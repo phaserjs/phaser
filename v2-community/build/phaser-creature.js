@@ -7,7 +7,7 @@
 *
 * Phaser - http://phaser.io
 *
-* v2.7.1 "2016-11-28" - Built: Mon Nov 28 2016 18:47:40
+* v2.7.2 "2016-12-06" - Built: Tue Dec 06 2016 23:48:41
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -53,7 +53,7 @@ var Phaser = Phaser || {    // jshint ignore:line
     * @constant
     * @type {string}
     */
-    VERSION: '2.7.1',
+    VERSION: '2.7.2',
 
     /**
     * An array of Phaser game instances.
@@ -9867,7 +9867,7 @@ Phaser.Group.prototype.add = function (child, silent, index) {
 */
 Phaser.Group.prototype.addAt = function (child, index, silent) {
 
-    this.add(child, silent, index);
+    return this.add(child, silent, index);
 
 };
 
@@ -24330,15 +24330,14 @@ Phaser.Component.FixedToCamera.prototype = {
     _fixedToCamera: false,
 
     /**
-    * A Game Object that is "fixed" to the camera uses its x/y coordinates as offsets from the top left of the camera during rendering.
+    * A Game Object that is "fixed" to the camera is rendered at a given x/y offsets from the top left of the camera. The offsets 
+    * are stored in the `cameraOffset` property, which is initialized with the current object coordinates. 
     * 
     * The values are adjusted at the rendering stage, overriding the Game Objects actual world position.
     * 
     * The end result is that the Game Object will appear to be 'fixed' to the camera, regardless of where in the game world
     * the camera is viewing. This is useful if for example this Game Object is a UI item that you wish to be visible at all times 
     * regardless where in the world the camera is.
-    * 
-    * The offsets are stored in the `cameraOffset` property.
     * 
     * Note that the `cameraOffset` values are in addition to any parent of this Game Object on the display list.
     *
@@ -25778,7 +25777,7 @@ Phaser.GameObjectFactory.prototype = {
     * @param {number} [y=0] - The y coordinate of the creature. The coordinate is relative to any parent container this creature may be in.
     * @param {string|PIXI.Texture} [key] - The image used as a texture by this creature object during rendering. If a string Phaser will get for an entry in the Image Cache. Or it can be an instance of a PIXI.Texture.
     * @param {Phaser.Group} [group] - Optional Group to add the object to. If not specified it will be added to the World group.
-    * @returns {Phaser.Creature} The newly created Sprite object.
+    * @returns {Phaser.Creature} The newly created Creature object.
     */
     creature: function (x, y, key, mesh, group) {
 
@@ -34193,6 +34192,18 @@ Phaser.Text = function (game, x, y, text, style) {
      */
     this.splitRegExp = /(?:\r\n|\r|\n)/;
 
+
+    /** The maximum number of characters that can be set.
+    * @property {number} characterLimitSize
+    */
+    this.characterLimitSize = -1;
+
+    /** The suffix that is applied to truncated text that is longer than the
+    * characterLimitSize.
+    * @property {string} characterLimitSuffix
+    */
+    this.characterLimitSuffix = '';
+
     /**
      * @property {number} _res - Internal canvas resolution var.
      * @private
@@ -34428,6 +34439,10 @@ Phaser.Text.prototype.updateText = function () {
     this.context.font = this.style.font;
 
     var outputText = this.text;
+
+    if (this.characterLimitSize > -1 && this.characterLimitSize < outputText.length) {
+        outputText = this.text.substring(0, this.characterLimitSize) + this.characterLimitSuffix;
+    }
 
     if (this.style.wordWrap)
     {
@@ -35709,6 +35724,22 @@ Phaser.Text.prototype.getBounds = function (matrix) {
     return PIXI.Sprite.prototype.getBounds.call(this, matrix);
 
 };
+
+/**
+* Sets the character limit of the text, with a suffix.
+* If the text is longer than this limit, it is truncated and the suffix is appended.
+*
+* @method Phaser.Text#setCharacterLimit
+* @param {number} [characterLimit] - The x coordinate of the Text Bounds region.
+* @param {string} [suffix] - The suffix to append to the truncated text.
+*/
+Phaser.Text.prototype.setCharacterLimit = function (characterLimit, suffix) {
+
+    this.characterLimitSuffix = suffix == undefined ? '' : suffix;
+    this.characterLimitSize = characterLimit;
+
+    this.updateText();
+}
 
 /**
 * The text to be displayed by this Text object.
@@ -47708,6 +47739,9 @@ Phaser.AnimationManager.prototype = {
     * 
     * If the requested animation is already playing this request will be ignored. 
     * If you need to reset an already running animation do so directly on the Animation object itself.
+    * 
+    * If you need to jump to a specific frame of this animation, then call `play` and immediately after it,
+    * set the frame you require (i.e. `animation.play(); animation.frame = 4`).
     *
     * @method Phaser.AnimationManager#play
     * @param {string} name - The name of the animation to be played, e.g. "fire", "walk", "jump".
@@ -48185,6 +48219,9 @@ Phaser.Animation.prototype = {
 
     /**
     * Plays this animation.
+    * 
+    * If you need to jump to a specific frame of this animation, then call `play` and immediately after it,
+    * set the frame you require (i.e. `animation.play(); animation.frame = 4`).
     *
     * @method Phaser.Animation#play
     * @param {number} [frameRate=null] - The framerate to play the animation at. The speed is given in frames per second. If not provided the previously set frameRate of the Animation is used.
@@ -51761,7 +51798,7 @@ Phaser.Cache.prototype = {
     */
     removeTextureAtlas: function (key) {
 
-        delete this._cache.atlas[key];
+        delete this._cache.image[key];
 
     },
 
@@ -53607,14 +53644,14 @@ Phaser.Loader.prototype = {
     },
 
     /**
-    * Add a synchronization point to the assets/files added within the supplied callback.
+    * Add a synchronization point to the assets / files added within the supplied callback.
     *
     * A synchronization point denotes that an asset _must_ be completely loaded before
     * subsequent assets can be loaded. An asset marked as a sync-point does not need to wait
     * for previous assets to load (unless they are sync-points). Resources, such as packs, may still
     * be downloaded around sync-points, as long as they do not finalize loading.
     *
-    * @method Phaser.Loader#withSyncPoints
+    * @method Phaser.Loader#withSyncPoint
     * @param {function} callback - The callback is invoked and is supplied with a single argument: the loader.
     * @param {object} [callbackContext=(loader)] - Context for the callback.
     * @return {Phaser.Loader} This Loader instance.
@@ -61768,7 +61805,7 @@ Phaser.ArrayUtils = {
     * Will return null if there are no array items that fall within the specified range
     * or if there is no item for the randomly chosen index.
     *
-    * @method
+    * @method Phaser.ArrayUtils.getRandomItem
     * @param {any[]} objects - An array of objects.
     * @param {integer} startIndex - Optional offset off the front of the array. Default value is 0, or the beginning of the array.
     * @param {integer} length - Optional restriction on the number of values you want to randomly select from.
@@ -61792,7 +61829,7 @@ Phaser.ArrayUtils = {
     * Will return null if there are no array items that fall within the specified range
     * or if there is no item for the randomly chosen index.
     *
-    * @method
+    * @method Phaser.ArrayUtils.removeRandomItem
     * @param {any[]} objects - An array of objects.
     * @param {integer} startIndex - Optional offset off the front of the array. Default value is 0, or the beginning of the array.
     * @param {integer} length - Optional restriction on the number of values you want to randomly select from.
@@ -61823,7 +61860,7 @@ Phaser.ArrayUtils = {
     /**
     * A standard Fisher-Yates Array shuffle implementation which modifies the array in place.
     *
-    * @method
+    * @method Phaser.ArrayUtils.shuffle
     * @param {any[]} array - The array to shuffle.
     * @return {any[]} The original array, now shuffled.
     */
@@ -61844,7 +61881,7 @@ Phaser.ArrayUtils = {
     /**
     * Transposes the elements of the given matrix (array of arrays).
     *
-    * @method
+    * @method Phaser.ArrayUtils.transposeMatrix
     * @param {Array<any[]>} array - The matrix to transpose.
     * @return {Array<any[]>} A new transposed matrix
     */
@@ -61874,7 +61911,7 @@ Phaser.ArrayUtils = {
     *
     * Based on the routine from {@link http://jsfiddle.net/MrPolywhirl/NH42z/}.
     *
-    * @method
+    * @method Phaser.ArrayUtils.rotateMatrix
     * @param {Array<any[]>} matrix - The array to rotate; this matrix _may_ be altered.
     * @param {number|string} direction - The amount to rotate: the rotation in degrees (90, -90, 270, -270, 180) or a string command ('rotateLeft', 'rotateRight' or 'rotate180').
     * @return {Array<any[]>} The rotated matrix. The source matrix should be discarded for the returned matrix.
@@ -61914,7 +61951,7 @@ Phaser.ArrayUtils = {
     * Snaps a value to the nearest value in an array.
     * The result will always be in the range `[first_value, last_value]`.
     *
-    * @method
+    * @method Phaser.ArrayUtils.findClosest
     * @param {number} value - The search value
     * @param {number[]} arr - The input array which _must_ be sorted.
     * @return {number} The nearest value found.
@@ -62013,7 +62050,7 @@ Phaser.ArrayUtils = {
     * Create an array representing the inclusive range of numbers (usually integers) in `[start, end]`.
     * This is equivalent to `numberArrayStep(start, end, 1)`.
     *
-    * @method Phaser.ArrayUtils#numberArray
+    * @method Phaser.ArrayUtils.numberArray
     * @param {number} start - The minimum value the array starts with.
     * @param {number} end - The maximum value the array contains.
     * @return {number[]} The array of number values.
@@ -62040,7 +62077,7 @@ Phaser.ArrayUtils = {
     * Certain values for `start` and `end` (eg. NaN/undefined/null) are currently coerced to 0;
     * for forward compatibility make sure to pass in actual numbers.
     *
-    * @method Phaser.ArrayUtils#numberArrayStep
+    * @method Phaser.ArrayUtils.numberArrayStep
     * @param {number} start - The start of the range.
     * @param {number} [end] - The end of the range.
     * @param {number} [step=1] - The value to increment or decrement by.
@@ -79389,10 +79426,10 @@ Phaser.Particles.Arcade.Emitter = function (game, x, y, maxParticles) {
     this.alphaData = null;
 
     /**
-    * @property {number} gravity - Sets the `body.gravity.y` of each particle sprite to this value on launch.
+    * @property {Phaser.Point} gravity - Sets the `body.gravity` of each particle sprite to this on launch.
     * @default
     */
-    this.gravity = 100;
+    this.gravity = new Phaser.Point(0, 100);
 
     /**
     * @property {any} particleClass - For emitting your own particle class types. They must extend Phaser.Particle.
@@ -79750,6 +79787,7 @@ Phaser.Particles.Arcade.Emitter.prototype.explode = function (lifespan, quantity
 */
 Phaser.Particles.Arcade.Emitter.prototype.flow = function (lifespan, frequency, quantity, total, immediate) {
 
+    if (frequency === undefined || frequency === null) { frequency = 250; }
     if (quantity === undefined || quantity === 0) { quantity = 1; }
     if (total === undefined) { total = -1; }
     if (immediate === undefined) { immediate = true; }
@@ -79949,7 +79987,7 @@ Phaser.Particles.Arcade.Emitter.prototype.emitParticle = function (x, y, key, fr
     body.velocity.y = rnd.between(this.minParticleSpeed.y, this.maxParticleSpeed.y);
     body.angularVelocity = rnd.between(this.minRotation, this.maxRotation);
 
-    body.gravity.y = this.gravity;
+    body.gravity = this.gravity;
     body.angularDrag = this.angularDrag;
 
     particle.onEmit();

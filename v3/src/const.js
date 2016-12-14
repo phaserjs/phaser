@@ -6,6 +6,8 @@ var CONST = {
     CANVAS: 1,
     WEBGL: 2,
 
+    IMAGE: 20,
+
     state: {
 
         PENDING: 0,

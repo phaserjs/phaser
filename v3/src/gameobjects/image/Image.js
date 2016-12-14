@@ -4,6 +4,10 @@
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
+var CONST = require('../../const');
+var GameObject = require('../GameObject');
+var ImageWebGLRenderer = require('./ImageWebGLRenderer');
+
 /**
 * An Image is a light-weight object you can use to display anything that doesn't need physics or animation.
 * It can still rotate, scale, crop and receive input events. This makes it perfect for logos, backgrounds, simple buttons and other non-Sprite graphics.
@@ -17,32 +21,28 @@
 * @param {string} [key] - The texture used by the Image during rendering. It can be a string which is a reference to the Cache entry, or an instance of a RenderTexture, BitmapData or PIXI.Texture.
 * @param {string|number} [frame] - If this Image is using part of a sprite sheet or texture atlas you can specify the exact frame to use by giving a string or numeric index.
 */
-var Image = function (state, x, y, key, frame, name)
+var Image = function (state, x, y, key, frame)
 {
-    /*
     var _texture = state.game.textures.get(key);
     var _frame = _texture.get(frame);
 
-    Phaser.GameObject.call(this, state, x, y, _texture, _frame);
+    GameObject.call(this, state, x, y, _texture, _frame);
 
-    this.name = name;
+    this.type = CONST.IMAGE;
 
-    this.type = Phaser.IMAGE;
-    */
+    this.render = ImageWebGLRenderer;
 };
 
-module.exports = Image;
-
-
-// Image.prototype = Object.create(Phaser.GameObject.prototype);
-// Image.prototype.constructor = Image;
+Image.prototype = Object.create(GameObject.prototype);
+Image.prototype.constructor = Image;
 
 /**
 * Automatically called by World.preUpdate.
 *
 * @method Phaser.Image#preUpdate
 * @memberof Phaser.Image
-Phaser.GameObject.Image.prototype.preUpdate = function ()
+*/
+Image.prototype.preUpdate = function ()
 {
     //  Would like to get rid of this somehow ...
     if (this.parent)
@@ -50,9 +50,7 @@ Phaser.GameObject.Image.prototype.preUpdate = function ()
         this.color.worldAlpha = this.parent.color.worldAlpha;
     }
 };
-*/
 
-/*
 Object.defineProperties(Image.prototype, {
 
     width: {
@@ -88,4 +86,5 @@ Object.defineProperties(Image.prototype, {
     }
 
 });
-*/
+
+module.exports = Image;

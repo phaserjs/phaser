@@ -526,11 +526,11 @@ Phaser.Cache.prototype = {
 
         if (atlasType === 'json')
         {
-            obj.font = Phaser.LoaderParser.jsonBitmapFont(atlasData, obj.base, xSpacing, ySpacing);
+            obj.font = Phaser.LoaderParser.jsonBitmapFont(atlasData, obj.base, xSpacing, ySpacing, false, this.game.resolution);
         }
         else
         {
-            obj.font = Phaser.LoaderParser.xmlBitmapFont(atlasData, obj.base, xSpacing, ySpacing);
+            obj.font = Phaser.LoaderParser.xmlBitmapFont(atlasData, obj.base, xSpacing, ySpacing, false, this.game.resolution);
         }
 
         this._cache.bitmapFont[key] = obj;
@@ -582,12 +582,12 @@ Phaser.Cache.prototype = {
         if (dataType === 'json')
         {
             fontData = this.getJSON(dataKey);
-            obj.font = Phaser.LoaderParser.jsonBitmapFont(fontData, obj.base, xSpacing, ySpacing, frame);
+            obj.font = Phaser.LoaderParser.jsonBitmapFont(fontData, obj.base, xSpacing, ySpacing, frame, this.game.resolution);
         }
         else
         {
             fontData = this.getXML(dataKey);
-            obj.font = Phaser.LoaderParser.xmlBitmapFont(fontData, obj.base, xSpacing, ySpacing, frame);
+            obj.font = Phaser.LoaderParser.xmlBitmapFont(fontData, obj.base, xSpacing, ySpacing, frame, this.game.resolution);
         }
 
         this._cache.bitmapFont[key] = obj;
@@ -1987,7 +1987,7 @@ Phaser.Cache.prototype = {
     */
     removeTextureAtlas: function (key) {
 
-        delete this._cache.atlas[key];
+        delete this._cache.image[key];
 
     },
 

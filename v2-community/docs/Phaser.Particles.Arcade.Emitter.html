@@ -737,6 +737,10 @@
 						</li>
 						
 						<li class="class-depth-1">
+							<a href="PIXI.DisplayObject.html">DisplayObject</a>
+						</li>
+						
+						<li class="class-depth-1">
 							<a href="PIXI.DisplayObjectContainer.html">DisplayObjectContainer</a>
 						</li>
 						
@@ -750,10 +754,6 @@
 						
 						<li class="class-depth-1">
 							<a href="PIXI.PIXI.html">PIXI</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="PIXI.PIXI.DisplayObject.html">DisplayObject</a>
 						</li>
 						
 						<li class="class-depth-1">
@@ -1063,8 +1063,7 @@
 						</li>
 						
 						<li class="class-depth-2">
-							<a href="global.html#Phaser.Path#numPointsreturn%257Bnumber%257DThetotalnumberofPathPointsinthisPath.">Phaser.Path#numPoints
-return {number} The total number of PathPoints in this Path.</a>
+							<a href="global.html#Phaser.Path#numPointsreturn%257Bnumber%257DThetotalnumberofPathPointsinthisPath.">Phaser.Path#numPointsreturn {number} The total number of PathPoints in this Path.</a>
 						</li>
 						
 						<li class="class-depth-0">
@@ -2185,7 +2184,7 @@ return {number} The total number of PathPoints in this Path.</a>
 
     
     <dt class="tag-source">Source -
-    <a href="src_particles_arcade_Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="src_particles_arcade_Emitter.js.html#sunlight-1-line-1006">line 1006</a>
+    <a href="src_particles_arcade_Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="src_particles_arcade_Emitter.js.html#sunlight-1-line-1007">line 1007</a>
     </dt>
     
 
@@ -2242,6 +2241,70 @@ return {number} The total number of PathPoints in this Path.</a>
     
     <dt class="tag-source">Source -
     <a href="src_particles_arcade_Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="src_particles_arcade_Emitter.js.html#sunlight-1-line-155">line 155</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id="cacheAsBitmap"><span class="type-signature"></span>cacheAsBitmap<span class="type-signature"> :Boolean</span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    <div class="description">
+        <p>Sets if this DisplayObject should be cached as a bitmap.</p>
+<p>When invoked it will take a snapshot of the DisplayObject, as it is at that moment, and store it<br>in a RenderTexture. This is then used whenever this DisplayObject is rendered. It can provide a<br>performance benefit for complex, but static, DisplayObjects. I.e. those with lots of children.</p>
+<p>Cached Bitmaps do not track their parents. If you update a property of this DisplayObject, it will not<br>re-generate the cached bitmap automatically. To do that you need to call <code>DisplayObject.updateCache</code>.</p>
+<p>To remove a cached bitmap, set this property to <code>null</code>.</p>
+    </div>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="PIXI.DisplayObject.html#cacheAsBitmap">PIXI.DisplayObject#cacheAsBitmap</a>
+    </li></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-763">line 763</a>
     </dt>
     
 
@@ -3005,6 +3068,130 @@ return {number} The total number of PathPoints in this Path.</a>
             
 <dt>
     <h4 class="name "
+        id="filterArea"><span class="type-signature"></span>filterArea<span class="type-signature"> :Rectangle</span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    <div class="description">
+        <p>The rectangular area used by filters when rendering a shader for this DisplayObject.</p>
+    </div>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="PIXI.DisplayObject.html#filterArea">PIXI.DisplayObject#filterArea</a>
+    </li></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-195">line 195</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id="filters"><span class="type-signature"></span>filters<span class="type-signature"> :Array</span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    <div class="description">
+        <p>Sets the filters for this DisplayObject. This is a WebGL only feature, and is ignored by the Canvas<br>Renderer. A filter is a shader applied to this DisplayObject. You can modify the placement of the filter<br>using <code>DisplayObject.filterArea</code>.</p>
+<p>To remove filters, set this property to <code>null</code>.</p>
+<p>Note: You cannot have a filter set, and a MULTIPLY Blend Mode active, at the same time. Setting a<br>filter will reset this DisplayObjects blend mode to NORMAL.</p>
+    </div>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="PIXI.DisplayObject.html#filters">PIXI.DisplayObject#filters</a>
+    </li></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-710">line 710</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
         id="fixedToCamera"><span class="type-signature"></span>fixedToCamera<span class="type-signature"> :boolean</span></h4>
     
     
@@ -3194,7 +3381,7 @@ return {number} The total number of PathPoints in this Path.</a>
             
 <dt>
     <h4 class="name "
-        id="gravity"><span class="type-signature"></span>gravity<span class="type-signature"> :number</span></h4>
+        id="gravity"><span class="type-signature"></span>gravity<span class="type-signature"> :<a href="Phaser.Point.html">Phaser.Point</a></span></h4>
     
     
 </dt>
@@ -3203,7 +3390,7 @@ return {number} The total number of PathPoints in this Path.</a>
 
     
     <div class="description">
-        <p>Sets the <code>body.gravity.y</code> of each particle sprite to this value on launch.</p>
+        <p>Sets the <code>body.gravity</code> of each particle sprite to this on launch.</p>
     </div>
     
     
@@ -3227,9 +3414,6 @@ return {number} The total number of PathPoints in this Path.</a>
 
     
 
-    
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>100</li></ul></dd>
     
 
     
@@ -3353,7 +3537,87 @@ return {number} The total number of PathPoints in this Path.</a>
 
     
     <dt class="tag-source">Source -
-    <a href="src_particles_arcade_Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="src_particles_arcade_Emitter.js.html#sunlight-1-line-919">line 919</a>
+    <a href="src_particles_arcade_Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="src_particles_arcade_Emitter.js.html#sunlight-1-line-920">line 920</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id="hitArea"><span class="type-signature"></span>hitArea<span class="type-signature"> :Rectangle|Circle|Ellipse|Polygon</span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    <div class="description">
+        <p>This is the defined area that will pick up mouse / touch events. It is null by default.<br>Setting it is a neat way of optimising the hitTest function that the interactionManager will use (as it will not need to hit test all the children)</p>
+    </div>
+    
+    
+    
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
+<span class="param-type">Rectangle</span>
+|
+
+<span class="param-type">Circle</span>
+|
+
+<span class="param-type">Ellipse</span>
+|
+
+<span class="param-type">Polygon</span>
+
+
+            </li>
+        </ul>
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="PIXI.DisplayObject.html#hitArea">PIXI.DisplayObject#hitArea</a>
+    </li></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-89">line 89</a>
     </dt>
     
 
@@ -3409,7 +3673,7 @@ return {number} The total number of PathPoints in this Path.</a>
 
     
     <dt class="tag-source">Source -
-    <a href="src_particles_arcade_Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="src_particles_arcade_Emitter.js.html#sunlight-1-line-893">line 893</a>
+    <a href="src_particles_arcade_Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="src_particles_arcade_Emitter.js.html#sunlight-1-line-894">line 894</a>
     </dt>
     
 
@@ -3651,7 +3915,7 @@ return {number} The total number of PathPoints in this Path.</a>
 
     
     <dt class="tag-source">Source -
-    <a href="src_particles_arcade_Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="src_particles_arcade_Emitter.js.html#sunlight-1-line-967">line 967</a>
+    <a href="src_particles_arcade_Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="src_particles_arcade_Emitter.js.html#sunlight-1-line-968">line 968</a>
     </dt>
     
 
@@ -3772,6 +4036,67 @@ return {number} The total number of PathPoints in this Path.</a>
     
     <dt class="tag-source">Source -
     <a href="src_particles_arcade_Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="src_particles_arcade_Emitter.js.html#sunlight-1-line-150">line 150</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id="mask"><span class="type-signature"></span>mask<span class="type-signature"> :PIXIGraphics</span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    <div class="description">
+        <p>Sets a mask for this DisplayObject. A mask is an instance of a Graphics object.<br>When applied it limits the visible area of this DisplayObject to the shape of the mask.<br>Under a Canvas renderer it uses shape clipping. Under a WebGL renderer it uses a Stencil Buffer.<br>To remove a mask, set this property to <code>null</code>.</p>
+    </div>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="PIXI.DisplayObject.html#mask">PIXI.DisplayObject#mask</a>
+    </li></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-675">line 675</a>
     </dt>
     
 
@@ -4730,6 +5055,67 @@ return {number} The total number of PathPoints in this Path.</a>
             
 <dt>
     <h4 class="name "
+        id="parent"><span class="type-signature">&lt;readonly> </span>parent<span class="type-signature"> :PIXIDisplayObjectContainer</span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    <div class="description">
+        <p>The parent DisplayObjectContainer that this DisplayObject is a child of.<br>All DisplayObjects must belong to a parent in order to be rendered.<br>The root parent is the Stage object. This property is set automatically when the<br>DisplayObject is added to, or removed from, a DisplayObjectContainer.</p>
+    </div>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="PIXI.DisplayObject.html#parent">PIXI.DisplayObject#parent</a>
+    </li></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-107">line 107</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
         id="particleAnchor"><span class="type-signature"></span>particleAnchor<span class="type-signature"> :<a href="Phaser.Point.html">Phaser.Point</a></span></h4>
     
     
@@ -5254,6 +5640,190 @@ return {number} The total number of PathPoints in this Path.</a>
             
 <dt>
     <h4 class="name "
+        id="pivot"><span class="type-signature"></span>pivot<span class="type-signature"> :PIXIPoint</span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    <div class="description">
+        <p>The pivot point of this DisplayObject that it rotates around. The values are expressed<br>in pixel values.</p>
+    </div>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="PIXI.DisplayObject.html#pivot">PIXI.DisplayObject#pivot</a>
+    </li></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-43">line 43</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id="position"><span class="type-signature"></span>position<span class="type-signature"> :PIXIPoint</span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    <div class="description">
+        <p>The coordinates, in pixels, of this DisplayObject, relative to its parent container.</p>
+<p>The value of this property does not reflect any positioning happening further up the display list.<br>To obtain that value please see the <code>worldPosition</code> property.</p>
+    </div>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="PIXI.DisplayObject.html#position">PIXI.DisplayObject#position</a>
+    </li></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-20">line 20</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id="renderable"><span class="type-signature"></span>renderable<span class="type-signature"> :Boolean</span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    <div class="description">
+        <p>Should this DisplayObject be rendered by the renderer? An object with a renderable value of<br><code>false</code> is skipped during the render pass.</p>
+    </div>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="PIXI.DisplayObject.html#renderable">PIXI.DisplayObject#renderable</a>
+    </li></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-98">line 98</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
         id="right"><span class="type-signature">&lt;readonly> </span>right<span class="type-signature"> :number</span></h4>
     
     
@@ -5291,7 +5861,7 @@ return {number} The total number of PathPoints in this Path.</a>
 
     
     <dt class="tag-source">Source -
-    <a href="src_particles_arcade_Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="src_particles_arcade_Emitter.js.html#sunlight-1-line-980">line 980</a>
+    <a href="src_particles_arcade_Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="src_particles_arcade_Emitter.js.html#sunlight-1-line-981">line 981</a>
     </dt>
     
 
@@ -5354,6 +5924,68 @@ return {number} The total number of PathPoints in this Path.</a>
     
     <dt class="tag-source">Source -
     <a href="src_core_Group.js.html">core/Group.js</a>, <a href="src_core_Group.js.html#sunlight-1-line-2987">line 2987</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id="scale"><span class="type-signature"></span>scale<span class="type-signature"> :PIXIPoint</span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    <div class="description">
+        <p>The scale of this DisplayObject. A scale of 1:1 represents the DisplayObject<br>at its default size. A value of 0.5 would scale this DisplayObject by half, and so on.</p>
+<p>The value of this property does not reflect any scaling happening further up the display list.<br>To obtain that value please see the <code>worldScale</code> property.</p>
+    </div>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="PIXI.DisplayObject.html#scale">PIXI.DisplayObject#scale</a>
+    </li></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-31">line 31</a>
     </dt>
     
 
@@ -5465,7 +6097,7 @@ return {number} The total number of PathPoints in this Path.</a>
 
     
     <dt class="tag-source">Source -
-    <a href="src_particles_arcade_Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="src_particles_arcade_Emitter.js.html#sunlight-1-line-993">line 993</a>
+    <a href="src_particles_arcade_Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="src_particles_arcade_Emitter.js.html#sunlight-1-line-994">line 994</a>
     </dt>
     
 
@@ -5706,7 +6338,383 @@ return {number} The total number of PathPoints in this Path.</a>
 
     
     <dt class="tag-source">Source -
-    <a href="src_particles_arcade_Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="src_particles_arcade_Emitter.js.html#sunlight-1-line-903">line 903</a>
+    <a href="src_particles_arcade_Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="src_particles_arcade_Emitter.js.html#sunlight-1-line-904">line 904</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id="worldAlpha"><span class="type-signature">&lt;readonly> </span>worldAlpha<span class="type-signature"> :Number</span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    <div class="description">
+        <p>The multiplied alpha value of this DisplayObject. A value of 1 is fully opaque. A value of 0 is transparent.<br>This value is the calculated total, based on the alpha values of all parents of this DisplayObjects<br>in the display list.</p>
+<p>To obtain, and set, the local alpha value, see the <code>alpha</code> property.</p>
+<p>Note: This property is only updated at the end of the <code>updateTransform</code> call, once per render. Until<br>that happens this property will contain values based on the previous frame. Be mindful of this if<br>accessing this property outside of the normal game flow, i.e. from an asynchronous event callback.</p>
+    </div>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="PIXI.DisplayObject.html#worldAlpha">PIXI.DisplayObject#worldAlpha</a>
+    </li></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-119">line 119</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id="worldPosition"><span class="type-signature">&lt;readonly> </span>worldPosition<span class="type-signature"> :PIXIPoint</span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    <div class="description">
+        <p>The coordinates, in pixels, of this DisplayObject within the world.</p>
+<p>This property contains the calculated total, based on the positions of all parents of this<br>DisplayObject in the display list.</p>
+<p>Note: This property is only updated at the end of the <code>updateTransform</code> call, once per render. Until<br>that happens this property will contain values based on the previous frame. Be mindful of this if<br>accessing this property outside of the normal game flow, i.e. from an asynchronous event callback.</p>
+    </div>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="PIXI.DisplayObject.html#worldPosition">PIXI.DisplayObject#worldPosition</a>
+    </li></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-150">line 150</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id="worldRotation"><span class="type-signature">&lt;readonly> </span>worldRotation<span class="type-signature"> :Number</span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    <div class="description">
+        <p>The rotation, in radians, of this DisplayObject.</p>
+<p>This property contains the calculated total, based on the rotations of all parents of this<br>DisplayObject in the display list.</p>
+<p>Note: This property is only updated at the end of the <code>updateTransform</code> call, once per render. Until<br>that happens this property will contain values based on the previous frame. Be mindful of this if<br>accessing this property outside of the normal game flow, i.e. from an asynchronous event callback.</p>
+    </div>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="PIXI.DisplayObject.html#worldRotation">PIXI.DisplayObject#worldRotation</a>
+    </li></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-180">line 180</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id="worldScale"><span class="type-signature">&lt;readonly> </span>worldScale<span class="type-signature"> :PIXIPoint</span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    <div class="description">
+        <p>The global scale of this DisplayObject.</p>
+<p>This property contains the calculated total, based on the scales of all parents of this<br>DisplayObject in the display list.</p>
+<p>Note: This property is only updated at the end of the <code>updateTransform</code> call, once per render. Until<br>that happens this property will contain values based on the previous frame. Be mindful of this if<br>accessing this property outside of the normal game flow, i.e. from an asynchronous event callback.</p>
+    </div>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="PIXI.DisplayObject.html#worldScale">PIXI.DisplayObject#worldScale</a>
+    </li></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-165">line 165</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id="worldTransform"><span class="type-signature">&lt;readonly> </span>worldTransform<span class="type-signature"> :PIXIMatrix</span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    <div class="description">
+        <p>The current transform of this DisplayObject.</p>
+<p>This property contains the calculated total, based on the transforms of all parents of this<br>DisplayObject in the display list.</p>
+<p>Note: This property is only updated at the end of the <code>updateTransform</code> call, once per render. Until<br>that happens this property will contain values based on the previous frame. Be mindful of this if<br>accessing this property outside of the normal game flow, i.e. from an asynchronous event callback.</p>
+    </div>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="PIXI.DisplayObject.html#worldTransform">PIXI.DisplayObject#worldTransform</a>
+    </li></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-135">line 135</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id="worldVisible"><span class="type-signature"></span>worldVisible<span class="type-signature"> :Boolean</span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    <div class="description">
+        <p>Indicates if this DisplayObject is visible, based on it, and all of its parents, <code>visible</code> property values.</p>
+    </div>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="PIXI.DisplayObject.html#worldVisible">PIXI.DisplayObject#worldVisible</a>
+    </li></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-632">line 632</a>
     </dt>
     
 
@@ -5762,7 +6770,7 @@ return {number} The total number of PathPoints in this Path.</a>
 
     
     <dt class="tag-source">Source -
-    <a href="src_particles_arcade_Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="src_particles_arcade_Emitter.js.html#sunlight-1-line-935">line 935</a>
+    <a href="src_particles_arcade_Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="src_particles_arcade_Emitter.js.html#sunlight-1-line-936">line 936</a>
     </dt>
     
 
@@ -5818,7 +6826,7 @@ return {number} The total number of PathPoints in this Path.</a>
 
     
     <dt class="tag-source">Source -
-    <a href="src_particles_arcade_Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="src_particles_arcade_Emitter.js.html#sunlight-1-line-951">line 951</a>
+    <a href="src_particles_arcade_Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="src_particles_arcade_Emitter.js.html#sunlight-1-line-952">line 952</a>
     </dt>
     
 
@@ -6581,7 +7589,7 @@ return {number} The total number of PathPoints in this Path.</a>
             
 <dt>
     <h4 class="name "
-        id="addChild"><span class="type-signature"></span>addChild<span class="signature">(child)</span><span class="type-signature"> &rarr; {<a href="global.html#DisplayObject">DisplayObject</a>}</span></h4>
+        id="addChild"><span class="type-signature"></span>addChild<span class="signature">(child)</span><span class="type-signature"> &rarr; {<a href="PIXI.DisplayObject.html">PIXI.DisplayObject</a>}</span></h4>
     
     
 </dt>
@@ -6630,7 +7638,7 @@ return {number} The total number of PathPoints in this Path.</a>
             <td class="type">
             
                 
-<span class="param-type"><a href="global.html#DisplayObject">DisplayObject</a></span>
+<span class="param-type"><a href="PIXI.DisplayObject.html">PIXI.DisplayObject</a></span>
 
 
             
@@ -6657,7 +7665,7 @@ return {number} The total number of PathPoints in this Path.</a>
     
         <div class="returns-type">
         
-<span class="param-type"><a href="global.html#DisplayObject">DisplayObject</a></span>
+<span class="param-type"><a href="PIXI.DisplayObject.html">PIXI.DisplayObject</a></span>
 
  -
         </div>
@@ -6725,7 +7733,7 @@ return {number} The total number of PathPoints in this Path.</a>
             
 <dt>
     <h4 class="name "
-        id="addChildAt"><span class="type-signature"></span>addChildAt<span class="signature">(child, index)</span><span class="type-signature"> &rarr; {<a href="global.html#DisplayObject">DisplayObject</a>}</span></h4>
+        id="addChildAt"><span class="type-signature"></span>addChildAt<span class="signature">(child, index)</span><span class="type-signature"> &rarr; {<a href="PIXI.DisplayObject.html">PIXI.DisplayObject</a>}</span></h4>
     
     
 </dt>
@@ -6774,7 +7782,7 @@ return {number} The total number of PathPoints in this Path.</a>
             <td class="type">
             
                 
-<span class="param-type"><a href="global.html#DisplayObject">DisplayObject</a></span>
+<span class="param-type"><a href="PIXI.DisplayObject.html">PIXI.DisplayObject</a></span>
 
 
             
@@ -6824,7 +7832,7 @@ return {number} The total number of PathPoints in this Path.</a>
     
         <div class="returns-type">
         
-<span class="param-type"><a href="global.html#DisplayObject">DisplayObject</a></span>
+<span class="param-type"><a href="PIXI.DisplayObject.html">PIXI.DisplayObject</a></span>
 
  -
         </div>
@@ -8426,7 +9434,7 @@ return {number} The total number of PathPoints in this Path.</a>
 <span class="param-type"><a href="Phaser.Text.html">Phaser.Text</a></span>
 |
 
-<span class="param-type">PIXI.DisplayObject</span>
+<span class="param-type"><a href="PIXI.DisplayObject.html">PIXI.DisplayObject</a></span>
 
 
             
@@ -8489,7 +9497,7 @@ return {number} The total number of PathPoints in this Path.</a>
 
     
     <dt class="tag-source">Source -
-    <a href="src_particles_arcade_Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="src_particles_arcade_Emitter.js.html#sunlight-1-line-868">line 868</a>
+    <a href="src_particles_arcade_Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="src_particles_arcade_Emitter.js.html#sunlight-1-line-869">line 869</a>
     </dt>
     
 
@@ -9864,7 +10872,7 @@ return {number} The total number of PathPoints in this Path.</a>
             <td class="type">
             
                 
-<span class="param-type"><a href="global.html#DisplayObject">DisplayObject</a></span>
+<span class="param-type"><a href="PIXI.DisplayObject.html">PIXI.DisplayObject</a></span>
 
 
             
@@ -11175,7 +12183,7 @@ return {number} The total number of PathPoints in this Path.</a>
 
     
     <dt class="tag-source">Source -
-    <a href="src_particles_arcade_Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="src_particles_arcade_Emitter.js.html#sunlight-1-line-687">line 687</a>
+    <a href="src_particles_arcade_Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="src_particles_arcade_Emitter.js.html#sunlight-1-line-688">line 688</a>
     </dt>
     
 
@@ -11636,7 +12644,7 @@ return {number} The total number of PathPoints in this Path.</a>
 
     
     <dt class="tag-source">Source -
-    <a href="src_particles_arcade_Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="src_particles_arcade_Emitter.js.html#sunlight-1-line-559">line 559</a>
+    <a href="src_particles_arcade_Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="src_particles_arcade_Emitter.js.html#sunlight-1-line-560">line 560</a>
     </dt>
     
 
@@ -14113,7 +15121,7 @@ healthyList.callAll('attack');</code></pre><p>Note: Currently this will skip any
             
 <dt>
     <h4 class="name "
-        id="getChildAt"><span class="type-signature"></span>getChildAt<span class="signature">(index)</span><span class="type-signature"> &rarr; {<a href="global.html#DisplayObject">DisplayObject</a>}</span></h4>
+        id="getChildAt"><span class="type-signature"></span>getChildAt<span class="signature">(index)</span><span class="type-signature"> &rarr; {<a href="PIXI.DisplayObject.html">PIXI.DisplayObject</a>}</span></h4>
     
     
 </dt>
@@ -14189,7 +15197,7 @@ healthyList.callAll('attack');</code></pre><p>Note: Currently this will skip any
     
         <div class="returns-type">
         
-<span class="param-type"><a href="global.html#DisplayObject">DisplayObject</a></span>
+<span class="param-type"><a href="PIXI.DisplayObject.html">PIXI.DisplayObject</a></span>
 
  -
         </div>
@@ -14306,7 +15314,7 @@ healthyList.callAll('attack');</code></pre><p>Note: Currently this will skip any
             <td class="type">
             
                 
-<span class="param-type"><a href="global.html#DisplayObject">DisplayObject</a></span>
+<span class="param-type"><a href="PIXI.DisplayObject.html">PIXI.DisplayObject</a></span>
 
 
             
@@ -19300,7 +20308,7 @@ healthyList.callAll('attack');</code></pre><p>Note: Currently this will skip any
             
 <dt>
     <h4 class="name "
-        id="removeChild"><span class="type-signature"></span>removeChild<span class="signature">(child)</span><span class="type-signature"> &rarr; {<a href="global.html#DisplayObject">DisplayObject</a>}</span></h4>
+        id="removeChild"><span class="type-signature"></span>removeChild<span class="signature">(child)</span><span class="type-signature"> &rarr; {<a href="PIXI.DisplayObject.html">PIXI.DisplayObject</a>}</span></h4>
     
     
 </dt>
@@ -19349,7 +20357,7 @@ healthyList.callAll('attack');</code></pre><p>Note: Currently this will skip any
             <td class="type">
             
                 
-<span class="param-type"><a href="global.html#DisplayObject">DisplayObject</a></span>
+<span class="param-type"><a href="PIXI.DisplayObject.html">PIXI.DisplayObject</a></span>
 
 
             
@@ -19376,7 +20384,7 @@ healthyList.callAll('attack');</code></pre><p>Note: Currently this will skip any
     
         <div class="returns-type">
         
-<span class="param-type"><a href="global.html#DisplayObject">DisplayObject</a></span>
+<span class="param-type"><a href="PIXI.DisplayObject.html">PIXI.DisplayObject</a></span>
 
  -
         </div>
@@ -19444,7 +20452,7 @@ healthyList.callAll('attack');</code></pre><p>Note: Currently this will skip any
             
 <dt>
     <h4 class="name "
-        id="removeChildAt"><span class="type-signature"></span>removeChildAt<span class="signature">(index)</span><span class="type-signature"> &rarr; {<a href="global.html#DisplayObject">DisplayObject</a>}</span></h4>
+        id="removeChildAt"><span class="type-signature"></span>removeChildAt<span class="signature">(index)</span><span class="type-signature"> &rarr; {<a href="PIXI.DisplayObject.html">PIXI.DisplayObject</a>}</span></h4>
     
     
 </dt>
@@ -19520,7 +20528,7 @@ healthyList.callAll('attack');</code></pre><p>Note: Currently this will skip any
     
         <div class="returns-type">
         
-<span class="param-type"><a href="global.html#DisplayObject">DisplayObject</a></span>
+<span class="param-type"><a href="PIXI.DisplayObject.html">PIXI.DisplayObject</a></span>
 
  -
         </div>
@@ -22167,7 +23175,7 @@ healthyList.callAll('attack');</code></pre><p>Note: Currently this will skip any
 
     
     <dt class="tag-source">Source -
-    <a href="src_particles_arcade_Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="src_particles_arcade_Emitter.js.html#sunlight-1-line-775">line 775</a>
+    <a href="src_particles_arcade_Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="src_particles_arcade_Emitter.js.html#sunlight-1-line-776">line 776</a>
     </dt>
     
 
@@ -22243,7 +23251,7 @@ healthyList.callAll('attack');</code></pre><p>Note: Currently this will skip any
             <td class="type">
             
                 
-<span class="param-type"><a href="global.html#DisplayObject">DisplayObject</a></span>
+<span class="param-type"><a href="PIXI.DisplayObject.html">PIXI.DisplayObject</a></span>
 
 
             
@@ -22828,7 +23836,7 @@ healthyList.callAll('attack');</code></pre><p>Note: Currently this will skip any
 
     
     <dt class="tag-source">Source -
-    <a href="src_particles_arcade_Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="src_particles_arcade_Emitter.js.html#sunlight-1-line-755">line 755</a>
+    <a href="src_particles_arcade_Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="src_particles_arcade_Emitter.js.html#sunlight-1-line-756">line 756</a>
     </dt>
     
 
@@ -23221,7 +24229,7 @@ healthyList.callAll('attack');</code></pre><p>Note: Currently this will skip any
 
     
     <dt class="tag-source">Source -
-    <a href="src_particles_arcade_Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="src_particles_arcade_Emitter.js.html#sunlight-1-line-817">line 817</a>
+    <a href="src_particles_arcade_Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="src_particles_arcade_Emitter.js.html#sunlight-1-line-818">line 818</a>
     </dt>
     
 
@@ -23383,7 +24391,7 @@ healthyList.callAll('attack');</code></pre><p>Note: Currently this will skip any
 
     
     <dt class="tag-source">Source -
-    <a href="src_particles_arcade_Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="src_particles_arcade_Emitter.js.html#sunlight-1-line-700">line 700</a>
+    <a href="src_particles_arcade_Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="src_particles_arcade_Emitter.js.html#sunlight-1-line-701">line 701</a>
     </dt>
     
 
@@ -23581,7 +24589,7 @@ healthyList.callAll('attack');</code></pre><p>Note: Currently this will skip any
 
     
     <dt class="tag-source">Source -
-    <a href="src_particles_arcade_Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="src_particles_arcade_Emitter.js.html#sunlight-1-line-717">line 717</a>
+    <a href="src_particles_arcade_Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="src_particles_arcade_Emitter.js.html#sunlight-1-line-718">line 718</a>
     </dt>
     
 
@@ -23779,7 +24787,7 @@ healthyList.callAll('attack');</code></pre><p>Note: Currently this will skip any
 
     
     <dt class="tag-source">Source -
-    <a href="src_particles_arcade_Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="src_particles_arcade_Emitter.js.html#sunlight-1-line-736">line 736</a>
+    <a href="src_particles_arcade_Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="src_particles_arcade_Emitter.js.html#sunlight-1-line-737">line 737</a>
     </dt>
     
 
@@ -24280,7 +25288,7 @@ healthyList.callAll('attack');</code></pre><p>Note: Currently this will skip any
 
     
     <dt class="tag-source">Source -
-    <a href="src_particles_arcade_Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="src_particles_arcade_Emitter.js.html#sunlight-1-line-509">line 509</a>
+    <a href="src_particles_arcade_Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="src_particles_arcade_Emitter.js.html#sunlight-1-line-510">line 510</a>
     </dt>
     
 
@@ -24698,7 +25706,7 @@ healthyList.callAll('attack');</code></pre><p>Note: Currently this will skip any
             <td class="type">
             
                 
-<span class="param-type"><a href="global.html#DisplayObject">DisplayObject</a></span>
+<span class="param-type"><a href="PIXI.DisplayObject.html">PIXI.DisplayObject</a></span>
 
 
             
@@ -24721,7 +25729,7 @@ healthyList.callAll('attack');</code></pre><p>Note: Currently this will skip any
             <td class="type">
             
                 
-<span class="param-type"><a href="global.html#DisplayObject">DisplayObject</a></span>
+<span class="param-type"><a href="PIXI.DisplayObject.html">PIXI.DisplayObject</a></span>
 
 
             
@@ -25141,7 +26149,7 @@ healthyList.callAll('attack');</code></pre><p>Note: Currently this will skip any
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a>
-		on Mon Nov 28 2016 18:47:58 GMT+0200 (EET) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Tue Dec 06 2016 23:49:01 GMT+0000 (GMT Standard Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

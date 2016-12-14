@@ -141,7 +141,7 @@ Phaser.GameObjectFactory.prototype = {
     * @param {number} [y=0] - The y coordinate of the creature. The coordinate is relative to any parent container this creature may be in.
     * @param {string|PIXI.Texture} [key] - The image used as a texture by this creature object during rendering. If a string Phaser will get for an entry in the Image Cache. Or it can be an instance of a PIXI.Texture.
     * @param {Phaser.Group} [group] - Optional Group to add the object to. If not specified it will be added to the World group.
-    * @returns {Phaser.Creature} The newly created Sprite object.
+    * @returns {Phaser.Creature} The newly created Creature object.
     */
     creature: function (x, y, key, mesh, group) {
 

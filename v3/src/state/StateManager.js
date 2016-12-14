@@ -10,6 +10,7 @@ var State = require('./State');
 var Settings = require('./Settings');
 var Systems = require('./Systems');
 var GetObjectValue = require('../utils/GetObjectValue');
+// var LoaderEvent = require('../loader/events/');
 
 /**
 * The State Manager is responsible for loading, setting up and switching game states.
@@ -74,8 +75,6 @@ StateManager.prototype = {
         // this.game.onPause.add(this.pause, this);
         // this.game.onResume.add(this.resume, this);
 
-        console.log('StateManager.boot');
-
         for (var i = 0; i < this._pending.length; i++)
         {
             var entry = this._pending[i];
@@ -136,7 +135,7 @@ StateManager.prototype = {
                 autoStart: autoStart
             });
 
-            console.log('StateManager not yet booted, adding to list', this._pending.length);
+            // console.log('StateManager not yet booted, adding to list', this._pending.length);
 
             return;
         }
@@ -147,12 +146,12 @@ StateManager.prototype = {
 
         if (stateConfig instanceof State)
         {
-            console.log('StateManager.add from instance', key);
+            // console.log('StateManager.add from instance', key);
             newState = this.createStateFromInstance(key, stateConfig);
         }
         else if (typeof stateConfig === 'object')
         {
-            console.log('StateManager.add from object', key);
+            // console.log('StateManager.add from object', key);
 
             stateConfig.key = key;
 
@@ -160,7 +159,7 @@ StateManager.prototype = {
         }
         else if (typeof stateConfig === 'function')
         {
-            console.log('StateManager.add from function', key);
+            // console.log('StateManager.add from function', key);
 
             newState = this.createStateFromFunction(key, stateConfig);
         }
@@ -280,7 +279,7 @@ StateManager.prototype = {
         var width = newState.settings.width;
         var height = newState.settings.height;
 
-        // newState.sys.fbo = this.game.renderer.createFBO(newState, x, y, width, height);
+        newState.sys.fbo = this.game.renderer.createFBO(newState, x, y, width, height);
     },
 
     getState: function (key)
@@ -318,7 +317,7 @@ StateManager.prototype = {
         //  if not booted, then put state into a holding pattern
         if (!this.game.isBooted)
         {
-            console.log('StateManager not yet booted, setting autoStart on pending list');
+            // console.log('StateManager not yet booted, setting autoStart on pending list');
 
             for (var i = 0; i < this._pending.length; i++)
             {
@@ -353,30 +352,26 @@ StateManager.prototype = {
 
             if (state.preload && state.sys.load)
             {
-                state.sys.load.reset(true);
+                state.sys.load.reset();
 
                 state.preload.call(state, this.game);
 
                 //  Is the loader empty?
-                if (state.sys.load.totalQueuedFiles() === 0 && state.sys.load.totalQueuedPacks() === 0)
+                if (state.sys.load.list.size === 0)
                 {
-                    console.log('empty queue');
                     this.startCreate(state);
                 }
                 else
                 {
-                    console.log('load start');
-
                     //  Start the loader going as we have something in the queue
-                    // state.load.onLoadComplete.addOnce(this.loadComplete, this, 0, state);
+
+                    state.sys.load.events.once('LOADER_COMPLETE_EVENT', this.loadComplete.bind(this));
 
                     state.sys.load.start();
                 }
             }
             else
             {
-                console.log('no preload');
-
                 //  No preload? Then there was nothing to load either
                 this.startCreate(state);
             }
@@ -384,12 +379,13 @@ StateManager.prototype = {
         }
     },
 
-    loadComplete: function (state)
+    loadComplete: function (event)
     {
-        console.log('loadComplete');
+        var state = event.loader.state;
 
         //  Make sure to do load-update one last time before state is set to _created
 
+        //  Stop doing this ...
         if (state.hasOwnProperty('loadUpdate'))
         {
             state.loadUpdate.call(state);
