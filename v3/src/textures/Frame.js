@@ -4,6 +4,8 @@
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
+var Extend = require('../utils/object/Extend');
+
 /**
 * A Frame is a section of a Texture.
 *
@@ -242,7 +244,7 @@ Frame.prototype = {
 
     clone: function ()
     {
-        var clone = new Phaser.TextureFrame(this.texture, this.name, this.sourceIndex);
+        var clone = new Frame(this.texture, this.name, this.sourceIndex);
 
         clone.cutX = this.cutX;
         clone.cutY = this.cutY;
@@ -256,7 +258,7 @@ Frame.prototype = {
 
         clone.rotated = this.rotated;
 
-        clone.data = Phaser.Utils.extend(true, clone.data, this.data);
+        clone.data = Extend(true, clone.data, this.data);
 
         clone.updateUVs();
 

@@ -5,6 +5,8 @@
 */
 
 var Component = require('../components');
+var MATH_CONST = require('../math/const');
+var WrapAngle = require('../math/angle/Wrap');
 
 /**
 * A Camera is your view into the game world. It has a position and size and renders only those objects within its field of view.
@@ -292,12 +294,12 @@ Object.defineProperties(Camera.prototype, {
 
         get: function ()
         {
-            return Phaser.Math.wrapAngle(this.rotation * Phaser.Math.RAD_TO_DEG);
+            return WrapAngle(this.rotation * MATH_CONST.RAD_TO_DEG);
         },
 
         set: function (value)
         {
-            this.rotation = Phaser.Math.wrapAngle(value) * Phaser.Math.DEG_TO_RAD;
+            this.rotation = WrapAngle(value) * MATH_CONST.DEG_TO_RAD;
         }
 
     },
@@ -321,7 +323,7 @@ Object.defineProperties(Camera.prototype, {
             this.transform._rotation = value;
             this.transform.dirty = true;
 
-            if (this.transform._rotation % Phaser.Math.PI2)
+            if (this.transform._rotation % MATH_CONST.PI2)
             {
                 this.transform.cache.sr = Math.sin(this.transform._rotation);
                 this.transform.cache.cr = Math.cos(this.transform._rotation);
@@ -334,7 +336,7 @@ Object.defineProperties(Camera.prototype, {
             }
         }
 
-    }
+    },
 
 });
 

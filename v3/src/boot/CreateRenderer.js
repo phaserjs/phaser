@@ -69,11 +69,11 @@ var CreateRenderer = function (game)
         // game.context = this.renderer.context;
     }
 
-    if (config.renderType !== Phaser.HEADLESS)
-    {
+    // if (config.renderType !== Phaser.HEADLESS)
+    // {
         // Phaser.Canvas.addToDOM(this.canvas, this.parent, false);
         // Phaser.Canvas.setTouchAction(this.canvas);
-    }
+    // }
 
 };
 
