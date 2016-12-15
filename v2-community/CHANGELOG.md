@@ -1,5 +1,34 @@
 # Change Log
 
+## Version 2.7.2 - 6th December 2016
+
+### New Features
+
+* Added feature: set character limit with suffix
+
+### Updates
+
+* Clarification of fixedToCamera semantics
+* change Emitter.gravity from number to Phaser.Point
+* Fixed issue causing tsc to crap out under certain circumstances
+
+### Bug Fixes
+
+* removeTextureAtlas now deletes the correct cache object.
+
+## Version 2.7.1 - 28th November 2016
+
+### Updates
+
+* Added a third optional parameter to PIXI.BaseTexture allowing textures to be scaled according to devicePixelRatio (thanks @cloakedninjas)
+* TypeScript definitions fixes and updates (thanks @Aleksey-Danchin)
+
+### Bug Fixes
+
+* Phaser.AnimationParser.spriteSheet() now works like it is supposed to work (thanks @stoneman1, @qarlosh)
+* EarCut was not included in the build because of wrong path in grunt tasks. It should  now work (thanks @stoneman1)
+* Some browsers uses CancelRequestAnimationFrame instead of CancelAnimationFrame and it is now fixed (thanks @stoneman1)
+
 ## Version 2.7.0 - "World's End" - 22nd November 2016
 
 Phaser 2.7 is now released to the community to maintain. Please see the README for more details.

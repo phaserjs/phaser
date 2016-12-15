@@ -254,12 +254,12 @@ Phaser.Video = function (game, key, url) {
     */
     if (this.video && !url)
     {
-        this.baseTexture = new PIXI.BaseTexture(this.video);
+        this.baseTexture = new PIXI.BaseTexture(this.video, null, this.game.resolution);
         this.baseTexture.forceLoaded(this.width, this.height);
     }
     else
     {
-        this.baseTexture = new PIXI.BaseTexture(Phaser.Cache.DEFAULT.baseTexture.source);
+        this.baseTexture = new PIXI.BaseTexture(Phaser.Cache.DEFAULT.baseTexture.source, null, this.game.resolution);
         this.baseTexture.forceLoaded(this.width, this.height);
     }
 

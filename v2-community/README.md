@@ -34,7 +34,7 @@ Grab the source and join in the fun!
 <a name="whats-new"></a>
 ![What's New](http://phaser.io/images/github/div-whats-new.png "What's New")
 
-<div align="center"><img src="http://phaser.io/images/github/news.jpg"></div>
+<div align="center"><img src="http://phaser.io/images/github/phaser-ce.png"></div>
 
 > 22nd November 2016
 
@@ -266,6 +266,18 @@ Should you wish to build Phaser from source you can take advantage of the provid
 
 Run `grunt` to perform a default build to the `dist` folder.
 
+### Packaging a new release
+
+Releases of new versions of Phaser CE are under the communities control. If you feel there are sufficient fixes, or important ones that warrant a new version release, then please do the following:
+
+1. Make sure the version number is increased, in line with semver policies, in the following files: `package.json` and `src/Phaser.js`
+
+2. Make sure that you have added details of the new version to the `README.md` and `CHANGELOG.md`. This should include a summary of changes made in the version. You can usually obtain this from the commit / PR history. It's nice to credit who made the changes by linking to their GitHub user ID, but isn't a requirement.
+
+3. From the root of the `v2-community` folder, run `grunt jshint` and make sure there are no jshint errors. If there are, please fix them, or request that the original author of the code does so.
+
+4. Once jshint passes run `grunt release`, sit back, and wait. It will build all of the versions of Phaser required, update the doc files, TypeScript defs and lots more. When finished, commit all of the new files and make sure to include a clear message in your commit saying you want this release pushed to npm. Be sure to tag me when doing this, i.e. 'Phaser CE Version 2.X.X. Please publish to npm @photonstorm' - I'll see it, and then publish as soon as I can (often the same day).
+
 ![Made With Phaser](http://phaser.io/images/github/div-made-with.png "Made With Phaser")
 <a name="games"></a>
 
@@ -313,6 +325,42 @@ If you code with [TypeScript](http://www.typescriptlang.org/) there are comprehe
 
 ![Change Log](http://phaser.io/images/github/div-change-log.png "Change Log")
 <a name="change-log"></a>
+
+## Version 2.7.3 - In development
+
+* Replaced missing jshintrc file (#2912)
+* Added tempPoint argument / undefined block to Graphics.containsPoint
+* Fixed Text.setCharacterLimit conditional check
+* Added resolution argument to LoaderParser.jsonBitmapFont
+
+## Version 2.7.2 - 6th December 2016
+
+### New Features
+
+* Added feature: set character limit with suffix
+
+### Updates
+
+* Clarification of fixedToCamera semantics
+* change Emitter.gravity from number to Phaser.Point
+* Fixed issue causing tsc to crap out under certain circumstances
+
+### Bug Fixes
+
+* removeTextureAtlas now deletes the correct cache object.
+
+## Version 2.7.1 - 28th November 2016
+
+### Updates
+
+* Added a third optional parameter to PIXI.BaseTexture allowing textures to be scaled according to devicePixelRatio (thanks @cloakedninjas)
+* TypeScript definitions fixes and updates (thanks @Aleksey-Danchin)
+
+### Bug Fixes
+
+* Phaser.AnimationParser.spriteSheet() now works like it is supposed to work (thanks @stoneman1, @qarlosh)
+* EarCut was not included in the build because of wrong path in grunt tasks. It should  now work (thanks @stoneman1)
+* Some browsers uses CancelRequestAnimationFrame instead of CancelAnimationFrame and it is now fixed (thanks @stoneman1)
 
 ## Version 2.7.0 - "World's End" - 22nd November 2016
 
@@ -403,11 +451,11 @@ The [Contributors Guide][contribute] contains full details on how to help with P
 
 - Found a bug? Report it on [GitHub Issues][issues] and include a code sample.
 
-- Pull Requests should only be made against the `dev` branch. *Never* against `master`.
+- Pull Requests should only be made against the `v2-community` folder version of Phaser, never `v2`.
 
-- Before submitting a Pull Request run your code through [JSHint](http://www.jshint.com/) using our [config](https://github.com/photonstorm/phaser/blob/master/.jshintrc).
+- Before submitting a Pull Request run your code through [JSHint](http://www.jshint.com/) using our [config](https://github.com/photonstorm/phaser/blob/master/v2-community/.jshintrc).
 
-- Before contributing read the [code of conduct](https://github.com/photonstorm/phaser/blob/master/CODE_OF_CONDUCT.md).
+- Before contributing read the [code of conduct](https://github.com/photonstorm/phaser/blob/master/v2-community/CODE_OF_CONDUCT.md).
 
 Written something cool in Phaser? Please tell us about it in the [forum][forum], or email support@phaser.io
 

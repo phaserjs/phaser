@@ -121,7 +121,7 @@ Phaser.BitmapData = function (game, key, width, height, skipPool) {
     * @property {PIXI.BaseTexture} baseTexture - The PIXI.BaseTexture.
     * @default
     */
-    this.baseTexture = new PIXI.BaseTexture(this.canvas);
+    this.baseTexture = new PIXI.BaseTexture(this.canvas, null, this.game.resolution);
 
     /**
     * @property {PIXI.Texture} texture - The PIXI.Texture.

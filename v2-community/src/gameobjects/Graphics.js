@@ -1249,7 +1249,9 @@ Phaser.Graphics.prototype.getLocalBounds = function () {
 * @param point {Point} the point to test
 * @return {boolean} the result of the test
 */
-Phaser.Graphics.prototype.containsPoint = function (point) {
+Phaser.Graphics.prototype.containsPoint = function (point, tempPoint) {
+
+    if (tempPoint === undefined) { tempPoint = new Phaser.Point(); }
 
     this.worldTransform.applyInverse(point, tempPoint);
 

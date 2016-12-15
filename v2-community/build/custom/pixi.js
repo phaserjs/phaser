@@ -7,7 +7,7 @@
 *
 * Phaser - http://phaser.io
 *
-* v2.7.0 "World's End" - Built: Wed Nov 23 2016 00:48:51
+* v2.7.2 "2016-12-06" - Built: Tue Dec 06 2016 23:48:33
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -69,7 +69,7 @@ var PIXI = PIXI || {};
 *
 * It is used internally by the likes of PIXI.Sprite.
 *
-* @class PIXI.DisplayObject
+* @class DisplayObject
 * @constructor
 */
 PIXI.DisplayObject = function () {
@@ -6896,12 +6896,12 @@ PIXI.CanvasRenderer.prototype.mapBlendModes = function () {
  * A texture stores the information that represents an image. All textures have a base texture.
  *
  * @class BaseTexture
- * @uses EventTarget
  * @constructor
  * @param source {String|Canvas} the source object (image or canvas)
  * @param scaleMode {Number} See {{#crossLink "PIXI/scaleModes:property"}}PIXI.scaleModes{{/crossLink}} for possible values
+ * @param [resolution] {Number} the resolution of the texture (for HiDPI displays)
  */
-PIXI.BaseTexture = function(source, scaleMode)
+PIXI.BaseTexture = function(source, scaleMode, resolution)
 {
     /**
      * The Resolution of the texture. 
@@ -6909,7 +6909,7 @@ PIXI.BaseTexture = function(source, scaleMode)
      * @property resolution
      * @type Number
      */
-    this.resolution = 1;
+    this.resolution = resolution || 1;
     
     /**
      * [read-only] The width of the base texture set when the image has loaded
@@ -7125,9 +7125,10 @@ PIXI.BaseTexture.prototype.unloadFromGPU = function()
  * @method fromCanvas
  * @param canvas {Canvas} The canvas element source of the texture
  * @param scaleMode {Number} See {{#crossLink "PIXI/scaleModes:property"}}PIXI.scaleModes{{/crossLink}} for possible values
+ * @param [resolution] {Number} the resolution of the texture (for HiDPI displays)
  * @return {BaseTexture}
  */
-PIXI.BaseTexture.fromCanvas = function(canvas, scaleMode)
+PIXI.BaseTexture.fromCanvas = function(canvas, scaleMode, resolution)
 {
     if (canvas.width === 0)
     {
@@ -7139,7 +7140,9 @@ PIXI.BaseTexture.fromCanvas = function(canvas, scaleMode)
         canvas.height = 1;
     }
 
-    return new PIXI.BaseTexture(canvas, scaleMode);
+    resolution = resolution || 1;
+
+    return new PIXI.BaseTexture(canvas, scaleMode, resolution);
 };
 
 /**
@@ -7160,7 +7163,6 @@ PIXI.TextureSilentFail = false;
  * to the display list directly. Instead use it as the texture for a PIXI.Sprite. If no frame is provided then the whole image is used.
  *
  * @class Texture
- * @uses EventTarget
  * @constructor
  * @param baseTexture {BaseTexture} The base texture source to create the texture from
  * @param frame {Rectangle} The rectangle frame of the texture to show

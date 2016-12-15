@@ -7,7 +7,7 @@
 *
 * Phaser - http://phaser.io
 *
-* v2.7.0 "World's End" - Built: Wed Nov 23 2016 00:49:01
+* v2.7.2 "2016-12-06" - Built: Tue Dec 06 2016 23:48:41
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -53,7 +53,7 @@ var Phaser = Phaser || {    // jshint ignore:line
     * @constant
     * @type {string}
     */
-    VERSION: '2.7.0',
+    VERSION: '2.7.2',
 
     /**
     * An array of Phaser game instances.
@@ -9867,7 +9867,7 @@ Phaser.Group.prototype.add = function (child, silent, index) {
 */
 Phaser.Group.prototype.addAt = function (child, index, silent) {
 
-    this.add(child, silent, index);
+    return this.add(child, silent, index);
 
 };
 
@@ -21439,7 +21439,7 @@ Phaser.SinglePad.prototype.constructor = Phaser.SinglePad;
 
 /**
 * If you need more fine-grained control over the handling of specific keys you can create and use Phaser.Key objects.
-* 
+*
 * @class Phaser.Key
 * @constructor
 * @param {Phaser.Game} game - Current game instance.
@@ -21563,7 +21563,7 @@ Phaser.Key.prototype = {
 
     /**
     * Called automatically by Phaser.Keyboard.
-    * 
+    *
     * @method Phaser.Key#update
     * @protected
     */
@@ -21586,7 +21586,7 @@ Phaser.Key.prototype = {
 
     /**
     * Called automatically by Phaser.Keyboard.
-    * 
+    *
     * @method Phaser.Key#processKeyDown
     * @param {KeyboardEvent} event - The DOM event that triggered this.
     * @protected
@@ -21623,7 +21623,7 @@ Phaser.Key.prototype = {
 
     /**
     * Called automatically by Phaser.Keyboard.
-    * 
+    *
     * @method Phaser.Key#processKeyUp
     * @param {KeyboardEvent} event - The DOM event that triggered this.
     * @protected
@@ -21686,7 +21686,7 @@ Phaser.Key.prototype = {
     /**
     * Returns `true` if the Key was pressed down within the `duration` value given, or `false` if it either isn't down,
     * or was pressed down longer ago than then given duration.
-    * 
+    *
     * @method Phaser.Key#downDuration
     * @param {number} [duration=50] - The duration within which the key is considered as being just pressed. Given in ms.
     * @return {boolean} True if the key was pressed down within the given duration.
@@ -21702,7 +21702,7 @@ Phaser.Key.prototype = {
     /**
     * Returns `true` if the Key was pressed down within the `duration` value given, or `false` if it either isn't down,
     * or was pressed down longer ago than then given duration.
-    * 
+    *
     * @method Phaser.Key#upDuration
     * @param {number} [duration=50] - The duration within which the key is considered as being just released. Given in ms.
     * @return {boolean} True if the key was released within the given duration.
@@ -21722,7 +21722,8 @@ Phaser.Key.prototype = {
 * When you check this value it will return `true` if the Key is down, otherwise `false`.
 * You can only call justDown once per key press. It will only return `true` once, until the Key is released and pressed down again.
 * This allows you to use it in situations where you want to check if this key is down without using a Signal, such as in a core game loop.
-* 
+*
+* @name Phaser.Key#justDown
 * @property {boolean} justDown
 * @memberof Phaser.Key
 * @default false
@@ -21744,7 +21745,8 @@ Object.defineProperty(Phaser.Key.prototype, "justDown", {
 * When you check this value it will return `true` if the Key is up, otherwise `false`.
 * You can only call justUp once per key release. It will only return `true` once, until the Key is pressed down and released again.
 * This allows you to use it in situations where you want to check if this key is up without using a Signal, such as in a core game loop.
-* 
+*
+* @name Phaser.Key#justUp
 * @property {boolean} justUp
 * @memberof Phaser.Key
 * @default false
@@ -21764,7 +21766,7 @@ Object.defineProperty(Phaser.Key.prototype, "justUp", {
 /**
 * An enabled key processes its update and dispatches events.
 * A key can be disabled momentarily at runtime instead of deleting it.
-* 
+* @name Phaser.Key#enabled
 * @property {boolean} enabled
 * @memberof Phaser.Key
 * @default true
@@ -24328,15 +24330,14 @@ Phaser.Component.FixedToCamera.prototype = {
     _fixedToCamera: false,
 
     /**
-    * A Game Object that is "fixed" to the camera uses its x/y coordinates as offsets from the top left of the camera during rendering.
+    * A Game Object that is "fixed" to the camera is rendered at a given x/y offsets from the top left of the camera. The offsets 
+    * are stored in the `cameraOffset` property, which is initialized with the current object coordinates. 
     * 
     * The values are adjusted at the rendering stage, overriding the Game Objects actual world position.
     * 
     * The end result is that the Game Object will appear to be 'fixed' to the camera, regardless of where in the game world
     * the camera is viewing. This is useful if for example this Game Object is a UI item that you wish to be visible at all times 
     * regardless where in the world the camera is.
-    * 
-    * The offsets are stored in the `cameraOffset` property.
     * 
     * Note that the `cameraOffset` values are in addition to any parent of this Game Object on the display list.
     *
@@ -25776,7 +25777,7 @@ Phaser.GameObjectFactory.prototype = {
     * @param {number} [y=0] - The y coordinate of the creature. The coordinate is relative to any parent container this creature may be in.
     * @param {string|PIXI.Texture} [key] - The image used as a texture by this creature object during rendering. If a string Phaser will get for an entry in the Image Cache. Or it can be an instance of a PIXI.Texture.
     * @param {Phaser.Group} [group] - Optional Group to add the object to. If not specified it will be added to the World group.
-    * @returns {Phaser.Creature} The newly created Sprite object.
+    * @returns {Phaser.Creature} The newly created Creature object.
     */
     creature: function (x, y, key, mesh, group) {
 
@@ -27776,7 +27777,7 @@ Phaser.BitmapData = function (game, key, width, height, skipPool) {
     * @property {PIXI.BaseTexture} baseTexture - The PIXI.BaseTexture.
     * @default
     */
-    this.baseTexture = new PIXI.BaseTexture(this.canvas);
+    this.baseTexture = new PIXI.BaseTexture(this.canvas, null, this.game.resolution);
 
     /**
     * @property {PIXI.Texture} texture - The PIXI.Texture.
@@ -30097,6 +30098,635 @@ Phaser.BitmapData.getTransform = function (translateX, translateY, scaleX, scale
 };
 
 Phaser.BitmapData.prototype.constructor = Phaser.BitmapData;
+
+/* jshint ignore:start */
+
+/*
+Copyright (c) 2016, Mapbox
+
+Permission to use, copy, modify, and/or distribute this software for any purpose
+with or without fee is hereby granted, provided that the above copyright notice
+and this permission notice appear in all copies.
+
+THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND
+FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
+INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS
+OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
+TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF
+THIS SOFTWARE.
+*/
+
+/**
+* @class EarCut
+*/
+Phaser.EarCut = {};
+
+Phaser.EarCut.Triangulate = function (data, holeIndices, dim) {
+
+    dim = dim || 2;
+
+    var hasHoles = holeIndices && holeIndices.length,
+        outerLen = hasHoles ? holeIndices[0] * dim : data.length,
+        outerNode = Phaser.EarCut.linkedList(data, 0, outerLen, dim, true),
+        triangles = [];
+
+    if (!outerNode) return triangles;
+
+    var minX, minY, maxX, maxY, x, y, size;
+
+    if (hasHoles) outerNode = Phaser.EarCut.eliminateHoles(data, holeIndices, outerNode, dim);
+
+    // if the shape is not too simple, we'll use z-order curve hash later; calculate polygon bbox
+    if (data.length > 80 * dim) {
+        minX = maxX = data[0];
+        minY = maxY = data[1];
+
+        for (var i = dim; i < outerLen; i += dim) {
+            x = data[i];
+            y = data[i + 1];
+            if (x < minX) minX = x;
+            if (y < minY) minY = y;
+            if (x > maxX) maxX = x;
+            if (y > maxY) maxY = y;
+        }
+
+        // minX, minY and size are later used to transform coords into integers for z-order calculation
+        size = Math.max(maxX - minX, maxY - minY);
+    }
+
+    Phaser.EarCut.earcutLinked(outerNode, triangles, dim, minX, minY, size);
+
+    return triangles;
+};
+
+// create a circular doubly linked list from polygon points in the specified winding order
+
+Phaser.EarCut.linkedList = function (data, start, end, dim, clockwise) {
+    var sum = 0,
+        i, j, last;
+
+    // calculate original winding order of a polygon ring
+    for (i = start, j = end - dim; i < end; i += dim) {
+        sum += (data[j] - data[i]) * (data[i + 1] + data[j + 1]);
+        j = i;
+    }
+
+    // link points into circular doubly-linked list in the specified winding order
+    if (clockwise === (sum > 0)) {
+        for (i = start; i < end; i += dim) last = Phaser.EarCut.insertNode(i, data[i], data[i + 1], last);
+    } else {
+        for (i = end - dim; i >= start; i -= dim) last = Phaser.EarCut.insertNode(i, data[i], data[i + 1], last);
+    }
+
+    return last;
+};
+
+// eliminate colinear or duplicate points
+
+Phaser.EarCut.filterPoints = function (start, end) {
+    if (!start) return start;
+    if (!end) end = start;
+
+    var p = start,
+        again;
+    do {
+        again = false;
+
+        if (!p.steiner && (Phaser.EarCut.equals(p, p.next) || Phaser.EarCut.area(p.prev, p, p.next) === 0)) {
+            Phaser.EarCut.removeNode(p);
+            p = end = p.prev;
+            if (p === p.next) return null;
+            again = true;
+
+        } else {
+            p = p.next;
+        }
+    } while (again || p !== end);
+
+    return end;
+};
+
+// main ear slicing loop which triangulates a polygon (given as a linked list)
+
+Phaser.EarCut.earcutLinked = function (ear, triangles, dim, minX, minY, size, pass) {
+    if (!ear) return;
+
+    // interlink polygon nodes in z-order
+    if (!pass && size) Phaser.EarCut.indexCurve(ear, minX, minY, size);
+
+    var stop = ear,
+        prev, next;
+
+    // iterate through ears, slicing them one by one
+    while (ear.prev !== ear.next) {
+        prev = ear.prev;
+        next = ear.next;
+
+        if (size ? Phaser.EarCut.isEarHashed(ear, minX, minY, size) : Phaser.EarCut.isEar(ear)) {
+            // cut off the triangle
+            triangles.push(prev.i / dim);
+            triangles.push(ear.i / dim);
+            triangles.push(next.i / dim);
+
+            Phaser.EarCut.removeNode(ear);
+
+            // skipping the next vertice leads to less sliver triangles
+            ear = next.next;
+            stop = next.next;
+
+            continue;
+        }
+
+        ear = next;
+
+        // if we looped through the whole remaining polygon and can't find any more ears
+        if (ear === stop) {
+            // try filtering points and slicing again
+            if (!pass) {
+                Phaser.EarCut.earcutLinked(Phaser.EarCut.filterPoints(ear), triangles, dim, minX, minY, size, 1);
+
+                // if this didn't work, try curing all small self-intersections locally
+            } else if (pass === 1) {
+                ear = Phaser.EarCut.cureLocalIntersections(ear, triangles, dim);
+                Phaser.EarCut.earcutLinked(ear, triangles, dim, minX, minY, size, 2);
+
+                // as a last resort, try splitting the remaining polygon into two
+            } else if (pass === 2) {
+                Phaser.EarCut.splitEarcut(ear, triangles, dim, minX, minY, size);
+            }
+
+            break;
+        }
+    }
+};
+
+// check whether a polygon node forms a valid ear with adjacent nodes
+
+Phaser.EarCut.isEar = function (ear) {
+    var a = ear.prev,
+        b = ear,
+        c = ear.next;
+
+    if (Phaser.EarCut.area(a, b, c) >= 0) return false; // reflex, can't be an ear
+
+    // now make sure we don't have other points inside the potential ear
+    var p = ear.next.next;
+
+    while (p !== ear.prev) {
+        if (Phaser.EarCut.pointInTriangle(a.x, a.y, b.x, b.y, c.x, c.y, p.x, p.y) &&
+            Phaser.EarCut.area(p.prev, p, p.next) >= 0) return false;
+        p = p.next;
+    }
+
+    return true;
+};
+
+Phaser.EarCut.isEarHashed = function (ear, minX, minY, size) {
+    var a = ear.prev,
+        b = ear,
+        c = ear.next;
+
+    if (Phaser.EarCut.area(a, b, c) >= 0) return false; // reflex, can't be an ear
+
+    // triangle bbox; min & max are calculated like this for speed
+    var minTX = a.x < b.x ? (a.x < c.x ? a.x : c.x) : (b.x < c.x ? b.x : c.x),
+        minTY = a.y < b.y ? (a.y < c.y ? a.y : c.y) : (b.y < c.y ? b.y : c.y),
+        maxTX = a.x > b.x ? (a.x > c.x ? a.x : c.x) : (b.x > c.x ? b.x : c.x),
+        maxTY = a.y > b.y ? (a.y > c.y ? a.y : c.y) : (b.y > c.y ? b.y : c.y);
+
+    // z-order range for the current triangle bbox;
+    var minZ = Phaser.EarCut.zOrder(minTX, minTY, minX, minY, size),
+        maxZ = Phaser.EarCut.zOrder(maxTX, maxTY, minX, minY, size);
+
+    // first look for points inside the triangle in increasing z-order
+    var p = ear.nextZ;
+
+    while (p && p.z <= maxZ) {
+        if (p !== ear.prev && p !== ear.next &&
+            Phaser.EarCut.pointInTriangle(a.x, a.y, b.x, b.y, c.x, c.y, p.x, p.y) &&
+            Phaser.EarCut.area(p.prev, p, p.next) >= 0) return false;
+        p = p.nextZ;
+    }
+
+    // then look for points in decreasing z-order
+    p = ear.prevZ;
+
+    while (p && p.z >= minZ) {
+        if (p !== ear.prev && p !== ear.next &&
+            Phaser.EarCut.pointInTriangle(a.x, a.y, b.x, b.y, c.x, c.y, p.x, p.y) &&
+            Phaser.EarCut.area(p.prev, p, p.next) >= 0) return false;
+        p = p.prevZ;
+    }
+
+    return true;
+};
+
+// go through all polygon nodes and cure small local self-intersections
+
+Phaser.EarCut.cureLocalIntersections = function (start, triangles, dim) {
+    var p = start;
+    do {
+        var a = p.prev,
+            b = p.next.next;
+
+        // a self-intersection where edge (v[i-1],v[i]) intersects (v[i+1],v[i+2])
+        if (Phaser.EarCut.intersects(a, p, p.next, b) && Phaser.EarCut.locallyInside(a, b) && Phaser.EarCut.locallyInside(b, a)) {
+
+            triangles.push(a.i / dim);
+            triangles.push(p.i / dim);
+            triangles.push(b.i / dim);
+
+            // remove two nodes involved
+            Phaser.EarCut.removeNode(p);
+            Phaser.EarCut.removeNode(p.next);
+
+            p = start = b;
+        }
+        p = p.next;
+    } while (p !== start);
+
+    return p;
+};
+
+// try splitting polygon into two and triangulate them independently
+
+Phaser.EarCut.splitEarcut = function (start, triangles, dim, minX, minY, size) {
+    // look for a valid diagonal that divides the polygon into two
+    var a = start;
+    do {
+        var b = a.next.next;
+        while (b !== a.prev) {
+            if (a.i !== b.i && Phaser.EarCut.isValidDiagonal(a, b)) {
+                // split the polygon in two by the diagonal
+                var c = Phaser.EarCut.splitPolygon(a, b);
+
+                // filter colinear points around the cuts
+                a = Phaser.EarCut.filterPoints(a, a.next);
+                c = Phaser.EarCut.filterPoints(c, c.next);
+
+                // run earcut on each half
+                Phaser.EarCut.earcutLinked(a, triangles, dim, minX, minY, size);
+                Phaser.EarCut.earcutLinked(c, triangles, dim, minX, minY, size);
+                return;
+            }
+            b = b.next;
+        }
+        a = a.next;
+    } while (a !== start);
+};
+
+// link every hole into the outer loop, producing a single-ring polygon without holes
+
+Phaser.EarCut.eliminateHoles = function (data, holeIndices, outerNode, dim) {
+    var queue = [],
+        i, len, start, end, list;
+
+    for (i = 0, len = holeIndices.length; i < len; i++) {
+        start = holeIndices[i] * dim;
+        end = i < len - 1 ? holeIndices[i + 1] * dim : data.length;
+        list = Phaser.EarCut.linkedList(data, start, end, dim, false);
+        if (list === list.next) list.steiner = true;
+        queue.push(Phaser.EarCut.getLeftmost(list));
+    }
+
+    queue.sort(compareX);
+
+    // process holes from left to right
+    for (i = 0; i < queue.length; i++) {
+        Phaser.EarCut.eliminateHole(queue[i], outerNode);
+        outerNode = Phaser.EarCut.filterPoints(outerNode, outerNode.next);
+    }
+
+    return outerNode;
+};
+
+Phaser.EarCut.compareX = function (a, b) {
+    return a.x - b.x;
+};
+
+// find a bridge between vertices that connects hole with an outer ring and and link it
+
+Phaser.EarCut.eliminateHole = function (hole, outerNode) {
+    outerNode = Phaser.EarCut.findHoleBridge(hole, outerNode);
+    if (outerNode) {
+        var b = Phaser.EarCut.splitPolygon(outerNode, hole);
+        Phaser.EarCut.filterPoints(b, b.next);
+    }
+};
+
+// David Eberly's algorithm for finding a bridge between hole and outer polygon
+
+Phaser.EarCut.findHoleBridge = function (hole, outerNode) {
+    var p = outerNode,
+        hx = hole.x,
+        hy = hole.y,
+        qx = -Infinity,
+        m;
+
+    // find a segment intersected by a ray from the hole's leftmost point to the left;
+    // segment's endpoint with lesser x will be potential connection point
+    do {
+        if (hy <= p.y && hy >= p.next.y) {
+            var x = p.x + (hy - p.y) * (p.next.x - p.x) / (p.next.y - p.y);
+            if (x <= hx && x > qx) {
+                qx = x;
+                m = p.x < p.next.x ? p : p.next;
+            }
+        }
+        p = p.next;
+    } while (p !== outerNode);
+
+    if (!m) return null;
+
+    if (hole.x === m.x) return m.prev; // hole touches outer segment; pick lower endpoint
+
+    // look for points inside the triangle of hole point, segment intersection and endpoint;
+    // if there are no points found, we have a valid connection;
+    // otherwise choose the point of the minimum angle with the ray as connection point
+
+    var stop = m,
+        tanMin = Infinity,
+        tan;
+
+    p = m.next;
+
+    while (p !== stop) {
+        if (hx >= p.x && p.x >= m.x &&
+            Phaser.EarCut.pointInTriangle(hy < m.y ? hx : qx, hy, m.x, m.y, hy < m.y ? qx : hx, hy, p.x, p.y)) {
+
+            tan = Math.abs(hy - p.y) / (hx - p.x); // tangential
+
+            if ((tan < tanMin || (tan === tanMin && p.x > m.x)) && Phaser.EarCut.locallyInside(p, hole)) {
+                m = p;
+                tanMin = tan;
+            }
+        }
+
+        p = p.next;
+    }
+
+    return m;
+};
+
+// interlink polygon nodes in z-order
+
+Phaser.EarCut.indexCurve = function (start, minX, minY, size) {
+    var p = start;
+    do {
+        if (p.z === null) p.z = Phaser.EarCut.zOrder(p.x, p.y, minX, minY, size);
+        p.prevZ = p.prev;
+        p.nextZ = p.next;
+        p = p.next;
+    } while (p !== start);
+
+    p.prevZ.nextZ = null;
+    p.prevZ = null;
+
+    Phaser.EarCut.sortLinked(p);
+};
+
+// Simon Tatham's linked list merge sort algorithm
+// http://www.chiark.greenend.org.uk/~sgtatham/algorithms/listsort.html
+
+Phaser.EarCut.sortLinked = function (list) {
+    var i, p, q, e, tail, numMerges, pSize, qSize,
+        inSize = 1;
+
+    do {
+        p = list;
+        list = null;
+        tail = null;
+        numMerges = 0;
+
+        while (p) {
+            numMerges++;
+            q = p;
+            pSize = 0;
+            for (i = 0; i < inSize; i++) {
+                pSize++;
+                q = q.nextZ;
+                if (!q) break;
+            }
+
+            qSize = inSize;
+
+            while (pSize > 0 || (qSize > 0 && q)) {
+
+                if (pSize === 0) {
+                    e = q;
+                    q = q.nextZ;
+                    qSize--;
+                } else if (qSize === 0 || !q) {
+                    e = p;
+                    p = p.nextZ;
+                    pSize--;
+                } else if (p.z <= q.z) {
+                    e = p;
+                    p = p.nextZ;
+                    pSize--;
+                } else {
+                    e = q;
+                    q = q.nextZ;
+                    qSize--;
+                }
+
+                if (tail) tail.nextZ = e;
+                else list = e;
+
+                e.prevZ = tail;
+                tail = e;
+            }
+
+            p = q;
+        }
+
+        tail.nextZ = null;
+        inSize *= 2;
+
+    } while (numMerges > 1);
+
+    return list;
+};
+
+// z-order of a point given coords and size of the data bounding box
+
+Phaser.EarCut.zOrder = function (x, y, minX, minY, size) {
+    // coords are transformed into non-negative 15-bit integer range
+    x = 32767 * (x - minX) / size;
+    y = 32767 * (y - minY) / size;
+
+    x = (x | (x << 8)) & 0x00FF00FF;
+    x = (x | (x << 4)) & 0x0F0F0F0F;
+    x = (x | (x << 2)) & 0x33333333;
+    x = (x | (x << 1)) & 0x55555555;
+
+    y = (y | (y << 8)) & 0x00FF00FF;
+    y = (y | (y << 4)) & 0x0F0F0F0F;
+    y = (y | (y << 2)) & 0x33333333;
+    y = (y | (y << 1)) & 0x55555555;
+
+    return x | (y << 1);
+};
+
+// find the leftmost node of a polygon ring
+
+Phaser.EarCut.getLeftmost = function (start) {
+    var p = start,
+        leftmost = start;
+    do {
+        if (p.x < leftmost.x) leftmost = p;
+        p = p.next;
+    } while (p !== start);
+
+    return leftmost;
+};
+
+// check if a point lies within a convex triangle
+
+Phaser.EarCut.pointInTriangle = function (ax, ay, bx, by, cx, cy, px, py) {
+    return (cx - px) * (ay - py) - (ax - px) * (cy - py) >= 0 &&
+        (ax - px) * (by - py) - (bx - px) * (ay - py) >= 0 &&
+        (bx - px) * (cy - py) - (cx - px) * (by - py) >= 0;
+};
+
+// check if a diagonal between two polygon nodes is valid (lies in polygon interior)
+
+Phaser.EarCut.isValidDiagonal = function (a, b) {
+    return Phaser.EarCut.equals(a, b) || a.next.i !== b.i && a.prev.i !== b.i && !Phaser.EarCut.intersectsPolygon(a, b) &&
+        Phaser.EarCut.locallyInside(a, b) && Phaser.EarCut.locallyInside(b, a) && Phaser.EarCut.middleInside(a, b);
+};
+
+// signed area of a triangle
+
+Phaser.EarCut.area = function (p, q, r) {
+    return (q.y - p.y) * (r.x - q.x) - (q.x - p.x) * (r.y - q.y);
+};
+
+// check if two points are equal
+
+Phaser.EarCut.equals = function (p1, p2) {
+    return p1.x === p2.x && p1.y === p2.y;
+};
+
+// check if two segments intersect
+
+Phaser.EarCut.intersects = function (p1, q1, p2, q2) {
+    return Phaser.EarCut.area(p1, q1, p2) > 0 !== Phaser.EarCut.area(p1, q1, q2) > 0 &&
+        Phaser.EarCut.area(p2, q2, p1) > 0 !== Phaser.EarCut.area(p2, q2, q1) > 0;
+};
+
+// check if a polygon diagonal intersects any polygon segments
+
+Phaser.EarCut.intersectsPolygon = function (a, b) {
+    var p = a;
+    do {
+        if (p.i !== a.i && p.next.i !== a.i && p.i !== b.i && p.next.i !== b.i &&
+            Phaser.EarCut.intersects(p, p.next, a, b)) return true;
+        p = p.next;
+    } while (p !== a);
+
+    return false;
+};
+
+// check if a polygon diagonal is locally inside the polygon
+
+Phaser.EarCut.locallyInside = function (a, b) {
+    return Phaser.EarCut.area(a.prev, a, a.next) < 0 ?
+        Phaser.EarCut.area(a, b, a.next) >= 0 && Phaser.EarCut.area(a, a.prev, b) >= 0 :
+        Phaser.EarCut.area(a, b, a.prev) < 0 || Phaser.EarCut.area(a, a.next, b) < 0;
+};
+
+// check if the middle point of a polygon diagonal is inside the polygon
+
+Phaser.EarCut.middleInside = function (a, b) {
+    var p = a,
+        inside = false,
+        px = (a.x + b.x) / 2,
+        py = (a.y + b.y) / 2;
+    do {
+        if (((p.y > py) !== (p.next.y > py)) && (px < (p.next.x - p.x) * (py - p.y) / (p.next.y - p.y) + p.x))
+            inside = !inside;
+        p = p.next;
+    } while (p !== a);
+
+    return inside;
+};
+
+// link two polygon vertices with a bridge; if the vertices belong to the same ring, it splits polygon into two;
+// if one belongs to the outer ring and another to a hole, it merges it into a single ring
+
+Phaser.EarCut.splitPolygon = function (a, b) {
+    var a2 = new Phaser.EarCut.Node(a.i, a.x, a.y),
+        b2 = new Phaser.EarCut.Node(b.i, b.x, b.y),
+        an = a.next,
+        bp = b.prev;
+
+    a.next = b;
+    b.prev = a;
+
+    a2.next = an;
+    an.prev = a2;
+
+    b2.next = a2;
+    a2.prev = b2;
+
+    bp.next = b2;
+    b2.prev = bp;
+
+    return b2;
+};
+
+// create a node and optionally link it with previous one (in a circular doubly linked list)
+
+Phaser.EarCut.insertNode = function (i, x, y, last) {
+    var p = new Phaser.EarCut.Node(i, x, y);
+
+    if (!last) {
+        p.prev = p;
+        p.next = p;
+
+    } else {
+        p.next = last.next;
+        p.prev = last;
+        last.next.prev = p;
+        last.next = p;
+    }
+    return p;
+};
+
+Phaser.EarCut.removeNode = function (p) {
+    p.next.prev = p.prev;
+    p.prev.next = p.next;
+
+    if (p.prevZ) p.prevZ.nextZ = p.nextZ;
+    if (p.nextZ) p.nextZ.prevZ = p.prevZ;
+};
+
+Phaser.EarCut.Node = function (i, x, y) {
+    // vertice index in coordinates array
+    this.i = i;
+
+    // vertex coordinates
+    this.x = x;
+    this.y = y;
+
+    // previous and next vertice nodes in a polygon ring
+    this.prev = null;
+    this.next = null;
+
+    // z-order curve value
+    this.z = null;
+
+    // previous and next nodes in z-order
+    this.prevZ = null;
+    this.nextZ = null;
+
+    // indicates whether this is a steiner point
+    this.steiner = false;
+};
+
+/* jshint ignore:end */
 
 /**
  * @author Mat Groves http://matgroves.com/ @Doormat23
@@ -33562,6 +34192,18 @@ Phaser.Text = function (game, x, y, text, style) {
      */
     this.splitRegExp = /(?:\r\n|\r|\n)/;
 
+
+    /** The maximum number of characters that can be set.
+    * @property {number} characterLimitSize
+    */
+    this.characterLimitSize = -1;
+
+    /** The suffix that is applied to truncated text that is longer than the
+    * characterLimitSize.
+    * @property {string} characterLimitSuffix
+    */
+    this.characterLimitSuffix = '';
+
     /**
      * @property {number} _res - Internal canvas resolution var.
      * @private
@@ -33797,6 +34439,10 @@ Phaser.Text.prototype.updateText = function () {
     this.context.font = this.style.font;
 
     var outputText = this.text;
+
+    if (this.characterLimitSize > -1 && this.characterLimitSize < outputText.length) {
+        outputText = this.text.substring(0, this.characterLimitSize) + this.characterLimitSuffix;
+    }
 
     if (this.style.wordWrap)
     {
@@ -35078,6 +35724,22 @@ Phaser.Text.prototype.getBounds = function (matrix) {
     return PIXI.Sprite.prototype.getBounds.call(this, matrix);
 
 };
+
+/**
+* Sets the character limit of the text, with a suffix.
+* If the text is longer than this limit, it is truncated and the suffix is appended.
+*
+* @method Phaser.Text#setCharacterLimit
+* @param {number} [characterLimit] - The x coordinate of the Text Bounds region.
+* @param {string} [suffix] - The suffix to append to the truncated text.
+*/
+Phaser.Text.prototype.setCharacterLimit = function (characterLimit, suffix) {
+
+    this.characterLimitSuffix = suffix == undefined ? '' : suffix;
+    this.characterLimitSize = characterLimit;
+
+    this.updateText();
+}
 
 /**
 * The text to be displayed by this Text object.
@@ -40601,7 +41263,7 @@ Phaser.RequestAnimationFrame = function(game, forceSetTimeOut) {
     for (var x = 0; x < vendors.length && !window.requestAnimationFrame; x++)
     {
         window.requestAnimationFrame = window[vendors[x] + 'RequestAnimationFrame'];
-        window.cancelAnimationFrame = window[vendors[x] + 'CancelAnimationFrame'];
+        window.cancelAnimationFrame = window[vendors[x] + 'CancelAnimationFrame'] || window[vendors[x] + 'CancelRequestAnimationFrame'];
     }
 
     /**
@@ -47077,6 +47739,9 @@ Phaser.AnimationManager.prototype = {
     * 
     * If the requested animation is already playing this request will be ignored. 
     * If you need to reset an already running animation do so directly on the Animation object itself.
+    * 
+    * If you need to jump to a specific frame of this animation, then call `play` and immediately after it,
+    * set the frame you require (i.e. `animation.play(); animation.frame = 4`).
     *
     * @method Phaser.AnimationManager#play
     * @param {string} name - The name of the animation to be played, e.g. "fire", "walk", "jump".
@@ -47554,6 +48219,9 @@ Phaser.Animation.prototype = {
 
     /**
     * Plays this animation.
+    * 
+    * If you need to jump to a specific frame of this animation, then call `play` and immediately after it,
+    * set the frame you require (i.e. `animation.play(); animation.frame = 4`).
     *
     * @method Phaser.Animation#play
     * @param {number} [frameRate=null] - The framerate to play the animation at. The speed is given in frames per second. If not provided the previously set frameRate of the Animation is used.
@@ -47708,8 +48376,9 @@ Phaser.Animation.prototype = {
 
         if (frameIndex)
         {
-            //  Set the current frame index to the found index. Subtract 1 so that it animates to the desired frame on update.
-            this._frameIndex = frameIndex - 1;
+            //  Set the current frame index to the found index. Subtract a directional offset so that it animates to the desired frame on update.
+            var directionalOffset = this.isReversed ? -1 : 1;
+            this._frameIndex = frameIndex - directionalOffset;
 
             //  Make the animation update at next update
             this._timeNextFrame = this.game.time.time;
@@ -48811,6 +49480,10 @@ Phaser.AnimationParser = {
     */
     spriteSheet: function (game, key, frameWidth, frameHeight, frameMax, margin, spacing, skipFrames) {
 
+        if (frameMax === undefined) { frameMax = -1; }
+        if (margin === undefined) { margin = 0; }
+        if (spacing === undefined) { spacing = 0; }
+
         var img = key;
 
         if (typeof key === 'string')
@@ -49390,7 +50063,7 @@ Phaser.Cache.prototype = {
             key: key,
             url: url,
             data: data,
-            base: new PIXI.BaseTexture(data),
+            base: new PIXI.BaseTexture(data, null, this.game.resolution),
             frame: new Phaser.Frame(0, 0, 0, data.width, data.height, key),
             frameData: new Phaser.FrameData(),
             fileFormat: extension
@@ -49443,7 +50116,7 @@ Phaser.Cache.prototype = {
             key: key,
             url: url,
             data: data,
-            base: new PIXI.BaseTexture(data),
+            base: new PIXI.BaseTexture(data, null, this.game.resolution),
             frame: new Phaser.Frame(0, 0, 0, data.width, data.height, key),
             frameData: new Phaser.FrameData()
         };
@@ -49656,7 +50329,7 @@ Phaser.Cache.prototype = {
             url: url,
             data: data,
             font: null,
-            base: new PIXI.BaseTexture(data)
+            base: new PIXI.BaseTexture(data, null, this.game.resolution)
         };
 
         if (xSpacing === undefined) { xSpacing = 0; }
@@ -49838,7 +50511,7 @@ Phaser.Cache.prototype = {
             frameHeight: frameHeight,
             margin: margin,
             spacing: spacing,
-            base: new PIXI.BaseTexture(data),
+            base: new PIXI.BaseTexture(data, null, this.game.resolution),
             frameData: Phaser.AnimationParser.spriteSheet(this.game, data, frameWidth, frameHeight, frameMax, margin, spacing, skipFrames)
         };
 
@@ -49864,7 +50537,7 @@ Phaser.Cache.prototype = {
             key: key,
             url: url,
             data: data,
-            base: new PIXI.BaseTexture(data)
+            base: new PIXI.BaseTexture(data, null, this.game.resolution)
         };
 
         if (format === Phaser.Loader.TEXTURE_ATLAS_XML_STARLING)
@@ -51125,7 +51798,7 @@ Phaser.Cache.prototype = {
     */
     removeTextureAtlas: function (key) {
 
-        delete this._cache.atlas[key];
+        delete this._cache.image[key];
 
     },
 
@@ -52971,14 +53644,14 @@ Phaser.Loader.prototype = {
     },
 
     /**
-    * Add a synchronization point to the assets/files added within the supplied callback.
+    * Add a synchronization point to the assets / files added within the supplied callback.
     *
     * A synchronization point denotes that an asset _must_ be completely loaded before
     * subsequent assets can be loaded. An asset marked as a sync-point does not need to wait
     * for previous assets to load (unless they are sync-points). Resources, such as packs, may still
     * be downloaded around sync-points, as long as they do not finalize loading.
     *
-    * @method Phaser.Loader#withSyncPoints
+    * @method Phaser.Loader#withSyncPoint
     * @param {function} callback - The callback is invoked and is supplied with a single argument: the loader.
     * @param {object} [callbackContext=(loader)] - Context for the callback.
     * @return {Phaser.Loader} This Loader instance.
@@ -61132,7 +61805,7 @@ Phaser.ArrayUtils = {
     * Will return null if there are no array items that fall within the specified range
     * or if there is no item for the randomly chosen index.
     *
-    * @method
+    * @method Phaser.ArrayUtils.getRandomItem
     * @param {any[]} objects - An array of objects.
     * @param {integer} startIndex - Optional offset off the front of the array. Default value is 0, or the beginning of the array.
     * @param {integer} length - Optional restriction on the number of values you want to randomly select from.
@@ -61156,7 +61829,7 @@ Phaser.ArrayUtils = {
     * Will return null if there are no array items that fall within the specified range
     * or if there is no item for the randomly chosen index.
     *
-    * @method
+    * @method Phaser.ArrayUtils.removeRandomItem
     * @param {any[]} objects - An array of objects.
     * @param {integer} startIndex - Optional offset off the front of the array. Default value is 0, or the beginning of the array.
     * @param {integer} length - Optional restriction on the number of values you want to randomly select from.
@@ -61187,7 +61860,7 @@ Phaser.ArrayUtils = {
     /**
     * A standard Fisher-Yates Array shuffle implementation which modifies the array in place.
     *
-    * @method
+    * @method Phaser.ArrayUtils.shuffle
     * @param {any[]} array - The array to shuffle.
     * @return {any[]} The original array, now shuffled.
     */
@@ -61208,7 +61881,7 @@ Phaser.ArrayUtils = {
     /**
     * Transposes the elements of the given matrix (array of arrays).
     *
-    * @method
+    * @method Phaser.ArrayUtils.transposeMatrix
     * @param {Array<any[]>} array - The matrix to transpose.
     * @return {Array<any[]>} A new transposed matrix
     */
@@ -61238,7 +61911,7 @@ Phaser.ArrayUtils = {
     *
     * Based on the routine from {@link http://jsfiddle.net/MrPolywhirl/NH42z/}.
     *
-    * @method
+    * @method Phaser.ArrayUtils.rotateMatrix
     * @param {Array<any[]>} matrix - The array to rotate; this matrix _may_ be altered.
     * @param {number|string} direction - The amount to rotate: the rotation in degrees (90, -90, 270, -270, 180) or a string command ('rotateLeft', 'rotateRight' or 'rotate180').
     * @return {Array<any[]>} The rotated matrix. The source matrix should be discarded for the returned matrix.
@@ -61278,7 +61951,7 @@ Phaser.ArrayUtils = {
     * Snaps a value to the nearest value in an array.
     * The result will always be in the range `[first_value, last_value]`.
     *
-    * @method
+    * @method Phaser.ArrayUtils.findClosest
     * @param {number} value - The search value
     * @param {number[]} arr - The input array which _must_ be sorted.
     * @return {number} The nearest value found.
@@ -61377,7 +62050,7 @@ Phaser.ArrayUtils = {
     * Create an array representing the inclusive range of numbers (usually integers) in `[start, end]`.
     * This is equivalent to `numberArrayStep(start, end, 1)`.
     *
-    * @method Phaser.ArrayUtils#numberArray
+    * @method Phaser.ArrayUtils.numberArray
     * @param {number} start - The minimum value the array starts with.
     * @param {number} end - The maximum value the array contains.
     * @return {number[]} The array of number values.
@@ -61404,7 +62077,7 @@ Phaser.ArrayUtils = {
     * Certain values for `start` and `end` (eg. NaN/undefined/null) are currently coerced to 0;
     * for forward compatibility make sure to pass in actual numbers.
     *
-    * @method Phaser.ArrayUtils#numberArrayStep
+    * @method Phaser.ArrayUtils.numberArrayStep
     * @param {number} start - The start of the range.
     * @param {number} [end] - The end of the range.
     * @param {number} [step=1] - The value to increment or decrement by.
@@ -76148,7 +76821,7 @@ Phaser.TilemapLayer = function (game, tilemap, index, width, height) {
     */
     this.context = this.canvas.getContext('2d');
 
-    this.setTexture(new PIXI.Texture(new PIXI.BaseTexture(this.canvas)));
+    this.setTexture(new PIXI.Texture(new PIXI.BaseTexture(this.canvas, null, this.game.resolution)));
 
     /**
     * The const type of this object.
@@ -78591,11 +79264,8 @@ Phaser.Particles.prototype = {
     * @return {Phaser.Emitter} The emitter that was added.
     */
     add: function (emitter) {
-
-        this.emitters[emitter.name] = emitter;
-
+        this.emitters[emitter.id] = emitter;
         return emitter;
-
     },
 
     /**
@@ -78604,9 +79274,7 @@ Phaser.Particles.prototype = {
     * @param {Phaser.Emitter} emitter - The emitter to remove.
     */
     remove: function (emitter) {
-
-        delete this.emitters[emitter.name];
-
+        delete this.emitters[emitter.id];
     },
 
     /**
@@ -78615,7 +79283,6 @@ Phaser.Particles.prototype = {
     * @protected
     */
     update: function () {
-
         for (var key in this.emitters)
         {
             if (this.emitters[key].exists)
@@ -78652,7 +79319,7 @@ Phaser.Particles.Arcade = {};
 * Emitter is a lightweight particle emitter that uses Arcade Physics.
 * It can be used for one-time explosions or for continuous effects like rain and fire.
 * All it really does is launch Particle objects out at set intervals, and fixes their positions and velocities accordingly.
-* 
+*
 * @class Phaser.Particles.Arcade.Emitter
 * @constructor
 * @extends Phaser.Group
@@ -78672,9 +79339,15 @@ Phaser.Particles.Arcade.Emitter = function (game, x, y, maxParticles) {
     Phaser.Group.call(this, game);
 
     /**
+    * @property {number} _id - Internal ID for this emitter -- only used by the Particle System in most cases
+    * @private
+    */
+    this._id = this.game.particles.ID++;
+
+    /**
     * @property {string} name - A handy string name for this emitter. Can be set to anything.
     */
-    this.name = 'emitter' + this.game.particles.ID++;
+    this.name = 'emitter' + this.id;
 
     /**
     * @property {number} type - Internal Phaser Type value.
@@ -78753,10 +79426,10 @@ Phaser.Particles.Arcade.Emitter = function (game, x, y, maxParticles) {
     this.alphaData = null;
 
     /**
-    * @property {number} gravity - Sets the `body.gravity.y` of each particle sprite to this value on launch.
+    * @property {Phaser.Point} gravity - Sets the `body.gravity` of each particle sprite to this on launch.
     * @default
     */
-    this.gravity = 100;
+    this.gravity = new Phaser.Point(0, 100);
 
     /**
     * @property {any} particleClass - For emitting your own particle class types. They must extend Phaser.Particle.
@@ -78909,7 +79582,7 @@ Phaser.Particles.Arcade.Emitter.prototype.constructor = Phaser.Particles.Arcade.
 
 /**
 * Called automatically by the game loop, decides when to launch particles and when to "die".
-* 
+*
 * @method Phaser.Particles.Arcade.Emitter#update
 */
 Phaser.Particles.Arcade.Emitter.prototype.update = function () {
@@ -79081,7 +79754,7 @@ Phaser.Particles.Arcade.Emitter.prototype.revive = function () {
 
 /**
 * Call this function to emit the given quantity of particles at all once (an explosion)
-* 
+*
 * @method Phaser.Particles.Arcade.Emitter#explode
 * @param {number} [lifespan=0] - How long each particle lives once emitted in ms. 0 = forever.
 * @param {number} [quantity=0] - How many particles to launch.
@@ -79103,7 +79776,7 @@ Phaser.Particles.Arcade.Emitter.prototype.explode = function (lifespan, quantity
 * Each time the flow is run the quantity number of particles will be emitted together.
 * If you set the total to be 20 and quantity to be 5 then flow will emit 4 times in total (4 x 5 = 20 total)
 * If you set the total to be -1 then no quantity cap is used and it will keep emitting.
-* 
+*
 * @method Phaser.Particles.Arcade.Emitter#flow
 * @param {number} [lifespan=0] - How long each particle lives once emitted in ms. 0 = forever.
 * @param {number} [frequency=250] - Frequency is how often to emit the particles, given in ms.
@@ -79114,6 +79787,7 @@ Phaser.Particles.Arcade.Emitter.prototype.explode = function (lifespan, quantity
 */
 Phaser.Particles.Arcade.Emitter.prototype.flow = function (lifespan, frequency, quantity, total, immediate) {
 
+    if (frequency === undefined || frequency === null) { frequency = 250; }
     if (quantity === undefined || quantity === 0) { quantity = 1; }
     if (total === undefined) { total = -1; }
     if (immediate === undefined) { immediate = true; }
@@ -79146,7 +79820,7 @@ Phaser.Particles.Arcade.Emitter.prototype.flow = function (lifespan, frequency, 
 
 /**
 * Call this function to start emitting particles.
-* 
+*
 * @method Phaser.Particles.Arcade.Emitter#start
 * @param {boolean} [explode=true] - Whether the particles should all burst out at once (true) or at the frequency given (false).
 * @param {number} [lifespan=0] - How long each particle lives once emitted in ms. 0 = forever.
@@ -79313,7 +79987,7 @@ Phaser.Particles.Arcade.Emitter.prototype.emitParticle = function (x, y, key, fr
     body.velocity.y = rnd.between(this.minParticleSpeed.y, this.maxParticleSpeed.y);
     body.angularVelocity = rnd.between(this.minRotation, this.maxRotation);
 
-    body.gravity.y = this.gravity;
+    body.gravity = this.gravity;
     body.angularDrag = this.angularDrag;
 
     particle.onEmit();
@@ -79324,7 +79998,7 @@ Phaser.Particles.Arcade.Emitter.prototype.emitParticle = function (x, y, key, fr
 
 /**
 * Destroys this Emitter, all associated child Particles and then removes itself from the Particle Manager.
-* 
+*
 * @method Phaser.Particles.Arcade.Emitter#destroy
 */
 Phaser.Particles.Arcade.Emitter.prototype.destroy = function () {
@@ -79337,7 +80011,7 @@ Phaser.Particles.Arcade.Emitter.prototype.destroy = function () {
 
 /**
 * A more compact way of setting the width and height of the emitter.
-* 
+*
 * @method Phaser.Particles.Arcade.Emitter#setSize
 * @param {number} width - The desired width of the emitter (particles are spawned randomly within these dimensions).
 * @param {number} height - The desired height of the emitter.
@@ -79527,6 +80201,16 @@ Phaser.Particles.Arcade.Emitter.prototype.at = function (object) {
     return this;
 
 };
+
+/**
+* @name Phaser.Particles.Arcade.Emitter#id
+* @property {number} id - Gets the internal ID that represents this emitter.
+*/
+Object.defineProperty(Phaser.Particles.Arcade.Emitter.prototype, "id", {
+    get: function () {
+        return this._id;
+    }
+});
 
 /**
 * @name Phaser.Particles.Arcade.Emitter#width
@@ -81917,12 +82601,12 @@ Phaser.Video = function (game, key, url) {
     */
     if (this.video && !url)
     {
-        this.baseTexture = new PIXI.BaseTexture(this.video);
+        this.baseTexture = new PIXI.BaseTexture(this.video, null, this.game.resolution);
         this.baseTexture.forceLoaded(this.width, this.height);
     }
     else
     {
-        this.baseTexture = new PIXI.BaseTexture(Phaser.Cache.DEFAULT.baseTexture.source);
+        this.baseTexture = new PIXI.BaseTexture(Phaser.Cache.DEFAULT.baseTexture.source, null, this.game.resolution);
         this.baseTexture.forceLoaded(this.width, this.height);
     }
 

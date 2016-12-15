@@ -1,7 +1,44 @@
 require('./polyfills');
 
-var boot = require('./boot');
+//  This object is exported globally
 
-module.exports = boot;
+var Phaser = {
 
-global.Phaser = boot;
+    Game: require('./boot/Game'),
+
+    Event: require('./events/Event'),
+    EventDispatcher: require('./events/EventDispatcher'),
+
+    Math: require('./math'),
+
+    GameObjects: {
+
+        Factory: require('./gameobjects/FactoryContainer'),
+
+    },
+
+    Loader: {
+
+        ImageFile: require('./loader/filetypes/ImageFile')
+
+    },
+
+    Utils: {
+
+        Array: require('./utils/array/'),
+        Objects: require('./utils/objects/')
+
+    }
+
+};
+
+//  Required, but don't need Phaser level exports
+
+require('./gameobjects/image/ImageFactory');
+require('./gameobjects/container/ContainerFactory');
+
+//  Export it
+
+module.exports = Phaser;
+
+global.Phaser = Phaser;
