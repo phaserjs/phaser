@@ -1,3 +1,38 @@
+function CreateRenderTarget(gl, width, height) {
+    var texture = gl.createTexture();
+    gl.activeTexture(gl.TEXTURE0);
+    gl.bindTexture(gl.TEXTURE_2D, texture);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, width, height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+    if (gl.getError() != gl.NO_ERROR) {
+        console.error("GL ERROR", gl.getError());
+    }
+    return texture;
+}
+
+function CreateFramebuffer(gl, width, height) {
+    var fbo = gl.createFramebuffer();
+    var rbo = gl.createRenderbuffer();
+    var tex = null;
+    gl.bindFramebuffer(gl.FRAMEBUFFER, fbo);
+    gl.bindRenderbuffer(gl.RENDERBUFFER, rbo);
+    tex = CreateRenderTarget(gl, width, height);
+    gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, tex, 0);
+    if (gl.checkFramebufferStatus(gl.FRAMEBUFFER) !== gl.FRAMEBUFFER_COMPLETE)
+        console.error('Frame buffer incomplete');
+    gl.bindTexture(gl.TEXTURE_2D, null);
+    gl.bindRenderbuffer(gl.RENDERBUFFER, null);
+    gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+    fbo.width = width;
+    fbo.height = height;
+    fbo.targetTexture = tex;
+    fbo.renderbuffer = rbo;
+    return fbo;
+}
+
 function CanvasGL(gl) {
     var program = gl.createProgram();
     var vShader = gl.createShader(gl.VERTEX_SHADER);
@@ -5,18 +40,50 @@ function CanvasGL(gl) {
     gl.shaderSource(vShader, [
         'attribute vec2 inPosition;',
         'attribute vec4 inColor;',
+        'attribute vec2 inTexCoord;',
         'uniform mat4 uViewMatrix;',
+        'varying vec2 outTexCoord;',
         'varying vec4 outColor;',
         'void main() {',
         '   gl_Position = uViewMatrix * vec4(inPosition, 1.0, 1.0);',
         '   outColor = inColor;',
+        '   outTexCoord = inTexCoord;',
         '}'
     ].join('\n'));
     gl.shaderSource(fShader, [
         'precision mediump float;',
+        'const vec2 gf0 = vec2(-3.0, 0.015625);',
+        'const vec2 gf1 = vec2(-2.0, 0.09375);',
+        'const vec2 gf2 = vec2(-1.0, 0.234375);',
+        'const vec2 gf3 = vec2(0.0, 0.3125);',
+        'const vec2 gf4 = vec2(1.0, 0.234375);',
+        'const vec2 gf5 = vec2(2.0, 0.09375);',
+        'const vec2 gf6 = vec2(3.0, 0.015625);',
+        'const float factor = 0.5;',
+        'uniform bool isStencil;',
+        'uniform sampler2D mainSampler;',
+        'uniform sampler2D maskSampler;',
+        'uniform vec2 scale;',
+        'uniform bool enableBlur;',
         'varying vec4 outColor;',
+        'varying vec2 outTexCoord;',
         'void main() {',
-        '   gl_FragColor = vec4(outColor.bgr, 1.0);',
+        '   if (isStencil == false) {',
+        '       gl_FragColor = vec4(outColor.bgr, 1.0);',
+        '   } else {',
+        '       vec4 mainColor = texture2D(mainSampler, outTexCoord);',
+        '       vec4 maskColor = vec4(0, 0, 0, 0);',
+        '       if (enableBlur) {',
+        '           maskColor += texture2D(maskSampler, vec2(outTexCoord.x + gf0.x * (scale.x * factor), outTexCoord.y + gf0.x * (scale.y * factor))) * gf0.y;',
+        '           maskColor += texture2D(maskSampler, vec2(outTexCoord.x + gf1.x * (scale.x * factor), outTexCoord.y + gf1.x * (scale.y * factor))) * gf1.y;',
+        '           maskColor += texture2D(maskSampler, vec2(outTexCoord.x + gf2.x * (scale.x * factor), outTexCoord.y + gf2.x * (scale.y * factor))) * gf2.y;',
+        '           maskColor += texture2D(maskSampler, vec2(outTexCoord.x + gf3.x * (scale.x * factor), outTexCoord.y + gf3.x * (scale.y * factor))) * gf3.y;',
+        '           maskColor += texture2D(maskSampler, vec2(outTexCoord.x + gf4.x * (scale.x * factor), outTexCoord.y + gf4.x * (scale.y * factor))) * gf4.y;',
+        '           maskColor += texture2D(maskSampler, vec2(outTexCoord.x + gf5.x * (scale.x * factor), outTexCoord.y + gf5.x * (scale.y * factor))) * gf5.y;',
+        '           maskColor += texture2D(maskSampler, vec2(outTexCoord.x + gf6.x * (scale.x * factor), outTexCoord.y + gf6.x * (scale.y * factor))) * gf6.y;',
+        '       } else maskColor = texture2D(maskSampler, outTexCoord);',
+        '       gl_FragColor = mainColor * maskColor.a;',
+        '   }',
         '}'
     ].join('\n'));
     gl.compileShader(vShader);
@@ -32,6 +99,7 @@ function CanvasGL(gl) {
             0, 0, 1, 1, -1, 1, 0, 0
         ])
     );
+    this._isStencilLocation = gl.getUniformLocation(program, 'isStencil');
     this._lineWidth = 1;
     this._matrixStack = new Float32Array(6 * 1000);
     this._matrixStackPointer = 0;
@@ -41,6 +109,7 @@ function CanvasGL(gl) {
     this._fShader = fShader;
     this._inPositionLocation = gl.getAttribLocation(program, 'inPosition');
     this._inColorLocation = gl.getAttribLocation(program, 'inColor');
+    this._inTexCoordLocation = gl.getAttribLocation(program, 'inTexCoord');
     this._gl = gl;
     this._fillColor = new Uint32Array([0xFFFFFFFF]);
     this._lineColor = 0xFFFFFFFF;
@@ -51,12 +120,99 @@ function CanvasGL(gl) {
     this._colorBuffer = new Uint32Array(this._arrayBuffer);
     this._pathArray = [];
     this._lastPath = null;
+    this._emptyTexture = CreateRenderTarget(gl, 1, 1);
     this.bind();
     gl.bufferData(gl.ARRAY_BUFFER, this._arrayBuffer.byteLength, gl.DYNAMIC_DRAW);
     gl.viewport(0, 0, this.canvas.width, this.canvas.height);
     gl.enable(gl.BLEND);
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+    gl.uniform1i(this._isStencilLocation, 0);
+    this._fboStencilBuffer = CreateFramebuffer(gl, gl.canvas.width, gl.canvas.height);
+    this._fboColorBuffer = CreateFramebuffer(gl, gl.canvas.width, gl.canvas.height);
+    gl.activeTexture(gl.TEXTURE0);
+    gl.bindTexture(gl.TEXTURE_2D, this._emptyTexture);
+    gl.activeTexture(gl.TEXTURE1);
+    gl.bindTexture(gl.TEXTURE_2D, this._emptyTexture);
+    gl.uniform1i(gl.getUniformLocation(program, 'mainSampler'), 0);
+    gl.uniform1i(gl.getUniformLocation(program, 'maskSampler'), 1);
+    gl.uniform2f(gl.getUniformLocation(program, 'scale'), 1 / gl.canvas.width, 1 / gl.canvas.height);
 }
+
+CanvasGL.prototype.enableMaskAntialiasing = function () {
+    gl.uniform1i(gl.getUniformLocation(this._program, 'enableBlur'), 1);
+};
+
+CanvasGL.prototype.disableMaskAntialiasing = function () {
+    gl.uniform1i(gl.getUniformLocation(this._program, 'enableBlur'), 0);
+};
+
+CanvasGL.prototype.startMaskRecording = function () {
+    var gl = this._gl;
+    var stencilbuffer = this._fboStencilBuffer;
+    this.flush();
+    gl.viewport(0, 0, stencilbuffer.width, stencilbuffer.height);
+    gl.bindFramebuffer(gl.FRAMEBUFFER, stencilbuffer);
+    gl.clear(gl.COLOR_BUFFER_BIT);
+    gl.activeTexture(gl.TEXTURE0);
+    gl.bindTexture(gl.TEXTURE_2D, this._emptyTexture);
+    gl.activeTexture(gl.TEXTURE1);
+    gl.bindTexture(gl.TEXTURE_2D, this._emptyTexture);
+    gl.uniform1i(this._isStencilLocation, 0);
+};
+
+CanvasGL.prototype.endMaskRecording = function () {
+    var gl = this._gl;
+    this.flush();
+    gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+    gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+    gl.activeTexture(gl.TEXTURE0);
+    gl.bindTexture(gl.TEXTURE_2D, this._emptyTexture);
+    gl.activeTexture(gl.TEXTURE1);
+    gl.bindTexture(gl.TEXTURE_2D, this._emptyTexture);
+    gl.uniform1i(this._isStencilLocation, 0);
+};
+
+CanvasGL.prototype.startMaskApply = function () {
+    var gl = this._gl;
+    var colorbuffer = this._fboColorBuffer;
+    this.flush();
+    gl.viewport(0, 0, colorbuffer.width, colorbuffer.height);
+    gl.bindFramebuffer(gl.FRAMEBUFFER, colorbuffer);
+    gl.clear(gl.COLOR_BUFFER_BIT);
+    gl.activeTexture(gl.TEXTURE0);
+    gl.bindTexture(gl.TEXTURE_2D, this._emptyTexture);
+    gl.activeTexture(gl.TEXTURE1);
+    gl.bindTexture(gl.TEXTURE_2D, this._emptyTexture);
+    gl.uniform1i(this._isStencilLocation, 0);
+};
+
+CanvasGL.prototype.endMaskApply = function () {
+    var gl = this._gl;
+    var colorbuffer = this._fboColorBuffer;
+    var stencilbuffer = this._fboStencilBuffer;
+    this.flush();
+    gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+    gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+    gl.activeTexture(gl.TEXTURE0);
+    gl.bindTexture(gl.TEXTURE_2D, colorbuffer.targetTexture);
+    gl.activeTexture(gl.TEXTURE1);
+    gl.bindTexture(gl.TEXTURE_2D, stencilbuffer.targetTexture);
+    gl.uniform1i(this._isStencilLocation, 1);
+
+    this.fillRect(0, 0, colorbuffer.width, colorbuffer.height);
+    this.flush();
+
+    gl.uniform1i(this._isStencilLocation, 0);
+    gl.activeTexture(gl.TEXTURE0);
+    gl.bindTexture(gl.TEXTURE_2D, this._emptyTexture);
+    gl.activeTexture(gl.TEXTURE1);
+    gl.bindTexture(gl.TEXTURE_2D, this._emptyTexture);
+};
+
+CanvasGL.prototype.clearScreen = function () {
+    var gl = this._gl;
+    gl.clear(gl.COLOR_BUFFER_BIT);
+};
 
 CanvasGL.Point = function (x, y) {
     this.x = x;
@@ -232,7 +388,7 @@ CanvasGL.prototype.fillTriangle = function (tx0, ty0, tx1, ty1, tx2, ty2, fillCo
     if (this._vertexCount + 3 >= this.MAX_VERTEX_COUNT) {
         this.flush();
     }
-    var offset = this._vertexCount * 3;
+    var offset = this._vertexCount * 5;
     var position = this._positionBuffer;
     var color = this._colorBuffer;
     var intColor = fillColor;
@@ -250,17 +406,23 @@ CanvasGL.prototype.fillTriangle = function (tx0, ty0, tx1, ty1, tx2, ty2, fillCo
     var x2 = tx2 * a + ty2 * c + e;
     var y2 = tx2 * b + ty2 * d + f;
 
-    position[offset + 0] = x0;
-    position[offset + 1] = y0;
-    color[offset + 2] = intColor;
+    position[offset++] = x0;
+    position[offset++] = y0;
+    position[offset++] = 0;
+    position[offset++] = 0;
+    color[offset++] = intColor;
 
-    position[offset + 3] = x1;
-    position[offset + 4] = y1;
-    color[offset + 5] = intColor;
+    position[offset++] = x1;
+    position[offset++] = y1;
+    position[offset++] = 0;
+    position[offset++] = 0;
+    color[offset++] = intColor;
 
-    position[offset + 6] = x2;
-    position[offset + 7] = y2;
-    color[offset + 8] = intColor;
+    position[offset++] = x2;
+    position[offset++] = y2;
+    position[offset++] = 0;
+    position[offset++] = 0;
+    color[offset++] = intColor;
 
     this._vertexCount += 3;
 };
@@ -273,7 +435,7 @@ CanvasGL.prototype.strokeLine = function (ax, ay, bx, by) {
     var dy = by - ay;
     var len = Math.sqrt(dx * dx + dy * dy);
     var lineWidth = this._lineWidth * 0.5;
-    var offset = this._vertexCount * 3;
+    var offset = this._vertexCount * 5;
     var position = this._positionBuffer;
     var color = this._colorBuffer;
     var intColor = this._lineColor;
@@ -301,29 +463,36 @@ CanvasGL.prototype.strokeLine = function (ax, ay, bx, by) {
     var x3 = lx3 * a + ly3 * c + e;
     var y3 = lx3 * b + ly3 * d + f;
 
-    position[offset + 0] = x0;
-    position[offset + 1] = y0;
-    color[offset + 2] = intColor;
-
-    position[offset + 3] = x1;
-    position[offset + 4] = y1;
-    color[offset + 5] = intColor;
-
-    position[offset + 6] = x2;
-    position[offset + 7] = y2;
-    color[offset + 8] = intColor;
-
-    position[offset + 9] = x1;
-    position[offset + 10] = y1;
-    color[offset + 11] = intColor;
-
-    position[offset + 12] = x3;
-    position[offset + 13] = y3;
-    color[offset + 14] = intColor;
-
-    position[offset + 15] = x2;
-    position[offset + 16] = y2;
-    color[offset + 17] = intColor;
+    position[offset++] = x0;
+    position[offset++] = y0;
+    position[offset++] = 0;
+    position[offset++] = 1;
+    color[offset++] = intColor;
+    position[offset++] = x1;
+    position[offset++] = y1;
+    position[offset++] = 1;
+    position[offset++] = 1;
+    color[offset++] = intColor;
+    position[offset++] = x2;
+    position[offset++] = y2;
+    position[offset++] = 0;
+    position[offset++] = 0;
+    color[offset++] = intColor;
+    position[offset++] = x1;
+    position[offset++] = y1;
+    position[offset++] = 1;
+    position[offset++] = 1;
+    color[offset++] = intColor;
+    position[offset++] = x3;
+    position[offset++] = y3;
+    position[offset++] = 1;
+    position[offset++] = 0;
+    color[offset++] = intColor;
+    position[offset++] = x2;
+    position[offset++] = y2;
+    position[offset++] = 0;
+    position[offset++] = 0;
+    color[offset++] = intColor;
 
     this._vertexCount += 6;
     return [
@@ -338,7 +507,7 @@ CanvasGL.prototype.fillRect = function (x, y, width, height) {
     if (this._vertexCount + 6 >= this.MAX_VERTEX_COUNT) {
         this.flush();
     }
-    var offset = this._vertexCount * 3;
+    var offset = this._vertexCount * 5;
     var position = this._positionBuffer;
     var color = this._colorBuffer;
     var intColor = this._fillColor[0];
@@ -362,29 +531,36 @@ CanvasGL.prototype.fillRect = function (x, y, width, height) {
     var x3 = xmax * a + ymin * c + e;
     var y3 = xmax * b + ymin * d + f;
 
-    position[offset + 0] = x0;
-    position[offset + 1] = y0;
-    color[offset + 2] = intColor;
-
-    position[offset + 3] = x1;
-    position[offset + 4] = y1;
-    color[offset + 5] = intColor;
-
-    position[offset + 6] = x2;
-    position[offset + 7] = y2;
-    color[offset + 8] = intColor;
-
-    position[offset + 9] = x1;
-    position[offset + 10] = y1;
-    color[offset + 11] = intColor;
-
-    position[offset + 12] = x3;
-    position[offset + 13] = y3;
-    color[offset + 14] = intColor;
-
-    position[offset + 15] = x2;
-    position[offset + 16] = y2;
-    color[offset + 17] = intColor;
+    position[offset++] = x0;
+    position[offset++] = y0;
+    position[offset++] = 0;
+    position[offset++] = 0;
+    color[offset++] = intColor;
+    position[offset++] = x1;
+    position[offset++] = y1;
+    position[offset++] = 1;
+    position[offset++] = 0;
+    color[offset++] = intColor;
+    position[offset++] = x2;
+    position[offset++] = y2;
+    position[offset++] = 0;
+    position[offset++] = 1;
+    color[offset++] = intColor;
+    position[offset++] = x1;
+    position[offset++] = y1;
+    position[offset++] = 1;
+    position[offset++] = 0;
+    color[offset++] = intColor;
+    position[offset++] = x3;
+    position[offset++] = y3;
+    position[offset++] = 1;
+    position[offset++] = 1;
+    color[offset++] = intColor;
+    position[offset++] = x2;
+    position[offset++] = y2;
+    position[offset++] = 0;
+    position[offset++] = 1;
+    color[offset++] = intColor;
 
     this._vertexCount += 6;
 };
@@ -449,21 +625,25 @@ CanvasGL.prototype.stroke = function () {
                 x2 = curr[2 * 3 + 0];
                 y2 = curr[2 * 3 + 1];
 
-                offset = this._vertexCount * 3;
+                offset = this._vertexCount * 5;
                 position = this._positionBuffer;
                 color = this._colorBuffer;
 
-                position[offset + 0] = x0;
-                position[offset + 1] = y0;
-                color[offset + 2] = lineColor;
-
-                position[offset + 3] = x1;
-                position[offset + 4] = y1;
-                color[offset + 5] = lineColor;
-
-                position[offset + 6] = x2;
-                position[offset + 7] = y2;
-                color[offset + 8] = lineColor;
+                position[offset++] = x0;
+                position[offset++] = y0;
+                position[offset++] = 0;
+                position[offset++] = 1;
+                color[offset++] = lineColor;
+                position[offset++] = x1;
+                position[offset++] = y1;
+                position[offset++] = 1;
+                position[offset++] = 1;
+                color[offset++] = lineColor;
+                position[offset++] = x2;
+                position[offset++] = y2;
+                position[offset++] = 0;
+                position[offset++] = 0;
+                color[offset++] = lineColor;
 
                 x0 = last[2 * 0 + 0];
                 y0 = last[2 * 0 + 1];
@@ -472,17 +652,21 @@ CanvasGL.prototype.stroke = function () {
                 x2 = curr[2 * 1 + 0];
                 y2 = curr[2 * 1 + 1];
 
-                position[offset + 9] = x0;
-                position[offset + 10] = y0;
-                color[offset + 11] = lineColor;
-
-                position[offset + 12] = x1;
-                position[offset + 13] = y1;
-                color[offset + 14] = lineColor;
-
-                position[offset + 15] = x2;
-                position[offset + 16] = y2;
-                color[offset + 17] = lineColor;
+                position[offset++] = x0;
+                position[offset++] = y0;
+                position[offset++] = 0;
+                position[offset++] = 1;
+                color[offset++] = lineColor;
+                position[offset++] = x1;
+                position[offset++] = y1;
+                position[offset++] = 1;
+                position[offset++] = 1;
+                color[offset++] = lineColor;
+                position[offset++] = x2;
+                position[offset++] = y2;
+                position[offset++] = 0;
+                position[offset++] = 0;
+                color[offset++] = lineColor;
 
                 this._vertexCount += 6;
             }
@@ -502,21 +686,25 @@ CanvasGL.prototype.stroke = function () {
                 x2 = curr[2 * 3 + 0];
                 y2 = curr[2 * 3 + 1];
 
-                offset = this._vertexCount * 3;
+                offset = this._vertexCount * 5;
                 position = this._positionBuffer;
                 color = this._colorBuffer;
 
-                position[offset + 0] = x0;
-                position[offset + 1] = y0;
-                color[offset + 2] = lineColor;
-
-                position[offset + 3] = x1;
-                position[offset + 4] = y1;
-                color[offset + 5] = lineColor;
-
-                position[offset + 6] = x2;
-                position[offset + 7] = y2;
-                color[offset + 8] = lineColor;
+                position[offset++] = x0;
+                position[offset++] = y0;
+                position[offset++] = 0;
+                position[offset++] = 1;
+                color[offset++] = lineColor;
+                position[offset++] = x1;
+                position[offset++] = y1;
+                position[offset++] = 1;
+                position[offset++] = 1;
+                color[offset++] = lineColor;
+                position[offset++] = x2;
+                position[offset++] = y2;
+                position[offset++] = 0;
+                position[offset++] = 0;
+                color[offset++] = lineColor;
 
                 x0 = last[2 * 0 + 0];
                 y0 = last[2 * 0 + 1];
@@ -525,17 +713,21 @@ CanvasGL.prototype.stroke = function () {
                 x2 = curr[2 * 1 + 0];
                 y2 = curr[2 * 1 + 1];
 
-                position[offset + 9] = x0;
-                position[offset + 10] = y0;
-                color[offset + 11] = lineColor;
-
-                position[offset + 12] = x1;
-                position[offset + 13] = y1;
-                color[offset + 14] = lineColor;
-
-                position[offset + 15] = x2;
-                position[offset + 16] = y2;
-                color[offset + 17] = lineColor;
+                position[offset++] = x0;
+                position[offset++] = y0;
+                position[offset++] = 0;
+                position[offset++] = 1;
+                color[offset++] = lineColor;
+                position[offset++] = x1;
+                position[offset++] = y1;
+                position[offset++] = 1;
+                position[offset++] = 1;
+                color[offset++] = lineColor;
+                position[offset++] = x2;
+                position[offset++] = y2;
+                position[offset++] = 0;
+                position[offset++] = 0;
+                color[offset++] = lineColor;
 
                 this._vertexCount += 6;
             }
@@ -579,12 +771,15 @@ CanvasGL.prototype.bind = function () {
     var vertexSize = this.VERTEX_SIZE;
     var inPositionLocation = this._inPositionLocation;
     var inColorLocation = this._inColorLocation;
+    var inTexCoordLocation = this._inTexCoordLocation;
     gl.useProgram(this._program);
     gl.bindBuffer(gl.ARRAY_BUFFER, this._vbo);
     gl.enableVertexAttribArray(inPositionLocation);
     gl.enableVertexAttribArray(inColorLocation);
+    gl.enableVertexAttribArray(inTexCoordLocation);
     gl.vertexAttribPointer(inPositionLocation, 2, gl.FLOAT, gl.FALSE, vertexSize, 0);
-    gl.vertexAttribPointer(inColorLocation, 4, gl.UNSIGNED_BYTE, gl.TRUE, vertexSize, 8);
+    gl.vertexAttribPointer(inTexCoordLocation, 2, gl.FLOAT, gl.FALSE, vertexSize, 8);
+    gl.vertexAttribPointer(inColorLocation, 4, gl.UNSIGNED_BYTE, gl.TRUE, vertexSize, 16);
 };
 
 CanvasGL.prototype.flush = function () {
@@ -592,7 +787,7 @@ CanvasGL.prototype.flush = function () {
     var vertexCount = this._vertexCount;
     if (vertexCount > 0) {
         this.bind();
-        gl.bufferSubData(gl.ARRAY_BUFFER, 0, this._positionBuffer.subarray(0, vertexCount * 3));
+        gl.bufferSubData(gl.ARRAY_BUFFER, 0, this._positionBuffer.subarray(0, vertexCount * 5));
         gl.drawArrays(gl.TRIANGLES, 0, vertexCount);
         this._vertexCount = 0;
     }
@@ -650,7 +845,7 @@ Object.defineProperty(CanvasGL.prototype, 'lineWidth', {
 
 Object.defineProperty(CanvasGL.prototype, 'VERTEX_SIZE', {
     get: function () {
-        return (4 * 2) + 4;
+        return (4 * 2) + (4 * 2) + 4;
     }
 });
 
