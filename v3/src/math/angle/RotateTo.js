@@ -1,3 +1,5 @@
+var MATH_CONST = require('../const');
+
 /**
 * Rotates currentAngle towards targetAngle, taking the shortest rotation distance.
 * The lerp argument is the amount to rotate by in this call.
@@ -17,7 +19,7 @@ var RotateTo = function (currentAngle, targetAngle, lerp)
         return currentAngle;
     }
 
-    if (Math.abs(targetAngle - currentAngle) <= lerp || Math.abs(targetAngle - currentAngle) >= (Phaser.Math.PI2 - lerp))
+    if (Math.abs(targetAngle - currentAngle) <= lerp || Math.abs(targetAngle - currentAngle) >= (MATH_CONST.PI2 - lerp))
     {
         currentAngle = targetAngle;
     }
@@ -27,11 +29,11 @@ var RotateTo = function (currentAngle, targetAngle, lerp)
         {
             if (targetAngle < currentAngle)
             {
-                targetAngle += Phaser.Math.PI2;
+                targetAngle += MATH_CONST.PI2;
             }
             else
             {
-                targetAngle -= Phaser.Math.PI2;
+                targetAngle -= MATH_CONST.PI2;
             }
         }
 

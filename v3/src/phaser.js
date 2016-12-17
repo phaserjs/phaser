@@ -21,6 +21,13 @@ var Phaser = {
 
         ImageFile: require('./loader/filetypes/ImageFile')
 
+    },
+
+    Utils: {
+
+        Array: require('./utils/array/'),
+        Objects: require('./utils/objects/')
+
     }
 
 };

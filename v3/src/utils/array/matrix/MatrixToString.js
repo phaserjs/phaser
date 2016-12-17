@@ -1,23 +1,23 @@
-import Pad from 'utils/string/Pad.js';
-import CheckMatrix from 'utils/array/matrix/CheckMatrix.js';
+var Pad = require('../../string/Pad');
+var CheckMatrix = require('./CheckMatrix');
 
 //  Generates a string (which you can pass to console.log) from the given
 //  Array Matrix.
 
-export default function MatrixToString (matrix) {
-
-    let str = '';
+ var MatrixToString = function (matrix)
+ {
+    var str = '';
 
     if (!CheckMatrix(matrix))
     {
         return str;
     }
 
-    for (let r = 0; r < matrix.length; r++)
+    for (var r = 0; r < matrix.length; r++)
     {
-        for (let c = 0; c < matrix[r].length; c++)
+        for (var c = 0; c < matrix[r].length; c++)
         {
-            let cell = matrix[r][c].toString();
+            var cell = matrix[r][c].toString();
 
             if (cell !== 'undefined')
             {
@@ -38,7 +38,7 @@ export default function MatrixToString (matrix) {
         {
             str += '\n';
 
-            for (let i = 0; i < matrix[r].length; i++)
+            for (var i = 0; i < matrix[r].length; i++)
             {
                 str += '---';
 
@@ -54,5 +54,6 @@ export default function MatrixToString (matrix) {
     }
 
     return str;
+};
 
-}
+module.exports = MatrixToString;
