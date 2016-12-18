@@ -528,6 +528,32 @@ Phaser.Keyboard.prototype = {
 
     },
 
+    justPressed: function (keycode) {
+
+        if (this._keys[keycode])
+        {
+            return this._keys[keycode].justPressed();
+        }
+        else
+        {
+            return null;
+        }
+
+    },
+
+    justReleased: function (keycode) {
+
+        if (this._keys[keycode])
+        {
+            return this._keys[keycode].justReleased();
+        }
+        else
+        {
+            return null;
+        }
+
+    },
+
     /**
     * Returns true of the key is currently pressed down. Note that it can only detect key presses on the web browser.
     *

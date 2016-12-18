@@ -82,6 +82,14 @@ Phaser.Key = function (game, keycode) {
     this.timeUp = -2500;
 
     /**
+    * If the key is up this value holds the duration of that key release and is constantly updated.
+    * If the key is down it holds the duration of the previous up session.
+    * @property {number} duration - The number of milliseconds this key has been up for.
+    * @default
+    */
+    this.durationUp = -2500;
+
+    /**
     * @property {number} repeats - If a key is held down this holds down the number of times the key has 'repeated'.
     * @default
     */
@@ -148,6 +156,10 @@ Phaser.Key.prototype = {
                 this.onHoldCallback.call(this.onHoldContext, this);
             }
         }
+        else
+        {
+            this.durationUp = this.game.time.time - this.timeUp;
+        }
 
     },
 
@@ -178,6 +190,7 @@ Phaser.Key.prototype = {
         this.isUp = false;
         this.timeDown = this.game.time.time;
         this.duration = 0;
+        this.durationUp = this.game.time.time - this.timeUp;
         this.repeats = 0;
 
         // _justDown will remain true until it is read via the justDown Getter
@@ -210,6 +223,7 @@ Phaser.Key.prototype = {
         this.isUp = true;
         this.timeUp = this.game.time.time;
         this.duration = this.game.time.time - this.timeDown;
+        this.durationUp = 0;
 
         // _justUp will remain true until it is read via the justUp Getter
         // this enables the game to poll for past presses, or reset it at the start of a new game state
@@ -236,6 +250,7 @@ Phaser.Key.prototype = {
         this.isUp = true;
         this.timeUp = this.game.time.time;
         this.duration = 0;
+        this.durationUp = -2500;
         this._enabled = true; // .enabled causes reset(false)
         this._justDown = false;
         this._justUp = false;
@@ -279,6 +294,32 @@ Phaser.Key.prototype = {
         if (duration === undefined) { duration = 50; }
 
         return (!this.isDown && ((this.game.time.time - this.timeUp) < duration));
+
+    },
+    
+    /**
+    * Returns `true` if the Key was just pressed down this update tick, or `false` if it either isn't down,
+    * or was pressed down on a previous update tick.
+    * 
+    * @method Phaser.Key#justPressed
+    * @return {boolean} True if the key was just pressed down this update tick.
+    */
+    justPressed: function () {
+
+        return (this.isDown && this.duration === 0);
+
+    },
+
+    /**
+    * Returns `true` if the Key was just released this update tick, or `false` if it either isn't up,
+    * or was released on a previous update tick.
+    * 
+    * @method Phaser.Key#justReleased
+    * @return {boolean} True if the key was just released this update tick.
+    */
+    justReleased: function () {
+
+        return (!this.isDown && this.durationUp === 0);
 
     }
 
