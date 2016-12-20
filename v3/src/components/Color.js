@@ -146,10 +146,10 @@ Object.defineProperties(Color.prototype, {
             {
                 if (!this._dirty)
                 {
+                    this._dirty = true;
+
                     this.state.sys.updates.add(this);
                 }
-
-                this._dirty = true;
             }
             else
             {
@@ -293,6 +293,11 @@ Object.defineProperties(Color.prototype, {
 
         get: function ()
         {
+            if (this.gameObject.parent)
+            {
+                this._worldAlpha = this._alpha * this.gameObject.parent.color.worldAlpha;
+            }
+
             return this._worldAlpha;
         },
 
