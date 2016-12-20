@@ -8,7 +8,7 @@ var IsPlainObject = require('./IsPlainObject');
 * @param {object} target - The target object to copy to.
 * @return {object} The extended object.
 */
-var extend = function ()
+var Extend = function ()
 {
     var options, name, src, copy, copyIsArray, clone,
         target = arguments[0] || {},

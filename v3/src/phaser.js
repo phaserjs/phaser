@@ -26,7 +26,7 @@ var Phaser = {
     Utils: {
 
         Array: require('./utils/array/'),
-        Objects: require('./utils/objects/')
+        Objects: require('./utils/object/')
 
     }
 

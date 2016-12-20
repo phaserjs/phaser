@@ -58,4 +58,4 @@ var NumberArrayStep = function (start, end, step)
     return result;
 };
 
-module.exports = numberArrayStep;
+module.exports = NumberArrayStep;
