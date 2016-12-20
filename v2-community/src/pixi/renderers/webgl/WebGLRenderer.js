@@ -292,11 +292,20 @@ PIXI.WebGLRenderer.prototype.setTexturePriority = function (textureNameCollectio
         console.warn('setTexturePriority error: Multi Texture support hasn\'t been enabled in the Phaser Game Config.');
         return;
     }
-
-    var maxTextures = this.maxTextures;
+    var clampPot = function (potSize) {
+        --potSize;
+        potSize |= potSize >> 1;
+        potSize |= potSize >> 2;
+        potSize |= potSize >> 4;
+        potSize |= potSize >> 8;
+        potSize |= potSize >> 16;
+        return ++potSize;
+    };
+    var gl = this.gl;
+    var maxTextures = gl.getParameter(gl.MAX_TEXTURE_IMAGE_UNITS);
+    var maxTextureSize = gl.getParameter(gl.MAX_TEXTURE_SIZE);
     var imageCache = this.game.cache._cache.image;
     var imageName = null;
-    var gl = this.gl;
 
     //  Clear out all previously batched textures and reset their flags.
     //  If the array has been modified, then the developer will have to
@@ -312,9 +321,8 @@ PIXI.WebGLRenderer.prototype.setTexturePriority = function (textureNameCollectio
         
         imageCache[imageName].base.textureIndex = 0;
     }
-
+    var maxTextureAvailableSpace = (maxTextureSize) - clampPot(Math.max(this.width, this.height));
     this.currentBatchedTextures.length = 0;
-
     // We start from 1 because framebuffer texture uses unit 0.
     for (var index = 0; index < textureNameCollection.length; ++index)
     {
@@ -324,16 +332,14 @@ PIXI.WebGLRenderer.prototype.setTexturePriority = function (textureNameCollectio
         {
             continue;
         }
-
-        if (index + 1 < maxTextures)
-        {
-            imageCache[imageName].base.textureIndex = index + 1;
+        // Unit 0 is reserved for Pixi's framebuffer
+        var base = imageCache[imageName].base;
+        maxTextureAvailableSpace -= clampPot(Math.max(base.width, base.height));
+        if (maxTextureAvailableSpace <= 0) {
+            base.textureIndex = 0;
+        } else {
+            base.textureIndex = (1 + (index % (maxTextures - 1)));
         }
-        else
-        {
-            imageCache[imageName].base.textureIndex = maxTextures - 1;
-        }
-
         this.currentBatchedTextures.push(imageName);
     }
 
