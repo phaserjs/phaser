@@ -1,4 +1,4 @@
-function CreateRenderTarget(gl, width, height) {
+function CreateRenderTarget(gl, width, height, data) {
     var texture = gl.createTexture();
     gl.activeTexture(gl.TEXTURE0);
     gl.bindTexture(gl.TEXTURE_2D, texture);
@@ -6,7 +6,22 @@ function CreateRenderTarget(gl, width, height) {
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
-    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, width, height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, width, height, 0, gl.RGBA, gl.UNSIGNED_BYTE, data ? data : null);
+    if (gl.getError() != gl.NO_ERROR) {
+        console.error("GL ERROR", gl.getError());
+    }
+    return texture;
+}
+
+function UploadTexture(gl, image) {
+    var texture = gl.createTexture();
+    gl.activeTexture(gl.TEXTURE0);
+    gl.bindTexture(gl.TEXTURE_2D, texture);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
     if (gl.getError() != gl.NO_ERROR) {
         console.error("GL ERROR", gl.getError());
     }
@@ -61,6 +76,7 @@ function CanvasGL(gl) {
         'const vec2 gf6 = vec2(3.0, 0.015625);',
         'const float factor = 0.5;',
         'uniform bool isStencil;',
+        'uniform bool isPattern;',
         'uniform sampler2D mainSampler;',
         'uniform sampler2D maskSampler;',
         'uniform vec2 scale;',
@@ -70,6 +86,8 @@ function CanvasGL(gl) {
         'void main() {',
         '   if (isStencil == false) {',
         '       gl_FragColor = vec4(outColor.bgr, 1.0);',
+        '   } else if (isPattern) {',
+        '       gl_FragColor = texture2D(mainSampler, outTexCoord);',
         '   } else {',
         '       vec4 mainColor = texture2D(mainSampler, outTexCoord);',
         '       vec4 maskColor = vec4(0, 0, 0, 0);',
@@ -133,20 +151,43 @@ function CanvasGL(gl) {
     gl.bindTexture(gl.TEXTURE_2D, this._emptyTexture);
     gl.activeTexture(gl.TEXTURE1);
     gl.bindTexture(gl.TEXTURE_2D, this._emptyTexture);
+    this._isPatternLocation = gl.getUniformLocation(program, 'isPattern');
     gl.uniform1i(gl.getUniformLocation(program, 'mainSampler'), 0);
     gl.uniform1i(gl.getUniformLocation(program, 'maskSampler'), 1);
+    gl.uniform1i(this._isPatternLocation, 0);
     gl.uniform2f(gl.getUniformLocation(program, 'scale'), 1 / gl.canvas.width, 1 / gl.canvas.height);
+    this.enableMaskAntialiasing();
+    this._currentPattern = null;
 }
 
+CanvasGL.prototype.createPatternTexture = function (image) {
+    var texture = UploadTexture(this._gl, image);
+    var pattern = {
+        // Other Properties
+        texture: texture
+    };
+    return pattern;
+};
+
+CanvasGL.prototype.usePattern = function (pattern) {
+    this._currentPattern = pattern;
+};
+
+CanvasGL.prototype.stopPattern = function () {
+    this._currentPattern = null;
+};
+
 CanvasGL.prototype.enableMaskAntialiasing = function () {
+    var gl = this._gl;
     gl.uniform1i(gl.getUniformLocation(this._program, 'enableBlur'), 1);
 };
 
 CanvasGL.prototype.disableMaskAntialiasing = function () {
+    var gl = this._gl;
     gl.uniform1i(gl.getUniformLocation(this._program, 'enableBlur'), 0);
 };
 
-CanvasGL.prototype.startMaskRecording = function () {
+CanvasGL.prototype.recordMaskBegin = function () {
     var gl = this._gl;
     var stencilbuffer = this._fboStencilBuffer;
     this.flush();
@@ -160,7 +201,7 @@ CanvasGL.prototype.startMaskRecording = function () {
     gl.uniform1i(this._isStencilLocation, 0);
 };
 
-CanvasGL.prototype.endMaskRecording = function () {
+CanvasGL.prototype.recordMaskEnd = function () {
     var gl = this._gl;
     this.flush();
     gl.bindFramebuffer(gl.FRAMEBUFFER, null);
@@ -172,7 +213,7 @@ CanvasGL.prototype.endMaskRecording = function () {
     gl.uniform1i(this._isStencilLocation, 0);
 };
 
-CanvasGL.prototype.startMaskApply = function () {
+CanvasGL.prototype.applyMaskBegin = function () {
     var gl = this._gl;
     var colorbuffer = this._fboColorBuffer;
     this.flush();
@@ -186,7 +227,7 @@ CanvasGL.prototype.startMaskApply = function () {
     gl.uniform1i(this._isStencilLocation, 0);
 };
 
-CanvasGL.prototype.endMaskApply = function () {
+CanvasGL.prototype.applyMaskEnd = function () {
     var gl = this._gl;
     var colorbuffer = this._fboColorBuffer;
     var stencilbuffer = this._fboStencilBuffer;
@@ -194,7 +235,7 @@ CanvasGL.prototype.endMaskApply = function () {
     gl.bindFramebuffer(gl.FRAMEBUFFER, null);
     gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
     gl.activeTexture(gl.TEXTURE0);
-    gl.bindTexture(gl.TEXTURE_2D, colorbuffer.targetTexture);
+    gl.bindTexture(gl.TEXTURE_2D, this._currentPattern ? this._currentPattern.texture : colorbuffer.targetTexture);
     gl.activeTexture(gl.TEXTURE1);
     gl.bindTexture(gl.TEXTURE_2D, stencilbuffer.targetTexture);
     gl.uniform1i(this._isStencilLocation, 1);
@@ -531,35 +572,40 @@ CanvasGL.prototype.fillRect = function (x, y, width, height) {
     var x3 = xmax * a + ymin * c + e;
     var y3 = xmax * b + ymin * d + f;
 
+    var umin = 0;
+    var vmin = 0;
+    var umax = 1;
+    var vmax = 1;
+
     position[offset++] = x0;
     position[offset++] = y0;
-    position[offset++] = 0;
-    position[offset++] = 0;
+    position[offset++] = umin;
+    position[offset++] = vmin;
     color[offset++] = intColor;
     position[offset++] = x1;
     position[offset++] = y1;
-    position[offset++] = 1;
-    position[offset++] = 0;
+    position[offset++] = umax;
+    position[offset++] = vmin;
     color[offset++] = intColor;
     position[offset++] = x2;
     position[offset++] = y2;
-    position[offset++] = 0;
-    position[offset++] = 1;
+    position[offset++] = umin;
+    position[offset++] = vmax;
     color[offset++] = intColor;
     position[offset++] = x1;
     position[offset++] = y1;
-    position[offset++] = 1;
-    position[offset++] = 0;
+    position[offset++] = umax;
+    position[offset++] = vmin;
     color[offset++] = intColor;
     position[offset++] = x3;
     position[offset++] = y3;
-    position[offset++] = 1;
-    position[offset++] = 1;
+    position[offset++] = umax;
+    position[offset++] = vmax;
     color[offset++] = intColor;
     position[offset++] = x2;
     position[offset++] = y2;
-    position[offset++] = 0;
-    position[offset++] = 1;
+    position[offset++] = umin;
+    position[offset++] = vmax;
     color[offset++] = intColor;
 
     this._vertexCount += 6;

@@ -929,8 +929,8 @@ Phaser.BitmapData.prototype = {
     * Sets the color of the given pixel to the specified red, green, blue and alpha values.
     *
     * @method Phaser.BitmapData#setPixel32
-    * @param {number} x - The x coordinate of the pixel to be set. Must lay within the dimensions of this BitmapData.
-    * @param {number} y - The y coordinate of the pixel to be set. Must lay within the dimensions of this BitmapData.
+    * @param {integer} x - The x coordinate of the pixel to be set. Must lay within the dimensions of this BitmapData and be an integer, not a float.
+    * @param {integer} y - The y coordinate of the pixel to be set. Must lay within the dimensions of this BitmapData and be an integer, not a float.
     * @param {number} red - The red color value, between 0 and 0xFF (255).
     * @param {number} green - The green color value, between 0 and 0xFF (255).
     * @param {number} blue - The blue color value, between 0 and 0xFF (255).
@@ -968,8 +968,8 @@ Phaser.BitmapData.prototype = {
     * Sets the color of the given pixel to the specified red, green and blue values.
     *
     * @method Phaser.BitmapData#setPixel
-    * @param {number} x - The x coordinate of the pixel to be set. Must lay within the dimensions of this BitmapData.
-    * @param {number} y - The y coordinate of the pixel to be set. Must lay within the dimensions of this BitmapData.
+    * @param {integer} x - The x coordinate of the pixel to be set. Must lay within the dimensions of this BitmapData and be an integer, not a float.
+    * @param {integer} y - The y coordinate of the pixel to be set. Must lay within the dimensions of this BitmapData and be an integer, not a float.
     * @param {number} red - The red color value, between 0 and 0xFF (255).
     * @param {number} green - The green color value, between 0 and 0xFF (255).
     * @param {number} blue - The blue color value, between 0 and 0xFF (255).
@@ -988,8 +988,8 @@ Phaser.BitmapData.prototype = {
     * otherwise this may return out of date color values, or worse - throw a run-time error as it tries to access an array element that doesn't exist.
     *
     * @method Phaser.BitmapData#getPixel
-    * @param {number} x - The x coordinate of the pixel to be set. Must lay within the dimensions of this BitmapData.
-    * @param {number} y - The y coordinate of the pixel to be set. Must lay within the dimensions of this BitmapData.
+    * @param {integer} x - The x coordinate of the pixel to be set. Must lay within the dimensions of this BitmapData and be an integer, not a float.
+    * @param {integer} y - The y coordinate of the pixel to be set. Must lay within the dimensions of this BitmapData and be an integer, not a float.
     * @param {object} [out] - An object into which 4 properties will be created: r, g, b and a. If not provided a new object will be created.
     * @return {object} An object with the red, green, blue and alpha values set in the r, g, b and a properties.
     */
@@ -1020,8 +1020,8 @@ Phaser.BitmapData.prototype = {
     * Note that on little-endian systems the format is 0xAABBGGRR and on big-endian the format is 0xRRGGBBAA.
     *
     * @method Phaser.BitmapData#getPixel32
-    * @param {number} x - The x coordinate of the pixel to be set. Must lay within the dimensions of this BitmapData.
-    * @param {number} y - The y coordinate of the pixel to be set. Must lay within the dimensions of this BitmapData.
+    * @param {integer} x - The x coordinate of the pixel to be set. Must lay within the dimensions of this BitmapData and be an integer, not a float.
+    * @param {integer} y - The y coordinate of the pixel to be set. Must lay within the dimensions of this BitmapData and be an integer, not a float.
     * @return {number} A native color value integer (format: 0xAARRGGBB)
     */
     getPixel32: function (x, y) {
@@ -1039,8 +1039,8 @@ Phaser.BitmapData.prototype = {
     * otherwise this may return out of date color values, or worse - throw a run-time error as it tries to access an array element that doesn't exist.
     *
     * @method Phaser.BitmapData#getPixelRGB
-    * @param {number} x - The x coordinate of the pixel to be set. Must lay within the dimensions of this BitmapData.
-    * @param {number} y - The y coordinate of the pixel to be set. Must lay within the dimensions of this BitmapData.
+    * @param {integer} x - The x coordinate of the pixel to be set. Must lay within the dimensions of this BitmapData and be an integer, not a float.
+    * @param {integer} y - The y coordinate of the pixel to be set. Must lay within the dimensions of this BitmapData and be an integer, not a float.
     * @param {object} [out] - An object into which 3 properties will be created: r, g and b. If not provided a new object will be created.
     * @param {boolean} [hsl=false] - Also convert the rgb values into hsl?
     * @param {boolean} [hsv=false] - Also convert the rgb values into hsv?

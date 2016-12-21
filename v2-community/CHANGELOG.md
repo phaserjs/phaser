@@ -290,7 +290,7 @@ Thanks to Corin Wilkins at Aardman Digital, for lots of the investigation work, 
 * Group.onChildInputOut is a new Signal that you can listen to. It will be dispatched whenever any immediate child of the Group emits an `onInputOut` signal itself. This allows you to listen for a Signal from the Group, rather than every Sprite within it.
 * Phaser.Weapon is a brand new plugin that provides the ability to easily create a bullet pool and manager. Weapons fire Phaser.Bullet objects, which are essentially Sprites with a few extra properties. The Bullets are enabled for Arcade Physics. They do not currently work with P2 Physics. The Bullets are created inside of `Weapon.bullets`, which is a Phaser.Group instance. Anything you can usually do with a Group, such as move it around the display list, iterate it, etc can be done to the bullets Group too. Bullets can have textures and even animations. You can control the speed at which they are fired, the firing rate, the firing angle, and even set things like gravity for them. Please see the Documentation for more details, or view the [Weapon examples](https://github.com/photonstorm/phaser-examples/tree/master/examples/weapon) in the Examples repo.
 * BitmapData.smoothProperty is a new property that holds the string based prefix needed to set image scaling on the BitmapData context.
-* BitmapData.copyTransform allows you to draw a Game Object to the BitmapData, using its `worldTransform` property to control the location, scaling and rotation of the object. You can optionally provide 
+* BitmapData.copyTransform allows you to draw a Game Object to the BitmapData, using its `worldTransform` property to control the location, scaling and rotation of the object. You can optionally provide
 * BitmapData.drawGroup now uses the new `copyTransform` method, to provide for far more accurate results. Previously nested Game Objects wouldn't render correctly, nor would Sprites added via `addChild` to another Sprite. BitmapText objects also rendered without rotation taken into account, and the Sprites smoothing property was ignored. All of these things are now covered by the new drawGroup method, which also handles full deep iteration down the display list.
 * Added the following new constants: `Phaser.TOP_LEFT`, `Phaser.TOP_CENTER`, `Phaser.TOP_RIGHT`, `Phaser.LEFT_TOP`, `Phaser.LEFT_CENTER`, `Phaser.LEFT_BOTTOM`, `Phaser.CENTER`, `Phaser.RIGHT_TOP`, `Phaser.RIGHT_CENTER`, `Phaser.RIGHT_BOTTOM`, `Phaser.BOTTOM_LEFT`, `Phaser.BOTTOM_CENTER` and `Phaser.BOTTOM_RIGHT`.
 * Rectangle.getPoint is a new method that returns a point based on the given position constant, such as `Phaser.BOTTOM_LEFT`. It returns the same result as calling `Rectangle.bottomLeft` (etc) but unlike those getters you are able to provide your own Point object.
@@ -841,7 +841,7 @@ For the full list of p2 additions please read [their change log](https://github.
 * Rectangle.bottomLeft has been added (thanks @mattmogford #1788)
 * Device.firefoxVersion is a new property that contains the major Firefox version number if running within Firefox, otherwise zero.
 * Math.distanceSq will return the euclidean distance squared between the two given set of coordinates (thanks @jeremyosborne #1761 #1770)
-* StateManager.onStateChange is a new signal which is dispatched whenever the State changes from one to another. The callback you specify is sent two parameters: the string based key of the new state, and the second parameter is the string based key of the old / previous state. 
+* StateManager.onStateChange is a new signal which is dispatched whenever the State changes from one to another. The callback you specify is sent two parameters: the string based key of the new state, and the second parameter is the string based key of the old / previous state.
 * onDragUpdate is a new signal that is dispatched whenever a Game object enabled for input and drag is moved by a pointer (i.e. during a drag event). See the `Phaser.InputHandler.enableDrag` docs for parameter details and the new Phaser Example.
 * Rectangle.resize allows you to resize a Rectangle to the new given dimensions without altering its position.
 * Cache.getJSON has a new parameter: `clone`. If set it will return a clone of the object stored in the Cache rather than a reference to it.
@@ -1086,7 +1086,7 @@ Please see the README instructions on how to create custom builds.
 
 #### Arcade Physics
 
-We've updated the core of Arcade Physics in a number of significant ways. 
+We've updated the core of Arcade Physics in a number of significant ways.
 
 First we've dropped lots of internal private vars and moved to using non-cached local vars. Array lengths are no longer cached and we've implemented `physicsType` properties on Game Objects to speed-up the core World collideHandler. All of these small changes have lead to a nice improvement in speed as a result, and also allows us to now offer things like physics enabled BitmapText objects.
 
@@ -1106,7 +1106,7 @@ The parallel file concurrency limit is available in `Loader.maxParallelDownloads
 
 The Loader now supports synchronization points. An asset marked as a synchronization point must be loaded (or fail to load) before any *subsequent* assets can be loaded. This is enabled by using the `withSyncPoint` and `addSyncPoint` methods. Packs ('packfile' files) and Scripts ('script' files) are treated as synchronization points by default. This allows parallel downloads in general while allowing synchronization of select resources if required (packs, and potentially other assets in the future, can load-around synchronization points if they are written to delay final 'loading').
 
-Additional error handling / guards have been added, and the reported error message has been made more consistent. Invalid XML (when loading) no longer throws an exception but fails the particular file/asset that was being loaded. 
+Additional error handling / guards have been added, and the reported error message has been made more consistent. Invalid XML (when loading) no longer throws an exception but fails the particular file/asset that was being loaded.
 
 Some public methods/properties have been marked as protected, but no (except in case of a should-have-been-private-method) public-facing interfaces have been removed. Some private methods have been renamed and/or removed.
 
@@ -1539,14 +1539,14 @@ This fixes a bug in FF where it would use the default DOMMouseWheel (thanks @pns
 ### Pixi 2.1.0 Bug Fixes
 
 * Fix destroy method of PIXI.WebGLRenderer
-* Fixed Graphics.drawRoundedRectangle 
+* Fixed Graphics.drawRoundedRectangle
 * Fixed Graphics.arcTo issue
 * Fixed Graphics.arc issue
 * Fixed Graphics.cacheAsBitmap alpha issue
 * Fixed PIXI.Strip alpha issue
 * Fixed PIXI.DisplayObject.cacheAsBitmap alpha issue
 * Fixed PIXI.RenderTexture Canvas Clear bug
-* Fixed PIXI.DisplayObject.updateTransform issue 
+* Fixed PIXI.DisplayObject.updateTransform issue
 * Fixed webGL Shader textures issue
 * Fixed PIXI.DisplayObject.getLocalPosition()
 * Fixed CocoonJS crashing, when loading destroyed texture
@@ -1892,7 +1892,7 @@ Version 2.1.1. of Phaser is an emergency point release. It addresses a potential
 ### Significant Internal Changes
 
 * The PIXI.TextureCache global array is no longer used internally for storing Pixi Texture files. It's not actually a requirement of Pixi to use this and we were running into various issues with texture conflicts in DragonBones tests and issues with shared texture frames between Sprites. It meant we couldn't crop a sprite without cropping all instances unless we created a new texture frame at run-time, which as you can imagine is a huge overhead if you then want to crop an animated Sprite.
- 
+
 After talking with Mat at GoodBoyDigital about the issue it was his idea to just not use the TextureCache at all, and let each Sprite have its own frame. So this is the direction we've taken. We didn't save this for the 2.1 release as it doesn't actually alter the Phaser API at all, but it does change how things are working internally. So if you've got game code hooked directly into the `TextureCache` you need to be aware of this change before updating to 2.0.6.
 
 * The way in which Sprite.crop works has been changed. It will now adjust the dimensions of the sprite itself, remaining at the sprites previous x/y coordinates. Please be aware of this if you use cropped sprites in your game. The change was worth it though as it's significantly more powerful as a result.
@@ -2184,7 +2184,7 @@ The Plugins have now all moved to [their own repository](https://github.com/phot
 * ArcadePhysics.Body.phase is checked in postUpdate to prevent it from being called multiple times in a single frame.
 * Group.setProperty will now check if the property exists before setting it, this applies to Group.setAll and anything else using setProperty internally.
 * QuadTree.retrieve now checks to see if the given Sprite has a body before carrying on.
-* ArcadePhysics.collideSpriteVsGroup checks if Sprite has a body before carrying on, now safely skips sub-groups or other non-Sprite group children. 
+* ArcadePhysics.collideSpriteVsGroup checks if Sprite has a body before carrying on, now safely skips sub-groups or other non-Sprite group children.
 * Group.remove now checks the child to see if it's a member of the root Group before removing it, otherwise Pixi throws an Error.
 * The Emitter no longer checks if minParticleScale = maxParticleScale for the scale check, allowing for fixed scale particles again.
 * The PIXI.AbstractFilter is now included in the Phaser Pixi build by default, allowing for easier use of external Pixi Filters.
@@ -3419,7 +3419,7 @@ There is an extensive [Migration Guide](https://github.com/photonstorm/phaser/bl
 * Added Point.rotate to allow you to rotate a point around another point, with optional distance clamping. Also created test cases.
 * Added Group.alpha to apply a globalAlpha before the groups children are rendered. Useful to save on alpha calls.
 * Added Group.globalCompositeOperation to apply a composite operation before all of the groups children are rendered.
-* Added Camera black list support to Sprite and Group along with Camera.show, Camera.hide and Camera.isHidden methods to populate them. 
+* Added Camera black list support to Sprite and Group along with Camera.show, Camera.hide and Camera.isHidden methods to populate them.
 * Added GameMath.rotatePoint to allow for point rotation at any angle around a given anchor and distance
 * Updated World.setSize() to optionally update the VerletManager dimensions as well
 * Added GameObject.setPosition(x, y)

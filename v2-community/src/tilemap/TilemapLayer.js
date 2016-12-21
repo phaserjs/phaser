@@ -96,7 +96,7 @@ Phaser.TilemapLayer = function (game, tilemap, index, width, height) {
     * @default
     */
     this.renderSettings = {
-        enableScrollDelta: false,
+        enableScrollDelta: true,
         overdrawRatio: 0.20,
         copyCanvas: null
     };

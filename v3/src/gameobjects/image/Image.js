@@ -36,21 +36,6 @@ var Image = function (state, x, y, key, frame)
 Image.prototype = Object.create(GameObject.prototype);
 Image.prototype.constructor = Image;
 
-/**
-* Automatically called by World.preUpdate.
-*
-* @method Phaser.Image#preUpdate
-* @memberof Phaser.Image
-*/
-Image.prototype.preUpdate = function ()
-{
-    //  Would like to get rid of this somehow ...
-    if (this.parent)
-    {
-        this.color.worldAlpha = this.parent.color.worldAlpha;
-    }
-};
-
 Object.defineProperties(Image.prototype, {
 
     width: {

@@ -1,4 +1,4 @@
-﻿/// <reference path="phaser.d.ts" />
+﻿/// <reference path="phaser.comments.d.ts" />
 /// <reference path="box2d.d.ts" />
 
 declare module Phaser {
@@ -49,7 +49,7 @@ declare module Phaser {
             mouseJointBody: box2d.b2Body;
             // @property {box2d.b2MouseJoint} mouseJoint - The active mouse joint for dragging dynamic bodies.
             mouseJoint: box2d.b2MouseJoint;
-            // Pixel to meter function overrides. 
+            // Pixel to meter function overrides.
             // mpx: Function;
             // pxm: Function;
             // @property {object} walls - An object containing the 4 wall bodies that bound the physics world.
@@ -135,17 +135,17 @@ declare module Phaser {
             // Returns all bodies (Phaser.Physics.Box2D.Body) found under the given coordinates. Set the onlyOne
             // parameter to true if you only care about finding one body.
             getBodiesAtPoint(x: number, y: number, onlyOne?: boolean, onlyDynamic?: boolean): box2d.b2Body[];
-            
+
             // If there is a dynamic body under the given point, a mouse joint will be created
             // to drag that body around. Use the mouseDragMove and mouseDragEnd functions to
             // continue the drag action. Any mouse drag already in progress will be canceled.
             mouseDragStart(point: Phaser.Point): void;
             // Updates the target location of the active mouse joint, if there is one. If there
             // is no mouse joint active, this does nothing.
-            mouseDragMove(point: Phaser.Point): void;    
+            mouseDragMove(point: Phaser.Point): void;
             // Ends the active mouse joint if there is one. If there is no mouse joint active, does nothing.
-            mouseDragEnd(): void;    
-            
+            mouseDragEnd(): void;
+
             // Creates a distance joint.
             distanceJoint(bodyA: Box2D.Body | Phaser.Sprite, bodyB: Box2D.Body | Phaser.Sprite, length?: number,
                 ax?: number, ay?: number, bx?: number, by?: number, frequency?: number, damping?: number): box2d.b2DistanceJoint;
@@ -198,7 +198,7 @@ declare module Phaser {
             // Every time you call this method it will destroy any previously created bodies and remove them from the world.
             // Therefore understand it's a very expensive operation and not to be done in a core game update loop.
             convertTilemap(map: Phaser.Tilemap, layer: number | string | Phaser.TilemapLayer, addToWorld?: boolean, optimize?: boolean): Box2D.Body[];
-    
+
             // Casts a ray and finds intersecting fixtures in the world.
             raycast(x1: number, y1: number, x2: number, y2: number, closestHitOnly?: boolean, filterFunction?: Function): Box2D.RaycastHit[];
             // Finds all fixtures with AABBs overlapping the given area. This does NOT mean
@@ -272,11 +272,11 @@ declare module Phaser {
                 EndContact(contact: box2d.b2Contact): void;
                 // Common code for begin and end contacts.
                 handleContactBeginOrEnd(contact: box2d.b2Contact, begin: boolean): void;
-                // This is called after a contact is updated. This allows you to 
-                // inspect a contact before it goes to the solver. If you are 
-                // careful, you can modify the contact manifold (e.g. disable contact). 
+                // This is called after a contact is updated. This allows you to
+                // inspect a contact before it goes to the solver. If you are
+                // careful, you can modify the contact manifold (e.g. disable contact).
                 PreSolve(contact: box2d.b2Contact, oldManifold: box2d.b2Manifold): void;
-                // This lets you inspect a contact after the solver is finished. 
+                // This lets you inspect a contact after the solver is finished.
                 PostSolve(contact: box2d.b2Contact, impulse: box2d.b2ContactImpulse): void;
             }
 
@@ -315,7 +315,7 @@ declare module Phaser {
                 // @property {boolean} removeNextStep - To avoid deleting this body during a physics step, and causing all kinds of problems, set removeNextStep to true to have it removed in the next preUpdate.
                 removeNextStep: boolean;
 
-                //  Sets a callback to be fired any time a fixture in this Body begins or ends contact with a fixture in the given Body. 
+                //  Sets a callback to be fired any time a fixture in this Body begins or ends contact with a fixture in the given Body.
                 setBodyContactCallback(object: Phaser.Sprite | Box2D.Body, callback: Function, callbackContext: any): void;
                 // Sets a callback to be fired any time the given fixture begins or ends contact something
                 setFixtureContactCallback(fixture: box2d.b2Fixture, callback: Function, callbackContext: any): void;

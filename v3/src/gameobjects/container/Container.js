@@ -25,11 +25,6 @@ Container.prototype.constructor = Container;
 
 Container.prototype.preUpdate = function ()
 {
-    if (this.parent)
-    {
-        this.color.worldAlpha = this.parent.color.worldAlpha;
-    }
-
     this.children.preUpdate();
 };
 
