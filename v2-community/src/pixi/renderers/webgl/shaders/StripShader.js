@@ -49,16 +49,22 @@ PIXI.StripShader = function(gl)
         this.fragmentSrc = [
             '//StripShader Fragment Shader.',
             'precision mediump float;',
+            'bool isnan( float val ) {  return ( val < 0.0 || 0.0 < val || val == 0.0 ) ? false : true; }',
             'varying vec2 vTextureCoord;',
             'varying float vTextureIndex;',
          //   'varying float vColor;',
             'uniform float alpha;',
             'uniform sampler2D uSamplerArray[' + this.MAX_TEXTURES + '];',
-            'const vec4 PINK = vec4(1.0, 0.0, 1.0, 1.0);',
-            'const vec4 GREEN = vec4(0.0, 1.0, 0.0, 1.0);',
+            // Blue color means that you are trying to bound
+            // a texture out of the limits of the hardware.
+            'const vec4 BLUE = vec4(1.0, 0.0, 1.0, 1.0);',
+            // If you get a red color means you are out of memory
+            // or in some way corrupted the vertex buffer.
+            'const vec4 RED = vec4(1.0, 0.0, 0.0, 1.0);',
             'void main(void) {',
             dynamicIfs,
-            'else gl_FragColor = PINK;',
+            '   else if(vTextureIndex >= ' + this.MAX_TEXTURES + '.0) gl_FragColor = BLUE;',
+            '   else if(isnan(vTextureIndex)) gl_FragColor = RED;',
             '}'
         ];    
     } else {
