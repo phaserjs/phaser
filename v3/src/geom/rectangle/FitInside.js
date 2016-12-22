@@ -1,7 +1,7 @@
 var GetAspectRatio = require('./GetAspectRatio');
 
 //  Fits the target rectangle into the source rectangle.
-//  Preserves aspect ration.
+//  Preserves aspect ratio.
 //  Scales and centers the target rectangle to the source rectangle
 
 var FitInside = function (target, source)
@@ -20,8 +20,8 @@ var FitInside = function (target, source)
     }
 
     return target.setPosition(
-        (source.right / 2) - target.width / 2,
-        (source.bottom / 2) - target.height / 2
+        (source.right / 2) - (target.width / 2),
+        (source.bottom / 2) - (target.height / 2)
     );
 };
 

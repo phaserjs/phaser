@@ -14,4 +14,4 @@ var CenterOn = function (rect, x, y)
     return rect;
 };
 
-module.exports = centerOn;
+module.exports = CenterOn;

@@ -11,9 +11,11 @@ var Phaser = {
 
     Math: require('./math'),
 
+    Geom: require('./geom'),
+
     GameObjects: {
 
-        Factory: require('./gameobjects/FactoryContainer'),
+        Factory: require('./gameobjects/FactoryContainer')
 
     },
 

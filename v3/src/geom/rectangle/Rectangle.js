@@ -9,77 +9,148 @@ var Rectangle = function (x, y, width, height)
     if (width === undefined) { width = 0; }
     if (height === undefined) { height = 0; }
 
-    return {
+    this.x = x;
 
-        x: x,
+    this.y = y;
 
-        y: y,
+    this.width = width;
 
-        width: width,
+    this.height = height;
+};
 
-        height: height,
+Rectangle.prototype.constructor = Rectangle;
 
-        set: function (x, y, width, height) {
+Rectangle.prototype = {
 
-            this.x = x;
-            this.y = y;
-            this.width = width;
-            this.height = height;
+    set: function (x, y, width, height)
+    {
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
 
-            return this;
+        return this;
+    },
 
-        },
+    setPosition: function (x, y)
+    {
+        if (y === undefined) { y = x; }
 
-        setPosition: function (x, y) {
+        this.x = x;
+        this.y = y;
 
-            if (y === undefined) { y = x; }
+        return this;
+    },
 
-            this.x = x;
-            this.y = y;
+    setSize: function (width, height)
+    {
+        if (height === undefined) { height = width; }
 
-            return this;
+        this.width = width;
+        this.height = height;
 
-        },
-
-        setSize: function (width, height) {
-
-            if (height === undefined) { height = width; }
-
-            this.width = width;
-            this.height = height;
-
-            return this;
-
-        },
-
-        /*
-        get left () {
-
-            return this.x;
-
-        },
-
-        get right () {
-
-            return this.x + this.width;
-
-        },
-
-        get top () {
-
-            return this.y;
-
-        },
-
-        get bottom () {
-
-            return this.y + this.height;
-
-        }
-        */
-
+        return this;
     }
 
 };
+
+Object.defineProperties(Rectangle.prototype, {
+
+    left: {
+
+        enumerable: true,
+
+        get: function ()
+        {
+            return this.x;
+        },
+
+        set: function (value)
+        {
+            if (value >= this.right)
+            {
+                this.width = 0;
+            }
+            else
+            {
+                this.width = this.right - value;
+            }
+
+            this.x = value;
+        }
+
+    },
+
+    right: {
+
+        enumerable: true,
+
+        get: function ()
+        {
+            return this.x + this.width;
+        },
+
+        set: function (value)
+        {
+            if (value <= this.x)
+            {
+                this.width = 0;
+            }
+            else
+            {
+                this.width = value - this.x;
+            }
+        }
+
+    },
+
+    top: {
+
+        enumerable: true,
+
+        get: function ()
+        {
+            return this.y;
+        },
+
+        set: function (value)
+        {
+            if (value >= this.bottom)
+            {
+                this.height = 0;
+                this.y = value;
+            }
+            else
+            {
+                this.height = (this.bottom - value);
+            }
+        }
+
+    },
+
+    bottom: {
+
+        enumerable: true,
+
+        get: function ()
+        {
+            return this.y + this.height;
+        },
+
+        set: function (value)
+        {
+            if (value <= this.y)
+            {
+                this.height = 0;
+            }
+            else
+            {
+                this.height = value - this.y;
+            }
+        }
+
+    }
+
+});
 
 module.exports = Rectangle;
