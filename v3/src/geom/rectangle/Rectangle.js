@@ -22,7 +22,7 @@ Rectangle.prototype.constructor = Rectangle;
 
 Rectangle.prototype = {
 
-    set: function (x, y, width, height)
+    setTo: function (x, y, width, height)
     {
         this.x = x;
         this.y = y;
@@ -30,6 +30,11 @@ Rectangle.prototype = {
         this.height = height;
 
         return this;
+    },
+
+    setEmpty: function ()
+    {
+        return this.setTo(0, 0, 0, 0);
     },
 
     setPosition: function (x, y)
