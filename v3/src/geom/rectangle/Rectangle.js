@@ -55,6 +55,11 @@ Rectangle.prototype = {
         this.height = height;
 
         return this;
+    },
+
+    isEmpty: function ()
+    {
+        return (this.width <= 0 || this.height <= 0);
     }
 
 };

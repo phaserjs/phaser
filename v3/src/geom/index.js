@@ -2,6 +2,7 @@
 
 module.exports = {
     
-    Rectangle: require('./rectangle')
+    Rectangle: require('./rectangle'),
+    Circle: require('./circle')
 
 };
