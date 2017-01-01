@@ -1,27 +1,22 @@
-var CircleVsRectangle = function (circle, rectangle)
+var CircleVsRectangle = function (circle, rect)
 {
-    var halfWidth = rectangle.width / 2;
-    var halfHeight = rectangle.height / 2;
+    var halfWidth = rect.width / 2;
+    var halfHeight = rect.height / 2;
 
-    var cx = Math.abs(circle.x - rectangle.x - halfWidth);
+    var cx = Math.abs(circle.x - rect.x - halfWidth);
     var xDist = halfWidth + circle.radius;
 
-    if (cx > xDist)
+    if (cx <= halfWidth || cx > xDist)
     {
         return false;
     }
 
-    var cy = Math.abs(circle.y - rectangle.y - halfHeight);
+    var cy = Math.abs(circle.y - rect.y - halfHeight);
     var yDist = halfHeight + circle.radius;
 
-    if (cy > yDist)
+    if (cy <= halfHeight || cy > yDist)
     {
         return false;
-    }
-
-    if (cx <= halfWidth || cy <= halfHeight)
-    {
-        return true;
     }
 
     var xCornerDist = cx - halfWidth;
@@ -30,7 +25,7 @@ var CircleVsRectangle = function (circle, rectangle)
     var yCornerDistSq = yCornerDist * yCornerDist;
     var maxCornerDistSq = circle.radius * circle.radius;
 
-    return xCornerDistSq + yCornerDistSq <= maxCornerDistSq;
+    return (xCornerDistSq + yCornerDistSq <= maxCornerDistSq);
 };
 
 module.exports = CircleVsRectangle;
