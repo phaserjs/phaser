@@ -39,6 +39,11 @@ Circle.prototype = {
         this.y = y;
 
         return this;
+    },
+
+    isEmpty: function ()
+    {
+        return (this._radius <= 0);
     }
 
 };
