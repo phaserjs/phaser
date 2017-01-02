@@ -1,6 +1,6 @@
 var Area = function (ellipse)
 {
-    if (ellipse.empty)
+    if (ellipse.isEmpty())
     {
         return 0;
     }

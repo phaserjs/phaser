@@ -2,7 +2,9 @@
 
 module.exports = {
     
-    Rectangle: require('./rectangle'),
-    Circle: require('./circle')
+    Circle: require('./circle'),
+    Ellipse: require('./ellipse'),
+    Intersects: require('./intersects'),
+    Rectangle: require('./rectangle')
 
 };
