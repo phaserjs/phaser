@@ -53,6 +53,18 @@ Ellipse.prototype = {
         return this;
     },
 
+    //  AKA Semi Minor Axis
+    getMinorRadius: function ()
+    {
+        return Math.min(this.width, this.height) / 2;
+    },
+
+    //  AKA Semi Major Axis
+    getMajorRadius: function ()
+    {
+        return Math.max(this.width, this.height) / 2;
+    },
+
     isEmpty: function ()
     {
         return (this.width <= 0 || this.height <= 0);
