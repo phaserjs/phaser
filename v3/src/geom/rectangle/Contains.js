@@ -1,4 +1,4 @@
-var ContainsXY = function (rect, x, y)
+var Contains = function (rect, x, y)
 {
     if (rect.width <= 0 || rect.height <= 0)
     {
@@ -8,4 +8,4 @@ var ContainsXY = function (rect, x, y)
     return (rect.x <= x && rect.x + rect.width >= x && rect.y <= y && rect.y + rect.height >= y);
 };
 
-module.exports = ContainsXY;
+module.exports = Contains;

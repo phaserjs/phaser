@@ -1,8 +1,4 @@
-
-//  Encapsulates a 2D rectangle defined by its corner point in the top-left
-//  and its extends in x (width) and y (height)
-
-var Rectangle = function (x, y, width, height)
+var Ellipse = function (x, y, width, height)
 {
     if (x === undefined) { x = 0; }
     if (y === undefined) { y = 0; }
@@ -18,9 +14,9 @@ var Rectangle = function (x, y, width, height)
     this.height = height;
 };
 
-Rectangle.prototype.constructor = Rectangle;
+Ellipse.prototype.constructor = Ellipse;
 
-Rectangle.prototype = {
+Ellipse.prototype = {
 
     setTo: function (x, y, width, height)
     {
@@ -60,11 +56,23 @@ Rectangle.prototype = {
     isEmpty: function ()
     {
         return (this.width <= 0 || this.height <= 0);
+    },
+
+    //  AKA Semi Minor Axis
+    getMinorRadius: function ()
+    {
+        return Math.min(this.width, this.height) / 2;
+    },
+
+    //  AKA Semi Major Axis
+    getMajorRadius: function ()
+    {
+        return Math.max(this.width, this.height) / 2;
     }
 
 };
 
-Object.defineProperties(Rectangle.prototype, {
+Object.defineProperties(Ellipse.prototype, {
 
     left: {
 
@@ -163,4 +171,4 @@ Object.defineProperties(Rectangle.prototype, {
 
 });
 
-module.exports = Rectangle;
+module.exports = Ellipse;
