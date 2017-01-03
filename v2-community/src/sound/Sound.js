@@ -62,13 +62,13 @@ Phaser.Sound = function (game, key, volume, loop, connect) {
     this.totalDuration = 0;
 
     /**
-    * @property {number} startTime - The time the Sound starts at (typically 0 unless starting from a marker)
+    * @property {number} startTime - The time the sound starts at in ms (typically 0 unless starting from a marker).
     * @default
     */
     this.startTime = 0;
 
     /**
-    * @property {number} currentTime - The current time the sound is at.
+    * @property {number} currentTime - The current time of sound playback in ms.
     */
     this.currentTime = 0;
 
@@ -83,12 +83,12 @@ Phaser.Sound = function (game, key, volume, loop, connect) {
     this.durationMS = 0;
 
     /**
-    * @property {number} position - The position of the current sound marker.
+    * @property {number} position - The position of the current sound marker in ms.
     */
     this.position = 0;
 
     /**
-    * @property {number} stopTime - The time the sound stopped.
+    * @property {number} stopTime - The time the sound stopped in ms.
     */
     this.stopTime = 0;
 
@@ -99,12 +99,12 @@ Phaser.Sound = function (game, key, volume, loop, connect) {
     this.paused = false;
 
     /**
-    * @property {number} pausedPosition - The position the sound had reached when it was paused.
+    * @property {number} pausedPosition - The position the sound had reached when it was paused in ms.
     */
     this.pausedPosition = 0;
 
     /**
-    * @property {number} pausedTime - The game time at which the sound was paused.
+    * @property {number} pausedTime - The game time (ms) at which the sound was paused.
     */
     this.pausedTime = 0;
 
