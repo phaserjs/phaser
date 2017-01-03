@@ -35,6 +35,7 @@ module.exports = {
     RadToDeg: require('./RadToDeg'),
     Rotate: require('./Rotate'),
     RotateAround: require('./RotateAround'),
+    RotateAroundDistance: require('./RotateAroundDistance'),
     RoundAwayFromZero: require('./RoundAwayFromZero'),
     RoundTo: require('./RoundTo'),
     SinCosTableGenerator: require('./SinCosTableGenerator'),

@@ -1,13 +1,14 @@
 //  p = Point or any object with public x/y properties
-var Rotate = function (p, angle)
+
+var Rotate = function (point, angle)
 {
-    var x = p.x;
-    var y = p.y;
+    var x = point.x;
+    var y = point.y;
 
-    p.x = x * Math.cos(angle) - y * Math.sin(angle);
-    p.y = x * Math.sin(angle) + y * Math.cos(angle);
+    point.x = (x * Math.cos(angle)) - (y * Math.sin(angle));
+    point.y = (x * Math.sin(angle)) + (y * Math.cos(angle));
 
-    return p;
+    return point;
 };
 
 module.exports = Rotate;
