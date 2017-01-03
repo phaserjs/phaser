@@ -8,6 +8,7 @@
 
 ### Updates
 
+* Clarification of `group.exists` behavior
 * Clarification of fixedToCamera semantics
 * change Emitter.gravity from number to Phaser.Point
 * Fixed issue causing tsc to crap out under certain circumstances
