@@ -15,6 +15,7 @@
 
 ### Bug Fixes
 
+* Phaser.Line.intersectsRectangle() now works correctly for horizontal and vertical lines ([#2942](https://github.com/photonstorm/phaser/issues/2942)).
 * removeTextureAtlas now deletes the correct cache object.
 
 ## Version 2.7.1 - 28th November 2016
