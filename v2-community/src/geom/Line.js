@@ -633,8 +633,9 @@ Phaser.Line.intersects = function (a, b, asSegment, result) {
 *
 * An intersection is considered valid if:
 *
-* The line starts within or ends within the rectangle (even for lines of length 0); or
+* The line starts within or ends within the rectangle; or
 * The line segment intersects one of the 4 rectangle edges; and
+* The line has a non-zero length; and
 * The rectangle is not empty.
 *
 * For the purposes of this function rectangles are considered 'solid'.
@@ -647,7 +648,7 @@ Phaser.Line.intersects = function (a, b, asSegment, result) {
 Phaser.Line.intersectsRectangle = function (line, rect) {
 
     //  Quick bail out
-    if (rect.empty)
+    if (line.length === 0 || rect.empty)
     {
         return false;
     }
