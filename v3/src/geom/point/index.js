@@ -11,6 +11,7 @@ Point.Divide = require('./Divide');
 Point.Dot = require('./Dot');
 Point.Equals = require('./Equals');
 Point.Floor = require('./Floor');
+Point.GetCentroid = require('./GetCentroid');
 Point.GetMagnitude = require('./GetMagnitude');
 Point.GetMagnitudeSq = require('./GetMagnitudeSq');
 Point.Interpolate = require('./Interpolate');
