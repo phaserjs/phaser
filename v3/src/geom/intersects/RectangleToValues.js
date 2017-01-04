@@ -1,4 +1,4 @@
-var RectangleVsValues = function (rect, left, right, top, bottom, tolerance)
+var RectangleToValues = function (rect, left, right, top, bottom, tolerance)
 {
     if (tolerance === undefined) { tolerance = 0; }
 
@@ -10,4 +10,4 @@ var RectangleVsValues = function (rect, left, right, top, bottom, tolerance)
     );
 };
 
-module.exports = RectangleVsValues;
+module.exports = RectangleToValues;
