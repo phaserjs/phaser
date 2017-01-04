@@ -1,6 +1,8 @@
+var Point = require('../point/Point');
+
 var Random = function (ellipse, out)
 {
-    if (out === undefined) { out = { x: 0, y: 0 }; }
+    if (out === undefined) { out = new Point(); }
 
     var p = Math.random() * Math.PI * 2;
     var s = Math.sqrt(Math.random());

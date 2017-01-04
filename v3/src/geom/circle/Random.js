@@ -1,3 +1,5 @@
+var Point = require('../point/Point');
+
 /**
 * Returns a uniformly distributed random point from anywhere within this Circle.
 * 
@@ -8,7 +10,7 @@
 */
 var Random = function (circle, out)
 {
-    if (out === undefined) { out = { x: 0, y: 0 }; }
+    if (out === undefined) { out = new Point(); }
 
     var t = 2 * Math.PI * Math.random();
     var u = Math.random() + Math.random();

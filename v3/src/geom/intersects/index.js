@@ -1,10 +1,14 @@
 
 module.exports = {
 
-    CircleVsCircle: require('./CircleVsCircle'),
-    CircleVsRectangle: require('./CircleVsRectangle'),
+    CircleToCircle: require('./CircleToCircle'),
+    CircleToRectangle: require('./CircleToRectangle'),
     GetRectangleIntersection: require('./GetRectangleIntersection'),
-    RectangleVsRectangle: require('./RectangleVsRectangle'),
-    RectangleVsValues: require('./RectangleVsValues')
+    LineToLine: require('./LineToLine'),
+    LineToRectangle: require('./LineToRectangle'),
+    PointToLine: require('./PointToLine'),
+    PointToLineSegment: require('./PointToLineSegment'),
+    RectangleToRectangle: require('./RectangleToRectangle'),
+    RectangleToValues: require('./RectangleToValues')
 
 };
