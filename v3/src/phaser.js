@@ -44,3 +44,9 @@ require('./gameobjects/container/ContainerFactory');
 module.exports = Phaser;
 
 global.Phaser = Phaser;
+
+/*
+ * “Sometimes, the elegant implementation is just a function.
+ * Not a method. Not a class. Not a framework. Just a function.”
+ * - John Carmack
+ */
