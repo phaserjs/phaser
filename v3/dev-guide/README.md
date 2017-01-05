@@ -74,7 +74,7 @@ Having said that, there is a 'Download' button in the top-right as well. If you 
 
 ### Creating a New Example
 
-All the Phaser 3 examples can be found in the `phaser3-examples/public/src` folder. You'll see what we've numbered them. This is just during development. Over time we'll create sub-folders and examples within those, but for dev we're using numbers so we can all talk about 'Example 44' and know exactly which one we're referring to.
+All the Phaser 3 examples can be found in the `phaser3-examples/public/src` folder. You'll see that we've numbered them. This is just during development. Over time we'll create sub-folders and examples within those, but for dev we're using numbers so we can all talk about 'Example 44' and know exactly which one we're referring to.
 
 1. To create a new example just save it into the `src` folder, giving it a non-conflicting version number and file name.
 
@@ -194,10 +194,10 @@ There is a global State Manager. This parses, creates and maintains all of the S
 
 The State itself is a quite small class that contains 4 key properties and a handful of functions. The properties are really important, and are:
 
-`game` - a reference to the Phaser Game instance to which the State belongs.
-`settings` - the State settings. These are settings defined by the game dev for that specific State (such as fps, width, height, scale mode, etc)
-`sys` - the big one, the State Systems property (see below)
-`children` - an instance of the Children Component. All display level objects that belong to this State, exist in this component.
+* `game` - a reference to the Phaser Game instance to which the State belongs.
+* `settings` - the State settings. These are settings defined by the game dev for that specific State (such as fps, width, height, scale mode, etc)
+* `sys` - the big one, the State Systems property (see below)
+* `children` - an instance of the Children Component. All display level objects that belong to this State, exist in this component.
 
 ### State Systems
 
