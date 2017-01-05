@@ -13,7 +13,7 @@ You can now use typings, the TypeScript Definition Manager, to include Phaser's 
 - Make sure that typings is installed in your system: `npm install -g typings`
 - Install phaser typescript definitions as a global dependency: 
 ```
-typings install github:photonstorm/phaser/typescript/typings.json -GD
+typings install github:photonstorm/phaser/v2-community/typescript/typings.json -GD
 ```
 
 This will make phaser typescript definitions available for your compiler so that there is no need to reference them from your source files. 
