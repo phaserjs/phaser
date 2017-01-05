@@ -2,6 +2,8 @@
 
 This evolving guide is written for those who wish to help with Phaser 3. I must stress, this isn't a guide on how to use Phaser 3, or to make games, it's a guide on how to set-up your dev environment so you can assist us in _building Phaser 3 itself_, along with the basics of the internal structure.
 
+All of the following is subject to change as V3 evolves, but is correct as of today: 5th January 2017.
+
 ## Set-up Your Environment
 
 I'm assuming you already have a recent version of Node installed locally, and can run `npm`. This guide is tested and works on both Windows 10 and OS X, so the platform doesn't matter.
@@ -158,7 +160,7 @@ Circle.Random = require('./Random');
 module.exports = Circle;
 ```
 
-In the above, the `Circle` file contains the base class / object, and the rest contain additional functions that help support it. Based on the above structure you can do:
+In the above, the `Circle` file contains the base class / object, and the rest of the files contain additional functions that help support it. Based on the above structure you can do:
 
 ```
 var circle = new Phaser.Geom.Circle(0, 0, 32);
@@ -182,5 +184,148 @@ All of the additional functionality a class may need is added via functions (suc
 
 This means that the 'standard' Phaser 3 API can include all of these functions by default, to help keep it easy to use for devs, but that if you wish to create your own much smaller, and more refined, build - then you can literally say "Nope, don't need any of those extra Circle functions", and just not include them.
 
+## How States Work
+
+In Phaser 3 the State Manager maintains and runs multiple states, in parallel if required. States have been elevated considerably from their humble origins in Phaser 2, and are now in their own way complete mini 'Games' in their own right.
+
+All of the State files live in `src/state`.
+
+There is a global State Manager. This parses, creates and maintains all of the States. When the Game Boots, it is responsible for handling the State set-up.
+
+The State itself is a quite small class that contains 4 key properties and a handful of functions. The properties are really important, and are:
+
+`game` - a reference to the Phaser Game instance to which the State belongs.
+`settings` - the State settings. These are settings defined by the game dev for that specific State (such as fps, width, height, scale mode, etc)
+`sys` - the big one, the State Systems property (see below)
+`children` - an instance of the Children Component. All display level objects that belong to this State, exist in this component.
+
+### State Systems
+
+The State Systems controller is in `src/state/Systems.js`, and the systems themselves reside in the `state/systems` sub-folder. Basically State Systems are all the various systems that a State needs in order to work. Examples of State Systems are:
+
+* The Game Object Factory
+* The Loader
+* The Main Loop
+* The Update Manager
+* A Camera
+* Event Dispatcher
+
+... and so on.
+
+Remember in Phaser 2 how you could do `this.add.sprite` from within your State? The `add` part of that was the Game Object Factory. In Phaser 2 the Factory was global, belonging to the Game instance itself, and the State just referenced it. In V3 the Game no longer holds any systems (other than Textures), they now all belong to the States themselves. So in v3 `this.add.sprite` is actually talking to the `state/systems/GameObjectFactory` instead.
+
+There are lots of other systems in there, and lots more to come. This part of V3 is in flux right now, but the core concept is sound, it will just continue to evolve.
+
+In V2 States used to be populated with masses of properties (over 30 of them), references to all the various systems. In V3 this is now under dev control via the State Settings object, so they can decide which gets exposed and what doesn't.
+
+**Important** When a State System needs to reference another State System, it must do so via the `state.sys` property. For example say one system needs to add an item to the display list, it should call `state.sys.add` and not `state.add`, because that property may have been excluded in via the State Settings.
+
 ## How Game Objects Work
+
+All Game Objects (GOs) in Phaser 3 inherit from the same base class, which is found in `src/gameobjects/GameObject.js`. This class contains a few core functions, getters / setters and some core properties.
+
+Most importantly: Game Objects now belong to a State, not a 'World' any more. In a way, you can think of each State as being its own 'World', but the property is now `state` and `world` is no longer used.
+
+All GOs have a `transform` property, which is an instance of the Transform Component. It controls everything to do with the transformation of the GO (rotation, scale, position, etc).
+
+Texture based GOs (like Images and Sprites) have `texture` and `frame` properties. These contain _references_ to a base texture and frame, not instances (see the Texture Manager for more details)
+
+If relevant, the GO has two renderer functions, one for Canvas and one for WebGL. For example the Image GO has `ImageWebGLRenderer` and `ImageCanvasRenderer`.
+
+If you look at the WebGL function you'll see it's very minimal:
+
+```
+var ImageWebGLRenderer = function (renderer, src, interpolationPercentage)
+{
+    var frame = src.frame;
+    var alpha = src.color.worldAlpha * 255 << 24;
+
+    //  Skip rendering?
+
+    if (src.skipRender || !src.visible || alpha === 0 || !frame.cutWidth || !frame.cutHeight)
+    {
+        return;
+    }
+
+    var verts = src.transform.getVertexData(interpolationPercentage);
+    var index = src.frame.source.glTextureIndex;
+    var tint = src.color._glTint;
+    var bg = src.color._glBg;
+
+    renderer.batch.add(frame.source, src.blendMode, verts, frame.uvs, index, alpha, tint, bg);
+};
+
+module.exports = ImageWebGLRenderer;
+```
+
+In the above `src` refers to the Image GO itself, and `renderer` to the WebGL Renderer instance responsible for displaying the Image.
+
+## The Core Game Loop
+
+When Phaser boots it creates an instance of Phaser.Game (`src/boot/Game.js`). This takes a Game Configuration object, which is passed to the Config handler (`src/boot/Config.js`), and all the various things it needs are extracted from it.
+
+The Game object, unlike in V2, now only has a small number of properties and functions. It only looks after truly global systems, of which there are (currently) only 3: The Request Animation Frame handler, the Texture Manager, the State Manager and the Device class.
+
+When the DOM Content Loaded event happens, the Game calls Game.boot. This sets-up the RNG, header, renderer, State Manager and starts RAF running.
+
+### A single tick
+
+Every time RAF ticks it calls the following:
+
+1. Calls `Game.update`, which ...
+2. Calls `StateManager.step`, which ...
+3. Iterates through all _active_ States, and ...
+4. Calls `State.sys.mainloop.step`, which ...
+5. Checks if the frame rate is throttled, and returns if so, otherwise ...
+6. It updates the frame delta values, then ...
+7. Calls `State.sys.begin` (which is an empty function by default)
+8. While the frame delta is within range, it ...
+9. Calls `State.sys.update` (empty by default)
+10. If then iterates through all `State.children`, and if they exist calls `update` on each of them
+11. It then calls `State.update`
+12. When the while loop exits (because the frameDelta is > the step size), it ...
+13. Calls `State.sys.preRender` (empty)
+14. Calls `State.sys.updates.start` - this process the Update Managers list
+15. If the State is visible, it then calls `Game.renderer.render`, passing in the State ...
+16. If the Renderer is running it performs all of the related set-up calls (setting the blend mode, clearing the canvas, etc), then ...
+17. Starts the Batch Manager (`src/renderer/webgl/BatchManager.start`)
+18. Calls `StateManager.renderChildren`, which ...
+19. Iterates through all children of the current State, calling `child.render` on each one.
+20. It then calls `State.sys.updates.stop` - which stops the Update Manager
+21. Finally it calls `State.sys.end` which just resets the frame delta / panic flags.
+
+In a tree form it maps to the following:
+
+```
++ Game.update
+|
++ StateManager.step (iterates all active States)
+  |
+  +- State.sys.mainloop.step (updates delta values)
+  +- State.sys.begin
+  +- While (frameDelta within step range)
+     |
+     +- State.sys.update
+     +- Iterates State.children, if child exists, call child.update
+     +- State.update
+  |
+  +- State.sys.preRender
+  +- Update Manager Start (State.sys.updates)
+  +- Game.renderer.render (if State is visible)
+     |
+     +- Renderer set-up (blend mode, clear canvas, etc)
+     +- Batch Manager Start
+     +- StateManager.renderChildren
+        |
+        +- Iterates all children, calling child.render on each
+  |
+  +- Update Manager Stop (State.sys.updates)
+  +- State.sys.end (resets frame delta and panic flags)
+```
+
+The above is subject to change heavily! There are currently lots of empty function calls in there (State.sys.update for example), so we may well optimize this path considerably.
+
+In essence though the concept is: Once per frame we update all the timing values, update the core systems, update the children, and repeat this until our step value is high enough, then we render everything.
+
+
 
