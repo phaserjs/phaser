@@ -4,7 +4,9 @@ Welcome to Phaser 3!
 
 **Phaser 3 is not yet ready for production use**
 
-You are of course welcome to clone the source, play around, and mess with it as much as you like. But understand it's changing every single day, and shouldn't be used for production level games yet.
+If you want to help build Phaser 3 then check out our new [Getting Started Guide](dev-guide/README.md). I stress this isn't a guide on how to make Phaser 3 games, it's a guide on how to set-up your dev environment so you can assist us in _building Phaser 3 itself_.
+
+You are of course welcome to clone the source, play around, and mess with it as much as you like. But understand it's changing every single day.
 
 Every Friday we publish the [Phaser World](http://phaser.io/community/newsletter) newsletter, and part of each issue contains our 'Development Progress' articles. These are condensed summaries of what we've been working on during the week.
 
