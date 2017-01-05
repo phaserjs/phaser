@@ -14,17 +14,17 @@ I'm assuming you already have a recent version of Node installed locally, and ca
 
 3. Using your console, `cd` into the `phaser/v3/` folder. You can then either run `npm install` or `yarn install`, as we've configs for both. This process should install a local copy of webpack2 and a handful of small support scripts. Note that Yarn on Windows seems to have issues making some packages global, so stick with npm if this is the case.
 
-4. Making sure you've got both repos checked out, and at the same directory level in your filesystem, issue the comment `webpack` from within the v3 folder. You should see the following output (truncated for brevity):
+4. Making sure you've got both repos checked out, and at the same directory level in your filesystem, issue the command `webpack` from within the v3 folder. You should see the following output (truncated for brevity):
 
-![Webpack](webpack1.png)
+    ![Webpack](webpack1.png)
 
-and at the end, after all the files have been packed:
+    and at the end, after all the files have been packed:
 
-![Webpack End](webpack2.png)
+    ![Webpack End](webpack2.png)
 
-If there are any errors in the code, they'll be flagged in the build process above.
+    If there are any errors in the code, they'll be flagged in the build process above.
 
-**What you need to end up with is the ability to issue the command `webpack` within the v3 folder, and have it work**
+    **What you need to end up with is the ability to issue the command `webpack` within the v3 folder, and have it work**
 
 5. There is an ESLint configuration and an Editor Configuration in the v3 folder. **Please adhere to these!** Although not enforced in the build process yet, I will be adding that at a later point. There are lots of tools you can install so your editor of choice will check the ES Lint config during development.
 
@@ -36,29 +36,29 @@ Now you can build Phaser 3, it's time to run the Examples.
 
 1. Make sure you can access the Phaser 3 Examples Runner in your browser. If your local server is running on 127.0.0.1 then try to load `http://127.0.0.1/phaser3-examples/public/` and make sure the page loads. It should look something like this:
 
-![Examples Runner](examples-runner.png)
+    ![Examples Runner](examples-runner.png)
 
 2. From the list, scroll down, and pick `021 - image from atlas`. The Phaser 3 Sandbox editor should appear with the code on the left and a blank window on the right. You likely do this already, but I strongly suggest you perform all testing with the browsers Dev Tools open. In Chrome this will ensure the cache doesn't mess things up, and that you see errors and debug info.
 
 3. Click 'Run Code'. The example should load in the right-pane (in this case it'll show a selection of sprites from a texture atlas)
 
-![Code Editor](examples-runner2.png)
+    ![Code Editor](examples-runner2.png)
 
-Note: The red background in the grab above is for debugging. You may not see this when you run it. What's important is that you do actually see the Sprites, and it doesn't throw any errors.
+    Note: The red background in the grab above is for debugging. You may not see this when you run it. What's important is that you do actually see the Sprites, and it doesn't throw any errors.
 
 4. If it doesn't run, check the console for errors, check your paths, and see if anything is missing.
 
-**IMPORTANT** Not all examples run! Lots of the early ones don't currently work, as they were built before Phaser was refactored into modules. Given time I'll update them all, but for now a quick way to test is to check the source. If the Phaser Game is created like this: `var game = new Phaser.Game(800, 600 ...` then it means the example is old and hasn't yet been updated.
+    **IMPORTANT** Not all examples run! Lots of the early ones don't currently work, as they were built before Phaser was refactored into modules. Given time I'll update them all, but for now a quick way to test is to check the source. If the Phaser Game is created like this: `var game = new Phaser.Game(800, 600 ...` then it means the example is old and hasn't yet been updated.
 
 5. Using the editor in the browser, tweak the code. For example change this line:
 
-`    this.add.image(0, 0, 'atlas', 'aya_touhou_teng_soldier');`
+    `    this.add.image(0, 0, 'atlas', 'aya_touhou_teng_soldier');`
 
-to
+    to
 
-`    this.add.image(0, 200, 'atlas', 'aya_touhou_teng_soldier');`
+    `    this.add.image(0, 200, 'atlas', 'aya_touhou_teng_soldier');`
 
-.. and click 'Run Code' again. The right-hand iFrame should reload, the dev tools console should clear, and the changes should be reflected instantly.
+    .. and click 'Run Code' again. The right-hand iFrame should reload, the dev tools console should clear, and the changes should be reflected instantly.
 
 The Phaser 3 Examples runner is now working properly. Woohoo!
 
@@ -80,9 +80,9 @@ All the Phaser 3 examples can be found in the `phaser3-examples/public/src` fold
 
 2. New examples don't appear on the Phaser 3 Examples index list by default. They are read from the `examples.json` file in the public folder of the repo when the page loads. To add your example to the JSON you can use the provided node script:
 
-`node build`
+    `node build`
 
-This will parse the `src` folder, and write everything it finds in there to the json file. You can then commit it to the repo, and it'll appear on the index page.
+    This will parse the `src` folder, and write everything it finds in there to the json file. You can then commit it to the repo, and it'll appear on the index page.
 
 ## The Build Process
 
