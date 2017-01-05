@@ -11,9 +11,9 @@ Circle.ContainsPoint = require('./ContainsPoint');
 Circle.ContainsRect = require('./ContainsRect');
 Circle.CopyFrom = require('./CopyFrom');
 Circle.Equals = require('./Equals');
+Circle.GetBounds = require('./GetBounds');
 Circle.Offset = require('./Offset');
 Circle.OffsetPoint = require('./OffsetPoint');
-Circle.Overlaps = require('./Overlaps');
 Circle.Random = require('./Random');
 
 module.exports = Circle;

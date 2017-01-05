@@ -1,11 +1,11 @@
 var Rectangle = require('../rectangle/Rectangle');
-var RectangleVsRectangle = require('./RectangleVsRectangle');
+var RectangleToRectangle = require('./RectangleToRectangle');
 
 var GetRectangleIntersection = function (rectA, rectB, output)
 {
     if (output === undefined) { output = new Rectangle(); }
 
-    if (RectangleVsRectangle(rectA, rectB))
+    if (RectangleToRectangle(rectA, rectB))
     {
         output.x = Math.max(rectA.x, rectB.x);
         output.y = Math.max(rectA.y, rectB.y);
