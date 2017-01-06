@@ -219,6 +219,9 @@ Phaser.DeviceButton.prototype = {
     */
     padFloat: function (value) {
 
+        this.isDown = false;
+        this.isUp = false;
+
         this.value = value;
 
         this.onFloat.dispatch(this, value);
