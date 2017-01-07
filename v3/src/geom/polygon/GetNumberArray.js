@@ -9,10 +9,10 @@ var GetNumberArray = function (polygon, output)
 {
     if (output === undefined) { output = []; }
 
-    for (var i = 0; i < polygon._points.length; i++)
+    for (var i = 0; i < polygon.points.length; i++)
     {
-        output.push(polygon._points[i].x);
-        output.push(polygon._points[i].y);
+        output.push(polygon.points[i].x);
+        output.push(polygon.points[i].y);
     }
 
     return output;

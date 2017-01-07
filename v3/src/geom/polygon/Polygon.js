@@ -6,10 +6,9 @@ var Polygon = function (points)
     this.area = 0;
 
     /**
-    * @property {array} _points - An array of number pair objects that make up this polygon. I.e. [ {x,y}, {x,y}, {x,y} ]
-    * @private
+    * @property {array} points - An array of number pair objects that make up this polygon. I.e. [ {x,y}, {x,y}, {x,y} ]
     */
-    this._points = [];
+    this.points = [];
 
     if (points)
     {
@@ -40,7 +39,7 @@ Polygon.prototype = {
     setTo: function (points)
     {
         this.area = 0;
-        this._points = [];
+        this.points = [];
 
         if (!Array.isArray(points))
         {
@@ -74,7 +73,7 @@ Polygon.prototype = {
                 p.y = points[i].y;
             }
 
-            this._points.push(p);
+            this.points.push(p);
 
             //  Lowest boundary
             if (p.y < y0)
@@ -89,7 +88,7 @@ Polygon.prototype = {
     },
 
     /**
-     * Calcuates the area of the Polygon. This is available in the property Polygon.area
+     * Calculates the area of the Polygon. This is available in the property Polygon.area
      *
      * @method Phaser.Polygon#calculateArea
      * @private
@@ -98,28 +97,54 @@ Polygon.prototype = {
      */
     calculateArea: function (y0)
     {
+        if (this.points.length < 3)
+        {
+            this.area = 0;
+
+            return this.area;
+        }
+
+        var sum = 0;
         var p1;
         var p2;
-        var avgHeight;
-        var width;
 
-        for (var i = 0, len = this._points.length; i < len; i++)
+        for (var i = 0; i < this.points.length - 1; i++)
         {
-            p1 = this._points[i];
+            p1 = this.points[i];
+            p2 = this.points[i + 1];
 
-            if (i === len - 1)
-            {
-                p2 = this._points[0];
-            }
-            else
-            {
-                p2 = this._points[i + 1];
-            }
-
-            avgHeight = ((p1.y - y0) + (p2.y - y0)) / 2;
-            width = p1.x - p2.x;
-            this.area += avgHeight * width;
+            sum += (p2.x - p1.x) * (p1.y + p2.y);
         }
+
+        p1 = this.points[0];
+        p2 = this.points[this.points.length - 1];
+
+        sum += (p1.x - p2.x) * (p2.y + p1.y);
+
+        this.area = -sum * 0.5;
+
+        // var p1;
+        // var p2;
+        // var avgHeight;
+        // var width;
+
+        // for (var i = 0, len = this.points.length; i < len; i++)
+        // {
+        //     p1 = this.points[i];
+
+        //     if (i === len - 1)
+        //     {
+        //         p2 = this.points[0];
+        //     }
+        //     else
+        //     {
+        //         p2 = this.points[i + 1];
+        //     }
+
+        //     avgHeight = ((p1.y - y0) + (p2.y - y0)) / 2;
+        //     width = p1.x - p2.x;
+        //     this.area += avgHeight * width;
+        // }
 
         return this.area;
     }
