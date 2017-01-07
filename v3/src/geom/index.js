@@ -8,6 +8,7 @@ module.exports = {
     Intersects: require('./intersects'),
     Line: require('./line'),
     Point: require('./point'),
+    Polygon: require('./polygon'),
     Rectangle: require('./rectangle')
 
 };
