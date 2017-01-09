@@ -16,6 +16,7 @@
 
 ### Bug Fixes
 
+* Floating Gamepad buttons now work correctly when partially pressing and releasing
 * Phaser.Line.intersectsRectangle() now works correctly for horizontal and vertical lines ([#2942](https://github.com/photonstorm/phaser/issues/2942)).
 * removeTextureAtlas now deletes the correct cache object.
 
