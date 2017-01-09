@@ -332,6 +332,7 @@ If you code with [TypeScript](http://www.typescriptlang.org/) there are comprehe
 * Added tempPoint argument / undefined block to Graphics.containsPoint
 * Fixed Text.setCharacterLimit conditional check
 * Added resolution argument to LoaderParser.jsonBitmapFont
+* Fixed Phaser.Plugin.AStar TypeScript definitions to match plugin source
 
 ## Version 2.7.2 - 6th December 2016
 
