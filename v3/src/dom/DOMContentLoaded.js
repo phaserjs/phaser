@@ -8,7 +8,7 @@ var OS = require('../device/OS');
 
 var isBooted = false;
 
-function DOMContentLoaded (callback)
+var DOMContentLoaded = function (callback)
 {
     if (isBooted)
     {
@@ -49,6 +49,6 @@ function DOMContentLoaded (callback)
         document.addEventListener('DOMContentLoaded', check, true);
         window.addEventListener('load', check, true);
     }
-}
+};
 
 module.exports = DOMContentLoaded;

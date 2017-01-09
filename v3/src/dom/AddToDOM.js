@@ -1,4 +1,4 @@
-function AddToDOM (element, parent, overflowHidden)
+var AddToDOM = function (element, parent, overflowHidden)
 {
     if (overflowHidden === undefined) { overflowHidden = true; }
 
@@ -32,7 +32,6 @@ function AddToDOM (element, parent, overflowHidden)
     target.appendChild(element);
 
     return element;
-
-}
+};
 
 module.exports = AddToDOM;

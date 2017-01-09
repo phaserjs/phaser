@@ -1,6 +1,6 @@
-function RemoveEventListener (target, event, listener)
+var RemoveEventListener = function (target, event, listener)
 {
     target.removeEventListener(event, listener);
-}
+};
 
 module.exports = RemoveEventListener;

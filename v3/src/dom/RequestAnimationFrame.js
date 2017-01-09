@@ -27,19 +27,6 @@ function RequestAnimationFrame (game)
 
     this.tick = 0;
 
-    var vendors = [
-        'ms',
-        'moz',
-        'webkit',
-        'o'
-    ];
-
-    for (var x = 0; x < vendors.length && !window.requestAnimationFrame; x++)
-    {
-        window.requestAnimationFrame = window[vendors[x] + 'RequestAnimationFrame'];
-        window.cancelAnimationFrame = window[vendors[x] + 'CancelAnimationFrame'];
-    }
-
     /**
     * @property {boolean} isSetTimeOut  - True if the browser is using setTimeout instead of rAf.
     */
