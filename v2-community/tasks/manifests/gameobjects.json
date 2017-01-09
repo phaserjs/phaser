@@ -1,8 +1,0 @@
-[
-    "src/gameobjects/GameObjectFactory.js",
-    "src/gameobjects/GameObjectCreator.js",
-    "src/gameobjects/Sprite.js",
-    "src/gameobjects/Image.js",
-    "src/gameobjects/Button.js",
-    "src/gameobjects/SpriteBatch.js"
-]

@@ -1,9 +1,0 @@
-[
-    "src/input/Input.js",
-    "src/input/Mouse.js",
-    "src/input/MSPointer.js",
-    "src/input/DeviceButton.js",
-    "src/input/Pointer.js",
-    "src/input/Touch.js",
-    "src/input/InputHandler.js"
-]
