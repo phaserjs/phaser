@@ -20,103 +20,103 @@ var ConstantElement = function (gl, shaderPipeline, descriptor) {
     }
 
     switch (descriptor.type) {
-    case PipelineState.TYPE_FLOAT:
+    case ConstantElement.TYPE_FLOAT:
         PHASER_ASSERT((this.dataReference instanceof Float32Array), 'Invalid type for constant refenrece data');
         this.update = function () {
             gl.uniform1fv(this.location, this.dataReference);
         };
         break;
-    case PipelineState.TYPE_INT:
+    case ConstantElement.TYPE_INT:
         PHASER_ASSERT((this.dataReference instanceof Int32Array), 'Invalid type for constant refenrece data');
         this.update = function () {
             gl.uniform1iv(this.location, this.dataReference);
         };
         break;
-    case PipelineState.TYPE_BOOL:
+    case ConstantElement.TYPE_BOOL:
         PHASER_ASSERT((this.dataReference instanceof Int32Array), 'Invalid type for constant refenrece data');
         this.update = function () {
             gl.uniform1iv(this.location, this.dataReference);
         };
         break;
-    case PipelineState.TYPE_FLOAT_VEC2:
+    case ConstantElement.TYPE_FLOAT_VEC2:
         PHASER_ASSERT((this.dataReference instanceof Float32Array), 'Invalid type for constant refenrece data');
         this.update = function () {
             gl.uniform2fv(this.location, this.dataReference);
         };
         break;
-    case PipelineState.TYPE_INT_VEC2:
+    case ConstantElement.TYPE_INT_VEC2:
         PHASER_ASSERT((this.dataReference instanceof Int32Array), 'Invalid type for constant refenrece data');
         this.update = function () {
             gl.uniform2iv(this.location, this.dataReference);
         };
         break;
-    case PipelineState.TYPE_BOOL_VEC2:
+    case ConstantElement.TYPE_BOOL_VEC2:
         PHASER_ASSERT((this.dataReference instanceof Int32Array), 'Invalid type for constant refenrece data');
         this.update = function () {
             gl.uniform2iv(this.location, this.dataReference);
         };
         break;
-    case PipelineState.TYPE_FLOAT_VEC3:
+    case ConstantElement.TYPE_FLOAT_VEC3:
         PHASER_ASSERT((this.dataReference instanceof Float32Array), 'Invalid type for constant refenrece data');
         this.update = function () {
             gl.uniform3fv(this.location, this.dataReference);
         };
         break;
-    case PipelineState.TYPE_INT_VEC3:
+    case ConstantElement.TYPE_INT_VEC3:
         PHASER_ASSERT((this.dataReference instanceof Int32Array), 'Invalid type for constant refenrece data');
         this.update = function () {
             gl.uniform3iv(this.location, this.dataReference);
         };
         break;
-    case PipelineState.TYPE_BOOL_VEC3:
+    case ConstantElement.TYPE_BOOL_VEC3:
         PHASER_ASSERT((this.dataReference instanceof Int32Array), 'Invalid type for constant refenrece data');
         this.update = function () {
             gl.uniform3iv(this.location, this.dataReference);
         };
         break;
-    case PipelineState.TYPE_FLOAT_VEC4:
+    case ConstantElement.TYPE_FLOAT_VEC4:
         PHASER_ASSERT((this.dataReference instanceof Float32Array), 'Invalid type for constant refenrece data');
         this.update = function () {
             gl.uniform4fv(this.location, this.dataReference);
         };
         break;
-    case PipelineState.TYPE_INT_VEC4:
+    case ConstantElement.TYPE_INT_VEC4:
         PHASER_ASSERT((this.dataReference instanceof Int32Array), 'Invalid type for constant refenrece data');
         this.update = function () {
             gl.uniform4iv(this.location, this.dataReference);
         };
         break;
-    case PipelineState.TYPE_BOOL_VEC4:
+    case ConstantElement.TYPE_BOOL_VEC4:
         PHASER_ASSERT((this.dataReference instanceof Int32Array), 'Invalid type for constant refenrece data');
         this.update = function () {
             gl.uniform4iv(this.location, this.dataReference);
         };
         break;
-    case PipelineState.TYPE_MAT2:
+    case ConstantElement.TYPE_MAT2:
         PHASER_ASSERT((this.dataReference instanceof Float32Array), 'Invalid type for constant refenrece data');
         this.update = function () {
             gl.uniformMatrix2fv(this.location, this.transpose, this.dataReference);
         };
         break;
-    case PipelineState.TYPE_MAT3:
+    case ConstantElement.TYPE_MAT3:
         PHASER_ASSERT((this.dataReference instanceof Float32Array), 'Invalid type for constant refenrece data');
         this.update = function () {
             gl.uniformMatrix3fv(this.location, this.transpose, this.dataReference);
         };
         break;
-    case PipelineState.TYPE_MAT4:
+    case ConstantElement.TYPE_MAT4:
         PHASER_ASSERT((this.dataReference instanceof Float32Array), 'Invalid type for constant refenrece data');
         this.update = function () {
             gl.uniformMatrix4fv(this.location, this.transpose, this.dataReference);
         };
         break;
-    case PipelineState.TYPE_SAMPLER_2D:
+    case ConstantElement.TYPE_SAMPLER_2D:
         PHASER_ASSERT((this.dataReference instanceof Int32Array), 'Invalid type for constant refenrece data');
         this.update = function () {
             gl.uniform1iv(this.location, this.dataReference);
         };
         break;
-    case PipelineState.TYPE_SAMPLER_CUBE:
+    case ConstantElement.TYPE_SAMPLER_CUBE:
         PHASER_ASSERT((this.dataReference instanceof Int32Array), 'Invalid type for constant refenrece data');
         this.update = function () {
             gl.uniform1iv(this.location, this.dataReference);
