@@ -25,6 +25,8 @@ var Phaser = {
 
     },
 
+    Sound: require('./sound'),
+
     Utils: {
 
         Array: require('./utils/array/'),

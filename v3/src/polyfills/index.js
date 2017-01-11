@@ -1,5 +1,6 @@
 require('./Array.forEach');
 require('./Array.isArray');
+require('./AudioContextMonkeyPatch');
 require('./console');
 require('./Function.bind');
 require('./Math.trunc');
