@@ -1,22 +1,27 @@
-var PHASER_ASSERT = function (condition, message) {
-    if (!(condition)) {
+var PHASER_ASSERT = function (condition, message)
+{
+    if (!(condition))
+    {
         console.error('Assertion Failed: ', message);
     }
-}
+};
 
 // Device works as the WebGL backend. It's the API
 // that interacts directly with WebGL calls. It's
 // design to reduce the amount state changes and
 // redundant gl calls.
-var Device = function (gl) {
+var Device = function (gl)
+{
     this.gl = gl;
     this.canvas = gl.canvas;
     this.pipelineState = null;
-}
-Device.prototype.clearPipelineState = function () {
+};
+Device.prototype.clearPipelineState = function ()
+{
     var gl = this.gl;
     var canvas = gl.canvas;
-    if (this.pipelineState === null) {
+    if (this.pipelineState === null)
+    {
         this.pipelineState = null;
         gl.useProgram(null);
         gl.bindBuffer(gl.ARRAY_BUFFER, null);
@@ -27,14 +32,17 @@ Device.prototype.clearPipelineState = function () {
         gl.viewport(0, 0, canvas.width, canvas.height);
     }
 };
-Device.prototype.setPipelineState = function (pipelineState) {
+Device.prototype.setPipelineState = function (pipelineState)
+{
     var vertexInput, inputLayout, elements, elementsCount,
         viewport, blendState, vertexBuffer, indexBuffer,
         depthStencilState, gl;
 
     PHASER_ASSERT(pipelineState != null, 'Invalid pipeline state.');
     if (this.pipelineState === pipelineState)
+    {
         return;
+    }
 
     this.pipelineState = pipelineState;
     gl = this.gl;
@@ -57,13 +65,18 @@ Device.prototype.setPipelineState = function (pipelineState) {
 
     // Bind buffers
     if (vertexBuffer)
+    {
         gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer.bufferHandle);
+    }
 
     if (indexBuffer)
+    {
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer.bufferHandle);
+    }
 
     // Bind Elements
-    for (var index = 0; index < elementsCount; ++index) {
+    for (var index = 0; index < elementsCount; ++index)
+    {
         var element = elements[index];
         var elementLocation = element.location;
         gl.enableVertexAttribArray(elementLocation);
@@ -78,26 +91,33 @@ Device.prototype.setPipelineState = function (pipelineState) {
     }
 
     // Bind blend state
-    if (blendState && blendState.enabled) {
+    if (blendState && blendState.enabled)
+    {
         gl.enable(gl.BLEND);
-        gl.logicOp(blendState.logicOperator);
+        //gl.logicOp(blendState.logicOperator);
         gl.blendEquationSeparate(blendState.rgbEquation, blendState.alphaEquation);
         gl.blendFuncSeparate(blendState.sourceRgb, blendState.destinationRgb, blendState.sourceAlpha, blendState.destinationAlpha);
-    } else {
+    }
+    else
+    {
         gl.disable(gl.BLEND);
     }
 
     // Bind depth state
-    if (depthStencilState && depthStencilState.depthEnabled) {
+    if (depthStencilState && depthStencilState.depthEnabled)
+    {
         gl.enable(gl.DEPTH_TEST);
         gl.depthMask(depthStencilState.depthWriteMask);
         gl.depthFunc(depthStencilState.depthFunction);
-    } else {
+    }
+    else
+    {
         gl.disable(gl.DEPTH_TEST);
     }
 
     // Bind stencil state
-    if (depthStencilState && depthStencilState.stencilEnabled) {
+    if (depthStencilState && depthStencilState.stencilEnabled)
+    {
         gl.enable(gl.STENCIL_TEST);
         gl.stencilOp(
             depthStencilState.stencilFail,
@@ -108,78 +128,80 @@ Device.prototype.setPipelineState = function (pipelineState) {
             depthStencilState.stencilFunction,
             1, 0xFF
         );
-    } else {
+    }
+    else
+    {
         gl.disable(gl.STENCIL_TEST);
     }
 };
-Device.prototype.setTexture2D = function (texture2D) {
+Device.prototype.setTexture2D = function (texture2D)
+{
     var gl = this.gl;
     gl.activeTexture(gl.TEXTURE0 + texture2D.unit);
     gl.bindTexture(gl.TEXTURE_2D, texture2D.textureHandle);
 };
-Device.prototype.setTextureCube = function (textureCube) {
+Device.prototype.setTextureCube = function (textureCube)
+{
     var gl = this.gl;
     gl.activeTexture(gl.TEXTURE0 + textureCube.unit);
     gl.bindTexture(gl.TEXTURE_CUBE_MAP, textureCube.textureHandle);
 };
-Device.prototype.updateVertexBuffer = function () {
+Device.prototype.updateVertexBuffer = function (offset, hostArrayBuffer)
+{
     var gl = this.gl;
-    var vertexBuffer = this.pipelineState.vertexInput.vertexBuffer;
-    gl.bufferSubData(gl.ARRAY_BUFFER, 0, vertexBuffer.bufferSize, vertexBuffer.bufferHost);
+    gl.bufferSubData(gl.ARRAY_BUFFER, offset, hostArrayBuffer);
 };
-Device.prototype.updateIndexBuffer = function () {
+Device.prototype.updateIndexBuffer = function (offset, hostArrayBuffer)
+{
     var gl = this.gl;
-    var indexBuffer = this.pipelineState.vertexInput.indexBuffer;
-    gl.bufferSubData(gl.ELEMENT_ARRAY_BUFFER, 0, indexBuffer.bufferSize, indexBuffer.bufferHost);
+    gl.bufferSubData(gl.ELEMENT_ARRAY_BUFFER, offset, hostArrayBuffer);
 };
-Device.prototype.updateConstantBuffer = function () {
+Device.prototype.updateConstantBuffer = function ()
+{
     var elements = this.pipelineState.constantBuffer.elements;
     var elementsCount = this.pipelineState.constantBuffer.elementsCount;
-    for (var index = 0; index < elementsCount; ++index) {
+    for (var index = 0; index < elementsCount; ++index)
+    {
         elements[index].update();
     }
 };
-Device.prototype.updateSubVertexBuffer = function (offset, byteSize) {
-    var gl = this.gl;
-    var vertexBuffer = this.pipelineState.vertexInput.vertexBuffer;
-    gl.bufferSubData(gl.ARRAY_BUFFER, offset, byteSize, vertexBuffer.bufferHost);
-};
-Device.prototype.updateSubIndexBuffer = function (offset, byteSize) {
-    var gl = this.gl;
-    var indexBuffer = this.pipelineState.vertexInput.indexBuffer;
-    gl.bufferSubData(gl.ELEMENT_ARRAY_BUFFER, offset, byteSize, indexBuffer.bufferHost);
-};
-Device.prototype.drawIndexed = function (indexCount, startIndexLocation) {
+Device.prototype.drawIndexed = function (indexCount, startIndexLocation)
+{
     var gl = this.gl;
     var vertexInput = this.pipelineState.vertexInput;
     gl.drawElements(vertexInput.primitiveTopology, indexCount, vertexInput.indexBuffer.format, startIndexLocation);
 };
-Device.prototype.draw = function (vertexCount, startVertexLocation) {
+Device.prototype.draw = function (vertexCount, startVertexLocation)
+{
     var gl = this.gl;
     var vertexInput = this.pipelineState.vertexInput;
     gl.drawArrays(vertexInput.primitiveTopology, startVertexLocation, vertexCount);
 };
-Device.prototype.setClearColor = function (red, green, blue, alpha) {
-
+Device.prototype.setClearColor = function (red, green, blue, alpha)
+{
     this.gl.clearColor(red, green, blue, alpha);
 };
-Device.prototype.setClearDepth = function (depth) {
-
+Device.prototype.setClearDepth = function (depth)
+{
     this.gl.clearDepth(depth);
 };
-Device.prototype.setClearStencil = function (stencil) {
+Device.prototype.setClearStencil = function (stencil)
+{
 
     this.gl.clearStencil(stencil);
 };
-Device.prototype.clearColorBuffer = function () {
+Device.prototype.clearColorBuffer = function ()
+{
     var gl = this.gl;
     gl.clear(gl.COLOR_BUFFER_BIT);
 };
-Device.prototype.clearDepthStencilBuffer = function () {
+Device.prototype.clearDepthStencilBuffer = function ()
+{
     var gl = this.gl;
     gl.clear(gl.DEPTH_BUFFER_BIT | gl.STENCIL_BUFFER_BIT);
 };
-Device.prototype.clearAllBuffers = function () {
+Device.prototype.clearAllBuffers = function ()
+{
     var gl = this.gl;
     gl.clear(gl.DEPTH_BUFFER_BIT | gl.STENCIL_BUFFER_BIT | gl.COLOR_BUFFER_BIT);
 };
