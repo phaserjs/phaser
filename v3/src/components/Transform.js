@@ -25,17 +25,16 @@ var Transform = function (gameObject, x, y, scaleX, scaleY)
 
     this.game = this.state.game;
 
-    //  Local Transform
     //  a = scale X
     //  b = shear Y
     //  c = shear X
     //  d = scale Y
     //  tx / ty = translation
-    // this.local = { a: scaleX, b: 0, c: 0, d: scaleY, tx: x, ty: y };
 
     //  World Transform
     this.world = { a: scaleX, b: 0, c: 0, d: scaleY, tx: x, ty: y };
 
+    //  Previous Transform (used for interpolation)
     this.old = { a: scaleX, b: 0, c: 0, d: scaleY, tx: x, ty: y };
 
     //  Cached Transform Calculations
@@ -43,6 +42,9 @@ var Transform = function (gameObject, x, y, scaleX, scaleY)
 
     //  GL Vertex Data
     this.glVertextData = { x0: 0, y0: 0, x1: 0, y1: 0, x2: 0, y2: 0, x3: 0, y3: 0 };
+
+    //  Canvas SetTransform Data
+    this.canvasData = { a: 1, b: 0, c: 0, d: 1, tx: 0, ty: 0 };
 
     this.immediate = false;
 
@@ -478,12 +480,6 @@ Transform.prototype = {
         }
         else
         {
-            // w0 = frame.width * (1 - this._anchorX);
-            // w1 = frame.width * -this._anchorX;
-
-            // h0 = frame.height * (1 - this._anchorY);
-            // h1 = frame.height * -this._anchorY;
-
             w0 = frame.cutWidth * (1 - this._anchorX);
             w1 = frame.cutWidth * -this._anchorX;
 
@@ -599,7 +595,39 @@ Transform.prototype = {
             x3: src.x3,
             y3: src.y3
         };
+    },
+
+    getCanvasTransformData: function (interpolationPercentage)
+    {
+        var world = this.world;
+        var data = this.canvasData;
+
+        if (this.interpolate)
+        {
+            var old = this.old;
+
+            // Interpolate with the last position to reduce stuttering.
+            data.a = old.a + ((world.a - old.a) * interpolationPercentage);
+            data.b = old.b + ((world.b - old.b) * interpolationPercentage);
+            data.c = old.c + ((world.c - old.c) * interpolationPercentage);
+            data.d = old.d + ((world.d - old.d) * interpolationPercentage);
+            data.tx = old.tx + ((world.tx - old.tx) * interpolationPercentage);
+            data.ty = old.ty + ((world.ty - old.ty) * interpolationPercentage);
+        }
+        else
+        {
+            //  Copy over the values to the canvasData object, in case the renderer needs to adjust them
+            data.a = world.a;
+            data.b = world.b;
+            data.c = world.c;
+            data.d = world.d;
+            data.tx = world.tx;
+            data.ty = world.ty;
+        }
+
+        return data;
     }
+
 };
 
 Object.defineProperties(Transform.prototype, {

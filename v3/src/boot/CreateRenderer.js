@@ -7,6 +7,7 @@
 var CONST = require('../const');
 var CanvasPool = require('../dom/CanvasPool');
 var Features = require('../device/Features');
+var CanvasRenderer = require('../renderer/canvas/CanvasRenderer');
 var WebGLRenderer = require('../renderer/webgl/WebGLRenderer');
 
 /**
@@ -65,16 +66,9 @@ var CreateRenderer = function (game)
     else
     {
         console.log('Creating Canvas Renderer');
-        // game.renderer = new Phaser.Renderer.Canvas(this);
-        // game.context = this.renderer.context;
+        game.renderer = new CanvasRenderer(game);
+        game.context = this.renderer.context;
     }
-
-    // if (config.renderType !== Phaser.HEADLESS)
-    // {
-        // Phaser.Canvas.addToDOM(this.canvas, this.parent, false);
-        // Phaser.Canvas.setTouchAction(this.canvas);
-    // }
-
 };
 
 module.exports = CreateRenderer;
