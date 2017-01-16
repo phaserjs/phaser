@@ -1,0 +1,34 @@
+export default class FX {
+    audioContext: any;
+    frequencyValue: number;
+    attack: number;
+    decay: number;
+    type: string;
+    volumeValue: number;
+    panValue: number;
+    wait: number;
+    pitchBendAmount: number;
+    reverse: boolean;
+    randomValue: number;
+    dissonance: number;
+    echo: boolean;
+    echoDelay: number;
+    echoFeedback: number;
+    echoFilter: number;
+    reverb: boolean;
+    reverbDuration: number;
+    reverbDecay: number;
+    reverbReverse: boolean;
+    timeout: boolean;
+    volume: any;
+    pan: any;
+    constructor(ctx: any, config: any);
+    play(oscillator: any): void;
+    fadeIn(volume: any): void;
+    fadeOut(volume: any): void;
+    addReverb(volume: any): void;
+    addEcho(volume: any): void;
+    pitchBend(oscillator: any): void;
+    addDissonance(): void;
+    impulseResponse(duration: any, decay: any, reverse: any, audioContext?: any): any;
+}
