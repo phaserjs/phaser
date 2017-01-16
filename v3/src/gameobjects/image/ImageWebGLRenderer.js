@@ -11,7 +11,7 @@ var ImageWebGLRenderer = function (renderer, src, interpolationPercentage)
         return;
     }
 
-    var verts = src.transform.getVertexData(interpolationPercentage);
+    var verts = src.transform.getVertexData(interpolationPercentage, renderer);
     var index = src.frame.source.glTextureIndex;
     var tint = src.color._glTint;
     var bg = src.color._glBg;

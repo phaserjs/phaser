@@ -18,7 +18,7 @@ var defaultBannerColor = [
 
 var defaultBannerTextColor = '#ffffff';
 
-function Config (config)
+var Config = function (config)
 {
     if (config === undefined) { config = {}; }
 
@@ -42,7 +42,7 @@ function Config (config)
     this.gameVersion = GetObjectValue(config, 'version', '');
 
     //  If you do: { banner: false } it won't display any banner at all
-    this.hideBanner = (GetObjectValue(config, 'banner', false) === false);
+    this.hideBanner = (GetObjectValue(config, 'banner', null) === false);
 
     this.hidePhaser = GetObjectValue(config, 'banner.hidePhaser', false);
     this.bannerTextColor = GetObjectValue(config, 'banner.text', defaultBannerTextColor);
@@ -55,8 +55,7 @@ function Config (config)
     //  Callbacks
     this.preBoot = GetObjectValue(config, 'callbacks.preBoot', NOOP);
     this.postBoot = GetObjectValue(config, 'callbacks.postBoot', NOOP);
-
-}
+};
 
 Config.prototype.constructor = Config;
 
