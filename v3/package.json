@@ -10,6 +10,7 @@
   "license": "MIT",
   "licenseUrl": "http://www.opensource.org/licenses/mit-license.php",
   "main": "./build/phaser.js",
+  "typings": "./typings/index.d.ts",
   "repository": {
     "type": "git",
     "url": "https://photonstorm@github.com/photonstorm/phaser.git"
