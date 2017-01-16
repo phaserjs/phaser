@@ -17,3 +17,5 @@ var CreateTexture2DImage = function (gl, pixels, filter, mipLevels)
     );
     return texture;
 };
+
+module.exports = CreateTexture2DImage;

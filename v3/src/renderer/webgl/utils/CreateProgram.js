@@ -12,3 +12,5 @@ var CreateProgram = function (gl, vertexShader, fragmentShader)
     }
     return program;
 };
+
+module.exports = CreateProgram;

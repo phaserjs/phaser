@@ -11,3 +11,5 @@ var CreateAttribDesc = function (gl, program, name, size, type, normalized, stri
         offset
     );
 };
+
+module.exports = CreateAttribDesc;

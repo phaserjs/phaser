@@ -15,3 +15,5 @@ var CreateAttribArray = function (gl, program, attributeDescArray)
     }
     return attributes;
 };
+
+module.exports = CreateAttribArray;

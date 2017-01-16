@@ -11,3 +11,5 @@ var CreateShader = function (gl, shaderSource, shaderType)
     }
     return shader;
 };
+
+module.exports = CreateShader;

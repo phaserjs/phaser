@@ -19,3 +19,5 @@ var CreateTexture2DArrayBuffer = function (gl, width, height, border, filter, ar
     );
     return texture;
 };
+
+module.exports = CreateTexture2DArrayBuffer;

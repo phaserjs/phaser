@@ -7,3 +7,5 @@ var Attribute = function (location, size, type, normalize, stride, offset)
     this.stride = stride;
     this.offset = offset;
 };
+
+module.exports = Attribute;

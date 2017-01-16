@@ -12,3 +12,5 @@ var CreateBuffer = function (gl, bufferType, usage, bufferData, bufferSize)
     }
     return buffer;
 };
+
+module.exports = CreateBuffer;

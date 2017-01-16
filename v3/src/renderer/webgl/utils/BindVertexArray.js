@@ -17,3 +17,5 @@ var BindVertexArray = function (gl, vao)
         );
     }
 };
+
+module.exports = BindVertexArray;
