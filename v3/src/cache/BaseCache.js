@@ -11,27 +11,27 @@ BaseCache.prototype = {
 
     add: function (key, data)
     {
-        this.files.set(key, data);
+        this.entries.set(key, data);
     },
 
     has: function (key)
     {
-        return this.files.has(key);
+        return this.entries.has(key);
     },
 
     get: function (key)
     {
-        return this.files.get(key);
+        return this.entries.get(key);
     },
 
     remove: function (key)
     {
-        this.files.delete(key);
+        this.entries.delete(key);
     },
 
     destroy: function ()
     {
-        this.files.clear();
+        this.entries.clear();
     }
 
 };
