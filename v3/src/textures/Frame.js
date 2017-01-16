@@ -9,9 +9,7 @@ var Extend = require('../utils/object/Extend');
 /**
 * A Frame is a section of a Texture.
 *
-* Called TextureFrame during integration, will rename to Frame later.
-*
-* @class Phaser.TextureFrame
+* @class Phaser.Frame
 * @constructor
 * @param {Phaser.Texture} texture - The Texture this Frame belongs to.
 * @param {string} name - The unique (within the Texture) name of this Frame.
@@ -142,6 +140,14 @@ var Frame = function (texture, name, sourceIndex, x, y, width, height)
             y2: 0,
             x3: 0,
             y3: 0
+        },
+        drawImage: {
+            sx: x,
+            sy: y,
+            sWidth: width,
+            sHeight: height,
+            dWidth: width,
+            dHeight: height
         }
     };
 
@@ -165,23 +171,35 @@ Frame.prototype = {
     */
     setTrim: function (actualWidth, actualHeight, destX, destY, destWidth, destHeight)
     {
+        var data = this.data;
+        var ss = data.spriteSourceSize;
+        var di = data.drawImage;
+
         //  Store actual values
 
-        this.data.trim = true;
+        data.trim = true;
 
-        this.data.sourceSize.w = actualWidth;
-        this.data.sourceSize.h = actualHeight;
+        data.sourceSize.w = actualWidth;
+        data.sourceSize.h = actualHeight;
 
-        this.data.spriteSourceSize.x = destX;
-        this.data.spriteSourceSize.y = destY;
-        this.data.spriteSourceSize.w = destWidth;
-        this.data.spriteSourceSize.h = destHeight;
+        ss.x = destX;
+        ss.y = destY;
+        ss.w = destWidth;
+        ss.h = destHeight;
 
         //  Adjust properties
         this.x = destX;
         this.y = destY;
         this.width = destWidth;
         this.height = destHeight;
+
+        //  drawImage data
+        di.sx = destX;
+        di.sy = destY;
+        di.sWidth = destWidth;
+        di.sHeight = destHeight;
+        di.dWidth = destWidth;
+        di.dHeight = destHeight;
 
         this.updateUVs();
 
@@ -322,6 +340,23 @@ Object.defineProperties(Frame.prototype, {
         get: function ()
         {
             return this.data.uvs;
+        }
+
+    },
+
+    /**
+    * Canvas Draw Image data
+    *
+    * @name Phaser.TextureFrame#canvasData
+    * @property {Object} canvasData
+    */
+    canvasData: {
+
+        enumerable: true,
+
+        get: function ()
+        {
+            return this.data.drawImage;
         }
 
     }

@@ -6,8 +6,7 @@ var GetObjectValue = function (source, key, defaultValue)
 {
     if (key.indexOf('.'))
     {
-        keys = key.split('.');
-
+        var keys = key.split('.');
         var parent = source;
         var value = defaultValue;
 
@@ -31,9 +30,8 @@ var GetObjectValue = function (source, key, defaultValue)
     }
     else
     {
-        return (source.hasOwnProperty(key) ? source[key] : defaultValue);
+        return (source.hasOwnProperty(key)) ? source[key] : defaultValue;
     }
-
-}
+};
 
 module.exports = GetObjectValue;

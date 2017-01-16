@@ -1,5 +1,8 @@
 require('./polyfills');
 
+var CONST = require('./const');
+var Extend = require('./utils/object/Extend');
+
 //  This object is exported globally
 
 var Phaser = {
@@ -40,6 +43,10 @@ var Phaser = {
 
 require('./gameobjects/image/ImageFactory');
 require('./gameobjects/container/ContainerFactory');
+
+//   Merge in the consts
+
+Phaser = Extend(false, Phaser, CONST);
 
 //  Export it
 

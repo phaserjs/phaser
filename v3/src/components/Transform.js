@@ -43,8 +43,8 @@ var Transform = function (gameObject, x, y, scaleX, scaleY)
     //  GL Vertex Data
     this.glVertextData = { x0: 0, y0: 0, x1: 0, y1: 0, x2: 0, y2: 0, x3: 0, y3: 0 };
 
-    //  Canvas SetTransform Data
-    this.canvasData = { a: 1, b: 0, c: 0, d: 1, tx: 0, ty: 0 };
+    //  Canvas SetTransform data
+    this.canvasData = { a: 1, b: 0, c: 0, d: 1, tx: 0, ty: 0, dx: 0, dy: 0 };
 
     this.immediate = false;
 
@@ -455,7 +455,7 @@ Transform.prototype = {
         this.cache.d = this.cache.cr * this._scaleY;
     },
 
-    updateVertexData: function (interpolationPercentage)
+    updateVertexData: function (interpolationPercentage, renderer)
     {
         if (!this.gameObject.frame || (!this._dirtyVertex && !this.interpolate))
         {
@@ -542,7 +542,7 @@ Transform.prototype = {
             h1 = _w1;
         }
 
-        if (frame.autoRound === 1 || (frame.autoRound === -1 && this.game.renderer.roundPixels))
+        if (frame.autoRound === 1 || (frame.autoRound === -1 && renderer.roundPixels))
         {
             tx |= 0;
             ty |= 0;
@@ -597,8 +597,10 @@ Transform.prototype = {
         };
     },
 
-    getCanvasTransformData: function (interpolationPercentage)
+    getCanvasTransformData: function (interpolationPercentage, renderer)
     {
+        var frame = this.gameObject.frame;
+
         var world = this.world;
         var data = this.canvasData;
 
@@ -613,6 +615,8 @@ Transform.prototype = {
             data.d = old.d + ((world.d - old.d) * interpolationPercentage);
             data.tx = old.tx + ((world.tx - old.tx) * interpolationPercentage);
             data.ty = old.ty + ((world.ty - old.ty) * interpolationPercentage);
+            data.dx = old.dx + ((frame.x - (this.anchorX * frame.width)) * interpolationPercentage);
+            data.dy = old.dy + ((frame.y - (this.anchorY * frame.height)) * interpolationPercentage);
         }
         else
         {
@@ -623,6 +627,16 @@ Transform.prototype = {
             data.d = world.d;
             data.tx = world.tx;
             data.ty = world.ty;
+            data.dx = frame.x - (this.anchorX * frame.width);
+            data.dy = frame.y - (this.anchorY * frame.height);
+        }
+
+        if (frame.autoRound === 1 || (frame.autoRound === -1 && renderer.roundPixels))
+        {
+            data.tx |= 0;
+            data.ty |= 0;
+            data.dx |= 0;
+            data.dy |= 0;
         }
 
         return data;

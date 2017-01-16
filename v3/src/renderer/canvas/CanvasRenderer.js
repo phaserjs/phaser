@@ -1,4 +1,4 @@
-var BatchManager = require('./BatchManager');
+var DrawImage = require('./utils/DrawImage');
 
 var CanvasRenderer = function (game)
 {
@@ -38,10 +38,12 @@ var CanvasRenderer = function (game)
 
     this.roundPixels = false;
 
-    this.batch = new BatchManager(this, 4000);
+    //  Map to the required function
+    this.drawImage = DrawImage;
 
-    // var so = 'source-over';
-    // this.blendModes = [ so, 'lighter', so, so, so, so, so, so, so, so, so, so, so, so, so, so, so ];
+    var so = 'source-over';
+
+    this.blendModes = [ so, 'lighter', so, so, so, so, so, so, so, so, so, so, so, so, so, so, so ];
 
     this.currentAlpha = 1;
     this.currentBlendMode = 0;
@@ -50,8 +52,6 @@ var CanvasRenderer = function (game)
     this.startTime = 0;
     this.endTime = 0;
     this.drawCount = 0;
-
-    this.blendModes = [];
 
     // this.tintMethod = this.tintWithPerPixel;
 
@@ -65,8 +65,6 @@ CanvasRenderer.prototype = {
     init: function ()
     {
         this.mapBlendModes();
-
-        this.batch.init();
 
         this.resize(this.width, this.height);
     },
@@ -164,12 +162,8 @@ CanvasRenderer.prototype = {
 
         this.drawCount = 0;
 
-        this.batch.start();
-
         //  Could move to the State Systems or MainLoop
         this.game.state.renderChildren(this, state, interpolationPercentage);
-
-        this.batch.stop();
 
         this.endTime = Date.now();
 

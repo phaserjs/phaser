@@ -15,7 +15,7 @@ var DOMContentLoaded = require('../dom/DOMContentLoaded');
 var CreateRenderer = require('./CreateRenderer');
 var RandomDataGenerator = require('../math/random-data-generator/RandomDataGenerator');
 var StateManager = require('../state/StateManager');
-var TextureManager = require ('../textures/TextureManager');
+var TextureManager = require('../textures/TextureManager');
 
 var Game = function (config)
 {
