@@ -67,7 +67,7 @@ var CreateRenderer = function (game)
     {
         console.log('Creating Canvas Renderer');
         game.renderer = new CanvasRenderer(game);
-        game.context = this.renderer.context;
+        game.context = game.renderer.context;
     }
 };
 
