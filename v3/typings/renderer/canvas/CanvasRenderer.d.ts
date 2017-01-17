@@ -9,7 +9,7 @@ export default class CanvasRenderer {
     resolution: any;
     view: any;
     context: any;
-    batch: any;
+    drawImage: any;
     roundPixels: any;
     currentAlpha: any;
     currentBlendMode: any;

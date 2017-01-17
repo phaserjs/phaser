@@ -51,8 +51,8 @@ export default class Transform {
     updateFromDirtyParent(): void;
     update(): void;
     updateCache(): void;
-    updateVertexData(interpolationPercentage: any): any;
-    getVertexData(interpolationPercentage: any): any;
+    updateVertexData(interpolationPercentage: any, renderer: any): any;
+    getVertexData(interpolationPercentage: any, renderer: any): any;
     cloneVertexData(): {
         x0: any;
         y0: any;
@@ -63,7 +63,7 @@ export default class Transform {
         x3: any;
         y3: any;
     };
-    getCanvasTransformData(interpolationPercentage: any): any;
+    getCanvasTransformData(interpolationPercentage: any, renderer: any): any;
     x: any;
     y: any;
     scale: any;

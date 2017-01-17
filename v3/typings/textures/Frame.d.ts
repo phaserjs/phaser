@@ -2,9 +2,7 @@ import Texture from './Texture';
 /**
 * A Frame is a section of a Texture.
 *
-* Called TextureFrame during integration, will rename to Frame later.
-*
-* @class Phaser.TextureFrame
+* @class Phaser.Frame
 * @constructor
 * @param {Phaser.Texture} texture - The Texture this Frame belongs to.
 * @param {string} name - The unique (within the Texture) name of this Frame.
@@ -83,4 +81,11 @@ export default class Frame {
     * @property {Object} uvs
     */
     readonly uvs: any;
+    /**
+    * Canvas Draw Image data
+    *
+    * @name Phaser.TextureFrame#canvasData
+    * @property {Object} canvasData
+    */
+    readonly canvasData: any;
 }
