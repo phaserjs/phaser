@@ -25,6 +25,8 @@ var ParticleRenderer = function ()
     this.type = CONST.WEBGL;
     this.view = game.canvas;
     this.resolution = game.config.resolution;
+    this.width = game.config.width * game.config.resolution;
+    this.height = game.config.height * game.config.resolution;
     this.init();
 };
 
@@ -78,6 +80,7 @@ ParticleRenderer.prototype.init = function ()
             );
         var viewMatrixLocation = gl.getUniformLocation(program, 'u_view_matrix');
         var view = this.view;
+
         this.vertexDataBuffer = vertexDataBuffer;
         this.indexDataBuffer = indexDataBuffer;
         this.vertShader = vertShader;
@@ -86,18 +89,12 @@ ParticleRenderer.prototype.init = function ()
         this.indexBufferObject = indexBufferObject;
         this.vertexArray = vertexArray;
         this.glContext = gl;
-        gl.uniformMatrix4fv(
-            viewMatrixLocation,
-            false,
-            new Float32Array([
-                2 / view.width, 0, 0, 0,
-                0, -2 / view.height, 0, 0,
-                0, 0, 1, 1,
-                -1, 1, 0, 0
-            ])
-        );
+        this.viewMatrixLocation = viewMatrixLocation;
+       
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBufferObject);
         var indexBuffer = indexDataBuffer.wordView;
+
+        // Populate the index buffer only once
         for (var indexA = indexB = 0;
             indexA < ParticleRenderer.MAX_PARTICLES * ParticleRenderer.PARTICLE_INDEX_COUNT;
             indexA += ParticleRenderer.PARTICLE_INDEX_COUNT, indexB += ParticleRenderer.PARTICLE_VERTEX_COUNT)
@@ -109,6 +106,7 @@ ParticleRenderer.prototype.init = function ()
             indexBuffer[indexA + 4] = indexB + 2;
             indexBuffer[indexA + 5] = indexB + 3;
         }
+        this.resize(this.width, this.height);
     }
     else
     {
@@ -175,12 +173,14 @@ ParticleRenderer.prototype.setTexture2D = function (texture2D)
         this.flush();
         gl.activeTexture(gl.TEXTURE0);
         gl.bindTexture(gl.TEXTURE_2D, texture2D);
+        this.currentTexture2D = texture2D;
     }
 };
 
 ParticleRenderer.prototype.bind = function ()
 {
     var gl = this.glContext;
+    gl.useProgram(this.program);
     gl.clearColor(0, 0, 0, 1);
     gl.enable(gl.BLEND);
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
@@ -191,6 +191,7 @@ ParticleRenderer.prototype.bind = function ()
 ParticleRenderer.prototype.unbind = function ()
 {
     var gl = this.glContext;
+    gl.useProgram(null);
     gl.disable(gl.BLEND);
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null);
     gl.bindBuffer(gl.ARRAY_BUFFER, null);
@@ -207,6 +208,32 @@ ParticleRenderer.prototype.flush = function ()
 };
 
 ParticleRenderer.prototype.resize = function (width, height)
-{};
+{
+    var gl = this.glContext;
+    var res = this.game.config.resolution;
+    
+    this.width = width * res;
+    this.height = height * res;
+    
+    this.view.width = this.width;
+    this.view.height = this.height;
+    
+    if (this.autoResize)
+    {
+        this.view.style.width = (this.width / res) + 'px';
+        this.view.style.height = (this.height / res) + 'px';
+    }
+    gl.viewport(0, 0, this.width, this.height);
+    gl.uniformMatrix4fv(
+        viewMatrixLocation,
+        false,
+        new Float32Array([
+            2 / view.width, 0, 0, 0,
+            0, -2 / view.height, 0, 0,
+            0, 0, 1, 1,
+            -1, 1, 0, 0
+        ])
+    );
+};
 
 module.exports = ParticleRenderer;
