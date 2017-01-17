@@ -6,11 +6,13 @@ Welcome to Phaser 3!
 
 If you want to help build Phaser 3 then check out our new [Getting Started Guide](dev-guide/README.md). I stress this isn't a guide on how to make Phaser 3 games, it's a guide on how to set-up your dev environment so you can assist us in _building Phaser 3 itself_.
 
+Also please join the [Phaser 3 Google Group](https://groups.google.com/d/forum/phaser3-dev) mailing list. We are posting there frequently, asking for suggestions and getting help and feedback from the community, so it'd be great to have you there too.
+
 You are of course welcome to clone the source, play around, and mess with it as much as you like. But understand it's changing every single day.
 
 Every Friday we publish the [Phaser World](http://phaser.io/community/newsletter) newsletter, and part of each issue contains our 'Development Progress' articles. These are condensed summaries of what we've been working on during the week.
 
-If you want to follow development on a casual basis, the newsletter is perfect. If you want a blow-by-blow account of development, then Watch this repo, and be prepared for the influx of emails that'll generate :)
+If you want to follow development on a casual basis, the newsletter is perfect. If you want a blow-by-blow account of development, then Watch this repo, join the mailing list, and be prepared for the influx of emails that'll generate :)
 
 Cheers,
 
