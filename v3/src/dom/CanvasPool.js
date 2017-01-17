@@ -69,12 +69,9 @@ var CanvasPool = function ()
             canvas = container.canvas;
         }
 
-        if (width !== undefined)
-        {
-            canvas.width = width;
-            canvas.height = height;
-        }
-
+        canvas.width = width;
+        canvas.height = height;
+        
         return canvas;
     };
 
