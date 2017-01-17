@@ -569,11 +569,11 @@ Transform.prototype = {
         return vert;
     },
 
-    getVertexData: function (interpolationPercentage)
+    getVertexData: function (interpolationPercentage, renderer)
     {
         if (this.interpolate || this._dirtyVertex)
         {
-            this.updateVertexData(interpolationPercentage);
+            this.updateVertexData(interpolationPercentage, renderer);
 
             this._dirtyVertex = false;
         }
