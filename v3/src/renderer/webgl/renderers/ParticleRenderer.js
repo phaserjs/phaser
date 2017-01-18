@@ -243,7 +243,7 @@ ParticleRenderer.prototype.resize = function (width, height)
     this.view.width = this.width;
     this.view.height = this.height;
     
-    if (this.autoResize)
+    if (this.config.autoResize)
     {
         this.view.style.width = (this.width / res) + 'px';
         this.view.style.height = (this.height / res) + 'px';
