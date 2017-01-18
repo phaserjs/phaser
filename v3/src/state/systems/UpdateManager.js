@@ -63,7 +63,7 @@ UpdateManager.prototype = {
         for (var i = 0; i < len; i++)
         {
             //  Because it may have already been processed (as a child of another Transform that was updated)
-            if (this.list[i] && this.list[i]._dirty)
+            if (this.list[i] && this.list[i].dirty)
             {
                 this.processed++;
                 this.list[i].update();
