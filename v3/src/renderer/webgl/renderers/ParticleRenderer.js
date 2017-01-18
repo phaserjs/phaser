@@ -113,7 +113,7 @@ ParticleRenderer.prototype.init = function ()
         var indexBuffer = indexDataBuffer.wordView;
 
         // Populate the index buffer only once
-        for (var indexA = indexB = 0;
+        for (var indexA = 0, indexB = 0;
             indexA < ParticleRenderer.MAX_PARTICLES * ParticleRenderer.PARTICLE_INDEX_COUNT;
             indexA += ParticleRenderer.PARTICLE_INDEX_COUNT, indexB += ParticleRenderer.PARTICLE_VERTEX_COUNT)
         {
