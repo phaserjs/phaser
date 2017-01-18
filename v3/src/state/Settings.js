@@ -1,4 +1,5 @@
 var CONST = require('../const');
+var ScaleModes = require('../renderer/ScaleModes');
 var GetObjectValue = require('../utils/GetObjectValue');
 
 var Settings = function (state, config)
@@ -24,7 +25,7 @@ var Settings = function (state, config)
     this.key = GetObjectValue(config, 'key', '');
     this.active = GetObjectValue(config, 'active', false);
     this.visible = GetObjectValue(config, 'visible', true);
-    this.scaleMode = GetObjectValue(config, 'scaleMode', CONST.scaleModes.DEFAULT);
+    this.scaleMode = GetObjectValue(config, 'scaleMode', ScaleModes.DEFAULT);
     this.fps = GetObjectValue(config, 'fps', 60);
     this.x = GetObjectValue(config, 'x', 0);
     this.y = GetObjectValue(config, 'y', 0);

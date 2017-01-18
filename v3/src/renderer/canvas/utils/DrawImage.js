@@ -25,7 +25,7 @@ var DrawImage = function (frame, blendMode, transform, alpha, tint, bg)
     if (this.currentScaleMode !== frame.source.scaleMode)
     {
         // this.currentScaleMode = source.scaleMode;
-        // ctx[this.smoothProperty] = (source.scaleMode === Phaser.scaleModes.LINEAR);
+        // ctx[this.smoothProperty] = (source.scaleMode === ScaleModes.LINEAR);
     }
 
     ctx.setTransform(transform.a, transform.b, transform.c, transform.d, transform.tx, transform.ty);

@@ -13,7 +13,7 @@ var CanvasRenderer = function (game)
     //  Needed?
     this.type = CONST.CANVAS;
 
-    //  Read all the following from game config
+    //  Read all the following from game config (or State config?)
     this.clearBeforeRender = true;
 
     this.transparent = false;
@@ -50,10 +50,6 @@ var CanvasRenderer = function (game)
     this.currentBlendMode = 0;
     this.currentScaleMode = 0;
 
-    this.startTime = 0;
-    this.endTime = 0;
-    this.drawCount = 0;
-
     // this.tintMethod = this.tintWithPerPixel;
 
     this.init();
@@ -86,7 +82,7 @@ CanvasRenderer.prototype = {
 
         // if (this.smoothProperty)
         // {
-        //     this.context[this.smoothProperty] = (this.scaleMode === Phaser.scaleModes.LINEAR);
+        //     this.context[this.smoothProperty] = (this.scaleMode === ScaleModes.LINEAR);
         // }
     },
 
@@ -109,8 +105,6 @@ CanvasRenderer.prototype = {
 
         //  TODO: A State should have the option of having its own canvas to draw to
 
-        this.startTime = Date.now();
-
         ctx.setTransform(1, 0, 0, 1, 0, 0);
 
         //  If the alpha or blend mode didn't change since the last render, then don't set them again (saves 2 ops)
@@ -118,28 +112,24 @@ CanvasRenderer.prototype = {
         if (this.currentAlpha !== 1)
         {
             ctx.globalAlpha = 1;
+            this.currentAlpha = 1;
         }
 
         if (this.currentBlendMode !== 0)
         {
             ctx.globalCompositeOperation = 'source-over';
+            this.currentBlendMode = 0;
         }
 
-        this.currentBlendMode = 0;
         this.currentScaleMode = 0;
-        this.currentAlpha = 1;
 
         if (this.clearBeforeRender)
         {
             ctx.clearRect(0, 0, this.width, this.height);
         }
 
-        this.drawCount = 0;
-
         //  Could move to the State Systems or MainLoop
         this.game.state.renderChildren(this, state, interpolationPercentage);
-
-        this.endTime = Date.now();
 
         // console.log('%c render end ', 'color: #ffffff; background: #ff0000;');
 

@@ -6,6 +6,7 @@
 
 var CONST = require('../const');
 var MATH_CONST = require('../math/const');
+var ScaleModes = require('../renderer/ScaleModes');
 var Component = require('../components');
 var WrapAngle = require('../math/angle/Wrap');
 
@@ -51,7 +52,7 @@ var GameObject = function (state, x, y, texture, frame, parent)
     //  ----------------------------------------------------------------
     //  ----------------------------------------------------------------
 
-    this.scaleMode = CONST.scaleModes.DEFAULT;
+    this.scaleMode = ScaleModes.DEFAULT;
 
     //  Allows you to turn off a GameObject from rendering, but still render its children (if it has any)
     //  Maybe this should move?
