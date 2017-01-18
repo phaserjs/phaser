@@ -8,8 +8,9 @@ var IndexBuffer = require('../utils/IndexBuffer');
 var VertexArray = require('../utils/VertexArray');
 var CONST = require('../../const');
 
-var ParticleRenderer = function ()
+var ParticleRenderer = function (game)
 {
+    this.game = game;
     this.glContext = null;
     this.maxParticles = null;
     this.vertShader = null;
@@ -27,6 +28,23 @@ var ParticleRenderer = function ()
     this.resolution = game.config.resolution;
     this.width = game.config.width * game.config.resolution;
     this.height = game.config.height * game.config.resolution;
+
+    //   All of these settings will be able to be controlled via the Game Config
+    this.config = {
+        clearBeforeRender: true,
+        transparent: false,
+        autoResize: false,
+        preserveDrawingBuffer: false,
+
+        WebGLContextOptions: {
+            alpha: true,
+            antialias: true,
+            premultipliedAlpha: true,
+            stencil: true,
+            preserveDrawingBuffer: false
+        }
+    };
+
     this.init();
 };
 
@@ -228,8 +246,8 @@ ParticleRenderer.prototype.resize = function (width, height)
         viewMatrixLocation,
         false,
         new Float32Array([
-            2 / view.width, 0, 0, 0,
-            0, -2 / view.height, 0, 0,
+            2 / this.view.width, 0, 0, 0,
+            0, -2 / this.view.height, 0, 0,
             0, 0, 1, 1,
             -1, 1, 0, 0
         ])
