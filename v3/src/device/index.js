@@ -10,6 +10,7 @@ var Input = require('./Input');
 var Audio = require('./Audio');
 var Video = require('./Video');
 var Fullscreen = require('./Fullscreen');
+var CanvasFeatures = require('./CanvasFeatures');
 
 module.exports = {
 
@@ -19,6 +20,7 @@ module.exports = {
     Input: Input,
     Audio: Audio,
     Video: Video,
-    Fullscreen: Fullscreen
+    Fullscreen: Fullscreen,
+    CanvasFeatures: CanvasFeatures
 
 };

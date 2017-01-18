@@ -1,4 +1,6 @@
+var CONST = require('../../const');
 var DrawImage = require('./utils/DrawImage');
+var GetBlendModes = require('./utils/GetBlendModes');
 
 var CanvasRenderer = function (game)
 {
@@ -8,7 +10,8 @@ var CanvasRenderer = function (game)
     //  Needed?
     this.game = game;
 
-    // this.type = CONST.CANVAS;
+    //  Needed?
+    this.type = CONST.CANVAS;
 
     //  Read all the following from game config
     this.clearBeforeRender = true;
@@ -41,9 +44,7 @@ var CanvasRenderer = function (game)
     //  Map to the required function
     this.drawImage = DrawImage;
 
-    var so = 'source-over';
-
-    this.blendModes = [ so, 'lighter', so, so, so, so, so, so, so, so, so, so, so, so, so, so, so ];
+    this.blendModes = GetBlendModes();
 
     this.currentAlpha = 1;
     this.currentBlendMode = 0;
@@ -64,36 +65,7 @@ CanvasRenderer.prototype = {
 
     init: function ()
     {
-        this.mapBlendModes();
-
         this.resize(this.width, this.height);
-    },
-
-    /**
-     * Maps Blend modes to Canvas blend modes.
-     *
-     * @method mapBlendModes
-     * @private
-     */
-    mapBlendModes: function ()
-    {
-        // var modes = Phaser.blendModes;
-
-        // this.blendModes[modes.MULTIPLY] = 'multiply';
-        // this.blendModes[modes.SCREEN] = 'screen';
-        // this.blendModes[modes.OVERLAY] = 'overlay';
-        // this.blendModes[modes.DARKEN] = 'darken';
-        // this.blendModes[modes.LIGHTEN] = 'lighten';
-        // this.blendModes[modes.COLOR_DODGE] = 'color-dodge';
-        // this.blendModes[modes.COLOR_BURN] = 'color-burn';
-        // this.blendModes[modes.HARD_LIGHT] = 'hard-light';
-        // this.blendModes[modes.SOFT_LIGHT] = 'soft-light';
-        // this.blendModes[modes.DIFFERENCE] = 'difference';
-        // this.blendModes[modes.EXCLUSION] = 'exclusion';
-        // this.blendModes[modes.HUE] = 'hue';
-        // this.blendModes[modes.SATURATION] = 'saturation';
-        // this.blendModes[modes.COLOR] = 'color';
-        // this.blendModes[modes.LUMINOSITY] = 'luminosity';
     },
 
     resize: function (width, height)
@@ -131,24 +103,26 @@ CanvasRenderer.prototype = {
     {
         // console.log('%c render start ', 'color: #ffffff; background: #00ff00;');
 
+        var ctx = this.context;
+
         //  Add Pre-render hook
 
         //  TODO: A State should have the option of having its own canvas to draw to
 
         this.startTime = Date.now();
 
-        this.context.setTransform(1, 0, 0, 1, 0, 0);
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
 
         //  If the alpha or blend mode didn't change since the last render, then don't set them again (saves 2 ops)
 
         if (this.currentAlpha !== 1)
         {
-            this.context.globalAlpha = 1;
+            ctx.globalAlpha = 1;
         }
 
         if (this.currentBlendMode !== 0)
         {
-            this.context.globalCompositeOperation = 'source-over';
+            ctx.globalCompositeOperation = 'source-over';
         }
 
         this.currentBlendMode = 0;
@@ -157,7 +131,7 @@ CanvasRenderer.prototype = {
 
         if (this.clearBeforeRender)
         {
-            this.context.clearRect(0, 0, this.width, this.height);
+            ctx.clearRect(0, 0, this.width, this.height);
         }
 
         this.drawCount = 0;

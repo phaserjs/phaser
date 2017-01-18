@@ -112,8 +112,6 @@ function checkIsLittleEndian ()
 
 function init ()
 {
-    console.log('Features.init');
-
     Features.canvas = !!window['CanvasRenderingContext2D'] || OS.cocoonJS;
 
     try
