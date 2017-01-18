@@ -92,8 +92,8 @@ ParticleRenderer.prototype.init = function ()
         var vertexArray = new VertexArray(gl,
                 CreateBuffer(gl, gl.ARRAY_BUFFER, gl.STREAM_DRAW, null, vertexDataBuffer.getByteCapacity()),
                 [
-                    CreateAttributeDesc(gl, program, 'a_position', 2, gl.FLOAT, false, ParticleRendererRenderer.VERTEX_SIZE, 0),
-                    CreateAttributeDesc(gl, program, 'a_tex_coord', 2, gl.FLOAT, false, ParticleRendererRenderer.VERTEX_SIZE, 8)
+                    CreateAttribDesc(gl, program, 'a_position', 2, gl.FLOAT, false, ParticleRenderer.VERTEX_SIZE, 0),
+                    CreateAttribDesc(gl, program, 'a_tex_coord', 2, gl.FLOAT, false, ParticleRenderer.VERTEX_SIZE, 8)
                 ]
             );
         var viewMatrixLocation = gl.getUniformLocation(program, 'u_view_matrix');
@@ -243,7 +243,7 @@ ParticleRenderer.prototype.resize = function (width, height)
     }
     gl.viewport(0, 0, this.width, this.height);
     gl.uniformMatrix4fv(
-        viewMatrixLocation,
+        this.viewMatrixLocation,
         false,
         new Float32Array([
             2 / this.view.width, 0, 0, 0,
