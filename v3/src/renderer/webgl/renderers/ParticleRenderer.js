@@ -86,10 +86,10 @@ ParticleRenderer.prototype.init = function ()
         var vertexDataBuffer = new VertexBuffer(ParticleRenderer.VERTEX_SIZE * ParticleRenderer.PARTICLE_VERTEX_COUNT * ParticleRenderer.MAX_PARTICLES);
         var indexDataBuffer = new IndexBuffer(ParticleRenderer.INDEX_SIZE * ParticleRenderer.PARTICLE_INDEX_COUNT * ParticleRenderer.MAX_PARTICLES);
         var vertShader = CreateShader(gl, ParticleRenderer.VERTEX_SHADER_SOURCE, gl.VERTEX_SHADER);
-        var fragShader = CreateShader(gl, ParticleRenderer.FRAGMENT_SHADER_SOURCE, gl.FRAGMENT_SHADER_SOURCE);
+        var fragShader = CreateShader(gl, ParticleRenderer.FRAGMENT_SHADER_SOURCE, gl.FRAGMENT_SHADER);
         var program = CreateProgram(gl, vertShader, fragShader);
         var indexBufferObject = CreateBuffer(gl, gl.ELEMENT_ARRAY_BUFFER, gl.STATIC_DRAW, null, indexDataBuffer.getByteCapacity());
-        var vertexArray = new VertexArray(gl,
+        var vertexArray = new VertexArray(
                 CreateBuffer(gl, gl.ARRAY_BUFFER, gl.STREAM_DRAW, null, vertexDataBuffer.getByteCapacity()),
                 [
                     CreateAttribDesc(gl, program, 'a_position', 2, gl.FLOAT, false, ParticleRenderer.VERTEX_SIZE, 0),
@@ -124,7 +124,9 @@ ParticleRenderer.prototype.init = function ()
             indexBuffer[indexA + 4] = indexB + 2;
             indexBuffer[indexA + 5] = indexB + 3;
         }
+        this.bind();
         this.resize(this.width, this.height);
+        this.unbind();
     }
     else
     {
@@ -208,7 +210,7 @@ ParticleRenderer.prototype.bind = function ()
     gl.enable(gl.BLEND);
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBufferObject);
-    BindVertexArray(this.vertexArray);
+    BindVertexArray(gl, this.vertexArray);
 };
 
 ParticleRenderer.prototype.unbind = function ()
