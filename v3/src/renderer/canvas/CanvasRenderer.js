@@ -128,8 +128,12 @@ CanvasRenderer.prototype = {
             ctx.clearRect(0, 0, this.width, this.height);
         }
 
-        //  Could move to the State Systems or MainLoop
-        this.game.state.renderChildren(this, state, interpolationPercentage);
+        for (var c = 0; c < state.sys.children.list.length; c++)
+        {
+            var child = state.sys.children.list[c];
+
+            child.renderCanvas(this, child, interpolationPercentage);
+        }
 
         // console.log('%c render end ', 'color: #ffffff; background: #ff0000;');
 

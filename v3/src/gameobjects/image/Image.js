@@ -6,8 +6,6 @@
 
 var CONST = require('../../const');
 var GameObject = require('../GameObject');
-var ImageWebGLRenderer = require('./ImageWebGLRenderer');
-var ImageCanvasRenderer = require('./ImageCanvasRenderer');
 
 /**
 * An Image is a light-weight object you can use to display anything that doesn't need physics or animation.
@@ -30,13 +28,13 @@ var Image = function (state, x, y, key, frame)
     GameObject.call(this, state, x, y, _texture, _frame);
 
     this.type = CONST.IMAGE;
-
-    // this.render = ImageWebGLRenderer;
-    this.render = ImageCanvasRenderer;
 };
 
 Image.prototype = Object.create(GameObject.prototype);
 Image.prototype.constructor = Image;
+
+Image.prototype.renderCanvas = require('./ImageCanvasRenderer');
+Image.prototype.renderWebGL = require('./ImageWebGLRenderer');
 
 Object.defineProperties(Image.prototype, {
 

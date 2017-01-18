@@ -536,17 +536,6 @@ StateManager.prototype = {
     },
     */
 
-    renderChildren: function (renderer, state, interpolationPercentage)
-    {
-        //  Populates the display list
-        for (var c = 0; c < state.sys.children.list.length; c++)
-        {
-            var child = state.sys.children.list[c];
-
-            child.render(renderer, child, interpolationPercentage);
-        }
-    }
-
 };
 
 module.exports = StateManager;
