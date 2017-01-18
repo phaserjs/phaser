@@ -3,15 +3,16 @@
 * @copyright    2016 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
-import Config from './Config';
+import { default as Config, GameConfig } from './Config';
 import * as Device from '../device';
 import RequestAnimationFrame from '../dom/RequestAnimationFrame';
 import RandomDataGenerator from '../math/random-data-generator/RandomDataGenerator';
 import StateManager from '../state/StateManager';
+import Renderer from '../renderer/Renderer';
 export default class Game {
     config: Config;
-    renderer: any;
-    canvas: any;
+    renderer: Renderer;
+    canvas: HTMLCanvasElement;
     context: any;
     isBooted: boolean;
     isRunning: boolean;
@@ -21,7 +22,7 @@ export default class Game {
     state: StateManager;
     device: typeof Device;
     rnd: RandomDataGenerator;
-    constructor(config: any);
+    constructor(config: GameConfig);
     boot(): void;
-    update(timestamp: any): void;
+    update(timestamp: number): void;
 }

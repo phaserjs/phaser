@@ -1,19 +1,16 @@
-/**
-* @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2016 Photon Storm Ltd.
-* @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
-*/
+import Game from '../../boot/Game';
+import State from '../../state/State';
 /**
 * Dirty! Manager
 *
 * @class
 */
 export default class UpdateManager {
-    state: any;
-    game: any;
-    list: any;
-    running: any;
-    processed: any;
+    state: State;
+    game: Game;
+    list: any[];
+    running: boolean;
+    processed: number;
     constructor(state: any);
     stop(): void;
     start(): void;

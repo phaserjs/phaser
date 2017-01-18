@@ -1,1 +1,1 @@
-export default function (p0: any, p1: any, t: any): any;
+export default function (p0: number, p1: number, t: number): number;

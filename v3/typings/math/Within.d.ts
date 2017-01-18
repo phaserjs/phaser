@@ -8,4 +8,4 @@
 * @return {boolean} True if a is <= tolerance of b.
 * @see {@link Phaser.Math.fuzzyEqual}
 */
-export default function (a: any, b: any, tolerance: any): boolean;
+export default function (a: number, b: number, tolerance: number): boolean;

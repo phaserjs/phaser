@@ -1,1 +1,1 @@
-export default function (point: any, angle: any): any;
+export default function (point: any, angle: number): any;

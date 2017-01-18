@@ -1,1 +1,1 @@
-export default function (degrees: any): number;
+export default function (degrees: number): number;

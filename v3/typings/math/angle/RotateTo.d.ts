@@ -8,4 +8,4 @@
 * @param {number} [lerp=0.05] - The lerp value to add to the current angle.
 * @return {number} The adjusted angle.
 */
-export default function (currentAngle: any, targetAngle: any, lerp: any): any;
+export default function (currentAngle: number, targetAngle: number, lerp?: number): number;

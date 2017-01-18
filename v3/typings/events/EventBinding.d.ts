@@ -1,13 +1,23 @@
+import EventDispatcher from './EventDispatcher';
 export default class EventBinding {
-    dispatcher: any;
+    dispatcher: EventDispatcher;
     type: any;
-    state: any;
-    active: any;
-    constructor(dispatcher: any, type: any);
+    state: number;
+    active: {
+        state: number;
+        callback: any;
+    }[];
+    constructor(dispatcher: EventDispatcher, type: any);
     total(): number;
-    get(callback: any): any;
+    get(callback: any): {
+        state: number;
+        callback: any;
+    };
     getIndex(callback: any): number;
-    has(callback: any): any;
+    has(callback: any): {
+        state: number;
+        callback: any;
+    };
     add(callback: any, priority: any, once: any): void;
     sortHandler(listenerA: any, listenerB: any): 0 | 1 | -1;
     remove(callback: any): void;

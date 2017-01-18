@@ -7,7 +7,7 @@ export default class CanvasInterpolation {
     * @param {HTMLCanvasElement} canvas - The canvas to set image-rendering crisp on.
     * @return {HTMLCanvasElement} Returns the source canvas.
     */
-    static setCrisp(canvas: any): any;
+    static setCrisp(canvas: HTMLCanvasElement): HTMLCanvasElement;
     /**
     * Sets the CSS image-rendering property on the given canvas to be 'bicubic' (aka 'auto').
     * Note that if this doesn't given the desired result then see the CanvasUtils.setSmoothingEnabled method.
@@ -16,5 +16,5 @@ export default class CanvasInterpolation {
     * @param {HTMLCanvasElement} canvas The canvas to set image-rendering bicubic on.
     * @return {HTMLCanvasElement} Returns the source canvas.
     */
-    static setBicubic(canvas: any): any;
+    static setBicubic(canvas: HTMLCanvasElement): HTMLCanvasElement;
 }

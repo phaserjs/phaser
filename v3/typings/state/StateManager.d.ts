@@ -1,11 +1,14 @@
+import State from './State';
 import Game from '../boot/Game';
+import Renderer from '../renderer/Renderer';
+import StateConfig from './StateConfig';
 export default class StateManager {
     private _pending;
     private _start;
-    active: any;
+    private active;
     keys: any;
     game: Game;
-    states: any;
+    states: State[];
     /**
     * The State Manager is responsible for loading, setting up and switching game states.
     *
@@ -13,7 +16,7 @@ export default class StateManager {
     * @constructor
     * @param {Phaser.Game} game - A reference to the currently running game.
     */
-    constructor(game: Game, stateConfig: any);
+    constructor(game: Game, stateConfig: StateConfig | StateConfig[]);
     /**
     * The Boot handler is called by Phaser.Game when it first starts up.
     * The renderer is available by now.
@@ -33,21 +36,21 @@ export default class StateManager {
     * @param {Phaser.State|object|function} state  - The state you want to switch to.
     * @param {boolean} [autoStart=false]  - If true the State will be started immediately after adding it.
     */
-    add(key: any, stateConfig: any, autoStart: any): any;
+    add(key: string, stateConfig: State | StateConfig | (() => any), autoStart?: boolean): any;
     createStateFromInstance(key: any, newState: any): any;
     createStateFromObject(key: any, stateConfig: any): any;
     createStateFromFunction(key: any, state: any): any;
     setupCallbacks(newState: any, stateConfig?: any): any;
     createStateFrameBuffer(newState: any): void;
     getState(key: any): any;
-    getStateIndex(state: any): any;
-    getActiveStateIndex(state: any): any;
+    getStateIndex(state: any): number;
+    getActiveStateIndex(state: any): number;
     isActive(key: any): boolean;
     start(key: any): void;
     loadComplete(event: any): void;
     startCreate(state: any): void;
     pause(key: any): void;
     sortStates(stateA: any, stateB: any): 0 | 1 | -1;
-    step(timestamp: any): void;
-    renderChildren(renderer: any, state: any, interpolationPercentage: any): void;
+    step(timestamp: number): void;
+    renderChildren(renderer: Renderer, state: State, interpolationPercentage: number): void;
 }
