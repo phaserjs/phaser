@@ -112,6 +112,8 @@ ParticleRenderer.prototype.init = function ()
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBufferObject);
         var indexBuffer = indexDataBuffer.wordView;
 
+        var indexB;
+
         // Populate the index buffer only once
         for (var indexA = indexB = 0;
             indexA < ParticleRenderer.MAX_PARTICLES * ParticleRenderer.PARTICLE_INDEX_COUNT;
