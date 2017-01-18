@@ -6,7 +6,7 @@ var CreateAttribDesc = require('../utils/CreateAttribDesc');
 var VertexBuffer = require('../utils/VertexBuffer');
 var IndexBuffer = require('../utils/IndexBuffer');
 var VertexArray = require('../utils/VertexArray');
-var CONST = require('../../const');
+var CONST = require('../../../const');
 
 var ParticleRenderer = function (game)
 {
@@ -186,13 +186,18 @@ ParticleRenderer.prototype.add = function (x, y, width, height, umin, vmin, umax
 ParticleRenderer.prototype.setTexture2D = function (texture2D)
 {
     var gl = this.glContext;
-    if (this.currentTexture2D != texture2D)
+    if (this.currentTexture2D !== texture2D)
     {
         this.flush();
         gl.activeTexture(gl.TEXTURE0);
         gl.bindTexture(gl.TEXTURE_2D, texture2D);
         this.currentTexture2D = texture2D;
     }
+};
+
+ParticleRenderer.prototype.render = function ()
+{
+    //  Stops it breaking
 };
 
 ParticleRenderer.prototype.bind = function ()
