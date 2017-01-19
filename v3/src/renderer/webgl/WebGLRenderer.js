@@ -7,6 +7,7 @@
 
 var CONST = require('../../const');
 var CreateEmptyTexture = require('./utils/CreateEmptyTexture');
+var BlitterBatch =  require('./batches/blitter/BlitterBatch');
 
 var WebGLRenderer = function (game)
 {
@@ -44,6 +45,9 @@ var WebGLRenderer = function (game)
     this.gl = null;
 
     this.init();
+    this.blitterBatch = new BlitterBatch(game, this.gl, this);
+    this.batch = null;
+    this.currentTexture2D = null;
 };
 
 WebGLRenderer.prototype.constructor = WebGLRenderer;
@@ -127,6 +131,12 @@ WebGLRenderer.prototype = {
         ];
     },
 
+    setTexture2D: function(texture2D)
+    {
+        this.currentTexture = texture2D;
+        this.batch.dirty = true;
+    },
+
     resize: function (width, height)
     {
         var res = this.game.config.resolution;
@@ -177,38 +187,44 @@ WebGLRenderer.prototype = {
 
         var gl = this.gl;
 
-        /*
+        
 
         //  This is the old render loop - add what you need here to replace it,
         //  but please allow each State to render to its own Quad FBO
 
-        var fbo = state.sys.fbo;
+        //var fbo = state.sys.fbo;
 
-        fbo.activate();
+        //fbo.activate();
 
         //  clear is needed for the FBO, otherwise corruption ...
         gl.clear(gl.COLOR_BUFFER_BIT);
 
-        this.setBlendMode(CONST.blendModes.NORMAL);
+        //this.setBlendMode(CONST.blendModes.NORMAL);
 
-        this.batch.start();
+        //this.batch.start();
 
         //  Could move to the State Systems or MainLoop
-        this.game.state.renderChildren(this, state, interpolationPercentage);
+        for (var c = 0; c < state.sys.children.list.length; c++)
+        {
+            var child = state.sys.children.list[c];
 
-        this.batch.stop();
+            child.renderWebGL(this, child, interpolationPercentage);
+        }
+        this.batch.flush();
+
+        //this.batch.stop();
 
         //  Call state.render here, so we can do some extra shizzle on the top
         //  Maybe pass in the FBO texture too?
 
-        fbo.render(null);
+        //fbo.render(null);
 
         //  Unbind the fbo texture and replace it with an empty texture.
         //  If we forget this we corrupt the main context texture!
         //  or get `RENDER WARNING: there is no texture bound to the unit 0` spam in the console
-        gl.bindTexture(gl.TEXTURE_2D, this.emptyTexture);
+        //gl.bindTexture(gl.TEXTURE_2D, this.emptyTexture);
 
-        */
+        
 
         // console.log('%c render end ', 'color: #ffffff; background: #ff0000;');
 
@@ -218,8 +234,8 @@ WebGLRenderer.prototype = {
     destroy: function ()
     {
         this.gl = null;
-    }
-
+    },
+    createFBO: function () {}
 };
 
 module.exports = WebGLRenderer;

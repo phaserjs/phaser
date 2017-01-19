@@ -12,7 +12,7 @@ var VertexArray = require('../../utils/VertexArray');
 var PHASER_CONST = require('../../../../const');
 var CONST = require('./const');
 
-var ParticleRenderer = function (game)
+var BlitterBatch = function (game, gl, manager)
 {
     this.game = game;
     this.type = PHASER_CONST.WEBGL;
@@ -22,7 +22,7 @@ var ParticleRenderer = function (game)
     this.width = game.config.width * game.config.resolution;
     this.height = game.config.height * game.config.resolution;
 
-    this.glContext = null;
+    this.glContext = gl;
 
     this.maxParticles = null;
 
@@ -57,78 +57,73 @@ var ParticleRenderer = function (game)
         }
     };
 
-    this.init();
+    this.manager = manager;
+    this.dirty = false;
+
+    this.init(this.glContext);
 };
 
-ParticleRenderer.prototype.constructor = ParticleRenderer;
+BlitterBatch.prototype.constructor = BlitterBatch;
 
-ParticleRenderer.prototype = {
+BlitterBatch.prototype = {
 
-    init: function ()
+    init: function (gl)
     {
-        if (this.glContext === null)
-        {
-            var gl = this.view.getContext('webgl', this.config.WebGLContextOptions) || this.view.getContext('experimental-webgl', this.config.WebGLContextOptions);
 
-            var vertexDataBuffer = new VertexBuffer(CONST.VERTEX_SIZE * CONST.PARTICLE_VERTEX_COUNT * CONST.MAX_PARTICLES);
+        var vertexDataBuffer = new VertexBuffer(CONST.VERTEX_SIZE * CONST.PARTICLE_VERTEX_COUNT * CONST.MAX_PARTICLES);
 
-            var indexDataBuffer = new IndexBuffer(CONST.INDEX_SIZE * CONST.PARTICLE_INDEX_COUNT * CONST.MAX_PARTICLES);
+        var indexDataBuffer = new IndexBuffer(CONST.INDEX_SIZE * CONST.PARTICLE_INDEX_COUNT * CONST.MAX_PARTICLES);
 
-            var vertShader = CreateShader(gl, CONST.VERTEX_SHADER_SOURCE, gl.VERTEX_SHADER);
-            var fragShader = CreateShader(gl, CONST.FRAGMENT_SHADER_SOURCE, gl.FRAGMENT_SHADER);
-            var program = CreateProgram(gl, vertShader, fragShader);
+        var vertShader = CreateShader(gl, CONST.VERTEX_SHADER_SOURCE, gl.VERTEX_SHADER);
+        var fragShader = CreateShader(gl, CONST.FRAGMENT_SHADER_SOURCE, gl.FRAGMENT_SHADER);
+        var program = CreateProgram(gl, vertShader, fragShader);
 
-            var indexBufferObject = CreateBuffer(gl, gl.ELEMENT_ARRAY_BUFFER, gl.STATIC_DRAW, null, indexDataBuffer.getByteCapacity());
+        var indexBufferObject = CreateBuffer(gl, gl.ELEMENT_ARRAY_BUFFER, gl.STATIC_DRAW, null, indexDataBuffer.getByteCapacity());
 
-            var attribArray = [
-                CreateAttribDesc(gl, program, 'a_position', 2, gl.FLOAT, false, CONST.VERTEX_SIZE, 0),
-                CreateAttribDesc(gl, program, 'a_tex_coord', 2, gl.FLOAT, false, CONST.VERTEX_SIZE, 8)
-            ];
+        var attribArray = [
+            CreateAttribDesc(gl, program, 'a_position', 2, gl.FLOAT, false, CONST.VERTEX_SIZE, 0),
+            CreateAttribDesc(gl, program, 'a_tex_coord', 2, gl.FLOAT, false, CONST.VERTEX_SIZE, 8)
+        ];
 
-            var vertexArray = new VertexArray(CreateBuffer(gl, gl.ARRAY_BUFFER, gl.STREAM_DRAW, null, vertexDataBuffer.getByteCapacity()), attribArray);
+        var vertexArray = new VertexArray(CreateBuffer(gl, gl.ARRAY_BUFFER, gl.STREAM_DRAW, null, vertexDataBuffer.getByteCapacity()), attribArray);
 
-            var viewMatrixLocation = gl.getUniformLocation(program, 'u_view_matrix');
+        var viewMatrixLocation = gl.getUniformLocation(program, 'u_view_matrix');
 
-            this.vertexDataBuffer = vertexDataBuffer;
-            this.indexDataBuffer = indexDataBuffer;
+        this.vertexDataBuffer = vertexDataBuffer;
+        this.indexDataBuffer = indexDataBuffer;
 
-            this.vertShader = vertShader;
-            this.fragShader = fragShader;
-            this.program = program;
+        this.vertShader = vertShader;
+        this.fragShader = fragShader;
+        this.program = program;
 
-            this.indexBufferObject = indexBufferObject;
-            this.vertexArray = vertexArray;
+        this.indexBufferObject = indexBufferObject;
+        this.vertexArray = vertexArray;
 
-            this.glContext = gl;
 
-            this.viewMatrixLocation = viewMatrixLocation;
+        this.viewMatrixLocation = viewMatrixLocation;
            
-            gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBufferObject);
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBufferObject);
 
-            var indexBuffer = indexDataBuffer.wordView;
-            var max = CONST.MAX_PARTICLES * CONST.PARTICLE_INDEX_COUNT;
+        var indexBuffer = indexDataBuffer.wordView;
+        var max = CONST.MAX_PARTICLES * CONST.PARTICLE_INDEX_COUNT;
 
             // Populate the index buffer only once
-            for (var indexA = 0, indexB = 0; indexA < max; indexA += CONST.PARTICLE_INDEX_COUNT, indexB += CONST.PARTICLE_VERTEX_COUNT)
+        for (var indexA = 0, indexB = 0; indexA < max; indexA += CONST.PARTICLE_INDEX_COUNT, indexB += CONST.PARTICLE_VERTEX_COUNT)
             {
-                indexBuffer[indexA + 0] = indexB + 0;
-                indexBuffer[indexA + 1] = indexB + 1;
-                indexBuffer[indexA + 2] = indexB + 2;
-                indexBuffer[indexA + 3] = indexB + 0;
-                indexBuffer[indexA + 4] = indexB + 2;
-                indexBuffer[indexA + 5] = indexB + 3;
-            }
-
-            this.bind();
-
-            this.resize(this.width, this.height);
-
-            this.unbind();
+            indexBuffer[indexA + 0] = indexB + 0;
+            indexBuffer[indexA + 1] = indexB + 1;
+            indexBuffer[indexA + 2] = indexB + 2;
+            indexBuffer[indexA + 3] = indexB + 0;
+            indexBuffer[indexA + 4] = indexB + 2;
+            indexBuffer[indexA + 5] = indexB + 3;
         }
-        else
-        {
-            console.error('ParticleRenderer already initialized');
-        }
+        gl.bufferSubData(gl.ELEMENT_ARRAY_BUFFER, 0, indexDataBuffer.getUsedBufferAsWord());
+
+        this.bind();
+
+        this.resize(this.width, this.height);
+
+        this.unbind();
     },
 
     isFull: function ()
@@ -138,9 +133,19 @@ ParticleRenderer.prototype = {
 
     add: function (x, y, width, height, umin, vmin, umax, vmax)
     {
-        // The user must check if the buffers are full before flushing
-        // this is to give freedom of when should the renderer flush.
+        var manager = this.manager;
+        if (manager.batch !== this || this.dirty)
+        {
+            if (manager.batch)
+                manager.batch.flush();
+    
+            this.bind();
+            this.setTexture2D(manager.currentTexture2D, true);
+            manager.batch = this;
+        }
 
+        // The user must check if the buffers are full before flushing
+        // this is to give freedom of when should the renderer flush. var vertexDataBuffer = this.vertexDataBuffer;
         var vertexDataBuffer = this.vertexDataBuffer;
         var vertexBuffer = vertexDataBuffer.floatView;
         var vertexOffset = vertexDataBuffer.allocate(CONST.PARTICLE_VERTEX_COMPONENT_COUNT * CONST.PARTICLE_VERTEX_COUNT);
@@ -168,11 +173,11 @@ ParticleRenderer.prototype = {
         this.elementCount += CONST.PARTICLE_INDEX_COUNT;
     },
 
-    setTexture2D: function (texture2D)
+    setTexture2D: function (texture2D, force)
     {
         var gl = this.glContext;
 
-        if (this.currentTexture2D !== texture2D)
+        if (this.currentTexture2D !== texture2D || force)
         {
             this.flush();
 
@@ -181,16 +186,6 @@ ParticleRenderer.prototype = {
 
             this.currentTexture2D = texture2D;
         }
-    },
-
-    render: function ()
-    {
-        //  Stops it breaking
-    },
-
-    createFBO: function ()
-    {
-        //  Stops it breaking
     },
 
     bind: function ()
@@ -282,4 +277,4 @@ ParticleRenderer.prototype = {
 
 };
 
-module.exports = ParticleRenderer;
+module.exports = BlitterBatch;
