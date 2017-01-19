@@ -18,8 +18,10 @@ var Texture = require('./Texture');
 * @class Phaser.TextureManager
 * @constructor
 */
-var TextureManager = function ()
+var TextureManager = function (game)
 {
+    this.game = game;
+
     this.list = {};
 };
 
@@ -169,7 +171,6 @@ TextureManager.prototype = {
         this.list[key] = texture;
 
         return texture;
-
     },
 
     exists: function (key)

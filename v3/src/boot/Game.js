@@ -37,7 +37,7 @@ var Game = function (config)
     /**
     * @property {Phaser.TextureManager} textures - Reference to the Phaser Texture Manager.
     */
-    this.textures = new TextureManager();
+    this.textures = new TextureManager(this);
 
     /**
     * @property {Phaser.Cache} cache - Reference to the assets cache.
