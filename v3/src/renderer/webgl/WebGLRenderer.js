@@ -7,7 +7,8 @@
 
 var CONST = require('../../const');
 var CreateEmptyTexture = require('./utils/CreateEmptyTexture');
-var BlitterBatch =  require('./batches/blitter/BlitterBatch');
+var BlitterBatch = require('./batches/blitter/BlitterBatch');
+var SpriteBatch = require('./batches/sprite/SpriteBatch');
 
 var WebGLRenderer = function (game)
 {
@@ -46,6 +47,7 @@ var WebGLRenderer = function (game)
 
     this.init();
     this.blitterBatch = new BlitterBatch(game, this.gl, this);
+    this.spriteBatch = new SpriteBatch(game, this.gl, this);
     this.batch = null;
     this.currentTexture2D = null;
 };
@@ -131,10 +133,24 @@ WebGLRenderer.prototype = {
         ];
     },
 
-    setTexture2D: function(texture2D)
+    setTexture2D: function (texture2D)
     {
         this.currentTexture = texture2D;
         this.batch.dirty = true;
+    },
+
+    setBatch: function (batch)
+    {
+        if (this.batch != batch)
+        {
+            if (this.batch)
+            {
+                this.batch.flush();
+            }
+            batch.bind();
+            batch.setTexture2D(this.currentTexture2D, true);
+            this.batch = batch;
+        }
     },
 
     resize: function (width, height)

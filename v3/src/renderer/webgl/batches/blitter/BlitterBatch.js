@@ -1,13 +1,13 @@
 //  Could you move these into sub-folders please, i.e. 'vao', 'shader' etc?
 
-var BindVertexArray = require('../../utils/BindVertexArray');
-var CreateProgram = require('../../utils/CreateProgram');
-var CreateShader = require('../../utils/CreateShader');
-var CreateBuffer = require('../../utils/CreateBuffer');
-var CreateAttribDesc = require('../../utils/CreateAttribDesc');
-var VertexBuffer = require('../../utils/VertexBuffer');
-var IndexBuffer = require('../../utils/IndexBuffer');
-var VertexArray = require('../../utils/VertexArray');
+var BindVertexArray = require('../../utils/vao/BindVertexArray');
+var CreateProgram = require('../../utils/shader/CreateProgram');
+var CreateShader = require('../../utils/shader/CreateShader');
+var CreateBuffer = require('../../utils/buffer/CreateBuffer');
+var CreateAttribDesc = require('../../utils/vao/CreateAttribDesc');
+var VertexBuffer = require('../../utils/buffer/VertexBuffer');
+var IndexBuffer = require('../../utils/buffer/IndexBuffer');
+var VertexArray = require('../../utils/vao/VertexArray');
 
 var PHASER_CONST = require('../../../../const');
 var CONST = require('./const');
@@ -133,16 +133,7 @@ BlitterBatch.prototype = {
 
     add: function (x, y, width, height, umin, vmin, umax, vmax)
     {
-        var manager = this.manager;
-        if (manager.batch !== this || this.dirty)
-        {
-            if (manager.batch)
-                manager.batch.flush();
-    
-            this.bind();
-            this.setTexture2D(manager.currentTexture2D, true);
-            manager.batch = this;
-        }
+        this.manager.setBatch(this);
 
         // The user must check if the buffers are full before flushing
         // this is to give freedom of when should the renderer flush. var vertexDataBuffer = this.vertexDataBuffer;

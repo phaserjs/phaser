@@ -1,0 +1,23 @@
+var FragmentShader = require('./FragmentShader');
+var VertexShader = require('./VertexShader');
+
+var CONST = {
+
+    // VERTEX_SIZE = (sizeof(vec2) * 4) + (sizeof(float))
+    VERTEX_SIZE: 36,
+    INDEX_SIZE: 2,
+    SPRITE_VERTEX_COUNT: 4,
+    SPRITE_INDEX_COUNT: 6,
+
+    // How many 32-bit components does the vertex have.
+    SPRITE_VERTEX_COMPONENT_COUNT: 9,
+
+    // Can't be bigger since index are 16-bit
+    MAX_SPRITES: 10000,
+
+    VERTEX_SHADER_SOURCE: VertexShader,
+    FRAGMENT_SHADER_SOURCE: FragmentShader
+
+};
+
+module.exports = CONST;
