@@ -1,4 +1,20 @@
-# Phaser 3 Thoughts and Ideas
+# Phaser 3 Ideas and To Dos
+
+TODO
+----
+
+Upgrade to Webpack 2 final release
+Stop the build script from _moving_ the build file into Examples, and just copy it :)
+
+General
+-------
+
+Add a Registry -  a game level Data component, accessible from any State.
+
+Look at adding events to the Data component, so you can be notified about changes to objects stored within it.
+
+Rename ParticleRenderer to BlitterBatch.
+
 
 Arcade Physics
 --------------
