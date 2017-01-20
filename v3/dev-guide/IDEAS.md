@@ -11,7 +11,7 @@ General
 
 Add a Registry -  a game level Data component, accessible from any State.
 
-Look at adding events to the Data component, so you can be notified about changes to objects stored within it.
+Look at adding events to the Data component, so you can be notified about changes to objects stored within it. Something like the way Freezer does it? https://github.com/arqex/freezer
 
 Rename ParticleRenderer to BlitterBatch.
 
