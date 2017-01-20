@@ -10,8 +10,12 @@ var VertexArray = require('../../utils/vao/VertexArray');
 var PHASER_CONST = require('../../../../const');
 var CONST = require('./const');
 
-var SpriteBatch = function (game, gl, manager)
+var SpriteBatch32 = function (game, gl, manager)
 {
+    gl.getExtension('OES_element_index_uint');
+    CONST.INDEX_SIZE = 4;
+    CONST.MAX_SPRITES = 100000;
+
     this.game = game;
     this.type = PHASER_CONST.WEBGL;
 
@@ -61,16 +65,16 @@ var SpriteBatch = function (game, gl, manager)
     this.init(this.glContext);
 };
 
-SpriteBatch.prototype.constructor = SpriteBatch;
+SpriteBatch32.prototype.constructor = SpriteBatch32;
 
-SpriteBatch.prototype = {
+SpriteBatch32.prototype = {
 
     init: function (gl)
     {
 
         var vertexDataBuffer = new VertexBuffer(CONST.VERTEX_SIZE * CONST.SPRITE_VERTEX_COUNT * CONST.MAX_SPRITES);
 
-        var indexDataBuffer = new IndexBuffer(CONST.INDEX_SIZE * CONST.SPRITE_INDEX_COUNT * CONST.MAX_SPRITES);
+        var indexDataBuffer = new VertexBuffer(CONST.INDEX_SIZE * CONST.SPRITE_INDEX_COUNT * CONST.MAX_SPRITES);
 
         var vertShader = CreateShader(gl, CONST.VERTEX_SHADER_SOURCE, gl.VERTEX_SHADER);
         var fragShader = CreateShader(gl, CONST.FRAGMENT_SHADER_SOURCE, gl.FRAGMENT_SHADER);
@@ -105,7 +109,7 @@ SpriteBatch.prototype = {
            
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBufferObject);
 
-        var indexBuffer = indexDataBuffer.wordView;
+        var indexBuffer = indexDataBuffer.uintView;
         var max = CONST.MAX_SPRITES * CONST.SPRITE_INDEX_COUNT;
 
             // Populate the index buffer only once
@@ -225,7 +229,7 @@ SpriteBatch.prototype = {
 
         gl.bufferSubData(gl.ARRAY_BUFFER, 0, vertexDataBuffer.getUsedBufferAsFloat());
 
-        gl.drawElements(gl.TRIANGLES, this.elementCount, gl.UNSIGNED_SHORT, 0);
+        gl.drawElements(gl.TRIANGLES, this.elementCount, gl.UNSIGNED_INT, 0);
 
         vertexDataBuffer.clear();
 
@@ -279,4 +283,4 @@ SpriteBatch.prototype = {
 
 };
 
-module.exports = SpriteBatch;
+module.exports = SpriteBatch32;

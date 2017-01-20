@@ -10,6 +10,7 @@ var CreateEmptyTexture = require('./utils/CreateEmptyTexture');
 var CreateTexture2DImage = require('./utils/texture/CreateTexture2DImage');
 var BlitterBatch = require('./batches/blitter/BlitterBatch');
 var SpriteBatch = require('./batches/sprite/SpriteBatch');
+var SpriteBatch32 = require('./batches/sprite/SpriteBatch32');
 
 var WebGLRenderer = function (game)
 {
@@ -48,8 +49,18 @@ var WebGLRenderer = function (game)
 
     this.init();
 
+    this.extensions = this.gl.getSupportedExtensions();
+
     this.blitterBatch = new BlitterBatch(game, this.gl, this);
-    this.spriteBatch = new SpriteBatch(game, this.gl, this);
+    this.spriteBatch = null;
+    if (this.extensions.indexOf('OES_element_index_uint') >= 0)
+    {
+        this.spriteBatch = new SpriteBatch32(game, this.gl, this);
+    }
+    else
+    {
+        this.spriteBatch = new SpriteBatch(game, this.gl, this);
+    }
 
     this.batch = null;
     this.currentTexture2D = null;
