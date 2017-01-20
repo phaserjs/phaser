@@ -150,15 +150,18 @@ WebGLRenderer.prototype = {
 
     setTexture2D: function (texture2D)
     {
-        if (this.currentTexture2D != texture2D)
+        if (this.currentTexture2D !== texture2D)
         {
-            var batch = this.batch;
-            if (batch)
+            if (this.batch)
             {
-                batch.flush();
+                this.batch.flush();
             }
+
+            var gl = this.gl;
+
             gl.activeTexture(gl.TEXTURE0);
             gl.bindTexture(gl.TEXTURE_2D, texture2D);
+
             this.currentTexture2D = texture2D;
         }
     },
@@ -166,13 +169,16 @@ WebGLRenderer.prototype = {
     setBatch: function (batch, texture2D)
     {
         this.setTexture2D(texture2D);
-        if (this.batch != batch)
+
+        if (this.batch !== batch)
         {
             if (this.batch)
             {
                 this.batch.flush();
             }
+
             batch.bind();
+
             this.batch = batch;
         }
     },
