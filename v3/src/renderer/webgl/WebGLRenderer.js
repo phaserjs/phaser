@@ -152,7 +152,11 @@ WebGLRenderer.prototype = {
     {
         if (this.currentTexture2D != texture2D)
         {
-            this.flush();
+            var batch = this.batch;
+            if (batch)
+            {
+                batch.flush();
+            }
             gl.activeTexture(gl.TEXTURE0);
             gl.bindTexture(gl.TEXTURE_2D, texture2D);
             this.currentTexture2D = texture2D;
