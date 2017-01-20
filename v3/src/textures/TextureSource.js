@@ -4,8 +4,10 @@
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
+var CONST = require('../const');
 var ScaleModes = require('../renderer/ScaleModes');
 var IsSizePowerOfTwo = require('../math/pow2/IsSizePowerOfTwo');
+var CreateTexture2DFromSource = require('../renderer/webgl/utils/texture/CreateTexture2DFromSource');
 
 /**
 *
@@ -71,10 +73,10 @@ var TextureSource = function (texture, source)
     * Set this to true if a mipmap of this texture needs to be generated. This value needs to be set before the texture is used
     * Also the texture must be a power of two size to work
     *
-    * @property mipmap
-    * @type {Boolean}
+    * @property mipmapLevel
+    * @type {integer}
     */
-    this.mipmap = false;
+    this.mipmapLevel = 0;
 
     /**
     * A BaseTexture can be set to skip the rendering phase in the WebGL Sprite Batch.
@@ -117,6 +119,13 @@ var TextureSource = function (texture, source)
     * @property glDirty
     */
     this.glDirty = true;
+
+    var game = texture.manager.game;
+
+    if (game.config.renderType === CONST.WEBGL)
+    {
+        CreateTexture2DFromSource(game.renderer.gl, this);
+    }
 };
 
 module.exports = TextureSource;
