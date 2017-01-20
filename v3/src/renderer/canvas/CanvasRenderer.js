@@ -20,7 +20,9 @@ var CanvasRenderer = function (game)
 
     this.autoResize = false;
 
-    this.preserveDrawingBuffer = false;
+    // this.smoothProperty = Phaser.Canvas.getSmoothingPrefix(this.context);
+
+    this.roundPixels = false;
 
     this.width = game.config.width * game.config.resolution;
 
@@ -36,10 +38,6 @@ var CanvasRenderer = function (game)
      * @type CanvasRenderingContext2D
      */
     this.context = this.view.getContext('2d', { alpha: true });
-
-    // this.smoothProperty = Phaser.Canvas.getSmoothingPrefix(this.context);
-
-    this.roundPixels = false;
 
     //  Map to the required function
     this.drawImage = DrawImage;

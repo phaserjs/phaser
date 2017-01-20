@@ -1,4 +1,4 @@
-var CONST = require('../const');
+var CONST = require('./const');
 var ScaleModes = require('../renderer/ScaleModes');
 var GetObjectValue = require('../utils/GetObjectValue');
 
@@ -16,11 +16,11 @@ var Settings = function (state, config)
 
     this.state = state; //  Do we actually need this reference? This could just be a property bucket
 
-    this.status = CONST.state.PENDING;
+    this.status = CONST.PENDING;
 
     //  Which part of this State is currently being processed?
     //  preload, create, update, shutdown, etc
-    this.op = CONST.state.BOOT;
+    this.op = CONST.BOOT;
 
     this.key = GetObjectValue(config, 'key', '');
     this.active = GetObjectValue(config, 'active', false);
@@ -33,6 +33,15 @@ var Settings = function (state, config)
     //  -1 means the State Manager will set it to be the Game dimensions
     this.width = GetObjectValue(config, 'width', -1);
     this.height = GetObjectValue(config, 'height', -1);
+
+    //  Renderer Settings
+
+    this.clearBeforeRender = GetObjectValue(config, 'clearBeforeRender', true);
+    this.transparent = GetObjectValue(config, 'transparent', false);
+    this.autoResize = GetObjectValue(config, 'autoResize', false);
+    this.roundPixels = GetObjectValue(config, 'roundPixels', false);
+    this.drawToPrimaryCanvas = GetObjectValue(config, 'drawToPrimaryCanvas', false);
+
 };
 
 //  Unless we add some actual functions in here, we'll make this just return an Object instead of an instance
