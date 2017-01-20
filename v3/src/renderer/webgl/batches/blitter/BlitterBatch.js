@@ -109,7 +109,7 @@ BlitterBatch.prototype = {
 
             // Populate the index buffer only once
         for (var indexA = 0, indexB = 0; indexA < max; indexA += CONST.PARTICLE_INDEX_COUNT, indexB += CONST.PARTICLE_VERTEX_COUNT)
-            {
+        {
             indexBuffer[indexA + 0] = indexB + 0;
             indexBuffer[indexA + 1] = indexB + 1;
             indexBuffer[indexA + 2] = indexB + 2;
@@ -131,52 +131,40 @@ BlitterBatch.prototype = {
         return (this.vertexDataBuffer.getByteLength() >= this.vertexDataBuffer.getByteCapacity());
     },
 
-    add: function (x, y, width, height, umin, vmin, umax, vmax)
+    add: function (x, y, frame)
     {
-        this.manager.setBatch(this);
+        this.manager.setBatch(this, frame.texture.source[0].glTexture);
 
         // The user must check if the buffers are full before flushing
         // this is to give freedom of when should the renderer flush. var vertexDataBuffer = this.vertexDataBuffer;
         var vertexDataBuffer = this.vertexDataBuffer;
         var vertexBuffer = vertexDataBuffer.floatView;
         var vertexOffset = vertexDataBuffer.allocate(CONST.PARTICLE_VERTEX_COMPONENT_COUNT * CONST.PARTICLE_VERTEX_COUNT);
+        var uvs = frame.uvs;
+        var width = frame.width;
+        var height = frame.height;
 
         vertexBuffer[vertexOffset++] = x;
         vertexBuffer[vertexOffset++] = y;
-        vertexBuffer[vertexOffset++] = umin;
-        vertexBuffer[vertexOffset++] = vmin;
+        vertexBuffer[vertexOffset++] = uvs.x0;
+        vertexBuffer[vertexOffset++] = uvs.y0;
         
         vertexBuffer[vertexOffset++] = x;
         vertexBuffer[vertexOffset++] = y + height;
-        vertexBuffer[vertexOffset++] = umin;
-        vertexBuffer[vertexOffset++] = vmax;
+        vertexBuffer[vertexOffset++] = uvs.x1;
+        vertexBuffer[vertexOffset++] = uvs.y1;
 
         vertexBuffer[vertexOffset++] = x + width;
         vertexBuffer[vertexOffset++] = y + height;
-        vertexBuffer[vertexOffset++] = umax;
-        vertexBuffer[vertexOffset++] = vmax;
+        vertexBuffer[vertexOffset++] = uvs.x2;
+        vertexBuffer[vertexOffset++] = uvs.y2;
 
         vertexBuffer[vertexOffset++] = x + width;
         vertexBuffer[vertexOffset++] = y;
-        vertexBuffer[vertexOffset++] = umax;
-        vertexBuffer[vertexOffset++] = vmin;
+        vertexBuffer[vertexOffset++] = uvs.x3;
+        vertexBuffer[vertexOffset++] = uvs.y3;
 
         this.elementCount += CONST.PARTICLE_INDEX_COUNT;
-    },
-
-    setTexture2D: function (texture2D, force)
-    {
-        var gl = this.glContext;
-
-        if (this.currentTexture2D !== texture2D || force)
-        {
-            this.flush();
-
-            gl.activeTexture(gl.TEXTURE0);
-            gl.bindTexture(gl.TEXTURE_2D, texture2D);
-
-            this.currentTexture2D = texture2D;
-        }
     },
 
     bind: function ()

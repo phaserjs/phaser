@@ -110,7 +110,7 @@ SpriteBatch.prototype = {
 
             // Populate the index buffer only once
         for (var indexA = 0, indexB = 0; indexA < max; indexA += CONST.SPRITE_INDEX_COUNT, indexB += CONST.SPRITE_VERTEX_COUNT)
-            {
+        {
             indexBuffer[indexA + 0] = indexB + 0;
             indexBuffer[indexA + 1] = indexB + 1;
             indexBuffer[indexA + 2] = indexB + 2;
@@ -134,7 +134,7 @@ SpriteBatch.prototype = {
 
     add: function (frame, pivotX, pivotY, translateX, translateY, scaleX, scaleY, rotation)
     {
-        this.manager.setBatch(this);
+        this.manager.setBatch(this, frame.texture.source[0].glTexture);
 
         // The user must check if the buffers are full before flushing
         // this is to give freedom of when should the renderer flush. var vertexDataBuffer = this.vertexDataBuffer;
@@ -188,21 +188,6 @@ SpriteBatch.prototype = {
         vertexBuffer[vertexOffset++] = rotation;
 
         this.elementCount += CONST.SPRITE_INDEX_COUNT;
-    },
-
-    setTexture2D: function (texture2D, force)
-    {
-        var gl = this.glContext;
-
-        if (this.currentTexture2D !== texture2D || force)
-        {
-            this.flush();
-
-            gl.activeTexture(gl.TEXTURE0);
-            gl.bindTexture(gl.TEXTURE_2D, texture2D);
-
-            this.currentTexture2D = texture2D;
-        }
     },
 
     bind: function ()
