@@ -132,7 +132,7 @@ SpriteBatch.prototype = {
         return (this.vertexDataBuffer.getByteLength() >= this.vertexDataBuffer.getByteCapacity());
     },
 
-    add: function (x, y, width, height, umin, vmin, umax, vmax, translateX, translateY, scaleX, scaleY, rotation)
+    add: function (frame, pivotX, pivotY, translateX, translateY, scaleX, scaleY, rotation)
     {
         this.manager.setBatch(this);
 
@@ -141,11 +141,16 @@ SpriteBatch.prototype = {
         var vertexDataBuffer = this.vertexDataBuffer;
         var vertexBuffer = vertexDataBuffer.floatView;
         var vertexOffset = vertexDataBuffer.allocate(CONST.SPRITE_VERTEX_COMPONENT_COUNT * CONST.SPRITE_VERTEX_COUNT);
+        var uvs = frame.uvs;
+        var x = -pivotX;
+        var y = -pivotY;
+        var width = frame.width;
+        var height = frame.height;
 
         vertexBuffer[vertexOffset++] = x;
         vertexBuffer[vertexOffset++] = y;
-        vertexBuffer[vertexOffset++] = umin;
-        vertexBuffer[vertexOffset++] = vmin;
+        vertexBuffer[vertexOffset++] = uvs.x0;
+        vertexBuffer[vertexOffset++] = uvs.y0;
         vertexBuffer[vertexOffset++] = translateX;
         vertexBuffer[vertexOffset++] = translateY;
         vertexBuffer[vertexOffset++] = scaleX;
@@ -154,8 +159,8 @@ SpriteBatch.prototype = {
 
         vertexBuffer[vertexOffset++] = x;
         vertexBuffer[vertexOffset++] = y + height;
-        vertexBuffer[vertexOffset++] = umin;
-        vertexBuffer[vertexOffset++] = vmax;
+        vertexBuffer[vertexOffset++] = uvs.x1;
+        vertexBuffer[vertexOffset++] = uvs.y1;
         vertexBuffer[vertexOffset++] = translateX;
         vertexBuffer[vertexOffset++] = translateY;
         vertexBuffer[vertexOffset++] = scaleX;
@@ -164,8 +169,8 @@ SpriteBatch.prototype = {
     
         vertexBuffer[vertexOffset++] = x + width;
         vertexBuffer[vertexOffset++] = y + height;
-        vertexBuffer[vertexOffset++] = umax;
-        vertexBuffer[vertexOffset++] = vmax;
+        vertexBuffer[vertexOffset++] = uvs.x2;
+        vertexBuffer[vertexOffset++] = uvs.y2;
         vertexBuffer[vertexOffset++] = translateX;
         vertexBuffer[vertexOffset++] = translateY;
         vertexBuffer[vertexOffset++] = scaleX;
@@ -174,8 +179,8 @@ SpriteBatch.prototype = {
 
         vertexBuffer[vertexOffset++] = x + width;
         vertexBuffer[vertexOffset++] = y;
-        vertexBuffer[vertexOffset++] = umax;
-        vertexBuffer[vertexOffset++] = vmin;
+        vertexBuffer[vertexOffset++] = uvs.x3;
+        vertexBuffer[vertexOffset++] = uvs.y3;
         vertexBuffer[vertexOffset++] = translateX;
         vertexBuffer[vertexOffset++] = translateY;
         vertexBuffer[vertexOffset++] = scaleX;

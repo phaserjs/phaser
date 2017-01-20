@@ -20,9 +20,8 @@ var ImageWebGLRenderer = function (renderer, src, interpolationPercentage)
     var transform = src.transform;
 
     renderer.spriteBatch.add(
-        0, 0,
-        frame.cutWidth, frame.cutHeight,
-        0, 0, 1, 1,
+        frame,
+        transform._pivotX, transform._pivotY,
         transform.world.tx, transform.world.ty,
         transform._worldScaleX, transform._worldScaleY,
         transform._worldRotation

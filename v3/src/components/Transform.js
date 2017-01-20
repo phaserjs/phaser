@@ -551,20 +551,20 @@ Transform.prototype = {
         var vert = this.glVertextData;
 
         //  Top Left Vert
-        vert.x0 = (a * w1) + (c * h1) + tx;
-        vert.y0 = (d * h1) + (b * w1) + ty;
+        // vert.x0 = (a * w1) + (c * h1) + tx;
+        // vert.y0 = (d * h1) + (b * w1) + ty;
 
         //  Top Right Vert
-        vert.x1 = (a * w0) + (c * h1) + tx;
-        vert.y1 = (d * h1) + (b * w0) + ty;
+        // vert.x1 = (a * w0) + (c * h1) + tx;
+        // vert.y1 = (d * h1) + (b * w0) + ty;
 
         //  Bottom Right Vert
-        vert.x2 = (a * w0) + (c * h0) + tx;
-        vert.y2 = (d * h0) + (b * w0) + ty;
+        // vert.x2 = (a * w0) + (c * h0) + tx;
+        // vert.y2 = (d * h0) + (b * w0) + ty;
 
         //  Bottom Left Vert
-        vert.x3 = (a * w1) + (c * h0) + tx;
-        vert.y3 = (d * h0) + (b * w1) + ty;
+        // vert.x3 = (a * w1) + (c * h0) + tx;
+        // vert.y3 = (d * h0) + (b * w1) + ty;
         
         return vert;
     },

@@ -221,14 +221,14 @@ Frame.prototype = {
         uvs.x0 = this.cutX / tw;
         uvs.y0 = this.cutY / th;
 
-        uvs.x1 = (this.cutX + this.cutWidth) / tw;
-        uvs.y1 = this.cutY / th;
+        uvs.x1 = this.cutX / tw;
+        uvs.y1 = (this.cutY + this.cutHeight) / th;
 
         uvs.x2 = (this.cutX + this.cutWidth) / tw;
         uvs.y2 = (this.cutY + this.cutHeight) / th;
 
-        uvs.x3 = this.cutX / tw;
-        uvs.y3 = (this.cutY + this.cutHeight) / th;
+        uvs.x3 = (this.cutX + this.cutWidth) / tw;
+        uvs.y3 = this.cutY / th;
 
         return this;
     },
