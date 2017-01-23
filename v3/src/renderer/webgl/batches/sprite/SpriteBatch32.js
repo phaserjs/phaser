@@ -87,7 +87,8 @@ SpriteBatch32.prototype = {
             CreateAttribDesc(gl, program, 'a_tex_coord', 2, gl.FLOAT, false, CONST.VERTEX_SIZE, 8),
             CreateAttribDesc(gl, program, 'a_translate', 2, gl.FLOAT, false, CONST.VERTEX_SIZE, 16),
             CreateAttribDesc(gl, program, 'a_scale', 2, gl.FLOAT, false, CONST.VERTEX_SIZE, 24),
-            CreateAttribDesc(gl, program, 'a_rotation', 1, gl.FLOAT, false, CONST.VERTEX_SIZE, 32)
+            CreateAttribDesc(gl, program, 'a_rotation', 1, gl.FLOAT, false, CONST.VERTEX_SIZE, 32),
+            CreateAttribDesc(gl, program, 'a_color', 3, 5121, true, CONST.VERTEX_SIZE, 36)
         ];
 
         var vertexArray = new VertexArray(CreateBuffer(gl, gl.ARRAY_BUFFER, gl.STREAM_DRAW, null, vertexDataBuffer.getByteCapacity()), attribArray);
@@ -136,14 +137,15 @@ SpriteBatch32.prototype = {
         return (this.vertexDataBuffer.getByteLength() >= this.vertexDataBuffer.getByteCapacity());
     },
 
-    add: function (frame, pivotX, pivotY, translateX, translateY, scaleX, scaleY, rotation)
+    add: function (frame, pivotX, pivotY, translateX, translateY, scaleX, scaleY, rotation, vertexColor)
     {
         this.manager.setBatch(this, frame.texture.source[0].glTexture);
 
         // The user must check if the buffers are full before flushing
         // this is to give freedom of when should the renderer flush. var vertexDataBuffer = this.vertexDataBuffer;
         var vertexDataBuffer = this.vertexDataBuffer;
-        var vertexBuffer = vertexDataBuffer.floatView;
+        var vertexBufferF32 = vertexDataBuffer.floatView;
+        var vertexBufferU32 = vertexDataBuffer.uintView;
         var vertexOffset = vertexDataBuffer.allocate(CONST.SPRITE_VERTEX_COMPONENT_COUNT * CONST.SPRITE_VERTEX_COUNT);
         var uvs = frame.uvs;
         var x = -pivotX;
@@ -151,45 +153,49 @@ SpriteBatch32.prototype = {
         var width = frame.width;
         var height = frame.height;
 
-        vertexBuffer[vertexOffset++] = x;
-        vertexBuffer[vertexOffset++] = y;
-        vertexBuffer[vertexOffset++] = uvs.x0;
-        vertexBuffer[vertexOffset++] = uvs.y0;
-        vertexBuffer[vertexOffset++] = translateX;
-        vertexBuffer[vertexOffset++] = translateY;
-        vertexBuffer[vertexOffset++] = scaleX;
-        vertexBuffer[vertexOffset++] = scaleY;
-        vertexBuffer[vertexOffset++] = rotation;
+        vertexBufferF32[vertexOffset++] = x;
+        vertexBufferF32[vertexOffset++] = y;
+        vertexBufferF32[vertexOffset++] = uvs.x0;
+        vertexBufferF32[vertexOffset++] = uvs.y0;
+        vertexBufferF32[vertexOffset++] = translateX;
+        vertexBufferF32[vertexOffset++] = translateY;
+        vertexBufferF32[vertexOffset++] = scaleX;
+        vertexBufferF32[vertexOffset++] = scaleY;
+        vertexBufferF32[vertexOffset++] = rotation;
+        vertexBufferU32[vertexOffset++] = vertexColor.topLeft;
 
-        vertexBuffer[vertexOffset++] = x;
-        vertexBuffer[vertexOffset++] = y + height;
-        vertexBuffer[vertexOffset++] = uvs.x1;
-        vertexBuffer[vertexOffset++] = uvs.y1;
-        vertexBuffer[vertexOffset++] = translateX;
-        vertexBuffer[vertexOffset++] = translateY;
-        vertexBuffer[vertexOffset++] = scaleX;
-        vertexBuffer[vertexOffset++] = scaleY;
-        vertexBuffer[vertexOffset++] = rotation;
+        vertexBufferF32[vertexOffset++] = x;
+        vertexBufferF32[vertexOffset++] = y + height;
+        vertexBufferF32[vertexOffset++] = uvs.x1;
+        vertexBufferF32[vertexOffset++] = uvs.y1;
+        vertexBufferF32[vertexOffset++] = translateX;
+        vertexBufferF32[vertexOffset++] = translateY;
+        vertexBufferF32[vertexOffset++] = scaleX;
+        vertexBufferF32[vertexOffset++] = scaleY;
+        vertexBufferF32[vertexOffset++] = rotation;
+        vertexBufferU32[vertexOffset++] = vertexColor.bottomLeft;
     
-        vertexBuffer[vertexOffset++] = x + width;
-        vertexBuffer[vertexOffset++] = y + height;
-        vertexBuffer[vertexOffset++] = uvs.x2;
-        vertexBuffer[vertexOffset++] = uvs.y2;
-        vertexBuffer[vertexOffset++] = translateX;
-        vertexBuffer[vertexOffset++] = translateY;
-        vertexBuffer[vertexOffset++] = scaleX;
-        vertexBuffer[vertexOffset++] = scaleY;
-        vertexBuffer[vertexOffset++] = rotation;
+        vertexBufferF32[vertexOffset++] = x + width;
+        vertexBufferF32[vertexOffset++] = y + height;
+        vertexBufferF32[vertexOffset++] = uvs.x2;
+        vertexBufferF32[vertexOffset++] = uvs.y2;
+        vertexBufferF32[vertexOffset++] = translateX;
+        vertexBufferF32[vertexOffset++] = translateY;
+        vertexBufferF32[vertexOffset++] = scaleX;
+        vertexBufferF32[vertexOffset++] = scaleY;
+        vertexBufferF32[vertexOffset++] = rotation;
+        vertexBufferU32[vertexOffset++] = vertexColor.bottomRight;
 
-        vertexBuffer[vertexOffset++] = x + width;
-        vertexBuffer[vertexOffset++] = y;
-        vertexBuffer[vertexOffset++] = uvs.x3;
-        vertexBuffer[vertexOffset++] = uvs.y3;
-        vertexBuffer[vertexOffset++] = translateX;
-        vertexBuffer[vertexOffset++] = translateY;
-        vertexBuffer[vertexOffset++] = scaleX;
-        vertexBuffer[vertexOffset++] = scaleY;
-        vertexBuffer[vertexOffset++] = rotation;
+        vertexBufferF32[vertexOffset++] = x + width;
+        vertexBufferF32[vertexOffset++] = y;
+        vertexBufferF32[vertexOffset++] = uvs.x3;
+        vertexBufferF32[vertexOffset++] = uvs.y3;
+        vertexBufferF32[vertexOffset++] = translateX;
+        vertexBufferF32[vertexOffset++] = translateY;
+        vertexBufferF32[vertexOffset++] = scaleX;
+        vertexBufferF32[vertexOffset++] = scaleY;
+        vertexBufferF32[vertexOffset++] = rotation;
+        vertexBufferU32[vertexOffset++] = vertexColor.topRight;
 
         this.elementCount += CONST.SPRITE_INDEX_COUNT;
     },

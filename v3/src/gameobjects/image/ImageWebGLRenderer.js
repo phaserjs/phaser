@@ -24,7 +24,8 @@ var ImageWebGLRenderer = function (renderer, src, interpolationPercentage)
         transform._pivotX, transform._pivotY,
         transform.world.tx, transform.world.ty,
         transform._worldScaleX, transform._worldScaleY,
-        transform._worldRotation
+        transform._worldRotation,
+        src.color._glTint
     );
 };
 

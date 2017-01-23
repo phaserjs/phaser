@@ -4,8 +4,10 @@ module.exports = [
     'attribute vec2 a_tex_coord;',
     'attribute vec2 a_translate;',
     'attribute vec2 a_scale;',
+    'attribute vec3 a_color;',
     'attribute float a_rotation;',
     'varying vec2 v_tex_coord;',
+    'varying vec3 v_color;',
     'void main () {',
     '   float t_cos = cos(a_rotation);',
     '   float t_sin = sin(a_rotation);',
@@ -14,5 +16,6 @@ module.exports = [
     '   t_position += a_translate;',
     '   gl_Position = u_view_matrix * vec4(t_position, 1.0, 1.0);',
     '   v_tex_coord = a_tex_coord;',
+    '   v_color = a_color;',
     '}'
 ].join('\n');
