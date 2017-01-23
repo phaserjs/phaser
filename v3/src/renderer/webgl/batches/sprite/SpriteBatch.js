@@ -204,9 +204,6 @@ SpriteBatch.prototype = {
 
         gl.clearColor(0, 0, 0, 1);
 
-        gl.enable(gl.BLEND);
-        gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
-
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBufferObject);
 
         BindVertexArray(gl, this.vertexArray);
@@ -217,8 +214,6 @@ SpriteBatch.prototype = {
         var gl = this.glContext;
 
         gl.useProgram(null);
-
-        gl.disable(gl.BLEND);
 
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null);
         gl.bindBuffer(gl.ARRAY_BUFFER, null);

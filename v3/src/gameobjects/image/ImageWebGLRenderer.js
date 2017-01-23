@@ -18,7 +18,7 @@ var ImageWebGLRenderer = function (renderer, src, interpolationPercentage)
     // renderer.batch.add(frame.source, src.blendMode, verts, frame.uvs, index, alpha, tint, bg);
 
     var transform = src.transform;
-
+    renderer.setBlendMode(src.color._blendMode);
     renderer.spriteBatch.add(
         frame,
         transform._anchorX, transform._anchorY,

@@ -11,6 +11,7 @@ var CreateTexture2DImage = require('./utils/texture/CreateTexture2DImage');
 var BlitterBatch = require('./batches/blitter/BlitterBatch');
 var SpriteBatch = require('./batches/sprite/SpriteBatch');
 var SpriteBatch32 = require('./batches/sprite/SpriteBatch32');
+var BlendModes = require('../BlendModes');
 
 var WebGLRenderer = function (game)
 {
@@ -145,6 +146,8 @@ WebGLRenderer.prototype = {
             normal, normal, normal, normal,
             normal, normal, normal, normal
         ];
+
+        this.blendMode = -1;
     },
 
     createTexture2D: function (source)
@@ -256,9 +259,7 @@ WebGLRenderer.prototype = {
         //  clear is needed for the FBO, otherwise corruption ...
         gl.clear(gl.COLOR_BUFFER_BIT);
 
-        //this.setBlendMode(CONST.blendModes.NORMAL);
-
-        //this.batch.start();
+        this.setBlendMode(BlendModes.NORMAL);
 
         //  Could move to the State Systems or MainLoop
         for (var c = 0; c < state.sys.children.list.length; c++)
@@ -296,7 +297,25 @@ WebGLRenderer.prototype = {
     {
         this.gl = null;
     },
-    createFBO: function () {}
+
+    createFBO: function () {},
+
+    setBlendMode: function (newBlendMode)
+    {
+        var gl = this.gl;
+        var batch = this.batch;
+        var blend = null;
+
+        if (this.blendMode !== newBlendMode)
+        {
+            if (batch)
+                batch.flush();
+            blend = this.blendModes[newBlendMode];
+            gl.enable(gl.BLEND);
+            gl.blendFunc(blend[0], blend[1]);        
+            this.blendMode = newBlendMode;
+        }
+    }
 };
 
 module.exports = WebGLRenderer;
