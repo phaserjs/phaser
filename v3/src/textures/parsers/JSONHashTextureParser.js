@@ -53,6 +53,7 @@ var JSONHashTextureParser = function (texture, sourceIndex, json)
         if (src.rotated)
         {
             newFrame.rotated = true;
+            newFrame.updateUVsInverted();
         }
     }
 

@@ -245,17 +245,17 @@ Frame.prototype = {
         var th = this.source.height;
         var uvs = this.data.uvs;
         
-        uvs.x0 = this.cutX / tw;
-        uvs.y0 = this.cutY / th;
-
-        uvs.x1 = (this.cutX + this.cutHeight) / tw;
-        uvs.y1 = this.cutY / th;
-
-        uvs.x2 = (this.cutX + this.cutHeight) / tw;
-        uvs.y2 = (this.cutY + this.cutWidth) / th;
-
-        uvs.x3 = this.cutX / tw;
+        uvs.x3 = (this.cutX + this.cutHeight) / tw;
         uvs.y3 = (this.cutY + this.cutWidth) / th;
+
+        uvs.x2 = this.cutX / tw;        
+        uvs.y2 = (this.cutY + this.cutWidth) / th;
+        
+        uvs.x1 = this.cutX / tw;
+        uvs.y1 = this.cutY / th;
+        
+        uvs.x0 = (this.cutX + this.cutHeight) / tw;
+        uvs.y0 = this.cutY / th;
 
         return this;
     },
