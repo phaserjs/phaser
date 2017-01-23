@@ -136,7 +136,7 @@ WebGLRenderer.prototype = {
         //  Map Blend Modes
 
         var add = [ gl.SRC_ALPHA, gl.DST_ALPHA ];
-        var normal = [ gl.ONE, gl.ONE_MINUS_SRC_ALPHA ];
+        var normal = [ gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA ];
         var multiply = [ gl.DST_COLOR, gl.ONE_MINUS_SRC_ALPHA ];
         var screen = [ gl.SRC_ALPHA, gl.ONE ];
 
