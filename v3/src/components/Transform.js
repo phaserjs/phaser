@@ -286,15 +286,19 @@ Transform.prototype = {
         var parent = this.parent.world;
         var tx = 0;
         var ty = 0;
+        var a;
+        var b;
+        var c;
+        var d;
 
         if (this.hasLocalRotation)
         {
             // console.log(this.name, 'Transform.updateFromParent', this.parent.name);
 
-            var a = this.cache.a;
-            var b = this.cache.b;
-            var c = this.cache.c;
-            var d = this.cache.d;
+            a = this.cache.a;
+            b = this.cache.b;
+            c = this.cache.c;
+            d = this.cache.d;
 
             tx = this._posX - ((this._pivotX * a) + (this._pivotY * c));
             ty = this._posY - ((this._pivotX * b) + (this._pivotY * d));
@@ -317,13 +321,39 @@ Transform.prototype = {
             world.d = this._scaleY * parent.d;
         }
 
-        this._worldRotation = Math.atan2(-this.world.c, this.world.d);
+        // this._worldRotation = Math.atan2(-this.world.c, this.world.d);
 
         world.tx = (tx * parent.a) + (ty * parent.c) + parent.tx;
         world.ty = (tx * parent.b) + (ty * parent.d) + parent.ty;
 
-        this._worldScaleX = this._scaleX * Math.sqrt((world.a * world.a) + (world.c * world.c));
-        this._worldScaleY = this._scaleY * Math.sqrt((world.b * world.b) + (world.d * world.d));
+        a = world.a;
+        b = world.b;
+        c = world.c;
+        d = world.d;
+
+        var determ = (a * d) - (b * c);
+
+        if (a || b)
+        {
+            var r = Math.sqrt((a * a) + (b * b));
+
+            this._worldRotation = (b > 0) ? Math.acos(a / r) : -Math.acos(a / r);
+            this._worldScaleX = r;
+            this._worldScaleY = determ / r;
+        }
+        else if (c || d)
+        {
+            var s = Math.sqrt((c * c) + (d * d));
+
+            this._worldRotation = MATH_CONST.TAU - ((d > 0) ? Math.acos(-c / s) : -Math.acos(c / s));
+            this._worldScaleX = determ / s;
+            this._worldScaleY = s;
+        }
+        else
+        {
+            this._worldScaleX = 0;
+            this._worldScaleY = 0;
+        }
 
         return this;
     },
