@@ -11,10 +11,9 @@ module.exports = [
     'void main () {',
     '   float t_cos = cos(a_rotation);',
     '   float t_sin = sin(a_rotation);',
-    '   vec2 t_position = a_position * a_scale;',
+    '   vec2 t_position = (a_position );',
     '   t_position = vec2(t_position.x * t_cos - t_position.y * t_sin, t_position.x * t_sin + t_position.y * t_cos);',
-    '   t_position += a_translate;',
-    '   gl_Position = u_view_matrix * vec4(t_position, 1.0, 1.0);',
+    '   gl_Position = u_view_matrix * vec4((t_position * a_scale) + a_translate, 1.0, 1.0);',
     '   v_tex_coord = a_tex_coord;',
     '   v_color = a_color;',
     '}'

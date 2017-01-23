@@ -133,7 +133,7 @@ SpriteBatch.prototype = {
         return (this.vertexDataBuffer.getByteLength() >= this.vertexDataBuffer.getByteCapacity());
     },
 
-    add: function (frame, pivotX, pivotY, translateX, translateY, scaleX, scaleY, rotation, vertexColor)
+    add: function (frame, anchorX, anchorY, translateX, translateY, scaleX, scaleY, rotation, vertexColor)
     {
         this.manager.setBatch(this, frame.texture.source[0].glTexture);
 
@@ -144,10 +144,10 @@ SpriteBatch.prototype = {
         var vertexBufferU32 = vertexDataBuffer.uintView;
         var vertexOffset = vertexDataBuffer.allocate(CONST.SPRITE_VERTEX_COMPONENT_COUNT * CONST.SPRITE_VERTEX_COUNT);
         var uvs = frame.uvs;
-        var x = -pivotX;
-        var y = -pivotY;
         var width = frame.width;
         var height = frame.height;
+        var x = width * -anchorX;
+        var y = height * -anchorY;
 
         vertexBufferF32[vertexOffset++] = x;
         vertexBufferF32[vertexOffset++] = y;
