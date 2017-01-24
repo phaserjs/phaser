@@ -83,7 +83,7 @@ BlitterBatch.prototype = {
         var attribArray = [
             CreateAttribDesc(gl, program, 'a_position', 2, gl.FLOAT, false, CONST.VERTEX_SIZE, 0),
             CreateAttribDesc(gl, program, 'a_tex_coord', 2, gl.FLOAT, false, CONST.VERTEX_SIZE, 8),
-            CreateAttribDesc(gl, program, 'a_color', 1, gl.FLOAT, false, CONST.VERTEX_SIZE, 16)
+            CreateAttribDesc(gl, program, 'a_alpha', 1, gl.FLOAT, false, CONST.VERTEX_SIZE, 16)
         ];
 
         var vertexArray = new VertexArray(CreateBuffer(gl, gl.ARRAY_BUFFER, gl.STREAM_DRAW, null, vertexDataBuffer.getByteCapacity()), attribArray);
