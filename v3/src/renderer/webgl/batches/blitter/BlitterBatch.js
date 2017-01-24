@@ -144,6 +144,8 @@ BlitterBatch.prototype = {
         var uvs = frame.uvs;
         var width = frame.width;
         var height = frame.height;
+        x += frame.x
+        y += frame.y
 
         vertexBuffer[vertexOffset++] = x;
         vertexBuffer[vertexOffset++] = y;

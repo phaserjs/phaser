@@ -150,8 +150,8 @@ SpriteBatch32.prototype = {
         var uvs = frame.uvs;
         var width = frame.width;
         var height = frame.height;
-        var x = width * -anchorX;
-        var y = height * -anchorY;
+        var x = width * -anchorX + frame.x;
+        var y = height * -anchorY + frame.y;
         
         vertexBufferF32[vertexOffset++] = x;
         vertexBufferF32[vertexOffset++] = y;
