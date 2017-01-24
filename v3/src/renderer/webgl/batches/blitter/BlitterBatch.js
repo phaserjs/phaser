@@ -82,7 +82,8 @@ BlitterBatch.prototype = {
 
         var attribArray = [
             CreateAttribDesc(gl, program, 'a_position', 2, gl.FLOAT, false, CONST.VERTEX_SIZE, 0),
-            CreateAttribDesc(gl, program, 'a_tex_coord', 2, gl.FLOAT, false, CONST.VERTEX_SIZE, 8)
+            CreateAttribDesc(gl, program, 'a_tex_coord', 2, gl.FLOAT, false, CONST.VERTEX_SIZE, 8),
+            CreateAttribDesc(gl, program, 'a_color', 1, gl.FLOAT, false, CONST.VERTEX_SIZE, 16)
         ];
 
         var vertexArray = new VertexArray(CreateBuffer(gl, gl.ARRAY_BUFFER, gl.STREAM_DRAW, null, vertexDataBuffer.getByteCapacity()), attribArray);
@@ -131,7 +132,7 @@ BlitterBatch.prototype = {
         return (this.vertexDataBuffer.getByteLength() >= this.vertexDataBuffer.getByteCapacity());
     },
 
-    add: function (x, y, frame)
+    add: function (x, y, frame, alpha)
     {
         this.manager.setBatch(this, frame.texture.source[0].glTexture);
 
@@ -148,21 +149,25 @@ BlitterBatch.prototype = {
         vertexBuffer[vertexOffset++] = y;
         vertexBuffer[vertexOffset++] = uvs.x0;
         vertexBuffer[vertexOffset++] = uvs.y0;
-        
+        vertexBuffer[vertexOffset++] = alpha;
+
         vertexBuffer[vertexOffset++] = x;
         vertexBuffer[vertexOffset++] = y + height;
         vertexBuffer[vertexOffset++] = uvs.x1;
         vertexBuffer[vertexOffset++] = uvs.y1;
+        vertexBuffer[vertexOffset++] = alpha;
 
         vertexBuffer[vertexOffset++] = x + width;
         vertexBuffer[vertexOffset++] = y + height;
         vertexBuffer[vertexOffset++] = uvs.x2;
         vertexBuffer[vertexOffset++] = uvs.y2;
+        vertexBuffer[vertexOffset++] = alpha;
 
         vertexBuffer[vertexOffset++] = x + width;
         vertexBuffer[vertexOffset++] = y;
         vertexBuffer[vertexOffset++] = uvs.x3;
         vertexBuffer[vertexOffset++] = uvs.y3;
+        vertexBuffer[vertexOffset++] = alpha;
 
         this.elementCount += CONST.PARTICLE_INDEX_COUNT;
     },
