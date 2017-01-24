@@ -136,7 +136,7 @@ WebGLRenderer.prototype = {
         //  Map Blend Modes
 
         var add = [ gl.SRC_ALPHA, gl.DST_ALPHA ];
-        var normal = [ gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA ];
+        var normal = [ gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA, gl.ONE, gl.ONE_MINUS_SRC_ALPHA ];
         var multiply = [ gl.DST_COLOR, gl.ONE_MINUS_SRC_ALPHA ];
         var screen = [ gl.SRC_ALPHA, gl.ONE ];
 
@@ -312,7 +312,14 @@ WebGLRenderer.prototype = {
                 batch.flush();
             blend = this.blendModes[newBlendMode];
             gl.enable(gl.BLEND);
-            gl.blendFunc(blend[0], blend[1]);        
+            if (blend.length > 2)
+            {
+                gl.blendFuncSeparate(blend[0], blend[1], blend[2], blend[3]);
+            }
+            else
+            {
+                gl.blendFunc(blend[0], blend[1]);        
+            }
             this.blendMode = newBlendMode;
         }
     }
