@@ -43,6 +43,7 @@ var Phaser = {
 
 require('./gameobjects/blitter/BlitterFactory');
 require('./gameobjects/image/ImageFactory');
+require('./gameobjects/sprite/SpriteFactory');
 require('./gameobjects/container/ContainerFactory');
 
 //   Merge in the consts
