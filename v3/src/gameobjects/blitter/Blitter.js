@@ -5,13 +5,19 @@
 */
 
 var CONST = require('../../const');
+var Bob = require('./Bob');
 var GameObject = require('../GameObject');
+var Children = require('../../components/Children');
 
 /**
-* An Image is a light-weight object you can use to display anything that doesn't need physics or animation.
-* It can still rotate, scale, crop and receive input events. This makes it perfect for logos, backgrounds, simple buttons and other non-Sprite graphics.
+* A Blitter Game Object.
 *
-* @class Phaser.GameObject.Blitter
+* The Blitter Game Object is a special type of Container, that contains Blitter.Bob objects.
+* These objects can be thought of as just texture frames with a transform, and nothing more.
+* Bobs don't have any update methods, or the ability to have children, or any kind of special effects.
+* They are essentially just texture renderers, and the Blitter object creates and manages them.
+*
+* @class Blitter
 * @extends Phaser.GameObject
 * @constructor
 * @param {Phaser.Game} game - A reference to the currently running game.
@@ -28,48 +34,68 @@ var Blitter = function (state, x, y, key, frame)
     GameObject.call(this, state, x, y, _texture, _frame);
 
     this.type = CONST.BLITTER;
+
+    this.children = new Children(this);
 };
 
 Blitter.prototype = Object.create(GameObject.prototype);
 Blitter.prototype.constructor = Blitter;
 
-Blitter.prototype.renderCanvas = require('./BlitterCanvasRenderer');
+// Blitter.prototype.renderCanvas = require('./BlitterCanvasRenderer');
 Blitter.prototype.renderWebGL = require('./BlitterWebGLRenderer');
 
-Object.defineProperties(Blitter.prototype, {
+//  frame MUST be part of the Blitter texture
+Blitter.prototype.create = function (x, y, frame, visible, index)
+{
+    if (frame === undefined) { frame = this.frame; }
+    if (visible === undefined) { visible = true; }
+    if (index === undefined) { index = 0; }
 
-    width: {
+    var bob = new Bob(this, x, y, frame, visible);
 
-        enumerable: true,
+    this.children.addAt(bob, index, false);
 
-        get: function ()
-        {
-            return this.transform._scaleX * this.frame.realWidth;
-        },
+    return bob;
+};
 
-        set: function (value)
-        {
-            this.scaleX = value / this.frame.realWidth;
-        }
+//  frame MUST be part of the Blitter texture
+Blitter.prototype.createFromCallback = function (callback, quantity, frame, visible)
+{
+    var bobs = this.createMultiple(quantity, key, frame, visible);
 
-    },
+    for (var i = 0; i < bobs.length; i++)
+    {
+        var bob = bobs[i];
 
-    height: {
-
-        enumerable: true,
-
-        get: function ()
-        {
-            return this.transform._scaleY * this.frame.realHeight;
-        },
-
-        set: function (value)
-        {
-            this.scaleY = value / this.frame.realHeight;
-        }
-
+        callback.call(this, bob, i);
     }
 
-});
+    return bobs;
+};
+
+//  frame MUST be part of the Blitter texture
+Blitter.prototype.createMultiple = function (quantity, frame, visible)
+{
+    if (frame === undefined) { frame = 0; }
+    if (visible === undefined) { visible = true; }
+
+    if (!Array.isArray(frame))
+    {
+        frame = [ frame ];
+    }
+
+    var bobs = [];
+    var _this = this;
+
+    frame.forEach(function (singleFrame)
+    {
+        for (var i = 0; i < quantity; i++)
+        {
+            bobs.push(_this.create(0, 0, singleFrame, visible));
+        }
+    });
+
+    return bobs;
+};
 
 module.exports = Blitter;

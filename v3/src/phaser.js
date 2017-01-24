@@ -41,6 +41,7 @@ var Phaser = {
 
 //  Required, but don't need Phaser level exports
 
+require('./gameobjects/blitter/BlitterFactory');
 require('./gameobjects/image/ImageFactory');
 require('./gameobjects/container/ContainerFactory');
 
