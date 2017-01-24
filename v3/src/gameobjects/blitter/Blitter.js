@@ -61,7 +61,7 @@ Blitter.prototype.create = function (x, y, frame, visible, index)
 //  frame MUST be part of the Blitter texture
 Blitter.prototype.createFromCallback = function (callback, quantity, frame, visible)
 {
-    var bobs = this.createMultiple(quantity, key, frame, visible);
+    var bobs = this.createMultiple(quantity, frame, visible);
 
     for (var i = 0; i < bobs.length; i++)
     {
@@ -76,7 +76,7 @@ Blitter.prototype.createFromCallback = function (callback, quantity, frame, visi
 //  frame MUST be part of the Blitter texture
 Blitter.prototype.createMultiple = function (quantity, frame, visible)
 {
-    if (frame === undefined) { frame = 0; }
+    if (frame === undefined) { frame = this.frame; }
     if (visible === undefined) { visible = true; }
 
     if (!Array.isArray(frame))
