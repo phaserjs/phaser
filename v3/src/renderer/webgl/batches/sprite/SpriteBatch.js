@@ -135,7 +135,7 @@ SpriteBatch.prototype = {
 
     add: function (frame, anchorX, anchorY, translateX, translateY, scaleX, scaleY, rotation, vertexColor)
     {
-        this.manager.setBatch(this, frame.texture.source[0].glTexture);
+        this.manager.setBatch(this, frame.texture.source[frame.sourceIndex].glTexture);
 
         // The user must check if the buffers are full before flushing
         // this is to give freedom of when should the renderer flush. var vertexDataBuffer = this.vertexDataBuffer;
