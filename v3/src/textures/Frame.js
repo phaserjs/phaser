@@ -173,7 +173,6 @@ Frame.prototype = {
     {
         var data = this.data;
         var ss = data.spriteSourceSize;
-        var di = data.drawImage;
 
         //  Store actual values
 
@@ -192,14 +191,6 @@ Frame.prototype = {
         this.y = destY;
         this.width = destWidth;
         this.height = destHeight;
-
-        //  drawImage data
-        di.sx = destX;
-        di.sy = destY;
-        di.sWidth = destWidth;
-        di.sHeight = destHeight;
-        di.dWidth = destWidth;
-        di.dHeight = destHeight;
 
         this.updateUVs();
 
