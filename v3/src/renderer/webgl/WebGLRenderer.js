@@ -267,7 +267,7 @@ WebGLRenderer.prototype = {
             var child = state.sys.children.list[c];
             child.renderWebGL(this, child, interpolationPercentage);
             var batch = this.batch;
-            if (batch.isFull())
+            if (batch && batch.isFull())
                 batch.flush();
         }
         var batch = this.batch;

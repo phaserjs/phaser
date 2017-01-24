@@ -1,7 +1,7 @@
 
 var BlitterWebGLRenderer = function (renderer, src, interpolationPercentage)
 {
-    var worldAlpha = src.color.worldAlpha * 255 << 24;
+    var worldAlpha = src.color.worldAlpha;
     var len = src.children.list.length;
 
     //  Skip rendering?
@@ -22,7 +22,7 @@ var BlitterWebGLRenderer = function (renderer, src, interpolationPercentage)
             continue;
         }
 
-        renderer.blitterBatch.add(bob.x, bob.y, frame);
+        renderer.blitterBatch.add(bob.x, bob.y, frame, worldAlpha);
     }
 };
 
