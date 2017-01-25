@@ -450,6 +450,7 @@ StateManager.prototype = {
 
     //  See if we can reduce this down to just update and render
 
+    //  timestamp = DOMHighResTimeStamp
     step: function (timestamp)
     {
         for (var i = 0; i < this.active.length; i++)

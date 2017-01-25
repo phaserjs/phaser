@@ -13,7 +13,6 @@ var RequestAnimationFrame = require('../dom/RequestAnimationFrame');
 var DOMContentLoaded = require('../dom/DOMContentLoaded');
 
 var CreateRenderer = require('./CreateRenderer');
-var RandomDataGenerator = require('../math/random-data-generator/RandomDataGenerator');
 var StateManager = require('../state/StateManager');
 var TextureManager = require('../textures/TextureManager');
 
@@ -32,7 +31,7 @@ var Game = function (config)
     * @property {Phaser.RequestAnimationFrame} raf - Automatically handles the core game loop via requestAnimationFrame or setTimeout
     * @protected
     */
-    this.raf = new RequestAnimationFrame(this);
+    this.raf = new RequestAnimationFrame();
 
     /**
     * @property {Phaser.TextureManager} textures - Reference to the Phaser Texture Manager.
@@ -59,9 +58,6 @@ var Game = function (config)
     */
     this.device = Device;
 
-    //  Move this somewhere else? Math perhaps? Doesn't need to be a Game level system.
-    this.rnd;
-
     //  Wait for the DOM Ready event, then call boot.
     DOMContentLoaded(this.boot.bind(this));
 
@@ -79,9 +75,6 @@ Game.prototype = {
 
         this.config.preBoot();
 
-        //  Probably move within Math
-        this.rnd = new RandomDataGenerator(this.config.seed);
-
         DebugHeader(this);
 
         CreateRenderer(this);
@@ -94,13 +87,7 @@ Game.prototype = {
 
         this.config.postBoot();
 
-        this.raf.start();
-    },
-
-    //  timestamp = DOMHighResTimeStamp
-    update: function (timestamp)
-    {
-        this.state.step(timestamp);
+        this.raf.start(this.state.step.bind(this.state), this.config.forceSetTimeOut);
     }
 
 };

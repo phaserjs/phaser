@@ -23,8 +23,6 @@ var Transform = function (gameObject, x, y, scaleX, scaleY)
 
     this.state = (gameObject.state) ? gameObject.state : gameObject.parent.state;
 
-    this.game = this.state.game;
-
     //  a = scale X
     //  b = shear Y
     //  c = shear X

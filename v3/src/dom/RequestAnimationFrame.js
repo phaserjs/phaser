@@ -4,26 +4,24 @@
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
+var NOOP = require('../utils/NOOP');
+
 /**
 * Abstracts away the use of RAF or setTimeOut for the core game update loop.
 *
 * @class Phaser.RequestAnimationFrame
 * @constructor
-* @param {Phaser.Game} game - A reference to the currently running game.
 * @param {boolean} [forceSetTimeOut=false] - Tell Phaser to use setTimeOut even if raf is available.
 */
-function RequestAnimationFrame (game)
+var RequestAnimationFrame = function ()
 {
-    /**
-    * @property {Phaser.Game} game - The currently running game.
-    */
-    this.game = game;
-
     /**
     * @property {boolean} isRunning - true if RequestAnimationFrame is running, otherwise false.
     * @default
     */
     this.isRunning = false;
+
+    this.callback = NOOP;
 
     this.tick = 0;
 
@@ -46,45 +44,50 @@ function RequestAnimationFrame (game)
 
         _this.timeOutID = window.requestAnimationFrame(step);
 
-        _this.game.update(timestamp);
+        _this.callback(timestamp);
     };
 
     var stepTimeout = function ()
     {
-        _this.tick = Date.now();
+        var d = Date.now();
 
-        // _this.game.update(_this.tick);
+        _this.tick = d;
 
-        // _this.timeOutID = window.setTimeout(stepTimeout, _this.game.time.timeToCall);
+        _this.timeOutID = window.setTimeout(stepTimeout, _this.timeToCall);
+
+        _this.callback(d);
     };
+
+    this.step = step;
+    this.stepTimeout = stepTimeout;
+};
+
+RequestAnimationFrame.prototype.constructor = RequestAnimationFrame;
+
+RequestAnimationFrame.prototype = {
 
     /**
     * Starts the requestAnimationFrame running or setTimeout if unavailable in browser
     * @method Phaser.RequestAnimationFrame#start
     */
-    this.start = function ()
+    start: function (callback, forceSetTimeOut)
     {
+        this.callback = callback;
+
+        this.isSetTimeOut = forceSetTimeOut;
+
         this.isRunning = true;
 
-        if (this.game.config.forceSetTimeOut)
-        {
-            this.isSetTimeOut = true;
+        var _this = this;
 
-            this.timeOutID = window.setTimeout(stepTimeout, 0);
-        }
-        else
-        {
-            this.isSetTimeOut = false;
-
-            this.timeOutID = window.requestAnimationFrame(step);
-        }
-    };
+        this.timeOutID = (forceSetTimeOut) ? window.setTimeout(_this.stepTimeout, 0) : window.requestAnimationFrame(_this.step);
+    },
 
     /**
     * Stops the requestAnimationFrame from running.
     * @method Phaser.RequestAnimationFrame#stop
     */
-    this.stop = function ()
+    stop: function ()
     {
         this.isRunning = false;
 
@@ -96,17 +99,15 @@ function RequestAnimationFrame (game)
         {
             window.cancelAnimationFrame(this.timeOutID);
         }
-    };
+    },
 
-    this.destroy = function ()
+    destroy: function ()
     {
         this.stop();
 
-        this.game = undefined;
-    };
+        this.callback = NOOP;
+    }
 
-}
-
-RequestAnimationFrame.prototype.constructor = RequestAnimationFrame;
+};
 
 module.exports = RequestAnimationFrame;

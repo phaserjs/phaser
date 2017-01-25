@@ -272,7 +272,7 @@ When the DOM Content Loaded event happens, the Game calls Game.boot. This sets-u
 
 Every time RAF ticks it calls the following:
 
-1. Calls `Game.update`, which ...
+1. --removed--
 2. Calls `StateManager.step`, which ...
 3. Iterates through all _active_ States, and ...
 4. Calls `State.sys.mainloop.step`, which ...
@@ -297,8 +297,6 @@ Every time RAF ticks it calls the following:
 In a tree form it maps to the following:
 
 ```
-+ Game.update
-|
 + StateManager.step (iterates all active States)
   |
   +- State.sys.mainloop.step (updates delta values)

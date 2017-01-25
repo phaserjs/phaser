@@ -73,6 +73,8 @@ WebGLRenderer.prototype = {
 
     init: function ()
     {
+        console.log('WebGLRenderer.init');
+
         this.gl = this.view.getContext('webgl', this.config.WebGLContextOptions) || this.view.getContext('experimental-webgl', this.config.WebGLContextOptions);
 
         if (!this.gl)
