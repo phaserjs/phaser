@@ -4,6 +4,7 @@
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
+var MATH = require('../math');
 var CONST = require('../const');
 var NOOP = require('../utils/NOOP');
 var GetObjectValue = require('../utils/GetObjectValue');
@@ -36,6 +37,8 @@ var Config = function (config)
     this.stateConfig = GetObjectValue(config, 'state', null);
 
     this.seed = GetObjectValue(config, 'seed', [ (Date.now() * Math.random()).toString() ]);
+
+    MATH.RND.init(this.seed);
 
     this.gameTitle = GetObjectValue(config, 'title', '');
     this.gameURL = GetObjectValue(config, 'url', 'http://phaser.io');
