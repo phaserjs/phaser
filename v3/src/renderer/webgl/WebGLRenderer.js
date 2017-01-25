@@ -226,16 +226,8 @@ WebGLRenderer.prototype = {
         // this.projection.y = -(this.height / 2) / res;
     },
 
-    /**
-     * Renders the State.
-     *
-     * @method render
-     * @param {Phaser.State} state - The State to be rendered.
-     * @param {number} interpolationPercentage - The cumulative amount of time that hasn't been simulated yet, divided
-     *   by the amount of time that will be simulated the next time update()
-     *   runs. Useful for interpolating frames.
-     */
-    render: function (state, interpolationPercentage)
+    //  Call at the start of the render loop
+    preRender: function ()
     {
         // console.log('%c render start ', 'color: #ffffff; background: #00ff00;');
 
@@ -249,50 +241,50 @@ WebGLRenderer.prototype = {
 
         var gl = this.gl;
 
-        
-
-        //  This is the old render loop - add what you need here to replace it,
-        //  but please allow each State to render to its own Quad FBO
-
-        //var fbo = state.sys.fbo;
-
-        //fbo.activate();
-
         //  clear is needed for the FBO, otherwise corruption ...
         gl.clear(gl.COLOR_BUFFER_BIT);
 
         this.setBlendMode(BlendModes.NORMAL);
+    },
+
+    /**
+     * Renders a single State.
+     *
+     * @method render
+     * @param {Phaser.State} state - The State to be rendered.
+     * @param {number} interpolationPercentage - The cumulative amount of time that hasn't been simulated yet, divided
+     *   by the amount of time that will be simulated the next time update()
+     *   runs. Useful for interpolating frames.
+     */
+    render: function (state, interpolationPercentage)
+    {
+        var batch = this.batch;
 
         //  Could move to the State Systems or MainLoop
         for (var c = 0; c < state.sys.children.list.length; c++)
         {
             var child = state.sys.children.list[c];
+
             child.renderWebGL(this, child, interpolationPercentage);
-            var batch = this.batch;
+
             if (batch && batch.isFull())
+            {
                 batch.flush();
+            }
         }
-        var batch = this.batch;
-        if (batch)
-            batch.flush();
+    },
 
-        //this.batch.stop();
-
-        //  Call state.render here, so we can do some extra shizzle on the top
-        //  Maybe pass in the FBO texture too?
-
-        //fbo.render(null);
-
-        //  Unbind the fbo texture and replace it with an empty texture.
-        //  If we forget this we corrupt the main context texture!
-        //  or get `RENDER WARNING: there is no texture bound to the unit 0` spam in the console
-        //gl.bindTexture(gl.TEXTURE_2D, this.emptyTexture);
-
-        
-
-        // console.log('%c render end ', 'color: #ffffff; background: #ff0000;');
+    //  Called at the end of the render loop (tidy things up, etc)
+    postRender: function ()
+    {
+        if (this.batch)
+        {
+            this.batch.flush();
+        }
 
         //  Add Post-render hook
+
+        // console.log('%c render end ', 'color: #ffffff; background: #ff0000;');
     },
 
     destroy: function ()

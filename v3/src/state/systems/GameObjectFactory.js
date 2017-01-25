@@ -26,15 +26,10 @@ var GameObjectFactory = {
 
 function init (state)
 {
-    console.log('Creating GameObjectFactory instance for State');
-
     GameObjectFactory.state = state;
 
     //   Load the factories into this Object
-
     return FactoryContainer.load(GameObjectFactory, true);
-
-    // return GameObjectFactory;
 }
 
 module.exports = init;

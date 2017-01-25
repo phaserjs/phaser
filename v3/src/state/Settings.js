@@ -2,7 +2,7 @@ var CONST = require('./const');
 var ScaleModes = require('../renderer/ScaleModes');
 var GetObjectValue = require('../utils/GetObjectValue');
 
-var Settings = function (state, config)
+var Settings = function (config)
 {
     if (typeof config === 'string')
     {
@@ -14,37 +14,32 @@ var Settings = function (state, config)
         config = {};
     }
 
-    this.state = state; //  Do we actually need this reference? This could just be a property bucket
+    return {
 
-    this.status = CONST.PENDING;
+        status: CONST.PENDING,
 
-    //  Which part of this State is currently being processed?
-    //  preload, create, update, shutdown, etc
-    this.op = CONST.BOOT;
+        op: CONST.BOOT,
 
-    this.key = GetObjectValue(config, 'key', '');
-    this.active = GetObjectValue(config, 'active', false);
-    this.visible = GetObjectValue(config, 'visible', true);
-    this.scaleMode = GetObjectValue(config, 'scaleMode', ScaleModes.DEFAULT);
-    this.fps = GetObjectValue(config, 'fps', 60);
-    this.x = GetObjectValue(config, 'x', 0);
-    this.y = GetObjectValue(config, 'y', 0);
+        key: GetObjectValue(config, 'key', ''),
+        active: GetObjectValue(config, 'active', false),
+        visible: GetObjectValue(config, 'visible', true),
+        scaleMode: GetObjectValue(config, 'scaleMode', ScaleModes.DEFAULT),
+        x: GetObjectValue(config, 'x', 0),
+        y: GetObjectValue(config, 'y', 0),
 
-    //  -1 means the State Manager will set it to be the Game dimensions
-    this.width = GetObjectValue(config, 'width', -1);
-    this.height = GetObjectValue(config, 'height', -1);
+        //  -1 means the State Manager will set it to be the Game dimensions
+        width: GetObjectValue(config, 'width', -1),
+        height: GetObjectValue(config, 'height', -1),
 
-    //  Renderer Settings
+        //  Renderer Settings
 
-    this.clearBeforeRender = GetObjectValue(config, 'clearBeforeRender', true);
-    this.transparent = GetObjectValue(config, 'transparent', false);
-    this.autoResize = GetObjectValue(config, 'autoResize', false);
-    this.roundPixels = GetObjectValue(config, 'roundPixels', false);
-    this.drawToPrimaryCanvas = GetObjectValue(config, 'drawToPrimaryCanvas', false);
+        clearBeforeRender: GetObjectValue(config, 'clearBeforeRender', true),
+        transparent: GetObjectValue(config, 'transparent', false),
+        autoResize: GetObjectValue(config, 'autoResize', false),
+        roundPixels: GetObjectValue(config, 'roundPixels', false),
+        drawToPrimaryCanvas: GetObjectValue(config, 'drawToPrimaryCanvas', false),
 
+    };
 };
-
-//  Unless we add some actual functions in here, we'll make this just return an Object instead of an instance
-Settings.prototype.constructor = Settings;
 
 module.exports = Settings;

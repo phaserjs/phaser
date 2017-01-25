@@ -12,6 +12,7 @@ var AddToDOM = require('../dom/AddToDOM');
 var RequestAnimationFrame = require('../dom/RequestAnimationFrame');
 var DOMContentLoaded = require('../dom/DOMContentLoaded');
 
+var MainLoop = require('./MainLoop');
 var CreateRenderer = require('./CreateRenderer');
 var StateManager = require('../state/StateManager');
 var TextureManager = require('../textures/TextureManager');
@@ -58,6 +59,12 @@ var Game = function (config)
     */
     this.device = Device;
 
+    /**
+    * @property {Phaser.MainLoop} mainloop - Main Loop handler.
+    * @protected
+    */
+    this.mainloop = new MainLoop(this.config.fps);
+
     //  Wait for the DOM Ready event, then call boot.
     DOMContentLoaded(this.boot.bind(this));
 
@@ -87,7 +94,15 @@ Game.prototype = {
 
         this.config.postBoot();
 
-        this.raf.start(this.state.step.bind(this.state), this.config.forceSetTimeOut);
+        this.mainloop.start();
+
+        this.raf.start(this.step.bind(this), this.config.forceSetTimeOut);
+    },
+
+    step: function (timestamp)
+    {
+        //  Pass in via game to 'start' instead of every update?
+        this.mainloop.step(timestamp, this.state.active, this.renderer);
     }
 
 };

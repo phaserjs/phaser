@@ -8,6 +8,9 @@ var Component = require('../components');
 var MATH_CONST = require('../math/const');
 var WrapAngle = require('../math/angle/Wrap');
 
+//  Swap to extending a BaseTransform
+// var BaseTransform = require('');
+
 /**
 * A Camera is your view into the game world. It has a position and size and renders only those objects within its field of view.
 * The game automatically creates a single Stage sized camera on boot. Move the camera around the world with Phaser.Camera.x/y
@@ -29,11 +32,6 @@ var Camera = function (state, x, y, viewportWidth, viewportHeight)
     * @property {Phaser.State} state
     */
     this.state = state;
-
-    /**
-    * @property {Phaser.Game} game - A reference to the currently running Game.
-    */
-    this.game = state.game;
 
     this.viewportWidth = viewportWidth;
 

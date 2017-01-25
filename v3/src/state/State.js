@@ -4,7 +4,6 @@
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
-var Settings = require('./Settings');
 var Systems = require('./Systems');
 
 /**
@@ -15,39 +14,22 @@ var Systems = require('./Systems');
 */
 var State = function (config)
 {
-    //  The properties a State *must* have, that cannot be changed without breaking it:
-
-    this.game = null;
-
-    //  Maybe just an object? Doesn't have to instantiate I don't think ...
-    this.settings = new Settings(this, config);
-
+    //  The State Systems. You must never overwrite this property, or all hell will break lose.
     this.sys = new Systems(this, config);
 
-    //  Reference to sys.children, set during sys.init only
-    this.children;
+    this.settings = this.sys.settings;
 };
 
 State.prototype.constructor = State;
 
 State.prototype = {
 
-    //  Can be overridden by your own States
-    preUpdate: function ()
-    {
-    },
-
-    //  Can be overridden by your own States
+    //  Should be overridden by your own States
     update: function ()
     {
     },
 
-    //  Can be overridden by your own States
-    postUpdate: function ()
-    {
-    },
-
-    //  Can be overridden by your own States
+    //  Should be overridden by your own States
     render: function ()
     {
     }

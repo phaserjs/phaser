@@ -51,6 +51,7 @@ var Config = function (config)
     this.bannerTextColor = GetObjectValue(config, 'banner.text', defaultBannerTextColor);
     this.bannerBackgroundColor = GetObjectValue(config, 'banner.background', defaultBannerColor);
    
+    this.fps = GetObjectValue(config, 'fps', 60);
     this.forceSetTimeOut = GetObjectValue(config, 'forceSetTimeOut', false);
     this.transparent = GetObjectValue(config, 'transparent', false);
     this.pixelArt = GetObjectValue(config, 'pixelArt', false);

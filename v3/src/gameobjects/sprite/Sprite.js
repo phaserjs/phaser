@@ -10,7 +10,7 @@ var Children = require('../../components/Children');
 
 var Sprite = function (state, x, y, key, frame)
 {
-    var _texture = state.game.textures.get(key);
+    var _texture = state.sys.textures.get(key);
     var _frame = _texture.get(frame);
 
     GameObject.call(this, state, x, y, _texture, _frame);

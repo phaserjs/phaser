@@ -24,7 +24,7 @@ var GameObject = function (state, x, y, texture, frame, parent)
 {
     this.state = state;
 
-    this.game = state.game;
+    this.game = state.sys.game;
 
     this.name = '';
 

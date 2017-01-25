@@ -270,29 +270,23 @@ When the DOM Content Loaded event happens, the Game calls Game.boot. This sets-u
 
 ### A single tick
 
-Every time RAF ticks it calls the following:
+Every time RAF ticks it calls the following (in order)
 
-1. --removed--
-2. Calls `StateManager.step`, which ...
-3. Iterates through all _active_ States, and ...
-4. Calls `State.sys.mainloop.step`, which ...
-5. Checks if the frame rate is throttled, and returns if so, otherwise ...
-6. It updates the frame delta values, then ...
-7. Calls `State.sys.begin` (which is an empty function by default)
-8. While the frame delta is within range, it ...
-9. Calls `State.sys.update` (empty by default)
-10. If then iterates through all `State.children`, and if they exist calls `update` on each of them
-11. It then calls `State.update`
-12. When the while loop exits (because the frameDelta is > the step size), it ...
-13. Calls `State.sys.preRender` (empty)
-14. Calls `State.sys.updates.start` - this process the Update Managers list
-15. If the State is visible, it then calls `Game.renderer.render`, passing in the State ...
-16. If the Renderer is running it performs all of the related set-up calls (setting the blend mode, clearing the canvas, etc), then ...
-17. Starts the Batch Manager (`src/renderer/webgl/BatchManager.start`)
-18. Calls `StateManager.renderChildren`, which ...
-19. Iterates through all children of the current State, calling `child.render` on each one.
-20. It then calls `State.sys.updates.stop` - which stops the Update Manager
-21. Finally it calls `State.sys.end` which just resets the frame delta / panic flags.
+1. `Game.step` is called, which calls ...
+2. `Game.mainloop.step` which checks frame rate, updates delta values, etc
+3. This calls `State.sys.begin` once for all _active_ States
+4. While the frame delta is within range it calls `State.sys.update`
+5. This iterates all `State.children`, and calls `update` if they exist
+6. It then calls `State.update` (dev level callback)
+7. When the loop exits (because the frameDelta is > the step size) it ..
+8. `Renderer.preRender` which resets the canvas, cls, then ...
+9. Calls `State.sys.render` on all _active_ States, which each calls ...
+10. `State.sys.updates.start` which processes the Update Managers list
+11. If the State is visible, it then calls `Game.renderer.render`, which ...
+12. Iterates through all children calling `child.render` on each one.
+13. It then calls `State.sys.updates.stop` - which stops the Update Manager
+14. Then calls `State.render` (dev level callback)
+15. Finally mainloop calls `Renderer.postRender` and resets the panic flags.
 
 In a tree form it maps to the following:
 
@@ -320,6 +314,9 @@ In a tree form it maps to the following:
   +- Update Manager Stop (State.sys.updates)
   +- State.sys.end (resets frame delta and panic flags)
 ```
+
+
+
 
 The above is subject to change heavily! There are currently lots of empty function calls in there (State.sys.update for example), so we may well optimize this path considerably.
 

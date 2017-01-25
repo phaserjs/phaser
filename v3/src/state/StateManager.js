@@ -10,7 +10,7 @@ var State = require('./State');
 var Settings = require('./Settings');
 var Systems = require('./Systems');
 var GetObjectValue = require('../utils/GetObjectValue');
-// var LoaderEvent = require('../loader/events/');
+var EventDispatcher = require('../events/EventDispatcher');
 
 /**
 * The State Manager is responsible for loading, setting up and switching game states.
@@ -72,9 +72,6 @@ StateManager.prototype = {
     */
     boot: function ()
     {
-        // this.game.onPause.add(this.pause, this);
-        // this.game.onResume.add(this.resume, this);
-
         for (var i = 0; i < this._pending.length; i++)
         {
             var entry = this._pending[i];
@@ -185,11 +182,9 @@ StateManager.prototype = {
 
     createStateFromInstance: function (key, newState)
     {
-        newState.game = this.game;
-
         newState.settings.key = key;
 
-        newState.sys.init();
+        newState.sys.init(this.game);
 
         if (this.game.config.renderType === CONST.WEBGL)
         {
@@ -203,9 +198,7 @@ StateManager.prototype = {
     {
         var newState = new State(stateConfig);
 
-        newState.game = this.game;
-
-        newState.sys.init();
+        newState.sys.init(this.game);
 
         if (this.game.config.renderType === CONST.WEBGL)
         {
@@ -230,7 +223,7 @@ StateManager.prototype = {
             newState.settings = new Settings(newState, key);
             newState.sys = new Systems(newState);
 
-            newState.sys.init();
+            newState.sys.init(this.game);
 
             if (this.game.config.renderType === CONST.WEBGL)
             {
@@ -253,9 +246,9 @@ StateManager.prototype = {
         newState.create = GetObjectValue(stateConfig, 'create', NOOP);
         newState.shutdown = GetObjectValue(stateConfig, 'shutdown', NOOP);
 
-        newState.preUpdate = GetObjectValue(stateConfig, 'preUpdate', NOOP);
+        //  Game Loop level callbacks
+
         newState.update = GetObjectValue(stateConfig, 'update', NOOP);
-        newState.postUpdate = GetObjectValue(stateConfig, 'postUpdate', NOOP);
         newState.render = GetObjectValue(stateConfig, 'render', NOOP);
 
         return newState;
@@ -375,7 +368,6 @@ StateManager.prototype = {
                 //  No preload? Then there was nothing to load either
                 this.startCreate(state);
             }
-
         }
     },
 
@@ -411,8 +403,6 @@ StateManager.prototype = {
         this.active.sort(this.sortStates.bind(this));
 
         state.sys.updates.running = true;
-
-        state.sys.mainloop.start();
     },
 
     pause: function (key)
@@ -446,96 +436,7 @@ StateManager.prototype = {
         {
             return 0;
         }
-    },
-
-    //  See if we can reduce this down to just update and render
-
-    //  timestamp = DOMHighResTimeStamp
-    step: function (timestamp)
-    {
-        for (var i = 0; i < this.active.length; i++)
-        {
-            var state = this.active[i].state;
-
-            if (state.sys.mainloop.running)
-            {
-                state.sys.mainloop.step(timestamp);
-            }
-        }
-    },
-
-    /*
-    preUpdate: function ()
-    {
-        for (var i = 0; i < this.active.length; i++)
-        {
-            var state = this.active[i].state;
-
-            for (var c = 0; c < state.sys.children.list.length; c++)
-            {
-                state.sys.children.list[c].preUpdate();
-            }
-
-            state.preUpdate();
-        }
-    },
-
-    update: function ()
-    {
-        for (var i = 0; i < this.active.length; i++)
-        {
-            var state = this.active[i].state;
-
-            //  Invoke State Main Loop here - updating all of its systems (tweens, physics, etc)
-
-            //  This shouldn't be called if the State is still loading
-            //  Have a State.STATUS const in the Settings, dictating what is going on
-
-            for (var c = 0; c < state.sys.children.list.length; c++)
-            {
-                var child = state.sys.children.list[c];
-
-                if (child.exists)
-                {
-                    child.update();
-                }
-            }
-
-            state.update();
-        }
-    },
-
-    postUpdate: function ()
-    {
-        for (var i = 0; i < this.active.length; i++)
-        {
-            var state = this.active[i].state;
-
-            for (var c = 0; c < state.sys.children.list.length; c++)
-            {
-                state.sys.children.list[c].postUpdate();
-            }
-
-            state.postUpdate();
-        }
-    },
-
-    render: function ()
-    {
-        for (var i = 0; i < this.active.length; i++)
-        {
-            var state = this.active[i].state;
-
-            //  Can put all kinds of other checks in here, like MainLoop, FPS, etc.
-            if (!state.settings.visible || state.sys.color.alpha === 0 || state.sys.children.list.length === 0)
-            {
-                continue;
-            }
-
-            this.game.renderer.render(state);
-        }
-    },
-    */
+    }
 
 };
 

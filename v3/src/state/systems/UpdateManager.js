@@ -13,8 +13,6 @@ var UpdateManager = function (state)
 {
     this.state = state;
 
-    this.game = state.game;
-
     this.list = [];
 
     // this.i = 1;
