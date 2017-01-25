@@ -79,19 +79,29 @@ var hash = function (data)
 
 var RandomDataGenerator = function (seeds)
 {
-    if (typeof seeds === 'string')
+    if (seeds)
     {
-        this.state(seeds);
-    }
-    else
-    {
-        this.sow(seeds);
+        this.init(seeds);
     }
 };
 
 RandomDataGenerator.prototype.constructor = RandomDataGenerator;
 
 RandomDataGenerator.prototype = {
+
+    init: function (seeds)
+    {
+        console.log('RandomDataGenerator.init', seeds);
+
+        if (typeof seeds === 'string')
+        {
+            this.state(seeds);
+        }
+        else
+        {
+            this.sow(seeds);
+        }
+    },
 
     /**
     * Reset the seed of the random data generator.

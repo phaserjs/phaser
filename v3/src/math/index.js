@@ -1,3 +1,5 @@
+var RND = require('./random-data-generator/RandomDataGenerator');
+
 module.exports = {
 
     //  CONSTs (makes them visible under Phaser.Math)
@@ -15,6 +17,9 @@ module.exports = {
     Interpolation: require('./interpolation/'),
     Pow2: require('./pow2/'),
     Snap: require('./snap/'),
+
+    //  Random Data Generator
+    RND: new RND(),
 
     //  Single functions
     Average: require('./Average'),
