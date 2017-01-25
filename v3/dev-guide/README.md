@@ -291,17 +291,20 @@ Every time RAF ticks it calls the following (in order)
 In a tree form it maps to the following:
 
 ```
-+ StateManager.step (iterates all active States)
++ Game.step
++ MainLoop.step
   |
-  +- State.sys.mainloop.step (updates delta values)
-  +- State.sys.begin
+  +- All Active States:
+  +- State.sys.begin (called once per active state)
   +- While (frameDelta within step range)
      |
      +- State.sys.update
      +- Iterates State.children, if child exists, call child.update
      +- State.update
   |
-  +- State.sys.preRender
+  +- Renderer.preRender
+  +- 
+  +- State.sys.render
   +- Update Manager Start (State.sys.updates)
   +- Game.renderer.render (if State is visible)
      |
