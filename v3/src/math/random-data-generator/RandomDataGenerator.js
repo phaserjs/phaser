@@ -91,8 +91,6 @@ RandomDataGenerator.prototype = {
 
     init: function (seeds)
     {
-        console.log('RandomDataGenerator.init', seeds);
-
         if (typeof seeds === 'string')
         {
             this.state(seeds);
