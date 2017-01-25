@@ -83,10 +83,10 @@ Camera.prototype = {
         var vh = this.y + this.viewportHeight;
 
         //  Make sure we didn't go outside the cameras bounds
-        if (vx <= this.bounds.x * this.scale.x)
+        if (vx <= this.bounds.x * this.scaleX)
         {
             this.atLimit.x = true;
-            this.view.x = this.bounds.x * this.scale.x;
+            this.view.x = this.bounds.x * this.scaleX;
 
             if (!this._shake.shakeBounds)
             {
@@ -95,10 +95,10 @@ Camera.prototype = {
             }
         }
 
-        if (vw >= this.bounds.right * this.scale.x)
+        if (vw >= this.bounds.right * this.scaleX)
         {
             this.atLimit.x = true;
-            this.view.x = (this.bounds.right * this.scale.x) - this.width;
+            this.view.x = (this.bounds.right * this.scaleX) - this.width;
 
             if (!this._shake.shakeBounds)
             {
@@ -107,10 +107,10 @@ Camera.prototype = {
             }
         }
 
-        if (vy <= this.bounds.top * this.scale.y)
+        if (vy <= this.bounds.top * this.scaleY)
         {
             this.atLimit.y = true;
-            this.view.y = this.bounds.top * this.scale.y;
+            this.view.y = this.bounds.top * this.scaleY;
 
             if (!this._shake.shakeBounds)
             {
@@ -119,10 +119,10 @@ Camera.prototype = {
             }
         }
 
-        if (vh >= this.bounds.bottom * this.scale.y)
+        if (vh >= this.bounds.bottom * this.scaleY)
         {
             this.atLimit.y = true;
-            this.view.y = (this.bounds.bottom * this.scale.y) - this.height;
+            this.view.y = (this.bounds.bottom * this.scaleY) - this.height;
 
             if (!this._shake.shakeBounds)
             {
