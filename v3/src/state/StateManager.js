@@ -186,10 +186,7 @@ StateManager.prototype = {
 
         newState.sys.init(this.game);
 
-        if (this.game.config.renderType === CONST.WEBGL)
-        {
-            this.createStateFrameBuffer(newState);
-        }
+        this.createStateDisplay(newState);
 
         return newState;
     },
@@ -200,10 +197,7 @@ StateManager.prototype = {
 
         newState.sys.init(this.game);
 
-        if (this.game.config.renderType === CONST.WEBGL)
-        {
-            this.createStateFrameBuffer(newState);
-        }
+        this.createStateDisplay(newState);
 
         return this.setupCallbacks(newState, stateConfig);
     },
@@ -225,10 +219,7 @@ StateManager.prototype = {
 
             newState.sys.init(this.game);
 
-            if (this.game.config.renderType === CONST.WEBGL)
-            {
-                this.createStateFrameBuffer(newState);
-            }
+            this.createStateDisplay(newState);
 
             //  Default required functions
             return this.setupCallbacks(newState);
@@ -254,25 +245,36 @@ StateManager.prototype = {
         return newState;
     },
 
-    createStateFrameBuffer: function (newState)
+    createStateDisplay: function (newState)
     {
-        var x = newState.settings.x;
-        var y = newState.settings.y;
+        return;
 
-        if (newState.settings.width === -1)
+        /*
+        var settings = newState.sys.settings;
+
+        var x = settings.x;
+        var y = settings.y;
+
+        //  Too late to do all this?
+
+        if (settings.width === -1)
         {
-            newState.settings.width = this.game.config.width;
+            settings.width = this.game.config.width;
         }
 
-        if (newState.settings.height === -1)
+        if (settings.height === -1)
         {
-            newState.settings.height = this.game.config.height;
+            settings.height = this.game.config.height;
         }
 
-        var width = newState.settings.width;
-        var height = newState.settings.height;
+        if (this.game.config.renderType === CONST.WEBGL)
+        {
+            var width = settings.width;
+            var height = settings.height;
 
-        newState.sys.fbo = this.game.renderer.createFBO(newState, x, y, width, height);
+            newState.sys.fbo = this.game.renderer.createFBO(newState, x, y, width, height);
+        }
+        */
     },
 
     getState: function (key)

@@ -23,6 +23,15 @@ var Transform = function (gameObject, x, y, scaleX, scaleY)
 
     this.state = (gameObject.state) ? gameObject.state : gameObject.parent.state;
 
+    var w = 1;
+    var h = 1;
+
+    if (gameObject.frame)
+    {
+        w = gameObject.frame.cutWidth;
+        h = gameObject.frame.cutHeight;
+    }
+
     //  a = scale X
     //  b = shear Y
     //  c = shear X
@@ -44,11 +53,16 @@ var Transform = function (gameObject, x, y, scaleX, scaleY)
     //  Canvas SetTransform data
     this.canvasData = { a: 1, b: 0, c: 0, d: 1, tx: 0, ty: 0, dx: 0, dy: 0 };
 
+    this.bounds = { x: x, y: y, width: w, height: h };
+
     this.immediate = false;
 
     this.interpolate = false;
 
     this.hasLocalRotation = false;
+
+    //  Z-depth, for display list sorting
+    this.z = 0;
 
     //  Private value holders, accessed via the getters and setters
     this._posX = x;
@@ -68,7 +82,8 @@ var Transform = function (gameObject, x, y, scaleX, scaleY)
     this._dirty = true;
     this._dirtyVertex = true;
 
-    this.state.sys.updates.add(this);
+    //  This Transforms entry in the State RTree.
+    this._bbox = { minX: x, minY: y, maxX: x + w, maxY: y + h, gameObject: gameObject };
 
     //  The parent Transform (NOT the parent GameObject, although very often they are related)
     this.parent = null;
@@ -76,6 +91,8 @@ var Transform = function (gameObject, x, y, scaleX, scaleY)
     //  Any child Transforms of this one - note that they don't have to belong to Game Objects
     //  that are children of the owner of this Transform
     this.children = [];
+
+    this.state.sys.updates.add(this);
 };
 
 Transform.prototype.constructor = Transform;
@@ -319,8 +336,6 @@ Transform.prototype = {
             world.d = this._scaleY * parent.d;
         }
 
-        // this._worldRotation = Math.atan2(-this.world.c, this.world.d);
-
         world.tx = (tx * parent.a) + (ty * parent.c) + parent.tx;
         world.ty = (tx * parent.b) + (ty * parent.d) + parent.ty;
 
@@ -461,6 +476,29 @@ Transform.prototype = {
             this.updateFromRoot();
         }
 
+        //  Calculate local bounds
+
+        this.calculateLocalBounds();
+
+        //  Update the RTree bbox entry
+
+        if (this._bbox)
+        {
+            var x = this.world.tx;
+            var y = this.world.ty;
+
+            this.state.sys.tree.remove(this._bbox);
+
+            this._bbox.minX = x;
+            this._bbox.minY = y;
+            this._bbox.maxX = x + this.bounds.width;
+            this._bbox.maxY = y + this.bounds.height;
+
+            this.state.sys.tree.insert(this._bbox);
+        }
+
+        //  Update the children
+
         var len = this.children.length;
 
         if (len)
@@ -473,6 +511,18 @@ Transform.prototype = {
 
         this._dirty = false;
         this._dirtyVertex = true;
+    },
+
+    deleteTreeNode: function ()
+    {
+        this.state.sys.tree.remove(this._bbox);
+
+        this._bbox = undefined;
+    },
+
+    removeTreeNode: function ()
+    {
+        this.state.sys.tree.remove(this._bbox);
     },
 
     updateCache: function ()
@@ -668,6 +718,11 @@ Transform.prototype = {
         }
 
         return data;
+    },
+
+    calculateLocalBounds: function ()
+    {
+        //  TODO
     }
 
 };

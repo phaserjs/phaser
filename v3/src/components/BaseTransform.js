@@ -14,9 +14,9 @@ var Transform = require('./Transform');
 *
 * @class
 */
-var BaseTransform = function (x, y)
+var BaseTransform = function (parent, x, y, scaleX, scaleY)
 {
-    this.transform = new Transform(this, x, y);
+    this.transform = new Transform(parent, x, y, scaleX, scaleY);
 };
 
 BaseTransform.prototype.constructor = BaseTransform;

@@ -5,6 +5,8 @@ TODO
 
 Upgrade to Webpack 2 final release
 Stop the build script from _moving_ the build file into Examples, and just copy it :)
+Add in k-nearest neighbors search (KNN) for RBush
+Look at Bounds + SetBounds from EaselJS for Transforms that aren't Frame based
 
 General
 -------
@@ -12,8 +14,6 @@ General
 Add a Registry -  a game level Data component, accessible from any State.
 
 Look at adding events to the Data component, so you can be notified about changes to objects stored within it. Something like the way Freezer does it? https://github.com/arqex/freezer
-
-Rename ParticleRenderer to BlitterBatch.
 
 
 Arcade Physics

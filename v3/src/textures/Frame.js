@@ -141,6 +141,7 @@ var Frame = function (texture, name, sourceIndex, x, y, width, height)
             x3: 0,
             y3: 0
         },
+        radius: 0.5 * Math.sqrt(width * width + height * height),
         drawImage: {
             sx: x,
             sy: y,
@@ -331,6 +332,22 @@ Object.defineProperties(Frame.prototype, {
         get: function ()
         {
             return this.data.uvs;
+        }
+
+    },
+
+    /**
+    * The radius of the Frame (derived from sqrt(w * w + h * h) / 2)
+    * @name Phaser.TextureFrame#radius
+    * @property {number} radius
+    */
+    radius: {
+
+        enumerable: true,
+
+        get: function ()
+        {
+            return this.data.radius;
         }
 
     },

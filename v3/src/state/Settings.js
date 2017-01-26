@@ -2,7 +2,7 @@ var CONST = require('./const');
 var ScaleModes = require('../renderer/ScaleModes');
 var GetObjectValue = require('../utils/GetObjectValue');
 
-var Settings = function (config)
+var Settings = function (config, gameConfig)
 {
     if (typeof config === 'string')
     {
@@ -24,12 +24,13 @@ var Settings = function (config)
         active: GetObjectValue(config, 'active', false),
         visible: GetObjectValue(config, 'visible', true),
         scaleMode: GetObjectValue(config, 'scaleMode', ScaleModes.DEFAULT),
-        x: GetObjectValue(config, 'x', 0),
-        y: GetObjectValue(config, 'y', 0),
 
         //  -1 means the State Manager will set it to be the Game dimensions
-        width: GetObjectValue(config, 'width', -1),
-        height: GetObjectValue(config, 'height', -1),
+
+        x: GetObjectValue(config, 'x', 0),
+        y: GetObjectValue(config, 'y', 0),
+        width: GetObjectValue(config, 'width', gameConfig.width),
+        height: GetObjectValue(config, 'height', gameConfig.height),
 
         //  Renderer Settings
 
@@ -37,7 +38,7 @@ var Settings = function (config)
         transparent: GetObjectValue(config, 'transparent', false),
         autoResize: GetObjectValue(config, 'autoResize', false),
         roundPixels: GetObjectValue(config, 'roundPixels', false),
-        drawToPrimaryCanvas: GetObjectValue(config, 'drawToPrimaryCanvas', false),
+        drawToPrimaryCanvas: GetObjectValue(config, 'drawToPrimaryCanvas', false)
 
     };
 };

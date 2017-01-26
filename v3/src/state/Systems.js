@@ -12,6 +12,7 @@ var UpdateManager = require('./systems/UpdateManager');
 var Component = require('../components');
 var Camera = require('../camera/Camera');
 var Settings = require('./Settings');
+var RTree = require('../structs/RTree');
 
 var Systems = function (state, config)
 {
@@ -21,13 +22,11 @@ var Systems = function (state, config)
 
     this.config = config;
 
-    this.settings = Settings(config);
-
-    //  Reference to the global Game level systems
-    this.textureManager;
-    this.stateManager;
+    this.settings;
 
     //  CORE SYSTEMS / PROPERTIES
+
+    this.textures;
 
     //  Reference to State specific managers (Factory, Tweens, Loader, Physics, etc)
     this.add;
@@ -35,6 +34,7 @@ var Systems = function (state, config)
     this.load;
     this.events;
     this.updates;
+    this.tree;
 
     //  State properties
     this.camera;
@@ -56,9 +56,13 @@ Systems.prototype = {
 
         this.game = game;
 
+        this.settings = Settings(this.config, this.game.config);
+
+        this.textures = this.game.textures;
+
         //  State specific managers (Factory, Tweens, Loader, Physics, etc)
 
-        this.textures = game.textures;
+        this.tree = RTree(16);
         this.events = new EventDispatcher();
         this.add = new GameObjectFactory(this.state);
         this.make = GameObjectCreator(this.state);
@@ -67,7 +71,7 @@ Systems.prototype = {
 
         //  State specific properties (transform, data, children, etc)
 
-        this.camera = new Camera(this.state, 0, 0, 800, 600);
+        this.camera = new Camera(this.state, 0, 0, this.settings.width, this.settings.height);
         this.children = new Component.Children(this.state);
         this.color = new Component.Color(this.state);
         this.data = new Component.Data(this.state);
@@ -86,11 +90,13 @@ Systems.prototype = {
         this.state.children = this.children;
         this.state.color = this.color;
         this.state.data = this.data;
-        this.state.state = this.game.state; // StateManager
+        this.state.settings = this.settings;
 
         this.state.camera = this.camera;
         this.state.transform = this.camera.transform;
-        this.state.textures = this.textures;
+
+        this.state.state = this.game.state;
+        this.state.textures = this.game.textures;
     },
 
     //  Called just once per frame, regardless of speed
@@ -115,18 +121,25 @@ Systems.prototype = {
     },
 
     //  Called just once per frame, regardless of speed
-    render: function (interpolationPercentage, renderer)
+    render: function (interpolation, renderer)
     {
         this.updates.start();
 
         if (this.settings.visible && this.color.alpha !== 0)
         {
-            renderer.render(this.state, interpolationPercentage);
+            var list = this.tree.search({
+                minX: this.camera.x,
+                minY: this.camera.y,
+                maxX: this.camera.right,
+                maxY: this.camera.bottom
+            });
+
+            renderer.render(this.state, list, interpolation);
         }
 
         this.updates.stop();
 
-        this.state.render(interpolationPercentage);
+        this.state.render(interpolation);
     }
 };
 

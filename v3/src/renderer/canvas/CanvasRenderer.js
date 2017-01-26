@@ -20,6 +20,8 @@ var CanvasRenderer = function (game)
 
     this.autoResize = false;
 
+    this.drawCount = 0;
+
     // this.smoothProperty = Phaser.Canvas.getSmoothingPrefix(this.context);
 
     this.roundPixels = false;
@@ -84,24 +86,16 @@ CanvasRenderer.prototype = {
         // }
     },
 
-    /**
-     * Renders the State.
-     *
-     * @method render
-     * @param {Phaser.State} state - The State to be rendered.
-     * @param {number} interpolationPercentage - The cumulative amount of time that hasn't been simulated yet, divided
-     *   by the amount of time that will be simulated the next time update()
-     *   runs. Useful for interpolating frames.
-     */
-    render: function (state, interpolationPercentage)
+    //  Call at the start of the render loop
+    preRender: function ()
     {
         // console.log('%c render start ', 'color: #ffffff; background: #00ff00;');
 
-        var ctx = this.context;
-
         //  Add Pre-render hook
 
-        //  TODO: A State should have the option of having its own canvas to draw to
+        this.drawCount = 0;
+
+        var ctx = this.context;
 
         ctx.setTransform(1, 0, 0, 1, 0, 0);
 
@@ -126,13 +120,37 @@ CanvasRenderer.prototype = {
             ctx.clearRect(0, 0, this.width, this.height);
         }
 
-        for (var c = 0; c < state.sys.children.list.length; c++)
+        //  TEMP
+        ctx.fillStyle = '#000000';
+        ctx.fillRect(0, 0, this.width, this.height);
+    },
+
+    /**
+     * Renders the State.
+     *
+     * @method render
+     * @param {Phaser.State} state - The State to be rendered.
+     * @param {number} interpolationPercentage - The cumulative amount of time that hasn't been simulated yet, divided
+     *   by the amount of time that will be simulated the next time update()
+     *   runs. Useful for interpolating frames.
+     */
+    render: function (state, list, interpolationPercentage)
+    {
+        this.drawCount = list.length;
+
+        for (var c = 0; c < list.length; c++)
         {
-            var child = state.sys.children.list[c];
+            var child = list[c].gameObject;
 
             child.renderCanvas(this, child, interpolationPercentage);
         }
 
+        //  Reset the transform so going into the devs render function the context is ready for use
+        this.context.setTransform(1, 0, 0, 1, 0, 0);
+    },
+
+    postRender: function ()
+    {
         // console.log('%c render end ', 'color: #ffffff; background: #ff0000;');
 
         //  Add Post-render hook
