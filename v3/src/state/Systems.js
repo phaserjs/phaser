@@ -43,7 +43,7 @@ var Systems = function (state, config)
     this.data;
     this.fbo;
     this.time;
-    this.transform;
+    // this.transform;
 };
 
 Systems.prototype.constructor = Systems;
@@ -75,7 +75,7 @@ Systems.prototype = {
         this.children = new Component.Children(this.state);
         this.color = new Component.Color(this.state);
         this.data = new Component.Data(this.state);
-        this.transform = this.camera.transform;
+        // this.transform = this.camera.transform;
 
         this.inject();
     },
@@ -93,7 +93,7 @@ Systems.prototype = {
         this.state.settings = this.settings;
 
         this.state.camera = this.camera;
-        this.state.transform = this.camera.transform;
+        // this.state.transform = this.camera.transform;
 
         this.state.state = this.game.state;
         this.state.textures = this.game.textures;
