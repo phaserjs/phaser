@@ -1,40 +1,45 @@
+
 // This is an abstraction for a transformation
 // matrix. It shouldn't contain anything that
 // is not specific to that.
 function Transform(x, y)
 {
-    // We should definitely build a matrix pool
-    // instancing typed arrays at runtime is very expensive.
-    this.local = new Float32Array([1, 0, 0, 1, x, y]);
-    this.world = new Float32Array([1, 0, 0, 1, 0, 0]);
+    var local = Transform.allocateTransformData();
+    var world = Transform.allocateTransformData();
+    
+    local[0] = 1;
+    local[1] = 0;
+    local[2] = 0;
+    local[3] = 1;
+    local[4] = x;
+    local[5] = y;
+
+    world[0] = 1;
+    world[1] = 0;
+    world[2] = 0;
+    world[3] = 1;
+    world[4] = 0;
+    world[5] = 0;
+
+    this.local = local;
+    this.world = world;
     // More experienced developer can just access the 
     // local and world matrices. For developer who want 
     // easy access to specific components of the matrix
     // they can use the decomposition functions.
 }
+
+// This function must be called to avoid 
+// Memory leaks
+Transform.prototype.destroy = functions()
+{
+    Transform.freeTransformData(this.local);
+    Transform.freeTransformData(this.world);
+    this.local = null;
+    this.world = null;
+};
+
 // This functions only apply to local matrix
-Transform.prototype.setTranslate = function (x, y)
-{
-    var local = this.local;
-    local[4] = x;
-    local[5] = y;
-};
-Transform.prototype.setScale = function (x, y)
-{
-    var local = this.local;
-    local[0] = x;
-    local[3] = y;
-};
-Transform.prototype.setRotation = function (radian)
-{
-    var tcos = Math.cos(radian);
-    var tsin = Math.sin(radian);
-    var local = this.local;
-    local[0] = cr + sr;
-    local[1] = cr + sr;
-    local[2] = -sr + cr;
-    local[3] = -sr + cr;
-};
 Transform.prototype.translate = function (x, y)
 {
     var local = this.local;
@@ -101,13 +106,28 @@ Transform.prototype.loadIdentity = function ()
     local[4] = 0;
     local[5] = 0;
 };
+Transform.prototype.setRotation = function (radian)
+{
+    var local = this.local;
+    var tcos = Math.cos(radian);
+    var tsin = Math.sin(radian);
+
+    local[0] = tcos + tsin;
+    local[1] = tcos + tsin;
+    local[2] = -tsin + tcos;
+    local[3] = -tsin + tcos;
+};
+Transform.prototype.setScale = function (x, y)
+{
+
+};
 // This is the only function that operates on the world transform
 // Should only be called once per frame.
-Transform.prototype.updateWorldMatrix = function (parentTransform)
+Transform.prototype.update = function (parentTransform)
 {
     var local = this.local;
     var world = this.world;
-    var parent = parentTransform;
+    var parent = parentTransform.world;
     
     world[0] = parent[0] * local[0] + parent[1] * local[2];
     world[1] = parent[0] * local[1] + parent[1] * local[3];
@@ -148,35 +168,6 @@ Transform.prototype.getScale = function (vec2)
     vec2[1] = sy;
     return vec2;
 };
-Transform.prototype.getTranslateX = function ()
-{
-    return this.local[4];
-};
-
-Transform.prototype.getTranslateY = function ()
-{
-    return this.local[5];
-};
-Transform.prototype.getScaleX = function ()
-{
-    var local = this.local;
-    var a = local[0];
-    var c = local[2];
-    var a2 = a * a;
-    var c2 = c * c;
-    var sx = Math.sqrt(a2 + c2);
-    return sx;
-};
-Transform.prototype.getScaleY = function ()
-{
-    var local = this.local;
-    var b = local[1];
-    var d = local[3];
-    var b2 = b * b;
-    var d2 = d * d;
-    var sy = Math.sqrt(b2 + d2);
-    return sx;
-};
 Transform.prototype.getRotation = function ()
 {
     var local = this.local;
@@ -186,7 +177,6 @@ Transform.prototype.getRotation = function ()
     var c2 = c * c;
     return Math.acos(a / Math.sqrt(a2 + c2)) * (Math.atan(-c / a) < 0 ? -1 : 1);
 };
-
 // World
 Transform.prototype.getWorldTranslate = function (vec2)
 {
@@ -212,35 +202,6 @@ Transform.prototype.getWorldScale = function (vec2)
     vec2[1] = sy;
     return vec2;
 };
-Transform.prototype.getWorldTranslateX = function ()
-{
-    return this.world[4];
-};
-
-Transform.prototype.getWorldTranslateY = function ()
-{
-    return this.world[5];
-};
-Transform.prototype.getWorldScaleX = function ()
-{
-    var world = this.world;
-    var a = world[0];
-    var c = world[2];
-    var a2 = a * a;
-    var c2 = c * c;
-    var sx = Math.sqrt(a2 + c2);
-    return sx;
-};
-Transform.prototype.getWorldScaleY = function ()
-{
-    var world = this.world;
-    var b = world[1];
-    var d = world[3];
-    var b2 = b * b;
-    var d2 = d * d;
-    var sy = Math.sqrt(b2 + d2);
-    return sx;
-};
 Transform.prototype.getWorldRotation = function ()
 {
     var world = this.world;
@@ -249,4 +210,36 @@ Transform.prototype.getWorldRotation = function ()
     var a2 = a * a;
     var c2 = c * c;
     return Math.acos(a / Math.sqrt(a2 + c2)) * (Math.atan(-c / a) < 0 ? -1 : 1);
+};
+
+// Enough space for 10K transforms.
+Transform.float32Buffer = new Float32Array(100000);
+Transform.bumpIndex = 0;
+Transform.transformSize = 5;
+Transform.freeList = [];
+
+// Fixed size of 5
+Transform.allocateTransformData = function () 
+{
+    var freeList = Transform.freeList;
+    var bumpIndex = Transform.bumpIndex;
+    var float32Buffer = Transform.float32Buffer;
+    // First check free list if we have available blocks
+    if (freeList.length > 0)
+    {
+        return freeList.pop();
+    }
+    // if not we allocate
+    var block = float32Buffer.subarray(bumpIndex, bumpIndex + Transform.transformSize);
+    Transform.bumpIndex += Transform.transformSize;
+    return block;
+};
+
+Transform.freeTransformData = function(transformData)
+{
+    var index = freeList.indexOf(transformData);
+    if (transformData !== null && index < 0)
+    {
+        freeList.push(transformData);
+    }
 };
