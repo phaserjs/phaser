@@ -4,6 +4,9 @@
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
+var Event = require('../events/Event');
+var EventDispatcher = require('../events/EventDispatcher');
+
 /**
 * The Data Component features a means to store pieces of data specific to a Game Object,
 * search it, query it, and retrieve it.
@@ -13,6 +16,8 @@
 var Data = function (parent)
 {
     this.parent = parent;
+
+    this.events = new EventDispatcher();
 
     this.list = {};
 
@@ -81,6 +86,8 @@ Data.prototype = {
                 data = result;
             }
         }
+
+        this.events.dispatch(new Event.LOADER_START_EVENT(this));
 
         this.list[key] = data;
 
