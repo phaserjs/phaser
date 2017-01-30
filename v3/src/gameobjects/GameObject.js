@@ -4,11 +4,11 @@
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
-var CONST = require('../const');
-var MATH_CONST = require('../math/const');
+// var CONST = require('../const');
+// var MATH_CONST = require('../math/const');
 var ScaleModes = require('../renderer/ScaleModes');
 var Component = require('../components');
-var WrapAngle = require('../math/angle/Wrap');
+// var WrapAngle = require('../math/angle/Wrap');
 
 /**
 * This is the base Game Object class that you can use when creating your own extended Game Objects.
@@ -39,7 +39,10 @@ var GameObject = function (state, x, y, texture, frame, parent)
     this.frame = frame;
 
     //  All GameObjects have the following components, always:
-    this.transform = new Component.Transform(this, x, y);
+    this.transform = new Component.Transform(this);
+
+    this.transform.positionX = x;
+    this.transform.positionY = y;
 
     //  Optional? Maybe set on a per GO basis?
     this.data = new Component.Data(this);
@@ -108,13 +111,12 @@ Object.defineProperties(GameObject.prototype, {
 
         get: function ()
         {
-            return this.transform._posX;
+            return this.transform.positionX;
         },
 
         set: function (value)
         {
-            this.transform._posX = value;
-            this.transform.dirty = true;
+            this.transform.positionX = value;
         }
 
     },
@@ -125,17 +127,17 @@ Object.defineProperties(GameObject.prototype, {
 
         get: function ()
         {
-            return this.transform._posY;
+            return this.transform.positionY;
         },
 
         set: function (value)
         {
-            this.transform._posY = value;
-            this.transform.dirty = true;
+            this.transform.positionY = value;
         }
 
     },
 
+    /*
     scale: {
 
         enumerable: true,
@@ -326,6 +328,7 @@ Object.defineProperties(GameObject.prototype, {
         }
 
     },
+    */
 
     //  Color getters / setters
 

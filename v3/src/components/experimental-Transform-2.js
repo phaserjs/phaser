@@ -81,14 +81,14 @@ Transform.prototype.flattenTree = function (children, flatChildrenArray, childCo
 	}
 	return childCount;
 };
-Transform.prototype.addChild = function (transform)
+Transform.prototype.add = function (transform)
 {
 	this.root.dirty = true;
 	this.hasChildren = true;
 	transform.root = this.root;
 	this.children.push(transform);
 };
-Transform.prototype.removeChild = function (transform)
+Transform.prototype.remove = function (transform)
 {
 	var children = this.children;
 	var index = children.indexOf(transform);
@@ -160,7 +160,7 @@ Transform.prototype.update = function (parentTransformMatrix)
 };
 Transform.prototype.updateLocal = function ()
 {
-	var local this.localMatrix.loadIdentity();
+	var local = this.localMatrix.loadIdentity();
 	local.translate(this.positionX, this.positionY);
 	local.rotate(this.rotation);
 	local.scale(this.scaleX, this.scaleY);
@@ -219,3 +219,5 @@ Object.defineProperties(Transform.prototype,{
 		}
 	}
 });
+
+module.exports = Transform;

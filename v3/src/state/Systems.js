@@ -10,7 +10,7 @@ var GameObjectCreator = require('./systems/GameObjectCreator');
 var Loader = require('./systems/Loader');
 var UpdateManager = require('./systems/UpdateManager');
 var Component = require('../components');
-var Camera = require('../camera/Camera');
+// var Camera = require('../camera/Camera');
 var Settings = require('./Settings');
 var RTree = require('../structs/RTree');
 
@@ -38,13 +38,13 @@ var Systems = function (state, config)
     this.tree;
 
     //  State properties
-    this.camera;
+    // this.camera;
     this.children;
     this.color;
     this.data;
     this.fbo;
     this.time;
-    // this.transform;
+    this.transform;
 };
 
 Systems.prototype.constructor = Systems;
@@ -73,11 +73,11 @@ Systems.prototype = {
 
         //  State specific properties (transform, data, children, etc)
 
-        this.camera = new Camera(this.state, 0, 0, this.settings.width, this.settings.height);
+        // this.camera = new Camera(this.state, 0, 0, this.settings.width, this.settings.height);
         this.children = new Component.Children(this.state);
         this.color = new Component.Color(this.state);
         this.data = new Component.Data(this.state);
-        // this.transform = this.camera.transform;
+        this.transform = new Component.Transform(this.state);
 
         this.inject();
     },
@@ -94,7 +94,7 @@ Systems.prototype = {
         this.state.data = this.data;
         this.state.settings = this.settings;
 
-        this.state.camera = this.camera;
+        // this.state.camera = this.camera;
         // this.state.transform = this.camera.transform;
 
         this.state.state = this.game.state;
@@ -123,8 +123,19 @@ Systems.prototype = {
         this.state.update(timestep, physicsStep);
     },
 
-    //  Called just once per frame, regardless of speed
     render: function (interpolation, renderer)
+    {
+        this.transform.updateRoot();
+
+        //  Now what? :)
+
+        // renderer.render(this.state, list, interpolation);
+
+        this.state.render(interpolation);
+    },
+
+    //  Called just once per frame, regardless of speed
+    OLDrender: function (interpolation, renderer)
     {
         this.updates.start();
 
