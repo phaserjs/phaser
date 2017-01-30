@@ -17,6 +17,7 @@ var CreateRenderer = require('./CreateRenderer');
 var StateManager = require('../state/StateManager');
 var TextureManager = require('../textures/TextureManager');
 var Data = require('../components/Data');
+var Cache = require('../cache/Cache');
 
 var Game = function (config)
 {
@@ -43,7 +44,7 @@ var Game = function (config)
     /**
     * @property {Phaser.Cache} cache - Reference to the assets cache.
     */
-    // this.cache = new Cache();
+    this.cache = new Cache();
 
     /**
     * @property {Phaser.Data} registry - Game wide data store.

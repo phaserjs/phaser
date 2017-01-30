@@ -139,6 +139,7 @@ Loader.prototype.processCallback = function ()
     }
 
     //  The global Texture Manager
+    var cache = this.state.sys.cache;
     var textures = this.state.sys.textures;
 
     //  Process multiatlas groups first
@@ -189,29 +190,56 @@ Loader.prototype.processCallback = function ()
 
     this.storage.each(function (file)
     {
-        if (file.type === 'image')
+        switch (file.type)
         {
-            textures.addImage(file.key, file.data);
-        }
-        else if (file.type === 'atlasjson')
-        {
-            var fileA = file.fileA;
-            var fileB = file.fileB;
+            case 'image':
+                textures.addImage(file.key, file.data);
+                break;
 
-            if (fileA.type === 'image')
-            {
-                textures.addAtlas(fileA.key, fileA.data, fileB.data);
-            }
-            else
-            {
-                textures.addAtlas(fileB.key, fileB.data, fileA.data);
-            }
-        }
-        else if (file.type === 'json')
-        {
-            // console.dir(file.data);
+            case 'atlasjson':
+                var fileA = file.fileA;
+                var fileB = file.fileB;
+
+                if (fileA.type === 'image')
+                {
+                    textures.addAtlas(fileA.key, fileA.data, fileB.data);
+                }
+                else
+                {
+                    textures.addAtlas(fileB.key, fileB.data, fileA.data);
+                }
+                break;
+
+            case 'json':
+                cache.json.add(file.key, file.data);
+                break;
+
+            case 'xml':
+                cache.xml.add(file.key, file.data);
+                break;
+
+            case 'text':
+                cache.text.add(file.key, file.data);
+                break;
+
+            case 'binary':
+                cache.binary.add(file.key, file.data);
+                break;
+
+            case 'sound':
+                cache.sound.add(file.key, file.data);
+                break;
+
+            case 'glsl':
+                cache.shader.add(file.key, file.data);
+                break;
         }
     });
+
+    // this.video = new BaseCache();
+    // this.physics = new BaseCache();
+    // this.tilemap = new BaseCache();
+    // this.bitmapFont = new BaseCache();
 
     this.storage.clear();
 };

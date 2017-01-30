@@ -26,6 +26,7 @@ var Systems = function (state, config)
 
     //  CORE SYSTEMS / PROPERTIES
 
+    this.cache;
     this.textures;
 
     //  Reference to State specific managers (Factory, Tweens, Loader, Physics, etc)
@@ -58,6 +59,7 @@ Systems.prototype = {
 
         this.settings = Settings(this.config, this.game.config);
 
+        this.cache = this.game.cache;
         this.textures = this.game.textures;
 
         //  State specific managers (Factory, Tweens, Loader, Physics, etc)
@@ -96,6 +98,7 @@ Systems.prototype = {
         // this.state.transform = this.camera.transform;
 
         this.state.state = this.game.state;
+        this.state.cache = this.game.cache;
         this.state.textures = this.game.textures;
     },
 
