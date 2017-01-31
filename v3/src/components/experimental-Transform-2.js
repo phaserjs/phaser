@@ -45,7 +45,7 @@ TransformMatrix.prototype.rotate = function (radian)
     matrix[3] = b * -tsin + d * tcos;
     return this;
 };
-function Transform(root)
+function Transform(gameObject, root)
 {
 	this.positionX = 0;
 	this.positionY = 0;
@@ -66,6 +66,7 @@ function Transform(root)
 	this.childCount = 0;
 	this.dirty = false;
 	this.root = root || this;
+    this.gameObject = gameObject;
 }
 // this must be called only once on the root of the tree. Never on children
 Transform.prototype.flattenTree = function (children, flatChildrenArray, childCount)

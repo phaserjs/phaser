@@ -95,7 +95,7 @@ Systems.prototype = {
         this.state.settings = this.settings;
 
         // this.state.camera = this.camera;
-        // this.state.transform = this.camera.transform;
+        this.state.transform = this.transform;
 
         this.state.state = this.game.state;
         this.state.cache = this.game.cache;
@@ -129,12 +129,14 @@ Systems.prototype = {
 
         //  Now what? :)
 
-        // renderer.render(this.state, list, interpolation);
+        renderer.render(this.state, this.transform.flatChildrenArray, interpolation);
 
         this.state.render(interpolation);
     },
 
     //  Called just once per frame, regardless of speed
+
+    /*
     OLDrender: function (interpolation, renderer)
     {
         this.updates.start();
@@ -155,6 +157,7 @@ Systems.prototype = {
 
         this.state.render(interpolation);
     }
+    */
 };
 
 module.exports = Systems;

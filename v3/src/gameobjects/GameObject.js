@@ -39,10 +39,8 @@ var GameObject = function (state, x, y, texture, frame, parent)
     this.frame = frame;
 
     //  All GameObjects have the following components, always:
-    this.transform = new Component.Transform(this);
-
-    this.transform.positionX = x;
-    this.transform.positionY = y;
+    this.transform = new Component.Transform(this, this.state.sys.transform);
+    this.transform.localMatrix.translate(x, y);
 
     //  Optional? Maybe set on a per GO basis?
     this.data = new Component.Data(this);

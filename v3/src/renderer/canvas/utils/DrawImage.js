@@ -28,8 +28,15 @@ var DrawImage = function (frame, blendMode, transform, alpha, tint, bg)
         // ctx[this.smoothProperty] = (source.scaleMode === ScaleModes.LINEAR);
     }
 
-    ctx.setTransform(transform.a, transform.b, transform.c, transform.d, transform.tx, transform.ty);
-    ctx.drawImage(frame.source.image, cd.sx, cd.sy, cd.sWidth, cd.sHeight, transform.dx, transform.dy, cd.dWidth, cd.dHeight);
+    // var dx = frame.x - (transform.anchorX * frame.width);
+    // var dy = frame.y - (transform.anchorY * frame.height);
+    var dx = frame.x;
+    var dy = frame.y;
+    var wt = transform.worldMatrix;
+
+    ctx.setTransform(wt[0], wt[1], wt[2], wt[3], wt[4], wt[5]);
+
+    ctx.drawImage(frame.source.image, cd.sx, cd.sy, cd.sWidth, cd.sHeight, dx, dy, cd.dWidth, cd.dHeight);
 
 };
 

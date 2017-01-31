@@ -138,6 +138,8 @@ CanvasRenderer.prototype = {
     {
         this.drawCount = list.length;
 
+        // console.log(this.drawCount);
+
         for (var c = 0; c < list.length; c++)
         {
             var child = list[c].gameObject;

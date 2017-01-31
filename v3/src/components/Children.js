@@ -28,7 +28,7 @@ Children.prototype = {
     {
         if (skipTransform === undefined) { skipTransform = false; }
 
-        // console.log('--->', this.gameObject.name, 'adds new child:', child.name);
+        // console.log('--->', this.gameObject, 'adds new child:', child);
 
         if (child.parent === this)
         {
