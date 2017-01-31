@@ -116,10 +116,10 @@ Systems.prototype = {
         {
             var child = this.children.list[c];
 
-            if (child.exists)
-            {
+            // if (child.exists)
+            // {
                 child.update(timestep);
-            }
+            // }
         }
 
         this.state.update(timestep, physicsStep);
