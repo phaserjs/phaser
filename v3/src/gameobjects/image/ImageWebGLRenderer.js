@@ -21,10 +21,8 @@ var ImageWebGLRenderer = function (renderer, src, interpolationPercentage)
     renderer.setBlendMode(src.color._blendMode);
     renderer.spriteBatch.add(
         frame,
-        transform._anchorX, transform._anchorY,
-        transform.world.tx, transform.world.ty,
-        transform._worldScaleX, transform._worldScaleY,
-        transform._worldRotation,
+        src.anchorX, src.anchorY,
+        transform.worldMatrix.matrix,
         src.color._glTint
     );
 };

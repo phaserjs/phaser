@@ -165,7 +165,7 @@ Transform.prototype.update = function (parentTransformMatrix)
 
 	var localm = this.localMatrix.loadIdentity();
 	localm.translate(this.positionX, this.positionY);
-	//localm.rotate(rotation);
+	localm.rotate(rotation);
 	localm.scale(this.scaleX, this.scaleY);
 	
 	var local = localm.matrix;
