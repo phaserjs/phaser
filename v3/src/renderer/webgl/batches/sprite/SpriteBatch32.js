@@ -83,20 +83,13 @@ SpriteBatch32.prototype = {
         var indexBufferObject = CreateBuffer(gl, gl.ELEMENT_ARRAY_BUFFER, gl.STATIC_DRAW, null, indexDataBuffer.getByteCapacity());
 
         var attribArray = [
-            //CreateAttribDesc(gl, program, 'a_position', 2, gl.FLOAT, false, CONST.VERTEX_SIZE, 0),
-            //CreateAttribDesc(gl, program, 'a_tex_coord', 2, gl.FLOAT, false, CONST.VERTEX_SIZE, 8),
-            //CreateAttribDesc(gl, program, 'a_translate', 2, gl.FLOAT, false, CONST.VERTEX_SIZE, 16),
-            //CreateAttribDesc(gl, program, 'a_scale', 2, gl.FLOAT, false, CONST.VERTEX_SIZE, 24),
-            //CreateAttribDesc(gl, program, 'a_rotation', 1, gl.FLOAT, false, CONST.VERTEX_SIZE, 32),
-            //CreateAttribDesc(gl, program, 'a_color', 3, 5121, true, CONST.VERTEX_SIZE, 36)
             CreateAttribDesc(gl, program, 'a_position', 2, gl.FLOAT, false, CONST.VERTEX_SIZE, 0),
             CreateAttribDesc(gl, program, 'a_tex_coord', 2, gl.FLOAT, false, CONST.VERTEX_SIZE, 8),
             CreateAttribDesc(gl, program, 'transform_a', 1, gl.FLOAT, false, CONST.VERTEX_SIZE, 16),
             CreateAttribDesc(gl, program, 'transform_b', 1, gl.FLOAT, false, CONST.VERTEX_SIZE, 20),
             CreateAttribDesc(gl, program, 'transform_c', 1, gl.FLOAT, false, CONST.VERTEX_SIZE, 24),
             CreateAttribDesc(gl, program, 'transform_d', 1, gl.FLOAT, false, CONST.VERTEX_SIZE, 28),
-            CreateAttribDesc(gl, program, 'transform_tx', 1, gl.FLOAT, false, CONST.VERTEX_SIZE, 32),
-            CreateAttribDesc(gl, program, 'transform_ty', 1, gl.FLOAT, false, CONST.VERTEX_SIZE, 36),
+            CreateAttribDesc(gl, program, 'transform_t', 2, gl.FLOAT, false, CONST.VERTEX_SIZE, 32),
             CreateAttribDesc(gl, program, 'a_color', 3, gl.UNSIGNED_BYTE, true, CONST.VERTEX_SIZE, 40)
         ];
 
