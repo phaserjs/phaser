@@ -1,7 +1,28 @@
-function TransformMatrix()
+// this must be called only once on the root of the tree. Never on children
+var flattenTree = function (children, flatRenderArray, flatChildrenArray, childCount, renderCount)
+{
+	for (var index = 0, length = children.length; index < length; ++index)
+	{
+		var child = children[index];
+		// we need a rendering list since we avoid iterating over
+		// repeating children used as tags for the applying transformations.
+		flatRenderArray[renderCount++] = child; 
+		flatChildrenArray[childCount++] = child;
+		if (children[index].children.length > 0)
+		{
+			var counts = flattenTree(children[index].children, flatRenderArray, flatChildrenArray, childCount, renderCount);
+			childCount = counts[0];
+			renderCount = counts[1];
+			flatChildrenArray[childCount++] = children[index]; // add ending tag
+		}
+	}
+	return [childCount, renderCount];
+};
+
+var TransformMatrix = function ()
 {
 	this.matrix = new Float32Array([1, 0, 0, 1, 0, 0]);
-}
+};
 TransformMatrix.prototype.loadIdentity = function ()
 {
 	var matrix = this.matrix;
@@ -45,7 +66,7 @@ TransformMatrix.prototype.rotate = function (radian)
     matrix[3] = b * -tsin + d * tcos;
     return this;
 };
-function Transform(gameObject, root)
+var Transform = function (gameObject, root)
 {
 	this.positionX = 0;
 	this.positionY = 0;
@@ -72,26 +93,6 @@ function Transform(gameObject, root)
 	this.root = root || this;
     this.gameObject = gameObject;
 }
-// this must be called only once on the root of the tree. Never on children
-Transform.prototype.flattenTree = function (children, flatRenderArray, flatChildrenArray, childCount, renderCount)
-{
-	for (var index = 0, length = children.length; index < length; ++index)
-	{
-		var child = children[index];
-		// we need a rendering list since we avoid iterating over
-		// repeating children used as tags for the applying transformations.
-		flatRenderArray[renderCount++] = child; 
-		flatChildrenArray[childCount++] = child;
-		if (children[index].children.length > 0)
-		{
-			var counts = this.flattenTree(children[index].children, flatRenderArray, flatChildrenArray, childCount, renderCount);
-			childCount = counts[0];
-			renderCount = counts[1];
-			flatChildrenArray[childCount++] = children[index]; // add ending tag
-		}
-	}
-	return [childCount, renderCount];
-};
 Transform.prototype.add = function (transform)
 {
 	this.root.dirty = true;
@@ -114,9 +115,104 @@ Transform.prototype.remove = function (transform)
 	}
 };
 
+Transform.updateRoot = function (root)
+{
+	var currentTransform;
+	var currentChild = null;
+	var stackLength = 0;
+	var transformStack = root.transformStack;
+	var childStack = root.childStack;
+	var childrenArray = root.flatChildrenArray;
+	var cos = Math.cos;
+	var sin = Math.sin;
+
+	if (root.dirty)
+	{
+		var counts = flattenTree(root.children, root.flatRenderArray, childrenArray, 0, 0);
+		root.childCount = counts[0];
+		root.renderCount = counts[1];
+		root.dirty = false;
+	}
+	var transX = root.positionX; 
+	var transY = root.positionY;
+	var scaleX = root.scaleX;
+	var scaleY = root.scaleY;
+	var rotation = root.rotation;
+	var tcos = cos(rotation);
+	var tsin = sin(rotation);
+
+	currentTransform = root.localMatrix.matrix;
+	currentTransform[0] = tcos * scaleX;
+	currentTransform[1] = tsin * scaleX;
+    currentTransform[2] = -tsin * scaleY;
+	currentTransform[3] = tcos * scaleY;
+	currentTransform[4] = transX;
+	currentTransform[5] = transY;
+
+	for (var index = 0, length = root.childCount; index < length; ++index)
+	{
+		var child = childrenArray[index];
+		if (child !== currentChild)
+		{
+			// inlined transformation
+		    var world = child.worldMatrix.matrix;
+			var local = child.localMatrix.matrix;
+			var p0 = currentTransform[0];
+		    var p1 = currentTransform[1];
+		    var p2 = currentTransform[2];
+		    var p3 = currentTransform[3];
+		    var p4 = currentTransform[4];
+		    var p5 = currentTransform[5];
+			
+			transX = child.positionX;
+			transY = child.positionY;
+			scaleX = child.scaleX;
+			scaleY = child.scaleY;
+			rotation = child.rotation;
+		    tcos = cos(rotation);
+		    tsin = sin(rotation);
+
+		    // Rotate + Scale + Translate
+		    var l0 = tcos * scaleX;
+    		var l1 = tsin * scaleX;
+    		var l2 = -tsin * scaleY;
+    		var l3 = tcos * scaleY;
+
+    		// Apply world transformation
+		    world[0] = l0 * p0 + l1 * p2;
+		    world[1] = l0 * p1 + l1 * p3;
+		    world[2] = l2 * p0 + l3 * p2;
+		    world[3] = l2 * p1 + l3 * p3;
+		    world[4] = transX * p0 + transY * p2 + p4;
+		    world[5] = transX * p1 + transY * p3 + p5;
+
+		    // Store local transformation
+		    local[0] = l0;
+		    local[1] = l1;
+		    local[2] = l2;
+		    local[3] = l3;
+		    local[4] = transX;
+		    local[5] = transY;
+
+			if (child.hasChildren)
+			{
+				transformStack[stackLength] = currentTransform;
+				childStack[stackLength++] = currentChild;
+				currentTransform = local;
+				currentChild = child;
+			}
+		}
+		else
+		{
+			currentTransform = transformStack[--stackLength];
+			currentChild = childStack[stackLength];
+		}
+	}
+};
+
 // Only call this function once per frame. Should probably
 // be only available at State
-Transform.prototype.updateRoot = function ()
+Transform.prototype.___updateRoot___old = function ()
 {
 	if (this.root !== this)
 	{

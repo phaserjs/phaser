@@ -259,13 +259,36 @@ WebGLRenderer.prototype = {
     render: function (state, flatRenderArray, interpolationPercentage)
     {
         //  Could move to the State Systems or MainLoop
+        var gl = this.gl;
         var list = state.sys.children.list;
         var length = list.length;
         for (var index = 0; index < length; ++index)
         {
             var child = list[index];
-            child.renderWebGL(this, child, interpolationPercentage);
+            // Setting blend mode if needed            
             var batch = this.batch;
+            var newBlendMode = child.color._blendMode;
+            if (this.blendMode !== newBlendMode)
+            {
+                if (batch) 
+                {
+                    batch.flush();
+                }
+                var blend = this.blendModes[newBlendMode];
+                gl.enable(gl.BLEND);
+                if (blend.length > 2)
+                {
+                    gl.blendFuncSeparate(blend[0], blend[1], blend[2], blend[3]);
+                }
+                else
+                {
+                    gl.blendFunc(blend[0], blend[1]);        
+                }
+                this.blendMode = newBlendMode;
+            }
+            // drawing child
+            child.renderWebGL(this, child, interpolationPercentage);
+            batch = this.batch;
             if (batch && batch.isFull())
             {
                 batch.flush();

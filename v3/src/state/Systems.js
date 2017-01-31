@@ -13,6 +13,7 @@ var Component = require('../components');
 // var Camera = require('../camera/Camera');
 var Settings = require('./Settings');
 var RTree = require('../structs/RTree');
+var Transform = require('../components/experimental-Transform-2')
 
 var Systems = function (state, config)
 {
@@ -127,12 +128,9 @@ Systems.prototype = {
 
     render: function (interpolation, renderer)
     {
-        this.transform.updateRoot();
-
-        //  Now what? :)
-
-        renderer.render(this.state, this.transform.flatRenderArray, interpolation);
-
+        var transform = this.transform;
+        Transform.updateRoot(transform);
+        renderer.render(this.state, transform.flatRenderArray, interpolation);
         this.state.render(interpolation);
     },
 
