@@ -68,6 +68,7 @@ function Transform(gameObject, root)
 	this.childCount = 0;
 	this.renderCount = 0;
 	this.dirty = false;
+	this.dirtyLocal = true;
 	this.root = root || this;
     this.gameObject = gameObject;
 }
@@ -159,6 +160,11 @@ Transform.prototype.updateRoot = function ()
 };
 Transform.prototype.update = function (parentTransformMatrix)
 {
+	if (!this.dirtyLocal)
+	{
+		return;
+	}
+
     var parent = parentTransformMatrix.matrix;
     var world = this.worldMatrix.matrix;
 	var rotation = this.rotation;
@@ -176,7 +182,10 @@ Transform.prototype.update = function (parentTransformMatrix)
     world[3] = parent[2] * local[1] + parent[3] * local[3];
     world[4] = parent[4] * local[0] + parent[5] * local[2] + local[4];
     world[5] = parent[4] * local[1] + parent[5] * local[3] + local[5];
+
+    this.dirtyLocal = false;
 };
+
 Transform.prototype.updateLocal = function ()
 {
 	var local = this.localMatrix.loadIdentity();

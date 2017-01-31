@@ -118,6 +118,7 @@ Object.defineProperties(GameObject.prototype, {
         set: function (value)
         {
             this.transform.positionX = value;
+            this.transform.dirtyLocal = true;
         }
 
     },
@@ -134,6 +135,7 @@ Object.defineProperties(GameObject.prototype, {
         set: function (value)
         {
             this.transform.positionY = value;
+            this.transform.dirtyLocal = true;
         }
 
     },
@@ -151,6 +153,7 @@ Object.defineProperties(GameObject.prototype, {
         {
             this.transform.scaleX = value;
             this.transform.scaleY = value;
+            this.transform.dirtyLocal = true;
         }
 
     },
@@ -167,6 +170,7 @@ Object.defineProperties(GameObject.prototype, {
         set: function (value)
         {
             this.transform.scaleX = value;
+            this.transform.dirtyLocal = true;
         }
 
     },
@@ -183,6 +187,7 @@ Object.defineProperties(GameObject.prototype, {
         set: function (value)
         {
             this.transform.scaleY = value;
+            this.transform.dirtyLocal = true;
         }
 
     },
@@ -199,6 +204,7 @@ Object.defineProperties(GameObject.prototype, {
         set: function (value)
         {
             this.transform.rotation = value;
+            this.transform.dirtyLocal = true;
         }
 
     },
@@ -216,6 +222,7 @@ Object.defineProperties(GameObject.prototype, {
         {
             //  value is in degrees
             this.transform.rotation = WrapAngle(value * MATH_CONST.DEG_TO_RAD);
+            this.transform.dirtyLocal = true;
         }
 
     },
