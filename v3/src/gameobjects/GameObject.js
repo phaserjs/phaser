@@ -5,10 +5,10 @@
 */
 
 // var CONST = require('../const');
-// var MATH_CONST = require('../math/const');
+var MATH_CONST = require('../math/const');
 var ScaleModes = require('../renderer/ScaleModes');
 var Component = require('../components');
-// var WrapAngle = require('../math/angle/Wrap');
+var WrapAngle = require('../math/angle/Wrap');
 
 /**
 * This is the base Game Object class that you can use when creating your own extended Game Objects.
@@ -42,6 +42,8 @@ var GameObject = function (state, x, y, texture, frame, parent)
     this.transform = new Component.Transform(this, this.state.sys.transform);
     this.transform.positionX = x;
     this.transform.positionY = y;
+
+    this.anchor = new Component.Anchor();
 
     //  Optional? Maybe set on a per GO basis?
     this.data = new Component.Data(this);
@@ -136,22 +138,19 @@ Object.defineProperties(GameObject.prototype, {
 
     },
 
-    /*
     scale: {
 
         enumerable: true,
 
         get: function ()
         {
-            return this.transform._scaleX;
+            return this.transform.scaleX;
         },
 
         set: function (value)
         {
-            this.transform._scaleX = value;
-            this.transform._scaleY = value;
-            this.transform.dirty = true;
-            this.transform.updateCache();
+            this.transform.scaleX = value;
+            this.transform.scaleY = value;
         }
 
     },
@@ -162,14 +161,12 @@ Object.defineProperties(GameObject.prototype, {
 
         get: function ()
         {
-            return this.transform._scaleX;
+            return this.transform.scaleX;
         },
 
         set: function (value)
         {
-            this.transform._scaleX = value;
-            this.transform.dirty = true;
-            this.transform.updateCache();
+            this.transform.scaleX = value;
         }
 
     },
@@ -180,30 +177,45 @@ Object.defineProperties(GameObject.prototype, {
 
         get: function ()
         {
-            return this.transform._scaleY;
+            return this.transform.scaleY;
         },
 
         set: function (value)
         {
-            this.transform._scaleY = value;
-            this.transform.dirty = true;
-            this.transform.updateCache();
+            this.transform.scaleY = value;
         }
 
     },
 
-    anchor: {
+    rotation: {
 
         enumerable: true,
 
         get: function ()
         {
-            return this.transform._anchorX;
+            return this.transform.rotation;
         },
 
         set: function (value)
         {
-            this.transform.setAnchor(value);
+            this.transform.rotation = value;
+        }
+
+    },
+
+    angle: {
+
+        enumerable: true,
+
+        get: function ()
+        {
+            return WrapAngle(this.transform.rotation * MATH_CONST.RAD_TO_DEG);
+        },
+
+        set: function (value)
+        {
+            //  value is in degrees
+            this.transform.rotation = WrapAngle(value * MATH_CONST.DEG_TO_RAD);
         }
 
     },
@@ -214,13 +226,12 @@ Object.defineProperties(GameObject.prototype, {
 
         get: function ()
         {
-            return this.transform._anchorX;
+            return this.anchor.getX();
         },
 
         set: function (value)
         {
-            this.transform._anchorX = value;
-            this.transform.dirty = true;
+            this.anchor.setX(value);
         }
 
     },
@@ -231,17 +242,17 @@ Object.defineProperties(GameObject.prototype, {
 
         get: function ()
         {
-            return this.transform._anchorY;
+            return this.anchor.getY();
         },
 
         set: function (value)
         {
-            this.transform._anchorY = value;
-            this.transform.dirty = true;
+            this.anchor.setY(value);
         }
 
     },
 
+    /*
     pivotX: {
 
         enumerable: true,
@@ -274,56 +285,6 @@ Object.defineProperties(GameObject.prototype, {
             this.transform._pivotY = value;
             this.transform.dirty = true;
             this.transform.updateCache();
-        }
-
-    },
-
-    angle: {
-
-        enumerable: true,
-
-        get: function ()
-        {
-            return WrapAngle(this.rotation * MATH_CONST.RAD_TO_DEG);
-        },
-
-        set: function (value)
-        {
-            this.rotation = WrapAngle(value) * MATH_CONST.DEG_TO_RAD;
-        }
-
-    },
-
-    rotation: {
-
-        enumerable: true,
-
-        get: function ()
-        {
-            return this.transform._rotation;
-        },
-
-        set: function (value)
-        {
-            if (this.transform._rotation === value)
-            {
-                return;
-            }
-
-            this.transform._rotation = value;
-            this.transform.dirty = true;
-
-            if (this.transform._rotation % MATH_CONST.PI2)
-            {
-                this.transform.cache.sr = Math.sin(this.transform._rotation);
-                this.transform.cache.cr = Math.cos(this.transform._rotation);
-                this.transform.updateCache();
-                this.transform.hasLocalRotation = true;
-            }
-            else
-            {
-                this.transform.hasLocalRotation = false;
-            }
         }
 
     },

@@ -86,6 +86,8 @@ Systems.prototype = {
     {
         //  Defaults properties injected into the State
 
+        this.state.game = this.game;
+
         this.state.events = this.events;
         this.state.add = this.add;
         this.state.load = this.load;

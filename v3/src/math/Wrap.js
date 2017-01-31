@@ -7,6 +7,11 @@ var Wrap = function (value, min, max)
         return 0;
     }
 
+    if (value >= min && value <= max)
+    {
+        return value;
+    }
+
     var result = (value - min) % range;
 
     if (result < 0)
