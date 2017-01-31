@@ -128,6 +128,10 @@ Transform.prototype.updateRoot = function ()
 	var transformStack = this.transformStack;
 	var childStack = this.childStack;
 	var childrenArray = this.flatChildrenArray;
+	var currentTransform = this.localMatrix;
+	var cos = Math.cos;
+	var sin = Math.sin;
+
 	if (this.dirty)
 	{
 		var counts = this.flattenTree(this.children, this.flatRenderArray, childrenArray, 0, 0);
@@ -135,19 +139,70 @@ Transform.prototype.updateRoot = function ()
 		this.renderCount = counts[1];
 		this.dirty = false;
 	}
-	this.updateLocal();
-	currentTransform = this.localMatrix;
+
+	this.localMatrix.loadIdentity();
+	this.localMatrix.translate(this.positionX, this.positionY);
+	this.localMatrix.rotate(this.rotation);
+	this.localMatrix.scale(this.scaleX, this.scaleY);
+	currentTransform = this.localMatrix.matrix;
+
 	for (var index = 0, length = this.childCount; index < length; ++index)
 	{
 		var child = childrenArray[index];
 		if (child !== currentChild)
 		{
-			child.update(currentTransform);
+			// inlined transformation
+			var parent = currentTransform;
+		    var world = child.worldMatrix.matrix;
+			var rotation = child.rotation;
+			var local = child.localMatrix.matrix;
+			var transX = child.positionX;
+			var transY = child.positionY;
+			var scaleX = child.scaleX;
+			var scaleY = child.scaleY;
+			var rotation = child.rotation;
+		    var tcos = 1;
+		    var tsin = 0;
+
+		    var p0 = parent[0];
+		    var p1 = parent[1];
+		    var p2 = parent[2];
+		    var p3 = parent[3];
+		    var p4 = parent[4];
+		    var p5 = parent[5];
+
+		    // Rotate + Scale + Translate
+		    if (rotation !== 0)
+		    {
+		    	tcos = cos(rotation);
+				tsin = sin(rotation);
+		    }
+		    var l0 = tcos * scaleX;
+    		var l1 = tsin * scaleX;
+    		var l2 = -tsin * scaleY;
+    		var l3 = tcos * scaleY;
+
+    		// Apply world transformation
+		    world[0] = l0 * p0 + l1 * p2;
+		    world[1] = l0 * p1 + l1 * p3;
+		    world[2] = l2 * p0 + l3 * p2;
+		    world[3] = l2 * p1 + l3 * p3;
+		    world[4] = transX * p0 + transY * p2 + p4;
+		    world[5] = transX * p1 + transY * p3 + p5;
+
+		    // Store local transformation
+		    local[0] = l0;
+		    local[1] = l1;
+		    local[2] = l2;
+		    local[3] = l3;
+		    local[4] = transX;
+		    local[5] = transY;
+
 			if (child.hasChildren)
 			{
 				transformStack[stackLength] = currentTransform;
 				childStack[stackLength++] = currentChild;
-				currentTransform = child.worldMatrix;
+				currentTransform = local;
 				currentChild = child;
 			}
 		}
@@ -158,41 +213,7 @@ Transform.prototype.updateRoot = function ()
 		}
 	}
 };
-Transform.prototype.update = function (parentTransformMatrix)
-{
-	if (!this.dirtyLocal)
-	{
-		return;
-	}
 
-    var parent = parentTransformMatrix.matrix;
-    var world = this.worldMatrix.matrix;
-	var rotation = this.rotation;
-
-	var localm = this.localMatrix.loadIdentity();
-	localm.translate(this.positionX, this.positionY);
-	localm.rotate(rotation);
-	localm.scale(this.scaleX, this.scaleY);
-	
-	var local = localm.matrix;
-    
-    world[0] = parent[0] * local[0] + parent[1] * local[2];
-    world[1] = parent[0] * local[1] + parent[1] * local[3];
-    world[2] = parent[2] * local[0] + parent[3] * local[2];
-    world[3] = parent[2] * local[1] + parent[3] * local[3];
-    world[4] = parent[4] * local[0] + parent[5] * local[2] + local[4];
-    world[5] = parent[4] * local[1] + parent[5] * local[3] + local[5];
-
-    this.dirtyLocal = false;
-};
-
-Transform.prototype.updateLocal = function ()
-{
-	var local = this.localMatrix.loadIdentity();
-	local.translate(this.positionX, this.positionY);
-	local.rotate(this.rotation);
-	local.scale(this.scaleX, this.scaleY);
-};
 Object.defineProperties(Transform.prototype,{
 	worldPositionX: {
 		enumarable: true,

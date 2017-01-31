@@ -258,7 +258,6 @@ WebGLRenderer.prototype = {
      */
     render: function (state, interpolationPercentage)
     {
-        var batch = this.batch;
 
         //  Could move to the State Systems or MainLoop
         for (var c = 0; c < state.sys.children.list.length; c++)
@@ -266,7 +265,7 @@ WebGLRenderer.prototype = {
             var child = state.sys.children.list[c];
 
             child.renderWebGL(this, child, interpolationPercentage);
-
+            var batch = this.batch;
             if (batch && batch.isFull())
             {
                 batch.flush();
