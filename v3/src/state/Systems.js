@@ -129,7 +129,7 @@ Systems.prototype = {
 
         //  Now what? :)
 
-        renderer.render(this.state, this.transform.flatChildrenArray, interpolation);
+        renderer.render(this.state, this.transform.flatRenderArray, interpolation);
 
         this.state.render(interpolation);
     },

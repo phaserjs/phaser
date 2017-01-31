@@ -61,26 +61,34 @@ function Transform(gameObject, root)
 	// Only valid if you are the root.
 	// This probably needs to be on State and not here.
 	this.flatChildrenArray = [];
+	this.flatRenderArray = [];
 	this.transformStack = [];
 	this.childStack = [];
 	this.childCount = 0;
+	this.renderCount = 0;
 	this.dirty = false;
 	this.root = root || this;
     this.gameObject = gameObject;
 }
 // this must be called only once on the root of the tree. Never on children
-Transform.prototype.flattenTree = function (children, flatChildrenArray, childCount)
+Transform.prototype.flattenTree = function (children, flatRenderArray, flatChildrenArray, childCount, renderCount)
 {
 	for (var index = 0, length = children.length; index < length; ++index)
 	{
-		flatChildrenArray[childCount++] = children[index];
+		var child = children[index];
+		// we need a rendering list since we avoid iterating over
+		// repeating children used as tags for the applying transformations.
+		flatRenderArray[renderCount++] = child; 
+		flatChildrenArray[childCount++] = child;
 		if (children[index].children.length > 0)
 		{
-			childCount = this.flattenTree(children[index].children, flatChildrenArray, childCount);
+			var counts = this.flattenTree(children[index].children, flatChildrenArray, childCount);
+			childCount = counts[0];
+			renderCount = counts[1];
 			flatChildrenArray[childCount++] = children[index]; // add ending tag
 		}
 	}
-	return childCount;
+	return [childCount, renderCount];
 };
 Transform.prototype.add = function (transform)
 {
@@ -117,7 +125,9 @@ Transform.prototype.updateRoot = function ()
 	var childrenArray = this.flatChildrenArray;
 	if (this.dirty)
 	{
-		this.childCount = this.flattenTree(this.children, childrenArray, 0);
+		var counts = this.flattenTree(this.children, this.flatRenderArray, childrenArray, 0, 0);
+		this.childCount = counts[0];
+		this.renderCount = counts[1];
 		this.dirty = false;
 	}
 	this.updateLocal();
@@ -148,8 +158,9 @@ Transform.prototype.update = function (parentTransformMatrix)
     var parent = parentTransformMatrix.matrix;
     var world = this.worldMatrix.matrix;
 	var localm = this.localMatrix.loadIdentity();
+	var rotation = this.rotation;
 	localm.translate(this.positionX, this.positionY);
-	localm.rotate(this.rotation);
+	if (rotation !== 0) localm.rotate(this.rotation);
 	var local = localm.scale(this.scaleX, this.scaleY).matrix;
     
     world[0] = parent[0] * local[0] + parent[1] * local[2];

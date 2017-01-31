@@ -32,7 +32,7 @@ var DrawImage = function (frame, blendMode, transform, alpha, tint, bg)
     // var dy = frame.y - (transform.anchorY * frame.height);
     var dx = frame.x;
     var dy = frame.y;
-    var wt = transform.worldMatrix;
+    var wt = transform.worldMatrix.matrix;
 
     ctx.setTransform(wt[0], wt[1], wt[2], wt[3], wt[4], wt[5]);
 
