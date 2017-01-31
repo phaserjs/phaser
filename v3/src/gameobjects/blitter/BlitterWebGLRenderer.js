@@ -6,10 +6,10 @@ var BlitterWebGLRenderer = function (renderer, src, interpolationPercentage)
 
     //  Skip rendering?
 
-    if (src.skipRender || !src.visible || worldAlpha === 0 || len === 0)
-    {
-        return;
-    }
+    // if (src.skipRender || !src.visible || worldAlpha === 0 || len === 0)
+    // {
+    //     return;
+    // }
 
     //  Render children
     for (var i = 0; i < len; i++)
@@ -17,10 +17,10 @@ var BlitterWebGLRenderer = function (renderer, src, interpolationPercentage)
         var bob = src.children.list[i];
         var frame = bob.frame;
 
-        if (!bob.visible || !frame.cutWidth || !frame.cutHeight)
-        {
-            continue;
-        }
+        // if (!bob.visible || !frame.cutWidth || !frame.cutHeight)
+        // {
+        //     continue;
+        // }
 
         renderer.blitterBatch.add(bob.x, bob.y, frame, worldAlpha);
     }
