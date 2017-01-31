@@ -256,6 +256,7 @@ WebGLRenderer.prototype = {
      *   by the amount of time that will be simulated the next time update()
      *   runs. Useful for interpolating frames.
      */
+    render: function (state, flatRenderArray, interpolationPercentage)
     {
         //  Could move to the State Systems or MainLoop
         var list = state.sys.children.list;
