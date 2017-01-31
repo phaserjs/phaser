@@ -256,14 +256,13 @@ WebGLRenderer.prototype = {
      *   by the amount of time that will be simulated the next time update()
      *   runs. Useful for interpolating frames.
      */
-    render: function (state, interpolationPercentage)
     {
-
         //  Could move to the State Systems or MainLoop
-        for (var c = 0; c < state.sys.children.list.length; c++)
+        var list = state.sys.children.list;
+        var length = list.length;
+        for (var index = 0; index < length; ++index)
         {
-            var child = state.sys.children.list[c];
-
+            var child = list[index];
             child.renderWebGL(this, child, interpolationPercentage);
             var batch = this.batch;
             if (batch && batch.isFull())
