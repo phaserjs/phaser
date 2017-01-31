@@ -58,6 +58,7 @@ function Transform(gameObject, root)
 	// Only for user
 	this.children = [];
 	this.hasChildren = false;
+	this.parent = this;
 	// Only valid if you are the root.
 	// This probably needs to be on State and not here.
 	this.flatChildrenArray = [];
@@ -82,7 +83,7 @@ Transform.prototype.flattenTree = function (children, flatRenderArray, flatChild
 		flatChildrenArray[childCount++] = child;
 		if (children[index].children.length > 0)
 		{
-			var counts = this.flattenTree(children[index].children, flatChildrenArray, childCount);
+			var counts = this.flattenTree(children[index].children, flatRenderArray, flatChildrenArray, childCount, renderCount);
 			childCount = counts[0];
 			renderCount = counts[1];
 			flatChildrenArray[childCount++] = children[index]; // add ending tag
@@ -95,6 +96,8 @@ Transform.prototype.add = function (transform)
 	this.root.dirty = true;
 	this.hasChildren = true;
 	transform.root = this.root;
+	transform.parent.remove(transform);
+	transform.parent = this;
 	this.children.push(transform);
 };
 Transform.prototype.remove = function (transform)
@@ -106,6 +109,7 @@ Transform.prototype.remove = function (transform)
 		children.splice(index, 1);
 		this.hasChildren = (children.length > 0);
 		this.root.dirty = true;
+		transform.parent = transform;
 	}
 };
 
@@ -157,11 +161,14 @@ Transform.prototype.update = function (parentTransformMatrix)
 {
     var parent = parentTransformMatrix.matrix;
     var world = this.worldMatrix.matrix;
-	var localm = this.localMatrix.loadIdentity();
 	var rotation = this.rotation;
+
+	var localm = this.localMatrix.loadIdentity();
 	localm.translate(this.positionX, this.positionY);
-	if (rotation !== 0) localm.rotate(this.rotation);
-	var local = localm.scale(this.scaleX, this.scaleY).matrix;
+	//localm.rotate(rotation);
+	localm.scale(this.scaleX, this.scaleY);
+	
+	var local = localm.matrix;
     
     world[0] = parent[0] * local[0] + parent[1] * local[2];
     world[1] = parent[0] * local[1] + parent[1] * local[3];
