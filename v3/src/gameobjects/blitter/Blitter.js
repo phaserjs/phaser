@@ -13,9 +13,9 @@ var Children = require('../../components/Children');
 * A Blitter Game Object.
 *
 * The Blitter Game Object is a special type of Container, that contains Blitter.Bob objects.
-* These objects can be thought of as just texture frames with a transform, and nothing more.
+* These objects can be thought of as just texture frames with a position and nothing more.
 * Bobs don't have any update methods, or the ability to have children, or any kind of special effects.
-* They are essentially just texture renderers, and the Blitter object creates and manages them.
+* They are essentially just super-fast texture frame renderers, and the Blitter object creates and manages them.
 *
 * @class Blitter
 * @extends Phaser.GameObject
@@ -50,6 +50,11 @@ Blitter.prototype.create = function (x, y, frame, visible, index)
     if (frame === undefined) { frame = this.frame; }
     if (visible === undefined) { visible = true; }
     if (index === undefined) { index = 0; }
+
+    if (typeof frame === 'string')
+    {
+        frame = this.texture.get(frame);
+    }
 
     var bob = new Bob(this, x, y, frame, visible);
 
