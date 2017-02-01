@@ -87,7 +87,7 @@ Transform.updateRoot = function (root)
 	var rotation = root.rotation;
 	var tcos = cos(rotation);
 	var tsin = sin(rotation);
-	
+
 	if (root.dirty)
 	{
 		var counts = flattenTree(root.children, root.flatRenderArray, childrenArray, 0, 0);
@@ -110,7 +110,6 @@ Transform.updateRoot = function (root)
 		{
 			// inlined transformation
 		    var world = child.worldMatrix;
-			var local = child.localMatrix;
 			var p0 = tempLocal[0];
 		    var p1 = tempLocal[1];
 		    var p2 = tempLocal[2];
@@ -149,12 +148,12 @@ Transform.updateRoot = function (root)
 				matrixStack[matrixStackLength + 4] = tempLocal[4];
 				matrixStack[matrixStackLength + 5] = tempLocal[5];
 
-				tempLocal[0] = l0;
-				tempLocal[1] = l1;
-				tempLocal[2] = l2;
-				tempLocal[3] = l3;
-				tempLocal[4] = transX;
-				tempLocal[5] = transY;
+				tempLocal[0] = world[0];
+				tempLocal[1] = world[1];
+				tempLocal[2] = world[2];
+				tempLocal[3] = world[3];
+				tempLocal[4] = world[4];
+				tempLocal[5] = world[5];
 
 				childStack[stackLength++] = currentChild;
 				currentChild = child;
@@ -164,13 +163,13 @@ Transform.updateRoot = function (root)
 		else
 		{
 			matrixStackLength -= 6;
-			tempLocal[0] = matrixStackLength[matrixStackLength + 0];
-			tempLocal[1] = matrixStackLength[matrixStackLength + 1];
-			tempLocal[2] = matrixStackLength[matrixStackLength + 2];
-			tempLocal[3] = matrixStackLength[matrixStackLength + 3];
-			tempLocal[4] = matrixStackLength[matrixStackLength + 4];
-			tempLocal[5] = matrixStackLength[matrixStackLength + 5];
-			currentChild = childStack[stackLength];
+			tempLocal[0] = matrixStack[matrixStackLength + 0];
+			tempLocal[1] = matrixStack[matrixStackLength + 1];
+			tempLocal[2] = matrixStack[matrixStackLength + 2];
+			tempLocal[3] = matrixStack[matrixStackLength + 3];
+			tempLocal[4] = matrixStack[matrixStackLength + 4];
+			tempLocal[5] = matrixStack[matrixStackLength + 5];
+			currentChild = childStack[--stackLength];
 		}
 	}
 };
@@ -180,21 +179,21 @@ Object.defineProperties(Transform.prototype,{
 		enumarable: true,
 		get: function ()
 		{
-			return this.world[4];
+			return this.worldMatrix[4];
 		}
 	},
 	worldPositionY: {
 		enumarable: true,
 		get: function ()
 		{
-			return this.world[5];
+			return this.worldMatrix[5];
 		}
 	},
 	worldScaleX: {
 		enumarable: true,
 		get: function ()
 		{
-			var world = this.world;
+			var world = this.worldMatrix;
 		    var a = world[0];
 		    var c = world[2];
 		    var a2 = a * a;
@@ -207,7 +206,7 @@ Object.defineProperties(Transform.prototype,{
 		enumarable: true,
 		get: function ()
 		{
-			var world = this.world;
+			var world = this.worldMatrix;
 		    var b = world[1];
 		    var d = world[3];
 		    var b2 = b * b;
@@ -220,7 +219,7 @@ Object.defineProperties(Transform.prototype,{
 		enumarable: true,
 		get: function ()
 		{
-			var world = this.world;
+			var world = this.worldMatrix;
 		    var a = world[0];
 		    var c = world[2];
 		    var a2 = a * a;
