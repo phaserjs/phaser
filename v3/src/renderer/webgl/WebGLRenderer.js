@@ -12,6 +12,7 @@ var BlitterBatch = require('./batches/blitter/BlitterBatch');
 var SpriteBatch = require('./batches/sprite/SpriteBatch');
 var SpriteBatch32 = require('./batches/sprite/SpriteBatch32');
 var BlendModes = require('../BlendModes');
+var Transform = require('../../components/experimental-Transform-2');
 
 var WebGLRenderer = function (game)
 {
@@ -262,6 +263,7 @@ WebGLRenderer.prototype = {
         var gl = this.gl;
         var list = state.sys.children.list;
         var length = list.length;
+        var matrixBuffer = Transform.float32Buffer;
         for (var index = 0; index < length; ++index)
         {
             var child = list[index];
@@ -287,7 +289,7 @@ WebGLRenderer.prototype = {
                 this.blendMode = newBlendMode;
             }
             // drawing child
-            child.renderWebGL(this, child, interpolationPercentage);
+            child.renderWebGL(this, child, interpolationPercentage, matrixBuffer);
             batch = this.batch;
             if (batch && batch.isFull())
             {

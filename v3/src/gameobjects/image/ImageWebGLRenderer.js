@@ -35,10 +35,10 @@ var ImageWebGLRenderer = function (renderer, src, interpolationPercentage)
     var spriteBatch = renderer.spriteBatch;
     var anchorX = src.anchorX;
     var anchorY = src.anchorY;
-    var matrix = transform.worldMatrix.matrix;
+    var matrix = transform.worldMatrix;
     var vertexColor = src.color._glTint;
 
-    renderer.setBlendMode(src.color._blendMode);
+    //renderer.setBlendMode(src.color._blendMode);
     renderer.setBatch(spriteBatch, frame.texture.source[frame.sourceIndex].glTexture);
     // The user must check if the buffers are full before flushing
     // this is to give freedom of when should the renderer flush. var vertexDataBuffer = this.vertexDataBuffer;
