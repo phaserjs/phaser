@@ -15,7 +15,6 @@ var TouchAction = function (canvas, value)
     canvas.style['touch-action'] = value;
 
     return canvas;
-
 };
 
 module.exports = TouchAction;

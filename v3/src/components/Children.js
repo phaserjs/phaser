@@ -170,6 +170,24 @@ Children.prototype = {
         return this.list[randomIndex];
     },
 
+    getFirst: function (property, value, startIndex, endIndex)
+    {
+        if (startIndex === undefined) { startIndex = 0; }
+        if (endIndex === undefined) { endIndex = this.list.length; }
+
+        for (var i = startIndex; i < endIndex; i++)
+        {
+            var child = this.list[i];
+
+            if (child[property] === value)
+            {
+                return child;
+            }
+        }
+
+        return null;
+    },
+
     /**
     * Returns all children in this Group.
     *

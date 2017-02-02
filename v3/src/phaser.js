@@ -7,6 +7,8 @@ var Extend = require('./utils/object/Extend');
 
 var Phaser = {
 
+    DOM: require('./dom/'),
+
     Game: require('./boot/Game'),
 
     Event: require('./events/Event'),
@@ -33,7 +35,8 @@ var Phaser = {
     Utils: {
 
         Array: require('./utils/array/'),
-        Objects: require('./utils/object/')
+        Objects: require('./utils/object/'),
+        String: require('./utils/string/')
 
     }
 

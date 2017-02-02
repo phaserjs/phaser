@@ -103,4 +103,9 @@ Blitter.prototype.createMultiple = function (quantity, frame, visible)
     return bobs;
 };
 
+Blitter.prototype.clear = function ()
+{
+    this.children.removeAll();
+};
+
 module.exports = Blitter;
