@@ -13,7 +13,7 @@ var CONST = {
     PARTICLE_VERTEX_COMPONENT_COUNT: 5,
 
     // Can't be bigger since index are 16-bit
-    MAX_PARTICLES: 10000,
+    MAX_PARTICLES: 2000,
 
     VERTEX_SHADER_SOURCE: VertexShader,
     FRAGMENT_SHADER_SOURCE: FragmentShader
