@@ -12,7 +12,8 @@ var BlitterWebGLRenderer = function (renderer, src, interpolationPercentage)
     }
 
     //  Render bobs
-    for (var i = len; i >= 0; i--)
+    //for (var i = len; i >= 0; i--)
+    for (var i = 0; i <= len; ++i)
     {
         var bob = src.children.list[i];
         var frame = bob.frame;

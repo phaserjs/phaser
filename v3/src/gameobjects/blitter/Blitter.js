@@ -49,7 +49,7 @@ Blitter.prototype.create = function (x, y, frame, visible, index)
 {
     if (frame === undefined) { frame = this.frame; }
     if (visible === undefined) { visible = true; }
-    if (index === undefined) { index = 0; }
+    if (index === undefined) { index = this.children.length; }
 
     if (typeof frame === 'string')
     {
