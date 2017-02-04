@@ -25,6 +25,7 @@ var Config = function (config)
 
     this.width = GetObjectValue(config, 'width', 1024);
     this.height = GetObjectValue(config, 'height', 768);
+    this.zoom = GetObjectValue(config, 'zoom', 1);
 
     this.resolution = GetObjectValue(config, 'resolution', 1);
 

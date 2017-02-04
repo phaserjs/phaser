@@ -9,6 +9,7 @@ var CanvasPool = require('../dom/CanvasPool');
 var Features = require('../device/Features');
 var CanvasRenderer = require('../renderer/canvas/CanvasRenderer');
 var WebGLRenderer = require('../renderer/webgl/WebGLRenderer');
+var CanvasInterpolation = require('../dom/CanvasInterpolation');
 
 /**
 * Checks if the device is capable of using the requested renderer and sets it up or an alternative if not.
@@ -56,16 +57,27 @@ var CreateRenderer = function (game)
         game.canvas.style = config.canvasStyle;
     }
 
+    //  Pixel Art mode?
+    if (config.pixelArt)
+    {
+        CanvasInterpolation.setCrisp(game.canvas);
+    }
+
+    //  Zoomed?
+    if (config.zoom !== 1)
+    {
+        game.canvas.style.width = (config.width * config.zoom).toString() + 'px';
+        game.canvas.style.height = (config.height * config.zoom).toString() + 'px';
+    }
+
     //  Create the renderer
     if (config.renderType === CONST.WEBGL)
     {
-        console.log('Creating WEBGL Renderer');
         game.renderer = new WebGLRenderer(game);
         game.context = null;
     }
     else
     {
-        console.log('Creating Canvas Renderer');
         game.renderer = new CanvasRenderer(game);
         game.context = game.renderer.context;
     }
