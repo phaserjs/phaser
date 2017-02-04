@@ -2,7 +2,7 @@
 var CONST = require('../const');
 var File = require('../File');
 
-var ImageFile = function (key, url, path, xhrSettings)
+var ImageFile = function (key, url, path, xhrSettings, options)
 {
     if (path === undefined) { path = ''; }
 
@@ -20,7 +20,7 @@ var ImageFile = function (key, url, path, xhrSettings)
         url = path.concat(url);
     }
 
-    File.call(this, 'image', key, url, 'blob', xhrSettings);
+    File.call(this, 'image', key, url, 'blob', xhrSettings, options);
 };
 
 ImageFile.prototype = Object.create(File.prototype);

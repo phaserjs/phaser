@@ -4,7 +4,7 @@ var XHRLoader = require('./XHRLoader');
 var XHRSettings = require('./XHRSettings');
 var MergeXHRSettings = require('./MergeXHRSettings');
 
-var File = function (type, key, url, responseType, xhrSettings)
+var File = function (type, key, url, responseType, xhrSettings, config)
 {
     //  file type (image, json, etc) for sorting within the Loader
     this.type = type;
@@ -40,6 +40,9 @@ var File = function (type, key, url, responseType, xhrSettings)
 
     //  The actual processed file data
     this.data = undefined;
+
+    //  A config object that can be used by file types to store transitional data
+    this.config = config || {};
 
     //  Multipart file? (i.e. an atlas and its json together)
     this.linkFile = undefined;

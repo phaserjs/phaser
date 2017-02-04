@@ -10,10 +10,6 @@ var BaseLoader = function ()
     //  To finish the loader ...
     //  
     //  3) Progress update
-    //  4) JSON loader
-    //  5) XML Loader
-    //  6) Multi File support (atlas + data)
-    //  7) Atlas Loader
 
     this.events = new EventDispatcher();
 

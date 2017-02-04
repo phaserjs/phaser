@@ -9,6 +9,7 @@ var BinaryFile = require('../../loader/filetypes/BinaryFile');
 var GLSLFile = require('../../loader/filetypes/GLSLFile');
 var TextFile = require('../../loader/filetypes/TextFile');
 var AtlasJSONFile = require('../../loader/filetypes/AtlasJSONFile');
+var SpriteSheet = require('../../loader/filetypes/SpriteSheet');
 
 var Loader = function (state)
 {
@@ -64,6 +65,14 @@ Loader.prototype.text = function (key, url, xhrSettings)
 Loader.prototype.glsl = function (key, url, xhrSettings)
 {
     var file = new GLSLFile(key, url, this.path, xhrSettings);
+
+    return this.addFile(file);
+};
+
+//  config can include: frameWidth, frameHeight, startFrame, endFrame, margin, spacing
+Loader.prototype.spritesheet = function (key, url, config, xhrSettings)
+{
+    var file = new SpriteSheet(key, url, config, this.path, xhrSettings);
 
     return this.addFile(file);
 };
@@ -208,6 +217,10 @@ Loader.prototype.processCallback = function ()
                 {
                     textures.addAtlas(fileB.key, fileB.data, fileA.data);
                 }
+                break;
+
+            case 'spritesheet':
+                textures.addSpriteSheet(file.key, file.data, file.config);
                 break;
 
             case 'json':

@@ -99,19 +99,31 @@ TextureManager.prototype = {
         return texture;
     },
 
-    addSpriteSheet: function (key, source, frameWidth, frameHeight, startFrame, endFrame, margin, spacing)
+    /**
+     * [addSpriteSheet description]
+     * @param {[type]} key    [description]
+     * @param {[type]} source [description]
+     * @param {[type]} config [description]
+     * @param {number} config.frameWidth - The fixed width of each frame.
+     * @param {number} [config.frameHeight] - The fixed height of each frame. If not set it will use the frameWidth as the height.
+     * @param {number} [config.startFrame=0] - Skip a number of frames. Useful when there are multiple sprite sheets in one Texture.
+     * @param {number} [config.endFrame=-1] - The total number of frames to extract from the Sprite Sheet. The default value of -1 means "extract all frames".
+     * @param {number} [config.margin=0] - If the frames have been drawn with a margin, specify the amount here.
+     * @param {number} [config.spacing=0] - If the frames have been drawn with spacing between them, specify the amount here.
+     */
+    addSpriteSheet: function (key, source, config)
     {
         var texture = this.create(key, source);
 
         var width = texture.source[0].width;
         var height = texture.source[0].height;
 
-        Parser.SpriteSheet(texture, 0, 0, 0, width, height, frameWidth, frameHeight, startFrame, endFrame, margin, spacing);
+        Parser.SpriteSheet(texture, 0, 0, 0, width, height, config);
 
         return texture;
     },
 
-    addSpriteSheetFromAtlas: function (key, atlasKey, atlasFrame, frameWidth, frameHeight, startFrame, endFrame, margin, spacing)
+    addSpriteSheetFromAtlas: function (key, atlasKey, atlasFrame, config)
     {
         var atlas = this.get(atlasKey);
         var sheet = atlas.get(atlasFrame);
@@ -120,7 +132,7 @@ TextureManager.prototype = {
         {
             var texture = this.create(key, sheet.source.image);
 
-            Parser.SpriteSheet(texture, 0, sheet.cutX, sheet.cutY, sheet.cutWidth, sheet.cutHeight, frameWidth, frameHeight, startFrame, endFrame, margin, spacing);
+            Parser.SpriteSheet(texture, 0, sheet.cutX, sheet.cutY, sheet.cutWidth, sheet.cutHeight, config);
 
             return texture;
         }

@@ -4,6 +4,8 @@
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
+var GetObjectValue = require('../../utils/GetObjectValue');
+
 /**
 * Parse a Sprite Sheet and extracts the frame data from it.
 *
@@ -19,12 +21,21 @@
 * @param {number} [spacing=0] - If the frames have been drawn with spacing between them, specify the amount here.
 * @return {Phaser.FrameData} A FrameData object containing the parsed frames.
 */
-var SpriteSheetTextureParser = function (texture, sourceIndex, x, y, width, height, frameWidth, frameHeight, startFrame, endFrame, margin, spacing)
+var SpriteSheetTextureParser = function (texture, sourceIndex, x, y, width, height, config)
 {
-    if (startFrame === undefined) { startFrame = 0; }
-    if (endFrame === undefined) { endFrame = -1; }
-    if (margin === undefined) { margin = 0; }
-    if (spacing === undefined) { spacing = 0; }
+    var frameWidth = GetObjectValue(config, 'frameWidth', null);
+    var frameHeight = GetObjectValue(config, 'frameHeight', frameWidth);
+
+    //  If missing we can't proceed
+    if (frameWidth === null)
+    {
+        throw new Error('TextureManager.SpriteSheetTextureParser: Invalid frameWidth given.');
+    }
+
+    var startFrame = GetObjectValue(config, 'startFrame', 0);
+    var endFrame = GetObjectValue(config, 'endFrame', -1);
+    var margin = GetObjectValue(config, 'margin', 0);
+    var spacing = GetObjectValue(config, 'spacing', 0);
 
     var row = Math.floor((width - margin) / (frameWidth + spacing));
     var column = Math.floor((height - margin) / (frameHeight + spacing));
