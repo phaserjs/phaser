@@ -1,6 +1,6 @@
 
 var Between = require('../../math/Between');
-var GetObjectValue = require('../../utils/GetObjectValue');
+var GetObjectValue = require('../../utils/object/GetObjectValue');
 
 //  Phaser.Sound.Dynamic.FX
 

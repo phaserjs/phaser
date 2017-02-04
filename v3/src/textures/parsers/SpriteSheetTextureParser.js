@@ -4,7 +4,7 @@
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
-var GetObjectValue = require('../../utils/GetObjectValue');
+var GetObjectValue = require('../../utils/object/GetObjectValue');
 
 /**
 * Parse a Sprite Sheet and extracts the frame data from it.

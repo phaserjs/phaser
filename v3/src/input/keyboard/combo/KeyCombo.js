@@ -1,4 +1,4 @@
-var GetObjectValue = require('../../../utils/GetObjectValue');
+var GetObjectValue = require('../../../utils/object/GetObjectValue');
 
 //  Keys can be either:
 //  

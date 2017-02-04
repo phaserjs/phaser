@@ -9,7 +9,7 @@ var NOOP = require('../utils/NOOP');
 var State = require('./State');
 var Settings = require('./Settings');
 var Systems = require('./Systems');
-var GetObjectValue = require('../utils/GetObjectValue');
+var GetObjectValue = require('../utils/object/GetObjectValue');
 var EventDispatcher = require('../events/EventDispatcher');
 
 /**

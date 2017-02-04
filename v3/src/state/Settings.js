@@ -1,6 +1,6 @@
 var CONST = require('./const');
 var ScaleModes = require('../renderer/ScaleModes');
-var GetObjectValue = require('../utils/GetObjectValue');
+var GetObjectValue = require('../utils/object/GetObjectValue');
 
 var Settings = function (config, gameConfig)
 {

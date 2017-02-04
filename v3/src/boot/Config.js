@@ -7,7 +7,7 @@
 var MATH = require('../math');
 var CONST = require('../const');
 var NOOP = require('../utils/NOOP');
-var GetObjectValue = require('../utils/GetObjectValue');
+var GetObjectValue = require('../utils/object/GetObjectValue');
 
 var defaultBannerColor = [
     '#ff0000',
