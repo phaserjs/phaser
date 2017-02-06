@@ -132,10 +132,12 @@ StateManager.prototype = {
                 autoStart: autoStart
             });
 
-            // console.log('StateManager not yet booted, adding to list', this._pending.length);
+            console.log('StateManager not yet booted, adding to list', this._pending.length);
 
             return;
         }
+
+        console.log('StateManager.add', key, stateConfig, autoStart);
 
         key = this.getKey(key, stateConfig);
 
@@ -143,12 +145,12 @@ StateManager.prototype = {
 
         if (stateConfig instanceof State)
         {
-            // console.log('StateManager.add from instance', key);
+            console.log('StateManager.add from instance', key);
             newState = this.createStateFromInstance(key, stateConfig);
         }
         else if (typeof stateConfig === 'object')
         {
-            // console.log('StateManager.add from object', key);
+            console.log('StateManager.add from object', key);
 
             stateConfig.key = key;
 
@@ -156,7 +158,7 @@ StateManager.prototype = {
         }
         else if (typeof stateConfig === 'function')
         {
-            // console.log('StateManager.add from function', key);
+            console.log('StateManager.add from function', key);
 
             newState = this.createStateFromFunction(key, stateConfig);
         }

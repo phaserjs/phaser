@@ -23,7 +23,7 @@ var Systems = function (state, config)
 
     this.config = config;
 
-    this.settings;
+    this.settings = Settings.create(config);
 
     //  CORE SYSTEMS / PROPERTIES
 
@@ -58,7 +58,7 @@ Systems.prototype = {
 
         this.game = game;
 
-        this.settings = Settings(this.config, this.game.config);
+        Settings.init(this.settings, this.game.config);
 
         this.cache = this.game.cache;
         this.textures = this.game.textures;
