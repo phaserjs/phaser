@@ -1,5 +1,6 @@
 var CONST = require('../../const');
 var DrawImage = require('./utils/DrawImage');
+var BlitImage = require('./utils/BlitImage');
 var GetBlendModes = require('./utils/GetBlendModes');
 
 var CanvasRenderer = function (game)
@@ -43,6 +44,7 @@ var CanvasRenderer = function (game)
 
     //  Map to the required function
     this.drawImage = DrawImage;
+    this.blitImage = BlitImage;
 
     this.blendModes = GetBlendModes();
 
@@ -123,6 +125,29 @@ CanvasRenderer.prototype = {
         //  TEMP
         ctx.fillStyle = '#000000';
         ctx.fillRect(0, 0, this.width, this.height);
+    },
+
+    resetTransform: function ()
+    {
+        this.context.setTransform(1, 0, 0, 1, 0, 0);
+    },
+
+    setBlendMode: function (blendMode)
+    {
+        if (this.currentBlendMode !== blendMode)
+        {
+            this.context.globalCompositeOperation = blendMode;
+            this.currentBlendMode = blendMode;
+        }
+    },
+
+    setAlpha: function (alpha)
+    {
+        if (this.currentAlpha !== alpha)
+        {
+            this.context.globalAlpha = alpha;
+            this.currentAlpha = alpha;
+        }
     },
 
     /**
