@@ -25,26 +25,33 @@ var Settings = {
             key: GetObjectValue(config, 'key', ''),
             active: GetObjectValue(config, 'active', false),
             visible: GetObjectValue(config, 'visible', true),
-            scaleMode: GetObjectValue(config, 'scaleMode', ScaleModes.DEFAULT),
+
+            //  Loader payload array
+
+            files: GetObjectValue(config, 'files', false),
 
             //  -1 means the State Manager will set it to be the Game dimensions
 
             x: GetObjectValue(config, 'x', 0),
             y: GetObjectValue(config, 'y', 0),
+            rotation: GetObjectValue(config, 'rotation', 0),
             width: GetObjectValue(config, 'width', -1),
             height: GetObjectValue(config, 'height', -1),
 
-            //  Renderer Settings
+            //  State Render Settings (applies only to this State)
 
-            clearBeforeRender: GetObjectValue(config, 'clearBeforeRender', true),
-            transparent: GetObjectValue(config, 'transparent', false),
-            autoResize: GetObjectValue(config, 'autoResize', false),
+            scaleMode: GetObjectValue(config, 'scaleMode', ScaleModes.DEFAULT),
             roundPixels: GetObjectValue(config, 'roundPixels', false),
-            drawToPrimaryCanvas: GetObjectValue(config, 'drawToPrimaryCanvas', false),
 
-            //  Loader payload array
+            dirtyRender: GetObjectValue(config, 'dirtyRender', false),
+            renderToTexture: GetObjectValue(config, 'renderToTexture', false),
 
-            files: GetObjectValue(config, 'files', false)
+            //  The following only apply if renderToTexture is true
+
+            autoResize: GetObjectValue(config, 'autoResize', false),
+            transparent: GetObjectValue(config, 'transparent', false),
+            clearBeforeRender: GetObjectValue(config, 'clearBeforeRender', true),
+            backgroundColor: GetObjectValue(config, 'backgroundColor', false)
 
         };
     },

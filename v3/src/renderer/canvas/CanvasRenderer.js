@@ -2,45 +2,43 @@ var CONST = require('../../const');
 var DrawImage = require('./utils/DrawImage');
 var BlitImage = require('./utils/BlitImage');
 var GetBlendModes = require('./utils/GetBlendModes');
+var GetContext = require('../../canvas/GetContext');
 
 var CanvasRenderer = function (game)
 {
     /**
     * @property {Phaser.Game} game - A reference to the currently running Game.
     */
-    //  Needed?
     this.game = game;
 
     //  Needed?
     this.type = CONST.CANVAS;
 
-    //  Read all the following from game config (or State config?)
-    this.clearBeforeRender = true;
-
-    this.transparent = false;
-
-    this.autoResize = false;
-
     this.drawCount = 0;
 
+    //  Read all the following from game config (or State config?)
+    // this.clearBeforeRender = true;
+    // this.transparent = false;
+    // this.autoResize = false;
     // this.smoothProperty = Phaser.Canvas.getSmoothingPrefix(this.context);
-
-    this.roundPixels = false;
+    // this.roundPixels = false;
 
     this.width = game.config.width * game.config.resolution;
-
     this.height = game.config.height * game.config.resolution;
-
     this.resolution = game.config.resolution;
 
-    this.view = game.canvas;
+    this.gameCanvas = game.canvas;
 
     /**
      * The canvas 2d context that everything is drawn with
      * @property context
      * @type CanvasRenderingContext2D
      */
-    this.context = this.view.getContext('2d', { alpha: true });
+    this.gameContext = GetContext(this.gameCanvas);
+
+    this.gameConfig = game.config;
+
+    this.currentContext = this.gameContext;
 
     //  Map to the required function
     this.drawImage = DrawImage;
@@ -73,19 +71,42 @@ CanvasRenderer.prototype = {
         this.width = width * res;
         this.height = height * res;
 
-        this.view.width = this.width;
-        this.view.height = this.height;
+        this.gameCanvas.width = this.width;
+        this.gameCanvas.height = this.height;
 
         if (this.autoResize)
         {
-            this.view.style.width = (this.width / res) + 'px';
-            this.view.style.height = (this.height / res) + 'px';
+            this.gameCanvas.style.width = (this.width / res) + 'px';
+            this.gameCanvas.style.height = (this.height / res) + 'px';
         }
 
         // if (this.smoothProperty)
         // {
-        //     this.context[this.smoothProperty] = (this.scaleMode === ScaleModes.LINEAR);
+        //     this.gameContext[this.smoothProperty] = (this.scaleMode === ScaleModes.LINEAR);
         // }
+    },
+
+    resetTransform: function ()
+    {
+        this.currentContext.setTransform(1, 0, 0, 1, 0, 0);
+    },
+
+    setBlendMode: function (blendMode)
+    {
+        if (this.currentBlendMode !== blendMode)
+        {
+            this.currentContext.globalCompositeOperation = blendMode;
+            this.currentBlendMode = blendMode;
+        }
+    },
+
+    setAlpha: function (alpha)
+    {
+        if (this.currentAlpha !== alpha)
+        {
+            this.currentContext.globalAlpha = alpha;
+            this.currentAlpha = alpha;
+        }
     },
 
     //  Call at the start of the render loop
@@ -93,11 +114,42 @@ CanvasRenderer.prototype = {
     {
         // console.log('%c render start ', 'color: #ffffff; background: #00ff00;');
 
+        var ctx = this.gameContext;
+        var config = this.gameConfig;
+
+        if (config.clearBeforeRender)
+        {
+            ctx.clearRect(0, 0, this.width, this.height);
+        }
+
+        if (!config.transparent)
+        {
+            ctx.fillStyle = config.backgroundColor;
+            ctx.fillRect(0, 0, this.width, this.height);
+        }
+
         //  Add Pre-render hook
 
         this.drawCount = 0;
+    },
 
-        var ctx = this.context;
+    /**
+     * Renders the State.
+     *
+     * @method render
+     * @param {Phaser.State} state - The State to be rendered.
+     * @param {number} interpolationPercentage - The cumulative amount of time that hasn't been simulated yet, divided
+     *   by the amount of time that will be simulated the next time update()
+     *   runs. Useful for interpolating frames.
+     */
+    render: function (state, list, interpolationPercentage)
+    {
+        var w = state.sys.width;
+        var h = state.sys.height;
+        var ctx = state.sys.context;
+        var settings = state.sys.settings;
+
+        this.currentContext = ctx;
 
         ctx.setTransform(1, 0, 0, 1, 0, 0);
 
@@ -117,53 +169,21 @@ CanvasRenderer.prototype = {
 
         this.currentScaleMode = 0;
 
-        if (this.clearBeforeRender)
+        if (settings.renderToTexture)
         {
-            ctx.clearRect(0, 0, this.width, this.height);
+            if (settings.clearBeforeRender)
+            {
+                ctx.clearRect(0, 0, w, h);
+            }
+
+            if (settings.backgroundColor)
+            {
+                ctx.fillStyle = settings.backgroundColor;
+                ctx.fillRect(0, 0, w, h);
+            }
         }
 
-        //  TEMP
-        ctx.fillStyle = '#000000';
-        ctx.fillRect(0, 0, this.width, this.height);
-    },
-
-    resetTransform: function ()
-    {
-        this.context.setTransform(1, 0, 0, 1, 0, 0);
-    },
-
-    setBlendMode: function (blendMode)
-    {
-        if (this.currentBlendMode !== blendMode)
-        {
-            this.context.globalCompositeOperation = blendMode;
-            this.currentBlendMode = blendMode;
-        }
-    },
-
-    setAlpha: function (alpha)
-    {
-        if (this.currentAlpha !== alpha)
-        {
-            this.context.globalAlpha = alpha;
-            this.currentAlpha = alpha;
-        }
-    },
-
-    /**
-     * Renders the State.
-     *
-     * @method render
-     * @param {Phaser.State} state - The State to be rendered.
-     * @param {number} interpolationPercentage - The cumulative amount of time that hasn't been simulated yet, divided
-     *   by the amount of time that will be simulated the next time update()
-     *   runs. Useful for interpolating frames.
-     */
-    render: function (state, list, interpolationPercentage)
-    {
-        this.drawCount = list.length;
-
-        // console.log(this.drawCount);
+        this.drawCount += list.length;
 
         for (var c = 0; c < list.length; c++)
         {
@@ -173,7 +193,16 @@ CanvasRenderer.prototype = {
         }
 
         //  Reset the transform so going into the devs render function the context is ready for use
-        this.context.setTransform(1, 0, 0, 1, 0, 0);
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
+
+        //  Call the State.render function
+        state.render(ctx, interpolationPercentage);
+
+        //  Blast it to the Game Canvas (if needed)
+        if (settings.renderToTexture)
+        {
+            this.gameContext.drawImage(state.sys.canvas, 0, 0, w, h, settings.x, settings.y, w, h);
+        }
     },
 
     postRender: function ()
@@ -187,14 +216,14 @@ CanvasRenderer.prototype = {
      * Removes everything from the renderer and optionally removes the Canvas DOM element.
      *
      * @method destroy
-     * @param [removeView=true] {boolean} Removes the Canvas element from the DOM.
+     * @param [removegameCanvas=true] {boolean} Removes the Canvas element from the DOM.
      */
     destroy: function ()
     {
         //  CanvasPool
 
-        this.view = null;
-        this.context = null;
+        this.gameCanvas = null;
+        this.gameContext = null;
     }
 
 };

@@ -7,10 +7,13 @@
 var CONST = require('../const');
 var NOOP = require('../utils/NOOP');
 var State = require('./State');
-var Settings = require('./Settings');
 var Systems = require('./Systems');
 var GetObjectValue = require('../utils/object/GetObjectValue');
 var EventDispatcher = require('../events/EventDispatcher');
+var Rectangle = require('../geom/rectangle/Rectangle');
+var CanvasPool = require('../dom/CanvasPool');
+var CanvasInterpolation = require('../dom/CanvasInterpolation');
+var GetContext = require('../canvas/GetContext');
 
 /**
 * The State Manager is responsible for loading, setting up and switching game states.
@@ -132,25 +135,25 @@ StateManager.prototype = {
                 autoStart: autoStart
             });
 
-            // console.log('StateManager not yet booted, adding to list', this._pending.length);
+            console.log('StateManager not yet booted, adding to list', this._pending.length);
 
             return;
         }
 
-        // console.log('StateManager.add', key, stateConfig, autoStart);
-
         key = this.getKey(key, stateConfig);
+
+        console.log('StateManager.add', key, stateConfig, autoStart);
 
         var newState;
 
         if (stateConfig instanceof State)
         {
-            // console.log('StateManager.add from instance', key);
+            console.log('StateManager.add from instance:', key);
             newState = this.createStateFromInstance(key, stateConfig);
         }
         else if (typeof stateConfig === 'object')
         {
-            // console.log('StateManager.add from object', key);
+            console.log('StateManager.add from object:', key);
 
             stateConfig.key = key;
 
@@ -158,7 +161,7 @@ StateManager.prototype = {
         }
         else if (typeof stateConfig === 'function')
         {
-            // console.log('StateManager.add from function', key);
+            console.log('StateManager.add from function:', key);
 
             newState = this.createStateFromFunction(key, stateConfig);
         }
@@ -256,55 +259,65 @@ StateManager.prototype = {
         }
     },
 
-    setupCallbacks: function (newState, stateConfig)
+    setupCallbacks: function (state, stateConfig)
     {
-        if (stateConfig === undefined) { stateConfig = newState; }
+        if (stateConfig === undefined) { stateConfig = state; }
 
         //  Extract callbacks or set NOOP
 
-        newState.init = GetObjectValue(stateConfig, 'init', NOOP);
-        newState.preload = GetObjectValue(stateConfig, 'preload', NOOP);
-        newState.create = GetObjectValue(stateConfig, 'create', NOOP);
-        newState.shutdown = GetObjectValue(stateConfig, 'shutdown', NOOP);
+        state.init = GetObjectValue(stateConfig, 'init', NOOP);
+        state.preload = GetObjectValue(stateConfig, 'preload', NOOP);
+        state.create = GetObjectValue(stateConfig, 'create', NOOP);
+        state.shutdown = GetObjectValue(stateConfig, 'shutdown', NOOP);
 
         //  Game Loop level callbacks
 
-        newState.update = GetObjectValue(stateConfig, 'update', NOOP);
-        newState.render = GetObjectValue(stateConfig, 'render', NOOP);
+        state.update = GetObjectValue(stateConfig, 'update', NOOP);
+        state.render = GetObjectValue(stateConfig, 'render', NOOP);
 
-        return newState;
+        return state;
     },
 
-    createStateDisplay: function (newState)
+    createStateDisplay: function (state)
     {
-        return;
+        console.log('createStateDisplay', state.settings.key);
 
-        /*
-        var settings = newState.sys.settings;
+        var settings = state.sys.settings;
 
-        var x = settings.x;
-        var y = settings.y;
+        // var x = settings.x;
+        // var y = settings.y;
+        var width = settings.width;
+        var height = settings.height;
 
-        //  Too late to do all this?
+        var config = this.game.config;
 
-        if (settings.width === -1)
+        if (config.renderType === CONST.CANVAS)
         {
-            settings.width = this.game.config.width;
+            if (settings.renderToTexture)
+            {
+                console.log('renderToTexture');
+                state.sys.canvas = CanvasPool.create(state, width, height);
+                state.sys.context = GetContext(state.sys.canvas);
+
+                //  Pixel Art mode?
+                if (config.pixelArt)
+                {
+                    CanvasInterpolation.setCrisp(state.sys.canvas);
+                }
+            }
+            else
+            {
+                console.log('using game canvas');
+                state.sys.mask = new Rectangle(0, 0, width, height);
+                state.sys.canvas = this.game.canvas;
+                state.sys.context = this.game.context;
+            }
+        }
+        else if (config.renderType === CONST.WEBGL)
+        {
+            // state.sys.fbo = this.game.renderer.createFBO(state, x, y, width, height);
         }
 
-        if (settings.height === -1)
-        {
-            settings.height = this.game.config.height;
-        }
-
-        if (this.game.config.renderType === CONST.WEBGL)
-        {
-            var width = settings.width;
-            var height = settings.height;
-
-            newState.sys.fbo = this.game.renderer.createFBO(newState, x, y, width, height);
-        }
-        */
     },
 
     getState: function (key)
@@ -339,10 +352,12 @@ StateManager.prototype = {
 
     start: function (key)
     {
+        console.log('start:', key);
+
         //  if not booted, then put state into a holding pattern
         if (!this.game.isBooted)
         {
-            // console.log('StateManager not yet booted, setting autoStart on pending list');
+            console.log('StateManager not yet booted, setting autoStart on pending list');
 
             for (var i = 0; i < this._pending.length; i++)
             {
@@ -396,16 +411,16 @@ StateManager.prototype = {
 
     payloadComplete: function (event)
     {
-        console.log('payloadComplete');
-
         var state = event.loader.state;
+
+        console.log('payloadComplete', state.sys.settings.key);
 
         this.bootState(state);
     },
 
     bootState: function (state)
     {
-        console.log('bootState', state);
+        console.log('bootState', state.sys.settings.key);
 
         //  + arguments
         if (state.init)
@@ -414,11 +429,11 @@ StateManager.prototype = {
         }
 
         var loader = state.sys.load;
+            
+        loader.reset();
 
-        if (state.preload && loader)
+        if (state.preload)
         {
-            loader.reset();
-
             state.preload.call(state, this.game);
 
             //  Is the loader empty?
@@ -444,9 +459,9 @@ StateManager.prototype = {
 
     loadComplete: function (event)
     {
-        console.log('loadComplete');
-
         var state = event.loader.state;
+
+        console.log('loadComplete', state.sys.settings.key);
 
         //  Make sure to do load-update one last time before state is set to _created
 
@@ -461,14 +476,19 @@ StateManager.prototype = {
 
     startCreate: function (state)
     {
+        console.log('startCreate', state.sys.settings.key);
+
         if (state.create)
         {
+            console.log('startCreate.call', state.sys.settings.key);
             state.create.call(state);
         }
 
         //  Insert at the correct index, or it just all goes wrong :)
 
         var i = this.getStateIndex(state);
+
+        console.log('startCreate.index', state.sys.settings.key, i);
 
         this.active.push({ index: i, state: state });
 

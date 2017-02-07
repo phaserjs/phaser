@@ -79,7 +79,7 @@ var CreateRenderer = function (game)
     else
     {
         game.renderer = new CanvasRenderer(game);
-        game.context = game.renderer.context;
+        game.context = game.renderer.gameContext;
     }
 };
 

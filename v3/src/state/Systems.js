@@ -25,6 +25,13 @@ var Systems = function (state, config)
 
     this.settings = Settings.create(config);
 
+    this.x = this.settings.x;
+    this.y = this.settings.y;
+
+    this.mask = null;
+    this.canvas;
+    this.context;
+
     //  CORE SYSTEMS / PROPERTIES
 
     this.cache;
@@ -39,7 +46,7 @@ var Systems = function (state, config)
     this.tree;
 
     //  State properties
-    this.camera;
+    this.cameras;
     this.children;
     this.color;
     this.data;
@@ -143,35 +150,12 @@ Systems.prototype = {
             camera.preRender();
             state.camera = camera;
             renderer.render(state, transform.flatRenderArray, interpolation, camera);
-            state.render(interpolation);
+            //state.render(interpolation);
             camera.postRender();
         }
-    },
-
-    //  Called just once per frame, regardless of speed
-
-    /*
-    OLDrender: function (interpolation, renderer)
-    {
-        this.updates.start();
-
-        if (this.settings.visible && this.color.alpha !== 0)
-        {
-            var list = this.tree.search({
-                minX: this.camera.x,
-                minY: this.camera.y,
-                maxX: this.camera.right,
-                maxY: this.camera.bottom
-            });
-
-            renderer.render(this.state, list, interpolation);
-        }
-
-        this.updates.stop();
-
-        this.state.render(interpolation);
     }
-    */
+
+
 };
 
 module.exports = Systems;
