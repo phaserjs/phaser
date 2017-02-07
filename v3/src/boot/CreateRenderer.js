@@ -80,6 +80,7 @@ var CreateRenderer = function (game)
     {
         game.renderer = new CanvasRenderer(game);
         game.context = game.renderer.gameContext;
+
         //  debug
         game.canvas.id = 'game';
     }

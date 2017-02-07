@@ -332,15 +332,17 @@ StateManager.prototype = {
 
     getActiveStateIndex: function (state)
     {
+        var index = -1;
+
         for (var i = 0; i < this.active.length; i++)
         {
             if (this.active[i].state === state)
             {
-                return this.active[i].index;
+                index = this.active[i].index;
             }
         }
 
-        return -1;
+        return index;
     },
 
     isActive: function (key)
@@ -434,7 +436,7 @@ StateManager.prototype = {
 
         if (state.preload)
         {
-            state.preload.call(state, this.game);
+            state.preload(this.game);
 
             //  Is the loader empty?
             if (loader.list.size === 0)
@@ -473,7 +475,7 @@ StateManager.prototype = {
         if (state.create)
         {
             console.log('startCreate.call', state.sys.settings.key);
-            state.create.call(state);
+            state.create();
         }
 
         //  Insert at the correct index, or it just all goes wrong :)

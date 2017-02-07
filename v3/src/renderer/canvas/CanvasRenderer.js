@@ -144,6 +144,11 @@ CanvasRenderer.prototype = {
      */
     render: function (state, list, interpolationPercentage, camera)
     {
+        if (window.d === 1)
+        {
+            console.log('render', state.sys.settings.key);
+        }
+
         var w = state.sys.width;
         var h = state.sys.height;
         var ctx = state.sys.context;
@@ -157,6 +162,11 @@ CanvasRenderer.prototype = {
 
         if (scissor)
         {
+            if (window.d === 1)
+            {
+                console.log('scissor');
+            }
+
             ctx.beginPath();
             ctx.rect(camera.x, camera.y, camera.width, camera.height);
             ctx.clip();
@@ -179,6 +189,11 @@ CanvasRenderer.prototype = {
 
         if (settings.renderToTexture)
         {
+            if (window.d === 1)
+            {
+                console.log('renderToTexture');
+            }
+
             if (settings.clearBeforeRender)
             {
                 ctx.clearRect(0, 0, w, h);
@@ -197,6 +212,11 @@ CanvasRenderer.prototype = {
         {
             var child = list[c].gameObject;
 
+            if (window.d === 1)
+            {
+                console.log('render child', state.sys.settings.key, child.frame.cutWidth);
+            }
+
             child.renderCanvas(this, child, interpolationPercentage);
         }
 
@@ -204,12 +224,17 @@ CanvasRenderer.prototype = {
         ctx.setTransform(1, 0, 0, 1, 0, 0);
 
         //  Call the State.render function
-        state.render(ctx, interpolationPercentage);
+        state.render.call(state, ctx, interpolationPercentage);
 
         //  Blast it to the Game Canvas (if needed)
         if (settings.renderToTexture)
         {
             this.gameContext.drawImage(state.sys.canvas, 0, 0, w, h, settings.x, settings.y, w, h);
+        }
+
+        if (window.d === 1)
+        {
+            console.log('render end', state.sys.settings.key);
         }
     },
 

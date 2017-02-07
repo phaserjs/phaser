@@ -23,6 +23,8 @@ var MainLoop = function (framerate)
     */
     this.frameDelta = 0;
 
+    this.discardedTime = 0;
+
     /**
     * The timestamp in milliseconds of the last time the main loop was run.
     * Used to compute the time elapsed between frames.
@@ -134,9 +136,11 @@ MainLoop.prototype = {
 
     step: function (timestamp, active, renderer)
     {
+        var len = active.length;
+
         // Throttle the frame rate (if minFrameDelay is set to a non-zero value by
         // `MainLoop.setMaxAllowedFPS()`).
-        if (active.length === 0 || timestamp < this.lastFrameTimeMs + this.minFrameDelay)
+        if (len === 0 || timestamp < this.lastFrameTimeMs + this.minFrameDelay)
         {
             return;
         }
@@ -152,7 +156,7 @@ MainLoop.prototype = {
         //  Run any updates that are not dependent on time in the simulation.
         //  Here we'll need to run things like tween.update, input.update, etc.
 
-        for (var i = 0; i < active.length; i++)
+        for (var i = 0; i < len; i++)
         {
             active[i].state.sys.begin(timestamp, this.frameDelta);
         }
@@ -178,7 +182,7 @@ MainLoop.prototype = {
 
         while (this.frameDelta >= this.timestep)
         {
-            for (var i = 0; i < active.length; i++)
+            for (i = 0; i < len; i++)
             {
                 active[i].state.sys.update(this.timestep, this.physicsStep);
             }
@@ -198,6 +202,7 @@ MainLoop.prototype = {
 
         renderer.preRender();
 
+        //  This uses active.length, in case state.update removed the state from the active list
         for (i = 0; i < active.length; i++)
         {
             active[i].state.sys.render(interpolation, renderer);
@@ -211,9 +216,9 @@ MainLoop.prototype = {
             // it's better than the alternative (the application would look like it
             // was running very quickly until the simulation caught up to real
             // time).
-            var discardedTime = Math.round(this.resetFrameDelta());
+            this.discardedTime = Math.round(this.resetFrameDelta());
 
-            console.warn('Main loop panicked, tab probably put in the background. Discarding ' + discardedTime + 'ms');
+            // console.warn('Main loop panicked, tab probably put in the background. Discarding ' + discardedTime + 'ms');
         }
 
         this.panic = false;

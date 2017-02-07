@@ -136,7 +136,7 @@ Systems.prototype = {
             // }
         }
 
-        this.state.update(timestep, physicsStep);
+        this.state.update.call(this.state, timestep, physicsStep);
     },
 
     render: function (interpolation, renderer)
