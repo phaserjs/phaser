@@ -463,14 +463,6 @@ StateManager.prototype = {
 
         console.log('loadComplete', state.sys.settings.key);
 
-        //  Make sure to do load-update one last time before state is set to _created
-
-        //  Stop doing this ...
-        if (state.hasOwnProperty('loadUpdate'))
-        {
-            state.loadUpdate.call(state);
-        }
-
         this.startCreate(state);
     },
 
@@ -492,8 +484,14 @@ StateManager.prototype = {
 
         this.active.push({ index: i, state: state });
 
+        // console.log('a1');
+        // console.dir(this.active);
+
         //  Sort the 'active' array based on the index property
-        this.active.sort(this.sortStates.bind(this));
+        this.active.sort(this.sortStates);
+
+        // console.log('a2');
+        // console.dir(this.active);
 
         state.sys.updates.running = true;
     },
@@ -516,6 +514,8 @@ StateManager.prototype = {
 
     sortStates: function (stateA, stateB)
     {
+        // console.log('sortStates', stateA.state.sys.settings.key, stateA.index, stateB.state.sys.settings.key, stateB.index);
+
         //  Sort descending
         if (stateA.index < stateB.index)
         {
