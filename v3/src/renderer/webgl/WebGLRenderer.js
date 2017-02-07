@@ -261,9 +261,13 @@ WebGLRenderer.prototype = {
     {
         //  Could move to the State Systems or MainLoop
         var gl = this.gl;
+        var scissor = (camera.x !== 0 || camera.y !== 0 || camera.width !== gl.canvas.width || camera.height !== gl.canvas.height);
 
-        gl.enable(gl.SCISSOR_TEST);
-        gl.scissor(camera.x, (gl.drawingBufferWidth - camera.y - camera.height), camera.width, camera.height);
+        if (scissor)
+        {
+            gl.enable(gl.SCISSOR_TEST);
+            gl.scissor(camera.x, (gl.drawingBufferHeight - camera.y - camera.height), camera.width, camera.height);
+        }
         // We could either clear color or render a quad
         gl.clear(gl.COLOR_BUFFER_BIT);
 
@@ -302,18 +306,19 @@ WebGLRenderer.prototype = {
                 batch.flush();
             }
         }
-        batch.flush();
-        gl.disable(gl.SCISSOR_TEST);
+        if (this.batch)
+        {
+            this.batch.flush();
+        }
+        if (scissor)
+        {
+            gl.disable(gl.SCISSOR_TEST);
+        }
     },
 
     //  Called at the end of the render loop (tidy things up, etc)
     postRender: function ()
     {
-        if (this.batch)
-        {
-            this.batch.flush();
-        }
-
         //  Add Post-render hook
 
         // console.log('%c render end ', 'color: #ffffff; background: #ff0000;');

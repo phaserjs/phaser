@@ -142,18 +142,26 @@ CanvasRenderer.prototype = {
      *   by the amount of time that will be simulated the next time update()
      *   runs. Useful for interpolating frames.
      */
-    render: function (state, list, interpolationPercentage)
+    render: function (state, list, interpolationPercentage, camera)
     {
         var w = state.sys.width;
         var h = state.sys.height;
         var ctx = state.sys.context;
         var settings = state.sys.settings;
-
+        var scissor = (camera.x !== 0 || camera.y !== 0 || camera.width !== ctx.canvas.width || camera.height !== ctx.canvas.height);
         this.currentContext = ctx;
 
         ctx.setTransform(1, 0, 0, 1, 0, 0);
 
         //  If the alpha or blend mode didn't change since the last render, then don't set them again (saves 2 ops)
+
+        if (scissor)
+        {
+            ctx.beginPath();
+            ctx.rect(camera.x, camera.y, camera.width, camera.height);
+            ctx.clip();
+            ctx.closePath();
+        }
 
         if (this.currentAlpha !== 1)
         {
