@@ -40,7 +40,11 @@ var Settings = {
             transparent: GetObjectValue(config, 'transparent', false),
             autoResize: GetObjectValue(config, 'autoResize', false),
             roundPixels: GetObjectValue(config, 'roundPixels', false),
-            drawToPrimaryCanvas: GetObjectValue(config, 'drawToPrimaryCanvas', false)
+            drawToPrimaryCanvas: GetObjectValue(config, 'drawToPrimaryCanvas', false),
+
+            //  Loader payload array
+
+            files: GetObjectValue(config, 'files', false)
 
         };
     },

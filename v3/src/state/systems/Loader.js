@@ -27,6 +27,50 @@ var Loader = function (state)
 Loader.prototype = Object.create(BaseLoader.prototype);
 Loader.prototype.constructor = Loader;
 
+Loader.prototype.loadArray = function (files)
+{
+    if (Array.isArray(files))
+    {
+        for (var i = 0; i < files.length; i++)
+        {
+            this.file(files[i]);
+        }
+    }
+
+    return (this.list.size > 0);
+};
+
+Loader.prototype.file = function (file)
+{
+    var entry;
+
+    switch (file.type)
+    {
+        case 'image':
+        case 'json':
+        case 'xml':
+        case 'binary':
+        case 'text':
+        case 'glsl':
+            entry = this[file.type](file.key, file.url, file.xhrSettings);
+            break;
+
+        case 'spritesheet':
+            entry = this.spritesheet(file.key, file.url, file.config, file.xhrSettings);
+            break;
+
+        case 'atlas':
+            entry = this.atlas(file.key, file.textureURL, file.atlasURL, file.textureXhrSettings, file.atlasXhrSettings);
+            break;
+
+        case 'multiatlas':
+            entry = this.multiatlas(file.key, file.textureURLs, file.atlasURLs, file.textureXhrSettings, file.atlasXhrSettings);
+            break;
+    }
+
+    return entry;
+};
+
 Loader.prototype.image = function (key, url, xhrSettings)
 {
     var file = new ImageFile(key, url, this.path, xhrSettings);
