@@ -13,7 +13,7 @@ var Component = require('../components');
 // var Camera = require('../camera/Camera');
 var Settings = require('./Settings');
 var RTree = require('../structs/RTree');
-var Transform = require('../components/experimental-Transform-2')
+var Camera = require('../camera/Camera-2')
 
 var Systems = function (state, config)
 {
@@ -39,7 +39,7 @@ var Systems = function (state, config)
     this.tree;
 
     //  State properties
-    // this.camera;
+    this.camera;
     this.children;
     this.color;
     this.data;
@@ -79,7 +79,7 @@ Systems.prototype = {
         this.color = new Component.Color(this.state);
         this.data = new Component.Data(this.state);
         this.transform = new Component.Transform(this.state);
-
+        this.camera = new Camera(0, 0, this.game.config.width, this.game.config.height);
         this.inject();
     },
 
@@ -103,6 +103,8 @@ Systems.prototype = {
         this.state.state = this.game.state;
         this.state.cache = this.game.cache;
         this.state.textures = this.game.textures;
+
+        this.camera.setState(this.state);
     },
 
     //  Called just once per frame, regardless of speed
@@ -129,9 +131,10 @@ Systems.prototype = {
     render: function (interpolation, renderer)
     {
         var transform = this.transform;
-        Transform.updateRoot(transform);
+        this.camera.preRender();
         renderer.render(this.state, transform.flatRenderArray, interpolation);
         this.state.render(interpolation);
+        this.camera.postRender();
     },
 
     //  Called just once per frame, regardless of speed
