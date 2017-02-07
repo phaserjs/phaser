@@ -54,8 +54,11 @@ var Config = function (config)
    
     this.fps = GetObjectValue(config, 'fps', 60);
     this.forceSetTimeOut = GetObjectValue(config, 'forceSetTimeOut', false);
-    this.transparent = GetObjectValue(config, 'transparent', false);
+
     this.pixelArt = GetObjectValue(config, 'pixelArt', false);
+    this.transparent = GetObjectValue(config, 'transparent', false);
+    this.clearBeforeRender = GetObjectValue(config, 'clearBeforeRender', true);
+    this.backgroundColor = GetObjectValue(config, 'backgroundColor', '#000000');
 
     //  Callbacks
     this.preBoot = GetObjectValue(config, 'callbacks.preBoot', NOOP);
