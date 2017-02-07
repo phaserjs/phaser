@@ -61,7 +61,7 @@ Systems.prototype = {
 
     init: function (game)
     {
-        console.log('State.Systems.init');
+        // console.log('State.Systems.init');
 
         this.game = game;
 
