@@ -149,6 +149,7 @@ CanvasRenderer.prototype = {
         var ctx = state.sys.context;
         var settings = state.sys.settings;
         var scissor = (camera.x !== 0 || camera.y !== 0 || camera.width !== ctx.canvas.width || camera.height !== ctx.canvas.height);
+
         this.currentContext = ctx;
 
         ctx.setTransform(1, 0, 0, 1, 0, 0);

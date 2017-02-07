@@ -27,6 +27,8 @@ var Systems = function (state, config)
 
     this.x = this.settings.x;
     this.y = this.settings.y;
+    this.width = this.settings.width;
+    this.height = this.settings.height;
 
     this.mask = null;
     this.canvas;

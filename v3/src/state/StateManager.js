@@ -280,7 +280,7 @@ StateManager.prototype = {
 
     createStateDisplay: function (state)
     {
-        console.log('createStateDisplay', state.settings.key);
+        // console.log('createStateDisplay', state.settings.key);
 
         var settings = state.sys.settings;
 
@@ -295,7 +295,7 @@ StateManager.prototype = {
         {
             if (settings.renderToTexture)
             {
-                console.log('renderToTexture');
+                // console.log('renderToTexture', width, height);
                 state.sys.canvas = CanvasPool.create(state, width, height);
                 state.sys.context = GetContext(state.sys.canvas);
 
@@ -307,7 +307,7 @@ StateManager.prototype = {
             }
             else
             {
-                console.log('using game canvas');
+                // console.log('using game canvas');
                 state.sys.mask = new Rectangle(0, 0, width, height);
                 state.sys.canvas = this.game.canvas;
                 state.sys.context = this.game.context;
@@ -317,7 +317,6 @@ StateManager.prototype = {
         {
             // state.sys.fbo = this.game.renderer.createFBO(state, x, y, width, height);
         }
-
     },
 
     getState: function (key)
