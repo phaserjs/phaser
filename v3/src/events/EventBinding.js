@@ -223,6 +223,15 @@ EventBinding.prototype = {
 
     tidy: function ()
     {
+        //  Nothing to do ...
+        if (this.active.length === 0)
+        {
+            return;
+        }
+
+        console.log('EventBinding.tidy');
+        console.dir(this.active);
+
         var added = 0;
 
         var i = this.active.length - 1;
