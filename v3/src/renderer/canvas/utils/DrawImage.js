@@ -1,7 +1,7 @@
 
 var DrawImage = function (frame, blendMode, transform, anchorX, anchorY, alpha, tint, bg)
 {
-    var ctx = this.context;
+    var ctx = this.currentContext;
     var cd = frame.canvasData;
 
     //  Blend Mode
