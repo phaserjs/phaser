@@ -1,8 +1,8 @@
 
-var BlitterWebGLRenderer = function (renderer, src, interpolationPercentage)
+var BlitterCanvasRenderer = function (renderer, src, interpolationPercentage)
 {
     var worldAlpha = src.color.worldAlpha;
-    var len = src.children.list.length - 1;
+    var len = src.children.list.length;
 
     //  Skip rendering?
 
@@ -11,8 +11,12 @@ var BlitterWebGLRenderer = function (renderer, src, interpolationPercentage)
         return;
     }
 
+    renderer.resetTransform();
+    renderer.setBlendMode(src.blendMode);
+    renderer.setAlpha(worldAlpha);
+
     //  Render bobs
-    for (var i = 0; i <= len; ++i)
+    for (var i = 0; i < len; i++)
     {
         var bob = src.children.list[i];
         var frame = bob.frame;
@@ -22,8 +26,8 @@ var BlitterWebGLRenderer = function (renderer, src, interpolationPercentage)
             // continue;
         // }
 
-        renderer.blitterBatch.add(bob.x, bob.y, frame, worldAlpha);
+        renderer.blitImage(bob.x, bob.y, frame);
     }
 };
 
-module.exports = BlitterWebGLRenderer;
+module.exports = BlitterCanvasRenderer;

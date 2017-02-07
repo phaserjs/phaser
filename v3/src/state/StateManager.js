@@ -137,6 +137,8 @@ StateManager.prototype = {
             return;
         }
 
+        // console.log('StateManager.add', key, stateConfig, autoStart);
+
         key = this.getKey(key, stateConfig);
 
         var newState;
@@ -212,9 +214,6 @@ StateManager.prototype = {
         }
         else
         {
-            newState.game = this.game;
-
-            newState.settings = new Settings(newState, key);
             newState.sys = new Systems(newState);
 
             newState.sys.init(this.game);
@@ -222,7 +221,38 @@ StateManager.prototype = {
             this.createStateDisplay(newState);
 
             //  Default required functions
-            return this.setupCallbacks(newState);
+
+            if (!newState.init)
+            {
+                newState.init = NOOP;
+            }
+
+            if (!newState.preload)
+            {
+                newState.preload = NOOP;
+            }
+
+            if (!newState.create)
+            {
+                newState.create = NOOP;
+            }
+
+            if (!newState.shutdown)
+            {
+                newState.shutdown = NOOP;
+            }
+
+            if (!newState.update)
+            {
+                newState.update = NOOP;
+            }
+
+            if (!newState.render)
+            {
+                newState.render = NOOP;
+            }
+
+            return newState;
         }
     },
 
@@ -339,42 +369,83 @@ StateManager.prototype = {
 
             state.settings.active = true;
 
-            //  + arguments
-            if (state.init)
+            var loader = state.sys.load;
+
+            //  Files payload?
+            if (loader && Array.isArray(state.sys.settings.files))
             {
-                state.init.call(state);
-            }
+                loader.reset();
 
-            if (state.preload && state.sys.load)
-            {
-                state.sys.load.reset();
-
-                state.preload.call(state, this.game);
-
-                //  Is the loader empty?
-                if (state.sys.load.list.size === 0)
+                if (loader.loadArray(state.sys.settings.files))
                 {
-                    this.startCreate(state);
+                    loader.events.once('LOADER_COMPLETE_EVENT', this.payloadComplete.bind(this));
+
+                    loader.start();
                 }
                 else
                 {
-                    //  Start the loader going as we have something in the queue
-
-                    state.sys.load.events.once('LOADER_COMPLETE_EVENT', this.loadComplete.bind(this));
-
-                    state.sys.load.start();
+                    this.bootState(state);
                 }
             }
             else
             {
-                //  No preload? Then there was nothing to load either
+                this.bootState(state);
+            }
+        }
+    },
+
+    payloadComplete: function (event)
+    {
+        console.log('payloadComplete');
+
+        var state = event.loader.state;
+
+        this.bootState(state);
+    },
+
+    bootState: function (state)
+    {
+        console.log('bootState', state);
+
+        //  + arguments
+        if (state.init)
+        {
+            state.init.call(state);
+        }
+
+        var loader = state.sys.load;
+
+        if (state.preload && loader)
+        {
+            loader.reset();
+
+            state.preload.call(state, this.game);
+
+            //  Is the loader empty?
+            if (loader.list.size === 0)
+            {
                 this.startCreate(state);
             }
+            else
+            {
+                //  Start the loader going as we have something in the queue
+
+                loader.events.once('LOADER_COMPLETE_EVENT', this.loadComplete.bind(this));
+
+                loader.start();
+            }
+        }
+        else
+        {
+            //  No preload? Then there was nothing to load either
+            this.startCreate(state);
         }
     },
 
     loadComplete: function (event)
     {
+        console.log('loadComplete');
+
         var state = event.loader.state;
 
         //  Make sure to do load-update one last time before state is set to _created

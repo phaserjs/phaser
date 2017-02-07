@@ -23,11 +23,29 @@ var TextureManager = function (game)
     this.game = game;
 
     this.list = {};
+
+    this.addBase64('__DEFAULT', game.config.defaultImage);
+    this.addBase64('__MISSING', game.config.missingImage);
 };
 
 TextureManager.prototype.constructor = TextureManager;
 
 TextureManager.prototype = {
+
+    addBase64: function (key, data)
+    {
+        var _this = this;
+        var image = new Image();
+
+        image.onload = function ()
+        {
+            var texture = _this.create(key, image);
+        
+            Parser.Image(texture, 0);
+        };
+
+        image.src = data;
+    },
 
     addImage: function (key, source)
     {

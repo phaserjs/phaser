@@ -26,6 +26,8 @@ var Phaser = {
 
     },
 
+    State: require('./state/State'),
+
     Loader: {
 
         ImageFile: require('./loader/filetypes/ImageFile')

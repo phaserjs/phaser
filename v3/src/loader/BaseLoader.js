@@ -271,6 +271,9 @@ BaseLoader.prototype = {
         this.queue.clear();
         this.storage.clear();
 
+        this.events.removeAll('LOADER_START_EVENT');
+        this.events.removeAll('LOADER_COMPLETE_EVENT');
+
         this.tag = '';
         this.path = '';
         this.baseURL = '';

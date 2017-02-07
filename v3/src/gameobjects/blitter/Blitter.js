@@ -41,7 +41,7 @@ var Blitter = function (state, x, y, key, frame)
 Blitter.prototype = Object.create(GameObject.prototype);
 Blitter.prototype.constructor = Blitter;
 
-// Blitter.prototype.renderCanvas = require('./BlitterCanvasRenderer');
+Blitter.prototype.renderCanvas = require('./BlitterCanvasRenderer');
 Blitter.prototype.renderWebGL = require('./BlitterWebGLRenderer');
 
 //  frame MUST be part of the Blitter texture
