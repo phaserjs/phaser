@@ -257,10 +257,16 @@ WebGLRenderer.prototype = {
      *   by the amount of time that will be simulated the next time update()
      *   runs. Useful for interpolating frames.
      */
-    render: function (state, flatRenderArray, interpolationPercentage)
+    render: function (state, flatRenderArray, interpolationPercentage, camera)
     {
         //  Could move to the State Systems or MainLoop
         var gl = this.gl;
+
+        gl.enable(gl.SCISSOR_TEST);
+        gl.scissor(camera.x, (gl.drawingBufferWidth - camera.y - camera.height), camera.width, camera.height);
+        // We could either clear color or render a quad
+        gl.clear(gl.COLOR_BUFFER_BIT);
+
         var list = state.sys.children.list;
         var length = list.length;
         var matrixBuffer = Transform.float32Buffer;
@@ -296,6 +302,8 @@ WebGLRenderer.prototype = {
                 batch.flush();
             }
         }
+        batch.flush();
+        gl.disable(gl.SCISSOR_TEST);
     },
 
     //  Called at the end of the render loop (tidy things up, etc)

@@ -79,7 +79,8 @@ Systems.prototype = {
         this.color = new Component.Color(this.state);
         this.data = new Component.Data(this.state);
         this.transform = new Component.Transform(this.state);
-        this.camera = new Camera(0, 0, this.game.config.width, this.game.config.height);
+        this.cameras = [];
+        this.cameras[0] = new Camera(0, 0, this.game.config.width, this.game.config.height);
         this.inject();
     },
 
@@ -104,7 +105,10 @@ Systems.prototype = {
         this.state.cache = this.game.cache;
         this.state.textures = this.game.textures;
 
-        this.camera.setState(this.state);
+        for (var i = 0, l = this.cameras.length; i < l; ++i)
+        {
+            this.cameras[i].setState(this.state);
+        }
     },
 
     //  Called just once per frame, regardless of speed
@@ -130,11 +134,18 @@ Systems.prototype = {
 
     render: function (interpolation, renderer)
     {
+        var state = this.state;
         var transform = this.transform;
-        this.camera.preRender();
-        renderer.render(this.state, transform.flatRenderArray, interpolation);
-        this.state.render(interpolation);
-        this.camera.postRender();
+        var cameras = this.cameras;
+        for (var i = 0, l = cameras.length; i < l; ++i)
+        {
+            var camera = cameras[i];
+            camera.preRender();
+            state.camera = camera;
+            renderer.render(state, transform.flatRenderArray, interpolation, camera);
+            state.render(interpolation);
+            camera.postRender();
+        }
     },
 
     //  Called just once per frame, regardless of speed
