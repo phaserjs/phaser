@@ -72,7 +72,7 @@ Transform.prototype.remove = function (transform)
 	}
 };
 
-Transform.updateRoot = function (root)
+Transform.updateRoot = function (root, globalOffsetX, globalOffsetY)
 {
 	var currentChild = null;
 	var stackLength = 0;
@@ -117,8 +117,8 @@ Transform.updateRoot = function (root)
 		    var p4 = tempLocal[4];
 		    var p5 = tempLocal[5];
 			
-			transX = child.positionX;
-			transY = child.positionY;
+			transX = child.positionX + globalOffsetX;
+			transY = child.positionY + globalOffsetY;
 			scaleX = child.scaleX;
 			scaleY = child.scaleY;
 			rotation = child.rotation;
