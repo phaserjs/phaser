@@ -72,7 +72,7 @@ Transform.prototype.remove = function (transform)
 	}
 };
 
-Transform.updateRoot = function (root, globalOffsetX, globalOffsetY)
+Transform.updateRoot = function (root, globalOffsetX, globalOffsetY, globalScale, globalRotation)
 {
 	var currentChild = null;
 	var stackLength = 0;
@@ -119,9 +119,9 @@ Transform.updateRoot = function (root, globalOffsetX, globalOffsetY)
 			
 			transX = child.positionX + globalOffsetX;
 			transY = child.positionY + globalOffsetY;
-			scaleX = child.scaleX;
-			scaleY = child.scaleY;
-			rotation = child.rotation;
+			scaleX = child.scaleX * globalScale;
+			scaleY = child.scaleY * globalScale;
+			rotation = child.rotation + globalRotation;
 		    tcos = cos(rotation);
 		    tsin = sin(rotation);
 
@@ -136,8 +136,8 @@ Transform.updateRoot = function (root, globalOffsetX, globalOffsetY)
 		    world[1] = l0 * p1 + l1 * p3;
 		    world[2] = l2 * p0 + l3 * p2;
 		    world[3] = l2 * p1 + l3 * p3;
-		    world[4] = transX * p0 + transY * p2 + p4;
-		    world[5] = transX * p1 + transY * p3 + p5;
+		    world[4] = transX * world[0] + transY * world[2] + p4;
+		    world[5] = transX * world[1] + transY * world[3] + p5;
 
 			if (child.hasChildren)
 			{
