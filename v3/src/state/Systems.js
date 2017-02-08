@@ -7,10 +7,10 @@
 var EventDispatcher = require('../events/EventDispatcher');
 var GameObjectFactory = require('./systems/GameObjectFactory');
 var GameObjectCreator = require('./systems/GameObjectCreator');
+var StateManager = require('./systems/StateManager');
 var Loader = require('./systems/Loader');
 var UpdateManager = require('./systems/UpdateManager');
 var Component = require('../components');
-// var Camera = require('../camera/Camera');
 var Settings = require('./Settings');
 var RTree = require('../structs/RTree');
 var Camera = require('../camera/Camera-2')
@@ -46,6 +46,7 @@ var Systems = function (state, config)
     this.events;
     this.updates;
     this.tree;
+    this.stateManager;
 
     //  State properties
     this.cameras;
@@ -77,17 +78,18 @@ Systems.prototype = {
         this.tree = RTree(16);
         this.events = new EventDispatcher();
         this.add = new GameObjectFactory(this.state);
-        this.make = GameObjectCreator(this.state);
+        this.make = new GameObjectCreator(this.state);
         this.updates = new UpdateManager(this.state);
         this.load = new Loader(this.state);
+        this.stateManager = new StateManager(this.state, game);
 
         //  State specific properties (transform, data, children, etc)
 
-        // this.camera = new Camera(this.state, 0, 0, this.settings.width, this.settings.height);
         this.children = new Component.Children(this.state);
         this.color = new Component.Color(this.state);
         this.data = new Component.Data(this.state);
         this.transform = new Component.Transform(this.state);
+
         this.cameras = [];
         this.mainCamera = new Camera(0, 0, this.game.config.width, this.game.config.height);
         this.cameras.push(this.mainCamera);
@@ -107,11 +109,11 @@ Systems.prototype = {
         this.state.color = this.color;
         this.state.data = this.data;
         this.state.settings = this.settings;
+        this.state.state = this.stateManager;
 
         // this.state.camera = this.camera;
         this.state.transform = this.transform;
 
-        this.state.state = this.game.state;
         this.state.cache = this.game.cache;
         this.state.textures = this.game.textures;
 
@@ -144,16 +146,25 @@ Systems.prototype = {
 
     render: function (interpolation, renderer)
     {
+        if (!this.settings.visible)
+        {
+            return;
+        }
+
         var state = this.state;
         var transform = this.transform;
         var cameras = this.cameras;
+
         for (var i = 0, l = cameras.length; i < l; ++i)
         {
             var camera = cameras[i];
+
             camera.preRender();
+
             state.camera = camera;
+
             renderer.render(state, transform.flatRenderArray, interpolation, camera);
-            //state.render(interpolation);
+
             camera.postRender();
         }
     },

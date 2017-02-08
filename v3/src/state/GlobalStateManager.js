@@ -18,11 +18,11 @@ var GetContext = require('../canvas/GetContext');
 /**
 * The State Manager is responsible for loading, setting up and switching game states.
 *
-* @class Phaser.StateManager
+* @class Phaser.GlobalStateManager
 * @constructor
 * @param {Phaser.Game} game - A reference to the currently running game.
 */
-var StateManager = function (game, stateConfig)
+var GlobalStateManager = function (game, stateConfig)
 {
     this.game = game;
 
@@ -62,15 +62,15 @@ var StateManager = function (game, stateConfig)
     }
 };
 
-StateManager.prototype.constructor = StateManager;
+GlobalStateManager.prototype.constructor = GlobalStateManager;
 
-StateManager.prototype = {
+GlobalStateManager.prototype = {
 
     /**
     * The Boot handler is called by Phaser.Game when it first starts up.
     * The renderer is available by now.
     *
-    * @method Phaser.StateManager#boot
+    * @method Phaser.GlobalStateManager#boot
     * @private
     */
     boot: function ()
@@ -112,11 +112,11 @@ StateManager.prototype = {
     },
 
     /**
-    * Adds a new State into the StateManager. You must give each State a unique key by which you'll identify it.
+    * Adds a new State into the GlobalStateManager. You must give each State a unique key by which you'll identify it.
     * The State can be either a Phaser.State object (or an object that extends it), a plain JavaScript object or a function.
     * If a function is given a new state object will be created by calling it.
     *
-    * @method Phaser.StateManager#add
+    * @method Phaser.GlobalStateManager#add
     * @param {string} key - A unique key you use to reference this state, i.e. "MainMenu", "Level1".
     * @param {Phaser.State|object|function} state  - The state you want to switch to.
     * @param {boolean} [autoStart=false]  - If true the State will be started immediately after adding it.
@@ -135,25 +135,25 @@ StateManager.prototype = {
                 autoStart: autoStart
             });
 
-            console.log('StateManager not yet booted, adding to list', this._pending.length);
+            console.log('GlobalStateManager not yet booted, adding to list', this._pending.length);
 
             return;
         }
 
         key = this.getKey(key, stateConfig);
 
-        // console.log('StateManager.add', key, stateConfig, autoStart);
+        // console.log('GlobalStateManager.add', key, stateConfig, autoStart);
 
         var newState;
 
         if (stateConfig instanceof State)
         {
-            // console.log('StateManager.add from instance:', key);
+            // console.log('GlobalStateManager.add from instance:', key);
             newState = this.createStateFromInstance(key, stateConfig);
         }
         else if (typeof stateConfig === 'object')
         {
-            // console.log('StateManager.add from object:', key);
+            // console.log('GlobalStateManager.add from object:', key);
 
             stateConfig.key = key;
 
@@ -161,7 +161,7 @@ StateManager.prototype = {
         }
         else if (typeof stateConfig === 'function')
         {
-            // console.log('StateManager.add from function:', key);
+            // console.log('GlobalStateManager.add from function:', key);
 
             newState = this.createStateFromFunction(key, stateConfig);
         }
@@ -358,7 +358,7 @@ StateManager.prototype = {
         //  if not booted, then put state into a holding pattern
         if (!this.game.isBooted)
         {
-            // console.log('StateManager not yet booted, setting autoStart on pending list');
+            // console.log('GlobalStateManager not yet booted, setting autoStart on pending list');
 
             for (var i = 0; i < this._pending.length; i++)
             {
@@ -440,7 +440,7 @@ StateManager.prototype = {
             //  Is the loader empty?
             if (loader.list.size === 0)
             {
-                this.startCreate(state);
+                this.create(state);
             }
             else
             {
@@ -454,7 +454,7 @@ StateManager.prototype = {
         else
         {
             //  No preload? Then there was nothing to load either
-            this.startCreate(state);
+            this.create(state);
         }
     },
 
@@ -464,23 +464,18 @@ StateManager.prototype = {
 
         // console.log('loadComplete', state.sys.settings.key);
 
-        this.startCreate(state);
+        this.create(state);
     },
 
-    startCreate: function (state)
+    create: function (state)
     {
-        // console.log('startCreate', state.sys.settings.key);
-
-        if (state.create)
-        {
-            state.create();
-        }
+        console.log('create', state.sys.settings.key);
 
         //  Insert at the correct index, or it just all goes wrong :)
 
         var i = this.getStateIndex(state);
 
-        // console.log('startCreate.index', state.sys.settings.key, i);
+        // console.log('create.index', state.sys.settings.key, i);
 
         this.active.push({ index: i, state: state });
 
@@ -488,11 +483,16 @@ StateManager.prototype = {
         this.active.sort(this.sortStates);
 
         state.sys.updates.running = true;
+
+        if (state.create)
+        {
+            state.create();
+        }
     },
 
     pause: function (key)
     {
-        var index = this.getActiveStateIndex(key);
+        var index = this.getActiveStateIndex(this.getState(key));
 
         if (index > -1)
         {
@@ -502,7 +502,7 @@ StateManager.prototype = {
 
             this.active.splice(index, 1);
 
-            this.active.sort(this.sortStates.bind(this));
+            this.active.sort(this.sortStates);
         }
     },
 
@@ -527,4 +527,4 @@ StateManager.prototype = {
 
 };
 
-module.exports = StateManager;
+module.exports = GlobalStateManager;

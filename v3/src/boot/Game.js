@@ -14,7 +14,7 @@ var DOMContentLoaded = require('../dom/DOMContentLoaded');
 
 var MainLoop = require('./MainLoop');
 var CreateRenderer = require('./CreateRenderer');
-var StateManager = require('../state/StateManager');
+var GlobalStateManager = require('../state/GlobalStateManager');
 var TextureManager = require('../textures/TextureManager');
 var Data = require('../components/Data');
 var Cache = require('../cache/Cache');
@@ -57,9 +57,9 @@ var Game = function (config)
     this.input = null;
 
     /**
-    * @property {Phaser.StateManager} state - The StateManager. Phaser instance specific.
+    * @property {Phaser.GlobalStateManager} state - The StateManager. Phaser instance specific.
     */
-    this.state = new StateManager(this, this.config.stateConfig);
+    this.state = new GlobalStateManager(this, this.config.stateConfig);
 
     /**
     * @property {Phaser.Device} device - Contains device information and capabilities (singleton)
