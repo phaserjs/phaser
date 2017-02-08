@@ -319,6 +319,10 @@ WebGLRenderer.prototype = {
     //  Called at the end of the render loop (tidy things up, etc)
     postRender: function ()
     {
+        if (this.batch)
+        {
+            this.batch.flush();
+        }
         //  Add Post-render hook
 
         // console.log('%c render end ', 'color: #ffffff; background: #ff0000;');

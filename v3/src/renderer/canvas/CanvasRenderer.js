@@ -155,13 +155,6 @@ CanvasRenderer.prototype = {
 
         //  If the alpha or blend mode didn't change since the last render, then don't set them again (saves 2 ops)
 
-        if (scissor)
-        {
-            ctx.beginPath();
-            ctx.rect(camera.x, camera.y, camera.width, camera.height);
-            ctx.clip();
-            ctx.closePath();
-        }
 
         if (this.currentAlpha !== 1)
         {
@@ -193,6 +186,15 @@ CanvasRenderer.prototype = {
 
         this.drawCount += list.length;
 
+        if (scissor)
+        {
+            ctx.save();
+            ctx.beginPath();
+            ctx.rect(camera.x, camera.y, camera.width, camera.height);
+            ctx.clip();
+            ctx.closePath();
+        }
+
         for (var c = 0; c < list.length; c++)
         {
             var child = list[c].gameObject;
@@ -210,6 +212,11 @@ CanvasRenderer.prototype = {
         if (settings.renderToTexture)
         {
             this.gameContext.drawImage(state.sys.canvas, 0, 0, w, h, settings.x, settings.y, w, h);
+        }
+
+        if (scissor)
+        {
+            ctx.restore();
         }
     },
 

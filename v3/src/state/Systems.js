@@ -87,7 +87,8 @@ Systems.prototype = {
         this.data = new Component.Data(this.state);
         this.transform = new Component.Transform(this.state);
         this.cameras = [];
-        this.cameras[0] = new Camera(0, 0, this.game.config.width, this.game.config.height);
+        this.mainCamera = new Camera(0, 0, this.game.config.width, this.game.config.height);
+        this.cameras.push(this.mainCamera);
         this.inject();
     },
 
@@ -153,8 +154,25 @@ Systems.prototype = {
             //state.render(interpolation);
             camera.postRender();
         }
-    }
+    },
 
+    addCamera: function (x, y, width, height)
+    {
+        var camera = new Camera(x, y, width, height);
+        camera.setState(this.state);
+        this.cameras.push(camera);
+        return camera;
+    },
+
+    resetCameras: function ()
+    {
+        this.cameras.length = 1;
+        this.mainCamera = this.cameras[0];
+        this.mainCamera.x = 0;
+        this.mainCamera.y = 0;
+        this.mainCamera.width = this.game.config.width;
+        this.mainCamera.height = this.game.config.height;
+    }
 
 };
 
