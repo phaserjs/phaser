@@ -13,23 +13,22 @@ var FactoryContainer = require('../../gameobjects/FactoryContainer');
 * @constructor
 * @param {Phaser.Game} game - A reference to the currently running game.
 */
+var GameObjectCreator = function (state)
+{
+    this.state = state;
 
-var GameObjectCreator = {
+    FactoryContainer.load(this, false);
+};
 
-    /**
-    * @property {Phaser.State} state - The State that owns this Factory
-    * @protected
-    */
-    state: null
+GameObjectCreator.prototype.constructor = GameObjectCreator;
+
+GameObjectCreator.prototype = {
+
+    destroy: function ()
+    {
+        this.state = undefined;
+    }
 
 };
 
-function init (state)
-{
-    GameObjectCreator.state = state;
-
-    //   Load the factories into this Object
-    return FactoryContainer.load(GameObjectCreator, false);
-}
-
-module.exports = init;
+module.exports = GameObjectCreator;

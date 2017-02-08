@@ -142,18 +142,18 @@ StateManager.prototype = {
 
         key = this.getKey(key, stateConfig);
 
-        console.log('StateManager.add', key, stateConfig, autoStart);
+        // console.log('StateManager.add', key, stateConfig, autoStart);
 
         var newState;
 
         if (stateConfig instanceof State)
         {
-            console.log('StateManager.add from instance:', key);
+            // console.log('StateManager.add from instance:', key);
             newState = this.createStateFromInstance(key, stateConfig);
         }
         else if (typeof stateConfig === 'object')
         {
-            console.log('StateManager.add from object:', key);
+            // console.log('StateManager.add from object:', key);
 
             stateConfig.key = key;
 
@@ -161,7 +161,7 @@ StateManager.prototype = {
         }
         else if (typeof stateConfig === 'function')
         {
-            console.log('StateManager.add from function:', key);
+            // console.log('StateManager.add from function:', key);
 
             newState = this.createStateFromFunction(key, stateConfig);
         }
@@ -280,7 +280,7 @@ StateManager.prototype = {
 
     createStateDisplay: function (state)
     {
-        console.log('createStateDisplay', state.settings.key);
+        // console.log('createStateDisplay', state.settings.key);
 
         var settings = state.sys.settings;
 
@@ -295,7 +295,7 @@ StateManager.prototype = {
         {
             if (settings.renderToTexture)
             {
-                console.log('renderToTexture');
+                // console.log('renderToTexture', width, height);
                 state.sys.canvas = CanvasPool.create(state, width, height);
                 state.sys.context = GetContext(state.sys.canvas);
 
@@ -307,7 +307,7 @@ StateManager.prototype = {
             }
             else
             {
-                console.log('using game canvas');
+                // console.log('using game canvas');
                 state.sys.mask = new Rectangle(0, 0, width, height);
                 state.sys.canvas = this.game.canvas;
                 state.sys.context = this.game.context;
@@ -317,7 +317,6 @@ StateManager.prototype = {
         {
             // state.sys.fbo = this.game.renderer.createFBO(state, x, y, width, height);
         }
-
     },
 
     getState: function (key)
@@ -332,15 +331,17 @@ StateManager.prototype = {
 
     getActiveStateIndex: function (state)
     {
+        var index = -1;
+
         for (var i = 0; i < this.active.length; i++)
         {
             if (this.active[i].state === state)
             {
-                return this.active[i].index;
+                index = this.active[i].index;
             }
         }
 
-        return -1;
+        return index;
     },
 
     isActive: function (key)
@@ -352,12 +353,12 @@ StateManager.prototype = {
 
     start: function (key)
     {
-        console.log('start:', key);
+        // console.log('start:', key);
 
         //  if not booted, then put state into a holding pattern
         if (!this.game.isBooted)
         {
-            console.log('StateManager not yet booted, setting autoStart on pending list');
+            // console.log('StateManager not yet booted, setting autoStart on pending list');
 
             for (var i = 0; i < this._pending.length; i++)
             {
@@ -413,14 +414,14 @@ StateManager.prototype = {
     {
         var state = event.loader.state;
 
-        console.log('payloadComplete', state.sys.settings.key);
+        // console.log('payloadComplete', state.sys.settings.key);
 
         this.bootState(state);
     },
 
     bootState: function (state)
     {
-        console.log('bootState', state.sys.settings.key);
+        // console.log('bootState', state.sys.settings.key);
 
         //  + arguments
         if (state.init)
@@ -434,7 +435,7 @@ StateManager.prototype = {
 
         if (state.preload)
         {
-            state.preload.call(state, this.game);
+            state.preload(this.game);
 
             //  Is the loader empty?
             if (loader.list.size === 0)
@@ -461,39 +462,30 @@ StateManager.prototype = {
     {
         var state = event.loader.state;
 
-        console.log('loadComplete', state.sys.settings.key);
-
-        //  Make sure to do load-update one last time before state is set to _created
-
-        //  Stop doing this ...
-        if (state.hasOwnProperty('loadUpdate'))
-        {
-            state.loadUpdate.call(state);
-        }
+        // console.log('loadComplete', state.sys.settings.key);
 
         this.startCreate(state);
     },
 
     startCreate: function (state)
     {
-        console.log('startCreate', state.sys.settings.key);
+        // console.log('startCreate', state.sys.settings.key);
 
         if (state.create)
         {
-            console.log('startCreate.call', state.sys.settings.key);
-            state.create.call(state);
+            state.create();
         }
 
         //  Insert at the correct index, or it just all goes wrong :)
 
         var i = this.getStateIndex(state);
 
-        console.log('startCreate.index', state.sys.settings.key, i);
+        // console.log('startCreate.index', state.sys.settings.key, i);
 
         this.active.push({ index: i, state: state });
 
         //  Sort the 'active' array based on the index property
-        this.active.sort(this.sortStates.bind(this));
+        this.active.sort(this.sortStates);
 
         state.sys.updates.running = true;
     },
@@ -516,6 +508,8 @@ StateManager.prototype = {
 
     sortStates: function (stateA, stateB)
     {
+        // console.log('sortStates', stateA.state.sys.settings.key, stateA.index, stateB.state.sys.settings.key, stateB.index);
+
         //  Sort descending
         if (stateA.index < stateB.index)
         {

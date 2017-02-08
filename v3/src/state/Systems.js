@@ -27,6 +27,8 @@ var Systems = function (state, config)
 
     this.x = this.settings.x;
     this.y = this.settings.y;
+    this.width = this.settings.width;
+    this.height = this.settings.height;
 
     this.mask = null;
     this.canvas;
@@ -61,7 +63,7 @@ Systems.prototype = {
 
     init: function (game)
     {
-        console.log('State.Systems.init');
+        // console.log('State.Systems.init');
 
         this.game = game;
 
@@ -137,7 +139,7 @@ Systems.prototype = {
             // }
         }
 
-        this.state.update(timestep, physicsStep);
+        this.state.update.call(this.state, timestep, physicsStep);
     },
 
     render: function (interpolation, renderer)

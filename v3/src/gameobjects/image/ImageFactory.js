@@ -31,8 +31,8 @@ var ImageFactory = {
     {
         if (group === undefined) { group = this.state; }
 
-        // console.log('ImageFactory.add', key, x, y, frame, group);
-        // console.log('into State', this.state);
+        // console.log('ImageFactory.add', key);
+        // console.log('into State', this.state.sys.settings.key);
 
         return group.children.add(new Image(this.state, x, y, key, frame));
     },

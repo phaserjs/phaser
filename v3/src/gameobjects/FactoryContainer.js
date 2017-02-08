@@ -22,15 +22,17 @@ var FactoryContainer = function ()
 
             return this.getType(factory.KEY);
         }
+        else
+        {
+            // console.log('registering', factory.KEY);
 
-        // console.log('registering', factory.KEY);
+            factories[factory.KEY] = {
+                add: factory.add,
+                make: factory.make
+            };
 
-        factories[factory.KEY] = {
-            add: factory.add,
-            make: factory.make
-        };
-
-        return factory;
+            return factory;
+        }
     };
 
     this.getType = function (key)

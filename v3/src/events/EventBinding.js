@@ -229,9 +229,6 @@ EventBinding.prototype = {
             return;
         }
 
-        console.log('EventBinding.tidy');
-        console.dir(this.active);
-
         var added = 0;
 
         var i = this.active.length - 1;
