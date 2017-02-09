@@ -10,18 +10,21 @@
  * @param {number} v - The value, in the range 0 - 1.
  * @return {BaseColor} This
  */
-var HSVToRGB = function (h, s = 1, v = 1)
+var HSVToRGB = function (h, s, v)
 {
-    const i = Math.floor(h * 6);
-    const f = h * 6 - i;
+    if (s === undefined) { s = 1; }
+    if (v === undefined) { v = 1; }
 
-    const p = Math.floor((v * (1 - s)) * 255);
-    const q = Math.floor((v * (1 - f * s)) * 255);
-    const t = Math.floor((v * (1 - (1 - f) * s)) * 255);
+    var i = Math.floor(h * 6);
+    var f = h * 6 - i;
+
+    var p = Math.floor((v * (1 - s)) * 255);
+    var q = Math.floor((v * (1 - f * s)) * 255);
+    var t = Math.floor((v * (1 - (1 - f) * s)) * 255);
 
     v = Math.floor(v *= 255);
 
-    const r = i % 6;
+    var r = i % 6;
 
     if (r === 0)
     {
@@ -47,7 +50,6 @@ var HSVToRGB = function (h, s = 1, v = 1)
     {
         return { r: v, g: p, b: q };
     }
-    
 };
 
 module.exports = HSVToRGB;

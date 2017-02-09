@@ -65,6 +65,20 @@ Color.prototype = {
         return this.update();
     },
 
+    setFromRGB: function (color)
+    {
+        this.red = color.r;
+        this.green = color.g;
+        this.blue = color.b;
+
+        if (color.hasOwnProperty('a'))
+        {
+            this.alpha = color.a;
+        }
+
+        return this.update();
+    },
+
     update: function ()
     {
         if (!this.dirty)

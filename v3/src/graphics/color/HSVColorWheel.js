@@ -1,4 +1,4 @@
-var HSVtoRGB = require('./HSVtoRGB');
+var HSVToRGB = require('./HSVToRGB');
 
 /**
 * Get HSV color wheel values in an array which will be 360 elements in size.
@@ -18,7 +18,7 @@ var HSVColorWheel = function (s, v)
 
     for (var c = 0; c <= 359; c++)
     {
-        colors.push(HSVtoRGB(c / 359, s, v));
+        colors.push(HSVToRGB(c / 359, s, v));
     }
 
     return colors;
