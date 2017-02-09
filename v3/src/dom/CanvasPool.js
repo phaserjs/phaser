@@ -87,7 +87,7 @@ var CanvasPool = function ()
 
     /**
     * Gets the first free canvas index from the pool.
-    * 
+    *
     * @static
     * @method Phaser.CanvasPool.getFirst
     * @return {number}
