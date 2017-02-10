@@ -10,6 +10,7 @@ var CreateEmptyTexture = require('./utils/CreateEmptyTexture');
 var CreateTexture2DImage = require('./utils/texture/CreateTexture2DImage');
 var BlitterBatch = require('./batches/blitter/BlitterBatch');
 var SpriteBatch = require('./batches/sprite/SpriteBatch');
+var AAQuadBatch = require('./batches/aaquad/AAQuadBatch');
 var SpriteBatch32 = require('./batches/sprite/SpriteBatch32');
 var BlendModes = require('../BlendModes');
 var Transform = require('../../components/experimental-Transform-2');
@@ -54,6 +55,7 @@ var WebGLRenderer = function (game)
     this.extensions = this.gl.getSupportedExtensions();
 
     this.blitterBatch = new BlitterBatch(game, this.gl, this);
+    this.aaQuadBatch = new AAQuadBatch(game, this.gl, this);
     this.spriteBatch = null;
     if (this.extensions.indexOf('OES_element_index_uint') >= 0)
     {
@@ -308,6 +310,29 @@ WebGLRenderer.prototype = {
         if (this.batch)
         {
             this.batch.flush();
+        }
+        if (camera._fadeAlpha > 0 || camera._flashAlpha > 0)
+        {
+            var aaQuadBatch = this.aaQuadBatch;
+            aaQuadBatch.bind();
+            // fade rendering
+            aaQuadBatch.add(
+                camera.x, camera.y, camera.width, camera.height, 
+                camera._fadeRed, 
+                camera._fadeGreen, 
+                camera._fadeBlue, 
+                camera._fadeAlpha
+            );
+            // flash rendering
+            aaQuadBatch.add(
+                camera.x, camera.y, camera.width, camera.height, 
+                camera._flashRed, 
+                camera._flashGreen, 
+                camera._flashBlue, 
+                camera._flashAlpha
+            );
+            aaQuadBatch.flush();
+            this.batch.bind();
         }
         if (scissor)
         {

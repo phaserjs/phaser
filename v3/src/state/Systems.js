@@ -140,7 +140,10 @@ Systems.prototype = {
                 child.update(timestep);
             // }
         }
-
+        for (var i = 0, l = this.cameras.length; i < l; ++i)
+        {
+            this.cameras[i].update(timestep);
+        }
         this.state.update.call(this.state, timestep, physicsStep);
     },
 
