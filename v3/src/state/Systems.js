@@ -91,6 +91,7 @@ Systems.prototype = {
         this.transform = new Component.Transform(this.state);
 
         this.cameras = [];
+        this.cameraPool = [];
         this.mainCamera = new Camera(0, 0, this.game.config.width, this.game.config.height);
         this.cameras.push(this.mainCamera);
         this.inject();
@@ -174,20 +175,53 @@ Systems.prototype = {
 
     addCamera: function (x, y, width, height)
     {
-        var camera = new Camera(x, y, width, height);
+        var camera = null;
+        if (this.cameraPool.length > 0)
+        {
+            camera = this.cameraPool.pop();
+            camera.setViewport(x, y, width, height);
+        }
+        else
+        {
+            camera = new Camera(x, y, width, height);
+        }
         camera.setState(this.state);
         this.cameras.push(camera);
         return camera;
     },
 
+    addCameraReference: function (camera)
+    {
+        var index = this.cameras.indexOf(camera);
+        var poolIndex = this.cameraPool.indexOf(camera);
+
+        if (index < 0 && poolIndex >= 0)
+        {
+            this.cameras.push(camera);
+            this.cameraPool.slice(poolIndex, 1);
+            return camera;
+        }
+        
+        return null;
+    },
+
+    removeCamera: function (camera)
+    {
+        var cameraIndex = this.cameras.indexOf(camera);
+        if (cameraIndex >= 0)
+        {
+            this.cameraPool.push(this.cameras[cameraIndex]);
+            this.cameras.splice(cameraIndex, 1);
+        }
+    },
+
     resetCameras: function ()
     {
-        this.cameras.length = 1;
-        this.mainCamera = this.cameras[0];
-        this.mainCamera.x = 0;
-        this.mainCamera.y = 0;
-        this.mainCamera.width = this.game.config.width;
-        this.mainCamera.height = this.game.config.height;
+        while(this.cameras.length > 0)
+        {
+            this.cameraPool.push(this.cameras.pop());
+        }
+        this.mainCamera = this.addCamera(0, 0, this.game.config.width, this.game.config.height);
     }
 
 };

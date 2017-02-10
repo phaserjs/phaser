@@ -32,6 +32,14 @@ var Camera = function (x, y, width, height)
     this._flashAlpha = 0.0;
 };
 
+Camera.prototype.setViewport = function (x, y, width, height)
+{
+    this.x = x;
+    this.y = y;
+    this.width = width;
+    this.height = height;
+};
+
 Camera.prototype.setState = function (state)
 {
     this.state = state;
