@@ -117,15 +117,14 @@ CanvasRenderer.prototype = {
         var ctx = this.gameContext;
         var config = this.gameConfig;
 
-        if (config.clearBeforeRender)
-        {
-            ctx.clearRect(0, 0, this.width, this.height);
-        }
-
         if (!config.transparent)
         {
-            ctx.fillStyle = config.backgroundColor;
+            ctx.fillStyle = config.backgroundColor.rgba;
             ctx.fillRect(0, 0, this.width, this.height);
+        }
+        else if (config.clearBeforeRender)
+        {
+            ctx.clearRect(0, 0, this.width, this.height);
         }
 
         //  Add Pre-render hook

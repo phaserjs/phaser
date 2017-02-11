@@ -36,6 +36,8 @@ Color.prototype = {
         this.blue = 0;
         this.alpha = 0;
 
+        this.dirty = true;
+
         return this.update();
     },
 
@@ -49,6 +51,8 @@ Color.prototype = {
         this.blue = blue;
         this.alpha = alpha;
 
+        this.dirty = true;
+
         return this.update();
     },
 
@@ -61,6 +65,8 @@ Color.prototype = {
         this.greenGL = green;
         this.blueGL = blue;
         this.alphaGL = alpha;
+
+        this.dirty = true;
 
         return this.update();
     },
@@ -76,6 +82,8 @@ Color.prototype = {
             this.alpha = color.a;
         }
 
+        this.dirty = true;
+
         return this.update();
     },
 
@@ -86,9 +94,9 @@ Color.prototype = {
             return this;
         }
 
-        this.color = GetColor(this.r, this.g, this.b);
-        this.color32 = GetColor32(this.r, this.g, this.b, this.a);
-        this.rgba = 'rgba(' + this.r + ',' + this.g + ',' + this.b + ',' + (255 / this.a) + ')';
+        this._color = GetColor(this.r, this.g, this.b);
+        this._color32 = GetColor32(this.r, this.g, this.b, this.a);
+        this._rgba = 'rgba(' + this.r + ',' + this.g + ',' + this.b + ',' + (255 / this.a) + ')';
 
         this.dirty = false;
 
