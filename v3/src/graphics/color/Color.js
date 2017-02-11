@@ -9,10 +9,10 @@ var Color = function (red, green, blue, alpha)
     if (alpha === undefined) { alpha = 255; }
 
     //  All private
-    this.r = red;
-    this.g = green;
-    this.b = blue;
-    this.a = alpha;
+    this.r = 0;
+    this.g = 0;
+    this.b = 0;
+    this.a = 255;
 
     this.gl = [ 0.0, 0.0, 0.0, 1.0 ];
 
@@ -22,7 +22,7 @@ var Color = function (red, green, blue, alpha)
 
     this.dirty = true;
 
-    this.update();
+    this.setTo(red, green, blue, alpha);
 };
 
 Color.prototype.contrusctor = Color;

@@ -8,6 +8,7 @@ var MATH = require('../math');
 var CONST = require('../const');
 var NOOP = require('../utils/NOOP');
 var GetObjectValue = require('../utils/object/GetObjectValue');
+var ValueToColor = require('../graphics/color/ValueToColor');
 
 var defaultBannerColor = [
     '#ff0000',
@@ -58,7 +59,7 @@ var Config = function (config)
     this.pixelArt = GetObjectValue(config, 'pixelArt', false);
     this.transparent = GetObjectValue(config, 'transparent', false);
     this.clearBeforeRender = GetObjectValue(config, 'clearBeforeRender', true);
-    this.backgroundColor = GetObjectValue(config, 'backgroundColor', '#000000');
+    this.backgroundColor = ValueToColor(GetObjectValue(config, 'backgroundColor', 0));
 
     //  Callbacks
     this.preBoot = GetObjectValue(config, 'callbacks.preBoot', NOOP);

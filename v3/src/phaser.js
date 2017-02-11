@@ -20,6 +20,8 @@ var Phaser = {
 
     Geom: require('./geom'),
 
+    Graphics: require('./graphics'),
+
     GameObjects: {
 
         Factory: require('./gameobjects/FactoryContainer')
