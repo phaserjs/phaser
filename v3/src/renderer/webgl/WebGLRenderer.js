@@ -109,7 +109,9 @@ WebGLRenderer.prototype = {
         gl.disable(gl.CULL_FACE);
         gl.enable(gl.BLEND);
 
-        gl.clearColor(1, 0, 0, 1);
+        var color = this.game.config.backgroundColor;
+
+        gl.clearColor(color.redGL, color.greenGL, color.blueGL, color.alphaGL);
 
         this.resize(this.width, this.height);
 
@@ -245,7 +247,11 @@ WebGLRenderer.prototype = {
         var gl = this.gl;
 
         //  clear is needed for the FBO, otherwise corruption ...
-        gl.clear(gl.COLOR_BUFFER_BIT);
+//        gl.clear(gl.COLOR_BUFFER_BIT);
+
+        var color = this.game.config.backgroundColor;
+
+        gl.clearColor(color.redGL, color.greenGL, color.blueGL, color.alphaGL);
 
         this.setBlendMode(BlendModes.NORMAL);
     },
