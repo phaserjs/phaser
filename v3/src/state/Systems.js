@@ -13,7 +13,7 @@ var UpdateManager = require('./systems/UpdateManager');
 var Component = require('../components');
 var Settings = require('./Settings');
 var RTree = require('../structs/RTree');
-var Camera = require('../camera/Camera-2')
+var CameraManager = require('./systems/CameraManager');
 
 var Systems = function (state, config)
 {
@@ -53,7 +53,7 @@ var Systems = function (state, config)
     this.children;
     this.color;
     this.data;
-    this.fbo;
+    // this.fbo;
     this.time;
     this.transform;
 };
@@ -70,6 +70,9 @@ Systems.prototype = {
 
         Settings.init(this.settings, this.game.config);
 
+        this.width = this.settings.width;
+        this.height = this.settings.height;
+
         this.cache = this.game.cache;
         this.textures = this.game.textures;
 
@@ -82,6 +85,7 @@ Systems.prototype = {
         this.updates = new UpdateManager(this.state);
         this.load = new Loader(this.state);
         this.stateManager = new StateManager(this.state, game);
+        this.cameras = new CameraManager(this.state);
 
         //  State specific properties (transform, data, children, etc)
 
@@ -90,10 +94,6 @@ Systems.prototype = {
         this.data = new Component.Data(this.state);
         this.transform = new Component.Transform(this.state);
 
-        this.cameras = [];
-        this.cameraPool = [];
-        this.mainCamera = new Camera(0, 0, this.game.config.width, this.game.config.height);
-        this.cameras.push(this.mainCamera);
         this.inject();
     },
 
@@ -112,16 +112,11 @@ Systems.prototype = {
         this.state.settings = this.settings;
         this.state.state = this.stateManager;
 
-        // this.state.camera = this.camera;
+        this.state.cameras = this.cameras;
         this.state.transform = this.transform;
 
         this.state.cache = this.game.cache;
         this.state.textures = this.game.textures;
-
-        for (var i = 0, l = this.cameras.length; i < l; ++i)
-        {
-            this.cameras[i].setState(this.state);
-        }
     },
 
     //  Called just once per frame, regardless of speed
@@ -132,19 +127,8 @@ Systems.prototype = {
     //  Potentially called multiple times per frame (on super-fast systems)
     update: function (timestep, physicsStep)
     {
-        for (var c = 0; c < this.children.list.length; c++)
-        {
-            var child = this.children.list[c];
+        this.cameras.update(timestep);
 
-            // if (child.exists)
-            // {
-                child.update(timestep);
-            // }
-        }
-        for (var i = 0, l = this.cameras.length; i < l; ++i)
-        {
-            this.cameras[i].update(timestep);
-        }
         this.state.update.call(this.state, timestep, physicsStep);
     },
 
@@ -155,75 +139,8 @@ Systems.prototype = {
             return;
         }
 
-        var state = this.state;
-        var transform = this.transform;
-        var cameras = this.cameras;
-
-        for (var i = 0, l = cameras.length; i < l; ++i)
-        {
-            var camera = cameras[i];
-
-            camera.preRender();
-
-            state.camera = camera;
-
-            renderer.render(state, transform.flatRenderArray, interpolation, camera);
-
-            camera.postRender();
-        }
-    },
-
-    addCamera: function (x, y, width, height)
-    {
-        var camera = null;
-        if (this.cameraPool.length > 0)
-        {
-            camera = this.cameraPool.pop();
-            camera.setViewport(x, y, width, height);
-        }
-        else
-        {
-            camera = new Camera(x, y, width, height);
-        }
-        camera.setState(this.state);
-        this.cameras.push(camera);
-        return camera;
-    },
-
-    addCameraReference: function (camera)
-    {
-        var index = this.cameras.indexOf(camera);
-        var poolIndex = this.cameraPool.indexOf(camera);
-
-        if (index < 0 && poolIndex >= 0)
-        {
-            this.cameras.push(camera);
-            this.cameraPool.slice(poolIndex, 1);
-            return camera;
-        }
-        
-        return null;
-    },
-
-    removeCamera: function (camera)
-    {
-        var cameraIndex = this.cameras.indexOf(camera);
-        if (cameraIndex >= 0)
-        {
-            this.cameraPool.push(this.cameras[cameraIndex]);
-            this.cameras.splice(cameraIndex, 1);
-        }
-    },
-
-    resetCameras: function ()
-    {
-        while(this.cameras.length > 0)
-        {
-            this.cameraPool.push(this.cameras.pop());
-        }
-        this.mainCamera = this.addCamera(0, 0, this.game.config.width, this.game.config.height);
+        this.cameras.render(renderer, this.transform.flatRenderArray, interpolation);
     }
-
 };
 
 module.exports = Systems;
