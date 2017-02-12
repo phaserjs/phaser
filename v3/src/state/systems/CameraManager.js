@@ -1,4 +1,4 @@
-var Camera = require('../../camera/Camera-2');
+var Camera = require('../../camera/Camera');
 
 var CameraManager = function (state)
 {
