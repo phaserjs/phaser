@@ -36,6 +36,10 @@ var Blitter = function (state, x, y, key, frame)
     this.type = CONST.BLITTER;
 
     this.children = new Children(this);
+
+    this.renderList = [];
+
+    this.dirty = false;
 };
 
 Blitter.prototype = Object.create(GameObject.prototype);
@@ -59,6 +63,8 @@ Blitter.prototype.create = function (x, y, frame, visible, index)
     var bob = new Bob(this, x, y, frame, visible);
 
     this.children.addAt(bob, index, false);
+
+    this.dirty = true;
 
     return bob;
 };
@@ -103,9 +109,25 @@ Blitter.prototype.createMultiple = function (quantity, frame, visible)
     return bobs;
 };
 
+Blitter.prototype.childCanRender = function (child)
+{
+    return (child.visible && child.alpha > 0);
+};
+
+Blitter.prototype.getRenderList = function ()
+{
+    if (this.dirty)
+    {
+        this.renderList = this.children.list.filter(this.childCanRender, this);
+    }
+
+    return this.renderList;
+};
+
 Blitter.prototype.clear = function ()
 {
     this.children.removeAll();
+    this.dirty = true;
 };
 
 module.exports = Blitter;

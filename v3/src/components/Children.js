@@ -693,7 +693,7 @@ Object.defineProperties(Children.prototype, {
     },
 
     /**
-    * Returns the the next item (based on the cursor) and advances the cursor.
+    * Returns the next item (based on the cursor) and advances the cursor.
     *
     * @name Phaser.ArraySet#next
     * @property {any} next
@@ -719,7 +719,7 @@ Object.defineProperties(Children.prototype, {
     },
 
     /**
-    * Returns the the previous item (based on the cursor) and retreats the cursor.
+    * Returns the previous item (based on the cursor) and retreats the cursor.
     *
     * @name Phaser.ArraySet#previous
     * @property {any} previous

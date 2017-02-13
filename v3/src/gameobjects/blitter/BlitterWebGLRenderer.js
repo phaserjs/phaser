@@ -1,23 +1,22 @@
 var BlitterWebGLRenderer = function (renderer, src, interpolationPercentage)
 {
     var worldAlpha = src.color.worldAlpha;
-    var len = src.children.list.length - 1;
+    var list = src.getRenderList();
 
     //  Skip rendering?
 
-    if (src.skipRender || !src.visible || worldAlpha === 0 || len === 0)
+    if (src.skipRender || !src.visible || worldAlpha === 0 || list.length === 0)
     {
         return;
     }
 
     //  Render bobs
 
-    for (var i = 0; i <= len; ++i)
+    for (var i = 0; i < list.length; i++)
     {
-        var bob = src.children.list[i];
-        var frame = bob.frame;
+        var bob = list[i];
 
-        renderer.blitterBatch.add(bob.x, bob.y, frame, worldAlpha);
+        renderer.blitterBatch.add(bob.x, bob.y, bob.frame, bob.alpha);
     }
 };
 

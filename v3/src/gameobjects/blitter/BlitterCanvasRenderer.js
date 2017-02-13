@@ -2,31 +2,31 @@
 var BlitterCanvasRenderer = function (renderer, src, interpolationPercentage)
 {
     var worldAlpha = src.color.worldAlpha;
-    var len = src.children.list.length;
+    var list = src.getRenderList();
 
     //  Skip rendering?
 
-    if (src.skipRender || !src.visible || worldAlpha === 0 || len === 0)
+    if (src.skipRender || !src.visible || worldAlpha === 0 || list.length === 0)
     {
         return;
     }
 
     renderer.resetTransform();
     renderer.setBlendMode(src.blendMode);
-    renderer.setAlpha(worldAlpha);
+
+    var ca = renderer.currentAlpha;
 
     //  Render bobs
-    for (var i = 0; i < len; i++)
+    for (var i = 0; i < list.length; i++)
     {
-        var bob = src.children.list[i];
-        var frame = bob.frame;
+        var bob = list[i];
 
-        // if (!bob.visible)
-        // {
-            // continue;
-        // }
+        if (ca !== bob.alpha)
+        {
+            ca = renderer.setAlpha(bob.alpha);
+        }
 
-        renderer.blitImage(bob.x, bob.y, frame);
+        renderer.blitImage(bob.x, bob.y, bob.frame);
     }
 };
 

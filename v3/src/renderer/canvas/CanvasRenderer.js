@@ -98,6 +98,8 @@ CanvasRenderer.prototype = {
             this.currentContext.globalCompositeOperation = blendMode;
             this.currentBlendMode = blendMode;
         }
+
+        return this.currentBlendMode;
     },
 
     setAlpha: function (alpha)
@@ -107,6 +109,8 @@ CanvasRenderer.prototype = {
             this.currentContext.globalAlpha = alpha;
             this.currentAlpha = alpha;
         }
+
+        return this.currentAlpha;
     },
 
     //  Call at the start of the render loop
@@ -158,7 +162,6 @@ CanvasRenderer.prototype = {
         ctx.setTransform(1, 0, 0, 1, 0, 0);
 
         //  If the alpha or blend mode didn't change since the last render, then don't set them again (saves 2 ops)
-
 
         if (this.currentAlpha !== 1)
         {
@@ -228,6 +231,14 @@ CanvasRenderer.prototype = {
     postRender: function ()
     {
         // console.log('%c render end ', 'color: #ffffff; background: #ff0000;');
+
+        var ctx = this.gameContext;
+
+        ctx.globalAlpha = 1;
+        ctx.globalCompositeOperation = 'source-over';
+
+        this.currentAlpha = 1;
+        this.currentBlendMode = 0;
 
         //  Add Post-render hook
     },
