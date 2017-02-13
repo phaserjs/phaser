@@ -131,8 +131,8 @@ Hermite.prototype = {
     * @method Phaser.Hermite#recalculate
     * @return {Phaser.Hermite} This object.
     */
-    recalculate: function () {
-
+    recalculate: function ()
+    {
         this._ax = (2 * this._p1x - 2 * this._p2x + this._v1x + this._v2x);
         this._ay = (2 * this._p1y - 2 * this._p2y + this._v1y + this._v2y);
         this._bx = (-3 * this._p1x + 3 * this._p2x - 2 * this._v1x - this._v2x);
@@ -141,7 +141,6 @@ Hermite.prototype = {
         this.length = this.calculateEvenPoints();
 
         return this;
-
     },
 
     /**
@@ -150,8 +149,8 @@ Hermite.prototype = {
     * @method Phaser.Hermite#calculateEvenPoints
     * @return {number} The total length of the curve approximated as straight line distances between the points.
     */
-    calculateEvenPoints: function () {
-
+    calculateEvenPoints: function ()
+    {
         var totalLength = 0;
 
         this._temp1.setTo(0, 0);                    //  pnt
@@ -162,13 +161,14 @@ Hermite.prototype = {
         for (var i = 1; i <= this._accuracy; i++)
         {
             this.getPoint(i / this._accuracy, this._temp1);
+
             totalLength += this._temp1.distance(this._temp2);
+
             this._points[i] = totalLength;
             this._temp2.copyFrom(this._temp1);
         }
 
         return totalLength;
-
     }
 
 };
@@ -207,20 +207,18 @@ Object.defineProperties(Hermite.prototype, {
 
         enumerable: true,
 
-        get: function () {
-
+        get: function ()
+        {
             return this._p1x;
-
         },
 
-        set: function (value) {
-
+        set: function (value)
+        {
             if (value !== this._p1x)
             {
                 this._p1x = value;
                 this.recalculate();
             }
-
         }
 
     },
@@ -233,20 +231,18 @@ Object.defineProperties(Hermite.prototype, {
 
         enumerable: true,
 
-        get: function () {
-
+        get: function ()
+        {
             return this._p1y;
-
         },
 
-        set: function (value) {
-
+        set: function (value)
+        {
             if (value !== this._p1y)
             {
                 this._p1y = value;
                 this.recalculate();
             }
-
         }
 
     },
@@ -259,20 +255,18 @@ Object.defineProperties(Hermite.prototype, {
 
         enumerable: true,
 
-        get: function () {
-
+        get: function ()
+        {
             return this._p2x;
-
         },
 
-        set: function (value) {
-
+        set: function (value)
+        {
             if (value !== this._p2x)
             {
                 this._p2x = value;
                 this.recalculate();
             }
-
         }
 
     },
@@ -285,20 +279,18 @@ Object.defineProperties(Hermite.prototype, {
 
         enumerable: true,
 
-        get: function () {
-
+        get: function ()
+        {
             return this._p2y;
-
         },
 
-        set: function (value) {
-
+        set: function (value)
+        {
             if (value !== this._p2y)
             {
                 this._p2y = value;
                 this.recalculate();
             }
-
         }
 
     },
@@ -311,20 +303,18 @@ Object.defineProperties(Hermite.prototype, {
 
         enumerable: true,
 
-        get: function () {
-
+        get: function ()
+        {
             return this._v1x;
-
         },
 
-        set: function (value) {
-
+        set: function (value)
+        {
             if (value !== this._v1x)
             {
                 this._v1x = value;
                 this.recalculate();
             }
-
         }
 
     },
@@ -337,20 +327,18 @@ Object.defineProperties(Hermite.prototype, {
 
         enumerable: true,
 
-        get: function () {
-
+        get: function ()
+        {
             return this._v1y;
-
         },
 
-        set: function (value) {
-
+        set: function (value)
+        {
             if (value !== this._v1y)
             {
                 this._v1y = value;
                 this.recalculate();
             }
-
         }
 
     },
@@ -363,20 +351,18 @@ Object.defineProperties(Hermite.prototype, {
 
         enumerable: true,
 
-        get: function () {
-
+        get: function ()
+        {
             return this._v2x;
-
         },
 
-        set: function (value) {
-
+        set: function (value)
+        {
             if (value !== this._v2x)
             {
                 this._v2x = value;
                 this.recalculate();
             }
-
         }
 
     },
@@ -389,20 +375,18 @@ Object.defineProperties(Hermite.prototype, {
 
         enumerable: true,
 
-        get: function () {
-
+        get: function ()
+        {
             return this._v2y;
-
         },
 
-        set: function (value) {
-
+        set: function (value)
+        {
             if (value !== this._v2y)
             {
                 this._v2y = value;
                 this.recalculate();
             }
-
         }
 
     }
