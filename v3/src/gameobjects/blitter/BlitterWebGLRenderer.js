@@ -1,4 +1,3 @@
-
 var BlitterWebGLRenderer = function (renderer, src, interpolationPercentage)
 {
     var worldAlpha = src.color.worldAlpha;
@@ -12,15 +11,11 @@ var BlitterWebGLRenderer = function (renderer, src, interpolationPercentage)
     }
 
     //  Render bobs
+
     for (var i = 0; i <= len; ++i)
     {
         var bob = src.children.list[i];
         var frame = bob.frame;
-
-        // if (!bob.visible)
-        // {
-            // continue;
-        // }
 
         renderer.blitterBatch.add(bob.x, bob.y, frame, worldAlpha);
     }

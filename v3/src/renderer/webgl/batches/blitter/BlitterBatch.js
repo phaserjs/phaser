@@ -86,6 +86,7 @@ BlitterBatch.prototype = {
         this.indexBufferObject = indexBufferObject;
         this.vertexArray = vertexArray;
         this.viewMatrixLocation = viewMatrixLocation;
+        this.maxParticles = max;
 
         // Populate the index buffer only once
         for (var indexA = 0, indexB = 0; indexA < max; indexA += CONST.PARTICLE_INDEX_COUNT, indexB += CONST.PARTICLE_VERTEX_COUNT)
@@ -115,16 +116,20 @@ BlitterBatch.prototype = {
     {
         this.manager.setBatch(this, frame.texture.source[frame.sourceIndex].glTexture);
 
-        // The user must check if the buffers are full before flushing
-        // this is to give freedom of when should the renderer flush. var vertexDataBuffer = this.vertexDataBuffer;
+        if (this.elementCount >= this.maxParticles)
+        {
+            this.flush();
+        }
+
         var vertexDataBuffer = this.vertexDataBuffer;
         var vertexBuffer = vertexDataBuffer.floatView;
         var vertexOffset = vertexDataBuffer.allocate(CONST.PARTICLE_VERTEX_COMPONENT_COUNT * CONST.PARTICLE_VERTEX_COUNT);
         var uvs = frame.uvs;
         var width = frame.width;
         var height = frame.height;
-        x += frame.x
-        y += frame.y
+
+        x += frame.x;
+        y += frame.y;
 
         vertexBuffer[vertexOffset++] = x;
         vertexBuffer[vertexOffset++] = y;

@@ -7,7 +7,7 @@
 
 var ProcessKeyDown = function (event, list, prevent)
 {
-    if (prevent === undefined) {  prevent = false; }
+    if (prevent === undefined) { prevent = false; }
 
     if (list)
     {
