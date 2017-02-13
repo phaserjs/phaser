@@ -117,14 +117,18 @@ CanvasRenderer.prototype = {
         var ctx = this.gameContext;
         var config = this.gameConfig;
 
+        var width = this.width;
+        var height = this.height;
+
+        if (config.clearBeforeRender)
+        {
+            ctx.clearRect(0, 0, width, height);
+        }
+
         if (!config.transparent)
         {
             ctx.fillStyle = config.backgroundColor.rgba;
-            ctx.fillRect(0, 0, this.width, this.height);
-        }
-        else if (config.clearBeforeRender)
-        {
-            ctx.clearRect(0, 0, this.width, this.height);
+            ctx.fillRect(0, 0, width, height);
         }
 
         //  Add Pre-render hook
@@ -202,21 +206,22 @@ CanvasRenderer.prototype = {
             child.renderCanvas(this, child, interpolationPercentage);
         }
 
-        //  Reset the transform so going into the devs render function the context is ready for use
+        //  Reset the transform so going in to the devs render function the context is ready for use
         ctx.setTransform(1, 0, 0, 1, 0, 0);
 
         //  Call the State.render function
         state.render.call(state, ctx, interpolationPercentage);
 
+        //  Reset the camera scissor
+        if (scissor)
+        {
+            ctx.restore();
+        }
+
         //  Blast it to the Game Canvas (if needed)
         if (settings.renderToTexture)
         {
             this.gameContext.drawImage(state.sys.canvas, 0, 0, w, h, settings.x, settings.y, w, h);
-        }
-
-        if (scissor)
-        {
-            ctx.restore();
         }
     },
 
