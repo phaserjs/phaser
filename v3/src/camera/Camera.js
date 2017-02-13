@@ -1,4 +1,4 @@
-var Transform = require('../components/experimental-Transform-2');
+var Transform = require('../components/Transform');
 
 var Camera = function (x, y, width, height)
 {

@@ -9,22 +9,18 @@ var CONST = require('../../const');
 var CreateEmptyTexture = require('./utils/CreateEmptyTexture');
 var CreateTexture2DImage = require('./utils/texture/CreateTexture2DImage');
 var BlitterBatch = require('./batches/blitter/BlitterBatch');
-var SpriteBatch = require('./batches/sprite/SpriteBatch');
 var AAQuadBatch = require('./batches/aaquad/AAQuadBatch');
-var SpriteBatch32 = require('./batches/sprite/SpriteBatch32');
+var SpriteBatch = require('./batches/sprite/SpriteBatch');
 var BlendModes = require('../BlendModes');
-var Transform = require('../../components/experimental-Transform-2');
+var Transform = require('../../components/Transform');
 
 var WebGLRenderer = function (game)
 {
     this.game = game;
-
     this.type = CONST.WEBGL;
-
     this.width = game.config.width * game.config.resolution;
     this.height = game.config.height * game.config.resolution;
     this.resolution = game.config.resolution;
-
     this.view = game.canvas;
 
     //   All of these settings will be able to be controlled via the Game Config
@@ -47,27 +43,16 @@ var WebGLRenderer = function (game)
     this.maxTextures = 1;
     this.multiTexture = false;
     this.blendModes = [];
-
     this.gl = null;
-
-    this.init();
-
-    this.extensions = this.gl.getSupportedExtensions();
-
-    this.blitterBatch = new BlitterBatch(game, this.gl, this);
-    this.aaQuadBatch = new AAQuadBatch(game, this.gl, this);
+    this.extensions = null;
+    this.batches = [];
+    this.blitterBatch = null;
+    this.aaQuadBatch = null;
     this.spriteBatch = null;
-    if (this.extensions.indexOf('OES_element_index_uint') >= 0)
-    {
-        this.spriteBatch = new SpriteBatch32(game, this.gl, this);
-    }
-    else
-    {
-        this.spriteBatch = new SpriteBatch(game, this.gl, this);
-    }
-
     this.batch = null;
     this.currentTexture2D = null;
+
+    this.init();
 };
 
 WebGLRenderer.prototype.constructor = WebGLRenderer;
@@ -87,58 +72,14 @@ WebGLRenderer.prototype = {
         }
 
         var gl = this.gl;
-
-        /*
-        //  Will need supporting
-
-        this.maxTextures = gl.getParameter(gl.MAX_TEXTURE_IMAGE_UNITS);
-
-        if (this.maxTextures === 1)
-        {
-            this.multiTexture = false;
-        }
-        else
-        {
-            this.createMultiEmptyTextures();
-        }
-
-        this.emptyTexture = CreateEmptyTexture(this.gl, 1, 1, 0, 0);
-        */
-
+        var color = this.game.config.backgroundColor;
+    
         gl.disable(gl.DEPTH_TEST);
         gl.disable(gl.CULL_FACE);
         gl.enable(gl.BLEND);
-
-        var color = this.game.config.backgroundColor;
-
         gl.clearColor(color.redGL, color.greenGL, color.blueGL, color.alphaGL);
 
         this.resize(this.width, this.height);
-
-        /*
-        //  Will need supporting
-
-        this.extensions.compression = {};
-
-        var etc1 = gl.getExtension('WEBGL_compressed_texture_etc1') || gl.getExtension('WEBKIT_WEBGL_compressed_texture_etc1');
-        var pvrtc = gl.getExtension('WEBGL_compressed_texture_pvrtc') || gl.getExtension('WEBKIT_WEBGL_compressed_texture_pvrtc');
-        var s3tc = gl.getExtension('WEBGL_compressed_texture_s3tc') || gl.getExtension('WEBKIT_WEBGL_compressed_texture_s3tc');
-
-        if (etc1)
-        {
-            this.extensions.compression.ETC1 = etc1;
-        }
-
-        if (pvrtc)
-        {
-            this.extensions.compression.PVRTC = pvrtc;
-        }
-
-        if (s3tc)
-        {
-            this.extensions.compression.S3TC = s3tc;
-        }
-        */
 
         //  Map Blend Modes
 
@@ -155,6 +96,10 @@ WebGLRenderer.prototype = {
         ];
 
         this.blendMode = -1;
+        this.extensions = gl.getSupportedExtensions();
+        this.blitterBatch = this.addBatch(new BlitterBatch(this.game, gl, this));
+        this.aaQuadBatch = this.addBatch(new AAQuadBatch(this.game, gl, this));
+        this.spriteBatch = this.addBatch(new SpriteBatch(this.game, gl, this));
     },
 
     createTexture2D: function (source)
@@ -221,21 +166,20 @@ WebGLRenderer.prototype = {
         }
 
         this.gl.viewport(0, 0, this.width, this.height);
-
-        //  Needed?
-        // this.clipUnitX = 2 / this.width;
-        // this.clipUnitY = 2 / this.height;
-
-        //  Needed?
-        // this.projection.x = (this.width / 2) / res;
-        // this.projection.y = -(this.height / 2) / res;
+        for (var i = 0, l = this.batches.length; i < l; ++i)
+        {
+            this.batches[i].bind();
+            this.batches[i].resize(width, height, resolution);
+        }
+        if (this.batch) 
+        {
+            this.batch.bind();
+        }
     },
 
     //  Call at the start of the render loop
     preRender: function ()
     {
-        // console.log('%c render start ', 'color: #ffffff; background: #00ff00;');
-
         //  No point rendering if our context has been blown up!
         if (this.contextLost)
         {
@@ -245,13 +189,11 @@ WebGLRenderer.prototype = {
         //  Add Pre-render hook
 
         var gl = this.gl;
-
-        //  clear is needed for the FBO, otherwise corruption ...
-//        gl.clear(gl.COLOR_BUFFER_BIT);
-
         var color = this.game.config.backgroundColor;
 
         gl.clearColor(color.redGL, color.greenGL, color.blueGL, color.alphaGL);
+        // Some drivers require to call glClear
+        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT | gl.STENCIL_BUFFER_BIT);
 
         this.setBlendMode(BlendModes.NORMAL);
     },
@@ -387,6 +329,17 @@ WebGLRenderer.prototype = {
             }
             this.blendMode = newBlendMode;
         }
+    },
+
+    addBatch: function (batchInstance)
+    {
+        var index = this.batches.indexOf(batchInstance);
+        if (index < 0) 
+        {
+            this.batches.push(batchInstance);
+            return batchInstance;
+        }
+        return null;
     }
 };
 

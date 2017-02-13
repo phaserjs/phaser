@@ -5,6 +5,6 @@ module.exports = {
     Children: require('./Children'),
     Color: require('./Color'),
     Data: require('./Data'),
-    Transform: require('./experimental-Transform-2')
+    Transform: require('./Transform')
 
 };

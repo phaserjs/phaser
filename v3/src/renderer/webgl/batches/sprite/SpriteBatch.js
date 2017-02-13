@@ -3,8 +3,8 @@ var CreateProgram = require('../../utils/shader/CreateProgram');
 var CreateShader = require('../../utils/shader/CreateShader');
 var CreateBuffer = require('../../utils/buffer/CreateBuffer');
 var CreateAttribDesc = require('../../utils/vao/CreateAttribDesc');
-var VertexBuffer = require('../../utils/buffer/VertexBuffer');
-var IndexBuffer = require('../../utils/buffer/IndexBuffer');
+var Buffer32 = require('../../utils/buffer/Buffer32');
+var Buffer16 = require('../../utils/buffer/Buffer16');
 var VertexArray = require('../../utils/vao/VertexArray');
 
 var PHASER_CONST = require('../../../../const');
@@ -14,28 +14,20 @@ var SpriteBatch = function (game, gl, manager)
 {
     this.game = game;
     this.type = PHASER_CONST.WEBGL;
-
     this.view = game.canvas;
     this.resolution = game.config.resolution;
     this.width = game.config.width * game.config.resolution;
     this.height = game.config.height * game.config.resolution;
-
     this.glContext = gl;
-
     this.maxSprites = null;
-
     this.vertShader = null;
     this.fragShader = null;
-
     this.program = null;
-
     this.vertexArray = null;
     this.indexBufferObject = null;
     this.vertexDataBuffer = null;
     this.indexDataBuffer = null;
-
     this.elementCount = 0;
-
     this.currentTexture2D = null;
     this.viewMatrixLocation = null;
 
@@ -68,48 +60,37 @@ SpriteBatch.prototype = {
     init: function (gl)
     {
 
-        var vertexDataBuffer = new VertexBuffer(CONST.VERTEX_SIZE * CONST.SPRITE_VERTEX_COUNT * CONST.MAX_SPRITES);
-
-        var indexDataBuffer = new IndexBuffer(CONST.INDEX_SIZE * CONST.SPRITE_INDEX_COUNT * CONST.MAX_SPRITES);
-
+        var vertexDataBuffer = new Buffer32(CONST.VERTEX_SIZE * CONST.SPRITE_VERTEX_COUNT * CONST.MAX_SPRITES);
+        var indexDataBuffer = new Buffer16(CONST.INDEX_SIZE * CONST.SPRITE_INDEX_COUNT * CONST.MAX_SPRITES);
         var vertShader = CreateShader(gl, CONST.VERTEX_SHADER_SOURCE, gl.VERTEX_SHADER);
         var fragShader = CreateShader(gl, CONST.FRAGMENT_SHADER_SOURCE, gl.FRAGMENT_SHADER);
         var program = CreateProgram(gl, vertShader, fragShader);
-
         var indexBufferObject = CreateBuffer(gl, gl.ELEMENT_ARRAY_BUFFER, gl.STATIC_DRAW, null, indexDataBuffer.getByteCapacity());
-
         var attribArray = [
             CreateAttribDesc(gl, program, 'a_position', 2, gl.FLOAT, false, CONST.VERTEX_SIZE, 0),
             CreateAttribDesc(gl, program, 'a_tex_coord', 2, gl.FLOAT, false, CONST.VERTEX_SIZE, 8),
-            CreateAttribDesc(gl, program, 'a_translate', 2, gl.FLOAT, false, CONST.VERTEX_SIZE, 16),
-            CreateAttribDesc(gl, program, 'a_scale', 2, gl.FLOAT, false, CONST.VERTEX_SIZE, 24),
-            CreateAttribDesc(gl, program, 'a_rotation', 1, gl.FLOAT, false, CONST.VERTEX_SIZE, 32),
-            CreateAttribDesc(gl, program, 'a_color', 3, 5121, true, CONST.VERTEX_SIZE, 36)
+            CreateAttribDesc(gl, program, 'transform_a', 1, gl.FLOAT, false, CONST.VERTEX_SIZE, 16),
+            CreateAttribDesc(gl, program, 'transform_b', 1, gl.FLOAT, false, CONST.VERTEX_SIZE, 20),
+            CreateAttribDesc(gl, program, 'transform_c', 1, gl.FLOAT, false, CONST.VERTEX_SIZE, 24),
+            CreateAttribDesc(gl, program, 'transform_d', 1, gl.FLOAT, false, CONST.VERTEX_SIZE, 28),
+            CreateAttribDesc(gl, program, 'transform_t', 2, gl.FLOAT, false, CONST.VERTEX_SIZE, 32),
+            CreateAttribDesc(gl, program, 'a_color', 3, gl.UNSIGNED_BYTE, true, CONST.VERTEX_SIZE, 40)
         ];
-
         var vertexArray = new VertexArray(CreateBuffer(gl, gl.ARRAY_BUFFER, gl.STREAM_DRAW, null, vertexDataBuffer.getByteCapacity()), attribArray);
-
         var viewMatrixLocation = gl.getUniformLocation(program, 'u_view_matrix');
+        var indexBuffer = indexDataBuffer.uintView;
+        var max = CONST.MAX_SPRITES * CONST.SPRITE_INDEX_COUNT;
 
         this.vertexDataBuffer = vertexDataBuffer;
         this.indexDataBuffer = indexDataBuffer;
-
         this.vertShader = vertShader;
         this.fragShader = fragShader;
         this.program = program;
-
         this.indexBufferObject = indexBufferObject;
         this.vertexArray = vertexArray;
-
-
         this.viewMatrixLocation = viewMatrixLocation;
-           
-        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBufferObject);
 
-        var indexBuffer = indexDataBuffer.wordView;
-        var max = CONST.MAX_SPRITES * CONST.SPRITE_INDEX_COUNT;
-
-            // Populate the index buffer only once
+        // Populate the index buffer only once
         for (var indexA = 0, indexB = 0; indexA < max; indexA += CONST.SPRITE_INDEX_COUNT, indexB += CONST.SPRITE_VERTEX_COUNT)
         {
             indexBuffer[indexA + 0] = indexB + 0;
@@ -119,12 +100,12 @@ SpriteBatch.prototype = {
             indexBuffer[indexA + 4] = indexB + 2;
             indexBuffer[indexA + 5] = indexB + 3;
         }
+
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBufferObject);
         gl.bufferSubData(gl.ELEMENT_ARRAY_BUFFER, 0, indexBuffer);
 
         this.bind();
-
-        this.resize(this.width, this.height);
-
+        this.resize(this.width, this.height, this.game.config.resolution);
         this.unbind();
     },
 
@@ -133,7 +114,7 @@ SpriteBatch.prototype = {
         return (this.vertexDataBuffer.getByteLength() >= this.vertexDataBuffer.getByteCapacity());
     },
 
-    add: function (frame, anchorX, anchorY, translateX, translateY, scaleX, scaleY, rotation, vertexColor)
+    add: function (frame, anchorX, anchorY, matrix, vertexColor)
     {
         this.manager.setBatch(this, frame.texture.source[frame.sourceIndex].glTexture);
 
@@ -148,49 +129,59 @@ SpriteBatch.prototype = {
         var height = frame.height;
         var x = width * -anchorX + frame.x;
         var y = height * -anchorY + frame.y;
-
+        var a = matrix[0];
+        var b = matrix[1];
+        var c = matrix[2];
+        var d = matrix[3];
+        var tx = matrix[4];
+        var ty = matrix[5];
+        
         vertexBufferF32[vertexOffset++] = x;
         vertexBufferF32[vertexOffset++] = y;
         vertexBufferF32[vertexOffset++] = uvs.x0;
         vertexBufferF32[vertexOffset++] = uvs.y0;
-        vertexBufferF32[vertexOffset++] = translateX;
-        vertexBufferF32[vertexOffset++] = translateY;
-        vertexBufferF32[vertexOffset++] = scaleX;
-        vertexBufferF32[vertexOffset++] = scaleY;
-        vertexBufferF32[vertexOffset++] = rotation;
+        vertexBufferF32[vertexOffset++] = a;
+        vertexBufferF32[vertexOffset++] = b;
+        vertexBufferF32[vertexOffset++] = c;
+        vertexBufferF32[vertexOffset++] = d;
+        vertexBufferF32[vertexOffset++] = tx;
+        vertexBufferF32[vertexOffset++] = ty;
         vertexBufferU32[vertexOffset++] = vertexColor.topLeft;
 
         vertexBufferF32[vertexOffset++] = x;
         vertexBufferF32[vertexOffset++] = y + height;
         vertexBufferF32[vertexOffset++] = uvs.x1;
         vertexBufferF32[vertexOffset++] = uvs.y1;
-        vertexBufferF32[vertexOffset++] = translateX;
-        vertexBufferF32[vertexOffset++] = translateY;
-        vertexBufferF32[vertexOffset++] = scaleX;
-        vertexBufferF32[vertexOffset++] = scaleY;
-        vertexBufferF32[vertexOffset++] = rotation;
+        vertexBufferF32[vertexOffset++] = a;
+        vertexBufferF32[vertexOffset++] = b;
+        vertexBufferF32[vertexOffset++] = c;
+        vertexBufferF32[vertexOffset++] = d;
+        vertexBufferF32[vertexOffset++] = tx;
+        vertexBufferF32[vertexOffset++] = ty;
         vertexBufferU32[vertexOffset++] = vertexColor.bottomLeft;
     
         vertexBufferF32[vertexOffset++] = x + width;
         vertexBufferF32[vertexOffset++] = y + height;
         vertexBufferF32[vertexOffset++] = uvs.x2;
         vertexBufferF32[vertexOffset++] = uvs.y2;
-        vertexBufferF32[vertexOffset++] = translateX;
-        vertexBufferF32[vertexOffset++] = translateY;
-        vertexBufferF32[vertexOffset++] = scaleX;
-        vertexBufferF32[vertexOffset++] = scaleY;
-        vertexBufferF32[vertexOffset++] = rotation;
+        vertexBufferF32[vertexOffset++] = a;
+        vertexBufferF32[vertexOffset++] = b;
+        vertexBufferF32[vertexOffset++] = c;
+        vertexBufferF32[vertexOffset++] = d;
+        vertexBufferF32[vertexOffset++] = tx;
+        vertexBufferF32[vertexOffset++] = ty;
         vertexBufferU32[vertexOffset++] = vertexColor.bottomRight;
 
         vertexBufferF32[vertexOffset++] = x + width;
         vertexBufferF32[vertexOffset++] = y;
         vertexBufferF32[vertexOffset++] = uvs.x3;
         vertexBufferF32[vertexOffset++] = uvs.y3;
-        vertexBufferF32[vertexOffset++] = translateX;
-        vertexBufferF32[vertexOffset++] = translateY;
-        vertexBufferF32[vertexOffset++] = scaleX;
-        vertexBufferF32[vertexOffset++] = scaleY;
-        vertexBufferF32[vertexOffset++] = rotation;
+        vertexBufferF32[vertexOffset++] = a;
+        vertexBufferF32[vertexOffset++] = b;
+        vertexBufferF32[vertexOffset++] = c;
+        vertexBufferF32[vertexOffset++] = d;
+        vertexBufferF32[vertexOffset++] = tx;
+        vertexBufferF32[vertexOffset++] = ty;
         vertexBufferU32[vertexOffset++] = vertexColor.topRight;
 
         this.elementCount += CONST.SPRITE_INDEX_COUNT;
@@ -201,11 +192,8 @@ SpriteBatch.prototype = {
         var gl = this.glContext;
 
         gl.useProgram(this.program);
-
         gl.clearColor(0, 0, 0, 1);
-
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBufferObject);
-
         BindVertexArray(gl, this.vertexArray);
     },
 
@@ -214,7 +202,6 @@ SpriteBatch.prototype = {
         var gl = this.glContext;
 
         gl.useProgram(null);
-
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null);
         gl.bindBuffer(gl.ARRAY_BUFFER, null);
     },
@@ -225,39 +212,25 @@ SpriteBatch.prototype = {
         var vertexDataBuffer = this.vertexDataBuffer;
 
         gl.bufferSubData(gl.ARRAY_BUFFER, 0, vertexDataBuffer.getUsedBufferAsFloat());
-
         gl.drawElements(gl.TRIANGLES, this.elementCount, gl.UNSIGNED_SHORT, 0);
-
         vertexDataBuffer.clear();
 
         this.elementCount = 0;
     },
 
-    resize: function (width, height)
+    resize: function (width, height, resolution)
     {
         var gl = this.glContext;
-        var res = this.game.config.resolution;
         
-        this.width = width * res;
-        this.height = height * res;
-        
-        this.view.width = this.width;
-        this.view.height = this.height;
-        
-        if (this.autoResize)
-        {
-            this.view.style.width = (this.width / res) + 'px';
-            this.view.style.height = (this.height / res) + 'px';
-        }
-
-        gl.viewport(0, 0, this.width, this.height);
+        this.width = width * resolution;
+        this.height = height * resolution;
 
         gl.uniformMatrix4fv(
             this.viewMatrixLocation,
             false,
             new Float32Array([
-                2 / this.view.width, 0, 0, 0,
-                0, -2 / this.view.height, 0, 0,
+                2 / this.width, 0, 0, 0,
+                0, -2 / this.height, 0, 0,
                 0, 0, 1, 1,
                 -1, 1, 0, 0
             ])

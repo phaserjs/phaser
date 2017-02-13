@@ -13,7 +13,7 @@ var CONST = {
     SPRITE_VERTEX_COMPONENT_COUNT: 11,
 
     // Can't be bigger since index are 16-bit
-    MAX_SPRITES: 10000,
+    MAX_SPRITES: 2000,
 
     VERTEX_SHADER_SOURCE: VertexShader,
     FRAGMENT_SHADER_SOURCE: FragmentShader
