@@ -60,6 +60,7 @@ var Config = function (config)
     this.transparent = GetObjectValue(config, 'transparent', false);
     this.clearBeforeRender = GetObjectValue(config, 'clearBeforeRender', true);
     this.backgroundColor = ValueToColor(GetObjectValue(config, 'backgroundColor', 0));
+    this.preserveDrawingBuffer = ValueToColor(GetObjectValue(config, 'preserveDrawingBuffer', false));
 
     //  Callbacks
     this.preBoot = GetObjectValue(config, 'callbacks.preBoot', NOOP);
