@@ -1,7 +1,7 @@
 /**
-* @author       Richard Davey <rich@photonstorm.com>
-* @author       Mat Groves (@Doormat23)
-* @copyright    2016 Photon Storm Ltd.
+* @author       Richard Davey (@photonstorm)
+* @author       Felipe Alfonso (@bitnenfer)
+* @copyright    2017 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
