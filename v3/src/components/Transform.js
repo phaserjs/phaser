@@ -71,6 +71,23 @@ Transform.prototype.remove = function (transform)
 		transform.parent = transform;
 	}
 };
+Transform.prototype.hasPoint = function (x, y, camera)
+{
+	var gameObject = this.gameObject;
+	var worldMatrix = this.worldMatrix;
+
+	// This should be passed to the function in some way.
+	// Not every gameobject is a rectangle
+	var width = gameObject.frame.width;
+	var height = gameObject.frame.height;
+	var px = x * worldMatrix[0] + y * worldMatrix[2];
+    var py = x * worldMatrix[1] + y * worldMatrix[3];
+
+	camera.preRender();
+
+	camera.postRender();
+	return false;
+};
 
 Transform.updateRoot = function (root, globalOffsetX, globalOffsetY, globalScale, globalRotation)
 {

@@ -163,7 +163,7 @@ Camera.prototype = {
         this._shakeOffsetY = 0;
     },
 
-    preRender: function (interpolation, renderer)
+    preRender: function ()
     {
         var state = this.state;
         var stateTransform = state.sys.transform;
