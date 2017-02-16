@@ -46,7 +46,8 @@ var GlobalStateManager = function (game, stateConfig)
                     index: i,
                     key: 'default',
                     state: stateConfig[i],
-                    autoStart: (i === 0)
+                    autoStart: (i === 0),
+                    data: {}
                 });
             }
         }
@@ -56,7 +57,8 @@ var GlobalStateManager = function (game, stateConfig)
                 index: 0,
                 key: 'default',
                 state: stateConfig,
-                autoStart: true
+                autoStart: true,
+                data: {}
             });
         }
     }
@@ -86,6 +88,7 @@ GlobalStateManager.prototype = {
         this._pending = [];
     },
 
+    //  private
     getKey: function (key, stateConfig)
     {
         if (!key) { key = 'default'; }
@@ -351,8 +354,10 @@ GlobalStateManager.prototype = {
         return (state && state.settings.active && this.active.indexOf(state) !== -1);
     },
 
-    start: function (key)
+    start: function (key, data)
     {
+        if (data === undefined) { data = {}; }
+
         // console.log('start:', key);
 
         //  if not booted, then put state into a holding pattern
@@ -367,6 +372,7 @@ GlobalStateManager.prototype = {
                 if (entry.key === key)
                 {
                     entry.autoStart = true;
+                    entry.data = data;
                 }
             }
 
@@ -394,39 +400,39 @@ GlobalStateManager.prototype = {
 
                 if (loader.loadArray(state.sys.settings.files))
                 {
-                    loader.events.once('LOADER_COMPLETE_EVENT', this.payloadComplete.bind(this));
+                    loader.events.once('LOADER_COMPLETE_EVENT', this.payloadComplete.bind(this, data));
 
                     loader.start();
                 }
                 else
                 {
-                    this.bootState(state);
+                    this.bootState(state, data);
                 }
             }
             else
             {
-                this.bootState(state);
+                this.bootState(state, data);
             }
         }
     },
 
-    payloadComplete: function (event)
+    payloadComplete: function (event, data)
     {
         var state = event.loader.state;
 
         // console.log('payloadComplete', state.sys.settings.key);
 
-        this.bootState(state);
+        this.bootState(state, data);
     },
 
-    bootState: function (state)
+    bootState: function (state, data)
     {
-        // console.log('bootState', state.sys.settings.key);
+        console.log('bootState', state.sys.settings.key);
+        console.dir(data);
 
-        //  + arguments
         if (state.init)
         {
-            state.init.call(state);
+            state.init.call(state, data);
         }
 
         var loader = state.sys.load;
@@ -440,13 +446,13 @@ GlobalStateManager.prototype = {
             //  Is the loader empty?
             if (loader.list.size === 0)
             {
-                this.create(state);
+                this.create(state, data);
             }
             else
             {
                 //  Start the loader going as we have something in the queue
 
-                loader.events.once('LOADER_COMPLETE_EVENT', this.loadComplete.bind(this));
+                loader.events.once('LOADER_COMPLETE_EVENT', this.loadComplete.bind(this, data));
 
                 loader.start();
             }
@@ -454,20 +460,20 @@ GlobalStateManager.prototype = {
         else
         {
             //  No preload? Then there was nothing to load either
-            this.create(state);
+            this.create(state, data);
         }
     },
 
-    loadComplete: function (event)
+    loadComplete: function (event, data)
     {
         var state = event.loader.state;
 
         // console.log('loadComplete', state.sys.settings.key);
 
-        this.create(state);
+        this.create(state, data);
     },
 
-    create: function (state)
+    create: function (state, data)
     {
         console.log('create', state.sys.settings.key);
 
@@ -486,7 +492,7 @@ GlobalStateManager.prototype = {
 
         if (state.create)
         {
-            state.create();
+            state.create(data);
         }
     },
 
