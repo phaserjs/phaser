@@ -1,13 +1,17 @@
-/**
-* @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2016 Photon Storm Ltd.
-* @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
-*/
+var RequestAnimationFrame = require('../dom/RequestAnimationFrame');
 
 // My thanks to Isaac Sukin for creating MainLoop.js, on which lots of this is based.
 
-var MainLoop = function (framerate)
+var MainLoop = function (game, framerate)
 {
+    this.game = game;
+
+    /**
+    * @property {Phaser.RequestAnimationFrame} raf - Automatically handles the core game loop via requestAnimationFrame or setTimeout
+    * @protected
+    */
+    this.raf = new RequestAnimationFrame();
+
     /**
     * @property {number} timestep - The amount of time (in milliseconds) to simulate each time update() runs.
     */
@@ -129,13 +133,18 @@ MainLoop.prototype = {
         this.lastFrameTimeMs = window.performance.now();
         this.lastFpsUpdate = window.performance.now();
         this.framesThisSecond = 0;
+
+        this.raf.start(this.step.bind(this), this.game.config.forceSetTimeOut);
     },
 
     //  timestamp = DOMHighResTimeStamp
     // active = array containing: ({ index: i, state: state })
 
-    step: function (timestamp, active, renderer)
+    step: function (timestamp)
     {
+        var active = this.game.state.active;
+        var renderer = this.game.renderer;
+
         var len = active.length;
 
         // Throttle the frame rate (if minFrameDelay is set to a non-zero value by

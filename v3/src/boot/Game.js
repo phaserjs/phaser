@@ -9,7 +9,7 @@ var DebugHeader = require('./DebugHeader');
 var Device = require('../device');
 
 var AddToDOM = require('../dom/AddToDOM');
-var RequestAnimationFrame = require('../dom/RequestAnimationFrame');
+// var RequestAnimationFrame = require('../dom/RequestAnimationFrame');
 var DOMContentLoaded = require('../dom/DOMContentLoaded');
 
 var MainLoop = require('./MainLoop');
@@ -34,7 +34,7 @@ var Game = function (config)
     * @property {Phaser.RequestAnimationFrame} raf - Automatically handles the core game loop via requestAnimationFrame or setTimeout
     * @protected
     */
-    this.raf = new RequestAnimationFrame();
+    // this.raf = new RequestAnimationFrame();
 
     /**
     * @property {Phaser.TextureManager} textures - Reference to the Phaser Texture Manager.
@@ -70,7 +70,7 @@ var Game = function (config)
     * @property {Phaser.MainLoop} mainloop - Main Loop handler.
     * @protected
     */
-    this.mainloop = new MainLoop(this.config.fps);
+    this.mainloop = new MainLoop(this, this.config.fps);
 
     //  Wait for the DOM Ready event, then call boot.
     DOMContentLoaded(this.boot.bind(this));
@@ -103,14 +103,16 @@ Game.prototype = {
 
         this.mainloop.start();
 
-        this.raf.start(this.step.bind(this), this.config.forceSetTimeOut);
-    },
+        // this.raf.start(this.step.bind(this), this.config.forceSetTimeOut);
+    }
 
+    /*
     step: function (timestamp)
     {
         //  Pass in via game to 'start' instead of every update?
         this.mainloop.step(timestamp, this.state.active, this.renderer);
     }
+    */
 
 };
 

@@ -452,7 +452,7 @@ GlobalStateManager.prototype = {
             {
                 //  Start the loader going as we have something in the queue
 
-                loader.events.once('LOADER_COMPLETE_EVENT', this.loadComplete.bind(this, data));
+                loader.events.once('LOADER_COMPLETE_EVENT', this.loadComplete.bind(this, {}, data));
 
                 loader.start();
             }
