@@ -9,7 +9,6 @@ var DebugHeader = require('./DebugHeader');
 var Device = require('../device');
 
 var AddToDOM = require('../dom/AddToDOM');
-// var RequestAnimationFrame = require('../dom/RequestAnimationFrame');
 var DOMContentLoaded = require('../dom/DOMContentLoaded');
 
 var MainLoop = require('./MainLoop');
@@ -29,12 +28,6 @@ var Game = function (config)
 
     this.isBooted = false;
     this.isRunning = false;
-
-    /**
-    * @property {Phaser.RequestAnimationFrame} raf - Automatically handles the core game loop via requestAnimationFrame or setTimeout
-    * @protected
-    */
-    // this.raf = new RequestAnimationFrame();
 
     /**
     * @property {Phaser.TextureManager} textures - Reference to the Phaser Texture Manager.
@@ -102,17 +95,7 @@ Game.prototype = {
         this.config.postBoot();
 
         this.mainloop.start();
-
-        // this.raf.start(this.step.bind(this), this.config.forceSetTimeOut);
     }
-
-    /*
-    step: function (timestamp)
-    {
-        //  Pass in via game to 'start' instead of every update?
-        this.mainloop.step(timestamp, this.state.active, this.renderer);
-    }
-    */
 
 };
 

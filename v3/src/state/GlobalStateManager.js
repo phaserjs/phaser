@@ -359,6 +359,7 @@ GlobalStateManager.prototype = {
         if (data === undefined) { data = {}; }
 
         // console.log('start:', key);
+        // console.dir(data);
 
         //  if not booted, then put state into a holding pattern
         if (!this.game.isBooted)
@@ -391,6 +392,8 @@ GlobalStateManager.prototype = {
 
             state.settings.active = true;
 
+            state.settings.data = data;
+
             var loader = state.sys.load;
 
             //  Files payload?
@@ -400,39 +403,38 @@ GlobalStateManager.prototype = {
 
                 if (loader.loadArray(state.sys.settings.files))
                 {
-                    loader.events.once('LOADER_COMPLETE_EVENT', this.payloadComplete.bind(this, data));
+                    loader.events.once('LOADER_COMPLETE_EVENT', this.payloadComplete.bind(this));
 
                     loader.start();
                 }
                 else
                 {
-                    this.bootState(state, data);
+                    this.bootState(state);
                 }
             }
             else
             {
-                this.bootState(state, data);
+                this.bootState(state);
             }
         }
     },
 
-    payloadComplete: function (event, data)
+    payloadComplete: function (event)
     {
         var state = event.loader.state;
 
         // console.log('payloadComplete', state.sys.settings.key);
 
-        this.bootState(state, data);
+        this.bootState(state);
     },
 
-    bootState: function (state, data)
+    bootState: function (state)
     {
-        console.log('bootState', state.sys.settings.key);
-        console.dir(data);
+        // console.log('bootState', state.sys.settings.key);
 
         if (state.init)
         {
-            state.init.call(state, data);
+            state.init.call(state, state.sys.settings.data);
         }
 
         var loader = state.sys.load;
@@ -446,13 +448,13 @@ GlobalStateManager.prototype = {
             //  Is the loader empty?
             if (loader.list.size === 0)
             {
-                this.create(state, data);
+                this.create(state);
             }
             else
             {
                 //  Start the loader going as we have something in the queue
 
-                loader.events.once('LOADER_COMPLETE_EVENT', this.loadComplete.bind(this, {}, data));
+                loader.events.once('LOADER_COMPLETE_EVENT', this.loadComplete.bind(this));
 
                 loader.start();
             }
@@ -460,22 +462,22 @@ GlobalStateManager.prototype = {
         else
         {
             //  No preload? Then there was nothing to load either
-            this.create(state, data);
+            this.create(state);
         }
     },
 
-    loadComplete: function (event, data)
+    loadComplete: function (event)
     {
         var state = event.loader.state;
 
         // console.log('loadComplete', state.sys.settings.key);
 
-        this.create(state, data);
+        this.create(state);
     },
 
-    create: function (state, data)
+    create: function (state)
     {
-        console.log('create', state.sys.settings.key);
+        // console.log('create', state.sys.settings.key);
 
         //  Insert at the correct index, or it just all goes wrong :)
 
@@ -492,7 +494,7 @@ GlobalStateManager.prototype = {
 
         if (state.create)
         {
-            state.create(data);
+            state.create(state.sys.settings.data);
         }
     },
 

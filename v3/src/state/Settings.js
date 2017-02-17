@@ -28,6 +28,8 @@ var Settings = {
 
             //  Loader payload array
 
+            data: {},
+
             files: GetObjectValue(config, 'files', false),
 
             //  -1 means the State Manager will set it to be the Game dimensions

@@ -16,11 +16,11 @@ StateManager.prototype.constructor = StateManager;
 StateManager.prototype = {
 
     //  Start this State (or the one given via key)
-    start: function (key)
+    start: function (key, data)
     {
         if (key === undefined) { key = this.key; }
 
-        this.manager.start(key);
+        this.manager.start(key, data);
     },
 
     //  Pause this State (or the one given via key)
