@@ -25,7 +25,7 @@ var Color = function (red, green, blue, alpha)
     this.setTo(red, green, blue, alpha);
 };
 
-Color.prototype.contrusctor = Color;
+Color.prototype.constructor = Color;
 
 Color.prototype = {
 
