@@ -30,7 +30,6 @@ Grab the source and join in the fun!
 - [Requirements](#requirements)
 - [Road Map](#road-map)
 - [Change Log](#change-log)
-- [Lazer](#lazer)
 - [Contributing](#contributing)
 
 <a name="whats-new"></a>
