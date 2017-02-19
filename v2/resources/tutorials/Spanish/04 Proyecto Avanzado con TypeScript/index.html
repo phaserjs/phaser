@@ -32,13 +32,15 @@ module Castlevania {
 } 
 </pre> 
 
-Aqui hemos creado un nuevo modulo llamada <code>Castlevania</code> que estara debajo de todas las otras clases. Obviously you'd change this to whatever your game is actually called, unless you're genuinely working on a Castlevania game, in which case I'm eternally jealous :)
+Aqui hemos creado un nuevo modulo llamada <code>Castlevania</code> que estara debajo de todas las otras clases. 
+Obviamente, cambiarías esto a cualquier juego que se llame, a menos que estés realmente trabajando en un juego de Castlevania, en cuyo caso estaria eternamente celoso :)
 
-The <code>Game</code> class is extending <code>Phaser.Game</code>. As a result we need to call super in the constructor and pass in our game settings. Once done we add 4 States to the game: Boot, Preloader, MainMenu and Level1, and then start the Boot state. You don't have to add ALL of the States at this point, but there is no harm in doing so.
+El <code>Game</code> class extiende de <code>Phaser.Game</code>. Como resultado necesitamos invocar en el constructor el metodo super y pasar la configuración del juego. Una vez hecho esto, agregamos 4 estados al juego: Boot, Preloader, MainMenu and Level1, y luego inicia el Boot estado. No tienes que agregar todos los estados. 
 
 <!--more-->
 
-When adding this code in Visual Studio you may notice that Boot, Preload, MainMenu, and Level1 are underlined in red. This is because they don't yet exist within the Project.
+Cuando agreges este codigo en Visual Studio debes notar que Boot, Preload, MainMenu y Level1 estan subrayadas en rojo. Estos es porque estos no existen en el proyecto aun.
+
 
 <a href="http://www.photonstorm.com/wp-content/uploads/2013/12/part11.png"><img src="http://www.photonstorm.com/wp-content/uploads/2013/12/part11.png" alt="part1" width="1327" height="971" class="alignnone size-full wp-image-13669" /></a>
 
@@ -81,10 +83,9 @@ module Castlevania {
 
 }
 </pre> 
+Nuesta clase <code>Boot</code> es donde vamosa  definir la configuración global del juego. Es tambien donde vamos a precargar los graficos que van a ser usados en la precarga actual, que para este caso es una simple barra. 
 
-Our <code>Boot</code> class is where we define global settings for the game. It's also were we preload the graphics that will be used by the actual Preloader, in this case a simple loading bar image.
-
-The <code>create</code> function is called after the image has loaded. In the code above you can see that we're setting the maximum number of pointers to 1 and disabling the 'pause' checks. This isn't a require of Phaser, it's just a good example of the sort of things that go into a common Boot script. This is also where you would define how the game handles scaling. For example if this was aimed at mobile and needed to run at iPad resolution (1024x672) then we would usually add the following code into the 'mobile settings' part of the class:
+La función <code>create</code> es llamada despues de que la imagen es cargada. En el código anterior puedes ver que estamos configurando el número maáximo de apuntadores a 1 y deshabilitando la verificación del 'pause'. Esto no es un requisito en Phaser, es solo un buen ejemplo de la manera de organizar las cosas que van dentro un archivo de inicializacion (Boot). Este es ademas donde tu podras definir como el juego manejara el escalamiento. Por ejemplo si este estuviera dirigido para dispositivos moviles y necesitaramos que corrierra en la resolucion de un iPad (1024x672) entonces tendriamos que agregar el siguiente codigo dentro de las configuraciones de la parte del codigo de configuración relacionada con el movil 'mobile settings': 
  
 <pre class="lang:js decode:true " >//  In this case we're saying "scale the game, no lower than 480x260 and no higher than 1024x768"
 this.stage.scaleMode = Phaser.StageScaleMode.SHOW_ALL;
@@ -97,13 +98,14 @@ this.stage.scale.pageAlignHorizontally = true;
 this.stage.scale.setScreenSize(true);
 </pre> 
 
-The code above isn't needed for this tutorial however.
+Este codigo anterior sinembargo no es necesario para este tutorial.
 
-When all of this has finished Phaser swaps to the <code>Preloader</code> state.
+Cuando termina esto, Phaser cambiara al estado de <code>Preloader</code>.
 
-<h3>Creating our Preloader, extending a Phaser.State</h3>
 
-Create a new TypeScript file called <code>Preloader.ts</code> and paste the following code in:
+<h3>Creando nuestro Preloader (Precarga), extendiendo de Phaser.State</h3>
+
+Crear un nuevo archivo TypeScript con el nombre <code>Preloader.ts</code> y pega el siguiente código:
  
 <pre class="lang:js decode:true " >module Castlevania {
 
@@ -144,19 +146,21 @@ Create a new TypeScript file called <code>Preloader.ts</code> and paste the foll
 }
 </pre> 
 
-This class is extending <a href="http://gametest.mobi/phaser/docs/Phaser.State.html">Phaser.State</a>. This means you've got instant access to all the properties of the State object. Phaser uses a set of specially named functions to perform tasks, one of which is <code>preload</code>. Inside here we can queue calls to Phasers asset loader. As you can see in the code above we're loading a variety of assets: some images, a sprite sheet and an mp3.
+Esta clase extiende de <a href="http://gametest.mobi/phaser/docs/Phaser.State.html">Phaser.State</a>.  Esto significa que tendras acceso instantaneo a todas las propiedas del estado del obejto. Phaser usa un conjunto de funciones para realizar ciertas tareas, una de estas es <code>preload</code>. Dentro de esta podemos encolar llamados a la precargar de recursos (assets) the Phaser. Como podras ver en el código anterior estamos cargando una variedad de recursos: algunas imagenes, sprites y mp3. 
 
-We also create a sprite called <code>preloadBar</code> and link it to the asset loader. It will be automatically cropped as the files load in, making the effect of a preloader bar increasing over time as each file completes:
+Tambien creamos un sprite llamado <code>preloadBar</code>  y lo ligamos al cargador de recursos. Este sera automaticamente recortado como el archivo sea cargado, haciendo del efecto de de una barra de precarga en el tiempo hasta que carguen todos los archivos:
+
 
 <a href="http://www.photonstorm.com/wp-content/uploads/2013/12/part21.png"><img src="http://www.photonstorm.com/wp-content/uploads/2013/12/part21.png" alt="part2" width="800" height="600" class="alignnone size-full wp-image-13674" /></a>
 
-When the load is finished the <code>create</code> function is called, which is when we fade the preload bar away. On completion of that tween we start the main menu. If you run the game locally you probably won't even see the preload bar fill-up as the assets will load from the local filesystem too fast to be noticed, but once out in the wild this won't be an issue and it'll be important to offer a decent looking preloader screen.
+Cuando la carga termina la función <code>create</code> es llamada, y en este momento es cuando se oculta la barra de precarga. Al completar esa interpolación empezamos el menú principal. Si corres el juego localmente no veras la barra de precarga dado que los recursos seran cargados del sistema local de archivos y eso sucede muy rapido, pero una vez en produccion esto no sera un problema y sera muy importante mostrar una bonita pantalla de precarga.
 
-Once everything has finished we start the <code>MainMenu</code>.
+Una vez terminado esto, empezamos el <code>MainMenu</code> (Menú principal).
 
-<h3>The Main Menu</h3>
 
-For this tutorial our menu is a picture and a game logo with a couple of simple tweens. Obviously you'll want to enhance this for your own games, but it serves our purpose here. Create a new file called <code>MainMenu.ts</code> and paste this code in:
+<h3>El menú principal/h3>
+
+Para este tutorial, nuestro menú es una imagen y el logo del juego con una serie de transiciones sencillas. Obviamente vas a querer mejor esto para tu propio juego, pero esto sirve para nuestro proposito aqui. Crea un nuevo archivo llamado <code>MainMenu.ts</code> y pega este código: 
  
 <pre class="lang:js decode:true " >module Castlevania {
 
@@ -199,15 +203,17 @@ For this tutorial our menu is a picture and a game logo with a couple of simple 
 
 }</pre> 
 
-I won't explain all of it because it should start becoming quite familiar by now. A couple of Sprites, tweens to make them appear. Then the game waits for an input event before fading out and starting the Level1 class. When you run it the menu will look like this:
+No voy a explicar todo esto porque esto debe comenzar a ser bastante familiar por ahora. Un par the Sprites, transiciones que las hacen aparecer. Luego el juego espera por algun evento de entrada antes de ocultar e iniciar la clase Level1. Cuando corras esto el menu se vera como esto:
+
 
 <a href="http://www.photonstorm.com/wp-content/uploads/2013/12/part3.jpg"><img src="http://www.photonstorm.com/wp-content/uploads/2013/12/part3.jpg" alt="part3" width="800" height="600" class="alignnone size-full wp-image-13675" /></a>
 
-Not too bad :)
 
-<h3>Extending Phaser.Sprite</h3>
+No esta nada mal :)
 
-Create a new TypeScript file called <code>Level1.ts</code> and add this code to it:
+<h3>Extendiendo Phaser.Sprite</h3>
+
+Crea un nuevo archivo TypeScript con el nombre <code>Level1.ts</code> y agrega este código:
  
 <pre class="lang:js decode:true " >module Castlevania {
 
@@ -231,9 +237,8 @@ Create a new TypeScript file called <code>Level1.ts</code> and add this code to 
     }
 
 } </pre> 
-
-We aren't going to cover creating a fully working game here, but I do want to use this file to highlight extending Phaser Sprites. In the code above you'll see a local variable called <code>player</code> that is an instance of Castlevania.Player. Create a new TypeScript file called Player.ts and paste this code in:
- 
+Nosotros no vamos a cubrir la creación completa de un juego aqui, pero quiero usar este archivo para resaltar la forma de extender Sprites en Phaser. En el código anterior podras ver la variable llamada <code>player</code> que es una instancia de Castlevania.Player. Crea un nuevo archivo de TypeScript con el nombre Player.ts y pega el siguiente codigo:
+  
 <pre class="lang:js decode:true " >module Castlevania {
 
     export class Player extends Phaser.Sprite {
@@ -282,6 +287,7 @@ We aren't going to cover creating a fully working game here, but I do want to us
 
 }</pre> 
 
+Aqui nuestro objeto Player esta extendiendo  de <a href="http://gametest.mobi/phaser/docs/Phaser.Sprite.html">Phaser.Sprite</a>. Como resulado tenemos un acceso directo a todos las propiedades desde a dentro del Sprite,  por lo que podemos configurar directamente la velocidad sobre el cuerpo 
 Here our Player object is extending <a href="http://gametest.mobi/phaser/docs/Phaser.Sprite.html">Phaser.Sprite</a>. As a result we have direct access to all Sprite properties from within it, which is why we can set the velocity directly on the body for example. Upon instantiation a few visual properties are set and an animation walk cycle added. Finally the sprite is added to the game world via <code>game.add.existing(this)</code>.
 
 Once the sprite is added to the game world its update function will be called every frame. So to take advantage of this we set the players velocity if the left or right arrow keys are held down. As you'd expect this allows you to make the player walk left or right and animate accordingly. The end result looks like this:
@@ -290,17 +296,20 @@ Once the sprite is added to the game world its update function will be called ev
 
 We didn't have to check for input within the Player class. We could have added an update function to the Level1 class instead and then told the Player to move as a result of that, but it highlighted an important choice: it's up to you how your code is structured. So long as you adhere to a few basic rules and remember the names of the special Phaser functions, you can achieve pretty much any set-up you require or are familiar with.
 
-<h3>Compiling to a single JS file</h3>
+
+<h3>Compilando un solo archivo Javascript</h3>
 
 I'm sure you are keen to try out the project, but first let's make a couple of small but vital tweaks so we can build it. Enter the Project properties by selecting <code>Properties</code> from the Project menu. Then click the <strong>TypeScript Build</strong> category on the left and change the settings to match this:
 
 <a href="http://www.photonstorm.com/wp-content/uploads/2013/12/part52.png"><img src="http://www.photonstorm.com/wp-content/uploads/2013/12/part52.png" alt="part5" width="831" height="731" class="alignnone size-full wp-image-13678" /></a>
 
-The important things to do are:
+Las cosas importante para hacer son:
 
 <ul>
-	<li>Make sure the ECMAScript version is set to ECMAScript 5.</li>
-	<li>Set the Module system to None</li>
+    <li>Asegurarte que las version de  ECMAScript esta configurada en la versión ECMAScript 5.</li>
+<li>Configurar elModule system en None</li>
+
+
 	<li>Check 'Combine JavaScript output into file' and enter 'game.js' as the filename</li>
 </ul>
 
