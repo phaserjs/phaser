@@ -76,16 +76,32 @@ Transform.prototype.hasPoint = function (x, y, camera)
 	var gameObject = this.gameObject;
 	var worldMatrix = this.worldMatrix;
 
+	camera.preRender();
+
 	// This should be passed to the function in some way.
 	// Not every gameobject is a rectangle
 	var width = gameObject.frame.width;
 	var height = gameObject.frame.height;
 	var px = x * worldMatrix[0] + y * worldMatrix[2];
     var py = x * worldMatrix[1] + y * worldMatrix[3];
+    var tx = worldMatrix[4];
+    var ty = worldMatrix[5];
+    var cx = camera.x;
+    var cy = camera.y;
+    var cw = cx + camera.width;
+    var ch = cy + camera.height;
 
-	camera.preRender();
+	if (x > cx && x < cw &&
+		y > cy && y < ch &&
+		px > tx && px < tx + width &&
+		py > ty && py < ty + height)
+	{
+		camera.postRender();
+		return true;
+	}
 
 	camera.postRender();
+
 	return false;
 };
 
