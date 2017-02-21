@@ -214,14 +214,29 @@ CanvasRenderer.prototype = {
         }
         //  Call the State.render function
         state.render.call(state, ctx, interpolationPercentage);
+        
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
+
+        if (camera._fadeAlpha > 0 || camera._flashAlpha > 0)
+        {
+            // fade rendering
+            ctx.fillStyle = 'rgb(' + (camera._fadeRed * 255) + ',' + (camera._fadeGreen * 255) + ',' + (camera._fadeBlue * 255) + ')';
+            ctx.globalAlpha = camera._fadeAlpha;
+            ctx.fillRect(camera.x, camera.y, camera.width, camera.height);
+
+            // flash rendering
+            ctx.fillStyle = 'rgb(' + (camera._flashRed * 255) + ',' + (camera._flashGreen * 255) + ',' + (camera._flashBlue * 255) + ')';
+            ctx.globalAlpha = camera._flashAlpha;
+            ctx.fillRect(camera.x, camera.y, camera.width, camera.height);
+
+            ctx.globalAlpha = 1.0;
+        }
 
         //  Reset the camera scissor
         if (scissor)
         {
             ctx.restore();
         }
-
-        ctx.setTransform(1, 0, 0, 1, 0, 0);
         
         //  Blast it to the Game Canvas (if needed)
         if (settings.renderToTexture)
