@@ -220,7 +220,7 @@ WebGLRenderer.prototype = {
         // We could either clear color or render a quad
         gl.clear(gl.COLOR_BUFFER_BIT);
 
-        var list = state.sys.children.list;
+        var list = children.list;
         var length = list.length;
         for (var index = 0; index < length; ++index)
         {

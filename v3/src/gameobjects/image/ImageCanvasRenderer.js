@@ -1,5 +1,5 @@
 
-var ImageCanvasRenderer = function (renderer, src, interpolationPercentage)
+var ImageCanvasRenderer = function (renderer, src, interpolationPercentage, camera)
 {
     var frame = src.frame;
 
@@ -15,7 +15,7 @@ var ImageCanvasRenderer = function (renderer, src, interpolationPercentage)
     var tint = src.color._glTint;
     var bg = src.color._glBg;
 
-    renderer.drawImage(frame, src.blendMode, src.transform, src.anchorX, src.anchorY, alpha, tint, bg);
+    renderer.drawImage(frame, src.blendMode, src.transform, src.anchorX, src.anchorY, alpha, tint, bg, camera);
 };
 
 module.exports = ImageCanvasRenderer;

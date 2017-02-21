@@ -149,17 +149,18 @@ CanvasRenderer.prototype = {
      *   by the amount of time that will be simulated the next time update()
      *   runs. Useful for interpolating frames.
      */
-    render: function (state, list, interpolationPercentage, camera)
+    render: function (state, children, interpolationPercentage, camera)
     {
         var w = state.sys.width;
         var h = state.sys.height;
         var ctx = state.sys.context;
         var settings = state.sys.settings;
         var scissor = (camera.x !== 0 || camera.y !== 0 || camera.width !== ctx.canvas.width || camera.height !== ctx.canvas.height);
+        var list = children.list;
 
         this.currentContext = ctx;
 
-        ctx.setTransform(1, 0, 0, 1, 0, 0);
+        
 
         //  If the alpha or blend mode didn't change since the last render, then don't set them again (saves 2 ops)
 
@@ -202,16 +203,15 @@ CanvasRenderer.prototype = {
             ctx.closePath();
         }
 
+        var matrix = camera.matrix.matrix;
+        ctx.setTransform(matrix[0], matrix[1], matrix[2], matrix[3], matrix[4], matrix[5]);
+
         for (var c = 0; c < list.length; c++)
         {
-            var child = list[c].gameObject;
+            var child = list[c];
 
-            child.renderCanvas(this, child, interpolationPercentage);
+            child.renderCanvas(this, child, interpolationPercentage, camera);
         }
-
-        //  Reset the transform so going in to the devs render function the context is ready for use
-        ctx.setTransform(1, 0, 0, 1, 0, 0);
-
         //  Call the State.render function
         state.render.call(state, ctx, interpolationPercentage);
 
@@ -221,6 +221,8 @@ CanvasRenderer.prototype = {
             ctx.restore();
         }
 
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
+        
         //  Blast it to the Game Canvas (if needed)
         if (settings.renderToTexture)
         {

@@ -1,5 +1,5 @@
 
-var BlitterCanvasRenderer = function (renderer, src, interpolationPercentage)
+var BlitterCanvasRenderer = function (renderer, src, interpolationPercentage, camera)
 {
     var worldAlpha = src.color.worldAlpha;
     var list = src.getRenderList();
@@ -26,7 +26,7 @@ var BlitterCanvasRenderer = function (renderer, src, interpolationPercentage)
             ca = renderer.setAlpha(bob.alpha);
         }
 
-        renderer.blitImage(bob.x, bob.y, bob.frame);
+        renderer.blitImage(bob.x, bob.y, bob.frame, camera);
     }
 };
 
