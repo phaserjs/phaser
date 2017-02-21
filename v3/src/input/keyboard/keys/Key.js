@@ -18,7 +18,7 @@ var Key = function (keyCode)
     * @property {boolean} preventDefault - Should this Key prevent event propagation?
     * @default
     */
-    this.preventDefault = false;
+    this.preventDefault = true;
 
     /**
     * @property {boolean} enabled - Can this Key be processed?

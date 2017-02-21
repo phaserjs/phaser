@@ -2,6 +2,8 @@ var EventDispatcher = require('../../events/EventDispatcher');
 var Event = require('./events');
 var KeyCodes = require('./keys/KeyCodes');
 var Key = require('./keys/Key');
+var KeyCombo = require('./combo/KeyCombo');
+var ProcessKeyCombo = require('./combo/ProcessKeyCombo');
 var ProcessKeyDown = require('./keys/ProcessKeyDown');
 var ProcessKeyUp = require('./keys/ProcessKeyUp');
 
@@ -30,6 +32,8 @@ var KeyboardManager = function (inputManager)
     this.events = new EventDispatcher();
 
     this.keys = [];
+
+    this.combos = [];
 
     //   Standard FIFO queue
     this.queue = [];
@@ -137,14 +141,16 @@ KeyboardManager.prototype = {
     * @param {integer} keycode - The {@link Phaser.KeyCode keycode} of the key.
     * @return {Phaser.Key} The Key object which you can store locally and reference directly.
     */
-    addKey: function (keycode, name)
+    addKey: function (keyCode)
     {
-        if (!this.keys[keycode])
+        var keys = this.keys;
+
+        if (!keys[keyCode])
         {
-            this.keys[keycode] = new Key(this, keycode, name);
+            keys[keyCode] = new Key(keyCode);
         }
 
-        return this.keys[keycode];
+        return keys[keyCode];
     },
 
     /**
@@ -159,6 +165,15 @@ KeyboardManager.prototype = {
         {
             this.keys[keycode] = undefined;
         }
+    },
+
+    addKeyCombo: function (keys, config)
+    {
+        var combo = KeyCombo(keys, config);
+
+        this.combos.push(combo);
+
+        return combo;
     },
 
     //  https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/KeyboardEvent
@@ -177,6 +192,7 @@ KeyboardManager.prototype = {
         var queue = this.queue.splice(0, this.queue.length);
 
         var keys = this.keys;
+        var singleKey;
 
         //  Process the event queue, dispatching all of the events that have stored up
         for (var i = 0; i < queue.length; i++)
@@ -187,9 +203,11 @@ KeyboardManager.prototype = {
             {
                 this.events.dispatch(new Event.KEY_DOWN_EVENT(event));
 
-                if (Event._DOWN[event.keyCode])
+                singleKey = Event._DOWN[event.keyCode];
+
+                if (singleKey)
                 {
-                    this.events.dispatch(new Event._DOWN[event.keyCode](event));
+                    this.events.dispatch(new singleKey(event));
                 }
 
                 if (keys[event.keyCode])
@@ -201,9 +219,11 @@ KeyboardManager.prototype = {
             {
                 this.events.dispatch(new Event.KEY_UP_EVENT(event));
 
-                if (Event._UP[event.keyCode])
+                singleKey = Event._UP[event.keyCode];
+
+                if (singleKey)
                 {
-                    this.events.dispatch(new Event._UP[event.keyCode](event));
+                    this.events.dispatch(new singleKey(event));
                 }
 
                 if (keys[event.keyCode])
