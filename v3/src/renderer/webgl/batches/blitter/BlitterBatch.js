@@ -112,52 +112,6 @@ BlitterBatch.prototype = {
         return (this.vertexDataBuffer.getByteLength() >= this.vertexDataBuffer.getByteCapacity());
     },
 
-    add: function (x, y, frame, alpha)
-    {
-        this.manager.setBatch(this, frame.texture.source[frame.sourceIndex].glTexture);
-
-        if (this.elementCount >= this.maxParticles)
-        {
-            this.flush();
-        }
-
-        var vertexDataBuffer = this.vertexDataBuffer;
-        var vertexBuffer = vertexDataBuffer.floatView;
-        var vertexOffset = vertexDataBuffer.allocate(CONST.PARTICLE_VERTEX_COMPONENT_COUNT * CONST.PARTICLE_VERTEX_COUNT);
-        var uvs = frame.uvs;
-        var width = frame.width;
-        var height = frame.height;
-
-        x += frame.x;
-        y += frame.y;
-
-        vertexBuffer[vertexOffset++] = x;
-        vertexBuffer[vertexOffset++] = y;
-        vertexBuffer[vertexOffset++] = uvs.x0;
-        vertexBuffer[vertexOffset++] = uvs.y0;
-        vertexBuffer[vertexOffset++] = alpha;
-
-        vertexBuffer[vertexOffset++] = x;
-        vertexBuffer[vertexOffset++] = y + height;
-        vertexBuffer[vertexOffset++] = uvs.x1;
-        vertexBuffer[vertexOffset++] = uvs.y1;
-        vertexBuffer[vertexOffset++] = alpha;
-
-        vertexBuffer[vertexOffset++] = x + width;
-        vertexBuffer[vertexOffset++] = y + height;
-        vertexBuffer[vertexOffset++] = uvs.x2;
-        vertexBuffer[vertexOffset++] = uvs.y2;
-        vertexBuffer[vertexOffset++] = alpha;
-
-        vertexBuffer[vertexOffset++] = x + width;
-        vertexBuffer[vertexOffset++] = y;
-        vertexBuffer[vertexOffset++] = uvs.x3;
-        vertexBuffer[vertexOffset++] = uvs.y3;
-        vertexBuffer[vertexOffset++] = alpha;
-
-        this.elementCount += CONST.PARTICLE_INDEX_COUNT;
-    },
-
     bind: function ()
     {
         var gl = this.glContext;

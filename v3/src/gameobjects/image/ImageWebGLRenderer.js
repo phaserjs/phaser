@@ -1,6 +1,10 @@
 
 var ImageWebGLRenderer = function (renderer, src, interpolationPercentage, camera)
 {
+    //--------------------
+    // Inlined quad push
+    //--------------------
+
     var frame = src.frame;
     var alpha = 16777216;
     var transform2D = src.transform;
@@ -11,7 +15,7 @@ var ImageWebGLRenderer = function (renderer, src, interpolationPercentage, camer
     var vertexDataBuffer = spriteBatch.vertexDataBuffer;
     var vertexBufferF32 = vertexDataBuffer.floatView;
     var vertexBufferU32 = vertexDataBuffer.uintView;
-    var vertexOffset = vertexDataBuffer.allocate(40);
+    var vertexOffset = 0;
     var uvs = frame.uvs;
     var width = frame.width;
     var height = frame.height;
@@ -37,7 +41,9 @@ var ImageWebGLRenderer = function (renderer, src, interpolationPercentage, camer
     var tyh = xw * b + yh * d + f;
 
     renderer.setBatch(spriteBatch, frame.texture.source[frame.sourceIndex].glTexture);
-
+    vertexOffset = vertexDataBuffer.allocate(40);
+    spriteBatch.elementCount += 6;
+    
     vertexBufferF32[vertexOffset++] = tx;
     vertexBufferF32[vertexOffset++] = ty;
     vertexBufferF32[vertexOffset++] = uvs.x0;
@@ -78,8 +84,6 @@ var ImageWebGLRenderer = function (renderer, src, interpolationPercentage, camer
     vertexBufferF32[vertexOffset++] = scaleY;
     vertexBufferF32[vertexOffset++] = rotation;
     vertexBufferU32[vertexOffset++] = vertexColor.topRight;
-
-    spriteBatch.elementCount += 6;
 };
 
 module.exports = ImageWebGLRenderer;
