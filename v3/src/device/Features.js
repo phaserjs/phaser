@@ -171,7 +171,7 @@ function init ()
         return false;
     };
 
-    Features.webGL = testWebGL();
+    Features.webGL = true;//testWebGL();
 
     Features.worker = !!window['Worker'];
 

@@ -84,7 +84,7 @@ CameraManager.prototype = {
         }
     },
 
-    render: function (renderer, flatRenderArray, interpolation)
+    render: function (renderer, children, interpolation)
     {
         var cameras = this.cameras;
 
@@ -94,9 +94,7 @@ CameraManager.prototype = {
 
             camera.preRender();
 
-            renderer.render(this.state, flatRenderArray, interpolation, camera);
-
-            camera.postRender();
+            renderer.render(this.state, children, interpolation, camera);
         }
 
     },

@@ -12,7 +12,6 @@ var BlitterBatch = require('./batches/blitter/BlitterBatch');
 var AAQuadBatch = require('./batches/aaquad/AAQuadBatch');
 var SpriteBatch = require('./batches/sprite/SpriteBatch');
 var BlendModes = require('../BlendModes');
-var Transform = require('../../components/Transform');
 
 var WebGLRenderer = function (game)
 {
@@ -207,7 +206,7 @@ WebGLRenderer.prototype = {
      *   by the amount of time that will be simulated the next time update()
      *   runs. Useful for interpolating frames.
      */
-    render: function (state, flatRenderArray, interpolationPercentage, camera)
+    render: function (state, children, interpolationPercentage, camera)
     {
         //  Could move to the State Systems or MainLoop
         var gl = this.gl;
@@ -248,7 +247,7 @@ WebGLRenderer.prototype = {
                 this.blendMode = newBlendMode;
             }
             // drawing child
-            child.renderWebGL(this, child, interpolationPercentage);
+            child.renderWebGL(this, child, interpolationPercentage, camera);
             batch = this.batch;
             if (batch && batch.isFull())
             {

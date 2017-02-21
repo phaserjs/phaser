@@ -39,9 +39,7 @@ var GameObject = function (state, x, y, texture, frame, parent)
     this.frame = frame;
 
     //  All GameObjects have the following components, always:
-    this.transform = new Component.Transform(this, this.state.sys.transform);
-    this.transform.positionX = x;
-    this.transform.positionY = y;
+    this.transform = new Component.Transform2D(x, y);
 
     this.anchor = new Component.Anchor();
 
@@ -112,13 +110,12 @@ Object.defineProperties(GameObject.prototype, {
 
         get: function ()
         {
-            return this.transform.positionX;
+            return this.transform.x;
         },
 
         set: function (value)
         {
-            this.transform.positionX = value;
-            this.transform.dirtyLocal = true;
+            this.transform.x = value;
         }
 
     },
@@ -129,13 +126,12 @@ Object.defineProperties(GameObject.prototype, {
 
         get: function ()
         {
-            return this.transform.positionY;
+            return this.transform.y;
         },
 
         set: function (value)
         {
-            this.transform.positionY = value;
-            this.transform.dirtyLocal = true;
+            this.transform.y = value;
         }
 
     },
@@ -153,7 +149,6 @@ Object.defineProperties(GameObject.prototype, {
         {
             this.transform.scaleX = value;
             this.transform.scaleY = value;
-            this.transform.dirtyLocal = true;
         }
 
     },
@@ -170,7 +165,6 @@ Object.defineProperties(GameObject.prototype, {
         set: function (value)
         {
             this.transform.scaleX = value;
-            this.transform.dirtyLocal = true;
         }
 
     },
@@ -187,7 +181,6 @@ Object.defineProperties(GameObject.prototype, {
         set: function (value)
         {
             this.transform.scaleY = value;
-            this.transform.dirtyLocal = true;
         }
 
     },
@@ -198,13 +191,12 @@ Object.defineProperties(GameObject.prototype, {
 
         get: function ()
         {
-            return this.transform.rotation;
+            return this.transform.angle;
         },
 
         set: function (value)
         {
-            this.transform.rotation = value;
-            this.transform.dirtyLocal = true;
+            this.transform.angle = value;
         }
 
     },
@@ -215,14 +207,13 @@ Object.defineProperties(GameObject.prototype, {
 
         get: function ()
         {
-            return WrapAngle(this.transform.rotation * MATH_CONST.RAD_TO_DEG);
+            return WrapAngle(this.transform.angle * MATH_CONST.RAD_TO_DEG);
         },
 
         set: function (value)
         {
             //  value is in degrees
-            this.transform.rotation = WrapAngle(value * MATH_CONST.DEG_TO_RAD);
-            this.transform.dirtyLocal = true;
+            this.transform.angle = WrapAngle(value * MATH_CONST.DEG_TO_RAD);
         }
 
     },

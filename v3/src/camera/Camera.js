@@ -1,4 +1,4 @@
-var Transform = require('../components/Transform');
+var Transform2DMatrix = require('../components/Transform2DMatrix').Transform2DMatrix;
 
 var Camera = function (x, y, width, height)
 {
@@ -7,13 +7,11 @@ var Camera = function (x, y, width, height)
     this.width = width;
     this.height = height;
 
-    this.state = null;
-    this.statePositionX = 0.0;
-    this.statePositionY = 0.0;
     this.scrollX = 0.0;
     this.scrollY = 0.0;
     this.zoom = 1.0;
     this.rotation = 0.0;
+    this.matrix = new Transform2DMatrix(1, 0, 0, 1, 0, 0);
 
     // shake
     this._shakeDuration = 0.0;
@@ -165,24 +163,10 @@ Camera.prototype = {
 
     preRender: function ()
     {
-        var state = this.state;
-        var stateTransform = state.sys.transform;
-
-        this.statePositionX = stateTransform.positionX;
-        this.statePositionY = stateTransform.positionY;
-
-        stateTransform.positionX = this.statePositionX + this.x;
-        stateTransform.positionY = this.statePositionY + this.y;
-        
-        Transform.updateRoot(stateTransform, -this.scrollX + this._shakeOffsetX, -this.scrollY + this._shakeOffsetY, this.zoom, this.rotation);
-    },
-
-    postRender: function ()
-    {
-        var stateTransform = this.state.sys.transform;
-
-        stateTransform.positionX = this.statePositionX;
-        stateTransform.positionY = this.statePositionY;
+        this.matrix.loadIdentity().
+                    translate(this.x + this._shakeOffsetX, this.y + this._shakeOffsetY).
+                    rotate(this.rotation).
+                    scale(this.zoom, this.zoom);
     },
 
     destroy: function ()

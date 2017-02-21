@@ -92,7 +92,7 @@ Systems.prototype = {
         this.children = new Component.Children(this.state);
         this.color = new Component.Color(this.state);
         this.data = new Component.Data(this.state);
-        this.transform = new Component.Transform(this.state);
+        //this.transform = new Component.Transform(this.state);
 
         this.inject();
     },
@@ -113,7 +113,7 @@ Systems.prototype = {
         this.state.state = this.stateManager;
 
         this.state.cameras = this.cameras;
-        this.state.transform = this.transform;
+        //this.state.transform = this.transform;
 
         this.state.cache = this.game.cache;
         this.state.textures = this.game.textures;
@@ -139,7 +139,7 @@ Systems.prototype = {
             return;
         }
 
-        this.cameras.render(renderer, this.transform.flatRenderArray, interpolation);
+        this.cameras.render(renderer, this.children, interpolation);
     }
 };
 

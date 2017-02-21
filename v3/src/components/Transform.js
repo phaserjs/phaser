@@ -262,4 +262,4 @@ Object.defineProperties(Transform.prototype,{
 	}
 });
 
-module.exports = Transform;
+//module.exports = Transform;
