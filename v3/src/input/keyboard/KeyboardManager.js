@@ -167,13 +167,9 @@ KeyboardManager.prototype = {
         }
     },
 
-    addKeyCombo: function (keys, config)
+    createCombo: function (keys, config)
     {
-        var combo = new KeyCombo(keys, config);
-
-        this.combos.push(combo);
-
-        return combo;
+        return new KeyCombo(this, keys, config);
     },
 
     //  https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/KeyboardEvent

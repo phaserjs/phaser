@@ -1,4 +1,7 @@
 var GetObjectValue = require('../../../utils/object/GetObjectValue');
+var ResetKeyCombo = require('./ResetKeyCombo');
+var ProcessKeyCombo = require('./ProcessKeyCombo');
+var KeyComboMatchEvent = require('./KeyComboMatchEvent');
 
 //  Keys can be either:
 //  
@@ -8,6 +11,8 @@ var GetObjectValue = require('../../../utils/object/GetObjectValue');
 
 var KeyCombo = function (keyboardManager, keys, config)
 {
+    if (config === undefined) { config = {}; }
+
     //  Can't have a zero or single length combo (string or array based)
     if (keys.length < 2)
     {
@@ -68,13 +73,53 @@ var KeyCombo = function (keyboardManager, keys, config)
 
     //  If previously matched and they press Key 1 again, will it reset?
     this.resetOnMatch = GetObjectValue(config, 'resetOnMatch', false);
+
+    //  If the combo matches, will it delete itself?
+    this.deleteOnMatch = GetObjectValue(config, 'deleteOnMatch', false);
+
+    var _this = this;
+
+    var onKeyDownHandler = function (event)
+    {
+        if (_this.matched || !_this.enabled)
+        {
+            return;
+        }
+
+        var matched = ProcessKeyCombo(event.data, _this);
+
+        if (matched)
+        {
+            _this.manager.events.dispatch(new KeyComboMatchEvent(_this, event));
+
+            if (_this.resetOnMatch)
+            {
+                ResetKeyCombo(_this);
+            }
+            else if (_this.deleteOnMatch)
+            {
+                _this.destroy();
+            }
+        }
+    };
+
+    this.onKeyDown = onKeyDownHandler;
+
+    this.manager.events.on('KEY_DOWN_EVENT', onKeyDownHandler);
 };
 
 KeyCombo.prototype.constructor = KeyCombo;
 
 KeyCombo.prototype = {
 
+    destroy: function ()
+    {
+        this.enabled = false;
+        this.keyCodes = [];
 
+        this.manager.events.off('KEY_DOWN', this.onKeyDown);
+        this.manager = undefined;
+    }
 
 };
 
