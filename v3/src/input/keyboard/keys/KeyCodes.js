@@ -2,24 +2,30 @@ module.exports = {
     BACKSPACE: 8,
     TAB: 9,
     ENTER: 13,
+
     SHIFT: 16,
     CTRL: 17,
     ALT: 18,
+
     PAUSE: 19,
     CAPS_LOCK: 20,
     ESC: 27,
     SPACE: 32,
+
     PAGE_UP: 33,
     PAGE_DOWN: 34,
     END: 35,
     HOME: 36,
+
     LEFT: 37,
     UP: 38,
     RIGHT: 39,
     DOWN: 40,
+
     PRINT_SCREEN: 42,
     INSERT: 45,
     DELETE: 46,
+
     ZERO: 48,
     ONE: 49,
     TWO: 50,
@@ -30,6 +36,7 @@ module.exports = {
     SEVEN: 55,
     EIGHT: 56,
     NINE: 57,
+
     A: 65,
     B: 66,
     C: 67,
@@ -56,6 +63,7 @@ module.exports = {
     X: 88,
     Y: 89,
     Z: 90,
+
     F1: 112,
     F2: 113,
     F3: 114,
@@ -68,6 +76,7 @@ module.exports = {
     F10: 121,
     F11: 122,
     F12: 123,
+
     SEMICOLON: 186,
     PLUS: 187,
     COMMA: 188,

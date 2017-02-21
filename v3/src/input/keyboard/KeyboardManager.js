@@ -1,10 +1,24 @@
 var EventDispatcher = require('../../events/EventDispatcher');
 var Event = require('./events');
-var KeyCodes = require('./KeyCodes');
-var Key = require('./Key');
-var ProcessKeyDown = require('./ops/ProcessKeyDown');
-var ProcessKeyUp = require('./ops/ProcessKeyUp');
+var KeyCodes = require('./keys/KeyCodes');
+var Key = require('./keys/Key');
+var ProcessKeyDown = require('./keys/ProcessKeyDown');
+var ProcessKeyUp = require('./keys/ProcessKeyUp');
 
+/**
+* The Keyboard class monitors keyboard input and dispatches keyboard events.
+*
+* _Note_: many keyboards are unable to process certain combinations of keys due to hardware limitations known as ghosting.
+* See http://www.html5gamedevs.com/topic/4876-impossible-to-use-more-than-2-keyboard-input-buttons-at-the-same-time/ for more details.
+*
+* Also please be aware that certain browser extensions can disable or override Phaser keyboard handling.
+* For example the Chrome extension vimium is known to disable Phaser from using the D key. And there are others.
+* So please check your extensions before opening Phaser issues.
+*
+* @class Phaser.Keyboard
+* @constructor
+* @param {Phaser.Game} game - A reference to the currently running game.
+*/
 var KeyboardManager = function (inputManager)
 {
     this.manager = inputManager;
@@ -75,6 +89,47 @@ KeyboardManager.prototype = {
     },
 
     /**
+    * Creates and returns an object containing 4 hotkeys for Up, Down, Left and Right.
+    *
+    * @method Phaser.Keyboard#createCursorKeys
+    * @return {object} An object containing properties: `up`, `down`, `left` and `right` of {@link Phaser.Key} objects.
+    */
+    createCursorKeys: function ()
+    {
+        return this.addKeys({
+            up: KeyCodes.UP,
+            down: KeyCodes.DOWN,
+            left: KeyCodes.LEFT,
+            right: KeyCodes.RIGHT
+        });
+    },
+
+    /**
+    * A practical way to create an object containing user selected hotkeys.
+    *
+    * For example,
+    *
+    *     addKeys( { 'up': Phaser.KeyCode.W, 'down': Phaser.KeyCode.S, 'left': Phaser.KeyCode.A, 'right': Phaser.KeyCode.D } );
+    *
+    * would return an object containing properties (`up`, `down`, `left` and `right`) referring to {@link Phaser.Key} object.
+    *
+    * @method Phaser.Keyboard#addKeys
+    * @param {object} keys - A key mapping object, i.e. `{ 'up': Phaser.KeyCode.W, 'down': Phaser.KeyCode.S }` or `{ 'up': 52, 'down': 53 }`.
+    * @return {object} An object containing the properties mapped to {@link Phaser.Key} values.
+    */
+    addKeys: function (keys)
+    {
+        var output = {};
+
+        for (var key in keys)
+        {
+            output[key] = this.addKey(keys[key]);
+        }
+
+        return output;
+    },
+
+    /**
     * If you need more fine-grained control over a Key you can create a new Phaser.Key object via this method.
     * The Key object can then be polled, have events attached to it, etc.
     *
@@ -87,8 +142,6 @@ KeyboardManager.prototype = {
         if (!this.keys[keycode])
         {
             this.keys[keycode] = new Key(this, keycode, name);
-
-            // this.addKeyCapture(keycode);
         }
 
         return this.keys[keycode];
@@ -105,8 +158,6 @@ KeyboardManager.prototype = {
         if (this.keys[keycode])
         {
             this.keys[keycode] = undefined;
-
-            // this.removeKeyCapture(keycode);
         }
     },
 
@@ -116,11 +167,18 @@ KeyboardManager.prototype = {
 
     update: function ()
     {
-        //  Process the event queue, dispatching all of the events that have stored up
+        if (!this.enabled)
+        {
+            return;
+        }
 
-        var queue = this.queue;
+        //  Clears the queue array, and also means we don't work on array data that could potentially
+        //  be modified during the processing phase
+        var queue = this.queue.splice(0, this.queue.length);
+
         var keys = this.keys;
 
+        //  Process the event queue, dispatching all of the events that have stored up
         for (var i = 0; i < queue.length; i++)
         {
             var event = queue[i];
@@ -128,6 +186,11 @@ KeyboardManager.prototype = {
             if (event.type === 'keydown')
             {
                 this.events.dispatch(new Event.KEY_DOWN_EVENT(event));
+
+                if (Event._DOWN[event.keyCode])
+                {
+                    this.events.dispatch(new Event._DOWN[event.keyCode](event));
+                }
 
                 if (keys[event.keyCode])
                 {
@@ -138,14 +201,17 @@ KeyboardManager.prototype = {
             {
                 this.events.dispatch(new Event.KEY_UP_EVENT(event));
 
+                if (Event._UP[event.keyCode])
+                {
+                    this.events.dispatch(new Event._UP[event.keyCode](event));
+                }
+
                 if (keys[event.keyCode])
                 {
                     ProcessKeyUp(keys[event.keyCode], event);
                 }
             }
         }
-
-        queue.length = 0;
     }
 
 };

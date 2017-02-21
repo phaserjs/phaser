@@ -1,28 +1,18 @@
 //  A generic Key object which can be passed to the Process functions (and so on)
 
-//  keycode can be either numeric or a string
+//  keycode must be an integer
 
-var Key = function (keycode, name)
+var Key = function (keyCode)
 {
-    if (typeof keycode === 'string')
-    {
-        keycode = keycode.toUpperCase().charCodeAt(0);
-    }
-
-    if (name === undefined || name === '')
-    {
-        name = String.fromCharCode(keycode);
-    }
+    /**
+    * @property {integer} keyCode - The keycode of this key.
+    */
+    this.keyCode = keyCode;
 
     /**
-    * @property {number} keyCode - The keycode of this key.
+    * @property {KeyboardEvent} originalEvent - The original DOM event.
     */
-    this.keyCode = keycode;
-
-    /**
-    * @property {string} name - A string representation of this Key (worked out via String.fromCharCode if possible, or set in the arguments)
-    */
-    this.name = name;
+    this.originalEvent = undefined;
 
     /**
     * @property {boolean} preventDefault - Should this Key prevent event propagation?
@@ -65,6 +55,12 @@ var Key = function (keycode, name)
     * @default
     */
     this.shiftKey = false;
+
+    /**
+    * @property {integer} location - The location of the modifier key. 0 for standard (or unknown), 1 for left, 2 for right, 3 for numpad.
+    * @default
+    */
+    this.location = 0;
 
     /**
     * @property {number} timeDown - The timestamp when the key was last pressed down. This is based on Game.time.now.

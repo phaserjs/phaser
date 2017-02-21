@@ -116,6 +116,7 @@ Systems.prototype = {
         //this.state.transform = this.transform;
 
         this.state.cache = this.game.cache;
+        this.state.input = this.game.input;
         this.state.textures = this.game.textures;
     },
 
