@@ -100,4 +100,6 @@ var Key = function (keyCode)
     this._justUp = false;
 };
 
+Key.prototype.constructor = Key;
+
 module.exports = Key;

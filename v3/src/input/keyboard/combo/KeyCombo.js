@@ -6,13 +6,17 @@ var GetObjectValue = require('../../../utils/object/GetObjectValue');
 //  An array of either integers (key codes) or strings, or a mixture of both
 //  An array of objects (such as Key objects) with a public 'keyCode' property
 
-var KeyCombo = function (keys, config)
+var KeyCombo = function (keyboardManager, keys, config)
 {
     //  Can't have a zero or single length combo (string or array based)
     if (keys.length < 2)
     {
         return false;
     }
+
+    this.manager = keyboardManager;
+
+    this.enabled = true;
 
     this.keyCodes = [];
 
@@ -64,6 +68,14 @@ var KeyCombo = function (keys, config)
 
     //  If previously matched and they press Key 1 again, will it reset?
     this.resetOnMatch = GetObjectValue(config, 'resetOnMatch', false);
+};
+
+KeyCombo.prototype.constructor = KeyCombo;
+
+KeyCombo.prototype = {
+
+
+
 };
 
 module.exports = KeyCombo;

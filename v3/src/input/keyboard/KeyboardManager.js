@@ -169,7 +169,7 @@ KeyboardManager.prototype = {
 
     addKeyCombo: function (keys, config)
     {
-        var combo = KeyCombo(keys, config);
+        var combo = new KeyCombo(keys, config);
 
         this.combos.push(combo);
 
