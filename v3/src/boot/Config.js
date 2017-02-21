@@ -46,6 +46,10 @@ var Config = function (config)
     this.gameURL = GetObjectValue(config, 'url', 'http://phaser.io');
     this.gameVersion = GetObjectValue(config, 'version', '');
 
+    //  Input
+    this.inputKeyboard = GetObjectValue(config, 'input.keyboard', true);
+    this.inputKeyboardEventTarget = GetObjectValue(config, 'input.keyboard.target', window);
+
     //  If you do: { banner: false } it won't display any banner at all
     this.hideBanner = (GetObjectValue(config, 'banner', null) === false);
 

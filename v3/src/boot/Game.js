@@ -13,6 +13,7 @@ var DOMContentLoaded = require('../dom/DOMContentLoaded');
 
 var MainLoop = require('./MainLoop');
 var CreateRenderer = require('./CreateRenderer');
+var GlobalInputManager = require('../input/GlobalInputManager');
 var GlobalStateManager = require('../state/GlobalStateManager');
 var TextureManager = require('../textures/TextureManager');
 var Data = require('../components/Data');
@@ -47,7 +48,7 @@ var Game = function (config)
     /**
     * @property {Phaser.Input} input - Reference to the input manager
     */
-    this.input = null;
+    this.input = new GlobalInputManager(this, this.config);
 
     /**
     * @property {Phaser.GlobalStateManager} state - The StateManager. Phaser instance specific.
@@ -89,6 +90,8 @@ Game.prototype = {
         AddToDOM(this.canvas, this.config.parent);
 
         this.state.boot();
+
+        this.input.boot();
 
         this.isRunning = true;
 

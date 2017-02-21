@@ -22,6 +22,8 @@ var Phaser = {
 
     Graphics: require('./graphics'),
 
+    Input: require('./input'),
+
     GameObjects: {
 
         Factory: require('./gameobjects/FactoryContainer')

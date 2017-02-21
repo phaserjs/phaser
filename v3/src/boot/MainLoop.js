@@ -162,6 +162,10 @@ MainLoop.prototype = {
         this.frameDelta += timestamp - this.lastFrameTimeMs;
         this.lastFrameTimeMs = timestamp;
 
+        //  Global Managers (Time, Input, etc)
+
+        this.game.input.update(timestamp, this.frameDelta);
+
         //  Run any updates that are not dependent on time in the simulation.
         //  Here we'll need to run things like tween.update, input.update, etc.
 
