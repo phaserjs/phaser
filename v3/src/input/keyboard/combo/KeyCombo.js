@@ -4,7 +4,7 @@ var ProcessKeyCombo = require('./ProcessKeyCombo');
 var KeyComboMatchEvent = require('./KeyComboMatchEvent');
 
 //  Keys can be either:
-//  
+//
 //  A string (ATARI)
 //  An array of either integers (key codes) or strings, or a mixture of both
 //  An array of objects (such as Key objects) with a public 'keyCode' property
@@ -122,5 +122,21 @@ KeyCombo.prototype = {
     }
 
 };
+
+Object.defineProperties(KeyCombo.prototype, {
+
+    progress: {
+
+        enumerable: true,
+
+        //  How far complete is this combo? A value between 0 and 1.
+        get: function ()
+        {
+            return this.index / this.size;
+        }
+
+    }
+
+});
 
 module.exports = KeyCombo;
