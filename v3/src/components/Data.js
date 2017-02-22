@@ -87,7 +87,7 @@ Data.prototype = {
             }
         }
 
-        this.events.dispatch(new Event.LOADER_START_EVENT(this));
+        // this.events.dispatch(new Event.LOADER_START_EVENT(this));
 
         this.list[key] = data;
 
