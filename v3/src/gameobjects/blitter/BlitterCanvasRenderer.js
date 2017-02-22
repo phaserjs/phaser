@@ -1,7 +1,7 @@
 
 var BlitterCanvasRenderer = function (renderer, src, interpolationPercentage, camera)
 {
-    var worldAlpha = src.color.worldAlpha;
+    var worldAlpha = 1; //src.color.worldAlpha;
     var list = src.getRenderList();
 
     //  Skip rendering?

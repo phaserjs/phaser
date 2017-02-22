@@ -1,5 +1,5 @@
 
-var DrawImage = function (frame, blendMode, transform, anchorX, anchorY, alpha, tint, bg, camera)
+var DrawImage = function (frame, src, blendMode, alpha, tint, bg, camera)
 {
     var ctx = this.currentContext;
     var cd = frame.canvasData;
@@ -28,13 +28,13 @@ var DrawImage = function (frame, blendMode, transform, anchorX, anchorY, alpha, 
         // ctx[this.smoothProperty] = (source.scaleMode === ScaleModes.LINEAR);
     }
 
-    var dx = frame.x - (anchorX * frame.width) - camera.scrollX;
-    var dy = frame.y - (anchorY * frame.height) - camera.scrollY;
+    var dx = frame.x - (src.anchorX * frame.width) - camera.scrollX;
+    var dy = frame.y - (src.anchorY * frame.height) - camera.scrollY;
 
     ctx.save();
-    ctx.translate(transform.x, transform.y);
-    ctx.rotate(transform.angle);
-    ctx.scale(transform.scaleX, transform.scaleY);
+    ctx.translate(src.x, src.y);
+    ctx.rotate(src.angle);
+    ctx.scale(src.scaleX, src.scaleY);
     ctx.drawImage(frame.source.image, cd.sx, cd.sy, cd.sWidth, cd.sHeight, dx, dy, cd.dWidth, cd.dHeight);
     ctx.restore();
 };
