@@ -24,10 +24,8 @@ Children.prototype.constructor = Children;
 
 Children.prototype = {
 
-    add: function (child, skipTransform)
+    add: function (child)
     {
-        if (skipTransform === undefined) { skipTransform = false; }
-
         // console.log('--->', this.gameObject, 'adds new child:', child);
 
         if (child.parent === this)
@@ -45,21 +43,14 @@ Children.prototype = {
 
         this.list.push(child);
 
-        if (!skipTransform && this.gameObject.transform && child.transform)
-        {
-            // console.log(this.gameObject.name, 'adds transform from', child.name);
-            this.gameObject.transform.add(child.transform);
-        }
-
         // console.log('<--- end');
 
         return child;
     },
 
-    addAt: function (child, index, skipTransform)
+    addAt: function (child, index)
     {
         if (index === undefined) { index = 0; }
-        if (skipTransform === undefined) { skipTransform = false; }
 
         if (this.list.length === 0)
         {
@@ -78,22 +69,17 @@ Children.prototype = {
             this.list.splice(index, 0, child);
         }
 
-        if (!skipTransform && this.gameObject.transform && child.transform)
-        {
-            this.gameObject.transform.add(child.transform);
-        }
-
         return child;
 
     },
 
-    addMultiple: function (children, skipTransform)
+    addMultiple: function (children)
     {
         if (Array.isArray(children))
         {
             for (var i = 0; i < children.length; i++)
             {
-                this.add(children[i], skipTransform);
+                this.add(children[i]);
             }
         }
 
@@ -271,7 +257,7 @@ Children.prototype = {
         return child;
     },
 
-    remove: function (child, skipTransform)
+    remove: function (child)
     {
         var index = this.list.indexOf(child);
 
@@ -280,17 +266,12 @@ Children.prototype = {
             child.parent = undefined;
 
             this.list.splice(index, 1);
-
-            if (!skipTransform && this.gameObject.transform && child.transform)
-            {
-                this.gameObject.transform.remove(child.transform);
-            }
         }
         
         return child;
     },
 
-    removeAt: function (index, skipTransform)
+    removeAt: function (index)
     {
         var child = this.list[index];
 
@@ -299,11 +280,6 @@ Children.prototype = {
             child.parent = undefined;
 
             this.children.splice(index, 1);
-
-            if (!skipTransform && this.gameObject.transform && child.transform)
-            {
-                this.gameObject.transform.remove(child.transform);
-            }
         }
 
         return child;
@@ -494,7 +470,7 @@ Children.prototype = {
     * @param {any} newChild - The child to be inserted into this group.
     * @return {any} Returns the oldChild that was replaced within this group.
     */
-    replace: function (oldChild, newChild, skipTransform)
+    replace: function (oldChild, newChild)
     {
         var index = this.getIndex(oldChild);
 
@@ -502,12 +478,12 @@ Children.prototype = {
         {
             if (newChild.parent)
             {
-                newChild.parent.remove(newChild, skipTransform);
+                newChild.parent.remove(newChild);
             }
 
-            this.remove(oldChild, skipTransform);
+            this.remove(oldChild);
 
-            this.addAt(newChild, index, skipTransform);
+            this.addAt(newChild, index);
 
             return oldChild;
         }
@@ -516,7 +492,7 @@ Children.prototype = {
     //  Swaps a child from another parent, with one from this parent.
     //  child1 = the child of THIS parent
     //  child2 = the child of the OTHER parent
-    exchange: function (child1, child2, skipTransform)
+    exchange: function (child1, child2)
     {
         if (child1 === child2 || child1.parent === child2.parent)
         {
@@ -533,13 +509,13 @@ Children.prototype = {
             throw new Error('Children.swap: Supplied objects must be children of parents');
         }
 
-        this.remove(child1, skipTransform);
+        this.remove(child1);
 
-        parentChildren.remove(child2, skipTransform);
+        parentChildren.remove(child2);
 
-        this.addAt(child2, index1, skipTransform);
+        this.addAt(child2, index1);
 
-        parentChildren.addAt(child1, index2, skipTransform);
+        parentChildren.addAt(child1, index2);
     },
 
     /**

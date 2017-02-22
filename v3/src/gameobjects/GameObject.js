@@ -26,6 +26,8 @@ var GameObject = function (state, x, y, texture, frame)
 
     this.name = '';
 
+    this.parent;
+
     this.texture = texture;
 
     this.frame = frame;

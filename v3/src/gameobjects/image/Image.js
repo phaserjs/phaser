@@ -26,8 +26,6 @@ var Image = function (state, x, y, key, frame)
     var _frame = _texture.get(frame);
 
     GameObject.call(this, state, x, y, _texture, _frame);
-
-    this.type = CONST.IMAGE;
 };
 
 Image.prototype = Object.create(GameObject.prototype);
@@ -44,7 +42,7 @@ Object.defineProperties(Image.prototype, {
 
         get: function ()
         {
-            return this.transform._scaleX * this.frame.realWidth;
+            return this.scaleX * this.frame.realWidth;
         },
 
         set: function (value)
@@ -60,7 +58,7 @@ Object.defineProperties(Image.prototype, {
 
         get: function ()
         {
-            return this.transform._scaleY * this.frame.realHeight;
+            return this.scaleY * this.frame.realHeight;
         },
 
         set: function (value)
