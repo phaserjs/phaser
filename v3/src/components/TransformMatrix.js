@@ -4,7 +4,7 @@ var mathSqrt = Math.sqrt;
 var mathAcos = Math.acos;
 var mathAtan = Math.atan;
 
-var Transform2DMatrix = function (a, b, c, d, tx, ty) 
+var TransformMatrix = function (a, b, c, d, tx, ty) 
 {
     a = typeof a === 'number' ? a : 1;
     b = typeof b === 'number' ? b : 0;
@@ -23,7 +23,7 @@ var Transform2DMatrix = function (a, b, c, d, tx, ty)
     };
 };
 
-Transform2DMatrix.prototype.loadIdentity = function ()
+TransformMatrix.prototype.loadIdentity = function ()
 {
     var matrix = this.matrix;
     
@@ -37,7 +37,7 @@ Transform2DMatrix.prototype.loadIdentity = function ()
     return this;
 };
 
-Transform2DMatrix.prototype.translate = function (x, y)
+TransformMatrix.prototype.translate = function (x, y)
 {
     var matrix = this.matrix;
 
@@ -47,7 +47,7 @@ Transform2DMatrix.prototype.translate = function (x, y)
     return this;
 };
 
-Transform2DMatrix.prototype.scale = function (x, y)
+TransformMatrix.prototype.scale = function (x, y)
 {
     var matrix = this.matrix;
 
@@ -59,7 +59,7 @@ Transform2DMatrix.prototype.scale = function (x, y)
     return this;
 };
 
-Transform2DMatrix.prototype.rotate = function (radian)
+TransformMatrix.prototype.rotate = function (radian)
 {
     var matrix = this.matrix;
     var a = matrix[0];
@@ -77,7 +77,7 @@ Transform2DMatrix.prototype.rotate = function (radian)
     return this;
 };
 
-Transform2DMatrix.prototype.multiply = function (otherMatrix)
+TransformMatrix.prototype.multiply = function (otherMatrix)
 {
     var matrix = this.matrix;
     var a0 = matrix[0];
@@ -103,7 +103,7 @@ Transform2DMatrix.prototype.multiply = function (otherMatrix)
     return this;
 };
 
-Transform2DMatrix.prototype.transform = function (a, b, c, d, tx, ty)
+TransformMatrix.prototype.transform = function (a, b, c, d, tx, ty)
 {
     var matrix = this.matrix;
     var a0 = matrix[0];
@@ -123,7 +123,7 @@ Transform2DMatrix.prototype.transform = function (a, b, c, d, tx, ty)
     return this;
 };
 
-Transform2DMatrix.prototype.setTransform = function (a, b, c, d, tx, ty)
+TransformMatrix.prototype.setTransform = function (a, b, c, d, tx, ty)
 {
     var matrix = this.matrix;
 
@@ -137,7 +137,7 @@ Transform2DMatrix.prototype.setTransform = function (a, b, c, d, tx, ty)
     return this;
 };
 
-Transform2DMatrix.prototype.decomposeMatrix = function ()
+TransformMatrix.prototype.decomposeMatrix = function ()
 {
     var decomposedMatrix = this.decomposedMatrix;
     var matrix = this.matrix;
@@ -161,26 +161,36 @@ Transform2DMatrix.prototype.decomposeMatrix = function ()
     return decomposedMatrix;
 };
 
-Transform2DMatrix.prototype.fromTransform2D = function (transform2D)
+/* identity + translate + rotate + scale */
+TransformMatrix.prototype.applyITRS = function (x, y, rotation, scaleX, scaleY) 
 {
-    this.loadIdentity().
-        translate(transform2D.x, transform2D.y).
-        rotate(transform2D.angle).
-        scale(transform2D.scaleX, transform2D.scaleY);
+    var matrix = this.matrix;
+    var a = 1;
+    var b = 0;
+    var c = 0;
+    var d = 1;
+    var e = 0;
+    var f = 0;
+    var sr = mathSin(rotation);
+    var cr = mathCos(rotation);
+
+    // Translate
+    matrix[4] = a * x + c * y + e;
+    matrix[5] = b * x + d * y + f;
+
+    // Rotate
+    matrix[0] = a * cr + c * sr;
+    matrix[1] = b * cr + d * sr;
+    matrix[2] = a * -sr + c * cr;
+    matrix[3] = b * -sr + d * cr;
+
+    // Scale
+    matrix[0] = matrix[0] * scaleX;
+    matrix[1] = matrix[1] * scaleX;
+    matrix[2] = matrix[2] * scaleY;
+    matrix[3] = matrix[3] * scaleY;
 
     return this;
 };
 
-var Transform2D = function (x, y)
-{
-    this.x = x;
-    this.y = y;
-    this.scaleX = 1;
-    this.scaleY = 1;
-    this.angle = 0;
-};
-
-module.exports = {
-    Transform2DMatrix: Transform2DMatrix,
-    Transform2D: Transform2D
-};
+module.exports = TransformMatrix;

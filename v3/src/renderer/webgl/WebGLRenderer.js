@@ -227,7 +227,7 @@ WebGLRenderer.prototype = {
             var child = list[index];
             // Setting blend mode if needed            
             var batch = this.batch;
-            var newBlendMode = child.color._blendMode;
+            var newBlendMode = child.blendMode;
             if (this.blendMode !== newBlendMode)
             {
                 if (batch) 

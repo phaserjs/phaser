@@ -7,11 +7,10 @@ var ImageWebGLRenderer = function (renderer, src, interpolationPercentage, camer
 
     var frame = src.frame;
     var alpha = 16777216;
-    var transform2D = src.transform;
     var spriteBatch = renderer.spriteBatch;
     var anchorX = src.anchorX;
     var anchorY = src.anchorY;
-    var vertexColor = src.color._glTint;
+    //var vertexColor = src.color._glTint;
     var vertexDataBuffer = spriteBatch.vertexDataBuffer;
     var vertexBufferF32 = vertexDataBuffer.floatView;
     var vertexBufferU32 = vertexDataBuffer.uintView;
@@ -19,11 +18,11 @@ var ImageWebGLRenderer = function (renderer, src, interpolationPercentage, camer
     var uvs = frame.uvs;
     var width = frame.width;
     var height = frame.height;
-    var translateX = transform2D.x - camera.scrollX;
-    var translateY = transform2D.y - camera.scrollY;
-    var scaleX = transform2D.scaleX;
-    var scaleY = transform2D.scaleY;
-    var rotation = transform2D.angle;
+    var translateX = src.x - camera.scrollX;
+    var translateY = src.y - camera.scrollY;
+    var scaleX = src.scaleX;
+    var scaleY = src.scaleY;
+    var rotation = src.rotation;
     var cameraMatrix = camera.matrix.matrix;
     var a = cameraMatrix[0];
     var b = cameraMatrix[1];
@@ -40,6 +39,11 @@ var ImageWebGLRenderer = function (renderer, src, interpolationPercentage, camer
     var txw = xw * a + yh * c + e;
     var tyh = xw * b + yh * d + f;
 
+    if (!src.visible)
+    {
+        return;
+    }
+
     renderer.setBatch(spriteBatch, frame.texture.source[frame.sourceIndex].glTexture);
     vertexOffset = vertexDataBuffer.allocate(40);
     spriteBatch.elementCount += 6;
@@ -53,7 +57,7 @@ var ImageWebGLRenderer = function (renderer, src, interpolationPercentage, camer
     vertexBufferF32[vertexOffset++] = scaleX;
     vertexBufferF32[vertexOffset++] = scaleY;
     vertexBufferF32[vertexOffset++] = rotation;
-    vertexBufferU32[vertexOffset++] = vertexColor.topLeft;
+    vertexBufferU32[vertexOffset++] = 0xFFFFFF; //vertexColor.topLeft;
     vertexBufferF32[vertexOffset++] = tx;
     vertexBufferF32[vertexOffset++] = tyh;
     vertexBufferF32[vertexOffset++] = uvs.x1;
@@ -63,7 +67,7 @@ var ImageWebGLRenderer = function (renderer, src, interpolationPercentage, camer
     vertexBufferF32[vertexOffset++] = scaleX;
     vertexBufferF32[vertexOffset++] = scaleY;
     vertexBufferF32[vertexOffset++] = rotation;
-    vertexBufferU32[vertexOffset++] = vertexColor.bottomLeft;
+    vertexBufferU32[vertexOffset++] = 0xFFFFFF; //vertexColor.bottomLeft;
     vertexBufferF32[vertexOffset++] = txw;
     vertexBufferF32[vertexOffset++] = tyh;
     vertexBufferF32[vertexOffset++] = uvs.x2;
@@ -73,7 +77,7 @@ var ImageWebGLRenderer = function (renderer, src, interpolationPercentage, camer
     vertexBufferF32[vertexOffset++] = scaleX;
     vertexBufferF32[vertexOffset++] = scaleY;
     vertexBufferF32[vertexOffset++] = rotation;
-    vertexBufferU32[vertexOffset++] = vertexColor.bottomRight;
+    vertexBufferU32[vertexOffset++] = 0xFFFFFF; //vertexColor.bottomRight;
     vertexBufferF32[vertexOffset++] = txw;
     vertexBufferF32[vertexOffset++] = ty;
     vertexBufferF32[vertexOffset++] = uvs.x3;
@@ -83,7 +87,7 @@ var ImageWebGLRenderer = function (renderer, src, interpolationPercentage, camer
     vertexBufferF32[vertexOffset++] = scaleX;
     vertexBufferF32[vertexOffset++] = scaleY;
     vertexBufferF32[vertexOffset++] = rotation;
-    vertexBufferU32[vertexOffset++] = vertexColor.topRight;
+    vertexBufferU32[vertexOffset++] = 0xFFFFFF; //vertexColor.topRight;
 };
 
 module.exports = ImageWebGLRenderer;

@@ -1,6 +1,6 @@
 var BlitterWebGLRenderer = function (renderer, src, interpolationPercentage, camera)
 {
-    var worldAlpha = src.color.worldAlpha;
+    var worldAlpha = 1; //src.color.worldAlpha;
     var list = src.getRenderList();
     var blitterBatch = renderer.blitterBatch;
     var cameraMatrix = camera.matrix.matrix;
@@ -14,7 +14,7 @@ var BlitterWebGLRenderer = function (renderer, src, interpolationPercentage, cam
     var cameraScrollY = camera.scrollY;
     //  Skip rendering?
 
-    if (src.skipRender || !src.visible || worldAlpha === 0 || list.length === 0)
+    if (!src.visible || worldAlpha === 0 || list.length === 0)
     {
         return;
     }
