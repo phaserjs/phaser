@@ -4,23 +4,21 @@
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
-// var CONST = require('../const');
 var MATH_CONST = require('../math/const');
+var BlendModes = require('../renderer/BlendModes');
 var ScaleModes = require('../renderer/ScaleModes');
-var Component = require('../components');
 var WrapAngle = require('../math/angle/Wrap');
 
 /**
 * This is the base Game Object class that you can use when creating your own extended Game Objects.
-* It hides away the 'private' stuff and exposes only the useful getters, setters and properties.
 *
 * @class
 */
 
-//  Phaser.Texture and Phaser.Frame objects passed in here, instead of looked-up.
-//  Allows override from non-standard GO types
+//  Texture is globally shared between GameObjects, not specific to this one
+//  Frame is globally shared between GameObjects, not specific to this one
 
-var GameObject = function (state, x, y, texture, frame, parent)
+var GameObject = function (state, x, y, texture, frame)
 {
     this.state = state;
 
@@ -28,178 +26,41 @@ var GameObject = function (state, x, y, texture, frame, parent)
 
     this.name = '';
 
-    this.type = 0;
-
-    this.parent = parent;
-
-    //  Texture is globally shared between GameObjects, not specific to this one
     this.texture = texture;
 
-    //  Frame is globally shared between GameObjects, not specific to this one
     this.frame = frame;
 
-    //  All GameObjects have the following components, always:
-    this.transform = new Component.Transform2D(x, y);
+    this.x = x;
+    this.y = y;
+    this.z = 0;
+    this.scaleX = 1;
+    this.scaleY = 1;
+    this.rotation = 0;
+    this.anchorX = 0;
+    this.anchorY = 0;
 
-    this.anchor = new Component.Anchor();
-
-    //  Optional? Maybe set on a per GO basis?
-    this.data = new Component.Data(this);
-
-    this.color = new Component.Color(this);
-
-    //  ----------------------------------------------------------------
-    //  ----------------------------------------------------------------
-    //  The following properties are debatable to have in this class
-    //  ----------------------------------------------------------------
-    //  ----------------------------------------------------------------
-
+    this.alpha = 1;
+    this.blendMode = BlendModes.NORMAL;
     this.scaleMode = ScaleModes.DEFAULT;
 
-    //  Allows you to turn off a GameObject from rendering, but still render its children (if it has any)
-    //  Maybe this should move?
-    // this.skipRender = (key === undefined);
-    this.skipRender = false;
-
     this.visible = true;
-
-    //  Either null, or the Children component
-    this.children = null;
-
-    this.exists = true;
 };
 
 GameObject.prototype.constructor = GameObject;
 
 GameObject.prototype = {
 
-    preUpdate: function ()
-    {
-        //  NOOP
-    },
-
-    update: function ()
-    {
-        //  NOOP
-    },
-
-    postUpdate: function ()
-    {
-        //  NOOP
-    },
-
-    render: function ()
-    {
-        //  NOOP
-    },
-
     destroy: function ()
     {
-        //  NOOP
+        this.state = undefined;
+        this.game = undefined;
+        this.texture = undefined;
+        this.frame = undefined;
     }
 
 };
 
 Object.defineProperties(GameObject.prototype, {
-
-    //  Transform getters / setters
-
-    x: {
-
-        enumerable: true,
-
-        get: function ()
-        {
-            return this.transform.x;
-        },
-
-        set: function (value)
-        {
-            this.transform.x = value;
-        }
-
-    },
-
-    y: {
-
-        enumerable: true,
-
-        get: function ()
-        {
-            return this.transform.y;
-        },
-
-        set: function (value)
-        {
-            this.transform.y = value;
-        }
-
-    },
-
-    scale: {
-
-        enumerable: true,
-
-        get: function ()
-        {
-            return this.transform.scaleX;
-        },
-
-        set: function (value)
-        {
-            this.transform.scaleX = value;
-            this.transform.scaleY = value;
-        }
-
-    },
-
-    scaleX: {
-
-        enumerable: true,
-
-        get: function ()
-        {
-            return this.transform.scaleX;
-        },
-
-        set: function (value)
-        {
-            this.transform.scaleX = value;
-        }
-
-    },
-
-    scaleY: {
-
-        enumerable: true,
-
-        get: function ()
-        {
-            return this.transform.scaleY;
-        },
-
-        set: function (value)
-        {
-            this.transform.scaleY = value;
-        }
-
-    },
-
-    rotation: {
-
-        enumerable: true,
-
-        get: function ()
-        {
-            return this.transform.angle;
-        },
-
-        set: function (value)
-        {
-            this.transform.angle = value;
-        }
-
-    },
 
     angle: {
 
@@ -207,117 +68,13 @@ Object.defineProperties(GameObject.prototype, {
 
         get: function ()
         {
-            return WrapAngle(this.transform.angle * MATH_CONST.RAD_TO_DEG);
+            return WrapAngle(this.rotation * MATH_CONST.RAD_TO_DEG);
         },
 
         set: function (value)
         {
             //  value is in degrees
-            this.transform.angle = WrapAngle(value * MATH_CONST.DEG_TO_RAD);
-        }
-
-    },
-
-    anchorX: {
-
-        enumerable: true,
-
-        get: function ()
-        {
-            return this.anchor.getX();
-        },
-
-        set: function (value)
-        {
-            this.anchor.setX(value);
-        }
-
-    },
-
-    anchorY: {
-
-        enumerable: true,
-
-        get: function ()
-        {
-            return this.anchor.getY();
-        },
-
-        set: function (value)
-        {
-            this.anchor.setY(value);
-        }
-
-    },
-
-    /*
-    pivotX: {
-
-        enumerable: true,
-
-        get: function ()
-        {
-            return this.transform._pivotX;
-        },
-
-        set: function (value)
-        {
-            this.transform._pivotX = value;
-            this.transform.dirty = true;
-            this.transform.updateCache();
-        }
-
-    },
-
-    pivotY: {
-
-        enumerable: true,
-
-        get: function ()
-        {
-            return this.transform._pivotY;
-        },
-
-        set: function (value)
-        {
-            this.transform._pivotY = value;
-            this.transform.dirty = true;
-            this.transform.updateCache();
-        }
-
-    },
-    */
-
-    //  Color getters / setters
-
-    alpha: {
-
-        enumerable: true,
-
-        get: function ()
-        {
-            return this.color._alpha;
-        },
-
-        set: function (value)
-        {
-            this.color.alpha = value;
-        }
-
-    },
-
-    blendMode: {
-
-        enumerable: true,
-
-        get: function ()
-        {
-            return this.color._blendMode;
-        },
-
-        set: function (value)
-        {
-            this.color.blendMode = value;
+            this.rotation = WrapAngle(value * MATH_CONST.DEG_TO_RAD);
         }
 
     }
