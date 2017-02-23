@@ -14,6 +14,7 @@ var Image = new Class({
         Components.BlendMode,
         Components.ScaleMode,
         Components.Visible,
+        Components.GetBounds,
         ImageRender
     ],
 

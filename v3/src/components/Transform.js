@@ -1,5 +1,5 @@
 var MATH_CONST = require('../math/const');
-var WrapAngle = require('../math/angle/Wrap');
+var WrapAngle = require('../math/angle/WrapDegrees');
 
 var _scaleX = 1;
 var _scaleY = 1;
@@ -122,7 +122,7 @@ var Transform = {
         set: function (value)
         {
             //  value is in degrees
-            this.rotation = WrapAngle(value * MATH_CONST.DEG_TO_RAD);
+            this.rotation = WrapAngle(value) * MATH_CONST.DEG_TO_RAD;
         }
     }
 
