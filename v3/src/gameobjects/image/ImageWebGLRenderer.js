@@ -1,6 +1,11 @@
 
 var ImageWebGLRenderer = function (renderer, src, interpolationPercentage, camera)
 {
+    if (this.renderMask !== this.renderFlags)
+    {
+        return;
+    }
+
     //--------------------
     // Inlined quad push
     //--------------------
@@ -39,11 +44,6 @@ var ImageWebGLRenderer = function (renderer, src, interpolationPercentage, camer
     var txw = xw * a + yh * c + e;
     var tyh = xw * b + yh * d + f;
 
-    if (!src.visible)
-    {
-        return;
-    }
-
     renderer.setBatch(spriteBatch, frame.texture.source[frame.sourceIndex].glTexture);
     vertexOffset = vertexDataBuffer.allocate(40);
     spriteBatch.elementCount += 6;
@@ -58,6 +58,7 @@ var ImageWebGLRenderer = function (renderer, src, interpolationPercentage, camer
     vertexBufferF32[vertexOffset++] = scaleY;
     vertexBufferF32[vertexOffset++] = rotation;
     vertexBufferU32[vertexOffset++] = 0xFFFFFF; //vertexColor.topLeft;
+
     vertexBufferF32[vertexOffset++] = tx;
     vertexBufferF32[vertexOffset++] = tyh;
     vertexBufferF32[vertexOffset++] = uvs.x1;
@@ -68,6 +69,7 @@ var ImageWebGLRenderer = function (renderer, src, interpolationPercentage, camer
     vertexBufferF32[vertexOffset++] = scaleY;
     vertexBufferF32[vertexOffset++] = rotation;
     vertexBufferU32[vertexOffset++] = 0xFFFFFF; //vertexColor.bottomLeft;
+
     vertexBufferF32[vertexOffset++] = txw;
     vertexBufferF32[vertexOffset++] = tyh;
     vertexBufferF32[vertexOffset++] = uvs.x2;
@@ -78,6 +80,7 @@ var ImageWebGLRenderer = function (renderer, src, interpolationPercentage, camer
     vertexBufferF32[vertexOffset++] = scaleY;
     vertexBufferF32[vertexOffset++] = rotation;
     vertexBufferU32[vertexOffset++] = 0xFFFFFF; //vertexColor.bottomRight;
+
     vertexBufferF32[vertexOffset++] = txw;
     vertexBufferF32[vertexOffset++] = ty;
     vertexBufferF32[vertexOffset++] = uvs.x3;

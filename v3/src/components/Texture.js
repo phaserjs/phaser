@@ -1,17 +1,29 @@
 //  Texture Component
 
-var Texture = function (gameObject, texture, frame)
-{
-    this.gameObject = gameObject;
+//  bitmask flag for GameObject.renderMask
+var _FLAG = 8; // 1000
 
-    this.texture = texture;
+var Texture = {
 
-    this.frame = frame;
-};
+    texture: null,
+    frame: null,
 
-Texture.prototype.constructor = Texture;
+    setTexture: function (key, frame)
+    {
+        this.texture = this.state.sys.textures.get(key);
 
-Texture.prototype = {
+        this.frame = this.texture.get(frame);
+
+        if (!this.frame.cutWidth || !this.frame.cutHeight)
+        {
+            this.renderFlags &= ~_FLAG;
+        }
+        else
+        {
+            this.renderFlags |= _FLAG;
+        }
+    }
+
 };
 
 module.exports = Texture;

@@ -40,6 +40,8 @@ var Phaser = {
 
     Sound: require('./sound'),
 
+    Class: require('./utils/Class'),
+
     Utils: {
 
         Array: require('./utils/array/'),
@@ -52,10 +54,10 @@ var Phaser = {
 
 //  Required, but don't need Phaser level exports
 
-require('./gameobjects/blitter/BlitterFactory');
+// require('./gameobjects/blitter/BlitterFactory');
 require('./gameobjects/image/ImageFactory');
-require('./gameobjects/sprite/SpriteFactory');
-require('./gameobjects/container/ContainerFactory');
+// require('./gameobjects/sprite/SpriteFactory');
+// require('./gameobjects/container/ContainerFactory');
 
 //   Merge in the consts
 

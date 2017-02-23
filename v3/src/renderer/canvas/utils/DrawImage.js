@@ -1,30 +1,31 @@
 
-var DrawImage = function (frame, src, blendMode, alpha, tint, bg, camera)
+var DrawImage = function (src, camera)
 {
     var ctx = this.currentContext;
+    var frame = src.frame;
     var cd = frame.canvasData;
 
     //  Blend Mode
 
-    if (this.currentBlendMode !== blendMode)
+    if (this.currentBlendMode !== src.blendMode)
     {
-        this.currentBlendMode = blendMode;
-        ctx.globalCompositeOperation = this.blendModes[blendMode];
+        this.currentBlendMode = src.blendMode;
+        ctx.globalCompositeOperation = this.blendModes[src.blendMode];
     }
 
     //  Alpha
 
-    if (this.currentAlpha !== alpha)
+    if (this.currentAlpha !== src.alpha)
     {
-        this.currentAlpha = alpha;
-        ctx.globalAlpha = alpha;
+        this.currentAlpha = src.alpha;
+        ctx.globalAlpha = src.alpha;
     }
 
-    //  Smoothing (should this be a Game Object, or Frame / Texture level property?)
+    //  Smoothing
 
-    if (this.currentScaleMode !== frame.source.scaleMode)
+    if (this.currentScaleMode !== src.scaleMode)
     {
-        // this.currentScaleMode = source.scaleMode;
+        this.currentScaleMode = src.scaleMode;
         // ctx[this.smoothProperty] = (source.scaleMode === ScaleModes.LINEAR);
     }
 
@@ -33,7 +34,7 @@ var DrawImage = function (frame, src, blendMode, alpha, tint, bg, camera)
 
     ctx.save();
     ctx.translate(src.x, src.y);
-    ctx.rotate(src.angle);
+    ctx.rotate(src.rotation);
     ctx.scale(src.scaleX, src.scaleY);
     ctx.drawImage(frame.source.image, cd.sx, cd.sy, cd.sWidth, cd.sHeight, dx, dy, cd.dWidth, cd.dHeight);
     ctx.restore();
