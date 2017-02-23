@@ -1,17 +1,13 @@
 
 var BlitterCanvasRenderer = function (renderer, src, interpolationPercentage, camera)
 {
-    var worldAlpha = 1; //src.color.worldAlpha;
-    var list = src.getRenderList();
-
-    //  Skip rendering?
-
-    if (src.skipRender || !src.visible || worldAlpha === 0 || list.length === 0)
+    if (this.renderMask !== this.renderFlags)
     {
         return;
     }
 
-    renderer.resetTransform();
+    var list = src.getRenderList();
+
     renderer.setBlendMode(src.blendMode);
 
     var ca = renderer.currentAlpha;

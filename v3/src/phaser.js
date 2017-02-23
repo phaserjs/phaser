@@ -24,11 +24,7 @@ var Phaser = {
 
     Input: require('./input'),
 
-    GameObjects: {
-
-        Factory: require('./gameobjects/FactoryContainer')
-
-    },
+    GameObjects: require('./gameobjects'),
 
     State: require('./state/State'),
 
@@ -51,13 +47,6 @@ var Phaser = {
     }
 
 };
-
-//  Required, but don't need Phaser level exports
-
-// require('./gameobjects/blitter/BlitterFactory');
-require('./gameobjects/image/ImageFactory');
-// require('./gameobjects/sprite/SpriteFactory');
-// require('./gameobjects/container/ContainerFactory');
 
 //   Merge in the consts
 
