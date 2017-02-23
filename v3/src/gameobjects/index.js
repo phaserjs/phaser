@@ -4,6 +4,7 @@
 require('./image/ImageFactory');
 require('./sprite/SpriteFactory');
 require('./blitter/BlitterFactory');
+require('./text/BitmapTextFactory');
 
 // require('./gameobjects/container/ContainerFactory');
 
