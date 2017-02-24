@@ -21,9 +21,6 @@ var Transform = {
     anchorX: 0,
     anchorY: 0,
 
-    offsetX: 0,
-    offsetY: 0,
-
     scaleX: {
 
         get: function ()

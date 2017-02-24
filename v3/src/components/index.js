@@ -2,6 +2,7 @@ module.exports = {
 
     Alpha: require('./Alpha'),
     BlendMode: require('./BlendMode'),
+    Bounds: require('./Bounds'),
     Children: require('./Children'),
     Color: require('./Color'),
     Data: require('./Data'),

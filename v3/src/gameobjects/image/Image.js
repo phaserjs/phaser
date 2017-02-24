@@ -7,14 +7,15 @@ var ImageRender = require('./ImageRender');
 var Image = new Class({
 
     Mixins: [
-        Components.Transform,
-        Components.Texture,
-        Components.Size,
         Components.Alpha,
         Components.BlendMode,
-        Components.ScaleMode,
-        Components.Visible,
+        Components.Bounds,
         Components.GetBounds,
+        Components.ScaleMode,
+        Components.Size,
+        Components.Texture,
+        Components.Transform,
+        Components.Visible,
         ImageRender
     ],
 
