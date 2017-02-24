@@ -1,17 +1,22 @@
 var GetBounds = {
 
-    getBounds: function ()
+    getBounds: function (output)
     {
-        var r = this.rotation;
-
-        var wct = this.width * Math.cos(r);
-        var hct = this.height * Math.cos(r);
-
-        var wst = this.width * Math.sin(r);
-        var hst = this.height * Math.sin(r);
+        if (output === undefined) { output = { x: 0, y: 0, width: 0, height: 0 }; }
 
         var x = this.x;
         var y = this.y;
+
+        var w = this.width;
+        var h = this.height;
+
+        var r = this.rotation;
+
+        var wct = w * Math.cos(r);
+        var hct = h * Math.cos(r);
+
+        var wst = w * Math.sin(r);
+        var hst = h * Math.sin(r);
 
         var xMin = x;
         var xMax = x;
@@ -35,30 +40,27 @@ var GetBounds = {
                 xMin = x - hst + wct;
             }
         }
+        else if (r > -1.5707963267948966)
+        {
+            // -90 < theta <= 0
+            yMin = y + wst;
+            yMax = y + hct;
+            xMax = x + wct - hst;
+        }
         else
         {
-            if (r > -1.5707963267948966)
-            {
-                // -90 < theta <= 0
-                yMin = y + wst;
-                yMax = y + hct;
-                xMax = x + wct - hst;
-            }
-            else
-            {
-                // -180 <= theta <= -90
-                yMin = y + wst + hct;
-                xMin = x + wct;
-                xMax = x - hst;
-            }
+            // -180 <= theta <= -90
+            yMin = y + wst + hct;
+            xMin = x + wct;
+            xMax = x - hst;
         }
 
-        return {
-            x: xMin,
-            y: yMin,
-            width: xMax - xMin,
-            height: yMax - yMin
-        };
+        output.x = xMin;
+        output.y = yMin;
+        output.width = xMax - xMin;
+        output.height = yMax - yMin;
+
+        return output;
     }
 };
 
