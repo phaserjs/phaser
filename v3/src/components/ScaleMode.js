@@ -2,22 +2,22 @@ var ScaleModes = require('../renderer/ScaleModes');
 
 //  ScaleMode Component
 
-var _scaleMode = ScaleModes.DEFAULT;
-
 var ScaleMode = {
+
+    _scaleMode: ScaleModes.DEFAULT,
 
     scaleMode: {
 
         get: function ()
         {
-            return _scaleMode;
+            return this._scaleMode;
         },
 
         set: function (value)
         {
             if (value === ScaleModes.LINEAR || value === ScaleModes.NEAREST)
             {
-                _scaleMode = value;
+                this._scaleMode = value;
             }
         }
 

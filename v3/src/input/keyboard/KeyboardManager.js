@@ -35,6 +35,8 @@ var KeyboardManager = function (inputManager)
 
     this.combos = [];
 
+    this.captures = [];
+
     //   Standard FIFO queue
     this.queue = [];
 
@@ -68,6 +70,7 @@ KeyboardManager.prototype = {
     startListeners: function ()
     {
         var queue = this.queue;
+        var captures = this.captures;
 
         var keyHandler = function (event)
         {
@@ -78,6 +81,11 @@ KeyboardManager.prototype = {
             }
 
             queue.push(event);
+
+            if (captures[event.keyCode])
+            {
+                event.preventDefault();
+            }
         };
 
         this.keyHandler = keyHandler;
@@ -148,6 +156,7 @@ KeyboardManager.prototype = {
         if (!keys[keyCode])
         {
             keys[keyCode] = new Key(keyCode);
+            this.captures[keyCode] = true;
         }
 
         return keys[keyCode];
@@ -159,11 +168,38 @@ KeyboardManager.prototype = {
     * @method Phaser.Keyboard#removeKey
     * @param {integer} keycode - The {@link Phaser.KeyCode keycode} of the key to remove.
     */
-    removeKey: function (keycode)
+    removeKey: function (keyCode)
     {
-        if (this.keys[keycode])
+        if (this.keys[keyCode])
         {
-            this.keys[keycode] = undefined;
+            this.keys[keyCode] = undefined;
+            this.captures[keyCode] = false;
+        }
+    },
+
+    addKeyCapture: function (keyCodes)
+    {
+        if (!Array.isArray(keyCodes))
+        {
+            keyCodes = [ keyCodes ];
+        }
+
+        for (var i = 0; i < keyCodes.length; i++)
+        {
+            this.captures[keyCodes[i]] = true;
+        }
+    },
+
+    removeKeyCapture: function (keyCodes)
+    {
+        if (!Array.isArray(keyCodes))
+        {
+            keyCodes = [ keyCodes ];
+        }
+
+        for (var i = 0; i < keyCodes.length; i++)
+        {
+            this.captures[keyCodes[i]] = false;
         }
     },
 

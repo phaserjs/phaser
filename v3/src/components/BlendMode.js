@@ -2,15 +2,15 @@ var BlendModes = require('../renderer/BlendModes');
 
 //  BlendMode Component
 
-var _blendMode = BlendModes.NORMAL;
-
 var BlendMode = {
+
+    _blendMode: BlendModes.NORMAL,
 
     blendMode: {
 
         get: function ()
         {
-            return _blendMode;
+            return this._blendMode;
         },
 
         set: function (value)
@@ -19,7 +19,7 @@ var BlendMode = {
 
             if (value >= 0 && value <= 16)
             {
-                _blendMode = value;
+                this._blendMode = value;
             }
         }
 

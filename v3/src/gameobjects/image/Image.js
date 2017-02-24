@@ -24,8 +24,8 @@ var Image = new Class({
     {
         GameObject.call(this, state);
 
-        this.setPosition(x, y);
         this.setTexture(texture, frame);
+        this.setPosition(x, y);
     }
 
 });
