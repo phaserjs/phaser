@@ -1,5 +1,5 @@
 
-var ContainerWebGLRenderer = function (renderer, src, interpolationPercentage, camera)
+var ContainerCanvasRenderer = function (renderer, src, interpolationPercentage, camera)
 {
     if (this.renderMask !== this.renderFlags)
     {
@@ -11,8 +11,8 @@ var ContainerWebGLRenderer = function (renderer, src, interpolationPercentage, c
     {
         var child = src.children.list[i];
 
-        child.renderWebGL(renderer, child, interpolationPercentage, camera);
+        child.renderCanvas(renderer, child, interpolationPercentage, camera);
     }
 };
 
-module.exports = ContainerWebGLRenderer;
+module.exports = ContainerCanvasRenderer;

@@ -1,12 +1,11 @@
 //  Required, but don't need Phaser level exports
 //  (maybe these should be Phaser export level?)
 
+require('./blitter/BlitterFactory');
+require('./container/ContainerFactory');
 require('./image/ImageFactory');
 require('./sprite/SpriteFactory');
-require('./blitter/BlitterFactory');
 require('./text/BitmapTextFactory');
-
-// require('./gameobjects/container/ContainerFactory');
 
 //  Phaser.GameObjects
 
@@ -14,8 +13,9 @@ module.exports = {
 
     Factory: require('./FactoryContainer'),
 
+    Blitter: require('./blitter/Blitter'),
+    Container: require('./container/Container'),
     Image: require('./image/Image'),
-    Sprite: require('./sprite/Sprite'),
-    Blitter: require('./blitter/Blitter')
+    Sprite: require('./sprite/Sprite')
 
 };

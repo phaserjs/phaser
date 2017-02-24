@@ -1,8 +1,3 @@
-/**
-* @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2016 Photon Storm Ltd.
-* @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
-*/
 
 var Image = require('./Image');
 var FactoryContainer = require('../../gameobjects/FactoryContainer');
@@ -27,20 +22,15 @@ var ImageFactory = {
     * @param {Phaser.Group} [group] - Optional Group to add the object to. If not specified it will be added to the World group.
     * @return {Phaser.Image} The newly created Image object.
     */
-    add: function (x, y, key, frame, group)
+    add: function (x, y, key, frame, parent)
     {
-        if (group === undefined) { group = this.state; }
+        if (parent === undefined) { parent = this.state; }
 
-        // console.log('ImageFactory.add', key);
-        // console.log('into State', this.state.sys.settings.key);
-
-        return group.children.add(new Image(this.state, x, y, key, frame));
+        return parent.children.add(new Image(this.state, x, y, key, frame));
     },
 
     make: function (x, y, key, frame)
     {
-        // console.log('ImageFactory.make', key, x, y, frame);
-
         return new Image(this.state, x, y, key, frame);
     }
 
