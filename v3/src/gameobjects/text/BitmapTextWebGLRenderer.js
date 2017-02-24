@@ -5,7 +5,6 @@ var BitmapTextWebGLRenderer = function (renderer, src, interpolationPercentage, 
         return;
     }
 
-    var blitterBatch = renderer.blitterBatch;
     var cameraMatrix = camera.matrix.matrix;
     var a = cameraMatrix[0];
     var b = cameraMatrix[1];
