@@ -5,6 +5,7 @@ var BitmapTextWebGLRenderer = function (renderer, src, interpolationPercentage, 
         return;
     }
 
+    var textureFrame = src.frame;
     var cameraMatrix = camera.matrix.matrix;
     var a = cameraMatrix[0];
     var b = cameraMatrix[1];
@@ -25,9 +26,12 @@ var BitmapTextWebGLRenderer = function (renderer, src, interpolationPercentage, 
     var vertexOffset = 0;
     var srcX = src.x; 
     var srcY = src.y;
-    var texture = src.texture.source[0].glTexture
-    var textureWidth = src.texture.source[0].width;
-    var textureHeight = src.texture.source[0].height
+    var textureData = src.texture.source[textureFrame.sourceIndex];
+    var textureX = textureFrame.cutX;
+    var textureY = textureFrame.cutY;
+    var textureWidth = textureData.width;
+    var textureHeight = textureData.height;
+    var texture = textureData.glTexture;
     var xAdvance = 0;
     var yAdvance = 0;
     var indexCount = 0;
@@ -70,8 +74,8 @@ var BitmapTextWebGLRenderer = function (renderer, src, interpolationPercentage, 
             continue;
         }
 
-        glyphX = glyph.x;
-        glyphY = glyph.y;
+        glyphX = textureX + glyph.x;
+        glyphY = textureY + glyph.y;
         glyphW = glyph.width;
         glyphH = glyph.height;
         x = (srcX + indexCount + glyph.xOffset + xAdvance) - cameraScrollX;

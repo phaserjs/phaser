@@ -4,6 +4,8 @@ var BitmapTextCanvasRenderer = function (renderer, src, interpolationPercentage,
     {
         return;
     }
+    
+    var textureFrame = src.frame;
     var cameraScrollX = camera.scrollX;
     var cameraScrollY = camera.scrollY;
     var text = src.text;
@@ -27,6 +29,9 @@ var BitmapTextCanvasRenderer = function (renderer, src, interpolationPercentage,
     var lastCharCode = 0;
     var ctx = renderer.currentContext;
     var image = src.frame.source.image;
+    var textureData = src.texture.source[textureFrame.sourceIndex];
+    var textureX = textureFrame.cutX;
+    var textureY = textureFrame.cutY;
 
     //  Blend Mode
     if (renderer.currentBlendMode !== src.blendMode)
@@ -66,8 +71,8 @@ var BitmapTextCanvasRenderer = function (renderer, src, interpolationPercentage,
             continue;
         }
 
-        glyphX = glyph.x;
-        glyphY = glyph.y;
+        glyphX = textureX + glyph.x;
+        glyphY = textureY + glyph.y;
         glyphW = glyph.width;
         glyphH = glyph.height;
         x = (srcX + indexCount + glyph.xOffset + xAdvance) - cameraScrollX;

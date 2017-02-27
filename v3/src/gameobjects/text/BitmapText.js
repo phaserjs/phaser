@@ -63,14 +63,14 @@ var BitmapText = new Class({
 
     initialize:
 
-    function BitmapText (state, x, y, key, text)
+    function BitmapText (state, x, y, text, key, subKey)
     {
         GameObject.call(this, state);
 
         this.text = typeof text === 'string' ? text : '';
-        this.fontData = ParseXMLBitmapFont(this.state.sys.cache.xml.get(key), 0, 0);
+        this.fontData = ParseXMLBitmapFont(this.state.sys.cache.xml.get(subKey ? subKey : key), 0, 0);
         
-        this.setTexture(key, null);
+        this.setTexture(key, subKey);
         this.setPosition(x, y);
     }
 
