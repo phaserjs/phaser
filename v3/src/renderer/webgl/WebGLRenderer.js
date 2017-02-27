@@ -11,6 +11,7 @@ var CreateTexture2DImage = require('./utils/texture/CreateTexture2DImage');
 var BlitterBatch = require('./batches/blitter/BlitterBatch');
 var AAQuadBatch = require('./batches/aaquad/AAQuadBatch');
 var SpriteBatch = require('./batches/sprite/SpriteBatch');
+var ShapeBatch = require('./batches/shape/ShapeBatch');
 var BlendModes = require('../BlendModes');
 
 var WebGLRenderer = function (game)
@@ -48,6 +49,7 @@ var WebGLRenderer = function (game)
     this.blitterBatch = null;
     this.aaQuadBatch = null;
     this.spriteBatch = null;
+    this.shapeBatch = null;
     this.batch = null;
     this.currentTexture2D = null;
 
@@ -99,6 +101,7 @@ WebGLRenderer.prototype = {
         this.blitterBatch = this.addBatch(new BlitterBatch(this.game, gl, this));
         this.aaQuadBatch = this.addBatch(new AAQuadBatch(this.game, gl, this));
         this.spriteBatch = this.addBatch(new SpriteBatch(this.game, gl, this));
+        this.shapeBatch = this.addBatch(new ShapeBatch(this.game, gl, this));
     },
 
     createTexture2D: function (source)
