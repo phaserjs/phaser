@@ -17,7 +17,7 @@ function getProperty (definition, k, isClassDescriptor)
         def = def.value;
     }
 
-    //  This might be a regular property, or it may be a getter / setter the user defined in a class.
+    //  This might be a regular property, or it may be a getter/setter the user defined in a class.
     if (def && hasGetterOrSetter(def))
     {
         if (typeof def.enumerable === 'undefined')
@@ -34,14 +34,7 @@ function getProperty (definition, k, isClassDescriptor)
     }
     else
     {
-        // if (typeof definition[k] === 'object')
-        // {
-        //     return -1;
-        // }
-        // else
-        // {
-            return false;
-        // }
+        return false;
     }
 }
 
@@ -67,7 +60,7 @@ function hasNonConfigurable (obj, k)
     return false;
 }
 
-function extend (ctor, definition, isClassDescriptor, extendCallback)
+function extend (ctor, definition, isClassDescriptor, extend)
 {
     for (var k in definition)
     {
@@ -76,78 +69,13 @@ function extend (ctor, definition, isClassDescriptor, extendCallback)
             continue;
         }
 
-        if (typeof definition[k] === 'object')
-        {
-             // Here goes nothing ...
-            extend(ctor, def, false, extendCallback);
-        }
-
         var def = getProperty(definition, k, isClassDescriptor);
 
-        //  Object ...
-
-        if (def === -1)
-        {
-            console.log(k, def);
-
-            //  Iterate the object, and see if any children are getters / setters
-            //  https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty
-
-            def = definition[k];
-
-            var entry = {};
-
-            entry[k] = {};
-
-            // ctor.prototype[k] = {};
-            // Object.defineProperty(ctor.prototype, k, { value: {} });
-
-            console.log('iterating', def);
-
-            for (var key in def)
-            {
-                var child = def[key];
-
-                console.log('->', key, child);
-
-                if (child && hasGetterOrSetter(child))
-                {
-                    if (typeof child.enumerable === 'undefined')
-                    {
-                        child.enumerable = true;
-                    }
-
-                    if (typeof child.configurable === 'undefined')
-                    {
-                        child.configurable = true;
-                    }
-
-                    Object.defineProperty(entry[k], key, child);
-                }
-                else
-                {
-                    Object.defineProperty(entry[k], key, {
-                        value: child,
-                        writable: true,
-                        configurable: true,
-                        enumerable: true
-                    });
-
-                    // ctor.prototype[k][key] = { value: child };
-                }
-            }
-
-            // ctor.prototype[k] = def;
-
-            console.dir(entry);
-
-            Object.defineProperties(ctor.prototype, entry);
-        }
-        else if (def !== false)
+        if (def !== false)
         {
             //  If Extends is used, we will check its prototype to see if the final variable exists.
             
-            var parent = extendCallback || ctor;
+            var parent = extend || ctor;
 
             if (hasNonConfigurable(parent.prototype, k))
             {
@@ -176,8 +104,6 @@ function extend (ctor, definition, isClassDescriptor, extendCallback)
 
 function mixin (myClass, mixins)
 {
-    console.log(myClass);
-
     if (!mixins)
     {
         return;

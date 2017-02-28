@@ -9,7 +9,6 @@ var Image = new Class({
     Mixins: [
         Components.Alpha,
         Components.BlendMode,
-        Components.Bounds,
         Components.GetBounds,
         Components.ScaleMode,
         Components.Size,

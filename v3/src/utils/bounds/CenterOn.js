@@ -1,5 +1,5 @@
-var CenterX = require('./CenterX');
-var CenterY = require('./CenterY');
+var SetCenterX = require('./SetCenterX');
+var SetCenterY = require('./SetCenterY');
 
 /**
 * The center x coordinate of the Game Object.
@@ -8,16 +8,11 @@ var CenterY = require('./CenterY');
 * @property {number} centerX
 */
 
-//  Phaser.Utils.Bounds.GetCenterX(bob)
-//  Phaser.Utils.Bounds.CenterOn(bob, x, y)
-//  Phaser.Utils.Bounds.CenterX(bob, x)
-//  Phaser.Utils.Bounds.CenterY(bob, x)
-
 var CenterOn = function (gameObject, x, y)
 {
-    CenterX(gameObject, x);
+    SetCenterX(gameObject, x);
 
-    return CenterY(gameObject, y);
+    return SetCenterY(gameObject, y);
 };
 
 module.exports = CenterOn;

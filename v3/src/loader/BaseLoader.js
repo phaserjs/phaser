@@ -67,7 +67,7 @@ BaseLoader.prototype = {
 
     start: function ()
     {
-        console.log(this.state.settings.key, ' - BaseLoader start. Files to load:', this.list.size);
+        console.log(this.state.settings.key, '- BaseLoader start. Files to load:', this.list.size);
 
         if (!this.isReady())
         {
@@ -247,7 +247,7 @@ BaseLoader.prototype = {
 
     processComplete: function ()
     {
-        console.log(this.state.settings.key, ' - Loader Complete. Loaded:', this.storage.size, 'Failed:', this.failed.size);
+        console.log(this.state.settings.key, '- Loader Complete. Loaded:', this.storage.size, 'Failed:', this.failed.size);
 
         this.list.clear();
         this.inflight.clear();
