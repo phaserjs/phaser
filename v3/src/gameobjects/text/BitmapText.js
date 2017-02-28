@@ -1,7 +1,7 @@
 var Class = require('../../utils/Class');
 var GameObject = require('../GameObject');
 var Components = require('../../components');
-var Renderer = require('./BitmapTextRenderer');
+var Render = require('./BitmapTextRender');
 
 var ParseXMLBitmapFont = function (xml, xSpacing, ySpacing, frame) 
 {
@@ -58,7 +58,7 @@ var BitmapText = new Class({
         Components.Alpha,
         Components.BlendMode,
         Components.Visible,
-        Renderer
+        Render
     ],
 
     initialize:
