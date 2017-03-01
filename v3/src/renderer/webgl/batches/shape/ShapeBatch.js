@@ -45,8 +45,9 @@ var ShapeBatch = function (game, gl, manager)
 
     this.manager = manager;
     this.dirty = false;
-
+    this.context = null;
     this.init(this.glContext);
+
 };
 
 ShapeBatch.prototype.constructor = ShapeBatch;
@@ -55,7 +56,6 @@ ShapeBatch.prototype = {
 
     init: function (gl)
     {
-
         var vertexDataBuffer = new Buffer32(CONST.VERTEX_SIZE * CONST.MAX_VERTICES);
         var vertShader = CreateShader(gl, CONST.VERTEX_SHADER_SOURCE, gl.VERTEX_SHADER);
         var fragShader = CreateShader(gl, CONST.FRAGMENT_SHADER_SOURCE, gl.FRAGMENT_SHADER);

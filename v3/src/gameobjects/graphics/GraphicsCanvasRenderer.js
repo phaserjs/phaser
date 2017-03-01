@@ -112,31 +112,6 @@ var GraphicsCanvasRenderer = function (renderer, src, interpolationPercentage, c
                 );
                 index += 4;
                 break;
-            case Commands.STROKE_CIRCLE:
-                ctx.beginPath();
-                ctx.arc(
-                    commandBuffer[index + 1], 
-                    commandBuffer[index + 2], 
-                    commandBuffer[index + 3],
-                    0,
-                    PI2
-                );
-                ctx.stroke();
-                ctx.closePath();
-                index += 3;
-                break;
-            case Commands.STROKE_RECT:
-                ctx.beginPath();
-                ctx.rect(
-                    commandBuffer[index + 1],
-                    commandBuffer[index + 2],
-                    commandBuffer[index + 3],
-                    commandBuffer[index + 4]
-                );
-                ctx.stroke();
-                ctx.closePath();
-                index += 4;
-                break;
             case Commands.LINE_TO:
                 ctx.lineTo(
                     commandBuffer[index + 1],

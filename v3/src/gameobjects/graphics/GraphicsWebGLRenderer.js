@@ -4,7 +4,6 @@ var pathArray = [];
 var cos = Math.cos;
 var sin = Math.sin;
 
-
 var Point = function (x, y) 
 {
     this.x = x;
@@ -14,7 +13,8 @@ var Point = function (x, y)
 var Path = function (x, y) 
 {
     this.points = [];
-    this.points.push(new Point(x, y));
+    this.pointsLength = 1;
+    this.points[0] = new Point(x, y);
 };
 
 var lerp = function (norm, min, max) 
@@ -71,6 +71,7 @@ var GraphicsWebGLRenderer = function (renderer, src, interpolationPercentage, ca
     var path;
     var pathLength;
     var point;
+    var maxVertices = shapeBatch.maxVertices;
 
     renderer.setBatch(shapeBatch, null);
 
@@ -127,11 +128,15 @@ var GraphicsWebGLRenderer = function (renderer, src, interpolationPercentage, ca
                 }
                 break;
             case Commands.FILL_PATH:
-                for (var pathArrayIndex = 0, pathArrayLength = pathArray.length; pathArrayIndex < pathArrayLength; ++pathArrayIndex) 
+                for (var pathArrayIndex = 0, pathArrayLength = pathArray.length; 
+                    pathArrayIndex < pathArrayLength; 
+                    ++pathArrayIndex) 
                 {
                     path = pathArray[pathArrayIndex].points;
                     pathLength = path.length;
-                    for (var pathIndex = 0; pathIndex < pathLength; ++pathIndex)
+                    for (var pathIndex = 0; 
+                        pathIndex < pathLength; 
+                        ++pathIndex)
                     {
                         point = path[pathIndex];
                         polygon.push(point.x, point.y);
@@ -142,6 +147,11 @@ var GraphicsWebGLRenderer = function (renderer, src, interpolationPercentage, ca
                         v0 = polygonIndex[index + 0] * 2;
                         v1 = polygonIndex[index + 1] * 2;
                         v2 = polygonIndex[index + 2] * 2;
+                        if (vertexCount + 3 > maxVertices)
+                        {
+                            shapeBatch.flush();
+                            vertexCount = 0;
+                        }
                         vertexOffset = vertexDataBuffer.allocate(9 * 3);
                         vertexCount += 3;
 
@@ -188,7 +198,6 @@ var GraphicsWebGLRenderer = function (renderer, src, interpolationPercentage, ca
                         vertexBufferF32[vertexOffset++] = srcScaleX;
                         vertexBufferF32[vertexOffset++] = srcScaleY;
                         vertexBufferF32[vertexOffset++] = srcRotation;
-
                     }
                     polygon.length = 0;
                 }
@@ -196,6 +205,11 @@ var GraphicsWebGLRenderer = function (renderer, src, interpolationPercentage, ca
             case Commands.STROKE_PATH:
                 break;
             case Commands.FILL_RECT:
+                if (vertexCount + 6 > maxVertices)
+                {
+                    shapeBatch.flush();
+                    vertexCount = 0;
+                }
                 vertexOffset = vertexDataBuffer.allocate(9 * 6);
                 vertexCount += 6;
 
@@ -262,13 +276,6 @@ var GraphicsWebGLRenderer = function (renderer, src, interpolationPercentage, ca
                 vertexBufferF32[vertexOffset++] = srcScaleX;
                 vertexBufferF32[vertexOffset++] = srcScaleY;
                 vertexBufferF32[vertexOffset++] = srcRotation;
-
-                cmdIndex += 4;
-                break;
-            case Commands.STROKE_CIRCLE:
-                cmdIndex += 3;
-                break;
-            case Commands.STROKE_RECT:
                 cmdIndex += 4;
                 break;
             case Commands.LINE_TO:

@@ -103,10 +103,13 @@ var Graphics = new Class({
 
     strokeRect: function (x, y, width, height) 
     {
-        this.commandBuffer.push(
-            Commands.STROKE_RECT,
-            x, y, width, height
-        );
+        this.beginPath();
+        this.moveTo(x, y);
+        this.lineTo(x + width, y);
+        this.lineTo(x + width, y + height);
+        this.lineTo(x, y + height);
+        this.lineTo(x, y);
+        this.closePath();
     },
 
     lineTo: function (x, y) 
