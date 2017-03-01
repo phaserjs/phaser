@@ -1,10 +1,8 @@
-var Class = require('../../utils/Class');
-var GameObject = require('../GameObject');
-var Components = require('../../components');
-var Render = require('./BitmapTextRender');
-
-var ParseXMLBitmapFont = function (xml, xSpacing, ySpacing, frame) 
+var ParseXMLBitmapFont = function (xml, xSpacing, ySpacing, frame)
 {
+    if (xSpacing === undefined) { xSpacing = 0; }
+    if (ySpacing === undefined) { ySpacing = 0; }
+
     var data = {};
     var info = xml.getElementsByTagName('info')[0];
     var common = xml.getElementsByTagName('common')[0];
@@ -23,7 +21,8 @@ var ParseXMLBitmapFont = function (xml, xSpacing, ySpacing, frame)
     {
         var charCode = parseInt(letters[i].getAttribute('id'), 10);
 
-        data.chars[charCode] = {
+        data.chars[charCode] =
+        {
             x: x + parseInt(letters[i].getAttribute('x'), 10),
             y: y + parseInt(letters[i].getAttribute('y'), 10),
             width: parseInt(letters[i].getAttribute('width'), 10),
@@ -47,33 +46,6 @@ var ParseXMLBitmapFont = function (xml, xSpacing, ySpacing, frame)
     }
 
     return data;
-}
+};
 
-var BitmapText = new Class({
-
-    Mixins: [
-        Components.Transform,
-        Components.Texture,
-        Components.Size,
-        Components.Alpha,
-        Components.BlendMode,
-        Components.Visible,
-        Render
-    ],
-
-    initialize:
-
-    function BitmapText (state, x, y, text, key, subKey)
-    {
-        GameObject.call(this, state);
-
-        this.text = typeof text === 'string' ? text : '';
-        this.fontData = ParseXMLBitmapFont(this.state.sys.cache.xml.get(subKey ? subKey : key), 0, 0);
-        
-        this.setTexture(key, subKey);
-        this.setPosition(x, y);
-    }
-
-});
-
-module.exports = BitmapText;
+module.exports = ParseXMLBitmapFont;

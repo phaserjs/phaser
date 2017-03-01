@@ -9,7 +9,10 @@ var BinaryFile = require('../../loader/filetypes/BinaryFile');
 var GLSLFile = require('../../loader/filetypes/GLSLFile');
 var TextFile = require('../../loader/filetypes/TextFile');
 var AtlasJSONFile = require('../../loader/filetypes/AtlasJSONFile');
+var BitmapFontFile = require('../../loader/filetypes/BitmapFontFile');
 var SpriteSheet = require('../../loader/filetypes/SpriteSheet');
+
+var ParseXMLBitmapFont = require('../../gameobjects/bitmaptext/ParseXMLBitmapFont');
 
 var Loader = function (state)
 {
@@ -61,6 +64,10 @@ Loader.prototype.file = function (file)
 
         case 'atlas':
             entry = this.atlas(file.key, file.textureURL, file.atlasURL, file.textureXhrSettings, file.atlasXhrSettings);
+            break;
+
+        case 'bitmapFont':
+            entry = this.bitmapFont(file.key, file.textureURL, file.xmlURL, file.textureXhrSettings, file.xmlXhrSettings);
             break;
 
         case 'multiatlas':
@@ -125,6 +132,17 @@ Loader.prototype.atlas = function (key, textureURL, atlasURL, textureXhrSettings
 {
     //  Returns an object with two properties: 'texture' and 'data'
     var files = new AtlasJSONFile(key, textureURL, atlasURL, this.path, textureXhrSettings, atlasXhrSettings);
+
+    this.addFile(files.texture);
+    this.addFile(files.data);
+
+    return this;
+};
+
+Loader.prototype.bitmapFont = function (key, textureURL, xmlURL, textureXhrSettings, xmlXhrSettings)
+{
+    //  Returns an object with two properties: 'texture' and 'data'
+    var files = new BitmapFontFile(key, textureURL, xmlURL, this.path, textureXhrSettings, xmlXhrSettings);
 
     this.addFile(files.texture);
     this.addFile(files.data);
@@ -198,6 +216,8 @@ Loader.prototype.processCallback = function ()
     //  Process multiatlas groups first
 
     var file;
+    var fileA;
+    var fileB;
 
     for (var key in this._multilist)
     {
@@ -250,8 +270,9 @@ Loader.prototype.processCallback = function ()
                 break;
 
             case 'atlasjson':
-                var fileA = file.fileA;
-                var fileB = file.fileB;
+
+                fileA = file.fileA;
+                fileB = file.fileB;
 
                 if (fileA.type === 'image')
                 {
@@ -260,6 +281,23 @@ Loader.prototype.processCallback = function ()
                 else
                 {
                     textures.addAtlas(fileB.key, fileB.data, fileA.data);
+                }
+                break;
+
+            case 'bitmapfont':
+
+                fileA = file.fileA;
+                fileB = file.fileB;
+
+                if (fileA.type === 'image')
+                {
+                    cache.bitmapFont.add(fileB.key, ParseXMLBitmapFont(fileB.data));
+                    textures.addImage(fileA.key, fileA.data);
+                }
+                else
+                {
+                    cache.bitmapFont.add(fileA.key, ParseXMLBitmapFont(fileA.data));
+                    textures.addImage(fileB.key, fileB.data);
                 }
                 break;
 
@@ -292,11 +330,6 @@ Loader.prototype.processCallback = function ()
                 break;
         }
     });
-
-    // this.video = new BaseCache();
-    // this.physics = new BaseCache();
-    // this.tilemap = new BaseCache();
-    // this.bitmapFont = new BaseCache();
 
     this.storage.clear();
 };

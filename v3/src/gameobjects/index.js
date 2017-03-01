@@ -5,7 +5,7 @@ require('./blitter/BlitterFactory');
 require('./container/ContainerFactory');
 require('./image/ImageFactory');
 require('./sprite/SpriteFactory');
-require('./text/BitmapTextFactory');
+require('./bitmaptext/BitmapTextFactory');
 require('./graphics/GraphicsFactory');
 
 //  Phaser.GameObjects
@@ -14,7 +14,7 @@ module.exports = {
 
     Factory: require('./FactoryContainer'),
 
-    BitmapText: require('./text/BitmapText'),
+    BitmapText: require('./bitmaptext/BitmapText'),
     Blitter: require('./blitter/Blitter'),
     Container: require('./container/Container'),
     Image: require('./image/Image'),
