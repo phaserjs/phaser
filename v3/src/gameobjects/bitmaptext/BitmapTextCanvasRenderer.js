@@ -10,14 +10,13 @@ var BitmapTextCanvasRenderer = function (renderer, src, interpolationPercentage,
     
     var textureFrame = src.frame;
 
+    var displayCallback = src.displayCallback;
+
     var cameraScrollX = camera.scrollX;
     var cameraScrollY = camera.scrollY;
 
     var chars = src.fontData.chars;
     var lineHeight = src.fontData.lineHeight;
-
-    var srcX = src.x;
-    var srcY = src.y;
 
     var xAdvance = 0;
     var yAdvance = 0;
@@ -43,8 +42,8 @@ var BitmapTextCanvasRenderer = function (renderer, src, interpolationPercentage,
     var textureX = textureFrame.cutX;
     var textureY = textureFrame.cutY;
 
-    var scaleX = src.scaleX * (src.fontSize / src.fontData.size);
-    var scaleY = src.scaleY * (src.fontSize / src.fontData.size);
+    var rotation = 0;
+    var scale = (src.fontSize / src.fontData.size);
 
     //  Blend Mode
     if (renderer.currentBlendMode !== src.blendMode)
@@ -66,8 +65,17 @@ var BitmapTextCanvasRenderer = function (renderer, src, interpolationPercentage,
         renderer.currentScaleMode = src.scaleMode;
     }
 
+    ctx.save();
+    ctx.translate(src.x, src.y);
+    ctx.rotate(src.rotation);
+    ctx.scale(src.scaleX, src.scaleY);
+
     for (var index = 0; index < textLength; ++index)
     {
+        //  Reset the scale (in case the callback changed it)
+        scale = (src.fontSize / src.fontData.size);
+        rotation = 0;
+
         charCode = text.charCodeAt(index);
 
         if (charCode === 10)
@@ -92,8 +100,8 @@ var BitmapTextCanvasRenderer = function (renderer, src, interpolationPercentage,
         glyphW = glyph.width;
         glyphH = glyph.height;
 
-        x = srcX + indexCount + glyph.xOffset + xAdvance;
-        y = srcY + glyph.yOffset + yAdvance;
+        x = indexCount + glyph.xOffset + xAdvance;
+        y = glyph.yOffset + yAdvance;
 
         if (lastGlyph !== null)
         {
@@ -101,15 +109,26 @@ var BitmapTextCanvasRenderer = function (renderer, src, interpolationPercentage,
             x += (kerningOffset !== undefined) ? kerningOffset : 0;
         }
 
-        x *= scaleX;
-        y *= scaleY;
+        if (displayCallback)
+        {
+            var output = displayCallback({ index: index, charCode: charCode, x: x, y: y, scale: scale, rotation: 0 });
+
+            x = output.x;
+            y = output.y;
+            scale = output.scale;
+            rotation = output.rotation;
+        }
+
+        x *= scale;
+        y *= scale;
 
         x -= cameraScrollX;
         y -= cameraScrollY;
 
         ctx.save();
         ctx.translate(x, y);
-        ctx.scale(scaleX, scaleY);
+        ctx.rotate(rotation);
+        ctx.scale(scale, scale);
         ctx.drawImage(image, glyphX, glyphY, glyphW, glyphH, 0, 0, glyphW, glyphH);
         ctx.restore();
         
@@ -118,6 +137,8 @@ var BitmapTextCanvasRenderer = function (renderer, src, interpolationPercentage,
         lastGlyph = glyph;
         lastCharCode = charCode;
     }
+
+    ctx.restore();
 };
 
 module.exports = BitmapTextCanvasRenderer;

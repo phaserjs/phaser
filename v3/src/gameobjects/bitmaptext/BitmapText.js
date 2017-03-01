@@ -28,11 +28,33 @@ var BitmapText = new Class({
         this.fontData = this.state.sys.cache.bitmapFont.get(font);
 
         this.text = text;
-        
+
         this.fontSize = size;
+
+        //  Setting these will enable the Size component to work
+        //  then anchorX etc will work too
+        // this.frame.realWidth = 0;
+        // this.frame.realHeight = 0;
+
+        this.displayCallback;
 
         this.setTexture(font);
         this.setPosition(x, y);
+    },
+
+    setDisplayCallback: function (callback)
+    {
+        this.displayCallback = callback;
+
+        return this;
+    },
+
+    setText: function (text)
+    {
+        // this._text = text;
+        // this.dirty = true;
+
+        return this;
     }
 
 });
