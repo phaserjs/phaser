@@ -46,7 +46,7 @@ var GraphicsCanvasRenderer = function (renderer, src, interpolationPercentage, c
     }
 
     ctx.save();
-    ctx.translate(srcX, srcY);
+    ctx.translate(srcX - cameraScrollX, srcY - cameraScrollY);
     ctx.rotate(srcRotation);
     ctx.scale(srcScaleX, srcScaleY);
     ctx.fillStyle = '#fff';
