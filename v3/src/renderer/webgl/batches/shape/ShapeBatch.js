@@ -62,7 +62,11 @@ ShapeBatch.prototype = {
         var program = CreateProgram(gl, vertShader, fragShader);
         var attribArray = [
             CreateAttribDesc(gl, program, 'a_position', 2, gl.FLOAT, false, CONST.VERTEX_SIZE, 0),
-            CreateAttribDesc(gl, program, 'a_color', 4, gl.FLOAT, true, CONST.VERTEX_SIZE, 8),
+            CreateAttribDesc(gl, program, 'a_color', 4, gl.UNSIGNED_BYTE, true, CONST.VERTEX_SIZE, 8),
+            CreateAttribDesc(gl, program, 'a_alpha', 1, gl.FLOAT, false, CONST.VERTEX_SIZE, 12),
+            CreateAttribDesc(gl, program, 'a_translate', 2, gl.FLOAT, false, CONST.VERTEX_SIZE, 16),
+            CreateAttribDesc(gl, program, 'a_scale', 2, gl.FLOAT, false, CONST.VERTEX_SIZE, 24),
+            CreateAttribDesc(gl, program, 'a_rotation', 1, gl.FLOAT, false, CONST.VERTEX_SIZE, 32),
         ];
         var vertexArray = new VertexArray(CreateBuffer(gl, gl.ARRAY_BUFFER, gl.STREAM_DRAW, null, vertexDataBuffer.getByteCapacity()), attribArray);
         var viewMatrixLocation = gl.getUniformLocation(program, 'u_view_matrix');
@@ -108,11 +112,13 @@ ShapeBatch.prototype = {
         var gl = this.glContext;
         var vertexDataBuffer = this.vertexDataBuffer;
 
-        gl.bufferSubData(gl.ARRAY_BUFFER, 0, vertexDataBuffer.getUsedBufferAsFloat());
-        gl.drawArrays(gl.TRIANGLES, 0, this.vertexCount);
-        vertexDataBuffer.clear();
-
-        this.vertexCount = 0;
+        if (this.vertexCount > 0)
+        {
+            gl.bufferSubData(gl.ARRAY_BUFFER, 0, vertexDataBuffer.getUsedBufferAsFloat());
+            gl.drawArrays(gl.TRIANGLES, 0, this.vertexCount);
+            vertexDataBuffer.clear();
+            this.vertexCount = 0;
+        }
     },
 
     resize: function (width, height, resolution)

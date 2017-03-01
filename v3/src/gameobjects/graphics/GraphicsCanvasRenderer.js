@@ -103,19 +103,6 @@ var GraphicsCanvasRenderer = function (renderer, src, interpolationPercentage, c
                 ctx.lineWidth = lineWidth;
                 ctx.stroke();
                 break;
-            case Commands.FILL_CIRCLE:
-                ctx.beginPath();
-                ctx.arc(
-                    commandBuffer[index + 1], 
-                    commandBuffer[index + 2], 
-                    commandBuffer[index + 3],
-                    0,
-                    PI2
-                );
-                ctx.fill();
-                ctx.closePath();
-                index += 3;
-                break;
             case Commands.FILL_RECT:
                 ctx.fillRect(
                     commandBuffer[index + 1],

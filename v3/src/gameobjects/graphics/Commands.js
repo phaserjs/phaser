@@ -10,5 +10,6 @@ module.exports = {
     STROKE_CIRCLE: 8,
     STROKE_RECT: 9,
     FILL_PATH: 10,
-    STROKE_PATH: 11
+    STROKE_PATH: 11,
+    FILL_STYLE: 12
 };

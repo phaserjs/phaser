@@ -3,6 +3,7 @@ var GameObject = require('../GameObject');
 var Components = require('../../components');
 var Render = require('./GraphicsRender');
 var Commands = require('./Commands');
+var PI2 = 2 * Math.PI;
 
 var Graphics = new Class({
 
@@ -78,32 +79,32 @@ var Graphics = new Class({
 
     fillCircle: function (x, y, radius) 
     {
-        this.commandBuffer.push(
-            Commands.DRAW_CIRCLE,
-            x, y, radius
-        );
+        this.beginPath();
+        this.arc(x, y, radius, 0, PI2);
+        this.fillPath();
+        this.closePath();
     },
 
     fillRect: function (x, y, width, height) 
     {
         this.commandBuffer.push(
-            Commands.DRAW_RECT,
+            Commands.FILL_RECT,
             x, y, width, height
         );
     },
 
     strokeCircle: function (x, y, radius) 
     {
-        this.commandBuffer.push(
-            Commands.DRAW_CIRCLE,
-            x, y, radius
-        );
+        this.beginPath();
+        this.arc(x, y, radius, 0, PI2);
+        this.strokePath();
+        this.closePath();
     },
 
     strokeRect: function (x, y, width, height) 
     {
         this.commandBuffer.push(
-            Commands.DRAW_RECT,
+            Commands.STROKE_RECT,
             x, y, width, height
         );
     },
