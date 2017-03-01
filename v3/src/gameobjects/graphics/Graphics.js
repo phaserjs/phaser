@@ -31,22 +31,52 @@ var Graphics = new Class({
         );
     },
 
-    beginFill: function (color) 
+    lineStyle: function (lineWidth, color, alpha)
     {
         this.commandBuffer.push(
-            Commands.BEGIN_FILL,
-            color
+            Commands.LINE_STYLE,
+            lineWidth, color, alpha
         );
     },
 
-    endFill: function () 
+    fillStyle: function (color, alpha)
     {
+        alpha = (alpha !== undefined ? alpha : 1);
         this.commandBuffer.push(
-            Commands.END_FILL
+            Commands.FILL_STYLE,
+            color, alpha
         );
     },
 
-    drawCircle: function (x, y, radius) 
+    beginPath: function () 
+    {
+        this.commandBuffer.push(
+            Commands.BEGIN_PATH
+        );
+    },
+
+    closePath: function () 
+    {
+        this.commandBuffer.push(
+            Commands.CLOSE_PATH
+        );
+    },
+
+    fillPath: function ()
+    {
+        this.commandBuffer.push(
+            Commands.FILL_PATH
+        );
+    },
+
+    strokePath: function ()
+    {
+        this.commandBuffer.push(
+            Commands.STROKE_PATH
+        );
+    },
+
+    fillCircle: function (x, y, radius) 
     {
         this.commandBuffer.push(
             Commands.DRAW_CIRCLE,
@@ -54,7 +84,23 @@ var Graphics = new Class({
         );
     },
 
-    drawRect: function (x, y, width, height) 
+    fillRect: function (x, y, width, height) 
+    {
+        this.commandBuffer.push(
+            Commands.DRAW_RECT,
+            x, y, width, height
+        );
+    },
+
+    strokeCircle: function (x, y, radius) 
+    {
+        this.commandBuffer.push(
+            Commands.DRAW_CIRCLE,
+            x, y, radius
+        );
+    },
+
+    strokeRect: function (x, y, width, height) 
     {
         this.commandBuffer.push(
             Commands.DRAW_RECT,

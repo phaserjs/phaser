@@ -16,6 +16,14 @@ var GraphicsCanvasRenderer = function (renderer, src, interpolationPercentage, c
     var commandBuffer = src.commandBuffer;
     var ctx = renderer.currentContext;
     var value;
+    var lineAlpha = 1.0;
+    var fillAlpha = 1.0;
+    var lineColor = 0;
+    var fillColor = 0;
+    var lineWidth = 1.0;
+    var red = 0;
+    var green = 0;
+    var blue = 0;
 
     //  Blend Mode
     if (renderer.currentBlendMode !== src.blendMode)
@@ -61,18 +69,41 @@ var GraphicsCanvasRenderer = function (renderer, src, interpolationPercentage, c
                 );
                 index += 6;
                 break;
-            case Commands.BEGIN_FILL:
-                value = commandBuffer[index + 1];
-                ctx.fillStyle = 'rgb(' + ((value & 0xFF0000) >>> 16) + ',' + ((value & 0xFF00) >>> 8) + ',' + (value & 0xFF) + ')';
+            case Commands.LINE_STYLE:
+                lineWidth = commandBuffer[index + 1];
+                lineColor = commandBuffer[index + 2]
+                lineAlpha = commandBuffer[index + 3];
+                index += 3;
+                break;
+            case Commands.FILL_STYLE:
+                fillColor = commandBuffer[index + 1];
+                fillAlpha = commandBuffer[index + 2];
+                index += 2;
+                break;
+            case Commands.BEGIN_PATH:
                 ctx.beginPath();
-                index += 1;
                 break;
-            case Commands.END_FILL:
-                ctx.fill();
+            case Commands.CLOSE_PATH:
                 ctx.closePath();
-                ctx.fillStyle = '#fff';
                 break;
-            case Commands.DRAW_CIRCLE:
+            case Commands.FILL_PATH:
+                red = ((fillColor & 0xFF0000) >>> 16);
+                green = ((fillColor & 0xFF00) >>> 8);
+                blue = (fillColor & 0xFF);
+                ctx.fillStyle = 'rgb(' + red + ',' + green + ',' + blue + ')';
+                ctx.globalAlpha = fillAlpha;
+                ctx.fill();
+                break;
+            case Commands.STROKE_PATH:
+                red = ((lineColor & 0xFF0000) >>> 16);
+                green = ((lineColor & 0xFF00) >>> 8);
+                blue = (lineColor & 0xFF);
+                ctx.strokeStyle = 'rgb(' + red + ',' + green + ',' + blue + ')';
+                ctx.globalAlpha = fillAlpha;
+                ctx.lineWidth = lineWidth;
+                ctx.stroke();
+                break;
+            case Commands.FILL_CIRCLE:
                 ctx.beginPath();
                 ctx.arc(
                     commandBuffer[index + 1], 
@@ -85,13 +116,38 @@ var GraphicsCanvasRenderer = function (renderer, src, interpolationPercentage, c
                 ctx.closePath();
                 index += 3;
                 break;
-            case Commands.DRAW_RECT:
+            case Commands.FILL_RECT:
                 ctx.fillRect(
                     commandBuffer[index + 1],
                     commandBuffer[index + 2],
                     commandBuffer[index + 3],
                     commandBuffer[index + 4]
                 );
+                index += 4;
+                break;
+            case Commands.STROKE_CIRCLE:
+                ctx.beginPath();
+                ctx.arc(
+                    commandBuffer[index + 1], 
+                    commandBuffer[index + 2], 
+                    commandBuffer[index + 3],
+                    0,
+                    PI2
+                );
+                ctx.stroke();
+                ctx.closePath();
+                index += 3;
+                break;
+            case Commands.STROKE_RECT:
+                ctx.beginPath();
+                ctx.rect(
+                    commandBuffer[index + 1],
+                    commandBuffer[index + 2],
+                    commandBuffer[index + 3],
+                    commandBuffer[index + 4]
+                );
+                ctx.stroke();
+                ctx.closePath();
                 index += 4;
                 break;
             case Commands.LINE_TO:
@@ -108,6 +164,7 @@ var GraphicsCanvasRenderer = function (renderer, src, interpolationPercentage, c
                 );
                 index += 2;
                 break;
+
             default:
                 console.error('Phaser: Invalid Graphics Command ID ' + commandID);
                 break;
