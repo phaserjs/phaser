@@ -129,7 +129,19 @@ var BitmapTextCanvasRenderer = function (renderer, src, interpolationPercentage,
         ctx.translate(x, y);
         ctx.rotate(rotation);
         ctx.scale(scale, scale);
+
+        ctx.fillStyle = 'rgb(255,0,255)';
+        ctx.fillRect(0, 0, glyphW, glyphH);
+
+        // if (!window.bob)
+        // {
+        //     window.bob = true;
+        //     console.log('xywh', x, y, glyphW, glyphH);
+        //     console.log('scaled', x * scale, y * scale, glyphW * scale, glyphH * scale);
+        // }
+
         ctx.drawImage(image, glyphX, glyphY, glyphW, glyphH, 0, 0, glyphW, glyphH);
+
         ctx.restore();
         
         xAdvance += glyph.xAdvance;

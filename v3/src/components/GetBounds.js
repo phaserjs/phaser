@@ -7,8 +7,8 @@ var GetBounds = {
         var x = this.x;
         var y = this.y;
 
-        var w = this.width;
-        var h = this.height;
+        var w = this.displayWidth;
+        var h = this.displayHeight;
 
         var r = this.rotation;
 

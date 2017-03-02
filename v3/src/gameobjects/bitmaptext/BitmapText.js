@@ -2,15 +2,17 @@ var Class = require('../../utils/Class');
 var GameObject = require('../GameObject');
 var Components = require('../../components');
 var Render = require('./BitmapTextRender');
+var GetBitmapTextSize = require('./GetBitmapTextSize');
 
 var BitmapText = new Class({
 
     Mixins: [
-        Components.Transform,
-        Components.Texture,
-        Components.Size,
         Components.Alpha,
         Components.BlendMode,
+        Components.Origin,
+        Components.Size,
+        Components.Texture,
+        Components.Transform,
         Components.Visible,
         Render
     ],
@@ -31,11 +33,6 @@ var BitmapText = new Class({
 
         this.fontSize = size;
 
-        //  Setting these will enable the Size component to work
-        //  then anchorX etc will work too
-        // this.frame.realWidth = 0;
-        // this.frame.realHeight = 0;
-
         this.displayCallback;
 
         this.setTexture(font);
@@ -51,10 +48,16 @@ var BitmapText = new Class({
 
     setText: function (text)
     {
-        // this._text = text;
-        // this.dirty = true;
+        this.text = text;
 
         return this;
+    },
+
+    getTextBounds: function ()
+    {
+        var size = GetBitmapTextSize(this);
+
+        return { x: this.x + size.x, y: this.y + size.y, width: size.width, height: size.height };
     }
 
 });

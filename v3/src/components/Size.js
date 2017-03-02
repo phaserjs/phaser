@@ -1,6 +1,9 @@
 var Size = {
 
-    width: {
+    width: 0,
+    height: 0,
+
+    displayWidth: {
 
         get: function ()
         {
@@ -14,7 +17,7 @@ var Size = {
 
     },
 
-    height: {
+    displayHeight: {
 
         get: function ()
         {
@@ -26,6 +29,24 @@ var Size = {
             this.scaleY = value / this.frame.realHeight;
         }
 
+    },
+
+    setSizeToFrame: function (frame)
+    {
+        if (frame === undefined) { frame = this.frame; }
+
+        this.width = frame.realWidth;
+        this.height = frame.realHeight;
+
+        return this;
+    },
+
+    setSize: function (width, height)
+    {
+        this.width = width;
+        this.height = height;
+
+        return this;
     }
 
 };
