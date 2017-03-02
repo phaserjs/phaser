@@ -3,7 +3,7 @@ var GameObject = require('../GameObject');
 var Components = require('../../components');
 var Render = require('./GraphicsRender');
 var Commands = require('./Commands');
-var PI2 = 2 * Math.PI;
+var MATH_CONST = require('../../math/const');
 
 var Graphics = new Class({
 
@@ -20,11 +20,13 @@ var Graphics = new Class({
     function Graphics (state, x, y)
     {
         GameObject.call(this, state);
-        this.commandBuffer = [];
+
         this.setPosition(x, y);
+
+        this.commandBuffer = [];
     },
 
-    arc: function (x, y, radius, startAngle, endAngle, anticlockwise) 
+    arc: function (x, y, radius, startAngle, endAngle, anticlockwise)
     {
         this.commandBuffer.push(
             Commands.ARC,
@@ -42,21 +44,22 @@ var Graphics = new Class({
 
     fillStyle: function (color, alpha)
     {
-        alpha = (alpha !== undefined ? alpha : 1);
+        if (alpha === undefined) { alpha = 1; }
+
         this.commandBuffer.push(
             Commands.FILL_STYLE,
             color, alpha
         );
     },
 
-    beginPath: function () 
+    beginPath: function ()
     {
         this.commandBuffer.push(
             Commands.BEGIN_PATH
         );
     },
 
-    closePath: function () 
+    closePath: function ()
     {
         this.commandBuffer.push(
             Commands.CLOSE_PATH
@@ -77,15 +80,15 @@ var Graphics = new Class({
         );
     },
 
-    fillCircle: function (x, y, radius) 
+    fillCircle: function (x, y, radius)
     {
         this.beginPath();
-        this.arc(x, y, radius, 0, PI2);
+        this.arc(x, y, radius, 0, MATH_CONST.PI2);
         this.fillPath();
         this.closePath();
     },
 
-    fillRect: function (x, y, width, height) 
+    fillRect: function (x, y, width, height)
     {
         this.commandBuffer.push(
             Commands.FILL_RECT,
@@ -93,15 +96,15 @@ var Graphics = new Class({
         );
     },
 
-    strokeCircle: function (x, y, radius) 
+    strokeCircle: function (x, y, radius)
     {
         this.beginPath();
-        this.arc(x, y, radius, 0, PI2);
+        this.arc(x, y, radius, 0, MATH_CONST.PI2);
         this.strokePath();
         this.closePath();
     },
 
-    strokeRect: function (x, y, width, height) 
+    strokeRect: function (x, y, width, height)
     {
         this.beginPath();
         this.moveTo(x, y);
@@ -113,7 +116,7 @@ var Graphics = new Class({
         this.closePath();
     },
 
-    lineTo: function (x, y) 
+    lineTo: function (x, y)
     {
         this.commandBuffer.push(
             Commands.LINE_TO,
@@ -121,7 +124,7 @@ var Graphics = new Class({
         );
     },
 
-    moveTo: function (x, y) 
+    moveTo: function (x, y)
     {
         this.commandBuffer.push(
             Commands.MOVE_TO,
@@ -129,10 +132,11 @@ var Graphics = new Class({
         );
     },
 
-    clear: function () 
+    clear: function ()
     {
-        commandBuffer.length = 0;
+        this.commandBuffer.length = 0;
     }
+
 });
 
 module.exports = Graphics;

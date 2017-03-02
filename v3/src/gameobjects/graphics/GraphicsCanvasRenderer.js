@@ -1,14 +1,16 @@
 var Commands = require('./Commands');
-var PI2 = 2 * Math.PI;
+var MATH_CONST = require('../../math/const');
+
 var GraphicsCanvasRenderer = function (renderer, src, interpolationPercentage, camera)
 {
     if (this.renderMask !== this.renderFlags)
     {
         return;
     }
+
     var cameraScrollX = camera.scrollX;
     var cameraScrollY = camera.scrollY;
-    var srcX = src.x; 
+    var srcX = src.x;
     var srcY = src.y;
     var srcScaleX = src.scaleX;
     var srcScaleY = src.scaleY;
@@ -56,36 +58,41 @@ var GraphicsCanvasRenderer = function (renderer, src, interpolationPercentage, c
     {
         var commandID = commandBuffer[index];
 
-        switch(commandID)
+        switch (commandID)
         {
             case Commands.ARC:
                 ctx.arc(
-                    commandBuffer[index + 1], 
-                    commandBuffer[index + 2], 
-                    commandBuffer[index + 3], 
-                    commandBuffer[index + 4], 
-                    commandBuffer[index + 5], 
+                    commandBuffer[index + 1],
+                    commandBuffer[index + 2],
+                    commandBuffer[index + 3],
+                    commandBuffer[index + 4],
+                    commandBuffer[index + 5],
                     commandBuffer[index + 6]
                 );
                 index += 6;
                 break;
+
             case Commands.LINE_STYLE:
                 lineWidth = commandBuffer[index + 1];
-                lineColor = commandBuffer[index + 2]
+                lineColor = commandBuffer[index + 2];
                 lineAlpha = commandBuffer[index + 3];
                 index += 3;
                 break;
+
             case Commands.FILL_STYLE:
                 fillColor = commandBuffer[index + 1];
                 fillAlpha = commandBuffer[index + 2];
                 index += 2;
                 break;
+
             case Commands.BEGIN_PATH:
                 ctx.beginPath();
                 break;
+
             case Commands.CLOSE_PATH:
                 ctx.closePath();
                 break;
+
             case Commands.FILL_PATH:
                 red = ((fillColor & 0xFF0000) >>> 16);
                 green = ((fillColor & 0xFF00) >>> 8);
@@ -94,6 +101,7 @@ var GraphicsCanvasRenderer = function (renderer, src, interpolationPercentage, c
                 ctx.globalAlpha = fillAlpha;
                 ctx.fill();
                 break;
+
             case Commands.STROKE_PATH:
                 red = ((lineColor & 0xFF0000) >>> 16);
                 green = ((lineColor & 0xFF00) >>> 8);
@@ -103,6 +111,7 @@ var GraphicsCanvasRenderer = function (renderer, src, interpolationPercentage, c
                 ctx.lineWidth = lineWidth;
                 ctx.stroke();
                 break;
+
             case Commands.FILL_RECT:
                 ctx.fillRect(
                     commandBuffer[index + 1],
@@ -119,6 +128,7 @@ var GraphicsCanvasRenderer = function (renderer, src, interpolationPercentage, c
                 );
                 index += 2;
                 break;
+
             case Commands.MOVE_TO:
                 ctx.moveTo(
                     commandBuffer[index + 1],
@@ -134,7 +144,6 @@ var GraphicsCanvasRenderer = function (renderer, src, interpolationPercentage, c
     }
 
     ctx.restore();
-    ctx.globalAlpha = 1.0;
-}
+};
 
 module.exports = GraphicsCanvasRenderer;
