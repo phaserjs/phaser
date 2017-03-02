@@ -18,9 +18,6 @@ var Transform = {
     y: 0,
     z: 0,
 
-    anchorX: 0,
-    anchorY: 0,
-
     scaleX: {
 
         get: function ()
@@ -119,28 +116,6 @@ var Transform = {
 
         this.scaleX = x;
         this.scaleY = y;
-
-        return this;
-    },
-
-    setAnchor: function (x, y)
-    {
-        if (x === undefined) { x = 0; }
-        if (y === undefined) { y = x; }
-
-        this.anchorX = x;
-        this.anchorY = y;
-
-        return this;
-    },
-
-    setOffset: function (x, y)
-    {
-        if (x === undefined) { x = 0; }
-        if (y === undefined) { y = x; }
-
-        this.offsetX = x;
-        this.offsetY = y;
 
         return this;
     }
