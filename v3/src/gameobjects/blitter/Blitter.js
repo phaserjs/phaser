@@ -26,12 +26,12 @@ var Bob = require('./Bob');
 var Blitter = new Class({
 
     Mixins: [
-        Components.Transform,
-        Components.Texture,
-        Components.Size,
         Components.Alpha,
         Components.BlendMode,
         Components.ScaleMode,
+        Components.Size,
+        Components.Texture,
+        Components.Transform,
         Components.Visible,
         BlitterRender
     ],
@@ -42,8 +42,8 @@ var Blitter = new Class({
     {
         GameObject.call(this, state);
 
-        this.setPosition(x, y);
         this.setTexture(texture, frame);
+        this.setPosition(x, y);
 
         this.children = new Components.Children(this);
 
