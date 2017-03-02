@@ -109,6 +109,7 @@ var Graphics = new Class({
         this.lineTo(x + width, y + height);
         this.lineTo(x, y + height);
         this.lineTo(x, y);
+        this.strokePath();
         this.closePath();
     },
 
