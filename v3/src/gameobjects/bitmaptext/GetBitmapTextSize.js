@@ -13,17 +13,14 @@ var GetBitmapTextSize = function (src)
 
     if (textLength === 0)
     {
-        console.log('bailed');
         return bounds;
     }
 
     bounds.x = Number.MAX_VALUE;
     bounds.y = Number.MAX_VALUE;
-    bounds.width = -1;
-    bounds.height = -1;
+    bounds.width = 0;
+    bounds.height = 0;
     
-    var textureFrame = src.frame;
-
     var chars = src.fontData.chars;
     var lineHeight = src.fontData.lineHeight;
 
@@ -34,8 +31,6 @@ var GetBitmapTextSize = function (src)
     var charCode = 0;
 
     var glyph = null;
-    var glyphX = 0;
-    var glyphY = 0;
     var glyphW = 0;
     var glyphH = 0;
 
@@ -44,9 +39,6 @@ var GetBitmapTextSize = function (src)
 
     var lastGlyph = null;
     var lastCharCode = 0;
-
-    var textureX = textureFrame.cutX;
-    var textureY = textureFrame.cutY;
 
     var scale = (src.fontSize / src.fontData.size);
 
@@ -70,9 +62,6 @@ var GetBitmapTextSize = function (src)
             continue;
         }
 
-        glyphX = textureX + glyph.x;
-        glyphY = textureY + glyph.y;
-
         glyphW = glyph.width;
         glyphH = glyph.height;
 
@@ -88,19 +77,6 @@ var GetBitmapTextSize = function (src)
         x *= scale;
         y *= scale;
 
-        // ctx.save();
-        // ctx.translate(x, y);
-        // ctx.rotate(rotation);
-        // ctx.scale(scale, scale);
-
-        // ctx.fillStyle = 'rgb(255,0,255)';
-        // ctx.fillRect(0, 0, glyphW, glyphH);
-
-        // ctx.drawImage(image, glyphX, glyphY, glyphW, glyphH, 0, 0, glyphW, glyphH);
-
-        // var xs = x * scale;
-        // var ys = y * scale;
-
         if (bounds.x > x)
         {
             bounds.x = x;
@@ -111,30 +87,27 @@ var GetBitmapTextSize = function (src)
             bounds.y = y;
         }
 
-        var gw = x + (glyphW * scale);
-        var gh = y + (glyphH * scale);
+        var gw = x + (glyphW * scale) - bounds.x;
+        var gh = y + (glyphH * scale) - bounds.y;
 
         if (bounds.width < gw)
         {
-            bounds.width = gw - bounds.x;
+            bounds.width = gw;
         }
         
         if (bounds.height < gh)
         {
-            bounds.height = gh - bounds.y;
+            bounds.height = gh;
         }
-
-        // console.log('Letter', text[index]);
-        // console.log('pos', x, y);
-        // console.log('wh', glyphW, glyphH);
-        // console.log('scaled', gw, gh);
-        // console.log('bounds', bounds.width, bounds.height);
 
         xAdvance += glyph.xAdvance;
         indexCount += 1;
         lastGlyph = glyph;
         lastCharCode = charCode;
     }
+
+    // bounds.width *= src.scaleX;
+    // bounds.height *= src.scaleY;
 
     return bounds;
 };
