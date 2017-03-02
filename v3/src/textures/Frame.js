@@ -75,6 +75,16 @@ var Frame = function (texture, name, sourceIndex, x, y, width, height)
     this.height = height;
 
     /**
+    * @property {number} width - The rendering width of this Frame, taking trim into account.
+    */
+    this.centerX = Math.floor(width / 2);
+
+    /**
+    * @property {number} height - The rendering height of this Frame, taking trim into account.
+    */
+    this.centerY = Math.floor(height / 2);
+
+    /**
     * Is this frame is rotated or not in the Texture?
     * Rotation allows you to use rotated frames in texture atlas packing.
     * It has nothing to do with Sprite rotation.
@@ -190,8 +200,12 @@ Frame.prototype = {
         //  Adjust properties
         this.x = destX;
         this.y = destY;
+
         this.width = destWidth;
         this.height = destHeight;
+
+        this.centerX = Math.floor(destWidth / 2);
+        this.centerY = Math.floor(destHeight / 2);
 
         this.updateUVs();
 
@@ -263,8 +277,12 @@ Frame.prototype = {
 
         clone.x = this.x;
         clone.y = this.y;
+
         clone.width = this.width;
         clone.height = this.height;
+
+        clone.centerX = this.centerX;
+        clone.centerY = this.centerY;
 
         clone.rotated = this.rotated;
 
