@@ -13,14 +13,18 @@ var GetBitmapTextSize = function (src)
 
     if (textLength === 0)
     {
-        console.log('bailed');
         return bounds;
     }
 
     bounds.x = Number.MAX_VALUE;
     bounds.y = Number.MAX_VALUE;
-    bounds.width = -1;
-    bounds.height = -1;
+    bounds.width = 0;
+    bounds.height = 0;
+
+    // var sx = src.scaleX;
+    // var sy = src.scaleY;
+    // var prevX;
+    // var prevY;
     
     var textureFrame = src.frame;
 
@@ -34,8 +38,8 @@ var GetBitmapTextSize = function (src)
     var charCode = 0;
 
     var glyph = null;
-    var glyphX = 0;
-    var glyphY = 0;
+    // var glyphX = 0;
+    // var glyphY = 0;
     var glyphW = 0;
     var glyphH = 0;
 
@@ -45,8 +49,8 @@ var GetBitmapTextSize = function (src)
     var lastGlyph = null;
     var lastCharCode = 0;
 
-    var textureX = textureFrame.cutX;
-    var textureY = textureFrame.cutY;
+    // var textureX = textureFrame.cutX;
+    // var textureY = textureFrame.cutY;
 
     var scale = (src.fontSize / src.fontData.size);
 
@@ -70,8 +74,8 @@ var GetBitmapTextSize = function (src)
             continue;
         }
 
-        glyphX = textureX + glyph.x;
-        glyphY = textureY + glyph.y;
+        // glyphX = textureX + glyph.x;
+        // glyphY = textureY + glyph.y;
 
         glyphW = glyph.width;
         glyphH = glyph.height;
@@ -85,28 +89,25 @@ var GetBitmapTextSize = function (src)
             x += (kerningOffset !== undefined) ? kerningOffset : 0;
         }
 
+        // prevX = x;
+        // prevY = y;
+
         x *= scale;
         y *= scale;
 
-        // ctx.save();
-        // ctx.translate(x, y);
-        // ctx.rotate(rotation);
-        // ctx.scale(scale, scale);
-
-        // ctx.fillStyle = 'rgb(255,0,255)';
-        // ctx.fillRect(0, 0, glyphW, glyphH);
-
         // ctx.drawImage(image, glyphX, glyphY, glyphW, glyphH, 0, 0, glyphW, glyphH);
 
-        // var xs = x * scale;
-        // var ys = y * scale;
+        xAdvance += glyph.xAdvance;
+        indexCount += 1;
+        lastGlyph = glyph;
+        lastCharCode = charCode;
 
-        if (bounds.x > x)
+        if (x < bounds.x)
         {
             bounds.x = x;
         }
 
-        if (bounds.y > y)
+        if (y < bounds.y)
         {
             bounds.y = y;
         }
@@ -114,26 +115,22 @@ var GetBitmapTextSize = function (src)
         var gw = x + (glyphW * scale);
         var gh = y + (glyphH * scale);
 
-        if (bounds.width < gw)
+        if (gw > bounds.width)
         {
-            bounds.width = gw - bounds.x;
+            bounds.width = gw;
         }
         
-        if (bounds.height < gh)
+        if (gh > bounds.height)
         {
-            bounds.height = gh - bounds.y;
+            bounds.height = gh;
         }
 
-        // console.log('Letter', text[index]);
+        // console.log('Letter', text[index], 'code', charCode);
         // console.log('pos', x, y);
+        // console.log('prev', prevX, prevY);
         // console.log('wh', glyphW, glyphH);
         // console.log('scaled', gw, gh);
-        // console.log('bounds', bounds.width, bounds.height);
-
-        xAdvance += glyph.xAdvance;
-        indexCount += 1;
-        lastGlyph = glyph;
-        lastCharCode = charCode;
+        // console.log('xAdvance', xAdvance);
     }
 
     return bounds;
