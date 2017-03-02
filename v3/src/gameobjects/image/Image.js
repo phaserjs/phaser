@@ -10,6 +10,7 @@ var Image = new Class({
         Components.Alpha,
         Components.BlendMode,
         Components.GetBounds,
+        Components.Origin,
         Components.ScaleMode,
         Components.Size,
         Components.Texture,
@@ -26,6 +27,7 @@ var Image = new Class({
 
         this.setTexture(texture, frame);
         this.setPosition(x, y);
+        this.setOriginToCenter();
     }
 
 });

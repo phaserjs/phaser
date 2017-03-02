@@ -7,12 +7,14 @@ var SpriteRender = require('./SpriteRender');
 var Sprite = new Class({
 
     Mixins: [
-        Components.Transform,
-        Components.Texture,
-        Components.Size,
         Components.Alpha,
         Components.BlendMode,
+        Components.GetBounds,
+        Components.Origin,
         Components.ScaleMode,
+        Components.Size,
+        Components.Texture,
+        Components.Transform,
         Components.Visible,
         SpriteRender
     ],
@@ -23,8 +25,9 @@ var Sprite = new Class({
     {
         GameObject.call(this, state);
 
-        this.setPosition(x, y);
         this.setTexture(texture, frame);
+        this.setPosition(x, y);
+        this.setOriginToCenter();
     }
 
 });
