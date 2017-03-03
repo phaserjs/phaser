@@ -1,3 +1,8 @@
+function getValue (node, attribute)
+{
+    return parseInt(node.getAttribute(attribute), 10);
+}
+
 var ParseXMLBitmapFont = function (xml, xSpacing, ySpacing, frame)
 {
     if (xSpacing === undefined) { xSpacing = 0; }
@@ -8,8 +13,8 @@ var ParseXMLBitmapFont = function (xml, xSpacing, ySpacing, frame)
     var common = xml.getElementsByTagName('common')[0];
 
     data.font = info.getAttribute('face');
-    data.size = parseInt(info.getAttribute('size'), 10);
-    data.lineHeight = parseInt(common.getAttribute('lineHeight'), 10) + ySpacing;
+    data.size = getValue(info, 'size');
+    data.lineHeight = getValue(common, 'lineHeight') + ySpacing;
     data.chars = {};
 
     var letters = xml.getElementsByTagName('char');
@@ -19,17 +24,23 @@ var ParseXMLBitmapFont = function (xml, xSpacing, ySpacing, frame)
 
     for (var i = 0; i < letters.length; i++)
     {
-        var charCode = parseInt(letters[i].getAttribute('id'), 10);
+        var node = letters[i];
+
+        var charCode = getValue(node, 'id');
+        var gw = getValue(node, 'width');
+        var gh = getValue(node, 'height');
 
         data.chars[charCode] =
         {
-            x: x + parseInt(letters[i].getAttribute('x'), 10),
-            y: y + parseInt(letters[i].getAttribute('y'), 10),
-            width: parseInt(letters[i].getAttribute('width'), 10),
-            height: parseInt(letters[i].getAttribute('height'), 10),
-            xOffset: parseInt(letters[i].getAttribute('xoffset'), 10),
-            yOffset: parseInt(letters[i].getAttribute('yoffset'), 10),
-            xAdvance: parseInt(letters[i].getAttribute('xadvance'), 10) + xSpacing,
+            x: x + getValue(node, 'x'),
+            y: y + getValue(node, 'y'),
+            width: gw,
+            height: gh,
+            centerX: Math.floor(gw / 2),
+            centerY: Math.floor(gh / 2),
+            xOffset: getValue(node, 'xoffset'),
+            yOffset: getValue(node, 'yoffset'),
+            xAdvance: getValue(node, 'xadvance') + xSpacing,
             kerning: {}
         };
     }
@@ -38,9 +49,11 @@ var ParseXMLBitmapFont = function (xml, xSpacing, ySpacing, frame)
 
     for (i = 0; i < kernings.length; i++)
     {
-        var first = parseInt(kernings[i].getAttribute('first'), 10);
-        var second = parseInt(kernings[i].getAttribute('second'), 10);
-        var amount = parseInt(kernings[i].getAttribute('amount'), 10);
+        var kern = kernings[i];
+
+        var first = getValue(kern, 'first');
+        var second = getValue(kern, 'second');
+        var amount = getValue(kern, 'amount');
 
         data.chars[second].kerning[first] = amount;
     }

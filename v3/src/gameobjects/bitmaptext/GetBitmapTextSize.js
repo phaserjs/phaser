@@ -4,16 +4,6 @@ var GetBitmapTextSize = function (src)
     var text = src.text;
     var textLength = text.length;
 
-    if (textLength === 0)
-    {
-        return {
-            x: 0,
-            y: 0,
-            width: 0,
-            height: 0
-        };
-    }
-
     var bx = Number.MAX_VALUE;
     var by = Number.MAX_VALUE;
     var bw = 0;
@@ -37,8 +27,6 @@ var GetBitmapTextSize = function (src)
 
     var lastGlyph = null;
     var lastCharCode = 0;
-
-    var scale = (src.fontSize / src.fontData.size);
 
     for (var index = 0; index < textLength; ++index)
     {
@@ -101,19 +89,23 @@ var GetBitmapTextSize = function (src)
         lastCharCode = charCode;
     }
 
+    var scale = (src.fontSize / src.fontData.size);
     var sx = scale * src.scaleX;
     var sy = scale * src.scaleY;
 
-    bx *= sx;
-    by *= sy;
-    bw *= sx;
-    bh *= sy;
-
     return {
-        x: bx,
-        y: by,
-        width: bw,
-        height: bh
+        local: {
+            x: bx * scale,
+            y: by * scale,
+            width: bw * scale,
+            height: bh * scale
+        },
+        global: {
+            x: src.x + (bx * sx),
+            y: src.y + (by * sy),
+            width: bw * sx,
+            height: bh * sy
+        }
     };
 };
 

@@ -46,6 +46,13 @@ var BitmapText = new Class({
         return this;
     },
 
+    setFontSize: function (size)
+    {
+        this.fontSize = size;
+
+        return this;
+    },
+
     setText: function (text)
     {
         this.text = text;
@@ -53,11 +60,27 @@ var BitmapText = new Class({
         return this;
     },
 
+    // {
+    //     local: {
+    //         x,
+    //         y,
+    //         width,
+    //         height
+    //     },
+    //     global: {
+    //         x,
+    //         y,
+    //         width,
+    //         height
+    //     }
+    // }
+
     getTextBounds: function ()
     {
-        var size = GetBitmapTextSize(this);
+        //  local = the BitmapText based on fontSize and 0x0 coords
+        //  global = the BitmapText, taking into account scale and world position
 
-        return { x: this.x + size.x, y: this.y + size.y, width: size.width, height: size.height };
+        return GetBitmapTextSize(this);
     }
 
 });
