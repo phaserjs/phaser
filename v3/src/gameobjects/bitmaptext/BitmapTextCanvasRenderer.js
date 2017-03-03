@@ -130,8 +130,8 @@ var BitmapTextCanvasRenderer = function (renderer, src, interpolationPercentage,
         ctx.rotate(rotation);
         ctx.scale(scale, scale);
 
-        ctx.fillStyle = 'rgb(155,0,255)';
-        ctx.fillRect(0, 0, glyphW, glyphH);
+        // ctx.fillStyle = 'rgba(0,255,0,0.2)';
+        // ctx.fillRect(0, 0, glyphW, glyphH);
 
         // if (!window.bob)
         // {

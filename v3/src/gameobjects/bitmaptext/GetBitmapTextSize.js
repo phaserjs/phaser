@@ -4,22 +4,20 @@ var GetBitmapTextSize = function (src)
     var text = src.text;
     var textLength = text.length;
 
-    var bounds = {
-        x: 0,
-        y: 0,
-        width: 0,
-        height: 0
-    };
-
     if (textLength === 0)
     {
-        return bounds;
+        return {
+            x: 0,
+            y: 0,
+            width: 0,
+            height: 0
+        };
     }
 
-    bounds.x = Number.MAX_VALUE;
-    bounds.y = Number.MAX_VALUE;
-    bounds.width = 0;
-    bounds.height = 0;
+    var bx = Number.MAX_VALUE;
+    var by = Number.MAX_VALUE;
+    var bw = 0;
+    var bh = 0;
     
     var chars = src.fontData.chars;
     var lineHeight = src.fontData.lineHeight;
@@ -74,30 +72,27 @@ var GetBitmapTextSize = function (src)
             x += (kerningOffset !== undefined) ? kerningOffset : 0;
         }
 
-        x *= scale;
-        y *= scale;
-
-        if (bounds.x > x)
+        if (bx > x)
         {
-            bounds.x = x;
+            bx = x;
         }
 
-        if (bounds.y > y)
+        if (by > y)
         {
-            bounds.y = y;
+            by = y;
         }
 
-        var gw = x + (glyphW * scale) - bounds.x;
-        var gh = y + (glyphH * scale) - bounds.y;
+        var gw = x + glyphW - bx;
+        var gh = y + glyphH - by;
 
-        if (bounds.width < gw)
+        if (bw < gw)
         {
-            bounds.width = gw;
+            bw = gw;
         }
         
-        if (bounds.height < gh)
+        if (bh < gh)
         {
-            bounds.height = gh;
+            bh = gh;
         }
 
         xAdvance += glyph.xAdvance;
@@ -106,10 +101,20 @@ var GetBitmapTextSize = function (src)
         lastCharCode = charCode;
     }
 
-    // bounds.width *= src.scaleX;
-    // bounds.height *= src.scaleY;
+    var sx = scale * src.scaleX;
+    var sy = scale * src.scaleY;
 
-    return bounds;
+    bx *= sx;
+    by *= sy;
+    bw *= sx;
+    bh *= sy;
+
+    return {
+        x: bx,
+        y: by,
+        width: bw,
+        height: bh
+    };
 };
 
 module.exports = GetBitmapTextSize;
