@@ -39,10 +39,10 @@ var SpriteWebGLRenderer = function (renderer, src, interpolationPercentage, came
     var y = -src.originY + frame.y;
     var xw = x + width;
     var yh = y + height;
-    var tx = x * a + y * c + e;
-    var ty = x * b + y * d + f;
-    var txw = xw * a + yh * c + e;
-    var tyh = xw * b + yh * d + f;
+    var tx = x;//x * a + y * c + e;
+    var ty = y;//x * b + y * d + f;
+    var txw = xw;//xw * a + yh * c + e;
+    var tyh = yh;//xw * b + yh * d + f;
 
     renderer.setBatch(spriteBatch, frame.texture.source[frame.sourceIndex].glTexture);
     vertexOffset = vertexDataBuffer.allocate(40);

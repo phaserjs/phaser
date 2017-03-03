@@ -160,11 +160,11 @@ var GraphicsWebGLRenderer = function (renderer, src, interpolationPercentage, ca
     var vertexOffset = 0;
     var cameraScrollX = camera.scrollX;
     var cameraScrollY = camera.scrollY;
-    var srcX = src.x;
-    var srcY = src.y;
-    var srcScaleX = src.scaleX;
-    var srcScaleY = src.scaleY;
-    var srcRotation = src.rotation;
+    const srcX = src.x;
+    const srcY = src.y;
+    const srcScaleX = src.scaleX;
+    const srcScaleY = src.scaleY;
+    const srcRotation = src.rotation;
     var commandBuffer = src.commandBuffer;
     var value;
     var lineAlpha = 1.0;
@@ -173,12 +173,12 @@ var GraphicsWebGLRenderer = function (renderer, src, interpolationPercentage, ca
     var fillColor = 0;
     var lineWidth = 1.0;
     var cameraMatrix = camera.matrix.matrix;
-    var a = cameraMatrix[0];
-    var b = cameraMatrix[1];
-    var c = cameraMatrix[2];
-    var d = cameraMatrix[3];
-    var e = cameraMatrix[4];
-    var f = cameraMatrix[5];
+    const a = cameraMatrix[0];
+    const b = cameraMatrix[1];
+    const c = cameraMatrix[2];
+    const d = cameraMatrix[3];
+    const e = cameraMatrix[4];
+    const f = cameraMatrix[5];
     var lastPath = null;
     var iteration = 0;
     var iterStep = 0.01;
@@ -197,6 +197,7 @@ var GraphicsWebGLRenderer = function (renderer, src, interpolationPercentage, ca
     var pathLength;
     var point;
     var maxVertices = shapeBatch.maxVertices;
+    var translateX, translateY;
 
     renderer.setBatch(shapeBatch, null);
 
@@ -207,32 +208,32 @@ var GraphicsWebGLRenderer = function (renderer, src, interpolationPercentage, ca
         switch(cmd)
         {
             case Commands.ARC:
-                x = commandBuffer[cmdIndex + 1];
-                y = commandBuffer[cmdIndex + 2];
-                radius = commandBuffer[cmdIndex + 3];
-                startAngle = commandBuffer[cmdIndex + 4];
-                endAngle = commandBuffer[cmdIndex + 5];
-                anticlockwise = commandBuffer[cmdIndex + 6];
-                
-                while (iteration < 1)
-                {
-                    ta = lerp(iteration, startAngle, endAngle);
-                    tx = x + cos(ta) * radius;
-                    ty = y + sin(ta) * radius;
-
-                    if (iteration === 0)
-                    {
-                        lastPath = new Path(tx, ty);
-                        pathArray.push(lastPath);
-                    }
-                    else
-                    {
-                        lastPath.points.push(new Point(tx, ty));
-                    }
-
-                    iteration += iterStep;
-                }
-
+//                x = commandBuffer[cmdIndex + 1];
+//                y = commandBuffer[cmdIndex + 2];
+//                radius = commandBuffer[cmdIndex + 3];
+//                startAngle = commandBuffer[cmdIndex + 4];
+//                endAngle = commandBuffer[cmdIndex + 5];
+//                anticlockwise = commandBuffer[cmdIndex + 6];
+//                
+//                while (iteration < 1)
+//                {
+//                    ta = lerp(iteration, startAngle, endAngle);
+//                    tx = x + cos(ta) * radius;
+//                    ty = y + sin(ta) * radius;
+//
+//                    if (iteration === 0)
+//                    {
+//                        lastPath = new Path(tx, ty);
+//                        pathArray.push(lastPath);
+//                    }
+//                    else
+//                    {
+//                        lastPath.points.push(new Point(tx, ty));
+//                    }
+//
+//                    iteration += iterStep;
+//                }
+//
                 cmdIndex += 6;
                 break;
 
@@ -250,337 +251,343 @@ var GraphicsWebGLRenderer = function (renderer, src, interpolationPercentage, ca
                 break;
 
             case Commands.BEGIN_PATH:
-                pathArray.length = 0;
+//                pathArray.length = 0;
                 break;
 
             case Commands.CLOSE_PATH:
-                if (lastPath !== null && lastPath.points.length > 0)
-                {
-                    var firstPoint = lastPath.points[0];
-                    // var lastPoint = lastPath.points[lastPath.points.length - 1];
-                    lastPath.points.push(firstPoint);
-                    lastPath = new Path(x, y);
-                    pathArray.push(lastPath);
-                }
+//                if (lastPath !== null && lastPath.points.length > 0)
+//                {
+//                    var firstPoint = lastPath.points[0];
+//                    // var lastPoint = lastPath.points[lastPath.points.length - 1];
+//                    lastPath.points.push(firstPoint);
+//                    lastPath = new Path(x, y);
+//                    pathArray.push(lastPath);
+//                }
                 break;
 
             case Commands.FILL_PATH:
-                for (var pathArrayIndex = 0, pathArrayLength = pathArray.length;
-                    pathArrayIndex < pathArrayLength;
-                    ++pathArrayIndex)
-                {
-                    path = pathArray[pathArrayIndex].points;
-                    pathLength = path.length;
-
-                    for (var pathIndex = 0;
-                        pathIndex < pathLength;
-                        ++pathIndex)
-                    {
-                        point = path[pathIndex];
-                        polygon.push(point.x, point.y);
-                    }
-
-                    polygonIndex = Earcut(polygon);
-
-                    for (var index = 0, length = polygonIndex.length; index < length; index += 3)
-                    {
-                        v0 = polygonIndex[index + 0] * 2;
-                        v1 = polygonIndex[index + 1] * 2;
-                        v2 = polygonIndex[index + 2] * 2;
-
-                        if (vertexCount + 3 > maxVertices)
-                        {
-                            shapeBatch.flush();
-                            vertexCount = 0;
-                        }
-
-                        vertexOffset = vertexDataBuffer.allocate(9 * 3);
-                        vertexCount += 3;
-
-                        x0 = polygon[v0 + 0] - cameraScrollX;
-                        y0 = polygon[v0 + 1] - cameraScrollY;
-                        x1 = polygon[v1 + 0] - cameraScrollX;
-                        y1 = polygon[v1 + 1] - cameraScrollY;
-                        x2 = polygon[v2 + 0] - cameraScrollX;
-                        y2 = polygon[v2 + 1] - cameraScrollY;
-
-                        tx0 = x0 * a + y0 * c + e;
-                        ty0 = x0 * b + y0 * d + f;
-                        tx1 = x1 * a + y1 * c + e;
-                        ty1 = x1 * b + y1 * d + f;
-                        tx2 = x2 * a + y2 * c + e;
-                        ty2 = x2 * b + y2 * d + f;
-
-                        vertexBufferF32[vertexOffset++] = tx0;
-                        vertexBufferF32[vertexOffset++] = ty0;
-                        vertexBufferU32[vertexOffset++] = fillColor;
-                        vertexBufferF32[vertexOffset++] = fillAlpha;
-                        vertexBufferF32[vertexOffset++] = srcX;
-                        vertexBufferF32[vertexOffset++] = srcY;
-                        vertexBufferF32[vertexOffset++] = srcScaleX;
-                        vertexBufferF32[vertexOffset++] = srcScaleY;
-                        vertexBufferF32[vertexOffset++] = srcRotation;
-                        
-                        vertexBufferF32[vertexOffset++] = tx1;
-                        vertexBufferF32[vertexOffset++] = ty1;
-                        vertexBufferU32[vertexOffset++] = fillColor;
-                        vertexBufferF32[vertexOffset++] = fillAlpha;
-                        vertexBufferF32[vertexOffset++] = srcX;
-                        vertexBufferF32[vertexOffset++] = srcY;
-                        vertexBufferF32[vertexOffset++] = srcScaleX;
-                        vertexBufferF32[vertexOffset++] = srcScaleY;
-                        vertexBufferF32[vertexOffset++] = srcRotation;
-
-                        vertexBufferF32[vertexOffset++] = tx2;
-                        vertexBufferF32[vertexOffset++] = ty2;
-                        vertexBufferU32[vertexOffset++] = fillColor;
-                        vertexBufferF32[vertexOffset++] = fillAlpha;
-                        vertexBufferF32[vertexOffset++] = srcX;
-                        vertexBufferF32[vertexOffset++] = srcY;
-                        vertexBufferF32[vertexOffset++] = srcScaleX;
-                        vertexBufferF32[vertexOffset++] = srcScaleY;
-                        vertexBufferF32[vertexOffset++] = srcRotation;
-                    }
-                    polygon.length = 0;
-                }
+//                for (var pathArrayIndex = 0, pathArrayLength = pathArray.length;
+//                    pathArrayIndex < pathArrayLength;
+//                    ++pathArrayIndex)
+//                {
+//                    path = pathArray[pathArrayIndex].points;
+//                    pathLength = path.length;
+//
+//                    for (var pathIndex = 0;
+//                        pathIndex < pathLength;
+//                        ++pathIndex)
+//                    {
+//                        point = path[pathIndex];
+//                        polygon.push(point.x, point.y);
+//                    }
+//
+//                    polygonIndex = Earcut(polygon);
+//
+//                    for (var index = 0, length = polygonIndex.length; index < length; index += 3)
+//                    {
+//                        v0 = polygonIndex[index + 0] * 2;
+//                        v1 = polygonIndex[index + 1] * 2;
+//                        v2 = polygonIndex[index + 2] * 2;
+//
+//                        if (vertexCount + 3 > maxVertices)
+//                        {
+//                            shapeBatch.vertexCount = vertexCount;
+//                            shapeBatch.flush();
+//                            vertexCount = 0;
+//                        }
+//
+//                        vertexOffset = vertexDataBuffer.allocate(9 * 3);
+//                        vertexCount += 3;
+//
+//                        x0 = polygon[v0 + 0] - cameraScrollX;
+//                        y0 = polygon[v0 + 1] - cameraScrollY;
+//                        x1 = polygon[v1 + 0] - cameraScrollX;
+//                        y1 = polygon[v1 + 1] - cameraScrollY;
+//                        x2 = polygon[v2 + 0] - cameraScrollX;
+//                        y2 = polygon[v2 + 1] - cameraScrollY;
+//
+//                        tx0 = x0 * a + y0 * c + e;
+//                        ty0 = x0 * b + y0 * d + f;
+//                        tx1 = x1 * a + y1 * c + e;
+//                        ty1 = x1 * b + y1 * d + f;
+//                        tx2 = x2 * a + y2 * c + e;
+//                        ty2 = x2 * b + y2 * d + f;
+//
+//                        vertexBufferF32[vertexOffset++] = tx0;
+//                        vertexBufferF32[vertexOffset++] = ty0;
+//                        vertexBufferU32[vertexOffset++] = fillColor;
+//                        vertexBufferF32[vertexOffset++] = fillAlpha;
+//                        vertexBufferF32[vertexOffset++] = srcX;
+//                        vertexBufferF32[vertexOffset++] = srcY;
+//                        vertexBufferF32[vertexOffset++] = srcScaleX;
+//                        vertexBufferF32[vertexOffset++] = srcScaleY;
+//                        vertexBufferF32[vertexOffset++] = srcRotation;
+//                        
+//                        vertexBufferF32[vertexOffset++] = tx1;
+//                        vertexBufferF32[vertexOffset++] = ty1;
+//                        vertexBufferU32[vertexOffset++] = fillColor;
+//                        vertexBufferF32[vertexOffset++] = fillAlpha;
+//                        vertexBufferF32[vertexOffset++] = srcX;
+//                        vertexBufferF32[vertexOffset++] = srcY;
+//                        vertexBufferF32[vertexOffset++] = srcScaleX;
+//                        vertexBufferF32[vertexOffset++] = srcScaleY;
+//                        vertexBufferF32[vertexOffset++] = srcRotation;
+//
+//                        vertexBufferF32[vertexOffset++] = tx2;
+//                        vertexBufferF32[vertexOffset++] = ty2;
+//                        vertexBufferU32[vertexOffset++] = fillColor;
+//                        vertexBufferF32[vertexOffset++] = fillAlpha;
+//                        vertexBufferF32[vertexOffset++] = srcX;
+//                        vertexBufferF32[vertexOffset++] = srcY;
+//                        vertexBufferF32[vertexOffset++] = srcScaleX;
+//                        vertexBufferF32[vertexOffset++] = srcScaleY;
+//                        vertexBufferF32[vertexOffset++] = srcRotation;
+//                    }
+//                    polygon.length = 0;
+//                }
                 break;
 
             case Commands.STROKE_PATH:
-
                 //  All of these vars are already defined (except polylines, last, curr, point0 and point1)
-                var pathArrayLength = pathArray.length;
-                var lineWidth = lineWidth * 0.5;
-                var pathArrayIndex, path, pathLength, pathIndex, point0, point1;
-                var polylines = [];
-                var lineColor = lineColor;
-                var index, length, last, curr;
-                var x0, y0, x1, y1, x2, y2, offset, position, color;
-
-                for (pathArrayIndex = 0; pathArrayIndex < pathArrayLength; ++pathArrayIndex)
-                {
-                    path = pathArray[pathArrayIndex].points;
-                    pathLength = path.length;
-
-                    for (pathIndex = 0; pathIndex + 1 < pathLength; pathIndex += 1)
-                    {
-                        point0 = path[pathIndex];
-                        point1 = path[pathIndex + 1];
-                        polylines.push(renderLine(
-                            point0.x, point0.y, point1.x, point1.y,
-                            vertexBufferF32, vertexBufferU32, vertexDataBuffer,
-                            cameraScrollX, cameraScrollY,
-                            a, b, c, d, e, f,
-                            lineColor, lineAlpha, lineWidth,
-                            vertexCount, maxVertices,
-                            shapeBatch,
-                            srcX, srcY, srcScaleX, srcScaleY, srcRotation
-                        ));
-                        vertexCount = shapeBatch.vertexCount;
-                    }
-
-                    if (pathArray[pathArrayIndex] === this._lastPath)
-                    {
-                        for (index = 1, length = polylines.length; index < length; ++index)
-                        {
-                            last = polylines[index - 1];
-                            curr = polylines[index];
-
-                            if (vertexCount + 6 > maxVertices)
-                            {
-                                shapeBatch.flush();
-                                vertexCount = 0;
-                            }
-
-                            vertexOffset = vertexDataBuffer.allocate(9 * 6);
-                            vertexCount += 6;
-
-                            x0 = last[2 * 2 + 0] - cameraScrollX;
-                            y0 = last[2 * 2 + 1] - cameraScrollY;
-                            x1 = last[2 * 0 + 0] - cameraScrollX;
-                            y1 = last[2 * 0 + 1] - cameraScrollY;
-                            x2 = curr[2 * 3 + 0] - cameraScrollX;
-                            y2 = curr[2 * 3 + 1] - cameraScrollY;
-
-                            vertexBufferF32[vertexOffset++] = x0;
-                            vertexBufferF32[vertexOffset++] = y0;
-                            vertexBufferU32[vertexOffset++] = lineColor;
-                            vertexBufferF32[vertexOffset++] = lineAlpha;
-                            vertexBufferF32[vertexOffset++] = srcX;
-                            vertexBufferF32[vertexOffset++] = srcY;
-                            vertexBufferF32[vertexOffset++] = srcScaleX;
-                            vertexBufferF32[vertexOffset++] = srcScaleY;
-                            vertexBufferF32[vertexOffset++] = srcRotation;
-
-                            vertexBufferF32[vertexOffset++] = x1;
-                            vertexBufferF32[vertexOffset++] = y1;
-                            vertexBufferU32[vertexOffset++] = lineColor;
-                            vertexBufferF32[vertexOffset++] = lineAlpha;
-                            vertexBufferF32[vertexOffset++] = srcX;
-                            vertexBufferF32[vertexOffset++] = srcY;
-                            vertexBufferF32[vertexOffset++] = srcScaleX;
-                            vertexBufferF32[vertexOffset++] = srcScaleY;
-                            vertexBufferF32[vertexOffset++] = srcRotation;
-
-                            vertexBufferF32[vertexOffset++] = x2;
-                            vertexBufferF32[vertexOffset++] = y2;
-                            vertexBufferU32[vertexOffset++] = lineColor;
-                            vertexBufferF32[vertexOffset++] = lineAlpha;
-                            vertexBufferF32[vertexOffset++] = srcX;
-                            vertexBufferF32[vertexOffset++] = srcY;
-                            vertexBufferF32[vertexOffset++] = srcScaleX;
-                            vertexBufferF32[vertexOffset++] = srcScaleY;
-                            vertexBufferF32[vertexOffset++] = srcRotation;
-
-                            x0 = last[2 * 0 + 0] - cameraScrollX;
-                            y0 = last[2 * 0 + 1] - cameraScrollY;
-                            x1 = last[2 * 2 + 0] - cameraScrollX;
-                            y1 = last[2 * 2 + 1] - cameraScrollY;
-                            x2 = curr[2 * 1 + 0] - cameraScrollX;
-                            y2 = curr[2 * 1 + 1] - cameraScrollY;
-
-                            vertexBufferF32[vertexOffset++] = x0;
-                            vertexBufferF32[vertexOffset++] = y0;
-                            vertexBufferU32[vertexOffset++] = lineColor;
-                            vertexBufferF32[vertexOffset++] = lineAlpha;
-                            vertexBufferF32[vertexOffset++] = srcX;
-                            vertexBufferF32[vertexOffset++] = srcY;
-                            vertexBufferF32[vertexOffset++] = srcScaleX;
-                            vertexBufferF32[vertexOffset++] = srcScaleY;
-                            vertexBufferF32[vertexOffset++] = srcRotation;
-
-                            vertexBufferF32[vertexOffset++] = x1;
-                            vertexBufferF32[vertexOffset++] = y1;
-                            vertexBufferU32[vertexOffset++] = lineColor;
-                            vertexBufferF32[vertexOffset++] = lineAlpha;
-                            vertexBufferF32[vertexOffset++] = srcX;
-                            vertexBufferF32[vertexOffset++] = srcY;
-                            vertexBufferF32[vertexOffset++] = srcScaleX;
-                            vertexBufferF32[vertexOffset++] = srcScaleY;
-                            vertexBufferF32[vertexOffset++] = srcRotation;
-
-                            vertexBufferF32[vertexOffset++] = x2;
-                            vertexBufferF32[vertexOffset++] = y2;
-                            vertexBufferU32[vertexOffset++] = lineColor;
-                            vertexBufferF32[vertexOffset++] = lineAlpha;
-                            vertexBufferF32[vertexOffset++] = srcX;
-                            vertexBufferF32[vertexOffset++] = srcY;
-                            vertexBufferF32[vertexOffset++] = srcScaleX;
-                            vertexBufferF32[vertexOffset++] = srcScaleY;
-                            vertexBufferF32[vertexOffset++] = srcRotation;
-
-                            vertexCount += 6;
-                        }
-                    }
-                    else
-                    {
-                        for (index = 0, length = polylines.length; index < length; ++index)
-                        {
-                            last = polylines[index - 1] || polylines[polylines.length - 1];
-                            curr = polylines[index];
-
-                            if (vertexCount + 6 > maxVertices)
-                            {
-                                shapeBatch.flush();
-                                vertexCount = 0;
-                            }
-
-                            vertexOffset = vertexDataBuffer.allocate(9 * 6);
-                            vertexCount += 6;
-
-                            x0 = last[2 * 2 + 0] - cameraScrollX;
-                            y0 = last[2 * 2 + 1] - cameraScrollY;
-                            x1 = last[2 * 0 + 0] - cameraScrollX;
-                            y1 = last[2 * 0 + 1] - cameraScrollY;
-                            x2 = curr[2 * 3 + 0] - cameraScrollX;
-                            y2 = curr[2 * 3 + 1] - cameraScrollY;
-
-                            vertexBufferF32[vertexOffset++] = x0;
-                            vertexBufferF32[vertexOffset++] = y0;
-                            vertexBufferU32[vertexOffset++] = lineColor;
-                            vertexBufferF32[vertexOffset++] = lineAlpha;
-                            vertexBufferF32[vertexOffset++] = srcX;
-                            vertexBufferF32[vertexOffset++] = srcY;
-                            vertexBufferF32[vertexOffset++] = srcScaleX;
-                            vertexBufferF32[vertexOffset++] = srcScaleY;
-                            vertexBufferF32[vertexOffset++] = srcRotation;
-
-                            vertexBufferF32[vertexOffset++] = x1;
-                            vertexBufferF32[vertexOffset++] = y1;
-                            vertexBufferU32[vertexOffset++] = lineColor;
-                            vertexBufferF32[vertexOffset++] = lineAlpha;
-                            vertexBufferF32[vertexOffset++] = srcX;
-                            vertexBufferF32[vertexOffset++] = srcY;
-                            vertexBufferF32[vertexOffset++] = srcScaleX;
-                            vertexBufferF32[vertexOffset++] = srcScaleY;
-                            vertexBufferF32[vertexOffset++] = srcRotation;
-
-                            vertexBufferF32[vertexOffset++] = x2;
-                            vertexBufferF32[vertexOffset++] = y2;
-                            vertexBufferU32[vertexOffset++] = lineColor;
-                            vertexBufferF32[vertexOffset++] = lineAlpha;
-                            vertexBufferF32[vertexOffset++] = srcX;
-                            vertexBufferF32[vertexOffset++] = srcY;
-                            vertexBufferF32[vertexOffset++] = srcScaleX;
-                            vertexBufferF32[vertexOffset++] = srcScaleY;
-                            vertexBufferF32[vertexOffset++] = srcRotation;
-
-                            x0 = last[2 * 0 + 0] - cameraScrollX;
-                            y0 = last[2 * 0 + 1] - cameraScrollY;
-                            x1 = last[2 * 2 + 0] - cameraScrollX;
-                            y1 = last[2 * 2 + 1] - cameraScrollY;
-                            x2 = curr[2 * 1 + 0] - cameraScrollX;
-                            y2 = curr[2 * 1 + 1] - cameraScrollY;
-
-                            vertexBufferF32[vertexOffset++] = x0;
-                            vertexBufferF32[vertexOffset++] = y0;
-                            vertexBufferU32[vertexOffset++] = lineColor;
-                            vertexBufferF32[vertexOffset++] = lineAlpha;
-                            vertexBufferF32[vertexOffset++] = srcX;
-                            vertexBufferF32[vertexOffset++] = srcY;
-                            vertexBufferF32[vertexOffset++] = srcScaleX;
-                            vertexBufferF32[vertexOffset++] = srcScaleY;
-                            vertexBufferF32[vertexOffset++] = srcRotation;
-
-                            vertexBufferF32[vertexOffset++] = x1;
-                            vertexBufferF32[vertexOffset++] = y1;
-                            vertexBufferU32[vertexOffset++] = lineColor;
-                            vertexBufferF32[vertexOffset++] = lineAlpha;
-                            vertexBufferF32[vertexOffset++] = srcX;
-                            vertexBufferF32[vertexOffset++] = srcY;
-                            vertexBufferF32[vertexOffset++] = srcScaleX;
-                            vertexBufferF32[vertexOffset++] = srcScaleY;
-                            vertexBufferF32[vertexOffset++] = srcRotation;
-
-                            vertexBufferF32[vertexOffset++] = x2;
-                            vertexBufferF32[vertexOffset++] = y2;
-                            vertexBufferU32[vertexOffset++] = lineColor;
-                            vertexBufferF32[vertexOffset++] = lineAlpha;
-                            vertexBufferF32[vertexOffset++] = srcX;
-                            vertexBufferF32[vertexOffset++] = srcY;
-                            vertexBufferF32[vertexOffset++] = srcScaleX;
-                            vertexBufferF32[vertexOffset++] = srcScaleY;
-                            vertexBufferF32[vertexOffset++] = srcRotation;
-
-                            vertexCount += 6;
-                        }
-                    }
-                    polylines.length = 0;
-                }
-                break;
+//                var pathArrayLength = pathArray.length;
+//                var lineWidth = lineWidth * 0.5;
+//                var pathArrayIndex, path, pathLength, pathIndex, point0, point1;
+//                var polylines = [];
+//                var lineColor = lineColor;
+//                var index, length, last, curr;
+//                var x0, y0, x1, y1, x2, y2, offset, position, color;
+//
+//                for (pathArrayIndex = 0; pathArrayIndex < pathArrayLength; ++pathArrayIndex)
+//                {
+//                    path = pathArray[pathArrayIndex].points;
+//                    pathLength = path.length;
+//
+//                    for (pathIndex = 0; pathIndex + 1 < pathLength; pathIndex += 1)
+//                    {
+//                        point0 = path[pathIndex];
+//                        point1 = path[pathIndex + 1];
+//                        polylines.push(renderLine(
+//                            point0.x, point0.y, point1.x, point1.y,
+//                            vertexBufferF32, vertexBufferU32, vertexDataBuffer,
+//                            cameraScrollX, cameraScrollY,
+//                            a, b, c, d, e, f,
+//                            lineColor, lineAlpha, lineWidth,
+//                            vertexCount, maxVertices,
+//                            shapeBatch,
+//                            srcX, srcY, srcScaleX, srcScaleY, srcRotation
+//                        ));
+//                        vertexCount = shapeBatch.vertexCount;
+//                    }
+//
+//                    if (pathArray[pathArrayIndex] === this._lastPath)
+//                    {
+//                        for (index = 1, length = polylines.length; index < length; ++index)
+//                        {
+//                            last = polylines[index - 1];
+//                            curr = polylines[index];
+//
+//                            if (vertexCount + 6 > maxVertices)
+//                            {
+//                                shapeBatch.vertexCount = vertexCount;
+//                                shapeBatch.flush();
+//                                vertexCount = 0;
+//                            }
+//
+//                            vertexOffset = vertexDataBuffer.allocate(9 * 6);
+//                            vertexCount += 6;
+//
+//                            x0 = last[2 * 2 + 0] - cameraScrollX;
+//                            y0 = last[2 * 2 + 1] - cameraScrollY;
+//                            x1 = last[2 * 0 + 0] - cameraScrollX;
+//                            y1 = last[2 * 0 + 1] - cameraScrollY;
+//                            x2 = curr[2 * 3 + 0] - cameraScrollX;
+//                            y2 = curr[2 * 3 + 1] - cameraScrollY;
+//
+//                            vertexBufferF32[vertexOffset++] = x0;
+//                            vertexBufferF32[vertexOffset++] = y0;
+//                            vertexBufferU32[vertexOffset++] = lineColor;
+//                            vertexBufferF32[vertexOffset++] = lineAlpha;
+//                            vertexBufferF32[vertexOffset++] = srcX;
+//                            vertexBufferF32[vertexOffset++] = srcY;
+//                            vertexBufferF32[vertexOffset++] = srcScaleX;
+//                            vertexBufferF32[vertexOffset++] = srcScaleY;
+//                            vertexBufferF32[vertexOffset++] = srcRotation;
+//
+//                            vertexBufferF32[vertexOffset++] = x1;
+//                            vertexBufferF32[vertexOffset++] = y1;
+//                            vertexBufferU32[vertexOffset++] = lineColor;
+//                            vertexBufferF32[vertexOffset++] = lineAlpha;
+//                            vertexBufferF32[vertexOffset++] = srcX;
+//                            vertexBufferF32[vertexOffset++] = srcY;
+//                            vertexBufferF32[vertexOffset++] = srcScaleX;
+//                            vertexBufferF32[vertexOffset++] = srcScaleY;
+//                            vertexBufferF32[vertexOffset++] = srcRotation;
+//
+//                            vertexBufferF32[vertexOffset++] = x2;
+//                            vertexBufferF32[vertexOffset++] = y2;
+//                            vertexBufferU32[vertexOffset++] = lineColor;
+//                            vertexBufferF32[vertexOffset++] = lineAlpha;
+//                            vertexBufferF32[vertexOffset++] = srcX;
+//                            vertexBufferF32[vertexOffset++] = srcY;
+//                            vertexBufferF32[vertexOffset++] = srcScaleX;
+//                            vertexBufferF32[vertexOffset++] = srcScaleY;
+//                            vertexBufferF32[vertexOffset++] = srcRotation;
+//
+//                            x0 = last[2 * 0 + 0] - cameraScrollX;
+//                            y0 = last[2 * 0 + 1] - cameraScrollY;
+//                            x1 = last[2 * 2 + 0] - cameraScrollX;
+//                            y1 = last[2 * 2 + 1] - cameraScrollY;
+//                            x2 = curr[2 * 1 + 0] - cameraScrollX;
+//                            y2 = curr[2 * 1 + 1] - cameraScrollY;
+//
+//                            vertexBufferF32[vertexOffset++] = x0;
+//                            vertexBufferF32[vertexOffset++] = y0;
+//                            vertexBufferU32[vertexOffset++] = lineColor;
+//                            vertexBufferF32[vertexOffset++] = lineAlpha;
+//                            vertexBufferF32[vertexOffset++] = srcX;
+//                            vertexBufferF32[vertexOffset++] = srcY;
+//                            vertexBufferF32[vertexOffset++] = srcScaleX;
+//                            vertexBufferF32[vertexOffset++] = srcScaleY;
+//                            vertexBufferF32[vertexOffset++] = srcRotation;
+//
+//                            vertexBufferF32[vertexOffset++] = x1;
+//                            vertexBufferF32[vertexOffset++] = y1;
+//                            vertexBufferU32[vertexOffset++] = lineColor;
+//                            vertexBufferF32[vertexOffset++] = lineAlpha;
+//                            vertexBufferF32[vertexOffset++] = srcX;
+//                            vertexBufferF32[vertexOffset++] = srcY;
+//                            vertexBufferF32[vertexOffset++] = srcScaleX;
+//                            vertexBufferF32[vertexOffset++] = srcScaleY;
+//                            vertexBufferF32[vertexOffset++] = srcRotation;
+//
+//                            vertexBufferF32[vertexOffset++] = x2;
+//                            vertexBufferF32[vertexOffset++] = y2;
+//                            vertexBufferU32[vertexOffset++] = lineColor;
+//                            vertexBufferF32[vertexOffset++] = lineAlpha;
+//                            vertexBufferF32[vertexOffset++] = srcX;
+//                            vertexBufferF32[vertexOffset++] = srcY;
+//                            vertexBufferF32[vertexOffset++] = srcScaleX;
+//                            vertexBufferF32[vertexOffset++] = srcScaleY;
+//                            vertexBufferF32[vertexOffset++] = srcRotation;
+//
+//                            vertexCount += 6;
+//                        }
+//                    }
+//                    else
+//                    {
+//                        for (index = 0, length = polylines.length; index < length; ++index)
+//                        {
+//                            last = polylines[index - 1] || polylines[polylines.length - 1];
+//                            curr = polylines[index];
+//
+//                            if (vertexCount + 6 > maxVertices)
+//                            {
+//                                shapeBatch.vertexCount = vertexCount;
+//                                shapeBatch.flush();
+//                                vertexCount = 0;
+//                            }
+//
+//                            vertexOffset = vertexDataBuffer.allocate(9 * 6);
+//                            vertexCount += 6;
+//
+//                            x0 = last[2 * 2 + 0] - cameraScrollX;
+//                            y0 = last[2 * 2 + 1] - cameraScrollY;
+//                            x1 = last[2 * 0 + 0] - cameraScrollX;
+//                            y1 = last[2 * 0 + 1] - cameraScrollY;
+//                            x2 = curr[2 * 3 + 0] - cameraScrollX;
+//                            y2 = curr[2 * 3 + 1] - cameraScrollY;
+//
+//                            vertexBufferF32[vertexOffset++] = x0;
+//                            vertexBufferF32[vertexOffset++] = y0;
+//                            vertexBufferU32[vertexOffset++] = lineColor;
+//                            vertexBufferF32[vertexOffset++] = lineAlpha;
+//                            vertexBufferF32[vertexOffset++] = srcX;
+//                            vertexBufferF32[vertexOffset++] = srcY;
+//                            vertexBufferF32[vertexOffset++] = srcScaleX;
+//                            vertexBufferF32[vertexOffset++] = srcScaleY;
+//                            vertexBufferF32[vertexOffset++] = srcRotation;
+//
+//                            vertexBufferF32[vertexOffset++] = x1;
+//                            vertexBufferF32[vertexOffset++] = y1;
+//                            vertexBufferU32[vertexOffset++] = lineColor;
+//                            vertexBufferF32[vertexOffset++] = lineAlpha;
+//                            vertexBufferF32[vertexOffset++] = srcX;
+//                            vertexBufferF32[vertexOffset++] = srcY;
+//                            vertexBufferF32[vertexOffset++] = srcScaleX;
+//                            vertexBufferF32[vertexOffset++] = srcScaleY;
+//                            vertexBufferF32[vertexOffset++] = srcRotation;
+//
+//                            vertexBufferF32[vertexOffset++] = x2;
+//                            vertexBufferF32[vertexOffset++] = y2;
+//                            vertexBufferU32[vertexOffset++] = lineColor;
+//                            vertexBufferF32[vertexOffset++] = lineAlpha;
+//                            vertexBufferF32[vertexOffset++] = srcX;
+//                            vertexBufferF32[vertexOffset++] = srcY;
+//                            vertexBufferF32[vertexOffset++] = srcScaleX;
+//                            vertexBufferF32[vertexOffset++] = srcScaleY;
+//                            vertexBufferF32[vertexOffset++] = srcRotation;
+//
+//                            x0 = last[2 * 0 + 0] - cameraScrollX;
+//                            y0 = last[2 * 0 + 1] - cameraScrollY;
+//                            x1 = last[2 * 2 + 0] - cameraScrollX;
+//                            y1 = last[2 * 2 + 1] - cameraScrollY;
+//                            x2 = curr[2 * 1 + 0] - cameraScrollX;
+//                            y2 = curr[2 * 1 + 1] - cameraScrollY;
+//
+//                            vertexBufferF32[vertexOffset++] = x0;
+//                            vertexBufferF32[vertexOffset++] = y0;
+//                            vertexBufferU32[vertexOffset++] = lineColor;
+//                            vertexBufferF32[vertexOffset++] = lineAlpha;
+//                            vertexBufferF32[vertexOffset++] = srcX;
+//                            vertexBufferF32[vertexOffset++] = srcY;
+//                            vertexBufferF32[vertexOffset++] = srcScaleX;
+//                            vertexBufferF32[vertexOffset++] = srcScaleY;
+//                            vertexBufferF32[vertexOffset++] = srcRotation;
+//
+//                            vertexBufferF32[vertexOffset++] = x1;
+//                            vertexBufferF32[vertexOffset++] = y1;
+//                            vertexBufferU32[vertexOffset++] = lineColor;
+//                            vertexBufferF32[vertexOffset++] = lineAlpha;
+//                            vertexBufferF32[vertexOffset++] = srcX;
+//                            vertexBufferF32[vertexOffset++] = srcY;
+//                            vertexBufferF32[vertexOffset++] = srcScaleX;
+//                            vertexBufferF32[vertexOffset++] = srcScaleY;
+//                            vertexBufferF32[vertexOffset++] = srcRotation;
+//
+//                            vertexBufferF32[vertexOffset++] = x2;
+//                            vertexBufferF32[vertexOffset++] = y2;
+//                            vertexBufferU32[vertexOffset++] = lineColor;
+//                            vertexBufferF32[vertexOffset++] = lineAlpha;
+//                            vertexBufferF32[vertexOffset++] = srcX;
+//                            vertexBufferF32[vertexOffset++] = srcY;
+//                            vertexBufferF32[vertexOffset++] = srcScaleX;
+//                            vertexBufferF32[vertexOffset++] = srcScaleY;
+//                            vertexBufferF32[vertexOffset++] = srcRotation;
+//
+//                            vertexCount += 6;
+//                        }
+//                    }
+//                    polylines.length = 0;
+//                }
+//                break;
 
             case Commands.FILL_RECT:
                 if (vertexCount + 6 > maxVertices)
                 {
+                    shapeBatch.vertexCount = vertexCount;
                     shapeBatch.flush();
                     vertexCount = 0;
                 }
                 vertexOffset = vertexDataBuffer.allocate(9 * 6);
                 vertexCount += 6;
 
-                x = commandBuffer[cmdIndex + 1] - cameraScrollX;
-                y = commandBuffer[cmdIndex + 2] - cameraScrollY;
-                var xw = x + commandBuffer[cmdIndex + 3];
-                var yh = y + commandBuffer[cmdIndex + 4];
+                translateX = srcX + commandBuffer[cmdIndex + 1] - cameraScrollX;
+                translateY = srcY + commandBuffer[cmdIndex + 2] - cameraScrollY;
+
+                x = 0;//commandBuffer[cmdIndex + 1] - cameraScrollX;
+                y = 0;//commandBuffer[cmdIndex + 2] - cameraScrollY;
+                xw = x + commandBuffer[cmdIndex + 3];
+                yh = y + commandBuffer[cmdIndex + 4];
                 tx = x * a + y * c + e;
                 ty = x * b + y * d + f;
                 txw = xw * a + yh * c + e;
@@ -590,75 +597,81 @@ var GraphicsWebGLRenderer = function (renderer, src, interpolationPercentage, ca
                 vertexBufferF32[vertexOffset++] = ty;
                 vertexBufferU32[vertexOffset++] = fillColor;
                 vertexBufferF32[vertexOffset++] = fillAlpha;
-                vertexBufferF32[vertexOffset++] = srcX;
-                vertexBufferF32[vertexOffset++] = srcY;
+                vertexBufferF32[vertexOffset++] = translateX;
+                vertexBufferF32[vertexOffset++] = translateY;
                 vertexBufferF32[vertexOffset++] = srcScaleX;
                 vertexBufferF32[vertexOffset++] = srcScaleY;
                 vertexBufferF32[vertexOffset++] = srcRotation;
+
                 vertexBufferF32[vertexOffset++] = tx;
                 vertexBufferF32[vertexOffset++] = tyh;
                 vertexBufferU32[vertexOffset++] = fillColor;
                 vertexBufferF32[vertexOffset++] = fillAlpha;
-                vertexBufferF32[vertexOffset++] = srcX;
-                vertexBufferF32[vertexOffset++] = srcY;
+                vertexBufferF32[vertexOffset++] = translateX;
+                vertexBufferF32[vertexOffset++] = translateY;
                 vertexBufferF32[vertexOffset++] = srcScaleX;
                 vertexBufferF32[vertexOffset++] = srcScaleY;
                 vertexBufferF32[vertexOffset++] = srcRotation;
+
                 vertexBufferF32[vertexOffset++] = txw;
                 vertexBufferF32[vertexOffset++] = tyh;
                 vertexBufferU32[vertexOffset++] = fillColor;
                 vertexBufferF32[vertexOffset++] = fillAlpha;
-                vertexBufferF32[vertexOffset++] = srcX;
-                vertexBufferF32[vertexOffset++] = srcY;
+                vertexBufferF32[vertexOffset++] = translateX;
+                vertexBufferF32[vertexOffset++] = translateY;
                 vertexBufferF32[vertexOffset++] = srcScaleX;
                 vertexBufferF32[vertexOffset++] = srcScaleY;
                 vertexBufferF32[vertexOffset++] = srcRotation;
+
                 vertexBufferF32[vertexOffset++] = tx;
                 vertexBufferF32[vertexOffset++] = ty;
                 vertexBufferU32[vertexOffset++] = fillColor;
                 vertexBufferF32[vertexOffset++] = fillAlpha;
-                vertexBufferF32[vertexOffset++] = srcX;
-                vertexBufferF32[vertexOffset++] = srcY;
+                vertexBufferF32[vertexOffset++] = translateX;
+                vertexBufferF32[vertexOffset++] = translateY;
                 vertexBufferF32[vertexOffset++] = srcScaleX;
                 vertexBufferF32[vertexOffset++] = srcScaleY;
                 vertexBufferF32[vertexOffset++] = srcRotation;
+
                 vertexBufferF32[vertexOffset++] = txw;
                 vertexBufferF32[vertexOffset++] = tyh;
                 vertexBufferU32[vertexOffset++] = fillColor;
                 vertexBufferF32[vertexOffset++] = fillAlpha;
-                vertexBufferF32[vertexOffset++] = srcX;
-                vertexBufferF32[vertexOffset++] = srcY;
+                vertexBufferF32[vertexOffset++] = translateX;
+                vertexBufferF32[vertexOffset++] = translateY;
                 vertexBufferF32[vertexOffset++] = srcScaleX;
                 vertexBufferF32[vertexOffset++] = srcScaleY;
                 vertexBufferF32[vertexOffset++] = srcRotation;
+
                 vertexBufferF32[vertexOffset++] = txw;
                 vertexBufferF32[vertexOffset++] = ty;
                 vertexBufferU32[vertexOffset++] = fillColor;
                 vertexBufferF32[vertexOffset++] = fillAlpha;
-                vertexBufferF32[vertexOffset++] = srcX;
-                vertexBufferF32[vertexOffset++] = srcY;
+                vertexBufferF32[vertexOffset++] = translateX;
+                vertexBufferF32[vertexOffset++] = translateY;
                 vertexBufferF32[vertexOffset++] = srcScaleX;
                 vertexBufferF32[vertexOffset++] = srcScaleY;
                 vertexBufferF32[vertexOffset++] = srcRotation;
+                
                 cmdIndex += 4;
                 break;
 
             case Commands.LINE_TO:
-                if (lastPath !== null)
-                {
-                    lastPath.points.push(new Point(commandBuffer[cmdIndex + 1], commandBuffer[cmdIndex + 2]));
-                }
-                else
-                {
-                    lastPath = new Path(commandBuffer[cmdIndex + 1], commandBuffer[cmdIndex + 2]);
-                    pathArray.push(lastPath);
-                }
+//                if (lastPath !== null)
+//                {
+//                    lastPath.points.push(new Point(commandBuffer[cmdIndex + 1], commandBuffer[cmdIndex + 2]));
+//                }
+//                else
+//                {
+//                    lastPath = new Path(commandBuffer[cmdIndex + 1], commandBuffer[cmdIndex + 2]);
+//                    pathArray.push(lastPath);
+//                }
                 cmdIndex += 2;
                 break;
 
             case Commands.MOVE_TO:
-                lastPath = new Path(commandBuffer[cmdIndex + 1], commandBuffer[cmdIndex + 2]);
-                pathArray.push(lastPath);
+//                lastPath = new Path(commandBuffer[cmdIndex + 1], commandBuffer[cmdIndex + 2]);
+//                pathArray.push(lastPath);
                 cmdIndex += 2;
                 break;
 
