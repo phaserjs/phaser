@@ -5,6 +5,7 @@ var CreateBuffer = require('../../utils/buffer/CreateBuffer');
 var CreateAttribDesc = require('../../utils/vao/CreateAttribDesc');
 var Buffer32 = require('../../utils/buffer/Buffer32');
 var VertexArray = require('../../utils/vao/VertexArray');
+var Earcut = require('./earcut');
 
 var PHASER_CONST = require('../../../../const');
 var CONST = require('./const');
@@ -63,10 +64,7 @@ ShapeBatch.prototype = {
         var attribArray = [
             CreateAttribDesc(gl, program, 'a_position', 2, gl.FLOAT, false, CONST.VERTEX_SIZE, 0),
             CreateAttribDesc(gl, program, 'a_color', 4, gl.UNSIGNED_BYTE, true, CONST.VERTEX_SIZE, 8),
-            CreateAttribDesc(gl, program, 'a_alpha', 1, gl.FLOAT, false, CONST.VERTEX_SIZE, 12),
-            CreateAttribDesc(gl, program, 'a_translate', 2, gl.FLOAT, false, CONST.VERTEX_SIZE, 16),
-            CreateAttribDesc(gl, program, 'a_scale', 2, gl.FLOAT, false, CONST.VERTEX_SIZE, 24),
-            CreateAttribDesc(gl, program, 'a_rotation', 1, gl.FLOAT, false, CONST.VERTEX_SIZE, 32),
+            CreateAttribDesc(gl, program, 'a_alpha', 1, gl.FLOAT, false, CONST.VERTEX_SIZE, 12)
         ];
         var vertexArray = new VertexArray(CreateBuffer(gl, gl.ARRAY_BUFFER, gl.STREAM_DRAW, null, vertexDataBuffer.getByteCapacity()), attribArray);
         var viewMatrixLocation = gl.getUniformLocation(program, 'u_view_matrix');
@@ -79,6 +77,7 @@ ShapeBatch.prototype = {
         this.vertexArray = vertexArray;
         this.viewMatrixLocation = viewMatrixLocation;
         this.maxVertices = max;
+        this.polygonCache = [];
 
         this.bind();
         this.resize(this.width, this.height, this.game.config.resolution);
@@ -151,6 +150,145 @@ ShapeBatch.prototype = {
             gl.deleteProgram(this.program);
             gl.deleteBuffer(this.vertexArray.buffer);
         }
+    },
+
+    addFillPath: function (
+        /* Graphics Game Object properties */
+        srcX, srcY, srcScaleX, srcScaleY, srcRotation,
+        /* Path properties */
+        path, fillColor, fillAlpha,
+        /* transform */
+        a, b, c, d, e, f
+    ) {
+        var length = path.length;
+        var polygonCache = this.polygonCache;
+        var polygonIndexArray;
+        var point;
+        var v0, v1, v2;
+        var vertexOffset;
+        var vertexCount = this.vertexCount;
+        var maxVertices = this.maxVertices;
+        var vertexDataBuffer = this.vertexDataBuffer;
+        var vertexBufferF32 = vertexDataBuffer.floatView;
+        var vertexBufferU32 = vertexDataBuffer.uintView;
+        var x0, y0, x1, y1, x2, y2;
+        var tx0, ty0, tx1, ty1, tx2, ty2;
+
+        for (var pathIndex = 0; pathIndex < length; ++pathIndex)
+        {
+            point = path[pathIndex];
+            polygonCache.push(point.x, point.y);
+        }
+        polygonIndexArray = Earcut(polygonCache);
+        length = polygonIndexArray.length;
+
+        for (var index = 0; index < length; index += 3)
+        {
+            v0 = polygonIndexArray[index + 0] * 2;
+            v1 = polygonIndexArray[index + 1] * 2;
+            v2 = polygonIndexArray[index + 2] * 2;
+
+            if (vertexCount + 3 > maxVertices)
+            {
+                this.vertexCount = vertexCount;
+                this.flush();
+                vertexCount = 0;
+            }
+            vertexOffset = vertexDataBuffer.allocate(12);
+            vertexCount += 3;
+
+            x0 = polygonCache[v0 + 0];
+            y0 = polygonCache[v0 + 1];
+            x1 = polygonCache[v1 + 0];
+            y1 = polygonCache[v1 + 1];
+            x2 = polygonCache[v2 + 0];
+            y2 = polygonCache[v2 + 1];
+
+            tx0 = x0 * a + y0 * c + e;
+            ty0 = x0 * b + y0 * d + f;
+            tx1 = x1 * a + y1 * c + e;
+            ty1 = x1 * b + y1 * d + f;
+            tx2 = x2 * a + y2 * c + e;
+            ty2 = x2 * b + y2 * d + f;
+
+            vertexBufferF32[vertexOffset++] = tx0;
+            vertexBufferF32[vertexOffset++] = ty0;
+            vertexBufferU32[vertexOffset++] = fillColor;
+            vertexBufferF32[vertexOffset++] = fillAlpha;
+
+            vertexBufferF32[vertexOffset++] = tx1;
+            vertexBufferF32[vertexOffset++] = ty1;
+            vertexBufferU32[vertexOffset++] = fillColor;
+            vertexBufferF32[vertexOffset++] = fillAlpha;
+
+            vertexBufferF32[vertexOffset++] = tx2;
+            vertexBufferF32[vertexOffset++] = ty2;
+            vertexBufferU32[vertexOffset++] = fillColor;
+            vertexBufferF32[vertexOffset++] = fillAlpha;
+
+        }
+        this.vertexCount = vertexCount;
+        polygonCache.length = 0;
+    },
+
+    addFillRect: function (
+        /* Graphics Game Object properties */
+        srcX, srcY, srcScaleX, srcScaleY, srcRotation,
+        /* Rectangle properties */
+        x, y, width, height, fillColor, fillAlpha,
+        /* transform */
+        a, b, c, d, e, f
+    ) {
+        if (this.vertexCount + 6 > this.maxVertices)
+        {
+            this.flush();
+        }
+        var vertexDataBuffer = this.vertexDataBuffer;
+        var vertexBufferF32 = vertexDataBuffer.floatView;
+        var vertexBufferU32 = vertexDataBuffer.uintView;
+        var vertexOffset = vertexDataBuffer.allocate(24);
+        var xw = x + width;
+        var yh = y + height;
+        var tx0 = x * a + y * c + e;
+        var ty0 = x * b + y * d + f;
+        var tx1 = x * a + yh * c + e;
+        var ty1 = x * b + yh * d + f;
+        var tx2 = xw * a + yh * c + e;
+        var ty2 = xw * b + yh * d + f;
+        var tx3 = xw * a + y * c + e;
+        var ty3 = xw * b + y * d + f;
+
+        vertexBufferF32[vertexOffset++] = tx0;
+        vertexBufferF32[vertexOffset++] = ty0;
+        vertexBufferU32[vertexOffset++] = fillColor;
+        vertexBufferF32[vertexOffset++] = fillAlpha;
+
+        vertexBufferF32[vertexOffset++] = tx1;
+        vertexBufferF32[vertexOffset++] = ty1;
+        vertexBufferU32[vertexOffset++] = fillColor;
+        vertexBufferF32[vertexOffset++] = fillAlpha;
+
+        vertexBufferF32[vertexOffset++] = tx2;
+        vertexBufferF32[vertexOffset++] = ty2;
+        vertexBufferU32[vertexOffset++] = fillColor;
+        vertexBufferF32[vertexOffset++] = fillAlpha;
+
+        vertexBufferF32[vertexOffset++] = tx0;
+        vertexBufferF32[vertexOffset++] = ty0;
+        vertexBufferU32[vertexOffset++] = fillColor;
+        vertexBufferF32[vertexOffset++] = fillAlpha;
+
+        vertexBufferF32[vertexOffset++] = tx2;
+        vertexBufferF32[vertexOffset++] = ty2;
+        vertexBufferU32[vertexOffset++] = fillColor;
+        vertexBufferF32[vertexOffset++] = fillAlpha;
+
+        vertexBufferF32[vertexOffset++] = tx3;
+        vertexBufferF32[vertexOffset++] = ty3;
+        vertexBufferU32[vertexOffset++] = fillColor;
+        vertexBufferF32[vertexOffset++] = fillAlpha;
+
+        this.vertexCount += 6;
     }
 };
 

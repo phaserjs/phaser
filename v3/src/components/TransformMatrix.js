@@ -13,7 +13,7 @@ var TransformMatrix = function (a, b, c, d, tx, ty)
     tx = typeof tx === 'number' ? tx : 0;
     ty = typeof ty === 'number' ? ty : 0;
 
-    this.matrix = new Float32Array([a, b, c, d, tx, ty]);
+    this.matrix = new Float32Array([a, b, c, d, tx, ty, 0, 0, 1]);
     this.decomposedMatrix = {
         translateX: 0,
         translateY: 0,
@@ -61,20 +61,10 @@ TransformMatrix.prototype.scale = function (x, y)
 
 TransformMatrix.prototype.rotate = function (radian)
 {
-    var matrix = this.matrix;
-    var a = matrix[0];
-    var b = matrix[1];
-    var c = matrix[2];
-    var d = matrix[3];
-    var sr = mathSin(radian);
-    var cr = mathCos(radian);
+    var radianSin = mathSin(radian);
+    var radianCos = mathCos(radian);
 
-    matrix[0] = a * cr + c * sr;
-    matrix[1] = b * cr + d * sr;
-    matrix[2] = a * -sr + c * cr;
-    matrix[3] = b * -sr + d * cr;
-
-    return this;
+    return this.transform(radianCos, -radianSin, radianSin, radianCos, 0, 0);
 };
 
 TransformMatrix.prototype.multiply = function (otherMatrix)
@@ -179,10 +169,10 @@ TransformMatrix.prototype.applyITRS = function (x, y, rotation, scaleX, scaleY)
     matrix[5] = b * x + d * y + f;
 
     // Rotate
-    matrix[0] = a * cr + c * sr;
-    matrix[1] = b * cr + d * sr;
-    matrix[2] = a * -sr + c * cr;
-    matrix[3] = b * -sr + d * cr;
+    matrix[0] = cr * a + -sr * c;
+    matrix[1] = cr * b + -sr * d;
+    matrix[2] = sr * a + cr * c;
+    matrix[3] = sr * b + cr * d;
 
     // Scale
     matrix[0] = matrix[0] * scaleX;

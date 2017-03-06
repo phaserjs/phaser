@@ -134,8 +134,9 @@ WebGLRenderer.prototype = {
         }
     },
 
-    setBatch: function (batch, texture2D)
+    setBatch: function (batch, texture2D, camera)
     {
+        var gl = this.gl;
         this.setTexture2D(texture2D);
 
         if (this.batch !== batch)

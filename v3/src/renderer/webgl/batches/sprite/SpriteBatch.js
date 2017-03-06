@@ -6,6 +6,7 @@ var CreateAttribDesc = require('../../utils/vao/CreateAttribDesc');
 var Buffer32 = require('../../utils/buffer/Buffer32');
 var Buffer16 = require('../../utils/buffer/Buffer16');
 var VertexArray = require('../../utils/vao/VertexArray');
+var TransformMatrix = require('../../../../components/TransformMatrix');
 
 var PHASER_CONST = require('../../../../const');
 var CONST = require('./const');
@@ -30,7 +31,7 @@ var SpriteBatch = function (game, gl, manager)
     this.elementCount = 0;
     this.currentTexture2D = null;
     this.viewMatrixLocation = null;
-
+    this.tempMatrix = new TransformMatrix();
     //   All of these settings will be able to be controlled via the Game Config
     this.config = {
         clearBeforeRender: true,
@@ -69,10 +70,7 @@ SpriteBatch.prototype = {
         var attribArray = [
             CreateAttribDesc(gl, program, 'a_position', 2, gl.FLOAT, false, CONST.VERTEX_SIZE, 0),
             CreateAttribDesc(gl, program, 'a_tex_coord', 2, gl.FLOAT, false, CONST.VERTEX_SIZE, 8),
-            CreateAttribDesc(gl, program, 'a_translate', 2, gl.FLOAT, false, CONST.VERTEX_SIZE, 16),
-            CreateAttribDesc(gl, program, 'a_scale', 2, gl.FLOAT, false, CONST.VERTEX_SIZE, 24),
-            CreateAttribDesc(gl, program, 'a_rotation', 1, gl.FLOAT, false, CONST.VERTEX_SIZE, 32),
-            CreateAttribDesc(gl, program, 'a_color', 3, gl.UNSIGNED_BYTE, true, CONST.VERTEX_SIZE, 36)
+            CreateAttribDesc(gl, program, 'a_color', 3, gl.UNSIGNED_BYTE, true, CONST.VERTEX_SIZE, 16)
         ];
         var vertexArray = new VertexArray(CreateBuffer(gl, gl.ARRAY_BUFFER, gl.STREAM_DRAW, null, vertexDataBuffer.getByteCapacity()), attribArray);
         var viewMatrixLocation = gl.getUniformLocation(program, 'u_view_matrix');
@@ -179,6 +177,93 @@ SpriteBatch.prototype = {
             gl.deleteBuffer(this.indexBufferObject);
             gl.deleteBuffer(this.vertexArray.buffer);
         }
+    },
+
+    addSprite: function (src, camera)
+    {
+        var tempMatrix = this.tempMatrix;
+        var frame = src.frame;
+        var alpha = 16777216;
+        var vertexDataBuffer = this.vertexDataBuffer;
+        var vertexBufferF32 = vertexDataBuffer.floatView;
+        var vertexBufferU32 = vertexDataBuffer.uintView;
+        var vertexOffset = 0;
+        var uvs = frame.uvs;
+        var width = frame.width;
+        var height = frame.height;
+        var translateX = src.x - camera.scrollX;
+        var translateY = src.y - camera.scrollY;
+        var scaleX = src.scaleX;
+        var scaleY = src.scaleY;
+        var rotation = -src.rotation;
+        var tempMatrixMatrix = tempMatrix.matrix;
+        var x = -src.originX + frame.x;
+        var y = -src.originY + frame.y;
+        var xw = x + width;
+        var yh = y + height;
+        var cameraMatrix = camera.matrix.matrix;
+        var mva, mvb, mvc, mvd, mve, mvf, tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3;
+        var sra, srb, src, srd, sre, srf, cma, cmb, cmc, cmd, cme, cmf;
+
+        tempMatrix.applyITRS(translateX, translateY, rotation, scaleX, scaleY);
+
+        sra = tempMatrixMatrix[0];
+        srb = tempMatrixMatrix[1];
+        src = tempMatrixMatrix[2];
+        srd = tempMatrixMatrix[3];
+        sre = tempMatrixMatrix[4];
+        srf = tempMatrixMatrix[5];
+
+        cma = cameraMatrix[0];
+        cmb = cameraMatrix[1];
+        cmc = cameraMatrix[2];
+        cmd = cameraMatrix[3];
+        cme = cameraMatrix[4];
+        cmf = cameraMatrix[5];
+
+        mva = sra * cma + srb * cmc;
+        mvb = sra * cmb + srb * cmd;
+        mvc = src * cma + srd * cmc;
+        mvd = src * cmb + srd * cmd;
+        mve = sre * cma + srf * cmc + cme;
+        mvf = sre * cmb + srf * cmd + cmf; 
+        
+        tx0 = x * mva + y * mvc + mve;
+        ty0 = x * mvb + y * mvd + mvf;
+        tx1 = x * mva + yh * mvc + mve;
+        ty1 = x * mvb + yh * mvd + mvf;
+        tx2 = xw * mva + yh * mvc + mve;
+        ty2 = xw * mvb + yh * mvd + mvf;
+        tx3 = xw * mva + y * mvc + mve;
+        ty3 = xw * mvb + y * mvd + mvf;
+
+        this.manager.setBatch(this, frame.texture.source[frame.sourceIndex].glTexture, camera);
+        vertexOffset = vertexDataBuffer.allocate(20);
+        this.elementCount += 6;
+        
+        vertexBufferF32[vertexOffset++] = tx0;
+        vertexBufferF32[vertexOffset++] = ty0;
+        vertexBufferF32[vertexOffset++] = uvs.x0;
+        vertexBufferF32[vertexOffset++] = uvs.y0;
+        vertexBufferU32[vertexOffset++] = 0xFFFFFF; //vertexColor.topLeft;
+
+        vertexBufferF32[vertexOffset++] = tx1;
+        vertexBufferF32[vertexOffset++] = ty1;
+        vertexBufferF32[vertexOffset++] = uvs.x1;
+        vertexBufferF32[vertexOffset++] = uvs.y1;
+        vertexBufferU32[vertexOffset++] = 0xFFFFFF; //vertexColor.bottomLeft;
+
+        vertexBufferF32[vertexOffset++] = tx2;
+        vertexBufferF32[vertexOffset++] = ty2;
+        vertexBufferF32[vertexOffset++] = uvs.x2;
+        vertexBufferF32[vertexOffset++] = uvs.y2;
+        vertexBufferU32[vertexOffset++] = 0xFFFFFF; //vertexColor.bottomRight;
+
+        vertexBufferF32[vertexOffset++] = tx3;
+        vertexBufferF32[vertexOffset++] = ty3;
+        vertexBufferF32[vertexOffset++] = uvs.x3;
+        vertexBufferF32[vertexOffset++] = uvs.y3;
+        vertexBufferU32[vertexOffset++] = 0xFFFFFF; //vertexColor.topRight;
     }
 
 };
