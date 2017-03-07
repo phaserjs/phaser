@@ -32,6 +32,9 @@ var Camera = function (x, y, width, height)
     this._flashGreen = 1.0;
     this._flashBlue = 1.0;
     this._flashAlpha = 0.0;
+
+    // origin
+    this._follow = null;
 };
 
 Camera.prototype.constructor = Camera;
@@ -163,13 +166,36 @@ Camera.prototype = {
 
     preRender: function ()
     {
+        var width = this.width;
+        var height = this.height;
         var zoom = this.zoom;
+        var matrix = this.matrix;
+        var originX = width / 2;
+        var originY = height / 2;
+        var follow = this._follow;
 
-        this.matrix.applyITRS(
-            this.x + this._shakeOffsetX, this.y + this._shakeOffsetY,
-            this.rotation,
-            zoom, zoom
-        );
+        if (follow != null)
+        {
+            if (follow.originX)
+            {
+                originX = follow.x + follow.originX;
+                originY = follow.y + follow.originY;
+            }
+            else
+            {
+                originX = follow.x;
+                originY = follow.y;
+            }
+            
+            originX = -this.scrollX - originX;
+            originY = -this.scrollY - originY;
+        }
+
+        matrix.loadIdentity();
+        matrix.translate(this.x + originX, this.y + originY);
+        matrix.rotate(this.rotation);
+        matrix.scale(zoom, zoom);
+        matrix.translate(-originX + this._shakeOffsetX, -originY + this._shakeOffsetY);
     },
 
     destroy: function ()
