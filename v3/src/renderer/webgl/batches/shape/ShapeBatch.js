@@ -152,6 +152,240 @@ ShapeBatch.prototype = {
         }
     },
 
+    addLine: function (
+        /* Graphics Game Object properties */
+        srcX, srcY, srcScaleX, srcScaleY, srcRotation,
+        /* line properties */
+        ax, ay, bx, by, lineWidth, lineColor, lineAlpha,
+        /* transform */
+        a, b, c, d, e, f
+    ) {
+        if (this.vertexCount + 6 > this.maxVertices)
+        {
+            this.flush();
+        }
+
+        this.vertexCount += 6;
+
+        var vertexDataBuffer = this.vertexDataBuffer;
+        var vertexBufferF32 = vertexDataBuffer.floatView;
+        var vertexBufferU32 = vertexDataBuffer.uintView;
+        var dx = bx - ax;
+        var dy = by - ay;
+        var len = Math.sqrt(dx * dx + dy * dy);
+        var l0 = lineWidth * (by - ay) / len;
+        var l1 = lineWidth * (ax - bx) / len;
+        var lx0 = bx - l0;
+        var ly0 = by - l1;
+        var lx1 = ax - l0;
+        var ly1 = ay - l1;
+        var lx2 = bx + l0;
+        var ly2 = by + l1;
+        var lx3 = ax + l0;
+        var ly3 = ay + l1;
+        var x0 = lx0 * a + ly0 * c + e;
+        var y0 = lx0 * b + ly0 * d + f;
+        var x1 = lx1 * a + ly1 * c + e;
+        var y1 = lx1 * b + ly1 * d + f;
+        var x2 = lx2 * a + ly2 * c + e;
+        var y2 = lx2 * b + ly2 * d + f;
+        var x3 = lx3 * a + ly3 * c + e;
+        var y3 = lx3 * b + ly3 * d + f;
+        var vertexOffset = vertexDataBuffer.allocate(24);
+
+        vertexBufferF32[vertexOffset++] = x0;
+        vertexBufferF32[vertexOffset++] = y0;
+        vertexBufferU32[vertexOffset++] = lineColor;
+        vertexBufferF32[vertexOffset++] = lineAlpha;
+
+        vertexBufferF32[vertexOffset++] = x1;
+        vertexBufferF32[vertexOffset++] = y1;
+        vertexBufferU32[vertexOffset++] = lineColor;
+        vertexBufferF32[vertexOffset++] = lineAlpha;
+
+        vertexBufferF32[vertexOffset++] = x2;
+        vertexBufferF32[vertexOffset++] = y2;
+        vertexBufferU32[vertexOffset++] = lineColor;
+        vertexBufferF32[vertexOffset++] = lineAlpha;
+
+        vertexBufferF32[vertexOffset++] = x1;
+        vertexBufferF32[vertexOffset++] = y1;
+        vertexBufferU32[vertexOffset++] = lineColor;
+        vertexBufferF32[vertexOffset++] = lineAlpha;
+
+        vertexBufferF32[vertexOffset++] = x3;
+        vertexBufferF32[vertexOffset++] = y3;
+        vertexBufferU32[vertexOffset++] = lineColor;
+        vertexBufferF32[vertexOffset++] = lineAlpha;
+
+        vertexBufferF32[vertexOffset++] = x2;
+        vertexBufferF32[vertexOffset++] = y2;
+        vertexBufferU32[vertexOffset++] = lineColor;
+        vertexBufferF32[vertexOffset++] = lineAlpha;
+
+        return [
+            x0, y0,
+            x1, y1,
+            x2, y2,
+            x3, y3
+        ];
+
+    },
+
+    addStrokePath: function (
+        /* Graphics Game Object properties */
+        srcX, srcY, srcScaleX, srcScaleY, srcRotation,
+        /* Path properties */
+        path, lineWidth, lineColor, lineAlpha,
+        /* transform */
+        a, b, c, d, e, f,
+        /* is last connection */
+        isLastPath
+    ) {
+        var point0, point1;
+        var pathLength = path.length;
+        var polylines = this.polygonCache;
+        var halfLineWidth = lineWidth * 0.5;
+        var last, curr;
+        var vertexDataBuffer = this.vertexDataBuffer;
+        var vertexBufferF32 = vertexDataBuffer.floatView;
+        var vertexBufferU32 = vertexDataBuffer.uintView;
+        var vertexOffset;
+        var x0, y0, x1, y1, x2, y2;
+
+        for (var pathIndex = 0; pathIndex + 1 < pathLength; pathIndex += 1)
+        {
+            point0 = path[pathIndex];
+            point1 = path[pathIndex + 1];
+            polylines.push(this.addLine(
+                srcX, srcY, srcScaleX, srcScaleY, srcRotation,
+                point0.x, point0.y, point1.x, point1.y, halfLineWidth, lineColor, lineAlpha,
+                a, b, c, d, e, f
+            ));
+        }
+
+        if (lineWidth < 1.0)
+            return;
+
+        if (isLastPath)
+        {
+            for (var index = 0, polylinesLength = polylines.length;
+                index < polylinesLength; ++index)
+            {
+
+                if (this.vertexCount + 6 > this.maxVertices)
+                {
+                    this.flush();
+                }
+
+                last = polylines[index - 1];
+                curr = polylines[index];
+                vertexOffset = vertexDataBuffer.allocate(24)
+
+                x0 = last[2 * 2 + 0];
+                y0 = last[2 * 2 + 1];
+                x1 = last[2 * 0 + 0];
+                y1 = last[2 * 0 + 1];
+                x2 = curr[2 * 3 + 0];
+                y2 = curr[2 * 3 + 1];
+
+                vertexBufferF32[vertexOffset++] = x0;
+                vertexBufferF32[vertexOffset++] = y0;
+                vertexBufferU32[vertexOffset++] = lineColor;
+                vertexBufferF32[vertexOffset++] = lineAlpha;
+                vertexBufferF32[vertexOffset++] = x1;
+                vertexBufferF32[vertexOffset++] = y1;
+                vertexBufferU32[vertexOffset++] = lineColor;
+                vertexBufferF32[vertexOffset++] = lineAlpha;
+                vertexBufferF32[vertexOffset++] = x2;
+                vertexBufferF32[vertexOffset++] = y2;
+                vertexBufferU32[vertexOffset++] = lineColor;
+                vertexBufferF32[vertexOffset++] = lineAlpha;
+
+                x0 = last[2 * 0 + 0];
+                y0 = last[2 * 0 + 1];
+                x1 = last[2 * 2 + 0];
+                y1 = last[2 * 2 + 1];
+                x2 = curr[2 * 1 + 0];
+                y2 = curr[2 * 1 + 1];
+
+                vertexBufferF32[vertexOffset++] = x0;
+                vertexBufferF32[vertexOffset++] = y0;
+                vertexBufferU32[vertexOffset++] = lineColor;
+                vertexBufferF32[vertexOffset++] = lineAlpha;
+                vertexBufferF32[vertexOffset++] = x1;
+                vertexBufferF32[vertexOffset++] = y1;
+                vertexBufferU32[vertexOffset++] = lineColor;
+                vertexBufferF32[vertexOffset++] = lineAlpha;
+                vertexBufferF32[vertexOffset++] = x2;
+                vertexBufferF32[vertexOffset++] = y2;
+                vertexBufferU32[vertexOffset++] = lineColor;
+                vertexBufferF32[vertexOffset++] = lineAlpha;
+            
+                this.vertexCount += 6;
+            }
+        }
+        else
+        {
+            for (var index = 0, polylinesLength = polylines.length;
+                index < polylinesLength; ++index)
+            {
+
+                if (this.vertexCount + 6 > this.maxVertices)
+                {
+                    this.flush();
+                }
+
+                last = polylines[index - 1] || polylines[polylinesLength - 1];
+                curr = polylines[index];
+                vertexOffset = vertexDataBuffer.allocate(24)
+
+                x0 = last[2 * 2 + 0];
+                y0 = last[2 * 2 + 1];
+                x1 = last[2 * 0 + 0];
+                y1 = last[2 * 0 + 1];
+                x2 = curr[2 * 3 + 0];
+                y2 = curr[2 * 3 + 1];
+
+                vertexBufferF32[vertexOffset++] = x0;
+                vertexBufferF32[vertexOffset++] = y0;
+                vertexBufferU32[vertexOffset++] = lineColor;
+                vertexBufferF32[vertexOffset++] = lineAlpha;
+                vertexBufferF32[vertexOffset++] = x1;
+                vertexBufferF32[vertexOffset++] = y1;
+                vertexBufferU32[vertexOffset++] = lineColor;
+                vertexBufferF32[vertexOffset++] = lineAlpha;
+                vertexBufferF32[vertexOffset++] = x2;
+                vertexBufferF32[vertexOffset++] = y2;
+                vertexBufferU32[vertexOffset++] = lineColor;
+                vertexBufferF32[vertexOffset++] = lineAlpha;
+
+                x0 = last[2 * 0 + 0];
+                y0 = last[2 * 0 + 1];
+                x1 = last[2 * 2 + 0];
+                y1 = last[2 * 2 + 1];
+                x2 = curr[2 * 1 + 0];
+                y2 = curr[2 * 1 + 1];
+                
+                vertexBufferF32[vertexOffset++] = x0;
+                vertexBufferF32[vertexOffset++] = y0;
+                vertexBufferU32[vertexOffset++] = lineColor;
+                vertexBufferF32[vertexOffset++] = lineAlpha;
+                vertexBufferF32[vertexOffset++] = x1;
+                vertexBufferF32[vertexOffset++] = y1;
+                vertexBufferU32[vertexOffset++] = lineColor;
+                vertexBufferF32[vertexOffset++] = lineAlpha;
+                vertexBufferF32[vertexOffset++] = x2;
+                vertexBufferF32[vertexOffset++] = y2;
+                vertexBufferU32[vertexOffset++] = lineColor;
+                vertexBufferF32[vertexOffset++] = lineAlpha;
+
+                this.vertexCount += 6;
+            }
+        }
+        polylines.length = 0;
+    },
+
     addFillPath: function (
         /* Graphics Game Object properties */
         srcX, srcY, srcScaleX, srcScaleY, srcRotation,
