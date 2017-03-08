@@ -79,8 +79,7 @@ var GraphicsCanvasRenderer = function (renderer, src, interpolationPercentage, c
                 red = ((lineColor & 0xFF0000) >>> 16);
                 green = ((lineColor & 0xFF00) >>> 8);
                 blue = (lineColor & 0xFF);
-                ctx.strokeStyle = 'rgb(' + red + ',' + green + ',' + blue + ')';
-                ctx.globalAlpha = fillAlpha;
+                ctx.strokeStyle = 'rgba(' + red + ',' + green + ',' + blue + ',' + lineAlpha + ')';
                 ctx.lineWidth = lineWidth;
                 index += 3;
                 break;
@@ -91,8 +90,7 @@ var GraphicsCanvasRenderer = function (renderer, src, interpolationPercentage, c
                 red = ((fillColor & 0xFF0000) >>> 16);
                 green = ((fillColor & 0xFF00) >>> 8);
                 blue = (fillColor & 0xFF);
-                ctx.fillStyle = 'rgb(' + red + ',' + green + ',' + blue + ')';
-                ctx.globalAlpha = fillAlpha;
+                ctx.fillStyle = 'rgba(' + red + ',' + green + ',' + blue + ',' + fillAlpha + ')';
                 index += 2;
                 break;
 
