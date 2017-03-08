@@ -1,3 +1,5 @@
+var GetColor = require('./GetColor');
+
 /**
  * Converts an HSV (hue, saturation and value) color value to RGB.
  * Conversion formula from http://en.wikipedia.org/wiki/HSL_color_space.
@@ -22,34 +24,46 @@ var HSVToRGB = function (h, s, v)
     var q = Math.floor((v * (1 - f * s)) * 255);
     var t = Math.floor((v * (1 - (1 - f) * s)) * 255);
 
+    var output = { r: v, g: v, b: v, color: 0 };
+
     v = Math.floor(v *= 255);
 
     var r = i % 6;
 
     if (r === 0)
     {
-        return { r: v, g: t, b: p };
+        output.g = t;
+        output.b = p;
     }
     else if (r === 1)
     {
-        return { r: q, g: v, b: p };
+        output.r = q;
+        output.b = p;
     }
     else if (r === 2)
     {
-        return { r: p, g: v, b: t };
+        output.r = p;
+        output.b = t;
     }
     else if (r === 3)
     {
-        return { r: p, g: q, b: v };
+        output.r = p;
+        output.g = q;
     }
     else if (r === 4)
     {
-        return { r: t, g: p, b: v };
+        output.r = t;
+        output.g = p;
     }
     else if (r === 5)
     {
-        return { r: v, g: p, b: q };
+        output.g = p;
+        output.b = q;
     }
+
+    output.color = GetColor(output.r, output.g, output.b);
+
+    return output;
 };
 
 module.exports = HSVToRGB;
