@@ -96,15 +96,15 @@ var Transform = {
     {
         if (y === undefined) { y = x; }
 
-        this.x = x;
-        this.y = y;
+        this.x = (x ? x : 0.0);
+        this.y = (y ? y : 0.0);
 
         return this;
     },
 
     setRotation: function (radians)
     {
-        this.rotation = radians;
+        this.rotation = (radians ? radians : 0.0);
 
         return this;
     },
@@ -114,8 +114,8 @@ var Transform = {
         if (x === undefined) { x = 1; }
         if (y === undefined) { y = x; }
 
-        this.scaleX = x;
-        this.scaleY = y;
+        this.scaleX = (x ? x : 0.0);
+        this.scaleY = (y ? y : 0.0);
 
         return this;
     }

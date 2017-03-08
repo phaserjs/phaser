@@ -108,8 +108,8 @@ var Graphics = new Class({
     {
         this.beginPath();
         this.arc(x, y, radius, 0, MATH_CONST.PI2);
-        this.strokePath();
         this.closePath();
+        this.strokePath();
     },
 
     strokeRect: function (x, y, width, height)
