@@ -24,9 +24,9 @@ var HSVToRGB = function (h, s, v)
     var q = Math.floor((v * (1 - f * s)) * 255);
     var t = Math.floor((v * (1 - (1 - f) * s)) * 255);
 
-    var output = { r: v, g: v, b: v, color: 0 };
-
     v = Math.floor(v *= 255);
+
+    var output = { r: v, g: v, b: v, color: 0 };
 
     var r = i % 6;
 
