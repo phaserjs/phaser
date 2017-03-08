@@ -76,12 +76,23 @@ var GraphicsCanvasRenderer = function (renderer, src, interpolationPercentage, c
                 lineWidth = commandBuffer[index + 1];
                 lineColor = commandBuffer[index + 2];
                 lineAlpha = commandBuffer[index + 3];
+                red = ((lineColor & 0xFF0000) >>> 16);
+                green = ((lineColor & 0xFF00) >>> 8);
+                blue = (lineColor & 0xFF);
+                ctx.strokeStyle = 'rgb(' + red + ',' + green + ',' + blue + ')';
+                ctx.globalAlpha = fillAlpha;
+                ctx.lineWidth = lineWidth;
                 index += 3;
                 break;
 
             case Commands.FILL_STYLE:
                 fillColor = commandBuffer[index + 1];
                 fillAlpha = commandBuffer[index + 2];
+                red = ((fillColor & 0xFF0000) >>> 16);
+                green = ((fillColor & 0xFF00) >>> 8);
+                blue = (fillColor & 0xFF);
+                ctx.fillStyle = 'rgb(' + red + ',' + green + ',' + blue + ')';
+                ctx.globalAlpha = fillAlpha;
                 index += 2;
                 break;
 
@@ -94,21 +105,10 @@ var GraphicsCanvasRenderer = function (renderer, src, interpolationPercentage, c
                 break;
 
             case Commands.FILL_PATH:
-                red = ((fillColor & 0xFF0000) >>> 16);
-                green = ((fillColor & 0xFF00) >>> 8);
-                blue = (fillColor & 0xFF);
-                ctx.fillStyle = 'rgb(' + red + ',' + green + ',' + blue + ')';
-                ctx.globalAlpha = fillAlpha;
                 ctx.fill();
                 break;
 
             case Commands.STROKE_PATH:
-                red = ((lineColor & 0xFF0000) >>> 16);
-                green = ((lineColor & 0xFF00) >>> 8);
-                blue = (lineColor & 0xFF);
-                ctx.strokeStyle = 'rgb(' + red + ',' + green + ',' + blue + ')';
-                ctx.globalAlpha = fillAlpha;
-                ctx.lineWidth = lineWidth;
                 ctx.stroke();
                 break;
 
@@ -121,6 +121,29 @@ var GraphicsCanvasRenderer = function (renderer, src, interpolationPercentage, c
                 );
                 index += 4;
                 break;
+
+            case Commands.FILL_TRIANGLE:
+                ctx.beginPath();
+                ctx.moveTo(commandBuffer[index + 1], commandBuffer[index + 2]);
+                ctx.lineTo(commandBuffer[index + 3], commandBuffer[index + 4]);
+                ctx.lineTo(commandBuffer[index + 5], commandBuffer[index + 6]);
+                ctx.lineTo(commandBuffer[index + 1], commandBuffer[index + 2]);
+                ctx.closePath();
+                ctx.fill();
+                index += 6;
+                break;
+
+            case Commands.STROKE_TRIANGLE:
+                ctx.beginPath();
+                ctx.moveTo(commandBuffer[index + 1], commandBuffer[index + 2]);
+                ctx.lineTo(commandBuffer[index + 3], commandBuffer[index + 4]);
+                ctx.lineTo(commandBuffer[index + 5], commandBuffer[index + 6]);
+                ctx.lineTo(commandBuffer[index + 1], commandBuffer[index + 2]);
+                ctx.closePath();
+                ctx.stroke();
+                index += 6;
+                break;
+
             case Commands.LINE_TO:
                 ctx.lineTo(
                     commandBuffer[index + 1],

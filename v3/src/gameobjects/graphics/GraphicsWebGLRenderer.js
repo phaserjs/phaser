@@ -213,6 +213,47 @@ var GraphicsWebGLRenderer = function (renderer, src, interpolationPercentage, ca
                 cmdIndex += 4;
                 break;
 
+            case Commands.FILL_TRIANGLE:
+                shapeBatch.addFillTriangle(
+                    /* Graphics Game Object Properties */
+                    srcX, srcY, srcScaleX, srcScaleY, srcRotation,
+                    /* Triangle properties */ 
+                    commandBuffer[cmdIndex + 1] - cameraScrollX,
+                    commandBuffer[cmdIndex + 2] - cameraScrollY,
+                    commandBuffer[cmdIndex + 3] - cameraScrollX,
+                    commandBuffer[cmdIndex + 4] - cameraScrollY,
+                    commandBuffer[cmdIndex + 5] - cameraScrollX,
+                    commandBuffer[cmdIndex + 6] - cameraScrollY,
+                    fillColor,
+                    fillAlpha,
+                    /* Transform */
+                    mva, mvb, mvc, mvd, mve, mvf
+                );
+                
+                cmdIndex += 6;
+                break;
+
+            case Commands.STROKE_TRIANGLE:
+                shapeBatch.addStrokeTriangle(
+                    /* Graphics Game Object Properties */
+                    srcX, srcY, srcScaleX, srcScaleY, srcRotation,
+                    /* Triangle properties */ 
+                    commandBuffer[cmdIndex + 1] - cameraScrollX,
+                    commandBuffer[cmdIndex + 2] - cameraScrollY,
+                    commandBuffer[cmdIndex + 3] - cameraScrollX,
+                    commandBuffer[cmdIndex + 4] - cameraScrollY,
+                    commandBuffer[cmdIndex + 5] - cameraScrollX,
+                    commandBuffer[cmdIndex + 6] - cameraScrollY,
+                    lineWidth,
+                    lineColor,
+                    lineAlpha,
+                    /* Transform */
+                    mva, mvb, mvc, mvd, mve, mvf
+                );
+                
+                cmdIndex += 6;
+                break
+
             case Commands.LINE_TO:
                 if (lastPath !== null)
                 {

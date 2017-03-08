@@ -9,4 +9,6 @@ module.exports = {
     FILL_STYLE: 7,
     FILL_PATH: 8,
     STROKE_PATH: 9,
+    FILL_TRIANGLE: 10,
+    STROKE_TRIANGLE: 11
 };

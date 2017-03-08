@@ -96,6 +96,14 @@ var Graphics = new Class({
         );
     },
 
+    fillTriangle: function (x0, y0, x1, y1, x2, y2)
+    {
+        this.commandBuffer.push(
+            Commands.FILL_TRIANGLE,
+            x0, y0, x1, y1, x2, y2
+        );
+    },
+
     strokeCircle: function (x, y, radius)
     {
         this.beginPath();
@@ -114,6 +122,14 @@ var Graphics = new Class({
         this.lineTo(x, y);
         this.strokePath();
         this.closePath();
+    },
+
+    strokeTriangle: function (x0, y0, x1, y1, x2, y2)
+    {
+        this.commandBuffer.push(
+            Commands.STROKE_TRIANGLE,
+            x0, y0, x1, y1, x2, y2
+        );
     },
 
     lineTo: function (x, y)

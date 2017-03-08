@@ -27,6 +27,12 @@ var ShapeBatch = function (game, gl, manager)
     this.vertexDataBuffer = null;
     this.vertexCount = 0;
     this.viewMatrixLocation = null;
+    this.tempTriangle = [
+        {x: 0, y: 0},
+        {x: 0, y: 0},
+        {x: 0, y: 0},
+        {x: 0, y: 0}
+    ];
 
     //   All of these settings will be able to be controlled via the Game Config
     this.config = {
@@ -523,6 +529,73 @@ ShapeBatch.prototype = {
         vertexBufferF32[vertexOffset++] = fillAlpha;
 
         this.vertexCount += 6;
+    },
+
+    addFillTriangle: function (
+        /* Graphics Game Object properties */
+        srcX, srcY, srcScaleX, srcScaleY, srcRotation,
+        /* Triangle properties */
+        x0, y0, x1, y1, x2, y2, fillColor, fillAlpha,
+        /* transform */
+        a, b, c, d, e, f
+    ) {
+        if (this.vertexCount + 3 > this.maxVertices)
+        {
+            this.flush();
+        }
+        var vertexDataBuffer = this.vertexDataBuffer;
+        var vertexBufferF32 = vertexDataBuffer.floatView;
+        var vertexBufferU32 = vertexDataBuffer.uintView;
+        var vertexOffset = vertexDataBuffer.allocate(12);
+        var tx0 = x0 * a + y0 * c + e;
+        var ty0 = x0 * b + y0 * d + f;
+        var tx1 = x1 * a + y1 * c + e;
+        var ty1 = x1 * b + y1 * d + f;
+        var tx2 = x2 * a + y2 * c + e;
+        var ty2 = x2 * b + y2 * d + f;
+
+        vertexBufferF32[vertexOffset++] = tx0;
+        vertexBufferF32[vertexOffset++] = ty0;
+        vertexBufferU32[vertexOffset++] = fillColor;
+        vertexBufferF32[vertexOffset++] = fillAlpha;
+
+        vertexBufferF32[vertexOffset++] = tx1;
+        vertexBufferF32[vertexOffset++] = ty1;
+        vertexBufferU32[vertexOffset++] = fillColor;
+        vertexBufferF32[vertexOffset++] = fillAlpha;
+
+        vertexBufferF32[vertexOffset++] = tx2;
+        vertexBufferF32[vertexOffset++] = ty2;
+        vertexBufferU32[vertexOffset++] = fillColor;
+        vertexBufferF32[vertexOffset++] = fillAlpha;
+
+        this.vertexCount += 3;
+    },
+
+    addStrokeTriangle: function (
+        /* Graphics Game Object properties */
+        srcX, srcY, srcScaleX, srcScaleY, srcRotation,
+        /* Triangle properties */
+        x0, y0, x1, y1, x2, y2, lineWidth, lineColor, lineAlpha,
+        /* transform */
+        a, b, c, d, e, f
+    ) {
+        var tempTriangle = this.tempTriangle;
+
+        tempTriangle[0].x = x0;
+        tempTriangle[0].y = y0;
+        tempTriangle[1].x = x1;
+        tempTriangle[1].y = y1;
+        tempTriangle[2].x = x2;
+        tempTriangle[2].y = y2;
+        tempTriangle[3].x = x0;
+        tempTriangle[3].y = y0;
+
+        this.addStrokePath(
+            srcX, srcY, srcScaleX, srcScaleY, srcRotation,
+            tempTriangle, lineWidth, lineColor, lineAlpha,
+            a, b, c, d, e, f
+        );
     }
 };
 
