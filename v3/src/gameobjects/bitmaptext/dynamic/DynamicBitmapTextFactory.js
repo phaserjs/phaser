@@ -1,9 +1,9 @@
-var BitmapText = require('./BitmapText');
-var FactoryContainer = require('../../gameobjects/FactoryContainer');
+var BitmapText = require('./DynamicBitmapText');
+var FactoryContainer = require('../../FactoryContainer');
 
-var BitmapTextFactory = {
+var DynamicBitmapTextFactory = {
 
-    KEY: 'bitmapText',
+    KEY: 'dynamicBitmapText',
 
     add: function (x, y, font, text, size, align)
     {
@@ -17,4 +17,4 @@ var BitmapTextFactory = {
 
 };
 
-module.exports = FactoryContainer.register(BitmapTextFactory);
+module.exports = FactoryContainer.register(DynamicBitmapTextFactory);
