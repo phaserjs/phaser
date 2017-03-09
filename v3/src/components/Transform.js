@@ -94,17 +94,20 @@ var Transform = {
 
     setPosition: function (x, y)
     {
+        if (x === undefined) { x = 0; }
         if (y === undefined) { y = x; }
 
-        this.x = (x ? x : 0.0);
-        this.y = (y ? y : 0.0);
+        this.x = x;
+        this.y = y;
 
         return this;
     },
 
     setRotation: function (radians)
     {
-        this.rotation = (radians ? radians : 0.0);
+        if (radians === undefined) { radians = 0; }
+
+        this.rotation = radians;
 
         return this;
     },
