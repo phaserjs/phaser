@@ -625,7 +625,7 @@ Phaser.Physics.Arcade.prototype = {
         {
             if (object2.physicsType === Phaser.SPRITE)
             {
-                this.collideSpriteVsGroup(object2, object1, collideCallback, processCallback, callbackContext, overlapOnly);
+                this.collideSpriteVsGroup(object1, object2, collideCallback, processCallback, callbackContext, overlapOnly);
             }
             else if (object2.physicsType === Phaser.GROUP)
             {
@@ -641,11 +641,11 @@ Phaser.Physics.Arcade.prototype = {
         {
             if (object2.physicsType === Phaser.SPRITE)
             {
-                this.collideSpriteVsTilemapLayer(object2, object1, collideCallback, processCallback, callbackContext, overlapOnly);
+                this.collideSpriteVsTilemapLayer(object1, object2, collideCallback, processCallback, callbackContext, overlapOnly);
             }
             else if (object2.physicsType === Phaser.GROUP)
             {
-                this.collideGroupVsTilemapLayer(object2, object1, collideCallback, processCallback, callbackContext, overlapOnly);
+                this.collideGroupVsTilemapLayer(object1, object2, collideCallback, processCallback, callbackContext, overlapOnly);
             }
         }
 
