@@ -101,6 +101,22 @@ Camera.prototype = {
         }
     },
 
+    startFollow: function (gameObjectOrPoint)
+    {
+        if (this._follow !== null)
+        {
+            this.stopFollow();
+        }
+
+        this._follow = gameObjectOrPoint;
+    },
+
+    stopFollow: function () 
+    {
+        /* do unfollow work here */
+        this._follow = null;
+    },
+
     flash: function (duration, red, green, blue, force)
     {
         if (!force && this._flashAlpha > 0.0)
@@ -176,26 +192,19 @@ Camera.prototype = {
 
         if (follow != null)
         {
-            if (follow.originX)
-            {
-                originX = follow.x + follow.originX;
-                originY = follow.y + follow.originY;
-            }
-            else
-            {
-                originX = follow.x;
-                originY = follow.y;
-            }
+            originX = follow.x;
+            originY = follow.y;
             
-            originX = -this.scrollX - originX;
-            originY = -this.scrollY - originY;
+            this.scrollX = originX - width * 0.5;
+            this.scrollY = originY - height * 0.5;
         }
 
         matrix.loadIdentity();
         matrix.translate(this.x + originX, this.y + originY);
         matrix.rotate(this.rotation);
         matrix.scale(zoom, zoom);
-        matrix.translate(-originX + this._shakeOffsetX, -originY + this._shakeOffsetY);
+        matrix.translate(-originX, -originY);
+        matrix.translate(this._shakeOffsetX, this._shakeOffsetY);
     },
 
     destroy: function ()
