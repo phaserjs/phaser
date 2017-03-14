@@ -93,6 +93,27 @@ Texture.prototype = {
         }
     },
 
+    getSourceImage: function (name)
+    {
+        if (name === undefined || name === null || this.frameTotal === 1)
+        {
+            name = '__BASE';
+        }
+
+        var frame = this.frames[name];
+
+        if (!frame)
+        {
+            console.warn('No Texture.frame found with name ' + name);
+
+            return this.frames['__BASE'].source.image;
+        }
+        else
+        {
+            return frame.source.image;
+        }
+    },
+
     setTextureIndex: function (index)
     {
         for (var i = 0; i < this.source.length; i++)
