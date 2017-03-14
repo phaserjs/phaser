@@ -148,6 +148,22 @@ var Graphics = new Class({
         );
     },
 
+    lineWidthTo: function (x, y, width)
+    {
+        this.commandBuffer.push(
+            Commands.LINE_WIDTH_TO,
+            x, y, width
+        );        
+    },
+
+    moveWidthTo: function (x, y, width)
+    {
+        this.commandBuffer.push(
+            Commands.MOVE_WIDTH_TO,
+            x, y, width
+        );
+    },
+
     clear: function ()
     {
         this.commandBuffer.length = 0;

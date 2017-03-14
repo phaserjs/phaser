@@ -158,6 +158,22 @@ var GraphicsCanvasRenderer = function (renderer, src, interpolationPercentage, c
                 index += 2;
                 break;
 
+            case Commands.LINE_WIDTH_TO:
+                ctx.lineTo(
+                    commandBuffer[index + 1],
+                    commandBuffer[index + 2]
+                );
+                index += 3;
+                break;
+
+            case Commands.MOVE_WIDTH_TO:
+                ctx.moveTo(
+                    commandBuffer[index + 1],
+                    commandBuffer[index + 2]
+                );
+                index += 3;
+                break;
+
             default:
                 console.error('Phaser: Invalid Graphics Command ID ' + commandID);
                 break;

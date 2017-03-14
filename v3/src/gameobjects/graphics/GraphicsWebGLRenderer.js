@@ -6,17 +6,18 @@ var sin = Math.sin;
 var sqrt = Math.sqrt;
 var tempMatrix = new TransformMatrix();
 
-var Point = function (x, y)
+var Point = function (x, y, width)
 {
     this.x = x;
     this.y = y;
+    this.width = width;
 };
 
-var Path = function (x, y)
+var Path = function (x, y, width)
 {
     this.points = [];
     this.pointsLength = 1;
-    this.points[0] = new Point(x, y);
+    this.points[0] = new Point(x, y, width);
 };
 
 var GraphicsWebGLRenderer = function (renderer, src, interpolationPercentage, camera)
@@ -116,12 +117,12 @@ var GraphicsWebGLRenderer = function (renderer, src, interpolationPercentage, ca
 
                     if (iteration === 0)
                     {
-                        lastPath = new Path(tx, ty);
+                        lastPath = new Path(tx, ty, lineWidth);
                         pathArray.push(lastPath);
                     }
                     else
                     {
-                        lastPath.points.push(new Point(tx, ty));
+                        lastPath.points.push(new Point(tx, ty, lineWidth));
                     }
 
                     iteration += iterStep;
@@ -150,8 +151,9 @@ var GraphicsWebGLRenderer = function (renderer, src, interpolationPercentage, ca
                 if (lastPath !== null && lastPath.points.length > 0)
                 {
                     var firstPoint = lastPath.points[0];
+                    var lastPoint = lastPath.points[lastPath.points.length - 1];
                     lastPath.points.push(firstPoint);
-                    lastPath = new Path(x, y);
+                    lastPath = new Path(lastPoint.x, lastPoint.y, lineWidth);
                     pathArray.push(lastPath);
                 }
                 break;
@@ -257,20 +259,39 @@ var GraphicsWebGLRenderer = function (renderer, src, interpolationPercentage, ca
             case Commands.LINE_TO:
                 if (lastPath !== null)
                 {
-                    lastPath.points.push(new Point(commandBuffer[cmdIndex + 1], commandBuffer[cmdIndex + 2]));
+                    lastPath.points.push(new Point(commandBuffer[cmdIndex + 1], commandBuffer[cmdIndex + 2], lineWidth));
                 }
                 else
                 {
-                    lastPath = new Path(commandBuffer[cmdIndex + 1], commandBuffer[cmdIndex + 2]);
+                    lastPath = new Path(commandBuffer[cmdIndex + 1], commandBuffer[cmdIndex + 2], lineWidth);
                     pathArray.push(lastPath);
                 }
                 cmdIndex += 2;
                 break;
 
             case Commands.MOVE_TO:
-                lastPath = new Path(commandBuffer[cmdIndex + 1], commandBuffer[cmdIndex + 2]);
+                lastPath = new Path(commandBuffer[cmdIndex + 1], commandBuffer[cmdIndex + 2], lineWidth);
                 pathArray.push(lastPath);
                 cmdIndex += 2;
+                break;
+
+            case Commands.LINE_WIDTH_TO:
+                if (lastPath !== null)
+                {
+                    lastPath.points.push(new Point(commandBuffer[cmdIndex + 1], commandBuffer[cmdIndex + 2], commandBuffer[cmdIndex + 3]));
+                }
+                else
+                {
+                    lastPath = new Path(commandBuffer[cmdIndex + 1], commandBuffer[cmdIndex + 2], commandBuffer[cmdIndex + 3]);
+                    pathArray.push(lastPath);
+                }
+                cmdIndex += 3;
+                break;
+
+            case Commands.MOVE_WIDTH_TO:
+                lastPath = new Path(commandBuffer[cmdIndex + 1], commandBuffer[cmdIndex + 2], commandBuffer[cmdIndex + 3]);
+                pathArray.push(lastPath);
+                cmdIndex += 3;
                 break;
 
             default:

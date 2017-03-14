@@ -10,5 +10,7 @@ module.exports = {
     FILL_PATH: 8,
     STROKE_PATH: 9,
     FILL_TRIANGLE: 10,
-    STROKE_TRIANGLE: 11
+    STROKE_TRIANGLE: 11,
+    LINE_WIDTH_TO: 12,
+    MOVE_WIDTH_TO: 13
 };
