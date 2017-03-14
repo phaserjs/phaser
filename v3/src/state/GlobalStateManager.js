@@ -478,6 +478,7 @@ GlobalStateManager.prototype = {
     create: function (state)
     {
         // console.log('create', state.sys.settings.key);
+        // console.log(state);
 
         //  Insert at the correct index, or it just all goes wrong :)
 
@@ -494,7 +495,7 @@ GlobalStateManager.prototype = {
 
         if (state.create)
         {
-            state.create(state.sys.settings.data);
+            state.create.call(state, state.sys.settings.data);
         }
     },
 
