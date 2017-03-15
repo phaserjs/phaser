@@ -27,8 +27,8 @@ var TextCanvasRenderer = function (renderer, src, interpolationPercentage, camer
         renderer.currentScaleMode = src.scaleMode;
     }
 
-    var dx = src.x - src.originX - camera.scrollX;
-    var dy = src.y - src.originY - camera.scrollY;
+    var dx = src.x - src.displayOriginX - camera.scrollX;
+    var dy = src.y - src.displayOriginY - camera.scrollY;
 
     var canvas = src.canvas;
 

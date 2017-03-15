@@ -16,7 +16,6 @@ var Text = new Class({
         Components.GetBounds,
         Components.Origin,
         Components.ScaleMode,
-        Components.Size,
         Components.Transform,
         Components.Visible,
         TextRender
@@ -46,7 +45,7 @@ var Text = new Class({
 
         this.style = new TextStyle(this, style);
 
-        this.autoRound = false;
+        this.autoRound = true;
 
         /**
          * The Regular Expression that is used to split the text up into lines, in
@@ -61,6 +60,9 @@ var Text = new Class({
         this.resolution = 1;
 
         this.padding = { x: 0, y: 0 };
+
+        this.width = 1;
+        this.height = 1;
 
         if (text !== '')
         {
@@ -87,6 +89,9 @@ var Text = new Class({
         var lines = outputText.split(this.splitRegExp);
 
         var textSize = GetTextSize(this, size, lines);
+
+        this.width = textSize.width;
+        this.height = textSize.height;
 
         canvas.width = textSize.width * this.resolution;
         canvas.height = textSize.height * this.resolution;

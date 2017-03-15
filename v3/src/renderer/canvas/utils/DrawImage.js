@@ -29,8 +29,8 @@ var DrawImage = function (src, camera)
         // ctx[this.smoothProperty] = (source.scaleMode === ScaleModes.LINEAR);
     }
 
-    var dx = frame.x - src.originX;
-    var dy = frame.y - src.originY;
+    var dx = frame.x - src.displayOriginX;
+    var dy = frame.y - src.displayOriginY;
 
     ctx.save();
     ctx.translate(src.x - camera.scrollX, src.y - camera.scrollY);

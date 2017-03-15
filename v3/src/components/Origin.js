@@ -3,24 +3,30 @@
 
 var Origin = {
 
-    originX: 0,
-    originY: 0,
+    originX: 0.5,
+    originY: 0.5,
+
+    //  READ ONLY
+    displayOriginX: 0,
+    displayOriginY: 0,
 
     setOrigin: function (x, y)
     {
-        if (x === undefined) { x = 0; }
+        if (x === undefined) { x = 0.5; }
         if (y === undefined) { y = x; }
 
         this.originX = x;
         this.originY = y;
+
+        this.displayOriginX = x * this.width;
+        this.displayOriginY = y * this.height;
 
         return this;
     },
 
     setOriginToCenter: function ()
     {
-        this.originX = this.frame.centerX;
-        this.originY = this.frame.centerY;
+        this.setOrigin(0.5);
     }
 
 };
