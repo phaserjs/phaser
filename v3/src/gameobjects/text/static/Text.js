@@ -70,6 +70,17 @@ var Text = new Class({
         }
     },
 
+    setText: function (value)
+    {
+        if (value !== this.text)
+        {
+            this.text = value;
+            this.updateText();
+        }
+
+        return this;
+    },
+
     updateText: function ()
     {
         var canvas = this.canvas;
@@ -92,6 +103,8 @@ var Text = new Class({
 
         this.width = textSize.width;
         this.height = textSize.height;
+
+        this.updateOrigin();
 
         canvas.width = textSize.width * this.resolution;
         canvas.height = textSize.height * this.resolution;

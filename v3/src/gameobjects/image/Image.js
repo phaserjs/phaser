@@ -28,7 +28,7 @@ var Image = new Class({
         this.setTexture(texture, frame);
         this.setPosition(x, y);
         this.setSizeToFrame();
-        this.setOriginToCenter();
+        this.setOrigin();
     }
 
 });

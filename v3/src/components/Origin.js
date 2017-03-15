@@ -1,5 +1,6 @@
 //  Origin Component
-//  Values are given in pixels, not percent
+//  Values are normalized, given in the range 0 to 1.
+//  Display values contain the calculated pixel values.
 
 var Origin = {
 
@@ -18,15 +19,15 @@ var Origin = {
         this.originX = x;
         this.originY = y;
 
-        this.displayOriginX = x * this.width;
-        this.displayOriginY = y * this.height;
-
-        return this;
+        return this.updateOrigin();
     },
 
-    setOriginToCenter: function ()
+    updateOrigin: function ()
     {
-        this.setOrigin(0.5);
+        this.displayOriginX = this.originX * this.width;
+        this.displayOriginY = this.originY * this.height;
+
+        return this;
     }
 
 };

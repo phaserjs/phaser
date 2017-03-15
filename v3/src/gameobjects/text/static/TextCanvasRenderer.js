@@ -27,18 +27,13 @@ var TextCanvasRenderer = function (renderer, src, interpolationPercentage, camer
         renderer.currentScaleMode = src.scaleMode;
     }
 
-    var dx = src.x - src.displayOriginX - camera.scrollX;
-    var dy = src.y - src.displayOriginY - camera.scrollY;
-
     var canvas = src.canvas;
 
     ctx.save();
-    ctx.translate(src.x, src.y);
+    ctx.translate(src.x - camera.scrollX, src.y - camera.scrollY);
     ctx.rotate(src.rotation);
     ctx.scale(src.scaleX, src.scaleY);
-
-    ctx.drawImage(canvas, 0, 0, canvas.width, canvas.height, dx, dy, canvas.width, canvas.height);
-
+    ctx.drawImage(canvas, 0, 0, canvas.width, canvas.height, -src.displayOriginX, -src.displayOriginY, canvas.width, canvas.height);
     ctx.restore();
 };
 
