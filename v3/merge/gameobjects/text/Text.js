@@ -518,6 +518,8 @@ Phaser.GameObject.Text.prototype.updateText = function () {
     this.context.lineCap = 'round';
     this.context.lineJoin = 'round';
 
+    //  HERE
+
     var linePositionX;
     var linePositionY;
 

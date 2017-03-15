@@ -8,6 +8,7 @@ require('./sprite/SpriteFactory');
 require('./bitmaptext/static/BitmapTextFactory');
 require('./bitmaptext/dynamic/DynamicBitmapTextFactory');
 require('./graphics/GraphicsFactory');
+require('./text/static/TextFactory');
 
 //  Phaser.GameObjects
 
@@ -16,11 +17,12 @@ module.exports = {
     Factory: require('./FactoryContainer'),
 
     BitmapText: require('./bitmaptext/static/BitmapText'),
-    DynamicBitmapText: require('./bitmaptext/dynamic/DynamicBitmapText'),
     Blitter: require('./blitter/Blitter'),
     Container: require('./container/Container'),
+    DynamicBitmapText: require('./bitmaptext/dynamic/DynamicBitmapText'),
+    Graphics: require('./graphics/Graphics.js'),
     Image: require('./image/Image'),
     Sprite: require('./sprite/Sprite'),
-    Graphics: require('./graphics/Graphics.js')
+    Text: require('./text/static/Text')
 
 };
