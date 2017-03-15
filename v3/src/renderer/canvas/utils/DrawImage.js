@@ -29,11 +29,11 @@ var DrawImage = function (src, camera)
         // ctx[this.smoothProperty] = (source.scaleMode === ScaleModes.LINEAR);
     }
 
-    var dx = frame.x - src.originX - camera.scrollX;
-    var dy = frame.y - src.originY - camera.scrollY;
+    var dx = frame.x - src.originX;
+    var dy = frame.y - src.originY;
 
     ctx.save();
-    ctx.translate(src.x, src.y);
+    ctx.translate(src.x - camera.scrollX, src.y - camera.scrollY);
     ctx.rotate(src.rotation);
     ctx.scale(src.scaleX, src.scaleY);
     ctx.drawImage(frame.source.image, cd.sx, cd.sy, cd.sWidth, cd.sHeight, dx, dy, cd.dWidth, cd.dHeight);
