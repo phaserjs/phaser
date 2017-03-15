@@ -158,20 +158,20 @@ var GraphicsCanvasRenderer = function (renderer, src, interpolationPercentage, c
                 index += 2;
                 break;
 
-            case Commands.LINE_WIDTH_TO:
+            case Commands.LINE_FX_TO:
                 ctx.lineTo(
                     commandBuffer[index + 1],
                     commandBuffer[index + 2]
                 );
-                index += 3;
+                index += 5;
                 break;
 
-            case Commands.MOVE_WIDTH_TO:
+            case Commands.MOVE_FX_TO:
                 ctx.moveTo(
                     commandBuffer[index + 1],
                     commandBuffer[index + 2]
                 );
-                index += 3;
+                index += 5;
                 break;
 
             default:

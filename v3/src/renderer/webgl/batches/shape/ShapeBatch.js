@@ -162,7 +162,7 @@ ShapeBatch.prototype = {
         /* Graphics Game Object properties */
         srcX, srcY, srcScaleX, srcScaleY, srcRotation,
         /* line properties */
-        ax, ay, bx, by, aLineWidth, bLineWidth, lineColor, lineAlpha,
+        ax, ay, bx, by, aLineWidth, bLineWidth, aLineColor, bLineColor, lineAlpha,
         /* transform */
         a, b, c, d, e, f
     ) {
@@ -203,34 +203,34 @@ ShapeBatch.prototype = {
 
         vertexBufferF32[vertexOffset++] = x0;
         vertexBufferF32[vertexOffset++] = y0;
-        vertexBufferU32[vertexOffset++] = lineColor;
+        vertexBufferU32[vertexOffset++] = bLineColor;
         vertexBufferF32[vertexOffset++] = lineAlpha;
         vertexBufferF32[vertexOffset++] = x1;
         vertexBufferF32[vertexOffset++] = y1;
-        vertexBufferU32[vertexOffset++] = lineColor;
+        vertexBufferU32[vertexOffset++] = aLineColor;
         vertexBufferF32[vertexOffset++] = lineAlpha;
         vertexBufferF32[vertexOffset++] = x2;
         vertexBufferF32[vertexOffset++] = y2;
-        vertexBufferU32[vertexOffset++] = lineColor;
+        vertexBufferU32[vertexOffset++] = bLineColor;
         vertexBufferF32[vertexOffset++] = lineAlpha;
         vertexBufferF32[vertexOffset++] = x1;
         vertexBufferF32[vertexOffset++] = y1;
-        vertexBufferU32[vertexOffset++] = lineColor;
+        vertexBufferU32[vertexOffset++] = aLineColor;
         vertexBufferF32[vertexOffset++] = lineAlpha;
         vertexBufferF32[vertexOffset++] = x3;
         vertexBufferF32[vertexOffset++] = y3;
-        vertexBufferU32[vertexOffset++] = lineColor;
+        vertexBufferU32[vertexOffset++] = aLineColor;
         vertexBufferF32[vertexOffset++] = lineAlpha;
         vertexBufferF32[vertexOffset++] = x2;
         vertexBufferF32[vertexOffset++] = y2;
-        vertexBufferU32[vertexOffset++] = lineColor;
+        vertexBufferU32[vertexOffset++] = bLineColor;
         vertexBufferF32[vertexOffset++] = lineAlpha;
 
         return [
-            x0, y0,
-            x1, y1,
-            x2, y2,
-            x3, y3
+            x0, y0, bLineColor,
+            x1, y1, aLineColor,
+            x2, y2, bLineColor,
+            x3, y3, aLineColor
         ];
 
     },
@@ -266,7 +266,7 @@ ShapeBatch.prototype = {
                 point0.x, point0.y, 
                 point1.x, point1.y, 
                 point0.width / 2, point1.width / 2, 
-                lineColor, lineAlpha,
+                point0.rgb, point1.rgb, lineAlpha,
                 a, b, c, d, e, f
             );
             polylines.push(line);
@@ -286,44 +286,34 @@ ShapeBatch.prototype = {
             curr = polylines[index];
             vertexOffset = vertexDataBuffer.allocate(24)
 
-            x0 = last[2 * 2 + 0];
-            y0 = last[2 * 2 + 1];
-            x1 = last[2 * 0 + 0];
-            y1 = last[2 * 0 + 1];
-            x2 = curr[2 * 3 + 0];
-            y2 = curr[2 * 3 + 1];
-
-            vertexBufferF32[vertexOffset++] = x0;
-            vertexBufferF32[vertexOffset++] = y0;
-            vertexBufferU32[vertexOffset++] = lineColor;
-            vertexBufferF32[vertexOffset++] = lineAlpha;
-            vertexBufferF32[vertexOffset++] = x1;
-            vertexBufferF32[vertexOffset++] = y1;
-            vertexBufferU32[vertexOffset++] = lineColor;
-            vertexBufferF32[vertexOffset++] = lineAlpha;
-            vertexBufferF32[vertexOffset++] = x2;
-            vertexBufferF32[vertexOffset++] = y2;
-            vertexBufferU32[vertexOffset++] = lineColor;
+            vertexBufferF32[vertexOffset++] = last[3 * 2 + 0];
+            vertexBufferF32[vertexOffset++] = last[3 * 2 + 1];
+            vertexBufferU32[vertexOffset++] = last[3 * 2 + 2];
             vertexBufferF32[vertexOffset++] = lineAlpha;
 
-            x0 = last[2 * 0 + 0];
-            y0 = last[2 * 0 + 1];
-            x1 = last[2 * 2 + 0];
-            y1 = last[2 * 2 + 1];
-            x2 = curr[2 * 1 + 0];
-            y2 = curr[2 * 1 + 1];
-            
-            vertexBufferF32[vertexOffset++] = x0;
-            vertexBufferF32[vertexOffset++] = y0;
-            vertexBufferU32[vertexOffset++] = lineColor;
+            vertexBufferF32[vertexOffset++] = last[3 * 0 + 0];
+            vertexBufferF32[vertexOffset++] = last[3 * 0 + 1];
+            vertexBufferU32[vertexOffset++] = last[3 * 0 + 2];
             vertexBufferF32[vertexOffset++] = lineAlpha;
-            vertexBufferF32[vertexOffset++] = x1;
-            vertexBufferF32[vertexOffset++] = y1;
-            vertexBufferU32[vertexOffset++] = lineColor;
+
+            vertexBufferF32[vertexOffset++] = curr[3 * 3 + 0];
+            vertexBufferF32[vertexOffset++] = curr[3 * 3 + 1];
+            vertexBufferU32[vertexOffset++] = curr[3 * 3 + 2];
             vertexBufferF32[vertexOffset++] = lineAlpha;
-            vertexBufferF32[vertexOffset++] = x2;
-            vertexBufferF32[vertexOffset++] = y2;
-            vertexBufferU32[vertexOffset++] = lineColor;
+
+            vertexBufferF32[vertexOffset++] = last[3 * 0 + 0];
+            vertexBufferF32[vertexOffset++] = last[3 * 0 + 1];
+            vertexBufferU32[vertexOffset++] = last[3 * 0 + 2];
+            vertexBufferF32[vertexOffset++] = lineAlpha;
+
+            vertexBufferF32[vertexOffset++] = last[3 * 2 + 0];
+            vertexBufferF32[vertexOffset++] = last[3 * 2 + 1];
+            vertexBufferU32[vertexOffset++] = last[3 * 2 + 2];
+            vertexBufferF32[vertexOffset++] = lineAlpha;
+
+            vertexBufferF32[vertexOffset++] = curr[3 * 1 + 0];
+            vertexBufferF32[vertexOffset++] = curr[3 * 1 + 1];
+            vertexBufferU32[vertexOffset++] = curr[3 * 1 + 2];
             vertexBufferF32[vertexOffset++] = lineAlpha;
 
             this.vertexCount += 6;

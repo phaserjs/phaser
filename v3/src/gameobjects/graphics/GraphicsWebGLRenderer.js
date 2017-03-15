@@ -6,18 +6,20 @@ var sin = Math.sin;
 var sqrt = Math.sqrt;
 var tempMatrix = new TransformMatrix();
 
-var Point = function (x, y, width)
+var Point = function (x, y, width, rgb, alpha)
 {
     this.x = x;
     this.y = y;
     this.width = width;
+    this.rgb = rgb;
+    this.alpha = alpha;
 };
 
-var Path = function (x, y, width)
+var Path = function (x, y, width, rgb, alpha)
 {
     this.points = [];
     this.pointsLength = 1;
-    this.points[0] = new Point(x, y, width);
+    this.points[0] = new Point(x, y, width, rgb, alpha);
 };
 
 var GraphicsWebGLRenderer = function (renderer, src, interpolationPercentage, camera)
@@ -275,23 +277,41 @@ var GraphicsWebGLRenderer = function (renderer, src, interpolationPercentage, ca
                 cmdIndex += 2;
                 break;
 
-            case Commands.LINE_WIDTH_TO:
+            case Commands.LINE_FX_TO:
                 if (lastPath !== null)
                 {
-                    lastPath.points.push(new Point(commandBuffer[cmdIndex + 1], commandBuffer[cmdIndex + 2], commandBuffer[cmdIndex + 3]));
+                    lastPath.points.push(new Point(
+                        commandBuffer[cmdIndex + 1], 
+                        commandBuffer[cmdIndex + 2], 
+                        commandBuffer[cmdIndex + 3],
+                        commandBuffer[cmdIndex + 4],
+                        commandBuffer[cmdIndex + 5]
+                    ));
                 }
                 else
                 {
-                    lastPath = new Path(commandBuffer[cmdIndex + 1], commandBuffer[cmdIndex + 2], commandBuffer[cmdIndex + 3]);
+                    lastPath = new Path(
+                        commandBuffer[cmdIndex + 1], 
+                        commandBuffer[cmdIndex + 2], 
+                        commandBuffer[cmdIndex + 3],
+                        commandBuffer[cmdIndex + 4],
+                        commandBuffer[cmdIndex + 5]
+                    );
                     pathArray.push(lastPath);
                 }
-                cmdIndex += 3;
+                cmdIndex += 5;
                 break;
 
-            case Commands.MOVE_WIDTH_TO:
-                lastPath = new Path(commandBuffer[cmdIndex + 1], commandBuffer[cmdIndex + 2], commandBuffer[cmdIndex + 3]);
+            case Commands.MOVE_FX_TO:
+                lastPath = new Path(
+                    commandBuffer[cmdIndex + 1], 
+                    commandBuffer[cmdIndex + 2], 
+                    commandBuffer[cmdIndex + 3],
+                    commandBuffer[cmdIndex + 4],
+                    commandBuffer[cmdIndex + 5]
+                );
                 pathArray.push(lastPath);
-                cmdIndex += 3;
+                cmdIndex += 5;
                 break;
 
             default:

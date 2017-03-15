@@ -148,19 +148,19 @@ var Graphics = new Class({
         );
     },
 
-    lineWidthTo: function (x, y, width)
+    lineFxTo: function (x, y, width, rgb)
     {
         this.commandBuffer.push(
-            Commands.LINE_WIDTH_TO,
-            x, y, width
+            Commands.LINE_FX_TO,
+            x, y, width, rgb, 1
         );        
     },
 
-    moveWidthTo: function (x, y, width)
+    moveFxTo: function (x, y, width, rgb)
     {
         this.commandBuffer.push(
-            Commands.MOVE_WIDTH_TO,
-            x, y, width
+            Commands.MOVE_FX_TO,
+            x, y, width, rgb, 1
         );
     },
 
