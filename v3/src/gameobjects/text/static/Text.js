@@ -153,42 +153,22 @@ var Text = new Class({
 
             if (style.strokeThickness)
             {
-                this.updateShadow(style.shadowStroke);
+                this.style.syncShadow(style.shadowStroke);
 
                 context.strokeText(lines[i], linePositionX, linePositionY);
             }
 
             if (style.fill)
             {
-                this.updateShadow(style.shadowFill);
+                this.style.syncShadow(style.shadowFill);
 
                 context.fillText(lines[i], linePositionX, linePositionY);
             }
         }
-    },
+    }
 
     //  Add style callback so we can chain filter effects
 
-    updateShadow: function (visible)
-    {
-        var context = this.context;
-        var style = this.style;
-
-        if (visible)
-        {
-            context.shadowOffsetX = style.shadowOffsetX;
-            context.shadowOffsetY = style.shadowOffsetY;
-            context.shadowColor = style.shadowColor;
-            context.shadowBlur = style.shadowBlur;
-        }
-        else
-        {
-            context.shadowOffsetX = 0;
-            context.shadowOffsetY = 0;
-            context.shadowColor = 0;
-            context.shadowBlur = 0;
-        }
-    }
 
 });
 

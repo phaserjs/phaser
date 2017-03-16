@@ -25,8 +25,7 @@ var TextStyle = new Class({
 
     function TextStyle (text, style)
     {
-        //  Needed?
-        this.text = text;
+        this.parent = text;
 
         this.font = propertyMap.font[1];
         this.backgroundColor = propertyMap.backgroundColor[1];
@@ -48,17 +47,7 @@ var TextStyle = new Class({
         }
     },
 
-    setStyle: function (style)
-    {
-        for (var key in propertyMap)
-        {
-            this[key] = GetObjectValue(style, propertyMap[key][0], this[key]);
-        }
-
-        return this;
-    },
-
-    syncToCanvas: function (canvas, context)
+    syncFont: function (canvas, context)
     {
         context.font = this.font;
         context.textBaseline = 'alphabetic';
@@ -71,12 +60,131 @@ var TextStyle = new Class({
         context.lineJoin = 'round';
     },
 
+    syncShadow: function (canvas, context, visible)
+    {
+        var style = this.style;
+
+        if (visible)
+        {
+            context.shadowOffsetX = style.shadowOffsetX;
+            context.shadowOffsetY = style.shadowOffsetY;
+            context.shadowColor = style.shadowColor;
+            context.shadowBlur = style.shadowBlur;
+        }
+        else
+        {
+            context.shadowOffsetX = 0;
+            context.shadowOffsetY = 0;
+            context.shadowColor = 0;
+            context.shadowBlur = 0;
+        }
+    },
+
+    setStyle: function (style)
+    {
+        for (var key in propertyMap)
+        {
+            this[key] = GetObjectValue(style, propertyMap[key][0], this[key]);
+        }
+
+        return this;
+    },
+
     setFont: function (font)
     {
+
         this.font = font;
 
-        //  Tell Text it changed
+        this.parent.updateText();
+
+        return this;
     },
+
+    setBackgroundColor: function (color)
+    {
+        this.backgroundColor = color;
+
+        this.parent.updateText();
+
+        return this;
+    },
+
+    setFill: function (color)
+    {
+        this.fill = color;
+
+        this.parent.updateText();
+
+        return this;
+    },
+
+    setStroke: function (color, thickness)
+    {
+        if (color === undefined)
+        {
+            //  Reset the stroke to zero (disabling it)
+            this.strokeThickness = 0;
+        }
+        else
+        {
+            if (thickness === undefined) { thickness = this.strokeThickness; }
+
+            this.stroke = color;
+            this.strokeThickness = thickness;
+        }
+
+        this.parent.updateText();
+
+        return this;
+    },
+
+    setShadow: function (x, y, color, blur, shadowStroke, shadowFill)
+    {
+        if (x === undefined) { x = 0; }
+        if (y === undefined) { y = 0; }
+        if (color === undefined) { color = '#000'; }
+        if (blur === undefined) { blur = 0; }
+        if (shadowStroke === undefined) { shadowStroke = false; }
+        if (shadowFill === undefined) { shadowFill = false; }
+
+        this.shadowOffsetX = x;
+        this.shadowOffsetY = y;
+        this.shadowColor = color;
+        this.shadowBlur = blur;
+        this.shadowStroke = shadowStroke;
+        this.shadowFill = shadowFill;
+
+        this.parent.updateText();
+
+        return this;
+    },
+
+    setAlign: function (align)
+    {
+        if (align === undefined) { align = 'left'; }
+
+        this.align = align;
+
+        this.parent.updateText();
+
+        return this;
+    },
+
+    setMaxLines: function (max)
+    {
+        if (max === undefined) { max = 0; }
+
+        this.maxLines = max;
+
+        this.parent.updateText();
+
+        return this;
+    },
+
+    destroy: function ()
+    {
+        this.parent = undefined;
+    }
 
 });
 
