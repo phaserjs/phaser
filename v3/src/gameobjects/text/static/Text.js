@@ -81,6 +81,11 @@ var Text = new Class({
         return this;
     },
 
+    setStyle: function (style)
+    {
+        return this.style.setStyle(style);
+    },
+
     updateText: function ()
     {
         var canvas = this.canvas;
@@ -115,7 +120,7 @@ var Text = new Class({
             context.fillRect(0, 0, canvas.width, canvas.height);
         }
 
-        style.syncStyle(canvas, context);
+        style.syncToCanvas(canvas, context);
 
         var linePositionX;
         var linePositionY;

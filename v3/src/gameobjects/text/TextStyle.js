@@ -1,44 +1,64 @@
 var Class = require('../../utils/Class');
 var GetObjectValue = require('../../utils/object/GetObjectValue');
 
+//  Key: [ Object Key, Default Value ]
+
+var propertyMap = {
+    font: [ 'font', '16px Courier' ],
+    backgroundColor: [ 'backgroundColor', null ],
+    fill: [ 'fill', '#fff' ],
+    stroke: [ 'stroke', '#fff' ],
+    strokeThickness: [ 'strokeThickness', 0 ],
+    shadowOffsetX: [ 'shadow.offsetX', 0 ],
+    shadowOffsetY: [ 'shadow.offsetY', 0 ],
+    shadowColor: [ 'shadow.color', '#000' ],
+    shadowBlur: [ 'shadow.blur', 0 ],
+    shadowStroke: [ 'shadow.stroke', false ],
+    shadowFill: [ 'shadow.fill', false ],
+    align: [ 'align', 'left' ],
+    maxLines: [ 'maxLines', 0 ]
+};
+
 var TextStyle = new Class({
 
     initialize:
 
     function TextStyle (text, style)
     {
-        if (style === undefined) { style = {}; }
-
         //  Needed?
         this.text = text;
 
-        this.font = GetObjectValue(style, 'font', '16px Arial');
+        this.font = propertyMap.font[1];
+        this.backgroundColor = propertyMap.backgroundColor[1];
+        this.fill = propertyMap.fill[1];
+        this.stroke = propertyMap.stroke[1];
+        this.strokeThickness = propertyMap.strokeThickness[1];
+        this.shadowOffsetX = propertyMap.shadowOffsetX[1];
+        this.shadowOffsetY = propertyMap.shadowOffsetY[1];
+        this.shadowColor = propertyMap.shadowColor[1];
+        this.shadowBlur = propertyMap.shadowBlur[1];
+        this.shadowStroke = propertyMap.shadowStroke[1];
+        this.shadowFill = propertyMap.shadowFill[1];
+        this.align = propertyMap.align[1];
+        this.maxLines = propertyMap.maxLines[1];
 
-        this.backgroundColor = GetObjectValue(style, 'backgroundColor', null);
-
-        this.fill = GetObjectValue(style, 'fill', '#fff');
-
-        this.stroke = GetObjectValue(style, 'stroke', '#fff');
-
-        this.strokeThickness = GetObjectValue(style, 'strokeThickness', 0);
-
-        this.shadowOffsetX = GetObjectValue(style, 'shadow.offsetX', 0);
-        this.shadowOffsetY = GetObjectValue(style, 'shadow.offsetY', 0);
-        this.shadowColor = GetObjectValue(style, 'shadow.color', '#000');
-        this.shadowBlur = GetObjectValue(style, 'shadow.blur', 0);
-        this.shadowStroke = GetObjectValue(style, 'shadow.stroke', false);
-        this.shadowFill = GetObjectValue(style, 'shadow.fill', false);
-
-        this.align = GetObjectValue(style, 'align', 'left');
-
-        this.tabs = GetObjectValue(style, 'tabs', 0);
-
-        this.maxLines = GetObjectValue(style, 'maxLines', 0);
-
-        this.wordWrap = GetObjectValue(style, 'wordWrap', 0);
+        if (style !== undefined)
+        {
+            this.setStyle(style);
+        }
     },
 
-    syncStyle: function (canvas, context)
+    setStyle: function (style)
+    {
+        for (var key in propertyMap)
+        {
+            this[key] = GetObjectValue(style, propertyMap[key][0], this[key]);
+        }
+
+        return this;
+    },
+
+    syncToCanvas: function (canvas, context)
     {
         context.font = this.font;
         context.textBaseline = 'alphabetic';
@@ -49,7 +69,14 @@ var TextStyle = new Class({
         context.lineWidth = this.strokeThickness;
         context.lineCap = 'round';
         context.lineJoin = 'round';
-    }
+    },
+
+    setFont: function (font)
+    {
+        this.font = font;
+
+        //  Tell Text it changed
+    },
 
 });
 
