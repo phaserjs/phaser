@@ -22,10 +22,24 @@ var Origin = {
         return this.updateOrigin();
     },
 
+    setDisplayOrigin: function (x, y)
+    {
+        if (x === undefined) { x = 0; }
+        if (y === undefined) { y = x; }
+
+        this.displayOriginX = x;
+        this.displayOriginY = y;
+
+        this.originX = this.width / x;
+        this.originY = this.height / y;
+
+        return this;
+    },
+
     updateOrigin: function ()
     {
-        this.displayOriginX = this.originX * this.width;
-        this.displayOriginY = this.originY * this.height;
+        this.displayOriginX = Math.round(this.originX * this.width);
+        this.displayOriginY = Math.round(this.originY * this.height);
 
         return this;
     }
