@@ -167,6 +167,8 @@ var Text = new Class({
         }
     },
 
+    //  Add style callback so we can chain filter effects
+
     updateShadow: function (visible)
     {
         var context = this.context;
