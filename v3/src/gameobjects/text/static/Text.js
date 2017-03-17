@@ -120,7 +120,7 @@ var Text = new Class({
             context.fillRect(0, 0, canvas.width, canvas.height);
         }
 
-        style.syncToCanvas(canvas, context);
+        style.syncFont(canvas, context);
 
         var linePositionX;
         var linePositionY;
