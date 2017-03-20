@@ -91,8 +91,7 @@ var Text = new Class({
         var canvas = this.canvas;
         var context = this.context;
         var style = this.style;
-
-        var size = MeasureText(style);
+        var size = style.metrics;
 
         var outputText = this.text;
 
@@ -106,19 +105,36 @@ var Text = new Class({
 
         var textSize = GetTextSize(this, size, lines);
 
-        this.width = textSize.width;
-        this.height = textSize.height;
+        if (!style.fixedWidth)
+        {
+            this.width = textSize.width;
+        }
+
+        if (!style.fixedHeight)
+        {
+            this.height = textSize.height;
+        }
 
         this.updateOrigin();
 
-        canvas.width = textSize.width * this.resolution;
-        canvas.height = textSize.height * this.resolution;
+        var w = textSize.width * this.resolution;
+        var h = textSize.height * this.resolution;
+
+        if (canvas.width !== w || canvas.height !== h)
+        {
+            canvas.width = w;
+            canvas.height = h;
+        }
 
         if (style.backgroundColor)
         {
             context.fillStyle = style.backgroundColor;
-            context.fillRect(0, 0, canvas.width, canvas.height);
+            context.fillRect(0, 0, w, h);
         }
+
+        //  DEBUG
+        context.fillStyle = '#ff00ff';
+        context.fillRect(0, 0, w, h);
 
         style.syncFont(canvas, context);
 
@@ -153,23 +169,19 @@ var Text = new Class({
 
             if (style.strokeThickness)
             {
-                this.style.syncShadow(style.shadowStroke);
+                this.style.syncShadow(context, style.shadowStroke);
 
                 context.strokeText(lines[i], linePositionX, linePositionY);
             }
 
             if (style.fill)
             {
-                this.style.syncShadow(style.shadowFill);
+                this.style.syncShadow(context, style.shadowFill);
 
                 context.fillText(lines[i], linePositionX, linePositionY);
             }
         }
     }
-
-    //  Add style callback so we can chain filter effects
-
-
 });
 
 module.exports = Text;

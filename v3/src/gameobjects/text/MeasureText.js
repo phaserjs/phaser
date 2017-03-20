@@ -21,7 +21,7 @@ var MeasureText = function (textStyle, testString)
      */
     var context = canvas.getContext('2d');
 
-    textStyle.syncStyle(canvas, context);
+    textStyle.syncFont(canvas, context);
 
     var width = Math.ceil(context.measureText(testString).width);
     var baseline = width;

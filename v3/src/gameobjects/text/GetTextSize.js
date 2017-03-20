@@ -14,7 +14,7 @@ var GetTextSize = function (text, size, lines)
         drawnLines = style.maxLines;
     }
 
-    style.syncStyle(canvas, context);
+    style.syncFont(canvas, context);
 
     //  Text Width
 

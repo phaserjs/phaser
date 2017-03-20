@@ -1,5 +1,6 @@
 var Class = require('../../utils/Class');
 var GetObjectValue = require('../../utils/object/GetObjectValue');
+var MeasureText = require('./MeasureText');
 
 //  Key: [ Object Key, Default Value ]
 
@@ -16,7 +17,9 @@ var propertyMap = {
     shadowStroke: [ 'shadow.stroke', false ],
     shadowFill: [ 'shadow.fill', false ],
     align: [ 'align', 'left' ],
-    maxLines: [ 'maxLines', 0 ]
+    maxLines: [ 'maxLines', 0 ],
+    fixedWidth: [ 'fixedWidth', false ],
+    fixedHeight: [ 'fixedHeight', false ]
 };
 
 var TextStyle = new Class({
@@ -40,11 +43,18 @@ var TextStyle = new Class({
         this.shadowFill = propertyMap.shadowFill[1];
         this.align = propertyMap.align[1];
         this.maxLines = propertyMap.maxLines[1];
+        this.fixedWidth = propertyMap.fixedWidth[1];
+        this.fixedHeight = propertyMap.fixedHeight[1];
 
         if (style !== undefined)
         {
-            this.setStyle(style);
+            for (var key in propertyMap)
+            {
+                this[key] = GetObjectValue(style, propertyMap[key][0], this[key]);
+            }
         }
+
+        this.metrics = MeasureText(this);
     },
 
     syncFont: function (canvas, context)
@@ -60,24 +70,36 @@ var TextStyle = new Class({
         context.lineJoin = 'round';
     },
 
-    syncShadow: function (canvas, context, visible)
+    syncShadow: function (context, reset)
     {
-        var style = this.style;
+        var style = this;
 
-        if (visible)
-        {
-            context.shadowOffsetX = style.shadowOffsetX;
-            context.shadowOffsetY = style.shadowOffsetY;
-            context.shadowColor = style.shadowColor;
-            context.shadowBlur = style.shadowBlur;
-        }
-        else
+        if (reset)
         {
             context.shadowOffsetX = 0;
             context.shadowOffsetY = 0;
             context.shadowColor = 0;
             context.shadowBlur = 0;
         }
+        else
+        {
+            context.shadowOffsetX = style.shadowOffsetX;
+            context.shadowOffsetY = style.shadowOffsetY;
+            context.shadowColor = style.shadowColor;
+            context.shadowBlur = style.shadowBlur;
+        }
+    },
+
+    update: function (recalculateMetrics)
+    {
+        if (recalculateMetrics)
+        {
+            this.metrics = MeasureText(this);
+        }
+
+        this.parent.updateText();
+
+        return this.text;
     },
 
     setStyle: function (style)
@@ -87,35 +109,46 @@ var TextStyle = new Class({
             this[key] = GetObjectValue(style, propertyMap[key][0], this[key]);
         }
 
-        return this;
+        return this.update(true);
     },
 
     setFont: function (font)
     {
-
         this.font = font;
 
-        this.parent.updateText();
+        return this.update(true);
+    },
 
-        return this;
+    setFixedSize: function (width, height)
+    {
+        this.fixedWidth = width;
+        this.fixedHeight = height;
+
+        if (width)
+        {
+            this.text.width = width;
+        }
+
+        if (height)
+        {
+            this.text.height = height;
+        }
+
+        return this.update(false);
     },
 
     setBackgroundColor: function (color)
     {
         this.backgroundColor = color;
 
-        this.parent.updateText();
-
-        return this;
+        return this.update(false);
     },
 
     setFill: function (color)
     {
         this.fill = color;
 
-        this.parent.updateText();
-
-        return this;
+        return this.update(false);
     },
 
     setStroke: function (color, thickness)
@@ -133,14 +166,11 @@ var TextStyle = new Class({
             this.strokeThickness = thickness;
         }
 
-        this.parent.updateText();
-
-        return this;
+        return this.update(true);
     },
 
     setShadow: function (x, y, color, blur, shadowStroke, shadowFill)
     {
-        if (x === undefined) { x = 0; }
         if (y === undefined) { y = 0; }
         if (color === undefined) { color = '#000'; }
         if (blur === undefined) { blur = 0; }
@@ -154,9 +184,50 @@ var TextStyle = new Class({
         this.shadowStroke = shadowStroke;
         this.shadowFill = shadowFill;
 
-        this.parent.updateText();
+        return this.update(false);
+    },
 
-        return this;
+    setShadowOffset: function (x, y)
+    {
+        if (x === undefined) { x = 0; }
+        if (y === undefined) { y = x; }
+
+        this.shadowOffsetX = x;
+        this.shadowOffsetY = y;
+
+        return this.update(false);
+    },
+
+    setShadowColor: function (color)
+    {
+        if (color === undefined) { color = '#000'; }
+
+        this.shadowColor = color;
+
+        return this.update(false);
+    },
+
+    setShadowBlur: function (blur)
+    {
+        if (blur === undefined) { blur = 0; }
+
+        this.shadowBlur = blur;
+
+        return this.update(false);
+    },
+
+    setShadowStroke: function (enabled)
+    {
+        this.shadowStroke = enabled;
+
+        return this.update(false);
+    },
+
+    setShadowFill: function (enabled)
+    {
+        this.shadowFill = enabled;
+
+        return this.update(false);
     },
 
     setAlign: function (align)
@@ -165,9 +236,7 @@ var TextStyle = new Class({
 
         this.align = align;
 
-        this.parent.updateText();
-
-        return this;
+        return this.update(false);
     },
 
     setMaxLines: function (max)
@@ -176,9 +245,7 @@ var TextStyle = new Class({
 
         this.maxLines = max;
 
-        this.parent.updateText();
-
-        return this;
+        return this.update(false);
     },
 
     destroy: function ()
