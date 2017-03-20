@@ -9,11 +9,22 @@ var Bob = function (blitter, x, y, frame, visible)
 
     this._visible = visible;
     this._alpha = 1;
+
+    this.flipX - false;
+    this.flipY = false;
+
 };
 
 Bob.prototype.constructor = Bob;
 
 Bob.prototype = {
+
+    resetFlip: function ()
+    {
+        this.flipX = false;
+        this.flipY = false;
+    },
+
 
     reset: function (x, y, frame)
     {

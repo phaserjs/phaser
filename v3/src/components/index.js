@@ -5,6 +5,7 @@ module.exports = {
     Children: require('./Children'),
     Color: require('./Color'),
     Data: require('./Data'),
+    Flip: require('./Flip'),
     GetBounds: require('./GetBounds'),
     Origin: require('./Origin'),
     ScaleMode: require('./ScaleMode'),

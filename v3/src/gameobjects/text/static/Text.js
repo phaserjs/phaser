@@ -17,6 +17,7 @@ var Text = new Class({
         Components.ScaleMode,
         Components.Transform,
         Components.Visible,
+        Components.Flip,
         TextRender
     ],
 

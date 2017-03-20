@@ -36,6 +36,8 @@ var DrawImage = function (src, camera)
     ctx.translate(src.x - camera.scrollX, src.y - camera.scrollY);
     ctx.rotate(src.rotation);
     ctx.scale(src.scaleX, src.scaleY);
+    ctx.scale(src.flipX ? -1 : 1, src.flipY ? -1 : 1);
+    ctx.translate(src.dWidth * (src.flipX ? 1 : 0), src.dHeight * (src.flipY ? 1 : 0));
     ctx.drawImage(frame.source.image, cd.sx, cd.sy, cd.sWidth, cd.sHeight, dx, dy, cd.dWidth, cd.dHeight);
     ctx.restore();
 };
