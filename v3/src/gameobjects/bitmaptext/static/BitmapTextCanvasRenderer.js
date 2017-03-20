@@ -70,7 +70,6 @@ var BitmapTextCanvasRenderer = function (renderer, src, interpolationPercentage,
 
     for (var index = 0; index < textLength; ++index)
     {
-
         charCode = text.charCodeAt(index);
 
         if (charCode === 10)

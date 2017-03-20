@@ -35,6 +35,7 @@ var BitmapText = new Class({
 
         this.setTexture(font);
         this.setPosition(x, y);
+        this.setOrigin(0, 0);
     },
 
     setFontSize: function (size)

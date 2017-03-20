@@ -5,7 +5,6 @@ var Components = require('../../../components');
 var CanvasPool = require('../../../dom/CanvasPool');
 var TextRender = require('./TextRender');
 var TextStyle = require('../TextStyle');
-var MeasureText = require('../MeasureText');
 var GetTextSize = require('../GetTextSize');
 
 var Text = new Class({
