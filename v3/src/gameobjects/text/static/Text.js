@@ -56,7 +56,7 @@ var Text = new Class({
          */
         this.splitRegExp = /(?:\r\n|\r|\n)/;
 
-        this.text = text;
+        this.text = (Array.isArray(text)) ? text.join('\n') : text;
 
         this.resolution = 1;
 
@@ -73,9 +73,15 @@ var Text = new Class({
 
     setText: function (value)
     {
+        if (Array.isArray(value))
+        {
+            value = value.join('\n');
+        }
+
         if (value !== this.text)
         {
             this.text = value;
+
             this.updateText();
         }
 
@@ -190,6 +196,10 @@ var Text = new Class({
         {
             canvas.width = w;
             canvas.height = h;
+        }
+        else
+        {
+            context.clearRect(0, 0, w, h);
         }
 
         if (style.backgroundColor)

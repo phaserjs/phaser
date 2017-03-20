@@ -70,23 +70,23 @@ var TextStyle = new Class({
         context.lineJoin = 'round';
     },
 
-    syncShadow: function (context, reset)
+    syncShadow: function (context, enabled)
     {
         var style = this;
 
-        if (reset)
-        {
-            context.shadowOffsetX = 0;
-            context.shadowOffsetY = 0;
-            context.shadowColor = 0;
-            context.shadowBlur = 0;
-        }
-        else
+        if (enabled)
         {
             context.shadowOffsetX = style.shadowOffsetX;
             context.shadowOffsetY = style.shadowOffsetY;
             context.shadowColor = style.shadowColor;
             context.shadowBlur = style.shadowBlur;
+        }
+        else
+        {
+            context.shadowOffsetX = 0;
+            context.shadowOffsetY = 0;
+            context.shadowColor = 0;
+            context.shadowBlur = 0;
         }
     },
 
@@ -169,6 +169,7 @@ var TextStyle = new Class({
 
     setShadow: function (x, y, color, blur, shadowStroke, shadowFill)
     {
+        if (x === undefined) { x = 0; }
         if (y === undefined) { y = 0; }
         if (color === undefined) { color = '#000'; }
         if (blur === undefined) { blur = 0; }
