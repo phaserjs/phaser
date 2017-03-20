@@ -97,9 +97,7 @@ var TextStyle = new Class({
             this.metrics = MeasureText(this);
         }
 
-        this.parent.updateText();
-
-        return this.text;
+        return this.parent.updateText();
     },
 
     setStyle: function (style)

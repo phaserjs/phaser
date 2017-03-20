@@ -32,6 +32,7 @@ var Text = new Class({
         GameObject.call(this, state);
 
         this.setPosition(x, y);
+        this.setOrigin(0, 0);
 
         /**
          * @property {HTMLCanvasElement} canvas - The canvas element that the text is rendered.
@@ -86,6 +87,71 @@ var Text = new Class({
         return this.style.setStyle(style);
     },
 
+    setFont: function (font)
+    {
+        return this.style.setFont(font);
+    },
+
+    setFixedSize: function (width, height)
+    {
+        return this.style.setFixedSize(width, height);
+    },
+
+    setBackgroundColor: function (color)
+    {
+        return this.style.setBackgroundColor(color);
+    },
+
+    setFill: function (color)
+    {
+        return this.style.setFill(color);
+    },
+
+    setStroke: function (color, thickness)
+    {
+        return this.style.setStroke(color, thickness);
+    },
+
+    setShadow: function (x, y, color, blur, shadowStroke, shadowFill)
+    {
+        return this.style.setShadow(x, y, color, blur, shadowStroke, shadowFill);
+    },
+
+    setShadowOffset: function (x, y)
+    {
+        return this.style.setShadowOffset(x, y);
+    },
+
+    setShadowColor: function (color)
+    {
+        return this.style.setShadowColor(color);
+    },
+
+    setShadowBlur: function (blur)
+    {
+        return this.style.setShadowBlur(blur);
+    },
+
+    setShadowStroke: function (enabled)
+    {
+        return this.style.setShadowStroke(enabled);
+    },
+
+    setShadowFill: function (enabled)
+    {
+        return this.style.setShadowFill(enabled);
+    },
+
+    setAlign: function (align)
+    {
+        return this.style.setAlign(align);
+    },
+
+    setMaxLines: function (max)
+    {
+        return this.style.setMaxLines(max);
+    },
+
     updateText: function ()
     {
         var canvas = this.canvas;
@@ -132,10 +198,6 @@ var Text = new Class({
             context.fillRect(0, 0, w, h);
         }
 
-        //  DEBUG
-        context.fillStyle = '#ff00ff';
-        context.fillRect(0, 0, w, h);
-
         style.syncFont(canvas, context);
 
         var linePositionX;
@@ -181,6 +243,8 @@ var Text = new Class({
                 context.fillText(lines[i], linePositionX, linePositionY);
             }
         }
+
+        return this;
     }
 });
 
