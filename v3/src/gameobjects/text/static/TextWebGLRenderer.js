@@ -5,8 +5,7 @@ var TextWebGLRenderer = function (renderer, src, interpolationPercentage, camera
         return;
     }
     
-    var cameraScrollX = camera.scrollX;
-    var cameraScrollY = camera.scrollY;
+    renderer.spriteBatch.addSpriteTexture(src, camera, src.gpuBuffer, src.prevWidth, src.prevHeight);
 };
 
 module.exports = TextWebGLRenderer;

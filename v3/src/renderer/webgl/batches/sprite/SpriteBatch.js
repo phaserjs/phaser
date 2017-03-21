@@ -179,6 +179,91 @@ SpriteBatch.prototype = {
         }
     },
 
+    addSpriteTexture: function (src, camera, texture, textureWidth, textureHeight)
+    {
+        var tempMatrix = this.tempMatrix;
+        var alpha = 16777216;
+        var vertexDataBuffer = this.vertexDataBuffer;
+        var vertexBufferF32 = vertexDataBuffer.floatView;
+        var vertexBufferU32 = vertexDataBuffer.uintView;
+        var vertexOffset = 0;
+        var width = textureWidth * (src.flipX ? -1 : 1);
+        var height = textureHeight * (src.flipY ? -1 : 1);
+        var translateX = src.x - camera.scrollX;
+        var translateY = src.y - camera.scrollY;
+        var scaleX = src.scaleX;
+        var scaleY = src.scaleY;
+        var rotation = -src.rotation;
+        var tempMatrixMatrix = tempMatrix.matrix;
+        var x = -src.displayOriginX + ((textureWidth) * (src.flipX ? 1 : 0.0));
+        var y = -src.displayOriginY + ((textureHeight) * (src.flipY ? 1 : 0.0));
+        var xw = x + width;
+        var yh = y + height;
+        var cameraMatrix = camera.matrix.matrix;
+        var mva, mvb, mvc, mvd, mve, mvf, tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3;
+        var sra, srb, src, srd, sre, srf, cma, cmb, cmc, cmd, cme, cmf;
+
+        tempMatrix.applyITRS(translateX, translateY, rotation, scaleX, scaleY);
+
+        sra = tempMatrixMatrix[0];
+        srb = tempMatrixMatrix[1];
+        src = tempMatrixMatrix[2];
+        srd = tempMatrixMatrix[3];
+        sre = tempMatrixMatrix[4];
+        srf = tempMatrixMatrix[5];
+
+        cma = cameraMatrix[0];
+        cmb = cameraMatrix[1];
+        cmc = cameraMatrix[2];
+        cmd = cameraMatrix[3];
+        cme = cameraMatrix[4];
+        cmf = cameraMatrix[5];
+
+        mva = sra * cma + srb * cmc;
+        mvb = sra * cmb + srb * cmd;
+        mvc = src * cma + srd * cmc;
+        mvd = src * cmb + srd * cmd;
+        mve = sre * cma + srf * cmc + cme;
+        mvf = sre * cmb + srf * cmd + cmf; 
+        
+        tx0 = x * mva + y * mvc + mve;
+        ty0 = x * mvb + y * mvd + mvf;
+        tx1 = x * mva + yh * mvc + mve;
+        ty1 = x * mvb + yh * mvd + mvf;
+        tx2 = xw * mva + yh * mvc + mve;
+        ty2 = xw * mvb + yh * mvd + mvf;
+        tx3 = xw * mva + y * mvc + mve;
+        ty3 = xw * mvb + y * mvd + mvf;
+
+        this.manager.setBatch(this, texture, camera);
+        vertexOffset = vertexDataBuffer.allocate(20);
+        this.elementCount += 6;
+        
+        vertexBufferF32[vertexOffset++] = tx0;
+        vertexBufferF32[vertexOffset++] = ty0;
+        vertexBufferF32[vertexOffset++] = 0;
+        vertexBufferF32[vertexOffset++] = 0;
+        vertexBufferU32[vertexOffset++] = 0xFFFFFF; //vertexColor.topLeft;
+
+        vertexBufferF32[vertexOffset++] = tx1;
+        vertexBufferF32[vertexOffset++] = ty1;
+        vertexBufferF32[vertexOffset++] = 0;
+        vertexBufferF32[vertexOffset++] = 1;
+        vertexBufferU32[vertexOffset++] = 0xFFFFFF; //vertexColor.bottomLeft;
+
+        vertexBufferF32[vertexOffset++] = tx2;
+        vertexBufferF32[vertexOffset++] = ty2;
+        vertexBufferF32[vertexOffset++] = 1;
+        vertexBufferF32[vertexOffset++] = 1;
+        vertexBufferU32[vertexOffset++] = 0xFFFFFF; //vertexColor.bottomRight;
+
+        vertexBufferF32[vertexOffset++] = tx3;
+        vertexBufferF32[vertexOffset++] = ty3;
+        vertexBufferF32[vertexOffset++] = 1;
+        vertexBufferF32[vertexOffset++] = 0;
+        vertexBufferU32[vertexOffset++] = 0xFFFFFF; //vertexColor.topRight;
+    },
+
     addSprite: function (src, camera)
     {
         var tempMatrix = this.tempMatrix;

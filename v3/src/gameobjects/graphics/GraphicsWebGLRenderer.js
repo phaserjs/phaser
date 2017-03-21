@@ -119,12 +119,12 @@ var GraphicsWebGLRenderer = function (renderer, src, interpolationPercentage, ca
 
                     if (iteration === 0)
                     {
-                        lastPath = new Path(tx, ty, lineWidth);
+                        lastPath = new Path(tx, ty, lineWidth, lineColor, lineAlpha);
                         pathArray.push(lastPath);
                     }
                     else
                     {
-                        lastPath.points.push(new Point(tx, ty, lineWidth));
+                        lastPath.points.push(new Point(tx, ty, lineWidth, lineColor, lineAlpha));
                     }
 
                     iteration += iterStep;
@@ -155,7 +155,7 @@ var GraphicsWebGLRenderer = function (renderer, src, interpolationPercentage, ca
                     var firstPoint = lastPath.points[0];
                     var lastPoint = lastPath.points[lastPath.points.length - 1];
                     lastPath.points.push(firstPoint);
-                    lastPath = new Path(lastPoint.x, lastPoint.y, lineWidth);
+                    lastPath = new Path(lastPoint.x, lastPoint.y, lastPoint.width, lastPoint.rgb, lastPoint.alpha);
                     pathArray.push(lastPath);
                 }
                 break;
@@ -261,18 +261,18 @@ var GraphicsWebGLRenderer = function (renderer, src, interpolationPercentage, ca
             case Commands.LINE_TO:
                 if (lastPath !== null)
                 {
-                    lastPath.points.push(new Point(commandBuffer[cmdIndex + 1], commandBuffer[cmdIndex + 2], lineWidth));
+                    lastPath.points.push(new Point(commandBuffer[cmdIndex + 1], commandBuffer[cmdIndex + 2], lineWidth, lineColor, lineAlpha));
                 }
                 else
                 {
-                    lastPath = new Path(commandBuffer[cmdIndex + 1], commandBuffer[cmdIndex + 2], lineWidth);
+                    lastPath = new Path(commandBuffer[cmdIndex + 1], commandBuffer[cmdIndex + 2], lineWidth, lineColor, lineAlpha);
                     pathArray.push(lastPath);
                 }
                 cmdIndex += 2;
                 break;
 
             case Commands.MOVE_TO:
-                lastPath = new Path(commandBuffer[cmdIndex + 1], commandBuffer[cmdIndex + 2], lineWidth);
+                lastPath = new Path(commandBuffer[cmdIndex + 1], commandBuffer[cmdIndex + 2], lineWidth, lineColor, lineAlpha);
                 pathArray.push(lastPath);
                 cmdIndex += 2;
                 break;
