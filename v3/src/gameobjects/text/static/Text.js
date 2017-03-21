@@ -65,7 +65,7 @@ var Text = new Class({
         this.width = 1;
         this.height = 1;
 
-        this.gpuBuffer = null;
+        this.canvasTexture = null;
         this.prevWidth = this.canvas.width;
         this.prevHeight = this.canvas.height;
 
@@ -260,45 +260,19 @@ var Text = new Class({
 
         if (this.state.game.config.renderType === Phaser.WEBGL)
         {
-            this.uploadToGPU();
+            this.canvasTexture = this.state.game.renderer.uploadCanvasToGPU(
+                this.canvas,
+                this.canvasTexture,
+                !(this.prevWidth < canvas.width || this.prevHeight < canvas.height)
+            );
+            this.prevWidth = canvas.width;
+            this.prevHeight = canvas.height;
         }
 
         return this;
     },
 
-    uploadToGPU: function ()
-    {
-        var gl = this.state.game.renderer.gl;
-        var currentTexture2D = this.state.game.renderer.currentTexture2D;
-        var canvas = this.canvas;
-
-        if (this.gpuBuffer === null)
-        {
-            this.gpuBuffer = gl.createTexture();
-        }
-        
-        if (this.prevWidth < canvas.width || this.prevHeight < canvas.height)
-        {
-            /* New canvas is too big. We need to reallocate the texture */
-            gl.bindTexture(gl.TEXTURE_2D, this.gpuBuffer);
-            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, canvas);
-            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-            this.prevWidth = canvas.width;
-            this.prevHeight = canvas.height;
-        } 
-        else 
-        {
-            /* if the canvas is smaller we just update the resource */
-            gl.bindTexture(gl.TEXTURE_2D, this.gpuBuffer);
-            gl.texSubImage2D(gl.TEXTURE_2D, 0, 0, 0, gl.RGBA, gl.UNSIGNED_BYTE, canvas);
-        }
-
-        /* we must rebind old texture */
-        gl.bindTexture(gl.TEXTURE_2D, currentTexture2D);
-    }
+    
 });
 
 module.exports = Text;
