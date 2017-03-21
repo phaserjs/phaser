@@ -19,7 +19,8 @@ var propertyMap = {
     align: [ 'align', 'left' ],
     maxLines: [ 'maxLines', 0 ],
     fixedWidth: [ 'fixedWidth', false ],
-    fixedHeight: [ 'fixedHeight', false ]
+    fixedHeight: [ 'fixedHeight', false ],
+    rtl: [ 'rtl', false ]
 };
 
 var TextStyle = new Class({
@@ -30,21 +31,25 @@ var TextStyle = new Class({
     {
         this.parent = text;
 
-        this.font = propertyMap.font[1];
-        this.backgroundColor = propertyMap.backgroundColor[1];
-        this.fill = propertyMap.fill[1];
-        this.stroke = propertyMap.stroke[1];
-        this.strokeThickness = propertyMap.strokeThickness[1];
-        this.shadowOffsetX = propertyMap.shadowOffsetX[1];
-        this.shadowOffsetY = propertyMap.shadowOffsetY[1];
-        this.shadowColor = propertyMap.shadowColor[1];
-        this.shadowBlur = propertyMap.shadowBlur[1];
-        this.shadowStroke = propertyMap.shadowStroke[1];
-        this.shadowFill = propertyMap.shadowFill[1];
-        this.align = propertyMap.align[1];
-        this.maxLines = propertyMap.maxLines[1];
-        this.fixedWidth = propertyMap.fixedWidth[1];
-        this.fixedHeight = propertyMap.fixedHeight[1];
+        this.font;
+        this.backgroundColor;
+        this.fill;
+        this.stroke;
+        this.strokeThickness;
+        this.shadowOffsetX;
+        this.shadowOffsetY;
+        this.shadowColor;
+        this.shadowBlur;
+        this.shadowStroke;
+        this.shadowFill;
+        this.align;
+        this.maxLines;
+        this.fixedWidth;
+        this.fixedHeight;
+        this.rtl;
+
+        //  Set to defaults
+        this.reset();
 
         if (style !== undefined)
         {
@@ -57,8 +62,23 @@ var TextStyle = new Class({
         this.metrics = MeasureText(this);
     },
 
+    reset: function ()
+    {
+        for (var key in propertyMap)
+        {
+            this[key] = propertyMap[key][1];
+        }
+
+        return this;
+    },
+
     syncFont: function (canvas, context)
     {
+        if (this.rtl)
+        {
+            canvas.dir = 'rtl';
+        }
+
         context.font = this.font;
         context.textBaseline = 'alphabetic';
 
@@ -72,14 +92,12 @@ var TextStyle = new Class({
 
     syncShadow: function (context, enabled)
     {
-        var style = this;
-
         if (enabled)
         {
-            context.shadowOffsetX = style.shadowOffsetX;
-            context.shadowOffsetY = style.shadowOffsetY;
-            context.shadowColor = style.shadowColor;
-            context.shadowBlur = style.shadowBlur;
+            context.shadowOffsetX = this.shadowOffsetX;
+            context.shadowOffsetY = this.shadowOffsetY;
+            context.shadowColor = this.shadowColor;
+            context.shadowBlur = this.shadowBlur;
         }
         else
         {

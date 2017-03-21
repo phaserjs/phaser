@@ -4,7 +4,8 @@ var CONST = {
 
     AUTO: 0,
     CANVAS: 1,
-    WEBGL: 2
+    WEBGL: 2,
+    HEADLESS: 3
 
 };
 
