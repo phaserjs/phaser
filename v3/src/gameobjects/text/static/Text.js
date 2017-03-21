@@ -68,6 +68,7 @@ var Text = new Class({
         this.canvasTexture = null;
         this.prevWidth = this.canvas.width;
         this.prevHeight = this.canvas.height;
+        this.dirty = false;
 
         if (text !== '')
         {
@@ -258,16 +259,7 @@ var Text = new Class({
             }
         }
 
-        if (this.state.game.config.renderType === Phaser.WEBGL)
-        {
-            this.canvasTexture = this.state.game.renderer.uploadCanvasToGPU(
-                this.canvas,
-                this.canvasTexture,
-                !(this.prevWidth < canvas.width || this.prevHeight < canvas.height)
-            );
-            this.prevWidth = canvas.width;
-            this.prevHeight = canvas.height;
-        }
+        this.dirty = true;
 
         return this;
     },
