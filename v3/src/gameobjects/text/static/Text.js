@@ -66,8 +66,8 @@ var Text = new Class({
         this.height = 1;
 
         this.canvasTexture = null;
-        this.prevWidth = this.canvas.width;
-        this.prevHeight = this.canvas.height;
+        this.prevWidth = 0;
+        this.prevHeight = 0;
         this.dirty = false;
 
         if (text !== '')
@@ -262,9 +262,7 @@ var Text = new Class({
         this.dirty = true;
 
         return this;
-    },
-
-    
+    }
 });
 
 module.exports = Text;

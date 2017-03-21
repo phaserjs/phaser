@@ -7,17 +7,17 @@ var TextWebGLRenderer = function (renderer, src, interpolationPercentage, camera
     
     if (src.dirty)
     {
-        src.canvasTexture = renderer.uploadCanvasToGPU(
-            src.canvas,
-            src.canvasTexture,
-            !(src.prevWidth < src.canvas.width || src.prevHeight < src.canvas.height)
-        );
-        src.prevWidth = src.canvas.width;
-        src.prevHeight = src.canvas.height;
+        var w = src.canvas.width;
+        var h = src.canvas.height;
+        var resize = !(src.prevWidth < w || src.prevHeight < h);
+
+        src.canvasTexture = renderer.uploadCanvasToGPU(src.canvas, src.canvasTexture, resize);
+        src.prevWidth = w;
+        src.prevHeight = h;
         src.dirty = false;
     }
 
-    renderer.spriteBatch.addSpriteTexture(src, camera, src.canvasTexture, src.prevWidth, src.prevHeight);
+    renderer.spriteBatch.addSpriteTexture(src, camera, src.canvasTexture, w, h);
 };
 
 module.exports = TextWebGLRenderer;
