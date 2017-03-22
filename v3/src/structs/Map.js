@@ -12,11 +12,13 @@ var Map = function (elements)
 {
     this.entries = {};
 
+    this.size = 0;
+
     if (Array.isArray(elements))
     {
         for (var i = 0; i < elements.length; i++)
         {
-            this.add(elements[i][0], elements[i][1]);
+            this.set(elements[i][0], elements[i][1]);
         }
     }
 };
@@ -27,163 +29,138 @@ Map.prototype = {
 
     set: function (key, value)
     {
-        if (!this.entries.hasOwnProperty(key))
+        if (!this.has(key))
         {
             this.entries[key] = value;
+            this.size++;
         }
 
         return this;
     },
 
+    get: function (key)
+    {
+        if (this.has(key))
+        {
+            return this.entries[key];
+        }
+    },
+
+    has: function (key)
+    {
+        return (this.entries.hasOwnProperty(key));
+    },
+
     delete: function (key)
     {
-        if (this.entries.hasOwnProperty(key))
+        if (this.has(key))
         {
             delete this.entries[key];
+            this.size--;
         }
+
+        return this;
+    },
+
+    clear: function ()
+    {
+        Object.keys(this.entries).forEach(function (prop)
+        {
+            delete this.entries[prop];
+        });
+
+        this.size = 0;
 
         return this;
     },
 
     keys: function ()
     {
-
+        return Object.keys(this.entries);
     },
 
     values: function ()
     {
+        var output = [];
+        var entries = this.entries;
 
+        for (var key in entries)
+        {
+            output.push(entries[key]);
+        }
+
+        return output;
     },
 
     dump: function ()
     {
+        var entries = this.entries;
+
         console.group('Map');
 
-        for (var i = 0; i < this.entries.length; i++)
+        for (var key in entries)
         {
-            var entry = this.entries[i];
-            console.log(entry);
+            console.log(key, entries[key]);
         }
 
         console.groupEnd();
     },
 
-    get: function (property, value)
-    {
-        for (var i = 0; i < this.entries.length; i++)
-        {
-            var entry = this.entries[i];
 
-            if (entry[property] === value)
-            {
-                return entry;
-            }
-        }
-    },
-
-    //  For when you know this Map will be modified during the iteration
     each: function (callback)
     {
-        var temp = this.entries.slice();
+        var entries = this.entries;
 
-        for (var i = 0; i < temp.length; i++)
+        for (var key in entries)
         {
-            if (callback(temp[i]) === false)
+            if (callback(key, entries[key]) === false)
             {
                 break;
             }
         }
-    },
 
-    //  For when you absolutely know this Map won't be modified during the iteration
-    iterate: function (callback)
-    {
-        for (var i = 0; i < this.entries.length; i++)
-        {
-            if (callback(this.entries[i]) === false)
-            {
-                break;
-            }
-        }
-    },
-
-    clear: function ()
-    {
-        this.entries.length = 0;
+        return this;
     },
 
     contains: function (value)
     {
-        return (this.entries.indexOf(value) > -1);
-    },
+        var entries = this.entries;
 
-    union: function (set)
-    {
-        var newMap = new Map();
-
-        set.values.forEach(function (value)
+        for (var key in entries)
         {
-            newMap.add(value);
-        });
-
-        this.entries.forEach(function (value)
-        {
-            newMap.add(value);
-        });
-
-        return newMap;
-    },
-
-    intersect: function (set)
-    {
-        var newMap = new Map();
-
-        this.entries.forEach(function (value)
-        {
-            if (set.contains(value))
+            if (entries[key] === value)
             {
-                newMap.add(value);
+                return true;
             }
-        });
-
-        return newMap;
-    },
-
-    difference: function (set)
-    {
-        var newMap = new Map();
-
-        this.entries.forEach(function (value)
-        {
-            if (!set.contains(value))
-            {
-                newMap.add(value);
-            }
-        });
-
-        return newMap;
-    }
-
-};
-
-Object.defineProperties(Map.prototype, {
-
-    size: {
-
-        enumerable: true,
-
-        get: function ()
-        {
-            return this.entries.length;
-        },
-
-        set: function (value)
-        {
-            return this.entries.length = value;
         }
 
-    }
+        return false;
+    },
 
-});
+    //  Merges all new keys from the given Map into this one
+    //  If it encounters a key that already exists it will be skipped
+    //  unless override = true
+    merge: function (map, override)
+    {
+        if (override === undefined) { override = false; }
+
+        var local = this.entries;
+        var source = map.entries;
+
+        for (var key in source)
+        {
+            if (local.hasOwnProperty(key) && override)
+            {
+                local[key] = source[key];
+            }
+            else
+            {
+                this.set(key, source[key]);
+            }
+        }
+
+        return this;
+    }
+};
 
 module.exports = Map;
