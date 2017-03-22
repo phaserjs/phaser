@@ -9,6 +9,7 @@ require('./bitmaptext/static/BitmapTextFactory');
 require('./bitmaptext/dynamic/DynamicBitmapTextFactory');
 require('./graphics/GraphicsFactory');
 require('./text/static/TextFactory');
+require('./layer/LayerFactory');
 
 //  Phaser.GameObjects
 
@@ -23,6 +24,7 @@ module.exports = {
     Graphics: require('./graphics/Graphics.js'),
     Image: require('./image/Image'),
     Sprite: require('./sprite/Sprite'),
-    Text: require('./text/static/Text')
+    Text: require('./text/static/Text'),
+    Layer: require('./layer/Layer')
 
 };
