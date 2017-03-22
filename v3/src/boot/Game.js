@@ -15,6 +15,7 @@ var MainLoop = require('./MainLoop');
 var CreateRenderer = require('./CreateRenderer');
 var GlobalInputManager = require('../input/GlobalInputManager');
 var GlobalStateManager = require('../state/GlobalStateManager');
+var AnimationManager = require('../animation/AnimationManager');
 var TextureManager = require('../textures/TextureManager');
 var Data = require('../components/Data');
 var Cache = require('../cache/Cache');
@@ -29,6 +30,11 @@ var Game = function (config)
 
     this.isBooted = false;
     this.isRunning = false;
+
+    /**
+    * @property {Phaser.AnimationManager} anims - Reference to the Phaser Animation Manager.
+    */
+    this.anims = new AnimationManager(this);
 
     /**
     * @property {Phaser.TextureManager} textures - Reference to the Phaser Texture Manager.
