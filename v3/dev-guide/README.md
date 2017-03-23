@@ -38,7 +38,7 @@ Now you can build Phaser 3, it's time to run the Examples.
 
     ![Examples Runner](examples-runner.png)
 
-2. From the list, scroll down, and pick `021 - image from atlas`. The Phaser 3 Sandbox editor should appear with the code on the left and a blank window on the right. You likely do this already, but I strongly suggest you perform all testing with the browsers Dev Tools open. In Chrome this will ensure the cache doesn't mess things up, and that you see errors and debug info.
+2. From the menu, scroll down, open Textures folder, and pick `Frames From Single Atlas` file by clicking on the file name (**NOTE** Clicking on the file name open in the editor, while clicking on the file picture open in view mode). The Phaser 3 Sandbox editor should appear with the code on the left and a blank window on the right. You likely do this already, but I strongly suggest you perform all testing with the browsers Dev Tools open. In Chrome this will ensure the cache doesn't mess things up, and that you see errors and debug info.
 
 3. Click 'Run Code'. The example should load in the right-pane (in this case it'll show a selection of sprites from a texture atlas)
 
@@ -125,7 +125,7 @@ In the above, the `Geom` object is a reference to the `src/geom/index.js` file, 
 //  Phaser.Geom
 
 module.exports = {
-    
+
     Circle: require('./circle'),
     Ellipse: require('./ellipse'),
     Intersects: require('./intersects'),
@@ -303,7 +303,7 @@ In a tree form it maps to the following:
      +- State.update
   |
   +- Renderer.preRender
-  +- 
+  +-
   +- State.sys.render
   +- Update Manager Start (State.sys.updates)
   +- Game.renderer.render (if State is visible)
@@ -324,6 +324,3 @@ In a tree form it maps to the following:
 The above is subject to change heavily! There are currently lots of empty function calls in there (State.sys.update for example), so we may well optimize this path considerably.
 
 In essence though the concept is: Once per frame we update all the timing values, update the core systems, update the children, and repeat this until our step value is high enough, then we render everything.
-
-
-
