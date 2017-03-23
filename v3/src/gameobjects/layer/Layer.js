@@ -5,13 +5,14 @@ var Layer = new Class({
 
     initialize:
 
-    function Layer()
+    function Layer ()
     {
         this.children = [];
+
         Array.prototype.push.apply(this.children, arguments);
     },
 
-    add: function (child) 
+    add: function (child)
     {
         var children = this.children;
         var index = children.indexOf(child);
@@ -20,27 +21,36 @@ var Layer = new Class({
         {
             children.push(child);
         }
+
+        return this;
     },
 
     addArray: function (childrenArray)
     {
         var length = childrenArray.length;
+
         for (var index = 0; index < length; ++index)
         {
             this.add(childrenArray[index]);
         }
+
+        return this;
     },
 
-    addX: function (value) {
+    addX: function (value)
+    {
         var children = this.children;
         var length = children.length;
+
         for (var index = 0; index < length; ++index)
         {
             children[index].x += value;
         }
+
+        return this;
     },
 
-    addY: function (value) 
+    addY: function (value)
     {
         var children = this.children;
         var length = children.length;
@@ -48,73 +58,100 @@ var Layer = new Class({
         {
             children[index].y += value;
         }
+
+        return this;
     },
 
-    addPosition: function (x, y) 
+    addPosition: function (x, y)
     {
         var children = this.children;
         var length = children.length;
+
         for (var index = 0; index < length; ++index)
         {
             children[index].x += x;
             children[index].y += y;
         }
+
+        return this;
     },
 
-    rotate: function (value) {
+    rotate: function (value)
+    {
         var children = this.children;
         var length = children.length;
+
         for (var index = 0; index < length; ++index)
         {
             children[index].rotation += value;
         }
+
+        return this;
     },
 
-    setX: function (value) {
+    setX: function (value)
+    {
         var children = this.children;
         var length = children.length;
+
         for (var index = 0; index < length; ++index)
         {
             children[index].x = value;
         }
+
+        return this;
     },
 
-    setY: function (value) 
+    setY: function (value)
     {
         var children = this.children;
         var length = children.length;
+
         for (var index = 0; index < length; ++index)
         {
             children[index].y = value;
         }
+
+        return this;
     },
 
-    setRotation: function (value) {
+    setRotation: function (value)
+    {
         var children = this.children;
         var length = children.length;
+
         for (var index = 0; index < length; ++index)
         {
             children[index].rotation = value;
         }
+
+        return this;
     },
 
-    setVisible: function (value) {
+    setVisible: function (value)
+    {
         var children = this.children;
         var length = children.length;
+
         for (var index = 0; index < length; ++index)
         {
             children[index].visible = value;
-        }  
+        }
+
+        return this;
     },
 
     toggleVisible: function ()
     {
         var children = this.children;
         var length = children.length;
+
         for (var index = 0; index < length; ++index)
         {
             children[index].visible = !children[index].visible;
-        }  
+        }
+
+        return this;
     }
 
 });

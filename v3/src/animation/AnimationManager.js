@@ -4,9 +4,7 @@
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
-// var Parser = require('./parsers');
-// var Texture = require('./Texture');
-// var CanvasPool = require('../dom/CanvasPool');
+var Map = require('../structs/Map');
 
 /**
 * Animations are managed by the global AnimationManager. This is a singleton class that is
@@ -23,7 +21,7 @@ var AnimationManager = function (game)
 {
     this.game = game;
 
-    this.list = {};
+    this.anims = new Map();
 };
 
 AnimationManager.prototype.constructor = AnimationManager;
@@ -37,15 +35,18 @@ AnimationManager.prototype = {
 
     add: function (key, frames, loop)
     {
+        if (this.anims.has(key))
+        {
+            console.error('Animation with key', key, 'already exists');
+            return;
+        }
+
 
     },
 
     get: function (key)
     {
-        if (this.list[key])
-        {
-            //
-        }
+        return this.anims.get(key);
     }
 
 };
