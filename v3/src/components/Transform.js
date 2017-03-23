@@ -13,10 +13,19 @@ var Transform = {
     _scaleX: 1,
     _scaleY: 1,
     _rotation: 0,
+    _z: 0,
 
     x: 0,
     y: 0,
-    z: 0,
+    z: {
+        get: function () {
+            return this._z;
+        },
+        set: function (value) {
+            this.state.sortChildrenFlag = (this._z !== value); 
+            this._z = value;
+        }
+    },
 
     scaleX: {
 

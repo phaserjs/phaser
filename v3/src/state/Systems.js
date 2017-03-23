@@ -14,6 +14,7 @@ var Component = require('../components');
 var Settings = require('./Settings');
 var RTree = require('../structs/RTree');
 var CameraManager = require('./systems/CameraManager');
+var StableSort = require('../utils/array/StableSort');
 
 var Systems = function (state, config)
 {
@@ -110,17 +111,26 @@ Systems.prototype = {
         this.state.data = this.data;
         this.state.settings = this.settings;
         this.state.state = this.stateManager;
-
         this.state.cameras = this.cameras;
 
         this.state.cache = this.game.cache;
         this.state.input = this.game.input;
         this.state.textures = this.game.textures;
+        this.state.sortChildrenFlag = false;
     },
 
     //  Called just once per frame, regardless of speed
     begin: function (timestamp, frameDelta)
     {
+        var state = this.state;
+        if (state.sortChildrenFlag)
+        {
+            /* Sort the current state children */
+            StableSort.inplace(state.children.list, function (childA, childB) {
+                return childA._z - childB._z;
+            });
+            state.sortChildrenFlag = false;
+        }
     },
 
     //  Potentially called multiple times per frame (on super-fast systems)
