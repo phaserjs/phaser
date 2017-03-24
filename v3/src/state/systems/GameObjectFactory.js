@@ -24,6 +24,11 @@ GameObjectFactory.prototype.constructor = GameObjectFactory;
 
 GameObjectFactory.prototype = {
 
+    existing: function (child)
+    {
+        return this.state.children.add(child);
+    },
+
     destroy: function ()
     {
         this.state = undefined;
