@@ -22,7 +22,7 @@ var Transform = {
             return this._z;
         },
         set: function (value) {
-            this.state.sortChildrenFlag = (this._z !== value); 
+            this.state.sortChildrenFlag = true;
             this._z = value;
         }
     },
