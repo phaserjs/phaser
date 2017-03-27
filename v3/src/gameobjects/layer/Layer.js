@@ -1,158 +1,66 @@
 
 var Class = require('../../utils/Class');
+var Set = require('../../structs/Set');
 
 var Layer = new Class({
 
     initialize:
 
-    function Layer ()
+    function Layer (children)
     {
-        this.children = [];
-
-        Array.prototype.push.apply(this.children, arguments);
+        this.children = new Set(children);
     },
+
+    //  Layer management methods:
 
     add: function (child)
     {
-        var children = this.children;
-        var index = children.indexOf(child);
+        this.children.set(child);
 
-        if (index < 0)
+        return this;
+    },
+
+    addMultiple: function (children)
+    {
+        if (Array.isArray(children))
         {
-            children.push(child);
+            for (var i = 0; i < children.length; i++)
+            {
+                this.children.set(children[i]);
+            }
         }
 
         return this;
     },
 
-    addArray: function (childrenArray)
+    remove: function (child)
     {
-        var length = childrenArray.length;
-
-        for (var index = 0; index < length; ++index)
-        {
-            this.add(childrenArray[index]);
-        }
+        this.children.delete(child);
 
         return this;
     },
 
-    addX: function (value)
+    clear: function ()
     {
-        var children = this.children;
-        var length = children.length;
-
-        for (var index = 0; index < length; ++index)
-        {
-            children[index].x += value;
-        }
+        this.children.clear();
 
         return this;
     },
 
-    addY: function (value)
-    {
-        var children = this.children;
-        var length = children.length;
-        for (var index = 0; index < length; ++index)
-        {
-            children[index].y += value;
-        }
+    //  Child Update Methods
 
-        return this;
-    },
+    addX: require('./actions/AddX'),
+    addY: require('./actions/AddY'),
+    addXY: require('./actions/AddXY'),
+    setX: require('./actions/SetX'),
+    setY: require('./actions/SetY'),
+    setXY: require('./actions/SetXY'),
 
-    addPosition: function (x, y)
-    {
-        var children = this.children;
-        var length = children.length;
-
-        for (var index = 0; index < length; ++index)
-        {
-            children[index].x += x;
-            children[index].y += y;
-        }
-
-        return this;
-    },
-
-    rotate: function (value)
-    {
-        var children = this.children;
-        var length = children.length;
-
-        for (var index = 0; index < length; ++index)
-        {
-            children[index].rotation += value;
-        }
-
-        return this;
-    },
-
-    setX: function (value)
-    {
-        var children = this.children;
-        var length = children.length;
-
-        for (var index = 0; index < length; ++index)
-        {
-            children[index].x = value;
-        }
-
-        return this;
-    },
-
-    setY: function (value)
-    {
-        var children = this.children;
-        var length = children.length;
-
-        for (var index = 0; index < length; ++index)
-        {
-            children[index].y = value;
-        }
-
-        return this;
-    },
-
-    setRotation: function (value)
-    {
-        var children = this.children;
-        var length = children.length;
-
-        for (var index = 0; index < length; ++index)
-        {
-            children[index].rotation = value;
-        }
-
-        return this;
-    },
-
-    setVisible: function (value)
-    {
-        var children = this.children;
-        var length = children.length;
-
-        for (var index = 0; index < length; ++index)
-        {
-            children[index].visible = value;
-        }
-
-        return this;
-    },
-
-    toggleVisible: function ()
-    {
-        var children = this.children;
-        var length = children.length;
-
-        for (var index = 0; index < length; ++index)
-        {
-            children[index].visible = !children[index].visible;
-        }
-
-        return this;
-    }
+    rotate: require('./actions/Rotate'),
+    angle: require('./actions/Angle'),
+    setRotation: require('./actions/SetRotation'),
+    setVisible: require('./actions/SetVisible'),
+    toggleVisible: require('./actions/ToggleVisible')
 
 });
 

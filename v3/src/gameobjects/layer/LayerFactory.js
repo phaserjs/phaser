@@ -5,18 +5,14 @@ var LayerFactory = {
 
     KEY: 'layer',
 
-    add: function ()
+    add: function (children)
     {
-        var layer = new Layer();
-        layer.addArray(Array.prototype.slice.apply(arguments));
-        return layer;
+        return new Layer(children);
     },
 
-    make: function ()
+    make: function (children)
     {
-        var layer = new Layer();
-        layer.addArray(Array.prototype.slice.apply(arguments));
-        return layer;
+        return new Layer(children);
     }
 
 };
