@@ -1,15 +1,16 @@
+var CONST = require('./const');
 
-var AlignInMap = {
-    BOTTOM_CENTER: require('./InBottomCenter'),
-    BOTTOM_LEFT: require('./InBottomLeft'),
-    BOTTOM_RIGHT: require('./InBottomRight'),
-    CENTER: require('./InCenter'),
-    LEFT_CENTER: require('./InLeftCenter'),
-    RIGHT_CENTER: require('./InRightCenter'),
-    TOP_CENTER: require('./InTopCenter'),
-    TOP_LEFT: require('./InTopLeft'),
-    TOP_RIGHT: require('./InTopRight')
-};
+var AlignInMap = [];
+
+AlignInMap[CONST.BOTTOM_CENTER] = require('./InBottomCenter');
+AlignInMap[CONST.BOTTOM_LEFT] = require('./InBottomLeft');
+AlignInMap[CONST.BOTTOM_RIGHT] = require('./InBottomRight');
+AlignInMap[CONST.CENTER] = require('./InCenter');
+AlignInMap[CONST.LEFT_CENTER] = require('./InLeftCenter');
+AlignInMap[CONST.RIGHT_CENTER] = require('./InRightCenter');
+AlignInMap[CONST.TOP_CENTER] = require('./InTopCenter');
+AlignInMap[CONST.TOP_LEFT] = require('./InTopLeft');
+AlignInMap[CONST.TOP_RIGHT] = require('./InTopRight');
 
 var AlignIn = function (child, container, position)
 {

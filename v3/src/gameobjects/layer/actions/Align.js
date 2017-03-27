@@ -119,3 +119,6 @@ var Align = function (width, height, cellWidth, cellHeight, position, offset)
 
     return true;
 };
+
+module.exports = Align;
+
