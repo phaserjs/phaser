@@ -60,7 +60,9 @@ var Layer = new Class({
     angle: require('./actions/Angle'),
     setRotation: require('./actions/SetRotation'),
     setVisible: require('./actions/SetVisible'),
-    toggleVisible: require('./actions/ToggleVisible')
+    toggleVisible: require('./actions/ToggleVisible'),
+
+    align: require('./actions/Align')
 
 });
 
