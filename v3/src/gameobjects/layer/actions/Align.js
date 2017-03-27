@@ -1,6 +1,8 @@
 var CONST = require('../../../utils/align/const');
 var AlignIn = require('../../../utils/align/AlignIn');
-var Rectangle = require('../../../geom/rectangle/Rectangle');
+var Zone = require('../../zone/Zone');
+
+var tempZone = new Zone({}, 0, 0, 1, 1);
 
 /**
 * This method iterates through all children in the Group (regardless if they are visible or exist)
@@ -66,7 +68,9 @@ var Align = function (width, height, cellWidth, cellHeight, position, offset)
         return false;
     }
 
-    var r = new Rectangle(0, 0, cellWidth, cellHeight);
+    tempZone.setPosition(0, 0);
+    tempZone.setSize(cellWidth, cellHeight);
+
     var w = (width * cellWidth);
     var h = (height * cellHeight);
 
@@ -74,41 +78,41 @@ var Align = function (width, height, cellWidth, cellHeight, position, offset)
     {
         var child = children[i];
 
-        AlignIn(child, r, position);
+        AlignIn(child, tempZone, position);
 
         if (width === -1)
         {
             //  We keep laying them out horizontally until we've done them all
-            r.y += cellHeight;
+            tempZone.y += cellHeight;
 
-            if (r.y === h)
+            if (tempZone.y === h)
             {
-                r.x += cellWidth;
-                r.y = 0;
+                tempZone.x += cellWidth;
+                tempZone.y = 0;
             }
         }
         else if (height === -1)
         {
             //  We keep laying them out vertically until we've done them all
-            r.x += cellWidth;
+            tempZone.x += cellWidth;
 
-            if (r.x === w)
+            if (tempZone.x === w)
             {
-                r.x = 0;
-                r.y += cellHeight;
+                tempZone.x = 0;
+                tempZone.y += cellHeight;
             }
         }
         else
         {
             //  We keep laying them out until we hit the column limit
-            r.x += cellWidth;
+            tempZone.x += cellWidth;
 
-            if (r.x === w)
+            if (tempZone.x === w)
             {
-                r.x = 0;
-                r.y += cellHeight;
+                tempZone.x = 0;
+                tempZone.y += cellHeight;
 
-                if (r.y === h)
+                if (tempZone.y === h)
                 {
                     //  We've hit the column limit, so return, even if there are children left
                     return true;
