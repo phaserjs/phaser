@@ -26,24 +26,18 @@ Children.prototype = {
 
     add: function (child)
     {
-        // console.log('--->', this.gameObject, 'adds new child:', child);
-
         if (child.parent === this)
         {
-            // console.log('Children.add 1');
             return child;
         }
         else if (child.parent)
         {
-            // console.log('Children.add 2');
             child.parent.children.remove(child);
         }
 
         child.parent = this.gameObject;
 
         this.list.push(child);
-
-        // console.log('<--- end');
 
         return child;
     },
