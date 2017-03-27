@@ -32,6 +32,11 @@ var SpriteSheetTextureParser = function (texture, sourceIndex, x, y, width, heig
         throw new Error('TextureManager.SpriteSheetTextureParser: Invalid frameWidth given.');
     }
 
+    //  Add in a __BASE entry (for the entire atlas)
+    var source = texture.source[sourceIndex];
+
+    texture.add('__BASE', sourceIndex, 0, 0, source.width, source.height);
+
     var startFrame = GetObjectValue(config, 'startFrame', 0);
     var endFrame = GetObjectValue(config, 'endFrame', -1);
     var margin = GetObjectValue(config, 'margin', 0);
