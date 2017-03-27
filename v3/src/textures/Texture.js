@@ -48,6 +48,8 @@ var Texture = function (manager, key, source)
     */
     this.frames = {};
 
+    this.firstFrame = '__BASE';
+
     this.frameTotal = 0;
 
     //  Load the Sources
@@ -67,6 +69,15 @@ Texture.prototype = {
 
         this.frames[name] = frame;
 
+        //  Set the first frame of the Texture (other than __BASE)
+        //  This is used to ensure we don't spam the display with entire
+        //  atlases of sprite sheets, but instead just the first frame of them
+        //  should the dev incorrectly specify the frame index
+        if (this.frameTotal === 1)
+        {
+            this.firstFrame = name;
+        }
+
         this.frameTotal++;
 
         return frame;
@@ -74,9 +85,9 @@ Texture.prototype = {
 
     get: function (name)
     {
-        if (name === undefined || name === null || this.frameTotal === 1)
+        if (name === undefined || name === null)
         {
-            name = '__BASE';
+            name = (this.frameTotal === 1) ? '__BASE' : this.firstFrame;
         }
 
         var frame = this.frames[name];
