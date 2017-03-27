@@ -1,4 +1,4 @@
-var AddXY = function (x, y)
+var IncXY = function (x, y)
 {
     var children = this.children.entries;
 
@@ -11,4 +11,4 @@ var AddXY = function (x, y)
     return this;
 };
 
-module.exports = AddXY;
+module.exports = IncXY;

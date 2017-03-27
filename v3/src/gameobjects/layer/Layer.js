@@ -1,13 +1,31 @@
 
 var Class = require('../../utils/Class');
 var Set = require('../../structs/Set');
+var Actions = require('./actions/');
 
 var Layer = new Class({
 
+    Mixins: [
+        Actions.IncX,
+        Actions.IncY,
+        Actions.IncXY,
+        Actions.SetX,
+        Actions.SetY,
+        Actions.SetXY,
+        Actions.Rotate,
+        Actions.Angle,
+        Actions.SetRotation,
+        Actions.SetVisible,
+        Actions.ToggleVisible,
+        Actions.Align
+    ],
+
     initialize:
 
-    function Layer (children)
+    function Layer (state, children)
     {
+        this.state = state;
+
         this.children = new Set(children);
     },
 
@@ -47,23 +65,13 @@ var Layer = new Class({
         return this;
     },
 
-    //  Child Update Methods
+    destroy: function ()
+    {
+        this.children.clear();
 
-    addX: require('./actions/AddX'),
-    addY: require('./actions/AddY'),
-    addXY: require('./actions/AddXY'),
-    setX: require('./actions/SetX'),
-    setY: require('./actions/SetY'),
-    setXY: require('./actions/SetXY'),
-
-    rotate: require('./actions/Rotate'),
-    angle: require('./actions/Angle'),
-    setRotation: require('./actions/SetRotation'),
-    setVisible: require('./actions/SetVisible'),
-    toggleVisible: require('./actions/ToggleVisible'),
-
-    align: require('./actions/Align')
-
+        this.state = undefined;
+        this.children = undefined;
+    }
 });
 
 module.exports = Layer;

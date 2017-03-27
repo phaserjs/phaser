@@ -1,4 +1,4 @@
-var AddY = function (value)
+var IncY = function (value)
 {
     var children = this.children.entries;
 
@@ -10,4 +10,4 @@ var AddY = function (value)
     return this;
 };
 
-module.exports = AddY;
+module.exports = IncY;

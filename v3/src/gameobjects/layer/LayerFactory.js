@@ -7,12 +7,12 @@ var LayerFactory = {
 
     add: function (children)
     {
-        return new Layer(children);
+        return new Layer(this.state, children);
     },
 
     make: function (children)
     {
-        return new Layer(children);
+        return new Layer(this.state, children);
     }
 
 };
