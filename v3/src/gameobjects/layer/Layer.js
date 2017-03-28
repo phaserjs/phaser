@@ -101,6 +101,7 @@ var Layer = new Class({
     createMultiple: function (quantity, key, frame, options)
     {
         if (frame === undefined) { frame = null; }
+        // if (options === undefined) { options = {}; }
 
         var visible = GetObjectValue(options, 'visible', true);
 
@@ -219,6 +220,34 @@ var Layer = new Class({
     positionAroundCircle: function (circle, startAngle, endAngle)
     {
         Actions.PositionAroundCircle(this.children.entries, circle, startAngle, endAngle);
+
+        return this;
+    },
+
+    randomCircle: function (circle)
+    {
+        Actions.RandomCircle(this.children.entries, circle);
+
+        return this;
+    },
+
+    randomEllipse: function (ellipse)
+    {
+        Actions.RandomEllipse(this.children.entries, ellipse);
+
+        return this;
+    },
+
+    randomLine: function (line)
+    {
+        Actions.RandomLine(this.children.entries, line);
+
+        return this;
+    },
+
+    randomRectangle: function (rect)
+    {
+        Actions.RandomRectangle(this.children.entries, rect);
 
         return this;
     },
