@@ -37,16 +37,19 @@ var RenderPass = {
     /* Needed for getting constant values
      * Form the WebGL context.
      */
-    glContext: null,
+    renderingContext: null,
     
     /* Utility functions */
-    initRenderComponent: function () 
+    initRenderPassComponent: function () 
     {
         var renderingContext = this.state.game.renderer.gl;
 
-        if ((renderingContext instanceof WebGLRenderingContext) || (renderingContext !== null && renderingContext.rawgl !== undefined))
+        if (renderingContext !== undefined &&
+            ((renderingContext instanceof WebGLRenderingContext) || (renderingContext !== null && renderingContext.rawgl !== undefined)))
         {
-            this.glContext = renderingContext;
+            this.renderingContext = renderingContext;
+            this.setDefaultDepthStencilState();
+            this.setNoBlending();
         }
     },
 
@@ -110,7 +113,7 @@ var RenderPass = {
     },
 
     setDefaultBlending: function () {
-        var gl = this.glContext;
+        var gl = this.renderingContext;
 
         this.setBlendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA, gl.ADD);
         
@@ -118,7 +121,7 @@ var RenderPass = {
     },
 
     setNoBlending: function () {
-        var gl = this.glContext;
+        var gl = this.renderingContext;
 
         this.setBlendFunc(gl.ONE, gl.ZERO, gl.ADD);
         
@@ -142,7 +145,7 @@ var RenderPass = {
 
     /* Call this on render pass */
     dispatchRenderPassState: function () {
-        var gl = this.glContext;
+        var gl = this.renderingContext;
         var textures = this.textures;
         var length = textures.length;
         var outputStage = this.outputStage;
@@ -184,4 +187,4 @@ var RenderPass = {
     }
 };
 
-module.exports = Render;
+module.exports = RenderPass;

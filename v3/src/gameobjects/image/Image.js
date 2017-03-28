@@ -12,6 +12,7 @@ var Image = new Class({
         Components.Flip,
         Components.GetBounds,
         Components.Origin,
+        Components.RenderPass,
         Components.ScaleMode,
         Components.Size,
         Components.Texture,
@@ -30,6 +31,7 @@ var Image = new Class({
         this.setPosition(x, y);
         this.setSizeToFrame();
         this.setOrigin();
+        this.initRenderPassComponent();
     }
 
 });

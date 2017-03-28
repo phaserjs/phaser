@@ -11,6 +11,7 @@ var Graphics = new Class({
         Components.Alpha,
         Components.BlendMode,
         Components.Transform,
+        Components.RenderPass,
         Components.Visible,
         Render
     ],
@@ -24,6 +25,7 @@ var Graphics = new Class({
         this.setPosition(x, y);
 
         this.commandBuffer = [];
+        this.initRenderPassComponent();
     },
 
     arc: function (x, y, radius, startAngle, endAngle, anticlockwise)
