@@ -26,6 +26,8 @@ var GetObjectValue = function (source, key, defaultValue)
             }
             else
             {
+                //  Can't go any further, so reset to default
+                value = defaultValue;
                 break;
             }
         }
