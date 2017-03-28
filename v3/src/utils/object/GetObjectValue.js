@@ -4,7 +4,11 @@
 
 var GetObjectValue = function (source, key, defaultValue)
 {
-    if (key.indexOf('.'))
+    if (!source)
+    {
+        return defaultValue;
+    }
+    else if (key.indexOf('.'))
     {
         var keys = key.split('.');
         var parent = source;
