@@ -70,7 +70,8 @@ SpriteBatch.prototype = {
         var attribArray = [
             CreateAttribDesc(gl, program, 'a_position', 2, gl.FLOAT, false, CONST.VERTEX_SIZE, 0),
             CreateAttribDesc(gl, program, 'a_tex_coord', 2, gl.FLOAT, false, CONST.VERTEX_SIZE, 8),
-            CreateAttribDesc(gl, program, 'a_color', 3, gl.UNSIGNED_BYTE, true, CONST.VERTEX_SIZE, 16)
+            CreateAttribDesc(gl, program, 'a_color', 3, gl.UNSIGNED_BYTE, true, CONST.VERTEX_SIZE, 16),
+            CreateAttribDesc(gl, program, 'a_alpha', 1, gl.FLOAT, false, CONST.VERTEX_SIZE, 20)
         ];
         var vertexArray = new VertexArray(CreateBuffer(gl, gl.ARRAY_BUFFER, gl.STREAM_DRAW, null, vertexDataBuffer.getByteCapacity()), attribArray);
         var viewMatrixLocation = gl.getUniformLocation(program, 'u_view_matrix');
@@ -202,6 +203,7 @@ SpriteBatch.prototype = {
         var cameraMatrix = camera.matrix.matrix;
         var mva, mvb, mvc, mvd, mve, mvf, tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3;
         var sra, srb, src, srd, sre, srf, cma, cmb, cmc, cmd, cme, cmf;
+        var alpha = src.alpha;
 
         tempMatrix.applyITRS(translateX, translateY, rotation, scaleX, scaleY);
 
@@ -236,7 +238,7 @@ SpriteBatch.prototype = {
         ty3 = xw * mvb + y * mvd + mvf;
 
         this.manager.setBatch(this, texture, camera);
-        vertexOffset = vertexDataBuffer.allocate(20);
+        vertexOffset = vertexDataBuffer.allocate(24);
         this.elementCount += 6;
         
         vertexBufferF32[vertexOffset++] = tx0;
@@ -244,24 +246,28 @@ SpriteBatch.prototype = {
         vertexBufferF32[vertexOffset++] = 0;
         vertexBufferF32[vertexOffset++] = 0;
         vertexBufferU32[vertexOffset++] = 0xFFFFFF; //vertexColor.topLeft;
+        vertexBufferF32[vertexOffset++] = alpha;
 
         vertexBufferF32[vertexOffset++] = tx1;
         vertexBufferF32[vertexOffset++] = ty1;
         vertexBufferF32[vertexOffset++] = 0;
         vertexBufferF32[vertexOffset++] = 1;
         vertexBufferU32[vertexOffset++] = 0xFFFFFF; //vertexColor.bottomLeft;
+        vertexBufferF32[vertexOffset++] = alpha;
 
         vertexBufferF32[vertexOffset++] = tx2;
         vertexBufferF32[vertexOffset++] = ty2;
         vertexBufferF32[vertexOffset++] = 1;
         vertexBufferF32[vertexOffset++] = 1;
         vertexBufferU32[vertexOffset++] = 0xFFFFFF; //vertexColor.bottomRight;
+        vertexBufferF32[vertexOffset++] = alpha;
 
         vertexBufferF32[vertexOffset++] = tx3;
         vertexBufferF32[vertexOffset++] = ty3;
         vertexBufferF32[vertexOffset++] = 1;
         vertexBufferF32[vertexOffset++] = 0;
         vertexBufferU32[vertexOffset++] = 0xFFFFFF; //vertexColor.topRight;
+        vertexBufferF32[vertexOffset++] = alpha;
     },
 
     addSprite: function (src, camera)
@@ -289,6 +295,7 @@ SpriteBatch.prototype = {
         var cameraMatrix = camera.matrix.matrix;
         var mva, mvb, mvc, mvd, mve, mvf, tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3;
         var sra, srb, src, srd, sre, srf, cma, cmb, cmc, cmd, cme, cmf;
+        var alpha = src.alpha;
 
         tempMatrix.applyITRS(translateX, translateY, rotation, scaleX, scaleY);
 
@@ -323,7 +330,7 @@ SpriteBatch.prototype = {
         ty3 = xw * mvb + y * mvd + mvf;
 
         this.manager.setBatch(this, frame.texture.source[frame.sourceIndex].glTexture, camera);
-        vertexOffset = vertexDataBuffer.allocate(20);
+        vertexOffset = vertexDataBuffer.allocate(24);
         this.elementCount += 6;
         
         vertexBufferF32[vertexOffset++] = tx0;
@@ -331,24 +338,28 @@ SpriteBatch.prototype = {
         vertexBufferF32[vertexOffset++] = uvs.x0;
         vertexBufferF32[vertexOffset++] = uvs.y0;
         vertexBufferU32[vertexOffset++] = 0xFFFFFF; //vertexColor.topLeft;
+        vertexBufferF32[vertexOffset++] = alpha;
 
         vertexBufferF32[vertexOffset++] = tx1;
         vertexBufferF32[vertexOffset++] = ty1;
         vertexBufferF32[vertexOffset++] = uvs.x1;
         vertexBufferF32[vertexOffset++] = uvs.y1;
         vertexBufferU32[vertexOffset++] = 0xFFFFFF; //vertexColor.bottomLeft;
+        vertexBufferF32[vertexOffset++] = alpha;
 
         vertexBufferF32[vertexOffset++] = tx2;
         vertexBufferF32[vertexOffset++] = ty2;
         vertexBufferF32[vertexOffset++] = uvs.x2;
         vertexBufferF32[vertexOffset++] = uvs.y2;
         vertexBufferU32[vertexOffset++] = 0xFFFFFF; //vertexColor.bottomRight;
+        vertexBufferF32[vertexOffset++] = alpha;
 
         vertexBufferF32[vertexOffset++] = tx3;
         vertexBufferF32[vertexOffset++] = ty3;
         vertexBufferF32[vertexOffset++] = uvs.x3;
         vertexBufferF32[vertexOffset++] = uvs.y3;
         vertexBufferU32[vertexOffset++] = 0xFFFFFF; //vertexColor.topRight;
+        vertexBufferF32[vertexOffset++] = alpha;
     }
 
 };
