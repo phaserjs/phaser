@@ -288,6 +288,13 @@ var Layer = new Class({
         return this;
     },
 
+    setOrigin: function (x, y)
+    {
+        Actions.SetOrigin(this.children.entries, x, y);
+
+        return this;
+    },
+
     scaleX: function (value)
     {
         Actions.ScaleX(this.children.entries, value);

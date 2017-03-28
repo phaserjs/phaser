@@ -21,6 +21,7 @@ module.exports = {
     ScaleXY: require('./ScaleXY'),
     ScaleY: require('./ScaleY'),
     SetAlpha: require('./SetAlpha'),
+    SetOrigin: require('./SetOrigin'),
     SetRotation: require('./SetRotation'),
     SetScale: require('./SetScale'),
     SetScaleX: require('./SetScaleX'),
