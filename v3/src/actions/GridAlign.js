@@ -1,6 +1,6 @@
-var CONST = require('../../../utils/align/const');
-var AlignIn = require('../../../utils/align/AlignIn');
-var Zone = require('../../zone/Zone');
+var CONST = require('../utils/align/const');
+var AlignIn = require('../utils/align/AlignIn');
+var Zone = require('../gameobjects/zone/Zone');
 
 var tempZone = new Zone({}, 0, 0, 1, 1);
 
@@ -53,20 +53,11 @@ var tempZone = new Zone({}, 0, 0, 1, 1);
 * @param {integer} cellWidth - The width of each grid cell, in pixels.
 * @param {integer} cellHeight - The height of each grid cell, in pixels.
 * @param {integer} [position] - The position constant. One of `Phaser.TOP_LEFT` (default), `Phaser.TOP_CENTER`, `Phaser.TOP_RIGHT`, `Phaser.LEFT_CENTER`, `Phaser.CENTER`, `Phaser.RIGHT_CENTER`, `Phaser.BOTTOM_LEFT`, `Phaser.BOTTOM_CENTER` or `Phaser.BOTTOM_RIGHT`.
-* @param {integer} [offset=0] - Optional index to start the alignment from. Defaults to zero, the first child in the Group, but can be set to any valid child index value.
 * @return {boolean} True if the Group children were aligned, otherwise false.
 */
-var Align = function (width, height, cellWidth, cellHeight, position, offset)
+var GridAlign = function (items, width, height, cellWidth, cellHeight, position)
 {
     if (position === undefined) { position = CONST.TOP_LEFT; }
-    if (offset === undefined) { offset = 0; }
-
-    var children = this.children.entries;
-
-    if (children.length === 0 || offset > children.length || (width === -1 && height === -1))
-    {
-        return false;
-    }
 
     tempZone.setPosition(0, 0);
     tempZone.setSize(cellWidth, cellHeight);
@@ -74,11 +65,9 @@ var Align = function (width, height, cellWidth, cellHeight, position, offset)
     var w = (width * cellWidth);
     var h = (height * cellHeight);
 
-    for (var i = offset; i < children.length; i++)
+    for (var i = 0; i < items.length; i++)
     {
-        var child = children[i];
-
-        AlignIn(child, tempZone, position);
+        AlignIn(items[i], tempZone, position);
 
         if (width === -1)
         {
@@ -114,15 +103,14 @@ var Align = function (width, height, cellWidth, cellHeight, position, offset)
 
                 if (tempZone.y === h)
                 {
-                    //  We've hit the column limit, so return, even if there are children left
-                    return true;
+                    //  We've hit the column limit, so return, even if there are items left
+                    break;
                 }
             }
         }
     }
 
-    return true;
+    return items;
 };
 
-module.exports = Align;
-
+module.exports = GridAlign;

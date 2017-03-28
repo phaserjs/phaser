@@ -1,10 +1,12 @@
+//  Phaser.Actions
+
 module.exports = {
 
+    Angle: require('./Angle'),
+    GridAlign: require('./GridAlign'),
     IncX: require('./IncX'),
     IncXY: require('./IncXY'),
     IncY: require('./IncY'),
-    Align: require('./Align'),
-    Angle: require('./Angle'),
     PositionAroundCircle: require('./PositionAroundCircle'),
     Rotate: require('./Rotate'),
     RotateAround: require('./RotateAround'),

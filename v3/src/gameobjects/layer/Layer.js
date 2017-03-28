@@ -1,7 +1,7 @@
 
 var Class = require('../../utils/Class');
 var Set = require('../../structs/Set');
-var Actions = require('./actions/');
+var Actions = require('../../actions/');
 var Sprite = require('../sprite/Sprite');
 
 var Layer = new Class({
@@ -153,22 +153,110 @@ var Layer = new Class({
 
     //  Child related methods
 
-    align: Actions.Align,
-    angle: Actions.Angle,
-    incX: Actions.IncX,
-    incXY: Actions.IncXY,
-    incY: Actions.IncY,
-    positionAroundCircle: Actions.PositionAroundCircle,
-    rotate: Actions.Rotate,
-    rotateAround: Actions.RotateAround,
-    rotateAroundDistance: Actions.RotateAroundDistance,
-    setRotation: Actions.SetRotation,
-    setVisible: Actions.SetVisible,
-    setX: Actions.SetX,
-    setXY: Actions.SetXY,
-    setY: Actions.SetY,
-    toggleVisible: Actions.ToggleVisible
+    angle: function (value)
+    {
+        Actions.Angle(this.children.entries, value);
 
+        return this;
+    },
+
+    gridAlign: function (width, height, cellWidth, cellHeight, position)
+    {
+        Actions.GridAlign(this.children.entries, width, height, cellWidth, cellHeight, position);
+
+        return this;
+    },
+
+    incX: function (value)
+    {
+        Actions.IncX(this.children.entries, value);
+
+        return this;
+    },
+
+    incXY: function (x, y)
+    {
+        Actions.IncXY(this.children.entries, x, y);
+
+        return this;
+    },
+
+    incY: function (value)
+    {
+        Actions.IncY(this.children.entries, value);
+
+        return this;
+    },
+
+    positionAroundCircle: function (circle, startAngle, endAngle)
+    {
+        Actions.PositionAroundCircle(this.children.entries, circle, startAngle, endAngle);
+
+        return this;
+    },
+
+    rotate: function (value)
+    {
+        Actions.Rotate(this.children.entries, value);
+
+        return this;
+    },
+
+    rotateAround: function (point, angle)
+    {
+        Actions.RotateAround(this.children.entries, point, angle);
+
+        return this;
+    },
+
+    rotateAroundDistance: function (point, angle, distance)
+    {
+        Actions.RotateAroundDistance(this.children.entries, point, angle, distance);
+
+        return this;
+    },
+
+    setRotation: function (value, step)
+    {
+        Actions.SetRotation(this.children.entries, value, step);
+
+        return this;
+    },
+
+    setVisible: function (value)
+    {
+        Actions.SetVisible(this.children.entries, value);
+
+        return this;
+    },
+
+    setX: function (value, step)
+    {
+        Actions.SetX(this.children.entries, value, step);
+
+        return this;
+    },
+
+    setXY: function (x, y)
+    {
+        Actions.SetXY(this.children.entries, x, y);
+
+        return this;
+    },
+
+    setY: function (value, step)
+    {
+        Actions.SetY(this.children.entries, value, step);
+
+        return this;
+    },
+
+    toggleVisible: function ()
+    {
+        Actions.ToggleVisible(this.children.entries);
+
+        return this;
+    }
 
 });
 

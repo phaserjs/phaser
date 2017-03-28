@@ -7,6 +7,8 @@ var Extend = require('./utils/object/Extend');
 
 var Phaser = {
 
+    Actions: require('./actions/'),
+
     DOM: require('./dom/'),
 
     Game: require('./boot/Game'),
