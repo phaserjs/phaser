@@ -49,7 +49,9 @@ var Layer = new Class({
 
         child.visible = visible;
 
-        return this.add(child);
+        this.add(child);
+
+        return child;
     },
 
     /**
@@ -135,24 +137,24 @@ var Layer = new Class({
             entries.push(this.create(0, 0, range[i].a, range[i].b, visible));
         }
 
-        //  Post-creation options:
+        //  Post-creation options (applied only to those items created in this call):
 
         var x = GetObjectValue(options, 'setXY.x', 0);
         var y = GetObjectValue(options, 'setXY.y', 0);
         var stepX = GetObjectValue(options, 'setXY.stepX', 0);
         var stepY = GetObjectValue(options, 'setXY.stepY', 0);
 
-        this.setXY(x, y, stepX, stepY);
+        Actions.SetXY(entries, x, y, stepX, stepY);
 
         var rotation = GetObjectValue(options, 'setRotation.value', 0);
         var stepRotation = GetObjectValue(options, 'setRotation.step', 0);
 
-        this.setRotation(rotation, stepRotation);
+        Actions.SetRotation(entries, rotation, stepRotation);
 
         var alpha = GetObjectValue(options, 'setAlpha.value', 1);
         var stepAlpha = GetObjectValue(options, 'setAlpha.step', 0);
 
-        this.setAlpha(alpha, stepAlpha);
+        Actions.SetAlpha(entries, alpha, stepAlpha);
 
         return entries;
     },
