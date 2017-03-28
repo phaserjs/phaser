@@ -251,9 +251,51 @@ var Layer = new Class({
         return this;
     },
 
+    scaleX: function (value)
+    {
+        Actions.ScaleX(this.children.entries, value);
+
+        return this;
+    },
+
+    scaleXY: function (x, y)
+    {
+        Actions.ScaleXY(this.children.entries, x, y);
+
+        return this;
+    },
+
+    scaleY: function (value)
+    {
+        Actions.ScaleY(this.children.entries, value);
+
+        return this;
+    },
+
     setRotation: function (value, step)
     {
         Actions.SetRotation(this.children.entries, value, step);
+
+        return this;
+    },
+
+    setScale: function (x, y, stepX, stepY)
+    {
+        Actions.SetScale(this.children.entries, x, y, stepX, stepY);
+
+        return this;
+    },
+
+    setScaleX: function (value, step)
+    {
+        Actions.SetScaleX(this.children.entries, value, step);
+
+        return this;
+    },
+
+    setScaleY: function (value, step)
+    {
+        Actions.SetScaleY(this.children.entries, value, step);
 
         return this;
     },
