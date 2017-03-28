@@ -1,4 +1,7 @@
-//  p = Point or any object with public x/y properties
+//  p = Point or any object with public x/y properties, the item to be rotated
+//  x/y = the coordinate to rotate around
+//  angle = radians
+//  distance = in px
 
 var RotateAroundDistance = function (point, x, y, angle, distance)
 {

@@ -146,43 +146,9 @@ Texture.prototype = {
     */
     destroy: function ()
     {
-        //  Need to iterate though the TextureSources, and unload each one
-        //  then clear out the frames
-
-        /*
-        if (this.source)
-        {
-            Phaser.CanvasPool.removeByCanvas(this.source);
-        }
-
-        this.source = null;
-        */
+        //  TODO
     }
 
 };
-
-/**
-* Helper function that creates a base texture from the given canvas element.
-*
-* @static
-* @method fromCanvas
-* @param canvas {Canvas} The canvas element source of the texture
-* @param scaleMode {Number} See {{#crossLink "PIXI/scaleModes:property"}}Phaser.scaleModes{{/crossLink}} for possible values
-* @return {BaseTexture}
-Phaser.Texture.fromCanvas = function (canvas, scaleMode)
-{
-    if (canvas.width === 0)
-    {
-        canvas.width = 1;
-    }
-
-    if (canvas.height === 0)
-    {
-        canvas.height = 1;
-    }
-
-    return new Phaser.Texture(canvas, scaleMode);
-};
-*/
 
 module.exports = Texture;
