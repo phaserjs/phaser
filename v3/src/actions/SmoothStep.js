@@ -1,14 +1,25 @@
 var MathSmoothStep = require('../math/SmoothStep');
 
-var SmoothStep = function (items, property, min, max)
+var SmoothStep = function (items, property, min, max, inc)
 {
+    if (inc === undefined) { inc = false; }
+
     var step = Math.abs(max - min) / items.length;
+    var i;
 
-    for (var i = 0; i < items.length; i++)
+    if (inc)
     {
-        var item = items[i];
-
-        item[property] = MathSmoothStep(i * step, min, max);
+        for (i = 0; i < items.length; i++)
+        {
+            items[i][property] += MathSmoothStep(i * step, min, max);
+        }
+    }
+    else
+    {
+        for (i = 0; i < items.length; i++)
+        {
+            items[i][property] = MathSmoothStep(i * step, min, max);
+        }
     }
 
     return items;

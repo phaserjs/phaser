@@ -357,23 +357,23 @@ var Layer = new Class({
         return this;
     },
 
-    smootherStep: function (property, min, max)
+    smootherStep: function (property, min, max, inc)
     {
-        Actions.SmootherStep(this.children.entries, property, min, max);
+        Actions.SmootherStep(this.children.entries, property, min, max, inc);
 
         return this;
     },
 
-    smoothStep: function (property, min, max)
+    smoothStep: function (property, min, max, inc)
     {
-        Actions.SmoothStep(this.children.entries, property, min, max);
+        Actions.SmoothStep(this.children.entries, property, min, max, inc);
 
         return this;
     },
 
-    spread: function (property, min, max)
+    spread: function (property, min, max, inc)
     {
-        Actions.Spread(this.children.entries, property, min, max);
+        Actions.Spread(this.children.entries, property, min, max, inc);
 
         return this;
     },
