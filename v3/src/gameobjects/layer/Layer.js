@@ -151,6 +151,13 @@ var Layer = new Class({
 
         Actions.SetRotation(entries, rotation, stepRotation);
 
+        var scaleX = GetObjectValue(options, 'setScale.x', 1);
+        var scaleY = GetObjectValue(options, 'setScale.y', 1);
+        var stepScaleX = GetObjectValue(options, 'setScale.stepX', 0);
+        var stepScaleY = GetObjectValue(options, 'setScale.stepY', 0);
+
+        Actions.SetScale(entries, scaleX, scaleY, stepScaleX, stepScaleY);
+
         var alpha = GetObjectValue(options, 'setAlpha.value', 1);
         var stepAlpha = GetObjectValue(options, 'setAlpha.step', 0);
 
