@@ -5,6 +5,7 @@ module.exports = {
     NumberArray: require('./NumberArray'),
     NumberArrayStep: require('./NumberArrayStep'),
     QuickSelect: require('./QuickSelect'),
+    Range: require('./Range'),
     RemoveRandomElement: require('./RemoveRandomElement'),
     RotateLeft: require('./RotateLeft'),
     RotateRight: require('./RotateRight'),
