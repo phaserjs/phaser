@@ -126,8 +126,8 @@ var Transform = {
         if (x === undefined) { x = 1; }
         if (y === undefined) { y = x; }
 
-        this.scaleX = (x ? x : 0.0);
-        this.scaleY = (y ? y : 0.0);
+        this.scaleX = x;
+        this.scaleY = y;
 
         return this;
     }
