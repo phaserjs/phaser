@@ -2,6 +2,7 @@
 var Class = require('../../utils/Class');
 var Set = require('../../structs/Set');
 var GetObjectValue = require('../../utils/object/GetObjectValue');
+var Range = require('../../utils/array/Range');
 var Actions = require('../../actions/');
 var Sprite = require('../sprite/Sprite');
 
@@ -84,12 +85,7 @@ var Layer = new Class({
     * It will then create 20 'balls' of frame 0, 20 with frame 1 and 20 with frame 2.
     * In total it will have created 120 sprites.
     *
-    * By default the Sprites will have their `exists` property set to `false`, and they will be 
-    * positioned at 0x0, relative to the `Group.x / y` values.
-    * 
-    * If `Group.enableBody` is set, then a physics body will be created on the objects, so long as one does not already exist.
-    *
-    * If `Group.inputEnableChildren` is set, then an Input Handler will be created on the objects, so long as one does not already exist.
+    * By default the Sprites will be positioned at 0x0.
     *
     * @method Phaser.Group#createMultiple
     * @param {integer} quantity - The number of Sprites to create.
@@ -98,10 +94,9 @@ var Layer = new Class({
     * @param {boolean} [exists=false] - The default exists state of the Sprite.
     * @return {array} An array containing all of the Sprites that were created.
     */
-    createMultiple: function (quantity, key, frame, options)
+    createMultiple: function (key, frame, options)
     {
         if (frame === undefined) { frame = null; }
-        // if (options === undefined) { options = {}; }
 
         var visible = GetObjectValue(options, 'visible', true);
 
@@ -115,36 +110,47 @@ var Layer = new Class({
             frame = [ frame ];
         }
 
-        var _this = this;
+        //  Build an array of key frame pairs to loop through
+
+        var repeat = GetObjectValue(options, 'repeat', 0);
+        var randomKey = GetObjectValue(options, 'randomKey', false);
+        var randomFrame = GetObjectValue(options, 'randomFrame', false);
+        var yoyo = GetObjectValue(options, 'yoyo', false);
+        var quantity = GetObjectValue(options, 'quantity', 1);
+        var max = GetObjectValue(options, 'max', 0);
+
         var entries = [];
 
-        key.forEach(function (singleKey)
-        {
-            frame.forEach(function (singleFrame)
-            {
-                for (var i = 0; i < quantity; i++)
-                {
-                    entries.push(_this.create(0, 0, singleKey, singleFrame, visible));
-                }
-            });
+        var range = Range(key, frame, {
+            max: max,
+            qty: quantity,
+            random: randomKey,
+            randomB: randomFrame,
+            repeat: repeat,
+            yoyo: yoyo
         });
+
+        for (var i = 0; i < range.length; i++)
+        {
+            entries.push(this.create(0, 0, range[i].a, range[i].b, visible));
+        }
 
         //  Post-creation options:
 
-        var x = GetObjectValue(options, 'x', 0);
-        var y = GetObjectValue(options, 'y', 0);
-        var stepX = GetObjectValue(options, 'stepX', 0);
-        var stepY = GetObjectValue(options, 'stepY', 0);
+        var x = GetObjectValue(options, 'setXY.x', 0);
+        var y = GetObjectValue(options, 'setXY.y', 0);
+        var stepX = GetObjectValue(options, 'setXY.stepX', 0);
+        var stepY = GetObjectValue(options, 'setXY.stepY', 0);
 
         this.setXY(x, y, stepX, stepY);
 
-        var rotation = GetObjectValue(options, 'rotation', 0);
-        var stepRotation = GetObjectValue(options, 'stepRotation', 0);
+        var rotation = GetObjectValue(options, 'setRotation.value', 0);
+        var stepRotation = GetObjectValue(options, 'setRotation.step', 0);
 
         this.setRotation(rotation, stepRotation);
 
-        var alpha = GetObjectValue(options, 'alpha', 1);
-        var stepAlpha = GetObjectValue(options, 'stepAlpha', 0);
+        var alpha = GetObjectValue(options, 'setAlpha.value', 1);
+        var stepAlpha = GetObjectValue(options, 'setAlpha.step', 0);
 
         this.setAlpha(alpha, stepAlpha);
 
