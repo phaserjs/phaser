@@ -1,6 +1,7 @@
 
 var Class = require('../../utils/Class');
 var Set = require('../../structs/Set');
+var GetObjectValue = require('../../utils/object/GetObjectValue');
 var Actions = require('../../actions/');
 var Sprite = require('../sprite/Sprite');
 
@@ -97,10 +98,11 @@ var Layer = new Class({
     * @param {boolean} [exists=false] - The default exists state of the Sprite.
     * @return {array} An array containing all of the Sprites that were created.
     */
-    createMultiple: function (quantity, key, frame, visible)
+    createMultiple: function (quantity, key, frame, options)
     {
         if (frame === undefined) { frame = null; }
-        if (visible === undefined) { visible = true; }
+
+        var visible = GetObjectValue(options, 'visible', true);
 
         if (!Array.isArray(key))
         {
@@ -125,6 +127,25 @@ var Layer = new Class({
                 }
             });
         });
+
+        //  Post-creation options:
+
+        var x = GetObjectValue(options, 'x', 0);
+        var y = GetObjectValue(options, 'y', 0);
+        var stepX = GetObjectValue(options, 'stepX', 0);
+        var stepY = GetObjectValue(options, 'stepY', 0);
+
+        this.setXY(x, y, stepX, stepY);
+
+        var rotation = GetObjectValue(options, 'rotation', 0);
+        var stepRotation = GetObjectValue(options, 'stepRotation', 0);
+
+        this.setRotation(rotation, stepRotation);
+
+        var alpha = GetObjectValue(options, 'alpha', 1);
+        var stepAlpha = GetObjectValue(options, 'stepAlpha', 0);
+
+        this.setAlpha(alpha, stepAlpha);
 
         return entries;
     },
@@ -163,6 +184,13 @@ var Layer = new Class({
     gridAlign: function (width, height, cellWidth, cellHeight, position)
     {
         Actions.GridAlign(this.children.entries, width, height, cellWidth, cellHeight, position);
+
+        return this;
+    },
+
+    incAlpha: function (value, step)
+    {
+        Actions.IncAlpha(this.children.entries, value, step);
 
         return this;
     },
@@ -216,6 +244,13 @@ var Layer = new Class({
         return this;
     },
 
+    setAlpha: function (value, step)
+    {
+        Actions.SetAlpha(this.children.entries, value, step);
+
+        return this;
+    },
+
     setRotation: function (value, step)
     {
         Actions.SetRotation(this.children.entries, value, step);
@@ -237,9 +272,9 @@ var Layer = new Class({
         return this;
     },
 
-    setXY: function (x, y)
+    setXY: function (x, y, stepX, stepY)
     {
-        Actions.SetXY(this.children.entries, x, y);
+        Actions.SetXY(this.children.entries, x, y, stepX, stepY);
 
         return this;
     },
