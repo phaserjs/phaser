@@ -28,6 +28,9 @@ module.exports = {
     SetX: require('./SetX'),
     SetXY: require('./SetXY'),
     SetY: require('./SetY'),
+    SmootherStep: require('./SmootherStep'),
+    SmoothStep: require('./SmoothStep'),
+    Spread: require('./Spread'),
     ToggleVisible: require('./ToggleVisible')
 
 };

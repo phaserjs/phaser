@@ -357,6 +357,27 @@ var Layer = new Class({
         return this;
     },
 
+    smootherStep: function (property, min, max)
+    {
+        Actions.SmootherStep(this.children.entries, property, min, max);
+
+        return this;
+    },
+
+    smoothStep: function (property, min, max)
+    {
+        Actions.SmoothStep(this.children.entries, property, min, max);
+
+        return this;
+    },
+
+    spread: function (property, min, max)
+    {
+        Actions.Spread(this.children.entries, property, min, max);
+
+        return this;
+    },
+
     toggleVisible: function ()
     {
         Actions.ToggleVisible(this.children.entries);
