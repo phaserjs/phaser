@@ -199,12 +199,12 @@ var Graphics = new Class({
 
     fillTriangleShape: function (triangle)
     {
-        return this.fillTriangle(triangle.x0, triangle.y0, triangle.x1, triangle.y1, triangle.x2, triangle.y2);
+        return this.fillTriangle(triangle.x1, triangle.y1, triangle.x2, triangle.y2, triangle.x3, triangle.y3);
     },
 
     strokeTriangleShape: function (triangle)
     {
-        return this.strokeTriangle(triangle.x0, triangle.y0, triangle.x1, triangle.y1, triangle.x2, triangle.y2);
+        return this.strokeTriangle(triangle.x1, triangle.y1, triangle.x2, triangle.y2, triangle.x3, triangle.y3);
     },
 
     fillTriangle: function (x0, y0, x1, y1, x2, y2)
