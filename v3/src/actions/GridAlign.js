@@ -65,14 +65,22 @@ var GridAlign = function (items, options)
     var position = GetObjectValue(options, 'position', CONST.TOP_LEFT);
     var x = GetObjectValue(options, 'x', 0);
     var y = GetObjectValue(options, 'y', 0);
-
-    tempZone.setPosition(x, y);
-    tempZone.setSize(cellWidth, cellHeight);
+    // var centerX = GetObjectValue(options, 'centerX', null);
+    // var centerY = GetObjectValue(options, 'centerY', null);
 
     var cx = 0;
     var cy = 0;
     var w = (width * cellWidth);
     var h = (height * cellHeight);
+
+    //  If the Grid is centered on a position then we need to calculate it now
+    // if (centerX !== null && centerY !== null)
+    // {
+        // 
+    // }
+
+    tempZone.setPosition(x, y);
+    tempZone.setSize(cellWidth, cellHeight);
 
     for (var i = 0; i < items.length; i++)
     {
