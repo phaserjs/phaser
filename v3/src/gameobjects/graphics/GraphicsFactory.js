@@ -5,16 +5,14 @@ var GraphicsFactory = {
 
     KEY: 'graphics',
 
-    add: function (x, y, group)
+    add: function (options)
     {
-        if (group === undefined) { group = this.state; }
-
-        return group.children.add(new Graphics(this.state, x, y));
+        return this.state.children.add(new Graphics(this.state, options));
     },
 
-    make: function (x, y)
+    make: function (options)
     {
-        return new Graphics(this.state, x, y);
+        return new Graphics(this.state, options);
     }
 
 };

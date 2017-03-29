@@ -4,6 +4,7 @@ var Components = require('../../components');
 var Render = require('./GraphicsRender');
 var Commands = require('./Commands');
 var MATH_CONST = require('../../math/const');
+var GetObjectValue = require('../../utils/object/GetObjectValue');
 
 var Graphics = new Class({
 
@@ -18,14 +19,48 @@ var Graphics = new Class({
 
     initialize:
 
-    function Graphics (state, x, y)
+    function Graphics (state, options)
     {
+        var x = GetObjectValue(options, 'x', 0);
+        var y = GetObjectValue(options, 'y', 0);
+
         GameObject.call(this, state);
 
         this.setPosition(x, y);
 
         this.commandBuffer = [];
         this.initRenderPassComponent();
+
+        this.defaultFillColor = -1;
+        this.defaultFillAlpha = 1;
+
+        this.defaultStrokeWidth = 1;
+        this.defaultStrokeColor = -1;
+        this.defaultStrokeAlpha = 1;
+
+        this.setDefaultStyles(options);
+    },
+
+    setDefaultStyles: function (options)
+    {
+        if (GetObjectValue(options, 'lineStyle', null))
+        {
+            this.defaultStrokeWidth = GetObjectValue(options, 'lineStyle.width', 1);
+            this.defaultStrokeColor = GetObjectValue(options, 'lineStyle.color', 0xffffff);
+            this.defaultStrokeAlpha = GetObjectValue(options, 'lineStyle.alpha', 1);
+
+            this.lineStyle(this.defaultStrokeWidth, this.defaultStrokeColor, this.defaultStrokeAlpha);
+        }
+
+        if (GetObjectValue(options, 'fillStyle', null))
+        {
+            this.defaultFillColor = GetObjectValue(options, 'fillStyle.color', 0xffffff);
+            this.defaultFillAlpha = GetObjectValue(options, 'fillStyle.alpha', 1);
+
+            this.fillStyle(this.defaultFillColor, this.defaultFillAlpha);
+        }
+
+        return this;
     },
 
     arc: function (x, y, radius, startAngle, endAngle, anticlockwise)
@@ -94,6 +129,16 @@ var Graphics = new Class({
         );
 
         return this;
+    },
+
+    strokeShape: function (shape)
+    {
+
+    },
+
+    fillShape: function (shape)
+    {
+
     },
 
     fillCircle: function (x, y, radius)
@@ -203,6 +248,16 @@ var Graphics = new Class({
     clear: function ()
     {
         this.commandBuffer.length = 0;
+
+        if (this.defaultFillColor > -1)
+        {
+            this.fillStyle(this.defaultFillColor, this.defaultFillAlpha);
+        }
+
+        if (this.defaultStrokeColor > -1)
+        {
+            this.lineStyle(this.defaultStrokeWidth, this.defaultStrokeColor, this.defaultStrokeAlpha);
+        }
 
         return this;
     }
