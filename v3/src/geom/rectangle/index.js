@@ -20,6 +20,7 @@ Rectangle.GetAspectRatio = require('./GetAspectRatio');
 Rectangle.GetCenter = require('./GetCenter');
 Rectangle.GetSize = require('./GetSize');
 Rectangle.Inflate = require('./Inflate');
+Rectangle.MarchingAnts = require('./MarchingAnts');
 Rectangle.MergePoints = require('./MergePoints');
 Rectangle.MergeRect = require('./MergeRect');
 Rectangle.MergeXY = require('./MergeXY');
