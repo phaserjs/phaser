@@ -9,6 +9,7 @@ module.exports = {
     Line: require('./line'),
     Point: require('./point'),
     Polygon: require('./polygon'),
-    Rectangle: require('./rectangle')
+    Rectangle: require('./rectangle'),
+    Triangle: require('./triangle')
 
 };
