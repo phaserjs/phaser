@@ -1,15 +1,28 @@
 var Perimeter = require('./Perimeter');
 
 //  Return an array of points from the perimeter of the rectangle
-//  each spaced out based on the quantity required
+//  each spaced out based on the quantity or step required
 
-//  Add option to set a starting offset?
-
-var MarchingAnts = function (rect, quantity, out)
+var MarchingAnts = function (rect, step, quantity, out)
 {
     if (out === undefined) { out = []; }
 
-    var step = Perimeter(rect) / quantity;
+    if (!step && !quantity)
+    {
+        //  Bail out
+        return out;
+    }
+
+    //  If step is a falsey value (false, null, 0, undefined, etc) then we calculate
+    //  it based on the quantity instead, otherwise we always use the step value
+    if (!step)
+    {
+        step = Perimeter(rect) / quantity;
+    }
+    else
+    {
+        quantity = Math.round(Perimeter(rect) / step);
+    }
 
     var x = rect.x;
     var y = rect.y;
