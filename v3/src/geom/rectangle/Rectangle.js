@@ -159,6 +159,38 @@ Object.defineProperties(Rectangle.prototype, {
             }
         }
 
+    },
+
+    centerX: {
+
+        enumerable: true,
+
+        get: function ()
+        {
+            return this.x + (this.width / 2);
+        },
+
+        set: function (value)
+        {
+            this.x = value - (this.width / 2);
+        }
+
+    },
+
+    centerY: {
+
+        enumerable: true,
+
+        get: function ()
+        {
+            return this.y + (this.height / 2);
+        },
+
+        set: function (value)
+        {
+            this.y = value - (this.height / 2);
+        }
+
     }
 
 });
