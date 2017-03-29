@@ -41,6 +41,8 @@ var Graphics = new Class({
         this.setDefaultStyles(options);
     },
 
+    //  STYLES
+
     setDefaultStyles: function (options)
     {
         if (GetObjectValue(options, 'lineStyle', null))
@@ -59,16 +61,6 @@ var Graphics = new Class({
 
             this.fillStyle(this.defaultFillColor, this.defaultFillAlpha);
         }
-
-        return this;
-    },
-
-    arc: function (x, y, radius, startAngle, endAngle, anticlockwise)
-    {
-        this.commandBuffer.push(
-            Commands.ARC,
-            x, y, radius, startAngle, endAngle, anticlockwise
-        );
 
         return this;
     },
@@ -96,6 +88,8 @@ var Graphics = new Class({
 
         return this;
     },
+
+    //  PATH
 
     beginPath: function ()
     {
@@ -133,14 +127,16 @@ var Graphics = new Class({
         return this;
     },
 
-    strokeShape: function (shape)
-    {
+    //  CIRCLE
 
+    fillCircleShape: function (circle)
+    {
+        return this.fillCircle(circle.x, circle.y, circle.radius);
     },
 
-    fillShape: function (shape)
+    strokeCircleShape: function (circle)
     {
-
+        return this.strokeCircle(circle.x, circle.y, circle.radius);
     },
 
     fillCircle: function (x, y, radius)
@@ -153,32 +149,34 @@ var Graphics = new Class({
         return this;
     },
 
-    fillRect: function (x, y, width, height)
-    {
-        this.commandBuffer.push(
-            Commands.FILL_RECT,
-            x, y, width, height
-        );
-
-        return this;
-    },
-
-    fillTriangle: function (x0, y0, x1, y1, x2, y2)
-    {
-        this.commandBuffer.push(
-            Commands.FILL_TRIANGLE,
-            x0, y0, x1, y1, x2, y2
-        );
-
-        return this;
-    },
-
     strokeCircle: function (x, y, radius)
     {
         this.beginPath();
         this.arc(x, y, radius, 0, MATH_CONST.PI2);
         this.closePath();
         this.strokePath();
+
+        return this;
+    },
+
+    //  RECTANGLE
+
+    fillRectShape: function (rect)
+    {
+        return this.fillRect(rect.x, rect.y, rect.width, rect.height);
+    },
+
+    strokeRectShape: function (rect)
+    {
+        return this.strokeRect(rect.x, rect.y, rect.width, rect.height);
+    },
+
+    fillRect: function (x, y, width, height)
+    {
+        this.commandBuffer.push(
+            Commands.FILL_RECT,
+            x, y, width, height
+        );
 
         return this;
     },
@@ -197,6 +195,28 @@ var Graphics = new Class({
         return this;
     },
 
+    //  TRIANGLE
+
+    fillTriangleShape: function (triangle)
+    {
+        return this.fillTriangle(triangle.x0, triangle.y0, triangle.x1, triangle.y1, triangle.x2, triangle.y2);
+    },
+
+    strokeTriangleShape: function (triangle)
+    {
+        return this.strokeTriangle(triangle.x0, triangle.y0, triangle.x1, triangle.y1, triangle.x2, triangle.y2);
+    },
+
+    fillTriangle: function (x0, y0, x1, y1, x2, y2)
+    {
+        this.commandBuffer.push(
+            Commands.FILL_TRIANGLE,
+            x0, y0, x1, y1, x2, y2
+        );
+
+        return this;
+    },
+
     strokeTriangle: function (x0, y0, x1, y1, x2, y2)
     {
         this.commandBuffer.push(
@@ -205,6 +225,15 @@ var Graphics = new Class({
         );
 
         return this;
+    },
+
+    //  LINE
+
+    strokeLineShape: function (line)
+    {
+        this.moveTo(line.x1, line.y1);
+
+        return this.lineTo(line.x2, line.y2);
     },
 
     lineTo: function (x, y)
@@ -242,6 +271,18 @@ var Graphics = new Class({
         this.commandBuffer.push(
             Commands.MOVE_FX_TO,
             x, y, width, rgb, 1
+        );
+
+        return this;
+    },
+
+    //  ARC
+
+    arc: function (x, y, radius, startAngle, endAngle, anticlockwise)
+    {
+        this.commandBuffer.push(
+            Commands.ARC,
+            x, y, radius, startAngle, endAngle, anticlockwise
         );
 
         return this;
