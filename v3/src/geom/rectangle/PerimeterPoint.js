@@ -1,6 +1,6 @@
 var MATH_CONST = require('../../math/const');
 
-//  deg = degrees
+//  deg = degrees (0-360)
 
 var PerimeterPoint = function (rect, deg, out)
 {

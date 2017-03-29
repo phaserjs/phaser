@@ -217,9 +217,16 @@ var Layer = new Class({
         return this;
     },
 
-    positionAroundCircle: function (circle, startAngle, endAngle)
+    placeOnCircle: function (circle, startAngle, endAngle)
     {
-        Actions.PositionAroundCircle(this.children.entries, circle, startAngle, endAngle);
+        Actions.PlaceOnCircle(this.children.entries, circle, startAngle, endAngle);
+
+        return this;
+    },
+
+    placeOnLine: function (line)
+    {
+        Actions.PlaceOnLine(this.children.entries, line);
 
         return this;
     },
