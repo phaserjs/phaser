@@ -11,6 +11,7 @@ module.exports = {
     IncY: require('./IncY'),
     PlaceOnCircle: require('./PlaceOnCircle'),
     PlaceOnLine: require('./PlaceOnLine'),
+    PlaceOnRectangle: require('./PlaceOnRectangle'),
     RandomCircle: require('./RandomCircle'),
     RandomEllipse: require('./RandomEllipse'),
     RandomLine: require('./RandomLine'),

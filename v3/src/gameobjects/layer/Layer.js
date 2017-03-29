@@ -231,6 +231,13 @@ var Layer = new Class({
         return this;
     },
 
+    placeOnRectangle: function (rect)
+    {
+        Actions.PlaceOnRectangle(this.children.entries, rect);
+
+        return this;
+    },
+
     randomCircle: function (circle)
     {
         Actions.RandomCircle(this.children.entries, circle);
