@@ -12,9 +12,9 @@ AlignInMap[CONST.TOP_CENTER] = require('./InTopCenter');
 AlignInMap[CONST.TOP_LEFT] = require('./InTopLeft');
 AlignInMap[CONST.TOP_RIGHT] = require('./InTopRight');
 
-var AlignIn = function (child, container, position)
+var AlignIn = function (child, container, position, offsetX, offsetY)
 {
-    return AlignInMap[position](child, container);
+    return AlignInMap[position](child, container, offsetX, offsetY);
 };
 
 module.exports = AlignIn;
