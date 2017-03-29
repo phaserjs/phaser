@@ -1,6 +1,7 @@
 var CONST = require('../utils/align/const');
 var AlignIn = require('../utils/align/AlignIn');
 var Zone = require('../gameobjects/zone/Zone');
+var GetObjectValue = require('../utils/object/GetObjectValue');
 
 var tempZone = new Zone({}, 0, 0, 1, 1);
 
@@ -55,13 +56,21 @@ var tempZone = new Zone({}, 0, 0, 1, 1);
 * @param {integer} [position] - The position constant. One of `Phaser.TOP_LEFT` (default), `Phaser.TOP_CENTER`, `Phaser.TOP_RIGHT`, `Phaser.LEFT_CENTER`, `Phaser.CENTER`, `Phaser.RIGHT_CENTER`, `Phaser.BOTTOM_LEFT`, `Phaser.BOTTOM_CENTER` or `Phaser.BOTTOM_RIGHT`.
 * @return {boolean} True if the Group children were aligned, otherwise false.
 */
-var GridAlign = function (items, width, height, cellWidth, cellHeight, position)
+var GridAlign = function (items, options)
 {
-    if (position === undefined) { position = CONST.TOP_LEFT; }
+    var width = GetObjectValue(options, 'width', -1);
+    var height = GetObjectValue(options, 'height', -1);
+    var cellWidth = GetObjectValue(options, 'cellWidth', 1);
+    var cellHeight = GetObjectValue(options, 'cellHeight', cellWidth);
+    var position = GetObjectValue(options, 'position', CONST.TOP_LEFT);
+    var x = GetObjectValue(options, 'x', 0);
+    var y = GetObjectValue(options, 'y', 0);
 
-    tempZone.setPosition(0, 0);
+    tempZone.setPosition(x, y);
     tempZone.setSize(cellWidth, cellHeight);
 
+    var cx = 0;
+    var cy = 0;
     var w = (width * cellWidth);
     var h = (height * cellHeight);
 
@@ -72,36 +81,43 @@ var GridAlign = function (items, width, height, cellWidth, cellHeight, position)
         if (width === -1)
         {
             //  We keep laying them out horizontally until we've done them all
+            cy += cellHeight;
             tempZone.y += cellHeight;
 
-            if (tempZone.y === h)
+            if (cy === h)
             {
+                cy = 0;
                 tempZone.x += cellWidth;
-                tempZone.y = 0;
+                tempZone.y = y;
             }
         }
         else if (height === -1)
         {
             //  We keep laying them out vertically until we've done them all
+            cx += cellWidth;
             tempZone.x += cellWidth;
 
-            if (tempZone.x === w)
+            if (cx === w)
             {
-                tempZone.x = 0;
+                cx = 0;
+                tempZone.x = x;
                 tempZone.y += cellHeight;
             }
         }
         else
         {
             //  We keep laying them out until we hit the column limit
+            cx += cellWidth;
             tempZone.x += cellWidth;
 
-            if (tempZone.x === w)
+            if (cx === w)
             {
-                tempZone.x = 0;
+                cx = 0;
+                cy += cellHeight;
+                tempZone.x = x;
                 tempZone.y += cellHeight;
 
-                if (tempZone.y === h)
+                if (cy === h)
                 {
                     //  We've hit the column limit, so return, even if there are items left
                     break;

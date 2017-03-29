@@ -86,7 +86,7 @@ var Layer = new Class({
         var randomKey = GetObjectValue(options, 'randomKey', false);
         var randomFrame = GetObjectValue(options, 'randomFrame', false);
         var yoyo = GetObjectValue(options, 'yoyo', false);
-        var quantity = GetObjectValue(options, 'quantity', 1);
+        var quantity = GetObjectValue(options, 'frameQuantity', 1);
         var max = GetObjectValue(options, 'max', 0);
 
         var range = Range(key, frame, {
@@ -182,9 +182,9 @@ var Layer = new Class({
         return this;
     },
 
-    gridAlign: function (width, height, cellWidth, cellHeight, position)
+    gridAlign: function (options)
     {
-        Actions.GridAlign(this.children.entries, width, height, cellWidth, cellHeight, position);
+        Actions.GridAlign(this.children.entries, options);
 
         return this;
     },
