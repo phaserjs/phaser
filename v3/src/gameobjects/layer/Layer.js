@@ -152,7 +152,7 @@ var Layer = new Class({
         Actions.SetRotation(entries, rotation, stepRotation);
 
         var scaleX = GetObjectValue(options, 'setScale.x', 1);
-        var scaleY = GetObjectValue(options, 'setScale.y', 1);
+        var scaleY = GetObjectValue(options, 'setScale.y', scaleX);
         var stepScaleX = GetObjectValue(options, 'setScale.stepX', 0);
         var stepScaleY = GetObjectValue(options, 'setScale.stepY', 0);
 
@@ -267,9 +267,9 @@ var Layer = new Class({
         return this;
     },
 
-    rotate: function (value)
+    rotate: function (value, step)
     {
-        Actions.Rotate(this.children.entries, value);
+        Actions.Rotate(this.children.entries, value, step);
 
         return this;
     },
