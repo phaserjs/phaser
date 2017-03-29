@@ -231,9 +231,9 @@ var Layer = new Class({
         return this;
     },
 
-    placeOnRectangle: function (rect)
+    placeOnRectangle: function (rect, shift)
     {
-        Actions.PlaceOnRectangle(this.children.entries, rect);
+        Actions.PlaceOnRectangle(this.children.entries, rect, shift);
 
         return this;
     },
