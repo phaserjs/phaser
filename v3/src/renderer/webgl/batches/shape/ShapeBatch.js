@@ -28,10 +28,10 @@ var ShapeBatch = function (game, gl, manager)
     this.vertexCount = 0;
     this.viewMatrixLocation = null;
     this.tempTriangle = [
-        {x: 0, y: 0, width: 0},
-        {x: 0, y: 0, width: 0},
-        {x: 0, y: 0, width: 0},
-        {x: 0, y: 0, width: 0}
+        {x: 0, y: 0, width: 0, rgb: 0xFFFFFF, alpha: 1.0},
+        {x: 0, y: 0, width: 0, rgb: 0xFFFFFF, alpha: 1.0},
+        {x: 0, y: 0, width: 0, rgb: 0xFFFFFF, alpha: 1.0},
+        {x: 0, y: 0, width: 0, rgb: 0xFFFFFF, alpha: 1.0}
     ];
 
     //   All of these settings will be able to be controlled via the Game Config
@@ -514,15 +514,23 @@ ShapeBatch.prototype = {
         tempTriangle[0].x = x0;
         tempTriangle[0].y = y0;
         tempTriangle[0].width = lineWidth;
+        tempTriangle[0].rgb = lineColor;
+        tempTriangle[0].alpha = lineAlpha;
         tempTriangle[1].x = x1;
         tempTriangle[1].y = y1;
         tempTriangle[1].width = lineWidth;
+        tempTriangle[1].rgb = lineColor;
+        tempTriangle[1].alpha = lineAlpha;
         tempTriangle[2].x = x2;
         tempTriangle[2].y = y2;
         tempTriangle[2].width = lineWidth;
+        tempTriangle[2].rgb = lineColor;
+        tempTriangle[2].alpha = lineAlpha;
         tempTriangle[3].x = x0;
         tempTriangle[3].y = y0;
         tempTriangle[3].width = lineWidth;
+        tempTriangle[3].rgb = lineColor;
+        tempTriangle[3].alpha = lineAlpha;
 
         this.addStrokePath(
             srcX, srcY, srcScaleX, srcScaleY, srcRotation,
