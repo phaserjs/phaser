@@ -75,6 +75,8 @@ var Graphics = new Class({
 
     lineStyle: function (lineWidth, color, alpha)
     {
+        if (alpha === undefined) { alpha = 1; }
+
         this.commandBuffer.push(
             Commands.LINE_STYLE,
             lineWidth, color, alpha
