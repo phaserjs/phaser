@@ -195,6 +195,23 @@ var Graphics = new Class({
         return this;
     },
 
+    //  POINT
+
+    fillPointShape: function (point, size)
+    {
+        return this.fillPoint(point.x, point.y, size);
+    },
+
+    fillPoint: function (x, y, size)
+    {
+        this.commandBuffer.push(
+            Commands.FILL_RECT,
+            x, y, size, size
+        );
+
+        return this;
+    },
+
     //  TRIANGLE
 
     fillTriangleShape: function (triangle)
@@ -234,6 +251,17 @@ var Graphics = new Class({
         this.moveTo(line.x1, line.y1);
 
         return this.lineTo(line.x2, line.y2);
+    },
+
+    lineBetween: function (x1, y1, x2, y2)
+    {
+        this.beginPath();
+        this.moveTo(x1, y1);
+        this.lineTo(x2, y2);
+        this.strokePath();
+        this.closePath();
+
+        return this;
     },
 
     lineTo: function (x, y)
