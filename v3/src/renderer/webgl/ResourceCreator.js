@@ -111,7 +111,7 @@ ResourceCreator.prototype = {
             height = pixels.height;
         }
 
-        return new Resources.Texture(texture, 0, width, height);
+        return new Resources.Texture(texture, width, height);
     },
 
     createShaderPipeline: function (vertexShaderSource, fragmentShaderSource) 
