@@ -104,6 +104,7 @@ var GraphicsWebGLRenderer = function (renderer, src, interpolationPercentage, ca
         switch(cmd)
         {
             case Commands.ARC:
+                iteration = 0;
                 x = commandBuffer[cmdIndex + 1];
                 y = commandBuffer[cmdIndex + 2];
                 radius = commandBuffer[cmdIndex + 3];
