@@ -33,8 +33,9 @@ var GameObject = new Class({
 
     destroy: function ()
     {
+        this.parent.remove(this);
+
         this.state = undefined;
-        this.parent = undefined;
     }
 
 });
