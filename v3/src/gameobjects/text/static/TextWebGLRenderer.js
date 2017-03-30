@@ -17,7 +17,7 @@ var TextWebGLRenderer = function (renderer, src, interpolationPercentage, camera
         src.dirty = false;
     }
 
-    renderer.spriteBatch.addSpriteTexture(src, camera, src.canvasTexture, w, h);
+    renderer.spriteBatch.addSpriteTexture(src, camera, src.canvasTexture, src.prevWidth, src.prevHeight);
 };
 
 module.exports = TextWebGLRenderer;
