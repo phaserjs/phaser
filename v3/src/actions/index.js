@@ -12,6 +12,7 @@ module.exports = {
     PlaceOnCircle: require('./PlaceOnCircle'),
     PlaceOnLine: require('./PlaceOnLine'),
     PlaceOnRectangle: require('./PlaceOnRectangle'),
+    PlaceOnTriangle: require('./PlaceOnTriangle'),
     RandomCircle: require('./RandomCircle'),
     RandomEllipse: require('./RandomEllipse'),
     RandomLine: require('./RandomLine'),

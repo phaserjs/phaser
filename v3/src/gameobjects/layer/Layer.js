@@ -238,6 +238,13 @@ var Layer = new Class({
         return this;
     },
 
+    placeOnTriangle: function (triangle, stepRate)
+    {
+        Actions.PlaceOnTriangle(this.children.entries, triangle, stepRate);
+
+        return this;
+    },
+
     randomCircle: function (circle)
     {
         Actions.RandomCircle(this.children.entries, circle);
