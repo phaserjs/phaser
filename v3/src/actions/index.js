@@ -17,6 +17,7 @@ module.exports = {
     RandomEllipse: require('./RandomEllipse'),
     RandomLine: require('./RandomLine'),
     RandomRectangle: require('./RandomRectangle'),
+    RandomTriangle: require('./RandomTriangle'),
     Rotate: require('./Rotate'),
     RotateAround: require('./RotateAround'),
     RotateAroundDistance: require('./RotateAroundDistance'),

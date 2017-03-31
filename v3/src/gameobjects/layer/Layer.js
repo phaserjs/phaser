@@ -273,6 +273,13 @@ var Layer = new Class({
         return this;
     },
 
+    randomTriangle: function (triangle)
+    {
+        Actions.RandomTriangle(this.children.entries, triangle);
+
+        return this;
+    },
+
     rotate: function (value, step)
     {
         Actions.Rotate(this.children.entries, value, step);

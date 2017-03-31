@@ -12,6 +12,7 @@ Triangle.Clone = require('./Clone');
 Triangle.Contains = require('./Contains');
 Triangle.ContainsPoint = require('./ContainsPoint');
 Triangle.InCenter = require('./InCenter');
+Triangle.Random = require('./Random');
 Triangle.Rotate = require('./Rotate');
 Triangle.RotateAroundPoint = require('./RotateAroundPoint');
 Triangle.RotateAroundXY = require('./RotateAroundXY');
