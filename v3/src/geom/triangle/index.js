@@ -10,6 +10,7 @@ Triangle.CircumCenter = require('./CircumCenter');
 Triangle.CircumCircle = require('./CircumCircle');
 Triangle.Clone = require('./Clone');
 Triangle.Contains = require('./Contains');
+Triangle.ContainsArray = require('./ContainsArray');
 Triangle.ContainsPoint = require('./ContainsPoint');
 Triangle.CopyFrom = require('./CopyFrom');
 Triangle.Equals = require('./Equals');
