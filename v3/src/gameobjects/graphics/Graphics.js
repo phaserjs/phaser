@@ -248,9 +248,7 @@ var Graphics = new Class({
 
     strokeLineShape: function (line)
     {
-        this.moveTo(line.x1, line.y1);
-
-        return this.lineTo(line.x2, line.y2);
+        return this.lineBetween(line.x1, line.y1, line.x2, line.y2);
     },
 
     lineBetween: function (x1, y1, x2, y2)
