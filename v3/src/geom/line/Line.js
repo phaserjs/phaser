@@ -28,6 +28,16 @@ Line.prototype = {
         this.y2 = y2;
 
         return this;
+    },
+
+    getPointA: function ()
+    {
+        return { x1: this.x1, y1: this.y1 };
+    },
+
+    getPointB: function ()
+    {
+        return { x1: this.x2, y1: this.y2 };
     }
 
 };
