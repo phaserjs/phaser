@@ -7,8 +7,8 @@
 var CONST = require('../const');
 var CanvasPool = require('../dom/CanvasPool');
 var Features = require('../device/Features');
-var CanvasRenderer = require('../renderer/canvas/CanvasRenderer');
-var WebGLRenderer = require('../renderer/webgl/WebGLRenderer');
+//var CanvasRenderer = require('../renderer/canvas/CanvasRenderer');
+//var WebGLRenderer = require('../renderer/webgl/WebGLRenderer');
 var CanvasInterpolation = require('../dom/CanvasInterpolation');
 
 /**
@@ -71,7 +71,7 @@ var CreateRenderer = function (game)
     }
 
     //  Create the renderer
-    if (config.renderType === CONST.WEBGL)
+    /*if (config.renderType === CONST.WEBGL)
     {
         game.renderer = new WebGLRenderer(game);
         game.context = null;
@@ -83,7 +83,7 @@ var CreateRenderer = function (game)
 
         //  debug
         game.canvas.id = 'game';
-    }
+    }*/
 };
 
 module.exports = CreateRenderer;
