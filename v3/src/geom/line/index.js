@@ -15,6 +15,7 @@ Line.Length = require('./Length');
 Line.NormalAngle = require('./NormalAngle');
 Line.NormalX = require('./NormalX');
 Line.NormalY = require('./NormalY');
+Line.Offset = require('./Offset');
 Line.PerpSlope = require('./PerpSlope');
 Line.Random = require('./Random');
 Line.ReflectAngle = require('./ReflectAngle');
