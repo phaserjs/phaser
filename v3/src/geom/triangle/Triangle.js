@@ -39,6 +39,21 @@ Triangle.prototype = {
         this.y3 = y3;
 
         return this;
+    },
+
+    getLineA: function ()
+    {
+        return { x1: this.x1, y1: this.y1, x2: this.x2, y2: this.y2 };
+    },
+
+    getLineB: function ()
+    {
+        return { x1: this.x2, y1: this.y2, x2: this.x3, y2: this.y3 };
+    },
+
+    getLineC: function ()
+    {
+        return { x1: this.x3, y1: this.y3, x2: this.x1, y2: this.y1 };
     }
 
 };
