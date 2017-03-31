@@ -9,6 +9,7 @@ var LineToLine = function (line1, line2, out)
     var y1 = line1.y1;
     var x2 = line1.x2;
     var y2 = line1.y2;
+
     var x3 = line2.x1;
     var y3 = line2.y1;
     var x4 = line2.x2;

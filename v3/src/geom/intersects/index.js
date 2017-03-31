@@ -12,6 +12,7 @@ module.exports = {
     PointToLineSegment: require('./PointToLineSegment'),
     RectangleToRectangle: require('./RectangleToRectangle'),
     RectangleToValues: require('./RectangleToValues'),
-    TriangleToCircle: require('./TriangleToCircle')
+    TriangleToCircle: require('./TriangleToCircle'),
+    TriangleToLine: require('./TriangleToLine')
 
 };
