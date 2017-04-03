@@ -4,6 +4,7 @@ var Triangle = require('./Triangle');
 
 Triangle.Area = require('./Area');
 Triangle.BuildEquilateral = require('./BuildEquilateral');
+Triangle.BuildFromPolygon = require('./BuildFromPolygon');
 Triangle.BuildRight = require('./BuildRight');
 Triangle.Centroid = require('./Centroid');
 Triangle.CircumCenter = require('./CircumCenter');
