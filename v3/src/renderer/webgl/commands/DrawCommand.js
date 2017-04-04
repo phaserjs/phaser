@@ -1,4 +1,4 @@
-var GL = require('../../GL');
+var GL = require('../GL');
 var BaseDrawCommand = require('./BaseDrawCommand');
 
 var DrawCommand = function ()
@@ -9,66 +9,75 @@ var DrawCommand = function ()
     this.vertexBuffer = null;
 };
 
-DrawCommand.prototype.constructor = DrawCommand;
-
 DrawCommand.prototype = Object.create(BaseDrawCommand.prototype, {
 
-    setVertexBuffer: function (vertexBuffer) 
+    setVertexBuffer: 
     {
-        this.vertexBuffer = vertexBuffer;
-
-        return this;
-    },
-
-    setVertexCount: function (first, vertexCount)
-    {
-        this.first = first;
-        this.vertexCount = vertexCount;
+        value: function (vertexBuffer) 
+        {
+                this.vertexBuffer = vertexBuffer;
     
-        return this;
+            return this;
+        }
     },
 
-    dispatch: function (backend)
+    setVertexCount: 
     {
-        var gl = backend;
-        var renderTarget = this.outputStage.renderTarget
-        var vertexBuffer = this.vertexBuffer;
-        var inputElements = vertexBuffer.inputElements;
-        var inputLength = inputElements.length;
-
-        gl.useProgram(this.shaderPipeline.program);
-        if (renderTarget !== null)
+        value: function (first, vertexCount)
         {
-            gl.bindFramebuffer(GL.FRAMEBUFFER, renderTarget.framebufferObject);
+            this.first = first;
+            this.vertexCount = vertexCount;
+        
+            return this;
         }
-        else
-        {
-            gl.bindFramebuffer(GL.FRAMEBUFFER, null);
-        }
-        this.dispatchBase(backend);
+    },
 
-        gl.bindBuffer(GL.ARRAY_BUFFER, vertexBuffer.bufferObject);
-
-        for (var index = 0; index < inputLength; ++index)
+    dispatch:
+    {
+        value: function (backend)
         {
-            var element = inputElements[index];
-            if (element !== undefined && element !== null) 
+            var gl = backend;
+            var renderTarget = this.outputStage.renderTarget
+            var vertexBuffer = this.vertexBuffer;
+            var inputElements = vertexBuffer.inputElements;
+            var inputLength = inputElements.length;
+
+            gl.useProgram(this.shaderPipeline.program);
+            if (renderTarget !== null)
             {
-                gl.enableVertexAttribArray(element.index);
-                gl.vertexAttribPointer(
-                    element.index, 
-                    element.size, 
-                    element.type, 
-                    element.normalized, 
-                    element.stride, 
-                    element.offset
-                );
+                gl.bindFramebuffer(GL.FRAMEBUFFER, renderTarget.framebufferObject);
             }
-        }
+            else
+            {
+                gl.bindFramebuffer(GL.FRAMEBUFFER, null);
+            }
+            this.dispatchBase(backend);
 
-        gl.drawArrays(this.topology, this.first, this.vertexCount);
+            gl.bindBuffer(GL.ARRAY_BUFFER, vertexBuffer.bufferObject);
+
+            for (var index = 0; index < inputLength; ++index)
+            {
+                var element = inputElements[index];
+                if (element !== undefined && element !== null) 
+                {
+                    gl.enableVertexAttribArray(element.index);
+                    gl.vertexAttribPointer(
+                        element.index, 
+                        element.size, 
+                        element.type, 
+                        element.normalized, 
+                        element.stride, 
+                        element.offset
+                    );
+                }
+            }
+
+            gl.drawArrays(this.topology, this.first, this.vertexCount);
+        }
     }
 
 });
+
+DrawCommand.prototype.constructor = DrawCommand;
 
 module.exports = DrawCommand;

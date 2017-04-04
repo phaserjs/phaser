@@ -1,4 +1,4 @@
-var GL = require('../../GL');
+var GL = require('../GL');
 
 var UpdateBufferResourceCommand = function ()
 {
@@ -33,7 +33,7 @@ UpdateBufferResourceCommand.prototype = {
         var bufferTarget = buffer.bufferTarget;
 
         gl.bindBuffer(bufferTarget, buffer.bufferObject);
-        gl.bufferSubData(bufferTarget, this.bufferData, this.bufferDataOffset);
+        gl.bufferSubData(bufferTarget, this.bufferDataOffset, this.bufferData);
     }
 };
 

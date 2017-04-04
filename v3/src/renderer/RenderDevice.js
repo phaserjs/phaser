@@ -1,12 +1,16 @@
-var RenderDevice = function (backend) 
+var RenderDevice = function (backendInterface, resourceManager, rendererList) 
 {
-    this.backend = backend;
+    this.backendInterface = backendInterface;
+    this.backend = backendInterface.backend;
     this.commandListArray = [];
+    this.resourceManager = resourceManager;
+    this.rendererList = rendererList;
 };
 
 RenderDevice.prototype.constructor = RenderDevice;
 
 RenderDevice.prototype = {
+
     addCommandList: function (commandList) 
     {
         this.commandListArray.push(commandList);
@@ -21,12 +25,15 @@ RenderDevice.prototype = {
     },
     dispatch: function () 
     {
-        var listCount = commandListArray.length;
+        var listCount = this.commandListArray.length;
         var commandListArray = this.commandListArray;
+        var backend = this.backend;
+
+        this.backendInterface.clearScreen(0, 0, 0, 1);
 
         for (var index = 0; index < listCount; ++index) 
         {
-            commandListArray[index].dispatch(this.backend);
+            commandListArray[index].dispatch(backend);
         }
         
         commandListArray.length = 0;

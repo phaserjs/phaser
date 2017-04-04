@@ -1,10 +1,10 @@
-var ScaleModes = require('../renderer/ScaleModes');
+//var ScaleModes = require('../renderer/ScaleModes');
 
 //  ScaleMode Component
 
 var ScaleMode = {
 
-    _scaleMode: ScaleModes.DEFAULT,
+    //_scaleMode: ScaleModes.DEFAULT,
 
     scaleMode: {
 

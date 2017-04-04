@@ -1,4 +1,4 @@
-var GL = require('../../GL');
+var GL = require('../GL');
 
 var BaseDrawCommand = function () 
 {
@@ -57,7 +57,7 @@ BaseDrawCommand.prototype = {
         if (outputStage.enableBlending)
         {
             gl.enable(GL.BLEND);
-            gl.blendFuncSeparate(outputStage.blendSrcRGB, outputStage.blendDstRGB, outputStage.blendSrcAlpha, outputStage.blendDstAlpha);
+            gl.blendFuncSeparate(outputStage.blendSrcRgb, outputStage.blendDstRgb, outputStage.blendSrcAlpha, outputStage.blendDstAlpha);
             gl.blendEquationSeparate(outputStage.blendEqRgb, outputStage.blendEqAlpha);
             gl.blendColor(outputStage.blendRed, outputStage.blendGreen, outputStage.blendBlue, outputStage.blendAlpha)
         } 

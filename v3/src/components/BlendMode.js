@@ -1,10 +1,10 @@
-var BlendModes = require('../renderer/BlendModes');
+// var BlendModes = require('../renderer/BlendModes');
 
 //  BlendMode Component
 
 var BlendMode = {
 
-    _blendMode: BlendModes.NORMAL,
+    //_blendMode: BlendModes.NORMAL,
 
     blendMode: {
 

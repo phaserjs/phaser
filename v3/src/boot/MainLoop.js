@@ -143,7 +143,8 @@ MainLoop.prototype = {
     step: function (timestamp)
     {
         var active = this.game.state.active;
-        var renderer = this.game.renderer;
+        var renderDevice = this.game.renderDevice;
+        //var renderer = this.game.renderer;
 
         var len = active.length;
 
@@ -213,15 +214,13 @@ MainLoop.prototype = {
 
         var interpolation = this.frameDelta / this.timestep;
 
-        renderer.preRender();
 
         //  This uses active.length, in case state.update removed the state from the active list
         for (i = 0; i < active.length; i++)
         {
-            active[i].state.sys.render(interpolation, renderer);
+            active[i].state.sys.render(interpolation, renderDevice);
         }
 
-        renderer.postRender();
 
         if (this.panic)
         {

@@ -1,15 +1,16 @@
 var Resources = require('./resources');
 var GL = require('./GL');
 
-var ResourceCreator = function (gl) 
+var ResourceManager = function (gl) 
 {
     this.gl = gl;
     /* Maybe add pooling here */
+    this.shaderCache = {};
 };
 
-ResourceCreator.prototype.constructor = ResourceCreator;
+ResourceManager.prototype.constructor = ResourceManager;
 
-ResourceCreator.prototype = {
+ResourceManager.prototype = {
 
     createRenderTarget: function (width, height, colorBuffer, depthStencilBuffer) 
     {
@@ -74,7 +75,7 @@ ResourceCreator.prototype = {
         var gl = this.gl;
         var bufferObject = gl.createBuffer();
         gl.bindBuffer(target, bufferObject);
-        gl.bufferData(target, bufferObject, initialDataOrSize, bufferUsage);
+        gl.bufferData(target, initialDataOrSize, bufferUsage);
 
         switch (target) 
         {
@@ -114,48 +115,56 @@ ResourceCreator.prototype = {
         return new Resources.Texture(texture, width, height);
     },
 
-    createShaderPipeline: function (vertexShaderSource, fragmentShaderSource) 
+    createShaderPipeline: function (shaderName, shaderSources) 
     {
-        var gl = this.gl;
-        var program = gl.createProgram();
-        var vertShader = gl.createShader(GL.VERTEX_SHADER);
-        var fragShader = gl.createShader(GL.FRAGMENT_SHADER);
-        var error;
-
-        gl.shaderSoruce(vertShader, vertexShaderSource);
-        gl.shaderSoruce(fragShader, fragmentShaderSource);
-
-        gl.compileShader(vertShader);
-        gl.compileShader(fragShader);
-
-        error = gl.getShaderInfoLog(vertShader);
-
-        if (error.length > 0) 
+        if (!(shaderName in this.shaderCache))
         {
-            throw new Error('Vertex Shader Compilation Error.\n' + error);
+            var gl = this.gl;
+            var program = gl.createProgram();
+            var vertShader = gl.createShader(GL.VERTEX_SHADER);
+            var fragShader = gl.createShader(GL.FRAGMENT_SHADER);
+            var error;
+
+            gl.shaderSource(vertShader, shaderSources.vert);
+            gl.shaderSource(fragShader, shaderSources.frag);
+
+            gl.compileShader(vertShader);
+            gl.compileShader(fragShader);
+
+            error = gl.getShaderInfoLog(vertShader);
+
+            if (error.length > 0) 
+            {
+                throw new Error('Vertex Shader Compilation Error.\n' + error);
+            }
+
+            error = gl.getShaderInfoLog(fragShader);
+
+            if (error.length > 0) 
+            {
+                throw new Error('Fragment Shader Compilation Error.\n' + error);
+            }
+
+            gl.attachShader(program, vertShader);
+            gl.attachShader(program, fragShader);
+            gl.linkProgram(program);
+
+            error = gl.getProgramParameter(program, GL.LINK_STATUS);
+
+            if (error === 0)
+            {
+                error = gl.getProgramInfoLog(program);
+
+                throw new Error('Program Linking Error.\n' + error);
+            }
+
+            
+            return (this.shaderCache[shaderName] = new Resources.ShaderPipeline(gl, program, vertShader, fragShader));
         }
-
-        error = gl.getShaderInfoLog(fragShader);
-
-        if (error.length > 0) 
+        else
         {
-            throw new Error('Fragment Shader Compilation Error.\n' + error);
+            return this.shaderCache[shaderName];   
         }
-
-        gl.attachShader(program, vertShader);
-        gl.attachShader(program, fragShader);
-        gl.linkProgram(program);
-
-        error = gl.getProgramParameter(program, GL.LINK_STATUS);
-
-        if (error === 0)
-        {
-            error = gl.getProgramInfoLog(program);
-
-            throw new Error('Program Linking Error.\n' + error);
-        }
-
-        return new Resources.ShaderPipeline(gl, program, vertShader, fragShader);
     },
 
     createOutputStage: function () 
@@ -170,4 +179,4 @@ ResourceCreator.prototype = {
 
 };
 
-module.exports = ResourceCreator;
+module.exports = ResourceManager;

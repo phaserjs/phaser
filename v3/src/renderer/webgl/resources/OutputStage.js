@@ -67,7 +67,7 @@ OutputStage.prototype = {
         return this;
     },
 
-    setBlendFuncSeparate: function (srcRgb, srcAlpha, dstRgb, dstAlpha, eqRgb, eqAlpha) 
+    setBlendFuncSeparate: function (srcRgb, dstRgb, srcAlpha, dstAlpha, eqRgb, eqAlpha) 
     {
         this.blendSrcRgb = srcRgb;
         this.blendSrcAlpha = srcAlpha;
@@ -80,14 +80,23 @@ OutputStage.prototype = {
 
     setDefaultBlending: function () 
     {
-        this.setBlendFunc(GL.SRC_ALPHA, GL.ONE_MINUS_SRC_ALPHA, GL.ADD);
+        this.setBlendFuncSeparate(
+            GL.SRC_ALPHA,
+            GL.ONE_MINUS_SRC_ALPHA,
+            GL.ONE,
+            GL.ONE_MINUS_SRC_ALPHA, 
+            GL.FUNC_ADD,
+            GL.FUNC_ADD
+        );
         return this;
     },
 
     setNoBlending: function () 
     {
-        this.setBlendFunc(GL.ONE, GL.ZERO, GL.ADD);
+        this.setBlendFunc(GL.ONE, GL.ZERO, GL.FUNC_ADD);
         return this;
     }
 
 };
+
+module.exports = OutputStage;

@@ -141,14 +141,14 @@ Systems.prototype = {
         this.state.update.call(this.state, timestep, physicsStep);
     },
 
-    render: function (interpolation, renderer)
+    render: function (interpolation, renderDevice)
     {
         if (!this.settings.visible)
         {
             return;
         }
 
-        this.cameras.render(renderer, this.children, interpolation);
+        this.cameras.render(renderDevice, this.children, interpolation);
     }
 };
 

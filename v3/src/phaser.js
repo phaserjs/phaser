@@ -50,6 +50,24 @@ var Phaser = {
         Objects: require('./utils/object/'),
         String: require('./utils/string/')
 
+    },
+
+    Render: {
+        
+        CommandList: require('./renderer/CommandList'),
+        GlobalCommandList: require('./renderer/GlobalCommandList'),
+
+        WebGL: {
+
+            BaseDrawCommand: require('./renderer/webgl/commands/BaseDrawCommand'),
+            ClearRenderTargetCommand: require('./renderer/webgl/commands/ClearRenderTargetCommand'),
+            DrawCommand: require('./renderer/webgl/commands/DrawCommand'),
+            DrawIndexedCommand: require('./renderer/webgl/commands/DrawIndexedCommand'),
+            SetViewportCommand: require('./renderer/webgl/commands/SetViewportCommand'),
+            UpdateBufferResourceCommand: require('./renderer/webgl/commands/UpdateBufferResourceCommand')
+
+        }
+
     }
 
 };

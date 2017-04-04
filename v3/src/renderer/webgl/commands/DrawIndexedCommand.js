@@ -1,4 +1,4 @@
-var GL = require('../../GL');
+var GL = require('../GL');
 var BaseDrawCommand = require('./BaseDrawCommand');
 
 var DrawIndexedCommand = function ()
@@ -32,7 +32,7 @@ DrawIndexedCommand.prototype = Object.create(BaseDrawCommand.prototype, {
         this.indexCount = indexCount;
 
         return this;
-    }
+    },
 
     setVertexCount: function (first, vertexCount)
     {

@@ -1,4 +1,5 @@
 var Camera = require('../../camera/Camera');
+var GlobalCommandList = require('../../renderer/GlobalCommandList');
 
 var CameraManager = function (state)
 {
@@ -84,18 +85,26 @@ CameraManager.prototype = {
         }
     },
 
-    render: function (renderer, children, interpolation)
+    render: function (renderDevice, children, interpolation)
     {
         var cameras = this.cameras;
+        
         for (var i = 0, l = cameras.length; i < l; ++i)
         {
             var camera = cameras[i];
-
+            var childCount = children.length;
+            var list = children.list;
             camera.preRender();
-
-            renderer.render(this.state, children, interpolation, camera);
+            GlobalCommandList.commandList.clearList();
+            renderDevice.addCommandList(GlobalCommandList.commandList);
+            for (var childIndex = 0; childIndex < childCount; ++childIndex)
+            {
+                list[childIndex].render(camera);
+            }
+            //renderer.render(this.state, children, interpolation, camera);
+            renderDevice.sortCommandLists();
+            renderDevice.dispatch();
         }
-
     },
 
     destroy: function ()

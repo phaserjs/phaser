@@ -12,13 +12,12 @@ var Image = new Class({
         Components.Flip,
         Components.GetBounds,
         Components.Origin,
-        Components.RenderPass,
         Components.ScaleMode,
         Components.Size,
         Components.Texture,
         Components.Transform,
         Components.Visible,
-        ImageRender
+        Components.Render
     ],
 
     initialize:
@@ -27,11 +26,16 @@ var Image = new Class({
     {
         GameObject.call(this, state);
 
+        this.renderer = new state.
+                            game.
+                            renderDevice.
+                            rendererList.
+                            TextureRenderer(state.game, 1);
+
         this.setTexture(texture, frame);
         this.setPosition(x, y);
         this.setSizeToFrame();
         this.setOrigin();
-        this.initRenderPassComponent();
     }
 
 });

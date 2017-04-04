@@ -5,10 +5,10 @@
 */
 
 var CONST = require('../const');
-var ScaleModes = require('../renderer/ScaleModes');
+//var ScaleModes = require('../renderer/ScaleModes');
 var IsSizePowerOfTwo = require('../math/pow2/IsSizePowerOfTwo');
-var CreateTexture2DFromSource = require('../renderer/webgl/utils/texture/CreateTexture2DFromSource');
-
+//var CreateTexture2DFromSource = require('../renderer/webgl/utils/texture/CreateTexture2DFromSource');
+var GL = require('../renderer/webgl/GL');
 /**
 *
 * @class Phaser.TextureSource
@@ -58,7 +58,7 @@ var TextureSource = function (texture, source)
     * @type {Number}
     * @default Phaser.scaleModes.DEFAULT;
     */
-    this.scaleMode = ScaleModes.DEFAULT;
+    //this.scaleMode = ScaleModes.DEFAULT;
 
     /**
     * Controls if RGB channels should be pre-multiplied by Alpha  (WebGL only)
@@ -124,7 +124,10 @@ var TextureSource = function (texture, source)
 
     if (game.config.renderType === CONST.WEBGL)
     {
-        CreateTexture2DFromSource(game.renderer.gl, this);
+        this.glTexture = game.
+                         renderDevice.
+                         resourceManager.
+                         createTexture(0, GL.LINEAR, GL.LINEAR, GL.CLAMP_TO_EDGE, GL.CLAMP_TO_EDGE, GL.RGBA, source);
     }
 };
 

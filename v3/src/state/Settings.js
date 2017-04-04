@@ -1,5 +1,5 @@
 var CONST = require('./const');
-var ScaleModes = require('../renderer/ScaleModes');
+//var ScaleModes = require('../renderer/ScaleModes');
 var GetObjectValue = require('../utils/object/GetObjectValue');
 
 var Settings = {
@@ -42,7 +42,7 @@ var Settings = {
 
             //  State Render Settings (applies only to this State)
 
-            scaleMode: GetObjectValue(config, 'scaleMode', ScaleModes.DEFAULT),
+            //scaleMode: GetObjectValue(config, 'scaleMode', ScaleModes.DEFAULT),
             roundPixels: GetObjectValue(config, 'roundPixels', false),
 
             dirtyRender: GetObjectValue(config, 'dirtyRender', false),

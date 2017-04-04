@@ -10,7 +10,7 @@ CommandList.prototype = {
 
     addCommand: function (command) 
     {
-        this.commandBuffer.push(command)
+        this.commandBuffer.push(command);
     },
 
     clearList: function () 
@@ -22,7 +22,7 @@ CommandList.prototype = {
     {
         var commandBuffer = this.commandBuffer;
         var commandCount = commandBuffer.length;
-        for(var inde = 0 index < commandCount; ++index)
+        for(var index = 0; index < commandCount; ++index)
         {
             commandBuffer[index].dispatch(backend);
         }

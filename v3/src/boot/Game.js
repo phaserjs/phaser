@@ -24,7 +24,8 @@ var Game = function (config)
 {
     this.config = new Config(config);
 
-    this.renderer = null;
+    this.renderDevice = null;
+    //this.renderer = null;
     this.canvas = null;
     this.context = null;
 

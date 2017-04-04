@@ -32,7 +32,6 @@ var Blitter = new Class({
         Components.Size,
         Components.Texture,
         Components.Transform,
-        Components.RenderPass,
         Components.Visible,
         BlitterRender
     ],
@@ -51,7 +50,6 @@ var Blitter = new Class({
         this.renderList = [];
 
         this.dirty = false;
-        this.initRenderPassComponent();
     },
 
     //  frame MUST be part of the Blitter texture

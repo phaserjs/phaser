@@ -1,4 +1,4 @@
-var GL = require('../../GL');
+var GL = require('../GL');
 
 var ClearRenderTargetCommand = function ()
 {
