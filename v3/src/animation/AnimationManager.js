@@ -4,6 +4,7 @@
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
+var Animation = require('./frame/Animation');
 var Map = require('../structs/Map');
 
 /**
@@ -21,6 +22,8 @@ var AnimationManager = function (game)
 {
     this.game = game;
 
+    this.textureManager = game.textures;
+
     this.anims = new Map();
 };
 
@@ -33,7 +36,32 @@ AnimationManager.prototype = {
     //  add bone based animation
     //  add animation from json data
 
-    add: function (key, frames, loop)
+    //  {
+    //      frames: [
+    //          { key: textureKey, frame: textureFrame },
+    //          { key: textureKey, frame: textureFrame, duration: float },
+    //          { key: textureKey, frame: textureFrame, onUpdate: function }
+    //      ],
+    //      framerate: integer,
+    //      duration: float (seconds, optional, ignored if framerate is set),
+    //      skipMissedFrames: boolean,
+    //      delay: integer
+    //      repeat: -1 = forever, otherwise integer
+    //      repeatDelay: integer
+    //      yoyo: boolean,
+    //      onStart: function
+    //      onRepeat: function
+    //      onComplete: function,
+    //      
+    //      transitions: [
+    //          {
+    //              key: string <- key of the animation to blend with,
+    //              frames: [] <- play these frames before starting key
+    //          }
+    //      ]
+    //  }
+
+    add: function (key, config)
     {
         if (this.anims.has(key))
         {
@@ -41,7 +69,11 @@ AnimationManager.prototype = {
             return;
         }
 
+        var anim = new Animation(this, key, config);
 
+        this.anims.set(key, anim);
+
+        return anim;
     },
 
     get: function (key)
