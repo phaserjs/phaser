@@ -1,11 +1,12 @@
 //  http://www.blackpawn.com/texts/pointinpoly/
 
 //  points is an array of Point-like objects with public x/y properties
-//  returns an array with the same number of elements as the points array
-//  each element contains either true or false depending if the point lay in the Triangle or not.
+//  returns an array containing all points that are within the triangle, or an empty array if none
+//  if 'returnFirst' is true it will return after the first point within the triangle is found
 
-var ContainsArray = function (triangle, points, out)
+var ContainsArray = function (triangle, points, returnFirst, out)
 {
+    if (returnFirst === undefined) { returnFirst = false; }
     if (out === undefined) { out = []; }
 
     var v0x = triangle.x3 - triangle.x1;
@@ -43,7 +44,15 @@ var ContainsArray = function (triangle, points, out)
         u = ((dot11 * dot02) - (dot01 * dot12)) * inv;
         v = ((dot00 * dot12) - (dot01 * dot02)) * inv;
     
-        out.push(u >= 0 && v >= 0 && (u + v < 1));
+        if (u >= 0 && v >= 0 && (u + v < 1))
+        {
+            out.push({ x: points[i].x, y: points[i].y });
+
+            if (returnFirst)
+            {
+                break;
+            }
+        }
     }
 
     return out;
