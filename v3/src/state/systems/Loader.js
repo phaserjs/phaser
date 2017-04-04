@@ -12,6 +12,7 @@ var AtlasJSONFile = require('../../loader/filetypes/AtlasJSONFile');
 var BitmapFontFile = require('../../loader/filetypes/BitmapFontFile');
 var SpriteSheet = require('../../loader/filetypes/SpriteSheet');
 var SVGFile = require('../../loader/filetypes/SVGFile');
+var HTMLFile = require('../../loader/filetypes/HTMLFile');
 
 var ParseXMLBitmapFont = require('../../gameobjects/bitmaptext/ParseXMLBitmapFont');
 
@@ -126,6 +127,13 @@ Loader.prototype.glsl = function (key, url, xhrSettings)
 Loader.prototype.spritesheet = function (key, url, config, xhrSettings)
 {
     var file = new SpriteSheet(key, url, config, this.path, xhrSettings);
+
+    return this.addFile(file);
+};
+
+Loader.prototype.html = function (key, url, width, height, xhrSettings)
+{
+    var file = new HTMLFile(key, url, width, height, this.path, xhrSettings);
 
     return this.addFile(file);
 };
@@ -276,6 +284,7 @@ Loader.prototype.processCallback = function ()
         {
             case 'image':
             case 'svg':
+            case 'html':
                 textures.addImage(file.key, file.data);
                 break;
 
