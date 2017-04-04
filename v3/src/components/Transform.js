@@ -15,16 +15,24 @@ var Transform = {
     _rotation: 0,
     _z: 0,
 
+    //  public properties / methods
+
     x: 0,
     y: 0,
+
     z: {
-        get: function () {
+
+        get: function ()
+        {
             return this._z;
         },
-        set: function (value) {
-            this.state.sortChildrenFlag = true;
+
+        set: function (value)
+        {
+            this.state.sys.sortChildrenFlag = true;
             this._z = value;
         }
+
     },
 
     scaleX: {
@@ -128,6 +136,15 @@ var Transform = {
 
         this.scaleX = x;
         this.scaleY = y;
+
+        return this;
+    },
+
+    setZ: function (value)
+    {
+        if (value === undefined) { value = 0; }
+
+        this.z = value;
 
         return this;
     }
