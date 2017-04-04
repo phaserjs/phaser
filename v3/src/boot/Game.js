@@ -95,6 +95,8 @@ Game.prototype = {
 
         AddToDOM(this.canvas, this.config.parent);
 
+        this.anims.boot(this.textures);
+
         this.state.boot();
 
         this.input.boot();
