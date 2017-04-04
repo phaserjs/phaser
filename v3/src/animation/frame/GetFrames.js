@@ -1,17 +1,18 @@
 var AnimationFrame = require('../AnimationFrame');
 var GetObjectValue = require('../../utils/object/GetObjectValue');
 
-var GetFrames = function (animation, frames, out)
+var GetFrames = function (textureManager, frames)
 {
-    if (out === undefined) { out = []; }
-
-    var textureManager = animation.manager.textureManager;
-
     //      frames: [
     //          { key: textureKey, frame: textureFrame },
     //          { key: textureKey, frame: textureFrame, duration: float },
     //          { key: textureKey, frame: textureFrame, onUpdate: function }
     //      ],
+
+    // console.table(frames);
+
+    var out = [];
+    var prev;
 
     for (var i = 0; i < frames.length; i++)
     {
@@ -30,7 +31,19 @@ var GetFrames = function (animation, frames, out)
 
         var textureFrame = textureManager.getFrame(key, frame);
 
-        out.push(new AnimationFrame(textureFrame, duration, onUpdate));
+        var animationFrame = new AnimationFrame(textureFrame, duration, onUpdate);
+
+        //  The previously created animationFrame
+        if (prev)
+        {
+            prev.nextFrame = animationFrame;
+
+            animationFrame.prevFrame = prev;
+        }
+
+        out.push(animationFrame);
+
+        prev = animationFrame;
     }
 
     return out;

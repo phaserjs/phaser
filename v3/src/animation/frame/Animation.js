@@ -23,10 +23,9 @@ var Animation = function (manager, key, config)
     //      onRepeat: function
     //      onComplete: function,
 
-    this.frames = [];
-
     //  Extract all the frame data into the frames array
-    GetFrames(this, GetObjectValue(config, 'frames', []), this.frames);
+
+    this.frames = GetFrames(manager.textureManager, GetObjectValue(config, 'frames', []));
 
     this.framerate = GetObjectValue(config, 'framerate', 24);
 
@@ -62,19 +61,29 @@ Animation.prototype.constructor = Animation;
 
 Animation.prototype = {
 
-    start: function ()
+    load: function (component, startFrame)
     {
+        if (startFrame >= this.frames.length)
+        {
+            startFrame = 0;
+        }
 
+        component.currentAnim = this;
+        component.currentFrame = this.frames[startFrame];
     },
 
-    update: function (elapsed)
+    checkFrame: function (index)
     {
-
+        return (index < this.frames.length);
     },
 
-    stop: function ()
+    setFrame: function (timestamp, child)
     {
+        //  Work out which frame should be set next on the child, and set it
 
+
+
+        return child;
     },
 
     destroy: function ()

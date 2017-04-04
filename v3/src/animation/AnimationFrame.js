@@ -3,6 +3,12 @@ var AnimationFrame = function (frame, duration, onUpdate)
     //  Texture Frame
     this.frame = frame;
 
+    //  The frame that comes before this one in the animation (if any)
+    this.prevFrame = null;
+
+    //  The frame that comes after this one in the animation (if any)
+    this.nextFrame = null;
+
     //   Duration this frame should appear for (modifier to fps rate)
     this.duration = duration;
 

@@ -22,7 +22,7 @@ var AnimationManager = function (game)
 {
     this.game = game;
 
-    this.textureManager = game.textures;
+    this.textureManager = null;
 
     this.anims = new Map();
 };
@@ -30,6 +30,11 @@ var AnimationManager = function (game)
 AnimationManager.prototype.constructor = AnimationManager;
 
 AnimationManager.prototype = {
+
+    boot: function (textureManager)
+    {
+        this.textureManager = textureManager;
+    },
 
     //  add frame name based animation
     //  add frame index based animation
@@ -61,7 +66,7 @@ AnimationManager.prototype = {
     //      ]
     //  }
 
-    add: function (key, config)
+    create: function (key, config)
     {
         if (this.anims.has(key))
         {
@@ -79,6 +84,19 @@ AnimationManager.prototype = {
     get: function (key)
     {
         return this.anims.get(key);
+    },
+
+    //  Load an Animation into a Game Objects Animation Component
+    load: function (child, key, startFrame)
+    {
+        var anim = this.get(key);
+
+        if (anim)
+        {
+            anim.load(child, startFrame);
+        }
+
+        return child;
     }
 
 };
