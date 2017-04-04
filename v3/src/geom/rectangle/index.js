@@ -11,6 +11,7 @@ Rectangle.Contains = require('./Contains');
 Rectangle.ContainsPoint = require('./ContainsPoint');
 Rectangle.ContainsRect = require('./ContainsRect');
 Rectangle.CopyFrom = require('./CopyFrom');
+Rectangle.Decompose = require('./Decompose');
 Rectangle.Equals = require('./Equals');
 Rectangle.FitInside = require('./FitInside');
 Rectangle.FitOutside = require('./FitOutside');
