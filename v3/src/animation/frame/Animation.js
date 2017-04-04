@@ -1,9 +1,11 @@
 var GetObjectValue = require('../../utils/object/GetObjectValue');
 var GetFrames = require('./GetFrames');
 
-var Animation = function (manager, config)
+var Animation = function (manager, key, config)
 {
     this.manager = manager;
+
+    this.key = key;
 
     //      frames: [
     //          { key: textureKey, frame: textureFrame },
@@ -21,7 +23,10 @@ var Animation = function (manager, config)
     //      onRepeat: function
     //      onComplete: function,
 
-    this.frames = GetFrames(this, GetObjectValue(config, 'frames', []));
+    this.frames = [];
+
+    //  Extract all the frame data into the frames array
+    GetFrames(this, GetObjectValue(config, 'frames', []), this.frames);
 
     this.framerate = GetObjectValue(config, 'framerate', 24);
 

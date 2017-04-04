@@ -1,9 +1,9 @@
 var AnimationFrame = require('../AnimationFrame');
 var GetObjectValue = require('../../utils/object/GetObjectValue');
 
-var GetFrames = function (animation, frames)
+var GetFrames = function (animation, frames, out)
 {
-    var out = [];
+    if (out === undefined) { out = []; }
 
     var textureManager = animation.manager.textureManager;
 
