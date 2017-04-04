@@ -1,6 +1,7 @@
 module.exports = {
 
     Alpha: require('./Alpha'),
+    Animation: require('./Animation'),
     BlendMode: require('./BlendMode'),
     Children: require('./Children'),
     Color: require('./Color'),
