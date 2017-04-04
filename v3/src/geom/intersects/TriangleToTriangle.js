@@ -5,6 +5,17 @@ var Decompose = require('../triangle/Decompose');
 
 var TriangleToTriangle = function (triangleA, triangleB)
 {
+    //  First the cheapest ones:
+
+    if (
+        triangleA.left > triangleB.right ||
+        triangleA.right < triangleB.left ||
+        triangleA.top > triangleB.bottom ||
+        triangleA.bottom < triangleB.top)
+    {
+        return false;
+    }
+
     var lineAA = triangleA.getLineA();
     var lineAB = triangleA.getLineB();
     var lineAC = triangleA.getLineC();
