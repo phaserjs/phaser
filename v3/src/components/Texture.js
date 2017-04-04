@@ -21,15 +21,6 @@ var Texture = {
         else
         {
             this.renderFlags |= _FLAG;
-
-            // if (this.hasOwnProperty('originX'))
-            // {
-            //     //  Default origin to the center
-            //     var w = Math.floor(this.frame.realWidth / 2);
-            //     var h = Math.floor(this.frame.realHeight / 2);
-
-            //     this.setOrigin(w, h);
-            // }
         }
 
         return this;
