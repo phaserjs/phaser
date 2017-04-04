@@ -26,20 +26,13 @@ var SpriteFactory = {
     * @param {Phaser.Group} [group] - Optional Group to add the object to. If not specified it will be added to the World group.
     * @return {Phaser.Sprite} The newly created Sprite object.
     */
-    add: function (x, y, key, frame, group)
+    add: function (x, y, key, frame)
     {
-        if (group === undefined) { group = this.state; }
-
-        // console.log('ImageFactory.add', key, x, y, frame, group);
-        // console.log('into State', this.state);
-
-        return group.children.add(new Sprite(this.state, x, y, key, frame));
+        return this.children.add(new Sprite(this.state, x, y, key, frame));
     },
 
     make: function (x, y, key, frame)
     {
-        // console.log('ImageFactory.make', key, x, y, frame);
-
         return new Sprite(this.state, x, y, key, frame);
     }
 

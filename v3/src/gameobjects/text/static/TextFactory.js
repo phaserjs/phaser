@@ -7,7 +7,7 @@ var TextFactory = {
 
     add: function (x, y, text, style)
     {
-        return this.state.children.add(new Text(this.state, x, y, text, style));
+        return this.children.add(new Text(this.state, x, y, text, style));
     },
 
     make: function (x, y, text, style)

@@ -6,11 +6,9 @@ var BlitterFactory = {
 
     KEY: 'blitter',
 
-    add: function (x, y, key, frame, parent)
+    add: function (x, y, key, frame)
     {
-        if (parent === undefined) { parent = this.state; }
-
-        return parent.children.add(new Blitter(this.state, x, y, key, frame));
+        return this.children.add(new Blitter(this.state, x, y, key, frame));
     },
 
     make: function (x, y, key, frame)

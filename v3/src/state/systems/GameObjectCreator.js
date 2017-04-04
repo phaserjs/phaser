@@ -17,6 +17,8 @@ var GameObjectCreator = function (state)
 {
     this.state = state;
 
+    this.children = state.sys.children;
+
     FactoryContainer.load(this, false);
 };
 

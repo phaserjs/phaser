@@ -22,11 +22,9 @@ var ImageFactory = {
     * @param {Phaser.Group} [group] - Optional Group to add the object to. If not specified it will be added to the World group.
     * @return {Phaser.Image} The newly created Image object.
     */
-    add: function (x, y, key, frame, parent)
+    add: function (x, y, key, frame)
     {
-        if (parent === undefined) { parent = this.state; }
-
-        return parent.children.add(new Image(this.state, x, y, key, frame));
+        return this.children.add(new Image(this.state, x, y, key, frame));
     },
 
     make: function (x, y, key, frame)

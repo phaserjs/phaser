@@ -7,7 +7,7 @@ var DynamicBitmapTextFactory = {
 
     add: function (x, y, font, text, size, align)
     {
-        return this.state.children.add(new BitmapText(this.state, x, y, font, text, size, align));
+        return this.children.add(new BitmapText(this.state, x, y, font, text, size, align));
     },
 
     make: function (x, y, font, text, size, align)

@@ -7,7 +7,7 @@ var GraphicsFactory = {
 
     add: function (options)
     {
-        return this.state.children.add(new Graphics(this.state, options));
+        return this.children.add(new Graphics(this.state, options));
     },
 
     make: function (options)

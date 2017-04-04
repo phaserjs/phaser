@@ -12,20 +12,14 @@ var factories = {};
 
 var FactoryContainer = function ()
 {
-    // console.log('FactoryContainer is alive');
-
     this.register = function (factory)
     {
         if (factories.hasOwnProperty(factory.KEY))
         {
-            // console.log('Already registered', factory.KEY);
-
             return this.getType(factory.KEY);
         }
         else
         {
-            // console.log('registering', factory.KEY);
-
             factories[factory.KEY] = {
                 add: factory.add,
                 make: factory.make
@@ -46,8 +40,6 @@ var FactoryContainer = function ()
         {
             if (factories.hasOwnProperty(factory))
             {
-                // console.log('Loading', factory);
-
                 dest[factory] = (isFactory) ? factories[factory].add : factories[factory].make;
             }
         }

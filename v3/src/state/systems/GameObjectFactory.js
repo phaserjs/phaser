@@ -17,6 +17,8 @@ var GameObjectFactory = function (state)
 {
     this.state = state;
 
+    this.children = state.sys.children;
+
     FactoryContainer.load(this, true);
 };
 
@@ -26,7 +28,7 @@ GameObjectFactory.prototype = {
 
     existing: function (child)
     {
-        return this.state.children.add(child);
+        return this.children.add(child);
     },
 
     destroy: function ()
