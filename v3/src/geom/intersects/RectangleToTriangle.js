@@ -1,0 +1,60 @@
+
+var LineToLine = require('./LineToLine');
+var Contains = require('../rectangle/Contains');
+var ContainsArray = require('../triangle/ContainsArray');
+var Decompose = require('../rectangle/Decompose');
+
+var RectangleToTriangle = function (rect, triangle)
+{
+    var triA = triangle.getLineA();
+    var triB = triangle.getLineB();
+    var triC = triangle.getLineC();
+
+    //  Are any of the triangle points within the rectangle?
+
+    if (Contains(rect, triA.x1, triA.y1) || Contains(rect, triA.x2, triA.y2))
+    {
+        return true;
+    }
+
+    if (Contains(rect, triB.x1, triA.y1) || Contains(rect, triB.x2, triA.y2))
+    {
+        return true;
+    }
+
+    if (Contains(rect, triC.x1, triA.y1) || Contains(rect, triC.x2, triA.y2))
+    {
+        return true;
+    }
+
+    //  Cheap tests over, no to see if any of the lines intersect ...
+
+    var rectA = rect.getLineA();
+    var rectB = rect.getLineB();
+    var rectC = rect.getLineC();
+    var rectD = rect.getLineD();
+
+    if (LineToLine(triA, rectA) || LineToLine(triA, rectB) || LineToLine(triA, rectC) || LineToLine(triA, rectD))
+    {
+        return true;
+    }
+
+    if (LineToLine(triB, rectA) || LineToLine(triB, rectB) || LineToLine(triB, rectC) || LineToLine(triB, rectD))
+    {
+        return true;
+    }
+
+    if (LineToLine(triC, rectA) || LineToLine(triC, rectB) || LineToLine(triC, rectC) || LineToLine(triC, rectD))
+    {
+        return true;
+    }
+
+    //  None of the lines intersect, so are any rectangle points within the triangle?
+
+    var points = Decompose(rect);
+    var within = ContainsArray(triangle, points, true);
+
+    return (within.length > 0);
+};
+
+module.exports = RectangleToTriangle;

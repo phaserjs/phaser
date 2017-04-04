@@ -60,6 +60,30 @@ Rectangle.prototype = {
     isEmpty: function ()
     {
         return (this.width <= 0 || this.height <= 0);
+    },
+
+    //  TOP
+    getLineA: function ()
+    {
+        return { x1: this.x, y1: this.y, x2: this.right, y2: this.y };
+    },
+
+    //  RIGHT
+    getLineB: function ()
+    {
+        return { x1: this.right, y1: this.y, x2: this.right, y2: this.bottom };
+    },
+
+    //  BOTTOM
+    getLineC: function ()
+    {
+        return { x1: this.right, y1: this.bottom, x2: this.x, y2: this.bottom };
+    },
+
+    //  LEFT
+    getLineD: function ()
+    {
+        return { x1: this.x, y1: this.bottom, x2: this.x, y2: this.y };
     }
 
 };
