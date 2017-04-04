@@ -31,6 +31,11 @@ var GameObject = new Class({
         this.renderFlags = 15;
     },
 
+    //  To be overridden by custom Game Objects
+    preUpdate: function ()
+    {
+    },
+
     destroy: function ()
     {
         this.parent.remove(this);
