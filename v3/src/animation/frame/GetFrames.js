@@ -15,8 +15,9 @@ var GetFrames = function (textureManager, frames)
     var prev;
     var animationFrame;
     var index = 1;
+    var i;
 
-    for (var i = 0; i < frames.length; i++)
+    for (i = 0; i < frames.length; i++)
     {
         var item = frames[i];
 
@@ -58,6 +59,15 @@ var GetFrames = function (textureManager, frames)
     animationFrame.nextFrame = out[0];
 
     out[0].prevFrame = animationFrame;
+
+    //  Generate the progress data
+
+    var slice = 1 / (out.length - 1);
+
+    for (i = 0; i < out.length; i++)
+    {
+        out[i].progress = i * slice;
+    }
 
     return out;
 };
