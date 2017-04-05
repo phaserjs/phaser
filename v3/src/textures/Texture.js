@@ -83,6 +83,11 @@ Texture.prototype = {
         return frame;
     },
 
+    has: function (name)
+    {
+        return (this.frames[name]);
+    },
+
     get: function (name)
     {
         if (name === undefined || name === null)
