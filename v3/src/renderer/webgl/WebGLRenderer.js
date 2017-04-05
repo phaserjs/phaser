@@ -6,14 +6,13 @@
 */
 
 var CONST = require('../../const');
-var CreateEmptyTexture = require('./utils/CreateEmptyTexture');
-var CreateTexture2DImage = require('./utils/texture/CreateTexture2DImage');
 var BlitterBatch = require('./batches/blitter/BlitterBatch');
 var AAQuadBatch = require('./batches/aaquad/AAQuadBatch');
 var SpriteBatch = require('./batches/sprite/SpriteBatch');
 var ShapeBatch = require('./batches/shape/ShapeBatch');
 var BlendModes = require('../BlendModes');
-var Shader = require('./utils/shader/Shader');
+var ScaleModes = require('../ScaleModes');
+var ResourceManager = require('./ResourceManager');
 
 var WebGLRenderer = function (game)
 {
@@ -55,6 +54,7 @@ var WebGLRenderer = function (game)
     this.currentTexture2D = null;
     this.shaderCache = {};
     this.currentShader = null;
+    this.resourceManager = null;
 
     this.init();
 };
@@ -77,6 +77,8 @@ WebGLRenderer.prototype = {
 
         var gl = this.gl;
         var color = this.game.config.backgroundColor;
+
+        this.resourceManager = new ResourceManager(gl);
     
         gl.disable(gl.DEPTH_TEST);
         gl.disable(gl.CULL_FACE);
@@ -107,21 +109,40 @@ WebGLRenderer.prototype = {
         this.shapeBatch = this.addBatch(new ShapeBatch(this.game, gl, this));
     },
 
-    createTexture2D: function (source)
+    createTexture: function (source)
     {
         var gl = this.gl;
+        var filter = gl.NEAREST;
 
         if (!source.glTexture)
         {
-            source.glTexture = CreateTexture2DImage(gl, source.image, gl.NEAREST, 0);
+
+            if (source.scaleMode === ScaleModes.LINEAR)
+            {
+                filter = gl.LINEAR;
+            }
+            else if (source.scaleMode === ScaleModes.NEAREST)
+            {
+                filter = gl.NEAREST;
+            }
+
+            source.glTexture = this.resourceManager.createTexture(
+                    0,
+                    filter,
+                    filter,
+                    gl.CLAMP_TO_EDGE,
+                    gl.CLAMP_TO_EDGE,
+                    gl.RGBA,
+                    source.image
+                );
         }
 
         this.currentTexture2D = source.glTexture;
     },
 
-    setTexture2D: function (texture2D)
+    setTexture: function (texture)
     {
-        if (this.currentTexture2D !== texture2D)
+        if (this.currentTexture2D !== texture)
         {
             if (this.batch)
             {
@@ -131,16 +152,23 @@ WebGLRenderer.prototype = {
             var gl = this.gl;
 
             gl.activeTexture(gl.TEXTURE0);
-            gl.bindTexture(gl.TEXTURE_2D, texture2D);
+            if (texture !== null)
+            {
+                gl.bindTexture(gl.TEXTURE_2D, texture.texture);
+            }
+            else
+            {
+                gl.bindTexture(gl.TEXTURE_2D, null);
+            }
 
-            this.currentTexture2D = texture2D;
+            this.currentTexture2D = texture;
         }
     },
 
-    setBatch: function (batch, texture2D, camera)
+    setBatch: function (batch, texture, camera)
     {
         var gl = this.gl;
-        this.setTexture2D(texture2D);
+        this.setTexture(texture);
 
         if (this.batch !== batch)
         {
@@ -148,8 +176,6 @@ WebGLRenderer.prototype = {
             {
                 this.batch.flush();
             }
-
-            batch.bind();
 
             this.batch = batch;
         }
@@ -379,73 +405,6 @@ WebGLRenderer.prototype = {
         gl.bindTexture(gl.TEXTURE_2D, this.currentTexture2D);
 
         return dstTexture;
-    },
-
-    createShader: function (shaderName, shaderSources) 
-    {
-        if (!(shaderName in this.shaderCache))
-        {
-            var gl = this.gl;
-            var program = gl.createProgram();
-            var vertShader = gl.createShader(gl.VERTEX_SHADER);
-            var fragShader = gl.createShader(gl.FRAGMENT_SHADER);
-            var error;
-            var shader;
-
-            gl.shaderSource(vertShader, shaderSources.vert);
-            gl.shaderSource(fragShader, shaderSources.frag);
-
-            gl.compileShader(vertShader);
-            gl.compileShader(fragShader);
-
-            error = gl.getShaderInfoLog(vertShader);
-
-            if (error.length > 0) 
-            {
-                throw new Error('Vertex Shader Compilation Error.\n' + error);
-            }
-
-            error = gl.getShaderInfoLog(fragShader);
-
-            if (error.length > 0) 
-            {
-                throw new Error('Fragment Shader Compilation Error.\n' + error);
-            }
-
-            gl.attachShader(program, vertShader);
-            gl.attachShader(program, fragShader);
-            gl.linkProgram(program);
-
-            error = gl.getProgramParameter(program, gl.LINK_STATUS);
-
-            if (error === 0)
-            {
-                error = gl.getProgramInfoLog(program);
-
-                throw new Error('Program Linking Error.\n' + error);
-            }
-
-            shader = new Shader(shaderName, gl, program, vertShader, fragShader);
-            this.shaderCache[shaderName] = shader;
-            return shader;
-        }
-        return this.shaderCache[shaderName];
-    },
-    deleteShader: function (shader)
-    {
-        var storedShader = this.shaderCache[shader.name]
-        var gl = this.gl;
-        if (storedShader !== undefined)
-        {
-            delete this.shaderCache;
-        }
-        gl.deleteShader(shader.vertexShader);
-        gl.deleteShader(shader.fragmentShader);
-        gl.deleteProgram(shader.program);
-        shader.vertexShader = null;
-        shader.fragmentShader = null;
-        shader.program = null;
-        shader.name = null;
     }
 };
 

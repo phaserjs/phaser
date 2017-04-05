@@ -7,7 +7,6 @@
 var CONST = require('../const');
 var ScaleModes = require('../renderer/ScaleModes');
 var IsSizePowerOfTwo = require('../math/pow2/IsSizePowerOfTwo');
-var CreateTexture2DFromSource = require('../renderer/webgl/utils/texture/CreateTexture2DFromSource');
 
 /**
 *
@@ -124,7 +123,7 @@ var TextureSource = function (texture, source)
 
     if (game.config.renderType === CONST.WEBGL)
     {
-        CreateTexture2DFromSource(game.renderer.gl, this);
+        game.renderer.createTexture(this);
     }
 };
 

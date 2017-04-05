@@ -1,10 +1,4 @@
-var BindVertexArray = require('../../utils/vao/BindVertexArray');
-var CreateProgram = require('../../utils/shader/CreateProgram');
-var CreateShader = require('../../utils/shader/CreateShader');
-var CreateBuffer = require('../../utils/buffer/CreateBuffer');
-var CreateAttribDesc = require('../../utils/vao/CreateAttribDesc');
-var Buffer32 = require('../../utils/buffer/Buffer32');
-var VertexArray = require('../../utils/vao/VertexArray');
+var DataBuffer32 = require('../../utils/DataBuffer32');
 var Earcut = require('./earcut');
 var UntexturedAndNormalizedTintedShader = require('../../shaders/UntexturedAndNormalizedTintedShader');
 
@@ -22,7 +16,7 @@ var ShapeBatch = function (game, gl, manager)
     this.glContext = gl;
     this.maxVertices = null;
     this.shader = null;
-    this.vertexArray = null;
+    this.vertexBufferObject = null;
     this.vertexDataBuffer = null;
     this.vertexCount = 0;
     this.viewMatrixLocation = null;
@@ -62,27 +56,24 @@ ShapeBatch.prototype = {
 
     init: function (gl)
     {
-        var vertexDataBuffer = new Buffer32(CONST.VERTEX_SIZE * CONST.MAX_VERTICES);
-        var shader = this.manager.createShader('UntexturedAndNormalizedTintedShader', UntexturedAndNormalizedTintedShader);
-        var attribArray = [
-            CreateAttribDesc(gl, shader.program, 'a_position', 2, gl.FLOAT, false, CONST.VERTEX_SIZE, 0),
-            CreateAttribDesc(gl, shader.program, 'a_color', 4, gl.UNSIGNED_BYTE, true, CONST.VERTEX_SIZE, 8),
-            CreateAttribDesc(gl, shader.program, 'a_alpha', 1, gl.FLOAT, false, CONST.VERTEX_SIZE, 12)
-        ];
-        var vertexArray = new VertexArray(CreateBuffer(gl, gl.ARRAY_BUFFER, gl.STREAM_DRAW, null, vertexDataBuffer.getByteCapacity()), attribArray);
-        var viewMatrixLocation = gl.getUniformLocation(shader.program, 'u_view_matrix');
+        var vertexDataBuffer = new DataBuffer32(CONST.VERTEX_SIZE * CONST.MAX_VERTICES);
+        var shader = this.manager.resourceManager.createShader('UntexturedAndNormalizedTintedShader', UntexturedAndNormalizedTintedShader);
+        var vertexBufferObject = this.manager.resourceManager.createBuffer(gl.ARRAY_BUFFER, vertexDataBuffer.getByteCapacity(), gl.STREAM_DRAW);
+        var viewMatrixLocation = shader.getUniformLocation('u_view_matrix');
         var max = CONST.MAX_VERTICES;
+
+        vertexBufferObject.addAttribute(0, 2, gl.FLOAT, false, CONST.VERTEX_SIZE, 0);
+        vertexBufferObject.addAttribute(1, 4, gl.UNSIGNED_BYTE, true, CONST.VERTEX_SIZE, 8);
+        vertexBufferObject.addAttribute(2, 1, gl.FLOAT, false, CONST.VERTEX_SIZE, 12);
 
         this.vertexDataBuffer = vertexDataBuffer;
         this.shader = shader;
-        this.vertexArray = vertexArray;
+        this.vertexBufferObject = vertexBufferObject;
         this.viewMatrixLocation = viewMatrixLocation;
         this.maxVertices = max;
         this.polygonCache = [];
 
-        this.bind();
         this.resize(this.width, this.height, this.game.config.resolution);
-        this.unbind();
     },
 
     isFull: function ()
@@ -90,53 +81,47 @@ ShapeBatch.prototype = {
         return (this.vertexDataBuffer.getByteLength() >= this.vertexDataBuffer.getByteCapacity());
     },
 
-    bind: function ()
+    bind: function (shader)
     {
-        var gl = this.glContext;
-
-        gl.useProgram(this.shader.program);
-        gl.clearColor(0, 0, 0, 1);
-        this.bindVertexAttributes();
+        if (shader === undefined)
+        {
+            this.shader.bind();
+        }
+        else
+        {
+            shader.bind();
+            this.resize(this.width, this.height, this.game.config.resolution, shader);
+        }
+        this.vertexBufferObject.bind();
     },
 
-    bindVertexAttributes: function ()
-    {
-        var gl = this.glContext;
-        BindVertexArray(gl, this.vertexArray);
-    },
-
-    unbind: function ()
-    {
-        var gl = this.glContext;
-
-        gl.useProgram(null);
-        gl.bindBuffer(gl.ARRAY_BUFFER, null);
-    },
-
-    flush: function ()
+    flush: function (shader)
     {
         var gl = this.glContext;
         var vertexDataBuffer = this.vertexDataBuffer;
 
-        if (this.vertexCount > 0)
+        if (this.vertexCount === 0)
         {
-            gl.bufferSubData(gl.ARRAY_BUFFER, 0, vertexDataBuffer.getUsedBufferAsFloat());
-            gl.drawArrays(gl.TRIANGLES, 0, this.vertexCount);
-            vertexDataBuffer.clear();
-            this.vertexCount = 0;
+            return;
         }
+
+        this.bind(shader);
+        this.vertexBufferObject.updateResource(vertexDataBuffer.getUsedBufferAsFloat(), 0);
+        gl.drawArrays(gl.TRIANGLES, 0, this.vertexCount);
+        vertexDataBuffer.clear();
+        this.vertexCount = 0;
     },
 
-    resize: function (width, height, resolution)
+    resize: function (width, height, resolution, shader)
     {
         var gl = this.glContext;
-        
+        var activeShader = shader !== undefined ? shader : this.shader;
+
         this.width = width * resolution;
         this.height = height * resolution;
-        
-        gl.uniformMatrix4fv(
+
+        activeShader.setConstantMatrix4x4(
             this.viewMatrixLocation,
-            false,
             new Float32Array([
                 2 / this.width, 0, 0, 0,
                 0, -2 / this.height, 0, 0,
@@ -148,13 +133,11 @@ ShapeBatch.prototype = {
 
     destroy: function ()
     {
-        var gl = this.glContext;
+        this.manager.resourceManager.deleteShader(this.shader);
+        this.manager.resourceManager.deleteBuffer(this.vertexBufferObject);
 
-        if (gl)
-        {
-            this.manager.deleteShader(this.shader.program);
-            gl.deleteBuffer(this.vertexArray.buffer);
-        }
+        this.shader = null;
+        this.vertexBufferObject = null;
     },
 
     addLine: function (

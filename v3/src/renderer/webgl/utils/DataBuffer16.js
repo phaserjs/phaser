@@ -1,4 +1,4 @@
-var Buffer16 = function (byteSize)
+var DataBuffer16 = function (byteSize)
 {
     this.wordLength = 0;
     this.wordCapacity = byteSize / 2;
@@ -7,36 +7,36 @@ var Buffer16 = function (byteSize)
     this.uintView = new Uint16Array(this.buffer);
 };
 
-Buffer16.prototype.clear = function ()
+DataBuffer16.prototype.clear = function ()
 {
     this.wordLength = 0;
 };
 
-Buffer16.prototype.getByteLength = function ()
+DataBuffer16.prototype.getByteLength = function ()
 {
     return this.wordLength * 2;
 };
 
-Buffer16.prototype.getByteCapacity = function () 
+DataBuffer16.prototype.getByteCapacity = function () 
 {
     return this.buffer.byteLength;
 };
 
-Buffer16.prototype.allocate = function (wordSize)
+DataBuffer16.prototype.allocate = function (wordSize)
 {
     var currentLength = this.wordLength;
     this.wordLength += wordSize;
     return currentLength;
 };
 
-Buffer16.prototype.getUsedBufferAsShort = function ()
+DataBuffer16.prototype.getUsedBufferAsShort = function ()
 {
     return this.intView.subarray(0, this.wordLength);
 };
 
-Buffer16.prototype.getUsedBufferAsWord = function ()
+DataBuffer16.prototype.getUsedBufferAsWord = function ()
 {
     return this.uintView.subarray(0, this.wordLength);
 };
 
-module.exports = Buffer16;
+module.exports = DataBuffer16;

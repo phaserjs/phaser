@@ -1,11 +1,5 @@
-var BindVertexArray = require('../../utils/vao/BindVertexArray');
-var CreateProgram = require('../../utils/shader/CreateProgram');
-var CreateShader = require('../../utils/shader/CreateShader');
-var CreateBuffer = require('../../utils/buffer/CreateBuffer');
-var CreateAttribDesc = require('../../utils/vao/CreateAttribDesc');
-var Buffer32 = require('../../utils/buffer/Buffer32');
-var Buffer16 = require('../../utils/buffer/Buffer16');
-var VertexArray = require('../../utils/vao/VertexArray');
+var DataBuffer32 = require('../../utils/DataBuffer32');
+var DataBuffer16 = require('../../utils/DataBuffer16');
 var UntexturedAndTintedShader = require('../../shaders/UntexturedAndTintedShader');
 
 var PHASER_CONST = require('../../../../const');
@@ -22,7 +16,7 @@ var AAQuadBatch = function (game, gl, manager)
     this.glContext = gl;
     this.maxQuads = null;
     this.shader = null;
-    this.vertexArray = null;
+    this.vertexBufferObject = null;
     this.indexBufferObject = null;
     this.vertexDataBuffer = null;
     this.indexDataBuffer = null;
@@ -58,24 +52,23 @@ AAQuadBatch.prototype = {
     init: function (gl)
     {
 
-        var vertexDataBuffer = new Buffer32(CONST.VERTEX_SIZE * CONST.AAQUAD_VERTEX_COUNT * CONST.MAX_AAQUAD);
-        var indexDataBuffer = new Buffer16(CONST.INDEX_SIZE * CONST.AAQUAD_INDEX_COUNT * CONST.MAX_AAQUAD);
-        var shader = this.manager.createShader('UntexturedAndTintedShader', UntexturedAndTintedShader);
-        var indexBufferObject = CreateBuffer(gl, gl.ELEMENT_ARRAY_BUFFER, gl.STATIC_DRAW, null, indexDataBuffer.getByteCapacity());
-        var attribArray = [
-            CreateAttribDesc(gl, shader.program, 'a_position', 2, gl.FLOAT, false, CONST.VERTEX_SIZE, 0),
-            CreateAttribDesc(gl, shader.program, 'a_color', 4, gl.FLOAT, false, CONST.VERTEX_SIZE, 8)
-        ];
-        var vertexArray = new VertexArray(CreateBuffer(gl, gl.ARRAY_BUFFER, gl.STREAM_DRAW, null, vertexDataBuffer.getByteCapacity()), attribArray);
-        var viewMatrixLocation = gl.getUniformLocation(shader.program, 'u_view_matrix');
+        var vertexDataBuffer = new DataBuffer32(CONST.VERTEX_SIZE * CONST.AAQUAD_VERTEX_COUNT * CONST.MAX_AAQUAD);
+        var indexDataBuffer = new DataBuffer16(CONST.INDEX_SIZE * CONST.AAQUAD_INDEX_COUNT * CONST.MAX_AAQUAD);
+        var shader = this.manager.resourceManager.createShader('UntexturedAndTintedShader', UntexturedAndTintedShader);
+        var indexBufferObject = this.manager.resourceManager.createBuffer(gl.ELEMENT_ARRAY_BUFFER, indexDataBuffer.getByteCapacity(), gl.STATIC_DRAW);
+        var vertexBufferObject = this.manager.resourceManager.createBuffer(gl.ARRAY_BUFFER, vertexDataBuffer.getByteCapacity(), gl.STREAM_DRAW);
+        var viewMatrixLocation = shader.getUniformLocation('u_view_matrix');
         var indexBuffer = indexDataBuffer.uintView;
         var max = CONST.MAX_AAQUAD * CONST.AAQUAD_INDEX_COUNT;
+
+        vertexBufferObject.addAttribute(0, 2, gl.FLOAT, false, CONST.VERTEX_SIZE, 0);
+        vertexBufferObject.addAttribute(1, 4, gl.FLOAT, false, CONST.VERTEX_SIZE, 8);
 
         this.vertexDataBuffer = vertexDataBuffer;
         this.indexDataBuffer = indexDataBuffer;
         this.shader = shader;
         this.indexBufferObject = indexBufferObject;
-        this.vertexArray = vertexArray;
+        this.vertexBufferObject = vertexBufferObject;
         this.viewMatrixLocation = viewMatrixLocation;
 
         // Populate the index buffer only once
@@ -89,12 +82,9 @@ AAQuadBatch.prototype = {
             indexBuffer[indexA + 5] = indexB + 3;
         }
 
-        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBufferObject);
-        gl.bufferSubData(gl.ELEMENT_ARRAY_BUFFER, 0, indexBuffer);
+        indexBufferObject.updateResource(indexBuffer, 0);
 
-        this.bind();
         this.resize(this.width, this.height, this.game.config.resolution);
-        this.unbind();
     },
 
     isFull: function ()
@@ -141,52 +131,48 @@ AAQuadBatch.prototype = {
         this.elementCount += CONST.AAQUAD_INDEX_COUNT;
     },
 
-    bind: function ()
+    bind: function (shader)
     {
-        var gl = this.glContext;
-
-        gl.useProgram(this.shader.program);
-        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBufferObject);
-        this.bindVertexAttributes();
+        if (shader === undefined)
+        {
+            this.shader.bind();
+        }
+        else
+        {
+            shader.bind();
+            this.resize(this.width, this.height, this.game.config.resolution, shader);
+        }
+        this.indexBufferObject.bind();
+        this.vertexBufferObject.bind();
     },
 
-    bindVertexAttributes: function ()
-    {
-        var gl = this.glContext;
-        BindVertexArray(gl, this.vertexArray);
-    },
-
-    unbind: function ()
-    {
-        var gl = this.glContext;
-
-        gl.useProgram(null);
-        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null);
-        gl.bindBuffer(gl.ARRAY_BUFFER, null);
-    },
-
-    flush: function ()
+    flush: function (shader)
     {
         var gl = this.glContext;
         var vertexDataBuffer = this.vertexDataBuffer;
 
-        gl.bufferSubData(gl.ARRAY_BUFFER, 0, vertexDataBuffer.getUsedBufferAsFloat());
+        if (this.elementCount === 0)
+        {
+            return;
+        }
+        
+        this.bind(shader);
+        this.vertexBufferObject.updateResource(vertexDataBuffer.getUsedBufferAsFloat(), 0);
         gl.drawElements(gl.TRIANGLES, this.elementCount, gl.UNSIGNED_SHORT, 0);
         vertexDataBuffer.clear();
-
         this.elementCount = 0;
     },
 
-    resize: function (width, height, resolution)
+    resize: function (width, height, resolution, shader)
     {
         var gl = this.glContext;
+        var activeShader = shader !== undefined ? shader : this.shader;
         
         this.width = width * resolution;
         this.height = height * resolution;
-        
-        gl.uniformMatrix4fv(
+
+        activeShader.setConstantMatrix4x4(
             this.viewMatrixLocation,
-            false,
             new Float32Array([
                 2 / this.width, 0, 0, 0,
                 0, -2 / this.height, 0, 0,
@@ -198,14 +184,13 @@ AAQuadBatch.prototype = {
 
     destroy: function ()
     {
-        var gl = this.glContext;
+        this.manager.resourceManager.deleteShader(this.shader);
+        this.manager.resourceManager.deleteBuffer(this.indexBufferObject);
+        this.manager.resourceManager.deleteBuffer(this.vertexBufferObject);
 
-        if (gl)
-        {
-            this.manager.deleteShader(this.shader);
-            gl.deleteBuffer(this.indexBufferObject);
-            gl.deleteBuffer(this.vertexArray.buffer);
-        }
+        this.shader = null;
+        this.indexBufferObject = null;
+        this.vertexBufferObject = null;
     }
 };
 
