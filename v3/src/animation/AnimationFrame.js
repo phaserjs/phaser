@@ -1,5 +1,8 @@
-var AnimationFrame = function (frame, duration, onUpdate)
+var AnimationFrame = function (index, frame, duration, onUpdate)
 {
+    //  The index of this frame within the Animation.frames array
+    this.index = index;
+
     //  Texture Frame
     this.frame = frame;
 

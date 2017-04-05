@@ -117,8 +117,40 @@ Animation.prototype = {
         this.isPlaying = false;
 
         return this.parent;
+    },
+
+    //  How far through the current animation are we?
+    //  Value between 0 and 1
+    //  I.e. [a,b,c,d,e,f] if on frame c progress would be 0.5
+
+    //  TODO: Add value argument
+    progress: function ()
+    {
+        var p = this.currentFrame.index / this.currentAnim.frames.length;
+
+        if (!this.forward)
+        {
+            p = 1 - p;
+        }
+
+        return p;
     }
 
 };
+
+Object.defineProperties(Animation.prototype, {
+
+    totalFrames: {
+
+        enumerable: true,
+
+        get: function ()
+        {
+            return this.currentAnim.frames.length;
+        }
+
+    }
+
+});
 
 module.exports = Animation;
