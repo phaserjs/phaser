@@ -36,11 +36,7 @@ AnimationManager.prototype = {
         this.textureManager = textureManager;
     },
 
-    //  add frame name based animation
-    //  add frame index based animation
-    //  add bone based animation
-    //  add animation from json data
-
+    //  config format:
     //  {
     //      frames: [
     //          { key: textureKey, frame: textureFrame },
@@ -53,11 +49,11 @@ AnimationManager.prototype = {
     //      delay: integer
     //      repeat: -1 = forever, otherwise integer
     //      repeatDelay: integer
-    //      yoyo: boolean,
+    //      yoyo: boolean
+    //      hideOnComplete: boolean
     //      onStart: function
     //      onRepeat: function
     //      onComplete: function,
-    //      
     //      transitions: [
     //          {
     //              key: string <- key of the animation to blend with,

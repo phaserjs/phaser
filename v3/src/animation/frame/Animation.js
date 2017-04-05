@@ -7,27 +7,10 @@ var Animation = function (manager, key, config)
 
     this.key = key;
 
-    //      frames: [
-    //          { key: textureKey, frame: textureFrame },
-    //          { key: textureKey, frame: textureFrame, duration: float },
-    //          { key: textureKey, frame: textureFrame, onUpdate: function }
-    //      ],
-    //      framerate: integer,
-    //      duration: float (seconds, optional, ignored if framerate is set),
-    //      skipMissedFrames: boolean,
-    //      delay: integer
-    //      repeat: -1 = forever, otherwise integer
-    //      repeatDelay: integer
-    //      yoyo: boolean,
-    //      onStart: function
-    //      onRepeat: function
-    //      onComplete: function,
-
     //  Extract all the frame data into the frames array
     this.frames = GetFrames(manager.textureManager, GetObjectValue(config, 'frames', []));
 
-    //  Scale the time (make it go faster / slower) >>> move to Animation Component?
-    this.timeScale = 1;
+    this.firstFrame = this.frames[0];
 
     //  The frame rate of playback in frames per second (default 24 if duration is null)
     this.framerate = GetObjectValue(config, 'framerate', null);
@@ -92,8 +75,8 @@ Animation.prototype = {
             startFrame = 0;
         }
 
-        component.currentAnim = this;
-        component.currentFrame = this.frames[startFrame];
+        component.updateAnimation(this);
+        component.updateFrame(this.frames[startFrame]);
     },
 
     checkFrame: function (index)
@@ -105,36 +88,100 @@ Animation.prototype = {
     {
         //  When is the next update due?
         var frame = component.currentFrame;
+        var diff = component.accumulator - component.nextTick;
 
-        component.nextTick = this.msPerFrame + frame.duration;
+        component.accumulator = diff;
+        component.nextTick = (this.msPerFrame + frame.duration) * component.timescale;
     },
 
-    setFrame: function (component)
+    nextFrame: function (component)
     {
-        //  Example data:
-        //  timestamp = 2356.534000020474
-        //  frameDelta = 17.632333353807383 (diff since last timestamp)
-
-        //  Work out which frame should be set next on the child, and set it
-
         var frame = component.currentFrame;
 
-        var diff = component.accumulator - component.nextTick;
+        //  TODO: Add frame skip support
 
         if (frame.nextFrame)
         {
-            component.currentFrame = frame.nextFrame;
-
-            component.updateFrame();
-
-            component.accumulator = diff;
+            component.updateFrame(frame.nextFrame);
 
             this.getNextTick(component);
         }
         else
         {
             //  We're at the end of the animation
-            component.stop();
+
+            //  Yoyo? (happens before repeat)
+            if (this.yoyo)
+            {
+                component.forward = false;
+            }
+            else if (component.repeatCounter > 0)
+            {
+                //  Repeat (happens before complete)
+                this.repeatAnimation(component);
+            }
+            else
+            {
+                //  OnComplete
+                component.stop();
+            }
+        }
+    },
+
+    repeatAnimation: function (component)
+    {
+        component.repeatCounter--;
+
+        component.forward = true;
+
+        component.updateFrame(this.firstFrame);
+
+        this.getNextTick(component);
+
+        component.nextTick += (this.repeatDelay * 1000) * component.timescale;
+
+        //  OnRepeat
+    },
+
+    previousFrame: function (component)
+    {
+        var frame = component.currentFrame;
+
+        //  TODO: Add frame skip support
+
+        if (frame.prevFrame)
+        {
+            component.updateFrame(frame.prevFrame);
+
+            this.getNextTick(component);
+        }
+        else
+        {
+            //  We're at the start of the animation
+
+            if (component.repeatCounter > 0)
+            {
+                //  Repeat (happens before complete)
+                this.repeatAnimation(component);
+            }
+            else
+            {
+                //  OnComplete
+                component.stop();
+            }
+        }
+    },
+
+    setFrame: function (component)
+    {
+        //  Work out which frame should be set next on the child, and set it
+        if (component.forward)
+        {
+            this.nextFrame(component);
+        }
+        else
+        {
+            this.previousFrame(component);
         }
     },
 

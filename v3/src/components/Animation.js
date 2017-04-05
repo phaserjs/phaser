@@ -19,14 +19,37 @@ var Animation = function (parent)
     //  Reference to the Phaser.AnimationFrame object
     this.currentFrame = null;
 
-    //  Timing playhead values
+    //  Scale the time (make it go faster / slower)
+    this.timescale = 1;
+
+    //  Playhead values
+
+    //  Move the playhead forward (true) or in reverse (false)
+    this.forward = true;
+
     this.accumulator = 0;
+
     this.nextTick = 0;
+
+    this.repeatCounter = 0;
 };
 
 Animation.prototype.constructor = Animation;
 
 Animation.prototype = {
+
+    updateAnimation: function (animation)
+    {
+        this.currentAnim = animation;
+    },
+
+    updateFrame: function (animationFrame)
+    {
+        this.currentFrame = animationFrame;
+
+        this.parent.texture = animationFrame.frame.texture;
+        this.parent.frame = animationFrame.frame;
+    },
 
     load: function (key, startFrame)
     {
@@ -39,8 +62,6 @@ Animation.prototype = {
 
         //  Load the new animation in
         this.animationManager.load(this, key, startFrame);
-
-        this.updateFrame();
     },
 
     play: function (key, startFrame)
@@ -49,24 +70,22 @@ Animation.prototype = {
 
         this.load(key, startFrame);
 
+        //  Move to reset?
         this.accumulator = 0;
+        this.nextTick = 0;
+
+        //  Should give us 9,007,199,254,740,991 safe repeats
+        this.repeatCounter = (this.currentAnim.repeat === -1) ? Number.MAX_SAFE_INTEGER : this.currentAnim.repeat;
 
         this.currentAnim.getNextTick(this);
 
+        this.forward = true;
         this.isPlaying = true;
     },
 
-    stop: function ()
-    {
-        this.isPlaying = false;
-    },
-
-    updateFrame: function ()
-    {
-        this.parent.texture = this.currentFrame.frame.texture;
-        this.parent.frame = this.currentFrame.frame;
-    },
-
+    //  Example data:
+    //  timestamp = 2356.534000020474
+    //  frameDelta = 17.632333353807383 (diff since last timestamp)
     update: function (timestamp, frameDelta)
     {
         if (this.isPlaying)
@@ -78,6 +97,11 @@ Animation.prototype = {
                 this.currentAnim.setFrame(this);
             }
         }
+    },
+
+    stop: function ()
+    {
+        this.isPlaying = false;
     }
 
 };
