@@ -14,6 +14,7 @@ var GetFrames = function (textureManager, frames)
     var out = [];
     var prev;
     var animationFrame;
+    var index = 1;
 
     for (var i = 0; i < frames.length; i++)
     {
@@ -32,7 +33,7 @@ var GetFrames = function (textureManager, frames)
 
         var textureFrame = textureManager.getFrame(key, frame);
 
-        animationFrame = new AnimationFrame(textureFrame, duration, onUpdate);
+        animationFrame = new AnimationFrame(index, textureFrame, duration, onUpdate);
 
         animationFrame.isFirst = (!prev);
 
@@ -47,6 +48,8 @@ var GetFrames = function (textureManager, frames)
         out.push(animationFrame);
 
         prev = animationFrame;
+
+        index++;
     }
 
     animationFrame.isLast = true;
