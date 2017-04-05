@@ -9,7 +9,6 @@ module.exports = {
     Flip: require('./Flip'),
     GetBounds: require('./GetBounds'),
     Origin: require('./Origin'),
-    RenderPass: require('./RenderPass'),
     ScaleMode: require('./ScaleMode'),
     Size: require('./Size'),
     Texture: require('./Texture'),

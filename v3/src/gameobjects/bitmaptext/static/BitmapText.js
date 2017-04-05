@@ -15,7 +15,6 @@ var BitmapText = new Class({
         Components.Size,
         Components.Texture,
         Components.Transform,
-        Components.RenderPass,
         Components.Visible,
         Render
     ],
@@ -39,7 +38,6 @@ var BitmapText = new Class({
         this.setTexture(font);
         this.setPosition(x, y);
         this.setOrigin(0, 0);
-        this.initRenderPassComponent();
     },
 
     setFontSize: function (size)

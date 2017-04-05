@@ -20,7 +20,6 @@ var Text = new Class({
         Components.Transform,
         Components.Visible,
         Components.Flip,
-        Components.RenderPass,
         TextRender
     ],
 
@@ -77,7 +76,6 @@ var Text = new Class({
         {
             this.updateText();
         }
-        this.initRenderPassComponent();
     },
 
     setText: function (value)

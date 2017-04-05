@@ -15,7 +15,6 @@ var DynamicBitmapText = new Class({
         Components.Size,
         Components.Texture,
         Components.Transform,
-        Components.RenderPass,
         Components.Visible,
         Render
     ],
@@ -40,7 +39,6 @@ var DynamicBitmapText = new Class({
 
         this.setTexture(font);
         this.setPosition(x, y);
-        this.initRenderPassComponent();
     },
 
     setDisplayCallback: function (callback)
