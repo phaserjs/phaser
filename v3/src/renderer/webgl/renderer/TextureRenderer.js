@@ -10,7 +10,7 @@ var TextureRenderer = function (game, maxSprites, commandList)
     
     // Vertex Structure
     // ---------------------
-    // struct SpriteVertex {
+    // struct Vertex {
     //     float32 a_position[2];   // 8 bytes
     //     float32 a_tex_coord[2];  // 8 bytes
     //     uint32 a_color;          // 4 bytes

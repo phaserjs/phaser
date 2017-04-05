@@ -14,7 +14,7 @@ var BitmapText = new Class({
         Components.Texture,
         Components.Transform,
         Components.Visible,
-        Render
+        Components.Render
     ],
 
     initialize:
