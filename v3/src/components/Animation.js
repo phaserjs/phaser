@@ -91,6 +91,8 @@ Animation.prototype = {
         this.isPlaying = true;
         this.pendingRepeat = false;
 
+        this.prevTick = this.parent.state.game.mainloop.lastFrameTimeMs;
+
         return this.parent;
     },
 
@@ -126,7 +128,7 @@ Animation.prototype = {
     //  TODO: Add value argument
     progress: function ()
     {
-        var p = this.currentFrame.index / this.currentAnim.frames.length;
+        var p = this.currentFrame.progress;
 
         if (!this.forward)
         {
