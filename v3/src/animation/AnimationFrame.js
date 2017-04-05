@@ -18,6 +18,9 @@ var AnimationFrame = function (index, frame, duration, onUpdate)
     //   Additional time (in ms) this frame should appear for - added onto the msPerFrame
     this.duration = duration;
 
+    //   What % through the animation progress is this frame?
+    this.progress = 0;
+
     //  Callback if this frame gets displayed
     this.onUpdate = onUpdate;
 };
