@@ -116,8 +116,6 @@ Animation.prototype = {
     {
         this.isPlaying = false;
 
-        console.log('Animation Stopped');
-
         return this.parent;
     }
 

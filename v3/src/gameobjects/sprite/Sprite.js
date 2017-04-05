@@ -39,6 +39,11 @@ var Sprite = new Class({
     preUpdate: function (timestamp, frameDelta)
     {
         this.anims.update(timestamp, frameDelta);
+    },
+
+    play: function (key, startFrame)
+    {
+        return this.anims.play(key, startFrame);
     }
 
 });
