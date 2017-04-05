@@ -96,9 +96,9 @@ AnimationManager.prototype = {
         return child;
     },
 
-    generateFrameNumbers: function (key, startFrame, endFrame, firstFrame)
+    generateFrameNumbers: function (key, startFrame, endFrame, firstFrame, out)
     {
-        var out = [];
+        if (out === undefined) { out = []; }
 
         if (firstFrame)
         {
@@ -127,12 +127,12 @@ AnimationManager.prototype = {
     * @param {number} [zeroPad=0] - The number of zeros to pad the min and max values with. If your frames are named 'explosion_0001' to 'explosion_0034' then the zeroPad is 4.
     * @return {string[]} An array of framenames.
     */
-    generateFrameNames: function (key, prefix, start, stop, suffix, zeroPad)
+    generateFrameNames: function (key, prefix, start, stop, suffix, zeroPad, out)
     {
         if (suffix === undefined) { suffix = ''; }
         if (zeroPad === undefined) { zeroPad = 0; }
+        if (out === undefined) { out = []; }
 
-        var output = [];
         var diff = (start < stop) ? 1 : -1;
 
         //  Adjust because we use i !== stop in the for loop
@@ -142,10 +142,10 @@ AnimationManager.prototype = {
         {
             var frame = prefix + Pad(i, zeroPad, '0', 1) + suffix;
 
-            output.push({ key: key, frame: frame });
+            out.push({ key: key, frame: frame });
         }
 
-        return output;
+        return out;
     }
 
 };
