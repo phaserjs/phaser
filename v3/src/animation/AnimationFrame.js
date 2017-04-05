@@ -9,7 +9,7 @@ var AnimationFrame = function (frame, duration, onUpdate)
     //  The frame that comes after this one in the animation (if any)
     this.nextFrame = null;
 
-    //   Duration this frame should appear for (modifier to fps rate)
+    //   Additional time (in ms) this frame should appear for - added onto the msPerFrame
     this.duration = duration;
 
     //  Callback if this frame gets displayed

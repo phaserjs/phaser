@@ -13,10 +13,14 @@ var Animation = function (parent)
 
     this.isPlaying = false;
 
-    //  References to the data stored in the Phaser.Animation class
+    //  Reference to the Phaser.Animation object
     this.currentAnim = null;
+
+    //  Reference to the Phaser.AnimationFrame object
     this.currentFrame = null;
 
+    //  Timing playhead values
+    this.accumulator = 0;
     this.nextTick = 0;
 };
 
@@ -28,28 +32,28 @@ Animation.prototype = {
     {
         if (startFrame === undefined) { startFrame = 0; }
 
-        //  Load the new animation in
-        this.animationManager.loadAnimation(this, key, startFrame);
+        if (this.isPlaying)
+        {
+            this.stop();
+        }
 
-        this.parent.texture = this.currentFrame.frame.texture;
-        this.parent.frame = this.currentFrame.frame;
+        //  Load the new animation in
+        this.animationManager.load(this, key, startFrame);
+
+        this.updateFrame();
     },
 
     play: function (key, startFrame)
     {
         if (startFrame === undefined) { startFrame = 0; }
 
-        if (this.isPlaying)
-        {
-            this.stop();
-        }
-
         this.load(key, startFrame);
 
-        this.isPlaying = true;
+        this.accumulator = 0;
 
-        //  Calculate next tick
-        // this.nextTick = (1000 / this.framerate) + this.currentFrame.
+        this.currentAnim.getNextTick(this);
+
+        this.isPlaying = true;
     },
 
     stop: function ()
@@ -57,11 +61,22 @@ Animation.prototype = {
         this.isPlaying = false;
     },
 
+    updateFrame: function ()
+    {
+        this.parent.texture = this.currentFrame.frame.texture;
+        this.parent.frame = this.currentFrame.frame;
+    },
+
     update: function (timestamp, frameDelta)
     {
-        if (!this.isPlaying)
+        if (this.isPlaying)
         {
-            return;
+            this.accumulator += frameDelta;
+
+            if (this.accumulator >= this.nextTick)
+            {
+                this.currentAnim.setFrame(this);
+            }
         }
     }
 

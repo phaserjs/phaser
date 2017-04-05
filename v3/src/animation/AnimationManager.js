@@ -97,6 +97,18 @@ AnimationManager.prototype = {
         }
 
         return child;
+    },
+
+    buildSpriteSheetFrames: function (key, startFrame, endFrame)
+    {
+        var out = [];
+
+        for (var i = startFrame; i <= endFrame; i++)
+        {
+            out.push({ key: key, frame: i });
+        }
+
+        return out;
     }
 
 };
