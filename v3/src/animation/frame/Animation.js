@@ -82,11 +82,18 @@ Animation.prototype = {
         return (index < this.frames.length);
     },
 
+    getFirstTick: function (component)
+    {
+        //  When is the first update due?
+        component.accumulator = 0;
+        component.nextTick = this.msPerFrame + component.currentFrame.duration + (this.delay * 1000);
+    },
+
     getNextTick: function (component)
     {
         //  When is the next update due?
         component.accumulator -= component.nextTick;
-        component.nextTick = (this.msPerFrame + component.currentFrame.duration) * component.timescale;
+        component.nextTick = this.msPerFrame + component.currentFrame.duration;
     },
 
     nextFrame: function (component)
@@ -95,13 +102,7 @@ Animation.prototype = {
 
         //  TODO: Add frame skip support
 
-        if (!frame.isLast)
-        {
-            component.updateFrame(frame.nextFrame);
-
-            this.getNextTick(component);
-        }
-        else
+        if (frame.isLast)
         {
             //  We're at the end of the animation
 
@@ -110,7 +111,7 @@ Animation.prototype = {
             {
                 component.forward = false;
 
-                //  Delay for the current frame?
+                //  Delay for the current frame
                 this.getNextTick(component);
             }
             else if (component.repeatCounter > 0)
@@ -124,6 +125,41 @@ Animation.prototype = {
                 component.stop();
             }
         }
+        else
+        {
+            component.updateFrame(frame.nextFrame);
+
+            this.getNextTick(component);
+        }
+    },
+
+    previousFrame: function (component)
+    {
+        var frame = component.currentFrame;
+
+        //  TODO: Add frame skip support
+
+        if (frame.isFirst)
+        {
+            //  We're at the start of the animation
+
+            if (component.repeatCounter > 0)
+            {
+                //  Repeat (happens before complete)
+                this.repeatAnimation(component);
+            }
+            else
+            {
+                //  OnComplete
+                component.stop();
+            }
+        }
+        else
+        {
+            component.updateFrame(frame.prevFrame);
+
+            this.getNextTick(component);
+        }
     },
 
     repeatAnimation: function (component)
@@ -132,7 +168,7 @@ Animation.prototype = {
         {
             component.pendingRepeat = true;
             component.accumulator -= component.nextTick;
-            component.nextTick += (this.repeatDelay * 1000) * component.timescale;
+            component.nextTick += (this.repeatDelay * 1000);
         }
         else
         {
@@ -147,35 +183,6 @@ Animation.prototype = {
             component.pendingRepeat = false;
     
             //  OnRepeat
-        }
-    },
-
-    previousFrame: function (component)
-    {
-        var frame = component.currentFrame;
-
-        //  TODO: Add frame skip support
-
-        if (!frame.isFirst)
-        {
-            component.updateFrame(frame.prevFrame);
-
-            this.getNextTick(component);
-        }
-        else
-        {
-            //  We're at the start of the animation
-
-            if (component.repeatCounter > 0)
-            {
-                //  Repeat (happens before complete)
-                this.repeatAnimation(component);
-            }
-            else
-            {
-                //  OnComplete
-                component.stop();
-            }
         }
     },
 

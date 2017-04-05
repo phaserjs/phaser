@@ -29,6 +29,7 @@ var Animation = function (parent)
 
     this.accumulator = 0;
 
+    this.prevTick = 0;
     this.nextTick = 0;
 
     this.repeatCounter = 0;
@@ -66,34 +67,43 @@ Animation.prototype = {
         this.animationManager.load(this, key, startFrame);
     },
 
+    delayedPlay: function (delay, key, startFrame)
+    {
+        this.play(key, startFrame);
+
+        this.nextTick += (delay * 1000);
+
+        return this.parent;
+    },
+
     play: function (key, startFrame)
     {
         if (startFrame === undefined) { startFrame = 0; }
 
         this.load(key, startFrame);
 
-        //  Move to reset?
-        this.accumulator = 0;
-        this.nextTick = 0;
-
         //  Should give us 9,007,199,254,740,991 safe repeats
         this.repeatCounter = (this.currentAnim.repeat === -1) ? Number.MAX_SAFE_INTEGER : this.currentAnim.repeat;
 
-        this.currentAnim.getNextTick(this);
+        this.currentAnim.getFirstTick(this);
 
         this.forward = true;
         this.isPlaying = true;
         this.pendingRepeat = false;
+
+        return this.parent;
     },
 
     //  Example data:
     //  timestamp = 2356.534000020474
-    //  frameDelta = 17.632333353807383 (diff since last timestamp)
-    update: function (timestamp, frameDelta)
+    //  frameDelta = 17.632333353807383 (diff since last timestamp?)
+    update: function (timestamp)
     {
         if (this.isPlaying)
         {
-            this.accumulator += frameDelta;
+            this.accumulator += (timestamp - this.prevTick) * this.timescale;
+
+            this.prevTick = timestamp;
 
             if (this.accumulator >= this.nextTick)
             {
@@ -107,6 +117,8 @@ Animation.prototype = {
         this.isPlaying = false;
 
         console.log('Animation Stopped');
+
+        return this.parent;
     }
 
 };

@@ -27,9 +27,9 @@
 */
 var Pad = function (str, len, pad, dir)
 {
-    if (len === undefined) { var len = 0; }
-    if (pad === undefined) { var pad = ' '; }
-    if (dir === undefined) { var dir = 3; }
+    if (len === undefined) { len = 0; }
+    if (pad === undefined) { pad = ' '; }
+    if (dir === undefined) { dir = 3; }
 
     str = str.toString();
 
@@ -46,7 +46,7 @@ var Pad = function (str, len, pad, dir)
             case 3:
                 var right = Math.ceil((padlen = len - str.length) / 2);
                 var left = padlen - right;
-                str = new Array(left+1).join(pad) + str + new Array(right+1).join(pad);
+                str = new Array(left + 1).join(pad) + str + new Array(right + 1).join(pad);
                 break;
 
             default:
@@ -56,7 +56,6 @@ var Pad = function (str, len, pad, dir)
     }
 
     return str;
-
 };
 
 module.exports = Pad;
