@@ -6,6 +6,8 @@ var GetBitmapTextSize = require('../GetBitmapTextSize');
 
 var BitmapText = new Class({
 
+    Extends: GameObject,
+
     Mixins: [
         Components.Alpha,
         Components.BlendMode,

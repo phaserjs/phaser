@@ -9,6 +9,8 @@ var GetTextSize = require('../GetTextSize');
 
 var Text = new Class({
 
+    Extends: GameObject,
+
     Mixins: [
         Components.Alpha,
         Components.BlendMode,

@@ -8,6 +8,8 @@ var GetObjectValue = require('../../utils/object/GetObjectValue');
 
 var Graphics = new Class({
 
+    Extends: GameObject,
+
     Mixins: [
         Components.Alpha,
         Components.BlendMode,

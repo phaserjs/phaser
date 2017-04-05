@@ -5,6 +5,8 @@ var Components = require('../../components');
 
 var Zone = new Class({
 
+    Extends: GameObject,
+
     Mixins: [
         Components.GetBounds,
         Components.Origin,

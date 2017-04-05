@@ -6,6 +6,8 @@ var SpriteRender = require('./SpriteRender');
 
 var Sprite = new Class({
 
+    Extends: GameObject,
+
     Mixins: [
         Components.Alpha,
         Components.BlendMode,

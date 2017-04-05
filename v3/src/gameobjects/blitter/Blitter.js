@@ -25,6 +25,8 @@ var Bob = require('./Bob');
 
 var Blitter = new Class({
 
+    Extends: GameObject,
+
     Mixins: [
         Components.Alpha,
         Components.BlendMode,

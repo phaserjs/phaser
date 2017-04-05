@@ -6,6 +6,8 @@ var ImageRender = require('./ImageRender');
 
 var Image = new Class({
 
+    Extends: GameObject,
+
     Mixins: [
         Components.Alpha,
         Components.BlendMode,

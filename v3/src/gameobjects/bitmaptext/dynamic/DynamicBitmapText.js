@@ -6,6 +6,8 @@ var GetBitmapTextSize = require('../GetBitmapTextSize');
 
 var DynamicBitmapText = new Class({
 
+    Extends: GameObject,
+
     Mixins: [
         Components.Alpha,
         Components.BlendMode,
