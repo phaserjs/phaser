@@ -44,6 +44,9 @@ AnimationManager.prototype = {
     //          { key: textureKey, frame: textureFrame },
     //          { key: textureKey, frame: textureFrame, duration: float },
     //          { key: textureKey, frame: textureFrame, onUpdate: function }
+    //          { key: textureKey, frame: textureFrame, flipX: boolean, flipY: boolean }
+    //          { key: textureKey, frame: textureFrame, alpha: float }
+    //          { key: textureKey, frame: textureFrame, visible: boolean }
     //      ],
     //      framerate: integer,
     //      duration: float (seconds, optional, ignored if framerate is set),
@@ -64,6 +67,21 @@ AnimationManager.prototype = {
     //      ]
     //  }
 
+    add: function (key, animation)
+    {
+        if (this.anims.has(key))
+        {
+            console.error('Animation with key', key, 'already exists');
+            return;
+        }
+
+        animation.key = key;
+
+        this.anims.set(key, animation);
+
+        return this;
+    },
+
     create: function (key, config)
     {
         if (this.anims.has(key))
@@ -82,6 +100,18 @@ AnimationManager.prototype = {
     get: function (key)
     {
         return this.anims.get(key);
+    },
+
+    remove: function (key)
+    {
+        var anim = this.get(key);
+
+        if (anim)
+        {
+            this.anims.delete(key);
+        }
+
+        return anim;
     },
 
     //  Load an Animation into a Game Objects Animation Component

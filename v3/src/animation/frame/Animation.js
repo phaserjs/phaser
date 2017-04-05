@@ -82,11 +82,18 @@ Animation.prototype = {
         return (index < this.frames.length);
     },
 
-    getFirstTick: function (component)
+    getFirstTick: function (component, includeDelay)
     {
+        if (includeDelay === undefined) { includeDelay = true; }
+
         //  When is the first update due?
         component.accumulator = 0;
-        component.nextTick = this.msPerFrame + component.currentFrame.duration + (this.delay * 1000);
+        component.nextTick = this.msPerFrame + component.currentFrame.duration;
+
+        if (includeDelay)
+        {
+            component.nextTick += (this.delay * 1000);
+        }
     },
 
     getNextTick: function (component)

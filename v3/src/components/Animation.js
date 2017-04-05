@@ -11,6 +11,8 @@ var Animation = function (parent)
 
     this.animationManager = parent.state.sys.anims;
 
+    this.mainloop = parent.state.game.mainloop;
+
     this.isPlaying = false;
 
     //  Reference to the Phaser.Animation object
@@ -35,6 +37,9 @@ var Animation = function (parent)
     this.repeatCounter = 0;
 
     this.pendingRepeat = false;
+
+    this._paused = false;
+    this._wasPlaying = false;
 };
 
 Animation.prototype.constructor = Animation;
@@ -91,26 +96,25 @@ Animation.prototype = {
         this.isPlaying = true;
         this.pendingRepeat = false;
 
-        this.prevTick = this.parent.state.game.mainloop.lastFrameTimeMs;
+        this.prevTick = this.mainloop.lastFrameTimeMs;
 
         return this.parent;
     },
 
-    //  Example data:
-    //  timestamp = 2356.534000020474
-    //  frameDelta = 17.632333353807383 (diff since last timestamp?)
     update: function (timestamp)
     {
-        if (this.isPlaying)
+        if (!this.isPlaying)
         {
-            this.accumulator += (timestamp - this.prevTick) * this.timescale;
+            return;
+        }
 
-            this.prevTick = timestamp;
+        this.accumulator += (timestamp - this.prevTick) * this.timescale;
 
-            if (this.accumulator >= this.nextTick)
-            {
-                this.currentAnim.setFrame(this);
-            }
+        this.prevTick = timestamp;
+
+        if (this.accumulator >= this.nextTick)
+        {
+            this.currentAnim.setFrame(this);
         }
     },
 
@@ -119,6 +123,72 @@ Animation.prototype = {
         this.isPlaying = false;
 
         return this.parent;
+    },
+
+    restart: function (includeDelay)
+    {
+        if (includeDelay === undefined) { includeDelay = false; }
+
+        this.currentAnim.getFirstTick(this, includeDelay);
+
+        this.forward = true;
+        this.isPlaying = true;
+        this.pendingRepeat = false;
+
+        this.prevTick = this.mainloop.lastFrameTimeMs;
+
+        //  Set frame
+        this.updateFrame(this.currentAnim.frames[0]);
+
+        return this.parent;
+    },
+
+    paused: function (value)
+    {
+        if (value !== undefined)
+        {
+            //  Setter
+            if (value)
+            {
+                return this.pause();
+            }
+            else
+            {
+                return this.resume();
+            }
+        }
+        else
+        {
+            return this._paused;
+        }
+    },
+
+    pause: function ()
+    {
+        if (!this._paused)
+        {
+            this._paused = true;
+            this._wasPlaying = this.isPlaying;
+            this.isPlaying = false;
+        }
+        
+        return this;
+    },
+
+    resume: function ()
+    {
+        if (this._paused)
+        {
+            this._paused = false;
+            this.isPlaying = this._wasPlaying;
+
+            if (this.isPlaying)
+            {
+                this.prevTick = this.mainloop.lastFrameTimeMs;
+            }
+        }
+        
+        return this;
     },
 
     //  How far through the current animation are we?
