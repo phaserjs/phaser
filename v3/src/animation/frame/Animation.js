@@ -10,8 +10,6 @@ var Animation = function (manager, key, config)
     //  Extract all the frame data into the frames array
     this.frames = GetFrames(manager.textureManager, GetObjectValue(config, 'frames', []));
 
-    this.firstFrame = this.frames[0];
-
     //  The frame rate of playback in frames per second (default 24 if duration is null)
     this.framerate = GetObjectValue(config, 'framerate', null);
 
@@ -87,11 +85,8 @@ Animation.prototype = {
     getNextTick: function (component)
     {
         //  When is the next update due?
-        var frame = component.currentFrame;
-        var diff = component.accumulator - component.nextTick;
-
-        component.accumulator = diff;
-        component.nextTick = (this.msPerFrame + frame.duration) * component.timescale;
+        component.accumulator -= component.nextTick;
+        component.nextTick = (this.msPerFrame + component.currentFrame.duration) * component.timescale;
     },
 
     nextFrame: function (component)
@@ -100,7 +95,7 @@ Animation.prototype = {
 
         //  TODO: Add frame skip support
 
-        if (frame.nextFrame)
+        if (!frame.isLast)
         {
             component.updateFrame(frame.nextFrame);
 
@@ -114,6 +109,9 @@ Animation.prototype = {
             if (this.yoyo)
             {
                 component.forward = false;
+
+                //  Delay for the current frame?
+                this.getNextTick(component);
             }
             else if (component.repeatCounter > 0)
             {
@@ -130,17 +128,26 @@ Animation.prototype = {
 
     repeatAnimation: function (component)
     {
-        component.repeatCounter--;
+        if (this.repeatDelay > 0 && component.pendingRepeat === false)
+        {
+            component.pendingRepeat = true;
+            component.accumulator -= component.nextTick;
+            component.nextTick += (this.repeatDelay * 1000) * component.timescale;
+        }
+        else
+        {
+            component.repeatCounter--;
 
-        component.forward = true;
+            component.forward = true;
 
-        component.updateFrame(this.firstFrame);
+            component.updateFrame(component.currentFrame.nextFrame);
 
-        this.getNextTick(component);
+            this.getNextTick(component);
 
-        component.nextTick += (this.repeatDelay * 1000) * component.timescale;
-
-        //  OnRepeat
+            component.pendingRepeat = false;
+    
+            //  OnRepeat
+        }
     },
 
     previousFrame: function (component)
@@ -149,7 +156,7 @@ Animation.prototype = {
 
         //  TODO: Add frame skip support
 
-        if (frame.prevFrame)
+        if (!frame.isFirst)
         {
             component.updateFrame(frame.prevFrame);
 

@@ -13,6 +13,7 @@ var GetFrames = function (textureManager, frames)
 
     var out = [];
     var prev;
+    var animationFrame;
 
     for (var i = 0; i < frames.length; i++)
     {
@@ -31,7 +32,9 @@ var GetFrames = function (textureManager, frames)
 
         var textureFrame = textureManager.getFrame(key, frame);
 
-        var animationFrame = new AnimationFrame(textureFrame, duration, onUpdate);
+        animationFrame = new AnimationFrame(textureFrame, duration, onUpdate);
+
+        animationFrame.isFirst = (!prev);
 
         //  The previously created animationFrame
         if (prev)
@@ -45,6 +48,13 @@ var GetFrames = function (textureManager, frames)
 
         prev = animationFrame;
     }
+
+    animationFrame.isLast = true;
+
+    //  Link them end-to-end, so they loop
+    animationFrame.nextFrame = out[0];
+
+    out[0].prevFrame = animationFrame;
 
     return out;
 };

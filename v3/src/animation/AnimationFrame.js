@@ -3,6 +3,9 @@ var AnimationFrame = function (frame, duration, onUpdate)
     //  Texture Frame
     this.frame = frame;
 
+    this.isFirst = false;
+    this.isLast = false;
+
     //  The frame that comes before this one in the animation (if any)
     this.prevFrame = null;
 

@@ -32,6 +32,8 @@ var Animation = function (parent)
     this.nextTick = 0;
 
     this.repeatCounter = 0;
+
+    this.pendingRepeat = false;
 };
 
 Animation.prototype.constructor = Animation;
@@ -81,6 +83,7 @@ Animation.prototype = {
 
         this.forward = true;
         this.isPlaying = true;
+        this.pendingRepeat = false;
     },
 
     //  Example data:
@@ -102,6 +105,8 @@ Animation.prototype = {
     stop: function ()
     {
         this.isPlaying = false;
+
+        console.log('Animation Stopped');
     }
 
 };
