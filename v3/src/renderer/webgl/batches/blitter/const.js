@@ -1,6 +1,3 @@
-var FragmentShader = require('./FragmentShader');
-var VertexShader = require('./VertexShader');
-
 var CONST = {
 
     // VERTEX_SIZE = sizeof(vec2) + sizeof(vec2) + sizeof(float)
@@ -14,9 +11,6 @@ var CONST = {
 
     // Can't be bigger than 10,000 since index are 16-bit
     MAX_PARTICLES: 2000,
-
-    VERTEX_SHADER_SOURCE: VertexShader,
-    FRAGMENT_SHADER_SOURCE: FragmentShader
 
 };
 

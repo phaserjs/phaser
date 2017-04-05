@@ -8,6 +8,7 @@ var CreateAttribDesc = require('../../utils/vao/CreateAttribDesc');
 var Buffer32 = require('../../utils/buffer/Buffer32');
 var Buffer16 = require('../../utils/buffer/Buffer16');
 var VertexArray = require('../../utils/vao/VertexArray');
+var TexturedAndAlphaShader = require('../../shaders/TexturedAndAlphaShader');
 
 var PHASER_CONST = require('../../../../const');
 var CONST = require('./const');
@@ -22,9 +23,7 @@ var BlitterBatch = function (game, gl, manager)
     this.height = game.config.height * game.config.resolution;
     this.glContext = gl;
     this.maxParticles = null;
-    this.vertShader = null;
-    this.fragShader = null;
-    this.program = null;
+    this.shader = null;
     this.vertexArray = null;
     this.indexBufferObject = null;
     this.vertexDataBuffer = null;
@@ -64,25 +63,21 @@ BlitterBatch.prototype = {
 
         var vertexDataBuffer = new Buffer32(CONST.VERTEX_SIZE * CONST.PARTICLE_VERTEX_COUNT * CONST.MAX_PARTICLES);
         var indexDataBuffer = new Buffer16(CONST.INDEX_SIZE * CONST.PARTICLE_INDEX_COUNT * CONST.MAX_PARTICLES);
-        var vertShader = CreateShader(gl, CONST.VERTEX_SHADER_SOURCE, gl.VERTEX_SHADER);
-        var fragShader = CreateShader(gl, CONST.FRAGMENT_SHADER_SOURCE, gl.FRAGMENT_SHADER);
-        var program = CreateProgram(gl, vertShader, fragShader);
+        var shader = this.manager.createShader('TexturedAndAlphaShader', TexturedAndAlphaShader);
         var indexBufferObject = CreateBuffer(gl, gl.ELEMENT_ARRAY_BUFFER, gl.STATIC_DRAW, null, indexDataBuffer.getByteCapacity());
         var attribArray = [
-            CreateAttribDesc(gl, program, 'a_position', 2, gl.FLOAT, false, CONST.VERTEX_SIZE, 0),
-            CreateAttribDesc(gl, program, 'a_tex_coord', 2, gl.FLOAT, false, CONST.VERTEX_SIZE, 8),
-            CreateAttribDesc(gl, program, 'a_alpha', 1, gl.FLOAT, false, CONST.VERTEX_SIZE, 16)
+            CreateAttribDesc(gl, shader.program, 'a_position', 2, gl.FLOAT, false, CONST.VERTEX_SIZE, 0),
+            CreateAttribDesc(gl, shader.program, 'a_tex_coord', 2, gl.FLOAT, false, CONST.VERTEX_SIZE, 8),
+            CreateAttribDesc(gl, shader.program, 'a_alpha', 1, gl.FLOAT, false, CONST.VERTEX_SIZE, 16)
         ];
         var vertexArray = new VertexArray(CreateBuffer(gl, gl.ARRAY_BUFFER, gl.STREAM_DRAW, null, vertexDataBuffer.getByteCapacity()), attribArray);
-        var viewMatrixLocation = gl.getUniformLocation(program, 'u_view_matrix');
+        var viewMatrixLocation = gl.getUniformLocation(shader.program, 'u_view_matrix');
         var indexBuffer = indexDataBuffer.uintView;
         var max = CONST.MAX_PARTICLES * CONST.PARTICLE_INDEX_COUNT;
 
         this.vertexDataBuffer = vertexDataBuffer;
         this.indexDataBuffer = indexDataBuffer;
-        this.vertShader = vertShader;
-        this.fragShader = fragShader;
-        this.program = program;
+        this.shader = shader;
         this.indexBufferObject = indexBufferObject;
         this.vertexArray = vertexArray;
         this.viewMatrixLocation = viewMatrixLocation;
@@ -116,8 +111,14 @@ BlitterBatch.prototype = {
     {
         var gl = this.glContext;
 
-        gl.useProgram(this.program);
+        gl.useProgram(this.shader.program);
         gl.clearColor(0, 0, 0, 1);
+        this.bindVertexAttributes();
+    },
+
+    bindVertexAttributes: function ()
+    {
+        var gl = this.glContext;
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBufferObject);
         BindVertexArray(gl, this.vertexArray);
     },
@@ -168,9 +169,7 @@ BlitterBatch.prototype = {
 
         if (gl)
         {
-            gl.deleteShader(this.vertShader);
-            gl.deleteShader(this.fragShader);
-            gl.deleteProgram(this.program);
+            this.manager.deleteShader(this.shader);
             gl.deleteBuffer(this.indexBufferObject);
             gl.deleteBuffer(this.vertexArray.buffer);
         }

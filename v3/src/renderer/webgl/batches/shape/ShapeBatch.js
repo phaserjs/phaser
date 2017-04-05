@@ -6,6 +6,7 @@ var CreateAttribDesc = require('../../utils/vao/CreateAttribDesc');
 var Buffer32 = require('../../utils/buffer/Buffer32');
 var VertexArray = require('../../utils/vao/VertexArray');
 var Earcut = require('./earcut');
+var UntexturedAndNormalizedTintedShader = require('../../shaders/UntexturedAndNormalizedTintedShader');
 
 var PHASER_CONST = require('../../../../const');
 var CONST = require('./const');
@@ -20,9 +21,7 @@ var ShapeBatch = function (game, gl, manager)
     this.height = game.config.height * game.config.resolution;
     this.glContext = gl;
     this.maxVertices = null;
-    this.vertShader = null;
-    this.fragShader = null;
-    this.program = null;
+    this.shader = null;
     this.vertexArray = null;
     this.vertexDataBuffer = null;
     this.vertexCount = 0;
@@ -64,22 +63,18 @@ ShapeBatch.prototype = {
     init: function (gl)
     {
         var vertexDataBuffer = new Buffer32(CONST.VERTEX_SIZE * CONST.MAX_VERTICES);
-        var vertShader = CreateShader(gl, CONST.VERTEX_SHADER_SOURCE, gl.VERTEX_SHADER);
-        var fragShader = CreateShader(gl, CONST.FRAGMENT_SHADER_SOURCE, gl.FRAGMENT_SHADER);
-        var program = CreateProgram(gl, vertShader, fragShader);
+        var shader = this.manager.createShader('UntexturedAndNormalizedTintedShader', UntexturedAndNormalizedTintedShader);
         var attribArray = [
-            CreateAttribDesc(gl, program, 'a_position', 2, gl.FLOAT, false, CONST.VERTEX_SIZE, 0),
-            CreateAttribDesc(gl, program, 'a_color', 4, gl.UNSIGNED_BYTE, true, CONST.VERTEX_SIZE, 8),
-            CreateAttribDesc(gl, program, 'a_alpha', 1, gl.FLOAT, false, CONST.VERTEX_SIZE, 12)
+            CreateAttribDesc(gl, shader.program, 'a_position', 2, gl.FLOAT, false, CONST.VERTEX_SIZE, 0),
+            CreateAttribDesc(gl, shader.program, 'a_color', 4, gl.UNSIGNED_BYTE, true, CONST.VERTEX_SIZE, 8),
+            CreateAttribDesc(gl, shader.program, 'a_alpha', 1, gl.FLOAT, false, CONST.VERTEX_SIZE, 12)
         ];
         var vertexArray = new VertexArray(CreateBuffer(gl, gl.ARRAY_BUFFER, gl.STREAM_DRAW, null, vertexDataBuffer.getByteCapacity()), attribArray);
-        var viewMatrixLocation = gl.getUniformLocation(program, 'u_view_matrix');
+        var viewMatrixLocation = gl.getUniformLocation(shader.program, 'u_view_matrix');
         var max = CONST.MAX_VERTICES;
 
         this.vertexDataBuffer = vertexDataBuffer;
-        this.vertShader = vertShader;
-        this.fragShader = fragShader;
-        this.program = program;
+        this.shader = shader;
         this.vertexArray = vertexArray;
         this.viewMatrixLocation = viewMatrixLocation;
         this.maxVertices = max;
@@ -99,8 +94,14 @@ ShapeBatch.prototype = {
     {
         var gl = this.glContext;
 
-        gl.useProgram(this.program);
+        gl.useProgram(this.shader.program);
         gl.clearColor(0, 0, 0, 1);
+        this.bindVertexAttributes();
+    },
+
+    bindVertexAttributes: function ()
+    {
+        var gl = this.glContext;
         BindVertexArray(gl, this.vertexArray);
     },
 
@@ -151,9 +152,7 @@ ShapeBatch.prototype = {
 
         if (gl)
         {
-            gl.deleteShader(this.vertShader);
-            gl.deleteShader(this.fragShader);
-            gl.deleteProgram(this.program);
+            this.manager.deleteShader(this.shader.program);
             gl.deleteBuffer(this.vertexArray.buffer);
         }
     },

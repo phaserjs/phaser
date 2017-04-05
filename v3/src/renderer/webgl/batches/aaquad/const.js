@@ -1,6 +1,3 @@
-var FragmentShader = require('./FragmentShader');
-var VertexShader = require('./VertexShader');
-
 var CONST = {
 
     // VERTEX_SIZE = sizeof(vec2) + sizeof(vec4)
@@ -12,9 +9,6 @@ var CONST = {
     // How many 32-bit components does the vertex have.
     AAQUAD_VERTEX_COMPONENT_COUNT: 6,
     MAX_AAQUAD: 2000,
-
-    VERTEX_SHADER_SOURCE: VertexShader,
-    FRAGMENT_SHADER_SOURCE: FragmentShader
 
 };
 

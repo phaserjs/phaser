@@ -13,6 +13,7 @@ var AAQuadBatch = require('./batches/aaquad/AAQuadBatch');
 var SpriteBatch = require('./batches/sprite/SpriteBatch');
 var ShapeBatch = require('./batches/shape/ShapeBatch');
 var BlendModes = require('../BlendModes');
+var Shader = require('./utils/shader/Shader');
 
 var WebGLRenderer = function (game)
 {
@@ -52,6 +53,8 @@ var WebGLRenderer = function (game)
     this.shapeBatch = null;
     this.batch = null;
     this.currentTexture2D = null;
+    this.shaderCache = {};
+    this.currentShader = null;
 
     this.init();
 };
@@ -376,6 +379,73 @@ WebGLRenderer.prototype = {
         gl.bindTexture(gl.TEXTURE_2D, this.currentTexture2D);
 
         return dstTexture;
+    },
+
+    createShader: function (shaderName, shaderSources) 
+    {
+        if (!(shaderName in this.shaderCache))
+        {
+            var gl = this.gl;
+            var program = gl.createProgram();
+            var vertShader = gl.createShader(gl.VERTEX_SHADER);
+            var fragShader = gl.createShader(gl.FRAGMENT_SHADER);
+            var error;
+            var shader;
+
+            gl.shaderSource(vertShader, shaderSources.vert);
+            gl.shaderSource(fragShader, shaderSources.frag);
+
+            gl.compileShader(vertShader);
+            gl.compileShader(fragShader);
+
+            error = gl.getShaderInfoLog(vertShader);
+
+            if (error.length > 0) 
+            {
+                throw new Error('Vertex Shader Compilation Error.\n' + error);
+            }
+
+            error = gl.getShaderInfoLog(fragShader);
+
+            if (error.length > 0) 
+            {
+                throw new Error('Fragment Shader Compilation Error.\n' + error);
+            }
+
+            gl.attachShader(program, vertShader);
+            gl.attachShader(program, fragShader);
+            gl.linkProgram(program);
+
+            error = gl.getProgramParameter(program, gl.LINK_STATUS);
+
+            if (error === 0)
+            {
+                error = gl.getProgramInfoLog(program);
+
+                throw new Error('Program Linking Error.\n' + error);
+            }
+
+            shader = new Shader(shaderName, gl, program, vertShader, fragShader);
+            this.shaderCache[shaderName] = shader;
+            return shader;
+        }
+        return this.shaderCache[shaderName];
+    },
+    deleteShader: function (shader)
+    {
+        var storedShader = this.shaderCache[shader.name]
+        var gl = this.gl;
+        if (storedShader !== undefined)
+        {
+            delete this.shaderCache;
+        }
+        gl.deleteShader(shader.vertexShader);
+        gl.deleteShader(shader.fragmentShader);
+        gl.deleteProgram(shader.program);
+        shader.vertexShader = null;
+        shader.fragmentShader = null;
+        shader.program = null;
+        shader.name = null;
     }
 };
 
