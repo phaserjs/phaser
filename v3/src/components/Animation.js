@@ -43,16 +43,16 @@ var Animation = new Class({
         this.skipMissedFrames = true;
 
         //  Delay before starting playback (in seconds)
-        this.delay = 0;
+        this._delay = 0;
 
         //  Number of times to repeat the animation (-1 for infinity)
-        this.repeat = 0;
+        this._repeat = 0;
 
         //  Delay before the repeat starts (in seconds)
-        this.repeatDelay = 0;
+        this._repeatDelay = 0;
 
         //  Should the animation yoyo? (reverse back down to the start) before repeating?
-        this.yoyo = false;
+        this._yoyo = false;
 
         //  Playhead values
         //  ---------------
@@ -73,12 +73,15 @@ var Animation = new Class({
         this._wasPlaying = false;
     },
 
+    delay: Components.Delay,
     delayedPlay: Components.DelayedPlay,
     load: Components.Load,
     pause: Components.Pause,
     paused: Components.Paused,
     play: Components.Play,
     progress: Components.Progress,
+    repeat: Components.Repeat,
+    repeatDelay: Components.RepeatDelay,
     restart: Components.Restart,
     resume: Components.Resume,
     stop: Components.Stop,

@@ -1,4 +1,4 @@
-var Resume = function ()
+var Resume = function (fromFrame)
 {
     if (this._paused)
     {
@@ -9,6 +9,11 @@ var Resume = function ()
         {
             this.prevTick = this.mainloop.lastFrameTimeMs;
         }
+    }
+
+    if (fromFrame !== undefined)
+    {
+        this.updateFrame(fromFrame);
     }
     
     return this;

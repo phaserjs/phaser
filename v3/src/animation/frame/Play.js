@@ -5,7 +5,7 @@ var Play = function (key, startFrame)
     this.load(key, startFrame);
 
     //  Should give us 9,007,199,254,740,991 safe repeats
-    this.repeatCounter = (this.repeat === -1) ? Number.MAX_SAFE_INTEGER : this.repeat;
+    this.repeatCounter = (this._repeat === -1) ? Number.MAX_SAFE_INTEGER : this._repeat;
 
     this.currentAnim.getFirstTick(this);
 
@@ -15,7 +15,7 @@ var Play = function (key, startFrame)
 
     this.prevTick = this.mainloop.lastFrameTimeMs;
 
-    return this.parent;
+    return this;
 };
 
 module.exports = Play;

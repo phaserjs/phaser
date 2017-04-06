@@ -2,11 +2,11 @@ var Yoyo = function (value)
 {
     if (value === undefined)
     {
-        return this.yoyo;
+        return this._yoyo;
     }
     else
     {
-        this.yoyo = value;
+        this._yoyo = value;
 
         return this;
     }

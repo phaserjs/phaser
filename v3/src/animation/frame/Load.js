@@ -9,6 +9,8 @@ var Load = function (key, startFrame)
 
     //  Load the new animation in
     this.animationManager.load(this, key, startFrame);
+
+    return this;
 };
 
 module.exports = Load;

@@ -82,10 +82,10 @@ Animation.prototype = {
             component.duration = this.duration;
             component.msPerFrame = this.msPerFrame;
             component.skipMissedFrames = this.skipMissedFrames;
-            component.delay = this.delay;
-            component.repeat = this.repeat;
-            component.repeatDelay = this.repeatDelay;
-            component.yoyo = this.yoyo;
+            component._delay = this.delay;
+            component._repeat = this.repeat;
+            component._repeatDelay = this.repeatDelay;
+            component._yoyo = this.yoyo;
         }
 
         component.updateFrame(this.frames[startFrame]);
@@ -106,7 +106,7 @@ Animation.prototype = {
 
         if (includeDelay)
         {
-            component.nextTick += (component.delay * 1000);
+            component.nextTick += (component._delay * 1000);
         }
     },
 
@@ -187,11 +187,11 @@ Animation.prototype = {
 
     repeatAnimation: function (component)
     {
-        if (component.repeatDelay > 0 && component.pendingRepeat === false)
+        if (component._repeatDelay > 0 && component.pendingRepeat === false)
         {
             component.pendingRepeat = true;
             component.accumulator -= component.nextTick;
-            component.nextTick += (component.repeatDelay * 1000);
+            component.nextTick += (component._repeatDelay * 1000);
         }
         else
         {

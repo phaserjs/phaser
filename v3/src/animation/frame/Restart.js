@@ -13,7 +13,7 @@ var Restart = function (includeDelay)
     //  Set frame
     this.updateFrame(this.currentAnim.frames[0]);
 
-    return this.parent;
+    return this;
 };
 
 module.exports = Restart;

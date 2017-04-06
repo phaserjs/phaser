@@ -4,7 +4,7 @@ var DelayedPlay = function (delay, key, startFrame)
 
     this.nextTick += (delay * 1000);
 
-    return this.parent;
+    return this;
 };
 
 module.exports = DelayedPlay;

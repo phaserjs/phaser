@@ -2,7 +2,7 @@ var Stop = function ()
 {
     this.isPlaying = false;
 
-    return this.parent;
+    return this;
 };
 
 module.exports = Stop;
