@@ -5,7 +5,7 @@ var Update = function (timestamp)
         return;
     }
 
-    this.accumulator += (timestamp - this.prevTick) * this.timeScale;
+    this.accumulator += (timestamp - this.prevTick) * this._timeScale;
 
     this.prevTick = timestamp;
 

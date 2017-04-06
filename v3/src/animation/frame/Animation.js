@@ -77,7 +77,7 @@ Animation.prototype = {
         {
             component.currentAnim = this;
 
-            component.timeScale = 1;
+            component._timeScale = 1;
             component.frameRate = this.frameRate;
             component.duration = this.duration;
             component.msPerFrame = this.msPerFrame;

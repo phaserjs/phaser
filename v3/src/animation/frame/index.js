@@ -14,6 +14,7 @@ module.exports = {
     Restart: require('./Restart'),
     Resume: require('./Resume'),
     Stop: require('./Stop'),
+    TimeScale: require('./TimeScale'),
     TotalFrames: require('./TotalFrames'),
     TotalProgress: require('./TotalProgress'),
     Update: require('./Update'),

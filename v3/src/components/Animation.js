@@ -27,7 +27,8 @@ var Animation = new Class({
         //  -------------------------
 
         //  Scale the time (make it go faster / slower)
-        this.timeScale = 1;
+        //  Factor that's used to scale time where 1 = normal speed (the default), 0.5 = half speed, 2 = double speed, etc.
+        this._timeScale = 1;
 
         //  The frame rate of playback in frames per second (default 24 if duration is null)
         this.frameRate = 0;
@@ -85,6 +86,7 @@ var Animation = new Class({
     restart: Components.Restart,
     resume: Components.Resume,
     stop: Components.Stop,
+    timeScale: Components.TimeScale,
     totalFrames: Components.TotalFrames,
     totalProgress: Components.TotalProgress,
     update: Components.Update,
