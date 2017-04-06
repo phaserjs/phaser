@@ -31,10 +31,27 @@ var GetFrames = function (textureManager, frames)
         var frame = GetObjectValue(item, 'frame', 0);
         var duration = GetObjectValue(item, 'duration', 0);
         var onUpdate = GetObjectValue(item, 'onUpdate', null);
+        var alpha = GetObjectValue(item, 'alpha', null);
+        var visible = GetObjectValue(item, 'visible', null);
 
         var textureFrame = textureManager.getFrame(key, frame);
 
-        animationFrame = new AnimationFrame(index, textureFrame, duration, onUpdate);
+        animationFrame = new AnimationFrame(index, textureFrame);
+
+        animationFrame.duration = duration;
+        animationFrame.onUpdate = onUpdate;
+
+        if (alpha !== null)
+        {
+            animationFrame.setAlpha = true;
+            animationFrame.alpha = alpha;
+        }
+
+        if (visible !== null)
+        {
+            animationFrame.setVisible = true;
+            animationFrame.visible = visible;
+        }
 
         animationFrame.isFirst = (!prev);
 

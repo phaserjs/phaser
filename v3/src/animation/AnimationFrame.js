@@ -1,4 +1,4 @@
-var AnimationFrame = function (index, frame, duration, onUpdate)
+var AnimationFrame = function (index, frame)
 {
     //  The index of this frame within the Animation.frames array
     this.index = index;
@@ -16,13 +16,21 @@ var AnimationFrame = function (index, frame, duration, onUpdate)
     this.nextFrame = null;
 
     //   Additional time (in ms) this frame should appear for - added onto the msPerFrame
-    this.duration = duration;
+    this.duration = 0;
 
     //   What % through the animation progress is this frame?
     this.progress = 0;
 
     //  Callback if this frame gets displayed
-    this.onUpdate = onUpdate;
+    this.onUpdate = null;
+
+    //  When this frame hits, set sprite.alpha to this
+    this.setAlpha = false;
+    this.alpha = 1;
+
+    //  When this frame hits, set sprite.visible to this
+    this.setVisible = false;
+    this.visible = false;
 };
 
 AnimationFrame.prototype.constructor = AnimationFrame;
