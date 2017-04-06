@@ -11,34 +11,34 @@ var Animation = function (manager, key, config)
     this.frames = GetFrames(manager.textureManager, GetObjectValue(config, 'frames', []));
 
     //  The frame rate of playback in frames per second (default 24 if duration is null)
-    this.framerate = GetObjectValue(config, 'framerate', null);
+    this.frameRate = GetObjectValue(config, 'framerate', null);
 
-    //  How long the animation should play for. If framerate is set it overrides this value
-    //  otherwise framerate is derived from duration
+    //  How long the animation should play for. If frameRate is set it overrides this value
+    //  otherwise frameRate is derived from duration
     this.duration = GetObjectValue(config, 'duration', null);
 
-    if (this.duration === null && this.framerate === null)
+    if (this.duration === null && this.frameRate === null)
     {
-        this.framerate = 24;
-        this.duration = this.framerate / this.frames.length;
+        this.frameRate = 24;
+        this.duration = this.frameRate / this.frames.length;
     }
-    else if (this.duration && this.framerate === null)
+    else if (this.duration && this.frameRate === null)
     {
-        //  Duration given but no framerate, so set the framerate based on duration
+        //  Duration given but no frameRate, so set the frameRate based on duration
         //  I.e. 12 frames in the animation, duration = 4 (4000 ms)
-        //  So framerate is 12 / 4 = 3 fps
-        this.framerate = this.frames.length / this.duration;
+        //  So frameRate is 12 / 4 = 3 fps
+        this.frameRate = this.frames.length / this.duration;
     }
     else
     {
-        //  No duration, so derive from the framerate
-        //  I.e. 15 frames in the animation, framerate = 30 fps
+        //  No duration, so derive from the frameRate
+        //  I.e. 15 frames in the animation, frameRate = 30 fps
         //  So duration is 15 / 30 = 0.5 (half a second)
-        this.duration = this.frames.length / this.framerate;
+        this.duration = this.frames.length / this.frameRate;
     }
 
     //  ms per frame (without including frame specific modifiers)
-    this.msPerFrame = 1000 / this.framerate;
+    this.msPerFrame = 1000 / this.frameRate;
 
     //  Skip frames if the time lags, or always advanced anyway?
     this.skipMissedFrames = GetObjectValue(config, 'skipMissedFrames', true);
@@ -73,7 +73,21 @@ Animation.prototype = {
             startFrame = 0;
         }
 
-        component.updateAnimation(this);
+        if (component.currentAnim !== this)
+        {
+            component.currentAnim = this;
+
+            component.timeScale = 1;
+            component.frameRate = this.frameRate;
+            component.duration = this.duration;
+            component.msPerFrame = this.msPerFrame;
+            component.skipMissedFrames = this.skipMissedFrames;
+            component.delay = this.delay;
+            component.repeat = this.repeat;
+            component.repeatDelay = this.repeatDelay;
+            component.yoyo = this.yoyo;
+        }
+
         component.updateFrame(this.frames[startFrame]);
     },
 
@@ -88,11 +102,11 @@ Animation.prototype = {
 
         //  When is the first update due?
         component.accumulator = 0;
-        component.nextTick = this.msPerFrame + component.currentFrame.duration;
+        component.nextTick = component.msPerFrame + component.currentFrame.duration;
 
         if (includeDelay)
         {
-            component.nextTick += (this.delay * 1000);
+            component.nextTick += (component.delay * 1000);
         }
     },
 
@@ -100,7 +114,7 @@ Animation.prototype = {
     {
         //  When is the next update due?
         component.accumulator -= component.nextTick;
-        component.nextTick = this.msPerFrame + component.currentFrame.duration;
+        component.nextTick = component.msPerFrame + component.currentFrame.duration;
     },
 
     nextFrame: function (component)
@@ -117,6 +131,8 @@ Animation.prototype = {
             if (this.yoyo)
             {
                 component.forward = false;
+    
+                component.updateFrame(frame.prevFrame);
 
                 //  Delay for the current frame
                 this.getNextTick(component);
@@ -171,11 +187,11 @@ Animation.prototype = {
 
     repeatAnimation: function (component)
     {
-        if (this.repeatDelay > 0 && component.pendingRepeat === false)
+        if (component.repeatDelay > 0 && component.pendingRepeat === false)
         {
             component.pendingRepeat = true;
             component.accumulator -= component.nextTick;
-            component.nextTick += (this.repeatDelay * 1000);
+            component.nextTick += (component.repeatDelay * 1000);
         }
         else
         {

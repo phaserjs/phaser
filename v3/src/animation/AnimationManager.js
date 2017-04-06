@@ -26,6 +26,8 @@ var AnimationManager = function (game)
 
     this.textureManager = null;
 
+    this.globalTimeScale = 1;
+
     this.anims = new Map();
 };
 
