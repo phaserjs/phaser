@@ -5,7 +5,7 @@ var UntexturedAndTintedShader = require('../../shaders/UntexturedAndTintedShader
 var PHASER_CONST = require('../../../../const');
 var CONST = require('./const');
 
-var AAQuadBatch = function (game, gl, manager)
+var QuadBatch = function (game, gl, manager)
 {
     this.game = game;
     this.type = PHASER_CONST.WEBGL;
@@ -45,9 +45,9 @@ var AAQuadBatch = function (game, gl, manager)
     this.init(this.glContext);
 };
 
-AAQuadBatch.prototype.constructor = AAQuadBatch;
+QuadBatch.prototype.constructor = QuadBatch;
 
-AAQuadBatch.prototype = {
+QuadBatch.prototype = {
 
     init: function (gl)
     {
@@ -194,4 +194,4 @@ AAQuadBatch.prototype = {
     }
 };
 
-module.exports = AAQuadBatch;
+module.exports = QuadBatch;

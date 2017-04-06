@@ -6,13 +6,14 @@
 */
 
 var CONST = require('../../const');
-var BlitterBatch = require('./batches/blitter/BlitterBatch');
-var AAQuadBatch = require('./batches/aaquad/AAQuadBatch');
-var SpriteBatch = require('./batches/sprite/SpriteBatch');
-var ShapeBatch = require('./batches/shape/ShapeBatch');
+var BlitterBatch = require('./renderers/blitterbatch/BlitterBatch');
+var QuadBatch = require('./renderers/quadbatch/QuadBatch');
+var SpriteBatch = require('./renderers/spritebatch/SpriteBatch');
+var ShapeBatch = require('./renderers/shapebatch/ShapeBatch');
 var BlendModes = require('../BlendModes');
 var ScaleModes = require('../ScaleModes');
 var ResourceManager = require('./ResourceManager');
+var Resources = require('./resources');
 
 var WebGLRenderer = function (game)
 {
@@ -45,13 +46,13 @@ var WebGLRenderer = function (game)
     this.blendModes = [];
     this.gl = null;
     this.extensions = null;
-    this.batches = [];
+    this.currentRendereres = [];
     this.blitterBatch = null;
     this.aaQuadBatch = null;
     this.spriteBatch = null;
     this.shapeBatch = null;
-    this.batch = null;
-    this.currentTexture2D = null;
+    this.currentRenderer = null;
+    this.currentTexture = null;
     this.shaderCache = {};
     this.currentShader = null;
     this.resourceManager = null;
@@ -103,10 +104,10 @@ WebGLRenderer.prototype = {
 
         this.blendMode = -1;
         this.extensions = gl.getSupportedExtensions();
-        this.blitterBatch = this.addBatch(new BlitterBatch(this.game, gl, this));
-        this.aaQuadBatch = this.addBatch(new AAQuadBatch(this.game, gl, this));
-        this.spriteBatch = this.addBatch(new SpriteBatch(this.game, gl, this));
-        this.shapeBatch = this.addBatch(new ShapeBatch(this.game, gl, this));
+        this.blitterBatch = this.addRenderer(new BlitterBatch(this.game, gl, this));
+        this.quadBatch = this.addRenderer(new QuadBatch(this.game, gl, this));
+        this.spriteBatch = this.addRenderer(new SpriteBatch(this.game, gl, this));
+        this.shapeBatch = this.addRenderer(new ShapeBatch(this.game, gl, this));
     },
 
     createTexture: function (source)
@@ -137,16 +138,16 @@ WebGLRenderer.prototype = {
                 );
         }
 
-        this.currentTexture2D = source.glTexture;
+        this.currentTexture = source.glTexture;
     },
 
     setTexture: function (texture)
     {
-        if (this.currentTexture2D !== texture)
+        if (this.currentTexture !== texture)
         {
-            if (this.batch)
+            if (this.currentRenderer)
             {
-                this.batch.flush();
+                this.currentRenderer.flush();
             }
 
             var gl = this.gl;
@@ -161,7 +162,7 @@ WebGLRenderer.prototype = {
                 gl.bindTexture(gl.TEXTURE_2D, null);
             }
 
-            this.currentTexture2D = texture;
+            this.currentTexture = texture;
         }
     },
 
@@ -170,14 +171,14 @@ WebGLRenderer.prototype = {
         var gl = this.gl;
         this.setTexture(texture);
 
-        if (this.batch !== batch)
+        if (this.currentRenderer !== batch)
         {
-            if (this.batch)
+            if (this.currentRenderer)
             {
-                this.batch.flush();
+                this.currentRenderer.flush();
             }
 
-            this.batch = batch;
+            this.currentRenderer = batch;
         }
     },
 
@@ -198,14 +199,14 @@ WebGLRenderer.prototype = {
         }
 
         this.gl.viewport(0, 0, this.width, this.height);
-        for (var i = 0, l = this.batches.length; i < l; ++i)
+        for (var i = 0, l = this.currentRendereres.length; i < l; ++i)
         {
-            this.batches[i].bind();
-            this.batches[i].resize(width, height, resolution);
+            this.currentRendereres[i].bind();
+            this.currentRendereres[i].resize(width, height, resolution);
         }
-        if (this.batch) 
+        if (this.currentRenderer) 
         {
-            this.batch.bind();
+            this.currentRenderer.bind();
         }
     },
 
@@ -259,7 +260,7 @@ WebGLRenderer.prototype = {
         {
             var child = list[index];
             // Setting blend mode if needed            
-            var batch = this.batch;
+            var batch = this.currentRenderer;
             var newBlendMode = child.blendMode;
             if (this.blendMode !== newBlendMode)
             {
@@ -281,22 +282,22 @@ WebGLRenderer.prototype = {
             }
             // drawing child
             child.renderWebGL(this, child, interpolationPercentage, camera);
-            batch = this.batch;
+            batch = this.currentRenderer;
             if (batch && batch.isFull())
             {
                 batch.flush();
             }
         }
-        if (this.batch)
+        if (this.currentRenderer)
         {
-            this.batch.flush();
+            this.currentRenderer.flush();
         }
         if (camera._fadeAlpha > 0 || camera._flashAlpha > 0)
         {
-            var aaQuadBatch = this.aaQuadBatch;
-            aaQuadBatch.bind();
+            var quadBatch = this.quadBatch;
+            quadBatch.bind();
             // fade rendering
-            aaQuadBatch.add(
+            quadBatch.add(
                 camera.x, camera.y, camera.width, camera.height, 
                 camera._fadeRed, 
                 camera._fadeGreen, 
@@ -304,15 +305,15 @@ WebGLRenderer.prototype = {
                 camera._fadeAlpha
             );
             // flash rendering
-            aaQuadBatch.add(
+            quadBatch.add(
                 camera.x, camera.y, camera.width, camera.height, 
                 camera._flashRed, 
                 camera._flashGreen, 
                 camera._flashBlue, 
                 camera._flashAlpha
             );
-            aaQuadBatch.flush();
-            this.batch.bind();
+            quadBatch.flush();
+            this.currentRenderer.bind();
         }
         if (scissor)
         {
@@ -323,9 +324,9 @@ WebGLRenderer.prototype = {
     //  Called at the end of the render loop (tidy things up, etc)
     postRender: function ()
     {
-        if (this.batch)
+        if (this.currentRenderer)
         {
-            this.batch.flush();
+            this.currentRenderer.flush();
         }
         //  Add Post-render hook
 
@@ -342,7 +343,7 @@ WebGLRenderer.prototype = {
     setBlendMode: function (newBlendMode)
     {
         var gl = this.gl;
-        var batch = this.batch;
+        var batch = this.currentRenderer;
         var blend = null;
 
         if (this.blendMode !== newBlendMode)
@@ -363,13 +364,13 @@ WebGLRenderer.prototype = {
         }
     },
 
-    addBatch: function (batchInstance)
+    addRenderer: function (rendererInstance)
     {
-        var index = this.batches.indexOf(batchInstance);
+        var index = this.currentRendereres.indexOf(rendererInstance);
         if (index < 0) 
         {
-            this.batches.push(batchInstance);
-            return batchInstance;
+            this.currentRendereres.push(rendererInstance);
+            return rendererInstance;
         }
         return null;
     },
@@ -380,20 +381,21 @@ WebGLRenderer.prototype = {
 
         if (!dstTexture)
         {
+            dstTexture = new Resources.Texture(null, 0, 0);
             /* only call this once */
-            dstTexture = gl.createTexture();
+            dstTexture.texture = gl.createTexture();
         }
         
         if (shouldUpdateResource)
         {
             /* Update resource */
-            gl.bindTexture(gl.TEXTURE_2D, dstTexture);
+            gl.bindTexture(gl.TEXTURE_2D, dstTexture.texture);
             gl.texSubImage2D(gl.TEXTURE_2D, 0, 0, 0, gl.RGBA, gl.UNSIGNED_BYTE, srcCanvas);
         }
         else
         {
             /* Allocate or Reallocate resource */
-            gl.bindTexture(gl.TEXTURE_2D, dstTexture);
+            gl.bindTexture(gl.TEXTURE_2D, dstTexture.texture);
             gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, srcCanvas);
             gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
             gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
@@ -401,8 +403,11 @@ WebGLRenderer.prototype = {
             gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
         }
 
+        dstTexture.width = srcCanvas.width;
+        dstTexture.height = srcCanvas.height;
+
         /* we must rebind old texture */
-        gl.bindTexture(gl.TEXTURE_2D, this.currentTexture2D);
+        gl.bindTexture(gl.TEXTURE_2D, this.currentTexture.texture);
 
         return dstTexture;
     }
