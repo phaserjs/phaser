@@ -44,7 +44,7 @@ var BlitterWebGLRenderer = function (renderer, src, interpolationPercentage, cam
             blitterBatch.flush();
         }
 
-        renderer.setBatch(blitterBatch, frame.texture.source[frame.sourceIndex].glTexture);
+        renderer.setRenderer(blitterBatch, frame.texture.source[frame.sourceIndex].glTexture);
         vertexOffset = vertexDataBuffer.allocate(20);
         blitterBatch.elementCount += 6;
         x += frame.x;

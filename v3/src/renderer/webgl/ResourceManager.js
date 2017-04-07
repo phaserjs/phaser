@@ -1,11 +1,11 @@
 var Resources = require('./resources');
-var GL = require('./GL');
 
 var ResourceManager = function (gl) 
 {
     this.gl = gl;
     /* Maybe add pooling here */
     this.shaderCache = {};
+    this.shaderCount = 0;
 };
 
 ResourceManager.prototype.constructor = ResourceManager;
@@ -20,37 +20,37 @@ ResourceManager.prototype = {
         var colorRenderbufferObject = null;
         var complete = 0;
 
-        gl.bindFramebuffer(GL.FRAMEBUFFER, framebufferObject)
+        gl.bindFramebuffer(gl.FRAMEBUFFER, framebufferObject)
 
         if (depthStencilBuffer !== undefined && depthStencilBuffer !== null) 
         {
             depthStencilBuffer.isRenderTexture = true;
-            gl.framebufferTexture2D(GL.FRAMEBUFFER, GL.DEPTH_STENCIL_ATTACHMENT, GL.TEXTURE_2D, depthStencilBuffer.texture, depthStencilBuffer.mipLevel);
+            gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.DEPTH_STENCIL_ATTACHMENT, gl.TEXTURE_2D, depthStencilBuffer.texture, depthStencilBuffer.mipLevel);
         }
         else
         {
             depthStencilRenderbufferObject = gl.createRenderbuffer();
-            gl.bindRenderbuffer(GL.RENDERBUFFER, depthStencilRenderbufferObject);
-            gl.renderbufferStorage(GL.RENDERBUFFER, GL.DEPTH_STENCIL, width, height);
-            gl.framebufferRenderbuffer(GL.FRAMEBUFFER, GL.DEPTH_STENCIL_ATTACHMENT, GL.RENDERBUFFER, depthStencilRenderbufferObject);
+            gl.bindRenderbuffer(gl.RENDERBUFFER, depthStencilRenderbufferObject);
+            gl.renderbufferStorage(gl.RENDERBUFFER, gl.DEPTH_STENCIL, width, height);
+            gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.DEPTH_STENCIL_ATTACHMENT, gl.RENDERBUFFER, depthStencilRenderbufferObject);
         }
 
         if (colorBuffer !== undefined && colorBuffer !== null) 
         {
             colorBuffer.isRenderTexture = true;
-            gl.framebufferTexture2D(GL.FRAMEBUFFER, GL.COLOR_ATTACHMENT0, GL.TEXTURE_2D, colorBuffer.texture, colorBuffer.mipLevel);
+            gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, colorBuffer.texture, colorBuffer.mipLevel);
         } 
         else
         {
             colorRenderbufferObject = gl.createRenderbuffer();
-            gl.bindRenderbuffer(GL.RENDERBUFFER, colorRenderbufferObject);
-            gl.renderbufferStorage(GL.RENDERBUFFER, GL.RGBA4, width, height);
-            gl.framebufferRenderbuffer(GL.FRAMEBUFFER, GL.COLOR_ATTACHMENT0, GL.RENDERBUFFER, colorRenderbufferObject);
+            gl.bindRenderbuffer(gl.RENDERBUFFER, colorRenderbufferObject);
+            gl.renderbufferStorage(gl.RENDERBUFFER, gl.RGBA4, width, height);
+            gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.RENDERBUFFER, colorRenderbufferObject);
         }
 
-        complete = gl.checkFramebufferStatus(GL.FRAMEBUFFER);
+        complete = gl.checkFramebufferStatus(gl.FRAMEBUFFER);
 
-        if (complete !== GL.FRAMEBUFFER_COMPLETE) 
+        if (complete !== gl.FRAMEBUFFER_COMPLETE) 
         {
             var errors = {
                 36054: 'Incomplete Attachment',
@@ -58,11 +58,11 @@ ResourceManager.prototype = {
                 36057: 'Incomplete Dimensions',
                 36061: 'Framebuffer Unsupported'
             };
-
+            alert('Framebuffer incomplete. Framebuffer status: ' + errors[complete]);
             throw new Error('Framebuffer incomplete. Framebuffer status: ' + errors[complete]);
         }
 
-        gl.bindFramebuffer(GL.FRAMEBUFFER, null);
+        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
 
         return new Resources.RenderTarget(
             framebufferObject,
@@ -81,11 +81,12 @@ ResourceManager.prototype = {
 
         switch (target) 
         {
-            case GL.ARRAY_BUFFER:
+            case gl.ARRAY_BUFFER:
                 return new Resources.VertexBuffer(gl, bufferObject);
-            case GL.ELEMENT_ARRAY_BUFFER:
+            case gl.ELEMENT_ARRAY_BUFFER:
                 return new Resources.IndexBuffer(gl, bufferObject);
             default:
+                alert('Invalid Buffer Target');
                 throw new Error('Invalid Buffer Target');
         }
 
@@ -97,34 +98,40 @@ ResourceManager.prototype = {
         var gl = this.gl;
         var texture = gl.createTexture();
 
-        gl.bindTexture(GL.TEXTURE_2D, texture);
-        gl.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_MIN_FILTER, minFilter);
-        gl.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_MAG_FILTER, magFilter);
-        gl.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_WRAP_S, wrapS);
-        gl.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_WRAP_T, wrapT);
+        gl.bindTexture(gl.TEXTURE_2D, texture);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, minFilter);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, magFilter);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, wrapS);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, wrapT);
 
         if (pixels === null || pixels === undefined) 
         {
-            gl.texImage2D(GL.TEXTURE_2D, mipLevel, format, width, height, 0, format, GL.UNSIGNED_BYTE, null);
+            gl.texImage2D(gl.TEXTURE_2D, mipLevel, format, width, height, 0, format, gl.UNSIGNED_BYTE, null);
         } 
         else 
         {
-            gl.texImage2D(GL.TEXTURE_2D, mipLevel, format, format, GL.UNSIGNED_BYTE, pixels);
+            gl.texImage2D(gl.TEXTURE_2D, mipLevel, format, format, gl.UNSIGNED_BYTE, pixels);
             width = pixels.width;
             height = pixels.height;
         }
+        gl.bindTexture(gl.TEXTURE_2D, null);
 
         return new Resources.Texture(texture, width, height);
     },
 
     createShader: function (shaderName, shaderSources) 
     {
+        if (shaderName === null || shaderName === undefined)
+        {
+            shaderName += 'Shader' + this.shaderCount;
+            this.shaderCount += 1;
+        }
         if (!(shaderName in this.shaderCache))
         {
             var gl = this.gl;
             var program = gl.createProgram();
-            var vertShader = gl.createShader(GL.VERTEX_SHADER);
-            var fragShader = gl.createShader(GL.FRAGMENT_SHADER);
+            var vertShader = gl.createShader(gl.VERTEX_SHADER);
+            var fragShader = gl.createShader(gl.FRAGMENT_SHADER);
             var error;
             var shader;
 
@@ -136,15 +143,17 @@ ResourceManager.prototype = {
 
             error = gl.getShaderInfoLog(vertShader);
 
-            if (error.length > 0) 
+            if (error && error.length > 0) 
             {
+                alert('Vertex Shader Compilation Error.\n' + error);
                 throw new Error('Vertex Shader Compilation Error.\n' + error);
             }
 
             error = gl.getShaderInfoLog(fragShader);
 
-            if (error.length > 0) 
+            if (error && error.length > 0) 
             {
+                alert('Fragment Shader Compilation Error.\n' + error);
                 throw new Error('Fragment Shader Compilation Error.\n' + error);
             }
 
@@ -152,12 +161,13 @@ ResourceManager.prototype = {
             gl.attachShader(program, fragShader);
             gl.linkProgram(program);
 
-            error = gl.getProgramParameter(program, GL.LINK_STATUS);
+            error = gl.getProgramParameter(program, gl.LINK_STATUS);
 
             if (error === 0)
             {
                 error = gl.getProgramInfoLog(program);
 
+                alert('Program Linking Error.\n' + error);
                 throw new Error('Program Linking Error.\n' + error);
             }
 
@@ -169,16 +179,6 @@ ResourceManager.prototype = {
         {
             return this.shaderCache[shaderName];   
         }
-    },
-
-    createOutputStage: function () 
-    {
-        var outputStage = new Resources.OutputStage();
-
-        outputStage.setDefaultDepthStencilState();
-        outputStage.setNoBlending();
-
-        return outputStage;
     },
 
     deleteShader: function (shader)

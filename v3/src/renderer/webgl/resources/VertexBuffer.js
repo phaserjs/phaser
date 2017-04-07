@@ -1,9 +1,7 @@
-var GL = require('../GL');
-
 var VertexBuffer = function (gl, bufferObject) 
 {
     this.gl = gl;
-    this.bufferTarget = GL.ARRAY_BUFFER;
+    this.bufferTarget = gl.ARRAY_BUFFER;
     this.bufferObject = bufferObject;
     this.attributes = [];
 };
@@ -28,8 +26,8 @@ VertexBuffer.prototype = {
     updateResource: function (bufferData, offset)
     {
         var gl = this.gl;
-        gl.bindBuffer(GL.ARRAY_BUFFER, this.bufferObject);
-        gl.bufferSubData(GL.ARRAY_BUFFER, offset, bufferData);
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.bufferObject);
+        gl.bufferSubData(gl.ARRAY_BUFFER, offset, bufferData);
         return this;
     },
 
@@ -40,7 +38,7 @@ VertexBuffer.prototype = {
         var attributes = this.attributes;
         var attributesLength = attributes.length;
 
-        gl.bindBuffer(GL.ARRAY_BUFFER, bufferObject);
+        gl.bindBuffer(gl.ARRAY_BUFFER, bufferObject);
         for (var index = 0; index < attributesLength; ++index)
         {
             var element = attributes[index];

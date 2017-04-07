@@ -135,7 +135,7 @@ var BitmapTextWebGLRenderer = function (renderer, src, interpolationPercentage, 
             blitterBatch.flush();
         }
 
-        renderer.setBatch(blitterBatch, texture);
+        renderer.setRenderer(blitterBatch, texture);
         vertexOffset = vertexDataBuffer.allocate(20);
         blitterBatch.elementCount += 6;
 

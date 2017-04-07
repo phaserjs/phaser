@@ -5,6 +5,7 @@ var RenderTarget = function (framebufferObject, width, height, colorBuffer, dept
     this.height = height;
     this.colorBuffer = colorBuffer;
     this.depthStencilBuffer = depthStencilBuffer;
+    this.shouldClear = false;
 };
 
 module.exports = RenderTarget;

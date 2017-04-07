@@ -95,7 +95,7 @@ var GraphicsWebGLRenderer = function (renderer, src, interpolationPercentage, ca
     mve = sre * cma + srf * cmc + cme;
     mvf = sre * cmb + srf * cmd + cmf;
 
-    renderer.setBatch(shapeBatch, null);
+    renderer.setRenderer(shapeBatch, null);
 
     for (var cmdIndex = 0, cmdLength = commandBuffer.length; cmdIndex < cmdLength; ++cmdIndex)
     {

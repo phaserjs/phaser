@@ -1,9 +1,8 @@
-var GL = require('../GL');
 
 var IndexBuffer = function (gl, bufferObject) 
 {
     this.gl = gl;
-    this.bufferTarget = GL.ELEMENT_ARRAY_BUFFER;
+    this.bufferTarget = gl.ELEMENT_ARRAY_BUFFER;
     this.bufferObject = bufferObject;
 };
 
@@ -21,8 +20,8 @@ IndexBuffer.prototype = {
     updateResource: function (bufferData, offset)
     {
         var gl = this.gl;
-        gl.bindBuffer(GL.ELEMENT_ARRAY_BUFFER, this.bufferObject);
-        gl.bufferSubData(GL.ELEMENT_ARRAY_BUFFER, offset, bufferData);
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.bufferObject);
+        gl.bufferSubData(gl.ELEMENT_ARRAY_BUFFER, offset, bufferData);
         return this;
     }
 
