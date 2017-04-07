@@ -165,6 +165,11 @@ var Layer = new Class({
         return this;
     },
 
+    getChildren: function ()
+    {
+        return this.children.entries;
+    },
+
     destroy: function ()
     {
         this.children.clear();
