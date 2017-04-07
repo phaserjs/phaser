@@ -45,7 +45,7 @@ var Layer = new Class({
     {
         if (visible === undefined) { visible = true; }
 
-        var child = this.state.children.add(new this.classType(this.state, x, y, key, frame));
+        var child = this.state.sys.children.add(new this.classType(this.state, x, y, key, frame));
 
         child.visible = visible;
 
