@@ -30,6 +30,7 @@ var EffectLayer = new Class({
         this.dstRenderTarget = null
         this.dstRenderTexture = null;
         this.dstShader = null;
+        this.uniforms = {};
 
         if (resourceManager !== undefined)
         {
@@ -68,6 +69,65 @@ var EffectLayer = new Class({
         {
             gameObject.renderTarget = null;
         }  
+    },
+
+    getUniformLocation: function (uniformName)
+    {
+        var dstShader = this.dstShader;
+        var uniforms = this.uniforms;
+        var location;
+
+        if (uniformName in uniforms)
+        {
+            location = uniforms[uniformName];
+        }
+        else
+        {
+            location = dstShader.getUniformLocation(uniformName);
+            uniforms[uniformName] = location;
+        }
+
+        return location;
+    },
+
+    setFloat: function (uniformName, x)
+    {
+        var dstShader = this.dstShader;
+
+        if (dstShader === null)
+            return;
+
+        dstShader.setConstantFloat1(this.getUniformLocation(uniformName), x);
+    },
+
+    setFloat2: function (uniformName, x, y)
+    {
+        var dstShader = this.dstShader;
+
+        if (dstShader === null)
+            return;
+
+        dstShader.setConstantFloat2(this.getUniformLocation(uniformName), x, y);
+    },
+
+    setFloat3: function (uniformName, x, y, z)
+    {
+        var dstShader = this.dstShader;
+
+        if (dstShader === null)
+            return;
+
+        dstShader.setConstantFloat3(this.getUniformLocation(uniformName), x, y, z);
+    },
+
+    setFloat4: function (uniformName, x, y, z, w)
+    {
+        var dstShader = this.dstShader;
+
+        if (dstShader === null)
+            return;
+
+        dstShader.setConstantFloat4(this.getUniformLocation(uniformName), x, y, z, w);
     }
 
 });
