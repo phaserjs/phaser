@@ -200,7 +200,6 @@ WebGLRenderer.prototype = {
             if (renderTarget !== null)
             {
                 gl.bindFramebuffer(gl.FRAMEBUFFER, renderTarget.framebufferObject);
-                gl.viewport(0, 0, renderTarget.width, renderTarget.height);
                 if (renderTarget.shouldClear)
                 {
                     gl.clearColor(0, 0, 0, 0);
