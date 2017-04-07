@@ -58,7 +58,6 @@ ResourceManager.prototype = {
                 36057: 'Incomplete Dimensions',
                 36061: 'Framebuffer Unsupported'
             };
-            alert('Framebuffer incomplete. Framebuffer status: ' + errors[complete]);
             throw new Error('Framebuffer incomplete. Framebuffer status: ' + errors[complete]);
         }
 
@@ -86,7 +85,6 @@ ResourceManager.prototype = {
             case gl.ELEMENT_ARRAY_BUFFER:
                 return new Resources.IndexBuffer(gl, bufferObject);
             default:
-                alert('Invalid Buffer Target');
                 throw new Error('Invalid Buffer Target');
         }
 
@@ -129,37 +127,50 @@ ResourceManager.prototype = {
         if (!(shaderName in this.shaderCache))
         {
             var gl = this.gl;
-            var program = gl.createProgram();
-            var vertShader = gl.createShader(gl.VERTEX_SHADER);
-            var fragShader = gl.createShader(gl.FRAGMENT_SHADER);
+            var program;
+            var vertShader;
+            var fragShader;
+            var status;
             var error;
             var shader;
 
+            vertShader = gl.createShader(gl.VERTEX_SHADER);
             gl.shaderSource(vertShader, shaderSources.vert);
-            gl.shaderSource(fragShader, shaderSources.frag);
-
             gl.compileShader(vertShader);
-            gl.compileShader(fragShader);
 
             error = gl.getShaderInfoLog(vertShader);
+            status = gl.getShaderParameter(vertShader, gl.COMPILE_STATUS);
 
-            if (error && error.length > 0) 
+            if (!status && error && error.length > 0) 
             {
-                alert('Vertex Shader Compilation Error.\n' + error);
-                throw new Error('Vertex Shader Compilation Error.\n' + error);
+                throw new Error('Vertex Shader Compilation Error. Shader name: ' + shaderName + '.\n' + error + '\n\n Shader source:\n' + shaderSources.vert);
             }
+            else if (error && error.length > 0)
+            {
+                console.warn('Vertex Shader Compilation Warning. Shader name: ' + shaderName + '.\n' + error + '\n\n Shader source:\n' + shaderSources.vert);
+            }
+
+            fragShader = gl.createShader(gl.FRAGMENT_SHADER);
+            gl.shaderSource(fragShader, shaderSources.frag);
+            gl.compileShader(fragShader);
 
             error = gl.getShaderInfoLog(fragShader);
+            status = gl.getShaderParameter(fragShader, gl.COMPILE_STATUS);
 
-            if (error && error.length > 0) 
+            if (!status && error && error.length > 0) 
             {
-                alert('Fragment Shader Compilation Error.\n' + error);
-                throw new Error('Fragment Shader Compilation Error.\n' + error);
+                throw new Error('Fragment Shader Compilation Error. Shader name: ' + shaderName + '.\n' + error + '\n\n Shader source:\n' + shaderSources.frag);
+            }
+            else if (error && error.length > 0)
+            {
+                console.warn('Fragment Shader Compilation Warning. Shader name: ' + shaderName + '.\n' + error + '\n\n Shader source:\n' + shaderSources.frag);
             }
 
+            program = gl.createProgram();
             gl.attachShader(program, vertShader);
             gl.attachShader(program, fragShader);
             gl.linkProgram(program);
+            gl.validateProgram(program);
 
             error = gl.getProgramParameter(program, gl.LINK_STATUS);
 
@@ -167,8 +178,14 @@ ResourceManager.prototype = {
             {
                 error = gl.getProgramInfoLog(program);
 
-                alert('Program Linking Error.\n' + error);
-                throw new Error('Program Linking Error.\n' + error);
+                throw new Error('Program Linking Error. Shader name: ' + shaderName + '.\n' + error);
+            }
+            
+            error = gl.getProgramParameter(program, gl.VALIDATE_STATUS);
+            if (error === 0)
+            {
+                error = gl.getProgramInfoLog(program);
+                throw new Error('Program Validation Error. Shader name: ' + shaderName + '.\n' + error);
             }
 
             shader = new Resources.Shader(shaderName, gl, program, vertShader, fragShader);
