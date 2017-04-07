@@ -62,9 +62,9 @@ BlitterBatch.prototype = {
         var indexBuffer = indexDataBuffer.uintView;
         var max = CONST.MAX_PARTICLES * CONST.PARTICLE_INDEX_COUNT;
 
-        vertexBufferObject.addAttribute(0, 2, gl.FLOAT, false, CONST.VERTEX_SIZE, 0);
-        vertexBufferObject.addAttribute(1, 2, gl.FLOAT, false, CONST.VERTEX_SIZE, 8);
-        vertexBufferObject.addAttribute(2, 1, gl.FLOAT, false, CONST.VERTEX_SIZE, 16);
+        vertexBufferObject.addAttribute(shader.getAttribLocation('a_position'), 2, gl.FLOAT, false, CONST.VERTEX_SIZE, 0);
+        vertexBufferObject.addAttribute(shader.getAttribLocation('a_tex_coord'), 2, gl.FLOAT, false, CONST.VERTEX_SIZE, 8);
+        vertexBufferObject.addAttribute(shader.getAttribLocation('a_alpha'), 1, gl.FLOAT, false, CONST.VERTEX_SIZE, 16);
 
         this.vertexDataBuffer = vertexDataBuffer;
         this.indexDataBuffer = indexDataBuffer;

@@ -17,6 +17,11 @@ Shader.prototype = {
         return this.gl.getUniformLocation(this.program, name);
     },
 
+    getAttribLocation: function (name)
+    {
+        return this.gl.getAttribLocation(this.program, name);
+    },  
+
     setConstantFloat1: function(location, x) 
     {
         this.gl.useProgram(this.program);

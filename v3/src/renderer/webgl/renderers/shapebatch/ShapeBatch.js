@@ -62,9 +62,9 @@ ShapeBatch.prototype = {
         var viewMatrixLocation = shader.getUniformLocation('u_view_matrix');
         var max = CONST.MAX_VERTICES;
 
-        vertexBufferObject.addAttribute(0, 2, gl.FLOAT, false, CONST.VERTEX_SIZE, 0);
-        vertexBufferObject.addAttribute(1, 4, gl.UNSIGNED_BYTE, true, CONST.VERTEX_SIZE, 8);
-        vertexBufferObject.addAttribute(2, 1, gl.FLOAT, false, CONST.VERTEX_SIZE, 12);
+        vertexBufferObject.addAttribute(shader.getAttribLocation('a_position'), 2, gl.FLOAT, false, CONST.VERTEX_SIZE, 0);
+        vertexBufferObject.addAttribute(shader.getAttribLocation('a_color'), 4, gl.UNSIGNED_BYTE, true, CONST.VERTEX_SIZE, 8);
+        vertexBufferObject.addAttribute(shader.getAttribLocation('a_alpha'), 1, gl.FLOAT, false, CONST.VERTEX_SIZE, 12);
 
         this.vertexDataBuffer = vertexDataBuffer;
         this.shader = shader;

@@ -70,10 +70,10 @@ SpriteBatch.prototype = {
         this.vertexBufferObject = vertexBufferObject;
         this.viewMatrixLocation = viewMatrixLocation;
 
-        vertexBufferObject.addAttribute(0, 2, gl.FLOAT, false, CONST.VERTEX_SIZE, 0);
-        vertexBufferObject.addAttribute(1, 2, gl.FLOAT, false, CONST.VERTEX_SIZE, 8);
-        vertexBufferObject.addAttribute(2, 3, gl.UNSIGNED_BYTE, true, CONST.VERTEX_SIZE, 16);
-        vertexBufferObject.addAttribute(3, 1, gl.FLOAT, false, CONST.VERTEX_SIZE, 20);
+        vertexBufferObject.addAttribute(shader.getAttribLocation('a_position'), 2, gl.FLOAT, false, CONST.VERTEX_SIZE, 0);
+        vertexBufferObject.addAttribute(shader.getAttribLocation('a_tex_coord'), 2, gl.FLOAT, false, CONST.VERTEX_SIZE, 8);
+        vertexBufferObject.addAttribute(shader.getAttribLocation('a_color'), 3, gl.UNSIGNED_BYTE, true, CONST.VERTEX_SIZE, 16);
+        vertexBufferObject.addAttribute(shader.getAttribLocation('a_alpha'), 1, gl.FLOAT, false, CONST.VERTEX_SIZE, 20);
 
         // Populate the index buffer only once
         for (var indexA = 0, indexB = 0; indexA < max; indexA += CONST.SPRITE_INDEX_COUNT, indexB += CONST.SPRITE_VERTEX_COUNT)

@@ -61,8 +61,8 @@ QuadBatch.prototype = {
         var indexBuffer = indexDataBuffer.uintView;
         var max = CONST.MAX_AAQUAD * CONST.AAQUAD_INDEX_COUNT;
 
-        vertexBufferObject.addAttribute(0, 2, gl.FLOAT, false, CONST.VERTEX_SIZE, 0);
-        vertexBufferObject.addAttribute(1, 4, gl.FLOAT, false, CONST.VERTEX_SIZE, 8);
+        vertexBufferObject.addAttribute(shader.getAttribLocation('a_position'), 2, gl.FLOAT, false, CONST.VERTEX_SIZE, 0);
+        vertexBufferObject.addAttribute(shader.getAttribLocation('a_color'), 4, gl.FLOAT, false, CONST.VERTEX_SIZE, 8);
 
         this.vertexDataBuffer = vertexDataBuffer;
         this.indexDataBuffer = indexDataBuffer;
