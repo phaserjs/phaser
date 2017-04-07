@@ -247,6 +247,7 @@ WebGLRenderer.prototype = {
     //  Call at the start of the render loop
     preRender: function ()
     {
+        this.setRenderTarget(null);
         //  No point rendering if our context has been blown up!
         if (this.contextLost)
         {
@@ -279,8 +280,8 @@ WebGLRenderer.prototype = {
         //  Could move to the State Systems or MainLoop
         var gl = this.gl;
         var scissor = (camera.x !== 0 || camera.y !== 0 || camera.width !== gl.canvas.width || camera.height !== gl.canvas.height);
-        this.setRenderTarget(null);
 
+        this.setRenderTarget(null);
         if (scissor)
         {
             gl.enable(gl.SCISSOR_TEST);
