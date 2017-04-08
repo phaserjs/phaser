@@ -17,3 +17,4 @@ src/animation/creature/gl-matrix.js
 src/animation/creature/CreatureMeshBone.js
 src/gameobjects/Creature.js
 src/stubs/*
+src/physics/matter-js/*

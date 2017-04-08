@@ -173,8 +173,8 @@ Loader.prototype.multiatlas = function (key, textureURLs, atlasURLs, textureXhrS
     {
         var total = textureURLs;
 
-        textureURLs = NumberArray(0, total, key + '-', '.png');
-        atlasURLs = NumberArray(0, total, key + '-', '.json');
+        textureURLs = NumberArray(0, total, key, '.png');
+        atlasURLs = NumberArray(0, total, key, '.json');
     }
     else
     {
