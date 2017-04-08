@@ -250,6 +250,13 @@ var Layer = new Class({
         return this;
     },
 
+    playAnimation: function (key, startFrame)
+    {
+        Actions.PlayAnimation(this.children.entries, key, startFrame);
+
+        return this;
+    },
+
     randomCircle: function (circle)
     {
         Actions.RandomCircle(this.children.entries, circle);

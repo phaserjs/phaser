@@ -13,6 +13,7 @@ module.exports = {
     PlaceOnLine: require('./PlaceOnLine'),
     PlaceOnRectangle: require('./PlaceOnRectangle'),
     PlaceOnTriangle: require('./PlaceOnTriangle'),
+    PlayAnimation: require('./PlayAnimation'),
     RandomCircle: require('./RandomCircle'),
     RandomEllipse: require('./RandomEllipse'),
     RandomLine: require('./RandomLine'),
