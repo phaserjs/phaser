@@ -9,14 +9,16 @@ var EffectLayer = new Class({
     Extends: GameObject,
 
     Mixins: [
-        Components.Flip,
         Components.Alpha,
-        Components.Transform,
-        Components.Visible,
-        Components.Size,
+        Components.BlendMode,
+        Components.Flip,
+        Components.GetBounds,
         Components.Origin,
         Components.RenderTarget,
-        Components.BlendMode,
+        Components.ScaleMode,
+        Components.Size,
+        Components.Transform,
+        Components.Visible,
         Render
     ],
 
@@ -24,6 +26,8 @@ var EffectLayer = new Class({
 
     function EffectLayer(state, x, y, width, height, effectName, fragmentShader)
     {
+        GameObject.call(this, state);
+       
         var resourceManager = state.game.renderer.resourceManager;
         var gl;
 
