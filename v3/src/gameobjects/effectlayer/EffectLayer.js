@@ -128,6 +128,76 @@ var EffectLayer = new Class({
             return;
 
         dstShader.setConstantFloat4(this.getUniformLocation(uniformName), x, y, z, w);
+    },
+
+    setInt: function (uniformName, x)
+    {
+        var dstShader = this.dstShader;
+
+        if (dstShader === null)
+            return;
+
+        dstShader.setConstantInt1(this.getUniformLocation(uniformName), x);
+    },
+
+    setInt2: function (uniformName, x, y)
+    {
+        var dstShader = this.dstShader;
+
+        if (dstShader === null)
+            return;
+
+        dstShader.setConstantInt2(this.getUniformLocation(uniformName), x, y);
+    },
+
+    setInt3: function (uniformName, x, y, z)
+    {
+        var dstShader = this.dstShader;
+
+        if (dstShader === null)
+            return;
+
+        dstShader.setConstantInt3(this.getUniformLocation(uniformName), x, y, z);
+    },
+
+    setInt4: function (uniformName, x, y, z, w)
+    {
+        var dstShader = this.dstShader;
+
+        if (dstShader === null)
+            return;
+
+        dstShader.setConstantInt4(this.getUniformLocation(uniformName), x, y, z, w);
+    },
+
+    setMatrix2x2: function (uniformName, matrix)
+    {
+        var dstShader = this.dstShader;
+
+        if (dstShader === null)
+            return;
+
+        dstShader.setConstantMatrix2x2(this.getUniformLocation(uniformName), matrix);
+    },
+
+    setMatrix3x3: function (uniformName, matrix)
+    {
+        var dstShader = this.dstShader;
+
+        if (dstShader === null)
+            return;
+
+        dstShader.setConstantMatrix3x3(this.getUniformLocation(uniformName), matrix);
+    },
+
+    setMatrix4x4: function (uniformName, matrix)
+    {
+        var dstShader = this.dstShader;
+
+        if (dstShader === null)
+            return;
+
+        dstShader.setConstantMatrix4x4(this.getUniformLocation(uniformName), matrix);
     }
 
 });
