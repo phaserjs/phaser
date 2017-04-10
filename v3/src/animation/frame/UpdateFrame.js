@@ -7,14 +7,24 @@ var UpdateFrame = function (animationFrame)
     sprite.texture = animationFrame.frame.texture;
     sprite.frame = animationFrame.frame;
 
-    if (animationFrame.setAlpha)
+    if (this.isPlaying)
     {
-        sprite.alpha = animationFrame.alpha;
-    }
+        if (animationFrame.setAlpha)
+        {
+            sprite.alpha = animationFrame.alpha;
+        }
 
-    if (animationFrame.onUpdate)
-    {
-        animationFrame.onUpdate(sprite, animationFrame);
+        var anim = this.currentAnim;
+
+        if (anim.onUpdate)
+        {
+            anim.onUpdate.apply(anim.callbackScope, this._updateParams);
+        }
+
+        if (animationFrame.onUpdate)
+        {
+            animationFrame.onUpdate(sprite, animationFrame);
+        }
     }
 };
 

@@ -61,11 +61,20 @@ var Animation = function (manager, key, config)
     //  Should sprite.visible = false when the animation finishes?
     this.hideOnComplete = GetObjectValue(config, 'hideOnComplete', false);
 
-    //  Callbacks (swap for Events?)
+    //  Callbacks
+    this.callbackScope = GetObjectValue(config, 'callbackScope', this);
+
     this.onStart = GetObjectValue(config, 'onStart', false);
+    this.onStartParams = GetObjectValue(config, 'onStartParams', []);
+
     this.onRepeat = GetObjectValue(config, 'onRepeat', false);
+    this.onRepeatParams = GetObjectValue(config, 'onRepeatParams', []);
+
+    this.onUpdate = GetObjectValue(config, 'onUpdate', false);
+    this.onUpdateParams = GetObjectValue(config, 'onUpdateParams', []);
+
     this.onComplete = GetObjectValue(config, 'onComplete', false);
-    this.onStop = GetObjectValue(config, 'onStop', false);
+    this.onCompleteParams = GetObjectValue(config, 'onCompleteParams', []);
 };
 
 Animation.prototype.constructor = Animation;
@@ -92,6 +101,8 @@ Animation.prototype = {
             component._repeat = this.repeat;
             component._repeatDelay = this.repeatDelay;
             component._yoyo = this.yoyo;
+            component._callbackArgs[1] = this;
+            component._updateParams = component._callbackArgs.concat(this.onUpdateParams);
         }
 
         component.updateFrame(this.frames[startFrame]);
@@ -209,21 +220,21 @@ Animation.prototype = {
 
             component.pendingRepeat = false;
     
-            //  OnRepeat
+            if (this.onRepeat)
+            {
+                this.onRepeat.apply(this.callbackScope, component._callbackArgs.concat(this.onRepeatParams));
+            }
         }
     },
 
     completeAnimation: function (component)
     {
-        component.stop();
-
         if (this.hideOnComplete)
         {
             component.parent.visible = false;
         }
 
-        //  Events
-
+        component.stop(true);
     },
 
     setFrame: function (component)

@@ -44,22 +44,28 @@ AnimationManager.prototype = {
     //  {
     //      frames: [
     //          { key: textureKey, frame: textureFrame },
-    //          { key: textureKey, frame: textureFrame, duration: float },
-    //          { key: textureKey, frame: textureFrame, onUpdate: function }
+    //          { key: textureKey, frame: textureFrame, duration: float }
     //          { key: textureKey, frame: textureFrame, visible: boolean }
+    //          { key: textureKey, frame: textureFrame, onUpdate: function }
     //      ]
     //      framerate: integer
     //      duration: float (seconds, optional, ignored if framerate is set)
     //      skipMissedFrames: boolean
     //      delay: integer
-    //      repeat: -1 = forever, otherwise integer
+    //      repeat: integer (-1 = forever)
     //      repeatDelay: integer
     //      yoyo: boolean
     //      showOnStart: boolean
     //      hideOnComplete: boolean
+    //      callbackScope: Object
     //      onStart: function
+    //      onStartParams: array
     //      onRepeat: function
+    //      onRepeatParams: array
+    //      onUpdate: function
+    //      onUpdateParams: array
     //      onComplete: function
+    //      onCompleteParams: array
     //      transitions: [
     //          {
     //              key: string <- key of the animation to blend with,

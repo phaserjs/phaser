@@ -72,6 +72,9 @@ var Animation = new Class({
 
         this._paused = false;
         this._wasPlaying = false;
+
+        this._callbackArgs = [ parent, null ];
+        this._updateParams = [];
     },
 
     delay: Components.Delay,
