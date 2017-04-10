@@ -70,6 +70,8 @@ var Animation = function (manager, key, config)
     this.onRepeat = GetObjectValue(config, 'onRepeat', false);
     this.onRepeatParams = GetObjectValue(config, 'onRepeatParams', []);
 
+    //  Called for EVERY frame of the animation.
+    //  See AnimationFrame.onUpdate for a frame specific callback.
     this.onUpdate = GetObjectValue(config, 'onUpdate', false);
     this.onUpdateParams = GetObjectValue(config, 'onUpdateParams', []);
 
