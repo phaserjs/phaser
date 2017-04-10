@@ -2,7 +2,7 @@
 
 This evolving guide is written for those who wish to help with Phaser 3. I must stress, this isn't a guide on how to use Phaser 3, or to make games, it's a guide on how to set-up your dev environment so you can assist us in _building Phaser 3 itself_, along with the basics of the internal structure.
 
-All of the following is subject to change as V3 evolves, but is correct as of today: 5th January 2017.
+All of the following is subject to change as V3 evolves, but is correct as of today: 10th April 2017.
 
 ## Set-up Your Environment
 
@@ -34,17 +34,22 @@ Later in this guide I'll explain how Webpack is configured.
 
 Now you can build Phaser 3, it's time to run the Examples.
 
+** Please note: Not all examples run! The API is changing frequently, so older examples broke as this happened. We will tidy them all up before release **
+
 1. Make sure you can access the Phaser 3 Examples Runner in your browser. If your local server is running on 127.0.0.1 then try to load `http://127.0.0.1/phaser3-examples/public/` and make sure the page loads. It should look something like this:
 
     ![Examples Runner](examples-runner.png)
 
-2. From the list, scroll down, and pick `021 - image from atlas`. The Phaser 3 Sandbox editor should appear with the code on the left and a blank window on the right. You likely do this already, but I strongly suggest you perform all testing with the browsers Dev Tools open. In Chrome this will ensure the cache doesn't mess things up, and that you see errors and debug info.
+2. Click any folder to enter that section of the examples. You'll see a list of icons with the example title below them.
+ 
+If you click the icon it will load the example into the runner.
+If you click the text it will load it into the sandbox editor.
 
-3. Click 'Run Code'. The example should load in the right-pane (in this case it'll show a selection of sprites from a texture atlas)
+Try picking a folder such as 'Animation' and then click the text below the 'Single Sprite Sheet' icon. The Phaser 3 Sandbox editor should appear with the code on the left and a blank window on the right. You likely do this already, but I strongly suggest you perform all testing with the browsers Dev Tools open. In Chrome this will ensure the cache doesn't mess things up, and that you see errors and debug info.
+
+3. Click 'Run Code'. The example should load in the right-pane (in this example below you can see a selection of sprites from a texture atlas)
 
     ![Code Editor](examples-runner2.png)
-
-    Note: The red background in the grab above is for debugging. You may not see this when you run it. What's important is that you do actually see the Sprites, and it doesn't throw any errors.
 
 4. If it doesn't run, check the console for errors, check your paths, and see if anything is missing.
 
@@ -275,8 +280,8 @@ Every time RAF ticks it calls the following (in order)
 1. `Game.step` is called, which calls ...
 2. `Game.mainloop.step` which checks frame rate, updates delta values, etc
 3. This calls `State.sys.begin` once for all _active_ States
-4. While the frame delta is within range it calls `State.sys.update`
-5. This iterates all `State.children`, and calls `update` if they exist
+4. This iterates all `State.children`, and calls `preUpdate` if they exist
+5. While the frame delta is within range it calls `State.sys.update`
 6. It then calls `State.update` (dev level callback)
 7. When the loop exits (because the frameDelta is > the step size) it ..
 8. `Renderer.preRender` which resets the canvas, cls, then ...
@@ -296,10 +301,11 @@ In a tree form it maps to the following:
   |
   +- All Active States:
   +- State.sys.begin (called once per active state)
+     |
+     +- Iterates State.children, if child exists, call child.preUpdate
   +- While (frameDelta within step range)
      |
      +- State.sys.update
-     +- Iterates State.children, if child exists, call child.update
      +- State.update
   |
   +- Renderer.preRender
@@ -318,12 +324,6 @@ In a tree form it maps to the following:
   +- State.sys.end (resets frame delta and panic flags)
 ```
 
-
-
-
 The above is subject to change heavily! There are currently lots of empty function calls in there (State.sys.update for example), so we may well optimize this path considerably.
 
 In essence though the concept is: Once per frame we update all the timing values, update the core systems, update the children, and repeat this until our step value is high enough, then we render everything.
-
-
-
