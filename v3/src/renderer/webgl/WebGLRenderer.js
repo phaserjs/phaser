@@ -332,6 +332,7 @@ WebGLRenderer.prototype = {
         }
         if (camera._fadeAlpha > 0 || camera._flashAlpha > 0)
         {
+            this.setRenderTarget(null);
             var quadBatch = this.quadBatch;
             quadBatch.bind();
             // fade rendering
