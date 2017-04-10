@@ -12,11 +12,6 @@ var UpdateFrame = function (animationFrame)
         sprite.alpha = animationFrame.alpha;
     }
 
-    if (animationFrame.setVisible)
-    {
-        sprite.visible = animationFrame.visible;
-    }
-
     if (animationFrame.onUpdate)
     {
         animationFrame.onUpdate(sprite, animationFrame);

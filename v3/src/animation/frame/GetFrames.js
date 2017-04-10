@@ -7,6 +7,7 @@ var GetFrames = function (textureManager, frames)
     //          { key: textureKey, frame: textureFrame },
     //          { key: textureKey, frame: textureFrame, duration: float },
     //          { key: textureKey, frame: textureFrame, onUpdate: function }
+    //          { key: textureKey, frame: textureFrame, visible: boolean }
     //      ],
 
     // console.table(frames);
@@ -31,7 +32,6 @@ var GetFrames = function (textureManager, frames)
         var frame = GetObjectValue(item, 'frame', 0);
         var duration = GetObjectValue(item, 'duration', 0);
         var onUpdate = GetObjectValue(item, 'onUpdate', null);
-        var alpha = GetObjectValue(item, 'alpha', null);
         var visible = GetObjectValue(item, 'visible', null);
 
         var textureFrame = textureManager.getFrame(key, frame);
@@ -40,12 +40,6 @@ var GetFrames = function (textureManager, frames)
 
         animationFrame.duration = duration;
         animationFrame.onUpdate = onUpdate;
-
-        if (alpha !== null)
-        {
-            animationFrame.setAlpha = true;
-            animationFrame.alpha = alpha;
-        }
 
         if (visible !== null)
         {

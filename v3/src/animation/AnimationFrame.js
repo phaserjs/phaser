@@ -24,10 +24,6 @@ var AnimationFrame = function (index, frame)
     //  Callback if this frame gets displayed
     this.onUpdate = null;
 
-    //  When this frame hits, set sprite.alpha to this
-    this.setAlpha = false;
-    this.alpha = 1;
-
     //  When this frame hits, set sprite.visible to this
     this.setVisible = false;
     this.visible = false;

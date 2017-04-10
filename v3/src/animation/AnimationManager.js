@@ -46,7 +46,6 @@ AnimationManager.prototype = {
     //          { key: textureKey, frame: textureFrame },
     //          { key: textureKey, frame: textureFrame, duration: float },
     //          { key: textureKey, frame: textureFrame, onUpdate: function }
-    //          { key: textureKey, frame: textureFrame, alpha: float }
     //          { key: textureKey, frame: textureFrame, visible: boolean }
     //      ]
     //      framerate: integer
@@ -56,6 +55,7 @@ AnimationManager.prototype = {
     //      repeat: -1 = forever, otherwise integer
     //      repeatDelay: integer
     //      yoyo: boolean
+    //      showOnStart: boolean
     //      hideOnComplete: boolean
     //      onStart: function
     //      onRepeat: function

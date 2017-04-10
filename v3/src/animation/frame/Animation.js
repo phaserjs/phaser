@@ -55,6 +55,12 @@ var Animation = function (manager, key, config)
     //  Should the animation yoyo? (reverse back down to the start) before repeating?
     this.yoyo = GetObjectValue(config, 'yoyo', false);
 
+    //  Should sprite.visible = true when the animation starts to play?
+    this.showOnStart = GetObjectValue(config, 'showOnStart', false);
+
+    //  Should sprite.visible = false when the animation finishes?
+    this.hideOnComplete = GetObjectValue(config, 'hideOnComplete', false);
+
     //  Callbacks (swap for Events?)
     this.onStart = GetObjectValue(config, 'onStart', false);
     this.onRepeat = GetObjectValue(config, 'onRepeat', false);
@@ -144,8 +150,7 @@ Animation.prototype = {
             }
             else
             {
-                //  OnComplete
-                component.stop();
+                this.completeAnimation(component);
             }
         }
         else
@@ -173,8 +178,7 @@ Animation.prototype = {
             }
             else
             {
-                //  OnComplete
-                component.stop();
+                this.completeAnimation(component);
             }
         }
         else
@@ -207,6 +211,19 @@ Animation.prototype = {
     
             //  OnRepeat
         }
+    },
+
+    completeAnimation: function (component)
+    {
+        component.stop();
+
+        if (this.hideOnComplete)
+        {
+            component.parent.visible = false;
+        }
+
+        //  Events
+
     },
 
     setFrame: function (component)
