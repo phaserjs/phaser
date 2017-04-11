@@ -21,7 +21,6 @@ var MergeXHRSettings = function (global, local)
     }
 
     return output;
-
 };
 
 module.exports = MergeXHRSettings;
