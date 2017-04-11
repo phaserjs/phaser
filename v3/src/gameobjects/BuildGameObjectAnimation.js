@@ -28,22 +28,24 @@ var BuildGameObjectAnimation = function (sprite, config)
         //           }
         //  }
 
+        var anims = sprite.anims;
+
         var key = GetAdvancedValue(animConfig, 'key', undefined);
         var startFrame = GetAdvancedValue(animConfig, 'startFrame', undefined);
+
+        anims.load(key);
 
         var delay = GetAdvancedValue(animConfig, 'delay', 0);
         var repeat = GetAdvancedValue(animConfig, 'repeat', 0);
         var repeatDelay = GetAdvancedValue(animConfig, 'repeatDelay', 0);
         var yoyo = GetAdvancedValue(animConfig, 'yoyo', false);
 
-        var anims = sprite.anims;
-
         anims.delay(delay);
         anims.repeat(repeat);
         anims.repeatDelay(repeatDelay);
         anims.yoyo(yoyo);
 
-        if (GetAdvancedValue(animConfig, 'play', true))
+        if (GetAdvancedValue(animConfig, 'play', false))
         {
             anims.play(key, startFrame);
         }
