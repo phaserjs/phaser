@@ -102,6 +102,7 @@ Systems.prototype = {
         this.state.textures = this.textures;
 
         this.state.add = this.add;
+        this.state.make = this.make;
         this.state.cameras = this.cameras;
         this.state.events = this.events;
         this.state.load = this.load;
