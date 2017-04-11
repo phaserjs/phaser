@@ -446,7 +446,7 @@ WebGLRenderer.prototype = {
         dstTexture.height = srcCanvas.height;
 
         /* we must rebind old texture */
-        gl.bindTexture(gl.TEXTURE_2D, this.currentTexture.texture);
+        this.currentTexture = null;
 
         return dstTexture;
     }

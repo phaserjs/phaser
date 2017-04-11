@@ -16,6 +16,7 @@ var Text = new Class({
         Components.BlendMode,
         Components.GetBounds,
         Components.Origin,
+        Components.RenderTarget,
         Components.ScaleMode,
         Components.Transform,
         Components.Visible,

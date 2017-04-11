@@ -14,6 +14,7 @@ var Graphics = new Class({
         Components.Alpha,
         Components.BlendMode,
         Components.Transform,
+        Components.RenderTarget,
         Components.Visible,
         Render
     ],
