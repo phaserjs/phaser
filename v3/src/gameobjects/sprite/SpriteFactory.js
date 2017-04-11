@@ -1,11 +1,7 @@
-/**
-* @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2016 Photon Storm Ltd.
-* @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
-*/
 
 var Sprite = require('./Sprite');
-var FactoryContainer = require('../../gameobjects/FactoryContainer');
+var BuildFromConfig = require('./BuildFromConfig');
+var FactoryContainer = require('../FactoryContainer');
 
 var SpriteFactory = {
 
@@ -31,9 +27,9 @@ var SpriteFactory = {
         return this.children.add(new Sprite(this.state, x, y, key, frame));
     },
 
-    make: function (x, y, key, frame)
+    make: function (config)
     {
-        return new Sprite(this.state, x, y, key, frame);
+        return BuildFromConfig(this.state, config);
     }
 
 };

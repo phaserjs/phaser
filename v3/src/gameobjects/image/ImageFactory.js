@@ -1,5 +1,6 @@
 
 var Image = require('./Image');
+var BuildFromConfig = require('./BuildFromConfig');
 var FactoryContainer = require('../../gameobjects/FactoryContainer');
 
 var ImageFactory = {
@@ -27,9 +28,9 @@ var ImageFactory = {
         return this.children.add(new Image(this.state, x, y, key, frame));
     },
 
-    make: function (x, y, key, frame)
+    make: function (config)
     {
-        return new Image(this.state, x, y, key, frame);
+        return BuildFromConfig(this.state, config);
     }
 
 };
