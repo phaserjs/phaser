@@ -1,5 +1,5 @@
 var Zone = require('./Zone');
-var FactoryContainer = require('../../gameobjects/FactoryContainer');
+var FactoryContainer = require('../FactoryContainer');
 
 var ZoneFactory = {
 

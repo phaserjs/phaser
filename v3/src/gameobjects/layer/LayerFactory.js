@@ -1,5 +1,5 @@
 var Layer = require('./Layer');
-var FactoryContainer = require('../../gameobjects/FactoryContainer');
+var FactoryContainer = require('../FactoryContainer');
 
 var LayerFactory = {
 

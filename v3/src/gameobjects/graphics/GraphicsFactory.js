@@ -1,5 +1,5 @@
 var Graphics = require('./Graphics');
-var FactoryContainer = require('../../gameobjects/FactoryContainer');
+var FactoryContainer = require('../FactoryContainer');
 
 var GraphicsFactory = {
 

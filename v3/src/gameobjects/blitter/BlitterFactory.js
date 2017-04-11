@@ -1,6 +1,6 @@
 
 var Blitter = require('./Blitter');
-var FactoryContainer = require('../../gameobjects/FactoryContainer');
+var FactoryContainer = require('../FactoryContainer');
 
 var BlitterFactory = {
 
