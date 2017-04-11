@@ -172,9 +172,10 @@ Loader.prototype.multiatlas = function (key, textureURLs, atlasURLs, textureXhrS
     if (typeof textureURLs === 'number')
     {
         var total = textureURLs;
+        var suffix = (atlasURLs === undefined) ? '' : atlasURLs;
 
-        textureURLs = NumberArray(0, total, key, '.png');
-        atlasURLs = NumberArray(0, total, key, '.json');
+        textureURLs = NumberArray(0, total, key + suffix, '.png');
+        atlasURLs = NumberArray(0, total, key + suffix, '.json');
     }
     else
     {
