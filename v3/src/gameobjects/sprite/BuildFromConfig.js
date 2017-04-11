@@ -1,6 +1,7 @@
 var Sprite = require('./Sprite');
 var GetAdvancedValue = require('../../utils/object/GetAdvancedValue');
 var BuildGameObject = require('../BuildGameObject');
+var BuildGameObjectAnimation = require('../BuildGameObjectAnimation');
 
 var BuildFromConfig = function (state, config)
 {
@@ -13,33 +14,9 @@ var BuildFromConfig = function (state, config)
 
     //  Sprite specific config options:
 
-    //  { anims: 'key' }
-    //  { anims: {
-    //              key: string
-    //              startFrame: [string|integer]
-    //           }
-    //  }
+    BuildGameObjectAnimation(sprite, config);
 
-    // delay: Components.Delay,
-    // delayedPlay: Components.DelayedPlay,
-    // load: Components.Load,
-    // pause: Components.Pause,
-    // paused: Components.Paused,
-    // play: Components.Play,
-    // progress: Components.Progress,
-    // repeat: Components.Repeat,
-    // repeatDelay: Components.RepeatDelay,
-    // restart: Components.Restart,
-    // resume: Components.Resume,
-    // stop: Components.Stop,
-    // timeScale: Components.TimeScale,
-    // totalFrames: Components.TotalFrames,
-    // totalProgress: Components.TotalProgress,
-    // update: Components.Update,
-    // updateFrame: Components.UpdateFrame,
-    // yoyo: Components.Yoyo
-
-    // var anim = GetAdvancedValue(config, 'anims', null);
+    //  Physics, Input, etc to follow ...
 
     return sprite;
 };
