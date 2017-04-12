@@ -13,6 +13,7 @@ module.exports = {
     ScaleMode: require('./ScaleMode'),
     Size: require('./Size'),
     Texture: require('./Texture'),
+    ToJSON: require('./ToJSON'),
     Transform: require('./Transform'),
     TransformMatrix: require('./TransformMatrix'),
     Visible: require('./Visible')
