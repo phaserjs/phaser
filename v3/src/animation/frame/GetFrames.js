@@ -1,4 +1,4 @@
-var AnimationFrame = require('../AnimationFrame');
+var Frame = require('./Frame');
 var GetObjectValue = require('../../utils/object/GetObjectValue');
 
 var GetFrames = function (textureManager, frames)
@@ -33,7 +33,7 @@ var GetFrames = function (textureManager, frames)
 
         var textureFrame = textureManager.getFrame(key, frame);
 
-        animationFrame = new AnimationFrame(key, frame, index, textureFrame);
+        animationFrame = new Frame(key, frame, index, textureFrame);
 
         animationFrame.duration = GetObjectValue(item, 'duration', 0);
         animationFrame.onUpdate = GetObjectValue(item, 'onUpdate', null);

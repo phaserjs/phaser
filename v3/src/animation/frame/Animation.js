@@ -7,6 +7,9 @@ var Animation = function (manager, key, config)
 
     this.key = key;
 
+    //  A frame based animation (as opposed to a bone based animation)
+    this.type = 'frame';
+
     //  Extract all the frame data into the frames array
     this.frames = GetFrames(manager.textureManager, GetObjectValue(config, 'frames', []));
 
@@ -257,7 +260,7 @@ Animation.prototype = {
     {
         var output = {
             key: this.key,
-            type: 'frame',
+            type: this.type,
             frames: [],
             framerate: this.frameRate,
             duration: this.duration,

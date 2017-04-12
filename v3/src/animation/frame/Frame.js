@@ -1,4 +1,4 @@
-var AnimationFrame = function (textureKey, textureFrame, index, frame)
+var Frame = function (textureKey, textureFrame, index, frame)
 {
     //  The keys into the Texture Manager of the texture + frame this uses
     this.textureKey = textureKey;
@@ -33,9 +33,9 @@ var AnimationFrame = function (textureKey, textureFrame, index, frame)
     this.visible = false;
 };
 
-AnimationFrame.prototype.constructor = AnimationFrame;
+Frame.prototype.constructor = Frame;
 
-AnimationFrame.prototype = {
+Frame.prototype = {
 
     toJSON: function ()
     {
@@ -55,4 +55,4 @@ AnimationFrame.prototype = {
 
 };
 
-module.exports = AnimationFrame;
+module.exports = Frame;

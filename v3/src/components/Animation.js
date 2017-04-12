@@ -1,6 +1,6 @@
 
 var Class = require('../utils/Class');
-var Components = require('../animation/frame/');
+var Components = require('../animation/frame/components/');
 
 var Animation = new Class({
 
