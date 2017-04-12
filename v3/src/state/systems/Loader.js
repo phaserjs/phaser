@@ -3,6 +3,7 @@ var BaseLoader = require('../../loader/BaseLoader');
 var NumberArray = require('../../utils/array/NumberArray');
 
 var ImageFile = require('../../loader/filetypes/ImageFile');
+var AnimationJSONFile = require('../../loader/filetypes/AnimationJSONFile');
 var JSONFile = require('../../loader/filetypes/JSONFile');
 var XMLFile = require('../../loader/filetypes/XMLFile');
 var BinaryFile = require('../../loader/filetypes/BinaryFile');
@@ -84,6 +85,13 @@ Loader.prototype.file = function (file)
 Loader.prototype.image = function (key, url, xhrSettings)
 {
     var file = new ImageFile(key, url, this.path, xhrSettings);
+
+    return this.addFile(file);
+};
+
+Loader.prototype.animation = function (key, url, xhrSettings)
+{
+    var file = new AnimationJSONFile(key, url, this.path, xhrSettings);
 
     return this.addFile(file);
 };
@@ -230,6 +238,7 @@ Loader.prototype.processCallback = function ()
     //  The global Texture Manager
     var cache = this.state.sys.cache;
     var textures = this.state.sys.textures;
+    var anims = this.state.sys.anims;
 
     //  Process multiatlas groups first
 
@@ -279,10 +288,19 @@ Loader.prototype.processCallback = function ()
         }
     }
 
+    //  Process all of the files
+
+    //  Because AnimationJSON may require images to be loaded first, we process them last
+    var animJSON = [];
+
     this.storage.each(function (file)
     {
         switch (file.type)
         {
+            case 'animationJSON':
+                animJSON.push(file);
+                break;
+
             case 'image':
             case 'svg':
             case 'html':
@@ -349,6 +367,11 @@ Loader.prototype.processCallback = function ()
                 cache.shader.add(file.key, file.data);
                 break;
         }
+    });
+
+    animJSON.forEach(function (file)
+    {
+        anims.fromJSON(file.data);
     });
 
     this.storage.clear();

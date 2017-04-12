@@ -1,6 +1,6 @@
 var ToJSON = function (key)
 {
-    if (key !== undefined)
+    if (key !== undefined && key !== '')
     {
         return this.anims.get(key).toJSON();
     }
@@ -11,9 +11,9 @@ var ToJSON = function (key)
             globalTimeScale: this.globalTimeScale
         };
 
-        this.anims.each(function (key, anim)
+        this.anims.each(function (animationKey, animation)
         {
-            output.anims.push(anim.toJSON());
+            output.anims.push(animation.toJSON());
         });
 
         return output;
