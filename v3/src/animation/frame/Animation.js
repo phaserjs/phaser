@@ -19,6 +19,7 @@ var Animation = function (manager, key, config)
 
     if (this.duration === null && this.frameRate === null)
     {
+        //  No duration or frameRate given, use default frameRate of 24fps
         this.frameRate = 24;
         this.duration = this.frameRate / this.frames.length;
     }
@@ -31,7 +32,7 @@ var Animation = function (manager, key, config)
     }
     else
     {
-        //  No duration, so derive from the frameRate
+        //  frameRate given, derive duration from it (even if duration also specified)
         //  I.e. 15 frames in the animation, frameRate = 30 fps
         //  So duration is 15 / 30 = 0.5 (half a second)
         this.duration = this.frames.length / this.frameRate;
@@ -250,6 +251,31 @@ Animation.prototype = {
         {
             this.previousFrame(component);
         }
+    },
+
+    toJSON: function ()
+    {
+        var output = {
+            key: this.key,
+            type: 'frame',
+            frames: [],
+            framerate: this.frameRate,
+            duration: this.duration,
+            skipMissedFrames: this.skipMissedFrames,
+            delay: this.delay,
+            repeat: this.repeat,
+            repeatDelay: this.repeatDelay,
+            yoyo: this.yoyo,
+            showOnStart: this.showOnStart,
+            hideOnComplete: this.hideOnComplete
+        };
+
+        this.frames.forEach(function (frame)
+        {
+            output.frames.push(frame.toJSON());
+        });
+
+        return output;
     },
 
     destroy: function ()

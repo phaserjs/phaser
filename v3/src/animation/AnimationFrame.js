@@ -1,5 +1,9 @@
-var AnimationFrame = function (index, frame)
+var AnimationFrame = function (textureKey, textureFrame, index, frame)
 {
+    //  The keys into the Texture Manager of the texture + frame this uses
+    this.textureKey = textureKey;
+    this.textureFrame = textureFrame;
+
     //  The index of this frame within the Animation.frames array
     this.index = index;
 
@@ -32,6 +36,16 @@ var AnimationFrame = function (index, frame)
 AnimationFrame.prototype.constructor = AnimationFrame;
 
 AnimationFrame.prototype = {
+
+    toJSON: function ()
+    {
+        return {
+            key: this.textureKey,
+            frame: this.textureFrame,
+            duration: this.duration,
+            visible: this.visible
+        };
+    },
 
     destroy: function ()
     {
