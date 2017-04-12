@@ -30,6 +30,7 @@ var BitmapText = new Class({
 
         GameObject.call(this, state, 'BitmapText');
 
+        this.font = font;
         this.fontData = this.state.sys.cache.bitmapFont.get(font);
 
         this.text = text;
@@ -76,6 +77,23 @@ var BitmapText = new Class({
         //  global = the BitmapText, taking into account scale and world position
 
         return GetBitmapTextSize(this);
+    },
+
+    toJSON: function ()
+    {
+        var out = Components.ToJSON(this);
+
+        //  Extra data is added here
+
+        var data = {
+            font: this.font,
+            text: this.text,
+            fontSize: this.fontSize
+        };
+
+        out.data = data;
+
+        return out;
     }
 
 });

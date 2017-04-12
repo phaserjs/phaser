@@ -6,11 +6,9 @@ var ToJSON = function (gameObject)
     var out = {
         name: gameObject.name,
         type: gameObject.type,
-        position: {
-            x: gameObject.x,
-            y: gameObject.y,
-            z: gameObject.z
-        },
+        x: gameObject.x,
+        y: gameObject.y,
+        z: gameObject.z,
         scale: {
             x: gameObject.scaleX,
             y: gameObject.scaleY
@@ -19,23 +17,22 @@ var ToJSON = function (gameObject)
             x: gameObject.originX,
             y: gameObject.originY
         },
-        flip: {
-            x: gameObject.flipX,
-            y: gameObject.flipY
-        },
+        flipX: gameObject.flipX,
+        flipY: gameObject.flipY,
         rotation: gameObject.rotation,
         alpha: gameObject.alpha,
         visible: gameObject.visible,
         scaleMode: gameObject.scaleMode,
         blendMode: gameObject.blendMode,
         textureKey: '',
-        frameKey: ''
+        frameKey: '',
+        data: {}
     };
 
     if (gameObject.texture)
     {
         out.textureKey = gameObject.texture.key;
-        out.frameKey = gameObject.frame.key;
+        out.frameKey = gameObject.frame.name;
     }
 
     return out;

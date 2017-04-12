@@ -45,6 +45,15 @@ var Sprite = new Class({
     play: function (key, startFrame)
     {
         return this.anims.play(key, startFrame);
+    },
+
+    toJSON: function ()
+    {
+        var data = Components.ToJSON(this);
+
+        //  Extra Sprite data is added here
+
+        return data;
     }
 
 });

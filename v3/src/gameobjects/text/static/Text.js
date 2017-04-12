@@ -265,6 +265,28 @@ var Text = new Class({
         this.dirty = true;
 
         return this;
+    },
+
+    toJSON: function ()
+    {
+        var out = Components.ToJSON(this);
+
+        //  Extra Text data is added here
+        //  TODO: TextStyle.toJSON
+
+        var data = {
+            autoRound: this.autoRound,
+            text: this.text,
+            resolution: this.resolution,
+            padding: {
+                x: this.padding.x,
+                y: this.padding.y
+            }
+        };
+
+        out.data = data;
+
+        return out;
     }
 });
 
