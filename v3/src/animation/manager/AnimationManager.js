@@ -5,6 +5,7 @@
 */
 
 var Map = require('../../structs/Map');
+var Components = require('./components/');
 
 /**
 * Animations are managed by the global AnimationManager. This is a singleton class that is
@@ -37,16 +38,17 @@ AnimationManager.prototype = {
         this.textureManager = textureManager;
     },
 
-    add: require('./AddAnimation'),
-    create: require('./CreateFrameAnimation'),
-    get: require('./GetAnimation'),
-    remove: require('./RemoveAnimation'),
-    load: require('./LoadAnimationToGameObject'),
-    play: require('./PlayAnimation'),
-    staggerPlay: require('./StaggerPlayAnimation'),
-    generateFrameNumbers: require('./GenerateFrameNumbers'),
-    generateFrameNames: require('./GenerateFrameNames'),
-    toJSON: require('./ToJSON'),
+    add: Components.AddAnimation,
+    create: Components.CreateFrameAnimation,
+    fromJSON: Components.FromJSON,
+    generateFrameNames: Components.GenerateFrameNames,
+    generateFrameNumbers: Components.GenerateFrameNumbers,
+    get: Components.GetAnimation,
+    load: Components.LoadAnimationToGameObject,
+    play: Components.PlayAnimation,
+    remove: Components.RemoveAnimation,
+    staggerPlay: Components.StaggerPlayAnimation,
+    toJSON: Components.ToJSON,
 
     destroy: function ()
     {

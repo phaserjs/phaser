@@ -1,4 +1,4 @@
-var GetObjectValue = require('../../utils/object/GetObjectValue');
+var GetObjectValue = require('../../../utils/object/GetObjectValue');
 
 var GenerateFrameNumbers = function (key, config)
 {

@@ -1,5 +1,5 @@
-var GetObjectValue = require('../../utils/object/GetObjectValue');
-var Pad = require('../../utils/string/Pad');
+var GetObjectValue = require('../../../utils/object/GetObjectValue');
+var Pad = require('../../../utils/string/Pad');
 
 var GenerateFrameNames = function (key, config)
 {
