@@ -32,7 +32,7 @@ var Text = new Class({
         if (y === undefined) { y = 0; }
         if (text === undefined) { text = ''; }
 
-        GameObject.call(this, state);
+        GameObject.call(this, state, 'Text');
 
         this.setPosition(x, y);
         this.setOrigin(0, 0);

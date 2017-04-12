@@ -24,14 +24,14 @@ var EffectLayer = new Class({
 
     initialize:
 
-    function EffectLayer(state, x, y, width, height, effectName, fragmentShader)
+    function EffectLayer (state, x, y, width, height, effectName, fragmentShader)
     {
-        GameObject.call(this, state);
+        GameObject.call(this, state, 'EffectLayer');
        
         var resourceManager = state.game.renderer.resourceManager;
         var gl;
 
-        this.dstRenderTarget = null
+        this.dstRenderTarget = null;
         this.dstRenderTexture = null;
         this.dstShader = null;
         this.uniforms = {};
@@ -39,20 +39,24 @@ var EffectLayer = new Class({
         if (resourceManager !== undefined)
         {
             gl = state.game.renderer.gl;
+
             this.dstShader = resourceManager.createShader(effectName, {
                 vert: TexturedAndNormalizedTintedShader.vert,
                 frag: fragmentShader
             });
+
             this.dstRenderTexture = resourceManager.createTexture(
-                0, 
-                gl.LINEAR, gl.LINEAR, 
-                gl.CLAMP_TO_EDGE, gl.CLAMP_TO_EDGE, 
-                gl.RGBA, 
+                0,
+                gl.LINEAR, gl.LINEAR,
+                gl.CLAMP_TO_EDGE, gl.CLAMP_TO_EDGE,
+                gl.RGBA,
                 null, width, height
             );
-            this.dstRenderTarget = resourceManager.createRenderTarget(width, height, this.dstRenderTexture, null); 
+
+            this.dstRenderTarget = resourceManager.createRenderTarget(width, height, this.dstRenderTexture, null);
             //state.game.renderer.currentTexture = null; // force rebinding of prev texture
         }
+
         this.flipY = true;
         this.setPosition(x, y);
         this.setSize(width, height);
@@ -72,7 +76,7 @@ var EffectLayer = new Class({
         if (gameObject.renderTarget !== undefined)
         {
             gameObject.renderTarget = null;
-        }  
+        }
     },
 
     getUniformLocation: function (uniformName)
@@ -99,7 +103,9 @@ var EffectLayer = new Class({
         var dstShader = this.dstShader;
 
         if (dstShader === null)
+        {
             return;
+        }
 
         dstShader.setConstantFloat1(this.getUniformLocation(uniformName), x);
     },
@@ -109,7 +115,9 @@ var EffectLayer = new Class({
         var dstShader = this.dstShader;
 
         if (dstShader === null)
+        {
             return;
+        }
 
         dstShader.setConstantFloat2(this.getUniformLocation(uniformName), x, y);
     },
@@ -119,7 +127,9 @@ var EffectLayer = new Class({
         var dstShader = this.dstShader;
 
         if (dstShader === null)
+        {
             return;
+        }
 
         dstShader.setConstantFloat3(this.getUniformLocation(uniformName), x, y, z);
     },
@@ -129,7 +139,9 @@ var EffectLayer = new Class({
         var dstShader = this.dstShader;
 
         if (dstShader === null)
+        {
             return;
+        }
 
         dstShader.setConstantFloat4(this.getUniformLocation(uniformName), x, y, z, w);
     },
@@ -139,7 +151,9 @@ var EffectLayer = new Class({
         var dstShader = this.dstShader;
 
         if (dstShader === null)
+        {
             return;
+        }
 
         dstShader.setConstantInt1(this.getUniformLocation(uniformName), x);
     },
@@ -149,7 +163,9 @@ var EffectLayer = new Class({
         var dstShader = this.dstShader;
 
         if (dstShader === null)
+        {
             return;
+        }
 
         dstShader.setConstantInt2(this.getUniformLocation(uniformName), x, y);
     },
@@ -159,7 +175,9 @@ var EffectLayer = new Class({
         var dstShader = this.dstShader;
 
         if (dstShader === null)
+        {
             return;
+        }
 
         dstShader.setConstantInt3(this.getUniformLocation(uniformName), x, y, z);
     },
@@ -169,7 +187,9 @@ var EffectLayer = new Class({
         var dstShader = this.dstShader;
 
         if (dstShader === null)
+        {
             return;
+        }
 
         dstShader.setConstantInt4(this.getUniformLocation(uniformName), x, y, z, w);
     },
@@ -179,7 +199,9 @@ var EffectLayer = new Class({
         var dstShader = this.dstShader;
 
         if (dstShader === null)
+        {
             return;
+        }
 
         dstShader.setConstantMatrix2x2(this.getUniformLocation(uniformName), matrix);
     },
@@ -189,7 +211,9 @@ var EffectLayer = new Class({
         var dstShader = this.dstShader;
 
         if (dstShader === null)
+        {
             return;
+        }
 
         dstShader.setConstantMatrix3x3(this.getUniformLocation(uniformName), matrix);
     },
@@ -199,7 +223,9 @@ var EffectLayer = new Class({
         var dstShader = this.dstShader;
 
         if (dstShader === null)
+        {
             return;
+        }
 
         dstShader.setConstantMatrix4x4(this.getUniformLocation(uniformName), matrix);
     }

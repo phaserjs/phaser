@@ -26,7 +26,7 @@ var Graphics = new Class({
         var x = GetObjectValue(options, 'x', 0);
         var y = GetObjectValue(options, 'y', 0);
 
-        GameObject.call(this, state);
+        GameObject.call(this, state, 'Graphics');
 
         this.setPosition(x, y);
 

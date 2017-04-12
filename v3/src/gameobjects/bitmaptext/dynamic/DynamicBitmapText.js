@@ -28,7 +28,7 @@ var DynamicBitmapText = new Class({
         if (size === undefined) { size = 32; }
         if (align === undefined) { align = 'left'; }
 
-        GameObject.call(this, state);
+        GameObject.call(this, state, 'DynamicBitmapText');
 
         this.fontData = this.state.sys.cache.bitmapFont.get(font);
 

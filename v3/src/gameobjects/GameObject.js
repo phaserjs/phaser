@@ -16,11 +16,12 @@ var GameObject = new Class({
 
     initialize:
 
-    function GameObject (state)
+    function GameObject (state, type)
     {
         this.state = state;
 
         this.id = 0;
+        this.type = type;
         this.name = '';
 
         this.parent;

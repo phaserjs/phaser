@@ -20,7 +20,7 @@ var Zone = new Class({
 
     function Zone (state, x, y, width, height)
     {
-        GameObject.call(this, state);
+        GameObject.call(this, state, 'Zone');
 
         this.setPosition(x, y);
         this.setSize(width, height);

@@ -23,9 +23,9 @@ var RenderPass = new Class({
 
     initialize:
 
-    function RenderPass(state, x, y, width, height, shaderName, fragmentShader)
+    function RenderPass (state, x, y, width, height, shaderName, fragmentShader)
     {
-        GameObject.call(this, state);
+        GameObject.call(this, state, 'RenderPass');
        
         var resourceManager = state.game.renderer.resourceManager;
         var gl;
