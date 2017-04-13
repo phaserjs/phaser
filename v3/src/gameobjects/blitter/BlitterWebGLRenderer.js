@@ -16,6 +16,7 @@ var BlitterWebGLRenderer = function (renderer, src, interpolationPercentage, cam
     var f = cameraMatrix[5];
     var cameraScrollX = camera.scrollX;
     var cameraScrollY = camera.scrollY;
+    var renderTarget = src.renderTarget;
 
     //  Render bobs
 
@@ -44,7 +45,7 @@ var BlitterWebGLRenderer = function (renderer, src, interpolationPercentage, cam
             blitterBatch.flush();
         }
 
-        renderer.setRenderer(blitterBatch, frame.texture.source[frame.sourceIndex].glTexture);
+        renderer.setRenderer(blitterBatch, frame.texture.source[frame.sourceIndex].glTexture, camera, renderTarget);
         vertexOffset = vertexDataBuffer.allocate(20);
         blitterBatch.elementCount += 6;
         x += frame.x;

@@ -170,7 +170,7 @@ WebGLRenderer.prototype = {
         }
     },
 
-    setRenderer: function (renderer, texture, camera, renderTarget)
+    setRenderer: function (renderer, texture, renderTarget)
     {
         this.setTexture(texture);
         this.setRenderTarget(renderTarget);

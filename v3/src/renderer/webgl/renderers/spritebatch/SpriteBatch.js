@@ -215,7 +215,7 @@ SpriteBatch.prototype = {
         tx3 = xw * mva + y * mvc + mve;
         ty3 = xw * mvb + y * mvd + mvf;
 
-        this.manager.setRenderer(this, texture, camera, gameObject.renderTarget);
+        this.manager.setRenderer(this, texture, gameObject.renderTarget);
         vertexOffset = vertexDataBuffer.allocate(24);
         this.elementCount += 6;
         
@@ -307,7 +307,7 @@ SpriteBatch.prototype = {
         tx3 = xw * mva + y * mvc + mve;
         ty3 = xw * mvb + y * mvd + mvf;
 
-        this.manager.setRenderer(this, frame.texture.source[frame.sourceIndex].glTexture, camera, gameObject.renderTarget);
+        this.manager.setRenderer(this, frame.texture.source[frame.sourceIndex].glTexture, gameObject.renderTarget);
         vertexOffset = vertexDataBuffer.allocate(24);
         this.elementCount += 6;
         

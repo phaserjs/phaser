@@ -22,13 +22,14 @@ var Path = function (x, y, width, rgb, alpha)
     this.points[0] = new Point(x, y, width, rgb, alpha);
 };
 
-var GraphicsWebGLRenderer = function (renderer, src, interpolationPercentage, camera)
+var GraphicsWebGLRenderer = function (renderer, gameObject, interpolationPercentage, camera)
 {
     if (this.renderMask !== this.renderFlags)
     {
         return;
     }
 
+    var renderTarget = gameObject.renderTarget;
     var shapeBatch = renderer.shapeBatch;
     var vertexDataBuffer = shapeBatch.vertexDataBuffer;
     var vertexBufferF32 = vertexDataBuffer.floatView;
@@ -36,12 +37,12 @@ var GraphicsWebGLRenderer = function (renderer, src, interpolationPercentage, ca
     var vertexOffset = 0;
     var cameraScrollX = camera.scrollX;
     var cameraScrollY = camera.scrollY;
-    const srcX = src.x - cameraScrollX;
-    const srcY = src.y - cameraScrollY;
-    const srcScaleX = src.scaleX;
-    const srcScaleY = src.scaleY;
-    const srcRotation = -src.rotation;
-    var commandBuffer = src.commandBuffer;
+    const srcX = gameObject.x - cameraScrollX;
+    const srcY = gameObject.y - cameraScrollY;
+    const srcScaleX = gameObject.scaleX;
+    const srcScaleY = gameObject.scaleY;
+    const srcRotation = -gameObject.rotation;
+    var commandBuffer = gameObject.commandBuffer;
     var value;
     var lineAlpha = 1.0;
     var fillAlpha = 1.0;
@@ -95,7 +96,7 @@ var GraphicsWebGLRenderer = function (renderer, src, interpolationPercentage, ca
     mve = sre * cma + srf * cmc + cme;
     mvf = sre * cmb + srf * cmd + cmf;
 
-    renderer.setRenderer(shapeBatch, null);
+    renderer.setRenderer(shapeBatch, null, renderTarget);
 
     for (var cmdIndex = 0, cmdLength = commandBuffer.length; cmdIndex < cmdLength; ++cmdIndex)
     {
