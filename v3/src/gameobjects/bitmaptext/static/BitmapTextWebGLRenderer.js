@@ -1,28 +1,28 @@
 var TransformMatrix = require('../../../components/TransformMatrix');
 var tempMatrix = new TransformMatrix();
 
-var BitmapTextWebGLRenderer = function (renderer, src, interpolationPercentage, camera)
+var BitmapTextWebGLRenderer = function (renderer, gameObject, interpolationPercentage, camera)
 {
     if (this.renderMask !== this.renderFlags)
     {
         return;
     }
 
-    var textureFrame = src.frame;
+    var textureFrame = gameObject.frame;
     var cameraScrollX = camera.scrollX;
     var cameraScrollY = camera.scrollY;
-    var text = src.text;
+    var text = gameObject.text;
     var textLength = text.length;
-    var chars = src.fontData.chars;
-    var lineHeight = src.fontData.lineHeight;
+    var chars = gameObject.fontData.chars;
+    var lineHeight = gameObject.fontData.lineHeight;
     var blitterBatch = renderer.blitterBatch;
-    var alpha = src.alpha;
+    var alpha = gameObject.alpha;
     var vertexDataBuffer = blitterBatch.vertexDataBuffer;
     var vertexBuffer = vertexDataBuffer.floatView;
     var vertexOffset = 0;
-    var srcX = src.x; 
-    var srcY = src.y;
-    var textureData = src.texture.source[textureFrame.sourceIndex];
+    var srcX = gameObject.x; 
+    var srcY = gameObject.y;
+    var textureData = gameObject.texture.source[textureFrame.sourceIndex];
     var textureX = textureFrame.cutX;
     var textureY = textureFrame.cutY;
     var textureWidth = textureData.width;
@@ -55,12 +55,13 @@ var BitmapTextWebGLRenderer = function (renderer, src, interpolationPercentage, 
     var cameraMatrix = camera.matrix.matrix;
     var mva, mvb, mvc, mvd, mve, mvf, tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3;
     var sra, srb, src, srd, sre, srf, cma, cmb, cmc, cmd, cme, cmf;
-    var scale = (src.fontSize / src.fontData.size);
+    var scale = (gameObject.fontSize / gameObject.fontData.size);
+    var renderTarget = gameObject.renderTarget;
 
     tempMatrix.applyITRS(
-        src.x - cameraScrollX, src.y - cameraScrollY, 
-        -src.rotation, 
-        src.scaleX, src.scaleY
+        gameObject.x - cameraScrollX, gameObject.y - cameraScrollY, 
+        -gameObject.rotation, 
+        gameObject.scaleX, gameObject.scaleY
     );
 
     sra = tempMatrixMatrix[0];
@@ -135,7 +136,7 @@ var BitmapTextWebGLRenderer = function (renderer, src, interpolationPercentage, 
             blitterBatch.flush();
         }
 
-        renderer.setRenderer(blitterBatch, texture);
+        renderer.setRenderer(blitterBatch, texture, renderTarget);
         vertexOffset = vertexDataBuffer.allocate(20);
         blitterBatch.elementCount += 6;
 
