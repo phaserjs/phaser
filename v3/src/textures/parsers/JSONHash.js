@@ -10,15 +10,15 @@
 * @class Phaser.TextureParser.JSONArray
 * @static
 * @param {Phaser.Texture} texture - The parent Texture.
-* @param {object} json - The JSON data from the Texture Atlas. Must be in Array format.
+* @param {object} json - The JSON data from the Texture Atlas. Must be in JSON Hash format.
 * @return {Phaser.FrameData} A FrameData object containing the parsed frames.
 */
-var JSONArrayTextureParser = function (texture, sourceIndex, json)
+var JSONHash = function (texture, sourceIndex, json)
 {
     //  Malformed?
     if (!json['frames'])
     {
-        console.warn('Invalid Texture Atlas JSON Array given, missing \'frames\' array');
+        console.warn('Invalid Texture Atlas JSON Hash given, missing \'frames\' Object');
         return;
     }
 
@@ -26,16 +26,16 @@ var JSONArrayTextureParser = function (texture, sourceIndex, json)
     var source = texture.source[sourceIndex];
     texture.add('__BASE', sourceIndex, 0, 0, source.width, source.height);
 
-    //  By this stage frames is a fully parsed array
+    //  By this stage frames is a fully parsed Object
     var frames = json['frames'];
     var newFrame;
 
-    for (var i = 0; i < frames.length; i++)
+    for (var key in frames)
     {
-        var src = frames[i];
+        var src = frames[key];
 
         //  The frame values are the exact coordinates to cut the frame out of the atlas from
-        newFrame = texture.add(src.filename, sourceIndex, src.frame.x, src.frame.y, src.frame.w, src.frame.h);
+        newFrame = texture.add(key, sourceIndex, src.frame.x, src.frame.y, src.frame.w, src.frame.h);
 
         //  These are the original (non-trimmed) sprite values
         if (src.trimmed)
@@ -60,4 +60,4 @@ var JSONArrayTextureParser = function (texture, sourceIndex, json)
     return texture;
 };
 
-module.exports = JSONArrayTextureParser;
+module.exports = JSONHash;

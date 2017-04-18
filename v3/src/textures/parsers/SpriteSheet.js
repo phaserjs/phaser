@@ -21,7 +21,7 @@ var GetObjectValue = require('../../utils/object/GetObjectValue');
 * @param {number} [spacing=0] - If the frames have been drawn with spacing between them, specify the amount here.
 * @return {Phaser.FrameData} A FrameData object containing the parsed frames.
 */
-var SpriteSheetTextureParser = function (texture, sourceIndex, x, y, width, height, config)
+var SpriteSheet = function (texture, sourceIndex, x, y, width, height, config)
 {
     var frameWidth = GetObjectValue(config, 'frameWidth', null);
     var frameHeight = GetObjectValue(config, 'frameHeight', frameWidth);
@@ -29,7 +29,7 @@ var SpriteSheetTextureParser = function (texture, sourceIndex, x, y, width, heig
     //  If missing we can't proceed
     if (frameWidth === null)
     {
-        throw new Error('TextureManager.SpriteSheetTextureParser: Invalid frameWidth given.');
+        throw new Error('TextureManager.SpriteSheet: Invalid frameWidth given.');
     }
 
     //  Add in a __BASE entry (for the entire atlas)
@@ -99,4 +99,4 @@ var SpriteSheetTextureParser = function (texture, sourceIndex, x, y, width, heig
     return texture;
 };
 
-module.exports = SpriteSheetTextureParser;
+module.exports = SpriteSheet;

@@ -371,6 +371,22 @@ Object.defineProperties(Frame.prototype, {
     },
 
     /**
+    * Is the Frame trimmed?
+    * @name Phaser.TextureFrame#trimmed
+    * @property {boolean} trimmed
+    */
+    trimmed: {
+
+        enumerable: true,
+
+        get: function ()
+        {
+            return this.data.trim;
+        }
+
+    },
+
+    /**
     * Canvas Draw Image data
     *
     * @name Phaser.TextureFrame#canvasData

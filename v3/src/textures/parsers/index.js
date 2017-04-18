@@ -1,10 +1,11 @@
 
 module.exports = {
-    Canvas: require('./CanvasTextureParser'),
-    Image: require('./ImageTextureParser'),
-    SpriteSheet: require('./SpriteSheetTextureParser'),
-    JSONArray: require('./JSONArrayTextureParser'),
-    JSONHash: require('./JSONHashTextureParser'),
-    StarlingXML: require('./StarlingXMLTextureParser'),
-    Pyxel: require('./PyxelTextureParser')
+    Canvas: require('./Canvas'),
+    Image: require('./Image'),
+    JSONArray: require('./JSONArray'),
+    JSONHash: require('./JSONHash'),
+    Pyxel: require('./Pyxel'),
+    SpriteSheet: require('./SpriteSheet'),
+    SpriteSheetFromAtlas: require('./SpriteSheetFromAtlas'),
+    StarlingXML: require('./StarlingXML')
 };

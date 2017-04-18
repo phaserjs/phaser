@@ -13,7 +13,7 @@
 * @param {string} key - The key of the Frame within the Texture that the Sprite Sheet is stored in.
 * @return {Phaser.FrameData} A FrameData object containing the parsed frames.
 */
-var ImageTextureParser = function (texture, sourceIndex)
+var Image = function (texture, sourceIndex)
 {
     var source = texture.source[sourceIndex];
 
@@ -22,4 +22,4 @@ var ImageTextureParser = function (texture, sourceIndex)
     return texture;
 };
 
-module.exports = ImageTextureParser;
+module.exports = Image;

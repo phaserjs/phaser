@@ -13,7 +13,7 @@
 * @param {object} xml - The XML data from the Texture Atlas. Must be in Starling XML format.
 * @return {Phaser.FrameData} A FrameData object containing the parsed frames.
 */
-var StarlingXMLTextureParser = function (texture, xml)
+var StarlingXML = function (texture, xml)
 {
     //  Malformed?
     if (!xml.getElementsByTagName('TextureAtlas'))
@@ -72,4 +72,4 @@ var StarlingXMLTextureParser = function (texture, xml)
 
 };
 
-module.exports = StarlingXMLTextureParser;
+module.exports = StarlingXML;
