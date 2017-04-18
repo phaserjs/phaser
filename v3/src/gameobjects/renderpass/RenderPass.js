@@ -1,7 +1,10 @@
+// RenderPass Will only work with Sprite and Image GameObjects.
+
 var Class = require('../../utils/Class');
 var GameObject = require('../GameObject');
 var Components = require('../../components');
 var Render = require('./RenderPassRender');
+var TexturedAndNormalizedTintedShader = require('../../renderer/webgl/shaders/TexturedAndNormalizedTintedShader');
 
 var RenderPass = new Class({
 
@@ -30,36 +33,33 @@ var RenderPass = new Class({
         var resourceManager = state.game.renderer.resourceManager;
         var gl;
 
-        this.dstRenderTarget = null
-        this.dstRenderTexture = null;
-        this.dstShader = null;
+        this.renderer = state.game.renderer;
+        this.passRenderTarget = null
+        this.passRenderTexture = null;
+        this.passShader = null;
         this.uniforms = {};
 
         if (resourceManager !== undefined)
         {
-            /*gl = state.game.renderer.gl;
-            this.dstShader = resourceManager.createShader(shaderName, {
-                vert: TexturedAndNormalizedTintedShader.vert,
-                frag: fragmentShader
-            });
-            this.dstRenderTexture = resourceManager.createTexture(
-                0, 
-                gl.LINEAR, gl.LINEAR, 
-                gl.CLAMP_TO_EDGE, gl.CLAMP_TO_EDGE, 
-                gl.RGBA, 
-                null, width, height
-            );
-            this.dstRenderTarget = resourceManager.createRenderTarget(width, height, this.dstRenderTexture, null); */
+            gl = state.game.renderer.gl;
+            this.passShader = resourceManager.createShader(shaderName, {vert: TexturedAndNormalizedTintedShader.vert, frag: fragmentShader});
+            this.passRenderTexture = resourceManager.createTexture(0, gl.LINEAR, gl.LINEAR, gl.CLAMP_TO_EDGE, gl.CLAMP_TO_EDGE, gl.RGBA, null, width, height);
+            this.passRenderTarget = resourceManager.createRenderTarget(width, height, this.passRenderTexture, null);
             state.game.renderer.currentTexture = null; // force rebinding of prev texture
         }
-        this.flipY = true;
+
         this.setPosition(x, y);
         this.setSize(width, height);
         this.setOrigin(0, 0);
+
     },
 
-    render: function (gameObject)
+    render: function (gameObject, camera)
     {
+        var gl = this.renderer.gl;
+        this.renderer.spriteBatch.addSprite(gameObject, camera);
+        this.renderer.spriteBatch.flush(this.passShader, this.passRenderTarget.framebufferObject);
+        this.renderer.setRenderer(null, null, null);
     },
 
     getUniformLocation: function (uniformName)

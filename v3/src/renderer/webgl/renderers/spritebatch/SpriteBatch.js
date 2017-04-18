@@ -111,7 +111,7 @@ SpriteBatch.prototype = {
         this.vertexBufferObject.bind();
     },
 
-    flush: function (shader)
+    flush: function (shader, renderTarget)
     {
         var gl = this.glContext;
         var vertexDataBuffer = this.vertexDataBuffer;
@@ -121,23 +121,37 @@ SpriteBatch.prototype = {
             return;
         }
         
+        if (renderTarget)
+        {
+            gl.bindFramebuffer(gl.FRAMEBUFFER, renderTarget);
+        }
+
         this.bind(shader);
         this.vertexBufferObject.updateResource(vertexDataBuffer.getUsedBufferAsFloat(), 0);
         gl.drawElements(gl.TRIANGLES, this.elementCount, gl.UNSIGNED_SHORT, 0);
         vertexDataBuffer.clear();
         this.elementCount = 0;
+
+        if (renderTarget)
+        {
+            gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+        }
     },
 
     resize: function (width, height, resolution, shader)
     {
         var gl = this.glContext;
         var activeShader = shader !== undefined ? shader : this.shader;
-
+        var location = activeShader == this.shader ? this.viewMatrixLocation : activeShader.getUniformLocation('u_view_matrix');
         this.width = width * resolution;
         this.height = height * resolution;
+        this.setProjectionMatrix(activeShader, location);
+    },
 
-        activeShader.setConstantMatrix4x4(
-            this.viewMatrixLocation,
+    setProjectionMatrix: function (shader, location)
+    {
+        shader.setConstantMatrix4x4(
+            location,
             new Float32Array([
                 2 / this.width, 0, 0, 0,
                 0, -2 / this.height, 0, 0,
