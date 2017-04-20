@@ -32,7 +32,7 @@ var EffectLayer = new Class({
         var gl;
 
         this.dstRenderTarget = null;
-        this.dstRenderTexture = null;
+        this.renderTexture = null;
         this.dstShader = null;
         this.uniforms = {};
 
@@ -45,7 +45,7 @@ var EffectLayer = new Class({
                 frag: fragmentShader
             });
 
-            this.dstRenderTexture = resourceManager.createTexture(
+            this.renderTexture = resourceManager.createTexture(
                 0,
                 gl.LINEAR, gl.LINEAR,
                 gl.CLAMP_TO_EDGE, gl.CLAMP_TO_EDGE,
@@ -53,8 +53,8 @@ var EffectLayer = new Class({
                 null, width, height
             );
 
-            this.dstRenderTarget = resourceManager.createRenderTarget(width, height, this.dstRenderTexture, null);
-            //state.game.renderer.currentTexture = null; // force rebinding of prev texture
+            this.dstRenderTarget = resourceManager.createRenderTarget(width, height, this.renderTexture, null);
+            state.game.renderer.currentTexture = null; // force rebinding of prev texture
         }
 
         this.flipY = true;

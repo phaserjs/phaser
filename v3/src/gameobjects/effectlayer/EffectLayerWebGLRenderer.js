@@ -4,7 +4,7 @@ var EffectLayerWebGLRenderer = function (renderer, src, interpolationPercentage,
     {
         return;
     }
-    renderer.effectRenderer.renderEffect(src, camera, src.dstRenderTexture, src.width, src.height);
+    renderer.effectRenderer.renderEffect(src, camera, src.renderTexture, src.width, src.height);
 };
 
 module.exports = EffectLayerWebGLRenderer;

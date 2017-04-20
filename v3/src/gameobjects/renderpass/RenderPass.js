@@ -35,7 +35,7 @@ var RenderPass = new Class({
 
         this.renderer = state.game.renderer;
         this.passRenderTarget = null
-        this.passRenderTexture = null;
+        this.renderTexture = null;
         this.passShader = null;
         this.uniforms = {};
 
@@ -43,8 +43,8 @@ var RenderPass = new Class({
         {
             gl = state.game.renderer.gl;
             this.passShader = resourceManager.createShader(shaderName, {vert: TexturedAndNormalizedTintedShader.vert, frag: fragmentShader});
-            this.passRenderTexture = resourceManager.createTexture(0, gl.LINEAR, gl.LINEAR, gl.CLAMP_TO_EDGE, gl.CLAMP_TO_EDGE, gl.RGBA, null, width, height);
-            this.passRenderTarget = resourceManager.createRenderTarget(width, height, this.passRenderTexture, null);
+            this.renderTexture = resourceManager.createTexture(0, gl.LINEAR, gl.LINEAR, gl.CLAMP_TO_EDGE, gl.CLAMP_TO_EDGE, gl.RGBA, null, width, height);
+            this.passRenderTarget = resourceManager.createRenderTarget(width, height, this.renderTexture, null);
             state.game.renderer.currentTexture = null; // force rebinding of prev texture
         }
 

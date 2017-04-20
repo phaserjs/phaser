@@ -4,7 +4,7 @@ var RenderPassWebGLRenderer = function (renderer, src, interpolationPercentage, 
     {
         return;
     }
-    renderer.spriteBatch.addSpriteTexture(src, camera, src.passRenderTexture, src.width, src.height);
+    renderer.spriteBatch.addSpriteTexture(src, camera, src.renderTexture, src.width, src.height);
 };
 
 module.exports = RenderPassWebGLRenderer;
