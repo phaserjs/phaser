@@ -48,23 +48,66 @@ var RenderPass = new Class({
             state.game.renderer.currentTexture = null; // force rebinding of prev texture
         }
 
+        this.flipY = true;
         this.setPosition(x, y);
         this.setSize(width, height);
         this.setOrigin(0, 0);
 
     },
 
+    clearColorBuffer: function (r, g, b, a)
+    {
+        var gl = this.renderer.gl;
+        if (gl)
+        {
+            gl.bindFramebuffer(gl.FRAMBUFFER, this.passRenderTarget.framebufferObject);
+            gl.clearColor(r, g, b, a);
+            gl.clear(gl.COLOR_BUFFER_BIT);
+            gl.bindFramebuffer(gl.FRAMBUFFER, null);
+        }
+    },
+
+    clearDepthStencilBuffers: function (depth, stencil)
+    {
+        var gl = this.renderer.gl;
+        if (gl)
+        {
+            gl.bindFramebuffer(gl.FRAMBUFFER, this.passRenderTarget.framebufferObject);
+            gl.clearDepth(depth);
+            gl.clearStencil(stencil);
+            gl.clear(gl.DEPTH_BUFFER_BIT | gl.STENCIL_BUFFER_BIT);
+            gl.bindFramebuffer(gl.FRAMBUFFER, null);
+        }
+    },
+
+    clearAllBuffers: function (depth, stencil)
+    {
+        var gl = this.renderer.gl;
+        if (gl)
+        {
+            gl.bindFramebuffer(gl.FRAMBUFFER, this.passRenderTarget.framebufferObject);
+            gl.clearColor(r, g, b, a);
+            gl.clearDepth(depth);
+            gl.clearStencil(stencil);
+            gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT | gl.STENCIL_BUFFER_BIT);
+            gl.bindFramebuffer(gl.FRAMBUFFER, null);
+        }
+    },
+
     render: function (gameObject, camera)
     {
         var gl = this.renderer.gl;
-        this.renderer.spriteBatch.addSprite(gameObject, camera);
-        this.renderer.spriteBatch.flush(this.passShader, this.passRenderTarget.framebufferObject);
-        this.renderer.setRenderer(null, null, null);
+        if (gl)
+        {
+            this.renderer.spriteBatch.addSprite(gameObject, camera);
+            this.renderer.spriteBatch.flush(this.passShader, this.passRenderTarget.framebufferObject);
+            this.renderer.setRenderer(null, null, null);
+        }
     },
 
     getUniformLocation: function (uniformName)
     {
-        var dstShader = this.dstShader;
+        var passShader = this.passShader;
         var uniforms = this.uniforms;
         var location;
 
@@ -74,7 +117,7 @@ var RenderPass = new Class({
         }
         else
         {
-            location = dstShader.getUniformLocation(uniformName);
+            location = passShader.getUniformLocation(uniformName);
             uniforms[uniformName] = location;
         }
 
@@ -83,112 +126,112 @@ var RenderPass = new Class({
 
     setFloat: function (uniformName, x)
     {
-        var dstShader = this.dstShader;
+        var passShader = this.passShader;
 
-        if (dstShader === null)
+        if (passShader === null)
             return;
 
-        dstShader.setConstantFloat1(this.getUniformLocation(uniformName), x);
+        passShader.setConstantFloat1(this.getUniformLocation(uniformName), x);
     },
 
     setFloat2: function (uniformName, x, y)
     {
-        var dstShader = this.dstShader;
+        var passShader = this.passShader;
 
-        if (dstShader === null)
+        if (passShader === null)
             return;
 
-        dstShader.setConstantFloat2(this.getUniformLocation(uniformName), x, y);
+        passShader.setConstantFloat2(this.getUniformLocation(uniformName), x, y);
     },
 
     setFloat3: function (uniformName, x, y, z)
     {
-        var dstShader = this.dstShader;
+        var passShader = this.passShader;
 
-        if (dstShader === null)
+        if (passShader === null)
             return;
 
-        dstShader.setConstantFloat3(this.getUniformLocation(uniformName), x, y, z);
+        passShader.setConstantFloat3(this.getUniformLocation(uniformName), x, y, z);
     },
 
     setFloat4: function (uniformName, x, y, z, w)
     {
-        var dstShader = this.dstShader;
+        var passShader = this.passShader;
 
-        if (dstShader === null)
+        if (passShader === null)
             return;
 
-        dstShader.setConstantFloat4(this.getUniformLocation(uniformName), x, y, z, w);
+        passShader.setConstantFloat4(this.getUniformLocation(uniformName), x, y, z, w);
     },
 
     setInt: function (uniformName, x)
     {
-        var dstShader = this.dstShader;
+        var passShader = this.passShader;
 
-        if (dstShader === null)
+        if (passShader === null)
             return;
 
-        dstShader.setConstantInt1(this.getUniformLocation(uniformName), x);
+        passShader.setConstantInt1(this.getUniformLocation(uniformName), x);
     },
 
     setInt2: function (uniformName, x, y)
     {
-        var dstShader = this.dstShader;
+        var passShader = this.passShader;
 
-        if (dstShader === null)
+        if (passShader === null)
             return;
 
-        dstShader.setConstantInt2(this.getUniformLocation(uniformName), x, y);
+        passShader.setConstantInt2(this.getUniformLocation(uniformName), x, y);
     },
 
     setInt3: function (uniformName, x, y, z)
     {
-        var dstShader = this.dstShader;
+        var passShader = this.passShader;
 
-        if (dstShader === null)
+        if (passShader === null)
             return;
 
-        dstShader.setConstantInt3(this.getUniformLocation(uniformName), x, y, z);
+        passShader.setConstantInt3(this.getUniformLocation(uniformName), x, y, z);
     },
 
     setInt4: function (uniformName, x, y, z, w)
     {
-        var dstShader = this.dstShader;
+        var passShader = this.passShader;
 
-        if (dstShader === null)
+        if (passShader === null)
             return;
 
-        dstShader.setConstantInt4(this.getUniformLocation(uniformName), x, y, z, w);
+        passShader.setConstantInt4(this.getUniformLocation(uniformName), x, y, z, w);
     },
 
     setMatrix2x2: function (uniformName, matrix)
     {
-        var dstShader = this.dstShader;
+        var passShader = this.passShader;
 
-        if (dstShader === null)
+        if (passShader === null)
             return;
 
-        dstShader.setConstantMatrix2x2(this.getUniformLocation(uniformName), matrix);
+        passShader.setConstantMatrix2x2(this.getUniformLocation(uniformName), matrix);
     },
 
     setMatrix3x3: function (uniformName, matrix)
     {
-        var dstShader = this.dstShader;
+        var passShader = this.passShader;
 
-        if (dstShader === null)
+        if (passShader === null)
             return;
 
-        dstShader.setConstantMatrix3x3(this.getUniformLocation(uniformName), matrix);
+        passShader.setConstantMatrix3x3(this.getUniformLocation(uniformName), matrix);
     },
 
     setMatrix4x4: function (uniformName, matrix)
     {
-        var dstShader = this.dstShader;
+        var passShader = this.passShader;
 
-        if (dstShader === null)
+        if (passShader === null)
             return;
 
-        dstShader.setConstantMatrix4x4(this.getUniformLocation(uniformName), matrix);
+        passShader.setConstantMatrix4x4(this.getUniformLocation(uniformName), matrix);
     }
 
 });
