@@ -60,10 +60,10 @@ var RenderPass = new Class({
         var gl = this.renderer.gl;
         if (gl)
         {
-            gl.bindFramebuffer(gl.FRAMBUFFER, this.passRenderTarget.framebufferObject);
+            gl.bindFramebuffer(gl.FRAMEBUFFER, this.passRenderTarget.framebufferObject);
             gl.clearColor(r, g, b, a);
             gl.clear(gl.COLOR_BUFFER_BIT);
-            gl.bindFramebuffer(gl.FRAMBUFFER, null);
+            gl.bindFramebuffer(gl.FRAMEBUFFER, null);
         }
     },
 
@@ -72,25 +72,25 @@ var RenderPass = new Class({
         var gl = this.renderer.gl;
         if (gl)
         {
-            gl.bindFramebuffer(gl.FRAMBUFFER, this.passRenderTarget.framebufferObject);
+            gl.bindFramebuffer(gl.FRAMEBUFFER, this.passRenderTarget.framebufferObject);
             gl.clearDepth(depth);
             gl.clearStencil(stencil);
             gl.clear(gl.DEPTH_BUFFER_BIT | gl.STENCIL_BUFFER_BIT);
-            gl.bindFramebuffer(gl.FRAMBUFFER, null);
+            gl.bindFramebuffer(gl.FRAMEBUFFER, null);
         }
     },
 
-    clearAllBuffers: function (depth, stencil)
+    clearAllBuffers: function (r, g, b, a, depth, stencil)
     {
         var gl = this.renderer.gl;
         if (gl)
         {
-            gl.bindFramebuffer(gl.FRAMBUFFER, this.passRenderTarget.framebufferObject);
+            gl.bindFramebuffer(gl.FRAMEBUFFER, this.passRenderTarget.framebufferObject);
             gl.clearColor(r, g, b, a);
             gl.clearDepth(depth);
             gl.clearStencil(stencil);
             gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT | gl.STENCIL_BUFFER_BIT);
-            gl.bindFramebuffer(gl.FRAMBUFFER, null);
+            gl.bindFramebuffer(gl.FRAMEBUFFER, null);
         }
     },
 
@@ -102,6 +102,20 @@ var RenderPass = new Class({
             this.renderer.spriteBatch.addSprite(gameObject, camera);
             this.renderer.spriteBatch.flush(this.passShader, this.passRenderTarget.framebufferObject);
             this.renderer.setRenderer(null, null, null);
+        }
+    },
+
+    setRenderTextureAt: function (renderTexture, samplerName, unit)
+    {
+        var gl = this.renderer.gl;
+        if (gl)
+        {
+            /* Texture 1 is reserved for Phaser's Main Renderer */
+            unit = unit > 0 ? unit : 1;
+            this.setInt(samplerName, unit);
+            gl.activeTexture(gl.TEXTURE0 + unit);
+            gl.bindTexture(gl.TEXTURE_2D, renderTexture.texture);
+            gl.activeTexture(gl.TEXTURE0);
         }
     },
 

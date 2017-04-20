@@ -112,6 +112,7 @@ WebGLRenderer.prototype = {
         this.spriteBatch = this.addRenderer(new SpriteBatch(this.game, gl, this));
         this.shapeBatch = this.addRenderer(new ShapeBatch(this.game, gl, this));
         this.effectRenderer = this.addRenderer(new EffectRenderer(this.game, gl, this));
+        this.setBlendMode(0);
     },
 
     createTexture: function (source)
