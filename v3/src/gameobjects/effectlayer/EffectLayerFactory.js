@@ -1,4 +1,5 @@
 var EffectLayer = require('./EffectLayer');
+var BuildFromConfig = require('./BuildFromConfig');
 var FactoryContainer = require('../../gameobjects/FactoryContainer');
 
 var EffectLayerFactory = {
@@ -14,6 +15,11 @@ var EffectLayerFactory = {
     {
         return new EffectLayer(this.state, x, y, width, height, effectName, fragmentShader);
     }
+
+    // make: function (config)
+    // {
+    //     return BuildFromConfig(this.state, config);
+    // }
 
 };
 
