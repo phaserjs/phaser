@@ -1,4 +1,6 @@
-Before opening this issue _please_ check we haven't already fixed it! Check the [Dev Change Log](https://github.com/photonstorm/phaser/tree/master/v2-community/#change-log).
+**This repo is for Phaser 3 related issues only**
+
+Official support for Phaser 2 has now ended. We urge you to visit the [Phaser CE (Community Edition)](https://github.com/photonstorm/phaser-ce) for continued development of v2.
 
 This Issue is about (delete as applicable)
 
@@ -8,9 +10,7 @@ This Issue is about (delete as applicable)
 * An error on the web site
 * A problem with my own code
 
-API errors must include example code showing what happens, and why you don't believe this is the expected behavior. Issues posted without code take _far_ longer to get resolved, _if ever_.
-
-If the issue is in a current version of Phaser, then you can use the [Phaser Sandbox](http://phaser.io/sandbox) to demonstrate it. Otherwise feel free to use another service, such as jsbin. If we can run it, and see the error, we can usually fix it.
+API errors must include example code showing what happens, and why you don't believe this is the expected behavior. Issues posted without code take _far_ longer to get resolved, _if ever_. Feel free to use a site such as jsbin to demo the problem. If we can run it, and see the error, we can usually fix it.
 
 If your Issue contains _any_ form of hostility it will be instantly closed.
 
