@@ -216,7 +216,7 @@ EffectRenderer.prototype = {
         tx3 = xw * mva + y * mvc + mve;
         ty3 = xw * mvb + y * mvd + mvf;
 
-        this.manager.setRenderer(this, texture, camera, gameObject.renderTarget);
+        this.manager.setRenderer(this, texture, gameObject.renderTarget);
         vertexOffset = vertexDataBuffer.allocate(24);
         this.elementCount += 6;
         
