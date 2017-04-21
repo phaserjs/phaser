@@ -63,6 +63,16 @@ var EffectLayer = new Class({
         this.setOrigin(0, 0);
     },
 
+    renderOffScreen: function () 
+    {
+        this.renderTarget = this.dstRenderTarget;
+    },
+
+    renderOnScreen: function ()
+    {
+        this.renderTarget = null;
+    },
+
     add: function (gameObject)
     {
         if (gameObject.renderTarget !== undefined)
