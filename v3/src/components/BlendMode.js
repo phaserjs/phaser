@@ -23,6 +23,13 @@ var BlendMode = {
             }
         }
 
+    },
+
+    setBlendMode: function (value)
+    {
+        this.blendMode = value;
+
+        return this;
     }
 
 };

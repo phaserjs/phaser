@@ -21,6 +21,13 @@ var ScaleMode = {
             }
         }
 
+    },
+
+    setScaleMode: function (value)
+    {
+        this.scaleMode = value;
+
+        return this;
     }
 
 };
