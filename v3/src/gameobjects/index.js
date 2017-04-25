@@ -13,6 +13,7 @@ require('./layer/LayerFactory');
 require('./zone/ZoneFactory');
 require('./effectlayer/EffectLayerFactory');
 require('./renderpass/RenderPassFactory');
+require('./tilesprite/TileSpriteFactory');
 
 //  Phaser.GameObjects
 
@@ -26,6 +27,7 @@ module.exports = {
     DynamicBitmapText: require('./bitmaptext/dynamic/DynamicBitmapText'),
     Graphics: require('./graphics/Graphics.js'),
     Image: require('./image/Image'),
+    TileSprite: require('./tilesprite/TileSprite'),
     Layer: require('./layer/Layer'),
     RenderPass: require('./renderpass/RenderPass.js'),
     Sprite: require('./sprite/Sprite'),

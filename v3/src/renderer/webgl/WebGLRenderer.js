@@ -9,6 +9,7 @@ var CONST = require('../../const');
 var BlitterBatch = require('./renderers/blitterbatch/BlitterBatch');
 var QuadBatch = require('./renderers/quadbatch/QuadBatch');
 var SpriteBatch = require('./renderers/spritebatch/SpriteBatch');
+var TileBatch = require('./renderers/tilebatch/TileBatch');
 var ShapeBatch = require('./renderers/shapebatch/ShapeBatch');
 var EffectRenderer = require('./renderers/effectrenderer/EffectRenderer');
 var BlendModes = require('../BlendModes');
@@ -112,6 +113,7 @@ WebGLRenderer.prototype = {
         this.spriteBatch = this.addRenderer(new SpriteBatch(this.game, gl, this));
         this.shapeBatch = this.addRenderer(new ShapeBatch(this.game, gl, this));
         this.effectRenderer = this.addRenderer(new EffectRenderer(this.game, gl, this));
+        this.tileBatch = this.addRenderer(new TileBatch(this.game, gl, this));
         this.setBlendMode(0);
     },
 
