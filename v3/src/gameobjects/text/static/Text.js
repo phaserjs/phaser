@@ -273,11 +273,11 @@ var Text = new Class({
         var out = Components.ToJSON(this);
 
         //  Extra Text data is added here
-        //  TODO: TextStyle.toJSON
 
         var data = {
             autoRound: this.autoRound,
             text: this.text,
+            style: this.style.toJSON(),
             resolution: this.resolution,
             padding: {
                 x: this.padding.x,

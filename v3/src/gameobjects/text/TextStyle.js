@@ -1,5 +1,4 @@
 var Class = require('../../utils/Class');
-// var GetObjectValue = require('../../utils/object/GetObjectValue');
 var GetAdvancedValue = require('../../utils/object/GetAdvancedValue');
 var MeasureText = require('./MeasureText');
 
@@ -56,7 +55,6 @@ var TextStyle = new Class({
         {
             for (var key in propertyMap)
             {
-                // this[key] = GetObjectValue(style, propertyMap[key][0], this[key]);
                 this[key] = GetAdvancedValue(style, propertyMap[key][0], this[key]);
             }
         }
@@ -124,7 +122,6 @@ var TextStyle = new Class({
     {
         for (var key in propertyMap)
         {
-            // this[key] = GetObjectValue(style, propertyMap[key][0], this[key]);
             this[key] = GetAdvancedValue(style, propertyMap[key][0], this[key]);
         }
 
@@ -266,6 +263,18 @@ var TextStyle = new Class({
         this.maxLines = max;
 
         return this.update(false);
+    },
+
+    toJSON: function ()
+    {
+        var output = {};
+
+        for (var key in propertyMap)
+        {
+            output[key] = this[key];
+        }
+
+        return output;
     },
 
     destroy: function ()
