@@ -10,6 +10,7 @@ var CanvasPool = require('../../dom/CanvasPool');
 var MeasureText = function (textStyle, testString)
 {
     if (testString === undefined) { testString = '|MÉq'; }
+    // if (testString === undefined) { testString = 'ABCDEFG'; }
 
     /**
      * @property {HTMLCanvasElement} canvas - The canvas element that the text is rendered.
@@ -37,7 +38,8 @@ var MeasureText = function (textStyle, testString)
 
     context.font = textStyle.font;
 
-    context.textBaseline = 'alphabetic';
+    // context.textBaseline = 'alphabetic';
+    context.textBaseline = 'middle';
     context.fillStyle = '#000';
     context.fillText(testString, 0, baseline);
 
@@ -119,6 +121,8 @@ var MeasureText = function (textStyle, testString)
     output.fontSize = output.ascent + output.descent;
 
     CanvasPool.remove(canvas);
+
+    console.log(output);
 
     return output;
 };

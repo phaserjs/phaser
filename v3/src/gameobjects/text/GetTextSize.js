@@ -20,7 +20,7 @@ var GetTextSize = function (text, size, lines)
 
     for (var i = 0; i < drawnLines; i++)
     {
-        var lineWidth = style.strokeThickness + text.padding.x;
+        var lineWidth = style.strokeThickness;
 
         lineWidth += context.measureText(lines[i]).width;
 
@@ -36,7 +36,7 @@ var GetTextSize = function (text, size, lines)
 
     //  Text Height
 
-    var lineHeight = size.fontSize + style.strokeThickness + text.padding.y;
+    var lineHeight = size.fontSize + style.strokeThickness;
     var height = lineHeight * drawnLines;
     var lineSpacing = text._lineSpacing || 0;
 

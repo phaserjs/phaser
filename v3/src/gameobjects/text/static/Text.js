@@ -198,8 +198,10 @@ var Text = new Class({
 
         this.updateOrigin();
 
-        var w = textSize.width * this.resolution;
-        var h = textSize.height * this.resolution;
+        var padding = this.padding;
+
+        var w = (textSize.width + (padding.x * 2)) * this.resolution;
+        var h = (textSize.height + (padding.y * 2)) * this.resolution;
 
         if (canvas.width !== w || canvas.height !== h)
         {
@@ -218,6 +220,11 @@ var Text = new Class({
         }
 
         style.syncFont(canvas, context);
+
+        context.textBaseline = 'middle';
+
+        //  Apply padding
+        context.translate(padding.x, padding.y);
 
         var linePositionX;
         var linePositionY;

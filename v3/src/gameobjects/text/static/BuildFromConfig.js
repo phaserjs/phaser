@@ -35,6 +35,24 @@ var BuildFromConfig = function (state, config)
     text.autoRound = GetAdvancedValue(config, 'autoRound', true);
     text.resolution = GetAdvancedValue(config, 'resolution', 1);
 
+    //  Padding
+    //  Either: { padding: 2 } or { padding: { x: 2, y: 2 }}
+
+    var padding = GetAdvancedValue(config, 'padding', null);
+
+    if (typeof padding === 'number')
+    {
+        text.padding.x = padding;
+        text.padding.y = padding;
+    }
+    else if (padding !== null)
+    {
+        text.padding.x = GetAdvancedValue(padding, 'x', 1);
+        text.padding.y = GetAdvancedValue(padding, 'y', 1);
+    }
+
+    text.updateText();
+
     return text;
 };
 
