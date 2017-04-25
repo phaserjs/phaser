@@ -1,4 +1,6 @@
+
 var Text = require('./Text');
+var BuildFromConfig = require('./BuildFromConfig');
 var FactoryContainer = require('../../FactoryContainer');
 
 var TextFactory = {
@@ -10,9 +12,9 @@ var TextFactory = {
         return this.children.add(new Text(this.state, x, y, text, style));
     },
 
-    make: function (x, y, text, style)
+    make: function (config)
     {
-        return new Text(this.state, x, y, text, style);
+        return BuildFromConfig(this.state, config);
     }
 
 };

@@ -63,6 +63,7 @@ var Text = new Class({
 
         this.resolution = 1;
 
+        //  Move to TextStyle?
         this.padding = { x: 0, y: 0 };
 
         this.width = 1;

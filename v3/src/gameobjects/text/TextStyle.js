@@ -1,5 +1,6 @@
 var Class = require('../../utils/Class');
-var GetObjectValue = require('../../utils/object/GetObjectValue');
+// var GetObjectValue = require('../../utils/object/GetObjectValue');
+var GetAdvancedValue = require('../../utils/object/GetAdvancedValue');
 var MeasureText = require('./MeasureText');
 
 //  Key: [ Object Key, Default Value ]
@@ -51,11 +52,12 @@ var TextStyle = new Class({
         //  Set to defaults
         this.reset();
 
-        if (style !== undefined)
+        if (style)
         {
             for (var key in propertyMap)
             {
-                this[key] = GetObjectValue(style, propertyMap[key][0], this[key]);
+                // this[key] = GetObjectValue(style, propertyMap[key][0], this[key]);
+                this[key] = GetAdvancedValue(style, propertyMap[key][0], this[key]);
             }
         }
 
@@ -122,7 +124,8 @@ var TextStyle = new Class({
     {
         for (var key in propertyMap)
         {
-            this[key] = GetObjectValue(style, propertyMap[key][0], this[key]);
+            // this[key] = GetObjectValue(style, propertyMap[key][0], this[key]);
+            this[key] = GetAdvancedValue(style, propertyMap[key][0], this[key]);
         }
 
         return this.update(true);
