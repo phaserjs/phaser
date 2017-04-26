@@ -1,4 +1,5 @@
 var Class = require('../../utils/Class');
+var GetObjectValue = require('../../utils/object/GetObjectValue');
 var GetAdvancedValue = require('../../utils/object/GetAdvancedValue');
 var MeasureText = require('./MeasureText');
 
@@ -59,7 +60,22 @@ var TextStyle = new Class({
             }
         }
 
-        this.metrics = MeasureText(this);
+        var metrics = GetObjectValue(style, 'metrics', false);
+
+        //  Provide optional TextMetrics in the style object to avoid the canvas look-up / scanning
+        //  Doing this is un-done if you then change the font of this TextStyle after creation
+        if (metrics)
+        {
+            this.metrics = {
+                ascent: GetObjectValue(metrics, 'ascent', 0),
+                descent: GetObjectValue(metrics, 'descent', 0),
+                fontSize: GetObjectValue(metrics, 'fontSize', 0)
+            };
+        }
+        else
+        {
+            this.metrics = MeasureText(this);
+        }
     },
 
     reset: function ()
@@ -265,6 +281,17 @@ var TextStyle = new Class({
         return this.update(false);
     },
 
+    getTextMetrics: function ()
+    {
+        var metrics = this.metrics;
+
+        return {
+            ascent: metrics.ascent,
+            descent: metrics.descent,
+            fontSize: metrics.fontSize
+        };
+    },
+
     toJSON: function ()
     {
         var output = {};
@@ -273,6 +300,8 @@ var TextStyle = new Class({
         {
             output[key] = this[key];
         }
+
+        output.metrics = this.getTextMetrics();
 
         return output;
     },

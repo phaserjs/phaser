@@ -279,6 +279,11 @@ var Text = new Class({
         return this;
     },
 
+    getTextMetrics: function ()
+    {
+        return this.style.getTextMetrics();
+    },
+
     toJSON: function ()
     {
         var out = Components.ToJSON(this);
