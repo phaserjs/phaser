@@ -21,12 +21,9 @@ var MeasureText = function (textStyle, testString)
      */
     var context = canvas.getContext('2d');
 
-    //   DEBUG :)
-    // document.body.appendChild(canvas);
-
     textStyle.syncFont(canvas, context);
 
-    var width = Math.ceil(context.measureText(testString).width);
+    var width = Math.ceil(context.measureText(testString).width * 1.2);
     var baseline = width;
     var height = 2 * baseline;
 
@@ -69,9 +66,6 @@ var MeasureText = function (textStyle, testString)
     var idx = 0;
     var stop = false;
 
-    context.fillStyle = '#00ff00';
-    context.fillRect(0, baseline, width, 1);
-
     // ascent. scan from top to bottom until we find a non red pixel
     for (i = 0; i < baseline; i++)
     {
@@ -80,8 +74,6 @@ var MeasureText = function (textStyle, testString)
             if (imagedata[idx + j] !== 255)
             {
                 stop = true;
-                context.fillStyle = '#ffff00';
-                context.fillRect(0, i, width, 1);
                 break;
             }
         }
@@ -109,8 +101,6 @@ var MeasureText = function (textStyle, testString)
             if (imagedata[idx + j] !== 255)
             {
                 stop = true;
-                context.fillStyle = '#ffffff';
-                context.fillRect(0, i, width, 1);
                 break;
             }
         }
@@ -128,9 +118,7 @@ var MeasureText = function (textStyle, testString)
     output.descent = (i - baseline);
     output.fontSize = output.ascent + output.descent;
 
-    //  DEBUG
-    // CanvasPool.remove(canvas);
-    console.log(output);
+    CanvasPool.remove(canvas);
 
     return output;
 };

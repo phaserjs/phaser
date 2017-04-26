@@ -45,13 +45,20 @@ var GetTextSize = function (text, size, lines)
         lineSpacing = -lineHeight;
     }
 
-    // //  Adjust for line spacing
+    //  Adjust for line spacing
     if (lineSpacing !== 0)
     {
         height += (lineSpacing > 0) ? lineSpacing * lines.length : lineSpacing * (lines.length - 1);
     }
 
-    return { width: maxLineWidth, height: height, lines: drawnLines, lineWidths: lineWidths, lineSpacing: lineSpacing, lineHeight: lineHeight };
+    return {
+        width: maxLineWidth,
+        height: height,
+        lines: drawnLines,
+        lineWidths: lineWidths,
+        lineSpacing: lineSpacing,
+        lineHeight: lineHeight
+    };
 };
 
 module.exports = GetTextSize;
