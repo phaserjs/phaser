@@ -4,7 +4,7 @@ var Components = require('../../components');
 var Render = require('./GraphicsRender');
 var Commands = require('./Commands');
 var MATH_CONST = require('../../math/const');
-var GetObjectValue = require('../../utils/object/GetObjectValue');
+var GetValue = require('../../utils/object/GetValue');
 
 var Graphics = new Class({
 
@@ -23,8 +23,8 @@ var Graphics = new Class({
 
     function Graphics (state, options)
     {
-        var x = GetObjectValue(options, 'x', 0);
-        var y = GetObjectValue(options, 'y', 0);
+        var x = GetValue(options, 'x', 0);
+        var y = GetValue(options, 'y', 0);
 
         GameObject.call(this, state, 'Graphics');
 
@@ -46,19 +46,19 @@ var Graphics = new Class({
 
     setDefaultStyles: function (options)
     {
-        if (GetObjectValue(options, 'lineStyle', null))
+        if (GetValue(options, 'lineStyle', null))
         {
-            this.defaultStrokeWidth = GetObjectValue(options, 'lineStyle.width', 1);
-            this.defaultStrokeColor = GetObjectValue(options, 'lineStyle.color', 0xffffff);
-            this.defaultStrokeAlpha = GetObjectValue(options, 'lineStyle.alpha', 1);
+            this.defaultStrokeWidth = GetValue(options, 'lineStyle.width', 1);
+            this.defaultStrokeColor = GetValue(options, 'lineStyle.color', 0xffffff);
+            this.defaultStrokeAlpha = GetValue(options, 'lineStyle.alpha', 1);
 
             this.lineStyle(this.defaultStrokeWidth, this.defaultStrokeColor, this.defaultStrokeAlpha);
         }
 
-        if (GetObjectValue(options, 'fillStyle', null))
+        if (GetValue(options, 'fillStyle', null))
         {
-            this.defaultFillColor = GetObjectValue(options, 'fillStyle.color', 0xffffff);
-            this.defaultFillAlpha = GetObjectValue(options, 'fillStyle.alpha', 1);
+            this.defaultFillColor = GetValue(options, 'fillStyle.color', 0xffffff);
+            this.defaultFillAlpha = GetValue(options, 'fillStyle.alpha', 1);
 
             this.fillStyle(this.defaultFillColor, this.defaultFillAlpha);
         }

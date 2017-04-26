@@ -2,7 +2,7 @@
 //  The key as a string, or an array of keys, i.e. 'banner', or 'banner.hideBanner'
 //  The default value to use if the key doesn't exist
 
-var GetObjectValue = function (source, key, defaultValue)
+var GetValue = function (source, key, defaultValue)
 {
     if (!source)
     {
@@ -40,4 +40,4 @@ var GetObjectValue = function (source, key, defaultValue)
     }
 };
 
-module.exports = GetObjectValue;
+module.exports = GetValue;

@@ -1,14 +1,14 @@
-var GetObjectValue = require('../../../utils/object/GetObjectValue');
+var GetValue = require('../../../utils/object/GetValue');
 var Pad = require('../../../utils/string/Pad');
 
 var GenerateFrameNames = function (key, config)
 {
-    var prefix = GetObjectValue(config, 'prefix', '');
-    var start = GetObjectValue(config, 'start', 0);
-    var end = GetObjectValue(config, 'end', 0);
-    var suffix = GetObjectValue(config, 'suffix', '');
-    var zeroPad = GetObjectValue(config, 'zeroPad', 0);
-    var out = GetObjectValue(config, 'framesArray', []);
+    var prefix = GetValue(config, 'prefix', '');
+    var start = GetValue(config, 'start', 0);
+    var end = GetValue(config, 'end', 0);
+    var suffix = GetValue(config, 'suffix', '');
+    var zeroPad = GetValue(config, 'zeroPad', 0);
+    var out = GetValue(config, 'framesArray', []);
 
     var diff = (start < end) ? 1 : -1;
 

@@ -5,7 +5,7 @@ module.exports = {
     Extend: require('./Extend'),
     GetAdvancedValue: require('./GetAdvancedValue'),
     GetMinMaxValue: require('./GetMinMaxValue'),
-    GetObjectValue: require('./GetObjectValue'),
+    GetValue: require('./GetValue'),
     IsPlainObject: require('./IsPlainObject')
 
 };

@@ -4,7 +4,7 @@
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
-var GetObjectValue = require('../../utils/object/GetObjectValue');
+var GetValue = require('../../utils/object/GetValue');
 
 /**
 * Parse a Sprite Sheet and extracts the frame data from it.
@@ -23,8 +23,8 @@ var GetObjectValue = require('../../utils/object/GetObjectValue');
 */
 var SpriteSheet = function (texture, sourceIndex, x, y, width, height, config)
 {
-    var frameWidth = GetObjectValue(config, 'frameWidth', null);
-    var frameHeight = GetObjectValue(config, 'frameHeight', frameWidth);
+    var frameWidth = GetValue(config, 'frameWidth', null);
+    var frameHeight = GetValue(config, 'frameHeight', frameWidth);
 
     //  If missing we can't proceed
     if (frameWidth === null)
@@ -37,10 +37,10 @@ var SpriteSheet = function (texture, sourceIndex, x, y, width, height, config)
 
     texture.add('__BASE', sourceIndex, 0, 0, source.width, source.height);
 
-    var startFrame = GetObjectValue(config, 'startFrame', 0);
-    var endFrame = GetObjectValue(config, 'endFrame', -1);
-    var margin = GetObjectValue(config, 'margin', 0);
-    var spacing = GetObjectValue(config, 'spacing', 0);
+    var startFrame = GetValue(config, 'startFrame', 0);
+    var endFrame = GetValue(config, 'endFrame', -1);
+    var margin = GetValue(config, 'margin', 0);
+    var spacing = GetValue(config, 'spacing', 0);
 
     var row = Math.floor((width - margin) / (frameWidth + spacing));
     var column = Math.floor((height - margin) / (frameHeight + spacing));

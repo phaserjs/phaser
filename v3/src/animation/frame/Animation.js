@@ -1,4 +1,4 @@
-var GetObjectValue = require('../../utils/object/GetObjectValue');
+var GetValue = require('../../utils/object/GetValue');
 var GetFrames = require('./GetFrames');
 
 var Animation = function (manager, key, config)
@@ -11,14 +11,14 @@ var Animation = function (manager, key, config)
     this.type = 'frame';
 
     //  Extract all the frame data into the frames array
-    this.frames = GetFrames(manager.textureManager, GetObjectValue(config, 'frames', []));
+    this.frames = GetFrames(manager.textureManager, GetValue(config, 'frames', []));
 
     //  The frame rate of playback in frames per second (default 24 if duration is null)
-    this.frameRate = GetObjectValue(config, 'framerate', null);
+    this.frameRate = GetValue(config, 'framerate', null);
 
     //  How long the animation should play for. If frameRate is set it overrides this value
     //  otherwise frameRate is derived from duration
-    this.duration = GetObjectValue(config, 'duration', null);
+    this.duration = GetValue(config, 'duration', null);
 
     if (this.duration === null && this.frameRate === null)
     {
@@ -45,42 +45,42 @@ var Animation = function (manager, key, config)
     this.msPerFrame = 1000 / this.frameRate;
 
     //  Skip frames if the time lags, or always advanced anyway?
-    this.skipMissedFrames = GetObjectValue(config, 'skipMissedFrames', true);
+    this.skipMissedFrames = GetValue(config, 'skipMissedFrames', true);
 
     //  Delay before starting playback (in seconds)
-    this.delay = GetObjectValue(config, 'delay', 0);
+    this.delay = GetValue(config, 'delay', 0);
 
     //  Number of times to repeat the animation (-1 for infinity)
-    this.repeat = GetObjectValue(config, 'repeat', 0);
+    this.repeat = GetValue(config, 'repeat', 0);
 
     //  Delay before the repeat starts (in seconds)
-    this.repeatDelay = GetObjectValue(config, 'repeatDelay', 0);
+    this.repeatDelay = GetValue(config, 'repeatDelay', 0);
 
     //  Should the animation yoyo? (reverse back down to the start) before repeating?
-    this.yoyo = GetObjectValue(config, 'yoyo', false);
+    this.yoyo = GetValue(config, 'yoyo', false);
 
     //  Should sprite.visible = true when the animation starts to play?
-    this.showOnStart = GetObjectValue(config, 'showOnStart', false);
+    this.showOnStart = GetValue(config, 'showOnStart', false);
 
     //  Should sprite.visible = false when the animation finishes?
-    this.hideOnComplete = GetObjectValue(config, 'hideOnComplete', false);
+    this.hideOnComplete = GetValue(config, 'hideOnComplete', false);
 
     //  Callbacks
-    this.callbackScope = GetObjectValue(config, 'callbackScope', this);
+    this.callbackScope = GetValue(config, 'callbackScope', this);
 
-    this.onStart = GetObjectValue(config, 'onStart', false);
-    this.onStartParams = GetObjectValue(config, 'onStartParams', []);
+    this.onStart = GetValue(config, 'onStart', false);
+    this.onStartParams = GetValue(config, 'onStartParams', []);
 
-    this.onRepeat = GetObjectValue(config, 'onRepeat', false);
-    this.onRepeatParams = GetObjectValue(config, 'onRepeatParams', []);
+    this.onRepeat = GetValue(config, 'onRepeat', false);
+    this.onRepeatParams = GetValue(config, 'onRepeatParams', []);
 
     //  Called for EVERY frame of the animation.
     //  See AnimationFrame.onUpdate for a frame specific callback.
-    this.onUpdate = GetObjectValue(config, 'onUpdate', false);
-    this.onUpdateParams = GetObjectValue(config, 'onUpdateParams', []);
+    this.onUpdate = GetValue(config, 'onUpdate', false);
+    this.onUpdateParams = GetValue(config, 'onUpdateParams', []);
 
-    this.onComplete = GetObjectValue(config, 'onComplete', false);
-    this.onCompleteParams = GetObjectValue(config, 'onCompleteParams', []);
+    this.onComplete = GetValue(config, 'onComplete', false);
+    this.onCompleteParams = GetValue(config, 'onCompleteParams', []);
 };
 
 Animation.prototype.constructor = Animation;

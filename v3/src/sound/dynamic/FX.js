@@ -1,6 +1,6 @@
 
 var Between = require('../../math/Between');
-var GetObjectValue = require('../../utils/object/GetObjectValue');
+var GetValue = require('../../utils/object/GetValue');
 
 //  Phaser.Sound.Dynamic.FX
 
@@ -26,26 +26,26 @@ var FX = function (ctx, config)
 {
     this.audioContext = ctx;
 
-    this.frequencyValue = GetObjectValue(config, 'frequency', 200);
-    this.attack = GetObjectValue(config, 'attack', 0);
-    this.decay = GetObjectValue(config, 'decay', 1);
-    this.type = GetObjectValue(config, 'type', 'sine');
-    this.volumeValue = GetObjectValue(config, 'volume', 1);
-    this.panValue = GetObjectValue(config, 'pan', 0);
-    this.wait = GetObjectValue(config, 'wait', 0);
-    this.pitchBendAmount = GetObjectValue(config, 'pitchBend', 0);
-    this.reverse = GetObjectValue(config, 'reverse', false);
-    this.randomValue = GetObjectValue(config, 'random', 0);
-    this.dissonance = GetObjectValue(config, 'dissonance', 0);
-    this.echo = GetObjectValue(config, 'echo', false);
-    this.echoDelay = GetObjectValue(config, 'echo.delay', 0);
-    this.echoFeedback = GetObjectValue(config, 'echo.feedback', 0);
-    this.echoFilter = GetObjectValue(config, 'echo.filter', 0);
-    this.reverb = GetObjectValue(config, 'reverb', false);
-    this.reverbDuration = GetObjectValue(config, 'reverb.duration', 0);
-    this.reverbDecay = GetObjectValue(config, 'reverb.decay', 0);
-    this.reverbReverse = GetObjectValue(config, 'reverb.reverse', false);
-    this.timeout = GetObjectValue(config, 'timeout', false);
+    this.frequencyValue = GetValue(config, 'frequency', 200);
+    this.attack = GetValue(config, 'attack', 0);
+    this.decay = GetValue(config, 'decay', 1);
+    this.type = GetValue(config, 'type', 'sine');
+    this.volumeValue = GetValue(config, 'volume', 1);
+    this.panValue = GetValue(config, 'pan', 0);
+    this.wait = GetValue(config, 'wait', 0);
+    this.pitchBendAmount = GetValue(config, 'pitchBend', 0);
+    this.reverse = GetValue(config, 'reverse', false);
+    this.randomValue = GetValue(config, 'random', 0);
+    this.dissonance = GetValue(config, 'dissonance', 0);
+    this.echo = GetValue(config, 'echo', false);
+    this.echoDelay = GetValue(config, 'echo.delay', 0);
+    this.echoFeedback = GetValue(config, 'echo.feedback', 0);
+    this.echoFilter = GetValue(config, 'echo.filter', 0);
+    this.reverb = GetValue(config, 'reverb', false);
+    this.reverbDuration = GetValue(config, 'reverb.duration', 0);
+    this.reverbDecay = GetValue(config, 'reverb.decay', 0);
+    this.reverbReverse = GetValue(config, 'reverb.reverse', false);
+    this.timeout = GetValue(config, 'timeout', false);
 
     this.volume = ctx.createGain();
     this.pan = (!ctx.createStereoPanner) ? ctx.createPanner() : ctx.createStereoPanner();

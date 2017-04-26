@@ -8,7 +8,7 @@ var CONST = require('../const');
 var NOOP = require('../utils/NOOP');
 var State = require('./State');
 var Systems = require('./Systems');
-var GetObjectValue = require('../utils/object/GetObjectValue');
+var GetValue = require('../utils/object/GetValue');
 var EventDispatcher = require('../events/EventDispatcher');
 var Rectangle = require('../geom/rectangle/Rectangle');
 var CanvasPool = require('../dom/CanvasPool');
@@ -268,15 +268,15 @@ GlobalStateManager.prototype = {
 
         //  Extract callbacks or set NOOP
 
-        state.init = GetObjectValue(stateConfig, 'init', NOOP);
-        state.preload = GetObjectValue(stateConfig, 'preload', NOOP);
-        state.create = GetObjectValue(stateConfig, 'create', NOOP);
-        state.shutdown = GetObjectValue(stateConfig, 'shutdown', NOOP);
+        state.init = GetValue(stateConfig, 'init', NOOP);
+        state.preload = GetValue(stateConfig, 'preload', NOOP);
+        state.create = GetValue(stateConfig, 'create', NOOP);
+        state.shutdown = GetValue(stateConfig, 'shutdown', NOOP);
 
         //  Game Loop level callbacks
 
-        state.update = GetObjectValue(stateConfig, 'update', NOOP);
-        state.render = GetObjectValue(stateConfig, 'render', NOOP);
+        state.update = GetValue(stateConfig, 'update', NOOP);
+        state.render = GetValue(stateConfig, 'render', NOOP);
 
         return state;
     },

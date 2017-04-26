@@ -1,4 +1,4 @@
-var GetObjectValue = require('../../../utils/object/GetObjectValue');
+var GetValue = require('../../../utils/object/GetValue');
 var ResetKeyCombo = require('./ResetKeyCombo');
 var ProcessKeyCombo = require('./ProcessKeyCombo');
 var KeyComboMatchEvent = require('./KeyComboMatchEvent');
@@ -66,16 +66,16 @@ var KeyCombo = function (keyboardManager, keys, config)
     //  Custom options ...
 
     //  If they press the wrong key do we reset the combo?
-    this.resetOnWrongKey = GetObjectValue(config, 'resetOnWrongKey', true);
+    this.resetOnWrongKey = GetValue(config, 'resetOnWrongKey', true);
 
     //  The max delay in ms between each key press. Above this the combo is reset. 0 means disabled.
-    this.maxKeyDelay = GetObjectValue(config, 'maxKeyDelay', 0);
+    this.maxKeyDelay = GetValue(config, 'maxKeyDelay', 0);
 
     //  If previously matched and they press Key 1 again, will it reset?
-    this.resetOnMatch = GetObjectValue(config, 'resetOnMatch', false);
+    this.resetOnMatch = GetValue(config, 'resetOnMatch', false);
 
     //  If the combo matches, will it delete itself?
-    this.deleteOnMatch = GetObjectValue(config, 'deleteOnMatch', false);
+    this.deleteOnMatch = GetValue(config, 'deleteOnMatch', false);
 
     var _this = this;
 

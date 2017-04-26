@@ -1,5 +1,5 @@
 var Shuffle = require('./Shuffle');
-var GetObjectValue = require('../object/GetObjectValue');
+var GetValue = require('../object/GetValue');
 
 var BuildChunk = function (a, b, qty)
 {
@@ -51,12 +51,12 @@ var BuildChunk = function (a, b, qty)
 
 var Range = function (a, b, options)
 {
-    var max = GetObjectValue(options, 'max', 0);
-    var qty = GetObjectValue(options, 'qty', 1);
-    var random = GetObjectValue(options, 'random', false);
-    var randomB = GetObjectValue(options, 'randomB', false);
-    var repeat = GetObjectValue(options, 'repeat', 0);
-    var yoyo = GetObjectValue(options, 'yoyo', false);
+    var max = GetValue(options, 'max', 0);
+    var qty = GetValue(options, 'qty', 1);
+    var random = GetValue(options, 'random', false);
+    var randomB = GetValue(options, 'randomB', false);
+    var repeat = GetValue(options, 'repeat', 0);
+    var yoyo = GetValue(options, 'yoyo', false);
 
     var out = [];
 

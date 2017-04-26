@@ -1,5 +1,5 @@
 var Class = require('../../utils/Class');
-var GetObjectValue = require('../../utils/object/GetObjectValue');
+var GetValue = require('../../utils/object/GetValue');
 var GetAdvancedValue = require('../../utils/object/GetAdvancedValue');
 var MeasureText = require('./MeasureText');
 
@@ -60,16 +60,16 @@ var TextStyle = new Class({
             }
         }
 
-        var metrics = GetObjectValue(style, 'metrics', false);
+        var metrics = GetValue(style, 'metrics', false);
 
         //  Provide optional TextMetrics in the style object to avoid the canvas look-up / scanning
         //  Doing this is un-done if you then change the font of this TextStyle after creation
         if (metrics)
         {
             this.metrics = {
-                ascent: GetObjectValue(metrics, 'ascent', 0),
-                descent: GetObjectValue(metrics, 'descent', 0),
-                fontSize: GetObjectValue(metrics, 'fontSize', 0)
+                ascent: GetValue(metrics, 'ascent', 0),
+                descent: GetValue(metrics, 'descent', 0),
+                fontSize: GetValue(metrics, 'fontSize', 0)
             };
         }
         else

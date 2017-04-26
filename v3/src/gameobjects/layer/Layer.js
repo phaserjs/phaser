@@ -1,7 +1,7 @@
 
 var Class = require('../../utils/Class');
 var Set = require('../../structs/Set');
-var GetObjectValue = require('../../utils/object/GetObjectValue');
+var GetValue = require('../../utils/object/GetValue');
 var Range = require('../../utils/array/Range');
 var Actions = require('../../actions/');
 var Sprite = require('../sprite/Sprite');
@@ -56,9 +56,9 @@ var Layer = new Class({
 
     createFromConfig: function (options)
     {
-        var key = GetObjectValue(options, 'key', undefined);
-        var frame = GetObjectValue(options, 'frame', null);
-        var visible = GetObjectValue(options, 'visible', true);
+        var key = GetValue(options, 'key', undefined);
+        var frame = GetValue(options, 'frame', null);
+        var visible = GetValue(options, 'visible', true);
 
         var entries = [];
 
@@ -82,12 +82,12 @@ var Layer = new Class({
 
         //  Build an array of key frame pairs to loop through
 
-        var repeat = GetObjectValue(options, 'repeat', 0);
-        var randomKey = GetObjectValue(options, 'randomKey', false);
-        var randomFrame = GetObjectValue(options, 'randomFrame', false);
-        var yoyo = GetObjectValue(options, 'yoyo', false);
-        var quantity = GetObjectValue(options, 'frameQuantity', 1);
-        var max = GetObjectValue(options, 'max', 0);
+        var repeat = GetValue(options, 'repeat', 0);
+        var randomKey = GetValue(options, 'randomKey', false);
+        var randomFrame = GetValue(options, 'randomFrame', false);
+        var yoyo = GetValue(options, 'yoyo', false);
+        var quantity = GetValue(options, 'frameQuantity', 1);
+        var max = GetValue(options, 'max', 0);
 
         var range = Range(key, frame, {
             max: max,
@@ -105,27 +105,27 @@ var Layer = new Class({
 
         //  Post-creation options (applied only to those items created in this call):
 
-        var x = GetObjectValue(options, 'setXY.x', 0);
-        var y = GetObjectValue(options, 'setXY.y', 0);
-        var stepX = GetObjectValue(options, 'setXY.stepX', 0);
-        var stepY = GetObjectValue(options, 'setXY.stepY', 0);
+        var x = GetValue(options, 'setXY.x', 0);
+        var y = GetValue(options, 'setXY.y', 0);
+        var stepX = GetValue(options, 'setXY.stepX', 0);
+        var stepY = GetValue(options, 'setXY.stepY', 0);
 
         Actions.SetXY(entries, x, y, stepX, stepY);
 
-        var rotation = GetObjectValue(options, 'setRotation.value', 0);
-        var stepRotation = GetObjectValue(options, 'setRotation.step', 0);
+        var rotation = GetValue(options, 'setRotation.value', 0);
+        var stepRotation = GetValue(options, 'setRotation.step', 0);
 
         Actions.SetRotation(entries, rotation, stepRotation);
 
-        var scaleX = GetObjectValue(options, 'setScale.x', 1);
-        var scaleY = GetObjectValue(options, 'setScale.y', scaleX);
-        var stepScaleX = GetObjectValue(options, 'setScale.stepX', 0);
-        var stepScaleY = GetObjectValue(options, 'setScale.stepY', 0);
+        var scaleX = GetValue(options, 'setScale.x', 1);
+        var scaleY = GetValue(options, 'setScale.y', scaleX);
+        var stepScaleX = GetValue(options, 'setScale.stepX', 0);
+        var stepScaleY = GetValue(options, 'setScale.stepY', 0);
 
         Actions.SetScale(entries, scaleX, scaleY, stepScaleX, stepScaleY);
 
-        var alpha = GetObjectValue(options, 'setAlpha.value', 1);
-        var stepAlpha = GetObjectValue(options, 'setAlpha.step', 0);
+        var alpha = GetValue(options, 'setAlpha.value', 1);
+        var stepAlpha = GetValue(options, 'setAlpha.step', 0);
 
         Actions.SetAlpha(entries, alpha, stepAlpha);
 

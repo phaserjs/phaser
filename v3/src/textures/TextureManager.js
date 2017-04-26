@@ -7,7 +7,7 @@
 var Parser = require('./parsers');
 var Texture = require('./Texture');
 var CanvasPool = require('../dom/CanvasPool');
-var GetObjectValue = require('../utils/object/GetObjectValue');
+var GetValue = require('../utils/object/GetValue');
 
 /**
 * Textures are managed by the global TextureManager. This is a singleton class that is
@@ -155,8 +155,8 @@ TextureManager.prototype = {
 
     addSpriteSheetFromAtlas: function (key, config)
     {
-        var atlasKey = GetObjectValue(config, 'atlas', null);
-        var atlasFrame = GetObjectValue(config, 'frame', null);
+        var atlasKey = GetValue(config, 'atlas', null);
+        var atlasFrame = GetValue(config, 'frame', null);
 
         if (!atlasKey || !atlasFrame)
         {

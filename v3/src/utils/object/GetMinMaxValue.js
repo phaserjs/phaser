@@ -1,11 +1,11 @@
-var GetObjectValue = require('./GetObjectValue');
+var GetValue = require('./GetValue');
 var Clamp = require('../../math/Clamp');
 
 var GetMinMaxValue = function (source, key, min, max, defaultValue)
 {
     if (defaultValue === undefined) { defaultValue = min; }
 
-    var value = GetObjectValue(source, key, defaultValue);
+    var value = GetValue(source, key, defaultValue);
 
     return Clamp(value, min, max);
 };

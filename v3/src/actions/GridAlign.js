@@ -1,7 +1,7 @@
 var CONST = require('../utils/align/const');
 var AlignIn = require('../utils/align/AlignIn');
 var Zone = require('../gameobjects/zone/Zone');
-var GetObjectValue = require('../utils/object/GetObjectValue');
+var GetValue = require('../utils/object/GetValue');
 
 var tempZone = new Zone({}, 0, 0, 1, 1);
 
@@ -58,15 +58,15 @@ var tempZone = new Zone({}, 0, 0, 1, 1);
 */
 var GridAlign = function (items, options)
 {
-    var width = GetObjectValue(options, 'width', -1);
-    var height = GetObjectValue(options, 'height', -1);
-    var cellWidth = GetObjectValue(options, 'cellWidth', 1);
-    var cellHeight = GetObjectValue(options, 'cellHeight', cellWidth);
-    var position = GetObjectValue(options, 'position', CONST.TOP_LEFT);
-    var x = GetObjectValue(options, 'x', 0);
-    var y = GetObjectValue(options, 'y', 0);
-    // var centerX = GetObjectValue(options, 'centerX', null);
-    // var centerY = GetObjectValue(options, 'centerY', null);
+    var width = GetValue(options, 'width', -1);
+    var height = GetValue(options, 'height', -1);
+    var cellWidth = GetValue(options, 'cellWidth', 1);
+    var cellHeight = GetValue(options, 'cellHeight', cellWidth);
+    var position = GetValue(options, 'position', CONST.TOP_LEFT);
+    var x = GetValue(options, 'x', 0);
+    var y = GetValue(options, 'y', 0);
+    // var centerX = GetValue(options, 'centerX', null);
+    // var centerY = GetValue(options, 'centerY', null);
 
     var cx = 0;
     var cy = 0;

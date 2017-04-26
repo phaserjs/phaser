@@ -1,11 +1,11 @@
-var GetObjectValue = require('../../../utils/object/GetObjectValue');
+var GetValue = require('../../../utils/object/GetValue');
 
 var GenerateFrameNumbers = function (key, config)
 {
-    var startFrame = GetObjectValue(config, 'start', 0);
-    var endFrame = GetObjectValue(config, 'end', -1);
-    var firstFrame = GetObjectValue(config, 'first', false);
-    var out = GetObjectValue(config, 'framesArray', []);
+    var startFrame = GetValue(config, 'start', 0);
+    var endFrame = GetValue(config, 'end', -1);
+    var firstFrame = GetValue(config, 'first', false);
+    var out = GetValue(config, 'framesArray', []);
 
     var texture = this.textureManager.get(key);
 

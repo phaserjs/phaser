@@ -1,5 +1,5 @@
 var MATH = require('../../math');
-var GetObjectValue = require('./GetObjectValue');
+var GetValue = require('./GetValue');
 
 //  Allowed types:
 
@@ -30,7 +30,7 @@ var GetObjectValue = require('./GetObjectValue');
 
 var GetAdvancedValue = function (source, key, defaultValue)
 {
-    var value = GetObjectValue(source, key, null);
+    var value = GetValue(source, key, null);
 
     if (value === null)
     {
