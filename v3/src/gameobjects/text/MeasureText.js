@@ -9,8 +9,7 @@ var CanvasPool = require('../../dom/CanvasPool');
 */
 var MeasureText = function (textStyle, testString)
 {
-    if (testString === undefined) { testString = '|MÉq'; }
-    // if (testString === undefined) { testString = 'ABCDEFG'; }
+    if (testString === undefined) { testString = '|MÉqgy'; }
 
     /**
      * @property {HTMLCanvasElement} canvas - The canvas element that the text is rendered.
@@ -21,6 +20,9 @@ var MeasureText = function (textStyle, testString)
      * @property {HTMLCanvasElement} context - The context of the canvas element that the text is rendered to.
      */
     var context = canvas.getContext('2d');
+
+    //   DEBUG :)
+    // document.body.appendChild(canvas);
 
     textStyle.syncFont(canvas, context);
 
@@ -38,8 +40,7 @@ var MeasureText = function (textStyle, testString)
 
     context.font = textStyle.font;
 
-    // context.textBaseline = 'alphabetic';
-    context.textBaseline = 'middle';
+    context.textBaseline = 'alphabetic';
     context.fillStyle = '#000';
     context.fillText(testString, 0, baseline);
 
@@ -68,6 +69,9 @@ var MeasureText = function (textStyle, testString)
     var idx = 0;
     var stop = false;
 
+    context.fillStyle = '#00ff00';
+    context.fillRect(0, baseline, width, 1);
+
     // ascent. scan from top to bottom until we find a non red pixel
     for (i = 0; i < baseline; i++)
     {
@@ -76,6 +80,8 @@ var MeasureText = function (textStyle, testString)
             if (imagedata[idx + j] !== 255)
             {
                 stop = true;
+                context.fillStyle = '#ffff00';
+                context.fillRect(0, i, width, 1);
                 break;
             }
         }
@@ -103,6 +109,8 @@ var MeasureText = function (textStyle, testString)
             if (imagedata[idx + j] !== 255)
             {
                 stop = true;
+                context.fillStyle = '#ffffff';
+                context.fillRect(0, i, width, 1);
                 break;
             }
         }
@@ -117,11 +125,11 @@ var MeasureText = function (textStyle, testString)
         }
     }
 
-    output.descent = (i - baseline) + 6;
+    output.descent = (i - baseline);
     output.fontSize = output.ascent + output.descent;
 
-    CanvasPool.remove(canvas);
-
+    //  DEBUG
+    // CanvasPool.remove(canvas);
     console.log(output);
 
     return output;

@@ -221,7 +221,7 @@ var Text = new Class({
 
         style.syncFont(canvas, context);
 
-        context.textBaseline = 'middle';
+        context.textBaseline = 'alphabetic';
 
         //  Apply padding
         context.translate(padding.x, padding.y);
