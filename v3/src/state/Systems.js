@@ -114,6 +114,20 @@ Systems.prototype = {
         this.state.data = this.data;
     },
 
+    step: function (time)
+    {
+        var list = this.children.list;
+
+        for (var i = 0; i < list.length; i++)
+        {
+            list[i].preUpdate(time);
+        }
+
+        this.cameras.update(time);
+
+        this.state.update.call(this.state, time);
+    },
+
     //  Called just once per frame, regardless of speed
     begin: function (timestamp, frameDelta)
     {

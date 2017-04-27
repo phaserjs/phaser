@@ -70,6 +70,8 @@ var Config = function (config)
     this.preBoot = GetValue(config, 'callbacks.preBoot', NOOP);
     this.postBoot = GetValue(config, 'callbacks.postBoot', NOOP);
 
+    this.useTicker = GetValue(config, 'useTicker', false);
+
     //  Default / Missing Images
     var pngPrefix = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAg';
 

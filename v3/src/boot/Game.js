@@ -12,6 +12,7 @@ var AddToDOM = require('../dom/AddToDOM');
 var DOMContentLoaded = require('../dom/DOMContentLoaded');
 
 var MainLoop = require('./MainLoop');
+var TickerLoop = require('./TickerLoop');
 var CreateRenderer = require('./CreateRenderer');
 var GlobalInputManager = require('../input/GlobalInputManager');
 var GlobalStateManager = require('../state/GlobalStateManager');
@@ -70,7 +71,14 @@ var Game = function (config)
     * @property {Phaser.MainLoop} mainloop - Main Loop handler.
     * @protected
     */
-    this.mainloop = new MainLoop(this, this.config.fps);
+    if (this.config.useTicker)
+    {
+        this.loop = new TickerLoop(this, this.config.fps);
+    }
+    else
+    {
+        this.loop = new MainLoop(this, this.config.fps);
+    }
 
     //  Wait for the DOM Ready event, then call boot.
     DOMContentLoaded(this.boot.bind(this));
@@ -105,7 +113,38 @@ Game.prototype = {
 
         this.config.postBoot();
 
-        this.mainloop.start();
+        this.loop.start(!!this.config.forceSetTimeOut, this.step.bind(this));
+    },
+
+    step: function (time)
+    {
+        var active = this.state.active;
+        var renderer = this.renderer;
+
+        //  Global Managers (Time, Input, etc)
+
+        this.input.update(time);
+
+        //  States
+
+        for (var i = 0; i < active.length; i++)
+        {
+            active[i].state.sys.step(time);
+        }
+
+        //  Render
+
+        // var interpolation = this.frameDelta / this.timestep;
+
+        renderer.preRender();
+
+        //  This uses active.length, in case state.update removed the state from the active list
+        for (i = 0; i < active.length; i++)
+        {
+            active[i].state.sys.render(0, renderer);
+        }
+
+        renderer.postRender();
     }
 
 };

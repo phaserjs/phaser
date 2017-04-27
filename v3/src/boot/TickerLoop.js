@@ -1,3 +1,4 @@
+var NOOP = require('../utils/NOOP');
 var RequestAnimationFrame = require('../dom/RequestAnimationFrame');
 
 var TickerLoop = function (game, framerate)
@@ -11,12 +12,16 @@ var TickerLoop = function (game, framerate)
 
     this.lastUpdate = 0;
 
+    this.gap = 1 / (framerate || 60);
     this.startTime = 0;
     this.elapsed = 0;
     this.time = 0;
     this.nextTime = 0;
     this.frame = 0;
-    this.fps = false;
+    this.overlap = 0;
+    this.fps = framerate;
+
+    this.callback = NOOP;
 
     this.lagThreshold = 500;
     this.adjustedLag = 33;
@@ -28,7 +33,12 @@ TickerLoop.prototype.constructor = TickerLoop;
 
 TickerLoop.prototype = {
 
-    start: function (fps, useRAF)
+    toString: function ()
+    {
+        return 'time: ' + this.time + ' elapsed: ' + this.elapsed + ' overlap: ' + this.overlap;
+    },
+
+    start: function (useRAF, callback)
     {
         if (this.started)
         {
@@ -41,13 +51,14 @@ TickerLoop.prototype = {
         this.startTime = Date.now();
         this.lastUpdate = Date.now();
 
-        this.useRAF = !!this.game.config.forceSetTimeOut;
+        this.useRAF = useRAF;
+        this.callback = callback;
 
         this.raf.start(this.step.bind(this), useRAF);
     },
 
-    step: function (manual) {
-
+    step: function (manual)
+    {
         var elapsed = Date.now() - this.lastUpdate;
 
         if (elapsed > this.lagThreshold)
@@ -57,44 +68,22 @@ TickerLoop.prototype = {
 
         this.lastUpdate += elapsed;
 
-        this.time = (this.lastUpdate - this.startTime) / 1000;
+        var time = (this.lastUpdate - this.startTime) / 1000;
 
         this.elapsed = elapsed;
 
-        var overlap = this.time - this.nextTime;
+        var overlap = time - this.nextTime;
 
-        // var elapsed = _getTime() - _lastUpdate,
-        //     overlap, dispatch;
-        // if (elapsed > _lagThreshold) {
-        //     _startTime += elapsed - _adjustedLag;
-        // }
-        // _lastUpdate += elapsed;
-        // _self.time = (_lastUpdate - _startTime) / 1000;
-        // overlap = _self.time - _nextTime;
+        this.overlap = overlap;
 
-        if (!this.fps || overlap > 0 || manual)
+        this.time = time;
+
+        if (overlap > 0 || manual)
         {
             this.frame++;
-            this.nextTime += overlap + (overlap >= this.gap ? 0.004 : this.gap - overlap);
+            this.nextTime += overlap + ((overlap >= this.gap) ? 0.004 : this.gap - overlap);
+            this.callback(elapsed);
         }
-
-        // if (!manual)
-        // {
-        // }
-
-        // if (!_fps || overlap > 0 || manual === true) {
-        //     _self.frame++;
-        //     _nextTime += overlap + (overlap >= _gap ? 0.004 : _gap - overlap);
-        //     dispatch = true;
-        // }
-        // if (manual !== true) { //make sure the request is made before we dispatch the "tick" event so that timing is maintained. Otherwise, if processing the "tick" requires a bunch of time (like 15ms) and we're using a setTimeout() that's based on 16.7ms, it'd technically take 31.7ms between frames otherwise.
-        //     _id = _req(_tick);
-        // }
-        // if (dispatch) {
-        //     _self.dispatchEvent(_tickWord);
-        // }
-
-
     },
 
     tick: function ()
@@ -133,7 +122,7 @@ TickerLoop.prototype = {
             this.lastUpdate = Date.now() - this.lagThreshold + 5;
         }
 
-        this.raf.start(this.step.bind(this), useRAF);
+        this.raf.start(this.step.bind(this), this.useRAF);
 
         this.running = true;
 
