@@ -13,6 +13,7 @@ var DOMContentLoaded = require('../dom/DOMContentLoaded');
 
 var MainLoop = require('./MainLoop');
 var TickerLoop = require('./TickerLoop');
+var VariableTimeStep = require('./VariableTimeStep');
 var CreateRenderer = require('./CreateRenderer');
 var GlobalInputManager = require('../input/GlobalInputManager');
 var GlobalStateManager = require('../state/GlobalStateManager');
@@ -73,7 +74,7 @@ var Game = function (config)
     */
     if (this.config.useTicker)
     {
-        this.loop = new TickerLoop(this, this.config.fps);
+        this.loop = new VariableTimeStep(this, this.config.fps);
     }
     else
     {
@@ -116,20 +117,20 @@ Game.prototype = {
         this.loop.start(!!this.config.forceSetTimeOut, this.step.bind(this));
     },
 
-    step: function (time)
+    step: function (time, delta)
     {
         var active = this.state.active;
         var renderer = this.renderer;
 
         //  Global Managers (Time, Input, etc)
 
-        this.input.update(time);
+        this.input.update(time, delta);
 
         //  States
 
         for (var i = 0; i < active.length; i++)
         {
-            active[i].state.sys.step(time);
+            active[i].state.sys.step(time, delta);
         }
 
         //  Render

@@ -33,6 +33,7 @@ module.exports = {
     Factorial: require('./Factorial'),
     FloatBetween: require('./FloatBetween'),
     FloorTo: require('./FloorTo'),
+    GetSpeed: require('./GetSpeed'),
     Linear: require('./Linear'),
     MaxAdd: require('./MaxAdd'),
     MinSub: require('./MinSub'),
