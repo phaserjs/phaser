@@ -48,8 +48,10 @@ TickerLoop.prototype = {
         this.started = true;
         this.running = true;
 
-        this.startTime = Date.now();
-        this.lastUpdate = Date.now();
+        var now = window.performance.now();
+
+        this.startTime = now;
+        this.lastUpdate = now;
 
         this.useRAF = useRAF;
         this.callback = callback;
@@ -57,9 +59,9 @@ TickerLoop.prototype = {
         this.raf.start(this.step.bind(this), useRAF);
     },
 
-    step: function (manual)
+    step: function (time, manual)
     {
-        var elapsed = Date.now() - this.lastUpdate;
+        var elapsed = time - this.lastUpdate;
 
         if (elapsed > this.lagThreshold)
         {
@@ -68,15 +70,15 @@ TickerLoop.prototype = {
 
         this.lastUpdate += elapsed;
 
-        var time = (this.lastUpdate - this.startTime) / 1000;
+        var dt = (this.lastUpdate - this.startTime) / 1000;
 
         this.elapsed = elapsed;
 
-        var overlap = time - this.nextTime;
+        var overlap = dt - this.nextTime;
 
         this.overlap = overlap;
 
-        this.time = time;
+        this.time = dt;
 
         if (overlap > 0 || manual)
         {
