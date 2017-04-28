@@ -13,8 +13,6 @@ var Animation = new Class({
 
         this.animationManager = parent.state.sys.anims;
 
-        this.mainloop = parent.state.game.mainloop;
-
         this.isPlaying = false;
 
         //  Reference to the Phaser.Animation object
@@ -62,8 +60,6 @@ var Animation = new Class({
         this.forward = true;
 
         this.accumulator = 0;
-
-        this.prevTick = 0;
         this.nextTick = 0;
 
         this.repeatCounter = 0;

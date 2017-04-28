@@ -1,13 +1,11 @@
-var Update = function (timestamp)
+var Update = function (timestamp, delta)
 {
     if (!this.isPlaying)
     {
         return;
     }
 
-    this.accumulator += (timestamp - this.prevTick) * this._timeScale;
-
-    this.prevTick = timestamp;
+    this.accumulator += delta * this._timeScale;
 
     if (this.accumulator >= this.nextTick)
     {

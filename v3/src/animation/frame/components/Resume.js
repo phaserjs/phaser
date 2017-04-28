@@ -4,11 +4,6 @@ var Resume = function (fromFrame)
     {
         this._paused = false;
         this.isPlaying = this._wasPlaying;
-
-        if (this.isPlaying)
-        {
-            this.prevTick = this.mainloop.lastFrameTimeMs;
-        }
     }
 
     if (fromFrame !== undefined)

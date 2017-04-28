@@ -15,8 +15,6 @@ var Play = function (key, startFrame)
     this.isPlaying = true;
     this.pendingRepeat = false;
 
-    this.prevTick = this.mainloop.lastFrameTimeMs;
-
     if (anim.showOnStart)
     {
         this.parent.visible = true;
