@@ -3,6 +3,7 @@ var Class = require('../../utils/Class');
 var GameObject = require('../GameObject');
 var Components = require('../../components');
 var TileSpriteRender = require('./TileSpriteRender');
+var CanvasPool = require('../../dom/CanvasPool')
 
 var TileSprite = new Class({
 
@@ -25,17 +26,29 @@ var TileSprite = new Class({
 
     initialize:
 
-    function TileSprite (state, x, y, texture, frame)
+    function TileSprite (state, x, y, width, height, texture, frame)
     {
+        var resourceManager = state.game.renderer.resourceManager;
+        var gl;
+
         GameObject.call(this, state, 'TileSprite');
 
         this.tilePositionX = 0;
         this.tilePositionY = 0;
+        this.canvasBuffer = CanvasPool.create2D(null, width, height);
+        this.canvasBufferCtx = this.canvasBuffer.getContext('2d');
+        this.dirty = false;
 
         this.setTexture(texture, frame);
         this.setPosition(x, y);
         this.setSizeToFrame();
         this.setOrigin();
+
+    },
+
+    updateTileTexture: function () 
+    {
+
     }
 
 });

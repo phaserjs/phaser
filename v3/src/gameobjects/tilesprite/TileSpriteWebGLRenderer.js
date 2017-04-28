@@ -4,6 +4,7 @@ var TileSpriteWebGLRenderer = function (renderer, src, interpolationPercentage, 
     {
         return;
     }
+    renderer.tileBatch.addTileSprite(src, camera);
 };
 
 module.exports = TileSpriteWebGLRenderer;

@@ -288,6 +288,8 @@ TileBatch.prototype = {
         var mva, mvb, mvc, mvd, mve, mvf, tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3;
         var sra, srb, src, srd, sre, srf, cma, cmb, cmc, cmd, cme, cmf;
         var alpha = gameObject.alpha;
+        var tilePositionX = gameObject.tilePositionX / width;
+        var tilePositionY = gameObject.tilePositionY / height;
 
         tempMatrix.applyITRS(translateX, translateY, rotation, scaleX, scaleY);
 
@@ -327,29 +329,29 @@ TileBatch.prototype = {
         
         vertexBufferObjectF32[vertexOffset++] = tx0;
         vertexBufferObjectF32[vertexOffset++] = ty0;
-        vertexBufferObjectF32[vertexOffset++] = uvs.x0;
-        vertexBufferObjectF32[vertexOffset++] = uvs.y0;
+        vertexBufferObjectF32[vertexOffset++] = uvs.x0 + tilePositionX;
+        vertexBufferObjectF32[vertexOffset++] = uvs.y0 + tilePositionY;
         vertexBufferObjectU32[vertexOffset++] = 0xFFFFFF; //vertexColor.topLeft;
         vertexBufferObjectF32[vertexOffset++] = alpha;
 
         vertexBufferObjectF32[vertexOffset++] = tx1;
         vertexBufferObjectF32[vertexOffset++] = ty1;
-        vertexBufferObjectF32[vertexOffset++] = uvs.x1;
-        vertexBufferObjectF32[vertexOffset++] = uvs.y1;
+        vertexBufferObjectF32[vertexOffset++] = uvs.x1 + tilePositionX;
+        vertexBufferObjectF32[vertexOffset++] = uvs.y1 + tilePositionY;
         vertexBufferObjectU32[vertexOffset++] = 0xFFFFFF; //vertexColor.bottomLeft;
         vertexBufferObjectF32[vertexOffset++] = alpha;
 
         vertexBufferObjectF32[vertexOffset++] = tx2;
         vertexBufferObjectF32[vertexOffset++] = ty2;
-        vertexBufferObjectF32[vertexOffset++] = uvs.x2;
-        vertexBufferObjectF32[vertexOffset++] = uvs.y2;
+        vertexBufferObjectF32[vertexOffset++] = uvs.x2 + tilePositionX;
+        vertexBufferObjectF32[vertexOffset++] = uvs.y2 + tilePositionY;
         vertexBufferObjectU32[vertexOffset++] = 0xFFFFFF; //vertexColor.bottomRight;
         vertexBufferObjectF32[vertexOffset++] = alpha;
 
         vertexBufferObjectF32[vertexOffset++] = tx3;
         vertexBufferObjectF32[vertexOffset++] = ty3;
-        vertexBufferObjectF32[vertexOffset++] = uvs.x3;
-        vertexBufferObjectF32[vertexOffset++] = uvs.y3;
+        vertexBufferObjectF32[vertexOffset++] = uvs.x3 + tilePositionX;
+        vertexBufferObjectF32[vertexOffset++] = uvs.y3 + tilePositionY;
         vertexBufferObjectU32[vertexOffset++] = 0xFFFFFF; //vertexColor.topRight;
         vertexBufferObjectF32[vertexOffset++] = alpha;
     }
