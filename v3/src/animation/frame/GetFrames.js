@@ -10,13 +10,34 @@ var GetFrames = function (textureManager, frames)
     //          { key: textureKey, frame: textureFrame, visible: boolean }
     //      ],
 
-    // console.table(frames);
-
     var out = [];
     var prev;
     var animationFrame;
     var index = 1;
     var i;
+    var textureKey;
+
+    //  if frames is a string, we'll get all the frames from the texture manager as if it's a sprite sheet
+    if (typeof frames === 'string')
+    {
+        textureKey = frames;
+
+        var texture = textureManager.get(textureKey);
+        var frameKeys = texture.getFrameNames();
+
+        frames = [];
+
+        frameKeys.forEach(function (idx, value) {
+            frames.push({ key: textureKey, frame: value });
+        });
+    }
+
+    // console.table(frames);
+
+    if (!Array.isArray(frames) || frames.length === 0)
+    {
+        return out;
+    }
 
     for (i = 0; i < frames.length; i++)
     {
@@ -63,20 +84,23 @@ var GetFrames = function (textureManager, frames)
         index++;
     }
 
-    animationFrame.isLast = true;
-
-    //  Link them end-to-end, so they loop
-    animationFrame.nextFrame = out[0];
-
-    out[0].prevFrame = animationFrame;
-
-    //  Generate the progress data
-
-    var slice = 1 / (out.length - 1);
-
-    for (i = 0; i < out.length; i++)
+    if (out.length > 0)
     {
-        out[i].progress = i * slice;
+        animationFrame.isLast = true;
+
+        //  Link them end-to-end, so they loop
+        animationFrame.nextFrame = out[0];
+
+        out[0].prevFrame = animationFrame;
+
+        //  Generate the progress data
+
+        var slice = 1 / (out.length - 1);
+
+        for (i = 0; i < out.length; i++)
+        {
+            out[i].progress = i * slice;
+        }
     }
 
     return out;
