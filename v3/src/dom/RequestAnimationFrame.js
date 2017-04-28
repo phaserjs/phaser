@@ -42,9 +42,9 @@ var RequestAnimationFrame = function ()
     {
         _this.tick = timestamp;
 
-        _this.timeOutID = window.requestAnimationFrame(step);
-
         _this.callback(timestamp);
+
+        _this.timeOutID = window.requestAnimationFrame(step);
     };
 
     var stepTimeout = function ()
@@ -53,9 +53,9 @@ var RequestAnimationFrame = function ()
 
         _this.tick = d;
 
-        _this.timeOutID = window.setTimeout(stepTimeout, _this.timeToCall);
-
         _this.callback(d);
+
+        _this.timeOutID = window.setTimeout(stepTimeout, _this.timeToCall);
     };
 
     this.step = step;
