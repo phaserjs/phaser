@@ -10,6 +10,7 @@ var VariableTimeStep = function (game, framerate)
     this.started = false;
     this.running = false;
 
+    //  For fixed-step physics
     this.fps = framerate;
 
     this.callback = NOOP;
@@ -30,11 +31,6 @@ VariableTimeStep.prototype.constructor = VariableTimeStep;
 
 VariableTimeStep.prototype = {
 
-    toString: function ()
-    {
-        return 'time: ' + this.time + ' delta: ' + this.delta;
-    },
-
     start: function (useRAF, callback)
     {
         if (this.started)
@@ -45,9 +41,11 @@ VariableTimeStep.prototype = {
         this.started = true;
         this.running = true;
 
-        this.time = Date.now();
-        this.startTime = Date.now();
-        this.lastTime = Date.now();
+        var now = window.performance.now();
+
+        this.time = now;
+        this.startTime = now;
+        this.lastTime = now;
 
         //  Pre-populate smoothing array
 
@@ -83,7 +81,7 @@ VariableTimeStep.prototype = {
         //  clamp delta to 0.0001 to 0.5 range
         dt = Math.max(Math.min(dt, 0.5), 0.0001);
 
-        // Smooth out the delta over the previous 10 frames
+        // Smooth out the delta over the previous X frames
 
         var idx = this.deltaIndex;
         var history = this.deltaHistory;
@@ -99,7 +97,7 @@ VariableTimeStep.prototype = {
         //  average
         var avg = 0;
 
-        //  Loop the array, adding the delta values together
+        //  Loop the history array, adding the delta values together
         for (var i = 0; i < max; i++)
         {
             avg += history[i];
@@ -120,10 +118,9 @@ VariableTimeStep.prototype = {
         this.lastTime = time;
     },
 
-    /*
     tick: function ()
     {
-        this.step(true);
+        this.step(window.performance.now());
     },
 
     sleep: function ()
@@ -144,25 +141,19 @@ VariableTimeStep.prototype = {
         }
         else if (seamless)
         {
-            this.startTime += -this.lastUpdate + (this.lastUpdate = Date.now());
-        }
-        else if (this.frame > 10)
-        {
-            this.lastUpdate = Date.now() - this.lagThreshold + 5;
+            this.startTime += -this.lastTime + (this.lastTime = window.performance.now());
         }
 
         this.raf.start(this.step.bind(this), this.useRAF);
 
         this.running = true;
 
-        this.step(true);
+        this.step(window.performance.now());
     },
 
     setFps: function (value)
     {
         this.fps = value;
-        this.gap = 1 / (value || 60);
-        this.nextTime = this.time + this.gap;
 
         this.wake();
     },
@@ -171,7 +162,6 @@ VariableTimeStep.prototype = {
     {
         return this.fps;
     },
-    */
 
     stop: function ()
     {
