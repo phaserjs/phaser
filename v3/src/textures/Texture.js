@@ -109,6 +109,25 @@ Texture.prototype = {
         }
     },
 
+    getFrameNames: function (includeBase)
+    {
+        if (includeBase === undefined) { includeBase = false; }
+
+        var out = Object.keys(this.frames);
+
+        if (!includeBase)
+        {
+            var idx = out.indexOf('__BASE');
+
+            if (idx !== -1)
+            {
+                out.splice(idx, 1);
+            }
+        }
+
+        return out;
+    },
+
     getSourceImage: function (name)
     {
         if (name === undefined || name === null || this.frameTotal === 1)
@@ -136,7 +155,7 @@ Texture.prototype = {
         {
             this.source[i].glTextureIndex = index;
 
-            console.log(this.source[i].image.currentSrc, 'index = ', index);
+            // console.log(this.source[i].image.currentSrc, 'index = ', index);
 
             index++;
         }
