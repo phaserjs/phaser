@@ -72,14 +72,14 @@ var Game = function (config)
     * @property {Phaser.MainLoop} mainloop - Main Loop handler.
     * @protected
     */
-    if (this.config.useTicker)
-    {
+    // if (this.config.useTicker)
+    // {
         this.loop = new VariableTimeStep(this, this.config.fps);
-    }
-    else
-    {
-        this.loop = new MainLoop(this, this.config.fps);
-    }
+    // }
+    // else
+    // {
+    //     this.loop = new MainLoop(this, this.config.fps);
+    // }
 
     //  Wait for the DOM Ready event, then call boot.
     DOMContentLoaded(this.boot.bind(this));
