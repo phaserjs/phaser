@@ -1,5 +1,5 @@
 **/.*
-bower_components/
-resources/
+dist/
+docs/
+merge/
 examples/
-plugins/

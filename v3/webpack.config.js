@@ -5,14 +5,14 @@ const WebpackShellPlugin = require('webpack-shell-plugin');
 
 module.exports = {
 
-    context: './src',
+    context: `${__dirname}/src/`,
 
     entry: {
         phaser: './phaser.js'
     },
 
     output: {
-        path: './dist',
+        path: `${__dirname}/dist/`,
         filename: '[name].js',
         library: 'Phaser',
         libraryTarget: 'umd',

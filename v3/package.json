@@ -9,14 +9,15 @@
   "bugs": "https://github.com/photonstorm/phaser/issues",
   "license": "MIT",
   "licenseUrl": "http://www.opensource.org/licenses/mit-license.php",
-  "main": "./build/phaser.js",
+  "main": "./src/phaser.js",
   "typings": "./typings/index.d.ts",
   "repository": {
     "type": "git",
     "url": "https://photonstorm@github.com/photonstorm/phaser.git"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "webpack",
+    "lint": "eslint --config .eslintrc.json \"src/**/*.js\""
   },
   "keywords": [
     "2d",
@@ -30,17 +31,11 @@
     "typescript",
     "web audio"
   ],
-  "dependencies": {
-    "json-loader": "^0.5.4",
-    "webpack": "2.1.0-beta.27"
-  },
   "devDependencies": {
-    "copy-webpack-plugin": "^4.0.1",
-    "fs-extra": "^1.0.0",
-    "json-loader": "^0.5.4",
-    "node-uuid": "^1.4.7",
-    "webpack": "2.1.0-beta.27",
-    "webpack-dev-server": "2.1.0-beta.11",
-    "webpack-shell-plugin": "^0.4.3"
+    "eslint": "^3.19.0",
+    "fs-extra": "^3.0.0",
+    "uuid": "^3.0.1",
+    "webpack": "^2.4.1",
+    "webpack-shell-plugin": "^0.5.0"
   }
 }
