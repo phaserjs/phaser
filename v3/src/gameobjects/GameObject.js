@@ -24,6 +24,7 @@ var GameObject = new Class({
         this.id = 0;
         this.type = type;
         this.name = '';
+        this.tabIndex = -1;
 
         this.parent;
 
