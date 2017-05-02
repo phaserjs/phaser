@@ -137,6 +137,65 @@ Animation.prototype = {
         this.paused = false;
     },
 
+    addFrame: function (config)
+    {
+        return this.addFrameAt(0, config);
+    },
+
+    addFrameAt: function (index, config)
+    {
+        if (index === undefined) { index = 0; }
+
+        var newFrames = GetFrames(this.manager.textureManager, config);
+
+        if (newFrames.length > 0)
+        {
+            var pre = this.frames.slice(0, index);
+            var post = this.frames.slice(index);
+
+            this.frames = pre.concat(newFrames, post);
+        }
+
+        return this.updateFrameSequence();
+    },
+
+    updateFrameSequence: function ()
+    {
+        var len = this.frames.length;
+        var slice = 1 / (len - 1);
+
+        for (var i = 0; i < len; i++)
+        {
+            var frame = this.frames[i];
+
+            frame.index = i + 1;
+            frame.isFirst = false;
+            frame.isLast = false;
+            frame.progress = i * slice;
+
+            if (i === 0)
+            {
+                frame.isFirst = true;
+                frame.isLast = (len === 1);
+                frame.prevFrame = this.frames[len - 1];
+                frame.nextFrame = this.frames[i + 1];
+            }
+            else if (i === len - 1)
+            {
+                frame.isLast = true;
+                frame.prevFrame = this.frames[len - 2];
+                frame.nextFrame = this.frames[0];
+            }
+            else if (len > 1)
+            {
+                frame.prevFrame = this.frames[i - 1];
+                frame.nextFrame = this.frames[i + 1];
+            }
+        }
+
+        return this;
+    },
+
     checkFrame: function (index)
     {
         return (index < this.frames.length);
