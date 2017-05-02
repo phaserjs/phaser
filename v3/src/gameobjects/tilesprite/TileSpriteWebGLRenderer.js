@@ -4,6 +4,7 @@ var TileSpriteWebGLRenderer = function (renderer, src, interpolationPercentage, 
     {
         return;
     }
+    src.updateTileTexture();
     renderer.tileBatch.addTileSprite(src, camera);
 };
 
