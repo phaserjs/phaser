@@ -1,6 +1,6 @@
 //  Phaser.Animation.Frame.Components
 
-//  Used by the GameObject Animation Component
+//  Used by the GameObject Animation Controller, not the Animation itself
 
 module.exports = {
 

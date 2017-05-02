@@ -31,6 +31,8 @@ var AnimationManager = function (game)
     this.globalTimeScale = 1;
 
     this.anims = new Map();
+
+    this.paused = false;
 };
 
 AnimationManager.prototype.constructor = AnimationManager;
@@ -50,7 +52,9 @@ AnimationManager.prototype = {
     get: Components.GetAnimation,
     load: Components.LoadAnimationToGameObject,
     play: Components.PlayAnimation,
+    pauseAll: Components.PauseAll,
     remove: Components.RemoveAnimation,
+    resumeAll: Components.ResumeAll,
     staggerPlay: Components.StaggerPlayAnimation,
     toJSON: Components.ToJSON,
 

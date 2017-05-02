@@ -1,6 +1,13 @@
 var GetValue = require('../../utils/object/GetValue');
 var GetFrames = require('./GetFrames');
 
+//  A Frame based Animation
+//  This consists of a key, some default values (like the frame rate) and a bunch of Frame objects.
+//  The Animation Manager creates these
+//  Game Objects don't own an instance of these directly
+//  Game Objects have Animation Components, which are like playheads to global Animations (these objects)
+//  So multiple Game Objects can have playheads all pointing to this one Animation instance
+
 var Animation = function (manager, key, config)
 {
     this.manager = manager;
@@ -81,6 +88,12 @@ var Animation = function (manager, key, config)
 
     this.onComplete = GetValue(config, 'onComplete', false);
     this.onCompleteParams = GetValue(config, 'onCompleteParams', []);
+
+    //  Global pause, effects all Game Objects using this Animation instance
+    this.paused = false;
+
+    this.manager.events.on('PAUSE_ALL_ANIMATION_EVENT', this.pause.bind(this));
+    this.manager.events.on('RESUME_ALL_ANIMATION_EVENT', this.resume.bind(this));
 };
 
 Animation.prototype.constructor = Animation;
@@ -112,6 +125,16 @@ Animation.prototype = {
         }
 
         component.updateFrame(this.frames[startFrame]);
+    },
+
+    pause: function ()
+    {
+        this.paused = true;
+    },
+
+    resume: function ()
+    {
+        this.paused = false;
     },
 
     checkFrame: function (index)

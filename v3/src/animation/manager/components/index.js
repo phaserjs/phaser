@@ -8,6 +8,8 @@ module.exports = {
     GetAnimation: require('./GetAnimation'),
     LoadAnimationToGameObject: require('./LoadAnimationToGameObject'),
     PlayAnimation: require('./PlayAnimation'),
+    PauseAll: require('./PauseAll'),
+    ResumeAll: require('./ResumeAll'),
     RemoveAnimation: require('./RemoveAnimation'),
     StaggerPlayAnimation: require('./StaggerPlayAnimation'),
     ToJSON: require('./ToJSON')

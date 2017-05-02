@@ -1,6 +1,6 @@
 var Update = function (timestamp, delta)
 {
-    if (!this.isPlaying)
+    if (!this.isPlaying || this.currentAnim.paused)
     {
         return;
     }

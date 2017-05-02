@@ -2,6 +2,8 @@
 var Class = require('../utils/Class');
 var Components = require('../animation/frame/components/');
 
+//  Game Object Animation Controller
+
 var Animation = new Class({
 
     initialize:
