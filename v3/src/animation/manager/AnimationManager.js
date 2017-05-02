@@ -6,6 +6,8 @@
 
 var Map = require('../../structs/Map');
 var Components = require('./components/');
+var EventDispatcher = require('../../events/EventDispatcher');
+var Event = require('./events');
 
 /**
 * Animations are managed by the global AnimationManager. This is a singleton class that is
@@ -23,6 +25,8 @@ var AnimationManager = function (game)
     this.game = game;
 
     this.textureManager = null;
+
+    this.events = new EventDispatcher();
 
     this.globalTimeScale = 1;
 

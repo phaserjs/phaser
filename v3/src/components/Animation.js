@@ -13,6 +13,8 @@ var Animation = new Class({
 
         this.animationManager = parent.state.sys.anims;
 
+        this.animationManager.events.once('REMOVE_ANIMATION_EVENT', this.remove.bind(this));
+
         this.isPlaying = false;
 
         //  Reference to the Phaser.Animation object
@@ -73,6 +75,12 @@ var Animation = new Class({
         this._updateParams = [];
     },
 
+
+    destroy: function ()
+    {
+
+    },
+
     delay: Components.Delay,
     delayedPlay: Components.DelayedPlay,
     load: Components.Load,
@@ -80,6 +88,7 @@ var Animation = new Class({
     paused: Components.Paused,
     play: Components.Play,
     progress: Components.Progress,
+    remove: Components.Remove,
     repeat: Components.Repeat,
     repeatDelay: Components.RepeatDelay,
     restart: Components.Restart,

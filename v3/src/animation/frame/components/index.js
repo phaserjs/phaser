@@ -11,6 +11,7 @@ module.exports = {
     Paused: require('./Paused'),
     Play: require('./Play'),
     Progress: require('./Progress'),
+    Remove: require('./Remove'),
     Repeat: require('./Repeat'),
     RepeatDelay: require('./RepeatDelay'),
     Restart: require('./Restart'),
