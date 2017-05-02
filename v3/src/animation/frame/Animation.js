@@ -5,7 +5,7 @@ var GetFrames = require('./GetFrames');
 //  This consists of a key, some default values (like the frame rate) and a bunch of Frame objects.
 //  The Animation Manager creates these
 //  Game Objects don't own an instance of these directly
-//  Game Objects have Animation Components, which are like playheads to global Animations (these objects)
+//  Game Objects have the Animation Component, which are like playheads to global Animations (these objects)
 //  So multiple Game Objects can have playheads all pointing to this one Animation instance
 
 var Animation = function (manager, key, config)
@@ -100,22 +100,22 @@ Animation.prototype.constructor = Animation;
 
 Animation.prototype = {
 
-    load: require('./Load'),
     addFrame: require('./AddFrame'),
     addFrameAt: require('./AddFrameAt'),
-    getFrameAt: require('./GetFrameAt'),
-    removeFrame: require('./RemoveFrame'),
-    removeFrameAt: require('./RemoveFrameAt'),
-    updateFrameSequence: require('./UpdateFrameSequence'),
     checkFrame: require('./CheckFrame'),
+    completeAnimation: require('./CompleteAnimation'),
     getFirstTick: require('./GetFirstTick'),
+    getFrameAt: require('./GetFrameAt'),
     getNextTick: require('./GetNextTick'),
+    load: require('./Load'),
     nextFrame: require('./NextFrame'),
     previousFrame: require('./PreviousFrame'),
+    removeFrame: require('./RemoveFrame'),
+    removeFrameAt: require('./RemoveFrameAt'),
     repeatAnimation: require('./RepeatAnimation'),
-    completeAnimation: require('./CompleteAnimation'),
     setFrame: require('./SetFrame'),
     toJSON: require('./ToJSON'),
+    updateFrameSequence: require('./UpdateFrameSequence'),
 
     pause: function ()
     {
