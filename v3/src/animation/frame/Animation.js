@@ -148,15 +148,28 @@ Animation.prototype = {
 
         var newFrames = GetFrames(this.manager.textureManager, config);
 
-        if (newFrames.length > 0)
+        if (newFrames.length === 0)
         {
-            var pre = this.frames.slice(0, index);
-            var post = this.frames.slice(index);
+            if (index === 0)
+            {
+                this.frames = newFrames.concat(this.frames);
+            }
+            else if (index === this.frames.length)
+            {
+                this.frames = this.frames.concat(newFrames);
+            }
+            else
+            {
+                var pre = this.frames.slice(0, index);
+                var post = this.frames.slice(index);
 
-            this.frames = pre.concat(newFrames, post);
+                this.frames = pre.concat(newFrames, post);
+            }
+
+            this.updateFrameSequence();
         }
 
-        return this.updateFrameSequence();
+        return this;
     },
 
     updateFrameSequence: function ()
