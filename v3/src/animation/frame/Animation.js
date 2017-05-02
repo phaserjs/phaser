@@ -137,11 +137,18 @@ Animation.prototype = {
         this.paused = false;
     },
 
+    //  config = Array of Animation config objects, like:
+    //  [
+    //      { key: 'gems', frame: 'diamond0001', [duration], [visible], [onUpdate] }
+    //  ]
+
+    //  Add frames to the end of the animation
     addFrame: function (config)
     {
-        return this.addFrameAt(0, config);
+        return this.addFrameAt(this.frames.length, config);
     },
 
+    //  Add frame/s into the animation
     addFrameAt: function (index, config)
     {
         if (index === undefined) { index = 0; }
@@ -168,6 +175,33 @@ Animation.prototype = {
 
             this.updateFrameSequence();
         }
+
+        return this;
+    },
+
+    getFrameAt: function (index)
+    {
+        return this.frames[index];
+    },
+
+    //  Remove frame if it matches the given frame
+    removeFrame: function (frame)
+    {
+        var index = this.frames.indexOf(frame);
+
+        if (index !== -1)
+        {
+            this.removeFrameAt(index);
+        }
+
+        return this;
+    },
+
+    removeFrameAt: function (index)
+    {
+        this.frames.splice(index, 1);
+
+        this.updateFrameSequence();
 
         return this;
     },

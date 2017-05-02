@@ -10,19 +10,25 @@ var Frame = function (textureKey, textureFrame, index, frame)
     //  Texture Frame
     this.frame = frame;
 
+    //  Read-only
     this.isFirst = false;
+
+    //  Read-only
     this.isLast = false;
 
     //  The frame that comes before this one in the animation (if any)
+    //  Read-only
     this.prevFrame = null;
 
     //  The frame that comes after this one in the animation (if any)
+    //  Read-only
     this.nextFrame = null;
 
     //   Additional time (in ms) this frame should appear for - added onto the msPerFrame
     this.duration = 0;
 
     //   What % through the animation progress is this frame?
+    //  Read-only
     this.progress = 0;
 
     //  Callback if this frame gets displayed
@@ -30,6 +36,7 @@ var Frame = function (textureKey, textureFrame, index, frame)
 
     //  When this frame hits, set sprite.visible to this
     this.setVisible = false;
+
     this.visible = false;
 };
 
