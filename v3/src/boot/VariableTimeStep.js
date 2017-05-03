@@ -1,7 +1,17 @@
 var NOOP = require('../utils/NOOP');
+var GetValue = require('../utils/object/GetValue');
 var RequestAnimationFrame = require('../dom/RequestAnimationFrame');
 
-var VariableTimeStep = function (game, framerate)
+//  Frame Rate config
+//      fps: {
+//          min: 10,
+//          target: 60,
+//          max: 120
+//          forceSetTimeOut: false,
+//          deltaHistory: 10
+//     }
+
+var VariableTimeStep = function (game, config)
 {
     this.game = game;
 
@@ -9,13 +19,22 @@ var VariableTimeStep = function (game, framerate)
 
     this.started = false;
     this.running = false;
+    
+    this.minFps = GetValue(config, 'min', 5);
+    this.maxFps = GetValue(config, 'max', 120);
+    this.targetFps = GetValue(config, 'target', 60);
 
-    //  For fixed-step physics
-    this.fps = framerate;
+    this._min = 1000 / this.minFps;         //  200ms between frames (i.e. super slow!)
+    this._max = 1000 / this.maxFps;         //  8.333ms between frames (i.e. super fast, 120Hz displays)
+    this._target = 1000 / this.targetFps;   //  16.666ms between frames (i.e. normal)
+
+    //  200 / 1000 = 0.2 (5fps)
+    //  8.333 / 1000 = 0.008333 (120fps)
+    //  16.666 / 1000 = 0.01666 (60fps)
 
     this.callback = NOOP;
 
-    this.useRAF = true;
+    this.forceSetTimeOut = GetValue(config, 'forceSetTimeOut', false);
 
     this.time = 0;
     this.startTime = 0;
@@ -24,14 +43,14 @@ var VariableTimeStep = function (game, framerate)
     this.delta = 0;
     this.deltaIndex = 0;
     this.deltaHistory = [];
-    this.deltaSmoothingMax = 10;
+    this.deltaSmoothingMax = GetValue(config, 'deltaHistory', 10);
 };
 
 VariableTimeStep.prototype.constructor = VariableTimeStep;
 
 VariableTimeStep.prototype = {
 
-    start: function (useRAF, callback)
+    start: function (callback)
     {
         if (this.started)
         {
@@ -54,40 +73,41 @@ VariableTimeStep.prototype = {
 
         for (var i = 0; i < this.deltaSmoothingMax; i++)
         {
-            history[i] = 0.0166;
+            history[i] = this._target;
         }
 
         this.delta = 0;
         this.deltaIndex = 0;
         this.deltaHistory = history;
 
-        this.useRAF = useRAF;
         this.callback = callback;
 
-        this.raf.start(this.step.bind(this), useRAF);
+        this.raf.start(this.step.bind(this), this.forceSetTimeOut);
     },
 
+    //  time comes from requestAnimationFrame and is either a high res time value,
+    //  or Date.now if using setTimeout
     step: function (time)
     {
         var idx = this.deltaIndex;
         var history = this.deltaHistory;
         var max = this.deltaSmoothingMax;
 
-        //  delta time
-        var dt = (time - this.lastTime) / 1000;
+        //  delta time (time is in ms)
+        var dt = (time - this.lastTime);
 
-        //  min / max range
-        if (dt < 0.0001 || dt > 0.5)
+        //  min / max range (yes, the < and > should be this way around)
+        if (dt > this._min || dt < this._max)
         {
-            //  Probably super bad start time or browser tab inactivity / context loss
+            //  Probably super bad start time or browser tab context loss,
             //  so use the last 'sane' dt value
 
             console.log('dt sync', dt, 'ms over', history[idx]);
 
             dt = history[idx];
 
-            //  clamp delta to 0.0001 to 0.5 range
-            dt = Math.max(Math.min(dt, 0.5), 0.0001);
+            //  Clamp delta to min max range (in case history has become corrupted somehow)
+            dt = Math.max(Math.min(dt, this._max), this._min);
         }
 
         //  Smooth out the delta over the previous X frames
@@ -117,7 +137,7 @@ VariableTimeStep.prototype = {
         //  Real-world timer advance
         this.time += avg;
 
-        this.callback(this.time, avg * 1000);
+        this.callback(this.time, avg);
 
         //  Shift time value over
         this.lastTime = time;

@@ -114,7 +114,7 @@ Game.prototype = {
 
         this.config.postBoot();
 
-        this.loop.start(!!this.config.forceSetTimeOut, this.step.bind(this));
+        this.loop.start(this.step.bind(this));
     },
 
     step: function (time, delta)
