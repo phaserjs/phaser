@@ -20,12 +20,11 @@ var VariableTimeStep = function (game, framerate)
     this.time = 0;
     this.startTime = 0;
     this.lastTime = 0;
-    this.runOff = 0;
 
     this.delta = 0;
     this.deltaIndex = 0;
     this.deltaHistory = [];
-    this.deltaSmoothingMax = 30;
+    this.deltaSmoothingMax = 10;
 };
 
 VariableTimeStep.prototype.constructor = VariableTimeStep;
@@ -70,25 +69,25 @@ VariableTimeStep.prototype = {
 
     step: function (time)
     {
+        var idx = this.deltaIndex;
+        var history = this.deltaHistory;
+        var max = this.deltaSmoothingMax;
+
         //  delta time
         var dt = (time - this.lastTime) / 1000;
 
         if (dt < 0 || dt > 1)
         {
-            //  Loop skip, probably super bad start time
-            this.runOff = time - this.lastTime;
-            this.lastTime = time;
-            return;
+            //  Probably super bad start time or browser tab inactivity / context loss
+            //  so use the last 'sane' dt value
+
+            dt = history[idx];
         }
 
         //  clamp delta to 0.0001 to 0.5 range
         dt = Math.max(Math.min(dt, 0.5), 0.0001);
 
         //  Smooth out the delta over the previous X frames
-
-        var idx = this.deltaIndex;
-        var history = this.deltaHistory;
-        var max = this.deltaSmoothingMax;
 
         //  add the delta to the smoothing array
         history[idx] = dt;
