@@ -54,7 +54,7 @@ VariableTimeStep.prototype = {
 
         for (var i = 0; i < this.deltaSmoothingMax; i++)
         {
-            history[i] = 0;
+            history[i] = 0.0166;
         }
 
         this.delta = 0;
@@ -76,16 +76,19 @@ VariableTimeStep.prototype = {
         //  delta time
         var dt = (time - this.lastTime) / 1000;
 
-        if (dt < 0 || dt > 1)
+        //  min / max range
+        if (dt < 0.0001 || dt > 0.5)
         {
             //  Probably super bad start time or browser tab inactivity / context loss
             //  so use the last 'sane' dt value
 
-            dt = history[idx];
-        }
+            console.log('dt sync', dt, 'ms over', history[idx]);
 
-        //  clamp delta to 0.0001 to 0.5 range
-        dt = Math.max(Math.min(dt, 0.5), 0.0001);
+            dt = history[idx];
+
+            //  clamp delta to 0.0001 to 0.5 range
+            dt = Math.max(Math.min(dt, 0.5), 0.0001);
+        }
 
         //  Smooth out the delta over the previous X frames
 
