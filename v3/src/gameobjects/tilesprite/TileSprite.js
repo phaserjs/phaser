@@ -103,6 +103,20 @@ var TileSprite = new Class({
             this.canvasPattern = this.canvasBufferCtx.createPattern(this.canvasBuffer, 'repeat');
         }
         this.dirty = false;
+    },
+
+    destroy: function () 
+    {
+        if (this.renderer) 
+        {
+            this.renderer.gl.deleteTexture(this.tileTexture);
+        }
+        CanvasPool.remove(this.canvasBuffer);
+        this.canvasPattern = null;
+        this.canvasBufferCtx = null;
+        this.canvasBuffer = null;
+        this.renderer = null;
+        this.visible = false;
     }
 
 });
