@@ -427,7 +427,6 @@ WebGLRenderer.prototype = {
             /* only call this once */
             dstTexture.texture = gl.createTexture();
         }
-        
         if (shouldUpdateResource)
         {
             /* Update resource */

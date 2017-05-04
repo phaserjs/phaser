@@ -202,8 +202,8 @@ TileBatch.prototype = {
         var mva, mvb, mvc, mvd, mve, mvf, tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3;
         var sra, srb, src, srd, sre, srf, cma, cmb, cmc, cmd, cme, cmf;
         var alpha = gameObject.alpha;
-        var tilePositionX = gameObject.tilePositionX / width;
-        var tilePositionY = gameObject.tilePositionY / height;
+        var tilePositionX = gameObject.tilePositionX / gameObject.frame.width;
+        var tilePositionY = gameObject.tilePositionY / gameObject.frame.height;
         var texture = gameObject.tileTexture;
 
         tempMatrix.applyITRS(translateX, translateY, rotation, scaleX, scaleY);

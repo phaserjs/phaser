@@ -47,6 +47,7 @@ var TileSprite = new Class({
 
         this.potWidth = this.frame.width;
         this.potHeight = this.frame.height; 
+        this.canvasPattern = null;
 
         if (resourceManager) 
         {
@@ -71,7 +72,7 @@ var TileSprite = new Class({
 
             this.tileTexture = resourceManager.createTexture(0, gl.LINEAR, gl.LINEAR, gl.REPEAT, gl.REPEAT, gl.RGBA, this.canvasBuffer, this.potWidth, this.potHeight);
 
-        }
+        } 
 
         this.canvasBuffer = CanvasPool.create2D(null, this.potWidth, this.potHeight);
         this.canvasBufferCtx = this.canvasBuffer.getContext('2d');
@@ -84,6 +85,7 @@ var TileSprite = new Class({
         if (!this.dirty)
             return;
 
+        this.canvasBuffer.width = this.canvasBuffer.width;
         this.canvasBufferCtx.drawImage(
             this.frame.source.image, 
             this.frame.cutX, this.frame.cutY,
@@ -95,6 +97,10 @@ var TileSprite = new Class({
         if (this.renderer) 
         {
             this.renderer.uploadCanvasToGPU(this.canvasBuffer, this.tileTexture, true);
+        }
+        else
+        {
+            this.canvasPattern = this.canvasBufferCtx.createPattern(this.canvasBuffer, 'repeat');
         }
         this.dirty = false;
     }
