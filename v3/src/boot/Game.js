@@ -1,8 +1,3 @@
-/**
-* @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2016 Photon Storm Ltd.
-* @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
-*/
 
 var Config = require('./Config');
 var DebugHeader = require('./DebugHeader');
@@ -11,9 +6,7 @@ var Device = require('../device');
 var AddToDOM = require('../dom/AddToDOM');
 var DOMContentLoaded = require('../dom/DOMContentLoaded');
 
-var MainLoop = require('./MainLoop');
-var TickerLoop = require('./TickerLoop');
-var VariableTimeStep = require('./VariableTimeStep');
+var TimeStep = require('./TimeStep');
 var CreateRenderer = require('./CreateRenderer');
 var GlobalInputManager = require('../input/GlobalInputManager');
 var GlobalStateManager = require('../state/GlobalStateManager');
@@ -72,14 +65,7 @@ var Game = function (config)
     * @property {Phaser.MainLoop} mainloop - Main Loop handler.
     * @protected
     */
-    // if (this.config.useTicker)
-    // {
-        this.loop = new VariableTimeStep(this, this.config.fps);
-    // }
-    // else
-    // {
-    //     this.loop = new MainLoop(this, this.config.fps);
-    // }
+    this.loop = new TimeStep(this, this.config.fps);
 
     //  Wait for the DOM Ready event, then call boot.
     DOMContentLoaded(this.boot.bind(this));

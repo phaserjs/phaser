@@ -11,7 +11,7 @@ var RequestAnimationFrame = require('../dom/RequestAnimationFrame');
 //          deltaHistory: 10
 //     }
 
-var VariableTimeStep = function (game, config)
+var TimeStep = function (game, config)
 {
     this.game = game;
 
@@ -32,6 +32,15 @@ var VariableTimeStep = function (game, config)
     //  8.333 / 1000 = 0.008333 (120fps)
     //  16.666 / 1000 = 0.01666 (60fps)
 
+    /**
+    * @property {number} fps - An exponential moving average of the frames per second.
+    * @readOnly
+    */
+    this.actualFps = this.targetFps;
+
+    this.nextFpsUpdate = 0;
+    this.framesThisSecond = 0;
+
     this.callback = NOOP;
 
     this.forceSetTimeOut = GetValue(config, 'forceSetTimeOut', false);
@@ -46,9 +55,9 @@ var VariableTimeStep = function (game, config)
     this.deltaSmoothingMax = GetValue(config, 'deltaHistory', 10);
 };
 
-VariableTimeStep.prototype.constructor = VariableTimeStep;
+TimeStep.prototype.constructor = TimeStep;
 
-VariableTimeStep.prototype = {
+TimeStep.prototype = {
 
     start: function (callback)
     {
@@ -65,7 +74,8 @@ VariableTimeStep.prototype = {
         this.time = now;
         this.startTime = now;
         this.lastTime = now;
-        this.runOff = 0;
+        this.nextFpsUpdate = now + 1000;
+        this.framesThisSecond = 0;
 
         //  Pre-populate smoothing array
 
@@ -137,7 +147,26 @@ VariableTimeStep.prototype = {
         //  Real-world timer advance
         this.time += avg;
 
-        this.callback(this.time, avg);
+        // Update the estimate of the frame rate, `fps`. Every second, the number
+        // of frames that occurred in that second are included in an exponential
+        // moving average of all frames per second, with an alpha of 0.25. This
+        // means that more recent seconds affect the estimated frame rate more than
+        // older seconds.
+        if (time > this.nextFpsUpdate)
+        {
+            // Compute the new exponential moving average with an alpha of 0.25.
+            // Using constants inline is okay here.
+            this.actualFps = 0.25 * this.framesThisSecond + 0.75 * this.actualFps;
+            this.nextFpsUpdate = time + 1000;
+            this.framesThisSecond = 0;
+        }
+
+        this.framesThisSecond++;
+
+        //  Interpolation - how far between what is expected and where we are?
+        var interpolation = avg / this._target;
+
+        this.callback(this.time, avg, interpolation);
 
         //  Shift time value over
         this.lastTime = time;
@@ -197,7 +226,6 @@ VariableTimeStep.prototype = {
 
         return this;
     }
-
 };
 
-module.exports = VariableTimeStep;
+module.exports = TimeStep;

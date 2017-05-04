@@ -1,7 +1,7 @@
 var NOOP = require('../utils/NOOP');
 var RequestAnimationFrame = require('../dom/RequestAnimationFrame');
 
-var TickerLoop = function (game, framerate)
+var Ticker = function (game, framerate)
 {
     this.game = game;
 
@@ -29,9 +29,9 @@ var TickerLoop = function (game, framerate)
     this.useRAF = true;
 };
 
-TickerLoop.prototype.constructor = TickerLoop;
+Ticker.prototype.constructor = Ticker;
 
-TickerLoop.prototype = {
+Ticker.prototype = {
 
     toString: function ()
     {
@@ -157,4 +157,4 @@ TickerLoop.prototype = {
 
 };
 
-module.exports = TickerLoop;
+module.exports = Ticker;
