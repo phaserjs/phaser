@@ -48,6 +48,7 @@ var TimeStep = function (game, config)
     this.time = 0;
     this.startTime = 0;
     this.lastTime = 0;
+    this.frame = 0;
 
     this.delta = 0;
     this.deltaIndex = 0;
@@ -76,6 +77,7 @@ TimeStep.prototype = {
         this.lastTime = now;
         this.nextFpsUpdate = now + 1000;
         this.framesThisSecond = 0;
+        this.frame = 0;
 
         //  Pre-populate smoothing array
 
@@ -99,6 +101,12 @@ TimeStep.prototype = {
     //  or Date.now if using setTimeout
     step: function (time)
     {
+        //  Debug only
+        var debug = null;
+        var dump = [];
+
+        this.frame++;
+
         var idx = this.deltaIndex;
         var history = this.deltaHistory;
         var max = this.deltaSmoothingMax;
@@ -106,13 +114,17 @@ TimeStep.prototype = {
         //  delta time (time is in ms)
         var dt = (time - this.lastTime);
 
+        //  When a browser switches tab, then comes back again, it takes around 10 frames before
+        //  the delta time settles down again, and this is likely device specific (some may be
+        //  faster or slower)
+
         //  min / max range (yes, the < and > should be this way around)
         if (dt > this._min || dt < this._max)
         {
             //  Probably super bad start time or browser tab context loss,
             //  so use the last 'sane' dt value
 
-            console.log('dt sync', dt, 'ms over', history[idx]);
+            debug = dt;
 
             dt = history[idx];
 
@@ -127,14 +139,26 @@ TimeStep.prototype = {
 
         //  adjusts the delta history array index based on the smoothing count
         //  this stops the array growing beyond the size of deltaSmoothingMax
-        this.deltaIndex = (idx + 1) % max;
+        this.deltaIndex++;
 
-        //  average
+        if (this.deltaIndex > max)
+        {
+            this.deltaIndex = 0;
+        }
+
+        //  Delta Average
         var avg = 0;
 
         //  Loop the history array, adding the delta values together
+
         for (var i = 0; i < max; i++)
         {
+            //   Debug
+            if (history[i] < 16 || history[i] > 17)
+            {
+                dump.push({ i: i, dt: history[i] });
+            }
+
             avg += history[i];
         }
 
@@ -170,6 +194,26 @@ TimeStep.prototype = {
 
         //  Shift time value over
         this.lastTime = time;
+
+        if (debug || dump.length)
+        {
+            console.group('Frame ' + this.frame);
+            console.log('Interpolation', interpolation, '%');
+
+            if (debug)
+            {
+                console.log('Elapsed', debug, 'ms');
+            }
+
+            console.log('Delta', avg, '(average)');
+
+            if (dump.length)
+            {
+                console.table(dump);
+            }
+
+            console.groupEnd();
+        }
     },
 
     tick: function ()
