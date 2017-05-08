@@ -5,6 +5,9 @@ var cos = Math.cos;
 var sin = Math.sin;
 var sqrt = Math.sqrt;
 var tempMatrix = new TransformMatrix();
+var matrixStack = new Float32Array(6 * 1000);
+var matrixStackLength = 0;
+var currentMatrix = new TransformMatrix();
 
 var Point = function (x, y, width, rgb, alpha)
 {
@@ -175,7 +178,8 @@ var GraphicsWebGLRenderer = function (renderer, gameObject, interpolationPercent
                         fillColor,
                         fillAlpha,
                         /* Transform */
-                        mva, mvb, mvc, mvd, mve, mvf
+                        mva, mvb, mvc, mvd, mve, mvf,
+                        currentMatrix
                     );
                 }
                 break;
@@ -196,7 +200,9 @@ var GraphicsWebGLRenderer = function (renderer, gameObject, interpolationPercent
                         lineAlpha,
                         /* Transform */
                         mva, mvb, mvc, mvd, mve, mvf,
-                        path === this._lastPath
+                        path === this._lastPath,
+                        currentMatrix
+
                     );
                 }
                 break;
@@ -213,7 +219,9 @@ var GraphicsWebGLRenderer = function (renderer, gameObject, interpolationPercent
                     fillColor,
                     fillAlpha,
                     /* Transform */
-                    mva, mvb, mvc, mvd, mve, mvf
+                    mva, mvb, mvc, mvd, mve, mvf,
+                    currentMatrix
+
                 );
              
                 cmdIndex += 4;
@@ -233,7 +241,9 @@ var GraphicsWebGLRenderer = function (renderer, gameObject, interpolationPercent
                     fillColor,
                     fillAlpha,
                     /* Transform */
-                    mva, mvb, mvc, mvd, mve, mvf
+                    mva, mvb, mvc, mvd, mve, mvf,
+                    currentMatrix
+
                 );
                 
                 cmdIndex += 6;
@@ -254,7 +264,9 @@ var GraphicsWebGLRenderer = function (renderer, gameObject, interpolationPercent
                     lineColor,
                     lineAlpha,
                     /* Transform */
-                    mva, mvb, mvc, mvd, mve, mvf
+                    mva, mvb, mvc, mvd, mve, mvf,
+                    currentMatrix
+
                 );
                 
                 cmdIndex += 6;
@@ -316,12 +328,55 @@ var GraphicsWebGLRenderer = function (renderer, gameObject, interpolationPercent
                 cmdIndex += 5;
                 break;
 
+            case Commands.SAVE:
+                matrixStack[matrixStackLength + 0] = currentMatrix.matrix[0];
+                matrixStack[matrixStackLength + 1] = currentMatrix.matrix[1];
+                matrixStack[matrixStackLength + 2] = currentMatrix.matrix[2];
+                matrixStack[matrixStackLength + 3] = currentMatrix.matrix[3];
+                matrixStack[matrixStackLength + 4] = currentMatrix.matrix[4];
+                matrixStack[matrixStackLength + 5] = currentMatrix.matrix[5];
+                matrixStackLength += 6;
+                break;
+
+            case Commands.RESTORE:
+                matrixStackLength -= 6;
+                currentMatrix.matrix[0] = matrixStack[matrixStackLength + 0];
+                currentMatrix.matrix[1] = matrixStack[matrixStackLength + 1];
+                currentMatrix.matrix[2] = matrixStack[matrixStackLength + 2];
+                currentMatrix.matrix[3] = matrixStack[matrixStackLength + 3];
+                currentMatrix.matrix[4] = matrixStack[matrixStackLength + 4];
+                currentMatrix.matrix[5] = matrixStack[matrixStackLength + 5];
+                break;
+
+            case Commands.TRANSLATE:
+                currentMatrix.translate(
+                    commandBuffer[cmdIndex + 1],
+                    commandBuffer[cmdIndex + 2]
+                );
+                cmdIndex += 2;
+                break;
+
+            case Commands.SCALE:
+                currentMatrix.scale(
+                    commandBuffer[cmdIndex + 1],
+                    commandBuffer[cmdIndex + 2]
+                );
+                cmdIndex += 2;
+                break;
+
+            case Commands.ROTATE:
+                currentMatrix.rotate(
+                    -commandBuffer[cmdIndex + 1]
+                );
+                cmdIndex += 1;
+                break;
+
             default:
                 console.error('Phaser: Invalid Graphics Command ID ' + cmd);
                 break;
         }
     }
-
+    currentMatrix.loadIdentity();
     pathArray.length = 0;
 };
 

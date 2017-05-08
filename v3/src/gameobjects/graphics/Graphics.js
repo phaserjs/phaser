@@ -315,6 +315,44 @@ var Graphics = new Class({
         return this;
     },
 
+    save: function () {
+        this.commandBuffer.push(
+            Commands.SAVE
+        );
+        return this;
+    },
+
+    restore: function () {
+        this.commandBuffer.push(
+            Commands.RESTORE
+        );
+        return this;
+    },
+
+    translate: function (x, y) {
+        this.commandBuffer.push(
+            Commands.TRANSLATE,
+            x, y
+        );
+        return this;
+    },
+
+    scale: function (x, y) {
+        this.commandBuffer.push(
+            Commands.SCALE,
+            x, y
+        );
+        return this;
+    },
+
+    rotate: function (radian) {
+        this.commandBuffer.push(
+            Commands.ROTATE,
+            radian
+        );
+        return this;
+    },
+
     clear: function ()
     {
         this.commandBuffer.length = 0;

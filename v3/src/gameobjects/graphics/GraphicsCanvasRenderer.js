@@ -174,6 +174,37 @@ var GraphicsCanvasRenderer = function (renderer, src, interpolationPercentage, c
                 index += 5;
                 break;
 
+            case Commands.SAVE:
+                ctx.save();
+                break;
+
+            case Commands.RESTORE:
+                ctx.restore();
+                break;
+
+            case Commands.TRANSLATE:
+                ctx.translate(
+                    commandBuffer[index + 1],
+                    commandBuffer[index + 2]
+                );
+                index += 2;
+                break;
+
+            case Commands.SCALE:
+                ctx.scale(
+                    commandBuffer[index + 1],
+                    commandBuffer[index + 2]
+                );
+                index += 2;
+                break;
+
+            case Commands.ROTATE:
+                ctx.rotate(
+                    commandBuffer[index + 1]
+                );
+                index += 1;
+                break;
+
             default:
                 console.error('Phaser: Invalid Graphics Command ID ' + commandID);
                 break;

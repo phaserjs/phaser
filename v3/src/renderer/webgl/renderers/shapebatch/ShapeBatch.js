@@ -146,7 +146,8 @@ ShapeBatch.prototype = {
         /* line properties */
         ax, ay, bx, by, aLineWidth, bLineWidth, aLineColor, bLineColor, lineAlpha,
         /* transform */
-        a, b, c, d, e, f
+        a1, b1, c1, d1, e1, f1,
+        currentMatrix
     ) {
         if (this.vertexCount + 6 > this.maxVertices)
         {
@@ -155,6 +156,18 @@ ShapeBatch.prototype = {
 
         this.vertexCount += 6;
 
+        var a0 = currentMatrix.matrix[0];
+        var b0 = currentMatrix.matrix[1];
+        var c0 = currentMatrix.matrix[2];
+        var d0 = currentMatrix.matrix[3];
+        var e0 = currentMatrix.matrix[4];
+        var f0 = currentMatrix.matrix[5];
+        var a = a1 * a0 + b1 * c0;
+        var b = a1 * b0 + b1 * d0;
+        var c = c1 * a0 + d1 * c0;
+        var d = c1 * b0 + d1 * d0;
+        var e = e1 * a0 + f1 * c0 + e0;
+        var f = e1 * b0 + f1 * d0 + f0;
         var vertexDataBuffer = this.vertexDataBuffer;
         var vertexBufferF32 = vertexDataBuffer.floatView;
         var vertexBufferU32 = vertexDataBuffer.uintView;
@@ -225,7 +238,8 @@ ShapeBatch.prototype = {
         /* transform */
         a, b, c, d, e, f,
         /* is last connection */
-        isLastPath
+        isLastPath,
+        currentMatrix
     ) {
         var point0, point1;
         var pathLength = path.length;
@@ -249,7 +263,8 @@ ShapeBatch.prototype = {
                 point1.x, point1.y, 
                 point0.width / 2, point1.width / 2, 
                 point0.rgb, point1.rgb, lineAlpha,
-                a, b, c, d, e, f
+                a, b, c, d, e, f,
+                currentMatrix
             );
             polylines.push(line);
         }
@@ -309,7 +324,8 @@ ShapeBatch.prototype = {
         /* Path properties */
         path, fillColor, fillAlpha,
         /* transform */
-        a, b, c, d, e, f
+        a1, b1, c1, d1, e1, f1,
+        currentMatrix
     ) {
         var length = path.length;
         var polygonCache = this.polygonCache;
@@ -324,6 +340,18 @@ ShapeBatch.prototype = {
         var vertexBufferU32 = vertexDataBuffer.uintView;
         var x0, y0, x1, y1, x2, y2;
         var tx0, ty0, tx1, ty1, tx2, ty2;
+        var a0 = currentMatrix.matrix[0];
+        var b0 = currentMatrix.matrix[1];
+        var c0 = currentMatrix.matrix[2];
+        var d0 = currentMatrix.matrix[3];
+        var e0 = currentMatrix.matrix[4];
+        var f0 = currentMatrix.matrix[5];
+        var a = a1 * a0 + b1 * c0;
+        var b = a1 * b0 + b1 * d0;
+        var c = c1 * a0 + d1 * c0;
+        var d = c1 * b0 + d1 * d0;
+        var e = e1 * a0 + f1 * c0 + e0;
+        var f = e1 * b0 + f1 * d0 + f0;
 
         for (var pathIndex = 0; pathIndex < length; ++pathIndex)
         {
@@ -388,7 +416,8 @@ ShapeBatch.prototype = {
         /* Rectangle properties */
         x, y, width, height, fillColor, fillAlpha,
         /* transform */
-        a, b, c, d, e, f
+        a1, b1, c1, d1, e1, f1,
+        currentMatrix
     ) {
         if (this.vertexCount + 6 > this.maxVertices)
         {
@@ -400,6 +429,18 @@ ShapeBatch.prototype = {
         var vertexOffset = vertexDataBuffer.allocate(24);
         var xw = x + width;
         var yh = y + height;
+        var a0 = currentMatrix.matrix[0];
+        var b0 = currentMatrix.matrix[1];
+        var c0 = currentMatrix.matrix[2];
+        var d0 = currentMatrix.matrix[3];
+        var e0 = currentMatrix.matrix[4];
+        var f0 = currentMatrix.matrix[5];
+        var a = a1 * a0 + b1 * c0;
+        var b = a1 * b0 + b1 * d0;
+        var c = c1 * a0 + d1 * c0;
+        var d = c1 * b0 + d1 * d0;
+        var e = e1 * a0 + f1 * c0 + e0;
+        var f = e1 * b0 + f1 * d0 + f0;
         var tx0 = x * a + y * c + e;
         var ty0 = x * b + y * d + f;
         var tx1 = x * a + yh * c + e;
@@ -448,12 +489,25 @@ ShapeBatch.prototype = {
         /* Triangle properties */
         x0, y0, x1, y1, x2, y2, fillColor, fillAlpha,
         /* transform */
-        a, b, c, d, e, f
+        a1, b1, c1, d1, e1, f1,
+        currentMatrix
     ) {
         if (this.vertexCount + 3 > this.maxVertices)
         {
             this.flush();
         }
+        var a0 = currentMatrix.matrix[0];
+        var b0 = currentMatrix.matrix[1];
+        var c0 = currentMatrix.matrix[2];
+        var d0 = currentMatrix.matrix[3];
+        var e0 = currentMatrix.matrix[4];
+        var f0 = currentMatrix.matrix[5];
+        var a = a1 * a0 + b1 * c0;
+        var b = a1 * b0 + b1 * d0;
+        var c = c1 * a0 + d1 * c0;
+        var d = c1 * b0 + d1 * d0;
+        var e = e1 * a0 + f1 * c0 + e0;
+        var f = e1 * b0 + f1 * d0 + f0;
         var vertexDataBuffer = this.vertexDataBuffer;
         var vertexBufferF32 = vertexDataBuffer.floatView;
         var vertexBufferU32 = vertexDataBuffer.uintView;
@@ -489,7 +543,8 @@ ShapeBatch.prototype = {
         /* Triangle properties */
         x0, y0, x1, y1, x2, y2, lineWidth, lineColor, lineAlpha,
         /* transform */
-        a, b, c, d, e, f
+        a, b, c, d, e, f,
+        currentMatrix
     ) {
         var tempTriangle = this.tempTriangle;
 
@@ -517,7 +572,8 @@ ShapeBatch.prototype = {
         this.addStrokePath(
             srcX, srcY, srcScaleX, srcScaleY, srcRotation,
             tempTriangle, lineWidth, lineColor, lineAlpha,
-            a, b, c, d, e, f
+            a, b, c, d, e, f,
+            currentMatrix
         );
     }
 };
