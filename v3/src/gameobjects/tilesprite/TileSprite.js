@@ -3,7 +3,7 @@ var Class = require('../../utils/Class');
 var GameObject = require('../GameObject');
 var Components = require('../../components');
 var TileSpriteRender = require('./TileSpriteRender');
-var CanvasPool = require('../../dom/CanvasPool')
+var CanvasPool = require('../../dom/CanvasPool');
 
 var TileSprite = new Class({
 

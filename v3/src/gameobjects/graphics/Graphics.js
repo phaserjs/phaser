@@ -5,6 +5,7 @@ var Render = require('./GraphicsRender');
 var Commands = require('./Commands');
 var MATH_CONST = require('../../math/const');
 var GetValue = require('../../utils/object/GetValue');
+var CanvasPool = require('../../dom/CanvasPool');
 
 var Graphics = new Class({
 
@@ -40,6 +41,22 @@ var Graphics = new Class({
         this.defaultStrokeAlpha = 1;
 
         this.setDefaultStyles(options);
+
+        this.dstRenderTexture = null;
+        this.dstRenderTarget = null;
+
+        var resourceManager = state.game.renderer.resourceManager;
+
+        if (resourceManager !== undefined)
+        {
+            //var gl = state.game.renderer.gl;
+            //this.passShader = resourceManager.createShader(shaderName, {vert: TexturedAndNormalizedTintedShader.vert, frag: fragmentShader});
+            //this.renderTexture = resourceManager.createTexture(0, gl.LINEAR, gl.LINEAR, gl.CLAMP_TO_EDGE, gl.CLAMP_TO_EDGE, gl.RGBA, null, width, height);
+            //this.passRenderTarget = resourceManager.createRenderTarget(width, height, this.renderTexture, null);
+            //state.game.renderer.currentTexture = null; // force rebinding of prev texture
+            this.resourceManager = resourceManager;
+            this.gl = state.game.renderer.gl;   
+        }
     },
 
     //  STYLES
@@ -368,6 +385,31 @@ var Graphics = new Class({
         }
 
         return this;
+    },
+
+    createRenderTarget: function (width, height) 
+    {
+        var resourceManager = this.resourceManager;
+        if (this.dstRenderTarget === null) 
+        {
+            if (resourceManager !== undefined)
+            {
+                var gl = this.gl;
+                this.dstRenderTexture = resourceManager.createTexture(0, gl.LINEAR, gl.LINEAR, gl.CLAMP_TO_EDGE, gl.CLAMP_TO_EDGE, gl.RGBA, null, width, height);
+                this.dstRenderTarget = resourceManager.createRenderTarget(width, height, this.dstRenderTexture, null);
+                state.game.renderer.currentTexture = null; // force rebinding of prev texture
+            }
+            else
+            {
+                this.dstRenderTexture = CanvasPool.create2D(null, width, height);
+                this.dstRenderTarget = this.dstRenderTexture.getContext('2d');
+            }
+        }
+    },
+
+    bakeToRenderTarget: function () 
+    {
+        
     }
 
 });
