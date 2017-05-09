@@ -31,11 +31,11 @@ var VisibilityHandler = function (eventDispatcher)
     {
         if (document.hidden || event.type === 'pause')
         {
-            eventDispatcher.dispatch(new Event('DOCUMENT_HIDDEN'));
+            eventDispatcher.dispatch(new Event('HIDDEN'));
         }
         else
         {
-            eventDispatcher.dispatch(new Event('DOCUMENT_VISIBLE'));
+            eventDispatcher.dispatch(new Event('VISIBLE'));
         }
     };
 
@@ -49,6 +49,17 @@ var VisibilityHandler = function (eventDispatcher)
     {
         console.log('Fallback TODO');
     }
+
+    window.onblur = function ()
+    {
+        eventDispatcher.dispatch(new Event('ON_BLUR'));
+    };
+
+    window.onfocus = function ()
+    {
+        eventDispatcher.dispatch(new Event('ON_FOCUS'));
+    };
+
 };
 
 module.exports = VisibilityHandler;

@@ -8,7 +8,8 @@ var RequestAnimationFrame = require('../dom/RequestAnimationFrame');
 //          target: 60,
 //          max: 120
 //          forceSetTimeOut: false,
-//          deltaHistory: 10
+//          deltaHistory: 10,
+//          panicMax: 120
 //     }
 
 var TimeStep = function (game, config)
@@ -50,6 +51,8 @@ var TimeStep = function (game, config)
     this.lastTime = 0;
     this.frame = 0;
 
+    this.inFocus = true;
+
     this._pauseTime = 0;
     this._coolDown = 0;
 
@@ -57,16 +60,35 @@ var TimeStep = function (game, config)
     this.deltaIndex = 0;
     this.deltaHistory = [];
     this.deltaSmoothingMax = GetValue(config, 'deltaHistory', 10);
+    this.panicMax = GetValue(config, 'panicMax', 120);
 };
 
 TimeStep.prototype.constructor = TimeStep;
 
 TimeStep.prototype = {
 
+    //  Called when the DOM window.onBlur event triggers
+    blur: function ()
+    {
+        this.inFocus = false;
+
+        console.log('TimeStep.blur');
+    },
+
+    //  Called when the DOM window.onFocus event triggers
+    focus: function ()
+    {
+        this.inFocus = true;
+
+        console.log('TimeStep.focus');
+
+        this.resetDelta();
+    },
+
     //  Called when the visibility API says the game is 'hidden' (tab switch, etc)
     pause: function ()
     {
-        // console.log('TimeStep.pause');
+        console.log('TimeStep.pause');
 
         this._pauseTime = window.performance.now();
     },
@@ -78,7 +100,7 @@ TimeStep.prototype = {
 
         this.startTime += this.time - this._pauseTime;
 
-        // console.log('TimeStep.resume - paused for', (this.time - this._pauseTime));
+        console.log('TimeStep.resume - paused for', (this.time - this._pauseTime));
     },
 
     resetDelta: function ()
@@ -101,7 +123,7 @@ TimeStep.prototype = {
         this.delta = 0;
         this.deltaIndex = 0;
 
-        this._coolDown = this.deltaSmoothingMax;
+        this._coolDown = this.panicMax;
     },
 
     start: function (callback)
@@ -130,8 +152,8 @@ TimeStep.prototype = {
     step: function (time)
     {
         //  Debug only
-        var debug = 0;
-        var dump = [];
+        // var debug = 0;
+        // var dump = [];
 
         this.frame++;
 
@@ -146,11 +168,12 @@ TimeStep.prototype = {
         //  the delta time settles down so we employ a 'cooling down' period before we start
         //  trusting the delta values again, to avoid spikes flooding through our delta average
 
-        if (this._coolDown > 0)
+        if (this._coolDown > 0 || !this.inFocus)
         {
             this._coolDown--;
 
             dt = this._target;
+            // debug = (time - this.lastTime);
         }
         else
         {
@@ -163,7 +186,7 @@ TimeStep.prototype = {
             //  Probably super bad start time or browser tab context loss,
             //  so use the last 'sane' dt value
 
-            debug = dt;
+            // debug = dt;
 
             dt = history[idx];
 
@@ -193,10 +216,10 @@ TimeStep.prototype = {
         for (var i = 0; i < max; i++)
         {
             //   Debug
-            if (history[i] < 16 || history[i] > 17)
-            {
-                dump.push({ i: i, dt: history[i] });
-            }
+            // if (history[i] < 16 || history[i] > 17)
+            // {
+            //     dump.push({ i: i, dt: history[i] });
+            // }
 
             avg += history[i];
         }
@@ -215,13 +238,33 @@ TimeStep.prototype = {
         // moving average of all frames per second, with an alpha of 0.25. This
         // means that more recent seconds affect the estimated frame rate more than
         // older seconds.
+        // 
+        // When a browser window is NOT minimized, but is covered up (i.e. you're using
+        // another app which has spawned a window over the top of the browser), then it
+        // will start to throttle the raf callback time. It waits for a while, and then
+        // starts to drop the frame rate at 1 frame per second until it's down to just over 1fps.
+        // So if the game was running at 60fps, and the player opens a new window, then
+        // after 60 seconds (+ the 'buffer time') it'll be down to 1fps, so rafin'g at 1Hz.
+        // 
+        // When they make the game visible again, the frame rate is increased at a rate of
+        // approx. 8fps, back up to 60fps (or the max it can obtain)
+        // 
+        // There is no easy way to determine if this drop in frame rate is because the
+        // browser is throttling raf, or because the game is struggling with performance
+        // because you're asking it to do too much on the device.
+
         if (time > this.nextFpsUpdate)
         {
-            // Compute the new exponential moving average with an alpha of 0.25.
-            // Using constants inline is okay here.
+            //  Compute the new exponential moving average with an alpha of 0.25.
             this.actualFps = 0.25 * this.framesThisSecond + 0.75 * this.actualFps;
             this.nextFpsUpdate = time + 1000;
             this.framesThisSecond = 0;
+
+            // if (this.actualFps < 56)
+            // {
+            //     console.log(this.actualFps);
+            //     console.log('F', this.frame, 'Avg', avg, 'Dt', debug, 'Panic', this._coolDown);
+            // }
         }
 
         this.framesThisSecond++;
@@ -233,6 +276,11 @@ TimeStep.prototype = {
 
         //  Shift time value over
         this.lastTime = time;
+
+        // if (debug !== 0)
+        // {
+        //     console.log('F', this.frame, 'Avg', avg, 'Dt', debug, 'Panic', this._coolDown);
+        // }
 
         /*
         if (debug !== 0 || dump.length)

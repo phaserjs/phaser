@@ -111,8 +111,10 @@ Game.prototype = {
 
         VisibilityHandler(this.events);
 
-        this.events.on('DOCUMENT_HIDDEN', this.onHidden.bind(this));
-        this.events.on('DOCUMENT_VISIBLE', this.onVisible.bind(this));
+        this.events.on('HIDDEN', this.onHidden.bind(this));
+        this.events.on('VISIBLE', this.onVisible.bind(this));
+        this.events.on('ON_BLUR', this.onBlur.bind(this));
+        this.events.on('ON_FOCUS', this.onFocus.bind(this));
     },
 
     step: function (time, delta)
@@ -148,16 +150,23 @@ Game.prototype = {
 
     onHidden: function ()
     {
-        console.log('Game.hidden');
         this.loop.pause();
     },
 
     onVisible: function ()
     {
-        console.log('Game.visible');
         this.loop.resume();
-    }
+    },
 
+    onBlur: function ()
+    {
+        this.loop.blur();
+    },
+
+    onFocus: function ()
+    {
+        this.loop.focus();
+    }
 };
 
 module.exports = Game;
