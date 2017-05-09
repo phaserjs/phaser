@@ -9,6 +9,7 @@ var Settings = require('./Settings');
 var StableSort = require('../utils/array/StableSort');
 var StateManager = require('./systems/StateManager');
 var UpdateManager = require('./systems/UpdateManager');
+var TweenManager = require('../tween/TweenManager');
 
 var Systems = function (state, config)
 {
@@ -46,6 +47,7 @@ var Systems = function (state, config)
     this.make;
     this.stateManager;
     this.updates;
+    this.tweens;
 
     //  State properties
     this.children;
@@ -85,6 +87,7 @@ Systems.prototype = {
         this.load = new Loader(this.state);
         this.make = new GameObjectCreator(this.state);
         this.stateManager = new StateManager(this.state, game);
+        this.tweens = new TweenManager(this.state);
         this.updates = new UpdateManager(this.state);
 
         this.inject();
@@ -108,6 +111,7 @@ Systems.prototype = {
         this.state.load = this.load;
         this.state.settings = this.settings;
         this.state.state = this.stateManager;
+        this.state.tweens = this.tweens;
 
         this.state.children = this.children;
         this.state.color = this.color;
@@ -116,6 +120,9 @@ Systems.prototype = {
 
     step: function (time, delta)
     {
+        //  Before or after child update?
+        this.tweens.update(time, delta);
+
         var list = this.children.list;
 
         for (var i = 0; i < list.length; i++)
