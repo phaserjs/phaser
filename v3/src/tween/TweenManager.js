@@ -29,6 +29,8 @@ TweenManager.prototype = {
     {
     },
 
+    //  Add a 'to' GSAP equivalent?
+
     exists: function (tween)
     {
     },
@@ -40,6 +42,46 @@ TweenManager.prototype = {
     update: function (timestamp, delta)
     {
 
+    },
+
+    globalTimeScale: function ()
+    {
+    },
+
+    getAllTweens: function ()
+    {
+    },
+
+    getTweensOf: function (target)
+    {
+    },
+
+    isTweening: function (target)
+    {
+    },
+
+    kill: function (vars, target)
+    {
+    },
+
+    killAll: function ()
+    {
+    },
+
+    killTweensOf: function (target)
+    {
+    },
+
+    pauseAll: function ()
+    {
+    },
+
+    resumeAll: function ()
+    {
+    },
+
+    delayedCall: function ()
+    {
     },
 
     /**
