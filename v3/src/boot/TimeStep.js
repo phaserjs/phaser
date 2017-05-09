@@ -51,6 +51,7 @@ var TimeStep = function (game, config)
     this.frame = 0;
 
     this._pauseTime = 0;
+    this._coolDown = 0;
 
     this.delta = 0;
     this.deltaIndex = 0;
@@ -65,7 +66,7 @@ TimeStep.prototype = {
     //  Called when the visibility API says the game is 'hidden' (tab switch, etc)
     pause: function ()
     {
-        console.log('TimeStep.pause');
+        // console.log('TimeStep.pause');
 
         this._pauseTime = window.performance.now();
     },
@@ -77,7 +78,7 @@ TimeStep.prototype = {
 
         this.startTime += this.time - this._pauseTime;
 
-        console.log('TimeStep.resume - paused for', (this.time - this._pauseTime));
+        // console.log('TimeStep.resume - paused for', (this.time - this._pauseTime));
     },
 
     resetDelta: function ()
@@ -99,6 +100,8 @@ TimeStep.prototype = {
 
         this.delta = 0;
         this.deltaIndex = 0;
+
+        this._coolDown = this.deltaSmoothingMax;
     },
 
     start: function (callback)
@@ -127,7 +130,7 @@ TimeStep.prototype = {
     step: function (time)
     {
         //  Debug only
-        var debug = null;
+        var debug = 0;
         var dump = [];
 
         this.frame++;
@@ -137,11 +140,22 @@ TimeStep.prototype = {
         var max = this.deltaSmoothingMax;
 
         //  delta time (time is in ms)
-        var dt = (time - this.lastTime);
+        var dt;
 
         //  When a browser switches tab, then comes back again, it takes around 10 frames before
-        //  the delta time settles down again, and this is likely device specific (some may be
-        //  faster or slower)
+        //  the delta time settles down so we employ a 'cooling down' period before we start
+        //  trusting the delta values again, to avoid spikes flooding through our delta average
+
+        if (this._coolDown > 0)
+        {
+            this._coolDown--;
+
+            dt = this._target;
+        }
+        else
+        {
+            dt = (time - this.lastTime);
+        }
 
         //  min / max range (yes, the < and > should be this way around)
         if (dt > this._min || dt < this._max)
@@ -220,7 +234,8 @@ TimeStep.prototype = {
         //  Shift time value over
         this.lastTime = time;
 
-        if (debug || dump.length)
+        /*
+        if (debug !== 0 || dump.length)
         {
             console.group('Frame ' + this.frame);
             console.log('Interpolation', interpolation, '%');
@@ -229,6 +244,8 @@ TimeStep.prototype = {
             {
                 console.log('Elapsed', debug, 'ms');
             }
+
+            // console.log('Frame', this.frame, 'Delta', avg, '(average)', debug, '(now)');
 
             console.log('Delta', avg, '(average)');
 
@@ -239,6 +256,7 @@ TimeStep.prototype = {
 
             console.groupEnd();
         }
+        */
     },
 
     tick: function ()
