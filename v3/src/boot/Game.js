@@ -5,6 +5,8 @@ var Device = require('../device');
 
 var AddToDOM = require('../dom/AddToDOM');
 var DOMContentLoaded = require('../dom/DOMContentLoaded');
+var VisibilityHandler = require('./VisibilityHandler');
+var EventDispatcher = require('../events/EventDispatcher');
 
 var TimeStep = require('./TimeStep');
 var CreateRenderer = require('./CreateRenderer');
@@ -25,6 +27,11 @@ var Game = function (config)
 
     this.isBooted = false;
     this.isRunning = false;
+
+    /**
+    * @property {EventDispatcher} events - Global / Global Game System Events
+    */
+    this.events = new EventDispatcher();
 
     /**
     * @property {Phaser.AnimationManager} anims - Reference to the Phaser Animation Manager.
@@ -101,6 +108,11 @@ Game.prototype = {
         this.config.postBoot();
 
         this.loop.start(this.step.bind(this));
+
+        VisibilityHandler(this.events);
+
+        this.events.on('DOCUMENT_HIDDEN', this.onHidden.bind(this));
+        this.events.on('DOCUMENT_VISIBLE', this.onVisible.bind(this));
     },
 
     step: function (time, delta)
@@ -132,6 +144,18 @@ Game.prototype = {
         }
 
         renderer.postRender();
+    },
+
+    onHidden: function ()
+    {
+        console.log('Game.hidden');
+        this.loop.pause();
+    },
+
+    onVisible: function ()
+    {
+        console.log('Game.visible');
+        this.loop.resume();
     }
 
 };

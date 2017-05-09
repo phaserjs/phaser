@@ -50,6 +50,8 @@ var TimeStep = function (game, config)
     this.lastTime = 0;
     this.frame = 0;
 
+    this._pauseTime = 0;
+
     this.delta = 0;
     this.deltaIndex = 0;
     this.deltaHistory = [];
@@ -59,6 +61,45 @@ var TimeStep = function (game, config)
 TimeStep.prototype.constructor = TimeStep;
 
 TimeStep.prototype = {
+
+    //  Called when the visibility API says the game is 'hidden' (tab switch, etc)
+    pause: function ()
+    {
+        console.log('TimeStep.pause');
+
+        this._pauseTime = window.performance.now();
+    },
+
+    //  Called when the visibility API says the game is 'visible' again (tab switch, etc)
+    resume: function ()
+    {
+        this.resetDelta();
+
+        this.startTime += this.time - this._pauseTime;
+
+        console.log('TimeStep.resume - paused for', (this.time - this._pauseTime));
+    },
+
+    resetDelta: function ()
+    {
+        var now = window.performance.now();
+
+        this.time = now;
+        this.lastTime = now;
+        this.nextFpsUpdate = now + 1000;
+        this.framesThisSecond = 0;
+        this.frame = 0;
+
+        //  Pre-populate smoothing array
+
+        for (var i = 0; i < this.deltaSmoothingMax; i++)
+        {
+            this.deltaHistory[i] = this._target;
+        }
+
+        this.delta = 0;
+        this.deltaIndex = 0;
+    },
 
     start: function (callback)
     {
@@ -70,27 +111,11 @@ TimeStep.prototype = {
         this.started = true;
         this.running = true;
 
-        var now = window.performance.now();
+        this.deltaHistory = [];
 
-        this.time = now;
-        this.startTime = now;
-        this.lastTime = now;
-        this.nextFpsUpdate = now + 1000;
-        this.framesThisSecond = 0;
-        this.frame = 0;
+        this.resetDelta();
 
-        //  Pre-populate smoothing array
-
-        var history = [];
-
-        for (var i = 0; i < this.deltaSmoothingMax; i++)
-        {
-            history[i] = this._target;
-        }
-
-        this.delta = 0;
-        this.deltaIndex = 0;
-        this.deltaHistory = history;
+        this.startTime = window.performance.now();
 
         this.callback = callback;
 
