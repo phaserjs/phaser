@@ -6,6 +6,11 @@ var Components = require('../../components');
 var Render = require('./RenderPassRender');
 var TexturedAndNormalizedTintedShader = require('../../renderer/webgl/shaders/TexturedAndNormalizedTintedShader');
 
+//   RenderPass - the user has a higher control on the rendering since you explicitly
+//   indicate what is rendered. RenderPass also has a render target but the difference
+//   is that when explicitly rendering an object to the render pass the shader from that
+//   render pass is applied. This is useful for additive passes and specific object effects.
+
 var RenderPass = new Class({
 
     Extends: GameObject,
@@ -34,7 +39,7 @@ var RenderPass = new Class({
         var gl;
 
         this.renderer = state.game.renderer;
-        this.passRenderTarget = null
+        this.passRenderTarget = null;
         this.renderTexture = null;
         this.passShader = null;
         this.uniforms = {};
@@ -52,12 +57,12 @@ var RenderPass = new Class({
         this.setPosition(x, y);
         this.setSize(width, height);
         this.setOrigin(0, 0);
-
     },
 
     clearColorBuffer: function (r, g, b, a)
     {
         var gl = this.renderer.gl;
+
         if (gl)
         {
             gl.bindFramebuffer(gl.FRAMEBUFFER, this.passRenderTarget.framebufferObject);
@@ -70,6 +75,7 @@ var RenderPass = new Class({
     clearDepthStencilBuffers: function (depth, stencil)
     {
         var gl = this.renderer.gl;
+
         if (gl)
         {
             gl.bindFramebuffer(gl.FRAMEBUFFER, this.passRenderTarget.framebufferObject);
@@ -83,6 +89,7 @@ var RenderPass = new Class({
     clearAllBuffers: function (r, g, b, a, depth, stencil)
     {
         var gl = this.renderer.gl;
+
         if (gl)
         {
             gl.bindFramebuffer(gl.FRAMEBUFFER, this.passRenderTarget.framebufferObject);
@@ -97,6 +104,7 @@ var RenderPass = new Class({
     render: function (gameObject, camera)
     {
         var gl = this.renderer.gl;
+
         if (gl)
         {
             this.renderer.spriteBatch.addSprite(gameObject, camera);
@@ -108,10 +116,11 @@ var RenderPass = new Class({
     setRenderTextureAt: function (renderTexture, samplerName, unit)
     {
         var gl = this.renderer.gl;
+
         if (gl)
         {
-            /* Texture 1 is reserved for Phaser's Main Renderer */
-            unit = unit > 0 ? unit : 1;
+            /* Texture 1 is reserved for Phasers Main Renderer */
+            unit = (unit > 0) ? unit : 1;
             this.setInt(samplerName, unit);
             gl.activeTexture(gl.TEXTURE0 + unit);
             gl.bindTexture(gl.TEXTURE_2D, renderTexture.texture);
@@ -143,7 +152,9 @@ var RenderPass = new Class({
         var passShader = this.passShader;
 
         if (passShader === null)
+        {
             return;
+        }
 
         passShader.setConstantFloat1(this.getUniformLocation(uniformName), x);
     },
@@ -153,7 +164,9 @@ var RenderPass = new Class({
         var passShader = this.passShader;
 
         if (passShader === null)
+        {
             return;
+        }
 
         passShader.setConstantFloat2(this.getUniformLocation(uniformName), x, y);
     },
@@ -163,7 +176,9 @@ var RenderPass = new Class({
         var passShader = this.passShader;
 
         if (passShader === null)
+        {
             return;
+        }
 
         passShader.setConstantFloat3(this.getUniformLocation(uniformName), x, y, z);
     },
@@ -173,7 +188,9 @@ var RenderPass = new Class({
         var passShader = this.passShader;
 
         if (passShader === null)
+        {
             return;
+        }
 
         passShader.setConstantFloat4(this.getUniformLocation(uniformName), x, y, z, w);
     },
@@ -183,7 +200,9 @@ var RenderPass = new Class({
         var passShader = this.passShader;
 
         if (passShader === null)
+        {
             return;
+        }
 
         passShader.setConstantInt1(this.getUniformLocation(uniformName), x);
     },
@@ -193,7 +212,9 @@ var RenderPass = new Class({
         var passShader = this.passShader;
 
         if (passShader === null)
+        {
             return;
+        }
 
         passShader.setConstantInt2(this.getUniformLocation(uniformName), x, y);
     },
@@ -203,7 +224,9 @@ var RenderPass = new Class({
         var passShader = this.passShader;
 
         if (passShader === null)
+        {
             return;
+        }
 
         passShader.setConstantInt3(this.getUniformLocation(uniformName), x, y, z);
     },
@@ -213,7 +236,9 @@ var RenderPass = new Class({
         var passShader = this.passShader;
 
         if (passShader === null)
+        {
             return;
+        }
 
         passShader.setConstantInt4(this.getUniformLocation(uniformName), x, y, z, w);
     },
@@ -223,7 +248,9 @@ var RenderPass = new Class({
         var passShader = this.passShader;
 
         if (passShader === null)
+        {
             return;
+        }
 
         passShader.setConstantMatrix2x2(this.getUniformLocation(uniformName), matrix);
     },
@@ -233,7 +260,9 @@ var RenderPass = new Class({
         var passShader = this.passShader;
 
         if (passShader === null)
+        {
             return;
+        }
 
         passShader.setConstantMatrix3x3(this.getUniformLocation(uniformName), matrix);
     },
@@ -243,7 +272,9 @@ var RenderPass = new Class({
         var passShader = this.passShader;
 
         if (passShader === null)
+        {
             return;
+        }
 
         passShader.setConstantMatrix4x4(this.getUniformLocation(uniformName), matrix);
     }

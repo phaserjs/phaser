@@ -4,6 +4,10 @@ var Components = require('../../components');
 var Render = require('./EffectLayerRender');
 var TexturedAndNormalizedTintedShader = require('../../renderer/webgl/shaders/TexturedAndNormalizedTintedShader');
 
+//  EffectLayer renders all elements on the layer to an offscreen render target
+//  and then when rendering the color buffer of that render target to the main screen
+//  it applies the effect layer shader.
+
 var EffectLayer = new Class({
 
     Extends: GameObject,
@@ -63,7 +67,7 @@ var EffectLayer = new Class({
         this.setOrigin(0, 0);
     },
 
-    renderOffScreen: function () 
+    renderOffScreen: function ()
     {
         this.renderTarget = this.dstRenderTarget;
     },
