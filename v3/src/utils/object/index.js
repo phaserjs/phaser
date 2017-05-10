@@ -7,6 +7,8 @@ module.exports = {
     GetAdvancedValue: require('./GetAdvancedValue'),
     GetMinMaxValue: require('./GetMinMaxValue'),
     GetValue: require('./GetValue'),
-    IsPlainObject: require('./IsPlainObject')
+    IsPlainObject: require('./IsPlainObject'),
+    Merge: require('./Merge'),
+    MergeRight: require('./MergeRight')
 
 };
