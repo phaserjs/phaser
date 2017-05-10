@@ -31,7 +31,7 @@ TweenData.prototype = {
 
 var TweenData = function (config)
 {
-    this.property = ;
+    this.property;
 
     this.value;
 

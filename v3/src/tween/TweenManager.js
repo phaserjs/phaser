@@ -1,5 +1,4 @@
 
-var GetValue = require('../utils/object/GetValue');
 var EventDispatcher = require('../events/EventDispatcher');
 var Tween = require('./Tween');
 
@@ -27,6 +26,11 @@ TweenManager.prototype = {
 
     add: function (config)
     {
+        var tween = new Tween(this, config);
+
+        this.list.push(tween);
+
+        return tween;
     },
 
     //  Add a 'to' GSAP equivalent?
@@ -41,7 +45,12 @@ TweenManager.prototype = {
 
     update: function (timestamp, delta)
     {
+        var list = this.list;
 
+        for (var i = 0; i < list.length; i++)
+        {
+            list[i].update(timestamp, delta);
+        }
     },
 
     globalTimeScale: function ()
