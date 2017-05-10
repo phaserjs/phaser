@@ -23,7 +23,7 @@ var TextureSource = require('./TextureSource');
 * @param {object} source
 * @param {number} scaleMode
 */
-var Texture = function (manager, key, source)
+var Texture = function (manager, key, source, width, height)
 {
     this.manager = manager;
 
@@ -55,7 +55,7 @@ var Texture = function (manager, key, source)
     //  Load the Sources
     for (var i = 0; i < source.length; i++)
     {
-        this.source.push(new TextureSource(this, source[i]));
+        this.source.push(new TextureSource(this, source[i], width, height));
     }
 };
 

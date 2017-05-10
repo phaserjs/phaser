@@ -49,11 +49,6 @@ var Graphics = new Class({
 
         if (resourceManager !== undefined)
         {
-            //var gl = state.game.renderer.gl;
-            //this.passShader = resourceManager.createShader(shaderName, {vert: TexturedAndNormalizedTintedShader.vert, frag: fragmentShader});
-            //this.renderTexture = resourceManager.createTexture(0, gl.LINEAR, gl.LINEAR, gl.CLAMP_TO_EDGE, gl.CLAMP_TO_EDGE, gl.RGBA, null, width, height);
-            //this.passRenderTarget = resourceManager.createRenderTarget(width, height, this.renderTexture, null);
-            //state.game.renderer.currentTexture = null; // force rebinding of prev texture
             this.resourceManager = resourceManager;
             this.gl = state.game.renderer.gl;   
         }
@@ -407,9 +402,19 @@ var Graphics = new Class({
         }
     },
 
-    bakeToRenderTarget: function () 
+    generateTexture: function (key, width, height) 
     {
+        width = (typeof width === 'number') ? width : this.state.game.config.width;
+        height = (typeof height === 'number') ? height : this.state.game.config.height;
         
+        if (this.gl) 
+        {
+            this.state.game.textures.create(key, null, width, height);
+        }
+        else
+        {
+            this.state.game.textures.createCanvas(key, width, height);
+        }
     }
 
 });

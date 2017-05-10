@@ -235,9 +235,9 @@ TextureManager.prototype = {
         return texture;
     },
 
-    create: function (key, source)
+    create: function (key, source, width, height)
     {
-        var texture = new Texture(this, key, source);
+        var texture = new Texture(this, key, source, width, height);
 
         this.list[key] = texture;
 

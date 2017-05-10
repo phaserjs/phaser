@@ -15,7 +15,7 @@ var IsSizePowerOfTwo = require('../math/pow2/IsSizePowerOfTwo');
 * @param {object} source
 * @param {number} scaleMode
 */
-var TextureSource = function (texture, source)
+var TextureSource = function (texture, source, width, height)
 {
     this.texture = texture;
 
@@ -38,7 +38,7 @@ var TextureSource = function (texture, source)
     * @type Number
     * @readOnly
     */
-    this.width = source.naturalWidth || source.width || 0;
+    this.width = width || source.naturalWidth || source.width || 0;
 
     /**
     * The height of the Texture.
@@ -47,7 +47,7 @@ var TextureSource = function (texture, source)
     * @type Number
     * @readOnly
     */
-    this.height = source.naturalHeight || source.height || 0;
+    this.height = height || source.naturalHeight || source.height || 0;
 
     /**
     * The scale mode to apply when scaling this texture.
