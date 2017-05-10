@@ -2,6 +2,7 @@
 
 module.exports = {
 
+    Clone: require('./Clone'),
     Extend: require('./Extend'),
     GetAdvancedValue: require('./GetAdvancedValue'),
     GetMinMaxValue: require('./GetMinMaxValue'),
