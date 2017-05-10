@@ -2,7 +2,6 @@ var GetValue = require('../utils/object/GetValue');
 var GetEaseFunction = require('./GetEaseFunction');
 var CloneObject = require('../utils/object/Clone');
 var MergeRight = require('../utils/object/MergeRight');
-// var TweenData = require('./TweenData');
 
 var RESERVED = [ 'targets', 'ease', 'duration', 'yoyo', 'repeat', 'loop', 'paused', 'useFrames', 'offset' ];
 
@@ -67,6 +66,51 @@ var RESERVED = [ 'targets', 'ease', 'duration', 'yoyo', 'repeat', 'loop', 'pause
         }
     });
 
+    //  Multiple Targets + Multiple property tweens:
+
+    var tween = this.tweens.add({
+        targets: [ alien1, alien2, alien3, alienBoss ],
+        props: {
+            x: { value: 400, duration: 2000 },
+            y: { value: 300, duration: 1000 }
+        },
+        ease: 'Sine'
+    });
+
+    //  Multiple Targets + Multiple properties + Multi-state Property tweens:
+
+    var tween = this.tweens.add({
+        targets: [ alien1, alien2, alien3, alienBoss ],
+        props: {
+            x: [ { value: 200, duration: 100 }, { value: 300, duration: 50 }, { value: 400 } ],
+            y: { value: 300, duration: 1000 }
+        },
+        ease: 'Sine'
+    });
+
+    //  Multi-value Tween Property with static values
+
+    var tween = this.tweens.add({
+        targets: [ alien1, alien2, alien3, alienBoss ],
+        props: {
+            x: [ 200, 300, 400 ]
+        },
+        duration: 1000,
+        ease: 'Sine'
+    });
+    
+    var tween = this.tweens.add({
+        targets: player,
+        timeline: [
+            { x: 400 },
+            { y: 400 },
+            { x: 100 },
+            { y: 100 }
+        ],
+        duration: 1000,
+        ease: 'Sine'
+    });
+
  */
 
 var Tween = function (manager, config)
@@ -76,70 +120,58 @@ var Tween = function (manager, config)
     //  The following config properties are reserved words, i.e. they map to Tween related functions
     //  and properties. However if you've got a target that has a property that matches one of the
     //  reserved words, i.e. Target.duration - that you want to tween, then pass it inside a property
-    //  called `vars`. If present it will use the contents of the `vars` object instead.
+    //  called `props`. If present it will use the contents of the `props` object instead.
 
     this.targets = this.setTargets(GetValue(config, 'targets', null));
 
-    //  The properties on the targets that are being tweened.
-    //  The properties are tween simultaneously.
-    //  This object contains the properties which each has an array of TweenData objects,
-    //  that are updated in sequence.
-    this.props = {};
+    //  'Default' Tween properties:
 
-    this.ease = GetEaseFunction(GetValue(config, 'ease', 'Power0'));
-
-    this.duration = GetValue(config, 'duration', 1000);
-
-    //  Only applied if this Tween is part of a Timeline
-    this.offset = GetValue(config, 'offset', 0);
-
-    this.yoyo = GetValue(config, 'yoyo', false);
-    this.repeat = GetValue(config, 'repeat', 0);
-    this.delay = GetValue(config, 'delay', 0);
-    this.onCompleteDelay = GetValue(config, 'onCompleteDelay', 0);
-
-    //  Short-cut for repeat -1 (if set, overrides repeat value)
-    this.loop = GetValue(config, 'loop', false);
-
-    if (this.repeat === -1)
-    {
-        this.loop = true;
-    }
-
-    //  Move to global
-    this.defaultInstance = {
-        key: '',
-        running: false,
-        complete: false,
-        current: 0,
-        queue: [],
-        totalDuration: 0
-    };
-
-    this.defaultTweenData = {
-        value: undefined,
+    this.tweenData = {
+        ease: GetEaseFunction(GetValue(config, 'ease', 'Power0')),
+        duration: GetValue(config, 'duration', 1000),
+        yoyo: GetValue(config, 'yoyo', false),
+        repeat: GetValue(config, 'repeat', 0),
+        loop: GetValue(config, 'loop', false),
+        delay: GetValue(config, 'delay', 0),
+        startAt: null,
         progress: 0,
         startTime: 0,
-        ease: this.ease,
-        duration: this.duration,
-        yoyo: this.yoyo,
-        repeat: this.repeat,
-        loop: this.loop,
-        delay: this.delay,
-        startAt: undefined,
         elapsed: 0
     };
+ 
+    //  One of these for every property being tweened (min 1)
+    this.tweenProps = {
+        key: '',
+        endValue: 0,
+        current: 0,
+        dataQueue: [] // array of TweenData objects
+    };
 
-    this.paused = GetValue(config, 'paused', false);
+    //  One of these per Target, per Property (min 1)
+    this.tweenTarget = {
+        target: undefined,
+        currentValue: 0
+    };
+ 
+    // this.ease = GetEaseFunction(GetValue(config, 'ease', 'Power0'));
+    // this.duration = GetValue(config, 'duration', 1000);
 
-    this.useFrames = GetValue(config, 'useFrames', false);
+    //  Only applied if this Tween is part of a Timeline
+    // this.offset = GetValue(config, 'offset', 0);
 
-    this.autoStart = GetValue(config, 'autoStart', true);
+    // this.yoyo = GetValue(config, 'yoyo', false);
+    // this.repeat = GetValue(config, 'repeat', 0);
+    // this.delay = GetValue(config, 'delay', 0);
+    // this.onCompleteDelay = GetValue(config, 'onCompleteDelay', 0);
 
-    this.running = this.autoStart;
+    //  Same as repeat -1 (if set, overrides repeat value)
+    // this.loop = GetValue(config, 'loop', (this.repeat === -1));
 
-    this.progress = 0;
-    this.totalDuration = 0;
+    // this.paused = GetValue(config, 'paused', false);
+    // this.useFrames = GetValue(config, 'useFrames', false);
+    // this.autoStart = GetValue(config, 'autoStart', true);
+
+    //  Callbacks
 
     this.onStart;
     this.onStartScope;
@@ -159,8 +191,13 @@ var Tween = function (manager, config)
 
     this.callbackScope;
 
-    this.buildTweenData(config);
+    //  Running properties
 
+    // this.running = this.autoStart;
+    // this.progress = 0;
+    // this.totalDuration = 0;
+
+    this.buildTweenData(config);
 };
 
 Tween.prototype.constructor = Tween;
@@ -262,6 +299,7 @@ Tween.prototype = {
         //      {
         //          key: 'x',
         //          start: [ Target0 startValue, Target1 startValue, Target2 startValue ],
+        //          end: [ Target0 endValue, Target1 endValue, Target2 endValue ],
         //          running: true,
         //          complete: false,
         //          current: 0,
