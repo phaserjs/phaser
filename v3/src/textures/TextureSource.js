@@ -123,7 +123,7 @@ var TextureSource = function (texture, source, width, height)
 
     if (game.config.renderType === CONST.WEBGL)
     {
-        game.renderer.createTexture(this);
+        game.renderer.createTexture(this, width, height);
     }
 };
 

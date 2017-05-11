@@ -1,7 +1,7 @@
 var Commands = require('./Commands');
 var MATH_CONST = require('../../math/const');
 
-var GraphicsCanvasRenderer = function (renderer, src, interpolationPercentage, camera)
+var GraphicsCanvasRenderer = function (renderer, src, interpolationPercentage, camera, renderTargetCtx)
 {
     if (this.renderMask !== this.renderFlags)
     {
@@ -16,7 +16,7 @@ var GraphicsCanvasRenderer = function (renderer, src, interpolationPercentage, c
     var srcScaleY = src.scaleY;
     var srcRotation = src.rotation;
     var commandBuffer = src.commandBuffer;
-    var ctx = renderer.currentContext;
+    var ctx = renderTargetCtx || renderer.currentContext;
     var value;
     var lineAlpha = 1.0;
     var fillAlpha = 1.0;

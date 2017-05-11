@@ -117,7 +117,7 @@ WebGLRenderer.prototype = {
         this.setBlendMode(0);
     },
 
-    createTexture: function (source)
+    createTexture: function (source, width, height)
     {
         var gl = this.gl;
         var filter = gl.NEAREST;
@@ -134,7 +134,22 @@ WebGLRenderer.prototype = {
                 filter = gl.NEAREST;
             }
 
-            source.glTexture = this.resourceManager.createTexture(
+            if (typeof width === 'number' && typeof height === 'number')
+            {
+                source.glTexture = this.resourceManager.createTexture(
+                    0,
+                    filter,
+                    filter,
+                    gl.CLAMP_TO_EDGE,
+                    gl.CLAMP_TO_EDGE,
+                    gl.RGBA,
+                    null,
+                    width, height
+                );
+            }
+            else
+            {
+                source.glTexture = this.resourceManager.createTexture(
                     0,
                     filter,
                     filter,
@@ -143,6 +158,7 @@ WebGLRenderer.prototype = {
                     gl.RGBA,
                     source.image
                 );
+            }
         }
 
         this.currentTexture = null;

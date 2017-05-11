@@ -6,6 +6,7 @@ var Commands = require('./Commands');
 var MATH_CONST = require('../../math/const');
 var GetValue = require('../../utils/object/GetValue');
 var CanvasPool = require('../../dom/CanvasPool');
+var Camera = require('../../camera/Camera.js');
 
 var Graphics = new Class({
 
@@ -41,9 +42,6 @@ var Graphics = new Class({
         this.defaultStrokeAlpha = 1;
 
         this.setDefaultStyles(options);
-
-        this.dstRenderTexture = null;
-        this.dstRenderTarget = null;
 
         var resourceManager = state.game.renderer.resourceManager;
 
@@ -382,26 +380,6 @@ var Graphics = new Class({
         return this;
     },
 
-    createRenderTarget: function (width, height) 
-    {
-        var resourceManager = this.resourceManager;
-        if (this.dstRenderTarget === null) 
-        {
-            if (resourceManager !== undefined)
-            {
-                var gl = this.gl;
-                this.dstRenderTexture = resourceManager.createTexture(0, gl.LINEAR, gl.LINEAR, gl.CLAMP_TO_EDGE, gl.CLAMP_TO_EDGE, gl.RGBA, null, width, height);
-                this.dstRenderTarget = resourceManager.createRenderTarget(width, height, this.dstRenderTexture, null);
-                state.game.renderer.currentTexture = null; // force rebinding of prev texture
-            }
-            else
-            {
-                this.dstRenderTexture = CanvasPool.create2D(null, width, height);
-                this.dstRenderTarget = this.dstRenderTexture.getContext('2d');
-            }
-        }
-    },
-
     generateTexture: function (key, width, height) 
     {
         width = (typeof width === 'number') ? width : this.state.game.config.width;
@@ -409,14 +387,25 @@ var Graphics = new Class({
         
         if (this.gl) 
         {
-            this.state.game.textures.create(key, null, width, height);
+            var texture = this.state.game.textures.create(key, null, width, height);
+            var glTexture = texture.source[0].glTexture;
+            var renderTarget = this.resourceManager.createRenderTarget(width, height, glTexture, null);
+            glTexture.width = width;
+            glTexture.height = height;
         }
         else
         {
-            this.state.game.textures.createCanvas(key, width, height);
+            var texture = this.state.game.textures.createCanvas(key, width, height);
+            var ctx = texture.source[0].image.getContext('2d');
+            Graphics.TargetCamera.setViewport(0, 0, width, height);
+            Graphics.TargetCamera.scrollX = this.x;
+            Graphics.TargetCamera.scrollY = this.y;
+            this.renderCanvas(this.state.game.renderer, this, 0, Graphics.TargetCamera, ctx);
         }
     }
 
 });
+
+Graphics.TargetCamera = new Camera(0, 0, 0, 0);
 
 module.exports = Graphics;
