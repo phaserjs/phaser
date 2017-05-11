@@ -25,14 +25,14 @@ var Path = function (x, y, width, rgb, alpha)
     this.points[0] = new Point(x, y, width, rgb, alpha);
 };
 
-var GraphicsWebGLRenderer = function (renderer, gameObject, interpolationPercentage, camera)
+var GraphicsWebGLRenderer = function (renderer, gameObject, interpolationPercentage, camera, forceRenderTarget)
 {
     if (this.renderMask !== this.renderFlags)
     {
         return;
     }
 
-    var renderTarget = gameObject.renderTarget;
+    var renderTarget = forceRenderTarget || gameObject.renderTarget;
     var shapeBatch = renderer.shapeBatch;
     var vertexDataBuffer = shapeBatch.vertexDataBuffer;
     var vertexBufferF32 = vertexDataBuffer.floatView;

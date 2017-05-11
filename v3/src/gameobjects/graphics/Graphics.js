@@ -382,25 +382,22 @@ var Graphics = new Class({
 
     generateTexture: function (key, width, height) 
     {
-        width = (typeof width === 'number') ? width : this.state.game.config.width;
-        height = (typeof height === 'number') ? height : this.state.game.config.height;
+        var screenWidth = this.state.game.config.width;
+        var screenHeight = this.state.game.config.height;
+        width = (typeof width === 'number') ? width : screenWidth;
+        height = (typeof height === 'number') ? height : screenHeight;
         
-        if (this.gl) 
+        Graphics.TargetCamera.setViewport(0, 0, width, height);
+        Graphics.TargetCamera.scrollX = this.x;
+        Graphics.TargetCamera.scrollY = this.y;
+
+        var texture = this.state.game.textures.createCanvas(key, width, height);
+        var ctx = texture.source[0].image.getContext('2d');
+        texture.add('__BASE', 0, 0, 0, width, height);
+        this.renderCanvas(this.state.game.renderer, this, 0, Graphics.TargetCamera, ctx);
+        if (this.gl)
         {
-            var texture = this.state.game.textures.create(key, null, width, height);
-            var glTexture = texture.source[0].glTexture;
-            var renderTarget = this.resourceManager.createRenderTarget(width, height, glTexture, null);
-            glTexture.width = width;
-            glTexture.height = height;
-        }
-        else
-        {
-            var texture = this.state.game.textures.createCanvas(key, width, height);
-            var ctx = texture.source[0].image.getContext('2d');
-            Graphics.TargetCamera.setViewport(0, 0, width, height);
-            Graphics.TargetCamera.scrollX = this.x;
-            Graphics.TargetCamera.scrollY = this.y;
-            this.renderCanvas(this.state.game.renderer, this, 0, Graphics.TargetCamera, ctx);
+            this.state.game.renderer.uploadCanvasToGPU(ctx.canvas, texture.source[0].glTexture, true);
         }
     }
 
