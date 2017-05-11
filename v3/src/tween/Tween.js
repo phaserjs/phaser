@@ -3,7 +3,7 @@ var GetEaseFunction = require('./GetEaseFunction');
 var CloneObject = require('../utils/object/Clone');
 var MergeRight = require('../utils/object/MergeRight');
 
-var RESERVED = [ 'targets', 'ease', 'duration', 'yoyo', 'repeat', 'loop', 'paused', 'useFrames', 'offset' ];
+// var RESERVED = [ 'targets', 'ease', 'duration', 'yoyo', 'repeat', 'loop', 'paused', 'useFrames', 'offset' ];
 
 /*
     The following are all the same
@@ -93,12 +93,15 @@ var RESERVED = [ 'targets', 'ease', 'duration', 'yoyo', 'repeat', 'loop', 'pause
     var tween = this.tweens.add({
         targets: [ alien1, alien2, alien3, alienBoss ],
         props: {
-            x: [ 200, 300, 400 ]
+            x: [ 200, 300, 400 ],
+            y: [ '+100', '-100', '+100' ]
         },
         duration: 1000,
         ease: 'Sine'
     });
     
+    //  Timeline concept
+
     var tween = this.tweens.add({
         targets: player,
         timeline: [
@@ -121,12 +124,52 @@ var Tween = function (manager, config)
     //  and properties. However if you've got a target that has a property that matches one of the
     //  reserved words, i.e. Target.duration - that you want to tween, then pass it inside a property
     //  called `props`. If present it will use the contents of the `props` object instead.
+    //  If you have a Target property you want to tween called 'props' then you're SOL I'm afraid!
 
-    this.targets = this.setTargets(GetValue(config, 'targets', null));
+    //  Array of Targets
 
-    //  'Default' Tween properties:
+    //  [
+    //      {
+    //          target: targetRef,
+    //          props: {
+    //              x: {
+    //                  start: 0,
+    //                  current: 0,
+    //                  end: 0
+    //              },
+    //              y: {
+    //                  start: 0,
+    //                  current: 0,
+    //                  end: 0
+    //              }
+    //          }
+    //      }
+    //  ]
 
-    this.tweenData = {
+    this.targets = [];
+
+    this.props = [];
+
+    //  One of these for every property being tweened
+    this.defaultTweenProp = {
+        key: '',
+        value: 0,   // target value (as defined in the original tween, could be a number, string or function)
+        current: 0, // index to which TweenData in the queue it's processing
+        queue: [] // array of TweenData objects (always at least 1, but can be more)
+    };
+
+    //  Keep start and end values to ensure we never go over them when ending
+    this.defaultTargetProp = {
+        start: 0,
+        current: 0,
+        end: 0
+    };
+
+    //  'Default' Tween properties, duplicated for each property
+    //  Swap for local getValue for speed
+    //  TODO: Add local getters (getLoop, getProgress, etc)
+
+    this.defaultTweenData = {
         ease: GetEaseFunction(GetValue(config, 'ease', 'Power0')),
         duration: GetValue(config, 'duration', 1000),
         yoyo: GetValue(config, 'yoyo', false),
@@ -136,22 +179,10 @@ var Tween = function (manager, config)
         startAt: null,
         progress: 0,
         startTime: 0,
-        elapsed: 0
+        elapsed: 0,
+        direction: 0 // 0 = forward, 1 = reverse
     };
  
-    //  One of these for every property being tweened (min 1)
-    this.tweenProps = {
-        key: '',
-        endValue: 0,
-        current: 0,
-        dataQueue: [] // array of TweenData objects
-    };
-
-    //  One of these per Target, per Property (min 1)
-    this.tweenTarget = {
-        target: undefined,
-        currentValue: 0
-    };
  
     // this.ease = GetEaseFunction(GetValue(config, 'ease', 'Power0'));
     // this.duration = GetValue(config, 'duration', 1000);
@@ -197,12 +228,105 @@ var Tween = function (manager, config)
     // this.progress = 0;
     // this.totalDuration = 0;
 
-    this.buildTweenData(config);
+    this.build(config);
 };
 
 Tween.prototype.constructor = Tween;
 
 Tween.prototype = {
+
+    //  Build Process:
+
+    //  For Each Prop
+    //      Create TweenProp object
+    //      Populate queue with TweenData objects (at least 1)
+    //      Add to props array
+    //  For Each Target
+    //      Create Target object
+    //      For Each Prop
+    //          Create TargetProp object in props object
+
+    build: function (config)
+    {
+        //  For now let's just assume `config.props` is being used:
+
+        var propKeys = [];
+
+        for (var key in config.props)
+        {
+            var prop = CloneObject(this.defaultTweenProp);
+
+            var data;
+            var value = config.props[key];
+
+            if (typeof value === 'number')
+            {
+                // props: {
+                //     x: 400,
+                //     y: 300
+                // }
+                data = CloneObject(this.defaultTweenData);
+
+                prop.value = parseFloat(value);
+            }
+            else if (typeof value === 'string')
+            {
+                // props: {
+                //     x: '+400',
+                //     y: '-300'
+                // }
+            }
+            else if (typeof value === 'function')
+            {
+                // props: {
+                //     x: function () { return Math.random() * 10 },
+                //     y: someOtherCallback
+                // }
+                data = CloneObject(this.defaultTweenData);
+
+                prop.value = parseFloat(value.call());
+            }
+            else
+            {
+                // props: {
+                //     x: { value: 400, ... },
+                //     y: { value: 300, ... }
+                // }
+
+                data = MergeRight(this.defaultTweenData, value);
+
+                //  Value may still be a string, function or number though
+
+                prop.value = parseFloat(data.value);
+            }
+
+            prop.key = key;
+            prop.queue.push(data);
+
+            this.props.push(prop);
+
+            propKeys.push(key);
+        }
+
+        var targets = this.getTargets(config);
+
+        for (var i = 0; i < targets.length; i++)
+        {
+            var target = {
+                ref: targets[i],
+                props: {}
+            };
+
+            for (var k = 0; k < propKeys.length; k++)
+            {
+                target.props[propKeys[k]] = CloneObject(this.defaultTargetProp);
+            }
+
+            this.targets.push(target);
+        }
+    },
+
+    // getPropValue
 
     //  Move to own functions
 
@@ -283,6 +407,18 @@ Tween.prototype = {
         }
     },
 
+    //  Update Loop:
+
+    //  For Each Prop
+    //      Get current TweenData
+    //      Update elapsed time
+    //      Get ease value
+    //      For Each Target
+    //          Apply ease value to Target value
+    //      Has the tween finished?
+    //          No: Wait for next update
+    //          Yes: Advance queue index, or complete tween
+
     update: function (timestep, delta)
     {
         if (!this.running)
@@ -351,8 +487,10 @@ Tween.prototype = {
 
     },
 
-    setTargets: function (targets)
+    getTargets: function (config)
     {
+        var targets = GetValue(config, 'targets', null);
+
         if (typeof targets === 'function')
         {
             targets = targets.call();
