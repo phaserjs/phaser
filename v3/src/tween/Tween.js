@@ -120,6 +120,8 @@ var Tween = function (manager, config)
 {
     this.manager = manager;
 
+    this.config = config;
+
     //  The following config properties are reserved words, i.e. they map to Tween related functions
     //  and properties. However if you've got a target that has a property that matches one of the
     //  reserved words, i.e. Target.duration - that you want to tween, then pass it inside a property
@@ -153,9 +155,9 @@ var Tween = function (manager, config)
     //  One of these for every property being tweened
     this.defaultTweenProp = {
         key: '',
-        value: 0,   // target value (as defined in the original tween, could be a number, string or function)
-        current: 0, // index to which TweenData in the queue it's processing
-        queue: [] // array of TweenData objects (always at least 1, but can be more)
+        value: null,    // target value (as defined in the original tween, could be a number, string or function)
+        current: 0,     // index of which TweenData in the queue it's currently running
+        queue: []       // array of TweenData objects (always at least 1, but can be more)
     };
 
     //  Keep start and end values to ensure we never go over them when ending
@@ -184,23 +186,20 @@ var Tween = function (manager, config)
     };
  
  
-    // this.ease = GetEaseFunction(GetValue(config, 'ease', 'Power0'));
-    // this.duration = GetValue(config, 'duration', 1000);
-
     //  Only applied if this Tween is part of a Timeline
     // this.offset = GetValue(config, 'offset', 0);
 
-    // this.yoyo = GetValue(config, 'yoyo', false);
-    // this.repeat = GetValue(config, 'repeat', 0);
-    // this.delay = GetValue(config, 'delay', 0);
     // this.onCompleteDelay = GetValue(config, 'onCompleteDelay', 0);
-
     //  Same as repeat -1 (if set, overrides repeat value)
     // this.loop = GetValue(config, 'loop', (this.repeat === -1));
 
+    this.useFrames = GetValue(config, 'useFrames', false);
+
+    //  These both do the same thing - pick the most suitable
+    this.autoStart = GetValue(config, 'autoStart', true);
     // this.paused = GetValue(config, 'paused', false);
-    // this.useFrames = GetValue(config, 'useFrames', false);
-    // this.autoStart = GetValue(config, 'autoStart', true);
+
+    this._hasInit = false;
 
     //  Callbacks
 
@@ -228,7 +227,7 @@ var Tween = function (manager, config)
     // this.progress = 0;
     // this.totalDuration = 0;
 
-    this.build(config);
+    // this.build(config);
 };
 
 Tween.prototype.constructor = Tween;
@@ -246,16 +245,64 @@ Tween.prototype = {
     //      For Each Prop
     //          Create TargetProp object in props object
 
-    build: function (config)
+    init: function (timestamp, delta)
     {
-        //  For now let's just assume `config.props` is being used:
+        var config = this.config;
+
+        //  For now let's just assume only `config.props` is being used:
 
         var propKeys = [];
 
+        //  Build the props array
         for (var key in config.props)
         {
             var prop = CloneObject(this.defaultTweenProp);
 
+            prop.key = key;
+            prop.value = config.props[key];
+
+            this.props.push(prop);
+
+            propKeys.push(key);
+        }
+
+        //  Build the targets array
+        var targets = this.getTargets(config);
+
+        for (var i = 0; i < targets.length; i++)
+        {
+            var target = {
+                ref: targets[i],
+                props: {}
+            };
+
+            for (var k = 0; k < propKeys.length; k++)
+            {
+                target.props[propKeys[k]] = CloneObject(this.defaultTargetProp);
+            }
+
+            this.targets.push(target);
+        }
+
+        if (this.autoStart)
+        {
+            this.buildTweenData(timestamp, delta);
+        }
+    },
+
+    //  Called when the Tween first starts (moves from 'pending' to 'active')
+
+    buildTweenData: function (timestamp, delta)
+    {
+        var config = this.config;
+
+        //  Loop through the properties and populate the Target values
+
+    },
+
+    /*
+    startTween: function ()
+    {
             var data;
             var value = config.props[key];
 
@@ -284,6 +331,7 @@ Tween.prototype = {
                 // }
                 data = CloneObject(this.defaultTweenData);
 
+                //  Technically this could return a number, string or object
                 prop.value = parseFloat(value.call());
             }
             else
@@ -295,36 +343,13 @@ Tween.prototype = {
 
                 data = MergeRight(this.defaultTweenData, value);
 
-                //  Value may still be a string, function or number though
+                //  Value may still be a string, function or a number
 
                 prop.value = parseFloat(data.value);
             }
 
-            prop.key = key;
-            prop.queue.push(data);
-
-            this.props.push(prop);
-
-            propKeys.push(key);
-        }
-
-        var targets = this.getTargets(config);
-
-        for (var i = 0; i < targets.length; i++)
-        {
-            var target = {
-                ref: targets[i],
-                props: {}
-            };
-
-            for (var k = 0; k < propKeys.length; k++)
-            {
-                target.props[propKeys[k]] = CloneObject(this.defaultTargetProp);
-            }
-
-            this.targets.push(target);
-        }
     },
+    */
 
     // getPropValue
 
@@ -342,6 +367,7 @@ Tween.prototype = {
         }
     },
 
+    /*
     buildTweenData: function (config)
     {
         //  For now let's just assume `config.props` is being used:
@@ -406,6 +432,7 @@ Tween.prototype = {
             this.totalDuration += propertyMarker.totalDuration;
         }
     },
+    */
 
     //  Update Loop:
 
@@ -420,6 +447,10 @@ Tween.prototype = {
     //          Yes: Advance queue index, or complete tween
 
     update: function (timestep, delta)
+    {
+    },
+
+    OLDupdate: function (timestep, delta)
     {
         if (!this.running)
         {

@@ -12,7 +12,8 @@ var TweenManager = function (state)
     */
     this.events = new EventDispatcher(); // should use State event dispatcher?
 
-    this.list = [];
+    this.pending = [];
+    this.active = [];
 };
 
 TweenManager.prototype.constructor = TweenManager;
@@ -28,7 +29,7 @@ TweenManager.prototype = {
     {
         var tween = new Tween(this, config);
 
-        this.list.push(tween);
+        this.pending.push(tween);
 
         return tween;
     },
@@ -45,9 +46,25 @@ TweenManager.prototype = {
 
     update: function (timestamp, delta)
     {
-        var list = this.list;
+        var list = this.pending;
+        var i;
 
-        for (var i = 0; i < list.length; i++)
+        //  Process the pending list first
+        //  This stops callbacks and out of sync events from populating the active array mid-way during the update
+        if (list.length)
+        {
+            for (i = 0; i < list.length; i++)
+            {
+                list[i].init(timestamp, delta);
+            }
+
+            list.length = 0;
+        }
+
+        //  Process active tweens
+        list = this.active;
+
+        for (i = 0; i < list.length; i++)
         {
             list[i].update(timestamp, delta);
         }
