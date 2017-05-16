@@ -16,6 +16,7 @@ var BlendModes = require('../BlendModes');
 var ScaleModes = require('../ScaleModes');
 var ResourceManager = require('./ResourceManager');
 var Resources = require('./resources');
+var Snapshot = require('../../snapshot/Snapshot');
 
 var WebGLRenderer = function (game)
 {
@@ -60,6 +61,7 @@ var WebGLRenderer = function (game)
     this.currentShader = null;
     this.resourceManager = null;
     this.currentRenderTarget = null;
+    this.snapshotCallback = null;
 
     this.init();
 };
@@ -386,10 +388,24 @@ WebGLRenderer.prototype = {
         {
             this.currentRenderer.flush();
         }
+
+        if (this.snapshotCallback)
+        {
+
+            this.snapshotCallback(Snapshot.WebGLSnapshot(this.view));
+            this.snapshotCallback = null;
+        }
+
         //  Add Post-render hook
 
         // console.log('%c render end ', 'color: #ffffff; background: #ff0000;');
     },
+
+    snapshot: function (callback) 
+    {
+        this.snapshotCallback = callback;
+    },
+
 
     destroy: function ()
     {

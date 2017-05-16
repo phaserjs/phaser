@@ -3,6 +3,7 @@ var DrawImage = require('./utils/DrawImage');
 var BlitImage = require('./utils/BlitImage');
 var GetBlendModes = require('./utils/GetBlendModes');
 var GetContext = require('../../canvas/GetContext');
+var Snapshot = require('../../snapshot/Snapshot');
 
 var CanvasRenderer = function (game)
 {
@@ -257,7 +258,19 @@ CanvasRenderer.prototype = {
         this.currentAlpha = 1;
         this.currentBlendMode = 0;
 
+        if (this.snapshotCallback)
+        {
+
+            this.snapshotCallback(Snapshot.CanvasSnapshot(this.gameCanvas));
+            this.snapshotCallback = null;
+        }
+
         //  Add Post-render hook
+    },
+
+    snapshot: function (callback) 
+    {
+        this.snapshotCallback = callback;
     },
 
     /**
