@@ -14,6 +14,7 @@ require('./zone/ZoneFactory');
 require('./effectlayer/EffectLayerFactory');
 require('./renderpass/RenderPassFactory');
 require('./tilesprite/TileSpriteFactory');
+require('./mesh/MeshFactory');
 
 //  Phaser.GameObjects
 
@@ -33,6 +34,7 @@ module.exports = {
     Sprite: require('./sprite/Sprite'),
     Text: require('./text/static/Text'),
     Zone: require('./zone/Zone'),
-    EffectLayer: require('./effectlayer/EffectLayer')
+    EffectLayer: require('./effectlayer/EffectLayer'),
+    Mesh: require('./mesh/Mesh')
 
 };
