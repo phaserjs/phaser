@@ -4,9 +4,13 @@
 
 var GetValue = function (source, key, defaultValue)
 {
-    if (!source)
+    if (!source || typeof source === 'number')
     {
         return defaultValue;
+    }
+    else if (source.hasOwnProperty(key))
+    {
+        return source[key];
     }
     else if (key.indexOf('.'))
     {
@@ -36,7 +40,7 @@ var GetValue = function (source, key, defaultValue)
     }
     else
     {
-        return (source.hasOwnProperty(key)) ? source[key] : defaultValue;
+        return defaultValue;
     }
 };
 
