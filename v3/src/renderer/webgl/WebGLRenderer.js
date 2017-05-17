@@ -49,7 +49,7 @@ var WebGLRenderer = function (game)
     this.blendModes = [];
     this.gl = null;
     this.extensions = null;
-    this.currentRendereres = [];
+    this.rendererArray = [];
     this.blitterBatch = null;
     this.aaQuadBatch = null;
     this.spriteBatch = null;
@@ -92,7 +92,6 @@ WebGLRenderer.prototype = {
         gl.enable(gl.BLEND);
         gl.clearColor(color.redGL, color.greenGL, color.blueGL, color.alphaGL);
 
-        this.resize(this.width, this.height);
 
         //  Map Blend Modes
 
@@ -116,7 +115,9 @@ WebGLRenderer.prototype = {
         this.shapeBatch = this.addRenderer(new ShapeBatch(this.game, gl, this));
         this.effectRenderer = this.addRenderer(new EffectRenderer(this.game, gl, this));
         this.tileBatch = this.addRenderer(new TileBatch(this.game, gl, this));
+        this.currentRenderer = this.spriteBatch;
         this.setBlendMode(0);
+        this.resize(this.width, this.height);
     },
 
     createTexture: function (source, width, height)
@@ -170,14 +171,12 @@ WebGLRenderer.prototype = {
     {
         if (this.currentTexture !== texture)
         {
-            if (this.currentRenderer)
-            {
-                this.currentRenderer.flush();
-            }
-
             var gl = this.gl;
 
+            this.currentRenderer.flush();
+            
             gl.activeTexture(gl.TEXTURE0);
+
             if (texture !== null)
             {
                 gl.bindTexture(gl.TEXTURE_2D, texture.texture);
@@ -196,13 +195,9 @@ WebGLRenderer.prototype = {
         this.setTexture(texture);
         this.setRenderTarget(renderTarget);
         
-        if (this.currentRenderer !== renderer)
+        if (this.currentRenderer !== renderer || this.currentRenderer.shouldFlush())
         {
-            if (this.currentRenderer)
-            {
-                this.currentRenderer.flush();
-            }
-
+            this.currentRenderer.flush();
             this.currentRenderer = renderer;
         }
     },
@@ -213,10 +208,7 @@ WebGLRenderer.prototype = {
 
         if (this.currentRenderTarget !== renderTarget)
         {
-            if (this.currentRenderer)
-            {
-                this.currentRenderer.flush();
-            }
+            this.currentRenderer.flush();
 
             if (renderTarget !== null)
             {
@@ -239,30 +231,27 @@ WebGLRenderer.prototype = {
 
     resize: function (width, height)
     {
-        var res = this.game.config.resolution;
+        var resolution = this.game.config.resolution;
 
-        this.width = width * res;
-        this.height = height * res;
+        this.width = width * resolution;
+        this.height = height * resolution;
 
         this.view.width = this.width;
         this.view.height = this.height;
 
         if (this.autoResize)
         {
-            this.view.style.width = (this.width / res) + 'px';
-            this.view.style.height = (this.height / res) + 'px';
+            this.view.style.width = (this.width / resolution) + 'px';
+            this.view.style.height = (this.height / resolution) + 'px';
         }
 
         this.gl.viewport(0, 0, this.width, this.height);
-        for (var i = 0, l = this.currentRendereres.length; i < l; ++i)
+        for (var i = 0, l = this.rendererArray.length; i < l; ++i)
         {
-            this.currentRendereres[i].bind();
-            this.currentRendereres[i].resize(width, height, resolution);
+            this.rendererArray[i].bind();
+            this.rendererArray[i].resize(width, height, resolution);
         }
-        if (this.currentRenderer) 
-        {
-            this.currentRenderer.bind();
-        }
+        this.currentRenderer.bind();
     },
 
     //  Call at the start of the render loop
@@ -342,15 +331,14 @@ WebGLRenderer.prototype = {
             // drawing child
             child.renderWebGL(this, child, interpolationPercentage, camera);
             renderer = this.currentRenderer;
-            if (renderer && renderer.isFull())
+            if (renderer.isFull() || renderer.shouldFlush())
             {
                 renderer.flush();
             }
         }
-        if (this.currentRenderer)
-        {
-            this.currentRenderer.flush();
-        }
+        
+        this.currentRenderer.flush();
+        
         if (camera._fadeAlpha > 0 || camera._flashAlpha > 0)
         {
             this.setRenderTarget(null);
@@ -384,10 +372,7 @@ WebGLRenderer.prototype = {
     //  Called at the end of the render loop (tidy things up, etc)
     postRender: function ()
     {
-        if (this.currentRenderer)
-        {
-            this.currentRenderer.flush();
-        }
+        this.currentRenderer.flush();
 
         if (this.snapshotCallback)
         {
@@ -440,10 +425,10 @@ WebGLRenderer.prototype = {
 
     addRenderer: function (rendererInstance)
     {
-        var index = this.currentRendereres.indexOf(rendererInstance);
+        var index = this.rendererArray.indexOf(rendererInstance);
         if (index < 0) 
         {
-            this.currentRendereres.push(rendererInstance);
+            this.rendererArray.push(rendererInstance);
             return rendererInstance;
         }
         return null;

@@ -43,6 +43,8 @@ var SpriteBatch = function (game, gl, manager)
 
     this.manager = manager;
     this.dirty = false;
+    this.drawIndexed = true;
+    this.vertexCount = 0;
 
     this.init(this.glContext);
 };
@@ -91,6 +93,11 @@ SpriteBatch.prototype = {
         this.resize(this.width, this.height, this.game.config.resolution);
     },
 
+    shouldFlush: function ()
+    {
+        return false;
+    },
+
     isFull: function ()
     {
         return (this.vertexDataBuffer.getByteLength() >= this.vertexDataBuffer.getByteCapacity());
@@ -128,9 +135,18 @@ SpriteBatch.prototype = {
 
         this.bind(shader);
         this.vertexBufferObject.updateResource(vertexDataBuffer.getUsedBufferAsFloat(), 0);
-        gl.drawElements(gl.TRIANGLES, this.elementCount, gl.UNSIGNED_SHORT, 0);
+        if (this.drawIndexed)
+        {
+            gl.drawElements(gl.TRIANGLES, this.elementCount, gl.UNSIGNED_SHORT, 0);
+        }
+        else
+        {
+            gl.drawArrays(gl.TRIANGLES, 0, this.vertexCount);
+        }
+        
         vertexDataBuffer.clear();
         this.elementCount = 0;
+        this.vertexCount = 0;
 
         if (renderTarget)
         {
@@ -170,6 +186,12 @@ SpriteBatch.prototype = {
         this.shader = null;
         this.indexBufferObject = null;
         this.vertexBufferObject = null;
+    },
+
+
+    addMesh: function (gameObject, camera)
+    {
+
     },
 
     addSpriteTexture: function (gameObject, camera, texture, textureWidth, textureHeight)

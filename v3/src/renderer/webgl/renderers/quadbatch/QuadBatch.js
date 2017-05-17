@@ -87,6 +87,11 @@ QuadBatch.prototype = {
         this.resize(this.width, this.height, this.game.config.resolution);
     },
 
+    shouldFlush: function ()
+    {
+        return false;
+    },
+
     isFull: function ()
     {
         return (this.vertexDataBuffer.getByteLength() >= this.vertexDataBuffer.getByteCapacity());

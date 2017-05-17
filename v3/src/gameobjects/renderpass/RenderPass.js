@@ -107,9 +107,9 @@ var RenderPass = new Class({
 
         if (gl)
         {
+            this.renderer.setRenderer(this.renderer.spriteBatch, null, null);
             this.renderer.spriteBatch.addSprite(gameObject, camera);
             this.renderer.spriteBatch.flush(this.passShader, this.passRenderTarget.framebufferObject);
-            this.renderer.setRenderer(null, null, null);
         }
     },
 
