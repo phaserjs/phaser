@@ -3,6 +3,7 @@ var GetAdvancedValue = require('../utils/object/GetAdvancedValue');
 var Tween = require('./Tween');
 var RESERVED = require('./ReservedProps');
 var GetEaseFunction = require('./GetEaseFunction');
+var TweenData = require('./TweenData');
 
 var GetTargets = function (config)
 {
@@ -146,15 +147,14 @@ var TweenBuilder = function (manager, config)
     var tweens = [];
 
     //  Default Tween values
-    var ease = GetEaseFunction(GetValue(config, 'ease', 'Power0'));
-    var duration = GetAdvancedValue(config, 'duration', 1000);
-    var yoyo = GetValue(config, 'yoyo', false);
-    var repeat = GetAdvancedValue(config, 'repeat', 0);
-    var repeatDelay = GetAdvancedValue(config, 'repeatDelay', 0);
-    var completeDelay = GetAdvancedValue(config, 'completeDelay', 0);
-    var loop = GetValue(config, 'loop', false);
-    var delay = GetAdvancedValue(config, 'delay', 0);
-    var elasticity = GetAdvancedValue(config, 'elasticity', 0);
+    var defaultEase = GetEaseFunction(GetValue(config, 'ease', 'Power0'));
+    var defaultDuration = GetAdvancedValue(config, 'duration', 1000);
+    var defaultYoyo = GetValue(config, 'yoyo', false);
+    var defaultRepeat = GetAdvancedValue(config, 'repeat', 0);
+    var defaultRepeatDelay = GetAdvancedValue(config, 'repeatDelay', 0);
+    var defaultCompleteDelay = GetAdvancedValue(config, 'completeDelay', 0);
+    var defaultLoop = GetValue(config, 'loop', false);
+    var defaultDelay = GetAdvancedValue(config, 'delay', 0);
 
     for (var p = 0; p < props.length; p++)
     {
@@ -162,33 +162,34 @@ var TweenBuilder = function (manager, config)
         var key = props[p].key;
         var value = props[p].value;
 
-        var iEase = GetEaseFunction(GetValue(value, 'ease', ease));
-        var iDuration = GetAdvancedValue(value, 'duration', duration);
-        var iYoyo = GetValue(value, 'yoyo', yoyo);
-        var iRepeat = GetAdvancedValue(value, 'repeat', repeat);
-        var iRepeatDelay = GetAdvancedValue(value, 'repeatDelay', repeatDelay);
-        var iCompleteDelay = GetAdvancedValue(value, 'completeDelay', completeDelay);
-        var iLoop = GetValue(value, 'loop', loop);
-        var iDelay = GetAdvancedValue(value, 'delay', delay);
-        var iElasticity = GetAdvancedValue(value, 'elasticity', elasticity);
+        var ease = GetEaseFunction(GetValue(value, 'ease', defaultEase));
+        var duration = GetAdvancedValue(value, 'duration', defaultDuration);
+        var yoyo = GetValue(value, 'yoyo', defaultYoyo);
+        var repeat = GetAdvancedValue(value, 'repeat', defaultRepeat);
+        var repeatDelay = GetAdvancedValue(value, 'repeatDelay', defaultRepeatDelay);
+        var completeDelay = GetAdvancedValue(value, 'completeDelay', defaultCompleteDelay);
+        var loop = GetValue(value, 'loop', defaultLoop);
+        var delay = GetAdvancedValue(value, 'delay', defaultDelay);
 
         for (var t = 0; t < targets.length; t++)
         {
             var target = targets[t];
+
+            //  If value is an Array, we've got a sequence of tweens
+
             var valueOp = GetValueOp(target, key, value);
 
             var tween = new Tween(manager, targets[t], key, valueOp);
 
-            //  Set all the other properties ...
-            tween.ease = iEase;
-            tween.duration = iDuration;
-            tween.yoyo = iYoyo;
-            tween.repeat = iRepeat;
-            tween.repeatDelay = iRepeatDelay;
-            tween.completeDelay = iCompleteDelay;
-            tween.loop = iLoop;
-            tween.delay = iDelay;
-            tween.elasticity = iElasticity;
+            //  Set Tween properties (TODO: Callbacks)
+
+            tween.completeDelay = completeDelay;
+
+            //  Set TweenData properties (TODO: Array Loop)
+
+            var tweenData = TweenData(ease, duration, yoyo, repeat, loop, delay, repeatDelay);
+
+            tween.data.push(tweenData);
 
             tweens.push(tween);
 

@@ -132,8 +132,9 @@ TweenManager.prototype = {
         {
             tween = list[i];
 
-            //  If Tween.update returns 'true' then it means keep it alive, otherwise move to destroy list
-            if (!tween.update(timestamp, delta))
+            //  If Tween.update returns 'true' then it means it has completed,
+            //  so move it to the destroy list
+            if (tween.update(timestamp, delta))
             {
                 this._destroy.push(tween);
                 this._toProcess++;
