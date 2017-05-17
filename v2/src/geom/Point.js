@@ -274,7 +274,7 @@ Phaser.Point.prototype = {
     */
     equals: function (a) {
 
-        return (a.x === this.x && a.y === this.y);
+        return (a && a.x === this.x && a.y === this.y);
 
     },
 
