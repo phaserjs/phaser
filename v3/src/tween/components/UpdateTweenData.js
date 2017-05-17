@@ -1,10 +1,10 @@
 //  Merge with Backwards and include in update?
-var Forward = function (tween, delta)
+var Forward = function (parent, tween, delta)
 {
     var elapsed = tween.elapsed;
     var duration = tween.duration;
 
-    elapsed += (this.useFrames) ? 1 : delta;
+    elapsed += (parent.useFrames) ? 1 : delta;
 
     if (elapsed > duration)
     {
@@ -16,9 +16,9 @@ var Forward = function (tween, delta)
     var p = tween.ease(progress);
 
     //  Optimize
-    this.current = this.start + ((this.end - this.start) * p);
+    parent.current = parent.start + ((parent.end - parent.start) * p);
 
-    this.target[this.key] = this.current;
+    parent.target[parent.key] = parent.current;
 
     tween.elapsed = elapsed;
     tween.progress = progress;
@@ -28,16 +28,16 @@ var Forward = function (tween, delta)
         //  Tween has reached end
         //  Do we yoyo or repeat?
 
-        tween.state = ProcessRepeat(tween);
+        tween.state = ProcessRepeat(parent, tween);
     }
 };
 
-var Backward = function (tween, delta)
+var Backward = function (parent, tween, delta)
 {
     var elapsed = tween.elapsed;
     var duration = tween.duration;
 
-    elapsed += (this.useFrames) ? 1 : delta;
+    elapsed += (parent.useFrames) ? 1 : delta;
 
     if (elapsed > duration)
     {
@@ -49,9 +49,9 @@ var Backward = function (tween, delta)
     var p = tween.ease(1 - progress);
 
     //  Optimize
-    this.current = this.start + ((this.end - this.start) * p);
+    parent.current = parent.start + ((parent.end - parent.start) * p);
 
-    this.target[this.key] = this.current;
+    parent.target[parent.key] = parent.current;
 
     tween.elapsed = elapsed;
     tween.progress = progress;
@@ -61,11 +61,11 @@ var Backward = function (tween, delta)
         //  Tween has reached start
         //  Do we yoyo or repeat?
 
-        tween.state = ProcessRepeat(tween);
+        tween.state = ProcessRepeat(parent, tween);
     }
 };
 
-var ProcessRepeat = function (tween)
+var ProcessRepeat = function (parent, tween)
 {
     //  Playing forward, and Yoyo is enabled?
     if (tween.state === 3 && tween.yoyo)
@@ -81,7 +81,8 @@ var ProcessRepeat = function (tween)
         tween.repeatCounter--;
 
         //  Reset the elapsed
-        this.current = this.start;
+        parent.current = parent.start;
+
         tween.elapsed = 0;
         tween.progress = 0;
 
@@ -101,12 +102,12 @@ var ProcessRepeat = function (tween)
     return 5;
 };
 
-var UpdateTweenData = function (tween, timestep, delta)
+var UpdateTweenData = function (parent, tween, timestep, delta)
 {
     if (tween.state === 2)
     {
         //  Waiting for delay to expire
-        tween.countdown -= (this.useFrames) ? 1 : delta;
+        tween.countdown -= (parent.useFrames) ? 1 : delta;
 
         if (tween.countdown <= 0)
         {
@@ -117,16 +118,16 @@ var UpdateTweenData = function (tween, timestep, delta)
     if (tween.state === 3)
     {
         //  Playing forwards
-        Forward(tween, delta);
+        Forward(parent, tween, delta);
     }
     else if (tween.state === 4)
     {
         //  Playing backwards
-        Backward(tween, delta);
+        Backward(parent, tween, delta);
     }
 
     //  Complete?
-    return (tween.state !== 5);
+    return (tween.state === 5);
 };
 
 module.exports = UpdateTweenData;

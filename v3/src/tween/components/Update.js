@@ -2,10 +2,11 @@ var UpdateTweenData = require('./UpdateTweenData');
 
 var Update = function (timestamp, delta)
 {
-    var tween = this.data[this.current];
-
-    if (UpdateTweenData(tween, timestamp, delta))
+    if (UpdateTweenData(this, this.tween, timestamp, delta))
     {
+        //  Next TweenData
+        
+
         //  Tween has completed
         this.state = 5;
     }

@@ -1,6 +1,9 @@
-var TweenData = function (ease, duration, yoyo, repeat, loop, delay, repeatDelay)
+var TweenData = function (value, ease, duration, yoyo, repeat, loop, delay, repeatDelay)
 {
     return {
+
+        //  A function to call when starting the tween, to populate the 'start' and 'end' values with
+        value: value,
 
         // the ease function this tween uses
         ease: ease,
@@ -41,7 +44,11 @@ var TweenData = function (ease, duration, yoyo, repeat, loop, delay, repeatDelay
         //  3 = Playing Forward
         //  4 = Playing Backwards
         //  5 = Completed
-        state: 0
+        state: 0,
+
+        //  For chained TweenData these point to the prev and next references
+        prev: null,
+        next: null
     };
 };
 

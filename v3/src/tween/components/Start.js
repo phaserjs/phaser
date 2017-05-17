@@ -5,13 +5,9 @@ var Start = function ()
         return;
     }
 
-    this.loadValues();
+    this.setCurrentTweenData(0);
 
-    if (this.delay > 0)
-    {
-        this.countdown = this.delay;
-        this.state = 2;
-    }
+    this.loadValues();
 };
 
 module.exports = Start;

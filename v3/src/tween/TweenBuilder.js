@@ -160,36 +160,50 @@ var TweenBuilder = function (manager, config)
     {
         //  Get Tween value + op
         var key = props[p].key;
-        var value = props[p].value;
+        var values = props[p].value;
 
-        var ease = GetEaseFunction(GetValue(value, 'ease', defaultEase));
-        var duration = GetAdvancedValue(value, 'duration', defaultDuration);
-        var yoyo = GetValue(value, 'yoyo', defaultYoyo);
-        var repeat = GetAdvancedValue(value, 'repeat', defaultRepeat);
-        var repeatDelay = GetAdvancedValue(value, 'repeatDelay', defaultRepeatDelay);
-        var completeDelay = GetAdvancedValue(value, 'completeDelay', defaultCompleteDelay);
-        var loop = GetValue(value, 'loop', defaultLoop);
-        var delay = GetAdvancedValue(value, 'delay', defaultDelay);
+        if (!Array.isArray(values))
+        {
+            values = [ values ];
+        }
 
         for (var t = 0; t < targets.length; t++)
         {
             var target = targets[t];
 
-            //  If value is an Array, we've got a sequence of tweens
-
-            var valueOp = GetValueOp(target, key, value);
-
-            var tween = new Tween(manager, targets[t], key, valueOp);
+            var tween = new Tween(manager, targets[t], key);
 
             //  Set Tween properties (TODO: Callbacks)
 
-            tween.completeDelay = completeDelay;
+            tween.completeDelay = GetAdvancedValue(value, 'completeDelay', defaultCompleteDelay);
 
-            //  Set TweenData properties (TODO: Array Loop)
+            //  Build the TweenData
+            for (var i = 0; i < values.length; i++)
+            {
+                var value = values[i];
 
-            var tweenData = TweenData(ease, duration, yoyo, repeat, loop, delay, repeatDelay);
+                //  Set TweenData properties
+                var valueOp = GetValueOp(target, key, value);
 
-            tween.data.push(tweenData);
+                var ease = GetEaseFunction(GetValue(value, 'ease', defaultEase));
+                var duration = GetAdvancedValue(value, 'duration', defaultDuration);
+                var yoyo = GetValue(value, 'yoyo', defaultYoyo);
+                var repeat = GetAdvancedValue(value, 'repeat', defaultRepeat);
+                var repeatDelay = GetAdvancedValue(value, 'repeatDelay', defaultRepeatDelay);
+                var loop = GetValue(value, 'loop', defaultLoop);
+                var delay = GetAdvancedValue(value, 'delay', defaultDelay);
+
+                if (repeat === -1)
+                {
+                    loop = true;
+                }
+
+                var tweenData = TweenData(valueOp, ease, duration, yoyo, repeat, loop, delay, repeatDelay);
+
+                tween.data.push(tweenData);
+            }
+
+            tween.current = tween.data[0];
 
             tweens.push(tween);
 

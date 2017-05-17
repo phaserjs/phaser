@@ -5,7 +5,7 @@
 //  A Tween contains TweenData objects (at least one). It can contain more than one TweenData,
 //  in which case they play out like a nested timeline, all impacting just the one target property.
 
-var Tween = function (manager, target, key, value)
+var Tween = function (manager, target, key)
 {
     //  Needed? Maybe to dispatch Events?
     this.manager = manager;
@@ -14,18 +14,15 @@ var Tween = function (manager, target, key, value)
 
     this.key = key;
 
-    //  A function to call when starting the tween, to populate the 'start' and 'end' values with
-    this.value = value;
-
     this.start;
     this.current;
     this.end;
 
-    //  TweenData
+    //  TweenData array
     this.data = [];
 
     //  Current TweenData being processed
-    this.current = 0;
+    this.tween;
 
     //  if true then duration, delay, etc values are all frame totals
     this.useFrames = false;
@@ -62,6 +59,7 @@ Tween.prototype = {
 
     init: require('./components/Init'),
     loadValues: require('./components/LoadValues'),
+    setCurrentTweenData: require('./components/SetCurrentTweenData'),
     setEventCallback: require('./components/SetEventCallback'),
     start: require('./components/Start'),
     update: require('./components/Update')
