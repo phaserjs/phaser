@@ -68,14 +68,14 @@ var GetValueOp = function (target, key, value)
     else if (typeof value === 'string')
     {
         // props: {
-        //     x: '+400',
-        //     y: '-300',
-        //     z: '*2',
-        //     w: '/2'
+        //     x: '+=400',
+        //     y: '-=300',
+        //     z: '*=2',
+        //     w: '/=2'
         // }
 
         var op = value[0];
-        var num = parseFloat(value.substr(1));
+        var num = parseFloat(value.substr(2));
 
         switch (op)
         {
