@@ -109,6 +109,7 @@ Tween.prototype = {
 
             if (this.countdown <= 0)
             {
+                //  Refactor this, so we can use countdown for repeatDelay and onCompleteDelay as well
                 this.loadValues();
             }
         }
@@ -128,6 +129,7 @@ Tween.prototype = {
         return (this.state !== 5);
     },
 
+    //  Merge with Backwards and include in update?
     forward: function (delta)
     {
         var elapsed = this.elapsed;
@@ -185,7 +187,7 @@ Tween.prototype = {
         this.elapsed = elapsed;
         this.progress = progress;
 
-        if (progress === 0)
+        if (progress === 1)
         {
             //  Tween has reached start
             //  Do we yoyo or repeat?
