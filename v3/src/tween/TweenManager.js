@@ -1,6 +1,7 @@
 
 var EventDispatcher = require('../events/EventDispatcher');
 var TweenBuilder = require('./TweenBuilder');
+var TWEEN_CONST = require('./const');
 
 var TweenManager = function (state)
 {

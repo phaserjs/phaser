@@ -1,10 +1,12 @@
+var TWEEN_CONST = require('../const');
+
 //  Merge with Backwards and include in update?
-var Forward = function (parent, tween, delta)
+var Forward = function (tween, tweenData, delta)
 {
-    var elapsed = tween.elapsed;
-    var duration = tween.duration;
+    var elapsed = tweenData.elapsed;
+    var duration = tweenData.duration;
 
-    elapsed += (parent.useFrames) ? 1 : delta;
+    elapsed += delta;
 
     if (elapsed > duration)
     {
@@ -13,31 +15,28 @@ var Forward = function (parent, tween, delta)
 
     var progress = elapsed / duration;
 
-    var p = tween.ease(progress);
+    var p = tweenData.ease(progress);
 
     //  Optimize
-    parent.current = parent.start + ((parent.end - parent.start) * p);
+    tween.current = tween.start + ((tween.end - tween.start) * p);
 
-    parent.target[parent.key] = parent.current;
+    tween.target[tween.key] = tween.current;
 
-    tween.elapsed = elapsed;
-    tween.progress = progress;
+    tweenData.elapsed = elapsed;
+    tweenData.progress = progress;
 
     if (progress === 1)
     {
-        //  Tween has reached end
-        //  Do we yoyo or repeat?
-
-        tween.state = ProcessRepeat(parent, tween);
+        tweenData.state = ProcessRepeat(tween, tweenData);
     }
 };
 
-var Backward = function (parent, tween, delta)
+var Backward = function (tween, tweenData, delta)
 {
-    var elapsed = tween.elapsed;
-    var duration = tween.duration;
+    var elapsed = tweenData.elapsed;
+    var duration = tweenData.duration;
 
-    elapsed += (parent.useFrames) ? 1 : delta;
+    elapsed += delta;
 
     if (elapsed > duration)
     {
@@ -46,94 +45,134 @@ var Backward = function (parent, tween, delta)
 
     var progress = elapsed / duration;
 
-    var p = tween.ease(1 - progress);
+    var p = tweenData.ease(1 - progress);
 
     //  Optimize
-    parent.current = parent.start + ((parent.end - parent.start) * p);
+    tween.current = tween.start + ((tween.end - tween.start) * p);
 
-    parent.target[parent.key] = parent.current;
+    tween.target[tween.key] = tween.current;
 
-    tween.elapsed = elapsed;
-    tween.progress = progress;
+    tweenData.elapsed = elapsed;
+    tweenData.progress = progress;
 
     if (progress === 1)
     {
-        //  Tween has reached start
-        //  Do we yoyo or repeat?
-
-        tween.state = ProcessRepeat(parent, tween);
+        tweenData.state = ProcessRepeat(tween, tweenData);
     }
 };
 
-var ProcessRepeat = function (parent, tween)
+//  TweenData has reached the end. Now it needs to decide what action to take.
+//  It can either hold, yoyo, repeat or complete.
+var ProcessRepeat = function (tween, tweenData)
 {
-    //  Playing forward, and Yoyo is enabled?
-    if (tween.state === 3 && tween.yoyo)
+    //  Do we hold?
+    if (tweenData.hold > 0)
     {
-        //  Play backwards
-        tween.elapsed = 0;
-        tween.progress = 0;
+        tweenData.elapsed = tweenData.hold;
 
-        return 4;
+        return TWEEN_CONST.HOLD;
     }
-    else if (tween.repeatCounter > 0)
+    else if (tweenData.state === TWEEN_CONST.PLAYING_FORWARD && tweenData.yoyo)
     {
-        tween.repeatCounter--;
+        //  Playing forward and we have a yoyo
+
+        tweenData.elapsed = 0;
+        tweenData.progress = 0;
+
+        return TWEEN_CONST.PLAYING_BACKWARD;
+    }
+    else if (tweenData.repeatCounter > 0)
+    {
+        //  No hold or yoyo, but we do have a repeat
+        tweenData.repeatCounter--;
 
         //  Reset the elapsed
-        parent.current = parent.start;
+        tween.current = tween.start;
 
-        tween.elapsed = 0;
-        tween.progress = 0;
+        tweenData.elapsed = 0;
+        tweenData.progress = 0;
 
         //  Delay?
-        if (tween.repeatDelay > 0)
+        if (tweenData.repeatDelay > 0)
         {
-            tween.countdown = tween.repeatDelay;
+            tweenData.elapsed = tweenData.repeatDelay;
 
-            return 2;
+            tween.target[tween.key] = tween.current;
+
+            return TWEEN_CONST.REPEAT_DELAY;
         }
         else
         {
-            return 3;
+            return TWEEN_CONST.PLAYING_FORWARD;
         }
     }
 
-    return 5;
+    return TWEEN_CONST.COMPLETE;
 };
 
-var UpdateTweenData = function (parent, tween, timestep, delta)
+//  Delta is either a value in ms, or 1 if Tween.useFrames is true
+var UpdateTweenData = function (tween, tweenData, timestep, delta)
 {
-    if (tween.state === 1)
+    switch (tweenData.state)
     {
-        //  Waiting for delay to expire
-        tween.countdown -= (parent.useFrames) ? 1 : delta;
+        case TWEEN_CONST.DELAY:
 
-        if (tween.countdown <= 0)
-        {
-            tween.state = 2;
-        }
+            tweenData.elapsed -= delta;
+
+            if (tweenData.elapsed <= 0)
+            {
+                tweenData.elapsed = 0;
+                tweenData.state = TWEEN_CONST.PENDING_RENDER;
+            }
+
+            break;
+
+        case TWEEN_CONST.REPEAT_DELAY:
+
+            tweenData.elapsed -= delta;
+
+            if (tweenData.elapsed <= 0)
+            {
+                tweenData.elapsed = 0;
+                tweenData.state = TWEEN_CONST.PLAYING_FORWARD;
+            }
+
+            break;
+
+        case TWEEN_CONST.HOLD:
+
+            tweenData.elapsed -= delta;
+
+            if (tweenData.elapsed <= 0)
+            {
+                tweenData.elapsed = 0;
+                //  yoyo, repeat or complete
+                // tweenData.state = TWEEN_CONST.PENDING_RENDER;
+            }
+
+            break;
+
+        case TWEEN_CONST.PENDING_RENDER:
+
+            tween.loadValues();
+            tweenData.state = TWEEN_CONST.PLAYING_FORWARD;
+
+            break;
+
+        case TWEEN_CONST.PLAYING_FORWARD:
+
+            Forward(tween, tweenData, delta);
+
+            break;
+
+        case TWEEN_CONST.PLAYING_BACKWARD:
+
+            Backward(tween, tweenData, delta);
+
+            break;
     }
 
-    if (tween.state === 2)
-    {
-        parent.loadValues();
-        tween.state = 3;
-    }
-
-    if (tween.state === 3)
-    {
-        //  Playing forwards
-        Forward(parent, tween, delta);
-    }
-    else if (tween.state === 4)
-    {
-        //  Playing backwards
-        Backward(parent, tween, delta);
-    }
-
-    //  Complete?
-    return (tween.state === 5);
+    return (tweenData.state === TWEEN_CONST.COMPLETE);
 };
 
 module.exports = UpdateTweenData;

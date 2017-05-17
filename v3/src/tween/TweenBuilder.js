@@ -152,9 +152,15 @@ var TweenBuilder = function (manager, config)
     var defaultYoyo = GetValue(config, 'yoyo', false);
     var defaultRepeat = GetAdvancedValue(config, 'repeat', 0);
     var defaultRepeatDelay = GetAdvancedValue(config, 'repeatDelay', 0);
-    var defaultCompleteDelay = GetAdvancedValue(config, 'completeDelay', 0);
-    var defaultLoop = GetValue(config, 'loop', false);
     var defaultDelay = GetAdvancedValue(config, 'delay', 0);
+    var defaultHold = GetAdvancedValue(config, 'hold', 0);
+    var defaultStartAt = GetAdvancedValue(config, 'startAt', null);
+
+    var useFrames = GetValue(config, 'useFrames', false);
+
+    var loop = GetValue(config, 'loop', false);
+    var loopDelay = GetAdvancedValue(config, 'loopDelay', 0);
+    var completeDelay = GetAdvancedValue(config, 'completeDelay', 0);
 
     for (var p = 0; p < props.length; p++)
     {
@@ -176,8 +182,10 @@ var TweenBuilder = function (manager, config)
 
             //  Set Tween properties (TODO: Callbacks)
 
-            tween.completeDelay = GetAdvancedValue(value, 'completeDelay', defaultCompleteDelay);
-            tween.loop = GetValue(value, 'loop', defaultLoop);
+            tween.useFrames = useFrames;
+            tween.loop = loop;
+            tween.loopDelay = loopDelay;
+            tween.completeDelay = completeDelay;
 
             //  Build the TweenData
             for (var i = 0; i < values.length; i++)
@@ -185,16 +193,18 @@ var TweenBuilder = function (manager, config)
                 var value = values[i];
 
                 //  Set TweenData properties
-                var valueOp = GetValueOp(target, key, value);
 
-                var ease = GetEaseFunction(GetValue(value, 'ease', defaultEase));
-                var duration = GetAdvancedValue(value, 'duration', defaultDuration);
-                var yoyo = GetValue(value, 'yoyo', defaultYoyo);
-                var repeat = GetAdvancedValue(value, 'repeat', defaultRepeat);
-                var repeatDelay = GetAdvancedValue(value, 'repeatDelay', defaultRepeatDelay);
-                var delay = GetAdvancedValue(value, 'delay', defaultDelay);
-
-                var tweenData = TweenData(valueOp, ease, duration, yoyo, repeat, delay, repeatDelay);
+                var tweenData = TweenData(
+                    GetValueOp(target, key, value),
+                    GetEaseFunction(GetValue(value, 'ease', defaultEase)),
+                    GetAdvancedValue(value, 'delay', defaultDelay),
+                    GetAdvancedValue(value, 'duration', defaultDuration),
+                    GetAdvancedValue(value, 'hold', defaultHold),
+                    GetAdvancedValue(value, 'repeat', defaultRepeat),
+                    GetAdvancedValue(value, 'repeatDelay', defaultRepeatDelay),
+                    GetAdvancedValue(value, 'startAt', defaultStartAt),
+                    GetValue(value, 'yoyo', defaultYoyo)
+                );
 
                 tweenData.prev = prev;
 
@@ -207,8 +217,6 @@ var TweenBuilder = function (manager, config)
 
                 prev = tweenData;
             }
-
-            tween.current = tween.data[0];
 
             tweens.push(tween);
 

@@ -1,21 +1,23 @@
-var SetCurrentTweenData = function (tween)
+var TWEEN_CONST = require('../const');
+
+var SetCurrentTweenData = function (tweenData)
 {
-    tween.progress = 0;
-    tween.elapsed = 0;
+    tweenData.progress = 0;
+    tweenData.elapsed = 0;
 
-    tween.repeatCounter = (tween.repeat === -1) ? Number.MAX_SAFE_INTEGER : tween.repeat;
+    tweenData.repeatCounter = (tweenData.repeat === -1) ? Number.MAX_SAFE_INTEGER : tweenData.repeat;
 
-    if (tween.delay > 0)
+    if (tweenData.delay > 0)
     {
-        tween.countdown = tween.delay;
-        tween.state = 1;
+        tweenData.elapsed = tweenData.delay;
+        tweenData.state = TWEEN_CONST.DELAY;
     }
     else
     {
-        tween.state = 2;
+        tweenData.state = TWEEN_CONST.PENDING_RENDER;
     }
 
-    this.tween = tween;
+    this.currentTweenData = tweenData;
 };
 
 module.exports = SetCurrentTweenData;

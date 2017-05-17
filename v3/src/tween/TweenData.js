@@ -1,4 +1,4 @@
-var TweenData = function (value, ease, duration, yoyo, repeat, delay, repeatDelay)
+var TweenData = function (value, ease, delay, duration, hold, repeat, repeatDelay, startAt, yoyo)
 {
     return {
 
@@ -20,8 +20,14 @@ var TweenData = function (value, ease, duration, yoyo, repeat, delay, repeatDela
         // time in ms/frames before tween will start
         delay: delay,
 
+        // time in ms/frames the tween will remain in its end state before either yoyo, repeat or complete
+        hold: hold,
+
         // time in ms/frames before repeat will start
         repeatDelay: repeatDelay,
+
+        //  Changes the property to be this value before starting the tween
+        startAt: startAt,
 
         // between 0 and 1 showing completion of this TweenData
         progress: 0,
@@ -29,18 +35,10 @@ var TweenData = function (value, ease, duration, yoyo, repeat, delay, repeatDela
         // delta counter
         elapsed: 0,
 
-        // delta countdown timer
-        countdown: 0,
-
         // how many repeats are left to run?
         repeatCounter: 0,
 
-        //  0 = Waiting for Start
-        //  1 = Waiting for countdown to expire
-        //  2 = Started, waiting for next render to Load Values
-        //  3 = Playing Forward
-        //  4 = Playing Backwards
-        //  5 = Completed
+        //  TWEEN_CONST.CREATED
         state: 0,
 
         //  For chained TweenData these point to the prev and next references

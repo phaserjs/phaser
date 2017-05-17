@@ -1,3 +1,4 @@
+var TWEEN_CONST = require('./const');
 
 //  A Tween is responsible for tweening one property of one target.
 //  If a target has many properties being tweened, then each unique property will be its own Tween object.
@@ -22,27 +23,25 @@ var Tween = function (manager, target, key)
     this.data = [];
 
     //  Current TweenData being processed
-    this.tween;
+    this.currentTweenData = null;
 
     //  if true then duration, delay, etc values are all frame totals
     this.useFrames = false;
 
-    // infinitely loop this tween?
+    // infinitely loop this tween? Maybe a string? 'alternate', 'reverse', etc
+    // When enabled it will play through
     this.loop = false;
 
+    //  Time in ms/frames before the tween loops again if loop is true
+    this.loopDelay = 0;
+
     //  Time in ms/frames before the 'onComplete' event fires
-    this.onCompleteDelay = 0;
+    this.completeDelay = 0;
 
-    //  Changes the property to be this before starting the tween
-    this.startAt;
+    // delta countdown timer
+    this.countdown = 0;
 
-    //  0 = Waiting to be added to the TweenManager
-    //  1 = Paused (dev needs to invoke Tween.start)
-    //  2 = Started, but waiting for delay to expire
-    //  3 = Playing Forwards
-    //  4 = Playing Backwards
-    //  5 = Completed
-    this.state = 0;
+    this.state = TWEEN_CONST.PENDING_ADD;
 
     this.paused = false;
 
@@ -62,6 +61,7 @@ Tween.prototype = {
 
     init: require('./components/Init'),
     loadValues: require('./components/LoadValues'),
+    playNext: require('./components/PlayNext'),
     setCurrentTweenData: require('./components/SetCurrentTweenData'),
     setEventCallback: require('./components/SetEventCallback'),
     start: require('./components/Start'),
