@@ -73,14 +73,12 @@ Tween.prototype = {
             return;
         }
 
+        this.loadValues();
+
         if (this.delay > 0)
         {
             this.countdown = this.delay;
             this.state = 2;
-        }
-        else
-        {
-            this.loadValues();
         }
     },
 
@@ -109,8 +107,7 @@ Tween.prototype = {
 
             if (this.countdown <= 0)
             {
-                //  Refactor this, so we can use countdown for repeatDelay and onCompleteDelay as well
-                this.loadValues();
+                this.state = 3;
             }
         }
 
@@ -216,7 +213,17 @@ Tween.prototype = {
             this.elapsed = 0;
             this.progress = 0;
 
-            return 3;
+            //  Delay?
+            if (this.repeatDelay > 0)
+            {
+                this.countdown = this.repeatDelay;
+
+                return 2;
+            }
+            else
+            {
+                return 3;
+            }
         }
 
         return 5;

@@ -150,6 +150,7 @@ var TweenBuilder = function (manager, config)
     var duration = GetAdvancedValue(config, 'duration', 1000);
     var yoyo = GetValue(config, 'yoyo', false);
     var repeat = GetAdvancedValue(config, 'repeat', 0);
+    var repeatDelay = GetAdvancedValue(config, 'repeatDelay', 0);
     var loop = GetValue(config, 'loop', false);
     var delay = GetAdvancedValue(config, 'delay', 0);
 
@@ -166,6 +167,7 @@ var TweenBuilder = function (manager, config)
         var iDuration = GetAdvancedValue(value, 'duration', duration);
         var iYoyo = GetValue(value, 'yoyo', yoyo);
         var iRepeat = GetAdvancedValue(value, 'repeat', repeat);
+        var iRepeatDelay = GetAdvancedValue(value, 'repeatDelay', repeatDelay);
         var iLoop = GetValue(value, 'loop', loop);
         var iDelay = GetAdvancedValue(value, 'delay', delay);
 
@@ -181,6 +183,7 @@ var TweenBuilder = function (manager, config)
             tween.duration = iDuration;
             tween.yoyo = iYoyo;
             tween.repeat = iRepeat;
+            tween.repeatDelay = iRepeatDelay;
             tween.loop = iLoop;
             tween.delay = iDelay;
 
