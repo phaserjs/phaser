@@ -1,6 +1,6 @@
 
 var EventDispatcher = require('../events/EventDispatcher');
-var Tween = require('./Tween');
+var TweenBuilder = require('./TweenBuilder');
 
 var TweenManager = function (state)
 {
@@ -12,8 +12,10 @@ var TweenManager = function (state)
     */
     this.events = new EventDispatcher(); // should use State event dispatcher?
 
-    this.pending = [];
-    this.active = [];
+    this._add = [];
+    this._pending = [];
+    this._active = [];
+    this._destroy = [];
 };
 
 TweenManager.prototype.constructor = TweenManager;
@@ -27,9 +29,21 @@ TweenManager.prototype = {
 
     add: function (config)
     {
-        var tween = new Tween(this, config);
+        var tweens = TweenBuilder(this, config);
 
-        this.pending.push(tween);
+        if (tweens.length === 1)
+        {
+            return tweens[0];
+        }
+        else
+        {
+            return tweens;
+        }
+    },
+
+    queue: function (tween)
+    {
+        this._add.push(tween);
 
         return tween;
     },
@@ -46,27 +60,42 @@ TweenManager.prototype = {
 
     update: function (timestamp, delta)
     {
-        var list = this.pending;
+        var list = this._add;
         var i;
+        var tween;
 
-        //  Process the pending list first
+        //  Process the addition list first
         //  This stops callbacks and out of sync events from populating the active array mid-way during the update
         if (list.length)
         {
             for (i = 0; i < list.length; i++)
             {
-                list[i].init(timestamp, delta);
+                tween = list[i];
+
+                //  Return true if the Tween should be started right away, otherwise false
+                if (tween.init())
+                {
+                    tween.start(timestamp);
+
+                    this._active.push(tween);
+                }
+                else
+                {
+                    this._pending.push(tween);
+                }
             }
 
             list.length = 0;
         }
 
         //  Process active tweens
-        list = this.active;
+        list = this._active;
 
         for (i = 0; i < list.length; i++)
         {
-            list[i].update(timestamp, delta);
+            tween = list[i];
+
+            tween.update(timestamp, delta);
         }
     },
 
