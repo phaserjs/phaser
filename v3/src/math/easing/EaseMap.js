@@ -13,13 +13,13 @@ var Sine = require('./Sine');
 //  EaseMap
 module.exports = {
 
-    Power0: Linear.None,
+    Power0: Linear,
     Power1: Quadratic.Out,
     Power2: Cubic.Out,
     Power3: Quartic.Out,
     Power4: Quintic.Out,
 
-    Linear: Linear.None,
+    Linear: Linear,
     Quad: Quadratic.Out,
     Cubic: Cubic.Out,
     Quart: Quartic.Out,
