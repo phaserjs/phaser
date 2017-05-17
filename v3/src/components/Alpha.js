@@ -30,6 +30,13 @@ var Alpha = {
             }
         }
 
+    },
+
+    setAlpha: function (value)
+    {
+        this.alpha = value;
+
+        return this;
     }
 
 };
