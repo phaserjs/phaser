@@ -27,6 +27,9 @@ var Tween = function (manager, target, key)
     //  if true then duration, delay, etc values are all frame totals
     this.useFrames = false;
 
+    // infinitely loop this tween?
+    this.loop = false;
+
     //  Time in ms/frames before the 'onComplete' event fires
     this.onCompleteDelay = 0;
 
@@ -36,7 +39,7 @@ var Tween = function (manager, target, key)
     //  0 = Waiting to be added to the TweenManager
     //  1 = Paused (dev needs to invoke Tween.start)
     //  2 = Started, but waiting for delay to expire
-    //  3 = Playing Forward
+    //  3 = Playing Forwards
     //  4 = Playing Backwards
     //  5 = Completed
     this.state = 0;

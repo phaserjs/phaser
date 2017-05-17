@@ -1,17 +1,18 @@
-var SetCurrentTweenData = function (index)
+var SetCurrentTweenData = function (tween)
 {
-    var tween = this.data[index];
+    tween.progress = 0;
+    tween.elapsed = 0;
 
-    tween.repeatCounter = (tween.loop) ? Number.MAX_SAFE_INTEGER : tween.repeat;
+    tween.repeatCounter = (tween.repeat === -1) ? Number.MAX_SAFE_INTEGER : tween.repeat;
 
     if (tween.delay > 0)
     {
         tween.countdown = tween.delay;
-        tween.state = 2;
+        tween.state = 1;
     }
     else
     {
-        tween.state = 3;
+        tween.state = 2;
     }
 
     this.tween = tween;

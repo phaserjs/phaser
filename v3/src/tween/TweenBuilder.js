@@ -161,6 +161,7 @@ var TweenBuilder = function (manager, config)
         //  Get Tween value + op
         var key = props[p].key;
         var values = props[p].value;
+        var prev = null;
 
         if (!Array.isArray(values))
         {
@@ -176,6 +177,7 @@ var TweenBuilder = function (manager, config)
             //  Set Tween properties (TODO: Callbacks)
 
             tween.completeDelay = GetAdvancedValue(value, 'completeDelay', defaultCompleteDelay);
+            tween.loop = GetValue(value, 'loop', defaultLoop);
 
             //  Build the TweenData
             for (var i = 0; i < values.length; i++)
@@ -190,17 +192,20 @@ var TweenBuilder = function (manager, config)
                 var yoyo = GetValue(value, 'yoyo', defaultYoyo);
                 var repeat = GetAdvancedValue(value, 'repeat', defaultRepeat);
                 var repeatDelay = GetAdvancedValue(value, 'repeatDelay', defaultRepeatDelay);
-                var loop = GetValue(value, 'loop', defaultLoop);
                 var delay = GetAdvancedValue(value, 'delay', defaultDelay);
 
-                if (repeat === -1)
+                var tweenData = TweenData(valueOp, ease, duration, yoyo, repeat, delay, repeatDelay);
+
+                tweenData.prev = prev;
+
+                if (prev)
                 {
-                    loop = true;
+                    prev.next = tweenData;
                 }
 
-                var tweenData = TweenData(valueOp, ease, duration, yoyo, repeat, loop, delay, repeatDelay);
-
                 tween.data.push(tweenData);
+
+                prev = tweenData;
             }
 
             tween.current = tween.data[0];

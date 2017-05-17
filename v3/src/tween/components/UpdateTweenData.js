@@ -104,15 +104,21 @@ var ProcessRepeat = function (parent, tween)
 
 var UpdateTweenData = function (parent, tween, timestep, delta)
 {
-    if (tween.state === 2)
+    if (tween.state === 1)
     {
         //  Waiting for delay to expire
         tween.countdown -= (parent.useFrames) ? 1 : delta;
 
         if (tween.countdown <= 0)
         {
-            tween.state = 3;
+            tween.state = 2;
         }
+    }
+
+    if (tween.state === 2)
+    {
+        parent.loadValues();
+        tween.state = 3;
     }
 
     if (tween.state === 3)

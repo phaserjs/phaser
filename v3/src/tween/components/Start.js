@@ -5,9 +5,7 @@ var Start = function ()
         return;
     }
 
-    this.setCurrentTweenData(0);
-
-    this.loadValues();
+    this.setCurrentTweenData(this.data[0]);
 };
 
 module.exports = Start;
