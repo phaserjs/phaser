@@ -151,11 +151,10 @@ var TweenBuilder = function (manager, config)
     var yoyo = GetValue(config, 'yoyo', false);
     var repeat = GetAdvancedValue(config, 'repeat', 0);
     var repeatDelay = GetAdvancedValue(config, 'repeatDelay', 0);
+    var completeDelay = GetAdvancedValue(config, 'completeDelay', 0);
     var loop = GetValue(config, 'loop', false);
     var delay = GetAdvancedValue(config, 'delay', 0);
-
-    // var onCompleteDelay = 0;
-    // var elasticity = 0;
+    var elasticity = GetAdvancedValue(config, 'elasticity', 0);
 
     for (var p = 0; p < props.length; p++)
     {
@@ -168,8 +167,10 @@ var TweenBuilder = function (manager, config)
         var iYoyo = GetValue(value, 'yoyo', yoyo);
         var iRepeat = GetAdvancedValue(value, 'repeat', repeat);
         var iRepeatDelay = GetAdvancedValue(value, 'repeatDelay', repeatDelay);
+        var iCompleteDelay = GetAdvancedValue(value, 'completeDelay', completeDelay);
         var iLoop = GetValue(value, 'loop', loop);
         var iDelay = GetAdvancedValue(value, 'delay', delay);
+        var iElasticity = GetAdvancedValue(value, 'elasticity', elasticity);
 
         for (var t = 0; t < targets.length; t++)
         {
@@ -184,8 +185,10 @@ var TweenBuilder = function (manager, config)
             tween.yoyo = iYoyo;
             tween.repeat = iRepeat;
             tween.repeatDelay = iRepeatDelay;
+            tween.completeDelay = iCompleteDelay;
             tween.loop = iLoop;
             tween.delay = iDelay;
+            tween.elasticity = iElasticity;
 
             tweens.push(tween);
 

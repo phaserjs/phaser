@@ -13,24 +13,24 @@ var Tween = function (manager, target, key, value)
     this.current;
     this.end;
 
-    this.ease;
-    this.duration = 1000;
-    this.yoyo = false;
-    this.repeat = 0;
-    this.loop = false;
-    this.delay = 0;
-    this.repeatDelay = 0;
-    this.onCompleteDelay = 0;
+    this.ease; // the ease function this tween uses
+    this.duration = 1000; // duration of the tween in ms/frames, excludes time for yoyo or repeats
+    this.yoyo = false; // alternate the tween back to its start position again?
+    this.repeat = 0; // number of times to repeat the tween (-1 = forever, same as setting loop=true)
+    this.loop = false; // infinitely loop this tween?
+    this.delay = 0; // time in ms/frames between tween will start its first run
+    this.repeatDelay = 0; // time in ms/frames before repeat will start
+    this.onCompleteDelay = 0; // time in ms/frames before the 'onComplete' event fires
     this.elasticity = 0;
 
     //  Changes the property to be this before starting the tween
     this.startAt;
 
-    this.progress = 0;
-    this.elapsed = 0;
-    this.countdown = 0;
+    this.progress = 0; // between 0 and 1 showing completion of current portion of tween
+    this.elapsed = 0; // delta counter
+    this.countdown = 0; // delta countdown timer
 
-    this.repeatCounter = 0;
+    this.repeatCounter = 0; // how many repeats are left to run?
 
     //  0 = Waiting to be added to the TweenManager
     //  1 = Paused (dev needs to invoke Tween.start)
@@ -141,7 +141,7 @@ Tween.prototype = {
 
         var progress = elapsed / duration;
 
-        var p = this.ease(progress);
+        var p = this.ease(progress, 0.1, this.elasticity);
 
         //  Optimize
         this.current = this.start + ((this.end - this.start) * p);
@@ -174,7 +174,7 @@ Tween.prototype = {
 
         var progress = elapsed / duration;
 
-        var p = this.ease(1 - progress);
+        var p = this.ease(1 - progress, 0.1, this.elasticity);
 
         //  Optimize
         this.current = this.start + ((this.end - this.start) * p);
