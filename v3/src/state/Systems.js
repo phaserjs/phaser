@@ -120,8 +120,7 @@ Systems.prototype = {
 
     step: function (time, delta)
     {
-        //  Before or after child update?
-        this.tweens.update(time, delta);
+        this.tweens.begin(time);
 
         var list = this.children.list;
 
@@ -130,12 +129,16 @@ Systems.prototype = {
             list[i].preUpdate(time, delta);
         }
 
+        this.tweens.update(time, delta);
+
         this.cameras.update(time, delta);
 
         this.state.update.call(this.state, time, delta);
     },
 
     //  Called just once per frame, regardless of speed
+
+    /*
     begin: function (timestamp, frameDelta)
     {
         var list = this.children.list;
@@ -153,6 +156,7 @@ Systems.prototype = {
 
         this.state.update.call(this.state, timestep, physicsStep);
     },
+    */
 
     //  Called just once per frame
     render: function (interpolation, renderer)
