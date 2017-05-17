@@ -4,6 +4,7 @@ var MeshWebGLRenderer = function (renderer, src, interpolationPercentage, camera
     {
         return;
     }
+    renderer.spriteBatch.addMesh(src, camera);
 };
 
 module.exports = MeshWebGLRenderer

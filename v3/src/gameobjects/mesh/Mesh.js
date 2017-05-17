@@ -34,8 +34,13 @@ var Mesh = new Class({
         this.setSizeToFrame();
         this.setOrigin();
 
-        this.vertices = vertices;
-        this.uv = uv;
+        if (vertices.length !== uv.length)
+        {
+            throw new Error('Phaser: Vertex count must match UV count');
+        }
+
+        this.vertices = new Float32Array(vertices);
+        this.uv = new Float32Array(uv);
     }
 
 });
