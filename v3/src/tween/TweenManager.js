@@ -12,10 +12,16 @@ var TweenManager = function (state)
     */
     this.events = new EventDispatcher(); // should use State event dispatcher?
 
+    //  TODO:
+    //  Add _pool array and make the queue re-use objects within it.
+    //  Add a pool max size.
+
     this._add = [];
     this._pending = [];
     this._active = [];
     this._destroy = [];
+
+    this._toProcess = 0;
 };
 
 TweenManager.prototype.constructor = TweenManager;
@@ -45,6 +51,8 @@ TweenManager.prototype = {
     {
         this._add.push(tween);
 
+        this._toProcess++;
+
         return tween;
     },
 
@@ -58,44 +66,78 @@ TweenManager.prototype = {
     {
     },
 
-    update: function (timestamp, delta)
+    begin: function ()
     {
-        var list = this._add;
+        if (this._toProcess === 0)
+        {
+            //  Quick bail
+            return;
+        }
+
+        var list = this._destroy;
+        var active = this._active;
         var i;
         var tween;
 
-        //  Process the addition list first
-        //  This stops callbacks and out of sync events from populating the active array mid-way during the update
-        if (list.length)
+        //  Clear the 'destroy' list
+        for (i = 0; i < list.length; i++)
         {
-            for (i = 0; i < list.length; i++)
+            tween = list[i];
+
+            //  Remove from the 'active' array
+            var idx = active.indexOf(tween);
+
+            if (idx !== -1)
             {
-                tween = list[i];
-
-                //  Return true if the Tween should be started right away, otherwise false
-                if (tween.init())
-                {
-                    tween.start(timestamp);
-
-                    this._active.push(tween);
-                }
-                else
-                {
-                    this._pending.push(tween);
-                }
+                active.splice(idx, 1);
             }
-
-            list.length = 0;
         }
 
-        //  Process active tweens
-        list = this._active;
+        list.length = 0;
+
+        //  Process the addition list
+        //  This stops callbacks and out of sync events from populating the active array mid-way during the update
+
+        list = this._add;
 
         for (i = 0; i < list.length; i++)
         {
             tween = list[i];
 
-            tween.update(timestamp, delta);
+            //  Return true if the Tween should be started right away, otherwise false
+            if (tween.init())
+            {
+                tween.start();
+
+                this._active.push(tween);
+            }
+            else
+            {
+                this._pending.push(tween);
+            }
+        }
+
+        list.length = 0;
+
+        this._toProcess = 0;
+    },
+
+    update: function (timestamp, delta)
+    {
+        //  Process active tweens
+        var list = this._active;
+        var tween;
+
+        for (var i = 0; i < list.length; i++)
+        {
+            tween = list[i];
+
+            //  If Tween.update returns 'true' then it means keep it alive, otherwise move to destroy list
+            if (!tween.update(timestamp, delta))
+            {
+                this._destroy.push(tween);
+                this._toProcess++;
+            }
         }
     },
 
