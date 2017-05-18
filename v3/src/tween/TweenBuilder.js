@@ -162,32 +162,33 @@ var TweenBuilder = function (manager, config)
     var loopDelay = GetAdvancedValue(config, 'loopDelay', 0);
     var completeDelay = GetAdvancedValue(config, 'completeDelay', 0);
 
+    //  FOR EACH PROPERTY
     for (var p = 0; p < props.length; p++)
     {
         //  Get Tween value + op
         var key = props[p].key;
         var values = props[p].value;
-        var prev = null;
 
         if (!Array.isArray(values))
         {
             values = [ values ];
         }
 
+        //  FOR EACH TARGET
         for (var t = 0; t < targets.length; t++)
         {
             var target = targets[t];
 
-            var tween = new Tween(manager, targets[t], key);
+            var prev = null;
 
-            //  Set Tween properties (TODO: Callbacks)
+            var tween = new Tween(manager, targets[t], key);
 
             tween.useFrames = useFrames;
             tween.loop = loop;
             tween.loopDelay = loopDelay;
             tween.completeDelay = completeDelay;
 
-            //  Build the TweenData
+            //  FOR EACH TWEEN DATA
             for (var i = 0; i < values.length; i++)
             {
                 var value = values[i];
