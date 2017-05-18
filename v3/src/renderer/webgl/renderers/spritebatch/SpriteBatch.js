@@ -46,6 +46,7 @@ var SpriteBatch = function (game, gl, manager)
     this.dirty = false;
     this.drawIndexed = true;
     this.lastDrawIndexed = true;
+    this.lastDrawingMesh = false;
     this.drawingMesh = false;
     this.vertexCount = 0;
 
@@ -100,9 +101,10 @@ SpriteBatch.prototype = {
 
     shouldFlush: function ()
     {
-        if (this.drawIndexed != this.lastDrawIndexed)
+        if (this.drawIndexed != this.lastDrawIndexed || this.lastDrawingMesh !== this.drawingMesh)
         {
             this.lastDrawIndexed = this.drawIndexed;
+            this.lastDrawingMesh = this.drawingMesh;
             return true;
         }
         return false;
