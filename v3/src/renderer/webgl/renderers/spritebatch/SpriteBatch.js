@@ -232,6 +232,7 @@ SpriteBatch.prototype = {
         var indexBuffer = this.indexDataBuffer.uintView;
         var indices = gameObject.indices;
         var indexLength = indices.length;
+        var indexOffset = this.vertexCount;
 
         tempMatrix.applyITRS(translateX, translateY, rotation, scaleX, scaleY);
 
@@ -279,7 +280,7 @@ SpriteBatch.prototype = {
         var elementCount = this.elementCount;
         for (var index = 0; index < indexLength; ++index)
         {
-            indexBuffer[elementCount + index] = indices[index];
+            indexBuffer[elementCount + index] = indexOffset + indices[index];
         }
 
         this.elementCount += indexLength;
