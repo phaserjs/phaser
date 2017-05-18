@@ -8,7 +8,6 @@ var TWEEN_CONST = require('./const');
 
 var Tween = function (manager, target, key)
 {
-    //  Needed? Maybe to dispatch Events?
     this.manager = manager;
 
     this.target = target;
@@ -27,6 +26,11 @@ var Tween = function (manager, target, key)
 
     //  if true then duration, delay, etc values are all frame totals
     this.useFrames = false;
+
+    //  Time in ms/frames before the tween starts for the very first time
+    //  (populated by stagger property, or directly) - never used again once the
+    //  tween has begun.
+    this.startDelay = 0;
 
     // infinitely loop this tween? Maybe a string? 'alternate', 'reverse', etc
     // When enabled it will play through
@@ -61,10 +65,10 @@ Tween.prototype = {
 
     init: require('./components/Init'),
     loadValues: require('./components/LoadValues'),
-    playNext: require('./components/PlayNext'),
+    advanceState: require('./components/AdvanceState'),
     setCurrentTweenData: require('./components/SetCurrentTweenData'),
     setEventCallback: require('./components/SetEventCallback'),
-    start: require('./components/Start'),
+    play: require('./components/Play'),
     update: require('./components/Update')
 
 };

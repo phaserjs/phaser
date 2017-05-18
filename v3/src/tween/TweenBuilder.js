@@ -157,10 +157,13 @@ var TweenBuilder = function (manager, config)
     var defaultStartAt = GetAdvancedValue(config, 'startAt', null);
 
     var useFrames = GetValue(config, 'useFrames', false);
+    var stagger = GetValue(config, 'stagger', 0);
 
     var loop = GetValue(config, 'loop', false);
     var loopDelay = GetAdvancedValue(config, 'loopDelay', 0);
     var completeDelay = GetAdvancedValue(config, 'completeDelay', 0);
+    var startDelay = GetAdvancedValue(config, 'startDelay', 0);
+    var paused = GetValue(config, 'paused', false);
 
     //  FOR EACH PROPERTY
     for (var p = 0; p < props.length; p++)
@@ -187,6 +190,8 @@ var TweenBuilder = function (manager, config)
             tween.loop = loop;
             tween.loopDelay = loopDelay;
             tween.completeDelay = completeDelay;
+            tween.startDelay = startDelay + (stagger * t);
+            tween.paused = paused;
 
             //  FOR EACH TWEEN DATA
             for (var i = 0; i < values.length; i++)

@@ -108,7 +108,7 @@ TweenManager.prototype = {
             //  Return true if the Tween should be started right away, otherwise false
             if (tween.init())
             {
-                tween.start();
+                tween.play();
 
                 this._active.push(tween);
             }
@@ -141,6 +141,20 @@ TweenManager.prototype = {
                 this._toProcess++;
             }
         }
+    },
+
+    makeActive: function (tween)
+    {
+        var idx = this._pending.indexOf(tween);
+
+        if (idx !== -1)
+        {
+            this._pending.splice(idx, 1);
+        }
+
+        this._add.push(tween);
+
+        this._toProcess++;
     },
 
     globalTimeScale: function ()

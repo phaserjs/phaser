@@ -1,6 +1,6 @@
 var TWEEN_CONST = require('../const');
 
-var PlayNext = function ()
+var AdvanceState = function ()
 {
     //  This is the TweenData that has just completed playing
     var tweenData = this.currentTweenData;
@@ -33,4 +33,4 @@ var PlayNext = function ()
     }
 };
 
-module.exports = PlayNext;
+module.exports = AdvanceState;

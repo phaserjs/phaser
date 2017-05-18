@@ -15,12 +15,13 @@ var Update = function (timestamp, delta)
             if (UpdateTweenData(this, this.currentTweenData, timestamp, delta))
             {
                 //  If this returns true then the current TweenData has completed
-                this.playNext();
+                this.advanceState();
             }
 
             break;
 
         case TWEEN_CONST.LOOP_DELAY:
+        case TWEEN_CONST.START_DELAY:
 
             this.countdown -= delta;
 
