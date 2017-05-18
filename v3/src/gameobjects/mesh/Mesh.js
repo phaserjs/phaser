@@ -25,7 +25,7 @@ var Mesh = new Class({
 
     initialize:
 
-    function Mesh (state, x, y, vertices, uv, texture, frame)
+    function Mesh (state, x, y, vertices, uv, indices, texture, frame)
     {
         GameObject.call(this, state, 'Mesh');
 
@@ -41,6 +41,7 @@ var Mesh = new Class({
 
         this.vertices = new Float32Array(vertices);
         this.uv = new Float32Array(uv);
+        this.indices = new Uint16Array(indices);
     }
 
 });

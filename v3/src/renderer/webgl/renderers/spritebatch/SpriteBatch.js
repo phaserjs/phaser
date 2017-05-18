@@ -19,6 +19,7 @@ var SpriteBatch = function (game, gl, manager)
     this.shader = null;
     this.vertexBufferObject = null;
     this.indexBufferObject = null;
+    this.indexBufferObjectForMesh = null;
     this.vertexDataBuffer = null;
     this.indexDataBuffer = null;
     this.elementCount = 0;
@@ -45,6 +46,7 @@ var SpriteBatch = function (game, gl, manager)
     this.dirty = false;
     this.drawIndexed = true;
     this.lastDrawIndexed = true;
+    this.drawingMesh = false;
     this.vertexCount = 0;
 
     this.init(this.glContext);
@@ -61,6 +63,7 @@ SpriteBatch.prototype = {
         var indexDataBuffer = new DataBuffer16(CONST.INDEX_SIZE * CONST.SPRITE_INDEX_COUNT * CONST.MAX_SPRITES);
         var shader = this.manager.resourceManager.createShader('TexturedAndNormalizedTintedShader', TexturedAndNormalizedTintedShader);
         var indexBufferObject = this.manager.resourceManager.createBuffer(gl.ELEMENT_ARRAY_BUFFER, indexDataBuffer.getByteCapacity(), gl.STATIC_DRAW);
+        var indexBufferObjectForMesh = this.manager.resourceManager.createBuffer(gl.ELEMENT_ARRAY_BUFFER, indexDataBuffer.getByteCapacity(), gl.STREAM_DRAW);
         var vertexBufferObject = this.manager.resourceManager.createBuffer(gl.ARRAY_BUFFER, vertexDataBuffer.getByteCapacity(), gl.STREAM_DRAW);
         var viewMatrixLocation = shader.getUniformLocation('u_view_matrix');
         var indexBuffer = indexDataBuffer.uintView;
@@ -70,6 +73,7 @@ SpriteBatch.prototype = {
         this.indexDataBuffer = indexDataBuffer;
         this.shader = shader;
         this.indexBufferObject = indexBufferObject;
+        this.indexBufferObjectForMesh = indexBufferObjectForMesh;
         this.vertexBufferObject = vertexBufferObject;
         this.viewMatrixLocation = viewMatrixLocation;
 
@@ -120,7 +124,6 @@ SpriteBatch.prototype = {
             shader.bind();
             this.resize(this.width, this.height, this.game.config.resolution, shader);
         }
-        this.indexBufferObject.bind();
         this.vertexBufferObject.bind();
     },
 
@@ -143,6 +146,14 @@ SpriteBatch.prototype = {
         this.vertexBufferObject.updateResource(vertexDataBuffer.getUsedBufferAsFloat(), 0);
         if (this.drawIndexed)
         {
+            if (this.drawingMesh)
+            {
+                this.indexBufferObjectForMesh.bind();
+                this.indexBufferObjectForMesh.updateResource(this.indexDataBuffer.buffer, 0)
+            }
+            else
+                this.indexBufferObject.bind();
+
             gl.drawElements(gl.TRIANGLES, this.elementCount, gl.UNSIGNED_SHORT, 0);
         }
         else
@@ -194,6 +205,83 @@ SpriteBatch.prototype = {
         this.vertexBufferObject = null;
     },
 
+    addMeshIndexed: function (gameObject, camera)
+    {
+        var tempMatrix = this.tempMatrix;
+        var frame = gameObject.frame;
+        var vertexDataBuffer = this.vertexDataBuffer;
+        var vertexBufferObjectF32 = vertexDataBuffer.floatView;
+        var vertexBufferObjectU32 = vertexDataBuffer.uintView;
+        var vertexOffset = 0;
+        var translateX = gameObject.x - camera.scrollX;
+        var translateY = gameObject.y - camera.scrollY;
+        var scaleX = gameObject.scaleX;
+        var scaleY = gameObject.scaleY;
+        var rotation = -gameObject.rotation;
+        var tempMatrixMatrix = tempMatrix.matrix;
+        var cameraMatrix = camera.matrix.matrix;
+        var mva, mvb, mvc, mvd, mve, mvf, tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3;
+        var sra, srb, src, srd, sre, srf, cma, cmb, cmc, cmd, cme, cmf;
+        var alpha = gameObject.alpha;
+        var vertices = gameObject.vertices;
+        var uv = gameObject.uv;
+        var length = vertices.length;
+        var totalVertices = (length / 2)|0;
+        var indexBuffer = this.indexDataBuffer.uintView;
+        var indices = gameObject.indices;
+        var indexLength = indices.length;
+
+        tempMatrix.applyITRS(translateX, translateY, rotation, scaleX, scaleY);
+
+        sra = tempMatrixMatrix[0];
+        srb = tempMatrixMatrix[1];
+        src = tempMatrixMatrix[2];
+        srd = tempMatrixMatrix[3];
+        sre = tempMatrixMatrix[4];
+        srf = tempMatrixMatrix[5];
+
+        cma = cameraMatrix[0];
+        cmb = cameraMatrix[1];
+        cmc = cameraMatrix[2];
+        cmd = cameraMatrix[3];
+        cme = cameraMatrix[4];
+        cmf = cameraMatrix[5];
+
+        mva = sra * cma + srb * cmc;
+        mvb = sra * cmb + srb * cmd;
+        mvc = src * cma + srd * cmc;
+        mvd = src * cmb + srd * cmd;
+        mve = sre * cma + srf * cmc + cme;
+        mvf = sre * cmb + srf * cmd + cmf; 
+        
+        this.manager.setRenderer(this, frame.texture.source[frame.sourceIndex].glTexture, gameObject.renderTarget);
+        this.drawIndexed = true;
+        this.drawingMesh = true;
+        this.vertexCount += totalVertices;
+
+        vertexOffset = vertexDataBuffer.allocate(totalVertices * 6);
+
+        for (var index = 0; index < length; index += 2)
+        {
+            var x = vertices[index + 0];
+            var y = vertices[index + 1];
+            var tx = x * mva + y * mvc + mve;
+            var ty = x * mvb + y * mvd + mvf;
+            vertexBufferObjectF32[vertexOffset++] = tx;
+            vertexBufferObjectF32[vertexOffset++] = ty;
+            vertexBufferObjectF32[vertexOffset++] = uv[index + 0];
+            vertexBufferObjectF32[vertexOffset++] = uv[index + 1];
+            vertexBufferObjectU32[vertexOffset++] = 0xFFFFFF;
+            vertexBufferObjectF32[vertexOffset++] = alpha;
+        }
+        var elementCount = this.elementCount;
+        for (var index = 0; index < indexLength; ++index)
+        {
+            indexBuffer[elementCount + index] = indices[index];
+        }
+
+        this.elementCount += indexLength;
+    },
 
     addMesh: function (gameObject, camera)
     {
@@ -241,8 +329,9 @@ SpriteBatch.prototype = {
         mve = sre * cma + srf * cmc + cme;
         mvf = sre * cmb + srf * cmd + cmf; 
         
-        this.drawIndexed = false;
         this.manager.setRenderer(this, frame.texture.source[frame.sourceIndex].glTexture, gameObject.renderTarget);
+        this.drawIndexed = false;
+        this.drawingMesh = true;
         this.vertexCount += totalVertices;
 
         vertexOffset = vertexDataBuffer.allocate(totalVertices * 6);
@@ -260,37 +349,6 @@ SpriteBatch.prototype = {
             vertexBufferObjectU32[vertexOffset++] = 0xFFFFFF;
             vertexBufferObjectF32[vertexOffset++] = alpha;
         }
-
-        /*vertexOffset = vertexDataBuffer.allocate(24);
-        this.vertexCount += 6;
-        
-        vertexBufferObjectF32[vertexOffset++] = tx0;
-        vertexBufferObjectF32[vertexOffset++] = ty0;
-        vertexBufferObjectF32[vertexOffset++] = uvs.x0;
-        vertexBufferObjectF32[vertexOffset++] = uvs.y0;
-        vertexBufferObjectU32[vertexOffset++] = 0xFFFFFF; //vertexColor.topLeft;
-        vertexBufferObjectF32[vertexOffset++] = alpha;
-
-        vertexBufferObjectF32[vertexOffset++] = tx1;
-        vertexBufferObjectF32[vertexOffset++] = ty1;
-        vertexBufferObjectF32[vertexOffset++] = uvs.x1;
-        vertexBufferObjectF32[vertexOffset++] = uvs.y1;
-        vertexBufferObjectU32[vertexOffset++] = 0xFFFFFF; //vertexColor.bottomLeft;
-        vertexBufferObjectF32[vertexOffset++] = alpha;
-
-        vertexBufferObjectF32[vertexOffset++] = tx2;
-        vertexBufferObjectF32[vertexOffset++] = ty2;
-        vertexBufferObjectF32[vertexOffset++] = uvs.x2;
-        vertexBufferObjectF32[vertexOffset++] = uvs.y2;
-        vertexBufferObjectU32[vertexOffset++] = 0xFFFFFF; //vertexColor.bottomRight;
-        vertexBufferObjectF32[vertexOffset++] = alpha;
-
-        vertexBufferObjectF32[vertexOffset++] = tx3;
-        vertexBufferObjectF32[vertexOffset++] = ty3;
-        vertexBufferObjectF32[vertexOffset++] = uvs.x3;
-        vertexBufferObjectF32[vertexOffset++] = uvs.y3;
-        vertexBufferObjectU32[vertexOffset++] = 0xFFFFFF; //vertexColor.topRight;
-        vertexBufferObjectF32[vertexOffset++] = alpha;*/
     },
 
     addSpriteTexture: function (gameObject, camera, texture, textureWidth, textureHeight)
@@ -350,8 +408,9 @@ SpriteBatch.prototype = {
         tx3 = xw * mva + y * mvc + mve;
         ty3 = xw * mvb + y * mvd + mvf;
 
-        this.drawIndexed = true;
         this.manager.setRenderer(this, texture, gameObject.renderTarget);
+        this.drawIndexed = true;
+        this.drawingMesh = false;
         vertexOffset = vertexDataBuffer.allocate(24);
         this.elementCount += 6;
         
@@ -446,8 +505,9 @@ SpriteBatch.prototype = {
         tx3 = xw * mva + y * mvc + mve;
         ty3 = xw * mvb + y * mvd + mvf;
 
-        this.drawIndexed = true;
         this.manager.setRenderer(this, frame.texture.source[frame.sourceIndex].glTexture, gameObject.renderTarget);
+        this.drawIndexed = true;
+        this.drawingMesh = false;
         vertexOffset = vertexDataBuffer.allocate(24);
         this.elementCount += 6;
         
