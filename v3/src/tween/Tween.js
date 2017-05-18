@@ -71,16 +71,22 @@ Tween.prototype.constructor = Tween;
 
 Tween.prototype = {
 
-    init: require('./components/Init'),
-    play: require('./components/Play'),
-    resetTweenData: require('./components/ResetTweenData'),
-    update: require('./components/Update'),
+    //  TODO:
+    //
+    //  Calculate total duration of this Tween, factoring in all TweenDatas and properties
+    //  Add progress for Tween duration
+    //  Only invoke loop, completeDelay, etc once all properties are completed
+
     calcTargetsValue: require('./components/CalcTargetsValue'),
-    resetTargetsValue: require('./components/ResetTargetsValue'),
-    setEventCallback: require('./components/SetEventCallback'),
+    init: require('./components/Init'),
     loadValues: require('./components/LoadValues'),
     nextTweenData: require('./components/NextTweenData'),
+    play: require('./components/Play'),
+    resetTargetsValue: require('./components/ResetTargetsValue'),
+    resetTweenData: require('./components/ResetTweenData'),
     setCurrentTweenData: require('./components/SetCurrentTweenData'),
+    setEventCallback: require('./components/SetEventCallback'),
+    update: require('./components/Update')
 
 };
 
