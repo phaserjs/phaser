@@ -232,7 +232,7 @@ SpriteBatch.prototype = {
         var indexBuffer = this.indexDataBuffer.uintView;
         var indices = gameObject.indices;
         var indexLength = indices.length;
-        var indexOffset = this.vertexCount;
+        var indexOffset = 0;
 
         tempMatrix.applyITRS(translateX, translateY, rotation, scaleX, scaleY);
 
@@ -258,6 +258,7 @@ SpriteBatch.prototype = {
         mvf = sre * cmb + srf * cmd + cmf; 
         
         this.manager.setRenderer(this, frame.texture.source[frame.sourceIndex].glTexture, gameObject.renderTarget);
+        indexOffset = this.vertexCount;
         this.drawIndexed = true;
         this.drawingMesh = true;
         this.vertexCount += totalVertices;
