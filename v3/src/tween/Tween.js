@@ -6,26 +6,31 @@ var TWEEN_CONST = require('./const');
 //  A Tween contains TweenData objects (at least one). It can contain more than one TweenData,
 //  in which case they play out like a nested timeline, all impacting just the one target property.
 
-var Tween = function (manager, target, key)
+var Tween = function (manager, targets, tweenData)
 {
     this.manager = manager;
 
-    //  The target being tweened
-    this.target = target;
+    //  Array of targets being tweened (TweenTarget objects)
+    this.targets = targets;
 
-    //  The property of the target to tween
-    this.key = key;
+    //  targets array size doesn't change, so we can cache the length
+    this.totalTargets = targets.length;
 
-    //  Current property values (populated from the TweenData)
-    this.start;
-    this.current;
-    this.end;
+    this.data = tweenData;
 
-    //  TweenData array
-    this.data = [];
-
-    //  Current TweenData being processed
-    this.currentTweenData = null;
+    //  An object with a property matching those being tweened by this Tween.
+    //  The list arrays contain TweenData instances in a linked-list format.
+    //
+    //  {
+    //      x: {
+    //          current: TweenData reference
+    //          list: []
+    //      },
+    //      y: {
+    //          current: TweenData reference
+    //          list: []
+    //      }
+    //  }
 
     //  if true then duration, delay, etc values are all frame totals
     this.useFrames = false;
@@ -45,7 +50,7 @@ var Tween = function (manager, target, key)
     //  Time in ms/frames before the 'onComplete' event fires
     this.completeDelay = 0;
 
-    // delta countdown timer
+    // delta countdown timer (used by startDelay and loopDelay)
     this.countdown = 0;
 
     this.state = TWEEN_CONST.PENDING_ADD;
@@ -67,12 +72,15 @@ Tween.prototype.constructor = Tween;
 Tween.prototype = {
 
     init: require('./components/Init'),
-    loadValues: require('./components/LoadValues'),
-    advanceState: require('./components/AdvanceState'),
-    setCurrentTweenData: require('./components/SetCurrentTweenData'),
-    setEventCallback: require('./components/SetEventCallback'),
     play: require('./components/Play'),
-    update: require('./components/Update')
+    resetTweenData: require('./components/ResetTweenData'),
+    update: require('./components/Update'),
+    calcTargetsValue: require('./components/CalcTargetsValue'),
+    resetTargetsValue: require('./components/ResetTargetsValue'),
+    setEventCallback: require('./components/SetEventCallback'),
+    loadValues: require('./components/LoadValues'),
+    nextTweenData: require('./components/NextTweenData'),
+    setCurrentTweenData: require('./components/SetCurrentTweenData'),
 
 };
 

@@ -16,9 +16,6 @@ var SetStateFromEnd = function (tween, tweenData)
     {
         tweenData.repeatCounter--;
 
-        //  Reset the elapsed
-        tween.current = tween.start;
-
         tweenData.elapsed = 0;
         tweenData.progress = 0;
 
@@ -27,7 +24,7 @@ var SetStateFromEnd = function (tween, tweenData)
         {
             tweenData.elapsed = tweenData.repeatDelay;
 
-            tween.target[tween.key] = tween.current;
+            tween.resetTargetsValue(tweenData);
 
             return TWEEN_CONST.REPEAT_DELAY;
         }
@@ -47,9 +44,6 @@ var SetStateFromStart = function (tween, tweenData)
     {
         tweenData.repeatCounter--;
 
-        //  Reset the elapsed
-        tween.current = tween.start;
-
         tweenData.elapsed = 0;
         tweenData.progress = 0;
 
@@ -58,7 +52,7 @@ var SetStateFromStart = function (tween, tweenData)
         {
             tweenData.elapsed = tweenData.repeatDelay;
 
-            tween.target[tween.key] = tween.current;
+            tween.resetTargetsValue(tweenData);
 
             return TWEEN_CONST.REPEAT_DELAY;
         }
@@ -72,7 +66,7 @@ var SetStateFromStart = function (tween, tweenData)
 };
 
 //  Delta is either a value in ms, or 1 if Tween.useFrames is true
-var UpdateTweenData = function (tween, tweenData, timestep, delta)
+var UpdateTweenData = function (tween, tweenData, delta)
 {
     switch (tweenData.state)
     {
@@ -102,9 +96,7 @@ var UpdateTweenData = function (tween, tweenData, timestep, delta)
                 v = tweenData.ease(1 - progress);
             }
 
-            tween.current = tween.start + ((tween.end - tween.start) * v);
-
-            tween.target[tween.key] = tween.current;
+            tween.calcTargetsValue(tweenData, v);
 
             tweenData.elapsed = elapsed;
             tweenData.progress = progress;
@@ -172,7 +164,8 @@ var UpdateTweenData = function (tween, tweenData, timestep, delta)
 
         case TWEEN_CONST.PENDING_RENDER:
 
-            tween.loadValues();
+            tween.loadValues(tweenData);
+
             tweenData.state = TWEEN_CONST.PLAYING_FORWARD;
 
             break;

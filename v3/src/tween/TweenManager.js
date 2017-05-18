@@ -1,7 +1,6 @@
 
 var EventDispatcher = require('../events/EventDispatcher');
 var TweenBuilder = require('./TweenBuilder');
-var TWEEN_CONST = require('./const');
 
 var TweenManager = function (state)
 {
@@ -36,20 +35,8 @@ TweenManager.prototype = {
 
     add: function (config)
     {
-        var tweens = TweenBuilder(this, config);
+        var tween = TweenBuilder(this, config);
 
-        if (tweens.length === 1)
-        {
-            return tweens[0];
-        }
-        else
-        {
-            return tweens;
-        }
-    },
-
-    queue: function (tween)
-    {
         this._add.push(tween);
 
         this._toProcess++;

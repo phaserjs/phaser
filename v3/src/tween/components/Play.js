@@ -15,7 +15,8 @@ var Play = function ()
     }
     else
     {
-        this.setCurrentTweenData(this.data[0]);
+        //  Reset the TweenData
+        this.resetTweenData();
 
         if (this.startDelay > 0)
         {

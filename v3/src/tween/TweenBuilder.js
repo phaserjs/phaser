@@ -1,11 +1,13 @@
+var Clone = require('../utils/object/Clone');
 var GetValue = require('../utils/object/GetValue');
 var GetAdvancedValue = require('../utils/object/GetAdvancedValue');
 var Tween = require('./Tween');
 var RESERVED = require('./ReservedProps');
 var GetEaseFunction = require('./GetEaseFunction');
 var TweenData = require('./TweenData');
+var TweenTarget = require('./TweenTarget');
 
-var GetTargets = function (config)
+var GetTargets = function (config, keys)
 {
     var targets = GetValue(config, 'targets', null);
 
@@ -14,12 +16,21 @@ var GetTargets = function (config)
         targets = targets.call();
     }
 
-    if (!Array.isArray(targets))
+    var out = [];
+
+    if (Array.isArray(targets))
     {
-        targets = [ targets ];
+        for (var i = 0; i < targets.length; i++)
+        {
+            out.push(TweenTarget(targets[i], keys));
+        }
+    }
+    else
+    {
+        out.push(TweenTarget(targets, keys));
     }
 
-    return targets;
+    return out;
 };
 
 var GetProps = function (config)
@@ -50,7 +61,7 @@ var GetProps = function (config)
     return keys;
 };
 
-var GetValueOp = function (target, key, value)
+var GetValueOp = function (key, value)
 {
     var valueCallback;
 
@@ -61,7 +72,7 @@ var GetValueOp = function (target, key, value)
         //     y: 300
         // }
 
-        valueCallback = function ()
+        valueCallback = function (i)
         {
             return value;
         };
@@ -81,35 +92,35 @@ var GetValueOp = function (target, key, value)
         switch (op)
         {
             case '+':
-                valueCallback = function ()
+                valueCallback = function (i)
                 {
-                    return target[key] + num;
+                    return i + num;
                 };
                 break;
 
             case '-':
-                valueCallback = function ()
+                valueCallback = function (i)
                 {
-                    return target[key] - num;
+                    return i - num;
                 };
                 break;
 
             case '*':
-                valueCallback = function ()
+                valueCallback = function (i)
                 {
-                    return target[key] * num;
+                    return i * num;
                 };
                 break;
 
             case '/':
-                valueCallback = function ()
+                valueCallback = function (i)
                 {
-                    return target[key] / num;
+                    return i / num;
                 };
                 break;
 
             default:
-                valueCallback = function ()
+                valueCallback = function (i)
                 {
                     return parseFloat(value);
                 };
@@ -123,7 +134,7 @@ var GetValueOp = function (target, key, value)
         //     y: someOtherCallback
         // }
 
-        valueCallback = GetValueOp(target, key, value.call());
+        valueCallback = GetValueOp(key, value.call());
     }
     else if (value.hasOwnProperty('value'))
     {
@@ -133,7 +144,7 @@ var GetValueOp = function (target, key, value)
         //     y: { value: 300, ... }
         // }
 
-        valueCallback = GetValueOp(target, key, value.value);
+        valueCallback = GetValueOp(key, value.value);
     }
 
     return valueCallback;
@@ -142,33 +153,42 @@ var GetValueOp = function (target, key, value)
 var TweenBuilder = function (manager, config)
 {
     //  Create arrays of the Targets and the Properties
-    var targets = GetTargets(config);
     var props = GetProps(config);
-    var tweens = [];
 
-    //  Default Tween values
-    var defaultEase = GetEaseFunction(GetValue(config, 'ease', 'Power0'));
-    var defaultDuration = GetAdvancedValue(config, 'duration', 1000);
-    var defaultYoyo = GetValue(config, 'yoyo', false);
-    var defaultRepeat = GetAdvancedValue(config, 'repeat', 0);
-    var defaultRepeatDelay = GetAdvancedValue(config, 'repeatDelay', 0);
-    var defaultDelay = GetAdvancedValue(config, 'delay', 0);
-    var defaultHold = GetAdvancedValue(config, 'hold', 0);
-    var defaultStartAt = GetAdvancedValue(config, 'startAt', null);
+    var targetKeys = {};
+    var tweenKeys = {};
 
-    var useFrames = GetValue(config, 'useFrames', false);
+    props.forEach(function (p) {
+        targetKeys[p.key] = { start: 0, current: 0, end: 0 };
+        tweenKeys[p.key] = { current: null, list: [] };
+    });
+
+    var targets = GetTargets(config, targetKeys);
+
+    var tween = new Tween(manager, targets, tweenKeys);
+
     var stagger = GetAdvancedValue(config, 'stagger', 0);
 
-    var loop = GetValue(config, 'loop', false);
-    var loopDelay = GetAdvancedValue(config, 'loopDelay', 0);
-    var completeDelay = GetAdvancedValue(config, 'completeDelay', 0);
-    var startDelay = GetAdvancedValue(config, 'startDelay', 0);
-    var paused = GetValue(config, 'paused', false);
+    tween.useFrames = GetValue(config, 'useFrames', false);
+    tween.loop = GetValue(config, 'loop', false);
+    tween.loopDelay = GetAdvancedValue(config, 'loopDelay', 0);
+    tween.completeDelay = GetAdvancedValue(config, 'completeDelay', 0);
+    tween.startDelay = GetAdvancedValue(config, 'startDelay', 0) + (stagger * targets.length);
+    tween.paused = GetValue(config, 'paused', false);
 
-    //  FOR EACH PROPERTY
+    //  Default Tween values
+    var ease = GetEaseFunction(GetValue(config, 'ease', 'Power0'));
+    var duration = GetAdvancedValue(config, 'duration', 1000);
+    var yoyo = GetValue(config, 'yoyo', false);
+    var repeat = GetAdvancedValue(config, 'repeat', 0);
+    var repeatDelay = GetAdvancedValue(config, 'repeatDelay', 0);
+    var delay = GetAdvancedValue(config, 'delay', 0);
+    var hold = GetAdvancedValue(config, 'hold', 0);
+    var startAt = GetAdvancedValue(config, 'startAt', null);
+
+    //  Loop through every property defined in the Tween, i.e.: props { x, y, alpha }
     for (var p = 0; p < props.length; p++)
     {
-        //  Get Tween value + op
         var key = props[p].key;
         var values = props[p].value;
 
@@ -177,171 +197,40 @@ var TweenBuilder = function (manager, config)
             values = [ values ];
         }
 
-        //  FOR EACH TARGET
-        for (var t = 0; t < targets.length; t++)
+        var prev = null;
+
+        //  Loop through every value for the property, i.e.: x: [ 200, 300, 400 ]
+        for (var i = 0; i < values.length; i++)
         {
-            var target = targets[t];
+            var value = values[i];
 
-            var prev = null;
+            var tweenData = TweenData(
+                key,
+                GetValueOp(key, value),
+                GetEaseFunction(GetValue(value, 'ease', ease)),
+                GetAdvancedValue(value, 'delay', delay),
+                GetAdvancedValue(value, 'duration', duration),
+                GetAdvancedValue(value, 'hold', hold),
+                GetAdvancedValue(value, 'repeat', repeat),
+                GetAdvancedValue(value, 'repeatDelay', repeatDelay),
+                GetAdvancedValue(value, 'startAt', startAt),
+                GetValue(value, 'yoyo', yoyo)
+            );
 
-            var tween = new Tween(manager, targets[t], key);
+            tweenData.prev = prev;
 
-            tween.useFrames = useFrames;
-            tween.loop = loop;
-            tween.loopDelay = loopDelay;
-            tween.completeDelay = completeDelay;
-            tween.startDelay = startDelay + (stagger * t);
-            tween.paused = paused;
-
-            //  FOR EACH TWEEN DATA
-            for (var i = 0; i < values.length; i++)
+            if (prev)
             {
-                var value = values[i];
-
-                //  Set TweenData properties
-
-                var tweenData = TweenData(
-                    GetValueOp(target, key, value),
-                    GetEaseFunction(GetValue(value, 'ease', defaultEase)),
-                    GetAdvancedValue(value, 'delay', defaultDelay),
-                    GetAdvancedValue(value, 'duration', defaultDuration),
-                    GetAdvancedValue(value, 'hold', defaultHold),
-                    GetAdvancedValue(value, 'repeat', defaultRepeat),
-                    GetAdvancedValue(value, 'repeatDelay', defaultRepeatDelay),
-                    GetAdvancedValue(value, 'startAt', defaultStartAt),
-                    GetValue(value, 'yoyo', defaultYoyo)
-                );
-
-                tweenData.prev = prev;
-
-                if (prev)
-                {
-                    prev.next = tweenData;
-                }
-
-                tween.data.push(tweenData);
-
-                prev = tweenData;
+                prev.next = tweenData;
             }
 
-            tweens.push(tween);
+            tween.data[key].list.push(tweenData);
 
-            manager.queue(tween);
+            prev = tweenData;
         }
     }
 
-    return tweens;
+    return tween;
 };
 
 module.exports = TweenBuilder;
-
-/*
-    The following are all the same
-
-    var tween = this.tweens.add({
-        targets: player,
-        x: 200,
-        duration: 2000,
-        ease: 'Power1',
-        yoyo: true
-    });
-
-    var tween = this.tweens.add({
-        targets: player,
-        props: {
-            x: 200
-        }
-        duration: 2000,
-        ease: 'Power1',
-        yoyo: true
-    });
-
-    var tween = this.tweens.add({
-        targets: player,
-        x: { value: 200, duration: 2000, ease: 'Power1', yoyo: true }
-    });
-
-    var tween = this.tweens.add({
-        targets: player,
-        props: {
-            x: { value: 200, duration: 2000, ease: 'Power1', yoyo: true }
-        }
-    });
-
-    //  Chained property tweens:
-    //  Each tween uses the same duration and ease because they've been 'globally' defined, except the middle one,
-    //  which uses its own duration as it overrides the global one
-
-    var tween = this.tweens.add({
-        targets: player,
-        x: [ { value: 200 }, { value: 300, duration: 50 }, { value: 400 } ],
-        duration: 2000,
-        ease: 'Power1',
-        yoyo: true
-    });
-
-    //  Multiple property tweens:
-
-    var tween = this.tweens.add({
-        targets: player,
-        x: { value: 400, duration: 2000, ease: 'Power1' },
-        y: { value: 300, duration: 1000, ease: 'Sine' }
-    });
-
-    var tween = this.tweens.add({
-        targets: player,
-        props: {
-            x: { value: 400, duration: 2000, ease: 'Power1' },
-            y: { value: 300, duration: 1000, ease: 'Sine' }
-        }
-    });
-
-    //  Multiple Targets + Multiple property tweens:
-
-    var tween = this.tweens.add({
-        targets: [ alien1, alien2, alien3, alienBoss ],
-        props: {
-            x: { value: 400, duration: 2000 },
-            y: { value: 300, duration: 1000 }
-        },
-        ease: 'Sine'
-    });
-
-    //  Multiple Targets + Multiple properties + Multi-state Property tweens:
-
-    var tween = this.tweens.add({
-        targets: [ alien1, alien2, alien3, alienBoss ],
-        props: {
-            x: [ { value: 200, duration: 100 }, { value: 300, duration: 50 }, { value: 400 } ],
-            y: { value: 300, duration: 1000 }
-        },
-        ease: 'Sine'
-    });
-
-    //  Multi-value Tween Property with static values
-
-    var tween = this.tweens.add({
-        targets: [ alien1, alien2, alien3, alienBoss ],
-        props: {
-            x: [ 200, 300, 400 ],
-            y: [ '+100', '-100', '+100' ]
-        },
-        duration: 1000,
-        ease: 'Sine'
-    });
-    
-    //  Timeline concept
-
-    var tween = this.tweens.add({
-        targets: player,
-        timeline: [
-            { x: 400 },
-            { y: 400 },
-            { x: 100 },
-            { y: 100 }
-        ],
-        duration: 1000,
-        ease: 'Sine'
-    });
-
- */

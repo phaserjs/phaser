@@ -1,24 +1,35 @@
-var LoadValues = function ()
+//  Calculate the start and end values
+//  Store them in the TweenData
+//  and also place them into the TweenTarget properties
+
+var LoadValues = function (tweenData)
 {
-    var tweenData = this.currentTweenData;
+    var targets = this.targets;
+    var key = tweenData.key;
 
-    if (tweenData.startValue === null)
+    for (var i = 0; i < this.totalTargets; i++)
     {
-        this.start = this.target[this.key];
-        this.end = this.currentTweenData.value();
+        var target = targets[i];
+        var entry = target.keys[key];
 
-        tweenData.startValue = this.start;
-        tweenData.endValue = this.end;
-    }
-    else
-    {
-        this.start = tweenData.startValue;
-        this.end = tweenData.endValue;
-    }
+        if (tweenData.startValue === null)
+        {
+            entry.start = target.ref[key];
+            entry.end = tweenData.value(entry.start);
 
-    this.current = this.start;
-    
-    this.target[this.key] = this.start;
+            tweenData.startValue = entry.start;
+            tweenData.endValue = entry.end;
+        }
+        else
+        {
+            entry.start = tweenData.startValue;
+            entry.end = tweenData.endValue;
+
+            target.ref[key] = entry.start;
+        }
+
+        entry.current = entry.start;
+    }
 };
 
 module.exports = LoadValues;

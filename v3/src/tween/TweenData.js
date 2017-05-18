@@ -1,6 +1,9 @@
-var TweenData = function (value, ease, delay, duration, hold, repeat, repeatDelay, startAt, yoyo)
+var TweenData = function (key, value, ease, delay, duration, hold, repeat, repeatDelay, startAt, yoyo)
 {
     return {
+
+        //  The property of the target to tween
+        key: key,
 
         //  A function to call when starting the tween, populates the 'start' and 'end' values
         value: value,
@@ -41,7 +44,6 @@ var TweenData = function (value, ease, delay, duration, hold, repeat, repeatDela
         //  TWEEN_CONST.CREATED
         state: 0,
 
-        //  store start and end values so we don't calc them on every play through
         startValue: null,
         endValue: null,
 

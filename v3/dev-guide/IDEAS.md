@@ -37,3 +37,116 @@ Timeline
 
 Tweens work great, but aren't very flexible, and a frame based Timeline object would be much more useful. Would allow you to set events to occur on specific frames on the timeline, to adjust and read the playhead, to go in reverse, to apply custom easing to sections of the timeline, etc. Much like the Flash timeline really, but code based and quick to create (and small enough to be used lots without a big overhead)
 
+Tweens
+------
+
+/*
+    The following are all the same
+
+    var tween = this.tweens.add({
+        targets: player,
+        x: 200,
+        duration: 2000,
+        ease: 'Power1',
+        yoyo: true
+    });
+
+    var tween = this.tweens.add({
+        targets: player,
+        props: {
+            x: 200
+        }
+        duration: 2000,
+        ease: 'Power1',
+        yoyo: true
+    });
+
+    var tween = this.tweens.add({
+        targets: player,
+        x: { value: 200, duration: 2000, ease: 'Power1', yoyo: true }
+    });
+
+    var tween = this.tweens.add({
+        targets: player,
+        props: {
+            x: { value: 200, duration: 2000, ease: 'Power1', yoyo: true }
+        }
+    });
+
+    //  Chained property tweens:
+    //  Each tween uses the same duration and ease because they've been 'globally' defined, except the middle one,
+    //  which uses its own duration as it overrides the global one
+
+    var tween = this.tweens.add({
+        targets: player,
+        x: [ { value: 200 }, { value: 300, duration: 50 }, { value: 400 } ],
+        duration: 2000,
+        ease: 'Power1',
+        yoyo: true
+    });
+
+    //  Multiple property tweens:
+
+    var tween = this.tweens.add({
+        targets: player,
+        x: { value: 400, duration: 2000, ease: 'Power1' },
+        y: { value: 300, duration: 1000, ease: 'Sine' }
+    });
+
+    var tween = this.tweens.add({
+        targets: player,
+        props: {
+            x: { value: 400, duration: 2000, ease: 'Power1' },
+            y: { value: 300, duration: 1000, ease: 'Sine' }
+        }
+    });
+
+    //  Multiple Targets + Multiple property tweens:
+
+    var tween = this.tweens.add({
+        targets: [ alien1, alien2, alien3, alienBoss ],
+        props: {
+            x: { value: 400, duration: 2000 },
+            y: { value: 300, duration: 1000 }
+        },
+        ease: 'Sine'
+    });
+
+    //  Multiple Targets + Multiple properties + Multi-state Property tweens:
+
+    var tween = this.tweens.add({
+        targets: [ alien1, alien2, alien3, alienBoss ],
+        props: {
+            x: [ { value: 200, duration: 100 }, { value: 300, duration: 50 }, { value: 400 } ],
+            y: { value: 300, duration: 1000 }
+        },
+        ease: 'Sine'
+    });
+
+    //  Multi-value Tween Property with static values
+
+    var tween = this.tweens.add({
+        targets: [ alien1, alien2, alien3, alienBoss ],
+        props: {
+            x: [ 200, 300, 400 ],
+            y: [ '+100', '-100', '+100' ]
+        },
+        duration: 1000,
+        ease: 'Sine'
+    });
+    
+    //  Timeline concept
+
+    var tween = this.tweens.add({
+        targets: player,
+        timeline: [
+            { x: 400 },
+            { y: 400 },
+            { x: 100 },
+            { y: 100 }
+        ],
+        duration: 1000,
+        ease: 'Sine'
+    });
+
+ */

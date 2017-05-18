@@ -1,20 +1,20 @@
 var TWEEN_CONST = require('../const');
 
-var AdvanceState = function ()
+var NextTweenData = function (prop)
 {
     //  This is the TweenData that has just completed playing
-    var tweenData = this.currentTweenData;
+    var tweenData = prop.current;
 
     if (tweenData.next)
     {
-        this.setCurrentTweenData(tweenData.next);
+        this.setCurrentTweenData(prop, tweenData.next);
     }
     else if (this.loop)
     {
         //  leaves the state in PENDING_RENDER
-        this.setCurrentTweenData(this.data[0]);
+        this.setCurrentTweenData(prop, prop.list[0]);
 
-        this.target[this.key] = this.currentTweenData.startValue;
+        this.resetTargetsValue(prop.current);
 
         if (this.loopDelay > 0)
         {
@@ -33,4 +33,4 @@ var AdvanceState = function ()
     }
 };
 
-module.exports = AdvanceState;
+module.exports = NextTweenData;

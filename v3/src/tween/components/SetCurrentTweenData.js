@@ -1,6 +1,6 @@
 var TWEEN_CONST = require('../const');
 
-var SetCurrentTweenData = function (tweenData)
+var SetCurrentTweenData = function (prop, tweenData)
 {
     tweenData.progress = 0;
     tweenData.elapsed = 0;
@@ -17,7 +17,7 @@ var SetCurrentTweenData = function (tweenData)
         tweenData.state = TWEEN_CONST.PENDING_RENDER;
     }
 
-    this.currentTweenData = tweenData;
+    prop.current = tweenData;
 };
 
 module.exports = SetCurrentTweenData;
