@@ -1,4 +1,4 @@
-var TweenBuilder = require('./TweenBuilder2');
+var TweenBuilder = require('./TweenBuilder');
 
 var Timeline = function (manager)
 {
