@@ -57,6 +57,11 @@ TweenManager.prototype = {
         return tween;
     },
 
+    timeline: function ()
+    {
+        // return new Timeline(this);
+    },
+
     //  Add a 'to' GSAP equivalent?
 
     exists: function (tween)

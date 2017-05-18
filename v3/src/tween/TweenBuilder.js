@@ -157,7 +157,7 @@ var TweenBuilder = function (manager, config)
     var defaultStartAt = GetAdvancedValue(config, 'startAt', null);
 
     var useFrames = GetValue(config, 'useFrames', false);
-    var stagger = GetValue(config, 'stagger', 0);
+    var stagger = GetAdvancedValue(config, 'stagger', 0);
 
     var loop = GetValue(config, 'loop', false);
     var loopDelay = GetAdvancedValue(config, 'loopDelay', 0);

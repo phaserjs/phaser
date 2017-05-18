@@ -10,10 +10,13 @@ var Tween = function (manager, target, key)
 {
     this.manager = manager;
 
+    //  The target being tweened
     this.target = target;
 
+    //  The property of the target to tween
     this.key = key;
 
+    //  Current property values (populated from the TweenData)
     this.start;
     this.current;
     this.end;
