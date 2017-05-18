@@ -41,6 +41,10 @@ var TweenData = function (value, ease, delay, duration, hold, repeat, repeatDela
         //  TWEEN_CONST.CREATED
         state: 0,
 
+        //  store start and end values so we don't calc them on every play through
+        startValue: null,
+        endValue: null,
+
         //  For chained TweenData these point to the prev and next references
         prev: null,
         next: null

@@ -14,7 +14,6 @@ var SetStateFromEnd = function (tween, tweenData)
     }
     else if (tweenData.repeatCounter > 0)
     {
-        //  No hold or yoyo, but we do have a repeat
         tweenData.repeatCounter--;
 
         //  Reset the elapsed
@@ -46,7 +45,6 @@ var SetStateFromStart = function (tween, tweenData)
 {
     if (tweenData.repeatCounter > 0)
     {
-        //  No hold or yoyo, but we do have a repeat
         tweenData.repeatCounter--;
 
         //  Reset the elapsed
