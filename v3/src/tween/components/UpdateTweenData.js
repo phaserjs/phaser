@@ -1,17 +1,9 @@
 var TWEEN_CONST = require('../const');
 
-//  TweenData has reached the end. Now it needs to decide what action to take.
-//  It can either hold, yoyo, repeat or complete.
-var ProcessRepeat = function (tween, tweenData, skipHold)
+//  Was PLAYING_FORWARD and has hit the end
+var SetStateFromEnd = function (tween, tweenData)
 {
-    //  Do we hold?
-    if (tweenData.hold > 0 && skipHold === false)
-    {
-        tweenData.elapsed = tweenData.hold;
-
-        return TWEEN_CONST.HOLD;
-    }
-    else if (tweenData.yoyo && tweenData.state === TWEEN_CONST.PLAYING_FORWARD)
+    if (tweenData.yoyo)
     {
         //  Playing forward and we have a yoyo
 
@@ -21,6 +13,38 @@ var ProcessRepeat = function (tween, tweenData, skipHold)
         return TWEEN_CONST.PLAYING_BACKWARD;
     }
     else if (tweenData.repeatCounter > 0)
+    {
+        //  No hold or yoyo, but we do have a repeat
+        tweenData.repeatCounter--;
+
+        //  Reset the elapsed
+        tween.current = tween.start;
+
+        tweenData.elapsed = 0;
+        tweenData.progress = 0;
+
+        //  Delay?
+        if (tweenData.repeatDelay > 0)
+        {
+            tweenData.elapsed = tweenData.repeatDelay;
+
+            tween.target[tween.key] = tween.current;
+
+            return TWEEN_CONST.REPEAT_DELAY;
+        }
+        else
+        {
+            return TWEEN_CONST.PLAYING_FORWARD;
+        }
+    }
+
+    return TWEEN_CONST.COMPLETE;
+};
+
+//  Was PLAYING_BACKWARD and has hit the start
+var SetStateFromStart = function (tween, tweenData)
+{
+    if (tweenData.repeatCounter > 0)
     {
         //  No hold or yoyo, but we do have a repeat
         tweenData.repeatCounter--;
@@ -67,16 +91,17 @@ var UpdateTweenData = function (tween, tweenData, timestep, delta)
                 elapsed = duration;
             }
 
+            var forward = (tweenData.state === TWEEN_CONST.PLAYING_FORWARD);
             var progress = elapsed / duration;
             var v;
 
-            if (tweenData.state === TWEEN_CONST.PLAYING_BACKWARD)
+            if (forward)
             {
-                v = tweenData.ease(1 - progress);
+                v = tweenData.ease(progress);
             }
             else
             {
-                v = tweenData.ease(progress);
+                v = tweenData.ease(1 - progress);
             }
 
             tween.current = tween.start + ((tween.end - tween.start) * v);
@@ -88,7 +113,24 @@ var UpdateTweenData = function (tween, tweenData, timestep, delta)
 
             if (progress === 1)
             {
-                tweenData.state = ProcessRepeat(tween, tweenData, false);
+                if (forward)
+                {
+                    //  Do we hold?
+                    if (tweenData.hold > 0)
+                    {
+                        tweenData.elapsed = tweenData.hold;
+
+                        tweenData.state = TWEEN_CONST.HOLD;
+                    }
+                    else
+                    {
+                        tweenData.state = SetStateFromEnd(tween, tweenData);
+                    }
+                }
+                else
+                {
+                    tweenData.state = SetStateFromStart(tween, tweenData);
+                }
             }
 
             break;
@@ -125,8 +167,7 @@ var UpdateTweenData = function (tween, tweenData, timestep, delta)
 
             if (tweenData.elapsed <= 0)
             {
-                tweenData.state = TWEEN_CONST.PLAYING_FORWARD;
-                tweenData.state = ProcessRepeat(tween, tweenData, true);
+                tweenData.state = SetStateFromEnd(tween, tweenData);
             }
 
             break;
