@@ -14,19 +14,22 @@ var TweenData = function (key, value, ease, delay, duration, hold, repeat, repea
         // duration of the tween in ms/frames, excludes time for yoyo or repeats
         duration: duration,
 
-        // return the tween back to its start position again?
+        //  The total calculated duration of this TweenData (based on duration, repeat, delay, hold, yoyo)
+        totalDuration: 0,
+
+        //  Cause the tween to alternate back and forth on each *repeat*. Has no effect unless repeat > 0.
         yoyo: yoyo,
 
-        // number of times to repeat the tween
+        //  Number of times to repeat the tween.
         repeat: repeat,
 
-        // time in ms/frames before tween will start
+        //  Time in ms/frames before tween will start.
         delay: delay,
 
-        // time in ms/frames the tween will remain in its end state before either yoyo, repeat or complete
+        //  Time in ms/frames the tween will remain in its end state before repeat or complete.
         hold: hold,
 
-        // time in ms/frames before repeat will start
+        //  Time in ms/frames before repeat will start
         repeatDelay: repeatDelay,
 
         //  Changes the property to be this value before starting the tween

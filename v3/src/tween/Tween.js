@@ -1,11 +1,5 @@
 var TWEEN_CONST = require('./const');
 
-//  A Tween is responsible for tweening one property of one target.
-//  If a target has many properties being tweened, then each unique property will be its own Tween object.
-//  This allows us to have differing ease, duration and associated events per property.
-//  A Tween contains TweenData objects (at least one). It can contain more than one TweenData,
-//  in which case they play out like a nested timeline, all impacting just the one target property.
-
 var Tween = function (manager, targets, tweenData)
 {
     this.manager = manager;
@@ -16,6 +10,7 @@ var Tween = function (manager, targets, tweenData)
     //  targets array size doesn't change, so we can cache the length
     this.totalTargets = targets.length;
 
+    //  The property data and TweenData lists
     this.data = tweenData;
 
     //  An object with a property matching those being tweened by this Tween.
@@ -37,20 +32,20 @@ var Tween = function (manager, targets, tweenData)
 
     //  Time in ms/frames before the tween starts for the very first time
     //  (populated by stagger property, or directly) - never used again once the
-    //  tween has begun.
+    //  tween has begun, even if it loops.
     this.startDelay = 0;
 
-    // infinitely loop this tween? Maybe a string? 'alternate', 'reverse', etc
-    // When enabled it will play through
+    //  Infinitely loop this tween?
+    //  When enabled it will play through ALL TweenDatas again (doesn't apply to just a single TD)
     this.loop = false;
 
     //  Time in ms/frames before the tween loops again if loop is true
     this.loopDelay = 0;
 
-    //  Time in ms/frames before the 'onComplete' event fires
+    //  Time in ms/frames before the 'onComplete' event fires.
     this.completeDelay = 0;
 
-    // delta countdown timer (used by startDelay and loopDelay)
+    //  Countdown timer (used by startDelay, loopDelay and completeDelay)
     this.countdown = 0;
 
     this.state = TWEEN_CONST.PENDING_ADD;

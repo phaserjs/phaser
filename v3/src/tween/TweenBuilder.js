@@ -217,6 +217,21 @@ var TweenBuilder = function (manager, config)
                 GetValue(value, 'yoyo', yoyo)
             );
 
+            //  Calculate total duration
+
+            //  Duration is derived from:
+            //  TweenData.duration
+            //  TweenData.delay
+            //  TweenData.hold
+            //  x TweenData.repeat
+
+            // var totalDuration = 0;
+
+            // var playThruDuration = tweenData.duration * tweenData.repeat;
+
+            // totalDuration
+            // tweenData.totalDuration = 
+
             tweenData.prev = prev;
 
             if (prev)
