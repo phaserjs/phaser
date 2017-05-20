@@ -29,7 +29,6 @@ var TileSprite = new Class({
     function TileSprite (state, x, y, width, height, texture, frame)
     {
         var resourceManager = state.game.renderer.resourceManager;
-        var gl;
 
         GameObject.call(this, state, 'TileSprite');
 

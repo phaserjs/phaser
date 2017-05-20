@@ -32,7 +32,9 @@ var EffectLayer = new Class({
     {
         GameObject.call(this, state, 'EffectLayer');
        
+        var pot = ((width & (width - 1)) == 0 && (height & (height - 1)) == 0);
         var resourceManager = state.game.renderer.resourceManager;
+        var wrap = pot ? gl.REPEAT : gl.CLAMP_TO_EDGE;
         var gl;
 
         this.dstRenderTarget = null;
@@ -52,7 +54,7 @@ var EffectLayer = new Class({
             this.renderTexture = resourceManager.createTexture(
                 0,
                 gl.LINEAR, gl.LINEAR,
-                gl.CLAMP_TO_EDGE, gl.CLAMP_TO_EDGE,
+                wrap, wrap,
                 gl.RGBA,
                 null, width, height
             );

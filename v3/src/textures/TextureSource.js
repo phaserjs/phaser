@@ -127,4 +127,13 @@ var TextureSource = function (texture, source, width, height)
     }
 };
 
+TextureSource.prototype.setFilter = function (filterMode)
+{
+    var game = this.texture.manager.game;
+    if (game.config.renderType === CONST.WEBGL)
+    {
+        game.renderer.setTextureFilterMode(this.glTexture, filterMode);
+    }
+};
+
 module.exports = TextureSource;

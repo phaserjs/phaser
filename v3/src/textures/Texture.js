@@ -171,6 +171,14 @@ Texture.prototype = {
     destroy: function ()
     {
         //  TODO
+    },
+
+    setFilter: function (filterMode)
+    {
+        for (var i = 0; i < this.source.length; i++)
+        {
+            this.source[i].setFilter(filterMode);
+        }
     }
 
 };

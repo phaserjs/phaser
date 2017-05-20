@@ -122,8 +122,10 @@ WebGLRenderer.prototype = {
 
     createTexture: function (source, width, height)
     {
+        var pot = ((width & (width - 1)) == 0 && (height & (height - 1)) == 0);
         var gl = this.gl;
         var filter = gl.NEAREST;
+        var wrap = pot ? gl.REPEAT : gl.CLAMP_TO_EDGE;
 
         if (!source.glTexture)
         {
@@ -143,8 +145,8 @@ WebGLRenderer.prototype = {
                     0,
                     filter,
                     filter,
-                    gl.CLAMP_TO_EDGE,
-                    gl.CLAMP_TO_EDGE,
+                    wrap,
+                    wrap,
                     gl.RGBA,
                     null,
                     width, height
@@ -156,8 +158,8 @@ WebGLRenderer.prototype = {
                     0,
                     filter,
                     filter,
-                    gl.CLAMP_TO_EDGE,
-                    gl.CLAMP_TO_EDGE,
+                    wrap,
+                    wrap,
                     gl.RGBA,
                     source.image
                 );
@@ -432,6 +434,22 @@ WebGLRenderer.prototype = {
             return rendererInstance;
         }
         return null;
+    },
+
+    setTextureFilterMode: function (texture, filterMode)
+    {
+        var gl = this.gl;
+        var glFilter = [gl.LINEAR, gl.NEAREST][filterMode];
+
+        gl.bindTexture(gl.TEXTURE_2D, texture.texture);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, glFilter);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, glFilter);
+        if (this.currentTexture !== null)
+            gl.bindTexture(gl.TEXTURE_2D, this.currentTexture.texture);
+        else
+            gl.bindTexture(gl.TEXTURE_2D, null);
+
+        return texture;
     },
 
     uploadCanvasToGPU: function (srcCanvas, dstTexture, shouldUpdateResource)
