@@ -231,6 +231,8 @@ SpriteBatch.prototype = {
         var totalVertices = (length / 2)|0;
         var indexBuffer = this.indexDataBuffer.uintView;
         var indices = gameObject.indices;
+        var colors = gameObject.colors;
+        var alphas = gameObject.alphas;
         var indexLength = indices.length;
         var indexOffset = 0;
 
@@ -265,7 +267,7 @@ SpriteBatch.prototype = {
 
         vertexOffset = vertexDataBuffer.allocate(totalVertices * 6);
 
-        for (var index = 0; index < length; index += 2)
+        for (var index = 0, index0 = 0; index < length; index += 2)
         {
             var x = vertices[index + 0];
             var y = vertices[index + 1];
@@ -275,8 +277,9 @@ SpriteBatch.prototype = {
             vertexBufferObjectF32[vertexOffset++] = ty;
             vertexBufferObjectF32[vertexOffset++] = uv[index + 0];
             vertexBufferObjectF32[vertexOffset++] = uv[index + 1];
-            vertexBufferObjectU32[vertexOffset++] = 0xFFFFFF;
-            vertexBufferObjectF32[vertexOffset++] = alpha;
+            vertexBufferObjectU32[vertexOffset++] = colors[index0];
+            vertexBufferObjectF32[vertexOffset++] = alphas[index0];
+            index0 += 1;
         }
         var elementCount = this.elementCount;
         for (var index = 0; index < indexLength; ++index)
@@ -307,6 +310,8 @@ SpriteBatch.prototype = {
         var alpha = gameObject.alpha;
         var vertices = gameObject.vertices;
         var uv = gameObject.uv;
+        var colors = gameObject.colors;
+        var alphas = gameObject.alphas;
         var length = vertices.length;
         var totalVertices = (length / 2)|0;
 
@@ -340,7 +345,7 @@ SpriteBatch.prototype = {
 
         vertexOffset = vertexDataBuffer.allocate(totalVertices * 6);
 
-        for (var index = 0; index < length; index += 2)
+        for (var index = 0, index0 = 0; index < length; index += 2)
         {
             var x = vertices[index + 0];
             var y = vertices[index + 1];
@@ -350,8 +355,9 @@ SpriteBatch.prototype = {
             vertexBufferObjectF32[vertexOffset++] = ty;
             vertexBufferObjectF32[vertexOffset++] = uv[index + 0];
             vertexBufferObjectF32[vertexOffset++] = uv[index + 1];
-            vertexBufferObjectU32[vertexOffset++] = 0xFFFFFF;
-            vertexBufferObjectF32[vertexOffset++] = alpha;
+            vertexBufferObjectU32[vertexOffset++] = colors[index0];
+            vertexBufferObjectF32[vertexOffset++] = alphas[index0];
+            index0 += 1;
         }
     },
 

@@ -25,7 +25,7 @@ var Mesh = new Class({
 
     initialize:
 
-    function Mesh (state, x, y, vertices, uv, indices, texture, frame)
+    function Mesh (state, x, y, vertices, uv, indices, colors, alphas, texture, frame)
     {
         GameObject.call(this, state, 'Mesh');
 
@@ -38,10 +38,36 @@ var Mesh = new Class({
         {
             throw new Error('Phaser: Vertex count must match UV count');
         }
+        if (colors.length > 0 && colors.length < (vertices.length / 2)|0)
+        {
+            throw new Error('Phaser: Color count must match Vertex count');
+        }
+        if (alphas.length > 0 && alphas.length < (vertices.length / 2)|0)
+        {
+            throw new Error('Phaser: Alpha count must match Vertex count');
+        }
+
+        if (colors.length === 0)
+        {
+            for (var i = 0; i < (vertices.length / 2)|0; ++i)
+            {
+                colors[i] = 0xFFFFFF;
+            }
+        }
+
+        if (alphas.length === 0)
+        {
+            for (var i = 0; i < (vertices.length / 2)|0; ++i)
+            {
+                alphas[i] = 1.0;
+            }
+        }
 
         this.vertices = new Float32Array(vertices);
         this.uv = new Float32Array(uv);
         this.indices = new Uint16Array(indices);
+        this.colors = new Uint32Array(colors);
+        this.alphas = new Float32Array(alphas);
     }
 
 });

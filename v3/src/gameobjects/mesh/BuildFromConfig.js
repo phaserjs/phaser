@@ -9,9 +9,11 @@ var BuildFromConfig = function (state, config)
     var frame = GetAdvancedValue(config, 'frame', null);
     var vertices = GetValue(config, 'vertices', []);
     var indices = GetValue(config, 'indices', []);
+    var colors = GetValue(config, 'colors', []);
+    var alphas = GetValue(config, 'alphas', []);
     var uv = GetValue(config, 'uv', []);
 
-    var mesh = new Mesh(state, 0, 0, vertices, uv, indices, key, frame);
+    var mesh = new Mesh(state, 0, 0, vertices, uv, indices, colors, alphas, key, frame);
 
     BuildGameObject(state, mesh, config);
 
