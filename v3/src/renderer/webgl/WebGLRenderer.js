@@ -122,6 +122,8 @@ WebGLRenderer.prototype = {
 
     createTexture: function (source, width, height)
     {
+        width = source ? source.width : width;
+        height = source ? source.height : height;
         var pot = ((width & (width - 1)) == 0 && (height & (height - 1)) == 0);
         var gl = this.gl;
         var filter = gl.NEAREST;
@@ -139,7 +141,7 @@ WebGLRenderer.prototype = {
                 filter = gl.NEAREST;
             }
 
-            if (typeof width === 'number' && typeof height === 'number')
+            if (!source && typeof width === 'number' && typeof height === 'number')
             {
                 source.glTexture = this.resourceManager.createTexture(
                     0,
