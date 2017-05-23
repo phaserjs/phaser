@@ -38,18 +38,22 @@ var Mesh = new Class({
         {
             throw new Error('Phaser: Vertex count must match UV count');
         }
+
         if (colors.length > 0 && colors.length < (vertices.length / 2)|0)
         {
             throw new Error('Phaser: Color count must match Vertex count');
         }
+
         if (alphas.length > 0 && alphas.length < (vertices.length / 2)|0)
         {
             throw new Error('Phaser: Alpha count must match Vertex count');
         }
 
+        var i;
+
         if (colors.length === 0)
         {
-            for (var i = 0; i < (vertices.length / 2)|0; ++i)
+            for (i = 0; i < (vertices.length / 2)|0; ++i)
             {
                 colors[i] = 0xFFFFFF;
             }
@@ -57,7 +61,7 @@ var Mesh = new Class({
 
         if (alphas.length === 0)
         {
-            for (var i = 0; i < (vertices.length / 2)|0; ++i)
+            for (i = 0; i < (vertices.length / 2)|0; ++i)
             {
                 alphas[i] = 1.0;
             }
