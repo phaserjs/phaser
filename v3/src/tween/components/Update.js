@@ -12,20 +12,20 @@ var Update = function (timestamp, delta)
     {
         case TWEEN_CONST.ACTIVE:
 
+            var stillRunning = false;
+
             for (var key in this.data)
             {
-                var prop = this.data[key];
-
-                if (UpdateTweenData(this, prop.current, delta))
+                if (UpdateTweenData(this, this.data[key], delta))
                 {
-                    //  TweenData complete - advance to the next one
-                    //  TODO:
-                    //  At the moment this sets the overall Tween.state, but
-                    //  it should only do that when the last remaining TweenData has ended,
-                    //  otherwise a shorter property tween could start this tween looping
-                    //  before a longer property tween has even finished
-                    this.nextTweenData(prop);
+                    stillRunning = true;
                 }
+            }
+
+            //  Anything still running? If not, we're done
+            if (!stillRunning)
+            {
+                this.nextState();
             }
 
             break;

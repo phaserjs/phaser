@@ -11,11 +11,17 @@ var Tween = function (manager, targets, tweenData)
     this.totalTargets = targets.length;
 
     //  The property data and TweenData lists
-    this.data = tweenData;
 
     //  An object with a property matching those being tweened by this Tween.
-    //  The list arrays contain TweenData instances in a linked-list format.
+    this.data = tweenData;
+
+    //  {
+    //      x: TweenData reference
+    //      y: TweenData reference
+    //  }
     //
+    //  An object with a property matching those being tweened by this Tween.
+    //  The list arrays contain TweenData instances in a linked-list format.
     //  {
     //      x: {
     //          current: TweenData reference
@@ -75,6 +81,7 @@ Tween.prototype = {
     calcTargetsValue: require('./components/CalcTargetsValue'),
     init: require('./components/Init'),
     loadValues: require('./components/LoadValues'),
+    nextState: require('./components/NextState'),
     nextTweenData: require('./components/NextTweenData'),
     play: require('./components/Play'),
     resetTargetsValue: require('./components/ResetTargetsValue'),

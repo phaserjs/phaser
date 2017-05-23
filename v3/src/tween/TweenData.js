@@ -48,11 +48,8 @@ var TweenData = function (key, value, ease, delay, duration, hold, repeat, repea
         state: 0,
 
         startValue: null,
-        endValue: null,
 
-        //  For chained TweenData these point to the prev and next references
-        prev: null,
-        next: null
+        endValue: null
     };
 };
 

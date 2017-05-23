@@ -171,7 +171,8 @@ var UpdateTweenData = function (tween, tweenData, delta)
             break;
     }
 
-    return (tweenData.state === TWEEN_CONST.COMPLETE);
+    //  Return TRUE if this TweenData still playing, otherwise return FALSE
+    return (tweenData.state !== TWEEN_CONST.COMPLETE);
 };
 
 module.exports = UpdateTweenData;

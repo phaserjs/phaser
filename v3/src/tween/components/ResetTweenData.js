@@ -4,9 +4,7 @@ var ResetTweenData = function ()
 {
     for (var key in this.data)
     {
-        var prop = this.data[key];
-
-        var tweenData = prop.list[0];
+        var tweenData = this.data[key];
 
         tweenData.progress = 0;
         tweenData.elapsed = 0;
@@ -22,8 +20,6 @@ var ResetTweenData = function ()
         {
             tweenData.state = TWEEN_CONST.PENDING_RENDER;
         }
-
-        prop.current = tweenData;
     }
 };
 

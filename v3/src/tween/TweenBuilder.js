@@ -1,4 +1,3 @@
-var Clone = require('../utils/object/Clone');
 var GetValue = require('../utils/object/GetValue');
 var GetAdvancedValue = require('../utils/object/GetAdvancedValue');
 var Tween = require('./Tween');
@@ -64,20 +63,21 @@ var GetProps = function (config)
 var GetValueOp = function (key, value)
 {
     var valueCallback;
+    var t = typeof(value);
 
-    if (typeof value === 'number')
+    if (t === 'number')
     {
         // props: {
         //     x: 400,
         //     y: 300
         // }
 
-        valueCallback = function (i)
+        valueCallback = function ()
         {
             return value;
         };
     }
-    else if (typeof value === 'string')
+    else if (t === 'string')
     {
         // props: {
         //     x: '+=400',
@@ -126,7 +126,7 @@ var GetValueOp = function (key, value)
                 };
         }
     }
-    else if (typeof value === 'function')
+    else if (t === 'function')
     {
         //  Technically this could return a number, string or object
         // props: {
@@ -158,7 +158,8 @@ var TweenBuilder = function (manager, config)
     var targetKeys = {};
     var tweenKeys = {};
 
-    props.forEach(function (p) {
+    props.forEach(function (p)
+    {
         targetKeys[p.key] = { start: 0, current: 0, end: 0 };
         tweenKeys[p.key] = { current: null, list: [] };
     });
@@ -190,59 +191,24 @@ var TweenBuilder = function (manager, config)
     for (var p = 0; p < props.length; p++)
     {
         var key = props[p].key;
-        var values = props[p].value;
+        var value = props[p].value;
 
-        if (!Array.isArray(values))
-        {
-            values = [ values ];
-        }
+        var tweenData = TweenData(
+            key,
+            GetValueOp(key, value),
+            GetEaseFunction(GetValue(value, 'ease', ease)),
+            GetAdvancedValue(value, 'delay', delay),
+            GetAdvancedValue(value, 'duration', duration),
+            GetAdvancedValue(value, 'hold', hold),
+            GetAdvancedValue(value, 'repeat', repeat),
+            GetAdvancedValue(value, 'repeatDelay', repeatDelay),
+            GetAdvancedValue(value, 'startAt', startAt),
+            GetValue(value, 'yoyo', yoyo)
+        );
 
-        var prev = null;
+        //  TODO: Calculate total duration
 
-        //  Loop through every value for the property, i.e.: x: [ 200, 300, 400 ]
-        for (var i = 0; i < values.length; i++)
-        {
-            var value = values[i];
-
-            var tweenData = TweenData(
-                key,
-                GetValueOp(key, value),
-                GetEaseFunction(GetValue(value, 'ease', ease)),
-                GetAdvancedValue(value, 'delay', delay),
-                GetAdvancedValue(value, 'duration', duration),
-                GetAdvancedValue(value, 'hold', hold),
-                GetAdvancedValue(value, 'repeat', repeat),
-                GetAdvancedValue(value, 'repeatDelay', repeatDelay),
-                GetAdvancedValue(value, 'startAt', startAt),
-                GetValue(value, 'yoyo', yoyo)
-            );
-
-            //  Calculate total duration
-
-            //  Duration is derived from:
-            //  TweenData.duration
-            //  TweenData.delay
-            //  TweenData.hold
-            //  x TweenData.repeat
-
-            // var totalDuration = 0;
-
-            // var playThruDuration = tweenData.duration * tweenData.repeat;
-
-            // totalDuration
-            // tweenData.totalDuration = 
-
-            tweenData.prev = prev;
-
-            if (prev)
-            {
-                prev.next = tweenData;
-            }
-
-            tween.data[key].list.push(tweenData);
-
-            prev = tweenData;
-        }
+        tween.data[key] = tweenData;
     }
 
     return tween;
