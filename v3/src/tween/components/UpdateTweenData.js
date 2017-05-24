@@ -7,10 +7,20 @@ var SetStateFromEnd = function (tween, tweenData)
     {
         //  Playing forward and we have a yoyo
 
-        tweenData.elapsed = 0;
         tweenData.progress = 0;
 
-        return TWEEN_CONST.PLAYING_BACKWARD;
+        if (tweenData.yoyoDelay > 0 && tweenData.state !== TWEEN_CONST.YOYO_DELAY)
+        {
+            tweenData.elapsed = tweenData.yoyoDelay;
+
+            return TWEEN_CONST.YOYO_DELAY;
+        }
+        else
+        {
+            tweenData.elapsed = 0;
+
+            return TWEEN_CONST.PLAYING_BACKWARD;
+        }
     }
     else if (tweenData.repeatCounter > 0)
     {
@@ -105,17 +115,7 @@ var UpdateTweenData = function (tween, tweenData, delta)
             {
                 if (forward)
                 {
-                    //  Do we hold?
-                    if (tweenData.hold > 0)
-                    {
-                        tweenData.elapsed = tweenData.hold;
-
-                        tweenData.state = TWEEN_CONST.HOLD;
-                    }
-                    else
-                    {
-                        tweenData.state = SetStateFromEnd(tween, tweenData);
-                    }
+                    tweenData.state = SetStateFromEnd(tween, tweenData);
                 }
                 else
                 {
@@ -151,7 +151,7 @@ var UpdateTweenData = function (tween, tweenData, delta)
 
             break;
 
-        case TWEEN_CONST.HOLD:
+        case TWEEN_CONST.YOYO_DELAY:
 
             tweenData.elapsed -= delta;
 

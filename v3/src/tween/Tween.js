@@ -7,33 +7,16 @@ var Tween = function (manager, targets, tweenData)
     //  Array of targets being tweened (TweenTarget objects)
     this.targets = targets;
 
-    //  targets array size doesn't change, so we can cache the length
+    //  targets array doesn't change, so we can cache the length
     this.totalTargets = targets.length;
 
-    //  The property data and TweenData lists
-
-    //  An object with a property matching those being tweened by this Tween.
+    //  An array of TweenData objects, each containing a unique property being tweened.
     this.data = tweenData;
 
-    //  {
-    //      x: TweenData reference
-    //      y: TweenData reference
-    //  }
-    //
-    //  An object with a property matching those being tweened by this Tween.
-    //  The list arrays contain TweenData instances in a linked-list format.
-    //  {
-    //      x: {
-    //          current: TweenData reference
-    //          list: []
-    //      },
-    //      y: {
-    //          current: TweenData reference
-    //          list: []
-    //      }
-    //  }
+    //  data array doesn't change, so we can cache the length
+    this.totalData = tweenData.length;
 
-    //  if true then duration, delay, etc values are all frame totals
+    //  If true then duration, delay, etc values are all frame totals
     this.useFrames = false;
 
     //  Time in ms/frames before the tween starts for the very first time
@@ -71,12 +54,6 @@ var Tween = function (manager, targets, tweenData)
 Tween.prototype.constructor = Tween;
 
 Tween.prototype = {
-
-    //  TODO:
-    //
-    //  Calculate total duration of this Tween, factoring in all TweenDatas and properties
-    //  Add progress for Tween duration
-    //  Only invoke loop, completeDelay, etc once all properties are completed
 
     calcTargetsValue: require('./components/CalcTargetsValue'),
     init: require('./components/Init'),

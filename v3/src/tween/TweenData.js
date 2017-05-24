@@ -1,4 +1,4 @@
-var TweenData = function (key, value, ease, delay, duration, hold, repeat, repeatDelay, startAt, yoyo)
+var TweenData = function (key, value, ease, delay, duration, yoyo, yoyoDelay, repeat, repeatDelay, startAt)
 {
     return {
 
@@ -8,48 +8,44 @@ var TweenData = function (key, value, ease, delay, duration, hold, repeat, repea
         //  A function to call when starting the tween, populates the 'start' and 'end' values
         value: value,
 
-        // the ease function this tween uses
+        //  The ease function this tween uses.
         ease: ease,
 
-        // duration of the tween in ms/frames, excludes time for yoyo or repeats
+        //  Duration of the tween in ms/frames, excludes time for yoyo or repeats.
         duration: duration,
 
-        //  The total calculated duration of this TweenData (based on duration, repeat, delay, hold, yoyo)
+        //  The total calculated duration of this TweenData (based on duration, repeat, delay and yoyo)
         totalDuration: 0,
-
-        //  Cause the tween to alternate back and forth on each *repeat*. Has no effect unless repeat > 0.
-        yoyo: yoyo,
-
-        //  Number of times to repeat the tween.
-        repeat: repeat,
 
         //  Time in ms/frames before tween will start.
         delay: delay,
 
-        //  Time in ms/frames the tween will remain in its end state before repeat or complete.
-        hold: hold,
+        //  Cause the tween to return back to its start value after yoyoDelay has expired.
+        yoyo: yoyo,
 
-        //  Time in ms/frames before repeat will start
+        //  Time in ms/frames the tween will pause before running the yoyo (only applied if yoyo is true)
+        yoyoDelay: yoyoDelay,
+
+        //  Number of times to repeat the tween. The tween will always run once regardless, so a repeat value of '1' will play the tween twice.
+        repeat: repeat,
+
+        //  Time in ms/frames before the repeat will start.
         repeatDelay: repeatDelay,
 
-        //  Changes the property to be this value before starting the tween
+        //  Changes the property to be this value before starting the tween.
         startAt: startAt,
 
-        // between 0 and 1 showing completion of this TweenData
+        //  Between 0 and 1 showing completion of this TweenData.
         progress: 0,
 
-        // delta counter
+        //  Delta counter.
         elapsed: 0,
 
-        // how many repeats are left to run?
+        //  How many repeats are left to run?
         repeatCounter: 0,
 
         //  TWEEN_CONST.CREATED
-        state: 0,
-
-        startValue: null,
-
-        endValue: null
+        state: 0
     };
 };
 

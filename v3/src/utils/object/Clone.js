@@ -1,4 +1,4 @@
-//  Shallow Clone
+//  Shallow Object Clone. Will not clone nested objects.
 
 var Clone = function (obj)
 {

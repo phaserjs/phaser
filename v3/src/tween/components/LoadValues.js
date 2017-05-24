@@ -1,34 +1,58 @@
-//  Calculate the start and end values
-//  Store them in the TweenData
-//  and also place them into the TweenTarget properties
+//  Calculate the start and end values and store them into the TweenTarget objects
 
 var LoadValues = function (tweenData)
 {
     var targets = this.targets;
-    var key = tweenData.key;
+    var prop = tweenData.key;
+
+    // console.log('--> LoadValues', prop);
+
+    //  Targets array:
+    //  0:
+    //      ref: GameObject,
+    //      keys: {
+    //          x: {
+    //              start,
+    //              current,
+    //              end,
+    //              startCache,
+    //              endCache
+    //          },
+    //          y: {
+    //              start,
+    //              current,
+    //              end,
+    //              startCache,
+    //              endCache
+    //          }
+    //      }
 
     for (var i = 0; i < this.totalTargets; i++)
     {
-        var target = targets[i];
-        var entry = target.keys[key];
+        var keys = targets[i].keys;
+        var entry = keys[prop];
+        var gameObject = targets[i].ref;
 
-        if (tweenData.startValue === null)
+        if (entry.startCache === null)
         {
-            entry.start = target.ref[key];
+            entry.start = gameObject[prop];
+            entry.current = entry.start;
             entry.end = tweenData.value(entry.start);
 
-            tweenData.startValue = entry.start;
-            tweenData.endValue = entry.end;
+            //  Cache the start and end values so we only do this once (needed?)
+            entry.startCache = entry.start;
+            entry.endCache = entry.end;
         }
         else
         {
-            entry.start = tweenData.startValue;
-            entry.end = tweenData.endValue;
+            entry.start = entry.startCache;
+            entry.current = entry.start;
+            entry.end = entry.endCache;
 
-            target.ref[key] = entry.start;
+            gameObject[prop] = entry.start;
         }
 
-        entry.current = entry.start;
+        // console.log('target', gameObject.name, 'key', prop, 'start', entry.start, 'end', entry.end);
     }
 };
 

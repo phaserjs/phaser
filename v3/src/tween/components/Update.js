@@ -14,9 +14,9 @@ var Update = function (timestamp, delta)
 
             var stillRunning = false;
 
-            for (var key in this.data)
+            for (var i = 0; i < this.totalData; i++)
             {
-                if (UpdateTweenData(this, this.data[key], delta))
+                if (UpdateTweenData(this, this.data[i], delta))
                 {
                     stillRunning = true;
                 }

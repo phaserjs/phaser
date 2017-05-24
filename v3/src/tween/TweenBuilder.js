@@ -6,7 +6,7 @@ var GetEaseFunction = require('./GetEaseFunction');
 var TweenData = require('./TweenData');
 var TweenTarget = require('./TweenTarget');
 
-var GetTargets = function (config, keys)
+var GetTargets = function (config, props)
 {
     var targets = GetValue(config, 'targets', null);
 
@@ -15,18 +15,23 @@ var GetTargets = function (config, keys)
         targets = targets.call();
     }
 
+    if (!Array.isArray(targets))
+    {
+        targets = [ targets ];
+    }
+
     var out = [];
 
-    if (Array.isArray(targets))
+    for (var i = 0; i < targets.length; i++)
     {
-        for (var i = 0; i < targets.length; i++)
+        var keyData = {};
+
+        for (var p = 0; p < props.length; p++)
         {
-            out.push(TweenTarget(targets[i], keys));
+            keyData[props[p].key] = { start: 0, current: 0, end: 0, startCache: null, endCache: null };
         }
-    }
-    else
-    {
-        out.push(TweenTarget(targets, keys));
+
+        out.push(TweenTarget(targets[i], keyData));
     }
 
     return out;
@@ -120,7 +125,7 @@ var GetValueOp = function (key, value)
                 break;
 
             default:
-                valueCallback = function (i)
+                valueCallback = function ()
                 {
                     return parseFloat(value);
                 };
@@ -155,37 +160,17 @@ var TweenBuilder = function (manager, config)
     //  Create arrays of the Targets and the Properties
     var props = GetProps(config);
 
-    var targetKeys = {};
-    var tweenKeys = {};
-
-    props.forEach(function (p)
-    {
-        targetKeys[p.key] = { start: 0, current: 0, end: 0 };
-        tweenKeys[p.key] = { current: null, list: [] };
-    });
-
-    var targets = GetTargets(config, targetKeys);
-
-    var tween = new Tween(manager, targets, tweenKeys);
-
-    var stagger = GetAdvancedValue(config, 'stagger', 0);
-
-    tween.useFrames = GetValue(config, 'useFrames', false);
-    tween.loop = GetValue(config, 'loop', false);
-    tween.loopDelay = GetAdvancedValue(config, 'loopDelay', 0);
-    tween.completeDelay = GetAdvancedValue(config, 'completeDelay', 0);
-    tween.startDelay = GetAdvancedValue(config, 'startDelay', 0) + (stagger * targets.length);
-    tween.paused = GetValue(config, 'paused', false);
-
     //  Default Tween values
     var ease = GetEaseFunction(GetValue(config, 'ease', 'Power0'));
     var duration = GetAdvancedValue(config, 'duration', 1000);
     var yoyo = GetValue(config, 'yoyo', false);
+    var yoyoDelay = GetAdvancedValue(config, 'yoyoDelay', 0);
     var repeat = GetAdvancedValue(config, 'repeat', 0);
     var repeatDelay = GetAdvancedValue(config, 'repeatDelay', 0);
     var delay = GetAdvancedValue(config, 'delay', 0);
-    var hold = GetAdvancedValue(config, 'hold', 0);
     var startAt = GetAdvancedValue(config, 'startAt', null);
+
+    var data = [];
 
     //  Loop through every property defined in the Tween, i.e.: props { x, y, alpha }
     for (var p = 0; p < props.length; p++)
@@ -199,17 +184,30 @@ var TweenBuilder = function (manager, config)
             GetEaseFunction(GetValue(value, 'ease', ease)),
             GetAdvancedValue(value, 'delay', delay),
             GetAdvancedValue(value, 'duration', duration),
-            GetAdvancedValue(value, 'hold', hold),
+            GetValue(value, 'yoyo', yoyo),
+            GetAdvancedValue(value, 'yoyoDelay', yoyoDelay),
             GetAdvancedValue(value, 'repeat', repeat),
             GetAdvancedValue(value, 'repeatDelay', repeatDelay),
-            GetAdvancedValue(value, 'startAt', startAt),
-            GetValue(value, 'yoyo', yoyo)
+            GetAdvancedValue(value, 'startAt', startAt)
         );
 
         //  TODO: Calculate total duration
 
-        tween.data[key] = tweenData;
+        data.push(tweenData);
     }
+
+    var targets = GetTargets(config, props);
+
+    var tween = new Tween(manager, targets, data);
+
+    var stagger = GetAdvancedValue(config, 'stagger', 0);
+
+    tween.useFrames = GetValue(config, 'useFrames', false);
+    tween.loop = GetValue(config, 'loop', false);
+    tween.loopDelay = GetAdvancedValue(config, 'loopDelay', 0);
+    tween.completeDelay = GetAdvancedValue(config, 'completeDelay', 0);
+    tween.startDelay = GetAdvancedValue(config, 'startDelay', 0) + (stagger * targets.length);
+    tween.paused = GetValue(config, 'paused', false);
 
     return tween;
 };
