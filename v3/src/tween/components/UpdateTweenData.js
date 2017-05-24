@@ -7,19 +7,9 @@ var SetStateFromEnd = function (tween, tweenData)
         //  Playing forward and we have a yoyo
 
         tweenData.progress = 0;
+        tweenData.elapsed = 0;
 
-        // if (tweenData.hold > 0 && tweenData.state !== TWEEN_CONST.HOLD_DELAY)
-        // {
-        //     tweenData.elapsed = tweenData.hold;
-
-        //     return TWEEN_CONST.HOLD_DELAY;
-        // }
-        // else
-        // {
-            tweenData.elapsed = 0;
-
-            return TWEEN_CONST.PLAYING_BACKWARD;
-        // }
+        return TWEEN_CONST.PLAYING_BACKWARD;
     }
     else if (tweenData.repeatCounter > 0)
     {
