@@ -93,7 +93,7 @@ var Text = new Class({
 
         if (value !== this.text)
         {
-            this.text = value;
+            this.text = value.toString();
 
             this.updateText();
         }
