@@ -57,6 +57,7 @@ Tween.prototype = {
     nextState: require('./components/NextState'),
     play: require('./components/Play'),
     resetTweenData: require('./components/ResetTweenData'),
+    seek: require('./components/Seek'),
     setEventCallback: require('./components/SetEventCallback'),
     update: require('./components/Update')
 
