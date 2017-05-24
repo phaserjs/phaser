@@ -53,15 +53,11 @@ Tween.prototype.constructor = Tween;
 
 Tween.prototype = {
 
-    calcTargetsValue: require('./components/CalcTargetsValue'),
     init: require('./components/Init'),
     loadValues: require('./components/LoadValues'),
     nextState: require('./components/NextState'),
-    nextTweenData: require('./components/NextTweenData'),
     play: require('./components/Play'),
-    resetTargetsValue: require('./components/ResetTargetsValue'),
     resetTweenData: require('./components/ResetTweenData'),
-    setCurrentTweenData: require('./components/SetCurrentTweenData'),
     setEventCallback: require('./components/SetEventCallback'),
     update: require('./components/Update')
 
