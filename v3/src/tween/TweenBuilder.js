@@ -202,7 +202,8 @@ var TweenBuilder = function (manager, config)
     var props = GetProps(config);
 
     //  Default Tween values
-    var ease = GetEaseFunction(GetValue(config, 'ease', 'Power0'));
+    var easeParams = GetValue(config, 'easeParams', null);
+    var ease = GetEaseFunction(GetValue(config, 'ease', 'Power0'), easeParams);
     var duration = GetNewValue(config, 'duration', 1000);
     var yoyo = GetBoolean(config, 'yoyo', false);
     var yoyoDelay = GetNewValue(config, 'yoyoDelay', 0);
@@ -226,7 +227,7 @@ var TweenBuilder = function (manager, config)
                 targets[t],
                 key,
                 GetValueOp(key, value),
-                GetEaseFunction(GetValue(value, 'ease', ease)),
+                GetEaseFunction(GetValue(value, 'ease', ease), easeParams),
                 GetNewValue(value, 'delay', delay),
                 GetNewValue(value, 'duration', duration),
                 GetBoolean(value, 'yoyo', yoyo),

@@ -5,6 +5,7 @@ module.exports = [
     'delay',
     'duration',
     'ease',
+    'easeParams',
     'loop',
     'loopDelay',
     'offset',

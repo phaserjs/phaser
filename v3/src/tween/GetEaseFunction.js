@@ -1,11 +1,27 @@
 var EaseMap = require('../math/easing/EaseMap');
 
-var GetEaseFunction = function (ease)
+var GetEaseFunction = function (ease, easeParams)
 {
     if (typeof ease === 'string' && EaseMap.hasOwnProperty(ease))
     {
-        //  String based look-up
-        return EaseMap[ease];
+        if (easeParams)
+        {
+            var cloneParams = easeParams.slice(0);
+
+            cloneParams.unshift(0);
+
+            return function (v)
+            {
+                cloneParams[0] = v;
+
+                return EaseMap[ease].apply(this, cloneParams);
+            };
+        }
+        else
+        {
+            //  String based look-up
+            return EaseMap[ease];
+        }
     }
     else if (typeof ease === 'function')
     {
