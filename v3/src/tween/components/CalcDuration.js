@@ -25,7 +25,7 @@ var CalcDuration = function ()
 
         single += tweenData.hold;
 
-        var totalRepeats = (tweenData.repeat === -1) ? Number.MAX_SAFE_INTEGER : tweenData.repeat;
+        var totalRepeats = (tweenData.repeat === -1) ? 999999999999 : tweenData.repeat;
 
         single += single * totalRepeats;
 
