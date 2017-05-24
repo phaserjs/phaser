@@ -3,19 +3,19 @@ var TWEEN_CONST = require('../const');
 var ResetTweenData = function (resetFromLoop)
 {
     var data = this.data;
-    var totalTargets = this.totalTargets;
+    // var totalTargets = this.totalTargets;
 
     for (var i = 0; i < this.totalData; i++)
     {
         var tweenData = data[i];
-        var target = tweenData.target;
-        var gen = tweenData.gen;
+        // var target = tweenData.target;
+        // var gen = tweenData.gen;
 
-        tweenData.delay = gen.delay(i, totalTargets, target);
-        tweenData.duration = gen.duration(i, totalTargets, target);
-        tweenData.hold = gen.hold(i, totalTargets, target);
-        tweenData.repeat = gen.repeat(i, totalTargets, target);
-        tweenData.repeatDelay = gen.repeatDelay(i, totalTargets, target);
+        // tweenData.delay = gen.delay(i, totalTargets, target);
+        // tweenData.duration = gen.duration(i, totalTargets, target);
+        // tweenData.hold = gen.hold(i, totalTargets, target);
+        // tweenData.repeat = gen.repeat(i, totalTargets, target);
+        // tweenData.repeatDelay = gen.repeatDelay(i, totalTargets, target);
 
         tweenData.progress = 0;
         tweenData.elapsed = 0;

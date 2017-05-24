@@ -1,34 +1,33 @@
-var TWEEN_CONST = require('../const');
+// var TWEEN_CONST = require('../const');
 
 //  For now progress = 0 to 1
-//  Needs to be normalized with the total Tween duration, not the tweenData durations
 var Seek = function (progress)
 {
+    var marker = this.totalDuration * progress;
+
     var data = this.data;
 
+    //  Now works on multi-property tweens with varying durations, but doesn't yet factor in delays
     for (var i = 0; i < this.totalData; i++)
     {
         var tweenData = data[i];
 
-        tweenData.progress = progress;
+        if (marker >= tweenData.duration)
+        {
+            tweenData.progress = 1;
+            tweenData.elapsed = tweenData.duration;
+        }
+        else
+        {
+            tweenData.progress = marker / tweenData.duration;
+            tweenData.elapsed = marker;
+        }
 
-        tweenData.elapsed = tweenData.duration * progress;
-
-        // var forward = (tweenData.state === TWEEN_CONST.PLAYING_FORWARD);
-        var v;
-
-        // if (forward)
-        // {
-            v = tweenData.ease(progress);
-        // }
-        // else
-        // {
-        //     v = tweenData.ease(1 - progress);
-        // }
+        var v = tweenData.ease(tweenData.progress);
 
         tweenData.current = tweenData.start + ((tweenData.end - tweenData.start) * v);
 
-        // console.log('Seek', tweenData.target[tweenData.key], 'to', tweenData.current);
+        // console.log(tweenData.key, 'Seek', tweenData.target[tweenData.key], 'to', tweenData.current, 'pro', tweenData.progress, 'marker', marker, progress);
 
         tweenData.target[tweenData.key] = tweenData.current;
     }

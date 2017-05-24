@@ -1,24 +1,45 @@
 var CalcDuration = function ()
 {
-    var total = 0;
+    var max = 0;
 
-    for (var key in this.data)
+    var data = this.data;
+
+    //  Duration is derived from:
+    //  TweenData.duration
+    //  TweenData.delay
+    //  TweenData.hold
+    //  x TweenData.repeat
+
+    for (var i = 0; i < this.totalData; i++)
     {
-        var prop = this.data[key];
+        var tweenData = data[i];
 
-        for (var i = 0; i < prop.list.length; i++)
+        var total = tweenData.delay;
+
+        var single = tweenData.duration;
+
+        if (tweenData.yoyo)
         {
-            // var tweenData = prop.list[i];
+            single *= 2;
+        }
 
-            //  Duration is derived from:
-            //  TweenData.duration
-            //  TweenData.delay
-            //  TweenData.hold
-            //  x TweenData.repeat
+        single += tweenData.hold;
+
+        var totalRepeats = (tweenData.repeat === -1) ? Number.MAX_SAFE_INTEGER : tweenData.repeat;
+
+        single += single * totalRepeats;
+
+        single += tweenData.repeatDelay * totalRepeats;
+
+        total += single;
+
+        if (total > max)
+        {
+            max = total;
         }
     }
 
-    return total;
+    return max;
 };
 
 module.exports = CalcDuration;

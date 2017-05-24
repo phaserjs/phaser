@@ -37,6 +37,9 @@ var Tween = function (manager, data)
 
     this.paused = false;
 
+    this.totalDuration = 0;
+    this.progress = 0;
+
     this.callbacks = {
         onStart: { callback: null, scope: null, params: null },
         onUpdate: { callback: null, scope: null, params: null },
@@ -53,6 +56,7 @@ Tween.prototype.constructor = Tween;
 Tween.prototype = {
 
     init: require('./components/Init'),
+    calcDuration: require('./components/CalcDuration'),
     loadValues: require('./components/LoadValues'),
     nextState: require('./components/NextState'),
     play: require('./components/Play'),
