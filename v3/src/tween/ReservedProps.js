@@ -6,6 +6,7 @@ module.exports = [
     'duration',
     'ease',
     'easeParams',
+    'hold',
     'loop',
     'loopDelay',
     'offset',
@@ -17,6 +18,5 @@ module.exports = [
     'startDelay',
     'targets',
     'useFrames',
-    'yoyo',
-    'yoyoDelay'
+    'yoyo'
 ];

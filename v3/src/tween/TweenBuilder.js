@@ -206,7 +206,7 @@ var TweenBuilder = function (manager, config)
     var ease = GetEaseFunction(GetValue(config, 'ease', 'Power0'), easeParams);
     var duration = GetNewValue(config, 'duration', 1000);
     var yoyo = GetBoolean(config, 'yoyo', false);
-    var yoyoDelay = GetNewValue(config, 'yoyoDelay', 0);
+    var hold = GetNewValue(config, 'hold', 0);
     var repeat = GetNewValue(config, 'repeat', 0);
     var repeatDelay = GetNewValue(config, 'repeatDelay', 0);
     var delay = GetNewValue(config, 'delay', 0);
@@ -231,7 +231,7 @@ var TweenBuilder = function (manager, config)
                 GetNewValue(value, 'delay', delay),
                 GetNewValue(value, 'duration', duration),
                 GetBoolean(value, 'yoyo', yoyo),
-                GetNewValue(value, 'yoyoDelay', yoyoDelay),
+                GetNewValue(value, 'hold', hold),
                 GetNewValue(value, 'repeat', repeat),
                 GetNewValue(value, 'repeatDelay', repeatDelay),
                 GetNewValue(value, 'startAt', startAt)

@@ -13,7 +13,7 @@ var ResetTweenData = function (resetFromLoop)
 
         tweenData.delay = gen.delay(i, totalTargets, target);
         tweenData.duration = gen.duration(i, totalTargets, target);
-        tweenData.yoyoDelay = gen.yoyoDelay(i, totalTargets, target);
+        tweenData.hold = gen.hold(i, totalTargets, target);
         tweenData.repeat = gen.repeat(i, totalTargets, target);
         tweenData.repeatDelay = gen.repeatDelay(i, totalTargets, target);
 

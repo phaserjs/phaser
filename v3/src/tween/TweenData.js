@@ -1,4 +1,4 @@
-var TweenData = function (target, key, value, ease, delay, duration, yoyo, yoyoDelay, repeat, repeatDelay, startAt)
+var TweenData = function (target, key, value, ease, delay, duration, yoyo, hold, repeat, repeatDelay, startAt)
 {
     return {
 
@@ -23,11 +23,11 @@ var TweenData = function (target, key, value, ease, delay, duration, yoyo, yoyoD
         //  Time in ms/frames before tween will start.
         delay: 0,
 
-        //  Cause the tween to return back to its start value after yoyoDelay has expired.
+        //  Cause the tween to return back to its start value after hold has expired.
         yoyo: yoyo,
 
-        //  Time in ms/frames the tween will pause before running the yoyo (only applied if yoyo is true)
-        yoyoDelay: 0,
+        //  Time in ms/frames the tween will pause before running the yoyo or starting a repeat.
+        hold: 0,
 
         //  Number of times to repeat the tween. The tween will always run once regardless, so a repeat value of '1' will play the tween twice.
         repeat: 0,
@@ -59,7 +59,7 @@ var TweenData = function (target, key, value, ease, delay, duration, yoyo, yoyoD
         gen: {
             delay: delay,
             duration: duration,
-            yoyoDelay: yoyoDelay,
+            hold: hold,
             repeat: repeat,
             repeatDelay: repeatDelay
         },

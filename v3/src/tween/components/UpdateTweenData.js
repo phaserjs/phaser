@@ -1,6 +1,5 @@
 var TWEEN_CONST = require('../const');
 
-//  Was PLAYING_FORWARD and has hit the end
 var SetStateFromEnd = function (tween, tweenData)
 {
     if (tweenData.yoyo)
@@ -9,18 +8,18 @@ var SetStateFromEnd = function (tween, tweenData)
 
         tweenData.progress = 0;
 
-        if (tweenData.yoyoDelay > 0 && tweenData.state !== TWEEN_CONST.YOYO_DELAY)
-        {
-            tweenData.elapsed = tweenData.yoyoDelay;
+        // if (tweenData.hold > 0 && tweenData.state !== TWEEN_CONST.HOLD_DELAY)
+        // {
+        //     tweenData.elapsed = tweenData.hold;
 
-            return TWEEN_CONST.YOYO_DELAY;
-        }
-        else
-        {
+        //     return TWEEN_CONST.HOLD_DELAY;
+        // }
+        // else
+        // {
             tweenData.elapsed = 0;
 
             return TWEEN_CONST.PLAYING_BACKWARD;
-        }
+        // }
     }
     else if (tweenData.repeatCounter > 0)
     {
@@ -121,7 +120,16 @@ var UpdateTweenData = function (tween, tweenData, delta)
             {
                 if (forward)
                 {
-                    tweenData.state = SetStateFromEnd(tween, tweenData);
+                    if (tweenData.hold > 0)
+                    {
+                        tweenData.elapsed = tweenData.hold;
+
+                        tweenData.state = TWEEN_CONST.HOLD_DELAY;
+                    }
+                    else
+                    {
+                        tweenData.state = SetStateFromEnd(tween, tweenData);
+                    }
                 }
                 else
                 {
@@ -157,7 +165,7 @@ var UpdateTweenData = function (tween, tweenData, delta)
 
             break;
 
-        case TWEEN_CONST.YOYO_DELAY:
+        case TWEEN_CONST.HOLD_DELAY:
 
             tweenData.elapsed -= delta;
 
