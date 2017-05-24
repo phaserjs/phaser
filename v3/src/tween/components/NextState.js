@@ -4,15 +4,16 @@ var NextState = function ()
 {
     if (this.loop)
     {
-        //  leaves the state in PENDING_RENDER
-        // this.setCurrentTweenData(prop, prop.list[0]);
-
-        // this.resetTargetsValue(prop.current);
+        this.resetTweenData(true);
 
         if (this.loopDelay > 0)
         {
             this.countdown = this.loopDelay;
             this.state = TWEEN_CONST.LOOP_DELAY;
+        }
+        else
+        {
+            this.state = TWEEN_CONST.ACTIVE;
         }
     }
     else if (this.completeDelay > 0)

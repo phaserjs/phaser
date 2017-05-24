@@ -174,6 +174,9 @@ var UpdateTweenData = function (tween, tweenData, delta)
             tweenData.current = tweenData.start;
             tweenData.end = tweenData.value(tweenData.start);
 
+            tweenData.startCache = tweenData.start;
+            tweenData.endCache = tweenData.end;
+
             tweenData.target[tweenData.key] = tweenData.current;
 
             tweenData.state = TWEEN_CONST.PLAYING_FORWARD;

@@ -1,6 +1,6 @@
 var TWEEN_CONST = require('../const');
 
-var ResetTweenData = function ()
+var ResetTweenData = function (resetFromLoop)
 {
     var data = this.data;
     var totalTargets = this.totalTargets;
@@ -22,7 +22,15 @@ var ResetTweenData = function ()
 
         tweenData.repeatCounter = (tweenData.repeat === -1) ? Number.MAX_SAFE_INTEGER : tweenData.repeat;
 
-        if (tweenData.delay > 0)
+        if (resetFromLoop)
+        {
+            tweenData.start = tweenData.startCache;
+            tweenData.current = tweenData.start;
+            tweenData.end = tweenData.endCache;
+
+            tweenData.state = TWEEN_CONST.PLAYING_FORWARD;
+        }
+        else if (tweenData.delay > 0)
         {
             tweenData.elapsed = tweenData.delay;
             tweenData.state = TWEEN_CONST.DELAY;

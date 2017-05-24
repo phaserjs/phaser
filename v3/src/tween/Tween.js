@@ -17,8 +17,7 @@ var Tween = function (manager, data)
     this.useFrames = false;
 
     //  Time in ms/frames before the tween starts for the very first time
-    //  (populated by stagger property, or directly) - never used again once the
-    //  tween has begun, even if it loops.
+    //  never used again once the tween has begun, even if it loops.
     this.startDelay = 0;
 
     //  Infinitely loop this tween?
