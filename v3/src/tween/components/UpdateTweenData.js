@@ -34,7 +34,9 @@ var SetStateFromEnd = function (tween, tweenData)
         {
             tweenData.elapsed = tweenData.repeatDelay;
 
-            tween.resetTargetsValue(tweenData);
+            tweenData.current = tweenData.start;
+
+            tweenData.target[tweenData.key] = tweenData.current;
 
             return TWEEN_CONST.REPEAT_DELAY;
         }
@@ -62,7 +64,9 @@ var SetStateFromStart = function (tween, tweenData)
         {
             tweenData.elapsed = tweenData.repeatDelay;
 
-            tween.resetTargetsValue(tweenData);
+            tweenData.current = tweenData.start;
+
+            tweenData.target[tweenData.key] = tweenData.current;
 
             return TWEEN_CONST.REPEAT_DELAY;
         }
@@ -106,7 +110,9 @@ var UpdateTweenData = function (tween, tweenData, delta)
                 v = tweenData.ease(1 - progress);
             }
 
-            tween.calcTargetsValue(tweenData, v);
+            tweenData.current = tweenData.start + ((tweenData.end - tweenData.start) * v);
+
+            tweenData.target[tweenData.key] = tweenData.current;
 
             tweenData.elapsed = elapsed;
             tweenData.progress = progress;
@@ -164,7 +170,11 @@ var UpdateTweenData = function (tween, tweenData, delta)
 
         case TWEEN_CONST.PENDING_RENDER:
 
-            tween.loadValues(tweenData);
+            tweenData.start = tweenData.target[tweenData.key];
+            tweenData.current = tweenData.start;
+            tweenData.end = tweenData.value(tweenData.start);
+
+            tweenData.target[tweenData.key] = tweenData.current;
 
             tweenData.state = TWEEN_CONST.PLAYING_FORWARD;
 

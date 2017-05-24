@@ -2,9 +2,20 @@ var TWEEN_CONST = require('../const');
 
 var ResetTweenData = function ()
 {
-    for (var key in this.data)
+    var data = this.data;
+    var totalTargets = this.totalTargets;
+
+    for (var i = 0; i < this.totalData; i++)
     {
-        var tweenData = this.data[key];
+        var tweenData = data[i];
+        var target = tweenData.target;
+        var gen = tweenData.gen;
+
+        tweenData.delay = gen.delay(i, totalTargets, target);
+        tweenData.duration = gen.duration(i, totalTargets, target);
+        tweenData.yoyoDelay = gen.yoyoDelay(i, totalTargets, target);
+        tweenData.repeat = gen.repeat(i, totalTargets, target);
+        tweenData.repeatDelay = gen.repeatDelay(i, totalTargets, target);
 
         tweenData.progress = 0;
         tweenData.elapsed = 0;

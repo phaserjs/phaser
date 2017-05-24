@@ -12,7 +12,6 @@ module.exports = [
     'props',
     'repeat',
     'repeatDelay',
-    'stagger',
     'startAt',
     'startDelay',
     'targets',

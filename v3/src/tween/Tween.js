@@ -1,20 +1,17 @@
 var TWEEN_CONST = require('./const');
 
-var Tween = function (manager, targets, tweenData)
+var Tween = function (manager, data)
 {
     this.manager = manager;
 
-    //  Array of targets being tweened (TweenTarget objects)
-    this.targets = targets;
-
-    //  targets array doesn't change, so we can cache the length
-    this.totalTargets = targets.length;
-
-    //  An array of TweenData objects, each containing a unique property being tweened.
-    this.data = tweenData;
+    //  An array of TweenData objects, each containing a unique property and target being tweened.
+    this.data = data;
 
     //  data array doesn't change, so we can cache the length
-    this.totalData = tweenData.length;
+    this.totalData = data.length;
+
+    //  Cached target total (not necessarily the same as the data total)
+    this.totalTargets = 0;
 
     //  If true then duration, delay, etc values are all frame totals
     this.useFrames = false;
@@ -31,7 +28,7 @@ var Tween = function (manager, targets, tweenData)
     //  Time in ms/frames before the tween loops again if loop is true
     this.loopDelay = 0;
 
-    //  Time in ms/frames before the 'onComplete' event fires.
+    //  Time in ms/frames before the 'onComplete' event fires. This never fires if loop = true (as it never completes)
     this.completeDelay = 0;
 
     //  Countdown timer (used by startDelay, loopDelay and completeDelay)
@@ -45,6 +42,7 @@ var Tween = function (manager, targets, tweenData)
         onStart: { callback: null, scope: null, params: null },
         onUpdate: { callback: null, scope: null, params: null },
         onRepeat: { callback: null, scope: null, params: null },
+        onLoop: { callback: null, scope: null, params: null },
         onComplete: { callback: null, scope: null, params: null }
     };
 

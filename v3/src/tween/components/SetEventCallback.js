@@ -1,6 +1,6 @@
 var SetEventCallback = function (type, callback, params, scope)
 {
-    var types = [ 'onStart', 'onUpdate', 'onRepeat', 'onComplete' ];
+    var types = [ 'onStart', 'onUpdate', 'onRepeat', 'onLoop', 'onComplete' ];
 
     if (types.indexOf(type) !== -1)
     {

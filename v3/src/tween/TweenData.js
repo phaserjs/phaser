@@ -1,6 +1,9 @@
-var TweenData = function (key, value, ease, delay, duration, yoyo, yoyoDelay, repeat, repeatDelay, startAt)
+var TweenData = function (target, key, value, ease, delay, duration, yoyo, yoyoDelay, repeat, repeatDelay, startAt)
 {
     return {
+
+        //  The target to tween
+        target: target,
 
         //  The property of the target to tween
         key: key,
@@ -12,25 +15,25 @@ var TweenData = function (key, value, ease, delay, duration, yoyo, yoyoDelay, re
         ease: ease,
 
         //  Duration of the tween in ms/frames, excludes time for yoyo or repeats.
-        duration: duration,
+        duration: 0,
 
         //  The total calculated duration of this TweenData (based on duration, repeat, delay and yoyo)
         totalDuration: 0,
 
         //  Time in ms/frames before tween will start.
-        delay: delay,
+        delay: 0,
 
         //  Cause the tween to return back to its start value after yoyoDelay has expired.
         yoyo: yoyo,
 
         //  Time in ms/frames the tween will pause before running the yoyo (only applied if yoyo is true)
-        yoyoDelay: yoyoDelay,
+        yoyoDelay: 0,
 
         //  Number of times to repeat the tween. The tween will always run once regardless, so a repeat value of '1' will play the tween twice.
-        repeat: repeat,
+        repeat: 0,
 
         //  Time in ms/frames before the repeat will start.
-        repeatDelay: repeatDelay,
+        repeatDelay: 0,
 
         //  Changes the property to be this value before starting the tween.
         startAt: startAt,
@@ -43,6 +46,21 @@ var TweenData = function (key, value, ease, delay, duration, yoyo, yoyoDelay, re
 
         //  How many repeats are left to run?
         repeatCounter: 0,
+
+        //  Value Data:
+
+        start: 0,
+        current: 0,
+        end: 0,
+
+        //  LoadValue generation functions
+        gen: {
+            delay: delay,
+            duration: duration,
+            yoyoDelay: yoyoDelay,
+            repeat: repeat,
+            repeatDelay: repeatDelay
+        },
 
         //  TWEEN_CONST.CREATED
         state: 0

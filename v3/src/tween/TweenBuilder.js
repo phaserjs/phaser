@@ -4,9 +4,8 @@ var Tween = require('./Tween');
 var RESERVED = require('./ReservedProps');
 var GetEaseFunction = require('./GetEaseFunction');
 var TweenData = require('./TweenData');
-var TweenTarget = require('./TweenTarget');
 
-var GetTargets = function (config, props)
+var GetTargets = function (config)
 {
     var targets = GetValue(config, 'targets', null);
 
@@ -20,21 +19,7 @@ var GetTargets = function (config, props)
         targets = [ targets ];
     }
 
-    var out = [];
-
-    for (var i = 0; i < targets.length; i++)
-    {
-        var keyData = {};
-
-        for (var p = 0; p < props.length; p++)
-        {
-            keyData[props[p].key] = { start: 0, current: 0, end: 0, startCache: null, endCache: null };
-        }
-
-        out.push(TweenTarget(targets[i], keyData));
-    }
-
-    return out;
+    return targets;
 };
 
 var GetProps = function (config)
@@ -133,13 +118,14 @@ var GetValueOp = function (key, value)
     }
     else if (t === 'function')
     {
-        //  Technically this could return a number, string or object
         // props: {
-        //     x: function () { return Math.random() * 10 },
-        //     y: someOtherCallback
+        //     x: function (startValue, target, index, totalTargets) { return startValue + (index * 50); },
         // }
 
-        valueCallback = GetValueOp(key, value.call());
+        valueCallback = function (startValue, target, index, total)
+        {
+            return value(startValue, target, index, total);
+        };
     }
     else if (value.hasOwnProperty('value'))
     {
@@ -155,20 +141,75 @@ var GetValueOp = function (key, value)
     return valueCallback;
 };
 
+var GetBoolean = function (source, key, defaultValue)
+{
+    if (!source)
+    {
+        return defaultValue;
+    }
+    else if (source.hasOwnProperty(key))
+    {
+        return source[key];
+    }
+    else
+    {
+        return defaultValue;
+    }
+};
+
+var GetNewValue = function (source, key, defaultValue)
+{
+    var valueCallback;
+
+    if (source.hasOwnProperty(key))
+    {
+        var t = typeof(source[key]);
+
+        if (t === 'function')
+        {
+            valueCallback = function (index, totalTargets, target)
+            {
+                return source[key](index, totalTargets, target);
+            };
+        }
+        else
+        {
+            valueCallback = function ()
+            {
+                return source[key];
+            };
+        }
+    }
+    else if (typeof defaultValue === 'function')
+    {
+        valueCallback = defaultValue;
+    }
+    else
+    {
+        valueCallback = function ()
+        {
+            return defaultValue;
+        };
+    }
+
+    return valueCallback;
+};
+
 var TweenBuilder = function (manager, config)
 {
     //  Create arrays of the Targets and the Properties
+    var targets = GetTargets(config);
     var props = GetProps(config);
 
     //  Default Tween values
     var ease = GetEaseFunction(GetValue(config, 'ease', 'Power0'));
-    var duration = GetAdvancedValue(config, 'duration', 1000);
-    var yoyo = GetValue(config, 'yoyo', false);
-    var yoyoDelay = GetAdvancedValue(config, 'yoyoDelay', 0);
-    var repeat = GetAdvancedValue(config, 'repeat', 0);
-    var repeatDelay = GetAdvancedValue(config, 'repeatDelay', 0);
-    var delay = GetAdvancedValue(config, 'delay', 0);
-    var startAt = GetAdvancedValue(config, 'startAt', null);
+    var duration = GetNewValue(config, 'duration', 1000);
+    var yoyo = GetBoolean(config, 'yoyo', false);
+    var yoyoDelay = GetNewValue(config, 'yoyoDelay', 0);
+    var repeat = GetNewValue(config, 'repeat', 0);
+    var repeatDelay = GetNewValue(config, 'repeatDelay', 0);
+    var delay = GetNewValue(config, 'delay', 0);
+    var startAt = GetNewValue(config, 'startAt', null);
 
     var data = [];
 
@@ -178,36 +219,38 @@ var TweenBuilder = function (manager, config)
         var key = props[p].key;
         var value = props[p].value;
 
-        var tweenData = TweenData(
-            key,
-            GetValueOp(key, value),
-            GetEaseFunction(GetValue(value, 'ease', ease)),
-            GetAdvancedValue(value, 'delay', delay),
-            GetAdvancedValue(value, 'duration', duration),
-            GetValue(value, 'yoyo', yoyo),
-            GetAdvancedValue(value, 'yoyoDelay', yoyoDelay),
-            GetAdvancedValue(value, 'repeat', repeat),
-            GetAdvancedValue(value, 'repeatDelay', repeatDelay),
-            GetAdvancedValue(value, 'startAt', startAt)
-        );
+        for (var t = 0; t < targets.length; t++)
+        {
+            //  Swap for faster getters, if they want Advanced Value style things, they can do it via their own functions
+            var tweenData = TweenData(
+                targets[t],
+                key,
+                GetValueOp(key, value),
+                GetEaseFunction(GetValue(value, 'ease', ease)),
+                GetNewValue(value, 'delay', delay),
+                GetNewValue(value, 'duration', duration),
+                GetBoolean(value, 'yoyo', yoyo),
+                GetNewValue(value, 'yoyoDelay', yoyoDelay),
+                GetNewValue(value, 'repeat', repeat),
+                GetNewValue(value, 'repeatDelay', repeatDelay),
+                GetNewValue(value, 'startAt', startAt)
+            );
 
-        //  TODO: Calculate total duration
+            //  TODO: Calculate total duration
 
-        data.push(tweenData);
+            data.push(tweenData);
+        }
     }
 
-    var targets = GetTargets(config, props);
+    var tween = new Tween(manager, data);
 
-    var tween = new Tween(manager, targets, data);
-
-    var stagger = GetAdvancedValue(config, 'stagger', 0);
-
-    tween.useFrames = GetValue(config, 'useFrames', false);
-    tween.loop = GetValue(config, 'loop', false);
+    tween.totalTargets = targets.length;
+    tween.useFrames = GetBoolean(config, 'useFrames', false);
+    tween.loop = GetBoolean(config, 'loop', false);
     tween.loopDelay = GetAdvancedValue(config, 'loopDelay', 0);
     tween.completeDelay = GetAdvancedValue(config, 'completeDelay', 0);
-    tween.startDelay = GetAdvancedValue(config, 'startDelay', 0) + (stagger * targets.length);
-    tween.paused = GetValue(config, 'paused', false);
+    tween.startDelay = GetAdvancedValue(config, 'startDelay', 0);
+    tween.paused = GetBoolean(config, 'paused', false);
 
     return tween;
 };
