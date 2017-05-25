@@ -15,7 +15,6 @@ module.exports = [
     'repeat',
     'repeatDelay',
     'startAt',
-    'startDelay',
     'targets',
     'useFrames',
     'yoyo'

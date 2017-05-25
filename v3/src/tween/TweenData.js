@@ -47,13 +47,17 @@ var TweenData = function (target, key, value, ease, delay, duration, yoyo, hold,
         //  How many repeats are left to run?
         repeatCounter: 0,
 
-        //  Value Data:
+        //  Ease Value Data:
 
         start: 0,
         current: 0,
         end: 0,
         startCache: 0,
         endCache: 0,
+
+        //  Time Durations
+        t1: 0,
+        t2: 0,
 
         //  LoadValue generation functions
         gen: {

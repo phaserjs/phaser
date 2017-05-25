@@ -18,15 +18,7 @@ var Play = function ()
         //  Reset the TweenData
         this.resetTweenData();
 
-        if (this.startDelay > 0)
-        {
-            this.countdown = this.startDelay;
-            this.state = TWEEN_CONST.START_DELAY;
-        }
-        else
-        {
-            this.state = TWEEN_CONST.ACTIVE;
-        }
+        this.state = TWEEN_CONST.ACTIVE;
     }
 };
 

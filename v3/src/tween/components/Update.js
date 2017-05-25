@@ -31,7 +31,6 @@ var Update = function (timestamp, delta)
             break;
 
         case TWEEN_CONST.LOOP_DELAY:
-        case TWEEN_CONST.START_DELAY:
 
             this.countdown -= delta;
 

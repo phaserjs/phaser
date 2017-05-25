@@ -250,7 +250,6 @@ var TweenBuilder = function (manager, config)
     tween.loop = GetBoolean(config, 'loop', false);
     tween.loopDelay = GetAdvancedValue(config, 'loopDelay', 0);
     tween.completeDelay = GetAdvancedValue(config, 'completeDelay', 0);
-    tween.startDelay = GetAdvancedValue(config, 'startDelay', 0);
     tween.paused = GetBoolean(config, 'paused', false);
 
     return tween;

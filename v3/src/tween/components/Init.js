@@ -19,7 +19,7 @@ var Init = function ()
         tweenData.repeatDelay = gen.repeatDelay(i, totalTargets, target);
     }
 
-    this.totalDuration = this.calcDuration();
+    this.calcDuration();
 
     console.log('Tween totalDuration', this.totalDuration);
 

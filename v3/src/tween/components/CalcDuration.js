@@ -4,40 +4,35 @@ var CalcDuration = function ()
 
     var data = this.data;
 
-    //  Duration is derived from:
-    //  TweenData.duration
-    //  TweenData.delay
-    //  TweenData.hold
-    //  x TweenData.repeat
-
     for (var i = 0; i < this.totalData; i++)
     {
         var tweenData = data[i];
 
-        var total = tweenData.delay;
-
-        var single = tweenData.duration;
+        //  Set t1 (duration + hold + yoyo)
+        tweenData.t1 = tweenData.duration + tweenData.hold;
 
         if (tweenData.yoyo)
         {
-            single *= 2;
+            tweenData.t1 += tweenData.duration;
         }
 
-        single += tweenData.hold;
+        //  Set t2 (repeatDelay + duration + hold + yoyo)
+        tweenData.t2 = tweenData.t1 + tweenData.repeatDelay;
 
-        var totalRepeats = (tweenData.repeat === -1) ? 999999999999 : tweenData.repeat;
+        //  Total Duration
+        tweenData.totalDuration = tweenData.delay + tweenData.t1;
 
-        single += single * totalRepeats;
+        tweenData.totalDuration += tweenData.t2 * (tweenData.repeat === -1) ? 999999999999 : tweenData.repeat;
 
-        single += tweenData.repeatDelay * totalRepeats;
-
-        total += single;
-
-        if (total > max)
+        if (tweenData.totalDuration > max)
         {
-            max = total;
+            max = tweenData.totalDuration;
         }
     }
+
+    // this.loop = false;
+    // this.loopDelay = 0;
+    // this.completeDelay = 0;
 
     return max;
 };

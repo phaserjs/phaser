@@ -16,12 +16,8 @@ var Tween = function (manager, data)
     //  If true then duration, delay, etc values are all frame totals
     this.useFrames = false;
 
-    //  Time in ms/frames before the tween starts for the very first time
-    //  never used again once the tween has begun, even if it loops.
-    this.startDelay = 0;
-
     //  Infinitely loop this tween?
-    //  When enabled it will play through ALL TweenDatas again (doesn't apply to just a single TD)
+    //  When enabled it will play through ALL TweenDatas again (use repeat to loop a single TD)
     this.loop = false;
 
     //  Time in ms/frames before the tween loops again if loop is true
@@ -30,7 +26,7 @@ var Tween = function (manager, data)
     //  Time in ms/frames before the 'onComplete' event fires. This never fires if loop = true (as it never completes)
     this.completeDelay = 0;
 
-    //  Countdown timer (used by startDelay, loopDelay and completeDelay)
+    //  Countdown timer (used by loopDelay and completeDelay)
     this.countdown = 0;
 
     this.state = TWEEN_CONST.PENDING_ADD;
