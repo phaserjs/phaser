@@ -30,11 +30,12 @@ var CalcDuration = function ()
         }
     }
 
-    // this.loop = false;
-    // this.loopDelay = 0;
-    // this.completeDelay = 0;
+    //  Excludes loop values
+    this.duration = max;
 
-    return max;
+    this.loopCounter = (this.loop === -1) ? 999999999999 : this.loop;
+
+    this.totalDuration = ((this.duration + this.loopDelay) * this.loopCounter) + this.completeDelay;
 };
 
 module.exports = CalcDuration;

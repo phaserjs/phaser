@@ -8,6 +8,12 @@ var Update = function (timestamp, delta)
         delta = 1;
     }
 
+    this.elapsed += delta;
+    this.progress = this.elapsed / this.duration;
+
+    this.totalElapsed += delta;
+    this.totalProgress = this.totalElapsed / this.totalDuration;
+
     switch (this.state)
     {
         case TWEEN_CONST.ACTIVE:

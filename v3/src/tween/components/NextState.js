@@ -2,9 +2,13 @@ var TWEEN_CONST = require('../const');
 
 var NextState = function ()
 {
-    if (this.loop)
+    if (this.loopCounter > 0)
     {
         this.resetTweenData(true);
+
+        this.elapsed = 0;
+        this.progress = 0;
+        this.loopCounter--;
 
         if (this.loopDelay > 0)
         {

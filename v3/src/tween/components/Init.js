@@ -21,7 +21,10 @@ var Init = function ()
 
     this.calcDuration();
 
-    console.log('Tween totalDuration', this.totalDuration);
+    this.progress = 0;
+    this.totalProgress = 0;
+
+    console.log('Tween duration', this.duration, 'totalDuration', this.totalDuration);
 
     if (this.paused)
     {
