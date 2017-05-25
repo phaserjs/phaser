@@ -35,7 +35,14 @@ var CalcDuration = function ()
 
     this.loopCounter = (this.loop === -1) ? 999999999999 : this.loop;
 
-    this.totalDuration = ((this.duration + this.loopDelay) * this.loopCounter) + this.completeDelay;
+    if (this.loopCounter > 0)
+    {
+        this.totalDuration = this.duration + this.completeDelay + ((this.duration + this.loopDelay) * this.loopCounter);
+    }
+    else
+    {
+        this.totalDuration = this.duration + this.completeDelay;
+    }
 };
 
 module.exports = CalcDuration;

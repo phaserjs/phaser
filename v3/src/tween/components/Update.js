@@ -9,10 +9,10 @@ var Update = function (timestamp, delta)
     }
 
     this.elapsed += delta;
-    this.progress = this.elapsed / this.duration;
+    this.progress = Math.min(this.elapsed / this.duration, 1);
 
     this.totalElapsed += delta;
-    this.totalProgress = this.totalElapsed / this.totalDuration;
+    this.totalProgress = Math.min(this.totalElapsed / this.totalDuration, 1);
 
     switch (this.state)
     {
