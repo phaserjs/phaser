@@ -35,6 +35,9 @@ var Tween = function (manager, data)
     //  The current state of the tween
     this.state = TWEEN_CONST.PENDING_ADD;
 
+    //  The state of the tween when it was paused (used by Resume)
+    this._pausedState = TWEEN_CONST.PENDING_ADD;
+
     //  Does the Tween start off paused? (if so it needs to be started with Tween.play)
     this.paused = false;
 
@@ -71,12 +74,14 @@ Tween.prototype.constructor = Tween;
 
 Tween.prototype = {
 
-    init: require('./components/Init'),
     calcDuration: require('./components/CalcDuration'),
+    init: require('./components/Init'),
     loadValues: require('./components/LoadValues'),
     nextState: require('./components/NextState'),
+    pause: require('./components/Pause'),
     play: require('./components/Play'),
     resetTweenData: require('./components/ResetTweenData'),
+    resume: require('./components/Resume'),
     seek: require('./components/Seek'),
     setEventCallback: require('./components/SetEventCallback'),
     update: require('./components/Update')

@@ -1,27 +1,45 @@
 // var TWEEN_CONST = require('../const');
 
 //  For now progress = 0 to 1
-var Seek = function (progress)
+var Seek = function (toPosition)
 {
-    var marker = this.totalDuration * progress;
-
     var data = this.data;
 
-    //  Now works on multi-property tweens with varying durations, but doesn't yet factor in delays
     for (var i = 0; i < this.totalData; i++)
     {
-        var tweenData = data[i];
+        //  This won't work with loop > 0 yet
+        var ms = this.totalDuration * toPosition;
 
-        if (marker >= tweenData.duration)
+        var tweenData = data[i];
+        var progress;
+        var elapsed;
+
+        if (ms <= tweenData.delay)
         {
-            tweenData.progress = 1;
-            tweenData.elapsed = tweenData.duration;
+            progress = 0;
+            elapsed = 0;
+        }
+        else if (ms >= tweenData.totalDuration)
+        {
+            progress = 1;
+            elapsed = tweenData.duration;
+        }
+        else if (ms > tweenData.delay && ms <= tweenData.t1)
+        {
+            //  Keep it zero bound
+            ms = Math.max(0, ms - tweenData.delay);
+
+            //  Somewhere in the first playthru range
+            progress = ms / tweenData.t1;
+            elapsed = tweenData.duration * progress;
         }
         else
         {
-            tweenData.progress = marker / tweenData.duration;
-            tweenData.elapsed = marker;
+            //  Somewhere in repeat land
         }
+
+        tweenData.progress = progress;
+        tweenData.elapsed = elapsed;
 
         var v = tweenData.ease(tweenData.progress);
 
