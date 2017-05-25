@@ -11,8 +11,8 @@ var Seek = function (toPosition)
         var ms = this.totalDuration * toPosition;
 
         var tweenData = data[i];
-        var progress;
-        var elapsed;
+        var progress = 0;
+        var elapsed = 0;
 
         if (ms <= tweenData.delay)
         {
@@ -33,9 +33,22 @@ var Seek = function (toPosition)
             progress = ms / tweenData.t1;
             elapsed = tweenData.duration * progress;
         }
-        else
+        else if (ms > tweenData.t1 && ms < tweenData.totalDuration)
         {
             //  Somewhere in repeat land
+            ms -= tweenData.delay;
+            ms -= tweenData.t1;
+
+            var repeats = Math.floor(ms / tweenData.t2);
+
+            //  remainder
+            ms = ((ms / tweenData.t2) % 1) * tweenData.t2;
+
+            if (ms > tweenData.repeatDelay)
+            {
+                progress = ms / tweenData.t1;
+                elapsed = tweenData.duration * progress;
+            }
         }
 
         tweenData.progress = progress;

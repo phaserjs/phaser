@@ -135,9 +135,9 @@ var UpdateTweenData = function (tween, tweenData, delta)
 
             if (tweenData.elapsed <= 0)
             {
-                //  TODO - Move elapsed block below switch statement
-                //  so that calls to render and play happen this frame, not the next one?
-                tweenData.elapsed = 0;
+                //  TODO - Move elapsed block below switch statement so that calls to render and play happen this frame, not the next one?
+                tweenData.elapsed = Math.abs(tweenData.elapsed);
+
                 tweenData.state = TWEEN_CONST.PENDING_RENDER;
             }
 
@@ -149,7 +149,7 @@ var UpdateTweenData = function (tween, tweenData, delta)
 
             if (tweenData.elapsed <= 0)
             {
-                tweenData.elapsed = 0;
+                tweenData.elapsed = Math.abs(tweenData.elapsed);
                 tweenData.state = TWEEN_CONST.PLAYING_FORWARD;
             }
 
