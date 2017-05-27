@@ -111,7 +111,7 @@ All Phaser versions are [hosted on Github][phaser]. You can:
 You can also get Phaser via Bower, npm and CDN. Please see the README files for the version you need for further details:
 
 * [Phaser 2 README](https://github.com/photonstorm/phaser/blob/master/v2/README.md)
-* [Phaser Community Edition README](https://github.com/photonstorm/phaser-ce/README.md)
+* [Phaser Community Edition README](https://github.com/photonstorm/phaser-ce/blob/master/README.md)
 * [Phaser 3 README](https://github.com/photonstorm/phaser/blob/master/v3/README.md)
 
 ### Phaser Sandbox
