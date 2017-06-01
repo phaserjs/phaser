@@ -49,98 +49,102 @@ var StaticTilemap = new Class({
         this.setSize(tileWidth * mapWidth, tileHeight * mapHeight);
     },
 
-    upload: function () 
+    upload: function (scrollX, scrollY) 
     {
-        if (this.dirty && this.gl)
+        if (this.gl)
         {
-            var gl = this.gl;
-            var vbo = this.vbo;
-            var mapWidth = this.mapWidth;
-            var mapHeight = this.mapHeight;
-            var tileWidth = this.tileWidth;
-            var tileHeight = this.tileHeight;
-            var bufferData = this.bufferData;
-            var bufferF32, bufferU32;
-            var voffset = 0;
-            var vertexCount = 0;
-            var width = this.texture.source[0].width;
-            var height = this.texture.source[0].height;
-            var setWidth = width / tileWidth;
-            var mapData = this.mapData;
-
-            if (this.vbo === null)
+            if (this.dirty)
             {
-                vbo = this.resourceManager.createBuffer(gl.ARRAY_BUFFER, (4 * 6 * (mapWidth * mapHeight)) * 4, gl.STATIC_DRAW);
-                vbo.addAttribute(this.tilemapRenderer.shader.getAttribLocation('a_position'), 2, gl.FLOAT, false, CONST.VERTEX_SIZE, 0);
-                vbo.addAttribute(this.tilemapRenderer.shader.getAttribLocation('a_tex_coord'), 2, gl.FLOAT, false, CONST.VERTEX_SIZE, 8);
-                bufferData = this.bufferData = new ArrayBuffer((4 * 6 * (mapWidth * mapHeight)) * 4);
-                this.vbo = vbo;
-            }
+                var gl = this.gl;
+                var vbo = this.vbo;
+                var mapWidth = this.mapWidth;
+                var mapHeight = this.mapHeight;
+                var tileWidth = this.tileWidth;
+                var tileHeight = this.tileHeight;
+                var bufferData = this.bufferData;
+                var bufferF32, bufferU32;
+                var voffset = 0;
+                var vertexCount = 0;
+                var width = this.texture.source[0].width;
+                var height = this.texture.source[0].height;
+                var setWidth = width / tileWidth;
+                var mapData = this.mapData;
 
-            bufferF32 = new Float32Array(bufferData);
-
-            for (var y = 0; y < mapHeight; ++y)
-            {
-                for (var x = 0; x < mapWidth; ++x)
+                if (this.vbo === null)
                 {
-                    var tileId = mapData[y * mapWidth + x];
-                    var rectx = ((tileId % setWidth)|0) * tileWidth;
-                    var recty = ((tileId / setWidth)|0) * tileHeight;
-                    var tx = x * tileWidth;
-                    var ty = y * tileHeight;
-                    var txw = tx + tileWidth;
-                    var tyh = ty + tileHeight;
-                    var u0 = rectx / width;
-                    var v0 = recty / height;
-                    var u1 = u0 + (tileWidth / width);
-                    var v1 = v0 + (tileHeight / height);
-                    var tx0 = tx;
-                    var ty0 = ty;
-                    var tx1 = tx;
-                    var ty1 = tyh;
-                    var tx2 = txw;
-                    var ty2 = tyh;
-                    var tx3 = txw;
-                    var ty3 = ty;
-
-                    bufferF32[voffset + 0] = tx0;
-                    bufferF32[voffset + 1] = ty0;
-                    bufferF32[voffset + 2] = u0;
-                    bufferF32[voffset + 3] = v0;
-
-                    bufferF32[voffset + 4] = tx1;
-                    bufferF32[voffset + 5] = ty1;
-                    bufferF32[voffset + 6] = u0;
-                    bufferF32[voffset + 7] = v1;
-
-                    bufferF32[voffset + 8] = tx2;
-                    bufferF32[voffset + 9] = ty2;
-                    bufferF32[voffset + 10] = u1;
-                    bufferF32[voffset + 11] = v1;
-
-                    bufferF32[voffset + 12] = tx0;
-                    bufferF32[voffset + 13] = ty0;
-                    bufferF32[voffset + 14] = u0;
-                    bufferF32[voffset + 15] = v0;
-
-                    bufferF32[voffset + 16] = tx2;
-                    bufferF32[voffset + 17] = ty2;
-                    bufferF32[voffset + 18] = u1;
-                    bufferF32[voffset + 19] = v1;
-
-                    bufferF32[voffset + 20] = tx3;
-                    bufferF32[voffset + 21] = ty3;
-                    bufferF32[voffset + 22] = u1;
-                    bufferF32[voffset + 23] = v0;
-                    
-                    voffset += 24;
-                    vertexCount += 6;
+                    vbo = this.resourceManager.createBuffer(gl.ARRAY_BUFFER, (4 * 6 * (mapWidth * mapHeight)) * 4, gl.STATIC_DRAW);
+                    vbo.addAttribute(this.tilemapRenderer.shader.getAttribLocation('a_position'), 2, gl.FLOAT, false, CONST.VERTEX_SIZE, 0);
+                    vbo.addAttribute(this.tilemapRenderer.shader.getAttribLocation('a_tex_coord'), 2, gl.FLOAT, false, CONST.VERTEX_SIZE, 8);
+                    bufferData = this.bufferData = new ArrayBuffer((4 * 6 * (mapWidth * mapHeight)) * 4);
+                    this.vbo = vbo;
                 }
-            }
-            this.vertexCount = vertexCount;
-            vbo.updateResource(bufferData, 0);
 
-            this.dirty = false;
+                bufferF32 = new Float32Array(bufferData);
+
+                for (var y = 0; y < mapHeight; ++y)
+                {
+                    for (var x = 0; x < mapWidth; ++x)
+                    {
+                        var tileId = mapData[y * mapWidth + x];
+                        var rectx = ((tileId % setWidth)|0) * tileWidth;
+                        var recty = ((tileId / setWidth)|0) * tileHeight;
+                        var tx = x * tileWidth;
+                        var ty = y * tileHeight;
+                        var txw = tx + tileWidth;
+                        var tyh = ty + tileHeight;
+                        var u0 = rectx / width;
+                        var v0 = recty / height;
+                        var u1 = u0 + (tileWidth / width);
+                        var v1 = v0 + (tileHeight / height);
+                        var tx0 = tx;
+                        var ty0 = ty;
+                        var tx1 = tx;
+                        var ty1 = tyh;
+                        var tx2 = txw;
+                        var ty2 = tyh;
+                        var tx3 = txw;
+                        var ty3 = ty;
+
+                        bufferF32[voffset + 0] = tx0;
+                        bufferF32[voffset + 1] = ty0;
+                        bufferF32[voffset + 2] = u0;
+                        bufferF32[voffset + 3] = v0;
+
+                        bufferF32[voffset + 4] = tx1;
+                        bufferF32[voffset + 5] = ty1;
+                        bufferF32[voffset + 6] = u0;
+                        bufferF32[voffset + 7] = v1;
+
+                        bufferF32[voffset + 8] = tx2;
+                        bufferF32[voffset + 9] = ty2;
+                        bufferF32[voffset + 10] = u1;
+                        bufferF32[voffset + 11] = v1;
+
+                        bufferF32[voffset + 12] = tx0;
+                        bufferF32[voffset + 13] = ty0;
+                        bufferF32[voffset + 14] = u0;
+                        bufferF32[voffset + 15] = v0;
+
+                        bufferF32[voffset + 16] = tx2;
+                        bufferF32[voffset + 17] = ty2;
+                        bufferF32[voffset + 18] = u1;
+                        bufferF32[voffset + 19] = v1;
+
+                        bufferF32[voffset + 20] = tx3;
+                        bufferF32[voffset + 21] = ty3;
+                        bufferF32[voffset + 22] = u1;
+                        bufferF32[voffset + 23] = v0;
+                        
+                        voffset += 24;
+                        vertexCount += 6;
+                    }
+                }
+                this.vertexCount = vertexCount;
+                vbo.updateResource(bufferData, 0);
+
+                this.dirty = false;
+            }
+            this.tilemapRenderer.shader.setConstantFloat2(this.tilemapRenderer.scrollLocation, -scrollX, -scrollY);
         }
     }
 
