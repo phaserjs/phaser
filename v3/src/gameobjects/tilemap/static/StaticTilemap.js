@@ -63,6 +63,10 @@ var StaticTilemap = new Class({
             var bufferF32, bufferU32;
             var voffset = 0;
             var vertexCount = 0;
+            var width = this.texture.source[0].width;
+            var height = this.texture.source[0].height;
+            var setWidth = width / tileWidth;
+            var mapData = this.mapData;
 
             if (this.vbo === null)
             {
@@ -79,10 +83,17 @@ var StaticTilemap = new Class({
             {
                 for (var x = 0; x < mapWidth; ++x)
                 {
+                    var tileId = mapData[y * mapWidth + x];
+                    var rectx = ((tileId % setWidth)|0) * tileWidth;
+                    var recty = ((tileId / setWidth)|0) * tileHeight;
                     var tx = x * tileWidth;
                     var ty = y * tileHeight;
                     var txw = tx + tileWidth;
                     var tyh = ty + tileHeight;
+                    var u0 = rectx / width;
+                    var v0 = recty / height;
+                    var u1 = u0 + (tileWidth / width);
+                    var v1 = v0 + (tileHeight / height);
                     var tx0 = tx;
                     var ty0 = ty;
                     var tx1 = tx;
@@ -94,34 +105,35 @@ var StaticTilemap = new Class({
 
                     bufferF32[voffset + 0] = tx0;
                     bufferF32[voffset + 1] = ty0;
-                    bufferF32[voffset + 2] = 0;
-                    bufferF32[voffset + 3] = 0;
+                    bufferF32[voffset + 2] = u0;
+                    bufferF32[voffset + 3] = v0;
 
-                    bufferF32[voffset + 0] = tx1;
-                    bufferF32[voffset + 1] = ty1;
-                    bufferF32[voffset + 2] = 0;
-                    bufferF32[voffset + 3] = 1
+                    bufferF32[voffset + 4] = tx1;
+                    bufferF32[voffset + 5] = ty1;
+                    bufferF32[voffset + 6] = u0;
+                    bufferF32[voffset + 7] = v1;
 
-                    bufferF32[voffset + 0] = tx2;
-                    bufferF32[voffset + 1] = ty2;
-                    bufferF32[voffset + 2] = 1;
-                    bufferF32[voffset + 3] = 1;
+                    bufferF32[voffset + 8] = tx2;
+                    bufferF32[voffset + 9] = ty2;
+                    bufferF32[voffset + 10] = u1;
+                    bufferF32[voffset + 11] = v1;
 
-                    bufferF32[voffset + 0] = tx0;
-                    bufferF32[voffset + 1] = ty0;
-                    bufferF32[voffset + 2] = 0;
-                    bufferF32[voffset + 3] = 0;
+                    bufferF32[voffset + 12] = tx0;
+                    bufferF32[voffset + 13] = ty0;
+                    bufferF32[voffset + 14] = u0;
+                    bufferF32[voffset + 15] = v0;
 
-                    bufferF32[voffset + 0] = tx2;
-                    bufferF32[voffset + 1] = ty2;
-                    bufferF32[voffset + 2] = 1;
-                    bufferF32[voffset + 3] = 1;
+                    bufferF32[voffset + 16] = tx2;
+                    bufferF32[voffset + 17] = ty2;
+                    bufferF32[voffset + 18] = u1;
+                    bufferF32[voffset + 19] = v1;
 
-                    bufferF32[voffset + 0] = tx3;
-                    bufferF32[voffset + 1] = ty3;
-                    bufferF32[voffset + 2] = 1;
-                    bufferF32[voffset + 3] = 0;
+                    bufferF32[voffset + 20] = tx3;
+                    bufferF32[voffset + 21] = ty3;
+                    bufferF32[voffset + 22] = u1;
+                    bufferF32[voffset + 23] = v0;
                     
+                    voffset += 24;
                     vertexCount += 6;
                 }
             }

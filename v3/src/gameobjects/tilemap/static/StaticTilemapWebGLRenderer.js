@@ -10,6 +10,7 @@ var StaticTilemapWebGLRenderer = function (renderer, src, interpolationPercentag
     var gl = gameObject.gl;
 
     renderer.setRenderer(gameObject.tilemapRenderer, frame.texture.source[frame.sourceIndex].glTexture, gameObject.renderTarget);
+    gameObject.tilemapRenderer.bind();
     gameObject.upload();
     gameObject.vbo.bind();
     gl.drawArrays(gl.TRIANGLES, 0, gameObject.vertexCount);
