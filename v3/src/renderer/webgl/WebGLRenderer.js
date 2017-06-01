@@ -12,6 +12,7 @@ var SpriteBatch = require('./renderers/spritebatch/SpriteBatch');
 var TileBatch = require('./renderers/tilebatch/TileBatch');
 var ShapeBatch = require('./renderers/shapebatch/ShapeBatch');
 var EffectRenderer = require('./renderers/effectrenderer/EffectRenderer');
+var TilemapRenderer = require('./renderers/tilemaprenderer/TilemapRenderer');
 var BlendModes = require('../BlendModes');
 var ScaleModes = require('../ScaleModes');
 var ResourceManager = require('./ResourceManager');
@@ -115,6 +116,7 @@ WebGLRenderer.prototype = {
         this.shapeBatch = this.addRenderer(new ShapeBatch(this.game, gl, this));
         this.effectRenderer = this.addRenderer(new EffectRenderer(this.game, gl, this));
         this.tileBatch = this.addRenderer(new TileBatch(this.game, gl, this));
+        this.tilemapRenderer = this.addRenderer(new TilemapRenderer(this.game, gl, this));
         this.currentRenderer = this.spriteBatch;
         this.setBlendMode(0);
         this.resize(this.width, this.height);

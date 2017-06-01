@@ -1,10 +1,11 @@
 
-var Class = require('../../utils/Class');
-var GameObject = require('../GameObject');
-var Components = require('../../components');
+var Class = require('../../../utils/Class');
+var GameObject = require('../../GameObject');
+var Components = require('../../../components');
 var StaticTilemapRender = require('./StaticTilemapRender');
+var CONST = require('../../../renderer/webgl/renderers/tilemaprenderer/const');
 
-var TileSprite = new Class({
+var StaticTilemap = new Class({
 
     Extends: GameObject,
 
@@ -30,6 +31,9 @@ var TileSprite = new Class({
         GameObject.call(this, state, 'StaticTilemap');
 
         this.vbo = null;
+        this.gl = state.game.renderer.gl ? state.game.renderer.gl : null;
+        this.tilemapRenderer = state.game.renderer.tilemapRenderer ? state.game.renderer.tilemapRenderer : null;
+        this.resourceManager = this.gl ? state.game.renderer.resourceManager : null;
         this.bufferData = null;
         this.mapData = mapData;
         this.tileWidth = tileWidth;
@@ -37,19 +41,19 @@ var TileSprite = new Class({
         this.mapWidth = mapWidth;
         this.mapHeight = mapHeight;
         this.dirty = true;
+        this.vertexCount = 0;
         this.setTexture(texture, frame);
         this.setPosition(x, y);
         this.setSizeToFrame();
         this.setOrigin();
-        this.setSize(width, height);
-
+        this.setSize(tileWidth * mapWidth, tileHeight * mapHeight);
     },
 
     upload: function () 
     {
-        if (this.dirty)
+        if (this.dirty && this.gl)
         {
-            var gl;
+            var gl = this.gl;
             var vbo = this.vbo;
             var mapWidth = this.mapWidth;
             var mapHeight = this.mapHeight;
@@ -58,13 +62,15 @@ var TileSprite = new Class({
             var bufferData = this.bufferData;
             var bufferF32, bufferU32;
             var voffset = 0;
+            var vertexCount = 0;
 
             if (this.vbo === null)
             {
-                vbo = this.vbo = gl.createBuffer();
+                vbo = this.resourceManager.createBuffer(gl.ARRAY_BUFFER, (4 * 6 * (mapWidth * mapHeight)) * 4, gl.STATIC_DRAW);
+                vbo.addAttribute(this.tilemapRenderer.shader.getAttribLocation('a_position'), 2, gl.FLOAT, false, CONST.VERTEX_SIZE, 0);
+                vbo.addAttribute(this.tilemapRenderer.shader.getAttribLocation('a_tex_coord'), 2, gl.FLOAT, false, CONST.VERTEX_SIZE, 8);
                 bufferData = this.bufferData = new ArrayBuffer((4 * 6 * (mapWidth * mapHeight)) * 4);
-                gl.bindBuffer(gl.ARRAY_BUFFER, vbo);
-                gl.bufferData(gl.ARRAY_BUFFER, bufferData, gl.STATIC_DRAW);
+                this.vbo = vbo;
             }
 
             bufferF32 = new Float32Array(bufferData);
@@ -115,11 +121,12 @@ var TileSprite = new Class({
                     bufferF32[voffset + 1] = ty3;
                     bufferF32[voffset + 2] = 1;
                     bufferF32[voffset + 3] = 0;
+                    
+                    vertexCount += 6;
                 }
             }
-
-            gl.bindBuffer(gl.ARRAY_BUFFER, vbo);
-            gl.bufferSubData(gl.ARRAY_BUFFER, 0, bufferData);
+            this.vertexCount = vertexCount;
+            vbo.updateResource(bufferData, 0);
 
             this.dirty = false;
         }

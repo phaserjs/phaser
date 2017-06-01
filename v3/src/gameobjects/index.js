@@ -16,6 +16,7 @@ require('./renderpass/RenderPassFactory');
 require('./tilesprite/TileSpriteFactory');
 require('./mesh/MeshFactory');
 require('./quad/QuadFactory');
+require('./tilemap/static/StaticTilemapFactory');
 
 //  Phaser.GameObjects
 
@@ -37,6 +38,6 @@ module.exports = {
     Zone: require('./zone/Zone'),
     EffectLayer: require('./effectlayer/EffectLayer'),
     Mesh: require('./mesh/Mesh'),
-    Quad: require('./quad/Quad')
-
+    Quad: require('./quad/Quad'),
+    StaticTilemap: require('./tilemap/static/StaticTilemap')
 };

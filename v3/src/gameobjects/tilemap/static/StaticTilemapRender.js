@@ -1,6 +1,6 @@
 module.exports = {
 
     renderCanvas: require('./StaticTilemapCanvasRenderer'),
-    renderWebGL: require('./StaticTilemapTextWebGLRenderer')
+    renderWebGL: require('./StaticTilemapWebGLRenderer')
 
 };
