@@ -1,4 +1,4 @@
-module.export = {
+module.exports = {
 
     GetNext: require('./GetPowerOfTwo'),
     IsSize: require('./IsSizePowerOfTwo'),

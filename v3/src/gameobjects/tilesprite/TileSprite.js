@@ -45,10 +45,10 @@ var TileSprite = new Class({
         this.setSize(width, height);
 
         this.potWidth = this.frame.width;
-        this.potHeight = this.frame.height; 
+        this.potHeight = this.frame.height;
         this.canvasPattern = null;
 
-        if (resourceManager) 
+        if (resourceManager)
         {
             this.potWidth--;
             this.potWidth |= this.potWidth >> 1;
@@ -67,11 +67,10 @@ var TileSprite = new Class({
             this.potHeight++;
 
             this.renderer = state.game.renderer;
-            gl = state.game.renderer.gl;
+            var gl = state.game.renderer.gl;
 
             this.tileTexture = resourceManager.createTexture(0, gl.LINEAR, gl.LINEAR, gl.REPEAT, gl.REPEAT, gl.RGBA, this.canvasBuffer, this.potWidth, this.potHeight);
-
-        } 
+        }
 
         this.canvasBuffer = CanvasPool.create2D(null, this.potWidth, this.potHeight);
         this.canvasBufferCtx = this.canvasBuffer.getContext('2d');
@@ -79,21 +78,24 @@ var TileSprite = new Class({
         this.updateTileTexture();
     },
 
-    updateTileTexture: function () 
+    updateTileTexture: function ()
     {
         if (!this.dirty)
+        {
             return;
+        }
 
         this.canvasBuffer.width = this.canvasBuffer.width;
+
         this.canvasBufferCtx.drawImage(
-            this.frame.source.image, 
+            this.frame.source.image,
             this.frame.cutX, this.frame.cutY,
             this.frame.cutWidth, this.frame.cutHeight,
             0, 0,
             this.potWidth, this.potHeight
         );
 
-        if (this.renderer) 
+        if (this.renderer)
         {
             this.renderer.uploadCanvasToGPU(this.canvasBuffer, this.tileTexture, true);
         }
@@ -101,19 +103,23 @@ var TileSprite = new Class({
         {
             this.canvasPattern = this.canvasBufferCtx.createPattern(this.canvasBuffer, 'repeat');
         }
+
         this.dirty = false;
     },
 
-    destroy: function () 
+    destroy: function ()
     {
-        if (this.renderer) 
+        if (this.renderer)
         {
             this.renderer.gl.deleteTexture(this.tileTexture);
         }
+
         CanvasPool.remove(this.canvasBuffer);
+
         this.canvasPattern = null;
         this.canvasBufferCtx = null;
         this.canvasBuffer = null;
+
         this.renderer = null;
         this.visible = false;
     }
