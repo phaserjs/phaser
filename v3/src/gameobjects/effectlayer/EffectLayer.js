@@ -34,7 +34,7 @@ var EffectLayer = new Class({
        
         var pot = ((width & (width - 1)) == 0 && (height & (height - 1)) == 0);
         var resourceManager = state.game.renderer.resourceManager;
-        var wrap = pot ? gl.REPEAT : gl.CLAMP_TO_EDGE;
+        var wrap;
         var gl;
 
         this.dstRenderTarget = null;
@@ -45,7 +45,7 @@ var EffectLayer = new Class({
         if (resourceManager !== undefined)
         {
             gl = state.game.renderer.gl;
-
+            wrap = pot ? gl.REPEAT : gl.CLAMP_TO_EDGE;
             this.dstShader = resourceManager.createShader(effectName, {
                 vert: TexturedAndNormalizedTintedShader.vert,
                 frag: fragmentShader

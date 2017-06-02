@@ -37,9 +37,9 @@ var RenderPass = new Class({
        
         var resourceManager = state.game.renderer.resourceManager;
         var pot = ((width & (width - 1)) == 0 && (height & (height - 1)) == 0);
-        var wrap = pot ? gl.REPEAT : gl.CLAMP_TO_EDGE;
         var gl;
-
+        var wrap;
+        
         this.renderer = state.game.renderer;
         this.passRenderTarget = null;
         this.renderTexture = null;
@@ -49,6 +49,7 @@ var RenderPass = new Class({
         if (resourceManager !== undefined)
         {
             gl = state.game.renderer.gl;
+            wrap = pot ? gl.REPEAT : gl.CLAMP_TO_EDGE;
             this.passShader = resourceManager.createShader(shaderName, {vert: TexturedAndNormalizedTintedShader.vert, frag: fragmentShader});
             this.renderTexture = resourceManager.createTexture(0, gl.LINEAR, gl.LINEAR, wrap, wrap, gl.RGBA, null, width, height);
             this.passRenderTarget = resourceManager.createRenderTarget(width, height, this.renderTexture, null);
