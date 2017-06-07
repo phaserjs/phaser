@@ -25,7 +25,6 @@ var DynamicBitmapText = new Class({
     function DynamicBitmapText (state, x, y, font, text, size, align)
     {
         if (text === undefined) { text = ''; }
-        if (size === undefined) { size = 32; }
         if (align === undefined) { align = 'left'; }
 
         GameObject.call(this, state, 'DynamicBitmapText');
@@ -34,7 +33,12 @@ var DynamicBitmapText = new Class({
 
         this.text = text;
 
-        this.fontSize = size;
+        this.fontSize = size || this.fontData.size;
+
+        this._scrollX = 0;
+        this._scrollY = 0;
+        this._maxWidth = 0;
+        this._maxHeight = 0;
 
         this.displayCallback;
 
@@ -59,6 +63,34 @@ var DynamicBitmapText = new Class({
     setText: function (text)
     {
         this.text = text;
+
+        return this;
+    },
+
+    setMaxWidth: function (value)
+    {
+        this._maxWidth = value;
+
+        return this;
+    },
+
+    setMaxHeight: function (value)
+    {
+        this._maxHeight = value;
+
+        return this;
+    },
+
+    setScrollX: function (value)
+    {
+        this._scrollX = value;
+
+        return this;
+    },
+
+    setScrollY: function (value)
+    {
+        this._scrollY = value;
 
         return this;
     },

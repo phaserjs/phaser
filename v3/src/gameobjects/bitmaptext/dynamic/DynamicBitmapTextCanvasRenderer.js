@@ -70,6 +70,9 @@ var DynamicBitmapTextCanvasRenderer = function (renderer, src, interpolationPerc
     ctx.rotate(src.rotation);
     ctx.scale(src.scaleX, src.scaleY);
 
+    var currentX;
+    var currentY;
+
     for (var index = 0; index < textLength; ++index)
     {
         //  Reset the scale (in case the callback changed it)
@@ -118,6 +121,9 @@ var DynamicBitmapTextCanvasRenderer = function (renderer, src, interpolationPerc
             scale = output.scale;
             rotation = output.rotation;
         }
+
+        //  Scroll clipping
+        x -= src._scrollX;
 
         x *= scale;
         y *= scale;
