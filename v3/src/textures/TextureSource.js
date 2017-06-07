@@ -125,11 +125,17 @@ var TextureSource = function (texture, source, width, height)
     {
         game.renderer.createTexture(this, width, height);
     }
+
+    if (game.config.pixelArt)
+    {
+        this.setFilter(1);
+    }
 };
 
 TextureSource.prototype.setFilter = function (filterMode)
 {
     var game = this.texture.manager.game;
+
     if (game.config.renderType === CONST.WEBGL)
     {
         game.renderer.setTextureFilterMode(this.glTexture, filterMode);
