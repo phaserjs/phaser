@@ -3,6 +3,7 @@ var GameObject = require('../../GameObject');
 var Components = require('../../../components');
 var Render = require('./BitmapTextRender');
 var GetBitmapTextSize = require('../GetBitmapTextSize');
+var ParseRetroFont = require('../ParseRetroFont');
 
 var BitmapText = new Class({
 
@@ -13,6 +14,7 @@ var BitmapText = new Class({
         Components.BlendMode,
         Components.Origin,
         Components.RenderTarget,
+        Components.ScaleMode,
         Components.Size,
         Components.Texture,
         Components.Transform,
@@ -25,7 +27,6 @@ var BitmapText = new Class({
     function BitmapText (state, x, y, font, text, size, align)
     {
         if (text === undefined) { text = ''; }
-        if (size === undefined) { size = 32; }
         if (align === undefined) { align = 'left'; }
 
         GameObject.call(this, state, 'BitmapText');
@@ -35,7 +36,7 @@ var BitmapText = new Class({
 
         this.text = text;
 
-        this.fontSize = size;
+        this.fontSize = size || this.fontData.size;
 
         this.setTexture(font);
         this.setPosition(x, y);
@@ -97,5 +98,7 @@ var BitmapText = new Class({
     }
 
 });
+
+BitmapText.ParseRetroFont = ParseRetroFont;
 
 module.exports = BitmapText;

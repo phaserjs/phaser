@@ -42,15 +42,7 @@ var Phaser = {
 
     Class: require('./utils/Class'),
 
-    Utils: {
-
-        Align: require('./utils/align/'),
-        Array: require('./utils/array/'),
-        Bounds: require('./utils/bounds/'),
-        Objects: require('./utils/object/'),
-        String: require('./utils/string/')
-
-    }
+    Utils: require('./utils')
 
 };
 
