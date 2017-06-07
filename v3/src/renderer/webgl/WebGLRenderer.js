@@ -133,12 +133,11 @@ WebGLRenderer.prototype = {
 
         if (!source.glTexture)
         {
-
             if (source.scaleMode === ScaleModes.LINEAR)
             {
                 filter = gl.LINEAR;
             }
-            else if (source.scaleMode === ScaleModes.NEAREST)
+            else if (source.scaleMode === ScaleModes.NEAREST || this.game.config.pixelArt)
             {
                 filter = gl.NEAREST;
             }
