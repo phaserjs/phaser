@@ -41,6 +41,7 @@ var DynamicBitmapTextWebGLRenderer = function (renderer, gameObject, interpolati
     var glyphH = 0;
     var x = 0;
     var y = 0;
+    var rotation = 0;
     var xw = 0;
     var yh = 0;
     var tx = 0;
@@ -92,6 +93,7 @@ var DynamicBitmapTextWebGLRenderer = function (renderer, gameObject, interpolati
     for (var index = 0; index < textLength; ++index)
     {
         charCode = text.charCodeAt(index);
+
         if (charCode === 10)
         {
             xAdvance = 0;
@@ -102,6 +104,7 @@ var DynamicBitmapTextWebGLRenderer = function (renderer, gameObject, interpolati
         }
 
         glyph = chars[charCode];
+
         if (!glyph)
         {
             continue;
@@ -113,6 +116,7 @@ var DynamicBitmapTextWebGLRenderer = function (renderer, gameObject, interpolati
         glyphH = glyph.height;
         x = (indexCount + glyph.xOffset + xAdvance) * scale;
         y = (glyph.yOffset + yAdvance) * scale;
+        rotation = 0;
 
         if (lastGlyph !== null)
         {
