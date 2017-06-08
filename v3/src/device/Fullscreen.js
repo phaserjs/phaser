@@ -35,13 +35,9 @@ var Fullscreen = {
 function init ()
 {
     var fs = [
-        'requestFullscreen',
         'requestFullScreen',
-        'webkitRequestFullscreen',
         'webkitRequestFullScreen',
-        'msRequestFullscreen',
         'msRequestFullScreen',
-        'mozRequestFullScreen',
         'mozRequestFullscreen'
     ];
 
