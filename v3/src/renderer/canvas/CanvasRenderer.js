@@ -4,6 +4,8 @@ var BlitImage = require('./utils/BlitImage');
 var GetBlendModes = require('./utils/GetBlendModes');
 var GetContext = require('../../canvas/GetContext');
 var Snapshot = require('../../snapshot/Snapshot');
+var Smoothing = require('../../dom/Smoothing');
+var ScaleModes = require('../ScaleModes');
 
 var CanvasRenderer = function (game)
 {
@@ -21,12 +23,13 @@ var CanvasRenderer = function (game)
     // this.clearBeforeRender = true;
     // this.transparent = false;
     // this.autoResize = false;
-    // this.smoothProperty = Phaser.Canvas.getSmoothingPrefix(this.context);
     // this.roundPixels = false;
 
     this.width = game.config.width * game.config.resolution;
     this.height = game.config.height * game.config.resolution;
     this.resolution = game.config.resolution;
+
+    this.scaleMode = (game.config.pixelArt) ? ScaleModes.NEAREST : ScaleModes.LINEAR;
 
     this.gameCanvas = game.canvas;
 
@@ -65,6 +68,7 @@ CanvasRenderer.prototype = {
         this.resize(this.width, this.height);
     },
 
+    //  Resize the main game canvas
     resize: function (width, height)
     {
         var res = this.game.config.resolution;
@@ -81,10 +85,11 @@ CanvasRenderer.prototype = {
             this.gameCanvas.style.height = (this.height / res) + 'px';
         }
 
-        // if (this.smoothProperty)
-        // {
-        //     this.gameContext[this.smoothProperty] = (this.scaleMode === ScaleModes.LINEAR);
-        // }
+        //  Resizing a canvas will reset imageSmoothingEnabled (and probably other properties)
+        if (this.scaleMode === ScaleModes.NEAREST)
+        {
+            Smoothing.disable(this.gameContext);
+        }
     },
 
     resetTransform: function ()
@@ -161,8 +166,6 @@ CanvasRenderer.prototype = {
 
         this.currentContext = ctx;
 
-        
-
         //  If the alpha or blend mode didn't change since the last render, then don't set them again (saves 2 ops)
 
         if (this.currentAlpha !== 1)
@@ -205,6 +208,7 @@ CanvasRenderer.prototype = {
         }
 
         var matrix = camera.matrix.matrix;
+
         ctx.setTransform(matrix[0], matrix[1], matrix[2], matrix[3], matrix[4], matrix[5]);
 
         for (var c = 0; c < list.length; c++)
@@ -213,6 +217,7 @@ CanvasRenderer.prototype = {
 
             child.renderCanvas(this, child, interpolationPercentage, camera);
         }
+
         //  Call the State.render function
         state.render.call(state, ctx, interpolationPercentage);
         
@@ -260,7 +265,6 @@ CanvasRenderer.prototype = {
 
         if (this.snapshotCallback)
         {
-
             this.snapshotCallback(Snapshot.CanvasSnapshot(this.gameCanvas));
             this.snapshotCallback = null;
         }
@@ -268,7 +272,7 @@ CanvasRenderer.prototype = {
         //  Add Post-render hook
     },
 
-    snapshot: function (callback) 
+    snapshot: function (callback)
     {
         this.snapshotCallback = callback;
     },
