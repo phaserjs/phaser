@@ -7,3 +7,4 @@
 (function(){
 
     var root = this;
+});
