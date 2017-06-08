@@ -41,6 +41,12 @@ var CreateRenderer = function (game)
         config.renderType = CONST.WEBGL;
     }
 
+    //  Pixel Art mode?
+    if (config.pixelArt)
+    {
+        CanvasPool.disableSmoothing();
+    }
+
     //  Does the game config provide its own canvas element to use?
     if (config.canvas)
     {
