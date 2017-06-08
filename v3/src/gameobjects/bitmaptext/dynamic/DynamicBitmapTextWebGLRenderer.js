@@ -88,7 +88,8 @@ var DynamicBitmapTextWebGLRenderer = function (renderer, gameObject, interpolati
 
     if (gameObject.width > 0 && gameObject.height > 0)
     {
-        blitterBatch.flush();
+        if (renderer.currentRenderer !== null)
+            renderer.currentRenderer.flush();
 
         if (!renderer.scissor.enabled)
         {
