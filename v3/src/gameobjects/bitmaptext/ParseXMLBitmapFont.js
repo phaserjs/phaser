@@ -41,6 +41,7 @@ var ParseXMLBitmapFont = function (xml, xSpacing, ySpacing, frame)
             xOffset: getValue(node, 'xoffset'),
             yOffset: getValue(node, 'yoffset'),
             xAdvance: getValue(node, 'xadvance') + xSpacing,
+            data: {},
             kerning: {}
         };
     }

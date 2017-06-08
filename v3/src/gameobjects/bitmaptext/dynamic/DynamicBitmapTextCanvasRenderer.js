@@ -122,7 +122,7 @@ var DynamicBitmapTextCanvasRenderer = function (renderer, src, interpolationPerc
 
         if (displayCallback)
         {
-            var output = displayCallback({ index: index, charCode: charCode, x: x, y: y, scale: scale, rotation: 0 });
+            var output = displayCallback({ index: index, charCode: charCode, x: x, y: y, scale: scale, rotation: 0, data: glyph.data });
 
             x = output.x;
             y = output.y;

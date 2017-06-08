@@ -71,6 +71,7 @@ var ParseRetroFont = function (state, config)
             xOffset: 0,
             yOffset: 0,
             xAdvance: w,
+            data: {},
             kerning: {}
         };
 
