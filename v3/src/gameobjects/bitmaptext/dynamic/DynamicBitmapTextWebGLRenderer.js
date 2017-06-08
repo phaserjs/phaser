@@ -86,11 +86,17 @@ var DynamicBitmapTextWebGLRenderer = function (renderer, gameObject, interpolati
 
     var gl = renderer.gl;
 
-    // if (gameObject.width > 0 && gameObject.height > 0)
-    // {
-    //     gl.enable(gl.SCISSOR_TEST);
-    //     gl.scissor(gameObject.x - cameraScrollX, gameObject.y - cameraScrollY, gameObject.width, gameObject.height);
-    // }
+    if (gameObject.width > 0 && gameObject.height > 0)
+    {
+        blitterBatch.flush();
+
+        if (!renderer.scissor.enabled)
+        {
+            gl.enable(gl.SCISSOR_TEST);
+        }
+
+        gl.scissor(gameObject.x, gl.drawingBufferHeight - gameObject.y - gameObject.height, gameObject.width, gameObject.height);
+    }
 
     for (var index = 0; index < textLength; ++index)
     {
@@ -210,10 +216,20 @@ var DynamicBitmapTextWebGLRenderer = function (renderer, gameObject, interpolati
         lastCharCode = charCode;
     }
 
-    // if (gameObject.width > 0 && gameObject.height > 0)
-    // {
-    //     gl.disable(gl.SCISSOR_TEST);
-    // }
+    if (gameObject.width > 0 && gameObject.height > 0)
+    {
+        blitterBatch.flush();
+
+        if (renderer.scissor.enabled)
+        {
+            gl.scissor(renderer.scissor.x, renderer.scissor.y, renderer.scissor.width, renderer.scissor.height);
+        }
+        else
+        {
+            gl.scissor(camera.x, gl.drawingBufferHeight - camera.y - camera.height, camera.width, camera.height);
+            gl.disable(gl.SCISSOR_TEST);
+        }
+    }
 };
 
 module.exports = DynamicBitmapTextWebGLRenderer;

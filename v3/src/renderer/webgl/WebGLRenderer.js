@@ -64,6 +64,14 @@ var WebGLRenderer = function (game)
     this.currentRenderTarget = null;
     this.snapshotCallback = null;
 
+    this.scissor = {
+        enabled: false,
+        x: 0,
+        y: 0,
+        width: 0,
+        height: 0
+    };
+
     this.init();
 };
 
@@ -73,7 +81,7 @@ WebGLRenderer.prototype = {
 
     init: function ()
     {
-        console.log('WebGLRenderer.init');
+        // console.log('WebGLRenderer.init');
 
         this.gl = this.view.getContext('webgl', this.config.WebGLContextOptions) || this.view.getContext('experimental-webgl', this.config.WebGLContextOptions);
 
@@ -92,7 +100,6 @@ WebGLRenderer.prototype = {
         gl.disable(gl.CULL_FACE);
         gl.enable(gl.BLEND);
         gl.clearColor(color.redGL, color.greenGL, color.blueGL, color.alphaGL);
-
 
         //  Map Blend Modes
 
@@ -263,6 +270,7 @@ WebGLRenderer.prototype = {
     preRender: function ()
     {
         this.setRenderTarget(null);
+
         //  No point rendering if our context has been blown up!
         if (this.contextLost)
         {
@@ -275,6 +283,7 @@ WebGLRenderer.prototype = {
         var color = this.game.config.backgroundColor;
 
         gl.clearColor(color.redGL, color.greenGL, color.blueGL, color.alphaGL);
+
         // Some drivers require to call glClear
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT | gl.STENCIL_BUFFER_BIT);
 
@@ -294,14 +303,23 @@ WebGLRenderer.prototype = {
     {
         //  Could move to the State Systems or MainLoop
         var gl = this.gl;
-        var scissor = (camera.x !== 0 || camera.y !== 0 || camera.width !== gl.canvas.width || camera.height !== gl.canvas.height);
+
+        this.scissor.enabled = (camera.x !== 0 || camera.y !== 0 || camera.width !== gl.canvas.width || camera.height !== gl.canvas.height);
 
         this.setRenderTarget(null);
-        if (scissor)
+
+        if (this.scissor.enabled)
         {
             gl.enable(gl.SCISSOR_TEST);
-            gl.scissor(camera.x, (gl.drawingBufferHeight - camera.y - camera.height), camera.width, camera.height);
+
+            this.scissor.x = camera.x;
+            this.scissor.y = gl.drawingBufferHeight - camera.y - camera.height;
+            this.scissor.width = camera.width;
+            this.scissor.height = camera.height;
+
+            gl.scissor(this.scissor.x, this.scissor.y, this.scissor.width, this.scissor.height);
         }
+
         // We could either clear color or render a quad
         var color = this.game.config.backgroundColor;
         gl.clearColor(color.redGL, color.greenGL, color.blueGL, color.alphaGL);
@@ -309,15 +327,18 @@ WebGLRenderer.prototype = {
 
         var list = children.list;
         var length = list.length;
+
         for (var index = 0; index < length; ++index)
         {
             var child = list[index];
+
             // Setting blend mode if needed            
             var renderer = this.currentRenderer;
             var newBlendMode = child.blendMode;
+
             if (this.blendMode !== newBlendMode)
             {
-                if (renderer) 
+                if (renderer)
                 {
                     renderer.flush();
                 }
@@ -333,6 +354,7 @@ WebGLRenderer.prototype = {
                 }
                 this.blendMode = newBlendMode;
             }
+
             // drawing child
             child.renderWebGL(this, child, interpolationPercentage, camera);
             renderer = this.currentRenderer;
@@ -349,6 +371,7 @@ WebGLRenderer.prototype = {
             this.setRenderTarget(null);
             var quadBatch = this.quadBatch;
             quadBatch.bind();
+
             // fade rendering
             quadBatch.add(
                 camera.x, camera.y, camera.width, camera.height, 
@@ -357,6 +380,7 @@ WebGLRenderer.prototype = {
                 camera._fadeBlue, 
                 camera._fadeAlpha
             );
+
             // flash rendering
             quadBatch.add(
                 camera.x, camera.y, camera.width, camera.height, 
@@ -368,7 +392,8 @@ WebGLRenderer.prototype = {
             quadBatch.flush();
             this.currentRenderer.bind();
         }
-        if (scissor)
+
+        if (this.scissor.enabled)
         {
             gl.disable(gl.SCISSOR_TEST);
         }
@@ -381,7 +406,6 @@ WebGLRenderer.prototype = {
 
         if (this.snapshotCallback)
         {
-
             this.snapshotCallback(Snapshot.WebGLSnapshot(this.view));
             this.snapshotCallback = null;
         }
@@ -413,9 +437,13 @@ WebGLRenderer.prototype = {
         if (this.blendMode !== newBlendMode)
         {
             if (renderer)
+            {
                 renderer.flush();
+            }
+
             blend = this.blendModes[newBlendMode];
             gl.enable(gl.BLEND);
+
             if (blend.length > 2)
             {
                 gl.blendFuncSeparate(blend[0], blend[1], blend[2], blend[3]);
@@ -424,6 +452,7 @@ WebGLRenderer.prototype = {
             {
                 gl.blendFunc(blend[0], blend[1]);        
             }
+
             this.blendMode = newBlendMode;
         }
     },
@@ -431,26 +460,33 @@ WebGLRenderer.prototype = {
     addRenderer: function (rendererInstance)
     {
         var index = this.rendererArray.indexOf(rendererInstance);
-        if (index < 0) 
+
+        if (index < 0)
         {
             this.rendererArray.push(rendererInstance);
             return rendererInstance;
         }
+
         return null;
     },
 
     setTextureFilterMode: function (texture, filterMode)
     {
         var gl = this.gl;
-        var glFilter = [gl.LINEAR, gl.NEAREST][filterMode];
+        var glFilter = [ gl.LINEAR, gl.NEAREST ][filterMode];
 
         gl.bindTexture(gl.TEXTURE_2D, texture.texture);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, glFilter);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, glFilter);
+
         if (this.currentTexture !== null)
+        {
             gl.bindTexture(gl.TEXTURE_2D, this.currentTexture.texture);
+        }
         else
+        {
             gl.bindTexture(gl.TEXTURE_2D, null);
+        }
 
         return texture;
     },
