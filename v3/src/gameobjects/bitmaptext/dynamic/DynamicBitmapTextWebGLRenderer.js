@@ -22,8 +22,6 @@ var DynamicBitmapTextWebGLRenderer = function (renderer, gameObject, interpolati
     var vertexDataBuffer = blitterBatch.vertexDataBuffer;
     var vertexBuffer = vertexDataBuffer.floatView;
     var vertexOffset = 0;
-    var srcX = gameObject.x; 
-    var srcY = gameObject.y;
     var textureData = gameObject.texture.source[textureFrame.sourceIndex];
     var textureX = textureFrame.cutX;
     var textureY = textureFrame.cutY;
@@ -44,10 +42,6 @@ var DynamicBitmapTextWebGLRenderer = function (renderer, gameObject, interpolati
     var rotation = 0;
     var xw = 0;
     var yh = 0;
-    var tx = 0;
-    var ty = 0;
-    var txw = 0;
-    var tyh = 0;
     var umin = 0;
     var umax = 0;
     var vmin = 0;
@@ -89,6 +83,14 @@ var DynamicBitmapTextWebGLRenderer = function (renderer, gameObject, interpolati
     mvd = src * cmb + srd * cmd;
     mve = sre * cma + srf * cmc + cme;
     mvf = sre * cmb + srf * cmd + cmf;
+
+    var gl = renderer.gl;
+
+    // if (gameObject.width > 0 && gameObject.height > 0)
+    // {
+    //     gl.enable(gl.SCISSOR_TEST);
+    //     gl.scissor(gameObject.x - cameraScrollX, gameObject.y - cameraScrollY, gameObject.width, gameObject.height);
+    // }
 
     for (var index = 0; index < textLength; ++index)
     {
@@ -133,6 +135,9 @@ var DynamicBitmapTextWebGLRenderer = function (renderer, gameObject, interpolati
             scale = output.scale;
             rotation = output.rotation;
         }
+
+        x -= gameObject.scrollX;
+        y -= gameObject.scrollY;
 
         tempMatrixChar.applyITRS(
             x, y,
@@ -204,6 +209,11 @@ var DynamicBitmapTextWebGLRenderer = function (renderer, gameObject, interpolati
         lastGlyph = glyph;
         lastCharCode = charCode;
     }
+
+    // if (gameObject.width > 0 && gameObject.height > 0)
+    // {
+    //     gl.disable(gl.SCISSOR_TEST);
+    // }
 };
 
 module.exports = DynamicBitmapTextWebGLRenderer;
