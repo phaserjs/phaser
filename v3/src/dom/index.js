@@ -11,6 +11,7 @@ module.exports = {
     RemoveEventListener: require('./RemoveEventListener'),
     RemoveFromDOM: require('./RemoveFromDOM'),
     RequestAnimationFrame: require('./RequestAnimationFrame'),
+    Smoothing: require('./Smoothing'),
     TouchAction: require('./TouchAction'),
     UserSelect: require('./UserSelect')
 
