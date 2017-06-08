@@ -12,6 +12,9 @@ var RequestAnimationFrame = require('../dom/RequestAnimationFrame');
 //          panicMax: 120
 //     }
 
+// http://www.testufo.com/#test=animation-time-graph
+// 
+
 var TimeStep = function (game, config)
 {
     this.game = game;
@@ -61,6 +64,10 @@ var TimeStep = function (game, config)
     this.deltaHistory = [];
     this.deltaSmoothingMax = GetValue(config, 'deltaHistory', 10);
     this.panicMax = GetValue(config, 'panicMax', 120);
+
+    //  The actual elapsed time in ms between one update and the next.
+    //  No smoothing, no capping, no averaging. So please be aware of this when using the contents of this property.
+    this.rawDelta = 0;
 };
 
 TimeStep.prototype.constructor = TimeStep;
@@ -72,7 +79,7 @@ TimeStep.prototype = {
     {
         this.inFocus = false;
 
-        console.log('TimeStep.blur');
+        // console.log('TimeStep.blur');
     },
 
     //  Called when the DOM window.onFocus event triggers
@@ -80,7 +87,7 @@ TimeStep.prototype = {
     {
         this.inFocus = true;
 
-        console.log('TimeStep.focus');
+        // console.log('TimeStep.focus');
 
         this.resetDelta();
     },
@@ -88,7 +95,7 @@ TimeStep.prototype = {
     //  Called when the visibility API says the game is 'hidden' (tab switch, etc)
     pause: function ()
     {
-        console.log('TimeStep.pause');
+        // console.log('TimeStep.pause');
 
         this._pauseTime = window.performance.now();
     },
@@ -100,7 +107,7 @@ TimeStep.prototype = {
 
         this.startTime += this.time - this._pauseTime;
 
-        console.log('TimeStep.resume - paused for', (this.time - this._pauseTime));
+        // console.log('TimeStep.resume - paused for', (this.time - this._pauseTime));
     },
 
     resetDelta: function ()
@@ -157,12 +164,14 @@ TimeStep.prototype = {
 
         this.frame++;
 
+        this.rawDelta = time - this.lastTime;
+
         var idx = this.deltaIndex;
         var history = this.deltaHistory;
         var max = this.deltaSmoothingMax;
 
         //  delta time (time is in ms)
-        var dt;
+        var dt = (time - this.lastTime);
 
         //  When a browser switches tab, then comes back again, it takes around 10 frames before
         //  the delta time settles down so we employ a 'cooling down' period before we start
@@ -174,10 +183,6 @@ TimeStep.prototype = {
 
             dt = this._target;
             // debug = (time - this.lastTime);
-        }
-        else
-        {
-            dt = (time - this.lastTime);
         }
 
         //  min / max range (yes, the < and > should be this way around)
@@ -231,24 +236,25 @@ TimeStep.prototype = {
         this.delta = avg;
 
         //  Real-world timer advance
-        this.time += avg;
+        // this.time += avg;
+        this.time += this.rawDelta;
 
         // Update the estimate of the frame rate, `fps`. Every second, the number
         // of frames that occurred in that second are included in an exponential
         // moving average of all frames per second, with an alpha of 0.25. This
         // means that more recent seconds affect the estimated frame rate more than
         // older seconds.
-        // 
+        //
         // When a browser window is NOT minimized, but is covered up (i.e. you're using
         // another app which has spawned a window over the top of the browser), then it
         // will start to throttle the raf callback time. It waits for a while, and then
         // starts to drop the frame rate at 1 frame per second until it's down to just over 1fps.
         // So if the game was running at 60fps, and the player opens a new window, then
         // after 60 seconds (+ the 'buffer time') it'll be down to 1fps, so rafin'g at 1Hz.
-        // 
+        //
         // When they make the game visible again, the frame rate is increased at a rate of
         // approx. 8fps, back up to 60fps (or the max it can obtain)
-        // 
+        //
         // There is no easy way to determine if this drop in frame rate is because the
         // browser is throttling raf, or because the game is struggling with performance
         // because you're asking it to do too much on the device.
@@ -272,7 +278,7 @@ TimeStep.prototype = {
         //  Interpolation - how far between what is expected and where we are?
         var interpolation = avg / this._target;
 
-        this.callback(this.time, avg, interpolation);
+        this.callback(time, avg, interpolation);
 
         //  Shift time value over
         this.lastTime = time;
