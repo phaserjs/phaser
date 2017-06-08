@@ -87,7 +87,7 @@ Set.prototype = {
     {
         for (var i = 0; i < this.entries.length; i++)
         {
-            if (callback(this.entries[i]) === false)
+            if (callback(this.entries[i], i) === false)
             {
                 break;
             }
