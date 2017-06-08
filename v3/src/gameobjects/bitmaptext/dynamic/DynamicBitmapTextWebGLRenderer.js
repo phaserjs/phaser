@@ -148,8 +148,8 @@ var DynamicBitmapTextWebGLRenderer = function (renderer, gameObject, interpolati
             rotation = output.rotation;
         }
 
-        x -= gameObject.scrollX;
-        y -= gameObject.scrollY;
+        x -= gameObject.scrollX | 0;
+        y -= gameObject.scrollY | 0;
 
         tempMatrixChar.applyITRS(
             x, y,
