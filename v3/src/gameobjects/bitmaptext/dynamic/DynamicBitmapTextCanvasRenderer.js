@@ -70,8 +70,14 @@ var DynamicBitmapTextCanvasRenderer = function (renderer, src, interpolationPerc
     ctx.rotate(src.rotation);
     ctx.scale(src.scaleX, src.scaleY);
 
-    var currentX;
-    var currentY;
+    if (src.width > 0 && src.height > 0)
+    {
+        ctx.save();
+        ctx.beginPath();
+        ctx.rect(0, 0, src.width, src.height);
+        ctx.clip();
+        ctx.closePath();
+    }
 
     for (var index = 0; index < textLength; ++index)
     {
@@ -103,8 +109,10 @@ var DynamicBitmapTextCanvasRenderer = function (renderer, src, interpolationPerc
         glyphW = glyph.width;
         glyphH = glyph.height;
 
-        x = indexCount + glyph.xOffset + xAdvance;
-        y = glyph.yOffset + yAdvance;
+        x = (indexCount + glyph.xOffset + xAdvance) - src.scrollX;
+        y = (glyph.yOffset + yAdvance) - src.scrollY;
+
+        //  This could be optimized so that it doesn't even bother drawing it if the x/y is out of range
 
         if (lastGlyph !== null)
         {
@@ -121,9 +129,6 @@ var DynamicBitmapTextCanvasRenderer = function (renderer, src, interpolationPerc
             scale = output.scale;
             rotation = output.rotation;
         }
-
-        //  Scroll clipping
-        x -= src._scrollX;
 
         x *= scale;
         y *= scale;
@@ -147,6 +152,11 @@ var DynamicBitmapTextCanvasRenderer = function (renderer, src, interpolationPerc
         indexCount += 1;
         lastGlyph = glyph;
         lastCharCode = charCode;
+    }
+
+    if (src.width > 0 && src.height > 0)
+    {
+        ctx.restore();
     }
 
     ctx.restore();

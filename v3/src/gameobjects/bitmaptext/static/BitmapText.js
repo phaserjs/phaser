@@ -34,7 +34,7 @@ var BitmapText = new Class({
         this.font = font;
         this.fontData = this.state.sys.cache.bitmapFont.get(font);
 
-        this.text = text;
+        this.text = (Array.isArray(text)) ? text.join('\n') : text;
 
         this.fontSize = size || this.fontData.size;
 

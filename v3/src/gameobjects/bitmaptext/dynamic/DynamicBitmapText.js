@@ -13,7 +13,6 @@ var DynamicBitmapText = new Class({
         Components.BlendMode,
         Components.Origin,
         Components.RenderTarget,
-        Components.Size,
         Components.Texture,
         Components.Transform,
         Components.Visible,
@@ -31,19 +30,28 @@ var DynamicBitmapText = new Class({
 
         this.fontData = this.state.sys.cache.bitmapFont.get(font);
 
-        this.text = text;
+        this.text = (Array.isArray(text)) ? text.join('\n') : text;
 
         this.fontSize = size || this.fontData.size;
 
-        this._scrollX = 0;
-        this._scrollY = 0;
-        this._maxWidth = 0;
-        this._maxHeight = 0;
+        this.scrollX = 0;
+        this.scrollY = 0;
+
+        this.width = 0;
+        this.height = 0;
 
         this.displayCallback;
 
         this.setTexture(font);
         this.setPosition(x, y);
+    },
+
+    setSize: function (width, height)
+    {
+        this.width = width;
+        this.height = height;
+
+        return this;
     },
 
     setDisplayCallback: function (callback)
@@ -67,30 +75,16 @@ var DynamicBitmapText = new Class({
         return this;
     },
 
-    setMaxWidth: function (value)
-    {
-        this._maxWidth = value;
-
-        return this;
-    },
-
-    setMaxHeight: function (value)
-    {
-        this._maxHeight = value;
-
-        return this;
-    },
-
     setScrollX: function (value)
     {
-        this._scrollX = value;
+        this.scrollX = value;
 
         return this;
     },
 
     setScrollY: function (value)
     {
-        this._scrollY = value;
+        this.scrollY = value;
 
         return this;
     },
