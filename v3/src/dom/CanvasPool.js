@@ -5,6 +5,7 @@
 */
 
 var CONST = require('../const');
+var Smoothing = require('./Smoothing');
 
 /**
  * The pool into which the canvas elements are placed.
@@ -13,6 +14,9 @@ var CONST = require('../const');
  * @type Array
  */
 var pool = [];
+
+//  Automatically apply smoothing(false) to created Canvas elements
+var _disableContextSmoothing = false;
 
 //  This singleton is instantiated as soon as Phaser loads,
 //  before a Phaser.Game instance has even been created.
@@ -39,6 +43,8 @@ var CanvasPool = function ()
     */
     var create = function (parent, width, height, type)
     {
+        // console.log('CanvasPool.create', parent);
+
         if (width === undefined) { width = 1; }
         if (height === undefined) { height = 1; }
         if (type === undefined) { type = CONST.CANVAS; }
@@ -71,6 +77,11 @@ var CanvasPool = function ()
 
         canvas.width = width;
         canvas.height = height;
+
+        if (_disableContextSmoothing && type === CONST.CANVAS)
+        {
+            Smoothing.disable(canvas.getContext('2d'));
+        }
         
         return canvas;
     };
@@ -110,7 +121,7 @@ var CanvasPool = function ()
     /**
     * Looks up a canvas based on its parent, and if found puts it back in the pool, freeing it up for re-use.
     * The canvas has its width and height set to 1, and its parent attribute nulled.
-    * 
+    *
     * @static
     * @method Phaser.CanvasPool.remove
     * @param {any|HTMLCanvasElement} parent - The parent of the canvas element.
@@ -134,7 +145,7 @@ var CanvasPool = function ()
 
     /**
     * Gets the total number of used canvas elements in the pool.
-    * 
+    *
     * @static
     * @method Phaser.CanvasPool.getTotal
     * @return {number} The number of in-use (parented) canvas elements in the pool.
@@ -156,7 +167,7 @@ var CanvasPool = function ()
 
     /**
     * Gets the total number of free canvas elements in the pool.
-    * 
+    *
     * @static
     * @method Phaser.CanvasPool.getFree
     * @return {number} The number of free (un-parented) canvas elements in the pool.
@@ -166,15 +177,29 @@ var CanvasPool = function ()
         return pool.length - total();
     };
 
+    //  Disable context smoothing on any new Canvas element created
+    var disableSmoothing = function ()
+    {
+        _disableContextSmoothing = true;
+    };
+
+    //  Enable context smoothing on any new Canvas element created
+    var enableSmoothing = function ()
+    {
+        _disableContextSmoothing = false;
+    };
+
     return {
-        create: create,
         create2D: create2D,
+        create: create,
         createWebGL: createWebGL,
+        disableSmoothing: disableSmoothing,
+        enableSmoothing: enableSmoothing,
         first: first,
-        remove: remove,
-        total: total,
         free: free,
-        pool: pool
+        pool: pool,
+        remove: remove,
+        total: total
     };
 };
 
