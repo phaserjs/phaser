@@ -89,14 +89,19 @@ var DynamicBitmapTextWebGLRenderer = function (renderer, gameObject, interpolati
     if (gameObject.width > 0 && gameObject.height > 0)
     {
         if (renderer.currentRenderer !== null)
+        {
             renderer.currentRenderer.flush();
+        }
 
         if (!renderer.scissor.enabled)
         {
             gl.enable(gl.SCISSOR_TEST);
         }
 
-        gl.scissor(gameObject.x, gl.drawingBufferHeight - gameObject.y - gameObject.height, gameObject.width, gameObject.height);
+        var sw = gameObject.width * gameObject.scaleX;
+        var sh = gameObject.height * gameObject.scaleY;
+
+        gl.scissor(gameObject.x, gl.drawingBufferHeight - gameObject.y - sh, sw, sh);
     }
 
     for (var index = 0; index < textLength; ++index)
