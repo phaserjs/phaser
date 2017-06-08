@@ -1,4 +1,5 @@
-import Loader from './systems/loader';
+import Systems from './Systems';
+import Loader from './systems/Loader';
 /**
 * A Base State Class.
 *
@@ -8,7 +9,7 @@ import Loader from './systems/loader';
 export default class State {
     game: any;
     settings: any;
-    sys: any;
+    sys: Systems;
     children: any;
     load: Loader;
     constructor(config: any);

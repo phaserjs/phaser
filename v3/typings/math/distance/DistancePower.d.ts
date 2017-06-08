@@ -1,1 +1,1 @@
-export default function (x1: any, y1: any, x2: any, y2: any, pow: any): number;
+export default function (x1: number, y1: number, x2: number, y2: number, pow?: number): number;

@@ -1,4 +1,5 @@
 import './polyfills';
+export * from './const';
 import * as Math from './math';
 import * as Geom from './geom';
 import * as Sound from './sound';

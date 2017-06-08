@@ -6,4 +6,4 @@
 * @param {number} height - The height to check.
 * @return {boolean} True if the width and height are a power of two.
 */
-export default function (width: any, height: any): boolean;
+export default function (width: number, height: number): boolean;

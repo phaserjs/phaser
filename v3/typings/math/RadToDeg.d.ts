@@ -1,1 +1,1 @@
-export default function (radians: any): number;
+export default function (radians: number): number;

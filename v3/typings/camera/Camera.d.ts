@@ -1,14 +1,23 @@
+import State from '../state/State';
+import Game from '../boot/Game';
+import Transform from '../components/Transform';
 export default class Camera {
-    state: any;
-    game: any;
-    viewportWidth: any;
-    viewportHeight: any;
-    transform: any;
-    atLimit: any;
+    state: State;
+    game: Game;
+    viewportWidth: number;
+    viewportHeight: number;
+    transform: Transform;
+    atLimit: {
+        x: boolean;
+        y: boolean;
+    };
     bounds: any;
-    view: any;
-    width: any;
-    height: any;
+    view: {
+        x: number;
+        y: number;
+    };
+    width: number;
+    height: number;
     private _shake;
     /**
     * A Camera is your view into the game world. It has a position and size and renders only those objects within its field of view.
@@ -23,7 +32,7 @@ export default class Camera {
     * @param {number} width - The width of the view rectangle
     * @param {number} height - The height of the view rectangle
     */
-    constructor(state: any, x: any, y: any, viewportWidth: any, viewportHeight: any);
+    constructor(state: State, x: number, y: number, viewportWidth: number, viewportHeight: number);
     /**
     * Method called to ensure the camera doesn't venture outside of the game world.
     * Called automatically by Camera.update.
@@ -32,15 +41,15 @@ export default class Camera {
     * @protected
     */
     protected checkBounds(): void;
-    x: any;
-    y: any;
-    readonly right: any;
-    readonly bottom: any;
-    scale: any;
-    scaleX: any;
-    scaleY: any;
-    pivotX: any;
-    pivotY: any;
-    angle: any;
-    rotation: any;
+    x: number;
+    y: number;
+    readonly right: number;
+    readonly bottom: number;
+    scale: number;
+    scaleX: number;
+    scaleY: number;
+    pivotX: number;
+    pivotY: number;
+    angle: number;
+    rotation: number;
 }

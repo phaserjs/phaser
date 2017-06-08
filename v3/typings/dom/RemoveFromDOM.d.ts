@@ -1,1 +1,1 @@
-export default function (element: any): void;
+export default function (element: Node): void;

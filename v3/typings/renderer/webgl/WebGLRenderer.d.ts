@@ -1,4 +1,5 @@
-export default class WebGLRenderer {
+import Renderer from '../Renderer';
+export default class WebGLRenderer implements Renderer {
     gl: any;
     view: any;
     config: any;

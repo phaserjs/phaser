@@ -1,1 +1,1 @@
-export default function (target: any, event: any, listener: any, useCapture: any): void;
+export default function (target: EventTarget, event: string, listener?: EventListenerOrEventListenerObject, useCapture?: boolean): void;

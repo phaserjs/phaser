@@ -1,1 +1,1 @@
-export default function (v: any, k: any): any;
+export default function (v: number[], k: number): number;

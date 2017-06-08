@@ -1,5 +1,5 @@
-export default function (length: any, sinAmp: any, cosAmp: any, frequency: any): {
+export default function (length: number, sinAmp?: number, cosAmp?: number, frequency?: number): {
     sin: any[];
     cos: any[];
-    length: any;
+    length: number;
 };

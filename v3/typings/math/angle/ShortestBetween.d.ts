@@ -13,4 +13,4 @@
 * @param {number} angle2 - The second angle. In the range -180 to 180.
 * @return {number} The shortest angle, in degrees. If greater than zero it's a counter-clockwise rotation.
 */
-export default function (angle1: any, angle2: any): number;
+export default function (angle1: number, angle2: number): number;

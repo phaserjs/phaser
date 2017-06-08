@@ -1,1 +1,1 @@
-export default function (line: any): any;
+export default function (line: any): number;

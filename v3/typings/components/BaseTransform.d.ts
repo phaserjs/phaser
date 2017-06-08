@@ -17,6 +17,6 @@ export default class BaseTransform {
     anchorY: any;
     pivotX: any;
     pivotY: any;
-    angle: any;
+    angle: number;
     rotation: any;
 }

@@ -7,4 +7,4 @@
 * @param {float} max - The maximum bounds.
 * @return {number} The clamped value.
 */
-export default function (v: any, min: any, max: any): any;
+export default function (v: number, min: number, max: number): number;

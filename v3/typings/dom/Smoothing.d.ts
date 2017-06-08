@@ -20,7 +20,7 @@ export declare class Smoothing {
     * @param {boolean} value - If set to true it will enable image smoothing, false will disable it.
     * @return {CanvasRenderingContext2D} Returns the source context.
     */
-    enable(context: any, value: any): any;
+    enable(context: CanvasRenderingContext2D, value: boolean): CanvasRenderingContext2D;
     /**
      * Returns `true` if the given context has image smoothing enabled, otherwise returns `false`.
      * Returns null if no smoothing prefix is available.
@@ -29,7 +29,7 @@ export declare class Smoothing {
      * @param {CanvasRenderingContext2D} context - The context to check for smoothing on.
      * @return {boolean} True if the given context has image smoothing enabled, otherwise false.
      */
-    isEnabled(context: any): any;
+    isEnabled(context: CanvasRenderingContext2D): boolean;
 }
 declare var _default: Smoothing;
 export default _default;

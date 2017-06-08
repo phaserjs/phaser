@@ -1,3 +1,8 @@
+import Loader from './systems/Loader';
+import MainLoop from './systems/MainLoop';
+import UpdateManager from './systems/UpdateManager';
+import * as Component from '../components';
+import Camera from '../camera/Camera';
 export default class Systems {
     state: any;
     config: any;
@@ -6,13 +11,13 @@ export default class Systems {
     add: any;
     make: any;
     input: any;
-    load: any;
+    load: Loader;
     tweens: any;
-    mainloop: any;
-    updates: any;
-    camera: any;
+    mainloop: MainLoop;
+    updates: UpdateManager;
+    camera: Camera;
     children: any;
-    color: any;
+    color: Component.Color;
     data: any;
     fbo: any;
     time: any;

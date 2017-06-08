@@ -3,6 +3,7 @@
 * @copyright    2016 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
+import Game from '../boot/Game';
 /**
 * Abstracts away the use of RAF or setTimeOut for the core game update loop.
 *
@@ -12,18 +13,18 @@
 * @param {boolean} [forceSetTimeOut=false] - Tell Phaser to use setTimeOut even if raf is available.
 */
 export default class RequestAnimationFrame {
-    game: any;
-    isRunning: any;
-    tick: any;
-    isSetTimeOut: any;
-    timeOutID: any;
-    constructor(game: any);
+    game: Game;
+    isRunning: boolean;
+    tick: number;
+    isSetTimeOut: boolean;
+    timeOutID: number;
+    constructor(game: Game);
     /**
     * Starts the requestAnimationFrame running or setTimeout if unavailable in browser
     * @method Phaser.RequestAnimationFrame#start
     */
     start(): void;
-    step(timestamp: any): void;
+    step(timestamp: number): void;
     /**
     * Stops the requestAnimationFrame from running.
     * @method Phaser.RequestAnimationFrame#stop
