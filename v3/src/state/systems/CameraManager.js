@@ -1,4 +1,6 @@
 var Camera = require('../../camera/Camera');
+var KeyControl = require('../../camera/KeyControl');
+var SmoothedKeyControl = require('../../camera/SmoothedKeyControl');
 
 var CameraManager = function (state)
 {
@@ -38,6 +40,16 @@ CameraManager.prototype = {
         this.cameras.push(camera);
 
         return camera;
+    },
+
+    addKeyControl: function (config)
+    {
+        return new KeyControl(config);
+    },
+
+    addSmoothedKeyControl: function (config)
+    {
+        return new SmoothedKeyControl(config);
     },
 
     addReference: function (camera)
