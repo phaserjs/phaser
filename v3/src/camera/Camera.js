@@ -1,3 +1,4 @@
+var Rectangle = require('../geom/rectangle/Rectangle');
 var TransformMatrix = require('../components/TransformMatrix');
 
 var Camera = function (x, y, width, height)
@@ -6,6 +7,9 @@ var Camera = function (x, y, width, height)
     this.y = y;
     this.width = width;
     this.height = height;
+
+    this.useBounds = false;
+    this._bounds = new Rectangle();
 
     this.scrollX = 0.0;
     this.scrollY = 0.0;
@@ -41,23 +45,47 @@ Camera.prototype.constructor = Camera;
 
 Camera.prototype = {
 
+    removeBounds: function ()
+    {
+        this.useBounds = false;
+
+        this._bounds.setEmpty();
+
+        return this;
+    },
+
+    setBounds: function (x, y, width, height)
+    {
+        this._bounds.setTo(x, y, width, height);
+
+        this.useBounds = true;
+
+        return this;
+    },
+
     setViewport: function (x, y, width, height)
     {
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
+
+        return this;
     },
 
     setSize: function (width, height)
     {
         this.width = width;
         this.height = height;
+
+        return this;
     },
 
     setState: function (state)
     {
         this.state = state;
+
+        return this;
     },
 
     update: function (delta)
@@ -111,7 +139,7 @@ Camera.prototype = {
         this._follow = gameObjectOrPoint;
     },
 
-    stopFollow: function () 
+    stopFollow: function ()
     {
         /* do unfollow work here */
         this._follow = null;
@@ -197,6 +225,29 @@ Camera.prototype = {
             
             this.scrollX = originX - width * 0.5;
             this.scrollY = originY - height * 0.5;
+        }
+
+        if (this.useBounds)
+        {
+            var bounds = this._bounds;
+
+            if (this.scrollX < bounds.x)
+            {
+                this.scrollX = bounds.x;
+            }
+            else if (this.scrollX > bounds.right)
+            {
+                this.scrollX = bounds.right;
+            }
+
+            if (this.scrollY < bounds.y)
+            {
+                this.scrollY = bounds.y;
+            }
+            else if (this.scrollY > bounds.bottom)
+            {
+                this.scrollY = bounds.bottom;
+            }
         }
 
         matrix.loadIdentity();
