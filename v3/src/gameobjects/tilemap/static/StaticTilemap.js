@@ -42,6 +42,8 @@ var StaticTilemap = new Class({
         this.mapHeight = mapHeight;
         this.dirty = true;
         this.vertexCount = 0;
+        this.scrollFactorX = 1.0;
+        this.scrollFactorY = 1.0;
         this.setTexture(texture, frame);
         this.setPosition(x, y);
         this.setSizeToFrame();
@@ -145,6 +147,8 @@ var StaticTilemap = new Class({
                 this.dirty = false;
             }
             this.tilemapRenderer.shader.setConstantFloat2(this.tilemapRenderer.scrollLocation, -scrollX, -scrollY);
+            this.tilemapRenderer.shader.setConstantFloat2(this.tilemapRenderer.scrollFactorLocation, this.scrollFactorX, this.scrollFactorY);
+            this.tilemapRenderer.shader.setConstantFloat2(this.tilemapRenderer.tilemapPositionLocation, this.x, this.y);
         }
     }
 

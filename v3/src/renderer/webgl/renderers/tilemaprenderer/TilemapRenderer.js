@@ -48,10 +48,14 @@ TilemapRenderer.prototype = {
         var shader = this.manager.resourceManager.createShader('TilemapShader', TilemapShader);
         var viewMatrixLocation = shader.getUniformLocation('u_view_matrix');
         var scrollLocation = shader.getUniformLocation('u_scroll');
+        var scrollFactorLocation = shader.getUniformLocation('u_scroll_factor');
+        var tilemapPositionLocation = shader.getUniformLocation('u_tilemap_position');
 
         this.shader = shader;
         this.viewMatrixLocation = viewMatrixLocation;
         this.scrollLocation = scrollLocation;
+        this.scrollFactorLocation = scrollFactorLocation;
+        this.tilemapPositionLocation = tilemapPositionLocation;
 
         this.resize(this.width, this.height, this.game.config.resolution);
     },
