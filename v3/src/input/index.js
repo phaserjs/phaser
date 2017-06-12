@@ -2,6 +2,7 @@
 
 module.exports = {
 
-    Keyboard: require('./keyboard')
+    Keyboard: require('./keyboard'),
+    Mouse: require('./mouse')
 
 };

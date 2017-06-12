@@ -9,6 +9,7 @@ var GlobalInputManager = function (game, gameConfig)
     this.gameConfig = gameConfig;
 
     this.keyboard = new Keyboard(this);
+    this.mouse = new Mouse(this);
 };
 
 GlobalInputManager.prototype.constructor = GlobalInputManager;
@@ -25,11 +26,13 @@ GlobalInputManager.prototype = {
     boot: function ()
     {
         this.keyboard.boot();
+        this.mouse.boot();
     },
 
     update: function ()
     {
         this.keyboard.update();
+        this.mouse.update();
     }
 
 };
