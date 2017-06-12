@@ -1,6 +1,7 @@
 //  GlobalInputManager
 
 var Keyboard = require('./keyboard/KeyboardManager');
+var Mouse = require('./mouse/MouseManager');
 
 var GlobalInputManager = function (game, gameConfig)
 {

@@ -214,20 +214,22 @@ KeyboardManager.prototype = {
 
     update: function ()
     {
-        if (!this.enabled)
+        var len = this.queue.length;
+
+        if (!this.enabled || len === 0)
         {
             return;
         }
 
         //  Clears the queue array, and also means we don't work on array data that could potentially
         //  be modified during the processing phase
-        var queue = this.queue.splice(0, this.queue.length);
+        var queue = this.queue.splice(0, len);
 
         var keys = this.keys;
         var singleKey;
 
         //  Process the event queue, dispatching all of the events that have stored up
-        for (var i = 0; i < queue.length; i++)
+        for (var i = 0; i < len; i++)
         {
             var event = queue[i];
 

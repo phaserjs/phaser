@@ -35,6 +35,11 @@ MouseManager.prototype = {
         this.enabled = config.inputMouse;
         this.target = config.inputMouseEventTarget;
 
+        if (!this.target)
+        {
+            this.target = this.manager.game.canvas;
+        }
+
         if (this.enabled)
         {
             this.startListeners();
@@ -44,7 +49,6 @@ MouseManager.prototype = {
     startListeners: function ()
     {
         var queue = this.queue;
-        // var captures = this.captures;
 
         var mouseHandler = function (event)
         {
@@ -55,11 +59,6 @@ MouseManager.prototype = {
             }
 
             queue.push(event);
-
-            // if (captures[event.keyCode])
-            // {
-            //     event.preventDefault();
-            // }
         };
 
         this.mouseHandler = mouseHandler;
@@ -77,30 +76,39 @@ MouseManager.prototype = {
     },
 
     //  https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent
+    //  https://github.com/WICG/EventListenerOptions/blob/gh-pages/explainer.md
 
     update: function ()
     {
-        if (!this.enabled)
+        var len = this.queue.length;
+
+        if (!this.enabled || len === 0)
         {
             return;
         }
 
         //  Clears the queue array, and also means we don't work on array data that could potentially
         //  be modified during the processing phase
-        var queue = this.queue.splice(0, this.queue.length);
+        var queue = this.queue.splice(0, len);
 
         //  Process the event queue, dispatching all of the events that have stored up
-        for (var i = 0; i < queue.length; i++)
+        for (var i = 0; i < len; i++)
         {
             var event = queue[i];
 
-            if (event.type === 'mousedown')
+            switch (event.type)
             {
-                this.events.dispatch(new Event.MOUSE_DOWN_EVENT(event));
-            }
-            else if (event.type === 'mouseup')
-            {
-                this.events.dispatch(new Event.MOUSE_UP_EVENT(event));
+                case 'mousemove':
+                    this.events.dispatch(new Event.MOUSE_MOVE_EVENT(event));
+                    break;
+
+                case 'mousedown':
+                    this.events.dispatch(new Event.MOUSE_DOWN_EVENT(event));
+                    break;
+
+                case 'mouseup':
+                    this.events.dispatch(new Event.MOUSE_UP_EVENT(event));
+                    break;
             }
         }
     }

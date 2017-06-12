@@ -50,6 +50,9 @@ var Config = function (config)
     this.inputKeyboard = GetValue(config, 'input.keyboard', true);
     this.inputKeyboardEventTarget = GetValue(config, 'input.keyboard.target', window);
 
+    this.inputMouse = GetValue(config, 'input.mouse', true);
+    this.inputMouseEventTarget = GetValue(config, 'input.mouse.target', null);
+
     //  If you do: { banner: false } it won't display any banner at all
     this.hideBanner = (GetValue(config, 'banner', null) === false);
 
