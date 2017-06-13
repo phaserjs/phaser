@@ -309,7 +309,7 @@ The [Contributors Guide][contribute] contains full details on how to help with P
 
 - Before submitting a Pull Request run your code through [JSHint](http://www.jshint.com/) using our [config](https://github.com/photonstorm/phaser/blob/master/v2-community/.jshintrc).
 
-- Before contributing read the [code of conduct](https://github.com/photonstorm/phaser/blob/master/v2-community/CODE_OF_CONDUCT.md).
+- Before contributing read the [code of conduct](https://github.com/photonstorm/phaser-ce/blob/master/CODE_OF_CONDUCT.md).
 
 Written something cool in Phaser? Please tell us about it in the [forum][forum], or email support@phaser.io
 
