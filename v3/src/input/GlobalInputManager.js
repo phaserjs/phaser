@@ -4,6 +4,9 @@ var Keyboard = require('./keyboard/KeyboardManager');
 var Mouse = require('./mouse/MouseManager');
 var MouseEvent = require('./mouse/events/');
 var EventDispatcher = require('../events/EventDispatcher');
+var GetTransformedPoint = require('./components/GetTransformedPoint');
+var PointWithinGameObject = require('./components/PointWithinGameObject');
+var TransformMatrix = require('../components/TransformMatrix');
 
 var GlobalInputManager = function (game, gameConfig)
 {
@@ -21,6 +24,9 @@ var GlobalInputManager = function (game, gameConfig)
     //  Listeners
     this.keyboard = new Keyboard(this);
     this.mouse = new Mouse(this);
+
+    this._tempMatrix = new TransformMatrix();
+    this._tempPoint = { x: 0, y: 0 };
 };
 
 GlobalInputManager.prototype.constructor = GlobalInputManager;
@@ -75,6 +81,16 @@ GlobalInputManager.prototype = {
                     break;
             }
         }
+    },
+
+    getTransformedPoint: function (gameObject, x, y)
+    {
+        return GetTransformedPoint(this._tempMatrix, gameObject, x, y, this._tempPoint);
+    },
+
+    pointWithinGameObject: function (gameObject, x, y)
+    {
+        return PointWithinGameObject(gameObject, x, y);
     }
 
 };
