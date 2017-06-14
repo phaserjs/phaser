@@ -1,5 +1,5 @@
-var EventDispatcher = require('../../events/EventDispatcher');
-var Event = require('./events');
+//  https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent
+//  https://github.com/WICG/EventListenerOptions/blob/gh-pages/explainer.md
 
 var MouseManager = function (inputManager)
 {
@@ -9,25 +9,13 @@ var MouseManager = function (inputManager)
 
     this.target;
 
-    this.events = new EventDispatcher();
-
-    this.mouseHandler;
-
-    //   Standard FIFO queue
-    this.queue = [];
+    this.handler;
 };
 
 MouseManager.prototype.constructor = MouseManager;
 
 MouseManager.prototype = {
 
-    /**
-    * The Boot handler is called by Phaser.Game when it first starts up.
-    * The renderer is available by now.
-    *
-    * @method Phaser.Input.MouseManager#boot
-    * @private
-    */
     boot: function ()
     {
         var config = this.manager.gameConfig;
@@ -48,9 +36,9 @@ MouseManager.prototype = {
 
     startListeners: function ()
     {
-        var queue = this.queue;
+        var queue = this.manager.queue;
 
-        var mouseHandler = function (event)
+        var handler = function (event)
         {
             if (event.preventDefaulted)
             {
@@ -61,58 +49,19 @@ MouseManager.prototype = {
             queue.push(event);
         };
 
-        this.mouseHandler = mouseHandler;
+        this.handler = handler;
 
-        this.target.addEventListener('mousemove', mouseHandler, false);
-        this.target.addEventListener('mousedown', mouseHandler, false);
-        this.target.addEventListener('mouseup', mouseHandler, false);
+        this.target.addEventListener('mousemove', handler, false);
+        this.target.addEventListener('mousedown', handler, false);
+        this.target.addEventListener('mouseup', handler, false);
     },
 
     stopListeners: function ()
     {
-        this.target.removeEventListener('mousemove', this.mouseHandler);
-        this.target.removeEventListener('mousedown', this.mouseHandler);
-        this.target.removeEventListener('mouseup', this.mouseHandler);
-    },
-
-    //  https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent
-    //  https://github.com/WICG/EventListenerOptions/blob/gh-pages/explainer.md
-
-    update: function ()
-    {
-        var len = this.queue.length;
-
-        if (!this.enabled || len === 0)
-        {
-            return;
-        }
-
-        //  Clears the queue array, and also means we don't work on array data that could potentially
-        //  be modified during the processing phase
-        var queue = this.queue.splice(0, len);
-
-        //  Process the event queue, dispatching all of the events that have stored up
-        for (var i = 0; i < len; i++)
-        {
-            var event = queue[i];
-
-            switch (event.type)
-            {
-                case 'mousemove':
-                    this.events.dispatch(new Event.MOUSE_MOVE_EVENT(event));
-                    break;
-
-                case 'mousedown':
-                    this.events.dispatch(new Event.MOUSE_DOWN_EVENT(event));
-                    break;
-
-                case 'mouseup':
-                    this.events.dispatch(new Event.MOUSE_UP_EVENT(event));
-                    break;
-            }
-        }
+        this.target.removeEventListener('mousemove', this.handler);
+        this.target.removeEventListener('mousedown', this.handler);
+        this.target.removeEventListener('mouseup', this.handler);
     }
-
 };
 
 module.exports = MouseManager;

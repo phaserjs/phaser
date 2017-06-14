@@ -1,4 +1,3 @@
-var EventDispatcher = require('../../events/EventDispatcher');
 var Event = require('./events');
 var KeyCodes = require('./keys/KeyCodes');
 var Key = require('./keys/Key');
@@ -29,8 +28,6 @@ var KeyboardManager = function (inputManager)
 
     this.target;
 
-    this.events = new EventDispatcher();
-
     this.keys = [];
 
     this.combos = [];
@@ -40,7 +37,7 @@ var KeyboardManager = function (inputManager)
     //   Standard FIFO queue
     this.queue = [];
 
-    this.keyHandler;
+    this.handler;
 };
 
 KeyboardManager.prototype.constructor = KeyboardManager;
@@ -72,7 +69,7 @@ KeyboardManager.prototype = {
         var queue = this.queue;
         var captures = this.captures;
 
-        var keyHandler = function (event)
+        var handler = function (event)
         {
             if (event.preventDefaulted)
             {
@@ -88,16 +85,16 @@ KeyboardManager.prototype = {
             }
         };
 
-        this.keyHandler = keyHandler;
+        this.handler = handler;
 
-        this.target.addEventListener('keydown', keyHandler, false);
-        this.target.addEventListener('keyup', keyHandler, false);
+        this.target.addEventListener('keydown', handler, false);
+        this.target.addEventListener('keyup', handler, false);
     },
 
     stopListeners: function ()
     {
-        this.target.removeEventListener('keydown', this.keyHandler);
-        this.target.removeEventListener('keyup', this.keyHandler);
+        this.target.removeEventListener('keydown', this.handler);
+        this.target.removeEventListener('keyup', this.handler);
     },
 
     /**
@@ -235,13 +232,13 @@ KeyboardManager.prototype = {
 
             if (event.type === 'keydown')
             {
-                this.events.dispatch(new Event.KEY_DOWN_EVENT(event));
+                this.manager.events.dispatch(new Event.KEY_DOWN_EVENT(event));
 
                 singleKey = Event._DOWN[event.keyCode];
 
                 if (singleKey)
                 {
-                    this.events.dispatch(new singleKey(event));
+                    this.manager.events.dispatch(new singleKey(event));
                 }
 
                 if (keys[event.keyCode])
@@ -251,13 +248,13 @@ KeyboardManager.prototype = {
             }
             else
             {
-                this.events.dispatch(new Event.KEY_UP_EVENT(event));
+                this.manager.events.dispatch(new Event.KEY_UP_EVENT(event));
 
                 singleKey = Event._UP[event.keyCode];
 
                 if (singleKey)
                 {
-                    this.events.dispatch(new singleKey(event));
+                    this.manager.events.dispatch(new singleKey(event));
                 }
 
                 if (keys[event.keyCode])
