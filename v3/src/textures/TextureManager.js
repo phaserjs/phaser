@@ -8,6 +8,7 @@ var Parser = require('./parsers');
 var Texture = require('./Texture');
 var CanvasPool = require('../dom/CanvasPool');
 var GetValue = require('../utils/object/GetValue');
+var GenerateTexture = require('../create/GenerateTexture');
 
 /**
 * Textures are managed by the global TextureManager. This is a singleton class that is
@@ -56,6 +57,17 @@ TextureManager.prototype = {
         Parser.Image(texture, 0);
 
         return texture;
+    },
+
+    generate: function (key, config)
+    {
+        var canvas = CanvasPool.create(this, 1, 1);
+
+        config.canvas = canvas;
+
+        GenerateTexture(config);
+
+        return this.addCanvas(key, canvas);
     },
 
     createCanvas: function (key, width, height)

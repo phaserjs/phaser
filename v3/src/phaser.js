@@ -9,6 +9,8 @@ var Phaser = {
 
     Actions: require('./actions/'),
 
+    Create: require('./create/'),
+
     DOM: require('./dom/'),
 
     Game: require('./boot/Game'),
