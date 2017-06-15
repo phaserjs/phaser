@@ -1749,11 +1749,11 @@ Phaser.BitmapData.prototype = {
 
         if (maskRect === undefined || maskRect === null)
         {
-            this.draw(mask).blendSourceAtop();
+            this.draw(mask).blendSourceIn();
         }
         else
         {
-            this.draw(mask, maskRect.x, maskRect.y, maskRect.width, maskRect.height).blendSourceAtop();
+            this.draw(mask, maskRect.x, maskRect.y, maskRect.width, maskRect.height).blendSourceIn();
         }
 
         if (sourceRect === undefined || sourceRect === null)
