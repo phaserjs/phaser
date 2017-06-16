@@ -170,6 +170,11 @@ var Layer = new Class({
         return this.children.entries;
     },
 
+    getLength: function ()
+    {
+        return this.children.size;
+    },
+
     destroy: function ()
     {
         this.children.clear();
@@ -400,6 +405,13 @@ var Layer = new Class({
     setY: function (value, step)
     {
         Actions.SetY(this.children.entries, value, step);
+
+        return this;
+    },
+
+    shiftPosition: function (x, y, direction)
+    {
+        Actions.ShiftPosition(this.children.entries, x, y, direction);
 
         return this;
     },

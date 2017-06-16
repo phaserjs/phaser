@@ -35,6 +35,7 @@ module.exports = {
     SetX: require('./SetX'),
     SetXY: require('./SetXY'),
     SetY: require('./SetY'),
+    ShiftPosition: require('./ShiftPosition'),
     SmootherStep: require('./SmootherStep'),
     SmoothStep: require('./SmoothStep'),
     Spread: require('./Spread'),
