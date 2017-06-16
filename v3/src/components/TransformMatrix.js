@@ -113,6 +113,47 @@ TransformMatrix.prototype.transform = function (a, b, c, d, tx, ty)
     return this;
 };
 
+TransformMatrix.prototype.transformPoint = function (x, y, point)
+{
+    if (point === undefined) { point = { x: 0, y: 0 }; }
+
+    var matrix = this.matrix;
+
+    var a = matrix[0];
+    var b = matrix[1];
+    var c = matrix[2];
+    var d = matrix[3];
+    var tx = matrix[4];
+    var ty = matrix[5];
+
+    point.x = x * a + y * c + tx;
+    point.y = x * b + y * d + ty;
+
+    return point;
+};
+
+TransformMatrix.prototype.invert = function ()
+{
+    var matrix = this.matrix;
+
+    var a1 = matrix[0];
+    var b1 = matrix[1];
+    var c1 = matrix[2];
+    var d1 = matrix[3];
+    var tx1 = matrix[4];
+    var ty1 = matrix[5];
+    var n = a1 * d1 - b1 * c1;
+
+    matrix[0] = d1 / n;
+    matrix[1] = -b1 / n;
+    matrix[2] = -c1 / n;
+    matrix[3] = a1 / n;
+    matrix[4] = (c1 * ty1 - d1 * tx1) / n;
+    matrix[5] = -(a1 * ty1 - b1 * tx1) / n;
+
+    return this;
+};
+
 TransformMatrix.prototype.setTransform = function (a, b, c, d, tx, ty)
 {
     var matrix = this.matrix;
