@@ -124,7 +124,6 @@ var FX = function (ctx, config)
 
     oscillator.onended = function ()
     {
-        console.log('onended');
         _this.pan.disconnect();
         _this.volume.disconnect();
     };
