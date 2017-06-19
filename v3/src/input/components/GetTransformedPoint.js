@@ -11,7 +11,7 @@ var GetTransformedPoint = function (matrix, gameObject, x, y, output)
     if (output === undefined) { output = { x: 0, y: 0 }; }
 
     matrix.applyITRS(gameObject.x, gameObject.y, gameObject.rotation, gameObject.scaleX, gameObject.scaleY);
-    matrix.invert();
+    // matrix.invert();
     matrix.transformPoint(x, y, output);
 
     // var a = matrix.matrix[0];

@@ -126,8 +126,13 @@ TransformMatrix.prototype.transformPoint = function (x, y, point)
     var tx = matrix[4];
     var ty = matrix[5];
 
-    point.x = x * a + y * c + tx;
-    point.y = x * b + y * d + ty;
+    // point.x = x * a + y * c + tx;
+    // point.y = x * b + y * d + ty;
+
+    var id = 1 / ((a * d) + (c * -b));
+
+    point.x = (d * id * x) + (-c * id * y) + (((ty * c) - (tx * d)) * id);
+    point.y = (a * id * y) + (-b * id * x) + (((-ty * a) + (tx * b)) * id);
 
     return point;
 };

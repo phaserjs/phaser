@@ -3,24 +3,22 @@
 
 var PointWithinGameObject = function (gameObject, x, y)
 {
-    // var width = gameObject.width;
-    // var height = gameObject.height;
-    // var x1 = -width * gameObject.originX;
+    var width = gameObject.displayWidth;
+    var height = gameObject.displayHeight;
 
-    // if (x >= x1 && x < x1 + width)
-    // {
-    //     var y1 = -height * gameObject.originY;
+    var x1 = -width * gameObject.originX;
 
-    //     if (y >= y1 && y < y1 + height)
-    //     {
-    //         return true;
-    //     }
-    // }
+    if (x >= x1 && x < x1 + width)
+    {
+        var y1 = -height * gameObject.originY;
 
-    // return false;
+        if (y >= y1 && y < y1 + height)
+        {
+            return true;
+        }
+    }
 
-    return (x >= gameObject.x && x <= gameObject.x+gameObject.width && y >= gameObject.y && y <= gameObject.y+gameObject.height);
-
+    return false;
 };
 
 module.exports = PointWithinGameObject;
