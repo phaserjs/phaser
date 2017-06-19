@@ -88,7 +88,7 @@ Camera.prototype = {
         return this;
     },
 
-    update: function (delta)
+    update: function (timestep, delta)
     {
         if (this._flashAlpha > 0.0)
         {

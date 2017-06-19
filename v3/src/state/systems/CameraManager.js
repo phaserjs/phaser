@@ -88,11 +88,11 @@ CameraManager.prototype = {
         this.main = this.add();
     },
 
-    update: function (timestep)
+    update: function (timestep, delta)
     {
         for (var i = 0, l = this.cameras.length; i < l; ++i)
         {
-            this.cameras[i].update(timestep);
+            this.cameras[i].update(timestep, delta);
         }
     },
 
