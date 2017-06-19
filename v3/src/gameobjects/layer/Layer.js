@@ -175,6 +175,13 @@ var Layer = new Class({
         return this.children.size;
     },
 
+    getFirst: function (compare, index)
+    {
+        if (index === undefined) { index = 0; }
+
+        return Actions.GetFirst(this.children.entries, compare, index);
+    },
+
     destroy: function ()
     {
         this.children.clear();

@@ -4,6 +4,7 @@ module.exports = {
 
     Angle: require('./Angle'),
     Call: require('./Call'),
+    GetFirst: require('./GetFirst'),
     GridAlign: require('./GridAlign'),
     IncAlpha: require('./IncAlpha'),
     IncX: require('./IncX'),
