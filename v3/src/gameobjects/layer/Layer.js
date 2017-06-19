@@ -416,9 +416,9 @@ var Layer = new Class({
         return this;
     },
 
-    shiftPosition: function (x, y, direction)
+    shiftPosition: function (x, y, direction, output)
     {
-        Actions.ShiftPosition(this.children.entries, x, y, direction);
+        Actions.ShiftPosition(this.children.entries, x, y, direction, output);
 
         return this;
     },

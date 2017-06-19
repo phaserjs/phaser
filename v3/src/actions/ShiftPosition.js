@@ -1,18 +1,21 @@
 //  Iterate through items changing the position of each element to
 //  be that of the element that came before it in the array (or after it if direction = 1)
 //  The first items position is set to x/y.
+//  The final x/y coords are returned
 
-var ShiftPosition = function (items, x, y, direction)
+var ShiftPosition = function (items, x, y, direction, output)
 {
     if (direction === undefined) { direction = 0; }
+    if (output === undefined) { output = { x: 0, y: 0 }; }
+
+    var px;
+    var py;
 
     if (items.length > 1)
     {
         var i;
         var cx;
         var cy;
-        var px;
-        var py;
         var cur;
 
         if (direction === 0)
@@ -78,11 +81,19 @@ var ShiftPosition = function (items, x, y, direction)
     }
     else
     {
+        px = items[0].x;
+        py = items[0].y;
+
         items[0].x = x;
         items[0].y = y;
     }
 
-    return items;
+    //  Return the final set of coordinates as they're effectively lost from the shift and may be needed
+
+    output.x = px;
+    output.y = py;
+
+    return output;
 };
 
 module.exports = ShiftPosition;
