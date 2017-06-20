@@ -11,43 +11,27 @@ var GetTransformedPoint = function (matrix, gameObject, x, y, output)
     if (output === undefined) { output = { x: 0, y: 0 }; }
 
     matrix.applyITRS(gameObject.x, gameObject.y, -gameObject.rotation, gameObject.scaleX, gameObject.scaleY);
+
     matrix.invert();
-    // matrix.transformPoint(x, y, output);
-    var ma = matrix.matrix;
-    var a = ma[0];
-    var b = ma[1];
-    var c = ma[2];
-    var d = ma[3];
-    var e = ma[4];
-    var f = ma[5];
 
-    var tx = x * a + y * c + e;
-    var ty = x * b + y * d + f;
+    return matrix.transformPoint(x, y, output);
 
-    output.x = tx;
-    output.y = ty;
+    // var ma = matrix.matrix;
 
-    // var a = matrix.matrix[0];
-    // var b = matrix.matrix[1];
-    // var c = matrix.matrix[2];
-    // var d = matrix.matrix[3];
-    // var tx = matrix.matrix[4];
-    // var ty = matrix.matrix[5];
+    // var a = ma[0];
+    // var b = ma[1];
+    // var c = ma[2];
+    // var d = ma[3];
+    // var e = ma[4];
+    // var f = ma[5];
 
-    //  Apply inverse of the matrix
+    // var tx = x * a + y * c + e;
+    // var ty = x * b + y * d + f;
 
-    // var id = 1 / ((a * d) + (c * -b));
+    // output.x = tx;
+    // output.y = ty;
 
-    // output.x = (d * id * x) + (-c * id * y) + (((ty * c) - (tx * d)) * id);
-    // output.y = (a * id * y) + (-b * id * x) + (((-ty * a) + (tx * b)) * id);
-
-    // x -= tx;
-    // y -= ty;
-
-    // output.x = (a * x) + (c * y) + tx;
-    // output.y = (b * x) + (d * y) + ty;
-
-    return output;
+    // return output;
 };
 
 module.exports = GetTransformedPoint;
