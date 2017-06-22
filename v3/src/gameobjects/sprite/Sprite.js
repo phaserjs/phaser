@@ -20,6 +20,7 @@ var Sprite = new Class({
         Components.Texture,
         Components.Transform,
         Components.Visible,
+        Components.ScrollFactor,
         SpriteRender
     ],
 

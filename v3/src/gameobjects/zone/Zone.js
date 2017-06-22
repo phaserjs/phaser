@@ -13,6 +13,7 @@ var Zone = new Class({
         Components.ScaleMode,
         Components.Size,
         Components.Transform,
+        Components.ScrollFactor,
         Components.Visible
     ],
 

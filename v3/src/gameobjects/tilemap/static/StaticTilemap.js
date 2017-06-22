@@ -21,6 +21,7 @@ var StaticTilemap = new Class({
         Components.Texture,
         Components.Transform,
         Components.Visible,
+        Components.ScrollFactor,
         StaticTilemapRender
     ],
 
@@ -42,8 +43,6 @@ var StaticTilemap = new Class({
         this.mapHeight = mapHeight;
         this.dirty = true;
         this.vertexCount = 0;
-        this.scrollFactorX = 1.0;
-        this.scrollFactorY = 1.0;
         this.setTexture(texture, frame);
         this.setPosition(x, y);
         this.setSizeToFrame();

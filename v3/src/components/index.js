@@ -11,6 +11,7 @@ module.exports = {
     Origin: require('./Origin'),
     RenderTarget: require('./RenderTarget'),
     ScaleMode: require('./ScaleMode'),
+    ScrollFactor: require('./ScrollFactor'),
     Size: require('./Size'),
     Texture: require('./Texture'),
     ToJSON: require('./ToJSON'),

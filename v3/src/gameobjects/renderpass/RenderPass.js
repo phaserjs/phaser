@@ -26,6 +26,7 @@ var RenderPass = new Class({
         Components.Size,
         Components.Transform,
         Components.Visible,
+        Components.ScrollFactor,
         Render
     ],
 

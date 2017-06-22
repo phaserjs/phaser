@@ -8,8 +8,8 @@ var GraphicsCanvasRenderer = function (renderer, src, interpolationPercentage, c
         return;
     }
 
-    var cameraScrollX = camera.scrollX;
-    var cameraScrollY = camera.scrollY;
+    var cameraScrollX = camera.scrollX * src.scrollFactorX;
+    var cameraScrollY = camera.scrollY * src.scrollFactorY;
     var srcX = src.x;
     var srcY = src.y;
     var srcScaleX = src.scaleX;

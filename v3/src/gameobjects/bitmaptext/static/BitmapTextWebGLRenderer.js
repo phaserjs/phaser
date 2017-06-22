@@ -9,8 +9,8 @@ var BitmapTextWebGLRenderer = function (renderer, gameObject, interpolationPerce
     }
 
     var textureFrame = gameObject.frame;
-    var cameraScrollX = camera.scrollX;
-    var cameraScrollY = camera.scrollY;
+    var cameraScrollX = camera.scrollX * gameObject.scrollFactorX;
+    var cameraScrollY = camera.scrollY * gameObject.scrollFactorY;
     var text = gameObject.text;
     var textLength = text.length;
     var chars = gameObject.fontData.chars;

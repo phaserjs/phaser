@@ -21,6 +21,7 @@ var Tilemap = new Class({
         Components.Texture,
         Components.Transform,
         Components.Visible,
+        Components.ScrollFactor,
         TilemapRender
     ],
 
@@ -30,7 +31,7 @@ var Tilemap = new Class({
     {
         GameObject.call(this, state, 'Tilemap');
 
-        this.mapData = mapData;
+        this.mapData = mapData !== null ? new Uint32Array(mapData) : new Uint32Array(mapWidth * mapHeight);
         this.tileWidth = tileWidth;
         this.tileHeight = tileHeight;
         this.mapWidth = mapWidth;
@@ -43,6 +44,16 @@ var Tilemap = new Class({
         this.setOrigin();
         this.setSize(tileWidth * mapWidth, tileHeight * mapHeight);
         this.buildTilemap();
+    },
+
+    getTotalTileCount: function () 
+    {
+        return this.tileArray.length;
+    },
+
+    getVisibleTileCount: function (camera)
+    {
+        return this.cull(camera).length;
     },
 
     buildTilemap: function () 
@@ -65,26 +76,89 @@ var Tilemap = new Class({
             for (var x = 0; x < mapWidth; ++x)
             {
                 var tileId = mapData[y * mapWidth + x];
-                var rectx = ((tileId % setWidth)|0) * tileWidth;
-                var recty = ((tileId / setWidth)|0) * tileHeight;
+                var halfTileWidth =  (tileWidth) * 0.5;
+                var halfTileHeight =  (tileHeight) * 0.5;
+                var rectx = (((tileId % setWidth)|0) * tileWidth) + halfTileWidth;
+                var recty = (((tileId / setWidth)|0) * tileHeight) + halfTileHeight;
                 var tx = x * tileWidth;
                 var ty = y * tileHeight;
                 
                 tileArray.push(new Tile({
+                    index: x + y,
                     id: tileId,
                     x: tx,
                     y: ty,
                     width: tileWidth,
                     height: tileHeight,
-                    frame: frame
+                    frameX: rectx,
+                    frameY: recty,
+                    frameWidth: tileWidth,
+                    frameHeight: tileHeight,
+                    textureWidth: width,
+                    textureHeight: height
                 }));
             }
         }
     },
 
-    cull: function (rect)
+    cull: function (camera)
     {
-        /* implement tilemap culling */
+        var culledTiles = this.culledTiles;
+        var tiles = this.tileArray;
+        var length = tiles.length;
+        var scrollX = camera.scrollX * this.scrollFactorX;
+        var scrollY = camera.scrollY * this.scrollFactorY;
+        var cameraW = camera.width;
+        var cameraH = camera.height;
+
+        culledTiles.length = 0;
+        for (var index = 0; index < length; ++index)
+        {
+            var tile = tiles[index];
+            var tileX = tile.x - scrollX;
+            var tileY = tile.y - scrollY;
+            var tileW = tile.width;
+            var tileH = tile.height;
+            var cullW = cameraW + tileW;
+            var cullH = cameraH + tileH;
+
+            if (tile.visible &&
+                tileX > -tileH && tileY > -tileW &&
+                tileX < cullW && tileY < cullH)
+            {
+                culledTiles.push(tile);
+            }
+        }
+
+        return culledTiles;
+    },
+
+    forEach: function (callback)
+    {
+        this.tileArray.forEach(callback);
+    },
+
+    getTileAt: function (x, y)
+    {
+        var ix = (x|0);
+        var iy = (y|0);
+        var tiles = this.tileArray;
+        var index = iy * this.mapWidth + ix;
+        if (index < tiles.length)
+        {
+            return tiles[index];
+        }
+        return null;
+    },
+
+    getTileAtIndex: function (index)
+    {
+        var tiles = this.tileArray;
+        if (index < tiles.length)
+        {
+            return tiles[index];
+        }
+        return null;  
     }
 
 });

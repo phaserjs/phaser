@@ -37,7 +37,7 @@ var TileSpriteCanvasRenderer = function (renderer, src, interpolationPercentage,
 
     ctx.save();
     ctx.translate(dx, dy);
-    ctx.translate(src.x - camera.scrollX, src.y - camera.scrollY);
+    ctx.translate(src.x - camera.scrollX * src.scrollFactorX, src.y - camera.scrollY * src.scrollFactorY);
     ctx.fillStyle = src.canvasPattern;
     ctx.translate(-this.tilePositionX, -this.tilePositionY);
     ctx.fillRect(this.tilePositionX, this.tilePositionY, src.width, src.height);

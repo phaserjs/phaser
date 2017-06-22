@@ -101,7 +101,7 @@ SpriteBatch.prototype = {
 
     shouldFlush: function ()
     {
-        if (this.drawIndexed != this.lastDrawIndexed || this.lastDrawingMesh !== this.drawingMesh)
+        if (this.drawIndexed != this.lastDrawIndexed || this.lastDrawingMesh !== this.drawingMesh || this.isFull())
         {
             this.lastDrawIndexed = this.drawIndexed;
             this.lastDrawingMesh = this.drawingMesh;
@@ -215,8 +215,8 @@ SpriteBatch.prototype = {
         var vertexBufferObjectF32 = vertexDataBuffer.floatView;
         var vertexBufferObjectU32 = vertexDataBuffer.uintView;
         var vertexOffset = 0;
-        var translateX = gameObject.x - camera.scrollX;
-        var translateY = gameObject.y - camera.scrollY;
+        var translateX = gameObject.x - camera.scrollX * gameObject.scrollFactorX;
+        var translateY = gameObject.y - camera.scrollY * gameObject.scrollFactorY;
         var scaleX = gameObject.scaleX;
         var scaleY = gameObject.scaleY;
         var rotation = -gameObject.rotation;
@@ -298,8 +298,8 @@ SpriteBatch.prototype = {
         var vertexBufferObjectF32 = vertexDataBuffer.floatView;
         var vertexBufferObjectU32 = vertexDataBuffer.uintView;
         var vertexOffset = 0;
-        var translateX = gameObject.x - camera.scrollX;
-        var translateY = gameObject.y - camera.scrollY;
+        var translateX = gameObject.x - camera.scrollX * gameObject.scrollFactorX;
+        var translateY = gameObject.y - camera.scrollY * gameObject.scrollFactorY;
         var scaleX = gameObject.scaleX;
         var scaleY = gameObject.scaleY;
         var rotation = -gameObject.rotation;
@@ -361,6 +361,77 @@ SpriteBatch.prototype = {
         }
     },
 
+    addTileTextureRect: function (texture, x, y, width, height, alpha, tint, scrollFactorX, scrollFactorY, textureWidth, textureHeight, rectX, rectY, rectW, rectH, camera, renderTarget)
+    {
+        var vertexDataBuffer = this.vertexDataBuffer;
+        var vertexBufferObjectF32 = vertexDataBuffer.floatView;
+        var vertexBufferObjectU32 = vertexDataBuffer.uintView;
+        var vertexOffset = 0;
+        var xw = x + width;
+        var yh = y + height;
+        var cameraMatrix = camera.matrix.matrix;
+        var mva, mvb, mvc, mvd, mve, mvf, tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3;
+        var sra, srb, src, srd, sre, srf, cma, cmb, cmc, cmd, cme, cmf;
+        var halfTileWidth = (width) * 0.5;
+        var halfTileHeight = (height) * 0.5;
+        var u0 = (rectX - (halfTileWidth - 0.5)) / textureWidth;
+        var v0 = (rectY - (halfTileHeight - 0.5)) / textureHeight;
+        var u1 = (rectX + (halfTileWidth - 0.5)) / textureWidth;
+        var v1 = (rectY + (halfTileHeight - 0.5)) / textureHeight;
+        var scrollX = camera.scrollX * scrollFactorX;
+        var scrollY = camera.scrollY * scrollFactorY;
+        
+        mva = cameraMatrix[0];
+        mvb = cameraMatrix[1];
+        mvc = cameraMatrix[2];
+        mvd = cameraMatrix[3];
+        mve = cameraMatrix[4];
+        mvf = cameraMatrix[5];
+
+        tx0 = (x * mva + y * mvc + mve) - scrollX;
+        ty0 = (x * mvb + y * mvd + mvf) - scrollY;
+        tx1 = (x * mva + yh * mvc + mve) - scrollX;
+        ty1 = (x * mvb + yh * mvd + mvf) - scrollY;
+        tx2 = (xw * mva + yh * mvc + mve) - scrollX;
+        ty2 = (xw * mvb + yh * mvd + mvf) - scrollY;
+        tx3 = (xw * mva + y * mvc + mve) - scrollX;
+        ty3 = (xw * mvb + y * mvd + mvf) - scrollY;
+
+        this.manager.setRenderer(this, texture, renderTarget);
+        this.drawIndexed = true;
+        this.drawingMesh = false;
+        this.elementCount += 6;
+        vertexOffset = vertexDataBuffer.allocate(24);
+        
+        vertexBufferObjectF32[vertexOffset++] = tx0;
+        vertexBufferObjectF32[vertexOffset++] = ty0;
+        vertexBufferObjectF32[vertexOffset++] = u0;
+        vertexBufferObjectF32[vertexOffset++] = v0;
+        vertexBufferObjectU32[vertexOffset++] = tint; 
+        vertexBufferObjectF32[vertexOffset++] = alpha;
+
+        vertexBufferObjectF32[vertexOffset++] = tx1;
+        vertexBufferObjectF32[vertexOffset++] = ty1;
+        vertexBufferObjectF32[vertexOffset++] = u0;
+        vertexBufferObjectF32[vertexOffset++] = v1;
+        vertexBufferObjectU32[vertexOffset++] = tint; 
+        vertexBufferObjectF32[vertexOffset++] = alpha;
+
+        vertexBufferObjectF32[vertexOffset++] = tx2;
+        vertexBufferObjectF32[vertexOffset++] = ty2;
+        vertexBufferObjectF32[vertexOffset++] = u1;
+        vertexBufferObjectF32[vertexOffset++] = v1;
+        vertexBufferObjectU32[vertexOffset++] = tint; 
+        vertexBufferObjectF32[vertexOffset++] = alpha;
+
+        vertexBufferObjectF32[vertexOffset++] = tx3;
+        vertexBufferObjectF32[vertexOffset++] = ty3;
+        vertexBufferObjectF32[vertexOffset++] = u1;
+        vertexBufferObjectF32[vertexOffset++] = v0;
+        vertexBufferObjectU32[vertexOffset++] = tint;
+        vertexBufferObjectF32[vertexOffset++] = alpha;
+    },
+
     addSpriteTexture: function (gameObject, camera, texture, textureWidth, textureHeight)
     {
         var tempMatrix = this.tempMatrix;
@@ -371,8 +442,8 @@ SpriteBatch.prototype = {
         var vertexOffset = 0;
         var width = textureWidth * (gameObject.flipX ? -1 : 1);
         var height = textureHeight * (gameObject.flipY ? -1 : 1);
-        var translateX = gameObject.x - camera.scrollX;
-        var translateY = gameObject.y - camera.scrollY;
+        var translateX = gameObject.x - camera.scrollX * gameObject.scrollFactorX;
+        var translateY = gameObject.y - camera.scrollY * gameObject.scrollFactorY;
         var scaleX = gameObject.scaleX;
         var scaleY = gameObject.scaleY;
         var rotation = -gameObject.rotation;
@@ -468,8 +539,8 @@ SpriteBatch.prototype = {
         var uvs = frame.uvs;
         var width = frame.width * (flipX ? -1 : 1);
         var height = frame.height * (flipY ? -1 : 1);
-        var translateX = gameObject.x - camera.scrollX;
-        var translateY = gameObject.y - camera.scrollY;
+        var translateX = gameObject.x - camera.scrollX * gameObject.scrollFactorX;
+        var translateY = gameObject.y - camera.scrollY * gameObject.scrollFactorY;
         var scaleX = gameObject.scaleX;
         var scaleY = gameObject.scaleY;
         var rotation = -gameObject.rotation;

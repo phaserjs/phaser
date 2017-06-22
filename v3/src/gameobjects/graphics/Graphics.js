@@ -18,6 +18,7 @@ var Graphics = new Class({
         Components.Transform,
         Components.RenderTarget,
         Components.Visible,
+        Components.ScrollFactor,
         Render
     ],
 

@@ -21,6 +21,7 @@ var Text = new Class({
         Components.Transform,
         Components.Visible,
         Components.Flip,
+        Components.ScrollFactor,
         TextRender
     ],
 

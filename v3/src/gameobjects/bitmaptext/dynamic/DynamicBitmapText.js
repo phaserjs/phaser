@@ -16,6 +16,7 @@ var DynamicBitmapText = new Class({
         Components.Texture,
         Components.Transform,
         Components.Visible,
+        Components.ScrollFactor,
         Render
     ],
 

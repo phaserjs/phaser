@@ -12,8 +12,8 @@ var DynamicBitmapTextCanvasRenderer = function (renderer, src, interpolationPerc
 
     var displayCallback = src.displayCallback;
 
-    var cameraScrollX = camera.scrollX;
-    var cameraScrollY = camera.scrollY;
+    var cameraScrollX = camera.scrollX * src.scrollFactorX;
+    var cameraScrollY = camera.scrollY * src.scrollFactorY;
 
     var chars = src.fontData.chars;
     var lineHeight = src.fontData.lineHeight;

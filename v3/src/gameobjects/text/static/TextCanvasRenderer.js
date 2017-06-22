@@ -30,7 +30,7 @@ var TextCanvasRenderer = function (renderer, src, interpolationPercentage, camer
     var canvas = src.canvas;
 
     ctx.save();
-    ctx.translate(src.x - camera.scrollX, src.y - camera.scrollY);
+    ctx.translate(src.x - camera.scrollX * src.scrollFactorX, src.y - camera.scrollY * src.scrollFactorY);
     ctx.rotate(src.rotation);
     ctx.scale(src.scaleX, src.scaleY);
     ctx.translate(canvas.width * (src.flipX ? 1 : 0), canvas.height * (src.flipY ? 1 : 0));

@@ -14,8 +14,8 @@ var BlitterWebGLRenderer = function (renderer, src, interpolationPercentage, cam
     var d = cameraMatrix[3];
     var e = cameraMatrix[4];
     var f = cameraMatrix[5];
-    var cameraScrollX = camera.scrollX;
-    var cameraScrollY = camera.scrollY;
+    var cameraScrollX = camera.scrollX * src.scrollFactorX;
+    var cameraScrollY = camera.scrollY * src.scrollFactorY;
     var renderTarget = src.renderTarget;
 
     //  Render bobs

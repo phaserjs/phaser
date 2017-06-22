@@ -11,8 +11,8 @@ var DynamicBitmapTextWebGLRenderer = function (renderer, gameObject, interpolati
 
     var displayCallback = gameObject.displayCallback;
     var textureFrame = gameObject.frame;
-    var cameraScrollX = camera.scrollX;
-    var cameraScrollY = camera.scrollY;
+    var cameraScrollX = camera.scrollX * gameObject.scrollFactorX;
+    var cameraScrollY = camera.scrollY * gameObject.scrollFactorY;
     var text = gameObject.text;
     var textLength = text.length;
     var chars = gameObject.fontData.chars;
