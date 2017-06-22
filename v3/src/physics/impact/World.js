@@ -4,6 +4,7 @@ var Class = require('../../utils/Class');
 var Set = require('../../structs/Set');
 var Body = require('./Body');
 var Solver = require('./Solver');
+var CollisionMap = require('./CollisionMap');
 var COLLIDES = require('./COLLIDES');
 var TYPE = require('./TYPE');
 
@@ -11,21 +12,26 @@ var World = new Class({
 
     initialize:
 
-    function World ()
+    function World (gravity, cellSize)
     {
+        if (gravity === undefined) { gravity = 0; }
+        if (cellSize === undefined) { cellSize = 64; }
+
         this.bodies = new Set();
 
-        this.gravity = 0;
-
-        this.delta = 0;
+        this.gravity = gravity;
 
         //  Spatial hash cell dimensions
-        this.cellSize = 64;
+        this.cellSize = cellSize;
+
+        this.collisionMap = new CollisionMap();
+
+        this.delta = 0;
     },
 
-    create: function (x, y)
+    create: function (x, y, sizeX, sizeY)
     {
-        var body = new Body(this, x, y);
+        var body = new Body(this, x, y, sizeX, sizeY);
 
         this.bodies.set(body);
 

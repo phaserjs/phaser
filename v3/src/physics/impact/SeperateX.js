@@ -1,4 +1,3 @@
-var Trace = require('./Trace');
 
 var SeperateX = function (world, left, right, weak)
 {
@@ -11,7 +10,7 @@ var SeperateX = function (world, left, right, weak)
 
         weak.vel.x = -weak.vel.x * weak.bounciness + strong.vel.x;
         
-        var resWeak = Trace(weak.pos.x, weak.pos.y, weak === left ? -nudge : nudge, 0, weak.size.x, weak.size.y);
+        var resWeak = world.collisionMap.trace(weak.pos.x, weak.pos.y, weak === left ? -nudge : nudge, 0, weak.size.x, weak.size.y);
 
         weak.pos.x = resWeak.pos.x;
     }
@@ -22,11 +21,11 @@ var SeperateX = function (world, left, right, weak)
         left.vel.x = -v2;
         right.vel.x = v2;
     
-        var resLeft = Trace(left.pos.x, left.pos.y, -nudge / 2, 0, left.size.x, left.size.y);
+        var resLeft = world.collisionMap.trace(left.pos.x, left.pos.y, -nudge / 2, 0, left.size.x, left.size.y);
 
         left.pos.x = Math.floor(resLeft.pos.x);
         
-        var resRight = Trace(right.pos.x, right.pos.y, nudge / 2, 0, right.size.x, right.size.y);
+        var resRight = world.collisionMap.trace(right.pos.x, right.pos.y, nudge / 2, 0, right.size.x, right.size.y);
 
         right.pos.x = Math.ceil(resRight.pos.x);
     }

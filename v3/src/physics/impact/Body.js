@@ -3,7 +3,6 @@
 var Class = require('../../utils/Class');
 var UpdateVelocity = require('./UpdateVelocity');
 var UpdateMotion = require('./UpdateMotion');
-var Trace = require('./Trace');
 var COLLIDES = require('./COLLIDES');
 var TYPE = require('./TYPE');
 
@@ -18,14 +17,16 @@ var Body = new Class({
 
     initialize:
 
-    function Body (world, x, y)
+    function Body (world, x, y, sx, sy)
     {
+        if (sx === undefined) { sx = 16; }
+        if (sy === undefined) { sy = 16; }
+
         this.world = world;
 
         this.enabled = true;
 
-        this.size = { x: 16, y: 16 };
-        this.offset = { x: 0, y: 0 };
+        this.size = { x: sx, y: sy };
         this.pos = { x: x, y: y };
         this.last = { x: 0, y: 0 };
         this.vel = { x: 0, y: 0 };
@@ -57,7 +58,7 @@ var Body = new Class({
         var mx = this.vel.x * delta;
         var my = this.vel.y * delta;
 
-        var res = Trace(this.pos.x, this.pos.y, mx, my, this.size.x, this.size.y);
+        var res = this.world.collisionMap.trace(this.pos.x, this.pos.y, mx, my, this.size.x, this.size.y);
 
         UpdateMotion(this, res);
     },
@@ -75,6 +76,13 @@ var Body = new Class({
             this.pos.y >= other.pos.y + other.size.y ||
             this.pos.y + this.size.y <= other.pos.y
         );
+    },
+
+    setBounce: function (value)
+    {
+        this.bounciness = value;
+
+        return this;
     },
 
     setVelocityX: function (x)
