@@ -32,7 +32,7 @@ var UpdateMotion = function (body, res)
     {
         if (body.bounciness > 0 && Math.abs(body.vel.x) > body.minBounceVelocity)
         {
-            body.vel.x *= -body.bounciness;             
+            body.vel.x *= -body.bounciness;
         }
         else
         {
@@ -48,12 +48,9 @@ var UpdateMotion = function (body, res)
         if (body.bounciness > 0)
         {
             var proj = body.vel.x * s.nx + body.vel.y * s.ny;
-            
-            body.vel.x -= s.nx * proj * 2;
-            body.vel.y -= s.ny * proj * 2;
-            
-            body.vel.x *= body.bounciness;
-            body.vel.y *= body.bounciness;
+
+            body.vel.x = (body.vel.x - s.nx * proj * 2) * body.bounciness;
+            body.vel.y = (body.vel.y - s.ny * proj * 2) * body.bounciness;
         }
         else
         {

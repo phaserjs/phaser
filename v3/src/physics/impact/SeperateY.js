@@ -2,6 +2,8 @@
 var SeperateY = function (world, top, bottom, weak)
 {
     var nudge = (top.pos.y + top.size.y - bottom.pos.y);
+    var nudgeX;
+    var resTop;
     
     if (weak)
     {
@@ -10,7 +12,7 @@ var SeperateY = function (world, top, bottom, weak)
         weak.vel.y = -weak.vel.y * weak.bounciness + strong.vel.y;
         
         // Riding on a platform?
-        var nudgeX = 0;
+        nudgeX = 0;
 
         if (weak === top && Math.abs(weak.vel.y - strong.vel.y) < weak.minBounceVelocity)
         {
@@ -18,20 +20,20 @@ var SeperateY = function (world, top, bottom, weak)
             nudgeX = strong.vel.x * world.delta;
         }
         
-        var resWeak = world.collisionMap.trace(weak.pos.x, weak.pos.y, nudgeX, weak == top ? -nudge : nudge, weak.size.x, weak.size.y);
+        var resWeak = world.collisionMap.trace(weak.pos.x, weak.pos.y, nudgeX, weak === top ? -nudge : nudge, weak.size.x, weak.size.y);
 
         weak.pos.y = resWeak.pos.y;
         weak.pos.x = resWeak.pos.x;
     }
     else if (world.gravity && (bottom.standing || top.vel.y > 0))
     {
-        var resTop = world.collisionMap.trace(top.pos.x, top.pos.y, 0, -(top.pos.y + top.size.y - bottom.pos.y), top.size.x, top.size.y);
+        resTop = world.collisionMap.trace(top.pos.x, top.pos.y, 0, -(top.pos.y + top.size.y - bottom.pos.y), top.size.x, top.size.y);
 
         top.pos.y = resTop.pos.y;
         
         if (top.bounciness > 0 && top.vel.y > top.minBounceVelocity)
         {
-            top.vel.y *= -top.bounciness;       
+            top.vel.y *= -top.bounciness;
         }
         else
         {
@@ -46,13 +48,13 @@ var SeperateY = function (world, top, bottom, weak)
         top.vel.y = -v2;
         bottom.vel.y = v2;
         
-        var nudgeX = bottom.vel.x * world.delta;
+        nudgeX = bottom.vel.x * world.delta;
 
-        var resTop = world.collisionMap.trace(top.pos.x, top.pos.y, nudgeX, -nudge/2, top.size.x, top.size.y);
+        resTop = world.collisionMap.trace(top.pos.x, top.pos.y, nudgeX, -nudge / 2, top.size.x, top.size.y);
 
         top.pos.y = resTop.pos.y;
         
-        var resBottom = world.collisionMap.trace(bottom.pos.x, bottom.pos.y, 0, nudge/2, bottom.size.x, bottom.size.y);
+        var resBottom = world.collisionMap.trace(bottom.pos.x, bottom.pos.y, 0, nudge / 2, bottom.size.x, bottom.size.y);
 
         bottom.pos.y = resBottom.pos.y;
     }

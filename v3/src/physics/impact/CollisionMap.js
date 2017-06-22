@@ -16,6 +16,8 @@ var CollisionMap = new Class({
         this.width = (Array.isArray(data)) ? data[0].length : 0;
         this.height = (Array.isArray(data)) ? data.length : 0;
 
+        this.lastSlope = 55;
+
         this.tiledef = DefaultDefs;
     },
 
@@ -89,8 +91,8 @@ var CollisionMap = new Class({
         //  Horizontal
         if (vx)
         {
-            var pxOffsetX = (vx > 0) ? width : 0;
-            var tileOffsetX = (vx < 0) ? tilesize : 0;
+            var pxOffsetX = (vx > 0 ? width : 0);
+            var tileOffsetX = (vx < 0 ? tilesize : 0);
             
             var firstTileY = Math.max(Math.floor(y / tilesize), 0);
             var lastTileY = Math.min(Math.ceil((y + height) / tilesize), mapHeight);
@@ -107,11 +109,11 @@ var CollisionMap = new Class({
             {
                 for (var tileY = firstTileY; tileY < lastTileY; tileY++)
                 {
-                    if (prevTileX != -1)
+                    if (prevTileX !== -1)
                     {
                         t = this.data[tileY][prevTileX];
 
-                        if (t > 1 && this.checkDef(res, t, x, y, rvx, rvy, width, height, prevTileX, tileY))
+                        if (t > 1 && t <= this.lastSlope && this.checkDef(res, t, x, y, rvx, rvy, width, height, prevTileX, tileY))
                         {
                             break;
                         }
@@ -119,9 +121,9 @@ var CollisionMap = new Class({
                     
                     t = this.data[tileY][tileX];
 
-                    if (t === 1 || (t > 1 && this.checkDef(res, t, x, y, rvx, rvy, width, height, tileX, tileY)))
+                    if (t === 1 || t > this.lastSlope || (t > 1 && this.checkDef(res, t, x, y, rvx, rvy, width, height, tileX, tileY)))
                     {
-                        if (t > 1 && res.collision.slope)
+                        if (t > 1 && t <= this.lastSlope && res.collision.slope)
                         {
                             break;
                         }
@@ -129,6 +131,8 @@ var CollisionMap = new Class({
                         res.collision.x = true;
                         res.tile.x = t;
                         res.pos.x = tileX * tilesize - pxOffsetX + tileOffsetX;
+                        x = res.pos.x;
+                        rvx = 0;
 
                         break;
                     }
@@ -139,8 +143,8 @@ var CollisionMap = new Class({
         //  Vertical
         if (vy)
         {
-            var pxOffsetY = (vy > 0) ? height : 0;
-            var tileOffsetY = (vy < 0) ? tilesize : 0;
+            var pxOffsetY = (vy > 0 ? height : 0);
+            var tileOffsetY = (vy < 0 ? tilesize : 0);
             
             var firstTileX = Math.max(Math.floor(res.pos.x / tilesize), 0);
             var lastTileX = Math.min(Math.ceil((res.pos.x + width) / tilesize), mapWidth);
@@ -157,11 +161,11 @@ var CollisionMap = new Class({
             {
                 for (var tileX = firstTileX; tileX < lastTileX; tileX++)
                 {
-                    if (prevTileY != -1)
+                    if (prevTileY !== -1)
                     {
                         t = this.data[prevTileY][tileX];
 
-                        if (t > 1 && this.checkDef(res, t, x, y, rvx, rvy, width, height, tileX, prevTileY))
+                        if (t > 1 && t <= this.lastSlope && this.checkDef(res, t, x, y, rvx, rvy, width, height, tileX, prevTileY))
                         {
                             break;
                         }
@@ -169,9 +173,9 @@ var CollisionMap = new Class({
                     
                     t = this.data[tileY][tileX];
 
-                    if (t === 1 || (t > 1 && this.checkDef(res, t, x, y, rvx, rvy, width, height, tileX, tileY)))
+                    if (t === 1 || t > this.lastSlope || (t > 1 && this.checkDef(res, t, x, y, rvx, rvy, width, height, tileX, tileY)))
                     {
-                        if (t > 1 && res.collision.slope)
+                        if (t > 1 && t <= this.lastSlope && res.collision.slope)
                         {
                             break;
                         }
@@ -224,7 +228,7 @@ var CollisionMap = new Class({
             
             if (px * px + py * py >= vx * vx + vy * vy)
             {
-                return true;
+                return solid || (lvx * (ty - vy) - lvy * (tx - vx) < 0.5);
             }
             
             res.pos.x = x + vx - px;

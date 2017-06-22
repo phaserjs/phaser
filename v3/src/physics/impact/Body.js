@@ -1,7 +1,7 @@
 //  Phaser.Physics.Impact.Body
 
 var Class = require('../../utils/Class');
-var UpdateVelocity = require('./UpdateVelocity');
+var GetVelocity = require('./GetVelocity');
 var UpdateMotion = require('./UpdateMotion');
 var COLLIDES = require('./COLLIDES');
 var TYPE = require('./TYPE');
@@ -28,7 +28,7 @@ var Body = new Class({
 
         this.size = { x: sx, y: sy };
         this.pos = { x: x, y: y };
-        this.last = { x: 0, y: 0 };
+        this.last = { x: x, y: y };
         this.vel = { x: 0, y: 0 };
         this.accel = { x: 0, y: 0 };
         this.friction = { x: 0, y: 0 };
@@ -37,6 +37,10 @@ var Body = new Class({
         this.standing = false;
         this.bounciness = 0;
         this.minBounceVelocity = 40;
+
+        this.accelGround = 0;
+        this.accelAir = 0;
+        this.jumpSpeed = 0;
     
         this.type = TYPE.NONE;
         this.checkAgainst = TYPE.NONE;
@@ -46,6 +50,11 @@ var Body = new Class({
         this.slopeStanding = { min: 0.767944870877505, max: 2.3736477827122884 };
     },
 
+    reset: function ()
+    {
+        //  TODO
+    },
+
     update: function (delta)
     {
         this.last.x = this.pos.x;
@@ -53,7 +62,8 @@ var Body = new Class({
 
         this.vel.y += this.world.gravity * delta * this.gravityFactor;
         
-        UpdateVelocity(this, delta);
+        this.vel.x = GetVelocity(delta, this.vel.x, this.accel.x, this.friction.x, this.maxVel.x);
+        this.vel.y = GetVelocity(delta, this.vel.y, this.accel.y, this.friction.y, this.maxVel.y);
         
         var mx = this.vel.x * delta;
         var my = this.vel.y * delta;
@@ -113,6 +123,28 @@ var Body = new Class({
 
         this.maxVel.x = x;
         this.maxVel.y = y;
+
+        return this;
+    },
+
+    setAccelerationX: function (x)
+    {
+        this.accel.x = x;
+
+        return this;
+    },
+
+    setAccelerationY: function (y)
+    {
+        this.accel.y = y;
+
+        return this;
+    },
+
+    setAcceleration: function (x, y)
+    {
+        this.accel.x = x;
+        this.accel.y = y;
 
         return this;
     },
@@ -194,9 +226,15 @@ var Body = new Class({
         return this;
     },
 
-    check: function( other ) {},
+    check: function (other)
+    {
+        //  Overridden by user code
+    },
 
-    collideWith: function( other, axis ) {}
+    collideWith: function (other, axis)
+    {
+        //  Overridden by user code
+    }
 
 });
 

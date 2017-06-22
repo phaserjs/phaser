@@ -15,23 +15,6 @@ var GetTransformedPoint = function (matrix, gameObject, x, y, output)
     matrix.invert();
 
     return matrix.transformPoint(x, y, output);
-
-    // var ma = matrix.matrix;
-
-    // var a = ma[0];
-    // var b = ma[1];
-    // var c = ma[2];
-    // var d = ma[3];
-    // var e = ma[4];
-    // var f = ma[5];
-
-    // var tx = x * a + y * c + e;
-    // var ty = x * b + y * d + f;
-
-    // output.x = tx;
-    // output.y = ty;
-
-    // return output;
 };
 
 module.exports = GetTransformedPoint;

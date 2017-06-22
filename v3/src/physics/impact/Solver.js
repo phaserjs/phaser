@@ -1,7 +1,6 @@
 var SeperateX = require('./SeperateX');
 var SeperateY = require('./SeperateY');
 var COLLIDES = require('./COLLIDES');
-var TYPE = require('./TYPE');
 
 //  Impact Physics Solver
 

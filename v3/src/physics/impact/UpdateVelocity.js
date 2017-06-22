@@ -20,7 +20,7 @@ var UpdateVelocity = function (body, delta)
         if (vel - frictionDelta > 0)
         {
             body.vel.x = vel - frictionDelta;
-        } 
+        }
         else if (vel + frictionDelta < 0)
         {
             body.vel.x = vel + frictionDelta;
@@ -52,7 +52,7 @@ var UpdateVelocity = function (body, delta)
         if (vel - frictionDelta > 0)
         {
             body.vel.y = vel - frictionDelta;
-        } 
+        }
         else if (vel + frictionDelta < 0)
         {
             body.vel.y = vel + frictionDelta;
