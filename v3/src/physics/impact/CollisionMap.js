@@ -153,13 +153,9 @@ var CollisionMap = new Class({
                         
                         res.collision.x = true;
                         res.tile.x = t;
-                        res.pos.x = tileX * tilesize - pxOffsetX + tileOffsetX;
+                        res.pos.x = (tileX * tilesize) - pxOffsetX + tileOffsetX;
                         x = res.pos.x;
                         rvx = 0;
-
-                        //  10, 32, 40, 0
-                        //  (10 * 32) = 320
-                        //  320 - 40 + 0 = 280
 
                         console.log('>>> Hit solid tile <<<');
 
@@ -168,6 +164,12 @@ var CollisionMap = new Class({
                         console.log('pxOffsetX', pxOffsetX);
                         console.log('tileOffsetX', tileOffsetX);
                         console.log('=', res.pos.x);
+
+                        //  9 * 32 = 288
+                        //  - 16 = 272
+                        //  + 0 = 272
+
+                        //  Where does the 16 come from?
 
                         break;
                     }
