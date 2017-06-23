@@ -43,6 +43,8 @@ var StaticTilemap = new Class({
         this.mapHeight = mapHeight;
         this.dirty = true;
         this.vertexCount = 0;
+        this.cullStart = 0;
+        this.cullEnd = 0;
         this.setTexture(texture, frame);
         this.setPosition(x, y);
         this.setSizeToFrame();
@@ -50,7 +52,7 @@ var StaticTilemap = new Class({
         this.setSize(tileWidth * mapWidth, tileHeight * mapHeight);
     },
 
-    upload: function (scrollX, scrollY) 
+    upload: function (camera) 
     {
         if (this.gl)
         {
@@ -147,9 +149,51 @@ var StaticTilemap = new Class({
 
                 this.dirty = false;
             }
-            this.tilemapRenderer.shader.setConstantFloat2(this.tilemapRenderer.scrollLocation, -scrollX, -scrollY);
+            this.tilemapRenderer.shader.setConstantFloat2(this.tilemapRenderer.scrollLocation, -camera.scrollX, -camera.scrollY);
             this.tilemapRenderer.shader.setConstantFloat2(this.tilemapRenderer.scrollFactorLocation, this.scrollFactorX, this.scrollFactorY);
             this.tilemapRenderer.shader.setConstantFloat2(this.tilemapRenderer.tilemapPositionLocation, this.x, this.y);
+        }
+    },
+
+    getTotalTileCount: function ()
+    {
+        return this.mapData.length;
+    },
+
+    getVisibleTileCount: function (camera)
+    {
+        this.cull(camera);
+        return (this.cullEnd - this.cullStart) / 6;
+    },
+
+    cull: function (camera)
+    {
+        this.cullStart = 0;
+        this.cullEnd = 0;
+        var tileWidth = this.tileWidth;
+        var tileHeight = this.tileHeight;
+        var pixelX = this.x - (camera.scrollX * this.scrollFactorX);
+        var pixelY = this.y - (camera.scrollY * this.scrollFactorY);
+        var pixelWidth = this.mapWidth * tileWidth;
+        var pixelHeight = this.mapHeight * tileHeight;
+
+        if (pixelX < camera.width + tileWidth &&
+            pixelX + pixelWidth > -tileWidth &&
+            pixelY < camera.height + tileHeight &&
+            pixelY + pixelHeight > -tileHeight)
+        {
+            var interX = Math.max(pixelX, -tileWidth);
+            var interY = Math.max(pixelY, -tileHeight);
+            var interWidth = Math.min(pixelX + pixelWidth, camera.width + tileWidth) - interX;
+            var interHeight = Math.min(pixelY + pixelHeight, camera.height + tileHeight) - interY;
+
+            interX = ((interX + (camera.scrollX * this.scrollFactorX)) / tileWidth)|0;
+            interY = ((interY + (camera.scrollY * this.scrollFactorY)) / tileHeight)|0;
+            interWidth = (interWidth / tileWidth)|0;
+            interHeight = (interHeight / tileHeight)|0;
+
+            this.cullStart = (interY * this.mapWidth + interX) * 6;
+            this.cullEnd = ((interY + interHeight) * this.mapWidth + interX) * 6;
         }
     }
 
