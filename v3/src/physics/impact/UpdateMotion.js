@@ -44,7 +44,7 @@ var UpdateMotion = function (body, res)
     if (res.collision.slope)
     {
         var s = res.collision.slope;
-        
+       
         if (body.bounciness > 0)
         {
             var proj = body.vel.x * s.nx + body.vel.y * s.ny;
@@ -67,7 +67,18 @@ var UpdateMotion = function (body, res)
                 body.standing = true;
             }
         }
+
+        if (window.dumpit)
+        {
+            console.group('slope');
+            console.log(s);
+            console.log('pos', res.pos.x, res.pos.y);
+            console.log('vel', body.vel.x, body.vel.y);
+            console.groupEnd();
+        }
     }
+
+    // body.pos = res.pos;
 
     body.pos.x = res.pos.x;
     body.pos.y = res.pos.y;

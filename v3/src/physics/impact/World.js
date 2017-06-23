@@ -86,6 +86,8 @@ var World = new Class({
     //  Check the body against the spatial hash
     checkHash: function (body, hash, size)
     {
+        console.log('checkHash');
+
         var checked = {};
         var xmin = Math.floor(body.pos.x / size);
         var ymin = Math.floor(body.pos.y / size);
@@ -99,11 +101,11 @@ var World = new Class({
                 if (!hash[x])
                 {
                     hash[x] = {};
-                    hash[x][y] = [body];
+                    hash[x][y] = [ body ];
                 }
                 else if (!hash[x][y])
                 {
-                    hash[x][y] = [body];
+                    hash[x][y] = [ body ];
                 }
                 else
                 {
@@ -140,6 +142,7 @@ var World = new Class({
         
         if (bodyA.collides && bodyB.collides && bodyA.collides + bodyB.collides > COLLIDES.ACTIVE)
         {
+            console.log('solve');
             Solver(this, bodyA, bodyB);
         }
     }

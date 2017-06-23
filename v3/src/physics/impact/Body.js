@@ -65,12 +65,23 @@ var Body = new Class({
         this.vel.x = GetVelocity(delta, this.vel.x, this.accel.x, this.friction.x, this.maxVel.x);
         this.vel.y = GetVelocity(delta, this.vel.y, this.accel.y, this.friction.y, this.maxVel.y);
         
+        if (window.dumpit)
+        {
+            console.log('');
+            console.log('UPDATE: pos', this.pos.x, this.pos.y, 'vel', this.vel.x, this.vel.y);
+        }
+
         var mx = this.vel.x * delta;
         var my = this.vel.y * delta;
 
         var res = this.world.collisionMap.trace(this.pos.x, this.pos.y, mx, my, this.size.x, this.size.y);
 
         UpdateMotion(this, res);
+
+        if (window.dumpit)
+        {
+            console.log('END res', res.pos.x, res.pos.y);
+        }
     },
 
     skipHash: function ()
