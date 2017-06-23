@@ -235,18 +235,17 @@ Camera.prototype = {
             {
                 this.scrollX = bounds.x;
             }
-            else if (this.scrollX > bounds.right)
+            else if (this.scrollX > bounds.right - width)
             {
-                this.scrollX = bounds.right;
+                this.scrollX = bounds.right - width;
             }
-
             if (this.scrollY < bounds.y)
             {
                 this.scrollY = bounds.y;
             }
-            else if (this.scrollY > bounds.bottom)
+            else if (this.scrollY > bounds.bottom - height)
             {
-                this.scrollY = bounds.bottom;
+                this.scrollY = bounds.bottom - height;
             }
         }
 
