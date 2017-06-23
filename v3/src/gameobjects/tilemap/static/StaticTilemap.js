@@ -177,15 +177,15 @@ var StaticTilemap = new Class({
         var pixelWidth = this.mapWidth * tileWidth;
         var pixelHeight = this.mapHeight * tileHeight;
 
-        if (pixelX < camera.width + tileWidth &&
-            pixelX + pixelWidth > -tileWidth &&
-            pixelY < camera.height + tileHeight &&
-            pixelY + pixelHeight > -tileHeight)
+        if (pixelX < camera.x + camera.width + (tileWidth * 2) &&
+            pixelX + pixelWidth > camera.x + -(tileWidth * 2) &&
+            pixelY < camera.y + camera.height + (tileHeight * 2) &&
+            pixelY + pixelHeight > camera.y + -(tileHeight * 2))
         {
-            var interX = Math.max(pixelX, -tileWidth);
-            var interY = Math.max(pixelY, -tileHeight);
-            var interWidth = Math.min(pixelX + pixelWidth, camera.width + tileWidth) - interX;
-            var interHeight = Math.min(pixelY + pixelHeight, camera.height + tileHeight) - interY;
+            var interX = Math.max(pixelX, camera.x + -(tileWidth * 2));
+            var interY = Math.max(pixelY, camera.y + -(tileHeight * 2));
+            var interWidth = Math.min(pixelX + pixelWidth, camera.x + camera.width + (tileWidth * 2)) - interX;
+            var interHeight = Math.min(pixelY + pixelHeight, camera.y + camera.height + (tileHeight * 2)) - interY;
 
             interX = ((interX + (camera.scrollX * this.scrollFactorX)) / tileWidth)|0;
             interY = ((interY + (camera.scrollY * this.scrollFactorY)) / tileHeight)|0;

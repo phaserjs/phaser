@@ -230,22 +230,27 @@ Camera.prototype = {
         if (this.useBounds)
         {
             var bounds = this._bounds;
+            var boundsX = bounds.x;
+            var boundsY = bounds.y;
+            var boundsR = Math.max(bounds.right - width, width);
+            var boundsB = Math.max(bounds.bottom - height, height);
 
             if (this.scrollX < bounds.x)
             {
                 this.scrollX = bounds.x;
             }
-            else if (this.scrollX > bounds.right - width)
+            if (this.scrollX > boundsR)
             {
-                this.scrollX = bounds.right - width;
+                this.scrollX = boundsR;
             }
+
             if (this.scrollY < bounds.y)
             {
                 this.scrollY = bounds.y;
             }
-            else if (this.scrollY > bounds.bottom - height)
+            if (this.scrollY > boundsB)
             {
-                this.scrollY = bounds.bottom - height;
+                this.scrollY = boundsB;
             }
         }
 
