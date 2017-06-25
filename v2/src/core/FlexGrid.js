@@ -129,7 +129,7 @@ Phaser.FlexGrid.prototype = {
 
         this.layers.push(layer);
 
-        if (typeof children !== 'undefined' && typeof children !== null)
+        if (typeof children !== 'undefined' && children !== null)
         {
             layer.addMultiple(children);
         }
@@ -158,7 +158,7 @@ Phaser.FlexGrid.prototype = {
 
         this.layers.push(layer);
 
-        if (typeof children !== 'undefined' && typeof children !== null)
+        if (typeof children !== 'undefined' && children !== null)
         {
             layer.addMultiple(children);
         }
