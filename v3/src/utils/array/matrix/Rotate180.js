@@ -1,4 +1,4 @@
-var RotateMatrix = require('./RotateMatrix)';
+var RotateMatrix = require('./RotateMatrix');
 
 var Rotate180 = function (matrix)
 {
