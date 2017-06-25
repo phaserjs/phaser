@@ -37,7 +37,8 @@ function graft2(parentNode, childNodes) {
             };
 
             if (element.params) {
-                for (i = 0, len = element.params.length; i < len; i++) {
+                var len = element.params.length;
+                for (var i = 0; i < len; i++) {
                     thisClass.constructor.parameters.push({
                         'name': element.params[i].name,
                         'type': element.params[i].type ? (element.params[i].type.names.length === 1 ? element.params[i].type.names[0] : element.params[i].type.names) : '',
