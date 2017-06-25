@@ -1234,7 +1234,7 @@ MeshRenderBoneComposition.prototype.initRegionsMap = function()
 {
   this.regions_map = {};
   for(var i = 0; i < this.regions.length; i++) {
-    cur_key = this.regions[i].getName();
+    var cur_key = this.regions[i].getName();
     this.regions_map[cur_key] = this.regions[i];
   }
 };
@@ -2077,7 +2077,7 @@ CreatureModuleUtils.FillBoneCache = function(json_obj, key, start_time, end_time
   {
   	var cur_node = base_obj[cur_time];
 
-    cache_list = [];
+    var cache_list = [];
 
     for (var cur_name in cur_node)
     {

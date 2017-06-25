@@ -52,7 +52,7 @@ function create() {
     ledge.body.immovable = true;
 
     // El jugador y su configuración
-    player = game.add.sprite(32, game.world.height - 150, 'dude');
+    var player = game.add.sprite(32, game.world.height - 150, 'dude');
 
     //  Las propiedades físicas del jugador. Le damos al chaval un pequeño rebote al caer (bounce)
     player.body.bounce.y = 0.2;
