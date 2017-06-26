@@ -6,11 +6,11 @@ var Range = require('../../utils/array/Range');
 var Actions = require('../../actions/');
 var Sprite = require('../sprite/Sprite');
 
-var Layer = new Class({
+var Group = new Class({
 
     initialize:
 
-    function Layer (state, children)
+    function Group (state, children)
     {
         this.state = state;
 
@@ -19,7 +19,7 @@ var Layer = new Class({
         this.classType = Sprite;
     },
 
-    //  Layer management methods:
+    //  Group management methods:
 
     add: function (child)
     {
@@ -453,4 +453,4 @@ var Layer = new Class({
 
 });
 
-module.exports = Layer;
+module.exports = Group;
