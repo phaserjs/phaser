@@ -6,6 +6,7 @@ module.exports = {
 
     Delay: require('./Delay'),
     DelayedPlay: require('./DelayedPlay'),
+    GetCurrentKey: require('./GetCurrentKey'),
     Load: require('./Load'),
     Pause: require('./Pause'),
     Paused: require('./Paused'),

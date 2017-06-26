@@ -85,6 +85,7 @@ var Animation = new Class({
 
     delay: Components.Delay,
     delayedPlay: Components.DelayedPlay,
+    getCurrentKey: Components.GetCurrentKey,
     load: Components.Load,
     pause: Components.Pause,
     paused: Components.Paused,
