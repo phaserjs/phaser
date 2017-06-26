@@ -435,7 +435,6 @@ SpriteBatch.prototype = {
     addSpriteTexture: function (gameObject, camera, texture, textureWidth, textureHeight)
     {
         var tempMatrix = this.tempMatrix;
-        var alpha = 16777216;
         var vertexDataBuffer = this.vertexDataBuffer;
         var vertexBufferObjectF32 = vertexDataBuffer.floatView;
         var vertexBufferObjectU32 = vertexDataBuffer.uintView;
@@ -528,7 +527,6 @@ SpriteBatch.prototype = {
     {
         var tempMatrix = this.tempMatrix;
         var frame = gameObject.frame;
-        var alpha = 16777216;
         var forceFlipY = (frame.texture.source[frame.sourceIndex].glTexture.isRenderTexture ? true : false);
         var flipX = gameObject.flipX;
         var flipY = gameObject.flipY ^ forceFlipY;

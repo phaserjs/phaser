@@ -31,6 +31,7 @@ SVGFile.prototype.onProcess = function (callback)
     this.state = CONST.FILE_PROCESSING;
 
     var svg = [ this.xhrLoader.responseText ];
+    var _this = this;
 
     try
     {
@@ -49,7 +50,6 @@ SVGFile.prototype.onProcess = function (callback)
 
     this.data.crossOrigin = this.crossOrigin;
 
-    var _this = this;
     var retry = false;
 
     this.data.onload = function ()

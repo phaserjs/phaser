@@ -167,7 +167,6 @@ EffectRenderer.prototype = {
     renderEffect: function (gameObject, camera, texture, textureWidth, textureHeight)
     {
         var tempMatrix = this.tempMatrix;
-        var alpha = 16777216;
         var vertexDataBuffer = this.vertexDataBuffer;
         var vertexBufferObjectF32 = vertexDataBuffer.floatView;
         var vertexBufferObjectU32 = vertexDataBuffer.uintView;

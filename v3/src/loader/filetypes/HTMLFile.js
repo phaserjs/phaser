@@ -51,6 +51,7 @@ HTMLFile.prototype.onProcess = function (callback)
     data.push('</svg>');
 
     var svg = [ data.join('\n') ];
+    var _this = this;
 
     try
     {
@@ -68,8 +69,6 @@ HTMLFile.prototype.onProcess = function (callback)
     this.data = new Image();
 
     this.data.crossOrigin = this.crossOrigin;
-
-    var _this = this;
 
     this.data.onload = function ()
     {
