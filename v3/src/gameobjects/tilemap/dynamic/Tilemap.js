@@ -139,6 +139,24 @@ var Tilemap = new Class({
         this.tileArray.forEach(callback);
     },
 
+    //  Returns Object containing:
+    //  {
+    //      alpha
+    //      frameWidth,
+    //      frameHeight,
+    //      frameX
+    //      frameY
+    //      id
+    //      index = the tile in the tilset to render
+    //      textureWidth = tileset texture size
+    //      textureHeight
+    //      tint
+    //      visible
+    //      width
+    //      x
+    //      y
+    //  }
+
     getTileAt: function (x, y)
     {
         var ix = (x|0);
