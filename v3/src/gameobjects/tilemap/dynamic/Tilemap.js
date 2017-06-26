@@ -46,7 +46,7 @@ var Tilemap = new Class({
         this.buildTilemap();
     },
 
-    getTotalTileCount: function () 
+    getTotalTileCount: function ()
     {
         return this.tileArray.length;
     },
@@ -56,11 +56,11 @@ var Tilemap = new Class({
         return this.cull(camera).length;
     },
 
-    buildTilemap: function () 
+    buildTilemap: function ()
     {
         var tileArray = this.tileArray;
         var mapData = this.mapData;
-        var frame = this.frame;
+        // var frame = this.frame;
         var tileWidth = this.tileWidth;
         var tileHeight = this.tileHeight;
         var width = this.texture.source[0].width;
@@ -76,8 +76,8 @@ var Tilemap = new Class({
             for (var x = 0; x < mapWidth; ++x)
             {
                 var tileId = mapData[y * mapWidth + x];
-                var halfTileWidth =  (tileWidth) * 0.5;
-                var halfTileHeight =  (tileHeight) * 0.5;
+                var halfTileWidth = (tileWidth) * 0.5;
+                var halfTileHeight = (tileHeight) * 0.5;
                 var rectx = (((tileId % setWidth)|0) * tileWidth) + halfTileWidth;
                 var recty = (((tileId / setWidth)|0) * tileHeight) + halfTileHeight;
                 var tx = x * tileWidth;
@@ -112,6 +112,7 @@ var Tilemap = new Class({
         var cameraH = camera.height;
 
         culledTiles.length = 0;
+
         for (var index = 0; index < length; ++index)
         {
             var tile = tiles[index];
@@ -144,21 +145,25 @@ var Tilemap = new Class({
         var iy = (y|0);
         var tiles = this.tileArray;
         var index = iy * this.mapWidth + ix;
+
         if (index < tiles.length)
         {
             return tiles[index];
         }
+
         return null;
     },
 
     getTileAtIndex: function (index)
     {
         var tiles = this.tileArray;
+
         if (index < tiles.length)
         {
             return tiles[index];
         }
-        return null;  
+
+        return null;
     }
 
 });

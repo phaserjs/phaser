@@ -27,7 +27,7 @@ var TilemapWebGLRenderer = function (renderer, gameObject, interpolationPercenta
             texture,
             x + tile.x, y + tile.y, tile.width, tile.height, alpha * tile.alpha, tile.tint,
             scrollFactorX, scrollFactorY,
-            textureWidth, textureHeight, 
+            textureWidth, textureHeight,
             tile.frameX, tile.frameY, tile.frameWidth, tile.frameHeight,
             camera,
             renderTarget
