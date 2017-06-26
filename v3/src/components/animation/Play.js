@@ -1,6 +1,12 @@
-var Play = function (key, startFrame)
+var Play = function (key, ignoreIfPlaying, startFrame)
 {
+    if (ignoreIfPlaying === undefined) { ignoreIfPlaying = false; }
     if (startFrame === undefined) { startFrame = 0; }
+
+    if (ignoreIfPlaying && this.isPlaying && this.currentAnim.key === key)
+    {
+        return this;
+    }
 
     this.load(key, startFrame);
 
