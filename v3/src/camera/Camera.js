@@ -8,7 +8,9 @@ var Camera = function (x, y, width, height)
     this.width = width;
     this.height = height;
 
+    this.roundPixels = false;
     this.useBounds = false;
+
     this._bounds = new Rectangle();
 
     this.scrollX = 0.0;
@@ -129,7 +131,7 @@ Camera.prototype = {
         }
     },
 
-    startFollow: function (gameObjectOrPoint)
+    startFollow: function (gameObjectOrPoint, roundPx)
     {
         if (this._follow !== null)
         {
@@ -137,12 +139,24 @@ Camera.prototype = {
         }
 
         this._follow = gameObjectOrPoint;
+
+        if (roundPx !== undefined)
+        {
+            this.roundPixels = roundPx;
+        }
     },
 
     stopFollow: function ()
     {
         /* do unfollow work here */
         this._follow = null;
+    },
+
+    setRoundPixels: function (value)
+    {
+        this.roundPixels = value;
+
+        return this;
     },
 
     flash: function (duration, red, green, blue, force)
@@ -218,7 +232,7 @@ Camera.prototype = {
         var originY = height / 2;
         var follow = this._follow;
 
-        if (follow != null)
+        if (follow !== null)
         {
             originX = follow.x;
             originY = follow.y;
@@ -235,23 +249,29 @@ Camera.prototype = {
             var boundsR = Math.max(bounds.right - width, width);
             var boundsB = Math.max(bounds.bottom - height, height);
 
-            if (this.scrollX < bounds.x)
+            if (this.scrollX < boundsX)
             {
-                this.scrollX = bounds.x;
+                this.scrollX = boundsX;
             }
             if (this.scrollX > boundsR)
             {
                 this.scrollX = boundsR;
             }
 
-            if (this.scrollY < bounds.y)
+            if (this.scrollY < boundsY)
             {
-                this.scrollY = bounds.y;
+                this.scrollY = boundsY;
             }
             if (this.scrollY > boundsB)
             {
                 this.scrollY = boundsB;
             }
+        }
+
+        if (this.roundPixels)
+        {
+            this.scrollX = Math.round(this.scrollX);
+            this.scrollY = Math.round(this.scrollY);
         }
 
         matrix.loadIdentity();
