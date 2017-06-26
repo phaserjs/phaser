@@ -49,7 +49,7 @@ var Group = new Class({
 
         child.visible = visible;
 
-        this.add(child);
+        this.children.set(child);
 
         return child;
     },

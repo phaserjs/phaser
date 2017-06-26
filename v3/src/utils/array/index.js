@@ -1,3 +1,5 @@
+//  Phaser.Utils.Array
+
 module.exports = {
 
     FindClosestInSorted: require('./FindClosestInSorted'),
