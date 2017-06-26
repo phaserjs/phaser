@@ -1,23 +1,23 @@
 //  Required, but don't need Phaser level exports
 //  (maybe these should be Phaser export level?)
 
+require('./bitmaptext/dynamic/DynamicBitmapTextFactory');
+require('./bitmaptext/static/BitmapTextFactory');
 require('./blitter/BlitterFactory');
 require('./container/ContainerFactory');
-require('./image/ImageFactory');
-require('./sprite/SpriteFactory');
-require('./bitmaptext/static/BitmapTextFactory');
-require('./bitmaptext/dynamic/DynamicBitmapTextFactory');
-require('./graphics/GraphicsFactory');
-require('./text/static/TextFactory');
-require('./layer/LayerFactory');
-require('./zone/ZoneFactory');
 require('./effectlayer/EffectLayerFactory');
-require('./renderpass/RenderPassFactory');
-require('./tilesprite/TileSpriteFactory');
+require('./graphics/GraphicsFactory');
+require('./group/GroupFactory');
+require('./image/ImageFactory');
 require('./mesh/MeshFactory');
 require('./quad/QuadFactory');
-require('./tilemap/static/StaticTilemapFactory');
+require('./renderpass/RenderPassFactory');
+require('./sprite/SpriteFactory');
+require('./text/static/TextFactory');
 require('./tilemap/dynamic/TilemapFactory');
+require('./tilemap/static/StaticTilemapFactory');
+require('./tilesprite/TileSpriteFactory');
+require('./zone/ZoneFactory');
 
 //  Phaser.GameObjects
 
@@ -29,17 +29,18 @@ module.exports = {
     Blitter: require('./blitter/Blitter'),
     Container: require('./container/Container'),
     DynamicBitmapText: require('./bitmaptext/dynamic/DynamicBitmapText'),
-    Graphics: require('./graphics/Graphics.js'),
-    Image: require('./image/Image'),
-    TileSprite: require('./tilesprite/TileSprite'),
-    Layer: require('./layer/Layer'),
-    RenderPass: require('./renderpass/RenderPass.js'),
-    Sprite: require('./sprite/Sprite'),
-    Text: require('./text/static/Text'),
-    Zone: require('./zone/Zone'),
     EffectLayer: require('./effectlayer/EffectLayer'),
+    Graphics: require('./graphics/Graphics.js'),
+    Group: require('./group/Group'),
+    Image: require('./image/Image'),
     Mesh: require('./mesh/Mesh'),
     Quad: require('./quad/Quad'),
+    RenderPass: require('./renderpass/RenderPass.js'),
+    Sprite: require('./sprite/Sprite'),
     StaticTilemap: require('./tilemap/static/StaticTilemap'),
+    Text: require('./text/static/Text'),
     Tilemap: require('./tilemap/dynamic/Tilemap'),
+    TileSprite: require('./tilesprite/TileSprite'),
+    Zone: require('./zone/Zone')
+
 };
