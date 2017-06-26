@@ -5,7 +5,7 @@ var ScrollFactor = {
 
     setScrollFactor: function (x, y)
     {
-        if (x === undefined) { x = y; }
+        if (y === undefined) { y = x; }
 
         this.scrollFactorX = x;
         this.scrollFactorY = y;
