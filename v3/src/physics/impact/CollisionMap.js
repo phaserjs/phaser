@@ -110,13 +110,16 @@ var CollisionMap = new Class({
                 prevTileX = -1;
             }
 
-            console.group('VX');
-            console.log('pxOffsetX', pxOffsetX);
-            console.log('tileOffsetX', tileOffsetX);
-            console.log('firstTileY', firstTileY);
-            console.log('lastTileY', lastTileY);
-            console.log('tileX', tileX);
-            console.log('prevTileX', prevTileX);
+            if (window.debugslopes)
+            {
+                console.group('VX');
+                console.log('pxOffsetX', pxOffsetX);
+                console.log('tileOffsetX', tileOffsetX);
+                console.log('firstTileY', firstTileY);
+                console.log('lastTileY', lastTileY);
+                console.log('tileX', tileX);
+                console.log('prevTileX', prevTileX);
+            }
             
             if (tileX >= 0 && tileX < mapWidth)
             {
@@ -141,7 +144,10 @@ var CollisionMap = new Class({
                     
                     t = this.data[tileY][tileX];
 
-                    console.log('Tile at', tileX, 'x', tileY, '=', t);
+                        if (window.debugslopes)
+                        {
+                            console.log('Tile at', tileX, 'x', tileY, '=', t);
+                        }
 
                     if (t === 1 || t > this.lastSlope || (t > 1 && this.checkDef(res, t, x, y, rvx, rvy, width, height, tileX, tileY)))
                     {
@@ -157,13 +163,16 @@ var CollisionMap = new Class({
                         x = res.pos.x;
                         rvx = 0;
 
-                        console.log('>>> Hit solid tile <<<');
+                        if (window.debugslopes)
+                        {
+                            console.log('>>> Hit solid tile <<<');
 
-                        console.log('tileX', tileX);
-                        console.log('tilesize', tilesize);
-                        console.log('pxOffsetX', pxOffsetX);
-                        console.log('tileOffsetX', tileOffsetX);
-                        console.log('=', res.pos.x);
+                            console.log('tileX', tileX);
+                            console.log('tilesize', tilesize);
+                            console.log('pxOffsetX', pxOffsetX);
+                            console.log('tileOffsetX', tileOffsetX);
+                            console.log('=', res.pos.x);
+                        }
 
                         //  9 * 32 = 288
                         //  - 16 = 272
@@ -176,7 +185,10 @@ var CollisionMap = new Class({
                 }
             }
 
-            console.groupEnd();
+            if (window.debugslopes)
+            {
+                console.groupEnd();
+            }
         }
         
         //  Vertical
