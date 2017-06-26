@@ -40,12 +40,12 @@ var Mesh = new Class({
             throw new Error('Phaser: Vertex count must match UV count');
         }
 
-        if (colors.length > 0 && colors.length < (vertices.length / 2)|0)
+        if (colors.length > 0 && colors.length < ((vertices.length / 2)|0))
         {
             throw new Error('Phaser: Color count must match Vertex count');
         }
 
-        if (alphas.length > 0 && alphas.length < (vertices.length / 2)|0)
+        if (alphas.length > 0 && alphas.length < ((vertices.length / 2)|0))
         {
             throw new Error('Phaser: Alpha count must match Vertex count');
         }
