@@ -30,6 +30,21 @@ var BuildGameObject = function (state, gameObject, config)
         gameObject.scaleY = GetAdvancedValue(scale, 'y', 1);
     }
 
+    //  ScrollFactor
+    //  Either: { scrollFactor: 2 } or { scrollFactor: { x: 2, y: 2 }}
+
+    var scrollFactor = GetAdvancedValue(config, 'scrollFactor', null);
+
+    if (typeof scrollFactor === 'number')
+    {
+        gameObject.setScrollFactor(scrollFactor);
+    }
+    else if (scrollFactor !== null)
+    {
+        gameObject.scrollFactorX = GetAdvancedValue(scrollFactor, 'x', 1);
+        gameObject.scrollFactorY = GetAdvancedValue(scrollFactor, 'y', 1);
+    }
+
     //  Rotation
 
     gameObject.rotation = GetAdvancedValue(config, 'rotation', 0);
