@@ -29,8 +29,14 @@ var Visible = {
             }
         }
 
-    }
+    },
 
+    setVisible: function (value)
+    {
+        this.visible = value;
+
+        return this;
+    }
 };
 
 module.exports = Visible;
