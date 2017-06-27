@@ -27,7 +27,7 @@ var Tilemap = new Class({
 
     initialize:
 
-    function Tilemap (state, mapData, x, y, tileWidth, tileHeight, mapWidth, mapHeight, texture, frame)
+    function Tilemap (state, mapData, x, y, tileWidth, tileHeight, mapWidth, mapHeight, tileBorder, texture, frame)
     {
         GameObject.call(this, state, 'Tilemap');
 
@@ -38,6 +38,7 @@ var Tilemap = new Class({
         this.mapHeight = mapHeight;
         this.tileArray = [];
         this.culledTiles = [];
+        this.tileBorder = tileBorder;
         this.setTexture(texture, frame);
         this.setPosition(x, y);
         this.setSizeToFrame();
@@ -60,9 +61,11 @@ var Tilemap = new Class({
     {
         var tileArray = this.tileArray;
         var mapData = this.mapData;
-        // var frame = this.frame;
+        var border = this.tileBorder;
         var tileWidth = this.tileWidth;
         var tileHeight = this.tileHeight;
+        var tileWidthBorder = tileWidth + border * 2;
+        var tileHeightBorder = tileHeight + border * 2;
         var width = this.texture.source[0].width;
         var height = this.texture.source[0].height;
         var mapWidth = this.mapWidth;
@@ -76,13 +79,13 @@ var Tilemap = new Class({
             for (var x = 0; x < mapWidth; ++x)
             {
                 var tileId = mapData[y * mapWidth + x];
-                var halfTileWidth = (tileWidth) * 0.5;
-                var halfTileHeight = (tileHeight) * 0.5;
-                var rectx = (((tileId % setWidth)|0) * tileWidth) + halfTileWidth;
-                var recty = (((tileId / setWidth)|0) * tileHeight) + halfTileHeight;
+                var halfTileWidth = (tileWidthBorder) * 0.5;
+                var halfTileHeight = (tileHeightBorder) * 0.5;
+                var rectx = (((tileId % setWidth)|0) * tileWidthBorder) + halfTileWidth;
+                var recty = (((tileId / setWidth)|0) * tileHeightBorder) + halfTileHeight;
                 var tx = x * tileWidth;
                 var ty = y * tileHeight;
-                
+
                 tileArray.push(new Tile({
                     index: x + y,
                     id: tileId,
@@ -95,7 +98,8 @@ var Tilemap = new Class({
                     frameWidth: tileWidth,
                     frameHeight: tileHeight,
                     textureWidth: width,
-                    textureHeight: height
+                    textureHeight: height,
+                    border: border
                 }));
             }
         }

@@ -374,10 +374,10 @@ SpriteBatch.prototype = {
         var sra, srb, src, srd, sre, srf, cma, cmb, cmc, cmd, cme, cmf;
         var halfTileWidth = (width) * 0.5;
         var halfTileHeight = (height) * 0.5;
-        var u0 = (rectX - (halfTileWidth - 0.5)) / textureWidth;
-        var v0 = (rectY - (halfTileHeight - 0.5)) / textureHeight;
-        var u1 = (rectX + (halfTileWidth - 0.5)) / textureWidth;
-        var v1 = (rectY + (halfTileHeight - 0.5)) / textureHeight;
+        var u0 = (rectX - halfTileWidth) / textureWidth;
+        var v0 = (rectY - halfTileHeight) / textureHeight;
+        var u1 = (rectX + halfTileWidth) / textureWidth;
+        var v1 = (rectY + halfTileHeight) / textureHeight;
         var scrollX = camera.scrollX * scrollFactorX;
         var scrollY = camera.scrollY * scrollFactorY;
         

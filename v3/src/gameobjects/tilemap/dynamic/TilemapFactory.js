@@ -7,9 +7,9 @@ var TilemapFactory = {
 
     KEY: 'tilemap',
 
-    add: function (mapData, x, y, tileWidth, tileHeight, mapWidth, mapHeight, texture, frame)
+    add: function (mapData, x, y, tileWidth, tileHeight, mapWidth, mapHeight, tileBorder, texture, frame)
     {
-        return this.children.add(new Tilemap(this.state, mapData, x, y, tileWidth, tileHeight, mapWidth, mapHeight, texture, frame));
+        return this.children.add(new Tilemap(this.state, mapData, x, y, tileWidth, tileHeight, mapWidth, mapHeight, tileBorder, texture, frame));
     },
 
     make: function (config)
