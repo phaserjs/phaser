@@ -19,6 +19,20 @@ var Group = new Class({
         this.classType = Sprite;
     },
 
+    update: function (time, delta)
+    {
+        //  Because a Group child may mess with the length of the Group during its update
+        var temp = this.children.entries.slice();
+
+        for (var i = 0; i < temp.length; i++)
+        {
+            if (temp[i].update(time, delta) === false)
+            {
+                break;
+            }
+        }
+    },
+
     //  Group management methods:
 
     add: function (child)
