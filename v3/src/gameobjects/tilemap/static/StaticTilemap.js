@@ -27,7 +27,7 @@ var StaticTilemap = new Class({
 
     initialize:
 
-    function StaticTilemap (state, mapData, x, y, tileWidth, tileHeight, mapWidth, mapHeight, texture, frame)
+    function StaticTilemap (state, mapData, x, y, tileWidth, tileHeight, mapWidth, mapHeight, tileBorder, texture, frame)
     {
         GameObject.call(this, state, 'StaticTilemap');
 
@@ -45,6 +45,7 @@ var StaticTilemap = new Class({
         this.vertexCount = 0;
         this.cullStart = 0;
         this.cullEnd = 0;
+        this.tileBorder = tileBorder;
         this.setTexture(texture, frame);
         this.setPosition(x, y);
         this.setSizeToFrame();
@@ -62,8 +63,11 @@ var StaticTilemap = new Class({
                 var vbo = this.vbo;
                 var mapWidth = this.mapWidth;
                 var mapHeight = this.mapHeight;
+                var border = this.tileBorder;
                 var tileWidth = this.tileWidth;
                 var tileHeight = this.tileHeight;
+                var tileWidthBorder = tileWidth + border * 2;
+                var tileHeightBorder = tileHeight + border * 2;
                 var bufferData = this.bufferData;
                 var bufferF32, bufferU32;
                 var voffset = 0;
@@ -89,10 +93,10 @@ var StaticTilemap = new Class({
                     for (var x = 0; x < mapWidth; ++x)
                     {
                         var tileId = mapData[y * mapWidth + x];
-                        var halfTileWidth =  (tileWidth) * 0.5;
-                        var halfTileHeight =  (tileHeight) * 0.5;
-                        var rectx = (((tileId % setWidth)|0) * tileWidth) + halfTileWidth;
-                        var recty = (((tileId / setWidth)|0) * tileHeight) + halfTileHeight;
+                        var halfTileWidth = (tileWidthBorder) * 0.5;
+                        var halfTileHeight = (tileHeightBorder) * 0.5;
+                        var rectx = (((tileId % setWidth)|0) * tileWidthBorder) + halfTileWidth;
+                        var recty = (((tileId / setWidth)|0) * tileHeightBorder) + halfTileHeight;
                         var tx = x * tileWidth;
                         var ty = y * tileHeight;
                         var txw = tx + tileWidth;

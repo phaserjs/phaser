@@ -15,8 +15,9 @@ var BuildFromConfig = function (state, config)
     var tileHeight = GetValue(config, 'tile.height', 16);
     var tileTexture = GetValue(config, 'tile.texture', null);
     var tileFrame = GetValue(config, 'tile.frame', null);
+    var tileBorder = GetValue(config, 'tile.border', 0);
 
-    var map = new StaticTilemap(state, mapData, x, y, tileWidth, tileHeight, mapWidth, mapHeight, tileTexture, tileFrame);
+    var map = new StaticTilemap(state, mapData, x, y, tileWidth, tileHeight, mapWidth, mapHeight, tileBorder, tileTexture, tileFrame);
 
     BuildGameObject(state, map, config);
 
