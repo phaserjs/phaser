@@ -3,7 +3,7 @@
 // In ACTIVE vs. LITE or FIXED vs. ANY collisions, only the "weak" entity moves,
 // while the other one stays fixed. In ACTIVE vs. ACTIVE and ACTIVE vs. PASSIVE
 // collisions, both entities are moved. LITE or PASSIVE entities don't collide
-// with other LITE or PASSIVE entities at all. The behaiviour for FIXED vs.
+// with other LITE or PASSIVE entities at all. The behavior for FIXED vs.
 // FIXED collisions is undefined.
 
 module.exports = {

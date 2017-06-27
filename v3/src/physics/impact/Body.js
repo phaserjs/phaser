@@ -26,6 +26,9 @@ var Body = new Class({
 
         this.enabled = true;
 
+        this.parent;
+        this.name = '';
+
         this.size = { x: sx, y: sy };
         this.pos = { x: x, y: y };
         this.last = { x: x, y: y };
