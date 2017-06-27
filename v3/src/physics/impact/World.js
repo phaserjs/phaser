@@ -52,13 +52,12 @@ var World = new Class({
 
         //  Update all bodies
 
-        this.bodies.iterate(function (body) {
-
+        this.bodies.iterate(function (body)
+        {
             if (body.enabled)
             {
                 body.update(delta);
             }
-
         });
 
         //  Run collision against them all
