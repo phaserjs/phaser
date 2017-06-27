@@ -34,6 +34,8 @@ module.exports = {
     FloatBetween: require('./FloatBetween'),
     FloorTo: require('./FloorTo'),
     GetSpeed: require('./GetSpeed'),
+    IsEven: require('./IsEven'),
+    IsEvenStrict: require('./IsEvenStrict'),
     Linear: require('./Linear'),
     MaxAdd: require('./MaxAdd'),
     MinSub: require('./MinSub'),
