@@ -76,12 +76,20 @@ var Body = new Class({
 
         var res = this.world.collisionMap.trace(this.pos.x, this.pos.y, mx, my, this.size.x, this.size.y);
 
-        UpdateMotion(this, res);
+        if (this.handleMovementTrace(res))
+        {
+            UpdateMotion(this, res);
+        }
 
         if (window.dumpit)
         {
             console.log('END res', res.pos.x, res.pos.y);
         }
+    },
+
+    handleMovementTrace: function (res)
+    {
+        return true;
     },
 
     skipHash: function ()
