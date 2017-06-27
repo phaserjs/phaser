@@ -86,7 +86,7 @@ var World = new Class({
     //  Check the body against the spatial hash
     checkHash: function (body, hash, size)
     {
-        console.log('checkHash');
+        // console.log('checkHash');
 
         var checked = {};
         var xmin = Math.floor(body.pos.x / size);
@@ -142,7 +142,7 @@ var World = new Class({
         
         if (bodyA.collides && bodyB.collides && bodyA.collides + bodyB.collides > COLLIDES.ACTIVE)
         {
-            console.log('solve');
+            // console.log('solve');
             Solver(this, bodyA, bodyB);
         }
     }
