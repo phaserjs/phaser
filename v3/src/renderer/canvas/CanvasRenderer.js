@@ -168,6 +168,12 @@ CanvasRenderer.prototype = {
 
         //  If the alpha or blend mode didn't change since the last render, then don't set them again (saves 2 ops)
 
+        if (!camera.transparent)
+        {
+            ctx.fillStyle = camera.backgroundColor.rgba;
+            ctx.fillRect(0, 0, camera.width, camera.height);
+        }
+
         if (this.currentAlpha !== 1)
         {
             ctx.globalAlpha = 1;
@@ -181,20 +187,6 @@ CanvasRenderer.prototype = {
         }
 
         this.currentScaleMode = 0;
-
-        if (settings.renderToTexture)
-        {
-            if (settings.clearBeforeRender)
-            {
-                ctx.clearRect(0, 0, w, h);
-            }
-
-            if (settings.backgroundColor)
-            {
-                ctx.fillStyle = settings.backgroundColor;
-                ctx.fillRect(0, 0, w, h);
-            }
-        }
 
         this.drawCount += list.length;
 
