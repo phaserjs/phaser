@@ -13,8 +13,6 @@ var Set = function (elements)
     }
 };
 
-Set.prototype.constructor = Set;
-
 Set.prototype = {
 
     set: function (value)
@@ -176,5 +174,7 @@ Object.defineProperties(Set.prototype, {
     }
 
 });
+
+Set.prototype.constructor = Set;
 
 module.exports = Set;

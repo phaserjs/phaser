@@ -5,17 +5,17 @@ var Device = require('../device');
 
 var AddToDOM = require('../dom/AddToDOM');
 var DOMContentLoaded = require('../dom/DOMContentLoaded');
-var VisibilityHandler = require('./VisibilityHandler');
 var EventDispatcher = require('../events/EventDispatcher');
+var VisibilityHandler = require('./VisibilityHandler');
 
-var TimeStep = require('./TimeStep');
+var AnimationManager = require('../animation/manager/AnimationManager');
+var Cache = require('../cache/Cache');
 var CreateRenderer = require('./CreateRenderer');
+var Data = require('../components/Data');
 var GlobalInputManager = require('../input/GlobalInputManager');
 var GlobalStateManager = require('../state/GlobalStateManager');
-var AnimationManager = require('../animation/manager/AnimationManager');
 var TextureManager = require('../textures/TextureManager');
-var Data = require('../components/Data');
-var Cache = require('../cache/Cache');
+var TimeStep = require('./TimeStep');
 
 var Game = function (config)
 {

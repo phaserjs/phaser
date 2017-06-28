@@ -23,8 +23,6 @@ var Map = function (elements)
     }
 };
 
-Map.prototype.constructor = Map;
-
 Map.prototype = {
 
     set: function (key, value)
@@ -162,5 +160,7 @@ Map.prototype = {
         return this;
     }
 };
+
+Map.prototype.constructor = Map;
 
 module.exports = Map;
