@@ -323,10 +323,14 @@ WebGLRenderer.prototype = {
         if (camera.backgroundColor.alphaGL > 0)
         {
             var color = camera.backgroundColor;
-
-            gl.clearColor(color.redGL, color.greenGL, color.blueGL, color.alphaGL);
-
-            gl.clear(gl.COLOR_BUFFER_BIT);
+            var quadBatch = this.quadBatch;
+            quadBatch.bind();
+            quadBatch.add(
+                camera.x, camera.y, camera.width, camera.height, 
+                color.redGL, color.greenGL, color.blueGL, color.alphaGL
+            );
+            quadBatch.flush();
+            this.currentRenderer.bind();
         }
 
         var list = children.list;
