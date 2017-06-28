@@ -52,8 +52,17 @@ var TimerEvent = function (config)
     */
     this.args = GetValue(config, 'args', []);
 
-    this.due = 0;
+    //  This works for setting an infinite repeat too
+    if (this.repeatCount === -1)
+    {
+        this.loop = true;
+    }
+
     this.elapsed = 0;
+    this.hasDispatched = false;
+
+    //  Swap for a getter / setter
+    this.paused = false;
 };
 
 TimerEvent.prototype = {
@@ -61,6 +70,36 @@ TimerEvent.prototype = {
     getProgress: function ()
     {
         return (this.elapsed / this.delay);
+    },
+
+    pause: function ()
+    {
+        this.paused = true;
+    },
+
+    resume: function ()
+    {
+        this.paused = false;
+    },
+
+    remove: function (dispatchCallback)
+    {
+        if (dispatchCallback === undefined) { dispatchCallback = false; }
+
+        this.elapsed = this.delay;
+
+        this.hasDispatched = !!dispatchCallback;
+
+        this.loop = false;
+        this.repeatCount = 0;
+    },
+
+    //  Called internaly, private
+    destroy: function ()
+    {
+        this.callback = undefined;
+        this.callbackScope = undefined;
+        this.args.length = 0;
     }
 
 };

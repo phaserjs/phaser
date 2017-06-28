@@ -57,12 +57,17 @@ Clock.prototype = {
         //  Delete old events
         for (var i = 0; i < this._pendingRemoval.length; i++)
         {
-            var index = this._active.indexOf(this._pendingRemoval[i]);
+            var event = this._pendingRemoval[i];
+
+            var index = this._active.indexOf(event);
 
             if (index > -1)
             {
                 this._active.splice(index, 1);
             }
+
+            //  Pool them?
+            event.destroy();
         }
 
         //  Move pending events to the active list
@@ -93,6 +98,11 @@ Clock.prototype = {
         {
             var event = this._active[i];
 
+            if (event.paused)
+            {
+                continue;
+            }
+
             event.elapsed += elapsed;
 
             // console.log(event.elapsed);
@@ -105,13 +115,18 @@ Clock.prototype = {
                 event.elapsed = event.delay;
 
                 //  Process the event
-                event.callback.apply(event.callbackScope, event.args);
+                if (!event.hasDispatched)
+                {
+                    event.hasDispatched = true;
+                    event.callback.apply(event.callbackScope, event.args);
+                }
 
                 if (event.loop || event.repeatCount > 0)
                 {
                     event.repeatCount--;
 
                     event.elapsed = remainder;
+                    event.hasDispatched = false;
                 }
                 else
                 {
