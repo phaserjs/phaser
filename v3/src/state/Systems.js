@@ -1,5 +1,6 @@
 
 var CameraManager = require('./systems/CameraManager');
+var Clock = require('../time/Clock');
 var Component = require('../components');
 var EventDispatcher = require('../events/EventDispatcher');
 var GameObjectCreator = require('./systems/GameObjectCreator');
@@ -8,8 +9,8 @@ var Loader = require('./systems/Loader');
 var Settings = require('./Settings');
 var StableSort = require('../utils/array/StableSort');
 var StateManager = require('./systems/StateManager');
-var UpdateManager = require('./systems/UpdateManager');
 var TweenManager = require('../tween/TweenManager');
+var UpdateManager = require('./systems/UpdateManager');
 
 var Systems = function (state, config)
 {
@@ -42,6 +43,7 @@ var Systems = function (state, config)
     //  Reference to State specific managers (Factory, Tweens, Loader, Physics, etc)
     this.add;
     this.cameras;
+    this.time;
     this.events;
     this.load;
     this.make;
@@ -83,6 +85,7 @@ Systems.prototype = {
 
         this.add = new GameObjectFactory(this.state);
         this.cameras = new CameraManager(this.state);
+        this.time = new Clock(this.state);
         this.events = new EventDispatcher();
         this.load = new Loader(this.state);
         this.make = new GameObjectCreator(this.state);
@@ -105,12 +108,13 @@ Systems.prototype = {
         this.state.textures = this.textures;
 
         this.state.add = this.add;
-        this.state.make = this.make;
         this.state.cameras = this.cameras;
         this.state.events = this.events;
         this.state.load = this.load;
+        this.state.make = this.make;
         this.state.settings = this.settings;
         this.state.state = this.stateManager;
+        this.state.time = this.time;
         this.state.tweens = this.tweens;
 
         this.state.children = this.children;
@@ -120,6 +124,8 @@ Systems.prototype = {
 
     step: function (time, delta)
     {
+        this.time.begin(time);
+
         this.tweens.begin(time);
 
         var list = this.children.list;
@@ -129,6 +135,8 @@ Systems.prototype = {
             list[i].preUpdate(time, delta);
         }
 
+        this.time.update(time, delta);
+
         this.tweens.update(time, delta);
 
         this.cameras.update(time, delta);
@@ -136,29 +144,6 @@ Systems.prototype = {
         this.state.update.call(this.state, time, delta);
     },
 
-    //  Called just once per frame, regardless of speed
-
-    /*
-    begin: function (timestamp, frameDelta)
-    {
-        var list = this.children.list;
-
-        for (var i = 0; i < list.length; i++)
-        {
-            list[i].preUpdate(timestamp, frameDelta);
-        }
-    },
-
-    //  Potentially called multiple times per frame (on super-fast systems)
-    update: function (timestep, physicsStep)
-    {
-        this.cameras.update(timestep);
-
-        this.state.update.call(this.state, timestep, physicsStep);
-    },
-    */
-
-    //  Called just once per frame
     render: function (interpolation, renderer)
     {
         if (!this.settings.visible)
