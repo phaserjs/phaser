@@ -99,6 +99,7 @@ CameraManager.prototype = {
     render: function (renderer, children, interpolation)
     {
         var cameras = this.cameras;
+
         for (var i = 0, l = cameras.length; i < l; ++i)
         {
             var camera = cameras[i];
@@ -107,7 +108,6 @@ CameraManager.prototype = {
 
             renderer.render(this.state, children, interpolation, camera);
         }
-
     },
 
     destroy: function ()

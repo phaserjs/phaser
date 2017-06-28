@@ -320,10 +320,14 @@ WebGLRenderer.prototype = {
             gl.scissor(this.scissor.x, this.scissor.y, this.scissor.width, this.scissor.height);
         }
 
-        // We could either clear color or render a quad
-        var color = this.game.config.backgroundColor;
-        gl.clearColor(color.redGL, color.greenGL, color.blueGL, color.alphaGL);
-        gl.clear(gl.COLOR_BUFFER_BIT);
+        if (camera.backgroundColor.alphaGL > 0)
+        {
+            var color = camera.backgroundColor;
+
+            gl.clearColor(color.redGL, color.greenGL, color.blueGL, color.alphaGL);
+
+            gl.clear(gl.COLOR_BUFFER_BIT);
+        }
 
         var list = children.list;
         var length = list.length;

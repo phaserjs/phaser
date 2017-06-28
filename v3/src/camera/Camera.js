@@ -1,5 +1,6 @@
 var Rectangle = require('../geom/rectangle/Rectangle');
 var TransformMatrix = require('../components/TransformMatrix');
+var ValueToColor = require('../graphics/color/ValueToColor');
 
 var Camera = function (x, y, width, height)
 {
@@ -41,11 +42,24 @@ var Camera = function (x, y, width, height)
 
     // origin
     this._follow = null;
+
+    this.clearBeforeRender = true;
+    this.backgroundColor = ValueToColor('rgba(0,0,0,0)');
+    this.transparent = true;
 };
 
 Camera.prototype.constructor = Camera;
 
 Camera.prototype = {
+
+    setBackgroundColor: function (color)
+    {
+        if (color === undefined) { color = 'rgba(0,0,0,0)'; }
+
+        this.backgroundColor = ValueToColor(color);
+
+        this.transparent = (this.backgroundColor.alpha === 0);
+    },
 
     removeBounds: function ()
     {
