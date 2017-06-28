@@ -181,7 +181,7 @@ See the [Creating a Custom Phaser Build](http://phaser.io/tutorials/creating-cus
 
 Phaser 2 was never written to be modular. Everything exists under one single global namespace, and you cannot `require` selected parts of it into your builds. It expects 3 global vars to exist in order to work properly: `Phaser`, `PIXI` and `p2`. The following is one way of doing this:
 
-```
+```javascript
 window.PIXI = require('phaser/build/custom/pixi')
 window.p2 = require('phaser/build/custom/p2')
 window.Phaser = require('phaser/build/custom/phaser-split')
@@ -199,7 +199,7 @@ You need to add `p2` as a dependency.
 
 ##### Webpack Config
 
-```
+```javascript
 var path = require('path');
 var webpack = require('webpack');
 
@@ -228,7 +228,7 @@ module.exports = {
 
 ##### Main js file
 
-```
+```javascript
 require('pixi.js');
 require('p2');
 require('phaser');
