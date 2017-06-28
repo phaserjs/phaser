@@ -46,6 +46,7 @@ var RenderPass = new Class({
         this.renderTexture = null;
         this.passShader = null;
         this.uniforms = {};
+        this.textures = {};
 
         if (resourceManager !== undefined)
         {
@@ -113,6 +114,37 @@ var RenderPass = new Class({
         {
             this.renderer.setRenderer(this.renderer.spriteBatch, null, null);
             this.renderer.spriteBatch.addSprite(gameObject, camera);
+            for (var key in this.textures)
+            {
+                var textureData = this.textures[key];
+                this.setInt(key, textureData.unit);
+                gl.activeTexture(gl.TEXTURE0 + textureData.unit);
+                gl.bindTexture(gl.TEXTURE_2D, textureData.texture);
+                gl.activeTexture(gl.TEXTURE0);
+            }
+            this.renderer.spriteBatch.flush(this.passShader, this.passRenderTarget.framebufferObject);
+        }
+    },
+
+    renderRect: function (x, y, width, height, camera)
+    {
+        var gl = this.renderer.gl;
+
+        if (gl)
+        {
+            this.renderer.setRenderer(this.renderer.spriteBatch, null, null);
+            this.renderer.spriteBatch.addTileTextureRect(
+                null, x, y, width, height, 1.0, 0xFFFFFFFF, this.scrollFactorX, this.scrollFactorY,
+                width, height, 0, 0, width, height, camera, null
+            );
+            for (var key in this.textures)
+            {
+                var textureData = this.textures[key];
+                this.setInt(key, textureData.unit);
+                gl.activeTexture(gl.TEXTURE0 + textureData.unit);
+                gl.bindTexture(gl.TEXTURE_2D, textureData.texture);
+                gl.activeTexture(gl.TEXTURE0);
+            }
             this.renderer.spriteBatch.flush(this.passShader, this.passRenderTarget.framebufferObject);
         }
     },
@@ -125,10 +157,11 @@ var RenderPass = new Class({
         {
             /* Texture 1 is reserved for Phasers Main Renderer */
             unit = (unit > 0) ? unit : 1;
-            this.setInt(samplerName, unit);
-            gl.activeTexture(gl.TEXTURE0 + unit);
-            gl.bindTexture(gl.TEXTURE_2D, renderTexture.texture);
-            gl.activeTexture(gl.TEXTURE0);
+            this.textures[samplerName] = { texture: renderTexture.texture, unit: unit };
+            //this.setInt(samplerName, unit);
+            //gl.activeTexture(gl.TEXTURE0 + unit);
+            //gl.bindTexture(gl.TEXTURE_2D, renderTexture.texture);
+            //gl.activeTexture(gl.TEXTURE0);
         }
     },
 

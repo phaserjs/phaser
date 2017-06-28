@@ -227,7 +227,7 @@ WebGLRenderer.prototype = {
                 gl.bindFramebuffer(gl.FRAMEBUFFER, renderTarget.framebufferObject);
                 if (renderTarget.shouldClear)
                 {
-                    gl.clearColor(0, 0, 0, 0);
+                    gl.clearColor(0, 0, 0, renderTarget.clearAlpha);
                     gl.clear(gl.COLOR_BUFFER_BIT);
                     renderTarget.shouldClear = false;
                 }

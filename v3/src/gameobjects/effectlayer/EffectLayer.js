@@ -70,6 +70,14 @@ var EffectLayer = new Class({
         this.setOrigin(0, 0);
     },
 
+    setClearAlpha: function (alpha)
+    {
+        if (this.dstRenderTarget)
+        {
+            this.dstRenderTarget.clearAlpha = alpha;            
+        }
+    },
+
     renderOffScreen: function ()
     {
         this.renderTarget = this.dstRenderTarget;
