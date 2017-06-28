@@ -50,10 +50,7 @@ var Settings = {
 
             //  The following only apply if renderToTexture is true
 
-            autoResize: GetValue(config, 'autoResize', false),
-            transparent: GetValue(config, 'transparent', false),
-            clearBeforeRender: GetValue(config, 'clearBeforeRender', true),
-            backgroundColor: GetValue(config, 'backgroundColor', false)
+            autoResize: GetValue(config, 'autoResize', false)
 
         };
     },
