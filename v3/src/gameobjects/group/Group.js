@@ -430,6 +430,13 @@ var Group = new Class({
         return this;
     },
 
+    setZ: function (value, step)
+    {
+        Actions.SetZ(this.children.entries, value, step);
+
+        return this;
+    },
+
     shiftPosition: function (x, y, direction, output)
     {
         Actions.ShiftPosition(this.children.entries, x, y, direction, output);
