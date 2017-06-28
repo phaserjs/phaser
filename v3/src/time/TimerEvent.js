@@ -1,85 +1,102 @@
-var GetValue = require('../utils/object/GetValue');
+var Class = require('../utils/Class');
+var GetFastValue = require('../utils/object/GetFastValue');
 
-/**
-* A TimerEvent is a single event that is processed by a Phaser.Clock
-*
-* It consists of a delay, which is a value in milliseconds after which the event will fire.
-* When the event fires it calls a specific callback with the specified arguments.
-* 
-* TimerEvents are removed by their parent timer once finished firing or repeating.
-* 
-* Use {@link Phaser.Clock#add}, {@link Phaser.Clock#repeat}, or {@link Phaser.Clock#loop} methods to create a new event.
-*
-* @class Phaser.TimerEvent
-* @constructor
-* @param {number} delay - The delay in ms at which this TimerEvent fires.
-* @param {number} tick - The tick is the next game clock time that this event will fire at.
-* @param {number} repeatCount - If this TimerEvent repeats it will do so this many times.
-* @param {boolean} loop - True if this TimerEvent loops, otherwise false.
-* @param {function} callback - The callback that will be called when the TimerEvent occurs.
-* @param {object} callbackContext - The context in which the callback will be called.
-* @param {any[]} arguments - Additional arguments to be passed to the callback.
-*/
-var TimerEvent = function (config)
-{
-    /**
-    * @property {number} delay - The delay in ms at which this TimerEvent fires.
-    */
-    this.delay = GetValue(config, 'delay', 0);
+var TimerEvent = new Class({
 
-    /**
-    * @property {number} repeatCount - If this TimerEvent repeats it will do so this many times.
-    */
-    this.repeatCount = GetValue(config, 'repeat', 0);
+    initialize:
 
-    /**
-    * @property {boolean} loop - True if this TimerEvent loops, otherwise false.
-    */
-    this.loop = GetValue(config, 'loop', false);
-
-    /**
-    * @property {function} callback - The callback that will be called when the TimerEvent occurs.
-    */
-    this.callback = GetValue(config, 'callback', null);
-
-    /**
-    * @property {object} callbackContext - The context in which the callback will be called.
-    */
-    this.callbackScope = GetValue(config, 'callbackScope', null);
-
-    /**
-    * @property {any[]} arguments - Additional arguments to be passed to the callback.
-    */
-    this.args = GetValue(config, 'args', []);
-
-    //  This works for setting an infinite repeat too
-    if (this.repeatCount === -1)
+    function TimerEvent (config)
     {
-        this.loop = true;
-    }
+        /**
+        * @property {number} delay - The delay in ms at which this TimerEvent fires.
+        */
+        this.delay = 0;
 
-    this.elapsed = 0;
-    this.hasDispatched = false;
+        /**
+        * @property {number} repeatCount - If this TimerEvent repeats it will do so this many times.
+        */
+        this.repeatCount = 0;
 
-    //  Swap for a getter / setter
-    this.paused = false;
-};
+        /**
+        * @property {boolean} loop - True if this TimerEvent loops, otherwise false.
+        */
+        this.loop = false;
 
-TimerEvent.prototype = {
+        /**
+        * @property {function} callback - The callback that will be called when the TimerEvent occurs.
+        */
+        this.callback;
+
+        /**
+        * @property {object} callbackContext - The context in which the callback will be called.
+        */
+        this.callbackScope;
+
+        /**
+        * @property {any[]} arguments - Additional arguments to be passed to the callback.
+        */
+        this.args;
+
+        //  Scale the time causing this TimerEvent to update
+        this.timeScale = 1;
+
+        //  Start this many MS into the elapsed (useful if you want a long duration with repeat, but for the first loop to fire quickly)
+        this.startAt = 0;
+
+        this.elapsed = 0;
+
+        this.paused = false;
+
+        this.hasDispatched = false;
+
+        this.reset(config);
+    },
+
+    reset: function (config)
+    {
+        this.delay = GetFastValue(config, 'delay', 0);
+
+        this.repeatCount = GetFastValue(config, 'repeat', 0);
+
+        this.loop = GetFastValue(config, 'loop', false);
+
+        this.callback = GetFastValue(config, 'callback', undefined);
+
+        this.callbackScope = GetFastValue(config, 'callbackScope', this.callback);
+
+        this.args = GetFastValue(config, 'args', []);
+
+        this.timeScale = GetFastValue(config, 'timeScale', 1);
+
+        this.startAt = GetFastValue(config, 'startAt', 0);
+
+        this.paused = GetFastValue(config, 'paused', false);
+
+        //  This works for setting an infinite repeat too
+        if (this.repeatCount === -1)
+        {
+            this.loop = true;
+        }
+
+        this.elapsed = 0;
+        this.hasDispatched = false;
+
+        return this;
+    },
 
     getProgress: function ()
     {
         return (this.elapsed / this.delay);
     },
 
-    pause: function ()
+    getElapsed: function ()
     {
-        this.paused = true;
+        return this.elapsed;
     },
 
-    resume: function ()
+    getElapsedSeconds: function ()
     {
-        this.paused = false;
+        return this.elapsed * 0.001;
     },
 
     remove: function (dispatchCallback)
@@ -102,8 +119,6 @@ TimerEvent.prototype = {
         this.args.length = 0;
     }
 
-};
-
-TimerEvent.prototype.constructor = TimerEvent;
+});
 
 module.exports = TimerEvent;

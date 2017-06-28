@@ -149,11 +149,25 @@ Game.prototype = {
     onHidden: function ()
     {
         this.loop.pause();
+
+        // var active = this.state.active;
+
+        // for (var i = 0; i < active.length; i++)
+        // {
+        //     active[i].state.sys.pause();
+        // }
     },
 
     onVisible: function ()
     {
         this.loop.resume();
+
+        // var active = this.state.active;
+
+        // for (var i = 0; i < active.length; i++)
+        // {
+        //     active[i].state.sys.resume();
+        // }
     },
 
     onBlur: function ()

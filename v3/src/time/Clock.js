@@ -1,42 +1,22 @@
+var Class = require('../utils/Class');
 var TimerEvent = require('./TimerEvent');
 
-//  There is only ever one instance of a MasterClock per game, and it belongs to the Game.
+var Clock = new Class({
 
-var Clock = function (state, masterclock)
-{
-    this.state = state;
+    initialize:
 
-    /**
-    * The `performance.now()` value when the time was last updated.
-    * @property {float} time
-    * @protected
-    */
-    this.time = 0;
+    function Clock (state)
+    {
+        this.state = state;
 
-    /**
-    * The `now` when the previous update occurred.
-    * @property {float} prevTime
-    * @protected
-    */
-    this.prevTime = 0;
+        this.now = Date.now();
 
-    /**
-    * Elapsed time since the last time update, in milliseconds, based on `now`.
-    *
-    * This value _may_ include time that the game is paused/inactive.
-    *
-    * @property {number} elapsed
-    * @see Lazer.Time.time
-    * @protected
-    */
-    this.elapsed = 0;
+        this.paused = false;
 
-    this._pendingInsertion = [];
-    this._active = [];
-    this._pendingRemoval = [];
-};
-
-Clock.prototype = {
+        this._active = [];
+        this._pendingInsertion = [];
+        this._pendingRemoval = [];
+    },
 
     addEvent: function (config)
     {
@@ -52,10 +32,33 @@ Clock.prototype = {
         return this.addEvent({ delay: delay, callback: callback, args: args, callbackScope: callbackScope });
     },
 
-    begin: function (time)
+    clearPendingEvents: function ()
     {
+        this._pendingInsertion = [];
+    },
+
+    removeAllEvents: function ()
+    {
+        this._pendingRemoval = this._pendingRemoval.concat(this._active);
+
+        return this;
+    },
+
+    begin: function ()
+    {
+        var toRemove = this._pendingRemoval.length;
+        var toInsert = this._pendingInsertion.length;
+
+        if (toRemove === 0 && toInsert === 0)
+        {
+            //  Quick bail
+            return;
+        }
+
+        var i;
+
         //  Delete old events
-        for (var i = 0; i < this._pendingRemoval.length; i++)
+        for (i = 0; i < toRemove; i++)
         {
             var event = this._pendingRemoval[i];
 
@@ -70,8 +73,17 @@ Clock.prototype = {
             event.destroy();
         }
 
+        for (i = 0; i < toInsert; i++)
+        {
+            var event = this._pendingInsertion[i];
+
+            event.elapsed = event.startAt * event.timeScale;
+
+            this._active.push(event);
+        }
+
         //  Move pending events to the active list
-        this._active = this._active.concat(this._pendingInsertion.splice(0));
+        // this._active = this._active.concat(this._pendingInsertion.splice(0));
 
         //  Clear the lists
         this._pendingRemoval.length = 0;
@@ -80,20 +92,13 @@ Clock.prototype = {
 
     update: function (time, delta)
     {
-        this.prevTime = this.time;
+        this.now = time;
 
-        this.time = time;
-
-        this.elapsed = time - this.prevTime;
-
-        if (this._active.length)
+        if (this.paused)
         {
-            this.processEvents(time, this.elapsed);
+            return;
         }
-    },
 
-    processEvents: function (time, elapsed)
-    {
         for (var i = 0; i < this._active.length; i++)
         {
             var event = this._active[i];
@@ -103,9 +108,11 @@ Clock.prototype = {
                 continue;
             }
 
-            event.elapsed += elapsed;
-
-            // console.log(event.elapsed);
+            //  Use delta time to increase elapsed.
+            //  Avoids needing to adjust for pause / resume.
+            //  Automatically smoothed by TimeStep class.
+            //  In testing accurate to +- 1ms!
+            event.elapsed += delta * event.timeScale;
 
             if (event.elapsed >= event.delay)
             {
@@ -115,7 +122,7 @@ Clock.prototype = {
                 event.elapsed = event.delay;
 
                 //  Process the event
-                if (!event.hasDispatched)
+                if (!event.hasDispatched && event.callback)
                 {
                     event.hasDispatched = true;
                     event.callback.apply(event.callbackScope, event.args);
@@ -134,10 +141,20 @@ Clock.prototype = {
                 }
             }
         }
+    },
+
+    destroy: function ()
+    {
+        for (var i = 0; i < this._active.length; i++)
+        {
+            this._active[i].destroy();
+        }
+
+        this._active.length = 0;
+        this._pendingRemoval.length = 0;
+        this._pendingInsertion.length = 0;
     }
 
-};
-
-Clock.prototype.constructor = Clock;
+});
 
 module.exports = Clock;

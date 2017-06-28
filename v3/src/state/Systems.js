@@ -135,6 +135,7 @@ Systems.prototype = {
             list[i].preUpdate(time, delta);
         }
 
+        //  preUpdate TimerEvents
         this.time.update(time, delta);
 
         this.tweens.update(time, delta);
