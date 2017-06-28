@@ -93,7 +93,11 @@ GlobalStateManager.prototype = {
     {
         if (!key) { key = 'default'; }
 
-        if (stateConfig instanceof State)
+        if (typeof stateConfig === 'function')
+        {
+            return key;
+        }
+        else if (stateConfig instanceof State)
         {
             key = stateConfig.settings.key;
         }
@@ -138,7 +142,7 @@ GlobalStateManager.prototype = {
                 autoStart: autoStart
             });
 
-            console.log('GlobalStateManager not yet booted, adding to list', this._pending.length);
+            // console.log('GlobalStateManager not yet booted, adding to list', this._pending.length);
 
             return;
         }
@@ -152,6 +156,7 @@ GlobalStateManager.prototype = {
         if (stateConfig instanceof State)
         {
             // console.log('GlobalStateManager.add from instance:', key);
+
             newState = this.createStateFromInstance(key, stateConfig);
         }
         else if (typeof stateConfig === 'object')
@@ -168,6 +173,9 @@ GlobalStateManager.prototype = {
 
             newState = this.createStateFromFunction(key, stateConfig);
         }
+
+        //  Replace key incase the state changed it
+        key = newState.settings.key;
 
         this.keys[key] = newState;
 
@@ -216,6 +224,13 @@ GlobalStateManager.prototype = {
 
         if (newState instanceof State)
         {
+            key = newState.sys.settings.key;
+
+            if (this.keys.hasOwnProperty(key))
+            {
+                throw new Error('Cannot add a State with duplicate key: ' + key);
+            }
+
             return this.createStateFromInstance(key, newState);
         }
         else
@@ -381,6 +396,8 @@ GlobalStateManager.prototype = {
         }
 
         var state = this.getState(key);
+
+        // console.log(state);
 
         if (state)
         {
