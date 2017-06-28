@@ -96,7 +96,7 @@ Color.prototype = {
 
         this._color = GetColor(this.r, this.g, this.b);
         this._color32 = GetColor32(this.r, this.g, this.b, this.a);
-        this._rgba = 'rgba(' + this.r + ',' + this.g + ',' + this.b + ',' + (255 / this.a) + ')';
+        this._rgba = 'rgba(' + this.r + ',' + this.g + ',' + this.b + ',' + (this.a / 255) + ')';
 
         this.dirty = false;
 
