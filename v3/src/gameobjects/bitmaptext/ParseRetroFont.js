@@ -39,6 +39,11 @@ var ParseRetroFont = function (state, config)
     if (charsPerRow === null)
     {
         charsPerRow = state.sys.textures.getFrame(key).width / w;
+
+        if (charsPerRow > letters.length)
+        {
+            charsPerRow = letters.length;
+        }
     }
 
     var x = offsetX;
@@ -92,6 +97,11 @@ var ParseRetroFont = function (state, config)
     return data;
 };
 
+/**
+* Text Set 1 =  !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~
+* @constant
+* @type {string}
+*/
 ParseRetroFont.TEXT_SET1 = " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~";
 
 /**
