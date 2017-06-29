@@ -4,6 +4,30 @@ var GetValue = require('../utils/object/GetValue');
 
 var Settings = {
 
+    /*
+    {
+        cameras: [
+            {
+                x: int
+                y: int
+                width: int
+                height: int
+                zoom: float
+                rotation: float
+                roundPixels: bool
+                scrollX: float
+                scrollY: float
+                bounds: {
+                    x: int
+                    y: int
+                    width: int
+                    height: int
+                }
+            }
+        ]
+    }
+    */
+
     create: function (config)
     {
         if (typeof config === 'string')
@@ -32,13 +56,16 @@ var Settings = {
 
             files: GetValue(config, 'files', false),
 
-            //  -1 means the State Manager will set it to be the Game dimensions
+            //  Cameras
 
-            x: GetValue(config, 'x', 0),
-            y: GetValue(config, 'y', 0),
-            rotation: GetValue(config, 'rotation', 0),
-            width: GetValue(config, 'width', -1),
-            height: GetValue(config, 'height', -1),
+            cameras: GetValue(config, 'cameras', null),
+
+            //  -1 means the State Manager will set it to be the Game dimensions
+            // x: GetValue(config, 'x', 0),
+            // y: GetValue(config, 'y', 0),
+            // rotation: GetValue(config, 'rotation', 0),
+            // width: GetValue(config, 'width', -1),
+            // height: GetValue(config, 'height', -1),
 
             //  State Render Settings (applies only to this State)
 
@@ -53,8 +80,9 @@ var Settings = {
             autoResize: GetValue(config, 'autoResize', false)
 
         };
-    },
+    }
 
+    /*
     init: function (config, gameConfig)
     {
         if (config.width === -1)
@@ -67,6 +95,7 @@ var Settings = {
             config.height = gameConfig.height;
         }
     }
+    */
 
 };
 

@@ -19,10 +19,10 @@ var Systems = function (state, config)
     this.config = config;
     this.settings = Settings.create(config);
 
-    this.x = this.settings.x;
-    this.y = this.settings.y;
-    this.width = this.settings.width;
-    this.height = this.settings.height;
+    // this.x = this.settings.x;
+    // this.y = this.settings.y;
+    // this.width = this.settings.width;
+    // this.height = this.settings.height;
 
     this.sortChildrenFlag = false;
 
@@ -65,10 +65,9 @@ Systems.prototype = {
     {
         this.game = game;
 
-        Settings.init(this.settings, this.game.config);
-
-        this.width = this.settings.width;
-        this.height = this.settings.height;
+        // Settings.init(this.settings, this.game.config);
+        // this.width = this.settings.width;
+        // this.height = this.settings.height;
 
         this.anims = this.game.anims;
         this.cache = this.game.cache;
@@ -85,11 +84,11 @@ Systems.prototype = {
 
         this.add = new GameObjectFactory(this.state);
         this.cameras = new CameraManager(this.state);
-        this.time = new Clock(this.state);
         this.events = new EventDispatcher();
         this.load = new Loader(this.state);
         this.make = new GameObjectCreator(this.state);
         this.stateManager = new StateManager(this.state, game);
+        this.time = new Clock(this.state);
         this.tweens = new TweenManager(this.state);
         this.updates = new UpdateManager(this.state);
 

@@ -4,6 +4,8 @@ var ValueToColor = require('../graphics/color/ValueToColor');
 
 var Camera = function (x, y, width, height)
 {
+    this.name = '';
+
     this.x = x;
     this.y = y;
     this.width = width;
@@ -294,6 +296,53 @@ Camera.prototype = {
         matrix.scale(zoom, zoom);
         matrix.translate(-originX, -originY);
         matrix.translate(this._shakeOffsetX, this._shakeOffsetY);
+    },
+
+    /*
+        camera: {
+            x: int
+            y: int
+            width: int
+            height: int
+            zoom: float
+            rotation: float
+            roundPixels: bool
+            scrollX: float
+            scrollY: float
+            bounds: {
+                x: int
+                y: int
+                width: int
+                height: int
+            }
+        }
+    */
+    toJSON: function ()
+    {
+        var output = {
+            name: this.name,
+            x: this.x,
+            y: this.y,
+            width: this.width,
+            height: this.height,
+            zoom: this.zoom,
+            rotation: this.rotation,
+            roundPixels: this.roundPixels,
+            scrollX: this.scrollX,
+            scrollY: this.scrollY
+        };
+
+        if (this.useBounds)
+        {
+            output['bounds'] = {
+                x: this._bounds.x,
+                y: this._bounds.y,
+                width: this._bounds.width,
+                height: this._bounds.height
+            };
+        }
+
+        return output;
     },
 
     destroy: function ()

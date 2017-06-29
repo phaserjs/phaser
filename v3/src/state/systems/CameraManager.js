@@ -1,6 +1,7 @@
 var Camera = require('../../camera/Camera');
 var KeyControl = require('../../camera/KeyControl');
 var SmoothedKeyControl = require('../../camera/SmoothedKeyControl');
+var GetFastValue = require('../../utils/object/GetFastValue');
 
 var CameraManager = function (state)
 {
@@ -9,19 +10,102 @@ var CameraManager = function (state)
     this.cameras = [];
     this.cameraPool = [];
 
-    this.main = this.add();
+    if (state.sys.settings.cameras)
+    {
+        //  We have cameras to create
+        this.fromJSON(state.sys.settings.cameras);
+    }
+    else
+    {
+        //  Make one
+        this.add();
+    }
+
+    //  Set the default camera
+    this.main = this.cameras[0];
 };
 
 CameraManager.prototype.constructor = CameraManager;
 
 CameraManager.prototype = {
 
+    /*
+    {
+        cameras: [
+            {
+                name: string
+                x: int
+                y: int
+                width: int
+                height: int
+                zoom: float
+                rotation: float
+                roundPixels: bool
+                scrollX: float
+                scrollY: float
+                bounds: {
+                    x: int
+                    y: int
+                    width: int
+                    height: int
+                }
+            }
+        ]
+    }
+    */
+    fromJSON: function (config)
+    {
+        if (!Array.isArray(config))
+        {
+            config = [ config ];
+        }
+
+        var gameWidth = this.state.sys.game.config.width;
+        var gameHeight = this.state.sys.game.config.height;
+
+        for (var i = 0; i < config.length; i++)
+        {
+            var cameraConfig = config[i];
+
+            var x = GetFastValue(cameraConfig, 'x', 0);
+            var y = GetFastValue(cameraConfig, 'y', 0);
+            var width = GetFastValue(cameraConfig, 'width', gameWidth);
+            var height = GetFastValue(cameraConfig, 'height', gameHeight);
+
+            var camera = this.add(x, y, width, height);
+
+            //  Direct properties
+            camera.name = GetFastValue(cameraConfig, 'name', '');
+            camera.zoom = GetFastValue(cameraConfig, 'zoom', 1);
+            camera.rotation = GetFastValue(cameraConfig, 'rotation', 0);
+            camera.scrollX = GetFastValue(cameraConfig, 'scrollX', 0);
+            camera.scrollY = GetFastValue(cameraConfig, 'scrollY', 0);
+            camera.roundPixels = GetFastValue(cameraConfig, 'roundPixels', false);
+
+            //  Bounds
+
+            var boundsConfig = GetFastValue(cameraConfig, 'bounds', null);
+
+            if (boundsConfig)
+            {
+                var bx = GetFastValue(boundsConfig, 'x', 0);
+                var by = GetFastValue(boundsConfig, 'y', 0);
+                var bwidth = GetFastValue(boundsConfig, 'width', gameWidth);
+                var bheight = GetFastValue(boundsConfig, 'height', gameHeight);
+
+                camera.setBounds(bx, by, bwidth, bheight);
+            }
+        }
+
+        return this;
+    },
+
     add: function (x, y, width, height)
     {
         if (x === undefined) { x = 0; }
         if (y === undefined) { y = 0; }
-        if (width === undefined) { width = this.state.sys.width; }
-        if (height === undefined) { height = this.state.sys.height; }
+        if (width === undefined) { width = this.state.sys.game.config.width; }
+        if (height === undefined) { height = this.state.sys.game.config.height; }
 
         var camera = null;
 
