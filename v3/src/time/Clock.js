@@ -11,6 +11,10 @@ var Clock = new Class({
 
         this.now = Date.now();
 
+        //  Scale the delta time coming into the Clock by this factor
+        //  which then influences anything using this Clock for calculations, like TimerEvents
+        this.timeScale = 1;
+
         this.paused = false;
 
         this._active = [];
@@ -56,11 +60,12 @@ var Clock = new Class({
         }
 
         var i;
+        var event;
 
         //  Delete old events
         for (i = 0; i < toRemove; i++)
         {
-            var event = this._pendingRemoval[i];
+            event = this._pendingRemoval[i];
 
             var index = this._active.indexOf(event);
 
@@ -75,7 +80,7 @@ var Clock = new Class({
 
         for (i = 0; i < toInsert; i++)
         {
-            var event = this._pendingInsertion[i];
+            event = this._pendingInsertion[i];
 
             event.elapsed = event.startAt * event.timeScale;
 
@@ -98,6 +103,8 @@ var Clock = new Class({
         {
             return;
         }
+
+        delta * this.timeScale;
 
         for (var i = 0; i < this._active.length; i++)
         {
@@ -128,7 +135,7 @@ var Clock = new Class({
                     event.callback.apply(event.callbackScope, event.args);
                 }
 
-                if (event.loop || event.repeatCount > 0)
+                if (event.repeatCount > 0)
                 {
                     event.repeatCount--;
 
