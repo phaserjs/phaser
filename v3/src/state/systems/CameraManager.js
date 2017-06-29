@@ -43,6 +43,7 @@ CameraManager.prototype = {
                 roundPixels: bool
                 scrollX: float
                 scrollY: float
+                backgroundColor: string
                 bounds: {
                     x: int
                     y: int
@@ -81,6 +82,15 @@ CameraManager.prototype = {
             camera.scrollX = GetFastValue(cameraConfig, 'scrollX', 0);
             camera.scrollY = GetFastValue(cameraConfig, 'scrollY', 0);
             camera.roundPixels = GetFastValue(cameraConfig, 'roundPixels', false);
+
+            // Background Color
+
+            var backgroundColor = GetFastValue(cameraConfig, 'backgroundColor', false);
+
+            if (backgroundColor)
+            {
+                camera.setBackgroundColor(backgroundColor);
+            }
 
             //  Bounds
 

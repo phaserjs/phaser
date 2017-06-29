@@ -309,6 +309,7 @@ Camera.prototype = {
             roundPixels: bool
             scrollX: float
             scrollY: float
+            backgroundColor: string
             bounds: {
                 x: int
                 y: int
@@ -329,7 +330,8 @@ Camera.prototype = {
             rotation: this.rotation,
             roundPixels: this.roundPixels,
             scrollX: this.scrollX,
-            scrollY: this.scrollY
+            scrollY: this.scrollY,
+            backgroundColor: this.backgroundColor.rgba
         };
 
         if (this.useBounds)
