@@ -99,7 +99,7 @@ GlobalStateManager.prototype = {
         }
         else if (stateConfig instanceof State)
         {
-            key = stateConfig.settings.key;
+            key = stateConfig.sys.settings.key;
         }
         else if (typeof stateConfig === 'object' && stateConfig.hasOwnProperty('key'))
         {
@@ -175,13 +175,13 @@ GlobalStateManager.prototype = {
         }
 
         //  Replace key incase the state changed it
-        key = newState.settings.key;
+        key = newState.sys.settings.key;
 
         this.keys[key] = newState;
 
         this.states.push(newState);
 
-        if (autoStart || newState.settings.active)
+        if (autoStart || newState.sys.settings.active)
         {
             if (this.game.isBooted)
             {
@@ -198,7 +198,7 @@ GlobalStateManager.prototype = {
 
     createStateFromInstance: function (key, newState)
     {
-        newState.settings.key = key;
+        newState.sys.settings.key = key;
 
         newState.sys.init(this.game);
 
@@ -298,7 +298,7 @@ GlobalStateManager.prototype = {
 
     createStateDisplay: function (state)
     {
-        // console.log('createStateDisplay', state.settings.key);
+        // console.log('createStateDisplay', state.sys.settings.key);
 
         var settings = state.sys.settings;
 
@@ -366,7 +366,7 @@ GlobalStateManager.prototype = {
     {
         var state = this.getState(key);
 
-        return (state && state.settings.active && this.active.indexOf(state) !== -1);
+        return (state && state.sys.settings.active && this.active.indexOf(state) !== -1);
     },
 
     start: function (key, data)
@@ -407,9 +407,9 @@ GlobalStateManager.prototype = {
                 return;
             }
 
-            state.settings.active = true;
+            state.sys.settings.active = true;
 
-            state.settings.data = data;
+            state.sys.settings.data = data;
 
             var loader = state.sys.load;
 
@@ -524,7 +524,7 @@ GlobalStateManager.prototype = {
         {
             var state = this.getState(key);
 
-            state.settings.active = false;
+            state.sys.settings.active = false;
 
             this.active.splice(index, 1);
 

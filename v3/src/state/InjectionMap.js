@@ -1,0 +1,30 @@
+//  These properties get injected into the State and map to local systems
+//  The key is the local system reference, the value is the property that is added to the State
+//  These can be modified via the config object
+
+var InjectionMap = {
+
+    game: 'game',
+
+    anims: 'anims',
+    cache: 'cache',
+    input: 'input',
+    registry: 'registry',
+    textures: 'textures',
+
+    add: 'add',
+    cameras: 'cameras',
+    events: 'events',
+    load: 'load',
+    make: 'make',
+    stateManager: 'state',
+    time: 'time',
+    tweens: 'tweens',
+
+    children: 'children',
+    color: 'color',
+    data: 'data'
+
+};
+
+module.exports = InjectionMap;

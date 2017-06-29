@@ -16,11 +16,7 @@ var State = function (config)
 {
     //  The State Systems. You must never overwrite this property, or all hell will break lose.
     this.sys = new Systems(this, config);
-
-    this.settings = this.sys.settings;
 };
-
-State.prototype.constructor = State;
 
 State.prototype = {
 
@@ -35,5 +31,7 @@ State.prototype = {
     }
 
 };
+
+State.prototype.constructor = State;
 
 module.exports = State;

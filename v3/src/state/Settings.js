@@ -1,6 +1,7 @@
 var CONST = require('./const');
 var ScaleModes = require('../renderer/ScaleModes');
 var GetValue = require('../utils/object/GetValue');
+var InjectionMap = require('./InjectionMap');
 
 var Settings = {
 
@@ -22,7 +23,7 @@ var Settings = {
 
             op: CONST.BOOT,
 
-            key: GetValue(config, 'key', ''),
+            key: GetValue(config, 'key', 'default'),
             active: GetValue(config, 'active', false),
             visible: GetValue(config, 'visible', true),
 
@@ -35,6 +36,10 @@ var Settings = {
             //  Cameras
 
             cameras: GetValue(config, 'cameras', null),
+
+            //  State Property Injection Map
+
+            map: GetValue(config, 'map', InjectionMap),
 
             //  State Render Settings (applies only to this State)
 

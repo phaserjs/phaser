@@ -92,28 +92,17 @@ Systems.prototype = {
 
     inject: function ()
     {
-        //  Defaults properties injected into the State
+        var map = this.settings.map;
 
-        this.state.game = this.game;
+        for (var key in map)
+        {
+            if (key === 'sys')
+            {
+                continue;
+            }
 
-        this.state.anims = this.anims;
-        this.state.cache = this.cache;
-        this.state.input = this.input;
-        this.state.registry = this.registry;
-        this.state.textures = this.textures;
-
-        this.state.add = this.add;
-        this.state.cameras = this.cameras;
-        this.state.events = this.events;
-        this.state.load = this.load;
-        this.state.make = this.make;
-        this.state.state = this.stateManager;
-        this.state.time = this.time;
-        this.state.tweens = this.tweens;
-
-        this.state.children = this.children;
-        this.state.color = this.color;
-        this.state.data = this.data;
+            this.state[map[key]] = this[key];
+        }
     },
 
     step: function (time, delta)
