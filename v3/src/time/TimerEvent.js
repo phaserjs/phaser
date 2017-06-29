@@ -9,16 +9,24 @@ var TimerEvent = new Class({
     {
         /**
         * @property {number} delay - The delay in ms at which this TimerEvent fires.
+        * @readOnly
         */
         this.delay = 0;
 
         /**
-        * @property {number} repeatCount - If this TimerEvent repeats it will do so this many times.
+        * @property {number} repeat - The total number of times this TimerEvent will repeat before finishing.
+        * @readOnly
+        */
+        this.repeat = 0;
+
+        /**
+        * @property {number} repeatCount - If repeating this contains the current repeat count.
         */
         this.repeatCount = 0;
 
         /**
         * @property {boolean} loop - True if this TimerEvent loops, otherwise false.
+        * @readOnly
         */
         this.loop = false;
 
@@ -56,7 +64,8 @@ var TimerEvent = new Class({
     {
         this.delay = GetFastValue(config, 'delay', 0);
 
-        this.repeatCount = GetFastValue(config, 'repeat', 0);
+        //  Can also be set to -1 for an infinite loop (same as setting loop: true)
+        this.repeat = GetFastValue(config, 'repeat', 0);
 
         this.loop = GetFastValue(config, 'loop', false);
 
@@ -72,21 +81,38 @@ var TimerEvent = new Class({
 
         this.paused = GetFastValue(config, 'paused', false);
 
-        //  This works for setting an infinite repeat too
-        if (this.repeatCount === -1)
-        {
-            this.loop = true;
-        }
-
         this.elapsed = 0;
         this.hasDispatched = false;
+        this.repeatCount = (this.repeat === -1 || this.loop) ? 999999999999 : this.repeat;
 
         return this;
     },
 
+    //  Gets the progress of the current iteration, not factoring in repeats
     getProgress: function ()
     {
         return (this.elapsed / this.delay);
+    },
+
+    //  Gets the progress of the timer overall, factoring in repeats.
+    getOverallProgress: function ()
+    {
+        if (this.repeat > 0)
+        {
+            var totalDuration = this.delay + (this.delay * this.repeat);
+            var totalElapsed = this.elapsed + (this.delay * (this.repeat - this.repeatCount));
+
+            return (totalElapsed / totalDuration);
+        }
+        else
+        {
+            return this.getProgress();
+        }
+    },
+
+    getRepeatCount: function ()
+    {
+        return this.repeatCount;
     },
 
     getElapsed: function ()
