@@ -133,7 +133,6 @@ var TimerEvent = new Class({
 
         this.hasDispatched = !!dispatchCallback;
 
-        this.loop = false;
         this.repeatCount = 0;
     },
 
