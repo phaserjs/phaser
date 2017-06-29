@@ -19,11 +19,6 @@ var Systems = function (state, config)
     this.config = config;
     this.settings = Settings.create(config);
 
-    // this.x = this.settings.x;
-    // this.y = this.settings.y;
-    // this.width = this.settings.width;
-    // this.height = this.settings.height;
-
     this.sortChildrenFlag = false;
 
     //  Set by the GlobalStateManager
@@ -38,18 +33,19 @@ var Systems = function (state, config)
     this.anims;
     this.cache;
     this.input;
+    this.registry;
     this.textures;
 
     //  Reference to State specific managers (Factory, Tweens, Loader, Physics, etc)
     this.add;
     this.cameras;
-    this.time;
     this.events;
     this.load;
     this.make;
     this.stateManager;
-    this.updates;
+    this.time;
     this.tweens;
+    this.updates;
 
     //  State properties
     this.children;
@@ -65,13 +61,12 @@ Systems.prototype = {
     {
         this.game = game;
 
-        // Settings.init(this.settings, this.game.config);
-        // this.width = this.settings.width;
-        // this.height = this.settings.height;
+        //  Game (Global) level managers
 
         this.anims = this.game.anims;
         this.cache = this.game.cache;
         this.input = this.game.input;
+        this.registry = this.game.registry;
         this.textures = this.game.textures;
 
         //  State specific properties (transform, data, children, etc)
@@ -104,6 +99,7 @@ Systems.prototype = {
         this.state.anims = this.anims;
         this.state.cache = this.cache;
         this.state.input = this.input;
+        this.state.registry = this.registry;
         this.state.textures = this.textures;
 
         this.state.add = this.add;
@@ -111,7 +107,6 @@ Systems.prototype = {
         this.state.events = this.events;
         this.state.load = this.load;
         this.state.make = this.make;
-        this.state.settings = this.settings;
         this.state.state = this.stateManager;
         this.state.time = this.time;
         this.state.tweens = this.tweens;
