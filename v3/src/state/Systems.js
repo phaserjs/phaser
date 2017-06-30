@@ -45,7 +45,7 @@ var Systems = function (state, config)
     this.stateManager;
     this.time;
     this.tweens;
-    // this.updates;
+    this.updates;
 
     //  State properties
     this.children;
@@ -83,7 +83,7 @@ Systems.prototype = {
         this.stateManager = new StateManager(this.state, game);
         this.time = new Clock(this.state);
         this.tweens = new TweenManager(this.state);
-        // this.updates = new UpdateManager(this.state);
+        this.updates = new UpdateManager(this.state);
 
         this.inject();
     },
@@ -163,7 +163,10 @@ Systems.prototype = {
 
         this.settings.active = false;
 
-        //  Notify the State callback or dispatch an event
+        if (this.state.pause)
+        {
+            this.state.pause.call(this.state);
+        }
     },
 
     resume: function ()
@@ -172,7 +175,10 @@ Systems.prototype = {
 
         this.settings.active = true;
 
-        //  Notify the State callback or dispatch an event
+        if (this.state.resume)
+        {
+            this.state.resume.call(this.state);
+        }
     },
 
     sleep: function ()
@@ -182,7 +188,10 @@ Systems.prototype = {
         this.settings.active = false;
         this.settings.visible = false;
 
-        //  Notify the State callback or dispatch an event
+        if (this.state.sleep)
+        {
+            this.state.sleep.call(this.state);
+        }
     },
 
     wake: function ()
@@ -192,7 +201,20 @@ Systems.prototype = {
         this.settings.active = true;
         this.settings.visible = true;
 
-        //  Notify the State callback or dispatch an event
+        if (this.state.wake)
+        {
+            this.state.wake.call(this.state);
+        }
+    },
+
+    start: function (data)
+    {
+        //  Was started by the GlobalStateManager
+
+        this.settings.data = data;
+
+        this.settings.active = true;
+        this.settings.visible = true;
     },
 
     shutdown: function ()
@@ -200,6 +222,7 @@ Systems.prototype = {
         //  Was stopped by the GlobalStateManager
 
         this.settings.active = false;
+        this.settings.visible = false;
 
         //  If all State level managers followed the same pattern then we could just iterate
         //  the map and call shutdown on all of them, same for destroy
@@ -212,7 +235,10 @@ Systems.prototype = {
         this.time.shutdown();
         this.tweens.shutdown();
 
-        this.state.shutdown.call(this.state);
+        if (this.state.shutdown)
+        {
+            this.state.shutdown.call(this.state);
+        }
     },
 
     //  Game level nuke
@@ -224,6 +250,10 @@ Systems.prototype = {
         this.tweens.destroy();
 
         //  etc
+        if (this.state.destroy)
+        {
+            this.state.destroy.call(this.state);
+        }
     }
 };
 

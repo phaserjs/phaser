@@ -420,9 +420,7 @@ GlobalStateManager.prototype = {
                 return;
             }
 
-            state.sys.settings.active = true;
-
-            state.sys.settings.data = data;
+            state.sys.start(data);
 
             var loader = state.sys.load;
 
@@ -572,7 +570,27 @@ GlobalStateManager.prototype = {
     swap: function (from, to)
     {
         this.sleep(from);
-        this.start(to);
+
+        if (this.isSleeping(to))
+        {
+            this.wake(to);
+        }
+        else
+        {
+            this.start(to);
+        }
+    },
+
+    isSleeping: function (key)
+    {
+        var entry = this.getActiveState(key);
+
+        if (entry)
+        {
+            return (!entry.state.sys.settings.active && !entry.state.sys.settings.visible);
+        }
+
+        return false;
     },
 
     stop: function (key)
