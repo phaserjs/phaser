@@ -105,6 +105,9 @@ Systems.prototype = {
 
     step: function (time, delta)
     {
+        //  Are there any pending StateManager actions?
+        this.stateManager.update();
+
         if (!this.settings.active)
         {
             return;
@@ -146,9 +149,6 @@ Systems.prototype = {
         }
 
         this.cameras.render(renderer, this.children, interpolation);
-
-        //  After everything has rendered are there any pending StateManager actions?
-        this.stateManager.update();
     },
 
     sortZ: function (childA, childB)
