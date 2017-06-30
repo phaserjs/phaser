@@ -4,9 +4,10 @@ var Children = new Class({
 
     initialize:
 
-    function Children (owner)
+    function Children (state)
     {
-        this.owner = owner;
+        //  The State that owns this component
+        this.state = state;
 
         //  The objects that belong to this collection.
         //  The equivalent of the old `Sprite.children` array.
@@ -17,7 +18,7 @@ var Children = new Class({
 
     add: function (child)
     {
-        if (child.parent === this)
+        if (child.parent === this.state)
         {
             return child;
         }
@@ -26,7 +27,7 @@ var Children = new Class({
             child.parent.children.remove(child);
         }
 
-        child.parent = this.owner;
+        child.parent = this.state;
 
         this.list.push(child);
 
@@ -49,7 +50,7 @@ var Children = new Class({
                 child.parent.children.remove(child);
             }
 
-            child.parent = this;
+            child.parent = this.state;
 
             this.list.splice(index, 0, child);
         }
@@ -322,7 +323,7 @@ var Children = new Class({
         {
             return false;
         }
-        else if (child.parent === this)
+        else if (child.parent === this.state)
         {
             return true;
         }
@@ -341,7 +342,7 @@ var Children = new Class({
     */
     bringToTop: function (child)
     {
-        if (child.parent === this && this.getIndex(child) < this.list.length)
+        if (child.parent === this.state && this.getIndex(child) < this.list.length)
         {
             this.remove(child);
             this.add(child);
@@ -359,7 +360,7 @@ var Children = new Class({
     */
     sendToBack: function (child)
     {
-        if (child.parent === this && this.getIndex(child) > 0)
+        if (child.parent === this.state && this.getIndex(child) > 0)
         {
             this.remove(child);
             this.addAt(child, 0);
@@ -567,7 +568,7 @@ var Children = new Class({
     */
     reparent: function (newParent)
     {
-        if (newParent !== this)
+        if (newParent !== this.state)
         {
             for (var i = 0; i < this.list.length; i++)
             {
