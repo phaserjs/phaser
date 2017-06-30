@@ -10,13 +10,18 @@ var Group = new Class({
 
     initialize:
 
-    function Group (state, children)
+    function Group (state, children, config)
     {
         this.state = state;
 
         this.children = new Set(children);
 
         this.classType = Sprite;
+
+        if (config)
+        {
+            this.createMultiple(config);
+        }
     },
 
     update: function (time, delta)

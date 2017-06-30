@@ -5,18 +5,14 @@ var GroupFactory = {
 
     KEY: 'group',
 
-    add: function (children)
+    add: function (children, config)
     {
-        return new Group(this.state, children);
+        return new Group(this.state, children, config);
     },
 
     make: function (config)
     {
-        var group = new Group(this.state);
-
-        group.createFromConfig(config);
-
-        return group;
+        return new Group(this.state, null, config);
     }
 
 };
