@@ -1,28 +1,19 @@
-/**
-* @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2016 Photon Storm Ltd.
-* @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
-*/
+var Class = require('../utils/Class');
 
-/**
-* The Children Component features quick access to Group sorting related methods.
-*
-* @class
-*/
-var Children = function (gameObject)
-{
-    this.gameObject = gameObject;
+var Children = new Class({
 
-    //  The objects that belong to this collection.
-    //  The equivalent of the old `Sprite.children` array.
-    this.list = [];
+    initialize:
 
-    this.position = 0;
-};
+    function Children (owner)
+    {
+        this.owner = owner;
 
-Children.prototype.constructor = Children;
+        //  The objects that belong to this collection.
+        //  The equivalent of the old `Sprite.children` array.
+        this.list = [];
 
-Children.prototype = {
+        this.position = 0;
+    },
 
     add: function (child)
     {
@@ -35,7 +26,7 @@ Children.prototype = {
             child.parent.children.remove(child);
         }
 
-        child.parent = this.gameObject;
+        child.parent = this.owner;
 
         this.list.push(child);
 
@@ -587,21 +578,9 @@ Children.prototype = {
         }
 
         return newParent;
-    }
+    },
 
-};
-
-Object.defineProperties(Children.prototype, {
-
-    /**
-    * Returns the first item and resets the cursor to the start.
-    *
-    * @name Phaser.ArraySet#first
-    * @property {any} first
-    */
     length: {
-
-        enumerable: true,
 
         get: function ()
         {
@@ -610,15 +589,7 @@ Object.defineProperties(Children.prototype, {
 
     },
 
-    /**
-    * Returns the first item and resets the cursor to the start.
-    *
-    * @name Phaser.ArraySet#first
-    * @property {any} first
-    */
     first: {
-
-        enumerable: true,
 
         get: function ()
         {
@@ -636,15 +607,7 @@ Object.defineProperties(Children.prototype, {
 
     },
 
-    /**
-    * Returns the last item and resets the cursor to the end.
-    *
-    * @name Phaser.ArraySet#last
-    * @property {any} last
-    */
     last: {
-
-        enumerable: true,
 
         get: function ()
         {
@@ -662,15 +625,7 @@ Object.defineProperties(Children.prototype, {
 
     },
 
-    /**
-    * Returns the next item (based on the cursor) and advances the cursor.
-    *
-    * @name Phaser.ArraySet#next
-    * @property {any} next
-    */
     next: {
-
-        enumerable: true,
 
         get: function ()
         {
@@ -688,15 +643,7 @@ Object.defineProperties(Children.prototype, {
 
     },
 
-    /**
-    * Returns the previous item (based on the cursor) and retreats the cursor.
-    *
-    * @name Phaser.ArraySet#previous
-    * @property {any} previous
-    */
     previous: {
-
-        enumerable: true,
 
         get: function ()
         {

@@ -1,4 +1,4 @@
 var CHECKSUM = {
-build: '4167f220-5d44-11e7-9b99-3f0e61c75797'
+build: 'f62eb230-5da2-11e7-9471-651c81b97fd3'
 };
 module.exports = CHECKSUM;

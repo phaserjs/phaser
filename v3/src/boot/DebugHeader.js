@@ -23,14 +23,14 @@ var DebugHeader = function (game)
     if (!ie)
     {
         var c = '';
-        var args = [c];
+        var args = [ c ];
 
         if (Array.isArray(config.bannerBackgroundColor))
         {
             var lastColor;
 
-            config.bannerBackgroundColor.forEach(function(color) {
-
+            config.bannerBackgroundColor.forEach(function (color)
+            {
                 c = c.concat('%c ');
 
                 args.push('background: ' + color);
@@ -86,7 +86,6 @@ var DebugHeader = function (game)
 
     // Keep this during dev build only
     console.log(CHECKSUM.build);
-
 };
 
 module.exports = DebugHeader;

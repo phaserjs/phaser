@@ -1,37 +1,38 @@
 //  GlobalInputManager
 
+var Class = require('../utils/Class');
+var EventDispatcher = require('../events/EventDispatcher');
+var GetTransformedPoint = require('./components/GetTransformedPoint');
 var Keyboard = require('./keyboard/KeyboardManager');
 var Mouse = require('./mouse/MouseManager');
 var MouseEvent = require('./mouse/events/');
-var EventDispatcher = require('../events/EventDispatcher');
-var GetTransformedPoint = require('./components/GetTransformedPoint');
 var PointWithinGameObject = require('./components/PointWithinGameObject');
 var TransformMatrix = require('../components/TransformMatrix');
 
-var GlobalInputManager = function (game, gameConfig)
-{
-    this.game = game;
+var GlobalInputManager = new Class({
 
-    this.gameConfig = gameConfig;
+    initialize:
 
-    this.enabled = true;
+    function GlobalInputManager (game, config)
+    {
+        this.game = game;
 
-    this.events = new EventDispatcher();
+        this.config = config;
 
-    //   Standard FIFO queue
-    this.queue = [];
+        this.enabled = true;
 
-    //  Listeners
-    this.keyboard = new Keyboard(this);
-    this.mouse = new Mouse(this);
+        this.events = new EventDispatcher();
 
-    this._tempMatrix = new TransformMatrix();
-    this._tempPoint = { x: 0, y: 0 };
-};
+        //   Standard FIFO queue
+        this.queue = [];
 
-GlobalInputManager.prototype.constructor = GlobalInputManager;
+        //  Listeners
+        this.keyboard = new Keyboard(this);
+        this.mouse = new Mouse(this);
 
-GlobalInputManager.prototype = {
+        this._tempMatrix = new TransformMatrix();
+        this._tempPoint = { x: 0, y: 0 };
+    },
 
     /**
     * The Boot handler is called by Phaser.Game when it first starts up.
@@ -93,6 +94,6 @@ GlobalInputManager.prototype = {
         return PointWithinGameObject(gameObject, x, y);
     }
 
-};
+});
 
 module.exports = GlobalInputManager;

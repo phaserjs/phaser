@@ -10,7 +10,6 @@ var Settings = require('./Settings');
 var StableSort = require('../utils/array/StableSort');
 var StateManager = require('./systems/StateManager');
 var TweenManager = require('../tween/TweenManager');
-var UpdateManager = require('./systems/UpdateManager');
 
 var Systems = function (state, config)
 {
@@ -45,7 +44,6 @@ var Systems = function (state, config)
     this.stateManager;
     this.time;
     this.tweens;
-    this.updates;
 
     //  State properties
     this.children;
@@ -83,7 +81,6 @@ Systems.prototype = {
         this.stateManager = new StateManager(this.state, game);
         this.time = new Clock(this.state);
         this.tweens = new TweenManager(this.state);
-        this.updates = new UpdateManager(this.state);
 
         this.inject();
     },

@@ -1,22 +1,24 @@
-var Ellipse = function (x, y, width, height)
-{
-    if (x === undefined) { x = 0; }
-    if (y === undefined) { y = 0; }
-    if (width === undefined) { width = 0; }
-    if (height === undefined) { height = 0; }
+var Class = require('../../utils/Class');
 
-    this.x = x;
+var Ellipse = new Class({
 
-    this.y = y;
+    initialize:
 
-    this.width = width;
+    function Ellipse (x, y, width, height)
+    {
+        if (x === undefined) { x = 0; }
+        if (y === undefined) { y = 0; }
+        if (width === undefined) { width = 0; }
+        if (height === undefined) { height = 0; }
 
-    this.height = height;
-};
+        this.x = x;
 
-Ellipse.prototype.constructor = Ellipse;
+        this.y = y;
 
-Ellipse.prototype = {
+        this.width = width;
+
+        this.height = height;
+    },
 
     setTo: function (x, y, width, height)
     {
@@ -68,15 +70,9 @@ Ellipse.prototype = {
     getMajorRadius: function ()
     {
         return Math.max(this.width, this.height) / 2;
-    }
-
-};
-
-Object.defineProperties(Ellipse.prototype, {
+    },
 
     left: {
-
-        enumerable: true,
 
         get: function ()
         {
@@ -101,8 +97,6 @@ Object.defineProperties(Ellipse.prototype, {
 
     right: {
 
-        enumerable: true,
-
         get: function ()
         {
             return this.x + this.width;
@@ -123,8 +117,6 @@ Object.defineProperties(Ellipse.prototype, {
     },
 
     top: {
-
-        enumerable: true,
 
         get: function ()
         {
@@ -147,8 +139,6 @@ Object.defineProperties(Ellipse.prototype, {
     },
 
     bottom: {
-
-        enumerable: true,
 
         get: function ()
         {

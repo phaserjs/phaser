@@ -1,5 +1,8 @@
-//  A generic Key object which can be passed to the Process functions (and so on)
+//  Can this become just a generic object instead of a class?
 
+
+
+//  A generic Key object which can be passed to the Process functions (and so on)
 //  keycode must be an integer
 
 var Key = function (keyCode)

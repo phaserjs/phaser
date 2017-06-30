@@ -1,15 +1,16 @@
+var Class = require('../utils/Class');
 var EventBinding = require('./EventBinding');
 
-var EventDispatcher = function ()
-{
-    this.bindings = {};
-    this.filters = [];
-    this.hasFilters = false;
-};
+var EventDispatcher = new Class({
 
-EventDispatcher.prototype.constructor = EventDispatcher;
+    initialize:
 
-EventDispatcher.prototype = {
+    function EventDispatcher ()
+    {
+        this.bindings = {};
+        this.filters = [];
+        this.hasFilters = false;
+    },
 
     getBinding: function (type)
     {
@@ -213,6 +214,6 @@ EventDispatcher.prototype = {
         this.removeAllFilters();
     }
 
-};
+});
 
 module.exports = EventDispatcher;

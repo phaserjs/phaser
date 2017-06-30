@@ -1,58 +1,59 @@
+var Class = require('../utils/Class');
 var Rectangle = require('../geom/rectangle/Rectangle');
 var TransformMatrix = require('../components/TransformMatrix');
 var ValueToColor = require('../graphics/color/ValueToColor');
 
-var Camera = function (x, y, width, height)
-{
-    this.name = '';
+var Camera = new Class({
 
-    this.x = x;
-    this.y = y;
-    this.width = width;
-    this.height = height;
+    initialize:
 
-    this.roundPixels = false;
-    this.useBounds = false;
+    function Camera (x, y, width, height)
+    {
+        this.name = '';
 
-    this._bounds = new Rectangle();
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
 
-    this.scrollX = 0.0;
-    this.scrollY = 0.0;
-    this.zoom = 1.0;
-    this.rotation = 0.0;
-    this.matrix = new TransformMatrix(1, 0, 0, 1, 0, 0);
+        this.roundPixels = false;
+        this.useBounds = false;
 
-    // shake
-    this._shakeDuration = 0.0;
-    this._shakeIntensity = 0.0;
-    this._shakeOffsetX = 0.0;
-    this._shakeOffsetY = 0.0;
+        this._bounds = new Rectangle();
 
-    // fade
-    this._fadeDuration = 0.0;
-    this._fadeRed = 0.0;
-    this._fadeGreen = 0.0;
-    this._fadeBlue = 0.0;
-    this._fadeAlpha = 0.0;
+        this.scrollX = 0.0;
+        this.scrollY = 0.0;
+        this.zoom = 1.0;
+        this.rotation = 0.0;
+        this.matrix = new TransformMatrix(1, 0, 0, 1, 0, 0);
 
-    // flash
-    this._flashDuration = 0.0;
-    this._flashRed = 1.0;
-    this._flashGreen = 1.0;
-    this._flashBlue = 1.0;
-    this._flashAlpha = 0.0;
+        // shake
+        this._shakeDuration = 0.0;
+        this._shakeIntensity = 0.0;
+        this._shakeOffsetX = 0.0;
+        this._shakeOffsetY = 0.0;
 
-    // origin
-    this._follow = null;
+        // fade
+        this._fadeDuration = 0.0;
+        this._fadeRed = 0.0;
+        this._fadeGreen = 0.0;
+        this._fadeBlue = 0.0;
+        this._fadeAlpha = 0.0;
 
-    this.clearBeforeRender = true;
-    this.backgroundColor = ValueToColor('rgba(0,0,0,0)');
-    this.transparent = true;
-};
+        // flash
+        this._flashDuration = 0.0;
+        this._flashRed = 1.0;
+        this._flashGreen = 1.0;
+        this._flashBlue = 1.0;
+        this._flashAlpha = 0.0;
 
-Camera.prototype.constructor = Camera;
+        // origin
+        this._follow = null;
 
-Camera.prototype = {
+        this.clearBeforeRender = true;
+        this.backgroundColor = ValueToColor('rgba(0,0,0,0)');
+        this.transparent = true;
+    },
 
     setBackgroundColor: function (color)
     {
@@ -352,6 +353,6 @@ Camera.prototype = {
         this.state = undefined;
     }
 
-};
+});
 
 module.exports = Camera;

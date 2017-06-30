@@ -1,3 +1,4 @@
+var Class = require('../utils/Class');
 var GetValue = require('../utils/object/GetValue');
 
 //  var camControl = new CameraControl({
@@ -7,34 +8,34 @@ var GetValue = require('../utils/object/GetValue');
 //      speed: float OR { x: 0, y: 0 }
 //  })
 
-var KeyControl = function (config)
-{
-    this.camera = GetValue(config, 'camera', null);
+var KeyControl = new Class({
 
-    this.left = GetValue(config, 'left', null);
-    this.right = GetValue(config, 'right', null);
-    this.up = GetValue(config, 'up', null);
-    this.down = GetValue(config, 'down', null);
+    initialize:
 
-    var speed = GetValue(config, 'speed', null);
-
-    if (typeof speed === 'number')
+    function KeyControl (config)
     {
-        this.speedX = speed;
-        this.speedY = speed;
-    }
-    else
-    {
-        this.speedX = GetValue(config, 'speed.x', 0);
-        this.speedY = GetValue(config, 'speed.y', 0);
-    }
+        this.camera = GetValue(config, 'camera', null);
 
-    this.active = (this.camera !== null);
-};
+        this.left = GetValue(config, 'left', null);
+        this.right = GetValue(config, 'right', null);
+        this.up = GetValue(config, 'up', null);
+        this.down = GetValue(config, 'down', null);
 
-KeyControl.prototype.constructor = KeyControl;
+        var speed = GetValue(config, 'speed', null);
 
-KeyControl.prototype = {
+        if (typeof speed === 'number')
+        {
+            this.speedX = speed;
+            this.speedY = speed;
+        }
+        else
+        {
+            this.speedX = GetValue(config, 'speed.x', 0);
+            this.speedY = GetValue(config, 'speed.y', 0);
+        }
+
+        this.active = (this.camera !== null);
+    },
 
     start: function ()
     {
@@ -85,6 +86,7 @@ KeyControl.prototype = {
         this.up = null;
         this.down = null;
     }
-};
+
+});
 
 module.exports = KeyControl;

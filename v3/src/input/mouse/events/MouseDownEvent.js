@@ -1,16 +1,22 @@
+var Class = require('../../../utils/Class');
 var Event = require('../../../events/Event');
 
-var MouseDownEvent = function (nativeEvent)
-{
-    Event.call(this, 'MOUSE_DOWN_EVENT');
+var MouseDownEvent = new Class({
 
-    this.data = nativeEvent;
+    Extends: Event,
 
-    this.x = nativeEvent.clientX;
-    this.y = nativeEvent.clientY;
-};
+    initialize:
 
-MouseDownEvent.prototype = Object.create(Event.prototype);
-MouseDownEvent.prototype.constructor = MouseDownEvent;
+    function MouseDownEvent (nativeEvent)
+    {
+        Event.call(this, 'MOUSE_DOWN_EVENT');
+
+        this.data = nativeEvent;
+
+        this.x = nativeEvent.clientX;
+        this.y = nativeEvent.clientY;
+    }
+
+});
 
 module.exports = MouseDownEvent;

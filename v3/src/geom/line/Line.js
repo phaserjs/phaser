@@ -1,18 +1,20 @@
+var Class = require('../../utils/Class');
+
 //  Defines a Line segment, a part of a line between two endpoints
 
-var Line = function (x1, y1, x2, y2)
-{
-    this.x1 = 0;
-    this.y1 = 0;
-    this.x2 = 0;
-    this.y2 = 0;
+var Line = new Class({
 
-    this.setTo(x1, y1, x2, y2);
-};
+    initialize:
 
-Line.prototype.constructor = Line;
+    function Line (x1, y1, x2, y2)
+    {
+        this.x1 = 0;
+        this.y1 = 0;
+        this.x2 = 0;
+        this.y2 = 0;
 
-Line.prototype = {
+        this.setTo(x1, y1, x2, y2);
+    },
 
     setTo: function (x1, y1, x2, y2)
     {
@@ -38,15 +40,9 @@ Line.prototype = {
     getPointB: function ()
     {
         return { x1: this.x2, y1: this.y2 };
-    }
-
-};
-
-Object.defineProperties(Line.prototype, {
+    },
 
     left: {
-
-        enumerable: true,
 
         get: function ()
         {
@@ -69,8 +65,6 @@ Object.defineProperties(Line.prototype, {
 
     right: {
 
-        enumerable: true,
-
         get: function ()
         {
             return Math.max(this.x1, this.x2);
@@ -92,8 +86,6 @@ Object.defineProperties(Line.prototype, {
 
     top: {
 
-        enumerable: true,
-
         get: function ()
         {
             return Math.min(this.y1, this.y2);
@@ -114,8 +106,6 @@ Object.defineProperties(Line.prototype, {
     },
 
     bottom: {
-
-        enumerable: true,
 
         get: function ()
         {

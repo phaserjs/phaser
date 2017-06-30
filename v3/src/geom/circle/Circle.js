@@ -1,20 +1,22 @@
-var Circle = function (x, y, radius)
-{
-    if (x === undefined) { x = 0; }
-    if (y === undefined) { y = 0; }
-    if (radius === undefined) { radius = 0; }
+var Class = require('../../utils/Class');
 
-    this.x = x;
+var Circle = new Class({
 
-    this.y = y;
+    initialize:
 
-    this._radius = radius;
-    this._diameter = radius * 2;
-};
+    function Circle (x, y, radius)
+    {
+        if (x === undefined) { x = 0; }
+        if (y === undefined) { y = 0; }
+        if (radius === undefined) { radius = 0; }
 
-Circle.prototype.constructor = Circle;
+        this.x = x;
 
-Circle.prototype = {
+        this.y = y;
+
+        this._radius = radius;
+        this._diameter = radius * 2;
+    },
 
     setTo: function (x, y, radius)
     {
@@ -44,15 +46,9 @@ Circle.prototype = {
     isEmpty: function ()
     {
         return (this._radius <= 0);
-    }
-
-};
-
-Object.defineProperties(Circle.prototype, {
+    },
 
     radius: {
-
-        enumerable: true,
 
         get: function ()
         {
@@ -69,8 +65,6 @@ Object.defineProperties(Circle.prototype, {
 
     diameter: {
 
-        enumerable: true,
-
         get: function ()
         {
             return this._diameter;
@@ -86,8 +80,6 @@ Object.defineProperties(Circle.prototype, {
 
     left: {
 
-        enumerable: true,
-
         get: function ()
         {
             return this.x - this._radius;
@@ -101,8 +93,6 @@ Object.defineProperties(Circle.prototype, {
     },
 
     right: {
-
-        enumerable: true,
 
         get: function ()
         {
@@ -118,8 +108,6 @@ Object.defineProperties(Circle.prototype, {
 
     top: {
 
-        enumerable: true,
-
         get: function ()
         {
             return this.y - this._radius;
@@ -133,8 +121,6 @@ Object.defineProperties(Circle.prototype, {
     },
 
     bottom: {
-
-        enumerable: true,
 
         get: function ()
         {

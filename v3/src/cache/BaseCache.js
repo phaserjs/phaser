@@ -1,17 +1,19 @@
-var CacheEntry = require('./CacheEntry');
-var Events = require('./events');
+var Class = require('../utils/Class');
 var EventDispatcher = require('../events/EventDispatcher');
+var Events = require('./events');
 
-var BaseCache = function ()
-{
-    this.entries = new Map();
+//  Phaser.Cache.BaseCache
 
-    this.events = new EventDispatcher();
-};
+var BaseCache = new Class({
 
-BaseCache.prototype.constructor = BaseCache;
+    initialize:
 
-BaseCache.prototype = {
+    function BaseCache ()
+    {
+        this.entries = new Map();
+
+        this.events = new EventDispatcher();
+    },
 
     add: function (key, data)
     {
@@ -47,6 +49,6 @@ BaseCache.prototype = {
         this.entries.clear();
     }
 
-};
+});
 
 module.exports = BaseCache;

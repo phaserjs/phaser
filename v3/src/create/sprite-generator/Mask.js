@@ -16,7 +16,6 @@
  *   @param {height} Height of the mask data array
  *   @param {mirrorX} A boolean describing whether the mask should be mirrored on the x axis
  *   @param {mirrorY} A boolean describing whether the mask should be mirrored on the y axis
- */
 export default function Mask (data, width, height, mirrorX = true, mirrorY = true) {
 
     return {
@@ -28,3 +27,4 @@ export default function Mask (data, width, height, mirrorX = true, mirrorY = tru
     };
 
 }
+ */

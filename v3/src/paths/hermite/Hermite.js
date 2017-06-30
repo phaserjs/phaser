@@ -117,8 +117,6 @@ var Hermite = function (p1x, p1y, p2x, p2y, v1x, v1y, v2x, v2y, accuracy)
     this.recalculate();
 };
 
-Hermite.prototype.constructor = Hermite;
-
 Hermite.prototype = {
 
     /**
@@ -392,5 +390,7 @@ Object.defineProperties(Hermite.prototype, {
     }
 
 });
+
+Hermite.prototype.constructor = Hermite;
 
 module.exports = Hermite;

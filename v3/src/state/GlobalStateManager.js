@@ -519,8 +519,6 @@ GlobalStateManager.prototype = {
         //  Sort the 'active' array based on the index property
         this.active.sort(this.sortStates);
 
-        state.sys.updates.running = true;
-
         if (state.create)
         {
             state.create.call(state, state.sys.settings.data);

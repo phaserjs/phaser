@@ -1,26 +1,27 @@
+var Class = require('../../utils/Class');
 
 //  Encapsulates a 2D rectangle defined by its corner point in the top-left
 //  and its extends in x (width) and y (height)
 
-var Rectangle = function (x, y, width, height)
-{
-    if (x === undefined) { x = 0; }
-    if (y === undefined) { y = 0; }
-    if (width === undefined) { width = 0; }
-    if (height === undefined) { height = 0; }
+var Rectangle = new Class({
 
-    this.x = x;
+    initialize:
 
-    this.y = y;
+    function Rectangle (x, y, width, height)
+    {
+        if (x === undefined) { x = 0; }
+        if (y === undefined) { y = 0; }
+        if (width === undefined) { width = 0; }
+        if (height === undefined) { height = 0; }
 
-    this.width = width;
+        this.x = x;
 
-    this.height = height;
-};
+        this.y = y;
 
-Rectangle.prototype.constructor = Rectangle;
+        this.width = width;
 
-Rectangle.prototype = {
+        this.height = height;
+    },
 
     setTo: function (x, y, width, height)
     {
@@ -84,15 +85,9 @@ Rectangle.prototype = {
     getLineD: function ()
     {
         return { x1: this.x, y1: this.bottom, x2: this.x, y2: this.y };
-    }
-
-};
-
-Object.defineProperties(Rectangle.prototype, {
+    },
 
     left: {
-
-        enumerable: true,
 
         get: function ()
         {
@@ -117,8 +112,6 @@ Object.defineProperties(Rectangle.prototype, {
 
     right: {
 
-        enumerable: true,
-
         get: function ()
         {
             return this.x + this.width;
@@ -139,8 +132,6 @@ Object.defineProperties(Rectangle.prototype, {
     },
 
     top: {
-
-        enumerable: true,
 
         get: function ()
         {
@@ -164,8 +155,6 @@ Object.defineProperties(Rectangle.prototype, {
 
     bottom: {
 
-        enumerable: true,
-
         get: function ()
         {
             return this.y + this.height;
@@ -187,8 +176,6 @@ Object.defineProperties(Rectangle.prototype, {
 
     centerX: {
 
-        enumerable: true,
-
         get: function ()
         {
             return this.x + (this.width / 2);
@@ -202,8 +189,6 @@ Object.defineProperties(Rectangle.prototype, {
     },
 
     centerY: {
-
-        enumerable: true,
 
         get: function ()
         {

@@ -1,16 +1,18 @@
-var Point = function (x, y)
-{
-    if (x === undefined) { x = 0; }
-    if (y === undefined) { y = x; }
+var Class = require('../../utils/Class');
 
-    this.x = x;
+var Point = new Class({
 
-    this.y = y;
-};
+    initialize:
 
-Point.prototype.constructor = Point;
+    function Point (x, y)
+    {
+        if (x === undefined) { x = 0; }
+        if (y === undefined) { y = x; }
 
-Point.prototype = {
+        this.x = x;
+
+        this.y = y;
+    },
 
     setTo: function (x, y)
     {
@@ -23,6 +25,6 @@ Point.prototype = {
         return this;
     }
 
-};
+});
 
 module.exports = Point;

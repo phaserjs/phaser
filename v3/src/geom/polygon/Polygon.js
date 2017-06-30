@@ -1,24 +1,26 @@
-var Polygon = function (points)
-{
-    /**
-    * @property {number} area - The area of this Polygon.
-    */
-    this.area = 0;
+var Class = require('../../utils/Class');
 
-    /**
-    * @property {array} points - An array of number pair objects that make up this polygon. I.e. [ {x,y}, {x,y}, {x,y} ]
-    */
-    this.points = [];
+var Polygon = new Class({
 
-    if (points)
+    initialize:
+
+    function Polygon (points)
     {
-        this.setTo(points);
-    }
-};
+        /**
+        * @property {number} area - The area of this Polygon.
+        */
+        this.area = 0;
 
-Polygon.prototype.constructor = Polygon;
+        /**
+        * @property {array} points - An array of number pair objects that make up this polygon. I.e. [ {x,y}, {x,y}, {x,y} ]
+        */
+        this.points = [];
 
-Polygon.prototype = {
+        if (points)
+        {
+            this.setTo(points);
+        }
+    },
 
     /**
      * Sets this Polygon to the given points.
@@ -149,6 +151,6 @@ Polygon.prototype = {
         return this.area;
     }
 
-};
+});
 
 module.exports = Polygon;

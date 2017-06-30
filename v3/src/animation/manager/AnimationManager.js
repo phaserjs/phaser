@@ -4,10 +4,10 @@
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
-var Map = require('../../structs/Map');
+var Class = require('../../utils/Class');
 var Components = require('./components/');
 var EventDispatcher = require('../../events/EventDispatcher');
-var Event = require('./events');
+var Map = require('../../structs/Map');
 
 /**
 * Animations are managed by the global AnimationManager. This is a singleton class that is
@@ -20,24 +20,24 @@ var Event = require('./events');
 * @class Phaser.AnimationManager
 * @constructor
 */
-var AnimationManager = function (game)
-{
-    this.game = game;
+var AnimationManager = new Class({
 
-    this.textureManager = null;
+    initialize:
 
-    this.events = new EventDispatcher();
+    function AnimationManager (game)
+    {
+        this.game = game;
 
-    this.globalTimeScale = 1;
+        this.textureManager = null;
 
-    this.anims = new Map();
+        this.events = new EventDispatcher();
 
-    this.paused = false;
-};
+        this.globalTimeScale = 1;
 
-AnimationManager.prototype.constructor = AnimationManager;
+        this.anims = new Map();
 
-AnimationManager.prototype = {
+        this.paused = false;
+    },
 
     boot: function (textureManager)
     {
@@ -62,6 +62,7 @@ AnimationManager.prototype = {
     {
         //  TODO
     }
-};
+
+});
 
 module.exports = AnimationManager;

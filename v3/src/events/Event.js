@@ -1,16 +1,18 @@
-var Event = function (type)
-{
-    this.type = type;
+var Class = require('../utils/Class');
 
-    //  The element that initiated the event.
-    this.target;
+var Event = new Class({
 
-    this._propagate = true;
-};
+    initialize:
 
-Event.prototype.constructor = Event;
+    function Event (type)
+    {
+        this.type = type;
 
-Event.prototype = {
+        //  The element that initiated the event.
+        this.target;
+
+        this._propagate = true;
+    },
 
     reset: function (target)
     {
@@ -24,6 +26,6 @@ Event.prototype = {
         this._propagate = false;
     }
 
-};
+});
 
 module.exports = Event;

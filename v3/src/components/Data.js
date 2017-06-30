@@ -1,35 +1,29 @@
-/**
-* @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2016 Photon Storm Ltd.
-* @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
-*/
 
+var Class = require('../utils/Class');
 var Event = require('../events/Event');
 var EventDispatcher = require('../events/EventDispatcher');
 
 /**
 * The Data Component features a means to store pieces of data specific to a Game Object,
 * search it, query it, and retrieve it.
-*
-* @class
 */
-var Data = function (parent)
-{
-    this.parent = parent;
+var Data = new Class({
 
-    this.events = new EventDispatcher();
+    initialize:
 
-    this.list = {};
+    function Data (parent)
+    {
+        this.parent = parent;
 
-    this._beforeCallbacks = {};
-    this._afterCallbacks = {};
+        this.events = new EventDispatcher();
 
-    this._frozen = false;
-};
+        this.list = {};
 
-Data.prototype.constructor = Data;
+        this._beforeCallbacks = {};
+        this._afterCallbacks = {};
 
-Data.prototype = {
+        this._frozen = false;
+    },
 
     //  Retrieves the value for the given key, or undefined if it doesn't exist.
     get: function (key)
@@ -238,11 +232,7 @@ Data.prototype = {
         }
 
         this._frozen = false;
-    }
-
-};
-
-Object.defineProperties(Data.prototype, {
+    },
 
     /**
     * Freeze this Data component, so no changes can be written to it.
@@ -251,8 +241,6 @@ Object.defineProperties(Data.prototype, {
     * @property {boolean} freeze
     */
     freeze: {
-
-        enumerable: true,
 
         get: function ()
         {
@@ -267,8 +255,6 @@ Object.defineProperties(Data.prototype, {
     },
 
     count: {
-
-        enumerable: true,
 
         get: function ()
         {

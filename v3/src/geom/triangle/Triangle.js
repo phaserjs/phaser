@@ -1,24 +1,26 @@
+var Class = require('../../utils/Class');
+
 // A triangle is a plane created by connecting three points.
 // The first two arguments specify the first point, the middle two arguments
 // specify the second point, and the last two arguments specify the third point.
 
-var Triangle = function (x1, y1, x2, y2, x3, y3)
-{
-    this.x1 = 0;
-    this.y1 = 0;
+var Triangle = new Class({
 
-    this.x2 = 0;
-    this.y2 = 0;
+    initialize:
 
-    this.x3 = 0;
-    this.y3 = 0;
+    function Triangle (x1, y1, x2, y2, x3, y3)
+    {
+        this.x1 = 0;
+        this.y1 = 0;
 
-    this.setTo(x1, y1, x2, y2, x3, y3);
-};
+        this.x2 = 0;
+        this.y2 = 0;
 
-Triangle.prototype.constructor = Triangle;
+        this.x3 = 0;
+        this.y3 = 0;
 
-Triangle.prototype = {
+        this.setTo(x1, y1, x2, y2, x3, y3);
+    },
 
     setTo: function (x1, y1, x2, y2, x3, y3)
     {
@@ -54,15 +56,9 @@ Triangle.prototype = {
     getLineC: function ()
     {
         return { x1: this.x3, y1: this.y3, x2: this.x1, y2: this.y1 };
-    }
-
-};
-
-Object.defineProperties(Triangle.prototype, {
+    },
 
     left: {
-
-        enumerable: true,
 
         get: function ()
         {
@@ -95,8 +91,6 @@ Object.defineProperties(Triangle.prototype, {
 
     right: {
 
-        enumerable: true,
-
         get: function ()
         {
             return Math.max(this.x1, this.x2, this.x3);
@@ -128,8 +122,6 @@ Object.defineProperties(Triangle.prototype, {
 
     top: {
 
-        enumerable: true,
-
         get: function ()
         {
             return Math.min(this.y1, this.y2, this.y3);
@@ -160,8 +152,6 @@ Object.defineProperties(Triangle.prototype, {
     },
 
     bottom: {
-
-        enumerable: true,
 
         get: function ()
         {

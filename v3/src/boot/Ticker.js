@@ -1,3 +1,11 @@
+//  Currently un-used
+//  Currently un-used
+//  Currently un-used
+//  Currently un-used
+//  Currently un-used
+//  Currently un-used
+//  Currently un-used
+
 var NOOP = require('../utils/NOOP');
 var RequestAnimationFrame = require('../dom/RequestAnimationFrame');
 

@@ -12,6 +12,8 @@ var Video = require('./Video');
 var Fullscreen = require('./Fullscreen');
 var CanvasFeatures = require('./CanvasFeatures');
 
+//  Phaser.Device
+
 module.exports = {
 
     OS: OS,

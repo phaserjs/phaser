@@ -16,8 +16,6 @@ var Color = function (gameObject)
 
     this.state = gameObject.state;
 
-    this._dirty = false;
-
     this._alpha = 1;
     this._worldAlpha = 1;
 
@@ -64,7 +62,7 @@ Color.prototype = {
             this._a = (alpha) ? alpha : 1;
         }
 
-        this.dirty = true;
+        this.update();
     },
 
     clearTint: function ()
@@ -90,14 +88,12 @@ Color.prototype = {
 
         this._hasTint = true;
 
-        this.dirty = true;
+        this.update();
     },
 
     //  Called by the Dirty Manager
     update: function ()
     {
-        this._dirty = false;
-
         if (this._hasBackground)
         {
             this._rgba = 'rgba(' + this._r + ',' + this._g + ',' + this._b + ',' + this._a + ')';
@@ -105,7 +101,6 @@ Color.prototype = {
         }
 
         //  Tint mults?
-
     },
 
     getColor: function (value)
@@ -131,34 +126,6 @@ Color.prototype = {
 
 Object.defineProperties(Color.prototype, {
 
-    dirty: {
-
-        enumerable: true,
-
-        get: function ()
-        {
-            return this._dirty;
-        },
-
-        set: function (value)
-        {
-            if (value)
-            {
-                if (!this._dirty)
-                {
-                    this._dirty = true;
-
-                    this.state.sys.updates.add(this);
-                }
-            }
-            else
-            {
-                this._dirty = false;
-            }
-        }
-
-    },
-
     tintTopLeft: {
 
         enumerable: true,
@@ -172,7 +139,7 @@ Object.defineProperties(Color.prototype, {
         {
             this._tint.topLeft = value;
             this._glTint.topLeft = this.getColor(value);
-            this.dirty = true;
+            this.update();
         }
 
     },
@@ -190,7 +157,7 @@ Object.defineProperties(Color.prototype, {
         {
             this._tint.topRight = value;
             this._glTint.topRight = this.getColor(value);
-            this.dirty = true;
+            this.update();
         }
 
     },
@@ -208,7 +175,7 @@ Object.defineProperties(Color.prototype, {
         {
             this._tint.bottomLeft = value;
             this._glTint.bottomLeft = this.getColor(value);
-            this.dirty = true;
+            this.update();
         }
 
     },
@@ -226,7 +193,7 @@ Object.defineProperties(Color.prototype, {
         {
             this._tint.bottomRight = value;
             this._glTint.bottomRight = this.getColor(value);
-            this.dirty = true;
+            this.update();
         }
 
     },
@@ -261,7 +228,7 @@ Object.defineProperties(Color.prototype, {
             if (value !== this._alpha)
             {
                 this._alpha = value;
-                this.dirty = true;
+                this.update();
             }
         }
 
@@ -281,7 +248,7 @@ Object.defineProperties(Color.prototype, {
             if (value !== this._blendMode && value >= 0 && value <= 16)
             {
                 this._blendMode = value;
-                this.dirty = true;
+                this.update();
             }
         }
 
@@ -323,7 +290,7 @@ Object.defineProperties(Color.prototype, {
             {
                 this._a = value;
                 this._hasBackground = true;
-                this.dirty = true;
+                this.update();
             }
         }
 
@@ -344,7 +311,7 @@ Object.defineProperties(Color.prototype, {
             {
                 this._r = value | 0;
                 this._hasBackground = true;
-                this.dirty = true;
+                this.update();
             }
         }
 
@@ -365,7 +332,7 @@ Object.defineProperties(Color.prototype, {
             {
                 this._g = value | 0;
                 this._hasBackground = true;
-                this.dirty = true;
+                this.update();
             }
         }
 
@@ -386,7 +353,7 @@ Object.defineProperties(Color.prototype, {
             {
                 this._b = value | 0;
                 this._hasBackground = true;
-                this.dirty = true;
+                this.update();
             }
         }
 

@@ -1,3 +1,4 @@
+var Class = require('../utils/Class');
 var GetValue = require('../utils/object/GetValue');
 
 //  var camControl = new SmoothedKeyControl({
@@ -9,63 +10,63 @@ var GetValue = require('../utils/object/GetValue');
 //      maxSpeed: float || { x: 0, y: 0 }
 //  })
 
-var SmoothedKeyControl = function (config)
-{
-    this.camera = GetValue(config, 'camera', null);
+var SmoothedKeyControl = new Class({
 
-    this.left = GetValue(config, 'left', null);
-    this.right = GetValue(config, 'right', null);
-    this.up = GetValue(config, 'up', null);
-    this.down = GetValue(config, 'down', null);
+    initialize:
 
-    var accel = GetValue(config, 'acceleration', null);
-
-    if (typeof accel === 'number')
+    function SmoothedKeyControl (config)
     {
-        this.accelX = accel;
-        this.accelY = accel;
-    }
-    else
-    {
-        this.accelX = GetValue(config, 'acceleration.x', 0);
-        this.accelY = GetValue(config, 'acceleration.y', 0);
-    }
+        this.camera = GetValue(config, 'camera', null);
 
-    var drag = GetValue(config, 'drag', null);
+        this.left = GetValue(config, 'left', null);
+        this.right = GetValue(config, 'right', null);
+        this.up = GetValue(config, 'up', null);
+        this.down = GetValue(config, 'down', null);
 
-    if (typeof drag === 'number')
-    {
-        this.dragX = drag;
-        this.dragY = drag;
-    }
-    else
-    {
-        this.dragX = GetValue(config, 'drag.x', 0);
-        this.dragY = GetValue(config, 'drag.y', 0);
-    }
+        var accel = GetValue(config, 'acceleration', null);
 
-    var maxSpeed = GetValue(config, 'maxSpeed', null);
+        if (typeof accel === 'number')
+        {
+            this.accelX = accel;
+            this.accelY = accel;
+        }
+        else
+        {
+            this.accelX = GetValue(config, 'acceleration.x', 0);
+            this.accelY = GetValue(config, 'acceleration.y', 0);
+        }
 
-    if (typeof maxSpeed === 'number')
-    {
-        this.maxSpeedX = maxSpeed;
-        this.maxSpeedY = maxSpeed;
-    }
-    else
-    {
-        this.maxSpeedX = GetValue(config, 'maxSpeed.x', 0);
-        this.maxSpeedY = GetValue(config, 'maxSpeed.y', 0);
-    }
+        var drag = GetValue(config, 'drag', null);
 
-    this._speedX = 0;
-    this._speedY = 0;
+        if (typeof drag === 'number')
+        {
+            this.dragX = drag;
+            this.dragY = drag;
+        }
+        else
+        {
+            this.dragX = GetValue(config, 'drag.x', 0);
+            this.dragY = GetValue(config, 'drag.y', 0);
+        }
 
-    this.active = (this.camera !== null);
-};
+        var maxSpeed = GetValue(config, 'maxSpeed', null);
 
-SmoothedKeyControl.prototype.constructor = SmoothedKeyControl;
+        if (typeof maxSpeed === 'number')
+        {
+            this.maxSpeedX = maxSpeed;
+            this.maxSpeedY = maxSpeed;
+        }
+        else
+        {
+            this.maxSpeedX = GetValue(config, 'maxSpeed.x', 0);
+            this.maxSpeedY = GetValue(config, 'maxSpeed.y', 0);
+        }
 
-SmoothedKeyControl.prototype = {
+        this._speedX = 0;
+        this._speedY = 0;
+
+        this.active = (this.camera !== null);
+    },
 
     start: function ()
     {
@@ -190,6 +191,7 @@ SmoothedKeyControl.prototype = {
         this.up = null;
         this.down = null;
     }
-};
+
+});
 
 module.exports = SmoothedKeyControl;

@@ -1,24 +1,26 @@
+var Class = require('../../utils/Class');
+
 //  https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent
 //  https://github.com/WICG/EventListenerOptions/blob/gh-pages/explainer.md
 
-var MouseManager = function (inputManager)
-{
-    this.manager = inputManager;
+var MouseManager = new Class({
 
-    this.enabled = false;
+    initialize:
 
-    this.target;
+    function MouseManager (inputManager)
+    {
+        this.manager = inputManager;
 
-    this.handler;
-};
+        this.enabled = false;
 
-MouseManager.prototype.constructor = MouseManager;
+        this.target;
 
-MouseManager.prototype = {
+        this.handler;
+    },
 
     boot: function ()
     {
-        var config = this.manager.gameConfig;
+        var config = this.manager.config;
 
         this.enabled = config.inputMouse;
         this.target = config.inputMouseEventTarget;
@@ -62,6 +64,7 @@ MouseManager.prototype = {
         this.target.removeEventListener('mousedown', this.handler);
         this.target.removeEventListener('mouseup', this.handler);
     }
-};
+
+});
 
 module.exports = MouseManager;

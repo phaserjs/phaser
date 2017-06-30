@@ -1,5 +1,6 @@
-var NOOP = require('../utils/NOOP');
+var Class = require('../utils/Class');
 var GetValue = require('../utils/object/GetValue');
+var NOOP = require('../utils/NOOP');
 var RequestAnimationFrame = require('../dom/RequestAnimationFrame');
 
 //  Frame Rate config
@@ -13,66 +14,65 @@ var RequestAnimationFrame = require('../dom/RequestAnimationFrame');
 //     }
 
 // http://www.testufo.com/#test=animation-time-graph
-// 
 
-var TimeStep = function (game, config)
-{
-    this.game = game;
+var TimeStep = new Class({
 
-    this.raf = new RequestAnimationFrame();
+    initialize:
 
-    this.started = false;
-    this.running = false;
-    
-    this.minFps = GetValue(config, 'min', 5);
-    this.maxFps = GetValue(config, 'max', 120);
-    this.targetFps = GetValue(config, 'target', 60);
+    function TimeStep (game, config)
+    {
+        this.game = game;
 
-    this._min = 1000 / this.minFps;         //  200ms between frames (i.e. super slow!)
-    this._max = 1000 / this.maxFps;         //  8.333ms between frames (i.e. super fast, 120Hz displays)
-    this._target = 1000 / this.targetFps;   //  16.666ms between frames (i.e. normal)
+        this.raf = new RequestAnimationFrame();
 
-    //  200 / 1000 = 0.2 (5fps)
-    //  8.333 / 1000 = 0.008333 (120fps)
-    //  16.666 / 1000 = 0.01666 (60fps)
+        this.started = false;
+        this.running = false;
+        
+        this.minFps = GetValue(config, 'min', 5);
+        this.maxFps = GetValue(config, 'max', 120);
+        this.targetFps = GetValue(config, 'target', 60);
 
-    /**
-    * @property {number} fps - An exponential moving average of the frames per second.
-    * @readOnly
-    */
-    this.actualFps = this.targetFps;
+        this._min = 1000 / this.minFps;         //  200ms between frames (i.e. super slow!)
+        this._max = 1000 / this.maxFps;         //  8.333ms between frames (i.e. super fast, 120Hz displays)
+        this._target = 1000 / this.targetFps;   //  16.666ms between frames (i.e. normal)
 
-    this.nextFpsUpdate = 0;
-    this.framesThisSecond = 0;
+        //  200 / 1000 = 0.2 (5fps)
+        //  8.333 / 1000 = 0.008333 (120fps)
+        //  16.666 / 1000 = 0.01666 (60fps)
 
-    this.callback = NOOP;
+        /**
+        * @property {number} fps - An exponential moving average of the frames per second.
+        * @readOnly
+        */
+        this.actualFps = this.targetFps;
 
-    this.forceSetTimeOut = GetValue(config, 'forceSetTimeOut', false);
+        this.nextFpsUpdate = 0;
+        this.framesThisSecond = 0;
 
-    this.time = 0;
-    this.startTime = 0;
-    this.lastTime = 0;
-    this.frame = 0;
+        this.callback = NOOP;
 
-    this.inFocus = true;
+        this.forceSetTimeOut = GetValue(config, 'forceSetTimeOut', false);
 
-    this._pauseTime = 0;
-    this._coolDown = 0;
+        this.time = 0;
+        this.startTime = 0;
+        this.lastTime = 0;
+        this.frame = 0;
 
-    this.delta = 0;
-    this.deltaIndex = 0;
-    this.deltaHistory = [];
-    this.deltaSmoothingMax = GetValue(config, 'deltaHistory', 10);
-    this.panicMax = GetValue(config, 'panicMax', 120);
+        this.inFocus = true;
 
-    //  The actual elapsed time in ms between one update and the next.
-    //  No smoothing, no capping, no averaging. So please be aware of this when using the contents of this property.
-    this.rawDelta = 0;
-};
+        this._pauseTime = 0;
+        this._coolDown = 0;
 
-TimeStep.prototype.constructor = TimeStep;
+        this.delta = 0;
+        this.deltaIndex = 0;
+        this.deltaHistory = [];
+        this.deltaSmoothingMax = GetValue(config, 'deltaHistory', 10);
+        this.panicMax = GetValue(config, 'panicMax', 120);
 
-TimeStep.prototype = {
+        //  The actual elapsed time in ms between one update and the next.
+        //  No smoothing, no capping, no averaging. So please be aware of this when using the contents of this property.
+        this.rawDelta = 0;
+    },
 
     //  Called when the DOM window.onBlur event triggers
     blur: function ()
@@ -366,7 +366,13 @@ TimeStep.prototype = {
         this.raf.stop();
 
         return this;
+    },
+
+    destroy: function ()
+    {
+
     }
-};
+
+});
 
 module.exports = TimeStep;

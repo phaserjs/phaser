@@ -1,4 +1,5 @@
 
+var Class = require('../utils/Class');
 var Config = require('./Config');
 var DebugHeader = require('./DebugHeader');
 var Device = require('../device');
@@ -9,79 +10,81 @@ var EventDispatcher = require('../events/EventDispatcher');
 var VisibilityHandler = require('./VisibilityHandler');
 
 var AnimationManager = require('../animation/manager/AnimationManager');
-var Cache = require('../cache/Cache');
 var CreateRenderer = require('./CreateRenderer');
 var Data = require('../components/Data');
+var GlobalCache = require('../cache/GlobalCache');
 var GlobalInputManager = require('../input/GlobalInputManager');
 var GlobalStateManager = require('../state/GlobalStateManager');
 var TextureManager = require('../textures/TextureManager');
 var TimeStep = require('./TimeStep');
 
-var Game = function (config)
-{
-    this.config = new Config(config);
+var Game = new Class({
 
-    this.renderer = null;
-    this.canvas = null;
-    this.context = null;
+    initialize:
 
-    this.isBooted = false;
-    this.isRunning = false;
+    function Game (config)
+    {
+        this.config = new Config(config);
 
-    /**
-    * @property {EventDispatcher} events - Global / Global Game System Events
-    */
-    this.events = new EventDispatcher();
+        this.renderer = null;
+        this.canvas = null;
+        this.context = null;
 
-    /**
-    * @property {Phaser.AnimationManager} anims - Reference to the Phaser Animation Manager.
-    */
-    this.anims = new AnimationManager(this);
+        this.isBooted = false;
+        this.isRunning = false;
 
-    /**
-    * @property {Phaser.TextureManager} textures - Reference to the Phaser Texture Manager.
-    */
-    this.textures = new TextureManager(this);
+        /**
+        * @property {EventDispatcher} events - Global / Global Game System Events
+        */
+        this.events = new EventDispatcher();
 
-    /**
-    * @property {Phaser.Cache} cache - Reference to the assets cache.
-    */
-    this.cache = new Cache();
+        /**
+        * @property {Phaser.AnimationManager} anims - Reference to the Phaser Animation Manager.
+        */
+        this.anims = new AnimationManager(this);
 
-    /**
-    * @property {Phaser.Data} registry - Game wide data store.
-    */
-    this.registry = new Data(this);
+        /**
+        * @property {Phaser.TextureManager} textures - Reference to the Phaser Texture Manager.
+        */
+        this.textures = new TextureManager(this);
 
-    /**
-    * @property {Phaser.Input} input - Reference to the input manager
-    */
-    this.input = new GlobalInputManager(this, this.config);
+        /**
+        * @property {Phaser.Cache} cache - Reference to the assets cache.
+        */
+        this.cache = new GlobalCache(this);
 
-    /**
-    * @property {Phaser.GlobalStateManager} state - The StateManager. Phaser instance specific.
-    */
-    this.state = new GlobalStateManager(this, this.config.stateConfig);
+        /**
+        * @property {Phaser.Data} registry - Game wide data store.
+        */
+        this.registry = new Data(this);
 
-    /**
-    * @property {Phaser.Device} device - Contains device information and capabilities (singleton)
-    */
-    this.device = Device;
+        /**
+        * @property {Phaser.Input} input - Reference to the input manager
+        */
+        this.input = new GlobalInputManager(this, this.config);
 
-    /**
-    * @property {Phaser.MainLoop} mainloop - Main Loop handler.
-    * @protected
-    */
-    this.loop = new TimeStep(this, this.config.fps);
+        /**
+        * @property {Phaser.GlobalStateManager} state - The StateManager. Phaser instance specific.
+        */
+        this.state = new GlobalStateManager(this, this.config.stateConfig);
 
-    //  Wait for the DOM Ready event, then call boot.
-    DOMContentLoaded(this.boot.bind(this));
+        /**
+        * @property {Phaser.Device} device - Contains device information and capabilities (singleton)
+        */
+        this.device = Device;
 
-    //  For debugging only
-    window.game = this;
-};
+        /**
+        * @property {Phaser.MainLoop} mainloop - Main Loop handler.
+        * @protected
+        */
+        this.loop = new TimeStep(this, this.config.fps);
 
-Game.prototype = {
+        //  Wait for the DOM Ready event, then call boot.
+        DOMContentLoaded(this.boot.bind(this));
+
+        //  For debugging only
+        window.game = this;
+    },
 
     boot: function ()
     {
@@ -179,8 +182,7 @@ Game.prototype = {
     {
         this.loop.focus();
     }
-};
 
-Game.prototype.constructor = Game;
+});
 
 module.exports = Game;

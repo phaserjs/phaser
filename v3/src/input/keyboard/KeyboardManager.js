@@ -1,6 +1,7 @@
+var Class = require('../../utils/Class');
 var Event = require('./events');
-var KeyCodes = require('./keys/KeyCodes');
 var Key = require('./keys/Key');
+var KeyCodes = require('./keys/KeyCodes');
 var KeyCombo = require('./combo/KeyCombo');
 var ProcessKeyCombo = require('./combo/ProcessKeyCombo');
 var ProcessKeyDown = require('./keys/ProcessKeyDown');
@@ -20,29 +21,30 @@ var ProcessKeyUp = require('./keys/ProcessKeyUp');
 * @constructor
 * @param {Phaser.Game} game - A reference to the currently running game.
 */
-var KeyboardManager = function (inputManager)
-{
-    this.manager = inputManager;
 
-    this.enabled = false;
+var KeyboardManager = new Class({
 
-    this.target;
+    initialize:
 
-    this.keys = [];
+    function KeyboardManager (inputManager)
+    {
+        this.manager = inputManager;
 
-    this.combos = [];
+        this.enabled = false;
 
-    this.captures = [];
+        this.target;
 
-    //   Standard FIFO queue
-    this.queue = [];
+        this.keys = [];
 
-    this.handler;
-};
+        this.combos = [];
 
-KeyboardManager.prototype.constructor = KeyboardManager;
+        this.captures = [];
 
-KeyboardManager.prototype = {
+        //   Standard FIFO queue
+        this.queue = [];
+
+        this.handler;
+    },
 
     /**
     * The Boot handler is called by Phaser.Game when it first starts up.
@@ -53,7 +55,7 @@ KeyboardManager.prototype = {
     */
     boot: function ()
     {
-        var config = this.manager.gameConfig;
+        var config = this.manager.config;
 
         this.enabled = config.inputKeyboard;
         this.target = config.inputKeyboardEventTarget;
@@ -265,6 +267,6 @@ KeyboardManager.prototype = {
         }
     }
 
-};
+});
 
 module.exports = KeyboardManager;

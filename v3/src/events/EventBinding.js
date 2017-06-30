@@ -1,17 +1,18 @@
+var Class = require('../utils/Class');
 var CONST = require('./const');
 var EventListener = require('./EventListener');
 
-var EventBinding = function (dispatcher, type)
-{
-    this.dispatcher = dispatcher;
-    this.type = type;
-    this.state = CONST.DISPATCHER_IDLE;
-    this.active = [];
-};
+var EventBinding = new Class({
 
-EventBinding.prototype.constructor = EventBinding;
+    initialize:
 
-EventBinding.prototype = {
+    function EventBinding (dispatcher, type)
+    {
+        this.dispatcher = dispatcher;
+        this.type = type;
+        this.state = CONST.DISPATCHER_IDLE;
+        this.active = [];
+    },
 
     total: function ()
     {
@@ -263,6 +264,6 @@ EventBinding.prototype = {
         this.state = CONST.DISPATCHER_DESTROYED;
     }
 
-};
+});
 
 module.exports = EventBinding;

@@ -1,15 +1,21 @@
+var Class = require('../../utils/Class');
 var Event = require('../../events/Event');
 
-var CacheRemoveEvent = function (cache, key, data)
-{
-    Event.call(this, 'CACHE_ADD_EVENT');
+var CacheRemoveEvent = new Class({
 
-    this.cache = cache;
-    this.key = key;
-    this.data = data;
-};
+    Extends: Event,
 
-CacheRemoveEvent.prototype = Object.create(Event.prototype);
-CacheRemoveEvent.prototype.constructor = CacheRemoveEvent;
+    initialize:
+
+    function CacheRemoveEvent (cache, key, data)
+    {
+        Event.call(this, 'CACHE_REMOVE_EVENT');
+
+        this.cache = cache;
+        this.key = key;
+        this.data = data;
+    }
+
+});
 
 module.exports = CacheRemoveEvent;

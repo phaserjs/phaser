@@ -1,33 +1,32 @@
+var Class = require('../../utils/Class');
 var GetColor = require('./GetColor');
 var GetColor32 = require('./GetColor32');
 
-var Color = function (red, green, blue, alpha)
-{
-    if (red === undefined) { red = 0; }
-    if (green === undefined) { green = 0; }
-    if (blue === undefined) { blue = 0; }
-    if (alpha === undefined) { alpha = 255; }
+var Color = new Class({
 
-    //  All private
-    this.r = 0;
-    this.g = 0;
-    this.b = 0;
-    this.a = 255;
+    initialize:
 
-    this.gl = [ 0.0, 0.0, 0.0, 1.0 ];
+    function Color (red, green, blue, alpha)
+    {
+        if (red === undefined) { red = 0; }
+        if (green === undefined) { green = 0; }
+        if (blue === undefined) { blue = 0; }
+        if (alpha === undefined) { alpha = 255; }
 
-    this._color = 0;
-    this._color32 = 0;
-    this._rgba = '';
+        //  All private
+        this.r = 0;
+        this.g = 0;
+        this.b = 0;
+        this.a = 255;
 
-    this.dirty = true;
+        this.gl = [ 0.0, 0.0, 0.0, 1.0 ];
 
-    this.setTo(red, green, blue, alpha);
-};
+        this._color = 0;
+        this._color32 = 0;
+        this._rgba = '';
 
-Color.prototype.constructor = Color;
-
-Color.prototype = {
+        this.setTo(red, green, blue, alpha);
+    },
 
     transparent: function ()
     {
@@ -35,8 +34,6 @@ Color.prototype = {
         this.green = 0;
         this.blue = 0;
         this.alpha = 0;
-
-        this.dirty = true;
 
         return this.update();
     },
@@ -51,8 +48,6 @@ Color.prototype = {
         this.blue = blue;
         this.alpha = alpha;
 
-        this.dirty = true;
-
         return this.update();
     },
 
@@ -65,8 +60,6 @@ Color.prototype = {
         this.greenGL = green;
         this.blueGL = blue;
         this.alphaGL = alpha;
-
-        this.dirty = true;
 
         return this.update();
     },
@@ -82,23 +75,14 @@ Color.prototype = {
             this.alpha = color.a;
         }
 
-        this.dirty = true;
-
         return this.update();
     },
 
     update: function ()
     {
-        if (!this.dirty)
-        {
-            return this;
-        }
-
         this._color = GetColor(this.r, this.g, this.b);
         this._color32 = GetColor32(this.r, this.g, this.b, this.a);
         this._rgba = 'rgba(' + this.r + ',' + this.g + ',' + this.b + ',' + (this.a / 255) + ')';
-
-        this.dirty = false;
 
         return this;
     },
@@ -107,23 +91,12 @@ Color.prototype = {
     clone: function ()
     {
         return new Color(this.r, this.g, this.b, this.a);
-    }
-
-};
-
-Object.defineProperties(Color.prototype, {
+    },
 
     color: {
 
-        enumerable: true,
-
         get: function ()
         {
-            if (this.dirty)
-            {
-                this.update();
-            }
-
             return this._color;
         }
 
@@ -131,15 +104,8 @@ Object.defineProperties(Color.prototype, {
 
     color32: {
 
-        enumerable: true,
-
         get: function ()
         {
-            if (this.dirty)
-            {
-                this.update();
-            }
-
             return this._color32;
         }
 
@@ -147,15 +113,8 @@ Object.defineProperties(Color.prototype, {
 
     rgba: {
 
-        enumerable: true,
-
         get: function ()
         {
-            if (this.dirty)
-            {
-                this.update();
-            }
-
             return this._rgba;
         }
 
@@ -163,8 +122,6 @@ Object.defineProperties(Color.prototype, {
 
     //  Gets and sets the red value, normalized to the 0 to 1 range
     redGL: {
-
-        enumerable: true,
 
         get: function ()
         {
@@ -177,14 +134,12 @@ Object.defineProperties(Color.prototype, {
 
             this.r = Math.floor(this.gl[0] * 255);
 
-            this.dirty = true;
+            this.update();
         }
 
     },
 
     greenGL: {
-
-        enumerable: true,
 
         get: function ()
         {
@@ -197,14 +152,12 @@ Object.defineProperties(Color.prototype, {
 
             this.g = Math.floor(this.gl[1] * 255);
 
-            this.dirty = true;
+            this.update();
         }
 
     },
 
     blueGL: {
-
-        enumerable: true,
 
         get: function ()
         {
@@ -217,14 +170,12 @@ Object.defineProperties(Color.prototype, {
 
             this.b = Math.floor(this.gl[2] * 255);
 
-            this.dirty = true;
+            this.update();
         }
 
     },
 
     alphaGL: {
-
-        enumerable: true,
 
         get: function ()
         {
@@ -237,15 +188,13 @@ Object.defineProperties(Color.prototype, {
 
             this.a = Math.floor(this.gl[3] * 255);
 
-            this.dirty = true;
+            this.update();
         }
 
     },
 
     //  Gets and sets the red value, normalized to the 0 to 255 range
     red: {
-
-        enumerable: true,
 
         get: function ()
         {
@@ -260,14 +209,12 @@ Object.defineProperties(Color.prototype, {
 
             this.gl[0] = value / 255;
 
-            this.dirty = true;
+            this.update();
         }
 
     },
 
     green: {
-
-        enumerable: true,
 
         get: function ()
         {
@@ -282,14 +229,12 @@ Object.defineProperties(Color.prototype, {
 
             this.gl[1] = value / 255;
 
-            this.dirty = true;
+            this.update();
         }
 
     },
 
     blue: {
-
-        enumerable: true,
 
         get: function ()
         {
@@ -304,14 +249,12 @@ Object.defineProperties(Color.prototype, {
 
             this.gl[2] = value / 255;
 
-            this.dirty = true;
+            this.update();
         }
 
     },
 
     alpha: {
-
-        enumerable: true,
 
         get: function ()
         {
@@ -326,12 +269,11 @@ Object.defineProperties(Color.prototype, {
 
             this.gl[3] = value / 255;
 
-            this.dirty = true;
+            this.update();
         }
 
-    },
+    }
 
 });
-
 
 module.exports = Color;
