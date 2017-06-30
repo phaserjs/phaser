@@ -87,9 +87,6 @@ var Clock = new Class({
             this._active.push(event);
         }
 
-        //  Move pending events to the active list
-        // this._active = this._active.concat(this._pendingInsertion.splice(0));
-
         //  Clear the lists
         this._pendingRemoval.length = 0;
         this._pendingInsertion.length = 0;
@@ -150,16 +147,37 @@ var Clock = new Class({
         }
     },
 
-    destroy: function ()
+    //  State that owns this Clock is shutting down
+    shutdown: function ()
     {
-        for (var i = 0; i < this._active.length; i++)
+        var i;
+
+        for (i = 0; i < this._pendingInsertion.length; i++)
+        {
+            this._pendingInsertion[i].destroy();
+        }
+
+        for (i = 0; i < this._active.length; i++)
         {
             this._active[i].destroy();
+        }
+
+        for (i = 0; i < this._pendingRemoval.length; i++)
+        {
+            this._pendingRemoval[i].destroy();
         }
 
         this._active.length = 0;
         this._pendingRemoval.length = 0;
         this._pendingInsertion.length = 0;
+    },
+
+    //  Game level nuke
+    destroy: function ()
+    {
+        this.shutdown();
+
+        this.state = undefined;
     }
 
 });

@@ -45,15 +45,13 @@ var Systems = function (state, config)
     this.stateManager;
     this.time;
     this.tweens;
-    this.updates;
+    // this.updates;
 
     //  State properties
     this.children;
     this.color;
     this.data;
 };
-
-Systems.prototype.constructor = Systems;
 
 Systems.prototype = {
 
@@ -85,7 +83,7 @@ Systems.prototype = {
         this.stateManager = new StateManager(this.state, game);
         this.time = new Clock(this.state);
         this.tweens = new TweenManager(this.state);
-        this.updates = new UpdateManager(this.state);
+        // this.updates = new UpdateManager(this.state);
 
         this.inject();
     },
@@ -107,6 +105,11 @@ Systems.prototype = {
 
     step: function (time, delta)
     {
+        if (!this.settings.active)
+        {
+            return;
+        }
+
         this.time.begin(time);
 
         this.tweens.begin(time);
@@ -143,12 +146,87 @@ Systems.prototype = {
         }
 
         this.cameras.render(renderer, this.children, interpolation);
+
+        //  After everything has rendered are there any pending StateManager actions?
+        this.stateManager.update();
     },
 
     sortZ: function (childA, childB)
     {
         return childA._z - childB._z;
+    },
+
+    //  A paused State still renders, it just doesn't run ANY of its update handlers or systems
+    pause: function ()
+    {
+        //  Was paused by the GlobalStateManager
+
+        this.settings.active = false;
+
+        //  Notify the State callback or dispatch an event
+    },
+
+    resume: function ()
+    {
+        //  Was resumed by the GlobalStateManager
+
+        this.settings.active = true;
+
+        //  Notify the State callback or dispatch an event
+    },
+
+    sleep: function ()
+    {
+        //  Was sent to sleep by the GlobalStateManager
+
+        this.settings.active = false;
+        this.settings.visible = false;
+
+        //  Notify the State callback or dispatch an event
+    },
+
+    wake: function ()
+    {
+        //  Was woken up by the GlobalStateManager
+
+        this.settings.active = true;
+        this.settings.visible = true;
+
+        //  Notify the State callback or dispatch an event
+    },
+
+    shutdown: function ()
+    {
+        //  Was stopped by the GlobalStateManager
+
+        this.settings.active = false;
+
+        //  If all State level managers followed the same pattern then we could just iterate
+        //  the map and call shutdown on all of them, same for destroy
+
+        //  Move to a Plugin based system? Then plugins can look-up other plugins via the State
+        //  and store their own references to them to avoid constant look-ups.
+
+        this.children.removeAll();
+
+        this.time.shutdown();
+        this.tweens.shutdown();
+
+        this.state.shutdown.call(this.state);
+    },
+
+    //  Game level nuke
+    destroy: function ()
+    {
+        //  TODO
+
+        this.time.destroy();
+        this.tweens.destroy();
+
+        //  etc
     }
 };
+
+Systems.prototype.constructor = Systems;
 
 module.exports = Systems;

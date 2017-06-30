@@ -214,9 +214,15 @@ TweenManager.prototype = {
         }
     },
 
+    //  State that owns this manager is shutting down
     shutdown: function ()
     {
-        //  State is shutting down (swapping to another State)
+    },
+
+    //  Game level nuke
+    destroy: function ()
+    {
+
     }
 
 };

@@ -347,6 +347,19 @@ GlobalStateManager.prototype = {
         return this.states.indexOf(state);
     },
 
+    getActiveState: function (key)
+    {
+        var state = this.getState(key);
+
+        for (var i = 0; i < this.active.length; i++)
+        {
+            if (this.active[i].state === state)
+            {
+                return this.active[i];
+            }
+        }
+    },
+
     getActiveStateIndex: function (state)
     {
         var index = -1;
@@ -373,7 +386,7 @@ GlobalStateManager.prototype = {
     {
         if (data === undefined) { data = {}; }
 
-        // console.log('start:', key);
+        console.log('start:', key);
         // console.dir(data);
 
         //  if not booted, then put state into a holding pattern
@@ -518,17 +531,67 @@ GlobalStateManager.prototype = {
 
     pause: function (key)
     {
-        var index = this.getActiveStateIndex(this.getState(key));
+        var entry = this.getActiveState(key);
 
-        if (index > -1)
+        if (entry)
         {
-            var state = this.getState(key);
+            entry.state.sys.pause();
+        }
+    },
 
-            state.sys.settings.active = false;
+    resume: function (key)
+    {
+        var entry = this.getActiveState(key);
 
-            this.active.splice(index, 1);
+        if (entry)
+        {
+            entry.state.sys.resume();
+        }
+    },
 
-            this.active.sort(this.sortStates);
+    sleep: function (key)
+    {
+        var entry = this.getActiveState(key);
+
+        if (entry)
+        {
+            entry.state.sys.sleep();
+        }
+    },
+
+    wake: function (key)
+    {
+        var entry = this.getActiveState(key);
+
+        if (entry)
+        {
+            entry.state.sys.wake();
+        }
+    },
+
+    swap: function (from, to)
+    {
+        this.sleep(from);
+        this.start(to);
+    },
+
+    stop: function (key)
+    {
+        var entry = this.getActiveState(key);
+
+        if (entry)
+        {
+            entry.state.sys.shutdown();
+
+            //  Remove from the active list
+            var index = this.active.indexOf(entry);
+
+            if (index !== -1)
+            {
+                this.active.splice(index, 1);
+
+                this.active.sort(this.sortStates);
+            }
         }
     },
 
