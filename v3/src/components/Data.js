@@ -75,6 +75,8 @@ Data.prototype = {
         var result;
 
         //  If there is a 'before' callback, then check it for a result
+        //  This means a property can only ever have 1 callback, which isn't right - we may need more
+        //  Dispatch event instead?
         if (this._beforeCallbacks.hasOwnProperty(key))
         {
             listener = this._beforeCallbacks[key];
