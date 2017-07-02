@@ -147,9 +147,10 @@ GlobalStateManager.prototype = {
             return;
         }
 
+        var ok = key;
         key = this.getKey(key, stateConfig);
 
-        // console.log('GlobalStateManager.add', key, stateConfig, autoStart);
+        // console.log('GlobalStateManager.add', ok, key, stateConfig, autoStart);
 
         var newState;
 
@@ -211,6 +212,8 @@ GlobalStateManager.prototype = {
     {
         var newState = new State(stateConfig);
 
+        newState.sys.settings.key = key;
+
         newState.sys.init(this.game);
 
         this.createStateDisplay(newState);
@@ -236,6 +239,8 @@ GlobalStateManager.prototype = {
         else
         {
             newState.sys = new Systems(newState);
+
+            newState.sys.settings.key = key;
 
             newState.sys.init(this.game);
 
@@ -386,7 +391,7 @@ GlobalStateManager.prototype = {
     {
         if (data === undefined) { data = {}; }
 
-        console.log('start:', key);
+        // console.log('start:', key);
         // console.dir(data);
 
         //  if not booted, then put state into a holding pattern
