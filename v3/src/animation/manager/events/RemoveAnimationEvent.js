@@ -1,14 +1,20 @@
+var Class = require('../../../utils/Class');
 var Event = require('../../../events/Event');
 
-var RemoveAnimationEvent = function (key, animation)
-{
-    Event.call(this, 'REMOVE_ANIMATION_EVENT');
+var RemoveAnimationEvent = new Class({
 
-    this.key = key;
-    this.animation = animation;
-};
+    Extends: Event,
 
-RemoveAnimationEvent.prototype = Object.create(Event.prototype);
-RemoveAnimationEvent.prototype.constructor = RemoveAnimationEvent;
+    initialize:
+
+    function RemoveAnimationEvent (key, animation)
+    {
+        Event.call(this, 'REMOVE_ANIMATION_EVENT');
+
+        this.key = key;
+        this.animation = animation;
+    }
+
+});
 
 module.exports = RemoveAnimationEvent;

@@ -1,40 +1,47 @@
-
+var Class = require('../../utils/Class');
 var CONST = require('../const');
 var File = require('../File');
 
-var TextFile = function (key, url, path, xhrSettings)
-{
-    if (path === undefined) { path = ''; }
+//  Phaser.Loader.FileTypes.TextFile
 
-    if (!key)
+var TextFile = new Class({
+
+    Extends: File,
+
+    initialize:
+
+    function TextFile (key, url, path, xhrSettings)
     {
-        throw new Error('Error calling \'Loader.text\' invalid key provided.');
+        if (path === undefined) { path = ''; }
+
+        if (!key)
+        {
+            throw new Error('Error calling \'Loader.txt\' invalid key provided.');
+        }
+
+        if (!url)
+        {
+            url = path + key + '.txt';
+        }
+        else
+        {
+            url = path.concat(url);
+        }
+
+        File.call(this, 'txt', key, url, 'text', xhrSettings);
+    },
+
+    onProcess: function (callback)
+    {
+        this.state = CONST.FILE_PROCESSING;
+
+        this.data = this.xhrLoader.responseText;
+
+        this.onComplete();
+
+        callback(this);
     }
 
-    if (!url)
-    {
-        url = path + key + '.text';
-    }
-    else
-    {
-        url = path.concat(url);
-    }
-
-    File.call(this, 'text', key, url, 'text', xhrSettings);
-};
-
-TextFile.prototype = Object.create(File.prototype);
-TextFile.prototype.constructor = TextFile;
-
-TextFile.prototype.onProcess = function (callback)
-{
-    this.state = CONST.FILE_PROCESSING;
-
-    this.data = this.xhrLoader.responseText;
-
-    this.onComplete();
-
-    callback(this);
-};
+});
 
 module.exports = TextFile;

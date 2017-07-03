@@ -1,88 +1,95 @@
-
+var Class = require('../../utils/Class');
 var CONST = require('../const');
 var File = require('../File');
 
-var SVGFile = function (key, url, path, xhrSettings)
-{
-    if (path === undefined) { path = ''; }
+//  Phaser.Loader.FileTypes.SVGFile
 
-    if (!key)
+var SVGFile = new Class({
+
+    Extends: File,
+
+    initialize:
+
+    function SVGFile (key, url, path, xhrSettings)
     {
-        throw new Error('Error calling \'Loader.svg\' invalid key provided.');
-    }
+        if (path === undefined) { path = ''; }
 
-    if (!url)
-    {
-        url = path + key + '.svg';
-    }
-    else
-    {
-        url = path.concat(url);
-    }
-
-    File.call(this, 'svg', key, url, 'text', xhrSettings);
-};
-
-SVGFile.prototype = Object.create(File.prototype);
-SVGFile.prototype.constructor = SVGFile;
-
-SVGFile.prototype.onProcess = function (callback)
-{
-    this.state = CONST.FILE_PROCESSING;
-
-    var svg = [ this.xhrLoader.responseText ];
-    var _this = this;
-
-    try
-    {
-        var blob = new window.Blob(svg, { type: 'image/svg+xml;charset=utf-8' });
-    }
-    catch (e)
-    {
-        _this.state = CONST.FILE_ERRORED;
-
-        callback(_this);
-
-        return;
-    }
-
-    this.data = new Image();
-
-    this.data.crossOrigin = this.crossOrigin;
-
-    var retry = false;
-
-    this.data.onload = function ()
-    {
-        URL.revokeObjectURL(_this.data.src);
-
-        _this.onComplete();
-
-        callback(_this);
-    };
-
-    this.data.onerror = function ()
-    {
-        URL.revokeObjectURL(_this.data.src);
-
-        //  Safari 8 re-try
-        if (!retry)
+        if (!key)
         {
-            retry = true;
+            throw new Error('Error calling \'Loader.svg\' invalid key provided.');
+        }
 
-            var url = 'data:image/svg+xml,' + encodeURIComponent(svg.join(''));
-
-            _this.data.src = URL.createObjectURL(url);
+        if (!url)
+        {
+            url = path + key + '.svg';
         }
         else
+        {
+            url = path.concat(url);
+        }
+
+        File.call(this, 'svg', key, url, 'text', xhrSettings);
+    },
+
+    onProcess: function (callback)
+    {
+        this.state = CONST.FILE_PROCESSING;
+
+        var svg = [ this.xhrLoader.responseText ];
+        var _this = this;
+
+        try
+        {
+            var blob = new window.Blob(svg, { type: 'image/svg+xml;charset=utf-8' });
+        }
+        catch (e)
         {
             _this.state = CONST.FILE_ERRORED;
 
             callback(_this);
-        }
-    };
 
-    this.data.src = URL.createObjectURL(blob);
-};
+            return;
+        }
+
+        this.data = new Image();
+
+        this.data.crossOrigin = this.crossOrigin;
+
+        var retry = false;
+
+        this.data.onload = function ()
+        {
+            URL.revokeObjectURL(_this.data.src);
+
+            _this.onComplete();
+
+            callback(_this);
+        };
+
+        this.data.onerror = function ()
+        {
+            URL.revokeObjectURL(_this.data.src);
+
+            //  Safari 8 re-try
+            if (!retry)
+            {
+                retry = true;
+
+                var url = 'data:image/svg+xml,' + encodeURIComponent(svg.join(''));
+
+                _this.data.src = URL.createObjectURL(url);
+            }
+            else
+            {
+                _this.state = CONST.FILE_ERRORED;
+
+                callback(_this);
+            }
+        };
+
+        this.data.src = URL.createObjectURL(blob);
+    }
+
+});
 
 module.exports = SVGFile;

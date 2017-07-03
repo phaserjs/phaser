@@ -1,15 +1,21 @@
+var Class = require('../../../utils/Class');
 var Event = require('../../../events/Event');
 
-var KeyComboMatchEvent = function (keyCombo, keyboardEvent)
-{
-    Event.call(this, 'KEY_COMBO_MATCH_EVENT');
+var KeyComboMatchEvent = new Class({
 
-    this.target = keyCombo;
+    Extends: Event,
 
-    this.data = keyboardEvent;
-};
+    initialize:
 
-KeyComboMatchEvent.prototype = Object.create(Event.prototype);
-KeyComboMatchEvent.prototype.constructor = KeyComboMatchEvent;
+    function KeyComboMatchEvent (keyCombo, keyboardEvent)
+    {
+        Event.call(this, 'KEY_COMBO_MATCH_EVENT');
+
+        this.target = keyCombo;
+
+        this.data = keyboardEvent;
+    }
+
+});
 
 module.exports = KeyComboMatchEvent;

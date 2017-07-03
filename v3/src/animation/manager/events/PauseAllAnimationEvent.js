@@ -1,11 +1,17 @@
+var Class = require('../../../utils/Class');
 var Event = require('../../../events/Event');
 
-var PauseAllAnimationEvent = function ()
-{
-    Event.call(this, 'PAUSE_ALL_ANIMATION_EVENT');
-};
+var PauseAllAnimationEvent = new Class({
 
-PauseAllAnimationEvent.prototype = Object.create(Event.prototype);
-PauseAllAnimationEvent.prototype.constructor = PauseAllAnimationEvent;
+    Extends: Event,
+
+    initialize:
+
+    function PauseAllAnimationEvent ()
+    {
+        Event.call(this, 'PAUSE_ALL_ANIMATION_EVENT');
+    }
+
+});
 
 module.exports = PauseAllAnimationEvent;

@@ -1,59 +1,62 @@
-var GetURL = require('./GetURL');
+var Class = require('../utils/Class');
 var CONST = require('./const');
+var GetURL = require('./GetURL');
+var MergeXHRSettings = require('./MergeXHRSettings');
 var XHRLoader = require('./XHRLoader');
 var XHRSettings = require('./XHRSettings');
-var MergeXHRSettings = require('./MergeXHRSettings');
 
-var File = function (type, key, url, responseType, xhrSettings, config)
-{
-    //  file type (image, json, etc) for sorting within the Loader
-    this.type = type;
+//  Phaser.Loader.File
 
-    //  unique cache key (unique within its file type)
-    this.key = key;
+var File = new Class({
 
-    //  The URL of the file, not including baseURL
-    this.url = url;
+    initialize:
 
-    //  Set when the Loader calls 'load' on this file
-    this.src = '';
-
-    this.xhrSettings = XHRSettings(responseType);
-
-    if (xhrSettings)
+    function File (type, key, url, responseType, xhrSettings, config)
     {
-        this.xhrSettings = MergeXHRSettings(this.xhrSettings, xhrSettings);
-    }
+        //  file type (image, json, etc) for sorting within the Loader
+        this.type = type;
 
-    this.xhrLoader = null;
+        //  unique cache key (unique within its file type)
+        this.key = key;
 
-    this.state = CONST.FILE_PENDING;
+        //  The URL of the file, not including baseURL
+        this.url = url;
 
-    //  Set by onProgress (only if loading via XHR)
-    this.bytesTotal = 0;
-    this.bytesLoaded = -1;
-    this.percentComplete = -1;
+        //  Set when the Loader calls 'load' on this file
+        this.src = '';
 
-    //  For CORs based loading.
-    //  If this is undefined then the File will check BaseLoader.crossOrigin and use that (if set)
-    this.crossOrigin = undefined;
+        this.xhrSettings = XHRSettings(responseType);
 
-    //  The actual processed file data
-    this.data = undefined;
+        if (xhrSettings)
+        {
+            this.xhrSettings = MergeXHRSettings(this.xhrSettings, xhrSettings);
+        }
 
-    //  A config object that can be used by file types to store transitional data
-    this.config = config || {};
+        this.xhrLoader = null;
 
-    //  Multipart file? (i.e. an atlas and its json together)
-    this.linkFile = undefined;
-    this.linkType = '';
+        this.state = CONST.FILE_PENDING;
 
-    this.callback = null;
-};
+        //  Set by onProgress (only if loading via XHR)
+        this.bytesTotal = 0;
+        this.bytesLoaded = -1;
+        this.percentComplete = -1;
 
-File.prototype.constructor = File;
+        //  For CORs based loading.
+        //  If this is undefined then the File will check BaseLoader.crossOrigin and use that (if set)
+        this.crossOrigin = undefined;
 
-File.prototype = {
+        //  The actual processed file data
+        this.data = undefined;
+
+        //  A config object that can be used by file types to store transitional data
+        this.config = config || {};
+
+        //  Multipart file? (i.e. an atlas and its json together)
+        this.linkFile = undefined;
+        this.linkType = '';
+
+        this.callback = null;
+    },
 
     resetXHR: function ()
     {
@@ -140,6 +143,7 @@ File.prototype = {
             this.xhrLoader = XHRLoader(this, globalXHR);
         }
     }
-};
+
+});
 
 module.exports = File;

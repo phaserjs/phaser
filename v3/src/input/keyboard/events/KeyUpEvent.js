@@ -1,13 +1,19 @@
+var Class = require('../../../utils/Class');
 var Event = require('../../../events/Event');
 
-var KeyUpEvent = function (keyboardEvent)
-{
-    Event.call(this, 'KEY_UP_EVENT');
+var KeyUpEvent = new Class({
 
-    this.data = keyboardEvent;
-};
+    Extends: Event,
 
-KeyUpEvent.prototype = Object.create(Event.prototype);
-KeyUpEvent.prototype.constructor = KeyUpEvent;
+    initialize:
+
+    function KeyUpEvent (keyboardEvent)
+    {
+        Event.call(this, 'KEY_UP_EVENT');
+
+        this.data = keyboardEvent;
+    }
+
+});
 
 module.exports = KeyUpEvent;

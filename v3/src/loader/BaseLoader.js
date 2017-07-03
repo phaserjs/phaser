@@ -4,40 +4,43 @@ var Set = require('../structs/Set');
 var XHRSettings = require('./XHRSettings');
 var Event = require('./events/');
 var EventDispatcher = require('../events/EventDispatcher');
+var Class = require('../utils/Class');
 
-var BaseLoader = function ()
-{
-    //  To finish the loader ...
-    //  
-    //  3) Progress update
+//  Phaser.Loader.BaseLoader
 
-    this.events = new EventDispatcher();
+//  To finish the loader ...
+//  
+//  3) Progress update
 
-    //  Move to a 'setURL' method?
-    this.baseURL = '';
-    this.path = '';
+var BaseLoader = new Class({
 
-    //  Read from Game / State Config
-    this.enableParallel = true;
-    this.maxParallelDownloads = 4;
+    initialize:
 
-    //  xhr specific global settings (can be overridden on a per-file basis)
-    this.xhr = XHRSettings();
+    function BaseLoader ()
+    {
+        this.events = new EventDispatcher();
 
-    this.crossOrigin = undefined;
+        //  Move to a 'setURL' method?
+        this.baseURL = '';
+        this.path = '';
 
-    this.list = new Set();
-    this.inflight = new Set();
-    this.failed = new Set();
-    this.queue = new Set();
-    this.storage = new Set();
+        //  Read from Game / State Config
+        this.enableParallel = true;
+        this.maxParallelDownloads = 4;
 
-    this._state = CONST.LOADER_IDLE;
-};
+        //  xhr specific global settings (can be overridden on a per-file basis)
+        this.xhr = XHRSettings();
 
-BaseLoader.prototype.contructor = BaseLoader;
+        this.crossOrigin = undefined;
 
-BaseLoader.prototype = {
+        this.list = new Set();
+        this.inflight = new Set();
+        this.failed = new Set();
+        this.queue = new Set();
+        this.storage = new Set();
+
+        this._state = CONST.LOADER_IDLE;
+    },
 
     addFile: function (file)
     {
@@ -287,6 +290,6 @@ BaseLoader.prototype = {
         this._state = CONST.LOADER_DESTROYED;
     }
 
-};
+});
 
 module.exports = BaseLoader;
