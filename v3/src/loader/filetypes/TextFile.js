@@ -12,23 +12,17 @@ var TextFile = new Class({
 
     function TextFile (key, url, path, xhrSettings)
     {
-        if (path === undefined) { path = ''; }
+        var fileConfig = {
+            type: 'text',
+            extension: 'txt',
+            responseType: 'text',
+            key: key,
+            url: url,
+            path: path,
+            xhrSettings: xhrSettings
+        };
 
-        if (!key)
-        {
-            throw new Error('Error calling \'Loader.txt\' invalid key provided.');
-        }
-
-        if (!url)
-        {
-            url = path + key + '.txt';
-        }
-        else
-        {
-            url = path.concat(url);
-        }
-
-        File.call(this, 'txt', key, url, 'text', xhrSettings);
+        File.call(this, fileConfig);
     },
 
     onProcess: function (callback)

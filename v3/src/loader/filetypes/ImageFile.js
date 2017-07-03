@@ -12,23 +12,18 @@ var ImageFile = new Class({
 
     function ImageFile (key, url, path, xhrSettings, config)
     {
-        if (path === undefined) { path = ''; }
+        var fileConfig = {
+            type: 'image',
+            extension: 'png',
+            responseType: 'blob',
+            key: key,
+            url: url,
+            path: path,
+            xhrSettings: xhrSettings,
+            config: config
+        };
 
-        if (!key)
-        {
-            throw new Error('Error calling \'Loader.image\' invalid key provided.');
-        }
-
-        if (!url)
-        {
-            url = path + key + '.png';
-        }
-        else
-        {
-            url = path.concat(url);
-        }
-
-        File.call(this, 'image', key, url, 'blob', xhrSettings, config);
+        File.call(this, fileConfig);
     },
 
     onProcess: function (callback)

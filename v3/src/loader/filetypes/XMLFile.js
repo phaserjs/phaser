@@ -13,23 +13,17 @@ var XMLFile = new Class({
 
     function XMLFile (key, url, path, xhrSettings)
     {
-        if (path === undefined) { path = ''; }
+        var fileConfig = {
+            type: 'xml',
+            extension: 'xml',
+            responseType: 'text',
+            key: key,
+            url: url,
+            path: path,
+            xhrSettings: xhrSettings
+        };
 
-        if (!key)
-        {
-            throw new Error('Error calling \'Loader.xml\' invalid key provided.');
-        }
-
-        if (!url)
-        {
-            url = path + key + '.xml';
-        }
-        else
-        {
-            url = path.concat(url);
-        }
-
-        File.call(this, 'xml', key, url, 'text', xhrSettings);
+        File.call(this, fileConfig);
     },
 
     onProcess: function (callback)

@@ -12,23 +12,17 @@ var BinaryFile = new Class({
 
     function BinaryFile (key, url, path, xhrSettings)
     {
-        if (path === undefined) { path = ''; }
+        var fileConfig = {
+            type: 'binary',
+            extension: 'bin',
+            responseType: 'arraybuffer',
+            key: key,
+            url: url,
+            path: path,
+            xhrSettings: xhrSettings
+        };
 
-        if (!key)
-        {
-            throw new Error('Error calling \'Loader.binary\' invalid key provided.');
-        }
-
-        if (!url)
-        {
-            url = path + key + '.bin';
-        }
-        else
-        {
-            url = path.concat(url);
-        }
-
-        File.call(this, 'binary', key, url, 'arraybuffer', xhrSettings);
+        File.call(this, fileConfig);
     },
 
     onProcess: function (callback)

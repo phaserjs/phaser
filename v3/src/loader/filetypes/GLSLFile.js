@@ -12,23 +12,17 @@ var GLSLFile = new Class({
 
     function GLSLFile (key, url, path, xhrSettings)
     {
-        if (path === undefined) { path = ''; }
+        var fileConfig = {
+            type: 'glsl',
+            extension: 'glsl',
+            responseType: 'text',
+            key: key,
+            url: url,
+            path: path,
+            xhrSettings: xhrSettings
+        };
 
-        if (!key)
-        {
-            throw new Error('Error calling \'Loader.glsl\' invalid key provided.');
-        }
-
-        if (!url)
-        {
-            url = path + key + '.glsl';
-        }
-        else
-        {
-            url = path.concat(url);
-        }
-
-        File.call(this, 'glsl', key, url, 'text', xhrSettings);
+        File.call(this, fileConfig);
     },
 
     onProcess: function (callback)

@@ -12,23 +12,17 @@ var SVGFile = new Class({
 
     function SVGFile (key, url, path, xhrSettings)
     {
-        if (path === undefined) { path = ''; }
+        var fileConfig = {
+            type: 'svg',
+            extension: 'svg',
+            responseType: 'text',
+            key: key,
+            url: url,
+            path: path,
+            xhrSettings: xhrSettings
+        };
 
-        if (!key)
-        {
-            throw new Error('Error calling \'Loader.svg\' invalid key provided.');
-        }
-
-        if (!url)
-        {
-            url = path + key + '.svg';
-        }
-        else
-        {
-            url = path.concat(url);
-        }
-
-        File.call(this, 'svg', key, url, 'text', xhrSettings);
+        File.call(this, fileConfig);
     },
 
     onProcess: function (callback)

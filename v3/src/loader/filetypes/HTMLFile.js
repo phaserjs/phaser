@@ -14,28 +14,22 @@ var HTMLFile = new Class({
     {
         if (width === undefined) { width = 512; }
         if (height === undefined) { height = 512; }
-        if (path === undefined) { path = ''; }
 
-        if (!key)
-        {
-            throw new Error('Error calling \'Loader.html\' invalid key provided.');
-        }
-
-        if (!url)
-        {
-            url = path + key + '.html';
-        }
-        else
-        {
-            url = path.concat(url);
-        }
-
-        var config = {
-            width: width,
-            height: height
+        var fileConfig = {
+            type: 'html',
+            extension: 'html',
+            responseType: 'text',
+            key: key,
+            url: url,
+            path: path,
+            xhrSettings: xhrSettings,
+            config: {
+                width: width,
+                height: height
+            }
         };
 
-        File.call(this, 'html', key, url, 'text', xhrSettings, config);
+        File.call(this, fileConfig);
     },
 
     onProcess: function (callback)

@@ -12,23 +12,17 @@ var JSONFile = new Class({
 
     function JSONFile (key, url, path, xhrSettings)
     {
-        if (path === undefined) { path = ''; }
+        var fileConfig = {
+            type: 'json',
+            extension: 'json',
+            responseType: 'text',
+            key: key,
+            url: url,
+            path: path,
+            xhrSettings: xhrSettings
+        };
 
-        if (!key)
-        {
-            throw new Error('Error calling \'Loader.json\' invalid key provided.');
-        }
-
-        if (!url)
-        {
-            url = path + key + '.json';
-        }
-        else
-        {
-            url = path.concat(url);
-        }
-
-        File.call(this, 'json', key, url, 'text', xhrSettings);
+        File.call(this, fileConfig);
     },
 
     onProcess: function (callback)

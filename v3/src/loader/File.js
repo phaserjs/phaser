@@ -1,4 +1,5 @@
 var Class = require('../utils/Class');
+var GetFastValue = require('../utils/object/GetFastValue');
 var CONST = require('./const');
 var GetURL = require('./GetURL');
 var MergeXHRSettings = require('./MergeXHRSettings');
@@ -11,25 +12,40 @@ var File = new Class({
 
     initialize:
 
-    function File (type, key, url, responseType, xhrSettings, config)
+    // old signature: type, key, url, responseType, xhrSettings, config
+    function File (fileConfig)
     {
         //  file type (image, json, etc) for sorting within the Loader
-        this.type = type;
+        this.type = GetFastValue(fileConfig, 'type', false);
 
         //  unique cache key (unique within its file type)
-        this.key = key;
+        this.key = GetFastValue(fileConfig, 'key', false);
+
+        if (!this.type || !this.key)
+        {
+            throw new Error('Error calling \'Loader.' + this.type + '\' invalid key provided.');
+        }
 
         //  The URL of the file, not including baseURL
-        this.url = url;
+        this.url = GetFastValue(fileConfig, 'url', '');
+
+        if (this.url === '')
+        {
+            this.url = GetFastValue(fileConfig, 'path', '') + this.key + GetFastValue(fileConfig, 'extension', '');
+        }
+        else
+        {
+            this.url = GetFastValue(fileConfig, 'path', '').concat(this.url);
+        }
 
         //  Set when the Loader calls 'load' on this file
         this.src = '';
 
-        this.xhrSettings = XHRSettings(responseType);
+        this.xhrSettings = XHRSettings(GetFastValue(fileConfig, 'responseType', undefined));
 
-        if (xhrSettings)
+        if (GetFastValue(fileConfig, 'xhrSettings', false))
         {
-            this.xhrSettings = MergeXHRSettings(this.xhrSettings, xhrSettings);
+            this.xhrSettings = MergeXHRSettings(this.xhrSettings, GetFastValue(fileConfig, 'xhrSettings', {}));
         }
 
         this.xhrLoader = null;
@@ -49,7 +65,7 @@ var File = new Class({
         this.data = undefined;
 
         //  A config object that can be used by file types to store transitional data
-        this.config = config || {};
+        this.config = GetFastValue(fileConfig, 'config', {});
 
         //  Multipart file? (i.e. an atlas and its json together)
         this.linkFile = undefined;
