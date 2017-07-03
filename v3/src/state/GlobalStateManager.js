@@ -147,10 +147,15 @@ GlobalStateManager.prototype = {
             return;
         }
 
-        var ok = key;
+        // var ok = key;
         key = this.getKey(key, stateConfig);
 
-        // console.log('GlobalStateManager.add', ok, key, stateConfig, autoStart);
+        // console.group('GlobalStateManager.add');
+        // console.log('add key:', ok);
+        // console.log('config key:', key);
+        // console.log('config:', stateConfig);
+        // console.log('autoStart:', autoStart);
+        // console.groupEnd();
 
         var newState;
 
@@ -175,8 +180,10 @@ GlobalStateManager.prototype = {
             newState = this.createStateFromFunction(key, stateConfig);
         }
 
-        //  Replace key incase the state changed it
+        //  Replace key in case the state changed it
         key = newState.sys.settings.key;
+
+        // console.log('replaced key', key);
 
         this.keys[key] = newState;
 
@@ -199,7 +206,16 @@ GlobalStateManager.prototype = {
 
     createStateFromInstance: function (key, newState)
     {
-        newState.sys.settings.key = key;
+        var configKey = newState.sys.settings.key;
+
+        if (configKey !== '')
+        {
+            key = configKey;
+        }
+        else
+        {
+            newState.sys.settings.key = key;
+        }
 
         newState.sys.init(this.game);
 
@@ -212,7 +228,16 @@ GlobalStateManager.prototype = {
     {
         var newState = new State(stateConfig);
 
-        newState.sys.settings.key = key;
+        var configKey = newState.sys.settings.key;
+
+        if (configKey !== '')
+        {
+            key = configKey;
+        }
+        else
+        {
+            newState.sys.settings.key = key;
+        }
 
         newState.sys.init(this.game);
 
@@ -223,11 +248,20 @@ GlobalStateManager.prototype = {
 
     createStateFromFunction: function (key, state)
     {
+        // console.log('createStateFromFunction', key);
+
         var newState = new state();
 
         if (newState instanceof State)
         {
-            key = newState.sys.settings.key;
+            // console.log('instanceof State');
+
+            var configKey = newState.sys.settings.key;
+
+            if (configKey !== '')
+            {
+                key = configKey;
+            }
 
             if (this.keys.hasOwnProperty(key))
             {

@@ -23,7 +23,7 @@ var Settings = {
 
             op: CONST.BOOT,
 
-            key: GetValue(config, 'key', 'default'),
+            key: GetValue(config, 'key', ''),
             active: GetValue(config, 'active', false),
             visible: GetValue(config, 'visible', true),
 
