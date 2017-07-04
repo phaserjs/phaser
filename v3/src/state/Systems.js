@@ -76,7 +76,6 @@ var Systems = new Class({
 
         this.updateList = new UpdateList(state);
         this.displayList = new DisplayList(state);
-
         this.data = new Data(state);
 
         //  State specific managers (Factory, Tweens, Loader, Physics, etc)
@@ -139,12 +138,12 @@ var Systems = new Class({
 
         if (this.sortChildrenFlag)
         {
-            StableSort.inplace(this.children.list, this.sortZ);
+            StableSort.inplace(this.displayList.list, this.sortZ);
 
             this.sortChildrenFlag = false;
         }
 
-        this.cameras.render(renderer, this.children, interpolation);
+        this.cameras.render(renderer, this.displayList, interpolation);
     },
 
     sortZ: function (childA, childB)
@@ -220,14 +219,8 @@ var Systems = new Class({
         this.settings.active = false;
         this.settings.visible = false;
 
-        //  If all State level managers followed the same pattern then we could just iterate
-        //  the map and call shutdown on all of them, same for destroy
-
-        //  Move to a Plugin based system? Then plugins can look-up other plugins via the State
-        //  and store their own references to them to avoid constant look-ups.
-
-        this.children.removeAll();
-
+        this.displayList.shutdown();
+        this.updateList.shutdown();
         this.time.shutdown();
         this.tweens.shutdown();
 

@@ -39,9 +39,9 @@ var Sprite = new Class({
         this.setOrigin();
     },
 
-    preUpdate: function (timestamp, frameDelta)
+    preUpdate: function (time, delta)
     {
-        this.anims.update(timestamp, frameDelta);
+        this.anims.update(time, delta);
     },
 
     play: function (key, startFrame)

@@ -30,14 +30,14 @@ var UpdateList = new Class({
         }
 
         var i;
-        var event;
+        var gameObject;
 
-        //  Delete old events
+        //  Delete old gameObjects
         for (i = 0; i < toRemove; i++)
         {
-            event = this._pendingRemoval[i];
+            gameObject = this._pendingRemoval[i];
 
-            var index = this._active.indexOf(event);
+            var index = this._active.indexOf(gameObject);
 
             if (index > -1)
             {
@@ -45,9 +45,10 @@ var UpdateList = new Class({
             }
 
             //  Pool them?
-            // event.destroy();
+            // gameObject.destroy();
         }
 
+        //  Move pending to active
         this._active = this._active.concat(this._pendingInsertion.splice(0));
 
         //  Clear the lists

@@ -316,6 +316,11 @@ var DisplayList = new Class({
         return this;
     },
 
+    shutdown: function ()
+    {
+        this.removeAll();
+    },
+
     //  Check to see if the given child is a child of this object, at any depth (recursively scans up the tree)
     contains: function (child)
     {
