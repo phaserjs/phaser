@@ -1,14 +1,10 @@
-/**
-* @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2016 Photon Storm Ltd.
-* @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
-*/
 
+var CanvasPool = require('../dom/CanvasPool');
+var Class = require('../utils/Class');
+var GenerateTexture = require('../create/GenerateTexture');
+var GetValue = require('../utils/object/GetValue');
 var Parser = require('./parsers');
 var Texture = require('./Texture');
-var CanvasPool = require('../dom/CanvasPool');
-var GetValue = require('../utils/object/GetValue');
-var GenerateTexture = require('../create/GenerateTexture');
 
 /**
 * Textures are managed by the global TextureManager. This is a singleton class that is
@@ -21,19 +17,19 @@ var GenerateTexture = require('../create/GenerateTexture');
 * @class Phaser.TextureManager
 * @constructor
 */
-var TextureManager = function (game)
-{
-    this.game = game;
+var TextureManager = new Class({
 
-    this.list = {};
+    initialize:
 
-    this.addBase64('__DEFAULT', game.config.defaultImage);
-    this.addBase64('__MISSING', game.config.missingImage);
-};
+    function TextureManager (game)
+    {
+        this.game = game;
 
-TextureManager.prototype.constructor = TextureManager;
+        this.list = {};
 
-TextureManager.prototype = {
+        this.addBase64('__DEFAULT', game.config.defaultImage);
+        this.addBase64('__MISSING', game.config.missingImage);
+    },
 
     addBase64: function (key, data)
     {
@@ -327,6 +323,6 @@ TextureManager.prototype = {
         }
     }
 
-};
+});
 
 module.exports = TextureManager;

@@ -1,9 +1,5 @@
-/**
-* @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2016 Photon Storm Ltd.
-* @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
-*/
 
+var Class = require('../utils/Class');
 var Extend = require('../utils/object/Extend');
 
 /**
@@ -18,156 +14,156 @@ var Extend = require('../utils/object/Extend');
 * @param {number} width - Width of the frame within the Texture.
 * @param {number} height - Height of the frame within the Texture.
 */
-var Frame = function (texture, name, sourceIndex, x, y, width, height)
-{
-    /**
-    * @property {Phaser.Texture} texture - The Texture this frame belongs to.
-    */
-    this.texture = texture;
+var Frame = new Class({
 
-    /**
-    * @property {string} name - The name of this frame within the Texture.
-    */
-    this.name = name;
+    initialize:
 
-    this.source = texture.source[sourceIndex];
+    function Frame (texture, name, sourceIndex, x, y, width, height)
+    {
+        /**
+        * @property {Phaser.Texture} texture - The Texture this frame belongs to.
+        */
+        this.texture = texture;
 
-    this.sourceIndex = sourceIndex;
+        /**
+        * @property {string} name - The name of this frame within the Texture.
+        */
+        this.name = name;
 
-    /**
-    * @property {number} cutX - X position within the source image to cut from.
-    */
-    this.cutX = x;
+        this.source = texture.source[sourceIndex];
 
-    /**
-    * @property {number} cutY - Y position within the source image to cut from.
-    */
-    this.cutY = y;
+        this.sourceIndex = sourceIndex;
 
-    /**
-    * @property {number} cutWidth - The width of the area in the source image to cut.
-    */
-    this.cutWidth = width;
+        /**
+        * @property {number} cutX - X position within the source image to cut from.
+        */
+        this.cutX = x;
 
-    /**
-    * @property {number} cutHeight - The height of the area in the source image to cut.
-    */
-    this.cutHeight = height;
+        /**
+        * @property {number} cutY - Y position within the source image to cut from.
+        */
+        this.cutY = y;
 
-    /**
-    * @property {number} x - The X rendering offset of this Frame, taking trim into account.
-    */
-    this.x = 0;
+        /**
+        * @property {number} cutWidth - The width of the area in the source image to cut.
+        */
+        this.cutWidth = width;
 
-    /**
-    * @property {number} y - The Y rendering offset of this Frame, taking trim into account.
-    */
-    this.y = 0;
+        /**
+        * @property {number} cutHeight - The height of the area in the source image to cut.
+        */
+        this.cutHeight = height;
 
-    /**
-    * @property {number} width - The rendering width of this Frame, taking trim into account.
-    */
-    this.width = width;
+        /**
+        * @property {number} x - The X rendering offset of this Frame, taking trim into account.
+        */
+        this.x = 0;
 
-    /**
-    * @property {number} height - The rendering height of this Frame, taking trim into account.
-    */
-    this.height = height;
+        /**
+        * @property {number} y - The Y rendering offset of this Frame, taking trim into account.
+        */
+        this.y = 0;
 
-    /**
-    * @property {number} width - The rendering width of this Frame, taking trim into account.
-    */
-    this.centerX = Math.floor(width / 2);
+        /**
+        * @property {number} width - The rendering width of this Frame, taking trim into account.
+        */
+        this.width = width;
 
-    /**
-    * @property {number} height - The rendering height of this Frame, taking trim into account.
-    */
-    this.centerY = Math.floor(height / 2);
+        /**
+        * @property {number} height - The rendering height of this Frame, taking trim into account.
+        */
+        this.height = height;
 
-    /**
-    * Is this frame is rotated or not in the Texture?
-    * Rotation allows you to use rotated frames in texture atlas packing.
-    * It has nothing to do with Sprite rotation.
-    *
-    * @property {boolean} rotated
-    * @default
-    */
-    this.rotated = false;
+        /**
+        * @property {number} width - The rendering width of this Frame, taking trim into account.
+        */
+        this.centerX = Math.floor(width / 2);
 
-    /**
-    * Is this a tiling texture? As used by the likes of a TilingSprite.
-    * TODO: Try and remove this, it shouldn't be here
-    *
-    * @property {boolean} isTiling
-    * @default
-    */
-    this.isTiling = false;
+        /**
+        * @property {number} height - The rendering height of this Frame, taking trim into account.
+        */
+        this.centerY = Math.floor(height / 2);
 
-    /**
-    * This will let a renderer know that a tinted parent has updated its texture.
-    * TODO: Try and remove this, it shouldn't be here
-    *
-    * @property {boolean} requiresReTint
-    * @default
-    */
-    this.requiresReTint = false;
+        /**
+        * Is this frame is rotated or not in the Texture?
+        * Rotation allows you to use rotated frames in texture atlas packing.
+        * It has nothing to do with Sprite rotation.
+        *
+        * @property {boolean} rotated
+        * @default
+        */
+        this.rotated = false;
 
-    //  Over-rides the Renderer setting? -1 = use Renderer Setting, 0 = No rounding, 1 = Round
-    this.autoRound = -1;
+        /**
+        * Is this a tiling texture? As used by the likes of a TilingSprite.
+        * TODO: Try and remove this, it shouldn't be here
+        *
+        * @property {boolean} isTiling
+        * @default
+        */
+        this.isTiling = false;
 
-    /**
-    * The un-modified source frame, trim and UV data.
-    *
-    * @private
-    * @property {object} data
-    */
-    this.data = {
-        cut: {
-            x: x,
-            y: y,
-            w: width,
-            h: height,
-            r: x + width,
-            b: y + height
-        },
-        trim: false,
-        sourceSize: {
-            w: width,
-            h: height
-        },
-        spriteSourceSize: {
-            x: 0,
-            y: 0,
-            w: width,
-            h: height
-        },
-        uvs: {
-            x0: 0,
-            y0: 0,
-            x1: 0,
-            y1: 0,
-            x2: 0,
-            y2: 0,
-            x3: 0,
-            y3: 0
-        },
-        radius: 0.5 * Math.sqrt(width * width + height * height),
-        drawImage: {
-            sx: x,
-            sy: y,
-            sWidth: width,
-            sHeight: height,
-            dWidth: width,
-            dHeight: height
-        }
-    };
+        /**
+        * This will let a renderer know that a tinted parent has updated its texture.
+        * TODO: Try and remove this, it shouldn't be here
+        *
+        * @property {boolean} requiresReTint
+        * @default
+        */
+        this.requiresReTint = false;
 
-    this.updateUVs();
-};
+        //  Over-rides the Renderer setting? -1 = use Renderer Setting, 0 = No rounding, 1 = Round
+        this.autoRound = -1;
 
-Frame.prototype.constructor = Frame;
+        /**
+        * The un-modified source frame, trim and UV data.
+        *
+        * @private
+        * @property {object} data
+        */
+        this.data = {
+            cut: {
+                x: x,
+                y: y,
+                w: width,
+                h: height,
+                r: x + width,
+                b: y + height
+            },
+            trim: false,
+            sourceSize: {
+                w: width,
+                h: height
+            },
+            spriteSourceSize: {
+                x: 0,
+                y: 0,
+                w: width,
+                h: height
+            },
+            uvs: {
+                x0: 0,
+                y0: 0,
+                x1: 0,
+                y1: 0,
+                x2: 0,
+                y2: 0,
+                x3: 0,
+                y3: 0
+            },
+            radius: 0.5 * Math.sqrt(width * width + height * height),
+            drawImage: {
+                sx: x,
+                sy: y,
+                sWidth: width,
+                sHeight: height,
+                dWidth: width,
+                dHeight: height
+            }
+        };
 
-Frame.prototype = {
+        this.updateUVs();
+    },
 
     /**
     * If the frame was trimmed when added to the Texture Atlas, this records the trim and source data.
@@ -295,11 +291,7 @@ Frame.prototype = {
 
     destroy: function ()
     {
-    }
-
-};
-
-Object.defineProperties(Frame.prototype, {
+    },
 
     /**
     * The width of the Frame in its un-trimmed, un-padded state, as prepared in the art package,
@@ -309,8 +301,6 @@ Object.defineProperties(Frame.prototype, {
     * @property {any} realWidth
     */
     realWidth: {
-
-        enumerable: true,
 
         get: function ()
         {
@@ -328,8 +318,6 @@ Object.defineProperties(Frame.prototype, {
     */
     realHeight: {
 
-        enumerable: true,
-
         get: function ()
         {
             return this.data.sourceSize.h;
@@ -345,8 +333,6 @@ Object.defineProperties(Frame.prototype, {
     */
     uvs: {
 
-        enumerable: true,
-
         get: function ()
         {
             return this.data.uvs;
@@ -360,8 +346,6 @@ Object.defineProperties(Frame.prototype, {
     * @property {number} radius
     */
     radius: {
-
-        enumerable: true,
 
         get: function ()
         {
@@ -377,8 +361,6 @@ Object.defineProperties(Frame.prototype, {
     */
     trimmed: {
 
-        enumerable: true,
-
         get: function ()
         {
             return this.data.trim;
@@ -393,8 +375,6 @@ Object.defineProperties(Frame.prototype, {
     * @property {Object} canvasData
     */
     canvasData: {
-
-        enumerable: true,
 
         get: function ()
         {

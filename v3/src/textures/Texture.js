@@ -1,9 +1,5 @@
-/**
-* @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2016 Photon Storm Ltd.
-* @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
-*/
 
+var Class = require('../utils/Class');
 var Frame = require('./Frame');
 var TextureSource = require('./TextureSource');
 
@@ -23,45 +19,45 @@ var TextureSource = require('./TextureSource');
 * @param {object} source
 * @param {number} scaleMode
 */
-var Texture = function (manager, key, source, width, height)
-{
-    this.manager = manager;
+var Texture = new Class({
 
-    if (!Array.isArray(source))
+    initialize:
+
+    function Texture (manager, key, source, width, height)
     {
-        source = [ source ];
-    }
+        this.manager = manager;
 
-    this.key = key;
+        if (!Array.isArray(source))
+        {
+            source = [ source ];
+        }
 
-    /**
-    * The source that is used to create the texture.
-    * Usually an Image, but can also be a Canvas.
-    *
-    * @property source
-    * @type array
-    */
-    this.source = [];
+        this.key = key;
 
-    /**
-    * @property {object} frames - Frames
-    */
-    this.frames = {};
+        /**
+        * The source that is used to create the texture.
+        * Usually an Image, but can also be a Canvas.
+        *
+        * @property source
+        * @type array
+        */
+        this.source = [];
 
-    this.firstFrame = '__BASE';
+        /**
+        * @property {object} frames - Frames
+        */
+        this.frames = {};
 
-    this.frameTotal = 0;
+        this.firstFrame = '__BASE';
 
-    //  Load the Sources
-    for (var i = 0; i < source.length; i++)
-    {
-        this.source.push(new TextureSource(this, source[i], width, height));
-    }
-};
+        this.frameTotal = 0;
 
-Texture.prototype.constructor = Texture;
-
-Texture.prototype = {
+        //  Load the Sources
+        for (var i = 0; i < source.length; i++)
+        {
+            this.source.push(new TextureSource(this, source[i], width, height));
+        }
+    },
 
     add: function (name, sourceIndex, x, y, width, height)
     {
@@ -155,22 +151,10 @@ Texture.prototype = {
         {
             this.source[i].glTextureIndex = index;
 
-            // console.log(this.source[i].image.currentSrc, 'index = ', index);
-
             index++;
         }
 
         return index;
-    },
-
-    /**
-    * Destroys this base texture
-    *
-    * @method destroy
-    */
-    destroy: function ()
-    {
-        //  TODO
     },
 
     setFilter: function (filterMode)
@@ -179,8 +163,12 @@ Texture.prototype = {
         {
             this.source[i].setFilter(filterMode);
         }
+    },
+
+    destroy: function ()
+    {
     }
 
-};
+});
 
 module.exports = Texture;
