@@ -1,7 +1,7 @@
 
 var Class = require('../../utils/Class');
 var GameObject = require('../GameObject');
-var Components = require('../../components');
+var Components = require('../components');
 var ImageRender = require('./ImageRender');
 
 var Image = new Class({

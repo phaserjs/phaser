@@ -1,22 +1,8 @@
-
 var Quad = require('./Quad');
-var BuildFromConfig = require('./BuildFromConfig');
-var FactoryContainer = require('../../gameobjects/FactoryContainer');
 
-var QuadFactory = {
-
-    KEY: 'quad',
-
-    add: function (x, y, key, frame)
-    {
-        return this.children.add(new Quad(this.state, x, y, key, frame));
-    },
-
-    make: function (config)
-    {
-        return BuildFromConfig(this.state, config);
-    }
-
+var QuadFactory = function (state, x, y, key, frame)
+{
+    return new Quad(state, x, y, key, frame);
 };
 
-module.exports = FactoryContainer.register(QuadFactory);
+module.exports = QuadFactory;

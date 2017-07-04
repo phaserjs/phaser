@@ -1,22 +1,8 @@
-
 var Text = require('./Text');
-var BuildFromConfig = require('./BuildFromConfig');
-var FactoryContainer = require('../../FactoryContainer');
 
-var TextFactory = {
-
-    KEY: 'text',
-
-    add: function (x, y, text, style)
-    {
-        return this.children.add(new Text(this.state, x, y, text, style));
-    },
-
-    make: function (config)
-    {
-        return BuildFromConfig(this.state, config);
-    }
-
+var TextFactory = function (state, x, y, text, style)
+{
+    return new Text(state, x, y, text, style);
 };
 
-module.exports = FactoryContainer.register(TextFactory);
+module.exports = TextFactory;

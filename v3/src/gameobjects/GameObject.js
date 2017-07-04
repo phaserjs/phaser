@@ -5,7 +5,7 @@
 */
 
 var Class = require('../utils/Class');
-var Components = require('../components');
+var Components = require('./components');
 
 /**
 * This is the base Game Object class that you can use when creating your own extended Game Objects.
@@ -21,9 +21,10 @@ var GameObject = new Class({
     {
         this.state = state;
 
-        this.id = 0;
         this.type = type;
+
         this.name = '';
+
         this.tabIndex = -1;
 
         this.parent;

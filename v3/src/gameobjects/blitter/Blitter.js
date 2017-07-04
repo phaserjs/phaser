@@ -1,9 +1,10 @@
 
-var Class = require('../../utils/Class');
-var GameObject = require('../GameObject');
-var Components = require('../../components');
 var BlitterRender = require('./BlitterRender');
 var Bob = require('./Bob');
+var Class = require('../../utils/Class');
+var Components = require('../components');
+var DisplayList = require('../../plugins/DisplayList');
+var GameObject = require('../GameObject');
 
 /**
 * A Blitter Game Object.
@@ -49,7 +50,7 @@ var Blitter = new Class({
         this.setTexture(texture, frame);
         this.setPosition(x, y);
 
-        this.children = new Components.Children(this);
+        this.children = new DisplayList(this);
 
         this.renderList = [];
 
@@ -68,7 +69,7 @@ var Blitter = new Class({
             frame = this.texture.get(frame);
         }
 
-        var bob = new Bob(this, x, y, frame, visible);
+        var bob = new Bob(x, y, frame, visible);
 
         this.children.addAt(bob, index, false);
 

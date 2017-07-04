@@ -1,30 +1,32 @@
-var Bob = function (blitter, x, y, frame, visible)
-{
-    this.parent = blitter;
+var Class = require('../../utils/Class');
 
-    this.x = x;
-    this.y = y;
-    this.frame = frame;
-    this.data = {};
+var Bob = new Class({
 
-    this._visible = visible;
-    this._alpha = 1;
+    initialize:
 
-    this.flipX - false;
-    this.flipY = false;
+    function Bob (x, y, frame, visible)
+    {
+        //  Set by the DisplayList class
+        this.parent;
 
-};
+        this.x = x;
+        this.y = y;
+        this.frame = frame;
+        this.data = {};
 
-Bob.prototype.constructor = Bob;
+        this._visible = visible;
+        this._alpha = 1;
 
-Bob.prototype = {
+        this.flipX - false;
+        this.flipY = false;
+
+    },
 
     resetFlip: function ()
     {
         this.flipX = false;
         this.flipY = false;
     },
-
 
     reset: function (x, y, frame)
     {
@@ -38,15 +40,9 @@ Bob.prototype = {
         this.parent = undefined;
         this.frame = undefined;
         this.data = undefined;
-    }
-
-};
-
-Object.defineProperties(Bob.prototype, {
+    },
 
     visible: {
-
-        enumerable: true,
 
         get: function ()
         {
@@ -62,8 +58,6 @@ Object.defineProperties(Bob.prototype, {
     },
 
     alpha: {
-
-        enumerable: true,
 
         get: function ()
         {

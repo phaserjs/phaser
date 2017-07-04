@@ -1,6 +1,6 @@
 var Class = require('../utils/Class');
 var Rectangle = require('../geom/rectangle/Rectangle');
-var TransformMatrix = require('../components/TransformMatrix');
+var TransformMatrix = require('../gameobjects/components/TransformMatrix');
 var ValueToColor = require('../graphics/color/ValueToColor');
 
 var Camera = new Class({

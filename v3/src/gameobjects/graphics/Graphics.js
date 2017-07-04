@@ -1,6 +1,6 @@
 var Class = require('../../utils/Class');
 var GameObject = require('../GameObject');
-var Components = require('../../components');
+var Components = require('../components');
 var Render = require('./GraphicsRender');
 var Commands = require('./Commands');
 var MATH_CONST = require('../../math/const');

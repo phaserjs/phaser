@@ -20,8 +20,6 @@ var Phaser = {
 
     Math: require('./math'),
 
-    Components: require('./components'),
-
     Geom: require('./geom'),
 
     Graphics: require('./graphics'),

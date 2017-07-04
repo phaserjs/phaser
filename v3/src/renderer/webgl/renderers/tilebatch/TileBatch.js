@@ -1,6 +1,6 @@
 var DataBuffer32 = require('../../utils/DataBuffer32');
 var DataBuffer16 = require('../../utils/DataBuffer16');
-var TransformMatrix = require('../../../../components/TransformMatrix');
+var TransformMatrix = require('../../../../gameobjects/components/TransformMatrix');
 var TexturedAndNormalizedTintedShader = require('../../shaders/TexturedAndNormalizedTintedShader');
 
 var PHASER_CONST = require('../../../../const');

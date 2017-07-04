@@ -1,22 +1,9 @@
 
 var Tilemap = require('./Tilemap');
-var BuildFromConfig = require('./BuildFromConfig');
-var FactoryContainer = require('../../../gameobjects/FactoryContainer');
 
-var TilemapFactory = {
-
-    KEY: 'tilemap',
-
-    add: function (mapData, x, y, tileWidth, tileHeight, mapWidth, mapHeight, tileBorder, texture, frame)
-    {
-        return this.children.add(new Tilemap(this.state, mapData, x, y, tileWidth, tileHeight, mapWidth, mapHeight, tileBorder, texture, frame));
-    },
-
-    make: function (config)
-    {
-        return BuildFromConfig(this.state, config);
-    }
-
+var TilemapFactory = function (state, mapData, x, y, tileWidth, tileHeight, mapWidth, mapHeight, tileBorder, texture, frame)
+{
+    return new Tilemap(state, mapData, x, y, tileWidth, tileHeight, mapWidth, mapHeight, tileBorder, texture, frame);
 };
 
-module.exports = FactoryContainer.register(TilemapFactory);
+module.exports = TilemapFactory;

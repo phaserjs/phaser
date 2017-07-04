@@ -11,7 +11,7 @@ var VisibilityHandler = require('./VisibilityHandler');
 
 var AnimationManager = require('../animation/manager/AnimationManager');
 var CreateRenderer = require('./CreateRenderer');
-var Data = require('../components/Data');
+var Data = require('../plugins/Data');
 var GlobalCache = require('../cache/GlobalCache');
 var GlobalInputManager = require('../input/GlobalInputManager');
 var GlobalStateManager = require('../state/GlobalStateManager');

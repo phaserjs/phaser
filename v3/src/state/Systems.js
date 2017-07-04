@@ -1,14 +1,16 @@
 
-var CameraManager = require('./systems/CameraManager');
+var CameraManager = require('../plugins/CameraManager');
 var Clock = require('../time/Clock');
-var Component = require('../components');
+// var Component = require('../components');
 var EventDispatcher = require('../events/EventDispatcher');
-var GameObjectCreator = require('./systems/GameObjectCreator');
-var GameObjectFactory = require('./systems/GameObjectFactory');
-var Loader = require('./systems/Loader');
+var DisplayList = require('../plugins/DisplayList');
+var Data = require('../plugins/Data');
+var GameObjectCreator = require('../plugins/GameObjectCreator');
+var GameObjectFactory = require('../plugins/GameObjectFactory');
+var Loader = require('../plugins/Loader');
 var Settings = require('./Settings');
 var StableSort = require('../utils/array/StableSort');
-var StateManager = require('./systems/StateManager');
+var StateManager = require('../plugins/StateManager');
 var TweenManager = require('../tween/TweenManager');
 
 var Systems = function (state, config)
@@ -55,32 +57,34 @@ Systems.prototype = {
 
     init: function (game)
     {
+        var state = this.state;
+
         this.game = game;
 
         //  Game (Global) level managers
 
-        this.anims = this.game.anims;
-        this.cache = this.game.cache;
-        this.input = this.game.input;
-        this.registry = this.game.registry;
-        this.textures = this.game.textures;
+        this.anims = game.anims;
+        this.cache = game.cache;
+        this.input = game.input;
+        this.registry = game.registry;
+        this.textures = game.textures;
 
         //  State specific properties (transform, data, children, etc)
 
-        this.children = new Component.Children(this.state);
-        this.color = new Component.Color(this.state);
-        this.data = new Component.Data(this.state);
+        this.children = new DisplayList(state);
+        // this.color = new Component.Color(state);
+        this.data = new Data(state);
 
         //  State specific managers (Factory, Tweens, Loader, Physics, etc)
 
-        this.add = new GameObjectFactory(this.state);
-        this.cameras = new CameraManager(this.state);
+        this.add = new GameObjectFactory(state);
+        this.cameras = new CameraManager(state);
         this.events = new EventDispatcher();
-        this.load = new Loader(this.state);
-        this.make = new GameObjectCreator(this.state);
-        this.stateManager = new StateManager(this.state, game);
-        this.time = new Clock(this.state);
-        this.tweens = new TweenManager(this.state);
+        this.load = new Loader(state);
+        this.make = new GameObjectCreator(state);
+        this.stateManager = new StateManager(state, game);
+        this.time = new Clock(state);
+        this.tweens = new TweenManager(state);
 
         this.inject();
     },

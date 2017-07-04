@@ -1,5 +1,5 @@
 var Commands = require('./Commands');
-var TransformMatrix = require('../../components/TransformMatrix');
+var TransformMatrix = require('../components/TransformMatrix');
 var pathArray = [];
 var cos = Math.cos;
 var sin = Math.sin;

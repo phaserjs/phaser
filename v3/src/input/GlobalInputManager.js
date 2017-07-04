@@ -7,7 +7,7 @@ var Keyboard = require('./keyboard/KeyboardManager');
 var Mouse = require('./mouse/MouseManager');
 var MouseEvent = require('./mouse/events/');
 var PointWithinGameObject = require('./components/PointWithinGameObject');
-var TransformMatrix = require('../components/TransformMatrix');
+var TransformMatrix = require('../gameobjects/components/TransformMatrix');
 
 var GlobalInputManager = new Class({
 

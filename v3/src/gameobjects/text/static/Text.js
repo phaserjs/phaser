@@ -1,7 +1,7 @@
 
 var Class = require('../../../utils/Class');
 var GameObject = require('../../GameObject');
-var Components = require('../../../components');
+var Components = require('../../components');
 var CanvasPool = require('../../../dom/CanvasPool');
 var TextRender = require('./TextRender');
 var TextStyle = require('../TextStyle');

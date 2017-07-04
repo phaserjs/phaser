@@ -1,4 +1,4 @@
-var TransformMatrix = require('../../../components/TransformMatrix');
+var TransformMatrix = require('../../components/TransformMatrix');
 var tempMatrix = new TransformMatrix();
 var tempMatrixChar = new TransformMatrix();
 
