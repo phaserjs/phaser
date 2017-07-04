@@ -23,10 +23,11 @@ var RenderPass = new Class({
         Components.Origin,
         Components.RenderTarget,
         Components.ScaleMode,
+        Components.ScrollFactor,
         Components.Size,
+        Components.Tint,
         Components.Transform,
         Components.Visible,
-        Components.ScrollFactor,
         Render
     ],
 
