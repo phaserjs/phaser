@@ -12,6 +12,7 @@ var Settings = require('./Settings');
 var StableSort = require('../utils/array/StableSort');
 var StateManager = require('../plugins/StateManager');
 var TweenManager = require('../tween/TweenManager');
+var UpdateList = require('../plugins/UpdateList');
 
 var Systems = new Class({
 
@@ -52,7 +53,8 @@ var Systems = new Class({
         this.tweens;
 
         //  State properties
-        this.children;
+        this.updateList;
+        this.displayList;
         this.data;
     },
 
@@ -72,7 +74,9 @@ var Systems = new Class({
 
         //  State specific properties (transform, data, children, etc)
 
-        this.children = new DisplayList(state);
+        this.updateList = new UpdateList(state);
+        this.displayList = new DisplayList(state);
+
         this.data = new Data(state);
 
         //  State specific managers (Factory, Tweens, Loader, Physics, etc)
@@ -114,22 +118,13 @@ var Systems = new Class({
             return;
         }
 
+        this.updateList.begin();
         this.time.begin(time);
-
         this.tweens.begin(time);
 
-        var list = this.children.list;
-
-        for (var i = 0; i < list.length; i++)
-        {
-            list[i].preUpdate(time, delta);
-        }
-
-        //  preUpdate TimerEvents
+        this.updateList.update(time, delta);
         this.time.update(time, delta);
-
         this.tweens.update(time, delta);
-
         this.cameras.update(time, delta);
 
         this.state.update.call(this.state, time, delta);

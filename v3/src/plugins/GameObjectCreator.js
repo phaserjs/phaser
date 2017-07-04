@@ -23,8 +23,6 @@ var GameObjectCreator = new Class({
     function GameObjectCreator (state)
     {
         this.state = state;
-
-        this.children = state.sys.children;
     },
 
     bitmapText: function (config)

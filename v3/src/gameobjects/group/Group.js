@@ -64,7 +64,14 @@ var Group = new Class({
     {
         if (visible === undefined) { visible = true; }
 
-        var child = this.state.sys.children.add(new this.classType(this.state, x, y, key, frame));
+        var child = new this.classType(this.state, x, y, key, frame);
+
+        this.state.sys.displayList.add(child);
+
+        if (child.preUpdate)
+        {
+            this.state.sys.updateList.add(child);
+        }
 
         child.visible = visible;
 

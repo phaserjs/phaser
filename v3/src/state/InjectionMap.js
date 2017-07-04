@@ -21,8 +21,7 @@ var InjectionMap = {
     time: 'time',
     tweens: 'tweens',
 
-    children: 'children',
-    color: 'color',
+    displayList: 'children',
     data: 'data'
 
 };

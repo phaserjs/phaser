@@ -35,11 +35,6 @@ var GameObject = new Class({
         this.renderFlags = 15;
     },
 
-    //  To be overridden by custom Game Objects
-    preUpdate: function ()
-    {
-    },
-
     //  Can be overridden by custom Game Objects, but provides default export functionality
     toJSON: function ()
     {
