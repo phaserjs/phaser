@@ -1,24 +1,16 @@
-/**
-* @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2016 Photon Storm Ltd.
-* @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
-*/
 
+var Class = require('../utils/Class');
 var Systems = require('./Systems');
 
-/**
-* A Base State Class.
-*
-* @class Phaser.State
-* @constructor
-*/
-var State = function (config)
-{
-    //  The State Systems. You must never overwrite this property, or all hell will break lose.
-    this.sys = new Systems(this, config);
-};
+var State = new Class({
 
-State.prototype = {
+    initialize:
+
+    function State (config)
+    {
+        //  The State Systems. You must never overwrite this property, or all hell will break lose.
+        this.sys = new Systems(this, config);
+    },
 
     //  Should be overridden by your own States
     update: function ()
@@ -30,8 +22,6 @@ State.prototype = {
     {
     }
 
-};
-
-State.prototype.constructor = State;
+});
 
 module.exports = State;

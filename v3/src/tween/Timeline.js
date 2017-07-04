@@ -1,26 +1,27 @@
+var Class = require('../utils/Class');
 var TweenBuilder = require('./TweenBuilder');
 
-var Timeline = function (manager)
-{
-    this.manager = manager;
+var Timeline = new Class({
 
-    this.tweens = [];
+    initialize:
 
-    this.paused = true;
+    function Timeline (manager)
+    {
+        this.manager = manager;
 
-    this.callbacks = {
-        onStart: { callback: null, scope: null, params: null },
-        onUpdate: { callback: null, scope: null, params: null },
-        onRepeat: { callback: null, scope: null, params: null },
-        onComplete: { callback: null, scope: null, params: null }
-    };
+        this.tweens = [];
 
-    this.callbackScope;
-};
+        this.paused = true;
 
-Timeline.prototype.constructor = Timeline;
+        this.callbacks = {
+            onStart: { callback: null, scope: null, params: null },
+            onUpdate: { callback: null, scope: null, params: null },
+            onRepeat: { callback: null, scope: null, params: null },
+            onComplete: { callback: null, scope: null, params: null }
+        };
 
-Timeline.prototype = {
+        this.callbackScope;
+    },
 
     add: function (config)
     {
@@ -36,6 +37,6 @@ Timeline.prototype = {
         this.tweens.push(tween);
     }
 
-};
+});
 
 module.exports = Timeline;

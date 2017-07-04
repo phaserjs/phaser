@@ -1,19 +1,22 @@
+var Class = require('../utils/Class');
+
 // A Set is a collection of unique elements.
+var Set = new Class({
 
-var Set = function (elements)
-{
-    this.entries = [];
+    initialize:
 
-    if (Array.isArray(elements))
+    function Set (elements)
     {
-        for (var i = 0; i < elements.length; i++)
-        {
-            this.set(elements[i]);
-        }
-    }
-};
+        this.entries = [];
 
-Set.prototype = {
+        if (Array.isArray(elements))
+        {
+            for (var i = 0; i < elements.length; i++)
+            {
+                this.set(elements[i]);
+            }
+        }
+    },
 
     set: function (value)
     {
@@ -151,15 +154,9 @@ Set.prototype = {
         });
 
         return newSet;
-    }
-
-};
-
-Object.defineProperties(Set.prototype, {
+    },
 
     size: {
-
-        enumerable: true,
 
         get: function ()
         {
@@ -174,7 +171,5 @@ Object.defineProperties(Set.prototype, {
     }
 
 });
-
-Set.prototype.constructor = Set;
 
 module.exports = Set;

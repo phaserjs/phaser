@@ -1,32 +1,33 @@
 
+var Class = require('../utils/Class');
 var EventDispatcher = require('../events/EventDispatcher');
 var TweenBuilder = require('./TweenBuilder');
 
-var TweenManager = function (state)
-{
-    //  The State the Tween Manager belongs to (tweens are State specific, not Game global)
-    this.state = state;
+var TweenManager = new Class({
 
-    /**
-    * @property {EventDispatcher} events - Global / Global Game System Events
-    */
-    this.events = new EventDispatcher(); // should use State event dispatcher?
+    initialize:
 
-    //  TODO:
-    //  Add _pool array and make the queue re-use objects within it.
-    //  Add a pool max size.
+    function TweenManager (state)
+    {
+        //  The State the Tween Manager belongs to (tweens are State specific, not Game global)
+        this.state = state;
 
-    this._add = [];
-    this._pending = [];
-    this._active = [];
-    this._destroy = [];
+        /**
+        * @property {EventDispatcher} events - Global / Global Game System Events
+        */
+        this.events = new EventDispatcher(); // should use State event dispatcher?
 
-    this._toProcess = 0;
-};
+        //  TODO:
+        //  Add _pool array and make the queue re-use objects within it.
+        //  Add a pool max size.
 
-TweenManager.prototype.constructor = TweenManager;
+        this._add = [];
+        this._pending = [];
+        this._active = [];
+        this._destroy = [];
 
-TweenManager.prototype = {
+        this._toProcess = 0;
+    },
 
     boot: function ()
     {
@@ -225,6 +226,6 @@ TweenManager.prototype = {
 
     }
 
-};
+});
 
 module.exports = TweenManager;

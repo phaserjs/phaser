@@ -1,10 +1,10 @@
 
 var CameraManager = require('../plugins/CameraManager');
+var Class = require('../utils/Class');
 var Clock = require('../time/Clock');
-// var Component = require('../components');
-var EventDispatcher = require('../events/EventDispatcher');
-var DisplayList = require('../plugins/DisplayList');
 var Data = require('../plugins/Data');
+var DisplayList = require('../plugins/DisplayList');
+var EventDispatcher = require('../events/EventDispatcher');
 var GameObjectCreator = require('../plugins/GameObjectCreator');
 var GameObjectFactory = require('../plugins/GameObjectFactory');
 var Loader = require('../plugins/Loader');
@@ -13,47 +13,48 @@ var StableSort = require('../utils/array/StableSort');
 var StateManager = require('../plugins/StateManager');
 var TweenManager = require('../tween/TweenManager');
 
-var Systems = function (state, config)
-{
-    this.state = state;
+var Systems = new Class({
 
-    this.config = config;
-    this.settings = Settings.create(config);
+    initialize:
 
-    this.sortChildrenFlag = false;
+    function Systems (state, config)
+    {
+        this.state = state;
 
-    //  Set by the GlobalStateManager
-    this.mask = null;
-    this.canvas;
-    this.context;
+        this.config = config;
+        this.settings = Settings.create(config);
 
-    //  CORE (GLOBAL) SYSTEMS / PROPERTIES
+        this.sortChildrenFlag = false;
 
-    this.game;
+        //  Set by the GlobalStateManager
+        this.mask = null;
+        this.canvas;
+        this.context;
 
-    this.anims;
-    this.cache;
-    this.input;
-    this.registry;
-    this.textures;
+        //  CORE (GLOBAL) SYSTEMS / PROPERTIES
 
-    //  Reference to State specific managers (Factory, Tweens, Loader, Physics, etc)
-    this.add;
-    this.cameras;
-    this.events;
-    this.load;
-    this.make;
-    this.stateManager;
-    this.time;
-    this.tweens;
+        this.game;
 
-    //  State properties
-    this.children;
-    this.color;
-    this.data;
-};
+        this.anims;
+        this.cache;
+        this.input;
+        this.registry;
+        this.textures;
 
-Systems.prototype = {
+        //  Reference to State specific managers (Factory, Tweens, Loader, Physics, etc)
+        this.add;
+        this.cameras;
+        this.events;
+        this.load;
+        this.make;
+        this.stateManager;
+        this.time;
+        this.tweens;
+
+        //  State properties
+        this.children;
+        this.data;
+    },
 
     init: function (game)
     {
@@ -72,7 +73,6 @@ Systems.prototype = {
         //  State specific properties (transform, data, children, etc)
 
         this.children = new DisplayList(state);
-        // this.color = new Component.Color(state);
         this.data = new Data(state);
 
         //  State specific managers (Factory, Tweens, Loader, Physics, etc)
@@ -256,8 +256,7 @@ Systems.prototype = {
             this.state.destroy.call(this.state);
         }
     }
-};
 
-Systems.prototype.constructor = Systems;
+});
 
 module.exports = Systems;

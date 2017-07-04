@@ -1,72 +1,61 @@
-/**
-* @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2016 Photon Storm Ltd.
-* @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
-*/
 
+var CanvasInterpolation = require('../dom/CanvasInterpolation');
+var CanvasPool = require('../dom/CanvasPool');
+var Class = require('../utils/Class');
 var CONST = require('../const');
+var EventDispatcher = require('../events/EventDispatcher');
+var GetContext = require('../canvas/GetContext');
+var GetValue = require('../utils/object/GetValue');
 var NOOP = require('../utils/NOOP');
+var Rectangle = require('../geom/rectangle/Rectangle');
 var State = require('./State');
 var Systems = require('./Systems');
-var GetValue = require('../utils/object/GetValue');
-var EventDispatcher = require('../events/EventDispatcher');
-var Rectangle = require('../geom/rectangle/Rectangle');
-var CanvasPool = require('../dom/CanvasPool');
-var CanvasInterpolation = require('../dom/CanvasInterpolation');
-var GetContext = require('../canvas/GetContext');
 
-/**
-* The State Manager is responsible for loading, setting up and switching game states.
-*
-* @class Phaser.GlobalStateManager
-* @constructor
-* @param {Phaser.Game} game - A reference to the currently running game.
-*/
-var GlobalStateManager = function (game, stateConfig)
-{
-    this.game = game;
+var GlobalStateManager = new Class({
 
-    //  Everything kept in here
-    this.keys = {};
-    this.states = [];
+    initialize:
 
-    //  Only active states are kept in here
-    this.active = [];
-
-    this._pending = [];
-
-    if (stateConfig)
+    function GlobalStateManager (game, stateConfig)
     {
-        if (Array.isArray(stateConfig))
+        this.game = game;
+
+        //  Everything kept in here
+        this.keys = {};
+        this.states = [];
+
+        //  Only active states are kept in here
+        this.active = [];
+
+        this._pending = [];
+
+        if (stateConfig)
         {
-            for (var i = 0; i < stateConfig.length; i++)
+            if (Array.isArray(stateConfig))
             {
-                //  The i === 0 part just starts the first State given
+                for (var i = 0; i < stateConfig.length; i++)
+                {
+                    //  The i === 0 part just starts the first State given
+                    this._pending.push({
+                        index: i,
+                        key: 'default',
+                        state: stateConfig[i],
+                        autoStart: (i === 0),
+                        data: {}
+                    });
+                }
+            }
+            else
+            {
                 this._pending.push({
-                    index: i,
+                    index: 0,
                     key: 'default',
-                    state: stateConfig[i],
-                    autoStart: (i === 0),
+                    state: stateConfig,
+                    autoStart: true,
                     data: {}
                 });
             }
         }
-        else
-        {
-            this._pending.push({
-                index: 0,
-                key: 'default',
-                state: stateConfig,
-                autoStart: true,
-                data: {}
-            });
-        }
-    }
-};
-
-GlobalStateManager.prototype.constructor = GlobalStateManager;
-
-GlobalStateManager.prototype = {
+    },
 
     /**
     * The Boot handler is called by Phaser.Game when it first starts up.
@@ -669,6 +658,6 @@ GlobalStateManager.prototype = {
         }
     }
 
-};
+});
 
 module.exports = GlobalStateManager;

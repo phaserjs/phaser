@@ -1,3 +1,5 @@
+var Class = require('../utils/Class');
+
 // The keys of a Map can be arbitrary values.
 
 /*
@@ -8,22 +10,24 @@ var map = new Map([
 ]);
 */
 
-var Map = function (elements)
-{
-    this.entries = {};
+var Map = new Class({
 
-    this.size = 0;
+    initialize:
 
-    if (Array.isArray(elements))
+    function Map (elements)
     {
-        for (var i = 0; i < elements.length; i++)
-        {
-            this.set(elements[i][0], elements[i][1]);
-        }
-    }
-};
+        this.entries = {};
 
-Map.prototype = {
+        this.size = 0;
+
+        if (Array.isArray(elements))
+        {
+            for (var i = 0; i < elements.length; i++)
+            {
+                this.set(elements[i][0], elements[i][1]);
+            }
+        }
+    },
 
     set: function (key, value)
     {
@@ -159,8 +163,7 @@ Map.prototype = {
 
         return this;
     }
-};
 
-Map.prototype.constructor = Map;
+});
 
 module.exports = Map;
