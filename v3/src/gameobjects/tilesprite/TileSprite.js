@@ -17,11 +17,12 @@ var TileSprite = new Class({
         Components.Origin,
         Components.RenderTarget,
         Components.ScaleMode,
+        Components.ScrollFactor,
         Components.Size,
         Components.Texture,
+        Components.Tint,
         Components.Transform,
         Components.Visible,
-        Components.ScrollFactor,
         TileSpriteRender
     ],
 

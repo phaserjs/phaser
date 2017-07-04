@@ -53,7 +53,6 @@ TileBatch.prototype = {
 
     init: function (gl)
     {
-
         var vertexDataBuffer = new DataBuffer32(CONST.VERTEX_SIZE * CONST.SPRITE_VERTEX_COUNT * CONST.MAX_SPRITES);
         var indexDataBuffer = new DataBuffer16(CONST.INDEX_SIZE * CONST.SPRITE_INDEX_COUNT * CONST.MAX_SPRITES);
         var shader = this.manager.resourceManager.createShader('TexturedAndNormalizedTintedShader', TexturedAndNormalizedTintedShader);
@@ -180,7 +179,6 @@ TileBatch.prototype = {
     addTileSprite: function (gameObject, camera)
     {
         var tempMatrix = this.tempMatrix;
-        var alpha = 16777216;
         var vertexDataBuffer = this.vertexDataBuffer;
         var vertexBufferObjectF32 = vertexDataBuffer.floatView;
         var vertexBufferObjectU32 = vertexDataBuffer.uintView;
@@ -210,6 +208,7 @@ TileBatch.prototype = {
         var tilePositionX = gameObject.tilePositionX / gameObject.frame.width;
         var tilePositionY = gameObject.tilePositionY / gameObject.frame.height;
         var texture = gameObject.tileTexture;
+        var tint = gameObject._tint;
 
         tempMatrix.applyITRS(translateX, translateY, rotation, scaleX, scaleY);
 
@@ -232,7 +231,7 @@ TileBatch.prototype = {
         mvc = src * cma + srd * cmc;
         mvd = src * cmb + srd * cmd;
         mve = sre * cma + srf * cmc + cme;
-        mvf = sre * cmb + srf * cmd + cmf; 
+        mvf = sre * cmb + srf * cmd + cmf;
         
         tx0 = x * mva + y * mvc + mve;
         ty0 = x * mvb + y * mvd + mvf;
@@ -247,32 +246,36 @@ TileBatch.prototype = {
         vertexOffset = vertexDataBuffer.allocate(24);
         this.elementCount += 6;
         
+        //  Top Left
         vertexBufferObjectF32[vertexOffset++] = tx0;
         vertexBufferObjectF32[vertexOffset++] = ty0;
         vertexBufferObjectF32[vertexOffset++] = u0 + tilePositionX;
         vertexBufferObjectF32[vertexOffset++] = v0 + tilePositionY;
-        vertexBufferObjectU32[vertexOffset++] = 0xFFFFFF; //vertexColor.topLeft;
+        vertexBufferObjectU32[vertexOffset++] = tint[0];
         vertexBufferObjectF32[vertexOffset++] = alpha;
 
+        //  Bottom Left
         vertexBufferObjectF32[vertexOffset++] = tx1;
         vertexBufferObjectF32[vertexOffset++] = ty1;
         vertexBufferObjectF32[vertexOffset++] = u0 + tilePositionX;
         vertexBufferObjectF32[vertexOffset++] = v1 + tilePositionY;
-        vertexBufferObjectU32[vertexOffset++] = 0xFFFFFF; //vertexColor.bottomLeft;
+        vertexBufferObjectU32[vertexOffset++] = tint[2];
         vertexBufferObjectF32[vertexOffset++] = alpha;
 
+        //  Bottom Right
         vertexBufferObjectF32[vertexOffset++] = tx2;
         vertexBufferObjectF32[vertexOffset++] = ty2;
         vertexBufferObjectF32[vertexOffset++] = u1 + tilePositionX;
         vertexBufferObjectF32[vertexOffset++] = v1 + tilePositionY;
-        vertexBufferObjectU32[vertexOffset++] = 0xFFFFFF; //vertexColor.bottomRight;
+        vertexBufferObjectU32[vertexOffset++] = tint[3];
         vertexBufferObjectF32[vertexOffset++] = alpha;
 
+        //  Top Right
         vertexBufferObjectF32[vertexOffset++] = tx3;
         vertexBufferObjectF32[vertexOffset++] = ty3;
         vertexBufferObjectF32[vertexOffset++] = u1 + tilePositionX;
         vertexBufferObjectF32[vertexOffset++] = v0 + tilePositionY;
-        vertexBufferObjectU32[vertexOffset++] = 0xFFFFFF; //vertexColor.topRight;
+        vertexBufferObjectU32[vertexOffset++] = tint[1];
         vertexBufferObjectF32[vertexOffset++] = alpha;
     }
 
