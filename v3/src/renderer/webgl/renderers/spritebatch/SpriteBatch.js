@@ -26,6 +26,7 @@ var SpriteBatch = function (game, gl, manager)
     this.currentTexture2D = null;
     this.viewMatrixLocation = null;
     this.tempMatrix = new TransformMatrix();
+
     //   All of these settings will be able to be controlled via the Game Config
     this.config = {
         clearBeforeRender: true,
@@ -59,7 +60,6 @@ SpriteBatch.prototype = {
 
     init: function (gl)
     {
-
         var vertexDataBuffer = new DataBuffer32(CONST.VERTEX_SIZE * CONST.SPRITE_VERTEX_COUNT * CONST.MAX_SPRITES);
         var indexDataBuffer = new DataBuffer16(CONST.INDEX_SIZE * CONST.SPRITE_INDEX_COUNT * CONST.MAX_SPRITES);
         var shader = this.manager.resourceManager.createShader('TexturedAndNormalizedTintedShader', TexturedAndNormalizedTintedShader);
@@ -101,12 +101,13 @@ SpriteBatch.prototype = {
 
     shouldFlush: function ()
     {
-        if (this.drawIndexed != this.lastDrawIndexed || this.lastDrawingMesh !== this.drawingMesh || this.isFull())
+        if (this.drawIndexed !== this.lastDrawIndexed || this.lastDrawingMesh !== this.drawingMesh || this.isFull())
         {
             this.lastDrawIndexed = this.drawIndexed;
             this.lastDrawingMesh = this.drawingMesh;
             return true;
         }
+
         return false;
     },
 
@@ -126,6 +127,7 @@ SpriteBatch.prototype = {
             shader.bind();
             this.resize(this.width, this.height, this.game.config.resolution, shader);
         }
+
         this.vertexBufferObject.bind();
     },
 
@@ -146,6 +148,7 @@ SpriteBatch.prototype = {
 
         this.bind(shader);
         this.vertexBufferObject.updateResource(vertexDataBuffer.getUsedBufferAsFloat(), 0);
+
         if (this.drawIndexed)
         {
             if (this.drawingMesh)
@@ -154,7 +157,9 @@ SpriteBatch.prototype = {
                 this.indexBufferObjectForMesh.updateResource(this.indexDataBuffer.buffer, 0)
             }
             else
+            {
                 this.indexBufferObject.bind();
+            }
 
             gl.drawElements(gl.TRIANGLES, this.elementCount, gl.UNSIGNED_SHORT, 0);
         }
@@ -175,9 +180,9 @@ SpriteBatch.prototype = {
 
     resize: function (width, height, resolution, shader)
     {
-        var gl = this.glContext;
-        var activeShader = shader !== undefined ? shader : this.shader;
-        var location = activeShader == this.shader ? this.viewMatrixLocation : activeShader.getUniformLocation('u_view_matrix');
+        var activeShader = (shader !== undefined) ? shader : this.shader;
+        var location = (activeShader === this.shader) ? this.viewMatrixLocation : activeShader.getUniformLocation('u_view_matrix');
+
         this.width = width * resolution;
         this.height = height * resolution;
         this.setProjectionMatrix(activeShader, location);
@@ -222,9 +227,8 @@ SpriteBatch.prototype = {
         var rotation = -gameObject.rotation;
         var tempMatrixMatrix = tempMatrix.matrix;
         var cameraMatrix = camera.matrix.matrix;
-        var mva, mvb, mvc, mvd, mve, mvf, tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3;
+        var mva, mvb, mvc, mvd, mve, mvf;
         var sra, srb, src, srd, sre, srf, cma, cmb, cmc, cmd, cme, cmf;
-        var alpha = gameObject.alpha;
         var vertices = gameObject.vertices;
         var uv = gameObject.uv;
         var length = vertices.length;
@@ -257,7 +261,7 @@ SpriteBatch.prototype = {
         mvc = src * cma + srd * cmc;
         mvd = src * cmb + srd * cmd;
         mve = sre * cma + srf * cmc + cme;
-        mvf = sre * cmb + srf * cmd + cmf; 
+        mvf = sre * cmb + srf * cmd + cmf;
         
         this.manager.setRenderer(this, frame.texture.source[frame.sourceIndex].glTexture, gameObject.renderTarget);
         indexOffset = this.vertexCount;
@@ -281,7 +285,9 @@ SpriteBatch.prototype = {
             vertexBufferObjectF32[vertexOffset++] = alphas[index0];
             index0 += 1;
         }
+
         var elementCount = this.elementCount;
+
         for (var index = 0; index < indexLength; ++index)
         {
             indexBuffer[elementCount + index] = indexOffset + indices[index];
@@ -305,9 +311,8 @@ SpriteBatch.prototype = {
         var rotation = -gameObject.rotation;
         var tempMatrixMatrix = tempMatrix.matrix;
         var cameraMatrix = camera.matrix.matrix;
-        var mva, mvb, mvc, mvd, mve, mvf, tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3;
+        var mva, mvb, mvc, mvd, mve, mvf;
         var sra, srb, src, srd, sre, srf, cma, cmb, cmc, cmd, cme, cmf;
-        var alpha = gameObject.alpha;
         var vertices = gameObject.vertices;
         var uv = gameObject.uv;
         var colors = gameObject.colors;
@@ -336,7 +341,7 @@ SpriteBatch.prototype = {
         mvc = src * cma + srd * cmc;
         mvd = src * cmb + srd * cmd;
         mve = sre * cma + srf * cmc + cme;
-        mvf = sre * cmb + srf * cmd + cmf; 
+        mvf = sre * cmb + srf * cmd + cmf;
         
         this.manager.setRenderer(this, frame.texture.source[frame.sourceIndex].glTexture, gameObject.renderTarget);
         this.drawIndexed = false;
@@ -371,7 +376,6 @@ SpriteBatch.prototype = {
         var yh = y + height;
         var cameraMatrix = camera.matrix.matrix;
         var mva, mvb, mvc, mvd, mve, mvf, tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3;
-        var sra, srb, src, srd, sre, srf, cma, cmb, cmc, cmd, cme, cmf;
         var halfTileWidth = (width) * 0.5;
         var halfTileHeight = (height) * 0.5;
         var u0 = (rectX - (halfTileWidth - 0.5)) / textureWidth;
@@ -407,21 +411,21 @@ SpriteBatch.prototype = {
         vertexBufferObjectF32[vertexOffset++] = ty0;
         vertexBufferObjectF32[vertexOffset++] = u0;
         vertexBufferObjectF32[vertexOffset++] = v0;
-        vertexBufferObjectU32[vertexOffset++] = tint; 
+        vertexBufferObjectU32[vertexOffset++] = tint;
         vertexBufferObjectF32[vertexOffset++] = alpha;
 
         vertexBufferObjectF32[vertexOffset++] = tx1;
         vertexBufferObjectF32[vertexOffset++] = ty1;
         vertexBufferObjectF32[vertexOffset++] = u0;
         vertexBufferObjectF32[vertexOffset++] = v1;
-        vertexBufferObjectU32[vertexOffset++] = tint; 
+        vertexBufferObjectU32[vertexOffset++] = tint;
         vertexBufferObjectF32[vertexOffset++] = alpha;
 
         vertexBufferObjectF32[vertexOffset++] = tx2;
         vertexBufferObjectF32[vertexOffset++] = ty2;
         vertexBufferObjectF32[vertexOffset++] = u1;
         vertexBufferObjectF32[vertexOffset++] = v1;
-        vertexBufferObjectU32[vertexOffset++] = tint; 
+        vertexBufferObjectU32[vertexOffset++] = tint;
         vertexBufferObjectF32[vertexOffset++] = alpha;
 
         vertexBufferObjectF32[vertexOffset++] = tx3;
@@ -478,7 +482,7 @@ SpriteBatch.prototype = {
         mvc = src * cma + srd * cmc;
         mvd = src * cmb + srd * cmd;
         mve = sre * cma + srf * cmc + cme;
-        mvf = sre * cmb + srf * cmd + cmf; 
+        mvf = sre * cmb + srf * cmd + cmf;
         
         tx0 = x * mva + y * mvc + mve;
         ty0 = x * mvb + y * mvd + mvf;
@@ -495,32 +499,36 @@ SpriteBatch.prototype = {
         vertexOffset = vertexDataBuffer.allocate(24);
         this.elementCount += 6;
         
+        //  Top Left
         vertexBufferObjectF32[vertexOffset++] = tx0;
         vertexBufferObjectF32[vertexOffset++] = ty0;
         vertexBufferObjectF32[vertexOffset++] = 0;
         vertexBufferObjectF32[vertexOffset++] = 0;
-        vertexBufferObjectU32[vertexOffset++] = tint[0]; //topLeft;
+        vertexBufferObjectU32[vertexOffset++] = tint[0];
         vertexBufferObjectF32[vertexOffset++] = alpha;
 
+        //  Bottom Left
         vertexBufferObjectF32[vertexOffset++] = tx1;
         vertexBufferObjectF32[vertexOffset++] = ty1;
         vertexBufferObjectF32[vertexOffset++] = 0;
         vertexBufferObjectF32[vertexOffset++] = 1;
-        vertexBufferObjectU32[vertexOffset++] = tint[2]; //bottomLeft;
+        vertexBufferObjectU32[vertexOffset++] = tint[2];
         vertexBufferObjectF32[vertexOffset++] = alpha;
 
+        //  Bottom Right
         vertexBufferObjectF32[vertexOffset++] = tx2;
         vertexBufferObjectF32[vertexOffset++] = ty2;
         vertexBufferObjectF32[vertexOffset++] = 1;
         vertexBufferObjectF32[vertexOffset++] = 1;
-        vertexBufferObjectU32[vertexOffset++] = tint[3]; //bottomRight;
+        vertexBufferObjectU32[vertexOffset++] = tint[3];
         vertexBufferObjectF32[vertexOffset++] = alpha;
 
+        //  Top Right
         vertexBufferObjectF32[vertexOffset++] = tx3;
         vertexBufferObjectF32[vertexOffset++] = ty3;
         vertexBufferObjectF32[vertexOffset++] = 1;
         vertexBufferObjectF32[vertexOffset++] = 0;
-        vertexBufferObjectU32[vertexOffset++] = tint[1]; //topRight;
+        vertexBufferObjectU32[vertexOffset++] = tint[1];
         vertexBufferObjectF32[vertexOffset++] = alpha;
     },
 
@@ -575,7 +583,7 @@ SpriteBatch.prototype = {
         mvc = src * cma + srd * cmc;
         mvd = src * cmb + srd * cmd;
         mve = sre * cma + srf * cmc + cme;
-        mvf = sre * cmb + srf * cmd + cmf; 
+        mvf = sre * cmb + srf * cmd + cmf;
         
         tx0 = x * mva + y * mvc + mve;
         ty0 = x * mvb + y * mvd + mvf;
@@ -592,32 +600,36 @@ SpriteBatch.prototype = {
         vertexOffset = vertexDataBuffer.allocate(24);
         this.elementCount += 6;
         
+        //  Top Left
         vertexBufferObjectF32[vertexOffset++] = tx0;
         vertexBufferObjectF32[vertexOffset++] = ty0;
         vertexBufferObjectF32[vertexOffset++] = uvs.x0;
         vertexBufferObjectF32[vertexOffset++] = uvs.y0;
-        vertexBufferObjectU32[vertexOffset++] = tint[0]; // topLeft
+        vertexBufferObjectU32[vertexOffset++] = tint[0];
         vertexBufferObjectF32[vertexOffset++] = alpha;
 
+        //  Bottom Left
         vertexBufferObjectF32[vertexOffset++] = tx1;
         vertexBufferObjectF32[vertexOffset++] = ty1;
         vertexBufferObjectF32[vertexOffset++] = uvs.x1;
         vertexBufferObjectF32[vertexOffset++] = uvs.y1;
-        vertexBufferObjectU32[vertexOffset++] = tint[2]; // bottomLeft;
+        vertexBufferObjectU32[vertexOffset++] = tint[2];
         vertexBufferObjectF32[vertexOffset++] = alpha;
 
+        //  Bottom Right
         vertexBufferObjectF32[vertexOffset++] = tx2;
         vertexBufferObjectF32[vertexOffset++] = ty2;
         vertexBufferObjectF32[vertexOffset++] = uvs.x2;
         vertexBufferObjectF32[vertexOffset++] = uvs.y2;
-        vertexBufferObjectU32[vertexOffset++] = tint[3]; // bottomRight;
+        vertexBufferObjectU32[vertexOffset++] = tint[3];
         vertexBufferObjectF32[vertexOffset++] = alpha;
 
+        //  Top Right
         vertexBufferObjectF32[vertexOffset++] = tx3;
         vertexBufferObjectF32[vertexOffset++] = ty3;
         vertexBufferObjectF32[vertexOffset++] = uvs.x3;
         vertexBufferObjectF32[vertexOffset++] = uvs.y3;
-        vertexBufferObjectU32[vertexOffset++] = tint[1]; // topRight;
+        vertexBufferObjectU32[vertexOffset++] = tint[1];
         vertexBufferObjectF32[vertexOffset++] = alpha;
     }
 
