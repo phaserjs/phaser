@@ -1,47 +1,47 @@
-var DataBuffer32 = require('../../utils/DataBuffer32');
+var Class = require('../../../../utils/Class');
+var CONST = require('./const');
 var DataBuffer16 = require('../../utils/DataBuffer16');
+var DataBuffer32 = require('../../utils/DataBuffer32');
+var PHASER_CONST = require('../../../../const');
 var TilemapShader = require('../../shaders/TilemapShader');
 
-var PHASER_CONST = require('../../../../const');
-var CONST = require('./const');
+var TilemapRenderer = new Class({
 
-var TilemapRenderer = function (game, gl, manager)
-{
-    this.game = game;
-    this.type = PHASER_CONST.WEBGL;
-    this.view = game.canvas;
-    this.resolution = game.config.resolution;
-    this.width = game.config.width * game.config.resolution;
-    this.height = game.config.height * game.config.resolution;
-    this.glContext = gl;
-    this.shader = null;
-    this.viewMatrixLocation = null;
+    initialize:
 
-    //   All of these settings will be able to be controlled via the Game Config
-    this.config = {
-        clearBeforeRender: true,
-        transparent: false,
-        autoResize: false,
-        preserveDrawingBuffer: false,
+    function TilemapRenderer (game, gl, manager)
+    {
+        this.game = game;
+        this.type = PHASER_CONST.WEBGL;
+        this.view = game.canvas;
+        this.resolution = game.config.resolution;
+        this.width = game.config.width * game.config.resolution;
+        this.height = game.config.height * game.config.resolution;
+        this.glContext = gl;
+        this.shader = null;
+        this.viewMatrixLocation = null;
 
-        WebGLContextOptions: {
-            alpha: true,
-            antialias: true,
-            premultipliedAlpha: true,
-            stencil: true,
-            preserveDrawingBuffer: false
-        }
-    };
+        //   All of these settings will be able to be controlled via the Game Config
+        this.config = {
+            clearBeforeRender: true,
+            transparent: false,
+            autoResize: false,
+            preserveDrawingBuffer: false,
 
-    this.manager = manager;
-    this.dirty = false;
+            WebGLContextOptions: {
+                alpha: true,
+                antialias: true,
+                premultipliedAlpha: true,
+                stencil: true,
+                preserveDrawingBuffer: false
+            }
+        };
 
-    this.init(this.glContext);
-};
+        this.manager = manager;
+        this.dirty = false;
 
-TilemapRenderer.prototype.constructor = TilemapRenderer;
-
-TilemapRenderer.prototype = {
+        this.init(this.glContext);
+    },
 
     init: function (gl)
     {
@@ -94,7 +94,6 @@ TilemapRenderer.prototype = {
 
     resize: function (width, height, resolution, shader)
     {
-        var gl = this.glContext;
         var activeShader = shader !== undefined ? shader : this.shader;
         
         this.width = width * resolution;
@@ -117,6 +116,7 @@ TilemapRenderer.prototype = {
 
         this.shader = null;
     }
-};
+
+});
 
 module.exports = TilemapRenderer;

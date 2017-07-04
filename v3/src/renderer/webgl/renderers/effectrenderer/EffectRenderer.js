@@ -1,59 +1,59 @@
-var DataBuffer32 = require('../../utils/DataBuffer32');
-var DataBuffer16 = require('../../utils/DataBuffer16');
-var TransformMatrix = require('../../../../gameobjects/components/TransformMatrix');
-var TexturedAndNormalizedTintedShader = require('../../shaders/TexturedAndNormalizedTintedShader');
-
-var PHASER_CONST = require('../../../../const');
+var Class = require('../../../../utils/Class');
 var CONST = require('./const');
+var DataBuffer16 = require('../../utils/DataBuffer16');
+var DataBuffer32 = require('../../utils/DataBuffer32');
+var PHASER_CONST = require('../../../../const');
+var TexturedAndNormalizedTintedShader = require('../../shaders/TexturedAndNormalizedTintedShader');
+var TransformMatrix = require('../../../../gameobjects/components/TransformMatrix');
 
-var EffectRenderer = function (game, gl, manager)
-{
-    this.game = game;
-    this.type = PHASER_CONST.WEBGL;
-    this.view = game.canvas;
-    this.resolution = game.config.resolution;
-    this.width = game.config.width * game.config.resolution;
-    this.height = game.config.height * game.config.resolution;
-    this.glContext = gl;
-    this.maxSprites = null;
-    this.shader = null;
-    this.vertexBufferObject = null;
-    this.indexBufferObject = null;
-    this.vertexDataBuffer = null;
-    this.indexDataBuffer = null;
-    this.elementCount = 0;
-    this.currentTexture2D = null;
-    this.viewMatrixLocation = null;
-    this.tempMatrix = new TransformMatrix();
-    //   All of these settings will be able to be controlled via the Game Config
-    this.config = {
-        clearBeforeRender: true,
-        transparent: false,
-        autoResize: false,
-        preserveDrawingBuffer: false,
+var EffectRenderer = new Class({
 
-        WebGLContextOptions: {
-            alpha: true,
-            antialias: true,
-            premultipliedAlpha: true,
-            stencil: true,
-            preserveDrawingBuffer: false
-        }
-    };
+    initialize:
 
-    this.manager = manager;
-    this.dirty = false;
+    function EffectRenderer (game, gl, manager)
+    {
+        this.game = game;
+        this.type = PHASER_CONST.WEBGL;
+        this.view = game.canvas;
+        this.resolution = game.config.resolution;
+        this.width = game.config.width * game.config.resolution;
+        this.height = game.config.height * game.config.resolution;
+        this.glContext = gl;
+        this.maxSprites = null;
+        this.shader = null;
+        this.vertexBufferObject = null;
+        this.indexBufferObject = null;
+        this.vertexDataBuffer = null;
+        this.indexDataBuffer = null;
+        this.elementCount = 0;
+        this.currentTexture2D = null;
+        this.viewMatrixLocation = null;
+        this.tempMatrix = new TransformMatrix();
 
-    this.init(this.glContext);
-};
+        //   All of these settings will be able to be controlled via the Game Config
+        this.config = {
+            clearBeforeRender: true,
+            transparent: false,
+            autoResize: false,
+            preserveDrawingBuffer: false,
 
-EffectRenderer.prototype.constructor = EffectRenderer;
+            WebGLContextOptions: {
+                alpha: true,
+                antialias: true,
+                premultipliedAlpha: true,
+                stencil: true,
+                preserveDrawingBuffer: false
+            }
+        };
 
-EffectRenderer.prototype = {
+        this.manager = manager;
+        this.dirty = false;
+
+        this.init(this.glContext);
+    },
 
     init: function (gl)
     {
-
         var vertexDataBuffer = new DataBuffer32(CONST.VERTEX_SIZE * CONST.QUAD_VERTEX_COUNT * CONST.MAX_QUADS);
         var indexDataBuffer = new DataBuffer16(CONST.INDEX_SIZE * CONST.QUAD_INDEX_COUNT * CONST.MAX_QUADS);
         var shader = this.manager.resourceManager.createShader('TexturedAndNormalizedTintedShader', TexturedAndNormalizedTintedShader);
@@ -112,6 +112,7 @@ EffectRenderer.prototype = {
             shader.bind();
             this.resize(this.width, this.height, this.game.config.resolution, shader);
         }
+
         this.indexBufferObject.bind();
         this.vertexBufferObject.bind();
     },
@@ -130,13 +131,14 @@ EffectRenderer.prototype = {
         this.vertexBufferObject.updateResource(vertexDataBuffer.getUsedBufferAsFloat(), 0);
 
         gl.drawElements(gl.TRIANGLES, this.elementCount, gl.UNSIGNED_SHORT, 0);
+
         vertexDataBuffer.clear();
+
         this.elementCount = 0;
     },
 
     resize: function (width, height, resolution, shader)
     {
-        var gl = this.glContext;
         var activeShader = shader !== undefined ? shader : this.shader;
 
         this.width = width * resolution;
@@ -151,17 +153,6 @@ EffectRenderer.prototype = {
                 -1, 1, 0, 0
             ])
         );
-    },
-
-    destroy: function ()
-    {
-        this.manager.resourceManager.deleteShader(this.shader);
-        this.manager.resourceManager.deleteBuffer(this.indexBufferObject);
-        this.manager.resourceManager.deleteBuffer(this.vertexBufferObject);
-
-        this.shader = null;
-        this.indexBufferObject = null;
-        this.vertexBufferObject = null;
     },
 
     renderEffect: function (gameObject, camera, texture, textureWidth, textureHeight)
@@ -187,6 +178,7 @@ EffectRenderer.prototype = {
         var mva, mvb, mvc, mvd, mve, mvf, tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3;
         var sra, srb, src, srd, sre, srf, cma, cmb, cmc, cmd, cme, cmf;
         var alpha = gameObject.alpha;
+        var tint = gameObject._tint;
 
         tempMatrix.applyITRS(translateX, translateY, rotation, scaleX, scaleY);
 
@@ -209,7 +201,7 @@ EffectRenderer.prototype = {
         mvc = src * cma + srd * cmc;
         mvd = src * cmb + srd * cmd;
         mve = sre * cma + srf * cmc + cme;
-        mvf = sre * cmb + srf * cmd + cmf; 
+        mvf = sre * cmb + srf * cmd + cmf;
         
         tx0 = x * mva + y * mvc + mve;
         ty0 = x * mvb + y * mvd + mvf;
@@ -224,39 +216,54 @@ EffectRenderer.prototype = {
         vertexOffset = vertexDataBuffer.allocate(24);
         this.elementCount += 6;
         
+        //  Top Left
         vertexBufferObjectF32[vertexOffset++] = tx0;
         vertexBufferObjectF32[vertexOffset++] = ty0;
         vertexBufferObjectF32[vertexOffset++] = 0;
         vertexBufferObjectF32[vertexOffset++] = 0;
-        vertexBufferObjectU32[vertexOffset++] = 0xFFFFFF;
+        vertexBufferObjectU32[vertexOffset++] = tint[0];
         vertexBufferObjectF32[vertexOffset++] = alpha;
 
+        //  Bottom Left
         vertexBufferObjectF32[vertexOffset++] = tx1;
         vertexBufferObjectF32[vertexOffset++] = ty1;
         vertexBufferObjectF32[vertexOffset++] = 0;
         vertexBufferObjectF32[vertexOffset++] = 1;
-        vertexBufferObjectU32[vertexOffset++] = 0xFFFFFF;
+        vertexBufferObjectU32[vertexOffset++] = tint[2];
         vertexBufferObjectF32[vertexOffset++] = alpha;
 
+        //  Bottom Right
         vertexBufferObjectF32[vertexOffset++] = tx2;
         vertexBufferObjectF32[vertexOffset++] = ty2;
         vertexBufferObjectF32[vertexOffset++] = 1;
         vertexBufferObjectF32[vertexOffset++] = 1;
-        vertexBufferObjectU32[vertexOffset++] = 0xFFFFFF;
+        vertexBufferObjectU32[vertexOffset++] = tint[3];
         vertexBufferObjectF32[vertexOffset++] = alpha;
 
+        //  Top Right
         vertexBufferObjectF32[vertexOffset++] = tx3;
         vertexBufferObjectF32[vertexOffset++] = ty3;
         vertexBufferObjectF32[vertexOffset++] = 1;
         vertexBufferObjectF32[vertexOffset++] = 0;
-        vertexBufferObjectU32[vertexOffset++] = 0xFFFFFF;
+        vertexBufferObjectU32[vertexOffset++] = tint[1];
         vertexBufferObjectF32[vertexOffset++] = alpha;
 
         this.flush(gameObject.dstShader);
-        gameObject.dstRenderTarget.shouldClear = true;
 
+        gameObject.dstRenderTarget.shouldClear = true;
+    },
+
+    destroy: function ()
+    {
+        this.manager.resourceManager.deleteShader(this.shader);
+        this.manager.resourceManager.deleteBuffer(this.indexBufferObject);
+        this.manager.resourceManager.deleteBuffer(this.vertexBufferObject);
+
+        this.shader = null;
+        this.indexBufferObject = null;
+        this.vertexBufferObject = null;
     }
 
-};
+});
 
 module.exports = EffectRenderer;

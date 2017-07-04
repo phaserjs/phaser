@@ -1,54 +1,54 @@
-var DataBuffer32 = require('../../utils/DataBuffer32');
+var Class = require('../../../../utils/Class');
+var CONST = require('./const');
 var DataBuffer16 = require('../../utils/DataBuffer16');
+var DataBuffer32 = require('../../utils/DataBuffer32');
+var PHASER_CONST = require('../../../../const');
 var TexturedAndAlphaShader = require('../../shaders/TexturedAndAlphaShader');
 
-var PHASER_CONST = require('../../../../const');
-var CONST = require('./const');
+var BlitterBatch = new Class({
 
-var BlitterBatch = function (game, gl, manager)
-{
-    this.game = game;
-    this.type = PHASER_CONST.WEBGL;
-    this.view = game.canvas;
-    this.resolution = game.config.resolution;
-    this.width = game.config.width * game.config.resolution;
-    this.height = game.config.height * game.config.resolution;
-    this.glContext = gl;
-    this.maxParticles = null;
-    this.shader = null;
-    this.vertexBufferObject = null;
-    this.indexBufferObject = null;
-    this.vertexDataBuffer = null;
-    this.indexDataBuffer = null;
-    this.elementCount = 0;
-    this.currentTexture2D = null;
-    this.viewMatrixLocation = null;
+    initialize:
 
-    //   All of these settings will be able to be controlled via the Game Config
-    this.config = {
-        clearBeforeRender: true,
-        transparent: false,
-        autoResize: false,
-        preserveDrawingBuffer: false,
+    function BlitterBatch (game, gl, manager)
+    {
+        this.game = game;
+        this.type = PHASER_CONST.WEBGL;
+        this.view = game.canvas;
+        this.resolution = game.config.resolution;
+        this.width = game.config.width * game.config.resolution;
+        this.height = game.config.height * game.config.resolution;
+        this.glContext = gl;
+        this.maxParticles = null;
+        this.shader = null;
+        this.vertexBufferObject = null;
+        this.indexBufferObject = null;
+        this.vertexDataBuffer = null;
+        this.indexDataBuffer = null;
+        this.elementCount = 0;
+        this.currentTexture2D = null;
+        this.viewMatrixLocation = null;
 
-        WebGLContextOptions: {
-            alpha: true,
-            antialias: true,
-            premultipliedAlpha: true,
-            stencil: true,
-            preserveDrawingBuffer: false
-        }
-    };
+        //   All of these settings will be able to be controlled via the Game Config
+        this.config = {
+            clearBeforeRender: true,
+            transparent: false,
+            autoResize: false,
+            preserveDrawingBuffer: false,
 
-    this.manager = manager;
-    this.dirty = false;
+            WebGLContextOptions: {
+                alpha: true,
+                antialias: true,
+                premultipliedAlpha: true,
+                stencil: true,
+                preserveDrawingBuffer: false
+            }
+        };
 
-    this.init(this.glContext);
-};
+        this.manager = manager;
+        this.dirty = false;
 
-BlitterBatch.prototype.constructor = BlitterBatch;
-
-BlitterBatch.prototype = {
+        this.init(this.glContext);
+    },
 
     init: function (gl)
     {
@@ -110,6 +110,7 @@ BlitterBatch.prototype = {
             shader.bind();
             this.resize(this.width, this.height, this.game.config.resolution, shader);
         }
+
         this.indexBufferObject.bind();
         this.vertexBufferObject.bind();
     },
@@ -126,8 +127,11 @@ BlitterBatch.prototype = {
         
         this.bind(shader);
         this.vertexBufferObject.updateResource(vertexDataBuffer.getUsedBufferAsFloat(), 0);
+
         gl.drawElements(gl.TRIANGLES, this.elementCount, gl.UNSIGNED_SHORT, 0);
+
         vertexDataBuffer.clear();
+
         this.elementCount = 0;
     },
 
@@ -159,6 +163,7 @@ BlitterBatch.prototype = {
         this.indexBufferObject = null;
         this.vertexBufferObject = null;
     }
-};
+
+});
 
 module.exports = BlitterBatch;

@@ -1,11 +1,17 @@
-var Texture = function (texture, width, height) 
-{
-    this.texture = texture;
-    this.width = width;
-    this.height = height;
-    this.isRenderTexture = false;
-};
+var Class = require('../../../utils/Class');
 
-Texture.prototype.constructor = Texture;
+var Texture = new Class({
+
+    initialize:
+
+    function Texture (texture, width, height)
+    {
+        this.texture = texture;
+        this.width = width;
+        this.height = height;
+        this.isRenderTexture = false;
+    }
+
+});
 
 module.exports = Texture;

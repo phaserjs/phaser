@@ -1,55 +1,56 @@
-var DataBuffer32 = require('../../utils/DataBuffer32');
-var DataBuffer16 = require('../../utils/DataBuffer16');
-var TransformMatrix = require('../../../../gameobjects/components/TransformMatrix');
-var TexturedAndNormalizedTintedShader = require('../../shaders/TexturedAndNormalizedTintedShader');
-
-var PHASER_CONST = require('../../../../const');
+var Class = require('../../../../utils/Class');
 var CONST = require('./const');
+var DataBuffer16 = require('../../utils/DataBuffer16');
+var DataBuffer32 = require('../../utils/DataBuffer32');
+var PHASER_CONST = require('../../../../const');
+var TexturedAndNormalizedTintedShader = require('../../shaders/TexturedAndNormalizedTintedShader');
+var TransformMatrix = require('../../../../gameobjects/components/TransformMatrix');
 
-var TileBatch = function (game, gl, manager)
-{
-    this.game = game;
-    this.type = PHASER_CONST.WEBGL;
-    this.view = game.canvas;
-    this.resolution = game.config.resolution;
-    this.width = game.config.width * game.config.resolution;
-    this.height = game.config.height * game.config.resolution;
-    this.glContext = gl;
-    this.maxSprites = null;
-    this.shader = null;
-    this.vertexBufferObject = null;
-    this.indexBufferObject = null;
-    this.vertexDataBuffer = null;
-    this.indexDataBuffer = null;
-    this.elementCount = 0;
-    this.currentTexture2D = null;
-    this.viewMatrixLocation = null;
-    this.tempMatrix = new TransformMatrix();
-    //   All of these settings will be able to be controlled via the Game Config
-    this.config = {
-        clearBeforeRender: true,
-        transparent: false,
-        autoResize: false,
-        preserveDrawingBuffer: false,
+var TileBatch = new Class({
 
-        WebGLContextOptions: {
-            alpha: true,
-            antialias: true,
-            premultipliedAlpha: true,
-            stencil: true,
-            preserveDrawingBuffer: false
-        }
-    };
+    initialize:
 
-    this.manager = manager;
-    this.dirty = false;
+    function TileBatch (game, gl, manager)
+    {
+        this.game = game;
+        this.type = PHASER_CONST.WEBGL;
+        this.view = game.canvas;
+        this.resolution = game.config.resolution;
+        this.width = game.config.width * game.config.resolution;
+        this.height = game.config.height * game.config.resolution;
+        this.glContext = gl;
+        this.maxSprites = null;
+        this.shader = null;
+        this.vertexBufferObject = null;
+        this.indexBufferObject = null;
+        this.vertexDataBuffer = null;
+        this.indexDataBuffer = null;
+        this.elementCount = 0;
+        this.currentTexture2D = null;
+        this.viewMatrixLocation = null;
+        this.tempMatrix = new TransformMatrix();
 
-    this.init(this.glContext);
-};
+        //   All of these settings will be able to be controlled via the Game Config
+        this.config = {
+            clearBeforeRender: true,
+            transparent: false,
+            autoResize: false,
+            preserveDrawingBuffer: false,
 
-TileBatch.prototype.constructor = TileBatch;
+            WebGLContextOptions: {
+                alpha: true,
+                antialias: true,
+                premultipliedAlpha: true,
+                stencil: true,
+                preserveDrawingBuffer: false
+            }
+        };
 
-TileBatch.prototype = {
+        this.manager = manager;
+        this.dirty = false;
+
+        this.init(this.glContext);
+    },
 
     init: function (gl)
     {
@@ -111,6 +112,7 @@ TileBatch.prototype = {
             shader.bind();
             this.resize(this.width, this.height, this.game.config.resolution, shader);
         }
+
         this.indexBufferObject.bind();
         this.vertexBufferObject.bind();
     },
@@ -132,8 +134,11 @@ TileBatch.prototype = {
 
         this.bind(shader);
         this.vertexBufferObject.updateResource(vertexDataBuffer.getUsedBufferAsFloat(), 0);
+
         gl.drawElements(gl.TRIANGLES, this.elementCount, gl.UNSIGNED_SHORT, 0);
+
         vertexDataBuffer.clear();
+
         this.elementCount = 0;
 
         if (renderTarget)
@@ -144,9 +149,9 @@ TileBatch.prototype = {
 
     resize: function (width, height, resolution, shader)
     {
-        var gl = this.glContext;
         var activeShader = shader !== undefined ? shader : this.shader;
         var location = activeShader == this.shader ? this.viewMatrixLocation : activeShader.getUniformLocation('u_view_matrix');
+
         this.width = width * resolution;
         this.height = height * resolution;
         this.setProjectionMatrix(activeShader, location);
@@ -279,6 +284,6 @@ TileBatch.prototype = {
         vertexBufferObjectF32[vertexOffset++] = alpha;
     }
 
-};
+});
 
 module.exports = TileBatch;

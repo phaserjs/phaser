@@ -1,58 +1,57 @@
+var Class = require('../../../../utils/Class');
+var CONST = require('./const');
 var DataBuffer32 = require('../../utils/DataBuffer32');
-var Earcut = require('./earcut');
+var Earcut = require('../../../../geom/earcut/Earcut');
+var PHASER_CONST = require('../../../../const');
 var UntexturedAndNormalizedTintedShader = require('../../shaders/UntexturedAndNormalizedTintedShader');
 
-var PHASER_CONST = require('../../../../const');
-var CONST = require('./const');
+var ShapeBatch = new Class({
 
-var ShapeBatch = function (game, gl, manager)
-{
-    this.game = game;
-    this.type = PHASER_CONST.WEBGL;
-    this.view = game.canvas;
-    this.resolution = game.config.resolution;
-    this.width = game.config.width * game.config.resolution;
-    this.height = game.config.height * game.config.resolution;
-    this.glContext = gl;
-    this.maxVertices = null;
-    this.shader = null;
-    this.vertexBufferObject = null;
-    this.vertexDataBuffer = null;
-    this.vertexCount = 0;
-    this.viewMatrixLocation = null;
-    this.tempTriangle = [
-        {x: 0, y: 0, width: 0, rgb: 0xFFFFFF, alpha: 1.0},
-        {x: 0, y: 0, width: 0, rgb: 0xFFFFFF, alpha: 1.0},
-        {x: 0, y: 0, width: 0, rgb: 0xFFFFFF, alpha: 1.0},
-        {x: 0, y: 0, width: 0, rgb: 0xFFFFFF, alpha: 1.0}
-    ];
+    initialize:
 
-    //   All of these settings will be able to be controlled via the Game Config
-    this.config = {
-        clearBeforeRender: true,
-        transparent: false,
-        autoResize: false,
-        preserveDrawingBuffer: false,
+    function ShapeBatch (game, gl, manager)
+    {
+        this.game = game;
+        this.type = PHASER_CONST.WEBGL;
+        this.view = game.canvas;
+        this.resolution = game.config.resolution;
+        this.width = game.config.width * game.config.resolution;
+        this.height = game.config.height * game.config.resolution;
+        this.glContext = gl;
+        this.maxVertices = null;
+        this.shader = null;
+        this.vertexBufferObject = null;
+        this.vertexDataBuffer = null;
+        this.vertexCount = 0;
+        this.viewMatrixLocation = null;
+        this.tempTriangle = [
+            {x: 0, y: 0, width: 0, rgb: 0xFFFFFF, alpha: 1.0},
+            {x: 0, y: 0, width: 0, rgb: 0xFFFFFF, alpha: 1.0},
+            {x: 0, y: 0, width: 0, rgb: 0xFFFFFF, alpha: 1.0},
+            {x: 0, y: 0, width: 0, rgb: 0xFFFFFF, alpha: 1.0}
+        ];
 
-        WebGLContextOptions: {
-            alpha: true,
-            antialias: true,
-            premultipliedAlpha: true,
-            stencil: true,
-            preserveDrawingBuffer: false
-        }
-    };
+        //   All of these settings will be able to be controlled via the Game Config
+        this.config = {
+            clearBeforeRender: true,
+            transparent: false,
+            autoResize: false,
+            preserveDrawingBuffer: false,
 
-    this.manager = manager;
-    this.dirty = false;
-    this.context = null;
-    this.init(this.glContext);
+            WebGLContextOptions: {
+                alpha: true,
+                antialias: true,
+                premultipliedAlpha: true,
+                stencil: true,
+                preserveDrawingBuffer: false
+            }
+        };
 
-};
-
-ShapeBatch.prototype.constructor = ShapeBatch;
-
-ShapeBatch.prototype = {
+        this.manager = manager;
+        this.dirty = false;
+        this.context = null;
+        this.init(this.glContext);
+    },
 
     init: function (gl)
     {
@@ -97,6 +96,7 @@ ShapeBatch.prototype = {
             shader.bind();
             this.resize(this.width, this.height, this.game.config.resolution, shader);
         }
+
         this.vertexBufferObject.bind();
     },
 
@@ -112,14 +112,16 @@ ShapeBatch.prototype = {
 
         this.bind(shader);
         this.vertexBufferObject.updateResource(vertexDataBuffer.getUsedBufferAsFloat(), 0);
+
         gl.drawArrays(gl.TRIANGLES, 0, this.vertexCount);
+
         vertexDataBuffer.clear();
+
         this.vertexCount = 0;
     },
 
     resize: function (width, height, resolution, shader)
     {
-        var gl = this.glContext;
         var activeShader = shader !== undefined ? shader : this.shader;
 
         this.width = width * resolution;
@@ -136,24 +138,17 @@ ShapeBatch.prototype = {
         );
     },
 
-    destroy: function ()
+    // Graphics Game Object properties
+    // srcX, srcY, srcScaleX, srcScaleY, srcRotation,
+
+    // line properties
+    // ax, ay, bx, by, aLineWidth, bLineWidth, aLineColor, bLineColor, lineAlpha,
+
+    // transform
+    // a1, b1, c1, d1, e1, f1,
+    // currentMatrix
+    addLine: function (srcX, srcY, srcScaleX, srcScaleY, srcRotation, ax, ay, bx, by, aLineWidth, bLineWidth, aLineColor, bLineColor, lineAlpha, a1, b1, c1, d1, e1, f1, currentMatrix)
     {
-        this.manager.resourceManager.deleteShader(this.shader);
-        this.manager.resourceManager.deleteBuffer(this.vertexBufferObject);
-
-        this.shader = null;
-        this.vertexBufferObject = null;
-    },
-
-    addLine: function (
-        /* Graphics Game Object properties */
-        srcX, srcY, srcScaleX, srcScaleY, srcRotation,
-        /* line properties */
-        ax, ay, bx, by, aLineWidth, bLineWidth, aLineColor, bLineColor, lineAlpha,
-        /* transform */
-        a1, b1, c1, d1, e1, f1,
-        currentMatrix
-    ) {
         if (this.vertexCount + 6 > this.maxVertices)
         {
             this.flush();
@@ -205,22 +200,27 @@ ShapeBatch.prototype = {
         vertexBufferF32[vertexOffset++] = y0;
         vertexBufferU32[vertexOffset++] = bLineColor;
         vertexBufferF32[vertexOffset++] = lineAlpha;
+
         vertexBufferF32[vertexOffset++] = x1;
         vertexBufferF32[vertexOffset++] = y1;
         vertexBufferU32[vertexOffset++] = aLineColor;
         vertexBufferF32[vertexOffset++] = lineAlpha;
+
         vertexBufferF32[vertexOffset++] = x2;
         vertexBufferF32[vertexOffset++] = y2;
         vertexBufferU32[vertexOffset++] = bLineColor;
         vertexBufferF32[vertexOffset++] = lineAlpha;
+
         vertexBufferF32[vertexOffset++] = x1;
         vertexBufferF32[vertexOffset++] = y1;
         vertexBufferU32[vertexOffset++] = aLineColor;
         vertexBufferF32[vertexOffset++] = lineAlpha;
+
         vertexBufferF32[vertexOffset++] = x3;
         vertexBufferF32[vertexOffset++] = y3;
         vertexBufferU32[vertexOffset++] = aLineColor;
         vertexBufferF32[vertexOffset++] = lineAlpha;
+
         vertexBufferF32[vertexOffset++] = x2;
         vertexBufferF32[vertexOffset++] = y2;
         vertexBufferU32[vertexOffset++] = bLineColor;
@@ -232,53 +232,53 @@ ShapeBatch.prototype = {
             x2, y2, bLineColor,
             x3, y3, aLineColor
         ];
-
     },
 
-    addStrokePath: function (
-        /* Graphics Game Object properties */
-        srcX, srcY, srcScaleX, srcScaleY, srcRotation,
-        /* Path properties */
-        path, lineWidth, lineColor, lineAlpha,
-        /* transform */
-        a, b, c, d, e, f,
-        /* is last connection */
-        isLastPath,
-        currentMatrix
-    ) {
+    // Graphics Game Object properties
+    // srcX, srcY, srcScaleX, srcScaleY, srcRotation,
+
+    // Path properties
+    // path, lineWidth, lineColor, lineAlpha,
+
+    // transform
+    // a, b, c, d, e, f,
+
+    // is last connection
+    // isLastPath,
+    // currentMatrix
+    addStrokePath: function (srcX, srcY, srcScaleX, srcScaleY, srcRotation, path, lineWidth, lineColor, lineAlpha, a, b, c, d, e, f, isLastPath, currentMatrix)
+    {
         var point0, point1;
         var pathLength = path.length;
         var polylines = this.polygonCache;
-        var halfLineWidth = lineWidth * 0.5;
         var last, curr;
         var vertexDataBuffer = this.vertexDataBuffer;
         var vertexBufferF32 = vertexDataBuffer.floatView;
         var vertexBufferU32 = vertexDataBuffer.uintView;
         var vertexOffset;
-        var x0, y0, x1, y1, x2, y2;
         var line;
 
         for (var pathIndex = 0; pathIndex + 1 < pathLength; pathIndex += 1)
         {
             point0 = path[pathIndex];
             point1 = path[pathIndex + 1];
+
             line = this.addLine(
                 srcX, srcY, srcScaleX, srcScaleY, srcRotation,
-                point0.x, point0.y, 
-                point1.x, point1.y, 
-                point0.width / 2, point1.width / 2, 
+                point0.x, point0.y,
+                point1.x, point1.y,
+                point0.width / 2, point1.width / 2,
                 point0.rgb, point1.rgb, lineAlpha,
                 a, b, c, d, e, f,
                 currentMatrix
             );
+
             polylines.push(line);
         }
 
         /* Render joints */
-        for (var index = 1, polylinesLength = polylines.length;
-            index < polylinesLength; ++index)
+        for (var index = 1, polylinesLength = polylines.length; index < polylinesLength; ++index)
         {
-
             if (this.vertexCount + 6 > this.maxVertices)
             {
                 this.flush();
@@ -286,7 +286,7 @@ ShapeBatch.prototype = {
 
             last = polylines[index - 1] || polylines[polylinesLength - 1];
             curr = polylines[index];
-            vertexOffset = vertexDataBuffer.allocate(24)
+            vertexOffset = vertexDataBuffer.allocate(24);
 
             vertexBufferF32[vertexOffset++] = last[3 * 2 + 0];
             vertexBufferF32[vertexOffset++] = last[3 * 2 + 1];
@@ -320,18 +320,21 @@ ShapeBatch.prototype = {
 
             this.vertexCount += 6;
         }
+
         polylines.length = 0;
     },
 
-    addFillPath: function (
-        /* Graphics Game Object properties */
-        srcX, srcY, srcScaleX, srcScaleY, srcRotation,
-        /* Path properties */
-        path, fillColor, fillAlpha,
-        /* transform */
-        a1, b1, c1, d1, e1, f1,
-        currentMatrix
-    ) {
+    // Graphics Game Object properties
+    // srcX, srcY, srcScaleX, srcScaleY, srcRotation,
+
+    // Path properties
+    // path, fillColor, fillAlpha,
+
+    // transform
+    // a1, b1, c1, d1, e1, f1,
+    // currentMatrix
+    addFillPath: function (srcX, srcY, srcScaleX, srcScaleY, srcRotation, path, fillColor, fillAlpha, a1, b1, c1, d1, e1, f1, currentMatrix)
+    {
         var length = path.length;
         var polygonCache = this.polygonCache;
         var polygonIndexArray;
@@ -363,6 +366,7 @@ ShapeBatch.prototype = {
             point = path[pathIndex];
             polygonCache.push(point.x, point.y);
         }
+
         polygonIndexArray = Earcut(polygonCache);
         length = polygonIndexArray.length;
 
@@ -378,6 +382,7 @@ ShapeBatch.prototype = {
                 this.flush();
                 vertexCount = 0;
             }
+
             vertexOffset = vertexDataBuffer.allocate(12);
             vertexCount += 3;
 
@@ -411,23 +416,28 @@ ShapeBatch.prototype = {
             vertexBufferF32[vertexOffset++] = fillAlpha;
 
         }
+
         this.vertexCount = vertexCount;
+
         polygonCache.length = 0;
     },
 
-    addFillRect: function (
-        /* Graphics Game Object properties */
-        srcX, srcY, srcScaleX, srcScaleY, srcRotation,
-        /* Rectangle properties */
-        x, y, width, height, fillColor, fillAlpha,
-        /* transform */
-        a1, b1, c1, d1, e1, f1,
-        currentMatrix
-    ) {
+    // Graphics Game Object properties
+    // srcX, srcY, srcScaleX, srcScaleY, srcRotation,
+
+    // Rectangle properties
+    // x, y, width, height, fillColor, fillAlpha,
+
+    // transform
+    // a1, b1, c1, d1, e1, f1,
+    // currentMatrix
+    addFillRect: function (srcX, srcY, srcScaleX, srcScaleY, srcRotation, x, y, width, height, fillColor, fillAlpha, a1, b1, c1, d1, e1, f1, currentMatrix)
+    {
         if (this.vertexCount + 6 > this.maxVertices)
         {
             this.flush();
         }
+
         var vertexDataBuffer = this.vertexDataBuffer;
         var vertexBufferF32 = vertexDataBuffer.floatView;
         var vertexBufferU32 = vertexDataBuffer.uintView;
@@ -488,19 +498,22 @@ ShapeBatch.prototype = {
         this.vertexCount += 6;
     },
 
-    addFillTriangle: function (
-        /* Graphics Game Object properties */
-        srcX, srcY, srcScaleX, srcScaleY, srcRotation,
-        /* Triangle properties */
-        x0, y0, x1, y1, x2, y2, fillColor, fillAlpha,
-        /* transform */
-        a1, b1, c1, d1, e1, f1,
-        currentMatrix
-    ) {
+    // Graphics Game Object properties
+    // srcX, srcY, srcScaleX, srcScaleY, srcRotation,
+
+    // Triangle properties
+    // x0, y0, x1, y1, x2, y2, fillColor, fillAlpha,
+
+    // transform
+    // a1, b1, c1, d1, e1, f1,
+    // currentMatrix
+    addFillTriangle: function (srcX, srcY, srcScaleX, srcScaleY, srcRotation, x0, y0, x1, y1, x2, y2, fillColor, fillAlpha, a1, b1, c1, d1, e1, f1, currentMatrix)
+    {
         if (this.vertexCount + 3 > this.maxVertices)
         {
             this.flush();
         }
+
         var a0 = currentMatrix.matrix[0];
         var b0 = currentMatrix.matrix[1];
         var c0 = currentMatrix.matrix[2];
@@ -542,15 +555,17 @@ ShapeBatch.prototype = {
         this.vertexCount += 3;
     },
 
-    addStrokeTriangle: function (
-        /* Graphics Game Object properties */
-        srcX, srcY, srcScaleX, srcScaleY, srcRotation,
-        /* Triangle properties */
-        x0, y0, x1, y1, x2, y2, lineWidth, lineColor, lineAlpha,
-        /* transform */
-        a, b, c, d, e, f,
-        currentMatrix
-    ) {
+    // Graphics Game Object properties
+    // srcX, srcY, srcScaleX, srcScaleY, srcRotation,
+
+    // Triangle properties
+    // x0, y0, x1, y1, x2, y2, lineWidth, lineColor, lineAlpha,
+
+    // transform
+    // a, b, c, d, e, f,
+    // currentMatrix
+    addStrokeTriangle: function (srcX, srcY, srcScaleX, srcScaleY, srcRotation, x0, y0, x1, y1, x2, y2, lineWidth, lineColor, lineAlpha, a, b, c, d, e, f, currentMatrix)
+    {
         var tempTriangle = this.tempTriangle;
 
         tempTriangle[0].x = x0;
@@ -581,7 +596,17 @@ ShapeBatch.prototype = {
             false,
             currentMatrix
         );
+    },
+
+    destroy: function ()
+    {
+        this.manager.resourceManager.deleteShader(this.shader);
+        this.manager.resourceManager.deleteBuffer(this.vertexBufferObject);
+
+        this.shader = null;
+        this.vertexBufferObject = null;
     }
-};
+
+});
 
 module.exports = ShapeBatch;

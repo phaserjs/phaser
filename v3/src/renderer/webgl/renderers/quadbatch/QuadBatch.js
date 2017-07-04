@@ -1,57 +1,56 @@
-var DataBuffer32 = require('../../utils/DataBuffer32');
+var Class = require('../../../../utils/Class');
+var CONST = require('./const');
 var DataBuffer16 = require('../../utils/DataBuffer16');
+var DataBuffer32 = require('../../utils/DataBuffer32');
+var PHASER_CONST = require('../../../../const');
 var UntexturedAndTintedShader = require('../../shaders/UntexturedAndTintedShader');
 
-var PHASER_CONST = require('../../../../const');
-var CONST = require('./const');
+var QuadBatch = new Class({
 
-var QuadBatch = function (game, gl, manager)
-{
-    this.game = game;
-    this.type = PHASER_CONST.WEBGL;
-    this.view = game.canvas;
-    this.resolution = game.config.resolution;
-    this.width = game.config.width * game.config.resolution;
-    this.height = game.config.height * game.config.resolution;
-    this.glContext = gl;
-    this.maxQuads = null;
-    this.shader = null;
-    this.vertexBufferObject = null;
-    this.indexBufferObject = null;
-    this.vertexDataBuffer = null;
-    this.indexDataBuffer = null;
-    this.elementCount = 0;
-    this.viewMatrixLocation = null;
+    initialize:
 
-    //   All of these settings will be able to be controlled via the Game Config
-    this.config = {
-        clearBeforeRender: true,
-        transparent: false,
-        autoResize: false,
-        preserveDrawingBuffer: false,
+    function QuadBatch (game, gl, manager)
+    {
+        this.game = game;
+        this.type = PHASER_CONST.WEBGL;
+        this.view = game.canvas;
+        this.resolution = game.config.resolution;
+        this.width = game.config.width * game.config.resolution;
+        this.height = game.config.height * game.config.resolution;
+        this.glContext = gl;
+        this.maxQuads = null;
+        this.shader = null;
+        this.vertexBufferObject = null;
+        this.indexBufferObject = null;
+        this.vertexDataBuffer = null;
+        this.indexDataBuffer = null;
+        this.elementCount = 0;
+        this.viewMatrixLocation = null;
 
-        WebGLContextOptions: {
-            alpha: true,
-            antialias: true,
-            premultipliedAlpha: true,
-            stencil: true,
-            preserveDrawingBuffer: false
-        }
-    };
+        //   All of these settings will be able to be controlled via the Game Config
+        this.config = {
+            clearBeforeRender: true,
+            transparent: false,
+            autoResize: false,
+            preserveDrawingBuffer: false,
 
-    this.manager = manager;
-    this.dirty = false;
+            WebGLContextOptions: {
+                alpha: true,
+                antialias: true,
+                premultipliedAlpha: true,
+                stencil: true,
+                preserveDrawingBuffer: false
+            }
+        };
 
-    this.init(this.glContext);
-};
+        this.manager = manager;
+        this.dirty = false;
 
-QuadBatch.prototype.constructor = QuadBatch;
-
-QuadBatch.prototype = {
+        this.init(this.glContext);
+    },
 
     init: function (gl)
     {
-
         var vertexDataBuffer = new DataBuffer32(CONST.VERTEX_SIZE * CONST.AAQUAD_VERTEX_COUNT * CONST.MAX_AAQUAD);
         var indexDataBuffer = new DataBuffer16(CONST.INDEX_SIZE * CONST.AAQUAD_INDEX_COUNT * CONST.MAX_AAQUAD);
         var shader = this.manager.resourceManager.createShader('UntexturedAndTintedShader', UntexturedAndTintedShader);
@@ -147,6 +146,7 @@ QuadBatch.prototype = {
             shader.bind();
             this.resize(this.width, this.height, this.game.config.resolution, shader);
         }
+
         this.indexBufferObject.bind();
         this.vertexBufferObject.bind();
     },
@@ -163,14 +163,15 @@ QuadBatch.prototype = {
         
         this.bind(shader);
         this.vertexBufferObject.updateResource(vertexDataBuffer.getUsedBufferAsFloat(), 0);
+
         gl.drawElements(gl.TRIANGLES, this.elementCount, gl.UNSIGNED_SHORT, 0);
         vertexDataBuffer.clear();
+
         this.elementCount = 0;
     },
 
     resize: function (width, height, resolution, shader)
     {
-        var gl = this.glContext;
         var activeShader = shader !== undefined ? shader : this.shader;
         
         this.width = width * resolution;
@@ -197,6 +198,7 @@ QuadBatch.prototype = {
         this.indexBufferObject = null;
         this.vertexBufferObject = null;
     }
-};
+
+});
 
 module.exports = QuadBatch;

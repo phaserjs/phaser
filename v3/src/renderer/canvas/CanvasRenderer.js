@@ -1,67 +1,68 @@
+var BlitImage = require('./utils/BlitImage');
+var CanvasSnapshot = require('../snapshot/CanvasSnapshot');
+var Class = require('../../utils/Class');
 var CONST = require('../../const');
 var DrawImage = require('./utils/DrawImage');
-var BlitImage = require('./utils/BlitImage');
 var GetBlendModes = require('./utils/GetBlendModes');
 var GetContext = require('../../canvas/GetContext');
-var CanvasSnapshot = require('../snapshot/CanvasSnapshot');
-var Smoothing = require('../../dom/Smoothing');
 var ScaleModes = require('../ScaleModes');
+var Smoothing = require('../../dom/Smoothing');
 
-var CanvasRenderer = function (game)
-{
-    /**
-    * @property {Phaser.Game} game - A reference to the currently running Game.
-    */
-    this.game = game;
+var CanvasRenderer = new Class({
 
-    //  Needed?
-    this.type = CONST.CANVAS;
+    initialize:
 
-    this.drawCount = 0;
+    function CanvasRenderer (game)
+    {
+        /**
+        * @property {Phaser.Game} game - A reference to the currently running Game.
+        */
+        this.game = game;
 
-    //  Read all the following from game config (or State config?)
-    // this.clearBeforeRender = true;
-    // this.transparent = false;
-    // this.autoResize = false;
-    // this.roundPixels = false;
+        //  Needed?
+        this.type = CONST.CANVAS;
 
-    this.width = game.config.width * game.config.resolution;
-    this.height = game.config.height * game.config.resolution;
-    this.resolution = game.config.resolution;
+        this.drawCount = 0;
 
-    this.scaleMode = (game.config.pixelArt) ? ScaleModes.NEAREST : ScaleModes.LINEAR;
+        //  Read all the following from game config (or State config?)
+        // this.clearBeforeRender = true;
+        // this.transparent = false;
+        // this.autoResize = false;
+        // this.roundPixels = false;
 
-    this.gameCanvas = game.canvas;
+        this.width = game.config.width * game.config.resolution;
+        this.height = game.config.height * game.config.resolution;
+        this.resolution = game.config.resolution;
 
-    /**
-     * The canvas 2d context that everything is drawn with
-     * @property context
-     * @type CanvasRenderingContext2D
-     */
-    this.gameContext = GetContext(this.gameCanvas);
+        this.scaleMode = (game.config.pixelArt) ? ScaleModes.NEAREST : ScaleModes.LINEAR;
 
-    this.gameConfig = game.config;
+        this.gameCanvas = game.canvas;
 
-    this.currentContext = this.gameContext;
+        /**
+         * The canvas 2d context that everything is drawn with
+         * @property context
+         * @type CanvasRenderingContext2D
+         */
+        this.gameContext = GetContext(this.gameCanvas);
 
-    //  Map to the required function
-    this.drawImage = DrawImage;
-    this.blitImage = BlitImage;
+        this.gameConfig = game.config;
 
-    this.blendModes = GetBlendModes();
+        this.currentContext = this.gameContext;
 
-    this.currentAlpha = 1;
-    this.currentBlendMode = 0;
-    this.currentScaleMode = 0;
+        //  Map to the required function
+        this.drawImage = DrawImage;
+        this.blitImage = BlitImage;
 
-    // this.tintMethod = this.tintWithPerPixel;
+        this.blendModes = GetBlendModes();
 
-    this.init();
-};
+        this.currentAlpha = 1;
+        this.currentBlendMode = 0;
+        this.currentScaleMode = 0;
 
-CanvasRenderer.prototype.constructor = CanvasRenderer;
+        // this.tintMethod = this.tintWithPerPixel;
 
-CanvasRenderer.prototype = {
+        this.init();
+    },
 
     init: function ()
     {
@@ -283,6 +284,6 @@ CanvasRenderer.prototype = {
         this.gameContext = null;
     }
 
-};
+});
 
 module.exports = CanvasRenderer;

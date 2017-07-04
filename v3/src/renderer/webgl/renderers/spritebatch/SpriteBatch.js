@@ -1,62 +1,62 @@
-var DataBuffer32 = require('../../utils/DataBuffer32');
-var DataBuffer16 = require('../../utils/DataBuffer16');
-var TransformMatrix = require('../../../../gameobjects/components/TransformMatrix');
-var TexturedAndNormalizedTintedShader = require('../../shaders/TexturedAndNormalizedTintedShader');
-
-var PHASER_CONST = require('../../../../const');
+var Class = require('../../../../utils/Class');
 var CONST = require('./const');
+var DataBuffer16 = require('../../utils/DataBuffer16');
+var DataBuffer32 = require('../../utils/DataBuffer32');
+var PHASER_CONST = require('../../../../const');
+var TexturedAndNormalizedTintedShader = require('../../shaders/TexturedAndNormalizedTintedShader');
+var TransformMatrix = require('../../../../gameobjects/components/TransformMatrix');
 
-var SpriteBatch = function (game, gl, manager)
-{
-    this.game = game;
-    this.type = PHASER_CONST.WEBGL;
-    this.view = game.canvas;
-    this.resolution = game.config.resolution;
-    this.width = game.config.width * game.config.resolution;
-    this.height = game.config.height * game.config.resolution;
-    this.glContext = gl;
-    this.maxSprites = null;
-    this.shader = null;
-    this.vertexBufferObject = null;
-    this.indexBufferObject = null;
-    this.indexBufferObjectForMesh = null;
-    this.vertexDataBuffer = null;
-    this.indexDataBuffer = null;
-    this.elementCount = 0;
-    this.currentTexture2D = null;
-    this.viewMatrixLocation = null;
-    this.tempMatrix = new TransformMatrix();
+var SpriteBatch = new Class({
 
-    //   All of these settings will be able to be controlled via the Game Config
-    this.config = {
-        clearBeforeRender: true,
-        transparent: false,
-        autoResize: false,
-        preserveDrawingBuffer: false,
+    initialize:
 
-        WebGLContextOptions: {
-            alpha: true,
-            antialias: true,
-            premultipliedAlpha: true,
-            stencil: true,
-            preserveDrawingBuffer: false
-        }
-    };
+    function SpriteBatch (game, gl, manager)
+    {
+        this.game = game;
+        this.type = PHASER_CONST.WEBGL;
+        this.view = game.canvas;
+        this.resolution = game.config.resolution;
+        this.width = game.config.width * game.config.resolution;
+        this.height = game.config.height * game.config.resolution;
+        this.glContext = gl;
+        this.maxSprites = null;
+        this.shader = null;
+        this.vertexBufferObject = null;
+        this.indexBufferObject = null;
+        this.indexBufferObjectForMesh = null;
+        this.vertexDataBuffer = null;
+        this.indexDataBuffer = null;
+        this.elementCount = 0;
+        this.currentTexture2D = null;
+        this.viewMatrixLocation = null;
+        this.tempMatrix = new TransformMatrix();
 
-    this.manager = manager;
-    this.dirty = false;
-    this.drawIndexed = true;
-    this.lastDrawIndexed = true;
-    this.lastDrawingMesh = false;
-    this.drawingMesh = false;
-    this.vertexCount = 0;
+        //   All of these settings will be able to be controlled via the Game Config
+        this.config = {
+            clearBeforeRender: true,
+            transparent: false,
+            autoResize: false,
+            preserveDrawingBuffer: false,
 
-    this.init(this.glContext);
-};
+            WebGLContextOptions: {
+                alpha: true,
+                antialias: true,
+                premultipliedAlpha: true,
+                stencil: true,
+                preserveDrawingBuffer: false
+            }
+        };
 
-SpriteBatch.prototype.constructor = SpriteBatch;
+        this.manager = manager;
+        this.dirty = false;
+        this.drawIndexed = true;
+        this.lastDrawIndexed = true;
+        this.lastDrawingMesh = false;
+        this.drawingMesh = false;
+        this.vertexCount = 0;
 
-SpriteBatch.prototype = {
+        this.init(this.glContext);
+    },
 
     init: function (gl)
     {
@@ -154,7 +154,7 @@ SpriteBatch.prototype = {
             if (this.drawingMesh)
             {
                 this.indexBufferObjectForMesh.bind();
-                this.indexBufferObjectForMesh.updateResource(this.indexDataBuffer.buffer, 0)
+                this.indexBufferObjectForMesh.updateResource(this.indexDataBuffer.buffer, 0);
             }
             else
             {
@@ -271,7 +271,10 @@ SpriteBatch.prototype = {
 
         vertexOffset = vertexDataBuffer.allocate(totalVertices * 6);
 
-        for (var index = 0, index0 = 0; index < length; index += 2)
+        var index;
+        var index0;
+
+        for (index = 0, index0 = 0; index < length; index += 2)
         {
             var x = vertices[index + 0];
             var y = vertices[index + 1];
@@ -288,7 +291,7 @@ SpriteBatch.prototype = {
 
         var elementCount = this.elementCount;
 
-        for (var index = 0; index < indexLength; ++index)
+        for (index = 0; index < indexLength; ++index)
         {
             indexBuffer[elementCount + index] = indexOffset + indices[index];
         }
@@ -633,6 +636,6 @@ SpriteBatch.prototype = {
         vertexBufferObjectF32[vertexOffset++] = alpha;
     }
 
-};
+});
 
 module.exports = SpriteBatch;

@@ -8,7 +8,7 @@ module.exports = {
     frag: [
         'precision mediump float;',
         'uniform float time;',
-        '// Oldskool plasm shader. (c) Victor Korsun, bitekas@gmail.com; 1996-2013.',
+        '// Oldskool plasma shader. (c) Victor Korsun, bitekas@gmail.com; 1996-2013.',
         '//',
         '// Attribution-ShareAlike CC License.',
         '//----------------',

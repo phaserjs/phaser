@@ -1,18 +1,20 @@
+var Class = require('../../utils/Class');
 var Resources = require('./resources');
 
-var ResourceManager = function (gl) 
-{
-    this.gl = gl;
-    /* Maybe add pooling here */
-    this.shaderCache = {};
-    this.shaderCount = 0;
-};
+var ResourceManager = new Class({
 
-ResourceManager.prototype.constructor = ResourceManager;
+    initialize:
 
-ResourceManager.prototype = {
+    function ResourceManager (gl)
+    {
+        this.gl = gl;
 
-    createRenderTarget: function (width, height, colorBuffer, depthStencilBuffer) 
+        //  Maybe add pooling here?
+        this.shaderCache = {};
+        this.shaderCount = 0;
+    },
+
+    createRenderTarget: function (width, height, colorBuffer, depthStencilBuffer)
     {
         var gl = this.gl;
         var framebufferObject = gl.createFramebuffer();
@@ -20,9 +22,9 @@ ResourceManager.prototype = {
         var colorRenderbufferObject = null;
         var complete = 0;
 
-        gl.bindFramebuffer(gl.FRAMEBUFFER, framebufferObject)
+        gl.bindFramebuffer(gl.FRAMEBUFFER, framebufferObject);
 
-        if (depthStencilBuffer !== undefined && depthStencilBuffer !== null) 
+        if (depthStencilBuffer !== undefined && depthStencilBuffer !== null)
         {
             depthStencilBuffer.isRenderTexture = true;
             gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.DEPTH_STENCIL_ATTACHMENT, gl.TEXTURE_2D, depthStencilBuffer.texture, depthStencilBuffer.mipLevel);
@@ -35,11 +37,11 @@ ResourceManager.prototype = {
             gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.DEPTH_STENCIL_ATTACHMENT, gl.RENDERBUFFER, depthStencilRenderbufferObject);
         }
 
-        if (colorBuffer !== undefined && colorBuffer !== null) 
+        if (colorBuffer !== undefined && colorBuffer !== null)
         {
             colorBuffer.isRenderTexture = true;
             gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, colorBuffer.texture, colorBuffer.mipLevel);
-        } 
+        }
         else
         {
             colorRenderbufferObject = gl.createRenderbuffer();
@@ -50,7 +52,7 @@ ResourceManager.prototype = {
 
         complete = gl.checkFramebufferStatus(gl.FRAMEBUFFER);
 
-        if (complete !== gl.FRAMEBUFFER_COMPLETE) 
+        if (complete !== gl.FRAMEBUFFER_COMPLETE)
         {
             var errors = {
                 36054: 'Incomplete Attachment',
@@ -71,27 +73,27 @@ ResourceManager.prototype = {
         );
     },
 
-    createBuffer: function (target, initialDataOrSize, bufferUsage) 
+    createBuffer: function (target, initialDataOrSize, bufferUsage)
     {
         var gl = this.gl;
         var bufferObject = gl.createBuffer();
         gl.bindBuffer(target, bufferObject);
         gl.bufferData(target, initialDataOrSize, bufferUsage);
 
-        switch (target) 
+        switch (target)
         {
             case gl.ARRAY_BUFFER:
                 return new Resources.VertexBuffer(gl, bufferObject);
+
             case gl.ELEMENT_ARRAY_BUFFER:
                 return new Resources.IndexBuffer(gl, bufferObject);
+
             default:
                 throw new Error('Invalid Buffer Target');
         }
-
-        return null;
     },
 
-    createTexture: function (mipLevel, minFilter, magFilter, wrapT, wrapS, format, pixels, width, height) 
+    createTexture: function (mipLevel, minFilter, magFilter, wrapT, wrapS, format, pixels, width, height)
     {
         var gl = this.gl;
         var texture = gl.createTexture();
@@ -102,28 +104,30 @@ ResourceManager.prototype = {
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, wrapS);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, wrapT);
 
-        if (pixels === null || pixels === undefined) 
+        if (pixels === null || pixels === undefined)
         {
             gl.texImage2D(gl.TEXTURE_2D, mipLevel, format, width, height, 0, format, gl.UNSIGNED_BYTE, null);
-        } 
-        else 
+        }
+        else
         {
             gl.texImage2D(gl.TEXTURE_2D, mipLevel, format, format, gl.UNSIGNED_BYTE, pixels);
             width = pixels.width;
             height = pixels.height;
         }
+
         gl.bindTexture(gl.TEXTURE_2D, null);
 
         return new Resources.Texture(texture, width, height);
     },
 
-    createShader: function (shaderName, shaderSources) 
+    createShader: function (shaderName, shaderSources)
     {
         if (shaderName === null || shaderName === undefined)
         {
             shaderName += 'Shader' + this.shaderCount;
             this.shaderCount += 1;
         }
+
         if (!(shaderName in this.shaderCache))
         {
             var gl = this.gl;
@@ -141,7 +145,7 @@ ResourceManager.prototype = {
             error = gl.getShaderInfoLog(vertShader);
             status = gl.getShaderParameter(vertShader, gl.COMPILE_STATUS);
 
-            if (!status && error && error.length > 0) 
+            if (!status && error && error.length > 0)
             {
                 throw new Error('Vertex Shader Compilation Error. Shader name: ' + shaderName + '.\n' + error + '\n\n Shader source:\n' + shaderSources.vert);
             }
@@ -157,7 +161,7 @@ ResourceManager.prototype = {
             error = gl.getShaderInfoLog(fragShader);
             status = gl.getShaderParameter(fragShader, gl.COMPILE_STATUS);
 
-            if (!status && error && error.length > 0) 
+            if (!status && error && error.length > 0)
             {
                 throw new Error('Fragment Shader Compilation Error. Shader name: ' + shaderName + '.\n' + error + '\n\n Shader source:\n' + shaderSources.frag);
             }
@@ -182,6 +186,7 @@ ResourceManager.prototype = {
             }
             
             error = gl.getProgramParameter(program, gl.VALIDATE_STATUS);
+
             if (error === 0)
             {
                 error = gl.getProgramInfoLog(program);
@@ -189,26 +194,32 @@ ResourceManager.prototype = {
             }
 
             shader = new Resources.Shader(shaderName, gl, program, vertShader, fragShader);
+
             this.shaderCache[shaderName] = shader;
-            return  shader;
+
+            return shader;
         }
         else
         {
-            return this.shaderCache[shaderName];   
+            return this.shaderCache[shaderName];
         }
     },
 
     deleteShader: function (shader)
     {
-        var storedShader = this.shaderCache[shader.name]
+        var storedShader = this.shaderCache[shader.name];
+
         var gl = this.gl;
+
         if (storedShader !== undefined)
         {
             delete this.shaderCache;
         }
+
         gl.deleteShader(shader.vertexShader);
         gl.deleteShader(shader.fragmentShader);
         gl.deleteProgram(shader.program);
+
         shader.vertexShader = null;
         shader.fragmentShader = null;
         shader.program = null;
@@ -222,6 +233,6 @@ ResourceManager.prototype = {
         gl.deleteBuffer(buffer.bufferObject);
     }
 
-};
+});
 
 module.exports = ResourceManager;
