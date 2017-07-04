@@ -49,7 +49,7 @@ var Graphics = new Class({
         if (resourceManager !== undefined)
         {
             this.resourceManager = resourceManager;
-            this.gl = state.game.renderer.gl;   
+            this.gl = state.game.renderer.gl;
         }
     },
 
