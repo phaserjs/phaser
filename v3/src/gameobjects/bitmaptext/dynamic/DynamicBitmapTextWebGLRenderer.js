@@ -200,16 +200,19 @@ var DynamicBitmapTextWebGLRenderer = function (renderer, gameObject, interpolati
         vertexBuffer[vertexOffset++] = umin;
         vertexBuffer[vertexOffset++] = vmin;
         vertexBuffer[vertexOffset++] = alpha;
+
         vertexBuffer[vertexOffset++] = tx1;
         vertexBuffer[vertexOffset++] = ty1;
         vertexBuffer[vertexOffset++] = umin;
         vertexBuffer[vertexOffset++] = vmax;
         vertexBuffer[vertexOffset++] = alpha;
+
         vertexBuffer[vertexOffset++] = tx2;
         vertexBuffer[vertexOffset++] = ty2;
         vertexBuffer[vertexOffset++] = umax;
         vertexBuffer[vertexOffset++] = vmax;
         vertexBuffer[vertexOffset++] = alpha;
+
         vertexBuffer[vertexOffset++] = tx3;
         vertexBuffer[vertexOffset++] = ty3;
         vertexBuffer[vertexOffset++] = umax;
