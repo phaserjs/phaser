@@ -247,6 +247,22 @@ var Camera = new Class({
         this._shakeOffsetY = 0;
     },
 
+    centerToSize: function ()
+    {
+        this.scrollX = this.width * 0.5;
+        this.scrollY = this.height * 0.5;
+        
+        return this;
+    },
+
+    centerToBounds: function () 
+    {
+        this.scrollX = (this._bounds.width * 0.5) - (this.width * 0.5);
+        this.scrollY = (this._bounds.height * 0.5) - (this.height * 0.5);
+        
+        return this;  
+    },
+
     preRender: function ()
     {
         var width = this.width;
