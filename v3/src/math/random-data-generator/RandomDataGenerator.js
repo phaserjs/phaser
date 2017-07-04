@@ -1,93 +1,95 @@
-/**
-* @property {number} c - Internal var.
-* @private
-*/
-var c = 1;
+var Class = require('../../utils/Class');
 
-/**
-* @property {number} s0 - Internal var.
-* @private
-*/
-var s0 = 0;
+var RandomDataGenerator = new Class({
 
-/**
-* @property {number} s1 - Internal var.
-* @private
-*/
-var s1 = 0;
+    initialize:
 
-/**
-* @property {number} s2 - Internal var.
-* @private
-*/
-var s2 = 0;
-
-/**
-* @property {Array} sign - Internal var.
-* @private
-*/
-var sign = [ -1, 1 ];
-
-/**
-* Private random helper.
-*
-* @method Phaser.RandomDataGenerator#rnd
-* @private
-* @return {number}
-*/
-var rnd = function ()
-{
-    var t = 2091639 * s0 + c * 2.3283064365386963e-10; // 2^-32
-
-    c = t | 0;
-    s0 = s1;
-    s1 = s2;
-    s2 = t - c;
-
-    return s2;
-};
-
-/**
-* Internal method that creates a seed hash.
-*
-* @method Phaser.RandomDataGenerator#hash
-* @private
-* @param {any} data
-* @return {number} hashed value.
-*/
-var hash = function (data)
-{
-    var h, i, n;
-    n = 0xefc8249d;
-    data = data.toString();
-
-    for (i = 0; i < data.length; i++)
+    function RandomDataGenerator (seeds)
     {
-        n += data.charCodeAt(i);
-        h = 0.02519603282416938 * n;
-        n = h >>> 0;
-        h -= n;
-        h *= n;
-        n = h >>> 0;
-        h -= n;
-        n += h * 0x100000000;// 2^32
-    }
+        /**
+        * @property {number} c - Internal var.
+        * @private
+        */
+        this.c = 1;
 
-    return (n >>> 0) * 2.3283064365386963e-10;// 2^-32
-};
+        /**
+        * @property {number} s0 - Internal var.
+        * @private
+        */
+        this.s0 = 0;
 
+        /**
+        * @property {number} s1 - Internal var.
+        * @private
+        */
+        this.s1 = 0;
 
-var RandomDataGenerator = function (seeds)
-{
-    if (seeds)
+        /**
+        * @property {number} s2 - Internal var.
+        * @private
+        */
+        this.s2 = 0;
+
+        /**
+        * @property {Array} sign - Internal var.
+        * @private
+        */
+        this.sign = [ -1, 1 ];
+
+        if (seeds)
+        {
+            this.init(seeds);
+        }
+    },
+
+    /**
+    * Private random helper.
+    *
+    * @method Phaser.RandomDataGenerator#rnd
+    * @private
+    * @return {number}
+    */
+    rnd: function ()
     {
-        this.init(seeds);
-    }
-};
+        var t = 2091639 * this.s0 + this.c * 2.3283064365386963e-10; // 2^-32
 
-RandomDataGenerator.prototype.constructor = RandomDataGenerator;
+        this.c = t | 0;
+        this.s0 = this.s1;
+        this.s1 = this.s2;
+        this.s2 = t - this.c;
 
-RandomDataGenerator.prototype = {
+        return this.s2;
+    },
+
+    /**
+    * Internal method that creates a seed hash.
+    *
+    * @method Phaser.RandomDataGenerator#hash
+    * @private
+    * @param {any} data
+    * @return {number} hashed value.
+    */
+    hash: function (data)
+    {
+        var h;
+        var n = 0xefc8249d;
+
+        data = data.toString();
+
+        for (var i = 0; i < data.length; i++)
+        {
+            n += data.charCodeAt(i);
+            h = 0.02519603282416938 * n;
+            n = h >>> 0;
+            h -= n;
+            h *= n;
+            n = h >>> 0;
+            h -= n;
+            n += h * 0x100000000;// 2^32
+        }
+
+        return (n >>> 0) * 2.3283064365386963e-10;// 2^-32
+    },
 
     init: function (seeds)
     {
@@ -112,10 +114,10 @@ RandomDataGenerator.prototype = {
     sow: function (seeds)
     {
         // Always reset to default seed
-        s0 = hash(' ');
-        s1 = hash(s0);
-        s2 = hash(s1);
-        c = 1;
+        this.s0 = this.hash(' ');
+        this.s1 = this.hash(this.s0);
+        this.s2 = this.hash(this.s1);
+        this.c = 1;
 
         if (!seeds)
         {
@@ -127,14 +129,13 @@ RandomDataGenerator.prototype = {
         {
             var seed = seeds[i];
 
-            s0 -= hash(seed);
-            s0 += ~~(s0 < 0);
-            s1 -= hash(seed);
-            s1 += ~~(s1 < 0);
-            s2 -= hash(seed);
-            s2 += ~~(s2 < 0);
+            this.s0 -= this.hash(seed);
+            this.s0 += ~~(this.s0 < 0);
+            this.s1 -= this.hash(seed);
+            this.s1 += ~~(this.s1 < 0);
+            this.s2 -= this.hash(seed);
+            this.s2 += ~~(this.s2 < 0);
         }
-
     },
 
     /**
@@ -146,7 +147,7 @@ RandomDataGenerator.prototype = {
     integer: function ()
     {
         // 2^32
-        return rnd() * 0x100000000;
+        return this.rnd() * 0x100000000;
     },
 
     /**
@@ -158,7 +159,7 @@ RandomDataGenerator.prototype = {
     frac: function ()
     {
         // 2^-53
-        return rnd() + (rnd() * 0x200000 | 0) * 1.1102230246251565e-16;
+        return this.rnd() + (this.rnd() * 0x200000 | 0) * 1.1102230246251565e-16;
     },
 
     /**
@@ -261,7 +262,7 @@ RandomDataGenerator.prototype = {
     */
     sign: function ()
     {
-        return this.pick(sign);
+        return this.pick(this.sign);
     },
 
     /**
@@ -334,15 +335,15 @@ RandomDataGenerator.prototype = {
         {
             state = state.split(',');
 
-            c = parseFloat(state[1]);
-            s0 = parseFloat(state[2]);
-            s1 = parseFloat(state[3]);
-            s2 = parseFloat(state[4]);
+            this.c = parseFloat(state[1]);
+            this.s0 = parseFloat(state[2]);
+            this.s1 = parseFloat(state[3]);
+            this.s2 = parseFloat(state[4]);
         }
 
-        return [ '!rnd', c, s0, s1, s2 ].join(',');
+        return [ '!rnd', this.c, this.s0, this.s1, this.s2 ].join(',');
     }
 
-};
+});
 
 module.exports = RandomDataGenerator;
