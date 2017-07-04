@@ -1,8 +1,11 @@
-var CanvasSnapshot = function (canvas) 
+var CanvasSnapshot = function (canvas)
 {
     var src = canvas.toDataURL();
-    var image =  new Image();
+
+    var image = new Image();
+
     image.src = src;
+
     return image;
 };
 

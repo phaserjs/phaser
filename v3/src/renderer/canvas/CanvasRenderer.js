@@ -3,7 +3,7 @@ var DrawImage = require('./utils/DrawImage');
 var BlitImage = require('./utils/BlitImage');
 var GetBlendModes = require('./utils/GetBlendModes');
 var GetContext = require('../../canvas/GetContext');
-var Snapshot = require('../../snapshot/Snapshot');
+var CanvasSnapshot = require('../snapshot/CanvasSnapshot');
 var Smoothing = require('../../dom/Smoothing');
 var ScaleModes = require('../ScaleModes');
 
@@ -257,7 +257,7 @@ CanvasRenderer.prototype = {
 
         if (this.snapshotCallback)
         {
-            this.snapshotCallback(Snapshot.CanvasSnapshot(this.gameCanvas));
+            this.snapshotCallback(CanvasSnapshot(this.gameCanvas));
             this.snapshotCallback = null;
         }
 
