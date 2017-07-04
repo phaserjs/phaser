@@ -1,4 +1,4 @@
-//  Phaser.Geom.Hermite
+//  Phaser.Paths.Hermite
 
 var Hermite = require('./Hermite');
 

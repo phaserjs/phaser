@@ -1,4 +1,4 @@
-//  Phaser.Path
+//  Phaser.Paths
 
 module.exports = {
     
