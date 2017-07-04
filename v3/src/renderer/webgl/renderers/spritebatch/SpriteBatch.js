@@ -455,6 +455,7 @@ SpriteBatch.prototype = {
         var mva, mvb, mvc, mvd, mve, mvf, tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3;
         var sra, srb, src, srd, sre, srf, cma, cmb, cmc, cmd, cme, cmf;
         var alpha = gameObject.alpha;
+        var tint = gameObject._tint;
 
         tempMatrix.applyITRS(translateX, translateY, rotation, scaleX, scaleY);
 
@@ -498,28 +499,28 @@ SpriteBatch.prototype = {
         vertexBufferObjectF32[vertexOffset++] = ty0;
         vertexBufferObjectF32[vertexOffset++] = 0;
         vertexBufferObjectF32[vertexOffset++] = 0;
-        vertexBufferObjectU32[vertexOffset++] = 0xFFFFFF; //vertexColor.topLeft;
+        vertexBufferObjectU32[vertexOffset++] = tint[0]; //topLeft;
         vertexBufferObjectF32[vertexOffset++] = alpha;
 
         vertexBufferObjectF32[vertexOffset++] = tx1;
         vertexBufferObjectF32[vertexOffset++] = ty1;
         vertexBufferObjectF32[vertexOffset++] = 0;
         vertexBufferObjectF32[vertexOffset++] = 1;
-        vertexBufferObjectU32[vertexOffset++] = 0xFFFFFF; //vertexColor.bottomLeft;
+        vertexBufferObjectU32[vertexOffset++] = tint[2]; //bottomLeft;
         vertexBufferObjectF32[vertexOffset++] = alpha;
 
         vertexBufferObjectF32[vertexOffset++] = tx2;
         vertexBufferObjectF32[vertexOffset++] = ty2;
         vertexBufferObjectF32[vertexOffset++] = 1;
         vertexBufferObjectF32[vertexOffset++] = 1;
-        vertexBufferObjectU32[vertexOffset++] = 0xFFFFFF; //vertexColor.bottomRight;
+        vertexBufferObjectU32[vertexOffset++] = tint[3]; //bottomRight;
         vertexBufferObjectF32[vertexOffset++] = alpha;
 
         vertexBufferObjectF32[vertexOffset++] = tx3;
         vertexBufferObjectF32[vertexOffset++] = ty3;
         vertexBufferObjectF32[vertexOffset++] = 1;
         vertexBufferObjectF32[vertexOffset++] = 0;
-        vertexBufferObjectU32[vertexOffset++] = 0xFFFFFF; //vertexColor.topRight;
+        vertexBufferObjectU32[vertexOffset++] = tint[1]; //topRight;
         vertexBufferObjectF32[vertexOffset++] = alpha;
     },
 
@@ -551,6 +552,7 @@ SpriteBatch.prototype = {
         var mva, mvb, mvc, mvd, mve, mvf, tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3;
         var sra, srb, src, srd, sre, srf, cma, cmb, cmc, cmd, cme, cmf;
         var alpha = gameObject.alpha;
+        var tint = gameObject._tint;
 
         tempMatrix.applyITRS(translateX, translateY, rotation, scaleX, scaleY);
 
@@ -594,28 +596,28 @@ SpriteBatch.prototype = {
         vertexBufferObjectF32[vertexOffset++] = ty0;
         vertexBufferObjectF32[vertexOffset++] = uvs.x0;
         vertexBufferObjectF32[vertexOffset++] = uvs.y0;
-        vertexBufferObjectU32[vertexOffset++] = 0xFFFFFF; //vertexColor.topLeft;
+        vertexBufferObjectU32[vertexOffset++] = tint[0]; // topLeft
         vertexBufferObjectF32[vertexOffset++] = alpha;
 
         vertexBufferObjectF32[vertexOffset++] = tx1;
         vertexBufferObjectF32[vertexOffset++] = ty1;
         vertexBufferObjectF32[vertexOffset++] = uvs.x1;
         vertexBufferObjectF32[vertexOffset++] = uvs.y1;
-        vertexBufferObjectU32[vertexOffset++] = 0xFFFFFF; //vertexColor.bottomLeft;
+        vertexBufferObjectU32[vertexOffset++] = tint[2]; // bottomLeft;
         vertexBufferObjectF32[vertexOffset++] = alpha;
 
         vertexBufferObjectF32[vertexOffset++] = tx2;
         vertexBufferObjectF32[vertexOffset++] = ty2;
         vertexBufferObjectF32[vertexOffset++] = uvs.x2;
         vertexBufferObjectF32[vertexOffset++] = uvs.y2;
-        vertexBufferObjectU32[vertexOffset++] = 0xFFFFFF; //vertexColor.bottomRight;
+        vertexBufferObjectU32[vertexOffset++] = tint[3]; // bottomRight;
         vertexBufferObjectF32[vertexOffset++] = alpha;
 
         vertexBufferObjectF32[vertexOffset++] = tx3;
         vertexBufferObjectF32[vertexOffset++] = ty3;
         vertexBufferObjectF32[vertexOffset++] = uvs.x3;
         vertexBufferObjectF32[vertexOffset++] = uvs.y3;
-        vertexBufferObjectU32[vertexOffset++] = 0xFFFFFF; //vertexColor.topRight;
+        vertexBufferObjectU32[vertexOffset++] = tint[1]; // topRight;
         vertexBufferObjectF32[vertexOffset++] = alpha;
     }
 

@@ -4,6 +4,7 @@ var SpriteWebGLRenderer = function (renderer, src, interpolationPercentage, came
     {
         return;
     }
+
     renderer.spriteBatch.addSprite(src, camera);
 };
 

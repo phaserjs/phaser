@@ -14,14 +14,15 @@ var Text = new Class({
     Mixins: [
         Components.Alpha,
         Components.BlendMode,
+        Components.Flip,
         Components.GetBounds,
         Components.Origin,
         Components.RenderTarget,
         Components.ScaleMode,
+        Components.ScrollFactor,
+        Components.Tint,
         Components.Transform,
         Components.Visible,
-        Components.Flip,
-        Components.ScrollFactor,
         TextRender
     ],
 
