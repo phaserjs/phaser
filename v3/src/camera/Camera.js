@@ -92,6 +92,14 @@ var Camera = new Class({
         return this;
     },
 
+    setPosition: function (x, y)
+    {
+        this.x = x;
+        this.y = y;
+
+        return this;
+    },
+
     setSize: function (width, height)
     {
         this.width = width;
