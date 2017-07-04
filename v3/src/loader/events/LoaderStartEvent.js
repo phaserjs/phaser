@@ -1,13 +1,19 @@
+var Class = require('../../utils/Class');
 var Event = require('../../events/Event');
 
-var LoaderStartEvent = function (loader)
-{
-    Event.call(this, 'LOADER_START_EVENT');
+var LoaderStartEvent = new Class({
 
-    this.loader = loader;
-};
+    Extends: Event,
 
-LoaderStartEvent.prototype = Object.create(Event.prototype);
-LoaderStartEvent.prototype.constructor = LoaderStartEvent;
+    initialize:
+
+    function LoaderStartEvent (loader)
+    {
+        Event.call(this, 'LOADER_START_EVENT');
+
+        this.loader = loader;
+    }
+
+});
 
 module.exports = LoaderStartEvent;
