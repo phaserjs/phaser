@@ -74,7 +74,7 @@ var EffectLayer = new Class({
     {
         if (this.dstRenderTarget)
         {
-            this.dstRenderTarget.clearAlpha = alpha;            
+            this.dstRenderTarget.clearAlpha = alpha;
         }
     },
 
