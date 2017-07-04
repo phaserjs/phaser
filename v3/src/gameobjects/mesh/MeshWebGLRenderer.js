@@ -4,10 +4,15 @@ var MeshWebGLRenderer = function (renderer, src, interpolationPercentage, camera
     {
         return;
     }
+
     if (src.indices.length > 0)
+    {
         renderer.spriteBatch.addMeshIndexed(src, camera);
+    }
     else
+    {
         renderer.spriteBatch.addMesh(src, camera);
+    }
 };
 
-module.exports = MeshWebGLRenderer
+module.exports = MeshWebGLRenderer;

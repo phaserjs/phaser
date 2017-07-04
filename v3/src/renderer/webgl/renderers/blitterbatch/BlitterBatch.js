@@ -52,7 +52,6 @@ BlitterBatch.prototype = {
 
     init: function (gl)
     {
-
         var vertexDataBuffer = new DataBuffer32(CONST.VERTEX_SIZE * CONST.PARTICLE_VERTEX_COUNT * CONST.MAX_PARTICLES);
         var indexDataBuffer = new DataBuffer16(CONST.INDEX_SIZE * CONST.PARTICLE_INDEX_COUNT * CONST.MAX_PARTICLES);
         var shader = this.manager.resourceManager.createShader('TexturedAndAlphaShader', TexturedAndAlphaShader);
@@ -134,7 +133,6 @@ BlitterBatch.prototype = {
 
     resize: function (width, height, resolution, shader)
     {
-        var gl = this.glContext;
         var activeShader = shader !== undefined ? shader : this.shader;
         
         this.width = width * resolution;
