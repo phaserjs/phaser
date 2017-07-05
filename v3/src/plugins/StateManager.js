@@ -178,6 +178,11 @@ var StateManager = new Class({
         this._queue.push({ type: 'sendToBack' });
     },
 
+    get: function (key)
+    {
+        return this.manager.getState(key);
+    },
+
     transitionTo: function (key, duration)
     {
     },
