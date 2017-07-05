@@ -27,11 +27,11 @@ var File = new Class({
         }
 
         //  The URL of the file, not including baseURL
-        this.url = GetFastValue(fileConfig, 'url', '');
+        this.url = GetFastValue(fileConfig, 'url');
 
-        if (this.url === '')
+        if (this.url === undefined)
         {
-            this.url = GetFastValue(fileConfig, 'path', '') + this.key + GetFastValue(fileConfig, 'extension', '');
+            this.url = GetFastValue(fileConfig, 'path', '') + this.key + '.' + GetFastValue(fileConfig, 'extension', '');
         }
         else
         {
