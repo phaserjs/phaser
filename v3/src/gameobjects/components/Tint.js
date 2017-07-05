@@ -7,11 +7,16 @@ var GetColor = function (value)
 var Tint = {
 
     //  0: topLeft, 1: topRight, 2: bottomLeft, 3: bottomRight
-    _tint: [ 16777215, 16777215, 16777215, 16777215 ],
+    _tintTL: 16777215,
+    _tintTR: 16777215,
+    _tintBL: 16777215,
+    _tintBR: 16777215,
 
     clearTint: function ()
     {
         this.setTint(0xffffff);
+
+        return this;
     },
 
     setTint: function (topLeft, topRight, bottomLeft, bottomRight)
@@ -23,22 +28,24 @@ var Tint = {
             bottomRight = topLeft;
         }
 
-        this.tintTopLeft = topLeft;
-        this.tintTopRight = topRight;
-        this.tintBottomLeft = bottomLeft;
-        this.tintBottomRight = bottomRight;
+        this._tintTL = GetColor(topLeft);
+        this._tintTR = GetColor(topRight);
+        this._tintBL = GetColor(bottomLeft);
+        this._tintBR = GetColor(bottomRight);
+
+        return this;
     },
 
     tintTopLeft: {
 
         get: function ()
         {
-            return this._tint[0];
+            return this._tintTL;
         },
 
         set: function (value)
         {
-            this._tint[0] = GetColor(value);
+            this._tintTL = GetColor(value);
         }
 
     },
@@ -47,12 +54,12 @@ var Tint = {
 
         get: function ()
         {
-            return this._tint[1];
+            return this._tintTR;
         },
 
         set: function (value)
         {
-            this._tint[1] = GetColor(value);
+            this._tintTR = GetColor(value);
         }
 
     },
@@ -61,12 +68,12 @@ var Tint = {
 
         get: function ()
         {
-            return this._tint[2];
+            return this._tintBL;
         },
 
         set: function (value)
         {
-            this._tint[2] = GetColor(value);
+            this._tintBL = GetColor(value);
         }
 
     },
@@ -75,22 +82,17 @@ var Tint = {
 
         get: function ()
         {
-            return this._tint[3];
+            return this._tintBR;
         },
 
         set: function (value)
         {
-            this._tint[3] = GetColor(value);
+            this._tintBR = GetColor(value);
         }
 
     },
 
     tint: {
-
-        get: function ()
-        {
-            return this._tint;
-        },
 
         set: function (value)
         {

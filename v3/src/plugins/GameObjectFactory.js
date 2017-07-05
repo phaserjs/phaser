@@ -28,6 +28,21 @@ var GameObjectFactory = new Class({
         this.updateList = state.sys.updateList;
     },
 
+    existing: function (child)
+    {
+        if (child.renderCanvas || child.renderWebGL)
+        {
+            this.displayList.add(child);
+        }
+
+        if (child.preUpdate)
+        {
+            this.updateList.add(child);
+        }
+
+        return child;
+    },
+
     bitmapText: function (x, y, font, text, size, align)
     {
         return this.displayList.add(StaticBitmapTextFactory(this.state, x, y, font, text, size, align));

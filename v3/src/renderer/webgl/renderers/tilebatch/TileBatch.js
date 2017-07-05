@@ -213,7 +213,10 @@ var TileBatch = new Class({
         var tilePositionX = gameObject.tilePositionX / gameObject.frame.width;
         var tilePositionY = gameObject.tilePositionY / gameObject.frame.height;
         var texture = gameObject.tileTexture;
-        var tint = gameObject._tint;
+        var tintTL = gameObject._tintTL;
+        var tintTR = gameObject._tintTR;
+        var tintBL = gameObject._tintBL;
+        var tintBR = gameObject._tintBR;
 
         tempMatrix.applyITRS(translateX, translateY, rotation, scaleX, scaleY);
 
@@ -256,7 +259,7 @@ var TileBatch = new Class({
         vertexBufferObjectF32[vertexOffset++] = ty0;
         vertexBufferObjectF32[vertexOffset++] = u0 + tilePositionX;
         vertexBufferObjectF32[vertexOffset++] = v0 + tilePositionY;
-        vertexBufferObjectU32[vertexOffset++] = tint[0];
+        vertexBufferObjectU32[vertexOffset++] = tintTL;
         vertexBufferObjectF32[vertexOffset++] = alpha;
 
         //  Bottom Left
@@ -264,7 +267,7 @@ var TileBatch = new Class({
         vertexBufferObjectF32[vertexOffset++] = ty1;
         vertexBufferObjectF32[vertexOffset++] = u0 + tilePositionX;
         vertexBufferObjectF32[vertexOffset++] = v1 + tilePositionY;
-        vertexBufferObjectU32[vertexOffset++] = tint[2];
+        vertexBufferObjectU32[vertexOffset++] = tintBL;
         vertexBufferObjectF32[vertexOffset++] = alpha;
 
         //  Bottom Right
@@ -272,7 +275,7 @@ var TileBatch = new Class({
         vertexBufferObjectF32[vertexOffset++] = ty2;
         vertexBufferObjectF32[vertexOffset++] = u1 + tilePositionX;
         vertexBufferObjectF32[vertexOffset++] = v1 + tilePositionY;
-        vertexBufferObjectU32[vertexOffset++] = tint[3];
+        vertexBufferObjectU32[vertexOffset++] = tintBR;
         vertexBufferObjectF32[vertexOffset++] = alpha;
 
         //  Top Right
@@ -280,7 +283,7 @@ var TileBatch = new Class({
         vertexBufferObjectF32[vertexOffset++] = ty3;
         vertexBufferObjectF32[vertexOffset++] = u1 + tilePositionX;
         vertexBufferObjectF32[vertexOffset++] = v0 + tilePositionY;
-        vertexBufferObjectU32[vertexOffset++] = tint[1];
+        vertexBufferObjectU32[vertexOffset++] = tintTR;
         vertexBufferObjectF32[vertexOffset++] = alpha;
     }
 

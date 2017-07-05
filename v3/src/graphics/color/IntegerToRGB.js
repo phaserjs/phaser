@@ -1,7 +1,7 @@
 /**
 * Return the component parts of a color as an Object with the properties alpha, red, green, blue.
 *
-* Alpha will only be set if it exist in the given color (0xAARRGGBB)
+* Alpha will only be set if it exists in the given color (0xAARRGGBB)
 *
 * @method Phaser.Color.getRGB
 * @static
