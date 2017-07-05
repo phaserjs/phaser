@@ -14,15 +14,15 @@ var InjectionMap = {
 
     add: 'add',
     cameras: 'cameras',
+    data: 'data',
+    displayList: 'children',
     events: 'events',
     load: 'load',
     make: 'make',
+    pool: 'pool',
     stateManager: 'state',
     time: 'time',
-    tweens: 'tweens',
-
-    displayList: 'children',
-    data: 'data'
+    tweens: 'tweens'
 
 };
 

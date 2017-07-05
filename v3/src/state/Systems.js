@@ -8,6 +8,7 @@ var EventDispatcher = require('../events/EventDispatcher');
 var GameObjectCreator = require('../plugins/GameObjectCreator');
 var GameObjectFactory = require('../plugins/GameObjectFactory');
 var Loader = require('../plugins/Loader');
+var PoolManager = require('../plugins/PoolManager');
 var Settings = require('./Settings');
 var StableSort = require('../utils/array/StableSort');
 var StateManager = require('../plugins/StateManager');
@@ -48,6 +49,7 @@ var Systems = new Class({
         this.events;
         this.load;
         this.make;
+        this.pool;
         this.stateManager;
         this.time;
         this.tweens;
@@ -85,6 +87,7 @@ var Systems = new Class({
         this.events = new EventDispatcher();
         this.load = new Loader(state);
         this.make = new GameObjectCreator(state);
+        this.pool = new PoolManager(state);
         this.stateManager = new StateManager(state, game);
         this.time = new Clock(state);
         this.tweens = new TweenManager(state);
@@ -117,10 +120,12 @@ var Systems = new Class({
             return;
         }
 
-        this.updateList.begin();
+        this.pool.begin(time);
+        this.updateList.begin(time);
         this.time.begin(time);
         this.tweens.begin(time);
 
+        this.pool.update(time, delta);
         this.updateList.update(time, delta);
         this.time.update(time, delta);
         this.tweens.update(time, delta);
@@ -219,6 +224,7 @@ var Systems = new Class({
         this.settings.active = false;
         this.settings.visible = false;
 
+        this.pool.shutdown();
         this.displayList.shutdown();
         this.updateList.shutdown();
         this.time.shutdown();
@@ -235,6 +241,7 @@ var Systems = new Class({
     {
         //  TODO
 
+        this.pool.destroy();
         this.time.destroy();
         this.tweens.destroy();
 

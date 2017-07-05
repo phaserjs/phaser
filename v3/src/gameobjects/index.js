@@ -12,6 +12,7 @@ module.exports = {
     Group: require('./group/Group'),
     Image: require('./image/Image'),
     Mesh: require('./mesh/Mesh'),
+    ObjectPool: require('./pool/ObjectPool.js'),
     Quad: require('./quad/Quad'),
     RenderPass: require('./renderpass/RenderPass.js'),
     Sprite: require('./sprite/Sprite'),
