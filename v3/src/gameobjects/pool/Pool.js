@@ -29,6 +29,7 @@ var Pool = new Class({
         }
     },
 
+    //  Allow them to add a Group too
     add: function (child)
     {
         if (Array.isArray(child))
@@ -48,8 +49,9 @@ var Pool = new Class({
 
     createMultiple: function ()
     {
-
     },
+
+    
 
     preUpdate: function (time, delta)
     {
