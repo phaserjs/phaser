@@ -48,6 +48,19 @@ var Map = new Class({
         }
     },
 
+    getArray: function ()
+    {
+        var output = [];
+        var entries = this.entries;
+
+        for (var key in entries)
+        {
+            output.push(entries[key]);
+        }
+
+        return output;
+    },
+
     has: function (key)
     {
         return (this.entries.hasOwnProperty(key));

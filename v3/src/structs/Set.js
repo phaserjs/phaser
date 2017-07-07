@@ -41,6 +41,11 @@ var Set = new Class({
         }
     },
 
+    getArray: function ()
+    {
+        return this.entries.slice(0);
+    },
+
     delete: function (value)
     {
         var index = this.entries.indexOf(value);
