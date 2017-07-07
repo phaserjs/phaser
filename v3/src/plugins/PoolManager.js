@@ -1,5 +1,6 @@
 var Class = require('../utils/Class');
 var ObjectPool = require('../gameobjects/pool/ObjectPool');
+var SpritePool = require('../gameobjects/pool/SpritePool');
 
 var PoolManager = new Class({
 
@@ -30,9 +31,20 @@ var PoolManager = new Class({
         return this;
     },
 
-    create: function ()
+    createSpritePool: function (maxSize, key, frame)
     {
-        var pool = new ObjectPool();
+        var pool = new SpritePool(this, maxSize, key, frame);
+
+        this.add(pool);
+
+        return pool;
+    },
+
+    createObjectPool: function (classType, maxSize)
+    {
+        if (maxSize === undefined) { maxSize = -1; }
+
+        var pool = new ObjectPool(this, classType, maxSize);
 
         this.add(pool);
 
@@ -65,8 +77,7 @@ var PoolManager = new Class({
                 this._active.splice(index, 1);
             }
 
-            //  Pool them?
-            // pool.destroy();
+            pool.destroy();
         }
 
         //  Move pending to active
