@@ -128,7 +128,7 @@ var Tilemap = new Class({
             var cullH = cameraH + tileH;
 
             if (tile.visible &&
-                tileX > -tileH && tileY > -tileW &&
+                tileX > -tileW && tileY > -tileH &&
                 tileX < cullW && tileY < cullH)
             {
                 culledTiles.push(tile);

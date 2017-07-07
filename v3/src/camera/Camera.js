@@ -26,6 +26,7 @@ var Camera = new Class({
         this.zoom = 1.0;
         this.rotation = 0.0;
         this.matrix = new TransformMatrix(1, 0, 0, 1, 0, 0);
+        this.culledObjects = [];
 
         // shake
         this._shakeDuration = 0.0;
@@ -53,6 +54,37 @@ var Camera = new Class({
         this.clearBeforeRender = true;
         this.backgroundColor = ValueToColor('rgba(0,0,0,0)');
         this.transparent = true;
+    },
+
+    cull: function (renderableObjects)
+    {
+        var scrollX = this.scrollX;
+        var scrollY = this.scrollY;
+        var cameraW = this.width;
+        var cameraH = this.height;
+        var culledObjects = this.culledObjects;
+        var length = renderableObjects.length;
+
+        culledObjects.length = 0;
+
+        for (var index = 0; index < length; ++index)
+        {
+            var object = renderableObjects[index];
+            var objectW = object.width;
+            var objectH = object.height;
+            var objectX = (object.x - (scrollX * object.scrollFactorX)) - (objectW * object.originX);
+            var objectY = (object.y - (scrollY * object.scrollFactorY)) - (objectH * object.originY);
+            var cullW = cameraW + objectW;
+            var cullH = cameraH + objectH;
+
+            if (objectX > -objectW && objectY > -objectH &&
+                objectX < cullW && objectY < cullH)
+            {
+                culledObjects.push(object);
+            }
+        }
+
+        return culledObjects;
     },
 
     setBackgroundColor: function (color)
@@ -280,8 +312,8 @@ var Camera = new Class({
             pointOut = {x: 0, y: 0};
         }
 
-        pointOut.x = (x * mva + y * mvc + mve) - scrollX;
-        pointOut.y = (x * mvb + y * mvd + mvf) - scrollY;
+        pointOut.x = (x * mva + y * mvc + mve);
+        pointOut.y = (x * mvb + y * mvd + mvf);
         
         return pointOut;
     },
