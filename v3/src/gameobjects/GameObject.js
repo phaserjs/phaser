@@ -25,6 +25,8 @@ var GameObject = new Class({
 
         this.name = '';
 
+        this.active = true;
+
         this.tabIndex = -1;
 
         this.parent;
@@ -33,6 +35,14 @@ var GameObject = new Class({
         //  Will Render bitmask flags for the components Visible, Alpha, Transform and Texture respectively
         this.renderMask = 15;
         this.renderFlags = 15;
+    },
+
+    //  For GameObject Pooling and item selection
+    setActive: function (value)
+    {
+        this.active = value;
+
+        return this;
     },
 
     //  Can be overridden by custom Game Objects, but provides default export functionality
