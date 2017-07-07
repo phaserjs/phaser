@@ -8,6 +8,7 @@ var Mouse = require('./mouse/MouseManager');
 var MouseEvent = require('./mouse/events/');
 var PointWithinGameObject = require('./components/PointWithinGameObject');
 var TransformMatrix = require('../gameobjects/components/TransformMatrix');
+var PointScreenToWorldHitTest = require('./components/PointScreenToWorldHitTest');
 
 var GlobalInputManager = new Class({
 
@@ -32,6 +33,7 @@ var GlobalInputManager = new Class({
 
         this._tempMatrix = new TransformMatrix();
         this._tempPoint = { x: 0, y: 0 };
+        this._tempHitTest = [];
     },
 
     /**
@@ -92,6 +94,11 @@ var GlobalInputManager = new Class({
     pointWithinGameObject: function (gameObject, x, y)
     {
         return PointWithinGameObject(gameObject, x, y);
+    },
+
+    pointScreenToWorldHitTest: function (gameObjects, x, y, camera)
+    {
+        return PointScreenToWorldHitTest(this._tempMatrix, x, y, gameObjects, camera, this._tempHitTest);
     }
 
 });

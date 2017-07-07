@@ -70,15 +70,24 @@ var Camera = new Class({
         for (var index = 0; index < length; ++index)
         {
             var object = renderableObjects[index];
-            var objectW = object.width;
-            var objectH = object.height;
-            var objectX = (object.x - (scrollX * object.scrollFactorX)) - (objectW * object.originX);
-            var objectY = (object.y - (scrollY * object.scrollFactorY)) - (objectH * object.originY);
-            var cullW = cameraW + objectW;
-            var cullH = cameraH + objectH;
 
-            if (objectX > -objectW && objectY > -objectH &&
-                objectX < cullW && objectY < cullH)
+            /* Not every renderable object has a dimension */ 
+            if (typeof object.width === 'number')
+            {
+                var objectW = object.width;
+                var objectH = object.height;
+                var objectX = (object.x - (scrollX * object.scrollFactorX)) - (objectW * object.originX);
+                var objectY = (object.y - (scrollY * object.scrollFactorY)) - (objectH * object.originY);
+                var cullW = cameraW + objectW;
+                var cullH = cameraH + objectH;
+
+                if (objectX > -objectW && objectY > -objectH &&
+                    objectX < cullW && objectY < cullH)
+                {
+                    culledObjects.push(object);
+                }
+            }
+            else
             {
                 culledObjects.push(object);
             }
