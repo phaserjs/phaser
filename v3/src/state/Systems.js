@@ -151,6 +151,12 @@ var Systems = new Class({
         this.cameras.render(renderer, this.displayList, interpolation);
     },
 
+    //  Force a sort of the display list next render
+    depthSort: function ()
+    {
+        this.sortChildrenFlag = true;
+    },
+
     sortZ: function (childA, childB)
     {
         return childA._z - childB._z;
