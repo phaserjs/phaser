@@ -48,6 +48,11 @@ var GameObject = new Class({
         return this;
     },
 
+    //  To be overridden by custom GameObjects. Allows base objects to be used in a Pool.
+    update: function ()
+    {
+    },
+
     //  Can be overridden by custom Game Objects, but provides default export functionality
     toJSON: function ()
     {
