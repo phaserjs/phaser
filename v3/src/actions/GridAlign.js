@@ -3,7 +3,7 @@ var AlignIn = require('../utils/align/AlignIn');
 var Zone = require('../gameobjects/zone/Zone');
 var GetValue = require('../utils/object/GetValue');
 
-var tempZone = new Zone({}, 0, 0, 1, 1);
+var tempZone = new Zone({ sys: { sortChildrenFlag: false }}, 0, 0, 1, 1);
 
 /**
 * This method iterates through all children in the Group (regardless if they are visible or exist)
