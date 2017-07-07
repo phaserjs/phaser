@@ -8,7 +8,7 @@ var UpdateList = new Class({
     {
         this.state = state;
 
-        this._active = [];
+        this._list = [];
         this._pendingInsertion = [];
         this._pendingRemoval = [];
     },
@@ -37,11 +37,11 @@ var UpdateList = new Class({
         {
             gameObject = this._pendingRemoval[i];
 
-            var index = this._active.indexOf(gameObject);
+            var index = this._list.indexOf(gameObject);
 
             if (index > -1)
             {
-                this._active.splice(index, 1);
+                this._list.splice(index, 1);
             }
 
             //  Pool them?
@@ -49,7 +49,7 @@ var UpdateList = new Class({
         }
 
         //  Move pending to active
-        this._active = this._active.concat(this._pendingInsertion.splice(0));
+        this._list = this._list.concat(this._pendingInsertion.splice(0));
 
         //  Clear the lists
         this._pendingRemoval.length = 0;
@@ -58,11 +58,14 @@ var UpdateList = new Class({
 
     update: function (time, delta)
     {
-        for (var i = 0; i < this._active.length; i++)
+        for (var i = 0; i < this._list.length; i++)
         {
-            var gameObject = this._active[i];
+            var gameObject = this._list[i];
 
-            gameObject.preUpdate.call(gameObject, time, delta);
+            if (gameObject.active)
+            {
+                gameObject.preUpdate.call(gameObject, time, delta);
+            }
         }
     },
 
@@ -76,9 +79,9 @@ var UpdateList = new Class({
             this._pendingInsertion[i].destroy();
         }
 
-        for (i = 0; i < this._active.length; i++)
+        for (i = 0; i < this._list.length; i++)
         {
-            this._active[i].destroy();
+            this._list[i].destroy();
         }
 
         for (i = 0; i < this._pendingRemoval.length; i++)
@@ -86,7 +89,7 @@ var UpdateList = new Class({
             this._pendingRemoval[i].destroy();
         }
 
-        this._active.length = 0;
+        this._list.length = 0;
         this._pendingRemoval.length = 0;
         this._pendingInsertion.length = 0;
     },
