@@ -24,7 +24,7 @@ var Init = function ()
     this.progress = 0;
     this.totalProgress = 0;
 
-    console.log('Tween duration', this.duration, 'totalDuration', this.totalDuration);
+    // console.log('Tween duration', this.duration, 'totalDuration', this.totalDuration);
 
     if (this.paused)
     {
