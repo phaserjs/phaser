@@ -21,6 +21,8 @@ var Tint = {
 
     setTint: function (topLeft, topRight, bottomLeft, bottomRight)
     {
+        if (topLeft === undefined) { topLeft = 0xffffff; }
+
         if (topRight === undefined)
         {
             topRight = topLeft;
