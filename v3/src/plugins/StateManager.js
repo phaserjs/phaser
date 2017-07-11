@@ -39,6 +39,10 @@ var StateManager = new Class({
 
             switch (action.type)
             {
+                case 'add':
+                    manager.add(action.key, action.data, action.autoStart);
+                    break;
+
                 case 'start':
                     manager.stop(this.key);
                     manager.start(action.key, action.data);
@@ -103,6 +107,14 @@ var StateManager = new Class({
         if (key === undefined) { key = this.key; }
 
         this._queue.push({ type: 'start', key: key, data: data });
+
+        return this;
+    },
+
+    //  Add the State into the State Manager and start it if 'autoStart' is true or the State config 'active' property is set
+    add: function (key, stateConfig, autoStart)
+    {
+        this._queue.push({ type: 'add', key: key, data: stateConfig, autoStart: autoStart });
 
         return this;
     },
