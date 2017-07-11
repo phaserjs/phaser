@@ -64,6 +64,28 @@ var Camera = new Class({
         var cameraH = this.height;
         var culledObjects = this.culledObjects;
         var length = renderableObjects.length;
+        var cameraMatrix = this.matrix.matrix;
+        var mva = cameraMatrix[0];
+        var mvb = cameraMatrix[1];
+        var mvc = cameraMatrix[2];
+        var mvd = cameraMatrix[3];
+        var mve = cameraMatrix[4];
+        var mvf = cameraMatrix[5];
+        
+        /* First Invert Matrix */
+        var determinant = (mva * mvd) - (mvb * mvc);
+
+        if (!determinant)
+            return pointIn;
+
+        determinant = 1 / determinant;
+
+        var ima = mvd * determinant;
+        var imb = -mvb * determinant;
+        var imc = -mvc * determinant;
+        var imd = mva * determinant;
+        var ime = (mvc * mvf - mvd * mve) * determinant;
+        var imf = (mvb * mve - mva * mvf) * determinant;
 
         culledObjects.length = 0;
 
@@ -78,11 +100,15 @@ var Camera = new Class({
                 var objectH = object.height;
                 var objectX = (object.x - (scrollX * object.scrollFactorX)) - (objectW * object.originX);
                 var objectY = (object.y - (scrollY * object.scrollFactorY)) - (objectH * object.originY);
+                var tx = (objectX * mva + objectY * mvc + mve);
+                var ty = (objectX * mvb + objectY * mvd + mvf);
+                var tw = ((objectX + objectW) * mva + (objectY + objectH) * mvc + mve);
+                var th = ((objectX + objectW) * mvb + (objectY + objectH) * mvd + mvf);
                 var cullW = cameraW + objectW;
                 var cullH = cameraH + objectH;
 
-                if (objectX > -objectW && objectY > -objectH &&
-                    objectX < cullW && objectY < cullH)
+                if (tx > -objectW || ty > -objectH || tx < cullW || ty < cullH ||
+                    tw > -objectW || th > -objectH || tw < cullW || th < cullH)
                 {
                     culledObjects.push(object);
                 }
@@ -336,7 +362,7 @@ var Camera = new Class({
         {
             pointOut = {x: 0, y: 0};
         }
-        
+
         /* Apply transform to point */
         pointOut.x = (x * ima + y * imc + ime);
         pointOut.y = (x * imb + y * imd + imf);
