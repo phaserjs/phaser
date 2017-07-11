@@ -94,24 +94,6 @@ var Frame = new Class({
         */
         this.rotated = false;
 
-        /**
-        * Is this a tiling texture? As used by the likes of a TilingSprite.
-        * TODO: Try and remove this, it shouldn't be here
-        *
-        * @property {boolean} isTiling
-        * @default
-        */
-        this.isTiling = false;
-
-        /**
-        * This will let a renderer know that a tinted parent has updated its texture.
-        * TODO: Try and remove this, it shouldn't be here
-        *
-        * @property {boolean} requiresReTint
-        * @default
-        */
-        this.requiresReTint = false;
-
         //  Over-rides the Renderer setting? -1 = use Renderer Setting, 0 = No rounding, 1 = Round
         this.autoRound = -1;
 
