@@ -304,7 +304,7 @@ var Camera = new Class({
         return this;  
     },
 
-    transformPoint: function (pointIn, pointOut)
+    cameraToScreen: function (pointIn, pointOut)
     {
         var cameraMatrix = this.matrix.matrix;
         var mva = cameraMatrix[0];
@@ -313,6 +313,22 @@ var Camera = new Class({
         var mvd = cameraMatrix[3];
         var mve = cameraMatrix[4];
         var mvf = cameraMatrix[5];
+        
+        /* First Invert Matrix */
+        var determinant = (mva * mvd) - (mvb * mvc);
+
+        if (!determinant)
+            return pointIn;
+
+        determinant = 1 / determinant;
+
+        var ima = mvd * determinant;
+        var imb = -mvb * determinant;
+        var imc = -mvc * determinant;
+        var imd = mva * determinant;
+        var ime = (mvc * mvf - mvd * mve) * determinant;
+        var imf = (mvb * mve - mva * mvf) * determinant;
+
         var x = pointIn.x;
         var y = pointIn.y;
 
@@ -320,9 +336,10 @@ var Camera = new Class({
         {
             pointOut = {x: 0, y: 0};
         }
-
-        pointOut.x = (x * mva + y * mvc + mve);
-        pointOut.y = (x * mvb + y * mvd + mvf);
+        
+        /* Apply transform to point */
+        pointOut.x = (x * ima + y * imc + ime);
+        pointOut.y = (x * imb + y * imd + imf);
         
         return pointOut;
     },
