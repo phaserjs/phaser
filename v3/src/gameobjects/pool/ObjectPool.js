@@ -149,6 +149,21 @@ var ObjectPool = new Class({
         }
     },
 
+    purge: function (destroyChildren)
+    {
+        if (destroyChildren === undefined) { destroyChildren = true; }
+
+        if (destroyChildren)
+        {
+            for (var i = 0; i < this._list.length; i++)
+            {
+                this._list[i].destroy();
+            }
+        }
+        
+        this._list.length = 0;
+    },
+
     isFull: function ()
     {
         if (this.maxSize === -1)
@@ -199,7 +214,16 @@ var ObjectPool = new Class({
 
     destroy: function ()
     {
+        this.manager = undefined;
+        this.state = undefined;
 
+        this.displayList = undefined;
+        this.updateList = undefined;
+
+        this.createCallback = undefined;
+        this.callbackScope = undefined;
+
+        this._list.length = 0;
     }
 
 });
