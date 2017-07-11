@@ -64,6 +64,26 @@ var StateManager = new Class({
                     manager.swap(this.key, action.key);
                     break;
 
+                case 'moveUp':
+                    manager.moveUp(this.key);
+                    break;
+
+                case 'moveDown':
+                    manager.moveDown(this.key);
+                    break;
+
+                case 'bringToTop':
+                    manager.bringToTop(this.key);
+                    break;
+
+                case 'sendToBack':
+                    manager.sendToBack(this.key);
+                    break;
+
+                case 'swapPosition':
+                    manager.swapPosition(this.key, action.key);
+                    break;
+
                 case 'sleep':
                     manager.sleep(action.key);
                     break;
@@ -156,6 +176,11 @@ var StateManager = new Class({
         this.settings.visible = value;
 
         return this;
+    },
+
+    swapPosition: function (key)
+    {
+        this._queue.push({ type: 'swapPosition', key: key });
     },
 
     moveUp: function ()
