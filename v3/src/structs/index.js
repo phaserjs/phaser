@@ -1,4 +1,9 @@
+//  Phaser.Structs
+
 module.exports = {
-    Set: require('./Set'),
-    Map: require('./Map')
+
+    Map: require('./Map'),
+    RTree: require('./RTree'),
+    Set: require('./Set')
+
 };
