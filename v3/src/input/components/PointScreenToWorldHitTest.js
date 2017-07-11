@@ -8,7 +8,15 @@ var PointScreenToWorldHitTest = function (tempMatrix, x, y, gameObjectArray, cam
     var scrollY = camera.scrollY;
     var cameraW = camera.width;
     var cameraH = camera.height;
+
+    if (!(x >= camera.x && y >= camera.y &&
+        x <= camera.x + cameraW && y <= camera.y + cameraH))
+    {
+        return null;
+    }
+
     var screenPoint = camera.cameraToScreen({x: x, y: y});
+
     output.length = 0;
 
     if (gameObjectArray instanceof Array)
@@ -31,7 +39,7 @@ var PointScreenToWorldHitTest = function (tempMatrix, x, y, gameObjectArray, cam
     }
     else
     {
-        var tpoint = GetTransformedPoint(tempMatrix, object, x + scrollX * object.scrollFactorX, y + scrollY * object.scrollFactorY);
+        var tpoint = GetTransformedPoint(tempMatrix, object, screenPoint.x + scrollX * object.scrollFactorX, screenPoint.y + scrollY * object.scrollFactorY);
         
         if (PointWithinGameObject(object, tpoint.x, tpoint.y))
         {
