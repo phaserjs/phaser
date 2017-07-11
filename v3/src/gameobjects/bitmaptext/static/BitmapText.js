@@ -1,9 +1,10 @@
 var Class = require('../../../utils/Class');
-var GameObject = require('../../GameObject');
 var Components = require('../../components');
-var Render = require('./BitmapTextRender');
+var GameObject = require('../../GameObject');
 var GetBitmapTextSize = require('../GetBitmapTextSize');
+var ParseFromAtlas = require('../ParseFromAtlas');
 var ParseRetroFont = require('../ParseRetroFont');
+var Render = require('./BitmapTextRender');
 
 var BitmapText = new Class({
 
@@ -25,21 +26,23 @@ var BitmapText = new Class({
 
     initialize:
 
-    function BitmapText (state, x, y, font, text, size, align)
+    function BitmapText (state, x, y, font, text, size)
     {
         if (text === undefined) { text = ''; }
-        if (align === undefined) { align = 'left'; }
 
         GameObject.call(this, state, 'BitmapText');
 
         this.font = font;
-        this.fontData = this.state.sys.cache.bitmapFont.get(font);
+
+        var entry = this.state.sys.cache.bitmapFont.get(font);
+
+        this.fontData = entry.data;
 
         this.text = (Array.isArray(text)) ? text.join('\n') : text;
 
         this.fontSize = size || this.fontData.size;
 
-        this.setTexture(font);
+        this.setTexture(entry.texture, entry.frame);
         this.setPosition(x, y);
         this.setOrigin(0, 0);
     },
@@ -101,5 +104,6 @@ var BitmapText = new Class({
 });
 
 BitmapText.ParseRetroFont = ParseRetroFont;
+BitmapText.ParseFromAtlas = ParseFromAtlas;
 
 module.exports = BitmapText;

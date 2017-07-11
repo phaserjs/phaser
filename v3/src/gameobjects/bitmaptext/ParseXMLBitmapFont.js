@@ -3,6 +3,16 @@ function getValue (node, attribute)
     return parseInt(node.getAttribute(attribute), 10);
 }
 
+// "azo-fire":
+// {
+//     "frame": {"x":2,"y":2,"w":1020,"h":376},
+//     "rotated": false,
+//     "trimmed": true,
+//     "spriteSourceSize": {"x":1,"y":1,"w":1020,"h":376},
+//     "sourceSize": {"w":1024,"h":512},
+//     "pivot": {"x":0.5,"y":0.5}
+// },
+
 var ParseXMLBitmapFont = function (xml, xSpacing, ySpacing, frame)
 {
     if (xSpacing === undefined) { xSpacing = 0; }
@@ -19,8 +29,13 @@ var ParseXMLBitmapFont = function (xml, xSpacing, ySpacing, frame)
 
     var letters = xml.getElementsByTagName('char');
 
-    var x = (frame) ? frame.x : 0;
-    var y = (frame) ? frame.y : 0;
+    var x = 0;
+    var y = 0;
+
+    if (frame && frame.trim)
+    {
+
+    }
 
     for (var i = 0; i < letters.length; i++)
     {

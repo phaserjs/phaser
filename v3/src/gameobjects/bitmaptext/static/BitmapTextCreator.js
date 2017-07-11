@@ -1,15 +1,16 @@
 var BitmapText = require('./BitmapText');
-var GetAdvancedValue = require('../../../utils/object/GetAdvancedValue');
 var BuildGameObject = require('../../BuildGameObject');
+var GetAdvancedValue = require('../../../utils/object/GetAdvancedValue');
+var GetValue = require('../../../utils/object/GetValue');
 
 var BitmapTextCreator = function (state, config)
 {
-    var font = GetAdvancedValue(config, 'font', '');
+    var font = GetValue(config, 'font', '');
     var text = GetAdvancedValue(config, 'text', '');
     var size = GetAdvancedValue(config, 'size', false);
-    var align = GetAdvancedValue(config, 'align', 'left');
+    var align = GetValue(config, 'align', 'left');
 
-    var bitmapText = new BitmapText(state, 0, 0, font, text, size, align);
+    var bitmapText = new BitmapText(state, 0, 0, font, text, size);
 
     BuildGameObject(state, bitmapText, config);
 
