@@ -341,12 +341,12 @@ var Loader = new Class({
 
                     if (fileA.type === 'image')
                     {
-                        cache.bitmapFont.add(fileB.key, ParseXMLBitmapFont(fileB.data));
+                        cache.bitmapFont.add(fileB.key, { data: ParseXMLBitmapFont(fileB.data), texture: fileA.key, frame: null });
                         textures.addImage(fileA.key, fileA.data);
                     }
                     else
                     {
-                        cache.bitmapFont.add(fileA.key, ParseXMLBitmapFont(fileA.data));
+                        cache.bitmapFont.add(fileA.key, { data: ParseXMLBitmapFont(fileA.data), texture: fileB.key, frame: null });
                         textures.addImage(fileB.key, fileB.data);
                     }
                     break;
