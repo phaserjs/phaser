@@ -26,6 +26,8 @@ var Camera = new Class({
         this.zoom = 1.0;
         this.rotation = 0.0;
         this.matrix = new TransformMatrix(1, 0, 0, 1, 0, 0);
+
+        this.disableCull = false;
         this.culledObjects = [];
 
         // shake
@@ -58,6 +60,11 @@ var Camera = new Class({
 
     cull: function (renderableObjects)
     {
+        if (this.disableCull)
+        {
+            return renderableObjects;
+        }
+
         var scrollX = this.scrollX;
         var scrollY = this.scrollY;
         var cameraW = this.width;
@@ -76,7 +83,9 @@ var Camera = new Class({
         var determinant = (mva * mvd) - (mvb * mvc);
 
         if (!determinant)
+        {
             return pointIn;
+        }
 
         determinant = 1 / determinant;
 
@@ -94,8 +103,8 @@ var Camera = new Class({
             var object = renderableObjects[index];
 
             /* Not every renderable object has a dimension */ 
-            if (typeof object.width === 'number')
-            {
+            // if (typeof object.width === 'number')
+            // {
                 var objectW = object.width;
                 var objectH = object.height;
                 var objectX = (object.x - (scrollX * object.scrollFactorX)) - (objectW * object.originX);
@@ -112,11 +121,11 @@ var Camera = new Class({
                 {
                     culledObjects.push(object);
                 }
-            }
-            else
-            {
-                culledObjects.push(object);
-            }
+            // }
+            // else
+            // {
+            //     culledObjects.push(object);
+            // }
         }
 
         return culledObjects;
