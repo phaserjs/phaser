@@ -82,6 +82,8 @@ var Group = new Class({
 
     createFromConfig: function (options)
     {
+        this.classType = GetValue(options, 'classType', this.classType);
+
         var key = GetValue(options, 'key', undefined);
         var frame = GetValue(options, 'frame', null);
         var visible = GetValue(options, 'visible', true);
