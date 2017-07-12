@@ -521,6 +521,11 @@ var WebGLRenderer = new Class({
             dstTexture.texture = gl.createTexture();
         }
 
+        if (dstTexture != this.currentTexture)
+        {
+            this.currentRenderer.flush();
+        }
+
         if (shouldUpdateResource)
         {
             //  Update resource
@@ -542,7 +547,10 @@ var WebGLRenderer = new Class({
         dstTexture.height = srcCanvas.height;
 
         //  We must rebind old texture
-        this.currentTexture = null;
+        if (dstTexture != this.currentTexture && this.currentTexture !== null)
+        {
+            gl.bindTexture(gl.TEXTURE_2D, this.currentTexture.texture);
+        }
 
         return dstTexture;
     },
