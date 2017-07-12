@@ -155,6 +155,13 @@ var Group = new Class({
 
         Actions.SetAlpha(entries, alpha, stepAlpha);
 
+        var grid = GetValue(options, 'gridAlign', false);
+
+        if (grid)
+        {
+            Actions.GridAlign(entries, grid);
+        }
+
         return entries;
     },
 
