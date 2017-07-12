@@ -59,7 +59,7 @@ var BitmapTextWebGLRenderer = function (renderer, gameObject, interpolationPerce
     var renderTarget = gameObject.renderTarget;
 
     tempMatrix.applyITRS(
-        gameObject.x - cameraScrollX, gameObject.y - cameraScrollY, 
+        (srcX - cameraScrollX) + textureFrame.x, (srcY - cameraScrollY) + textureFrame.y, 
         -gameObject.rotation, 
         gameObject.scaleX, gameObject.scaleY
     );
@@ -88,6 +88,7 @@ var BitmapTextWebGLRenderer = function (renderer, gameObject, interpolationPerce
     for (var index = 0; index < textLength; ++index)
     {
         charCode = text.charCodeAt(index);
+
         if (charCode === 10)
         {
             xAdvance = 0;
@@ -98,6 +99,7 @@ var BitmapTextWebGLRenderer = function (renderer, gameObject, interpolationPerce
         }
 
         glyph = chars[charCode];
+
         if (!glyph)
         {
             continue;
@@ -114,6 +116,17 @@ var BitmapTextWebGLRenderer = function (renderer, gameObject, interpolationPerce
         {
             var kerningOffset = glyph.kerning[lastCharCode];
             x += (kerningOffset !== undefined) ? kerningOffset : 0;
+        }
+
+        xAdvance += glyph.xAdvance;
+        indexCount += 1;
+        lastGlyph = glyph;
+        lastCharCode = charCode;
+
+        //  Nothing to render or a space? Then skip to the next glyph
+        if (glyphW === 0 || glyphH === 0 || charCode === 32)
+        {
+            continue;
         }
 
         xw = x + glyphW * scale;
@@ -163,11 +176,6 @@ var BitmapTextWebGLRenderer = function (renderer, gameObject, interpolationPerce
         vertexBuffer[vertexOffset++] = umax;
         vertexBuffer[vertexOffset++] = vmin;
         vertexBuffer[vertexOffset++] = alpha;
-
-        xAdvance += glyph.xAdvance;
-        indexCount += 1;
-        lastGlyph = glyph;
-        lastCharCode = charCode;
     }
 };
 

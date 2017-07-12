@@ -64,9 +64,11 @@ var BitmapTextCanvasRenderer = function (renderer, src, interpolationPercentage,
     }
 
     ctx.save();
-    ctx.translate(src.x - cameraScrollX, src.y - cameraScrollY);
+    ctx.translate((src.x - cameraScrollX) + src.frame.x, (src.y - cameraScrollY) + src.frame.y);
     ctx.rotate(src.rotation);
     ctx.scale(src.scaleX, src.scaleY);
+
+    // ctx.fillStyle = 'rgba(255,0,255,0.5)';
 
     for (var index = 0; index < textLength; ++index)
     {
@@ -106,16 +108,23 @@ var BitmapTextCanvasRenderer = function (renderer, src, interpolationPercentage,
         x *= scale;
         y *= scale;
 
-        ctx.save();
-        ctx.translate(x, y);
-        ctx.scale(scale, scale);
-        ctx.drawImage(image, glyphX, glyphY, glyphW, glyphH, 0, 0, glyphW, glyphH);
-        ctx.restore();
-        
         xAdvance += glyph.xAdvance;
         indexCount += 1;
         lastGlyph = glyph;
         lastCharCode = charCode;
+
+        //  Nothing to render or a space? Then skip to the next glyph
+        if (glyphW === 0 || glyphH === 0 || charCode === 32)
+        {
+            continue;
+        }
+
+        ctx.save();
+        ctx.translate(x, y);
+        ctx.scale(scale, scale);
+        // ctx.fillRect(0, 0, glyphW, glyphH);
+        ctx.drawImage(image, glyphX, glyphY, glyphW, glyphH, 0, 0, glyphW, glyphH);
+        ctx.restore();
     }
 
     ctx.restore();
