@@ -1,6 +1,10 @@
 var GetTransformedPoint = require('./GetTransformedPoint');
 var PointWithinGameObject = require('./PointWithinGameObject');
 
+//  Will always return an array.
+//  Array contains matching Game Objects.
+//  Array will be empty if no objects were matched.
+
 var PointScreenToWorldHitTest = function (tempMatrix, x, y, gameObjectArray, camera, output) 
 {
     var length = gameObjectArray.length;
@@ -9,17 +13,17 @@ var PointScreenToWorldHitTest = function (tempMatrix, x, y, gameObjectArray, cam
     var cameraW = camera.width;
     var cameraH = camera.height;
 
+    output.length = 0;
+
     if (!(x >= camera.x && y >= camera.y &&
         x <= camera.x + cameraW && y <= camera.y + cameraH))
     {
-        return null;
+        return output;
     }
 
     var screenPoint = camera.cameraToScreen({x: x, y: y});
 
-    output.length = 0;
-
-    if (gameObjectArray instanceof Array)
+    if (Array.isArray(gameObjectArray))
     {
         var culled = camera.cull(gameObjectArray);
         var culledLength = culled.length;
@@ -34,8 +38,6 @@ var PointScreenToWorldHitTest = function (tempMatrix, x, y, gameObjectArray, cam
                 output.push(object);
             }
         }
-
-        return output;
     }
     else
     {
@@ -43,11 +45,11 @@ var PointScreenToWorldHitTest = function (tempMatrix, x, y, gameObjectArray, cam
         
         if (PointWithinGameObject(object, tpoint.x, tpoint.y))
         {
-            return object;
+            output.push(object);
         }
     }
 
-    return null;
+    return output;
 };
 
 module.exports = PointScreenToWorldHitTest;
