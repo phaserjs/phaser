@@ -102,30 +102,22 @@ var Camera = new Class({
         {
             var object = renderableObjects[index];
 
-            /* Not every renderable object has a dimension */ 
-            // if (typeof object.width === 'number')
-            // {
-                var objectW = object.width;
-                var objectH = object.height;
-                var objectX = (object.x - (scrollX * object.scrollFactorX)) - (objectW * object.originX);
-                var objectY = (object.y - (scrollY * object.scrollFactorY)) - (objectH * object.originY);
-                var tx = (objectX * mva + objectY * mvc + mve);
-                var ty = (objectX * mvb + objectY * mvd + mvf);
-                var tw = ((objectX + objectW) * mva + (objectY + objectH) * mvc + mve);
-                var th = ((objectX + objectW) * mvb + (objectY + objectH) * mvd + mvf);
-                var cullW = cameraW + objectW;
-                var cullH = cameraH + objectH;
+            var objectW = object.width;
+            var objectH = object.height;
+            var objectX = (object.x - (scrollX * object.scrollFactorX)) - (objectW * object.originX);
+            var objectY = (object.y - (scrollY * object.scrollFactorY)) - (objectH * object.originY);
+            var tx = (objectX * mva + objectY * mvc + mve);
+            var ty = (objectX * mvb + objectY * mvd + mvf);
+            var tw = ((objectX + objectW) * mva + (objectY + objectH) * mvc + mve);
+            var th = ((objectX + objectW) * mvb + (objectY + objectH) * mvd + mvf);
+            var cullW = cameraW + objectW;
+            var cullH = cameraH + objectH;
 
-                if (tx > -objectW || ty > -objectH || tx < cullW || ty < cullH ||
-                    tw > -objectW || th > -objectH || tw < cullW || th < cullH)
-                {
-                    culledObjects.push(object);
-                }
-            // }
-            // else
-            // {
-            //     culledObjects.push(object);
-            // }
+            if (tx > -objectW || ty > -objectH || tx < cullW || ty < cullH ||
+                tw > -objectW || th > -objectH || tw < cullW || th < cullH)
+            {
+                culledObjects.push(object);
+            }
         }
 
         return culledObjects;

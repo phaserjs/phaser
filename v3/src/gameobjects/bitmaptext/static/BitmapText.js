@@ -16,7 +16,6 @@ var BitmapText = new Class({
         Components.Origin,
         Components.RenderTarget,
         Components.ScaleMode,
-        Components.Size,
         Components.Texture,
         Components.Transform,
         Components.Visible,
@@ -45,6 +44,8 @@ var BitmapText = new Class({
         this.setTexture(entry.texture, entry.frame);
         this.setPosition(x, y);
         this.setOrigin(0, 0);
+
+        this._bounds = this.getTextBounds();
     },
 
     setFontSize: function (size)
@@ -76,12 +77,34 @@ var BitmapText = new Class({
     //     }
     // }
 
-    getTextBounds: function ()
+    getTextBounds: function (round)
     {
         //  local = the BitmapText based on fontSize and 0x0 coords
         //  global = the BitmapText, taking into account scale and world position
 
-        return GetBitmapTextSize(this);
+        this._bounds = GetBitmapTextSize(this, round);
+
+        return this._bounds;
+    },
+
+    width: {
+
+        get: function ()
+        {
+            this.getTextBounds(false);
+            return this._bounds.global.width;
+        }
+
+    },
+
+    height: {
+
+        get: function ()
+        {
+            this.getTextBounds(false);
+            return this._bounds.global.height;
+        }
+
     },
 
     toJSON: function ()

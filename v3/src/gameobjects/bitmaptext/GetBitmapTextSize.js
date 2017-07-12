@@ -1,5 +1,5 @@
 
-var GetBitmapTextSize = function (src)
+var GetBitmapTextSize = function (src, round)
 {
     var text = src.text;
     var textLength = text.length;
@@ -93,7 +93,7 @@ var GetBitmapTextSize = function (src)
     var sx = scale * src.scaleX;
     var sy = scale * src.scaleY;
 
-    return {
+    var out = {
         local: {
             x: bx * scale,
             y: by * scale,
@@ -107,6 +107,21 @@ var GetBitmapTextSize = function (src)
             height: bh * sy
         }
     };
+
+    if (round)
+    {
+        out.local.x = Math.round(out.local.x);
+        out.local.y = Math.round(out.local.y);
+        out.local.width = Math.round(out.local.width);
+        out.local.height = Math.round(out.local.height);
+
+        out.global.x = Math.round(out.global.x);
+        out.global.y = Math.round(out.global.y);
+        out.global.width = Math.round(out.global.width);
+        out.global.height = Math.round(out.global.height);
+    }
+
+    return out;
 };
 
 module.exports = GetBitmapTextSize;

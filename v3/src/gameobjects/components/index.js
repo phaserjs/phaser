@@ -5,6 +5,7 @@ module.exports = {
     Alpha: require('./Alpha'),
     Animation: require('./Animation'),
     BlendMode: require('./BlendMode'),
+    ComputedSize: require('./ComputedSize'),
     Flip: require('./Flip'),
     GetBounds: require('./GetBounds'),
     Origin: require('./Origin'),
