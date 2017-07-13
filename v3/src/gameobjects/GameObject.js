@@ -58,8 +58,7 @@ var GameObject = new Class({
 
     setHitArea: function (shape, callback)
     {
-        this.hitArea = shape;
-        this.hitAreaCallback = callback;
+        this.state.sys.inputManager.setHitArea(this, shape, callback);
 
         return this;
     },
