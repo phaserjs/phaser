@@ -19,6 +19,8 @@ var Camera = new Class({
         this.roundPixels = false;
         this.useBounds = false;
 
+        this.inputEnabled = true;
+
         this._bounds = new Rectangle();
 
         this.scrollX = 0.0;
@@ -84,17 +86,10 @@ var Camera = new Class({
 
         if (!determinant)
         {
-            return pointIn;
+            return renderableObjects;
         }
 
         determinant = 1 / determinant;
-
-        var ima = mvd * determinant;
-        var imb = -mvb * determinant;
-        var imc = -mvc * determinant;
-        var imd = mva * determinant;
-        var ime = (mvc * mvf - mvd * mve) * determinant;
-        var imf = (mvb * mve - mva * mvf) * determinant;
 
         culledObjects.length = 0;
 
