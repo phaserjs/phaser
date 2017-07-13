@@ -129,6 +129,15 @@ var Transform = {
         return this;
     },
 
+    setAngle: function (degrees)
+    {
+        if (degrees === undefined) { degrees = 0; }
+
+        this.angle = degrees;
+
+        return this;
+    },
+
     setScale: function (x, y)
     {
         if (x === undefined) { x = 1; }
