@@ -7,6 +7,7 @@ var DisplayList = require('../plugins/DisplayList');
 var EventDispatcher = require('../events/EventDispatcher');
 var GameObjectCreator = require('../plugins/GameObjectCreator');
 var GameObjectFactory = require('../plugins/GameObjectFactory');
+var InputManager = require('../plugins/InputManager');
 var Loader = require('../plugins/Loader');
 var PoolManager = require('../plugins/PoolManager');
 var Settings = require('./Settings');
@@ -39,7 +40,6 @@ var Systems = new Class({
 
         this.anims;
         this.cache;
-        this.input;
         this.registry;
         this.textures;
 
@@ -47,6 +47,7 @@ var Systems = new Class({
         this.add;
         this.cameras;
         this.events;
+        this.inputManager;
         this.load;
         this.make;
         this.pool;
@@ -70,12 +71,12 @@ var Systems = new Class({
 
         this.anims = game.anims;
         this.cache = game.cache;
-        this.input = game.input;
         this.registry = game.registry;
         this.textures = game.textures;
 
         //  State specific properties (transform, data, children, etc)
 
+        this.inputManager = new InputManager(state, game);
         this.updateList = new UpdateList(state);
         this.displayList = new DisplayList(state);
         this.data = new Data(state);

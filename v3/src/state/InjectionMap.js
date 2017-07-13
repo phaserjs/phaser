@@ -8,7 +8,6 @@ var InjectionMap = {
 
     anims: 'anims',
     cache: 'cache',
-    input: 'input',
     registry: 'registry',
     textures: 'textures',
 
@@ -17,6 +16,7 @@ var InjectionMap = {
     data: 'data',
     displayList: 'children',
     events: 'events',
+    inputManager: 'input',
     load: 'load',
     make: 'make',
     pool: 'pool',
