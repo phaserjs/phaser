@@ -1,4 +1,5 @@
 var Class = require('../utils/Class');
+var InputEvent = require('../input/events');
 
 var InputManager = new Class({
 
@@ -9,7 +10,7 @@ var InputManager = new Class({
         //  The State that owns this plugin
         this.state = state;
 
-        this.cameras = state.cameras.cameras;
+        this.cameras;
 
         //  GlobalInputManager
         this.manager = game.input;
@@ -21,9 +22,21 @@ var InputManager = new Class({
         this.mouse = this.manager.mouse;
 
         this._size = 0;
+
+        //  All interactive objects
         this._list = [];
+
+        //  Only those which are currently below a pointer (any pointer)
+        this._over = [];
+
+        //  Objects waiting to be inserted or removed from the active list
         this._pendingInsertion = [];
         this._pendingRemoval = [];
+    },
+
+    boot: function ()
+    {
+        this.cameras = this.state.sys.cameras.cameras;
     },
 
     begin: function ()
@@ -53,13 +66,14 @@ var InputManager = new Class({
             }
         }
 
-        //  Move pending to active
+        //  Move pending to active (can swap for concat splice if we don't need anything extra here)
+
         for (i = 0; i < toInsert; i++)
         {
             gameObject = this._pendingInsertion[i];
 
             //  Swap for Input Enabled Object
-            this._list.push({ gameObject: gameObject, over: false, down: false, localX: 0, localY: 0 });
+            this._list.push(gameObject);
         }
 
         this._size = this._list.length;
@@ -85,20 +99,64 @@ var InputManager = new Class({
 
     processPointer: function (pointer)
     {
-        var over = [];
+        var i;
+        var tested = [];
+        var justOut = [];
+        var justOver = [];
+        var stillOver = [];
 
         //  Returns an array of objects the pointer is over
 
-        for (var i = 0; i < this.cameras.length; i++)
+        for (i = 0; i < this.cameras.length; i++)
         {
             var camera = this.cameras[i];
 
             if (camera.inputEnabled)
             {
-                over = over.concat(this.manager.hitTest(this._list, pointer.x, pointer.y, camera));
+                tested = tested.concat(this.manager.hitTest(this._list, pointer.x, pointer.y, camera));
             }
         }
 
+        for (i = 0; i < tested.length; i++)
+        {
+            var item = tested[i];
+
+            if (this._over.indexOf(item) !== -1)
+            {
+                stillOver.push(item);
+            }
+            else
+            {
+                justOver.push(item);
+            }
+        }
+
+        this._over.forEach(function(item) {
+
+            if (tested.indexOf(item) === -1)
+            {
+                justOut.push(item);
+            }
+
+        });
+
+        //  Now we can process what has happened
+        for (i = 0; i < justOut.length; i++)
+        {
+            //  Dispatch event? (include the pointer)
+            this.events.dispatch(new InputEvent.OUT(pointer, justOut[i]));
+        }
+
+        for (i = 0; i < justOver.length; i++)
+        {
+            //  Dispatch event? (include the pointer)
+            this.events.dispatch(new InputEvent.OVER(pointer, justOver[i]));
+        }
+
+        //  Store everything that is currently over
+        this._over = stillOver.concat(justOver);
+
+        // console.log('tested', tested.length, 'justOver', justOver.length, 'justOut', justOut.length, 'stillOver', stillOver.length, '_over', this._over.length);
     },
 
     add: function (child)

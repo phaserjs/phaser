@@ -93,6 +93,9 @@ var Systems = new Class({
         this.time = new Clock(state);
         this.tweens = new TweenManager(state);
 
+        //  Sometimes the managers need access to a system created after them
+        this.inputManager.boot();
+
         this.inject();
     },
 

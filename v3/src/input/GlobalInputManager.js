@@ -53,11 +53,15 @@ var GlobalInputManager = new Class({
         this.mouse.boot();
     },
 
-    update: function ()
+    update: function (time, delta)
     {
         this.keyboard.update();
 
         var len = this.queue.length;
+
+        var pointer = this.activePointer;
+
+        pointer.hasMoved = false;
 
         if (!this.enabled || len === 0)
         {
@@ -67,10 +71,6 @@ var GlobalInputManager = new Class({
         //  Clears the queue array, and also means we don't work on array data that could potentially
         //  be modified during the processing phase
         var queue = this.queue.splice(0, len);
-
-        var pointer = this.activePointer;
-
-        pointer.hasMoved = false;
 
         //  Process the event queue, dispatching all of the events that have stored up
         for (var i = 0; i < len; i++)

@@ -1,3 +1,4 @@
+//  Phaser.Input.Mouse.Events
 
 module.exports = {
     DOWN: require('./MouseDownEvent'),
