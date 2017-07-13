@@ -41,6 +41,8 @@ var PointScreenToWorldHitTest = function (tempMatrix, x, y, gameObjectArray, cam
     }
     else
     {
+        var object = gameObjectArray;
+
         var tpoint = GetTransformedPoint(tempMatrix, object, screenPoint.x + scrollX * object.scrollFactorX, screenPoint.y + scrollY * object.scrollFactorY);
         
         if (PointWithinGameObject(object, tpoint.x, tpoint.y))

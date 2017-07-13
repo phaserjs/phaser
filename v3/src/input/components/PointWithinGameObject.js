@@ -3,13 +3,12 @@
 
 var PointWithinGameObject = function (gameObject, x, y)
 {
-    var width = gameObject.width;
-    var height = gameObject.height;
+    if (!gameObject.hitArea)
+    {
+        return false;
+    }
 
-    var x1 = -width * gameObject.originX;
-    var y1 = -height * gameObject.originY;
-
-    return (x >= x1 && x < (x1 + width) && y >= y1 && y < (y1 + height));
+    return gameObject.hitAreaCallback(gameObject.hitArea, x, y);
 };
 
 module.exports = PointWithinGameObject;

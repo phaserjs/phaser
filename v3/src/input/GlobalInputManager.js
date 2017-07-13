@@ -99,6 +99,11 @@ var GlobalInputManager = new Class({
     pointScreenToWorldHitTest: function (gameObjects, x, y, camera)
     {
         return PointScreenToWorldHitTest(this._tempMatrix, x, y, gameObjects, camera, this._tempHitTest);
+    },
+
+    enable: function (gameObjects)
+    {
+        
     }
 
 });
