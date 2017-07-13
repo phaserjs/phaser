@@ -9,6 +9,8 @@ var InputManager = new Class({
         //  The State that owns this plugin
         this.state = state;
 
+        this.cameras = state.cameras.cameras;
+
         //  GlobalInputManager
         this.manager = game.input;
 
@@ -18,6 +20,7 @@ var InputManager = new Class({
         this.keyboard = this.manager.keyboard;
         this.mouse = this.manager.mouse;
 
+        this._size = 0;
         this._list = [];
         this._pendingInsertion = [];
         this._pendingRemoval = [];
@@ -51,15 +54,51 @@ var InputManager = new Class({
         }
 
         //  Move pending to active
-        this._list = this._list.concat(this._pendingInsertion.splice(0));
+        for (i = 0; i < toInsert; i++)
+        {
+            gameObject = this._pendingInsertion[i];
+
+            //  Swap for Input Enabled Object
+            this._list.push({ gameObject: gameObject, over: false, down: false, localX: 0, localY: 0 });
+        }
+
+        this._size = this._list.length;
 
         //  Clear the lists
         this._pendingRemoval.length = 0;
         this._pendingInsertion.length = 0;
     },
 
-    update: function ()
+    update: function (time, delta)
     {
+        if (this._size === 0)
+        {
+            return;
+        }
+
+        //  Has the pointer moved? If so we need to re-check the interactive objects per camera in this State
+        if (this.manager.activePointer.hasMoved)
+        {
+            this.processPointer(this.manager.activePointer);
+        }
+    },
+
+    processPointer: function (pointer)
+    {
+        var over = [];
+
+        //  Returns an array of objects the pointer is over
+
+        for (var i = 0; i < this.cameras.length; i++)
+        {
+            var camera = this.cameras[i];
+
+            if (camera.inputEnabled)
+            {
+                over = over.concat(this.manager.hitTest(this._list, pointer.x, pointer.y, camera));
+            }
+        }
+
     },
 
     add: function (child)

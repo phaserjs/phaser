@@ -1,4 +1,4 @@
-//  GlobalInputManager
+//  Phaser.Input.GlobalInputManager
 
 var Class = require('../utils/Class');
 var EventDispatcher = require('../events/EventDispatcher');
@@ -6,9 +6,11 @@ var GetTransformedPoint = require('./components/GetTransformedPoint');
 var Keyboard = require('./keyboard/KeyboardManager');
 var Mouse = require('./mouse/MouseManager');
 var MouseEvent = require('./mouse/events/');
+var Pointer = require('./Pointer');
+var PointScreenToWorldHitTest = require('./components/PointScreenToWorldHitTest');
+var HitTest = require('./components/HitTest');
 var PointWithinGameObject = require('./components/PointWithinGameObject');
 var TransformMatrix = require('../gameobjects/components/TransformMatrix');
-var PointScreenToWorldHitTest = require('./components/PointScreenToWorldHitTest');
 
 var GlobalInputManager = new Class({
 
@@ -30,6 +32,8 @@ var GlobalInputManager = new Class({
         //  Listeners
         this.keyboard = new Keyboard(this);
         this.mouse = new Mouse(this);
+
+        this.activePointer = new Pointer(this);
 
         this._tempMatrix = new TransformMatrix();
         this._tempPoint = { x: 0, y: 0 };
@@ -64,6 +68,10 @@ var GlobalInputManager = new Class({
         //  be modified during the processing phase
         var queue = this.queue.splice(0, len);
 
+        var pointer = this.activePointer;
+
+        pointer.hasMoved = false;
+
         //  Process the event queue, dispatching all of the events that have stored up
         for (var i = 0; i < len; i++)
         {
@@ -72,15 +80,25 @@ var GlobalInputManager = new Class({
             switch (event.type)
             {
                 case 'mousemove':
+
+                    pointer.update(event);
                     this.events.dispatch(new MouseEvent.MOVE(event));
+
                     break;
 
                 case 'mousedown':
+
+                    pointer.isDown = true;
+                    pointer.update(event);
                     this.events.dispatch(new MouseEvent.DOWN(event));
+
                     break;
 
                 case 'mouseup':
+
+                    pointer.isDown = false;
                     this.events.dispatch(new MouseEvent.UP(event));
+
                     break;
             }
         }
@@ -96,14 +114,14 @@ var GlobalInputManager = new Class({
         return PointWithinGameObject(gameObject, x, y);
     },
 
+    hitTest: function (gameObjects, x, y, camera)
+    {
+        return HitTest(this._tempMatrix, x, y, gameObjects, camera, this._tempHitTest);
+    },
+
     pointScreenToWorldHitTest: function (gameObjects, x, y, camera)
     {
         return PointScreenToWorldHitTest(this._tempMatrix, x, y, gameObjects, camera, this._tempHitTest);
-    },
-
-    enable: function (gameObjects)
-    {
-        
     }
 
 });

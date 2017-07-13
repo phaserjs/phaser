@@ -125,12 +125,14 @@ var Systems = new Class({
         this.updateList.begin(time);
         this.time.begin(time);
         this.tweens.begin(time);
+        this.inputManager.begin(time);
 
         this.pool.update(time, delta);
         this.updateList.update(time, delta);
         this.time.update(time, delta);
         this.tweens.update(time, delta);
         this.cameras.update(time, delta);
+        this.inputManager.update(time, delta);
 
         this.state.update.call(this.state, time, delta);
     },
