@@ -36,6 +36,9 @@ var GameObject = new Class({
         this.renderMask = 15;
         this.renderFlags = 15;
 
+        this.hitArea = null;
+        this.hitAreaCallback = null;
+
         //  Trigger a state z-depth sort
         this.state.sys.sortChildrenFlag = true;
     },
@@ -51,6 +54,14 @@ var GameObject = new Class({
     //  To be overridden by custom GameObjects. Allows base objects to be used in a Pool.
     update: function ()
     {
+    },
+
+    setHitArea: function (shape, callback)
+    {
+        this.hitArea = shape;
+        this.hitAreaCallback = callback;
+
+        return this;
     },
 
     //  Can be overridden by custom Game Objects, but provides default export functionality
