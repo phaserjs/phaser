@@ -15,12 +15,13 @@ var DynamicBitmapTextWebGLRenderer = function (renderer, gameObject, interpolati
     var cameraScrollY = camera.scrollY * gameObject.scrollFactorY;
     var text = gameObject.text;
     var textLength = text.length;
-    var chars = gameObject.fontData.chars;
+    var chars = gameObject.fontData.data.chars;
     var lineHeight = gameObject.fontData.lineHeight;
-    var blitterBatch = renderer.blitterBatch;
+    var spriteBatch = renderer.spriteBatch;
     var alpha = gameObject.alpha;
-    var vertexDataBuffer = blitterBatch.vertexDataBuffer;
+    var vertexDataBuffer = spriteBatch.vertexDataBuffer;
     var vertexBuffer = vertexDataBuffer.floatView;
+    var vertexBufferU32 = vertexDataBuffer.uintView;
     var vertexOffset = 0;
     var textureData = gameObject.texture.source[textureFrame.sourceIndex];
     var textureX = textureFrame.cutX;
@@ -37,6 +38,7 @@ var DynamicBitmapTextWebGLRenderer = function (renderer, gameObject, interpolati
     var glyphY = 0;
     var glyphW = 0;
     var glyphH = 0;
+    var vertexColor = 0xFFFFFFFF;
     var x = 0;
     var y = 0;
     var rotation = 0;
@@ -52,7 +54,7 @@ var DynamicBitmapTextWebGLRenderer = function (renderer, gameObject, interpolati
     var cameraMatrix = camera.matrix.matrix;
     var mva, mvb, mvc, mvd, mve, mvf, tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3;
     var sra, srb, src, srd, sre, srf, cma, cmb, cmc, cmd, cme, cmf;
-    var scale = (gameObject.fontSize / gameObject.fontData.size);
+    var scale = (gameObject.fontSize / gameObject.fontData.data.size);
     var uta, utb, utc, utd, ute, utf;
     var tempMatrixCharMatrix = tempMatrixChar.matrix;
     var renderTarget = gameObject.renderTarget;
@@ -140,12 +142,13 @@ var DynamicBitmapTextWebGLRenderer = function (renderer, gameObject, interpolati
 
         if (displayCallback)
         {
-            var output = displayCallback({ index: index, charCode: charCode, x: x, y: y, scale: scale, rotation: 0, data: glyph.data });
+            var output = displayCallback({ color: 0xFFFFFF, index: index, charCode: charCode, x: x, y: y, scale: scale, rotation: 0, data: glyph.data });
 
             x = output.x;
             y = output.y;
             scale = output.scale;
             rotation = output.rotation;
+            vertexColor = output.color;
         }
 
         x -= gameObject.scrollX | 0;
@@ -186,37 +189,41 @@ var DynamicBitmapTextWebGLRenderer = function (renderer, gameObject, interpolati
         vmin = glyphY / textureHeight;
         vmax = (glyphY + glyphH) / textureHeight;
 
-        if (blitterBatch.elementCount >= blitterBatch.maxParticles)
+        if (spriteBatch.elementCount >= spriteBatch.maxParticles)
         {
-            blitterBatch.flush();
+            spriteBatch.flush();
         }
 
-        renderer.setRenderer(blitterBatch, texture, renderTarget);
-        vertexOffset = vertexDataBuffer.allocate(20);
-        blitterBatch.elementCount += 6;
+        renderer.setRenderer(spriteBatch, texture, renderTarget);
+        vertexOffset = vertexDataBuffer.allocate(24);
+        spriteBatch.elementCount += 6;
 
         vertexBuffer[vertexOffset++] = tx0;
         vertexBuffer[vertexOffset++] = ty0;
         vertexBuffer[vertexOffset++] = umin;
         vertexBuffer[vertexOffset++] = vmin;
+        vertexBufferU32[vertexOffset++] = vertexColor;
         vertexBuffer[vertexOffset++] = alpha;
 
         vertexBuffer[vertexOffset++] = tx1;
         vertexBuffer[vertexOffset++] = ty1;
         vertexBuffer[vertexOffset++] = umin;
         vertexBuffer[vertexOffset++] = vmax;
+        vertexBufferU32[vertexOffset++] = vertexColor;
         vertexBuffer[vertexOffset++] = alpha;
 
         vertexBuffer[vertexOffset++] = tx2;
         vertexBuffer[vertexOffset++] = ty2;
         vertexBuffer[vertexOffset++] = umax;
         vertexBuffer[vertexOffset++] = vmax;
+        vertexBufferU32[vertexOffset++] = vertexColor;
         vertexBuffer[vertexOffset++] = alpha;
 
         vertexBuffer[vertexOffset++] = tx3;
         vertexBuffer[vertexOffset++] = ty3;
         vertexBuffer[vertexOffset++] = umax;
         vertexBuffer[vertexOffset++] = vmin;
+        vertexBufferU32[vertexOffset++] = vertexColor;
         vertexBuffer[vertexOffset++] = alpha;
 
         xAdvance += glyph.xAdvance;
@@ -227,7 +234,7 @@ var DynamicBitmapTextWebGLRenderer = function (renderer, gameObject, interpolati
 
     if (gameObject.width > 0 && gameObject.height > 0)
     {
-        blitterBatch.flush();
+        spriteBatch.flush();
 
         if (renderer.scissor.enabled)
         {
