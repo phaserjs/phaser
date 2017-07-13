@@ -157,6 +157,14 @@ var Group = new Class({
 
         Actions.SetAlpha(entries, alpha, stepAlpha);
 
+        var hitArea = GetValue(options, 'hitArea', null);
+        var hitAreaCallback = GetValue(options, 'hitAreaCallback', null);
+
+        if (hitArea)
+        {
+            Actions.SetHitArea(entries, hitArea, hitAreaCallback);
+        }
+
         var grid = GetValue(options, 'gridAlign', false);
 
         if (grid)
