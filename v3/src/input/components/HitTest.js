@@ -20,7 +20,6 @@ var HitTest = function (tempMatrix, x, y, gameObjectArray, camera, output)
     var scrollX = camera.scrollX;
     var scrollY = camera.scrollY;
     var screenPoint = camera.cameraToScreen({ x: x, y: y });
-
     var culled = camera.cull(gameObjectArray);
 
     for (var i = 0; i < culled.length; i++)
@@ -31,6 +30,7 @@ var HitTest = function (tempMatrix, x, y, gameObjectArray, camera, output)
 
         if (PointWithinGameObject(object, tpoint.x, tpoint.y))
         {
+            // output.push({ gameObject: object, x: tpoint.x, y: tpoint.y });
             output.push(object);
         }
     }

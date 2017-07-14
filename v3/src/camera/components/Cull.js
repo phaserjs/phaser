@@ -5,12 +5,6 @@ var Cull = function (renderableObjects)
         return renderableObjects;
     }
 
-    var scrollX = this.scrollX;
-    var scrollY = this.scrollY;
-    var cameraW = this.width;
-    var cameraH = this.height;
-    var culledObjects = this.culledObjects;
-    var length = renderableObjects.length;
     var cameraMatrix = this.matrix.matrix;
 
     var mva = cameraMatrix[0];
@@ -27,6 +21,13 @@ var Cull = function (renderableObjects)
     {
         return renderableObjects;
     }
+
+    var scrollX = this.scrollX;
+    var scrollY = this.scrollY;
+    var cameraW = this.width;
+    var cameraH = this.height;
+    var culledObjects = this.culledObjects;
+    var length = renderableObjects.length;
 
     determinant = 1 / determinant;
 
