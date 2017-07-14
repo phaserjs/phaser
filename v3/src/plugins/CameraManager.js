@@ -125,6 +125,7 @@ var CameraManager = new Class({
         if (this.cameraPool.length > 0)
         {
             camera = this.cameraPool.pop();
+
             camera.setViewport(x, y, width, height);
         }
         else
