@@ -27,9 +27,9 @@ var Image = new Class({
 
     initialize:
 
-    function Image (state, x, y, texture, frame)
+    function Image (scene, x, y, texture, frame)
     {
-        GameObject.call(this, state, 'Image');
+        GameObject.call(this, scene, 'Image');
 
         this.setTexture(texture, frame);
         this.setPosition(x, y);

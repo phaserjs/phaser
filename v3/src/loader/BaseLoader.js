@@ -24,7 +24,7 @@ var BaseLoader = new Class({
         this.baseURL = '';
         this.path = '';
 
-        //  Read from Game / State Config
+        //  Read from Game / Scene Config
         this.enableParallel = true;
         this.maxParallelDownloads = 4;
 
@@ -39,7 +39,7 @@ var BaseLoader = new Class({
         this.queue = new Set();
         this.storage = new Set();
 
-        this._state = CONST.LOADER_IDLE;
+        this.state = CONST.LOADER_IDLE;
     },
 
     addFile: function (file)
@@ -59,18 +59,18 @@ var BaseLoader = new Class({
     //  Is the Loader actively loading (or processing loaded files)
     isLoading: function ()
     {
-        return (this._state === CONST.LOADER_LOADING || this._state === CONST.LOADER_PROCESSING);
+        return (this.state === CONST.LOADER_LOADING || this.state === CONST.LOADER_PROCESSING);
     },
 
     //  Is the Loader ready to start a new load?
     isReady: function ()
     {
-        return (this._state === CONST.LOADER_IDLE || this._state === CONST.LOADER_COMPLETE || this._state === CONST.LOADER_FAILED);
+        return (this.state === CONST.LOADER_IDLE || this.state === CONST.LOADER_COMPLETE || this.state === CONST.LOADER_FAILED);
     },
 
     start: function ()
     {
-        console.log(this.state.sys.settings.key, '- BaseLoader start. Files to load:', this.list.size);
+        console.log(this.scene.sys.settings.key, '- BaseLoader start. Files to load:', this.list.size);
 
         if (!this.isReady())
         {
@@ -85,7 +85,7 @@ var BaseLoader = new Class({
         }
         else
         {
-            this._state = CONST.LOADER_LOADING;
+            this.state = CONST.LOADER_LOADING;
 
             this.failed.clear();
             this.inflight.clear();
@@ -180,7 +180,7 @@ var BaseLoader = new Class({
     {
         // console.log('---> BaseLoader.finishedLoading PROCESSING', this.queue.size, 'files');
 
-        this._state = CONST.LOADER_PROCESSING;
+        this.state = CONST.LOADER_PROCESSING;
 
         this.storage.clear();
 
@@ -241,7 +241,7 @@ var BaseLoader = new Class({
     {
         this.queue.delete(file);
 
-        if (this.queue.size === 0 && this._state === CONST.LOADER_PROCESSING)
+        if (this.queue.size === 0 && this.state === CONST.LOADER_PROCESSING)
         {
             //  We've processed all the files we loaded
             this.processComplete();
@@ -250,7 +250,7 @@ var BaseLoader = new Class({
 
     processComplete: function ()
     {
-        console.log(this.state.sys.settings.key, '- Loader Complete. Loaded:', this.storage.size, 'Failed:', this.failed.size);
+        console.log(this.scene.sys.settings.key, '- Loader Complete. Loaded:', this.storage.size, 'Failed:', this.failed.size);
 
         this.list.clear();
         this.inflight.clear();
@@ -261,7 +261,7 @@ var BaseLoader = new Class({
             this.processCallback();
         }
 
-        this._state = CONST.LOADER_COMPLETE;
+        this.state = CONST.LOADER_COMPLETE;
 
         this.events.dispatch(new Event.LOADER_COMPLETE_EVENT(this));
     },
@@ -281,13 +281,13 @@ var BaseLoader = new Class({
         this.path = '';
         this.baseURL = '';
 
-        this._state = CONST.LOADER_IDLE;
+        this.state = CONST.LOADER_IDLE;
     },
 
     destroy: function ()
     {
         this.reset();
-        this._state = CONST.LOADER_DESTROYED;
+        this.state = CONST.LOADER_DESTROYED;
     }
 
 });

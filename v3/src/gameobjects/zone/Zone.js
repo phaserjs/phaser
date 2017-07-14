@@ -19,9 +19,9 @@ var Zone = new Class({
 
     initialize:
 
-    function Zone (state, x, y, width, height)
+    function Zone (scene, x, y, width, height)
     {
-        GameObject.call(this, state, 'Zone');
+        GameObject.call(this, scene, 'Zone');
 
         this.setPosition(x, y);
         this.setSize(width, height);

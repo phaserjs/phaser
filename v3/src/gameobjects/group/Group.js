@@ -10,9 +10,9 @@ var Group = new Class({
 
     initialize:
 
-    function Group (state, children, config)
+    function Group (scene, children, config)
     {
-        this.state = state;
+        this.scene = scene;
 
         this.children = new Set(children);
 
@@ -64,13 +64,13 @@ var Group = new Class({
     {
         if (visible === undefined) { visible = true; }
 
-        var child = new this.classType(this.state, x, y, key, frame);
+        var child = new this.classType(this.scene, x, y, key, frame);
 
-        this.state.sys.displayList.add(child);
+        this.scene.sys.displayList.add(child);
 
         if (child.preUpdate)
         {
-            this.state.sys.updateList.add(child);
+            this.scene.sys.updateList.add(child);
         }
 
         child.visible = visible;
@@ -229,7 +229,7 @@ var Group = new Class({
     {
         this.children.clear();
 
-        this.state = undefined;
+        this.scene = undefined;
         this.children = undefined;
     },
 

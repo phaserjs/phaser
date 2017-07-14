@@ -24,12 +24,12 @@ var Graphics = new Class({
 
     initialize:
 
-    function Graphics (state, options)
+    function Graphics (scene, options)
     {
         var x = GetValue(options, 'x', 0);
         var y = GetValue(options, 'y', 0);
 
-        GameObject.call(this, state, 'Graphics');
+        GameObject.call(this, scene, 'Graphics');
 
         this.setPosition(x, y);
 
@@ -44,12 +44,12 @@ var Graphics = new Class({
 
         this.setDefaultStyles(options);
 
-        var resourceManager = state.game.renderer.resourceManager;
+        var resourceManager = scene.game.renderer.resourceManager;
 
         if (resourceManager !== undefined)
         {
             this.resourceManager = resourceManager;
-            this.gl = state.game.renderer.gl;
+            this.gl = scene.game.renderer.gl;
         }
     },
 
@@ -383,8 +383,8 @@ var Graphics = new Class({
 
     generateTexture: function (key, width, height) 
     {
-        var screenWidth = this.state.game.config.width;
-        var screenHeight = this.state.game.config.height;
+        var screenWidth = this.scene.game.config.width;
+        var screenHeight = this.scene.game.config.height;
         width = (typeof width === 'number') ? width : screenWidth;
         height = (typeof height === 'number') ? height : screenHeight;
         
@@ -392,13 +392,13 @@ var Graphics = new Class({
         Graphics.TargetCamera.scrollX = this.x;
         Graphics.TargetCamera.scrollY = this.y;
 
-        var texture = this.state.game.textures.createCanvas(key, width, height);
+        var texture = this.scene.game.textures.createCanvas(key, width, height);
         var ctx = texture.source[0].image.getContext('2d');
         texture.add('__BASE', 0, 0, 0, width, height);
-        this.renderCanvas(this.state.game.renderer, this, 0, Graphics.TargetCamera, ctx);
+        this.renderCanvas(this.scene.game.renderer, this, 0, Graphics.TargetCamera, ctx);
         if (this.gl)
         {
-            this.state.game.renderer.uploadCanvasToGPU(ctx.canvas, texture.source[0].glTexture, true);
+            this.scene.game.renderer.uploadCanvasToGPU(ctx.canvas, texture.source[0].glTexture, true);
         }
     }
 

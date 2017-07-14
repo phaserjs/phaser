@@ -7,15 +7,15 @@ var TweenManager = new Class({
 
     initialize:
 
-    function TweenManager (state)
+    function TweenManager (scene)
     {
-        //  The State the Tween Manager belongs to (tweens are State specific, not Game global)
-        this.state = state;
+        //  The Scene the Tween Manager belongs to (tweens are Scene specific, not Game global)
+        this.scene = scene;
 
         /**
         * @property {EventDispatcher} events - Global / Global Game System Events
         */
-        this.events = new EventDispatcher(); // should use State event dispatcher?
+        this.events = new EventDispatcher(); // should use Scene event dispatcher?
 
         //  TODO:
         //  Add _pool array and make the queue re-use objects within it.
@@ -31,7 +31,7 @@ var TweenManager = new Class({
 
     boot: function ()
     {
-        //  State is starting up
+        //  Scene is starting up
     },
 
     add: function (config)
@@ -215,7 +215,7 @@ var TweenManager = new Class({
         }
     },
 
-    //  State that owns this manager is shutting down
+    //  Scene that owns this manager is shutting down
     shutdown: function ()
     {
     },

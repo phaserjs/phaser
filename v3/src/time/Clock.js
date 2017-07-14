@@ -5,9 +5,9 @@ var Clock = new Class({
 
     initialize:
 
-    function Clock (state)
+    function Clock (scene)
     {
-        this.state = state;
+        this.scene = scene;
 
         this.now = Date.now();
 
@@ -147,7 +147,7 @@ var Clock = new Class({
         }
     },
 
-    //  State that owns this Clock is shutting down
+    //  Scene that owns this Clock is shutting down
     shutdown: function ()
     {
         var i;
@@ -177,7 +177,7 @@ var Clock = new Class({
     {
         this.shutdown();
 
-        this.state = undefined;
+        this.scene = undefined;
     }
 
 });

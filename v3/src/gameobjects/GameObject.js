@@ -17,9 +17,9 @@ var GameObject = new Class({
 
     initialize:
 
-    function GameObject (state, type)
+    function GameObject (scene, type)
     {
-        this.state = state;
+        this.scene = scene;
 
         this.type = type;
 
@@ -39,8 +39,8 @@ var GameObject = new Class({
         this.hitArea = null;
         this.hitAreaCallback = null;
 
-        //  Trigger a state z-depth sort
-        this.state.sys.sortChildrenFlag = true;
+        //  Trigger a scene z-depth sort
+        this.scene.sys.sortChildrenFlag = true;
     },
 
     //  For GameObject Pooling and item selection
@@ -58,7 +58,7 @@ var GameObject = new Class({
 
     setHitArea: function (shape, callback)
     {
-        this.state.sys.inputManager.setHitArea(this, shape, callback);
+        this.scene.sys.inputManager.setHitArea(this, shape, callback);
 
         return this;
     },
@@ -73,7 +73,7 @@ var GameObject = new Class({
     {
         this.parent.remove(this);
 
-        this.state = undefined;
+        this.scene = undefined;
     }
 
 });

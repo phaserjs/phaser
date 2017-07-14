@@ -6,9 +6,9 @@ var PoolManager = new Class({
 
     initialize:
 
-    function PoolManager (state)
+    function PoolManager (scene)
     {
-        this.state = state;
+        this.scene = scene;
 
         this._active = [];
         this._pendingInsertion = [];
@@ -102,7 +102,7 @@ var PoolManager = new Class({
         this.processing = false;
     },
 
-    //  State that owns this Pool is shutting down
+    //  Scene that owns this Pool is shutting down
     shutdown: function ()
     {
         var i;
@@ -132,7 +132,7 @@ var PoolManager = new Class({
     {
         this.shutdown();
 
-        this.state = undefined;
+        this.scene = undefined;
     }
 
 });

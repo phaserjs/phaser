@@ -27,14 +27,14 @@ var StaticTilemap = new Class({
 
     initialize:
 
-    function StaticTilemap (state, mapData, x, y, tileWidth, tileHeight, mapWidth, mapHeight, tileBorder, texture, frame)
+    function StaticTilemap (scene, mapData, x, y, tileWidth, tileHeight, mapWidth, mapHeight, tileBorder, texture, frame)
     {
-        GameObject.call(this, state, 'StaticTilemap');
+        GameObject.call(this, scene, 'StaticTilemap');
 
         this.vbo = null;
-        this.gl = state.game.renderer.gl ? state.game.renderer.gl : null;
-        this.tilemapRenderer = state.game.renderer.tilemapRenderer ? state.game.renderer.tilemapRenderer : null;
-        this.resourceManager = this.gl ? state.game.renderer.resourceManager : null;
+        this.gl = scene.game.renderer.gl ? scene.game.renderer.gl : null;
+        this.tilemapRenderer = scene.game.renderer.tilemapRenderer ? scene.game.renderer.tilemapRenderer : null;
+        this.resourceManager = this.gl ? scene.game.renderer.resourceManager : null;
         this.bufferData = null;
         this.mapData = mapData;
         this.tileWidth = tileWidth;

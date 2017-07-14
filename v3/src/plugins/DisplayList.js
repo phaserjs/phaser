@@ -4,10 +4,10 @@ var DisplayList = new Class({
 
     initialize:
 
-    function DisplayList (state)
+    function DisplayList (scene)
     {
-        //  The State that owns this plugin
-        this.state = state;
+        //  The Scene that owns this plugin
+        this.scene = scene;
 
         //  The objects that belong to this collection.
         //  The equivalent of the old `Sprite.children` array.
@@ -18,7 +18,7 @@ var DisplayList = new Class({
 
     add: function (child)
     {
-        if (child.parent === this.state)
+        if (child.parent === this.scene)
         {
             return child;
         }
@@ -27,7 +27,7 @@ var DisplayList = new Class({
             child.parent.children.remove(child);
         }
 
-        child.parent = this.state;
+        child.parent = this.scene;
 
         this.list.push(child);
 
@@ -50,7 +50,7 @@ var DisplayList = new Class({
                 child.parent.children.remove(child);
             }
 
-            child.parent = this.state;
+            child.parent = this.scene;
 
             this.list.splice(index, 0, child);
         }
@@ -328,7 +328,7 @@ var DisplayList = new Class({
         {
             return false;
         }
-        else if (child.parent === this.state)
+        else if (child.parent === this.scene)
         {
             return true;
         }
@@ -347,7 +347,7 @@ var DisplayList = new Class({
     */
     bringToTop: function (child)
     {
-        if (child.parent === this.state && this.getIndex(child) < this.list.length)
+        if (child.parent === this.scene && this.getIndex(child) < this.list.length)
         {
             this.remove(child);
             this.add(child);
@@ -365,7 +365,7 @@ var DisplayList = new Class({
     */
     sendToBack: function (child)
     {
-        if (child.parent === this.state && this.getIndex(child) > 0)
+        if (child.parent === this.scene && this.getIndex(child) > 0)
         {
             this.remove(child);
             this.addAt(child, 0);
@@ -573,7 +573,7 @@ var DisplayList = new Class({
     */
     reparent: function (newParent)
     {
-        if (newParent !== this.state)
+        if (newParent !== this.scene)
         {
             for (var i = 0; i < this.list.length; i++)
             {

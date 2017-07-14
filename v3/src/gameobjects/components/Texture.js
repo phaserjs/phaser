@@ -10,7 +10,7 @@ var Texture = {
 
     setTexture: function (key, frame)
     {
-        this.texture = this.state.sys.textures.get(key);
+        this.texture = this.scene.sys.textures.get(key);
 
         this.frame = this.texture.get(frame);
 

@@ -8,7 +8,7 @@ var Quad = new Class({
 
     initialize:
 
-    function Quad (state, x, y, texture, frame)
+    function Quad (scene, x, y, texture, frame)
     {
         //  0----3
         //  |\  B|
@@ -25,7 +25,7 @@ var Quad = new Class({
         var colors = [ 0xffffff, 0xffffff, 0xffffff, 0xffffff ];
         var alphas = [ 1, 1, 1, 1 ];
 
-        Mesh.call(this, state, x, y, vertices, uv, indices, colors, alphas, texture, frame);
+        Mesh.call(this, scene, x, y, vertices, uv, indices, colors, alphas, texture, frame);
 
         this.resetPosition();
     },

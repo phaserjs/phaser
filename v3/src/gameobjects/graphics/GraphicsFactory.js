@@ -1,8 +1,8 @@
 var Graphics = require('./Graphics');
 
-var GraphicsFactory = function (state, config)
+var GraphicsFactory = function (scene, config)
 {
-    return new Graphics(state, config);
+    return new Graphics(scene, config);
 };
 
 module.exports = GraphicsFactory;

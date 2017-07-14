@@ -23,7 +23,7 @@ var SpritePool = new Class({
 
     makeSprite: function ()
     {
-        var gameObject = new this.classType(this.state, 0, 0, this.defaultKey, this.defaultFrame);
+        var gameObject = new this.classType(this.scene, 0, 0, this.defaultKey, this.defaultFrame);
 
         this.displayList.add(gameObject);
         this.updateList.add(gameObject);

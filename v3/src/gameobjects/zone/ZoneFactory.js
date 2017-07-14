@@ -7,12 +7,12 @@ var ZoneFactory = {
 
     add: function (x, y, width, height)
     {
-        return new Zone(this.state, x, y, width, height);
+        return new Zone(this.scene, x, y, width, height);
     },
 
     make: function (x, y, width, height)
     {
-        return new Zone(this.state, x, y, width, height);
+        return new Zone(this.scene, x, y, width, height);
     }
 
 };

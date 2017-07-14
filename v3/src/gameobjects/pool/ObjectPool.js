@@ -15,10 +15,10 @@ var ObjectPool = new Class({
         if (callbackScope === undefined) { callbackScope = this; }
 
         this.manager = manager;
-        this.state = manager.state;
+        this.scene = manager.scene;
 
-        this.displayList = this.state.sys.displayList;
-        this.updateList = this.state.sys.updateList;
+        this.displayList = this.scene.sys.displayList;
+        this.updateList = this.scene.sys.updateList;
 
         this.createCallback = createCallback;
         this.callbackScope = callbackScope;
@@ -32,7 +32,7 @@ var ObjectPool = new Class({
 
     makeGameObject: function ()
     {
-        var gameObject = new this.classType(this.state);
+        var gameObject = new this.classType(this.scene);
 
         this.displayList.add(gameObject);
 
@@ -215,7 +215,7 @@ var ObjectPool = new Class({
     destroy: function ()
     {
         this.manager = undefined;
-        this.state = undefined;
+        this.scene = undefined;
 
         this.displayList = undefined;
         this.updateList = undefined;

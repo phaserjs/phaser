@@ -41,7 +41,7 @@ var Config = new Class({
         this.canvas = GetValue(config, 'canvas', null);
         this.canvasStyle = GetValue(config, 'canvasStyle', null);
 
-        this.stateConfig = GetValue(config, 'state', null);
+        this.sceneConfig = GetValue(config, 'scene', null);
 
         this.seed = GetValue(config, 'seed', [ (Date.now() * Math.random()).toString() ]);
 

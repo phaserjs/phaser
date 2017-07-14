@@ -2,7 +2,7 @@ var Text = require('./Text');
 var GetAdvancedValue = require('../../../utils/object/GetAdvancedValue');
 var BuildGameObject = require('../../BuildGameObject');
 
-var TextCreator = function (state, config)
+var TextCreator = function (scene, config)
 {
     // style Object = {
     //     font: [ 'font', '16px Courier' ],
@@ -26,9 +26,9 @@ var TextCreator = function (state, config)
     var content = GetAdvancedValue(config, 'text', '');
     var style = GetAdvancedValue(config, 'style', null);
 
-    var text = new Text(state, 0, 0, content, style);
+    var text = new Text(scene, 0, 0, content, style);
 
-    BuildGameObject(state, text, config);
+    BuildGameObject(scene, text, config);
 
     //  Text specific config options:
 

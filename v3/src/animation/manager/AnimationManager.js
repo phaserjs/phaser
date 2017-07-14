@@ -15,7 +15,7 @@ var Map = require('../../structs/Map');
 *
 * Sprites and other Game Objects get the data they need from the AnimationManager.
 *
-* Access it via `state.anims`.
+* Access it via `scene.anims`.
 *
 * @class Phaser.AnimationManager
 * @constructor

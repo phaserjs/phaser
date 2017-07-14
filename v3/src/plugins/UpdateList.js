@@ -4,9 +4,9 @@ var UpdateList = new Class({
 
     initialize:
 
-    function UpdateList (state)
+    function UpdateList (scene)
     {
-        this.state = state;
+        this.scene = scene;
 
         this._list = [];
         this._pendingInsertion = [];
@@ -69,7 +69,7 @@ var UpdateList = new Class({
         }
     },
 
-    //  State that owns this Clock is shutting down
+    //  Scene that owns this Clock is shutting down
     shutdown: function ()
     {
         var i;
@@ -99,7 +99,7 @@ var UpdateList = new Class({
     {
         this.shutdown();
 
-        this.state = undefined;
+        this.scene = undefined;
     }
 
 });

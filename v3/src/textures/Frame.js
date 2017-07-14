@@ -232,7 +232,7 @@ var Frame = new Class({
         uvs.x3 = (this.cutX + this.cutHeight) / tw;
         uvs.y3 = (this.cutY + this.cutWidth) / th;
 
-        uvs.x2 = this.cutX / tw;        
+        uvs.x2 = this.cutX / tw;
         uvs.y2 = (this.cutY + this.cutWidth) / th;
         
         uvs.x1 = this.cutX / tw;

@@ -2,7 +2,7 @@ var StaticTilemap = require('./StaticTilemap');
 var GetValue = require('../../../utils/object/GetValue');
 var BuildGameObject = require('../../BuildGameObject');
 
-var StaticTilemapCreator = function (state, config)
+var StaticTilemapCreator = function (scene, config)
 {
     var mapData = GetValue(config, 'map.data', null);
     var mapWidth = GetValue(config, 'map.width', 1);
@@ -17,9 +17,9 @@ var StaticTilemapCreator = function (state, config)
     var tileFrame = GetValue(config, 'tile.frame', null);
     var tileBorder = GetValue(config, 'tile.border', 0);
 
-    var map = new StaticTilemap(state, mapData, x, y, tileWidth, tileHeight, mapWidth, mapHeight, tileBorder, tileTexture, tileFrame);
+    var map = new StaticTilemap(scene, mapData, x, y, tileWidth, tileHeight, mapWidth, mapHeight, tileBorder, tileTexture, tileFrame);
 
-    BuildGameObject(state, map, config);
+    BuildGameObject(scene, map, config);
 
     return map;
 };

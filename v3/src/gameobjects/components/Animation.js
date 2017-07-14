@@ -13,7 +13,7 @@ var Animation = new Class({
         //  Sprite / Game Object
         this.parent = parent;
 
-        this.animationManager = parent.state.sys.anims;
+        this.animationManager = parent.scene.sys.anims;
 
         this.animationManager.events.once('REMOVE_ANIMATION_EVENT', this.remove.bind(this));
 

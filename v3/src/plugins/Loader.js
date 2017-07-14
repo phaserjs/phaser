@@ -1,6 +1,6 @@
 var BaseLoader = require('../loader/BaseLoader');
 var Class = require('../utils/Class');
-var CONST = require('../loader/const');
+// var CONST = require('../loader/const');
 var NumberArray = require('../utils/array/NumberArray');
 
 var AnimationJSONFile = require('../loader/filetypes/AnimationJSONFile');
@@ -25,15 +25,15 @@ var Loader = new Class({
 
     initialize:
 
-    function Loader (state)
+    function Loader (scene)
     {
         BaseLoader.call(this);
 
         /**
-        * @property {Phaser.State} state - The State that owns this Factory
+        * @property {Phaser.Scene} scene - The Scene that owns this Factory
         * @protected
         */
-        this.state = state;
+        this.scene = scene;
 
         this._multilist = {};
     },
@@ -248,9 +248,9 @@ var Loader = new Class({
         }
 
         //  The global Texture Manager
-        var cache = this.state.sys.cache;
-        var textures = this.state.sys.textures;
-        var anims = this.state.sys.anims;
+        var cache = this.scene.sys.cache;
+        var textures = this.scene.sys.textures;
+        var anims = this.scene.sys.anims;
 
         //  Process multiatlas groups first
 

@@ -26,9 +26,9 @@ var Mesh = new Class({
 
     initialize:
 
-    function Mesh (state, x, y, vertices, uv, indices, colors, alphas, texture, frame)
+    function Mesh (scene, x, y, vertices, uv, indices, colors, alphas, texture, frame)
     {
-        GameObject.call(this, state, 'Mesh');
+        GameObject.call(this, scene, 'Mesh');
 
         this.setTexture(texture, frame);
         this.setPosition(x, y);

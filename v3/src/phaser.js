@@ -28,7 +28,7 @@ var Phaser = {
 
     GameObjects: require('./gameobjects'),
 
-    State: require('./state/State'),
+    Scene: require('./scene/Scene'),
 
     Loader: {
 

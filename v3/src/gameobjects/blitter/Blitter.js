@@ -43,9 +43,9 @@ var Blitter = new Class({
 
     initialize:
 
-    function Blitter (state, x, y, texture, frame)
+    function Blitter (scene, x, y, texture, frame)
     {
-        GameObject.call(this, state, 'Blitter');
+        GameObject.call(this, scene, 'Blitter');
 
         this.setTexture(texture, frame);
         this.setPosition(x, y);

@@ -24,7 +24,7 @@ var CanvasRenderer = new Class({
 
         this.drawCount = 0;
 
-        //  Read all the following from game config (or State config?)
+        //  Read all the following from game config (or Scene config?)
         // this.clearBeforeRender = true;
         // this.transparent = false;
         // this.autoResize = false;
@@ -148,20 +148,20 @@ var CanvasRenderer = new Class({
     },
 
     /**
-     * Renders the State.
+     * Renders the Scene.
      *
      * @method render
-     * @param {Phaser.State} state - The State to be rendered.
+     * @param {Phaser.Scene} scene - The Scene to be rendered.
      * @param {number} interpolationPercentage - The cumulative amount of time that hasn't been simulated yet, divided
      *   by the amount of time that will be simulated the next time update()
      *   runs. Useful for interpolating frames.
      */
-    render: function (state, children, interpolationPercentage, camera)
+    render: function (scene, children, interpolationPercentage, camera)
     {
-        var w = state.sys.width;
-        var h = state.sys.height;
-        var ctx = state.sys.context;
-        var settings = state.sys.settings;
+        // var w = scene.sys.width;
+        // var h = scene.sys.height;
+        var ctx = scene.sys.context;
+        var settings = scene.sys.settings;
         var scissor = (camera.x !== 0 || camera.y !== 0 || camera.width !== ctx.canvas.width || camera.height !== ctx.canvas.height);
         var list = children.list;
 
@@ -211,8 +211,8 @@ var CanvasRenderer = new Class({
             child.renderCanvas(this, child, interpolationPercentage, camera);
         }
 
-        //  Call the State.render function
-        state.render.call(state, ctx, interpolationPercentage);
+        //  Call the Scene.render function
+        scene.render.call(scene, ctx, interpolationPercentage);
         
         ctx.setTransform(1, 0, 0, 1, 0, 0);
 
@@ -238,10 +238,10 @@ var CanvasRenderer = new Class({
         }
         
         //  Blast it to the Game Canvas (if needed)
-        if (settings.renderToTexture)
-        {
-            this.gameContext.drawImage(state.sys.canvas, 0, 0, w, h, settings.x, settings.y, w, h);
-        }
+        // if (settings.renderToTexture)
+        // {
+            // this.gameContext.drawImage(scene.sys.canvas, 0, 0, w, h, settings.x, settings.y, w, h);
+        // }
     },
 
     postRender: function ()

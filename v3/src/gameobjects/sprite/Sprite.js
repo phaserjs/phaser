@@ -27,9 +27,9 @@ var Sprite = new Class({
 
     initialize:
 
-    function Sprite (state, x, y, texture, frame)
+    function Sprite (scene, x, y, texture, frame)
     {
-        GameObject.call(this, state, 'Sprite');
+        GameObject.call(this, scene, 'Sprite');
 
         this.anims = new Components.Animation(this);
 

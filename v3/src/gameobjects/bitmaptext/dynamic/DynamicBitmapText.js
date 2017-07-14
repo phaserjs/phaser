@@ -22,14 +22,14 @@ var DynamicBitmapText = new Class({
 
     initialize:
 
-    function DynamicBitmapText (state, x, y, font, text, size, align)
+    function DynamicBitmapText (scene, x, y, font, text, size, align)
     {
         if (text === undefined) { text = ''; }
         if (align === undefined) { align = 'left'; }
 
-        GameObject.call(this, state, 'DynamicBitmapText');
+        GameObject.call(this, scene, 'DynamicBitmapText');
 
-        this.fontData = this.state.sys.cache.bitmapFont.get(font);
+        this.fontData = this.scene.sys.cache.bitmapFont.get(font);
 
         this.text = (Array.isArray(text)) ? text.join('\n') : text;
 

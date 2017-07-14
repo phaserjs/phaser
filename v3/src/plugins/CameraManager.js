@@ -8,18 +8,18 @@ var CameraManager = new Class({
 
     initialize:
 
-    function CameraManager (state)
+    function CameraManager (scene)
     {
-        //  The State that owns this plugin
-        this.state = state;
+        //  The Scene that owns this plugin
+        this.scene = scene;
 
         this.cameras = [];
         this.cameraPool = [];
 
-        if (state.sys.settings.cameras)
+        if (scene.sys.settings.cameras)
         {
             //  We have cameras to create
-            this.fromJSON(state.sys.settings.cameras);
+            this.fromJSON(scene.sys.settings.cameras);
         }
         else
         {
@@ -64,8 +64,8 @@ var CameraManager = new Class({
             config = [ config ];
         }
 
-        var gameWidth = this.state.sys.game.config.width;
-        var gameHeight = this.state.sys.game.config.height;
+        var gameWidth = this.scene.sys.game.config.width;
+        var gameHeight = this.scene.sys.game.config.height;
 
         for (var i = 0; i < config.length; i++)
         {
@@ -117,8 +117,8 @@ var CameraManager = new Class({
     {
         if (x === undefined) { x = 0; }
         if (y === undefined) { y = 0; }
-        if (width === undefined) { width = this.state.sys.game.config.width; }
-        if (height === undefined) { height = this.state.sys.game.config.height; }
+        if (width === undefined) { width = this.scene.sys.game.config.width; }
+        if (height === undefined) { height = this.scene.sys.game.config.height; }
 
         var camera = null;
 
@@ -132,7 +132,7 @@ var CameraManager = new Class({
             camera = new Camera(x, y, width, height);
         }
 
-        camera.setState(this.state);
+        camera.setScene(this.scene);
 
         this.cameras.push(camera);
 
@@ -203,7 +203,7 @@ var CameraManager = new Class({
 
             camera.preRender();
 
-            renderer.render(this.state, children, interpolation, camera);
+            renderer.render(this.scene, children, interpolation, camera);
         }
     },
 
@@ -223,7 +223,7 @@ var CameraManager = new Class({
 
         this.cameras = [];
         this.cameraPool = [];
-        this.state = undefined;
+        this.scene = undefined;
     }
 
 });

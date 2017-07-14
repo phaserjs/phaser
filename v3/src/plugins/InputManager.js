@@ -5,17 +5,17 @@ var InputManager = new Class({
 
     initialize:
 
-    function InputManager (state, game)
+    function InputManager (scene, game)
     {
-        //  The State that owns this plugin
-        this.state = state;
+        //  The Scene that owns this plugin
+        this.scene = scene;
 
         this.cameras;
 
         //  GlobalInputManager
         this.manager = game.input;
 
-        //  Should use State event dispatcher?
+        //  Should use Scene event dispatcher?
         this.events = this.manager.events;
 
         this.keyboard = this.manager.keyboard;
@@ -36,7 +36,7 @@ var InputManager = new Class({
 
     boot: function ()
     {
-        this.cameras = this.state.sys.cameras.cameras;
+        this.cameras = this.scene.sys.cameras.cameras;
     },
 
     begin: function ()
@@ -90,7 +90,7 @@ var InputManager = new Class({
             return;
         }
 
-        //  Has the pointer moved? If so we need to re-check the interactive objects per camera in this State
+        //  Has the pointer moved? If so we need to re-check the interactive objects per camera in this Scene
         if (this.manager.activePointer.dirty)
         {
             this.hitTestPointer(this.manager.activePointer);

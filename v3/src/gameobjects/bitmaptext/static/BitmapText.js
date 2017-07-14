@@ -25,15 +25,15 @@ var BitmapText = new Class({
 
     initialize:
 
-    function BitmapText (state, x, y, font, text, size)
+    function BitmapText (scene, x, y, font, text, size)
     {
         if (text === undefined) { text = ''; }
 
-        GameObject.call(this, state, 'BitmapText');
+        GameObject.call(this, scene, 'BitmapText');
 
         this.font = font;
 
-        var entry = this.state.sys.cache.bitmapFont.get(font);
+        var entry = this.scene.sys.cache.bitmapFont.get(font);
 
         this.fontData = entry.data;
 

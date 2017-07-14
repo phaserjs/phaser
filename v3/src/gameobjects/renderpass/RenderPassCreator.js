@@ -2,7 +2,7 @@ var RenderPass = require('./RenderPass');
 var GetAdvancedValue = require('../../utils/object/GetAdvancedValue');
 var BuildGameObject = require('../BuildGameObject');
 
-var RenderPassCreator = function (state, config)
+var RenderPassCreator = function (scene, config)
 {
     var x = GetAdvancedValue(config, 'x', 0);
     var y = GetAdvancedValue(config, 'y', 0);
@@ -11,9 +11,9 @@ var RenderPassCreator = function (state, config)
     var shaderName = GetAdvancedValue(config, 'shaderName', '');
     var fragmentShader = GetAdvancedValue(config, 'fragmentShader', '');
 
-    var pass = new RenderPass(state, x, y, width, height, shaderName, fragmentShader);
+    var pass = new RenderPass(scene, x, y, width, height, shaderName, fragmentShader);
 
-    BuildGameObject(state, pass, config);
+    BuildGameObject(scene, pass, config);
 
     return pass;
 };

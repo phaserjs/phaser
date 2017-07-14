@@ -2,7 +2,7 @@ var EffectLayer = require('./EffectLayer');
 var GetAdvancedValue = require('../../utils/object/GetAdvancedValue');
 var BuildGameObject = require('../BuildGameObject');
 
-var EffectLayerCreator = function (state, config)
+var EffectLayerCreator = function (scene, config)
 {
     var x = GetAdvancedValue(config, 'x', 0);
     var y = GetAdvancedValue(config, 'y', 0);
@@ -11,9 +11,9 @@ var EffectLayerCreator = function (state, config)
     var key = GetAdvancedValue(config, 'key', null);
     var fragmentShader = GetAdvancedValue(config, 'fragmentShader', '');
 
-    var layer = new EffectLayer(state, x, y, width, height, effectName, fragmentShader);
+    var layer = new EffectLayer(scene, x, y, width, height, effectName, fragmentShader);
 
-    BuildGameObject(state, layer, config);
+    BuildGameObject(scene, layer, config);
 
     return layer;
 };

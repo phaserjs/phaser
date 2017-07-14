@@ -3,7 +3,7 @@ var GetAdvancedValue = require('../../utils/object/GetAdvancedValue');
 var GetValue = require('../../utils/object/GetValue');
 var BuildGameObject = require('../BuildGameObject');
 
-var MeshCreator = function (state, config)
+var MeshCreator = function (scene, config)
 {
     var key = GetAdvancedValue(config, 'key', null);
     var frame = GetAdvancedValue(config, 'frame', null);
@@ -13,9 +13,9 @@ var MeshCreator = function (state, config)
     var alphas = GetValue(config, 'alphas', []);
     var uv = GetValue(config, 'uv', []);
 
-    var mesh = new Mesh(state, 0, 0, vertices, uv, indices, colors, alphas, key, frame);
+    var mesh = new Mesh(scene, 0, 0, vertices, uv, indices, colors, alphas, key, frame);
 
-    BuildGameObject(state, mesh, config);
+    BuildGameObject(scene, mesh, config);
 
     return mesh;
 };

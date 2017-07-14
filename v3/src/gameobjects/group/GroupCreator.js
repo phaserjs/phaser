@@ -1,8 +1,8 @@
 var Group = require('./Group');
 
-var GroupCreator = function (state, config)
+var GroupCreator = function (scene, config)
 {
-    return new Group(state, null, config);
+    return new Group(scene, null, config);
 };
 
 module.exports = GroupCreator;

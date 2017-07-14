@@ -29,7 +29,7 @@ var Transform = {
 
         set: function (value)
         {
-            this.state.sys.sortChildrenFlag = true;
+            this.scene.sys.sortChildrenFlag = true;
             this._z = value;
         }
 

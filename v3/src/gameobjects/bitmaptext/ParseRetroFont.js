@@ -11,7 +11,7 @@ var GetValue = require('../../utils/object/GetValue');
 // Phaser.GameObject.RetroFont = function (game, key, characterWidth, characterHeight, chars, charsPerRow, xSpacing, ySpacing, xOffset, yOffset)
 
 // {
-//      image: key,    
+//      image: key,
 //      width: 32,
 //      height: 32,
 //      chars: 'string',
@@ -20,7 +20,7 @@ var GetValue = require('../../utils/object/GetValue');
 //      offset: { x: 0, y: 0 }
 // }
 
-var ParseRetroFont = function (state, config)
+var ParseRetroFont = function (scene, config)
 {
     var w = config.width;
     var h = config.height;
@@ -38,7 +38,7 @@ var ParseRetroFont = function (state, config)
 
     if (charsPerRow === null)
     {
-        charsPerRow = state.sys.textures.getFrame(key).width / w;
+        charsPerRow = scene.sys.textures.getFrame(key).width / w;
 
         if (charsPerRow > letters.length)
         {

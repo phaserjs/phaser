@@ -2,7 +2,7 @@ var GetAdvancedValue = require('../utils/object/GetAdvancedValue');
 var ScaleModes = require('../renderer/ScaleModes');
 var BlendModes = require('../renderer/BlendModes');
 
-var BuildGameObject = function (state, gameObject, config)
+var BuildGameObject = function (scene, gameObject, config)
 {
     //  Position
 
@@ -89,13 +89,13 @@ var BuildGameObject = function (state, gameObject, config)
 
     gameObject.visible = GetAdvancedValue(config, 'visible', true);
 
-    //  Add to State
+    //  Add to Scene
 
     var add = GetAdvancedValue(config, 'add', true);
 
     if (add)
     {
-        state.children.add(gameObject);
+        scene.sys.displayList.add(gameObject);
     }
 
     return gameObject;

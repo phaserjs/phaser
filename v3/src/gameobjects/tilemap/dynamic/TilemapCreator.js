@@ -2,7 +2,7 @@ var Tilemap = require('./Tilemap');
 var GetValue = require('../../../utils/object/GetValue');
 var BuildGameObject = require('../../BuildGameObject');
 
-var TilemapCreator = function (state, config)
+var TilemapCreator = function (scene, config)
 {
     var mapData = GetValue(config, 'map.data', null);
     var mapWidth = GetValue(config, 'map.width', 1);
@@ -17,9 +17,9 @@ var TilemapCreator = function (state, config)
     var tileFrame = GetValue(config, 'tile.frame', null);
     var tileBorder = GetValue(config, 'tile.border', 0);
 
-    var map = new Tilemap(state, mapData, x, y, tileWidth, tileHeight, mapWidth, mapHeight, tileBorder, tileTexture, tileFrame);
+    var map = new Tilemap(scene, mapData, x, y, tileWidth, tileHeight, mapWidth, mapHeight, tileBorder, tileTexture, tileFrame);
 
-    BuildGameObject(state, map, config);
+    BuildGameObject(scene, map, config);
 
     return map;
 };

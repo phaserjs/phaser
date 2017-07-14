@@ -20,84 +20,84 @@ var GameObjectCreator = new Class({
 
     initialize:
 
-    function GameObjectCreator (state)
+    function GameObjectCreator (scene)
     {
-        this.state = state;
+        this.scene = scene;
     },
 
     bitmapText: function (config)
     {
-        return StaticBitmapTextCreator(this.state, config);
+        return StaticBitmapTextCreator(this.scene, config);
     },
 
     dynamicBitmapText: function (config)
     {
-        return DynamicBitmapTextCreator(this.state, config);
+        return DynamicBitmapTextCreator(this.scene, config);
     },
 
     blitter: function (config)
     {
-        return BlitterCreator(this.state, config);
+        return BlitterCreator(this.scene, config);
     },
 
     effectLayer: function (config)
     {
-        return EffectLayerCreator(this.state, config);
+        return EffectLayerCreator(this.scene, config);
     },
 
     graphics: function (config)
     {
-        return GraphicsCreator(this.state, config);
+        return GraphicsCreator(this.scene, config);
     },
 
     group: function (config)
     {
-        return GroupCreator(this.state, config);
+        return GroupCreator(this.scene, config);
     },
 
     mesh: function (config)
     {
-        return MeshCreator(this.state, config);
+        return MeshCreator(this.scene, config);
     },
 
     image: function (config)
     {
-        return ImageCreator(this.state, config);
+        return ImageCreator(this.scene, config);
     },
 
     quad: function (config)
     {
-        return QuadCreator(this.state, config);
+        return QuadCreator(this.scene, config);
     },
 
     renderPass: function (config)
     {
-        return RenderPassCreator(this.state, config);
+        return RenderPassCreator(this.scene, config);
     },
 
     sprite: function (config)
     {
-        return SpriteCreator(this.state, config);
+        return SpriteCreator(this.scene, config);
     },
 
     text: function (config)
     {
-        return TextCreator(this.state, config);
+        return TextCreator(this.scene, config);
     },
 
     tilemap: function (config)
     {
-        return DynamicTilemapCreator(this.state, config);
+        return DynamicTilemapCreator(this.scene, config);
     },
 
     staticTilemap: function (config)
     {
-        return StaticTilemapCreator(this.state, config);
+        return StaticTilemapCreator(this.scene, config);
     },
 
     tileSprite: function (config)
     {
-        return TileSpriteCreator(this.state, config);
+        return TileSpriteCreator(this.scene, config);
     }
 
 });

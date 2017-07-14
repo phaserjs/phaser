@@ -171,9 +171,9 @@ var Camera = new Class({
         return this;
     },
 
-    setState: function (state)
+    setScene: function (scene)
     {
-        this.state = state;
+        this.scene = scene;
 
         return this;
     },
@@ -477,7 +477,7 @@ var Camera = new Class({
 
     destroy: function ()
     {
-        this.state = undefined;
+        this.scene = undefined;
     }
 
 });

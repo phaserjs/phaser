@@ -295,15 +295,15 @@ var WebGLRenderer = new Class({
     },
 
     /**
-     * Renders a single State.
+     * Renders a single Scene.
      *
      * @method render
-     * @param {Phaser.State} state - The State to be rendered.
+     * @param {Phaser.Scene} scene - The Scene to be rendered.
      * @param {number} interpolationPercentage - The cumulative amount of time that hasn't been simulated yet, divided
      *   by the amount of time that will be simulated the next time update()
      *   runs. Useful for interpolating frames.
      */
-    render: function (state, children, interpolationPercentage, camera)
+    render: function (scene, children, interpolationPercentage, camera)
     {
         var gl = this.gl;
         var quadBatch = this.quadBatch;

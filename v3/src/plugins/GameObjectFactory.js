@@ -20,12 +20,12 @@ var GameObjectFactory = new Class({
 
     initialize:
 
-    function GameObjectFactory (state)
+    function GameObjectFactory (scene)
     {
-        this.state = state;
+        this.scene = scene;
 
-        this.displayList = state.sys.displayList;
-        this.updateList = state.sys.updateList;
+        this.displayList = scene.sys.displayList;
+        this.updateList = scene.sys.updateList;
     },
 
     existing: function (child)
@@ -45,57 +45,57 @@ var GameObjectFactory = new Class({
 
     bitmapText: function (x, y, font, text, size, align)
     {
-        return this.displayList.add(StaticBitmapTextFactory(this.state, x, y, font, text, size, align));
+        return this.displayList.add(StaticBitmapTextFactory(this.scene, x, y, font, text, size, align));
     },
 
     dynamicBitmapText: function (x, y, font, text, size, align)
     {
-        return this.displayList.add(DynamicBitmapTextFactory(this.state, x, y, font, text, size, align));
+        return this.displayList.add(DynamicBitmapTextFactory(this.scene, x, y, font, text, size, align));
     },
 
     blitter: function (x, y, key, frame)
     {
-        return this.displayList.add(BlitterFactory(this.state, x, y, key, frame));
+        return this.displayList.add(BlitterFactory(this.scene, x, y, key, frame));
     },
 
     effectLayer: function (x, y, width, height, effectName, fragmentShader)
     {
-        return this.displayList.add(EffectLayerFactory(this.state, x, y, width, height, effectName, fragmentShader));
+        return this.displayList.add(EffectLayerFactory(this.scene, x, y, width, height, effectName, fragmentShader));
     },
 
     graphics: function (config)
     {
-        return this.displayList.add(GraphicsFactory(this.state, config));
+        return this.displayList.add(GraphicsFactory(this.scene, config));
     },
 
     group: function (displayList, config)
     {
-        return GroupFactory(this.state, displayList, config);
+        return GroupFactory(this.scene, displayList, config);
     },
 
     image: function (x, y, key, frame)
     {
-        return this.displayList.add(ImageFactory(this.state, x, y, key, frame));
+        return this.displayList.add(ImageFactory(this.scene, x, y, key, frame));
     },
 
     mesh: function (x, y, vertices, uv, key, frame)
     {
-        return this.displayList.add(MeshFactory(this.state, x, y, vertices, uv, key, frame));
+        return this.displayList.add(MeshFactory(this.scene, x, y, vertices, uv, key, frame));
     },
 
     quad: function (x, y, key, frame)
     {
-        return this.displayList.add(QuadFactory(this.state, x, y, key, frame));
+        return this.displayList.add(QuadFactory(this.scene, x, y, key, frame));
     },
 
     renderPass: function (x, y, width, height, shaderName, fragmentShader)
     {
-        return this.displayList.add(RenderPassFactory(this.state, x, y, width, height, shaderName, fragmentShader));
+        return this.displayList.add(RenderPassFactory(this.scene, x, y, width, height, shaderName, fragmentShader));
     },
 
     sprite: function (x, y, key, frame)
     {
-        var sprite = SpriteFactory(this.state, x, y, key, frame);
+        var sprite = SpriteFactory(this.scene, x, y, key, frame);
 
         this.displayList.add(sprite);
         this.updateList.add(sprite);
@@ -105,22 +105,22 @@ var GameObjectFactory = new Class({
 
     text: function (x, y, text, style)
     {
-        return this.displayList.add(TextFactory(this.state, x, y, text, style));
+        return this.displayList.add(TextFactory(this.scene, x, y, text, style));
     },
 
     tilemap: function (mapData, x, y, tileWidth, tileHeight, mapWidth, mapHeight, tileBorder, texture, frame)
     {
-        return this.displayList.add(DynamicTilemapFactory(this.state, mapData, x, y, tileWidth, tileHeight, mapWidth, mapHeight, tileBorder, texture, frame));
+        return this.displayList.add(DynamicTilemapFactory(this.scene, mapData, x, y, tileWidth, tileHeight, mapWidth, mapHeight, tileBorder, texture, frame));
     },
 
     staticTilemap: function (mapData, x, y, tileWidth, tileHeight, mapWidth, mapHeight, tileBorder, texture, frame)
     {
-        return this.displayList.add(StaticTilemapFactory(this.state, mapData, x, y, tileWidth, tileHeight, mapWidth, mapHeight, tileBorder, texture, frame));
+        return this.displayList.add(StaticTilemapFactory(this.scene, mapData, x, y, tileWidth, tileHeight, mapWidth, mapHeight, tileBorder, texture, frame));
     },
 
     tileSprite: function (x, y, width, height, key, frame)
     {
-        return this.displayList.add(TileSpriteFactory(this.state, x, y, width, height, key, frame));
+        return this.displayList.add(TileSpriteFactory(this.scene, x, y, width, height, key, frame));
     }
 
 });

@@ -28,13 +28,13 @@ var Text = new Class({
 
     initialize:
 
-    function Text (state, x, y, text, style)
+    function Text (scene, x, y, text, style)
     {
         if (x === undefined) { x = 0; }
         if (y === undefined) { y = 0; }
         if (text === undefined) { text = ''; }
 
-        GameObject.call(this, state, 'Text');
+        GameObject.call(this, scene, 'Text');
 
         this.setPosition(x, y);
         this.setOrigin(0, 0);

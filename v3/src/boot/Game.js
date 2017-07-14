@@ -14,7 +14,7 @@ var CreateRenderer = require('./CreateRenderer');
 var Data = require('../plugins/Data');
 var GlobalCache = require('../cache/GlobalCache');
 var GlobalInputManager = require('../input/GlobalInputManager');
-var GlobalStateManager = require('../state/GlobalStateManager');
+var GlobalSceneManager = require('../scene/GlobalSceneManager');
 var TextureManager = require('../textures/TextureManager');
 var TimeStep = require('./TimeStep');
 
@@ -64,9 +64,9 @@ var Game = new Class({
         this.input = new GlobalInputManager(this, this.config);
 
         /**
-        * @property {Phaser.GlobalStateManager} state - The StateManager. Phaser instance specific.
+        * @property {Phaser.GlobalSceneManager} scene - The SceneManager. Phaser instance specific.
         */
-        this.state = new GlobalStateManager(this, this.config.stateConfig);
+        this.scene = new GlobalSceneManager(this, this.config.sceneConfig);
 
         /**
         * @property {Phaser.Device} device - Contains device information and capabilities (singleton)
@@ -100,7 +100,7 @@ var Game = new Class({
 
         this.anims.boot(this.textures);
 
-        this.state.boot();
+        this.scene.boot();
 
         this.input.boot();
 
@@ -120,18 +120,18 @@ var Game = new Class({
 
     step: function (time, delta)
     {
-        var active = this.state.active;
+        var active = this.scene.active;
         var renderer = this.renderer;
 
         //  Global Managers (Time, Input, etc)
 
         this.input.update(time, delta);
 
-        //  States
+        //  Scenes
 
         for (var i = 0; i < active.length; i++)
         {
-            active[i].state.sys.step(time, delta);
+            active[i].scene.sys.step(time, delta);
         }
 
         //  Render
@@ -140,10 +140,10 @@ var Game = new Class({
 
         renderer.preRender();
 
-        //  This uses active.length, in case state.update removed the state from the active list
+        //  This uses active.length, in case scene.update removed the scene from the active list
         for (i = 0; i < active.length; i++)
         {
-            active[i].state.sys.render(0, renderer);
+            active[i].scene.sys.render(0, renderer);
         }
 
         renderer.postRender();
@@ -153,11 +153,11 @@ var Game = new Class({
     {
         this.loop.pause();
 
-        // var active = this.state.active;
+        // var active = this.scene.active;
 
         // for (var i = 0; i < active.length; i++)
         // {
-        //     active[i].state.sys.pause();
+        //     active[i].scene.sys.pause();
         // }
     },
 
@@ -165,11 +165,11 @@ var Game = new Class({
     {
         this.loop.resume();
 
-        // var active = this.state.active;
+        // var active = this.scene.active;
 
         // for (var i = 0; i < active.length; i++)
         // {
-        //     active[i].state.sys.resume();
+        //     active[i].scene.sys.resume();
         // }
     },
 

@@ -3,14 +3,14 @@ var GetAdvancedValue = require('../../utils/object/GetAdvancedValue');
 var BuildGameObject = require('../BuildGameObject');
 var BuildGameObjectAnimation = require('../BuildGameObjectAnimation');
 
-var SpriteCreator = function (state, config)
+var SpriteCreator = function (scene, config)
 {
     var key = GetAdvancedValue(config, 'key', null);
     var frame = GetAdvancedValue(config, 'frame', null);
 
-    var sprite = new Sprite(state, 0, 0, key, frame);
+    var sprite = new Sprite(scene, 0, 0, key, frame);
 
-    BuildGameObject(state, sprite, config);
+    BuildGameObject(scene, sprite, config);
 
     //  Sprite specific config options:
 

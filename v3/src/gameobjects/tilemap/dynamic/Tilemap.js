@@ -27,9 +27,9 @@ var Tilemap = new Class({
 
     initialize:
 
-    function Tilemap (state, mapData, x, y, tileWidth, tileHeight, mapWidth, mapHeight, tileBorder, texture, frame)
+    function Tilemap (scene, mapData, x, y, tileWidth, tileHeight, mapWidth, mapHeight, tileBorder, texture, frame)
     {
-        GameObject.call(this, state, 'Tilemap');
+        GameObject.call(this, scene, 'Tilemap');
 
         this.mapData = mapData !== null ? new Uint32Array(mapData) : new Uint32Array(mapWidth * mapHeight);
         this.tileWidth = tileWidth;
