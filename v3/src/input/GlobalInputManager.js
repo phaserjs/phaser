@@ -59,9 +59,10 @@ var GlobalInputManager = new Class({
 
         var len = this.queue.length;
 
+        //  Currently just 1 pointer supported
         var pointer = this.activePointer;
 
-        pointer.hasMoved = false;
+        pointer.reset();
 
         if (!this.enabled || len === 0)
         {
@@ -77,28 +78,25 @@ var GlobalInputManager = new Class({
         {
             var event = queue[i];
 
+            //  Move to CONSTs so we can do integer comparisons instead of strings
             switch (event.type)
             {
                 case 'mousemove':
 
-                    pointer.update(event);
+                    pointer.move(event);
                     this.events.dispatch(new MouseEvent.MOVE(event));
-
                     break;
 
                 case 'mousedown':
 
-                    pointer.isDown = true;
-                    pointer.update(event);
+                    pointer.down(event);
                     this.events.dispatch(new MouseEvent.DOWN(event));
-
                     break;
 
                 case 'mouseup':
 
-                    pointer.isDown = false;
+                    pointer.up(event);
                     this.events.dispatch(new MouseEvent.UP(event));
-
                     break;
             }
         }

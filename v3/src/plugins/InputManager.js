@@ -91,13 +91,37 @@ var InputManager = new Class({
         }
 
         //  Has the pointer moved? If so we need to re-check the interactive objects per camera in this State
-        if (this.manager.activePointer.hasMoved)
+        if (this.manager.activePointer.dirty)
         {
+            this.hitTestPointer(this.manager.activePointer);
+
             this.processPointer(this.manager.activePointer);
         }
     },
 
+    //  Has it been pressed down or released in this update?
     processPointer: function (pointer)
+    {
+        var i;
+        var over = this._over;
+
+        if (pointer.justDown)
+        {
+            for (i = 0; i < over.length; i++)
+            {
+                this.events.dispatch(new InputEvent.DOWN(pointer, over[i]));
+            }
+        }
+        else if (pointer.justUp)
+        {
+            for (i = 0; i < over.length; i++)
+            {
+                this.events.dispatch(new InputEvent.UP(pointer, over[i]));
+            }
+        }
+    },
+
+    hitTestPointer: function (pointer)
     {
         var i;
         var tested = [];
@@ -143,20 +167,16 @@ var InputManager = new Class({
         //  Now we can process what has happened
         for (i = 0; i < justOut.length; i++)
         {
-            //  Dispatch event? (include the pointer)
             this.events.dispatch(new InputEvent.OUT(pointer, justOut[i]));
         }
 
         for (i = 0; i < justOver.length; i++)
         {
-            //  Dispatch event? (include the pointer)
             this.events.dispatch(new InputEvent.OVER(pointer, justOver[i]));
         }
 
         //  Store everything that is currently over
         this._over = stillOver.concat(justOver);
-
-        // console.log('tested', tested.length, 'justOver', justOver.length, 'justOut', justOut.length, 'stillOver', stillOver.length, '_over', this._over.length);
     },
 
     add: function (child)
