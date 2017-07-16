@@ -1,6 +1,7 @@
 
 var CanvasPool = require('../dom/CanvasPool');
 var Class = require('../utils/Class');
+var Color = require('../graphics/color/Color');
 var GenerateTexture = require('../create/GenerateTexture');
 var GetValue = require('../utils/object/GetValue');
 var Parser = require('./parsers');
@@ -26,6 +27,9 @@ var TextureManager = new Class({
         this.game = game;
 
         this.list = {};
+
+        this._tempCanvas = CanvasPool.create2D(this, 1, 1);
+        this._tempContext = this._tempCanvas.getContext('2d');
 
         this.addBase64('__DEFAULT', game.config.defaultImage);
         this.addBase64('__MISSING', game.config.missingImage);
@@ -285,6 +289,39 @@ var TextureManager = new Class({
         {
             return this.list[key].get(frame);
         }
+    },
+
+    getPixel: function (x, y, key, frame)
+    {
+        var textureFrame = this.getFrame(key, frame);
+
+        if (textureFrame)
+        {
+            var source = textureFrame.source.image;
+
+            if (x >= 0 && x <= source.width && y >= 0 && y <= source.height)
+            {
+                x += textureFrame.cutX;
+                y += textureFrame.cutY;
+
+                // if (textureFrame.trimmed)
+                // {
+                    // x -= this.sprite.texture.trim.x;
+                    // y -= this.sprite.texture.trim.y;
+                // }
+
+                var context = this._tempContext;
+
+                context.clearRect(0, 0, 1, 1);
+                context.drawImage(source, x, y, 1, 1, 0, 0, 1, 1);
+
+                var rgb = context.getImageData(0, 0, 1, 1);
+
+                return new Color(rgb.data[0], rgb.data[1], rgb.data[2], rgb.data[3]);
+            }
+        }
+
+        return null;
     },
 
     setTexture: function (gameObject, key, frame)
