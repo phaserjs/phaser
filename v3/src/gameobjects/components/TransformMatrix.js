@@ -204,47 +204,6 @@ var TransformMatrix = new Class({
     },
 
     /* identity + translate + rotate + scale */
-    applyITRSold: function (x, y, rotation, scaleX, scaleY)
-    {
-        var matrix = this.matrix;
-
-        var a = 1;
-        var b = 0;
-        var c = 0;
-        var d = 1;
-        var tx = 0;
-        var ty = 0;
-
-        var sr = Math.sin(rotation);
-        var cr = Math.cos(rotation);
-
-        // Translate
-        matrix[4] = a * x + c * y + tx;
-        matrix[5] = b * x + d * y + ty;
-
-        matrix[4] = 1 * x + 0 * y + 0;
-        matrix[5] = 0 * x + 1 * y + 0;
-
-        matrix[4] = x;
-        matrix[5] = y;
-
-
-        // Rotate
-        matrix[0] = cr * a + -sr * c;
-        matrix[1] = cr * b + -sr * d;
-        matrix[2] = sr * a + cr * c;
-        matrix[3] = sr * b + cr * d;
-
-        // Scale
-        matrix[0] = matrix[0] * scaleX;
-        matrix[1] = matrix[1] * scaleX;
-        matrix[2] = matrix[2] * scaleY;
-        matrix[3] = matrix[3] * scaleY;
-
-        return this;
-    },
-
-    /* identity + translate + rotate + scale */
     applyITRS: function (x, y, rotation, scaleX, scaleY)
     {
         var matrix = this.matrix;
