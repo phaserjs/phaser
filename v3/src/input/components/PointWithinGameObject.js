@@ -8,6 +8,10 @@ var PointWithinGameObject = function (gameObject, x, y)
         return false;
     }
 
+    //  Normalize the origin
+    x += gameObject.displayOriginX;
+    y += gameObject.displayOriginY;
+
     return gameObject.hitAreaCallback(gameObject.hitArea, x, y);
 };
 
