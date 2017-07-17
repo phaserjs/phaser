@@ -20,6 +20,8 @@ var GlobalInputManager = new Class({
     {
         this.game = game;
 
+        this.canvas;
+
         this.config = config;
 
         this.enabled = true;
@@ -35,6 +37,8 @@ var GlobalInputManager = new Class({
 
         this.activePointer = new Pointer(this);
 
+        this.scale = { x: 1, y: 1 };
+
         this._tempMatrix = new TransformMatrix();
         this._tempPoint = { x: 0, y: 0 };
         this._tempHitTest = [];
@@ -49,6 +53,8 @@ var GlobalInputManager = new Class({
     */
     boot: function ()
     {
+        this.canvas = this.game.canvas;
+
         this.keyboard.boot();
         this.mouse.boot();
     },
@@ -68,6 +74,9 @@ var GlobalInputManager = new Class({
         {
             return;
         }
+
+        this.scale.x = this.game.config.width / this.canvas.offsetWidth;
+        this.scale.y = this.game.config.height / this.canvas.offsetHeight;
 
         //  Clears the queue array, and also means we don't work on array data that could potentially
         //  be modified during the processing phase
@@ -120,6 +129,36 @@ var GlobalInputManager = new Class({
     pointScreenToWorldHitTest: function (gameObjects, x, y, camera)
     {
         return PointScreenToWorldHitTest(this._tempMatrix, x, y, gameObjects, camera, this._tempHitTest);
+    },
+
+    transformX: function (pageX)
+    {
+        return (pageX - this.canvas.offsetLeft) * this.scale.x;
+    },
+
+    transformY: function (pageY)
+    {
+        return (pageY - this.canvas.offsetTop) * this.scale.y;
+    },
+
+    getOffsetX: function ()
+    {
+        return this.canvas.offsetLeft;
+    },
+
+    getOffsetY: function ()
+    {
+        return this.canvas.offsetTop;
+    },
+
+    getScaleX: function ()
+    {
+        return this.game.config.width / this.canvas.offsetWidth;
+    },
+
+    getScaleY: function ()
+    {
+        return this.game.config.height / this.canvas.offsetHeight;
     }
 
 });

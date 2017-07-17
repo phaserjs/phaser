@@ -240,6 +240,15 @@ var InputManager = new Class({
         {
             this._pendingInsertion.push(child);
         }
+
+        return this;
+    },
+
+    remove: function (child)
+    {
+        this._pendingRemoval.push(child);
+
+        return this;
     },
 
     setHitArea: function (gameObject, shape, callback)
@@ -281,12 +290,14 @@ var InputManager = new Class({
 
         for (var i = 0; i < gameObject.length; i++)
         {
-            if (gameObject.frame)
-            {
-                gameObject[i].hitArea = new Rectangle(0, 0, gameObject.frame.width, gameObject.frame.height);
-                gameObject[i].hitAreaCallback = callback;
+            var entity = gameObject[i];
 
-                this.add(gameObject[i]);
+            if (entity.frame)
+            {
+                entity.hitArea = new Rectangle(0, 0, entity.frame.width, entity.frame.height);
+                entity.hitAreaCallback = callback;
+
+                this.add(entity);
             }
         }
 
@@ -327,6 +338,34 @@ var InputManager = new Class({
         var shape = new Triangle(x1, y1, x2, y2, x3, y3);
 
         return this.setHitArea(gameObject, shape, callback);
+    },
+
+    //  Drag Events
+    //  https://developer.mozilla.org/en-US/docs/Web/API/HTML_Drag_and_Drop_API
+
+    //  DRAG_START, DRAG (mouse move), DRAG_END
+
+
+    //  Scene that owns this is shutting down
+    shutdown: function ()
+    {
+        this._list = [];
+        this._over = [];
+        this._pendingRemoval = [];
+        this._pendingInsertion = [];
+    },
+
+    //  Game level nuke
+    destroy: function ()
+    {
+        this.shutdown();
+
+        this.scene = undefined;
+        this.cameras = undefined;
+        this.manager = undefined;
+        this.events =  undefined;
+        this.keyboard = undefined;
+        this.mouse = undefined;
     }
 
 });
