@@ -1,5 +1,13 @@
 var Class = require('../utils/Class');
 var InputEvent = require('../input/events');
+var Rectangle = require('../geom/rectangle/Rectangle');
+var RectangleContains = require('../geom/rectangle/Contains');
+var Circle = require('../geom/circle/Circle');
+var CircleContains = require('../geom/circle/Contains');
+var Ellipse = require('../geom/ellipse/Ellipse');
+var EllipseContains = require('../geom/ellipse/Contains');
+var Triangle = require('../geom/triangle/Triangle');
+var TriangleContains = require('../geom/triangle/Contains');
 
 var InputManager = new Class({
 
@@ -236,6 +244,11 @@ var InputManager = new Class({
 
     setHitArea: function (gameObject, shape, callback)
     {
+        if (shape === undefined)
+        {
+            return this.setHitAreaFromTexture(gameObject);
+        }
+
         if (Array.isArray(gameObject))
         {
             for (var i = 0; i < gameObject.length; i++)
@@ -257,6 +270,64 @@ var InputManager = new Class({
         return this;
     },
 
+    setHitAreaFromTexture: function (gameObject, callback)
+    {
+        if (callback === undefined) { callback = RectangleContains; }
+
+        if (!Array.isArray(gameObject))
+        {
+            gameObject = [ gameObject ];
+        }
+
+        for (var i = 0; i < gameObject.length; i++)
+        {
+            if (gameObject.frame)
+            {
+                gameObject[i].hitArea = new Rectangle(0, 0, gameObject.frame.width, gameObject.frame.height);
+                gameObject[i].hitAreaCallback = callback;
+
+                this.add(gameObject[i]);
+            }
+        }
+
+        return this;
+    },
+
+    setHitAreaRectangle: function (gameObject, x, y, width, height, callback)
+    {
+        if (callback === undefined) { callback = RectangleContains; }
+
+        var shape = new Rectangle(x, y, width, height);
+
+        return this.setHitArea(gameObject, shape, callback);
+    },
+
+    setHitAreaCircle: function (gameObject, x, y, radius, callback)
+    {
+        if (callback === undefined) { callback = CircleContains; }
+
+        var shape = new Circle(x, y, radius);
+
+        return this.setHitArea(gameObject, shape, callback);
+    },
+
+    setHitAreaEllipse: function (gameObject, x, y, width, height, callback)
+    {
+        if (callback === undefined) { callback = EllipseContains; }
+
+        var shape = new Ellipse(x, y, width, height);
+
+        return this.setHitArea(gameObject, shape, callback);
+    },
+
+    setHitAreaTriangle: function (gameObject, x1, y1, x2, y2, x3, y3, callback)
+    {
+        if (callback === undefined) { callback = TriangleContains; }
+
+        var shape = new Triangle(x1, y1, x2, y2, x3, y3);
+
+        return this.setHitArea(gameObject, shape, callback);
+    }
 
 });
 
