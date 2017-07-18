@@ -25,7 +25,14 @@ var InteractiveObject = function (gameObject, hitArea, hitAreaCallback)
         onDown: NOOP,
         onUp: NOOP,
         onOver: NOOP,
-        onOut: NOOP
+        onOut: NOOP,
+
+        dragX: 0,
+        dragY: 0,
+
+        onDragStart: NOOP,
+        onDrag: NOOP,
+        onDragEnd: NOOP
     };
 };
 

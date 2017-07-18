@@ -48,6 +48,9 @@ var InputManager = new Class({
         //  Only those which are currently below a pointer (any pointer)
         this._over = [];
 
+        //  Only Game Objects which have been flagged as draggable are added to this array
+        this._draggable = [];
+
         //  Objects waiting to be inserted or removed from the active list
         this._pendingInsertion = [];
         this._pendingRemoval = [];
@@ -160,7 +163,10 @@ var InputManager = new Class({
 
             this.processUpDownEvents(pointer);
 
-            this.processMovementEvents(pointer);
+            if (pointer.justMoved)
+            {
+                this.processMovementEvents(pointer);
+            }
         }
     },
 
@@ -171,6 +177,8 @@ var InputManager = new Class({
         var justOut = [];
         var justOver = [];
         var stillOver = [];
+        var currentlyOver = this._over;
+        var gameObject;
 
         //  Returns an array of objects the pointer is over
 
@@ -186,46 +194,47 @@ var InputManager = new Class({
 
         for (i = 0; i < tested.length; i++)
         {
-            var item = tested[i];
+            gameObject = tested[i];
 
-            if (this._over.indexOf(item) !== -1)
+            if (currentlyOver.indexOf(gameObject) !== -1)
             {
-                stillOver.push(item);
+                stillOver.push(gameObject);
             }
             else
             {
-                justOver.push(item);
+                justOver.push(gameObject);
             }
         }
 
-        this._over.forEach(function (item)
+        for (i = 0; i < currentlyOver.length; i++)
         {
-            if (tested.indexOf(item) === -1)
+            gameObject = currentlyOver[i];
+
+            if (tested.indexOf(gameObject) === -1)
             {
-                justOut.push(item);
+                justOut.push(gameObject);
             }
-
-        });
-
-        var gameObject;
+        }
 
         //  Now we can process what has happened
         for (i = 0; i < justOut.length; i++)
         {
             gameObject = justOut[i];
 
-            this.events.dispatch(new InputEvent.OUT(pointer, gameObject));
-
-            gameObject.input.onOut(gameObject, pointer);
+            if (gameObject.input.enabled)
+            {
+                this.gameObjectOnOut(pointer, gameObject);
+            }
         }
 
         for (i = 0; i < justOver.length; i++)
         {
             gameObject = justOver[i];
 
-            this.events.dispatch(new InputEvent.OVER(pointer, gameObject));
-
-            gameObject.input.onOver(gameObject, pointer, gameObject.input.localX, gameObject.input.localY);
+            if (gameObject.input.enabled)
+            {
+                this.gameObjectOnOver(pointer, gameObject);
+            }
         }
 
         //  Store everything that is currently over
@@ -235,31 +244,22 @@ var InputManager = new Class({
     //  Has it been pressed down or released in this update?
     processUpDownEvents: function (pointer)
     {
-        var i;
         var gameObject;
-        var over = this._over;
 
-        if (pointer.justDown)
+        for (var i = 0; i < this._over.length; i++)
         {
-            for (i = 0; i < over.length; i++)
+            gameObject = this._over[i];
+
+            if (gameObject.input.enabled)
             {
-                gameObject = over[i];
-
-                //   Maybe this should contain ALL game objects it hit in one single event?
-                this.events.dispatch(new InputEvent.DOWN(pointer, gameObject));
-
-                gameObject.input.onDown(gameObject, pointer, gameObject.input.localX, gameObject.input.localY);
-            }
-        }
-        else if (pointer.justUp)
-        {
-            for (i = 0; i < over.length; i++)
-            {
-                gameObject = over[i];
-
-                this.events.dispatch(new InputEvent.UP(pointer, gameObject));
-
-                gameObject.input.onUp(gameObject, pointer, gameObject.input.localX, gameObject.input.localY);
+                if (pointer.justDown)
+                {
+                    this.gameObjectOnDown(pointer, gameObject);
+                }
+                else
+                {
+                    this.gameObjectOnUp(pointer, gameObject);
+                }
             }
         }
     },
@@ -267,13 +267,116 @@ var InputManager = new Class({
     //  Has it been moved in this update?
     processMovementEvents: function (pointer)
     {
-        if (!pointer.justMoved)
+        //  Check the list of Draggable Items
+        for (var i = 0; i < this._draggable.length; i++)
         {
-            return;
+            var gameObject = this._draggable[i];
+            var input = gameObject.input;
+
+            if (!input.enabled)
+            {
+                continue;
+            }
+
+            if (pointer.justUp && input.isDragged)
+            {
+                //  Drag End
+                this.gameObjectOnDragEnd(pointer, gameObject);
+            }
+            else if (input.isDragged)
+            {
+                //  Drag
+                this.gameObjectOnDrag(pointer, gameObject);
+            }
         }
+    },
 
-        //  Drag?
+    gameObjectOnDragStart: function (pointer, gameObject)
+    {
+        var input = gameObject.input;
 
+        input.isDragged = true;
+
+        input.dragX = input.localX - gameObject.displayOriginX;
+        input.dragY = input.localY - gameObject.displayOriginY;
+
+        this.events.dispatch(new InputEvent.DRAG_START(pointer, gameObject));
+
+        gameObject.input.onDragStart(gameObject, pointer);
+    },
+
+    gameObjectOnDrag: function (pointer, gameObject)
+    {
+        this.events.dispatch(new InputEvent.DRAG(pointer, gameObject));
+
+        gameObject.input.onDrag(gameObject, pointer);
+    },
+
+    gameObjectOnDragEnd: function (pointer, gameObject)
+    {
+        var input = gameObject.input;
+
+        input.isDragged = false;
+
+        this.events.dispatch(new InputEvent.DRAG_END(pointer, gameObject));
+
+        gameObject.input.onDragEnd(gameObject, pointer);
+    },
+
+    gameObjectOnDown: function (pointer, gameObject)
+    {
+        var input = gameObject.input;
+
+        input.isDown = true;
+
+        this.events.dispatch(new InputEvent.DOWN(pointer, gameObject));
+
+        input.onDown(gameObject, pointer, input.localX, input.localY);
+
+        if (input.draggable && !input.isDragged)
+        {
+            //  Drag Start
+            this.gameObjectOnDragStart(pointer, gameObject);
+        }
+    },
+
+    gameObjectOnUp: function (pointer, gameObject)
+    {
+        gameObject.input.isDown = false;
+
+        this.events.dispatch(new InputEvent.UP(pointer, gameObject));
+
+        gameObject.input.onUp(gameObject, pointer, gameObject.input.localX, gameObject.input.localY);
+    },
+
+    gameObjectOnOut: function (pointer, gameObject)
+    {
+        var input = gameObject.input;
+
+        input.isOver = false;
+
+        //  Don't dispatch if we're dragging the gameObject, as the pointer often gets away from it
+        if (!input.isDragged)
+        {
+            this.events.dispatch(new InputEvent.OUT(pointer, gameObject));
+
+            input.onOut(gameObject, pointer);
+        }
+    },
+
+    gameObjectOnOver: function (pointer, gameObject)
+    {
+        var input = gameObject.input;
+
+        input.isOver = true;
+
+        //  Don't dispatch if we're dragging the gameObject, as the pointer often gets away from it
+        if (!input.isDragged)
+        {
+            this.events.dispatch(new InputEvent.OVER(pointer, gameObject));
+
+            input.onOver(gameObject, pointer, input.localX, input.localY);
+        }
     },
 
     enable: function (gameObject, shape, callback)
@@ -482,8 +585,6 @@ var InputManager = new Class({
     //  Drag Events
     //  https://developer.mozilla.org/en-US/docs/Web/API/HTML_Drag_and_Drop_API
 
-    //  DRAG_START, DRAG (mouse move), DRAG_END
-
     setDraggable: function (gameObjects, value)
     {
         if (value === undefined) { value = true; }
@@ -495,7 +596,29 @@ var InputManager = new Class({
 
         for (var i = 0; i < gameObjects.length; i++)
         {
-            gameObjects[i].input.draggable = value;
+            var gameObject = gameObjects[i];
+            var index = this._draggable.indexOf(gameObject);
+
+            if (value)
+            {
+                //  Make draggable
+                gameObject.input.draggable = true;
+
+                if (index === -1)
+                {
+                    this._draggable.push(gameObject);
+                }
+            }
+            else
+            {
+                //  Disable drag
+                gameObject.input.draggable = false;
+
+                if (index === -1)
+                {
+                    this._draggable.splice(index, 1);
+                }
+            }
         }
 
         return true;
@@ -506,6 +629,7 @@ var InputManager = new Class({
     {
         this._list = [];
         this._over = [];
+        this._draggable = [];
         this._pendingRemoval = [];
         this._pendingInsertion = [];
     },
