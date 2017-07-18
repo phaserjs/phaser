@@ -1,11 +1,12 @@
-var Class = require('../utils/Class');
-var InputEvent = require('../input/events');
-var Rectangle = require('../geom/rectangle/Rectangle');
-var RectangleContains = require('../geom/rectangle/Contains');
 var Circle = require('../geom/circle/Circle');
 var CircleContains = require('../geom/circle/Contains');
+var Class = require('../utils/Class');
 var Ellipse = require('../geom/ellipse/Ellipse');
 var EllipseContains = require('../geom/ellipse/Contains');
+var InputEvent = require('../input/events');
+var InteractiveObject = require('../input/InteractiveObject');
+var Rectangle = require('../geom/rectangle/Rectangle');
+var RectangleContains = require('../geom/rectangle/Contains');
 var Triangle = require('../geom/triangle/Triangle');
 var TriangleContains = require('../geom/triangle/Contains');
 
@@ -40,7 +41,7 @@ var InputManager = new Class({
 
         this._size = 0;
 
-        //  All interactive objects
+        //  All list of all Interactive Objects
         this._list = [];
 
         //  Only those which are currently below a pointer (any pointer)
@@ -234,6 +235,8 @@ var InputManager = new Class({
         }
     },
 
+    //  Adds a new InteractiveObject to this Input Manager.
+    //  Created automatically via methods like setHitArea, or can be created manually.
     add: function (child)
     {
         if (this._pendingInsertion.indexOf(child) === -1 && this._list.indexOf(child) === -1)
@@ -244,6 +247,7 @@ var InputManager = new Class({
         return this;
     },
 
+    //  Removes an InteractiveObject from this Input Manager.
     remove: function (child)
     {
         this._pendingRemoval.push(child);
@@ -265,7 +269,7 @@ var InputManager = new Class({
                 gameObject[i].hitArea = shape;
                 gameObject[i].hitAreaCallback = callback;
 
-                this.add(gameObject[i]);
+                this.add(InteractiveObject(gameObject[i], shape, callback));
             }
         }
         else
@@ -273,7 +277,7 @@ var InputManager = new Class({
             gameObject.hitArea = shape;
             gameObject.hitAreaCallback = callback;
 
-            this.add(gameObject);
+            this.add(InteractiveObject(gameObject, shape, callback));
         }
 
         return this;
@@ -297,7 +301,7 @@ var InputManager = new Class({
                 entity.hitArea = new Rectangle(0, 0, entity.frame.width, entity.frame.height);
                 entity.hitAreaCallback = callback;
 
-                this.add(entity);
+                this.add(InteractiveObject(entity, entity.hitArea, callback));
             }
         }
 

@@ -7,15 +7,15 @@ var PointerDownEvent = new Class({
 
     initialize:
 
-    function PointerDownEvent (pointer, gameObject)
+    function PointerDownEvent (pointer, interactiveObject)
     {
         Event.call(this, 'POINTER_DOWN_EVENT');
 
         this.pointer = pointer;
-        this.gameObject = gameObject;
+        this.gameObject = interactiveObject.gameObject;
 
-        // this.x;
-        // this.y;
+        this.x = interactiveObject.localX;
+        this.y = interactiveObject.localY;
     }
 
 });
