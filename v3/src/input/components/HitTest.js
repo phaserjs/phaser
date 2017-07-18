@@ -1,12 +1,11 @@
 var GetTransformedPoint = require('./GetTransformedPoint');
-var PointWithinGameObject = require('./PointWithinGameObject');
-var PointWithinInteractiveObject = require('./PointWithinInteractiveObject');
+var PointWithinHitArea = require('./PointWithinHitArea');
 
 //  Will always return an array.
 //  Array contains matching Interactive Objects.
 //  Array will be empty if no objects were matched.
 
-var HitTest = function (tempMatrix, x, y, gameObjectArray, camera, output)
+var HitTest = function (tempMatrix, x, y, gameObjects, camera, output)
 {
     var cameraW = camera.width;
     var cameraH = camera.height;
@@ -18,21 +17,28 @@ var HitTest = function (tempMatrix, x, y, gameObjectArray, camera, output)
         return output;
     }
 
-    var scrollX = camera.scrollX;
-    var scrollY = camera.scrollY;
     var screenPoint = camera.cameraToScreen({ x: x, y: y });
-    var culled = camera.cullHitTest(gameObjectArray);
+    var culledGameObjects = camera.cull(gameObjects);
 
-    for (var i = 0; i < culled.length; i++)
+    for (var i = 0; i < culledGameObjects.length; i++)
     {
-        var object = culled[i];
-        var gameObject = object.gameObject;
+        var gameObject = culledGameObjects[i];
 
-        var tpoint = GetTransformedPoint(tempMatrix, gameObject, screenPoint.x + scrollX * gameObject.scrollFactorX, screenPoint.y + scrollY * gameObject.scrollFactorY);
-
-        if (PointWithinInteractiveObject(object, tpoint.x, tpoint.y))
+        if (!gameObject.input.enabled)
         {
-            output.push(object);
+            continue;
+        }
+
+        var point = GetTransformedPoint(
+            tempMatrix,
+            gameObject,
+            (screenPoint.x + camera.scrollX) * gameObject.scrollFactorX,
+            (screenPoint.y + camera.scrollY) * gameObject.scrollFactorY
+        );
+
+        if (PointWithinHitArea(gameObject, point.x, point.y))
+        {
+            output.push(gameObject);
         }
     }
 
