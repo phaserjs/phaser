@@ -5,6 +5,7 @@ var Ellipse = require('../geom/ellipse/Ellipse');
 var EllipseContains = require('../geom/ellipse/Contains');
 var InputEvent = require('../input/events');
 var InteractiveObject = require('../input/InteractiveObject');
+var NOOP = require('../utils/NOOP');
 var Rectangle = require('../geom/rectangle/Rectangle');
 var RectangleContains = require('../geom/rectangle/Contains');
 var Triangle = require('../geom/triangle/Triangle');
@@ -41,7 +42,7 @@ var InputManager = new Class({
 
         this._size = 0;
 
-        //  All list of all Interactive Objects
+        //  All list of all Game Objects that have been input enabled
         this._list = [];
 
         //  Only those which are currently below a pointer (any pointer)
@@ -50,6 +51,8 @@ var InputManager = new Class({
         //  Objects waiting to be inserted or removed from the active list
         this._pendingInsertion = [];
         this._pendingRemoval = [];
+
+        this._validTypes = [ 'onDown', 'onUp', 'onOver', 'onOut' ];
     },
 
     boot: function ()
@@ -81,6 +84,8 @@ var InputManager = new Class({
             if (index > -1)
             {
                 this._list.splice(index, 1);
+
+                gameObject.input = null;
             }
         }
 
@@ -217,27 +222,57 @@ var InputManager = new Class({
     processPointer: function (pointer)
     {
         var i;
+        var gameObject;
         var over = this._over;
 
         if (pointer.justDown)
         {
             for (i = 0; i < over.length; i++)
             {
-                this.events.dispatch(new InputEvent.DOWN(pointer, over[i]));
+                gameObject = over[i];
+
+                //   Maybe this should contain ALL game objects it hit in one single event?
+                this.events.dispatch(new InputEvent.DOWN(pointer, gameObject));
+
+                gameObject.input.onDown(gameObject, pointer, gameObject.input.localX, gameObject.input.localY);
             }
         }
         else if (pointer.justUp)
         {
             for (i = 0; i < over.length; i++)
             {
-                this.events.dispatch(new InputEvent.UP(pointer, over[i]));
+                gameObject = over[i];
+
+                this.events.dispatch(new InputEvent.UP(pointer, gameObject));
+
+                gameObject.input.onUp(gameObject, pointer, gameObject.input.localX, gameObject.input.localY);
             }
         }
     },
 
-    //  Adds a new InteractiveObject to this Input Manager.
-    //  Created automatically via methods like setHitArea, or can be created manually.
-    add: function (child)
+    enable: function (gameObject, shape, callback)
+    {
+        if (gameObject.input)
+        {
+            //  If it is already has an InteractiveObject then just enable it and return
+            gameObject.input.enabled = true;
+        }
+        else
+        {
+            //  Create an InteractiveObject and enable it
+            this.setHitArea(gameObject, shape, callback);
+        }
+
+        return this;
+    },
+
+    disable: function (gameObject)
+    {
+        gameObject.input.enabled = false;
+    },
+
+    //  Queues a Game Object for insertion into this Input Manager on the next update.
+    queueForInsertion: function (child)
     {
         if (this._pendingInsertion.indexOf(child) === -1 && this._list.indexOf(child) === -1)
         {
@@ -247,101 +282,176 @@ var InputManager = new Class({
         return this;
     },
 
-    //  Removes an InteractiveObject from this Input Manager.
-    remove: function (child)
+    //  Queues a Game Object for removal from this Input Manager on the next update.
+    queueForRemoval: function (child)
     {
         this._pendingRemoval.push(child);
 
         return this;
     },
 
-    setHitArea: function (gameObject, shape, callback)
+
+    //  Set Hit Areas
+
+    setHitArea: function (gameObjects, shape, callback)
     {
         if (shape === undefined)
         {
-            return this.setHitAreaFromTexture(gameObject);
+            return this.setHitAreaFromTexture(gameObjects);
         }
 
-        if (Array.isArray(gameObject))
+        if (!Array.isArray(gameObjects))
         {
-            for (var i = 0; i < gameObject.length; i++)
-            {
-                gameObject[i].hitArea = shape;
-                gameObject[i].hitAreaCallback = callback;
-
-                this.add(InteractiveObject(gameObject[i], shape, callback));
-            }
+            gameObjects = [ gameObjects ];
         }
-        else
-        {
-            gameObject.hitArea = shape;
-            gameObject.hitAreaCallback = callback;
 
-            this.add(InteractiveObject(gameObject, shape, callback));
+        for (var i = 0; i < gameObjects.length; i++)
+        {
+            var gameObject = gameObjects[i];
+
+            gameObject.input = InteractiveObject(gameObject, shape, callback);
+
+            this.queueForInsertion(gameObject);
         }
 
         return this;
     },
 
-    setHitAreaFromTexture: function (gameObject, callback)
+    setHitAreaFromTexture: function (gameObjects, callback)
     {
         if (callback === undefined) { callback = RectangleContains; }
 
-        if (!Array.isArray(gameObject))
+        if (!Array.isArray(gameObjects))
         {
-            gameObject = [ gameObject ];
+            gameObjects = [ gameObjects ];
         }
 
-        for (var i = 0; i < gameObject.length; i++)
+        for (var i = 0; i < gameObjects.length; i++)
         {
-            var entity = gameObject[i];
+            var gameObject = gameObjects[i];
 
-            if (entity.frame)
+            if (gameObject.frame)
             {
-                entity.hitArea = new Rectangle(0, 0, entity.frame.width, entity.frame.height);
-                entity.hitAreaCallback = callback;
+                gameObject.input = InteractiveObject(gameObject, new Rectangle(0, 0, gameObject.frame.width, gameObject.frame.height), callback);
 
-                this.add(InteractiveObject(entity, entity.hitArea, callback));
+                this.queueForInsertion(gameObject);
             }
         }
 
         return this;
     },
 
-    setHitAreaRectangle: function (gameObject, x, y, width, height, callback)
+    setHitAreaRectangle: function (gameObjects, x, y, width, height, callback)
     {
         if (callback === undefined) { callback = RectangleContains; }
 
         var shape = new Rectangle(x, y, width, height);
 
-        return this.setHitArea(gameObject, shape, callback);
+        return this.setHitArea(gameObjects, shape, callback);
     },
 
-    setHitAreaCircle: function (gameObject, x, y, radius, callback)
+    setHitAreaCircle: function (gameObjects, x, y, radius, callback)
     {
         if (callback === undefined) { callback = CircleContains; }
 
         var shape = new Circle(x, y, radius);
 
-        return this.setHitArea(gameObject, shape, callback);
+        return this.setHitArea(gameObjects, shape, callback);
     },
 
-    setHitAreaEllipse: function (gameObject, x, y, width, height, callback)
+    setHitAreaEllipse: function (gameObjects, x, y, width, height, callback)
     {
         if (callback === undefined) { callback = EllipseContains; }
 
         var shape = new Ellipse(x, y, width, height);
 
-        return this.setHitArea(gameObject, shape, callback);
+        return this.setHitArea(gameObjects, shape, callback);
     },
 
-    setHitAreaTriangle: function (gameObject, x1, y1, x2, y2, x3, y3, callback)
+    setHitAreaTriangle: function (gameObjects, x1, y1, x2, y2, x3, y3, callback)
     {
         if (callback === undefined) { callback = TriangleContains; }
 
         var shape = new Triangle(x1, y1, x2, y2, x3, y3);
 
-        return this.setHitArea(gameObject, shape, callback);
+        return this.setHitArea(gameObjects, shape, callback);
+    },
+
+    //  type = onDown, onUp, onOver, onOut
+
+    setOnDownCallback: function (gameObjects, callback, context)
+    {
+        return this.setCallback(gameObjects, 'onDown', callback, context);
+    },
+
+    setOnUpCallback: function (gameObjects, callback, context)
+    {
+        return this.setCallback(gameObjects, 'onUp', callback, context);
+    },
+
+    setOnOverCallback: function (gameObjects, callback, context)
+    {
+        return this.setCallback(gameObjects, 'onOver', callback, context);
+    },
+
+    setOnOutCallback: function (gameObjects, callback, context)
+    {
+        return this.setCallback(gameObjects, 'onOut', callback, context);
+    },
+
+    setCallbacks: function (gameObjects, onDown, onUp, onOver, onOut, context)
+    {
+        if (onDown)
+        {
+            this.setOnDownCallback(gameObjects, onDown, context);
+        }
+
+        if (onUp)
+        {
+            this.setOnDownCallback(gameObjects, onUp, context);
+        }
+
+        if (onOver)
+        {
+            this.setOnDownCallback(gameObjects, onOver, context);
+        }
+
+        if (onOut)
+        {
+            this.setOnDownCallback(gameObjects, onOut, context);
+        }
+
+        return this;
+    },
+
+    setCallback: function (gameObjects, type, callback, context)
+    {
+        if (this._validTypes.indexOf(type) === -1)
+        {
+            return this;
+        }
+
+        if (!Array.isArray(gameObjects))
+        {
+            gameObjects = [ gameObjects ];
+        }
+
+        for (var i = 0; i < gameObjects.length; i++)
+        {
+            var gameObject = gameObjects[i];
+
+            if (gameObject.input)
+            {
+                gameObject.input[type] = callback;
+
+                if (context)
+                {
+                    gameObject.input.callbackContext = context;
+                }
+            }
+        }
+
+        return this;
     },
 
     //  Drag Events
