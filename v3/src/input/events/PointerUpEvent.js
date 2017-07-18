@@ -7,15 +7,15 @@ var PointerUpEvent = new Class({
 
     initialize:
 
-    function PointerUpEvent (pointer, interactiveObject)
+    function PointerUpEvent (pointer, gameObject)
     {
         Event.call(this, 'POINTER_UP_EVENT');
 
         this.pointer = pointer;
-        this.gameObject = interactiveObject.gameObject;
+        this.gameObject = gameObject;
 
-        this.x = interactiveObject.localX;
-        this.y = interactiveObject.localY;
+        this.x = gameObject.input.localX;
+        this.y = gameObject.input.localY;
     }
 
 });

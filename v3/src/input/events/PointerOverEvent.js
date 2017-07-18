@@ -7,15 +7,15 @@ var PointerOverEvent = new Class({
 
     initialize:
 
-    function PointerOverEvent (pointer, interactiveObject)
+    function PointerOverEvent (pointer, gameObject)
     {
         Event.call(this, 'POINTER_OVER_EVENT');
 
         this.pointer = pointer;
-        this.gameObject = interactiveObject.gameObject;
+        this.gameObject = gameObject;
 
-        this.x = interactiveObject.localX;
-        this.y = interactiveObject.localY;
+        this.x = gameObject.input.localX;
+        this.y = gameObject.input.localY;
     }
 
 });
