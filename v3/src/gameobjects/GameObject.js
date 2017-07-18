@@ -36,8 +36,7 @@ var GameObject = new Class({
         this.renderMask = 15;
         this.renderFlags = 15;
 
-        this.hitArea = null;
-        this.hitAreaCallback = null;
+        this.input = null;
 
         //  Trigger a scene z-depth sort
         this.scene.sys.sortChildrenFlag = true;
@@ -56,9 +55,9 @@ var GameObject = new Class({
     {
     },
 
-    setHitArea: function (shape, callback)
+    setInteractive: function (shape, callback)
     {
-        this.scene.sys.inputManager.setHitArea(this, shape, callback);
+        this.scene.sys.inputManager.enable(this, shape, callback);
 
         return this;
     },
