@@ -11,8 +11,6 @@ var Cull = function (renderableObjects)
     var mvb = cameraMatrix[1];
     var mvc = cameraMatrix[2];
     var mvd = cameraMatrix[3];
-    var mve = cameraMatrix[4];
-    var mvf = cameraMatrix[5];
     
     /* First Invert Matrix */
     var determinant = (mva * mvd) - (mvb * mvc);
@@ -21,6 +19,9 @@ var Cull = function (renderableObjects)
     {
         return renderableObjects;
     }
+
+    var mve = cameraMatrix[4];
+    var mvf = cameraMatrix[5];
 
     var scrollX = this.scrollX;
     var scrollY = this.scrollY;
