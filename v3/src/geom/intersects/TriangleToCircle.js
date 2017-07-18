@@ -15,7 +15,7 @@ var TriangleToCircle = function (triangle, circle)
         return false;
     }
 
-    if (Contains(triangle, circle))
+    if (Contains(triangle, circle.x, circle.y))
     {
         return true;
     }
