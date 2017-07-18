@@ -13,6 +13,7 @@ var PointerUpEvent = new Class({
 
         this.pointer = pointer;
         this.gameObject = gameObject;
+        this.input = gameObject.input;
 
         this.x = gameObject.input.localX;
         this.y = gameObject.input.localY;
