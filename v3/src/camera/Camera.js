@@ -67,6 +67,7 @@ var Camera = new Class({
     centerToBounds: require('./components/CenterToBounds'),
     centerToSize: require('./components/CenterToSize'),
     cull: require('./components/Cull'),
+    cullHitTest: require('./components/CullHitTest'),
     destroy: require('./components/Destroy'),
     fade: require('./components/Fade'),
     flash: require('./components/Flash'),
