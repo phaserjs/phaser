@@ -30,7 +30,7 @@ var CameraToScreen = function (pointIn, pointOut)
 
     if (!pointOut)
     {
-        pointOut = {x: 0, y: 0};
+        pointOut = { x: 0, y: 0 };
     }
 
     /* Apply transform to point */
