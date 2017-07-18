@@ -29,6 +29,7 @@ var Pointer = new Class({
     reset: function ()
     {
         this.dirty = false;
+        this.isDown = false;
         this.justDown = false;
         this.justUp = false;
         this.justMoved = false;
@@ -46,9 +47,9 @@ var Pointer = new Class({
         this.x = this.manager.transformX(event.pageX);
         this.y = this.manager.transformY(event.pageY);
 
-        this.dirty = true;
-
         this.justMoved = true;
+
+        this.dirty = true;
     },
 
     down: function (event)
@@ -63,9 +64,10 @@ var Pointer = new Class({
         this.x = this.manager.transformX(event.pageX);
         this.y = this.manager.transformY(event.pageY);
 
-        this.dirty = true;
-
         this.justDown = true;
+        this.isDown = true;
+
+        this.dirty = true;
     },
 
     up: function (event)
@@ -80,9 +82,10 @@ var Pointer = new Class({
         this.x = this.manager.transformX(event.pageX);
         this.y = this.manager.transformY(event.pageY);
 
-        this.dirty = true;
-
         this.justUp = true;
+        this.isDown = false;
+
+        this.dirty = true;
     }
 
 });

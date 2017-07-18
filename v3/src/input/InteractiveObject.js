@@ -8,6 +8,7 @@ var InteractiveObject = function (gameObject, hitArea, hitAreaCallback)
         gameObject: gameObject,
 
         enabled: true,
+        draggable: false,
 
         hitArea: hitArea,
         hitAreaCallback: hitAreaCallback,

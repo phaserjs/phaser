@@ -137,7 +137,9 @@ var InputManager = new Class({
             return;
         }
 
-        var runUpdate = (this.manager.activePointer.dirty || this.pollRate === 0);
+        var pointer = this.manager.activePointer;
+
+        var runUpdate = (pointer.dirty || this.pollRate === 0);
 
         if (this.pollRate > -1)
         {
@@ -154,9 +156,11 @@ var InputManager = new Class({
 
         if (runUpdate)
         {
-            this.hitTestPointer(this.manager.activePointer);
+            this.hitTestPointer(pointer);
 
-            this.processPointer(this.manager.activePointer);
+            this.processUpDownEvents(pointer);
+
+            this.processMovementEvents(pointer);
         }
     },
 
@@ -203,15 +207,25 @@ var InputManager = new Class({
 
         });
 
+        var gameObject;
+
         //  Now we can process what has happened
         for (i = 0; i < justOut.length; i++)
         {
-            this.events.dispatch(new InputEvent.OUT(pointer, justOut[i]));
+            gameObject = justOut[i];
+
+            this.events.dispatch(new InputEvent.OUT(pointer, gameObject));
+
+            gameObject.input.onOut(gameObject, pointer);
         }
 
         for (i = 0; i < justOver.length; i++)
         {
-            this.events.dispatch(new InputEvent.OVER(pointer, justOver[i]));
+            gameObject = justOver[i];
+
+            this.events.dispatch(new InputEvent.OVER(pointer, gameObject));
+
+            gameObject.input.onOver(gameObject, pointer, gameObject.input.localX, gameObject.input.localY);
         }
 
         //  Store everything that is currently over
@@ -219,7 +233,7 @@ var InputManager = new Class({
     },
 
     //  Has it been pressed down or released in this update?
-    processPointer: function (pointer)
+    processUpDownEvents: function (pointer)
     {
         var i;
         var gameObject;
@@ -248,6 +262,18 @@ var InputManager = new Class({
                 gameObject.input.onUp(gameObject, pointer, gameObject.input.localX, gameObject.input.localY);
             }
         }
+    },
+
+    //  Has it been moved in this update?
+    processMovementEvents: function (pointer)
+    {
+        if (!pointer.justMoved)
+        {
+            return;
+        }
+
+        //  Drag?
+
     },
 
     enable: function (gameObject, shape, callback)
@@ -289,7 +315,6 @@ var InputManager = new Class({
 
         return this;
     },
-
 
     //  Set Hit Areas
 
@@ -459,6 +484,22 @@ var InputManager = new Class({
 
     //  DRAG_START, DRAG (mouse move), DRAG_END
 
+    setDraggable: function (gameObjects, value)
+    {
+        if (value === undefined) { value = true; }
+
+        if (!Array.isArray(gameObjects))
+        {
+            gameObjects = [ gameObjects ];
+        }
+
+        for (var i = 0; i < gameObjects.length; i++)
+        {
+            gameObjects[i].input.draggable = value;
+        }
+
+        return true;
+    },
 
     //  Scene that owns this is shutting down
     shutdown: function ()
