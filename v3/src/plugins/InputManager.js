@@ -256,7 +256,7 @@ var InputManager = new Class({
                 {
                     this.gameObjectOnDown(pointer, gameObject);
                 }
-                else
+                else if (pointer.justUp)
                 {
                     this.gameObjectOnUp(pointer, gameObject);
                 }
