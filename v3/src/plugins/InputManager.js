@@ -1,11 +1,11 @@
 var Circle = require('../geom/circle/Circle');
 var CircleContains = require('../geom/circle/Contains');
 var Class = require('../utils/Class');
+var CONST = require('../input/const');
 var Ellipse = require('../geom/ellipse/Ellipse');
 var EllipseContains = require('../geom/ellipse/Contains');
 var InputEvent = require('../input/events');
 var InteractiveObject = require('../input/InteractiveObject');
-var NOOP = require('../utils/NOOP');
 var Rectangle = require('../geom/rectangle/Rectangle');
 var RectangleContains = require('../geom/rectangle/Contains');
 var Triangle = require('../geom/triangle/Triangle');
@@ -20,6 +20,10 @@ var InputManager = new Class({
         //  The Scene that owns this plugin
         this.scene = scene;
 
+        //  A reference to this.scene.sys.displayList (set in boot)
+        this.displayList;
+
+        //  A reference to the this.scene.sys.cameras.cameras array (set in boot)
         this.cameras;
 
         //  GlobalInputManager
@@ -30,6 +34,16 @@ var InputManager = new Class({
 
         this.keyboard = this.manager.keyboard;
         this.mouse = this.manager.mouse;
+
+        //  Only fire *callbacks* on the top-most Game Object in the display list (emulating DOM behavior)
+        //  and ignoring any GOs below it, or call them all? (TODO: Set via Input config)
+
+        this.processOptions = {
+            up: CONST.TOP,
+            down: CONST.TOP,
+            over: CONST.TOP,
+            out: CONST.TOP
+        };
 
         //  How often should the pointer input be checked?
         //  Time given in ms
@@ -61,6 +75,8 @@ var InputManager = new Class({
     boot: function ()
     {
         this.cameras = this.scene.sys.cameras.cameras;
+
+        this.displayList = this.scene.sys.displayList;
     },
 
     begin: function ()
@@ -180,8 +196,8 @@ var InputManager = new Class({
         var currentlyOver = this._over;
         var gameObject;
 
-        //  Returns an array of objects the pointer is over
-
+        //  Get a list of all objects that can be seen by all the cameras in the scene and store in 'tested' array.
+        //  All objects in this array are input enabled, as checked by the hitTest function, so we don't need to check later on as well.
         for (i = 0; i < this.cameras.length; i++)
         {
             var camera = this.cameras[i];
@@ -192,6 +208,7 @@ var InputManager = new Class({
             }
         }
 
+        //   Loop through the tested array and work out which game objects were 'over' previously and which are 'just over' (brand new)
         for (i = 0; i < tested.length; i++)
         {
             gameObject = tested[i];
@@ -206,6 +223,7 @@ var InputManager = new Class({
             }
         }
 
+        //  Loop through the list of 'currently over' objects (from the previous frame) and any missing are now 'just out'
         for (i = 0; i < currentlyOver.length; i++)
         {
             gameObject = currentlyOver[i];
@@ -216,55 +234,139 @@ var InputManager = new Class({
             }
         }
 
-        //  Now we can process what has happened
+        //  Now we can process what has happened.
+
+        //  Fire a global onOut event that contains all objects that have moved to 'out' status this update
+
+        gameObject = this.getTopInteractiveObject(justOut);
+
+        this.events.dispatch(new InputEvent.OUT(pointer, gameObject, justOut));
+
+        //  Call onOut for everything in the justOut array
         for (i = 0; i < justOut.length; i++)
         {
             gameObject = justOut[i];
 
-            if (gameObject.input.enabled)
+            this.gameObjectOnOut(pointer, gameObject);
+
+            if (this.processOptions.out === CONST.TOP)
             {
-                this.gameObjectOnOut(pointer, gameObject);
+                break;
             }
         }
 
+        //  Fire a global onOut event that contains all objects that have moved to 'over' status this update
+
+        gameObject = this.getTopInteractiveObject(justOver);
+
+        this.events.dispatch(new InputEvent.OVER(pointer, gameObject, justOver));
+
+        //  Call onOver for everything in the justOver array
         for (i = 0; i < justOver.length; i++)
         {
             gameObject = justOver[i];
 
-            if (gameObject.input.enabled)
+            this.gameObjectOnOver(pointer, gameObject);
+
+            if (this.processOptions.over === CONST.TOP)
             {
-                this.gameObjectOnOver(pointer, gameObject);
+                break;
             }
         }
 
-        //  Store everything that is currently over
+        //  Add the contents of justOver to the persistent 'over' array
         this._over = stillOver.concat(justOver);
+
+        //  Then sort it into display list order
+        this.sortInteractiveObjects(this._over);
+    },
+
+    //  Given an array of Game Objects, sort the array and return it,
+    //  so that the objects are in index order with the lowest at the bottom.
+    sortInteractiveObjects: function (interactiveObjects)
+    {
+        this.displayList.depthSort();
+
+        return interactiveObjects.sort(this.sortIndexHandler.bind(this));
+    },
+
+    //  Note that the given array is sorted in place, even though it isn't returned directly it will still be updated.
+    getTopInteractiveObject: function (interactiveObjects)
+    {
+        this.sortInteractiveObjects(interactiveObjects);
+
+        return interactiveObjects[0];
+    },
+
+    //  Return the child lowest down the display list (with the smallest index)
+    sortIndexHandler: function (childA, childB)
+    {
+        //  The higher the index, the lower down the display list they are.
+        //  So entry 0 will be the top-most item (visually)
+        var indexA = this.displayList.getIndex(childA.gameObject);
+        var indexB = this.displayList.getIndex(childB.gameObject);
+
+        if (indexA < indexB)
+        {
+            return 1;
+        }
+        else if (indexA > indexB)
+        {
+            return -1;
+        }
+
+        //  Technically this shouldn't happen, but if the GO wasn't part of this display list then it'll
+        //  have an index of -1, so in some cases it can
+        return 0;
     },
 
     //  Has it been pressed down or released in this update?
     processUpDownEvents: function (pointer)
     {
-        var gameObject;
+        //  _over is now in display list order, top to bottom
 
-        for (var i = 0; i < this._over.length; i++)
+        var i;
+        var gameObject = this.getTopInteractiveObject(this._over);
+
+        if (pointer.justDown)
         {
-            gameObject = this._over[i];
+            this.events.dispatch(new InputEvent.DOWN(pointer, gameObject, this._over));
 
-            if (gameObject.input.enabled)
+            if (this.processOptions.down === CONST.TOP)
             {
-                if (pointer.justDown)
+                this.gameObjectOnDown(pointer, gameObject);
+            }
+            else
+            {
+                for (i = 0; i < this._over.length; i++)
                 {
+                    gameObject = this._over[i];
+
                     this.gameObjectOnDown(pointer, gameObject);
                 }
-                else if (pointer.justUp)
+            }
+        }
+        else if (pointer.justUp)
+        {
+            this.events.dispatch(new InputEvent.UP(pointer, gameObject, this._over));
+
+            if (this.processOptions.up === CONST.TOP)
+            {
+                this.gameObjectOnUp(pointer, gameObject);
+            }
+            else
+            {
+                for (i = 0; i < this._over.length; i++)
                 {
+                    gameObject = this._over[i];
+
                     this.gameObjectOnUp(pointer, gameObject);
                 }
             }
         }
     },
 
-    //  Has it been moved in this update?
+    //  Has the pointer moved in this update?
     processMovementEvents: function (pointer)
     {
         //  Check the list of Draggable Items
@@ -329,8 +431,6 @@ var InputManager = new Class({
 
         input.isDown = true;
 
-        this.events.dispatch(new InputEvent.DOWN(pointer, gameObject));
-
         input.onDown(gameObject, pointer, input.localX, input.localY);
 
         if (input.draggable && !input.isDragged)
@@ -344,8 +444,6 @@ var InputManager = new Class({
     {
         gameObject.input.isDown = false;
 
-        this.events.dispatch(new InputEvent.UP(pointer, gameObject));
-
         gameObject.input.onUp(gameObject, pointer, gameObject.input.localX, gameObject.input.localY);
     },
 
@@ -358,7 +456,7 @@ var InputManager = new Class({
         //  Don't dispatch if we're dragging the gameObject, as the pointer often gets away from it
         if (!input.isDragged)
         {
-            this.events.dispatch(new InputEvent.OUT(pointer, gameObject));
+            // this.events.dispatch(new InputEvent.OUT(pointer, gameObject));
 
             input.onOut(gameObject, pointer);
         }
@@ -373,7 +471,7 @@ var InputManager = new Class({
         //  Don't dispatch if we're dragging the gameObject, as the pointer often gets away from it
         if (!input.isDragged)
         {
-            this.events.dispatch(new InputEvent.OVER(pointer, gameObject));
+            // this.events.dispatch(new InputEvent.OVER(pointer, gameObject));
 
             input.onOver(gameObject, pointer, input.localX, input.localY);
         }

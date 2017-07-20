@@ -94,6 +94,7 @@ var DisplayList = new Class({
         return gameObjects.sort(this.sortIndexHandler.bind(this));
     },
 
+    //  Note that the given array is sorted in place, even though it isn't returned directly it will still be updated.
     getTopGameObject: function (gameObjects)
     {
         this.sortGameObjects(gameObjects);

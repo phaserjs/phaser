@@ -7,16 +7,20 @@ var PointerOverEvent = new Class({
 
     initialize:
 
-    function PointerOverEvent (pointer, gameObject)
+    function PointerOverEvent (pointer, topObject, gameObjects)
     {
         Event.call(this, 'POINTER_OVER_EVENT');
 
         this.pointer = pointer;
-        this.gameObject = gameObject;
-        this.input = gameObject.input;
 
-        this.x = gameObject.input.localX;
-        this.y = gameObject.input.localY;
+        this.x = pointer.x;
+        this.y = pointer.y;
+
+        //  An array of all the game objects the pointer event occurred on
+        this.gameObjects = gameObjects;
+
+        //  A reference to the top-most game object in the list (based on display list order)
+        this.top = topObject;
     }
 
 });
