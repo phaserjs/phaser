@@ -83,6 +83,45 @@ var DisplayList = new Class({
         return this.list.indexOf(child);
     },
 
+    //  Given an array of Game Objects, sort the array and return it,
+    //  so that the objects are in index order with the lowest at the bottom.
+    sortGameObjects: function (gameObjects)
+    {
+        if (gameObjects === undefined) { gameObjects = this.list; }
+
+        this.scene.sys.depthSort();
+
+        return gameObjects.sort(this.sortIndexHandler.bind(this));
+    },
+
+    getTopGameObject: function (gameObjects)
+    {
+        this.sortGameObjects(gameObjects);
+
+        return gameObjects[gameObjects.length - 1];
+    },
+
+    //  Return the child lowest down the display list (with the smallest index)
+    sortIndexHandler: function (childA, childB)
+    {
+        //  The lower the index, the lower down the display list they are
+        var indexA = this.getIndex(childA);
+        var indexB = this.getIndex(childB);
+
+        if (indexA < indexB)
+        {
+            return -1;
+        }
+        else if (indexA > indexB)
+        {
+            return 1;
+        }
+
+        //  Technically this shouldn't happen, but if the GO wasn't part of this display list then it'll
+        //  have an index of -1, so in some cases it can
+        return 0;
+    },
+
     /**
     * Gets the first item from the set based on the property strictly equaling the value given.
     * Returns null if not found.
