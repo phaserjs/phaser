@@ -1,16 +1,16 @@
 //  Phaser.Input.GlobalInputManager
 
-var Class = require('../utils/Class');
-var EventDispatcher = require('../events/EventDispatcher');
+var Class = require('../../utils/Class');
+var EventDispatcher = require('../../events/EventDispatcher');
 var GetTransformedPoint = require('./components/GetTransformedPoint');
-var Keyboard = require('./keyboard/KeyboardManager');
-var Mouse = require('./mouse/MouseManager');
-var MouseEvent = require('./mouse/events/');
-var Pointer = require('./Pointer');
+var Keyboard = require('../keyboard/KeyboardManager');
+var Mouse = require('../mouse/MouseManager');
+var MouseEvent = require('../mouse/events/');
+var Pointer = require('../Pointer');
 var PointScreenToWorldHitTest = require('./components/PointScreenToWorldHitTest');
 var HitTest = require('./components/HitTest');
 var PointWithinGameObject = require('./components/PointWithinGameObject');
-var TransformMatrix = require('../gameobjects/components/TransformMatrix');
+var TransformMatrix = require('../../gameobjects/components/TransformMatrix');
 
 var GlobalInputManager = new Class({
 

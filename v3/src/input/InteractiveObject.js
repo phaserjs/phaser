@@ -20,6 +20,9 @@ var InteractiveObject = function (gameObject, hitArea, hitAreaCallback)
         isDown: false,
         isDragged: false,
 
+        pointersOver: [],
+        pointersDown: [],
+
         callbackContext: gameObject,
 
         onDown: NOOP,

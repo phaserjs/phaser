@@ -1,15 +1,15 @@
 var Class = require('../../utils/Class');
 var Event = require('../../events/Event');
 
-var PointerOverEvent = new Class({
+var PointerOutEvent = new Class({
 
     Extends: Event,
 
     initialize:
 
-    function PointerOverEvent (pointer, topObject, gameObjects)
+    function PointerOutEvent (pointer, topObject, gameObjects)
     {
-        Event.call(this, 'POINTER_OVER_EVENT');
+        Event.call(this, 'POINTER_OUT_EVENT');
 
         this.pointer = pointer;
 
@@ -17,12 +17,12 @@ var PointerOverEvent = new Class({
         this.y = pointer.y;
 
         //  An array of all the game objects the pointer event occurred on
-        this.gameObjects = gameObjects;
+        this.list = gameObjects;
 
         //  A reference to the top-most game object in the list (based on display list order)
-        this.top = topObject;
+        this.gameObject = topObject;
     }
 
 });
 
-module.exports = PointerOverEvent;
+module.exports = PointerOutEvent;
