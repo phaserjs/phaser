@@ -147,20 +147,26 @@ var Systems = new Class({
             return;
         }
 
+        this.depthSort();
+
+        this.cameras.render(renderer, this.displayList, interpolation);
+    },
+
+    //  Force a sort of the display list on the next render
+    queueDepthSort: function ()
+    {
+        this.sortChildrenFlag = true;
+    },
+
+    //  Immediately sorts the display list if the flag is set
+    depthSort: function ()
+    {
         if (this.sortChildrenFlag)
         {
             StableSort.inplace(this.displayList.list, this.sortZ);
 
             this.sortChildrenFlag = false;
         }
-
-        this.cameras.render(renderer, this.displayList, interpolation);
-    },
-
-    //  Force a sort of the display list next render
-    depthSort: function ()
-    {
-        this.sortChildrenFlag = true;
     },
 
     sortZ: function (childA, childB)
