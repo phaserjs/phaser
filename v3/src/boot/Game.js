@@ -3,6 +3,7 @@ var Class = require('../utils/Class');
 var Config = require('./Config');
 var DebugHeader = require('./DebugHeader');
 var Device = require('../device');
+var NOOP = require('../utils/NOOP');
 
 var AddToDOM = require('../dom/AddToDOM');
 var DOMContentLoaded = require('../dom/DOMContentLoaded');
@@ -79,6 +80,8 @@ var Game = new Class({
         */
         this.loop = new TimeStep(this, this.config.fps);
 
+        this.onStepCallback = NOOP;
+
         //  Wait for the DOM Ready event, then call boot.
         DOMContentLoaded(this.boot.bind(this));
 
@@ -128,6 +131,8 @@ var Game = new Class({
         this.input.update(time, delta);
 
         //  Scenes
+
+        this.onStepCallback();
 
         for (var i = 0; i < active.length; i++)
         {
