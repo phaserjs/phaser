@@ -95,6 +95,7 @@ var SceneInputManager = new Class({
     processOverOutEvents: require('./components/ProcessOverOutEvents'),
     processDownEvents: require('./components/ProcessDownEvents'),
     processUpEvents: require('./components/ProcessUpEvents'),
+    processMoveEvents: require('./components/ProcessMoveEvents'),
     childOnOut: require('./components/ChildOnOut'),
     childOnOver: require('./components/ChildOnOver'),
     childOnDown: require('./components/ChildOnDown'),
