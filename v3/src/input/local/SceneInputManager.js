@@ -59,7 +59,7 @@ var SceneInputManager = new Class({
             down: { 0: [], 1: [], 2: [], 3: [], 4: [], 5: [], 6: [], 7: [], 8: [], 9: [] }
         };
 
-        this._validTypes = [ 'onDown', 'onUp', 'onOver', 'onOut' ];
+        this._validTypes = [ 'onDown', 'onUp', 'onOver', 'onOut', 'onMove' ];
     },
 
     //  Add option to get all IOs within a Rect or Circle
@@ -90,6 +90,7 @@ var SceneInputManager = new Class({
     setOnOutCallback: require('./components/SetOnOutCallback'),
     setOnOverCallback: require('./components/SetOnOverCallback'),
     setOnUpCallback: require('./components/SetOnUpCallback'),
+    setOnMoveCallback: require('./components/SetOnMoveCallback'),
 
     processOverOutEvents: require('./components/ProcessOverOutEvents'),
     processDownEvents: require('./components/ProcessDownEvents'),

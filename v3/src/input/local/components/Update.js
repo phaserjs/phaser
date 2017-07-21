@@ -56,10 +56,10 @@ var Update = function (time, delta)
             this.processDownEvents(pointer, results);
         }
 
-        // if (pointer.justMoved)
-        // {
-        //     this.processMovementEvents(pointer, results);
-        // }
+        if (pointer.justMoved)
+        {
+            this.processMoveEvents(pointer, results);
+        }
     }
 };
 

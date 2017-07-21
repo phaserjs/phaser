@@ -25,7 +25,7 @@ var ProcessOverOutEvents = function (pointer, currentlyOver)
             //  In the currentlyOver array
             stillOver.push(interactiveObject);
         }
-    };
+    }
 
     //  Go through the hit test results
     for (i = 0; i < currentlyOver.length; i++)

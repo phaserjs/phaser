@@ -22,14 +22,14 @@ var InteractiveObject = function (gameObject, hitArea, hitAreaCallback)
 
         callbackContext: gameObject,
 
+        dragX: 0,
+        dragY: 0,
+
+        onMove: NOOP,
         onDown: NOOP,
         onUp: NOOP,
         onOver: NOOP,
         onOut: NOOP,
-
-        dragX: 0,
-        dragY: 0,
-
         onDragStart: NOOP,
         onDrag: NOOP,
         onDragEnd: NOOP
