@@ -92,8 +92,12 @@ var SceneInputManager = new Class({
     setOnUpCallback: require('./components/SetOnUpCallback'),
 
     processOverOutEvents: require('./components/ProcessOverOutEvents'),
+    processDownEvents: require('./components/ProcessDownEvents'),
+    processUpEvents: require('./components/ProcessUpEvents'),
     childOnOut: require('./components/ChildOnOut'),
     childOnOver: require('./components/ChildOnOver'),
+    childOnDown: require('./components/ChildOnDown'),
+    childOnUp: require('./components/ChildOnUp'),
     sortInteractiveObjects: require('./components/SortInteractiveObjects'),
     sortIndexHandler: require('./components/SortIndexHandler'),
 
