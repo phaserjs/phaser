@@ -1,4 +1,5 @@
 var Class = require('../utils/Class');
+var InputEvent = require('../input/local/events');
 var SceneInputManager = require('../input/local/SceneInputManager');
 
 var InputManager = new Class({
@@ -10,148 +11,131 @@ var InputManager = new Class({
     function InputManager (scene, game)
     {
         SceneInputManager.call(this, scene, game);
-    }
-
-    /*
-    processOverOutEvents: function (pointer, results)
-    {
-        var gameObject;
-
-        //  Go through the results
-        for (var i = 0; i < results.length; i++)
-        {
-            gameObject = results[i];
-
-            //  Was this GO previously in an 'over' state?
-
-
-
-        //   Loop through the tested array and work out which game objects were 'over' previously and which are 'just over' (brand new)
-        for (i = 0; i < results.length; i++)
-        {
-            gameObject = results[i];
-
-            if (previouslyOver.indexOf(gameObject) === -1)
-            {
-                justOver.push(gameObject);
-            }
-            else
-            {
-                stillOver.push(gameObject);
-            }
-        }
-
     },
-    */
 
     /*
-    hitTestPointer: function (pointer)
+    processOverOutEvents: function (pointer, currentlyOver)
     {
-        var i;
-        var tested = [];
         var justOut = [];
         var justOver = [];
         var stillOver = [];
-        var previouslyOver = this._over;
-        var gameObject;
+        var previouslyOver = this.children.over[pointer.id];
 
-        //  Get a list of all objects that can be seen by all the cameras in the scene and store in 'tested' array.
-        //  All objects in this array are input enabled, as checked by the hitTest function, so we don't need to check later on as well.
-        for (i = 0; i < this.cameras.length; i++)
+        var i;
+        var interactiveObject;
+
+        //  Go through all objects the pointer was previously over, and see if it still is
+        for (i = 0; i < previouslyOver.length; i++)
         {
-            var camera = this.cameras[i];
+            interactiveObject = previouslyOver[i];
 
-            if (camera.inputEnabled)
+            if (currentlyOver.indexOf(interactiveObject) === -1)
             {
-                tested = tested.concat(this.manager.hitTest(this._list, pointer.x, pointer.y, camera));
-            }
-        }
-
-
-
-        //   Loop through the tested array and work out which game objects were 'over' previously and which are 'just over' (brand new)
-        for (i = 0; i < tested.length; i++)
-        {
-            gameObject = tested[i];
-
-            if (previouslyOver.indexOf(gameObject) === -1)
-            {
-                justOver.push(gameObject);
+                //  Not in the currentlyOver array
+                justOut.push(interactiveObject);
             }
             else
             {
-                stillOver.push(gameObject);
+                //  In the currentlyOver array
+                stillOver.push(interactiveObject);
             }
-        }
+        };
 
-        //  Loop through the list of 'previously over' objects (from the last update) and any missing from it are now 'just out'
-        for (i = 0; i < previouslyOver.length; i++)
+        //  Go through the hit test results
+        for (i = 0; i < currentlyOver.length; i++)
         {
-            gameObject = previouslyOver[i];
+            interactiveObject = currentlyOver[i];
 
-            if (tested.indexOf(gameObject) === -1)
+            //  Is this newly over?
+
+            if (previouslyOver.indexOf(interactiveObject) === -1)
             {
-                justOut.push(gameObject);
+                justOver.push(interactiveObject);
             }
         }
 
-        //  Now we can process what has happened.
+        //  By this point the arrays are filled, so now we can process what happened...
 
-        //  Fire a global onOut event that contains all objects that have moved to 'out' status this update
+        //  Process the Just Out objects
+        var total = justOut.length;
 
-        if (justOut.length > 0)
+        if (total > 0)
         {
             this.sortInteractiveObjects(justOut);
 
             //  Call onOut for everything in the justOut array
-            for (i = 0; i < justOut.length; i++)
+            for (i = 0; i < total; i++)
             {
-                gameObject = justOut[i];
+                interactiveObject = justOut[i];
 
-                this.events.dispatch(new InputEvent.OUT(pointer, gameObject, justOut));
-
-                this.gameObjectOnOut(pointer, gameObject);
-
-                if (this.topOnly)
+                if (!this.topOnly || (this.topOnly && i === 0))
                 {
-                    break;
+                    this.events.dispatch(new InputEvent.OUT(pointer, interactiveObject.gameObject, justOut));
                 }
+
+                this.childOnOut(i, pointer, interactiveObject);
             }
         }
 
-        //  Fire a global onOut event that contains all objects that have moved to 'over' status this update
+        //  Process the Just Over objects
+        total = justOver.length;
 
-        if (justOver.length > 0)
+        if (total > 0)
         {
             this.sortInteractiveObjects(justOver);
 
             //  Call onOver for everything in the justOver array
-            for (i = 0; i < justOver.length; i++)
+            for (i = 0; i < total; i++)
             {
-                gameObject = justOver[i];
+                interactiveObject = justOver[i];
 
-                this.events.dispatch(new InputEvent.OVER(pointer, gameObject, justOver));
-
-                this.gameObjectOnOver(pointer, gameObject);
-
-                if (this.topOnly)
+                if (!this.topOnly || (this.topOnly && i === 0))
                 {
-                    break;
+                    this.events.dispatch(new InputEvent.OVER(pointer, interactiveObject.gameObject, justOver));
                 }
+
+                this.childOnOver(i, pointer, interactiveObject);
             }
         }
 
-        //  Add the contents of justOver to the persistent 'over' array
-        this._over = stillOver.concat(justOver);
+        //  Add the contents of justOver to the previously over array
+        previouslyOver = stillOver.concat(justOver);
 
         //  Then sort it into display list order
-        this._over = this.sortInteractiveObjects(this._over);
+        this.children.over[pointer.id] = this.sortInteractiveObjects(previouslyOver);
     },
-    */
 
-    /*
+    childOnOut: function (index, pointer, interactiveObject)
+    {
+        interactiveObject.isOver = false;
 
-    //  Given an array of Game Objects, sort the array and return it,
+        //  If we are not processing topOnly items, or we are and this IS the topmost item, then hit it
+        if (!this.topOnly || (this.topOnly && index === 0))
+        {
+            //  Don't dispatch if we're dragging the gameObject, as the pointer often gets away from it
+            if (!interactiveObject.isDragged)
+            {
+                interactiveObject.onOut(interactiveObject.gameObject, pointer);
+            }
+        }
+    },
+
+    childOnOver: function (index, pointer, interactiveObject)
+    {
+        interactiveObject.isOver = true;
+
+        //  If we are not processing topOnly items, or we are and this IS the topmost item, then hit it
+        if (!this.topOnly || (this.topOnly && index === 0))
+        {
+            //  Don't dispatch if we're dragging the gameObject, as the pointer often gets away from it
+            if (!interactiveObject.isDragged)
+            {
+                interactiveObject.onOver(interactiveObject.gameObject, pointer, interactiveObject.localX, interactiveObject.localY);
+            }
+        }
+    },
+
+    //  Given an array of Interactive Objects, sort the array and return it,
     //  so that the objects are in index order with the lowest at the bottom.
     sortInteractiveObjects: function (interactiveObjects)
     {
@@ -189,7 +173,12 @@ var InputManager = new Class({
         //  have an index of -1, so in some cases it can
         return 0;
     },
+    */
 
+
+
+
+    /*
     //  Has it been pressed down or released in this update?
     processUpDownEvents: function (pointer)
     {

@@ -1,5 +1,5 @@
-var Class = require('../../utils/Class');
-var Event = require('../../events/Event');
+var Class = require('../../../utils/Class');
+var Event = require('../../../events/Event');
 
 var PointerOverEvent = new Class({
 

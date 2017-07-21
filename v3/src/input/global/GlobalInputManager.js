@@ -35,7 +35,7 @@ var GlobalInputManager = new Class({
         this.keyboard = new Keyboard(this);
         this.mouse = new Mouse(this);
 
-        this.activePointer = new Pointer(this);
+        this.activePointer = new Pointer(this, 0);
 
         this.scale = { x: 1, y: 1 };
 

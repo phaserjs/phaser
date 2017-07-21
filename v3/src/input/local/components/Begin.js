@@ -1,7 +1,10 @@
 var Begin = function ()
 {
-    var toRemove = this._pendingRemoval.length;
-    var toInsert = this._pendingInsertion.length;
+    var removeList = this.children.pendingRemoval;
+    var insertList = this.children.pendingInsertion;
+
+    var toRemove = removeList.length;
+    var toInsert = insertList.length;
 
     if (toRemove === 0 && toInsert === 0)
     {
@@ -9,39 +12,33 @@ var Begin = function ()
         return;
     }
 
-    var i;
-    var gameObject;
+    var current = this.children.list;
 
     //  Delete old gameObjects
-    for (i = 0; i < toRemove; i++)
+    for (var i = 0; i < toRemove; i++)
     {
-        gameObject = this._pendingRemoval[i];
+        var interactiveObject = removeList[i];
 
-        var index = this._list.indexOf(gameObject);
+        var index = current.indexOf(interactiveObject);
 
         if (index > -1)
         {
-            this._list.splice(index, 1);
+            current.splice(index, 1);
 
-            gameObject.input = null;
+            //  Tidy up all of the Interactive Objects references?
+            //  Callbacks, shapes, etc
+            interactiveObject.gameObject.input = null;
         }
     }
 
-    //  Move pending to active (can swap for concat splice if we don't need anything extra here)
+    //  Clear the removal list
+    removeList.length = 0;
 
-    for (i = 0; i < toInsert; i++)
-    {
-        gameObject = this._pendingInsertion[i];
+    //  Move pendingInsertion to list (also clears pendingInsertion at the same time)
+    this.children.list = current.concat(insertList.splice(0));
 
-        //  Swap for Input Enabled Object
-        this._list.push(gameObject);
-    }
-
-    this._size = this._list.length;
-
-    //  Clear the lists
-    this._pendingRemoval.length = 0;
-    this._pendingInsertion.length = 0;
+    //  Update the size
+    this.children.size = this.children.list.length;
 };
 
 module.exports = Begin;

@@ -6,9 +6,11 @@ var Pointer = new Class({
 
     initialize:
 
-    function Pointer (manager)
+    function Pointer (manager, id)
     {
         this.manager = manager;
+
+        this.id = id;
 
         this.event;
 

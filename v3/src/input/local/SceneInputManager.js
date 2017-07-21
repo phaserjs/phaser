@@ -24,12 +24,12 @@ var SceneInputManager = new Class({
         //  Should use Scene event dispatcher?
         this.events = this.manager.events;
 
-        // this.keyboard = this.manager.keyboard;
-        // this.mouse = this.manager.mouse;
+        //  Proxy references available via the Scene
+        this.keyboard = this.manager.keyboard;
+        this.mouse = this.manager.mouse;
 
-        //  Only fire *callbacks* on the top-most Game Object in the display list (emulating DOM behavior)
-        //  and ignoring any GOs below it, or call them all?
-
+        //  Only fire callbacks and events on the top-most Game Object in the display list (emulating DOM behavior)
+        //  and ignore any GOs below it, or call them all?
         this.topOnly = true;
 
         //  How often should the pointer input be checked?
@@ -39,30 +39,39 @@ var SceneInputManager = new Class({
         //  Set to 0 to poll constantly. Set to -1 to only poll on user movement.
         this.pollRate = -1;
 
+        //  Internal counter
         this._pollTimer = 0;
 
-        this._size = 0;
-
-        //  All list of all Interactive Objects
-        this._list = [];
-
-        //  Objects waiting to be inserted or removed from the active list
-        this._pendingInsertion = [];
-        this._pendingRemoval = [];
-
-        //  A list of Interactive Objects which are *currently* below a pointer (any pointer) during the previous frame
-        this._over = [];
-
-        //  Only Game Objects which have been flagged as draggable are added to this array
-        this._draggable = [];
+        //  An object containing the various lists of Interactive Objects
+        //  list: A list of all Interactive Objects
+        //  pendingInsertion: Objects waiting to be inserted to the list on the next call to 'begin'
+        //  pendingRemoval: Objects waiting to be removed from the list on the next call to 'begin'
+        //  draggable: A list of all Interactive Objects that are set to be draggable (a subset of list)
+        //  over: A list of all Interactive Objects currently considered as being 'over' by any pointer, indexed by pointer ID
+        //  down: A list of all Interactive Objects currently considered as being 'down' by any pointer, indexed by pointer ID
+        this.children = {
+            size: 0,
+            list: [],
+            pendingInsertion: [],
+            pendingRemoval: [],
+            draggable: [],
+            over: { 0: [], 1: [], 2: [], 3: [], 4: [], 5: [], 6: [], 7: [], 8: [], 9: [] },
+            down: { 0: [], 1: [], 2: [], 3: [], 4: [], 5: [], 6: [], 7: [], 8: [], 9: [] }
+        };
 
         this._validTypes = [ 'onDown', 'onUp', 'onOver', 'onOut' ];
     },
+
+    //  Add option to get all IOs within a Rect or Circle
 
     boot: require('./components/Boot'),
     begin: require('./components/Begin'),
     update: require('./components/Update'),
     hitTestPointer: require('./components/HitTestPointer'),
+    disable: require('./components/Disable'),
+    enable: require('./components/Enable'),
+    queueForInsertion: require('./components/QueueForInsertion'),
+    queueForRemoval: require('./components/QueueForRemoval'),
 
     setpollRate: require('./components/SetPollRate'),
     setpollAlways: require('./components/SetPollAlways'),
@@ -82,8 +91,11 @@ var SceneInputManager = new Class({
     setOnOverCallback: require('./components/SetOnOverCallback'),
     setOnUpCallback: require('./components/SetOnUpCallback'),
 
-    queueForInsertion: require('./components/QueueForInsertion'),
-    queueForRemoval: require('./components/QueueForRemoval'),
+    processOverOutEvents: require('./components/ProcessOverOutEvents'),
+    childOnOut: require('./components/ChildOnOut'),
+    childOnOver: require('./components/ChildOnOver'),
+    sortInteractiveObjects: require('./components/SortInteractiveObjects'),
+    sortIndexHandler: require('./components/SortIndexHandler'),
 
     //  Scene that owns this is shutting down
     shutdown: function ()

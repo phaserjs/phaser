@@ -38,7 +38,7 @@ var HitTest = function (tempMatrix, x, y, gameObjects, camera, output)
 
         if (PointWithinHitArea(gameObject, point.x, point.y))
         {
-            output.push(gameObject);
+            output.push(gameObject.input);
         }
     }
 
