@@ -46,10 +46,15 @@ var Update = function (time, delta)
         //  This is run regardless if the pointer has moved so we capture moving Game Objects
         this.processOverOutEvents(pointer, results);
 
-        // if (pointer.justUp || pointer.justDown)
-        // {
-        //     this.processUpDownEvents(pointer, results);
-        // }
+        if (pointer.justUp)
+        {
+            this.processUpEvents(pointer, results);
+        }
+
+        if (pointer.justDown)
+        {
+            this.processDownEvents(pointer, results);
+        }
 
         // if (pointer.justMoved)
         // {

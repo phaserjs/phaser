@@ -13,6 +13,90 @@ var InputManager = new Class({
         SceneInputManager.call(this, scene, game);
     },
 
+    processUpEvents: function (pointer, currentlyOver)
+    {
+        //  If the pointer is released we need to reset all 'isDown' IOs, regardless if pointer is still over them or not
+        //  Also concat in the currentlyOver, so we can dispatch an UP event for an IO that has the pointer over it.
+        //  For example if you click down outside a sprite, hold down, move over the sprite, then release, the sprite will
+        //  still fire an UP event, even though it never previously received a DOWN event.
+        var previouslyDown = this.children.down[pointer.id].concat(currentlyOver);
+
+        if (previouslyDown.length === 0)
+        {
+            //  Dispatch UP event, even though nothing was down previously
+            this.events.dispatch(new InputEvent.UP(pointer));
+        }
+        else
+        {
+            //  Go through all objects the pointer was previously down on and set to up
+            for (var i = 0; i < previouslyDown.length; i++)
+            {
+                var interactiveObject = previouslyDown[i];
+
+                if (!this.topOnly || (this.topOnly && i === 0))
+                {
+                    this.events.dispatch(new InputEvent.UP(pointer, interactiveObject.gameObject, previouslyDown));
+                }
+
+                this.childOnUp(i, pointer, interactiveObject);
+            }
+        }
+
+        //  Reset the down array
+        this.children.down[pointer.id].length = 0;
+    },
+
+    processDownEvents: function (pointer, currentlyOver)
+    {
+        if (currentlyOver.length === 0)
+        {
+            //  Dispatch DOWN event, even though nothing was below the pointer
+            this.events.dispatch(new InputEvent.DOWN(pointer));
+        }
+        else
+        {
+            //  Go through all objects the pointer was over and set them to down
+            for (var i = 0; i < currentlyOver.length; i++)
+            {
+                var interactiveObject = currentlyOver[i];
+
+                this.events.dispatch(new InputEvent.DOWN(pointer, interactiveObject.gameObject, currentlyOver));
+
+                this.childOnDown(pointer, interactiveObject);
+
+                if (this.topOnly)
+                {
+                    break;
+                }
+            }
+        }
+    },
+
+    childOnUp: function (index, pointer, interactiveObject)
+    {
+        interactiveObject.isDown = false;
+
+        //  If we are not processing topOnly items, or we are and this IS the topmost item, then hit it
+        if (!this.topOnly || (this.topOnly && index === 0))
+        {
+            interactiveObject.onUp(interactiveObject.gameObject, pointer);
+        }
+    },
+
+    childOnDown: function (pointer, interactiveObject)
+    {
+        interactiveObject.isDown = true;
+
+        interactiveObject.onDown(interactiveObject.gameObject, pointer, interactiveObject.localX, interactiveObject.localY);
+
+        this.children.down[pointer.id].push(interactiveObject);
+
+        // if (input.draggable && !input.isDragged)
+        // {
+        //     this.gameObjectOnDragStart(pointer, gameObject);
+        // }
+    },
+
     /*
     processOverOutEvents: function (pointer, currentlyOver)
     {
