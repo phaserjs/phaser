@@ -7,7 +7,7 @@ var GameObjectUpEvent = new Class({
 
     initialize:
 
-    function GameObjectUpEvent (pointer, gameObject)
+    function GameObjectUpEvent (pointer, interactiveObject)
     {
         Event.call(this, 'GAME_OBJECT_UP_EVENT');
 
