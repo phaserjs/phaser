@@ -20,16 +20,19 @@ var InteractiveObject = function (gameObject, hitArea, hitAreaCallback)
         isDown: false,
         isDragged: false,
 
-        callbackContext: gameObject,
+        checkingDrag: false,
 
         dragX: 0,
         dragY: 0,
 
-        onMove: NOOP,
-        onDown: NOOP,
+        callbackContext: gameObject,
+
         onUp: NOOP,
+        onDown: NOOP,
         onOver: NOOP,
         onOut: NOOP,
+        onMove: NOOP,
+
         onDragStart: NOOP,
         onDrag: NOOP,
         onDragEnd: NOOP
