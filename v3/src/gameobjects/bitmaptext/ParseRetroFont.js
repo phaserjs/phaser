@@ -61,7 +61,7 @@ var ParseRetroFont = function (scene, config)
 
     for (var i = 0; i < letters.length; i++)
     {
-        var node = letters[i];
+        // var node = letters[i];
 
         var charCode = letters.charCodeAt(i);
 
@@ -94,7 +94,13 @@ var ParseRetroFont = function (scene, config)
         }
     }
 
-    return data;
+    var entry = {
+        data: data,
+        frame: null,
+        texture: key
+    };
+
+    return entry;
 };
 
 /**
