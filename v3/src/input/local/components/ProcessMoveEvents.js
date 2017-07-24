@@ -2,6 +2,20 @@ var InputEvent = require('../events');
 
 var ProcessMoveEvents = function (pointer, currentlyOver)
 {
+    this.events.dispatch(new InputEvent.POINTER_MOVE(pointer, currentlyOver));
+
+    //  Go through all objects the pointer was over and fire their events / callbacks
+    for (var i = 0; i < currentlyOver.length; i++)
+    {
+        var interactiveObject = currentlyOver[i];
+
+        this.events.dispatch(new InputEvent.GAME_OBJECT_MOVE(pointer, interactiveObject));
+
+        interactiveObject.onMove(interactiveObject.gameObject, pointer, interactiveObject.localX, interactiveObject.localY);
+    }
+
+
+    /*
     var i;
     var interactiveObject;
 
@@ -49,6 +63,7 @@ var ProcessMoveEvents = function (pointer, currentlyOver)
             this.childOnDrag(pointer, interactiveObject, currentlyOver);
         }
     }
+    */
 };
 
 module.exports = ProcessMoveEvents;

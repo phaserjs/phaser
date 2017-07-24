@@ -54,10 +54,20 @@ var SceneInputManager = new Class({
             list: [],
             pendingInsertion: [],
             pendingRemoval: [],
+            over: { 0: [], 1: [], 2: [], 3: [], 4: [], 5: [], 6: [], 7: [], 8: [], 9: [] }
+        };
+
+        /*
+        this.children = {
+            size: 0,
+            list: [],
+            pendingInsertion: [],
+            pendingRemoval: [],
             draggable: { 0: [], 1: [], 2: [], 3: [], 4: [], 5: [], 6: [], 7: [], 8: [], 9: [] },
             over: { 0: [], 1: [], 2: [], 3: [], 4: [], 5: [], 6: [], 7: [], 8: [], 9: [] },
             down: { 0: [], 1: [], 2: [], 3: [], 4: [], 5: [], 6: [], 7: [], 8: [], 9: [] }
         };
+        */
 
         this._validTypes = [ 'onDown', 'onUp', 'onOver', 'onOut', 'onMove' ];
     },
@@ -99,10 +109,10 @@ var SceneInputManager = new Class({
     processDownEvents: require('./components/ProcessDownEvents'),
     processUpEvents: require('./components/ProcessUpEvents'),
     processMoveEvents: require('./components/ProcessMoveEvents'),
-    childOnOut: require('./components/ChildOnOut'),
-    childOnOver: require('./components/ChildOnOver'),
-    childOnDown: require('./components/ChildOnDown'),
-    childOnUp: require('./components/ChildOnUp'),
+    // childOnOut: require('./components/ChildOnOut'),
+    // childOnOver: require('./components/ChildOnOver'),
+    // childOnDown: require('./components/ChildOnDown'),
+    // childOnUp: require('./components/ChildOnUp'),
     sortInteractiveObjects: require('./components/SortInteractiveObjects'),
     sortIndexHandler: require('./components/SortIndexHandler'),
 

@@ -49,17 +49,21 @@ var ProcessOverOutEvents = function (pointer, currentlyOver)
     {
         this.sortInteractiveObjects(justOut);
 
+        this.events.dispatch(new InputEvent.POINTER_OUT(pointer, justOut));
+
         //  Call onOut for everything in the justOut array
         for (i = 0; i < total; i++)
         {
             interactiveObject = justOut[i];
 
-            if (!this.topOnly || (this.topOnly && i === 0))
-            {
-                this.events.dispatch(new InputEvent.OUT(pointer, interactiveObject.gameObject, justOut));
-            }
+            this.events.dispatch(new InputEvent.GAME_OBJECT_OUT(pointer, interactiveObject));
 
-            this.childOnOut(i, pointer, interactiveObject);
+            interactiveObject.onOut(interactiveObject.gameObject, pointer);
+
+            if (this.topOnly)
+            {
+                break;
+            }
         }
     }
 
@@ -70,17 +74,21 @@ var ProcessOverOutEvents = function (pointer, currentlyOver)
     {
         this.sortInteractiveObjects(justOver);
 
+        this.events.dispatch(new InputEvent.POINTER_OVER(pointer, justOver));
+
         //  Call onOver for everything in the justOver array
         for (i = 0; i < total; i++)
         {
             interactiveObject = justOver[i];
 
-            if (!this.topOnly || (this.topOnly && i === 0))
-            {
-                this.events.dispatch(new InputEvent.OVER(pointer, interactiveObject.gameObject, justOver));
-            }
+            this.events.dispatch(new InputEvent.GAME_OBJECT_OVER(pointer, interactiveObject));
 
-            this.childOnOver(i, pointer, interactiveObject);
+            interactiveObject.onOver(interactiveObject.gameObject, pointer, interactiveObject.localX, interactiveObject.localY);
+
+            if (this.topOnly)
+            {
+                break;
+            }
         }
     }
 

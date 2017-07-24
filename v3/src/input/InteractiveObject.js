@@ -8,19 +8,19 @@ var InteractiveObject = function (gameObject, hitArea, hitAreaCallback)
         gameObject: gameObject,
 
         enabled: true,
-        draggable: false,
+        // draggable: false,
 
         hitArea: hitArea,
         hitAreaCallback: hitAreaCallback,
 
-        localX: 0,
-        localY: 0,
+        localX: 0, // tempX value populated by HitTest function
+        localY: 0, // tempY value populated by HitTest function
 
-        isOver: false,
-        isDown: false,
-        isDragged: false,
+        // isOver: false,
+        // isDown: false,
+        // isDragged: false,
 
-        checkingDrag: false,
+        // checkingDrag: false,
 
         dragX: 0,
         dragY: 0,

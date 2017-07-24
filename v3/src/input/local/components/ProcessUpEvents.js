@@ -2,6 +2,20 @@ var InputEvent = require('../events');
 
 var ProcessUpEvents = function (pointer, currentlyOver)
 {
+    this.events.dispatch(new InputEvent.POINTER_UP(pointer, currentlyOver));
+
+    //  Go through all objects the pointer was over and fire their events / callbacks
+    for (var i = 0; i < currentlyOver.length; i++)
+    {
+        var interactiveObject = currentlyOver[i];
+
+        this.events.dispatch(new InputEvent.GAME_OBJECT_UP(pointer, interactiveObject));
+
+        interactiveObject.onUp(interactiveObject.gameObject, pointer, interactiveObject.localX, interactiveObject.localY);
+    }
+
+    /*
+
     //  If the pointer is released we need to reset all 'isDown' IOs, regardless if pointer is still over them or not
     //  Also concat in the currentlyOver, so we can dispatch an UP event for an IO that has the pointer over it.
     //  For example if you click down outside a sprite, hold down, move over the sprite, then release, the sprite will
@@ -58,6 +72,7 @@ var ProcessUpEvents = function (pointer, currentlyOver)
             this.childOnDrag(pointer, interactiveObject, currentlyOver);
         }
     }
+    */
 
 };
 
