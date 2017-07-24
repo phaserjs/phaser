@@ -16,39 +16,44 @@ var InputManager = new Class({
     childOnMove: function (pointer, interactiveObject)
     {
         interactiveObject.onMove(interactiveObject.gameObject, pointer);
-    }
+    },
 
-    /*
-    childOnDragStart: function (index, pointer, interactiveObject)
+    childOnDragStart: function (pointer, interactiveObject)
     {
-        interactiveObject.isDragged = true;
+        var gameObject = interactiveObject.gameObject;
 
-        interactiveObject.dragX = interactiveObject.localX - interactiveObject.gameObject.displayOriginX;
-        interactiveObject.dragY = interactiveObject.localY - interactiveObject.gameObject.displayOriginY;
+        var dragX = interactiveObject.localX - gameObject.displayOriginX;
+        var dragY = interactiveObject.localY - gameObject.displayOriginY;
 
-        this.events.dispatch(new InputEvent.DRAG_START(pointer, gameObject));
+        var result = interactiveObject.onDragStart(gameObject, pointer, dragX, dragY);
 
-        gameObject.input.onDragStart(gameObject, pointer);
+        if (result !== false)
+        {
+            interactiveObject.isDragged = true;
+
+            interactiveObject.dragX = dragX;
+            interactiveObject.dragY = dragY;
+
+            this.events.dispatch(new InputEvent.DRAG_START(pointer, gameObject));
+        }
     },
 
     childOnDrag: function (index, pointer, interactiveObject)
     {
-        this.events.dispatch(new InputEvent.DRAG(pointer, gameObject));
+        this.events.dispatch(new InputEvent.DRAG(pointer, interactiveObject.gameObject));
 
-        gameObject.input.onDrag(gameObject, pointer);
+        interactiveObject.onDrag(interactiveObject.gameObject, pointer);
     },
 
     childOnDragEnd: function (index, pointer, interactiveObject)
     {
-        var input = gameObject.input;
+        interactiveObject.isDragged = false;
 
-        input.isDragged = false;
+        this.events.dispatch(new InputEvent.DRAG_END(pointer, interactiveObject.gameObject));
 
-        this.events.dispatch(new InputEvent.DRAG_END(pointer, gameObject));
+        interactiveObject.onDragEnd(interactiveObject.gameObject, pointer);
+    }
 
-        gameObject.input.onDragEnd(gameObject, pointer);
-    },
-    */
 });
 
 module.exports = InputManager;
