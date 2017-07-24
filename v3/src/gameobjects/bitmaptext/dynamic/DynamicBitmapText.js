@@ -14,6 +14,7 @@ var DynamicBitmapText = new Class({
         Components.Origin,
         Components.RenderTarget,
         Components.Texture,
+        Components.Tint,
         Components.Transform,
         Components.Visible,
         Components.ScrollFactor,
@@ -22,18 +23,27 @@ var DynamicBitmapText = new Class({
 
     initialize:
 
-    function DynamicBitmapText (scene, x, y, font, text, size, align)
+    function DynamicBitmapText (scene, x, y, font, text, size)
     {
         if (text === undefined) { text = ''; }
-        if (align === undefined) { align = 'left'; }
 
         GameObject.call(this, scene, 'DynamicBitmapText');
 
-        this.fontData = this.scene.sys.cache.bitmapFont.get(font);
+        this.font = font;
+
+        var entry = this.scene.sys.cache.bitmapFont.get(font);
+
+        this.fontData = entry.data;
 
         this.text = (Array.isArray(text)) ? text.join('\n') : text;
 
         this.fontSize = size || this.fontData.size;
+
+        this.setTexture(entry.texture, entry.frame);
+        this.setPosition(x, y);
+        this.setOrigin(0, 0);
+
+        this._bounds = this.getTextBounds();
 
         this.scrollX = 0;
         this.scrollY = 0;
@@ -42,9 +52,6 @@ var DynamicBitmapText = new Class({
         this.height = 0;
 
         this.displayCallback;
-
-        this.setTexture(font);
-        this.setPosition(x, y);
     },
 
     setSize: function (width, height)
