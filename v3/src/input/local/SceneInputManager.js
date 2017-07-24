@@ -109,11 +109,17 @@ var SceneInputManager = new Class({
     //  Scene that owns this is shutting down
     shutdown: function ()
     {
-        this._list = [];
-        this._over = [];
-        this._draggable = [];
-        this._pendingRemoval = [];
-        this._pendingInsertion = [];
+        this.children.size = 0;
+        this.children.list = [];
+        this.children.pendingRemoval = [];
+        this.children.pendingInsertion = [];
+
+        for (var i = 0; i < 10; i++)
+        {
+            this.children.draggable[i] = [];
+            this.children.over[i] = [];
+            this.children.down[i] = [];
+        }
     },
 
     //  Game level nuke
