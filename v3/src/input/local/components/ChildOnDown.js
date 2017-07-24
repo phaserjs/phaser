@@ -1,15 +1,20 @@
 var ChildOnDown = function (pointer, interactiveObject)
 {
-    interactiveObject.isDown = true;
+    //  If the callback returns false then we don't consider this child as interacted with
+    var result = interactiveObject.onDown(interactiveObject.gameObject, pointer, interactiveObject.localX, interactiveObject.localY);
 
-    interactiveObject.onDown(interactiveObject.gameObject, pointer, interactiveObject.localX, interactiveObject.localY);
+    if (result !== false)
+    {
+        interactiveObject.isDown = true;
 
-    this.children.down[pointer.id].push(interactiveObject);
+        this.children.down[pointer.id].push(interactiveObject);
 
-    // if (input.draggable && !input.isDragged)
-    // {
-    //     this.gameObjectOnDragStart(pointer, gameObject);
-    // }
+        if (interactiveObject.draggable && !interactiveObject.isDragged)
+        {
+            //  Apply drag criteria here
+            this.childOnDragStart(pointer, interactiveObject);
+        }
+    }
 };
 
 module.exports = ChildOnDown;
