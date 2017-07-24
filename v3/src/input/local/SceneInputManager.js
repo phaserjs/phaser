@@ -54,7 +54,7 @@ var SceneInputManager = new Class({
             list: [],
             pendingInsertion: [],
             pendingRemoval: [],
-            draggable: [],
+            draggable: { 0: [], 1: [], 2: [], 3: [], 4: [], 5: [], 6: [], 7: [], 8: [], 9: [] },
             over: { 0: [], 1: [], 2: [], 3: [], 4: [], 5: [], 6: [], 7: [], 8: [], 9: [] },
             down: { 0: [], 1: [], 2: [], 3: [], 4: [], 5: [], 6: [], 7: [], 8: [], 9: [] }
         };
@@ -83,6 +83,9 @@ var SceneInputManager = new Class({
     setHitAreaFromTexture: require('./components/SetHitAreaFromTexture'),
     setHitAreaRectangle: require('./components/SetHitAreaRectangle'),
     setHitAreaTriangle: require('./components/SetHitAreaTriangle'),
+
+    getInteractiveObject: require('./components/GetInteractiveObject'),
+    setDraggable: require('./components/SetDraggable'),
 
     setCallback: require('./components/SetCallback'),
     setCallbacks: require('./components/SetCallbacks'),
