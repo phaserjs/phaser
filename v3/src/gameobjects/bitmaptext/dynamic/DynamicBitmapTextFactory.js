@@ -1,8 +1,8 @@
 var BitmapText = require('./DynamicBitmapText');
 
-var DynamicBitmapTextFactory = function (scene, x, y, font, text, size, align)
+var DynamicBitmapTextFactory = function (scene, x, y, font, text, size)
 {
-    return new BitmapText(scene, x, y, font, text, size, align);
+    return new BitmapText(scene, x, y, font, text, size);
 };
 
 module.exports = DynamicBitmapTextFactory;
