@@ -10,31 +10,15 @@ var SetDraggable = function (gameObjects, value)
     for (var i = 0; i < gameObjects.length; i++)
     {
         var gameObject = gameObjects[i];
-        var index = this._draggable.indexOf(gameObject);
+        var interactiveObject = gameObject.input;
 
-        if (value)
+        if (interactiveObject)
         {
-            //  Make draggable
-            gameObject.input.draggable = true;
-
-            if (index === -1)
-            {
-                this._draggable.push(gameObject);
-            }
-        }
-        else
-        {
-            //  Disable drag
-            gameObject.input.draggable = false;
-
-            if (index === -1)
-            {
-                this._draggable.splice(index, 1);
-            }
+            interactiveObject.draggable = value;
         }
     }
 
-    return true;
+    return this;
 };
 
 module.exports = SetDraggable;
