@@ -1,4 +1,4 @@
-ChildOnOut = function (index, pointer, interactiveObject)
+var ChildOnOut = function (index, pointer, interactiveObject)
 {
     interactiveObject.isOver = false;
 
