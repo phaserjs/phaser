@@ -17,11 +17,15 @@ var BitmapTextWebGLRenderer = function (renderer, gameObject, interpolationPerce
     var lineHeight = gameObject.fontData.lineHeight;
     var spriteBatch = renderer.spriteBatch;
     var alpha = gameObject.alpha;
+    var tintTL = gameObject._tintTL;
+    var tintTR = gameObject._tintTR;
+    var tintBL = gameObject._tintBL;
+    var tintBR = gameObject._tintBR;
     var vertexDataBuffer = spriteBatch.vertexDataBuffer;
     var vertexBuffer = vertexDataBuffer.floatView;
     var vertexBufferU32 = vertexDataBuffer.uintView;
     var vertexOffset = 0;
-    var srcX = gameObject.x; 
+    var srcX = gameObject.x;
     var srcY = gameObject.y;
     var textureData = gameObject.texture.source[textureFrame.sourceIndex];
     var textureX = textureFrame.cutX;
@@ -38,15 +42,10 @@ var BitmapTextWebGLRenderer = function (renderer, gameObject, interpolationPerce
     var glyphY = 0;
     var glyphW = 0;
     var glyphH = 0;
-    var vertexColor = 0xFFFFFFFF;
     var x = 0;
     var y = 0;
     var xw = 0;
     var yh = 0;
-    var tx = 0;
-    var ty = 0;
-    var txw = 0;
-    var tyh = 0;
     var umin = 0;
     var umax = 0;
     var vmin = 0;
@@ -61,8 +60,8 @@ var BitmapTextWebGLRenderer = function (renderer, gameObject, interpolationPerce
     var renderTarget = gameObject.renderTarget;
 
     tempMatrix.applyITRS(
-        (srcX - cameraScrollX) + textureFrame.x, (srcY - cameraScrollY) + textureFrame.y, 
-        -gameObject.rotation, 
+        (srcX - cameraScrollX) + textureFrame.x, (srcY - cameraScrollY) + textureFrame.y,
+        -gameObject.rotation,
         gameObject.scaleX, gameObject.scaleY
     );
 
@@ -159,28 +158,28 @@ var BitmapTextWebGLRenderer = function (renderer, gameObject, interpolationPerce
         vertexBuffer[vertexOffset++] = ty0;
         vertexBuffer[vertexOffset++] = umin;
         vertexBuffer[vertexOffset++] = vmin;
-        vertexBufferU32[vertexOffset++] = vertexColor;
+        vertexBufferU32[vertexOffset++] = tintTL;
         vertexBuffer[vertexOffset++] = alpha;
 
         vertexBuffer[vertexOffset++] = tx1;
         vertexBuffer[vertexOffset++] = ty1;
         vertexBuffer[vertexOffset++] = umin;
         vertexBuffer[vertexOffset++] = vmax;
-        vertexBufferU32[vertexOffset++] = vertexColor;
+        vertexBufferU32[vertexOffset++] = tintBL;
         vertexBuffer[vertexOffset++] = alpha;
 
         vertexBuffer[vertexOffset++] = tx2;
         vertexBuffer[vertexOffset++] = ty2;
         vertexBuffer[vertexOffset++] = umax;
         vertexBuffer[vertexOffset++] = vmax;
-        vertexBufferU32[vertexOffset++] = vertexColor;
+        vertexBufferU32[vertexOffset++] = tintTR;
         vertexBuffer[vertexOffset++] = alpha;
 
         vertexBuffer[vertexOffset++] = tx3;
         vertexBuffer[vertexOffset++] = ty3;
         vertexBuffer[vertexOffset++] = umax;
         vertexBuffer[vertexOffset++] = vmin;
-        vertexBufferU32[vertexOffset++] = vertexColor;
+        vertexBufferU32[vertexOffset++] = tintBR;
         vertexBuffer[vertexOffset++] = alpha;
     }
 };
