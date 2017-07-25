@@ -14,7 +14,13 @@ var Pointer = new Class({
 
         this.event;
 
-        this.button = 0;
+        // 0  : No button or un-initialized
+        // 1  : Left button
+        // 2  : Right button
+        // 4  : Wheel button or middle button
+        // 8  : 4th button (typically the "Browser Back" button)
+        // 16 : 5th button (typically the "Browser Forward" button)
+        this.buttons = 0;
 
         this.x = 0;
         this.y = 0;
@@ -30,6 +36,8 @@ var Pointer = new Class({
 
     reset: function ()
     {
+        this.buttons = 0;
+
         this.dirty = false;
         this.isDown = false;
         this.justDown = false;
@@ -39,9 +47,9 @@ var Pointer = new Class({
 
     move: function (event)
     {
-        if (event.button !== undefined)
+        if (event.buttons)
         {
-            this.button = event.button;
+            this.buttons = event.buttons;
         }
 
         this.event = event;
@@ -56,9 +64,9 @@ var Pointer = new Class({
 
     down: function (event)
     {
-        if (event.button !== undefined)
+        if (event.buttons)
         {
-            this.button = event.button;
+            this.buttons = event.buttons;
         }
 
         this.event = event;
@@ -74,9 +82,9 @@ var Pointer = new Class({
 
     up: function (event)
     {
-        if (event.button !== undefined)
+        if (event.buttons)
         {
-            this.button = event.button;
+            this.buttons = event.buttons;
         }
 
         this.event = event;
@@ -88,6 +96,36 @@ var Pointer = new Class({
         this.isDown = false;
 
         this.dirty = true;
+    },
+
+    noButtonDown: function ()
+    {
+        return (this.buttons === 0);
+    },
+
+    leftButtonDown: function ()
+    {
+        return (this.buttons & 1);
+    },
+
+    rightButtonDown: function ()
+    {
+        return (this.buttons & 2);
+    },
+
+    middleButtonDown: function ()
+    {
+        return (this.buttons & 4);
+    },
+
+    backButtonDown: function ()
+    {
+        return (this.buttons & 8);
+    },
+
+    forwardButtonDown: function ()
+    {
+        return (this.buttons & 16);
     }
 
 });
