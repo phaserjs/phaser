@@ -1,7 +1,9 @@
 var InputEvent = require('../events');
 
-var ProcessOverOutEvents = function (pointer, currentlyOver)
+var ProcessOverOutEvents = function (pointer)
 {
+    var currentlyOver = this._tempIO;
+
     var justOut = [];
     var justOver = [];
     var stillOver = [];

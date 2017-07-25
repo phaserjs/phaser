@@ -1,8 +1,10 @@
 var InputEvent = require('../events');
 
-var ProcessMoveEvents = function (pointer, currentlyOver)
+var ProcessMoveEvents = function (pointer)
 {
-    this.events.dispatch(new InputEvent.POINTER_MOVE(pointer, currentlyOver));
+    var currentlyOver = this._tempIO;
+
+    this.events.dispatch(new InputEvent.POINTER_MOVE(pointer, this._tempGO));
 
     //  Go through all objects the pointer was over and fire their events / callbacks
     for (var i = 0; i < currentlyOver.length; i++)
@@ -13,7 +15,6 @@ var ProcessMoveEvents = function (pointer, currentlyOver)
 
         interactiveObject.onMove(interactiveObject.gameObject, pointer, interactiveObject.localX, interactiveObject.localY);
     }
-
 
     /*
     var i;

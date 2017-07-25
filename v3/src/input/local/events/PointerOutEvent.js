@@ -7,7 +7,7 @@ var PointerOutEvent = new Class({
 
     initialize:
 
-    function PointerOutEvent (pointer, gameObjects)
+    function PointerOutEvent (pointer, interactiveObjects)
     {
         Event.call(this, 'POINTER_OUT_EVENT');
 
@@ -25,10 +25,15 @@ var PointerOutEvent = new Class({
         //  Will be undefined if no objects were interacted with.
         //  If populated, the bottom element (list[0]) is the highest object on the display list.
         //  If InputManager.topOnly is true this array will only contain one element.
-        this.list = gameObjects;
+        this.list = [];
+
+        for (var i = 0; i < interactiveObjects.length; i++)
+        {
+            this.list.push(interactiveObjects[i].gameObject);
+        }
 
         //  A reference to the top-most object on the display list (also this.list[0])
-        this.gameObject = gameObjects[0];
+        this.gameObject = this.list[0];
     }
 
 });

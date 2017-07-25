@@ -42,8 +42,11 @@ var SceneInputManager = new Class({
         //  Internal counter
         this._pollTimer = 0;
 
+        //  Used to temporarily store the results of the Hit Test
+        this._temp = [];
+
         //  An object containing the various lists of Interactive Objects
-        //  list: A list of all Interactive Objects
+        //  list: A list of all Interactive Game Objects
         //  pendingInsertion: Objects waiting to be inserted to the list on the next call to 'begin'
         //  pendingRemoval: Objects waiting to be removed from the list on the next call to 'begin'
         //  draggable: A list of all Interactive Objects that are set to be draggable (a subset of list)

@@ -1,6 +1,6 @@
-var HitTestPointer = function (pointer)
+var HitTestPointer = function (pointer, output)
 {
-    var output = [];
+    output.length = 0;
 
     //  Get a list of all objects that can be seen by all the cameras in the scene and store in 'output' array.
     //  All objects in this array are input enabled, as checked by the hitTest function, so we don't need to check later on as well.

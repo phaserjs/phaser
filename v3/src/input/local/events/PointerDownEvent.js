@@ -31,7 +31,7 @@ var PointerDownEvent = new Class({
         this.list = gameObjects;
 
         //  A reference to the top-most object on the display list (same as event.list[0])
-        this.gameObject = gameObjects[0];
+        this.gameObject = (gameObjects.length > 0) ? gameObjects[gameObjects.length - 1].gameObject : undefined;
     }
 
 });
