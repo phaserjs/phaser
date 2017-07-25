@@ -29,27 +29,27 @@ var InteractiveObject = new Class({
         // onDragEnd: NOOP
     },
 
-    onUp: function ()
+    onUp: function (gameObject, pointer, x, y)
     {
         //  Empty by default. Override via setCallback.
     },
 
-    onDown: function ()
+    onDown: function (gameObject, pointer, x, y)
     {
         //  Empty by default. Override via setCallback.
     },
 
-    onOver: function ()
+    onOver: function (gameObject, pointer, x, y)
     {
         //  Empty by default. Override via setCallback.
     },
 
-    onOut: function ()
+    onOut: function (gameObject, pointer)
     {
         //  Empty by default. Override via setCallback.
     },
 
-    onMove: function ()
+    onMove: function (gameObject, pointer, x, y)
     {
         //  Empty by default. Override via setCallback.
     },

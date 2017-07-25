@@ -13,6 +13,7 @@ var InputManager = new Class({
         SceneInputManager.call(this, scene, game);
     },
 
+    /*
     childOnMove: function (pointer, interactiveObject)
     {
         interactiveObject.onMove(interactiveObject.gameObject, pointer);
@@ -53,6 +54,7 @@ var InputManager = new Class({
 
         interactiveObject.onDragEnd(interactiveObject.gameObject, pointer);
     }
+    */
 
 });
 

@@ -2,6 +2,8 @@ var Class = require('../../utils/Class');
 
 //  Drag Events
 //  https://developer.mozilla.org/en-US/docs/Web/API/HTML_Drag_and_Drop_API
+//  Mouse Events
+//  https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent
 
 var SceneInputManager = new Class({
 

@@ -22,32 +22,6 @@ var ProcessMoveEvents = function (pointer)
     }
 
     /*
-    var i;
-    var interactiveObject;
-
-    if (currentlyOver.length === 0)
-    {
-        //  Dispatch MOVE event, even though pointer isn't over anything
-        this.events.dispatch(new InputEvent.MOVE(pointer));
-    }
-    else
-    {
-        //  Go through all objects the pointer is over and dispatch them
-        for (i = 0; i < currentlyOver.length; i++)
-        {
-            interactiveObject = currentlyOver[i];
-
-            this.events.dispatch(new InputEvent.MOVE(pointer, interactiveObject.gameObject, currentlyOver));
-
-            this.childOnMove(pointer, interactiveObject);
-
-            if (this.topOnly)
-            {
-                break;
-            }
-        }
-    }
-
     //  Check the list of Draggable Items
     for (i = 0; i < this.children.draggable.length; i++)
     {
