@@ -58,6 +58,8 @@ var Config = new Class({
         this.inputMouse = GetValue(config, 'input.mouse', true);
         this.inputMouseEventTarget = GetValue(config, 'input.mouse.target', null);
 
+        this.disableContextMenu = GetValue(config, 'disableContextMenu', false);
+
         //  If you do: { banner: false } it won't display any banner at all
         this.hideBanner = (GetValue(config, 'banner', null) === false);
 

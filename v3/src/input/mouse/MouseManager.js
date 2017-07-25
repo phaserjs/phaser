@@ -11,6 +11,11 @@ var MouseManager = new Class({
     {
         this.manager = inputManager;
 
+        /**
+        * @property {boolean} capture - If true the DOM mouse events will have event.preventDefault applied to them, if false they will propagate fully.
+        */
+        this.capture = false;
+
         this.enabled = false;
 
         this.target;
@@ -30,15 +35,32 @@ var MouseManager = new Class({
             this.target = this.manager.game.canvas;
         }
 
+        if (config.disableContextMenu)
+        {
+            this.disableContextMenu();
+        }
+
         if (this.enabled)
         {
             this.startListeners();
         }
     },
 
+    disableContextMenu: function ()
+    {
+        document.body.addEventListener('contextmenu', function (event) {
+            event.preventDefault();
+            return false;
+        });
+
+        return this;
+    },
+
     startListeners: function ()
     {
         var queue = this.manager.queue;
+
+        var _this = this;
 
         var handler = function (event)
         {
@@ -49,6 +71,11 @@ var MouseManager = new Class({
             }
 
             queue.push(event);
+
+            if (_this.capture)
+            {
+                event.preventDefault();
+            }
         };
 
         this.handler = handler;
