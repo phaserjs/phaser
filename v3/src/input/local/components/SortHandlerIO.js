@@ -1,5 +1,5 @@
 //  Return the child lowest down the display list (with the smallest index)
-var SortIndexHandler = function (childA, childB)
+var SortHandlerIO = function (childA, childB)
 {
     //  The higher the index, the lower down the display list they are.
     //  So entry 0 will be the top-most item (visually)
@@ -20,4 +20,4 @@ var SortIndexHandler = function (childA, childB)
     return 0;
 };
 
-module.exports = SortIndexHandler;
+module.exports = SortHandlerIO;

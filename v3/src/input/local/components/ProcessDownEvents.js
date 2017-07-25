@@ -2,18 +2,23 @@ var InputEvent = require('../events');
 
 var ProcessDownEvents = function (pointer)
 {
-    var currentlyOver = this._tempIO;
+    var currentlyOver = this._temp;
 
-    this.events.dispatch(new InputEvent.POINTER_DOWN(pointer, this._tempGO));
+    this.events.dispatch(new InputEvent.POINTER_DOWN(pointer, currentlyOver));
 
     //  Go through all objects the pointer was over and fire their events / callbacks
     for (var i = 0; i < currentlyOver.length; i++)
     {
-        var interactiveObject = currentlyOver[i];
+        var gameObject = currentlyOver[i];
 
-        this.events.dispatch(new InputEvent.GAME_OBJECT_DOWN(pointer, interactiveObject));
+        this.events.dispatch(new InputEvent.GAME_OBJECT_DOWN(pointer, gameObject));
 
-        interactiveObject.onDown(interactiveObject.gameObject, pointer, interactiveObject.localX, interactiveObject.localY);
+        gameObject.input.onDown(gameObject, pointer, gameObject.input.localX, gameObject.input.localY);
+
+        if (this.topOnly)
+        {
+            break;
+        }
     }
 };
 

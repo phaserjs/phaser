@@ -1,42 +1,66 @@
-var NOOP = require('../utils/NOOP');
-
 //  Phaser.Input.InteractiveObject
 
-var InteractiveObject = function (gameObject, hitArea, hitAreaCallback)
-{
-    return {
-        gameObject: gameObject,
+var Class = require('../utils/Class');
 
-        enabled: true,
-        // draggable: false,
+var InteractiveObject = new Class({
 
-        hitArea: hitArea,
-        hitAreaCallback: hitAreaCallback,
+    initialize:
 
-        localX: 0, // tempX value populated by HitTest function
-        localY: 0, // tempY value populated by HitTest function
+    function InteractiveObject (gameObject, hitArea, hitAreaCallback)
+    {
+        this.gameObject = gameObject;
 
-        // isOver: false,
-        // isDown: false,
-        // isDragged: false,
+        this.enabled = true;
+        this.draggable = false;
 
-        // checkingDrag: false,
+        this.hitArea = hitArea;
+        this.hitAreaCallback = hitAreaCallback;
 
-        dragX: 0,
-        dragY: 0,
+        this.localX = 0;
+        this.localY = 0;
 
-        callbackContext: gameObject,
+        // this.dragX = 0;
+        // this.dragY = 0;
 
-        onUp: NOOP,
-        onDown: NOOP,
-        onOver: NOOP,
-        onOut: NOOP,
-        onMove: NOOP,
+        // this.callbackContext = gameObject;
 
-        onDragStart: NOOP,
-        onDrag: NOOP,
-        onDragEnd: NOOP
-    };
-};
+        // onDragStart: NOOP,
+        // onDrag: NOOP,
+        // onDragEnd: NOOP
+    },
+
+    onUp: function ()
+    {
+        //  Empty by default. Override via setCallback.
+    },
+
+    onDown: function ()
+    {
+        //  Empty by default. Override via setCallback.
+    },
+
+    onOver: function ()
+    {
+        //  Empty by default. Override via setCallback.
+    },
+
+    onOut: function ()
+    {
+        //  Empty by default. Override via setCallback.
+    },
+
+    onMove: function ()
+    {
+        //  Empty by default. Override via setCallback.
+    },
+
+    destroy: function ()
+    {
+        this.gameObject = undefined;
+        this.hitArea = undefined;
+        this.hitAreaCallback = undefined;
+    }
+
+});
 
 module.exports = InteractiveObject;

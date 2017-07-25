@@ -7,7 +7,7 @@ var GameObjectOverEvent = new Class({
 
     initialize:
 
-    function GameObjectOverEvent (pointer, interactiveObject)
+    function GameObjectOverEvent (pointer, gameObject)
     {
         Event.call(this, 'GAME_OBJECT_OVER_EVENT');
 
@@ -18,11 +18,11 @@ var GameObjectOverEvent = new Class({
         this.event = pointer.event;
 
         //  The Game Object the event occurred on
-        this.gameObject = interactiveObject.gameObject;
+        this.gameObject = gameObject;
 
         //  The local x/y coordinates of the event within the Game Object
-        this.x = interactiveObject.localX;
-        this.y = interactiveObject.localY;
+        this.x = gameObject.input.localX;
+        this.y = gameObject.input.localY;
     }
 
 });

@@ -35,10 +35,10 @@ var HitTest = function (tempMatrix, x, y, gameObjects, camera, output)
             (screenPoint.x + camera.scrollX) * gameObject.scrollFactorX,
             (screenPoint.y + camera.scrollY) * gameObject.scrollFactorY
         );
-
+    
         if (PointWithinHitArea(gameObject, point.x, point.y))
         {
-            output.push(gameObject.input);
+            output.push(gameObject);
         }
     }
 

@@ -7,7 +7,7 @@ var GameObjectOutEvent = new Class({
 
     initialize:
 
-    function GameObjectOutEvent (pointer, interactiveObject)
+    function GameObjectOutEvent (pointer, gameObject)
     {
         Event.call(this, 'GAME_OBJECT_OUT_EVENT');
 
@@ -18,7 +18,7 @@ var GameObjectOutEvent = new Class({
         this.event = pointer.event;
 
         //  The Game Object the event occurred on
-        this.gameObject = interactiveObject.gameObject;
+        this.gameObject = gameObject;
     }
 
 });

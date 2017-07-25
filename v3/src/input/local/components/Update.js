@@ -19,35 +19,20 @@ var Update = function (time, delta)
 
     if (runUpdate)
     {
-        this.hitTestPointer(pointer, this._tempIO);
+        this._temp = this.hitTestPointer(pointer);
 
-        this.sortInteractiveObjects(this._tempIO);
-
-        if (this.topOnly && this._tempIO.length > 1)
-        {
-            this._tempIO = this._tempIO.splice(1);
-        }
-
-        this._tempGO.length = 0;
-
-        for (var i = 0; i < this._tempIO.length; i++)
-        {
-            this._tempGO.push(this._tempIO[i].gameObject);
-        }
-
-        //  tempIO and tempGO now contain the sorted lists of InteractiveObjects
-        //  and their corresponding GameObjects
+        this.sortGameObjects(this._temp);
 
         this.processOverOutEvents(pointer);
-
-        if (pointer.justUp)
-        {
-            this.processUpEvents(pointer);
-        }
 
         if (pointer.justDown)
         {
             this.processDownEvents(pointer);
+        }
+
+        if (pointer.justUp)
+        {
+            this.processUpEvents(pointer);
         }
 
         if (pointer.justMoved)

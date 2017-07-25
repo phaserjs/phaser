@@ -9,13 +9,7 @@ var SetDraggable = function (gameObjects, value)
 
     for (var i = 0; i < gameObjects.length; i++)
     {
-        var gameObject = gameObjects[i];
-        var interactiveObject = gameObject.input;
-
-        if (interactiveObject)
-        {
-            interactiveObject.draggable = value;
-        }
+        gameObjects[i].input.draggable = value;
     }
 
     return this;

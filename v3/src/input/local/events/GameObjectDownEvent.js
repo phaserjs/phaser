@@ -7,7 +7,7 @@ var GameObjectDownEvent = new Class({
 
     initialize:
 
-    function GameObjectDownEvent (pointer, interactiveObject)
+    function GameObjectDownEvent (pointer, gameObject)
     {
         Event.call(this, 'GAME_OBJECT_DOWN_EVENT');
 
@@ -21,11 +21,11 @@ var GameObjectDownEvent = new Class({
         this.button = pointer.event.button;
 
         //  The Game Object the event occurred on
-        this.gameObject = interactiveObject.gameObject;
+        this.gameObject = gameObject;
 
         //  The local x/y coordinates of the event within the Game Object
-        this.x = interactiveObject.localX;
-        this.y = interactiveObject.localY;
+        this.x = gameObject.input.localX;
+        this.y = gameObject.input.localY;
     }
 
 });

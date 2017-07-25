@@ -45,32 +45,17 @@ var SceneInputManager = new Class({
         //  Used to temporarily store the results of the Hit Test
         this._temp = [];
 
-        //  An object containing the various lists of Interactive Objects
-        //  list: A list of all Interactive Game Objects
-        //  pendingInsertion: Objects waiting to be inserted to the list on the next call to 'begin'
-        //  pendingRemoval: Objects waiting to be removed from the list on the next call to 'begin'
-        //  draggable: A list of all Interactive Objects that are set to be draggable (a subset of list)
-        //  over: A list of all Interactive Objects currently considered as being 'over' by any pointer, indexed by pointer ID
-        //  down: A list of all Interactive Objects currently considered as being 'down' by any pointer, indexed by pointer ID
-        this.children = {
-            size: 0,
-            list: [],
-            pendingInsertion: [],
-            pendingRemoval: [],
-            over: { 0: [], 1: [], 2: [], 3: [], 4: [], 5: [], 6: [], 7: [], 8: [], 9: [] }
-        };
+        //  list: A list of all Game Objects that have been set to be interactive
+        this._list = [];
 
-        /*
-        this.children = {
-            size: 0,
-            list: [],
-            pendingInsertion: [],
-            pendingRemoval: [],
-            draggable: { 0: [], 1: [], 2: [], 3: [], 4: [], 5: [], 6: [], 7: [], 8: [], 9: [] },
-            over: { 0: [], 1: [], 2: [], 3: [], 4: [], 5: [], 6: [], 7: [], 8: [], 9: [] },
-            down: { 0: [], 1: [], 2: [], 3: [], 4: [], 5: [], 6: [], 7: [], 8: [], 9: [] }
-        };
-        */
+        //  pendingInsertion: Objects waiting to be inserted to the list on the next call to 'begin'
+        this._pendingInsertion = [];
+
+        //  pendingRemoval: Objects waiting to be removed from the list on the next call to 'begin'
+        this._pendingRemoval = [];
+
+        //  over: A list of all Interactive Objects currently considered as being 'over' by any pointer, indexed by pointer ID
+        this._over = { 0: [], 1: [], 2: [], 3: [], 4: [], 5: [], 6: [], 7: [], 8: [], 9: [] };
 
         this._validTypes = [ 'onDown', 'onUp', 'onOver', 'onOut', 'onMove' ];
     },
@@ -97,7 +82,6 @@ var SceneInputManager = new Class({
     setHitAreaRectangle: require('./components/SetHitAreaRectangle'),
     setHitAreaTriangle: require('./components/SetHitAreaTriangle'),
 
-    getInteractiveObject: require('./components/GetInteractiveObject'),
     setDraggable: require('./components/SetDraggable'),
 
     setCallback: require('./components/SetCallback'),
@@ -112,26 +96,22 @@ var SceneInputManager = new Class({
     processDownEvents: require('./components/ProcessDownEvents'),
     processUpEvents: require('./components/ProcessUpEvents'),
     processMoveEvents: require('./components/ProcessMoveEvents'),
-    // childOnOut: require('./components/ChildOnOut'),
-    // childOnOver: require('./components/ChildOnOver'),
-    // childOnDown: require('./components/ChildOnDown'),
-    // childOnUp: require('./components/ChildOnUp'),
+    sortGameObjects: require('./components/SortGameObjects'),
     sortInteractiveObjects: require('./components/SortInteractiveObjects'),
-    sortIndexHandler: require('./components/SortIndexHandler'),
+    sortHandlerGO: require('./components/SortHandlerGO'),
+    sortHandlerIO: require('./components/SortHandlerIO'),
 
     //  Scene that owns this is shutting down
     shutdown: function ()
     {
-        this.children.size = 0;
-        this.children.list = [];
-        this.children.pendingRemoval = [];
-        this.children.pendingInsertion = [];
+        this._temp.length = 0;
+        this._list.length = 0;
+        this._pendingRemoval.length = 0;
+        this._pendingInsertion.length = 0;
 
         for (var i = 0; i < 10; i++)
         {
-            this.children.draggable[i] = [];
-            this.children.over[i] = [];
-            this.children.down[i] = [];
+            this._over[i] = [];
         }
     },
 
