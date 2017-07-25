@@ -461,7 +461,10 @@ var SpriteBatch = new Class({
         var cameraMatrix = camera.matrix.matrix;
         var mva, mvb, mvc, mvd, mve, mvf, tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3;
         var sra, srb, src, srd, sre, srf, cma, cmb, cmc, cmd, cme, cmf;
-        var alpha = gameObject.alpha;
+        var alphaTL = gameObject._alphaTL;
+        var alphaTR = gameObject._alphaTR;
+        var alphaBL = gameObject._alphaBL;
+        var alphaBR = gameObject._alphaBR;
         var tintTL = gameObject._tintTL;
         var tintTR = gameObject._tintTR;
         var tintBL = gameObject._tintBL;
@@ -511,7 +514,7 @@ var SpriteBatch = new Class({
         vertexBufferObjectF32[vertexOffset++] = 0;
         vertexBufferObjectF32[vertexOffset++] = 0;
         vertexBufferObjectU32[vertexOffset++] = tintTL;
-        vertexBufferObjectF32[vertexOffset++] = alpha;
+        vertexBufferObjectF32[vertexOffset++] = alphaTL;
 
         //  Bottom Left
         vertexBufferObjectF32[vertexOffset++] = tx1;
@@ -519,7 +522,7 @@ var SpriteBatch = new Class({
         vertexBufferObjectF32[vertexOffset++] = 0;
         vertexBufferObjectF32[vertexOffset++] = 1;
         vertexBufferObjectU32[vertexOffset++] = tintBL;
-        vertexBufferObjectF32[vertexOffset++] = alpha;
+        vertexBufferObjectF32[vertexOffset++] = alphaBL;
 
         //  Bottom Right
         vertexBufferObjectF32[vertexOffset++] = tx2;
@@ -527,7 +530,7 @@ var SpriteBatch = new Class({
         vertexBufferObjectF32[vertexOffset++] = 1;
         vertexBufferObjectF32[vertexOffset++] = 1;
         vertexBufferObjectU32[vertexOffset++] = tintBR;
-        vertexBufferObjectF32[vertexOffset++] = alpha;
+        vertexBufferObjectF32[vertexOffset++] = alphaBR;
 
         //  Top Right
         vertexBufferObjectF32[vertexOffset++] = tx3;
@@ -535,7 +538,7 @@ var SpriteBatch = new Class({
         vertexBufferObjectF32[vertexOffset++] = 1;
         vertexBufferObjectF32[vertexOffset++] = 0;
         vertexBufferObjectU32[vertexOffset++] = tintTR;
-        vertexBufferObjectF32[vertexOffset++] = alpha;
+        vertexBufferObjectF32[vertexOffset++] = alphaTR;
     },
 
     addSprite: function (gameObject, camera)
@@ -565,7 +568,10 @@ var SpriteBatch = new Class({
         var cameraMatrix = camera.matrix.matrix;
         var mva, mvb, mvc, mvd, mve, mvf, tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3;
         var sra, srb, src, srd, sre, srf, cma, cmb, cmc, cmd, cme, cmf;
-        var alpha = gameObject.alpha;
+        var alphaTL = gameObject._alphaTL;
+        var alphaTR = gameObject._alphaTR;
+        var alphaBL = gameObject._alphaBL;
+        var alphaBR = gameObject._alphaBR;
         var tintTL = gameObject._tintTL;
         var tintTR = gameObject._tintTR;
         var tintBL = gameObject._tintBL;
@@ -615,7 +621,7 @@ var SpriteBatch = new Class({
         vertexBufferObjectF32[vertexOffset++] = uvs.x0;
         vertexBufferObjectF32[vertexOffset++] = uvs.y0;
         vertexBufferObjectU32[vertexOffset++] = tintTL;
-        vertexBufferObjectF32[vertexOffset++] = alpha;
+        vertexBufferObjectF32[vertexOffset++] = alphaTL;
 
         //  Bottom Left
         vertexBufferObjectF32[vertexOffset++] = tx1;
@@ -623,7 +629,7 @@ var SpriteBatch = new Class({
         vertexBufferObjectF32[vertexOffset++] = uvs.x1;
         vertexBufferObjectF32[vertexOffset++] = uvs.y1;
         vertexBufferObjectU32[vertexOffset++] = tintBL;
-        vertexBufferObjectF32[vertexOffset++] = alpha;
+        vertexBufferObjectF32[vertexOffset++] = alphaBL;
 
         //  Bottom Right
         vertexBufferObjectF32[vertexOffset++] = tx2;
@@ -631,7 +637,7 @@ var SpriteBatch = new Class({
         vertexBufferObjectF32[vertexOffset++] = uvs.x2;
         vertexBufferObjectF32[vertexOffset++] = uvs.y2;
         vertexBufferObjectU32[vertexOffset++] = tintBR;
-        vertexBufferObjectF32[vertexOffset++] = alpha;
+        vertexBufferObjectF32[vertexOffset++] = alphaBR;
 
         //  Top Right
         vertexBufferObjectF32[vertexOffset++] = tx3;
@@ -639,7 +645,7 @@ var SpriteBatch = new Class({
         vertexBufferObjectF32[vertexOffset++] = uvs.x3;
         vertexBufferObjectF32[vertexOffset++] = uvs.y3;
         vertexBufferObjectU32[vertexOffset++] = tintTR;
-        vertexBufferObjectF32[vertexOffset++] = alpha;
+        vertexBufferObjectF32[vertexOffset++] = alphaTR;
     }
 
 });
