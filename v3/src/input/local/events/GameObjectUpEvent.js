@@ -17,9 +17,6 @@ var GameObjectUpEvent = new Class({
         //  The native DOM event (MouseEvent, TouchEvent, etc)
         this.event = pointer.event;
 
-        //  The button that was used. This is read directly from the DOM event.
-        this.button = pointer.event.button;
-
         //  The Game Object the event occurred on
         this.gameObject = gameObject;
 

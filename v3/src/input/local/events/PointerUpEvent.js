@@ -17,9 +17,6 @@ var PointerUpEvent = new Class({
         //  The native DOM event (MouseEvent, TouchEvent, etc)
         this.event = pointer.event;
 
-        //  The button/s used in this event. This is read directly from the DOM event.
-        this.buttons = pointer.event.buttons;
-
         //  The x/y coordinates of the event
         this.x = pointer.x;
         this.y = pointer.y;
