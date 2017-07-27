@@ -9,6 +9,7 @@ Line.CopyFrom = require('./CopyFrom');
 Line.Equals = require('./Equals');
 Line.GetMidPoint = require('./GetMidPoint');
 Line.GetNormal = require('./GetNormal');
+Line.GetPoint = require('./GetPoint');
 Line.GetPointsOnLine = require('./GetPointsOnLine');
 Line.Height = require('./Height');
 Line.Length = require('./Length');

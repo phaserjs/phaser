@@ -44,6 +44,12 @@ var SceneInputManager = new Class({
         //  Internal counter
         this._pollTimer = 0;
 
+        //  The distance, in pixels, the pointer has to move while being held down, before it thinks it is being dragged.
+        this.dragDistanceThreshold = 0;
+
+        //  The amount of time, in ms, the pointer has to be held down before it thinks it is dragging.
+        this.dragTimeThreshold = 0;
+
         //  Used to temporarily store the results of the Hit Test
         this._temp = [];
 
@@ -55,6 +61,12 @@ var SceneInputManager = new Class({
 
         //  pendingRemoval: Objects waiting to be removed from the list on the next call to 'begin'
         this._pendingRemoval = [];
+
+        //  draggable: A list of all Game Objects that has been enabled for dragging
+        this._draggable = [];
+
+        //  drag: A list of all Interactive Objects currently considered as being 'draggable' by any pointer, indexed by pointer ID
+        this._drag = { 0: [], 1: [], 2: [], 3: [], 4: [], 5: [], 6: [], 7: [], 8: [], 9: [] };
 
         //  over: A list of all Interactive Objects currently considered as being 'over' by any pointer, indexed by pointer ID
         this._over = { 0: [], 1: [], 2: [], 3: [], 4: [], 5: [], 6: [], 7: [], 8: [], 9: [] };
@@ -96,6 +108,7 @@ var SceneInputManager = new Class({
 
     processOverOutEvents: require('./components/ProcessOverOutEvents'),
     processDownEvents: require('./components/ProcessDownEvents'),
+    processDragEvents: require('./components/ProcessDragEvents'),
     processUpEvents: require('./components/ProcessUpEvents'),
     processMoveEvents: require('./components/ProcessMoveEvents'),
     sortGameObjects: require('./components/SortGameObjects'),
@@ -108,11 +121,13 @@ var SceneInputManager = new Class({
     {
         this._temp.length = 0;
         this._list.length = 0;
+        this._draggable.length = 0;
         this._pendingRemoval.length = 0;
         this._pendingInsertion.length = 0;
 
         for (var i = 0; i < 10; i++)
         {
+            this._drag[i] = [];
             this._over[i] = [];
         }
     },

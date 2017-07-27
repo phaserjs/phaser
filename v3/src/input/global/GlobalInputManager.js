@@ -93,19 +93,19 @@ var GlobalInputManager = new Class({
             {
                 case 'mousemove':
 
-                    pointer.move(event);
+                    pointer.move(event, time);
                     this.events.dispatch(new MouseEvent.MOVE(event));
                     break;
 
                 case 'mousedown':
 
-                    pointer.down(event);
+                    pointer.down(event, time);
                     this.events.dispatch(new MouseEvent.DOWN(event));
                     break;
 
                 case 'mouseup':
 
-                    pointer.up(event);
+                    pointer.up(event, time);
                     this.events.dispatch(new MouseEvent.UP(event));
                     break;
             }

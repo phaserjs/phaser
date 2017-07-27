@@ -7,20 +7,22 @@ var DragStartEvent = new Class({
 
     initialize:
 
-    function DragStartEvent (pointer, topObject, gameObjects)
+    function DragStartEvent (pointer, gameObject)
     {
         Event.call(this, 'DRAG_START_EVENT');
 
+        //  The Pointer that triggered the event
         this.pointer = pointer;
 
-        this.x = pointer.x;
-        this.y = pointer.y;
+        //  The native DOM event (MouseEvent, TouchEvent, etc)
+        this.event = pointer.event;
 
-        //  An array of all the game objects the pointer event occurred on
-        this.list = gameObjects;
+        //  The Game Object the event occurred on
+        this.gameObject = gameObject;
 
-        //  A reference to the top-most game object in the list (based on display list order)
-        this.gameObject = topObject;
+        //  The local x/y coordinates of the event within the Game Object
+        this.x = gameObject.input.dragX;
+        this.y = gameObject.input.dragY;
     }
 
 });

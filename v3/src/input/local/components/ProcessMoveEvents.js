@@ -20,30 +20,6 @@ var ProcessMoveEvents = function (pointer)
             break;
         }
     }
-
-    /*
-    //  Check the list of Draggable Items
-    for (i = 0; i < this.children.draggable.length; i++)
-    {
-        interactiveObject = this.children.draggable[i];
-
-        if (!interactiveObject.enabled)
-        {
-            continue;
-        }
-
-        if (pointer.justUp && interactiveObject.isDragged)
-        {
-            //  Drag End
-            this.childOnDragEnd(pointer, interactiveObject, currentlyOver);
-        }
-        else if (interactiveObject.isDragged)
-        {
-            //  Drag
-            this.childOnDrag(pointer, interactiveObject, currentlyOver);
-        }
-    }
-    */
 };
 
 module.exports = ProcessMoveEvents;

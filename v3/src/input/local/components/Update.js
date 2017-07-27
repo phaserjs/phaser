@@ -23,6 +23,8 @@ var Update = function (time, delta)
 
         this.sortGameObjects(this._temp);
 
+        this.processDragEvents(pointer, time);
+
         this.processOverOutEvents(pointer);
 
         if (pointer.justDown)

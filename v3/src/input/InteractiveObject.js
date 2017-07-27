@@ -19,14 +19,13 @@ var InteractiveObject = new Class({
         this.localX = 0;
         this.localY = 0;
 
-        // this.dragX = 0;
-        // this.dragY = 0;
+        //  0 = Not being dragged
+        //  1 = Being checked for dragging
+        //  2 = Being dragged
+        this.dragState = 0;
 
-        // this.callbackContext = gameObject;
-
-        // onDragStart: NOOP,
-        // onDrag: NOOP,
-        // onDragEnd: NOOP
+        this.dragX = 0;
+        this.dragY = 0;
     },
 
     onUp: function (gameObject, pointer, x, y)
