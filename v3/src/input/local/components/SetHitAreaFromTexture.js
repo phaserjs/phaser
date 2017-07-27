@@ -16,9 +16,23 @@ var SetHitAreaFromTexture = function (gameObjects, callback)
         var gameObject = gameObjects[i];
         var frame = gameObject.frame;
 
+        var width = 0;
+        var height = 0;
+
         if (frame)
         {
-            gameObject.input = InteractiveObject(gameObject, new Rectangle(0, 0, frame.width, frame.height), callback);
+            width = frame.width;
+            height = frame.height;
+        }
+        else if (gameObject.width)
+        {
+            width = gameObject.width;
+            height = gameObject.height;
+        }
+
+        if (width !== 0 && height !== 0)
+        {
+            gameObject.input = InteractiveObject(gameObject, new Rectangle(0, 0, width, height), callback);
 
             this.queueForInsertion(gameObject);
         }
