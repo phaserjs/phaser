@@ -25,6 +25,9 @@ var InteractiveObject = function (gameObject, hitArea, hitAreaCallback)
         //  2 = Being dragged
         dragState: 0,
 
+        dragStartX: 0,
+        dragStartY: 0,
+
         dragX: 0,
         dragY: 0,
 

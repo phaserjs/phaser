@@ -7,7 +7,7 @@ var DragEndEvent = new Class({
 
     initialize:
 
-    function DragEndEvent (pointer, gameObject)
+    function DragEndEvent (pointer, gameObject, dropped)
     {
         Event.call(this, 'DRAG_END_EVENT');
 
@@ -23,6 +23,9 @@ var DragEndEvent = new Class({
         //  The local x/y coordinates of the event within the Game Object
         this.x = pointer.x;
         this.y = pointer.y;
+
+        //  When the drag ended did it fire a successful DROP event first?
+        this.dropped = dropped;
 
         this.dragX = gameObject.input.dragX;
         this.dragY = gameObject.input.dragY;

@@ -112,8 +112,12 @@ var ProcessDragEvents = function (pointer, time)
             input = gameObject.input;
 
             input.dragState = 2;
+
             input.dragX = input.localX - gameObject.displayOriginX;
             input.dragY = input.localY - gameObject.displayOriginY;
+
+            input.dragStartX = gameObject.x;
+            input.dragStartY = gameObject.y;
 
             this.events.dispatch(new InputEvent.DRAG_START(pointer, gameObject));
 
@@ -218,23 +222,24 @@ var ProcessDragEvents = function (pointer, time)
             input = gameObject.input;
 
             input.dragState = 0;
+
             input.dragX = input.localX - gameObject.displayOriginX;
             input.dragY = input.localY - gameObject.displayOriginY;
 
-            //  Any drop zones here?
-            for (c = 0; c < currentlyOver.length; c++)
-            {
-                overGameObject = currentlyOver[c];
+            var dropped = false;
 
-                if (overGameObject.input.dropZone)
-                {
-                    this.events.dispatch(new InputEvent.DROP(pointer, gameObject, overGameObject));
-                }
+            if (input.target)
+            {
+                this.events.dispatch(new InputEvent.DROP(pointer, gameObject, input.target));
+
+                input.target = null;
+
+                dropped = true;
             }
 
             //  And finally the dragend event
 
-            this.events.dispatch(new InputEvent.DRAG_END(pointer, gameObject));
+            this.events.dispatch(new InputEvent.DRAG_END(pointer, gameObject, dropped));
 
             input.onDragEnd(gameObject, pointer, input.dragX, input.dragY);
         }
