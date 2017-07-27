@@ -83,14 +83,14 @@ var ProcessDragEvents = function (pointer, time)
         if (this.dragDistanceThreshold > 0 && DistanceBetween(pointer.x, pointer.y, pointer.downX, pointer.downY) >= this.dragDistanceThreshold)
         {
             //  Alrighty, we've got a drag going on ...
-            pointer.dragState === 3;
+            pointer.dragState = 3;
         }
 
         //  Held down long enough to be considered a drag?
         if (this.dragTimeThreshold > 0 && (time >= pointer.downTime + this.dragTimeThreshold))
         {
             //  Alrighty, we've got a drag going on ...
-            pointer.dragState === 3;
+            pointer.dragState = 3;
         }
     }
 
