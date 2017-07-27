@@ -9,6 +9,10 @@ var ProcessDragEvents = function (pointer, time)
         return;
     }
 
+    var i;
+    var gameObject;
+    var list;
+    var input;
     var currentlyOver = this._temp;
 
     //  0 = Not dragging anything
@@ -35,9 +39,9 @@ var ProcessDragEvents = function (pointer, time)
         //  Get draggable objects, sort them, pick the top (or all) and store them somewhere
         var draglist = [];
 
-        for (var i = 0; i < currentlyOver.length; i++)
+        for (i = 0; i < currentlyOver.length; i++)
         {
-            var gameObject = currentlyOver[i];
+            gameObject = currentlyOver[i];
 
             if (gameObject.input.draggable)
             {
@@ -97,17 +101,21 @@ var ProcessDragEvents = function (pointer, time)
     //  3 = Pointer meets criteria and is freshly down, notify the draglist
     if (pointer.dragState === 3)
     {
-        var list = this._drag[pointer.id];
+        list = this._drag[pointer.id];
 
-        for (var i = 0; i < list.length; i++)
+        for (i = 0; i < list.length; i++)
         {
-            var gameObject = list[i];
+            gameObject = list[i];
 
-            gameObject.input.dragState = 2;
-            gameObject.input.dragX = gameObject.input.localX - gameObject.displayOriginX;
-            gameObject.input.dragY = gameObject.input.localY - gameObject.displayOriginY;
+            input = gameObject.input;
+
+            input.dragState = 2;
+            input.dragX = input.localX - gameObject.displayOriginX;
+            input.dragY = input.localY - gameObject.displayOriginY;
 
             this.events.dispatch(new InputEvent.DRAG_START(pointer, gameObject));
+
+            input.onDragStart(gameObject, pointer, input.dragX, input.dragY);
         }
 
         pointer.dragState = 4;
@@ -118,30 +126,36 @@ var ProcessDragEvents = function (pointer, time)
     //  4 = Pointer actively dragging the draglist and has moved
     if (pointer.dragState === 4 && pointer.justMoved)
     {
-        var list = this._drag[pointer.id];
+        list = this._drag[pointer.id];
 
-        for (var i = 0; i < list.length; i++)
+        for (i = 0; i < list.length; i++)
         {
-            var gameObject = list[i];
+            gameObject = list[i];
+
+            input = gameObject.input;
 
             this.events.dispatch(new InputEvent.DRAG(pointer, gameObject));
+
+            input.onDrag(gameObject, pointer);
         }
 
-        //  Check drop zones?
+        //  Check drop zones
     }
 
     //  5 = Pointer actively dragging but has been released, notify draglist
     if (pointer.dragState === 5)
     {
-        var list = this._drag[pointer.id];
+        list = this._drag[pointer.id];
 
-        for (var i = 0; i < list.length; i++)
+        for (i = 0; i < list.length; i++)
         {
-            var gameObject = list[i];
+            gameObject = list[i];
 
             gameObject.input.dragState = 0;
 
             this.events.dispatch(new InputEvent.DRAG_END(pointer, gameObject));
+
+            input.onDragEnd(gameObject, pointer, input.dragX, input.dragY);
         }
 
         pointer.dragState = 0;
