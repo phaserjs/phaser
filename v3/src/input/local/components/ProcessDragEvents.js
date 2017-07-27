@@ -57,7 +57,7 @@ var ProcessDragEvents = function (pointer, time)
 
             if (this.topOnly)
             {
-                draglist = draglist.splice(1);
+                draglist.splice(1);
             }
         }
 
