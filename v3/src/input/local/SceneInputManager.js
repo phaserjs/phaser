@@ -71,7 +71,7 @@ var SceneInputManager = new Class({
         //  over: A list of all Interactive Objects currently considered as being 'over' by any pointer, indexed by pointer ID
         this._over = { 0: [], 1: [], 2: [], 3: [], 4: [], 5: [], 6: [], 7: [], 8: [], 9: [] };
 
-        this._validTypes = [ 'onDown', 'onUp', 'onOver', 'onOut', 'onMove' ];
+        this._validTypes = [ 'onDown', 'onUp', 'onOver', 'onOut', 'onMove', 'onDragStart', 'onDrag', 'onDragEnd' ];
     },
 
     //  Add option to get all IOs within a Rect or Circle
