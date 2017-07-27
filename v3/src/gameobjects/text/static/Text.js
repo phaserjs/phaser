@@ -76,8 +76,6 @@ var Text = new Class({
         this.height = 1;
 
         this.canvasTexture = null;
-        this.prevWidth = 0;
-        this.prevHeight = 0;
         this.dirty = false;
 
         if (text !== '')

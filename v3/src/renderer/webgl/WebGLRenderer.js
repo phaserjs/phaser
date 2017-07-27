@@ -509,7 +509,7 @@ var WebGLRenderer = new Class({
         return texture;
     },
 
-    uploadCanvasToGPU: function (srcCanvas, dstTexture, shouldUpdateResource)
+    uploadCanvasToGPU: function (srcCanvas, dstTexture, shouldReallocate)
     {
         var gl = this.gl;
 
@@ -526,7 +526,7 @@ var WebGLRenderer = new Class({
             this.currentRenderer.flush();
         }
 
-        if (shouldUpdateResource)
+        if (!shouldReallocate)
         {
             //  Update resource
             gl.bindTexture(gl.TEXTURE_2D, dstTexture.texture);
@@ -541,10 +541,9 @@ var WebGLRenderer = new Class({
             gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
             gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
             gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+            dstTexture.width = srcCanvas.width;
+            dstTexture.height = srcCanvas.height;
         }
-
-        dstTexture.width = srcCanvas.width;
-        dstTexture.height = srcCanvas.height;
 
         //  We must rebind old texture
         if (dstTexture != this.currentTexture && this.currentTexture !== null)
