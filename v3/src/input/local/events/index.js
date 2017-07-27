@@ -2,10 +2,13 @@
 
 module.exports = {
 
-    DROP: require('./DropEvent'),
     DRAG: require('./DragEvent'),
     DRAG_END: require('./DragEndEvent'),
+    DRAG_ENTER: require('./DragEnterEvent'),
+    DRAG_LEAVE: require('./DragLeaveEvent'),
+    DRAG_OVER: require('./DragOverEvent'),
     DRAG_START: require('./DragStartEvent'),
+    DROP: require('./DropEvent'),
 
     GAME_OBJECT_DOWN: require('./GameObjectDownEvent'),
     GAME_OBJECT_MOVE: require('./GameObjectMoveEvent'),

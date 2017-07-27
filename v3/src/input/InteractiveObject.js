@@ -12,6 +12,8 @@ var InteractiveObject = function (gameObject, hitArea, hitAreaCallback)
         draggable: false,
         dropZone: false,
 
+        target: null,
+
         hitArea: hitArea,
         hitAreaCallback: hitAreaCallback,
 

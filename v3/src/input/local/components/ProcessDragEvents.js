@@ -10,6 +10,8 @@ var ProcessDragEvents = function (pointer, time)
     }
 
     var i;
+    var c;
+    var overGameObject;
     var gameObject;
     var list;
     var input;
@@ -126,6 +128,17 @@ var ProcessDragEvents = function (pointer, time)
     //  4 = Pointer actively dragging the draglist and has moved
     if (pointer.dragState === 4 && pointer.justMoved)
     {
+        //  Let's filter out currentlyOver for dropZones only
+        var dropZones = [];
+
+        for (c = 0; c < currentlyOver.length; c++)
+        {
+            if (currentlyOver[c].input.dropZone)
+            {
+                dropZones.push(currentlyOver[c]);
+            }
+        }
+
         list = this._drag[pointer.id];
 
         for (i = 0; i < list.length; i++)
@@ -140,12 +153,57 @@ var ProcessDragEvents = function (pointer, time)
             // input.dragX = pointer.x - input.localX;
             // input.dragY = pointer.y - input.localY;
 
+            //  If this GO has a target then let's check it
+            if (input.target)
+            {
+                var index = dropZones.indexOf(input.target);
+
+                //  Got a target, are we still over it?
+                if (index === 0)
+                {
+                    //  We're still over it, and it's still the top of the display list, phew ...
+                    this.events.dispatch(new InputEvent.DRAG_OVER(pointer, gameObject, input.target));
+                }
+                else if (index > 0)
+                {
+                    //  Still over it but it's no longer top of the display list (targets must always be at the top)
+                    this.events.dispatch(new InputEvent.DRAG_LEAVE(pointer, gameObject, input.target));
+
+                    input.target = dropZones[0];
+
+                    this.events.dispatch(new InputEvent.DRAG_ENTER(pointer, gameObject, input.target));
+                }
+                else
+                {
+                    //  Nope, we've moved on (or the target has!), leave the old target
+                    this.events.dispatch(new InputEvent.DRAG_LEAVE(pointer, gameObject, input.target));
+
+                    //  Anything new to replace it?
+                    //  Yup!
+                    if (dropZones[0])
+                    {
+                        input.target = dropZones[0];
+
+                        this.events.dispatch(new InputEvent.DRAG_ENTER(pointer, gameObject, input.target));
+                    }
+                    else
+                    {
+                        //  Nope
+                        input.target = null;
+                    }
+                }
+            }
+            else if (!input.target && dropZones[0])
+            {
+                input.target = dropZones[0];
+
+                this.events.dispatch(new InputEvent.DRAG_ENTER(pointer, gameObject, input.target));
+            }
+
             this.events.dispatch(new InputEvent.DRAG(pointer, gameObject));
 
             input.onDrag(gameObject, pointer);
         }
-
-        //  Check drop zones
     }
 
     //  5 = Pointer actively dragging but has been released, notify draglist
@@ -164,9 +222,9 @@ var ProcessDragEvents = function (pointer, time)
             input.dragY = input.localY - gameObject.displayOriginY;
 
             //  Any drop zones here?
-            for (var c = 0; c < currentlyOver.length; c++)
+            for (c = 0; c < currentlyOver.length; c++)
             {
-                var overGameObject = currentlyOver[c];
+                overGameObject = currentlyOver[c];
 
                 if (overGameObject.input.dropZone)
                 {

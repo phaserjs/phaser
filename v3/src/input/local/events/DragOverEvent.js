@@ -1,15 +1,15 @@
 var Class = require('../../../utils/Class');
 var Event = require('../../../events/Event');
 
-var DropEvent = new Class({
+var DragOverEvent = new Class({
 
     Extends: Event,
 
     initialize:
 
-    function DropEvent (pointer, gameObject, dropZone)
+    function DragOverEvent (pointer, gameObject, dropZone)
     {
-        Event.call(this, 'DROP_EVENT');
+        Event.call(this, 'DRAG_OVER_EVENT');
 
         //  The Pointer that triggered the event
         this.pointer = pointer;
@@ -26,4 +26,4 @@ var DropEvent = new Class({
 
 });
 
-module.exports = DropEvent;
+module.exports = DragOverEvent;
