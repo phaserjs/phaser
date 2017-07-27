@@ -137,8 +137,8 @@ var ProcessDragEvents = function (pointer, time)
             // input.dragX = pointer.x - (input.localX - gameObject.displayOriginX);
             // input.dragY = pointer.y - (input.localY - gameObject.displayOriginY);
 
-            input.dragX = pointer.x - input.localX;
-            input.dragY = pointer.y - input.localY;
+            // input.dragX = pointer.x - input.localX;
+            // input.dragY = pointer.y - input.localY;
 
             this.events.dispatch(new InputEvent.DRAG(pointer, gameObject));
 
