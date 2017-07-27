@@ -1,65 +1,55 @@
+var NOOP = require('../utils/NOOP');
+
 //  Phaser.Input.InteractiveObject
 
-var Class = require('../utils/Class');
+var InteractiveObject = function (gameObject, hitArea, hitAreaCallback)
+{
+    return {
 
-var InteractiveObject = new Class({
+        gameObject: gameObject,
 
-    initialize:
+        enabled: true,
+        draggable: false,
+        dropzone: false,
 
-    function InteractiveObject (gameObject, hitArea, hitAreaCallback)
-    {
-        this.gameObject = gameObject;
+        hitArea: hitArea,
+        hitAreaCallback: hitAreaCallback,
 
-        this.enabled = true;
-        this.draggable = false;
-
-        this.hitArea = hitArea;
-        this.hitAreaCallback = hitAreaCallback;
-
-        this.localX = 0;
-        this.localY = 0;
+        localX: 0,
+        localY: 0,
 
         //  0 = Not being dragged
         //  1 = Being checked for dragging
         //  2 = Being dragged
-        this.dragState = 0;
+        dragState: 0,
 
-        this.dragX = 0;
-        this.dragY = 0;
-    },
+        dragX: 0,
+        dragY: 0,
 
-    onUp: function (gameObject, pointer, x, y)
-    {
-        //  Empty by default. Override via setCallback.
-    },
+        //  Callbacks
 
-    onDown: function (gameObject, pointer, x, y)
-    {
-        //  Empty by default. Override via setCallback.
-    },
+        callbackContext: gameObject,
 
-    onOver: function (gameObject, pointer, x, y)
-    {
-        //  Empty by default. Override via setCallback.
-    },
+        //  gameObject, pointer, x, y
+        onUp: NOOP,
 
-    onOut: function (gameObject, pointer)
-    {
-        //  Empty by default. Override via setCallback.
-    },
+        //  gameObject, pointer, x, y
+        onDown: NOOP,
 
-    onMove: function (gameObject, pointer, x, y)
-    {
-        //  Empty by default. Override via setCallback.
-    },
+        //  gameObject, pointer, x, y
+        onOver: NOOP,
 
-    destroy: function ()
-    {
-        this.gameObject = undefined;
-        this.hitArea = undefined;
-        this.hitAreaCallback = undefined;
-    }
+        //  gameObject, pointer
+        onOut: NOOP,
 
-});
+        //  gameObject, pointer, x, y
+        onMove: NOOP,
+
+        onDragStart: NOOP,
+        onDrag: NOOP,
+        onDragEnd: NOOP
+
+    };
+};
 
 module.exports = InteractiveObject;
