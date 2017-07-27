@@ -4,7 +4,7 @@ var ToJSON = function ()
         key: this.key,
         type: this.type,
         frames: [],
-        framerate: this.frameRate,
+        frameRate: this.frameRate,
         duration: this.duration,
         skipMissedFrames: this.skipMissedFrames,
         delay: this.delay,

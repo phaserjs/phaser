@@ -5,8 +5,8 @@
         { key: textureKey, frame: textureFrame, visible: boolean },
         { key: textureKey, frame: textureFrame, onUpdate: function }
     ],
-    framerate: integer,
-    duration: float (seconds, optional, ignored if framerate is set),
+    frameRate: integer,
+    duration: float (seconds, optional, ignored if frameRate is set),
     skipMissedFrames: boolean,
     delay: integer,
     repeat: integer (-1 = forever),
