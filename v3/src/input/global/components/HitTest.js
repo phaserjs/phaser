@@ -24,7 +24,7 @@ var HitTest = function (tempMatrix, x, y, gameObjects, camera, output)
     {
         var gameObject = culledGameObjects[i];
 
-        if (!gameObject.input.enabled)
+        if (!gameObject.input.enabled || !gameObject.willRender())
         {
             continue;
         }
