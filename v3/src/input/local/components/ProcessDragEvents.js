@@ -151,7 +151,9 @@ var ProcessDragEvents = function (pointer, time)
         {
             gameObject = list[i];
 
-            gameObject.input.dragState = 0;
+            input = gameObject.input;
+
+            input.dragState = 0;
 
             this.events.dispatch(new InputEvent.DRAG_END(pointer, gameObject));
 
