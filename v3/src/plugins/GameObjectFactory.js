@@ -15,6 +15,7 @@ var StaticBitmapTextFactory = require('../gameobjects/bitmaptext/static/BitmapTe
 var StaticTilemapFactory = require('../gameobjects/tilemap/static/StaticTilemapFactory');
 var TextFactory = require('../gameobjects/text/static/TextFactory');
 var TileSpriteFactory = require('../gameobjects/tilesprite/TileSpriteFactory');
+var ZoneFactory = require('../gameobjects/zone/ZoneFactory');
 
 var GameObjectFactory = new Class({
 
@@ -121,6 +122,11 @@ var GameObjectFactory = new Class({
     tileSprite: function (x, y, width, height, key, frame)
     {
         return this.displayList.add(TileSpriteFactory(this.scene, x, y, width, height, key, frame));
+    },
+
+    zone: function (x, y, width, height)
+    {
+        return this.displayList.add(ZoneFactory(this.scene, x, y, width, height));
     }
 
 });

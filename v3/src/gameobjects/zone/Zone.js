@@ -2,6 +2,7 @@
 var Class = require('../../utils/Class');
 var GameObject = require('../GameObject');
 var Components = require('../components');
+var BlendModes = require('../../renderer/BlendModes');
 
 var Zone = new Class({
 
@@ -26,6 +27,30 @@ var Zone = new Class({
         this.setPosition(x, y);
         this.setSize(width, height);
         this.setOrigin(0);
+
+        this.blendMode = BlendModes.NORMAL;
+    },
+
+    setDropZone: function (shape, callback)
+    {
+        if (!this.input)
+        {
+            this.setInteractive(shape, callback);
+        }
+
+        this.input.dropzone = true;
+
+        return this;
+    },
+
+    renderCanvas: function ()
+    {
+        return;
+    },
+
+    renderWebGL: function ()
+    {
+        return;
     }
 
 });

@@ -1,20 +1,8 @@
 var Zone = require('./Zone');
-var FactoryContainer = require('../FactoryContainer');
 
-var ZoneFactory = {
-
-    KEY: 'zone',
-
-    add: function (x, y, width, height)
-    {
-        return new Zone(this.scene, x, y, width, height);
-    },
-
-    make: function (x, y, width, height)
-    {
-        return new Zone(this.scene, x, y, width, height);
-    }
-
+var ZoneFactory = function (scene, x, y, width, height)
+{
+    return new Zone(scene, x, y, width, height);
 };
 
-module.exports = FactoryContainer.register(ZoneFactory);
+module.exports = ZoneFactory;
