@@ -16,7 +16,7 @@ var SetHitArea = function (gameObjects, shape, callback)
     {
         var gameObject = gameObjects[i];
 
-        gameObject.input = new InteractiveObject(gameObject, shape, callback);
+        gameObject.input = InteractiveObject(gameObject, shape, callback);
 
         this.queueForInsertion(gameObject);
     }
