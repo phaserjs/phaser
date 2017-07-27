@@ -26,7 +26,7 @@ var Animation = new Class({
         this.frames = GetFrames(manager.textureManager, GetValue(config, 'frames', []));
 
         //  The frame rate of playback in frames per second (default 24 if duration is null)
-        this.frameRate = GetValue(config, 'framerate', null);
+        this.frameRate = GetValue(config, 'frameRate', null);
 
         //  How long the animation should play for. If frameRate is set it overrides this value
         //  otherwise frameRate is derived from duration

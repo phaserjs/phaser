@@ -35,8 +35,8 @@ var Animation = new Class({
         //  The frame rate of playback in frames per second (default 24 if duration is null)
         this.frameRate = 0;
 
-        //  How long the animation should play for. If framerate is set it overrides this value
-        //  otherwise framerate is derived from duration
+        //  How long the animation should play for. If frameRate is set it overrides this value
+        //  otherwise frameRate is derived from duration
         this.duration = 0;
 
         //  ms per frame (without including frame specific modifiers)
