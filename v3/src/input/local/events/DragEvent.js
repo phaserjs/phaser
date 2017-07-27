@@ -24,9 +24,12 @@ var DragEvent = new Class({
         this.x = pointer.x;
         this.y = pointer.y;
 
+        this.dragX = gameObject.input.dragX;
+        this.dragY = gameObject.input.dragY;
+
         //  The local x/y coordinates of the event within the Game Object
-        this.dragX = pointer.x - gameObject.input.dragX;
-        this.dragY = pointer.y - gameObject.input.dragY;
+        // this.dragX = pointer.x - gameObject.input.dragX;
+        // this.dragY = pointer.y - gameObject.input.dragY;
     }
 
 });
