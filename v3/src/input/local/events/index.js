@@ -2,6 +2,7 @@
 
 module.exports = {
 
+    DROP: require('./DropEvent'),
     DRAG: require('./DragEvent'),
     DRAG_END: require('./DragEndEvent'),
     DRAG_START: require('./DragStartEvent'),

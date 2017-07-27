@@ -62,7 +62,7 @@ var SceneInputManager = new Class({
         //  pendingRemoval: Objects waiting to be removed from the list on the next call to 'begin'
         this._pendingRemoval = [];
 
-        //  draggable: A list of all Game Objects that has been enabled for dragging
+        //  draggable: A list of all Game Objects that have been enabled for dragging
         this._draggable = [];
 
         //  drag: A list of all Interactive Objects currently considered as being 'draggable' by any pointer, indexed by pointer ID
@@ -71,7 +71,7 @@ var SceneInputManager = new Class({
         //  over: A list of all Interactive Objects currently considered as being 'over' by any pointer, indexed by pointer ID
         this._over = { 0: [], 1: [], 2: [], 3: [], 4: [], 5: [], 6: [], 7: [], 8: [], 9: [] };
 
-        this._validTypes = [ 'onDown', 'onUp', 'onOver', 'onOut', 'onMove', 'onDragStart', 'onDrag', 'onDragEnd' ];
+        this._validTypes = [ 'onDown', 'onUp', 'onOver', 'onOut', 'onMove', 'onDragStart', 'onDrag', 'onDragEnd', 'onDragEnter', 'onDragLeave', 'onDragOver', 'onDrop' ];
     },
 
     //  Add option to get all IOs within a Rect or Circle
