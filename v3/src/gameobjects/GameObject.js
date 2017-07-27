@@ -68,6 +68,11 @@ var GameObject = new Class({
         return Components.ToJSON(this);
     },
 
+    willRender: function ()
+    {
+        return (this.renderMask === this.renderFlags);
+    },
+
     destroy: function ()
     {
         this.parent.remove(this);
