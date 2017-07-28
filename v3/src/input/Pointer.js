@@ -73,6 +73,18 @@ var Pointer = new Class({
         this.justMoved = false;
     },
 
+    touchmove: function (event, time)
+    {
+        this.event = event;
+
+        this.x = this.manager.transformX(event.changedTouches[0].pageX);
+        this.y = this.manager.transformY(event.changedTouches[0].pageY);
+
+        this.justMoved = true;
+
+        this.dirty = true;
+    },
+
     move: function (event, time)
     {
         if (event.buttons)
@@ -117,6 +129,26 @@ var Pointer = new Class({
         this.dirty = true;
     },
 
+    touchstart: function (event, time)
+    {
+        this.buttons = 1;
+
+        this.event = event;
+
+        this.x = this.manager.transformX(event.changedTouches[0].pageX);
+        this.y = this.manager.transformY(event.changedTouches[0].pageY);
+
+        this.primaryDown = true;
+        this.downX = this.x;
+        this.downY = this.y;
+        this.downTime = time;
+
+        this.justDown = true;
+        this.isDown = true;
+
+        this.dirty = true;
+    },
+
     up: function (event, time)
     {
         if (event.buttons)
@@ -137,6 +169,26 @@ var Pointer = new Class({
             this.upY = this.y;
             this.upTime = time;
         }
+
+        this.justUp = true;
+        this.isDown = false;
+
+        this.dirty = true;
+    },
+
+    touchend: function (event, time)
+    {
+        this.buttons = 0;
+
+        this.event = event;
+
+        this.x = this.manager.transformX(event.changedTouches[0].pageX);
+        this.y = this.manager.transformY(event.changedTouches[0].pageY);
+
+        this.primaryDown = false;
+        this.upX = this.x;
+        this.upY = this.y;
+        this.upTime = time;
 
         this.justUp = true;
         this.isDown = false;

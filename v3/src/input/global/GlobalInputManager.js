@@ -6,6 +6,7 @@ var GetTransformedPoint = require('./components/GetTransformedPoint');
 var Keyboard = require('../keyboard/KeyboardManager');
 var Mouse = require('../mouse/MouseManager');
 var MouseEvent = require('../mouse/events/');
+var Touch = require('../touch/TouchManager');
 var Pointer = require('../Pointer');
 var PointScreenToWorldHitTest = require('./components/PointScreenToWorldHitTest');
 var HitTest = require('./components/HitTest');
@@ -34,6 +35,7 @@ var GlobalInputManager = new Class({
         //  Listeners
         this.keyboard = new Keyboard(this);
         this.mouse = new Mouse(this);
+        this.touch = new Touch(this);
 
         this.activePointer = new Pointer(this, 0);
 
@@ -57,6 +59,7 @@ var GlobalInputManager = new Class({
 
         this.keyboard.boot();
         this.mouse.boot();
+        this.touch.boot();
     },
 
     update: function (time, delta)
@@ -107,6 +110,21 @@ var GlobalInputManager = new Class({
 
                     pointer.up(event, time);
                     this.events.dispatch(new MouseEvent.UP(event));
+                    break;
+
+                case 'touchmove':
+
+                    pointer.touchmove(event, time);
+                    break;
+
+                case 'touchstart':
+
+                    pointer.touchstart(event, time);
+                    break;
+
+                case 'touchend':
+
+                    pointer.touchend(event, time);
                     break;
             }
         }
