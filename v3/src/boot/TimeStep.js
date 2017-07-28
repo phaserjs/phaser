@@ -7,7 +7,6 @@ var RequestAnimationFrame = require('../dom/RequestAnimationFrame');
 //      fps: {
 //          min: 10,
 //          target: 60,
-//          max: 120
 //          forceSetTimeOut: false,
 //          deltaHistory: 10,
 //          panicMax: 120
@@ -29,11 +28,9 @@ var TimeStep = new Class({
         this.running = false;
         
         this.minFps = GetValue(config, 'min', 5);
-        this.maxFps = GetValue(config, 'max', 120);
         this.targetFps = GetValue(config, 'target', 60);
 
         this._min = 1000 / this.minFps;         //  200ms between frames (i.e. super slow!)
-        this._max = 1000 / this.maxFps;         //  8.333ms between frames (i.e. super fast, 120Hz displays)
         this._target = 1000 / this.targetFps;   //  16.666ms between frames (i.e. normal)
 
         //  200 / 1000 = 0.2 (5fps)
@@ -124,7 +121,7 @@ var TimeStep = new Class({
 
         for (var i = 0; i < this.deltaSmoothingMax; i++)
         {
-            this.deltaHistory[i] = this._target;
+            this.deltaHistory[i] = 0;
         }
 
         this.delta = 0;
@@ -185,8 +182,7 @@ var TimeStep = new Class({
             // debug = (time - this.lastTime);
         }
 
-        //  min / max range (yes, the < and > should be this way around)
-        if (dt > this._min || dt < this._max)
+        if (dt > this._min)
         {
             //  Probably super bad start time or browser tab context loss,
             //  so use the last 'sane' dt value
@@ -195,8 +191,8 @@ var TimeStep = new Class({
 
             dt = history[idx];
 
-            //  Clamp delta to min max range (in case history has become corrupted somehow)
-            dt = Math.max(Math.min(dt, this._max), this._min);
+            //  Clamp delta to min (in case history has become corrupted somehow)
+            dt = Math.min(dt, this._min);
         }
 
         //  Smooth out the delta over the previous X frames
