@@ -78,6 +78,7 @@ var SceneInputManager = new Class({
 
     boot: require('./components/Boot'),
     begin: require('./components/Begin'),
+    clear: require('./components/Clear'),
     update: require('./components/Update'),
     hitTestPointer: require('./components/HitTestPointer'),
     disable: require('./components/Disable'),

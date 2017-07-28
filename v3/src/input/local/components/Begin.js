@@ -25,8 +25,9 @@ var Begin = function ()
         {
             current.splice(index, 1);
 
-            //  TODO: Tidy up all of the Interactive Objects references, callbacks, shapes, etc
-            gameObject.input = null;
+            //  TODO: Clear from _draggable, _drag and _over too
+
+            this.clear(gameObject);
         }
     }
 

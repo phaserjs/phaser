@@ -84,6 +84,11 @@ var GameObject = new Class({
     {
         this.parent.remove(this);
 
+        if (this.input)
+        {
+            this.scene.sys.inputManager.clear(this);
+        }
+
         this.scene = undefined;
     }
 
