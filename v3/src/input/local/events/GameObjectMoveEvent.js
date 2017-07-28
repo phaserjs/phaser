@@ -20,6 +20,9 @@ var GameObjectMoveEvent = new Class({
         //  The Game Object the event occurred on
         this.gameObject = gameObject;
 
+        //  The camera on which the input event occurred
+        this.camera = gameObject.input.camera;
+
         //  The local x/y coordinates of the event within the Game Object
         this.x = gameObject.input.localX;
         this.y = gameObject.input.localY;

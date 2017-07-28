@@ -19,6 +19,9 @@ var GameObjectOutEvent = new Class({
 
         //  The Game Object the event occurred on
         this.gameObject = gameObject;
+
+        //  The camera on which the input event occurred
+        this.camera = gameObject.input.camera;
     }
 
 });

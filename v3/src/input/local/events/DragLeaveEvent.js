@@ -20,6 +20,9 @@ var DragLeaveEvent = new Class({
         //  The Game Object the event occurred on
         this.gameObject = gameObject;
 
+        //  The camera on which the input event occurred
+        this.camera = gameObject.input.camera;
+
         //  The drop zone the game object was dropped on
         this.dropZone = dropZone;
     }

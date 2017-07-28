@@ -1,14 +1,14 @@
 //  x/y MUST be translated before being passed to this function,
 //  unless the gameObject is guaranteed to not be rotated or scaled in any way
 
-var PointWithinHitArea = function (gameObject, x, y)
+var PointWithinHitArea = function (gameObject, x, y, camera)
 {
     var input = gameObject.input;
 
-    if (!input)
-    {
-        return false;
-    }
+    // if (!input)
+    // {
+    //     return false;
+    // }
 
     //  Normalize the origin
     x += gameObject.displayOriginX;
@@ -18,6 +18,7 @@ var PointWithinHitArea = function (gameObject, x, y)
     {
         input.localX = x;
         input.localY = y;
+        input.camera = camera;
 
         return true;
     }

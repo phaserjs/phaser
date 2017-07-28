@@ -14,6 +14,8 @@ var InteractiveObject = function (gameObject, hitArea, hitAreaCallback)
 
         target: null,
 
+        camera: null,
+
         hitArea: hitArea,
         hitAreaCallback: hitAreaCallback,
 
