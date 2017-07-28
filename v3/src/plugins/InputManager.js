@@ -11,6 +11,11 @@ var InputManager = new Class({
     function InputManager (scene, game)
     {
         SceneInputManager.call(this, scene, game);
+    },
+
+    pointScreenToWorldHitTest: function (gameObjects, x, y, camera)
+    {
+        return this.manager.pointScreenToWorldHitTest(gameObjects, x, y, camera);
     }
 
 });

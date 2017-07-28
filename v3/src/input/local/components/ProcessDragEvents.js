@@ -11,7 +11,6 @@ var ProcessDragEvents = function (pointer, time)
 
     var i;
     var c;
-    var overGameObject;
     var gameObject;
     var list;
     var input;
@@ -113,8 +112,8 @@ var ProcessDragEvents = function (pointer, time)
 
             input.dragState = 2;
 
-            input.dragX = input.localX - gameObject.displayOriginX;
-            input.dragY = input.localY - gameObject.displayOriginY;
+            input.dragX = pointer.x - gameObject.x;
+            input.dragY = pointer.y - gameObject.y;
 
             input.dragStartX = gameObject.x;
             input.dragStartY = gameObject.y;
@@ -150,12 +149,6 @@ var ProcessDragEvents = function (pointer, time)
             gameObject = list[i];
 
             input = gameObject.input;
-
-            // input.dragX = pointer.x - (input.localX - gameObject.displayOriginX);
-            // input.dragY = pointer.y - (input.localY - gameObject.displayOriginY);
-
-            // input.dragX = pointer.x - input.localX;
-            // input.dragY = pointer.y - input.localY;
 
             //  If this GO has a target then let's check it
             if (input.target)
