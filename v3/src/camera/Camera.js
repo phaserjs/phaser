@@ -75,6 +75,7 @@ var Camera = new Class({
     removeBounds: require('./components/RemoveBounds'),
     setBackgroundColor: require('./components/SetBackgroundColor'),
     setBounds: require('./components/SetBounds'),
+    setName: require('./components/SetName'),
     setPosition: require('./components/SetPosition'),
     setRotation: require('./components/SetRotation'),
     setRoundPixels: require('./components/SetRoundPixels'),
