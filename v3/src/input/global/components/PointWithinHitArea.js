@@ -18,7 +18,6 @@ var PointWithinHitArea = function (gameObject, x, y, camera)
     {
         input.localX = x;
         input.localY = y;
-        input.camera = camera;
 
         return true;
     }

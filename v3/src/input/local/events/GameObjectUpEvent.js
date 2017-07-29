@@ -21,7 +21,7 @@ var GameObjectUpEvent = new Class({
         this.gameObject = gameObject;
 
         //  The camera on which the input event occurred
-        this.camera = gameObject.input.camera;
+        this.camera = pointer.camera;
 
         //  The local x/y coordinates of the event within the Game Object
         this.x = gameObject.input.localX;

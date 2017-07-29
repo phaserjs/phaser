@@ -23,6 +23,11 @@ var Pointer = new Class({
 
         this.event;
 
+        //  The camera the Pointer interacted with during its last update
+        //  A Pointer can only ever interact with 1 camera at once, which will be the top-most camera
+        //  in the list should multiple cameras be positioned on-top of each other.
+        this.camera = null;
+
         // 0  : No button or un-initialized
         // 1  : Left button
         // 2  : Right button

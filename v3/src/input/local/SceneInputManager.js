@@ -20,7 +20,7 @@ var SceneInputManager = new Class({
         //  A reference to this.scene.sys.displayList (set in boot)
         this.displayList;
 
-        //  A reference to the this.scene.sys.cameras.cameras array (set in boot)
+        //  A reference to the this.scene.sys.cameras (set in boot)
         this.cameras;
 
         //  Should use Scene event dispatcher?

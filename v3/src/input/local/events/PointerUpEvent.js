@@ -17,6 +17,9 @@ var PointerUpEvent = new Class({
         //  The native DOM event (MouseEvent, TouchEvent, etc)
         this.event = pointer.event;
 
+        //  The camera on which the input event occurred
+        this.camera = pointer.camera;
+
         //  The x/y coordinates of the event
         this.x = pointer.x;
         this.y = pointer.y;
