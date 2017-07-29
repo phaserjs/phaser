@@ -80,6 +80,7 @@ var Camera = new Class({
     setRotation: require('./components/SetRotation'),
     setRoundPixels: require('./components/SetRoundPixels'),
     setScene: require('./components/SetScene'),
+    setScroll: require('./components/SetScroll'),
     setSize: require('./components/SetSize'),
     setViewport: require('./components/SetViewport'),
     setZoom: require('./components/SetZoom'),
