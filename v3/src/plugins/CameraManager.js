@@ -2,6 +2,7 @@ var Camera = require('../camera/Camera');
 var Class = require('../utils/Class');
 var GetFastValue = require('../utils/object/GetFastValue');
 var KeyControl = require('../camera/KeyControl');
+var RectangleContains = require('../geom/rectangle/Contains');
 var SmoothedKeyControl = require('../camera/SmoothedKeyControl');
 
 var CameraManager = new Class({
@@ -191,6 +192,22 @@ var CameraManager = new Class({
         for (var i = 0, l = this.cameras.length; i < l; ++i)
         {
             this.cameras[i].update(timestep, delta);
+        }
+    },
+
+    getCameraBelowPointer: function (pointer)
+    {
+        var cameras = this.cameras;
+
+        //  Start from the most recently added camera (the 'top' camera)
+        for (var i = cameras.length - 1; i >= 0; i--)
+        {
+            var camera = cameras[i];
+
+            if (RectangleContains(camera, pointer.x, pointer.y))
+            {
+                return camera;
+            }
         }
     },
 
