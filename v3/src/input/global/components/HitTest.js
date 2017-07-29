@@ -32,10 +32,10 @@ var HitTest = function (tempMatrix, x, y, gameObjects, camera, output)
         var point = GetTransformedPoint(
             tempMatrix,
             gameObject,
-            (screenPoint.x + camera.scrollX) * gameObject.scrollFactorX,
-            (screenPoint.y + camera.scrollY) * gameObject.scrollFactorY
+            screenPoint.x + camera.scrollX * gameObject.scrollFactorX,
+            screenPoint.y + camera.scrollY * gameObject.scrollFactorY
         );
-    
+   
         if (PointWithinHitArea(gameObject, point.x, point.y, camera))
         {
             output.push(gameObject);
