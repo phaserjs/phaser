@@ -204,7 +204,7 @@ var CameraManager = new Class({
         {
             var camera = cameras[i];
 
-            if (RectangleContains(camera, pointer.x, pointer.y))
+            if (camera.inputEnabled && RectangleContains(camera, pointer.x, pointer.y))
             {
                 return camera;
             }
