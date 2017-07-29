@@ -1,6 +1,6 @@
 var Boot = function ()
 {
-    this.cameras = this.scene.sys.cameras.cameras;
+    this.cameras = this.scene.sys.cameras;
 
     this.displayList = this.scene.sys.displayList;
 };
