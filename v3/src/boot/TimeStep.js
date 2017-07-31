@@ -69,11 +69,6 @@ var TimeStep = new Class({
         //  The actual elapsed time in ms between one update and the next.
         //  No smoothing, no capping, no averaging. So please be aware of this when using the contents of this property.
         this.rawDelta = 0;
-
-        for (var i = 0; i < this.deltaSmoothingMax; i++)
-        {
-            this.deltaHistory[i] = this._target;
-        }
     },
 
     //  Called when the DOM window.onBlur event triggers
@@ -145,7 +140,10 @@ var TimeStep = new Class({
         this.started = true;
         this.running = true;
 
-        this.deltaHistory = [];
+        for (var i = 0; i < this.deltaSmoothingMax; i++)
+        {
+            this.deltaHistory[i] = this._target;
+        }
 
         this.resetDelta();
 
