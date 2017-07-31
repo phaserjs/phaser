@@ -24,8 +24,6 @@ module.exports = {
 
     plugins: [
 
-        new webpack.optimize.ModuleConcatenationPlugin(),
-
         new WebpackShellPlugin({
             onBuildStart: 'node create-checksum.js',
             onBuildEnd: 'node copy-to-examples.js'
@@ -33,7 +31,6 @@ module.exports = {
 
     ],
 
-    // devtool: 'inline-source-map'
-    devtool: 'source-map'
+    devtool: 'inline-source-map'
 
 };

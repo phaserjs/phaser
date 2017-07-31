@@ -9,7 +9,8 @@ module.exports = {
     context: `${__dirname}/src/`,
 
     entry: {
-        phaser: './phaser.js'
+        phaser: './phaser.js',
+        'phaser.min': './phaser.js'
     },
 
     output: {
@@ -23,6 +24,7 @@ module.exports = {
     plugins: [
 
         new UglifyJSPlugin({
+            include: /\.min\.js$/,
             parallel: true,
             sourceMap: true,
             compress: true,

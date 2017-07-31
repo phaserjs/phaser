@@ -1,7 +1,7 @@
 var fs = require('fs-extra');
 
 var source = './dist/phaser.js';
-var dest = '../../phaser3-examples/public/js/phaser.js';
+var dest = '../../phaser3-examples/public/build/dev.js';
 
 fs.copy(source, dest, function (err) {
 
