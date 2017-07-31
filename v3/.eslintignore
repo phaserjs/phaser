@@ -5,3 +5,4 @@ merge/physics/p2/p2.js
 merge/animation/creature/
 src/physics/matter-js/
 src/renderer/webgl/renderers/shapebatch/earcut.js
+webpack.*.js

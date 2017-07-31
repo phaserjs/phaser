@@ -17,6 +17,7 @@
   },
   "scripts": {
     "build": "webpack",
+    "dist": "webpack --config webpack.dist.config.js",
     "lint": "eslint --config .eslintrc.json \"src/**/*.js\""
   },
   "keywords": [
@@ -32,10 +33,11 @@
     "web audio"
   ],
   "devDependencies": {
-    "eslint": "^3.19.0",
-    "fs-extra": "^3.0.0",
-    "uuid": "^3.0.1",
-    "webpack": "^2.4.1",
+    "eslint": "^4.3.0",
+    "fs-extra": "^4.0.0",
+    "uglifyjs-webpack-plugin": "^0.4.6",
+    "uuid": "^3.1.0",
+    "webpack": "^3.4.1",
     "webpack-shell-plugin": "^0.5.0"
   }
 }
