@@ -1,7 +1,7 @@
 var Class = require('../../../../utils/Class');
 var CONST = require('./const');
 var DataBuffer32 = require('../../utils/DataBuffer32');
-var Earcut = require('../../../../geom/earcut/Earcut');
+var Earcut = require('../../../../geom/polygon/Earcut');
 var PHASER_CONST = require('../../../../const');
 var UntexturedAndNormalizedTintedShader = require('../../shaders/UntexturedAndNormalizedTintedShader');
 

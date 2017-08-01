@@ -23,24 +23,6 @@ var TextureSource = new Class({
 
         this.scaleMode = ScaleModes.DEFAULT;
 
-        //  USED?
-        this.premultipliedAlpha = true;
-
-        //  USED?
-        this.mipmapLevel = 0;
-
-        //  USED?
-        this.renderable = true;
-
-        //  USED?
-        this.glTextureIndex = 0;
-
-        //  USED?
-        this.glDirty = true;
-
-        //  USED?
-        this.glLastUsed = 0;
-
         this.isPowerOf2 = IsSizePowerOfTwo(this.width, this.height);
 
         this.glTexture = null;

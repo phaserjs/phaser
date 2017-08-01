@@ -133,18 +133,6 @@ var Texture = new Class({
         }
     },
 
-    setTextureIndex: function (index)
-    {
-        for (var i = 0; i < this.source.length; i++)
-        {
-            this.source[i].glTextureIndex = index;
-
-            index++;
-        }
-
-        return index;
-    },
-
     setFilter: function (filterMode)
     {
         for (var i = 0; i < this.source.length; i++)
