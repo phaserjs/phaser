@@ -8,12 +8,8 @@ var GenerateFrameNames = function (key, config)
     var end = GetValue(config, 'end', 0);
     var suffix = GetValue(config, 'suffix', '');
     var zeroPad = GetValue(config, 'zeroPad', 0);
-    var out = GetValue(config, 'framesArray', []);
-
-    var diff = (start < end) ? 1 : -1;
-
-    //  Adjust because we use i !== end in the for loop
-    end += diff;
+    var out = GetValue(config, 'outputArray', []);
+    var frames = GetValue(config, 'frames', false);
 
     var texture = this.textureManager.get(key);
 
@@ -22,13 +18,37 @@ var GenerateFrameNames = function (key, config)
         return out;
     }
 
-    for (var i = start; i !== end; i += diff)
-    {
-        var frame = prefix + Pad(i, zeroPad, '0', 1) + suffix;
+    var diff = (start < end) ? 1 : -1;
 
-        if (texture.has(frame))
+    //  Adjust because we use i !== end in the for loop
+    end += diff;
+
+    var i;
+    var frame;
+
+    //  Have they provided their own custom frame sequence array?
+    if (Array.isArray(frames))
+    {
+        for (i = 0; i < frames.length; i++)
         {
-            out.push({ key: key, frame: frame });
+            frame = prefix + Pad(frames[i], zeroPad, '0', 1) + suffix;
+
+            if (texture.has(frame))
+            {
+                out.push({ key: key, frame: frame });
+            }
+        }
+    }
+    else
+    {
+        for (i = start; i !== end; i += diff)
+        {
+            frame = prefix + Pad(i, zeroPad, '0', 1) + suffix;
+
+            if (texture.has(frame))
+            {
+                out.push({ key: key, frame: frame });
+            }
         }
     }
 

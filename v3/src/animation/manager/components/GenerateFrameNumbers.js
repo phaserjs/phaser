@@ -5,7 +5,8 @@ var GenerateFrameNumbers = function (key, config)
     var startFrame = GetValue(config, 'start', 0);
     var endFrame = GetValue(config, 'end', -1);
     var firstFrame = GetValue(config, 'first', false);
-    var out = GetValue(config, 'framesArray', []);
+    var out = GetValue(config, 'outputArray', []);
+    var frames = GetValue(config, 'frames', false);
 
     var texture = this.textureManager.get(key);
 
@@ -14,23 +15,39 @@ var GenerateFrameNumbers = function (key, config)
         return out;
     }
 
-    //  No endFrame then see if we can get it
-
-    if (endFrame === -1)
-    {
-        endFrame = texture.frameTotal;
-    }
-
     if (firstFrame && texture.has(firstFrame))
     {
         out.push({ key: key, frame: firstFrame });
     }
 
-    for (var i = startFrame; i <= endFrame; i++)
+    var i;
+
+    //  Have they provided their own custom frame sequence array?
+    if (Array.isArray(frames))
     {
-        if (texture.has(i))
+        for (i = 0; i < frames.length; i++)
         {
-            out.push({ key: key, frame: i });
+            if (texture.has(frames[i]))
+            {
+                out.push({ key: key, frame: frames[i] });
+            }
+        }
+    }
+    else
+    {
+        //  No endFrame then see if we can get it
+
+        if (endFrame === -1)
+        {
+            endFrame = texture.frameTotal;
+        }
+
+        for (i = startFrame; i <= endFrame; i++)
+        {
+            if (texture.has(i))
+            {
+                out.push({ key: key, frame: i });
+            }
         }
     }
 
