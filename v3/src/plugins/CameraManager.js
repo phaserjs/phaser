@@ -114,12 +114,13 @@ var CameraManager = new Class({
         return this;
     },
 
-    add: function (x, y, width, height)
+    add: function (x, y, width, height, makeMain)
     {
         if (x === undefined) { x = 0; }
         if (y === undefined) { y = 0; }
         if (width === undefined) { width = this.scene.sys.game.config.width; }
         if (height === undefined) { height = this.scene.sys.game.config.height; }
+        if (makeMain === undefined) { makeMain = false; }
 
         var camera = null;
 
@@ -137,6 +138,11 @@ var CameraManager = new Class({
         camera.setScene(this.scene);
 
         this.cameras.push(camera);
+
+        if (makeMain)
+        {
+            this.main = camera;
+        }
 
         return camera;
     },
@@ -170,10 +176,15 @@ var CameraManager = new Class({
     {
         var cameraIndex = this.cameras.indexOf(camera);
 
-        if (cameraIndex >= 0)
+        if (cameraIndex >= 0 && this.cameras.length > 1)
         {
             this.cameraPool.push(this.cameras[cameraIndex]);
             this.cameras.splice(cameraIndex, 1);
+
+            if (this.main === camera)
+            {
+                this.main = this.cameras[0];
+            }
         }
     },
 
@@ -185,6 +196,8 @@ var CameraManager = new Class({
         }
 
         this.main = this.add();
+
+        return this.main;
     },
 
     update: function (timestep, delta)
