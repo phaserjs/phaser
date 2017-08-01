@@ -1,18 +1,7 @@
-/**
-* @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2016 Photon Storm Ltd.
-* @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
-*/
-
 var CONST = require('../const');
 var Smoothing = require('./Smoothing');
 
-/**
- * The pool into which the canvas elements are placed.
- *
- * @property pool
- * @type Array
- */
+// The pool into which the canvas elements are placed.
 var pool = [];
 
 //  Automatically apply smoothing(false) to created Canvas elements
@@ -23,28 +12,12 @@ var _disableContextSmoothing = false;
 //  Which means all instances of Phaser Games on the same page
 //  can share the one single pool
 
-/**
-* The CanvasPool is a global static object, that allows Phaser to recycle and pool Canvas DOM elements.
-*
-* @class Phaser.CanvasPool
-* @static
-*/
+// The CanvasPool is a global static object, that allows Phaser to recycle and pool Canvas DOM elements.
 var CanvasPool = function ()
 {
-    /**
-    * Creates a new Canvas DOM element, or pulls one from the pool if free.
-    *
-    * @method Phaser.CanvasPool.create
-    * @static
-    * @param {any} parent - The parent of the canvas element.
-    * @param {number} width - The width of the canvas element.
-    * @param {number} height - The height of the canvas element.
-    * @return {HTMLCanvasElement} The canvas element.
-    */
+    // Creates a new Canvas DOM element, or pulls one from the pool if free.
     var create = function (parent, width, height, type)
     {
-        // console.log('CanvasPool.create', parent);
-
         if (width === undefined) { width = 1; }
         if (height === undefined) { height = 1; }
         if (type === undefined) { type = CONST.CANVAS; }
@@ -54,8 +27,6 @@ var CanvasPool = function ()
 
         if (container === null)
         {
-            // console.log('CanvasPool.create new');
-
             container = {
                 parent: parent,
                 canvas: document.createElement('canvas'),
@@ -68,8 +39,6 @@ var CanvasPool = function ()
         }
         else
         {
-            // console.log('CanvasPool.create existing');
-
             container.parent = parent;
 
             canvas = container.canvas;
@@ -96,13 +65,7 @@ var CanvasPool = function ()
         return create(parent, width, height, CONST.WEBGL);
     };
 
-    /**
-    * Gets the first free canvas index from the pool.
-    *
-    * @static
-    * @method Phaser.CanvasPool.getFirst
-    * @return {number}
-    */
+    // Gets the first free canvas index from the pool.
     var first = function (type)
     {
         if (type === undefined) { type = CONST.CANVAS; }
@@ -118,14 +81,8 @@ var CanvasPool = function ()
         return null;
     };
 
-    /**
-    * Looks up a canvas based on its parent, and if found puts it back in the pool, freeing it up for re-use.
-    * The canvas has its width and height set to 1, and its parent attribute nulled.
-    *
-    * @static
-    * @method Phaser.CanvasPool.remove
-    * @param {any|HTMLCanvasElement} parent - The parent of the canvas element.
-    */
+    //  Looks up a canvas based on its parent, and if found puts it back in the pool, freeing it up for re-use.
+    //  The canvas has its width and height set to 1, and its parent attribute nulled.
     var remove = function (parent)
     {
         //  Check to see if the parent is a canvas object
@@ -143,13 +100,7 @@ var CanvasPool = function ()
         });
     };
 
-    /**
-    * Gets the total number of used canvas elements in the pool.
-    *
-    * @static
-    * @method Phaser.CanvasPool.getTotal
-    * @return {number} The number of in-use (parented) canvas elements in the pool.
-    */
+    //  Gets the total number of used canvas elements in the pool.
     var total = function ()
     {
         var c = 0;
@@ -165,13 +116,7 @@ var CanvasPool = function ()
         return c;
     };
 
-    /**
-    * Gets the total number of free canvas elements in the pool.
-    *
-    * @static
-    * @method Phaser.CanvasPool.getFree
-    * @return {number} The number of free (un-parented) canvas elements in the pool.
-    */
+    //  Gets the total number of free canvas elements in the pool.
     var free = function ()
     {
         return pool.length - total();

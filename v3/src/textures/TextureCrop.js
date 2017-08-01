@@ -1,18 +1,5 @@
-/**
-* @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2016 Photon Storm Ltd.
-* @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
-*/
-
 var Clamp = require('../math/Clamp');
 
-/**
-*
-* @class Phaser.TextureCrop
-* @constructor
-* @param {object} source
-* @param {number} scaleMode
-*/
 var TextureCrop = function (gameObject, width, height, x, y)
 {
     var frame = gameObject.frame;

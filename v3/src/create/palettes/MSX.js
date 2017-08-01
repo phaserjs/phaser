@@ -1,8 +1,4 @@
-/**
-* A 16 color palette inspired by Japanese computers like the MSX.
-* @constant
-* @type {Array}
-*/
+// A 16 color palette inspired by Japanese computers like the MSX.
 
 module.exports = {
     0: '#000',

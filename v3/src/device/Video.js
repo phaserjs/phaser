@@ -1,42 +1,22 @@
-var OS = require('./OS');
-var Browser = require('./Browser');
 
 var Video = {
 
-    /**
-    * @property {boolean} oggVideo - Can this device play ogg video files?
-    * @default
-    */
+    //  @property {boolean} oggVideo - Can this device play ogg video files?
     oggVideo: false,
 
-    /**
-    * @property {boolean} h264Video - Can this device play h264 mp4 video files?
-    * @default
-    */
+    //  @property {boolean} h264Video - Can this device play h264 mp4 video files?
     h264Video: false,
 
-    /**
-    * @property {boolean} mp4Video - Can this device play h264 mp4 video files?
-    * @default
-    */
+    //  @property {boolean} mp4Video - Can this device play h264 mp4 video files?
     mp4Video: false,
 
-    /**
-    * @property {boolean} webmVideo - Can this device play webm video files?
-    * @default
-    */
+    //  @property {boolean} webmVideo - Can this device play webm video files?
     webmVideo: false,
 
-    /**
-    * @property {boolean} vp9Video - Can this device play vp9 video files?
-    * @default
-    */
+    //  @property {boolean} vp9Video - Can this device play vp9 video files?
     vp9Video: false,
 
-    /**
-    * @property {boolean} hlsVideo - Can this device play hls video files?
-    * @default
-    */
+    //  @property {boolean} hlsVideo - Can this device play hls video files?
     hlsVideo: false
 
 };

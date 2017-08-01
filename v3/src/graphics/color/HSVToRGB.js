@@ -5,12 +5,6 @@ var GetColor = require('./GetColor');
  * Conversion formula from http://en.wikipedia.org/wiki/HSL_color_space.
  * Assumes HSV values are contained in the set [0, 1] and returns r, g and b values in the set [0, 255].
  * Based on code by Michael Jackson (https://github.com/mjijackson)
- *
- * @method fromHSV
- * @param {number} h - The hue, in the range 0 - 1.
- * @param {number} s - The saturation, in the range 0 - 1.
- * @param {number} v - The value, in the range 0 - 1.
- * @return {BaseColor} This
  */
 var HSVToRGB = function (h, s, v)
 {

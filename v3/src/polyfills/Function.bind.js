@@ -1,9 +1,4 @@
 /**
-* @copyright    2016 Photon Storm Ltd.
-* @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
-*/
-
-/**
 * A polyfill for Function.prototype.bind
 */
 if (!Function.prototype.bind) {

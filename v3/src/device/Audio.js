@@ -1,61 +1,33 @@
-var OS = require('./OS');
 var Browser = require('./Browser');
 
 var Audio = {
 
-    /**
-    * @property {boolean} audioData - Are Audio tags available?
-    * @default
-    */
+    // @property {boolean} audioData - Are Audio tags available?
     audioData: false,
 
-    /**
-    * @property {boolean} webAudio - Is the WebAudio API available?
-    * @default
-    */
+    // @property {boolean} webAudio - Is the WebAudio API available?
     webAudio: false,
 
-    /**
-    * @property {boolean} ogg - Can this device play ogg files?
-    * @default
-    */
+    // @property {boolean} ogg - Can this device play ogg files?
     ogg: false,
 
-    /**
-    * @property {boolean} opus - Can this device play opus files?
-    * @default
-    */
+    // @property {boolean} opus - Can this device play opus files?
     opus: false,
 
-    /**
-    * @property {boolean} mp3 - Can this device play mp3 files?
-    * @default
-    */
+    // @property {boolean} mp3 - Can this device play mp3 files?
     mp3: false,
 
-    /**
-    * @property {boolean} wav - Can this device play wav files?
-    * @default
-    */
+    // @property {boolean} wav - Can this device play wav files?
     wav: false,
 
-    /**
-    * Can this device play m4a files?
-    * @property {boolean} m4a - True if this device can play m4a files.
-    * @default
-    */
+    // Can this device play m4a files?
+    // @property {boolean} m4a - True if this device can play m4a files.
     m4a: false,
 
-    /**
-    * @property {boolean} webm - Can this device play webm files?
-    * @default
-    */
+    // @property {boolean} webm - Can this device play webm files?
     webm: false,
 
-    /**
-    * @property {boolean} dolby - Can this device play EC-3 Dolby Digital Plus files?
-    * @default
-    */
+    // @property {boolean} dolby - Can this device play EC-3 Dolby Digital Plus files?
     dolby: false
 
 };

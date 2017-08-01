@@ -1,38 +1,19 @@
-/**
-* @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2016 Photon Storm Ltd.
-* @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
-*/
-
 var NOOP = require('../utils/NOOP');
 
-/**
-* Abstracts away the use of RAF or setTimeOut for the core game update loop.
-*
-* @class Phaser.RequestAnimationFrame
-* @constructor
-* @param {boolean} [forceSetTimeOut=false] - Tell Phaser to use setTimeOut even if raf is available.
-*/
+// Abstracts away the use of RAF or setTimeOut for the core game update loop.
 var RequestAnimationFrame = function ()
 {
-    /**
-    * @property {boolean} isRunning - true if RequestAnimationFrame is running, otherwise false.
-    * @default
-    */
+    // @property {boolean} isRunning - true if RequestAnimationFrame is running, otherwise false.
     this.isRunning = false;
 
     this.callback = NOOP;
 
     this.tick = 0;
 
-    /**
-    * @property {boolean} isSetTimeOut  - True if the browser is using setTimeout instead of rAf.
-    */
+    // @property {boolean} isSetTimeOut  - True if the browser is using setTimeout instead of rAf.
     this.isSetTimeOut = false;
 
-    /**
-    * @property {number} timeOutID - The callback setTimeout or rAf callback ID used when calling cancel.
-    */
+    // @property {number} timeOutID - The callback setTimeout or rAf callback ID used when calling cancel.
     this.timeOutID = null;
 
     var _this = this;
@@ -66,10 +47,7 @@ RequestAnimationFrame.prototype.constructor = RequestAnimationFrame;
 
 RequestAnimationFrame.prototype = {
 
-    /**
-    * Starts the requestAnimationFrame running or setTimeout if unavailable in browser
-    * @method Phaser.RequestAnimationFrame#start
-    */
+    // Starts the requestAnimationFrame running or setTimeout if unavailable in browser
     start: function (callback, forceSetTimeOut)
     {
         this.callback = callback;
@@ -83,10 +61,7 @@ RequestAnimationFrame.prototype = {
         this.timeOutID = (forceSetTimeOut) ? window.setTimeout(_this.stepTimeout, 0) : window.requestAnimationFrame(_this.step);
     },
 
-    /**
-    * Stops the requestAnimationFrame from running.
-    * @method Phaser.RequestAnimationFrame#stop
-    */
+    // Stops the requestAnimationFrame from running.
     stop: function ()
     {
         this.isRunning = false;

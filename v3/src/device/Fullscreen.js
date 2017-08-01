@@ -1,30 +1,15 @@
-var OS = require('./OS');
-var Browser = require('./Browser');
-
 var Fullscreen = {
 
-    /**
-    * @property {boolean} available - Does the browser support the Full Screen API?
-    * @default
-    */
+    //  @property {boolean} available - Does the browser support the Full Screen API?
     available: false,
 
-    /**
-    * @property {string} request - If the browser supports the Full Screen API this holds the call you need to use to activate it.
-    * @default
-    */
+    //  @property {string} request - If the browser supports the Full Screen API this holds the call you need to use to activate it.
     request: '',
 
-    /**
-    * @property {string} cancel - If the browser supports the Full Screen API this holds the call you need to use to cancel it.
-    * @default
-    */
+    //  @property {string} cancel - If the browser supports the Full Screen API this holds the call you need to use to cancel it.
     cancel: '',
 
-    /**
-    * @property {boolean} keyboard - Does the browser support access to the Keyboard during Full Screen mode?
-    * @default
-    */
+    //  @property {boolean} keyboard - Does the browser support access to the Keyboard during Full Screen mode?
     keyboard: false
 
 };
@@ -34,6 +19,8 @@ var Fullscreen = {
 */
 function init ()
 {
+    var i;
+
     var fs = [
         'requestFullscreen',
         'requestFullScreen',
@@ -47,7 +34,7 @@ function init ()
 
     var element = document.createElement('div');
 
-    for (var i = 0; i < fs.length; i++)
+    for (i = 0; i < fs.length; i++)
     {
         if (element[fs[i]])
         {
@@ -70,7 +57,7 @@ function init ()
 
     if (Fullscreen.available)
     {
-        for (var i = 0; i < cfs.length; i++)
+        for (i = 0; i < cfs.length; i++)
         {
             if (document[cfs[i]])
             {

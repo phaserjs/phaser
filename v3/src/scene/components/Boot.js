@@ -1,9 +1,6 @@
 /**
 * The Boot handler is called by Phaser.Game when it first starts up.
 * The renderer is available by now.
-*
-* @method Phaser.GlobalSceneManager#boot
-* @private
 */
 var Boot = function ()
 {

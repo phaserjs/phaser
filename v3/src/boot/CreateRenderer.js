@@ -1,9 +1,3 @@
-/**
-* @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2016 Photon Storm Ltd.
-* @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
-*/
-
 var CONST = require('../const');
 var CanvasPool = require('../dom/CanvasPool');
 var Features = require('../device/Features');
@@ -11,12 +5,6 @@ var CanvasRenderer = require('../renderer/canvas/CanvasRenderer');
 var WebGLRenderer = require('../renderer/webgl/WebGLRenderer');
 var CanvasInterpolation = require('../dom/CanvasInterpolation');
 
-/**
-* Checks if the device is capable of using the requested renderer and sets it up or an alternative if not.
-*
-* @method Phaser.Game#setUpRenderer
-* @protected
-*/
 var CreateRenderer = function (game)
 {
     var config = game.config;

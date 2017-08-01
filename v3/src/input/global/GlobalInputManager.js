@@ -49,9 +49,6 @@ var GlobalInputManager = new Class({
     /**
     * The Boot handler is called by Phaser.Game when it first starts up.
     * The renderer is available by now.
-    *
-    * @method Phaser.Input.KeyboardManager#boot
-    * @private
     */
     boot: function ()
     {

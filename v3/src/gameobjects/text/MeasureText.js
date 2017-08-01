@@ -2,23 +2,15 @@ var CanvasPool = require('../../dom/CanvasPool');
 
 /**
 * Calculates the ascent, descent and fontSize of a given font style.
-*
-* @method Phaser.GameObject.Text#determineFontProperties
-* @private
-* @param {object} textStyle
 */
 var MeasureText = function (textStyle, testString)
 {
     if (testString === undefined) { testString = '|MÉqgy'; }
 
-    /**
-     * @property {HTMLCanvasElement} canvas - The canvas element that the text is rendered.
-     */
+    // @property {HTMLCanvasElement} canvas - The canvas element that the text is rendered.
     var canvas = CanvasPool.create(this);
 
-    /**
-     * @property {HTMLCanvasElement} context - The context of the canvas element that the text is rendered to.
-     */
+    // @property {HTMLCanvasElement} context - The context of the canvas element that the text is rendered to.
     var context = canvas.getContext('2d');
 
     textStyle.syncFont(canvas, context);

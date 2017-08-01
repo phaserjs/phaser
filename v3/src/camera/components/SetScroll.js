@@ -1,4 +1,4 @@
-var setScroll = function (x, y)
+var SetScroll = function (x, y)
 {
     if (y === undefined) { y = x; }
 
@@ -8,4 +8,4 @@ var setScroll = function (x, y)
     return this;
 };
 
-module.exports = setScroll;
+module.exports = SetScroll;

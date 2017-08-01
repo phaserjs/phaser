@@ -16,10 +16,6 @@ var ProcessKeyUp = require('./keys/ProcessKeyUp');
 * Also please be aware that certain browser extensions can disable or override Phaser keyboard handling.
 * For example the Chrome extension vimium is known to disable Phaser from using the D key. And there are others.
 * So please check your extensions before opening Phaser issues.
-*
-* @class Phaser.Keyboard
-* @constructor
-* @param {Phaser.Game} game - A reference to the currently running game.
 */
 
 var KeyboardManager = new Class({
@@ -49,9 +45,6 @@ var KeyboardManager = new Class({
     /**
     * The Boot handler is called by Phaser.Game when it first starts up.
     * The renderer is available by now.
-    *
-    * @method Phaser.Input.KeyboardManager#boot
-    * @private
     */
     boot: function ()
     {
@@ -101,9 +94,6 @@ var KeyboardManager = new Class({
 
     /**
     * Creates and returns an object containing 4 hotkeys for Up, Down, Left and Right.
-    *
-    * @method Phaser.Keyboard#createCursorKeys
-    * @return {object} An object containing properties: `up`, `down`, `left` and `right` of {@link Phaser.Key} objects.
     */
     createCursorKeys: function ()
     {
@@ -123,10 +113,6 @@ var KeyboardManager = new Class({
     *     addKeys( { 'up': Phaser.KeyCode.W, 'down': Phaser.KeyCode.S, 'left': Phaser.KeyCode.A, 'right': Phaser.KeyCode.D } );
     *
     * would return an object containing properties (`up`, `down`, `left` and `right`) referring to {@link Phaser.Key} object.
-    *
-    * @method Phaser.Keyboard#addKeys
-    * @param {object} keys - A key mapping object, i.e. `{ 'up': Phaser.KeyCode.W, 'down': Phaser.KeyCode.S }` or `{ 'up': 52, 'down': 53 }`.
-    * @return {object} An object containing the properties mapped to {@link Phaser.Key} values.
     */
     addKeys: function (keys)
     {
@@ -143,10 +129,6 @@ var KeyboardManager = new Class({
     /**
     * If you need more fine-grained control over a Key you can create a new Phaser.Key object via this method.
     * The Key object can then be polled, have events attached to it, etc.
-    *
-    * @method Phaser.Keyboard#addKey
-    * @param {integer} keycode - The {@link Phaser.KeyCode keycode} of the key.
-    * @return {Phaser.Key} The Key object which you can store locally and reference directly.
     */
     addKey: function (keyCode)
     {
@@ -163,9 +145,6 @@ var KeyboardManager = new Class({
 
     /**
     * Removes a Key object from the Keyboard manager.
-    *
-    * @method Phaser.Keyboard#removeKey
-    * @param {integer} keycode - The {@link Phaser.KeyCode keycode} of the key to remove.
     */
     removeKey: function (keyCode)
     {

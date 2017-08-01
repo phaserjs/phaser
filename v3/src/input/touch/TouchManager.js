@@ -12,9 +12,7 @@ var TouchManager = new Class({
     {
         this.manager = inputManager;
 
-        /**
-        * @property {boolean} capture - If true the DOM events will have event.preventDefault applied to them, if false they will propagate fully.
-        */
+        // @property {boolean} capture - If true the DOM events will have event.preventDefault applied to them, if false they will propagate fully.
         this.capture = false;
 
         this.enabled = false;

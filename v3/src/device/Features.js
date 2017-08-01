@@ -4,85 +4,46 @@ var CanvasPool = require('../dom/CanvasPool');
 
 var Features = {
 
-    /**
-    * @property {boolean} canvas - Is canvas available?
-    * @default
-    */
+    //  @property {boolean} canvas - Is canvas available?
     canvas: false,
 
-    /**
-    * @property {?boolean} canvasBitBltShift - True if canvas supports a 'copy' bitblt onto itself when the source and destination regions overlap.
-    * @default
-    */
+    //  @property {?boolean} canvasBitBltShift - True if canvas supports a 'copy' bitblt onto itself when the source and destination regions overlap.
     canvasBitBltShift: null,
 
-    /**
-    * @property {boolean} webGL - Is webGL available?
-    * @default
-    */
+    //  @property {boolean} webGL - Is webGL available?
     webGL: false,
 
-    /**
-    * @property {boolean} file - Is file available?
-    * @default
-    */
+    //  @property {boolean} file - Is file available?
     file: false,
 
-    /**
-    * @property {boolean} fileSystem - Is fileSystem available?
-    * @default
-    */
+    //  @property {boolean} fileSystem - Is fileSystem available?
     fileSystem: false,
 
-    /**
-    * @property {boolean} localStorage - Is localStorage available?
-    * @default
-    */
+    //  @property {boolean} localStorage - Is localStorage available?
     localStorage: false,
 
-    /**
-    * @property {boolean} worker - Is worker available?
-    * @default
-    */
+    //  @property {boolean} worker - Is worker available?
     worker: false,
 
-    /**
-    * @property {boolean} pointerLock - Is Pointer Lock available?
-    * @default
-    */
+    //  @property {boolean} pointerLock - Is Pointer Lock available?
     pointerLock: false,
 
-    /**
-    * @property {boolean} vibration - Does the device support the Vibration API?
-    * @default
-    */
+    //  @property {boolean} vibration - Does the device support the Vibration API?
     vibration: false,
 
-    /**
-    * @property {boolean} getUserMedia - Does the device support the getUserMedia API?
-    * @default
-    */
+    //  @property {boolean} getUserMedia - Does the device support the getUserMedia API?
     getUserMedia: true,
 
-    /**
-    * @property {boolean} littleEndian - Is the device big or little endian? (only detected if the browser supports TypedArrays)
-    * @default
-    */
+    //  @property {boolean} littleEndian - Is the device big or little endian? (only detected if the browser supports TypedArrays)
     littleEndian: false,
 
-    /**
-    * @property {boolean} support32bit - Does the device context support 32bit pixel manipulation using array buffer views?
-    * @default
-    */
+    //  @property {boolean} support32bit - Does the device context support 32bit pixel manipulation using array buffer views?
     support32bit: false
 
 };
 
-/**
-* Check Little or Big Endian system.
-*
-* @author Matt DesLauriers (@mattdesl)
-*/
+// Check Little or Big Endian system.
+// @author Matt DesLauriers (@mattdesl)
 function checkIsLittleEndian ()
 {
     var a = new ArrayBuffer(4);

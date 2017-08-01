@@ -2,13 +2,6 @@ var Point = require('../../geom/Point');
 var Class = require('../../utils/Class');
 
 /**
-* @author       Richard Davey <rich@photonstorm.com>
-* @author       Pete Baron <pete@photonstorm.com>
-* @copyright    2016 Photon Storm Ltd.
-* @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
-*/
-
-/**
 * A data representation of a Hermite Curve (see http://en.wikipedia.org/wiki/Cubic_Hermite_spline)
 * 
 * A Hermite curve has a start and end point and tangent vectors for both of them.
@@ -27,8 +20,6 @@ var Class = require('../../utils/Class');
 * a desktop screen. If you use very long curves (more than 400 pixels) you may need to increase
 * this value further.
 *
-* @class Phaser.Hermite
-* @constructor
 * @param {number} p1x - The x coordinate of the start of the curve.
 * @param {number} p1y - The y coordinate of the start of the curve.
 * @param {number} p2x - The x coordinate of the end of the curve.

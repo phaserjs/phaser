@@ -6,12 +6,6 @@ var Color = require('./Color');
 * The hex string can supplied as `'#0033ff'` or the short-hand format of `'#03f'`; it can begin with an optional "#" or "0x", or be unprefixed.    
 *
 * An alpha channel is _not_ supported.
-*
-* @method Phaser.Color.hexToColor
-* @static
-* @param {string} hex - The color string in a hex format.
-* @param {object} [out] - An object into which 3 properties will be created or set: r, g and b. If not provided a new object will be created.
-* @return {object} An object with the red, green and blue values set in the r, g and b properties.
 */
 var HexStringToColor = function (hex)
 {

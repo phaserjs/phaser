@@ -3,23 +3,13 @@ var Browser = require('./Browser');
 
 var Input = {
 
-    /**
-    * @property {boolean} touch - Is touch available?
-    * @default
-    */
+    // @property {boolean} touch - Is touch available?
     touch: false,
 
-    /**
-    * @property {boolean} mspointer - Is mspointer available?
-    * @default
-    */
+    // @property {boolean} mspointer - Is mspointer available?
     mspointer: false,
 
-    /**
-    * @property {?string} wheelType - The newest type of Wheel/Scroll event supported: 'wheel', 'mousewheel', 'DOMMouseScroll'
-    * @default
-    * @protected
-    */
+    // @property {?string} wheelType - The newest type of Wheel/Scroll event supported: 'wheel', 'mousewheel', 'DOMMouseScroll'
     wheelEvent: null
     
 };

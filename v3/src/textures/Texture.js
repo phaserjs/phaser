@@ -1,4 +1,3 @@
-
 var Class = require('../utils/Class');
 var Frame = require('./Frame');
 var TextureSource = require('./TextureSource');
@@ -13,11 +12,6 @@ var TextureSource = require('./TextureSource');
 * responsible for creating and delivering Textures and their corresponding Frames to Game Objects.
 *
 * Sprites and other Game Objects get the texture data they need from the TextureManager.
-*
-* @class Phaser.Texture
-* @constructor
-* @param {object} source
-* @param {number} scaleMode
 */
 var Texture = new Class({
 
@@ -37,15 +31,9 @@ var Texture = new Class({
         /**
         * The source that is used to create the texture.
         * Usually an Image, but can also be a Canvas.
-        *
-        * @property source
-        * @type array
         */
         this.source = [];
 
-        /**
-        * @property {object} frames - Frames
-        */
         this.frames = {};
 
         this.firstFrame = '__BASE';

@@ -22,14 +22,13 @@ var ColorWithColor = function (color1, color2, length, index)
     return RGBWithRGB(color1.r, color1.g, color1.b, color2.r, color2.g, color2.b, length, index);
 };
 
-var ColorWithRGB = function  (color, r, g, b, length, index)
+var ColorWithRGB = function (color, r, g, b, length, index)
 {
     if (length === undefined) { length = 100; }
     if (index === undefined) { index = 0; }
 
     return RGBWithRGB(color.r, color.g, color.b, r, g, b, length, index);
 };
-
 
 module.exports = {
 

@@ -10,12 +10,6 @@
 * 
 * Painting with pure black or white produces a distinctly darker or lighter area, but does not result in pure black or white. 
 * The effect is similar to shining a diffused spotlight on the backdrop. 
-*
-* @method Lazer.Color.blendSoftLight
-* @static
-* @param {integer} a - The source color to blend, in the range 1 to 255.
-* @param {integer} b - The backdrop color to blend, in the range 1 to 255.
-* @returns {integer} The blended color value, in the range 1 to 255.
 */
 var SoftLight = function (a, b)
 {

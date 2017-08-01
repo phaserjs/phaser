@@ -5,7 +5,6 @@ var Scene = require('../Scene');
 * The Scene can be either a Phaser.Scene object (or an object that extends it), a plain JavaScript object or a function.
 * If a function is given a new scene object will be created by calling it.
 *
-* @method Phaser.GlobalSceneManager#add
 * @param {string} key - A unique key you use to reference this scene, i.e. "MainMenu", "Level1".
 * @param {Phaser.Scene|object|function} scene  - The scene you want to switch to.
 * @param {boolean} [autoStart=false]  - If true the Scene will be started immediately after adding it.

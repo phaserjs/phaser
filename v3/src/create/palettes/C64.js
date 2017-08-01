@@ -1,8 +1,4 @@
-/**
-* A 16 color C64 inspired palette.
-* @constant
-* @type {Array}
-*/
+// A 16 color C64 inspired palette.
 
 module.exports = {
     0: '#000',

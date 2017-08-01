@@ -1,8 +1,4 @@
-/**
-* A 16 color JMP palette by [Arne](http://androidarts.com/palette/16pal.htm)
-* @constant
-* @type {Array}
-*/
+// A 16 color JMP palette by [Arne](http://androidarts.com/palette/16pal.htm)
 
 module.exports = {
     0: '#000',

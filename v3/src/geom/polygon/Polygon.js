@@ -6,14 +6,10 @@ var Polygon = new Class({
 
     function Polygon (points)
     {
-        /**
-        * @property {number} area - The area of this Polygon.
-        */
+        // @property {number} area - The area of this Polygon.
         this.area = 0;
 
-        /**
-        * @property {array} points - An array of number pair objects that make up this polygon. I.e. [ {x,y}, {x,y}, {x,y} ]
-        */
+        // @property {array} points - An array of number pair objects that make up this polygon. I.e. [ {x,y}, {x,y}, {x,y} ]
         this.points = [];
 
         if (points)
@@ -33,10 +29,6 @@ var Polygon = new Class({
      * - An array of arrays with two elements representing x/y coordinates: `[[x1, y1], [x2, y2], ...]`
      *
      * `setTo` may also be called without any arguments to remove all points.
-     *
-     * @method Phaser.Polygon#setTo
-     * @param {Phaser.Point[]|number[]|...Phaser.Point|...number} points - The points to set.
-     * @return {Phaser.Polygon} This Polygon object
      */
     setTo: function (points)
     {
@@ -91,11 +83,6 @@ var Polygon = new Class({
 
     /**
      * Calculates the area of the Polygon. This is available in the property Polygon.area
-     *
-     * @method Phaser.Polygon#calculateArea
-     * @private
-     * @param {number} y0 - The lowest boundary
-     * @return {number} The area of the Polygon.
      */
     calculateArea: function (y0)
     {

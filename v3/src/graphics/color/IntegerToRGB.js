@@ -2,11 +2,6 @@
 * Return the component parts of a color as an Object with the properties alpha, red, green, blue.
 *
 * Alpha will only be set if it exists in the given color (0xAARRGGBB)
-*
-* @method Phaser.Color.getRGB
-* @static
-* @param {number} color - Color in RGB (0xRRGGBB) or ARGB format (0xAARRGGBB).
-* @return {object} An Object with properties: alpha, red, green, blue (also r, g, b and a). Alpha will only be present if a color value > 16777215 was given.
 */
 var IntegerToRGB = function (color)
 {

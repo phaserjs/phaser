@@ -1,4 +1,3 @@
-
 var Class = require('../../../utils/Class');
 var GameObject = require('../../GameObject');
 var Components = require('../../components');
@@ -31,7 +30,7 @@ var Tilemap = new Class({
     {
         GameObject.call(this, scene, 'Tilemap');
 
-        this.mapData = mapData !== null ? new Uint32Array(mapData) : new Uint32Array(mapWidth * mapHeight);
+        this.mapData = (mapData !== null) ? new Uint32Array(mapData) : new Uint32Array(mapWidth * mapHeight);
         this.tileWidth = tileWidth;
         this.tileHeight = tileHeight;
         this.mapWidth = mapWidth;

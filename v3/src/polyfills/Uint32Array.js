@@ -1,10 +1,4 @@
 /**
-* @copyright    2016 Photon Storm Ltd.
-* @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
-*/
-
-
-/**
 * Low-budget Float32Array knock-off, suitable for use with P2.js in IE9
 * Source: http://www.html5gamedevs.com/topic/5988-phaser-12-ie9/
 * Cameron Foale (http://www.kibibu.com)

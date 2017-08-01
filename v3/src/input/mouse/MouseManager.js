@@ -11,9 +11,7 @@ var MouseManager = new Class({
     {
         this.manager = inputManager;
 
-        /**
-        * @property {boolean} capture - If true the DOM mouse events will have event.preventDefault applied to them, if false they will propagate fully.
-        */
+        // @property {boolean} capture - If true the DOM mouse events will have event.preventDefault applied to them, if false they will propagate fully.
         this.capture = false;
 
         this.enabled = false;
@@ -48,7 +46,8 @@ var MouseManager = new Class({
 
     disableContextMenu: function ()
     {
-        document.body.addEventListener('contextmenu', function (event) {
+        document.body.addEventListener('contextmenu', function (event)
+        {
             event.preventDefault();
             return false;
         });

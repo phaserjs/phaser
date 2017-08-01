@@ -9,8 +9,6 @@ var TYPE = require('./TYPE');
 /**
 * An Impact.js compatible physics body.
 * This re-creates the properties you'd get on an Entity and the math needed to update them.
-*
-* @class
 */
 
 var Body = new Class({

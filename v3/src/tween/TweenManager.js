@@ -12,9 +12,6 @@ var TweenManager = new Class({
         //  The Scene the Tween Manager belongs to (tweens are Scene specific, not Game global)
         this.scene = scene;
 
-        /**
-        * @property {EventDispatcher} events - Global / Global Game System Events
-        */
         this.events = new EventDispatcher(); // should use Scene event dispatcher?
 
         //  TODO:

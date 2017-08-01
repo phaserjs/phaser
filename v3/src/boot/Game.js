@@ -1,4 +1,3 @@
-
 var Class = require('../utils/Class');
 var Config = require('./Config');
 var DebugHeader = require('./DebugHeader');
@@ -34,50 +33,22 @@ var Game = new Class({
         this.isBooted = false;
         this.isRunning = false;
 
-        /**
-        * @property {EventDispatcher} events - Global / Global Game System Events
-        */
         this.events = new EventDispatcher();
 
-        /**
-        * @property {Phaser.AnimationManager} anims - Reference to the Phaser Animation Manager.
-        */
         this.anims = new AnimationManager(this);
 
-        /**
-        * @property {Phaser.TextureManager} textures - Reference to the Phaser Texture Manager.
-        */
         this.textures = new TextureManager(this);
 
-        /**
-        * @property {Phaser.Cache} cache - Reference to the assets cache.
-        */
         this.cache = new GlobalCache(this);
 
-        /**
-        * @property {Phaser.Data} registry - Game wide data store.
-        */
         this.registry = new Data(this);
 
-        /**
-        * @property {Phaser.Input} input - Reference to the input manager
-        */
         this.input = new GlobalInputManager(this, this.config);
 
-        /**
-        * @property {Phaser.GlobalSceneManager} scene - The SceneManager. Phaser instance specific.
-        */
         this.scene = new GlobalSceneManager(this, this.config.sceneConfig);
 
-        /**
-        * @property {Phaser.Device} device - Contains device information and capabilities (singleton)
-        */
         this.device = Device;
 
-        /**
-        * @property {Phaser.MainLoop} mainloop - Main Loop handler.
-        * @protected
-        */
         this.loop = new TimeStep(this, this.config.fps);
 
         this.onStepCallback = NOOP;

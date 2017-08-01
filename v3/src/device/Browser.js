@@ -2,106 +2,55 @@ var OS = require('./OS');
 
 var Browser = {
 
-    /**
-    * @property {boolean} arora - Set to true if running in Arora.
-    * @default
-    */
+    //  @property {boolean} arora - Set to true if running in Arora.
     arora: false,
 
-    /**
-    * @property {boolean} chrome - Set to true if running in Chrome.
-    * @default
-    */
+    //  @property {boolean} chrome - Set to true if running in Chrome.
     chrome: false,
 
-    /**
-    * @property {number} chromeVersion - If running in Chrome this will contain the major version number.
-    * @default
-    */
+    //  @property {number} chromeVersion - If running in Chrome this will contain the major version number.
     chromeVersion: 0,
 
-    /**
-    * @property {boolean} epiphany - Set to true if running in Epiphany.
-    * @default
-    */
+    //  @property {boolean} epiphany - Set to true if running in Epiphany.
     epiphany: false,
 
-    /**
-    * @property {boolean} firefox - Set to true if running in Firefox.
-    * @default
-    */
+    //  @property {boolean} firefox - Set to true if running in Firefox.
     firefox: false,
 
-    /**
-    * @property {number} firefoxVersion - If running in Firefox this will contain the major version number.
-    * @default
-    */
+    //  @property {number} firefoxVersion - If running in Firefox this will contain the major version number.
     firefoxVersion: 0,
 
-    /**
-    * @property {boolean} mobileSafari - Set to true if running in Mobile Safari.
-    * @default
-    */
+    //  @property {boolean} mobileSafari - Set to true if running in Mobile Safari.
     mobileSafari: false,
 
-    /**
-    * @property {boolean} ie - Set to true if running in Internet Explorer.
-    * @default
-    */
+    //  @property {boolean} ie - Set to true if running in Internet Explorer.
     ie: false,
 
-    /**
-    * @property {number} ieVersion - If running in Internet Explorer this will contain the major version number. Beyond IE10 you should use Device.trident and Device.tridentVersion.
-    * @default
-    */
+    //  @property {number} ieVersion - If running in Internet Explorer this will contain the major version number. Beyond IE10 you should use Device.trident and Device.tridentVersion.
     ieVersion: 0,
 
-    /**
-    * @property {boolean} midori - Set to true if running in Midori.
-    * @default
-    */
+    //  @property {boolean} midori - Set to true if running in Midori.
     midori: false,
 
-    /**
-    * @property {boolean} opera - Set to true if running in Opera.
-    * @default
-    */
+    //  @property {boolean} opera - Set to true if running in Opera.
     opera: false,
 
-    /**
-    * @property {boolean} safari - Set to true if running in Safari.
-    * @default
-    */
+    //  @property {boolean} safari - Set to true if running in Safari.
     safari: false,
 
-    /**
-    * @property {number} safariVersion - If running in Safari this will contain the major version number.
-    * @default
-    */
+    //  @property {number} safariVersion - If running in Safari this will contain the major version number.
     safariVersion: 0,
 
-    /**
-    * @property {boolean} trident - Set to true if running a Trident version of Internet Explorer (IE11+)
-    * @default
-    */
+    //  @property {boolean} trident - Set to true if running a Trident version of Internet Explorer (IE11+)
     trident: false,
 
-    /**
-    * @property {number} tridentVersion - If running in Internet Explorer 11 this will contain the major version number. See {@link http://msdn.microsoft.com/en-us/library/ie/ms537503(v=vs.85).aspx}
-    * @default
-    */
+    //  @property {number} tridentVersion - If running in Internet Explorer 11 this will contain the major version number. See {@link http://msdn.microsoft.com/en-us/library/ie/ms537503(v=vs.85).aspx}
     tridentVersion: 0,
 
-    /**
-    * @property {boolean} edge - Set to true if running in Microsoft Edge browser.
-    * @default
-    */
+    //  @property {boolean} edge - Set to true if running in Microsoft Edge browser.
     edge: false,
 
-    /**
-    * @property {boolean} silk - Set to true if running in the Silk browser (as used on the Amazon Kindle)
-    * @default
-    */
+    //  @property {boolean} silk - Set to true if running in the Silk browser (as used on the Amazon Kindle)
     silk: false
 
 };

@@ -1,141 +1,72 @@
 var OS = {
 
-    /**
-    * @property {boolean} desktop - Is running on a desktop?
-    * @default
-    */
+    //  @property {boolean} desktop - Is running on a desktop?
     desktop: false,
 
-    /**
-    * @property {boolean} webApp - Set to true if running as a WebApp, i.e. within a WebView
-    * @default
-    */
+    //  @property {boolean} webApp - Set to true if running as a WebApp, i.e. within a WebView
     webApp: false,
 
-    /**
-    * @property {boolean} iOS - Is running on iOS?
-    * @default
-    */
+    //  @property {boolean} iOS - Is running on iOS?
     iOS: false,
 
-    /**
-    * @property {number} iOSVersion - If running in iOS this will contain the major version number.
-    * @default
-    */
+    //  @property {number} iOSVersion - If running in iOS this will contain the major version number.
     iOSVersion: 0,
 
-    /**
-    * @property {boolean} iPhone - Is running on iPhone?
-    * @default
-    */
+    //  @property {boolean} iPhone - Is running on iPhone?
     iPhone: false,
 
-    /**
-    * @property {boolean} iPad - Is running on iPad?
-    * @default
-    */
+    //  @property {boolean} iPad - Is running on iPad?
     iPad: false,
 
-    /**
-    * @property {boolean} cocoonJS - Is the game running under CocoonJS?
-    * @default
-    */
+    //  @property {boolean} cocoonJS - Is the game running under CocoonJS?
     cocoonJS: false,
     
-    /**
-    * @property {boolean} cocoonJSApp - Is this game running with CocoonJS.App?
-    * @default
-    */
+    //  @property {boolean} cocoonJSApp - Is this game running with CocoonJS.App?
     cocoonJSApp: false,
     
-    /**
-    * @property {boolean} cordova - Is the game running under Apache Cordova?
-    * @default
-    */
+    //  @property {boolean} cordova - Is the game running under Apache Cordova?
     cordova: false,
     
-    /**
-    * @property {boolean} node - Is the game running under Node.js?
-    * @default
-    */
+    //  @property {boolean} node - Is the game running under Node.js?
     node: false,
     
-    /**
-    * @property {boolean} nodeWebkit - Is the game running under Node-Webkit?
-    * @default
-    */
+    //  @property {boolean} nodeWebkit - Is the game running under Node-Webkit?
     nodeWebkit: false,
     
-    /**
-    * @property {boolean} electron - Is the game running under GitHub Electron?
-    * @default
-    */
+    //  @property {boolean} electron - Is the game running under GitHub Electron?
     electron: false,
     
-    /**
-    * @property {boolean} ejecta - Is the game running under Ejecta?
-    * @default
-    */
+    //  @property {boolean} ejecta - Is the game running under Ejecta?
     ejecta: false,
 
-    /**
-    * @property {boolean} crosswalk - Is the game running under the Intel Crosswalk XDK?
-    * @default
-    */
+    //  @property {boolean} crosswalk - Is the game running under the Intel Crosswalk XDK?
     crosswalk: false,
 
-    /**
-    * @property {boolean} android - Is running on android?
-    * @default
-    */
+    //  @property {boolean} android - Is running on android?
     android: false,
 
-    /**
-    * @property {boolean} chromeOS - Is running on chromeOS?
-    * @default
-    */
+    //  @property {boolean} chromeOS - Is running on chromeOS?
     chromeOS: false,
 
-    /**
-    * @property {boolean} linux - Is running on linux?
-    * @default
-    */
+    //  @property {boolean} linux - Is running on linux?
     linux: false,
 
-    /**
-    * @property {boolean} macOS - Is running on macOS?
-    * @default
-    */
+    //  @property {boolean} macOS - Is running on macOS?
     macOS: false,
 
-    /**
-    * @property {boolean} windows - Is running on windows?
-    * @default
-    */
+    //  @property {boolean} windows - Is running on windows?
     windows: false,
 
-    /**
-    * @property {boolean} windowsPhone - Is running on a Windows Phone?
-    * @default
-    */
+    //  @property {boolean} windowsPhone - Is running on a Windows Phone?
     windowsPhone: false,
 
-    /**
-    * @property {boolean} vita - Is running on a PlayStation Vita?
-    * @default
-    */
+    //  @property {boolean} vita - Is running on a PlayStation Vita?
     vita: false,
 
-    /**
-    * @property {boolean} kindle - Is running on an Amazon Kindle?
-    * @default
-    */
+    //  @property {boolean} kindle - Is running on an Amazon Kindle?
     kindle: false,
 
-    /**
-    * @property {number} pixelRatio - PixelRatio of the host device?
-    * @default
-    */
+    //  @property {number} pixelRatio - PixelRatio of the host device?
     pixelRatio: 1
 
 };

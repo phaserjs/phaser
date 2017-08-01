@@ -14,9 +14,6 @@ var Texture = require('./Texture');
 * Sprites and other Game Objects get the texture data they need from the TextureManager.
 *
 * Access it via `scene.textures`.
-*
-* @class Phaser.TextureManager
-* @constructor
 */
 var TextureManager = new Class({
 

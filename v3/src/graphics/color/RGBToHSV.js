@@ -3,13 +3,6 @@
 * Conversion forumla from http://en.wikipedia.org/wiki/HSL_color_space.
 * Assumes RGB values are contained in the set [0, 255] and returns h, s and v in the set [0, 1].
 * Based on code by Michael Jackson (https://github.com/mjijackson)
-*
-* @method Lazer.Color.RGBtoHSV
-* @static
-* @param {number} r - The red color component, in the range 0 - 255.
-* @param {number} g - The green color component, in the range 0 - 255.
-* @param {number} b - The blue color component, in the range 0 - 255.
-* @return {object} An object with the hue, saturation and value set in the h, s and v properties.
 */
 var RGBToHSV = function (r, g, b)
 {

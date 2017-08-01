@@ -1,4 +1,3 @@
-
 var Class = require('../../../utils/Class');
 var GameObject = require('../../GameObject');
 var Components = require('../../components');

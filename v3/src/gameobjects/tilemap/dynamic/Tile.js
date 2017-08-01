@@ -1,18 +1,18 @@
-function Tile(properties)
+function Tile (properties)
 {
     this.index = properties.index;
-	this.id = properties.id;
-	this.x =  properties.x;
-	this.y = properties.y;
-	this.width = properties.width;
-	this.height = properties.height;
+    this.id = properties.id;
+    this.x = properties.x;
+    this.y = properties.y;
+    this.width = properties.width;
+    this.height = properties.height;
     this.frameX = properties.frameX;
     this.frameY = properties.frameY;
     this.frameWidth = properties.frameWidth;
-	this.frameHeight = properties.frameHeight;
+    this.frameHeight = properties.frameHeight;
     this.alpha = 1.0;
-	this.tint = 0xFFFFFF;
-	this.visible = true;
+    this.tint = 0xFFFFFF;
+    this.visible = true;
     this.textureWidth = properties.textureWidth;
     this.textureHeight = properties.textureHeight;
     this.border = properties.border;
@@ -33,7 +33,6 @@ Tile.prototype.setId = function (id)
 
     this.frameX = rectx;
     this.frameY = recty;
-
 };
 
 module.exports = Tile;

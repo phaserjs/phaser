@@ -1,12 +1,6 @@
 /**
 * Converts a hue to an RGB color.
 * Based on code by Michael Jackson (https://github.com/mjijackson)
-*
-* @method Lazer.Color.hueToColor
-* @param {number} p
-* @param {number} q
-* @param {number} t
-* @return {number} The color component value.
 */
 var HueToComponent = function (p, q, t)
 {

@@ -1,25 +1,13 @@
-/**
-* @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2016 Photon Storm Ltd.
-* @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
-*/
-
 var Class = require('../../utils/Class');
 var Components = require('./components/');
 var EventDispatcher = require('../../events/EventDispatcher');
 var Map = require('../../structs/Map');
 
-/**
-* Animations are managed by the global AnimationManager. This is a singleton class that is
-* responsible for creating and delivering animations and their corresponding data to Game Objects.
-*
-* Sprites and other Game Objects get the data they need from the AnimationManager.
-*
-* Access it via `scene.anims`.
-*
-* @class Phaser.AnimationManager
-* @constructor
-*/
+// Animations are managed by the global AnimationManager. This is a singleton class that is
+// responsible for creating and delivering animations and their corresponding data to Game Objects.
+// Sprites and other Game Objects get the data they need from the AnimationManager.
+// Access it via `scene.anims`.
+
 var AnimationManager = new Class({
 
     initialize:
