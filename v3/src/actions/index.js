@@ -11,6 +11,7 @@ module.exports = {
     IncXY: require('./IncXY'),
     IncY: require('./IncY'),
     PlaceOnCircle: require('./PlaceOnCircle'),
+    PlaceOnEllipse: require('./PlaceOnEllipse'),
     PlaceOnLine: require('./PlaceOnLine'),
     PlaceOnRectangle: require('./PlaceOnRectangle'),
     PlaceOnTriangle: require('./PlaceOnTriangle'),

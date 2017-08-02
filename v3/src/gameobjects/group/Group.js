@@ -284,6 +284,13 @@ var Group = new Class({
         return this;
     },
 
+    placeOnEllipse: function (ellipse, startAngle, endAngle)
+    {
+        Actions.PlaceOnEllipse(this.children.entries, ellipse, startAngle, endAngle);
+
+        return this;
+    },
+
     placeOnLine: function (line)
     {
         Actions.PlaceOnLine(this.children.entries, line);
