@@ -1,3 +1,5 @@
+//  Phaser.BlendModes
+
 module.exports = {
 
     NORMAL: 0,
