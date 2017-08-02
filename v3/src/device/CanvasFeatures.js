@@ -14,28 +14,39 @@ function checkBlendMode ()
     var pngEnd = 'AAAACklEQVQI12NgAAAAAgAB4iG8MwAAAABJRU5ErkJggg==';
 
     var magenta = new Image();
+
+    magenta.onload = function ()
+    {
+        var yellow = new Image();
+
+        yellow.onload = function ()
+        {
+            var canvas = CanvasPool.create(yellow, 6, 1);
+            var context = canvas.getContext('2d');
+
+            context.globalCompositeOperation = 'multiply';
+
+            context.drawImage(magenta, 0, 0);
+            context.drawImage(yellow, 2, 0);
+
+            if (!context.getImageData(2, 0, 1, 1))
+            {
+                return false;
+            }
+
+            var data = context.getImageData(2, 0, 1, 1).data;
+
+            CanvasPool.remove(yellow);
+
+            CanvasFeatures.supportNewBlendModes = (data[0] === 255 && data[1] === 0 && data[2] === 0);
+        };
+
+        yellow.src = pngHead + '/wCKxvRF' + pngEnd;
+    };
+
     magenta.src = pngHead + 'AP804Oa6' + pngEnd;
 
-    var yellow = new Image();
-    yellow.src = pngHead + '/wCKxvRF' + pngEnd;
-
-    var canvas = CanvasPool.create(this, 6, 1);
-    var context = canvas.getContext('2d');
-
-    context.globalCompositeOperation = 'multiply';
-    context.drawImage(magenta, 0, 0);
-    context.drawImage(yellow, 2, 0);
-
-    if (!context.getImageData(2, 0, 1, 1))
-    {
-        return false;
-    }
-
-    var data = context.getImageData(2, 0, 1, 1).data;
-
-    CanvasPool.remove(this);
-
-    return (data[0] === 255 && data[1] === 0 && data[2] === 0);
+    return false;
 }
 
 function checkInverseAlpha ()
