@@ -56,7 +56,7 @@ var RenderPass = new Class({
             this.passShader = resourceManager.createShader(shaderName, {vert: TexturedAndNormalizedTintedShader.vert, frag: fragmentShader});
             this.renderTexture = resourceManager.createTexture(0, gl.LINEAR, gl.LINEAR, wrap, wrap, gl.RGBA, null, width, height);
             this.passRenderTarget = resourceManager.createRenderTarget(width, height, this.renderTexture, null);
-            scene.game.renderer.currentTexture = null; // force rebinding of prev texture
+            scene.game.renderer.currentTexture[0] = null; // force rebinding of prev texture
         }
 
         this.flipY = true;

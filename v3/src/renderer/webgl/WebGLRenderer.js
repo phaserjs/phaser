@@ -63,7 +63,7 @@ var WebGLRenderer = new Class({
         this.shapeBatch = null;
         this.effectRenderer = null;
         this.currentRenderer = null;
-        this.currentTexture = null;
+        this.currentTexture = [];
         this.shaderCache = {};
         this.currentShader = null;
         this.resourceManager = null;
@@ -217,18 +217,19 @@ var WebGLRenderer = new Class({
             }
         }
 
-        this.currentTexture = null;
+        this.currentTexture[0] = null;
     },
 
-    setTexture: function (texture)
+    setTexture: function (texture, unit)
     {
-        if (this.currentTexture !== texture)
+        unit = unit || 0;
+        if (this.currentTexture[unit] !== texture)
         {
             var gl = this.gl;
 
             this.currentRenderer.flush();
             
-            gl.activeTexture(gl.TEXTURE0);
+            gl.activeTexture(gl.TEXTURE0 + unit);
 
             if (texture !== null)
             {
@@ -239,7 +240,7 @@ var WebGLRenderer = new Class({
                 gl.bindTexture(gl.TEXTURE_2D, null);
             }
 
-            this.currentTexture = texture;
+            this.currentTexture[unit] = texture;
         }
     },
 
@@ -539,9 +540,9 @@ var WebGLRenderer = new Class({
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, glFilter);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, glFilter);
 
-        if (this.currentTexture !== null)
+        if (this.currentTexture[0] !== null)
         {
-            gl.bindTexture(gl.TEXTURE_2D, this.currentTexture.texture);
+            gl.bindTexture(gl.TEXTURE_2D, this.currentTexture[0].texture);
         }
         else
         {
@@ -563,10 +564,12 @@ var WebGLRenderer = new Class({
             dstTexture.texture = gl.createTexture();
         }
 
-        if (dstTexture != this.currentTexture)
+        if (dstTexture != this.currentTexture[0])
         {
             this.currentRenderer.flush();
         }
+
+        gl.activeTexture(gl.TEXTURE0);
 
         if (!shouldReallocate)
         {
@@ -588,9 +591,9 @@ var WebGLRenderer = new Class({
         }
 
         //  We must rebind old texture
-        if (dstTexture != this.currentTexture && this.currentTexture !== null)
+        if (dstTexture != this.currentTexture[0] && this.currentTexture[0] !== null)
         {
-            gl.bindTexture(gl.TEXTURE_2D, this.currentTexture.texture);
+            gl.bindTexture(gl.TEXTURE_2D, this.currentTexture[0].texture);
         }
 
         return dstTexture;

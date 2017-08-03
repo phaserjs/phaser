@@ -17,3 +17,5 @@ var SpriteNormalPair = new Class({
     }
 
 });
+
+module.exports = SpriteNormalPair;

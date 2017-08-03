@@ -6,6 +6,7 @@ var Render = require('./LightLayerRender');
 var Light = require('./Light');
 var SpriteNormalPair = require('./SpriteNormalPair');
 var WebGLSupportedExtensions = require('../../renderer/webgl/WebGLSupportedExtensions');
+var TexturedAndNormalizedTintedShader = require('../../renderer/webgl/shaders/TexturedAndNormalizedTintedShader');
 var Const = require('./Const');
 
 var LightLayer = new Class({
@@ -51,29 +52,7 @@ var LightLayer = new Class({
         if (resourceManager !== undefined && !this.deferred)
         {
             this.gl = scene.game.renderer.gl;
-            this.passShader = resourceManager.createShader('Phong2DShaderForward', {vert: `
-                precision mediump float;
-
-                uniform mat4 uProjection;
-
-                attribute vec2 vertPosition;
-                attribute vec2 vertTexCoord;
-                attribute vec3 vertColor;
-                attribute float vertAlpha;
-
-                varying vec2 fragTexCoord;
-                varying vec3 fragColor;
-                varying float fragAlpha;
-
-                void main()
-                {
-                    fragTexCoord = vertTexCoord;
-                    fragColor = vertColor;
-                    fragAlpha = vertAlpha;
-
-                    gl_Position = uProjection * vec4(vertPosition, 0.0, 1.0);
-                }
-            `, frag: `
+            this.passShader = resourceManager.createShader('Phong2DShaderForward', {vert: TexturedAndNormalizedTintedShader.vert, frag: `
                 precision mediump float;
 
                 struct Light
@@ -88,17 +67,29 @@ var LightLayer = new Class({
                 uniform vec3 uAmbientLightColor;
                 uniform Light uLights[` + Const.MAX_LIGHTS + `];
 
-                varying vec2 fragTexCoord;
-                varying vec3 fragColor;
-                varying float fragAlpha;
+                varying vec2 v_tex_coord;
+                varying vec3 v_color;
+                varying float v_alpha;
                 
                 void main()
                 {
                     /* Just Pass through for now */
-                    gl_FragColor = texture2D(uMainTexture, fragTexCoord) * vec4(fragColor, fragAlpha);
+                    vec4 finalColor = vec4(1.0, 0.0, 1.0, 1.0);
+                    vec4 normal = texture2D(uNormTexture, v_tex_coord);
+                    vec4 color = texture2D(uMainTexture, v_tex_coord);
+
+                    finalColor = color * normal;
+
+                    gl_FragColor = finalColor * vec4(v_color, v_alpha);
                 }                
             `});
             this.ambientLightColorLoc = this.passShader.getUniformLocation('uAmbientLightColor');
+            this.uMainTextureLoc = this.passShader.getUniformLocation('uMainTexture');
+            this.uNormTextureLoc = this.passShader.getUniformLocation('uNormTexture');
+
+            this.passShader.setConstantInt1(this.uMainTextureLoc, 0);
+            this.passShader.setConstantInt1(this.uNormTextureLoc, 1);
+
             for (var index = 0; index < Const.MAX_LIGHTS; ++index)
             {
                 this.lightsLocations[index] = {
@@ -135,6 +126,7 @@ var LightLayer = new Class({
         {
             spriteNormalPair = new SpriteNormalPair(sprite, normalTexture);
         }
+        this.scene.sys.displayList.remove(sprite);
         this.sprites.push(spriteNormalPair);
     },
 

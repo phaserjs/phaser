@@ -61,7 +61,7 @@ var EffectLayer = new Class({
             );
 
             this.dstRenderTarget = resourceManager.createRenderTarget(width, height, this.renderTexture, null);
-            scene.game.renderer.currentTexture = null; // force rebinding of prev texture
+            scene.game.renderer.currentTexture[0] = null; // force rebinding of prev texture
         }
 
         this.flipY = true;
