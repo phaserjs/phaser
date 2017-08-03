@@ -16,21 +16,16 @@ var LightLayer = new Class({
     Mixins: [
         Components.Alpha,
         Components.BlendMode,
-        Components.Flip,
-        Components.GetBounds,
         Components.Origin,
         Components.RenderTarget,
-        Components.ScaleMode,
         Components.ScrollFactor,
-        Components.Size,
-        Components.Transform,
         Components.Visible,
         Render
     ],
 
     initialize:
 
-    function LightLayer (scene, x, y, width, height)
+    function LightLayer (scene)
     {
         GameObject.call(this, scene, 'LightLayer');
 
@@ -62,6 +57,7 @@ var LightLayer = new Class({
                     float attenuation;
                 };
 
+                uniform vec2 uResolution;
                 uniform sampler2D uMainTexture;
                 uniform sampler2D uNormTexture;
                 uniform vec3 uAmbientLightColor;
@@ -73,19 +69,31 @@ var LightLayer = new Class({
                 
                 void main()
                 {
-                    /* Just Pass through for now */
-                    vec4 finalColor = vec4(1.0, 0.0, 1.0, 1.0);
-                    vec4 normal = texture2D(uNormTexture, v_tex_coord);
-                    vec4 color = texture2D(uMainTexture, v_tex_coord);
+                    vec3 finalColor = vec3(0.0, 0.0, 0.0);
+                    vec4 spriteColor = texture2D(uMainTexture, v_tex_coord) * vec4(v_color, v_alpha);
+                    vec3 spriteNormal = texture2D(uNormTexture, v_tex_coord).rgb;
+                    vec3 normal = normalize(vec3(spriteNormal * 2.0 - 1.0));
 
-                    finalColor = color * normal;
+                    for (int index = 0; index < ` + Const.MAX_LIGHTS + `; ++index)
+                    {
+                        Light light = uLights[index];
+                        float lightY = uResolution.y - light.position.y;
+                        vec3 lightDir = vec3((vec2(light.position.x, lightY) / uResolution) - (gl_FragCoord.xy / uResolution), light.position.z); 
+                        vec3 lightNormal = normalize(lightDir);
+                        float distToSurf = length(lightDir);
+                        float diffuseFactor = max(dot(normal, lightNormal), 0.0);
+                        float attenuation = 1.0 / (1.0 + light.attenuation * (distToSurf * distToSurf));
+                        vec3 diffuse = light.color * spriteColor.rgb * diffuseFactor;
+                        finalColor += attenuation * diffuse;
+                    }
 
-                    gl_FragColor = finalColor * vec4(v_color, v_alpha);
+                    gl_FragColor = vec4(uAmbientLightColor + finalColor, spriteColor.a);
                 }                
             `});
             this.ambientLightColorLoc = this.passShader.getUniformLocation('uAmbientLightColor');
             this.uMainTextureLoc = this.passShader.getUniformLocation('uMainTexture');
             this.uNormTextureLoc = this.passShader.getUniformLocation('uNormTexture');
+            this.uResolutionLoc = this.passShader.getUniformLocation('uResolution');
 
             this.passShader.setConstantInt1(this.uMainTextureLoc, 0);
             this.passShader.setConstantInt1(this.uNormTextureLoc, 1);
@@ -100,8 +108,6 @@ var LightLayer = new Class({
             }
         }
 
-        this.setPosition(x, y);
-        this.setSize(width, height);
         this.setOrigin(0, 0);
     },
 
@@ -176,7 +182,7 @@ var LightLayer = new Class({
         }
     },
 
-    updateLights: function()
+    updateLights: function(renderer, camera)
     {
         if (this.gl !== null)
         {
@@ -186,6 +192,7 @@ var LightLayer = new Class({
             var gl = this.gl;
             var passShader = this.passShader;
 
+            passShader.setConstantFloat2(this.uResolutionLoc, renderer.width * camera.zoom, renderer.height * camera.zoom);
             passShader.setConstantFloat3(this.ambientLightColorLoc, this.ambientLightColorR, this.ambientLightColorG, this.ambientLightColorB);
 
             for (var index = 0; index < length; ++index)
@@ -193,7 +200,7 @@ var LightLayer = new Class({
                 var light = lights[index];
                 passShader.setConstantFloat3(locations[index].position, light.x, light.y, light.z);
                 passShader.setConstantFloat3(locations[index].color, light.r, light.g, light.b);
-                passShader.setConstantFloat3(locations[index].attenuation, light.attenuation);
+                passShader.setConstantFloat1(locations[index].attenuation, light.attenuation);
             }
         }
     }

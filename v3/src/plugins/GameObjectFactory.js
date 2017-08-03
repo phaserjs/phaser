@@ -130,9 +130,9 @@ var GameObjectFactory = new Class({
         return this.displayList.add(ZoneFactory(this.scene, x, y, width, height));
     },
 
-    lightLayer: function (x, y, width, height)
+    lightLayer: function ()
     {
-        return this.displayList.add(LightLayerFactory(this.scene, x, y, width, height));
+        return this.displayList.add(LightLayerFactory(this.scene));
     }
 
 });

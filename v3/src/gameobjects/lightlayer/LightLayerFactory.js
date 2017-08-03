@@ -1,8 +1,8 @@
 var LightLayer = require('./LightLayer');
 
-var LightLayerFactory = function (scene, x, y, width, height)
+var LightLayerFactory = function (scene)
 {
-    return new LightLayer(scene, x, y, width, height);
+    return new LightLayer(scene);
 };
 
 module.exports = LightLayerFactory;

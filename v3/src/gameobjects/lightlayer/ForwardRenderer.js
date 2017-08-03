@@ -1,17 +1,22 @@
 var ForwardRenderer = function (renderer, lightLayer, interpolationPercentage, camera)
 {
-    if (this.renderMask !== this.renderFlags)
-    {
-        return;
-    }
-
     var spriteList = lightLayer.sprites;
     var length = spriteList.length;
     var batch = renderer.spriteBatch;
 
+    if (this.renderMask !== this.renderFlags || length === 0)
+    {
+        return;
+    }
+
+    if (renderer.currentRenderer !== null)
+    {
+        renderer.currentRenderer.flush();
+    }
+
     batch.bind(lightLayer.passShader);
     batch.indexBufferObject.bind();
-    lightLayer.updateLights();
+    lightLayer.updateLights(renderer, camera);
 
     for (var index = 0; index < length; ++index)
     {
