@@ -103,17 +103,21 @@ var WebGLRenderer = new Class({
 
         //  Map Blend Modes
 
-        var add = [ gl.SRC_ALPHA, gl.DST_ALPHA ];
-        var normal = [ gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA, gl.ONE, gl.ONE_MINUS_SRC_ALPHA ];
-        var multiply = [ gl.DST_COLOR, gl.ONE_MINUS_SRC_ALPHA ];
-        var screen = [ gl.SRC_ALPHA, gl.ONE ];
+        this.blendModes = [];
 
-        this.blendModes = [
-            normal, add, multiply, screen, normal,
-            normal, normal, normal, normal,
-            normal, normal, normal, normal,
-            normal, normal, normal, normal
-        ];
+        for (var i = 0; i <= 16; i++)
+        {
+            this.blendModes.push({ func: [ gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA, gl.ONE, gl.ONE_MINUS_SRC_ALPHA ], equation: gl.FUNC_ADD });
+        }
+
+        //  Add
+        this.blendModes[1].func = [ gl.SRC_ALPHA, gl.DST_ALPHA ];
+
+        //  Multiply
+        this.blendModes[2].func = [ gl.DST_COLOR, gl.ONE_MINUS_SRC_ALPHA ];
+
+        //  Screen
+        this.blendModes[3].func = [ gl.SRC_ALPHA, gl.ONE ];
 
         this.blendMode = -1;
         this.extensions = gl.getSupportedExtensions();
@@ -127,6 +131,43 @@ var WebGLRenderer = new Class({
         this.currentRenderer = this.spriteBatch;
         this.setBlendMode(0);
         this.resize(this.width, this.height);
+    },
+
+    // https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/blendFunc
+    // https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/blendFuncSeparate
+    // https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/blendEquation
+    // https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/blendEquationSeparate
+    // https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/blendColor
+    addBlendMode: function (func, equation)
+    {
+        var index = this.blendModes.push({ func: func, equation: equation });
+
+        return index - 1;
+    },
+
+    updateBlendMode: function (index, func, equation)
+    {
+        if (this.blendModes[index])
+        {
+            this.blendModes[index].func = func;
+
+            if (equation)
+            {
+                this.blendModes[index].equation = equation;
+            }
+        }
+
+        return this;
+    },
+
+    removeBlendMode: function (index)
+    {
+        if (index > 16 && this.blendModes[index])
+        {
+            this.blendModes.splice(index, 1);
+        }
+
+        return this;
     },
 
     createTexture: function (source, width, height)
@@ -358,9 +399,10 @@ var WebGLRenderer = new Class({
                     renderer.flush();
                 }
 
-                var blend = this.blendModes[newBlendMode];
+                var blend = this.blendModes[newBlendMode].func;
 
                 gl.enable(gl.BLEND);
+                gl.blendEquation(this.blendModes[newBlendMode].equation);
 
                 if (blend.length > 2)
                 {
@@ -449,7 +491,6 @@ var WebGLRenderer = new Class({
     {
         var gl = this.gl;
         var renderer = this.currentRenderer;
-        var blend = null;
 
         if (this.blendMode !== newBlendMode)
         {
@@ -458,9 +499,10 @@ var WebGLRenderer = new Class({
                 renderer.flush();
             }
 
-            blend = this.blendModes[newBlendMode];
+            var blend = this.blendModes[newBlendMode].func;
 
             gl.enable(gl.BLEND);
+            gl.blendEquation(this.blendModes[newBlendMode].equation);
 
             if (blend.length > 2)
             {
