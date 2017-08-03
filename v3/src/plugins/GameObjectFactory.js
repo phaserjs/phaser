@@ -16,6 +16,7 @@ var StaticTilemapFactory = require('../gameobjects/tilemap/static/StaticTilemapF
 var TextFactory = require('../gameobjects/text/static/TextFactory');
 var TileSpriteFactory = require('../gameobjects/tilesprite/TileSpriteFactory');
 var ZoneFactory = require('../gameobjects/zone/ZoneFactory');
+var LightLayerFactory = require('../gameobjects/lightlayer/LightLayerFactory');
 
 var GameObjectFactory = new Class({
 
@@ -127,6 +128,11 @@ var GameObjectFactory = new Class({
     zone: function (x, y, width, height)
     {
         return this.displayList.add(ZoneFactory(this.scene, x, y, width, height));
+    },
+
+    lightLayer: function (x, y, width, height)
+    {
+        return this.displayList.add(LightLayerFactory(this.scene, x, y, width, height));
     }
 
 });

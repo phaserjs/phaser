@@ -8,6 +8,7 @@ module.exports = {
     Blitter: require('./blitter/Blitter'),
     DynamicBitmapText: require('./bitmaptext/dynamic/DynamicBitmapText'),
     EffectLayer: require('./effectlayer/EffectLayer'),
+    LightLayer: require('./lightlayer/LightLayer'),
     Graphics: require('./graphics/Graphics.js'),
     Group: require('./group/Group'),
     Image: require('./image/Image'),
