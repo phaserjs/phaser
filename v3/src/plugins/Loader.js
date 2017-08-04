@@ -87,11 +87,26 @@ var Loader = new Class({
         return entry;
     },
 
+    //  key can be either a string, an object or an array of objects
     image: function (key, url, xhrSettings)
     {
-        var file = new ImageFile(key, url, this.path, xhrSettings);
+        if (Array.isArray(key))
+        {
+            var files = [];
 
-        return this.addFile(file);
+            for (var i = 0; i < key.length; i++)
+            {
+                files.push(this.image(key[i]));
+            }
+
+            return files;
+        }
+        else
+        {
+            var file = new ImageFile(key, url, this.path, xhrSettings);
+
+            return this.addFile(file);
+        }
     },
 
     animation: function (key, url, xhrSettings)

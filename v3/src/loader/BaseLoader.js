@@ -42,6 +42,18 @@ var BaseLoader = new Class({
         this.state = CONST.LOADER_IDLE;
     },
 
+    setPath: function (path)
+    {
+        if (path.substr(-1) !== '/')
+        {
+            path = path.concat('/');
+        }
+
+        this.path = path;
+
+        return this;
+    },
+
     addFile: function (file)
     {
         if (!this.isReady())

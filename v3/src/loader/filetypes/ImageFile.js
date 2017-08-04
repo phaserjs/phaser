@@ -1,6 +1,7 @@
 var Class = require('../../utils/Class');
 var CONST = require('../const');
 var File = require('../File');
+var GetFastValue = require('../../utils/object/GetFastValue');
 
 //  Phaser.Loader.FileTypes.ImageFile
 
@@ -10,17 +11,34 @@ var ImageFile = new Class({
 
     initialize:
 
+    // this.load.image('pic', 'assets/pics/taikodrummaster.jpg');
+    // this.load.image({ key: 'pic', texture: 'assets/pics/taikodrummaster.jpg' });
+    // this.load.image({
+    //     key: 'bunny',
+    //     texture: 'assets/sprites/bunny.png',
+    //     xhr: {
+    //         user: 'root',
+    //         password: 'th3G1bs0n',
+    //         timeout: 30,
+    //         header: 'Content-Type',
+    //         headerValue: 'text/xml'
+    //     }
+    // });
+    // this.load.image({ key: 'bunny' });
+    // this.load.image({ key: 'bunny', extension: 'jpg' });
     function ImageFile (key, url, path, xhrSettings, config)
     {
+        var fileKey = (typeof key === 'string') ? key : GetFastValue(key, 'key', '');
+
         var fileConfig = {
             type: 'image',
-            extension: 'png',
+            extension: GetFastValue(key, 'extension', 'png'),
             responseType: 'blob',
-            key: key,
-            url: url,
+            key: fileKey,
+            url: GetFastValue(key, 'texture', url),
             path: path,
-            xhrSettings: xhrSettings,
-            config: config
+            xhrSettings: GetFastValue(key, 'xhr', {}),
+            config: GetFastValue(key, 'config', config)
         };
 
         File.call(this, fileConfig);
