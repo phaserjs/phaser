@@ -1,6 +1,5 @@
 var BaseLoader = require('../loader/BaseLoader');
 var Class = require('../utils/Class');
-// var CONST = require('../loader/const');
 var NumberArray = require('../utils/array/NumberArray');
 
 var AnimationJSONFile = require('../loader/filetypes/AnimationJSONFile');
@@ -17,8 +16,6 @@ var SVGFile = require('../loader/filetypes/SVGFile');
 var TextFile = require('../loader/filetypes/TextFile');
 var XMLFile = require('../loader/filetypes/XMLFile');
 
-var ParseXMLBitmapFont = require('../gameobjects/bitmaptext/ParseXMLBitmapFont');
-
 var Loader = new Class({
 
     Extends: BaseLoader,
@@ -27,151 +24,72 @@ var Loader = new Class({
 
     function Loader (scene)
     {
-        BaseLoader.call(this);
-
-        /**
-        * @property {Phaser.Scene} scene - The Scene that owns this Factory
-        * @protected
-        */
-        this.scene = scene;
+        BaseLoader.call(this, scene);
 
         this._multilist = {};
     },
 
-    loadArray: function (files)
-    {
-        if (Array.isArray(files))
-        {
-            for (var i = 0; i < files.length; i++)
-            {
-                this.file(files[i]);
-            }
-        }
-
-        return (this.list.size > 0);
-    },
-
-    file: function (file)
-    {
-        var entry;
-
-        switch (file.type)
-        {
-            case 'image':
-            case 'json':
-            case 'xml':
-            case 'binary':
-            case 'text':
-            case 'glsl':
-            case 'svg':
-                entry = this[file.type](file.key, file.url, file.xhrSettings);
-                break;
-
-            case 'spritesheet':
-                entry = this.spritesheet(file.key, file.url, file.config, file.xhrSettings);
-                break;
-
-            case 'atlas':
-                entry = this.atlas(file.key, file.textureURL, file.atlasURL, file.textureXhrSettings, file.atlasXhrSettings);
-                break;
-
-            case 'bitmapFont':
-                entry = this.bitmapFont(file.key, file.textureURL, file.xmlURL, file.textureXhrSettings, file.xmlXhrSettings);
-                break;
-
-            case 'multiatlas':
-                entry = this.multiatlas(file.key, file.textureURLs, file.atlasURLs, file.textureXhrSettings, file.atlasXhrSettings);
-                break;
-        }
-
-        return entry;
-    },
-
     //  key can be either a string, an object or an array of objects
+
     image: function (key, url, xhrSettings)
     {
-        if (Array.isArray(key))
-        {
-            var files = [];
-
-            for (var i = 0; i < key.length; i++)
-            {
-                files.push(this.image(key[i]));
-            }
-
-            return files;
-        }
-        else
-        {
-            var file = new ImageFile(key, url, this.path, xhrSettings);
-
-            return this.addFile(file);
-        }
+        return ImageFile.create(this, key, url, xhrSettings);
     },
 
     animation: function (key, url, xhrSettings)
     {
-        var file = new AnimationJSONFile(key, url, this.path, xhrSettings);
-
-        return this.addFile(file);
+        return AnimationJSONFile.create(this, key, url, xhrSettings);
     },
 
     json: function (key, url, xhrSettings)
     {
-        var file = new JSONFile(key, url, this.path, xhrSettings);
-
-        return this.addFile(file);
+        return JSONFile.create(this, key, url, xhrSettings);
     },
 
     script: function (key, url, xhrSettings)
     {
-        var file = new ScriptFile(key, url, this.path, xhrSettings);
-
-        return this.addFile(file);
+        return ScriptFile.create(this, key, url, xhrSettings);
     },
 
     xml: function (key, url, xhrSettings)
     {
-        var file = new XMLFile(key, url, this.path, xhrSettings);
-
-        return this.addFile(file);
+        return XMLFile.create(this, key, url, xhrSettings);
     },
 
     binary: function (key, url, xhrSettings)
     {
-        var file = new BinaryFile(key, url, this.path, xhrSettings);
-
-        return this.addFile(file);
+        return BinaryFile.create(this, key, url, xhrSettings);
     },
 
     text: function (key, url, xhrSettings)
     {
-        var file = new TextFile(key, url, this.path, xhrSettings);
-
-        return this.addFile(file);
+        return TextFile.create(this, key, url, xhrSettings);
     },
 
     glsl: function (key, url, xhrSettings)
     {
-        var file = new GLSLFile(key, url, this.path, xhrSettings);
+        return GLSLFile.create(this, key, url, xhrSettings);
+    },
 
-        return this.addFile(file);
+    html: function (key, url, width, height, xhrSettings)
+    {
+        return HTMLFile.create(this, key, url, width, height, xhrSettings);
+    },
+
+    svg: function (key, url, xhrSettings)
+    {
+        return SVGFile.create(this, key, url, xhrSettings);
     },
 
     //  config can include: frameWidth, frameHeight, startFrame, endFrame, margin, spacing
     spritesheet: function (key, url, config, xhrSettings)
     {
-        var file = new SpriteSheet(key, url, config, this.path, xhrSettings);
-
-        return this.addFile(file);
+        return SpriteSheet.create(this, key, url, config, xhrSettings);
     },
 
-    html: function (key, url, width, height, xhrSettings)
-    {
-        var file = new HTMLFile(key, url, width, height, this.path, xhrSettings);
-
-        return this.addFile(file);
-    },
+    //  ---------------------------------------------------
+    //  Multi-File Loaders
+    //  ---------------------------------------------------
 
     atlas: function (key, textureURL, atlasURL, textureXhrSettings, atlasXhrSettings)
     {
@@ -193,13 +111,6 @@ var Loader = new Class({
         this.addFile(files.data);
 
         return this;
-    },
-
-    svg: function (key, url, xhrSettings)
-    {
-        var file = new SVGFile(key, url, this.path, xhrSettings);
-
-        return this.addFile(file);
     },
 
     multiatlas: function (key, textureURLs, atlasURLs, textureXhrSettings, atlasXhrSettings)
@@ -252,159 +163,54 @@ var Loader = new Class({
 
             this._multilist[key].push(multiKey);
         }
+    }
+
+    /*
+    loadArray: function (files)
+    {
+        if (Array.isArray(files))
+        {
+            for (var i = 0; i < files.length; i++)
+            {
+                this.file(files[i]);
+            }
+        }
+
+        return (this.list.size > 0);
     },
 
-    //  The Loader has finished
-    processCallback: function ()
+    file: function (file)
     {
-        if (this.storage.size === 0)
+        var entry;
+
+        switch (file.type)
         {
-            return;
+            case 'spritesheet':
+                entry = this.spritesheet(file.key, file.url, file.config, file.xhrSettings);
+                break;
+
+            case 'atlas':
+                entry = this.atlas(file.key, file.textureURL, file.atlasURL, file.textureXhrSettings, file.atlasXhrSettings);
+                break;
+
+            case 'bitmapFont':
+                entry = this.bitmapFont(file.key, file.textureURL, file.xmlURL, file.textureXhrSettings, file.xmlXhrSettings);
+                break;
+
+            case 'multiatlas':
+                entry = this.multiatlas(file.key, file.textureURLs, file.atlasURLs, file.textureXhrSettings, file.atlasXhrSettings);
+                break;
+
+            //  image, json, xml, binary, text, glsl, svg
+            default:
+                entry = this[file.type](file.key, file.url, file.xhrSettings);
+                break;
         }
 
-        //  The global Texture Manager
-        var cache = this.scene.sys.cache;
-        var textures = this.scene.sys.textures;
-        var anims = this.scene.sys.anims;
-
-        //  Process multiatlas groups first
-
-        var file;
-        var fileA;
-        var fileB;
-
-        for (var key in this._multilist)
-        {
-            var data = [];
-            var images = [];
-            var keys = this._multilist[key];
-
-            for (var i = 0; i < keys.length; i++)
-            {
-                file = this.storage.get('key', keys[i]);
-
-                if (file)
-                {
-                    if (file.type === 'image')
-                    {
-                        images.push(file.data);
-                    }
-                    else if (file.type === 'json')
-                    {
-                        data.push(file.data);
-                    }
-
-                    this.storage.delete(file);
-                }
-            }
-
-            //  Do we have everything needed?
-            if (images.length + data.length === keys.length)
-            {
-                //  Yup, add them to the Texture Manager
-
-                //  Is the data JSON Hash or JSON Array?
-                if (Array.isArray(data[0].frames))
-                {
-                    textures.addAtlasJSONArray(key, images, data);
-                }
-                else
-                {
-                    textures.addAtlasJSONHash(key, images, data);
-                }
-            }
-        }
-
-        //  Process all of the files
-
-        //  Because AnimationJSON may require images to be loaded first, we process them last
-        var animJSON = [];
-
-        this.storage.each(function (file)
-        {
-            switch (file.type)
-            {
-                case 'animationJSON':
-                    animJSON.push(file);
-                    break;
-
-                case 'image':
-                case 'svg':
-                case 'html':
-                    textures.addImage(file.key, file.data);
-                    break;
-
-                case 'atlasjson':
-
-                    fileA = file.fileA;
-                    fileB = file.fileB;
-
-                    if (fileA.type === 'image')
-                    {
-                        textures.addAtlas(fileA.key, fileA.data, fileB.data);
-                    }
-                    else
-                    {
-                        textures.addAtlas(fileB.key, fileB.data, fileA.data);
-                    }
-                    break;
-
-                case 'bitmapfont':
-
-                    fileA = file.fileA;
-                    fileB = file.fileB;
-
-                    if (fileA.type === 'image')
-                    {
-                        cache.bitmapFont.add(fileB.key, { data: ParseXMLBitmapFont(fileB.data), texture: fileA.key, frame: null });
-                        textures.addImage(fileA.key, fileA.data);
-                    }
-                    else
-                    {
-                        cache.bitmapFont.add(fileA.key, { data: ParseXMLBitmapFont(fileA.data), texture: fileB.key, frame: null });
-                        textures.addImage(fileB.key, fileB.data);
-                    }
-                    break;
-
-                case 'spritesheet':
-                    textures.addSpriteSheet(file.key, file.data, file.config);
-                    break;
-
-                case 'json':
-                    cache.json.add(file.key, file.data);
-                    break;
-
-                case 'xml':
-                    cache.xml.add(file.key, file.data);
-                    break;
-
-                case 'text':
-                    cache.text.add(file.key, file.data);
-                    break;
-
-                case 'binary':
-                    cache.binary.add(file.key, file.data);
-                    break;
-
-                case 'sound':
-                    cache.sound.add(file.key, file.data);
-                    break;
-
-                case 'glsl':
-                    cache.shader.add(file.key, file.data);
-                    break;
-            }
-        });
-
-        animJSON.forEach(function (file)
-        {
-            anims.fromJSON(file.data);
-        });
-
-        this.storage.clear();
-    }
+        return entry;
+    },
+    */
     
 });
 
 module.exports = Loader;
-

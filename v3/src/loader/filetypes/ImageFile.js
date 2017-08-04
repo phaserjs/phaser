@@ -12,10 +12,10 @@ var ImageFile = new Class({
     initialize:
 
     // this.load.image('pic', 'assets/pics/taikodrummaster.jpg');
-    // this.load.image({ key: 'pic', texture: 'assets/pics/taikodrummaster.jpg' });
+    // this.load.image({ key: 'pic', file: 'assets/pics/taikodrummaster.jpg' });
     // this.load.image({
     //     key: 'bunny',
-    //     texture: 'assets/sprites/bunny.png',
+    //     file: 'assets/sprites/bunny.png',
     //     xhr: {
     //         user: 'root',
     //         password: 'th3G1bs0n',
@@ -35,9 +35,9 @@ var ImageFile = new Class({
             extension: GetFastValue(key, 'extension', 'png'),
             responseType: 'blob',
             key: fileKey,
-            url: GetFastValue(key, 'texture', url),
+            url: GetFastValue(key, 'file', url),
             path: path,
-            xhrSettings: GetFastValue(key, 'xhr', {}),
+            xhrSettings: GetFastValue(key, 'xhr', xhrSettings),
             config: GetFastValue(key, 'config', config)
         };
 
@@ -76,5 +76,24 @@ var ImageFile = new Class({
     }
 
 });
+
+ImageFile.create = function (loader, key, url, xhrSettings)
+{
+    if (Array.isArray(key))
+    {
+        for (var i = 0; i < key.length; i++)
+        {
+            //  If it's an array it has to be an array of Objects, so we get everything out of the 'key' object
+            loader.addFile(new ImageFile(key[i], url, loader.path, xhrSettings));
+        }
+    }
+    else
+    {
+        loader.addFile(new ImageFile(key, url, loader.path, xhrSettings));
+    }
+
+    //  For method chaining
+    return loader;
+};
 
 module.exports = ImageFile;

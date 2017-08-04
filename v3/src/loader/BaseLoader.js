@@ -3,8 +3,9 @@ var CONST = require('./const');
 var Set = require('../structs/Set');
 var XHRSettings = require('./XHRSettings');
 var Event = require('./events/');
-var EventDispatcher = require('../events/EventDispatcher');
+// var EventDispatcher = require('../events/EventDispatcher');
 var Class = require('../utils/Class');
+var ParseXMLBitmapFont = require('../gameobjects/bitmaptext/ParseXMLBitmapFont');
 
 //  Phaser.Loader.BaseLoader
 
@@ -16,9 +17,11 @@ var BaseLoader = new Class({
 
     initialize:
 
-    function BaseLoader ()
+    function BaseLoader (scene)
     {
-        this.events = new EventDispatcher();
+        this.scene = scene;
+
+        this.events = scene.sys.events;
 
         //  Move to a 'setURL' method?
         this.baseURL = '';
@@ -268,14 +271,161 @@ var BaseLoader = new Class({
         this.inflight.clear();
         this.queue.clear();
 
-        if (this.processCallback)
-        {
-            this.processCallback();
-        }
+        this.processCallback();
 
         this.state = CONST.LOADER_COMPLETE;
 
         this.events.dispatch(new Event.LOADER_COMPLETE_EVENT(this));
+    },
+
+    //  The Loader has finished
+    processCallback: function ()
+    {
+        if (this.storage.size === 0)
+        {
+            return;
+        }
+
+        //  The global Texture Manager
+        var cache = this.scene.sys.cache;
+        var textures = this.scene.sys.textures;
+        var anims = this.scene.sys.anims;
+
+        //  Process multiatlas groups first
+
+        var file;
+        var fileA;
+        var fileB;
+
+        for (var key in this._multilist)
+        {
+            var data = [];
+            var images = [];
+            var keys = this._multilist[key];
+
+            for (var i = 0; i < keys.length; i++)
+            {
+                file = this.storage.get('key', keys[i]);
+
+                if (file)
+                {
+                    if (file.type === 'image')
+                    {
+                        images.push(file.data);
+                    }
+                    else if (file.type === 'json')
+                    {
+                        data.push(file.data);
+                    }
+
+                    this.storage.delete(file);
+                }
+            }
+
+            //  Do we have everything needed?
+            if (images.length + data.length === keys.length)
+            {
+                //  Yup, add them to the Texture Manager
+
+                //  Is the data JSON Hash or JSON Array?
+                if (Array.isArray(data[0].frames))
+                {
+                    textures.addAtlasJSONArray(key, images, data);
+                }
+                else
+                {
+                    textures.addAtlasJSONHash(key, images, data);
+                }
+            }
+        }
+
+        //  Process all of the files
+
+        //  Because AnimationJSON may require images to be loaded first, we process them last
+        var animJSON = [];
+
+        this.storage.each(function (file)
+        {
+            switch (file.type)
+            {
+                case 'animationJSON':
+                    animJSON.push(file);
+                    break;
+
+                case 'image':
+                case 'svg':
+                case 'html':
+                    textures.addImage(file.key, file.data);
+                    break;
+
+                case 'atlasjson':
+
+                    fileA = file.fileA;
+                    fileB = file.fileB;
+
+                    if (fileA.type === 'image')
+                    {
+                        textures.addAtlas(fileA.key, fileA.data, fileB.data);
+                    }
+                    else
+                    {
+                        textures.addAtlas(fileB.key, fileB.data, fileA.data);
+                    }
+                    break;
+
+                case 'bitmapfont':
+
+                    fileA = file.fileA;
+                    fileB = file.fileB;
+
+                    if (fileA.type === 'image')
+                    {
+                        cache.bitmapFont.add(fileB.key, { data: ParseXMLBitmapFont(fileB.data), texture: fileA.key, frame: null });
+                        textures.addImage(fileA.key, fileA.data);
+                    }
+                    else
+                    {
+                        cache.bitmapFont.add(fileA.key, { data: ParseXMLBitmapFont(fileA.data), texture: fileB.key, frame: null });
+                        textures.addImage(fileB.key, fileB.data);
+                    }
+                    break;
+
+                case 'spritesheet':
+                    textures.addSpriteSheet(file.key, file.data, file.config);
+                    break;
+
+                case 'json':
+                    cache.json.add(file.key, file.data);
+                    break;
+
+                case 'xml':
+                    cache.xml.add(file.key, file.data);
+                    break;
+
+                case 'text':
+                    cache.text.add(file.key, file.data);
+                    break;
+
+                case 'binary':
+                    cache.binary.add(file.key, file.data);
+                    break;
+
+                case 'sound':
+                    cache.sound.add(file.key, file.data);
+                    break;
+
+                case 'glsl':
+                    cache.shader.add(file.key, file.data);
+                    break;
+            }
+        });
+
+        animJSON.forEach(function (file)
+        {
+            anims.fromJSON(file.data);
+        });
+
+        this.storage.clear();
     },
 
     reset: function ()

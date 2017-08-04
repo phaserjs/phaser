@@ -1,6 +1,7 @@
 var Class = require('../../utils/Class');
 var CONST = require('../const');
 var File = require('../File');
+var GetFastValue = require('../../utils/object/GetFastValue');
 
 //  Phaser.Loader.FileTypes.HTMLFile
 
@@ -15,14 +16,16 @@ var HTMLFile = new Class({
         if (width === undefined) { width = 512; }
         if (height === undefined) { height = 512; }
 
+        var fileKey = (typeof key === 'string') ? key : GetFastValue(key, 'key', '');
+
         var fileConfig = {
             type: 'html',
-            extension: 'html',
+            extension: GetFastValue(key, 'extension', 'html'),
             responseType: 'text',
-            key: key,
-            url: url,
+            key: fileKey,
+            url: GetFastValue(key, 'file', url),
             path: path,
-            xhrSettings: xhrSettings,
+            xhrSettings: GetFastValue(key, 'xhr', xhrSettings),
             config: {
                 width: width,
                 height: height
@@ -91,5 +94,24 @@ var HTMLFile = new Class({
     }
 
 });
+
+HTMLFile.create = function (loader, key, url, width, height, xhrSettings)
+{
+    if (Array.isArray(key))
+    {
+        for (var i = 0; i < key.length; i++)
+        {
+            //  If it's an array it has to be an array of Objects, so we get everything out of the 'key' object
+            loader.addFile(new HTMLFile(key[i], url, width, height, loader.path, xhrSettings));
+        }
+    }
+    else
+    {
+        loader.addFile(new HTMLFile(key, url, width, height, loader.path, xhrSettings));
+    }
+
+    //  For method chaining
+    return loader;
+};
 
 module.exports = HTMLFile;
