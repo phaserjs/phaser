@@ -8,6 +8,8 @@ var SpriteNormalPair = require('./SpriteNormalPair');
 var WebGLSupportedExtensions = require('../../renderer/webgl/WebGLSupportedExtensions');
 var TexturedAndNormalizedTintedShader = require('../../renderer/webgl/shaders/TexturedAndNormalizedTintedShader');
 var Const = require('./Const');
+var Matrix = require('../components/TransformMatrix');
+var TempMatrix = new Matrix();
 
 var LightLayer = new Class({
 
@@ -118,6 +120,11 @@ var LightLayer = new Class({
         this.ambientLightColorB = b; 
     },
 
+    getMaxLights: function ()
+    {
+        return Const.MAX_LIGHTS;
+    },
+
     /* This will probably be removed later */ 
     addSprite: function (sprite, normalTexture)
     {
@@ -191,14 +198,18 @@ var LightLayer = new Class({
             var length = lights.length;
             var gl = this.gl;
             var passShader = this.passShader;
+            var point = {x: 0, y: 0};
 
-            passShader.setConstantFloat2(this.uResolutionLoc, renderer.width * camera.zoom, renderer.height * camera.zoom);
+            passShader.setConstantFloat2(this.uResolutionLoc, renderer.width, renderer.height);
             passShader.setConstantFloat3(this.ambientLightColorLoc, this.ambientLightColorR, this.ambientLightColorG, this.ambientLightColorB);
+
+            TempMatrix.applyITRS(camera.x, camera.y, camera.rotation, camera.zoom, camera.zoom);
 
             for (var index = 0; index < length; ++index)
             {
                 var light = lights[index];
-                passShader.setConstantFloat3(locations[index].position, light.x, light.y, light.z);
+                TempMatrix.transformPoint(light.x, light.y, point);
+                passShader.setConstantFloat3(locations[index].position, point.x - (camera.scrollX * light.scrollFactorX), point.y - (camera.scrollY * light.scrollFactorY), light.z);
                 passShader.setConstantFloat3(locations[index].color, light.r, light.g, light.b);
                 passShader.setConstantFloat1(locations[index].attenuation, light.attenuation);
             }

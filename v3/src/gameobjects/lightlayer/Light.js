@@ -13,6 +13,8 @@ var Light = new Class({
         this.g = g;
         this.b = b;
         this.attenuation = attenuation;
+        this.scrollFactorX = 1.0;
+        this.scrollFactorY = 1.0;
     },
 
     set: function (x, y, z, r, g, b, attenuation)
@@ -24,6 +26,8 @@ var Light = new Class({
         this.g = g;
         this.b = b;
         this.attenuation = attenuation;
+        this.scrollFactorX = 1.0;
+        this.scrollFactorY = 1.0;
     }
 
 });
