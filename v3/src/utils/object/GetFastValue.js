@@ -4,7 +4,9 @@
 
 var GetFastValue = function (source, key, defaultValue)
 {
-    if (!source || typeof source === 'number')
+    var t = typeof(source);
+
+    if (!source || t === 'number' || t === 'string')
     {
         return defaultValue;
     }
