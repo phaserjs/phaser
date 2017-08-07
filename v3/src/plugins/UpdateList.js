@@ -69,25 +69,34 @@ var UpdateList = new Class({
         }
     },
 
+    remove: function (child)
+    {
+        var index = this._list.indexOf(child);
+
+        if (index !== -1)
+        {
+            this._list.splice(index, 1);
+        }
+        
+        return child;
+    },
+
+    removeAll: function ()
+    {
+        var i = this._list.length;
+
+        while (i--)
+        {
+            this.remove(this._list[i]);
+        }
+
+        return this;
+    },
+
     //  Scene that owns this Clock is shutting down
     shutdown: function ()
     {
-        var i;
-
-        for (i = 0; i < this._pendingInsertion.length; i++)
-        {
-            this._pendingInsertion[i].destroy();
-        }
-
-        for (i = 0; i < this._list.length; i++)
-        {
-            this._list[i].destroy();
-        }
-
-        for (i = 0; i < this._pendingRemoval.length; i++)
-        {
-            this._pendingRemoval[i].destroy();
-        }
+        this.removeAll();
 
         this._list.length = 0;
         this._pendingRemoval.length = 0;

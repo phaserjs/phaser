@@ -70,12 +70,17 @@ var GameObject = new Class({
 
     destroy: function ()
     {
-        this.parent.remove(this);
+        if (this.parent)
+        {
+            this.parent.remove(this);
+        }
 
         if (this.input)
         {
             this.scene.sys.inputManager.clear(this);
         }
+
+        this.active = false;
 
         this.scene = undefined;
     }
