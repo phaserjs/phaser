@@ -1,8 +1,8 @@
 var IsActive = function (key)
 {
-    var scene = this.getScene(key);
+    var scene = this.getActiveScene(key);
 
-    return (scene && scene.sys.settings.active && this.active.indexOf(scene) !== -1);
+    return (scene && scene.sys.settings.active);
 };
 
 module.exports = IsActive;
