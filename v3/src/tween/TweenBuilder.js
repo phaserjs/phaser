@@ -1,8 +1,8 @@
-var GetValue = require('../utils/object/GetValue');
 var GetAdvancedValue = require('../utils/object/GetAdvancedValue');
-var Tween = require('./Tween');
-var RESERVED = require('./ReservedProps');
 var GetEaseFunction = require('./GetEaseFunction');
+var GetValue = require('../utils/object/GetValue');
+var RESERVED = require('./ReservedProps');
+var Tween = require('./Tween');
 var TweenData = require('./TweenData');
 
 var GetTargets = function (config)
@@ -219,6 +219,8 @@ var TweenBuilder = function (manager, config)
     {
         var key = props[p].key;
         var value = props[p].value;
+
+        // console.log(key, value);
 
         for (var t = 0; t < targets.length; t++)
         {

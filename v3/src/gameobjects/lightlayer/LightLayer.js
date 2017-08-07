@@ -11,6 +11,8 @@ var Const = require('./Const');
 var Matrix = require('../components/TransformMatrix');
 var TempMatrix = new Matrix();
 
+// http://cpetry.github.io/NormalMap-Online/
+
 var LightLayer = new Class({
 
     Extends: GameObject,
