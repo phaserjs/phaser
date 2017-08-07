@@ -47,6 +47,7 @@ var LightLayer = new Class({
         this.lights = [];
         this.sprites = [];
         this.lightsLocations = [];
+        this._z = 0;
 
         if (resourceManager !== undefined && !this.deferred)
         {
@@ -114,6 +115,16 @@ var LightLayer = new Class({
 
         this.setOrigin(0, 0);
     },
+
+    get z()
+    {
+        return this._z;
+    },
+
+    set z(newZ)
+    {
+        this._z = newZ;
+    },  
 
     setAmbientLightColor: function (r, g, b) 
     {
