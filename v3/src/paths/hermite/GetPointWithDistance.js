@@ -1,4 +1,3 @@
-var Point = require('../point/Point');
 var GetPoint = require('./GetPoint');
 var FindT = require('./FindT');
 
@@ -12,7 +11,7 @@ var FindT = require('./FindT');
 var GetPointWithDistance = function (curve, distance, out)
 {
     if (distance === undefined) { distance = 0; }
-    if (out === undefined) { out = new Point(); }
+    if (out === undefined) { out = { x: 0, y: 0 }; }
 
     if (distance <= 0)
     {

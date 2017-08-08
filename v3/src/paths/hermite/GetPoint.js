@@ -1,5 +1,3 @@
-var Point = require('../point/Point');
-
 /**
 * Get a point on the curve using the `t` (time) value, which must be between 0 and 1.
 *
@@ -10,7 +8,7 @@ var Point = require('../point/Point');
 var GetPoint = function (curve, t, out)
 {
     if (t === undefined) { t = 0; }
-    if (out === undefined) { out = new Point(); }
+    if (out === undefined) { out = { x: 0, y: 0 }; }
 
     if (t < 0)
     {
