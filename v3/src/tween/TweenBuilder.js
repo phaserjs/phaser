@@ -249,7 +249,7 @@ var TweenBuilder = function (manager, config)
 
     tween.totalTargets = targets.length;
     tween.useFrames = GetBoolean(config, 'useFrames', false);
-    tween.loop = GetBoolean(config, 'loop', 0);
+    tween.loop = GetAdvancedValue(config, 'loop', 0);
     tween.loopDelay = GetAdvancedValue(config, 'loopDelay', 0);
     tween.completeDelay = GetAdvancedValue(config, 'completeDelay', 0);
     tween.paused = GetBoolean(config, 'paused', false);
