@@ -56,6 +56,7 @@ var WebGLRenderer = new Class({
         this.blendModes = [];
         this.gl = null;
         this.extensions = null;
+        this.extensionList = {};
         this.rendererArray = [];
         this.blitterBatch = null;
         this.aaQuadBatch = null;
@@ -168,6 +169,15 @@ var WebGLRenderer = new Class({
         }
 
         return this;
+    },
+
+    getExtension: function (name)
+    {
+        if (!(name in this.extensionList))
+        {
+            this.extensionList[name] = this.gl.getExtension(name);
+        }
+        return this.extensionList[name];
     },
 
     createTexture: function (source, width, height)
