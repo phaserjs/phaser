@@ -75,6 +75,11 @@ var Tween = new Class({
         this.callbackScope;
     },
 
+    isPlaying: function ()
+    {
+        return (this.state === TWEEN_CONST.ACTIVE);
+    },
+
     calcDuration: require('./components/CalcDuration'),
     init: require('./components/Init'),
     loadValues: require('./components/LoadValues'),
