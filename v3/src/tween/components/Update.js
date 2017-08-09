@@ -3,6 +3,11 @@ var UpdateTweenData = require('./UpdateTweenData');
 
 var Update = function (timestamp, delta)
 {
+    if (this.state === TWEEN_CONST.PAUSED)
+    {
+        return;
+    }
+
     if (this.useFrames)
     {
         delta = 1;
