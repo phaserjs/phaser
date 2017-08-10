@@ -114,7 +114,6 @@ var LightLayer = new Class({
         }
         else
         {
-            Const.MAX_LIGHTS = 100;
             var gl = this.gl = scene.game.renderer.gl;
             this.ext = scene.game.renderer.getExtension('WEBGL_draw_buffers');
             this.gBufferShaderPass = resourceManager.createShader('GBufferShader', {vert: TexturedAndNormalizedTintedShader.vert, frag: `
