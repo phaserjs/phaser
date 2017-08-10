@@ -11,16 +11,16 @@ var GlobalCache = new Class({
     {
         this.game = game;
 
-        this.sound = new BaseCache();
-        this.video = new BaseCache();
-        this.text = new BaseCache();
-        this.json = new BaseCache();
-        this.xml = new BaseCache();
-        this.physics = new BaseCache();
-        this.tilemap = new BaseCache();
         this.binary = new BaseCache();
         this.bitmapFont = new BaseCache();
+        this.json = new BaseCache();
+        this.physics = new BaseCache();
         this.shader = new BaseCache();
+        this.sound = new BaseCache();
+        this.text = new BaseCache();
+        this.tilemap = new BaseCache();
+        this.video = new BaseCache();
+        this.xml = new BaseCache();
 
         this.custom = {};
     },
