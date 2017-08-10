@@ -46,7 +46,9 @@ var Sprite = new Class({
 
     play: function (key, startFrame)
     {
-        return this.anims.play(key, startFrame);
+        this.anims.play(key, startFrame);
+
+        return this;
     },
 
     toJSON: function ()
