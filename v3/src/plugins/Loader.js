@@ -14,6 +14,7 @@ var ScriptFile = require('../loader/filetypes/ScriptFile');
 var SpriteSheet = require('../loader/filetypes/SpriteSheet');
 var SVGFile = require('../loader/filetypes/SVGFile');
 var TextFile = require('../loader/filetypes/TextFile');
+var UnityAtlasFile = require('../loader/filetypes/UnityAtlasFile');
 var XMLFile = require('../loader/filetypes/XMLFile');
 
 var Loader = new Class({
@@ -90,6 +91,17 @@ var Loader = new Class({
     //  ---------------------------------------------------
     //  Multi-File Loaders
     //  ---------------------------------------------------
+
+    unityAtlas: function (key, textureURL, atlasURL, textureXhrSettings, atlasXhrSettings)
+    {
+        //  Returns an object with two properties: 'texture' and 'data'
+        var files = new UnityAtlasFile(key, textureURL, atlasURL, this.path, textureXhrSettings, atlasXhrSettings);
+
+        this.addFile(files.texture);
+        this.addFile(files.data);
+
+        return this;
+    },
 
     atlas: function (key, textureURL, atlasURL, textureXhrSettings, atlasXhrSettings)
     {

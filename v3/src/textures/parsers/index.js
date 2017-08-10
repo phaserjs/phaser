@@ -7,5 +7,6 @@ module.exports = {
     Pyxel: require('./Pyxel'),
     SpriteSheet: require('./SpriteSheet'),
     SpriteSheetFromAtlas: require('./SpriteSheetFromAtlas'),
-    StarlingXML: require('./StarlingXML')
+    StarlingXML: require('./StarlingXML'),
+    UnityYAML: require('./UnityYAML')
 };

@@ -138,6 +138,15 @@ var TextureManager = new Class({
         return texture;
     },
 
+    addUnityAtlas: function (key, source, data)
+    {
+        var texture = this.create(key, source);
+
+        Parser.UnityYAML(texture, 0, data);
+
+        return texture;
+    },
+
     /**
      * [addSpriteSheet description]
      * @param {[type]} key    [description]

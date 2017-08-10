@@ -373,6 +373,21 @@ var BaseLoader = new Class({
                     }
                     break;
 
+                case 'unityatlas':
+
+                    fileA = file.fileA;
+                    fileB = file.fileB;
+
+                    if (fileA.type === 'image')
+                    {
+                        textures.addUnityAtlas(fileA.key, fileA.data, fileB.data);
+                    }
+                    else
+                    {
+                        textures.addUnityAtlas(fileB.key, fileB.data, fileA.data);
+                    }
+                    break;
+
                 case 'bitmapfont':
 
                     fileA = file.fileA;
