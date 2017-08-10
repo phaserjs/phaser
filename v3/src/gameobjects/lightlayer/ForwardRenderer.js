@@ -16,7 +16,7 @@ var ForwardRenderer = function (renderer, lightLayer, interpolationPercentage, c
 
     batch.bind(lightLayer.passShader);
     batch.indexBufferObject.bind();
-    lightLayer.updateLights(renderer, camera);
+    lightLayer.updateLights(renderer, camera, this.passShader);
 
     for (var index = 0; index < length; ++index)
     {

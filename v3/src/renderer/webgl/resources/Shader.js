@@ -13,6 +13,12 @@ var Shader = new Class({
         this.name = name;
     },
 
+    bindAttribLocation: function (index, name)
+    {
+        this.gl.bindAttribLocation(this.program, index, name);
+
+    },
+
     getUniformLocation: function (name)
     {
         return this.gl.getUniformLocation(this.program, name);

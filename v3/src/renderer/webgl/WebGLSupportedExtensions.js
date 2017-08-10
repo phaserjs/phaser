@@ -7,7 +7,7 @@ var WebGLSupportedExtensions = (function () {
 
         has: function (name)
         {
-            return false; //extensionList.indexOf(name) >= 0;
+            return extensionList.indexOf(name) >= 0;
         }
         
     };
