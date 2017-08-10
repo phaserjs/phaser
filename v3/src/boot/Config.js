@@ -68,7 +68,7 @@ var Config = new Class({
         //      fps: {
         //          min: 10,
         //          target: 60,
-        //          max: 120
+        //          max: 120,
         //          forceSetTimeOut: false,
         //          deltaHistory: 10
         //     }
