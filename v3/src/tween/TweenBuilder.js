@@ -227,8 +227,7 @@ var TweenBuilder = function (manager, config)
         var key = props[p].key;
         var value = props[p].value;
 
-        // console.log(key, value);
-
+        //  Create 1 TweenData per target, per property
         for (var t = 0; t < targets.length; t++)
         {
             //  Swap for faster getters, if they want Advanced Value style things, they can do it via their own functions
@@ -247,8 +246,6 @@ var TweenBuilder = function (manager, config)
                 GetBoolean(value, 'flipX', flipX),
                 GetBoolean(value, 'flipY', flipY)
             );
-
-            //  TODO: Calculate total duration
 
             data.push(tweenData);
         }

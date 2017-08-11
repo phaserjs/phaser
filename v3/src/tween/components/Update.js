@@ -10,8 +10,10 @@ var Update = function (timestamp, delta)
 
     if (this.useFrames)
     {
-        delta = 1;
+        delta = 1 * this.manager.timeScale;
     }
+
+    delta *= this.timeScale;
 
     this.elapsed += delta;
     this.progress = Math.min(this.elapsed / this.duration, 1);

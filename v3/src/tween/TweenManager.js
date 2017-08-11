@@ -11,6 +11,8 @@ var TweenManager = new Class({
         //  The Scene the Tween Manager belongs to (tweens are Scene specific, not Game global)
         this.scene = scene;
 
+        this.timeScale = 1;
+
         this._add = [];
         this._pending = [];
         this._active = [];
@@ -114,6 +116,9 @@ var TweenManager = new Class({
         var list = this._active;
         var tween;
 
+        //  Scale the delta
+        delta *= this.timeScale;
+
         for (var i = 0; i < list.length; i++)
         {
             tween = list[i];
@@ -142,13 +147,20 @@ var TweenManager = new Class({
         this._toProcess++;
     },
 
-
-
-
-
-    globalTimeScale: function ()
+    setGlobalTimeScale: function (value)
     {
+        this.timeScale = value;
+
+        return this;
     },
+
+    getGlobalTimeScale: function ()
+    {
+        return this.timeScale;
+    },
+
+
+
 
     getAllTweens: function ()
     {

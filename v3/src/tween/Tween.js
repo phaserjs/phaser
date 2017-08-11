@@ -21,6 +21,10 @@ var Tween = new Class({
         //  If true then duration, delay, etc values are all frame totals
         this.useFrames = false;
 
+        //  Scales the time applied to this Tween. A value of 1 runs in real-time. A value of 0.5 runs 50% slower, and so on.
+        //  Value isn't used when calculating total duration of the tween, it's a run-time delta adjustment only.
+        this.timeScale = 1;
+
         //  Loop this tween? Can be -1 for an infinite loop, or an integer.
         //  When enabled it will play through ALL TweenDatas again (use TweenData.repeat to loop a single TD)
         this.loop = 0;
@@ -74,6 +78,18 @@ var Tween = new Class({
         };
 
         this.callbackScope;
+    },
+
+    setTimeScale: function (value)
+    {
+        this.timeScale = value;
+
+        return this;
+    },
+
+    getTimeScale: function ()
+    {
+        return this.timeScale;
     },
 
     isPlaying: function ()
