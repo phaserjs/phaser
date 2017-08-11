@@ -97,6 +97,21 @@ var Tween = new Class({
         return (this.state === TWEEN_CONST.ACTIVE);
     },
 
+    hasTarget: function (target)
+    {
+        var data = this.data;
+
+        for (var i = 0; i < this.totalData; i++)
+        {
+            if (data[i].target === target)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    },
+
     calcDuration: require('./components/CalcDuration'),
     init: require('./components/Init'),
     loadValues: require('./components/LoadValues'),
@@ -107,6 +122,7 @@ var Tween = new Class({
     resume: require('./components/Resume'),
     seek: require('./components/Seek'),
     setEventCallback: require('./components/SetEventCallback'),
+    stop: require('./components/Stop'),
     update: require('./components/Update')
 
 });
