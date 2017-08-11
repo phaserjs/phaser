@@ -159,43 +159,128 @@ var TweenManager = new Class({
         return this.timeScale;
     },
 
-
-
-
     getAllTweens: function ()
     {
+        var list = this._active;
+        var output = [];
+
+        for (var i = 0; i < list.length; i++)
+        {
+            output.push(list[i]);
+        }
+
+        return output;
     },
 
+    //  Single Target or an Array of targets
     getTweensOf: function (target)
     {
+        var list = this._active;
+        var tween;
+        var output = [];
+        var i;
+
+        if (Array.isArray(target))
+        {
+            for (i = 0; i < list.length; i++)
+            {
+                tween = list[i];
+
+                for (var t = 0; t < target.length; i++)
+                {
+                    if (tween.hasTarget(target[t]))
+                    {
+                        output.push(tween);
+                    }
+                }
+            }
+        }
+        else
+        {
+            for (i = 0; i < list.length; i++)
+            {
+                tween = list[i];
+
+                if (tween.hasTarget(target))
+                {
+                    output.push(tween);
+                }
+            }
+        }
+
+        return output;
     },
 
+    //  Single Target only
     isTweening: function (target)
     {
+        var list = this._active;
+        var tween;
+
+        for (var i = 0; i < list.length; i++)
+        {
+            tween = list[i];
+
+            if (tween.hasTarget(target) && tween.isPlaying())
+            {
+                return true;
+            }
+        }
+
+        return false;
     },
 
-    kill: function (vars, target)
-    {
-    },
+    // kill: function (vars, target)
+    // {
+    // },
 
     killAll: function ()
     {
+        var tweens = this.getAllTweens();
+
+        for (var i = 0; i < tweens.length; i++)
+        {
+            tweens[i].stop();
+        }
+
+        return this;
     },
 
+    //  Single Target or an Array of targets
     killTweensOf: function (target)
     {
+        var tweens = this.getTweensOf(target);
+
+        for (var i = 0; i < tweens.length; i++)
+        {
+            tweens[i].stop();
+        }
+
+        return this;
     },
 
     pauseAll: function ()
     {
+        var list = this._active;
+
+        for (var i = 0; i < list.length; i++)
+        {
+            list[i].pause();
+        }
+
+        return this;
     },
 
     resumeAll: function ()
     {
-    },
+        var list = this._active;
 
-    delayedCall: function ()
-    {
+        for (var i = 0; i < list.length; i++)
+        {
+            list[i].resume();
+        }
+
+        return this;
     },
 
     /**
