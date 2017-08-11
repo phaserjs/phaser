@@ -9,11 +9,24 @@ var SetStateFromEnd = function (tween, tweenData)
         tweenData.progress = 0;
         tweenData.elapsed = 0;
 
+        if (tweenData.flipX)
+        {
+            tweenData.target.toggleFlipX();
+        }
+
+        if (tweenData.flipY)
+        {
+            tweenData.target.toggleFlipY();
+        }
+
         var onYoyo = tween.callbacks.onYoyo;
 
         if (onYoyo)
         {
-            onYoyo.func.apply(onYoyo.scope, [tweenData.target].concat(onYoyo.params));
+            //  Element 1 is reserved for the target of the yoyo (and needs setting here)
+            onYoyo.params[1] = tweenData.target;
+
+            onYoyo.func.apply(onYoyo.scope, onYoyo.params);
         }
 
         return TWEEN_CONST.PLAYING_BACKWARD;
@@ -25,11 +38,24 @@ var SetStateFromEnd = function (tween, tweenData)
         tweenData.elapsed = 0;
         tweenData.progress = 0;
 
+        if (tweenData.flipX)
+        {
+            tweenData.target.toggleFlipX();
+        }
+
+        if (tweenData.flipY)
+        {
+            tweenData.target.toggleFlipY();
+        }
+
         var onRepeat = tween.callbacks.onRepeat;
 
         if (onRepeat)
         {
-            onRepeat.func.apply(onRepeat.scope, [tweenData.target].concat(onRepeat.params));
+            //  Element 1 is reserved for the target of the repeat (and needs setting here)
+            onRepeat.params[1] = tweenData.target;
+
+            onRepeat.func.apply(onRepeat.scope, onRepeat.params);
         }
 
         //  Delay?
@@ -62,11 +88,24 @@ var SetStateFromStart = function (tween, tweenData)
         tweenData.elapsed = 0;
         tweenData.progress = 0;
 
+        if (tweenData.flipX)
+        {
+            tweenData.target.toggleFlipX();
+        }
+
+        if (tweenData.flipY)
+        {
+            tweenData.target.toggleFlipY();
+        }
+
         var onRepeat = tween.callbacks.onRepeat;
 
         if (onRepeat)
         {
-            onRepeat.func.apply(onRepeat.scope, [tweenData.target].concat(onRepeat.params));
+            //  Element 1 is reserved for the target of the repeat (and needs setting here)
+            onRepeat.params[1] = tweenData.target;
+
+            onRepeat.func.apply(onRepeat.scope, onRepeat.params);
         }
 
         //  Delay?

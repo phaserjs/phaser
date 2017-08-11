@@ -1,4 +1,4 @@
-var TweenData = function (target, key, value, ease, delay, duration, yoyo, hold, repeat, repeatDelay, startAt)
+var TweenData = function (target, key, value, ease, delay, duration, yoyo, hold, repeat, repeatDelay, startAt, flipX, flipY)
 {
     return {
 
@@ -37,6 +37,12 @@ var TweenData = function (target, key, value, ease, delay, duration, yoyo, hold,
 
         //  Changes the property to be this value before starting the tween.
         startAt: startAt,
+
+        //  Automatically call toggleFlipX when the TweenData yoyos or repeats
+        flipX: flipX,
+
+        //  Automatically call toggleFlipY when the TweenData yoyos or repeats
+        flipY: flipY,
 
         //  Between 0 and 1 showing completion of this TweenData.
         progress: 0,

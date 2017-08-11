@@ -25,6 +25,8 @@ module.exports = [
     'duration',
     'ease',
     'easeParams',
+    'flipX',
+    'flipY',
     'hold',
     'loop',
     'loopDelay',
