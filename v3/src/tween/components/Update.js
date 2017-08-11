@@ -58,6 +58,13 @@ var Update = function (timestamp, delta)
 
             if (this.countdown <= 0)
             {
+                var onComplete = this.callbacks.onComplete;
+
+                if (onComplete)
+                {
+                    onComplete.func.apply(onComplete.scope, onComplete.params);
+                }
+
                 this.state = TWEEN_CONST.PENDING_REMOVE;
             }
 

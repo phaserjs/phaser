@@ -10,6 +10,13 @@ var NextState = function ()
         this.progress = 0;
         this.loopCounter--;
 
+        var onLoop = this.callbacks.onLoop;
+
+        if (onLoop)
+        {
+            onLoop.func.apply(onLoop.scope, onLoop.params);
+        }
+
         if (this.loopDelay > 0)
         {
             this.countdown = this.loopDelay;
@@ -27,6 +34,13 @@ var NextState = function ()
     }
     else
     {
+        var onComplete = this.callbacks.onComplete;
+
+        if (onComplete)
+        {
+            onComplete.func.apply(onComplete.scope, onComplete.params);
+        }
+
         this.state = TWEEN_CONST.PENDING_REMOVE;
     }
 };

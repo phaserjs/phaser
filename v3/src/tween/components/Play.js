@@ -12,6 +12,8 @@ var Play = function ()
         this.paused = false;
     
         this.manager.makeActive(this);
+
+        return;
     }
     else
     {
@@ -19,6 +21,13 @@ var Play = function ()
         this.resetTweenData();
 
         this.state = TWEEN_CONST.ACTIVE;
+    }
+
+    var onStart = this.callbacks.onStart;
+
+    if (onStart)
+    {
+        onStart.func.apply(onStart.scope, onStart.params);
     }
 };
 

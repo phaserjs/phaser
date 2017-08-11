@@ -9,6 +9,13 @@ var SetStateFromEnd = function (tween, tweenData)
         tweenData.progress = 0;
         tweenData.elapsed = 0;
 
+        var onYoyo = tween.callbacks.onYoyo;
+
+        if (onYoyo)
+        {
+            onYoyo.func.apply(onYoyo.scope, [tweenData.target].concat(onYoyo.params));
+        }
+
         return TWEEN_CONST.PLAYING_BACKWARD;
     }
     else if (tweenData.repeatCounter > 0)
@@ -17,6 +24,13 @@ var SetStateFromEnd = function (tween, tweenData)
 
         tweenData.elapsed = 0;
         tweenData.progress = 0;
+
+        var onRepeat = tween.callbacks.onRepeat;
+
+        if (onRepeat)
+        {
+            onRepeat.func.apply(onRepeat.scope, [tweenData.target].concat(onRepeat.params));
+        }
 
         //  Delay?
         if (tweenData.repeatDelay > 0)
@@ -47,6 +61,13 @@ var SetStateFromStart = function (tween, tweenData)
 
         tweenData.elapsed = 0;
         tweenData.progress = 0;
+
+        var onRepeat = tween.callbacks.onRepeat;
+
+        if (onRepeat)
+        {
+            onRepeat.func.apply(onRepeat.scope, [tweenData.target].concat(onRepeat.params));
+        }
 
         //  Delay?
         if (tweenData.repeatDelay > 0)
@@ -105,6 +126,13 @@ var UpdateTweenData = function (tween, tweenData, delta)
 
             tweenData.elapsed = elapsed;
             tweenData.progress = progress;
+
+            var onUpdate = tween.callbacks.onUpdate;
+
+            if (onUpdate)
+            {
+                onUpdate.func.apply(onUpdate.scope, onUpdate.params);
+            }
 
             if (progress === 1)
             {

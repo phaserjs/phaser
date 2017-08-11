@@ -65,11 +65,12 @@ var Tween = new Class({
         this.totalProgress = 0;
 
         this.callbacks = {
-            onStart: { callback: null, scope: null, params: null },
-            onUpdate: { callback: null, scope: null, params: null },
-            onRepeat: { callback: null, scope: null, params: null },
-            onLoop: { callback: null, scope: null, params: null },
-            onComplete: { callback: null, scope: null, params: null }
+            onComplete: null,
+            onLoop: null,
+            onRepeat: null,
+            onStart: null,
+            onUpdate: null,
+            onYoyo: null
         };
 
         this.callbackScope;
