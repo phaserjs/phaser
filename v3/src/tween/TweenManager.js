@@ -21,9 +21,10 @@ var TweenManager = new Class({
         this._toProcess = 0;
     },
 
+    //  Scene is starting up
     boot: function ()
     {
-        //  Scene is starting up
+        this.timeScale = 1;
     },
 
     //  Create a Tween and return it, but do NOT add it to the active or pending Tween lists
@@ -311,12 +312,20 @@ var TweenManager = new Class({
     //  Scene that owns this manager is shutting down
     shutdown: function ()
     {
+        this.killAll();
+
+        this._add = [];
+        this._pending = [];
+        this._active = [];
+        this._destroy = [];
+
+        this._toProcess = 0;
     },
 
     //  Game level nuke
     destroy: function ()
     {
-
+        this.shutdown();
     }
 
 });
