@@ -1,6 +1,5 @@
 
 var Class = require('../utils/Class');
-var EventDispatcher = require('../events/EventDispatcher');
 var TweenBuilder = require('./TweenBuilder');
 
 var TweenManager = new Class({
@@ -11,12 +10,6 @@ var TweenManager = new Class({
     {
         //  The Scene the Tween Manager belongs to (tweens are Scene specific, not Game global)
         this.scene = scene;
-
-        this.events = new EventDispatcher(); // should use Scene event dispatcher?
-
-        //  TODO:
-        //  Add _pool array and make the queue re-use objects within it.
-        //  Add a pool max size.
 
         this._add = [];
         this._pending = [];
@@ -31,6 +24,13 @@ var TweenManager = new Class({
         //  Scene is starting up
     },
 
+    //  Create a Tween and return it, but do NOT add it to the active or pending Tween lists
+    create: function (config)
+    {
+        return TweenBuilder(this, config);
+    },
+
+    //  Create a Tween and add it to the active Tween list
     add: function (config)
     {
         var tween = TweenBuilder(this, config);
@@ -42,19 +42,14 @@ var TweenManager = new Class({
         return tween;
     },
 
-    timeline: function ()
+    //  Add an existing tween into the active Tween list
+    existing: function (tween)
     {
-        // return new Timeline(this);
-    },
+        this._add.push(tween);
 
-    //  Add a 'to' GSAP equivalent?
+        this._toProcess++;
 
-    exists: function (tween)
-    {
-    },
-
-    get: function (target)
-    {
+        return this;
     },
 
     begin: function ()
@@ -146,6 +141,10 @@ var TweenManager = new Class({
 
         this._toProcess++;
     },
+
+
+
+
 
     globalTimeScale: function ()
     {

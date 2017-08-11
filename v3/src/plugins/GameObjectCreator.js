@@ -98,6 +98,11 @@ var GameObjectCreator = new Class({
     tileSprite: function (config)
     {
         return TileSpriteCreator(this.scene, config);
+    },
+
+    tween: function (config)
+    {
+        return this.scene.sys.tweens.create(config);
     }
 
 });

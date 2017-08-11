@@ -7,6 +7,7 @@ var EffectLayerFactory = require('../gameobjects/effectlayer/EffectLayerFactory'
 var GraphicsFactory = require('../gameobjects/graphics/GraphicsFactory');
 var GroupFactory = require('../gameobjects/group/GroupFactory');
 var ImageFactory = require('../gameobjects/image/ImageFactory');
+var LightLayerFactory = require('../gameobjects/lightlayer/LightLayerFactory');
 var MeshFactory = require('../gameobjects/mesh/MeshFactory');
 var QuadFactory = require('../gameobjects/quad/QuadFactory');
 var RenderPassFactory = require('../gameobjects/renderpass/RenderPassFactory');
@@ -16,7 +17,6 @@ var StaticTilemapFactory = require('../gameobjects/tilemap/static/StaticTilemapF
 var TextFactory = require('../gameobjects/text/static/TextFactory');
 var TileSpriteFactory = require('../gameobjects/tilesprite/TileSpriteFactory');
 var ZoneFactory = require('../gameobjects/zone/ZoneFactory');
-var LightLayerFactory = require('../gameobjects/lightlayer/LightLayerFactory');
 
 var GameObjectFactory = new Class({
 
@@ -128,6 +128,11 @@ var GameObjectFactory = new Class({
     zone: function (x, y, width, height)
     {
         return this.displayList.add(ZoneFactory(this.scene, x, y, width, height));
+    },
+
+    tween: function (config)
+    {
+        return this.scene.sys.tweens.add(config);
     },
 
     lightLayer: function ()
