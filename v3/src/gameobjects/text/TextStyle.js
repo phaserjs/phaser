@@ -208,7 +208,7 @@ var TextStyle = new Class({
         if (color === undefined) { color = '#000'; }
         if (blur === undefined) { blur = 0; }
         if (shadowStroke === undefined) { shadowStroke = false; }
-        if (shadowFill === undefined) { shadowFill = false; }
+        if (shadowFill === undefined) { shadowFill = true; }
 
         this.shadowOffsetX = x;
         this.shadowOffsetY = y;
