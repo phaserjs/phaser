@@ -121,7 +121,7 @@ var Tween = new Class({
     resetTweenData: require('./components/ResetTweenData'),
     resume: require('./components/Resume'),
     seek: require('./components/Seek'),
-    setEventCallback: require('./components/SetEventCallback'),
+    setCallback: require('./components/SetCallback'),
     stop: require('./components/Stop'),
     update: require('./components/Update')
 

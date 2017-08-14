@@ -1,4 +1,4 @@
-var SetEventCallback = function (type, callback, params, scope)
+var SetCallback = function (type, callback, params, scope)
 {
     var types = [ 'onStart', 'onUpdate', 'onRepeat', 'onLoop', 'onComplete', 'onYoyo' ];
 
@@ -10,4 +10,4 @@ var SetEventCallback = function (type, callback, params, scope)
     return this;
 };
 
-module.exports = SetEventCallback;
+module.exports = SetCallback;
