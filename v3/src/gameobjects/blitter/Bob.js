@@ -37,6 +37,10 @@ var Bob = new Class({
 
     destroy: function ()
     {
+        this.parent.dirty = true;
+
+        this.parent.children.remove(this);
+
         this.parent = undefined;
         this.frame = undefined;
         this.data = undefined;
