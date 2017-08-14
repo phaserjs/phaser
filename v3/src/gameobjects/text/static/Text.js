@@ -32,7 +32,7 @@ var Text = new Class({
     {
         if (x === undefined) { x = 0; }
         if (y === undefined) { y = 0; }
-        if (text === undefined) { text = ''; }
+        if (text === undefined) { text = ' '; }
 
         GameObject.call(this, scene, 'Text');
 
