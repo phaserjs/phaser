@@ -51,11 +51,14 @@ var Blitter = new Class({
     //  frame MUST be part of the Blitter texture
     create: function (x, y, frame, visible, index)
     {
-        if (frame === undefined) { frame = this.frame; }
         if (visible === undefined) { visible = true; }
         if (index === undefined) { index = this.children.length; }
 
-        if (typeof frame === 'string')
+        if (frame === undefined)
+        {
+            frame = this.frame;
+        }
+        else
         {
             frame = this.texture.get(frame);
         }
