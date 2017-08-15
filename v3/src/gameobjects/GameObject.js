@@ -24,7 +24,11 @@ var GameObject = new Class({
         this.renderMask = 15;
         this.renderFlags = 15;
 
+        //  instance of Phaser.Input.InteractiveObject if input enabled
         this.input = null;
+
+        //  instance of Phaser.Physics.X.Body if physics enabled (X = the physics system being used by the Scene)
+        this.body = null;
 
         //  Trigger a scene z-depth sort
         this.scene.sys.sortChildrenFlag = true;
@@ -78,6 +82,11 @@ var GameObject = new Class({
         if (this.input)
         {
             this.scene.sys.inputManager.clear(this);
+        }
+
+        if (this.body)
+        {
+            this.scene.sys.physicsManager.remove(this);
         }
 
         this.active = false;
