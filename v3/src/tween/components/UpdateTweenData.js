@@ -14,6 +14,9 @@ var SetStateFromEnd = function (tween, tweenData)
             tweenData.target.toggleFlipX();
         }
 
+        //  Problem: The flip and callback and so on gets called for every TweenData that triggers it at the same time.
+        //  If you're tweening several properties it can fire for all of them, at once.
+
         if (tweenData.flipY)
         {
             tweenData.target.toggleFlipY();

@@ -34,7 +34,7 @@ var LightLayer = new Class({
         GameObject.call(this, scene, 'LightLayer');
 
         var resourceManager = scene.game.renderer.resourceManager;
-        var deferred = WebGLSupportedExtensions.has('WEBGL_draw_buffers');
+        this._isDeferred = WebGLSupportedExtensions.has('WEBGL_draw_buffers');
 
         this.renderer = scene.game.renderer;
         this.passShader = null;
@@ -49,7 +49,7 @@ var LightLayer = new Class({
         this.lightsLocations = [];
         this._z = 0;
 
-        if (resourceManager !== undefined && !deferred)
+        if (resourceManager !== undefined && !this._isDeferred)
         {
             this.gl = scene.game.renderer.gl;
             this.passShader = resourceManager.createShader('Phong2DShaderForward', {vert: TexturedAndNormalizedTintedShader.vert, frag: `
@@ -121,7 +121,7 @@ var LightLayer = new Class({
         {
             var gl = this.gl = scene.game.renderer.gl;
             this.ext = scene.game.renderer.getExtension('WEBGL_draw_buffers');
-            this.gBufferShaderPass = resourceManager.createShader('GBufferShader', {vert: TexturedAndNormalizedTintedShader.vert, frag: `
+            this.gBufferShaderPass = resourceManager.createShader('GBufferShader', { vert: TexturedAndNormalizedTintedShader.vert, frag: `
                 #extension GL_EXT_draw_buffers : require 
 
                 precision mediump float;
@@ -167,7 +167,7 @@ var LightLayer = new Class({
                 uniform sampler2D uGbufferColor;
                 uniform sampler2D uGbufferNormal;
                 uniform vec3 uAmbientLightColor;
-                uniform Light uLights[` + Const.MAX_LIGHTS + `];
+                uniform Light uLights[` + Const.DEFERRED_MAX_LIGHTS + `];
                 
                 void main()
                 {
@@ -178,7 +178,7 @@ var LightLayer = new Class({
                     vec3 normal = normalize(vec3(gbNormal * 2.0 - 1.0));
                     vec2 res = vec2(min(uResolution.x, uResolution.y)) * uCamera.w;
 
-                    for (int index = 0; index < ` + Const.MAX_LIGHTS + `; ++index)
+                    for (int index = 0; index < ` + Const.DEFERRED_MAX_LIGHTS + `; ++index)
                     {                
                         Light light = uLights[index];
                         vec3 lightDir = vec3((light.position.xy / res) - (gl_FragCoord.xy / res), light.position.z); 
@@ -196,7 +196,7 @@ var LightLayer = new Class({
             `});
             this.lightPassVBO = gl.createBuffer();
             gl.bindBuffer(gl.ARRAY_BUFFER, this.lightPassVBO);
-            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, 7, -1, -1, 7, -1]), gl.STATIC_DRAW);
+            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([ -1, 7, -1, -1, 7, -1 ]), gl.STATIC_DRAW);
             
             this.uMainTextureLoc = this.gBufferShaderPass.getUniformLocation('uMainTexture');
             this.uNormTextureLoc = this.gBufferShaderPass.getUniformLocation('uNormTexture');
@@ -218,7 +218,7 @@ var LightLayer = new Class({
             this.gBufferShaderPass.bindAttribLocation(2, 'v_alpha');
             this.lightPassShader.bindAttribLocation(0, 'vertexPosition');
 
-            for (var index = 0; index < Const.MAX_LIGHTS; ++index)
+            for (var index = 0; index < Const.DEFERRED_MAX_LIGHTS; ++index)
             {
                 this.lightsLocations[index] = {
                     position: this.lightPassShader.getUniformLocation('uLights[' + index + '].position'),
@@ -251,7 +251,7 @@ var LightLayer = new Class({
             gl.framebufferTexture2D(gl.FRAMEBUFFER, this.ext.COLOR_ATTACHMENT0_WEBGL, gl.TEXTURE_2D, this.gBufferColorTex, 0);
             gl.framebufferTexture2D(gl.FRAMEBUFFER, this.ext.COLOR_ATTACHMENT1_WEBGL, gl.TEXTURE_2D, this.gBufferNormalTex, 0);
 
-            this.ext.drawBuffersWEBGL([this.ext.COLOR_ATTACHMENT0_WEBGL, this.ext.COLOR_ATTACHMENT1_WEBGL]);
+            this.ext.drawBuffersWEBGL([ this.ext.COLOR_ATTACHMENT0_WEBGL, this.ext.COLOR_ATTACHMENT1_WEBGL ]);
 
             var complete = gl.checkFramebufferStatus(gl.FRAMEBUFFER);
 
@@ -286,26 +286,26 @@ var LightLayer = new Class({
         }
     },
 
-    get z()
+    get z ()
     {
         return this._z;
     },
 
-    set z(newZ)
+    set z (newZ)
     {
         this._z = newZ;
-    },  
+    },
 
-    setAmbientLightColor: function (r, g, b) 
+    setAmbientLightColor: function (r, g, b)
     {
-        this.ambientLightColorR = r; 
-        this.ambientLightColorG = g; 
-        this.ambientLightColorB = b; 
+        this.ambientLightColorR = r;
+        this.ambientLightColorG = g;
+        this.ambientLightColorB = b;
     },
 
     getMaxLights: function ()
     {
-        return Const.MAX_LIGHTS;
+        return (this._isDeferred) ? Const.DEFERRED_MAX_LIGHTS : Const.MAX_LIGHTS;
     },
 
     getLightCount: function ()
@@ -315,7 +315,7 @@ var LightLayer = new Class({
 
     isDeferred: function ()
     {
-        return WebGLSupportedExtensions.has('WEBGL_draw_buffers');
+        return this._isDeferred;
     },
 
     /* This will probably be removed later */ 
@@ -353,7 +353,7 @@ var LightLayer = new Class({
 
     addLight: function (x, y, z, radius, r, g, b, attenuation)
     {
-        if (this.lights.length < Const.MAX_LIGHTS)
+        if (this.lights.length < this.getMaxLights())
         {
             var light = null;
             if (this.lightPool.length > 0)
@@ -382,14 +382,13 @@ var LightLayer = new Class({
         }
     },
 
-    updateLights: function(renderer, camera, shader)
+    updateLights: function (renderer, camera, shader)
     {
         if (this.gl !== null)
         {
             var locations = this.lightsLocations;
             var lights = this.lights;
             var length = lights.length;
-            var gl = this.gl;
             var point = {x: 0, y: 0};
             var height = renderer.height;
             var cameraMatrix = camera.matrix;

@@ -227,8 +227,7 @@ var TweenBuilder = function (manager, config)
         var key = props[p].key;
         var value = props[p].value;
 
-        // console.log(key, value);
-
+        //  Create 1 TweenData per target, per property
         for (var t = 0; t < targets.length; t++)
         {
             //  Swap for faster getters, if they want Advanced Value style things, they can do it via their own functions
@@ -247,8 +246,6 @@ var TweenBuilder = function (manager, config)
                 GetBoolean(value, 'flipX', flipX),
                 GetBoolean(value, 'flipY', flipY)
             );
-
-            //  TODO: Calculate total duration
 
             data.push(tweenData);
         }
@@ -278,7 +275,7 @@ var TweenBuilder = function (manager, config)
         var onStartScope = GetValue(config, 'onStartScope', scope);
         var onStartParams = GetValue(config, 'onStartParams', []);
 
-        tween.setEventCallback('onStart', onStart, tweenArray.concat(onStartParams), onStartScope);
+        tween.setCallback('onStart', onStart, tweenArray.concat(onStartParams), onStartScope);
     }
 
     var onUpdate = GetValue(config, 'onUpdate', false);
@@ -289,7 +286,7 @@ var TweenBuilder = function (manager, config)
         var onUpdateScope = GetValue(config, 'onUpdateScope', scope);
         var onUpdateParams = GetValue(config, 'onUpdateParams', []);
 
-        tween.setEventCallback('onUpdate', onUpdate, tweenArray.concat(onUpdateParams), onUpdateScope);
+        tween.setCallback('onUpdate', onUpdate, tweenArray.concat(onUpdateParams), onUpdateScope);
     }
 
     var onRepeat = GetValue(config, 'onRepeat', false);
@@ -300,7 +297,7 @@ var TweenBuilder = function (manager, config)
         var onRepeatScope = GetValue(config, 'onRepeatScope', scope);
         var onRepeatParams = GetValue(config, 'onRepeatParams', []);
 
-        tween.setEventCallback('onRepeat', onRepeat, tweenArray.concat(null, onRepeatParams), onRepeatScope);
+        tween.setCallback('onRepeat', onRepeat, tweenArray.concat(null, onRepeatParams), onRepeatScope);
     }
 
     var onLoop = GetValue(config, 'onLoop', false);
@@ -311,7 +308,7 @@ var TweenBuilder = function (manager, config)
         var onLoopScope = GetValue(config, 'onLoopScope', scope);
         var onLoopParams = GetValue(config, 'onLoopParams', []);
 
-        tween.setEventCallback('onLoop', onLoop, tweenArray.concat(onLoopParams), onLoopScope);
+        tween.setCallback('onLoop', onLoop, tweenArray.concat(onLoopParams), onLoopScope);
     }
 
     var onYoyo = GetValue(config, 'onYoyo', false);
@@ -322,7 +319,7 @@ var TweenBuilder = function (manager, config)
         var onYoyoScope = GetValue(config, 'onYoyoScope', scope);
         var onYoyoParams = GetValue(config, 'onYoyoParams', []);
 
-        tween.setEventCallback('onYoyo', onYoyo, tweenArray.concat(null, onYoyoParams), onYoyoScope);
+        tween.setCallback('onYoyo', onYoyo, tweenArray.concat(null, onYoyoParams), onYoyoScope);
     }
 
     var onComplete = GetValue(config, 'onComplete', false);
@@ -333,7 +330,7 @@ var TweenBuilder = function (manager, config)
         var onCompleteScope = GetValue(config, 'onCompleteScope', scope);
         var onCompleteParams = GetValue(config, 'onCompleteParams', []);
 
-        tween.setEventCallback('onComplete', onComplete, tweenArray.concat(onCompleteParams), onCompleteScope);
+        tween.setCallback('onComplete', onComplete, tweenArray.concat(onCompleteParams), onCompleteScope);
     }
 
     return tween;

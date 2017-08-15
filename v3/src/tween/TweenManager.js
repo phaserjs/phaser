@@ -11,6 +11,8 @@ var TweenManager = new Class({
         //  The Scene the Tween Manager belongs to (tweens are Scene specific, not Game global)
         this.scene = scene;
 
+        this.timeScale = 1;
+
         this._add = [];
         this._pending = [];
         this._active = [];
@@ -19,9 +21,10 @@ var TweenManager = new Class({
         this._toProcess = 0;
     },
 
+    //  Scene is starting up
     boot: function ()
     {
-        //  Scene is starting up
+        this.timeScale = 1;
     },
 
     //  Create a Tween and return it, but do NOT add it to the active or pending Tween lists
@@ -114,6 +117,9 @@ var TweenManager = new Class({
         var list = this._active;
         var tween;
 
+        //  Scale the delta
+        delta *= this.timeScale;
+
         for (var i = 0; i < list.length; i++)
         {
             tween = list[i];
@@ -142,48 +148,140 @@ var TweenManager = new Class({
         this._toProcess++;
     },
 
-
-
-
-
-    globalTimeScale: function ()
+    setGlobalTimeScale: function (value)
     {
+        this.timeScale = value;
+
+        return this;
+    },
+
+    getGlobalTimeScale: function ()
+    {
+        return this.timeScale;
     },
 
     getAllTweens: function ()
     {
+        var list = this._active;
+        var output = [];
+
+        for (var i = 0; i < list.length; i++)
+        {
+            output.push(list[i]);
+        }
+
+        return output;
     },
 
+    //  Single Target or an Array of targets
     getTweensOf: function (target)
     {
+        var list = this._active;
+        var tween;
+        var output = [];
+        var i;
+
+        if (Array.isArray(target))
+        {
+            for (i = 0; i < list.length; i++)
+            {
+                tween = list[i];
+
+                for (var t = 0; t < target.length; i++)
+                {
+                    if (tween.hasTarget(target[t]))
+                    {
+                        output.push(tween);
+                    }
+                }
+            }
+        }
+        else
+        {
+            for (i = 0; i < list.length; i++)
+            {
+                tween = list[i];
+
+                if (tween.hasTarget(target))
+                {
+                    output.push(tween);
+                }
+            }
+        }
+
+        return output;
     },
 
+    //  Single Target only
     isTweening: function (target)
     {
+        var list = this._active;
+        var tween;
+
+        for (var i = 0; i < list.length; i++)
+        {
+            tween = list[i];
+
+            if (tween.hasTarget(target) && tween.isPlaying())
+            {
+                return true;
+            }
+        }
+
+        return false;
     },
 
-    kill: function (vars, target)
-    {
-    },
+    // kill: function (vars, target)
+    // {
+    // },
 
     killAll: function ()
     {
+        var tweens = this.getAllTweens();
+
+        for (var i = 0; i < tweens.length; i++)
+        {
+            tweens[i].stop();
+        }
+
+        return this;
     },
 
+    //  Single Target or an Array of targets
     killTweensOf: function (target)
     {
+        var tweens = this.getTweensOf(target);
+
+        for (var i = 0; i < tweens.length; i++)
+        {
+            tweens[i].stop();
+        }
+
+        return this;
     },
 
     pauseAll: function ()
     {
+        var list = this._active;
+
+        for (var i = 0; i < list.length; i++)
+        {
+            list[i].pause();
+        }
+
+        return this;
     },
 
     resumeAll: function ()
     {
-    },
+        var list = this._active;
 
-    delayedCall: function ()
-    {
+        for (var i = 0; i < list.length; i++)
+        {
+            list[i].resume();
+        }
+
+        return this;
     },
 
     /**
@@ -214,12 +312,20 @@ var TweenManager = new Class({
     //  Scene that owns this manager is shutting down
     shutdown: function ()
     {
+        this.killAll();
+
+        this._add = [];
+        this._pending = [];
+        this._active = [];
+        this._destroy = [];
+
+        this._toProcess = 0;
     },
 
     //  Game level nuke
     destroy: function ()
     {
-
+        this.shutdown();
     }
 
 });

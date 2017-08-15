@@ -12,6 +12,11 @@ var Texture = {
     {
         this.texture = this.scene.sys.textures.get(key);
 
+        return this.setFrame(frame);
+    },
+
+    setFrame: function (frame)
+    {
         this.frame = this.texture.get(frame);
 
         if (!this.frame.cutWidth || !this.frame.cutHeight)
