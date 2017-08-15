@@ -60,8 +60,10 @@ var LightLayer = new Class({
                     vec3 position;
                     vec3 color;
                     float attenuation;
+                    float radius;
                 };
 
+                uniform vec4 uCamera; /* x, y, rotation, zoom */
                 uniform vec2 uResolution;
                 uniform sampler2D uMainTexture;
                 uniform sampler2D uNormTexture;
@@ -78,16 +80,17 @@ var LightLayer = new Class({
                     vec4 spriteColor = texture2D(uMainTexture, v_tex_coord) * vec4(v_color, v_alpha);
                     vec3 spriteNormal = texture2D(uNormTexture, v_tex_coord).rgb;
                     vec3 normal = normalize(vec3(spriteNormal * 2.0 - 1.0));
+                    vec2 res = vec2(min(uResolution.x, uResolution.y)) * uCamera.w;
 
                     for (int index = 0; index < ` + Const.MAX_LIGHTS + `; ++index)
                     {
                         Light light = uLights[index];
-                        float lightY = uResolution.y - light.position.y;
-                        vec3 lightDir = vec3((vec2(light.position.x, lightY) / uResolution) - (gl_FragCoord.xy / uResolution), light.position.z); 
+                        vec3 lightDir = vec3((light.position.xy / res) - (gl_FragCoord.xy / res), light.position.z); 
                         vec3 lightNormal = normalize(lightDir);
-                        float distToSurf = length(lightDir);
+                        float distToSurf = length(lightDir) * uCamera.w;
                         float diffuseFactor = max(dot(normal, lightNormal), 0.0);
-                        float attenuation = 1.0 / (1.0 + light.attenuation * (distToSurf * distToSurf));
+                        float radius = (light.radius / res.x * uCamera.w) * uCamera.w;
+                        float attenuation = clamp(1.0 - distToSurf * distToSurf / (radius * radius), 0.0, 1.0); 
                         vec3 diffuse = light.color * spriteColor.rgb * diffuseFactor;
                         finalColor += attenuation * diffuse;
                     }
@@ -99,6 +102,7 @@ var LightLayer = new Class({
             this.uMainTextureLoc = this.passShader.getUniformLocation('uMainTexture');
             this.uNormTextureLoc = this.passShader.getUniformLocation('uNormTexture');
             this.uResolutionLoc = this.passShader.getUniformLocation('uResolution');
+            this.uCameraLoc = this.passShader.getUniformLocation('uCamera');
 
             this.passShader.setConstantInt1(this.uMainTextureLoc, 0);
             this.passShader.setConstantInt1(this.uNormTextureLoc, 1);
@@ -108,7 +112,8 @@ var LightLayer = new Class({
                 this.lightsLocations[index] = {
                     position: this.passShader.getUniformLocation('uLights[' + index + '].position'),
                     color: this.passShader.getUniformLocation('uLights[' + index + '].color'),
-                    attenuation: this.passShader.getUniformLocation('uLights[' + index + '].attenuation')
+                    attenuation: this.passShader.getUniformLocation('uLights[' + index + '].attenuation'),
+                    radius: this.passShader.getUniformLocation('uLights[' + index + '].radius')
                 };
             }
         }
@@ -121,7 +126,6 @@ var LightLayer = new Class({
 
                 precision mediump float;
 
-                uniform vec2 uResolution;
                 uniform sampler2D uMainTexture;
                 uniform sampler2D uNormTexture;
 
@@ -155,8 +159,10 @@ var LightLayer = new Class({
                     vec3 position;
                     vec3 color;
                     float attenuation;
+                    float radius;
                 };
 
+                uniform vec4 uCamera; /* x, y, rotation, zoom */
                 uniform vec2 uResolution;
                 uniform sampler2D uGbufferColor;
                 uniform sampler2D uGbufferNormal;
@@ -170,16 +176,17 @@ var LightLayer = new Class({
                     vec4 gbColor = texture2D(uGbufferColor, uv);
                     vec3 gbNormal = texture2D(uGbufferNormal, uv).rgb;
                     vec3 normal = normalize(vec3(gbNormal * 2.0 - 1.0));
+                    vec2 res = vec2(min(uResolution.x, uResolution.y)) * uCamera.w;
 
                     for (int index = 0; index < ` + Const.MAX_LIGHTS + `; ++index)
-                    {
+                    {                
                         Light light = uLights[index];
-                        float lightY = uResolution.y - light.position.y;
-                        vec3 lightDir = vec3((vec2(light.position.x, lightY) / uResolution) - uv, light.position.z); 
+                        vec3 lightDir = vec3((light.position.xy / res) - (gl_FragCoord.xy / res), light.position.z); 
                         vec3 lightNormal = normalize(lightDir);
-                        float distToSurf = length(lightDir);
+                        float distToSurf = length(lightDir) * uCamera.w;
                         float diffuseFactor = max(dot(normal, lightNormal), 0.0);
-                        float attenuation = 1.0 / (1.0 + light.attenuation * (distToSurf * distToSurf));
+                        float radius = (light.radius / res.x * uCamera.w) * uCamera.w;
+                        float attenuation = clamp(1.0 - distToSurf * distToSurf / (radius * radius), 0.0, 1.0); 
                         vec3 diffuse = light.color * gbColor.rgb * diffuseFactor;
                         finalColor += attenuation * diffuse;
                     }
@@ -201,6 +208,7 @@ var LightLayer = new Class({
             this.uResolutionLoc = this.lightPassShader.getUniformLocation('uResolution');
             this.uGbufferColorLoc = this.lightPassShader.getUniformLocation('uGbufferColor');
             this.uGbufferNormalLoc = this.lightPassShader.getUniformLocation('uGbufferNormal');
+            this.uCameraLoc = this.lightPassShader.getUniformLocation('uCamera');
 
             this.lightPassShader.setConstantInt1(this.uGbufferColorLoc, 0);
             this.lightPassShader.setConstantInt1(this.uGbufferNormalLoc, 1);
@@ -215,7 +223,8 @@ var LightLayer = new Class({
                 this.lightsLocations[index] = {
                     position: this.lightPassShader.getUniformLocation('uLights[' + index + '].position'),
                     color: this.lightPassShader.getUniformLocation('uLights[' + index + '].color'),
-                    attenuation: this.lightPassShader.getUniformLocation('uLights[' + index + '].attenuation')
+                    attenuation: this.lightPassShader.getUniformLocation('uLights[' + index + '].attenuation'),
+                    radius: this.lightPassShader.getUniformLocation('uLights[' + index + '].radius')
                 };
             }
 
@@ -261,6 +270,20 @@ var LightLayer = new Class({
         }
 
         this.setOrigin(0, 0);
+    },
+
+    forEachLight: function (callback)
+    {
+        if (!callback)
+            return;
+
+        var lights = this.lights;
+        var length = lights.length;
+        
+        for (var index = 0; index < length; ++index)
+        {
+            callback(lights[index]);
+        }
     },
 
     get z()
@@ -328,7 +351,7 @@ var LightLayer = new Class({
         return sprite;
     },
 
-    addLight: function (x, y, z, r, g, b, attenuation)
+    addLight: function (x, y, z, radius, r, g, b, attenuation)
     {
         if (this.lights.length < Const.MAX_LIGHTS)
         {
@@ -336,11 +359,11 @@ var LightLayer = new Class({
             if (this.lightPool.length > 0)
             {
                 light = this.lightPool.pop();
-                light.set(x, y, z, r, g, b, attenuation);
+                light.set(x, y, z, radius, r, g, b, attenuation);
             }
             else
             {
-                light = new Light(x, y, z, r, g, b, attenuation);
+                light = new Light(x, y, z, radius, r, g, b, attenuation);
             }
             this.lights.push(light);
             return light;
@@ -368,19 +391,20 @@ var LightLayer = new Class({
             var length = lights.length;
             var gl = this.gl;
             var point = {x: 0, y: 0};
-
+            var height = renderer.height;
+            var cameraMatrix = camera.matrix;
+            shader.setConstantFloat4(this.uCameraLoc, camera.x, camera.y, camera.rotation, camera.zoom);
             shader.setConstantFloat2(this.uResolutionLoc, renderer.width, renderer.height);
             shader.setConstantFloat3(this.ambientLightColorLoc, this.ambientLightColorR, this.ambientLightColorG, this.ambientLightColorB);
-
-            TempMatrix.applyITRS(camera.x, camera.y, camera.rotation, camera.zoom, camera.zoom);
 
             for (var index = 0; index < length; ++index)
             {
                 var light = lights[index];
-                TempMatrix.transformPoint(light.x, light.y, point);
-                shader.setConstantFloat3(locations[index].position, point.x - (camera.scrollX * light.scrollFactorX), point.y - (camera.scrollY * light.scrollFactorY), light.z);
+                cameraMatrix.transformPoint(light.x, light.y, point);
+                shader.setConstantFloat3(locations[index].position, point.x - (camera.scrollX * light.scrollFactorX * camera.zoom), height - (point.y - (camera.scrollY * light.scrollFactorY) * camera.zoom), light.z);
                 shader.setConstantFloat3(locations[index].color, light.r, light.g, light.b);
                 shader.setConstantFloat1(locations[index].attenuation, light.attenuation);
+                shader.setConstantFloat1(locations[index].radius, light.radius);
             }
         }
     }

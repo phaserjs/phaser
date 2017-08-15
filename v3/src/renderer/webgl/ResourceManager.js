@@ -149,7 +149,7 @@ var ResourceManager = new Class({
             {
                 throw new Error('Vertex Shader Compilation Error. Shader name: ' + shaderName + '.\n' + error + '\n\n Shader source:\n' + shaderSources.vert);
             }
-            else if (error && error.length > 0)
+            else if (error && error.length > 10)
             {
                 console.warn('Vertex Shader Compilation Warning. Shader name: ' + shaderName + '.\n' + error + '\n\n Shader source:\n' + shaderSources.vert);
             }
@@ -165,7 +165,7 @@ var ResourceManager = new Class({
             {
                 throw new Error('Fragment Shader Compilation Error. Shader name: ' + shaderName + '.\n' + error + '\n\n Shader source:\n' + shaderSources.frag);
             }
-            else if (error && error.length > 0)
+            else if (error && error.length > 10)
             {
                 console.warn('Fragment Shader Compilation Warning. Shader name: ' + shaderName + '.\n' + error + '\n\n Shader source:\n' + shaderSources.frag);
             }
@@ -176,21 +176,33 @@ var ResourceManager = new Class({
             gl.linkProgram(program);
             gl.validateProgram(program);
 
-            error = gl.getProgramParameter(program, gl.LINK_STATUS);
+            error = gl.getProgramInfoLog(program);
+            status = gl.getProgramParameter(program, gl.LINK_STATUS);
 
-            if (error === 0)
+            if (!status && error && error.length > 0)
             {
-                error = gl.getProgramInfoLog(program);
-
                 throw new Error('Program Linking Error. Shader name: ' + shaderName + '.\n' + error);
             }
-            
-            error = gl.getProgramParameter(program, gl.VALIDATE_STATUS);
-
-            if (error === 0)
+            else if (error && error.length > 0)
             {
-                error = gl.getProgramInfoLog(program);
+                console.warn('Program Linking Warning. Shader name: ' + shaderName + '.\n' + error);
+            }
+
+            if (!error)
+            {
+
+            }
+            
+            error = gl.getProgramInfoLog(program);
+            status = gl.getProgramParameter(program, gl.VALIDATE_STATUS);
+
+            if (!status && error && error.length > 0)
+            {
                 throw new Error('Program Validation Error. Shader name: ' + shaderName + '.\n' + error);
+            }
+            else if (error && error.length > 0)
+            {
+                console.warn('Program Validation Warning. Shader name: ' + shaderName + '.\n' + error);
             }
 
             shader = new Resources.Shader(shaderName, gl, program, vertShader, fragShader);
