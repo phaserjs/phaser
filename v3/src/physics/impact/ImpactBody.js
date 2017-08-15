@@ -1,11 +1,8 @@
 
 var Class = require('../../utils/Class');
 var Components = require('./Components');
-var Image = require('../../gameobjects/image/Image');
 
-var ImpactImage = new Class({
-
-    Extends: Image,
+var ImpactBody = new Class({
 
     Mixins: [
         Components.Acceleration,
@@ -19,13 +16,9 @@ var ImpactImage = new Class({
 
     initialize:
 
-    function ImpactImage (world, x, y, texture, frame)
+    function ImpactBody (world, x, y, width, height)
     {
-        Image.call(this, world.scene, x, y, texture, frame);
-
-        this.body = world.create(x, y, this.width, this.height);
-
-        this.body.gameObject = this;
+        this.body = world.create(x, y, width, height);
 
         //  Local references to the Body properties
         this.vel = this.body.vel;
@@ -36,4 +29,4 @@ var ImpactImage = new Class({
 
 });
 
-module.exports = ImpactImage;
+module.exports = ImpactBody;

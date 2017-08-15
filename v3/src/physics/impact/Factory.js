@@ -1,4 +1,5 @@
 var Class = require('../../utils/Class');
+var ImpactBody = require('./ImpactBody');
 var ImpactImage = require('./ImpactImage');
 var ImpactSprite = require('./ImpactSprite');
 
@@ -13,9 +14,9 @@ var Factory = new Class({
         this.sys = world.scene.sys;
     },
 
-    body: function (x, y, sizeX, sizeY)
+    body: function (x, y, width, height)
     {
-        return this.world.create(x, y, sizeX, sizeY);
+        return new ImpactBody(this.world, x, y, width, height);
     },
 
     image: function (x, y, key, frame)

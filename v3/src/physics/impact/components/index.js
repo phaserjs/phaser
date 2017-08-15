@@ -7,6 +7,7 @@ module.exports = {
     Bounce: require('./Bounce'),
     CheckAgainst: require('./CheckAgainst'),
     Collides: require('./Collides'),
+    Gravity: require('./Gravity'),
     Velocity: require('./Velocity')
 
 };

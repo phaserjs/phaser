@@ -7,7 +7,14 @@ var Bounce = {
         return this;
     },
 
-    bounciness: {
+    setMinBounceVelocity: function (value)
+    {
+        this.body.minBounceVelocity = value;
+
+        return this;
+    },
+
+    bounce: {
 
         get: function ()
         {

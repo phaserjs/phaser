@@ -1,6 +1,7 @@
 //  Phaser.Physics.Impact.Body
 
 var Class = require('../../utils/Class');
+var Components = require('./Components');
 var COLLIDES = require('./COLLIDES');
 var GetVelocity = require('./GetVelocity');
 var TYPE = require('./TYPE');
@@ -112,6 +113,32 @@ var Body = new Class({
         this.gameObject = gameObject;
 
         return this;
+    },
+
+    toJSON: function ()
+    {
+        var output = {
+            name: this.name,
+            size: { x: this.size.x, y: this.size.y },
+            pos: { x: this.pos.x, y: this.pos.y },
+            vel: { x: this.vel.x, y: this.vel.y },
+            accel: { x: this.accel.x, y: this.accel.y },
+            friction: { x: this.friction.x, y: this.friction.y },
+            maxVel: { x: this.maxVel.x, y: this.maxVel.y },
+            gravityFactor: this.gravityFactor,
+            bounciness: this.bounciness,
+            minBounceVelocity: this.minBounceVelocity,
+            type: this.type,
+            checkAgainst: this.checkAgainst,
+            collides: this.collides
+        };
+
+        return output;
+    },
+
+    fromJSON: function (config)
+    {
+        //  TODO
     },
 
     check: function (other)

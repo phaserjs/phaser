@@ -13,6 +13,7 @@ var ImpactSprite = new Class({
         Components.Bounce,
         Components.CheckAgainst,
         Components.Collides,
+        Components.Gravity,
         Components.Velocity
     ],
 
