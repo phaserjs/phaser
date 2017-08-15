@@ -1,3 +1,5 @@
+var VertexBuffer = require('../../renderer/webgl/resources/VertexBuffer');
+
 var DeferredRenderer = function (renderer, lightLayer, interpolationPercentage, camera)
 {
     var spriteList = lightLayer.sprites;
@@ -5,7 +7,7 @@ var DeferredRenderer = function (renderer, lightLayer, interpolationPercentage, 
     var batch = renderer.spriteBatch;
     var gl = renderer.gl;
 
-    if (this.renderMask !== this.renderFlags)
+    if (this.renderMask !== this.renderFlags || length === 0 || (lightLayer.cameraFilter > 0 && (lightLayer.cameraFilter & camera._id)))
     {
         return;
     }
@@ -149,12 +151,12 @@ var DeferredRenderer = function (renderer, lightLayer, interpolationPercentage, 
     renderer.setTexture({texture: lightLayer.gBufferNormalTex}, 1);
 
     gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-    gl.useProgram(lightLayer.lightPassShader.program);
+    lightLayer.lightPassShader.bind();
     gl.bindBuffer(gl.ARRAY_BUFFER, lightLayer.lightPassVBO);
     gl.enableVertexAttribArray(0);
     gl.vertexAttribPointer(0, 2, gl.FLOAT, false, Float32Array.BYTES_PER_ELEMENT, 0);
     gl.drawArrays(gl.TRIANGLES, 0, 3);
-
+    VertexBuffer.SetDirty();
     batch.bind();
 };
 

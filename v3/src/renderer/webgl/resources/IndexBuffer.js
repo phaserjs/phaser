@@ -1,5 +1,5 @@
 var Class = require('../../../utils/Class');
-
+var CurrentIndexBuffer = null;
 var IndexBuffer = new Class({
 
     initialize:
@@ -14,8 +14,11 @@ var IndexBuffer = new Class({
     bind: function ()
     {
         var gl = this.gl;
-
-        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.bufferObject);
+        if (CurrentIndexBuffer !== this)
+        {
+            CurrentIndexBuffer = this;
+            gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.bufferObject);
+        }
 
         return this;
     },
@@ -24,12 +27,21 @@ var IndexBuffer = new Class({
     {
         var gl = this.gl;
 
-        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.bufferObject);
+        if (CurrentIndexBuffer !== this)
+        {
+            CurrentIndexBuffer = this;
+            gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.bufferObject);
+        }
         gl.bufferSubData(gl.ELEMENT_ARRAY_BUFFER, offset, bufferData);
 
         return this;
     }
 
 });
+
+IndexBuffer.SetDirty = function ()
+{
+    CurrentIndexBuffer = null;
+};
 
 module.exports = IndexBuffer;

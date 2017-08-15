@@ -1,5 +1,5 @@
 var Class = require('../../../utils/Class');
-
+var CurrentVertexBuffer = null;
 var VertexBuffer = new Class({
 
     initialize:
@@ -30,7 +30,11 @@ var VertexBuffer = new Class({
     {
         var gl = this.gl;
 
-        gl.bindBuffer(gl.ARRAY_BUFFER, this.bufferObject);
+        if (CurrentVertexBuffer !== this)
+        {
+            CurrentVertexBuffer = this;
+            gl.bindBuffer(gl.ARRAY_BUFFER, this.bufferObject);
+        }
         gl.bufferSubData(gl.ARRAY_BUFFER, offset, bufferData);
 
         return this;
@@ -43,29 +47,38 @@ var VertexBuffer = new Class({
         var attributes = this.attributes;
         var attributesLength = attributes.length;
 
-        gl.bindBuffer(gl.ARRAY_BUFFER, bufferObject);
-
-        for (var index = 0; index < attributesLength; ++index)
+        if (CurrentVertexBuffer !== this)
         {
-            var element = attributes[index];
-
-            if (element !== undefined && element !== null)
+            CurrentVertexBuffer = this;
+            gl.bindBuffer(gl.ARRAY_BUFFER, bufferObject);
+    
+            for (var index = 0; index < attributesLength; ++index)
             {
-                gl.enableVertexAttribArray(element.index);
-                gl.vertexAttribPointer(
-                    element.index,
-                    element.size,
-                    element.type,
-                    element.normalized,
-                    element.stride,
-                    element.offset
-                );
+                var element = attributes[index];
+    
+                if (element !== undefined && element !== null)
+                {
+                    gl.enableVertexAttribArray(element.index);
+                    gl.vertexAttribPointer(
+                        element.index,
+                        element.size,
+                        element.type,
+                        element.normalized,
+                        element.stride,
+                        element.offset
+                    );
+                }
             }
         }
 
         return this;
     }
-
+    
 });
+
+VertexBuffer.SetDirty = function () 
+{
+    CurrentVertexBuffer = null;
+};
 
 module.exports = VertexBuffer;

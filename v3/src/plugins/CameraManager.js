@@ -12,6 +12,7 @@ var CameraManager = new Class({
     function CameraManager (scene)
     {
         //  The Scene that owns this plugin
+        this.currentCameraId = 1;
         this.scene = scene;
 
         this.cameras = [];
@@ -30,6 +31,7 @@ var CameraManager = new Class({
 
         //  Set the default camera
         this.main = this.cameras[0];
+
     },
 
     /*
@@ -143,6 +145,9 @@ var CameraManager = new Class({
         {
             this.main = camera;
         }
+
+        camera._id = this.currentCameraId;
+        this.currentCameraId = this.currentCameraId << 1;
 
         return camera;
     },

@@ -10,6 +10,7 @@ var TexturedAndNormalizedTintedShader = require('../../renderer/webgl/shaders/Te
 var Const = require('./Const');
 var Matrix = require('../components/TransformMatrix');
 var TempMatrix = new Matrix();
+var VertexBuffer = require('../../renderer/webgl/resources/VertexBuffer');
 
 // http://cpetry.github.io/NormalMap-Online/
 
@@ -267,6 +268,7 @@ var LightLayer = new Class({
             }
 
             gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+            VertexBuffer.SetDirty();
         }
 
         this.setOrigin(0, 0);
@@ -392,18 +394,22 @@ var LightLayer = new Class({
             var point = {x: 0, y: 0};
             var height = renderer.height;
             var cameraMatrix = camera.matrix;
-            shader.setConstantFloat4(this.uCameraLoc, camera.x, camera.y, camera.rotation, camera.zoom);
-            shader.setConstantFloat2(this.uResolutionLoc, renderer.width, renderer.height);
-            shader.setConstantFloat3(this.ambientLightColorLoc, this.ambientLightColorR, this.ambientLightColorG, this.ambientLightColorB);
+            var gl = this.gl;
+
+            shader.bind();
+
+            gl.uniform2f(this.uResolutionLoc, renderer.width, renderer.height);
+            gl.uniform3f(this.ambientLightColorLoc, this.ambientLightColorR, this.ambientLightColorG, this.ambientLightColorB);
+            gl.uniform4f(this.uCameraLoc, camera.x, camera.y, camera.rotation, camera.zoom);
 
             for (var index = 0; index < length; ++index)
             {
                 var light = lights[index];
                 cameraMatrix.transformPoint(light.x, light.y, point);
-                shader.setConstantFloat3(locations[index].position, point.x - (camera.scrollX * light.scrollFactorX * camera.zoom), height - (point.y - (camera.scrollY * light.scrollFactorY) * camera.zoom), light.z);
-                shader.setConstantFloat3(locations[index].color, light.r, light.g, light.b);
-                shader.setConstantFloat1(locations[index].attenuation, light.attenuation);
-                shader.setConstantFloat1(locations[index].radius, light.radius);
+                gl.uniform1f(locations[index].attenuation, light.attenuation);
+                gl.uniform1f(locations[index].radius, light.radius);
+                gl.uniform3f(locations[index].position, point.x - (camera.scrollX * light.scrollFactorX * camera.zoom), height - (point.y - (camera.scrollY * light.scrollFactorY) * camera.zoom), light.z);
+                gl.uniform3f(locations[index].color, light.r, light.g, light.b);
             }
         }
     }

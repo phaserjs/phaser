@@ -61,6 +61,8 @@ var Camera = new Class({
 
         //  Follow
         this._follow = null;
+
+        this._id = 0;
     },
 
     cameraToScreen: require('./components/CameraToScreen'),
@@ -71,6 +73,7 @@ var Camera = new Class({
     destroy: require('./components/Destroy'),
     fade: require('./components/Fade'),
     flash: require('./components/Flash'),
+    ignore: require('./components/Ignore'),
     preRender: require('./components/PreRender'),
     removeBounds: require('./components/RemoveBounds'),
     setBackgroundColor: require('./components/SetBackgroundColor'),

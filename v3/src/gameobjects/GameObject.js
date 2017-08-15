@@ -23,6 +23,7 @@ var GameObject = new Class({
         //  Will Render bitmask flags for the components Visible, Alpha, Transform and Texture respectively
         this.renderMask = 15;
         this.renderFlags = 15;
+        this.cameraFilter = 0;
 
         this.input = null;
 
