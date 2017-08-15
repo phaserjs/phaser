@@ -68,7 +68,6 @@ var Config = new Class({
         //      fps: {
         //          min: 10,
         //          target: 60,
-        //          max: 120,
         //          forceSetTimeOut: false,
         //          deltaHistory: 10
         //     }
@@ -86,6 +85,15 @@ var Config = new Class({
         this.postBoot = GetValue(config, 'callbacks.postBoot', NOOP);
 
         this.useTicker = GetValue(config, 'useTicker', false);
+
+        //  Physics
+        //  physics: {
+        //      system: 'impact',
+        //      worldBounds: (TODO)
+        //      gravity: 0,
+        //      cellSize: 64,
+        //  }
+        this.physics = GetValue(config, 'physics', null);
 
         //  Default / Missing Images
         var pngPrefix = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAg';
