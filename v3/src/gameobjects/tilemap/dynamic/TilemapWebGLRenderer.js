@@ -1,6 +1,6 @@
 var TilemapWebGLRenderer = function (renderer, gameObject, interpolationPercentage, camera)
 {
-    if (this.renderMask !== this.renderFlags || (gameObject.cameraFilter > 0 && (gameObject.cameraFilter & camera._id)))
+    if (this.renderMask !== this.renderFlags || (this.cameraFilter > 0 && (this.cameraFilter & camera._id)))
     {
         return;
     }

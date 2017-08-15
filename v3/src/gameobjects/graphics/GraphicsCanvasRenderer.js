@@ -3,7 +3,7 @@ var MATH_CONST = require('../../math/const');
 
 var GraphicsCanvasRenderer = function (renderer, src, interpolationPercentage, camera, renderTargetCtx)
 {
-    if (this.renderMask !== this.renderFlags)
+    if (src.renderMask !== src.renderFlags || (src.cameraFilter > 0 && (src.cameraFilter & camera._id)))
     {
         return;
     }

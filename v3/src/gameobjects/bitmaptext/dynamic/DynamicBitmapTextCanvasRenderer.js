@@ -3,7 +3,7 @@ var DynamicBitmapTextCanvasRenderer = function (renderer, src, interpolationPerc
     var text = src.text;
     var textLength = text.length;
 
-    if (this.renderMask !== this.renderFlags || textLength === 0)
+    if (src.renderMask !== src.renderFlags || textLength === 0 || (src.cameraFilter > 0 && (src.cameraFilter & camera._id)))
     {
         return;
     }

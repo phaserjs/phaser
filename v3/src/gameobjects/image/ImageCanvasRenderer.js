@@ -1,10 +1,12 @@
 
 var ImageCanvasRenderer = function (renderer, src, interpolationPercentage, camera)
 {
-    if (this.renderMask === this.renderFlags)
+    if (src.renderMask !== src.renderFlags || (src.cameraFilter > 0 && (src.cameraFilter & camera._id)))
     {
-        renderer.drawImage(src, camera);
+        return;
     }
+
+    renderer.drawImage(src, camera);
 };
 
 module.exports = ImageCanvasRenderer;

@@ -3,7 +3,10 @@ var tempMatrix = new TransformMatrix();
 
 var BitmapTextWebGLRenderer = function (renderer, gameObject, interpolationPercentage, camera)
 {
-    if (this.renderMask !== this.renderFlags || (gameObject.cameraFilter > 0 && (gameObject.cameraFilter & camera._id)))
+    var text = src.text;
+    var textLength = text.length;
+
+    if (this.renderMask !== this.renderFlags || textLength === 0 || (this.cameraFilter > 0 && (this.cameraFilter & camera._id)))
     {
         return;
     }
