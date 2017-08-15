@@ -9,10 +9,11 @@ var GameObjectCreator = require('../plugins/GameObjectCreator');
 var GameObjectFactory = require('../plugins/GameObjectFactory');
 var InputManager = require('../plugins/InputManager');
 var Loader = require('../plugins/Loader');
+var PhysicsManager = require('../plugins/PhysicsManager');
 var PoolManager = require('../plugins/PoolManager');
+var SceneManager = require('../plugins/SceneManager');
 var Settings = require('./Settings');
 var StableSort = require('../utils/array/StableSort');
-var SceneManager = require('../plugins/SceneManager');
 var TweenManager = require('../tween/TweenManager');
 var UpdateList = require('../plugins/UpdateList');
 
@@ -30,7 +31,6 @@ var Systems = new Class({
         this.sortChildrenFlag = false;
 
         //  Set by the GlobalSceneManager
-        this.mask = null;
         this.canvas;
         this.context;
 
@@ -46,19 +46,18 @@ var Systems = new Class({
         //  Reference to Scene specific managers (Factory, Tweens, Loader, Physics, etc)
         this.add;
         this.cameras;
+        this.data;
+        this.displayList;
         this.events;
         this.inputManager;
         this.load;
         this.make;
+        this.physicsManager;
         this.pool;
         this.sceneManager;
         this.time;
         this.tweens;
-
-        //  Scene properties
         this.updateList;
-        this.displayList;
-        this.data;
     },
 
     init: function (game)
@@ -74,27 +73,27 @@ var Systems = new Class({
         this.registry = game.registry;
         this.textures = game.textures;
 
-        //  Scene specific properties (transform, data, children, etc)
-
-        this.inputManager = new InputManager(scene, game);
-        this.updateList = new UpdateList(scene);
-        this.displayList = new DisplayList(scene);
-        this.data = new Data(scene);
-
         //  Scene specific managers (Factory, Tweens, Loader, Physics, etc)
 
         this.add = new GameObjectFactory(scene);
         this.cameras = new CameraManager(scene);
+        this.data = new Data(scene);
+        this.displayList = new DisplayList(scene);
         this.events = new EventDispatcher();
+        this.inputManager = new InputManager(scene);
         this.load = new Loader(scene);
         this.make = new GameObjectCreator(scene);
+        this.physicsManager = new PhysicsManager(scene);
         this.pool = new PoolManager(scene);
-        this.sceneManager = new SceneManager(scene, game);
+        this.sceneManager = new SceneManager(scene);
         this.time = new Clock(scene);
         this.tweens = new TweenManager(scene);
+        this.updateList = new UpdateList(scene);
 
         //  Sometimes the managers need access to a system created after them
+        this.add.boot();
         this.inputManager.boot();
+        this.physicsManager.boot();
 
         this.inject();
     },
@@ -129,6 +128,8 @@ var Systems = new Class({
         this.time.begin(time);
         this.tweens.begin(time);
         this.inputManager.begin(time);
+
+        this.physicsManager.update(time, delta);
 
         this.pool.update(time, delta);
         this.updateList.update(time, delta);
