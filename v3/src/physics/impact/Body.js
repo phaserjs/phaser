@@ -1,10 +1,10 @@
 //  Phaser.Physics.Impact.Body
 
 var Class = require('../../utils/Class');
-var GetVelocity = require('./GetVelocity');
-var UpdateMotion = require('./UpdateMotion');
 var COLLIDES = require('./COLLIDES');
+var GetVelocity = require('./GetVelocity');
 var TYPE = require('./TYPE');
+var UpdateMotion = require('./UpdateMotion');
 
 /**
 * An Impact.js compatible physics body.
@@ -18,13 +18,16 @@ var Body = new Class({
     function Body (world, x, y, sx, sy)
     {
         if (sx === undefined) { sx = 16; }
-        if (sy === undefined) { sy = 16; }
+        if (sy === undefined) { sy = sx; }
 
         this.world = world;
+
+        this.gameObject = null;
 
         this.enabled = true;
 
         this.parent;
+
         this.name = '';
 
         this.size = { x: sx, y: sy };
@@ -34,8 +37,10 @@ var Body = new Class({
         this.accel = { x: 0, y: 0 };
         this.friction = { x: 0, y: 0 };
         this.maxVel = { x: 100, y: 100 };
-        this.gravityFactor = 1;
+
         this.standing = false;
+
+        this.gravityFactor = 1;
         this.bounciness = 0;
         this.minBounceVelocity = 40;
 
@@ -66,12 +71,6 @@ var Body = new Class({
         this.vel.x = GetVelocity(delta, this.vel.x, this.accel.x, this.friction.x, this.maxVel.x);
         this.vel.y = GetVelocity(delta, this.vel.y, this.accel.y, this.friction.y, this.maxVel.y);
         
-        if (window.dumpit)
-        {
-            console.log('');
-            console.log('UPDATE: pos', this.pos.x, this.pos.y, 'vel', this.vel.x, this.vel.y);
-        }
-
         var mx = this.vel.x * delta;
         var my = this.vel.y * delta;
 
@@ -82,9 +81,9 @@ var Body = new Class({
             UpdateMotion(this, res);
         }
 
-        if (window.dumpit)
+        if (this.gameObject)
         {
-            console.log('END res', res.pos.x, res.pos.y);
+            this.gameObject.setPosition(this.pos.x, this.pos.y);
         }
     },
 
@@ -108,140 +107,9 @@ var Body = new Class({
         );
     },
 
-    setBounce: function (value)
+    setGameObject: function (gameObject)
     {
-        this.bounciness = value;
-
-        return this;
-    },
-
-    setVelocityX: function (x)
-    {
-        this.vel.x = x;
-
-        return this;
-    },
-
-    setVelocityY: function (y)
-    {
-        this.vel.y = y;
-
-        return this;
-    },
-
-    setVelocity: function (x, y)
-    {
-        this.vel.x = x;
-        this.vel.y = y;
-
-        return this;
-    },
-
-    setMaxVelocity: function (x, y)
-    {
-        if (y === undefined) { y = x; }
-
-        this.maxVel.x = x;
-        this.maxVel.y = y;
-
-        return this;
-    },
-
-    setAccelerationX: function (x)
-    {
-        this.accel.x = x;
-
-        return this;
-    },
-
-    setAccelerationY: function (y)
-    {
-        this.accel.y = y;
-
-        return this;
-    },
-
-    setAcceleration: function (x, y)
-    {
-        this.accel.x = x;
-        this.accel.y = y;
-
-        return this;
-    },
-
-    setTypeNone: function ()
-    {
-        this.type = TYPE.NONE;
-
-        return this;
-    },
-
-    setTypeA: function ()
-    {
-        this.type = TYPE.A;
-
-        return this;
-    },
-
-    setTypeB: function ()
-    {
-        this.type = TYPE.B;
-
-        return this;
-    },
-
-    setCheckAgainstNone: function ()
-    {
-        this.checkAgainst = TYPE.NONE;
-
-        return this;
-    },
-
-    setCheckAgainstA: function ()
-    {
-        this.checkAgainst = TYPE.A;
-
-        return this;
-    },
-
-    setCheckAgainstB: function ()
-    {
-        this.checkAgainst = TYPE.B;
-
-        return this;
-    },
-
-    setCollidesNever: function ()
-    {
-        this.collides = COLLIDES.NEVER;
-
-        return this;
-    },
-
-    setLite: function ()
-    {
-        this.collides = COLLIDES.LITE;
-
-        return this;
-    },
-
-    setPassive: function ()
-    {
-        this.collides = COLLIDES.PASSIVE;
-
-        return this;
-    },
-
-    setActive: function ()
-    {
-        this.collides = COLLIDES.ACTIVE;
-
-        return this;
-    },
-
-    setFixed: function ()
-    {
-        this.collides = COLLIDES.FIXED;
+        this.gameObject = gameObject;
 
         return this;
     },
