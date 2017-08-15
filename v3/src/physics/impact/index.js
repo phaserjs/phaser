@@ -18,6 +18,7 @@ module.exports = {
     COLLIDES: require('./COLLIDES'),
     CollisionMap: require('./CollisionMap'),
     TYPE: require('./TYPE'),
-    World: require('./World')
+    World: require('./World'),
+    Factory: require('./Factory')
   
 };

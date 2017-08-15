@@ -1,21 +1,23 @@
 //  Phaser.Physics.Impact.World
 
-var Class = require('../../utils/Class');
-var Set = require('../../structs/Set');
 var Body = require('./Body');
-var Solver = require('./Solver');
-var CollisionMap = require('./CollisionMap');
+var Class = require('../../utils/Class');
 var COLLIDES = require('./COLLIDES');
+var CollisionMap = require('./CollisionMap');
+var Set = require('../../structs/Set');
+var Solver = require('./Solver');
 var TYPE = require('./TYPE');
 
 var World = new Class({
 
     initialize:
 
-    function World (gravity, cellSize)
+    function World (scene, gravity, cellSize)
     {
         if (gravity === undefined) { gravity = 0; }
         if (cellSize === undefined) { cellSize = 64; }
+
+        this.scene = scene;
 
         this.bodies = new Set();
 
@@ -52,22 +54,27 @@ var World = new Class({
 
         //  Update all bodies
 
-        this.bodies.iterate(function (body)
+        var i;
+        var bodies = this.bodies.entries;
+        var len = bodies.length;
+        var hash = {};
+        var size = this.cellSize;
+
+        //  Update all active bodies
+
+        for (i = 0; i < len; i++)
         {
+            var body = bodies[i];
+
             if (body.enabled)
             {
                 body.update(delta);
             }
-        });
+        }
 
-        //  Run collision against them all
+        //  Run collision against them all now they're in the new positions
 
-        var hash = {};
-        var size = this.cellSize;
-
-        var bodies = this.bodies.entries;
-
-        for (var i = 0; i < bodies.length; i++)
+        for (i = 0; i < len; i++)
         {
             var body = bodies[i];
 
@@ -85,9 +92,8 @@ var World = new Class({
     //  Check the body against the spatial hash
     checkHash: function (body, hash, size)
     {
-        // console.log('checkHash');
-
         var checked = {};
+
         var xmin = Math.floor(body.pos.x / size);
         var ymin = Math.floor(body.pos.y / size);
         var xmax = Math.floor((body.pos.x + body.size.x) / size) + 1;
