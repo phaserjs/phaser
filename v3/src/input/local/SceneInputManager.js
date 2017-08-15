@@ -9,13 +9,13 @@ var SceneInputManager = new Class({
 
     initialize:
 
-    function SceneInputManager (scene, game)
+    function SceneInputManager (scene)
     {
         //  The Scene that owns this plugin
         this.scene = scene;
 
         //  GlobalInputManager
-        this.manager = game.input;
+        this.manager = scene.sys.game.input;
 
         //  A reference to this.scene.sys.displayList (set in boot)
         this.displayList;
