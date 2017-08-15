@@ -93,7 +93,8 @@ var ForwardRenderer = function (renderer, lightLayer, interpolationPercentage, c
 
     
             if (renderer.currentTexture[0] !== frame.texture.source[frame.sourceIndex].glTexture ||
-                renderer.currentTexture[1] !== spriteNormalPair.normalTextureRef.source[spriteNormalPair.spriteRef.frame.sourceIndex].glTexture)
+                renderer.currentTexture[1] !== spriteNormalPair.normalTextureRef.source[spriteNormalPair.spriteRef.frame.sourceIndex].glTexture ||
+                batch.shouldFlush())
             {
                 batch.flush(lightLayer.passShader, lightLayer.renderTarget);
                 renderer.setTexture(frame.texture.source[frame.sourceIndex].glTexture, 0);

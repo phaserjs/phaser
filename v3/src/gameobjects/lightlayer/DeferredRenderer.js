@@ -97,7 +97,8 @@ var DeferredRenderer = function (renderer, lightLayer, interpolationPercentage, 
 
     
             if (renderer.currentTexture[0] !== frame.texture.source[frame.sourceIndex].glTexture ||
-                renderer.currentTexture[1] !== spriteNormalPair.normalTextureRef.source[spriteNormalPair.spriteRef.frame.sourceIndex].glTexture)
+                renderer.currentTexture[1] !== spriteNormalPair.normalTextureRef.source[spriteNormalPair.spriteRef.frame.sourceIndex].glTexture ||
+                batch.shouldFlush())
             {
                 batch.flush(lightLayer.gBufferShaderPass, lightLayer.renderTarget);
                 renderer.setTexture(frame.texture.source[frame.sourceIndex].glTexture, 0);
