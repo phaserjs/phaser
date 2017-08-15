@@ -8,9 +8,9 @@ var InputManager = new Class({
 
     initialize:
 
-    function InputManager (scene, game)
+    function InputManager (scene)
     {
-        SceneInputManager.call(this, scene, game);
+        SceneInputManager.call(this, scene);
     },
 
     pointScreenToWorldHitTest: function (gameObjects, x, y, camera)

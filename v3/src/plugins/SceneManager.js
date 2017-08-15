@@ -5,7 +5,7 @@ var SceneManager = new Class({
 
     initialize:
 
-    function SceneManager (scene, game)
+    function SceneManager (scene)
     {
         //  The Scene that owns this plugin
         this.scene = scene;
@@ -15,7 +15,7 @@ var SceneManager = new Class({
         this.key = scene.sys.settings.key;
 
         //  GlobalSceneManager
-        this.manager = game.scene;
+        this.manager = scene.sys.game.scene;
 
         //  Private
         this._queue = [];

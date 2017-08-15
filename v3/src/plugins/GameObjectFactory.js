@@ -26,8 +26,14 @@ var GameObjectFactory = new Class({
     {
         this.scene = scene;
 
-        this.displayList = scene.sys.displayList;
-        this.updateList = scene.sys.updateList;
+        this.displayList;
+        this.updateList;
+    },
+
+    boot: function ()
+    {
+        this.displayList = this.scene.sys.displayList;
+        this.updateList = this.scene.sys.updateList;
     },
 
     existing: function (child)
