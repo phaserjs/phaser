@@ -1,5 +1,5 @@
 var Class = require('../../../utils/Class');
-
+var CurrentShader = null;
 var Shader = new Class({
 
     initialize:
@@ -31,7 +31,7 @@ var Shader = new Class({
 
     setConstantFloat1: function (location, x)
     {
-        this.gl.useProgram(this.program);
+        this.bind();
         this.gl.uniform1f(location, x);
 
         return this;
@@ -39,7 +39,7 @@ var Shader = new Class({
     
     setConstantFloat2: function (location, x, y)
     {
-        this.gl.useProgram(this.program);
+        this.bind();
         this.gl.uniform2f(location, x, y);
 
         return this;
@@ -47,7 +47,7 @@ var Shader = new Class({
     
     setConstantFloat3: function (location, x, y, z)
     {
-        this.gl.useProgram(this.program);
+        this.bind();
         this.gl.uniform3f(location, x, y, z);
 
         return this;
@@ -55,7 +55,7 @@ var Shader = new Class({
     
     setConstantFloat4: function (location, x, y, z, w)
     {
-        this.gl.useProgram(this.program);
+        this.bind();
         this.gl.uniform4f(location, x, y, z, w);
 
         return this;
@@ -63,7 +63,7 @@ var Shader = new Class({
     
     setConstantInt1: function (location, x)
     {
-        this.gl.useProgram(this.program);
+        this.bind();
         this.gl.uniform1i(location, x);
 
         return this;
@@ -71,7 +71,7 @@ var Shader = new Class({
     
     setConstantInt2: function (location, x, y)
     {
-        this.gl.useProgram(this.program);
+        this.bind();
         this.gl.uniform2i(location, x, y);
 
         return this;
@@ -79,7 +79,7 @@ var Shader = new Class({
     
     setConstantInt3: function (location, x, y, z)
     {
-        this.gl.useProgram(this.program);
+        this.bind();
         this.gl.uniform3i(location, x, y, z);
 
         return this;
@@ -87,7 +87,7 @@ var Shader = new Class({
     
     setConstantInt4: function (location, x, y, z, w)
     {
-        this.gl.useProgram(this.program);
+        this.bind();
         this.gl.uniform4i(location, x, y, z, w);
 
         return this;
@@ -95,7 +95,7 @@ var Shader = new Class({
     
     setConstantMatrix2x2: function (location, floatArray)
     {
-        this.gl.useProgram(this.program);
+        this.bind();
         this.gl.uniformMatrix2fv(location, false, floatArray);
 
         return this;
@@ -103,7 +103,7 @@ var Shader = new Class({
     
     setConstantMatrix3x3: function (location, floatArray)
     {
-        this.gl.useProgram(this.program);
+        this.bind();
         this.gl.uniformMatrix3fv(location, false, floatArray);
 
         return this;
@@ -111,7 +111,7 @@ var Shader = new Class({
     
     setConstantMatrix4x4: function (location, floatArray)
     {
-        this.gl.useProgram(this.program);
+        this.bind();
         this.gl.uniformMatrix4fv(location, false, floatArray);
 
         return this;
@@ -119,11 +119,20 @@ var Shader = new Class({
 
     bind: function ()
     {
-        this.gl.useProgram(this.program);
+        if (CurrentShader !== this)
+        {
+            CurrentShader = this;
+            this.gl.useProgram(this.program);
+        }
 
         return this;
     }
 
 });
+
+Shader.SetDirty = function ()
+{
+    CurrentShader = null;
+};
 
 module.exports = Shader;

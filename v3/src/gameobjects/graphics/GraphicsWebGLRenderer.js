@@ -27,7 +27,7 @@ var Path = function (x, y, width, rgb, alpha)
 
 var GraphicsWebGLRenderer = function (renderer, gameObject, interpolationPercentage, camera, forceRenderTarget)
 {
-    if (this.renderMask !== this.renderFlags)
+    if (this.renderMask !== this.renderFlags || (gameObject.cameraFilter > 0 && (gameObject.cameraFilter & camera._id)))
     {
         return;
     }

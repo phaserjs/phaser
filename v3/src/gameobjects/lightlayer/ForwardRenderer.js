@@ -4,7 +4,7 @@ var ForwardRenderer = function (renderer, lightLayer, interpolationPercentage, c
     var length = spriteList.length;
     var batch = renderer.spriteBatch;
 
-    if (this.renderMask !== this.renderFlags || length === 0)
+    if (this.renderMask !== this.renderFlags || length === 0  || (lightLayer.cameraFilter > 0 && (lightLayer.cameraFilter & camera._id)))
     {
         return;
     }

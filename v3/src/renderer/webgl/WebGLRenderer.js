@@ -130,6 +130,7 @@ var WebGLRenderer = new Class({
         this.tileBatch = this.addRenderer(new TileBatch(this.game, gl, this));
         this.tilemapRenderer = this.addRenderer(new TilemapRenderer(this.game, gl, this));
         this.currentRenderer = this.spriteBatch;
+        this.currentVertexBuffer = null;
         this.setBlendMode(0);
         this.resize(this.width, this.height);
     },
