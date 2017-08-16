@@ -150,6 +150,142 @@ var World = new Class({
             // console.log('solve');
             Solver(this, bodyA, bodyB);
         }
+    },
+
+    //////////////
+    //  Helpers //
+    //////////////
+
+    setCollidesNever: function (bodies)
+    {
+        for (var i = 0; i < bodies.length; i++)
+        {
+            bodies[i].collides = COLLIDES.NEVER;
+        }
+
+        return this;
+    },
+
+    setLite: function (bodies)
+    {
+        for (var i = 0; i < bodies.length; i++)
+        {
+            bodies[i].collides = COLLIDES.LITE;
+        }
+
+        return this;
+    },
+
+    setPassive: function (bodies)
+    {
+        for (var i = 0; i < bodies.length; i++)
+        {
+            bodies[i].collides = COLLIDES.PASSIVE;
+        }
+
+        return this;
+    },
+
+    setActive: function (bodies)
+    {
+        for (var i = 0; i < bodies.length; i++)
+        {
+            bodies[i].collides = COLLIDES.ACTIVE;
+        }
+
+        return this;
+    },
+
+    setFixed: function (bodies)
+    {
+        for (var i = 0; i < bodies.length; i++)
+        {
+            bodies[i].collides = COLLIDES.FIXED;
+        }
+
+        return this;
+    },
+
+    setTypeNone: function (bodies)
+    {
+        for (var i = 0; i < bodies.length; i++)
+        {
+            bodies[i].type = TYPE.NONE;
+        }
+
+        return this;
+    },
+
+    setTypeA: function (bodies)
+    {
+        for (var i = 0; i < bodies.length; i++)
+        {
+            bodies[i].type = TYPE.A;
+        }
+
+        return this;
+    },
+
+    setTypeB: function (bodies)
+    {
+        for (var i = 0; i < bodies.length; i++)
+        {
+            bodies[i].type = TYPE.B;
+        }
+
+        return this;
+    },
+
+    setAvsB: function (bodies)
+    {
+        for (var i = 0; i < bodies.length; i++)
+        {
+            bodies[i].type = TYPE.A;
+            bodies[i].checkAgainst = TYPE.B;
+        }
+
+        return this;
+    },
+
+    setBvsA: function (bodies)
+    {
+        for (var i = 0; i < bodies.length; i++)
+        {
+            bodies[i].type = TYPE.B;
+            bodies[i].checkAgainst = TYPE.A;
+        }
+
+        return this;
+    },
+
+    setCheckAgainstNone: function (bodies)
+    {
+        for (var i = 0; i < bodies.length; i++)
+        {
+            bodies[i].checkAgainst = TYPE.NONE;
+        }
+
+        return this;
+    },
+
+    setCheckAgainstA: function (bodies)
+    {
+        for (var i = 0; i < bodies.length; i++)
+        {
+            bodies[i].checkAgainst = TYPE.A;
+        }
+
+        return this;
+    },
+
+    setCheckAgainstB: function (bodies)
+    {
+        for (var i = 0; i < bodies.length; i++)
+        {
+            bodies[i].checkAgainst = TYPE.B;
+        }
+
+        return this;
     }
 
 });

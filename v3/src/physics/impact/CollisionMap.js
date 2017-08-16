@@ -110,16 +110,16 @@ var CollisionMap = new Class({
                 prevTileX = -1;
             }
 
-            if (window.debugslopes)
-            {
-                console.group('VX');
-                console.log('pxOffsetX', pxOffsetX);
-                console.log('tileOffsetX', tileOffsetX);
-                console.log('firstTileY', firstTileY);
-                console.log('lastTileY', lastTileY);
-                console.log('tileX', tileX);
-                console.log('prevTileX', prevTileX);
-            }
+            // if (window.debugslopes)
+            // {
+            //     console.group('VX');
+            //     console.log('pxOffsetX', pxOffsetX);
+            //     console.log('tileOffsetX', tileOffsetX);
+            //     console.log('firstTileY', firstTileY);
+            //     console.log('lastTileY', lastTileY);
+            //     console.log('tileX', tileX);
+            //     console.log('prevTileX', prevTileX);
+            // }
             
             if (tileX >= 0 && tileX < mapWidth)
             {
@@ -163,32 +163,26 @@ var CollisionMap = new Class({
                         x = res.pos.x;
                         rvx = 0;
 
-                        if (window.debugslopes)
-                        {
-                            console.log('>>> Hit solid tile <<<');
+                        // if (window.debugslopes)
+                        // {
+                        //     console.log('>>> Hit solid tile <<<');
 
-                            console.log('tileX', tileX);
-                            console.log('tilesize', tilesize);
-                            console.log('pxOffsetX', pxOffsetX);
-                            console.log('tileOffsetX', tileOffsetX);
-                            console.log('=', res.pos.x);
-                        }
-
-                        //  9 * 32 = 288
-                        //  - 16 = 272
-                        //  + 0 = 272
-
-                        //  Where does the 16 come from?
+                        //     console.log('tileX', tileX);
+                        //     console.log('tilesize', tilesize);
+                        //     console.log('pxOffsetX', pxOffsetX);
+                        //     console.log('tileOffsetX', tileOffsetX);
+                        //     console.log('=', res.pos.x);
+                        // }
 
                         break;
                     }
                 }
             }
 
-            if (window.debugslopes)
-            {
-                console.groupEnd();
-            }
+            // if (window.debugslopes)
+            // {
+            //     console.groupEnd();
+            // }
         }
         
         //  Vertical
