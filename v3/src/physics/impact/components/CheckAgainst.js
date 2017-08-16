@@ -2,6 +2,20 @@ var TYPE = require('../TYPE');
 
 var CheckAgainst = {
 
+    setAvsB: function ()
+    {
+        this.setTypeA();
+
+        return this.setCheckAgainstB();
+    },
+
+    setBvsA: function ()
+    {
+        this.setTypeB();
+
+        return this.setCheckAgainstA();
+    },
+
     setCheckAgainstNone: function ()
     {
         this.body.checkAgainst = TYPE.NONE;
