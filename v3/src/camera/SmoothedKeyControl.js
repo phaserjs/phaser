@@ -1,14 +1,19 @@
 var Class = require('../utils/Class');
 var GetValue = require('../utils/object/GetValue');
 
-//  var camControl = new SmoothedKeyControl({
-//      camera: this.cameras.main,
-//      left: cursors.left,
-//      right: cursors.right,
-//      acceleration: float || { x: 0, y: 0 }
-//      drag: float || { x: 0, y: 0 }
-//      maxSpeed: float || { x: 0, y: 0 }
-//  })
+// var controlConfig = {
+//     camera: this.cameras.main,
+//     left: cursors.left,
+//     right: cursors.right,
+//     up: cursors.up,
+//     down: cursors.down,
+//     zoomIn: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Q),
+//     zoomOut: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E),
+//     zoomSpeed: 0.02,
+//     acceleration: 0.06,
+//     drag: 0.0005,
+//     maxSpeed: 1.0
+// };
 
 var SmoothedKeyControl = new Class({
 
@@ -22,6 +27,10 @@ var SmoothedKeyControl = new Class({
         this.right = GetValue(config, 'right', null);
         this.up = GetValue(config, 'up', null);
         this.down = GetValue(config, 'down', null);
+
+        this.zoomIn = GetValue(config, 'zoomIn', null);
+        this.zoomOut = GetValue(config, 'zoomOut', null);
+        this.zoomSpeed = GetValue(config, 'zoomSpeed', 0.01);
 
         var accel = GetValue(config, 'acceleration', null);
 
@@ -64,6 +73,7 @@ var SmoothedKeyControl = new Class({
 
         this._speedX = 0;
         this._speedY = 0;
+        this._zoom = 0;
 
         this.active = (this.camera !== null);
     },
@@ -131,7 +141,7 @@ var SmoothedKeyControl = new Class({
 
         //  Check for keys
 
-        if (this.up.isDown)
+        if (this.up && this.up.isDown)
         {
             this._speedY += this.accelY;
 
@@ -140,7 +150,7 @@ var SmoothedKeyControl = new Class({
                 this._speedY = this.maxSpeedY;
             }
         }
-        else if (this.down.isDown)
+        else if (this.down && this.down.isDown)
         {
             this._speedY -= this.accelY;
 
@@ -150,7 +160,7 @@ var SmoothedKeyControl = new Class({
             }
         }
 
-        if (this.left.isDown)
+        if (this.left && this.left.isDown)
         {
             this._speedX += this.accelX;
 
@@ -159,7 +169,7 @@ var SmoothedKeyControl = new Class({
                 this._speedX = this.maxSpeedX;
             }
         }
-        else if (this.right.isDown)
+        else if (this.right && this.right.isDown)
         {
             this._speedX -= this.accelX;
 
@@ -167,6 +177,21 @@ var SmoothedKeyControl = new Class({
             {
                 this._speedX = -this.maxSpeedX;
             }
+        }
+
+        //  Camera zoom
+
+        if (this.zoomIn && this.zoomIn.isDown)
+        {
+            this._zoom = -this.zoomSpeed;
+        }
+        else if (this.zoomOut && this.zoomOut.isDown)
+        {
+            this._zoom = this.zoomSpeed;
+        }
+        else
+        {
+            this._zoom = 0;
         }
 
         //  Apply to Camera
@@ -180,6 +205,16 @@ var SmoothedKeyControl = new Class({
         {
             cam.scrollY -= ((this._speedY * delta) | 0);
         }
+
+        if (this._zoom !== 0)
+        {
+            cam.zoom += this._zoom;
+
+            if (cam.zoom < 0.1)
+            {
+                cam.zoom = 0.1;
+            }
+        }
     },
 
     destroy: function ()
@@ -190,6 +225,9 @@ var SmoothedKeyControl = new Class({
         this.right = null;
         this.up = null;
         this.down = null;
+
+        this.zoomIn = null;
+        this.zoomOut = null;
     }
 
 });

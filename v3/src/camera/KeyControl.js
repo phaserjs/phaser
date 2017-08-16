@@ -21,6 +21,10 @@ var KeyControl = new Class({
         this.up = GetValue(config, 'up', null);
         this.down = GetValue(config, 'down', null);
 
+        this.zoomIn = GetValue(config, 'zoomIn', null);
+        this.zoomOut = GetValue(config, 'zoomOut', null);
+        this.zoomSpeed = GetValue(config, 'zoomSpeed', 0.01);
+
         var speed = GetValue(config, 'speed', null);
 
         if (typeof speed === 'number')
@@ -33,6 +37,8 @@ var KeyControl = new Class({
             this.speedX = GetValue(config, 'speed.x', 0);
             this.speedY = GetValue(config, 'speed.y', 0);
         }
+
+        this._zoom = 0;
 
         this.active = (this.camera !== null);
     },
@@ -75,6 +81,22 @@ var KeyControl = new Class({
         {
             cam.scrollX += ((this.speedX * delta) | 0);
         }
+
+        //  Camera zoom
+
+        if (this.zoomIn && this.zoomIn.isDown)
+        {
+            cam.zoom -= this.zoomSpeed;
+
+            if (cam.zoom < 0.1)
+            {
+                cam.zoom = 0.1;
+            }
+        }
+        else if (this.zoomOut && this.zoomOut.isDown)
+        {
+            cam.zoom += this.zoomSpeed;
+        }
     },
 
     destroy: function ()
@@ -85,6 +107,9 @@ var KeyControl = new Class({
         this.right = null;
         this.up = null;
         this.down = null;
+
+        this.zoomIn = null;
+        this.zoomOut = null;
     }
 
 });

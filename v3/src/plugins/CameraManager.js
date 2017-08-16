@@ -31,7 +31,6 @@ var CameraManager = new Class({
 
         //  Set the default camera
         this.main = this.cameras[0];
-
     },
 
     /*
