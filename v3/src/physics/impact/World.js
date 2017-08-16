@@ -40,6 +40,8 @@ var World = new Class({
         this.debugGraphic;
 
         this.defaults = {
+            debugShowBody: GetFastValue(config, 'debugShowBody', true),
+            debugShowVelocity: GetFastValue(config, 'debugShowVelocity', true),
             bodyDebugColor: GetFastValue(config, 'debugBodyColor', 0xff00ff),
             velocityDebugColor: GetFastValue(config, 'debugVelocityColor', 0x00ff00),
             maxVelocityX: GetFastValue(config, 'maxVelocityX', 100),

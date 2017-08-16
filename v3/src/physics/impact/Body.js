@@ -55,8 +55,8 @@ var Body = new Class({
         this.checkAgainst = TYPE.NONE;
         this.collides = COLLIDES.NEVER;
 
-        this.debugShowBody = true;
-        this.debugShowVelocity = true;
+        this.debugShowBody = world.defaults.debugShowBody;
+        this.debugShowVelocity = world.defaults.debugShowVelocity;
         this.debugBodyColor = world.defaults.bodyDebugColor;
     
         //  min 44 deg, max 136 deg
