@@ -1,7 +1,6 @@
 //  Phaser.Physics.Impact.Body
 
 var Class = require('../../utils/Class');
-var Components = require('./Components');
 var COLLIDES = require('./COLLIDES');
 var GetVelocity = require('./GetVelocity');
 var TYPE = require('./TYPE');
@@ -28,6 +27,8 @@ var Body = new Class({
         this.enabled = true;
 
         this.parent;
+
+        this.id = world.getNextID();
 
         this.name = '';
 

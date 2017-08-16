@@ -29,6 +29,13 @@ var World = new Class({
         this.collisionMap = new CollisionMap();
 
         this.delta = 0;
+
+        this._lastId = 0;
+    },
+
+    getNextID: function ()
+    {
+        return this._lastId++;
     },
 
     create: function (x, y, sizeX, sizeY)
@@ -55,6 +62,7 @@ var World = new Class({
         //  Update all bodies
 
         var i;
+        var body;
         var bodies = this.bodies.entries;
         var len = bodies.length;
         var hash = {};
@@ -64,7 +72,7 @@ var World = new Class({
 
         for (i = 0; i < len; i++)
         {
-            var body = bodies[i];
+            body = bodies[i];
 
             if (body.enabled)
             {
@@ -76,13 +84,9 @@ var World = new Class({
 
         for (i = 0; i < len; i++)
         {
-            var body = bodies[i];
+            body = bodies[i];
 
-            if (body.skipHash())
-            {
-                continue;
-            }
-            else
+            if (!body.skipHash())
             {
                 this.checkHash(body, hash, size);
             }
@@ -147,7 +151,6 @@ var World = new Class({
         
         if (bodyA.collides && bodyB.collides && bodyA.collides + bodyB.collides > COLLIDES.ACTIVE)
         {
-            // console.log('solve');
             Solver(this, bodyA, bodyB);
         }
     },

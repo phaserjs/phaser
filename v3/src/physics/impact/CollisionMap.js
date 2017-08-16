@@ -26,15 +26,12 @@ var CollisionMap = new Class({
         // Set up the trace-result
         var res = {
             collision: { x: false, y: false, slope: false },
-            pos: { x: x, y: y },
+            pos: { x: x + vx, y: y + vy },
             tile: { x: 0, y: 0 }
         };
 
         if (!this.data)
         {
-            res.pos.x += vx;
-            res.pos.y += vy;
-
             return res;
         }
         
@@ -80,13 +77,13 @@ var CollisionMap = new Class({
 
     step: function (res, x, y, vx, vy, width, height, rvx, rvy, step)
     {
-        res.pos.x += vx;
-        res.pos.y += vy;
+        // res.pos.x += vx;
+        // res.pos.y += vy;
 
-        if (window.dumpit)
-        {
-            console.log('STEP', res.pos.x, res.pos.y, 'VX', vx, 'VY', vy, 'step', step);
-        }
+        // if (window.dumpit)
+        // {
+        //     console.log('STEP', res.pos.x, res.pos.y, 'VX', vx, 'VY', vy, 'step', step);
+        // }
         
         var t = 0;
         var tilesize = this.tilesize;
@@ -144,10 +141,10 @@ var CollisionMap = new Class({
                     
                     t = this.data[tileY][tileX];
 
-                        if (window.debugslopes)
-                        {
-                            console.log('Tile at', tileX, 'x', tileY, '=', t);
-                        }
+                        // if (window.debugslopes)
+                        // {
+                        //     console.log('Tile at', tileX, 'x', tileY, '=', t);
+                        // }
 
                     if (t === 1 || t > this.lastSlope || (t > 1 && this.checkDef(res, t, x, y, rvx, rvy, width, height, tileX, tileY)))
                     {
