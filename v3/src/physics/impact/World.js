@@ -19,6 +19,8 @@ var World = new Class({
 
         this.scene = scene;
 
+        this.events = scene.sys.events;
+
         this.bodies = new Set();
 
         this.gravity = gravity;
@@ -29,6 +31,13 @@ var World = new Class({
         this.collisionMap = new CollisionMap();
 
         this.delta = 0;
+
+        this.timeScale = 1;
+
+        //  Impacts maximum time step is 20 fps.
+        this.maxStep = 0.05;
+
+        this.enabled = true;
 
         this._lastId = 0;
     },
@@ -47,19 +56,31 @@ var World = new Class({
         return body;
     },
 
+    pause: function ()
+    {
+        this.enabled = false;
+
+        return this;
+    },
+
+    resume: function ()
+    {
+        this.enabled = true;
+
+        return this;
+    },
+
     update: function (time, delta)
     {
-        if (this.bodies.size === 0)
+        if (!this.enabled || this.bodies.size === 0)
         {
             return;
         }
 
-        //  Impact uses a divided delta value
-        delta /= 1000;
+        //  Impact uses a divided delta value that is clamped to the maxStep (20fps) maximum
+        this.delta = Math.min(delta / 1000, this.maxStep) * this.timeScale;
 
-        this.delta = delta;
-
-        //  Update all bodies
+        //  Update all active bodies
 
         var i;
         var body;
@@ -68,19 +89,17 @@ var World = new Class({
         var hash = {};
         var size = this.cellSize;
 
-        //  Update all active bodies
-
         for (i = 0; i < len; i++)
         {
             body = bodies[i];
 
             if (body.enabled)
             {
-                body.update(delta);
+                body.update(this.delta);
             }
         }
 
-        //  Run collision against them all now they're in the new positions
+        //  Run collision against them all now they're in the new positions from the udpate
 
         for (i = 0; i < len; i++)
         {
