@@ -1,48 +1,59 @@
 var Debug = {
 
-    setDebug: function (value, color)
+    setDebug: function (showBody, showVelocity, bodyColor)
     {
-        this.body.debugShow = value;
-
-        if (value && color !== undefined)
-        {
-            this.body.debugColor = color;
-        }
+        this.debugShowBody = showBody;
+        this.debugShowVelocity = showVelocity;
+        this.debugBodyColor = bodyColor;
 
         return this;
     },
 
-    setDebugColor: function (value)
+    setDebugBodyColor: function (value)
     {
-        this.body.debugColor = value;
+        this.body.debugBodyColor = value;
 
         return this;
     },
 
-    debugShow: {
+    debugShowBody: {
 
         get: function ()
         {
-            return this.body.debugShow;
+            return this.body.debugShowBody;
         },
 
         set: function (value)
         {
-            this.body.debugShow = value;
+            this.body.debugShowBody = value;
         }
 
     },
 
-    debugColor: {
+    debugShowVelocity: {
 
         get: function ()
         {
-            return this.body.debugColor;
+            return this.body.debugShowVelocity;
         },
 
         set: function (value)
         {
-            this.body.debugColor = value;
+            this.body.debugShowVelocity = value;
+        }
+
+    },
+
+    debugBodyColor: {
+
+        get: function ()
+        {
+            return this.body.debugBodyColor;
+        },
+
+        set: function (value)
+        {
+            this.body.debugBodyColor = value;
         }
 
     }

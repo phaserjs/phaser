@@ -44,6 +44,11 @@ var World = new Class({
 
         this.debugGraphic;
 
+        this.debugColors = {
+            body: 0xff00ff,
+            velocity: 0x00ff00
+        };
+
         this._lastId = 0;
 
         if (showDebug)

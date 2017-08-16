@@ -55,8 +55,9 @@ var Body = new Class({
         this.checkAgainst = TYPE.NONE;
         this.collides = COLLIDES.NEVER;
 
-        this.debugShow = true;
-        this.debugColor = 0x00ff00;
+        this.debugShowBody = true;
+        this.debugShowVelocity = true;
+        this.debugBodyColor = world.debugColors.body;
     
         //  min 44 deg, max 136 deg
         this.slopeStanding = { min: 0.767944870877505, max: 2.3736477827122884 };
@@ -115,10 +116,24 @@ var Body = new Class({
             go.setPosition((pos.x - this.offset.x) + go.displayOriginX, (pos.y - this.offset.y) + go.displayOriginY);
         }
 
-        if (drawDebug && this.debugShow)
+        if (drawDebug)
         {
-            this.world.debugGraphic.lineStyle(1, this.debugColor, 1);
-            this.world.debugGraphic.strokeRect(pos.x, pos.y, this.size.x, this.size.y);
+            var graphic = this.world.debugGraphic;
+
+            if (this.debugShowBody)
+            {
+                graphic.lineStyle(1, this.debugBodyColor, 1);
+                graphic.strokeRect(pos.x, pos.y, this.size.x, this.size.y);
+            }
+
+            if (this.debugShowVelocity)
+            {
+                var x = pos.x + this.size.x / 2;
+                var y = pos.y + this.size.y / 2;
+
+                graphic.lineStyle(1, this.world.debugColors.velocity, 1);
+                graphic.lineBetween(x, y, x + this.vel.x, y + this.vel.y);
+            }
         }
     },
 
