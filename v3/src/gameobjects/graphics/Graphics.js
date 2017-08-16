@@ -44,12 +44,12 @@ var Graphics = new Class({
 
         this.setDefaultStyles(options);
 
-        var resourceManager = scene.game.renderer.resourceManager;
+        var resourceManager = scene.sys.game.renderer.resourceManager;
 
         if (resourceManager !== undefined)
         {
             this.resourceManager = resourceManager;
-            this.gl = scene.game.renderer.gl;
+            this.gl = scene.sys.game.renderer.gl;
         }
     },
 
@@ -326,41 +326,51 @@ var Graphics = new Class({
         return this;
     },
 
-    save: function () {
+    save: function ()
+    {
         this.commandBuffer.push(
             Commands.SAVE
         );
+
         return this;
     },
 
-    restore: function () {
+    restore: function ()
+    {
         this.commandBuffer.push(
             Commands.RESTORE
         );
+
         return this;
     },
 
-    translate: function (x, y) {
+    translate: function (x, y)
+    {
         this.commandBuffer.push(
             Commands.TRANSLATE,
             x, y
         );
+
         return this;
     },
 
-    scale: function (x, y) {
+    scale: function (x, y)
+    {
         this.commandBuffer.push(
             Commands.SCALE,
             x, y
         );
+
         return this;
     },
 
-    rotate: function (radian) {
+    rotate: function (radian)
+    {
         this.commandBuffer.push(
             Commands.ROTATE,
             radian
         );
+
         return this;
     },
 
@@ -381,10 +391,10 @@ var Graphics = new Class({
         return this;
     },
 
-    generateTexture: function (key, width, height) 
+    generateTexture: function (key, width, height)
     {
-        var screenWidth = this.scene.game.config.width;
-        var screenHeight = this.scene.game.config.height;
+        var screenWidth = this.scene.sys.game.config.width;
+        var screenHeight = this.scene.sys.game.config.height;
         width = (typeof width === 'number') ? width : screenWidth;
         height = (typeof height === 'number') ? height : screenHeight;
         
@@ -392,13 +402,13 @@ var Graphics = new Class({
         Graphics.TargetCamera.scrollX = this.x;
         Graphics.TargetCamera.scrollY = this.y;
 
-        var texture = this.scene.game.textures.createCanvas(key, width, height);
+        var texture = this.scene.sys.game.textures.createCanvas(key, width, height);
         var ctx = texture.source[0].image.getContext('2d');
         texture.add('__BASE', 0, 0, 0, width, height);
-        this.renderCanvas(this.scene.game.renderer, this, 0, Graphics.TargetCamera, ctx);
+        this.renderCanvas(this.scene.sys.game.renderer, this, 0, Graphics.TargetCamera, ctx);
         if (this.gl)
         {
-            this.scene.game.renderer.uploadCanvasToGPU(ctx.canvas, texture.source[0].glTexture, true);
+            this.scene.sys.game.renderer.uploadCanvasToGPU(ctx.canvas, texture.source[0].glTexture, true);
         }
     }
 

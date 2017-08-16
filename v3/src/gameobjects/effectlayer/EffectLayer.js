@@ -34,7 +34,7 @@ var EffectLayer = new Class({
         GameObject.call(this, scene, 'EffectLayer');
        
         var pot = ((width & (width - 1)) == 0 && (height & (height - 1)) == 0);
-        var resourceManager = scene.game.renderer.resourceManager;
+        var resourceManager = scene.sys.game.renderer.resourceManager;
         var wrap;
         var gl;
 
@@ -45,7 +45,7 @@ var EffectLayer = new Class({
 
         if (resourceManager !== undefined)
         {
-            gl = scene.game.renderer.gl;
+            gl = scene.sys.game.renderer.gl;
             wrap = pot ? gl.REPEAT : gl.CLAMP_TO_EDGE;
             this.dstShader = resourceManager.createShader(effectName, {
                 vert: TexturedAndNormalizedTintedShader.vert,
@@ -61,7 +61,7 @@ var EffectLayer = new Class({
             );
 
             this.dstRenderTarget = resourceManager.createRenderTarget(width, height, this.renderTexture, null);
-            scene.game.renderer.currentTexture[0] = null; // force rebinding of prev texture
+            scene.sys.game.renderer.currentTexture[0] = null; // force rebinding of prev texture
         }
 
         this.flipY = true;

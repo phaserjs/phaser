@@ -34,10 +34,10 @@ var LightLayer = new Class({
     {
         GameObject.call(this, scene, 'LightLayer');
 
-        var resourceManager = scene.game.renderer.resourceManager;
+        var resourceManager = scene.sys.game.renderer.resourceManager;
         this._isDeferred = WebGLSupportedExtensions.has('WEBGL_draw_buffers');
 
-        this.renderer = scene.game.renderer;
+        this.renderer = scene.sys.game.renderer;
         this.passShader = null;
         this.gl = null;
         this.ambientLightColorR = 0.0;
@@ -52,7 +52,7 @@ var LightLayer = new Class({
 
         if (resourceManager !== undefined && !this._isDeferred)
         {
-            this.gl = scene.game.renderer.gl;
+            this.gl = scene.sys.game.renderer.gl;
             this.passShader = resourceManager.createShader('Phong2DShaderForward', {vert: TexturedAndNormalizedTintedShader.vert, frag: `
                 precision mediump float;
 
@@ -120,8 +120,8 @@ var LightLayer = new Class({
         }
         else
         {
-            var gl = this.gl = scene.game.renderer.gl;
-            this.ext = scene.game.renderer.getExtension('WEBGL_draw_buffers');
+            var gl = this.gl = scene.sys.game.renderer.gl;
+            this.ext = scene.sys.game.renderer.getExtension('WEBGL_draw_buffers');
             this.gBufferShaderPass = resourceManager.createShader('GBufferShader', { vert: TexturedAndNormalizedTintedShader.vert, frag: `
                 #extension GL_EXT_draw_buffers : require 
 
@@ -236,14 +236,14 @@ var LightLayer = new Class({
 
             gl.bindFramebuffer(gl.FRAMEBUFFER, this.gBufferFbo);
             gl.bindTexture(gl.TEXTURE_2D, this.gBufferColorTex);
-            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, scene.game.renderer.width, scene.game.renderer.height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, scene.sys.game.renderer.width, scene.sys.game.renderer.height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
             gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
             gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
             gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
             gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
 
             gl.bindTexture(gl.TEXTURE_2D, this.gBufferNormalTex);
-            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, scene.game.renderer.width, scene.game.renderer.height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, scene.sys.game.renderer.width, scene.sys.game.renderer.height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
             gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
             gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
             gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);

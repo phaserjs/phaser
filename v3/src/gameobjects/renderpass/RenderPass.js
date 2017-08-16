@@ -37,12 +37,12 @@ var RenderPass = new Class({
     {
         GameObject.call(this, scene, 'RenderPass');
        
-        var resourceManager = scene.game.renderer.resourceManager;
+        var resourceManager = scene.sys.game.renderer.resourceManager;
         var pot = ((width & (width - 1)) == 0 && (height & (height - 1)) == 0);
         var gl;
         var wrap;
         
-        this.renderer = scene.game.renderer;
+        this.renderer = scene.sys.game.renderer;
         this.passRenderTarget = null;
         this.renderTexture = null;
         this.passShader = null;
@@ -51,12 +51,12 @@ var RenderPass = new Class({
 
         if (resourceManager !== undefined)
         {
-            gl = scene.game.renderer.gl;
+            gl = scene.sys.game.renderer.gl;
             wrap = pot ? gl.REPEAT : gl.CLAMP_TO_EDGE;
             this.passShader = resourceManager.createShader(shaderName, {vert: TexturedAndNormalizedTintedShader.vert, frag: fragmentShader});
             this.renderTexture = resourceManager.createTexture(0, gl.LINEAR, gl.LINEAR, wrap, wrap, gl.RGBA, null, width, height);
             this.passRenderTarget = resourceManager.createRenderTarget(width, height, this.renderTexture, null);
-            scene.game.renderer.currentTexture[0] = null; // force rebinding of prev texture
+            scene.sys.game.renderer.currentTexture[0] = null; // force rebinding of prev texture
         }
 
         this.flipY = true;

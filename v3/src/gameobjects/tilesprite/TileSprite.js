@@ -29,7 +29,7 @@ var TileSprite = new Class({
 
     function TileSprite (scene, x, y, width, height, texture, frame)
     {
-        var resourceManager = scene.game.renderer.resourceManager;
+        var resourceManager = scene.sys.game.renderer.resourceManager;
 
         GameObject.call(this, scene, 'TileSprite');
 
@@ -67,8 +67,8 @@ var TileSprite = new Class({
             this.potHeight |= this.potHeight >> 16;
             this.potHeight++;
 
-            this.renderer = scene.game.renderer;
-            var gl = scene.game.renderer.gl;
+            this.renderer = scene.sys.game.renderer;
+            var gl = scene.sys.game.renderer.gl;
 
             this.tileTexture = resourceManager.createTexture(0, gl.LINEAR, gl.LINEAR, gl.REPEAT, gl.REPEAT, gl.RGBA, this.canvasBuffer, this.potWidth, this.potHeight);
         }

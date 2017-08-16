@@ -31,9 +31,9 @@ var StaticTilemap = new Class({
         GameObject.call(this, scene, 'StaticTilemap');
 
         this.vbo = null;
-        this.gl = scene.game.renderer.gl ? scene.game.renderer.gl : null;
-        this.tilemapRenderer = scene.game.renderer.tilemapRenderer ? scene.game.renderer.tilemapRenderer : null;
-        this.resourceManager = this.gl ? scene.game.renderer.resourceManager : null;
+        this.gl = scene.sys.game.renderer.gl ? scene.sys.game.renderer.gl : null;
+        this.tilemapRenderer = scene.sys.game.renderer.tilemapRenderer ? scene.sys.game.renderer.tilemapRenderer : null;
+        this.resourceManager = this.gl ? scene.sys.game.renderer.resourceManager : null;
         this.bufferData = null;
         this.mapData = mapData;
         this.tileWidth = tileWidth;
