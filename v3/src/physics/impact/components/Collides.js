@@ -2,6 +2,21 @@ var COLLIDES = require('../COLLIDES');
 
 var Collides = {
 
+    _collideCallback: null,
+    _callbackScope: null,
+
+    setCollideCallback: function (callback, scope)
+    {
+        this._collideCallback = callback;
+
+        if (scope)
+        {
+            this._callbackScope = scope;
+        }
+
+        return this;
+    },
+
     setCollidesNever: function ()
     {
         this.body.collides = COLLIDES.NEVER;
