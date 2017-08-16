@@ -33,6 +33,7 @@ var Body = new Class({
         this.name = '';
 
         this.size = { x: sx, y: sy };
+        this.offset = { x: 0, y: 0 };
         this.pos = { x: x, y: y };
         this.last = { x: x, y: y };
         this.vel = { x: 0, y: 0 };
@@ -87,8 +88,10 @@ var Body = new Class({
 
     update: function (delta, drawDebug)
     {
-        this.last.x = this.pos.x;
-        this.last.y = this.pos.y;
+        var pos = this.pos;
+
+        this.last.x = pos.x;
+        this.last.y = pos.y;
 
         this.vel.y += this.world.gravity * delta * this.gravityFactor;
         
@@ -98,21 +101,24 @@ var Body = new Class({
         var mx = this.vel.x * delta;
         var my = this.vel.y * delta;
 
-        var res = this.world.collisionMap.trace(this.pos.x, this.pos.y, mx, my, this.size.x, this.size.y);
+        var res = this.world.collisionMap.trace(pos.x, pos.y, mx, my, this.size.x, this.size.y);
 
         if (this.handleMovementTrace(res))
         {
             UpdateMotion(this, res);
         }
 
-        if (this.gameObject)
+        var go = this.gameObject;
+
+        if (go)
         {
-            this.gameObject.setPosition(this.pos.x, this.pos.y);
+            go.setPosition((pos.x - this.offset.x) + go.displayOriginX, (pos.y - this.offset.y) + go.displayOriginY);
         }
 
-        if (drawDebug)
+        if (drawDebug && this.debugShow)
         {
-            this.world.debugGraphic.strokeRect(this.pos.x, this.pos.y, this.size.x, this.size.y);
+            this.world.debugGraphic.lineStyle(1, this.debugColor, 1);
+            this.world.debugGraphic.strokeRect(pos.x, pos.y, this.size.x, this.size.y);
         }
     },
 

@@ -54,9 +54,9 @@ var World = new Class({
 
     createDebugGraphic: function ()
     {
-        var graphic = this.scene.sys.add.graphics({ x: 0, y: 0, lineStyle: { width: 1, color: 0x00ff00, alpha: 1 } });
+        var graphic = this.scene.sys.add.graphics({ x: 0, y: 0 });
 
-        graphic.setScrollFactor(0);
+        graphic.setScrollFactor(0).setZ(Number.MAX_SAFE_INTEGER);
 
         this.debugGraphic = graphic;
 

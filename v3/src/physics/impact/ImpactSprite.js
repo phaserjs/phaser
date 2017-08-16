@@ -13,22 +13,25 @@ var ImpactSprite = new Class({
         Components.Bounce,
         Components.CheckAgainst,
         Components.Collides,
+        Components.Debug,
         Components.Gravity,
         Components.Velocity
     ],
 
     initialize:
 
+    //  x/y is the center of the Sprite / Body, just like other default Game Objects
     function ImpactSprite (world, x, y, texture, frame)
     {
         Sprite.call(this, world.scene, x, y, texture, frame);
 
-        this.body = world.create(x, y, this.width, this.height);
+        this.body = world.create(x - this.frame.centerX, y - this.frame.centerY, this.width, this.height);
 
         this.body.gameObject = this;
 
         //  Local references to the Body properties
         this.size = this.body.size;
+        this.offset = this.body.offset;
         this.vel = this.body.vel;
         this.accel = this.body.accel;
         this.friction = this.body.friction;
