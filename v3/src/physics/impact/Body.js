@@ -58,9 +58,28 @@ var Body = new Class({
         this.slopeStanding = { min: 0.767944870877505, max: 2.3736477827122884 };
     },
 
-    reset: function ()
+    reset: function (x, y)
     {
-        //  TODO
+        this.pos = { x: x, y: y };
+        this.last = { x: x, y: y };
+        this.vel = { x: 0, y: 0 };
+        this.accel = { x: 0, y: 0 };
+        this.friction = { x: 0, y: 0 };
+        this.maxVel = { x: 100, y: 100 };
+
+        this.standing = false;
+
+        this.gravityFactor = 1;
+        this.bounciness = 0;
+        this.minBounceVelocity = 40;
+
+        this.accelGround = 0;
+        this.accelAir = 0;
+        this.jumpSpeed = 0;
+    
+        this.type = TYPE.NONE;
+        this.checkAgainst = TYPE.NONE;
+        this.collides = COLLIDES.NEVER;
     },
 
     update: function (delta)
@@ -87,11 +106,6 @@ var Body = new Class({
         {
             this.gameObject.setPosition(this.pos.x, this.pos.y);
         }
-    },
-
-    handleMovementTrace: function (res)
-    {
-        return true;
     },
 
     skipHash: function ()
@@ -150,6 +164,24 @@ var Body = new Class({
     collideWith: function (other, axis)
     {
         //  Overridden by user code
+    },
+
+    handleMovementTrace: function (res)
+    {
+        //  Overridden by user code
+
+        return true;
+    },
+
+    destroy: function ()
+    {
+        this.enabled = false;
+
+        this.world = null;
+
+        this.gameObject = null;
+
+        this.parent = null;
     }
 
 });
