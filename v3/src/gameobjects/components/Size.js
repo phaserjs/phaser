@@ -47,6 +47,14 @@ var Size = {
         this.height = height;
 
         return this;
+    },
+
+    setDisplaySize: function (width, height)
+    {
+        this.displayWidth = width;
+        this.displayHeight = height;
+
+        return this;
     }
 
 };
