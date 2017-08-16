@@ -39,13 +39,13 @@ var Body = new Class({
         this.vel = { x: 0, y: 0 };
         this.accel = { x: 0, y: 0 };
         this.friction = { x: 0, y: 0 };
-        this.maxVel = { x: 100, y: 100 };
+        this.maxVel = { x: world.defaults.maxVelocityX, y: world.defaults.maxVelocityY };
 
         this.standing = false;
 
-        this.gravityFactor = 1;
-        this.bounciness = 0;
-        this.minBounceVelocity = 40;
+        this.gravityFactor = world.defaults.gravityFactor;
+        this.bounciness = world.defaults.bounciness;
+        this.minBounceVelocity = world.defaults.minBounceVelocity;
 
         this.accelGround = 0;
         this.accelAir = 0;
@@ -57,7 +57,7 @@ var Body = new Class({
 
         this.debugShowBody = true;
         this.debugShowVelocity = true;
-        this.debugBodyColor = world.debugColors.body;
+        this.debugBodyColor = world.defaults.bodyDebugColor;
     
         //  min 44 deg, max 136 deg
         this.slopeStanding = { min: 0.767944870877505, max: 2.3736477827122884 };
@@ -131,7 +131,7 @@ var Body = new Class({
                 var x = pos.x + this.size.x / 2;
                 var y = pos.y + this.size.y / 2;
 
-                graphic.lineStyle(1, this.world.debugColors.velocity, 1);
+                graphic.lineStyle(1, this.world.defaults.velocityDebugColor, 1);
                 graphic.lineBetween(x, y, x + this.vel.x, y + this.vel.y);
             }
         }

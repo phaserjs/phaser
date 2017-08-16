@@ -4,6 +4,7 @@ var Body = require('./Body');
 var Class = require('../../utils/Class');
 var COLLIDES = require('./COLLIDES');
 var CollisionMap = require('./CollisionMap');
+var GetFastValue = require('../../utils/object/GetFastValue');
 var Set = require('../../structs/Set');
 var Solver = require('./Solver');
 var TYPE = require('./TYPE');
@@ -12,46 +13,47 @@ var World = new Class({
 
     initialize:
 
-    function World (scene, gravity, cellSize, showDebug)
+    function World (scene, config)
     {
-        if (gravity === undefined) { gravity = 0; }
-        if (cellSize === undefined) { cellSize = 64; }
-        if (showDebug === undefined) { showDebug = false; }
-
         this.scene = scene;
 
         this.events = scene.sys.events;
 
         this.bodies = new Set();
 
-        this.gravity = gravity;
+        this.gravity = GetFastValue(config, 'gravity', 0);
 
         //  Spatial hash cell dimensions
-        this.cellSize = cellSize;
+        this.cellSize = GetFastValue(config, 'cellSize', 64);
 
         this.collisionMap = new CollisionMap();
 
-        this.delta = 0;
-
-        this.timeScale = 1;
+        this.timeScale = GetFastValue(config, 'timeScale', 1);
 
         //  Impacts maximum time step is 20 fps.
-        this.maxStep = 0.05;
+        this.maxStep = GetFastValue(config, 'maxStep', 0.05);
 
         this.enabled = true;
 
-        this.drawDebug = false;
+        this.drawDebug = GetFastValue(config, 'debug', false);
 
         this.debugGraphic;
 
-        this.debugColors = {
-            body: 0xff00ff,
-            velocity: 0x00ff00
+        this.defaults = {
+            bodyDebugColor: GetFastValue(config, 'debugBodyColor', 0xff00ff),
+            velocityDebugColor: GetFastValue(config, 'debugVelocityColor', 0x00ff00),
+            maxVelocityX: GetFastValue(config, 'maxVelocityX', 100),
+            maxVelocityY: GetFastValue(config, 'maxVelocityY', 100),
+            minBounceVelocity: GetFastValue(config, 'minBounceVelocity', 40),
+            gravityFactor: GetFastValue(config, 'gravityFactor', 1),
+            bounciness: GetFastValue(config, 'bounciness', 0)
         };
+
+        this.delta = 0;
 
         this._lastId = 0;
 
-        if (showDebug)
+        if (this.drawDebug)
         {
             this.createDebugGraphic();
         }
