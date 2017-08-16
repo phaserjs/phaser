@@ -56,6 +56,8 @@ var World = new Class({
     {
         var graphic = this.scene.sys.add.graphics({ x: 0, y: 0, lineStyle: { width: 1, color: 0x00ff00, alpha: 1 } });
 
+        graphic.setScrollFactor(0);
+
         this.debugGraphic = graphic;
 
         this.drawDebug = true;

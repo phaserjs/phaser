@@ -28,6 +28,7 @@ var ImpactImage = new Class({
         this.body.gameObject = this;
 
         //  Local references to the Body properties
+        this.size = this.body.size;
         this.vel = this.body.vel;
         this.accel = this.body.accel;
         this.friction = this.body.friction;

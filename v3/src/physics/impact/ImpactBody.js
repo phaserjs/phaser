@@ -21,6 +21,7 @@ var ImpactBody = new Class({
         this.body = world.create(x, y, width, height);
 
         //  Local references to the Body properties
+        this.size = this.body.size;
         this.vel = this.body.vel;
         this.accel = this.body.accel;
         this.friction = this.body.friction;

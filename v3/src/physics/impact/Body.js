@@ -112,10 +112,7 @@ var Body = new Class({
 
         if (drawDebug)
         {
-            var x = Math.floor(this.pos.x - (this.size.x / 2));
-            var y = Math.floor(this.pos.y - (this.size.y / 2));
-
-            this.world.debugGraphic.strokeRect(x, y, this.size.x, this.size.y);
+            this.world.debugGraphic.strokeRect(this.pos.x, this.pos.y, this.size.x, this.size.y);
         }
     },
 
