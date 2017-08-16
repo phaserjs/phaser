@@ -53,6 +53,9 @@ var Body = new Class({
         this.type = TYPE.NONE;
         this.checkAgainst = TYPE.NONE;
         this.collides = COLLIDES.NEVER;
+
+        this.debugShow = true;
+        this.debugColor = 0x00ff00;
     
         //  min 44 deg, max 136 deg
         this.slopeStanding = { min: 0.767944870877505, max: 2.3736477827122884 };
@@ -82,7 +85,7 @@ var Body = new Class({
         this.collides = COLLIDES.NEVER;
     },
 
-    update: function (delta)
+    update: function (delta, drawDebug)
     {
         this.last.x = this.pos.x;
         this.last.y = this.pos.y;
@@ -105,6 +108,14 @@ var Body = new Class({
         if (this.gameObject)
         {
             this.gameObject.setPosition(this.pos.x, this.pos.y);
+        }
+
+        if (drawDebug)
+        {
+            var x = Math.floor(this.pos.x - (this.size.x / 2));
+            var y = Math.floor(this.pos.y - (this.size.y / 2));
+
+            this.world.debugGraphic.strokeRect(x, y, this.size.x, this.size.y);
         }
     },
 
@@ -156,20 +167,23 @@ var Body = new Class({
         //  TODO
     },
 
+    //  Can be overridden by user code
     check: function (other)
     {
-        //  Overridden by user code
     },
 
+    //  Can be overridden by user code
     collideWith: function (other, axis)
     {
-        //  Overridden by user code
+        if (this.gameObject && this.gameObject._collideCallback)
+        {
+            this.gameObject._collideCallback.call(this.gameObject._callbackScope, this, other, axis);
+        }
     },
 
+    //  Can be overridden by user code but must return a boolean
     handleMovementTrace: function (res)
     {
-        //  Overridden by user code
-
         return true;
     },
 
