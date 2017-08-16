@@ -32,7 +32,7 @@ var Solver = function (world, bodyA, bodyB)
         bodyA.collideWith(bodyB, 'y');
         bodyB.collideWith(bodyA, 'y');
 
-        world.events.dispatch(new Events.COLLIDE(bodyA, bodyB));
+        world.events.dispatch(new Events.COLLIDE(bodyA, bodyB, 'y'));
     }
     else if (bodyA.last.y + bodyA.size.y > bodyB.last.y && bodyA.last.y < bodyB.last.y + bodyB.size.y)
     {
@@ -48,7 +48,7 @@ var Solver = function (world, bodyA, bodyB)
         bodyA.collideWith(bodyB, 'x');
         bodyB.collideWith(bodyA, 'x');
 
-        world.events.dispatch(new Events.COLLIDE(bodyA, bodyB));
+        world.events.dispatch(new Events.COLLIDE(bodyA, bodyB, 'x'));
     }
 };
 
