@@ -7,7 +7,7 @@ var CollideEvent = new Class({
 
     initialize:
 
-    function CollideEvent (bodyA, bodyB)
+    function CollideEvent (bodyA, bodyB, axis)
     {
         Event.call(this, 'COLLIDE_EVENT');
 
@@ -22,6 +22,9 @@ var CollideEvent = new Class({
 
         //  The Game Object associated with bodyB (if any)
         this.gameObjectB = bodyB.gameObject;
+
+        //  Either 'x' or 'y'
+        this.axis = axis;
     }
 
 });
