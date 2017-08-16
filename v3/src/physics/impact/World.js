@@ -12,10 +12,11 @@ var World = new Class({
 
     initialize:
 
-    function World (scene, gravity, cellSize)
+    function World (scene, gravity, cellSize, showDebug)
     {
         if (gravity === undefined) { gravity = 0; }
         if (cellSize === undefined) { cellSize = 64; }
+        if (showDebug === undefined) { showDebug = false; }
 
         this.scene = scene;
 
@@ -39,7 +40,27 @@ var World = new Class({
 
         this.enabled = true;
 
+        this.drawDebug = false;
+
+        this.debugGraphic;
+
         this._lastId = 0;
+
+        if (showDebug)
+        {
+            this.createDebugGraphic();
+        }
+    },
+
+    createDebugGraphic: function ()
+    {
+        var graphic = this.scene.sys.add.graphics({ x: 0, y: 0, lineStyle: { width: 1, color: 0x00ff00, alpha: 1 } });
+
+        this.debugGraphic = graphic;
+
+        this.drawDebug = true;
+
+        return graphic;
     },
 
     getNextID: function ()
@@ -88,6 +109,12 @@ var World = new Class({
         var len = bodies.length;
         var hash = {};
         var size = this.cellSize;
+        var debug = this.drawDebug;
+
+        if (debug)
+        {
+            this.debugGraphic.clear();
+        }
 
         for (i = 0; i < len; i++)
         {
@@ -95,7 +122,7 @@ var World = new Class({
 
             if (body.enabled)
             {
-                body.update(this.delta);
+                body.update(this.delta, debug);
             }
         }
 
@@ -308,6 +335,19 @@ var World = new Class({
         }
 
         return this;
+    },
+
+    destroy: function ()
+    {
+        this.scene = null;
+
+        this.events = null;
+
+        this.bodies.clear();
+
+        this.bodies = null;
+
+        this.collisionMap = null;
     }
 
 });

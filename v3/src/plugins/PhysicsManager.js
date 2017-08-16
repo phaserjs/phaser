@@ -29,7 +29,7 @@ var PhysicsManager = new Class({
 
         if (config.system === 'impact')
         {
-            this.world = new Physics.Impact.World(this.scene, config.gravity, config.cellSize);
+            this.world = new Physics.Impact.World(this.scene, config.gravity, config.cellSize, config.debug);
             this.add = new Physics.Impact.Factory(this.world);
         }
     },
