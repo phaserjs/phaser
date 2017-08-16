@@ -142,8 +142,8 @@ var ResourceManager = new Class({
             gl.shaderSource(vertShader, shaderSources.vert);
             gl.compileShader(vertShader);
 
-            error = gl.getShaderInfoLog(vertShader);
             status = gl.getShaderParameter(vertShader, gl.COMPILE_STATUS);
+            error = gl.getShaderInfoLog(vertShader);
 
             if (!status && error && error.length > 0)
             {
@@ -158,8 +158,8 @@ var ResourceManager = new Class({
             gl.shaderSource(fragShader, shaderSources.frag);
             gl.compileShader(fragShader);
 
-            error = gl.getShaderInfoLog(fragShader);
             status = gl.getShaderParameter(fragShader, gl.COMPILE_STATUS);
+            error = gl.getShaderInfoLog(fragShader);
 
             if (!status && error && error.length > 0)
             {
@@ -176,31 +176,26 @@ var ResourceManager = new Class({
             gl.linkProgram(program);
             gl.validateProgram(program);
 
-            error = gl.getProgramInfoLog(program);
             status = gl.getProgramParameter(program, gl.LINK_STATUS);
+            error = gl.getProgramInfoLog(program);
 
             if (!status && error && error.length > 0)
             {
                 throw new Error('Program Linking Error. Shader name: ' + shaderName + '.\n' + error);
             }
-            else if (error && error.length > 0)
+            else if (error && error.length > 10)
             {
                 console.warn('Program Linking Warning. Shader name: ' + shaderName + '.\n' + error);
             }
 
-            if (!error)
-            {
-
-            }
-            
-            error = gl.getProgramInfoLog(program);
             status = gl.getProgramParameter(program, gl.VALIDATE_STATUS);
+            error = gl.getProgramInfoLog(program);
 
             if (!status && error && error.length > 0)
             {
                 throw new Error('Program Validation Error. Shader name: ' + shaderName + '.\n' + error);
             }
-            else if (error && error.length > 0)
+            else if (error && error.length > 10)
             {
                 console.warn('Program Validation Warning. Shader name: ' + shaderName + '.\n' + error);
             }
