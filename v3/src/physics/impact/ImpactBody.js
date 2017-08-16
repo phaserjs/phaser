@@ -12,6 +12,7 @@ var ImpactBody = new Class({
         Components.Collides,
         Components.Debug,
         Components.Gravity,
+        Components.Offset,
         Components.Velocity
     ],
 

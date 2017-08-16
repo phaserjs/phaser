@@ -15,6 +15,7 @@ var ImpactImage = new Class({
         Components.Collides,
         Components.Debug,
         Components.Gravity,
+        Components.Offset,
         Components.Velocity
     ],
 

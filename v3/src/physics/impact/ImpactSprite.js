@@ -15,6 +15,7 @@ var ImpactSprite = new Class({
         Components.Collides,
         Components.Debug,
         Components.Gravity,
+        Components.Offset,
         Components.Velocity
     ],
 

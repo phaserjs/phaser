@@ -9,6 +9,7 @@ module.exports = {
     Collides: require('./Collides'),
     Debug: require('./Debug'),
     Gravity: require('./Gravity'),
+    Offset: require('./Offset'),
     Velocity: require('./Velocity')
 
 };
