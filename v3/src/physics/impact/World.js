@@ -61,7 +61,7 @@ var World = new Class({
     {
         var graphic = this.scene.sys.add.graphics({ x: 0, y: 0 });
 
-        graphic.setScrollFactor(0).setZ(Number.MAX_SAFE_INTEGER);
+        graphic.setZ(Number.MAX_SAFE_INTEGER);
 
         this.debugGraphic = graphic;
 
