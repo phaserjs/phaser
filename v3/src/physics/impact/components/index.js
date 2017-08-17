@@ -1,4 +1,4 @@
-//  Phaser.Physics.Impact.Components
+//  Phaser.Physics.Impact.Body.Components
 
 module.exports = {
 
@@ -10,6 +10,7 @@ module.exports = {
     Debug: require('./Debug'),
     Gravity: require('./Gravity'),
     Offset: require('./Offset'),
+    SetGameObject: require('./SetGameObject'),
     Velocity: require('./Velocity')
 
 };

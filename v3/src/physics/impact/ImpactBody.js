@@ -13,6 +13,7 @@ var ImpactBody = new Class({
         Components.Debug,
         Components.Gravity,
         Components.Offset,
+        Components.SetGameObject,
         Components.Velocity
     ],
 
