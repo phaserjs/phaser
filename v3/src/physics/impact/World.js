@@ -268,6 +268,12 @@ var World = new Class({
 
     checkBodies: function (bodyA, bodyB)
     {
+        //  2 fixed bodies won't do anything
+        if (bodyA.collides === COLLIDES.FIXED && bodyB.collides === COLLIDES.FIXED)
+        {
+            return;
+        }
+
         //  bitwise checks
         if (bodyA.checkAgainst & bodyB.type)
         {
