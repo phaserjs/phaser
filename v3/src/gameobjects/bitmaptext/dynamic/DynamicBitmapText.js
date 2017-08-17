@@ -48,16 +48,16 @@ var DynamicBitmapText = new Class({
         this.scrollX = 0;
         this.scrollY = 0;
 
-        this.width = 0;
-        this.height = 0;
+        this.cropWidth = 0;
+        this.cropHeight = 0;
 
         this.displayCallback;
     },
 
     setSize: function (width, height)
     {
-        this.width = width;
-        this.height = height;
+        this.cropWidth = width;
+        this.cropHeight = height;
 
         return this;
     },
@@ -112,12 +112,51 @@ var DynamicBitmapText = new Class({
     //     }
     // }
 
-    getTextBounds: function ()
+    getTextBounds: function (round)
     {
         //  local = the BitmapText based on fontSize and 0x0 coords
         //  global = the BitmapText, taking into account scale and world position
 
-        return GetBitmapTextSize(this);
+        this._bounds = GetBitmapTextSize(this, round);
+
+        return this._bounds;
+    },
+
+    width: {
+
+        get: function ()
+        {
+            this.getTextBounds(false);
+            return this._bounds.global.width;
+        }
+
+    },
+
+    height: {
+
+        get: function ()
+        {
+            this.getTextBounds(false);
+            return this._bounds.global.height;
+        }
+
+    },
+
+    toJSON: function ()
+    {
+        var out = Components.ToJSON(this);
+
+        //  Extra data is added here
+
+        var data = {
+            font: this.font,
+            text: this.text,
+            fontSize: this.fontSize
+        };
+
+        out.data = data;
+
+        return out;
     }
 
 });

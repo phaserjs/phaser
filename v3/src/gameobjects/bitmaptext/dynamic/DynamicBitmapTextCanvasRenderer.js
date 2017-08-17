@@ -70,11 +70,11 @@ var DynamicBitmapTextCanvasRenderer = function (renderer, src, interpolationPerc
     ctx.rotate(src.rotation);
     ctx.scale(src.scaleX, src.scaleY);
 
-    if (src.width > 0 && src.height > 0)
+    if (src.cropWidth > 0 && src.cropHeight > 0)
     {
         ctx.save();
         ctx.beginPath();
-        ctx.rect(0, 0, src.width, src.height);
+        ctx.rect(0, 0, src.cropWidth, src.cropHeight);
         ctx.clip();
         ctx.closePath();
     }
@@ -154,7 +154,7 @@ var DynamicBitmapTextCanvasRenderer = function (renderer, src, interpolationPerc
         lastCharCode = charCode;
     }
 
-    if (src.width > 0 && src.height > 0)
+    if (src.cropWidth > 0 && src.cropHeight > 0)
     {
         ctx.restore();
     }

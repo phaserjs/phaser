@@ -94,7 +94,7 @@ var DynamicBitmapTextWebGLRenderer = function (renderer, gameObject, interpolati
 
     var gl = renderer.gl;
 
-    if (gameObject.width > 0 && gameObject.height > 0)
+    if (gameObject.cropWidth > 0 && gameObject.cropHeight > 0)
     {
         if (renderer.currentRenderer !== null)
         {
@@ -106,8 +106,8 @@ var DynamicBitmapTextWebGLRenderer = function (renderer, gameObject, interpolati
             gl.enable(gl.SCISSOR_TEST);
         }
 
-        var sw = gameObject.width * gameObject.scaleX;
-        var sh = gameObject.height * gameObject.scaleY;
+        var sw = gameObject.cropWidth * gameObject.scaleX;
+        var sh = gameObject.cropHeight * gameObject.scaleY;
 
         gl.scissor(gameObject.x, gl.drawingBufferHeight - gameObject.y - sh, sw, sh);
     }
@@ -255,7 +255,7 @@ var DynamicBitmapTextWebGLRenderer = function (renderer, gameObject, interpolati
         lastCharCode = charCode;
     }
 
-    if (gameObject.width > 0 && gameObject.height > 0)
+    if (gameObject.cropWidth > 0 && gameObject.cropHeight > 0)
     {
         spriteBatch.flush();
 
