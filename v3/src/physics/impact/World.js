@@ -113,7 +113,7 @@ var World = new Class({
         {
             if (wall)
             {
-                wall.setSize(x, y, width, height);
+                wall.resetSize(x, y, width, height);
             }
             else
             {

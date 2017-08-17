@@ -159,7 +159,7 @@ var Body = new Class({
         );
     },
 
-    setSize: function (x, y, width, height)
+    resetSize: function (x, y, width, height)
     {
         this.pos.x = x;
         this.pos.y = y;

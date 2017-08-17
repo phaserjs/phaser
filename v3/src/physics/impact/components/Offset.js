@@ -1,6 +1,6 @@
 var Offset = {
 
-    setSize: function (width, height)
+    setBodySize: function (width, height)
     {
         if (height === undefined) { height = width; }
 
@@ -17,7 +17,7 @@ var Offset = {
 
         if (width)
         {
-            this.setSize(width, height);
+            this.setBodySize(width, height);
         }
 
         return this;

@@ -10,7 +10,7 @@ var SetGameObject = {
 
             if (setSize)
             {
-                this.setSize(gameObject.width, gameObject.height);
+                this.setBodySize(gameObject.width, gameObject.height);
             }
         }
         else
