@@ -33,6 +33,9 @@ var Graphics = new Class({
 
         this.setPosition(x, y);
 
+        this.displayOriginX = 0;
+        this.displayOriginY = 0;
+
         this.commandBuffer = [];
 
         this.defaultFillColor = -1;
@@ -393,10 +396,8 @@ var Graphics = new Class({
 
     generateTexture: function (key, width, height)
     {
-        var screenWidth = this.scene.sys.game.config.width;
-        var screenHeight = this.scene.sys.game.config.height;
-        width = (typeof width === 'number') ? width : screenWidth;
-        height = (typeof height === 'number') ? height : screenHeight;
+        if (width === undefined) { width = this.scene.sys.game.config.width; }
+        if (height === undefined) { height = this.scene.sys.game.config.height; }
         
         Graphics.TargetCamera.setViewport(0, 0, width, height);
         Graphics.TargetCamera.scrollX = this.x;
@@ -404,8 +405,11 @@ var Graphics = new Class({
 
         var texture = this.scene.sys.game.textures.createCanvas(key, width, height);
         var ctx = texture.source[0].image.getContext('2d');
+
         texture.add('__BASE', 0, 0, 0, width, height);
+
         this.renderCanvas(this.scene.sys.game.renderer, this, 0, Graphics.TargetCamera, ctx);
+
         if (this.gl)
         {
             this.scene.sys.game.renderer.uploadCanvasToGPU(ctx.canvas, texture.source[0].glTexture, true);
