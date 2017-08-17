@@ -53,11 +53,169 @@ var World = new Class({
 
         this.delta = 0;
 
+        /**
+        * @property {object} walls - An object containing the 4 wall bodies that bound the physics world.
+        */
+        this.walls = { left: null, right: null, top: null, bottom: null };
+    
         this._lastId = 0;
 
         if (this.drawDebug)
         {
             this.createDebugGraphic();
+        }
+    },
+
+    /**
+    * Sets the bounds of the Physics world to match the given world pixel dimensions.
+    * You can optionally set which 'walls' to create: left, right, top or bottom.
+    * If none of the walls are given it will default to use the walls settings it had previously.
+    * I.e. if you previously told it to not have the left or right walls, and you then adjust the world size
+    * the newly created bounds will also not have the left and right walls.
+    * Explicitly state them in the parameters to override this.
+    *
+    * @method Phaser.Physics.P2#setBounds
+    * @param {number} x - The x coordinate of the top-left corner of the bounds.
+    * @param {number} y - The y coordinate of the top-left corner of the bounds.
+    * @param {number} width - The width of the bounds.
+    * @param {number} height - The height of the bounds.
+    * @param {boolean} [left=true] - If true will create the left bounds wall.
+    * @param {boolean} [right=true] - If true will create the right bounds wall.
+    * @param {boolean} [top=true] - If true will create the top bounds wall.
+    * @param {boolean} [bottom=true] - If true will create the bottom bounds wall.
+    */
+    setBounds: function (x, y, width, height, thickness, left, right, top, bottom)
+    {
+        if (x === undefined) { x = 0; }
+        if (y === undefined) { y = 0; }
+        if (width === undefined) { width = this.scene.sys.game.config.width; }
+        if (height === undefined) { height = this.scene.sys.game.config.height; }
+        if (thickness === undefined) { thickness = 64; }
+        if (left === undefined) { left = true; }
+        if (right === undefined) { right = true; }
+        if (top === undefined) { top = true; }
+        if (bottom === undefined) { bottom = true; }
+
+        this.updateWall(left, 'left', x - thickness, y, thickness, height);
+        this.updateWall(right, 'right', x + width, y, thickness, height);
+        this.updateWall(top, 'top', x, y - thickness, width, thickness);
+        this.updateWall(bottom, 'bottom', x, y + height, width, thickness);
+
+        // if (left)
+        // {
+        //     if (leftWall)
+        //     {
+        //         leftWall.setSize(x - thickness, y, thickness, height);
+        //     }
+        //     else
+        //     {
+        //         this.walls.left = this.create(x - thickness, y, thickness, height);
+        //         this.walls.left.gravityFactor = 0;
+        //         this.walls.left.collides = COLLIDES.FIXED;
+        //     }
+        // }
+        // else
+        // {
+        //     if (leftWall)
+        //     {
+        //         this.bodies.remove(leftWall);
+        //     }
+
+        //     this.walls.left = null;
+        // }
+
+        // if (right)
+        // {
+        //     if (rightWall)
+        //     {
+        //         rightWall.setSize(x + width, y, thickness, height);
+        //     }
+        //     else
+        //     {
+        //         this.walls.right = this.create(x + width, y, thickness, height);
+        //     }
+        // }
+        // else
+        // {
+        //     if (rightWall)
+        //     {
+        //         this.bodies.remove(rightWall);
+        //     }
+
+        //     this.walls.right = null;
+        // }
+
+        // if (top)
+        // {
+        //     if (topWall)
+        //     {
+        //         topWall.setSize(x, y - thickness, width, thickness);
+        //     }
+        //     else
+        //     {
+        //         this.walls.top = this.create(x, y - thickness, width, thickness);
+        //     }
+        // }
+        // else
+        // {
+        //     if (topWall)
+        //     {
+        //         this.bodies.remove(topWall);
+        //     }
+
+        //     this.walls.top = null;
+        // }
+
+        // if (bottom)
+        // {
+        //     if (bottomWall)
+        //     {
+        //         bottomWall.setSize(x, y + height, width, thickness);
+        //     }
+        //     else
+        //     {
+        //         this.walls.bottom = this.create(x, y + height, width, thickness);
+        //     }
+        // }
+        // else
+        // {
+        //     if (bottomWall)
+        //     {
+        //         this.bodies.remove(bottomWall);
+        //     }
+
+        //     this.walls.bottom = null;
+        // }
+
+        return this;
+    },
+
+    //  position = 'left', 'right', 'top' or 'bottom'
+    updateWall: function (add, position, x, y, width, height)
+    {
+        var wall = this.walls[position];
+
+        if (add)
+        {
+            if (wall)
+            {
+                wall.setSize(x, y, width, height);
+            }
+            else
+            {
+                this.walls[position] = this.create(x, y, width, height);
+                this.walls[position].gravityFactor = 0;
+                this.walls[position].collides = COLLIDES.FIXED;
+            }
+        }
+        else
+        {
+            if (wall)
+            {
+                this.bodies.remove(wall);
+            }
+
+            this.walls[position] = null;
         }
     },
 
