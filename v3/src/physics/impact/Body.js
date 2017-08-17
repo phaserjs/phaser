@@ -58,6 +58,8 @@ var Body = new Class({
         this.debugShowBody = world.defaults.debugShowBody;
         this.debugShowVelocity = world.defaults.debugShowVelocity;
         this.debugBodyColor = world.defaults.bodyDebugColor;
+
+        this.updateCallback;
     
         //  min 44 deg, max 136 deg
         this.slopeStanding = { min: 0.767944870877505, max: 2.3736477827122884 };
@@ -134,6 +136,11 @@ var Body = new Class({
                 graphic.lineStyle(1, this.world.defaults.velocityDebugColor, 1);
                 graphic.lineBetween(x, y, x + this.vel.x, y + this.vel.y);
             }
+        }
+
+        if (this.updateCallback)
+        {
+            this.updateCallback(this);
         }
     },
 

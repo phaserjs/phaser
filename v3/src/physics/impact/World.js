@@ -210,7 +210,7 @@ var World = new Class({
             }
         }
 
-        //  Run collision against them all now they're in the new positions from the udpate
+        //  Run collision against them all now they're in the new positions from the update
 
         for (i = 0; i < len; i++)
         {
