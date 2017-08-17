@@ -29,6 +29,7 @@ var ImpactSprite = new Class({
 
         this.body = world.create(x - this.frame.centerX, y - this.frame.centerY, this.width, this.height);
 
+        this.body.parent = this;
         this.body.gameObject = this;
 
         //  Local references to the Body properties

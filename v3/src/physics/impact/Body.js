@@ -196,9 +196,9 @@ var Body = new Class({
     //  Can be overridden by user code
     collideWith: function (other, axis)
     {
-        if (this.gameObject && this.gameObject._collideCallback)
+        if (this.parent && this.parent._collideCallback)
         {
-            this.gameObject._collideCallback.call(this.gameObject._callbackScope, this, other, axis);
+            this.parent._collideCallback.call(this.parent._callbackScope, this, other, axis);
         }
     },
 

@@ -24,6 +24,8 @@ var ImpactBody = new Class({
     {
         this.body = world.create(x, y, width, height);
 
+        this.body.parent = this;
+
         //  Local references to the Body properties
         this.size = this.body.size;
         this.offset = this.body.offset;
