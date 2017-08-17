@@ -4,7 +4,7 @@ var tempMatrixChar = new TransformMatrix();
 
 var DynamicBitmapTextWebGLRenderer = function (renderer, gameObject, interpolationPercentage, camera)
 {
-    var text = src.text;
+    var text = gameObject.text;
     var textLength = text.length;
 
     if (this.renderMask !== this.renderFlags || textLength === 0 || (this.cameraFilter > 0 && (this.cameraFilter & camera._id)))
@@ -151,17 +151,27 @@ var DynamicBitmapTextWebGLRenderer = function (renderer, gameObject, interpolati
 
         if (displayCallback)
         {
-            var output = displayCallback({ tint: { topLeft: tintTL, topRight: tintTR, bottomLeft: tintBL, bottomRight: tintBR }, index: index, charCode: charCode, x: x, y: y, scale: scale, rotation: 0, data: glyph.data });
+            var output = displayCallback({ color: 0, tint: { topLeft: tintTL, topRight: tintTR, bottomLeft: tintBL, bottomRight: tintBR }, index: index, charCode: charCode, x: x, y: y, scale: scale, rotation: 0, data: glyph.data });
 
             x = output.x;
             y = output.y;
             scale = output.scale;
             rotation = output.rotation;
 
-            tintTL = output.tint.topLeft;
-            tintTR = output.tint.topRight;
-            tintBL = output.tint.bottomLeft;
-            tintBR = output.tint.bottomRight;
+            if (output.color)
+            {
+                tintTL = output.color;
+                tintTR = output.color;
+                tintBL = output.color;
+                tintBR = output.color;
+            }
+            else
+            {
+                tintTL = output.tint.topLeft;
+                tintTR = output.tint.topRight;
+                tintBL = output.tint.bottomLeft;
+                tintBR = output.tint.bottomRight;
+            }
         }
 
         x -= gameObject.scrollX | 0;
