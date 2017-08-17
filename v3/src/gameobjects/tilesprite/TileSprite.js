@@ -1,8 +1,9 @@
-var Class = require('../../utils/Class');
-var GameObject = require('../GameObject');
-var Components = require('../components');
-var TileSpriteRender = require('./TileSpriteRender');
 var CanvasPool = require('../../dom/CanvasPool');
+var Class = require('../../utils/Class');
+var Components = require('../components');
+var GameObject = require('../GameObject');
+var GetPowerOfTwo = require('../../math/pow2/GetPowerOfTwo');
+var TileSpriteRender = require('./TileSpriteRender');
 
 var TileSprite = new Class({
 
@@ -44,28 +45,12 @@ var TileSprite = new Class({
         this.setSize(width, height);
         this.setOrigin();
 
-        this.potWidth = this.frame.width;
-        this.potHeight = this.frame.height;
+        this.potWidth = GetPowerOfTwo(this.frame.width);
+        this.potHeight = GetPowerOfTwo(this.frame.height);
         this.canvasPattern = null;
 
         if (resourceManager)
         {
-            this.potWidth--;
-            this.potWidth |= this.potWidth >> 1;
-            this.potWidth |= this.potWidth >> 2;
-            this.potWidth |= this.potWidth >> 4;
-            this.potWidth |= this.potWidth >> 8;
-            this.potWidth |= this.potWidth >> 16;
-            this.potWidth++;
-
-            this.potHeight--;
-            this.potHeight |= this.potHeight >> 1;
-            this.potHeight |= this.potHeight >> 2;
-            this.potHeight |= this.potHeight >> 4;
-            this.potHeight |= this.potHeight >> 8;
-            this.potHeight |= this.potHeight >> 16;
-            this.potHeight++;
-
             this.renderer = scene.sys.game.renderer;
             var gl = scene.sys.game.renderer.gl;
 
