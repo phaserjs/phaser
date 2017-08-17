@@ -3,6 +3,7 @@
 module.exports = {
 
     Acceleration: require('./Acceleration'),
+    BodyScale: require('./BodyScale'),
     BodyType: require('./BodyType'),
     Bounce: require('./Bounce'),
     CheckAgainst: require('./CheckAgainst'),

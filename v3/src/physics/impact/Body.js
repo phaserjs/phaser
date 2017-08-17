@@ -115,7 +115,8 @@ var Body = new Class({
 
         if (go)
         {
-            go.setPosition((pos.x - this.offset.x) + go.displayOriginX, (pos.y - this.offset.y) + go.displayOriginY);
+            go.x = (pos.x - this.offset.x) + go.displayOriginX * go.scaleX;
+            go.y = (pos.y - this.offset.y) + go.displayOriginY * go.scaleY;
         }
 
         if (drawDebug)

@@ -9,6 +9,7 @@ var ImpactSprite = new Class({
 
     Mixins: [
         Components.Acceleration,
+        Components.BodyScale,
         Components.BodyType,
         Components.Bounce,
         Components.CheckAgainst,
