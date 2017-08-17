@@ -14,6 +14,7 @@ var ImpactSprite = new Class({
         Components.CheckAgainst,
         Components.Collides,
         Components.Debug,
+        Components.Friction,
         Components.Gravity,
         Components.Offset,
         Components.SetGameObject,

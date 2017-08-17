@@ -8,6 +8,7 @@ module.exports = {
     CheckAgainst: require('./CheckAgainst'),
     Collides: require('./Collides'),
     Debug: require('./Debug'),
+    Friction: require('./Friction'),
     Gravity: require('./Gravity'),
     Offset: require('./Offset'),
     SetGameObject: require('./SetGameObject'),
