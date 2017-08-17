@@ -41,9 +41,8 @@ var TileSprite = new Class({
 
         this.setTexture(texture, frame);
         this.setPosition(x, y);
-        this.setSizeToFrame();
-        this.setOrigin();
         this.setSize(width, height);
+        this.setOrigin();
 
         this.potWidth = this.frame.width;
         this.potHeight = this.frame.height;
