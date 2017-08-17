@@ -101,92 +101,6 @@ var World = new Class({
         this.updateWall(top, 'top', x, y - thickness, width, thickness);
         this.updateWall(bottom, 'bottom', x, y + height, width, thickness);
 
-        // if (left)
-        // {
-        //     if (leftWall)
-        //     {
-        //         leftWall.setSize(x - thickness, y, thickness, height);
-        //     }
-        //     else
-        //     {
-        //         this.walls.left = this.create(x - thickness, y, thickness, height);
-        //         this.walls.left.gravityFactor = 0;
-        //         this.walls.left.collides = COLLIDES.FIXED;
-        //     }
-        // }
-        // else
-        // {
-        //     if (leftWall)
-        //     {
-        //         this.bodies.remove(leftWall);
-        //     }
-
-        //     this.walls.left = null;
-        // }
-
-        // if (right)
-        // {
-        //     if (rightWall)
-        //     {
-        //         rightWall.setSize(x + width, y, thickness, height);
-        //     }
-        //     else
-        //     {
-        //         this.walls.right = this.create(x + width, y, thickness, height);
-        //     }
-        // }
-        // else
-        // {
-        //     if (rightWall)
-        //     {
-        //         this.bodies.remove(rightWall);
-        //     }
-
-        //     this.walls.right = null;
-        // }
-
-        // if (top)
-        // {
-        //     if (topWall)
-        //     {
-        //         topWall.setSize(x, y - thickness, width, thickness);
-        //     }
-        //     else
-        //     {
-        //         this.walls.top = this.create(x, y - thickness, width, thickness);
-        //     }
-        // }
-        // else
-        // {
-        //     if (topWall)
-        //     {
-        //         this.bodies.remove(topWall);
-        //     }
-
-        //     this.walls.top = null;
-        // }
-
-        // if (bottom)
-        // {
-        //     if (bottomWall)
-        //     {
-        //         bottomWall.setSize(x, y + height, width, thickness);
-        //     }
-        //     else
-        //     {
-        //         this.walls.bottom = this.create(x, y + height, width, thickness);
-        //     }
-        // }
-        // else
-        // {
-        //     if (bottomWall)
-        //     {
-        //         this.bodies.remove(bottomWall);
-        //     }
-
-        //     this.walls.bottom = null;
-        // }
-
         return this;
     },
 
@@ -204,6 +118,7 @@ var World = new Class({
             else
             {
                 this.walls[position] = this.create(x, y, width, height);
+                this.walls[position].name = position;
                 this.walls[position].gravityFactor = 0;
                 this.walls[position].collides = COLLIDES.FIXED;
             }
