@@ -152,9 +152,12 @@ var Body = new Class({
         );
     },
 
-    setGameObject: function (gameObject)
+    setSize: function (x, y, width, height)
     {
-        this.gameObject = gameObject;
+        this.pos.x = x;
+        this.pos.y = y;
+        this.size.x = width;
+        this.size.y = height;
 
         return this;
     },
