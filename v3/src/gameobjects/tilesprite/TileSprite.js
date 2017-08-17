@@ -86,8 +86,6 @@ var TileSprite = new Class({
             return;
         }
 
-        this.canvasBuffer.width = this.canvasBuffer.width;
-
         this.canvasBufferCtx.drawImage(
             this.frame.source.image,
             this.frame.cutX, this.frame.cutY,
@@ -98,7 +96,7 @@ var TileSprite = new Class({
 
         if (this.renderer)
         {
-            this.renderer.uploadCanvasToGPU(this.canvasBuffer, this.tileTexture, true);
+            this.renderer.uploadCanvasToGPU(this.canvasBuffer, this.tileTexture, false);
         }
         else
         {
