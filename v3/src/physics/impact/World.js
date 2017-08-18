@@ -5,7 +5,6 @@ var Class = require('../../utils/Class');
 var COLLIDES = require('./COLLIDES');
 var CollisionMap = require('./CollisionMap');
 var GetFastValue = require('../../utils/object/GetFastValue');
-var GetValue = require('../../utils/object/GetValue');
 var Set = require('../../structs/Set');
 var Solver = require('./Solver');
 var TYPE = require('./TYPE');
@@ -91,6 +90,13 @@ var World = new Class({
         {
             this.createDebugGraphic();
         }
+    },
+
+    setCollisionMap: function (tilesize, data)
+    {
+        this.collisionMap = new CollisionMap(tilesize, data);
+
+        return this;
     },
 
     /**
