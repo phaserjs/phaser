@@ -77,15 +77,9 @@ var CollisionMap = new Class({
 
     step: function (res, x, y, vx, vy, width, height, rvx, rvy, step)
     {
-        // res.pos.x += vx;
-        // res.pos.y += vy;
-
-        // if (window.dumpit)
-        // {
-        //     console.log('STEP', res.pos.x, res.pos.y, 'VX', vx, 'VY', vy, 'step', step);
-        // }
-        
         var t = 0;
+        var tileX;
+        var tileY;
         var tilesize = this.tilesize;
         var mapWidth = this.width;
         var mapHeight = this.height;
@@ -98,7 +92,8 @@ var CollisionMap = new Class({
             
             var firstTileY = Math.max(Math.floor(y / tilesize), 0);
             var lastTileY = Math.min(Math.ceil((y + height) / tilesize), mapHeight);
-            var tileX = Math.floor((res.pos.x + pxOffsetX) / tilesize);
+            
+            tileX = Math.floor((res.pos.x + pxOffsetX) / tilesize);
 
             var prevTileX = Math.floor((x + pxOffsetX) / tilesize);
 
@@ -106,51 +101,27 @@ var CollisionMap = new Class({
             {
                 prevTileX = -1;
             }
-
-            // if (window.debugslopes)
-            // {
-            //     console.group('VX');
-            //     console.log('pxOffsetX', pxOffsetX);
-            //     console.log('tileOffsetX', tileOffsetX);
-            //     console.log('firstTileY', firstTileY);
-            //     console.log('lastTileY', lastTileY);
-            //     console.log('tileX', tileX);
-            //     console.log('prevTileX', prevTileX);
-            // }
-            
+           
             if (tileX >= 0 && tileX < mapWidth)
             {
-                // console.log('X:', tileX);
-
-                for (var tileY = firstTileY; tileY < lastTileY; tileY++)
+                for (tileY = firstTileY; tileY < lastTileY; tileY++)
                 {
-                    // console.log('Y:', tileY);
-
                     if (prevTileX !== -1)
                     {
                         t = this.data[tileY][prevTileX];
 
-                        // console.log('t1', t);
-
                         if (t > 1 && t <= this.lastSlope && this.checkDef(res, t, x, y, rvx, rvy, width, height, prevTileX, tileY))
                         {
-                            // console.log('t1 break');
                             break;
                         }
                     }
                     
                     t = this.data[tileY][tileX];
 
-                        // if (window.debugslopes)
-                        // {
-                        //     console.log('Tile at', tileX, 'x', tileY, '=', t);
-                        // }
-
                     if (t === 1 || t > this.lastSlope || (t > 1 && this.checkDef(res, t, x, y, rvx, rvy, width, height, tileX, tileY)))
                     {
                         if (t > 1 && t <= this.lastSlope && res.collision.slope)
                         {
-                            // console.log('t2 break');
                             break;
                         }
                         
@@ -160,26 +131,10 @@ var CollisionMap = new Class({
                         x = res.pos.x;
                         rvx = 0;
 
-                        // if (window.debugslopes)
-                        // {
-                        //     console.log('>>> Hit solid tile <<<');
-
-                        //     console.log('tileX', tileX);
-                        //     console.log('tilesize', tilesize);
-                        //     console.log('pxOffsetX', pxOffsetX);
-                        //     console.log('tileOffsetX', tileOffsetX);
-                        //     console.log('=', res.pos.x);
-                        // }
-
                         break;
                     }
                 }
             }
-
-            // if (window.debugslopes)
-            // {
-            //     console.groupEnd();
-            // }
         }
         
         //  Vertical
@@ -190,7 +145,8 @@ var CollisionMap = new Class({
             
             var firstTileX = Math.max(Math.floor(res.pos.x / tilesize), 0);
             var lastTileX = Math.min(Math.ceil((res.pos.x + width) / tilesize), mapWidth);
-            var tileY = Math.floor((res.pos.y + pxOffsetY) / tilesize);
+            
+            tileY = Math.floor((res.pos.y + pxOffsetY) / tilesize);
             
             var prevTileY = Math.floor((y + pxOffsetY) / tilesize);
 
@@ -201,7 +157,7 @@ var CollisionMap = new Class({
             
             if (tileY >= 0 && tileY < mapHeight)
             {
-                for (var tileX = firstTileX; tileX < lastTileX; tileX++)
+                for (tileX = firstTileX; tileX < lastTileX; tileX++)
                 {
                     if (prevTileY !== -1)
                     {
