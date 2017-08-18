@@ -83,6 +83,7 @@ var StaticTilemap = new Class({
                     vbo.addAttribute(this.tilemapRenderer.shader.getAttribLocation('a_tex_coord'), 2, gl.FLOAT, false, CONST.VERTEX_SIZE, 8);
                     bufferData = this.bufferData = new ArrayBuffer((4 * 6 * (mapWidth * mapHeight)) * 4);
                     this.vbo = vbo;
+                    vbo.bind();
                 }
 
                 bufferF32 = new Float32Array(bufferData);
