@@ -602,7 +602,7 @@ var WebGLRenderer = new Class({
         }
 
         //  We must rebind old texture
-        if (dstTexture != this.currentTexture[0] && this.currentTexture[0] !== null)
+        if (this.currentTexture.length > 0 && dstTexture != this.currentTexture[0] && this.currentTexture[0] !== null)
         {
             gl.bindTexture(gl.TEXTURE_2D, this.currentTexture[0].texture);
         }
