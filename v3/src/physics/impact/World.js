@@ -5,6 +5,7 @@ var Class = require('../../utils/Class');
 var COLLIDES = require('./COLLIDES');
 var CollisionMap = require('./CollisionMap');
 var GetFastValue = require('../../utils/object/GetFastValue');
+var GetValue = require('../../utils/object/GetValue');
 var Set = require('../../structs/Set');
 var Solver = require('./Solver');
 var TYPE = require('./TYPE');
@@ -39,26 +40,52 @@ var World = new Class({
 
         this.debugGraphic;
 
+        var _maxVelocity = GetFastValue(config, 'maxVelocity', 100);
+
         this.defaults = {
             debugShowBody: GetFastValue(config, 'debugShowBody', true),
             debugShowVelocity: GetFastValue(config, 'debugShowVelocity', true),
             bodyDebugColor: GetFastValue(config, 'debugBodyColor', 0xff00ff),
             velocityDebugColor: GetFastValue(config, 'debugVelocityColor', 0x00ff00),
-            maxVelocityX: GetFastValue(config, 'maxVelocityX', 100),
-            maxVelocityY: GetFastValue(config, 'maxVelocityY', 100),
+            maxVelocityX: GetFastValue(config, 'maxVelocityX', _maxVelocity),
+            maxVelocityY: GetFastValue(config, 'maxVelocityY', _maxVelocity),
             minBounceVelocity: GetFastValue(config, 'minBounceVelocity', 40),
             gravityFactor: GetFastValue(config, 'gravityFactor', 1),
             bounciness: GetFastValue(config, 'bounciness', 0)
         };
-
-        this.delta = 0;
 
         /**
         * @property {object} walls - An object containing the 4 wall bodies that bound the physics world.
         */
         this.walls = { left: null, right: null, top: null, bottom: null };
     
+        this.delta = 0;
+
         this._lastId = 0;
+
+        if (GetFastValue(config, 'setBounds', false))
+        {
+            var boundsConfig = config['setBounds'];
+
+            if (typeof boundsConfig === 'boolean')
+            {
+                this.setBounds();
+            }
+            else
+            {
+                var x = GetFastValue(boundsConfig, 'x', 0);
+                var y = GetFastValue(boundsConfig, 'y', 0);
+                var width = GetFastValue(boundsConfig, 'width', scene.sys.game.config.width);
+                var height = GetFastValue(boundsConfig, 'height', scene.sys.game.config.height);
+                var thickness = GetFastValue(boundsConfig, 'thickness', 64);
+                var left = GetFastValue(boundsConfig, 'left', true);
+                var right = GetFastValue(boundsConfig, 'right', true);
+                var top = GetFastValue(boundsConfig, 'top', true);
+                var bottom = GetFastValue(boundsConfig, 'bottom', true);
+
+                this.setBounds(x, y, width, height, thickness, left, right, top, bottom);
+            }
+        }
 
         if (this.drawDebug)
         {

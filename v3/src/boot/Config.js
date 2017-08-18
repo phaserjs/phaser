@@ -89,11 +89,12 @@ var Config = new Class({
         //  Physics
         //  physics: {
         //      system: 'impact',
-        //      worldBounds: (TODO)
+        //      setBounds: true,
         //      gravity: 0,
-        //      cellSize: 64,
+        //      cellSize: 64
         //  }
-        this.physics = GetValue(config, 'physics', null);
+        this.physics = GetValue(config, 'physics', {});
+        this.defaultPhysicsSystem = GetValue(this.physics, 'default', false);
 
         //  Default / Missing Images
         var pngPrefix = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAg';

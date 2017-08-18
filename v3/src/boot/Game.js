@@ -11,10 +11,10 @@ var VisibilityHandler = require('./VisibilityHandler');
 
 var AnimationManager = require('../animation/manager/AnimationManager');
 var CreateRenderer = require('./CreateRenderer');
-var Data = require('../plugins/Data');
+var Data = require('../scene/plugins/Data');
 var GlobalCache = require('../cache/GlobalCache');
 var GlobalInputManager = require('../input/global/GlobalInputManager');
-var GlobalSceneManager = require('../scene/GlobalSceneManager');
+var GlobalSceneManager = require('../scene/global/GlobalSceneManager');
 var TextureManager = require('../textures/TextureManager');
 var TimeStep = require('./TimeStep');
 

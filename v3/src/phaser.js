@@ -28,7 +28,7 @@ var Phaser = {
 
     GameObjects: require('./gameobjects'),
 
-    Scene: require('./scene/Scene'),
+    Scene: require('./scene/local/Scene'),
 
     Loader: {
 
@@ -40,7 +40,7 @@ var Phaser = {
 
     Structs: require('./structs'),
 
-    Physics: require('./physics'),
+    // Physics: require('./physics'),
 
     Class: require('./utils/Class'),
 
