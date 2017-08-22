@@ -157,6 +157,44 @@ var StaticTilemap = new Class({
             this.tilemapRenderer.shader.setConstantFloat2(this.tilemapRenderer.scrollFactorLocation, this.scrollFactorX, this.scrollFactorY);
             this.tilemapRenderer.shader.setConstantFloat2(this.tilemapRenderer.tilemapPositionLocation, this.x, this.y);
         }
+        else if (this.dirty && !this.gl)
+        {
+            var mapWidth = this.mapWidth;
+            var mapHeight = this.mapHeight;
+            var border = this.tileBorder;
+            var tileWidth = this.tileWidth;
+            var tileHeight = this.tileHeight;
+            var tileWidthBorder = tileWidth + border * 2;
+            var tileHeightBorder = tileHeight + border * 2;
+            var width = this.texture.source[0].width;
+            var height = this.texture.source[0].height;
+            var setWidth = width / tileWidth;
+            var mapData = this.mapData;
+
+            this.tiles = [];
+
+            for (var y = 0; y < mapHeight; ++y)
+            {
+                for (var x = 0; x < mapWidth; ++x)
+                {
+                    var tileId = mapData[y * mapWidth + x];
+                    var frameX = (((tileId % setWidth)|0) * tileWidthBorder);
+                    var frameY = (((tileId / setWidth)|0) * tileHeightBorder);
+                    var tx = x * tileWidth;
+                    var ty = y * tileHeight;
+
+                    this.tiles.push({
+                        x: tx,
+                        y: ty,
+                        frameX: frameX,
+                        frameY: frameY
+                    });
+
+                }
+            }
+
+            this.dirty = false;
+        }
     },
 
     getTotalTileCount: function ()
