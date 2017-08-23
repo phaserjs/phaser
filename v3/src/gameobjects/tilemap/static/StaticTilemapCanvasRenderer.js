@@ -7,7 +7,7 @@ var StaticTilemapCanvasRenderer = function (renderer, gameObject, interpolationP
 
     gameObject.upload(camera);
 
-    var tiles = gameObject.tiles;
+    var tiles = camera.cullTilemap(gameObject);
     var tileWidth = gameObject.tileWidth;
     var tileHeight = gameObject.tileHeight;
     var frame = gameObject.frame;
@@ -16,6 +16,8 @@ var StaticTilemapCanvasRenderer = function (renderer, gameObject, interpolationP
     var image = frame.source.image;
     var tx = gameObject.x - camera.scrollX * gameObject.scrollFactorX;
     var ty = gameObject.y - camera.scrollY * gameObject.scrollFactorY;
+    var boundsX = camera.scrollX;
+
     ctx.save();
     ctx.translate(tx, ty);
     ctx.rotate(gameObject.rotation);

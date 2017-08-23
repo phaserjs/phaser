@@ -70,6 +70,7 @@ var Camera = new Class({
     centerToSize: require('./components/CenterToSize'),
     cull: require('./components/Cull'),
     cullHitTest: require('./components/CullHitTest'),
+    cullTilemap: require('./components/CullTilemap'),
     destroy: require('./components/Destroy'),
     fade: require('./components/Fade'),
     flash: require('./components/Flash'),
