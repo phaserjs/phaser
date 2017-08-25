@@ -16,6 +16,7 @@ function Tile (properties)
     this.textureWidth = properties.textureWidth;
     this.textureHeight = properties.textureHeight;
     this.border = properties.border;
+    this.center = properties.center; 
 }
 
 Tile.prototype.setId = function (id)
@@ -28,6 +29,11 @@ Tile.prototype.setId = function (id)
     var tileHeightBorder = (tileHeight + this.border * 2);
     var halfTileWidth = tileWidthBorder * 0.5;
     var halfTileHeight = tileHeightBorder * 0.5;
+    if (!this.center)
+    {
+        halfTileWidth = 0;
+        halfTileHeight = 0;
+    }
     var rectx = (((tileId % setWidth)|0) * tileWidthBorder) + halfTileWidth;
     var recty = (((tileId / setWidth)|0) * tileHeightBorder) + halfTileHeight;
 

@@ -43,7 +43,7 @@ var Tilemap = new Class({
         this.setSizeToFrame();
         this.setOrigin();
         this.setSize(tileWidth * mapWidth, tileHeight * mapHeight);
-        this.buildTilemap();
+        this.buildTilemap(!!scene.sys.game.renderer.gl);
     },
 
     getTotalTileCount: function ()
@@ -56,7 +56,7 @@ var Tilemap = new Class({
         return this.cull(camera).length;
     },
 
-    buildTilemap: function ()
+    buildTilemap: function (center)
     {
         var tileArray = this.tileArray;
         var mapData = this.mapData;
@@ -70,6 +70,14 @@ var Tilemap = new Class({
         var mapWidth = this.mapWidth;
         var mapHeight = this.mapHeight;
         var setWidth = width / tileWidth;
+        var tileWidthBorderHalf = tileWidthBorder * 0.5;
+        var tileHeightBorderHalf = tileHeightBorder * 0.5;
+
+        if (!center)
+        {
+            tileWidthBorderHalf = 0;
+            tileHeightBorderHalf = 0;
+        }
 
         tileArray.length = 0;
 
@@ -78,10 +86,8 @@ var Tilemap = new Class({
             for (var x = 0; x < mapWidth; ++x)
             {
                 var tileId = mapData[y * mapWidth + x];
-                var halfTileWidth = (tileWidthBorder) * 0.5;
-                var halfTileHeight = (tileHeightBorder) * 0.5;
-                var rectx = (((tileId % setWidth)|0) * tileWidthBorder) + halfTileWidth;
-                var recty = (((tileId / setWidth)|0) * tileHeightBorder) + halfTileHeight;
+                var rectx = (((tileId % setWidth)|0) * tileWidthBorder) + tileWidthBorderHalf;
+                var recty = (((tileId / setWidth)|0) * tileHeightBorder) + tileHeightBorderHalf;
                 var tx = x * tileWidth;
                 var ty = y * tileHeight;
 
@@ -98,7 +104,8 @@ var Tilemap = new Class({
                     frameHeight: tileHeight,
                     textureWidth: width,
                     textureHeight: height,
-                    border: border
+                    border: border,
+                    center: center
                 }));
             }
         }
