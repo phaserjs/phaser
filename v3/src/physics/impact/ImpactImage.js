@@ -1,6 +1,6 @@
 
 var Class = require('../../utils/Class');
-var Components = require('./Components');
+var Components = require('./components');
 var Image = require('../../gameobjects/image/Image');
 
 var ImpactImage = new Class({
