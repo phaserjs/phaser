@@ -226,12 +226,6 @@ var World = new Class({
         var len = bodies.length;
         var hash = {};
         var size = this.cellSize;
-        var debug = this.drawDebug;
-
-        if (debug)
-        {
-            this.debugGraphic.clear();
-        }
 
         for (i = 0; i < len; i++)
         {
@@ -239,7 +233,7 @@ var World = new Class({
 
             if (body.enabled)
             {
-                body.update(this.delta, debug);
+                body.update(this.delta);
             }
         }
 
@@ -252,6 +246,23 @@ var World = new Class({
             if (!body.skipHash())
             {
                 this.checkHash(body, hash, size);
+            }
+        }
+
+        if (this.drawDebug)
+        {
+            var graphics = this.debugGraphic;
+
+            graphics.clear();
+
+            for (i = 0; i < len; i++)
+            {
+                body = bodies[i];
+
+                if (body.willDrawDebug())
+                {
+                    body.drawDebug(graphics);
+                }
             }
         }
     },

@@ -89,7 +89,7 @@ var Body = new Class({
         this.collides = COLLIDES.NEVER;
     },
 
-    update: function (delta, drawDebug)
+    update: function (delta)
     {
         var pos = this.pos;
 
@@ -119,30 +119,35 @@ var Body = new Class({
             go.y = (pos.y - this.offset.y) + go.displayOriginY * go.scaleY;
         }
 
-        if (drawDebug)
-        {
-            var graphic = this.world.debugGraphic;
-
-            if (this.debugShowBody)
-            {
-                graphic.lineStyle(1, this.debugBodyColor, 1);
-                graphic.strokeRect(pos.x, pos.y, this.size.x, this.size.y);
-            }
-
-            if (this.debugShowVelocity)
-            {
-                var x = pos.x + this.size.x / 2;
-                var y = pos.y + this.size.y / 2;
-
-                graphic.lineStyle(1, this.world.defaults.velocityDebugColor, 1);
-                graphic.lineBetween(x, y, x + this.vel.x, y + this.vel.y);
-            }
-        }
-
         if (this.updateCallback)
         {
             this.updateCallback(this);
         }
+    },
+
+    drawDebug: function (graphic)
+    {
+        var pos = this.pos;
+
+        if (this.debugShowBody)
+        {
+            graphic.lineStyle(1, this.debugBodyColor, 1);
+            graphic.strokeRect(pos.x, pos.y, this.size.x, this.size.y);
+        }
+
+        if (this.debugShowVelocity)
+        {
+            var x = pos.x + this.size.x / 2;
+            var y = pos.y + this.size.y / 2;
+
+            graphic.lineStyle(1, this.world.defaults.velocityDebugColor, 1);
+            graphic.lineBetween(x, y, x + this.vel.x, y + this.vel.y);
+        }
+    },
+
+    willDrawDebug: function ()
+    {
+        return (this.debugShowBody || this.debugShowVelocity);
     },
 
     skipHash: function ()
