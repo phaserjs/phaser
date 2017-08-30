@@ -41,6 +41,9 @@ var Tween = new Class({
         //  Countdown timer (used by loopDelay and completeDelay)
         this.countdown = 0;
 
+        //  Set only if this Tween is part of a Timeline. Controls the offset from the start time of the Timeline.
+        this.offset = 0;
+
         //  The current state of the tween
         this.state = TWEEN_CONST.PENDING_ADD;
 
