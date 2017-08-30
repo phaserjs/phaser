@@ -230,7 +230,6 @@ var TweenBuilder = function (manager, config)
         //  Create 1 TweenData per target, per property
         for (var t = 0; t < targets.length; t++)
         {
-            //  Swap for faster getters, if they want Advanced Value style things, they can do it via their own functions
             var tweenData = TweenData(
                 targets[t],
                 key,
