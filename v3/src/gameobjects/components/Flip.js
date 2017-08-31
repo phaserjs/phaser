@@ -10,7 +10,7 @@ var Flip = {
         return this;
     },
 
-    toggleFlipY: function (value)
+    toggleFlipY: function ()
     {
         this.flipY = !this.flipY;
 
@@ -26,7 +26,7 @@ var Flip = {
 
     setFlipY: function (value)
     {
-        this.flipX = value;
+        this.flipY = value;
 
         return this;
     },
