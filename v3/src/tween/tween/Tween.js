@@ -1,4 +1,4 @@
-var Class = require('../utils/Class');
+var Class = require('../../utils/Class');
 var TWEEN_CONST = require('./const');
 
 var Tween = new Class({
@@ -129,5 +129,7 @@ var Tween = new Class({
     update: require('./components/Update')
 
 });
+
+Tween.TYPES = [ 'onStart', 'onUpdate', 'onRepeat', 'onLoop', 'onComplete', 'onYoyo' ];
 
 module.exports = Tween;

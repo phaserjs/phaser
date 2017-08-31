@@ -1,4 +1,4 @@
-var EaseMap = require('../math/easing/EaseMap');
+var EaseMap = require('../../math/easing/EaseMap');
 
 var GetEaseFunction = function (ease, easeParams)
 {

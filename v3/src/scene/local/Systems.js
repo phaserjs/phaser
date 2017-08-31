@@ -13,7 +13,7 @@ var PoolManager = require('../plugins/PoolManager');
 var SceneManager = require('../plugins/SceneManager');
 var Settings = require('./Settings');
 var StableSort = require('../../utils/array/StableSort');
-var TweenManager = require('../../tween/TweenManager');
+var TweenManager = require('../../tween/manager/TweenManager');
 var UpdateList = require('../plugins/UpdateList');
 
 var Systems = new Class({

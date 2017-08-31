@@ -1,9 +1,9 @@
-var GetAdvancedValue = require('../utils/object/GetAdvancedValue');
+var GetAdvancedValue = require('../../utils/object/GetAdvancedValue');
 var GetEaseFunction = require('./GetEaseFunction');
-var GetValue = require('../utils/object/GetValue');
+var GetValue = require('../../utils/object/GetValue');
 var RESERVED = require('./ReservedProps');
-var Tween = require('./Tween');
-var TweenData = require('./TweenData');
+var Tween = require('../tween/Tween');
+var TweenData = require('../tween/TweenData');
 
 var GetTargets = function (config)
 {
