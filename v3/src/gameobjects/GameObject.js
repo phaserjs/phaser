@@ -17,8 +17,6 @@ var GameObject = new Class({
 
         this.tabIndex = -1;
 
-        this.parent;
-
         //  0001 | 0010 | 0100 | 1000
         //  Will Render bitmask flags for the components Visible, Alpha, Transform and Texture respectively
         this.renderMask = 15;
@@ -75,10 +73,8 @@ var GameObject = new Class({
 
     destroy: function ()
     {
-        if (this.parent)
-        {
-            this.parent.remove(this);
-        }
+        this.scene.sys.displayList.remove(this);
+        this.scene.sys.updateList.remove(this);
 
         if (this.input)
         {

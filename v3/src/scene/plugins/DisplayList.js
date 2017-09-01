@@ -18,18 +18,12 @@ var DisplayList = new Class({
 
     add: function (child)
     {
-        if (child.parent === this.scene)
-        {
-            return child;
-        }
-        else if (child.parent)
-        {
-            child.parent.children.remove(child);
-        }
+        //  Is child already in this display list?
 
-        child.parent = this.scene;
-
-        this.list.push(child);
+        if (this.getIndex(child) === -1)
+        {
+            this.list.push(child);
+        }
 
         return child;
     },
@@ -45,18 +39,13 @@ var DisplayList = new Class({
 
         if (index >= 0 && index <= this.list.length)
         {
-            if (child.parent)
+            if (this.getIndex(child) === -1)
             {
-                child.parent.children.remove(child);
+                this.list.splice(index, 0, child);
             }
-
-            child.parent = this.scene;
-
-            this.list.splice(index, 0, child);
         }
 
         return child;
-
     },
 
     addMultiple: function (children)
@@ -79,7 +68,7 @@ var DisplayList = new Class({
 
     getIndex: function (child)
     {
-        //  Return -1 if given child isn't a child of this parent
+        //  Return -1 if given child isn't a child of this display list
         return this.list.indexOf(child);
     },
 
@@ -289,8 +278,6 @@ var DisplayList = new Class({
 
         if (index !== -1)
         {
-            child.parent = undefined;
-
             this.list.splice(index, 1);
         }
         
@@ -303,8 +290,6 @@ var DisplayList = new Class({
 
         if (child)
         {
-            child.parent = undefined;
-
             this.children.splice(index, 1);
         }
 
@@ -321,11 +306,6 @@ var DisplayList = new Class({
         if (range > 0 && range <= endIndex)
         {
             var removed = this.list.splice(beginIndex, range);
-
-            for (var i = 0; i < removed.length; i++)
-            {
-                removed[i].parent = undefined;
-            }
 
             return removed;
         }
@@ -361,23 +341,6 @@ var DisplayList = new Class({
         this.removeAll();
     },
 
-    //  Check to see if the given child is a child of this object, at any depth (recursively scans up the tree)
-    contains: function (child)
-    {
-        if (!child)
-        {
-            return false;
-        }
-        else if (child.parent === this.scene)
-        {
-            return true;
-        }
-        else
-        {
-            return this.contains(child.parent);
-        }
-    },
-
     /**
     * Brings the given child to the top of this group so it renders above all other children.
     *
@@ -387,7 +350,7 @@ var DisplayList = new Class({
     */
     bringToTop: function (child)
     {
-        if (child.parent === this.scene && this.getIndex(child) < this.list.length)
+        if (this.getIndex(child) < this.list.length)
         {
             this.remove(child);
             this.add(child);
@@ -405,7 +368,7 @@ var DisplayList = new Class({
     */
     sendToBack: function (child)
     {
-        if (child.parent === this.scene && this.getIndex(child) > 0)
+        if (this.getIndex(child) > 0)
         {
             this.remove(child);
             this.addAt(child, 0);
@@ -507,10 +470,7 @@ var DisplayList = new Class({
 
         if (index !== -1)
         {
-            if (newChild.parent)
-            {
-                newChild.parent.remove(newChild);
-            }
+            newChild.scene.sys.displayList.remove(newChild);
 
             this.remove(oldChild);
 
@@ -525,15 +485,15 @@ var DisplayList = new Class({
     //  child2 = the child of the OTHER parent
     exchange: function (child1, child2)
     {
-        if (child1 === child2 || child1.parent === child2.parent)
+        if (child1 === child2 || child1.scene === child2.scene)
         {
             return;
         }
 
-        var parentChildren = child2.parent.children;
+        var child2Parent = child2.scene.sys.displayList;
 
         var index1 = this.getIndex(child1);
-        var index2 = parentChildren.getIndex(child2);
+        var index2 = child2Parent.getIndex(child2);
 
         if (index1 < 0 || index2 < 0)
         {
@@ -542,11 +502,11 @@ var DisplayList = new Class({
 
         this.remove(child1);
 
-        parentChildren.remove(child2);
+        child2Parent.remove(child2);
 
         this.addAt(child2, index1);
 
-        parentChildren.addAt(child1, index2);
+        child2Parent.addAt(child1, index2);
     },
 
     /**
@@ -619,7 +579,7 @@ var DisplayList = new Class({
             {
                 var child = this.remove(this.list[i]);
 
-                newParent.add(child);
+                newParent.sys.displayList.add(child);
             }
         }
 
