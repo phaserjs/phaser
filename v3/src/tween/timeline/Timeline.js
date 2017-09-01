@@ -306,8 +306,6 @@ var Timeline = new Class({
                 {
                     // this.nextState();
 
-                    console.log('Timeline.update nothing running');
-
                     this.state = TWEEN_CONST.PENDING_REMOVE;
                 }
 

@@ -71,17 +71,6 @@ var TweenBuilder = function (manager, config, defaults)
 
     tween.totalTargets = targets.length;
 
-    //  Creates a function based on the offset value for Timeline tweens
-
-    // if (config.hasOwnProperty('offset'))
-    // {
-    //     tween.offset = GetValueOp('offset', config['offset']);
-    // }
-    // else
-    // {
-    //     tween.offset = function (i) { return i; };
-    // }
-
     tween.offset = GetAdvancedValue(config, 'offset', null);
     tween.completeDelay = GetAdvancedValue(config, 'completeDelay', 0);
     tween.loop = GetAdvancedValue(config, 'loop', 0);
