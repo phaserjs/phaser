@@ -1,11 +1,13 @@
 var TWEEN_CONST = require('../const');
 var UpdateTweenData = require('./UpdateTweenData');
 
+//  Returns 'true' if this Tween has finished and should be removed from the Tween Manager
+//  Otherwise, returns false
 var Update = function (timestamp, delta)
 {
     if (this.state === TWEEN_CONST.PAUSED)
     {
-        return;
+        return false;
     }
 
     if (this.useFrames)
@@ -44,6 +46,7 @@ var Update = function (timestamp, delta)
             break;
 
         case TWEEN_CONST.LOOP_DELAY:
+        case TWEEN_CONST.OFFSET_DELAY:
 
             this.countdown -= delta;
 

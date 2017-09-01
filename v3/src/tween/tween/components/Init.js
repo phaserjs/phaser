@@ -26,7 +26,8 @@ var Init = function ()
 
     // console.log('Tween duration', this.duration, 'totalDuration', this.totalDuration);
 
-    if (this.paused)
+    //  You can't have a paused Tween if it's part of a Timeline
+    if (this.paused && !this.timeline)
     {
         this.state = TWEEN_CONST.PAUSED;
 

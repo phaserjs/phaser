@@ -4,11 +4,6 @@ var TWEEN_CONST = require('../const');
 
 var Stop = function ()
 {
-    if (this.state === TWEEN_CONST.PENDING_REMOVE)
-    {
-        return;
-    }
-
     this.state = TWEEN_CONST.PENDING_REMOVE;
 };
 

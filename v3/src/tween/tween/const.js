@@ -5,12 +5,13 @@ var TWEEN_CONST = {
     CREATED: 0,
     INIT: 1,
     DELAY: 2,
-    PENDING_RENDER: 3,
-    PLAYING_FORWARD: 4,
-    PLAYING_BACKWARD: 5,
-    HOLD_DELAY: 6,
-    REPEAT_DELAY: 7,
-    COMPLETE: 8,
+    OFFSET_DELAY: 3,
+    PENDING_RENDER: 4,
+    PLAYING_FORWARD: 5,
+    PLAYING_BACKWARD: 6,
+    HOLD_DELAY: 7,
+    REPEAT_DELAY: 8,
+    COMPLETE: 9,
 
     //  Tween specific (starts from 20 to cleanly allow extra TweenData consts in the future)
 

@@ -1,223 +1,40 @@
+var Defaults = require('../tween/Defaults');
 var GetAdvancedValue = require('../../utils/object/GetAdvancedValue');
+var GetBoolean = require('./GetBoolean');
 var GetEaseFunction = require('./GetEaseFunction');
+var GetNewValue = require('./GetNewValue');
+var GetProps = require('./GetProps');
+var GetTargets = require('./GetTargets');
 var GetValue = require('../../utils/object/GetValue');
-var RESERVED = require('./ReservedProps');
+var GetValueOp = require('./GetValueOp');
 var Tween = require('../tween/Tween');
 var TweenData = require('../tween/TweenData');
 
-var GetTargets = function (config)
+var TweenBuilder = function (manager, config, defaults)
 {
-    var targets = GetValue(config, 'targets', null);
-
-    if (typeof targets === 'function')
+    if (defaults === undefined)
     {
-        targets = targets.call();
+        defaults = Defaults;
     }
 
-    if (!Array.isArray(targets))
-    {
-        targets = [ targets ];
-    }
-
-    return targets;
-};
-
-var GetProps = function (config)
-{
-    var key;
-    var keys = [];
-
-    //  First see if we have a props object
-
-    if (config.hasOwnProperty('props'))
-    {
-        for (key in config.props)
-        {
-            //  Skip any property that starts with an underscore
-            if (key.substr(0, 1) !== '_')
-            {
-                keys.push({ key: key, value: config.props[key] });
-            }
-        }
-    }
-    else
-    {
-        for (key in config)
-        {
-            //  Skip any property that is in the ReservedProps list or that starts with an underscore
-            if (RESERVED.indexOf(key) === -1 && key.substr(0, 1) !== '_')
-            {
-                keys.push({ key: key, value: config[key] });
-            }
-        }
-    }
-
-    return keys;
-};
-
-var GetValueOp = function (key, value)
-{
-    var valueCallback;
-    var t = typeof(value);
-
-    if (t === 'number')
-    {
-        // props: {
-        //     x: 400,
-        //     y: 300
-        // }
-
-        valueCallback = function ()
-        {
-            return value;
-        };
-    }
-    else if (t === 'string')
-    {
-        // props: {
-        //     x: '+=400',
-        //     y: '-=300',
-        //     z: '*=2',
-        //     w: '/=2'
-        // }
-
-        var op = value[0];
-        var num = parseFloat(value.substr(2));
-
-        switch (op)
-        {
-            case '+':
-                valueCallback = function (i)
-                {
-                    return i + num;
-                };
-                break;
-
-            case '-':
-                valueCallback = function (i)
-                {
-                    return i - num;
-                };
-                break;
-
-            case '*':
-                valueCallback = function (i)
-                {
-                    return i * num;
-                };
-                break;
-
-            case '/':
-                valueCallback = function (i)
-                {
-                    return i / num;
-                };
-                break;
-
-            default:
-                valueCallback = function ()
-                {
-                    return parseFloat(value);
-                };
-        }
-    }
-    else if (t === 'function')
-    {
-        // props: {
-        //     x: function (startValue, target, index, totalTargets) { return startValue + (index * 50); },
-        // }
-
-        valueCallback = function (startValue, target, index, total)
-        {
-            return value(startValue, target, index, total);
-        };
-    }
-    else if (value.hasOwnProperty('value'))
-    {
-        //  Value may still be a string, function or a number
-        // props: {
-        //     x: { value: 400, ... },
-        //     y: { value: 300, ... }
-        // }
-
-        valueCallback = GetValueOp(key, value.value);
-    }
-
-    return valueCallback;
-};
-
-var GetBoolean = function (source, key, defaultValue)
-{
-    if (!source)
-    {
-        return defaultValue;
-    }
-    else if (source.hasOwnProperty(key))
-    {
-        return source[key];
-    }
-    else
-    {
-        return defaultValue;
-    }
-};
-
-var GetNewValue = function (source, key, defaultValue)
-{
-    var valueCallback;
-
-    if (source.hasOwnProperty(key))
-    {
-        var t = typeof(source[key]);
-
-        if (t === 'function')
-        {
-            valueCallback = function (index, totalTargets, target)
-            {
-                return source[key](index, totalTargets, target);
-            };
-        }
-        else
-        {
-            valueCallback = function ()
-            {
-                return source[key];
-            };
-        }
-    }
-    else if (typeof defaultValue === 'function')
-    {
-        valueCallback = defaultValue;
-    }
-    else
-    {
-        valueCallback = function ()
-        {
-            return defaultValue;
-        };
-    }
-
-    return valueCallback;
-};
-
-var TweenBuilder = function (manager, config)
-{
     //  Create arrays of the Targets and the Properties
-    var targets = GetTargets(config);
+    var targets = (defaults.targets) ? defaults.targets : GetTargets(config);
+
+    // var props = (defaults.props) ? defaults.props : GetProps(config);
     var props = GetProps(config);
 
     //  Default Tween values
-    var delay = GetNewValue(config, 'delay', 0);
-    var duration = GetNewValue(config, 'duration', 1000);
-    var ease = GetEaseFunction(GetValue(config, 'ease', 'Power0'), easeParams);
-    var easeParams = GetValue(config, 'easeParams', null);
-    var hold = GetNewValue(config, 'hold', 0);
-    var repeat = GetNewValue(config, 'repeat', 0);
-    var repeatDelay = GetNewValue(config, 'repeatDelay', 0);
-    var startAt = GetNewValue(config, 'startAt', null);
-    var yoyo = GetBoolean(config, 'yoyo', false);
-    var flipX = GetBoolean(config, 'flipX', false);
-    var flipY = GetBoolean(config, 'flipY', false);
+    var delay = GetNewValue(config, 'delay', defaults.delay);
+    var duration = GetNewValue(config, 'duration', defaults.duration);
+    var easeParams = GetValue(config, 'easeParams', defaults.easeParams);
+    var ease = GetEaseFunction(GetValue(config, 'ease', defaults.ease), easeParams);
+    var hold = GetNewValue(config, 'hold', defaults.hold);
+    var repeat = GetNewValue(config, 'repeat', defaults.repeat);
+    var repeatDelay = GetNewValue(config, 'repeatDelay', defaults.repeatDelay);
+    var startAt = GetNewValue(config, 'startAt', defaults.startAt);
+    var yoyo = GetBoolean(config, 'yoyo', defaults.yoyo);
+    var flipX = GetBoolean(config, 'flipX', defaults.flipX);
+    var flipY = GetBoolean(config, 'flipY', defaults.flipY);
 
     var data = [];
 
@@ -254,6 +71,18 @@ var TweenBuilder = function (manager, config)
 
     tween.totalTargets = targets.length;
 
+    //  Creates a function based on the offset value for Timeline tweens
+
+    // if (config.hasOwnProperty('offset'))
+    // {
+    //     tween.offset = GetValueOp('offset', config['offset']);
+    // }
+    // else
+    // {
+    //     tween.offset = function (i) { return i; };
+    // }
+
+    tween.offset = GetAdvancedValue(config, 'offset', null);
     tween.completeDelay = GetAdvancedValue(config, 'completeDelay', 0);
     tween.loop = GetAdvancedValue(config, 'loop', 0);
     tween.loopDelay = GetAdvancedValue(config, 'loopDelay', 0);

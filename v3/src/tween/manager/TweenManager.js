@@ -1,5 +1,6 @@
 
 var Class = require('../../utils/Class');
+var TimelineBuilder = require('../builder/TimelineBuilder');
 var TweenBuilder = require('../builder/TweenBuilder');
 
 var TweenManager = new Class({
@@ -25,6 +26,24 @@ var TweenManager = new Class({
     boot: function ()
     {
         this.timeScale = 1;
+    },
+
+    //  Create a Tween Timeline and return it, but do NOT add it to the active or pending Tween lists
+    createTimeline: function (config)
+    {
+        return TimelineBuilder(this, config);
+    },
+
+    //  Create a Tween Timeline and add it to the active Tween list
+    timeline: function (config)
+    {
+        var timeline = TimelineBuilder(this, config);
+
+        this._add.push(timeline);
+
+        this._toProcess++;
+
+        return timeline;
     },
 
     //  Create a Tween and return it, but do NOT add it to the active or pending Tween lists

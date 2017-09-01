@@ -9,6 +9,9 @@ var Tween = new Class({
     {
         this.manager = manager;
 
+        //  If the Tween is part of a timeline this tells us which one
+        this.timeline = null;
+
         //  An array of TweenData objects, each containing a unique property and target being tweened.
         this.data = data;
 
@@ -41,8 +44,11 @@ var Tween = new Class({
         //  Countdown timer (used by loopDelay and completeDelay)
         this.countdown = 0;
 
-        //  Set only if this Tween is part of a Timeline. Controls the offset from the start time of the Timeline.
+        //  Set only if this Tween is part of a Timeline.
         this.offset = 0;
+
+        //  Set only if this Tween is part of a Timeline. The calculated offset amount.
+        this.calculatedOffset = 0;
 
         //  The current state of the tween
         this.state = TWEEN_CONST.PENDING_ADD;

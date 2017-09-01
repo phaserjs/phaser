@@ -7,7 +7,22 @@ var Play = function ()
         return;
     }
 
-    if (this.paused)
+    if (this.timeline)
+    {
+        this.resetTweenData();
+
+        if (this.calculatedOffset === 0)
+        {
+            this.state = TWEEN_CONST.ACTIVE;
+        }
+        else
+        {
+            this.countdown = this.calculatedOffset;
+
+            this.state = TWEEN_CONST.OFFSET_DELAY;
+        }
+    }
+    else if (this.paused)
     {
         this.paused = false;
     
@@ -17,7 +32,6 @@ var Play = function ()
     }
     else
     {
-        //  Reset the TweenData
         this.resetTweenData();
 
         this.state = TWEEN_CONST.ACTIVE;
