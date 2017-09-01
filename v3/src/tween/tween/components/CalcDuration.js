@@ -22,10 +22,18 @@ var CalcDuration = function ()
         //  Total Duration
         tweenData.totalDuration = tweenData.delay + tweenData.t1;
 
-        tweenData.totalDuration += tweenData.t2 * (tweenData.repeat === -1) ? 999999999999 : tweenData.repeat;
+        if (tweenData.repeat === -1)
+        {
+            tweenData.totalDuration += (tweenData.t2 * 999999999999);
+        }
+        else if (tweenData.repeat > 0)
+        {
+            tweenData.totalDuration += (tweenData.t2 * tweenData.repeat);
+        }
 
         if (tweenData.totalDuration > max)
         {
+            //  Get the longest TweenData from the Tween, used to calculate the Tween TD
             max = tweenData.totalDuration;
         }
     }

@@ -73,8 +73,8 @@ var TweenBuilder = function (manager, config, defaults)
 
     tween.offset = GetAdvancedValue(config, 'offset', null);
     tween.completeDelay = GetAdvancedValue(config, 'completeDelay', 0);
-    tween.loop = GetAdvancedValue(config, 'loop', 0);
-    tween.loopDelay = GetAdvancedValue(config, 'loopDelay', 0);
+    tween.loop = Math.round(GetAdvancedValue(config, 'loop', 0));
+    tween.loopDelay = Math.round(GetAdvancedValue(config, 'loopDelay', 0));
     tween.paused = GetBoolean(config, 'paused', false);
     tween.useFrames = GetBoolean(config, 'useFrames', false);
 

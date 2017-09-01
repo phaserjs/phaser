@@ -38,10 +38,10 @@ var Tween = new Class({
         //  How many loops are left to run?
         this.loopCounter = 0;
 
-        //  Time in ms/frames before the 'onComplete' event fires. This never fires if loop = true (as it never completes)
+        //  Time in ms/frames before the 'onComplete' event fires. This never fires if loop = -1 (as it never completes)
         this.completeDelay = 0;
 
-        //  Countdown timer (used by loopDelay and completeDelay)
+        //  Countdown timer (used by timeline offset, loopDelay and completeDelay)
         this.countdown = 0;
 
         //  Set only if this Tween is part of a Timeline.
