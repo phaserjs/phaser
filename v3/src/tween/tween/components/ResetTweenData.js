@@ -19,6 +19,9 @@ var ResetTweenData = function (resetFromLoop)
             tweenData.current = tweenData.start;
             tweenData.end = tweenData.endCache;
 
+            //  Apply to target?
+            // tweenData.target[tweenData.key] = tweenData.current;
+
             tweenData.state = TWEEN_CONST.PLAYING_FORWARD;
         }
         else if (tweenData.delay > 0)

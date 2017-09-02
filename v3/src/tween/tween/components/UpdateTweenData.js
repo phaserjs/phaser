@@ -151,6 +151,7 @@ var UpdateTweenData = function (tween, tweenData, delta)
 
             var forward = (tweenData.state === TWEEN_CONST.PLAYING_FORWARD);
             var progress = elapsed / duration;
+
             var v;
 
             if (forward)
@@ -180,6 +181,9 @@ var UpdateTweenData = function (tween, tweenData, delta)
             {
                 if (forward)
                 {
+                    // tweenData.current = tweenData.end;
+                    // tweenData.target[tweenData.key] = tweenData.current;
+
                     if (tweenData.hold > 0)
                     {
                         tweenData.elapsed = tweenData.hold;
@@ -193,6 +197,9 @@ var UpdateTweenData = function (tween, tweenData, delta)
                 }
                 else
                 {
+                    // tweenData.current = tweenData.start;
+                    // tweenData.target[tweenData.key] = tweenData.current;
+
                     tweenData.state = SetStateFromStart(tween, tweenData);
                 }
             }

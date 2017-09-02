@@ -1,6 +1,6 @@
 var TWEEN_CONST = require('../const');
 
-var Play = function ()
+var Play = function (resetFromTimeline)
 {
     if (this.state === TWEEN_CONST.ACTIVE)
     {
@@ -9,7 +9,7 @@ var Play = function ()
 
     if (this.timeline)
     {
-        this.resetTweenData();
+        this.resetTweenData(resetFromTimeline);
 
         if (this.calculatedOffset === 0)
         {

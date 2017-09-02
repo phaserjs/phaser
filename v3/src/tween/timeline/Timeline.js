@@ -69,7 +69,6 @@ var Timeline = new Class({
         this.callbacks = {
             onComplete: null,
             onLoop: null,
-            onRepeat: null,
             onStart: null,
             onUpdate: null,
             onYoyo: null
@@ -162,8 +161,8 @@ var Timeline = new Class({
     calcDuration: function ()
     {
         var prevEnd = 0;
-
-        this.totalDuration = 0;
+        var totalDuration = 0;
+        var offsetDuration = 0;
 
         for (var i = 0; i < this.totalData; i++)
         {
@@ -178,6 +177,11 @@ var Timeline = new Class({
                     //  An actual number, so it defines the start point from the beginning of the timeline
                     tween.calculatedOffset = tween.offset;
 
+                    if (tween.offset === 0)
+                    {
+                        offsetDuration = 0;
+                    }
+
                     // console.log('Timeline.calcDuration', i, 'absolute', tween.calculatedOffset);
                 }
                 else if (this.isOffsetRelative(tween.offset))
@@ -191,7 +195,7 @@ var Timeline = new Class({
             else
             {
                 //  Sequential
-                tween.calculatedOffset = this.totalDuration;
+                tween.calculatedOffset = offsetDuration;
                 
                 // console.log('Timeline.calcDuration', i, 'sequential', tween.calculatedOffset);
             }
@@ -200,7 +204,22 @@ var Timeline = new Class({
 
             // console.log('Span', i, tween.calculatedOffset, 'to', prevEnd);
 
-            this.totalDuration += tween.totalDuration;
+            totalDuration += tween.totalDuration;
+            offsetDuration += tween.totalDuration;
+        }
+
+        //  Excludes loop values
+        this.duration = totalDuration;
+
+        this.loopCounter = (this.loop === -1) ? 999999999999 : this.loop;
+
+        if (this.loopCounter > 0)
+        {
+            this.totalDuration = this.duration + this.completeDelay + ((this.duration + this.loopDelay) * this.loopCounter);
+        }
+        else
+        {
+            this.totalDuration = this.duration + this.completeDelay;
         }
     },
 
@@ -223,6 +242,26 @@ var Timeline = new Class({
         }
     },
 
+    resetTweens: function (resetFromLoop)
+    {
+        for (var i = 0; i < this.totalData; i++)
+        {
+            var tween = this.data[i];
+
+            tween.play(resetFromLoop);
+        }
+    },
+
+    setCallback: function (type, callback, params, scope)
+    {
+        if (Timeline.TYPES.indexOf(type) !== -1)
+        {
+            this.callbacks[type] = { func: callback, scope: scope, params: params };
+        }
+
+        return this;
+    },
+
     play: function ()
     {
         if (this.state === TWEEN_CONST.ACTIVE)
@@ -240,15 +279,7 @@ var Timeline = new Class({
         }
         else
         {
-            //  Reset the TweenData
-            // this.resetTweenData();
-
-            for (var i = 0; i < this.totalData; i++)
-            {
-                var tween = this.data[i];
-
-                tween.play();
-            }
+            this.resetTweens(false);
 
             this.state = TWEEN_CONST.ACTIVE;
         }
@@ -258,6 +289,56 @@ var Timeline = new Class({
         if (onStart)
         {
             onStart.func.apply(onStart.scope, onStart.params);
+        }
+    },
+
+    nextState: function ()
+    {
+        if (this.loopCounter > 0)
+        {
+            this.resetTweens(true);
+
+            //  Reset the elapsed time
+            //  TODO: Probably ought to be set to the remainder from elapsed - duration
+            //  as the tweens nearly always over-run by a few ms due to rAf
+
+            this.elapsed = 0;
+            this.progress = 0;
+
+            this.loopCounter--;
+
+            var onLoop = this.callbacks.onLoop;
+
+            if (onLoop)
+            {
+                onLoop.func.apply(onLoop.scope, onLoop.params);
+            }
+
+            if (this.loopDelay > 0)
+            {
+                this.countdown = this.loopDelay;
+                this.state = TWEEN_CONST.LOOP_DELAY;
+            }
+            else
+            {
+                this.state = TWEEN_CONST.ACTIVE;
+            }
+        }
+        else if (this.completeDelay > 0)
+        {
+            this.countdown = this.completeDelay;
+            this.state = TWEEN_CONST.COMPLETE_DELAY;
+        }
+        else
+        {
+            var onComplete = this.callbacks.onComplete;
+
+            if (onComplete)
+            {
+                onComplete.func.apply(onComplete.scope, onComplete.params);
+            }
+
+            this.state = TWEEN_CONST.PENDING_REMOVE;
         }
     },
 
@@ -301,12 +382,17 @@ var Timeline = new Class({
                     }
                 }
 
+                var onUpdate = this.callbacks.onUpdate;
+
+                if (onUpdate)
+                {
+                    onUpdate.func.apply(onUpdate.scope, onUpdate.params);
+                }
+
                 //  Anything still running? If not, we're done
                 if (stillRunning === 0)
                 {
-                    // this.nextState();
-
-                    this.state = TWEEN_CONST.PENDING_REMOVE;
+                    this.nextState();
                 }
 
                 break;
@@ -388,5 +474,7 @@ var Timeline = new Class({
 
     }
 });
+
+Timeline.TYPES = [ 'onStart', 'onUpdate', 'onLoop', 'onComplete', 'onYoyo' ];
 
 module.exports = Timeline;
