@@ -51,6 +51,9 @@ var SetStateFromEnd = function (tween, tweenData)
             tweenData.target.toggleFlipY();
         }
 
+        //  Reset the destination value, in case it's dynamic
+        tweenData.end = tweenData.value(tweenData.startCache);
+
         var onRepeat = tween.callbacks.onRepeat;
 
         if (onRepeat)
@@ -100,6 +103,9 @@ var SetStateFromStart = function (tween, tweenData)
         {
             tweenData.target.toggleFlipY();
         }
+
+        //  Reset the destination value, in case it's dynamic
+        tweenData.end = tweenData.value(tweenData.startCache);
 
         var onRepeat = tween.callbacks.onRepeat;
 
@@ -181,9 +187,6 @@ var UpdateTweenData = function (tween, tweenData, delta)
             {
                 if (forward)
                 {
-                    // tweenData.current = tweenData.end;
-                    // tweenData.target[tweenData.key] = tweenData.current;
-
                     if (tweenData.hold > 0)
                     {
                         tweenData.elapsed = tweenData.hold;
@@ -197,9 +200,6 @@ var UpdateTweenData = function (tween, tweenData, delta)
                 }
                 else
                 {
-                    // tweenData.current = tweenData.start;
-                    // tweenData.target[tweenData.key] = tweenData.current;
-
                     tweenData.state = SetStateFromStart(tween, tweenData);
                 }
             }
@@ -249,7 +249,6 @@ var UpdateTweenData = function (tween, tweenData, delta)
             tweenData.end = tweenData.value(tweenData.start);
 
             tweenData.startCache = tweenData.start;
-            tweenData.endCache = tweenData.end;
 
             tweenData.target[tweenData.key] = tweenData.current;
 
