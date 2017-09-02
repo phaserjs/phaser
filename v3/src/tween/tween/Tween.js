@@ -123,7 +123,6 @@ var Tween = new Class({
 
     calcDuration: require('./components/CalcDuration'),
     init: require('./components/Init'),
-    loadValues: require('./components/LoadValues'),
     nextState: require('./components/NextState'),
     pause: require('./components/Pause'),
     play: require('./components/Play'),
