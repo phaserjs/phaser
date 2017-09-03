@@ -103,7 +103,8 @@ var Timeline = new Class({
 
     queue: function (tween)
     {
-        tween.timeline = this;
+        tween.parent = this;
+        tween.parentIsTimeline = true;
 
         this.data.push(tween);
 
