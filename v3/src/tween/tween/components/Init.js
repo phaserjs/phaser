@@ -24,10 +24,8 @@ var Init = function ()
     this.progress = 0;
     this.totalProgress = 0;
 
-    // console.log('Tween duration', this.duration, 'totalDuration', this.totalDuration);
-
     //  You can't have a paused Tween if it's part of a Timeline
-    if (this.paused && !this.timeline)
+    if (this.paused && !this.parentIsTimeline)
     {
         this.state = TWEEN_CONST.PAUSED;
 

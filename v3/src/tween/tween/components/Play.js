@@ -7,7 +7,7 @@ var Play = function (resetFromTimeline)
         return;
     }
 
-    if (this.timeline)
+    if (this.parentIsTimeline)
     {
         this.resetTweenData(resetFromTimeline);
 
@@ -26,7 +26,7 @@ var Play = function (resetFromTimeline)
     {
         this.paused = false;
     
-        this.manager.makeActive(this);
+        this.parent.makeActive(this);
 
         return;
     }

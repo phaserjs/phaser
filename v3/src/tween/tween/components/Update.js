@@ -12,7 +12,7 @@ var Update = function (timestamp, delta)
 
     if (this.useFrames)
     {
-        delta = 1 * this.manager.timeScale;
+        delta = 1 * this.parent.timeScale;
     }
 
     delta *= this.timeScale;

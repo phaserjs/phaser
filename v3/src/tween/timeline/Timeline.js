@@ -10,6 +10,8 @@ var Timeline = new Class({
     {
         this.manager = manager;
 
+        this.isTimeline = true;
+
         //  An array of Tween objects, each containing a unique property and target being tweened.
         this.data = [];
 

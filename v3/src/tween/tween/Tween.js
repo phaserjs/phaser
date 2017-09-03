@@ -5,12 +5,12 @@ var Tween = new Class({
 
     initialize:
 
-    function Tween (manager, data)
+    function Tween (parent, data)
     {
-        this.manager = manager;
+        this.parent = parent;
 
-        //  If the Tween is part of a timeline this tells us which one
-        this.timeline = null;
+        //  Is the parent of this Tween a Timeline?
+        this.parentIsTimeline = parent.hasOwnProperty('isTimeline');
 
         //  An array of TweenData objects, each containing a unique property and target being tweened.
         this.data = data;
