@@ -51,7 +51,7 @@ var TimelineBuilder = function (manager, config)
     //  Create the Tweens
     for (var i = 0; i < tweens.length; i++)
     {
-        timeline.queue(TweenBuilder(manager, tweens[i], defaults));
+        timeline.queue(TweenBuilder(timeline, tweens[i], defaults));
     }
 
     timeline.completeDelay = GetAdvancedValue(config, 'completeDelay', 0);
