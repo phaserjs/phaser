@@ -67,12 +67,12 @@ var GetValueOp = function (key, value)
     else if (t === 'function')
     {
         // props: {
-        //     x: function (startValue, target, index, totalTargets) { return startValue + (index * 50); },
+        //     x: function (i, target, key) { return i + 50); },
         // }
 
-        valueCallback = function (startValue, target, index, total)
+        valueCallback = function (i, target, key)
         {
-            return value(startValue, target, index, total);
+            return value(i, target, key);
         };
     }
     else if (value.hasOwnProperty('value'))
