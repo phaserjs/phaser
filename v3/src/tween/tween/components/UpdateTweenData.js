@@ -4,7 +4,7 @@ var SetStateFromEnd = function (tween, tweenData)
 {
     if (tweenData.yoyo)
     {
-        //  Playing forward and we have a yoyo
+        //  We've hit the end of a Playing Forward TweenData and we have a yoyo
 
         tweenData.progress = 0;
         tweenData.elapsed = 0;
@@ -32,10 +32,21 @@ var SetStateFromEnd = function (tween, tweenData)
             onYoyo.func.apply(onYoyo.scope, onYoyo.params);
         }
 
+        var onRefresh = tween.callbacks.onRefresh;
+
+        if (onRefresh)
+        {
+            tweenData.startCache = onRefresh.func.call(onRefresh.scope, tweenData.target, tweenData.key, tweenData.startCache, false);
+            tweenData.start = tweenData.startCache;
+        }
+
         return TWEEN_CONST.PLAYING_BACKWARD;
     }
     else if (tweenData.repeatCounter > 0)
     {
+        //  We've hit the end of a Playing Forward TweenData and we have a Repeat.
+        //  So we're going to go right back to the start to repeat it again.
+
         tweenData.repeatCounter--;
 
         tweenData.elapsed = 0;
@@ -51,9 +62,6 @@ var SetStateFromEnd = function (tween, tweenData)
             tweenData.target.toggleFlipY();
         }
 
-        //  Reset the destination value, in case it's dynamic
-        tweenData.end = tweenData.value(tweenData.startCache);
-
         var onRepeat = tween.callbacks.onRepeat;
 
         if (onRepeat)
@@ -63,6 +71,18 @@ var SetStateFromEnd = function (tween, tweenData)
 
             onRepeat.func.apply(onRepeat.scope, onRepeat.params);
         }
+
+        //  Do we want to refresh the start value before we return to it?
+        var onRefresh = tween.callbacks.onRefresh;
+
+        if (onRefresh)
+        {
+            tweenData.startCache = onRefresh.func.call(onRefresh.scope, tweenData.target, tweenData.key, tweenData.startCache, false);
+            tweenData.start = tweenData.startCache;
+        }
+
+        //  Reset the destination value, in case it's dynamic
+        tweenData.end = tweenData.value(tweenData.startCache, tweenData.target, tweenData.key);
 
         //  Delay?
         if (tweenData.repeatDelay > 0)
@@ -104,9 +124,6 @@ var SetStateFromStart = function (tween, tweenData)
             tweenData.target.toggleFlipY();
         }
 
-        //  Reset the destination value, in case it's dynamic
-        tweenData.end = tweenData.value(tweenData.startCache);
-
         var onRepeat = tween.callbacks.onRepeat;
 
         if (onRepeat)
@@ -116,6 +133,18 @@ var SetStateFromStart = function (tween, tweenData)
 
             onRepeat.func.apply(onRepeat.scope, onRepeat.params);
         }
+
+        //  Do we want to refresh the start value now we're sitting on it?
+        var onRefresh = tween.callbacks.onRefresh;
+
+        if (onRefresh)
+        {
+            tweenData.startCache = onRefresh.func.call(onRefresh.scope, tweenData.target, tweenData.key, tweenData.startCache, false);
+            tweenData.start = tweenData.startCache;
+        }
+
+        //  Reset the destination value, in case it's dynamic
+        tweenData.end = tweenData.value(tweenData.startCache, tweenData.target, tweenData.key);
 
         //  Delay?
         if (tweenData.repeatDelay > 0)
@@ -244,14 +273,21 @@ var UpdateTweenData = function (tween, tweenData, delta)
 
         case TWEEN_CONST.PENDING_RENDER:
 
-            //  Swap for function
-            tweenData.start = tweenData.target[tweenData.key];
+            tweenData.startCache = tweenData.target[tweenData.key];
+
+            var onRefresh = tween.callbacks.onRefresh;
+
+            if (onRefresh)
+            {
+                tweenData.startCache = onRefresh.func.call(onRefresh.scope, tweenData.target, tweenData.key, tweenData.startCache, true);
+            }
+
+            tweenData.start = tweenData.startCache;
 
             tweenData.current = tweenData.start;
-            tweenData.end = tweenData.value(tweenData.start);
-            
-            tweenData.startCache = tweenData.start;
 
+            tweenData.end = tweenData.value(tweenData.start, tweenData.target, tweenData.key);
+            
             tweenData.target[tweenData.key] = tweenData.current;
 
             tweenData.state = TWEEN_CONST.PLAYING_FORWARD;
