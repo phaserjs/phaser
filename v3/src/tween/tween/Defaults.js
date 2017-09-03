@@ -7,7 +7,6 @@ var TWEEN_DEFAULTS = {
     hold: 0,
     repeat: 0,
     repeatDelay: 0,
-    startAt: null,
     yoyo: false,
     flipX: false,
     flipY: false

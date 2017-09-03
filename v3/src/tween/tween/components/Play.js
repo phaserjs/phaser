@@ -32,7 +32,7 @@ var Play = function (resetFromTimeline)
     }
     else
     {
-        this.resetTweenData();
+        this.resetTweenData(false);
 
         this.state = TWEEN_CONST.ACTIVE;
     }

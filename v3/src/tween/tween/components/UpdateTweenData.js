@@ -244,10 +244,12 @@ var UpdateTweenData = function (tween, tweenData, delta)
 
         case TWEEN_CONST.PENDING_RENDER:
 
+            //  Swap for function
             tweenData.start = tweenData.target[tweenData.key];
+
             tweenData.current = tweenData.start;
             tweenData.end = tweenData.value(tweenData.start);
-
+            
             tweenData.startCache = tweenData.start;
 
             tweenData.target[tweenData.key] = tweenData.current;

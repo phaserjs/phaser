@@ -31,7 +31,6 @@ var TweenBuilder = function (manager, config, defaults)
     var hold = GetNewValue(config, 'hold', defaults.hold);
     var repeat = GetNewValue(config, 'repeat', defaults.repeat);
     var repeatDelay = GetNewValue(config, 'repeatDelay', defaults.repeatDelay);
-    var startAt = GetNewValue(config, 'startAt', defaults.startAt);
     var yoyo = GetBoolean(config, 'yoyo', defaults.yoyo);
     var flipX = GetBoolean(config, 'flipX', defaults.flipX);
     var flipY = GetBoolean(config, 'flipY', defaults.flipY);
@@ -58,7 +57,6 @@ var TweenBuilder = function (manager, config, defaults)
                 GetNewValue(value, 'hold', hold),
                 GetNewValue(value, 'repeat', repeat),
                 GetNewValue(value, 'repeatDelay', repeatDelay),
-                GetNewValue(value, 'startAt', startAt),
                 GetBoolean(value, 'flipX', flipX),
                 GetBoolean(value, 'flipY', flipY)
             );

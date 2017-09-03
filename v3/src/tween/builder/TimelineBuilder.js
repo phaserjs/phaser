@@ -42,7 +42,6 @@ var TimelineBuilder = function (manager, config)
     defaults.hold = GetNewValue(config, 'hold', defaults.hold);
     defaults.repeat = GetNewValue(config, 'repeat', defaults.repeat);
     defaults.repeatDelay = GetNewValue(config, 'repeatDelay', defaults.repeatDelay);
-    defaults.startAt = GetNewValue(config, 'startAt', defaults.startAt);
     defaults.yoyo = GetBoolean(config, 'yoyo', defaults.yoyo);
     defaults.flipX = GetBoolean(config, 'flipX', defaults.flipX);
     defaults.flipY = GetBoolean(config, 'flipY', defaults.flipY);
