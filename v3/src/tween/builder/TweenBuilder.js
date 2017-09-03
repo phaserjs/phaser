@@ -10,7 +10,7 @@ var GetValueOp = require('./GetValueOp');
 var Tween = require('../tween/Tween');
 var TweenData = require('../tween/TweenData');
 
-var TweenBuilder = function (manager, config, defaults)
+var TweenBuilder = function (parent, config, defaults)
 {
     if (defaults === undefined)
     {
@@ -65,7 +65,7 @@ var TweenBuilder = function (manager, config, defaults)
         }
     }
 
-    var tween = new Tween(manager, data);
+    var tween = new Tween(parent, data);
 
     tween.totalTargets = targets.length;
 
@@ -76,12 +76,31 @@ var TweenBuilder = function (manager, config, defaults)
     tween.paused = GetBoolean(config, 'paused', false);
     tween.useFrames = GetBoolean(config, 'useFrames', false);
 
-    //  Callbacks
+    //  Set the Callbacks
 
     var scope = GetValue(config, 'callbackScope', tween);
 
     var tweenArray = [ tween ];
 
+    var callbacks = Tween.TYPES;
+
+    for (var i = 0; i < callbacks.length; i++)
+    {
+        var type = callbacks[i];
+
+        var callback = GetValue(config, type, false);
+
+        if (callback)
+        {
+            var callbackScope = GetValue(config, type + 'Scope', scope);
+            var callbackParams = GetValue(config, type + 'Params', []);
+
+            //  The null is reset to be the Tween target
+            tween.setCallback(type, callback, tweenArray.concat(null, callbackParams), callbackScope);
+        }
+    }
+
+    /*
     var onStart = GetValue(config, 'onStart', false);
 
     //  The Start of the Tween
@@ -147,6 +166,7 @@ var TweenBuilder = function (manager, config, defaults)
 
         tween.setCallback('onComplete', onComplete, tweenArray.concat(onCompleteParams), onCompleteScope);
     }
+    */
 
     return tween;
 };
