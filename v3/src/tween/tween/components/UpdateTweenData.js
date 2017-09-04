@@ -32,12 +32,12 @@ var SetStateFromEnd = function (tween, tweenData)
             onYoyo.func.apply(onYoyo.scope, onYoyo.params);
         }
 
+        //  Do we update the start value before returning to it?
         var onRefresh = tween.callbacks.onRefresh;
 
         if (onRefresh)
         {
-            tweenData.startCache = onRefresh.func.call(onRefresh.scope, tweenData.target, tweenData.key, tweenData.startCache, false);
-            tweenData.start = tweenData.startCache;
+            tweenData.start = onRefresh.func.call(onRefresh.scope, tweenData.target, tweenData.key, tweenData.start, false);
         }
 
         return TWEEN_CONST.PLAYING_BACKWARD;
@@ -72,17 +72,16 @@ var SetStateFromEnd = function (tween, tweenData)
             onRepeat.func.apply(onRepeat.scope, onRepeat.params);
         }
 
-        //  Do we want to refresh the start value before we return to it?
+        //  Do we update the start value before returning to it?
         var onRefresh = tween.callbacks.onRefresh;
 
         if (onRefresh)
         {
-            tweenData.startCache = onRefresh.func.call(onRefresh.scope, tweenData.target, tweenData.key, tweenData.startCache, false);
-            tweenData.start = tweenData.startCache;
+            tweenData.start = onRefresh.func.call(onRefresh.scope, tweenData.target, tweenData.key, tweenData.start, false);
         }
 
         //  Reset the destination value, in case it's dynamic
-        tweenData.end = tweenData.value(tweenData.startCache, tweenData.target, tweenData.key);
+        tweenData.end = tweenData.value(tweenData.start, tweenData.target, tweenData.key);
 
         //  Delay?
         if (tweenData.repeatDelay > 0)
@@ -139,12 +138,11 @@ var SetStateFromStart = function (tween, tweenData)
 
         if (onRefresh)
         {
-            tweenData.startCache = onRefresh.func.call(onRefresh.scope, tweenData.target, tweenData.key, tweenData.startCache, false);
-            tweenData.start = tweenData.startCache;
+            tweenData.start = onRefresh.func.call(onRefresh.scope, tweenData.target, tweenData.key, tweenData.start, true);
         }
 
         //  Reset the destination value, in case it's dynamic
-        tweenData.end = tweenData.value(tweenData.startCache, tweenData.target, tweenData.key);
+        tweenData.end = tweenData.value(tweenData.start, tweenData.target, tweenData.key);
 
         //  Delay?
         if (tweenData.repeatDelay > 0)
@@ -209,6 +207,8 @@ var UpdateTweenData = function (tween, tweenData, delta)
 
             if (onUpdate)
             {
+                onUpdate.params[1] = tweenData.target;
+
                 onUpdate.func.apply(onUpdate.scope, onUpdate.params);
             }
 
@@ -255,6 +255,7 @@ var UpdateTweenData = function (tween, tweenData, delta)
             if (tweenData.elapsed <= 0)
             {
                 tweenData.elapsed = Math.abs(tweenData.elapsed);
+
                 tweenData.state = TWEEN_CONST.PLAYING_FORWARD;
             }
 
@@ -273,16 +274,14 @@ var UpdateTweenData = function (tween, tweenData, delta)
 
         case TWEEN_CONST.PENDING_RENDER:
 
-            tweenData.startCache = tweenData.target[tweenData.key];
+            tweenData.start = tweenData.target[tweenData.key];
 
             var onRefresh = tween.callbacks.onRefresh;
 
             if (onRefresh)
             {
-                tweenData.startCache = onRefresh.func.call(onRefresh.scope, tweenData.target, tweenData.key, tweenData.startCache, true);
+                tweenData.start = onRefresh.func.call(onRefresh.scope, tweenData.target, tweenData.key, tweenData.start, true);
             }
-
-            tweenData.start = tweenData.startCache;
 
             tweenData.current = tweenData.start;
 

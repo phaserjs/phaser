@@ -55,7 +55,6 @@ var TweenData = function (target, key, value, ease, delay, duration, yoyo, hold,
         start: 0,
         current: 0,
         end: 0,
-        startCache: 0,
 
         //  Time Durations
         t1: 0,

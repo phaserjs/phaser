@@ -65,9 +65,7 @@ var TweenBuilder = function (parent, config, defaults)
         }
     }
 
-    var tween = new Tween(parent, data);
-
-    tween.totalTargets = targets.length;
+    var tween = new Tween(parent, data, targets);
 
     tween.offset = GetAdvancedValue(config, 'offset', null);
     tween.completeDelay = GetAdvancedValue(config, 'completeDelay', 0);
@@ -77,10 +75,10 @@ var TweenBuilder = function (parent, config, defaults)
     tween.useFrames = GetBoolean(config, 'useFrames', false);
 
     //  Set the Callbacks
-
     var scope = GetValue(config, 'callbackScope', tween);
 
-    var tweenArray = [ tween ];
+    //  Callback parameters: 0 = a reference to the Tween itself, 1 = the target/s of the Tween, ... your own params
+    var tweenArray = [ tween, null ];
 
     var callbacks = Tween.TYPES;
 
@@ -96,77 +94,9 @@ var TweenBuilder = function (parent, config, defaults)
             var callbackParams = GetValue(config, type + 'Params', []);
 
             //  The null is reset to be the Tween target
-            tween.setCallback(type, callback, tweenArray.concat(null, callbackParams), callbackScope);
+            tween.setCallback(type, callback, tweenArray.concat(callbackParams), callbackScope);
         }
     }
-
-    /*
-    var onStart = GetValue(config, 'onStart', false);
-
-    //  The Start of the Tween
-    if (onStart)
-    {
-        var onStartScope = GetValue(config, 'onStartScope', scope);
-        var onStartParams = GetValue(config, 'onStartParams', []);
-
-        tween.setCallback('onStart', onStart, tweenArray.concat(onStartParams), onStartScope);
-    }
-
-    var onUpdate = GetValue(config, 'onUpdate', false);
-
-    //  Every time the tween updates (regardless which TweenDatas are running)
-    if (onUpdate)
-    {
-        var onUpdateScope = GetValue(config, 'onUpdateScope', scope);
-        var onUpdateParams = GetValue(config, 'onUpdateParams', []);
-
-        tween.setCallback('onUpdate', onUpdate, tweenArray.concat(onUpdateParams), onUpdateScope);
-    }
-
-    var onRepeat = GetValue(config, 'onRepeat', false);
-
-    //  When a TweenData repeats
-    if (onRepeat)
-    {
-        var onRepeatScope = GetValue(config, 'onRepeatScope', scope);
-        var onRepeatParams = GetValue(config, 'onRepeatParams', []);
-
-        tween.setCallback('onRepeat', onRepeat, tweenArray.concat(null, onRepeatParams), onRepeatScope);
-    }
-
-    var onLoop = GetValue(config, 'onLoop', false);
-
-    //  Called when the whole Tween loops
-    if (onLoop)
-    {
-        var onLoopScope = GetValue(config, 'onLoopScope', scope);
-        var onLoopParams = GetValue(config, 'onLoopParams', []);
-
-        tween.setCallback('onLoop', onLoop, tweenArray.concat(onLoopParams), onLoopScope);
-    }
-
-    var onYoyo = GetValue(config, 'onYoyo', false);
-
-    //  Called when a TweenData yoyos
-    if (onYoyo)
-    {
-        var onYoyoScope = GetValue(config, 'onYoyoScope', scope);
-        var onYoyoParams = GetValue(config, 'onYoyoParams', []);
-
-        tween.setCallback('onYoyo', onYoyo, tweenArray.concat(null, onYoyoParams), onYoyoScope);
-    }
-
-    var onComplete = GetValue(config, 'onComplete', false);
-
-    //  Called when the Tween completes, after the completeDelay, etc.
-    if (onComplete)
-    {
-        var onCompleteScope = GetValue(config, 'onCompleteScope', scope);
-        var onCompleteParams = GetValue(config, 'onCompleteParams', []);
-
-        tween.setCallback('onComplete', onComplete, tweenArray.concat(onCompleteParams), onCompleteScope);
-    }
-    */
 
     return tween;
 };

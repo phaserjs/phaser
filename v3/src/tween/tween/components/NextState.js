@@ -14,6 +14,8 @@ var NextState = function ()
 
         if (onLoop)
         {
+            onLoop.params[1] = this.targets;
+
             onLoop.func.apply(onLoop.scope, onLoop.params);
         }
 
@@ -38,6 +40,8 @@ var NextState = function ()
 
         if (onComplete)
         {
+            onComplete.params[1] = this.targets;
+
             onComplete.func.apply(onComplete.scope, onComplete.params);
         }
 

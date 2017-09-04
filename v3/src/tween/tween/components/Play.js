@@ -41,6 +41,8 @@ var Play = function (resetFromTimeline)
 
     if (onStart)
     {
+        onStart.params[1] = this.targets;
+
         onStart.func.apply(onStart.scope, onStart.params);
     }
 };

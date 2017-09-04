@@ -5,7 +5,7 @@ var Tween = new Class({
 
     initialize:
 
-    function Tween (parent, data)
+    function Tween (parent, data, targets)
     {
         this.parent = parent;
 
@@ -18,8 +18,11 @@ var Tween = new Class({
         //  data array doesn't change, so we can cache the length
         this.totalData = data.length;
 
+        //  An array of references to the target/s this Tween is operating on
+        this.targets = targets;
+
         //  Cached target total (not necessarily the same as the data total)
-        this.totalTargets = 0;
+        this.totalTargets = targets.length;
 
         //  If true then duration, delay, etc values are all frame totals
         this.useFrames = false;
@@ -109,17 +112,7 @@ var Tween = new Class({
 
     hasTarget: function (target)
     {
-        var data = this.data;
-
-        for (var i = 0; i < this.totalData; i++)
-        {
-            if (data[i].target === target)
-            {
-                return true;
-            }
-        }
-
-        return false;
+        return (this.targets.indexOf(target) !== -1);
     },
 
     calcDuration: require('./components/CalcDuration'),
