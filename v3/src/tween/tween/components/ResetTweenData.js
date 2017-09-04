@@ -15,16 +15,11 @@ var ResetTweenData = function (resetFromLoop)
 
         if (resetFromLoop)
         {
-            var onRefresh = this.callbacks.onRefresh;
+            tweenData.start = tweenData.getStartValue(tweenData.target, tweenData.key, tweenData.start);
 
-            if (onRefresh)
-            {
-                tweenData.start = onRefresh.func.call(onRefresh.scope, tweenData.target, tweenData.key, tweenData.start, true);
-            }
+            tweenData.end = tweenData.getEndValue(tweenData.target, tweenData.key, tweenData.end);
 
             tweenData.current = tweenData.start;
-
-            tweenData.end = tweenData.value(tweenData.start, tweenData.target, tweenData.key);
 
             tweenData.state = TWEEN_CONST.PLAYING_FORWARD;
         }

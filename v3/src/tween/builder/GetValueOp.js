@@ -1,7 +1,29 @@
-var GetValueOp = function (key, value)
+function hasGetStart (def)
 {
-    var valueCallback;
-    var t = typeof(value);
+    return (!!def.getStart && typeof def.getStart === 'function');
+}
+
+function hasGetEnd (def)
+{
+    return (!!def.getEnd && typeof def.getEnd === 'function');
+}
+
+function hasGetters (def)
+{
+    return hasGetStart(def) || hasGetEnd(def);
+}
+
+var GetValueOp = function (key, propertyValue)
+{
+    var callbacks;
+
+    //  The returned value sets what the property will be at the END of the Tween (usually called at the start of the Tween)
+    var getEnd = function (target, key, value) { return value; };
+
+    //  The returned value sets what the property will be at the START of the Tween (usually called at the end of the Tween)
+    var getStart = function (target, key, value) { return value; };
+
+    var t = typeof(propertyValue);
 
     if (t === 'number')
     {
@@ -10,9 +32,9 @@ var GetValueOp = function (key, value)
         //     y: 300
         // }
 
-        valueCallback = function ()
+        getEnd = function ()
         {
-            return value;
+            return propertyValue;
         };
     }
     else if (t === 'string')
@@ -24,58 +46,85 @@ var GetValueOp = function (key, value)
         //     w: '/=2'
         // }
 
-        var op = value[0];
-        var num = parseFloat(value.substr(2));
+        var op = propertyValue[0];
+        var num = parseFloat(propertyValue.substr(2));
 
         switch (op)
         {
             case '+':
-                valueCallback = function (i)
+                getEnd = function (target, key, value)
                 {
-                    return i + num;
+                    return value + num;
                 };
                 break;
 
             case '-':
-                valueCallback = function (i)
+                getEnd = function (target, key, value)
                 {
-                    return i - num;
+                    return value - num;
                 };
                 break;
 
             case '*':
-                valueCallback = function (i)
+                getEnd = function (target, key, value)
                 {
-                    return i * num;
+                    return value * num;
                 };
                 break;
 
             case '/':
-                valueCallback = function (i)
+                getEnd = function (target, key, value)
                 {
-                    return i / num;
+                    return value / num;
                 };
                 break;
 
             default:
-                valueCallback = function ()
+                getEnd = function ()
                 {
-                    return parseFloat(value);
+                    return parseFloat(propertyValue);
                 };
         }
     }
     else if (t === 'function')
     {
+        //  The same as setting just the getEnd function and no getStart
+
         // props: {
-        //     x: function (i, target, key) { return i + 50); },
+        //     x: function (target, key, value) { return value + 50); },
         // }
 
-        valueCallback = function (i, target, key)
-        {
-            return value(i, target, key);
-        };
+        getEnd = propertyValue;
     }
-    else if (value.hasOwnProperty('value'))
+    else if (t === 'object' && hasGetters(propertyValue))
+    {
+        /*
+        x: {
+            //  Called at the start of the Tween. The returned value sets what the property will be at the END of the Tween.
+            getEnd: function (target, key, value)
+            {
+                return value;
+            },
+
+            //  Called at the end of the Tween. The returned value sets what the property will be at the START of the Tween.
+            getStart: function (target, key, value)
+            {
+                return value;
+            }
+        }
+        */
+
+        if (hasGetEnd(propertyValue))
+        {
+            getEnd = propertyValue.getEnd;
+        }
+
+        if (hasGetStart(propertyValue))
+        {
+            getStart = propertyValue.getStart;
+        }
+    }
+    else if (propertyValue.hasOwnProperty('value'))
     {
         //  Value may still be a string, function or a number
         // props: {
@@ -83,10 +132,19 @@ var GetValueOp = function (key, value)
         //     y: { value: 300, ... }
         // }
 
-        valueCallback = GetValueOp(key, value.value);
+        callbacks = GetValueOp(key, propertyValue.value);
     }
 
-    return valueCallback;
+    //  If callback not set by the else if block above then set it here and return it
+    if (!callbacks)
+    {
+        callbacks = {
+            getEnd: getEnd,
+            getStart: getStart
+        };
+    }
+
+    return callbacks;
 };
 
 module.exports = GetValueOp;

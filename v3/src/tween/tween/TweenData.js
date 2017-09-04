@@ -1,4 +1,4 @@
-var TweenData = function (target, key, value, ease, delay, duration, yoyo, hold, repeat, repeatDelay, flipX, flipY)
+var TweenData = function (target, key, getEnd, getStart, ease, delay, duration, yoyo, hold, repeat, repeatDelay, flipX, flipY)
 {
     return {
 
@@ -8,8 +8,11 @@ var TweenData = function (target, key, value, ease, delay, duration, yoyo, hold,
         //  The property of the target to tween
         key: key,
 
-        //  A function to call when starting the tween, populates the 'start' and 'end' values
-        value: value,
+        //  The returned value sets what the property will be at the END of the Tween.
+        getEndValue: getEnd,
+
+        //  The returned value sets what the property will be at the START of the Tween.
+        getStartValue: getStart,
 
         //  The ease function this tween uses.
         ease: ease,

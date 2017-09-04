@@ -83,7 +83,6 @@ var Tween = new Class({
         this.callbacks = {
             onComplete: null,
             onLoop: null,
-            onRefresh: null,
             onRepeat: null,
             onStart: null,
             onUpdate: null,
@@ -132,7 +131,6 @@ var Tween = new Class({
 Tween.TYPES = [
     'onComplete',
     'onLoop',
-    'onRefresh',
     'onRepeat',
     'onStart',
     'onUpdate',

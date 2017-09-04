@@ -46,10 +46,13 @@ var TweenBuilder = function (parent, config, defaults)
         //  Create 1 TweenData per target, per property
         for (var t = 0; t < targets.length; t++)
         {
+            var ops = GetValueOp(key, value);
+
             var tweenData = TweenData(
                 targets[t],
                 key,
-                GetValueOp(key, value),
+                ops.getEnd,
+                ops.getStart,
                 GetEaseFunction(GetValue(value, 'ease', ease), easeParams),
                 GetNewValue(value, 'delay', delay),
                 GetNewValue(value, 'duration', duration),
