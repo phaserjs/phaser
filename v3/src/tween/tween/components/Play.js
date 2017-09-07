@@ -10,6 +10,7 @@ var Play = function (resetFromTimeline)
     {
         this.init();
         this.parent.makeActive(this);
+        resetFromTimeline = true;
     }
 
     var onStart = this.callbacks.onStart;
@@ -46,7 +47,7 @@ var Play = function (resetFromTimeline)
     }
     else
     {
-        this.resetTweenData(false);
+        this.resetTweenData(resetFromTimeline);
 
         this.state = TWEEN_CONST.ACTIVE;
 

@@ -160,6 +160,11 @@ var TweenManager = new Class({
 
     makeActive: function (tween)
     {
+        if (this._add.indexOf(tween) !== -1 || this._active.indexOf(tween) !== -1)
+        {
+            return;
+        }
+
         var idx = this._pending.indexOf(tween);
 
         if (idx !== -1)
@@ -172,6 +177,8 @@ var TweenManager = new Class({
         tween.state = TWEEN_CONST.PENDING_ADD;
 
         this._toProcess++;
+
+        return this;
     },
 
     setGlobalTimeScale: require('./components/SetGlobalTimeScale'),

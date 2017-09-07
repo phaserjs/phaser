@@ -131,6 +131,12 @@ var Tween = new Class({
         return this;
     },
 
+    restart: function ()
+    {
+        this.stop();
+        this.play();
+    },
+
     calcDuration: require('./components/CalcDuration'),
     init: require('./components/Init'),
     nextState: require('./components/NextState'),
