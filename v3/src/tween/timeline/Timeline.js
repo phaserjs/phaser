@@ -103,12 +103,15 @@ var Timeline = new Class({
 
     queue: function (tween)
     {
-        tween.parent = this;
-        tween.parentIsTimeline = true;
+        if (!this.isPlaying())
+        {
+            tween.parent = this;
+            tween.parentIsTimeline = true;
 
-        this.data.push(tween);
+            this.data.push(tween);
 
-        this.totalData = this.data.length;
+            this.totalData = this.data.length;
+        }
 
         return this;
     },
@@ -467,13 +470,25 @@ var Timeline = new Class({
         return this;
     },
 
-    hasTarget: function ()
+    hasTarget: function (target)
     {
-
+        for (var i = 0; i < this.data.length; i++)
+        {
+            if (this.data[i].hasTarget(target))
+            {
+                return true;
+            }
+        }
+        
+        return false;
     },
 
     destroy: function ()
     {
+        for (var i = 0; i < this.data.length; i++)
+        {
+            this.data[i].destroy();
+        }
 
     }
 });

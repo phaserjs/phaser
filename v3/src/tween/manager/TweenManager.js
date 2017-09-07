@@ -39,9 +39,12 @@ var TweenManager = new Class({
     {
         var timeline = TimelineBuilder(this, config);
 
-        this._add.push(timeline);
+        if (!timeline.paused)
+        {
+            this._add.push(timeline);
 
-        this._toProcess++;
+            this._toProcess++;
+        }
 
         return timeline;
     },
