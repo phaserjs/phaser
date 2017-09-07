@@ -12,14 +12,18 @@ var TweenBuilder = require('./TweenBuilder');
 
 var TimelineBuilder = function (manager, config)
 {
-    var defaults = Clone(Defaults);
+    var timeline = new Timeline(manager);
 
     var tweens = GetTweens(config);
 
     if (tweens.length === 0)
     {
-        return null;
+        timeline.paused = true;
+
+        return timeline;
     }
+
+    var defaults = Clone(Defaults);
 
     defaults.targets = GetTargets(config);
 
@@ -45,8 +49,6 @@ var TimelineBuilder = function (manager, config)
     defaults.yoyo = GetBoolean(config, 'yoyo', defaults.yoyo);
     defaults.flipX = GetBoolean(config, 'flipX', defaults.flipX);
     defaults.flipY = GetBoolean(config, 'flipY', defaults.flipY);
-
-    var timeline = new Timeline(manager);
 
     //  Create the Tweens
     for (var i = 0; i < tweens.length; i++)

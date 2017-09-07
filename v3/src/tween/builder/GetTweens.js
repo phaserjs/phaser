@@ -4,7 +4,11 @@ var GetTweens = function (config)
 {
     var tweens = GetValue(config, 'tweens', null);
 
-    if (typeof tweens === 'function')
+    if (tweens === null)
+    {
+        return [];
+    }
+    else if (typeof tweens === 'function')
     {
         tweens = tweens.call();
     }
