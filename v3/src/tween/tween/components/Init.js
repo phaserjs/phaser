@@ -23,6 +23,8 @@ var Init = function ()
 
     this.progress = 0;
     this.totalProgress = 0;
+    this.elapsed = 0;
+    this.totalElapsed = 0;
 
     //  You can't have a paused Tween if it's part of a Timeline
     if (this.paused && !this.parentIsTimeline)

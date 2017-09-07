@@ -6,7 +6,12 @@ var Play = function (resetFromTimeline)
     {
         return;
     }
-    
+    else if (this.state === TWEEN_CONST.PENDING_REMOVE || this.state === TWEEN_CONST.REMOVED)
+    {
+        this.init();
+        this.parent.makeActive(this);
+    }
+
     var onStart = this.callbacks.onStart;
 
     if (this.parentIsTimeline)

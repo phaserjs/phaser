@@ -114,6 +114,23 @@ var Tween = new Class({
         return (this.targets.indexOf(target) !== -1);
     },
 
+    updateTo: function (key, value)
+    {
+        for (var i = 0; i < this.totalData; i++)
+        {
+            var tweenData = this.data[i];
+
+            if (tweenData.key === key)
+            {
+                tweenData.end = value;
+
+                break;
+            }
+        }
+
+        return this;
+    },
+
     calcDuration: require('./components/CalcDuration'),
     init: require('./components/Init'),
     nextState: require('./components/NextState'),

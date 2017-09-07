@@ -2,6 +2,7 @@
 var Class = require('../../utils/Class');
 var TimelineBuilder = require('../builder/TimelineBuilder');
 var TweenBuilder = require('../builder/TweenBuilder');
+var TWEEN_CONST = require('../tween/const');
 
 var TweenManager = new Class({
 
@@ -100,6 +101,7 @@ var TweenManager = new Class({
 
             if (idx !== -1)
             {
+                tween.state = TWEEN_CONST.REMOVED;
                 active.splice(idx, 1);
             }
         }
@@ -166,6 +168,8 @@ var TweenManager = new Class({
         }
 
         this._add.push(tween);
+
+        tween.state = TWEEN_CONST.PENDING_ADD;
 
         this._toProcess++;
     },
