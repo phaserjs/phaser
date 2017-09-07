@@ -117,6 +117,26 @@ var SceneInputManager = new Class({
     sortHandlerGO: require('./components/SortHandlerGO'),
     sortHandlerIO: require('./components/SortHandlerIO'),
 
+    //  The x/y coordinates of the ActivePointer based on the first camera in the camera list.
+    //  This is only safe to use if your game has just 1 non-transformed camera and doesn't use multi-touch.
+    x: {
+
+        get: function ()
+        {
+            return this.manager.activePointer.x;
+        }
+
+    },
+
+    y: {
+
+        get: function ()
+        {
+            return this.manager.activePointer.y;
+        }
+
+    },
+
     //  Scene that owns this is shutting down
     shutdown: function ()
     {
