@@ -256,6 +256,8 @@ var UpdateTweenData = function (tween, tweenData, delta)
 
             tweenData.end = tweenData.getEndValue(tweenData.target, tweenData.key, tweenData.start);
 
+            tweenData.current = tweenData.start;
+
             tweenData.target[tweenData.key] = tweenData.start;
 
             tweenData.state = TWEEN_CONST.PLAYING_FORWARD;

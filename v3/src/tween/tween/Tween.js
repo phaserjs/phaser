@@ -114,7 +114,7 @@ var Tween = new Class({
         return (this.targets.indexOf(target) !== -1);
     },
 
-    updateTo: function (key, value)
+    updateTo: function (key, value, startToCurrent)
     {
         for (var i = 0; i < this.totalData; i++)
         {
@@ -123,6 +123,11 @@ var Tween = new Class({
             if (tweenData.key === key)
             {
                 tweenData.end = value;
+
+                if (startToCurrent)
+                {
+                    tweenData.start = tweenData.current;
+                }
 
                 break;
             }
