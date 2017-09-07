@@ -46,12 +46,31 @@ var Update = function (timestamp, delta)
             break;
 
         case TWEEN_CONST.LOOP_DELAY:
+
+            this.countdown -= delta;
+
+            if (this.countdown <= 0)
+            {
+                this.state = TWEEN_CONST.ACTIVE;
+            }
+
+            break;
+
         case TWEEN_CONST.OFFSET_DELAY:
 
             this.countdown -= delta;
 
             if (this.countdown <= 0)
             {
+                var onStart = this.callbacks.onStart;
+
+                if (onStart)
+                {
+                    onStart.params[1] = this.targets;
+
+                    onStart.func.apply(onStart.scope, onStart.params);
+                }
+
                 this.state = TWEEN_CONST.ACTIVE;
             }
 

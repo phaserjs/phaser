@@ -6,6 +6,8 @@ var Play = function (resetFromTimeline)
     {
         return;
     }
+    
+    var onStart = this.callbacks.onStart;
 
     if (this.parentIsTimeline)
     {
@@ -13,6 +15,13 @@ var Play = function (resetFromTimeline)
 
         if (this.calculatedOffset === 0)
         {
+            if (onStart)
+            {
+                onStart.params[1] = this.targets;
+
+                onStart.func.apply(onStart.scope, onStart.params);
+            }
+
             this.state = TWEEN_CONST.ACTIVE;
         }
         else
@@ -35,15 +44,13 @@ var Play = function (resetFromTimeline)
         this.resetTweenData(false);
 
         this.state = TWEEN_CONST.ACTIVE;
-    }
 
-    var onStart = this.callbacks.onStart;
+        if (onStart)
+        {
+            onStart.params[1] = this.targets;
 
-    if (onStart)
-    {
-        onStart.params[1] = this.targets;
-
-        onStart.func.apply(onStart.scope, onStart.params);
+            onStart.func.apply(onStart.scope, onStart.params);
+        }
     }
 };
 
