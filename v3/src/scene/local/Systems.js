@@ -2,6 +2,7 @@ var CameraManager = require('../plugins/CameraManager');
 var Class = require('../../utils/Class');
 var Clock = require('../../time/Clock');
 var Data = require('../plugins/Data');
+var DataStore = require('../plugins/DataStore');
 var DisplayList = require('../plugins/DisplayList');
 var EventDispatcher = require('../../events/EventDispatcher');
 var GameObjectCreator = require('../plugins/GameObjectCreator');
@@ -46,6 +47,7 @@ var Systems = new Class({
         this.add;
         this.cameras;
         this.data;
+        this.dataStore;
         this.displayList;
         this.events;
         this.inputManager;
@@ -76,7 +78,12 @@ var Systems = new Class({
 
         this.add = new GameObjectFactory(scene);
         this.cameras = new CameraManager(scene);
-        this.data = new Data(scene);
+
+        this.dataStore = new DataStore(scene);
+
+        // this.data = new Data(scene);
+        this.data = this.dataStore.register(this);
+
         this.displayList = new DisplayList(scene);
         this.events = new EventDispatcher();
         this.inputManager = new InputManager(scene);

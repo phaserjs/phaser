@@ -10,11 +10,11 @@ var Data = new Class({
 
     initialize:
 
-    function Data (parent)
+    function Data (parent, eventDispatcher)
     {
         this.parent = parent;
 
-        this.events = new EventDispatcher();
+        this.events = (eventDispatcher) ? eventDispatcher : new EventDispatcher();
 
         this.list = {};
 
@@ -231,6 +231,15 @@ var Data = new Class({
         }
 
         this._frozen = false;
+    },
+
+    destroy: function ()
+    {
+        this.reset();
+
+        this.parent = null;
+
+        this.events = null;
     },
 
     /**

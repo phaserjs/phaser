@@ -1,5 +1,6 @@
 var Class = require('../utils/Class');
 var Components = require('./components');
+var DataProxy = require('./components/DataProxy');
 
 var GameObject = new Class({
 
@@ -16,6 +17,8 @@ var GameObject = new Class({
         this.active = true;
 
         this.tabIndex = -1;
+
+        this.data = new DataProxy(scene, this);
 
         //  0001 | 0010 | 0100 | 1000
         //  Will Render bitmask flags for the components Visible, Alpha, Transform and Texture respectively
