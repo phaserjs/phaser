@@ -11,26 +11,28 @@ var DataStore = new Class({
 
         this.events = scene.sys.events;
 
-        this.list = {};
-    },
-
-    register: function (parent)
-    {
-        var data = new Data(parent, this.events);
-
-        this.list[parent] = data;
-
-        return data;
+        this._list = [];
+        this._data = [];
     },
 
     getData: function (gameObject)
     {
-        if (!this.list.hasOwnProperty(gameObject))
+        var data;
+        var idx = this._list.indexOf(gameObject);
+
+        if (idx === -1)
         {
-            this.list[gameObject] = new Data(gameObject, this.events);
+            data = new Data(gameObject, this.events);
+
+            this._list.push(gameObject);
+            this._data.push(data);
+        }
+        else
+        {
+            data = this._data[idx];
         }
 
-        return this.list[gameObject];
+        return data;
     },
 
     get: function (gameObject, key)

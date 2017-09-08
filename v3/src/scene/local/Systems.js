@@ -78,12 +78,8 @@ var Systems = new Class({
 
         this.add = new GameObjectFactory(scene);
         this.cameras = new CameraManager(scene);
-
+        this.data = new Data(scene);
         this.dataStore = new DataStore(scene);
-
-        // this.data = new Data(scene);
-        this.data = this.dataStore.register(this);
-
         this.displayList = new DisplayList(scene);
         this.events = new EventDispatcher();
         this.inputManager = new InputManager(scene);
