@@ -4,8 +4,6 @@ var NextState = function ()
 {
     if (this.loopCounter > 0)
     {
-        this.resetTweenData(true);
-
         this.elapsed = 0;
         this.progress = 0;
         this.loopCounter--;
@@ -18,6 +16,8 @@ var NextState = function ()
 
             onLoop.func.apply(onLoop.scope, onLoop.params);
         }
+
+        this.resetTweenData(true);
 
         if (this.loopDelay > 0)
         {

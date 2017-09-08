@@ -302,8 +302,6 @@ var Timeline = new Class({
     {
         if (this.loopCounter > 0)
         {
-            this.resetTweens(true);
-
             //  Reset the elapsed time
             //  TODO: Probably ought to be set to the remainder from elapsed - duration
             //  as the tweens nearly always over-run by a few ms due to rAf
@@ -319,6 +317,8 @@ var Timeline = new Class({
             {
                 onLoop.func.apply(onLoop.scope, onLoop.params);
             }
+
+            this.resetTweens(true);
 
             if (this.loopDelay > 0)
             {
