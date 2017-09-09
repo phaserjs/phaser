@@ -256,7 +256,7 @@ var UpdateTweenData = function (tween, tweenData, delta)
 
             if (tweenData.elapsed <= 0)
             {
-                tweenData.state = SetStateFromEnd(tween, tweenData);
+                tweenData.state = SetStateFromEnd(tween, tweenData, Math.abs(tweenData.elapsed));
             }
 
             break;
