@@ -1,13 +1,14 @@
 var TWEEN_CONST = require('../const');
 
-var SetStateFromEnd = function (tween, tweenData)
+var SetStateFromEnd = function (tween, tweenData, diff)
 {
     if (tweenData.yoyo)
     {
         //  We've hit the end of a Playing Forward TweenData and we have a yoyo
 
-        tweenData.progress = 0;
-        tweenData.elapsed = 0;
+        //  Account for any extra time we got from the previous frame
+        tweenData.elapsed = diff;
+        tweenData.progress = diff / tweenData.duration;
 
         if (tweenData.flipX)
         {
@@ -43,8 +44,12 @@ var SetStateFromEnd = function (tween, tweenData)
 
         tweenData.repeatCounter--;
 
-        tweenData.elapsed = 0;
-        tweenData.progress = 0;
+        //  Account for any extra time we got from the previous frame
+        tweenData.elapsed = diff;
+        tweenData.progress = diff / tweenData.duration;
+
+        // tweenData.elapsed = 0;
+        // tweenData.progress = 0;
 
         if (tweenData.flipX)
         {
@@ -73,7 +78,7 @@ var SetStateFromEnd = function (tween, tweenData)
         //  Delay?
         if (tweenData.repeatDelay > 0)
         {
-            tweenData.elapsed = tweenData.repeatDelay;
+            tweenData.elapsed = tweenData.repeatDelay - diff;
 
             tweenData.current = tweenData.start;
 
@@ -91,14 +96,18 @@ var SetStateFromEnd = function (tween, tweenData)
 };
 
 //  Was PLAYING_BACKWARD and has hit the start
-var SetStateFromStart = function (tween, tweenData)
+var SetStateFromStart = function (tween, tweenData, diff)
 {
     if (tweenData.repeatCounter > 0)
     {
         tweenData.repeatCounter--;
 
-        tweenData.elapsed = 0;
-        tweenData.progress = 0;
+        //  Account for any extra time we got from the previous frame
+        tweenData.elapsed = diff;
+        tweenData.progress = diff / tweenData.duration;
+
+        // tweenData.elapsed = 0;
+        // tweenData.progress = 0;
 
         if (tweenData.flipX)
         {
@@ -125,7 +134,7 @@ var SetStateFromStart = function (tween, tweenData)
         //  Delay?
         if (tweenData.repeatDelay > 0)
         {
-            tweenData.elapsed = tweenData.repeatDelay;
+            tweenData.elapsed = tweenData.repeatDelay - diff;
 
             tweenData.current = tweenData.start;
 
@@ -152,11 +161,13 @@ var UpdateTweenData = function (tween, tweenData, delta)
 
             var elapsed = tweenData.elapsed;
             var duration = tweenData.duration;
+            var diff = 0;
 
             elapsed += delta;
 
             if (elapsed > duration)
             {
+                diff = elapsed - duration;
                 elapsed = duration;
             }
 
@@ -196,18 +207,18 @@ var UpdateTweenData = function (tween, tweenData, delta)
                 {
                     if (tweenData.hold > 0)
                     {
-                        tweenData.elapsed = tweenData.hold;
+                        tweenData.elapsed = tweenData.hold - diff;
 
                         tweenData.state = TWEEN_CONST.HOLD_DELAY;
                     }
                     else
                     {
-                        tweenData.state = SetStateFromEnd(tween, tweenData);
+                        tweenData.state = SetStateFromEnd(tween, tweenData, diff);
                     }
                 }
                 else
                 {
-                    tweenData.state = SetStateFromStart(tween, tweenData);
+                    tweenData.state = SetStateFromStart(tween, tweenData, diff);
                 }
             }
 
