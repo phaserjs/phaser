@@ -29,6 +29,7 @@ var SceneInputManager = new Class({
         //  Proxy references available via the Scene
         this.keyboard = this.manager.keyboard;
         this.mouse = this.manager.mouse;
+        this.gamepad = this.manager.gamepad;
 
         //  Only fire callbacks and events on the top-most Game Object in the display list (emulating DOM behavior)
         //  and ignore any GOs below it, or call them all?
@@ -164,6 +165,7 @@ var SceneInputManager = new Class({
         this.events = undefined;
         this.keyboard = undefined;
         this.mouse = undefined;
+        this.gamepad = undefined;
     }
 
 });

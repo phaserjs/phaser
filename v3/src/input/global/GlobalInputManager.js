@@ -2,15 +2,16 @@
 
 var Class = require('../../utils/Class');
 var EventDispatcher = require('../../events/EventDispatcher');
+var Gamepad = require('../gamepad/GamepadManager');
 var GetTransformedPoint = require('./components/GetTransformedPoint');
+var HitTest = require('./components/HitTest');
 var Keyboard = require('../keyboard/KeyboardManager');
 var Mouse = require('../mouse/MouseManager');
 var MouseEvent = require('../mouse/events/');
-var Touch = require('../touch/TouchManager');
 var Pointer = require('../Pointer');
 var PointScreenToWorldHitTest = require('./components/PointScreenToWorldHitTest');
-var HitTest = require('./components/HitTest');
 var PointWithinGameObject = require('./components/PointWithinGameObject');
+var Touch = require('../touch/TouchManager');
 var TransformMatrix = require('../../gameobjects/components/TransformMatrix');
 
 var GlobalInputManager = new Class({
@@ -32,10 +33,11 @@ var GlobalInputManager = new Class({
         //   Standard FIFO queue
         this.queue = [];
 
-        //  Listeners
+        //  Listeners (will be based on config)
         this.keyboard = new Keyboard(this);
         this.mouse = new Mouse(this);
         this.touch = new Touch(this);
+        this.gamepad = new Gamepad(this);
 
         this.activePointer = new Pointer(this, 0);
 
@@ -57,11 +59,13 @@ var GlobalInputManager = new Class({
         this.keyboard.boot();
         this.mouse.boot();
         this.touch.boot();
+        this.gamepad.boot();
     },
 
     update: function (time, delta)
     {
         this.keyboard.update();
+        this.gamepad.update();
 
         var len = this.queue.length;
 
