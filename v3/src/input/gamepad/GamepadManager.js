@@ -34,7 +34,7 @@ var GamepadManager = new Class({
     {
         var config = this.manager.config;
 
-        this.enabled = config.inputGamepad;
+        this.enabled = config.inputGamepad && this.manager.game.device.Input.gamepads;
 
         this.target = window;
 

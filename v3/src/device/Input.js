@@ -10,20 +10,28 @@ var Input = {
     mspointer: false,
 
     // @property {?string} wheelType - The newest type of Wheel/Scroll event supported: 'wheel', 'mousewheel', 'DOMMouseScroll'
-    wheelEvent: null
+    wheelEvent: null,
+
+    // @property {boolean} gamepads - Is navigator.getGamepads available?
+    gamepads: false
     
 };
 
 function init ()
 {
-    if ('ontouchstart' in document.documentElement || (window.navigator.maxTouchPoints && window.navigator.maxTouchPoints >= 1))
+    if ('ontouchstart' in document.documentElement || (navigator.maxTouchPoints && navigator.maxTouchPoints >= 1))
     {
         Input.touch = true;
     }
 
-    if (window.navigator.msPointerEnabled || window.navigator.pointerEnabled)
+    if (navigator.msPointerEnabled || navigator.pointerEnabled)
     {
         Input.mspointer = true;
+    }
+
+    if (navigator.getGamepads)
+    {
+        Input.gamepads = true;
     }
 
     if (!OS.cocoonJS)
