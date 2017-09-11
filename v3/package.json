@@ -1,6 +1,6 @@
 {
   "name": "phaser",
-  "version": "3.0.0-alpha.3",
+  "version": "3.0.0-beta.1",
   "release": "Shadow Coast",
   "description": "A fast, free and fun HTML5 Game Framework for Desktop and Mobile web browsers.",
   "author": "Richard Davey <rdavey@gmail.com> (http://www.photonstorm.com)",
