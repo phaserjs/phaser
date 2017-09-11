@@ -1,4 +1,7 @@
 {
+  "//": "git tag 3.0.0-beta.1",
+  "//": "git push",
+  "//": "npm publish ---tag beta",
   "name": "phaser",
   "version": "3.0.0-beta.1",
   "release": "Shadow Coast",
