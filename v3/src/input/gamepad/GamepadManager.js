@@ -7,6 +7,7 @@ var GamepadEvent = require('./events/');
 // https://developer.mozilla.org/en-US/docs/Web/API/Gamepad_API
 // https://developer.mozilla.org/en-US/docs/Web/API/Gamepad_API/Using_the_Gamepad_API
 // https://www.smashingmagazine.com/2015/11/gamepad-api-in-web-games/
+// http://html5gamepad.com/
 
 var GamepadManager = new Class({
 
@@ -129,6 +130,32 @@ var GamepadManager = new Class({
         }
     },
 
+    getAll: function ()
+    {
+        var out = [];
+
+        for (var i = 0; i < this.gamepads.length; i++)
+        {
+            if (this.gamepads[i])
+            {
+                out.push(this.gamepads[i]);
+            }
+        }
+
+        return out;
+    },
+
+    getPad: function (index)
+    {
+        for (var i = 0; i < this.gamepads.length; i++)
+        {
+            if (this.gamepads[i].index === index)
+            {
+                return this.gamepads[i];
+            }
+        }
+    },
+
     update: function ()
     {
         if (!this.enabled)
@@ -151,18 +178,36 @@ var GamepadManager = new Class({
         for (var i = 0; i < len; i++)
         {
             var event = queue[i];
+            var pad;
 
             switch (event.type)
             {
                 case 'gamepadconnected':
-                    //  Event?
+
+                    pad = this.getPad(event.gamepad.index);
+
+                    this.events.dispatch(new GamepadEvent.CONNECTED(pad, event));
+
                     break;
 
                 case 'gamepaddisconnected':
-                    //  Event?
+
+                    pad = this.getPad(event.gamepad.index);
+
+                    this.events.dispatch(new GamepadEvent.DISCONNECTED(pad, event));
+
                     break;
             }
         }
+    },
+
+    total: {
+
+        get: function ()
+        {
+            return this.gamepads.length;
+        }
+
     }
 
 });

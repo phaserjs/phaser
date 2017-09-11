@@ -15,19 +15,24 @@ var Button = new Class({
 
         this.index = index;
 
-        this.pressed = false;
-
+        //  Between 0 and 1
         this.value = 0;
+
+        //  Can be set for Analogue buttons to enable a 'pressure' threshold before considered as 'pressed'
+        this.threshold = 0;
+
+        this.pressed = false;
     },
 
     update: function (data)
     {
-        if (data.pressed)
+        this.value = data.value;
+
+        if (this.value >= this.threshold)
         {
             if (!this.pressed)
             {
                 this.pressed = true;
-                this.value = data.value;
                 this.events.dispatch(new GamepadEvent.DOWN(this.pad, this, this.value, data));
             }
         }
@@ -36,7 +41,6 @@ var Button = new Class({
             if (this.pressed)
             {
                 this.pressed = false;
-                this.value = data.value;
                 this.events.dispatch(new GamepadEvent.UP(this.pad, this, this.value, data));
             }
         }

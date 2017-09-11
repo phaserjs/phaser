@@ -1,5 +1,6 @@
 //  Phaser.Input.Gamepad.Gamepad
 
+var Axis = require('./Axis');
 var Button = require('./Button');
 var Class = require('../../utils/Class');
 var GamepadEvent = require('./events/');
@@ -23,6 +24,7 @@ var Gamepad = new Class({
         this.timestamp = 0;
 
         this.buttons = [];
+        this.axes = [];
     },
 
     update: function (data)
@@ -44,7 +46,18 @@ var Gamepad = new Class({
             this.buttons[i].update(buttonData);
         }
 
-        //  TODO: Axes
+        //  Axes
+        for (var i = 0; i < data.axes.length; i++)
+        {
+            var axisData = data.axes[i];
+
+            if (this.axes[i] === undefined)
+            {
+                this.axes[i] = new Axis(this, i);
+            }
+
+            this.axes[i].update(axisData);
+        }
     }
 
 });
