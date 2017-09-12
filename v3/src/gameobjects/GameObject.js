@@ -19,48 +19,42 @@ var GameObject = new Class({
         /**
          * The Scene to which this Game Object belongs.
          *
-         * @property
-         * @type {Scene}
+         * @property {Scene} scene
          */
         this.scene = scene;
 
         /**
          * A textual representation of this Game Object.
          *
-         * @property
-         * @type {string}
+         * @property {String} type
          */
         this.type = type;
 
         /**
          * The name of this Game Object. Blank by default and not populated by Phaser. Left for developers use.
          *
-         * @property
-         * @type {String}
+         * @property {String} [name='']
          */
         this.name = '';
 
         /**
          * The active state of this Game Object. A Game Object with an active state of `true` is processed by the UpdateList.
          *
-         * @property
-         * @type {Boolean}
+         * @property {Boolean} [active=true]
          */
         this.active = true;
 
         /**
          * The Tab Index of this Game Object.
          *
-         * @property
-         * @type {Number}
+         * @property {Integer} [tabIndex=-1]
          */
         this.tabIndex = -1;
 
         /**
          * A proxy to the Data class. It allows you to store and query key/value paired information specific to this Game Object.
          *
-         * @property
-         * @type {DataProxy}
+         * @property {DataProxy} data
          */
         this.data = new DataProxy(scene, this);
 
@@ -69,8 +63,7 @@ var GameObject = new Class({
          * Structure: 0001 | 0010 | 0100 | 1000
          * The components: Visible, Alpha, Transform and Texture set bits in this mask respectively
          *
-         * @property
-         * @type {Number}
+         * @property {Integer} [renderMask=15]
          * @private
          */
         this.renderMask = 15;
@@ -78,8 +71,7 @@ var GameObject = new Class({
         /**
          * The flags that the renderMask uses to determine if the Game Object will render or not.
          *
-         * @property
-         * @type {Number}
+         * @property {Integer} [renderFlags=15]
          * @private
          */
         this.renderFlags = 15;
@@ -87,8 +79,7 @@ var GameObject = new Class({
         /**
          * A bitmask that controls if this Game Object is drawn by a Camera or not.
          *
-         * @property
-         * @type {Number}
+         * @property {Number} [cameraFilter=0]
          * @private
          */
         this.cameraFilter = 0;
@@ -96,37 +87,28 @@ var GameObject = new Class({
         /**
          * If this Game Object is enabled for input then this property will contain a Phaser.Input.InteractiveObject reference.
          *
-         * @property
-         * @type {Phaser.Input.InteractiveObject|null}
+         * @property {Phaser.Input.InteractiveObject|null} [input=null]
          */
         this.input = null;
 
         /**
          * If this Game Object is enabled for physics then this property will contain a reference to a Physics Body.
          *
-         * @property
-         * @type {Phaser.Physics.Body|null}
+         * @property {Phaser.Physics.Body|null} [body=null]
          */
         this.body = null;
 
-        /**
-         * Should this Game Object trigger a Scene level z-depth sort?
-         * Automatically set by various components but can also be set manually as required.
-         *
-         * @property
-         * @type {Boolean}
-         */
+        //  Tell the Scene to re-sort the children
         this.scene.sys.sortChildrenFlag = true;
     },
 
     /**
      * Sets the `active` property of this Game Object and returns this Game Object for further chaining.
      *
-     * @method setActive
-     * @memberof GameObject#
+     * @method GameObject#setActive
      *
      * @param {Boolean} value - True if this Game Object should be set as active, false if not.
-     * @returns {this}
+     * @return {GameObject} This GameObject.
      */
     setActive: function (value)
     {
@@ -138,11 +120,10 @@ var GameObject = new Class({
     /**
      * Sets the `name` property of this Game Object and returns this Game Object for further chaining.
      *
-     * @method setName
-     * @memberof GameObject#
+     * @method GameObject#setName
      *
      * @param {String} value - The name to be given to this Game Object.
-     * @returns {this}
+     * @return {GameObject} This GameObject.
      */
     setName: function (value)
     {
@@ -154,12 +135,11 @@ var GameObject = new Class({
     /**
      * Pass this Game Object to the Input Manager to enable it for Input.
      *
-     * @method setInteractive
-     * @memberof GameObject#
+     * @method GameObject#setInteractive
      *
      * @param {[type]} [shape] - A geometric shape that defines the hit area for the Game Object. If not specified a Rectangle will be used.
      * @param {Function} [callback] - A callback to be invoked when the Game Object is interacted with.
-     * @returns {this}
+     * @return {GameObject} This GameObject.
      */
     setInteractive: function (shape, callback)
     {
@@ -176,8 +156,7 @@ var GameObject = new Class({
     /**
      * Returns a JSON representation of the Game Object.
      *
-     * @method toJSON
-     * @memberof GameObject#
+     * @method GameObject#toJSON
      *
      * @return {Object} A JSON representation of the Game Object.
      */
@@ -189,8 +168,7 @@ var GameObject = new Class({
     /**
      * Compares the renderMask with the renderFlags to see if this Game Object will render or not.
      *
-     * @method willRender
-     * @memberof GameObject#
+     * @method GameObject#willRender
      *
      * @return {Boolean} True if the Game Object should be rendered, otherwise false.
      */
@@ -206,8 +184,7 @@ var GameObject = new Class({
      * you don't plan to use it again later. If you do wish to use it later then look at using
      * the Game Object Pool class instead.
      *
-     * @method destroy
-     * @memberof GameObject#
+     * @method GameObject#destroy
      */
     destroy: function ()
     {

@@ -1,0 +1,289 @@
+[
+  {
+    "description": "The base GameObject class that all Game Objects extend.",
+    "tags": [
+      {
+        "title": "class",
+        "description": null,
+        "lineNumber": 3,
+        "type": null,
+        "name": "GameObject"
+      },
+      {
+        "title": "param",
+        "description": "The Scene to which this Game Object belongs.",
+        "lineNumber": 5,
+        "type": { "type": "NameExpression", "name": "Scene" },
+        "name": "scene"
+      },
+      {
+        "title": "param",
+        "description": "A textual representation of the Game Object.",
+        "lineNumber": 6,
+        "type": { "type": "NameExpression", "name": "String" },
+        "name": "type"
+      }
+    ]
+  },
+  {
+    "description": "The Scene to which this Game Object belongs.",
+    "tags": [
+      {
+        "title": "property",
+        "description": null,
+        "lineNumber": 3,
+        "type": { "type": "NameExpression", "name": "Scene" },
+        "name": "scene"
+      }
+    ]
+  },
+  {
+    "description": "A textual representation of this Game Object.",
+    "tags": [
+      {
+        "title": "property",
+        "description": null,
+        "lineNumber": 3,
+        "type": { "type": "NameExpression", "name": "String" },
+        "name": "type"
+      }
+    ]
+  },
+  {
+    "description": "The name of this Game Object. Blank by default and not populated by Phaser. Left for developers use.",
+    "tags": [
+      {
+        "title": "property",
+        "description": null,
+        "lineNumber": 3,
+        "type": { "type": "OptionalType", "expression": { "type": "NameExpression", "name": "String" } },
+        "name": "name",
+        "default": "''"
+      }
+    ]
+  },
+  {
+    "description": "The active state of this Game Object. A Game Object with an active state of `true` is processed by the UpdateList.",
+    "tags": [
+      {
+        "title": "property",
+        "description": null,
+        "lineNumber": 3,
+        "type": { "type": "OptionalType", "expression": { "type": "NameExpression", "name": "Boolean" } },
+        "name": "active",
+        "default": "true"
+      }
+    ]
+  },
+  {
+    "description": "The Tab Index of this Game Object.",
+    "tags": [
+      {
+        "title": "property",
+        "description": null,
+        "lineNumber": 3,
+        "type": { "type": "OptionalType", "expression": { "type": "NameExpression", "name": "Integer" } },
+        "name": "tabIndex",
+        "default": "-1"
+      }
+    ]
+  },
+  {
+    "description": "A proxy to the Data class. It allows you to store and query key/value paired information specific to this Game Object.",
+    "tags": [
+      {
+        "title": "property",
+        "description": null,
+        "lineNumber": 3,
+        "type": { "type": "NameExpression", "name": "DataProxy" },
+        "name": "data"
+      }
+    ]
+  },
+  {
+    "description": "The bitmask that determines if the Game Object will render or not.\r\nStructure: 0001 | 0010 | 0100 | 1000\r\nThe components: Visible, Alpha, Transform and Texture set bits in this mask respectively",
+    "tags": [
+      {
+        "title": "property",
+        "description": null,
+        "lineNumber": 5,
+        "type": { "type": "OptionalType", "expression": { "type": "NameExpression", "name": "Integer" } },
+        "name": "renderMask",
+        "default": "15"
+      },
+      { "title": "private", "description": null, "lineNumber": 6 }
+    ]
+  },
+  {
+    "description": "The flags that the renderMask uses to determine if the Game Object will render or not.",
+    "tags": [
+      {
+        "title": "property",
+        "description": null,
+        "lineNumber": 3,
+        "type": { "type": "OptionalType", "expression": { "type": "NameExpression", "name": "Integer" } },
+        "name": "renderFlags",
+        "default": "15"
+      },
+      { "title": "private", "description": null, "lineNumber": 4 }
+    ]
+  },
+  {
+    "description": "A bitmask that controls if this Game Object is drawn by a Camera or not.",
+    "tags": [
+      {
+        "title": "property",
+        "description": null,
+        "lineNumber": 3,
+        "type": { "type": "OptionalType", "expression": { "type": "NameExpression", "name": "Number" } },
+        "name": "cameraFilter",
+        "default": "0"
+      },
+      { "title": "private", "description": null, "lineNumber": 4 }
+    ]
+  },
+  {
+    "description": "If this Game Object is enabled for input then this property will contain a Phaser.Input.InteractiveObject reference.",
+    "tags": [
+      {
+        "title": "property",
+        "description": null,
+        "lineNumber": 3,
+        "type": {
+          "type": "OptionalType",
+          "expression": {
+            "type": "UnionType",
+            "elements": [
+              { "type": "NameExpression", "name": "Phaser.Input.InteractiveObject" },
+              { "type": "NullLiteral" }
+            ]
+          }
+        },
+        "name": "input",
+        "default": "null"
+      }
+    ]
+  },
+  {
+    "description": "If this Game Object is enabled for physics then this property will contain a reference to a Physics Body.",
+    "tags": [
+      {
+        "title": "property",
+        "description": null,
+        "lineNumber": 3,
+        "type": {
+          "type": "OptionalType",
+          "expression": {
+            "type": "UnionType",
+            "elements": [
+              { "type": "NameExpression", "name": "Phaser.Physics.Body" },
+              { "type": "NullLiteral" }
+            ]
+          }
+        },
+        "name": "body",
+        "default": "null"
+      }
+    ]
+  },
+  {
+    "description": "Sets the `active` property of this Game Object and returns this Game Object for further chaining.",
+    "tags": [
+      { "title": "method", "description": null, "lineNumber": 3, "name": "GameObject#setActive" },
+      {
+        "title": "param",
+        "description": "True if this Game Object should be set as active, false if not.",
+        "lineNumber": 5,
+        "type": { "type": "NameExpression", "name": "Boolean" },
+        "name": "value"
+      },
+      {
+        "title": "return",
+        "description": "This GameObject.",
+        "lineNumber": 6,
+        "type": { "type": "NameExpression", "name": "GameObject" }
+      }
+    ]
+  },
+  {
+    "description": "Sets the `name` property of this Game Object and returns this Game Object for further chaining.",
+    "tags": [
+      { "title": "method", "description": null, "lineNumber": 3, "name": "GameObject#setName" },
+      {
+        "title": "param",
+        "description": "The name to be given to this Game Object.",
+        "lineNumber": 5,
+        "type": { "type": "NameExpression", "name": "String" },
+        "name": "value"
+      },
+      {
+        "title": "return",
+        "description": "This GameObject.",
+        "lineNumber": 6,
+        "type": { "type": "NameExpression", "name": "GameObject" }
+      }
+    ]
+  },
+  {
+    "description": "Pass this Game Object to the Input Manager to enable it for Input.",
+    "tags": [
+      {
+        "title": "method",
+        "description": null,
+        "lineNumber": 3,
+        "name": "GameObject#setInteractive"
+      },
+      {
+        "title": "param",
+        "description": "A geometric shape that defines the hit area for the Game Object. If not specified a Rectangle will be used.",
+        "lineNumber": 5,
+        "type": {
+          "type": "OptionalType",
+          "expression": { "type": "ArrayType", "elements": [ { "type": "NameExpression", "name": "type" } ] }
+        },
+        "name": "shape"
+      },
+      {
+        "title": "param",
+        "description": "A callback to be invoked when the Game Object is interacted with.",
+        "lineNumber": 6,
+        "type": { "type": "OptionalType", "expression": { "type": "NameExpression", "name": "Function" } },
+        "name": "callback"
+      },
+      {
+        "title": "return",
+        "description": "This GameObject.",
+        "lineNumber": 7,
+        "type": { "type": "NameExpression", "name": "GameObject" }
+      }
+    ]
+  },
+  {
+    "description": "Returns a JSON representation of the Game Object.",
+    "tags": [
+      { "title": "method", "description": null, "lineNumber": 3, "name": "GameObject#toJSON" },
+      {
+        "title": "return",
+        "description": "A JSON representation of the Game Object.",
+        "lineNumber": 5,
+        "type": { "type": "NameExpression", "name": "Object" }
+      }
+    ]
+  },
+  {
+    "description": "Compares the renderMask with the renderFlags to see if this Game Object will render or not.",
+    "tags": [
+      { "title": "method", "description": null, "lineNumber": 3, "name": "GameObject#willRender" },
+      {
+        "title": "return",
+        "description": "True if the Game Object should be rendered, otherwise false.",
+        "lineNumber": 5,
+        "type": { "type": "NameExpression", "name": "Boolean" }
+      }
+    ]
+  },
+  {
+    "description": "Destroys this Game Object, removing it from the Display List and Update List.\r\nAlso removes it from the Input and Physics Managers if enabled.\r\nSets the active state to `false`. Use this to remove a Game Object from your game if\r\nyou don't plan to use it again later. If you do wish to use it later then look at using\r\nthe Game Object Pool class instead.",
+    "tags": [ { "title": "method", "description": null, "lineNumber": 7, "name": "GameObject#destroy" } ]
+  }
+]
