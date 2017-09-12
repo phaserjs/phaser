@@ -175,9 +175,8 @@ var Loader = new Class({
 
             this._multilist[key].push(multiKey);
         }
-    }
+    },
 
-    /*
     loadArray: function (files)
     {
         if (Array.isArray(files))
@@ -221,8 +220,6 @@ var Loader = new Class({
 
         return entry;
     },
-    */
-    
 });
 
 module.exports = Loader;
