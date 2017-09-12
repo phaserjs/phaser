@@ -104,7 +104,7 @@ var GamepadManager = new Class({
 
     refreshPads: function (pads)
     {
-        if (pads === null)
+        if (!pads)
         {
             this.disconnectAll();
         }
@@ -114,7 +114,7 @@ var GamepadManager = new Class({
             {
                 var pad = pads[i];
 
-                if (pad === null)
+                if (!pad)
                 {
                     //  removePad?
                     continue;
