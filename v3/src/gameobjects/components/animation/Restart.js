@@ -7,6 +7,7 @@ var Restart = function (includeDelay)
     this.forward = true;
     this.isPlaying = true;
     this.pendingRepeat = false;
+    this._paused = false;
 
     //  Set frame
     this.updateFrame(this.currentAnim.frames[0]);
