@@ -1,6 +1,8 @@
+var GameObject = require('../../GameObject');
+
 var StaticTilemapWebGLRenderer = function (renderer, src, interpolationPercentage, camera)
 {
-    if (src.renderMask !== src.renderFlags || (src.cameraFilter > 0 && (src.cameraFilter & camera._id)))
+    if (GameObject.RENDER_MASK !== src.renderFlags || (src.cameraFilter > 0 && (src.cameraFilter & camera._id)))
     {
         return;
     }
@@ -12,14 +14,8 @@ var StaticTilemapWebGLRenderer = function (renderer, src, interpolationPercentag
     renderer.setRenderer(gameObject.tilemapRenderer, frame.texture.source[frame.sourceIndex].glTexture, gameObject.renderTarget);
     gameObject.tilemapRenderer.bind();
     gameObject.upload(camera);
-    //gameObject.cull(camera);
     gameObject.vbo.bind();
 
-    //var vertexCount = gameObject.cullEnd - gameObject.cullStart;
-    //if (vertexCount > 0)
-    //{
-    //    gl.drawArrays(gl.TRIANGLES, gameObject.cullStart, vertexCount);
-    //}
     gl.drawArrays(gl.TRIANGLES, 0, gameObject.vertexCount);
 };
 

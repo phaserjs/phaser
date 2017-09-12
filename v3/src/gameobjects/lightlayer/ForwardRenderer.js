@@ -1,10 +1,12 @@
+var GameObject = require('../GameObject');
+
 var ForwardRenderer = function (renderer, lightLayer, interpolationPercentage, camera)
 {
     var spriteList = lightLayer.sprites;
     var length = spriteList.length;
     var batch = renderer.spriteBatch;
 
-    if (this.renderMask !== this.renderFlags || length === 0  || (lightLayer.cameraFilter > 0 && (lightLayer.cameraFilter & camera._id)))
+    if (GameObject.RENDER_MASK !== lightLayer.renderFlags || length === 0  || (lightLayer.cameraFilter > 0 && (lightLayer.cameraFilter & camera._id)))
     {
         return;
     }
@@ -16,7 +18,7 @@ var ForwardRenderer = function (renderer, lightLayer, interpolationPercentage, c
 
     batch.bind(lightLayer.passShader);
     batch.indexBufferObject.bind();
-    lightLayer.updateLights(renderer, camera, this.passShader);
+    lightLayer.updateLights(renderer, camera, lightLayer.passShader);
 
     for (var index = 0; index < length; ++index)
     {

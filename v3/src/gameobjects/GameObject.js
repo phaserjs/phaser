@@ -1,77 +1,85 @@
+/**
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2017 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
 var Class = require('../utils/Class');
 var Components = require('./components');
 var DataProxy = require('./components/DataProxy');
 
-/**
- * The base GameObject class that all Game Objects extend.
- *
- * @class GameObject
- *
- * @param {Scene} scene - The Scene to which this Game Object belongs.
- * @param {String} type - A textual representation of the Game Object.
- */
 var GameObject = new Class({
 
     initialize:
 
+    /**
+     * The base class that all Game Objects extend.
+     * You don't create GameObjects directly and they cannot be added to the display list.
+     * Instead, use them as the base for your own custom classes.
+     *
+     * @class GameObject
+     * @namespace Phaser.GameObjects
+     * @constructor
+     *
+     * @param {Phaser.Scene} scene - The Scene to which this Game Object belongs.
+     * @param {string} type - A textual representation of the type of Game Object, i.e. `sprite`.
+     */
     function GameObject (scene, type)
     {
         /**
          * The Scene to which this Game Object belongs.
+         * Game Objects can only belong to one Scene.
          *
-         * @property {Scene} scene
+         * @property {Phaser.Scene} scene
          */
         this.scene = scene;
 
         /**
-         * A textual representation of this Game Object.
+         * A textual representation of this Game Object, i.e. `sprite`.
+         * Used internally by Phaser but is available for your own custom classes to populate.
          *
-         * @property {String} type
+         * @property {string} type
          */
         this.type = type;
 
         /**
-         * The name of this Game Object. Blank by default and not populated by Phaser. Left for developers use.
+         * The name of this Game Object.
+         * Empty by default and never populated by Phaser, this is left for developers to use.
          *
-         * @property {String} [name='']
+         * @property {string} [name='']
          */
         this.name = '';
 
         /**
-         * The active state of this Game Object. A Game Object with an active state of `true` is processed by the UpdateList.
+         * The active state of this Game Object.
+         * A Game Object with an active state of `true` is processed by the Scenes UpdateList, if added to it.
          *
-         * @property {Boolean} [active=true]
+         * @property {boolean} [active=true]
          */
         this.active = true;
 
         /**
-         * The Tab Index of this Game Object.
+         * The Tab Index of the Game Object.
+         * Reserved for future use by plugins and the Input Manager.
          *
-         * @property {Integer} [tabIndex=-1]
+         * @property {integer} [tabIndex=-1]
          */
         this.tabIndex = -1;
 
         /**
-         * A proxy to the Data class. It allows you to store and query key/value paired information specific to this Game Object.
+         * A proxy to the Data class.
+         * It allows you to store, query and get key/value paired information specific to this Game Object.
          *
          * @property {DataProxy} data
          */
         this.data = new DataProxy(scene, this);
 
         /**
-         * The bitmask that determines if the Game Object will render or not.
-         * Structure: 0001 | 0010 | 0100 | 1000
-         * The components: Visible, Alpha, Transform and Texture set bits in this mask respectively
-         *
-         * @property {Integer} [renderMask=15]
-         * @private
-         */
-        this.renderMask = 15;
-
-        /**
          * The flags that the renderMask uses to determine if the Game Object will render or not.
+         * Structure: 0001 | 0010 | 0100 | 1000
+         * The components Visible, Alpha, Transform and Texture set the bits in this mask respectively
          *
-         * @property {Integer} [renderFlags=15]
+         * @property {integer} [renderFlags=15]
          * @private
          */
         this.renderFlags = 15;
@@ -79,7 +87,7 @@ var GameObject = new Class({
         /**
          * A bitmask that controls if this Game Object is drawn by a Camera or not.
          *
-         * @property {Number} [cameraFilter=0]
+         * @property {number} [cameraFilter=0]
          * @private
          */
         this.cameraFilter = 0;
@@ -105,9 +113,9 @@ var GameObject = new Class({
     /**
      * Sets the `active` property of this Game Object and returns this Game Object for further chaining.
      *
-     * @method GameObject#setActive
+     * @method setActive
      *
-     * @param {Boolean} value - True if this Game Object should be set as active, false if not.
+     * @param {boolean} value - True if this Game Object should be set as active, false if not.
      * @return {GameObject} This GameObject.
      */
     setActive: function (value)
@@ -120,9 +128,9 @@ var GameObject = new Class({
     /**
      * Sets the `name` property of this Game Object and returns this Game Object for further chaining.
      *
-     * @method GameObject#setName
+     * @method setName
      *
-     * @param {String} value - The name to be given to this Game Object.
+     * @param {string} value - The name to be given to this Game Object.
      * @return {GameObject} This GameObject.
      */
     setName: function (value)
@@ -135,10 +143,10 @@ var GameObject = new Class({
     /**
      * Pass this Game Object to the Input Manager to enable it for Input.
      *
-     * @method GameObject#setInteractive
+     * @method setInteractive
      *
-     * @param {[type]} [shape] - A geometric shape that defines the hit area for the Game Object. If not specified a Rectangle will be used.
-     * @param {Function} [callback] - A callback to be invoked when the Game Object is interacted with.
+     * @param {any} [shape] - A geometric shape that defines the hit area for the Game Object. If not specified a Rectangle will be used.
+     * @param {function} [callback] - A callback to be invoked when the Game Object is interacted with.
      * @return {GameObject} This GameObject.
      */
     setInteractive: function (shape, callback)
@@ -156,9 +164,9 @@ var GameObject = new Class({
     /**
      * Returns a JSON representation of the Game Object.
      *
-     * @method GameObject#toJSON
+     * @method toJSON
      *
-     * @return {Object} A JSON representation of the Game Object.
+     * @return {object} A JSON representation of the Game Object.
      */
     toJSON: function ()
     {
@@ -168,13 +176,13 @@ var GameObject = new Class({
     /**
      * Compares the renderMask with the renderFlags to see if this Game Object will render or not.
      *
-     * @method GameObject#willRender
+     * @method willRender
      *
-     * @return {Boolean} True if the Game Object should be rendered, otherwise false.
+     * @return {boolean} True if the Game Object should be rendered, otherwise false.
      */
     willRender: function ()
     {
-        return (this.renderMask === this.renderFlags);
+        return (GameObject.RENDER_MASK === this.renderFlags);
     },
 
     /**
@@ -184,7 +192,7 @@ var GameObject = new Class({
      * you don't plan to use it again later. If you do wish to use it later then look at using
      * the Game Object Pool class instead.
      *
-     * @method GameObject#destroy
+     * @method destroy
      */
     destroy: function ()
     {
@@ -207,5 +215,12 @@ var GameObject = new Class({
     }
 
 });
+
+/**
+ * The bitmask that `GameObject.renderFlags` is compared against to determine if the Game Object will render or not.
+ *
+ * @constant {integer} [RENDER_MASK=15]
+ */
+GameObject.RENDER_MASK = 15;
 
 module.exports = GameObject;

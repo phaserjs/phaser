@@ -1,11 +1,14 @@
+var GameObject = require('../../GameObject');
+
 var TilemapCanvasRenderer = function (renderer, gameObject, interpolationPercentage, camera)
 {
-    if (gameObject.renderMask !== gameObject.renderFlags || (gameObject.cameraFilter > 0 && (gameObject.cameraFilter & camera._id)))
+    if (GameObject.RENDER_MASK !== gameObject.renderFlags || (gameObject.cameraFilter > 0 && (gameObject.cameraFilter & camera._id)))
     {
         return;
     }
 
-    this.cull(camera);
+    gameObject.cull(camera);
+
     var tiles = gameObject.culledTiles;
     var tileCount = tiles.length;
     var image = gameObject.frame.source.image;
@@ -25,6 +28,7 @@ var TilemapCanvasRenderer = function (renderer, gameObject, interpolationPercent
     for (var index = 0; index < tileCount; ++index)
     {
         var tile = tiles[index];
+
         ctx.drawImage(
             image, 
             tile.frameX, tile.frameY, 

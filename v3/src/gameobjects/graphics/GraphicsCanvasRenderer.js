@@ -1,9 +1,10 @@
 var Commands = require('./Commands');
 var MATH_CONST = require('../../math/const');
+var GameObject = require('../GameObject');
 
 var GraphicsCanvasRenderer = function (renderer, src, interpolationPercentage, camera, renderTargetCtx)
 {
-    if (src.renderMask !== src.renderFlags || (src.cameraFilter > 0 && (src.cameraFilter & camera._id)))
+    if (GameObject.RENDER_MASK !== src.renderFlags || (src.cameraFilter > 0 && (src.cameraFilter & camera._id)))
     {
         return;
     }

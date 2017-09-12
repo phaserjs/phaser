@@ -1,4 +1,5 @@
 var VertexBuffer = require('../../renderer/webgl/resources/VertexBuffer');
+var GameObject = require('../GameObject');
 
 var DeferredRenderer = function (renderer, lightLayer, interpolationPercentage, camera)
 {
@@ -7,7 +8,7 @@ var DeferredRenderer = function (renderer, lightLayer, interpolationPercentage, 
     var batch = renderer.spriteBatch;
     var gl = renderer.gl;
 
-    if (this.renderMask !== this.renderFlags || length === 0 || (lightLayer.cameraFilter > 0 && (lightLayer.cameraFilter & camera._id)))
+    if (GameObject.RENDER_MASK !== lightLayer.renderFlags || length === 0 || (lightLayer.cameraFilter > 0 && (lightLayer.cameraFilter & camera._id)))
     {
         return;
     }
@@ -19,11 +20,12 @@ var DeferredRenderer = function (renderer, lightLayer, interpolationPercentage, 
 
     batch.bind(lightLayer.gBufferShaderPass);
     batch.indexBufferObject.bind();
-    lightLayer.updateLights(renderer, camera, this.lightPassShader);
+    lightLayer.updateLights(renderer, camera, lightLayer.lightPassShader);
 
     gl.bindFramebuffer(gl.FRAMEBUFFER, lightLayer.gBufferFbo);
     gl.clearColor(0, 0, 0, 0);
     gl.clear(gl.COLOR_BUFFER_BIT);
+
     for (var index = 0; index < length; ++index)
     {
         var spriteNormalPair = spriteList[index];

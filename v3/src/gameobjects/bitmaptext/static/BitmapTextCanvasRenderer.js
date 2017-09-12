@@ -1,9 +1,11 @@
+var GameObject = require('../../GameObject');
+
 var BitmapTextCanvasRenderer = function (renderer, src, interpolationPercentage, camera)
 {
     var text = src.text;
     var textLength = text.length;
 
-    if (src.renderMask !== src.renderFlags || textLength === 0 || (src.cameraFilter > 0 && (src.cameraFilter & camera._id)))
+    if (GameObject.RENDER_MASK !== src.renderFlags || textLength === 0 || (src.cameraFilter > 0 && (src.cameraFilter & camera._id)))
     {
         return;
     }

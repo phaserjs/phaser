@@ -1,11 +1,13 @@
+var GameObject = require('../../GameObject');
+
 var TilemapWebGLRenderer = function (renderer, gameObject, interpolationPercentage, camera)
 {
-    if (this.renderMask !== this.renderFlags || (this.cameraFilter > 0 && (this.cameraFilter & camera._id)))
+    if (GameObject.RENDER_MASK !== gameObject.renderFlags || (gameObject.cameraFilter > 0 && (gameObject.cameraFilter & camera._id)))
     {
         return;
     }
 
-    this.cull(camera);
+    gameObject.cull(camera);
 
     var renderTiles = gameObject.culledTiles;
     var length = renderTiles.length;
