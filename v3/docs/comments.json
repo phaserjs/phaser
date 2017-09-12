@@ -1,5 +1,21 @@
 [
   {
+    "description": "",
+    "tags": [
+      {
+        "title": "author",
+        "description": "Richard Davey <rich@photonstorm.com>",
+        "lineNumber": 1
+      },
+      { "title": "copyright", "description": "2016 Photon Storm Ltd.", "lineNumber": 2 },
+      {
+        "title": "license",
+        "description": "{@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}",
+        "lineNumber": 3
+      }
+    ]
+  },
+  {
     "description": "The base GameObject class that all Game Objects extend.",
     "tags": [
       {
@@ -10,16 +26,24 @@
         "name": "GameObject"
       },
       {
+        "title": "namespace",
+        "description": null,
+        "lineNumber": 4,
+        "type": null,
+        "name": "Phaser.GameObjects"
+      },
+      { "title": "constructor", "description": null, "lineNumber": 5, "type": null, "name": null },
+      {
         "title": "param",
         "description": "The Scene to which this Game Object belongs.",
-        "lineNumber": 5,
+        "lineNumber": 7,
         "type": { "type": "NameExpression", "name": "Scene" },
         "name": "scene"
       },
       {
         "title": "param",
         "description": "A textual representation of the Game Object.",
-        "lineNumber": 6,
+        "lineNumber": 8,
         "type": { "type": "NameExpression", "name": "String" },
         "name": "type"
       }
