@@ -27,12 +27,30 @@ var WebGLRenderer = new Class({
 
     function WebGLRenderer (game)
     {
+        var _this = this;
         this.game = game;
         this.type = CONST.WEBGL;
         this.width = game.config.width * game.config.resolution;
         this.height = game.config.height * game.config.resolution;
         this.resolution = game.config.resolution;
         this.view = game.canvas;
+        this.view.addEventListener('webglcontextlost', function (evt) {
+            var renderers = _this.rendererArray;
+            for (var index = 0; index < renderers.length; ++index)
+            {
+                renderers[index].destroy();
+            }
+            _this.contextLost = true;
+            evt.preventDefault();
+        }, false);
+
+        this.view.addEventListener('webglcontextrestored', function (evt) {
+            _this.rendererArray.length = 0;
+            _this.resourceManager.shaderCache = {};
+            _this.resourceManager.shaderCount = 0;
+            _this.contextLost = false;
+            _this.init();
+        }, false);
 
         //   All of these settings will be able to be controlled via the Game Config
         this.config = {
@@ -91,8 +109,10 @@ var WebGLRenderer = new Class({
             this.contextLost = true;
             throw new Error('This browser does not support WebGL. Try using the Canvas renderer.');
         }
-
         var gl = this.gl;
+
+        this.lostContext = this.getExtension('WEBGL_lose_context');
+
         var color = this.game.config.backgroundColor;
 
         this.resourceManager = new ResourceManager(gl);
@@ -326,14 +346,13 @@ var WebGLRenderer = new Class({
     //  Call at the start of the render loop
     preRender: function ()
     {
-        this.setRenderTarget(null);
-
         //  No point rendering if our context has been blown up!
         if (this.contextLost)
         {
             return;
         }
 
+        this.setRenderTarget(null);
         //  Add Pre-render hook
 
         var gl = this.gl;
@@ -358,6 +377,7 @@ var WebGLRenderer = new Class({
      */
     render: function (scene, children, interpolationPercentage, camera)
     {
+        if (this.contextLost) return;
         var gl = this.gl;
         var quadBatch = this.quadBatch;
 
@@ -479,6 +499,8 @@ var WebGLRenderer = new Class({
     //  Called at the end of the render loop (tidy things up, etc)
     postRender: function ()
     {
+        if (this.contextLost) return;
+
         this.currentRenderer.flush();
 
         if (this.snapshotCallback)
@@ -612,6 +634,10 @@ var WebGLRenderer = new Class({
 
     destroy: function ()
     {
+        if (this.lostContext)
+        {
+            this.lostContext.loseContext();
+        }
         this.gl = null;
     }
 

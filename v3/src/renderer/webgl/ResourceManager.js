@@ -220,7 +220,7 @@ var ResourceManager = new Class({
 
         if (storedShader !== undefined)
         {
-            delete this.shaderCache;
+            delete this.shaderCache[shader.name];
         }
 
         gl.deleteShader(shader.vertexShader);
