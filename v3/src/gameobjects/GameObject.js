@@ -31,6 +31,7 @@ var GameObject = new Class({
          * Game Objects can only belong to one Scene.
          *
          * @property {Phaser.Scene} scene
+         * @protected
          */
         this.scene = scene;
 
@@ -53,6 +54,7 @@ var GameObject = new Class({
         /**
          * The active state of this Game Object.
          * A Game Object with an active state of `true` is processed by the Scenes UpdateList, if added to it.
+         * An active object is one which is having its logic and internal systems updated.
          *
          * @property {boolean} [active=true]
          */
@@ -75,27 +77,29 @@ var GameObject = new Class({
         this.data = new DataProxy(scene, this);
 
         /**
-         * The flags that the renderMask uses to determine if the Game Object will render or not.
-         * Structure: 0001 | 0010 | 0100 | 1000
-         * The components Visible, Alpha, Transform and Texture set the bits in this mask respectively
+         * The flags that are compared against `RENDER_MASK` to determine if this Game Object will render or not.
+         * The bits are 0001 | 0010 | 0100 | 1000 set by the components Visible, Alpha, Transform and Texture respectively.
+         * If those components are not used by your custom class then you can use this bitmask as you wish.
          *
          * @property {integer} [renderFlags=15]
-         * @private
          */
         this.renderFlags = 15;
 
         /**
          * A bitmask that controls if this Game Object is drawn by a Camera or not.
+         * Not usually set directly. Instead call `Camera.ignore`.
          *
          * @property {number} [cameraFilter=0]
-         * @private
+         * @see Phaser.Cameras.Camera.ignore
          */
         this.cameraFilter = 0;
 
         /**
-         * If this Game Object is enabled for input then this property will contain a Phaser.Input.InteractiveObject reference.
+         * If this Game Object is enabled for input then this property will contain an InteractiveObject instance.
+         * Not usually set directly. Instead call `GameObject.setInteractive()`.
          *
          * @property {Phaser.Input.InteractiveObject|null} [input=null]
+         * @see setInteractive
          */
         this.input = null;
 
@@ -112,6 +116,7 @@ var GameObject = new Class({
 
     /**
      * Sets the `active` property of this Game Object and returns this Game Object for further chaining.
+     * A Game Object with its `active` property set to `true` will be updated by the Scenes UpdateList.
      *
      * @method setActive
      *
@@ -127,6 +132,10 @@ var GameObject = new Class({
 
     /**
      * Sets the `name` property of this Game Object and returns this Game Object for further chaining.
+     * The `name` property is not populated by Phaser and is presented for your own use.
+     *
+     * @example game objects/image/set name.js
+     * @tutorial game objects/basics
      *
      * @method setName
      *
@@ -143,6 +152,9 @@ var GameObject = new Class({
     /**
      * Pass this Game Object to the Input Manager to enable it for Input.
      *
+     * @example game objects/image/set interactive.js
+     * @tutorial input/basics
+     * 
      * @method setInteractive
      *
      * @param {any} [shape] - A geometric shape that defines the hit area for the Game Object. If not specified a Rectangle will be used.
@@ -186,11 +198,17 @@ var GameObject = new Class({
     },
 
     /**
-     * Destroys this Game Object, removing it from the Display List and Update List.
-     * Also removes it from the Input and Physics Managers if enabled.
-     * Sets the active state to `false`. Use this to remove a Game Object from your game if
-     * you don't plan to use it again later. If you do wish to use it later then look at using
-     * the Game Object Pool class instead.
+     * Destroys this Game Object removing it from the Display List and Update List and
+     * severing all ties to parent resources.
+     * 
+     * Also removes itself from the Input Manager and Physics Manager if previously enabled.
+     * 
+     * Use this to remove a Game Object from your game if you don't ever plan to use it again.
+     * As long as no reference to it exists within your own code it should become free for
+     * garbage collection by the browser.
+     * 
+     * If you just want to temporarily disable an object then look at using the
+     * Game Object Pool instead of destroying it, as destroyed objects cannot be resurrected.
      *
      * @method destroy
      */
@@ -211,6 +229,8 @@ var GameObject = new Class({
 
         this.active = false;
 
+        this.data = undefined;
+
         this.scene = undefined;
     }
 
@@ -219,7 +239,8 @@ var GameObject = new Class({
 /**
  * The bitmask that `GameObject.renderFlags` is compared against to determine if the Game Object will render or not.
  *
- * @constant {integer} [RENDER_MASK=15]
+ * @constant {integer} RENDER_MASK
+ * @default
  */
 GameObject.RENDER_MASK = 15;
 
