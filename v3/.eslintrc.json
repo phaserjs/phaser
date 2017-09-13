@@ -6,6 +6,8 @@
     },
     "extends": "eslint:recommended",
     "globals": {
+        "WEBGL_RENDERER": true,
+        "CANVAS_RENDERER": true,
         "Phaser": true,
         "p2": true
     },

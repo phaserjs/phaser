@@ -24,6 +24,11 @@ module.exports = {
 
     plugins: [
 
+        new webpack.DefinePlugin({
+            'CANVAS_RENDERER': JSON.stringify(true),
+            'WEBGL_RENDERER': JSON.stringify(true)
+        }),
+
         new WebpackShellPlugin({
             onBuildStart: 'node create-checksum.js',
             onBuildEnd: 'node copy-to-examples.js'

@@ -1,6 +1,19 @@
+var renderWebGL = require('../../utils/NOOP');
+var renderCanvas = require('../../utils/NOOP');
+
+if (WEBGL_RENDERER)
+{
+    renderWebGL = require('./EffectLayerWebGLRenderer');
+}
+
+if (CANVAS_RENDERER)
+{
+    renderCanvas = require('./EffectLayerCanvasRenderer');
+}
+
 module.exports = {
 
-    renderCanvas: require('./EffectLayerCanvasRenderer'),
-    renderWebGL: require('./EffectLayerWebGLRenderer')
+    renderWebGL: renderWebGL,
+    renderCanvas: renderCanvas
 
 };

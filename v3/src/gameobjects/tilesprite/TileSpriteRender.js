@@ -1,6 +1,19 @@
+var renderWebGL = require('../../utils/NOOP');
+var renderCanvas = require('../../utils/NOOP');
+
+if (WEBGL_RENDERER)
+{
+    renderWebGL = require('./TileSpriteWebGLRenderer');
+}
+
+if (CANVAS_RENDERER)
+{
+    renderCanvas = require('./TileSpriteCanvasRenderer');
+}
+
 module.exports = {
 
-    renderCanvas: require('./TileSpriteCanvasRenderer'),
-    renderWebGL: require('./TileSpriteWebGLRenderer')
+    renderWebGL: renderWebGL,
+    renderCanvas: renderCanvas
 
 };

@@ -66,9 +66,9 @@ var Game = new Class({
 
         this.config.preBoot();
 
-        DebugHeader(this);
-
         CreateRenderer(this);
+
+        DebugHeader(this);
 
         AddToDOM(this.canvas, this.config.parent);
 

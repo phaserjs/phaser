@@ -1,6 +1,19 @@
+var renderWebGL = require('../../../utils/NOOP');
+var renderCanvas = require('../../../utils/NOOP');
+
+if (WEBGL_RENDERER)
+{
+    renderWebGL = require('./DynamicBitmapTextWebGLRenderer');
+}
+
+if (CANVAS_RENDERER)
+{
+    renderCanvas = require('./DynamicBitmapTextCanvasRenderer');
+}
+
 module.exports = {
 
-    renderCanvas: require('./DynamicBitmapTextCanvasRenderer'),
-    renderWebGL: require('./DynamicBitmapTextWebGLRenderer')
+    renderWebGL: renderWebGL,
+    renderCanvas: renderCanvas
 
 };

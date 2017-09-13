@@ -1,6 +1,19 @@
+var renderWebGL = require('../../../utils/NOOP');
+var renderCanvas = require('../../../utils/NOOP');
+
+if (WEBGL_RENDERER)
+{
+    renderWebGL = require('./TextWebGLRenderer');
+}
+
+if (CANVAS_RENDERER)
+{
+    renderCanvas = require('./TextCanvasRenderer');
+}
+
 module.exports = {
 
-    renderCanvas: require('./TextCanvasRenderer'),
-    renderWebGL: require('./TextWebGLRenderer')
+    renderWebGL: renderWebGL,
+    renderCanvas: renderCanvas
 
 };
