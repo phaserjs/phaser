@@ -1,5 +1,5 @@
 var Frame = require('./Frame');
-var GetValue = require('../../utils/object/GetValue');
+var GetValue = require('../../../utils/object/GetValue');
 
 var GetFrames = function (textureManager, frames)
 {

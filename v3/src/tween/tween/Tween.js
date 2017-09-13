@@ -142,17 +142,17 @@ var Tween = new Class({
         this.play();
     },
 
-    calcDuration: require('./components/CalcDuration'),
-    init: require('./components/Init'),
-    nextState: require('./components/NextState'),
-    pause: require('./components/Pause'),
-    play: require('./components/Play'),
-    resetTweenData: require('./components/ResetTweenData'),
-    resume: require('./components/Resume'),
-    seek: require('./components/Seek'),
-    setCallback: require('./components/SetCallback'),
-    stop: require('./components/Stop'),
-    update: require('./components/Update')
+    calcDuration: require('./inc/CalcDuration'),
+    init: require('./inc/Init'),
+    nextState: require('./inc/NextState'),
+    pause: require('./inc/Pause'),
+    play: require('./inc/Play'),
+    resetTweenData: require('./inc/ResetTweenData'),
+    resume: require('./inc/Resume'),
+    seek: require('./inc/Seek'),
+    setCallback: require('./inc/SetCallback'),
+    stop: require('./inc/Stop'),
+    update: require('./inc/Update')
 
 });
 

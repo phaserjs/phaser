@@ -181,18 +181,18 @@ var TweenManager = new Class({
         return this;
     },
 
-    setGlobalTimeScale: require('./components/SetGlobalTimeScale'),
-    getGlobalTimeScale: require('./components/GetGlobalTimeScale'),
-    getAllTweens: require('./components/GetAllTweens'),
-    getTweensOf: require('./components/GetTweensOf'),
-    isTweening: require('./components/IsTweening'),
-    killAll: require('./components/KillAll'),
-    killTweensOf: require('./components/KillTweensOf'),
-    pauseAll: require('./components/PauseAll'),
-    resumeAll: require('./components/ResumeAll'),
-    each: require('./components/Each'),
-    shutdown: require('./components/Shutdown'),
-    destroy: require('./components/Destroy')
+    setGlobalTimeScale: require('./inc/SetGlobalTimeScale'),
+    getGlobalTimeScale: require('./inc/GetGlobalTimeScale'),
+    getAllTweens: require('./inc/GetAllTweens'),
+    getTweensOf: require('./inc/GetTweensOf'),
+    isTweening: require('./inc/IsTweening'),
+    killAll: require('./inc/KillAll'),
+    killTweensOf: require('./inc/KillTweensOf'),
+    pauseAll: require('./inc/PauseAll'),
+    resumeAll: require('./inc/ResumeAll'),
+    each: require('./inc/Each'),
+    shutdown: require('./inc/Shutdown'),
+    destroy: require('./inc/Destroy')
 
     // TODO: kill: function (vars, target)
 });

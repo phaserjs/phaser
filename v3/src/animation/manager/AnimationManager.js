@@ -1,5 +1,4 @@
 var Class = require('../../utils/Class');
-var Components = require('./components/');
 var EventDispatcher = require('../../events/EventDispatcher');
 var Map = require('../../structs/Map');
 
@@ -32,19 +31,19 @@ var AnimationManager = new Class({
         this.textureManager = textureManager;
     },
 
-    add: Components.AddAnimation,
-    create: Components.CreateFrameAnimation,
-    fromJSON: Components.FromJSON,
-    generateFrameNames: Components.GenerateFrameNames,
-    generateFrameNumbers: Components.GenerateFrameNumbers,
-    get: Components.GetAnimation,
-    load: Components.LoadAnimationToGameObject,
-    play: Components.PlayAnimation,
-    pauseAll: Components.PauseAll,
-    remove: Components.RemoveAnimation,
-    resumeAll: Components.ResumeAll,
-    staggerPlay: Components.StaggerPlayAnimation,
-    toJSON: Components.ToJSON,
+    add: require('./inc/AddAnimation'),
+    create: require('./inc/CreateFrameAnimation'),
+    fromJSON: require('./inc/FromJSON'),
+    generateFrameNames: require('./inc/GenerateFrameNames'),
+    generateFrameNumbers: require('./inc/GenerateFrameNumbers'),
+    get: require('./inc/GetAnimation'),
+    load: require('./inc/LoadAnimationToGameObject'),
+    pauseAll: require('./inc/PauseAll'),
+    play: require('./inc/PlayAnimation'),
+    remove: require('./inc/RemoveAnimation'),
+    resumeAll: require('./inc/ResumeAll'),
+    staggerPlay: require('./inc/StaggerPlayAnimation'),
+    toJSON: require('./inc/ToJSON'),
 
     destroy: function ()
     {

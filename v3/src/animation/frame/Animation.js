@@ -1,6 +1,6 @@
 var Class = require('../../utils/Class');
 var GetValue = require('../../utils/object/GetValue');
-var GetFrames = require('./GetFrames');
+var GetFrames = require('./inc/GetFrames');
 
 //  A Frame based Animation
 //  This consists of a key, some default values (like the frame rate) and a bunch of Frame objects.
@@ -101,22 +101,22 @@ var Animation = new Class({
         this.manager.events.on('RESUME_ALL_ANIMATION_EVENT', this.resume.bind(this));
     },
 
-    addFrame: require('./AddFrame'),
-    addFrameAt: require('./AddFrameAt'),
-    checkFrame: require('./CheckFrame'),
-    completeAnimation: require('./CompleteAnimation'),
-    getFirstTick: require('./GetFirstTick'),
-    getFrameAt: require('./GetFrameAt'),
-    getNextTick: require('./GetNextTick'),
-    load: require('./Load'),
-    nextFrame: require('./NextFrame'),
-    previousFrame: require('./PreviousFrame'),
-    removeFrame: require('./RemoveFrame'),
-    removeFrameAt: require('./RemoveFrameAt'),
-    repeatAnimation: require('./RepeatAnimation'),
-    setFrame: require('./SetFrame'),
-    toJSON: require('./ToJSON'),
-    updateFrameSequence: require('./UpdateFrameSequence'),
+    addFrame: require('./inc/AddFrame'),
+    addFrameAt: require('./inc/AddFrameAt'),
+    checkFrame: require('./inc/CheckFrame'),
+    completeAnimation: require('./inc/CompleteAnimation'),
+    getFirstTick: require('./inc/GetFirstTick'),
+    getFrameAt: require('./inc/GetFrameAt'),
+    getNextTick: require('./inc/GetNextTick'),
+    load: require('./inc/Load'),
+    nextFrame: require('./inc/NextFrame'),
+    previousFrame: require('./inc/PreviousFrame'),
+    removeFrame: require('./inc/RemoveFrame'),
+    removeFrameAt: require('./inc/RemoveFrameAt'),
+    repeatAnimation: require('./inc/RepeatAnimation'),
+    setFrame: require('./inc/SetFrame'),
+    toJSON: require('./inc/ToJSON'),
+    updateFrameSequence: require('./inc/UpdateFrameSequence'),
 
     pause: function ()
     {
