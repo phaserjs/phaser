@@ -9,9 +9,11 @@ var CollisionMap = new Class({
 
     function CollisionMap (tilesize, data)
     {
+        if (tilesize === undefined) { tilesize = 32; }
+
         this.tilesize = tilesize;
 
-        this.data = data;
+        this.data = (Array.isArray(data)) ? data : [];
 
         this.width = (Array.isArray(data)) ? data[0].length : 0;
         this.height = (Array.isArray(data)) ? data.length : 0;

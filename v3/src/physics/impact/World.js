@@ -96,7 +96,7 @@ var World = new Class({
     {
         this.collisionMap = new CollisionMap(tilesize, data);
 
-        return this;
+        return this.collisionMap;
     },
 
     /**
