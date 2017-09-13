@@ -33,30 +33,30 @@ var BuildGameObjectAnimation = function (sprite, config)
         var key = GetAdvancedValue(animConfig, 'key', undefined);
         var startFrame = GetAdvancedValue(animConfig, 'startFrame', undefined);
 
-        anims.load(key);
-
         var delay = GetAdvancedValue(animConfig, 'delay', 0);
         var repeat = GetAdvancedValue(animConfig, 'repeat', 0);
         var repeatDelay = GetAdvancedValue(animConfig, 'repeatDelay', 0);
         var yoyo = GetAdvancedValue(animConfig, 'yoyo', false);
+        
+        var play = GetAdvancedValue(animConfig, 'play', false);
+        var delayedPlay = GetAdvancedValue(animConfig, 'delayedPlay', 0);
 
         anims.delay(delay);
         anims.repeat(repeat);
         anims.repeatDelay(repeatDelay);
         anims.yoyo(yoyo);
 
-        if (GetAdvancedValue(animConfig, 'play', false))
+        if (play)
         {
             anims.play(key, startFrame);
         }
+        else if (delayedPlay > 0)
+        {
+            anims.delayedPlay(delayedPlay, key, startFrame);
+        }
         else
         {
-            var d = GetAdvancedValue(animConfig, 'delayedPlay', 0);
-
-            if (d > 0)
-            {
-                anims.delayedPlay(d, key, startFrame);
-            }
+            anims.load(key);
         }
     }
 
