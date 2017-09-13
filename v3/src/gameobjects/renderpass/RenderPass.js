@@ -63,6 +63,18 @@ var RenderPass = new Class({
         this.setPosition(x, y);
         this.setSize(width, height);
         this.setOrigin(0, 0);
+
+        var _this = this;
+        scene.sys.game.renderer.addContextRestoredCallback(function (renderer) {
+            var gl = renderer.gl;
+            var wrap = pot ? gl.REPEAT : gl.CLAMP_TO_EDGE;
+            _this.passShader = resourceManager.createShader(shaderName, {vert: TexturedAndNormalizedTintedShader.vert, frag: fragmentShader});
+            _this.renderTexture = resourceManager.createTexture(0, gl.LINEAR, gl.LINEAR, wrap, wrap, gl.RGBA, null, _this.width, _this.height);
+            _this.passRenderTarget = resourceManager.createRenderTarget(_this.width, _this.height, _this.renderTexture, null);
+            _this.uniforms = {};
+            _this.textures = {};
+            scene.sys.game.renderer.currentTexture[0] = null; // force rebinding of prev texture
+        });
     },
 
     clearColorBuffer: function (r, g, b, a)
@@ -109,12 +121,13 @@ var RenderPass = new Class({
 
     render: function (gameObject, camera)
     {
-        var gl = this.renderer.gl;
+        var renderer = this.renderer;
+        var gl = renderer.gl;
 
-        if (gl)
+        if (gl && !renderer.contextLost)
         {
-            this.renderer.setRenderer(this.renderer.spriteBatch, null, null);
-            this.renderer.spriteBatch.addSprite(gameObject, camera);
+            renderer.setRenderer(this.renderer.spriteBatch, null, null);
+            renderer.spriteBatch.addSprite(gameObject, camera);
             for (var key in this.textures)
             {
                 var textureData = this.textures[key];
@@ -123,18 +136,19 @@ var RenderPass = new Class({
                 gl.bindTexture(gl.TEXTURE_2D, textureData.texture);
                 gl.activeTexture(gl.TEXTURE0);
             }
-            this.renderer.spriteBatch.flush(this.passShader, this.passRenderTarget.framebufferObject);
+            renderer.spriteBatch.flush(this.passShader, this.passRenderTarget.framebufferObject);
         }
     },
 
     renderRect: function (x, y, width, height, camera)
     {
-        var gl = this.renderer.gl;
+        var renderer = this.renderer;
+        var gl = renderer.gl;
 
-        if (gl)
+        if (gl && !renderer.contextLost)
         {
-            this.renderer.setRenderer(this.renderer.spriteBatch, null, null);
-            this.renderer.spriteBatch.addTileTextureRect(
+            renderer.setRenderer(this.renderer.spriteBatch, null, null);
+            renderer.spriteBatch.addTileTextureRect(
                 null, x, y, width, height, 1.0, 0xFFFFFFFF, this.scrollFactorX, this.scrollFactorY,
                 width, height, 0, 0, width, height, camera, null
             );
@@ -146,15 +160,16 @@ var RenderPass = new Class({
                 gl.bindTexture(gl.TEXTURE_2D, textureData.texture);
                 gl.activeTexture(gl.TEXTURE0);
             }
-            this.renderer.spriteBatch.flush(this.passShader, this.passRenderTarget.framebufferObject);
+            renderer.spriteBatch.flush(this.passShader, this.passRenderTarget.framebufferObject);
         }
     },
 
     setRenderTextureAt: function (renderTexture, samplerName, unit)
     {
-        var gl = this.renderer.gl;
+        var renderer = this.renderer;
+        var gl = renderer.gl;
 
-        if (gl)
+        if (gl && !renderer.contextLost)
         {
             /* Texture 1 is reserved for Phasers Main Renderer */
             unit = (unit > 0) ? unit : 1;

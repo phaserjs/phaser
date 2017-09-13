@@ -68,6 +68,30 @@ var EffectLayer = new Class({
         this.setPosition(x, y);
         this.setSize(width, height);
         this.setOrigin(0, 0);
+
+        var _this = this;
+        scene.sys.game.renderer.addContextRestoredCallback(function (renderer) {
+            var resourceManager = renderer.resourceManager;
+            var gl = renderer.gl;
+            var wrap = pot ? gl.REPEAT : gl.CLAMP_TO_EDGE;
+            _this.dstShader = resourceManager.createShader(effectName, {
+                vert: TexturedAndNormalizedTintedShader.vert,
+                frag: fragmentShader
+            });
+
+            _this.renderTexture = resourceManager.createTexture(
+                0,
+                gl.LINEAR, gl.LINEAR,
+                wrap, wrap,
+                gl.RGBA,
+                null, _this.width, _this.height
+            );
+
+            _this.dstRenderTarget = resourceManager.createRenderTarget(_this.width, _this.height, _this.renderTexture, null);
+            _this.uniforms = {};
+            scene.sys.game.renderer.currentTexture[0] = null; // force rebinding of prev texture
+
+        });
     },
 
     setClearAlpha: function (alpha)

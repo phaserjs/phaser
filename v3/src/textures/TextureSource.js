@@ -9,6 +9,8 @@ var TextureSource = new Class({
 
     function TextureSource (texture, source, width, height)
     {
+        var game = texture.manager.game;
+
         this.texture = texture;
 
         this.image = source;
@@ -25,13 +27,16 @@ var TextureSource = new Class({
 
         this.isPowerOf2 = IsSizePowerOfTwo(this.width, this.height);
 
-        this.glTexture = null;
+        this.init(game);
+    },
 
-        var game = texture.manager.game;
+    init: function (game)
+    {
+        this.glTexture = null;
 
         if (game.config.renderType === CONST.WEBGL)
         {
-            game.renderer.createTexture(this, width, height);
+            game.renderer.createTexture(this, this.width, this.height);
         }
 
         if (game.config.pixelArt)

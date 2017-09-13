@@ -93,6 +93,15 @@ var CanvasRenderer = new Class({
         }
     },
 
+    addContextLostCallback: function (callback)
+    {
+    },
+
+    addContextRestoredCallback: function (callback)
+    {
+    },
+
+
     resetTransform: function ()
     {
         this.currentContext.setTransform(1, 0, 0, 1, 0, 0);

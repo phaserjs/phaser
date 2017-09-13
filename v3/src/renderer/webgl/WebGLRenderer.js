@@ -58,6 +58,12 @@ var WebGLRenderer = new Class({
             _this.resourceManager.shaderCount = 0;
             _this.contextLost = false;
             _this.init();
+            _this.game.textures.each(function (texture) {
+                for (var i = 0; i < texture.source.length; ++i)
+                {
+                    texture.source[i].init(_this.game);
+                }
+            }, null);
             for (var index = 0; index < callbacks.length; ++index)
             {
                 callbacks[index](_this);

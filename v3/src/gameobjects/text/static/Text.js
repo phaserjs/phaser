@@ -82,6 +82,12 @@ var Text = new Class({
         {
             this.updateText();
         }
+
+        var _this = this;
+        scene.sys.game.renderer.addContextRestoredCallback(function (renderer) {
+            _this.canvasTexture = null;
+            _this.dirty = true;
+        });
     },
 
     setText: function (value)

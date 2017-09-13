@@ -50,6 +50,15 @@ var StaticTilemap = new Class({
         this.setSizeToFrame();
         this.setOrigin();
         this.setSize(tileWidth * mapWidth, tileHeight * mapHeight);
+        
+        var _this = this;
+        scene.sys.game.renderer.addContextRestoredCallback(function (renderer) {
+            _this.tileTexture = null;
+            _this.dirty = true;
+            _this.vbo = null;
+            _this.gl = renderer.gl;
+            _this.tilemapRenderer = renderer.tilemapRenderer;
+        });
     },
 
     upload: function (camera) 
