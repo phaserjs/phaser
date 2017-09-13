@@ -33,12 +33,10 @@ var LightLayer = new Class({
 
     function LightLayer (scene)
     {
+        var _this = this;
+
         GameObject.call(this, scene, 'LightLayer');
 
-        var resourceManager = scene.sys.game.renderer.resourceManager;
-        this._isDeferred = WebGLSupportedExtensions.has('WEBGL_draw_buffers');
-
-        this.renderer = scene.sys.game.renderer;
         this.passShader = null;
         this.gl = null;
         this.ambientLightColorR = 0.0;
@@ -48,12 +46,35 @@ var LightLayer = new Class({
         this.spritePool = [];
         this.lights = [];
         this.sprites = [];
-        this.lightsLocations = [];
         this._z = 0;
+        this.setOrigin(0, 0);
+
+        scene.sys.game.renderer.addContextRestoredCallback(function (renderer) {
+            _this.onContextRestored(renderer);
+        });
+
+        this.init(scene.sys.game.renderer, WebGLSupportedExtensions.has('WEBGL_draw_buffers'));
+    },
+
+    onContextRestored: function (renderer)
+    {
+        /* It won't allow the use of drawBuffers on restored context */
+        this.init(renderer, false); 
+        this.renderWebGL = require('./ForwardRenderer');
+        this.lights.length = Math.min(this.lights.length, Const.MAX_LIGHTS);
+    },
+
+    init: function (renderer, deferred)
+    {
+        var resourceManager = renderer.resourceManager;
+        
+        this._isDeferred = deferred;
+        this.renderer = renderer;
+        this.lightsLocations = [];
 
         if (resourceManager !== undefined && !this._isDeferred)
         {
-            this.gl = scene.sys.game.renderer.gl;
+            this.gl = renderer.gl;
 
             this.passShader = resourceManager.createShader('Phong2DShaderForward', {
                 vert: TexturedAndNormalizedTintedShader.vert,
@@ -81,9 +102,9 @@ var LightLayer = new Class({
         }
         else
         {
-            var gl = this.gl = scene.sys.game.renderer.gl;
+            var gl = this.gl = renderer.gl;
 
-            this.ext = scene.sys.game.renderer.getExtension('WEBGL_draw_buffers');
+            this.ext = renderer.getExtension('WEBGL_draw_buffers');
 
             this.gBufferShaderPass = resourceManager.createShader('GBufferShader', {
                 vert: TexturedAndNormalizedTintedShader.vert,
@@ -138,14 +159,14 @@ var LightLayer = new Class({
 
             gl.bindFramebuffer(gl.FRAMEBUFFER, this.gBufferFbo);
             gl.bindTexture(gl.TEXTURE_2D, this.gBufferColorTex);
-            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, scene.sys.game.renderer.width, scene.sys.game.renderer.height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, renderer.width, renderer.height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
             gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
             gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
             gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
             gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
 
             gl.bindTexture(gl.TEXTURE_2D, this.gBufferNormalTex);
-            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, scene.sys.game.renderer.width, scene.sys.game.renderer.height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, renderer.width, renderer.height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
             gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
             gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
             gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
@@ -172,8 +193,6 @@ var LightLayer = new Class({
             gl.bindFramebuffer(gl.FRAMEBUFFER, null);
             VertexBuffer.SetDirty();
         }
-
-        this.setOrigin(0, 0);
     },
 
     forEachLight: function (callback)

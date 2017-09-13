@@ -29,27 +29,39 @@ var WebGLRenderer = new Class({
     {
         var _this = this;
         this.game = game;
+        this.onContextLostCallbacks = [];
+        this.onContextRestoredCallbacks = [];
         this.type = CONST.WEBGL;
         this.width = game.config.width * game.config.resolution;
         this.height = game.config.height * game.config.resolution;
         this.resolution = game.config.resolution;
         this.view = game.canvas;
         this.view.addEventListener('webglcontextlost', function (evt) {
+            var callbacks = _this.onContextLostCallbacks;
             var renderers = _this.rendererArray;
             for (var index = 0; index < renderers.length; ++index)
             {
                 renderers[index].destroy();
             }
             _this.contextLost = true;
+            for (var index = 0; index < callbacks.length; ++index)
+            {
+                callbacks[index](_this);
+            }
             evt.preventDefault();
         }, false);
 
         this.view.addEventListener('webglcontextrestored', function (evt) {
+            var callbacks = _this.onContextRestoredCallbacks;
             _this.rendererArray.length = 0;
             _this.resourceManager.shaderCache = {};
             _this.resourceManager.shaderCount = 0;
             _this.contextLost = false;
             _this.init();
+            for (var index = 0; index < callbacks.length; ++index)
+            {
+                callbacks[index](_this);
+            }
         }, false);
 
         //   All of these settings will be able to be controlled via the Game Config
@@ -199,6 +211,22 @@ var WebGLRenderer = new Class({
             this.extensionList[name] = this.gl.getExtension(name);
         }
         return this.extensionList[name];
+    },
+
+    addContextLostCallback: function (callback)
+    {
+        if (this.onContextLostCallbacks.indexOf(callback) === -1)
+        {
+            this.onContextLostCallbacks.push(callback);
+        }
+    },
+
+    addContextRestoredCallback: function (callback)
+    {
+        if (this.onContextRestoredCallbacks.indexOf(callback) === -1)
+        {
+            this.onContextRestoredCallbacks.push(callback);
+        }
     },
 
     createTexture: function (source, width, height)
