@@ -1,4 +1,4 @@
-var MATH = require('../../math');
+var MATH = require('../../math/const');
 var GetValue = require('./GetValue');
 
 //  Allowed types:

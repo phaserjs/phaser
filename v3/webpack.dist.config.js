@@ -2,7 +2,7 @@
 
 const webpack = require('webpack');
 const WebpackShellPlugin = require('webpack-shell-plugin');
-const UglifyJSPlugin = require('uglifyjs-webpack-plugin')
+const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 
 module.exports = {
 
@@ -23,10 +23,15 @@ module.exports = {
 
     plugins: [
 
+        new webpack.DefinePlugin({
+            'CANVAS_RENDERER': JSON.stringify(true),
+            'WEBGL_RENDERER': JSON.stringify(true)
+        }),
+
         new UglifyJSPlugin({
             include: /\.min\.js$/,
             parallel: true,
-            sourceMap: true,
+            sourceMap: false,
             compress: true,
             comments: false,
             uglifyOptions: {
@@ -42,13 +47,5 @@ module.exports = {
         })
 
     ]
-
-// new webpack.DefinePlugin({
-//   PRODUCTION: JSON.stringify(true),
-//   VERSION: JSON.stringify("5fa3b9"),
-//   BROWSER_SUPPORTS_HTML5: true,
-//   TWO: "1+1",
-//   "typeof window": JSON.stringify("object")
-// })
 
 };

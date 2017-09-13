@@ -1,7 +1,7 @@
 var Class = require('../utils/Class');
 var CONST = require('../const');
 var GetValue = require('../utils/object/GetValue');
-var MATH = require('../math');
+var MATH = require('../math/const');
 var NOOP = require('../utils/NOOP');
 var ValueToColor = require('../graphics/color/ValueToColor');
 
