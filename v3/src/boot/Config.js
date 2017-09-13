@@ -55,7 +55,7 @@ var Config = new Class({
         this.inputTouch = GetValue(config, 'input.touch', true);
         this.inputTouchEventTarget = GetValue(config, 'input.touch.target', null);
 
-        this.inputGamepad = GetValue(config, 'input.gamepad', true);
+        this.inputGamepad = GetValue(config, 'input.gamepad', false);
 
         this.disableContextMenu = GetValue(config, 'disableContextMenu', false);
 
