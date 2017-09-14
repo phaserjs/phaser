@@ -19,18 +19,36 @@ var GameObjects = {
     Zone: require('./zone/Zone'),
 
     //  Game Object Factories
-    BlitterFactory: require('./blitter/BlitterFactory'),
-    DynamicBitmapTextFactory: require('./bitmaptext/dynamic/DynamicBitmapTextFactory'),
-    DynamicTilemapFactory: require('./tilemap/dynamic/TilemapFactory'),
-    GraphicsFactory: require('./graphics/GraphicsFactory'),
-    GroupFactory: require('./group/GroupFactory'),
-    ImageFactory: require('./image/ImageFactory'),
-    SpriteFactory: require('./sprite/SpriteFactory'),
-    StaticBitmapTextFactory: require('./bitmaptext/static/BitmapTextFactory'),
-    StaticTilemapFactory: require('./tilemap/static/StaticTilemapFactory'),
-    TextFactory: require('./text/static/TextFactory'),
-    TileSpriteFactory: require('./tilesprite/TileSpriteFactory'),
-    ZoneFactory: require('./zone/ZoneFactory'),
+
+    Factories: {
+        Blitter: require('./blitter/BlitterFactory'),
+        DynamicBitmapText: require('./bitmaptext/dynamic/DynamicBitmapTextFactory'),
+        DynamicTilemap: require('./tilemap/dynamic/TilemapFactory'),
+        Graphics: require('./graphics/GraphicsFactory'),
+        Group: require('./group/GroupFactory'),
+        Image: require('./image/ImageFactory'),
+        Sprite: require('./sprite/SpriteFactory'),
+        StaticBitmapText: require('./bitmaptext/static/BitmapTextFactory'),
+        StaticTilemap: require('./tilemap/static/StaticTilemapFactory'),
+        Text: require('./text/static/TextFactory'),
+        TileSprite: require('./tilesprite/TileSpriteFactory'),
+        Zone: require('./zone/ZoneFactory'),
+    },
+
+    Creators: {
+        Blitter: require('./blitter/BlitterCreator'),
+        DynamicBitmapText: require('./bitmaptext/dynamic/DynamicBitmapTextCreator'),
+        DynamicTilemap: require('./tilemap/dynamic/TilemapCreator'),
+        Graphics: require('./graphics/GraphicsCreator'),
+        Group: require('./group/GroupCreator'),
+        Image: require('./image/ImageCreator'),
+        Sprite: require('./sprite/SpriteCreator'),
+        StaticBitmapText: require('./bitmaptext/static/BitmapTextCreator'),
+        StaticTilemap: require('./tilemap/static/StaticTilemapCreator'),
+        Text: require('./text/static/TextCreator'),
+        TileSprite: require('./tilesprite/TileSpriteCreator'),
+        Zone: require('./zone/ZoneCreator'),
+    }
 
 };
 
@@ -43,11 +61,17 @@ if (WEBGL_RENDERER)
     GameObjects.Quad = require('./quad/Quad');
     GameObjects.RenderPass = require('./renderpass/RenderPass.js');
 
-    GameObjects.EffectLayerFactory = require('./effectlayer/EffectLayerFactory');
-    GameObjects.LightLayerFactory = require('./lightlayer/LightLayerFactory');
-    GameObjects.MeshFactory = require('./mesh/MeshFactory');
-    GameObjects.QuadFactory = require('./quad/QuadFactory');
-    GameObjects.RenderPassFactory = require('./renderpass/RenderPassFactory');
+    GameObjects.Factories.EffectLayer = require('./effectlayer/EffectLayerFactory');
+    GameObjects.Factories.LightLayer = require('./lightlayer/LightLayerFactory');
+    GameObjects.Factories.Mesh = require('./mesh/MeshFactory');
+    GameObjects.Factories.Quad = require('./quad/QuadFactory');
+    GameObjects.Factories.RenderPass = require('./renderpass/RenderPassFactory');
+
+    GameObjects.Creators.EffectLayer = require('./effectlayer/EffectLayerCreator');
+    GameObjects.Creators.LightLayer = require('./lightlayer/LightLayerCreator');
+    GameObjects.Creators.Mesh = require('./mesh/MeshCreator');
+    GameObjects.Creators.Quad = require('./quad/QuadCreator');
+    GameObjects.Creators.RenderPass = require('./renderpass/RenderPassCreator');
 }
 
 module.exports = GameObjects;

@@ -1,8 +1,9 @@
+var GameObjectCreator = require('../../scene/plugins/GameObjectCreator');
 var Graphics = require('./Graphics');
 
-var GraphicsCreator = function (scene, config)
-{
-    return new Graphics(scene, config);
-};
+//  When registering a factory function 'this' refers to the GameObjectCreator context.
 
-module.exports = GraphicsCreator;
+GameObjectCreator.register('graphics', function (config)
+{
+    return new Graphics(this.scene, config);
+});

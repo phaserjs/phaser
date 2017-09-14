@@ -1,8 +1,11 @@
-var Text = require('./Text');
-var GetAdvancedValue = require('../../../utils/object/GetAdvancedValue');
 var BuildGameObject = require('../../BuildGameObject');
+var GameObjectCreator = require('../../../scene/plugins/GameObjectCreator');
+var GetAdvancedValue = require('../../../utils/object/GetAdvancedValue');
+var Text = require('./Text');
 
-var TextCreator = function (scene, config)
+//  When registering a factory function 'this' refers to the GameObjectCreator context.
+
+GameObjectCreator.register('text', function (config)
 {
     // style Object = {
     //     font: [ 'font', '16px Courier' ],
@@ -26,9 +29,9 @@ var TextCreator = function (scene, config)
     var content = GetAdvancedValue(config, 'text', '');
     var style = GetAdvancedValue(config, 'style', null);
 
-    var text = new Text(scene, 0, 0, content, style);
+    var text = new Text(this.scene, 0, 0, content, style);
 
-    BuildGameObject(scene, text, config);
+    BuildGameObject(this.scene, text, config);
 
     //  Text specific config options:
 
@@ -54,6 +57,4 @@ var TextCreator = function (scene, config)
     text.updateText();
 
     return text;
-};
-
-module.exports = TextCreator;
+});

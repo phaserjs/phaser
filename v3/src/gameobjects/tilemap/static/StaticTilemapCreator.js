@@ -1,8 +1,11 @@
-var StaticTilemap = require('./StaticTilemap');
-var GetValue = require('../../../utils/object/GetValue');
 var BuildGameObject = require('../../BuildGameObject');
+var GameObjectCreator = require('../../../scene/plugins/GameObjectCreator');
+var GetValue = require('../../../utils/object/GetValue');
+var StaticTilemap = require('./StaticTilemap');
 
-var StaticTilemapCreator = function (scene, config)
+//  When registering a factory function 'this' refers to the GameObjectCreator context.
+
+GameObjectCreator.register('staticTilemap', function (config)
 {
     var mapData = GetValue(config, 'map.data', null);
     var mapWidth = GetValue(config, 'map.width', 1);
@@ -17,11 +20,9 @@ var StaticTilemapCreator = function (scene, config)
     var tileFrame = GetValue(config, 'tile.frame', null);
     var tileBorder = GetValue(config, 'tile.border', 0);
 
-    var map = new StaticTilemap(scene, mapData, x, y, tileWidth, tileHeight, mapWidth, mapHeight, tileBorder, tileTexture, tileFrame);
+    var map = new StaticTilemap(this.scene, mapData, x, y, tileWidth, tileHeight, mapWidth, mapHeight, tileBorder, tileTexture, tileFrame);
 
-    BuildGameObject(scene, map, config);
+    BuildGameObject(this.scene, map, config);
 
     return map;
-};
-
-module.exports = StaticTilemapCreator;
+});

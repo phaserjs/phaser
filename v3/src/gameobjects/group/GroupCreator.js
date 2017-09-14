@@ -1,8 +1,9 @@
+var GameObjectCreator = require('../../scene/plugins/GameObjectCreator');
 var Group = require('./Group');
 
-var GroupCreator = function (scene, config)
+//  When registering a factory function 'this' refers to the GameObjectCreator context.
+
+GameObjectCreator.register('group', function (config)
 {
     return new Group(scene, null, config);
-};
-
-module.exports = GroupCreator;
+});

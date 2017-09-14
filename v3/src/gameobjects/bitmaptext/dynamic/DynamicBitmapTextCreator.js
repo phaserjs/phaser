@@ -1,19 +1,20 @@
 var BitmapText = require('./DynamicBitmapText');
-var GetAdvancedValue = require('../../../utils/object/GetAdvancedValue');
 var BuildGameObject = require('../../BuildGameObject');
+var GameObjectCreator = require('../../../scene/plugins/GameObjectCreator');
+var GetAdvancedValue = require('../../../utils/object/GetAdvancedValue');
 
-var DynamicBitmapTextCreator = function (scene, config)
+//  When registering a factory function 'this' refers to the GameObjectCreator context.
+
+GameObjectCreator.register('dynamicBitmapText', function (config)
 {
     var font = GetAdvancedValue(config, 'font', '');
     var text = GetAdvancedValue(config, 'text', '');
     var size = GetAdvancedValue(config, 'size', false);
     var align = GetAdvancedValue(config, 'align', 'left');
 
-    var bitmapText = new BitmapText(scene, 0, 0, font, text, size, align);
+    var bitmapText = new BitmapText(this.scene, 0, 0, font, text, size, align);
 
-    BuildGameObject(scene, bitmapText, config);
+    BuildGameObject(this.scene, bitmapText, config);
 
     return bitmapText;
-};
-
-module.exports = DynamicBitmapTextCreator;
+});

@@ -1,14 +1,15 @@
-var LightLayer = require('./LightLayer');
-var GetAdvancedValue = require('../../utils/object/GetAdvancedValue');
 var BuildGameObject = require('../BuildGameObject');
+var GameObjectCreator = require('../../scene/plugins/GameObjectCreator');
+var GetAdvancedValue = require('../../utils/object/GetAdvancedValue');
+var LightLayer = require('./LightLayer');
 
-var LightLayerCreator = function (scene, config)
+//  When registering a factory function 'this' refers to the GameObjectCreator context.
+
+GameObjectCreator.register('lightLayer', function (config)
 {
-    var pass = new LightLayer(scene);
+    var pass = new LightLayer(this.scene);
 
-    BuildGameObject(scene, pass, config);
+    BuildGameObject(this.scene, pass, config);
 
     return pass;
-};
-
-module.exports = LightLayerCreator;
+});

@@ -1,17 +1,6 @@
-var BlitterCreator = require('../../gameobjects/blitter/BlitterCreator');
 var Class = require('../../utils/Class');
-var DynamicBitmapTextCreator = require('../../gameobjects/bitmaptext/dynamic/DynamicBitmapTextCreator');
-var DynamicTilemapCreator = require('../../gameobjects/tilemap/dynamic/TilemapCreator');
-var GraphicsCreator = require('../../gameobjects/graphics/GraphicsCreator');
-var GroupCreator = require('../../gameobjects/group/GroupCreator');
-var ImageCreator = require('../../gameobjects/image/ImageCreator');
-var SpriteCreator = require('../../gameobjects/sprite/SpriteCreator');
-var StaticBitmapTextCreator = require('../../gameobjects/bitmaptext/static/BitmapTextCreator');
-var StaticTilemapCreator = require('../../gameobjects/tilemap/static/StaticTilemapCreator');
-var TextCreator = require('../../gameobjects/text/static/TextCreator');
-var TileSpriteCreator = require('../../gameobjects/tilesprite/TileSpriteCreator');
 
-var factoryDef = {
+var GameObjectCreator = new Class({
 
     initialize:
 
@@ -20,96 +9,23 @@ var factoryDef = {
         this.scene = scene;
     },
 
-    bitmapText: function (config)
+    destroy: function ()
     {
-        return StaticBitmapTextCreator(this.scene, config);
-    },
+        this.scene = null;
+    }
 
-    dynamicBitmapText: function (config)
-    {
-        return DynamicBitmapTextCreator(this.scene, config);
-    },
+});
 
-    blitter: function (config)
-    {
-        return BlitterCreator(this.scene, config);
-    },
+//  Static method called directly by the Game Object creator functions
 
-    graphics: function (config)
-    {
-        return GraphicsCreator(this.scene, config);
-    },
+GameObjectCreator.register = function (type, factoryFunction)
+{
+    // console.log('register', type);
 
-    group: function (config)
+    if (!GameObjectCreator.prototype.hasOwnProperty(type))
     {
-        return GroupCreator(this.scene, config);
-    },
-
-    image: function (config)
-    {
-        return ImageCreator(this.scene, config);
-    },
-
-    sprite: function (config)
-    {
-        return SpriteCreator(this.scene, config);
-    },
-
-    text: function (config)
-    {
-        return TextCreator(this.scene, config);
-    },
-
-    tilemap: function (config)
-    {
-        return DynamicTilemapCreator(this.scene, config);
-    },
-
-    staticTilemap: function (config)
-    {
-        return StaticTilemapCreator(this.scene, config);
-    },
-
-    tileSprite: function (config)
-    {
-        return TileSpriteCreator(this.scene, config);
-    },
-
-    tween: function (config)
-    {
-        return this.scene.sys.tweens.create(config);
+        GameObjectCreator.prototype[type] = factoryFunction;
     }
 };
-
-if (WEBGL_RENDERER)
-{
-    //  WebGL only Game Objects
-    var EffectLayerCreator = require('../../gameobjects/effectlayer/EffectLayerCreator');
-    var MeshCreator = require('../../gameobjects/mesh/MeshCreator');
-    var QuadCreator = require('../../gameobjects/quad/QuadCreator');
-    var RenderPassCreator = require('../../gameobjects/renderpass/RenderPassCreator');
-
-    factoryDef.effectLayer = function (config)
-    {
-        return EffectLayerCreator(this.scene, config);
-    };
-
-    factoryDef.mesh = function (config)
-    {
-        return MeshCreator(this.scene, config);
-    };
-
-    factoryDef.quad = function (config)
-    {
-        return QuadCreator(this.scene, config);
-    };
-
-    factoryDef.renderPass = function (config)
-    {
-        return RenderPassCreator(this.scene, config);
-    };
-}
-
-var GameObjectCreator = new Class(factoryDef);
 
 module.exports = GameObjectCreator;

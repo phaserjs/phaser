@@ -1,8 +1,11 @@
-var EffectLayer = require('./EffectLayer');
-var GetAdvancedValue = require('../../utils/object/GetAdvancedValue');
 var BuildGameObject = require('../BuildGameObject');
+var EffectLayer = require('./EffectLayer');
+var GameObjectCreator = require('../../scene/plugins/GameObjectCreator');
+var GetAdvancedValue = require('../../utils/object/GetAdvancedValue');
 
-var EffectLayerCreator = function (scene, config)
+//  When registering a factory function 'this' refers to the GameObjectCreator context.
+
+GameObjectCreator.register('effectLayer', function (config)
 {
     var x = GetAdvancedValue(config, 'x', 0);
     var y = GetAdvancedValue(config, 'y', 0);
@@ -11,11 +14,9 @@ var EffectLayerCreator = function (scene, config)
     var key = GetAdvancedValue(config, 'key', null);
     var fragmentShader = GetAdvancedValue(config, 'fragmentShader', '');
 
-    var layer = new EffectLayer(scene, x, y, width, height, effectName, fragmentShader);
+    var layer = new EffectLayer(this.scene, x, y, width, height, effectName, fragmentShader);
 
-    BuildGameObject(scene, layer, config);
+    BuildGameObject(this.scene, layer, config);
 
     return layer;
-};
-
-module.exports = EffectLayerCreator;
+});

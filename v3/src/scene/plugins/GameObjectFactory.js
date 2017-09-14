@@ -42,7 +42,7 @@ var GameObjectFactory = new Class({
 
 });
 
-//  Static method called directly by the various Game Object factory functions.
+//  Static method called directly by the Game Object factory functions
 
 GameObjectFactory.register = function (type, factoryFunction)
 {

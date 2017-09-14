@@ -1,4 +1,5 @@
 var Class = require('../../utils/Class');
+var GameObjectCreator = require('../../scene/plugins/GameObjectCreator');
 var GameObjectFactory = require('../../scene/plugins/GameObjectFactory');
 var TWEEN_CONST = require('./const');
 
@@ -177,6 +178,13 @@ Tween.TYPES = [
 GameObjectFactory.register('tween', function (config)
 {
     return this.scene.sys.tweens.add(config);
+});
+
+//  When registering a factory function 'this' refers to the GameObjectCreator context.
+
+GameObjectCreator.register('tween', function (config)
+{
+    return this.scene.sys.tweens.create(config);
 });
 
 module.exports = Tween;
