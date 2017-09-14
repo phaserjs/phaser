@@ -93,7 +93,7 @@ var Systems = new Class({
         this.updateList = new UpdateList(scene);
 
         //  Sometimes the managers need access to a system created after them
-        this.add.boot();
+        this.add.boot(this);
         this.inputManager.boot();
         this.physicsManager.boot();
 
@@ -262,6 +262,7 @@ var Systems = new Class({
     {
         //  TODO
 
+        this.add.destroy();
         this.pool.destroy();
         this.time.destroy();
         this.tweens.destroy();

@@ -1,8 +1,15 @@
 var Zone = require('./Zone');
+var GameObjectFactory = require('../../scene/plugins/GameObjectFactory');
 
-var ZoneFactory = function (scene, x, y, width, height)
+//  When registering a factory function 'this' refers to the GameObjectFactory context.
+//  
+//  There are several properties available to use:
+//  
+//  this.scene - a reference to the Scene that owns the GameObjectFactory
+//  this.displayList - a reference to the Display List the Scene owns
+//  this.updateList - a reference to the Update List the Scene owns
+
+GameObjectFactory.register('zone', function (x, y, width, height)
 {
-    return new Zone(scene, x, y, width, height);
-};
-
-module.exports = ZoneFactory;
+    return this.displayList.add(new Zone(this.scene, x, y, width, height));
+});

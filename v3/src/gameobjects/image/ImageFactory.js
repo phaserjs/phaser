@@ -1,8 +1,15 @@
 var Image = require('./Image');
+var GameObjectFactory = require('../../scene/plugins/GameObjectFactory');
 
-var ImageFactory = function (scene, x, y, key, frame)
+//  When registering a factory function 'this' refers to the GameObjectFactory context.
+//  
+//  There are several properties available to use:
+//  
+//  this.scene - a reference to the Scene that owns the GameObjectFactory
+//  this.displayList - a reference to the Display List the Scene owns
+//  this.updateList - a reference to the Update List the Scene owns
+
+GameObjectFactory.register('image', function (x, y, key, frame)
 {
-    return new Image(scene, x, y, key, frame);
-};
-
-module.exports = ImageFactory;
+    return this.displayList.add(new Image(this.scene, x, y, key, frame));
+});
