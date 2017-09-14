@@ -86,7 +86,7 @@ var Range = function (a, b, options)
         }
     }
 
-    for (var i = 0; i <= repeat; i++)
+    for (var i = 0; i < repeat; i++)
     {
         var chunk = BuildChunk(a, b, qty);
 
