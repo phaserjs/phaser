@@ -13,24 +13,24 @@ var Transform = {
     _scaleX: 1,
     _scaleY: 1,
     _rotation: 0,
-    _z: 0,
+    _depth: 0,
 
     //  public properties / methods
 
     x: 0,
     y: 0,
 
-    z: {
+    depth: {
 
         get: function ()
         {
-            return this._z;
+            return this._depth;
         },
 
         set: function (value)
         {
             this.scene.sys.sortChildrenFlag = true;
-            this._z = value;
+            this._depth = value;
         }
 
     },
@@ -149,11 +149,11 @@ var Transform = {
         return this;
     },
 
-    setZ: function (value)
+    setDepth: function (value)
     {
         if (value === undefined) { value = 0; }
 
-        this.z = value;
+        this.depth = value;
 
         return this;
     }

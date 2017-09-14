@@ -8,7 +8,7 @@ var ToJSON = function (gameObject)
         type: gameObject.type,
         x: gameObject.x,
         y: gameObject.y,
-        z: gameObject.z,
+        depth: gameObject.depth,
         scale: {
             x: gameObject.scaleX,
             y: gameObject.scaleY

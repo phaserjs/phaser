@@ -466,9 +466,9 @@ var Group = new Class({
         return this;
     },
 
-    setZ: function (value, step)
+    setDepth: function (value, step)
     {
-        Actions.SetZ(this.children.entries, value, step);
+        Actions.SetDepth(this.children.entries, value, step);
 
         return this;
     },

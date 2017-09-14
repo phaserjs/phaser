@@ -8,7 +8,7 @@ var BuildGameObject = function (scene, gameObject, config)
 
     gameObject.x = GetAdvancedValue(config, 'x', 0);
     gameObject.y = GetAdvancedValue(config, 'y', 0);
-    gameObject.z = GetAdvancedValue(config, 'z', 0);
+    gameObject.depth = GetAdvancedValue(config, 'depth', 0);
 
     //  Flip
 

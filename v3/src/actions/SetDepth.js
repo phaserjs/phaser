@@ -1,13 +1,13 @@
-var SetZ = function (items, value, step)
+var SetDepth = function (items, value, step)
 {
     if (step === undefined) { step = 0; }
 
     for (var i = 0; i < items.length; i++)
     {
-        items[i].z = value + (i * step);
+        items[i].depth = value + (i * step);
     }
 
     return items;
 };
 
-module.exports = SetZ;
+module.exports = SetDepth;

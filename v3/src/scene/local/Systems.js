@@ -174,7 +174,7 @@ var Systems = new Class({
 
     sortZ: function (childA, childB)
     {
-        return childA._z - childB._z;
+        return childA._depth - childB._depth;
     },
 
     //  A paused Scene still renders, it just doesn't run ANY of its update handlers or systems
