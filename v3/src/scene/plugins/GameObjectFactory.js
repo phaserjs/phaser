@@ -46,6 +46,8 @@ var GameObjectFactory = new Class({
 
 GameObjectFactory.register = function (type, factoryFunction)
 {
+    // console.log('register', type);
+
     if (!GameObjectFactory.prototype.hasOwnProperty(type))
     {
         GameObjectFactory.prototype[type] = factoryFunction;
