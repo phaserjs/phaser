@@ -1,8 +1,9 @@
 var Class = require('../utils/Class');
 
-var Matrix4 = require('./vecmath/Matrix4');
-var Vector2 = require('./vecmath/Vector2');
-var Vector3 = require('./vecmath/Vector3');
+var Vector3 = require('../math/Vector3');
+var Vector4 = require('../math/Vector4');
+var Matrix4 = require('../math/Matrix4');
+
 var Camera = require('./Camera3D');
 
 var tmpVec3 = new Vector3();

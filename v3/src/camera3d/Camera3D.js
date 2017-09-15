@@ -2,10 +2,9 @@ var Class = require('../utils/Class');
 
 var util = require('./vecutil');
 
-var Vector2 = require('./vecmath/Vector2');
-var Vector3 = require('./vecmath/Vector3');
-var Vector4 = require('./vecmath/Vector4');
-var Matrix4 = require('./vecmath/Matrix4');
+var Vector3 = require('../math/Vector3');
+var Vector4 = require('../math/Vector4');
+var Matrix4 = require('../math/Matrix4');
 
 var tmpVec3 = new Vector3();
 var tmpVec4 = new Vector4();

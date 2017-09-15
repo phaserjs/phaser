@@ -1,7 +1,7 @@
 
-var Vector3 = require('./vecmath/Vector3');
-var Matrix4 = require('./vecmath/Matrix4');
-var Quaternion = require('./vecmath/Quaternion');
+var Vector3 = require('../math/Vector3');
+var Matrix4 = require('../math/Matrix4');
+var Quaternion = require('../math/Quaternion');
 
 var tmpMat4 = new Matrix4();
 var tmpQuat = new Quaternion();
