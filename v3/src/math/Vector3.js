@@ -361,12 +361,12 @@ var Vector3 = new Class({
 
 });
 
-Vector3.sub = Vector3.subtract;
-Vector3.mul = Vector3.multiply;
-Vector3.div = Vector3.divide;
-Vector3.dist = Vector3.distance;
-Vector3.distSq = Vector3.distanceSq;
-Vector3.len = Vector3.length;
-Vector3.lenSq = Vector3.lengthSq;
+Vector3.prototype.sub = Vector3.prototype.subtract;
+Vector3.prototype.mul = Vector3.prototype.multiply;
+Vector3.prototype.div = Vector3.prototype.divide;
+Vector3.prototype.dist = Vector3.prototype.distance;
+Vector3.prototype.distSq = Vector3.prototype.distanceSq;
+Vector3.prototype.len = Vector3.prototype.length;
+Vector3.prototype.lenSq = Vector3.prototype.lengthSq;
 
 module.exports = Vector3;

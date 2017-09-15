@@ -271,12 +271,12 @@ var Vector4 = new Class({
 
 });
 
-Vector4.sub = Vector4.subtract;
-Vector4.mul = Vector4.multiply;
-Vector4.div = Vector4.divide;
-Vector4.dist = Vector4.distance;
-Vector4.distSq = Vector4.distanceSq;
-Vector4.len = Vector4.length;
-Vector4.lenSq = Vector4.lengthSq;
+Vector4.prototype.sub = Vector4.prototype.subtract;
+Vector4.prototype.mul = Vector4.prototype.multiply;
+Vector4.prototype.div = Vector4.prototype.divide;
+Vector4.prototype.dist = Vector4.prototype.distance;
+Vector4.prototype.distSq = Vector4.prototype.distanceSq;
+Vector4.prototype.len = Vector4.prototype.length;
+Vector4.prototype.lenSq = Vector4.prototype.lengthSq;
 
 module.exports = Vector4;

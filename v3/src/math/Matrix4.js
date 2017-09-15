@@ -883,8 +883,8 @@ var Matrix4 = new Class({
 
 });
 
-Matrix4.mul = Matrix4.multiply;
-Matrix4.idt = Matrix4.identity;
-Matrix4.reset = Matrix4.idt;
+Matrix4.prototype.mul = Matrix4.prototype.multiply;
+Matrix4.prototype.idt = Matrix4.prototype.identity;
+Matrix4.prototype.reset = Matrix4.prototype.idt;
 
 module.exports = Matrix4;

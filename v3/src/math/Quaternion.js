@@ -478,11 +478,11 @@ var Quaternion = new Class({
 
 });
 
-Quaternion.idt = Quaternion.identity;
-Quaternion.sub = Quaternion.subtract;
-Quaternion.mul = Quaternion.multiply;
-Quaternion.len = Quaternion.length;
-Quaternion.lenSq = Quaternion.lengthSq;
-Quaternion.reset = Quaternion.idt;
+Quaternion.prototype.idt = Quaternion.prototype.identity;
+Quaternion.prototype.sub = Quaternion.prototype.subtract;
+Quaternion.prototype.mul = Quaternion.prototype.multiply;
+Quaternion.prototype.len = Quaternion.prototype.length;
+Quaternion.prototype.lenSq = Quaternion.prototype.lengthSq;
+Quaternion.prototype.reset = Quaternion.prototype.idt;
 
 module.exports = Quaternion;

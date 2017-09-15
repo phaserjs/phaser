@@ -215,12 +215,12 @@ var Vector2 = new Class({
 
 });
 
-Vector2.sub = Vector2.subtract;
-Vector2.mul = Vector2.multiply;
-Vector2.div = Vector2.divide;
-Vector2.dist = Vector2.distance;
-Vector2.distSq = Vector2.distanceSq;
-Vector2.len = Vector2.length;
-Vector2.lenSq = Vector2.lengthSq;
+Vector2.prototype.sub = Vector2.prototype.subtract;
+Vector2.prototype.mul = Vector2.prototype.multiply;
+Vector2.prototype.div = Vector2.prototype.divide;
+Vector2.prototype.dist = Vector2.prototype.distance;
+Vector2.prototype.distSq = Vector2.prototype.distanceSq;
+Vector2.prototype.len = Vector2.prototype.length;
+Vector2.prototype.lenSq = Vector2.prototype.lengthSq;
 
 module.exports = Vector2;
