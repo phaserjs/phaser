@@ -19,6 +19,8 @@ var Transform = {
 
     x: 0,
     y: 0,
+    z: 0,
+    w: 0,
 
     depth: {
 
@@ -109,13 +111,17 @@ var Transform = {
         }
     },
 
-    setPosition: function (x, y)
+    setPosition: function (x, y, z, w)
     {
         if (x === undefined) { x = 0; }
         if (y === undefined) { y = x; }
+        if (z === undefined) { z = 0; }
+        if (w === undefined) { w = 0; }
 
         this.x = x;
         this.y = y;
+        this.z = z;
+        this.w = w;
 
         return this;
     },
@@ -145,6 +151,24 @@ var Transform = {
 
         this.scaleX = x;
         this.scaleY = y;
+
+        return this;
+    },
+
+    setZ: function (value)
+    {
+        if (value === undefined) { value = 0; }
+
+        this.z = value;
+
+        return this;
+    },
+
+    setW: function (value)
+    {
+        if (value === undefined) { value = 0; }
+
+        this.w = value;
 
         return this;
     },

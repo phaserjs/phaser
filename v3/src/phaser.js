@@ -19,6 +19,9 @@ var Phaser = {
 
     Create: require('./create/'),
 
+    Cameras3D: require('./camera3d/'),
+    VecMath: require('./camera3d/vecmath/'),
+
     DOM: require('./dom/'),
 
     Game: require('./boot/Game'),
