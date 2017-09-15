@@ -1,4 +1,5 @@
-//  Based on vecmath lib by mattdesl https://github.com/mattdesl/vecmath and gl-matrix
+//  Adapted from [gl-matrix](https://github.com/toji/gl-matrix) by toji 
+//  and [vecmath](https://github.com/mattdesl/vecmath) by mattdesl
 
 var Class = require('../utils/Class');
 
@@ -8,18 +9,22 @@ var Vector2 = new Class({
 
     function Vector2 (x, y)
     {
-        if (x === undefined) { x = 0; }
-        if (y === undefined) { y = 0; }
-
-        this.x = x;
-        this.y = y;
+        if (typeof x === 'object')
+        {
+            this.x = x.x || 0;
+            this.y = x.y || 0;
+        }
+        else
+        {
+            this.x = x || 0;
+            this.y = y || 0;
+        }
     },
 
     clone: function ()
     {
         return new Vector2(this.x, this.y);
     },
-
 
     copy: function (src)
     {
@@ -188,7 +193,7 @@ var Vector2 = new Class({
         return this;
     },
 
-    reset:  function ()
+    reset: function ()
     {
         this.x = 0;
         this.y = 0;
