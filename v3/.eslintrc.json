@@ -50,16 +50,6 @@
         "new-parens": "error",
         "no-array-constructor": "error",
         "no-lonely-if": "error",
-        "no-mixed-operators": [ "error", {
-            "groups": [
-                ["+", "-", "*", "/", "%", "**"],
-                ["&", "|", "^", "~", "<<", ">>", ">>>"],
-                ["==", "!=", "===", "!==", ">", ">=", "<", "<="],
-                ["&&", "||"],
-                ["in", "instanceof"]
-            ],
-            "allowSamePrecedence": true
-        }],
         "no-mixed-spaces-and-tabs": "error",
         "no-plusplus": "off",
         "no-trailing-spaces": [ "error", { "skipBlankLines": true } ],
