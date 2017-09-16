@@ -1,10 +1,10 @@
+var Camera = require('./Camera3D');
 var Class = require('../utils/Class');
-
+var Matrix4 = require('../math/Matrix4');
 var Vector3 = require('../math/Vector3');
 var Vector4 = require('../math/Vector4');
-var Matrix4 = require('../math/Matrix4');
 
-var Camera = require('./Camera3D');
+//  Local cache vars
 
 var tmpVec3 = new Vector3();
 
@@ -12,71 +12,89 @@ var OrthographicCamera = new Class({
 
     Extends: Camera,
 
-    zoom: {
+    initialize: function (viewportWidth, viewportHeight)
+    {
+        if (viewportWidth === undefined) { viewportWidth = 0; }
+        if (viewportHeight === undefined) { viewportHeight = 0; }
 
-        set: function(v) {
-            if (typeof v !== 'number')
-                throw new Error("zoom must be a number");
-            this._zoom = v;
-        },
-
-        get: function() {
-            return this._zoom;
-        }
-    },
-
-    initialize: function(viewportWidth, viewportHeight) {
         Camera.call(this);
-        this.viewportWidth = viewportWidth||0;
-        this.viewportHeight = viewportHeight||0;
+
+        this.viewportWidth = viewportWidth;
+        this.viewportHeight = viewportHeight;
 
         this._zoom = 1.0;
+
         this.near = 0;
+
         this.update();
     },
 
-    setToOrtho: function(yDown, viewportWidth, viewportHeight) {
-        var zoom = this.zoom;
-        viewportWidth = typeof viewportWidth === "number" ? viewportWidth : this.viewportWidth;
-        viewportHeight = typeof viewportHeight === "number" ? viewportHeight : this.viewportHeight;
+    setToOrtho: function (yDown, viewportWidth, viewportHeight)
+    {
+        if (viewportWidth === undefined) { viewportWidth = this.viewportWidth; }
+        if (viewportHeight === undefined) { viewportHeight = this.viewportHeight; }
 
-        this.up.set(0, yDown ? -1 : 1, 0);
-        this.direction.set(0, 0, yDown ? 1 : -1);
+        var zoom = this.zoom;
+
+        this.up.set(0, (yDown) ? -1 : 1, 0);
+        this.direction.set(0, 0, (yDown) ? 1 : -1);
         this.position.set(zoom * viewportWidth / 2, zoom * viewportHeight / 2, 0);
 
         this.viewportWidth = viewportWidth;
         this.viewportHeight = viewportHeight;
-        this.update();
+
+        return this.update();
     },
 
-    update: function() {
+    update: function ()
+    {
         //TODO: support x/y offset
-        var w = this.viewportWidth,
-            h = this.viewportHeight,
-            near = Math.abs(this.near),
-            far = Math.abs(this.far),
-            zoom = this.zoom;
+        var w = this.viewportWidth;
+        var h = this.viewportHeight;
+        var near = Math.abs(this.near);
+        var far = Math.abs(this.far);
+        var zoom = this.zoom;
 
-        if (w===0||h===0) {
-            //What to do here... hmm ? 
-            return;
+        if (w===0 || h===0)
+        {
+            //  What to do here... hmm?
+            return this;
         }
 
         this.projection.ortho(
             zoom * -w / 2, zoom * w / 2,
             zoom * -h / 2, zoom * h / 2,
-            near, far);
+            near,
+            far
+        );
 
-        //build the view matrix 
+        //  Build the view matrix 
         tmpVec3.copy(this.position).add(this.direction);
+
         this.view.lookAt(this.position, tmpVec3, this.up);
 
-        //projection * view matrix
+        //  Projection * view matrix
         this.combined.copy(this.projection).mul(this.view);
 
-        //invert combined matrix, used for unproject
+        //  Invert combined matrix, used for unproject
         this.invProjectionView.copy(this.combined).invert();
+
+        return this;
+    },
+
+    zoom: {
+
+        set: function (value)
+        {
+            this._zoom = value;
+        },
+
+        get: function ()
+        {
+            return this._zoom;
+        }
     }
+
 });
 
 module.exports = OrthographicCamera;

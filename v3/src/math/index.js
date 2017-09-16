@@ -46,6 +46,7 @@ module.exports = {
     Vector4: require('./Vector4'),
     Matrix3: require('./Matrix3'),
     Matrix4: require('./Matrix4'),
-    Quaternion: require('./Quaternion')
+    Quaternion: require('./Quaternion'),
+    RotateVec3: require('./RotateVec3')
 
 };
