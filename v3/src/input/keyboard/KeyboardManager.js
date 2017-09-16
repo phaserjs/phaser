@@ -93,7 +93,7 @@ var KeyboardManager = new Class({
     },
 
     /**
-    * Creates and returns an object containing 4 hotkeys for Up, Down, Left and Right.
+    * Creates and returns an object containing 4 hotkeys for Up, Down, Left and Right and also space and shift.
     */
     createCursorKeys: function ()
     {
@@ -101,7 +101,9 @@ var KeyboardManager = new Class({
             up: KeyCodes.UP,
             down: KeyCodes.DOWN,
             left: KeyCodes.LEFT,
-            right: KeyCodes.RIGHT
+            right: KeyCodes.RIGHT,
+            space: KeyCodes.SPACE,
+            shift: KeyCodes.SHIFT
         });
     },
 
