@@ -150,6 +150,12 @@ var Camera3D = new Class({
         //  Transform into clip space
         tmpVec4.transformMat4(this.combined);
 
+        //  Avoid divide by zero when 0x0x0 camera projects to a 0x0x0 vec3
+        if (tmpVec4.w === 0)
+        {
+            tmpVec4.w = 1;
+        }
+
         //  Now into NDC
         tmpVec4.x = tmpVec4.x / tmpVec4.w;
         tmpVec4.y = tmpVec4.y / tmpVec4.w;
