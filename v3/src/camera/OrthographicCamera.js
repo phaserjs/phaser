@@ -1,4 +1,4 @@
-var Camera = require('./Camera3D');
+var Camera3D = require('./Camera3D');
 var Class = require('../utils/Class');
 var Matrix4 = require('../math/Matrix4');
 var Vector3 = require('../math/Vector3');
@@ -10,14 +10,14 @@ var tmpVec3 = new Vector3();
 
 var OrthographicCamera = new Class({
 
-    Extends: Camera,
+    Extends: Camera3D,
 
     initialize: function (viewportWidth, viewportHeight)
     {
         if (viewportWidth === undefined) { viewportWidth = 0; }
         if (viewportHeight === undefined) { viewportHeight = 0; }
 
-        Camera.call(this);
+        Camera3D.call(this);
 
         this.viewportWidth = viewportWidth;
         this.viewportHeight = viewportHeight;
@@ -55,7 +55,7 @@ var OrthographicCamera = new Class({
         var far = Math.abs(this.far);
         var zoom = this.zoom;
 
-        if (w===0 || h===0)
+        if (w === 0 || h === 0)
         {
             //  What to do here... hmm?
             return this;
@@ -84,14 +84,15 @@ var OrthographicCamera = new Class({
 
     zoom: {
 
-        set: function (value)
-        {
-            this._zoom = value;
-        },
-
         get: function ()
         {
             return this._zoom;
+        },
+
+        set: function (value)
+        {
+            this._zoom = value;
+            this.update();
         }
     }
 

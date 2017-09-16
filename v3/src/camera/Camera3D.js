@@ -39,6 +39,13 @@ var Camera3D = new Class({
         this.viewportHeight = 0;
     },
 
+    setPosition: function (x, y, z)
+    {
+        this.position.set(x, y, z);
+
+        return this.update();
+    },
+
     /**
      * Sets the width and height of the viewport. Does not
      * update any matrices.
@@ -190,7 +197,48 @@ var Camera3D = new Class({
     update: function ()
     {
         //  Left empty for subclasses
+        return this;
+    },
+
+    x: {
+        get: function ()
+        {
+            return this.position.x;
+        },
+
+        set: function (value)
+        {
+            this.position.x = value;
+            this.update();
+        }
+    },
+
+    y: {
+        get: function ()
+        {
+            return this.position.y;
+        },
+
+        set: function (value)
+        {
+            this.position.y = value;
+            this.update();
+        }
+    },
+
+    z: {
+        get: function ()
+        {
+            return this.position.z;
+        },
+
+        set: function (value)
+        {
+            this.position.z = value;
+            this.update();
+        }
     }
+
 });
 
 Camera3D.FAR_RANGE = 1.0;

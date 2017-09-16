@@ -1,6 +1,7 @@
-var Camera = require('./Camera3D');
+var Camera3D = require('./Camera3D');
 var Class = require('../utils/Class');
 var Matrix4 = require('../math/Matrix4');
+var Vector2 = require('../math/Vector2');
 var Vector3 = require('../math/Vector3');
 var Vector4 = require('../math/Vector4');
 
@@ -13,7 +14,7 @@ var billboardMatrix = new Matrix4();
 
 var PerspectiveCamera = new Class({
 
-    Extends: Camera,
+    Extends: Camera3D,
 
     //  FOV is converted to radians
     initialize: function (fieldOfView, viewportWidth, viewportHeight)
@@ -22,7 +23,7 @@ var PerspectiveCamera = new Class({
         if (viewportWidth === undefined) { viewportWidth = 0; }
         if (viewportHeight === undefined) { viewportHeight = 0; }
 
-        Camera.call(this);
+        Camera3D.call(this);
 
         this.viewportWidth = viewportWidth;
         this.viewportHeight = viewportHeight;

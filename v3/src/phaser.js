@@ -19,7 +19,7 @@ var Phaser = {
 
     Create: require('./create/'),
 
-    Cameras3D: require('./camera3d/'),
+    Cameras: require('./camera/'),
 
     DOM: require('./dom/'),
 
