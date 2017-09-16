@@ -27,9 +27,12 @@ var TextureManager = new Class({
 
         this._tempCanvas = CanvasPool.create2D(this, 1, 1);
         this._tempContext = this._tempCanvas.getContext('2d');
+    },
 
-        this.addBase64('__DEFAULT', game.config.defaultImage);
-        this.addBase64('__MISSING', game.config.missingImage);
+    boot: function ()
+    {
+        this.addBase64('__DEFAULT', this.game.config.defaultImage);
+        this.addBase64('__MISSING', this.game.config.missingImage);
     },
 
     addBase64: function (key, data)
