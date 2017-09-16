@@ -123,11 +123,11 @@ var Camera3D = new Class({
 
     rotateAround: function (point, radians, axis)
     {
-        tmpVec.copy(point).sub(this.position);
+        tmpVec3.copy(point).sub(this.position);
 
-        this.translate(tmpVec);
+        this.translate(tmpVec3);
         this.rotate(radians, axis);
-        this.translate(tmpVec.negate());
+        this.translate(tmpVec3.negate());
 
         return this;
     },
