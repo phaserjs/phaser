@@ -5,5 +5,5 @@ var Group = require('./Group');
 
 GameObjectCreator.register('group', function (config)
 {
-    return new Group(scene, null, config);
+    return new Group(this.scene, null, config);
 });
