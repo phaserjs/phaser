@@ -11,5 +11,10 @@ var GameObjectFactory = require('../../scene/plugins/GameObjectFactory');
 
 GameObjectFactory.register('emitter', function (x, y, key, frame)
 {
-    return this.displayList.add(new ParticleEmitter(this.scene, x, y, key, frame));
+    var emitter = new ParticleEmitter(this.scene, x, y, key, frame);
+    
+    this.displayList.add(emitter);
+    this.updateList.add(emitter);
+    
+    return emitter;
 });

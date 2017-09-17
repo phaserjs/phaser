@@ -12,6 +12,7 @@ var CONST = require('../../const');
 var EffectRenderer = require('./renderers/effectrenderer/EffectRenderer');
 var IsSizePowerOfTwo = require('../../math/pow2/IsSizePowerOfTwo');
 var QuadBatch = require('./renderers/quadbatch/QuadBatch');
+var ParticleRenderer = require('./renderers/particlerenderer/ParticleRenderer');
 var ResourceManager = require('./ResourceManager');
 var Resources = require('./resources');
 var ScaleModes = require('../ScaleModes');
@@ -167,6 +168,7 @@ var WebGLRenderer = new Class({
         this.effectRenderer = this.addRenderer(new EffectRenderer(this.game, gl, this));
         this.tileBatch = this.addRenderer(new TileBatch(this.game, gl, this));
         this.tilemapRenderer = this.addRenderer(new TilemapRenderer(this.game, gl, this));
+        this.particleRenderer = this.addRenderer(new ParticleRenderer(this.game, gl, this));
         this.currentRenderer = this.spriteBatch;
         this.currentVertexBuffer = null;
         this.setBlendMode(0);
