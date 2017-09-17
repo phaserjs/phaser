@@ -72,6 +72,8 @@ var Game = new Class({
 
         AddToDOM(this.canvas, this.config.parent);
 
+        this.textures.boot();
+
         this.anims.boot(this.textures);
 
         this.scene.boot();
