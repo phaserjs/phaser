@@ -2,12 +2,11 @@
 
 module.exports = {
 
-    Camera: require('./Camera'),
-    Camera3D: require('./Camera3D'),
-    PerspectiveCamera: require('./PerspectiveCamera'),
-    OrthographicCamera: require('./OrthographicCamera'),
+    Camera: require('./2d/Camera'),
+    PerspectiveCamera: require('./3d/PerspectiveCamera'),
+    OrthographicCamera: require('./3d/OrthographicCamera'),
 
-    KeyControl: require('./KeyControl'),
-    SmoothedKeyControl: require('./SmoothedKeyControl')
+    KeyControl: require('./controls/KeyControl'),
+    SmoothedKeyControl: require('./controls/SmoothedKeyControl')
 
 };

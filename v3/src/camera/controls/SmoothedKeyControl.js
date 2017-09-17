@@ -1,5 +1,5 @@
-var Class = require('../utils/Class');
-var GetValue = require('../utils/object/GetValue');
+var Class = require('../../utils/Class');
+var GetValue = require('../../utils/object/GetValue');
 
 // var controlConfig = {
 //     camera: this.cameras.main,

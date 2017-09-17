@@ -1,4 +1,3 @@
-
 var BlitterRender = require('./BlitterRender');
 var Bob = require('./Bob');
 var Class = require('../../utils/Class');

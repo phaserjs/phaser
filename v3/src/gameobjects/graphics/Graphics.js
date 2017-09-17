@@ -1,12 +1,12 @@
-var Class = require('../../utils/Class');
-var GameObject = require('../GameObject');
-var Components = require('../components');
-var Render = require('./GraphicsRender');
-var Commands = require('./Commands');
-var MATH_CONST = require('../../math/const');
-var GetValue = require('../../utils/object/GetValue');
+var Camera = require('../../camera/2d/Camera.js');
 var CanvasPool = require('../../dom/CanvasPool');
-var Camera = require('../../camera/Camera.js');
+var Class = require('../../utils/Class');
+var Commands = require('./Commands');
+var Components = require('../components');
+var GameObject = require('../GameObject');
+var GetValue = require('../../utils/object/GetValue');
+var MATH_CONST = require('../../math/const');
+var Render = require('./GraphicsRender');
 
 var Graphics = new Class({
 

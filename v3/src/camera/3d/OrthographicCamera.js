@@ -1,11 +1,10 @@
 var Camera3D = require('./Camera3D');
-var Class = require('../utils/Class');
-var Matrix4 = require('../math/Matrix4');
-var Vector3 = require('../math/Vector3');
-var Vector4 = require('../math/Vector4');
+var Class = require('../../utils/Class');
+var Matrix4 = require('../../math/Matrix4');
+var Vector3 = require('../../math/Vector3');
+var Vector4 = require('../../math/Vector4');
 
 //  Local cache vars
-
 var tmpVec3 = new Vector3();
 
 var OrthographicCamera = new Class({
@@ -78,6 +77,8 @@ var OrthographicCamera = new Class({
 
         //  Invert combined matrix, used for unproject
         this.invProjectionView.copy(this.combined).invert();
+
+        this.billboardMatrixDirty = true;
 
         return this;
     },
