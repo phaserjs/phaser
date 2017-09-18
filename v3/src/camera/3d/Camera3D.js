@@ -166,7 +166,7 @@ var Camera3D = new Class({
             children[i].position.transformMat4(mat4);
         }
 
-        return this.update();
+        return this.updateChildren();
     },
 
     /**

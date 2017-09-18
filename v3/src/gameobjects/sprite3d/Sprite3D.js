@@ -25,12 +25,25 @@ var Sprite3D = new Class({
         this.adjustScaleX = true;
         this.adjustScaleY = true;
 
+        this.fastHide = true;
+
         this._visible = true;
+    },
+
+    //  Performs a simple check to see if this Sprite3D object should be hidden from view if its
+    //  z position is behind the cameras. Very fast but doesn't take camera direction into consideration,
+    //  so not suitable for all types of game.
+    setFastHide: function (value)
+    {
+        this.fastHide = value;
+
+        return this;
     },
 
     project: function (camera)
     {
         var pos = this.position;
+
         var gameObject = this.gameObject;
 
         camera.project(pos, gameObject);
@@ -48,6 +61,11 @@ var Sprite3D = new Class({
         }
 
         gameObject.setDepth(gameObject.z);
+
+        if (this.fastHide)
+        {
+            gameObject.setVisible(pos.z > camera.position.z);
+        }
     },
 
     visible: {
