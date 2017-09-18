@@ -327,22 +327,6 @@ var Vector3 = new Class({
         return this.project(invProjectionView);
     },
 
-    //  Position Vector randomly in a spherical area defined by the given radius
-    random: function (radius)
-    {
-        if (radius === undefined) { radius = 1; }
-
-        var r = Math.random() * 2 * Math.PI;
-        var z = (Math.random() * 2) - 1;
-        var zScale = Math.sqrt(1 - z * z) * radius;
-        
-        this.x = Math.cos(r) * zScale;
-        this.y = Math.sin(r) * zScale;
-        this.z = z * radius;
-
-        return this;
-    },
-
     reset: function ()
     {
         this.x = 0;

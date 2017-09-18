@@ -199,18 +199,6 @@ var Vector2 = new Class({
         this.y = 0;
 
         return this;
-    },
-
-    random: function (scale)
-    {
-        if (scale === undefined) { scale = 1; }
-
-        var r = Math.random() * 2 * Math.PI;
-
-        this.x = Math.cos(r) * scale;
-        this.y = Math.sin(r) * scale;
-
-        return this;
     }
 
 });

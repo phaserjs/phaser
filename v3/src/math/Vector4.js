@@ -246,19 +246,6 @@ var Vector4 = new Class({
         return this;
     },
 
-    random: function (scale)
-    {
-        if (scale === undefined) { scale = 1; }
-
-        // Not spherical; should fix this for more uniform distribution
-        this.x = (Math.random() * 2 - 1) * scale;
-        this.y = (Math.random() * 2 - 1) * scale;
-        this.z = (Math.random() * 2 - 1) * scale;
-        this.w = (Math.random() * 2 - 1) * scale;
-
-        return this;
-    },
-
     reset: function ()
     {
         this.x = 0;
