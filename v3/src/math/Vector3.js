@@ -32,7 +32,7 @@ var Vector3 = new Class({
     {
         this.x = src.x;
         this.y = src.y;
-        this.z = src.z;
+        this.z = src.z || 0;
 
         return this;
     },
@@ -59,7 +59,7 @@ var Vector3 = new Class({
     {
         this.x += v.x;
         this.y += v.y;
-        this.z += v.z;
+        this.z += v.z || 0;
 
         return this;
     },
@@ -68,7 +68,7 @@ var Vector3 = new Class({
     {
         this.x -= v.x;
         this.y -= v.y;
-        this.z -= v.z;
+        this.z -= v.z || 0;
 
         return this;
     },
@@ -77,7 +77,7 @@ var Vector3 = new Class({
     {
         this.x *= v.x;
         this.y *= v.y;
-        this.z *= v.z;
+        this.z *= v.z || 1;
 
         return this;
     },
@@ -95,7 +95,7 @@ var Vector3 = new Class({
     {
         this.x /= v.x;
         this.y /= v.y;
-        this.z /= v.z;
+        this.z /= v.z || 1;
 
         return this;
     },
@@ -113,7 +113,7 @@ var Vector3 = new Class({
     {
         var dx = v.x - this.x;
         var dy = v.y - this.y;
-        var dz = v.z - this.z;
+        var dz = v.z - this.z || 0;
 
         return Math.sqrt(dx * dx + dy * dy + dz * dz);
     },
@@ -122,7 +122,7 @@ var Vector3 = new Class({
     {
         var dx = v.x - this.x;
         var dy = v.y - this.y;
-        var dz = v.z - this.z;
+        var dz = v.z - this.z || 0;
 
         return dx * dx + dy * dy + dz * dz;
     },

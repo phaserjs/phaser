@@ -34,8 +34,8 @@ var Vector4 = new Class({
     {
         this.x = src.x;
         this.y = src.y;
-        this.z = src.z;
-        this.w = src.w;
+        this.z = src.z || 0;
+        this.w = src.w || 0;
 
         return this;
     },
@@ -64,8 +64,8 @@ var Vector4 = new Class({
     {
         this.x += v.x;
         this.y += v.y;
-        this.z += v.z;
-        this.w += v.w;
+        this.z += v.z || 0;
+        this.w += v.w || 0;
 
         return this;
     },
@@ -74,8 +74,8 @@ var Vector4 = new Class({
     {
         this.x -= v.x;
         this.y -= v.y;
-        this.z -= v.z;
-        this.w -= v.w;
+        this.z -= v.z || 0;
+        this.w -= v.w || 0;
 
         return this;
     },
@@ -157,8 +157,8 @@ var Vector4 = new Class({
     {
         this.x *= v.x;
         this.y *= v.y;
-        this.z *= v.z;
-        this.w *= v.w;
+        this.z *= v.z || 1;
+        this.w *= v.w || 1;
 
         return this;
     },
@@ -167,8 +167,8 @@ var Vector4 = new Class({
     {
         this.x /= v.x;
         this.y /= v.y;
-        this.z /= v.z;
-        this.w /= v.w;
+        this.z /= v.z || 1;
+        this.w /= v.w || 1;
 
         return this;
     },
@@ -177,8 +177,8 @@ var Vector4 = new Class({
     {
         var dx = v.x - this.x;
         var dy = v.y - this.y;
-        var dz = v.z - this.z;
-        var dw = v.w - this.w;
+        var dz = v.z - this.z || 0;
+        var dw = v.w - this.w || 0;
 
         return Math.sqrt(dx * dx + dy * dy + dz * dz + dw * dw);
     },
@@ -187,8 +187,8 @@ var Vector4 = new Class({
     {
         var dx = v.x - this.x;
         var dy = v.y - this.y;
-        var dz = v.z - this.z;
-        var dw = v.w - this.w;
+        var dz = v.z - this.z || 0;
+        var dw = v.w - this.w || 0;
 
         return dx * dx + dy * dy + dz * dz + dw * dw;
     },
