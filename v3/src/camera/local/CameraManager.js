@@ -34,7 +34,7 @@ var CameraManager = new Class({
     addOrthographicCamera: require('./inc/AddOrthographicCamera'),
     addExisting: require('./inc/AddExisting'),
     addKeyControl: require('./inc/AddKeyControl'),
-    addSmoothedKeyControl: require('./inc/AddsmoothedKeyControl'),
+    addSmoothedKeyControl: require('./inc/AddSmoothedKeyControl'),
     destroy: require('./inc/Destroy'),
     fromJSON: require('./inc/FromJSON'),
     getCameraBelowPointer: require('./inc/GetCameraBelowPointer'),
