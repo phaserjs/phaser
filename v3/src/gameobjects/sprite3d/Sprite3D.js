@@ -20,6 +20,8 @@ var Sprite3D = new Class({
 
         this.size = new Vector2(1, 1);
 
+        this.scale = new Vector2(1, 1);
+
         this.adjustScaleX = true;
         this.adjustScaleY = true;
 
@@ -33,16 +35,16 @@ var Sprite3D = new Class({
 
         camera.project(pos, gameObject);
 
-        var scale = camera.getPointSize(pos, this.size);
+        camera.getPointSize(pos, this.size, this.scale);
 
         if (this.adjustScaleX)
         {
-            gameObject.scaleX = scale.x;
+            gameObject.scaleX = this.scale.x;
         }
 
         if (this.adjustScaleY)
         {
-            gameObject.scaleY = scale.y;
+            gameObject.scaleY = this.scale.y;
         }
 
         gameObject.setDepth(gameObject.z);
