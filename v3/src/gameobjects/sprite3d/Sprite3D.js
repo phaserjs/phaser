@@ -20,20 +20,34 @@ var Sprite3D = new Class({
 
         this.size = new Vector2(1, 1);
 
+        this.adjustScaleX = true;
+        this.adjustScaleY = true;
+
         this._visible = true;
     },
 
     project: function (camera)
     {
+        var pos = this.position;
         var gameObject = this.gameObject;
 
-        camera.project(this.position, gameObject);
+        camera.project(pos, gameObject);
 
-        var scale = camera.getPointSize(this.position, this.size);
+        var scale = camera.getPointSize(pos, this.size);
 
-        gameObject.setScale(scale.x, scale.y).setDepth(gameObject.z);
+        if (this.adjustScaleX)
+        {
+            gameObject.scaleX = scale.x;
+        }
 
-        gameObject.setVisible((this.position.z > camera.z));
+        if (this.adjustScaleY)
+        {
+            gameObject.scaleY = scale.y;
+        }
+
+        gameObject.setDepth(gameObject.z);
+
+        gameObject.setVisible((pos.z > camera.z));
     },
 
     visible: {
