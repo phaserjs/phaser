@@ -13,19 +13,26 @@ var PerspectiveCamera = new Class({
     Extends: Camera3D,
 
     //  FOV is converted to radians automatically
-    initialize: function (fieldOfView, viewportWidth, viewportHeight)
+    initialize: function (scene, fieldOfView, viewportWidth, viewportHeight)
     {
         if (fieldOfView === undefined) { fieldOfView = 80; }
         if (viewportWidth === undefined) { viewportWidth = 0; }
         if (viewportHeight === undefined) { viewportHeight = 0; }
 
-        Camera3D.call(this);
+        Camera3D.call(this, scene);
 
         this.viewportWidth = viewportWidth;
         this.viewportHeight = viewportHeight;
         this.fieldOfView = fieldOfView * Math.PI / 180;
 
         this.update();
+    },
+
+    setFOV: function (value)
+    {
+        this.fieldOfView = value * Math.PI / 180;
+
+        return this;
     },
 
     update: function ()
@@ -52,6 +59,8 @@ var PerspectiveCamera = new Class({
         this.invProjectionView.copy(this.combined).invert();
 
         this.billboardMatrixDirty = true;
+
+        this.updateChildren();
 
         return this;
     }

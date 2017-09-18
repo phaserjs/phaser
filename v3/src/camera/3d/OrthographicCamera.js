@@ -11,12 +11,12 @@ var OrthographicCamera = new Class({
 
     Extends: Camera3D,
 
-    initialize: function (viewportWidth, viewportHeight)
+    initialize: function (scene, viewportWidth, viewportHeight)
     {
         if (viewportWidth === undefined) { viewportWidth = 0; }
         if (viewportHeight === undefined) { viewportHeight = 0; }
 
-        Camera3D.call(this);
+        Camera3D.call(this, scene);
 
         this.viewportWidth = viewportWidth;
         this.viewportHeight = viewportHeight;
@@ -79,6 +79,8 @@ var OrthographicCamera = new Class({
         this.invProjectionView.copy(this.combined).invert();
 
         this.billboardMatrixDirty = true;
+
+        this.updateChildren();
 
         return this;
     },

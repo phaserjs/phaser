@@ -1,6 +1,9 @@
 var Class = require('../../utils/Class');
 var Matrix4 = require('../../math/Matrix4');
 var RotateVec3 = require('../../math/RotateVec3');
+var Set = require('../../structs/Set');
+var Sprite3D = require('../../gameobjects/sprite3d/Sprite3D');
+var Vector2 = require('../../math/Vector2');
 var Vector3 = require('../../math/Vector3');
 var Vector4 = require('../../math/Vector4');
 
@@ -13,8 +16,12 @@ var billboardMatrix = new Matrix4();
 
 var Camera3D = new Class({
 
-    initialize: function ()
+    initialize: function (scene)
     {
+        this.scene = scene;
+
+        this.name = '';
+
         this.direction = new Vector3(0, 0, -1);
         this.up = new Vector3(0, 1, 0);
         this.position = new Vector3();
@@ -36,6 +43,61 @@ var Camera3D = new Class({
         this.viewportHeight = 0;
 
         this.billboardMatrixDirty = true;
+
+        this.children = new Set();
+    },
+
+    setScene: function (scene)
+    {
+        this.scene = scene;
+
+        return this;
+    },
+
+    add: function (sprite3D)
+    {
+        this.children.set(sprite3D);
+
+        this.updateChildren();
+
+        return sprite3D;
+    },
+
+    remove: function (child)
+    {
+        this.children.delete(child);
+
+        return this;
+    },
+
+    clear: function ()
+    {
+        this.children.clear();
+
+        return this;
+    },
+
+    getChildren: function ()
+    {
+        return this.children.entries;
+    },
+
+    create: function (x, y, z, key, frame, visible)
+    {
+        if (visible === undefined) { visible = true; }
+
+        var child = new Sprite3D(this.scene, x, y, z, key, frame);
+
+        this.scene.sys.displayList.add(child.gameObject);
+        this.scene.sys.updateList.add(child.gameObject);
+
+        child.visible = visible;
+
+        this.children.set(child);
+
+        this.updateChildren();
+
+        return child;
     },
 
     setPosition: function (x, y, z)
@@ -58,7 +120,7 @@ var Camera3D = new Class({
         this.viewportWidth = width;
         this.viewportHeight = height;
 
-        return this;
+        return this.update();
     },
 
     /**
@@ -85,7 +147,7 @@ var Camera3D = new Class({
             this.position.z += z || 0;
         }
 
-        return this;
+        return this.update();
     },
 
     lookAt: function (x, y, z)
@@ -110,7 +172,7 @@ var Camera3D = new Class({
         //  Calculate up vector
         up.copy(tmpVec3).cross(dir).normalize();
 
-        return this;
+        return this.update();
     },
 
     rotate: function (radians, axis)
@@ -118,7 +180,7 @@ var Camera3D = new Class({
         RotateVec3(this.direction, axis, radians);
         RotateVec3(this.up, axis, radians);
 
-        return this;
+        return this.update();
     },
 
     rotateAround: function (point, radians, axis)
@@ -129,7 +191,7 @@ var Camera3D = new Class({
         this.rotate(radians, axis);
         this.translate(tmpVec3.negate());
 
-        return this;
+        return this.update();
     },
 
     project: function (vec, out)
@@ -200,9 +262,21 @@ var Camera3D = new Class({
         return this.ray;
     },
 
+    updateChildren: function ()
+    {
+        var children = this.children.entries;
+
+        for (var i = 0; i < children.length; i++)
+        {
+            children[i].project(this);
+        }
+    },
+
+    //  Overriden by subclasses
     update: function ()
     {
-        //  Left empty for subclasses
+        this.updateChildren();
+
         return this;
     },
 
@@ -293,6 +367,14 @@ var Camera3D = new Class({
         var h = Math.abs(bry - tly);
 
         return out.set(w, h);
+    },
+
+    destroy: function ()
+    {
+        this.children.clear();
+
+        this.scene = undefined;
+        this.children = undefined;
     },
 
     x: {

@@ -29,7 +29,9 @@ var CameraManager = new Class({
     },
 
     add: require('./inc/Add2DCamera'),
-    add3D: require('./inc/Add3DCamera'),
+    add3D: require('./inc/AddPerspectiveCamera'),
+    addPerspectiveCamera: require('./inc/AddPerspectiveCamera'),
+    addOrthographicCamera: require('./inc/AddOrthographicCamera'),
     addExisting: require('./inc/AddExisting'),
     addKeyControl: require('./inc/AddKeyControl'),
     addSmoothedKeyControl: require('./inc/AddsmoothedKeyControl'),
