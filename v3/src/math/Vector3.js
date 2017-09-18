@@ -316,14 +316,6 @@ var Vector3 = new Class({
         var viewWidth = viewport.z;
         var viewHeight = viewport.w;
         
-        // var x = this.x;
-        // var y = this.y;
-        // var z = this.z;
-
-        // x = x - viewX;
-        // y = viewHeight - y - 1;
-        // y = y - viewY;
-
         var x = this.x - viewX;
         var y = (viewHeight - this.y - 1) - viewY;
         var z = this.z;
@@ -335,17 +327,18 @@ var Vector3 = new Class({
         return this.project(invProjectionView);
     },
 
-    random: function (scale)
+    //  Position Vector randomly in a spherical area defined by the given radius
+    random: function (radius)
     {
-        if (scale === undefined) { scale = 1; }
+        if (radius === undefined) { radius = 1; }
 
         var r = Math.random() * 2 * Math.PI;
         var z = (Math.random() * 2) - 1;
-        var zScale = Math.sqrt(1 - z * z) * scale;
+        var zScale = Math.sqrt(1 - z * z) * radius;
         
         this.x = Math.cos(r) * zScale;
         this.y = Math.sin(r) * zScale;
-        this.z = z * scale;
+        this.z = z * radius;
 
         return this;
     },
