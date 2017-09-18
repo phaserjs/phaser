@@ -18,7 +18,7 @@ var Sprite3D = new Class({
 
         this.position = new Vector4(x, y, z);
 
-        this.size = new Vector2(1, 1);
+        this.size = new Vector2(this.gameObject.width, this.gameObject.height);
 
         this.scale = new Vector2(1, 1);
 
@@ -48,8 +48,6 @@ var Sprite3D = new Class({
         }
 
         gameObject.setDepth(gameObject.z);
-
-        gameObject.setVisible((pos.z > camera.z));
     },
 
     visible: {

@@ -20,11 +20,20 @@ var Camera3D = new Class({
     {
         this.scene = scene;
 
+        this.displayList = scene.sys.displayList;
+        this.updateList = scene.sys.updateList;
+
         this.name = '';
 
         this.direction = new Vector3(0, 0, -1);
         this.up = new Vector3(0, 1, 0);
         this.position = new Vector3();
+
+        //  The mapping from 3D size units to pixels.
+        //  In the default case 1 3D unit = 128 pixels. So a sprite that is
+        //  256 x 128 px in size will be 2 x 1 units.
+        //  Change to whatever best fits your game assets.
+        this.pixelScale = 128;
 
         this.projection = new Matrix4();
         this.view = new Matrix4();
@@ -65,6 +74,9 @@ var Camera3D = new Class({
 
     remove: function (child)
     {
+        this.displayList.remove(child.gameObject);
+        this.updateList.remove(child.gameObject);
+
         this.children.delete(child);
 
         return this;
@@ -72,7 +84,12 @@ var Camera3D = new Class({
 
     clear: function ()
     {
-        this.children.clear();
+        var children = this.getChildren();
+
+        for (var i = 0; i < children.length; i++)
+        {
+            this.remove(children[i]);
+        }
 
         return this;
     },
@@ -88,8 +105,8 @@ var Camera3D = new Class({
 
         var child = new Sprite3D(this.scene, x, y, z, key, frame);
 
-        this.scene.sys.displayList.add(child.gameObject);
-        this.scene.sys.updateList.add(child.gameObject);
+        this.displayList.add(child.gameObject);
+        this.updateList.add(child.gameObject);
 
         child.visible = visible;
 
@@ -346,8 +363,8 @@ var Camera3D = new Class({
 
         var tmp = tmpVec3;
 
-        var dx = size.x / 2;
-        var dy = size.y / 2;
+        var dx = (size.x / this.pixelScale) / 2;
+        var dy = (size.y / this.pixelScale) / 2;
 
         tmp.set(-dx, -dy, 0).transformMat4(billboardMatrix).add(vec);
 
