@@ -58,6 +58,13 @@ var Camera3D = new Class({
         this.children = new Set();
     },
 
+    setPosition: function (x, y, z)
+    {
+        this.position.set(x, y, z);
+
+        return this.update();
+    },
+
     setScene: function (scene)
     {
         this.scene = scene;
@@ -126,47 +133,75 @@ var Camera3D = new Class({
         return child;
     },
 
-    setPosition: function (x, y, z)
+    createMultiple: function (quantity, key, frame, visible)
     {
-        this.position.set(x, y, z);
+        if (visible === undefined) { visible = true; }
 
-        return this.update();
+        var output = [];
+
+        for (var i = 0; i < quantity; i++)
+        {
+            var child = new Sprite3D(this.scene, 0, 0, 0, key, frame);
+
+            this.displayList.add(child.gameObject);
+            this.updateList.add(child.gameObject);
+
+            child.visible = visible;
+
+            this.children.set(child);
+
+            output.push(child);
+        }
+
+        return output;
     },
 
-    randomSphere: function (radius)
+    randomSphere: function (radius, sprites)
     {
-        var children = this.getChildren();
+        if (sprites === undefined) { sprites = this.getChildren(); }
 
-        for (var i = 0; i < children.length; i++)
+        for (var i = 0; i < sprites.length; i++)
         {
-            RandomXYZ(children[i].position, radius);
+            RandomXYZ(sprites[i].position, radius);
         }
 
         return this.update();
     },
 
-    randomCube: function (scale)
+    randomCube: function (scale, sprites)
     {
-        var children = this.getChildren();
+        if (sprites === undefined) { sprites = this.getChildren(); }
 
-        for (var i = 0; i < children.length; i++)
+        for (var i = 0; i < sprites.length; i++)
         {
-            RandomXYZW(children[i].position, scale);
+            RandomXYZW(sprites[i].position, scale);
         }
 
         return this.update();
     },
 
-    transformChildren: function (mat4)
+    translateChildren: function (vec3, sprites)
     {
-        var children = this.getChildren();
+        if (sprites === undefined) { sprites = this.getChildren(); }
 
-        for (var i = 0; i < children.length; i++)
+        for (var i = 0; i < sprites.length; i++)
         {
-            children[i].position.transformMat4(mat4);
+            sprites[i].position.add(vec3);
         }
 
-        return this.updateChildren();
+        return this.update();
+    },
+
+    transformChildren: function (mat4, sprites)
+    {
+        if (sprites === undefined) { sprites = this.getChildren(); }
+
+        for (var i = 0; i < sprites.length; i++)
+        {
+            sprites[i].position.transformMat4(mat4);
+        }
+
+        return this.update();
     },
 
     /**
