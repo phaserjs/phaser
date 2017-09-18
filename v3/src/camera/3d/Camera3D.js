@@ -1,5 +1,7 @@
 var Class = require('../../utils/Class');
 var Matrix4 = require('../../math/Matrix4');
+var RandomXYZ = require('../../math/RandomXYZ');
+var RandomXYZW = require('../../math/RandomXYZW');
 var RotateVec3 = require('../../math/RotateVec3');
 var Set = require('../../structs/Set');
 var Sprite3D = require('../../gameobjects/sprite3d/Sprite3D');
@@ -63,6 +65,13 @@ var Camera3D = new Class({
         return this;
     },
 
+    setPixelScale: function (value)
+    {
+        this.pixelScale = value;
+
+        return this.update();
+    },
+
     add: function (sprite3D)
     {
         this.children.set(sprite3D);
@@ -120,6 +129,42 @@ var Camera3D = new Class({
     setPosition: function (x, y, z)
     {
         this.position.set(x, y, z);
+
+        return this.update();
+    },
+
+    randomSphere: function (radius)
+    {
+        var children = this.getChildren();
+
+        for (var i = 0; i < children.length; i++)
+        {
+            RandomXYZ(children[i].position, radius);
+        }
+
+        return this.update();
+    },
+
+    randomCube: function (scale)
+    {
+        var children = this.getChildren();
+
+        for (var i = 0; i < children.length; i++)
+        {
+            RandomXYZW(children[i].position, scale);
+        }
+
+        return this.update();
+    },
+
+    transformChildren: function (mat4)
+    {
+        var children = this.getChildren();
+
+        for (var i = 0; i < children.length; i++)
+        {
+            children[i].position.transformMat4(mat4);
+        }
 
         return this.update();
     },
@@ -287,14 +332,14 @@ var Camera3D = new Class({
         {
             children[i].project(this);
         }
+
+        return this;
     },
 
     //  Overriden by subclasses
     update: function ()
     {
-        this.updateChildren();
-
-        return this;
+        return this.updateChildren();
     },
 
     updateBillboardMatrix: function ()
@@ -392,6 +437,27 @@ var Camera3D = new Class({
 
         this.scene = undefined;
         this.children = undefined;
+    },
+
+    setX: function (value)
+    {
+        this.position.x = value;
+
+        return this.update();
+    },
+
+    setY: function (value)
+    {
+        this.position.y = value;
+
+        return this.update();
+    },
+
+    setZ: function (value)
+    {
+        this.position.z = value;
+
+        return this.update();
     },
 
     x: {
