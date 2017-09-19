@@ -165,10 +165,6 @@ var Camera3D = new Class({
 
         var quantity = size.x * size.y * size.z;
 
-        // var width = size.x * spacing.x;
-        // var height = size.y * spacing.y;
-        // var depth = size.z * spacing.z;
-
         var sprites = this.createMultiple(quantity, key, frame);
 
         var i = 0;
@@ -499,8 +495,12 @@ var Camera3D = new Class({
         var brx = tmp.x;
         var bry = tmp.y;
 
-        var w = Math.abs(brx - tlx);
-        var h = Math.abs(bry - tly);
+        // var w = Math.abs(brx - tlx);
+        // var h = Math.abs(bry - tly);
+
+        //  Allow the projection to get negative ...
+        var w = brx - tlx;
+        var h = bry - tly;
 
         return out.set(w, h);
     },

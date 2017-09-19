@@ -25,19 +25,7 @@ var Sprite3D = new Class({
         this.adjustScaleX = true;
         this.adjustScaleY = true;
 
-        this.fastHide = true;
-
         this._visible = true;
-    },
-
-    //  Performs a simple check to see if this Sprite3D object should be hidden from view if its
-    //  z position is behind the cameras. Very fast but doesn't take camera direction into consideration,
-    //  so not suitable for all types of game.
-    setFastHide: function (value)
-    {
-        this.fastHide = value;
-
-        return this;
     },
 
     project: function (camera)
@@ -50,21 +38,28 @@ var Sprite3D = new Class({
 
         camera.getPointSize(pos, this.size, this.scale);
 
-        if (this.adjustScaleX)
+        if (this.scale.x <= 0 || this.scale.y <= 0)
         {
-            gameObject.scaleX = this.scale.x;
+            gameObject.setVisible(false);
         }
-
-        if (this.adjustScaleY)
+        else
         {
-            gameObject.scaleY = this.scale.y;
-        }
+            if (!gameObject.visible)
+            {
+                gameObject.setVisible(true);
+            }
 
-        gameObject.setDepth(gameObject.z);
+            if (this.adjustScaleX)
+            {
+                gameObject.scaleX = this.scale.x;
+            }
 
-        if (this.fastHide)
-        {
-            gameObject.setVisible(pos.z > camera.position.z);
+            if (this.adjustScaleY)
+            {
+                gameObject.scaleY = this.scale.y;
+            }
+
+            gameObject.setDepth(gameObject.z * -1);
         }
     },
 
@@ -88,6 +83,48 @@ var Sprite3D = new Class({
         this.visible = value;
 
         return this;
+    },
+
+    x: {
+
+        get: function ()
+        {
+            return this.position.x;
+        },
+
+        set: function (value)
+        {
+            this.position.x = value;
+        }
+
+    },
+
+    y: {
+
+        get: function ()
+        {
+            return this.position.y;
+        },
+
+        set: function (value)
+        {
+            this.position.y = value;
+        }
+
+    },
+
+    z: {
+
+        get: function ()
+        {
+            return this.position.z;
+        },
+
+        set: function (value)
+        {
+            this.position.z = value;
+        }
+
     }
 
 });
