@@ -156,6 +156,45 @@ var Camera3D = new Class({
         return output;
     },
 
+    //  Create a bunch of Sprite3D objects in a rectangle
+    //  size and spacing are Vec3s (or if integers are converted to vec3s)
+    createRect: function (size, spacing, key, frame)
+    {
+        if (typeof size === 'number') { size = { x: size, y: size, z: size }; }
+        if (typeof spacing === 'number') { spacing = { x: spacing, y: spacing, z: spacing }; }
+
+        var quantity = size.x * size.y * size.z;
+
+        // var width = size.x * spacing.x;
+        // var height = size.y * spacing.y;
+        // var depth = size.z * spacing.z;
+
+        var sprites = this.createMultiple(quantity, key, frame);
+
+        var i = 0;
+
+        for (var z = 0.5 - (size.z / 2); z < (size.z / 2); z++)
+        {
+            for (var y = 0.5 - (size.y / 2); y < (size.y / 2); y++)
+            {
+                for (var x = 0.5 - (size.x / 2); x < (size.x / 2); x++)
+                {
+                    var bx = (x * spacing.x);
+                    var by = (y * spacing.y);
+                    var bz = (z * spacing.z);
+
+                    sprites[i].position.set(bx, by, bz);
+
+                    i++;
+                }
+            }
+        }
+
+        this.update();
+
+        return sprites;
+    },
+
     randomSphere: function (radius, sprites)
     {
         if (sprites === undefined) { sprites = this.getChildren(); }
