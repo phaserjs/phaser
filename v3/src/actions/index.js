@@ -28,6 +28,7 @@ module.exports = {
     ScaleXY: require('./ScaleXY'),
     ScaleY: require('./ScaleY'),
     SetAlpha: require('./SetAlpha'),
+    SetBlendMode: require('./SetBlendMode'),
     SetDepth: require('./SetDepth'),
     SetHitArea: require('./SetHitArea'),
     SetOrigin: require('./SetOrigin'),
