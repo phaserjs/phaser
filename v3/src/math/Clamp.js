@@ -9,18 +9,7 @@
 */
 var Clamp = function (v, min, max)
 {
-    if (v < min)
-    {
-        return min;
-    }
-    else if (max < v)
-    {
-        return max;
-    }
-    else
-    {
-        return v;
-    }
+    return Math.max(min, Math.min(max, value));
 };
 
 module.exports = Clamp;
