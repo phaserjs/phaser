@@ -49,6 +49,8 @@ var Phaser = {
     Sound: require('./sound'),
 
     Structs: require('./structs'),
+    
+    Paths: require('./paths'),
 
     // Physics: require('./physics'),
 

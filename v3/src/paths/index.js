@@ -2,6 +2,11 @@
 
 module.exports = {
     
-    Hermite: require('./hermite')
+    Line: require('./curves/line/Line')
+
+    // Curves: {
+    //     Line: require('./curves/line/Line'),
+    //     Hermite: require('./curves/hermite')
+    // }
 
 };
