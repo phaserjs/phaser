@@ -1,42 +1,17 @@
+//  Based on the three.js Curve classes created by [zz85](http://www.lab4games.net/zz85/blog)
+
 var Clamp = require('../../math/Clamp');
+var Vector2 = require('../../math/Vector2');
 var Vector3 = require('../../math/Vector3');
 var Matrix4 = require('../../math/Matrix4');
 var Class = require('../../utils/Class');
 
-/**
- * @author zz85 / http://www.lab4games.net/zz85/blog
- * Extensible curve object
- *
- * Some common of Curve methods
- * .getPoint(t), getTangent(t)
- * .getPointAt(u), getTangentAt(u)
- * .getPoints(), .getSpacedPoints()
- * .getLength()
- * .updateArcLengths()
- *
- * This following classes subclasses THREE.Curve:
- *
- * -- 2d classes --
- * THREE.LineCurve
- * THREE.QuadraticBezierCurve
- * THREE.CubicBezierCurve
- * THREE.SplineCurve
- * THREE.ArcCurve
- * THREE.EllipseCurve
- *
- * -- 3d classes --
- * THREE.LineCurve3
- * THREE.QuadraticBezierCurve3
- * THREE.CubicBezierCurve3
- * THREE.SplineCurve3
- *
- * A series of curves can be represented as a THREE.CurvePath
- *
- **/
+//  Local cache vars
 
-/**************************************************************
- *  Abstract Curve base class
- **************************************************************/
+var tmpVec2A = new Vector2();
+var tmpVec2B = new Vector2();
+
+//  Our Base Curve which all other curves extend
 
 var Curve = new Class({
 
@@ -44,26 +19,24 @@ var Curve = new Class({
 
     function Curve ()
     {
+        this.arcLengthDivisions = 200;
     },
 
     // Get point at relative position in curve according to arc length
     // - u [0 .. 1]
 
-    getPointAt: function (u)
+    getPointAt: function (u, out)
     {
         var t = this.getUtoTmapping(u);
 
-        return this.getPoint(t);
+        return this.getPoint(t, out);
     },
 
     // Get sequence of points using getPoint( t )
 
     getPoints: function (divisions)
     {
-        if (!divisions)
-        {
-            divisions = 5;
-        }
+        if (divisions === undefined) { divisions = 5; }
 
         var points = [];
 
@@ -79,10 +52,7 @@ var Curve = new Class({
 
     getSpacedPoints: function (divisions)
     {
-        if (!divisions)
-        {
-            divisions = 5;
-        }
+        if (divisions === undefined) { divisions = 5; }
 
         var points = [];
 
@@ -107,10 +77,7 @@ var Curve = new Class({
 
     getLengths: function (divisions)
     {
-        if (!divisions)
-        {
-            divisions = (this.__arcLengthDivisions) ? (this.__arcLengthDivisions) : 200;
-        }
+        if (divisions === undefined) { divisions = this.arcLengthDivisions; }
 
         if (this.cacheArcLengths &&
             (this.cacheArcLengths.length === divisions + 1) &&
@@ -123,15 +90,15 @@ var Curve = new Class({
 
         var cache = [];
         var current;
-        var last = this.getPoint(0);
+        var last = this.getPoint(0, tmpVec2A);
         var sum = 0;
 
         cache.push(0);
 
         for (var p = 1; p <= divisions; p++)
         {
-            current = this.getPoint(p / divisions);
-            sum += current.distanceTo(last);
+            current = this.getPoint(p / divisions, tmpVec2B);
+            sum += current.distance(last);
             cache.push(sum);
             last = current;
         }
@@ -199,9 +166,7 @@ var Curve = new Class({
 
         if (arcLengths[i] === targetArcLength)
         {
-            var t = i / (il - 1);
-
-            return t;
+            return i / (il - 1);
         }
 
         // we could get finer grain at lengths, or use simple interpolation between two points
@@ -225,8 +190,10 @@ var Curve = new Class({
     // 2 points a small delta apart will be used to find its gradient
     // which seems to give a reasonable approximation
 
-    getTangent: function (t)
+    getTangent: function (t, out)
     {
+        if (out === undefined) { out = new Vector2(); }
+
         var delta = 0.0001;
         var t1 = t - delta;
         var t2 = t + delta;
@@ -243,19 +210,22 @@ var Curve = new Class({
             t2 = 1;
         }
 
-        var pt1 = this.getPoint(t1);
-        var pt2 = this.getPoint(t2);
+        // var pt1 = this.getPoint(t1);
+        // var pt2 = this.getPoint(t2);
+        // var vec = pt2.clone().sub(pt1);
+        // return vec.normalize();
 
-        var vec = pt2.clone().sub(pt1);
+        this.getPoint(t1, tmpVec2A);
+        this.getPoint(t2, out);
 
-        return vec.normalize();
+        return out.sub(tmpVec2A).normalize();
     },
 
-    getTangentAt: function (u)
+    getTangentAt: function (u, out)
     {
         var t = this.getUtoTmapping(u);
 
-        return this.getTangent(t);
+        return this.getTangent(t, out);
     },
 
     computeFrenetFrames: function (segments, closed)

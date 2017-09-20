@@ -50,6 +50,8 @@ var Phaser = {
 
     Structs: require('./structs'),
     
+    Curves: require('./paths/curves'),
+
     Paths: require('./paths'),
 
     // Physics: require('./physics'),
