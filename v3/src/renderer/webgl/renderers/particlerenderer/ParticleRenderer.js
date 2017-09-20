@@ -72,9 +72,7 @@ var ParticleRenderer = new Class({
 
         vertexBufferObject.addAttribute(shader.getAttribLocation('a_position'), 2, gl.FLOAT, false, CONST.VERTEX_SIZE, 0);
         vertexBufferObject.addAttribute(shader.getAttribLocation('a_tex_coord'), 2, gl.FLOAT, false, CONST.VERTEX_SIZE, 8);
-        vertexBufferObject.addAttribute(shader.getAttribLocation('a_scale'), 2, gl.FLOAT, false, CONST.VERTEX_SIZE, 16);
-        vertexBufferObject.addAttribute(shader.getAttribLocation('a_rotation'), 2, gl.FLOAT, false, CONST.VERTEX_SIZE, 24);
-        vertexBufferObject.addAttribute(shader.getAttribLocation('a_color'), 4, gl.UNSIGNED_BYTE, true, CONST.VERTEX_SIZE, 28);
+        vertexBufferObject.addAttribute(shader.getAttribLocation('a_color'), 4, gl.UNSIGNED_BYTE, true, CONST.VERTEX_SIZE, 16);
 
         // Populate the index buffer only once
         for (var indexA = 0, indexB = 0; indexA < max; indexA += CONST.INDEX_COUNT, indexB += CONST.VERTEX_COUNT)
@@ -214,6 +212,8 @@ var ParticleRenderer = new Class({
         var particleCount = 0;
         var batchCount = Math.ceil(length / CONST.MAX);
         var renderTarget = emitter.renderTarget;
+        var tempMatrix = this.tempMatrix;
+        var tempMatrixMatrix = tempMatrix.matrix;
         var particleOffset = 0;
 
         if (length === 0) return;
@@ -226,24 +226,39 @@ var ParticleRenderer = new Class({
             for (var index = 0; index < batchSize; ++index)
             {
                 var particle = particles[particleOffset + index];
-                var x = particle.x - ox;
-                var y = particle.y - oy;
+                var x = -ox;
+                var y = -oy;
                 var scaleX = particle.scaleX;
                 var scaleY = particle.scaleY;
                 var rotation = particle.rotation;
-                var color = 0xFFFFFFFF;
+                var color = particle.color;
                 var xw = x + width;
                 var yh = y + height;
-                var tx0 = x * cma + y * cmc + cme;
-                var ty0 = x * cmb + y * cmd + cmf;
-                var tx1 = x * cma + yh * cmc + cme;
-                var ty1 = x * cmb + yh * cmd + cmf;
-                var tx2 = xw * cma + yh * cmc + cme;
-                var ty2 = xw * cmb + yh * cmd + cmf;
-                var tx3 = xw * cma + y * cmc + cme;
-                var ty3 = xw * cmb + y * cmd + cmf;
+                
+                tempMatrix.applyITRS(particle.x, particle.y, rotation, scaleX, scaleY);
 
-                vtxOffset = data.allocate(32);
+                var sra = tempMatrixMatrix[0];
+                var srb = tempMatrixMatrix[1];
+                var src = tempMatrixMatrix[2];
+                var srd = tempMatrixMatrix[3];
+                var sre = tempMatrixMatrix[4];
+                var srf = tempMatrixMatrix[5];
+                var mva = sra * cma + srb * cmc;
+                var mvb = sra * cmb + srb * cmd;
+                var mvc = src * cma + srd * cmc;
+                var mvd = src * cmb + srd * cmd;
+                var mve = sre * cma + srf * cmc + cme;
+                var mvf = sre * cmb + srf * cmd + cmf;
+                var tx0 = x * mva + y * mvc + mve;
+                var ty0 = x * mvb + y * mvd + mvf;
+                var tx1 = x * mva + yh * mvc + mve;
+                var ty1 = x * mvb + yh * mvd + mvf;
+                var tx2 = xw * mva + yh * mvc + mve;
+                var ty2 = xw * mvb + yh * mvd + mvf;
+                var tx3 = xw * mva + y * mvc + mve;
+                var ty3 = xw * mvb + y * mvd + mvf;
+
+                vtxOffset = data.allocate(20);
                 elementCount += 6;
 
                 //  Top Left
@@ -251,9 +266,6 @@ var ParticleRenderer = new Class({
                 vbF32[vtxOffset++] = ty0;
                 vbF32[vtxOffset++] = u0;
                 vbF32[vtxOffset++] = v0;
-                vbF32[vtxOffset++] = scaleX;
-                vbF32[vtxOffset++] = scaleY;
-                vbF32[vtxOffset++] = rotation;
                 vbU32[vtxOffset++] = color;
 
                 //  Bottom Left
@@ -261,9 +273,6 @@ var ParticleRenderer = new Class({
                 vbF32[vtxOffset++] = ty1;
                 vbF32[vtxOffset++] = u1;
                 vbF32[vtxOffset++] = v1;
-                vbF32[vtxOffset++] = scaleX;
-                vbF32[vtxOffset++] = scaleY;
-                vbF32[vtxOffset++] = rotation;
                 vbU32[vtxOffset++] = color;
 
                 //  Bottom Right
@@ -271,9 +280,6 @@ var ParticleRenderer = new Class({
                 vbF32[vtxOffset++] = ty2;
                 vbF32[vtxOffset++] = u2;
                 vbF32[vtxOffset++] = v2;
-                vbF32[vtxOffset++] = scaleX;
-                vbF32[vtxOffset++] = scaleY;
-                vbF32[vtxOffset++] = rotation;
                 vbU32[vtxOffset++] = color;
 
                 //  Top Right
@@ -281,9 +287,6 @@ var ParticleRenderer = new Class({
                 vbF32[vtxOffset++] = ty3;
                 vbF32[vtxOffset++] = u3;
                 vbF32[vtxOffset++] = v3;
-                vbF32[vtxOffset++] = scaleX;
-                vbF32[vtxOffset++] = scaleY;
-                vbF32[vtxOffset++] = rotation;
                 vbU32[vtxOffset++] = color;
             }
             particleOffset += batchSize;

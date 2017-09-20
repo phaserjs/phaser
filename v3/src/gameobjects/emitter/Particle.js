@@ -16,6 +16,21 @@ var Particle = new Class({
         this.scaleX = 1.0;
         this.scaleY = 1.0;
         this.life = 1.0;
+        this.color = 0xFFFFFFFF;
+        this.lifeStep = 1.0;
+        this.normLifeStep = 1.0;
+
+        this.start = {
+            tint: 0xFFFFFF,
+            alpha: 1.0,
+            scale: 1.0
+        };
+
+        this.end = {
+            tint: 0xFFFFFF,
+            alpha: 1.0,
+            scale: 1.0
+        };
     },
 
     reset: function (x, y)
@@ -29,7 +44,27 @@ var Particle = new Class({
         this.scaleX = 1.0;
         this.scaleY = 1.0;
         this.life = 1.0;
+        this.color = 0xFFFFFFFF;
+        this.lifeStep = 1.0;
+        this.normLifeStep = 1.0;
+
+        this.start = {
+            tint: 0xFFFFFF,
+            alpha: 1.0,
+            scale: 1.0
+        };
+
+        this.end = {
+            tint: 0xFFFFFF,
+            alpha: 1.0,
+            scale: 1.0
+        };
         return this;
+    },
+
+    isAlive: function ()
+    {
+        return this.lifeStep > 0;
     }
 
 });

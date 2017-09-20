@@ -5,8 +5,6 @@ module.exports = {
 
         attribute vec2 a_position;
         attribute vec2 a_tex_coord;
-        attribute vec2 a_scale;
-        attribute float a_rotation;
         attribute vec4 a_color;
 
         varying vec4 v_color;
@@ -14,15 +12,7 @@ module.exports = {
 
         void main()
         {
-            vec2 position = vec2(0.0, 0.0);
-            float cos_rot = cos(a_rotation);
-            float sin_rot = sin(a_rotation);
-
-            position.x = a_position.x * cos_rot - a_position.y * sin_rot;
-            position.y = a_position.x * sin_rot + a_position.y * cos_rot;
-            position = position * a_scale;
-
-            gl_Position = u_view_matrix * vec4(position, 1.0, 1.0);
+            gl_Position = u_view_matrix * vec4(a_position, 1.0, 1.0);
 
             v_color = a_color;
             v_tex_coord = a_tex_coord;
