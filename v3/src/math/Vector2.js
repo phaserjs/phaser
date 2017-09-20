@@ -76,8 +76,16 @@ var Vector2 = new Class({
 
     scale: function (value)
     {
-        this.x *= value;
-        this.y *= value;
+        if (isFinite(value))
+        {
+            this.x *= value;
+            this.y *= value;
+        }
+        else
+        {
+            this.x = 0;
+            this.y = 0;
+        }
 
         return this;
     },

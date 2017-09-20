@@ -28,6 +28,22 @@ var Vector3 = new Class({
         return new Vector3(this.x, this.y, this.z);
     },
 
+    crossVectors: function (a, b)
+    {
+        var ax = a.x;
+        var ay = a.y;
+        var az = a.z;
+        var bx = b.x;
+        var by = b.y;
+        var bz = b.z;
+
+        this.x = ay * bz - az * by;
+        this.y = az * bx - ax * bz;
+        this.z = ax * by - ay * bx;
+
+        return this;
+    },
+
     copy: function (src)
     {
         this.x = src.x;
@@ -84,9 +100,18 @@ var Vector3 = new Class({
 
     scale: function (scale)
     {
-        this.x *= scale;
-        this.y *= scale;
-        this.z *= scale;
+        if (isFinite(scale))
+        {
+            this.x *= scale;
+            this.y *= scale;
+            this.z *= scale;
+        }
+        else
+        {
+            this.x = 0;
+            this.y = 0;
+            this.z = 0;
+        }
 
         return this;
     },
