@@ -1,9 +1,6 @@
 var Camera3D = require('./Camera3D');
 var Class = require('../../utils/Class');
-var Matrix4 = require('../../math/Matrix4');
-var Vector2 = require('../../math/Vector2');
 var Vector3 = require('../../math/Vector3');
-var Vector4 = require('../../math/Vector4');
 
 //  Local cache vars
 var tmpVec3 = new Vector3();
