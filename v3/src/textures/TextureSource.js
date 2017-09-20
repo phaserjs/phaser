@@ -25,6 +25,8 @@ var TextureSource = new Class({
 
         this.scaleMode = ScaleModes.DEFAULT;
 
+        this.isCanvas = (source instanceof HTMLCanvasElement);
+
         this.isPowerOf2 = IsSizePowerOfTwo(this.width, this.height);
 
         this.init(game);
