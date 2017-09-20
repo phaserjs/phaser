@@ -394,26 +394,68 @@ var Graphics = new Class({
         return this;
     },
 
+    //  If key is a string it'll generate a new texture using it and add it into the 
+    //  Texture Manager (assuming no key conflict happens).
+    //  
+    //  If key is a Canvas it will draw the texture to that canvas context. Note that it will NOT
+    //  automatically upload it to the GPU in WebGL mode.
+
     generateTexture: function (key, width, height)
     {
-        if (width === undefined) { width = this.scene.sys.game.config.width; }
-        if (height === undefined) { height = this.scene.sys.game.config.height; }
+        var sys = this.scene.sys;
+
+        if (width === undefined) { width = sys.game.config.width; }
+        if (height === undefined) { height = sys.game.config.height; }
         
         Graphics.TargetCamera.setViewport(0, 0, width, height);
         Graphics.TargetCamera.scrollX = this.x;
         Graphics.TargetCamera.scrollY = this.y;
 
-        var texture = this.scene.sys.game.textures.createCanvas(key, width, height);
-        var ctx = texture.source[0].image.getContext('2d');
+        var texture;
+        var ctx;
 
-        texture.add('__BASE', 0, 0, 0, width, height);
-
-        this.renderCanvas(this.scene.sys.game.renderer, this, 0, Graphics.TargetCamera, ctx);
-
-        if (this.gl)
+        if (typeof key === 'string')
         {
-            this.scene.sys.game.renderer.uploadCanvasToGPU(ctx.canvas, texture.source[0].glTexture, true);
+            if (sys.textures.exists(key))
+            {
+                //  Key is a string, it DOES exist in the Texture Manager AND is a canvas, so draw to it
+
+                texture = sys.textures.get(key);
+
+                var src = texture.getSourceImage();
+
+                if (src instanceof HTMLCanvasElement)
+                {
+                    ctx = src.getContext('2d');
+                }
+            }
+            else
+            {
+                //  Key is a string and doesn't exist in the Texture Manager, so generate and save it
+
+                texture = sys.textures.createCanvas(key, width, height);
+
+                ctx = texture.getSourceImage().getContext('2d');
+            }
         }
+        else if (key instanceof HTMLCanvasElement)
+        {
+            //  Key is a Canvas, so draw to it
+
+            ctx = key.getContext('2d');
+        }
+
+        if (ctx)
+        {
+            this.renderCanvas(sys.game.renderer, this, 0, Graphics.TargetCamera, ctx);
+
+            if (this.gl && texture)
+            {
+                sys.game.renderer.uploadCanvasToGPU(ctx.canvas, texture.source[0].glTexture, true);
+            }
+        }
+
+        return this;
     }
 
 });
