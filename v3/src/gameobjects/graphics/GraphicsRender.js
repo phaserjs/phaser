@@ -4,6 +4,9 @@ var renderCanvas = require('../../utils/NOOP');
 if (WEBGL_RENDERER)
 {
     renderWebGL = require('./GraphicsWebGLRenderer');
+
+    //  Needed for Graphics.generateTexture
+    renderCanvas = require('./GraphicsCanvasRenderer');
 }
 
 if (CANVAS_RENDERER)
