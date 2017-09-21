@@ -168,6 +168,19 @@ var Vector2 = new Class({
         return this;
     },
 
+    /**
+    * Right-hand normalize (make unit length) this Vector
+    */
+    normalizeRightHand: function ()
+    {
+        var x = this.x;
+
+        this.x = this.y * -1;
+        this.y = x;
+
+        return this;
+    },
+
     dot: function (src)
     {
         return this.x * src.x + this.y * src.y;
