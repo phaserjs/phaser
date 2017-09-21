@@ -35,14 +35,14 @@ var ParticleEmitter = new Class({
         this.alive = [];
         this.minSpeed = 0;
         this.maxSpeed = 0;
-        this.minScale = 1.0;
-        this.maxScale = 1.0;
-        this.minAlpha = 1.0;
-        this.maxAlpha = 1.0;
-        this.minAngle = 0;
-        this.maxAngle = 0;
-        this.minPartAngle = 0;
-        this.maxPartAngle = 0;
+        this.startScale = 1.0;
+        this.endScale = 1.0;
+        this.startAlpha = 1.0;
+        this.endAlpha = 1.0;
+        this.minEmitAngle = 0;
+        this.maxEmitAngle = 360;
+        this.startAngle = 0;
+        this.endAngle = 0;
         this.gravityX = 0;
         this.gravityY = 0;
         this.life = 1.0;
@@ -86,26 +86,26 @@ var ParticleEmitter = new Class({
 
     setEmitAngle: function (min, max)
     {
-        this.minAngle = min;
-        this.maxAngle = max;
+        this.minEmitAngle = min;
+        this.maxEmitAngle = max;
     },
 
     setScale: function (start, end)
     {
-        this.minScale = start;
-        this.maxScale = end;
+        this.startScale = start;
+        this.endScale = end;
     },
 
     setAlpha: function (start, end)
     {
-        this.minAlpha = start;
-        this.maxAlpha = end;
+        this.startAlpha = start;
+        this.endAlpha = end;
     },
 
-    setAngle: function (min, max)
+    setAngle: function (start, end)
     {
-        this.minPartAngle = min;
-        this.maxPartAngle = max;
+        this.startAngle = start;
+        this.endAngle = end;
     },
 
     setGravity: function (x, y)
@@ -180,7 +180,7 @@ var ParticleEmitter = new Class({
     emitParticle: function()
     {
         var particle = null;
-        var rad = Between(this.minAngle, this.maxAngle) * Math.PI / 180;
+        var rad = Between(this.minEmitAngle, this.maxEmitAngle) * Math.PI / 180;
         var vx = Math.cos(rad) * Between(this.minSpeed, this.maxSpeed);
         var vy = Math.sin(rad) * Between(this.minSpeed, this.maxSpeed);
         
@@ -198,15 +198,15 @@ var ParticleEmitter = new Class({
         particle.velocityY = vy;
         particle.life = Math.max(this.life, Number.MIN_VALUE);
         particle.lifeStep = particle.life;
-        particle.start.scale = this.minScale;
-        particle.end.scale = this.maxScale;
-        particle.scaleX = this.minScale;
-        particle.scaleY = this.minScale;
-        particle.start.alpha = this.minAlpha;
-        particle.end.alpha = this.maxAlpha;
-        particle.start.rotation = this.minPartAngle * Math.PI / 180;
-        particle.end.rotation = this.maxPartAngle * Math.PI / 180;
-        particle.color = (particle.color & 0x00FFFFFF) | (((this.minAlpha * 0xFF)|0) << 24);
+        particle.start.scale = this.startScale;
+        particle.end.scale = this.endScale;
+        particle.scaleX = this.startScale;
+        particle.scaleY = this.startScale;
+        particle.start.alpha = this.startAlpha;
+        particle.end.alpha = this.endAlpha;
+        particle.start.rotation = this.startAngle * Math.PI / 180;
+        particle.end.rotation = this.endAngle * Math.PI / 180;
+        particle.color = (particle.color & 0x00FFFFFF) | (((this.startAlpha * 0xFF)|0) << 24);
         particle.index = this.alive.length;
                 
         this.alive.push(particle);
