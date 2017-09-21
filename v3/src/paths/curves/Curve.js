@@ -19,7 +19,7 @@ var Curve = new Class({
 
     function Curve ()
     {
-        this.arcLengthDivisions = 200;
+        this.arcLengthDivisions = 100;
 
         this.cacheArcLengths = [];
 
@@ -122,6 +122,12 @@ var Curve = new Class({
         this.getLengths();
     },
 
+    //  Given a distance in pixels, get a t to find p.
+    getTFromDistance: function (distance, divisions)
+    {
+        return this.getUtoTmapping(0, distance, divisions);
+    },
+
     // Given u ( 0 .. 1 ), get a t to find p. This gives you points which are equidistant
 
     getUtoTmapping: function (u, distance, divisions)
@@ -135,7 +141,8 @@ var Curve = new Class({
 
         if (distance)
         {
-            targetArcLength = distance;
+            //  Cannot overshoot the curve
+            targetArcLength = Math.min(distance, arcLengths[il - 1]);
         }
         else
         {
