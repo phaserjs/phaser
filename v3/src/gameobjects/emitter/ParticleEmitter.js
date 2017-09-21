@@ -8,6 +8,7 @@ var Between = require('../../math/Between');
 var StableSort = require('../../utils/array/StableSort');
 var Easing = require('../../math/easing');
 var GetEaseFunction = require('../../tween/builder/GetEaseFunction');
+var DegToRad = require('../../math/DegToRad');
 
 var ParticleEmitter = new Class({
 
@@ -180,9 +181,10 @@ var ParticleEmitter = new Class({
     emitParticle: function()
     {
         var particle = null;
-        var rad = Between(this.minEmitAngle, this.maxEmitAngle) * Math.PI / 180;
-        var vx = Math.cos(rad) * Between(this.minSpeed, this.maxSpeed);
-        var vy = Math.sin(rad) * Between(this.minSpeed, this.maxSpeed);
+        var rad = DegToRad(Between(this.minEmitAngle, this.maxEmitAngle));
+        var speed = Between(this.minSpeed, this.maxSpeed);
+        var vx = Math.cos(rad) * speed;
+        var vy = Math.sin(rad) * speed;
         
         if (this.dead.length > 0)
         {
