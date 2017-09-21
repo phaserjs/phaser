@@ -6,6 +6,8 @@ var Render = require('./ParticleEmitterRender');
 var Particle = require('./Particle');
 var Between = require('../../math/Between');
 var StableSort = require('../../utils/array/StableSort');
+var Easing = require('../../math/easing');
+var GetEaseFunction = require('../../tween/builder/GetEaseFunction');
 
 var ParticleEmitter = new Class({
 
@@ -45,8 +47,35 @@ var ParticleEmitter = new Class({
         this.gravityY = 0;
         this.life = 1.0;
         this.deathCallback = null;
+        this.easingFunctionAlpha = Easing.Linear;
+        this.easingFunctionScale = Easing.Linear;
+        this.easingFunctionRotation = Easing.Linear;
         this.setTexture(texture, frame);
         this.setPosition(x, y);
+    },
+
+    setEase: function (easeName, easeParam)
+    {
+        var ease = GetEaseFunction(easeName, easeParam);
+
+        this.easingFunctionAlpha = ease;
+        this.easingFunctionScale = ease;
+        this.easingFunctionRotation = ease;
+    },
+
+    setAlphaEase: function (easeName, easeParam)
+    {
+        this.easingFunctionAlpha = GetEaseFunction(easeName, easeParam);
+    },
+
+    setScaleEase: function (easeName, easeParam)
+    {
+        this.easingFunctionScale = GetEaseFunction(easeName, easeParam);
+    },
+
+    setRotationEase: function (easeName, easeParam)
+    {
+        this.easingFunctionRotation = GetEaseFunction(easeName, easeParam);
     },
 
     setSpeed: function (min, max)
@@ -165,7 +194,6 @@ var ParticleEmitter = new Class({
             particle = new Particle(this.x, this.y);
         }
 
-        particle.rotation = Between(this.minPartAngle, this.maxPartAngle) * Math.PI / 180;
         particle.velocityX = vx;
         particle.velocityY = vy;
         particle.life = Math.max(this.life, Number.MIN_VALUE);
@@ -176,6 +204,8 @@ var ParticleEmitter = new Class({
         particle.scaleY = this.minScale;
         particle.start.alpha = this.minAlpha;
         particle.end.alpha = this.maxAlpha;
+        particle.start.rotation = this.minPartAngle * Math.PI / 180;
+        particle.end.rotation = this.maxPartAngle * Math.PI / 180;
         particle.color = (particle.color & 0x00FFFFFF) | (((this.minAlpha * 0xFF)|0) << 24);
         particle.index = this.alive.length;
                 
@@ -203,15 +233,19 @@ var ParticleEmitter = new Class({
             particle.velocityY += gravityY;
             particle.x += particle.velocityX * emitterStep;
             particle.y += particle.velocityY * emitterStep;
-            particle.rotation += particle.angularVelocity * emitterStep;
             particle.normLifeStep = particle.lifeStep / particle.life;
 
             var norm = 1.0 - particle.normLifeStep;
-            var alphaf = (particle.end.alpha - particle.start.alpha) * norm + particle.start.alpha;
-            var scale = (particle.end.scale - particle.start.scale) * norm + particle.start.scale;
+            var alphaEase = this.easingFunctionAlpha(norm);
+            var scaleEase = this.easingFunctionScale(norm);
+            var rotationEase = this.easingFunctionRotation(norm);
+            var alphaf = (particle.end.alpha - particle.start.alpha) * alphaEase + particle.start.alpha;
+            var scale = (particle.end.scale - particle.start.scale) * scaleEase + particle.start.scale;
+            var rotation = (particle.end.rotation - particle.start.rotation) * rotationEase + particle.start.rotation;
 
             particle.scaleX = particle.scaleY = scale;
             particle.color = (particle.color & 0x00FFFFFF) | (((alphaf * 0xFF)|0) << 24);
+            particle.rotation = rotation;
 
             if (particle.lifeStep <= 0)
             {

@@ -11,7 +11,6 @@ var Particle = new Class({
         this.y = y;
         this.velocityX = 0.0;
         this.velocityY = 0.0;
-        this.angularVelocity = 0.0;
         this.rotation = 0.0;
         this.scaleX = 1.0;
         this.scaleY = 1.0;
@@ -23,13 +22,15 @@ var Particle = new Class({
         this.start = {
             tint: 0xFFFFFF,
             alpha: 1.0,
-            scale: 1.0
+            scale: 1.0,
+            angle: 0.0
         };
 
         this.end = {
             tint: 0xFFFFFF,
             alpha: 1.0,
-            scale: 1.0
+            scale: 1.0,
+            angle: 0.0
         };
     },
 
@@ -51,13 +52,15 @@ var Particle = new Class({
         this.start = {
             tint: 0xFFFFFF,
             alpha: 1.0,
-            scale: 1.0
+            scale: 1.0,
+            angle: 0.0
         };
 
         this.end = {
             tint: 0xFFFFFF,
             alpha: 1.0,
-            scale: 1.0
+            scale: 1.0,
+            angle: 0.0
         };
         return this;
     },
