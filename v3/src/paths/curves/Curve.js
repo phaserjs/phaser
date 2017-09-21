@@ -20,6 +20,10 @@ var Curve = new Class({
     function Curve ()
     {
         this.arcLengthDivisions = 200;
+
+        this.cacheArcLengths = [];
+
+        this.needsUpdate = true;
     },
 
     // Get point at relative position in curve according to arc length
@@ -58,7 +62,9 @@ var Curve = new Class({
 
         for (var d = 0; d <= divisions; d++)
         {
-            points.push(this.getPointAt(d / divisions));
+            var t = this.getUtoTmapping(d / divisions, null, divisions);
+
+            points.push(this.getPoint(t));
         }
 
         return points;
@@ -79,9 +85,7 @@ var Curve = new Class({
     {
         if (divisions === undefined) { divisions = this.arcLengthDivisions; }
 
-        if (this.cacheArcLengths &&
-            (this.cacheArcLengths.length === divisions + 1) &&
-            !this.needsUpdate)
+        if ((this.cacheArcLengths.length === divisions + 1) && !this.needsUpdate)
         {
             return this.cacheArcLengths;
         }
@@ -98,9 +102,12 @@ var Curve = new Class({
         for (var p = 1; p <= divisions; p++)
         {
             current = this.getPoint(p / divisions, tmpVec2B);
+
             sum += current.distance(last);
+
             cache.push(sum);
-            last = current;
+
+            last.copy(current);
         }
 
         this.cacheArcLengths = cache;
@@ -117,9 +124,9 @@ var Curve = new Class({
 
     // Given u ( 0 .. 1 ), get a t to find p. This gives you points which are equidistant
 
-    getUtoTmapping: function (u, distance)
+    getUtoTmapping: function (u, distance, divisions)
     {
-        var arcLengths = this.getLengths();
+        var arcLengths = this.getLengths(divisions);
 
         var i = 0;
         var il = arcLengths.length;

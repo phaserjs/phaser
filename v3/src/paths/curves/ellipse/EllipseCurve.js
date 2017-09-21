@@ -13,6 +13,8 @@ var EllipseCurve = new Class({
 
     function EllipseCurve (aX, aY, xRadius, yRadius, aStartAngle, aEndAngle, aClockwise, aRotation)
     {
+        Curve.call(this);
+
         this.aX = aX;
         this.aY = aY;
 

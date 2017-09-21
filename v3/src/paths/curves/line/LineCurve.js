@@ -17,6 +17,8 @@ var LineCurve = new Class({
     //  vec2s
     function LineCurve (v1, v2)
     {
+        Curve.call(this);
+
         this.v1 = v1;
         this.v2 = v2;
     },
