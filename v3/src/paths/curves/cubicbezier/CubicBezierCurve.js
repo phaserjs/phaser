@@ -1,11 +1,11 @@
 //  Based on the three.js Curve classes created by [zz85](http://www.lab4games.net/zz85/blog)
 
 var Class = require('../../../utils/Class');
+var CubicBezier = require('../../../math/interpolation/CubicBezierInterpolation');
 var Curve = require('../Curve');
 var Vector2 = require('../../../math/Vector2');
-var CubicBezier = require('../../../math/interpolation/CubicBezierInterpolation');
 
-//  Phaser.Paths.Curves.CubicBezier
+//  Phaser.Curves.CubicBezier
 
 var CubicBezierCurve = new Class({
 
@@ -32,10 +32,7 @@ var CubicBezierCurve = new Class({
         var v2 = this.v2;
         var v3 = this.v3;
 
-        return out.set(
-            CubicBezier(t, v0.x, v1.x, v2.x, v3.x),
-            CubicBezier(t, v0.y, v1.y, v2.y, v3.y)
-        );
+        return out.set(CubicBezier(t, v0.x, v1.x, v2.x, v3.x), CubicBezier(t, v0.y, v1.y, v2.y, v3.y));
     }
 
 });

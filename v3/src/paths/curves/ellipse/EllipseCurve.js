@@ -3,7 +3,7 @@
 var Curve = require('../Curve');
 var Class = require('../../../utils/Class');
 
-//  Phaser.Paths.Curves.Ellipse
+//  Phaser.Curves.Ellipse
 
 var EllipseCurve = new Class({
 
