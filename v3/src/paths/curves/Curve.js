@@ -235,6 +235,7 @@ var Curve = new Class({
         return this.getTangent(t, out);
     },
 
+    /*
     computeFrenetFrames: function (segments, closed)
     {
         // see http://www.cs.indiana.edu/pub/techreports/TR425.pdf
@@ -344,6 +345,7 @@ var Curve = new Class({
             binormals: binormals
         };
     }
+    */
 
 });
 
