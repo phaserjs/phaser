@@ -2,6 +2,8 @@
 
 var Curve = require('../Curve');
 var Class = require('../../../utils/Class');
+var DegToRad = require('../../../math/DegToRad');
+var Vector2 = require('../../../math/Vector2');
 
 //  Phaser.Curves.Ellipse
 
@@ -13,6 +15,12 @@ var EllipseCurve = new Class({
 
     function EllipseCurve (aX, aY, xRadius, yRadius, aStartAngle, aEndAngle, aClockwise, aRotation)
     {
+        if (yRadius === undefined) { yRadius = xRadius; }
+        if (aStartAngle === undefined) { aStartAngle = 0; }
+        if (aEndAngle === undefined) { aEndAngle = 360; }
+        if (aClockwise === undefined) { aClockwise = false; }
+        if (aRotation === undefined) { aRotation = 0; }
+
         Curve.call(this);
 
         this.aX = aX;
@@ -21,16 +29,21 @@ var EllipseCurve = new Class({
         this.xRadius = xRadius;
         this.yRadius = yRadius;
 
-        this.aStartAngle = aStartAngle;
-        this.aEndAngle = aEndAngle;
+        //  Radians
+        this.aStartAngle = DegToRad(aStartAngle);
+        this.aEndAngle = DegToRad(aEndAngle);
 
+        //  Boolean (anti-clockwise direction)
         this.aClockwise = aClockwise;
 
-        this.aRotation = aRotation || 0;
+        //  The rotation of the arc
+        this.aRotation = DegToRad(aRotation);
     },
 
-    getPoint: function (t)
+    getPoint: function (t, out)
     {
+        if (out === undefined) { out = new Vector2(); }
+
         var twoPi = Math.PI * 2;
         var deltaAngle = this.aEndAngle - this.aStartAngle;
         var samePoints = Math.abs( deltaAngle ) < Number.EPSILON;
@@ -58,7 +71,7 @@ var EllipseCurve = new Class({
             }
         }
 
-        if (this.aClockwise === true && ! samePoints)
+        if (this.aClockwise && ! samePoints)
         {
             if (deltaAngle === twoPi)
             {
@@ -87,7 +100,7 @@ var EllipseCurve = new Class({
             y = tx * sin + ty * cos + this.aY;
         }
 
-        return new Vector2(x, y);
+        return out.set(x, y);
     }
 
 });
