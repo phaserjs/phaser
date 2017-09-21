@@ -40,6 +40,11 @@ var EllipseCurve = new Class({
         this.aRotation = DegToRad(aRotation);
     },
 
+    getResolution: function (divisions)
+    {
+        return divisions * 2;
+    },
+
     getPoint: function (t, out)
     {
         if (out === undefined) { out = new Vector2(); }

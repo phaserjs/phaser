@@ -23,6 +23,11 @@ var LineCurve = new Class({
         this.v2 = v2;
     },
 
+    getResolution: function (divisions)
+    {
+        return 1;
+    },
+
     getPoint: function (t, out)
     {
         if (out === undefined) { out = new Vector2(); }

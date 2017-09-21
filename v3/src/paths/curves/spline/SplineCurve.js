@@ -23,6 +23,11 @@ var SplineCurve = new Class({
         this.points = points;
     },
 
+    getResolution: function (divisions)
+    {
+        return divisions * this.points.length;
+    },
+
     getPoint: function (t, out)
     {
         if (out === undefined) { out = new Vector2(); }

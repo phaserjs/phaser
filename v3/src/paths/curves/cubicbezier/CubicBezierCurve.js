@@ -23,6 +23,11 @@ var CubicBezierCurve = new Class({
         this.v3 = v3;
     },
 
+    getResolution: function (divisions)
+    {
+        return divisions;
+    },
+
     getPoint: function (t, out)
     {
         if (out === undefined) { out = new Vector2(); }
