@@ -50,8 +50,13 @@ var Vector2 = new Class({
         return this;
     },
 
-    angle: function () {
+    equals: function (v)
+    {
+        return ((this.x === v.x) && (this.y === v.y));
+    },
 
+    angle: function ()
+    {
         // computes the angle in radians with respect to the positive x-axis
 
         var angle = Math.atan2(this.y, this.x);

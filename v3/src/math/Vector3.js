@@ -44,6 +44,11 @@ var Vector3 = new Class({
         return this;
     },
 
+    equals: function (v)
+    {
+        return ((this.x === v.x) && (this.y === v.y) && (this.z === v.z));
+    },
+
     copy: function (src)
     {
         this.x = src.x;

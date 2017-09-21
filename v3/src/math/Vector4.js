@@ -40,6 +40,11 @@ var Vector4 = new Class({
         return this;
     },
 
+    equals: function (v)
+    {
+        return ((this.x === v.x) && (this.y === v.y) && (this.z === v.z) && (this.w === v.w));
+    },
+
     set: function (x, y, z, w)
     {
         if (typeof x === 'object')
