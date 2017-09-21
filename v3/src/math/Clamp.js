@@ -7,7 +7,7 @@
 * @param {float} max - The maximum bounds.
 * @return {number} The clamped value.
 */
-var Clamp = function (v, min, max)
+var Clamp = function (value, min, max)
 {
     return Math.max(min, Math.min(max, value));
 };
