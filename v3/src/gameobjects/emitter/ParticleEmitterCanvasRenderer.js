@@ -4,4 +4,3 @@ var ParticleEmitterCanvasRenderer = function (renderer, src, interpolationPercen
 };
 
 module.exports = ParticleEmitterCanvasRenderer;
- 
