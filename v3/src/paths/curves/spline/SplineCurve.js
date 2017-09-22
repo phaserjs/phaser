@@ -23,6 +23,15 @@ var SplineCurve = new Class({
         this.points = points;
     },
 
+    addPoint: function (x, y)
+    {
+        var vec = new Vector2(x, y);
+
+        this.points.push(vec);
+
+        return vec;
+    },
+
     getStartPoint: function ()
     {
         return this.points[0];
