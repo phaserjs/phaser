@@ -1,8 +1,9 @@
 //  Based on the three.js Curve classes created by [zz85](http://www.lab4games.net/zz85/blog)
 
-var Curve = require('../Curve');
 var Class = require('../../../utils/Class');
+var Curve = require('../Curve');
 var DegToRad = require('../../../math/DegToRad');
+var RadToDeg = require('../../../math/RadToDeg');
 var Vector2 = require('../../../math/Vector2');
 
 //  Phaser.Curves.Ellipse
@@ -112,6 +113,21 @@ var EllipseCurve = new Class({
         }
 
         return out.set(x, y);
+    },
+
+    toJSON: function ()
+    {
+        return {
+            type: 'EllipseCurve',
+            x: this.p0.x,
+            y: this.p0.y,
+            xRadius: this._xRadius,
+            yRadius: this._yRadius,
+            startAngle: RadToDeg(this._startAngle),
+            endAngle: RadToDeg(this._endAngle),
+            clockwise: this._clockwise,
+            rotation: RadToDeg(this._rotation)
+        };
     },
 
     x: {

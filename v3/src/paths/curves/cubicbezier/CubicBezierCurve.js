@@ -72,6 +72,19 @@ var CubicBezierCurve = new Class({
 
         //  So you can chain graphics calls
         return graphics;
+    },
+
+    toJSON: function ()
+    {
+        return {
+            type: 'CubicBezierCurve',
+            points: [
+                this.p0.x, this.p0.y,
+                this.p1.x, this.p1.y,
+                this.p2.x, this.p2.y,
+                this.p3.x, this.p3.y
+            ]
+        };
     }
 
 });

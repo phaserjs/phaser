@@ -60,6 +60,22 @@ var SplineCurve = new Class({
         var p3 = points[(intPoint > points.length - 3) ? points.length - 1 : intPoint + 2];
 
         return out.set(CatmullRom(weight, p0.x, p1.x, p2.x, p3.x), CatmullRom(weight, p0.y, p1.y, p2.y, p3.y));
+    },
+
+    toJSON: function ()
+    {
+        var points = [];
+
+        for (var i = 0; i < this.points.length; i++)
+        {
+            points.push(this.points[i].x);
+            points.push(this.points[i].y);
+        }
+
+        return {
+            type: 'SplineCurve',
+            points: points
+        };
     }
 
 });

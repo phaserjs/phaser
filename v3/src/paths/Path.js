@@ -83,6 +83,24 @@ var Path = new Class({
     // function EllipseCurve (x, y, xRadius, yRadius, startAngle, endAngle, clockwise, rotation)
     // },
 
+    toJSON: function ()
+    {
+        var out = [];
+
+        for (var i = 0; i < this.curves.length; i++)
+        {
+            out.push(this.curves[i].toJSON());
+        }
+
+        return {
+            type: 'Path',
+            x: this.startPoint.x,
+            y: this.startPoint.y,
+            autoClose: this.autoClose,
+            curves: out
+        }
+    },
+
     add: function (curve)
     {
         this.curves.push(curve);

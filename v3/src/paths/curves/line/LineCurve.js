@@ -73,6 +73,17 @@ var LineCurve = new Class({
 
         //  So you can chain graphics calls
         return graphics;
+    },
+
+    toJSON: function ()
+    {
+        return {
+            type: 'LineCurve',
+            points: [
+                this.p0.x, this.p0.y,
+                this.p1.x, this.p1.y
+            ]
+        };
     }
 
 });
