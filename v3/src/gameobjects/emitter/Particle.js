@@ -2,7 +2,7 @@ var Class = require('../../utils/Class');
 
 var Particle = new Class({
 
-    initialize: 
+    initialize:
 
     function Particle (x, y)
     {

@@ -1,14 +1,13 @@
-
+var Between = require('../../math/Between');
 var Class = require('../../utils/Class');
 var Components = require('../components');
-var GameObject = require('../GameObject');
-var Render = require('./ParticleEmitterRender');
-var Particle = require('./Particle');
-var Between = require('../../math/Between');
-var StableSort = require('../../utils/array/StableSort');
-var Easing = require('../../math/easing');
-var GetEaseFunction = require('../../tween/builder/GetEaseFunction');
 var DegToRad = require('../../math/DegToRad');
+var Easing = require('../../math/easing');
+var GameObject = require('../GameObject');
+var GetEaseFunction = require('../../tween/builder/GetEaseFunction');
+var Particle = require('./Particle');
+var Render = require('./ParticleEmitterRender');
+var StableSort = require('../../utils/array/StableSort');
 
 var ParticleEmitter = new Class({
 
@@ -62,69 +61,104 @@ var ParticleEmitter = new Class({
         this.easingFunctionAlpha = ease;
         this.easingFunctionScale = ease;
         this.easingFunctionRotation = ease;
+
+        return this;
     },
 
     setAlphaEase: function (easeName, easeParam)
     {
         this.easingFunctionAlpha = GetEaseFunction(easeName, easeParam);
+
+        return this;
     },
 
     setScaleEase: function (easeName, easeParam)
     {
         this.easingFunctionScale = GetEaseFunction(easeName, easeParam);
+
+        return this;
     },
 
     setRotationEase: function (easeName, easeParam)
     {
         this.easingFunctionRotation = GetEaseFunction(easeName, easeParam);
+
+        return this;
     },
 
     setSpeed: function (min, max)
     {
+        if (max === undefined) { max = min; }
+
         this.minSpeed = min;
         this.maxSpeed = max;
+
+        return this;
     },
 
     setEmitAngle: function (min, max)
     {
+        if (max === undefined) { max = min; }
+
         this.minEmitAngle = min;
         this.maxEmitAngle = max;
+
+        return this;
     },
 
     setScale: function (start, end)
     {
+        if (end === undefined) { end = start; }
+
         this.startScale = start;
         this.endScale = end;
+
+        return this;
     },
 
     setAlpha: function (start, end)
     {
+        if (end === undefined) { end = start; }
+
         this.startAlpha = start;
         this.endAlpha = end;
+
+        return this;
     },
 
     setAngle: function (start, end)
     {
+        if (end === undefined) { end = start; }
+
         this.startAngle = start;
         this.endAngle = end;
+
+        return this;
     },
 
     setGravity: function (x, y)
     {
+        if (y === undefined) { y = x; }
+
         this.gravityX = x;
         this.gravityY = y;
+
+        return this;
     },
 
     reserve: function (particleCount)
     {
         var dead = this.dead;
+
         for (var count = 0; count < particleCount; ++count)
         {
             dead.push(new Particle(this.x, this.y));
         }
+
+        return this;
     },
 
-    getAliveParticleCount: function () 
+    getAliveParticleCount: function ()
     {
         return this.alive.length;
     },
@@ -139,10 +173,14 @@ var ParticleEmitter = new Class({
         return this.getAliveParticleCount() + this.getDeadParticleCount();
     },
 
-    onParticleDeath: function (callback) 
+    onParticleDeath: function (callback)
     {
-        if (typeof callback === 'function') 
+        if (typeof callback === 'function')
+        {
             this.deathCallback = callback;
+        }
+
+        return this;
     },
 
     killAll: function ()
@@ -154,6 +192,8 @@ var ParticleEmitter = new Class({
         {
             dead.push(alive.pop());
         }
+
+        return this;
     },
 
     forEachAlive: function (callback, thisArg)
@@ -165,6 +205,8 @@ var ParticleEmitter = new Class({
         {
             callback.call(thisArg, alive[index]);
         }
+
+        return this;
     },
 
     forEachDead: function (callback, thisArg)
@@ -176,9 +218,11 @@ var ParticleEmitter = new Class({
         {
             callback.call(thisArg, dead[index]);
         }
+
+        return this;
     },
 
-    emitParticle: function()
+    emitParticle: function ()
     {
         var particle = null;
         var rad = DegToRad(Between(this.minEmitAngle, this.maxEmitAngle));
@@ -256,14 +300,20 @@ var ParticleEmitter = new Class({
                 particles[index] = last;
                 index -= 1;
                 length -= 1;
-                if (deathCallback) deathCallback(particle);
+
+                if (deathCallback)
+                {
+                    deathCallback(particle);
+                }
             }
+
             particle.lifeStep -= emitterStep;
 
         }
 
         /* Cleanup */
         var deadLength = particles.length - length;
+
         if (deadLength > 0)
         {
             dead.push.apply(dead, particles.splice(particles.length - deadLength, deadLength));

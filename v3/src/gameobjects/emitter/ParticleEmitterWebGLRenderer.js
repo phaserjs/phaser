@@ -2,9 +2,7 @@ var GameObject = require('../GameObject');
 
 var ParticleEmitterWebGLRenderer = function (renderer, emitter, interpolationPercentage, camera)
 {
-    if (GameObject.RENDER_MASK !== emitter.renderFlags || 
-        (emitter.cameraFilter > 0 && 
-        (emitter.cameraFilter & camera._id)))
+    if (GameObject.RENDER_MASK !== emitter.renderFlags || (emitter.cameraFilter > 0 && (emitter.cameraFilter & camera._id)))
     {
         return;
     }
@@ -13,4 +11,3 @@ var ParticleEmitterWebGLRenderer = function (renderer, emitter, interpolationPer
 };
 
 module.exports = ParticleEmitterWebGLRenderer;
- 
