@@ -23,21 +23,27 @@ var EllipseCurve = new Class({
 
         Curve.call(this);
 
-        this.x = x;
-        this.y = y;
+        this.p0 = new Vector2(x, y);
 
-        this.xRadius = xRadius;
-        this.yRadius = yRadius;
+        this._xRadius = xRadius;
+        this._yRadius = yRadius;
 
         //  Radians
-        this.startAngle = DegToRad(startAngle);
-        this.endAngle = DegToRad(endAngle);
+        this._startAngle = DegToRad(startAngle);
+        this._endAngle = DegToRad(endAngle);
 
         //  Boolean (anti-clockwise direction)
-        this.clockwise = clockwise;
+        this._clockwise = clockwise;
 
         //  The rotation of the arc
-        this.rotation = DegToRad(rotation);
+        this._rotation = DegToRad(rotation);
+
+        this._startPoint = this.getPoint(0);
+    },
+
+    getStartPoint: function ()
+    {
+        return this._startPoint;
     },
 
     getResolution: function (divisions)
@@ -50,8 +56,8 @@ var EllipseCurve = new Class({
         if (out === undefined) { out = new Vector2(); }
 
         var twoPi = Math.PI * 2;
-        var deltaAngle = this.endAngle - this.startAngle;
-        var samePoints = Math.abs( deltaAngle ) < Number.EPSILON;
+        var deltaAngle = this._endAngle - this._startAngle;
+        var samePoints = Math.abs(deltaAngle) < Number.EPSILON;
 
         // ensures that deltaAngle is 0 .. 2 PI
         while (deltaAngle < 0)
@@ -76,7 +82,7 @@ var EllipseCurve = new Class({
             }
         }
 
-        if (this.clockwise && ! samePoints)
+        if (this._clockwise && !samePoints)
         {
             if (deltaAngle === twoPi)
             {
@@ -88,24 +94,126 @@ var EllipseCurve = new Class({
             }
         }
 
-        var angle = this.startAngle + t * deltaAngle;
-        var x = this.x + this.xRadius * Math.cos(angle);
-        var y = this.y + this.yRadius * Math.sin(angle);
+        var angle = this._startAngle + t * deltaAngle;
+        var x = this.p0.x + this._xRadius * Math.cos(angle);
+        var y = this.p0.y + this._yRadius * Math.sin(angle);
 
-        if (this.rotation !== 0)
+        if (this._rotation !== 0)
         {
-            var cos = Math.cos(this.rotation);
-            var sin = Math.sin(this.rotation);
+            var cos = Math.cos(this._rotation);
+            var sin = Math.sin(this._rotation);
 
-            var tx = x - this.x;
-            var ty = y - this.y;
+            var tx = x - this.p0.x;
+            var ty = y - this.p0.y;
 
             // Rotate the point about the center of the ellipse.
-            x = tx * cos - ty * sin + this.x;
-            y = tx * sin + ty * cos + this.y;
+            x = tx * cos - ty * sin + this.p0.x;
+            y = tx * sin + ty * cos + this.p0.y;
         }
 
         return out.set(x, y);
+    },
+
+    x: {
+        get: function ()
+        {
+            return this.p0.x;
+        },
+
+        set: function (value)
+        {
+            this.p0.x = value;
+        }
+    },
+
+    y: {
+        get: function ()
+        {
+            return this.p0.y;
+        },
+
+        set: function (value)
+        {
+            this.p0.y = value;
+        }
+    },
+
+    xRadius: {
+        get: function ()
+        {
+            return this._xRadius;
+        },
+
+        set: function (value)
+        {
+            this._xRadius = value;
+            this.getPoint(0, this._startPoint);
+        }
+    },
+
+    yRadius: {
+        get: function ()
+        {
+            return this._yRadius;
+        },
+
+        set: function (value)
+        {
+            this._yRadius = value;
+            this.getPoint(0, this._startPoint);
+        }
+    },
+
+    startAngle: {
+        get: function ()
+        {
+            return this._startAngle;
+        },
+
+        set: function (value)
+        {
+            this._startAngle = DegToRad(value);
+            this.getPoint(0, this._startPoint);
+        }
+    },
+
+    endAngle: {
+        get: function ()
+        {
+            return this._endAngle;
+        },
+
+        set: function (value)
+        {
+            this._endAngle = DegToRad(value);
+            this.getPoint(0, this._startPoint);
+        }
+    },
+
+    clockwise: {
+        get: function ()
+        {
+            return this._clockwise;
+        },
+
+        set: function (value)
+        {
+            this._clockwise = value;
+            this.getPoint(0, this._startPoint);
+        }
+    },
+
+    rotation: {
+        get: function ()
+        {
+            return this._rotation;
+        },
+
+        set: function (value)
+        {
+            this._rotation = DegToRad(value);
+            this.getPoint(0, this._startPoint);
+        }
     }
 
 });

@@ -2,18 +2,20 @@
 
 var Class = require('../utils/Class');
 var LineCurve = require('./curves/line/LineCurve');
+var SplineCurve = require('./curves/spline/SplineCurve');
+var CubicBezierCurve = require('./curves/cubicbezier/CubicBezierCurve');
 var Vector2 = require('../math/Vector2');
 
 //  Local cache vars
 
 var tmpVec2A = new Vector2();
-// var tmpVec2B = new Vector2();
+var tmpVec2B = new Vector2();
 
 var Path = new Class({
 
     initialize:
 
-    function Path ()
+    function Path (x, y)
     {
         this.curves = [];
 
@@ -21,28 +23,65 @@ var Path = new Class({
 
         // Automatically closes the path
         this.autoClose = false;
+
+        this.startPoint = new Vector2(x, y);
     },
 
-    //  If x2/y2 are not given then it creates a line between the previous curve end point (or 0x0) and x1,y1
-    addLineCurve: function (x1, y1, x2, y2)
+    //  Creates a line curve from the previous end point to x/y
+    lineTo: function (x, y)
     {
-        if (x2 === undefined && y2 === undefined)
+        if (x instanceof Vector2)
         {
-            //  Create a line from the previous end point to x1/y1
-            x2 = x1;
-            y2 = y1;
-
-            var end = this.getEndPoint(tmpVec2A);
-
-            this.curves.push(new LineCurve([ end.x, end.y, x2, y2 ]));
+            tmpVec2B.copy(x);
         }
         else
         {
-            this.curves.push(new LineCurve([ x1, y1, x2, y2 ]));
+            tmpVec2B.set(x, y);
         }
 
-        return this;
+        var end = this.getEndPoint(tmpVec2A);
+
+        return this.add(new LineCurve([ end.x, end.y, tmpVec2B.x, tmpVec2B.y ]));
     },
+
+    //  Creates a spline curve starting at the previous end point, using the given parameters
+    splineTo: function (points)
+    {
+        points.shift(this.getEndPoint());
+
+        return this.add(new SplineCurve(points));
+    },
+
+    //  Creates a cubic bezier curve starting at the previous end point and ending at p3, using p1 and p2 as control points
+    cubicBezierTo: function (x, y, control1X, control1Y, control2X, control2Y)
+    {
+        var p0 = this.getEndPoint();
+        var p1;
+        var p2;
+        var p3;
+
+        //  Assume they're all vec2s
+        if (x instanceof Vector2)
+        {
+            p1 = x;
+            p2 = y;
+            p3 = control1X;
+        }
+        else
+        {
+            p1 = new Vector2(control1X, control1Y);
+            p2 = new Vector2(control2X, control2Y);
+            p3 = new Vector2(x, y);
+        }
+
+        return this.add(new CubicBezierCurve(p0, p1, p2, p3));
+    },
+
+    //  Creates an ellipse curve positioned at the previous end point, using the given parameters
+    // ellipseTo: function (xRadius, yRadius, startAngle, endAngle, clockwise, rotation)
+    // {
+    // function EllipseCurve (x, y, xRadius, yRadius, startAngle, endAngle, clockwise, rotation)
+    // },
 
     add: function (curve)
     {
@@ -61,7 +100,7 @@ var Path = new Class({
         }
         else
         {
-            out.set(0, 0);
+            out.copy(this.startPoint);
         }
 
         return out;
@@ -227,6 +266,16 @@ var Path = new Class({
         }
 
         return points;
+    },
+
+    draw: function (graphics, pointsTotal)
+    {
+        for (var i = 0; i < this.curves.length; i++)
+        {
+            this.curves[i].draw(graphics, pointsTotal);
+        }
+
+        return graphics;
     }
 
 });

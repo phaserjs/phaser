@@ -1,10 +1,7 @@
 //  Based on the three.js Curve classes created by [zz85](http://www.lab4games.net/zz85/blog)
 
-var Clamp = require('../../math/Clamp');
-var Vector2 = require('../../math/Vector2');
-var Vector3 = require('../../math/Vector3');
-var Matrix4 = require('../../math/Matrix4');
 var Class = require('../../utils/Class');
+var Vector2 = require('../../math/Vector2');
 
 //  Local cache vars
 
@@ -237,6 +234,29 @@ var Curve = new Class({
         var t = this.getUtoTmapping(u);
 
         return this.getTangent(t, out);
+    },
+
+    draw: function (graphics, pointsTotal)
+    {
+        if (pointsTotal === undefined) { pointsTotal = 32; }
+
+        var start = this.getStartPoint();
+        var points = this.getPoints(pointsTotal);
+
+        graphics.beginPath();
+
+        graphics.moveTo(start.x, start.y);
+
+        for (var i = 1; i < points.length; i++)
+        {
+            graphics.lineTo(points[i].x, points[i].y);
+        }
+
+        graphics.strokePath();
+        graphics.closePath();
+
+        //  So you can chain graphics calls
+        return graphics;
     }
 
 });

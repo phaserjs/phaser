@@ -23,6 +23,11 @@ var SplineCurve = new Class({
         this.points = points;
     },
 
+    getStartPoint: function ()
+    {
+        return this.points[0];
+    },
+
     getResolution: function (divisions)
     {
         return divisions * this.points.length;
@@ -40,10 +45,10 @@ var SplineCurve = new Class({
 
         var weight = point - intPoint;
 
-        var p0 = points[ (intPoint === 0) ? intPoint : intPoint - 1 ];
-        var p1 = points[ intPoint ];
-        var p2 = points[ (intPoint > points.length - 2) ? points.length - 1 : intPoint + 1 ];
-        var p3 = points[ (intPoint > points.length - 3) ? points.length - 1 : intPoint + 2 ];
+        var p0 = points[(intPoint === 0) ? intPoint : intPoint - 1];
+        var p1 = points[intPoint];
+        var p2 = points[(intPoint > points.length - 2) ? points.length - 1 : intPoint + 1];
+        var p3 = points[(intPoint > points.length - 3) ? points.length - 1 : intPoint + 2];
 
         return out.set(CatmullRom(weight, p0.x, p1.x, p2.x, p3.x), CatmullRom(weight, p0.y, p1.y, p2.y, p3.y));
     }
