@@ -13,31 +13,31 @@ var EllipseCurve = new Class({
 
     initialize:
 
-    function EllipseCurve (aX, aY, xRadius, yRadius, aStartAngle, aEndAngle, aClockwise, aRotation)
+    function EllipseCurve (x, y, xRadius, yRadius, startAngle, endAngle, clockwise, rotation)
     {
         if (yRadius === undefined) { yRadius = xRadius; }
-        if (aStartAngle === undefined) { aStartAngle = 0; }
-        if (aEndAngle === undefined) { aEndAngle = 360; }
-        if (aClockwise === undefined) { aClockwise = false; }
-        if (aRotation === undefined) { aRotation = 0; }
+        if (startAngle === undefined) { startAngle = 0; }
+        if (endAngle === undefined) { endAngle = 360; }
+        if (clockwise === undefined) { clockwise = false; }
+        if (rotation === undefined) { rotation = 0; }
 
         Curve.call(this);
 
-        this.aX = aX;
-        this.aY = aY;
+        this.x = x;
+        this.y = y;
 
         this.xRadius = xRadius;
         this.yRadius = yRadius;
 
         //  Radians
-        this.aStartAngle = DegToRad(aStartAngle);
-        this.aEndAngle = DegToRad(aEndAngle);
+        this.startAngle = DegToRad(startAngle);
+        this.endAngle = DegToRad(endAngle);
 
         //  Boolean (anti-clockwise direction)
-        this.aClockwise = aClockwise;
+        this.clockwise = clockwise;
 
         //  The rotation of the arc
-        this.aRotation = DegToRad(aRotation);
+        this.rotation = DegToRad(rotation);
     },
 
     getResolution: function (divisions)
@@ -50,7 +50,7 @@ var EllipseCurve = new Class({
         if (out === undefined) { out = new Vector2(); }
 
         var twoPi = Math.PI * 2;
-        var deltaAngle = this.aEndAngle - this.aStartAngle;
+        var deltaAngle = this.endAngle - this.startAngle;
         var samePoints = Math.abs( deltaAngle ) < Number.EPSILON;
 
         // ensures that deltaAngle is 0 .. 2 PI
@@ -76,7 +76,7 @@ var EllipseCurve = new Class({
             }
         }
 
-        if (this.aClockwise && ! samePoints)
+        if (this.clockwise && ! samePoints)
         {
             if (deltaAngle === twoPi)
             {
@@ -88,21 +88,21 @@ var EllipseCurve = new Class({
             }
         }
 
-        var angle = this.aStartAngle + t * deltaAngle;
-        var x = this.aX + this.xRadius * Math.cos(angle);
-        var y = this.aY + this.yRadius * Math.sin(angle);
+        var angle = this.startAngle + t * deltaAngle;
+        var x = this.x + this.xRadius * Math.cos(angle);
+        var y = this.y + this.yRadius * Math.sin(angle);
 
-        if (this.aRotation !== 0)
+        if (this.rotation !== 0)
         {
-            var cos = Math.cos(this.aRotation);
-            var sin = Math.sin(this.aRotation);
+            var cos = Math.cos(this.rotation);
+            var sin = Math.sin(this.rotation);
 
-            var tx = x - this.aX;
-            var ty = y - this.aY;
+            var tx = x - this.x;
+            var ty = y - this.y;
 
             // Rotate the point about the center of the ellipse.
-            x = tx * cos - ty * sin + this.aX;
-            y = tx * sin + ty * cos + this.aY;
+            x = tx * cos - ty * sin + this.x;
+            y = tx * sin + ty * cos + this.y;
         }
 
         return out.set(x, y);
