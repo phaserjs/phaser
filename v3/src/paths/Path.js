@@ -6,7 +6,7 @@ var Vector2 = require('../math/Vector2');
 
 //  Local cache vars
 
-// var tmpVec2A = new Vector2();
+var tmpVec2A = new Vector2();
 // var tmpVec2B = new Vector2();
 
 var Path = new Class({
@@ -23,11 +23,48 @@ var Path = new Class({
         this.autoClose = false;
     },
 
+    //  If x2/y2 are not given then it creates a line between the previous curve end point (or 0x0) and x1,y1
+    addLineCurve: function (x1, y1, x2, y2)
+    {
+        if (x2 === undefined && y2 === undefined)
+        {
+            //  Create a line from the previous end point to x1/y1
+            x2 = x1;
+            y2 = y1;
+
+            var end = this.getEndPoint(tmpVec2A);
+
+            this.curves.push(new LineCurve([ end.x, end.y, x2, y2 ]));
+        }
+        else
+        {
+            this.curves.push(new LineCurve([ x1, y1, x2, y2 ]));
+        }
+
+        return this;
+    },
+
     add: function (curve)
     {
         this.curves.push(curve);
 
         return this;
+    },
+
+    getEndPoint: function (out)
+    {
+        if (out === undefined) { out = new Vector2(); }
+
+        if (this.curves.length > 0)
+        {
+            this.curves[this.curves.length - 1].getPoint(1, out);
+        }
+        else
+        {
+            out.set(0, 0);
+        }
+
+        return out;
     },
 
     closePath: function ()

@@ -5,6 +5,6 @@
 
 module.exports = {
 
-
+    Path: require('./Path')
 
 };
