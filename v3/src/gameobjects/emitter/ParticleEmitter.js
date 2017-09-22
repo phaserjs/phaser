@@ -232,6 +232,16 @@ var ParticleEmitter = new Class({
         return this;
     },
 
+    pause: function ()
+    {
+        this.active = false;
+    },
+
+    resume: function ()
+    {
+        this.active = true;
+    },
+
     explode: function (count)
     {
         if (!count) count = 100;
