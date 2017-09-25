@@ -7,7 +7,7 @@ var AddOrthographicCamera = function (width, height)
     if (width === undefined) { width = config.width; }
     if (height === undefined) { height = config.height; }
 
-    var camra = new OrthographicCamera(this.scene, width, height);
+    var camera = new OrthographicCamera(this.scene, width, height);
 
     return camera;
 };
