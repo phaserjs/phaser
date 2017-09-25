@@ -57,9 +57,17 @@ var ProcessOverOutEvents = function (pointer)
         {
             gameObject = justOut[i];
 
+            if (!gameObject.input)
+            {
+                continue;
+            }
+
             this.events.dispatch(new InputEvent.GAME_OBJECT_OUT(pointer, gameObject));
 
-            gameObject.input.onOut(gameObject, pointer);
+            if (gameObject.input)
+            {
+                gameObject.input.onOut(gameObject, pointer);
+            }
 
             if (this.topOnly)
             {
@@ -82,9 +90,17 @@ var ProcessOverOutEvents = function (pointer)
         {
             gameObject = justOver[i];
 
+            if (!gameObject.input)
+            {
+                continue;
+            }
+
             this.events.dispatch(new InputEvent.GAME_OBJECT_OVER(pointer, gameObject));
 
-            gameObject.input.onOver(gameObject, pointer, gameObject.input.localX, gameObject.input.localY);
+            if (gameObject.input)
+            {
+                gameObject.input.onOver(gameObject, pointer, gameObject.input.localX, gameObject.input.localY);
+            }
 
             if (this.topOnly)
             {

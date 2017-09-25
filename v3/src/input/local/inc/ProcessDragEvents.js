@@ -120,7 +120,10 @@ var ProcessDragEvents = function (pointer, time)
 
             this.events.dispatch(new InputEvent.DRAG_START(pointer, gameObject));
 
-            input.onDragStart(gameObject, pointer, input.dragX, input.dragY);
+            if (gameObject.input)
+            {
+                input.onDragStart(gameObject, pointer, input.dragX, input.dragY);
+            }
         }
 
         pointer.dragState = 4;
@@ -166,7 +169,10 @@ var ProcessDragEvents = function (pointer, time)
                     //  Still over it but it's no longer top of the display list (targets must always be at the top)
                     this.events.dispatch(new InputEvent.DRAG_LEAVE(pointer, gameObject, input.target));
 
-                    input.target = dropZones[0];
+                    if (gameObject.input)
+                    {
+                        input.target = dropZones[0];
+                    }
 
                     this.events.dispatch(new InputEvent.DRAG_ENTER(pointer, gameObject, input.target));
                 }
@@ -234,7 +240,10 @@ var ProcessDragEvents = function (pointer, time)
 
             this.events.dispatch(new InputEvent.DRAG_END(pointer, gameObject, dropped));
 
-            input.onDragEnd(gameObject, pointer, input.dragX, input.dragY);
+            if (gameObject.input)
+            {
+                input.onDragEnd(gameObject, pointer, input.dragX, input.dragY);
+            }
         }
 
         pointer.dragState = 0;

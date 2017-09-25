@@ -220,11 +220,13 @@ var GameObject = new Class({
         if (this.input)
         {
             this.scene.sys.inputManager.clear(this);
+            this.input = undefined;
         }
 
         if (this.body)
         {
             this.scene.sys.physicsManager.remove(this);
+            this.body = undefined;
         }
 
         this.active = false;

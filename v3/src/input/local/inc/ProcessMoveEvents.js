@@ -11,9 +11,17 @@ var ProcessMoveEvents = function (pointer)
     {
         var gameObject = currentlyOver[i];
 
+        if (!gameObject.input)
+        {
+            continue;
+        }
+
         this.events.dispatch(new InputEvent.GAME_OBJECT_MOVE(pointer, gameObject));
 
-        gameObject.input.onMove(gameObject, pointer, gameObject.input.localX, gameObject.input.localY);
+        if (gameObject.input)
+        {
+            gameObject.input.onMove(gameObject, pointer, gameObject.input.localX, gameObject.input.localY);
+        }
 
         if (this.topOnly)
         {
