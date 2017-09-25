@@ -1,4 +1,5 @@
 var Class = require('../../utils/Class');
+var Random = require('./Random');
 
 var Ellipse = new Class({
 
@@ -18,6 +19,11 @@ var Ellipse = new Class({
         this.width = width;
 
         this.height = height;
+    },
+
+    getRandomPoint: function (point)
+    {
+        return Random(this, point);
     },
 
     setTo: function (x, y, width, height)

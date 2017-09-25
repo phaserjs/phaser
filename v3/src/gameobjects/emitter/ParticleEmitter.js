@@ -52,6 +52,7 @@ var ParticleEmitter = new Class({
         this.emitCount = 1;
         this.enabled = true;
         this.allowCreation = true;
+        this.emitShape = null;
         this.easingFunctionAlpha = Easing.Linear;
         this.easingFunctionScale = Easing.Linear;
         this.easingFunctionRotation = Easing.Linear;
@@ -248,6 +249,11 @@ var ParticleEmitter = new Class({
         this.emitParticle(100);
     },
 
+    setShape: function (shape)
+    {
+        this.emitShape = shape;
+    },
+
     emitParticle: function(count)
     {
         count = count || 1;
@@ -260,19 +266,29 @@ var ParticleEmitter = new Class({
             var speed = Between(this.minSpeed, this.maxSpeed);
             var vx = Math.cos(rad) * speed;
             var vy = Math.sin(rad) * speed;
-            
+            var x = this.x;
+            var y = this.y;
+            var shape = this.emitShape;
+
             if (this.dead.length > 0)
             {
                 particle = this.dead.pop();
-                particle.reset(this.x, this.y);
+                particle.reset(x, y);
             }
             else if (this.allowCreation)
             {
-                particle = new Particle(this.x, this.y);
+                particle = new Particle(x, y);
             }
             else
             {
                 return null;
+            }
+
+            if (shape)
+            {
+                shape.getRandomPoint(particle);
+                particle.x += x;
+                particle.y += y;
             }
 
             particle.velocityX = vx;

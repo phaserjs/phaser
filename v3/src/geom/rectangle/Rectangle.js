@@ -1,4 +1,5 @@
 var Class = require('../../utils/Class');
+var Random = require('./Random');
 
 //  Encapsulates a 2D rectangle defined by its corner point in the top-left
 //  and its extends in x (width) and y (height)
@@ -21,6 +22,11 @@ var Rectangle = new Class({
         this.width = width;
 
         this.height = height;
+    },
+
+    getRandomPoint: function (point)
+    {
+        return Random(this, point);
     },
 
     setTo: function (x, y, width, height)

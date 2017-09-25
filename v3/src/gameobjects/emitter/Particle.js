@@ -68,6 +68,18 @@ var Particle = new Class({
     isAlive: function ()
     {
         return this.lifeStep > 0;
+    },
+
+    setPosition: function (x, y)
+    {
+        this.x = x;
+        this.y = y;
+    },
+
+    setScale: function (x, y)
+    {
+        this.scaleX = x;
+        this.scaleY = y;
     }
 
 });

@@ -1,4 +1,5 @@
 var Class = require('../../utils/Class');
+var Random = require('./Random');
 
 var Circle = new Class({
 
@@ -16,6 +17,11 @@ var Circle = new Class({
 
         this._radius = radius;
         this._diameter = radius * 2;
+    },
+
+    getRandomPoint: function (point)
+    {
+        return Random(this, point);
     },
 
     setTo: function (x, y, radius)
