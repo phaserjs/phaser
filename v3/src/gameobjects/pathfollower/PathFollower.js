@@ -1,8 +1,6 @@
 var Class = require('../../utils/Class');
-var Linear = require('../../math/easing/Linear');
 var Sprite = require('../sprite/Sprite');
 var Vector2 = require('../../math/Vector2');
-// GetEaseFunction
 
 var PathFollower = new Class({
 
@@ -17,90 +15,83 @@ var PathFollower = new Class({
         this.path = path;
 
         this.pathOffset = new Vector2(x, y);
+
         this.pathVector = new Vector2();
 
-        //  Path
-        //  Direction (forwards, backwards)
-        //  Speed (or is that controlled by the path?)
-        //  Rotate to face direction
-        //  Speed function (ease, default Linear)
-        //  Start from T along the path
-        //  Start from path x/y, or current x/y
+        this.pathTween;
 
-        this.isFollowing = false;
-        this.pathT = 0;
-        this.timeScale = 1;
-        this.elapsed = 0;
-        this.progress = 0;
-        this.duration = 0;
-        this.ease = Linear;
+        this.pathData = {
+            t: 0
+        };
     },
 
-    start: function (duration)
+    start: function (config)
     {
-        this.duration = duration;
-        this.isFollowing = true;
-        this.pathT = 0;
-        this.timeScale = 1;
-        this.elapsed = 0;
-        this.progress = 0;
+        if (config === undefined) { config = {}; }
 
-        //  path.startPoint
+        if (typeof config === 'number')
+        {
+            config = { duration: config };
+        }
+
+        //  Add the targets and property into the mix
+        config.targets = this.pathData;
+        config.t = 1;
+
+        this.pathTween = this.scene.sys.tweens.add(config);
 
         //  The starting point of the path, relative to this follower
 
+        // this.path.getStartPoint(this.pathOffset);
         var start = this.path.getStartPoint();
-        var diffX = this.pathOffset.x - start.x;
-        var diffY = this.pathOffset.y - start.y;
+
+        // console.log('getStartPoint', this.pathOffset.x, this.pathOffset.y);
+        console.log('getStartPoint2', this.x, this.y);
+
+        var diffX = this.x - start.x;
+        var diffY = this.y - start.y;
+
+        console.log('diffX', diffX, 'diffY', diffY);
 
         this.pathOffset.set(diffX, diffY);
+
+
     },
+
+    /*
+    playing: {
+
+        get: function ()
+        {
+            return this.pathData.playing;
+        },
+
+        set: function (value)
+        {
+            if (!value)
+            {
+                this.stop();
+            }
+            else
+            {
+                this.start();
+            }
+        }
+
+    }
+    */
 
     preUpdate: function (time, delta)
     {
         this.anims.update(time, delta);
 
-        if (!this.isFollowing)
+        if (this.pathTween && this.pathTween.isPlaying())
         {
-            return;
-        }
+            this.path.getPoint(this.pathData.t, this.pathVector);
 
-        //  Apply ease to pathT
-        delta *= this.timeScale;
+            this.pathVector.add(this.pathOffset);
 
-        this.elapsed += delta;
-        this.progress = Math.min(this.elapsed / this.duration, 1);
-
-        if (this.elapsed > this.duration)
-        {
-            var diff = this.elapsed - this.duration;
-            this.elapsed = this.duration;
-        }
-
-        var forward = true;
-
-        this.progress = this.elapsed / this.duration;
-
-        if (forward)
-        {
-            this.pathT = this.ease(this.progress);
-        }
-        else
-        {
-            this.pathT = this.ease(1 - this.progress);
-        }
-
-        this.path.getPoint(this.pathT, this.pathVector);
-
-        this.pathVector.add(this.pathOffset);
-
-        this.setPosition(this.pathVector.x, this.pathVector.y);
-
-        // this.setDepth(this.y);
-
-        if (this.progress === 1)
-        {
-            this.isFollowing = false;
+            this.setPosition(this.pathVector.x, this.pathVector.y);
         }
     }
 
