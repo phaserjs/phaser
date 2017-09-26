@@ -245,8 +245,8 @@ var ParticleEmitter = new Class({
 
     explode: function (count)
     {
-        if (!count) count = 100;
-        this.emitParticle(100);
+        if (!count) { count = 100; }
+        this.emitParticle(count);
     },
 
     setShape: function (shape)
@@ -254,7 +254,7 @@ var ParticleEmitter = new Class({
         this.emitShape = shape;
     },
 
-    emitParticle: function(count)
+    emitParticle: function (count)
     {
         count = count || 1;
 
@@ -305,7 +305,7 @@ var ParticleEmitter = new Class({
             particle.end.rotation = this.endAngle * Math.PI / 180;
             particle.color = (particle.color & 0x00FFFFFF) | (((this.startAlpha * 0xFF)|0) << 24);
             particle.index = this.alive.length;
-                    
+
             this.alive.push(particle);
         }
         return particle;
