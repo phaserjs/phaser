@@ -111,6 +111,13 @@ var Path = new Class({
         return this;
     },
 
+    getStartPoint: function (out)
+    {
+        if (out === undefined) { out = new Vector2(); }
+
+        return out.copy(this.startPoint);
+    },
+
     getEndPoint: function (out)
     {
         if (out === undefined) { out = new Vector2(); }

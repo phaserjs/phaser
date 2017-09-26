@@ -25,7 +25,22 @@ var Curve = new Class({
         this.needsUpdate = true;
     },
 
+    getStartPoint: function (out)
+    {
+        if (out === undefined) { out = new Vector2(); }
+
+        return this.getPointAt(0, out);
+    },
+
+    getEndPoint: function (out)
+    {
+        if (out === undefined) { out = new Vector2(); }
+
+        return this.getPointAt(1, out);
+    },
+
     // Get point at relative position in curve according to arc length
+
     // - u [0 .. 1]
 
     getPointAt: function (u, out)
