@@ -4,13 +4,7 @@
 
 var GetFastValue = function (source, key, defaultValue)
 {
-    var t = typeof(source);
-
-    if (!source || t === 'number' || t === 'string')
-    {
-        return defaultValue;
-    }
-    else if (source.hasOwnProperty(key))
+    if (source && typeof source === 'object' && source.hasOwnProperty(key))
     {
         return source[key];
     }
