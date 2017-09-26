@@ -44,9 +44,9 @@ var Sprite = new Class({
         this.anims.update(time, delta);
     },
 
-    play: function (key, startFrame)
+    play: function (key, ignoreIfPlaying, startFrame)
     {
-        this.anims.play(key, startFrame);
+        this.anims.play(key, ignoreIfPlaying, startFrame);
 
         return this;
     },
