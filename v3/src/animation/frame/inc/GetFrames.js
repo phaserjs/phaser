@@ -17,8 +17,8 @@ var GetFrames = function (textureManager, frames)
     var i;
     var textureKey;
 
-    //  if frames is a string, we'll get all the frames from the texture manager as if it's a sprite sheet
-    if (typeof frames === 'string')
+    //  if frames isn't an object, we'll get all the frames from the texture manager as if it's a sprite sheet
+    if (typeof frames !== 'object')
     {
         textureKey = frames;
 

@@ -4,7 +4,7 @@
 
 var GetValue = function (source, key, defaultValue)
 {
-    if (!source || typeof source === 'number')
+    if (!source || typeof source !== 'object')
     {
         return defaultValue;
     }

@@ -3,7 +3,7 @@
 
 var BringToTop = function (scene)
 {
-    var index = (typeof scene === 'string') ? this.getActiveSceneIndexByKey(scene) : this.getActiveSceneIndex(scene);
+    var index = (typeof scene === 'object') ? this.getActiveSceneIndex(scene) : this.getActiveSceneIndexByKey(scene);
 
     if (index < this.active.length)
     {

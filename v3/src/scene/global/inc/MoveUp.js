@@ -3,7 +3,7 @@
 
 var MoveUp = function (scene)
 {
-    var index = (typeof scene === 'string') ? this.getActiveSceneIndexByKey(scene) : this.getActiveSceneIndex(scene);
+    var index = (typeof scene === 'object') ? this.getActiveSceneIndex(scene) : this.getActiveSceneIndexByKey(scene);
 
     if (index !== -1 && index < this.active.length - 1)
     {
