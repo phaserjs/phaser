@@ -1,9 +1,10 @@
 //  Based on the three.js Curve classes created by [zz85](http://www.lab4games.net/zz85/blog)
 
 var Class = require('../utils/Class');
+var CubicBezierCurve = require('./curves/cubicbezier/CubicBezierCurve');
+var GameObjectFactory = require('../scene/plugins/GameObjectFactory');
 var LineCurve = require('./curves/line/LineCurve');
 var SplineCurve = require('./curves/spline/SplineCurve');
-var CubicBezierCurve = require('./curves/cubicbezier/CubicBezierCurve');
 var Vector2 = require('../math/Vector2');
 
 //  Local cache vars
@@ -17,6 +18,8 @@ var Path = new Class({
 
     function Path (x, y)
     {
+        this.name = '';
+
         this.curves = [];
 
         this.cacheLengths = [];
@@ -294,8 +297,28 @@ var Path = new Class({
         }
 
         return graphics;
+    },
+
+    destroy: function ()
+    {
+        this.curves.length = 0;
+        this.cacheLengths.length = 0;
+        this.startPoint = undefined;
     }
 
+});
+
+//  When registering a factory function 'this' refers to the GameObjectFactory context.
+//  
+//  There are several properties available to use:
+//  
+//  this.scene - a reference to the Scene that owns the GameObjectFactory
+//  this.displayList - a reference to the Display List the Scene owns
+//  this.updateList - a reference to the Update List the Scene owns
+
+GameObjectFactory.register('path', function (x, y)
+{
+    return new Path(x, y);
 });
 
 module.exports = Path;

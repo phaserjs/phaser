@@ -9,6 +9,7 @@ var GameObjectCreator = require('../plugins/GameObjectCreator');
 var GameObjectFactory = require('../plugins/GameObjectFactory');
 var InputManager = require('../plugins/InputManager');
 var Loader = require('../plugins/Loader');
+var PathManager = require('../../paths/local/PathManager');
 var PhysicsManager = require('../plugins/PhysicsManager');
 var PoolManager = require('../plugins/PoolManager');
 var SceneManager = require('../plugins/SceneManager');
@@ -53,6 +54,7 @@ var Systems = new Class({
         this.inputManager;
         this.load;
         this.make;
+        this.pathManager;
         this.physicsManager;
         this.pool;
         this.sceneManager;
@@ -85,6 +87,7 @@ var Systems = new Class({
         this.inputManager = new InputManager(scene);
         this.load = new Loader(scene);
         this.make = new GameObjectCreator(scene);
+        this.pathManager = new PathManager(scene);
         this.physicsManager = new PhysicsManager(scene);
         this.pool = new PoolManager(scene);
         this.sceneManager = new SceneManager(scene);
@@ -125,12 +128,16 @@ var Systems = new Class({
             return;
         }
 
+        //  Move these into local arrays, so you can control which systems are registered here and their
+        //  execution order
+
         this.pool.begin(time);
         this.updateList.begin(time);
         this.time.begin(time);
         this.tweens.begin(time);
         this.inputManager.begin(time);
 
+        this.pathManager.update(time, delta);
         this.physicsManager.update(time, delta);
 
         this.pool.update(time, delta);
