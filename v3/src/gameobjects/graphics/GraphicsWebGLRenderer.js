@@ -76,6 +76,7 @@ var GraphicsWebGLRenderer = function (renderer, gameObject, interpolationPercent
     var tempMatrixMatrix = tempMatrix.matrix;
     var sra, srb, src, srd, sre, srf, cma, cmb, cmc, cmd, cme, cmf;
     var mva, mvb, mvc, mvd, mve, mvf;
+    var abs = Math.abs;
 
     tempMatrix.applyITRS(srcX, srcY, srcRotation, srcScaleX, srcScaleY);
 
@@ -116,6 +117,13 @@ var GraphicsWebGLRenderer = function (renderer, gameObject, interpolationPercent
                 startAngle = commandBuffer[cmdIndex + 4];
                 endAngle = commandBuffer[cmdIndex + 5];
                 anticlockwise = commandBuffer[cmdIndex + 6];
+
+                if (anticlockwise)
+                {
+                    ta = endAngle;
+                    endAngle = startAngle;
+                    startAngle = -ta;
+                }
                 
                 while (iteration < 1)
                 {
