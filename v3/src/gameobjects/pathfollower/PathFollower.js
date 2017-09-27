@@ -1,6 +1,6 @@
 var Class = require('../../utils/Class');
 var GetBoolean = require('../../tween/builder/GetBoolean');
-var GetValue = require('../../utils/object/getValue');
+var GetValue = require('../../utils/object/GetValue');
 var Sprite = require('../sprite/Sprite');
 var Vector2 = require('../../math/Vector2');
 
@@ -26,6 +26,26 @@ var PathFollower = new Class({
         this.pathTween;
     },
 
+    setPath: function (path, config)
+    {
+        var tween = this.pathTween;
+
+        if (tween && tween.isPlaying())
+        {
+            tween.stop();
+        }
+
+        this.path = path;
+
+        if (config)
+        {
+            this.start(config);
+        }
+
+        return this;
+    },
+
+    //  rotation offset in radians
     setRotateToPath: function (value, offset)
     {
         if (offset === undefined) { offset = 0; }
@@ -36,13 +56,22 @@ var PathFollower = new Class({
         return this;
     },
 
+    isFollowing: function ()
+    {
+        var tween = this.pathTween;
+
+        return (tween && tween.isPlaying());
+    },
+
     start: function (config)
     {
         if (config === undefined) { config = {}; }
 
-        if (this.pathTween && this.pathTween.isPlaying())
+        var tween = this.pathTween;
+
+        if (tween && tween.isPlaying())
         {
-            return;
+            tween.stop();
         }
 
         if (typeof config === 'number')
@@ -70,57 +99,64 @@ var PathFollower = new Class({
         return this;
     },
 
-    stop: function ()
+    pause: function ()
     {
-        if (this.pathTween && this.pathTween.isPlaying())
+        var tween = this.pathTween;
+
+        if (tween && tween.isPlaying())
         {
-            this.pathTween.stop();
+            tween.pause();
         }
 
         return this;
     },
 
-    /*
-    playing: {
+    resume: function ()
+    {
+        var tween = this.pathTween;
 
-        get: function ()
+        if (tween && tween.isPaused())
         {
-            return this.pathData.playing;
-        },
-
-        set: function (value)
-        {
-            if (!value)
-            {
-                this.stop();
-            }
-            else
-            {
-                this.start();
-            }
+            tween.resume();
         }
 
-    }
-    */
+        return this;
+    },
+
+    stop: function ()
+    {
+        var tween = this.pathTween;
+
+        if (tween && tween.isPlaying())
+        {
+            tween.stop();
+        }
+
+        return this;
+    },
 
     preUpdate: function (time, delta)
     {
         this.anims.update(time, delta);
 
-        if (this.pathTween && this.pathTween.isPlaying())
-        {
-            this.path.getPoint(this.pathTween.getValue(), this.pathVector);
+        var tween = this.pathTween;
 
-            this.pathVector.add(this.pathOffset);
+        if (tween && tween.isPlaying())
+        {
+            var pathVector = this.pathVector;
+
+            this.path.getPoint(tween.getValue(), pathVector);
+
+            pathVector.add(this.pathOffset);
 
             var oldX = this.x;
             var oldY = this.y;
 
-            this.setPosition(this.pathVector.x, this.pathVector.y);
+            this.setPosition(pathVector.x, pathVector.y);
 
             if (this.rotateToPath)
             {
-                this.rotation = Math.atan2(this.y - oldY, this.x - oldX) + this.pathRotationOffset;
+                this.rotation = Math.atan2(this.y - oldY, this.x - oldX);
             }
         }
     }
