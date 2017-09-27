@@ -20,7 +20,41 @@ var SplineCurve = new Class({
 
         Curve.call(this);
 
-        this.points = points;
+        //  if points is an array of numbers ...
+
+        this.points = [];
+
+        this.addPoints(points);
+    },
+
+    addPoints: function (points)
+    {
+        for (var i = 0; i < points.length; i++)
+        {
+            var p = new Vector2();
+
+            if (typeof points[i] === 'number')
+            {
+                p.x = points[i];
+                p.y = points[i + 1];
+                i++;
+            }
+            else if (Array.isArray(entry))
+            {
+                //  An array of arrays?
+                p.x = points[i][0];
+                p.y = points[i][1];
+            }
+            else
+            {
+                p.x = points[i].x;
+                p.y = points[i].y;
+            }
+
+            this.points.push(p);
+        }
+
+        return this;
     },
 
     addPoint: function (x, y)
