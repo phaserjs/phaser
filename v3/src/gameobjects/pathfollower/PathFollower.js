@@ -25,6 +25,11 @@ var PathFollower = new Class({
     {
         if (config === undefined) { config = {}; }
 
+        if (this.pathTween && this.pathTween.isPlaying())
+        {
+            return;
+        }
+
         if (typeof config === 'number')
         {
             config = { duration: config };
@@ -34,6 +39,8 @@ var PathFollower = new Class({
         config.from = 0;
         config.to = 1;
 
+        //  Can also read extra values out of the config, like autoRotate
+
         this.pathTween = this.scene.sys.tweens.addCounter(config);
 
         //  The starting point of the path, relative to this follower
@@ -41,6 +48,18 @@ var PathFollower = new Class({
 
         this.pathOffset.x = this.x - this.pathOffset.x;
         this.pathOffset.y = this.y - this.pathOffset.y;
+
+        return this;
+    },
+
+    stop: function ()
+    {
+        if (this.pathTween && this.pathTween.isPlaying())
+        {
+            this.pathTween.stop();
+        }
+
+        return this;
     },
 
     /*
