@@ -116,6 +116,11 @@ var Tween = new Class({
         return (this.state === TWEEN_CONST.ACTIVE);
     },
 
+    isPaused: function ()
+    {
+        return (this.state === TWEEN_CONST.PAUSED);
+    },
+
     hasTarget: function (target)
     {
         return (this.targets.indexOf(target) !== -1);
