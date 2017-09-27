@@ -2,6 +2,7 @@
 var Class = require('../../utils/Class');
 var TimelineBuilder = require('../builder/TimelineBuilder');
 var TweenBuilder = require('../builder/TweenBuilder');
+var NumberTweenBuilder = require('../builder/NumberTweenBuilder');
 var TWEEN_CONST = require('../tween/const');
 
 var TweenManager = new Class({
@@ -76,6 +77,18 @@ var TweenManager = new Class({
         this._toProcess++;
 
         return this;
+    },
+
+    //  Create a Tween and add it to the active Tween list
+    addCounter: function (config)
+    {
+        var tween = NumberTweenBuilder(this, config);
+
+        this._add.push(tween);
+
+        this._toProcess++;
+
+        return tween;
     },
 
     begin: function ()
