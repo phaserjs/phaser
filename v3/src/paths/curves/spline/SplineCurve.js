@@ -32,9 +32,11 @@ var SplineCurve = new Class({
         return vec;
     },
 
-    getStartPoint: function ()
+    getStartPoint: function (out)
     {
-        return this.points[0];
+        if (out === undefined) { out = new Vector2(); }
+
+        return out.copy(this.points[0]);
     },
 
     getResolution: function (divisions)

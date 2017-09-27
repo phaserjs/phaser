@@ -31,9 +31,11 @@ var CubicBezierCurve = new Class({
         this.p3 = p3;
     },
 
-    getStartPoint: function ()
+    getStartPoint: function (out)
     {
-        return this.p0;
+        if (out === undefined) { out = new Vector2(); }
+
+        return out.copy(this.p0);
     },
 
     getResolution: function (divisions)

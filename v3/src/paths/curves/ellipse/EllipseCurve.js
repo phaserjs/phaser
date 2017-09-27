@@ -42,9 +42,11 @@ var EllipseCurve = new Class({
         this._startPoint = this.getPoint(0);
     },
 
-    getStartPoint: function ()
+    getStartPoint: function (out)
     {
-        return this._startPoint;
+        if (out === undefined) { out = new Vector2(); }
+
+        return out.copy(this._startPoint);
     },
 
     getResolution: function (divisions)
