@@ -26,6 +26,8 @@ var KeyboardManager = new Class({
     {
         this.manager = inputManager;
 
+        this.events = inputManager.events;
+
         this.enabled = false;
 
         this.target;
