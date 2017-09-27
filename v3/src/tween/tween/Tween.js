@@ -94,6 +94,11 @@ var Tween = new Class({
         this.callbackScope;
     },
 
+    getValue: function ()
+    {
+        return this.data[0].current;
+    },
+
     setTimeScale: function (value)
     {
         this.timeScale = value;
