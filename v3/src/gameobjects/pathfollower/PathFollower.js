@@ -1,4 +1,6 @@
 var Class = require('../../utils/Class');
+var GetBoolean = require('../../tween/builder/GetBoolean');
+var GetValue = require('../../utils/object/getValue');
 var Sprite = require('../sprite/Sprite');
 var Vector2 = require('../../math/Vector2');
 
@@ -14,11 +16,24 @@ var PathFollower = new Class({
 
         this.path = path;
 
+        this.rotateToPath = false;
+        this.pathRotationOffset = 0;
+
         this.pathOffset = new Vector2(x, y);
 
         this.pathVector = new Vector2();
 
         this.pathTween;
+    },
+
+    setRotateToPath: function (value, offset)
+    {
+        if (offset === undefined) { offset = 0; }
+
+        this.rotateToPath = value;
+        this.pathRotationOffset = offset;
+
+        return this;
     },
 
     start: function (config)
@@ -39,7 +54,10 @@ var PathFollower = new Class({
         config.from = 0;
         config.to = 1;
 
-        //  Can also read extra values out of the config, like autoRotate
+        //  Can also read extra values out of the config:
+
+        this.rotateToPath = GetBoolean(config, 'rotateToPath', false);
+        this.pathRotationOffset = GetValue(config, 'rotationOffset', 0);
 
         this.pathTween = this.scene.sys.tweens.addCounter(config);
 
@@ -95,7 +113,15 @@ var PathFollower = new Class({
 
             this.pathVector.add(this.pathOffset);
 
+            var oldX = this.x;
+            var oldY = this.y;
+
             this.setPosition(this.pathVector.x, this.pathVector.y);
+
+            if (this.rotateToPath)
+            {
+                this.rotation = Math.atan2(this.y - oldY, this.x - oldX) + this.pathRotationOffset;
+            }
         }
     }
 
