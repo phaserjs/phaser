@@ -28,7 +28,7 @@ var NumberTweenBuilder = function (parent, config, defaults)
     var from = GetValue(config, 'from', 0);
     var to = GetValue(config, 'to', 1);
 
-    var targets = [{ value: from }];
+    var targets = [ { value: from } ];
 
     var delay = GetNewValue(config, 'delay', defaults.delay);
     var duration = GetNewValue(config, 'duration', defaults.duration);

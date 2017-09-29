@@ -155,6 +155,11 @@ var Curve = new Class({
     //  Given a distance in pixels, get a t to find p.
     getTFromDistance: function (distance, divisions)
     {
+        if (distance <= 0)
+        {
+            return 0;
+        }
+
         return this.getUtoTmapping(0, distance, divisions);
     },
 

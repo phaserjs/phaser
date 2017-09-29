@@ -30,11 +30,15 @@ var PathFollower = new Class({
 
         this.pathTween;
 
+        this.pathConfig = null;
+
         this._prevDirection = TWEEN_CONST.PLAYING_FORWARD;
     },
 
     setPath: function (path, config)
     {
+        if (config === undefined) { config = this.pathConfig; }
+
         var tween = this.pathTween;
 
         if (tween && tween.isPlaying())
@@ -73,8 +77,9 @@ var PathFollower = new Class({
         return (tween && tween.isPlaying());
     },
 
-    start: function (config)
+    start: function (config, startAt)
     {
+        if (startAt === undefined) { startAt = 0; }
         if (config === undefined) { config = {}; }
 
         var tween = this.pathTween;
@@ -95,6 +100,8 @@ var PathFollower = new Class({
 
         //  Can also read extra values out of the config:
 
+        var positionOnPath = GetBoolean(config, 'positionOnPath', false);
+
         this.rotateToPath = GetBoolean(config, 'rotateToPath', false);
         this.pathRotationOffset = GetValue(config, 'rotationOffset', 0);
         this.pathRotationVerticalAdjust = GetBoolean(config, 'verticalAdjust', false);
@@ -103,6 +110,12 @@ var PathFollower = new Class({
 
         //  The starting point of the path, relative to this follower
         this.path.getStartPoint(this.pathOffset);
+
+        if (positionOnPath)
+        {
+            this.x = this.pathOffset.x;
+            this.y = this.pathOffset.y;
+        }
 
         this.pathOffset.x = this.x - this.pathOffset.x;
         this.pathOffset.y = this.y - this.pathOffset.y;
@@ -116,6 +129,8 @@ var PathFollower = new Class({
 
             this.rotation = Math.atan2(nextPoint.y - this.y, nextPoint.x - this.x) + DegToRad(this.pathRotationOffset);
         }
+
+        this.pathConfig = config;
 
         return this;
     },

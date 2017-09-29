@@ -8,5 +8,3 @@ module.exports = {
     Spline: require('./spline/SplineCurve')
 
 };
-
-//     Hermite: require('./curves/hermite')
