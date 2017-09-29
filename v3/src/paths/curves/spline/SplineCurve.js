@@ -39,7 +39,7 @@ var SplineCurve = new Class({
                 p.y = points[i + 1];
                 i++;
             }
-            else if (Array.isArray(entry))
+            else if (Array.isArray(points[i]))
             {
                 //  An array of arrays?
                 p.x = points[i][0];
