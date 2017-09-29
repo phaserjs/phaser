@@ -51,7 +51,7 @@ var Path = new Class({
     //  Creates a spline curve starting at the previous end point, using the given parameters
     splineTo: function (points)
     {
-        points.shift(this.getEndPoint());
+        points.unshift(this.getEndPoint());
 
         return this.add(new SplineCurve(points));
     },
