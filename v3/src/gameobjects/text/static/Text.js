@@ -32,7 +32,10 @@ var Text = new Class({
     {
         if (x === undefined) { x = 0; }
         if (y === undefined) { y = 0; }
-        if (text === undefined) { text = ' '; }
+        if (text === undefined) { text = ''; }
+
+        //  Cast to string whatever our value may be (numeric, etc)
+        text = text.toString();
 
         GameObject.call(this, scene, 'Text');
 
@@ -84,7 +87,9 @@ var Text = new Class({
         }
 
         var _this = this;
-        scene.sys.game.renderer.addContextRestoredCallback(function (renderer) {
+
+        scene.sys.game.renderer.addContextRestoredCallback(function ()
+        {
             _this.canvasTexture = null;
             _this.dirty = true;
         });
