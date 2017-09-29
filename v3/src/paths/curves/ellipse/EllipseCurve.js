@@ -188,6 +188,7 @@ var EllipseCurve = new Class({
     },
 
     x: {
+
         get: function ()
         {
             return this.p0.x;
@@ -197,9 +198,11 @@ var EllipseCurve = new Class({
         {
             this.p0.x = value;
         }
+
     },
 
     y: {
+
         get: function ()
         {
             return this.p0.y;
@@ -209,9 +212,11 @@ var EllipseCurve = new Class({
         {
             this.p0.y = value;
         }
+
     },
 
     xRadius: {
+
         get: function ()
         {
             return this._xRadius;
@@ -221,9 +226,11 @@ var EllipseCurve = new Class({
         {
             this._xRadius = value;
         }
+
     },
 
     yRadius: {
+
         get: function ()
         {
             return this._yRadius;
@@ -233,33 +240,39 @@ var EllipseCurve = new Class({
         {
             this._yRadius = value;
         }
+
     },
 
     startAngle: {
+
         get: function ()
         {
-            return this._startAngle;
+            return RadToDeg(this._startAngle);
         },
 
         set: function (value)
         {
             this._startAngle = DegToRad(value);
         }
+
     },
 
     endAngle: {
+
         get: function ()
         {
-            return this._endAngle;
+            return RadToDeg(this._endAngle);
         },
 
         set: function (value)
         {
             this._endAngle = DegToRad(value);
         }
+
     },
 
     clockwise: {
+
         get: function ()
         {
             return this._clockwise;
@@ -269,9 +282,11 @@ var EllipseCurve = new Class({
         {
             this._clockwise = value;
         }
+
     },
 
     rotation: {
+
         get: function ()
         {
             return this._rotation;
@@ -281,6 +296,7 @@ var EllipseCurve = new Class({
         {
             this._rotation = DegToRad(value);
         }
+
     }
 
 });
