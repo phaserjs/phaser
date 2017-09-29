@@ -14,7 +14,7 @@ function P1 (t, p)
 
 function P2 (t, p)
 {
-    return 3 * ( 1 - t ) * t * t * p;
+    return 3 * (1 - t) * t * t * p;
 }
 
 function P3 (t, p)
