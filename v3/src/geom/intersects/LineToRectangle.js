@@ -12,7 +12,7 @@
 var LineToRectangle = function (line, rect)
 {
     var x1 = line.x1;
-    var y1 = line.y2;
+    var y1 = line.y1;
 
     var x2 = line.x2;
     var y2 = line.y2;
