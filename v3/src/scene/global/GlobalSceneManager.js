@@ -77,7 +77,6 @@ var GlobalSceneManager = new Class({
     payloadComplete: require('./inc/PayloadComplete'),
     resume: require('./inc/Resume'),
     sendToBack: require('./inc/SendToBack'),
-    setupCallbacks: require('./inc/SetupCallbacks'),
     sleep: require('./inc/Sleep'),
     start: require('./inc/Start'),
     stop: require('./inc/Stop'),
