@@ -2,7 +2,7 @@ var Rectangle = require('./Rectangle');
 
 var Union = function (rectA, rectB, output)
 {
-    if (output === undefined) { output = Rectangle(); }
+    if (output === undefined) { output = new Rectangle(); }
 
     var x = Math.min(rectA.x, rectB.x);
     var y = Math.min(rectA.y, rectB.y);
