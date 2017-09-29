@@ -1,11 +1,13 @@
+var Rectangle = require('../../geom/rectangle/Rectangle');
+
 var GetBounds = {
 
     getBounds: function (output)
     {
-        if (output === undefined) { output = { x: 0, y: 0, width: 0, height: 0 }; }
+        if (output === undefined) { output = new Rectangle(); }
 
-        var x = this.x;
-        var y = this.y;
+        var x = this.x - this.displayOriginX;
+        var y = this.y - this.displayOriginY;
 
         var w = this.displayWidth;
         var h = this.displayHeight;
