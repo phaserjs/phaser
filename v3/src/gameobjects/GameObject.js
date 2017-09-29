@@ -150,6 +150,36 @@ var GameObject = new Class({
     },
 
     /**
+     * This is a quick chainable alias to the `DataProxy.set` method.
+     * It allows you to set a key and value in this Game Objects data store.
+     *
+     * @method setData
+     *
+     * @param {string} key - The key of the property to be stored.
+     * @param {any} value - The value to store with the key. Can be a string, number, array or object.
+     * @return {GameObject} This GameObject.
+     */
+    setData: function (key, value)
+    {
+        this.data.set(key, value);
+
+        return this;
+    },
+
+    /**
+     * This is a quick alias to the `DataProxy.get` method to remain consistent with `setData`.
+     *
+     * @method getData
+     *
+     * @param {string} key - The key of the property to be retrieve.
+     * @return {any} The data, if present in the Data Store.
+     */
+    getData: function (key)
+    {
+        return this.data.get(key);
+    },
+
+    /**
      * Pass this Game Object to the Input Manager to enable it for Input.
      *
      * @example game objects/image/set interactive.js
