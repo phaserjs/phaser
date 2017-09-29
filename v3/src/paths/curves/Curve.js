@@ -25,6 +25,8 @@ var Curve = new Class({
         this.cacheArcLengths = [];
 
         this.needsUpdate = true;
+
+        this.active = true;
     },
 
     getBounds: function (out)

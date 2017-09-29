@@ -5,6 +5,7 @@ var CubicBezierCurve = require('./curves/cubicbezier/CubicBezierCurve');
 var EllipseCurve = require('./curves/ellipse/EllipseCurve');
 var GameObjectFactory = require('../scene/plugins/GameObjectFactory');
 var LineCurve = require('./curves/line/LineCurve');
+var MoveTo = require('./MoveTo');
 var SplineCurve = require('./curves/spline/SplineCurve');
 var Vector2 = require('../math/Vector2');
 
@@ -29,6 +30,11 @@ var Path = new Class({
         this.autoClose = false;
 
         this.startPoint = new Vector2(x, y);
+    },
+
+    moveTo: function (x, y)
+    {
+        this.add(new MoveTo(x, y));
     },
 
     //  Creates a line curve from the previous end point to x/y
@@ -97,6 +103,13 @@ var Path = new Class({
         ellipse.y = end.y;
 
         return this.add(ellipse);
+    },
+
+    circleTo: function (radius, clockwise, rotation)
+    {
+        if (clockwise === undefined) { clockwise = false; }
+
+        return this.ellipseTo(radius, radius, 0, 360, clockwise, rotation);
     },
 
     toJSON: function ()
@@ -179,8 +192,6 @@ var Path = new Class({
         var curveLengths = this.getCurveLengths();
         var i = 0;
 
-        // To think about boundaries points.
-
         while (i < curveLengths.length)
         {
             if (curveLengths[i] >= d)
@@ -201,10 +212,6 @@ var Path = new Class({
         return null;
     },
 
-    // We cannot use the default THREE.Curve getPoint() with getLength() because in
-    // THREE.Curve, getLength() depends on getPoint() but in THREE.CurvePath
-    // getPoint() depends on getLength
-
     getLength: function ()
     {
         var lens = this.getCurveLengths();
@@ -215,14 +222,10 @@ var Path = new Class({
     // cacheLengths must be recalculated.
     updateArcLengths: function ()
     {
-        this.needsUpdate = true;
-        this.cacheLengths = null;
+        this.cacheLengths = [];
 
         this.getCurveLengths();
     },
-
-    // Compute lengths and cache them
-    // We cannot overwrite getLengths() because UtoT mapping uses it.
 
     getCurveLengths: function ()
     {
@@ -281,6 +284,11 @@ var Path = new Class({
         {
             var curve = this.curves[i];
 
+            if (!curve.active)
+            {
+                continue;
+            }
+
             var resolution = curve.getResolution(divisions);
 
             var pts = curve.getPoints(resolution);
@@ -313,7 +321,14 @@ var Path = new Class({
     {
         for (var i = 0; i < this.curves.length; i++)
         {
-            this.curves[i].draw(graphics, pointsTotal);
+            var curve = this.curves[i];
+
+            if (!curve.active)
+            {
+                continue;
+            }
+
+            curve.draw(graphics, pointsTotal);
         }
 
         return graphics;
