@@ -203,9 +203,12 @@ var ProcessDragEvents = function (pointer, time)
                 this.events.dispatch(new InputEvent.DRAG_ENTER(pointer, gameObject, input.target));
             }
 
-            this.events.dispatch(new InputEvent.DRAG(pointer, gameObject));
+            var dragEvent = new InputEvent.DRAG(pointer, gameObject);
 
-            input.onDrag(gameObject, pointer);
+            this.events.dispatch(dragEvent);
+
+            //  Maybe it would be better to send the event to the callback? So you can get all the other stuff from it?
+            input.onDrag(gameObject, pointer, dragEvent.dragX, dragEvent.dragY);
         }
     }
 

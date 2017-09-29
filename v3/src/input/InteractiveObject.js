@@ -52,8 +52,13 @@ var InteractiveObject = function (gameObject, hitArea, hitAreaCallback)
         //  gameObject, pointer, x, y
         onMove: NOOP,
 
+        //  gameObject, pointer, x, y
         onDragStart: NOOP,
+
+        //  gameObject, pointer, x, y
         onDrag: NOOP,
+
+        //  gameObject, pointer, x, y
         onDragEnd: NOOP
 
     };

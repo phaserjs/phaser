@@ -107,6 +107,9 @@ var SceneInputManager = new Class({
     setOnOverCallback: require('./inc/SetOnOverCallback'),
     setOnUpCallback: require('./inc/SetOnUpCallback'),
     setOnMoveCallback: require('./inc/SetOnMoveCallback'),
+    setOnDragStartCallback: require('./inc/SetOnDragStartCallback'),
+    setOnDragCallback: require('./inc/SetOnDragCallback'),
+    setOnDragEndCallback: require('./inc/SetOnDragEndCallback'),
 
     processOverOutEvents: require('./inc/ProcessOverOutEvents'),
     processDownEvents: require('./inc/ProcessDownEvents'),
