@@ -1,6 +1,8 @@
 //  Based on the three.js Curve classes created by [zz85](http://www.lab4games.net/zz85/blog)
 
 var Class = require('../../utils/Class');
+var FromPoints = require('../../geom/rectangle/FromPoints');
+var Rectangle = require('../../geom/rectangle/Rectangle');
 var Vector2 = require('../../math/Vector2');
 
 //  Local cache vars
@@ -23,6 +25,18 @@ var Curve = new Class({
         this.cacheArcLengths = [];
 
         this.needsUpdate = true;
+    },
+
+    getBounds: function (out)
+    {
+        if (out === undefined) { out = new Rectangle(); }
+
+        //  The length of the curve in pixels
+        //  So we'll have 1 spaced point per 10 pixels
+
+        var spaced = Math.max(1, Math.round(this.getLength() / 10));
+
+        return FromPoints(this.getSpacedPoints(spaced), out);
     },
 
     getStartPoint: function (out)

@@ -2,6 +2,8 @@
 
 var Class = require('../../../utils/Class');
 var Curve = require('../Curve');
+var FromPoints = require('../../../geom/rectangle/FromPoints');
+var Rectangle = require('../../../geom/rectangle/Rectangle');
 var Vector2 = require('../../../math/Vector2');
 
 //  Phaser.Curves.Line
@@ -27,6 +29,13 @@ var LineCurve = new Class({
 
         this.p0 = p0;
         this.p1 = p1;
+    },
+
+    getBounds: function (out)
+    {
+        if (out === undefined) { out = new Rectangle(); }
+
+        return FromPoints([ this.p0, this.p1 ], out);
     },
 
     getStartPoint: function (out)
