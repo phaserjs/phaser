@@ -500,8 +500,7 @@ var WebGLRenderer = new Class({
         if (camera._fadeAlpha > 0 || camera._flashAlpha > 0)
         {
             this.setRenderTarget(null);
-
-            quadBatch.bind();
+            this.setBlendMode(BlendModes.NORMAL);
 
             // fade rendering
             quadBatch.add(

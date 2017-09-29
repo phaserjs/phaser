@@ -227,6 +227,8 @@ var CanvasRenderer = new Class({
 
         if (camera._fadeAlpha > 0 || camera._flashAlpha > 0)
         {
+            ctx.globalCompositeOperation = 'source-over';
+            
             // fade rendering
             ctx.fillStyle = 'rgb(' + (camera._fadeRed * 255) + ',' + (camera._fadeGreen * 255) + ',' + (camera._fadeBlue * 255) + ')';
             ctx.globalAlpha = camera._fadeAlpha;

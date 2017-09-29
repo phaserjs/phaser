@@ -215,6 +215,8 @@ var ParticleRenderer = new Class({
         var tempMatrix = this.tempMatrix;
         var tempMatrixMatrix = tempMatrix.matrix;
         var particleOffset = 0;
+        var cameraScrollX = camera.scrollX * emitter.scrollFactorX;
+        var cameraScrollY = camera.scrollY * emitter.scrollFactorY;
 
         if (length === 0) return;
 
@@ -235,7 +237,7 @@ var ParticleRenderer = new Class({
                 var xw = x + width;
                 var yh = y + height;
                 
-                tempMatrix.applyITRS(particle.x, particle.y, rotation, scaleX, scaleY);
+                tempMatrix.applyITRS(particle.x - cameraScrollX, particle.y - cameraScrollY, rotation, scaleX, scaleY);
 
                 var sra = tempMatrixMatrix[0];
                 var srb = tempMatrixMatrix[1];
