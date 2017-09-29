@@ -2,6 +2,7 @@
 
 var Class = require('../utils/Class');
 var CubicBezierCurve = require('./curves/cubicbezier/CubicBezierCurve');
+var EllipseCurve = require('./curves/ellipse/EllipseCurve');
 var GameObjectFactory = require('../scene/plugins/GameObjectFactory');
 var LineCurve = require('./curves/line/LineCurve');
 var SplineCurve = require('./curves/spline/SplineCurve');
@@ -81,10 +82,22 @@ var Path = new Class({
     },
 
     //  Creates an ellipse curve positioned at the previous end point, using the given parameters
-    // ellipseTo: function (xRadius, yRadius, startAngle, endAngle, clockwise, rotation)
-    // {
-    // function EllipseCurve (x, y, xRadius, yRadius, startAngle, endAngle, clockwise, rotation)
-    // },
+    ellipseTo: function (xRadius, yRadius, startAngle, endAngle, clockwise, rotation)
+    {
+        var ellipse = new EllipseCurve(0, 0, xRadius, yRadius, startAngle, endAngle, clockwise, rotation);
+
+        var end = this.getEndPoint(tmpVec2A);
+
+        //  Calculate where to center the ellipse
+        var start = ellipse.getStartPoint(tmpVec2B);
+
+        end.sub(start);
+
+        ellipse.x = end.x;
+        ellipse.y = end.y;
+
+        return this.add(ellipse);
+    },
 
     toJSON: function ()
     {
@@ -101,7 +114,7 @@ var Path = new Class({
             y: this.startPoint.y,
             autoClose: this.autoClose,
             curves: out
-        }
+        };
     },
 
     add: function (curve)
