@@ -29,14 +29,22 @@ var Curve = new Class({
         this.active = true;
     },
 
-    getBounds: function (out)
+    getBounds: function (out, accuracy)
     {
         if (out === undefined) { out = new Rectangle(); }
+        if (accuracy === undefined) { accuracy = 16; }
+
+        var len = this.getLength();
+
+        if (accuracy > len)
+        {
+            accuracy = len / 2;
+        }
 
         //  The length of the curve in pixels
-        //  So we'll have 1 spaced point per 10 pixels
+        //  So we'll have 1 spaced point per 'accuracy' pixels
 
-        var spaced = Math.max(1, Math.round(this.getLength() / 10));
+        var spaced = Math.max(1, Math.round(len / accuracy));
 
         return FromPoints(this.getSpacedPoints(spaced), out);
     },
