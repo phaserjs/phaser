@@ -24,6 +24,7 @@ var EllipseCurve = new Class({
 
         Curve.call(this);
 
+        //  Center point
         this.p0 = new Vector2(x, y);
 
         this._xRadius = xRadius;
@@ -38,15 +39,13 @@ var EllipseCurve = new Class({
 
         //  The rotation of the arc
         this._rotation = DegToRad(rotation);
-
-        this._startPoint = this.getPoint(0);
     },
 
     getStartPoint: function (out)
     {
         if (out === undefined) { out = new Vector2(); }
 
-        return out.copy(this._startPoint);
+        return this.getPoint(0, out);
     },
 
     getResolution: function (divisions)
@@ -132,6 +131,62 @@ var EllipseCurve = new Class({
         };
     },
 
+    setXRadius: function (value)
+    {
+        this.xRadius = value;
+
+        return this;
+    },
+
+    setYRadius: function (value)
+    {
+        this.yRadius = value;
+
+        return this;
+    },
+
+    setWidth: function (value)
+    {
+        this.xRadius = value * 2;
+
+        return this;
+    },
+
+    setHeight: function (value)
+    {
+        this.yRadius = value * 2;
+
+        return this;
+    },
+
+    setStartAngle: function (value)
+    {
+        this.startAngle = value;
+
+        return this;
+    },
+
+    setEndAngle: function (value)
+    {
+        this.endAngle = value;
+
+        return this;
+    },
+
+    setClockwise: function (value)
+    {
+        this.clockwise = value;
+
+        return this;
+    },
+
+    setRotation: function (value)
+    {
+        this.rotation = value;
+
+        return this;
+    },
+
     x: {
         get: function ()
         {
@@ -165,7 +220,6 @@ var EllipseCurve = new Class({
         set: function (value)
         {
             this._xRadius = value;
-            this.getPoint(0, this._startPoint);
         }
     },
 
@@ -178,7 +232,6 @@ var EllipseCurve = new Class({
         set: function (value)
         {
             this._yRadius = value;
-            this.getPoint(0, this._startPoint);
         }
     },
 
@@ -191,7 +244,6 @@ var EllipseCurve = new Class({
         set: function (value)
         {
             this._startAngle = DegToRad(value);
-            this.getPoint(0, this._startPoint);
         }
     },
 
@@ -204,7 +256,6 @@ var EllipseCurve = new Class({
         set: function (value)
         {
             this._endAngle = DegToRad(value);
-            this.getPoint(0, this._startPoint);
         }
     },
 
@@ -217,7 +268,6 @@ var EllipseCurve = new Class({
         set: function (value)
         {
             this._clockwise = value;
-            this.getPoint(0, this._startPoint);
         }
     },
 
@@ -230,7 +280,6 @@ var EllipseCurve = new Class({
         set: function (value)
         {
             this._rotation = DegToRad(value);
-            this.getPoint(0, this._startPoint);
         }
     }
 
