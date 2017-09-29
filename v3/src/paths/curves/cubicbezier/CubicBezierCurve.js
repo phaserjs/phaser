@@ -13,6 +13,10 @@ var CubicBezierCurve = new Class({
 
     initialize:
 
+    //  p0 = start point (or an array of point pairs)
+    //  p1 = control point 1
+    //  p2 = control point 2
+    //  p3 = end point
     function CubicBezierCurve (p0, p1, p2, p3)
     {
         Curve.call(this);
