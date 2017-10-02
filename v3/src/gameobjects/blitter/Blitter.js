@@ -62,7 +62,7 @@ var Blitter = new Class({
             frame = this.texture.get(frame);
         }
 
-        var bob = new Bob(x, y, frame, visible);
+        var bob = new Bob(this, x, y, frame, visible);
 
         this.children.addAt(bob, index, false);
 

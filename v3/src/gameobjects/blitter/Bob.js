@@ -4,10 +4,9 @@ var Bob = new Class({
 
     initialize:
 
-    function Bob (x, y, frame, visible)
+    function Bob (blitter, x, y, frame, visible)
     {
-        //  Set by the DisplayList class
-        this.parent;
+        this.parent = blitter;
 
         this.x = x;
         this.y = y;
@@ -19,7 +18,6 @@ var Bob = new Class({
 
         this.flipX - false;
         this.flipY = false;
-
     },
 
     resetFlip: function ()
