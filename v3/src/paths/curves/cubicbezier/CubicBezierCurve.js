@@ -19,7 +19,7 @@ var CubicBezierCurve = new Class({
     //  p3 = end point
     function CubicBezierCurve (p0, p1, p2, p3)
     {
-        Curve.call(this);
+        Curve.call(this, 'CubicBezierCurve');
 
         if (Array.isArray(p0))
         {
@@ -83,7 +83,7 @@ var CubicBezierCurve = new Class({
     toJSON: function ()
     {
         return {
-            type: 'CubicBezierCurve',
+            type: this.type,
             points: [
                 this.p0.x, this.p0.y,
                 this.p1.x, this.p1.y,
@@ -94,5 +94,17 @@ var CubicBezierCurve = new Class({
     }
 
 });
+
+CubicBezierCurve.fromJSON = function (data)
+{
+    var points = data.points;
+
+    var p0 = new Vector2(points[0], points[1]);
+    var p1 = new Vector2(points[2], points[3]);
+    var p2 = new Vector2(points[4], points[5]);
+    var p3 = new Vector2(points[6], points[7]);
+
+    return new CubicBezierCurve(p0, p1, p2, p3);
+};
 
 module.exports = CubicBezierCurve;

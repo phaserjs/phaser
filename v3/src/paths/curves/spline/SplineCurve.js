@@ -18,7 +18,7 @@ var SplineCurve = new Class({
     {
         if (points === undefined) { points = []; }
 
-        Curve.call(this);
+        Curve.call(this, 'SplineCurve');
 
         //  if points is an array of numbers ...
 
@@ -109,11 +109,16 @@ var SplineCurve = new Class({
         }
 
         return {
-            type: 'SplineCurve',
+            type: this.type,
             points: points
         };
     }
 
 });
+
+SplineCurve.fromJSON = function (data)
+{
+    return new SplineCurve(data.points);
+};
 
 module.exports = SplineCurve;

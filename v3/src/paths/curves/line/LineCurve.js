@@ -19,7 +19,7 @@ var LineCurve = new Class({
     //  vec2s or array
     function LineCurve (p0, p1)
     {
-        Curve.call(this);
+        Curve.call(this, 'LineCurve');
 
         if (Array.isArray(p0))
         {
@@ -89,7 +89,7 @@ var LineCurve = new Class({
     toJSON: function ()
     {
         return {
-            type: 'LineCurve',
+            type: this.type,
             points: [
                 this.p0.x, this.p0.y,
                 this.p1.x, this.p1.y
@@ -98,5 +98,15 @@ var LineCurve = new Class({
     }
 
 });
+
+LineCurve.fromJSON = function (data)
+{
+    var points = data.points;
+
+    var p0 = new Vector2(points[0], points[1]);
+    var p1 = new Vector2(points[2], points[3]);
+
+    return new LineCurve(p0, p1);
+};
 
 module.exports = LineCurve;

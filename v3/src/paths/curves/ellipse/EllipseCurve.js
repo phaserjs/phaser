@@ -3,6 +3,7 @@
 var Class = require('../../../utils/Class');
 var Curve = require('../Curve');
 var DegToRad = require('../../../math/DegToRad');
+var GetValue = require('../../../utils/object/GetValue');
 var RadToDeg = require('../../../math/RadToDeg');
 var Vector2 = require('../../../math/Vector2');
 
@@ -16,13 +17,29 @@ var EllipseCurve = new Class({
 
     function EllipseCurve (x, y, xRadius, yRadius, startAngle, endAngle, clockwise, rotation)
     {
-        if (yRadius === undefined) { yRadius = xRadius; }
-        if (startAngle === undefined) { startAngle = 0; }
-        if (endAngle === undefined) { endAngle = 360; }
-        if (clockwise === undefined) { clockwise = false; }
-        if (rotation === undefined) { rotation = 0; }
+        if (typeof x === 'object')
+        {
+            var config = x;
 
-        Curve.call(this);
+            x = GetValue(config, 'x', 0);
+            y = GetValue(config, 'y', 0);
+            xRadius = GetValue(config, 'xRadius', 0);
+            yRadius = GetValue(config, 'yRadius', xRadius);
+            startAngle = GetValue(config, 'startAngle', 0);
+            endAngle = GetValue(config, 'endAngle', 360);
+            clockwise = GetValue(config, 'clockwise', false);
+            rotation = GetValue(config, 'rotation', 0);
+        }
+        else
+        {
+            if (yRadius === undefined) { yRadius = xRadius; }
+            if (startAngle === undefined) { startAngle = 0; }
+            if (endAngle === undefined) { endAngle = 360; }
+            if (clockwise === undefined) { clockwise = false; }
+            if (rotation === undefined) { rotation = 0; }
+        }
+
+        Curve.call(this, 'EllipseCurve');
 
         //  Center point
         this.p0 = new Vector2(x, y);
@@ -114,21 +131,6 @@ var EllipseCurve = new Class({
         }
 
         return out.set(x, y);
-    },
-
-    toJSON: function ()
-    {
-        return {
-            type: 'EllipseCurve',
-            x: this.p0.x,
-            y: this.p0.y,
-            xRadius: this._xRadius,
-            yRadius: this._yRadius,
-            startAngle: RadToDeg(this._startAngle),
-            endAngle: RadToDeg(this._endAngle),
-            clockwise: this._clockwise,
-            rotation: RadToDeg(this._rotation)
-        };
     },
 
     setXRadius: function (value)
@@ -297,8 +299,28 @@ var EllipseCurve = new Class({
             this._rotation = DegToRad(value);
         }
 
+    },
+
+    toJSON: function ()
+    {
+        return {
+            type: this.type,
+            x: this.p0.x,
+            y: this.p0.y,
+            xRadius: this._xRadius,
+            yRadius: this._yRadius,
+            startAngle: RadToDeg(this._startAngle),
+            endAngle: RadToDeg(this._endAngle),
+            clockwise: this._clockwise,
+            rotation: RadToDeg(this._rotation)
+        };
     }
 
 });
+
+EllipseCurve.fromJSON = function (data)
+{
+    return new EllipseCurve(data);
+};
 
 module.exports = EllipseCurve;
