@@ -16,8 +16,11 @@ var Curve = new Class({
 
     initialize:
 
-    function Curve ()
+    function Curve (type)
     {
+        //  String based identifier
+        this.type = type;
+
         this.defaultDivisions = 5;
 
         this.arcLengthDivisions = 100;
