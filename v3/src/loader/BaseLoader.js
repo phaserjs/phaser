@@ -443,6 +443,30 @@ var BaseLoader = new Class({
         this.storage.clear();
     },
 
+    saveJSON: function (data, filename)
+    {
+        return this.save(JSON.stringify(data), filename);
+    },
+
+    save: function (data, filename, filetype)
+    {
+        if (filename === undefined) { filename = 'file.json'; }
+        if (filetype === undefined) { filetype = 'application/json'; }
+
+        var blob = new Blob([data], { type: filetype });
+
+        var url = URL.createObjectURL(blob);
+
+        var a = document.createElement('a');
+
+        a.download = filename;
+        a.textContent = 'Download ' + filename;
+        a.href = url;
+        a.click();
+
+        return this;
+    },
+
     reset: function ()
     {
         this.list.clear();
