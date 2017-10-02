@@ -21,6 +21,9 @@ var Path = new Class({
 
     function Path (x, y)
     {
+        if (x === undefined) { x = 0; }
+        if (y === undefined) { y = 0; }
+
         this.name = '';
 
         this.curves = [];
@@ -30,7 +33,16 @@ var Path = new Class({
         // Automatically closes the path
         this.autoClose = false;
 
-        this.startPoint = new Vector2(x, y);
+        this.startPoint = new Vector2();
+
+        if (typeof x === 'object')
+        {
+            this.fromJSON(x);
+        }
+        else
+        {
+            this.startPoint.set(x, y);
+        }
     },
 
     moveTo: function (x, y)
@@ -147,6 +159,53 @@ var Path = new Class({
         out.bottom = maxBottom;
 
         return out;
+    },
+
+    /**
+     * Convert JSON
+     *
+     * @method fromJSON
+     *
+     * @param {[type]} data [description]
+     *
+     * @return {[type]} [description]
+     */
+    fromJSON: function (data)
+    {
+        //  data should be an object matching the Path.toJSON object structure.
+
+        this.curves = [];
+        this.cacheLengths = [];
+
+        this.startPoint.set(data.x, data.y);
+
+        this.autoClose = data.autoClose;
+
+        for (var i = 0; i < data.curves.length; i++)
+        {
+            var curve = data.curves[i];
+
+            switch (curve.type)
+            {
+                case 'LineCurve':
+                    this.add(LineCurve.fromJSON(curve));
+                    break;
+
+                case 'EllipseCurve':
+                    this.add(EllipseCurve.fromJSON(curve));
+                    break;
+
+                case 'SplineCurve':
+                    this.add(SplineCurve.fromJSON(curve));
+                    break;
+
+                case 'CubicBezierCurve':
+                    this.add(CubicBezierCurve.fromJSON(curve));
+                    break;
+            }
+        }
+
+        return this;
     },
 
     toJSON: function ()
