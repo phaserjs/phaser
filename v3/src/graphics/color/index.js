@@ -15,6 +15,7 @@ Color.HueToComponent = require('./HueToComponent');
 Color.IntegerToColor = require('./IntegerToColor');
 Color.IntegerToRGB = require('./IntegerToRGB');
 Color.Interpolate = require('./Interpolate');
+Color.ObjectToColor = require('./ObjectToColor');
 Color.RandomRGB = require('./RandomRGB');
 Color.RGBStringToColor = require('./RGBStringToColor');
 Color.RGBToHSV = require('./RGBToHSV');

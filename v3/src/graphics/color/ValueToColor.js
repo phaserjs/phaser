@@ -1,23 +1,36 @@
-var RGBStringToColor = require('./RGBStringToColor');
 var HexStringToColor = require('./HexStringToColor');
 var IntegerToColor = require('./IntegerToColor');
+var ObjectToColor = require('./ObjectToColor');
+var RGBStringToColor = require('./RGBStringToColor');
 
 var ValueToColor = function (input)
 {
-    if (typeof input === 'string')
+    var t = typeof input;
+
+    switch (t)
     {
-        if (input.substr(0, 3).toLowerCase() === 'rgb')
-        {
-            return RGBStringToColor(input);
-        }
-        else
-        {
-            return HexStringToColor(input);
-        }
-    }
-    else if (typeof input === 'number')
-    {
-        return IntegerToColor(input);
+        case 'string':
+
+            if (input.substr(0, 3).toLowerCase() === 'rgb')
+            {
+                return RGBStringToColor(input);
+            }
+            else
+            {
+                return HexStringToColor(input);
+            }
+
+            break;
+
+        case 'number':
+
+            return IntegerToColor(input);
+            break;
+
+        case 'object':
+
+            return ObjectToColor(input);
+            break;
     }
 };
 
