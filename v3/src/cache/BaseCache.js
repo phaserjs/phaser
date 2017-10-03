@@ -1,6 +1,7 @@
 var Class = require('../utils/Class');
 var EventDispatcher = require('../events/EventDispatcher');
 var Events = require('./events');
+var Map = require('../structs/Map');
 
 //  Phaser.Cache.BaseCache
 
