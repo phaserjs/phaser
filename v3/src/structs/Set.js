@@ -73,15 +73,30 @@ var Set = new Class({
 
 
     //  For when you know this Set will be modified during the iteration
-    each: function (callback)
+    each: function (callback, callbackScope)
     {
+        var i;
         var temp = this.entries.slice();
+        var len = temp.length;
 
-        for (var i = 0; i < temp.length; i++)
+        if (callbackScope)
         {
-            if (callback(temp[i]) === false)
+            for (i = 0; i < len; i++)
             {
-                break;
+                if (callback.call(callbackScope, temp[i], i) === false)
+                {
+                    break;
+                }
+            }
+        }
+        else
+        {
+            for (i = 0; i < len; i++)
+            {
+                if (callback(temp[i], i) === false)
+                {
+                    break;
+                }
             }
         }
 
@@ -89,13 +104,29 @@ var Set = new Class({
     },
 
     //  For when you absolutely know this Set won't be modified during the iteration
-    iterate: function (callback)
+    iterate: function (callback, callbackScope)
     {
-        for (var i = 0; i < this.entries.length; i++)
+        var i;
+        var len = this.entries.length;
+
+        if (callbackScope)
         {
-            if (callback(this.entries[i], i) === false)
+            for (i = 0; i < len; i++)
             {
-                break;
+                if (callback.call(callbackScope, this.entries[i], i) === false)
+                {
+                    break;
+                }
+            }
+        }
+        else
+        {
+            for (i = 0; i < len; i++)
+            {
+                if (callback(this.entries[i], i) === false)
+                {
+                    break;
+                }
             }
         }
 
