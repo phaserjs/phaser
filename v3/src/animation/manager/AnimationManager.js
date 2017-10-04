@@ -1,6 +1,6 @@
 var Class = require('../../utils/Class');
 var EventDispatcher = require('../../events/EventDispatcher');
-var Map = require('../../structs/Map');
+var CustomMap = require('../../structs/Map');
 
 // Animations are managed by the global AnimationManager. This is a singleton class that is
 // responsible for creating and delivering animations and their corresponding data to all Game Objects.
@@ -60,7 +60,7 @@ var AnimationManager = new Class({
          * @property {Phaser.Structs.Map} anims
          * @protected
          */
-        this.anims = new Map();
+        this.anims = new CustomMap();
 
         /**
          * [description]

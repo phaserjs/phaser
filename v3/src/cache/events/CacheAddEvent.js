@@ -7,6 +7,16 @@ var CacheAddEvent = new Class({
 
     initialize:
 
+    /**
+     * [description]
+     *
+     * @event CacheAddEvent
+     * @type {Phaser.Event}
+     *
+     * @param {Phaser.Cache.BaseCache} cache - [description]
+     * @param {string} key - [description]
+     * @param {any} data - [description]
+     */
     function CacheAddEvent (cache, key, data)
     {
         Event.call(this, 'CACHE_ADD_EVENT');

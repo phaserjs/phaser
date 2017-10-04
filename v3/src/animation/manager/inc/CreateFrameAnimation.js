@@ -5,6 +5,7 @@ var Animation = require('../../frame/Animation');
  * [description]
  *
  * @method Phaser.Animations.AnimationManager#create
+ * @fires AddAnimationEvent
  * @since 3.0.0
  * 
  * @param {object} config - [description]

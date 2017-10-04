@@ -7,6 +7,15 @@ var AddAnimationEvent = new Class({
 
     initialize:
 
+    /**
+     * [description]
+     *
+     * @event AddAnimationEvent
+     * @type {Phaser.Event}
+     *
+     * @param {string} key - [description]
+     * @param {Phaser.Animations.Animation} animation - [description]
+     */
     function AddAnimationEvent (key, animation)
     {
         Event.call(this, 'ADD_ANIMATION_EVENT');

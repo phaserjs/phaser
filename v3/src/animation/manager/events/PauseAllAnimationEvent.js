@@ -7,6 +7,12 @@ var PauseAllAnimationEvent = new Class({
 
     initialize:
 
+    /**
+     * [description]
+     *
+     * @event PauseAllAnimationEvent
+     * @type {Phaser.Event}
+     */
     function PauseAllAnimationEvent ()
     {
         Event.call(this, 'PAUSE_ALL_ANIMATION_EVENT');

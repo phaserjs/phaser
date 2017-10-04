@@ -7,6 +7,15 @@ var RemoveAnimationEvent = new Class({
 
     initialize:
 
+    /**
+     * [description]
+     *
+     * @event RemoveAnimationEvent
+     * @type {Phaser.Event}
+     *
+     * @param {string} key - [description]
+     * @param {Phaser.Animations.Animation} animation - [description]
+     */
     function RemoveAnimationEvent (key, animation)
     {
         Event.call(this, 'REMOVE_ANIMATION_EVENT');

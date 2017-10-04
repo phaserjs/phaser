@@ -7,6 +7,12 @@ var ResumeAllAnimationEvent = new Class({
 
     initialize:
 
+    /**
+     * [description]
+     *
+     * @event ResumeAllAnimationEvent
+     * @type {Phaser.Event}
+     */
     function ResumeAllAnimationEvent ()
     {
         Event.call(this, 'RESUME_ALL_ANIMATION_EVENT');
