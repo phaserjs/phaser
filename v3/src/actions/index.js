@@ -1,4 +1,6 @@
-//  Phaser.Actions
+/**
+ * @namespace Phaser.Actions
+ */
 
 module.exports = {
 

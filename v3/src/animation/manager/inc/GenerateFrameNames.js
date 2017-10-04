@@ -1,6 +1,23 @@
 var GetValue = require('../../../utils/object/GetValue');
 var Pad = require('../../../utils/string/Pad');
 
+/**
+ * [description]
+ *
+ * @method Phaser.Animations.AnimationManager#generateFrameNames
+ * @since 3.0.0
+ * 
+ * @param {string} key - [description]
+ * @param {object} config - [description]
+ * @param {string} [config.prefix=''] - [description]
+ * @param {integer} [config.start=0] - [description]
+ * @param {integer} [config.end=0] - [description]
+ * @param {string} [config.suffix=''] - [description]
+ * @param {integer} [config.zeroPad=0] - [description]
+ * @param {array} [config.outputArray=[]] - [description]
+ * @param {boolean} [config.frames=false] - [description]
+ * @return {array} [description]
+ */
 var GenerateFrameNames = function (key, config)
 {
     var prefix = GetValue(config, 'prefix', '');

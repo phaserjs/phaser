@@ -18,7 +18,7 @@ var GameObject = new Class({
      * Instead, use them as the base for your own custom classes.
      *
      * @class GameObject
-     * @namespace Phaser.GameObjects
+     * @memberof Phaser.GameObjects
      * @constructor
      *
      * @param {Phaser.Scene} scene - The Scene to which this Game Object belongs.
@@ -98,7 +98,7 @@ var GameObject = new Class({
          * If this Game Object is enabled for input then this property will contain an InteractiveObject instance.
          * Not usually set directly. Instead call `GameObject.setInteractive()`.
          *
-         * @property {Phaser.Input.InteractiveObject|null} [input=null]
+         * @property {?Phaser.Input.InteractiveObject} [input=null]
          * @see setInteractive
          */
         this.input = null;
@@ -106,7 +106,7 @@ var GameObject = new Class({
         /**
          * If this Game Object is enabled for physics then this property will contain a reference to a Physics Body.
          *
-         * @property {Phaser.Physics.Body|null} [body=null]
+         * @property {?Phaser.Physics.Body} [body=null]
          */
         this.body = null;
 

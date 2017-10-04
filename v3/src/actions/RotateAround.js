@@ -1,8 +1,17 @@
 var RotateAroundDistance = require('../math/RotateAroundDistance');
 var DistanceBetween = require('../math/distance/DistanceBetween');
 
-//  point = any object with public x/y properties
-
+/**
+ * [description]
+ *
+ * @function Phaser.Actions.RotateAround
+ * @since 3.0.0
+ * 
+ * @param {array} items - An array of Game Objects. The contents of this array are updated by this Action.
+ * @param {object} point - Any object with public `x` and `y` properties.
+ * @param {number} angle - The angle to rotate by, in radians.
+ * @return {array} The array of Game Objects that was passed to this Action.
+ */
 var RotateAround = function (items, point, angle)
 {
     var x = point.x;

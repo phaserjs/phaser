@@ -5,6 +5,16 @@ var GetValue = require('../utils/object/GetValue');
 
 var tempZone = new Zone({ sys: { sortChildrenFlag: false }}, 0, 0, 1, 1);
 
+/**
+ * [description]
+ *
+ * @function Phaser.Actions.GridAlign
+ * @since 3.0.0
+ * 
+ * @param {array} items - An array of Game Objects. The contents of this array are updated by this Action.
+ * @param {object} options - [description]
+ * @return {array} The array of Game Objects that was passed to this Action.
+ */
 var GridAlign = function (items, options)
 {
     var width = GetValue(options, 'width', -1);

@@ -1,5 +1,15 @@
 var Event = require('../events/');
 
+/**
+ * [description]
+ *
+ * @method Phaser.Animations.AnimationManager#add
+ * @since 3.0.0
+ * 
+ * @param {string} key - [description]
+ * @param {Phaser.Animations.Animation} animation - [description]
+ * @return {Phaser.Animations.AnimationManager} The Animation Manager for method chaining.
+ */
 var AddAnimation = function (key, animation)
 {
     if (this.anims.has(key))

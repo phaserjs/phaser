@@ -1,5 +1,14 @@
 var Event = require('../events/');
 
+/**
+ * [description]
+ *
+ * @method Phaser.Animations.AnimationManager#remove
+ * @since 3.0.0
+ * 
+ * @param {string} key - [description]
+ * @return {Phaser.Animations.Animation} [description]
+ */
 var RemoveAnimation = function (key)
 {
     var anim = this.get(key);

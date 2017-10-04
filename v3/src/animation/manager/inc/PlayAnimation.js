@@ -1,3 +1,13 @@
+/**
+ * [description]
+ *
+ * @method Phaser.Animations.AnimationManager#play
+ * @since 3.0.0
+ * 
+ * @param {string} key - [description]
+ * @param {Phaser.GameObjects.GameObject} child - [description]
+ * @return {Phaser.Animations.AnimationManager} The Animation Manager for method chaining.
+ */
 var PlayAnimation = function (key, child)
 {
     if (!Array.isArray(child))

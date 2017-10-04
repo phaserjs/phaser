@@ -1,5 +1,20 @@
 var GetValue = require('../../../utils/object/GetValue');
 
+/**
+ * [description]
+ *
+ * @method Phaser.Animations.AnimationManager#generateFrameNumbers
+ * @since 3.0.0
+ * 
+ * @param {string} key - [description]
+ * @param {object} config - [description]
+ * @param {integer} [config.start=0] - [description]
+ * @param {integer} [config.end=-1] - [description]
+ * @param {boolean} [config.first=false] - [description]
+ * @param {array} [config.outputArray=[]] - [description]
+ * @param {boolean} [config.frames=false] - [description]
+ * @return {array} [description]
+ */
 var GenerateFrameNumbers = function (key, config)
 {
     var startFrame = GetValue(config, 'start', 0);

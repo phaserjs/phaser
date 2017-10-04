@@ -1,6 +1,15 @@
 var Event = require('../events/');
 var Animation = require('../../frame/Animation');
 
+/**
+ * [description]
+ *
+ * @method Phaser.Animations.AnimationManager#create
+ * @since 3.0.0
+ * 
+ * @param {object} config - [description]
+ * @return {Phaser.Animations.Animation} The Animation that was created.
+ */
 var CreateFrameAnimation = function (config)
 {
     var key = config.key;
