@@ -5,10 +5,71 @@ var MATH = require('../math/const');
 var NOOP = require('../utils/NOOP');
 var ValueToColor = require('../graphics/color/ValueToColor');
 
+/**
+ * This callback type is completely empty, a no-operation.
+ *
+ * @callback NOOP
+ */
+
 var Config = new Class({
 
     initialize:
 
+    /**
+     * [description]
+     *
+     * @class Config
+     * @memberOf Phaser.Boot
+     * @constructor
+     * @since 3.0.0
+     *
+     * @todo Add Physics Config
+     * 
+     * @param {object} [config] - The configuration object for your Phaser Game instance.
+     * @param {integer|string} [config.width=1024] - [description]
+     * @param {integer|string} [config.height=768] - [description]
+     * @param {number} [config.zoom=1] - [description]
+     * @param {number} [config.resolution=1] - [description]
+     * @param {number} [config.type=CONST.AUTO] - [description]
+     * @param {object} [?config.parent=null] - [description]
+     * @param {HTMLCanvasElement} [?config.canvas=null] - [description]
+     * @param {string} [?config.canvasStyle=null] - [description]
+     * @param {object} [?config.scene=null] - [description]
+     * @param {array} [config.seed] - [description]
+     * @param {string} [config.title=''] - [description]
+     * @param {string} [config.url='http://phaser.io'] - [description]
+     * @param {string} [config.version=''] - [description]
+     * @param {object} [config.input] - [description]
+     * @param {boolean} [config.input.keyboard=true] - [description]
+     * @param {object} [config.input.keyboard.target=window] - [description]
+     * @param {boolean} [config.input.mouse=true] - [description]
+     * @param {object} [?config.input.mouse.target=null] - [description]
+     * @param {boolean} [config.input.touch=true] - [description]
+     * @param {object} [?config.input.touch.target=null] - [description]
+     * @param {boolean} [config.input.gamepad=false] - [description]
+     * @param {boolean} [config.disableContextMenu=false] - [description]
+     * @param {boolean} [config.banner=false] - [description]
+     * @param {boolean} [config.banner.hidePhaser=false] - [description]
+     * @param {string} [config.banner.text='#ffffff'] - [description]
+     * @param {array} [config.banner.background] - [description]
+     * @param {object} [?config.fps] - [description]
+     * @param {integer} [config.fps.min=10] - [description]
+     * @param {integer} [config.fps.target=60] - [description]
+     * @param {boolean} [config.fps.forceSetTimeOut=false] - [description]
+     * @param {integer} [config.fps.deltaHistory=10] - [description]
+     * @param {boolean} [config.pixelArt=false] - [description]
+     * @param {boolean} [config.transparent=false] - [description]
+     * @param {boolean} [config.clearBeforeRender=true] - [description]
+     * @param {string|number} [config.backgroundColor=0x000000] - [description]
+     * @param {boolean} [config.preserveDrawingBuffer=false] - [description]
+     * @param {object} [?config.callbacks] - [description]
+     * @param {function} [config.callbacks.preBoot=NOOP] - [description]
+     * @param {function} [config.callbacks.postBoot=NOOP] - [description]
+     * @param {boolean} [config.useTicker=false] - [description]
+     * @param {object} [?config.images] - [description]
+     * @param {string} [config.images.default] - [description]
+     * @param {string} [config.images.missing] - [description]
+     */
     function Config (config)
     {
         if (config === undefined) { config = {}; }
@@ -80,7 +141,7 @@ var Config = new Class({
         this.transparent = GetValue(config, 'transparent', false);
         this.clearBeforeRender = GetValue(config, 'clearBeforeRender', true);
         this.backgroundColor = ValueToColor(GetValue(config, 'backgroundColor', 0));
-        this.preserveDrawingBuffer = ValueToColor(GetValue(config, 'preserveDrawingBuffer', false));
+        this.preserveDrawingBuffer = GetValue(config, 'preserveDrawingBuffer', false);
 
         //  Callbacks
         this.preBoot = GetValue(config, 'callbacks.preBoot', NOOP);
