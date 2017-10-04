@@ -1,8 +1,15 @@
 var Point = require('../point/Point');
 
 /**
-* Returns a uniformly distributed random point from anywhere within this Circle.
-*/
+ * Returns a uniformly distributed random point from anywhere within the given Circle.
+ *
+ * @function Phaser.Geom.Circle.Random
+ * @since 3.0.0
+ *
+ * @param {Phaser.Geom.Circle} circle - [description]
+ * @param {Phaser.Geom.Point|object} [out] - [description]
+ * @return {Phaser.Geom.Point|object} [description]
+ */
 var Random = function (circle, out)
 {
     if (out === undefined) { out = new Point(); }

@@ -1,3 +1,14 @@
+/**
+ * [description]
+ *
+ * @function Phaser.Geom.Circle.Contains
+ * @since 3.0.0
+ *
+ * @param {Phaser.Geom.Circle} circle - [description]
+ * @param {number} x - [description]
+ * @param {number} y - [description]
+ * @return {boolean} [description]
+ */
 var Contains = function (circle, x, y)
 {
     //  Check if x/y are within the bounds first

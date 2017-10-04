@@ -7,6 +7,7 @@
  * @param {Phaser.GameObjects.GameObject} child - [description]
  * @param {string} key - [description]
  * @param {string|integer} [startFrame] - [description]
+ * 
  * @return {Phaser.GameObjects.GameObject} [description]
  */
 var LoadAnimationToGameObject = function (child, key, startFrame)

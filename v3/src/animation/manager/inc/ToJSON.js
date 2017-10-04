@@ -5,6 +5,7 @@
  * @since 3.0.0
  * 
  * @param {string} key - [description]
+ * 
  * @return {object} [description]
  */
 var ToJSON = function (key)

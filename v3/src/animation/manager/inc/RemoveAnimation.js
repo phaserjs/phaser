@@ -8,6 +8,7 @@ var Event = require('../events/');
  * @since 3.0.0
  * 
  * @param {string} key - [description]
+ * 
  * @return {Phaser.Animations.Animation} [description]
  */
 var RemoveAnimation = function (key)

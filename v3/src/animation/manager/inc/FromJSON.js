@@ -6,6 +6,7 @@
  * 
  * @param {string|object} data - [description]
  * @param {boolean} [clearCurrentAnimations=false] - [description]
+ * 
  * @return {array} An array containing all of the Animation objects that were created as a result of this call.
  */
 var FromJSON = function (data, clearCurrentAnimations)

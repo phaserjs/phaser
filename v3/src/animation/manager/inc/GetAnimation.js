@@ -5,6 +5,7 @@
  * @since 3.0.0
  * 
  * @param {string} key - [description]
+ * 
  * @return {Phaser.Animations.Animation} [description]
  */
 var GetAnimation = function (key)

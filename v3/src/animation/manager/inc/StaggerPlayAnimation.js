@@ -7,6 +7,7 @@
  * @param {string} key - [description]
  * @param {Phaser.GameObjects.GameObject} child - [description]
  * @param {number} [stagger=0] - [description]
+ * 
  * @return {Phaser.Animations.AnimationManager} The Animation Manager for method chaining.
  */
 var StaggerPlayAnimation = function (key, child, stagger)

@@ -9,6 +9,7 @@ var Event = require('../events/');
  * 
  * @param {string} key - [description]
  * @param {Phaser.Animations.Animation} animation - [description]
+ * 
  * @return {Phaser.Animations.AnimationManager} The Animation Manager for method chaining.
  */
 var AddAnimation = function (key, animation)

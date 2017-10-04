@@ -9,6 +9,7 @@ var Animation = require('../../frame/Animation');
  * @since 3.0.0
  * 
  * @param {object} config - [description]
+ * 
  * @return {Phaser.Animations.Animation} The Animation that was created.
  */
 var CreateFrameAnimation = function (config)

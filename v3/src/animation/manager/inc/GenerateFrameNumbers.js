@@ -13,6 +13,7 @@ var GetValue = require('../../../utils/object/GetValue');
  * @param {boolean} [config.first=false] - [description]
  * @param {array} [config.outputArray=[]] - [description]
  * @param {boolean} [config.frames=false] - [description]
+ * 
  * @return {array} [description]
  */
 var GenerateFrameNumbers = function (key, config)

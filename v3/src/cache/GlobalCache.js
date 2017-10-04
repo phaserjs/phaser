@@ -123,6 +123,7 @@ var GlobalCache = new Class({
      * @since 3.0.0
      * 
      * @param {string} key - [description]
+     * 
      * @return {Phaser.Cache.BaseCache} [description]
      */
     addCustom: function (key)

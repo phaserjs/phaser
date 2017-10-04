@@ -6,6 +6,7 @@
  * 
  * @param {string} key - [description]
  * @param {Phaser.GameObjects.GameObject} child - [description]
+ * 
  * @return {Phaser.Animations.AnimationManager} The Animation Manager for method chaining.
  */
 var PlayAnimation = function (key, child)

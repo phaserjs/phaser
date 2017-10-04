@@ -56,6 +56,7 @@ var BaseCache = new Class({
      * @since 3.0.0
      *
      * @param {string} key [description]
+     * 
      * @return {boolean} [description]
      */
     has: function (key)
@@ -70,6 +71,7 @@ var BaseCache = new Class({
      * @since 3.0.0
      *
      * @param {string} key [description]
+     * 
      * @return {any} [description]
      */
     get: function (key)
