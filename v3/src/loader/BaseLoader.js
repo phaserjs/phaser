@@ -1,6 +1,6 @@
 
 var CONST = require('./const');
-var Set = require('../structs/Set');
+var CustomSet = require('../structs/Set');
 var XHRSettings = require('./XHRSettings');
 var Event = require('./events/');
 // var EventDispatcher = require('../events/EventDispatcher');
@@ -36,11 +36,11 @@ var BaseLoader = new Class({
 
         this.crossOrigin = undefined;
 
-        this.list = new Set();
-        this.inflight = new Set();
-        this.failed = new Set();
-        this.queue = new Set();
-        this.storage = new Set();
+        this.list = new CustomSet();
+        this.inflight = new CustomSet();
+        this.failed = new CustomSet();
+        this.queue = new CustomSet();
+        this.storage = new CustomSet();
 
         this.state = CONST.LOADER_IDLE;
     },
@@ -125,26 +125,24 @@ var BaseLoader = new Class({
         // console.log('List size', this.list.size);
         // console.log(this.inflight.size, 'items still in flight. Can load another', (this.maxParallelDownloads - this.inflight.size));
 
-        var _this = this;
-
         this.list.each(function (file)
         {
-            if (file.state === CONST.FILE_PENDING && _this.inflight.size < _this.maxParallelDownloads)
+            if (file.state === CONST.FILE_PENDING && this.inflight.size < this.maxParallelDownloads)
             {
-                _this.inflight.set(file);
+                this.inflight.set(file);
 
-                _this.list.delete(file);
+                this.list.delete(file);
 
-                _this.loadFile(file);
+                this.loadFile(file);
             }
 
-            if (_this.inflight.size === _this.maxParallelDownloads)
+            if (this.inflight.size === this.maxParallelDownloads)
             {
                 //  Tells the Set iterator to abort
                 return false;
             }
 
-        });
+        }, this);
     },
 
     //  private
@@ -199,14 +197,12 @@ var BaseLoader = new Class({
 
         this.storage.clear();
 
-        var _this = this;
-
         this.queue.each(function (file)
         {
             // console.log('%c Calling process on ' + file.key, 'color: #000000; background: #ffff00;');
 
-            file.onProcess(_this.processUpdate.bind(_this));
-        });
+            file.onProcess(this.processUpdate.bind(this));
+        }, this);
     },
 
     //  Called automatically by the File when it has finished processing

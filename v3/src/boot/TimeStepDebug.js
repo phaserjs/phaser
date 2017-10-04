@@ -1,3 +1,7 @@
+/**
+ * @ignore
+ */
+
 var Class = require('../utils/Class');
 var GetValue = require('../utils/object/GetValue');
 var NOOP = require('../utils/NOOP');
@@ -355,6 +359,10 @@ var TimeStep = new Class({
      */
     step: function (time)
     {
+        //  Debug only
+        // var debug = 0;
+        // var dump = [];
+
         this.frame++;
 
         this.rawDelta = time - this.lastTime;
@@ -375,12 +383,16 @@ var TimeStep = new Class({
             this._coolDown--;
 
             dt = Math.min(dt, this._target);
+
+            // debug = (time - this.lastTime);
         }
 
         if (dt > this._min)
         {
             //  Probably super bad start time or browser tab context loss,
             //  so use the last 'sane' dt value
+
+            // debug = dt;
 
             dt = history[idx];
 
@@ -409,6 +421,12 @@ var TimeStep = new Class({
 
         for (var i = 0; i < max; i++)
         {
+            //   Debug
+            // if (history[i] < 16 || history[i] > 17)
+            // {
+            //     dump.push({ i: i, dt: history[i] });
+            // }
+
             avg += history[i];
         }
 
@@ -419,6 +437,7 @@ var TimeStep = new Class({
         this.delta = avg;
 
         //  Real-world timer advance
+        // this.time += avg;
         this.time += this.rawDelta;
 
         // Update the estimate of the frame rate, `fps`. Every second, the number
@@ -447,6 +466,12 @@ var TimeStep = new Class({
             this.actualFps = 0.25 * this.framesThisSecond + 0.75 * this.actualFps;
             this.nextFpsUpdate = time + 1000;
             this.framesThisSecond = 0;
+
+            // if (this.actualFps < 56)
+            // {
+            //     console.log(this.actualFps);
+            //     console.log('F', this.frame, 'Avg', avg, 'Dt', debug, 'Panic', this._coolDown);
+            // }
         }
 
         this.framesThisSecond++;
@@ -458,6 +483,35 @@ var TimeStep = new Class({
 
         //  Shift time value over
         this.lastTime = time;
+
+        // if (debug !== 0)
+        // {
+        //     console.log('F', this.frame, 'Avg', avg, 'Dt', debug, 'Panic', this._coolDown);
+        // }
+
+        /*
+        if (debug !== 0 || dump.length)
+        {
+            console.group('Frame ' + this.frame);
+            console.log('Interpolation', interpolation, '%');
+
+            if (debug)
+            {
+                console.log('Elapsed', debug, 'ms');
+            }
+
+            // console.log('Frame', this.frame, 'Delta', avg, '(average)', debug, '(now)');
+
+            console.log('Delta', avg, '(average)');
+
+            if (dump.length)
+            {
+                console.table(dump);
+            }
+
+            console.groupEnd();
+        }
+        */
     },
 
     /**

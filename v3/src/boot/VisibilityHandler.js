@@ -1,5 +1,13 @@
 var Event = require('../events/Event');
 
+/**
+ * [description]
+ *
+ * @function Phaser.Boot.VisibilityHandler
+ * @since 3.0.0
+ *
+ * @param {Phaser.Events.EventDispatcher} eventDispatcher - The EventDispatcher that will dispatch the visibility events.
+ */
 var VisibilityHandler = function (eventDispatcher)
 {
     var hiddenVar;
@@ -59,7 +67,6 @@ var VisibilityHandler = function (eventDispatcher)
     {
         eventDispatcher.dispatch(new Event('ON_FOCUS'));
     };
-
 };
 
 module.exports = VisibilityHandler;

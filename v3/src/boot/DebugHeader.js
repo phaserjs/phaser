@@ -1,6 +1,14 @@
 var CONST = require('../const');
 var CHECKSUM = require('../checksum');
 
+/**
+ * [description]
+ *
+ * @function Phaser.Boot.DebugHeader
+ * @since 3.0.0
+ *
+ * @param {Phaser.Game} game - [description]
+ */
 var DebugHeader = function (game)
 {
     var config = game.config;

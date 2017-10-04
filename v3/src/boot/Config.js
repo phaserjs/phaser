@@ -11,6 +11,62 @@ var ValueToColor = require('../graphics/color/ValueToColor');
  * @callback NOOP
  */
 
+/**
+ * @typedef {object} FPSConfig
+ * 
+ * @property {integer} [min=10] - [description]
+ * @property {integer} [target=60] - [description]
+ * @property {boolean} [forceSetTimeOut=false] - [description]
+ * @property {integer} [deltaHistory=10] - [description]
+ * @property {integer} [panicMax=120] - [description]
+ */
+
+/**
+ * @typedef {object} GameConfig
+ *
+ * @todo Add Physics Config
+ * 
+ * @property {integer|string} [width=1024] - [description]
+ * @property {integer|string} [height=768] - [description]
+ * @property {number} [zoom=1] - [description]
+ * @property {number} [resolution=1] - [description]
+ * @property {number} [type=CONST.AUTO] - [description]
+ * @property {object} [?parent=null] - [description]
+ * @property {HTMLCanvasElement} [?canvas=null] - [description]
+ * @property {string} [?canvasStyle=null] - [description]
+ * @property {object} [?scene=null] - [description]
+ * @property {array} [seed] - [description]
+ * @property {string} [title=''] - [description]
+ * @property {string} [url='http://phaser.io'] - [description]
+ * @property {string} [version=''] - [description]
+ * @property {object} [input] - [description]
+ * @property {boolean} [input.keyboard=true] - [description]
+ * @property {object} [input.keyboard.target=window] - [description]
+ * @property {boolean} [input.mouse=true] - [description]
+ * @property {object} [?input.mouse.target=null] - [description]
+ * @property {boolean} [input.touch=true] - [description]
+ * @property {object} [?input.touch.target=null] - [description]
+ * @property {boolean} [input.gamepad=false] - [description]
+ * @property {boolean} [disableContextMenu=false] - [description]
+ * @property {boolean} [banner=false] - [description]
+ * @property {boolean} [banner.hidePhaser=false] - [description]
+ * @property {string} [banner.text='#ffffff'] - [description]
+ * @property {array} [banner.background] - [description]
+ * @property {FPSConfig} [?fps] - [description]
+ * @property {boolean} [pixelArt=false] - [description]
+ * @property {boolean} [transparent=false] - [description]
+ * @property {boolean} [clearBeforeRender=true] - [description]
+ * @property {string|number} [backgroundColor=0x000000] - [description]
+ * @property {boolean} [preserveDrawingBuffer=false] - [description]
+ * @property {object} [?callbacks] - [description]
+ * @property {function} [callbacks.preBoot=NOOP] - [description]
+ * @property {function} [callbacks.postBoot=NOOP] - [description]
+ * @property {boolean} [useTicker=false] - [description]
+ * @property {object} [?images] - [description]
+ * @property {string} [images.default] - [description]
+ * @property {string} [images.missing] - [description]
+ */
+
 var Config = new Class({
 
     initialize:
@@ -23,52 +79,8 @@ var Config = new Class({
      * @constructor
      * @since 3.0.0
      *
-     * @todo Add Physics Config
+     * @param {object} [GameConfig] - The configuration object for your Phaser Game instance.
      * 
-     * @param {object} [config] - The configuration object for your Phaser Game instance.
-     * @param {integer|string} [config.width=1024] - [description]
-     * @param {integer|string} [config.height=768] - [description]
-     * @param {number} [config.zoom=1] - [description]
-     * @param {number} [config.resolution=1] - [description]
-     * @param {number} [config.type=CONST.AUTO] - [description]
-     * @param {object} [?config.parent=null] - [description]
-     * @param {HTMLCanvasElement} [?config.canvas=null] - [description]
-     * @param {string} [?config.canvasStyle=null] - [description]
-     * @param {object} [?config.scene=null] - [description]
-     * @param {array} [config.seed] - [description]
-     * @param {string} [config.title=''] - [description]
-     * @param {string} [config.url='http://phaser.io'] - [description]
-     * @param {string} [config.version=''] - [description]
-     * @param {object} [config.input] - [description]
-     * @param {boolean} [config.input.keyboard=true] - [description]
-     * @param {object} [config.input.keyboard.target=window] - [description]
-     * @param {boolean} [config.input.mouse=true] - [description]
-     * @param {object} [?config.input.mouse.target=null] - [description]
-     * @param {boolean} [config.input.touch=true] - [description]
-     * @param {object} [?config.input.touch.target=null] - [description]
-     * @param {boolean} [config.input.gamepad=false] - [description]
-     * @param {boolean} [config.disableContextMenu=false] - [description]
-     * @param {boolean} [config.banner=false] - [description]
-     * @param {boolean} [config.banner.hidePhaser=false] - [description]
-     * @param {string} [config.banner.text='#ffffff'] - [description]
-     * @param {array} [config.banner.background] - [description]
-     * @param {object} [?config.fps] - [description]
-     * @param {integer} [config.fps.min=10] - [description]
-     * @param {integer} [config.fps.target=60] - [description]
-     * @param {boolean} [config.fps.forceSetTimeOut=false] - [description]
-     * @param {integer} [config.fps.deltaHistory=10] - [description]
-     * @param {boolean} [config.pixelArt=false] - [description]
-     * @param {boolean} [config.transparent=false] - [description]
-     * @param {boolean} [config.clearBeforeRender=true] - [description]
-     * @param {string|number} [config.backgroundColor=0x000000] - [description]
-     * @param {boolean} [config.preserveDrawingBuffer=false] - [description]
-     * @param {object} [?config.callbacks] - [description]
-     * @param {function} [config.callbacks.preBoot=NOOP] - [description]
-     * @param {function} [config.callbacks.postBoot=NOOP] - [description]
-     * @param {boolean} [config.useTicker=false] - [description]
-     * @param {object} [?config.images] - [description]
-     * @param {string} [config.images.default] - [description]
-     * @param {string} [config.images.missing] - [description]
      */
     function Config (config)
     {
@@ -126,6 +138,11 @@ var Config = new Class({
         this.hidePhaser = GetValue(config, 'banner.hidePhaser', false);
         this.bannerTextColor = GetValue(config, 'banner.text', defaultBannerTextColor);
         this.bannerBackgroundColor = GetValue(config, 'banner.background', defaultBannerColor);
+
+        if (this.gameTitle === '' && this.hidePhaser)
+        {
+            this.hideBanner = true;
+        }
        
         //  Frame Rate config
         //      fps: {

@@ -3,6 +3,14 @@ var CanvasPool = require('../dom/CanvasPool');
 var Features = require('../device/Features');
 var CanvasInterpolation = require('../dom/CanvasInterpolation');
 
+/**
+ * [description]
+ *
+ * @function Phaser.Boot.CreateRenderer
+ * @since 3.0.0
+ *
+ * @param {Phaser.Game} game - [description]
+ */
 var CreateRenderer = function (game)
 {
     var config = game.config;
