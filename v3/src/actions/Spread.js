@@ -9,6 +9,7 @@
  * @param {number} min - [description]
  * @param {number} max - [description]
  * @param {number} inc - [description]
+ *
  * @return {array} The array of Game Objects that was passed to this Action.
  */
 var Spread = function (items, property, min, max, inc)

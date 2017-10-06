@@ -9,6 +9,7 @@ var GetPointsOnLine = require('../geom/line/GetPointsOnLine');
  * @param {array} items - An array of Game Objects. The contents of this array are updated by this Action.
  * @param {Phaser.Geom.Triangle} triangle - [description]
  * @param {number} [stepRate=1] - [description]
+ *
  * @return {array} The array of Game Objects that was passed to this Action.
  */
 var PlaceOnTriangle = function (items, triangle, stepRate)

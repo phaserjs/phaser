@@ -10,6 +10,7 @@ var MathRotateAroundDistance = require('../math/RotateAroundDistance');
  * @param {object} point - Any object with public `x` and `y` properties.
  * @param {number} angle - The angle to rotate by, in radians.
  * @param {number} distance - The distance from the point of rotation in pixels.
+ *
  * @return {array} The array of Game Objects that was passed to this Action.
  */
 var RotateAroundDistance = function (items, point, angle, distance)

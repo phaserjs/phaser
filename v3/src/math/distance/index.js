@@ -1,3 +1,5 @@
+//  Phaser.Math.Distance
+
 module.exports = {
 
     Between: require('./DistanceBetween'),

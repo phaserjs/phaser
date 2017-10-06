@@ -13,6 +13,7 @@ var tempZone = new Zone({ sys: { sortChildrenFlag: false }}, 0, 0, 1, 1);
  * 
  * @param {array} items - An array of Game Objects. The contents of this array are updated by this Action.
  * @param {object} options - [description]
+ *
  * @return {array} The array of Game Objects that was passed to this Action.
  */
 var GridAlign = function (items, options)

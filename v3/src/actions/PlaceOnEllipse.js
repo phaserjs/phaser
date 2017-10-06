@@ -8,6 +8,7 @@
  * @param {Phaser.Geom.Ellipse} ellipse - [description]
  * @param {number} [startAngle=0] - [description]
  * @param {number} [endAngle=6.28] - [description]
+ *
  * @return {array} The array of Game Objects that was passed to this Action.
  */
 var PlaceOnEllipse = function (items, ellipse, startAngle, endAngle)

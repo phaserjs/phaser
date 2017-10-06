@@ -9,6 +9,7 @@
  * @param {number} y - [description]
  * @param {number} [stepX=0] - [description]
  * @param {number} [stepY=0] - [description]
+ *
  * @return {array} The array of Game Objects that was passed to this Action.
  */
 var SetXY = function (items, x, y, stepX, stepY)

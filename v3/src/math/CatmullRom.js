@@ -1,3 +1,17 @@
+/**
+ * [description]
+ *
+ * @function Phaser.Math.CatmullRom
+ * @since 3.0.0
+ *
+ * @param {number} t - [description]
+ * @param {number} p0 - [description]
+ * @param {number} p1 - [description]
+ * @param {number} p2 - [description]
+ * @param {number} p3 - [description]
+ *
+ * @return {number} [description]
+ */
 var CatmullRom = function (t, p0, p1, p2, p3)
 {
     var v0 = (p2 - p0) * 0.5;

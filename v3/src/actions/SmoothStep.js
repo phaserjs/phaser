@@ -11,6 +11,7 @@ var MathSmoothStep = require('../math/SmoothStep');
  * @param {number} min - [description]
  * @param {number} max - [description]
  * @param {number} inc - [description]
+ *
  * @return {array} The array of Game Objects that was passed to this Action.
  */
 var SmoothStep = function (items, property, min, max, inc)

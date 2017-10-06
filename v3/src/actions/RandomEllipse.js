@@ -8,6 +8,7 @@ var Random = require('../geom/ellipse/Random');
  * 
  * @param {array} items - An array of Game Objects. The contents of this array are updated by this Action.
  * @param {Phaser.Geom.Ellipse} ellipse - [description]
+ *
  * @return {array} The array of Game Objects that was passed to this Action.
  */
 var RandomEllipse = function (items, ellipse)

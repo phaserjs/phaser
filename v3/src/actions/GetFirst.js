@@ -13,6 +13,7 @@
  * @param {array} items - An array of Game Objects. The contents of this array are updated by this Action.
  * @param {object} compare - [description]
  * @param {integer} index - [description]
+ * 
  * @return {array} The array of Game Objects that was passed to this Action.
  */
 var GetFirst = function (items, compare, index)
