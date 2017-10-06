@@ -1,5 +1,16 @@
 var CatmullRom = require('../CatmullRom');
 
+/**
+ * [description]
+ *
+ * @function Phaser.Math.Interpolation.CatmullRom
+ * @since 3.0.0
+ *
+ * @param {number} v - [description]
+ * @param {number} k - [description]
+ *
+ * @return {number} [description]
+ */
 var CatmullRomInterpolation = function (v, k)
 {
     var m = v.length - 1;

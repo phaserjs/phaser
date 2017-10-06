@@ -1,5 +1,13 @@
-//  Takes value and returns the nearest power of 2
-
+/**
+ * Returns the nearest power of 2 to the given `value`.
+ *
+ * @function Phaser.Math.Pow2.GetPowerOfTwo
+ * @since 3.0.0
+ *
+ * @param {number} value - [description]
+ *
+ * @return {integer} [description]
+ */
 var GetPowerOfTwo = function (value)
 {
     //  Math.log(2)

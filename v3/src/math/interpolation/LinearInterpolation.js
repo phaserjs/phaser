@@ -1,5 +1,16 @@
 var Linear = require('../Linear');
 
+/**
+ * [description]
+ *
+ * @function Phaser.Math.Interpolation.Linear
+ * @since 3.0.0
+ *
+ * @param {float} v - [description]
+ * @param {number} k - [description]
+ *
+ * @return {number} [description]
+ */
 var LinearInterpolation = function (v, k)
 {
     var m = v.length - 1;

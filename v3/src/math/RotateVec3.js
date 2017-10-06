@@ -11,11 +11,15 @@ var tmpVec3 = new Vector3();
  *
  * This is the same as transforming a point by an 
  * axis-angle quaternion, but it has higher precision.
- * 
- * @param  {Vector3} vec     [description]
- * @param  {Vector3} axis    [description]
- * @param  {float} radians [description]
- * @return {Vector3}         [description]
+ *
+ * @function Phaser.Math.RotateVec3
+ * @since 3.0.0
+ *
+ * @param {Phaser.Math.Vector3} vec - [description]
+ * @param {Phaser.Math.Vector3} axis - [description]
+ * @param {float} radians - [description]
+ *
+ * @return {Phaser.Math.Vector3} [description]
  */
 var RotateVec3 = function(vec, axis, radians)
 {

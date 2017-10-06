@@ -1,5 +1,14 @@
-//  p = Point or any object with public x/y properties
-
+/**
+ * [description]
+ *
+ * @function Phaser.Math.Rotate
+ * @since 3.0.0
+ *
+ * @param {Phaser.Geom.Point|object} point - [description]
+ * @param {number} angle - [description]
+ *
+ * @return {Phaser.Geom.Point} [description]
+ */
 var Rotate = function (point, angle)
 {
     var x = point.x;

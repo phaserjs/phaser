@@ -1,3 +1,15 @@
+/**
+ * [description]
+ *
+ * @function Phaser.Math.Snap.To
+ * @since 3.0.0
+ *
+ * @param {number} value - [description]
+ * @param {number} gap - [description]
+ * @param {number} [start=0] - [description]
+ *
+ * @return {number} [description]
+ */
 var SnapTo = function (value, gap, start)
 {
     if (start === undefined) { start = 0; }

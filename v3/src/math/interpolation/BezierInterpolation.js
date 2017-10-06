@@ -1,5 +1,16 @@
 var Bernstein = require('../Bernstein');
 
+/**
+ * [description]
+ *
+ * @function Phaser.Math.Interpolation.Bezier
+ * @since 3.0.0
+ *
+ * @param {number} v - [description]
+ * @param {number} k - [description]
+ *
+ * @return {number} [description]
+ */
 var BezierInterpolation = function (v, k)
 {
     var b = 0;

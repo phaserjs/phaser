@@ -1,5 +1,16 @@
 //  Position Vector randomly in a spherical area defined by the given radius
-var RandomXYZ = function (vector, radius)
+/**
+ * [description]
+ *
+ * @function Phaser.Math.RandomXYZ
+ * @since 3.0.0
+ *
+ * @param {Phaser.Math.Vector3} vec3 - [description]
+ * @param {number} [radius=1] - [description]
+ *
+ * @return {Phaser.Math.Vector3} [description]
+ */
+var RandomXYZ = function (vec3, radius)
 {
     if (radius === undefined) { radius = 1; }
 
@@ -7,11 +18,11 @@ var RandomXYZ = function (vector, radius)
     var z = (Math.random() * 2) - 1;
     var zScale = Math.sqrt(1 - z * z) * radius;
     
-    vector.x = Math.cos(r) * zScale;
-    vector.y = Math.sin(r) * zScale;
-    vector.z = z * radius;
+    vec3.x = Math.cos(r) * zScale;
+    vec3.y = Math.sin(r) * zScale;
+    vec3.z = z * radius;
 
-    return vector;
+    return vec3;
 };
 
 module.exports = RandomXYZ;

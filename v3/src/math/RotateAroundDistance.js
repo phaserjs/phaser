@@ -1,8 +1,17 @@
-//  p = Point or any object with public x/y properties, the item to be rotated
-//  x/y = the coordinate to rotate around
-//  angle = radians
-//  distance = in px
-
+/**
+ * [description]
+ *
+ * @function Phaser.Math.RotateAroundDistance
+ * @since 3.0.0
+ *
+ * @param {Phaser.Geom.Point|object} point - The Point to be rotated.
+ * @param {number} x - The horizontal coordinate to rotate around.
+ * @param {number} y - The vertical coordinate to rotate around.
+ * @param {number} angle - The angle of rotation in radians.
+ * @param {number} distance - [description]
+ *
+ * @return {Phaser.Geom.Point} [description]
+ */
 var RotateAroundDistance = function (point, x, y, angle, distance)
 {
     var t = angle + Math.atan2(point.y - y, point.x - x);

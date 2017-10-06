@@ -29,6 +29,20 @@ function P3 (t, p)
 
 // https://medium.com/@adrian_cooney/bezier-interpolation-13b68563313a
 
+/**
+ * [description]
+ *
+ * @function Phaser.Math.Interpolation.CubicBezier
+ * @since 3.0.0
+ *
+ * @param {float} t - [description]
+ * @param {number} p0 - [description]
+ * @param {number} p1 - [description]
+ * @param {number} p2 - [description]
+ * @param {number} p3 - [description]
+ *
+ * @return {number} [description]
+ */
 var CubicBezierInterpolation = function (t, p0, p1, p2, p3)
 {
     return P0(t, p0) + P1(t, p1) + P2(t, p2) + P3(t, p3);
