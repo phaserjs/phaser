@@ -10,7 +10,9 @@ var PerspectiveCamera = new Class({
     Extends: Camera3D,
 
     //  FOV is converted to radians automatically
-    initialize: function (scene, fieldOfView, viewportWidth, viewportHeight)
+    initialize:
+
+    function PerspectiveCamera (scene, fieldOfView, viewportWidth, viewportHeight)
     {
         if (fieldOfView === undefined) { fieldOfView = 80; }
         if (viewportWidth === undefined) { viewportWidth = 0; }

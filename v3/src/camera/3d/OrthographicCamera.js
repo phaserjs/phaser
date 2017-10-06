@@ -11,7 +11,9 @@ var OrthographicCamera = new Class({
 
     Extends: Camera3D,
 
-    initialize: function (scene, viewportWidth, viewportHeight)
+    initialize:
+
+    function OrthographicCamera (scene, viewportWidth, viewportHeight)
     {
         if (viewportWidth === undefined) { viewportWidth = 0; }
         if (viewportHeight === undefined) { viewportHeight = 0; }

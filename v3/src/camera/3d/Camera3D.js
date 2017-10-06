@@ -18,7 +18,9 @@ var billboardMatrix = new Matrix4();
 
 var Camera3D = new Class({
 
-    initialize: function (scene)
+    initialize:
+
+    function Camera3D (scene)
     {
         this.scene = scene;
 
