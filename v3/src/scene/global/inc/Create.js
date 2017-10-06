@@ -1,5 +1,13 @@
 var SortScenes = require('./SortScenes');
 
+/**
+ * [description]
+ *
+ * @method Phaser.Scenes.GlobalSceneManager#create
+ * @since 3.0.0
+ *
+ * @param {Phaser.Scene} scene - [description]
+ */
 var Create = function (scene)
 {
     //  Insert at the correct index, or it just all goes wrong :)

@@ -2,6 +2,17 @@ var Scene = require('../../local/Scene');
 var Systems = require('../../local/Systems');
 var NOOP = require('../../../utils/NOOP');
 
+/**
+ * [description]
+ *
+ * @method Phaser.Scenes.GlobalSceneManager#createSceneFromFunction
+ * @since 3.0.0
+ *
+ * @param {string} key - [description]
+ * @param {function} scene - [description]
+ *
+ * @return {Phaser.Scene} [description]
+ */
 var CreateSceneFromFunction = function (key, scene)
 {
     var newScene = new scene();

@@ -1,3 +1,11 @@
+/**
+ * [description]
+ *
+ * @method Phaser.Scenes.GlobalSceneManager#bootScene
+ * @since 3.0.0
+ *
+ * @param {Phaser.Scene} scene - [description]
+ */
 var BootScene = function (scene)
 {
     if (scene.init)

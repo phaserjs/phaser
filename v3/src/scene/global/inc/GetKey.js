@@ -1,6 +1,16 @@
 var Scene = require('../../local/Scene');
 
-//  private
+/**
+ * [description]
+ *
+ * @method Phaser.Scenes.GlobalSceneManager#getKey
+ * @since 3.0.0
+ *
+ * @param {string} key - [description]
+ * @param {Phaser.Scene|object|function} sceneConfig - [description]
+ *
+ * @return {string} [description]
+ */
 var GetKey = function (key, sceneConfig)
 {
     if (!key) { key = 'default'; }

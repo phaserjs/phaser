@@ -1,3 +1,14 @@
+/**
+ * [description]
+ *
+ * @method Phaser.Scenes.GlobalSceneManager#sortScenes
+ * @since 3.0.0
+ *
+ * @param {object} sceneA - [description]
+ * @param {object} sceneB - [description]
+ *
+ * @return {integer} [description]
+ */
 var SortScenes = function (sceneA, sceneB)
 {
     //  Sort descending

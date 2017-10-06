@@ -1,3 +1,14 @@
+/**
+ * [description]
+ *
+ * @method Phaser.Scenes.GlobalSceneManager#createSceneFromInstance
+ * @since 3.0.0
+ *
+ * @param {string} key - [description]
+ * @param {Phaser.Scene} newScene - [description]
+ *
+ * @return {Phaser.Scene} [description]
+ */
 var CreateSceneFromInstance = function (key, newScene)
 {
     var configKey = newScene.sys.settings.key;

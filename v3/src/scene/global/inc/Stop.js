@@ -1,5 +1,13 @@
 var SortScenes = require('./SortScenes');
 
+/**
+ * [description]
+ *
+ * @method Phaser.Scenes.GlobalSceneManager#stop
+ * @since 3.0.0
+ *
+ * @param {string} key - [description]
+ */
 var Stop = function (key)
 {
     var entry = this.getActiveScene(key);

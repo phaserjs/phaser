@@ -1,14 +1,28 @@
 var Scene = require('../../local/Scene');
 
 /**
-* Adds a new Scene into the GlobalSceneManager. You must give each Scene a unique key by which you'll identify it.
-* The Scene can be either a Phaser.Scene object (or an object that extends it), a plain JavaScript object or a function.
-* If a function is given a new scene object will be created by calling it.
-*
-* @param {string} key - A unique key you use to reference this scene, i.e. "MainMenu", "Level1".
-* @param {Phaser.Scene|object|function} scene  - The scene you want to switch to.
-* @param {boolean} [autoStart=false]  - If true the Scene will be started immediately after adding it.
-*/
+ * Adds a new Scene into the SceneManager.
+ * You must give each Scene a unique key by which you'll identify it.
+ *
+ * The `sceneConfig` can be:
+ *
+ * * A `Phaser.Scene` object, or an object that extends it.
+ * * A plain JavaScript object
+ * * A JavaScript ES6 Class that extends `Phaser.Scene`
+ * * A JavaScript ES5 prototype based Class
+ * * A JavaScript function
+ *
+ * If a function is given then a new Scene will be created by calling it.
+ *
+ * @method Phaser.Scenes.GlobalSceneManager#add
+ * @since 3.0.0
+ *
+ * @param {string} key - A unique key used to reference the Scene, i.e. `MainMenu` or `Level1`.
+ * @param {Phaser.Scene|object|function} sceneConfig - [description]
+ * @param {boolean} [autoStart=false] - If `true` the Scene will be started immediately after being added.
+ *
+ * @return {Phaser.Scene} [description]
+ */
 var Add = function (key, sceneConfig, autoStart)
 {
     if (autoStart === undefined) { autoStart = false; }

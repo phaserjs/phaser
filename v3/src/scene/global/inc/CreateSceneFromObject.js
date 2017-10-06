@@ -2,6 +2,17 @@ var GetValue = require('../../../utils/object/GetValue');
 var NOOP = require('../../../utils/NOOP');
 var Scene = require('../../local/Scene');
 
+/**
+ * [description]
+ *
+ * @method Phaser.Scenes.GlobalSceneManager#createSceneFromObject
+ * @since 3.0.0
+ *
+ * @param {string} key - [description]
+ * @param {object} sceneConfig - [description]
+ *
+ * @return {Phaser.Scene} [description]
+ */
 var CreateSceneFromObject = function (key, sceneConfig)
 {
     var newScene = new Scene(sceneConfig);

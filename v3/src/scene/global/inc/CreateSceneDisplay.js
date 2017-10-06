@@ -3,6 +3,14 @@ var CONST = require('../../../const');
 var GetContext = require('../../../canvas/GetContext');
 var CanvasInterpolation = require('../../../dom/CanvasInterpolation');
 
+/**
+ * [description]
+ *
+ * @method Phaser.Scenes.GlobalSceneManager#createSceneDisplay
+ * @since 3.0.0
+ *
+ * @param {Phaser.Scene} scene - [description]
+ */
 var CreateSceneDisplay = function (scene)
 {
     var settings = scene.sys.settings;

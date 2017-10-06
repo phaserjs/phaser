@@ -1,3 +1,12 @@
+/**
+ * [description]
+ *
+ * @method Phaser.Scenes.GlobalSceneManager#start
+ * @since 3.0.0
+ *
+ * @param {string} key - [description]
+ * @param {object} data - [description]
+ */
 var Start = function (key, data)
 {
     if (data === undefined) { data = {}; }
