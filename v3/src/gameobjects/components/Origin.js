@@ -30,8 +30,8 @@ var Origin = {
         this.displayOriginX = x;
         this.displayOriginY = y;
 
-        this.originX = this.width / x;
-        this.originY = this.height / y;
+        this.originX = (x === 0) ? 0 : this.width / x;
+        this.originY = (y === 0) ? 0 : this.height / y;
 
         return this;
     },
