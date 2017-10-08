@@ -8,8 +8,38 @@ var Origin = {
     originY: 0.5,
 
     //  READ ONLY
-    displayOriginX: 0,
-    displayOriginY: 0,
+    _displayOriginX: 0,
+    _displayOriginY: 0,
+
+    displayOriginX: {
+
+        get: function ()
+        {
+            return this._displayOriginX;
+        },
+
+        set: function (value)
+        {
+            this._displayOriginX = value;
+            this.originX = (value === 0) ? 0 : this.width / value;
+        }
+
+    },
+
+    displayOriginY: {
+
+        get: function ()
+        {
+            return this._displayOriginY;
+        },
+
+        set: function (value)
+        {
+            this._displayOriginY = value;
+            this.originY = (value === 0) ? 0 : this.height / value;
+        }
+
+    },
 
     setOrigin: function (x, y)
     {
@@ -29,9 +59,6 @@ var Origin = {
 
         this.displayOriginX = x;
         this.displayOriginY = y;
-
-        this.originX = (x === 0) ? 0 : this.width / x;
-        this.originY = (y === 0) ? 0 : this.height / y;
 
         return this;
     },
