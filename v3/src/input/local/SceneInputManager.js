@@ -87,9 +87,9 @@ var SceneInputManager = new Class({
     queueForInsertion: require('./inc/QueueForInsertion'),
     queueForRemoval: require('./inc/QueueForRemoval'),
 
-    setpollRate: require('./inc/SetPollRate'),
-    setpollAlways: require('./inc/SetPollAlways'),
-    setpollOnMove: require('./inc/SetPollOnMove'),
+    setPollRate: require('./inc/SetPollRate'),
+    setPollAlways: require('./inc/SetPollAlways'),
+    setPollOnMove: require('./inc/SetPollOnMove'),
 
     setHitArea: require('./inc/SetHitArea'),
     setHitAreaCircle: require('./inc/SetHitAreaCircle'),
