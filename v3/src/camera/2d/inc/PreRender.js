@@ -29,7 +29,7 @@ var PreRender = function ()
         {
             this.scrollX = boundsX;
         }
-        if (this.scrollX > boundsR)
+        else if (this.scrollX > boundsR)
         {
             this.scrollX = boundsR;
         }
@@ -38,7 +38,7 @@ var PreRender = function ()
         {
             this.scrollY = boundsY;
         }
-        if (this.scrollY > boundsB)
+        else if (this.scrollY > boundsB)
         {
             this.scrollY = boundsB;
         }
