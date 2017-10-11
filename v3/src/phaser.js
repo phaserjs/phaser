@@ -32,7 +32,7 @@ var Phaser = {
 
     Geom: require('./geom'),
 
-    Graphics: require('./graphics'),
+    Display: require('./display'),
 
     Input: require('./input'),
 

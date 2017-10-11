@@ -1,7 +1,7 @@
-var CONST = require('../utils/align/const');
-var AlignIn = require('../utils/align/AlignIn');
-var Zone = require('../gameobjects/zone/Zone');
+var AlignIn = require('../display/align/in/QuickSet');
+var CONST = require('../display/align/const');
 var GetValue = require('../utils/object/GetValue');
+var Zone = require('../gameobjects/zone/Zone');
 
 var tempZone = new Zone({ sys: { sortChildrenFlag: false }}, 0, 0, 1, 1);
 

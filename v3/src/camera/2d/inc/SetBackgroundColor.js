@@ -1,4 +1,4 @@
-var ValueToColor = require('../../../graphics/color/ValueToColor');
+var ValueToColor = require('../../../display/color/ValueToColor');
 
 var SetBackgroundColor = function (color)
 {

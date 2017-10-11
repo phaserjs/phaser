@@ -1,6 +1,6 @@
 var OS = require('./OS');
 var Browser = require('./Browser');
-var CanvasPool = require('../dom/CanvasPool');
+var CanvasPool = require('../display/canvas/CanvasPool');
 
 var Features = {
 

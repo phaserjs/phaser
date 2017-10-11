@@ -1,7 +1,7 @@
 
-var CanvasPool = require('../dom/CanvasPool');
+var CanvasPool = require('../display/canvas/CanvasPool');
 var Class = require('../utils/Class');
-var Color = require('../graphics/color/Color');
+var Color = require('../display/color/Color');
 var GenerateTexture = require('../create/GenerateTexture');
 var GetValue = require('../utils/object/GetValue');
 var Parser = require('./parsers');

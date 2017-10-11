@@ -1,4 +1,4 @@
-var CanvasPool = require('../dom/CanvasPool');
+var CanvasPool = require('../display/canvas/CanvasPool');
 
 var CanvasFeatures = {
 

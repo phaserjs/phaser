@@ -3,7 +3,7 @@ var CONST = require('../const');
 var GetValue = require('../utils/object/GetValue');
 var MATH = require('../math/const');
 var NOOP = require('../utils/NOOP');
-var ValueToColor = require('../graphics/color/ValueToColor');
+var ValueToColor = require('../display/color/ValueToColor');
 
 /**
  * This callback type is completely empty, a no-operation.
