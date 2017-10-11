@@ -1,7 +1,8 @@
-var fs = require('fs-extra');
+let fs = require('fs-extra');
+let sloc = require('node-sloc');
 
-var source = './dist/phaser.js';
-var dest = '../../phaser3-examples/public/build/dev.js';
+let source = './dist/phaser.js';
+let dest = '../../phaser3-examples/public/build/dev.js';
 
 if (fs.existsSync(dest))
 {
@@ -13,6 +14,15 @@ if (fs.existsSync(dest))
         }
 
         console.log('Build copied to ' + dest);
+
+        const options = {
+            path: './src',
+            extensions: [ '.js' ]
+        };
+ 
+        sloc(options).then((res) => {
+            console.log('Source files: ' + res.sloc.files + '\nLines of code: ' + res.sloc.sloc);
+        });
 
     });
 }
