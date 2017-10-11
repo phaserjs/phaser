@@ -65,8 +65,8 @@ var Origin = {
 
     updateOrigin: function ()
     {
-        this.displayOriginX = Math.round(this.originX * this.width);
-        this.displayOriginY = Math.round(this.originY * this.height);
+        this._displayOriginX = Math.round(this.originX * this.width);
+        this._displayOriginY = Math.round(this.originY * this.height);
 
         return this;
     }
