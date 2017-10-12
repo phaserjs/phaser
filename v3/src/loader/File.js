@@ -162,4 +162,34 @@ var File = new Class({
 
 });
 
+File.createObjectURL = function (data, response, defaultType)
+{
+    if(URL)
+    {
+        data.src = URL.createObjectURL(response);
+    }
+    else
+    {
+        var reader = new FileReader();
+
+        reader.onload = function()
+        {
+            delete data.crossOrigin;
+            data.src = 'data:' + (response.type || defaultType) + ';base64,' + reader.result.split(',')[1];
+        };
+
+        reader.onerror = data.onerror;
+
+        reader.readAsDataURL(response);
+    }
+};
+
+File.revokeObjectURL = function (data)
+{
+    if(URL)
+    {
+        URL.revokeObjectURL(data.src);
+    }
+};
+
 module.exports = File;
