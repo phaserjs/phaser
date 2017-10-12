@@ -162,11 +162,21 @@ var File = new Class({
 
 });
 
-File.createObjectURL = function (data, response, defaultType)
+/**
+ * Static method for creating object URL using URL API and setting it as image 'src' attribute.
+ * If URL API is not supported (usually on old browsers) it falls back to creating Base64 encoded url using FileReader.
+ *
+ * @method createObjectURL
+ * @static
+ * @param image {Image} Image object which 'src' attribute should be set to object URL.
+ * @param blob {Blob} A Blob object to create an object URL for.
+ * @param defaultType {string} Default mime type used if blob type is not available.
+ */
+File.createObjectURL = function (image, blob, defaultType)
 {
     if(URL)
     {
-        data.src = URL.createObjectURL(response);
+        image.src = URL.createObjectURL(blob);
     }
     else
     {
@@ -174,21 +184,29 @@ File.createObjectURL = function (data, response, defaultType)
 
         reader.onload = function()
         {
-            delete data.crossOrigin;
-            data.src = 'data:' + (response.type || defaultType) + ';base64,' + reader.result.split(',')[1];
+            delete image.crossOrigin;
+            image.src = 'data:' + (blob.type || defaultType) + ';base64,' + reader.result.split(',')[1];
         };
 
-        reader.onerror = data.onerror;
+        reader.onerror = image.onerror;
 
-        reader.readAsDataURL(response);
+        reader.readAsDataURL(blob);
     }
 };
 
-File.revokeObjectURL = function (data)
+/**
+ * Static method for releasing an existing object URL which was previously created
+ * by calling {@link File#createObjectURL} method.
+ *
+ * @method revokeObjectURL
+ * @static
+ * @param image {Image} Image object which 'src' attribute should be revoked.
+ */
+File.revokeObjectURL = function (image)
 {
     if(URL)
     {
-        URL.revokeObjectURL(data.src);
+        URL.revokeObjectURL(image.src);
     }
 };
 
