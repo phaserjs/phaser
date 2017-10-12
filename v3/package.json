@@ -1,6 +1,4 @@
 {
-  "//": "git tag 3.0.0-beta.6",
-  "//": "git push",
   "//": "npm publish --tag beta",
   "name": "phaser",
   "version": "3.0.0-beta.6",
@@ -21,7 +19,8 @@
   "scripts": {
     "build": "webpack",
     "dist": "webpack --config webpack.dist.config.js",
-    "lint": "eslint --config .eslintrc.json \"src/**/*.js\""
+    "lint": "eslint --config .eslintrc.json \"src/**/*.js\"",
+    "sloc": "node-sloc './src' --include-extensions \"js\""
   },
   "keywords": [
     "2d",
@@ -38,6 +37,7 @@
   "devDependencies": {
     "eslint": "^4.3.0",
     "fs-extra": "^4.0.0",
+    "node-sloc": "^0.1.10",
     "uglifyjs-webpack-plugin": "^0.4.6",
     "uuid": "^3.1.0",
     "webpack": "^3.4.1",

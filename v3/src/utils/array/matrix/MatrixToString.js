@@ -4,6 +4,16 @@ var CheckMatrix = require('./CheckMatrix');
 //  Generates a string (which you can pass to console.log) from the given
 //  Array Matrix.
 
+/**
+ * [description]
+ *
+ * @function Phaser.Utils.Array.Matrix.MatrixToString
+ * @since 3.0.0
+ *
+ * @param {array} matrix - [description]
+ *
+ * @return {string} [description]
+ */
  var MatrixToString = function (matrix)
  {
     var str = '';

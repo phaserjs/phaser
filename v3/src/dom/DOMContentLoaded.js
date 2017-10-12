@@ -2,11 +2,21 @@ var OS = require('../device/OS');
 
 var isBooted = false;
 
+/**
+ * [description]
+ *
+ * @function Phaser.Dom.DOMContentLoaded
+ * @since 3.0.0
+ *
+ * @param {function} callback - The callback to be invoked when the device is ready and the DOM content is loaded.
+ *
+ * @return {boolean} Returns `false` if the document is already loaded, otherwise `true` if the callback is pending.
+ */
 var DOMContentLoaded = function (callback)
 {
     if (isBooted)
     {
-        return;
+        return false;
     }
 
     if (document.readyState === 'complete' || document.readyState === 'interactive')
@@ -15,7 +25,7 @@ var DOMContentLoaded = function (callback)
         
         callback();
 
-        return;
+        return true;
     }
 
     var check = function ()
@@ -43,6 +53,8 @@ var DOMContentLoaded = function (callback)
         document.addEventListener('DOMContentLoaded', check, true);
         window.addEventListener('load', check, true);
     }
+    
+    return true;
 };
 
 module.exports = DOMContentLoaded;

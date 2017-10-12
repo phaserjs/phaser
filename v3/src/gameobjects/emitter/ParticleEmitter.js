@@ -4,7 +4,7 @@ var Components = require('../components');
 var DegToRad = require('../../math/DegToRad');
 var Easing = require('../../math/easing');
 var GameObject = require('../GameObject');
-var GetEaseFunction = require('../../tween/builder/GetEaseFunction');
+var GetEaseFunction = require('../../tweens/builder/GetEaseFunction');
 var Particle = require('./Particle');
 var Render = require('./ParticleEmitterRender');
 var StableSort = require('../../utils/array/StableSort');
@@ -28,34 +28,44 @@ var ParticleEmitter = new Class({
 
     function ParticleEmitter (scene, x, y, texture, frame)
     {
-
         GameObject.call(this, scene, 'ParticleEmitter');
 
         this.dead = [];
         this.alive = [];
+
         this.minSpeed = 0;
         this.maxSpeed = 0;
+
         this.startScale = 1.0;
         this.endScale = 1.0;
+
         this.startAlpha = 1.0;
         this.endAlpha = 1.0;
+
         this.minEmitAngle = 0;
         this.maxEmitAngle = 360;
+
         this.startAngle = 0;
         this.endAngle = 0;
+
         this.gravityX = 0;
         this.gravityY = 0;
+
         this.life = 1.0;
+
         this.delay = 0.0;
         this.delayCounter = 0.0;
+
         this.deathCallback = null;
         this.emitCount = 1;
         this.enabled = true;
         this.allowCreation = true;
         this.emitShape = null;
+
         this.easingFunctionAlpha = Easing.Linear;
         this.easingFunctionScale = Easing.Linear;
         this.easingFunctionRotation = Easing.Linear;
+
         this.setTexture(texture, frame);
         this.setPosition(x, y);
     },
@@ -155,6 +165,8 @@ var ParticleEmitter = new Class({
     setEmitterDelay: function (delay)
     {
         this.delay = delay;
+
+        return this;
     },
 
     reserve: function (particleCount)
@@ -236,27 +248,36 @@ var ParticleEmitter = new Class({
     pause: function ()
     {
         this.active = false;
+
+        return this;
     },
 
     resume: function ()
     {
         this.active = true;
+
+        return this;
     },
 
     explode: function (count)
     {
-        if (!count) { count = 100; }
+        if (count === undefined) { count = 100; }
+
         this.emitParticle(count);
+
+        return this;
     },
 
     setShape: function (shape)
     {
         this.emitShape = shape;
+
+        return this;
     },
 
     emitParticle: function (count)
     {
-        count = count || 1;
+        if (count === undefined) { count = 1; }
 
         var particle = null;
 
@@ -308,6 +329,7 @@ var ParticleEmitter = new Class({
 
             this.alive.push(particle);
         }
+
         return particle;
     },
 

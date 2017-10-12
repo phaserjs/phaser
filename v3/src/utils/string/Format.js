@@ -1,11 +1,17 @@
 /**
- * Replaces %1, %2, %3 etc in the String with the values
- * given in the array. Values are cast to strings.
- * If no value exists an empty string is inserted.
- * 
- * @param {string} string - The string containing the markers
- * @param {array} values - An array containing the values to replace the markers with
-*/
+ * Takes a string and replaces instances of markers with values in the given array.
+ * The markers take the form of `%1`, `%2`, etc. I.e.:
+ *
+ * `Format("The %1 is worth %2 gold", [ 'Sword', 500 ])`
+ *
+ * @function Phaser.Utils.String.Format
+ * @since 3.0.0
+ *
+ * @param {string} string - The string containing the replacement markers.
+ * @param {array} values - An array containing values that will replace the markers. If no value exists an empty string is inserted instead.
+ *
+ * @return {string} The string containing replaced values.
+ */
 var Format = function (string, values)
 {
     string.replace(/%([0-9]+)/g, function (s, n)

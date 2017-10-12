@@ -1,7 +1,7 @@
 var CONST = require('../const');
-var CanvasPool = require('../dom/CanvasPool');
+var CanvasPool = require('../display/canvas/CanvasPool');
 var Features = require('../device/Features');
-var CanvasInterpolation = require('../dom/CanvasInterpolation');
+var CanvasInterpolation = require('../display/canvas/CanvasInterpolation');
 
 /**
  * [description]

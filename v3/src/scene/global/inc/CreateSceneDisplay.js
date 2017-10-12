@@ -1,7 +1,6 @@
-var CanvasPool = require('../../../dom/CanvasPool');
+var CanvasPool = require('../../../display/canvas/CanvasPool');
 var CONST = require('../../../const');
-var GetContext = require('../../../canvas/GetContext');
-var CanvasInterpolation = require('../../../dom/CanvasInterpolation');
+var CanvasInterpolation = require('../../../display/canvas/CanvasInterpolation');
 
 /**
  * [description]
@@ -25,7 +24,7 @@ var CreateSceneDisplay = function (scene)
         if (settings.renderToTexture)
         {
             scene.sys.canvas = CanvasPool.create(scene, width, height);
-            scene.sys.context = GetContext(scene.sys.canvas);
+            scene.sys.context = scene.sys.canvas.getContext('2d');
         }
         else
         {

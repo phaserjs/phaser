@@ -1,4 +1,4 @@
-var CanvasPool = require('../../dom/CanvasPool');
+var CanvasPool = require('../../display/canvas/CanvasPool');
 var Class = require('../../utils/Class');
 var Components = require('../components');
 var GameObject = require('../GameObject');

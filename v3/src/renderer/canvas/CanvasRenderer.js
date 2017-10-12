@@ -4,9 +4,8 @@ var Class = require('../../utils/Class');
 var CONST = require('../../const');
 var DrawImage = require('./utils/DrawImage');
 var GetBlendModes = require('./utils/GetBlendModes');
-var GetContext = require('../../canvas/GetContext');
 var ScaleModes = require('../ScaleModes');
-var Smoothing = require('../../dom/Smoothing');
+var Smoothing = require('../../display/canvas/Smoothing');
 
 var CanvasRenderer = new Class({
 
@@ -43,7 +42,7 @@ var CanvasRenderer = new Class({
          * @property context
          * @type CanvasRenderingContext2D
          */
-        this.gameContext = GetContext(this.gameCanvas);
+        this.gameContext = this.gameCanvas.getContext('2d');
 
         this.gameConfig = game.config;
 

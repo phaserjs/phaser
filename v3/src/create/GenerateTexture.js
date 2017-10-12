@@ -1,6 +1,6 @@
 var GetValue = require('../utils/object/GetValue');
 var Arne16 = require('./palettes/Arne16');
-var CanvasPool = require('../dom/CanvasPool');
+var CanvasPool = require('../display/canvas/CanvasPool');
 
 var GenerateTexture = function (config)
 {

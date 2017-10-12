@@ -10,6 +10,17 @@
 *    [ 3, 3, 3, 3, 3, 3 ]
 *];
 */
+
+/**
+ * [description]
+ *
+ * @function Phaser.Utils.Array.Matrix.CheckMatrix
+ * @since 3.0.0
+ *
+ * @param {array} matrix - [description]
+ *
+ * @return {boolean} [description]
+ */
 var CheckMatrix = function (matrix)
 {
     if (!Array.isArray(matrix) || matrix.length < 2 || !Array.isArray(matrix[0]))

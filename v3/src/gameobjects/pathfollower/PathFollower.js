@@ -1,9 +1,9 @@
 var Class = require('../../utils/Class');
 var DegToRad = require('../../math/DegToRad');
-var GetBoolean = require('../../tween/builder/GetBoolean');
+var GetBoolean = require('../../tweens/builder/GetBoolean');
 var GetValue = require('../../utils/object/GetValue');
 var Sprite = require('../sprite/Sprite');
-var TWEEN_CONST = require('../../tween/tween/const');
+var TWEEN_CONST = require('../../tweens/tween/const');
 var Vector2 = require('../../math/Vector2');
 
 var PathFollower = new Class({

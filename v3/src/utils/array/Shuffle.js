@@ -1,10 +1,15 @@
 /**
-* A standard Fisher-Yates Array shuffle implementation which modifies the array in place.
-*
-* @method
-* @param {any[]} array - The array to shuffle.
-* @return {any[]} The original array, now shuffled.
-*/
+ * Shuffles the contents of the given array using the Fisher-Yates implementation.
+ *
+ * The original array is modified directly and returned.
+ *
+ * @function Phaser.Utils.Array.Shuffle
+ * @since 3.0.0
+ *
+ * @param {array} array - The array to shuffle. This array is modified in place.
+ *
+ * @return {array} The shuffled array.
+ */
 var Shuffle = function (array)
 {
     for (var i = array.length - 1; i > 0; i--)

@@ -1,16 +1,15 @@
 /**
-* Fetch a random entry from the given array.
-*
-* Will return null if there are no array items that fall within the specified range
-* or if there is no item for the randomly chosen index.
-*
-* @method
-* @param {any[]} objects - An array of objects.
-* @param {integer} startIndex - Optional offset off the front of the array. Default value is 0, or the beginning of the array.
-* @param {integer} length - Optional restriction on the number of values you want to randomly select from.
-* @return {object} The random object that was selected.
-*/
-
+ * [description]
+ *
+ * @function Phaser.Utils.Array.GetRandomElement
+ * @since 3.0.0
+ *
+ * @param {array} array - The array to select the random entry from.
+ * @param {integer} [start=0] - [description]
+ * @param {integer} [length=array.length] - [description]
+ *
+ * @return {object} A random element from the array, or `null` if no element could be found in the range given.
+ */
 var GetRandomElement = function (array, start, length)
 {
     if (start === undefined) { start = 0; }
