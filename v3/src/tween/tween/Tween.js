@@ -3,6 +3,8 @@ var GameObjectCreator = require('../../scene/plugins/GameObjectCreator');
 var GameObjectFactory = require('../../scene/plugins/GameObjectFactory');
 var TWEEN_CONST = require('./const');
 
+//  Phaser.Tweens.Tween
+
 var Tween = new Class({
 
     initialize:

@@ -1,3 +1,5 @@
+//  Phaser.Tweens.TweenData
+
 var TweenData = function (target, key, getEnd, getStart, ease, delay, duration, yoyo, hold, repeat, repeatDelay, flipX, flipY)
 {
     return {

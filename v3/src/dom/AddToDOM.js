@@ -1,3 +1,15 @@
+/**
+ * [description]
+ *
+ * @function Phaser.Dom.AddToDOM
+ * @since 3.0.0
+ *
+ * @param {any} element - [description]
+ * @param {any} parent - [description]
+ * @param {boolean} [overflowHidden=true] - [description]
+ *
+ * @return {any} [description]
+ */
 var AddToDOM = function (element, parent, overflowHidden)
 {
     if (overflowHidden === undefined) { overflowHidden = true; }

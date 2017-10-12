@@ -1,3 +1,13 @@
+/**
+ * [description]
+ *
+ * @function Phaser.Dom.ParseXML
+ * @since 3.0.0
+ *
+ * @param {string} data - The XML source stored in a string.
+ *
+ * @return {any} [description]
+ */
 var ParseXML = function (data)
 {
     var xml = '';
