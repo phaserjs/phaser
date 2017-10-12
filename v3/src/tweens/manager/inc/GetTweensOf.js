@@ -1,4 +1,13 @@
-//  Single Target or an Array of targets
+/**
+ * [description]
+ *
+ * @method Phaser.Tweens.TweenManager#getTweensOf
+ * @since 3.0.0
+ *
+ * @param {object|array} target - [description]
+ *
+ * @return {Phaser.Tweens.Tween[]} [description]
+ */
 var GetTweensOf = function (target)
 {
     var list = this._active;

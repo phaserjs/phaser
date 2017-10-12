@@ -1,3 +1,9 @@
+/**
+ * [description]
+ *
+ * @method Phaser.Tweens.Tween#calcDuration
+ * @since 3.0.0
+ */
 var CalcDuration = function ()
 {
     var max = 0;

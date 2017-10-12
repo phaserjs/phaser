@@ -1,3 +1,11 @@
+/**
+ * [description]
+ *
+ * @method Phaser.Tweens.TweenManager#getAllTweens
+ * @since 3.0.0
+ *
+ * @return {Phaser.Tweens.Tween[]} [description]
+ */
 var GetAllTweens = function ()
 {
     var list = this._active;

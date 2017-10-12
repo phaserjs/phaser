@@ -1,8 +1,17 @@
 var TWEEN_CONST = require('../const');
 var UpdateTweenData = require('./UpdateTweenData');
 
-//  Returns 'true' if this Tween has finished and should be removed from the Tween Manager
-//  Otherwise, returns false
+/**
+ * [description]
+ *
+ * @method Phaser.Tweens.Tween#update
+ * @since 3.0.0
+ *
+ * @param {number} timestamp - [description]
+ * @param {float} delta - [description]
+ *
+ * @return {boolean} Returns `true` if this Tween has finished and should be removed from the Tween Manager, otherwise returns `false`.
+ */
 var Update = function (timestamp, delta)
 {
     if (this.state === TWEEN_CONST.PAUSED)

@@ -1,6 +1,11 @@
-// var TWEEN_CONST = require('../const');
-
-//  For now progress = 0 to 1
+/**
+ * [description]
+ *
+ * @method Phaser.Tweens.Tween#seek
+ * @since 3.0.0
+ *
+ * @param {float} toPosition - A value between 0 and 1.
+ */
 var Seek = function (toPosition)
 {
     var data = this.data;

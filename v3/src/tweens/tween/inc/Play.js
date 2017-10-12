@@ -1,5 +1,13 @@
 var TWEEN_CONST = require('../const');
 
+/**
+ * [description]
+ *
+ * @method Phaser.Tweens.Tween#play
+ * @since 3.0.0
+ *
+ * @param {boolean} resetFromTimeline - [description]
+ */
 var Play = function (resetFromTimeline)
 {
     if (this.state === TWEEN_CONST.ACTIVE)
@@ -42,8 +50,6 @@ var Play = function (resetFromTimeline)
         this.paused = false;
     
         this.parent.makeActive(this);
-
-        return;
     }
     else
     {

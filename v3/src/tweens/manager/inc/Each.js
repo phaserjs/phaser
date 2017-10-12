@@ -1,11 +1,15 @@
+// Passes all Tweens to the given callback.
+
 /**
-* Passes all Tweens to the given callback.
-*
-* @method each
-* @param {function} callback - The function to call.
-* @param {object} [thisArg] - Value to use as `this` when executing callback.
-* @param {...*} [arguments] - Additional arguments that will be passed to the callback, after the child.
-*/
+ * [description]
+ *
+ * @method Phaser.Tweens.TweenManager#each
+ * @since 3.0.0
+ *
+ * @param {function} callback - [description]
+ * @param {object} [thisArg] - [description]
+ * @param {...*} [arguments] - [description]
+ */
 var Each = function (callback, thisArg)
 {
     var args = [ null ];

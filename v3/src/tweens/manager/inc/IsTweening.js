@@ -1,4 +1,13 @@
-//  Single Target only
+/**
+ * [description]
+ *
+ * @method Phaser.Tweens.TweenManager#isTweening
+ * @since 3.0.0
+ *
+ * @param {any} target - [description]
+ *
+ * @return {boolean} [description]
+ */
 var IsTweening = function (target)
 {
     var list = this._active;

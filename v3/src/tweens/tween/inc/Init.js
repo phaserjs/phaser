@@ -1,6 +1,13 @@
 var TWEEN_CONST = require('../const');
 
-//  Return true if this Tween should be moved from the pending list to the active list
+/**
+ * [description]
+ *
+ * @method Phaser.Tweens.Tween#init
+ * @since 3.0.0
+ *
+ * @return {boolean} Returns `true` if this Tween should be moved from the pending list to the active list by the Tween Manager.
+ */
 var Init = function ()
 {
     var data = this.data;

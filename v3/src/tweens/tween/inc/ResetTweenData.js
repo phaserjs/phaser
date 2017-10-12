@@ -1,5 +1,13 @@
 var TWEEN_CONST = require('../const');
 
+/**
+ * [description]
+ *
+ * @method Phaser.Tweens.Tween#resetTweenData
+ * @since 3.0.0
+ *
+ * @param {boolean} resetFromLoop - [description]
+ */
 var ResetTweenData = function (resetFromLoop)
 {
     var data = this.data;

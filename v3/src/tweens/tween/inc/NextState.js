@@ -1,5 +1,11 @@
 var TWEEN_CONST = require('../const');
 
+/**
+ * [description]
+ *
+ * @method Phaser.Tweens.Tween#nextState
+ * @since 3.0.0
+ */
 var NextState = function ()
 {
     if (this.loopCounter > 0)

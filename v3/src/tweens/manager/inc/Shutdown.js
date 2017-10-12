@@ -1,4 +1,11 @@
 //  Scene that owns this manager is shutting down
+
+/**
+ * [description]
+ *
+ * @method Phaser.Tweens.TweenManager#shutdown
+ * @since 3.0.0
+ */
 var Shutdown = function ()
 {
     this.killAll();
