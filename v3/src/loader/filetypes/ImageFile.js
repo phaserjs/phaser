@@ -56,7 +56,10 @@ var ImageFile = new Class({
 
         this.data.onload = function ()
         {
-            URL.revokeObjectURL(_this.data.src);
+            if(URL)
+            {
+                URL.revokeObjectURL(_this.data.src);
+            }
 
             _this.onComplete();
 
@@ -65,14 +68,40 @@ var ImageFile = new Class({
 
         this.data.onerror = function ()
         {
-            URL.revokeObjectURL(_this.data.src);
+            if(URL)
+            {
+                URL.revokeObjectURL(_this.data.src);
+            }
 
             _this.state = CONST.FILE_ERRORED;
 
             callback(_this);
         };
 
-        this.data.src = URL.createObjectURL(this.xhrLoader.response);
+       if(URL)
+        {
+            this.data.src = URL.createObjectURL(this.xhrLoader.response);
+        }
+        else
+        {
+            var reader = new FileReader();
+
+            reader.onload = function()
+            {
+                delete _this.data.crossOrigin;
+                _this.data.src = 'data:' + (_this.xhrLoader.response.type || 'image/png') + ';base64,' + reader.result.split(',')[1];
+            };
+
+            reader.onerror = function ()
+            {
+                _this.state = CONST.FILE_ERRORED;
+
+                callback(_this);
+            };
+
+            reader.readAsDataURL(this.xhrLoader.response);
+        }
+
     }
 
 });
