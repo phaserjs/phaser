@@ -1,10 +1,13 @@
 /**
-* The left coordinate of the Game Object.
-* This is the same as `x - offsetX`.
-*
-* @property {number} left
-*/
-
+ * [description]
+ *
+ * @function Phaser.Display.Bounds.GetBottom
+ * @since 3.0.0
+ *
+ * @param {Phaser.GameObjects.GameObject} gameObject - [description]
+ *
+ * @return {number} [description]
+ */
 var GetBottom = function (gameObject)
 {
     return (gameObject.y + gameObject.height) - (gameObject.height * gameObject.originY);

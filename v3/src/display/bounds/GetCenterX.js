@@ -1,10 +1,13 @@
 /**
-* The center x coordinate of the Game Object.
-* This is the same as `(x - offsetX) + (width / 2)`.
-*
-* @property {number} centerX
-*/
-
+ * [description]
+ *
+ * @function Phaser.Display.Bounds.GetCenterX
+ * @since 3.0.0
+ *
+ * @param {Phaser.GameObjects.GameObject} gameObject - [description]
+ *
+ * @return {number} [description]
+ */
 var GetCenterX = function (gameObject)
 {
     return gameObject.x - (gameObject.width * gameObject.originX) + (gameObject.width * 0.5);

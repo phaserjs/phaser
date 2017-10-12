@@ -8,6 +8,18 @@ var SetCenterY = require('./SetCenterY');
 * @property {number} centerX
 */
 
+/**
+ * [description]
+ *
+ * @function Phaser.Display.Bounds.CenterOn
+ * @since 3.0.0
+ *
+ * @param {Phaser.GameObjects.GameObject} gameObject - [description]
+ * @param {number} x - [description]
+ * @param {number} y - [description]
+ *
+ * @return {Phaser.GameObjects.GameObject} [description]
+ */
 var CenterOn = function (gameObject, x, y)
 {
     SetCenterX(gameObject, x);

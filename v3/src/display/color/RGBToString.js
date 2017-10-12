@@ -1,5 +1,19 @@
 var ComponentToHex = require('./ComponentToHex');
 
+/**
+ * [description]
+ *
+ * @function Phaser.Display.Color.RGBToString
+ * @since 3.0.0
+ *
+ * @param {integer} r - [description]
+ * @param {integer} g - [description]
+ * @param {integer} b - [description]
+ * @param {integer} [a=255] - [description]
+ * @param {string} [prefix=#] - [description]
+ *
+ * @return {string} [description]
+ */
 var RGBToString = function (r, g, b, a, prefix)
 {
     if (a === undefined) { a = 255; }

@@ -1,10 +1,14 @@
 /**
-* The y coordinate of the Game Object.
-* This is the same as `y - offsetY`.
-*
-* @property {number} top
-*/
-
+ * [description]
+ *
+ * @function Phaser.Display.Bounds.SetTop
+ * @since 3.0.0
+ *
+ * @param {Phaser.GameObjects.GameObject} gameObject - [description]
+ * @param {number} value - [description]
+ *
+ * @return {Phaser.GameObjects.GameObject} [description]
+ */
 var SetTop = function (gameObject, value)
 {
     gameObject.y = value + (gameObject.height * gameObject.originY);

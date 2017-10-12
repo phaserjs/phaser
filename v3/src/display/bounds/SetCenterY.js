@@ -1,15 +1,14 @@
 /**
-* The center x coordinate of the Game Object.
-* This is the same as `(x - offsetX) + (width / 2)`.
-*
-* @property {number} centerX
-*/
-
-//  Phaser.Utils.Bounds.GetCenterX(bob)
-//  Phaser.Utils.Bounds.CenterOn(bob, x, y)
-//  Phaser.Utils.Bounds.CenterX(bob, x)
-//  Phaser.Utils.Bounds.CenterY(bob, x)
-
+ * [description]
+ *
+ * @function Phaser.Display.Bounds.SetCenterY
+ * @since 3.0.0
+ *
+ * @param {Phaser.GameObjects.GameObject} gameObject - [description]
+ * @param {number} y - [description]
+ *
+ * @return {Phaser.GameObjects.GameObject} [description]
+ */
 var SetCenterY = function (gameObject, y)
 {
     var offsetY = gameObject.height * gameObject.originY;
