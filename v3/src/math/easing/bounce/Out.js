@@ -1,3 +1,13 @@
+/**
+ * [description]
+ *
+ * @function Phaser.Math.Easing.Bounce.Out
+ * @since 3.0.0
+ *
+ * @param {number} v - [description]
+ *
+ * @return {number} [description]
+ */
 var Out = function (v)
 {
     if (v < 1 / 2.75)

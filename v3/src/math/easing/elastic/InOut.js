@@ -1,3 +1,15 @@
+/**
+ * [description]
+ *
+ * @function Phaser.Math.Easing.Elastic.InOut
+ * @since 3.0.0
+ *
+ * @param {number} v - [description]
+ * @param {float} [amplitude=0.1] - [description]
+ * @param {float} [period=0.1] - [description]
+ *
+ * @return {number} [description]
+ */
 var InOut = function (v, amplitude, period)
 {
     if (amplitude === undefined) { amplitude = 0.1; }

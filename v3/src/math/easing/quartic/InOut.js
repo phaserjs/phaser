@@ -1,3 +1,13 @@
+/**
+ * [description]
+ *
+ * @function Phaser.Math.Easing.Quartic.InOut
+ * @since 3.0.0
+ *
+ * @param {number} v - [description]
+ *
+ * @return {number} [description]
+ */
 var InOut = function (v)
 {
     if ((v *= 2) < 1)
