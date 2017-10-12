@@ -1,14 +1,14 @@
-var Back = require('./Back');
-var Bounce = require('./Bounce');
-var Circular = require('./Circular');
-var Cubic = require('./Cubic');
-var Elastic = require('./Elastic');
-var Expo = require('./Expo');
-var Linear = require('./Linear');
-var Quadratic = require('./Quadratic');
-var Quartic = require('./Quartic');
-var Quintic = require('./Quintic');
-var Sine = require('./Sine');
+var Back = require('./back');
+var Bounce = require('./bounce');
+var Circular = require('./circular');
+var Cubic = require('./cubic');
+var Elastic = require('./elastic');
+var Expo = require('./expo');
+var Linear = require('./linear');
+var Quadratic = require('./quadratic');
+var Quartic = require('./quartic');
+var Quintic = require('./quintic');
+var Sine = require('./sine');
 
 //  EaseMap
 module.exports = {
