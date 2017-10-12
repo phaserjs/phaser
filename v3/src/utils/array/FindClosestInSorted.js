@@ -1,12 +1,14 @@
 /**
-* Snaps a value to the nearest value in an array.
-* The result will always be in the range `[first_value, last_value]`.
-*
-* @method
-* @param {number} value - The search value
-* @param {number[]} arr - The input array which _must_ be sorted.
-* @return {number} The nearest value found.
-*/
+ * [description]
+ *
+ * @function Phaser.Utils.Array.FindClosestInSorted
+ * @since 3.0.0
+ *
+ * @param {number} value - The value to search for in the array.
+ * @param {array} array - The array to search, which must be sorted.
+ *
+ * @return {number} The nearest value found in the array.
+ */
 var FindClosestInSorted = function (value, array)
 {
     if (!array.length)

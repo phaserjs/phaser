@@ -1,12 +1,17 @@
+// Moves the element at the start of the array to the end, shifting all items in the process.
+// The "rotation" happens to the left.
+
 /**
-* Moves the element at the start of the array to the end, shifting all items in the process.
-* The "rotation" happens to the left.
-*
-* @method Phaser.ArrayUtils.rotate
-* @param {any[]} array - The array to shift/rotate. The array is modified.
-* @param {integer} [total=1] - The number of times to shift the array. Only the most recently shifted element is returned.
-* @return {any} The shifted value.
-*/
+ * [description]
+ *
+ * @function Phaser.Utils.Array.RotateLeft
+ * @since 3.0.0
+ *
+ * @param {array} array - The array to shift to the left. This array is modified in place.
+ * @param {integer} [total=1] - The number of times to shift the array.
+ *
+ * @return {any} The most recently shifted element.
+ */
 var RotateLeft = function (array, total)
 {
     if (total === undefined) { total = 1; }

@@ -1,7 +1,15 @@
-
+/**
+ * A NOOP (No Operation) callback function.
+ *
+ * Used internally by Phaser when it's more expensive to determine if a callback exists
+ * than it is to just invoke an empty function.
+ *
+ * @function Phaser.Utils.NOOP
+ * @since 3.0.0
+ */
 var NOOP = function ()
 {
-    //  NOOP (No Operation) Callback
+    //  NOOP
 };
 
 module.exports = NOOP;
