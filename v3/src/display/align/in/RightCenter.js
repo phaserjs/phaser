@@ -3,7 +3,7 @@ var GetCenterY = require('../../bounds/GetCenterY');
 var SetRight = require('../../bounds/SetRight');
 var SetCenterY = require('../../bounds/SetCenterY');
 
-var InRightCenter = function (gameObject, container, offsetX, offsetY)
+var RightCenter = function (gameObject, container, offsetX, offsetY)
 {
     if (offsetX === undefined) { offsetX = 0; }
     if (offsetY === undefined) { offsetY = 0; }
@@ -14,4 +14,4 @@ var InRightCenter = function (gameObject, container, offsetX, offsetY)
     return gameObject;
 };
 
-module.exports = InRightCenter;
+module.exports = RightCenter;

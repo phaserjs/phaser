@@ -3,7 +3,7 @@ var GetBottom = require('../../bounds/GetBottom');
 var SetCenterX = require('../../bounds/SetCenterX');
 var SetTop = require('../../bounds/SetTop');
 
-var ToBottomCenter = function (gameObject, parent, offsetX, offsetY)
+var BottomCenter = function (gameObject, parent, offsetX, offsetY)
 {
     if (offsetX === undefined) { offsetX = 0; }
     if (offsetY === undefined) { offsetY = 0; }
@@ -14,4 +14,4 @@ var ToBottomCenter = function (gameObject, parent, offsetX, offsetY)
     return gameObject;
 };
 
-module.exports = ToBottomCenter;
+module.exports = BottomCenter;

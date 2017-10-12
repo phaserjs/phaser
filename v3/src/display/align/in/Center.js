@@ -2,7 +2,7 @@ var GetCenterX = require('../../bounds/GetCenterX');
 var GetCenterY = require('../../bounds/GetCenterY');
 var CenterOn = require('../../bounds/CenterOn');
 
-var InCenter = function (gameObject, container, offsetX, offsetY)
+var Center = function (gameObject, container, offsetX, offsetY)
 {
     if (offsetX === undefined) { offsetX = 0; }
     if (offsetY === undefined) { offsetY = 0; }
@@ -12,4 +12,4 @@ var InCenter = function (gameObject, container, offsetX, offsetY)
     return gameObject;
 };
 
-module.exports = InCenter;
+module.exports = Center;

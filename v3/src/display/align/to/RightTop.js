@@ -3,7 +3,7 @@ var GetTop = require('../../bounds/GetTop');
 var SetLeft = require('../../bounds/SetLeft');
 var SetTop = require('../../bounds/SetTop');
 
-var ToRightTop = function (gameObject, parent, offsetX, offsetY)
+var RightTop = function (gameObject, parent, offsetX, offsetY)
 {
     if (offsetX === undefined) { offsetX = 0; }
     if (offsetY === undefined) { offsetY = 0; }
@@ -14,4 +14,4 @@ var ToRightTop = function (gameObject, parent, offsetX, offsetY)
     return gameObject;
 };
 
-module.exports = ToRightTop;
+module.exports = RightTop;

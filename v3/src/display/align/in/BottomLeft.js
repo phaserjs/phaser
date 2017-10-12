@@ -3,7 +3,7 @@ var GetBottom = require('../../bounds/GetBottom');
 var SetLeft = require('../../bounds/SetLeft');
 var SetBottom = require('../../bounds/SetBottom');
 
-var InBottomLeft = function (gameObject, container, offsetX, offsetY)
+var BottomLeft = function (gameObject, container, offsetX, offsetY)
 {
     if (offsetX === undefined) { offsetX = 0; }
     if (offsetY === undefined) { offsetY = 0; }
@@ -14,4 +14,4 @@ var InBottomLeft = function (gameObject, container, offsetX, offsetY)
     return gameObject;
 };
 
-module.exports = InBottomLeft;
+module.exports = BottomLeft;
