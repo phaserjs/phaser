@@ -10,7 +10,8 @@ var Point = require('../point/Point');
  *
  * @param {Phaser.Geom.Circle} circle - The Circle to get the circumference point on.
  * @param {number} angle - [description]
- * @param {Phaser.Geom.Point|object} out - [description]
+ * @param {Phaser.Geom.Point|object} [out] - [description]
+ *
  * @return {Phaser.Geom.Point|object} [description]
  */
 var CircumferencePoint = function (circle, angle, out)

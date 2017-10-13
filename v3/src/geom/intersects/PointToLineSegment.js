@@ -1,5 +1,16 @@
 var PointToLine = require('./PointToLine');
 
+/**
+ * [description]
+ *
+ * @function Phaser.Geom.Intersects.PointToLineSegment
+ * @since 3.0.0
+ *
+ * @param {Phaser.Geom.Point} point - [description]
+ * @param {Phaser.Geom.Line} line - [description]
+ *
+ * @return {boolean} [description]
+ */
 var PointToLineSegment = function (point, line)
 {
     if (!PointToLine(point, line))

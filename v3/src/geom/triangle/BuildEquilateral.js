@@ -7,6 +7,18 @@ var Triangle = require('./Triangle');
 //  The x/y specifies the top-middle of the triangle (x1/y1) and length
 //  is the length of each side
 
+/**
+ * [description]
+ *
+ * @function Phaser.Geom.Triangle.BuildEquilateral
+ * @since 3.0.0
+ *
+ * @param {number} x - [description]
+ * @param {number} y - [description]
+ * @param {number} length - [description]
+ *
+ * @return {Phaser.Geom.Triangle} [description]
+ */
 var BuildEquilateral = function (x, y, length)
 {
     var height = length * (Math.sqrt(3) / 2);

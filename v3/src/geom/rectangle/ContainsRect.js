@@ -1,5 +1,16 @@
 //  Checks if rectB is fully contained within rectA
 
+/**
+ * [description]
+ *
+ * @function Phaser.Geom.Rectangle.ContainsRect
+ * @since 3.0.0
+ *
+ * @param {Phaser.Geom.Rectangle} rectA - [description]
+ * @param {Phaser.Geom.Rectangle} rectB - [description]
+ *
+ * @return {boolean} [description]
+ */
 var ContainsRect = function (rectA, rectB)
 {
     //  Volume check (if rectB volume > rectA then rectA cannot contain it)

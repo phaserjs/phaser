@@ -1,7 +1,17 @@
-
-var LineToLine = require('./LineToLine');
 var Contains = require('../triangle/Contains');
+var LineToLine = require('./LineToLine');
 
+/**
+ * [description]
+ *
+ * @function Phaser.Geom.Intersects.TriangleToLine
+ * @since 3.0.0
+ *
+ * @param {Phaser.Geom.Triangle} triangle - [description]
+ * @param {Phaser.Geom.Line} line - [description]
+ *
+ * @return {boolean} [description]
+ */
 var TriangleToLine = function (triangle, line)
 {
     //  If the Triangle contains either the start or end point of the line, it intersects

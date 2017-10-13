@@ -1,3 +1,15 @@
+/**
+ * [description]
+ *
+ * @function Phaser.Geom.Triangle.Offset
+ * @since 3.0.0
+ *
+ * @param {Phaser.Geom.Triangle} triangle - [description]
+ * @param {number} x - [description]
+ * @param {number} y - [description]
+ *
+ * @return {Phaser.Geom.Triangle} [description]
+ */
 var Offset = function (triangle, x, y)
 {
     triangle.x1 += x;

@@ -1,3 +1,13 @@
+/**
+ * [description]
+ *
+ * @function Phaser.Geom.Rectangle.CeilAll
+ * @since 3.0.0
+ *
+ * @param {Phaser.Geom.Rectangle} rect - [description]
+ *
+ * @return {Phaser.Geom.Rectangle} [description]
+ */
 var CeilAll = function (rect)
 {
     rect.x = Math.ceil(rect.x);

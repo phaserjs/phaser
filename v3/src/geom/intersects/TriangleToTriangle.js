@@ -1,8 +1,18 @@
-
-var LineToLine = require('./LineToLine');
 var ContainsArray = require('../triangle/ContainsArray');
 var Decompose = require('../triangle/Decompose');
+var LineToLine = require('./LineToLine');
 
+/**
+ * [description]
+ *
+ * @function Phaser.Geom.Intersects.TriangleToTriangle
+ * @since 3.0.0
+ *
+ * @param {Phaser.Geom.Triangle} triangleA - [description]
+ * @param {Phaser.Geom.Triangle} triangleB - [description]
+ *
+ * @return {boolean} [description]
+ */
 var TriangleToTriangle = function (triangleA, triangleB)
 {
     //  First the cheapest ones:

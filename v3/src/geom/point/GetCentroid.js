@@ -1,5 +1,16 @@
 var Point = require('./Point');
 
+/**
+ * [description]
+ *
+ * @function Phaser.Geom.Point.GetCentroid
+ * @since 3.0.0
+ *
+ * @param {Phaser.Geom.Point[]} points - [description]
+ * @param {Phaser.Geom.Point} [out] - [description]
+ *
+ * @return {Phaser.Geom.Point} [description]
+ */
 var GetCentroid = function (points, out)
 {
     if (out === undefined) { out = new Point(); }

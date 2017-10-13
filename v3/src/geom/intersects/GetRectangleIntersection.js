@@ -1,6 +1,18 @@
 var Rectangle = require('../rectangle/Rectangle');
 var RectangleToRectangle = require('./RectangleToRectangle');
 
+/**
+ * [description]
+ *
+ * @function Phaser.Geom.Intersects.GetRectangleIntersection
+ * @since 3.0.0
+ *
+ * @param {Phaser.Geom.Rectangle} rectA - [description]
+ * @param {Phaser.Geom.Rectangle} rectB - [description]
+ * @param {Phaser.Geom.Rectangle} [output] - [description]
+ *
+ * @return {Phaser.Geom.Rectangle} [description]
+ */
 var GetRectangleIntersection = function (rectA, rectB, output)
 {
     if (output === undefined) { output = new Rectangle(); }

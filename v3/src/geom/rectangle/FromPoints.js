@@ -8,6 +8,17 @@ var Rectangle = require('./Rectangle');
 //      { x: 30, y: 60 }
 //  ]
 
+/**
+ * [description]
+ *
+ * @function Phaser.Geom.Rectangle.FromPoints
+ * @since 3.0.0
+ *
+ * @param {[type]} points - [description]
+ * @param {Phaser.Geom.Rectangle} out - [description]
+ *
+ * @return {Phaser.Geom.Rectangle} [description]
+ */
 var FromPoints = function (points, out)
 {
     if (out === undefined) { out = new Rectangle(); }

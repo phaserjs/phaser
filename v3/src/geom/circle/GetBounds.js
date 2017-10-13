@@ -8,6 +8,7 @@ var Rectangle = require('../rectangle/Rectangle');
  *
  * @param {Phaser.Geom.Circle} circle - [description]
  * @param {Phaser.Geom.Rectangle|object} [out] - [description]
+ *
  * @return {Phaser.Geom.Rectangle|object} [description]
  */
 var GetBounds = function (circle, out)

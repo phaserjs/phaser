@@ -1,3 +1,18 @@
+/**
+ * [description]
+ *
+ * @function Phaser.Geom.Intersects.RectangleToValues
+ * @since 3.0.0
+ *
+ * @param {Phaser.Geom.Rectangle} rect - [description]
+ * @param {number} left - [description]
+ * @param {number} right - [description]
+ * @param {number} top - [description]
+ * @param {number} bottom - [description]
+ * @param {float} [tolerance=0] - [description]
+ *
+ * @return {boolean} [description]
+ */
 var RectangleToValues = function (rect, left, right, top, bottom, tolerance)
 {
     if (tolerance === undefined) { tolerance = 0; }

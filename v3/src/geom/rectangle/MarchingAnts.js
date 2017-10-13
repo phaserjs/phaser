@@ -1,8 +1,22 @@
 var Perimeter = require('./Perimeter');
+var Point = require('../point/Point');
 
 //  Return an array of points from the perimeter of the rectangle
 //  each spaced out based on the quantity or step required
 
+/**
+ * [description]
+ *
+ * @function Phaser.Geom.Rectangle.MarchingAnts
+ * @since 3.0.0
+ *
+ * @param {Phaser.Geom.Rectangle} rect - [description]
+ * @param {number} step - [description]
+ * @param {integer} quantity - [description]
+ * @param {array} [out] - [description]
+ *
+ * @return {Phaser.Geom.Point[]} [description]
+ */
 var MarchingAnts = function (rect, step, quantity, out)
 {
     if (out === undefined) { out = []; }
@@ -32,7 +46,7 @@ var MarchingAnts = function (rect, step, quantity, out)
 
     for (var i = 0; i < quantity; i++)
     {
-        out.push({ x: x, y: y });
+        out.push(new Point(x, y));
 
         switch (face)
         {

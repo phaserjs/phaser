@@ -1,3 +1,14 @@
+/**
+ * [description]
+ *
+ * @function Phaser.Geom.Rectangle.Decompose
+ * @since 3.0.0
+ *
+ * @param {Phaser.Geom.Rectangle} rect - [description]
+ * @param {array} [out] - [description]
+ *
+ * @return {array} [description]
+ */
 var Decompose = function (rect, out)
 {
     if (out === undefined) { out = []; }

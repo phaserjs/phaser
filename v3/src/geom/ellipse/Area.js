@@ -1,3 +1,13 @@
+/**
+ * [description]
+ *
+ * @function Phaser.Geom.Ellipse.Area
+ * @since 3.0.0
+ *
+ * @param {Phaser.Geom.Ellipse} ellipse - [description]
+ *
+ * @return {number} [description]
+ */
 var Area = function (ellipse)
 {
     if (ellipse.isEmpty())

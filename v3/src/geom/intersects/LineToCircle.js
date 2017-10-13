@@ -2,9 +2,22 @@
 //  https://github.com/mattdesl/line-circle-collision/blob/master/LICENSE.md
 
 var Contains = require('../circle/Contains');
+var Point = require('../point/Point');
 
-var tmp = { x: 0, y: 0 };
+var tmp = new Point();
 
+/**
+ * [description]
+ *
+ * @function Phaser.Geom.Intersects.LineToCircle
+ * @since 3.0.0
+ *
+ * @param {Phaser.Geom.Line} line - [description]
+ * @param {Phaser.Geom.Circle} circle - [description]
+ * @param {Phaser.Geom.Point} [nearest] - [description]
+ *
+ * @return {boolean} [description]
+ */
 var LineToCircle = function (line, circle, nearest)
 {
     if (nearest === undefined) { nearest = tmp; }

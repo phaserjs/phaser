@@ -1,3 +1,14 @@
+/**
+ * [description]
+ *
+ * @function Phaser.Geom.Intersects.CircleToRectangle
+ * @since 3.0.0
+ *
+ * @param {Phaser.Geom.Circle} circle - [description]
+ * @param {Phaser.Geom.Rectangle} rect - [description]
+ *
+ * @return {boolean} [description]
+ */
 var CircleToRectangle = function (circle, rect)
 {
     var halfWidth = rect.width / 2;

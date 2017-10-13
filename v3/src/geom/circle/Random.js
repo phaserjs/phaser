@@ -8,6 +8,7 @@ var Point = require('../point/Point');
  *
  * @param {Phaser.Geom.Circle} circle - [description]
  * @param {Phaser.Geom.Point|object} [out] - [description]
+ *
  * @return {Phaser.Geom.Point|object} [description]
  */
 var Random = function (circle, out)

@@ -8,6 +8,7 @@ var Contains = require('./Contains');
  *
  * @param {Phaser.Geom.Circle} circle - [description]
  * @param {Phaser.Geom.Rectangle|object} rect - [description]
+ *
  * @return {boolean} [description]
  */
 var ContainsRect = function (circle, rect)

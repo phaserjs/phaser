@@ -1,3 +1,14 @@
+/**
+ * [description]
+ *
+ * @function Phaser.Geom.Triangle.Equals
+ * @since 3.0.0
+ *
+ * @param {Phaser.Geom.Triangle} triangle - [description]
+ * @param {Phaser.Geom.Triangle} toCompare - [description]
+ *
+ * @return {boolean} [description]
+ */
 var Equals = function (triangle, toCompare)
 {
     return (

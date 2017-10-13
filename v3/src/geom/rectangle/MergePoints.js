@@ -1,6 +1,17 @@
 //  Merges the target Rectangle with a list of points.
 //  The points is an array of objects with public x/y properties.
 
+/**
+ * [description]
+ *
+ * @function Phaser.Geom.Rectangle.MergePoints
+ * @since 3.0.0
+ *
+ * @param {Phaser.Geom.Rectangle} target - [description]
+ * @param {Phaser.Geom.Point[]} points - [description]
+ *
+ * @return {Phaser.Geom.Rectangle} [description]
+ */
 var MergePoints = function (target, points)
 {
     var minX = target.x;

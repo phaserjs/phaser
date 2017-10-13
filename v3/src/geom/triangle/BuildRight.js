@@ -4,6 +4,19 @@ var Triangle = require('./Triangle');
 //  The x/y is the coordinate of the 90 degree angle (and will map to x1/y1 in the resulting Triangle)
 //  w/h can be positive or negative and represent the length of each side
 
+/**
+ * [description]
+ *
+ * @function Phaser.Geom.Triangle.BuildRight
+ * @since 3.0.0
+ *
+ * @param {number} x - [description]
+ * @param {number} y - [description]
+ * @param {number} width - [description]
+ * @param {number} height - [description]
+ *
+ * @return {Phaser.Geom.Triangle} [description]
+ */
 var BuildRight = function (x, y, width, height)
 {
     if (height === undefined) {  height = width; }

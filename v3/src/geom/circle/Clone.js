@@ -7,6 +7,7 @@ var Circle = require('./Circle');
  * @since 3.0.0
  *
  * @param {Phaser.Geom.Circle} source - The Circle to be cloned.
+ *
  * @return {Phaser.Geom.Circle} A clone of the source Circle.
  */
 var Clone = function (source)

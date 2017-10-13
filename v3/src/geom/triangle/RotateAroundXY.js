@@ -1,4 +1,16 @@
-
+/**
+ * [description]
+ *
+ * @function Phaser.Geom.Triangle.RotateAroundXY
+ * @since 3.0.0
+ *
+ * @param {Phaser.Geom.Triangle} triangle - [description]
+ * @param {number} x - [description]
+ * @param {number} y - [description]
+ * @param {number} angle - [description]
+ *
+ * @return {Phaser.Geom.Triangle} [description]
+ */
 var RotateAroundXY = function (triangle, x, y, angle)
 {
     var c = Math.cos(angle);

@@ -8,6 +8,7 @@ var Contains = require('./Contains');
  *
  * @param {Phaser.Geom.Circle} circle - [description]
  * @param {Phaser.Geom.Point|object} point - [description]
+ *
  * @return {boolean} [description]
  */
 var ContainsPoint = function (circle, point)

@@ -1,4 +1,15 @@
-
+/**
+ * [description]
+ *
+ * @function Phaser.Geom.Rectangle.MergeXY
+ * @since 3.0.0
+ *
+ * @param {Phaser.Geom.Rectangle} target - [description]
+ * @param {number} x - [description]
+ * @param {number} y - [description]
+ *
+ * @return {Phaser.Geom.Rectangle} [description]
+ */
 var MergeXY = function (target, x, y)
 {
     var minX = Math.min(target.x, x);

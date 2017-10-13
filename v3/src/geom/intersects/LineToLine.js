@@ -1,9 +1,23 @@
+var Point = require('../point/Point');
+
 //  This is based off an explanation and expanded math presented by Paul Bourke:
 //  See http:'local.wasp.uwa.edu.au/~pbourke/geometry/lineline2d/
 
+/**
+ * [description]
+ *
+ * @function Phaser.Geom.Intersects.LineToLine
+ * @since 3.0.0
+ *
+ * @param {Phaser.Geom.Line} line1 - [description]
+ * @param {Phaser.Geom.Line} line2 - [description]
+ * @param {Phaser.Geom.Point} [out] - [description]
+ *
+ * @return {boolean} [description]
+ */
 var LineToLine = function (line1, line2, out)
 {
-    if (out === undefined) { out = { x: 0, y: 0 }; }
+    if (out === undefined) { out = new Point(); }
 
     var x1 = line1.x1;
     var y1 = line1.y1;

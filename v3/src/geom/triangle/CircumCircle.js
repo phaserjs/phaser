@@ -1,8 +1,21 @@
+var Circle = require('../circle/Circle');
+
 //  Adapted from https://gist.github.com/mutoo/5617691
 
+/**
+ * [description]
+ *
+ * @function Phaser.Geom.Triangle.CircumCircle
+ * @since 3.0.0
+ *
+ * @param {Phaser.Geom.Triangle} triangle - [description]
+ * @param {Phaser.Geom.Circle} [out] - [description]
+ *
+ * @return {Phaser.Geom.Circle} [description]
+ */
 var CircumCircle = function (triangle, out)
 {
-    if (out === undefined) { out = { x: 0, y: 0, radius: 0 }; }
+    if (out === undefined) { out = new Circle(); }
 
     //  A
     var x1 = triangle.x1;

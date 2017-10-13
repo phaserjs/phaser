@@ -6,6 +6,7 @@
  *
  * @param {Phaser.Geom.Circle} circle - [description]
  * @param {Phaser.Geom.Point|object} point - [description]
+ *
  * @return {Phaser.Geom.Circle} [description]
  */
 var OffsetPoint = function (circle, point)

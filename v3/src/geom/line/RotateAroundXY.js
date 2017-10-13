@@ -1,4 +1,16 @@
-
+/**
+ * [description]
+ *
+ * @function Phaser.Geom.Line.RotateAroundXY
+ * @since 3.0.0
+ *
+ * @param {Phaser.Geom.Line} line - [description]
+ * @param {number} x - [description]
+ * @param {number} y - [description]
+ * @param {number} angle - [description]
+ *
+ * @return {Phaser.Geom.Line} [description]
+ */
 var RotateAroundXY = function (line, x, y, angle)
 {
     var c = Math.cos(angle);

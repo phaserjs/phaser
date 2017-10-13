@@ -1,7 +1,17 @@
-
 var LineToCircle = require('./LineToCircle');
 var Contains = require('../triangle/Contains');
 
+/**
+ * [description]
+ *
+ * @function Phaser.Geom.Intersects.TriangleToCircle
+ * @since 3.0.0
+ *
+ * @param {Phaser.Geom.Triangle} triangle - [description]
+ * @param {Phaser.Geom.Circle} circle - [description]
+ *
+ * @return {boolean} [description]
+ */
 var TriangleToCircle = function (triangle, circle)
 {
      //  First the cheapest ones:

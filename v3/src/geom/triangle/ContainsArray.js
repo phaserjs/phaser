@@ -4,6 +4,19 @@
 //  returns an array containing all points that are within the triangle, or an empty array if none
 //  if 'returnFirst' is true it will return after the first point within the triangle is found
 
+/**
+ * [description]
+ *
+ * @function Phaser.Geom.Triangle.ContainsArray
+ * @since 3.0.0
+ *
+ * @param {Phaser.Geom.Triangle} triangle - [description]
+ * @param {Phaser.Geom.Point[]} points - [description]
+ * @param {boolean} [returnFirst] - [description]
+ * @param {array} [out] - [description]
+ *
+ * @return {Phaser.Geom.Point[]} [description]
+ */
 var ContainsArray = function (triangle, points, returnFirst, out)
 {
     if (returnFirst === undefined) { returnFirst = false; }

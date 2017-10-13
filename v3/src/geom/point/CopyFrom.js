@@ -1,9 +1,14 @@
 /**
-* Copies the x, y and diameter properties from any given object to this Circle.
-* @method Phaser.Circle#copyFrom
-* @param {any} source - The object to copy from.
-* @return {Circle} This Circle object.
-*/
+ * [description]
+ *
+ * @function Phaser.Geom.Point.CopyFrom
+ * @since 3.0.0
+ *
+ * @param {Phaser.Geom.Point} source - [description]
+ * @param {Phaser.Geom.Point} dest - [description]
+ *
+ * @return {Phaser.Geom.Point} [description]
+ */
 var CopyFrom = function (source, dest)
 {
     return dest.setTo(source.x, source.y);

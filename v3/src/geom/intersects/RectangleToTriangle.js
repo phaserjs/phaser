@@ -1,9 +1,19 @@
-
 var LineToLine = require('./LineToLine');
 var Contains = require('../rectangle/Contains');
 var ContainsArray = require('../triangle/ContainsArray');
 var Decompose = require('../rectangle/Decompose');
 
+/**
+ * [description]
+ *
+ * @function Phaser.Geom.Intersects.RectangleToTriangle
+ * @since 3.0.0
+ *
+ * @param {Phaser.Geom.Rectangle} rect - [description]
+ * @param {Phaser.Geom.Triangle} triangle - [description]
+ *
+ * @return {boolean} [description]
+ */
 var RectangleToTriangle = function (rect, triangle)
 {
     //  First the cheapest ones:

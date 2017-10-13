@@ -1,3 +1,5 @@
+var Point = require('../point/Point');
+
 // The three angle bisectors of a triangle meet in one point called the incenter.
 // It is the center of the incircle, the circle inscribed in the triangle.
 
@@ -10,9 +12,20 @@ function getLength (x1, y1, x2, y2)
     return Math.sqrt(magnitude);
 }
 
+/**
+ * [description]
+ *
+ * @function Phaser.Geom.Triangle.InCenter
+ * @since 3.0.0
+ *
+ * @param {Phaser.Geom.Triangle} triangle - [description]
+ * @param {Phaser.Geom.Point} [out] - [description]
+ *
+ * @return {Phaser.Geom.Point} [description]
+ */
 var InCenter = function (triangle, out)
 {
-    if (out === undefined) { out = { x: 0, y: 0 }; }
+    if (out === undefined) { out = new Point(); }
 
     var x1 = triangle.x1;
     var y1 = triangle.y1;

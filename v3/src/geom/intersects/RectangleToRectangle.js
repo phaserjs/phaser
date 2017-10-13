@@ -1,3 +1,14 @@
+/**
+ * [description]
+ *
+ * @function Phaser.Geom.Intersects.RectangleToRectangle
+ * @since 3.0.0
+ *
+ * @param {Phaser.Geom.Rectangle} rectA - [description]
+ * @param {Phaser.Geom.Rectangle} rectB - [description]
+ *
+ * @return {boolean} [description]
+ */
 var RectangleToRectangle = function (rectA, rectB)
 {
     if (rectA.width <= 0 || rectA.height <= 0 || rectB.width <= 0 || rectB.height <= 0)

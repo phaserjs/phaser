@@ -1,10 +1,23 @@
+var Point = require('../point/Point');
 var MATH_CONST = require('../../math/const');
 
 //  deg = degrees (0-360)
 
+/**
+ * [description]
+ *
+ * @function Phaser.Geom.Rectangle.PerimeterPoint
+ * @since 3.0.0
+ *
+ * @param {Phaser.Geom.Rectangle} rect - [description]
+ * @param {integer} deg - [description]
+ * @param {Phaser.Geom.Point} [out] - [description]
+ *
+ * @return {Phaser.Geom.Point} [description]
+ */
 var PerimeterPoint = function (rect, deg, out)
 {
-    if (out === undefined) { out = { x: 0, y: 0 }; }
+    if (out === undefined) { out = new Point(); }
 
     var theta = deg * MATH_CONST.DEG_TO_RAD;
 

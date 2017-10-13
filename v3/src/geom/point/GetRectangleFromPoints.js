@@ -1,8 +1,18 @@
 var Rectangle = require('../rectangle/Rectangle');
 
+// Calculates the Axis Aligned Bounding Box (or aabb) from an array of points.
+
 /**
-* Calculates the Axis Aligned Bounding Box (or aabb) from an array of points.
-*/
+ * [description]
+ *
+ * @function Phaser.Geom.Point.GetRectangleFromPoints
+ * @since 3.0.0
+ *
+ * @param {Phaser.Geom.Point[]} points - [description]
+ * @param {Phaser.Geom.Rectangle} [out] - [description]
+ *
+ * @return {Phaser.Geom.Rectangle} [description]
+ */
 var GetRectangleFromPoints = function (points, out)
 {
     if (out === undefined) { out = new Rectangle(); }

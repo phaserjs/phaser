@@ -1,3 +1,15 @@
+/**
+ * [description]
+ *
+ * @function Phaser.Geom.Ellipse.Contains
+ * @since 3.0.0
+ *
+ * @param {Phaser.Geom.Ellipse} ellipse - [description]
+ * @param {number} x - [description]
+ * @param {number} y - [description]
+ *
+ * @return {boolean} [description]
+ */
 var Contains = function (ellipse, x, y)
 {
     if (ellipse.width <= 0 || ellipse.height <= 0)

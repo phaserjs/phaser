@@ -1,5 +1,17 @@
 //  http://www.blackpawn.com/texts/pointinpoly/
 
+/**
+ * [description]
+ *
+ * @function Phaser.Geom.Triangle.Contains
+ * @since 3.0.0
+ *
+ * @param {Phaser.Geom.Triangle} triangle - [description]
+ * @param {number} x - [description]
+ * @param {number} y - [description]
+ *
+ * @return {boolean} [description]
+ */
 var Contains = function (triangle, x, y)
 {
     var v0x = triangle.x3 - triangle.x1;

@@ -1,6 +1,20 @@
+var Rectangle = require('../rectangle/Rectangle');
 
-var GetAABB = function (polygon)
+/**
+ * [description]
+ *
+ * @function Phaser.Geom.Polygon.GetAABB
+ * @since 3.0.0
+ *
+ * @param {Phaser.Geom.Polygon} polygon - [description]
+ * @param {Phaser.Geom.Rectangle|object} [out] - [description]
+ *
+ * @return {Phaser.Geom.Rectangle|object} [description]
+ */
+var GetAABB = function (polygon, out)
 {
+    if (out === undefined) { out = new Rectangle(); }
+
     var minX = Infinity;
     var minY = Infinity;
     var maxX = -minX;
@@ -17,12 +31,12 @@ var GetAABB = function (polygon)
         maxY = Math.max(maxY, p.y);
     }
 
-    return {
-        x: minX,
-        y: minY,
-        width: maxX - minX,
-        height: maxY - minY
-    };
+    out.x = minX;
+    out.y = minY;
+    out.width = maxX - minX;
+    out.height = maxY - minY;
+
+    return out;
 };
 
 module.exports = GetAABB;

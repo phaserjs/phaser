@@ -1,3 +1,14 @@
+/**
+ * [description]
+ *
+ * @function Phaser.Geom.Line.Equals
+ * @since 3.0.0
+ *
+ * @param {Phaser.Geom.Line} line - [description]
+ * @param {Phaser.Geom.Line} toCompare - [description]
+ *
+ * @return {boolean} [description]
+ */
 var Equals = function (line, toCompare)
 {
     return (

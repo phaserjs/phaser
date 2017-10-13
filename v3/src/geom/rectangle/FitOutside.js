@@ -4,6 +4,17 @@ var GetAspectRatio = require('./GetAspectRatio');
 //  Preserves aspect ration.
 //  Scales and centers the target rectangle to the source rectangle
 
+/**
+ * [description]
+ *
+ * @function Phaser.Geom.Rectangle.FitOutside
+ * @since 3.0.0
+ *
+ * @param {Phaser.Geom.Rectangle} target - [description]
+ * @param {Phaser.Geom.Rectangle} source - [description]
+ *
+ * @return {Phaser.Geom.Rectangle} [description]
+ */
 var FitOutside = function (target, source)
 {
     var ratio = GetAspectRatio(target);

@@ -1,5 +1,15 @@
 // The 2D area of a triangle. The area value is always non-negative.
 
+/**
+ * [description]
+ *
+ * @function Phaser.Geom.Triangle.Area
+ * @since 3.0.0
+ *
+ * @param {Phaser.Geom.Triangle} triangle - [description]
+ *
+ * @return {number} [description]
+ */
 var Area = function (triangle)
 {
     var x1 = triangle.x1;

@@ -1,7 +1,19 @@
+var Point = require('../point/Point');
 
+/**
+ * [description]
+ *
+ * @function Phaser.Geom.Triangle.Random
+ * @since 3.0.0
+ *
+ * @param {Phaser.Geom.Triangle} triangle - [description]
+ * @param {Phaser.Geom.Point} [out] - [description]
+ *
+ * @return {Phaser.Geom.Point} [description]
+ */
 var Random = function (triangle, out)
 {
-    if (out === undefined) { out = { x: 0, y: 0 }; }
+    if (out === undefined) { out = new Point(); }
 
     //  Basis vectors
     var ux = triangle.x2 - triangle.x1;
