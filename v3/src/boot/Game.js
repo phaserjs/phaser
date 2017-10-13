@@ -9,7 +9,7 @@ var DOMContentLoaded = require('../dom/DOMContentLoaded');
 var EventDispatcher = require('../events/EventDispatcher');
 var VisibilityHandler = require('./VisibilityHandler');
 
-var AnimationManager = require('../animation/manager/AnimationManager');
+var AnimationManager = require('../animations/manager/AnimationManager');
 var CreateRenderer = require('./CreateRenderer');
 var Data = require('../scene/plugins/Data');
 var GlobalCache = require('../cache/GlobalCache');

@@ -9,6 +9,8 @@ var GetFrames = require('./inc/GetFrames');
 //  Game Objects have the Animation Component, which are like playheads to global Animations (these objects)
 //  So multiple Game Objects can have playheads all pointing to this one Animation instance
 
+//  Phaser.Animations.Animation
+
 var Animation = new Class({
 
     initialize:
