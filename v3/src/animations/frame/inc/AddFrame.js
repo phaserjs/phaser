@@ -4,6 +4,17 @@
 //  ]
 
 //  Add frames to the end of the animation
+
+/**
+ * [description]
+ *
+ * @method Phaser.Animations.Animation#addFrame
+ * @since 3.0.0
+ *
+ * @param {[type]} config - [description]
+ *
+ * @return {Phaser.Animations.Animation} [description]
+ */
 var AddFrame = function (config)
 {
     return this.addFrameAt(this.frames.length, config);

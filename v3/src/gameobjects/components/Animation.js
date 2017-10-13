@@ -4,6 +4,8 @@ var Components = require('./animation/');
 
 //  Game Object Animation Controller
 
+//  Phaser.GameObjects.Components.Animation
+
 var Animation = new Class({
 
     initialize:

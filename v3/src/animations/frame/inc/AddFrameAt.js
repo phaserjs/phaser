@@ -6,10 +6,20 @@ var GetFrames = require('./GetFrames');
 //  ]
 
 //  Add frame/s into the animation
+
+/**
+ * [description]
+ *
+ * @method Phaser.Animations.Animation#addFrameAt
+ * @since 3.0.0
+ *
+ * @param {integer} index - [description]
+ * @param {[type]} config - [description]
+ *
+ * @return {Phaser.Animations.Animation} [description]
+ */
 var AddFrameAt = function (index, config)
 {
-    if (index === undefined) { index = 0; }
-
     var newFrames = GetFrames(this.manager.textureManager, config);
 
     if (newFrames.length > 0)
