@@ -7,4 +7,3 @@ require('./Math.trunc');
 require('./performance.now');
 require('./requestAnimationFrame');
 require('./Uint32Array');
-require('./URL');

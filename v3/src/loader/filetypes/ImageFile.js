@@ -56,7 +56,7 @@ var ImageFile = new Class({
 
         this.data.onload = function ()
         {
-            URL.revokeObjectURL(_this.data.src);
+            File.revokeObjectURL(_this.data);
 
             _this.onComplete();
 
@@ -65,14 +65,15 @@ var ImageFile = new Class({
 
         this.data.onerror = function ()
         {
-            URL.revokeObjectURL(_this.data.src);
+            File.revokeObjectURL(_this.data);
 
             _this.state = CONST.FILE_ERRORED;
 
             callback(_this);
         };
 
-        this.data.src = URL.createObjectURL(this.xhrLoader.response);
+        File.createObjectURL(this.data, this.xhrLoader.response, 'image/png');
+
     }
 
 });

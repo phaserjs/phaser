@@ -162,4 +162,52 @@ var File = new Class({
 
 });
 
+/**
+ * Static method for creating object URL using URL API and setting it as image 'src' attribute.
+ * If URL API is not supported (usually on old browsers) it falls back to creating Base64 encoded url using FileReader.
+ *
+ * @method createObjectURL
+ * @static
+ * @param image {Image} Image object which 'src' attribute should be set to object URL.
+ * @param blob {Blob} A Blob object to create an object URL for.
+ * @param defaultType {string} Default mime type used if blob type is not available.
+ */
+File.createObjectURL = function (image, blob, defaultType)
+{
+    if(URL)
+    {
+        image.src = URL.createObjectURL(blob);
+    }
+    else
+    {
+        var reader = new FileReader();
+
+        reader.onload = function()
+        {
+            delete image.crossOrigin;
+            image.src = 'data:' + (blob.type || defaultType) + ';base64,' + reader.result.split(',')[1];
+        };
+
+        reader.onerror = image.onerror;
+
+        reader.readAsDataURL(blob);
+    }
+};
+
+/**
+ * Static method for releasing an existing object URL which was previously created
+ * by calling {@link File#createObjectURL} method.
+ *
+ * @method revokeObjectURL
+ * @static
+ * @param image {Image} Image object which 'src' attribute should be revoked.
+ */
+File.revokeObjectURL = function (image)
+{
+    if(URL)
+    {
+        URL.revokeObjectURL(image.src);
+    }
+};
+
 module.exports = File;

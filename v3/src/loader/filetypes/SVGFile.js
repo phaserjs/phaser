@@ -56,7 +56,10 @@ var SVGFile = new Class({
 
         this.data.onload = function ()
         {
-            URL.revokeObjectURL(_this.data.src);
+            if(!retry)
+            {
+                File.revokeObjectURL(_this.data);
+            }
 
             _this.onComplete();
 
@@ -65,16 +68,14 @@ var SVGFile = new Class({
 
         this.data.onerror = function ()
         {
-            URL.revokeObjectURL(_this.data.src);
-
             //  Safari 8 re-try
             if (!retry)
             {
                 retry = true;
 
-                var url = 'data:image/svg+xml,' + encodeURIComponent(svg.join(''));
+                File.revokeObjectURL(_this.data);
 
-                _this.data.src = URL.createObjectURL(url);
+                _this.data.src = 'data:image/svg+xml,' + encodeURIComponent(svg.join(''));
             }
             else
             {
@@ -84,7 +85,7 @@ var SVGFile = new Class({
             }
         };
 
-        this.data.src = URL.createObjectURL(blob);
+        File.createObjectURL(this.data, blob, 'image/svg+xml');
     }
 
 });

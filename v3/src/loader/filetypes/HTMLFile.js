@@ -74,7 +74,7 @@ var HTMLFile = new Class({
 
         this.data.onload = function ()
         {
-            URL.revokeObjectURL(_this.data.src);
+            File.revokeObjectURL(_this.data);
 
             _this.onComplete();
 
@@ -83,14 +83,14 @@ var HTMLFile = new Class({
 
         this.data.onerror = function ()
         {
-            URL.revokeObjectURL(_this.data.src);
+            File.revokeObjectURL(_this.data);
 
             _this.state = CONST.FILE_ERRORED;
 
             callback(_this);
         };
 
-        this.data.src = URL.createObjectURL(blob);
+        File.createObjectURL(this.data, blob, 'image/svg+xml');
     }
 
 });
