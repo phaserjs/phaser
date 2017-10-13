@@ -5,6 +5,17 @@ var Vector2 = require('../../../math/Vector2');
 // 2 points a small delta apart will be used to find its gradient
 // which seems to give a reasonable approximation
 
+/**
+ * [description]
+ *
+ * @method Phaser.Curves.Curve#getTangent
+ * @since 3.0.0
+ *
+ * @param {number} t - [description]
+ * @param {Phaser.Math.Vector2} [out] - [description]
+ *
+ * @return {Phaser.Math.Vector2} [description]
+ */
 var GetTangent = function (t, out)
 {
     if (out === undefined) { out = new Vector2(); }

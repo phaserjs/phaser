@@ -3,6 +3,16 @@ var EllipseCurve = require('../../ellipse/EllipseCurve');
 var LineCurve = require('../../line/LineCurve');
 var SplineCurve = require('../../spline/SplineCurve');
 
+/**
+ * [description]
+ *
+ * @method Phaser.Curves.Path#fromJSON
+ * @since 3.0.0
+ *
+ * @param {object} data - [description]
+ *
+ * @return {Phaser.Curves.Path} [description]
+ */
 var FromJSON = function (data)
 {
     //  data should be an object matching the Path.toJSON object structure.

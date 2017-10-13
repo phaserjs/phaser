@@ -1,5 +1,15 @@
 // Get sequence of points using getPointAt( u )
 
+/**
+ * [description]
+ *
+ * @method Phaser.Curves.Curve#getSpacedPoints
+ * @since 3.0.0
+ *
+ * @param {integer} [divisions] - [description]
+ *
+ * @return {Phaser.Math.Vector2[]} [description]
+ */
 var GetSpacedPoints = function (divisions)
 {
     if (divisions === undefined) { divisions = this.defaultDivisions; }

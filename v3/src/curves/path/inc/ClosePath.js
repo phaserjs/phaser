@@ -1,5 +1,13 @@
 var LineCurve = require('../../line/LineCurve');
 
+/**
+ * [description]
+ *
+ * @method Phaser.Curves.Path#closePath
+ * @since 3.0.0
+ *
+ * @return {Phaser.Curves.Path} [description]
+ */
 var ClosePath = function ()
 {
     // Add a line curve if start and end of lines are not connected

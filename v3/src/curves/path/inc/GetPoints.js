@@ -1,3 +1,13 @@
+/**
+ * [description]
+ *
+ * @method Phaser.Curves.Path#getPoints
+ * @since 3.0.0
+ *
+ * @param {integer} [divisions=12] - [description]
+ *
+ * @return {Phaser.Math.Vector2[]} [description]
+ */
 var GetPoints = function (divisions)
 {
     if (divisions === undefined) { divisions = 12; }

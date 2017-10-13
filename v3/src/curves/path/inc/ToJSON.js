@@ -1,3 +1,11 @@
+/**
+ * [description]
+ *
+ * @method Phaser.Curves.Path#toJSON
+ * @since 3.0.0
+ *
+ * @return {object} [description]
+ */
 var ToJSON = function ()
 {
     var out = [];

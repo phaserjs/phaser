@@ -1,3 +1,13 @@
+/**
+ * [description]
+ *
+ * @method Phaser.Curves.Path#getSpacedPoints
+ * @since 3.0.0
+ *
+ * @param {integer} [divisions=40] - [description]
+ *
+ * @return {Phaser.Math.Vector2[]} [description]
+ */
 var GetSpacedPoints = function (divisions)
 {
     if (divisions === undefined) { divisions = 40; }

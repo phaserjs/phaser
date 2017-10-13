@@ -9,6 +9,17 @@ var Vector2 = require('../../../math/Vector2');
 // 3. Get t for the curve
 // 4. Return curve.getPointAt(t')
 
+/**
+ * [description]
+ *
+ * @method Phaser.Curves.Path#getPoint
+ * @since 3.0.0
+ *
+ * @param {number} t - [description]
+ * @param {Phaser.Math.Vector2} [out] - [description]
+ *
+ * @return {Phaser.Math.Vector2|null} [description]
+ */
 var GetPoint = function (t, out)
 {
     if (out === undefined) { out = new Vector2(); }

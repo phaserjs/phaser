@@ -1,4 +1,15 @@
 //  Return an array of points, spaced out X distance pixels apart
+
+/**
+ * [description]
+ *
+ * @method Phaser.Curves.Curve#getDistancePoints
+ * @since 3.0.0
+ *
+ * @param {integer} distance - [description]
+ *
+ * @return {Phaser.Geom.Point[]} [description]
+ */
 var GetDistancePoints = function (distance)
 {
     var len = this.getLength();
@@ -6,13 +17,6 @@ var GetDistancePoints = function (distance)
     var spaced = Math.max(1, len / distance);
 
     return this.getSpacedPoints(spaced);
-
-    //  Get the t value for 200 pixels along the curve
-    // var t = curve.getTFromDistance(200);
-    //  = this.getUtoTmapping(0, distance, divisions)
-
-    //  Get the point at t
-    // var p = curve.getPoint(t);
 };
 
 module.exports = GetDistancePoints;

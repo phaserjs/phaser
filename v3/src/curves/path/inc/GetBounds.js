@@ -1,5 +1,16 @@
 var Rectangle = require('../../../geom/rectangle/Rectangle');
 
+/**
+ * [description]
+ *
+ * @method Phaser.Curves.Path#getBounds
+ * @since 3.0.0
+ *
+ * @param {Phaser.Geom.Rectangle} [out] - [description]
+ * @param {integer} [accuracy=16] - [description]
+ *
+ * @return {Phaser.Geom.Rectangle} [description]
+ */
 var GetBounds = function (out, accuracy)
 {
     if (out === undefined) { out = new Rectangle(); }

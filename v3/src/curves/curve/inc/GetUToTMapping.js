@@ -1,5 +1,17 @@
 // Given u ( 0 .. 1 ), get a t to find p. This gives you points which are equidistant
 
+/**
+ * [description]
+ *
+ * @method Phaser.Curves.Curve#getUtoTmapping
+ * @since 3.0.0
+ *
+ * @param {float} u - [description]
+ * @param {integer} distance - [description]
+ * @param {integer} [divisions] - [description]
+ *
+ * @return {number} [description]
+ */
 var GetUtoTmapping = function (u, distance, divisions)
 {
     var arcLengths = this.getLengths(divisions);

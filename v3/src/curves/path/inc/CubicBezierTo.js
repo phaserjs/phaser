@@ -3,6 +3,21 @@ var Vector2 = require('../../../math/Vector2');
 
 //  Creates a cubic bezier curve starting at the previous end point and ending at p3, using p1 and p2 as control points
 
+/**
+ * [description]
+ *
+ * @method Phaser.Curves.Path#cubicBezierTo
+ * @since 3.0.0
+ *
+ * @param {number} x - [description]
+ * @param {number} y - [description]
+ * @param {Phaser.Math.Vector2} control1X - [description]
+ * @param {Phaser.Math.Vector2} control1Y - [description]
+ * @param {Phaser.Math.Vector2} control2X - [description]
+ * @param {Phaser.Math.Vector2} control2Y - [description]
+ *
+ * @return {Phaser.Curves.Path} [description]
+ */
 var CubicBezierTo = function (x, y, control1X, control1Y, control2X, control2Y)
 {
     var p0 = this.getEndPoint();

@@ -1,3 +1,11 @@
+/**
+ * [description]
+ *
+ * @method Phaser.Curves.Path#getCurveLengths
+ * @since 3.0.0
+ *
+ * @return {array} [description]
+ */
 var GetCurveLengths = function ()
 {
     // We use cache values if curves and cache array are same length

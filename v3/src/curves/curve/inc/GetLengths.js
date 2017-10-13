@@ -1,5 +1,15 @@
 // Get list of cumulative segment lengths
 
+/**
+ * [description]
+ *
+ * @method Phaser.Curves.Curve#getLengths
+ * @since 3.0.0
+ *
+ * @param {integer} [divisions] - [description]
+ *
+ * @return {number[]} [description]
+ */
 var GetLengths = function (divisions)
 {
     if (divisions === undefined) { divisions = this.arcLengthDivisions; }
