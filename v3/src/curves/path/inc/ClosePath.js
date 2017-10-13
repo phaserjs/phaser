@@ -1,4 +1,4 @@
-var LineCurve = require('../curves/line/LineCurve');
+var LineCurve = require('../../line/LineCurve');
 
 var ClosePath = function ()
 {

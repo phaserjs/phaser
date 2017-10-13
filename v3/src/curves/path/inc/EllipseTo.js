@@ -1,4 +1,4 @@
-var EllipseCurve = require('../curves/ellipse/EllipseCurve');
+var EllipseCurve = require('../../ellipse/EllipseCurve');
 
 //  Creates an ellipse curve positioned at the previous end point, using the given parameters
 var EllipseTo = function (xRadius, yRadius, startAngle, endAngle, clockwise, rotation)

@@ -1,4 +1,4 @@
-//  Phaser.Curves
+//  Phaser.Math.Curves
 
 module.exports = {
     

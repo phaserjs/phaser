@@ -12,6 +12,8 @@ var tmpVec2B = new Vector2();
 
 //  Our Base Curve which all other curves extend
 
+//  Phaser.Math.Curves.Curve
+
 var Curve = new Class({
 
     initialize:

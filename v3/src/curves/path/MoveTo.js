@@ -1,5 +1,5 @@
-var Class = require('../utils/Class');
-var Vector2 = require('../math/Vector2');
+var Class = require('../../utils/Class');
+var Vector2 = require('../../math/Vector2');
 
 var MoveTo = new Class({
 

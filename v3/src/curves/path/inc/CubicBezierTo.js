@@ -1,5 +1,5 @@
-var CubicBezierCurve = require('../curves/cubicbezier/CubicBezierCurve');
-var Vector2 = require('../../math/Vector2');
+var CubicBezierCurve = require('../../cubicbezier/CubicBezierCurve');
+var Vector2 = require('../../../math/Vector2');
 
 //  Creates a cubic bezier curve starting at the previous end point and ending at p3, using p1 and p2 as control points
 

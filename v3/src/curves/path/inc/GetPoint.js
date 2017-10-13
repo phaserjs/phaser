@@ -1,4 +1,4 @@
-var Vector2 = require('../../math/Vector2');
+var Vector2 = require('../../../math/Vector2');
 
 // To get accurate point with reference to
 // entire path distance at time t,

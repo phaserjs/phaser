@@ -1,4 +1,4 @@
-var Vector2 = require('../../math/Vector2');
+var Vector2 = require('../../../math/Vector2');
 
 var GetEndPoint = function (out)
 {

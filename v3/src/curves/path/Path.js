@@ -1,8 +1,8 @@
 //  Based on the three.js Curve classes created by [zz85](http://www.lab4games.net/zz85/blog)
 
-var Class = require('../utils/Class');
-var GameObjectFactory = require('../scene/plugins/GameObjectFactory');
-var Vector2 = require('../math/Vector2');
+var Class = require('../../utils/Class');
+var GameObjectFactory = require('../../scene/plugins/GameObjectFactory');
+var Vector2 = require('../../math/Vector2');
 
 var Path = new Class({
 
@@ -38,7 +38,7 @@ var Path = new Class({
     },
 
     add: require('./inc/Add'),
-    circleto: require('./inc/CircleTo'),
+    circleTo: require('./inc/CircleTo'),
     closePath: require('./inc/ClosePath'),
     cubicBezierTo: require('./inc/CubicBezierTo'),
     destroy: require('./inc/Destroy'),

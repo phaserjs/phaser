@@ -1,4 +1,4 @@
-var Rectangle = require('../../geom/rectangle/Rectangle');
+var Rectangle = require('../../../geom/rectangle/Rectangle');
 
 var GetBounds = function (out, accuracy)
 {

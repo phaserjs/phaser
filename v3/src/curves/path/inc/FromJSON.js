@@ -1,7 +1,7 @@
-var CubicBezierCurve = require('../curves/cubicbezier/CubicBezierCurve');
-var EllipseCurve = require('../curves/ellipse/EllipseCurve');
-var LineCurve = require('../curves/line/LineCurve');
-var SplineCurve = require('../curves/spline/SplineCurve');
+var CubicBezierCurve = require('../../cubicbezier/CubicBezierCurve');
+var EllipseCurve = require('../../ellipse/EllipseCurve');
+var LineCurve = require('../../line/LineCurve');
+var SplineCurve = require('../../spline/SplineCurve');
 
 var FromJSON = function (data)
 {
