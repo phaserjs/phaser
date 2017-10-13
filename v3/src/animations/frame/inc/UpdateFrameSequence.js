@@ -1,3 +1,11 @@
+/**
+ * [description]
+ *
+ * @method Phaser.Animations.Animation#updateFrameSequence
+ * @since 3.0.0
+ *
+ * @return {Phaser.Animations.Animation} [description]
+ */
 var UpdateFrameSequence = function ()
 {
     var len = this.frames.length;

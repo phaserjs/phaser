@@ -1,3 +1,11 @@
+/**
+ * [description]
+ *
+ * @method Phaser.Animations.Animation#repeatAnimation
+ * @since 3.0.0
+ *
+ * @param {Phaser.GameObjects.Components.Animation} component - [description]
+ */
 var RepeatAnimation = function (component)
 {
     if (component._repeatDelay > 0 && component.pendingRepeat === false)

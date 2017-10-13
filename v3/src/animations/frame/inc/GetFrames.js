@@ -1,6 +1,17 @@
 var Frame = require('../AnimationFrame');
 var GetValue = require('../../../utils/object/GetValue');
 
+/**
+ * [description]
+ *
+ * @method Phaser.Animations.Animation#getFrames
+ * @since 3.0.0
+ *
+ * @param {[type]} textureManager - [description]
+ * @param {[type]} frames - [description]
+ *
+ * @return {Phaser.Animations.AnimationFrame[]} [description]
+ */
 var GetFrames = function (textureManager, frames)
 {
     //      frames: [

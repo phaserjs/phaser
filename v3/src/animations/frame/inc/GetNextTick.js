@@ -1,3 +1,11 @@
+/**
+ * [description]
+ *
+ * @method Phaser.Animations.Animation#getNextTick
+ * @since 3.0.0
+ *
+ * @param {Phaser.GameObjects.Components.Animation} component - [description]
+ */
 var GetNextTick = function (component)
 {
     // accumulator += delta * _timeScale

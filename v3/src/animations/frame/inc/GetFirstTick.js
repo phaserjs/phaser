@@ -1,3 +1,12 @@
+/**
+ * [description]
+ *
+ * @method Phaser.Animations.Animation#getFirstTick
+ * @since 3.0.0
+ *
+ * @param {Phaser.GameObjects.Components.Animation} component - [description]
+ * @param {boolean} [includeDelay=true] - [description]
+ */
 var GetFirstTick = function (component, includeDelay)
 {
     if (includeDelay === undefined) { includeDelay = true; }

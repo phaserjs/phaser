@@ -1,3 +1,11 @@
+/**
+ * [description]
+ *
+ * @method Phaser.Animations.Animation#toJSON
+ * @since 3.0.0
+ *
+ * @return {object} [description]
+ */
 var ToJSON = function ()
 {
     var output = {

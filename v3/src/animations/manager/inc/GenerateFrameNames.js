@@ -17,7 +17,7 @@ var Pad = require('../../../utils/string/Pad');
  * @param {array} [config.outputArray=[]] - [description]
  * @param {boolean} [config.frames=false] - [description]
  * 
- * @return {array} [description]
+ * @return {object[]} [description]
  */
 var GenerateFrameNames = function (key, config)
 {

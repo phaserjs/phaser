@@ -1,3 +1,12 @@
+/**
+ * [description]
+ *
+ * @method Phaser.Animations.Animation#load
+ * @since 3.0.0
+ *
+ * @param {Phaser.GameObjects.Components.Animation} component - [description]
+ * @param {integer} startFrame - [description]
+ */
 var Load = function (component, startFrame)
 {
     if (startFrame >= this.frames.length)

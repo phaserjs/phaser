@@ -1,3 +1,11 @@
+/**
+ * [description]
+ *
+ * @method Phaser.Animations.Animation#nextFrame
+ * @since 3.0.0
+ *
+ * @param {Phaser.GameObjects.Components.Animation} component - [description]
+ */
 var NextFrame = function (component)
 {
     var frame = component.currentFrame;
