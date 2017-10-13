@@ -13,7 +13,7 @@ var BinaryFile = new Class({
 
     function BinaryFile (key, url, path, xhrSettings)
     {
-        var fileKey = (typeof key === 'string') ? key : GetFastValue(key, 'key', '');
+        var fileKey = (typeof key === 'object') ? GetFastValue(key, 'key', '') : key;
 
         var fileConfig = {
             type: 'binary',

@@ -7,14 +7,9 @@ var Settings = {
 
     create: function (config)
     {
-        if (typeof config === 'string')
+        if (config && typeof config !== 'object')
         {
-            config = { key: config };
-        }
-        else if (config === undefined)
-        {
-            //  Pass the 'hasOwnProperty' checks
-            config = {};
+            config = { key: '' + config };
         }
 
         return {

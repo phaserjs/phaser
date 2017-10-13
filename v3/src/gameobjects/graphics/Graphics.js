@@ -414,7 +414,7 @@ var Graphics = new Class({
         var texture;
         var ctx;
 
-        if (typeof key === 'string')
+        if (typeof key !== 'object')
         {
             if (sys.textures.exists(key))
             {

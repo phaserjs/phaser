@@ -28,7 +28,7 @@ var ImageFile = new Class({
     // this.load.image({ key: 'bunny', extension: 'jpg' });
     function ImageFile (key, url, path, xhrSettings, config)
     {
-        var fileKey = (typeof key === 'string') ? key : GetFastValue(key, 'key', '');
+        var fileKey = (typeof key === 'object') ? GetFastValue(key, 'key', '') : key;
 
         var fileConfig = {
             type: 'image',

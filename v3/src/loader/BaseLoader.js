@@ -85,7 +85,7 @@ var BaseLoader = new Class({
 
     start: function ()
     {
-        console.log(this.scene.sys.settings.key, '- BaseLoader start. Files to load:', this.list.size);
+        console.log('%s - BaseLoader start. Files to load: %d', this.scene.sys.settings.key, this.list.size);
 
         if (!this.isReady())
         {
@@ -261,7 +261,7 @@ var BaseLoader = new Class({
 
     processComplete: function ()
     {
-        console.log(this.scene.sys.settings.key, '- Loader Complete. Loaded:', this.storage.size, 'Failed:', this.failed.size);
+        console.log('%s - Loader Complete. Loaded: %d Failed: %d', this.scene.sys.settings.key, this.storage.size, this.failed.size);
 
         this.list.clear();
         this.inflight.clear();

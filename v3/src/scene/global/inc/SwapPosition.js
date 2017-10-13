@@ -19,8 +19,8 @@ var SwapPosition = function (scene1, scene2)
         return;
     }
 
-    var index1 = (typeof scene1 === 'string') ? this.getActiveSceneIndexByKey(scene1) : this.getActiveSceneIndex(scene1);
-    var index2 = (typeof scene2 === 'string') ? this.getActiveSceneIndexByKey(scene2) : this.getActiveSceneIndex(scene2);
+    var index1 = (typeof scene1 === 'object') ? this.getActiveSceneIndex(scene1) : this.getActiveSceneIndexByKey(scene1);
+    var index2 = (typeof scene2 === 'object') ? this.getActiveSceneIndex(scene2) : this.getActiveSceneIndexByKey(scene2);
 
     if (index1 !== -1 && index2 !== -1)
     {

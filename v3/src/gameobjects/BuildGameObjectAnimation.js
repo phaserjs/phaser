@@ -9,12 +9,7 @@ var BuildGameObjectAnimation = function (sprite, config)
         return sprite;
     }
 
-    if (typeof animConfig === 'string')
-    {
-        //  { anims: 'key' }
-        sprite.anims.play(animConfig);
-    }
-    else if (typeof animConfig === 'object')
+    if (typeof animConfig === 'object')
     {
         //  { anims: {
         //              key: string
@@ -58,6 +53,11 @@ var BuildGameObjectAnimation = function (sprite, config)
         {
             anims.load(key);
         }
+    }
+    else
+    {
+        //  { anims: 'key' }
+        sprite.anims.play(animConfig);
     }
 
     return sprite;
