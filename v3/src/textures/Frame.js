@@ -65,6 +65,11 @@ var Frame = new Class({
         */
         this.height = height;
 
+        //  The half sizes of this frame (to save in constant calculations in the renderer)
+        this.halfWidth = width * 0.5;
+
+        this.halfHeight = height * 0.5;
+
         /**
         * @property {number} width - The rendering width of this Frame, taking trim into account.
         */
@@ -173,6 +178,9 @@ var Frame = new Class({
         this.width = destWidth;
         this.height = destHeight;
 
+        this.halfWidth = destWidth * 0.5;
+        this.halfHeight = destHeight * 0.5;
+
         this.centerX = Math.floor(destWidth / 2);
         this.centerY = Math.floor(destHeight / 2);
 
@@ -249,6 +257,9 @@ var Frame = new Class({
 
         clone.width = this.width;
         clone.height = this.height;
+
+        clone.halfWidth = this.halfWidth;
+        clone.halfHeight = this.halfHeight;
 
         clone.centerX = this.centerX;
         clone.centerY = this.centerY;
