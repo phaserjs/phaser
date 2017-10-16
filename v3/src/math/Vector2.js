@@ -34,18 +34,20 @@ var Vector2 = new Class({
         return this;
     },
 
+    setFromObject: function (obj)
+    {
+        this.x = obj.x || 0;
+        this.y = obj.y || 0;
+
+        return this;
+    },
+
     set: function (x, y)
     {
-        if (typeof x === 'object')
-        {
-            this.x = x.x || 0;
-            this.y = x.y || 0;
-        }
-        else
-        {
-            this.x = x;
-            this.y = y;
-        }
+        if (y === undefined) { y = x; }
+
+        this.x = x;
+        this.y = y;
 
         return this;
     },
