@@ -2,6 +2,11 @@ var GameObject = require('../GameObject');
 
 var ParticleEmitterCanvasRenderer = function (renderer, emitter, interpolationPercentage, camera)
 {
+    if (emitter.isEmpty() || GameObject.RENDER_MASK !== emitter.renderFlags || (emitter.cameraFilter > 0 && (emitter.cameraFilter & camera._id)))
+    {
+        return;
+    }
+
     var particles = emitter.alive;
     var length = particles.length;
     var ctx = renderer.currentContext;
@@ -16,11 +21,6 @@ var ParticleEmitterCanvasRenderer = function (renderer, emitter, interpolationPe
     var cd = frame.canvasData;
     var cameraScrollX = camera.scrollX * emitter.scrollFactorX;
     var cameraScrollY = camera.scrollY * emitter.scrollFactorY;
-
-    if (length === 0 || GameObject.RENDER_MASK !== emitter.renderFlags || (emitter.cameraFilter > 0 && (emitter.cameraFilter & camera._id)))
-    {
-        return;
-    }
 
     if (renderer.currentBlendMode !== emitter.blendMode)
     {
