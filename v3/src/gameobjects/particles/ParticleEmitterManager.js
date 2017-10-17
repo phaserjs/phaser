@@ -23,6 +23,8 @@ var ParticleEmitterManager = new Class({
         //  private
         this.blendMode = -1;
 
+        this.timeScale = 1;
+
         this.setTexture(texture, frame);
 
         this.emitters = [];
@@ -70,6 +72,9 @@ var ParticleEmitterManager = new Class({
 
     preUpdate: function (time, delta)
     {
+        //  Scale the delta
+        delta *= this.timeScale;
+
         var emitters = this.emitters;
 
         for (var i = 0; i < emitters.length; i++)

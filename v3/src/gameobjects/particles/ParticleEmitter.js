@@ -5,6 +5,8 @@ var DegToRad = require('../../math/DegToRad');
 var Easing = require('../../math/easing');
 var GameObject = require('../GameObject');
 var GetEaseFunction = require('../../tweens/builder/GetEaseFunction');
+var MinMax2 = require('../../math/MinMax2');
+var MinMax4 = require('../../math/MinMax4');
 var Particle = require('./Particle');
 var StableSort = require('../../utils/array/StableSort');
 
@@ -27,45 +29,68 @@ var ParticleEmitter = new Class({
 
         this.key = '';
 
-        this.x = 0;
-        this.y = 0;
-
         this.frame = manager.frame;
 
-        this.classType = Particle;
+        this.particleClass = Particle;
 
         this.dead = [];
         this.alive = [];
 
-        this.minSpeed = 0;
-        this.maxSpeed = 0;
+        this.x = 0;
+        this.y = 0;
 
-        this.startScale = 1.0;
-        this.endScale = 1.0;
+        //  Implement ease into the MinMax component?
 
-        this.startAlpha = 1.0;
-        this.endAlpha = 1.0;
+        this.velocity = new MinMax4();
 
-        this.minEmitAngle = 0;
-        this.maxEmitAngle = 360;
+        this.scale = new MinMax4(1);
 
-        this.startAngle = 0;
-        this.endAngle = 0;
+        this.gravity = new MinMax4();
 
-        this.gravityX = 0;
-        this.gravityY = 0;
+        this.alpha = new MinMax2(1);
 
-        this.life = 1.0;
+        this.angle = new MinMax2(0, 360);
 
-        this.delay = 0.0;
-        this.delayCounter = 0.0;
+        this.particleAngle = new MinMax2();
+
+        //  The lifespan of the particles (in ms)
+        this.lifespan = new MinMax2(1000);
 
         this.deathCallback = null;
         this.deathCallbackScope = null;
 
         this.emitCount = 1;
-        this.enabled = true;
-        this.allowCreation = true;
+
+        /**
+        * @property {number} frequency - How often a particle is emitted in ms (if emitter is started with Explode === false).
+        */
+        this.frequency = 100;
+
+        /**
+        * @property {boolean} on - Determines whether the emitter is currently emitting particles. It is totally safe to directly toggle this.
+        * @default
+        */
+        this.on = false;
+        // this.enabled = true;
+
+        /**
+        * @property {boolean} particleBringToTop - If this is `true` then when the Particle is emitted it will be bought to the top of the Emitters display list.
+        * @default
+        */
+        this.particleBringToTop = false;
+
+        /**
+        * @property {boolean} particleSendToBack - If this is `true` then when the Particle is emitted it will be sent to the back of the Emitters display list.
+        * @default
+        */
+        this.particleSendToBack = false;
+
+        this.timeScale = 1;
+
+        // this.delay = 0;
+        // this.delayCounter = 0;
+        // this.allowCreation = true;
+
         this.emitShape = null;
 
         this.easingFunctionAlpha = Easing.Linear;
@@ -90,6 +115,7 @@ var ParticleEmitter = new Class({
         return this;
     },
 
+    /*
     setEase: function (easeName, easeParam)
     {
         var ease = GetEaseFunction(easeName, easeParam);
@@ -121,68 +147,60 @@ var ParticleEmitter = new Class({
 
         return this;
     },
+    */
 
-    setSpeed: function (min, max)
+    //  Particle Emission
+
+    setVelocity: function (xMin, xMax, yMin, yMax)
     {
-        if (max === undefined) { max = min; }
-
-        this.minSpeed = min;
-        this.maxSpeed = max;
+        this.velocity.set(xMin, xMax, yMin, yMax);
 
         return this;
     },
 
-    setEmitAngle: function (min, max)
+    setScale: function (xMin, xMax, yMin, yMax)
     {
-        if (max === undefined) { max = min; }
-
-        this.minEmitAngle = min;
-        this.maxEmitAngle = max;
+        this.scale.set(xMin, xMax, yMin, yMax);
 
         return this;
     },
 
-    setScale: function (start, end)
+    setGravity: function (xMin, xMax, yMin, yMax)
     {
-        if (end === undefined) { end = start; }
-
-        this.startScale = start;
-        this.endScale = end;
+        this.gravity.set(xMin, xMax, yMin, yMax);
 
         return this;
     },
 
-    setAlpha: function (start, end)
+    setAlpha: function (min, max)
     {
-        if (end === undefined) { end = start; }
-
-        this.startAlpha = start;
-        this.endAlpha = end;
+        this.alpha.set(min, max);
 
         return this;
     },
 
-    setAngle: function (start, end)
+    setAngle: function (min, max)
     {
-        if (end === undefined) { end = start; }
-
-        this.startAngle = start;
-        this.endAngle = end;
+        this.angle.set(min, max);
 
         return this;
     },
 
-    setGravity: function (x, y)
+    setParticleAngle: function (min, max)
     {
-        if (y === undefined) { y = x; }
-
-        this.gravityX = x;
-        this.gravityY = y;
+        this.particleAngle.set(min, max);
 
         return this;
     },
 
-    setEmitterDelay: function (delay)
+    setLifespan: function (min, max)
+    {
+        this.lifespan.set(min, max);
+
+        return this;
+    },
+
+    setDelay: function (delay)
     {
         this.delay = delay;
         this.delayCounter = delay / 1000;
@@ -197,13 +215,15 @@ var ParticleEmitter = new Class({
         return this;
     },
 
+    //  Particle Management
+
     reserve: function (particleCount)
     {
         var dead = this.dead;
 
         for (var count = 0; count < particleCount; ++count)
         {
-            dead.push(new Particle(this.x, this.y));
+            dead.push(new this.particleClass(this.x, this.y, this.frame));
         }
 
         return this;
@@ -298,6 +318,14 @@ var ParticleEmitter = new Class({
         return this;
     },
 
+
+
+
+
+
+
+
+
     explode: function (count)
     {
         this.emit(count);
@@ -329,17 +357,12 @@ var ParticleEmitter = new Class({
 
         var x = this.x;
         var y = this.y;
-        var shape = this.emitShape;
+        // var shape = this.emitShape;
         var dead = this.dead;
-        var allowCreation = this.allowCreation;
+        // var allowCreation = this.allowCreation;
 
         for (var index = 0; index < count; index++)
         {
-            var rad = DegToRad(Between(this.minEmitAngle, this.maxEmitAngle));
-            var speed = Between(this.minSpeed, this.maxSpeed);
-            var vx = Math.cos(rad) * speed;
-            var vy = Math.sin(rad) * speed;
-
             if (dead.length > 0)
             {
                 particle = dead.pop();
@@ -347,34 +370,36 @@ var ParticleEmitter = new Class({
             }
             else if (allowCreation)
             {
-                particle = new this.classType(x, y, this.frame);
+                particle = new this.particleClass(x, y, this.frame);
             }
             else
             {
                 return null;
             }
 
-            if (shape)
-            {
-                shape.getRandomPoint(particle);
-                particle.x += x;
-                particle.y += y;
-            }
+            // if (shape)
+            // {
+            //     shape.getRandomPoint(particle);
+            //     particle.x += x;
+            //     particle.y += y;
+            // }
 
-            particle.velocityX = vx;
-            particle.velocityY = vy;
-            particle.life = Math.max(this.life, Number.MIN_VALUE);
-            particle.lifeStep = particle.life;
-            particle.start.scale = this.startScale;
-            particle.end.scale = this.endScale;
-            particle.scaleX = this.startScale;
-            particle.scaleY = this.startScale;
-            particle.start.alpha = this.startAlpha;
-            particle.end.alpha = this.endAlpha;
-            particle.start.rotation = DegToRad(this.startAngle);
-            particle.end.rotation = DegToRad(this.endAngle);
-            particle.color = (particle.color & 0x00FFFFFF) | (((this.startAlpha * 0xFF)|0) << 24);
-            particle.index = this.alive.length;
+            particle.emit(this);
+
+            // particle.velocityX = vx;
+            // particle.velocityY = vy;
+            // particle.life = Math.max(this.life, Number.MIN_VALUE);
+            // particle.lifeStep = particle.life;
+            // particle.start.scale = this.startScale;
+            // particle.end.scale = this.endScale;
+            // particle.scaleX = this.startScale;
+            // particle.scaleY = this.startScale;
+            // particle.start.alpha = this.startAlpha;
+            // particle.end.alpha = this.endAlpha;
+            // particle.start.rotation = DegToRad(this.startAngle);
+            // particle.end.rotation = DegToRad(this.endAngle);
+            // particle.color = (particle.color & 0x00FFFFFF) | (((this.startAlpha * 0xFF)|0) << 24);
+            // particle.index = this.alive.length;
 
             this.alive.push(particle);
         }
@@ -384,20 +409,36 @@ var ParticleEmitter = new Class({
 
     preUpdate: function (time, delta)
     {
+        //  Scale the delta
+        delta *= this.timeScale;
+
         var dead = this.dead;
         var particles = this.alive;
+
         var length = particles.length;
-        var emitterStep = (delta / 1000);
-        var gravityX = this.gravityX * emitterStep;
-        var gravityY = this.gravityY * emitterStep;
+
+        var step = (delta / 1000);
+
         var deathCallback = this.deathCallback;
         var deathCallbackScope = this.deathCallbackScope;
 
         /* Simulation */
-        for (var index = 0; index < length; ++index)
+        for (var index = 0; index < length; index++)
         {
             var particle = particles[index];
 
+            //  update returns `true` if the particle is now dead (lifeStep < 0)
+            if (particle.update(this, step))
+            {
+                //  Moves the dead particle to the end of the particles array (ready for splicing out later)
+                var last = particles[length - 1];
+                particles[length - 1] = particle;
+                particles[index] = last;
+                index -= 1;
+                length -= 1;
+            }
+
+            /*
             particle.velocityX += gravityX;
             particle.velocityY += gravityY;
             particle.x += particle.velocityX * emitterStep;
@@ -431,6 +472,7 @@ var ParticleEmitter = new Class({
             }
 
             particle.lifeStep -= emitterStep;
+            */
         }
 
         //  Move dead particles to the dead array
