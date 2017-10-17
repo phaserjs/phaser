@@ -2,6 +2,7 @@
 
 module.exports = {
 
+    SKIP_CHECK: -1,
     NORMAL: 0,
     ADD: 1,
     MULTIPLY: 2,
