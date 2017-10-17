@@ -2,7 +2,7 @@
  * Work out what percentage `value` is of the range between `min` and `max`.
  * If `max` isn't given then it will return the percentage of `value` to `min`.
  *
- * You can optionally specify an `upperMax` value, which is a mid-way point in the range that represents 100%, after which the % starts to go down to the zero again.
+ * You can optionally specify an `upperMax` value, which is a mid-way point in the range that represents 100%, after which the % starts to go down to zero again.
  *
  * @function Phaser.Math.Percent
  * @since 3.0.0

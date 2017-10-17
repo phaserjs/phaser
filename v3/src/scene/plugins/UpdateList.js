@@ -93,7 +93,6 @@ var UpdateList = new Class({
         return this;
     },
 
-    //  Scene that owns this Clock is shutting down
     shutdown: function ()
     {
         this.removeAll();
@@ -103,7 +102,6 @@ var UpdateList = new Class({
         this._pendingInsertion.length = 0;
     },
 
-    //  Game level nuke
     destroy: function ()
     {
         this.shutdown();
