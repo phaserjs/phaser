@@ -33,6 +33,7 @@ module.exports = {
     Factorial: require('./Factorial'),
     FloatBetween: require('./FloatBetween'),
     FloorTo: require('./FloorTo'),
+    FromPercent: require('./FromPercent'),
     GetSpeed: require('./GetSpeed'),
     IsEven: require('./IsEven'),
     IsEvenStrict: require('./IsEvenStrict'),
@@ -54,6 +55,10 @@ module.exports = {
     SmoothStep: require('./SmoothStep'),
     Within: require('./Within'),
     Wrap: require('./Wrap'),
+
+    //  Classes
+    MinMax2: require('./MinMax2'),
+    MinMax4: require('./MinMax4'),
 
     //  Vector classes
     Vector2: require('./Vector2'),
