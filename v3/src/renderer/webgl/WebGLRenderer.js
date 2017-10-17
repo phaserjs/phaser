@@ -456,32 +456,9 @@ var WebGLRenderer = new Class({
         {
             var child = list[index];
 
-            // Setting blend mode if needed
-            var renderer = this.currentRenderer;
-            var newBlendMode = child.blendMode;
-
-            if (this.blendMode !== newBlendMode)
+            if (child.blendMode !== this.blendMode)
             {
-                if (renderer)
-                {
-                    renderer.flush();
-                }
-
-                var blend = this.blendModes[newBlendMode].func;
-
-                gl.enable(gl.BLEND);
-                gl.blendEquation(this.blendModes[newBlendMode].equation);
-
-                if (blend.length > 2)
-                {
-                    gl.blendFuncSeparate(blend[0], blend[1], blend[2], blend[3]);
-                }
-                else
-                {
-                    gl.blendFunc(blend[0], blend[1]);
-                }
-
-                this.blendMode = newBlendMode;
+                this.setBlendMode(child.blendMode);
             }
 
             // drawing child
@@ -558,6 +535,11 @@ var WebGLRenderer = new Class({
 
     setBlendMode: function (newBlendMode)
     {
+        if (newBlendMode === BlendModes.SKIP_CHECK)
+        {
+            return;
+        }
+
         var gl = this.gl;
         var renderer = this.currentRenderer;
 
