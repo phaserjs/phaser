@@ -132,11 +132,13 @@ var ParticleRenderer = new Class({
         }
 
         this.bind(shader);
+
         this.vertexBufferObject.updateResource(vertexDataBuffer.getUsedBufferAsFloat(), 0);
 
         gl.drawElements(gl.TRIANGLES, this.elementCount, gl.UNSIGNED_SHORT, 0);
 
         this.elementCount = 0;
+
         vertexDataBuffer.clear();
 
         if (renderTarget)
@@ -213,6 +215,7 @@ var ParticleRenderer = new Class({
 
         this.manager.setRenderer(this, emitter.frame.source.glTexture, renderTarget);
 
+        //  If there are more particles than fit into a single batch (16000) then it flushes after each one
         for (var batchIndex = 0; batchIndex < batchCount; ++batchIndex)
         {
             var batchSize = Math.min(length, CONST.MAX);
