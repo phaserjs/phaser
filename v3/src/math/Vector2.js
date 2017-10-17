@@ -16,6 +16,8 @@ var Vector2 = new Class({
         }
         else
         {
+            if (y === undefined) { y = x; }
+
             this.x = x || 0;
             this.y = y || 0;
         }
