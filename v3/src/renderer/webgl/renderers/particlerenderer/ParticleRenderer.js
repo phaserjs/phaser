@@ -173,6 +173,16 @@ var ParticleRenderer = new Class({
         var particles = emitter.alive;
         var length = particles.length;
 
+        if (length === 0)
+        {
+            return;
+        }
+
+        if (emitter.blendMode !== this.manager.blendMode)
+        {
+            this.manager.setBlendMode(emitter.blendMode);
+        }
+
         var data = this.vertexDataBuffer;
         var vbF32 = data.floatView;
         var vbU32 = data.uintView;
@@ -201,9 +211,7 @@ var ParticleRenderer = new Class({
         var cameraScrollX = camera.scrollX * emitter.scrollFactorX;
         var cameraScrollY = camera.scrollY * emitter.scrollFactorY;
 
-        if (length === 0) return;
-
-        this.manager.setRenderer(this, emitter.frame.source.glTexture, emitter.renderTarget);
+        this.manager.setRenderer(this, emitter.frame.source.glTexture, renderTarget);
 
         for (var batchIndex = 0; batchIndex < batchCount; ++batchIndex)
         {
@@ -223,10 +231,10 @@ var ParticleRenderer = new Class({
 
                 var xw = x + frame.width;
                 var yh = y + frame.height;
-                
+               
                 tempMatrix.applyITRS(
-                    particle.x - cameraScrollX,
-                    particle.y - cameraScrollY,
+                    particle.x - cameraScrollX * particle.scrollFactorX,
+                    particle.y - cameraScrollY * particle.scrollFactorY,
                     particle.rotation,
                     particle.scaleX,
                     particle.scaleY
