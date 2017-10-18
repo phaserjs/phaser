@@ -93,6 +93,42 @@ var Texture = new Class({
         }
     },
 
+    getTextureSourceIndex: function (source)
+    {
+        for (var i = 0; i < this.source.length; i++)
+        {
+            if (this.source[i] === source)
+            {
+                return i;
+            }
+        }
+
+        return -1;
+    },
+
+    //  source = TextureSource object
+    getFramesFromTextureSource: function (sourceIndex)
+    {
+        var out = [];
+
+        for (var frameName in this.frames)
+        {
+            if (frameName === '__BASE')
+            {
+                continue;
+            }
+
+            var frame = this.frames[frameName];
+
+            if (frame.sourceIndex === sourceIndex)
+            {
+                out.push(frame.name);
+            }
+        }
+
+        return out;
+    },
+
     getFrameNames: function (includeBase)
     {
         if (includeBase === undefined) { includeBase = false; }
