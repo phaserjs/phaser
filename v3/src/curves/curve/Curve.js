@@ -93,6 +93,7 @@ var Curve = new Class({
     getLengths: require('./inc/GetLengths'),
     getPointAt: require('./inc/GetPointAt'),
     getPoints: require('./inc/GetPoints'),
+    getRandomPoint: require('./inc/GetRandomPoint'),
     getSpacedPoints: require('./inc/GetSpacedPoints'),
     getStartPoint: require('./inc/GetStartPoint'),
     getTangent: require('./inc/GetTangent'),

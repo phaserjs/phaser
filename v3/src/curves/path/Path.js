@@ -51,6 +51,7 @@ var Path = new Class({
     getLength: require('./inc/GetLength'),
     getPoint: require('./inc/GetPoint'),
     getPoints: require('./inc/GetPoints'),
+    getRandomPoint: require('./inc/GetRandomPoint'),
     getSpacedPoints: require('./inc/GetSpacedPoints'),
     getStartPoint: require('./inc/GetStartPoint'),
     lineTo: require('./inc/LineTo'),
