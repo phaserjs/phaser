@@ -1,14 +1,12 @@
-var Between = require('../../math/Between');
 var Class = require('../../utils/Class');
 var Components = require('../components');
-var DegToRad = require('../../math/DegToRad');
 var Easing = require('../../math/easing');
-var GameObject = require('../GameObject');
 var GetEaseFunction = require('../../tweens/builder/GetEaseFunction');
 var MinMax2 = require('../../math/MinMax2');
 var MinMax4 = require('../../math/MinMax4');
 var Particle = require('./Particle');
 var StableSort = require('../../utils/array/StableSort');
+var GetRandomElement = require('../../utils/array/GetRandomElement');
 
 var ParticleEmitter = new Class({
 
@@ -29,9 +27,9 @@ var ParticleEmitter = new Class({
 
         this.key = '';
 
-        this.frame = manager.frame;
-
         this.particleClass = Particle;
+
+        this.frames = [];
 
         this.dead = [];
         this.alive = [];
@@ -39,9 +37,13 @@ var ParticleEmitter = new Class({
         this.x = 0;
         this.y = 0;
 
-        //  Implement ease into the MinMax component?
+        //  How can the emitter pick from a random frame OR a fixed frame?
 
-        this.velocity = new MinMax4();
+        //  A radial emitter will emit particles in all directions between angle min and max
+        //  A point emitter will emit particles only in the direction set by the speed values
+        this.radial = true;
+
+        this.speed = new MinMax4();
 
         this.scale = new MinMax4(1);
 
@@ -49,7 +51,7 @@ var ParticleEmitter = new Class({
 
         this.alpha = new MinMax2(1);
 
-        this.angle = new MinMax2();
+        this.angle = new MinMax2(0, 360);
 
         this.particleAngle = new MinMax2();
 
@@ -59,50 +61,55 @@ var ParticleEmitter = new Class({
         this.deathCallback = null;
         this.deathCallbackScope = null;
 
+        //  Set to hard limit the amount of particle objects this emitter is allowed to create
+        this.maxParticles = 0;
+
+        //  How many particles are emitted each time the emitter updates
         this.emitCount = 1;
 
-        /**
-        * @property {number} frequency - How often a particle is emitted in ms (if emitter is started with Explode === false).
-        */
-        this.frequency = 100;
+        //  How often a particle is emitted in ms (if emitter is a constant / flow emitter)
+        //  If emitter is an explosion emitter this value will be -1.
+        //  Anything > -1 sets this to be a flow emitter
+        this.frequency = 0;
 
-        /**
-        * @property {boolean} on - Determines whether the emitter is currently emitting particles. It is totally safe to directly toggle this.
-        * @default
-        */
-        this.on = false;
-        // this.enabled = true;
+        //  Controls if the emitter is currently emitting particles. Already alive particles will continue to update until they expire.
+        this.on = true;
 
-        /**
-        * @property {boolean} particleBringToTop - If this is `true` then when the Particle is emitted it will be bought to the top of the Emitters display list.
-        * @default
-        */
-        this.particleBringToTop = false;
-
-        /**
-        * @property {boolean} particleSendToBack - If this is `true` then when the Particle is emitted it will be sent to the back of the Emitters display list.
-        * @default
-        */
-        this.particleSendToBack = false;
+        //  Newly emitted particles are added to the top of the particle list, i.e. rendered above those already alive. Set to false to send them to the back.
+        this.particleBringToTop = true;
 
         this.timeScale = 1;
 
-        // this.delay = 0;
-        // this.delayCounter = 0;
-        // this.allowCreation = true;
+        this._counter = 0;
 
-        this.emitShape = null;
+        //  Optional Particle emission zone - must be an object that supports a `getRandomPoint` function, such as a Rectangle, Circle, Path, etc.
+        this.zone = null;
 
-        this.easingFunctionAlpha = Easing.Linear;
-        this.easingFunctionScale = Easing.Linear;
-        this.easingFunctionRotation = Easing.Linear;
+        // this.easingFunctionAlpha = Easing.Linear;
+        // this.easingFunctionScale = Easing.Linear;
+        // this.easingFunctionRotation = Easing.Linear;
 
         this.active = true;
     },
 
+    getFrame: function ()
+    {
+        return GetRandomElement(this.frames);
+    },
+
+    //  Either a single frame (numeric / string based), or an array of frames to randomly pick from
     setFrame: function (frame)
     {
-        this.frame = this.manager.texture.get(frame);
+        this.manager.setEmitterFrames(frame, this);
+
+        return this;
+    },
+
+    setRadial: function (value)
+    {
+        if (value === undefined) { value = true; }
+
+        this.radial = value;
 
         return this;
     },
@@ -151,9 +158,9 @@ var ParticleEmitter = new Class({
 
     //  Particle Emission
 
-    setVelocity: function (xMin, xMax, yMin, yMax)
+    setSpeed: function (xMin, xMax, yMin, yMax)
     {
-        this.velocity.set(xMin, xMax, yMin, yMax);
+        this.speed.set(xMin, xMax, yMin, yMax);
 
         return this;
     },
@@ -200,17 +207,26 @@ var ParticleEmitter = new Class({
         return this;
     },
 
-    setDelay: function (delay)
+    setFrequency: function (frequency)
     {
-        this.delay = delay;
-        this.delayCounter = delay / 1000;
+        this.frequency = frequency;
+        this._counter = 0;
 
         return this;
     },
 
-    setShape: function (shape)
+    //  The zone must have a function called `getRandomPoint` that takes an object and sets
+    //  its x and y properties accordingly then returns that object
+    setZone: function (zone)
     {
-        this.emitShape = shape;
+        if (zone === undefined)
+        {
+            this.zone = null;
+        }
+        else if (typeof zone.getRandomPoint === 'function')
+        {
+            this.zone = zone;
+        }
 
         return this;
     },
@@ -221,9 +237,9 @@ var ParticleEmitter = new Class({
     {
         var dead = this.dead;
 
-        for (var count = 0; count < particleCount; ++count)
+        for (var i = 0; i < particleCount; i++)
         {
-            dead.push(new this.particleClass(this.x, this.y, this.frame));
+            dead.push(new this.particleClass());
         }
 
         return this;
@@ -242,6 +258,11 @@ var ParticleEmitter = new Class({
     getParticleCount: function ()
     {
         return this.getAliveParticleCount() + this.getDeadParticleCount();
+    },
+
+    atLimit: function ()
+    {
+        return (this.maxParticles > 0 && this.getParticleCount() === this.maxParticles);
     },
 
     onParticleDeath: function (callback, context)
@@ -285,7 +306,8 @@ var ParticleEmitter = new Class({
 
         for (var index = 0; index < length; ++index)
         {
-            callback.call(thisArg, alive[index]);
+            //  Sends the Particle and the Emitter
+            callback.call(thisArg, alive[index], this);
         }
 
         return this;
@@ -298,8 +320,18 @@ var ParticleEmitter = new Class({
 
         for (var index = 0; index < length; ++index)
         {
-            callback.call(thisArg, dead[index]);
+            //  Sends the Particle and the Emitter
+            callback.call(thisArg, dead[index], this);
         }
+
+        return this;
+    },
+
+    start: function ()
+    {
+        this.on = true;
+
+        this._counter = 0;
 
         return this;
     },
@@ -318,93 +350,95 @@ var ParticleEmitter = new Class({
         return this;
     },
 
-
-
-
-
-
-
-
-
-    explode: function (count)
+    flow: function (frequency, count)
     {
-        this.emit(count);
+        if (count === undefined) { count = 1; }
 
-        return this;
+        this.frequency = frequency;
+
+        this.emitCount = count;
+
+        return this.start();
+    },
+
+    explode: function (count, x, y)
+    {
+        this.frequency = -1;
+
+        return this.emit(count, x, y);
     },
 
     emitAt: function (x, y, count)
     {
+        return this.emit(count, x, y);
+    },
+
+    emit: function (count, x, y)
+    {
+        if (count === undefined) { count = 1; }
+
+        var output = [];
+
+        if (this.atLimit())
+        {
+            return output;
+        }
+
+        //  Store emitter coordinates in-case this was a placement explode, or emitAt
+
         var oldX = this.x;
         var oldY = this.y;
 
-        this.x = x;
-        this.y = y;
+        if (x !== undefined)
+        {
+            this.x = x;
+        }
 
-        var particle = this.emit(count);
+        if (y !== undefined)
+        {
+            this.y = y;
+        }
+
+        var dead = this.dead;
+
+        for (var i = 0; i < count; i++)
+        {
+            var particle;
+
+            if (dead.length > 0)
+            {
+                particle = dead.pop();
+
+                particle.reset();
+            }
+            else
+            {
+                particle = new this.particleClass();
+            }
+
+            particle.emit(this);
+
+            if (this.particleBringToTop)
+            {
+                this.alive.push(particle);
+            }
+            else
+            {
+                this.alive.unshift(particle);
+            }
+
+            output.push(particle);
+
+            if (this.atLimit())
+            {
+                break;
+            }
+        }
 
         this.x = oldX;
         this.y = oldY;
 
-        return particle;
-    },
-
-    emit: function (count)
-    {
-        if (count === undefined) { count = 1; }
-
-        var particle = null;
-
-        var x = this.x;
-        var y = this.y;
-        // var shape = this.emitShape;
-        var dead = this.dead;
-        var allowCreation = true;
-
-        for (var index = 0; index < count; index++)
-        {
-            if (dead.length > 0)
-            {
-                particle = dead.pop();
-                particle.reset(x, y, this.frame);
-            }
-            else if (allowCreation)
-            {
-                particle = new this.particleClass(x, y, this.frame);
-            }
-            else
-            {
-                return null;
-            }
-
-            // if (shape)
-            // {
-            //     shape.getRandomPoint(particle);
-            //     particle.x += x;
-            //     particle.y += y;
-            // }
-
-            particle.emit(this);
-
-            // particle.velocityX = vx;
-            // particle.velocityY = vy;
-            // particle.life = Math.max(this.life, Number.MIN_VALUE);
-            // particle.lifeStep = particle.life;
-            // particle.start.scale = this.startScale;
-            // particle.end.scale = this.endScale;
-            // particle.scaleX = this.startScale;
-            // particle.scaleY = this.startScale;
-            // particle.start.alpha = this.startAlpha;
-            // particle.end.alpha = this.endAlpha;
-            // particle.start.rotation = DegToRad(this.startAngle);
-            // particle.end.rotation = DegToRad(this.endAngle);
-            // particle.color = (particle.color & 0x00FFFFFF) | (((this.startAlpha * 0xFF)|0) << 24);
-            // particle.index = this.alive.length;
-
-            this.alive.push(particle);
-        }
-
-        return particle;
+        return output;
     },
 
     preUpdate: function (time, delta)
@@ -412,17 +446,10 @@ var ParticleEmitter = new Class({
         //  Scale the delta
         delta *= this.timeScale;
 
-        var dead = this.dead;
+        var step = (delta / 1000);
         var particles = this.alive;
-
         var length = particles.length;
 
-        var step = (delta / 1000);
-
-        var deathCallback = this.deathCallback;
-        var deathCallbackScope = this.deathCallbackScope;
-
-        /* Simulation */
         for (var index = 0; index < length; index++)
         {
             var particle = particles[index];
@@ -432,67 +459,49 @@ var ParticleEmitter = new Class({
             {
                 //  Moves the dead particle to the end of the particles array (ready for splicing out later)
                 var last = particles[length - 1];
+
                 particles[length - 1] = particle;
                 particles[index] = last;
+
                 index -= 1;
                 length -= 1;
             }
-
-            /*
-            particle.velocityX += gravityX;
-            particle.velocityY += gravityY;
-            particle.x += particle.velocityX * emitterStep;
-            particle.y += particle.velocityY * emitterStep;
-            particle.normLifeStep = particle.lifeStep / particle.life;
-
-            var norm = 1 - particle.normLifeStep;
-            var alphaEase = this.easingFunctionAlpha(norm);
-            var scaleEase = this.easingFunctionScale(norm);
-            var rotationEase = this.easingFunctionRotation(norm);
-            var alphaf = (particle.end.alpha - particle.start.alpha) * alphaEase + particle.start.alpha;
-            var scale = (particle.end.scale - particle.start.scale) * scaleEase + particle.start.scale;
-            var rotation = (particle.end.rotation - particle.start.rotation) * rotationEase + particle.start.rotation;
-
-            particle.scaleX = particle.scaleY = scale;
-            particle.color = (particle.color & 0x00FFFFFF) | (((alphaf * 0xFF)|0) << 24);
-            particle.rotation = rotation;
-
-            if (particle.lifeStep <= 0)
-            {
-                var last = particles[length - 1];
-                particles[length - 1] = particle;
-                particles[index] = last;
-                index -= 1;
-                length -= 1;
-
-                if (deathCallback)
-                {
-                    deathCallback.call(deathCallbackScope, particle);
-                }
-            }
-
-            particle.lifeStep -= emitterStep;
-            */
         }
 
         //  Move dead particles to the dead array
-        //  We can skip this for 'emitCount' number of particles if 'this.enabled'
         var deadLength = particles.length - length;
 
         if (deadLength > 0)
         {
-            dead.push.apply(dead, particles.splice(particles.length - deadLength, deadLength));
+            var rip = particles.splice(particles.length - deadLength, deadLength);
+
+            var deathCallback = this.deathCallback;
+            var deathCallbackScope = this.deathCallbackScope;
+
+            if (deathCallback)
+            {
+                for (var i = 0; i < rip.length; i++)
+                {
+                    deathCallback.call(deathCallbackScope, rip[i]);
+                }
+            }
+
+            this.dead.concat(rip);
 
             StableSort(particles, this.indexSort);
         }
 
-        // this.delayCounter -= emitterStep;
+        if (this.frequency > -1 && this.on)
+        {
+            this._counter -= delta;
 
-        // if (this.delayCounter <= 0 && this.enabled)
-        // {
-            this.emit(this.emitCount);
-        //     this.delayCounter = this.delay / 1000;
-        // }
+            if (this._counter <= 0)
+            {
+                this.emit(this.emitCount);
+
+                this._counter = this.frequency;
+            }
+        }
     },
 
     indexSort: function (a, b)

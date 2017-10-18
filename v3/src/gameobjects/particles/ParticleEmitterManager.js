@@ -9,7 +9,6 @@ var ParticleEmitterManager = new Class({
     Extends: GameObject,
 
     Mixins: [
-        Components.Texture,
         Components.Visible,
         Render
     ],
@@ -25,7 +24,13 @@ var ParticleEmitterManager = new Class({
 
         this.timeScale = 1;
 
+        this.texture = null;
+        this.frame = null;
+        this.frameNames = [];
+
         this.setTexture(texture, frame);
+
+        //  Array of frame names the emitters are allowed to use
 
         this.emitters = [];
 
@@ -42,6 +47,46 @@ var ParticleEmitterManager = new Class({
                 this.createEmitter(emitters[i]);
             }
         }
+    },
+
+    setTexture: function (key, frame)
+    {
+        this.texture = this.scene.sys.textures.get(key);
+
+        return this.setFrame(frame);
+    },
+
+    setFrame: function (frame)
+    {
+        this.frame = this.texture.get(frame);
+
+        this.frameNames = this.texture.getFramesFromTextureSource(this.frame.sourceIndex);
+
+        return this;
+    },
+
+    setEmitterFrames: function (frames, emitter)
+    {
+        if (!Array.isArray(frames))
+        {
+            frames = [ frames ];
+        }
+
+        var out = emitter.frames;
+
+        out.length = 0;
+
+        for (var i = 0; i < frames.length; i++)
+        {
+            var frame = frames[i];
+
+            if (this.frameNames.indexOf(frame) !== -1)
+            {
+                out.push(this.texture.get(frame));
+            }
+        }
+
+        return this;
     },
 
     addEmitter: function (emitter)

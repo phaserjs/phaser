@@ -6,15 +6,15 @@ var Particle = new Class({
 
     initialize:
 
-    function Particle (x, y, frame)
+    function Particle ()
     {
         //  Phaser.Texture.Frame
-        this.frame = frame;
+        this.frame = null;
 
         this.index = 0;
 
-        this.x = x;
-        this.y = y;
+        this.x = 0;
+        this.y = 0;
 
         //  Add Acceleration (and Bounce?)
 
@@ -66,14 +66,14 @@ var Particle = new Class({
         */
     },
 
-    reset: function (x, y, frame)
+    reset: function ()
     {
         this.index = 0;
 
-        this.frame = frame;
+        // this.frame = frame;
 
-        this.x = x;
-        this.y = y;
+        this.x = 0;
+        this.y = 0;
 
         this.velocityX = 0;
         this.velocityY = 0;
@@ -148,20 +148,30 @@ var Particle = new Class({
 
     emit: function (emitter)
     {
-        // var rad = DegToRad(emitter.angle.getRandom());
+        this.frame = emitter.getFrame();
 
-        // this.velocityX = Math.cos(rad) * emitter.velocity.getRandomX();
-        // this.velocityY = Math.sin(rad) * emitter.velocity.getRandomY();
-
-        this.velocityX = emitter.velocity.getRandomX();
-        this.velocityY = emitter.velocity.getRandomY();
-
-        var rad = DegToRad(emitter.angle.getRandom());
-
-        if (rad !== 0)
+        if (emitter.zone)
         {
-            this.velocityX *= Math.cos(rad);
-            this.velocityY *= Math.sin(rad);
+            emitter.zone.getRandomPoint(this);
+        }
+
+        this.x += emitter.x;
+        this.y += emitter.y;
+
+        var sx = emitter.speed.getRandomX();
+        var sy = emitter.speed.getRandomY();
+
+        if (emitter.radial)
+        {
+            var rad = DegToRad(emitter.angle.getRandom());
+
+            this.velocityX = Math.cos(rad) * Math.abs(sx);
+            this.velocityY = Math.sin(rad) * Math.abs(sy);
+        }
+        else
+        {
+            this.velocityX = sx;
+            this.velocityY = sy;
         }
 
         this.life = emitter.lifespan.getRandom();
@@ -175,8 +185,6 @@ var Particle = new Class({
         // emitter.particleAngle.copyToMinMax(this.data.angle);
 
         // emitter.alpha.copyToMinMax(this.data.alpha);
-
-
 
         // this.scaleX = emitter.scale.xMin;
         // this.scaleY = emitter.scale.yMin;
