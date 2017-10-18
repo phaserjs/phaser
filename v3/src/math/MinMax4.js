@@ -60,8 +60,8 @@ var MinMax4 = new Class({
         if (yMin === undefined) { yMin = xMin; }
         if (yMax === undefined) { yMax = xMax; }
 
-        this.setX(xMax, xMax);
-        this.setY(yMax, yMax);
+        this.setX(xMin, xMax);
+        this.setY(yMin, yMax);
 
         return this;
     },
@@ -96,6 +96,22 @@ var MinMax4 = new Class({
         dest.yMax = this.yMax;
 
         return dest;
+    },
+
+    copyXToMinMax: function (dest)
+    {
+        dest.min = this.xMin;
+        dest.max = this.xMax;
+
+        return this;
+    },
+
+    copyYToMinMax: function (dest)
+    {
+        dest.min = this.yMin;
+        dest.max = this.yMax;
+
+        return this;
     },
 
     /*

@@ -54,6 +54,14 @@ var MinMax2 = new Class({
         return this;
     },
 
+    copyToMinMax: function (dest)
+    {
+        dest.min = this.min;
+        dest.max = this.max;
+
+        return this;
+    },
+
     //  Given U (a value between 0 and 1) return the value in the range
     getU: function (u)
     {
