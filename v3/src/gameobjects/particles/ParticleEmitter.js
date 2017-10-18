@@ -45,11 +45,11 @@ var ParticleEmitter = new Class({
 
         this.scale = new MinMax4(1);
 
-        this.gravity = new MinMax4();
+        this.gravity = new MinMax2();
 
         this.alpha = new MinMax2(1);
 
-        this.angle = new MinMax2(0, 360);
+        this.angle = new MinMax2();
 
         this.particleAngle = new MinMax2();
 
@@ -165,9 +165,9 @@ var ParticleEmitter = new Class({
         return this;
     },
 
-    setGravity: function (xMin, xMax, yMin, yMax)
+    setGravity: function (x, y)
     {
-        this.gravity.set(xMin, xMax, yMin, yMax);
+        this.gravity.set(x, y);
 
         return this;
     },
@@ -359,7 +359,7 @@ var ParticleEmitter = new Class({
         var y = this.y;
         // var shape = this.emitShape;
         var dead = this.dead;
-        // var allowCreation = this.allowCreation;
+        var allowCreation = true;
 
         for (var index = 0; index < count; index++)
         {
@@ -428,7 +428,7 @@ var ParticleEmitter = new Class({
             var particle = particles[index];
 
             //  update returns `true` if the particle is now dead (lifeStep < 0)
-            if (particle.update(this, step))
+            if (particle.update(this, delta, step))
             {
                 //  Moves the dead particle to the end of the particles array (ready for splicing out later)
                 var last = particles[length - 1];
@@ -486,13 +486,13 @@ var ParticleEmitter = new Class({
             StableSort(particles, this.indexSort);
         }
 
-        this.delayCounter -= emitterStep;
+        // this.delayCounter -= emitterStep;
 
-        if (this.delayCounter <= 0 && this.enabled)
-        {
+        // if (this.delayCounter <= 0 && this.enabled)
+        // {
             this.emit(this.emitCount);
-            this.delayCounter = this.delay / 1000;
-        }
+        //     this.delayCounter = this.delay / 1000;
+        // }
     },
 
     indexSort: function (a, b)

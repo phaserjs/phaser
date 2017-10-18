@@ -1,3 +1,4 @@
+var Clamp = require('../../math/Clamp');
 var Class = require('../../utils/Class');
 var DegToRad = require('../../math/DegToRad');
 
@@ -23,18 +24,32 @@ var Particle = new Class({
         this.scaleX = 1;
         this.scaleY = 1;
 
+        this.angle = 0;
+
+        this.alpha = 1;
+
+        //  rads
         this.rotation = 0;
 
         this.scrollFactorX = 1;
         this.scrollFactorY = 1;
 
-        this.color = 0xFFFFFFFF;
+        this.color = 0xffffffff;
 
-        //  Floats?
-        this.life = 1;
-        this.lifeStep = 1;
-        this.normLifeStep = 1;
+        //  in ms
+        this.life = 1000;
+        this.lifeCurrent = 1000;
 
+        //  ease data
+        this.data = {
+            tint: { min: 0xffffff, max: 0xffffff, current: 0xffffff },
+            alpha: { min: 1, max: 1 },
+            angle: { min: 0, max: 0 },
+            scaleX: { min: 1, max: 1 },
+            scaleY: { min: 1, max: 1 }
+        };
+
+        /*
         this.start = {
             tint: 0xFFFFFF,
             alpha: 1,
@@ -48,6 +63,7 @@ var Particle = new Class({
             scale: { x: 1, y: 1 },
             angle: 0
         };
+        */
     },
 
     reset: function (x, y, frame)
@@ -62,17 +78,21 @@ var Particle = new Class({
         this.velocityX = 0;
         this.velocityY = 0;
 
-        this.scaleX = 1;
-        this.scaleY = 1;
+        this.life = 1000;
+        this.lifeCurrent = 1000;
 
-        this.rotation = 0;
+        // this.scaleX = 1;
+        // this.scaleY = 1;
 
-        this.color = 0xFFFFFFFF;
+        // this.rotation = 0;
 
-        this.life = 1;
-        this.lifeStep = 1;
-        this.normLifeStep = 1;
+        // this.color = 0xFFFFFFFF;
 
+        // this.life = 1;
+        // this.lifeStep = 1;
+        // this.normLifeStep = 1;
+
+        /*
         var start = this.start;
 
         start.tint = 0xFFFFFF;
@@ -88,13 +108,14 @@ var Particle = new Class({
         end.scale.x = 1;
         end.scale.y = 1;
         end.angle = 0;
+        */
 
         return this;
     },
 
     isAlive: function ()
     {
-        return (this.lifeStep > 0);
+        return (this.lifeCurrent > 0);
     },
 
     // var rad = DegToRad(Between(this.minEmitAngle, this.maxEmitAngle));
@@ -117,26 +138,63 @@ var Particle = new Class({
     // particle.color = (particle.color & 0x00FFFFFF) | (((this.startAlpha * 0xFF)|0) << 24);
     // particle.index = this.alive.length;
 
+        // this.data = {
+        //     tint: { min: 0xffffff, max: 0xffffff, current: 0xffffff },
+        //     alpha: { min: 1, max: 1, current: 1 },
+        //     angle: { min: 0, max: 0, current: 0 },
+        //     scaleX: { min: 1, max: 1, current: 1 },
+        //     scaleY: { min: 1, max: 1, current: 1 }
+        // };
+
     emit: function (emitter)
     {
+        // var rad = DegToRad(emitter.angle.getRandom());
+
+        // this.velocityX = Math.cos(rad) * emitter.velocity.getRandomX();
+        // this.velocityY = Math.sin(rad) * emitter.velocity.getRandomY();
+
+        this.velocityX = emitter.velocity.getRandomX();
+        this.velocityY = emitter.velocity.getRandomY();
+
         var rad = DegToRad(emitter.angle.getRandom());
 
-        this.velocityX = Math.cos(rad) * emitter.velocity.getRandomX();
-        this.velocityY = Math.sin(rad) * emitter.velocity.getRandomY();
+        if (rad !== 0)
+        {
+            this.velocityX *= Math.cos(rad);
+            this.velocityY *= Math.sin(rad);
+        }
 
-        this.life = Math.max(this.life, Number.MIN_VALUE);
-        this.lifeStep = this.life;
+        this.life = emitter.lifespan.getRandom();
+        this.lifeCurrent = this.life;
 
-        emitter.scale.copyX(this.start.scale);
-        emitter.scale.copyY(this.end.scale);
+        //  eased values
 
-        this.start.alpha = emitter.alpha.min;
-        this.end.alpha = emitter.alpha.max;
+        // emitter.scale.copyXToMinMax(this.data.scaleX);
+        // emitter.scale.copyYToMinMax(this.data.scaleY);
 
-        this.start.rotation = emitter.particleAngle.min;
-        this.end.rotation = emitter.particleAngle.max;
+        // emitter.particleAngle.copyToMinMax(this.data.angle);
 
-        this.color = (this.color & 0x00ffffff) | (((this.start.alpha * 0xff) | 0) << 24);
+        // emitter.alpha.copyToMinMax(this.data.alpha);
+
+
+
+        // this.scaleX = emitter.scale.xMin;
+        // this.scaleY = emitter.scale.yMin;
+
+        // this.rotation = DegToRad(emitter.particleAngle.min);
+
+        //  Set the starting ease data
+
+        // emitter.scale.copyX(this.start.scale);
+        // emitter.scale.copyY(this.end.scale);
+
+        // this.start.alpha = emitter.alpha.min;
+        // this.end.alpha = emitter.alpha.max;
+
+        // this.start.rotation = emitter.particleAngle.min;
+        // this.end.rotation = emitter.particleAngle.max;
+
+        // this.color = (this.color & 0x00ffffff) | (((this.start.alpha * 0xff) | 0) << 24);
 
         this.index = emitter.alive.length;
     },
@@ -159,9 +217,11 @@ var Particle = new Class({
     // particle.color = (particle.color & 0x00FFFFFF) | (((alphaf * 0xFF)|0) << 24);
     // particle.rotation = rotation;
 
-    update: function (emitter, step)
+    //  delta = ms, step = delta / 1000
+    update: function (emitter, delta, step)
     {
-        this.normLifeStep = 1 - this.lifeStep / this.life;
+        //  How far along in life is this particle? (t = 0 to 1)
+        // var t = this.lifeCurrent / this.life, 0, 1;
 
         this.velocityX += (emitter.gravity.x * step);
         this.velocityY += (emitter.gravity.y * step);
@@ -169,9 +229,15 @@ var Particle = new Class({
         this.x += this.velocityX * step;
         this.y += this.velocityY * step;
 
-        this.lifeStep -= step;
+        //  scale
 
-        return (this.lifeStep <= 0);
+        //  rotation
+
+        //  alpha
+
+        this.lifeCurrent -= delta;
+
+        return (this.lifeCurrent <= 0);
     }
 
 });
