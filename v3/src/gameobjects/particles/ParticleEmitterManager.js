@@ -9,6 +9,7 @@ var ParticleEmitterManager = new Class({
     Extends: GameObject,
 
     Mixins: [
+        Components.RenderTarget,
         Components.Visible,
         Render
     ],
@@ -29,8 +30,6 @@ var ParticleEmitterManager = new Class({
         this.frameNames = [];
 
         this.setTexture(texture, frame);
-
-        //  Array of frame names the emitters are allowed to use
 
         this.emitters = [];
 
@@ -62,6 +61,8 @@ var ParticleEmitterManager = new Class({
 
         this.frameNames = this.texture.getFramesFromTextureSource(this.frame.sourceIndex);
 
+        this.defaultFrame = this.frame;
+
         return this;
     },
 
@@ -84,6 +85,15 @@ var ParticleEmitterManager = new Class({
             {
                 out.push(this.texture.get(frame));
             }
+        }
+
+        if (out.length > 0)
+        {
+            emitter.defaultFrame = out[0];
+        }
+        else
+        {
+            emitter.defaultFrame = this.defaultFrame;
         }
 
         return this;

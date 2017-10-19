@@ -12,7 +12,6 @@ var ParticleEmitter = new Class({
 
     Mixins: [
         Components.BlendMode,
-        Components.RenderTarget,
         Components.ScrollFactor,
         Components.Visible
     ],
@@ -29,15 +28,18 @@ var ParticleEmitter = new Class({
 
         this.particleClass = Particle;
 
-        this.frames = [];
+        this.texture = manager.texture;
+
+        //  Unless overriden by the config
+        this.defaultFrame = manager.defaultFrame;
+
+        this.frames = [ manager.defaultFrame ];
 
         this.dead = [];
         this.alive = [];
 
         this.x = 0;
         this.y = 0;
-
-        //  How can the emitter pick from a random frame OR a fixed frame?
 
         //  A radial emitter will emit particles in all directions between angle min and max
         //  A point emitter will emit particles only in the direction set by the speed values
@@ -94,13 +96,20 @@ var ParticleEmitter = new Class({
 
     getFrame: function ()
     {
-        return GetRandomElement(this.frames);
+        if (this.frames.length === 1)
+        {
+            return this.defaultFrame;
+        }
+        else
+        {
+            return GetRandomElement(this.frames);
+        }
     },
 
     //  Either a single frame (numeric / string based), or an array of frames to randomly pick from
-    setFrame: function (frame)
+    setFrame: function (frames)
     {
-        this.manager.setEmitterFrames(frame, this);
+        this.manager.setEmitterFrames(frames, this);
 
         return this;
     },
@@ -207,10 +216,23 @@ var ParticleEmitter = new Class({
         return this;
     },
 
-    setFrequency: function (frequency)
+    setQuantity: function (quantity)
+    {
+        this.emitCount = quantity;
+
+        return this;
+    },
+
+    setFrequency: function (frequency, quantity)
     {
         this.frequency = frequency;
+
         this._counter = 0;
+
+        if (quantity)
+        {
+            this.emitCount = quantity;
+        }
 
         return this;
     },
@@ -491,7 +513,16 @@ var ParticleEmitter = new Class({
             StableSort(particles, this.indexSort);
         }
 
-        if (this.frequency > -1 && this.on)
+        if (!this.on)
+        {
+            return;
+        }
+
+        if (this.frequency === 0)
+        {
+            this.emit(this.emitCount);
+        }
+        else if (this.frequency > 0)
         {
             this._counter -= delta;
 
@@ -499,7 +530,8 @@ var ParticleEmitter = new Class({
             {
                 this.emit(this.emitCount);
 
-                this._counter = this.frequency;
+                //  counter = frequency - remained from previous delta
+                this._counter = (this.frequency - Math.abs(this._counter));
             }
         }
     },
