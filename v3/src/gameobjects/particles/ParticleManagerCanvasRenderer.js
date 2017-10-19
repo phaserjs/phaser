@@ -15,19 +15,15 @@ var ParticleManagerCanvasRenderer = function (renderer, emitterManager, interpol
 
         var particles = emitter.alive;
         var length = particles.length;
+
+        if (!emitter.visible || length === 0)
+        {
+            continue;
+        }
+
         var ctx = renderer.currentContext;
 
-        //  TODO: Move into the ctx loop below as it's now Particle specific
-        var frame = emitter.frame;
-        var dx = frame.x;
-        var dy = frame.y;
-        var width = frame.width;
-        var height = frame.height;
-        var ox = width * 0.5;
-        var oy = height * 0.5;
-
         var lastAlpha = ctx.globalAlpha;
-        var cd = frame.canvasData;
         var cameraScrollX = camera.scrollX * emitter.scrollFactorX;
         var cameraScrollY = camera.scrollY * emitter.scrollFactorY;
 
@@ -40,6 +36,16 @@ var ParticleManagerCanvasRenderer = function (renderer, emitterManager, interpol
         for (var index = 0; index < length; ++index)
         {
             var particle = particles[index];
+
+            var frame = particle.frame;
+            var dx = frame.x;
+            var dy = frame.y;
+            var width = frame.width;
+            var height = frame.height;
+            var ox = width * 0.5;
+            var oy = height * 0.5;
+            var cd = frame.canvasData;
+
             var x = -ox;
             var y = -oy;
             var alpha = ((particle.color >> 24) & 0xFF) / 255.0;

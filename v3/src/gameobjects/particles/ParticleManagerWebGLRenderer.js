@@ -9,10 +9,7 @@ var ParticleManagerWebGLRenderer = function (renderer, emitterManager, interpola
         return;
     }
 
-    for (var i = 0; i < emitters.length; i++)
-    {
-        renderer.particleRenderer.renderEmitter(emitters[i], camera);
-    }
+    renderer.particleRenderer.renderEmitterManager(emitterManager, camera);
 };
 
 module.exports = ParticleManagerWebGLRenderer;
