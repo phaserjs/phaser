@@ -13,7 +13,12 @@ var MinMax2 = new Class({
 
     function MinMax2 (min, max)
     {
-        if (typeof min === 'object')
+        if (Array.isArray(min))
+        {
+            max = min[1];
+            min = min[0];
+        }
+        else if (typeof min === 'object')
         {
             var obj = min;
 
@@ -32,7 +37,12 @@ var MinMax2 = new Class({
 
     set: function (min, max)
     {
-        if (typeof min === 'object')
+        if (Array.isArray(min))
+        {
+            max = min[1];
+            min = min[0];
+        }
+        else if (typeof min === 'object')
         {
             var obj = min;
 

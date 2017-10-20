@@ -55,7 +55,16 @@ var MinMax4 = new Class({
 
     set: function (xMin, xMax, yMin, yMax)
     {
-        if (typeof xMin === 'object')
+        if (Array.isArray(xMin))
+        {
+            var arr = xMin;
+
+            xMin = arr[0];
+            xMax = arr[1];
+            yMin = arr[2];
+            yMax = arr[3];
+        }
+        else if (typeof xMin === 'object')
         {
             var obj = xMin;
 
