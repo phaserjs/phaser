@@ -15,6 +15,11 @@ var BlendMode = {
 
         set: function (value)
         {
+            if (typeof value === 'string')
+            {
+                value = BlendModes[value];
+            }
+
             value | 0;
 
             if (value >= 0)
@@ -25,6 +30,7 @@ var BlendMode = {
 
     },
 
+    //  const or string
     setBlendMode: function (value)
     {
         this.blendMode = value;
