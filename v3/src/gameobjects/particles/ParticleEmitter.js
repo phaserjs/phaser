@@ -1,12 +1,14 @@
+var BlendModes = require('../../renderer/BlendModes');
 var Class = require('../../utils/Class');
 var Components = require('../components');
 var Easing = require('../../math/easing');
 var GetEaseFunction = require('../../tweens/builder/GetEaseFunction');
+var GetRandomElement = require('../../utils/array/GetRandomElement');
+var GetValue = require('../../utils/object/GetValue');
 var MinMax2 = require('../../math/MinMax2');
 var MinMax4 = require('../../math/MinMax4');
 var Particle = require('./Particle');
 var StableSort = require('../../utils/array/StableSort');
-var GetRandomElement = require('../../utils/array/GetRandomElement');
 
 var ParticleEmitter = new Class({
 
@@ -24,74 +26,83 @@ var ParticleEmitter = new Class({
 
         this.manager = manager;
 
-        this.key = '';
+        this.key = GetValue(config, 'key', '');
 
-        this.particleClass = Particle;
+        this.particleClass = GetValue(config, 'particleClass', Particle);
 
         this.texture = manager.texture;
 
-        //  Unless overriden by the config
-        this.defaultFrame = manager.defaultFrame;
-
         this.frames = [ manager.defaultFrame ];
 
-        this.dead = [];
-        this.alive = [];
+        this.defaultFrame = manager.defaultFrame;
 
-        this.x = 0;
-        this.y = 0;
+        this.x = GetValue(config, 'x', 0);
+        this.y = GetValue(config, 'y', 0);
 
         //  A radial emitter will emit particles in all directions between angle min and max
         //  A point emitter will emit particles only in the direction set by the speed values
-        this.radial = true;
+        this.radial = GetValue(config, 'radial', true);
 
-        this.speed = new MinMax4();
+        this.speed = new MinMax4(GetValue(config, 'speed', undefined));
 
-        this.scale = new MinMax4(1);
+        this.scale = new MinMax4(GetValue(config, 'scale', 1));
 
-        this.gravity = new MinMax2();
+        this.gravity = new MinMax2(GetValue(config, 'gravity', 0));
 
-        this.alpha = new MinMax2(1);
+        this.alpha = new MinMax2(GetValue(config, 'alpha', 1));
 
-        this.angle = new MinMax2(0, 360);
+        this.angle = new MinMax2(GetValue(config, 'angle', { min: 0, max: 360 }));
 
-        this.particleAngle = new MinMax2();
+        this.particleAngle = new MinMax2(GetValue(config, 'particleAngle', 0));
 
         //  The lifespan of the particles (in ms)
-        this.lifespan = new MinMax2(1000);
+        this.lifespan = new MinMax2(GetValue(config, 'lifespan', 1000));
 
-        this.deathCallback = null;
-        this.deathCallbackScope = null;
+        this.deathCallback = GetValue(config, 'deathCallback', null);
+        this.deathCallbackScope = GetValue(config, 'deathCallbackScope', null);
 
         //  Set to hard limit the amount of particle objects this emitter is allowed to create
-        this.maxParticles = 0;
+        this.maxParticles = GetValue(config, 'maxParticles', 0);
 
         //  How many particles are emitted each time the emitter updates
-        this.emitCount = 1;
+        this.quantity = GetValue(config, 'quantity', 1);
 
         //  How often a particle is emitted in ms (if emitter is a constant / flow emitter)
         //  If emitter is an explosion emitter this value will be -1.
         //  Anything > -1 sets this to be a flow emitter
-        this.frequency = 0;
+        this.frequency = GetValue(config, 'frequency', 0);
 
         //  Controls if the emitter is currently emitting particles. Already alive particles will continue to update until they expire.
-        this.on = true;
+        this.on = GetValue(config, 'on', true);
 
         //  Newly emitted particles are added to the top of the particle list, i.e. rendered above those already alive. Set to false to send them to the back.
-        this.particleBringToTop = true;
+        this.particleBringToTop = GetValue(config, 'particleBringToTop', true);
 
-        this.timeScale = 1;
+        this.timeScale = GetValue(config, 'timeScale', 1);
+
+        this.dead = [];
+        this.alive = [];
 
         this._counter = 0;
 
         //  Optional Particle emission zone - must be an object that supports a `getRandomPoint` function, such as a Rectangle, Circle, Path, etc.
-        this.zone = null;
+        this.zone = GetValue(config, 'zone', null);
 
-        this.easingFunctionAlpha = Easing.Linear;
-        this.easingFunctionScale = Easing.Linear;
-        this.easingFunctionRotation = Easing.Linear;
+        this.active = GetValue(config, 'active', true);
+        this.visible = GetValue(config, 'visible', true);
 
-        this.active = true;
+        this.blendMode = GetValue(config, 'blendMode', BlendModes.NORMAL);
+
+        this.easingFunctionAlpha = GetValue(config, 'alphaEase', GetEaseFunction('Linear'));
+        this.easingFunctionScale = GetValue(config, 'scaleEase', GetEaseFunction('Linear'));
+        this.easingFunctionRotation = GetValue(config, 'rotationEase', GetEaseFunction('Linear'));
+
+        var frame = GetValue(config, 'frame', null);
+
+        if (frame)
+        {
+            this.setFrame(frame);
+        }
     },
 
     getFrame: function ()
@@ -216,7 +227,7 @@ var ParticleEmitter = new Class({
 
     setQuantity: function (quantity)
     {
-        this.emitCount = quantity;
+        this.quantity = quantity;
 
         return this;
     },
@@ -229,7 +240,7 @@ var ParticleEmitter = new Class({
 
         if (quantity)
         {
-            this.emitCount = quantity;
+            this.quantity = quantity;
         }
 
         return this;
@@ -376,7 +387,7 @@ var ParticleEmitter = new Class({
 
         this.frequency = frequency;
 
-        this.emitCount = count;
+        this.quantity = count;
 
         return this.start();
     },
@@ -516,7 +527,7 @@ var ParticleEmitter = new Class({
 
         if (this.frequency === 0)
         {
-            this.emit(this.emitCount);
+            this.emit(this.quantity);
         }
         else if (this.frequency > 0)
         {
@@ -524,7 +535,7 @@ var ParticleEmitter = new Class({
 
             if (this._counter <= 0)
             {
-                this.emit(this.emitCount);
+                this.emit(this.quantity);
 
                 //  counter = frequency - remained from previous delta
                 this._counter = (this.frequency - Math.abs(this._counter));

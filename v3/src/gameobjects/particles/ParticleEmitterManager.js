@@ -16,6 +16,7 @@ var ParticleEmitterManager = new Class({
 
     initialize:
 
+    //  frame is optional and can contain the emitters array or object if skipped
     function ParticleEmitterManager (scene, texture, frame, emitters)
     {
         GameObject.call(this, scene, 'ParticleEmitterManager');
@@ -28,6 +29,12 @@ var ParticleEmitterManager = new Class({
         this.texture = null;
         this.frame = null;
         this.frameNames = [];
+
+        if (typeof frame === 'object' || Array.isArray(frame))
+        {
+            emitters = frame;
+            frame = null;
+        }
 
         this.setTexture(texture, frame);
 
