@@ -55,6 +55,16 @@ var MinMax4 = new Class({
 
     set: function (xMin, xMax, yMin, yMax)
     {
+        if (typeof xMin === 'object')
+        {
+            var obj = xMin;
+
+            xMin = obj.xMin || obj.min;
+            xMax = obj.xMax || obj.max;
+            yMin = obj.yMin;
+            yMax = obj.yMax;
+        }
+
         if (xMin === undefined) { xMin = 0; }
         if (xMax === undefined) { xMax = xMin; }
         if (yMin === undefined) { yMin = xMin; }

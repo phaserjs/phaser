@@ -13,6 +13,14 @@ var MinMax2 = new Class({
 
     function MinMax2 (min, max)
     {
+        if (typeof min === 'object')
+        {
+            var obj = min;
+
+            min = obj.min || obj.x;
+            max = obj.max || obj.y;
+        }
+
         if (min === undefined) { min = 0; }
         if (max === undefined) { max = min; }
 
@@ -24,6 +32,14 @@ var MinMax2 = new Class({
 
     set: function (min, max)
     {
+        if (typeof min === 'object')
+        {
+            var obj = min;
+
+            min = obj.min;
+            max = obj.max;
+        }
+
         if (min === undefined) { min = 0; }
         if (max === undefined) { max = min; }
 
