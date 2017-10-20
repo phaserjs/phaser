@@ -1,5 +1,6 @@
 var Class = require('../../utils/Class');
 var DegToRad = require('../../math/DegToRad');
+var FloatBetween = require('../../math/FloatBetween');
 
 var Particle = new Class({
 
@@ -21,9 +22,10 @@ var Particle = new Class({
         this.scaleX = 1;
         this.scaleY = 1;
 
-        this.angle = 0;
-
         this.alpha = 1;
+
+        //  degs
+        this.angle = 0;
 
         //  rads
         this.rotation = 0;
@@ -69,7 +71,7 @@ var Particle = new Class({
 
         if (emitter.radial)
         {
-            var rad = DegToRad(emitter.angle.getRandom());
+            var rad = DegToRad(emitter.emitterAngle.getRandom());
 
             this.velocityX = Math.cos(rad) * Math.abs(sx);
             this.velocityY = Math.sin(rad) * Math.abs(sy);
@@ -84,23 +86,101 @@ var Particle = new Class({
         this.lifeCurrent = this.life;
 
         //  eased values
-        emitter.scale.copyXToMinMax(this.data.scaleX);
-        emitter.scale.copyYToMinMax(this.data.scaleY);
-        emitter.particleAngle.copyToMinMax(this.data.angle);
-        emitter.alpha.copyToMinMax(this.data.alpha);
+
+        var dataScaleX = this.data.scaleX;
+        var dataScaleY = this.data.scaleY;
+        var dataAngle = this.data.angle;
+        var dataAlpha = this.data.alpha;
+
+        emitter.scale.copyXToMinMax(dataScaleX);
+        emitter.scale.copyYToMinMax(dataScaleY);
+        emitter.angle.copyToMinMax(dataAngle);
+        emitter.alpha.copyToMinMax(dataAlpha);
+
+        //  Random overrides
+
+        if (emitter.randomScaleX)
+        {
+            var randomScaleX = FloatBetween(emitter.randomScaleX[0], emitter.randomScaleX[1]);
+
+            //  If there is no current ease value set we override them both
+            if (dataScaleX.min === dataScaleX.max)
+            {
+                dataScaleX.min = randomScaleX;
+                dataScaleX.max = randomScaleX;
+            }
+            else
+            {
+                //  Otherwise we just reset the start value, so it still eases to the end value
+                dataScaleX.min = randomScaleX;
+            }
+        }
+
+        if (emitter.randomScaleY)
+        {
+            var randomScaleY = FloatBetween(emitter.randomScaleY[0], emitter.randomScaleY[1]);
+
+            //  If there is no current ease value set we override them both
+            if (dataScaleY.min === dataScaleY.max)
+            {
+                dataScaleY.min = randomScaleY;
+                dataScaleY.max = randomScaleY;
+            }
+            else
+            {
+                //  Otherwise we just reset the start value, so it still eases to the end value
+                dataScaleY.min = randomScaleY;
+            }
+        }
+
+        if (emitter.randomAngle)
+        {
+            var randomAngle = FloatBetween(emitter.randomAngle[0], emitter.randomAngle[1]);
+
+            //  If there is no current ease value set we override them both
+            if (dataAngle.min === dataAngle.max)
+            {
+                dataAngle.min = randomAngle;
+                dataAngle.max = randomAngle;
+            }
+            else
+            {
+                //  Otherwise we just reset the start value, so it still eases to the end value
+                dataAngle.min = randomAngle;
+            }
+        }
+
+        if (emitter.randomAlpha)
+        {
+            var randomAlpha = FloatBetween(emitter.randomAlpha[0], emitter.randomAlpha[1]);
+
+            //  If there is no current ease value set we override them both
+            if (dataAlpha.min === dataAlpha.max)
+            {
+                dataAlpha.min = randomAlpha;
+                dataAlpha.max = randomAlpha;
+            }
+            else
+            {
+                //  Otherwise we just reset the start value, so it still eases to the end value
+                dataAlpha.min = randomAlpha;
+            }
+        }
 
         //  Pre-calc ease values
-        this.data.scaleX.calc = this.data.scaleX.max - this.data.scaleX.min;
-        this.data.scaleY.calc = this.data.scaleY.max - this.data.scaleY.min;
-        this.data.angle.calc = this.data.angle.max - this.data.angle.min;
-        this.data.alpha.calc = this.data.alpha.max - this.data.alpha.min;
+        dataScaleX.calc = dataScaleX.max - dataScaleX.min;
+        dataScaleY.calc = dataScaleY.max - dataScaleY.min;
+        dataAngle.calc = dataAngle.max - dataAngle.min;
+        dataAlpha.calc = dataAlpha.max - dataAlpha.min;
 
         //  Set initial values
-        this.rotation = DegToRad(this.data.angle.min);
-        this.alpha = this.data.alpha.min;
+        this.scaleX = dataScaleX.min;
+        this.scaleY = dataScaleY.min;
+        this.angle = dataAngle.min;
+        this.rotation = DegToRad(dataAngle.min);
+
+        this.alpha = dataAlpha.min;
         this.color = (this.color & 0x00FFFFFF) | (((this.alpha * 0xFF) | 0) << 24);
-        this.scaleX = this.data.scaleX.min;
-        this.scaleY = this.data.scaleY.min;
 
         this.index = emitter.alive.length;
     },
@@ -117,12 +197,15 @@ var Particle = new Class({
         this.x += this.velocityX * step;
         this.y += this.velocityY * step;
 
-        this.scaleX = this.data.scaleX.calc * emitter.easingFunctionScale(t) + this.data.scaleX.min;
-        this.scaleY = this.data.scaleY.calc * emitter.easingFunctionScale(t) + this.data.scaleY.min;
+        var data = this.data;
 
-        this.rotation = DegToRad(this.data.angle.calc * emitter.easingFunctionRotation(t) + this.data.angle.min);
+        this.scaleX = data.scaleX.calc * emitter.easingFunctionScale(t) + data.scaleX.min;
+        this.scaleY = data.scaleY.calc * emitter.easingFunctionScale(t) + data.scaleY.min;
 
-        this.alpha = this.data.alpha.calc * emitter.easingFunctionAlpha(t) + this.data.alpha.min;
+        this.angle = data.angle.calc * emitter.easingFunctionRotation(t) + data.angle.min;
+        this.rotation = DegToRad(this.angle);
+
+        this.alpha = data.alpha.calc * emitter.easingFunctionAlpha(t) + data.alpha.min;
 
         this.color = (this.color & 0x00FFFFFF) | (((this.alpha * 0xFF) | 0) << 24);
 

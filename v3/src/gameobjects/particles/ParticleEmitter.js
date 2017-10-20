@@ -51,12 +51,36 @@ var ParticleEmitter = new Class({
 
         this.alpha = new MinMax2(GetValue(config, 'alpha', 1));
 
-        this.angle = new MinMax2(GetValue(config, 'angle', { min: 0, max: 360 }));
+        this.emitterAngle = new MinMax2(0, 360);
 
-        this.particleAngle = new MinMax2(GetValue(config, 'particleAngle', 0));
+        var configEmitterAngle = GetValue(config, 'emitterAngle', null);
+
+        if (configEmitterAngle)
+        {
+            this.emitterAngle.min = configEmitterAngle.min;
+            this.emitterAngle.max = configEmitterAngle.max;
+        }
+
+        this.angle = new MinMax2(GetValue(config, 'angle', 0));
 
         //  The lifespan of the particles (in ms)
         this.lifespan = new MinMax2(GetValue(config, 'lifespan', 1000));
+
+        //  Random overrides
+
+        this.randomScaleX = GetValue(config, 'randomScaleX', null);
+        this.randomScaleY = GetValue(config, 'randomScaleY', null);
+        this.randomScale = GetValue(config, 'randomScale', null);
+
+        if (this.randomScale)
+        {
+            this.randomScaleX = this.randomScale;
+            this.randomScaleY = this.randomScale;
+        }
+
+        this.randomAlpha = GetValue(config, 'randomAlpha', null);
+
+        this.randomAngle = GetValue(config, 'randomAngle', null);
 
         this.deathCallback = GetValue(config, 'deathCallback', null);
         this.deathCallbackScope = GetValue(config, 'deathCallbackScope', null);
@@ -93,9 +117,9 @@ var ParticleEmitter = new Class({
 
         this.blendMode = GetValue(config, 'blendMode', BlendModes.NORMAL);
 
-        this.easingFunctionAlpha = GetValue(config, 'alphaEase', GetEaseFunction('Linear'));
-        this.easingFunctionScale = GetValue(config, 'scaleEase', GetEaseFunction('Linear'));
-        this.easingFunctionRotation = GetValue(config, 'rotationEase', GetEaseFunction('Linear'));
+        this.easingFunctionAlpha = GetEaseFunction(GetValue(config, 'alphaEase', 'Linear'));
+        this.easingFunctionScale = GetEaseFunction(GetValue(config, 'scaleEase', 'Linear'));
+        this.easingFunctionRotation = GetEaseFunction(GetValue(config, 'rotationEase', 'Linear'));
 
         this.follow = GetValue(config, 'follow', null);
         this.followOffset = new Vector2(GetValue(config, 'followOffset', 0));
@@ -230,16 +254,16 @@ var ParticleEmitter = new Class({
         return this;
     },
 
-    setAngle: function (min, max)
+    setEmitterAngle: function (min, max)
     {
-        this.angle.set(min, max);
+        this.emitterAngle.set(min, max);
 
         return this;
     },
 
-    setParticleAngle: function (min, max)
+    setAngle: function (min, max)
     {
-        this.particleAngle.set(min, max);
+        this.angle.set(min, max);
 
         return this;
     },
