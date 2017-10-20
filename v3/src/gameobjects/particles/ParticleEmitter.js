@@ -1,7 +1,6 @@
 var BlendModes = require('../../renderer/BlendModes');
 var Class = require('../../utils/Class');
 var Components = require('../components');
-var Easing = require('../../math/easing');
 var GetEaseFunction = require('../../tweens/builder/GetEaseFunction');
 var GetRandomElement = require('../../utils/array/GetRandomElement');
 var GetValue = require('../../utils/object/GetValue');
@@ -9,6 +8,7 @@ var MinMax2 = require('../../math/MinMax2');
 var MinMax4 = require('../../math/MinMax4');
 var Particle = require('./Particle');
 var StableSort = require('../../utils/array/StableSort');
+var Vector2 = require('../../math/Vector2');
 
 var ParticleEmitter = new Class({
 
@@ -26,7 +26,7 @@ var ParticleEmitter = new Class({
 
         this.manager = manager;
 
-        this.key = GetValue(config, 'key', '');
+        this.name = GetValue(config, 'name', '');
 
         this.particleClass = GetValue(config, 'particleClass', Particle);
 
@@ -97,7 +97,9 @@ var ParticleEmitter = new Class({
         this.easingFunctionScale = GetValue(config, 'scaleEase', GetEaseFunction('Linear'));
         this.easingFunctionRotation = GetValue(config, 'rotationEase', GetEaseFunction('Linear'));
 
-        this._follow = GetValue(config, 'follow', null);;
+        this.follow = GetValue(config, 'follow', null);
+        this.followOffset = new Vector2(GetValue(config, 'followOffset', 0));
+        this.trackVisible = GetValue(config, 'trackVisible', false);
 
         var frame = GetValue(config, 'frame', null);
 
@@ -107,16 +109,24 @@ var ParticleEmitter = new Class({
         }
     },
 
-    startFollow: function (gameObjectOrPoint)
+    startFollow: function (target, offsetX, offsetY, trackVisible)
     {
-        this._follow = gameObjectOrPoint;
+        if (offsetX === undefined) { offsetX = 0; }
+        if (offsetY === undefined) { offsetY = 0; }
+        if (trackVisible === undefined) { trackVisible = false; }
+
+        this.follow = target;
+        this.followOffset.set(offsetX, offsetY);
+        this.trackVisible = trackVisible;
 
         return this;
     },
 
     stopFollow: function ()
     {
-        this._follow = null;
+        this.follow = null;
+        this.followOffset.set(0, 0);
+        this.trackVisible = false;
 
         return this;
     },
@@ -422,7 +432,7 @@ var ParticleEmitter = new Class({
 
     emit: function (count, x, y)
     {
-        if (count === undefined) { count = 1; }
+        if (count === undefined) { count = this.quantity; }
 
         var output = [];
 
@@ -493,10 +503,15 @@ var ParticleEmitter = new Class({
 
         var step = (delta / 1000);
 
-        if (this._follow)
+        if (this.follow)
         {
-            this.x = this._follow.x;
-            this.y = this._follow.y;
+            this.x = this.follow.x + this.followOffset.x;
+            this.y = this.follow.y + this.followOffset.y;
+
+            if (this.trackVisible)
+            {
+                this.visible = this.follow.visible;
+            }
         }
 
         var particles = this.alive;
@@ -550,7 +565,7 @@ var ParticleEmitter = new Class({
 
         if (this.frequency === 0)
         {
-            this.emit(this.quantity);
+            this.emit();
         }
         else if (this.frequency > 0)
         {
@@ -558,7 +573,7 @@ var ParticleEmitter = new Class({
 
             if (this._counter <= 0)
             {
-                this.emit(this.quantity);
+                this.emit();
 
                 //  counter = frequency - remained from previous delta
                 this._counter = (this.frequency - Math.abs(this._counter));
