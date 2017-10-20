@@ -17,8 +17,8 @@ var MinMax2 = new Class({
         {
             var obj = min;
 
-            min = obj.min || obj.x;
-            max = obj.max || obj.y;
+            min = (obj.hasOwnProperty('x')) ? obj.x : obj.min;
+            max = (obj.hasOwnProperty('y')) ? obj.y : obj.max;
         }
 
         if (min === undefined) { min = 0; }
