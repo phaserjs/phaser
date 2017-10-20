@@ -6,6 +6,8 @@ module.exports = {
     Animation: require('./Animation'),
     BlendMode: require('./BlendMode'),
     ComputedSize: require('./ComputedSize'),
+    DataProxy: require('./DataProxy'),
+    Depth: require('./Depth'),
     Flip: require('./Flip'),
     GetBounds: require('./GetBounds'),
     Origin: require('./Origin'),
