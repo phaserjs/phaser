@@ -170,155 +170,13 @@ var ParticleRenderer = new Class({
         );
     },
 
-    /*
-    renderEmitter: function (emitter, camera)
-    {
-        var particles = emitter.alive;
-        var length = particles.length;
-
-        if (length === 0)
-        {
-            return;
-        }
-
-        if (emitter.blendMode !== this.manager.blendMode)
-        {
-            this.manager.setBlendMode(emitter.blendMode);
-        }
-
-        var data = this.vertexDataBuffer;
-        var vbF32 = data.floatView;
-        var vbU32 = data.uintView;
-        var vtxOffset = 0;
-
-        var cameraMatrix = camera.matrix.matrix;
-        var cma = cameraMatrix[0];
-        var cmb = cameraMatrix[1];
-        var cmc = cameraMatrix[2];
-        var cmd = cameraMatrix[3];
-        var cme = cameraMatrix[4];
-        var cmf = cameraMatrix[5];
-
-        var elementCount = this.elementCount;
-
-        var particleCount = 0;
-        var batchCount = Math.ceil(length / CONST.MAX);
-
-        var renderTarget = emitter.renderTarget;
-
-        var tempMatrix = this.tempMatrix;
-        var tempMatrixMatrix = tempMatrix.matrix;
-
-        var particleOffset = 0;
-
-        var cameraScrollX = camera.scrollX * emitter.scrollFactorX;
-        var cameraScrollY = camera.scrollY * emitter.scrollFactorY;
-
-        this.manager.setRenderer(this, emitter.defaultFrame.source.glTexture, renderTarget);
-
-        //  If there are more particles than fit into a single batch (16000) then it flushes after each one
-        for (var batchIndex = 0; batchIndex < batchCount; ++batchIndex)
-        {
-            var batchSize = Math.min(length, CONST.MAX);
-
-            for (var index = 0; index < batchSize; index++)
-            {
-                var particle = particles[particleOffset + index];
-
-                var frame = particle.frame;
-                var uvs = frame.uvs;
-
-                var x = -(frame.halfWidth);
-                var y = -(frame.halfHeight);
-
-                var color = particle.color;
-
-                var xw = x + frame.width;
-                var yh = y + frame.height;
-               
-                tempMatrix.applyITRS(
-                    particle.x - cameraScrollX * particle.scrollFactorX,
-                    particle.y - cameraScrollY * particle.scrollFactorY,
-                    particle.rotation,
-                    particle.scaleX,
-                    particle.scaleY
-                );
-
-                var sra = tempMatrixMatrix[0];
-                var srb = tempMatrixMatrix[1];
-                var src = tempMatrixMatrix[2];
-                var srd = tempMatrixMatrix[3];
-                var sre = tempMatrixMatrix[4];
-                var srf = tempMatrixMatrix[5];
-
-                var mva = sra * cma + srb * cmc;
-                var mvb = sra * cmb + srb * cmd;
-                var mvc = src * cma + srd * cmc;
-                var mvd = src * cmb + srd * cmd;
-                var mve = sre * cma + srf * cmc + cme;
-                var mvf = sre * cmb + srf * cmd + cmf;
-
-                var tx0 = x * mva + y * mvc + mve;
-                var ty0 = x * mvb + y * mvd + mvf;
-                var tx1 = x * mva + yh * mvc + mve;
-                var ty1 = x * mvb + yh * mvd + mvf;
-                var tx2 = xw * mva + yh * mvc + mve;
-                var ty2 = xw * mvb + yh * mvd + mvf;
-                var tx3 = xw * mva + y * mvc + mve;
-                var ty3 = xw * mvb + y * mvd + mvf;
-
-                vtxOffset = data.allocate(20);
-                elementCount += 6;
-
-                //  Top Left
-                vbF32[vtxOffset++] = tx0;
-                vbF32[vtxOffset++] = ty0;
-                vbF32[vtxOffset++] = uvs.x0;
-                vbF32[vtxOffset++] = uvs.y0;
-                vbU32[vtxOffset++] = color;
-
-                //  Bottom Left
-                vbF32[vtxOffset++] = tx1;
-                vbF32[vtxOffset++] = ty1;
-                vbF32[vtxOffset++] = uvs.x1;
-                vbF32[vtxOffset++] = uvs.y1;
-                vbU32[vtxOffset++] = color;
-
-                //  Bottom Right
-                vbF32[vtxOffset++] = tx2;
-                vbF32[vtxOffset++] = ty2;
-                vbF32[vtxOffset++] = uvs.x2;
-                vbF32[vtxOffset++] = uvs.y2;
-                vbU32[vtxOffset++] = color;
-
-                //  Top Right
-                vbF32[vtxOffset++] = tx3;
-                vbF32[vtxOffset++] = ty3;
-                vbF32[vtxOffset++] = uvs.x3;
-                vbF32[vtxOffset++] = uvs.y3;
-                vbU32[vtxOffset++] = color;
-            }
-
-            particleOffset += batchSize;
-
-            length -= batchSize;
-
-            this.elementCount = elementCount;
-
-            this.flush(undefined, renderTarget);
-
-            elementCount = 0;
-        }
-    },
-    */
-
     renderEmitterManager: function (emitterManager, camera)
     {
         var renderTarget = emitterManager.renderTarget;
 
         this.manager.setRenderer(this, emitterManager.defaultFrame.source.glTexture, renderTarget);
 
-        var emitters = emitterManager.emitters;
+        var emitters = emitterManager.emitters.list;
 
         for (var i = 0; i < emitters.length; i++)
         {
@@ -351,10 +209,7 @@ var ParticleRenderer = new Class({
 
             var elementCount = this.elementCount;
 
-            var particleCount = 0;
             var batchCount = Math.ceil(length / CONST.MAX);
-
-            // var renderTarget = emitter.renderTarget;
 
             var tempMatrix = this.tempMatrix;
             var tempMatrixMatrix = tempMatrix.matrix;
