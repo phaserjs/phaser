@@ -1,6 +1,7 @@
 var Class = require('../../utils/Class');
 var Components = require('../components');
 var GameObject = require('../GameObject');
+var List = require('../../structs/List');
 var ParticleEmitter = require('./ParticleEmitter');
 var Render = require('./ParticleManagerRender');
 
@@ -9,6 +10,7 @@ var ParticleEmitterManager = new Class({
     Extends: GameObject,
 
     Mixins: [
+        Components.Depth,
         Components.RenderTarget,
         Components.Visible,
         Render
@@ -38,7 +40,7 @@ var ParticleEmitterManager = new Class({
 
         this.setTexture(texture, frame);
 
-        this.emitters = [];
+        this.emitters = new List(this);
 
         if (emitters !== undefined)
         {
@@ -108,14 +110,34 @@ var ParticleEmitterManager = new Class({
 
     addEmitter: function (emitter)
     {
-        this.emitters.push(emitter);
-
-        return emitter;
+        return this.emitters.add(emitter);
     },
 
     createEmitter: function (config)
     {
         return this.addEmitter(new ParticleEmitter(this, config));
+    },
+
+    emit: function (count, x, y)
+    {
+        var emitters = this.emitters.list;
+
+        for (var i = 0; i < emitters.length; i++)
+        {
+            var emitter = emitters[i];
+
+            if (emitter.active)
+            {
+                emitter.emit(count, x, y);
+            }
+        }
+
+        return this;
+    },
+
+    emitAt: function (x, y, count)
+    {
+        return this.emit(count, x, y);
     },
 
     pause: function ()
@@ -137,7 +159,7 @@ var ParticleEmitterManager = new Class({
         //  Scale the delta
         delta *= this.timeScale;
 
-        var emitters = this.emitters;
+        var emitters = this.emitters.list;
 
         for (var i = 0; i < emitters.length; i++)
         {
