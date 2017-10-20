@@ -87,9 +87,9 @@ var ParticleEmitter = new Class({
         //  Optional Particle emission zone - must be an object that supports a `getRandomPoint` function, such as a Rectangle, Circle, Path, etc.
         this.zone = null;
 
-        // this.easingFunctionAlpha = Easing.Linear;
-        // this.easingFunctionScale = Easing.Linear;
-        // this.easingFunctionRotation = Easing.Linear;
+        this.easingFunctionAlpha = Easing.Linear;
+        this.easingFunctionScale = Easing.Linear;
+        this.easingFunctionRotation = Easing.Linear;
 
         this.active = true;
     },
@@ -131,7 +131,6 @@ var ParticleEmitter = new Class({
         return this;
     },
 
-    /*
     setEase: function (easeName, easeParam)
     {
         var ease = GetEaseFunction(easeName, easeParam);
@@ -163,7 +162,6 @@ var ParticleEmitter = new Class({
 
         return this;
     },
-    */
 
     //  Particle Emission
 
@@ -430,8 +428,6 @@ var ParticleEmitter = new Class({
             if (dead.length > 0)
             {
                 particle = dead.pop();
-
-                particle.reset();
             }
             else
             {
