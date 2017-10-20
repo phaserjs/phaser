@@ -97,12 +97,28 @@ var ParticleEmitter = new Class({
         this.easingFunctionScale = GetValue(config, 'scaleEase', GetEaseFunction('Linear'));
         this.easingFunctionRotation = GetValue(config, 'rotationEase', GetEaseFunction('Linear'));
 
+        this._follow = GetValue(config, 'follow', null);;
+
         var frame = GetValue(config, 'frame', null);
 
         if (frame)
         {
             this.setFrame(frame);
         }
+    },
+
+    startFollow: function (gameObjectOrPoint)
+    {
+        this._follow = gameObjectOrPoint;
+
+        return this;
+    },
+
+    stopFollow: function ()
+    {
+        this._follow = null;
+
+        return this;
     },
 
     getFrame: function ()
@@ -476,6 +492,13 @@ var ParticleEmitter = new Class({
         delta *= this.timeScale;
 
         var step = (delta / 1000);
+
+        if (this._follow)
+        {
+            this.x = this._follow.x;
+            this.y = this._follow.y;
+        }
+
         var particles = this.alive;
         var length = particles.length;
 
