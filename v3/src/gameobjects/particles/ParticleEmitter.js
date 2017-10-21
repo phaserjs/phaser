@@ -4,11 +4,13 @@ var Components = require('../components');
 var GetEaseFunction = require('../../tweens/builder/GetEaseFunction');
 var GetRandomElement = require('../../utils/array/GetRandomElement');
 var GetValue = require('../../utils/object/GetValue');
+var GetFastValue = require('../../utils/object/GetFastValue');
 var MinMax2 = require('../../math/MinMax2');
 var MinMax4 = require('../../math/MinMax4');
 var Particle = require('./Particle');
 var StableSort = require('../../utils/array/StableSort');
 var Vector2 = require('../../math/Vector2');
+var GetValueOp = require('./GetValueOp');
 
 var ParticleEmitter = new Class({
 
@@ -36,32 +38,60 @@ var ParticleEmitter = new Class({
 
         this.defaultFrame = manager.defaultFrame;
 
-        this.x = GetValue(config, 'x', 0);
-        this.y = GetValue(config, 'y', 0);
+        this.x = GetValueOp(config, 'x', 0);
+        this.y = GetValueOp(config, 'y', 0);
 
-        //  A radial emitter will emit particles in all directions between angle min and max
-        //  A point emitter will emit particles only in the direction set by the speed values
+        //  A radial emitter will emit particles in all directions between emitterAngle min and max, using speed as the value
+        //  A point emitter will emit particles only in the direction derived from the speed values
+        this.radial = GetFastValue(config, 'radial', true);
+
+        this.speedX = GetValueOp(config, 'speedX', 0);
+        this.speedY = GetValueOp(config, 'speedY', 0);
+
+        this.scaleX = GetValueOp(config, 'scaleX', 1);
+        this.scaleY = GetValueOp(config, 'scaleY', 1);
+
+        this.gravityX = GetValueOp(config, 'gravityX', 0);
+        this.gravityY = GetValueOp(config, 'gravityY', 0);
+
+        this.alpha = GetValueOp(config, 'alpha', 1);
+
+        /*
+        this.x = new MinMax2(GetValue(config, 'x', 0));
+        this.y = new MinMax2(GetValue(config, 'y', 0));
+
         this.radial = GetValue(config, 'radial', true);
 
-        this.speed = new MinMax4(GetValue(config, 'speed', undefined));
+        this.speedX = new MinMax2(GetValue(config, 'speedX', 0));
+        this.speedY = new MinMax2(GetValue(config, 'speedY', 0));
 
-        this.scale = new MinMax4(GetValue(config, 'scale', 1));
+        var speedConfig = GetValue(config, 'speed', null);
+
+        if (speedConfig)
+        {
+            this.speedX.set(speedConfig);
+            this.speedY.set(speedConfig);
+        }
+
+        this.scaleX = new MinMax2(GetValue(config, 'scaleX', 1));
+        this.scaleY = new MinMax2(GetValue(config, 'scaleY', 1));
+
+        var scaleConfig = GetValue(config, 'scale', null);
+
+        if (scaleConfig)
+        {
+            this.scaleX.set(scaleConfig);
+            this.scaleY.set(scaleConfig);
+        }
 
         this.gravity = new MinMax2(GetValue(config, 'gravity', 0));
 
         this.alpha = new MinMax2(GetValue(config, 'alpha', 1));
+        */
 
-        this.emitterAngle = new MinMax2(0, 360);
+        this.emitterAngle = new MinMax2(GetValue(config, 'angle', [ 0, 360 ]));
 
-        var configEmitterAngle = GetValue(config, 'emitterAngle', null);
-
-        if (configEmitterAngle)
-        {
-            this.emitterAngle.min = configEmitterAngle.min;
-            this.emitterAngle.max = configEmitterAngle.max;
-        }
-
-        this.angle = new MinMax2(GetValue(config, 'angle', 0));
+        this.particleAngle = new MinMax2(GetValue(config, 'particleAngle', 0));
 
         //  The lifespan of the particles (in ms)
         this.lifespan = new MinMax2(GetValue(config, 'lifespan', 1000));
@@ -82,8 +112,21 @@ var ParticleEmitter = new Class({
 
         this.randomAngle = GetValue(config, 'randomAngle', null);
 
+        //  Callbacks
+
+        this.emitCallback = GetValue(config, 'emitCallback', null);
+        this.emitCallbackScope = GetValue(config, 'emitCallbackScope', null);
+
         this.deathCallback = GetValue(config, 'deathCallback', null);
         this.deathCallbackScope = GetValue(config, 'deathCallbackScope', null);
+
+        var callbackScope = GetValue(config, 'callbackScope', null)
+
+        if (callbackScope)
+        {
+            this.emitCallbackScope = callbackScope;
+            this.deathCallbackScope = callbackScope;
+        }
 
         //  Set to hard limit the amount of particle objects this emitter is allowed to create
         this.maxParticles = GetValue(config, 'maxParticles', 0);
@@ -320,7 +363,7 @@ var ParticleEmitter = new Class({
 
         for (var i = 0; i < particleCount; i++)
         {
-            dead.push(new this.particleClass());
+            dead.push(new this.particleClass(this));
         }
 
         return this;
@@ -344,6 +387,27 @@ var ParticleEmitter = new Class({
     atLimit: function ()
     {
         return (this.maxParticles > 0 && this.getParticleCount() === this.maxParticles);
+    },
+
+    onParticleEmit: function (callback, context)
+    {
+        if (callback === undefined)
+        {
+            //  Clear any previously set callback
+            this.emitCallback = null;
+            this.emitCallbackScope = null;
+        }
+        else if (typeof callback === 'function')
+        {
+            this.emitCallback = callback;
+
+            if (context)
+            {
+                this.emitCallbackScope = context;
+            }
+        }
+
+        return this;
     },
 
     onParticleDeath: function (callback, context)
@@ -431,6 +495,13 @@ var ParticleEmitter = new Class({
         return this;
     },
 
+    depthSort: function ()
+    {
+        StableSort.inplace(this.alive, this.depthSortCallback);
+
+        return this;
+    },
+
     flow: function (frequency, count)
     {
         if (count === undefined) { count = 1; }
@@ -458,11 +529,9 @@ var ParticleEmitter = new Class({
     {
         if (count === undefined) { count = this.quantity; }
 
-        var output = [];
-
         if (this.atLimit())
         {
-            return output;
+            return;
         }
 
         //  Store emitter coordinates in-case this was a placement explode, or emitAt
@@ -492,10 +561,10 @@ var ParticleEmitter = new Class({
             }
             else
             {
-                particle = new this.particleClass();
+                particle = new this.particleClass(this);
             }
 
-            particle.emit(this);
+            particle.emit();
 
             if (this.particleBringToTop)
             {
@@ -506,7 +575,10 @@ var ParticleEmitter = new Class({
                 this.alive.unshift(particle);
             }
 
-            output.push(particle);
+            if (this.emitCallback)
+            {
+                this.emitCallback.call(this.emitCallbackScope, particle, this);
+            }
 
             if (this.atLimit())
             {
@@ -517,7 +589,7 @@ var ParticleEmitter = new Class({
         this.x = oldX;
         this.y = oldY;
 
-        return output;
+        return particle;
     },
 
     preUpdate: function (time, delta)
@@ -546,7 +618,7 @@ var ParticleEmitter = new Class({
             var particle = particles[index];
 
             //  update returns `true` if the particle is now dead (lifeStep < 0)
-            if (particle.update(this, delta, step))
+            if (particle.update(delta, step))
             {
                 //  Moves the dead particle to the end of the particles array (ready for splicing out later)
                 var last = particles[length - 1];
@@ -579,9 +651,9 @@ var ParticleEmitter = new Class({
 
             this.dead.concat(rip);
 
-            StableSort(particles, this.indexSort);
+            StableSort.inplace(particles, this.indexSortCallback);
         }
-
+        
         if (!this.on)
         {
             return;
@@ -605,7 +677,12 @@ var ParticleEmitter = new Class({
         }
     },
 
-    indexSort: function (a, b)
+    depthSortCallback: function (a, b)
+    {
+        return a.y - b.y;
+    },
+
+    indexSortCallback: function (a, b)
     {
         return a.index - b.index;
     }

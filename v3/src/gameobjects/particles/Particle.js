@@ -6,8 +6,10 @@ var Particle = new Class({
 
     initialize:
 
-    function Particle ()
+    function Particle (emitter)
     {
+        this.emitter = emitter;
+
         //  Phaser.Texture.Frame
         this.frame = null;
 
@@ -54,8 +56,10 @@ var Particle = new Class({
         return (this.lifeCurrent > 0);
     },
 
-    emit: function (emitter)
+    emit: function ()
     {
+        var emitter = this.emitter;
+
         this.frame = emitter.getFrame();
 
         if (emitter.zone)
@@ -63,15 +67,15 @@ var Particle = new Class({
             emitter.zone.getRandomPoint(this);
         }
 
-        this.x += emitter.x;
-        this.y += emitter.y;
+        this.x += emitter.x.getNext();
+        this.y += emitter.y.getNext();
 
-        var sx = emitter.speed.getRandomX();
-        var sy = emitter.speed.getRandomY();
+        var sx = emitter.speedX.getNext();
+        var sy = emitter.speedY.getNext();
 
         if (emitter.radial)
         {
-            var rad = DegToRad(emitter.emitterAngle.getRandom());
+            var rad = DegToRad(emitter.emitterAngle.getNext());
 
             this.velocityX = Math.cos(rad) * Math.abs(sx);
             this.velocityY = Math.sin(rad) * Math.abs(sy);
@@ -82,7 +86,7 @@ var Particle = new Class({
             this.velocityY = sy;
         }
 
-        this.life = emitter.lifespan.getRandom();
+        this.life = emitter.lifespan.getNext();
         this.lifeCurrent = this.life;
 
         //  eased values
@@ -92,9 +96,9 @@ var Particle = new Class({
         var dataAngle = this.data.angle;
         var dataAlpha = this.data.alpha;
 
-        emitter.scale.copyXToMinMax(dataScaleX);
-        emitter.scale.copyYToMinMax(dataScaleY);
-        emitter.angle.copyToMinMax(dataAngle);
+        emitter.scaleX.copyToMinMax(dataScaleX);
+        emitter.scaleY.copyToMinMax(dataScaleY);
+        emitter.particleAngle.copyToMinMax(dataAngle);
         emitter.alpha.copyToMinMax(dataAlpha);
 
         //  Random overrides
@@ -186,8 +190,10 @@ var Particle = new Class({
     },
 
     //  delta = ms, step = delta / 1000
-    update: function (emitter, delta, step)
+    update: function (delta, step)
     {
+        var emitter = this.emitter;
+
         //  How far along in life is this particle? (t = 0 to 1)
         var t = 1 - (this.lifeCurrent / this.life);
 
