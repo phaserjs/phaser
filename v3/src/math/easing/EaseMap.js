@@ -9,6 +9,7 @@ var Quadratic = require('./quadratic');
 var Quartic = require('./quartic');
 var Quintic = require('./quintic');
 var Sine = require('./sine');
+var Stepped = require('./stepped');
 
 //  EaseMap
 module.exports = {
@@ -30,6 +31,7 @@ module.exports = {
     Elastic: Elastic.Out,
     Back: Back.Out,
     Bounce: Bounce.Out,
+    Stepped: Stepped,
 
     'Quad.easeIn': Quadratic.In,
     'Cubic.easeIn': Cubic.In,

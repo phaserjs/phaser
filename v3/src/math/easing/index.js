@@ -12,6 +12,7 @@ module.exports = {
     Quadratic: require('./quadratic'),
     Quartic: require('./quartic'),
     Quintic: require('./quintic'),
-    Sine: require('./sine')
+    Sine: require('./sine'),
+    Stepped: require('./stepped')
 
 };
