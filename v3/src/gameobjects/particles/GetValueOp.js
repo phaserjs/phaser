@@ -1,22 +1,25 @@
-var GetEaseFunction = require('../../tweens/builder/GetEaseFunction');
-var GetValue = require('../../utils/object/GetValue');
-var GetFastValue = require('../../utils/object/GetFastValue');
 var FloatBetween = require('../../math/FloatBetween');
+var GetEaseFunction = require('../../tweens/builder/GetEaseFunction');
+var GetFastValue = require('../../utils/object/GetFastValue');
+var Wrap = require('../../math/Wrap');
 
-function hasOnEmit (def)
+function has (object, key)
 {
-    return (!!def.onEmit && typeof def.onEmit === 'function');
+    return (object.hasOwnProperty(key));
 }
 
-function hasOnUpdate (def)
+function hasBoth (object, key1, key2)
 {
-    return (!!def.onUpdate && typeof def.onUpdate === 'function');
+    return (object.hasOwnProperty(key1) && object.hasOwnProperty(key2));
 }
 
 function hasGetters (def)
 {
-    return hasOnEmit(def) || hasOnUpdate(def);
+    return (has(def, 'onEmit')) || (has(def, 'onUpdate'));
 }
+
+var steps = 0;
+var counter = 0;
 
 var GetValueOp = function (config, key, defaultValue)
 {
@@ -73,31 +76,42 @@ var GetValueOp = function (config, key, defaultValue)
 
         particleUpdate = propertyValue;
     }
-    else if (t === 'object' && propertyValue.hasOwnProperty('start') && propertyValue.hasOwnProperty('end'))
+    else if (t === 'object' && (has(propertyValue, 'random') || hasBoth(propertyValue, 'start', 'end') || hasBoth(propertyValue, 'min', 'max')))
     {
-        var start = propertyValue.start;
-        var end = propertyValue.end;
+        var start = (propertyValue.hasOwnProperty('start')) ? propertyValue.start : propertyValue.min;
+        var end = (propertyValue.hasOwnProperty('end')) ? propertyValue.end : propertyValue.max;
+        var isRandom = false;
 
         //  A random starting value:
 
-        //  x: { start: 100, end: 400, randomStart: true }
+        //  x: { start: 100, end: 400, random: true } OR { min: 100, max: 400, random: true } OR { random: [ 100, 400 ] }
 
-        if (propertyValue.hasOwnProperty('randomStart'))
+        if (has(propertyValue, 'random'))
         {
-            particleEmit = function ()
+            isRandom = true;
+
+            var rnd = propertyValue.random;
+
+            //  x: { random: [ 100, 400 ] } = the same as doing: x: { start: 100, end: 400, random: true }
+            if (Array.isArray(rnd))
             {
-                return FloatBetween(start, end);
+                start = rnd[0];
+                end = rnd[1];
+            }
+
+            particleEmit = function (particle, key)
+            {
+                var data = particle.data[key];
+
+                var value = FloatBetween(start, end);
+
+                data.min = value;
+
+                return value;
             };
         }
-        else
-        {
-            particleEmit = function ()
-            {
-                return start;
-            };
-        }
 
-        if (propertyValue.hasOwnProperty('steps'))
+        if (has(propertyValue, 'steps'))
         {
             //  A stepped (per emit) range
 
@@ -105,11 +119,18 @@ var GetValueOp = function (config, key, defaultValue)
 
             //  Increments a value stored in the emitter
 
-            particleUpdate = function (particle, key)
-            {
-                var emitter = particle.emitter;
+            steps = propertyValue.steps;
+            counter = start;
 
-                return emitter.getNext(key);
+            particleEmit = function ()
+            {
+                var value = counter;
+
+                var i = value + ((end - start) / steps);
+
+                counter = Wrap(i, start, end);
+
+                return counter;
             };
         }
         else
@@ -122,12 +143,25 @@ var GetValueOp = function (config, key, defaultValue)
 
             var easeFunc = GetEaseFunction(ease);
 
+            if (!isRandom)
+            {
+                particleEmit = function (particle, key)
+                {
+                    var data = particle.data[key];
+
+                    data.min = start;
+                    data.max = end;
+
+                    return start;
+                };
+            }
+
             particleUpdate = function (particle, key, t, value)
             {
                 var data = particle.data[key];
 
-                return data.calc * easeFunc(t) + data.min;
-            }
+                return (data.max - data.min) * easeFunc(t) + data.min;
+            };
         }
     }
     else if (t === 'object' && hasGetters(propertyValue))
@@ -150,12 +184,12 @@ var GetValueOp = function (config, key, defaultValue)
         }
         */
 
-        if (hasOnEmit(propertyValue))
+        if (has(propertyValue, 'onEmit'))
         {
             particleEmit = propertyValue.onEmit;
         }
 
-        if (hasOnUpdate(propertyValue))
+        if (has(propertyValue, 'onUpdate'))
         {
             particleUpdate = propertyValue.onUpdate;
         }

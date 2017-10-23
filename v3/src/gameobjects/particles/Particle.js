@@ -1,6 +1,5 @@
 var Class = require('../../utils/Class');
 var DegToRad = require('../../math/DegToRad');
-var FloatBetween = require('../../math/FloatBetween');
 
 var Particle = new Class({
 
@@ -44,10 +43,10 @@ var Particle = new Class({
         //  ease data
         this.data = {
             tint: { min: 0xffffff, max: 0xffffff, current: 0xffffff },
-            alpha: { min: 1, max: 1, calc: 0 },
-            angle: { min: 0, max: 0, calc: 0 },
-            scaleX: { min: 1, max: 1, calc: 0 },
-            scaleY: { min: 1, max: 1, calc: 0 }
+            alpha: { min: 1, max: 1 },
+            angle: { min: 0, max: 0 },
+            scaleX: { min: 1, max: 1 },
+            scaleY: { min: 1, max: 1 }
         };
     },
 
@@ -67,15 +66,15 @@ var Particle = new Class({
             emitter.zone.getRandomPoint(this);
         }
 
-        this.x += emitter.x.getNext();
-        this.y += emitter.y.getNext();
+        this.x += emitter.x.onEmit(this, 'x');
+        this.y += emitter.y.onEmit(this, 'y');
 
-        var sx = emitter.speedX.getNext();
-        var sy = emitter.speedY.getNext();
+        var sx = emitter.speedX.onEmit(this, 'speedX');
+        var sy = (emitter.speedY) ? emitter.speedY.onEmit(this, 'speedY') : sx;
 
         if (emitter.radial)
         {
-            var rad = DegToRad(emitter.emitterAngle.getNext());
+            var rad = DegToRad(emitter.emitterAngle.onEmit(this, 'angle'));
 
             this.velocityX = Math.cos(rad) * Math.abs(sx);
             this.velocityY = Math.sin(rad) * Math.abs(sy);
@@ -86,104 +85,17 @@ var Particle = new Class({
             this.velocityY = sy;
         }
 
-        this.life = emitter.lifespan.getNext();
+        this.life = emitter.lifespan.onEmit(this, 'lifespan');
         this.lifeCurrent = this.life;
 
-        //  eased values
+        this.scaleX = emitter.scaleX.onEmit(this, 'scaleX');
+        this.scaleY = (emitter.scaleY) ? emitter.scaleY.onEmit(this, 'scaleY') : this.scaleX;
 
-        var dataScaleX = this.data.scaleX;
-        var dataScaleY = this.data.scaleY;
-        var dataAngle = this.data.angle;
-        var dataAlpha = this.data.alpha;
+        this.angle = emitter.particleAngle.onEmit(this, 'angle');
+        this.rotation = DegToRad(this.angle);
 
-        emitter.scaleX.copyToMinMax(dataScaleX);
-        emitter.scaleY.copyToMinMax(dataScaleY);
-        emitter.particleAngle.copyToMinMax(dataAngle);
-        emitter.alpha.copyToMinMax(dataAlpha);
+        this.alpha = emitter.alpha.onEmit(this, 'alpha');
 
-        //  Random overrides
-
-        if (emitter.randomScaleX)
-        {
-            var randomScaleX = FloatBetween(emitter.randomScaleX[0], emitter.randomScaleX[1]);
-
-            //  If there is no current ease value set we override them both
-            if (dataScaleX.min === dataScaleX.max)
-            {
-                dataScaleX.min = randomScaleX;
-                dataScaleX.max = randomScaleX;
-            }
-            else
-            {
-                //  Otherwise we just reset the start value, so it still eases to the end value
-                dataScaleX.min = randomScaleX;
-            }
-        }
-
-        if (emitter.randomScaleY)
-        {
-            var randomScaleY = FloatBetween(emitter.randomScaleY[0], emitter.randomScaleY[1]);
-
-            //  If there is no current ease value set we override them both
-            if (dataScaleY.min === dataScaleY.max)
-            {
-                dataScaleY.min = randomScaleY;
-                dataScaleY.max = randomScaleY;
-            }
-            else
-            {
-                //  Otherwise we just reset the start value, so it still eases to the end value
-                dataScaleY.min = randomScaleY;
-            }
-        }
-
-        if (emitter.randomAngle)
-        {
-            var randomAngle = FloatBetween(emitter.randomAngle[0], emitter.randomAngle[1]);
-
-            //  If there is no current ease value set we override them both
-            if (dataAngle.min === dataAngle.max)
-            {
-                dataAngle.min = randomAngle;
-                dataAngle.max = randomAngle;
-            }
-            else
-            {
-                //  Otherwise we just reset the start value, so it still eases to the end value
-                dataAngle.min = randomAngle;
-            }
-        }
-
-        if (emitter.randomAlpha)
-        {
-            var randomAlpha = FloatBetween(emitter.randomAlpha[0], emitter.randomAlpha[1]);
-
-            //  If there is no current ease value set we override them both
-            if (dataAlpha.min === dataAlpha.max)
-            {
-                dataAlpha.min = randomAlpha;
-                dataAlpha.max = randomAlpha;
-            }
-            else
-            {
-                //  Otherwise we just reset the start value, so it still eases to the end value
-                dataAlpha.min = randomAlpha;
-            }
-        }
-
-        //  Pre-calc ease values
-        dataScaleX.calc = dataScaleX.max - dataScaleX.min;
-        dataScaleY.calc = dataScaleY.max - dataScaleY.min;
-        dataAngle.calc = dataAngle.max - dataAngle.min;
-        dataAlpha.calc = dataAlpha.max - dataAlpha.min;
-
-        //  Set initial values
-        this.scaleX = dataScaleX.min;
-        this.scaleY = dataScaleY.min;
-        this.angle = dataAngle.min;
-        this.rotation = DegToRad(dataAngle.min);
-
-        this.alpha = dataAlpha.min;
         this.color = (this.color & 0x00FFFFFF) | (((this.alpha * 0xFF) | 0) << 24);
 
         this.index = emitter.alive.length;
@@ -197,21 +109,27 @@ var Particle = new Class({
         //  How far along in life is this particle? (t = 0 to 1)
         var t = 1 - (this.lifeCurrent / this.life);
 
-        this.velocityX += (emitter.gravity.x * step);
-        this.velocityY += (emitter.gravity.y * step);
+        this.velocityX += (emitter.gravityX * step);
+        this.velocityY += (emitter.gravityY * step);
 
         this.x += this.velocityX * step;
         this.y += this.velocityY * step;
 
-        var data = this.data;
+        this.scaleX = emitter.scaleX.onUpdate(this, 'scaleX', t, this.scaleX);
 
-        this.scaleX = data.scaleX.calc * emitter.easingFunctionScale(t) + data.scaleX.min;
-        this.scaleY = data.scaleY.calc * emitter.easingFunctionScale(t) + data.scaleY.min;
+        if (emitter.scaleY)
+        {
+            this.scaleY = emitter.scaleY.onUpdate(this, 'scaleY', t, this.scaleY);
+        }
+        else
+        {
+            this.scaleY = this.scaleX;
+        }
 
-        this.angle = data.angle.calc * emitter.easingFunctionRotation(t) + data.angle.min;
+        this.angle = emitter.particleAngle.onUpdate(this, 'angle', t, this.angle);
         this.rotation = DegToRad(this.angle);
 
-        this.alpha = data.alpha.calc * emitter.easingFunctionAlpha(t) + data.alpha.min;
+        this.alpha = emitter.alpha.onUpdate(this, 'alpha', t, this.alpha);
 
         this.color = (this.color & 0x00FFFFFF) | (((this.alpha * 0xFF) | 0) << 24);
 
