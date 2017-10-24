@@ -8,8 +8,10 @@ var EmitterOp = new Class({
 
     initialize:
 
-    function EmitterOp (config, key, defaultValue)
+    function EmitterOp (config, key, defaultValue, emitOnly)
     {
+        if (emitOnly === undefined) { emitOnly = false; }
+
         this.propertyKey = key;
         this.propertyValue = GetFastValue(config, key, defaultValue);
         this.defaultValue = defaultValue;
@@ -25,6 +27,12 @@ var EmitterOp = new Class({
         this.onUpdate = this.defaultUpdate;
 
         this.setMethods();
+
+        if (emitOnly)
+        {
+            //  Reset it back again
+            this.onUpdate = this.defaultUpdate;
+        }
     },
 
     onChange: function (value)
@@ -226,7 +234,7 @@ var EmitterOp = new Class({
 
     easedValueEmit: function (particle, key)
     {
-        if (particle)
+        if (particle && particle.data[key])
         {
             var data = particle.data[key];
 

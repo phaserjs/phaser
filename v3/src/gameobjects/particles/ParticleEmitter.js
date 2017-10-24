@@ -47,10 +47,20 @@ var ParticleEmitter = new Class({
         this.gravityX = GetValue(config, 'gravityX', 0);
         this.gravityY = GetValue(config, 'gravityY', 0);
 
-        //  Value ops
+        this.acceleration = false;
+        this.accelerationX = new EmitterOp(config, 'accelerationX', 0, true);
+        this.accelerationY = new EmitterOp(config, 'accelerationY', 0, true);
 
-        this.speedX = new EmitterOp(config, 'speedX', 0);
-        this.speedY = new EmitterOp(config, 'speedY', 0);
+        if (config.hasOwnProperty('accelerationX') || config.hasOwnProperty('accelerationY'))
+        {
+            this.acceleration = true;
+        }
+
+        this.maxVelocityX = new EmitterOp(config, 'maxVelocityX', 10000, true);
+        this.maxVelocityY = new EmitterOp(config, 'maxVelocityY', 10000, true);
+
+        this.speedX = new EmitterOp(config, 'speedX', 0, true);
+        this.speedY = new EmitterOp(config, 'speedY', 0, true);
 
         //  If you specify speedX and Y then it changes the emitter from radial to a point emitter
         if (config.hasOwnProperty('speedX') || config.hasOwnProperty('speedY'))
@@ -60,9 +70,11 @@ var ParticleEmitter = new Class({
 
         if (config.hasOwnProperty('speed'))
         {
-            this.speedX = new EmitterOp(config, 'speed', 0);
+            this.speedX = new EmitterOp(config, 'speed', 0, true);
             this.speedY = null;
         }
+
+        this.bounce = new EmitterOp(config, 'bounce', 0, true);
 
         this.scaleX = new EmitterOp(config, 'scaleX', 1);
         this.scaleY = new EmitterOp(config, 'scaleY', 1);
@@ -121,6 +133,10 @@ var ParticleEmitter = new Class({
         this.alive = [];
 
         this._counter = 0;
+
+        this.zone = GetFastValue(config, 'zone', null);
+
+        //  bounds
 
         //  Optional Particle emission zone - must be an object that supports a `getRandomPoint` function, such as a Rectangle, Circle, Path, etc.
         this.zone = GetFastValue(config, 'zone', null);

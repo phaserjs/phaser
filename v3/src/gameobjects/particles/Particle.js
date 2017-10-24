@@ -20,6 +20,14 @@ var Particle = new Class({
         this.velocityX = 0;
         this.velocityY = 0;
 
+        this.accelerationX = 0;
+        this.accelerationY = 0;
+
+        this.maxVelocityX = 10000;
+        this.maxVelocityY = 10000;
+
+        this.bounce = 0;
+
         this.scaleX = 1;
         this.scaleY = 1;
 
@@ -111,6 +119,15 @@ var Particle = new Class({
             this.velocityY = sy;
         }
 
+        if (emitter.acceleration)
+        {
+            this.accelerationX = emitter.accelerationX.onEmit(this, 'accelerationX');
+            this.accelerationY = emitter.accelerationY.onEmit(this, 'accelerationY');
+        }
+
+        this.maxVelocityX = emitter.maxVelocityX.onEmit(this, 'maxVelocityX');
+        this.maxVelocityY = emitter.maxVelocityY.onEmit(this, 'maxVelocityY');
+
         this.life = emitter.lifespan.onEmit(this, 'lifespan');
         this.lifeCurrent = this.life;
 
@@ -127,6 +144,52 @@ var Particle = new Class({
         this.index = emitter.alive.length;
     },
 
+    computeVelocity: function (emitter, step)
+    {
+        var vx = this.velocityX;
+        var vy = this.velocityY;
+
+        var ax = this.accelerationX;
+        var ay = this.accelerationY;
+
+        var mx = this.maxVelocityX;
+        var my = this.maxVelocityY;
+
+        vx += (emitter.gravityX * step);
+        vy += (emitter.gravityY * step);
+
+        if (ax)
+        {
+            vx += (ax * step);
+        }
+
+        if (ay)
+        {
+            vy += (ay * step);
+        }
+
+        if (vx > mx)
+        {
+            vx = mx;
+        }
+        else if (vx < -mx)
+        {
+            vx = -mx;
+        }
+
+        if (vy > my)
+        {
+            vy = my;
+        }
+        else if (vy < -my)
+        {
+            vy = -my;
+        }
+
+        this.velocityX = vx * step;
+        this.velocityY = vy * step;
+    },
+
     //  delta = ms, step = delta / 1000
     update: function (delta, step)
     {
@@ -135,11 +198,16 @@ var Particle = new Class({
         //  How far along in life is this particle? (t = 0 to 1)
         var t = 1 - (this.lifeCurrent / this.life);
 
-        this.velocityX += (emitter.gravityX * step);
-        this.velocityY += (emitter.gravityY * step);
+        this.computeVelocity(emitter, step);
 
-        this.x += this.velocityX * step;
-        this.y += this.velocityY * step;
+        // this.velocityX += (emitter.gravityX * step);
+        // this.velocityY += (emitter.gravityY * step);
+
+        // this.x += this.velocityX * step;
+        // this.y += this.velocityY * step;
+
+        this.x += this.velocityX;
+        this.y += this.velocityY;
 
         this.scaleX = emitter.scaleX.onUpdate(this, 'scaleX', t, this.scaleX);
 
