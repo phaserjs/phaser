@@ -7,7 +7,7 @@ var GetFastValue = require('../../utils/object/GetFastValue');
 var Particle = require('./Particle');
 var StableSort = require('../../utils/array/StableSort');
 var Vector2 = require('../../math/Vector2');
-var GetValueOp = require('./GetValueOp');
+var EmitterOp = require('./EmitterOp');
 
 var ParticleEmitter = new Class({
 
@@ -25,9 +25,9 @@ var ParticleEmitter = new Class({
 
         this.manager = manager;
 
-        this.name = GetValue(config, 'name', '');
+        this.name = GetFastValue(config, 'name', '');
 
-        this.particleClass = GetValue(config, 'particleClass', Particle);
+        this.particleClass = GetFastValue(config, 'particleClass', Particle);
 
         this.texture = manager.texture;
 
@@ -35,11 +35,11 @@ var ParticleEmitter = new Class({
 
         this.defaultFrame = manager.defaultFrame;
 
-        this.x = GetValueOp(config, 'x', 0);
-        this.y = GetValueOp(config, 'y', 0);
+        this.x = new EmitterOp(config, 'x', 0);
+        this.y = new EmitterOp(config, 'y', 0);
 
         //  A radial emitter will emit particles in all directions between emitterAngle min and max, using speed as the value
-        //  A point emitter will emit particles only in the direction derived from the speed values
+        //  A point emitter will emit particles only in the direction derived from the speedX and speedY values
         this.radial = GetFastValue(config, 'radial', true);
 
         //  Not a value operation because you should be able to constantly alter this and effect all
@@ -49,31 +49,37 @@ var ParticleEmitter = new Class({
 
         //  Value ops
 
-        this.speedX = GetValueOp(config, 'speedX', 0);
-        this.speedY = GetValueOp(config, 'speedY', 0);
+        this.speedX = new EmitterOp(config, 'speedX', 0);
+        this.speedY = new EmitterOp(config, 'speedY', 0);
+
+        //  If you specify speedX and Y then it changes the emitter from radial to a point emitter
+        if (config.hasOwnProperty('speedX') || config.hasOwnProperty('speedY'))
+        {
+            this.radial = false;
+        }
 
         if (config.hasOwnProperty('speed'))
         {
-            this.speedX = GetValueOp(config, 'speed', 0);
+            this.speedX = new EmitterOp(config, 'speed', 0);
             this.speedY = null;
         }
 
-        this.scaleX = GetValueOp(config, 'scaleX', 1);
-        this.scaleY = GetValueOp(config, 'scaleY', 1);
+        this.scaleX = new EmitterOp(config, 'scaleX', 1);
+        this.scaleY = new EmitterOp(config, 'scaleY', 1);
 
         if (config.hasOwnProperty('scale'))
         {
-            this.scaleX = GetValueOp(config, 'scale', 1);
+            this.scaleX = new EmitterOp(config, 'scale', 1);
             this.scaleY = null;
         }
 
-        this.alpha = GetValueOp(config, 'alpha', 1);
+        this.alpha = new EmitterOp(config, 'alpha', 1);
 
-        this.lifespan = GetValueOp(config, 'lifespan', 1000);
+        this.lifespan = new EmitterOp(config, 'lifespan', 1000);
 
-        this.emitterAngle = GetValueOp(config, 'angle', { min: 0, max: 360, random: true });
+        this.emitterAngle = new EmitterOp(config, 'angle', { min: 0, max: 360 });
 
-        this.particleAngle = GetValueOp(config, 'particleAngle', 0);
+        this.particleAngle = new EmitterOp(config, 'particleAngle', 0);
 
         //  Callbacks
 
@@ -92,7 +98,7 @@ var ParticleEmitter = new Class({
         }
 
         //  Set to hard limit the amount of particle objects this emitter is allowed to create
-        this.maxParticles = GetFastValue(config, 'maxParticles', 1);
+        this.maxParticles = GetFastValue(config, 'maxParticles', 0);
 
         //  How many particles are emitted each time the emitter updates
         this.quantity = GetFastValue(config, 'quantity', 1);
@@ -197,66 +203,118 @@ var ParticleEmitter = new Class({
         return this;
     },
 
-    /*
     setPosition: function (x, y)
     {
-        this.x = x;
-        this.y = y;
+        this.x.onChange(x);
+        this.y.onChange(y);
 
         return this;
     },
 
     //  Particle Emission
 
-    setSpeed: function (xMin, xMax, yMin, yMax)
+    setSpeedX: function (value)
     {
-        this.speed.set(xMin, xMax, yMin, yMax);
+        this.speedX.onChange(value);
+
+        //  If you specify speedX and Y then it changes the emitter from radial to a point emitter
+        this.radial = false;
 
         return this;
     },
 
-    setScale: function (xMin, xMax, yMin, yMax)
+    setSpeedY: function (value)
     {
-        this.scale.set(xMin, xMax, yMin, yMax);
+        this.speedY.onChange(value);
+
+        //  If you specify speedX and Y then it changes the emitter from radial to a point emitter
+        this.radial = false;
+
+        return this;
+    },
+
+    setSpeed: function (value)
+    {
+        this.speedX.onChange(value);
+        this.speedY = null;
+
+        //  If you specify speedX and Y then it changes the emitter from radial to a point emitter
+        this.radial = false;
+
+        return this;
+    },
+
+    setScaleX: function (value)
+    {
+        this.scaleX.onChange(value);
+
+        return this;
+    },
+
+    setScaleY: function (value)
+    {
+        this.scaleY.onChange(value);
+
+        return this;
+    },
+
+    setScale: function (value)
+    {
+        this.scaleX.onChange(value);
+        this.scaleY = null;
+
+        return this;
+    },
+
+    setGravityX: function (value)
+    {
+        this.gravityX = value;
+
+        return this;
+    },
+
+    setGravityY: function (value)
+    {
+        this.gravityY = value;
 
         return this;
     },
 
     setGravity: function (x, y)
     {
-        this.gravity.set(x, y);
+        this.gravityX = x;
+        this.gravityY = y;
 
         return this;
     },
 
-    setAlpha: function (min, max)
+    setAlpha: function (value)
     {
-        this.alpha.set(min, max);
+        this.alpha.onChange(value);
 
         return this;
     },
 
-    setEmitterAngle: function (min, max)
+    setEmitterAngle: function (value)
     {
-        this.emitterAngle.set(min, max);
+        this.emitterAngle.onChange(value);
 
         return this;
     },
 
-    setAngle: function (min, max)
+    setAngle: function (value)
     {
-        this.angle.set(min, max);
+        this.angle.onChange(value);
 
         return this;
     },
 
-    setLifespan: function (min, max)
+    setLifespan: function (value)
     {
-        this.lifespan.set(min, max);
+        this.lifespan.onChange(value);
 
         return this;
     },
-    */
 
     setQuantity: function (quantity)
     {
@@ -474,23 +532,6 @@ var ParticleEmitter = new Class({
             return;
         }
 
-        //  Store emitter coordinates in-case this was a placement explode, or emitAt
-
-        /*
-        var oldX = this.x;
-        var oldY = this.y;
-
-        if (x !== undefined)
-        {
-            this.x = x;
-        }
-
-        if (y !== undefined)
-        {
-            this.y = y;
-        }
-        */
-
         var dead = this.dead;
 
         for (var i = 0; i < count; i++)
@@ -506,7 +547,7 @@ var ParticleEmitter = new Class({
                 particle = new this.particleClass(this);
             }
 
-            particle.emit();
+            particle.emit(x, y);
 
             if (this.particleBringToTop)
             {
@@ -528,11 +569,6 @@ var ParticleEmitter = new Class({
             }
         }
 
-        /*
-        this.x = oldX;
-        this.y = oldY;
-        */
-
         return particle;
     },
 
@@ -543,15 +579,9 @@ var ParticleEmitter = new Class({
 
         var step = (delta / 1000);
 
-        if (this.follow)
+        if (this.trackVisible)
         {
-            this.x = this.follow.x + this.followOffset.x;
-            this.y = this.follow.y + this.followOffset.y;
-
-            if (this.trackVisible)
-            {
-                this.visible = this.follow.visible;
-            }
+            this.visible = this.follow.visible;
         }
 
         var particles = this.alive;

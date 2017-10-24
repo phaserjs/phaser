@@ -55,7 +55,7 @@ var Particle = new Class({
         return (this.lifeCurrent > 0);
     },
 
-    emit: function ()
+    emit: function (x, y)
     {
         var emitter = this.emitter;
 
@@ -63,11 +63,37 @@ var Particle = new Class({
 
         if (emitter.zone)
         {
+            //  Updates particle.x and particle.y during this call
             emitter.zone.getRandomPoint(this);
         }
 
-        this.x += emitter.x.onEmit(this, 'x');
-        this.y += emitter.y.onEmit(this, 'y');
+        if (x === undefined)
+        {
+            if (emitter.follow)
+            {
+                this.x += emitter.follow.x + emitter.followOffset.x;
+            }
+
+            this.x += emitter.x.onEmit(this, 'x');
+        }
+        else
+        {
+            this.x += x;
+        }
+
+        if (y === undefined)
+        {
+            if (emitter.follow)
+            {
+                this.y += emitter.follow.y + emitter.followOffset.y;
+            }
+
+            this.y += emitter.y.onEmit(this, 'y');
+        }
+        else
+        {
+            this.y += y;
+        }
 
         var sx = emitter.speedX.onEmit(this, 'speedX');
         var sy = (emitter.speedY) ? emitter.speedY.onEmit(this, 'speedY') : sx;
