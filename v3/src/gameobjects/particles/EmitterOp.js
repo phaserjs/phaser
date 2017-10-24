@@ -207,11 +207,9 @@ var EmitterOp = new Class({
     {
         var value = FloatBetween(this.start, this.end);
 
-        var data = particle.data[key];
-
-        if (data)
+        if (particle && particle.data[key])
         {
-            data.min = value;
+            particle.data[key].min = value;
         }
 
         return value;
@@ -228,10 +226,13 @@ var EmitterOp = new Class({
 
     easedValueEmit: function (particle, key)
     {
-        var data = particle.data[key];
+        if (particle)
+        {
+            var data = particle.data[key];
 
-        data.min = this.start;
-        data.max = this.end;
+            data.min = this.start;
+            data.max = this.end;
+        }
 
         return this.start;
     },

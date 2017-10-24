@@ -44,7 +44,7 @@ var Particle = new Class({
         this.data = {
             tint: { min: 0xffffff, max: 0xffffff, current: 0xffffff },
             alpha: { min: 1, max: 1 },
-            angle: { min: 0, max: 0 },
+            rotate: { min: 0, max: 0 },
             scaleX: { min: 1, max: 1 },
             scaleY: { min: 1, max: 1 }
         };
@@ -100,7 +100,7 @@ var Particle = new Class({
 
         if (emitter.radial)
         {
-            var rad = DegToRad(emitter.emitterAngle.onEmit(this, 'angle'));
+            var rad = DegToRad(emitter.angle.onEmit(this, 'angle'));
 
             this.velocityX = Math.cos(rad) * Math.abs(sx);
             this.velocityY = Math.sin(rad) * Math.abs(sy);
@@ -117,7 +117,7 @@ var Particle = new Class({
         this.scaleX = emitter.scaleX.onEmit(this, 'scaleX');
         this.scaleY = (emitter.scaleY) ? emitter.scaleY.onEmit(this, 'scaleY') : this.scaleX;
 
-        this.angle = emitter.particleAngle.onEmit(this, 'angle');
+        this.angle = emitter.rotate.onEmit(this, 'rotate');
         this.rotation = DegToRad(this.angle);
 
         this.alpha = emitter.alpha.onEmit(this, 'alpha');
@@ -152,7 +152,7 @@ var Particle = new Class({
             this.scaleY = this.scaleX;
         }
 
-        this.angle = emitter.particleAngle.onUpdate(this, 'angle', t, this.angle);
+        this.angle = emitter.rotate.onUpdate(this, 'rotate', t, this.angle);
         this.rotation = DegToRad(this.angle);
 
         this.alpha = emitter.alpha.onUpdate(this, 'alpha', t, this.alpha);

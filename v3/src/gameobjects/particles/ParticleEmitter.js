@@ -38,7 +38,7 @@ var ParticleEmitter = new Class({
         this.x = new EmitterOp(config, 'x', 0);
         this.y = new EmitterOp(config, 'y', 0);
 
-        //  A radial emitter will emit particles in all directions between emitterAngle min and max, using speed as the value
+        //  A radial emitter will emit particles in all directions between angle min and max, using speed as the value
         //  A point emitter will emit particles only in the direction derived from the speedX and speedY values
         this.radial = GetFastValue(config, 'radial', true);
 
@@ -77,9 +77,9 @@ var ParticleEmitter = new Class({
 
         this.lifespan = new EmitterOp(config, 'lifespan', 1000);
 
-        this.emitterAngle = new EmitterOp(config, 'angle', { min: 0, max: 360 });
+        this.angle = new EmitterOp(config, 'angle', { min: 0, max: 360 });
 
-        this.particleAngle = new EmitterOp(config, 'particleAngle', 0);
+        this.rotate = new EmitterOp(config, 'rotate', 0);
 
         //  Callbacks
 
@@ -97,11 +97,11 @@ var ParticleEmitter = new Class({
             this.deathCallbackScope = callbackScope;
         }
 
-        //  Set to hard limit the amount of particle objects this emitter is allowed to create
+        //  Set to hard limit the amount of particle objects this emitter is allowed to create. 0 means unlimited.
         this.maxParticles = GetFastValue(config, 'maxParticles', 0);
 
         //  How many particles are emitted each time the emitter updates
-        this.quantity = GetFastValue(config, 'quantity', 1);
+        this.quantity = new EmitterOp(config, 'quantity', 1);
 
         //  How often a particle is emitted in ms (if emitter is a constant / flow emitter)
         //  If emitter is an explosion emitter this value will be -1.
@@ -297,7 +297,7 @@ var ParticleEmitter = new Class({
 
     setEmitterAngle: function (value)
     {
-        this.emitterAngle.onChange(value);
+        this.angle.onChange(value);
 
         return this;
     },
@@ -318,7 +318,7 @@ var ParticleEmitter = new Class({
 
     setQuantity: function (quantity)
     {
-        this.quantity = quantity;
+        this.quantity.onChange(quantity);
 
         return this;
     },
@@ -331,7 +331,7 @@ var ParticleEmitter = new Class({
 
         if (quantity)
         {
-            this.quantity = quantity;
+            this.quantity.onChange(quantity);
         }
 
         return this;
@@ -506,7 +506,7 @@ var ParticleEmitter = new Class({
 
         this.frequency = frequency;
 
-        this.quantity = count;
+        this.quantity.onChange(count);
 
         return this.start();
     },
@@ -525,11 +525,14 @@ var ParticleEmitter = new Class({
 
     emit: function (count, x, y)
     {
-        if (count === undefined) { count = this.quantity; }
-
         if (this.atLimit())
         {
             return;
+        }
+
+        if (count === undefined)
+        {
+            count = this.quantity.onEmit();
         }
 
         var dead = this.dead;
