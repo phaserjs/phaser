@@ -639,6 +639,9 @@ var ParticleEmitter = new Class({
             this.visible = this.follow.visible;
         }
 
+        //  Any particle processors?
+        var processors = this.manager.getProcessors();
+
         var particles = this.alive;
         var length = particles.length;
 
@@ -647,7 +650,7 @@ var ParticleEmitter = new Class({
             var particle = particles[index];
 
             //  update returns `true` if the particle is now dead (lifeStep < 0)
-            if (particle.update(delta, step))
+            if (particle.update(delta, step, processors))
             {
                 //  Moves the dead particle to the end of the particles array (ready for splicing out later)
                 var last = particles[length - 1];
