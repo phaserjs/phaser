@@ -48,6 +48,9 @@ var Particle = new Class({
         this.life = 1000;
         this.lifeCurrent = 1000;
 
+        //  0-1
+        this.lifeT = 0;
+
         //  ease data
         this.data = {
             tint: { min: 0xffffff, max: 0xffffff, current: 0xffffff },
@@ -72,7 +75,7 @@ var Particle = new Class({
         if (emitter.zone)
         {
             //  Updates particle.x and particle.y during this call
-            emitter.zone.getRandomPoint(this);
+            emitter.zone.getPoint(this);
         }
 
         if (x === undefined)
@@ -130,6 +133,7 @@ var Particle = new Class({
 
         this.life = emitter.lifespan.onEmit(this, 'lifespan');
         this.lifeCurrent = this.life;
+        this.lifeT = 0;
 
         this.scaleX = emitter.scaleX.onEmit(this, 'scaleX');
         this.scaleY = (emitter.scaleY) ? emitter.scaleY.onEmit(this, 'scaleY') : this.scaleX;
@@ -146,7 +150,7 @@ var Particle = new Class({
         this.index = emitter.alive.length;
     },
 
-    computeVelocity: function (emitter, step)
+    computeVelocity: function (emitter, delta, step, processors)
     {
         var vx = this.velocityX;
         var vy = this.velocityY;
@@ -190,6 +194,12 @@ var Particle = new Class({
 
         this.velocityX = vx;
         this.velocityY = vy;
+
+        //  Apply any additional processors
+        for (var i = 0; i < processors.length; i++)
+        {
+            processors[i].update(this, delta, step);
+        }
     },
 
     checkBounds: function (emitter)
@@ -221,14 +231,16 @@ var Particle = new Class({
     },
 
     //  delta = ms, step = delta / 1000
-    update: function (delta, step)
+    update: function (delta, step, processors)
     {
         var emitter = this.emitter;
 
         //  How far along in life is this particle? (t = 0 to 1)
         var t = 1 - (this.lifeCurrent / this.life);
 
-        this.computeVelocity(emitter, step);
+        this.lifeT = t;
+
+        this.computeVelocity(emitter, delta, step, processors);
 
         this.x += this.velocityX * step;
         this.y += this.velocityY * step;
