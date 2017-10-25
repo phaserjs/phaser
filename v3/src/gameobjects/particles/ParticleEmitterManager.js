@@ -1,6 +1,7 @@
 var Class = require('../../utils/Class');
 var Components = require('../components');
 var GameObject = require('../GameObject');
+var GravityWell = require('./GravityWell');
 var List = require('../../structs/List');
 var ParticleEmitter = require('./ParticleEmitter');
 var Render = require('./ParticleManagerRender');
@@ -41,6 +42,8 @@ var ParticleEmitterManager = new Class({
         this.setTexture(texture, frame);
 
         this.emitters = new List(this);
+
+        this.wells = new List(this);
 
         if (emitters !== undefined)
         {
@@ -118,6 +121,16 @@ var ParticleEmitterManager = new Class({
         return this.addEmitter(new ParticleEmitter(this, config));
     },
 
+    addGravityWell: function (well)
+    {
+        return this.wells.add(well);
+    },
+
+    createGravityWell: function (config)
+    {
+        return this.addGravityWell(new GravityWell(config));
+    },
+
     emit: function (count, x, y)
     {
         var emitters = this.emitters.list;
@@ -152,6 +165,11 @@ var ParticleEmitterManager = new Class({
         this.active = true;
 
         return this;
+    },
+
+    getProcessors: function ()
+    {
+        return this.wells.getAll('active', true);
     },
 
     preUpdate: function (time, delta)
