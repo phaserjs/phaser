@@ -1,13 +1,14 @@
 var BlendModes = require('../../renderer/BlendModes');
 var Class = require('../../utils/Class');
 var Components = require('../components');
+var EmitterOp = require('./EmitterOp');
+var GetFastValue = require('../../utils/object/GetFastValue');
 var GetRandomElement = require('../../utils/array/GetRandomElement');
 var GetValue = require('../../utils/object/GetValue');
-var GetFastValue = require('../../utils/object/GetFastValue');
 var Particle = require('./Particle');
+var Rectangle = require('../../geom/rectangle/Rectangle');
 var StableSort = require('../../utils/array/StableSort');
 var Vector2 = require('../../math/Vector2');
-var EmitterOp = require('./EmitterOp');
 
 var ParticleEmitter = new Class({
 
@@ -136,7 +137,18 @@ var ParticleEmitter = new Class({
 
         this.zone = GetFastValue(config, 'zone', null);
 
-        //  bounds
+        //  bounds rectangle
+        this.bounds = null;
+
+        if (config.hasOwnProperty('bounds'))
+        {
+            this.setBounds(config.bounds);
+        }
+
+        this.collideLeft = GetFastValue(config, 'collideLeft', true);
+        this.collideRight = GetFastValue(config, 'collideRight', true);
+        this.collideTop = GetFastValue(config, 'collideTop', true);
+        this.collideBottom = GetFastValue(config, 'collideBottom', true);
 
         //  Optional Particle emission zone - must be an object that supports a `getRandomPoint` function, such as a Rectangle, Circle, Path, etc.
         this.zone = GetFastValue(config, 'zone', null);
@@ -223,6 +235,30 @@ var ParticleEmitter = new Class({
     {
         this.x.onChange(x);
         this.y.onChange(y);
+
+        return this;
+    },
+
+    setBounds: function (x, y, width, height)
+    {
+        if (typeof x === 'object')
+        {
+            var obj = x;
+
+            var x = obj.x;
+            var y = obj.y;
+            var width = (obj.hasOwnProperty('w')) ? obj.w : obj.width;
+            var height = (obj.hasOwnProperty('h')) ? obj.h : obj.height;
+        }
+
+        if (this.bounds)
+        {
+            this.bounds.setTo(x, y, width, height);
+        }
+        else
+        {
+            this.bounds = new Rectangle(x, y, width, height);
+        }
 
         return this;
     },

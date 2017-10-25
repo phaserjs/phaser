@@ -137,6 +137,8 @@ var Particle = new Class({
         this.angle = emitter.rotate.onEmit(this, 'rotate');
         this.rotation = DegToRad(this.angle);
 
+        this.bounce = emitter.bounce.onEmit(this, 'bounce');
+
         this.alpha = emitter.alpha.onEmit(this, 'alpha');
 
         this.color = (this.color & 0x00FFFFFF) | (((this.alpha * 0xFF) | 0) << 24);
@@ -186,8 +188,36 @@ var Particle = new Class({
             vy = -my;
         }
 
-        this.velocityX = vx * step;
-        this.velocityY = vy * step;
+        this.velocityX = vx;
+        this.velocityY = vy;
+    },
+
+    checkBounds: function (emitter)
+    {
+        var bounds = emitter.bounds;
+        var bounce = -this.bounce;
+
+        if (this.x < bounds.x && emitter.collideLeft)
+        {
+            this.x = bounds.x;
+            this.velocityX *= bounce;
+        }
+        else if (this.x > bounds.right && emitter.collideRight)
+        {
+            this.x = bounds.right;
+            this.velocityX *= bounce;
+        }
+
+        if (this.y < bounds.y && emitter.collideTop)
+        {
+            this.y = bounds.y;
+            this.velocityY *= bounce;
+        }
+        else if (this.y > bounds.bottom && emitter.collideBottom)
+        {
+            this.y = bounds.bottom;
+            this.velocityY *= bounce;
+        }
     },
 
     //  delta = ms, step = delta / 1000
@@ -200,14 +230,13 @@ var Particle = new Class({
 
         this.computeVelocity(emitter, step);
 
-        // this.velocityX += (emitter.gravityX * step);
-        // this.velocityY += (emitter.gravityY * step);
+        this.x += this.velocityX * step;
+        this.y += this.velocityY * step;
 
-        // this.x += this.velocityX * step;
-        // this.y += this.velocityY * step;
-
-        this.x += this.velocityX;
-        this.y += this.velocityY;
+        if (emitter.bounds)
+        {
+            this.checkBounds(emitter);
+        }
 
         this.scaleX = emitter.scaleX.onUpdate(this, 'scaleX', t, this.scaleX);
 
