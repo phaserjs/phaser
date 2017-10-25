@@ -317,6 +317,48 @@ var Graphics = new Class({
         return this;
     },
 
+    //  STROKE LINES BETWEEN AN ARRAY OF POINTS
+
+    strokePoints: function (points)
+    {
+        this.beginPath();
+
+        this.moveTo(points[0].x, points[0].y);
+
+        for (var i = 1; i < points.length; i++)
+        {
+            this.lineTo(points[i].x, points[i].y);
+        }
+
+        this.closePath();
+
+        this.strokePath();
+
+        return this;
+    },
+
+    //  ELLIPSE
+
+    strokeEllipseShape: function (ellipse, smoothness)
+    {
+        if (smoothness === undefined) { smoothness = 32; }
+
+        var points = ellipse.getPoints(smoothness);
+
+        return this.strokePoints(points);
+    },
+
+    strokeEllipse: function (x, y, width, height, smoothness)
+    {
+        if (smoothness === undefined) { smoothness = 32; }
+
+        var ellipse = new Ellipse(x, y, width, height);
+
+        var points = ellipse.getPoints(smoothness);
+
+        return this.strokePoints(points);
+    },
+
     //  ARC
 
     arc: function (x, y, radius, startAngle, endAngle, anticlockwise)
@@ -328,6 +370,8 @@ var Graphics = new Class({
 
         return this;
     },
+
+    //  TRANSFORM
 
     save: function ()
     {
