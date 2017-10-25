@@ -223,6 +223,23 @@ var List = new Class({
         return output;
     },
 
+    count: function (property, value)
+    {
+        var total = 0;
+
+        for (var i = 0; i < this.list.length; i++)
+        {
+            var child = this.list[i];
+
+            if (child[property] === value)
+            {
+                total++;
+            }
+        }
+
+        return total;
+    },
+
     swap: function (child1, child2)
     {
         if (child1 === child2)
