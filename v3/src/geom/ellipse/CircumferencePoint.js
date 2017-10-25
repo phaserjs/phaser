@@ -1,7 +1,7 @@
 var Point = require('../point/Point');
 
 /**
- * Given an angle this will returna Point object containing the coordinates of the point
+ * Given an angle this will return a Point object containing the coordinates of the point
  * on the circumference of the ellipse.
  *
  * @function Phaser.Geom.Ellipse.CircumferencePoint

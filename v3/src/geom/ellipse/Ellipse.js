@@ -1,4 +1,6 @@
 var Class = require('../../utils/Class');
+var GetPoint = require('./GetPoint');
+var GetPoints = require('./GetPoints');
 var Random = require('./Random');
 
 var Ellipse = new Class({
@@ -19,6 +21,16 @@ var Ellipse = new Class({
         this.width = width;
 
         this.height = height;
+    },
+
+    getPoint: function (position, point)
+    {
+        return GetPoint(this, position, point);
+    },
+
+    getPoints: function (steps, output)
+    {
+        return GetPoints(this, steps, output);
     },
 
     getRandomPoint: function (point)

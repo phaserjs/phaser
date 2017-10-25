@@ -1,4 +1,6 @@
 var Class = require('../../utils/Class');
+var GetPoint = require('./GetPoint');
+var GetPoints = require('./GetPoints');
 var Random = require('./Random');
 
 //  Defines a Line segment, a part of a line between two endpoints
@@ -15,6 +17,16 @@ var Line = new Class({
         this.y2 = 0;
 
         this.setTo(x1, y1, x2, y2);
+    },
+
+    getPoint: function (position, output)
+    {
+        return GetPoint(this, position, output);
+    },
+
+    getPoints: function (steps, output)
+    {
+        return GetPoints(this, steps, output);
     },
 
     getRandomPoint: function (point)
