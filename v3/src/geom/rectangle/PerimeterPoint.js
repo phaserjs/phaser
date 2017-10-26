@@ -1,7 +1,5 @@
 var Point = require('../point/Point');
-var MATH_CONST = require('../../math/const');
-
-//  deg = degrees (0-360)
+var DegToRad = require('../../math/DegToRad');
 
 /**
  * [description]
@@ -9,69 +7,35 @@ var MATH_CONST = require('../../math/const');
  * @function Phaser.Geom.Rectangle.PerimeterPoint
  * @since 3.0.0
  *
- * @param {Phaser.Geom.Rectangle} rect - [description]
- * @param {integer} deg - [description]
+ * @param {Phaser.Geom.Rectangle} rectangle - [description]
+ * @param {integer} angle - [description]
  * @param {Phaser.Geom.Point} [out] - [description]
  *
  * @return {Phaser.Geom.Point} [description]
  */
-var PerimeterPoint = function (rect, deg, out)
+var PerimeterPoint = function (rectangle, angle, out)
 {
     if (out === undefined) { out = new Point(); }
 
-    var theta = deg * MATH_CONST.DEG_TO_RAD;
+    angle = DegToRad(angle);
 
-    while (theta < -Math.PI)
-    {
-        theta += MATH_CONST.PI2;
-    }
+    var s = Math.sin(angle);
+    var c = Math.cos(angle);
 
-    while (theta > Math.PI)
-    {
-        theta -= MATH_CONST.PI2;
-    }
+    var dx = (c > 0) ? rectangle.width / 2 : rectangle.width / -2;
+    var dy = (s > 0) ? rectangle.height / 2 : rectangle.height / -2;
 
-    var rectAtan = Math.atan2(rect.height, rect.width);
-    var tanTheta = Math.tan(theta);
-    var thetaBounds = Math.PI - rectAtan;
-    var region;
-    var xFactor = 1;
-    var yFactor = 1;
-
-    if (theta > -rectAtan && theta <= rectAtan)
+    if (Math.abs(dx * s) < Math.abs(dy * c))
     {
-        region = 1;
-        yFactor = -1;
-    }
-    else if (theta > rectAtan && theta <= thetaBounds)
-    {
-        region = 2;
-        yFactor = -1;
-    }
-    else if (theta > thetaBounds || theta <= -thetaBounds)
-    {
-        region = 3;
-        xFactor = -1;
+        dy = (dx * s) / c;
     }
     else
     {
-        region = 4;
-        xFactor = -1;
+        dx = (dy * c) / s;
     }
 
-    out.x = rect.x + (rect.width / 2);
-    out.y = rect.y + (rect.height / 2);
-
-    if (region === 1 || region === 3)
-    {
-        out.x += xFactor * (rect.width / 2);                                     // "Z0"
-        out.y += yFactor * (rect.width / 2) * tanTheta;
-    }
-    else
-    {
-        out.x += xFactor * (rect.height / (2 * tanTheta));                        // "Z1"
-        out.y += yFactor * (rect.height / 2);
-    }
+    out.x = dx + rectangle.centerX;
+    out.y = dy + rectangle.centerY;
 
     return out;
 };
