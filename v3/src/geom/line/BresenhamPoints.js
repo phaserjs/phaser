@@ -2,7 +2,7 @@
  * Using Bresenham's line algorithm this will return an array of all coordinates on this line.
  * The start and end points are rounded before this runs as the algorithm works on integers.
  *
- * @function Phaser.Geom.Line.GetPointsOnLine
+ * @function Phaser.Geom.Line.BresenhamPoints
  * @since 3.0.0
  *
  * @param {Phaser.Geom.Line} line - [description]
@@ -11,7 +11,7 @@
  *
  * @return {array} [description]
  */
-var GetPointsOnLine = function (line, stepRate, results)
+var BresenhamPoints = function (line, stepRate, results)
 {
     if (stepRate === undefined) { stepRate = 1; }
     if (results === undefined) { results = []; }
@@ -58,4 +58,4 @@ var GetPointsOnLine = function (line, stepRate, results)
     return results;
 };
 
-module.exports = GetPointsOnLine;
+module.exports = BresenhamPoints;

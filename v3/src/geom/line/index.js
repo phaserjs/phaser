@@ -3,6 +3,7 @@
 var Line = require('./Line');
 
 Line.Angle = require('./Angle');
+Line.BresenhamPoints = require('./BresenhamPoints');
 Line.CenterOn = require('./CenterOn');
 Line.Clone = require('./Clone');
 Line.CopyFrom = require('./CopyFrom');
@@ -11,7 +12,6 @@ Line.GetMidPoint = require('./GetMidPoint');
 Line.GetNormal = require('./GetNormal');
 Line.GetPoint = require('./GetPoint');
 Line.GetPoints = require('./GetPoints');
-Line.GetPointsOnLine = require('./GetPointsOnLine');
 Line.Height = require('./Height');
 Line.Length = require('./Length');
 Line.NormalAngle = require('./NormalAngle');

@@ -1,4 +1,4 @@
-var GetPointsOnLine = require('../geom/line/GetPointsOnLine');
+var GetPoints = require('../geom/line/GetPoints');
 
 /**
  * [description]
@@ -13,19 +13,15 @@ var GetPointsOnLine = require('../geom/line/GetPointsOnLine');
  */
 var PlaceOnLine = function (items, line)
 {
-    var points = GetPointsOnLine(line);
-    var step = points.length / items.length;
-    var p = 0;
+    var points = GetPoints(line, items.length);
 
     for (var i = 0; i < items.length; i++)
     {
         var item = items[i];
-        var point = points[Math.floor(p)];
+        var point = points[i];
 
-        item.x = point[0];
-        item.y = point[1];
-
-        p += step;
+        item.x = point.x;
+        item.y = point.y;
     }
 
     return items;
