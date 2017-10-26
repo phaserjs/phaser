@@ -28,9 +28,9 @@ var Ellipse = new Class({
         return GetPoint(this, position, point);
     },
 
-    getPoints: function (steps, output)
+    getPoints: function (quantity, stepRate, output)
     {
-        return GetPoints(this, steps, output);
+        return GetPoints(this, quantity, stepRate, output);
     },
 
     getRandomPoint: function (point)

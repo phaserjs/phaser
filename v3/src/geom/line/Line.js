@@ -24,9 +24,9 @@ var Line = new Class({
         return GetPoint(this, position, output);
     },
 
-    getPoints: function (steps, output)
+    getPoints: function (quantity, stepRate, output)
     {
-        return GetPoints(this, steps, output);
+        return GetPoints(this, quantity, stepRate, output);
     },
 
     getRandomPoint: function (point)
