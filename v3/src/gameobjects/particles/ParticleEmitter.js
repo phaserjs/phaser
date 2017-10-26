@@ -1,11 +1,13 @@
 var BlendModes = require('../../renderer/BlendModes');
 var Class = require('../../utils/Class');
 var Components = require('../components');
+var EdgeZone = require('./zones/EdgeZone');
 var EmitterOp = require('./EmitterOp');
 var GetFastValue = require('../../utils/object/GetFastValue');
 var GetRandomElement = require('../../utils/array/GetRandomElement');
 var GetValue = require('../../utils/object/GetValue');
 var Particle = require('./Particle');
+var RandomZone = require('./zones/RandomZone');
 var Rectangle = require('../../geom/rectangle/Rectangle');
 var StableSort = require('../../utils/array/StableSort');
 var Vector2 = require('../../math/Vector2');
@@ -135,7 +137,12 @@ var ParticleEmitter = new Class({
 
         this._counter = 0;
 
-        this.zone = GetFastValue(config, 'zone', null);
+        this.zone = null;
+
+        if (config.hasOwnProperty('zone'))
+        {
+            this.setZone(config.zone);
+        }
 
         //  bounds rectangle
         this.bounds = null;
@@ -149,9 +156,6 @@ var ParticleEmitter = new Class({
         this.collideRight = GetFastValue(config, 'collideRight', true);
         this.collideTop = GetFastValue(config, 'collideTop', true);
         this.collideBottom = GetFastValue(config, 'collideBottom', true);
-
-        //  Optional Particle emission zone - must be an object that supports a `getRandomPoint` function, such as a Rectangle, Circle, Path, etc.
-        this.zone = GetFastValue(config, 'zone', null);
 
         this.active = GetFastValue(config, 'active', true);
         this.visible = GetFastValue(config, 'visible', true);
@@ -389,7 +393,7 @@ var ParticleEmitter = new Class({
         return this;
     },
 
-    //  The zone must have a function called `getRandomPoint` that takes an object and sets
+    //  The zone must have a function called `getPoint` that takes an object and sets
     //  its x and y properties accordingly then returns that object
     setZone: function (zone)
     {
@@ -397,9 +401,29 @@ var ParticleEmitter = new Class({
         {
             this.zone = null;
         }
-        else if (typeof zone.getRandomPoint === 'function')
+        else
         {
-            this.zone = zone;
+            //  Where source = Geom like Circle, or a Path or Curve
+            //  zone: { source: X, random: true }
+            //  zone: { source: X, edge: true, quantity: 32 }
+
+            var source = GetFastValue(zone, 'source', null);
+
+            if (source && typeof source.getPoint === 'function')
+            {
+                //  Valid source, is it random or edge?
+                if (GetFastValue(zone, 'random', null))
+                {
+                    this.zone = new RandomZone(source);
+                }
+                else
+                {
+                    var quantity = GetFastValue(zone, 'quantity', 1);
+                    var stepRate = GetFastValue(zone, 'stepRate', 1);
+
+                    this.zone = new EdgeZone(source, quantity, stepRate);
+                }
+            }
         }
 
         return this;

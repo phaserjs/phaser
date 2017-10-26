@@ -1,25 +1,29 @@
 var Class = require('../../../utils/Class');
-var GetFastValue = require('../../../utils/object/GetFastValue');
+var Wrap = require('../../../math/Wrap');
 
-var RandomZone = new Class({
+var EdgeZone = new Class({
 
     initialize:
 
-    function RandomZone (source, steps)
+    function EdgeZone (source, quantity, stepRate)
     {
-        if (steps === undefined) { steps = 1; }
-
         this.source = source;
 
-        this.steps = steps;
+        this.points = source.getPoints(quantity, stepRate);
 
         this.counter = 0;
     },
 
     getPoint: function (particle)
     {
+        var point = this.points[this.counter];
+
+        particle.x = point.x;
+        particle.y = point.y;
+
+        this.counter = Wrap(this.counter + 1, 0, this.points.length - 1);
     }
 
 });
 
-module.exports = RandomZone;
+module.exports = EdgeZone;
