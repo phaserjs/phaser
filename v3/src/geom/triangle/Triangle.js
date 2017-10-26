@@ -1,4 +1,6 @@
 var Class = require('../../utils/Class');
+var GetPoint = require('./GetPoint');
+var GetPoints = require('./GetPoints');
 var Random = require('./Random');
 
 // A triangle is a plane created by connecting three points.
@@ -21,6 +23,16 @@ var Triangle = new Class({
         this.y3 = 0;
 
         this.setTo(x1, y1, x2, y2, x3, y3);
+    },
+
+    getPoint: function (position, output)
+    {
+        return GetPoint(this, position, output);
+    },
+
+    getPoints: function (quantity, stepRate, output)
+    {
+        return GetPoints(this, quantity, stepRate, output);
     },
 
     getRandomPoint: function (point)
