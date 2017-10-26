@@ -3,6 +3,7 @@
 var Ellipse = require('./Ellipse');
 
 Ellipse.Area = require('./Area');
+Ellipse.Circumference = require('./Circumference');
 Ellipse.CircumferencePoint = require('./CircumferencePoint');
 Ellipse.Clone = require('./Clone');
 Ellipse.Contains = require('./Contains');
