@@ -1,4 +1,6 @@
 var Class = require('../../utils/Class');
+var GetPoint = require('./GetPoint');
+var GetPoints = require('./GetPoints');
 var Random = require('./Random');
 
 //  Encapsulates a 2D rectangle defined by its corner point in the top-left
@@ -22,6 +24,16 @@ var Rectangle = new Class({
         this.width = width;
 
         this.height = height;
+    },
+
+    getPoint: function (position, output)
+    {
+        return GetPoint(this, position, output);
+    },
+
+    getPoints: function (quantity, stepRate, output)
+    {
+        return GetPoints(this, quantity, stepRate, output);
     },
 
     getRandomPoint: function (point)
