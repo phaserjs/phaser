@@ -132,7 +132,7 @@ var Particle = new Class({
         this.maxVelocityX = emitter.maxVelocityX.onEmit(this, 'maxVelocityX');
         this.maxVelocityY = emitter.maxVelocityY.onEmit(this, 'maxVelocityY');
 
-        this.delayCurrent = emitter.lifespan.onEmit(this, 'delay');
+        this.delayCurrent = emitter.delay.onEmit(this, 'delay');
 
         this.life = emitter.lifespan.onEmit(this, 'lifespan');
         this.lifeCurrent = this.life;
@@ -239,6 +239,7 @@ var Particle = new Class({
         if (this.delayCurrent > 0)
         {
             this.delayCurrent -= delta;
+
             return false;
         }
 

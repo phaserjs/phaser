@@ -11,6 +11,7 @@ var RandomZone = require('./zones/RandomZone');
 var Rectangle = require('../../geom/rectangle/Rectangle');
 var StableSort = require('../../utils/array/StableSort');
 var Vector2 = require('../../math/Vector2');
+var Wrap = require('../../math/Wrap');
 
 var ParticleEmitter = new Class({
 
@@ -37,6 +38,14 @@ var ParticleEmitter = new Class({
         this.frames = [ manager.defaultFrame ];
 
         this.defaultFrame = manager.defaultFrame;
+
+        this.randomFrame = true;
+
+        this.frameQuantity = 1;
+
+        this.currentFrame = 0;
+
+        this._frameCounter = 0;
 
         this.x = new EmitterOp(config, 'x', 0);
         this.y = new EmitterOp(config, 'y', 0);
@@ -169,11 +178,11 @@ var ParticleEmitter = new Class({
         this.followOffset = new Vector2(GetFastValue(config, 'followOffset', 0));
         this.trackVisible = GetFastValue(config, 'trackVisible', false);
 
-        var frame = GetFastValue(config, 'frame', null);
+        var frameConfig = GetFastValue(config, 'frame', null);
 
-        if (frame)
+        if (frameConfig)
         {
-            this.setFrame(frame);
+            this.setFrame(frameConfig);
         }
     },
 
@@ -215,16 +224,72 @@ var ParticleEmitter = new Class({
         {
             return this.defaultFrame;
         }
-        else
+        else if (this.randomFrame)
         {
             return GetRandomElement(this.frames);
         }
+        else
+        {
+            var frame = this.frames[this.currentFrame];
+
+            this._frameCounter++;
+
+            if (this._frameCounter === this.frameQuantity)
+            {
+                this._frameCounter = 0;
+                this.currentFrame = Wrap(this.currentFrame + 1, 0, this._frameLength);                
+            }
+
+            return frame;
+        }
     },
 
-    //  Either a single frame (numeric / string based), or an array of frames to randomly pick from
-    setFrame: function (frames)
+    // frame: 0
+    // frame: 'red'
+    // frame: [ 0, 1, 2, 3 ]
+    // frame: [ 'red', 'green', 'blue', 'pink', 'white' ]
+    // frame: { frames: [ 'red', 'green', 'blue', 'pink', 'white' ], [cycle: bool], [quantity: int] }
+
+    setFrame: function (frames, pickRandom, quantity)
     {
-        this.manager.setEmitterFrames(frames, this);
+        if (pickRandom === undefined) { pickRandom = true; }
+        if (quantity === undefined) { quantity = 1; }
+
+        this.randomFrame = pickRandom;
+        this.frameQuantity = quantity;
+        this.currentFrame = 0;
+        this._frameCounter = 0;
+
+        var t = typeof (frames);
+
+        if (Array.isArray(frames) || t === 'string' || t === 'number')
+        {
+            this.manager.setEmitterFrames(frames, this);
+        }
+        else if (t === 'object')
+        {
+            var frameConfig = frames;
+            var frames = GetFastValue(frameConfig, 'frames', null);
+
+            if (frames)
+            {
+                this.manager.setEmitterFrames(frames, this);
+            }
+
+            var isCycle = GetFastValue(frameConfig, 'cycle', false);
+
+            this.randomFrame = (isCycle) ? false : true;
+
+            this.frameQuantity = GetFastValue(frameConfig, 'quantity', quantity);
+        }
+
+        this._frameLength = this.frames.length;
+
+        if (this._frameLength === 1)
+        {
+            this.frameQuantity = 1;
+            this.randomFrame = false;
+        }
 
         return this;
     },
