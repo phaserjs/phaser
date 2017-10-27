@@ -1,5 +1,6 @@
 var Class = require('../../utils/Class');
 var DegToRad = require('../../math/DegToRad');
+var DistanceBetween = require('../../math/distance/DistanceBetween');
 
 var Particle = new Class({
 
@@ -42,6 +43,7 @@ var Particle = new Class({
         this.scrollFactorX = 1;
         this.scrollFactorY = 1;
 
+        this.tint = 0xffffffff;
         this.color = 0xffffffff;
 
         //  in ms
@@ -107,6 +109,10 @@ var Particle = new Class({
             this.y += y;
         }
 
+        this.life = emitter.lifespan.onEmit(this, 'lifespan');
+        this.lifeCurrent = this.life;
+        this.lifeT = 0;
+
         var sx = emitter.speedX.onEmit(this, 'speedX');
         var sy = (emitter.speedY) ? emitter.speedY.onEmit(this, 'speedY') : sx;
 
@@ -116,6 +122,21 @@ var Particle = new Class({
 
             this.velocityX = Math.cos(rad) * Math.abs(sx);
             this.velocityY = Math.sin(rad) * Math.abs(sy);
+        }
+        else if (emitter.moveTo)
+        {
+            var mx = emitter.moveToX.onEmit(this, 'moveToX');
+            var my = (emitter.moveToY) ? emitter.moveToY.onEmit(this, 'moveToY') : mx;
+
+            var angle = Math.atan2(my - this.y, mx - this.x);
+
+            var speed = DistanceBetween(this.x, this.y, mx, my) / (this.life / 1000);
+
+            //  We know how many pixels we need to move, but how fast?
+            // var speed = this.distanceToXY(displayObject, x, y) / (maxTime / 1000);
+
+            this.velocityX = Math.cos(angle) * speed;
+            this.velocityY = Math.sin(angle) * speed;
         }
         else
         {
@@ -134,10 +155,6 @@ var Particle = new Class({
 
         this.delayCurrent = emitter.delay.onEmit(this, 'delay');
 
-        this.life = emitter.lifespan.onEmit(this, 'lifespan');
-        this.lifeCurrent = this.life;
-        this.lifeT = 0;
-
         this.scaleX = emitter.scaleX.onEmit(this, 'scaleX');
         this.scaleY = (emitter.scaleY) ? emitter.scaleY.onEmit(this, 'scaleY') : this.scaleX;
 
@@ -148,7 +165,9 @@ var Particle = new Class({
 
         this.alpha = emitter.alpha.onEmit(this, 'alpha');
 
-        this.color = (this.color & 0x00FFFFFF) | (((this.alpha * 0xFF) | 0) << 24);
+        this.tint = emitter.tint.onEmit(this, 'tint');
+
+        this.color = (this.tint & 0x00FFFFFF) | (((this.alpha * 0xFF) | 0) << 24);
 
         this.index = emitter.alive.length;
     },
@@ -276,7 +295,9 @@ var Particle = new Class({
 
         this.alpha = emitter.alpha.onUpdate(this, 'alpha', t, this.alpha);
 
-        this.color = (this.color & 0x00FFFFFF) | (((this.alpha * 0xFF) | 0) << 24);
+        this.tint = emitter.tint.onUpdate(this, 'tint', t, this.tint);
+
+        this.color = (this.tint & 0x00FFFFFF) | (((this.alpha * 0xFF) | 0) << 24);
 
         this.lifeCurrent -= delta;
 

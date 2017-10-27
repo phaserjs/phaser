@@ -225,11 +225,13 @@ var EmitterOp = new Class({
 
     steppedEmit: function ()
     {
+        var current = this.counter;
+
         var next = this.counter + ((this.end - this.start) / this.steps);
 
         this.counter = Wrap(next, this.start, this.end);
 
-        return this.counter;
+        return current;
     },
 
     easedValueEmit: function (particle, key)
