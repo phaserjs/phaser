@@ -118,6 +118,9 @@ var ParticleEmitter = new Class({
         //  How many particles are emitted each time the emitter updates
         this.quantity = new EmitterOp(config, 'quantity', 1);
 
+        //  How many ms to wait after emission before the particles start updating
+        this.delay = new EmitterOp(config, 'delay', 0, true);
+
         //  How often a particle is emitted in ms (if emitter is a constant / flow emitter)
         //  If emitter is an explosion emitter this value will be -1.
         //  Anything > -1 sets this to be a flow emitter

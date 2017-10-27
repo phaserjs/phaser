@@ -47,6 +47,7 @@ var Particle = new Class({
         //  in ms
         this.life = 1000;
         this.lifeCurrent = 1000;
+        this.delayCurrent = 0;
 
         //  0-1
         this.lifeT = 0;
@@ -130,6 +131,8 @@ var Particle = new Class({
 
         this.maxVelocityX = emitter.maxVelocityX.onEmit(this, 'maxVelocityX');
         this.maxVelocityY = emitter.maxVelocityY.onEmit(this, 'maxVelocityY');
+
+        this.delayCurrent = emitter.lifespan.onEmit(this, 'delay');
 
         this.life = emitter.lifespan.onEmit(this, 'lifespan');
         this.lifeCurrent = this.life;
@@ -233,6 +236,12 @@ var Particle = new Class({
     //  delta = ms, step = delta / 1000
     update: function (delta, step, processors)
     {
+        if (this.delayCurrent > 0)
+        {
+            this.delayCurrent -= delta;
+            return false;
+        }
+
         var emitter = this.emitter;
 
         //  How far along in life is this particle? (t = 0 to 1)
