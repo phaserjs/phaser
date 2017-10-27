@@ -86,6 +86,17 @@ var ParticleEmitter = new Class({
             this.speedY = null;
         }
 
+        this.moveTo = false;
+
+        this.moveToX = new EmitterOp(config, 'moveToX', 0, true);
+        this.moveToY = new EmitterOp(config, 'moveToY', 0, true);
+
+        if (config.hasOwnProperty('moveToX') || config.hasOwnProperty('moveToY'))
+        {
+            this.moveTo = true;
+            this.radial = false;
+        }
+
         this.bounce = new EmitterOp(config, 'bounce', 0, true);
 
         this.scaleX = new EmitterOp(config, 'scaleX', 1);
@@ -96,6 +107,8 @@ var ParticleEmitter = new Class({
             this.scaleX = new EmitterOp(config, 'scale', 1);
             this.scaleY = null;
         }
+
+        this.tint = new EmitterOp(config, 'tint', 0xffffffff);
 
         this.alpha = new EmitterOp(config, 'alpha', 1);
 
