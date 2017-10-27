@@ -404,24 +404,26 @@ var ParticleEmitter = new Class({
         else
         {
             //  Where source = Geom like Circle, or a Path or Curve
-            //  zone: { source: X, random: true }
-            //  zone: { source: X, edge: true, quantity: 32 }
+            //  zone: { type: 'random', source: X }
+            //  zone: { type: 'edge', source: X, quantity: 32, [stepRate=0], [yoyo=false] }
 
+            var type = GetFastValue(zone, 'type', 'random');
             var source = GetFastValue(zone, 'source', null);
 
             if (source && typeof source.getPoint === 'function')
             {
-                //  Valid source, is it random or edge?
-                if (GetFastValue(zone, 'random', null))
+                switch (type)
                 {
-                    this.zone = new RandomZone(source);
-                }
-                else
-                {
-                    var quantity = GetFastValue(zone, 'quantity', 1);
-                    var stepRate = GetFastValue(zone, 'stepRate', 1);
+                    case 'random':
+                        this.zone = new RandomZone(source);
+                        break;
 
-                    this.zone = new EdgeZone(source, quantity, stepRate);
+                    case 'edge':
+                        var quantity = GetFastValue(zone, 'quantity', 1);
+                        var stepRate = GetFastValue(zone, 'stepRate', 0);
+                        var yoyo = GetFastValue(zone, 'yoyo', false);
+                        this.zone = new EdgeZone(source, quantity, stepRate, yoyo);
+                        break;
                 }
             }
         }
