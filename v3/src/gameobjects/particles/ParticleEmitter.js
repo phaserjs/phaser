@@ -1,6 +1,7 @@
 var BlendModes = require('../../renderer/BlendModes');
 var Class = require('../../utils/Class');
 var Components = require('../components');
+var DeathZone = require('./zones/DeathZone');
 var EdgeZone = require('./zones/EdgeZone');
 var EmitterOp = require('./EmitterOp');
 var GetFastValue = require('../../utils/object/GetFastValue');
@@ -162,11 +163,18 @@ var ParticleEmitter = new Class({
 
         this._counter = 0;
 
-        this.zone = null;
+        this.emitZone = null;
 
-        if (config.hasOwnProperty('zone'))
+        if (config.hasOwnProperty('emitZone'))
         {
-            this.setZone(config.zone);
+            this.setEmitZone(config.emitZone);
+        }
+
+        this.deathZone = null;
+
+        if (config.hasOwnProperty('deathZone'))
+        {
+            this.setDeathZone(config.deathZone);
         }
 
         //  bounds rectangle
@@ -474,38 +482,64 @@ var ParticleEmitter = new Class({
         return this;
     },
 
-    //  The zone must have a function called `getPoint` that takes an object and sets
+    //  The zone must have a function called `getPoint` that takes a particle object and sets
     //  its x and y properties accordingly then returns that object
-    setZone: function (zone)
+    setEmitZone: function (zoneConfig)
     {
-        if (zone === undefined)
+        if (zoneConfig === undefined)
         {
-            this.zone = null;
+            this.emitZone = null;
         }
         else
         {
             //  Where source = Geom like Circle, or a Path or Curve
-            //  zone: { type: 'random', source: X }
-            //  zone: { type: 'edge', source: X, quantity: 32, [stepRate=0], [yoyo=false] }
+            //  emitZone: { type: 'random', source: X }
+            //  emitZone: { type: 'edge', source: X, quantity: 32, [stepRate=0], [yoyo=false] }
 
-            var type = GetFastValue(zone, 'type', 'random');
-            var source = GetFastValue(zone, 'source', null);
+            var type = GetFastValue(zoneConfig, 'type', 'random');
+            var source = GetFastValue(zoneConfig, 'source', null);
 
             if (source && typeof source.getPoint === 'function')
             {
                 switch (type)
                 {
                     case 'random':
-                        this.zone = new RandomZone(source);
+                        this.emitZone = new RandomZone(source);
                         break;
 
                     case 'edge':
-                        var quantity = GetFastValue(zone, 'quantity', 1);
-                        var stepRate = GetFastValue(zone, 'stepRate', 0);
-                        var yoyo = GetFastValue(zone, 'yoyo', false);
-                        this.zone = new EdgeZone(source, quantity, stepRate, yoyo);
+                        var quantity = GetFastValue(zoneConfig, 'quantity', 1);
+                        var stepRate = GetFastValue(zoneConfig, 'stepRate', 0);
+                        var yoyo = GetFastValue(zoneConfig, 'yoyo', false);
+                        this.emitZone = new EdgeZone(source, quantity, stepRate, yoyo);
                         break;
                 }
+            }
+        }
+
+        return this;
+    },
+
+    setDeathZone: function (zoneConfig)
+    {
+        if (zoneConfig === undefined)
+        {
+            this.deathZone = null;
+        }
+        else
+        {
+            //  Where source = Geom like Circle or Rect that suppors a 'contains' function
+            //  deathZone: { type: 'onEnter', source: X }
+            //  deathZone: { type: 'onLeave', source: X }
+
+            var type = GetFastValue(zoneConfig, 'type', 'onEnter');
+            var source = GetFastValue(zoneConfig, 'source', null);
+
+            if (source && typeof source.contains === 'function')
+            {
+                var killOnEnter = (type === 'onEnter') ? true : false;
+
+                this.deathZone = new DeathZone(source, killOnEnter);
             }
         }
 

@@ -75,10 +75,10 @@ var Particle = new Class({
 
         this.frame = emitter.getFrame();
 
-        if (emitter.zone)
+        if (emitter.emitZone)
         {
             //  Updates particle.x and particle.y during this call
-            emitter.zone.getPoint(this);
+            emitter.emitZone.getPoint(this);
         }
 
         if (x === undefined)
@@ -277,6 +277,14 @@ var Particle = new Class({
         if (emitter.bounds)
         {
             this.checkBounds(emitter);
+        }
+
+        if (emitter.deathZone && emitter.deathZone.willKill(this))
+        {
+            this.lifeCurrent = 0;
+
+            //  No need to go any further, particle has been killed
+            return true;
         }
 
         this.scaleX = emitter.scaleX.onUpdate(this, 'scaleX', t, this.scaleX);
