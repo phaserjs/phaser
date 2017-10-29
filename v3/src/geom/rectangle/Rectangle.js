@@ -1,4 +1,5 @@
 var Class = require('../../utils/Class');
+var Contains = require('./Contains');
 var GetPoint = require('./GetPoint');
 var GetPoints = require('./GetPoints');
 var Random = require('./Random');
@@ -24,6 +25,11 @@ var Rectangle = new Class({
         this.width = width;
 
         this.height = height;
+    },
+
+    contains: function (x, y)
+    {
+        return Contains(this, x, y);
     },
 
     getPoint: function (position, output)

@@ -1,4 +1,5 @@
 var Class = require('../../utils/Class');
+var Contains = require('./Contains');
 var GetPoint = require('./GetPoint');
 var GetPoints = require('./GetPoints');
 var Random = require('./Random');
@@ -23,6 +24,11 @@ var Triangle = new Class({
         this.y3 = 0;
 
         this.setTo(x1, y1, x2, y2, x3, y3);
+    },
+
+    contains: function (x, y)
+    {
+        return Contains(this, x, y);
     },
 
     getPoint: function (position, output)

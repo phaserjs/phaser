@@ -1,4 +1,5 @@
 var Class = require('../../utils/Class');
+var Contains = require('./Contains');
 
 var Polygon = new Class({
 
@@ -16,6 +17,11 @@ var Polygon = new Class({
         {
             this.setTo(points);
         }
+    },
+
+    contains: function (x, y)
+    {
+        return Contains(this, x, y);
     },
 
     /**
