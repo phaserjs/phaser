@@ -7,6 +7,8 @@ var EmitterOp = require('./EmitterOp');
 var GetFastValue = require('../../utils/object/GetFastValue');
 var GetRandomElement = require('../../utils/array/GetRandomElement');
 var GetValue = require('../../utils/object/GetValue');
+var HasValue = require('../../utils/object/HasValue');
+var HasAny = require('../../utils/object/HasAny');
 var Particle = require('./Particle');
 var RandomZone = require('./zones/RandomZone');
 var Rectangle = require('../../geom/rectangle/Rectangle');
@@ -26,13 +28,7 @@ var ParticleEmitter = new Class({
 
     function ParticleEmitter (manager, config)
     {
-        if (config === undefined) { config = {}; }
-
         this.manager = manager;
-
-        this.name = GetFastValue(config, 'name', '');
-
-        this.particleClass = GetFastValue(config, 'particleClass', Particle);
 
         this.texture = manager.texture;
 
@@ -40,34 +36,71 @@ var ParticleEmitter = new Class({
 
         this.defaultFrame = manager.defaultFrame;
 
-        this.randomFrame = true;
+        this.configFastMap = [
+            'active',
+            'blendMode',
+            'collideBottom',
+            'collideLeft',
+            'collideRight',
+            'collideTop',
+            'deathCallback',
+            'deathCallbackScope',
+            'emitCallback',
+            'emitCallbackScope',
+            'follow',
+            'frequency',
+            'gravityX',
+            'gravityY',
+            'maxParticles',
+            'name',
+            'on',
+            'particleBringToTop',
+            'particleClass',
+            'radial',
+            'timeScale',
+            'trackVisible',
+            'visible'
+        ];
 
-        this.frameQuantity = 1;
+        this.configOpMap = [
+            'accelerationX',
+            'accelerationY',
+            'alpha',
+            'bounce',
+            'delay',
+            'lifespan',
+            'maxVelocityX',
+            'maxVelocityY',
+            'moveToX',
+            'moveToY',
+            'quantity',
+            'rotate',
+            'scaleX',
+            'scaleY',
+            'speedX',
+            'speedY',
+            'tint',
+            'x',
+            'y'
+        ];
 
-        this.currentFrame = 0;
+        this.name = '';
 
-        this._frameCounter = 0;
+        this.particleClass = Particle;
 
         this.x = new EmitterOp(config, 'x', 0);
         this.y = new EmitterOp(config, 'y', 0);
 
         //  A radial emitter will emit particles in all directions between angle min and max, using speed as the value
         //  A point emitter will emit particles only in the direction derived from the speedX and speedY values
-        this.radial = GetFastValue(config, 'radial', true);
+        this.radial = true;
 
-        //  Not a value operation because you should be able to constantly alter this and effect all
-        //  alive particles in real-time, instantly
-        this.gravityX = GetValue(config, 'gravityX', 0);
-        this.gravityY = GetValue(config, 'gravityY', 0);
+        this.gravityX = 0;
+        this.gravityY = 0;
 
         this.acceleration = false;
         this.accelerationX = new EmitterOp(config, 'accelerationX', 0, true);
         this.accelerationY = new EmitterOp(config, 'accelerationY', 0, true);
-
-        if (config.hasOwnProperty('accelerationX') || config.hasOwnProperty('accelerationY'))
-        {
-            this.acceleration = true;
-        }
 
         this.maxVelocityX = new EmitterOp(config, 'maxVelocityX', 10000, true);
         this.maxVelocityY = new EmitterOp(config, 'maxVelocityY', 10000, true);
@@ -75,42 +108,16 @@ var ParticleEmitter = new Class({
         this.speedX = new EmitterOp(config, 'speedX', 0, true);
         this.speedY = new EmitterOp(config, 'speedY', 0, true);
 
-        //  If you specify speedX and Y then it changes the emitter from radial to a point emitter
-        if (config.hasOwnProperty('speedX') || config.hasOwnProperty('speedY'))
-        {
-            this.radial = false;
-        }
-
-        if (config.hasOwnProperty('speed'))
-        {
-            this.speedX = new EmitterOp(config, 'speed', 0, true);
-            this.speedY = null;
-        }
-
         this.moveTo = false;
-
         this.moveToX = new EmitterOp(config, 'moveToX', 0, true);
         this.moveToY = new EmitterOp(config, 'moveToY', 0, true);
-
-        if (config.hasOwnProperty('moveToX') || config.hasOwnProperty('moveToY'))
-        {
-            this.moveTo = true;
-            this.radial = false;
-        }
 
         this.bounce = new EmitterOp(config, 'bounce', 0, true);
 
         this.scaleX = new EmitterOp(config, 'scaleX', 1);
         this.scaleY = new EmitterOp(config, 'scaleY', 1);
 
-        if (config.hasOwnProperty('scale'))
-        {
-            this.scaleX = new EmitterOp(config, 'scale', 1);
-            this.scaleY = null;
-        }
-
         this.tint = new EmitterOp(config, 'tint', 0xffffffff);
-
         this.alpha = new EmitterOp(config, 'alpha', 1);
 
         this.lifespan = new EmitterOp(config, 'lifespan', 1000);
@@ -119,27 +126,17 @@ var ParticleEmitter = new Class({
 
         this.rotate = new EmitterOp(config, 'rotate', 0);
 
-        //  Callbacks
+        this.emitCallback = null;
+        this.emitCallbackScope = null;
 
-        this.emitCallback = GetFastValue(config, 'emitCallback', null);
-        this.emitCallbackScope = GetFastValue(config, 'emitCallbackScope', null);
-
-        this.deathCallback = GetFastValue(config, 'deathCallback', null);
-        this.deathCallbackScope = GetFastValue(config, 'deathCallbackScope', null);
-
-        var callbackScope = GetFastValue(config, 'callbackScope', null);
-
-        if (callbackScope)
-        {
-            this.emitCallbackScope = callbackScope;
-            this.deathCallbackScope = callbackScope;
-        }
+        this.deathCallback = null;
+        this.deathCallbackScope = null;
 
         //  Set to hard limit the amount of particle objects this emitter is allowed to create. 0 means unlimited.
-        this.maxParticles = GetFastValue(config, 'maxParticles', 0);
+        this.maxParticles = 0;
 
         //  How many particles are emitted each time the emitter updates
-        this.quantity = new EmitterOp(config, 'quantity', 1);
+        this.quantity = new EmitterOp(config, 'quantity', 1, true);
 
         //  How many ms to wait after emission before the particles start updating
         this.delay = new EmitterOp(config, 'delay', 0, true);
@@ -147,74 +144,186 @@ var ParticleEmitter = new Class({
         //  How often a particle is emitted in ms (if emitter is a constant / flow emitter)
         //  If emitter is an explosion emitter this value will be -1.
         //  Anything > -1 sets this to be a flow emitter
-        this.frequency = GetFastValue(config, 'frequency', 0);
+        this.frequency = 0;
 
         //  Controls if the emitter is currently emitting particles. Already alive particles will continue to update until they expire.
-        this.on = GetFastValue(config, 'on', true);
+        this.on = true;
 
         //  Newly emitted particles are added to the top of the particle list, i.e. rendered above those already alive. Set to false to send them to the back.
-        this.particleBringToTop = GetFastValue(config, 'particleBringToTop', true);
+        this.particleBringToTop = true;
 
-        this.timeScale = GetFastValue(config, 'timeScale', 1);
+        this.timeScale = 1;
+
+        this.emitZone = null;
+        this.deathZone = null;
+
+        this.bounds = null;
+
+        this.collideLeft = true;
+        this.collideRight = true;
+        this.collideTop = true;
+        this.collideBottom = true;
+
+        this.active = true;
+        this.visible = true;
+
+        this.blendMode = BlendModes.NORMAL;
+
+        this.follow = null;
+        this.followOffset = new Vector2();
+        this.trackVisible = false;
+
+        this.currentFrame = 0;
+
+        this.randomFrame = true;
+
+        this.frameQuantity = 1;
 
         //  private
         this.dead = [];
         this.alive = [];
 
         this._counter = 0;
+        this._frameCounter = 0;
 
-        this.emitZone = null;
-
-        if (config.hasOwnProperty('emitZone'))
+        if (config)
         {
-            this.setEmitZone(config.emitZone);
-        }
-
-        this.deathZone = null;
-
-        if (config.hasOwnProperty('deathZone'))
-        {
-            this.setDeathZone(config.deathZone);
-        }
-
-        //  bounds rectangle
-        this.bounds = null;
-
-        if (config.hasOwnProperty('bounds'))
-        {
-            this.setBounds(config.bounds);
-        }
-
-        this.collideLeft = GetFastValue(config, 'collideLeft', true);
-        this.collideRight = GetFastValue(config, 'collideRight', true);
-        this.collideTop = GetFastValue(config, 'collideTop', true);
-        this.collideBottom = GetFastValue(config, 'collideBottom', true);
-
-        this.active = GetFastValue(config, 'active', true);
-        this.visible = GetFastValue(config, 'visible', true);
-
-        this.blendMode = GetFastValue(config, 'blendMode', BlendModes.NORMAL);
-
-        this.follow = GetFastValue(config, 'follow', null);
-        this.followOffset = new Vector2(GetFastValue(config, 'followOffset', 0));
-        this.trackVisible = GetFastValue(config, 'trackVisible', false);
-
-        var frameConfig = GetFastValue(config, 'frame', null);
-
-        if (frameConfig)
-        {
-            this.setFrame(frameConfig);
+            this.fromJSON(config);
         }
     },
 
     fromJSON: function (config)
     {
+        if (!config)
+        {
+            return this;
+        }
 
+        //  Only update properties from their current state if they exist in the given config
+
+        var i = 0;
+        var key = '';
+
+        for (i = 0; i < this.configFastMap.length; i++)
+        {
+            key = this.configFastMap[i];
+
+            if (HasValue(config, key))
+            {
+                this[key] = GetFastValue(config, key);
+            }
+        }
+
+        for (i = 0; i < this.configOpMap.length; i++)
+        {
+            key = this.configOpMap[i];
+
+            if (HasValue(config, key))
+            {
+                this[key].loadConfig(config);
+            }
+        }
+
+        this.acceleration = (this.accelerationX.propertyValue !== 0 || this.accelerationY.propertyValue !== 0);
+
+        this.moveTo = (this.moveToX.propertyValue !== 0 || this.moveToY.propertyValue !== 0);
+
+        //  Special 'speed' override
+
+        if (HasValue(config, 'speed'))
+        {
+            this.speedX.loadConfig(config, 'speed');
+            this.speedY = null;
+        }
+
+        //  If you specify speedX, speedY ot moveTo then it changes the emitter from radial to a point emitter
+        if (HasAny(config, [ 'speedX', 'speedY' ]) || this.moveTo)
+        {
+            this.radial = false;
+        }
+
+        //  Special 'scale' override
+
+        if (HasValue(config, 'scale'))
+        {
+            this.scaleX.loadConfig(config, 'scale');
+            this.scaleY = null;
+        }
+
+        if (HasValue(config, 'callbackScope'))
+        {
+            var callbackScope = GetFastValue(config, 'callbackScope', null);
+
+            this.emitCallbackScope = callbackScope;
+            this.deathCallbackScope = callbackScope;
+        }
+
+        if (HasValue(config, 'emitZone'))
+        {
+            this.setEmitZone(config.emitZone);
+        }
+
+        if (HasValue(config, 'deathZone'))
+        {
+            this.setDeathZone(config.deathZone);
+        }
+
+        if (HasValue(config, 'bounds'))
+        {
+            this.setBounds(config.bounds);
+        }
+
+        if (HasValue(config, 'followOffset'))
+        {
+            this.followOffset.setFromObject(GetFastValue(config, 'followOffset', 0));
+        }
+
+        if (HasValue(config, 'frame'))
+        {
+            this.setFrame(config.frame);
+        }
+
+        return this;
     },
 
-    toJSON: function ()
+    toJSON: function (output)
     {
+        if (output === undefined) { output = {}; }
 
+        var i = 0;
+        var key = '';
+
+        for (i = 0; i < this.configFastMap.length; i++)
+        {
+            key = this.configFastMap[i];
+
+            output[key] = this[key];
+        }
+
+        for (i = 0; i < this.configOpMap.length; i++)
+        {
+            key = this.configOpMap[i];
+
+            if (this[key])
+            {
+                output[key] = this[key].toJSON();
+            }
+        }
+
+        //  special handlers
+        if (!this.speedY)
+        {
+            delete output.speedX;
+            output.speed = this.speedX.toJSON();
+        }
+
+        if (!this.scaleY)
+        {
+            delete output.scaleX;
+            output.scale = this.scaleX.toJSON();
+        }
+
+        return output;
     },
 
     startFollow: function (target, offsetX, offsetY, trackVisible)
@@ -340,8 +449,8 @@ var ParticleEmitter = new Class({
 
             var x = obj.x;
             var y = obj.y;
-            var width = (obj.hasOwnProperty('w')) ? obj.w : obj.width;
-            var height = (obj.hasOwnProperty('h')) ? obj.h : obj.height;
+            var width = (HasValue(obj, 'w')) ? obj.w : obj.width;
+            var height = (HasValue(obj, 'h')) ? obj.h : obj.height;
         }
 
         if (this.bounds)
@@ -370,10 +479,13 @@ var ParticleEmitter = new Class({
 
     setSpeedY: function (value)
     {
-        this.speedY.onChange(value);
+        if (this.speedY)
+        {
+            this.speedY.onChange(value);
 
-        //  If you specify speedX and Y then it changes the emitter from radial to a point emitter
-        this.radial = false;
+            //  If you specify speedX and Y then it changes the emitter from radial to a point emitter
+            this.radial = false;
+        }
 
         return this;
     },
@@ -384,7 +496,7 @@ var ParticleEmitter = new Class({
         this.speedY = null;
 
         //  If you specify speedX and Y then it changes the emitter from radial to a point emitter
-        this.radial = false;
+        this.radial = true;
 
         return this;
     },
