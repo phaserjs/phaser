@@ -33,7 +33,7 @@ var EmitterOp = new Class({
 
     loadConfig: function (config, newKey)
     {
-        if (config === undefined) { config = {} };
+        if (config === undefined) { config = {}; }
 
         if (newKey)
         {
@@ -86,7 +86,7 @@ var EmitterOp = new Class({
         }
         else if (t === 'function')
         {
-            //  The same as setting just the onUpdate function and no onEmit
+            //  The same as setting just the onUpdate function and no onEmit (unless this op is an emitOnly one)
             //  Custom callback, must return a value:
 
             /*
@@ -96,7 +96,14 @@ var EmitterOp = new Class({
                }
             */
 
-            this.onUpdate = value;
+            if (this.emitOnly)
+            {
+                this.onEmit = value;
+            }
+            else
+            {
+                this.onUpdate = value;
+            }
         }
         else if (t === 'object' && (this.has(value, 'random') || this.hasBoth(value, 'start', 'end') || this.hasBoth(value, 'min', 'max')))
         {
