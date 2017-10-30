@@ -13,7 +13,7 @@ var EmitterOp = new Class({
         if (emitOnly === undefined) { emitOnly = false; }
 
         this.propertyKey = key;
-        this.propertyValue = GetFastValue(config, key, defaultValue);
+        this.propertyValue = defaultValue;
         this.defaultValue = defaultValue;
 
         this.steps = 0;
@@ -23,16 +23,37 @@ var EmitterOp = new Class({
         this.end = 0;
         this.ease;
 
+        this.emitOnly = emitOnly;
+
         this.onEmit = this.defaultEmit;
         this.onUpdate = this.defaultUpdate;
 
+        this.loadConfig(config);
+    },
+
+    loadConfig: function (config, newKey)
+    {
+        if (config === undefined) { config = {} };
+
+        if (newKey)
+        {
+            this.propertyKey = newKey;
+        }
+
+        this.propertyValue = GetFastValue(config, this.propertyKey, this.defaultValue);
+
         this.setMethods();
 
-        if (emitOnly)
+        if (this.emitOnly)
         {
             //  Reset it back again
             this.onUpdate = this.defaultUpdate;
         }
+    },
+
+    toJSON: function ()
+    {
+        return JSON.stringify(this.propertyValue);
     },
 
     onChange: function (value)
