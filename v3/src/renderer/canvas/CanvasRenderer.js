@@ -205,7 +205,6 @@ var CanvasRenderer = new Class({
             ctx.beginPath();
             ctx.rect(camera.x, camera.y, camera.width, camera.height);
             ctx.clip();
-            ctx.closePath();
         }
 
         var matrix = camera.matrix.matrix;

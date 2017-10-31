@@ -74,7 +74,6 @@ var CubicBezierCurve = new Class({
         }
 
         graphics.strokePath();
-        graphics.closePath();
 
         //  So you can chain graphics calls
         return graphics;
