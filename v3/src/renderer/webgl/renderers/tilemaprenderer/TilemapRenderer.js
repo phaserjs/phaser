@@ -50,12 +50,14 @@ var TilemapRenderer = new Class({
         var scrollLocation = shader.getUniformLocation('u_scroll');
         var scrollFactorLocation = shader.getUniformLocation('u_scroll_factor');
         var tilemapPositionLocation = shader.getUniformLocation('u_tilemap_position');
+        var cameraTransformLocation = shader.getUniformLocation('u_camera_matrix');
 
         this.shader = shader;
         this.viewMatrixLocation = viewMatrixLocation;
         this.scrollLocation = scrollLocation;
         this.scrollFactorLocation = scrollFactorLocation;
         this.tilemapPositionLocation = tilemapPositionLocation;
+        this.cameraTransformLocation = cameraTransformLocation;
 
         this.resize(this.width, this.height, this.game.config.resolution);
     },

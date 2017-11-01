@@ -180,7 +180,7 @@ var CanvasRenderer = new Class({
         if (!camera.transparent)
         {
             ctx.fillStyle = camera.backgroundColor.rgba;
-            ctx.fillRect(0, 0, camera.width, camera.height);
+            ctx.fillRect(camera.x, camera.y, camera.width, camera.height);
         }
 
         if (this.currentAlpha !== 1)
