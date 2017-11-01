@@ -132,8 +132,6 @@ var EventBinding = new Class({
 
     dispatch: function (event)
     {
-        console.log('EventBinding.dispatch', this.type);
-
         if (this.state !== CONST.DISPATCHER_IDLE)
         {
             throw new Error('Error: Failed to execute \'EventDispatcher.dispatch\' on \'' + this.type + '\': The event is already being dispatched.');
