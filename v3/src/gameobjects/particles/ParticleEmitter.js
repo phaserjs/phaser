@@ -606,7 +606,7 @@ var ParticleEmitter = new Class({
         {
             //  Where source = Geom like Circle, or a Path or Curve
             //  emitZone: { type: 'random', source: X }
-            //  emitZone: { type: 'edge', source: X, quantity: 32, [stepRate=0], [yoyo=false] }
+            //  emitZone: { type: 'edge', source: X, quantity: 32, [stepRate=0], [yoyo=false], [seamless=true] }
 
             var type = GetFastValue(zoneConfig, 'type', 'random');
             var source = GetFastValue(zoneConfig, 'source', null);
@@ -616,14 +616,20 @@ var ParticleEmitter = new Class({
                 switch (type)
                 {
                     case 'random':
+
                         this.emitZone = new RandomZone(source);
+
                         break;
 
                     case 'edge':
+
                         var quantity = GetFastValue(zoneConfig, 'quantity', 1);
                         var stepRate = GetFastValue(zoneConfig, 'stepRate', 0);
                         var yoyo = GetFastValue(zoneConfig, 'yoyo', false);
-                        this.emitZone = new EdgeZone(source, quantity, stepRate, yoyo);
+                        var seamless = GetFastValue(zoneConfig, 'seamless', true);
+
+                        this.emitZone = new EdgeZone(source, quantity, stepRate, yoyo, seamless);
+
                         break;
                 }
             }
