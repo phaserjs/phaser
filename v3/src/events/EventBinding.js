@@ -132,6 +132,8 @@ var EventBinding = new Class({
 
     dispatch: function (event)
     {
+        console.log('EventBinding.dispatch', this.type);
+
         if (this.state !== CONST.DISPATCHER_IDLE)
         {
             throw new Error('Error: Failed to execute \'EventDispatcher.dispatch\' on \'' + this.type + '\': The event is already being dispatched.');
@@ -258,9 +260,14 @@ var EventBinding = new Class({
 
     destroy: function ()
     {
+        delete this.dispatcher.bindings[this.type];
+
         this.active.length = 0;
-        this.dispatcher = undefined;
+
+        this.dispatcher = null;
+
         this.type = '';
+
         this.state = CONST.DISPATCHER_DESTROYED;
     }
 

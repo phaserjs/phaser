@@ -1,4 +1,5 @@
 var Class = require('../utils/Class');
+var CONST = require('./const');
 var EventBinding = require('./EventBinding');
 
 var EventDispatcher = new Class({
@@ -190,9 +191,16 @@ var EventDispatcher = new Class({
 
         if (binding)
         {
-            binding.destroy();
+            if (binding.state === CONST.DISPATCHER_IDLE)
+            {
+                binding.destroy();
 
-            delete this.bindings[type];
+                delete this.bindings[type];
+            }
+            else
+            {
+                binding.state = CONST.DISPATCHER_DESTROYED;
+            }
         }
 
         return this;
