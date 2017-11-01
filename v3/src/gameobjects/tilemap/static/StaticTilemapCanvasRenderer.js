@@ -9,7 +9,7 @@ var StaticTilemapCanvasRenderer = function (renderer, gameObject, interpolationP
 
     gameObject.upload(camera);
 
-    var tiles = camera.cullTilemap(gameObject);
+    var tiles = gameObject.tiles;
     var tileWidth = gameObject.tileWidth;
     var tileHeight = gameObject.tileHeight;
     var frame = gameObject.frame;

@@ -162,9 +162,19 @@ var StaticTilemap = new Class({
 
                 this.dirty = false;
             }
-            this.tilemapRenderer.shader.setConstantFloat2(this.tilemapRenderer.scrollLocation, -camera.scrollX, -camera.scrollY);
+            this.tilemapRenderer.shader.setConstantFloat2(this.tilemapRenderer.scrollLocation, camera.scrollX, camera.scrollY);
             this.tilemapRenderer.shader.setConstantFloat2(this.tilemapRenderer.scrollFactorLocation, this.scrollFactorX, this.scrollFactorY);
             this.tilemapRenderer.shader.setConstantFloat2(this.tilemapRenderer.tilemapPositionLocation, this.x, this.y);
+            var cmat = camera.matrix.matrix;
+
+            this.tilemapRenderer.shader.setConstantMatrix3x3(
+                this.tilemapRenderer.cameraTransformLocation,
+                [
+                    cmat[0], cmat[1], 0.0, 
+                    cmat[2], cmat[3], 0.0,
+                    cmat[4], cmat[5], 1.0
+                ]
+            );
         }
         else if (this.dirty && !this.gl)
         {
