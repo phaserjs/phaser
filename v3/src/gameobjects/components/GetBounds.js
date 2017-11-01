@@ -1,13 +1,84 @@
 var Rectangle = require('../../geom/rectangle/Rectangle');
+var RotateAround = require('../../math/RotateAround');
+var Vector2 = require('../../math/Vector2');
 
 var GetBounds = {
+
+    getTopLeft: function (output)
+    {
+        if (output === undefined) { output = new Vector2(); }
+
+        output.x = this.x - (this.displayWidth * this.originX);
+        output.y = this.y - (this.displayHeight * this.originY);
+
+        if (this.rotation !== 0)
+        {
+            RotateAround(output, this.x, this.y, this.rotation);
+        }
+
+        return output;
+    },
+
+    getTopRight: function (output)
+    {
+        if (output === undefined) { output = new Vector2(); }
+
+        output.x = (this.x - (this.displayWidth * this.originX)) + this.displayWidth;
+        output.y = this.y - (this.displayHeight * this.originY);
+
+        if (this.rotation !== 0)
+        {
+            RotateAround(output, this.x, this.y, this.rotation);
+        }
+
+        return output;
+    },
+
+    getBottomLeft: function (output)
+    {
+        if (output === undefined) { output = new Vector2(); }
+
+        output.x = this.x - (this.displayWidth * this.originX);
+        output.y = (this.y - (this.displayHeight * this.originY)) + this.displayHeight;
+
+        if (this.rotation !== 0)
+        {
+            RotateAround(output, this.x, this.y, this.rotation);
+        }
+
+        return output;
+    },
+
+    getBottomRight: function (output)
+    {
+        if (output === undefined) { output = new Vector2(); }
+
+        output.x = (this.x - (this.displayWidth * this.originX)) + this.displayWidth;
+        output.y = (this.y - (this.displayHeight * this.originY)) + this.displayHeight;
+
+        if (this.rotation !== 0)
+        {
+            RotateAround(output, this.x, this.y, this.rotation);
+        }
+
+        return output;
+    },
 
     getBounds: function (output)
     {
         if (output === undefined) { output = new Rectangle(); }
 
-        var x = this.x - this.displayOriginX;
-        var y = this.y - this.displayOriginY;
+        var tmp = new Vector2();
+
+        this.getTopLeft(tmp);
+
+        var topRight = this.getTopRight();
+        var bottomLeft = this.getBottomLeft();
+        var bottomRight = this.getBottomRight();
+
+        /*
+        var x = this.x;
+        var y = this.y;
 
         var w = this.displayWidth;
         var h = this.displayHeight;
@@ -61,6 +132,7 @@ var GetBounds = {
         output.y = yMin;
         output.width = xMax - xMin;
         output.height = yMax - yMin;
+        */
 
         return output;
     }
