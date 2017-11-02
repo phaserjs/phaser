@@ -23,8 +23,8 @@ var SceneInputManager = new Class({
         //  A reference to the this.scene.sys.cameras (set in boot)
         this.cameras;
 
-        //  Should use Scene event dispatcher?
-        this.events = this.manager.events;
+        //  The Scene event dispatcher
+        this.events = scene.sys.events;
 
         //  Proxy references available via the Scene
         this.keyboard = this.manager.keyboard;
