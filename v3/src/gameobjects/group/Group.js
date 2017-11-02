@@ -1,9 +1,8 @@
-
+var Actions = require('../../actions/');
 var Class = require('../../utils/Class');
-var Set = require('../../structs/Set');
 var GetValue = require('../../utils/object/GetValue');
 var Range = require('../../utils/array/Range');
-var Actions = require('../../actions/');
+var Set = require('../../structs/Set');
 var Sprite = require('../sprite/Sprite');
 
 var Group = new Class({

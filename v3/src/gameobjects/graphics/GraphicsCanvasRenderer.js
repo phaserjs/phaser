@@ -1,5 +1,4 @@
 var Commands = require('./Commands');
-var MATH_CONST = require('../../math/const');
 var GameObject = require('../GameObject');
 
 var GraphicsCanvasRenderer = function (renderer, src, interpolationPercentage, camera, renderTargetCtx)
@@ -18,7 +17,6 @@ var GraphicsCanvasRenderer = function (renderer, src, interpolationPercentage, c
     var srcRotation = src.rotation;
     var commandBuffer = src.commandBuffer;
     var ctx = renderTargetCtx || renderer.currentContext;
-    var value;
     var lineAlpha = 1.0;
     var fillAlpha = 1.0;
     var lineColor = 0;
