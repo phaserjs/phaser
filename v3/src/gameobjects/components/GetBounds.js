@@ -68,15 +68,43 @@ var GetBounds = {
     {
         if (output === undefined) { output = new Rectangle(); }
 
-        var tmp = new Vector2();
+        //  We can use the output object to temporarily store the x/y coords in:
 
-        this.getTopLeft(tmp);
+        this.getTopLeft(output);
 
-        var topRight = this.getTopRight();
-        var bottomLeft = this.getBottomLeft();
-        var bottomRight = this.getBottomRight();
+        var TLx = output.x;
+        var TLy = output.y;
 
-        /*
+        this.getTopRight(output);
+
+        var TRx = output.x;
+        var TRy = output.y;
+
+        this.getBottomLeft(output);
+
+        var BLx = output.x;
+        var BLy = output.y;
+
+        this.getBottomRight(output);
+
+        var BRx = output.x;
+        var BRy = output.y;
+
+        output.x = Math.min(TLx, TRx, BLx, BRx);
+        output.y = Math.min(TLy, TRy, BLy, BRy);
+        output.width = Math.max(TLx, TRx, BLx, BRx) - output.x;
+        output.height = Math.max(TLy, TRy, BLy, BRy) - output.y;
+
+        return output;
+    },
+
+    //  Works but only if originX/Y = 0
+
+    /*
+    getBounds: function (output)
+    {
+        if (output === undefined) { output = new Rectangle(); }
+
         var x = this.x;
         var y = this.y;
 
@@ -132,10 +160,10 @@ var GetBounds = {
         output.y = yMin;
         output.width = xMax - xMin;
         output.height = yMax - yMin;
-        */
 
         return output;
     }
+    */
 };
 
 module.exports = GetBounds;
