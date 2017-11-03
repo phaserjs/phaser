@@ -176,8 +176,6 @@ var TextureManager = new Class({
 
     addSpriteSheetFromAtlas: function (key, config)
     {
-        console.log('addSpriteSheetFromAtlas', key);
-
         var atlasKey = GetValue(config, 'atlas', null);
         var atlasFrame = GetValue(config, 'frame', null);
 
@@ -193,17 +191,13 @@ var TextureManager = new Class({
         {
             var texture = this.create(key, sheet.source.image);
 
-            //  If trimmed we need to help the parser adjust
-
-            console.log(sheet);
-
             if (sheet.trimmed)
             {
+                //  If trimmed we need to help the parser adjust
                 Parser.SpriteSheetFromAtlas(texture, sheet, config);
             }
             else
             {
-                // Parser.SpriteSheetFromAtlas(texture, sheet, config);
                 Parser.SpriteSheet(texture, 0, sheet.cutX, sheet.cutY, sheet.cutWidth, sheet.cutHeight, config);
             }
 
