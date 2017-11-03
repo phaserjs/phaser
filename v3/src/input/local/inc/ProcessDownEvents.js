@@ -18,10 +18,7 @@ var ProcessDownEvents = function (pointer)
 
         this.events.dispatch(new InputEvent.GAME_OBJECT_DOWN(pointer, gameObject));
 
-        if (gameObject.input)
-        {
-            gameObject.input.onDown(gameObject, pointer, gameObject.input.localX, gameObject.input.localY);
-        }
+        gameObject.input.onDown(gameObject, pointer, gameObject.input.localX, gameObject.input.localY);
 
         if (this.topOnly)
         {
