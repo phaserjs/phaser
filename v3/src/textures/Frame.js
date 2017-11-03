@@ -143,17 +143,6 @@ var Frame = new Class({
         this.updateUVs();
     },
 
-    setCut: function (x, y, width, height)
-    {
-        this.cutX = x;
-        this.cutY = y;
-
-        this.cutWidth = width;
-        this.cutHeight = height;
-
-        return this.updateUVs();
-    },
-
     /**
     * If the frame was trimmed when added to the Texture Atlas, this records the trim and source data.
     *
@@ -198,14 +187,36 @@ var Frame = new Class({
         return this.updateUVs();
     },
 
+    setCut: function (x, y, width, height)
+    {
+        this.cutX = x;
+        this.cutY = y;
+
+        this.cutWidth = width;
+        this.cutHeight = height;
+
+        return this.updateUVs();
+    },
+
     /**
-    * Updates the internal WebGL UV cache.
+    * Updates the internal WebGL UV cache and the drawImage cache.
     *
     * @method updateUVs
     * @private
     */
     updateUVs: function ()
     {
+        //  Canvas data
+
+        var cd = this.data.drawImage;
+
+        cd.sWidth = this.cutWidth;
+        cd.sHeight = this.cutHeight;
+        cd.dWidth = this.cutWidth;
+        cd.dHeight = this.cutHeight;
+
+        //  WebGL data
+
         var tw = this.source.width;
         var th = this.source.height;
         var uvs = this.data.uvs;
