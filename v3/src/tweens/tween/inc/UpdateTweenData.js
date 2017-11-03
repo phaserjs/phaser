@@ -33,6 +33,8 @@ var SetStateFromEnd = function (tween, tweenData, diff)
             onYoyo.func.apply(onYoyo.scope, onYoyo.params);
         }
 
+        // console.log('SetStateFromEnd-a', tweenData.start, tweenData.end);
+
         tweenData.start = tweenData.getStartValue(tweenData.target, tweenData.key, tweenData.start);
 
         return TWEEN_CONST.PLAYING_BACKWARD;
@@ -71,9 +73,11 @@ var SetStateFromEnd = function (tween, tweenData, diff)
             onRepeat.func.apply(onRepeat.scope, onRepeat.params);
         }
 
+        // console.log('SetStateFromEnd-b', tweenData.start, tweenData.end);
+
         tweenData.start = tweenData.getStartValue(tweenData.target, tweenData.key, tweenData.start);
 
-        tweenData.end = tweenData.getEndValue(tweenData.target, tweenData.key, tweenData.end);
+        tweenData.end = tweenData.getEndValue(tweenData.target, tweenData.key, tweenData.start);
 
         //  Delay?
         if (tweenData.repeatDelay > 0)
@@ -129,7 +133,9 @@ var SetStateFromStart = function (tween, tweenData, diff)
             onRepeat.func.apply(onRepeat.scope, onRepeat.params);
         }
 
-        tweenData.end = tweenData.getEndValue(tweenData.target, tweenData.key, tweenData.end);
+        // console.log('SetStateFromStart', tweenData.start, tweenData.end);
+
+        tweenData.end = tweenData.getEndValue(tweenData.target, tweenData.key, tweenData.start);
 
         //  Delay?
         if (tweenData.repeatDelay > 0)
