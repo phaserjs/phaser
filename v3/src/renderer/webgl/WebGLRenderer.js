@@ -451,6 +451,7 @@ var WebGLRenderer = new Class({
 
         var list = children.list;
         var length = list.length;
+        var renderer;
 
         for (var index = 0; index < length; ++index)
         {
