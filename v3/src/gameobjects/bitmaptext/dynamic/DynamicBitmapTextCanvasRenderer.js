@@ -78,7 +78,6 @@ var DynamicBitmapTextCanvasRenderer = function (renderer, src, interpolationPerc
         ctx.beginPath();
         ctx.rect(0, 0, src.cropWidth, src.cropHeight);
         ctx.clip();
-        ctx.closePath();
     }
 
     for (var index = 0; index < textLength; ++index)

@@ -124,7 +124,6 @@ var GraphicsCanvasRenderer = function (renderer, src, interpolationPercentage, c
                 ctx.moveTo(commandBuffer[index + 1], commandBuffer[index + 2]);
                 ctx.lineTo(commandBuffer[index + 3], commandBuffer[index + 4]);
                 ctx.lineTo(commandBuffer[index + 5], commandBuffer[index + 6]);
-                ctx.lineTo(commandBuffer[index + 1], commandBuffer[index + 2]);
                 ctx.closePath();
                 ctx.fill();
                 index += 6;
@@ -135,7 +134,6 @@ var GraphicsCanvasRenderer = function (renderer, src, interpolationPercentage, c
                 ctx.moveTo(commandBuffer[index + 1], commandBuffer[index + 2]);
                 ctx.lineTo(commandBuffer[index + 3], commandBuffer[index + 4]);
                 ctx.lineTo(commandBuffer[index + 5], commandBuffer[index + 6]);
-                ctx.lineTo(commandBuffer[index + 1], commandBuffer[index + 2]);
                 ctx.closePath();
                 ctx.stroke();
                 index += 6;
