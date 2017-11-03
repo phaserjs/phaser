@@ -21,7 +21,7 @@ var Origin = {
         set: function (value)
         {
             this._displayOriginX = value;
-            this.originX = (value === 0) ? 0 : value / this.width;
+            this.originX = value / this.width;
         }
 
     },
@@ -36,7 +36,7 @@ var Origin = {
         set: function (value)
         {
             this._displayOriginY = value;
-            this.originY = (value === 0) ? 0 : value / this.height;
+            this.originY = value / this.height;
         }
 
     },
@@ -49,7 +49,7 @@ var Origin = {
         this.originX = x;
         this.originY = y;
 
-        return this.updateOrigin();
+        return this.updateDisplayOrigin();
     },
 
     setDisplayOrigin: function (x, y)
@@ -63,7 +63,7 @@ var Origin = {
         return this;
     },
 
-    updateOrigin: function ()
+    updateDisplayOrigin: function ()
     {
         this._displayOriginX = Math.round(this.originX * this.width);
         this._displayOriginY = Math.round(this.originY * this.height);
