@@ -1,9 +1,9 @@
-var GetValue = require('../../utils/object/GetValue');
+var GetFastValue = require('../../utils/object/GetFastValue');
 
 var SpriteSheet = function (texture, sourceIndex, x, y, width, height, config)
 {
-    var frameWidth = GetValue(config, 'frameWidth', null);
-    var frameHeight = GetValue(config, 'frameHeight', frameWidth);
+    var frameWidth = GetFastValue(config, 'frameWidth', null);
+    var frameHeight = GetFastValue(config, 'frameHeight', frameWidth);
 
     //  If missing we can't proceed
     if (frameWidth === null)
@@ -16,10 +16,10 @@ var SpriteSheet = function (texture, sourceIndex, x, y, width, height, config)
 
     texture.add('__BASE', sourceIndex, 0, 0, source.width, source.height);
 
-    var startFrame = GetValue(config, 'startFrame', 0);
-    var endFrame = GetValue(config, 'endFrame', -1);
-    var margin = GetValue(config, 'margin', 0);
-    var spacing = GetValue(config, 'spacing', 0);
+    var startFrame = GetFastValue(config, 'startFrame', 0);
+    var endFrame = GetFastValue(config, 'endFrame', -1);
+    var margin = GetFastValue(config, 'margin', 0);
+    var spacing = GetFastValue(config, 'spacing', 0);
 
     var row = Math.floor((width - margin) / (frameWidth + spacing));
     var column = Math.floor((height - margin) / (frameHeight + spacing));
