@@ -22,7 +22,7 @@ var SwapPosition = function (scene1, scene2)
     var index1 = (typeof scene1 === 'string') ? this.getActiveSceneIndexByKey(scene1) : this.getActiveSceneIndex(scene1);
     var index2 = (typeof scene2 === 'string') ? this.getActiveSceneIndexByKey(scene2) : this.getActiveSceneIndex(scene2);
 
-    if (index1 !== -1 && index2 !== -1)
+    if (index1 !== -1 && index2 !== -1 && index1 !== index2)
     {
         this.active[index1].index = index2;
         this.active[index2].index = index1;
