@@ -66,9 +66,9 @@ var Frame = new Class({
         this.height = height;
 
         //  The half sizes of this frame (to save in constant calculations in the renderer)
-        this.halfWidth = width * 0.5;
+        this.halfWidth = Math.floor(width * 0.5);
 
-        this.halfHeight = height * 0.5;
+        this.halfHeight = Math.floor(height * 0.5);
 
         /**
         * @property {number} width - The rendering width of this Frame, taking trim into account.
@@ -143,6 +143,17 @@ var Frame = new Class({
         this.updateUVs();
     },
 
+    setCut: function (x, y, width, height)
+    {
+        this.cutX = x;
+        this.cutY = y;
+
+        this.cutWidth = width;
+        this.cutHeight = height;
+
+        return this.updateUVs();
+    },
+
     /**
     * If the frame was trimmed when added to the Texture Atlas, this records the trim and source data.
     *
@@ -184,9 +195,7 @@ var Frame = new Class({
         this.centerX = Math.floor(destWidth / 2);
         this.centerY = Math.floor(destHeight / 2);
 
-        this.updateUVs();
-
-        return this;
+        return this.updateUVs();
     },
 
     /**
