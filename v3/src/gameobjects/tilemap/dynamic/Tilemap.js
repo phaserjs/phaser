@@ -31,18 +31,24 @@ var Tilemap = new Class({
         GameObject.call(this, scene, 'Tilemap');
 
         this.mapData = (mapData !== null) ? new Uint32Array(mapData) : new Uint32Array(mapWidth * mapHeight);
-        this.tileWidth = tileWidth;
-        this.tileHeight = tileHeight;
         this.mapWidth = mapWidth;
         this.mapHeight = mapHeight;
+
+        this.tileWidth = tileWidth;
+        this.tileHeight = tileHeight;
+
         this.tileArray = [];
         this.culledTiles = [];
         this.tileBorder = tileBorder;
+
         this.setTexture(texture, frame);
         this.setPosition(x, y);
         this.setSizeToFrame();
         this.setOrigin();
         this.setSize(tileWidth * mapWidth, tileHeight * mapHeight);
+
+        this.skipIndexZero = false;
+
         this.buildTilemap(!!scene.sys.game.renderer.gl);
     },
 
@@ -61,15 +67,19 @@ var Tilemap = new Class({
         var tileArray = this.tileArray;
         var mapData = this.mapData;
         var border = this.tileBorder;
+
         var tileWidth = this.tileWidth;
         var tileHeight = this.tileHeight;
         var tileWidthBorder = tileWidth + border * 2;
         var tileHeightBorder = tileHeight + border * 2;
+
         var width = this.texture.source[0].width;
         var height = this.texture.source[0].height;
+
         var mapWidth = this.mapWidth;
         var mapHeight = this.mapHeight;
         var setWidth = width / tileWidth;
+
         var tileWidthBorderHalf = tileWidthBorder * 0.5;
         var tileHeightBorderHalf = tileHeightBorder * 0.5;
 
@@ -157,7 +167,7 @@ var Tilemap = new Class({
     //      frameX
     //      frameY
     //      id
-    //      index = the tile in the tilset to render
+    //      index = the tile in the tileset to render
     //      textureWidth = tileset texture size
     //      textureHeight
     //      tint

@@ -12,9 +12,11 @@ var TilemapCanvasRenderer = function (renderer, gameObject, interpolationPercent
     var tiles = gameObject.culledTiles;
     var tileCount = tiles.length;
     var image = gameObject.frame.source.image;
-    var scrollFactorX = gameObject.scrollFactorX;
-    var scrollFactorY = gameObject.scrollFactorY;
-    var alpha = gameObject.alpha;
+
+    // var scrollFactorX = gameObject.scrollFactorX;
+    // var scrollFactorY = gameObject.scrollFactorY;
+    // var alpha = gameObject.alpha;
+
     var tx = gameObject.x - camera.scrollX * gameObject.scrollFactorX;
     var ty = gameObject.y - camera.scrollY * gameObject.scrollFactorY;
     var ctx = renderer.gameContext;
@@ -29,11 +31,16 @@ var TilemapCanvasRenderer = function (renderer, gameObject, interpolationPercent
     {
         var tile = tiles[index];
 
+        if (tile.id <= 0 && gameObject.skipIndexZero)
+        {
+            continue;
+        }
+
         ctx.drawImage(
-            image, 
-            tile.frameX, tile.frameY, 
-            tile.frameWidth, tile.frameHeight, 
-            tile.x, tile.y, 
+            image,
+            tile.frameX, tile.frameY,
+            tile.frameWidth, tile.frameHeight,
+            tile.x, tile.y,
             tile.frameWidth, tile.frameHeight
         );
     }

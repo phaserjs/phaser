@@ -18,7 +18,6 @@ var StaticTilemapCanvasRenderer = function (renderer, gameObject, interpolationP
     var image = frame.source.image;
     var tx = gameObject.x - camera.scrollX * gameObject.scrollFactorX;
     var ty = gameObject.y - camera.scrollY * gameObject.scrollFactorY;
-    var boundsX = camera.scrollX;
 
     ctx.save();
     ctx.translate(tx, ty);
@@ -29,6 +28,7 @@ var StaticTilemapCanvasRenderer = function (renderer, gameObject, interpolationP
     for (var index = 0; index < tileCount; ++index)
     {
         var tile = tiles[index];
+
         ctx.drawImage(image, tile.frameX, tile.frameY, tileWidth, tileHeight, tile.x, tile.y, tileWidth, tileHeight);
     }
 

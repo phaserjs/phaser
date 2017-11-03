@@ -1,8 +1,8 @@
 var Class = require('../../../utils/Class');
-var GameObject = require('../../GameObject');
 var Components = require('../../components');
-var StaticTilemapRender = require('./StaticTilemapRender');
 var CONST = require('../../../renderer/webgl/renderers/tilemaprenderer/const');
+var GameObject = require('../../GameObject');
+var StaticTilemapRender = require('./StaticTilemapRender');
 
 var StaticTilemap = new Class({
 
@@ -35,85 +35,112 @@ var StaticTilemap = new Class({
         this.tilemapRenderer = scene.sys.game.renderer.tilemapRenderer ? scene.sys.game.renderer.tilemapRenderer : null;
         this.resourceManager = this.gl ? scene.sys.game.renderer.resourceManager : null;
         this.bufferData = null;
+
         this.mapData = mapData;
-        this.tileWidth = tileWidth;
-        this.tileHeight = tileHeight;
         this.mapWidth = mapWidth;
         this.mapHeight = mapHeight;
+
+        this.tileWidth = tileWidth;
+        this.tileHeight = tileHeight;
+
         this.dirty = true;
         this.vertexCount = 0;
         this.cullStart = 0;
         this.cullEnd = 0;
+
         this.tileBorder = tileBorder;
+
         this.setTexture(texture, frame);
         this.setPosition(x, y);
         this.setSizeToFrame();
         this.setOrigin();
         this.setSize(tileWidth * mapWidth, tileHeight * mapHeight);
-        
-        var _this = this;
-        scene.sys.game.renderer.addContextRestoredCallback(function (renderer) {
-            _this.tileTexture = null;
-            _this.dirty = true;
-            _this.vbo = null;
-            _this.gl = renderer.gl;
-            _this.tilemapRenderer = renderer.tilemapRenderer;
-        });
+
+        this.skipIndexZero = false;
+
+        scene.sys.game.renderer.addContextRestoredCallback(this.contextRestore.bind(this));
     },
 
-    upload: function (camera) 
+    contextRestore: function (renderer)
     {
+        this.tileTexture = null;
+        this.dirty = true;
+        this.vbo = null;
+        this.gl = renderer.gl;
+        this.tilemapRenderer = renderer.tilemapRenderer;
+    },
+
+    upload: function (camera)
+    {
+        var mapWidth = this.mapWidth;
+        var mapHeight = this.mapHeight;
+        var border = this.tileBorder;
+        var tileWidth = this.tileWidth;
+        var tileHeight = this.tileHeight;
+        var tileWidthBorder = tileWidth + border * 2;
+        var tileHeightBorder = tileHeight + border * 2;
+        var width = this.texture.source[0].width;
+        var height = this.texture.source[0].height;
+        var setWidth = width / tileWidth;
+        var mapData = this.mapData;
+
+        var x;
+        var y;
+
         if (this.gl)
         {
             if (this.dirty)
             {
                 var gl = this.gl;
                 var vbo = this.vbo;
-                var mapWidth = this.mapWidth;
-                var mapHeight = this.mapHeight;
-                var border = this.tileBorder;
-                var tileWidth = this.tileWidth;
-                var tileHeight = this.tileHeight;
-                var tileWidthBorder = tileWidth + border * 2;
-                var tileHeightBorder = tileHeight + border * 2;
                 var bufferData = this.bufferData;
-                var bufferF32, bufferU32;
+                var bufferF32;
                 var voffset = 0;
                 var vertexCount = 0;
-                var width = this.texture.source[0].width;
-                var height = this.texture.source[0].height;
-                var setWidth = width / tileWidth;
-                var mapData = this.mapData;
 
                 if (this.vbo === null)
                 {
                     vbo = this.resourceManager.createBuffer(gl.ARRAY_BUFFER, (4 * 6 * (mapWidth * mapHeight)) * 4, gl.STATIC_DRAW);
+
                     vbo.addAttribute(this.tilemapRenderer.shader.getAttribLocation('a_position'), 2, gl.FLOAT, false, CONST.VERTEX_SIZE, 0);
                     vbo.addAttribute(this.tilemapRenderer.shader.getAttribLocation('a_tex_coord'), 2, gl.FLOAT, false, CONST.VERTEX_SIZE, 8);
+
                     bufferData = this.bufferData = new ArrayBuffer((4 * 6 * (mapWidth * mapHeight)) * 4);
+
                     this.vbo = vbo;
+
                     vbo.bind();
                 }
 
                 bufferF32 = new Float32Array(bufferData);
 
-                for (var y = 0; y < mapHeight; ++y)
+                for (y = 0; y < mapHeight; ++y)
                 {
-                    for (var x = 0; x < mapWidth; ++x)
+                    for (x = 0; x < mapWidth; ++x)
                     {
                         var tileId = mapData[y * mapWidth + x];
+
+                        if (tileId <= 0 && this.skipIndexZero)
+                        {
+                            continue;
+                        }
+
                         var halfTileWidth = (tileWidthBorder) * 0.5;
                         var halfTileHeight = (tileHeightBorder) * 0.5;
+
                         var rectx = (((tileId % setWidth)|0) * tileWidthBorder) + halfTileWidth;
                         var recty = (((tileId / setWidth)|0) * tileHeightBorder) + halfTileHeight;
+
                         var tx = x * tileWidth;
                         var ty = y * tileHeight;
                         var txw = tx + tileWidth;
                         var tyh = ty + tileHeight;
+
                         var u0 = (rectx - (halfTileWidth - 0.5)) / width;
                         var v0 = (recty - (halfTileHeight - 0.5)) / height;
                         var u1 = (rectx + (halfTileWidth - 0.5)) / width;
                         var v1 = (recty + (halfTileHeight - 0.5)) / height;
+
                         var tx0 = tx;
                         var ty0 = ty;
                         var tx1 = tx;
@@ -157,20 +184,26 @@ var StaticTilemap = new Class({
                         vertexCount += 6;
                     }
                 }
+
                 this.vertexCount = vertexCount;
+
                 vbo.updateResource(bufferData, 0);
 
                 this.dirty = false;
             }
-            this.tilemapRenderer.shader.setConstantFloat2(this.tilemapRenderer.scrollLocation, camera.scrollX, camera.scrollY);
-            this.tilemapRenderer.shader.setConstantFloat2(this.tilemapRenderer.scrollFactorLocation, this.scrollFactorX, this.scrollFactorY);
-            this.tilemapRenderer.shader.setConstantFloat2(this.tilemapRenderer.tilemapPositionLocation, this.x, this.y);
+
+            var renderer = this.tilemapRenderer;
+
+            renderer.shader.setConstantFloat2(renderer.scrollLocation, camera.scrollX, camera.scrollY);
+            renderer.shader.setConstantFloat2(renderer.scrollFactorLocation, this.scrollFactorX, this.scrollFactorY);
+            renderer.shader.setConstantFloat2(renderer.tilemapPositionLocation, this.x, this.y);
+
             var cmat = camera.matrix.matrix;
 
-            this.tilemapRenderer.shader.setConstantMatrix3x3(
-                this.tilemapRenderer.cameraTransformLocation,
+            renderer.shader.setConstantMatrix3x3(
+                renderer.cameraTransformLocation,
                 [
-                    cmat[0], cmat[1], 0.0, 
+                    cmat[0], cmat[1], 0.0,
                     cmat[2], cmat[3], 0.0,
                     cmat[4], cmat[5], 1.0
                 ]
@@ -178,33 +211,25 @@ var StaticTilemap = new Class({
         }
         else if (this.dirty && !this.gl)
         {
-            var mapWidth = this.mapWidth;
-            var mapHeight = this.mapHeight;
-            var border = this.tileBorder;
-            var tileWidth = this.tileWidth;
-            var tileHeight = this.tileHeight;
-            var tileWidthBorder = tileWidth + border * 2;
-            var tileHeightBorder = tileHeight + border * 2;
-            var width = this.texture.source[0].width;
-            var height = this.texture.source[0].height;
-            var setWidth = width / tileWidth;
-            var mapData = this.mapData;
-
             this.tiles = [];
 
-            for (var y = 0; y < mapHeight; ++y)
+            for (y = 0; y < mapHeight; ++y)
             {
-                for (var x = 0; x < mapWidth; ++x)
+                for (x = 0; x < mapWidth; ++x)
                 {
-                    var tileId = mapData[y * mapWidth + x];
-                    var frameX = (((tileId % setWidth)|0) * tileWidthBorder);
-                    var frameY = (((tileId / setWidth)|0) * tileHeightBorder);
-                    var tx = x * tileWidth;
-                    var ty = y * tileHeight;
+                    var id = mapData[y * mapWidth + x];
+
+                    if (id <= 0 && this.skipIndexZero)
+                    {
+                        continue;
+                    }
+
+                    var frameX = (((id % setWidth) | 0) * tileWidthBorder);
+                    var frameY = (((id / setWidth) | 0) * tileHeightBorder);
 
                     this.tiles.push({
-                        x: tx,
-                        y: ty,
+                        x: x * tileWidth,
+                        y: y * tileHeight,
                         frameX: frameX,
                         frameY: frameY
                     });
@@ -224,6 +249,7 @@ var StaticTilemap = new Class({
     getVisibleTileCount: function (camera)
     {
         this.cull(camera);
+
         return (this.cullEnd - this.cullStart) / 6;
     },
 
@@ -231,8 +257,10 @@ var StaticTilemap = new Class({
     {
         this.cullStart = 0;
         this.cullEnd = 0;
+
         var tileWidth = this.tileWidth;
         var tileHeight = this.tileHeight;
+
         var pixelX = this.x - (camera.scrollX * this.scrollFactorX);
         var pixelY = this.y - (camera.scrollY * this.scrollFactorY);
         var pixelWidth = this.mapWidth * tileWidth;
@@ -245,13 +273,15 @@ var StaticTilemap = new Class({
         {
             var interX = Math.max(pixelX, camera.x + -(tileWidth * 2));
             var interY = Math.max(pixelY, camera.y + -(tileHeight * 2));
+
             var interWidth = Math.min(pixelX + pixelWidth, camera.x + camera.width + (tileWidth * 2)) - interX;
             var interHeight = Math.min(pixelY + pixelHeight, camera.y + camera.height + (tileHeight * 2)) - interY;
 
-            interX = ((interX + (camera.scrollX * this.scrollFactorX)) / tileWidth)|0;
-            interY = ((interY + (camera.scrollY * this.scrollFactorY)) / tileHeight)|0;
-            interWidth = (interWidth / tileWidth)|0;
-            interHeight = (interHeight / tileHeight)|0;
+            interX = ((interX + (camera.scrollX * this.scrollFactorX)) / tileWidth) | 0;
+            interY = ((interY + (camera.scrollY * this.scrollFactorY)) / tileHeight) | 0;
+
+            interWidth = (interWidth / tileWidth) | 0;
+            interHeight = (interHeight / tileHeight) | 0;
 
             this.cullStart = (interY * this.mapWidth + interX) * 6;
             this.cullEnd = ((interY + interHeight) * this.mapWidth + interX) * 6;

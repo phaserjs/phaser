@@ -25,6 +25,12 @@ var TilemapWebGLRenderer = function (renderer, gameObject, interpolationPercenta
     for (var index = 0; index < length; ++index)
     {
         var tile = renderTiles[index];
+
+        if (tile.id <= 0 && gameObject.skipIndexZero)
+        {
+            continue;
+        }
+
         batch.addTileTextureRect(
             texture,
             x + tile.x, y + tile.y, tile.width, tile.height, alpha * tile.alpha, tile.tint,
