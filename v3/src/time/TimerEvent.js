@@ -141,7 +141,7 @@ var TimerEvent = new Class({
     {
         this.callback = undefined;
         this.callbackScope = undefined;
-        this.args.length = 0;
+        this.args = [];
     }
 
 });
