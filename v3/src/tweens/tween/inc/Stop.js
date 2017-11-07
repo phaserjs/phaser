@@ -6,8 +6,13 @@ var TWEEN_CONST = require('../const');
  * @method Phaser.Tweens.Tween#stop
  * @since 3.0.0
  */
-var Stop = function ()
+var Stop = function (resetTo)
 {
+    if (resetTo !== undefined)
+    {
+        this.seek(resetTo);
+    }
+
     this.state = TWEEN_CONST.PENDING_REMOVE;
 };
 
