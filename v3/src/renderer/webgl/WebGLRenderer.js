@@ -462,8 +462,18 @@ var WebGLRenderer = new Class({
                 this.setBlendMode(child.blendMode);
             }
 
+            if (child.mask)
+            {
+                child.mask.preRenderWebGL(this, child.mask, camera);
+            }
+
             // drawing child
             child.renderWebGL(this, child, interpolationPercentage, camera);
+
+            if (child.mask)
+            {
+                child.mask.postRenderWebGL(this);
+            }
 
             renderer = this.currentRenderer;
 
