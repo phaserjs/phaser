@@ -211,7 +211,7 @@ var Text = new Class({
             this.height = textSize.height;
         }
 
-        this.updateOrigin();
+        this.updateDisplayOrigin();
 
         var padding = this.padding;
 
