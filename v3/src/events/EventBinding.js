@@ -58,14 +58,16 @@ var EventBinding = new Class({
         return (this.get(callback));
     },
 
-    add: function (callback, priority, once)
+    //  Called by EventDispatcher.on and EventDispatcher.once
+    add: function (callback, priority, scope, once)
     {
+        //  EventListener
         var listener = this.get(callback);
 
         if (!listener)
         {
             //  The listener doesn't exist, so create one
-            listener = EventListener(this.type, callback, priority, once);
+            listener = EventListener(this.type, callback, scope, priority, once);
         }
         else
         {
@@ -148,6 +150,7 @@ var EventBinding = new Class({
 
         for (var i = 0; i < this.active.length; i++)
         {
+            //  EventListener
             listener = this.active[i];
 
             if (listener.state !== CONST.LISTENER_ACTIVE)
@@ -155,7 +158,8 @@ var EventBinding = new Class({
                 continue;
             }
 
-            listener.callback.call(this.dispatcher, event);
+            // listener.callback.call(this.dispatcher, event);
+            listener.callback.call(listener.scope, event);
 
             //  Has the callback changed the state of this binding?
             if (this.state !== CONST.DISPATCHER_DISPATCHING)

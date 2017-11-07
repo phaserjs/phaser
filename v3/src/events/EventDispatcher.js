@@ -31,29 +31,31 @@ var EventDispatcher = new Class({
         return this.bindings[type];
     },
 
-    on: function (type, listener, priority)
+    on: function (type, listener, priority, scope)
     {
         if (priority === undefined) { priority = 0; }
+        if (scope === undefined) { scope = this; }
 
         var binding = this.createBinding(type);
 
         if (binding)
         {
-            binding.add(listener, priority, false);
+            binding.add(listener, priority, scope, false);
         }
 
         return this;
     },
 
-    once: function (type, listener, priority)
+    once: function (type, listener, priority, scope)
     {
         if (priority === undefined) { priority = 0; }
+        if (scope === undefined) { scope = this; }
 
         var binding = this.createBinding(type);
 
         if (binding)
         {
-            binding.add(listener, priority, true);
+            binding.add(listener, priority, scope, true);
         }
 
         return this;
