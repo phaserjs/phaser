@@ -21,8 +21,8 @@ var SetHitAreaFromTexture = function (gameObjects, callback)
 
         if (frame)
         {
-            width = frame.width;
-            height = frame.height;
+            width = frame.realWidth;
+            height = frame.realHeight;
         }
         else if (gameObject.width)
         {
