@@ -475,7 +475,7 @@ var WebGLRenderer = new Class({
 
             if (child.mask)
             {
-                child.mask.postRenderWebGL(this);
+                child.mask.postRenderWebGL(this, child);
             }
 
             renderer = this.currentRenderer;

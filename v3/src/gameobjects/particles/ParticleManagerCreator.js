@@ -1,7 +1,7 @@
 var BuildGameObject = require('../BuildGameObject');
 var GameObjectCreator = require('../../scene/plugins/GameObjectCreator');
 var GetAdvancedValue = require('../../utils/object/GetAdvancedValue');
-var ParticleEmitter = require('./ParticleEmitter');
+var ParticleEmitterManager = require('./ParticleEmitterManager');
 
 //  When registering a factory function 'this' refers to the GameObjectCreator context.
 
@@ -9,10 +9,11 @@ GameObjectCreator.register('particles', function (config)
 {
     var key = GetAdvancedValue(config, 'key', null);
     var frame = GetAdvancedValue(config, 'frame', null);
+    var emitters = GetAdvancedValue(config, 'emitters', null);
 
-    var emitter = new ParticleEmitter(this.scene, 0, 0, key, frame);
+    var manager = new ParticleEmitterManager(this.scene, key, frame, emitters);
 
-    BuildGameObject(this.scene, emitter, config);
+    BuildGameObject(this.scene, manager, config);
 
-    return emitter;
+    return manager;
 });

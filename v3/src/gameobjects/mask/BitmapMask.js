@@ -1,7 +1,7 @@
 var Class = require('../../utils/Class');
 
 var BitmapMask = new Class({
-
+	
 	initialize: 
 
 	function BitmapMask(scene, renderable)
@@ -99,46 +99,45 @@ var BitmapMask = new Class({
 	preRenderWebGL: function (renderer, gameObject, camera)
 	{
 		var bitmapMask = this.bitmapMask;
+		var maskRenderTarget = this.maskRenderTarget;
+		var mainRenderTarget = this.mainRenderTarget;
 		
 		if (bitmapMask)
 		{
 			/* Clear render targets first */
 			var gl = renderer.gl;
 
-        	if (gl)
-        	{
-        	    gl.clearColor(0.0, 0.0, 0.0, 0.0);
-
-        	    gl.bindFramebuffer(gl.FRAMEBUFFER, this.maskRenderTarget.framebufferObject);
-        	    gl.clear(gl.COLOR_BUFFER_BIT);
-
-        	    gl.bindFramebuffer(gl.FRAMEBUFFER, this.mainRenderTarget.framebufferObject);
-        	    gl.clear(gl.COLOR_BUFFER_BIT);
-
-        	}
+			gl.clearColor(0.0, 0.0, 0.0, 0.0);
+			gl.bindFramebuffer(gl.FRAMEBUFFER, maskRenderTarget.framebufferObject);
+			gl.clear(gl.COLOR_BUFFER_BIT);
+			gl.bindFramebuffer(gl.FRAMEBUFFER, mainRenderTarget.framebufferObject);
+			gl.clear(gl.COLOR_BUFFER_BIT);
+			gl.bindFramebuffer(gl.FRAMEBUFFER, null);
 
 			// Inject mask render target & reset it after rendering.
-			bitmapMask.renderTarget = this.maskRenderTarget;
+			bitmapMask.renderTarget = maskRenderTarget;
 			bitmapMask.renderWebGL(renderer, bitmapMask, 0.0, camera);
+			renderer.currentRenderer.flush(null, maskRenderTarget);
 			bitmapMask.renderTarget = null;
 
 			// Inject main render target & reset it at post rendering.
 			gameObject.renderTarget = this.mainRenderTarget;
-        	
-        	// Cleanup GL state   
-        	gl.bindFramebuffer(gl.FRAMEBUFFER, null);
 		}
 
 	},
 
-	postRenderWebGL: function (renderer)
+	postRenderWebGL: function (renderer, gameObject)
 	{
 		var maskRenderer = renderer.maskRenderer;
-		// reset
+
+		// flush and reset
+		renderer.currentRenderer.flush(null, this.mainRenderTarget);
 		gameObject.renderTarget = null;
 
 		// Apply alpha masking using mask renderer		
-		maskRenderer.flush(null, null, this.mainTexture, this.maskTexture);
+		maskRenderer.draw(null, null, this.mainTexture, this.maskTexture);
 	}
 
 });
+
+module.exports = BitmapMask;

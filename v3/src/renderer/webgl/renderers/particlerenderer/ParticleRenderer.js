@@ -128,7 +128,7 @@ var ParticleRenderer = new Class({
         
         if (renderTarget)
         {
-            gl.bindFramebuffer(gl.FRAMEBUFFER, renderTarget);
+            gl.bindFramebuffer(gl.FRAMEBUFFER, renderTarget.framebufferObject);
         }
 
         this.bind(shader);

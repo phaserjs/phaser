@@ -87,7 +87,7 @@ var ShapeBatch = new Class({
 
     bind: function (shader)
     {
-        if (shader === undefined)
+        if (!shader)
         {
             this.shader.bind();
         }

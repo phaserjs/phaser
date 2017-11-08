@@ -1,5 +1,4 @@
 var Class = require('../../../../utils/Class');
-var CONST = require('./const');
 var DataBuffer16 = require('../../utils/DataBuffer16');
 var DataBuffer32 = require('../../utils/DataBuffer32');
 var PHASER_CONST = require('../../../../const');
@@ -46,21 +45,19 @@ var MaskRenderer = new Class({
         var shader = this.manager.resourceManager.createShader('MaskShader', MaskShader);
         var vertexBufferObject = this.manager.resourceManager.createBuffer(
             gl.ARRAY_BUFFER, new Float32Array([
-                -1.0, +1.0, 0.0, 0.0,
-                -1.0, -1.0, 0.0, 1.0,
-                +1.0, +1.0, 1.0, 0.0,
-                +1.0, +1.0, 1.0, 0.0,
-                -1.0, -1.0, 0.0, 1.0,
-                +1.0, -1.0, 1.0, 1.0
+                -1.0, +1.0,
+                -1.0, -1.0,
+                +1.0, +1.0,
+                +1.0, +1.0,
+                -1.0, -1.0,
+                +1.0, -1.0
             ]), 
             gl.STATIC_DRAW);
 
         this.shader = shader;
         this.vertexBufferObject = vertexBufferObject;
 
-        // Look into the possibility of just doing vec2 uv = gl_FragCoord.xy / u_resolution;
-        vertexBufferObject.addAttribute(shader.getAttribLocation('a_position'), 2, gl.FLOAT, false, CONST.VERTEX_SIZE, 0);
-        vertexBufferObject.addAttribute(shader.getAttribLocation('a_tex_coord'), 2, gl.FLOAT, false, CONST.VERTEX_SIZE, 8);
+        vertexBufferObject.addAttribute(shader.getAttribLocation('a_position'), 2, gl.FLOAT, false, 8, 0);
 
         this.resize(this.width, this.height, this.game.config.resolution);
     },
@@ -92,19 +89,25 @@ var MaskRenderer = new Class({
 
     flush: function (shader, renderTarget, mainTexture, maskTexture)
     {
+        // This is just a stub to make it work with WebGLRenderer flow
+    },
+
+    draw: function (shader, renderTarget, mainTexture, maskTexture)
+    {
         var gl = this.glContext;
         var manager = this.manager;
+        var program = this.shader.program;
 
-        if (renderTarget)
-        {
-            gl.bindFramebuffer(gl.FRAMEBUFFER, renderTarget);
-        }
+        manager.setRenderer(this, mainTexture, renderTarget);
+
+        manager.currentRenderer = this;
 
         this.shader.bind();
         this.vertexBufferObject.bind();
 
-        gl.uniform1i(gl.getUniformLocation(this.shader.program, 'u_main_sampler'), 0);
-        gl.uniform1i(gl.getUniformLocation(this.shader.program, 'u_mask_sampler'), 1);
+        gl.uniform2f(gl.getUniformLocation(program, 'u_resolution'), manager.width, manager.height);
+        gl.uniform1i(gl.getUniformLocation(program, 'u_main_sampler'), 0);
+        gl.uniform1i(gl.getUniformLocation(program, 'u_mask_sampler'), 1);
 
         manager.setTexture(mainTexture, 0);
         manager.setTexture(maskTexture, 1);
@@ -113,6 +116,7 @@ var MaskRenderer = new Class({
         
         if (renderTarget)
         {
+            // Cleanup GL State
             gl.bindFramebuffer(gl.FRAMEBUFFER, null);
         }
     },

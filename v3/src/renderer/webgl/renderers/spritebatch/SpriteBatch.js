@@ -118,7 +118,7 @@ var SpriteBatch = new Class({
 
     bind: function (shader)
     {
-        if (shader === undefined)
+        if (!shader)
         {
             this.shader.bind();
         }
@@ -143,7 +143,7 @@ var SpriteBatch = new Class({
         
         if (renderTarget)
         {
-            gl.bindFramebuffer(gl.FRAMEBUFFER, renderTarget);
+            gl.bindFramebuffer(gl.FRAMEBUFFER, renderTarget.framebufferObject);
         }
 
         this.bind(shader);
