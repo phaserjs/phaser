@@ -17,6 +17,8 @@ var TextFile = require('../../loader/filetypes/TextFile');
 var UnityAtlasFile = require('../../loader/filetypes/UnityAtlasFile');
 var XMLFile = require('../../loader/filetypes/XMLFile');
 var AudioFile = require('../../loader/filetypes/AudioFile');
+var TilemapCSVFile = require('../../loader/filetypes/TilemapCSVFile');
+var TilemapJSONFile = require('../../loader/filetypes/TilemapJSONFile');
 
 var Loader = new Class({
 
@@ -92,7 +94,17 @@ var Loader = new Class({
     //  config can include: instances
     audio: function (key, urls, config, xhrSettings)
     {
-        return AudioFile.create(this, key, urls, config, xhrSettings)
+        return AudioFile.create(this, key, urls, config, xhrSettings);
+    },
+
+    tilemapCSV: function (key, url, xhrSettings)
+    {
+        return TilemapCSVFile.create(this, key, url, xhrSettings);
+    },
+
+    tilemapJSON: function (key, url, xhrSettings)
+    {
+        return TilemapJSONFile.create(this, key, url, xhrSettings);
     },
 
     //  ---------------------------------------------------
