@@ -16,6 +16,7 @@ var SVGFile = require('../../loader/filetypes/SVGFile');
 var TextFile = require('../../loader/filetypes/TextFile');
 var UnityAtlasFile = require('../../loader/filetypes/UnityAtlasFile');
 var XMLFile = require('../../loader/filetypes/XMLFile');
+var AudioFile = require('../../loader/filetypes/AudioFile');
 
 var Loader = new Class({
 
@@ -86,6 +87,12 @@ var Loader = new Class({
     spritesheet: function (key, url, config, xhrSettings)
     {
         return SpriteSheet.create(this, key, url, config, xhrSettings);
+    },
+
+    //  config can include: instances
+    audio: function (key, urls, config, xhrSettings)
+    {
+        return AudioFile.create(this, key, urls, config, xhrSettings)
     },
 
     //  ---------------------------------------------------
@@ -220,7 +227,7 @@ var Loader = new Class({
 
         return entry;
     }
-    
+
 });
 
 module.exports = Loader;
