@@ -3,7 +3,8 @@ var GetValue = require('../../utils/object/GetValue');
 var Merge = require('../../utils/object/Merge');
 var NOOP = require('../../utils/NOOP');
 
-//  Physics Systems
+//  Physics Systems (TODO: Remove from here)
+var Arcade = require('../../physics/arcade/Arcade');
 var Impact = require('../../physics/impact/Impact');
 
 var PhysicsManager = new Class({
@@ -46,6 +47,10 @@ var PhysicsManager = new Class({
 
         switch (system)
         {
+            case 'arcade':
+                this.system = new Arcade(this, config);
+                break;
+
             case 'impact':
                 this.system = new Impact(this, config);
                 break;
@@ -55,6 +60,11 @@ var PhysicsManager = new Class({
     update: function (time, delta)
     {
         this.world.update(time, delta);
+    },
+
+    postUpdate: function ()
+    {
+        this.world.postUpdate();
     }
 
 });

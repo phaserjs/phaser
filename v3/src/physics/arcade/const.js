@@ -38,6 +38,12 @@ module.exports = {
     * @constant
     * @type {number}
     */
-    BOTTOM_TOP: 4
+    BOTTOM_TOP: 4,
+
+    FACING_NONE: 5,
+    FACING_UP: 6,
+    FACING_DOWN: 7,
+    FACING_LEFT: 8,
+    FACING_RIGHT: 9
 
 };
