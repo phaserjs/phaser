@@ -1,5 +1,5 @@
 var Class = require('../../utils/Class');
-var DataProxy = require('./components/DataProxy');
+var DataProxy = require('../components/DataProxy');
 var List = require('../../structs/List');
 
 var Container = new Class({
