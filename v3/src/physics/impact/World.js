@@ -208,6 +208,11 @@ var World = new Class({
         return this;
     },
 
+    postUpdate: function ()
+    {
+        //  NOOP
+    },
+
     update: function (time, delta)
     {
         if (!this.enabled || this.bodies.size === 0)
@@ -216,7 +221,10 @@ var World = new Class({
         }
 
         //  Impact uses a divided delta value that is clamped to the maxStep (20fps) maximum
-        this.delta = Math.min(delta / 1000, this.maxStep) * this.timeScale;
+
+        var clampedDelta = Math.min(delta / 1000, this.maxStep) * this.timeScale;
+
+        this.delta = clampedDelta;
 
         //  Update all active bodies
 
@@ -233,7 +241,7 @@ var World = new Class({
 
             if (body.enabled)
             {
-                body.update(this.delta);
+                body.update(clampedDelta);
             }
         }
 
