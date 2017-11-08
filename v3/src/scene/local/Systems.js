@@ -144,6 +144,8 @@ var Systems = new Class({
         this.inputManager.update(time, delta);
 
         this.scene.update.call(this.scene, time, delta);
+
+        this.physicsManager.postUpdate();
     },
 
     render: function (interpolation, renderer)
