@@ -23,7 +23,7 @@ var PhysicsManager = new Class({
         this.system;
 
         //  This gets set by the physics system during boot
-        this.world = { update: NOOP };
+        this.world = { update: NOOP, postUpdate: NOOP };
 
         //  This gets set by the physics system during boot
         this.add;
