@@ -1,7 +1,6 @@
 var Class = require('../../utils/Class');
-var Merge = require('../../utils/object/Merge');
-var World = require('./World');
 var Factory = require('./Factory');
+var World = require('./World');
 
 var Impact = new Class({
 
