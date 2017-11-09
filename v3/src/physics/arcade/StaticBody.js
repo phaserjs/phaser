@@ -17,8 +17,8 @@ var StaticBody = new Class({
 
         this.gameObject = gameObject;
 
-        this.debugShowBody = world.defaults.debugShowBody;
-        this.debugBodyColor = world.defaults.bodyDebugColor;
+        this.debugShowBody = world.defaults.debugShowStaticBody;
+        this.debugBodyColor = world.defaults.staticBodyDebugColor;
 
         this.enable = true;
 
@@ -88,12 +88,6 @@ var StaticBody = new Class({
 
         this.blocked = { none: true, up: false, down: false, left: false, right: false };
 
-        // this.tilePadding = new Vector2();
-        // this.dirty = false;
-        // this.isMoving = false;
-        // this.stopVelocityOnCollide = true;
-
-        //  read-only
         this.physicsType = CONST.STATIC_BODY;
 
         this._sx = gameObject.scaleX;
@@ -162,18 +156,25 @@ var StaticBody = new Class({
         return this;
     },
 
+    updateCenter: function ()
+    {
+        this.center.set(this.position.x + this.halfWidth, this.position.y + this.halfHeight);
+    },
+
     reset: function (x, y)
     {
-        this.world.staticTree.remove(this);
-
         var sprite = this.gameObject;
+
+        if (x === undefined) { x = sprite.x; }
+        if (y === undefined) { y = sprite.y; }
+
+        this.world.staticTree.remove(this);
 
         this.position.x = x - sprite.displayOriginX + (sprite.scaleX * this.offset.x);
         this.position.y = y - sprite.displayOriginY + (sprite.scaleY * this.offset.y);
 
         this.rotation = this.gameObject.angle;
 
-        this.updateBounds();
         this.updateCenter();
 
         this.world.staticTree.insert(this);
@@ -269,6 +270,9 @@ var StaticBody = new Class({
         set: function (value)
         {
             this.position.x = value;
+
+            this.world.staticTree.remove(this);
+            this.world.staticTree.insert(this);
         }
 
     },
@@ -283,6 +287,9 @@ var StaticBody = new Class({
         set: function (value)
         {
             this.position.y = value;
+
+            this.world.staticTree.remove(this);
+            this.world.staticTree.insert(this);
         }
 
     },
