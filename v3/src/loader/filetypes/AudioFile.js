@@ -7,12 +7,30 @@ var GetFastValue = require('../../utils/object/GetFastValue');
 
 var AudioFile = new Class({
 
-    Extends: File
+    Extends: File,
+
+    initialize:
+
+    function AudioFile (key, url, path, xhrSettings)
+    {
+        var fileConfig = {
+            type: 'audio',
+            extension: GetFastValue(url, 'type', ''),
+            responseType: 'arraybuffer',
+            key: key,
+            url: GetFastValue(url, 'uri', url),
+            path: path,
+            xhrSettings: xhrSettings
+        };
+
+        File.call(this, fileConfig);
+    }
 
 });
 
 AudioFile.create = function (loader, key, urls, config, xhrSettings)
 {
+    // TODO handle when sounds are disabled in game config
 
     var url = AudioFile.findAudioURL(urls);
 
@@ -24,18 +42,17 @@ AudioFile.create = function (loader, key, urls, config, xhrSettings)
 
     if (Audio.webAudio)
     {
-
+        loader.addFile(new AudioFile(key, url, loader.path, xhrSettings));
     }
     else if (Audio.audioData)
     {
-
+        // TODO handle loading audio tags
     }
     else
     {
         // TODO bail if sounds are disabled and print message
         return;
     }
-
 };
 
 // this.load.audio('sound', 'assets/audio/booom.ogg', config, xhrSettings);
@@ -97,13 +114,15 @@ AudioFile.findAudioURL = function (urls)
             return url;
         }
 
-        var audioType = url.match(/\.([a-zA-Z0-9]+)($|\?)/);
+        var type = url.match(/\.([a-zA-Z0-9]+)($|\?)/);
+        type = GetFastValue(urls[i], 'type', type ? type[1] : '').toLowerCase();
 
-        audioType = GetFastValue(urls[i], 'type', audioType ? audioType[1] : '').toLowerCase();
-
-        if (Audio[audioType])
+        if (Audio[type])
         {
-            return url;
+            return {
+                uri: url,
+                type: type
+            };
         }
     }
 
