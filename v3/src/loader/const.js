@@ -17,7 +17,10 @@ var FILE_CONST = {
     FILE_DESTROYED: 13,     // file has been destroyed
 
     TEXTURE_ATLAS_JSON_ARRAY: 20,
-    TEXTURE_ATLAS_JSON_HASH: 21
+    TEXTURE_ATLAS_JSON_HASH: 21,
+
+    TILEMAP_CSV: 30,
+    TILEMAP_JSON: 31
 
 };
 
