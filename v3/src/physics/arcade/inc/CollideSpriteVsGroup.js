@@ -1,3 +1,5 @@
+var CONST = require('../const');
+
 var CollideSpriteVsGroup = function (sprite, group, collideCallback, processCallback, callbackContext, overlapOnly)
 {
     if (group.length === 0)
@@ -16,9 +18,9 @@ var CollideSpriteVsGroup = function (sprite, group, collideCallback, processCall
     minMax.maxX = bodyA.right;
     minMax.maxY = bodyA.bottom;
 
-    var results = this.tree.search(minMax);
+    var results = (group.physicsType === CONST.DYNAMIC_BODY) ? this.tree.search(minMax) : this.staticTree.search(minMax);
 
-    if (results.length < 2)
+    if (results.length === 0)
     {
         return;
     }
