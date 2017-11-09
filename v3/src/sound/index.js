@@ -2,6 +2,8 @@
 
 module.exports = {
 
-    Dynamic: require('./dynamic')
+    Dynamic: require('./dynamic'),
+
+    SoundManager: require('./SoundManager')
 
 };
