@@ -1,9 +1,7 @@
-var Body = require('./Body');
+var ArcadeImage = require('./ArcadeImage');
+var ArcadeSprite = require('./ArcadeSprite');
 var Class = require('../../utils/Class');
-
-// var ImpactBody = require('./ImpactBody');
-// var ImpactImage = require('./ImpactImage');
-// var ImpactSprite = require('./ImpactSprite');
+var PhysicsGroup = require('./PhysicsGroup');
 
 var Factory = new Class({
 
@@ -13,18 +11,14 @@ var Factory = new Class({
     {
         this.world = world;
 
+        this.scene = world.scene;
+
         this.sys = world.scene.sys;
     },
 
-    body: function (gameObject)
-    {
-        return new Body(this.world, gameObject);
-    }
-
-    /*
     image: function (x, y, key, frame)
     {
-        var image = new ImpactImage(this.world, x, y, key, frame);
+        var image = new ArcadeImage(this.scene, x, y, key, frame);
 
         this.sys.displayList.add(image);
 
@@ -33,14 +27,18 @@ var Factory = new Class({
 
     sprite: function (x, y, key, frame)
     {
-        var sprite = new ImpactSprite(this.world, x, y, key, frame);
+        var sprite = new ArcadeSprite(this.scene, x, y, key, frame);
 
         this.sys.displayList.add(sprite);
         this.sys.updateList.add(sprite);
 
         return sprite;
+    },
+
+    group: function (children, config)
+    {
+        return new PhysicsGroup(this.world, this.world.scene, children, config);
     }
-    */
 
 });
 
