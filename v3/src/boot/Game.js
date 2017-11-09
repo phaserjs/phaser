@@ -17,6 +17,7 @@ var GlobalInputManager = require('../input/global/GlobalInputManager');
 var GlobalSceneManager = require('../scene/global/GlobalSceneManager');
 var TextureManager = require('../textures/TextureManager');
 var TimeStep = require('./TimeStep');
+var SoundManager = require('../sound/SoundManager');
 
 var Game = new Class({
 
@@ -29,7 +30,7 @@ var Game = new Class({
      * @memberOf Phaser
      * @constructor
      * @since 3.0.0
-     * 
+     *
      * @param {object} [GameConfig] - The configuration object for your Phaser Game instance.
      */
     function Game (config)
@@ -131,6 +132,13 @@ var Game = new Class({
          * @property {Phaser.Device} device
          */
         this.device = Device;
+
+        /**
+         * [description]
+         *
+         * @property {Phaser.SoundManager} sound
+         */
+        this.sound = SoundManager.create(this);
 
         /**
          * [description]
