@@ -3,8 +3,7 @@
 var CircleContains = require('../../geom/circle/Contains');
 var Class = require('../../utils/Class');
 var CONST = require('./const');
-// var DegToRad = require('../../math/DegToRad');
-// var RadToDeg = require('../../math/RadToDeg');
+var PhysicsEvent = require('./events');
 var Rectangle = require('../../geom/rectangle/Rectangle');
 var RectangleContains = require('../../geom/rectangle/Contains');
 var Vector2 = require('../../math/Vector2');
@@ -81,9 +80,10 @@ var Body = new Class({
 
         this.worldBounce = null;
 
-        // this.onWorldBounds = null;
-        // this.onCollide = null;
-        // this.onOverlap = null;
+        //  If true this Body will dispatch events
+        this.onWorldBounds = false;
+        this.onCollide = false;
+        this.onOverlap = false;
 
         this.maxVelocity = new Vector2(10000, 10000);
 
@@ -135,22 +135,14 @@ var Body = new Class({
 
         this.dirty = false;
 
-        this.skipQuadTree = false;
-
         this.syncBounds = false;
 
         this.isMoving = false;
 
         this.stopVelocityOnCollide = true;
 
-        // this.moveTimer = 0;
-        // this.moveDistance = 0;
-        // this.moveDuration = 0;
-        // this.moveTarget = null;
-        // this.moveEnd = null;
-        // this.onMoveComplete = new Phaser.Signal();
-        // this.movementCallback = null;
-        // this.movementCallbackContext = null;
+        //  read-only
+        this.physicsType = CONST.BODY;
 
         this._reset = true;
 
@@ -170,8 +162,6 @@ var Body = new Class({
         if (this.syncBounds)
         {
             var b = sprite.getBounds(this._bounds);
-
-            // b.ceilAll();
 
             if (b.width !== this.width || b.height !== this.height)
             {
@@ -244,12 +234,6 @@ var Body = new Class({
         this.position.x = sprite.x - sprite.displayOriginX + (sprite.scaleX * this.offset.x);
         this.position.y = sprite.y - sprite.displayOriginY + (sprite.scaleY * this.offset.y);
 
-        // this.position.x -= this.sprite.scale.x < 0 ? this.width : 0;
-        // this.position.y -= this.sprite.scale.y < 0 ? this.height : 0;
-
-        // this.position.x = sprite.x + (sprite.scaleX * this.offset.x);
-        // this.position.y = sprite.y + (sprite.scaleY * this.offset.y);
-
         this.updateCenter();
 
         this.rotation = sprite.angle;
@@ -285,12 +269,10 @@ var Body = new Class({
 
             if (this.collideWorldBounds)
             {
-                this.checkWorldBounds();
-
-                // if (this.checkWorldBounds() && this.onWorldBounds)
-                // {
-                    // this.onWorldBounds.dispatch(this.sprite, this.blocked.up, this.blocked.down, this.blocked.left, this.blocked.right);
-                // }
+                if (this.checkWorldBounds() && this.onWorldBounds)
+                {
+                    this.world.events.dispatch(new PhysicsEvent.WORLD_BOUNDS(this));
+                }
             }
         }
 
@@ -475,14 +457,8 @@ var Body = new Class({
 
         var sprite = this.gameObject;
 
-        this.position.x = x + (sprite.scaleX * this.offset.x);
-        this.position.y = y + (sprite.scaleY * this.offset.y);
-
-        // this.position.x = (x - (this.sprite.anchor.x * this.sprite.width)) + this.sprite.scale.x * this.offset.x;
-        // this.position.x -= this.sprite.scale.x < 0 ? this.width : 0;
-
-        // this.position.y = (y - (this.sprite.anchor.y * this.sprite.height)) + this.sprite.scale.y * this.offset.y;
-        // this.position.y -= this.sprite.scale.y < 0 ? this.height : 0;
+        this.position.x = x - sprite.displayOriginX + (sprite.scaleX * this.offset.x);
+        this.position.y = y - sprite.displayOriginY + (sprite.scaleY * this.offset.y);
 
         this.prev.x = this.position.x;
         this.prev.y = this.position.y;
@@ -589,6 +565,174 @@ var Body = new Class({
     willDrawDebug: function ()
     {
         return (this.debugShowBody || this.debugShowVelocity);
+    },
+
+    setCollideWorldBounds: function (value)
+    {
+        this.collideWorldBounds = value;
+
+        return this;
+    },
+
+    setVelocity: function (x, y)
+    {
+        this.velocity.set(x, y);
+
+        return this;
+    },
+
+    setVelocityX: function (value)
+    {
+        this.velocity.x = value;
+
+        return this;
+    },
+
+    setVelocityY: function (value)
+    {
+        this.velocity.y = value;
+
+        return this;
+    },
+
+    setBounce: function (x, y)
+    {
+        this.bounce.set(x, y);
+
+        return this;
+    },
+
+    setBounceX: function (value)
+    {
+        this.bounce.x = value;
+
+        return this;
+    },
+
+    setBounceY: function (value)
+    {
+        this.bounce.y = value;
+
+        return this;
+    },
+
+    setAcceleration: function (x, y)
+    {
+        this.acceleration.set(x, y);
+
+        return this;
+    },
+
+    setAccelerationX: function (value)
+    {
+        this.acceleration.x = value;
+
+        return this;
+    },
+
+    setAccelerationY: function (value)
+    {
+        this.acceleration.y = value;
+
+        return this;
+    },
+
+    setDrag: function (x, y)
+    {
+        this.drag.set(x, y);
+
+        return this;
+    },
+
+    setDragX: function (value)
+    {
+        this.drag.x = value;
+
+        return this;
+    },
+
+    setDragY: function (value)
+    {
+        this.drag.y = value;
+
+        return this;
+    },
+
+    setGravity: function (x, y)
+    {
+        this.gravity.set(x, y);
+
+        return this;
+    },
+
+    setGravityX: function (value)
+    {
+        this.gravity.x = value;
+
+        return this;
+    },
+
+    setGravityY: function (value)
+    {
+        this.gravity.y = value;
+
+        return this;
+    },
+
+    setFriction: function (x, y)
+    {
+        this.friction.set(x, y);
+
+        return this;
+    },
+
+    setFrictionX: function (value)
+    {
+        this.friction.x = value;
+
+        return this;
+    },
+
+    setFrictionY: function (value)
+    {
+        this.friction.y = value;
+
+        return this;
+    },
+
+    setAngularVelocity: function (value)
+    {
+        this.angularVelocity = value;
+
+        return this;
+    },
+
+    setAngularAcceleration: function (value)
+    {
+        this.angularAcceleration = value;
+
+        return this;
+    },
+
+    setAngularDrag: function (value)
+    {
+        this.angularDrag = value;
+
+        return this;
+    },
+
+    setMass: function (value)
+    {
+        this.mass = value;
+
+        return this;
+    },
+
+    setImmovable: function (value)
+    {
+        this.immovable = value;
+
+        return this;
     },
 
     x: {
