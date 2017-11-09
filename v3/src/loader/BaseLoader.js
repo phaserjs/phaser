@@ -6,11 +6,12 @@ var Event = require('./events/');
 // var EventDispatcher = require('../events/EventDispatcher');
 var Class = require('../utils/Class');
 var ParseXMLBitmapFont = require('../gameobjects/bitmaptext/ParseXMLBitmapFont');
+var TilemapFormats = require("../gameobjects/tilemap/Formats");
 
 //  Phaser.Loader.BaseLoader
 
 //  To finish the loader ...
-//  
+//
 //  3) Progress update
 
 var BaseLoader = new Class({
@@ -427,6 +428,14 @@ var BaseLoader = new Class({
 
                 case 'glsl':
                     cache.shader.add(file.key, file.data);
+                    break;
+
+                case 'tilemapCSV':
+                    cache.tilemap.add(file.key, { format: TilemapFormats.TILEMAP_CSV, data: file.data });
+                    break;
+
+                case 'tilemapJSON':
+                    cache.tilemap.add(file.key, { format: TilemapFormats.TILEMAP_TILED_JSON, data: file.data });
                     break;
             }
         });
