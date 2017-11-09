@@ -35,6 +35,10 @@ var Audio = {
 function init ()
 {
     Audio.audioData = !!(window['Audio']);
+
+    // TODO check if AudioContext is actually implemented
+    // sometimes browsers have a stub object for AudioContext
+    // which will falsely report Web Audio as available
     Audio.webAudio = !!(window['AudioContext'] || window['webkitAudioContext']);
 
     var audioElement = document.createElement('audio');
