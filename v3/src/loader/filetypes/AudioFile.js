@@ -11,7 +11,8 @@ var AudioFile = new Class({
 
 });
 
-AudioFile.create = function (loader, key, urls, config, xhrSettings) {
+AudioFile.create = function (loader, key, urls, config, xhrSettings)
+{
 
     var url = AudioFile.findAudioURL(urls);
 
@@ -84,7 +85,7 @@ AudioFile.findAudioURL = function (urls)
 {
     if (urls.constructor !== Array)
     {
-        urls = [urls];
+        urls = [ urls ];
     }
 
     for (var i = 0; i < urls.length; i++)
@@ -96,7 +97,7 @@ AudioFile.findAudioURL = function (urls)
             return url;
         }
 
-        var audioType = url.match(/\.([^\.?]+)($|\?)/);
+        var audioType = url.match(/\.([a-zA-Z0-9]+)($|\?)/);
 
         audioType = GetFastValue(urls[i], 'type', audioType ? audioType[1] : '').toLowerCase();
 
