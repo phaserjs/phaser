@@ -5,7 +5,6 @@ var Class = require('../../utils/Class');
 var CONST = require('./const');
 var GetFastValue = require('../../utils/object/GetFastValue');
 var Group = require('../../gameobjects/group/Group');
-var PhysicsEvent = require('./events');
 
 var PhysicsGroup = new Class({
 
@@ -31,6 +30,8 @@ var PhysicsGroup = new Class({
         config.removeCallback = this.removeCallback;
         config.classType = ArcadeSprite;
 
+        this.physicsType = CONST.DYNAMIC_BODY;
+
         this.defaults = {
             setCollideWorldBounds: GetFastValue(config, 'collideWorldBounds', false),
             setAccelerationX: GetFastValue(config, 'accelerationX', 0),
@@ -49,7 +50,7 @@ var PhysicsGroup = new Class({
             setAngularAcceleration: GetFastValue(config, 'angularAcceleration', 0),
             setAngularDrag: GetFastValue(config, 'angularDrag', 0),
             setMass: GetFastValue(config, 'mass', 1),
-            setImmovable: GetFastValue(config, 'immovable', false),
+            setImmovable: GetFastValue(config, 'immovable', false)
         };
 
         Group.call(this, scene, children, config);
@@ -59,7 +60,7 @@ var PhysicsGroup = new Class({
     {
         if (!child.body)
         {
-            this.world.enableBody(child);
+            this.world.enableBody(child, CONST.DYNAMIC_BODY);
         }
 
         var body = child.body;
