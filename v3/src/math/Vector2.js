@@ -54,6 +54,19 @@ var Vector2 = new Class({
         return this;
     },
 
+    // Sets the `x` and `y` values of this object from a given polar coordinate.
+    // @param {number} azimuth - The angular coordinate, in radians.
+    // @param {number} [radius=1] - The radial coordinate (length).
+    setToPolar: function (azimuth, radius)
+    {
+        if (radius == null) { radius = 1; }
+
+        this.x = Math.cos(azimuth) * radius;
+        this.y = Math.sin(azimuth) * radius;
+
+        return this;
+    },
+
     equals: function (v)
     {
         return ((this.x === v.x) && (this.y === v.y));
