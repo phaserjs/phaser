@@ -2,6 +2,7 @@ var Class = require('../../utils/Class');
 var File = require('../File');
 var Audio = require('../../device/Audio');
 var GetFastValue = require('../../utils/object/GetFastValue');
+var CONST = require('../../const');
 
 //  Phaser.Loader.FileTypes.AudioFile
 
@@ -11,8 +12,11 @@ var AudioFile = new Class({
 
     initialize:
 
-    function AudioFile (key, url, path, xhrSettings)
+    function AudioFile (key, url, path, xhrSettings, soundManager)
     {
+
+        this.sound = soundManager;
+
         var fileConfig = {
             type: 'audio',
             extension: GetFastValue(url, 'type', ''),
@@ -24,6 +28,18 @@ var AudioFile = new Class({
         };
 
         File.call(this, fileConfig);
+    },
+
+    onProcess: function (callback)
+    {
+        this.state = CONST.FILE_PROCESSING;
+
+        // TODO handle decoding
+        this.data = this.xhrLoader.response;
+
+        this.onComplete();
+
+        callback(this);
     }
 
 });
@@ -42,7 +58,7 @@ AudioFile.create = function (loader, key, urls, config, xhrSettings)
 
     if (Audio.webAudio)
     {
-        loader.addFile(new AudioFile(key, url, loader.path, xhrSettings));
+        loader.addFile(new AudioFile(key, url, loader.path, xhrSettings, loader.scene.game.sound));
     }
     else if (Audio.audioData)
     {
