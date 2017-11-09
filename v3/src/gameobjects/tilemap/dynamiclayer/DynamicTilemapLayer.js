@@ -1,10 +1,10 @@
 var Class = require('../../../utils/Class');
 var GameObject = require('../../GameObject');
 var Components = require('../../components');
-var TilemapRender = require('./TilemapRender');
+var DynamicTilemapLayerRender = require('./DynamicTilemapLayerRender');
 var Tile = require('./Tile');
 
-var Tilemap = new Class({
+var DynamicTilemapLayer = new Class({
 
     Extends: GameObject,
 
@@ -21,14 +21,14 @@ var Tilemap = new Class({
         Components.Transform,
         Components.Visible,
         Components.ScrollFactor,
-        TilemapRender
+        DynamicTilemapLayerRender
     ],
 
     initialize:
 
-    function Tilemap (scene, mapData, x, y, tileWidth, tileHeight, mapWidth, mapHeight, tileBorder, texture, frame)
+    function DynamicTilemapLayer (scene, mapData, x, y, tileWidth, tileHeight, mapWidth, mapHeight, tileBorder, texture, frame)
     {
-        GameObject.call(this, scene, 'Tilemap');
+        GameObject.call(this, scene, 'DynamicTilemapLayer');
 
         this.mapData = (mapData !== null) ? new Uint32Array(mapData) : new Uint32Array(mapWidth * mapHeight);
         this.mapWidth = mapWidth;
@@ -206,4 +206,4 @@ var Tilemap = new Class({
 
 });
 
-module.exports = Tilemap;
+module.exports = DynamicTilemapLayer;

@@ -1,6 +1,6 @@
 var GameObject = require('../../GameObject');
 
-var StaticTilemapWebGLRenderer = function (renderer, src, interpolationPercentage, camera)
+var StaticTilemapLayerWebGLRenderer = function (renderer, src, interpolationPercentage, camera)
 {
     if (GameObject.RENDER_MASK !== src.renderFlags || (src.cameraFilter > 0 && (src.cameraFilter & camera._id)))
     {
@@ -20,4 +20,4 @@ var StaticTilemapWebGLRenderer = function (renderer, src, interpolationPercentag
     gl.drawArrays(gl.TRIANGLES, 0, gameObject.vertexCount);
 };
 
-module.exports = StaticTilemapWebGLRenderer;
+module.exports = StaticTilemapLayerWebGLRenderer;

@@ -2,9 +2,9 @@ var Class = require('../../../utils/Class');
 var Components = require('../../components');
 var CONST = require('../../../renderer/webgl/renderers/tilemaprenderer/const');
 var GameObject = require('../../GameObject');
-var StaticTilemapRender = require('./StaticTilemapRender');
+var StaticTilemapLayerRender = require('./StaticTilemapLayerRender');
 
-var StaticTilemap = new Class({
+var StaticTilemapLayer = new Class({
 
     Extends: GameObject,
 
@@ -21,14 +21,14 @@ var StaticTilemap = new Class({
         Components.Transform,
         Components.Visible,
         Components.ScrollFactor,
-        StaticTilemapRender
+        StaticTilemapLayerRender
     ],
 
     initialize:
 
-    function StaticTilemap (scene, mapData, x, y, tileWidth, tileHeight, mapWidth, mapHeight, tileBorder, texture, frame)
+    function StaticTilemapLayer (scene, mapData, x, y, tileWidth, tileHeight, mapWidth, mapHeight, tileBorder, texture, frame)
     {
-        GameObject.call(this, scene, 'StaticTilemap');
+        GameObject.call(this, scene, 'StaticTilemapLayer');
 
         this.vbo = null;
         this.gl = scene.sys.game.renderer.gl ? scene.sys.game.renderer.gl : null;
@@ -179,7 +179,7 @@ var StaticTilemap = new Class({
                         bufferF32[voffset + 21] = ty3;
                         bufferF32[voffset + 22] = u1;
                         bufferF32[voffset + 23] = v0;
-                        
+
                         voffset += 24;
                         vertexCount += 6;
                     }
@@ -290,4 +290,4 @@ var StaticTilemap = new Class({
 
 });
 
-module.exports = StaticTilemap;
+module.exports = StaticTilemapLayer;

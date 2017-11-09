@@ -1,6 +1,6 @@
 var GameObject = require('../../GameObject');
 
-var StaticTilemapCanvasRenderer = function (renderer, gameObject, interpolationPercentage, camera)
+var StaticTilemapLayerCanvasRenderer = function (renderer, gameObject, interpolationPercentage, camera)
 {
     if (GameObject.RENDER_MASK !== gameObject.renderFlags || (gameObject.cameraFilter > 0 && (gameObject.cameraFilter & camera._id)))
     {
@@ -35,4 +35,4 @@ var StaticTilemapCanvasRenderer = function (renderer, gameObject, interpolationP
     ctx.restore();
 };
 
-module.exports = StaticTilemapCanvasRenderer;
+module.exports = StaticTilemapLayerCanvasRenderer;

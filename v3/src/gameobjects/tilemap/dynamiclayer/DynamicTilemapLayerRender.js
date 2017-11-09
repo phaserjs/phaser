@@ -3,12 +3,12 @@ var renderCanvas = require('../../../utils/NOOP');
 
 if (WEBGL_RENDERER)
 {
-    renderWebGL = require('./TilemapWebGLRenderer');
+    renderWebGL = require('./DynamicTilemapLayerWebGLRenderer');
 }
 
 if (CANVAS_RENDERER)
 {
-    renderCanvas = require('./TilemapCanvasRenderer');
+    renderCanvas = require('./DynamicTilemapLayerCanvasRenderer');
 }
 
 module.exports = {

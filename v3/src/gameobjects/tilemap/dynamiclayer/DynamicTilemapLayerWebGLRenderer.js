@@ -1,6 +1,6 @@
 var GameObject = require('../../GameObject');
 
-var TilemapWebGLRenderer = function (renderer, gameObject, interpolationPercentage, camera)
+var DynamicTilemapLayerWebGLRenderer = function (renderer, gameObject, interpolationPercentage, camera)
 {
     if (GameObject.RENDER_MASK !== gameObject.renderFlags || (gameObject.cameraFilter > 0 && (gameObject.cameraFilter & camera._id)))
     {
@@ -43,4 +43,4 @@ var TilemapWebGLRenderer = function (renderer, gameObject, interpolationPercenta
     }
 };
 
-module.exports = TilemapWebGLRenderer;
+module.exports = DynamicTilemapLayerWebGLRenderer;

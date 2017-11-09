@@ -1,6 +1,6 @@
 var GameObject = require('../../GameObject');
 
-var TilemapCanvasRenderer = function (renderer, gameObject, interpolationPercentage, camera)
+var DynamicTilemapLayerCanvasRenderer = function (renderer, gameObject, interpolationPercentage, camera)
 {
     if (GameObject.RENDER_MASK !== gameObject.renderFlags || (gameObject.cameraFilter > 0 && (gameObject.cameraFilter & camera._id)))
     {
@@ -48,4 +48,4 @@ var TilemapCanvasRenderer = function (renderer, gameObject, interpolationPercent
     ctx.restore();
 };
 
-module.exports = TilemapCanvasRenderer;
+module.exports = DynamicTilemapLayerCanvasRenderer;
