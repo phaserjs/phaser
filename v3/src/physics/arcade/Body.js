@@ -558,7 +558,7 @@ var Body = new Class({
             var y = pos.y + this.halfHeight;
 
             graphic.lineStyle(1, this.world.defaults.velocityDebugColor, 1);
-            graphic.lineBetween(x, y, x + this.velocity.x, y + this.velocity.y);
+            graphic.lineBetween(x, y, x + this.velocity.x / 2, y + this.velocity.y / 2);
         }
     },
 
