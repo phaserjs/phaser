@@ -2,10 +2,12 @@
 
 var Body = require('./Body');
 var Class = require('../../utils/Class');
+var CONST = require('./const');
 var GetValue = require('../../utils/object/GetValue');
 var Rectangle = require('../../geom/rectangle/Rectangle');
 var RTree = require('../../structs/RTree');
 var Set = require('../../structs/Set');
+var StaticBody = require('./StaticBody');
 var Vector2 = require('../../math/Vector2');
 
 var World = new Class({
@@ -18,7 +20,11 @@ var World = new Class({
 
         this.events = scene.sys.events;
 
+        //  Dynamic Bodies
         this.bodies = new Set();
+
+        //  Static Bodies
+        this.staticBodies = new Set();
 
         this.gravity = new Vector2(GetValue(config, 'gravity.x', 0), GetValue(config, 'gravity.y', 0));
 
@@ -58,6 +64,7 @@ var World = new Class({
         this.maxEntries = GetValue(config, 'maxEntries', 16);
 
         this.tree = new RTree(this.maxEntries, [ '.left', '.top', '.right', '.bottom' ]);
+        this.staticTree = new RTree(this.maxEntries, [ '.left', '.top', '.right', '.bottom' ]);
 
         this.treeMinMax = { minX: 0, minY: 0, maxX: 0, maxY: 0 };
 
@@ -67,8 +74,10 @@ var World = new Class({
         }
     },
 
-    enable: function (object)
+    enable: function (object, type)
     {
+        if (type === undefined) { type = CONST.DYNAMIC_BODY; }
+
         var i = 1;
 
         if (Array.isArray(object))
@@ -80,32 +89,43 @@ var World = new Class({
                 if (object[i].hasOwnProperty('children'))
                 {
                     //  If it's a Group then we do it on the children regardless
-                    this.enable(object[i].children.entries);
+                    this.enable(object[i].children.entries, type);
                 }
                 else
                 {
-                    this.enableBody(object[i]);
+                    this.enableBody(object[i], type);
                 }
             }
         }
         else if (object.hasOwnProperty('children'))
         {
             //  If it's a Group then we do it on the children regardless
-            this.enable(object.children.entries);
+            this.enable(object.children.entries, type);
         }
         else
         {
-            this.enableBody(object);
+            this.enableBody(object, type);
         }
     },
 
-    enableBody: function (object)
+    enableBody: function (object, type)
     {
         if (object.body === null)
         {
-            object.body = new Body(this, object);
+            if (type === CONST.DYNAMIC_BODY)
+            {
+                object.body = new Body(this, object);
 
-            this.bodies.set(object.body);
+                this.bodies.set(object.body);
+            }
+            else if (type === CONST.STATIC_BODY)
+            {
+                object.body = new StaticBody(this, object);
+
+                this.staticBodies.set(object.body);
+
+                this.staticTree.insert(object.body);
+            }
         }
 
         return object;
@@ -147,10 +167,17 @@ var World = new Class({
     {
         if (object.body)
         {
-            this.bodies.delete(object.body);
+            if (object.body.physicsType === CONST.DYNAMIC_BODY)
+            {
+                this.bodies.delete(object.body);
+            }
+            else if (object.body.physicsType === CONST.STATIC_BODY)
+            {
+                this.staticBodies.delete(object.body);
+                this.staticTree.remove(object.body);
+            }
 
             object.body.destroy();
-
             object.body = null;
         }
 
@@ -220,7 +247,7 @@ var World = new Class({
             }
         }
 
-        //  Populate our collision tree
+        //  Populate our dynamic collision tree
         this.tree.clear();
         this.tree.load(bodies);
     },
@@ -257,6 +284,19 @@ var World = new Class({
                     body.drawDebug(graphics);
                 }
             }
+
+            bodies = this.staticBodies.entries;
+            len = bodies.length;
+
+            for (i = 0; i < len; i++)
+            {
+                body = bodies[i];
+
+                if (body.willDrawDebug())
+                {
+                    body.drawDebug(graphics);
+                }
+            }
         }
     },
 
@@ -272,6 +312,16 @@ var World = new Class({
     collideHandler: require('./inc/CollideHandler'),
     collideSpriteVsSprite: require('./inc/CollideSpriteVsSprite'),
     collideSpriteVsGroup: require('./inc/CollideSpriteVsGroup'),
+
+    //  Utils
+    accelerateTo: require('./utils/AccelerateTo'),
+    accelerateToObject: require('./utils/AccelerateToObject'),
+    closest: require('./utils/Closest'),
+    furthest: require('./utils/Furthest'),
+    moveTo: require('./utils/MoveTo'),
+    moveToObject: require('./utils/MoveToObject'),
+    velocityFromAngle: require('./utils/VelocityFromAngle'),
+    velocityFromRotation: require('./utils/VelocityFromRotation'),
 
     //  TODO
     collideGroupVsGroup: function (group1, group2, collideCallback, processCallback, callbackContext, overlapOnly)
