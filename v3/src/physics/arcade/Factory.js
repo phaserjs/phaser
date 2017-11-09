@@ -18,6 +18,16 @@ var Factory = new Class({
         this.sys = world.scene.sys;
     },
 
+    collider: function (object1, object2, collideCallback, processCallback, callbackContext)
+    {
+        return this.world.addCollider(object1, object2, collideCallback, processCallback, callbackContext);
+    },
+
+    overlap: function (object1, object2, collideCallback, processCallback, callbackContext)
+    {
+        return this.world.addOverlap(object1, object2, collideCallback, processCallback, callbackContext);
+    },
+
     staticImage: function (x, y, key, frame)
     {
         var image = new ArcadeImage(this.scene, x, y, key, frame);

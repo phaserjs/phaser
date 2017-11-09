@@ -2,6 +2,7 @@
 
 var Body = require('./Body');
 var Class = require('../../utils/Class');
+var Collider = require('./Collider');
 var CONST = require('./const');
 var GetValue = require('../../utils/object/GetValue');
 var Rectangle = require('../../geom/rectangle/Rectangle');
@@ -25,6 +26,8 @@ var World = new Class({
 
         //  Static Bodies
         this.staticBodies = new Set();
+
+        this.colliders = [];
 
         this.gravity = new Vector2(GetValue(config, 'gravity.x', 0), GetValue(config, 'gravity.y', 0));
 
@@ -220,6 +223,32 @@ var World = new Class({
         return this;
     },
 
+    addCollider: function (object1, object2, collideCallback, processCallback, callbackContext)
+    {
+        if (collideCallback === undefined) { collideCallback = null; }
+        if (processCallback === undefined) { processCallback = null; }
+        if (callbackContext === undefined) { callbackContext = collideCallback; }
+
+        var collider = new Collider(this, false, object1, object2, collideCallback, processCallback, callbackContext);
+
+        this.colliders.push(collider);
+
+        return collider;
+    },
+
+    addOverlap: function (object1, object2, collideCallback, processCallback, callbackContext)
+    {
+        if (collideCallback === undefined) { collideCallback = null; }
+        if (processCallback === undefined) { processCallback = null; }
+        if (callbackContext === undefined) { callbackContext = collideCallback; }
+
+        var collider = new Collider(this, true, object1, object2, collideCallback, processCallback, callbackContext);
+
+        this.colliders.push(collider);
+
+        return collider;
+    },
+
     update: function (time, delta)
     {
         if (this.isPaused || this.bodies.size === 0)
@@ -252,6 +281,13 @@ var World = new Class({
         //  Populate our dynamic collision tree
         this.tree.clear();
         this.tree.load(bodies);
+
+        //  Process any colliders
+
+        for (i = 0; i < this.colliders.length; i++)
+        {
+            this.colliders[i].update();
+        }
     },
 
     postUpdate: function ()
