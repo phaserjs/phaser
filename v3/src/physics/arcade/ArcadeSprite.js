@@ -23,11 +23,11 @@ var ArcadeSprite = new Class({
     initialize:
 
     //  x/y is the center of the Sprite / Body, just like other default Game Objects
-    function ArcadeSprite (scene, x, y, texture, frame)
+    function ArcadeSprite (scene, bodyType, x, y, texture, frame)
     {
         Sprite.call(this, scene, x, y, texture, frame);
 
-        scene.sys.physicsManager.world.enableBody(this);
+        scene.sys.physicsManager.world.enableBody(this, bodyType);
     }
 
 });

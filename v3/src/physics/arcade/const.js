@@ -40,14 +40,15 @@ module.exports = {
     */
     BOTTOM_TOP: 4,
 
-    BODY: 5,
-    GROUP: 6,
-    TILEMAPLAYER: 7,
+    DYNAMIC_BODY: 5,
+    STATIC_BODY: 6,
+    GROUP: 7,
+    TILEMAPLAYER: 8,
 
-    FACING_NONE: 8,
-    FACING_UP: 9,
-    FACING_DOWN: 10,
-    FACING_LEFT: 11,
-    FACING_RIGHT: 12
+    FACING_NONE: 10,
+    FACING_UP: 11,
+    FACING_DOWN: 12,
+    FACING_LEFT: 13,
+    FACING_RIGHT: 14
 
 };

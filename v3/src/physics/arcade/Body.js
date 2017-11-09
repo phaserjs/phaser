@@ -142,7 +142,7 @@ var Body = new Class({
         this.stopVelocityOnCollide = true;
 
         //  read-only
-        this.physicsType = CONST.BODY;
+        this.physicsType = CONST.DYNAMIC_BODY;
 
         this._reset = true;
 

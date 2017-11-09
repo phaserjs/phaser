@@ -23,11 +23,11 @@ var ArcadeImage = new Class({
     initialize:
 
     //  x/y is the center of the Image / Body, just like other default Game Objects
-    function ArcadeImage (scene, x, y, texture, frame)
+    function ArcadeImage (scene, bodyType, x, y, texture, frame)
     {
         Image.call(this, scene, x, y, texture, frame);
 
-        scene.sys.physicsManager.world.enableBody(this);
+        scene.sys.physicsManager.world.enableBody(this, bodyType);
     }
 
 });
