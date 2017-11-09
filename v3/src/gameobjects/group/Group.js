@@ -9,13 +9,26 @@ var Group = new Class({
 
     initialize:
 
+    //  children can be either an array of children, or a config object
+    //  config can be either a config object, or undefined if passed as the children argument instead
     function Group (scene, children, config)
     {
+        if (config === undefined && !Array.isArray(children) && typeof children === 'object')
+        {
+            config = children;
+            children = null;
+        }
+
         this.scene = scene;
 
         this.children = new Set(children);
 
-        this.classType = Sprite;
+        this.isParent = true;
+
+        this.classType = GetValue(config, 'classType', Sprite);
+
+        this.createCallback = GetValue(config, 'createCallback', null);
+        this.removeCallback = GetValue(config, 'removeCallback', null);
 
         if (config)
         {
@@ -43,6 +56,11 @@ var Group = new Class({
     {
         this.children.set(child);
 
+        if (this.createCallback)
+        {
+            this.createCallback.call(this, child);
+        }
+
         return this;
     },
 
@@ -52,7 +70,7 @@ var Group = new Class({
         {
             for (var i = 0; i < children.length; i++)
             {
-                this.children.set(children[i]);
+                this.add(children[i]);
             }
         }
 
@@ -74,7 +92,7 @@ var Group = new Class({
 
         child.visible = visible;
 
-        this.children.set(child);
+        this.add(child);
 
         return child;
     },
@@ -115,6 +133,8 @@ var Group = new Class({
         var yoyo = GetValue(options, 'yoyo', false);
         var quantity = GetValue(options, 'frameQuantity', 1);
         var max = GetValue(options, 'max', 0);
+
+        //  If a grid is set we use that to override the quantity?
 
         var range = Range(key, frame, {
             max: max,
@@ -205,6 +225,11 @@ var Group = new Class({
         this.children.clear();
 
         return this;
+    },
+
+    contains: function (child)
+    {
+        return this.children.contains(child);
     },
 
     getChildren: function ()
