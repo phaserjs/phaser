@@ -10,6 +10,8 @@ var Collider = new Class({
     {
         this.world = world;
 
+        this.active = true;
+
         this.overlapOnly = overlapOnly;
 
         this.object1 = object1;
@@ -30,6 +32,20 @@ var Collider = new Class({
             this.callbackContext,
             this.overlapOnly
         );
+    },
+
+    destroy: function ()
+    {
+        this.world.removeCollider(this);
+
+        this.world = null;
+
+        this.object1 = null;
+        this.object2 = null;
+
+        this.collideCallback = null;
+        this.processCallback = null;
+        this.callbackContext = null;
     }
 
 });

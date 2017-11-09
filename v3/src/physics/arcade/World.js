@@ -249,6 +249,11 @@ var World = new Class({
         return collider;
     },
 
+    removeCollider: function (collider)
+    {
+        //  TODO
+    },
+
     update: function (time, delta)
     {
         if (this.isPaused || this.bodies.size === 0)
@@ -286,7 +291,12 @@ var World = new Class({
 
         for (i = 0; i < this.colliders.length; i++)
         {
-            this.colliders[i].update();
+            var collider = this.colliders[i];
+
+            if (collider.active)
+            {
+                collider.update();
+            }
         }
     },
 
