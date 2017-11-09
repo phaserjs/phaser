@@ -1,14 +1,16 @@
 //  Phaser.Physics.Arcade.World
 
 var Body = require('./Body');
-var Class = require('../../utils/Class');
-var Rectangle = require('../../geom/rectangle/Rectangle');
-var Vector2 = require('../../math/Vector2');
-var DistanceBetween = require('../../math/distance/DistanceBetween');
 var Clamp = require('../../math/Clamp');
+var Class = require('../../utils/Class');
 var CONST = require('./const');
+var DistanceBetween = require('../../math/distance/DistanceBetween');
 var GetValue = require('../../utils/object/GetValue');
+var PhysicsEvent = require('./events');
+var Rectangle = require('../../geom/rectangle/Rectangle');
+var RTree = require('../../structs/RTree');
 var Set = require('../../structs/Set');
+var Vector2 = require('../../math/Vector2');
 
 var World = new Class({
 
@@ -38,28 +40,17 @@ var World = new Class({
             right: GetValue(config, 'checkCollision.right', true)
         };
 
-        this.maxObjects = GetValue(config, 'maxObjects', 10);
-
-        this.maxLevels = GetValue(config, 'maxLevels',40);
-
         this.OVERLAP_BIAS = GetValue(config, 'overlapBias', 4);
 
         this.forceX = GetValue(config, 'forceX', false);
 
-        this.sortDirection = CONST.LEFT_RIGHT;
-
-        this.skipQuadTree = GetValue(config, 'skipQuadTree', true);
-
         this.isPaused = GetValue(config, 'isPaused', false);
-
-        // this.quadTree = new Phaser.QuadTree(this.game.world.bounds.x, this.game.world.bounds.y, this.game.world.bounds.width, this.game.world.bounds.height, this.maxObjects, this.maxLevels);
 
         this._total = 0;
 
         this.drawDebug = GetValue(config, 'debug', false);
-        this.debugGraphic;
 
-        // this.setBoundsToWorld();
+        this.debugGraphic;
 
         this.defaults = {
             debugShowBody: GetValue(config, 'debugShowBody', true),
@@ -67,6 +58,12 @@ var World = new Class({
             bodyDebugColor: GetValue(config, 'debugBodyColor', 0xff00ff),
             velocityDebugColor: GetValue(config, 'debugVelocityColor', 0x00ff00)
         };
+
+        this.maxEntries = GetValue(config, 'maxEntries', 16);
+
+        this.tree = new RTree(this.maxEntries, ['.left', '.top', '.right', '.bottom']);
+
+        this.treeMinMax = { minX: 0, minY: 0, maxX: 0, maxY: 0 };
 
         if (this.drawDebug)
         {
@@ -136,6 +133,10 @@ var World = new Class({
                 body.update(delta);
             }
         }
+
+        //  Populate our collision tree
+        this.tree.clear();
+        this.tree.load(bodies);
     },
 
     postUpdate: function ()
@@ -236,9 +237,9 @@ var World = new Class({
 
     overlap: function (object1, object2, overlapCallback, processCallback, callbackContext)
     {
-        overlapCallback = overlapCallback || null;
-        processCallback = processCallback || null;
-        callbackContext = callbackContext || overlapCallback;
+        if (overlapCallback === undefined) { overlapCallback = null; }
+        if (processCallback === undefined) { processCallback = null; }
+        if (callbackContext === undefined) { callbackContext = overlapCallback; }
 
         this._total = 0;
 
@@ -249,9 +250,9 @@ var World = new Class({
 
     collide: function (object1, object2, collideCallback, processCallback, callbackContext)
     {
-        collideCallback = collideCallback || null;
-        processCallback = processCallback || null;
-        callbackContext = callbackContext || collideCallback;
+        if (collideCallback === undefined) { collideCallback = null; }
+        if (processCallback === undefined) { processCallback = null; }
+        if (callbackContext === undefined) { callbackContext = collideCallback; }
 
         this._total = 0;
 
@@ -259,81 +260,6 @@ var World = new Class({
 
         return (this._total > 0);
     },
-
-    sortLeftRight: function (a, b)
-    {
-        if (!a.body || !b.body)
-        {
-            return 0;
-        }
-
-        return a.body.x - b.body.x;
-    },
-
-    sortRightLeft: function (a, b)
-    {
-        if (!a.body || !b.body)
-        {
-            return 0;
-        }
-
-        return b.body.x - a.body.x;
-    },
-
-    sortTopBottom: function (a, b)
-    {
-        if (!a.body || !b.body)
-        {
-            return 0;
-        }
-
-        return a.body.y - b.body.y;
-    },
-
-    sortBottomTop: function (a, b)
-    {
-        if (!a.body || !b.body)
-        {
-            return 0;
-        }
-
-        return b.body.y - a.body.y;
-    },
-
-    /*
-    sort: function (group, sortDirection)
-    {
-        if (group.physicsSortDirection !== null)
-        {
-            sortDirection = group.physicsSortDirection;
-        }
-        else
-        {
-            if (sortDirection === undefined) { sortDirection = this.sortDirection; }
-        }
-
-        if (sortDirection === Phaser.Physics.Arcade.LEFT_RIGHT)
-        {
-            //  Game world is say 2000x600 and you start at 0
-            group.hash.sort(this.sortLeftRight);
-        }
-        else if (sortDirection === Phaser.Physics.Arcade.RIGHT_LEFT)
-        {
-            //  Game world is say 2000x600 and you start at 2000
-            group.hash.sort(this.sortRightLeft);
-        }
-        else if (sortDirection === Phaser.Physics.Arcade.TOP_BOTTOM)
-        {
-            //  Game world is say 800x2000 and you start at 0
-            group.hash.sort(this.sortTopBottom);
-        }
-        else if (sortDirection === Phaser.Physics.Arcade.BOTTOM_TOP)
-        {
-            //  Game world is say 800x2000 and you start at 2000
-            group.hash.sort(this.sortBottomTop);
-        }
-    },
-    */
 
     collideObjects: function (object1, object2, collideCallback, processCallback, callbackContext, overlapOnly)
     {
@@ -380,20 +306,61 @@ var World = new Class({
     collideHandler: function (object1, object2, collideCallback, processCallback, callbackContext, overlapOnly)
     {
         //  Only collide valid objects
-        // if (object2 === undefined && object1.physicsType === Phaser.GROUP)
-        // {
-        //     this.sort(object1);
-        //     this.collideGroupVsSelf(object1, collideCallback, processCallback, callbackContext, overlapOnly);
-        //     return;
-        // }
+        if (object2 === undefined && object1.isParent)
+        {
+            return this.collideGroupVsSelf(object1, collideCallback, processCallback, callbackContext, overlapOnly);
+        }
 
-        //  If neither of the objects are set or exist then bail out
-        if (!object1 || !object2 || !object1.enable || !object2.enable)
+        //  If neither of the objects are set then bail out
+        if (!object1 || !object2)
         {
             return;
         }
 
-        this.collideSpriteVsSprite(object1, object2, collideCallback, processCallback, callbackContext, overlapOnly);
+        //  A Body
+        if (object1.body)
+        {
+            if (object2.body)
+            {
+                this.collideSpriteVsSprite(object1, object2, collideCallback, processCallback, callbackContext, overlapOnly);
+            }
+            else if (object2.isParent)
+            {
+                this.collideSpriteVsGroup(object1, object2, collideCallback, processCallback, callbackContext, overlapOnly);
+            }
+            else if (object2.isTilemap)
+            {
+                this.collideSpriteVsTilemapLayer(object1, object2, collideCallback, processCallback, callbackContext, overlapOnly);
+            }
+        }
+        //  GROUPS
+        else if (object.isParent)
+        {
+            if (object2.body)
+            {
+                this.collideSpriteVsGroup(object2, object1, collideCallback, processCallback, callbackContext, overlapOnly);
+            }
+            else if (object2.isParent)
+            {
+                this.collideGroupVsGroup(object1, object2, collideCallback, processCallback, callbackContext, overlapOnly);
+            }
+            else if (object2.isTilemap)
+            {
+                this.collideGroupVsTilemapLayer(object1, object2, collideCallback, processCallback, callbackContext, overlapOnly);
+            }
+        }
+        //  TILEMAP LAYERS
+        else if (object1.isTilemap)
+        {
+            if (object2.body)
+            {
+                this.collideSpriteVsTilemapLayer(object2, object1, collideCallback, processCallback, callbackContext, overlapOnly);
+            }
+            else if (object2.isParent)
+            {
+                this.collideGroupVsTilemapLayer(object2, object1, collideCallback, processCallback, callbackContext, overlapOnly);
+            }
+        }
     },
 
     collideSpriteVsSprite: function (sprite1, sprite2, collideCallback, processCallback, callbackContext, overlapOnly)
@@ -414,6 +381,62 @@ var World = new Class({
         }
 
         return true;
+    },
+
+    collideGroupVsGroup: function (group1, group2, collideCallback, processCallback, callbackContext, overlapOnly)
+    {
+        if (group1.length === 0 || group2.length === 0)
+        {
+            return;
+        }
+    },
+
+    collideSpriteVsGroup: function (sprite, group, collideCallback, processCallback, callbackContext, overlapOnly)
+    {
+        if (group.length === 0)
+        {
+            return;
+        }
+
+        var bodyA = sprite.body;
+
+        //  Does sprite collide with anything?
+
+        var minMax = this.treeMinMax;
+
+        minMax.minX = bodyA.left;
+        minMax.minY = bodyA.top;
+        minMax.maxX = bodyA.right;
+        minMax.maxY = bodyA.bottom;
+
+        var results = this.tree.search(minMax);
+
+        if (results.length < 2)
+        {
+            return;
+        }
+
+        var children = group.getChildren();
+
+        for (var i = 0; i < children.length; i++)
+        {
+            var bodyB = children[i].body;
+
+            if (!bodyB || bodyA === bodyB || results.indexOf(bodyB) === -1)
+            {
+                continue;
+            }
+
+            if (this.separate(bodyA, bodyB, processCallback, callbackContext, overlapOnly))
+            {
+                if (collideCallback)
+                {
+                    collideCallback.call(callbackContext, bodyA.gameObject, bodyB.gameObject);
+                }
+
+                this._total++;
+            }
+        }
     },
 
     separate: function (body1, body2, processCallback, callbackContext, overlapOnly)
@@ -496,29 +519,13 @@ var World = new Class({
 
         if (result)
         {
-            if (overlapOnly)
+            if (overlapOnly && (body1.onOverlap || body2.onOverlap))
             {
-                if (body1.onOverlap)
-                {
-                    body1.onOverlap.dispatch(body1.sprite, body2.sprite);
-                }
-
-                if (body2.onOverlap)
-                {
-                    body2.onOverlap.dispatch(body2.sprite, body1.sprite);
-                }
+                this.events.dispatch(new PhysicsEvent.OVERLAP(body1.gameObject, body2.gameObject));
             }
-            else
+            else if (body1.onCollide || body2.onCollide)
             {
-                if (body1.onCollide)
-                {
-                    body1.onCollide.dispatch(body1.sprite, body2.sprite);
-                }
-
-                if (body2.onCollide)
-                {
-                    body2.onCollide.dispatch(body2.sprite, body1.sprite);
-                }
+                this.events.dispatch(new PhysicsEvent.COLLIDE(body1.gameObject, body2.gameObject));
             }
         }
 
@@ -649,17 +656,9 @@ var World = new Class({
         //  Can't separate two immovable bodies, or a body with its own custom separation logic
         if (overlapOnly || overlap === 0 || (body1.immovable && body2.immovable) || body1.customSeparateX || body2.customSeparateX)
         {
-            if (overlap !== 0)
+            if (overlap !== 0 && (body1.onOverlap || body2.onOverlap))
             {
-                if (body1.onOverlap)
-                {
-                    body1.onOverlap.dispatch(body1.sprite, body2.sprite);
-                }
-
-                if (body2.onOverlap)
-                {
-                    body2.onOverlap.dispatch(body2.sprite, body1.sprite);
-                }
+                this.events.dispatch(new PhysicsEvent.OVERLAP(body1.gameObject, body2.gameObject));
             }
 
             //  return true if there was some overlap, otherwise false
@@ -668,31 +667,48 @@ var World = new Class({
 
         // Transform the velocity vector to the coordinate system oriented along the direction of impact.
         // This is done to eliminate the vertical component of the velocity
+
+        var b1vx = body1.velocity.x;
+        var b1vy = body1.velocity.y;
+        var b1mass = body1.mass;
+
+        var b2vx = body2.velocity.x;
+        var b2vy = body2.velocity.y;
+        var b2mass = body2.mass;
+
         var v1 = {
-            x: body1.velocity.x * Math.cos(angleCollision) + body1.velocity.y * Math.sin(angleCollision),
-            y: body1.velocity.x * Math.sin(angleCollision) - body1.velocity.y * Math.cos(angleCollision)
+            x: b1vx * Math.cos(angleCollision) + b1vy * Math.sin(angleCollision),
+            y: b1vx * Math.sin(angleCollision) - b1vy * Math.cos(angleCollision)
         };
 
         var v2 = {
-            x: body2.velocity.x * Math.cos(angleCollision) + body2.velocity.y * Math.sin(angleCollision),
-            y: body2.velocity.x * Math.sin(angleCollision) - body2.velocity.y * Math.cos(angleCollision)
+            x: b2vx * Math.cos(angleCollision) + b2vy * Math.sin(angleCollision),
+            y: b2vx * Math.sin(angleCollision) - b2vy * Math.cos(angleCollision)
         };
 
         // We expect the new velocity after impact
-        var tempVel1 = ((body1.mass - body2.mass) * v1.x + 2 * body2.mass * v2.x) / (body1.mass + body2.mass);
-        var tempVel2 = (2 * body1.mass * v1.x + (body2.mass - body1.mass) * v2.x) / (body1.mass + body2.mass);
+        var tempVel1 = ((b1mass - b2mass) * v1.x + 2 * b2mass * v2.x) / (b1mass + b2mass);
+        var tempVel2 = (2 * b1mass * v1.x + (b2mass - b1mass) * v2.x) / (b1mass + b2mass);
 
         // We convert the vector to the original coordinate system and multiplied by factor of rebound
         if (!body1.immovable)
         {
             body1.velocity.x = (tempVel1 * Math.cos(angleCollision) - v1.y * Math.sin(angleCollision)) * body1.bounce.x;
             body1.velocity.y = (v1.y * Math.cos(angleCollision) + tempVel1 * Math.sin(angleCollision)) * body1.bounce.y;
+
+            //  Reset local var
+            b1vx = body1.velocity.x;
+            b1vy = body1.velocity.y;
         }
 
         if (!body2.immovable)
         {
             body2.velocity.x = (tempVel2 * Math.cos(angleCollision) - v2.y * Math.sin(angleCollision)) * body2.bounce.x;
             body2.velocity.y = (v2.y * Math.cos(angleCollision) + tempVel2 * Math.sin(angleCollision)) * body2.bounce.y;
+
+            //  Reset local var
+            b2vx = body2.velocity.x;
+            b2vy = body2.velocity.y;
         }
 
         // When the collision angle is almost perpendicular to the total initial velocity vector
@@ -701,38 +717,38 @@ var World = new Class({
 
         if (Math.abs(angleCollision) < Math.PI / 2)
         {
-            if ((body1.velocity.x > 0) && !body1.immovable && (body2.velocity.x > body1.velocity.x))
+            if ((b1vx > 0) && !body1.immovable && (b2vx > b1vx))
             {
                 body1.velocity.x *= -1;
             }
-            else if ((body2.velocity.x < 0) && !body2.immovable && (body1.velocity.x < body2.velocity.x))
+            else if ((b2vx < 0) && !body2.immovable && (b1vx < b2vx))
             {
                 body2.velocity.x *= -1;
             }
-            else if ((body1.velocity.y > 0) && !body1.immovable && (body2.velocity.y > body1.velocity.y))
+            else if ((b1vy > 0) && !body1.immovable && (b2vy > b1vy))
             {
                 body1.velocity.y *= -1;
             }
-            else if ((body2.velocity.y < 0) && !body2.immovable && (body1.velocity.y < body2.velocity.y))
+            else if ((b2vy < 0) && !body2.immovable && (b1vy < b2vy))
             {
                 body2.velocity.y *= -1;
             }
         }
         else if (Math.abs(angleCollision) > Math.PI / 2)
         {
-            if ((body1.velocity.x < 0) && !body1.immovable && (body2.velocity.x < body1.velocity.x))
+            if ((b1vx < 0) && !body1.immovable && (b2vx < b1vx))
             {
                 body1.velocity.x *= -1;
             }
-            else if ((body2.velocity.x > 0) && !body2.immovable && (body1.velocity.x > body2.velocity.x))
+            else if ((b2vx > 0) && !body2.immovable && (b1vx > b2vx))
             {
                 body2.velocity.x *= -1;
             }
-            else if ((body1.velocity.y < 0) && !body1.immovable && (body2.velocity.y < body1.velocity.y))
+            else if ((b1vy < 0) && !body1.immovable && (b2vy < b1vy))
             {
                 body1.velocity.y *= -1;
             }
-            else if ((body2.velocity.y > 0) && !body2.immovable && (body1.velocity.x > body2.velocity.y))
+            else if ((b2vy > 0) && !body2.immovable && (b1vx > b2vy))
             {
                 body2.velocity.y *= -1;
             }
@@ -740,24 +756,19 @@ var World = new Class({
 
         if (!body1.immovable)
         {
-            body1.x += (body1.velocity.x * this.game.time.physicsElapsed) - overlap * Math.cos(angleCollision);
-            body1.y += (body1.velocity.y * this.game.time.physicsElapsed) - overlap * Math.sin(angleCollision);
+            body1.x += (body1.velocity.x * this.delta) - overlap * Math.cos(angleCollision);
+            body1.y += (body1.velocity.y * this.delta) - overlap * Math.sin(angleCollision);
         }
 
         if (!body2.immovable)
         {
-            body2.x += (body2.velocity.x * this.game.time.physicsElapsed) + overlap * Math.cos(angleCollision);
-            body2.y += (body2.velocity.y * this.game.time.physicsElapsed) + overlap * Math.sin(angleCollision);
+            body2.x += (body2.velocity.x * this.delta) + overlap * Math.cos(angleCollision);
+            body2.y += (body2.velocity.y * this.delta) + overlap * Math.sin(angleCollision);
         }
 
-        if (body1.onCollide)
+        if (body1.onCollide || body2.onCollide)
         {
-            body1.onCollide.dispatch(body1.sprite, body2.sprite);
-        }
-
-        if (body2.onCollide)
-        {
-            body2.onCollide.dispatch(body2.sprite, body1.sprite);
+            this.events.dispatch(new PhysicsEvent.COLLIDE(body1.gameObject, body2.gameObject));
         }
 
         return true;
@@ -1026,6 +1037,52 @@ var World = new Class({
             object.body = new Body(this, object);
 
             this.bodies.set(object.body);
+        }
+
+        return object;
+    },
+
+    disable: function (object)
+    {
+        var i = 1;
+
+        if (Array.isArray(object))
+        {
+            i = object.length;
+
+            while (i--)
+            {
+                if (object[i].hasOwnProperty('children'))
+                {
+                    //  If it's a Group then we do it on the children regardless
+                    this.disable(object[i].children.entries);
+                }
+                else
+                {
+                    this.disableBody(object[i]);
+                }
+            }
+        }
+        else if (object.hasOwnProperty('children'))
+        {
+            //  If it's a Group then we do it on the children regardless
+            this.disable(object.children.entries);
+        }
+        else
+        {
+            this.disableBody(object);
+        }
+    },
+
+    disableBody: function (object)
+    {
+        if (object.body)
+        {
+            this.bodies.delete(object.body);
+
+            object.body.destroy();
+
+            object.body = null;
         }
 
         return object;

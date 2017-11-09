@@ -6,11 +6,7 @@
 module.exports = {
 
     Body: require('./Body'),
-
-    // COLLIDES: require('./COLLIDES'),
-    // CollisionMap: require('./CollisionMap'),
-    // TYPE: require('./TYPE'),
-
+    PhysicsGroup: require('./PhysicsGroup'),
     World: require('./World'),
     Factory: require('./Factory')
   
