@@ -4,11 +4,7 @@ var Collide = function (object1, object2, collideCallback, processCallback, call
     if (processCallback === undefined) { processCallback = null; }
     if (callbackContext === undefined) { callbackContext = collideCallback; }
 
-    this._total = 0;
-
-    this.collideObjects(object1, object2, collideCallback, processCallback, callbackContext, false);
-
-    return (this._total > 0);
+    return this.collideObjects(object1, object2, collideCallback, processCallback, callbackContext, false);
 };
 
 module.exports = Collide;

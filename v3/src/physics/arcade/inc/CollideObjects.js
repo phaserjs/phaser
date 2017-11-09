@@ -4,6 +4,8 @@ var CollideObjects = function (object1, object2, collideCallback, processCallbac
     var object1isArray = Array.isArray(object1);
     var object2isArray = Array.isArray(object2);
 
+    this._total = 0;
+
     if (!object1isArray && !object2isArray)
     {
         //  Neither of them are arrays - do this first as it's the most common use-case
@@ -36,6 +38,8 @@ var CollideObjects = function (object1, object2, collideCallback, processCallbac
             }
         }
     }
+
+    return (this._total > 0);
 };
 
 module.exports = CollideObjects;
