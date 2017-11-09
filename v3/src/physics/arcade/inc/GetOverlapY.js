@@ -1,7 +1,7 @@
-var GetOverlapY = function (body1, body2, overlapOnly)
+var GetOverlapY = function (body1, body2, overlapOnly, bias)
 {
     var overlap = 0;
-    var maxOverlap = body1.deltaAbsY() + body2.deltaAbsY() + this.OVERLAP_BIAS;
+    var maxOverlap = body1.deltaAbsY() + body2.deltaAbsY() + bias;
 
     if (body1.deltaY() === 0 && body2.deltaY() === 0)
     {
