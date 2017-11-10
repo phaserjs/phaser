@@ -39,7 +39,7 @@ var AudioFile = new Class({
         this.soundManager.context.decodeAudioData(this.xhrLoader.response,
             function (audioBuffer)
             {
-                this.data = audioBuffer;
+                _this.data = audioBuffer;
 
                 _this.onComplete();
 
@@ -68,14 +68,16 @@ AudioFile.create = function (loader, key, urls, config, xhrSettings)
     if ((audioConfig && audioConfig.noAudio) || (!deviceAudio.webAudio && !deviceAudio.audioData))
     {
         // TODO log not loading audio because sounds are disabled
+        console.info('Skipping loading audio \'' + key + '\' since sounds are disabled.');
         return;
     }
 
-    var url = AudioFile.findAudioURL(urls);
+    var url = AudioFile.findAudioURL(game, urls);
 
     if (!url)
     {
         // TODO log no supported types
+        console.warn('No supported url provided for audio \'' + key + '\'!');
         return;
     }
 
@@ -133,7 +135,7 @@ AudioFile.create = function (loader, key, urls, config, xhrSettings)
 //         }
 //     ],
 //     config, xhrSettings);
-AudioFile.findAudioURL = function (urls)
+AudioFile.findAudioURL = function (game, urls)
 {
     if (urls.constructor !== Array)
     {
@@ -152,7 +154,7 @@ AudioFile.findAudioURL = function (urls)
         var type = url.match(/\.([a-zA-Z0-9]+)($|\?)/);
         type = GetFastValue(urls[i], 'type', type ? type[1] : '').toLowerCase();
 
-        if (Audio[type])
+        if (game.device.Audio[type])
         {
             return {
                 uri: url,
