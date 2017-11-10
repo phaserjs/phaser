@@ -18,6 +18,7 @@
   },
   "scripts": {
     "build": "webpack",
+    "watch": "webpack --watch",
     "dist": "webpack --config webpack.dist.config.js",
     "lint": "eslint --config .eslintrc.json \"src/**/*.js\"",
     "sloc": "node-sloc './src' --include-extensions \"js\""
