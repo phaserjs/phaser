@@ -1,15 +1,11 @@
 var Class = require('../utils/Class');
+var WebAudioSoundManager = require('./WebAudioSoundManager');
 
 //  Phaser.Loader.SoundManager
 
 var SoundManager = new Class({
 
-    initialize:
-
-    function SoundManager (game)
-    {
-
-    }
+    // TODO define sound manager interface
 
 });
 
@@ -24,8 +20,7 @@ SoundManager.create = function (game)
     if(game.device.Audio.webAudio
         && !(game.config.audio && game.config.audio.disableWebAudio))
     {
-        // TODO create Web Audio sound manager
-        return new SoundManager(game);
+        return new WebAudioSoundManager(game);
     }
 
     // TODO return HTML5 Audio sound manager
