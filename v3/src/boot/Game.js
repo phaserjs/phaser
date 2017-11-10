@@ -17,7 +17,7 @@ var GlobalInputManager = require('../input/global/GlobalInputManager');
 var GlobalSceneManager = require('../scene/global/GlobalSceneManager');
 var TextureManager = require('../textures/TextureManager');
 var TimeStep = require('./TimeStep');
-var SoundManager = require('../sound/SoundManager');
+var BaseSoundManager = require('../sound/BaseSoundManager');
 
 var Game = new Class({
 
@@ -136,9 +136,9 @@ var Game = new Class({
         /**
          * [description]
          *
-         * @property {Phaser.SoundManager} sound
+         * @property {Phaser.BaseSoundManager} sound
          */
-        this.sound = SoundManager.create(this);
+        this.sound = BaseSoundManager.create(this);
 
         /**
          * [description]

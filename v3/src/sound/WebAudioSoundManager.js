@@ -1,9 +1,11 @@
 var Class = require('../utils/Class');
-var SoundManager = require('./SoundManager');
+var BaseSoundManager = require('./BaseSoundManager');
+
+//  Phaser.Loader.WebAudioSoundManager
 
 var WebAudioSoundManager = new Class({
 
-    Extends: SoundManager,
+    Extends: BaseSoundManager,
 
     initialize:
 
