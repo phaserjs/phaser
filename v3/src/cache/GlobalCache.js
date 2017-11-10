@@ -12,7 +12,7 @@ var GlobalCache = new Class({
      * @memberOf Phaser.Cache
      * @constructor
      * @since 3.0.0
-     * 
+     *
      * @param {Phaser.Game} game - [description]
      */
     function GlobalCache (game)
@@ -68,10 +68,10 @@ var GlobalCache = new Class({
         /**
          * [description]
          *
-         * @property {Phaser.Cache.BaseCache} sound
+         * @property {Phaser.Cache.BaseCache} audio
          * @protected
          */
-        this.sound = new BaseCache();
+        this.audio = new BaseCache();
 
         /**
          * [description]
@@ -121,9 +121,9 @@ var GlobalCache = new Class({
      *
      * @method Phaser.Cache.GlobalCache#addCustom
      * @since 3.0.0
-     * 
+     *
      * @param {string} key - [description]
-     * 
+     *
      * @return {Phaser.Cache.BaseCache} [description]
      */
     addCustom: function (key)

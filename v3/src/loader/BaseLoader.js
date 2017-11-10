@@ -422,8 +422,8 @@ var BaseLoader = new Class({
                     cache.binary.add(file.key, file.data);
                     break;
 
-                case 'sound':
-                    cache.sound.add(file.key, file.data);
+                case 'audio':
+                    cache.audio.add(file.key, file.data);
                     break;
 
                 case 'glsl':
