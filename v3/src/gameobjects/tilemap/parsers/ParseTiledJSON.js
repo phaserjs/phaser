@@ -1,7 +1,7 @@
 var Formats = require('../Formats');
 var Tileset = require('../Tileset');
 var Tile = require('../Tile');
-var Extend = require("../../../utils/object/Extend");
+var Extend = require('../../../utils/object/Extend');
 
 var ParseJSONTiled = function (key, json)
 {
@@ -49,7 +49,7 @@ var ParseJSONTiled = function (key, json)
 
             // Interpret binaryString as an array of bytes representing
             // little-endian encoded uint32 values.
-            for (var j = 0; j < len; j+=4)
+            for (var j = 0; j < len; j += 4)
             {
                 bytes[j / 4] = (
                     binaryString.charCodeAt(j) |
@@ -310,7 +310,8 @@ var ParseJSONTiled = function (key, json)
     var objects = {};
     var collision = {};
 
-    function slice (obj, fields) {
+    function slice (obj, fields)
+    {
 
         var sliced = {};
 
@@ -348,7 +349,7 @@ var ParseJSONTiled = function (key, json)
 
                     gid: curo.objects[v].gid,
                     name: curo.objects[v].name,
-                    type: curo.objects[v].hasOwnProperty("type") ? curo.objects[v].type : "",
+                    type: curo.objects[v].hasOwnProperty('type') ? curo.objects[v].type : '',
                     x: curo.objects[v].x,
                     y: curo.objects[v].y,
                     visible: curo.objects[v].visible,
@@ -394,32 +395,35 @@ var ParseJSONTiled = function (key, json)
                 collision[curo.name].push(object);
                 objects[curo.name].push(object);
             }
+
             // polygon
             else if (curo.objects[v].polygon)
             {
-                var object = slice(curo.objects[v], ['name', 'type', 'x', 'y', 'visible', 'rotation', 'properties']);
+                var object = slice(curo.objects[v], [ 'name', 'type', 'x', 'y', 'visible', 'rotation', 'properties' ]);
 
                 //  Parse the polygon into an array
                 object.polygon = [];
 
                 for (var p = 0; p < curo.objects[v].polygon.length; p++)
                 {
-                    object.polygon.push([curo.objects[v].polygon[p].x, curo.objects[v].polygon[p].y]);
+                    object.polygon.push([ curo.objects[v].polygon[p].x, curo.objects[v].polygon[p].y ]);
                 }
 
                 objects[curo.name].push(object);
 
             }
+
             // ellipse
             else if (curo.objects[v].ellipse)
             {
-                var object = slice(curo.objects[v], ['name', 'type', 'ellipse', 'x', 'y', 'width', 'height', 'visible', 'rotation', 'properties']);
+                var object = slice(curo.objects[v], [ 'name', 'type', 'ellipse', 'x', 'y', 'width', 'height', 'visible', 'rotation', 'properties' ]);
                 objects[curo.name].push(object);
             }
+
             // otherwise it's a rectangle
             else
             {
-                var object = slice(curo.objects[v], ['name', 'type', 'x', 'y', 'width', 'height', 'visible', 'rotation', 'properties']);
+                var object = slice(curo.objects[v], [ 'name', 'type', 'x', 'y', 'width', 'height', 'visible', 'rotation', 'properties' ]);
                 object.rectangle = true;
                 objects[curo.name].push(object);
             }
@@ -446,7 +450,7 @@ var ParseJSONTiled = function (key, json)
         for (var t = set.firstgid; t < set.firstgid + set.total; t++)
         {
             //  Can add extra properties here as needed
-            map.tiles[t] = [x, y, i];
+            map.tiles[t] = [ x, y, i ];
 
             x += set.tileWidth + set.tileSpacing;
 
