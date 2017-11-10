@@ -8,6 +8,7 @@ var GetValue = require('../../utils/object/GetValue');
 var Rectangle = require('../../geom/rectangle/Rectangle');
 var RTree = require('../../structs/RTree');
 var Set = require('../../structs/Set');
+var ProcessQueue = require('../../structs/ProcessQueue');
 var StaticBody = require('./StaticBody');
 var Vector2 = require('../../math/Vector2');
 
@@ -27,7 +28,7 @@ var World = new Class({
         //  Static Bodies
         this.staticBodies = new Set();
 
-        this.colliders = [];
+        this.colliders = new ProcessQueue();
 
         this.gravity = new Vector2(GetValue(config, 'gravity.x', 0), GetValue(config, 'gravity.y', 0));
 
@@ -231,7 +232,7 @@ var World = new Class({
 
         var collider = new Collider(this, false, object1, object2, collideCallback, processCallback, callbackContext);
 
-        this.colliders.push(collider);
+        this.colliders.add(collider);
 
         return collider;
     },
@@ -244,14 +245,14 @@ var World = new Class({
 
         var collider = new Collider(this, true, object1, object2, collideCallback, processCallback, callbackContext);
 
-        this.colliders.push(collider);
+        this.colliders.add(collider);
 
         return collider;
     },
 
     removeCollider: function (collider)
     {
-        //  TODO
+        this.colliders.remove(collider);
     },
 
     update: function (time, delta)
@@ -288,10 +289,11 @@ var World = new Class({
         this.tree.load(bodies);
 
         //  Process any colliders
+        var colliders = this.colliders.update();
 
-        for (i = 0; i < this.colliders.length; i++)
+        for (i = 0; i < colliders.length; i++)
         {
-            var collider = this.colliders[i];
+            var collider = colliders[i];
 
             if (collider.active)
             {

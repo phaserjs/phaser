@@ -38,6 +38,8 @@ var Collider = new Class({
     {
         this.world.removeCollider(this);
 
+        this.active = false;
+
         this.world = null;
 
         this.object1 = null;
