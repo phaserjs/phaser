@@ -11,10 +11,7 @@ var WebAudioSoundManager = new Class({
 
     function WebAudioSoundManager (game)
     {
-        /**
-         * @property {Phaser.Game} game - Local reference to game.
-         */
-        this.game = game;
+        BaseSoundManager.call(this, game);
 
         /**
          * @property {AudioContext} context - The AudioContext being used for playback.
@@ -25,9 +22,11 @@ var WebAudioSoundManager = new Class({
 
     createAudioContext: function ()
     {
-        if (this.game.config.audio.context)
+        var audioConfig = this.game.config.audio;
+
+        if (audioConfig && audioConfig.context)
         {
-            return this.game.config.audio.context;
+            return audioConfig.context;
         }
 
         return new (window['AudioContext'] || window['webkitAudioContext'])();
