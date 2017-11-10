@@ -1,6 +1,5 @@
 var Class = require('../../utils/Class');
 var File = require('../File');
-var Audio = require('../../device/Audio');
 var GetFastValue = require('../../utils/object/GetFastValue');
 var CONST = require('../../const');
 
@@ -46,7 +45,15 @@ var AudioFile = new Class({
 
 AudioFile.create = function (loader, key, urls, config, xhrSettings)
 {
-    // TODO handle when sounds are disabled in game config
+    var game = loader.scene.game;
+    var audioConfig = game.config.audio;
+    var deviceAudio = game.device.Audio;
+
+    if ((audioConfig && audioConfig.noAudio) || (!deviceAudio.webAudio && !deviceAudio.audioData))
+    {
+        // TODO log not loading audio because sounds are disabled
+        return;
+    }
 
     var url = AudioFile.findAudioURL(urls);
 
@@ -56,19 +63,15 @@ AudioFile.create = function (loader, key, urls, config, xhrSettings)
         return;
     }
 
-    if (Audio.webAudio)
+    if(deviceAudio.webAudio && !(audioConfig && audioConfig.disableWebAudio))
     {
-        loader.addFile(new AudioFile(key, url, loader.path, xhrSettings, loader.scene.game.sound));
-    }
-    else if (Audio.audioData)
-    {
-        // TODO handle loading audio tags
-    }
-    else
-    {
-        // TODO bail if sounds are disabled and print message
+        loader.addFile(new AudioFile(key, url, loader.path, xhrSettings, game.sound));
         return;
     }
+
+    // TODO handle loading audio tags
+    loader.addFile(null);
+
 };
 
 // this.load.audio('sound', 'assets/audio/booom.ogg', config, xhrSettings);

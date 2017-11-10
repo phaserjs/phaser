@@ -11,14 +11,15 @@ var BaseSoundManager = new Class({
 
 BaseSoundManager.create = function (game)
 {
-    if ((game.config.audio && game.config.audio.noAudio)
-        || (!game.device.Audio.webAudio && !game.device.Audio.audioData))
+    var audioConfig = game.config.audio;
+    var deviceAudio = game.device.Audio;
+
+    if ((audioConfig && audioConfig.noAudio) || (!deviceAudio.webAudio && !deviceAudio.audioData))
     {
         return new BaseSoundManager(game);
     }
 
-    if(game.device.Audio.webAudio
-        && !(game.config.audio && game.config.audio.disableWebAudio))
+    if(deviceAudio.webAudio && !(audioConfig && audioConfig.disableWebAudio))
     {
         return new WebAudioSoundManager(game);
     }
