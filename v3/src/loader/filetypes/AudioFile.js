@@ -14,7 +14,7 @@ var AudioFile = new Class({
     function AudioFile (key, url, path, xhrSettings, soundManager)
     {
 
-        this.sound = soundManager;
+        this.soundManager = soundManager;
 
         var fileConfig = {
             type: 'audio',
@@ -33,12 +33,28 @@ var AudioFile = new Class({
     {
         this.state = CONST.FILE_PROCESSING;
 
-        // TODO handle decoding
-        this.data = this.xhrLoader.response;
+        var _this = this;
 
-        this.onComplete();
+        // interesting read https://github.com/WebAudio/web-audio-api/issues/1305
+        this.soundManager.context.decodeAudioData(this.xhrLoader.response,
+            function (audioBuffer)
+            {
+                this.data = audioBuffer;
 
-        callback(this);
+                _this.onComplete();
+
+                callback(_this);
+            },
+            function (e)
+            {
+                // TODO properly log decoding error
+                console.error('Error with decoding audio data for \'' + this.key + '\':', e.message);
+
+                _this.state = CONST.FILE_ERRORED;
+
+                callback(_this);
+            }
+        );
     }
 
 });
