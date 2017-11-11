@@ -1,20 +1,23 @@
 var Formats = require('./Formats');
 var Parsers = require('./parsers');
 
-var Parse = function (key, map, tileWidth, tileHeight, width, height)
+var Parse = function (key, mapFormat, mapData, tileWidth, tileHeight, width, height)
 {
     var newMap;
 
-    switch(map.format)
+    switch(mapFormat)
     {
+        case (Formats.TILEMAP_2D_ARRAY):
+            newMap = Parsers.Parse2DArray(key, mapData, tileWidth, tileHeight, width, height);
+            break;
         case (Formats.TILEMAP_CSV):
-            newMap = Parsers.ParseCSV(key, map.data, tileWidth, tileHeight, width, height);
+            newMap = Parsers.ParseCSV(key, mapData, tileWidth, tileHeight, width, height);
             break;
         case (Formats.TILEMAP_TILED_JSON):
-            newMap = Parsers.ParseTiledJSON(key, map.data);
+            newMap = Parsers.ParseTiledJSON(key, mapData);
             break;
         default:
-            console.warn('Unrecognized tilemap data format: ' + map.format);
+            console.warn('Unrecognized tilemap data format: ' + mapFormat);
             newMap = null;
     }
 
