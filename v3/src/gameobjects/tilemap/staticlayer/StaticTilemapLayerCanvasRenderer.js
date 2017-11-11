@@ -10,8 +10,8 @@ var StaticTilemapLayerCanvasRenderer = function (renderer, gameObject, interpola
     gameObject.upload(camera);
 
     var tiles = gameObject.tiles;
-    var tileWidth = gameObject.tileWidth;
-    var tileHeight = gameObject.tileHeight;
+    var tileWidth = gameObject.map.tileWidth;
+    var tileHeight = gameObject.map.tileHeight;
     var frame = gameObject.frame;
     var ctx = renderer.gameContext;
     var tileCount = tiles.length;

@@ -140,7 +140,7 @@ var SpriteBatch = new Class({
         {
             return;
         }
-        
+
         if (renderTarget)
         {
             gl.bindFramebuffer(gl.FRAMEBUFFER, renderTarget.framebufferObject);
@@ -167,7 +167,7 @@ var SpriteBatch = new Class({
         {
             gl.drawArrays(gl.TRIANGLES, 0, this.vertexCount);
         }
-        
+
         vertexDataBuffer.clear();
         this.elementCount = 0;
         this.vertexCount = 0;
@@ -262,7 +262,7 @@ var SpriteBatch = new Class({
         mvd = src * cmb + srd * cmd;
         mve = sre * cma + srf * cmc + cme;
         mvf = sre * cmb + srf * cmd + cmf;
-        
+
         this.manager.setRenderer(this, frame.texture.source[frame.sourceIndex].glTexture, gameObject.renderTarget);
         indexOffset = this.vertexCount;
         this.drawIndexed = true;
@@ -345,7 +345,7 @@ var SpriteBatch = new Class({
         mvd = src * cmb + srd * cmd;
         mve = sre * cma + srf * cmc + cme;
         mvf = sre * cmb + srf * cmd + cmf;
-        
+
         this.manager.setRenderer(this, frame.texture.source[frame.sourceIndex].glTexture, gameObject.renderTarget);
         this.drawIndexed = false;
         this.drawingMesh = true;
@@ -378,16 +378,16 @@ var SpriteBatch = new Class({
         var xw = x + width;
         var yh = y + height;
         var cameraMatrix = camera.matrix.matrix;
-        var mva, mvb, mvc, mvd, mve, mvf, tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3;
-        var halfTileWidth = (width) * 0.5;
-        var halfTileHeight = (height) * 0.5;
-        var u0 = (rectX - (halfTileWidth - 0.5)) / textureWidth;
-        var v0 = (rectY - (halfTileHeight - 0.5)) / textureHeight;
-        var u1 = (rectX + (halfTileWidth - 0.5)) / textureWidth;
-        var v1 = (rectY + (halfTileHeight - 0.5)) / textureHeight;
         var scrollX = camera.scrollX * scrollFactorX;
         var scrollY = camera.scrollY * scrollFactorY;
-        
+        var mva, mvb, mvc, mvd, mve, mvf, tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3;
+
+        // Inset UV coordinates by 0.5px to prevent tile bleeding
+        var u0 = (rectX + 0.5) / textureWidth;
+        var v0 = (rectY + 0.5) / textureHeight;
+        var u1 = (rectX - 0.5 + width) / textureWidth;
+        var v1 = (rectY - 0.5 + height) / textureHeight;
+
         mva = cameraMatrix[0];
         mvb = cameraMatrix[1];
         mvc = cameraMatrix[2];
@@ -409,7 +409,7 @@ var SpriteBatch = new Class({
         this.drawingMesh = false;
         this.elementCount += 6;
         vertexOffset = vertexDataBuffer.allocate(24);
-        
+
         vertexBufferObjectF32[vertexOffset++] = tx0;
         vertexBufferObjectF32[vertexOffset++] = ty0;
         vertexBufferObjectF32[vertexOffset++] = u0;
@@ -496,7 +496,7 @@ var SpriteBatch = new Class({
         mvd = src * cmb + srd * cmd;
         mve = sre * cma + srf * cmc + cme;
         mvf = sre * cmb + srf * cmd + cmf;
-        
+
         tx0 = x * mva + y * mvc + mve;
         ty0 = x * mvb + y * mvd + mvf;
         tx1 = x * mva + yh * mvc + mve;
@@ -511,7 +511,7 @@ var SpriteBatch = new Class({
         this.drawingMesh = false;
         vertexOffset = vertexDataBuffer.allocate(24);
         this.elementCount += 6;
-        
+
         //  Top Left
         vertexBufferObjectF32[vertexOffset++] = tx0;
         vertexBufferObjectF32[vertexOffset++] = ty0;
@@ -598,7 +598,7 @@ var SpriteBatch = new Class({
         mvd = src * cmb + srd * cmd;
         mve = sre * cma + srf * cmc + cme;
         mvf = sre * cmb + srf * cmd + cmf;
-        
+
         tx0 = x * mva + y * mvc + mve;
         ty0 = x * mvb + y * mvd + mvf;
         tx1 = x * mva + yh * mvc + mve;
@@ -613,7 +613,7 @@ var SpriteBatch = new Class({
         this.drawingMesh = false;
         vertexOffset = vertexDataBuffer.allocate(24);
         this.elementCount += 6;
-        
+
         //  Top Left
         vertexBufferObjectF32[vertexOffset++] = tx0;
         vertexBufferObjectF32[vertexOffset++] = ty0;
@@ -705,7 +705,7 @@ var SpriteBatch = new Class({
         mvd = src * cmb + srd * cmd;
         mve = sre * cma + srf * cmc + cme;
         mvf = sre * cmb + srf * cmd + cmf;
-        
+
         tx0 = x * mva + y * mvc + mve;
         ty0 = x * mvb + y * mvd + mvf;
         tx1 = x * mva + yh * mvc + mve;
@@ -720,7 +720,7 @@ var SpriteBatch = new Class({
         this.drawingMesh = false;
         vertexOffset = vertexDataBuffer.allocate(24);
         this.elementCount += 6;
-        
+
         //  Top Left
         vertexBufferObjectF32[vertexOffset++] = tx0;
         vertexBufferObjectF32[vertexOffset++] = ty0;

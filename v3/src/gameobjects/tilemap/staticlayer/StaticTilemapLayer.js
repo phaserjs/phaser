@@ -26,9 +26,14 @@ var StaticTilemapLayer = new Class({
 
     initialize:
 
-    function StaticTilemapLayer (scene, mapData, x, y, tileWidth, tileHeight, mapWidth, mapHeight, tileBorder, texture, frame)
+    function StaticTilemapLayer (scene, tilemap, layerIndex, tileset, x, y)
     {
         GameObject.call(this, scene, 'StaticTilemapLayer');
+
+        this.map = tilemap;
+        this.layerIndex = layerIndex;
+        this.layer = tilemap.layers[layerIndex];
+        this.tileset = tileset;
 
         this.vbo = null;
         this.gl = scene.sys.game.renderer.gl ? scene.sys.game.renderer.gl : null;
@@ -36,25 +41,16 @@ var StaticTilemapLayer = new Class({
         this.resourceManager = this.gl ? scene.sys.game.renderer.resourceManager : null;
         this.bufferData = null;
 
-        this.mapData = mapData;
-        this.mapWidth = mapWidth;
-        this.mapHeight = mapHeight;
-
-        this.tileWidth = tileWidth;
-        this.tileHeight = tileHeight;
-
         this.dirty = true;
         this.vertexCount = 0;
         this.cullStart = 0;
         this.cullEnd = 0;
 
-        this.tileBorder = tileBorder;
-
-        this.setTexture(texture, frame);
+        this.setTexture(tileset.image.key);
         this.setPosition(x, y);
         this.setSizeToFrame();
         this.setOrigin();
-        this.setSize(tileWidth * mapWidth, tileHeight * mapHeight);
+        this.setSize(this.map.tileWidth * this.layer.width, this.map.tileheight * this.layer.height);
 
         this.skipIndexZero = false;
 
@@ -72,20 +68,22 @@ var StaticTilemapLayer = new Class({
 
     upload: function (camera)
     {
-        var mapWidth = this.mapWidth;
-        var mapHeight = this.mapHeight;
-        var border = this.tileBorder;
-        var tileWidth = this.tileWidth;
-        var tileHeight = this.tileHeight;
-        var tileWidthBorder = tileWidth + border * 2;
-        var tileHeightBorder = tileHeight + border * 2;
+        // TODO: null tile handling when null tile feature is added
+        // TODO: canvas doesn't need to prepare an array of tiles
+
+        var tileset = this.tileset;
+        var mapWidth = this.layer.width;
+        var mapHeight = this.layer.height;
+        var tileWidth = this.map.tileWidth;
+        var tileHeight = this.map.tileHeight;
         var width = this.texture.source[0].width;
         var height = this.texture.source[0].height;
-        var setWidth = width / tileWidth;
-        var mapData = this.mapData;
+        var mapData = this.layer.data;
 
-        var x;
-        var y;
+        var row;
+        var col;
+        var tileIndex;
+        var texCoords;
 
         if (this.gl)
         {
@@ -114,32 +112,26 @@ var StaticTilemapLayer = new Class({
 
                 bufferF32 = new Float32Array(bufferData);
 
-                for (y = 0; y < mapHeight; ++y)
+                for (row = 0; row < mapHeight; ++row)
                 {
-                    for (x = 0; x < mapWidth; ++x)
+                    for (col = 0; col < mapWidth; ++col)
                     {
-                        var tileId = mapData[y * mapWidth + x];
+                        tileIndex = mapData[row][col].index;
+                        if (tileIndex <= 0 && this.skipIndexZero) { continue; }
 
-                        if (tileId <= 0 && this.skipIndexZero)
-                        {
-                            continue;
-                        }
-
-                        var halfTileWidth = (tileWidthBorder) * 0.5;
-                        var halfTileHeight = (tileHeightBorder) * 0.5;
-
-                        var rectx = (((tileId % setWidth)|0) * tileWidthBorder) + halfTileWidth;
-                        var recty = (((tileId / setWidth)|0) * tileHeightBorder) + halfTileHeight;
-
-                        var tx = x * tileWidth;
-                        var ty = y * tileHeight;
+                        var tx = col * tileWidth;
+                        var ty = row * tileHeight;
                         var txw = tx + tileWidth;
                         var tyh = ty + tileHeight;
 
-                        var u0 = (rectx - (halfTileWidth - 0.5)) / width;
-                        var v0 = (recty - (halfTileHeight - 0.5)) / height;
-                        var u1 = (rectx + (halfTileWidth - 0.5)) / width;
-                        var v1 = (recty + (halfTileHeight - 0.5)) / height;
+                        texCoords = tileset.getTileTextureCoordinates(tileIndex);
+                        if (texCoords === null) { continue; }
+
+                        // Inset UV coordinates by 0.5px to prevent tile bleeding
+                        var u0 = (texCoords.x + 0.5) / width;
+                        var v0 = (texCoords.y + 0.5) / height;
+                        var u1 = (texCoords.x + tileWidth - 0.5) / width;
+                        var v1 = (texCoords.y + tileHeight - 0.5) / height;
 
                         var tx0 = tx;
                         var ty0 = ty;
@@ -191,7 +183,6 @@ var StaticTilemapLayer = new Class({
 
                 this.dirty = false;
             }
-
             var renderer = this.tilemapRenderer;
 
             renderer.shader.setConstantFloat2(renderer.scrollLocation, camera.scrollX, camera.scrollY);
@@ -213,25 +204,21 @@ var StaticTilemapLayer = new Class({
         {
             this.tiles = [];
 
-            for (y = 0; y < mapHeight; ++y)
+            for (row = 0; row < mapHeight; ++row)
             {
-                for (x = 0; x < mapWidth; ++x)
+                for (col = 0; col < mapWidth; ++col)
                 {
-                    var id = mapData[y * mapWidth + x];
+                    tileIndex = mapData[row][col].index;
+                    if (tileIndex <= 0 && this.skipIndexZero) { continue; }
 
-                    if (id <= 0 && this.skipIndexZero)
-                    {
-                        continue;
-                    }
-
-                    var frameX = (((id % setWidth) | 0) * tileWidthBorder);
-                    var frameY = (((id / setWidth) | 0) * tileHeightBorder);
+                    texCoords = tileset.getTileTextureCoordinates(tileIndex);
+                    if (texCoords === null) { continue; }
 
                     this.tiles.push({
-                        x: x * tileWidth,
-                        y: y * tileHeight,
-                        frameX: frameX,
-                        frameY: frameY
+                        x: col * tileWidth,
+                        y: row * tileHeight,
+                        frameX: texCoords.x,
+                        frameY: texCoords.y
                     });
 
                 }
@@ -258,13 +245,13 @@ var StaticTilemapLayer = new Class({
         this.cullStart = 0;
         this.cullEnd = 0;
 
-        var tileWidth = this.tileWidth;
-        var tileHeight = this.tileHeight;
+        var tileWidth = this.map.tileWidth;
+        var tileHeight = this.map.tileHeight;
 
         var pixelX = this.x - (camera.scrollX * this.scrollFactorX);
         var pixelY = this.y - (camera.scrollY * this.scrollFactorY);
-        var pixelWidth = this.mapWidth * tileWidth;
-        var pixelHeight = this.mapHeight * tileHeight;
+        var pixelWidth = this.layer.width * tileWidth;
+        var pixelHeight = this.layer.height * tileHeight;
 
         if (pixelX < camera.x + camera.width + (tileWidth * 2) &&
             pixelX + pixelWidth > camera.x + -(tileWidth * 2) &&
@@ -283,8 +270,8 @@ var StaticTilemapLayer = new Class({
             interWidth = (interWidth / tileWidth) | 0;
             interHeight = (interHeight / tileHeight) | 0;
 
-            this.cullStart = (interY * this.mapWidth + interX) * 6;
-            this.cullEnd = ((interY + interHeight) * this.mapWidth + interX) * 6;
+            this.cullStart = (interY * this.layer.width + interX) * 6;
+            this.cullEnd = ((interY + interHeight) * this.layer.height + interX) * 6;
         }
     }
 
