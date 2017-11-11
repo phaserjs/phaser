@@ -37,6 +37,13 @@ var ParticleManagerCanvasRenderer = function (renderer, emitterManager, interpol
         {
             var particle = particles[index];
 
+            var alpha = ((particle.color >> 24) & 0xFF) / 255.0;
+
+            if (alpha <= 0)
+            {
+                continue;
+            }
+
             var frame = particle.frame;
             var dx = frame.x;
             var dy = frame.y;
@@ -48,7 +55,6 @@ var ParticleManagerCanvasRenderer = function (renderer, emitterManager, interpol
 
             var x = -ox;
             var y = -oy;
-            var alpha = ((particle.color >> 24) & 0xFF) / 255.0;
 
             ctx.globalAlpha = alpha;
         

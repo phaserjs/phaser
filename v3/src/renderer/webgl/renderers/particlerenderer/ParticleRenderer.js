@@ -228,6 +228,11 @@ var ParticleRenderer = new Class({
                 {
                     var particle = particles[particleOffset + index];
 
+                    if (particle.alpha <= 0)
+                    {
+                        continue;
+                    }
+
                     var frame = particle.frame;
                     var uvs = frame.uvs;
 
