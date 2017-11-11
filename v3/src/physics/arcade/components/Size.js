@@ -1,8 +1,15 @@
 var Size = {
 
-    setSize: function (width, height, offsetX, offsetY)
+    setOffset: function (x, y)
     {
-        this.body.setSize(width, height, offsetX, offsetY);
+        this.body.setOffset(x, y);
+
+        return this;
+    },
+
+    setSize: function (width, height, center)
+    {
+        this.body.setSize(width, height, center);
 
         return this;
     },

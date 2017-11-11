@@ -399,20 +399,39 @@ var Body = new Class({
         return !this.blocked.none;
     },
 
-    setSize: function (width, height, offsetX, offsetY)
+    setOffset: function (x, y)
     {
-        if (offsetX === undefined) { offsetX = this.offset.x; }
-        if (offsetY === undefined) { offsetY = this.offset.y; }
+        if (y === undefined) { y = x; }
+
+        this.offset.set(x, y);
+
+        return this;
+    },
+
+    setSize: function (width, height, center)
+    {
+        if (center === undefined) { center = true; }
 
         this.sourceWidth = width;
         this.sourceHeight = height;
+
         this.width = this.sourceWidth * this._sx;
         this.height = this.sourceHeight * this._sy;
+
         this.halfWidth = Math.floor(this.width / 2);
         this.halfHeight = Math.floor(this.height / 2);
-        this.offset.set(offsetX, offsetY);
 
         this.updateCenter();
+
+        if (center && this.gameObject.getCenter)
+        {
+            var gameObject = this.gameObject;
+
+            var ox = gameObject.displayWidth / 2;
+            var oy = gameObject.displayHeight / 2;
+
+            this.offset.set(ox - this.halfWidth, oy - this.halfHeight);
+        }
 
         this.isCircle = false;
         this.radius = 0;
@@ -545,18 +564,25 @@ var Body = new Class({
     drawDebug: function (graphic)
     {
         var pos = this.position;
+        var x = pos.x + this.halfWidth;
+        var y = pos.y + this.halfHeight;
 
         if (this.debugShowBody)
         {
-            graphic.lineStyle(1, this.debugBodyColor, 1);
-            graphic.strokeRect(pos.x, pos.y, this.width, this.height);
+            graphic.lineStyle(1, this.debugBodyColor);
+
+            if (this.isCircle)
+            {
+                graphic.strokeCircle(x, y, this.radius);
+            }
+            else
+            {
+                graphic.strokeRect(pos.x, pos.y, this.width, this.height);
+            }
         }
 
         if (this.debugShowVelocity)
         {
-            var x = pos.x + this.halfWidth;
-            var y = pos.y + this.halfHeight;
-
             graphic.lineStyle(1, this.world.defaults.velocityDebugColor, 1);
             graphic.lineBetween(x, y, x + this.velocity.x / 2, y + this.velocity.y / 2);
         }
