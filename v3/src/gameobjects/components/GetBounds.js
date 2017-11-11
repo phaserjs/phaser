@@ -4,6 +4,16 @@ var Vector2 = require('../../math/Vector2');
 
 var GetBounds = {
 
+    getCenter: function (output)
+    {
+        if (output === undefined) { output = new Vector2(); }
+
+        output.x = this.x - (this.displayWidth * this.originX) + (this.displayWidth / 2);
+        output.y = this.y - (this.displayHeight * this.originY) + (this.displayHeight / 2);
+
+        return output;
+    },
+
     getTopLeft: function (output)
     {
         if (output === undefined) { output = new Vector2(); }
