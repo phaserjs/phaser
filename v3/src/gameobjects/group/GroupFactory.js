@@ -17,5 +17,5 @@ GameObjectFactory.register('group', function (children, config)
         children = [];
     }
 
-    return new Group(this.scene, children, config);
+    return this.updateList.add(new Group(this.scene, children, config));
 });

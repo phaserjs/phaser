@@ -1,5 +1,6 @@
 var Actions = require('../../actions/');
 var Class = require('../../utils/Class');
+var GetFastValue = require('../../utils/object/GetFastValue');
 var GetValue = require('../../utils/object/GetValue');
 var Range = require('../../utils/array/Range');
 var Set = require('../../structs/Set');
@@ -25,10 +26,18 @@ var Group = new Class({
 
         this.isParent = true;
 
-        this.classType = GetValue(config, 'classType', Sprite);
+        this.classType = GetFastValue(config, 'classType', Sprite);
 
-        this.createCallback = GetValue(config, 'createCallback', null);
-        this.removeCallback = GetValue(config, 'removeCallback', null);
+        this.active = GetFastValue(config, 'active', true);
+        
+        this.maxSize = GetFastValue(config, 'maxSize', -1);
+
+        this.defaultKey = GetFastValue(config, 'defaultKey', null);
+        this.defaultFrame = GetFastValue(config, 'defaultFrame', null);
+        this.runChildUpdate = GetFastValue(config, 'runChildUpdate', false);
+
+        this.createCallback = GetFastValue(config, 'createCallback', null);
+        this.removeCallback = GetFastValue(config, 'removeCallback', null);
 
         if (config)
         {
@@ -36,50 +45,17 @@ var Group = new Class({
         }
     },
 
-    update: function (time, delta)
-    {
-        //  Because a Group child may mess with the length of the Group during its update
-        var temp = this.children.entries.slice();
-
-        for (var i = 0; i < temp.length; i++)
-        {
-            if (temp[i].update(time, delta) === false)
-            {
-                break;
-            }
-        }
-    },
-
-    //  Group management methods:
-
-    add: function (child)
-    {
-        this.children.set(child);
-
-        if (this.createCallback)
-        {
-            this.createCallback.call(this, child);
-        }
-
-        return this;
-    },
-
-    addMultiple: function (children)
-    {
-        if (Array.isArray(children))
-        {
-            for (var i = 0; i < children.length; i++)
-            {
-                this.add(children[i]);
-            }
-        }
-
-        return this;
-    },
-
     create: function (x, y, key, frame, visible)
     {
+        if (key === undefined) { key = this.defaultKey; }
+        if (frame === undefined) { frame = this.defaultFrame; }
         if (visible === undefined) { visible = true; }
+
+        //  Pool?
+        if (this.isFull())
+        {
+            return null;
+        }
 
         var child = new this.classType(this.scene, x, y, key, frame);
 
@@ -97,13 +73,32 @@ var Group = new Class({
         return child;
     },
 
+    createMultiple: function (config)
+    {
+        if (!Array.isArray(config))
+        {
+            config = [ config ];
+        }
+
+        var output = [];
+
+        for (var i = 0; i < config.length; i++)
+        {
+            var entries = this.createFromConfig(config[i]);
+
+            output = output.concat(entries);
+        }
+
+        return output;
+    },
+
     createFromConfig: function (options)
     {
-        this.classType = GetValue(options, 'classType', this.classType);
+        this.classType = GetFastValue(options, 'classType', this.classType);
 
-        var key = GetValue(options, 'key', undefined);
-        var frame = GetValue(options, 'frame', null);
-        var visible = GetValue(options, 'visible', true);
+        var key = GetFastValue(options, 'key', undefined);
+        var frame = GetFastValue(options, 'frame', null);
+        var visible = GetFastValue(options, 'visible', true);
 
         var entries = [];
 
@@ -127,12 +122,12 @@ var Group = new Class({
 
         //  Build an array of key frame pairs to loop through
 
-        var repeat = GetValue(options, 'repeat', 0);
-        var randomKey = GetValue(options, 'randomKey', false);
-        var randomFrame = GetValue(options, 'randomFrame', false);
-        var yoyo = GetValue(options, 'yoyo', false);
-        var quantity = GetValue(options, 'frameQuantity', 1);
-        var max = GetValue(options, 'max', 0);
+        var repeat = GetFastValue(options, 'repeat', 0);
+        var randomKey = GetFastValue(options, 'randomKey', false);
+        var randomFrame = GetFastValue(options, 'randomFrame', false);
+        var yoyo = GetFastValue(options, 'yoyo', false);
+        var quantity = GetFastValue(options, 'frameQuantity', 1);
+        var max = GetFastValue(options, 'max', 0);
 
         //  If a grid is set we use that to override the quantity?
 
@@ -176,15 +171,15 @@ var Group = new Class({
 
         Actions.SetAlpha(entries, alpha, stepAlpha);
 
-        var hitArea = GetValue(options, 'hitArea', null);
-        var hitAreaCallback = GetValue(options, 'hitAreaCallback', null);
+        var hitArea = GetFastValue(options, 'hitArea', null);
+        var hitAreaCallback = GetFastValue(options, 'hitAreaCallback', null);
 
         if (hitArea)
         {
             Actions.SetHitArea(entries, hitArea, hitAreaCallback);
         }
 
-        var grid = GetValue(options, 'gridAlign', false);
+        var grid = GetFastValue(options, 'gridAlign', false);
 
         if (grid)
         {
@@ -194,23 +189,50 @@ var Group = new Class({
         return entries;
     },
 
-    createMultiple: function (config)
+    preUpdate: function (time, delta)
     {
-        if (!Array.isArray(config))
+        if (!this.runChildUpdate || this.children.size === 0)
         {
-            config = [ config ];
+            return;
         }
 
-        var output = [];
+        //  Because a Group child may mess with the length of the Group during its update
+        var temp = this.children.entries.slice();
 
-        for (var i = 0; i < config.length; i++)
+        for (var i = 0; i < temp.length; i++)
         {
-            var entries = this.createFromConfig(config[i]);
+            var item = temp[i];
 
-            output = output.concat(entries);
+            if (item.active)
+            {
+                item.update(time, delta);
+            }
+        }
+    },
+
+    add: function (child)
+    {
+        this.children.set(child);
+
+        if (this.createCallback)
+        {
+            this.createCallback.call(this, child);
         }
 
-        return output;
+        return this;
+    },
+
+    addMultiple: function (children)
+    {
+        if (Array.isArray(children))
+        {
+            for (var i = 0; i < children.length; i++)
+            {
+                this.add(children[i]);
+            }
+        }
+
+        return this;
     },
 
     remove: function (child)
@@ -242,98 +264,59 @@ var Group = new Class({
         return this.children.size;
     },
 
-    getFirst: function (compare, index)
+    getFirst: function (state, createIfNull, x, y, key, frame, visible)
     {
-        if (index === undefined) { index = 0; }
+        if (state === undefined) { state = false; }
+        if (createIfNull === undefined) { createIfNull = false; }
 
-        return Actions.GetFirst(this.children.entries, compare, index);
+        var gameObject;
+
+        var children = this.children.entries;
+
+        for (var i = 0; i < children.length; i++)
+        {
+            var gameObject = children[i];
+
+            if (gameObject.active === state)
+            {
+                if (typeof(x) === 'number')
+                {
+                    gameObject.x = x;
+                }
+
+                if (typeof(y) === 'number')
+                {
+                    gameObject.y = y;
+                }
+
+                return gameObject;
+            }
+        }
+
+        //  Got this far? We need to create or bail
+        if (createIfNull)
+        {
+            return this.create(x, y, key, frame, visible);
+        }
+        else
+        {
+            return null;
+        }
     },
 
-    destroy: function ()
+    get: function (x, y, key, frame, visible)
     {
-        this.children.clear();
-
-        this.scene = undefined;
-        this.children = undefined;
+        return this.getFirst(false, true, x, y, key, frame, visible);
     },
 
-    //  Child related methods
-
-    angle: function (value)
+    getFirstAlive: function (createIfNull, x, y, key, frame, visible)
     {
-        Actions.Angle(this.children.entries, value);
-
-        return this;
+        return this.getFirst(true, createIfNull, x, y, key, frame, visible);
     },
 
-    gridAlign: function (options)
+    getFirstDead: function (createIfNull, x, y, key, frame, visible)
     {
-        Actions.GridAlign(this.children.entries, options);
-
-        return this;
-    },
-
-    incAlpha: function (value, step)
-    {
-        Actions.IncAlpha(this.children.entries, value, step);
-
-        return this;
-    },
-
-    incX: function (value)
-    {
-        Actions.IncX(this.children.entries, value);
-
-        return this;
-    },
-
-    incXY: function (x, y)
-    {
-        Actions.IncXY(this.children.entries, x, y);
-
-        return this;
-    },
-
-    incY: function (value)
-    {
-        Actions.IncY(this.children.entries, value);
-
-        return this;
-    },
-
-    placeOnCircle: function (circle, startAngle, endAngle)
-    {
-        Actions.PlaceOnCircle(this.children.entries, circle, startAngle, endAngle);
-
-        return this;
-    },
-
-    placeOnEllipse: function (ellipse, startAngle, endAngle)
-    {
-        Actions.PlaceOnEllipse(this.children.entries, ellipse, startAngle, endAngle);
-
-        return this;
-    },
-
-    placeOnLine: function (line)
-    {
-        Actions.PlaceOnLine(this.children.entries, line);
-
-        return this;
-    },
-
-    placeOnRectangle: function (rect, shift)
-    {
-        Actions.PlaceOnRectangle(this.children.entries, rect, shift);
-
-        return this;
-    },
-
-    placeOnTriangle: function (triangle, stepRate)
-    {
-        Actions.PlaceOnTriangle(this.children.entries, triangle, stepRate);
-
-        return this;
+        return this.getFirst(false, createIfNull, x, y, key, frame, visible);
     },
 
     playAnimation: function (key, startFrame)
@@ -343,151 +326,39 @@ var Group = new Class({
         return this;
     },
 
-    randomCircle: function (circle)
+    isFull: function ()
     {
-        Actions.RandomCircle(this.children.entries, circle);
-
-        return this;
+        if (this.maxSize === -1)
+        {
+            return false;
+        }
+        else
+        {
+            return (this.children.size === this.maxSize);
+        }
     },
 
-    randomEllipse: function (ellipse)
+    getTotalUsed: function ()
     {
-        Actions.RandomEllipse(this.children.entries, ellipse);
+        var total = 0;
 
-        return this;
+        for (var i = 0; i < this.children.size; i++)
+        {
+            if (this.children.entries[i].active)
+            {
+                total++;
+            }
+        }
+
+        return total;
     },
 
-    randomLine: function (line)
+    getTotalFree: function ()
     {
-        Actions.RandomLine(this.children.entries, line);
+        var used = this.getTotalUsed();
+        var capacity = (this.maxSize === -1) ? 999999999999 : this.maxSize;
 
-        return this;
-    },
-
-    randomRectangle: function (rect)
-    {
-        Actions.RandomRectangle(this.children.entries, rect);
-
-        return this;
-    },
-
-    randomTriangle: function (triangle)
-    {
-        Actions.RandomTriangle(this.children.entries, triangle);
-
-        return this;
-    },
-
-    rotate: function (value, step)
-    {
-        Actions.Rotate(this.children.entries, value, step);
-
-        return this;
-    },
-
-    rotateAround: function (point, angle)
-    {
-        Actions.RotateAround(this.children.entries, point, angle);
-
-        return this;
-    },
-
-    rotateAroundDistance: function (point, angle, distance)
-    {
-        Actions.RotateAroundDistance(this.children.entries, point, angle, distance);
-
-        return this;
-    },
-
-    setAlpha: function (value, step)
-    {
-        Actions.SetAlpha(this.children.entries, value, step);
-
-        return this;
-    },
-
-    setOrigin: function (x, y)
-    {
-        Actions.SetOrigin(this.children.entries, x, y);
-
-        return this;
-    },
-
-    scaleX: function (value)
-    {
-        Actions.ScaleX(this.children.entries, value);
-
-        return this;
-    },
-
-    scaleXY: function (x, y)
-    {
-        Actions.ScaleXY(this.children.entries, x, y);
-
-        return this;
-    },
-
-    scaleY: function (value)
-    {
-        Actions.ScaleY(this.children.entries, value);
-
-        return this;
-    },
-
-    setRotation: function (value, step)
-    {
-        Actions.SetRotation(this.children.entries, value, step);
-
-        return this;
-    },
-
-    setScale: function (x, y, stepX, stepY)
-    {
-        Actions.SetScale(this.children.entries, x, y, stepX, stepY);
-
-        return this;
-    },
-
-    setScaleX: function (value, step)
-    {
-        Actions.SetScaleX(this.children.entries, value, step);
-
-        return this;
-    },
-
-    setScaleY: function (value, step)
-    {
-        Actions.SetScaleY(this.children.entries, value, step);
-
-        return this;
-    },
-
-    setVisible: function (value)
-    {
-        Actions.SetVisible(this.children.entries, value);
-
-        return this;
-    },
-
-    setX: function (value, step)
-    {
-        Actions.SetX(this.children.entries, value, step);
-
-        return this;
-    },
-
-    setXY: function (x, y, stepX, stepY)
-    {
-        Actions.SetXY(this.children.entries, x, y, stepX, stepY);
-
-        return this;
-    },
-
-    setY: function (value, step)
-    {
-        Actions.SetY(this.children.entries, value, step);
-
-        return this;
+        return (capacity - used);
     },
 
     setDepth: function (value, step)
@@ -497,32 +368,21 @@ var Group = new Class({
         return this;
     },
 
-    shiftPosition: function (x, y, direction, output)
+    kill: function (gameObject)
     {
-        Actions.ShiftPosition(this.children.entries, x, y, direction, output);
-
-        return this;
+        if (this.children.contains(gameObject))
+        {
+            gameObject.setActive(false);
+        }
     },
 
-    smootherStep: function (property, min, max, inc)
+    killAndHide: function (gameObject)
     {
-        Actions.SmootherStep(this.children.entries, property, min, max, inc);
-
-        return this;
-    },
-
-    smoothStep: function (property, min, max, inc)
-    {
-        Actions.SmoothStep(this.children.entries, property, min, max, inc);
-
-        return this;
-    },
-
-    spread: function (property, min, max, inc)
-    {
-        Actions.Spread(this.children.entries, property, min, max, inc);
-
-        return this;
+        if (this.children.contains(gameObject))
+        {
+            gameObject.setActive(false);
+            gameObject.setVisible(false);
+        }
     },
 
     toggleVisible: function ()
@@ -530,6 +390,14 @@ var Group = new Class({
         Actions.ToggleVisible(this.children.entries);
 
         return this;
+    },
+
+    destroy: function ()
+    {
+        this.children.clear();
+
+        this.scene = undefined;
+        this.children = undefined;
     }
 
 });
