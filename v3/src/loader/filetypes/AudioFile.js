@@ -11,10 +11,9 @@ var AudioFile = new Class({
 
     initialize:
 
-    function AudioFile (key, url, path, xhrSettings, soundManager)
+    function AudioFile (key, url, path, xhrSettings, audioContext)
     {
-
-        this.soundManager = soundManager;
+        this.context = audioContext;
 
         var fileConfig = {
             type: 'audio',
@@ -36,7 +35,7 @@ var AudioFile = new Class({
         var _this = this;
 
         // interesting read https://github.com/WebAudio/web-audio-api/issues/1305
-        this.soundManager.context.decodeAudioData(this.xhrLoader.response,
+        this.context.decodeAudioData(this.xhrLoader.response,
             function (audioBuffer)
             {
                 _this.data = audioBuffer;
@@ -83,7 +82,7 @@ AudioFile.create = function (loader, key, urls, config, xhrSettings)
 
     if(deviceAudio.webAudio && !(audioConfig && audioConfig.disableWebAudio))
     {
-        loader.addFile(new AudioFile(key, url, loader.path, xhrSettings, game.sound));
+        loader.addFile(new AudioFile(key, url, loader.path, xhrSettings, game.sound.context));
         return;
     }
 
