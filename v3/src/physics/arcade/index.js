@@ -6,8 +6,10 @@
 module.exports = {
 
     Body: require('./Body'),
-    PhysicsGroup: require('./PhysicsGroup'),
-    World: require('./World'),
-    Factory: require('./Factory')
+    Factory: require('./Factory'),
+    Group: require('./PhysicsGroup'),
+    Image: require('./ArcadeImage'),
+    Sprite: require('./ArcadeSprite'),
+    World: require('./World')
   
 };

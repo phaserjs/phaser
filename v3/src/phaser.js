@@ -52,7 +52,7 @@ var Phaser = {
     
     Curves: require('./curves'),
 
-    // Physics: require('./physics'),
+    Physics: require('./physics'),
 
     Class: require('./utils/Class'),
 
