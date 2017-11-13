@@ -26,30 +26,27 @@ var DynamicTilemapLayer = new Class({
 
     initialize:
 
-    function DynamicTilemapLayer (scene, mapData, x, y, tileWidth, tileHeight, mapWidth, mapHeight, tileBorder, texture, frame)
+    function DynamicTilemapLayer (scene, tilemap, layerIndex, tileset, x, y)
     {
         GameObject.call(this, scene, 'DynamicTilemapLayer');
 
-        this.mapData = (mapData !== null) ? new Uint32Array(mapData) : new Uint32Array(mapWidth * mapHeight);
-        this.mapWidth = mapWidth;
-        this.mapHeight = mapHeight;
-
-        this.tileWidth = tileWidth;
-        this.tileHeight = tileHeight;
+        this.map = tilemap;
+        this.layerIndex = layerIndex;
+        this.layer = tilemap.layers[layerIndex];
+        this.tileset = tileset;
 
         this.tileArray = [];
         this.culledTiles = [];
-        this.tileBorder = tileBorder;
 
-        this.setTexture(texture, frame);
+        this.setTexture(tileset.image.key);
         this.setPosition(x, y);
         this.setSizeToFrame();
         this.setOrigin();
-        this.setSize(tileWidth * mapWidth, tileHeight * mapHeight);
+        this.setSize(this.map.tileWidth * this.layer.width, this.map.tileheight * this.layer.height);
 
         this.skipIndexZero = false;
 
-        this.buildTilemap(!!scene.sys.game.renderer.gl);
+        this.buildTilemap();
     },
 
     getTotalTileCount: function ()
@@ -62,60 +59,43 @@ var DynamicTilemapLayer = new Class({
         return this.cull(camera).length;
     },
 
-    buildTilemap: function (center)
+    buildTilemap: function ()
     {
         var tileArray = this.tileArray;
-        var mapData = this.mapData;
-        var border = this.tileBorder;
-
-        var tileWidth = this.tileWidth;
-        var tileHeight = this.tileHeight;
-        var tileWidthBorder = tileWidth + border * 2;
-        var tileHeightBorder = tileHeight + border * 2;
-
+        var mapData = this.layer.data;
+        var tileWidth = this.map.tileWidth;
+        var tileHeight = this.map.tileHeight;
+        var tileset = this.tileset;
         var width = this.texture.source[0].width;
         var height = this.texture.source[0].height;
-
-        var mapWidth = this.mapWidth;
-        var mapHeight = this.mapHeight;
-        var setWidth = width / tileWidth;
-
-        var tileWidthBorderHalf = tileWidthBorder * 0.5;
-        var tileHeightBorderHalf = tileHeightBorder * 0.5;
-
-        if (!center)
-        {
-            tileWidthBorderHalf = 0;
-            tileHeightBorderHalf = 0;
-        }
+        var mapWidth = this.layer.width;
+        var mapHeight = this.layer.height;
 
         tileArray.length = 0;
 
-        for (var y = 0; y < mapHeight; ++y)
+        for (var row = 0; row < mapHeight; ++row)
         {
-            for (var x = 0; x < mapWidth; ++x)
+            for (var col = 0; col < mapWidth; ++col)
             {
-                var tileId = mapData[y * mapWidth + x];
-                var rectx = (((tileId % setWidth)|0) * tileWidthBorder) + tileWidthBorderHalf;
-                var recty = (((tileId / setWidth)|0) * tileHeightBorder) + tileHeightBorderHalf;
-                var tx = x * tileWidth;
-                var ty = y * tileHeight;
+                var tileIndex = mapData[row][col].index;
+                if (tileIndex <= 0 && this.skipIndexZero) { continue; }
+
+                var texCoords = tileset.getTileTextureCoordinates(tileIndex);
+                if (texCoords === null) { continue; }
 
                 tileArray.push(new Tile({
-                    index: x + y,
-                    id: tileId,
-                    x: tx,
-                    y: ty,
+                    index: tileIndex,
+                    id: tileIndex,
+                    x: col * tileWidth,
+                    y: row * tileHeight,
                     width: tileWidth,
                     height: tileHeight,
-                    frameX: rectx,
-                    frameY: recty,
+                    frameX: texCoords.x,
+                    frameY: texCoords.y,
                     frameWidth: tileWidth,
                     frameHeight: tileHeight,
                     textureWidth: width,
-                    textureHeight: height,
-                    border: border,
-                    center: center
+                    textureHeight: height
                 }));
             }
         }
