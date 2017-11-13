@@ -6,6 +6,7 @@ module.exports = {
     BlendModes: require('./blendmodes'),
     Bounds: require('./bounds'),
     Canvas: require('./canvas'),
-    Color: require('./color')
+    Color: require('./color'),
+    Masks: require('./mask')
   
 };
