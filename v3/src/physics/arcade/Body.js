@@ -267,12 +267,9 @@ var Body = new Class({
             //  Now the State update will throw collision checks at the Body
             //  And finally we'll integrate the new position back to the Sprite in postUpdate
 
-            if (this.collideWorldBounds)
+            if (this.collideWorldBounds && this.checkWorldBounds() && this.onWorldBounds)
             {
-                if (this.checkWorldBounds() && this.onWorldBounds)
-                {
-                    this.world.events.dispatch(new PhysicsEvent.WORLD_BOUNDS(this));
-                }
+                this.world.events.dispatch(new PhysicsEvent.WORLD_BOUNDS(this));
             }
         }
 
