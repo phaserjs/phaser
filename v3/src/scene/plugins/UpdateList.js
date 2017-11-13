@@ -1,5 +1,6 @@
 var Class = require('../../utils/Class');
 
+//  TODO - Extend from ProcessQueue
 var UpdateList = new Class({
 
     initialize:
@@ -15,7 +16,14 @@ var UpdateList = new Class({
 
     add: function (child)
     {
-        this._pendingInsertion.push(child);
+        //  Is child already in this list?
+
+        if (this._list.indexOf(child) === -1 && this._pendingInsertion.indexOf(child) === -1)
+        {
+            this._pendingInsertion.push(child);
+        }
+
+        return child;
     },
 
     begin: function ()
