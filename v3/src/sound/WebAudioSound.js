@@ -10,10 +10,13 @@ var WebAudioSound = new Class({
          *
          * @property {AudioBuffer} audioBuffer
          */
-        this.audioBuffer = this.manager.game.cache.audio.get(key);
+        this.audioBuffer = manager.game.cache.audio.get(key);
         if (!this.audioBuffer) {
             console.error('No audio loaded in cache with key: \'' + key + '\'!');
             return;
+        }
+        if (config === void 0) {
+            config = {};
         }
         config.duration = this.audioBuffer.duration;
         BaseSound.call(this, manager, key, config);
