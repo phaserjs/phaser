@@ -20,7 +20,6 @@ var InjectionMap = {
     load: 'load',
     make: 'make',
     physicsManager: 'physics',
-    pool: 'pool',
     sceneManager: 'scene',
     time: 'time',
     tweens: 'tweens'

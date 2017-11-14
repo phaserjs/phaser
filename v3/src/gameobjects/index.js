@@ -12,7 +12,6 @@ var GameObjects = {
     Graphics: require('./graphics/Graphics.js'),
     Group: require('./group/Group'),
     Image: require('./image/Image'),
-    ObjectPool: require('./pool/ObjectPool.js'),
     Particles: require('./particles/ParticleEmitterManager'),
     PathFollower: require('./pathfollower/PathFollower'),
     Sprite3D: require('./sprite3d/Sprite3D'),

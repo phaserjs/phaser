@@ -10,7 +10,6 @@ var GameObjectFactory = require('../plugins/GameObjectFactory');
 var InputManager = require('../plugins/InputManager');
 var Loader = require('../plugins/Loader');
 var PhysicsManager = require('../plugins/PhysicsManager');
-var PoolManager = require('../plugins/PoolManager');
 var SceneManager = require('../plugins/SceneManager');
 var Settings = require('./Settings');
 var StableSort = require('../../utils/array/StableSort');
@@ -54,7 +53,6 @@ var Systems = new Class({
         this.load;
         this.make;
         this.physicsManager;
-        this.pool;
         this.sceneManager;
         this.time;
         this.tweens;
@@ -86,7 +84,6 @@ var Systems = new Class({
         this.load = new Loader(scene);
         this.make = new GameObjectCreator(scene);
         this.physicsManager = new PhysicsManager(scene);
-        this.pool = new PoolManager(scene);
         this.sceneManager = new SceneManager(scene);
         this.time = new Clock(scene);
         this.tweens = new TweenManager(scene);
@@ -128,7 +125,6 @@ var Systems = new Class({
         //  Move these into local arrays, so you can control which systems are registered here and their
         //  execution order
 
-        this.pool.begin(time);
         this.updateList.begin(time);
         this.time.begin(time);
         this.tweens.begin(time);
@@ -136,7 +132,6 @@ var Systems = new Class({
 
         this.physicsManager.update(time, delta);
 
-        this.pool.update(time, delta);
         this.updateList.update(time, delta);
         this.time.update(time, delta);
         this.tweens.update(time, delta);
@@ -250,7 +245,6 @@ var Systems = new Class({
         this.settings.active = false;
         this.settings.visible = false;
 
-        this.pool.shutdown();
         this.displayList.shutdown();
         this.updateList.shutdown();
         this.time.shutdown();
@@ -268,7 +262,6 @@ var Systems = new Class({
         //  TODO
 
         this.add.destroy();
-        this.pool.destroy();
         this.time.destroy();
         this.tweens.destroy();
 
