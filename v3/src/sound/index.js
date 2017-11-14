@@ -5,6 +5,8 @@ module.exports = {
     Dynamic: require('./dynamic'),
 
     BaseSoundManager: require('./BaseSoundManager'),
-    WebAudioSoundManager: require('./WebAudioSoundManager')
+    WebAudioSoundManager: require('./WebAudioSoundManager'),
+
+    BaseSound: require('./BaseSound')
 
 };
