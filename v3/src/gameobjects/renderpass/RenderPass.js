@@ -136,7 +136,7 @@ var RenderPass = new Class({
                 gl.bindTexture(gl.TEXTURE_2D, textureData.texture);
                 gl.activeTexture(gl.TEXTURE0);
             }
-            renderer.spriteBatch.flush(this.passShader, this.passRenderTarget.framebufferObject);
+            renderer.spriteBatch.flush(this.passShader, this.passRenderTarget);
         }
     },
 
