@@ -32,6 +32,7 @@ var BaseSound = new Class({
         this.events = new EventDispatcher();
     },
     addMarker: function (marker) {
+        return false;
     },
     removeMarker: function (markerName) {
         return false;
