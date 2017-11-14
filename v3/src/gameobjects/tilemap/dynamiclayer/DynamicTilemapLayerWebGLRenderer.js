@@ -15,6 +15,7 @@ var DynamicTilemapLayerWebGLRenderer = function (renderer, gameObject, interpola
     var texture = gameObject.texture.source[0].glTexture;
     var textureWidth = texture.width;
     var textureHeight = texture.height;
+    var tileset = this.tileset;
     var renderTarget = gameObject.renderTarget;
     var scrollFactorX = gameObject.scrollFactorX;
     var scrollFactorY = gameObject.scrollFactorY;
@@ -26,17 +27,15 @@ var DynamicTilemapLayerWebGLRenderer = function (renderer, gameObject, interpola
     {
         var tile = renderTiles[index];
 
-        if (tile.id <= 0 && gameObject.skipIndexZero)
-        {
-            continue;
-        }
+        var tileTexCoords = tileset.getTileTextureCoordinates(tile.index);
+        if (tileTexCoords === null) { continue; }
 
         batch.addTileTextureRect(
             texture,
-            x + tile.x, y + tile.y, tile.width, tile.height, alpha * tile.alpha, tile.tint,
+            x + tile.worldX, y + tile.worldY, tile.width, tile.height, alpha * tile.alpha, tile.tint,
             scrollFactorX, scrollFactorY,
             textureWidth, textureHeight,
-            tile.frameX, tile.frameY, tile.frameWidth, tile.frameHeight,
+            tileTexCoords.x, tileTexCoords.y, tile.width, tile.height,
             camera,
             renderTarget
         );

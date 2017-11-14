@@ -2,7 +2,6 @@ var Class = require('../../../utils/Class');
 var GameObject = require('../../GameObject');
 var Components = require('../../components');
 var DynamicTilemapLayerRender = require('./DynamicTilemapLayerRender');
-var Tile = require('./Tile');
 
 var DynamicTilemapLayer = new Class({
 
@@ -35,7 +34,6 @@ var DynamicTilemapLayer = new Class({
         this.layer = tilemap.layers[layerIndex];
         this.tileset = tileset;
 
-        this.tileArray = [];
         this.culledTiles = [];
 
         this.setTexture(tileset.image.key);
@@ -45,8 +43,6 @@ var DynamicTilemapLayer = new Class({
         this.setSize(this.map.tileWidth * this.layer.width, this.map.tileheight * this.layer.height);
 
         this.skipIndexZero = false;
-
-        this.buildTilemap();
     },
 
     getTotalTileCount: function ()
@@ -59,53 +55,12 @@ var DynamicTilemapLayer = new Class({
         return this.cull(camera).length;
     },
 
-    buildTilemap: function ()
-    {
-        var tileArray = this.tileArray;
-        var mapData = this.layer.data;
-        var tileWidth = this.map.tileWidth;
-        var tileHeight = this.map.tileHeight;
-        var tileset = this.tileset;
-        var width = this.texture.source[0].width;
-        var height = this.texture.source[0].height;
-        var mapWidth = this.layer.width;
-        var mapHeight = this.layer.height;
-
-        tileArray.length = 0;
-
-        for (var row = 0; row < mapHeight; ++row)
-        {
-            for (var col = 0; col < mapWidth; ++col)
-            {
-                var tileIndex = mapData[row][col].index;
-                if (tileIndex <= 0 && this.skipIndexZero) { continue; }
-
-                var texCoords = tileset.getTileTextureCoordinates(tileIndex);
-                if (texCoords === null) { continue; }
-
-                tileArray.push(new Tile({
-                    index: tileIndex,
-                    id: tileIndex,
-                    x: col * tileWidth,
-                    y: row * tileHeight,
-                    width: tileWidth,
-                    height: tileHeight,
-                    frameX: texCoords.x,
-                    frameY: texCoords.y,
-                    frameWidth: tileWidth,
-                    frameHeight: tileHeight,
-                    textureWidth: width,
-                    textureHeight: height
-                }));
-            }
-        }
-    },
-
     cull: function (camera)
     {
+        var mapData = this.layer.data;
+        var mapWidth = this.layer.width;
+        var mapHeight = this.layer.height;
         var culledTiles = this.culledTiles;
-        var tiles = this.tileArray;
-        var length = tiles.length;
         var scrollX = camera.scrollX * this.scrollFactorX;
         var scrollY = camera.scrollY * this.scrollFactorY;
         var cameraW = camera.width;
@@ -113,31 +68,37 @@ var DynamicTilemapLayer = new Class({
 
         culledTiles.length = 0;
 
-        for (var index = 0; index < length; ++index)
+        for (var row = 0; row < mapHeight; ++row)
         {
-            var tile = tiles[index];
-            var tileX = tile.x - scrollX;
-            var tileY = tile.y - scrollY;
-            var tileW = tile.width;
-            var tileH = tile.height;
-            var cullW = cameraW + tileW;
-            var cullH = cameraH + tileH;
-
-            if (tile.visible &&
-                tileX > -tileW && tileY > -tileH &&
-                tileX < cullW && tileY < cullH)
+            for (var col = 0; col < mapWidth; ++col)
             {
-                culledTiles.push(tile);
+                var tile = mapData[row][col];
+
+                if (tile === null || (tile.index <= 0 && this.skipIndexZero)) { continue; }
+
+                var tileX = tile.worldX - scrollX;
+                var tileY = tile.worldY - scrollY;
+                var tileW = tile.width;
+                var tileH = tile.height;
+                var cullW = cameraW + tileW;
+                var cullH = cameraH + tileH;
+
+                if (tile.visible &&
+                    tileX > -tileW && tileY > -tileH &&
+                    tileX < cullW && tileY < cullH)
+                {
+                    culledTiles.push(tile);
+                }
             }
         }
 
         return culledTiles;
-    },
+    }
 
-    forEach: function (callback)
-    {
-        this.tileArray.forEach(callback);
-    },
+    // forEach: function (callback)
+    // {
+    //     this.tileArray.forEach(callback);
+    // },
 
     //  Returns Object containing:
     //  {
@@ -157,32 +118,32 @@ var DynamicTilemapLayer = new Class({
     //      y
     //  }
 
-    getTileAt: function (x, y)
-    {
-        var ix = (x|0);
-        var iy = (y|0);
-        var tiles = this.tileArray;
-        var index = iy * this.mapWidth + ix;
+    // getTileAt: function (x, y)
+    // {
+    //     var ix = (x|0);
+    //     var iy = (y|0);
+    //     var tiles = this.tileArray;
+    //     var index = iy * this.mapWidth + ix;
 
-        if (index < tiles.length)
-        {
-            return tiles[index];
-        }
+    //     if (index < tiles.length)
+    //     {
+    //         return tiles[index];
+    //     }
 
-        return null;
-    },
+    //     return null;
+    // },
 
-    getTileAtIndex: function (index)
-    {
-        var tiles = this.tileArray;
+    // getTileAtIndex: function (index)
+    // {
+    //     var tiles = this.tileArray;
 
-        if (index < tiles.length)
-        {
-            return tiles[index];
-        }
+    //     if (index < tiles.length)
+    //     {
+    //         return tiles[index];
+    //     }
 
-        return null;
-    }
+    //     return null;
+    // }
 
 });
 

@@ -9,9 +9,10 @@ var DynamicTilemapLayerCanvasRenderer = function (renderer, gameObject, interpol
 
     gameObject.cull(camera);
 
-    var tiles = gameObject.culledTiles;
-    var tileCount = tiles.length;
+    var renderTiles = gameObject.culledTiles;
+    var length = renderTiles.length;
     var image = gameObject.frame.source.image;
+    var tileset = this.tileset;
 
     // var scrollFactorX = gameObject.scrollFactorX;
     // var scrollFactorY = gameObject.scrollFactorY;
@@ -27,21 +28,19 @@ var DynamicTilemapLayerCanvasRenderer = function (renderer, gameObject, interpol
     ctx.scale(gameObject.scaleX, gameObject.scaleY);
     ctx.scale(gameObject.flipX ? -1 : 1, gameObject.flipY ? -1 : 1);
 
-    for (var index = 0; index < tileCount; ++index)
+    for (var index = 0; index < length; ++index)
     {
-        var tile = tiles[index];
+        var tile = renderTiles[index];
 
-        if (tile.id <= 0 && gameObject.skipIndexZero)
-        {
-            continue;
-        }
+        var tileTexCoords = tileset.getTileTextureCoordinates(tile.index);
+        if (tileTexCoords === null) { continue; }
 
         ctx.drawImage(
             image,
-            tile.frameX, tile.frameY,
-            tile.frameWidth, tile.frameHeight,
-            tile.x, tile.y,
-            tile.frameWidth, tile.frameHeight
+            tileTexCoords.x, tileTexCoords.y,
+            tile.width, tile.height,
+            tile.worldX, tile.worldY,
+            tile.width, tile.height
         );
     }
 

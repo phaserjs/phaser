@@ -1,7 +1,7 @@
 var Class = require('../../../utils/Class');
+var GameObject = require('../../GameObject');
 var Components = require('../../components');
 var CONST = require('../../../renderer/webgl/renderers/tilemaprenderer/const');
-var GameObject = require('../../GameObject');
 var StaticTilemapLayerRender = require('./StaticTilemapLayerRender');
 
 var StaticTilemapLayer = new Class({
@@ -45,6 +45,7 @@ var StaticTilemapLayer = new Class({
         this.vertexCount = 0;
         this.cullStart = 0;
         this.cullEnd = 0;
+        this.canvasTiles = [];
 
         this.setTexture(tileset.image.key);
         this.setPosition(x, y);
@@ -80,6 +81,7 @@ var StaticTilemapLayer = new Class({
         var height = this.texture.source[0].height;
         var mapData = this.layer.data;
 
+        var tile;
         var row;
         var col;
         var tileIndex;
@@ -116,15 +118,15 @@ var StaticTilemapLayer = new Class({
                 {
                     for (col = 0; col < mapWidth; ++col)
                     {
-                        tileIndex = mapData[row][col].index;
-                        if (tileIndex <= 0 && this.skipIndexZero) { continue; }
+                        tile = mapData[row][col];
+                        if (tile === null || (tile.index <= 0 && this.skipIndexZero)) { continue; }
 
                         var tx = col * tileWidth;
                         var ty = row * tileHeight;
                         var txw = tx + tileWidth;
                         var tyh = ty + tileHeight;
 
-                        texCoords = tileset.getTileTextureCoordinates(tileIndex);
+                        texCoords = tileset.getTileTextureCoordinates(tile.index);
                         if (texCoords === null) { continue; }
 
                         // Inset UV coordinates by 0.5px to prevent tile bleeding
@@ -202,25 +204,16 @@ var StaticTilemapLayer = new Class({
         }
         else if (this.dirty && !this.gl)
         {
-            this.tiles = [];
+            this.canvasTiles.length = 0;
 
             for (row = 0; row < mapHeight; ++row)
             {
                 for (col = 0; col < mapWidth; ++col)
                 {
-                    tileIndex = mapData[row][col].index;
-                    if (tileIndex <= 0 && this.skipIndexZero) { continue; }
+                    tile = mapData[row][col];
+                    if (tile === null || (tile.index <= 0 && this.skipIndexZero)) { continue; }
 
-                    texCoords = tileset.getTileTextureCoordinates(tileIndex);
-                    if (texCoords === null) { continue; }
-
-                    this.tiles.push({
-                        x: col * tileWidth,
-                        y: row * tileHeight,
-                        frameX: texCoords.x,
-                        frameY: texCoords.y
-                    });
-
+                    this.canvasTiles.push(tile);
                 }
             }
 
