@@ -21,7 +21,7 @@ var EmitterOp = new Class({
 
         this.start = 0;
         this.end = 0;
-        this.ease;
+        this.ease = null;
 
         this.emitOnly = emitOnly;
 

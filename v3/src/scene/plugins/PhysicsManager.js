@@ -20,13 +20,13 @@ var PhysicsManager = new Class({
         this.sceneConfig = scene.sys.settings.physics;
 
         //  This gets set to an instance of the physics system during boot
-        this.system;
+        this.system = null;
 
         //  This gets set by the physics system during boot
         this.world = { update: NOOP, postUpdate: NOOP };
 
         //  This gets set by the physics system during boot
-        this.add;
+        this.add = null;
     },
 
     boot: function ()

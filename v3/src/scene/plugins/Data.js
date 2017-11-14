@@ -1,5 +1,4 @@
 var Class = require('../../utils/Class');
-var Event = require('../../events/Event');
 var EventDispatcher = require('../../events/EventDispatcher');
 
 /**
@@ -14,7 +13,7 @@ var Data = new Class({
     {
         this.parent = parent;
 
-        this.events = (eventDispatcher) ? eventDispatcher : new EventDispatcher();
+        this.events = eventDispatcher || new EventDispatcher();
 
         this.list = {};
 
@@ -36,7 +35,10 @@ var Data = new Class({
 
         for (var key in this.list)
         {
-            results[key] = this.list[key];
+            if (typeof this.list[key] !== 'undefined')
+            {
+                results[key] = this.list[key];
+            }
         }
 
         return results;
@@ -48,7 +50,7 @@ var Data = new Class({
 
         for (var key in this.list)
         {
-            if (key.match(search))
+            if (typeof this.list[key] !== 'undefined' && key.match(search))
             {
                 results[key] = this.list[key];
             }
@@ -70,10 +72,9 @@ var Data = new Class({
         //  If there is a 'before' callback, then check it for a result
         //  This means a property can only ever have 1 callback, which isn't right - we may need more
         //  Dispatch event instead?
-        if (this._beforeCallbacks.hasOwnProperty(key))
+        listener = this._beforeCallbacks[key];
+        if (listener)
         {
-            listener = this._beforeCallbacks[key];
-
             result = listener.callback.call(listener.scope, this.parent, key, data);
 
             if (result !== undefined)
@@ -87,10 +88,9 @@ var Data = new Class({
         this.list[key] = data;
 
         //  If there is a 'after' callback, then check it for a result
-        if (this._afterCallbacks.hasOwnProperty(key))
+        listener = this._afterCallbacks[key];
+        if (listener)
         {
-            listener = this._afterCallbacks[key];
-
             result = listener.callback.call(listener.scope, this.parent, key, data);
 
             if (result !== undefined)
@@ -107,7 +107,7 @@ var Data = new Class({
         if (callback === undefined)
         {
             //  Remove entry
-            delete this._beforeCallbacks[key];
+            this._beforeCallbacks[key] = undefined;
         }
         else
         {
@@ -120,7 +120,7 @@ var Data = new Class({
         if (callback === undefined)
         {
             //  Remove entry
-            delete this._afterCallbacks[key];
+            this._afterCallbacks[key] = undefined;
         }
         else
         {
@@ -138,7 +138,7 @@ var Data = new Class({
     */
     each: function (callback, scope)
     {
-        var args = [ this.parent, null, undefined ];
+        var args = [ this.parent, null, null ];
 
         for (var i = 1; i < arguments.length; i++)
         {
@@ -147,6 +147,7 @@ var Data = new Class({
 
         for (var key in this.list)
         {
+            if (typeof this.list[key] === 'undefined') { continue; }
             args[1] = key;
             args[2] = this.list[key];
 
@@ -161,7 +162,7 @@ var Data = new Class({
         //  Merge data from another component into this one
         for (var key in data)
         {
-            if (overwrite || (!overwrite && !this.has(key)))
+            if (overwrite || typeof this.list[key] === 'undefined')
             {
                 this.list[key] = data;
             }
@@ -172,7 +173,7 @@ var Data = new Class({
     {
         if (!this._frozen && this.has(key))
         {
-            delete this.list[key];
+            this.list[key] = undefined;
 
             this.removeListeners(key);
         }
@@ -180,56 +181,42 @@ var Data = new Class({
 
     removeListeners: function (key)
     {
-        if (this._beforeCallbacks.hasOwnProperty(key))
+        if (typeof this._beforeCallbacks[key] !== 'undefined')
         {
-            delete this._beforeCallbacks[key];
+            this._beforeCallbacks[key] = undefined;
         }
 
-        if (this._afterCallbacks.hasOwnProperty(key))
+        if (typeof this._afterCallbacks[key] !== 'undefined')
         {
-            delete this._afterCallbacks[key];
+            this._afterCallbacks[key] = undefined;
         }
     },
 
     //  Gets the data associated with the given 'key', deletes it from this Data store, then returns it.
     pop: function (key)
     {
-        var data = undefined;
-
         if (!this._frozen && this.has(key))
         {
-            data = this.list[key];
+            var data = this.list[key];
 
-            delete this.list[key];
+            this.list[key] = undefined;
 
             this.removeListeners(key);
-        }
 
-        return data;
+            return data;
+        }
     },
 
     has: function (key)
     {
-        return this.list.hasOwnProperty(key);
+        return typeof this.list[key] !== 'undefined';
     },
 
     reset: function ()
     {
-        for (var key in this.list)
-        {
-            delete this.list[key];
-        }
-
-        for (key in this._beforeCallbacks)
-        {
-            delete this._beforeCallbacks[key];
-        }
-
-        for (key in this._afterCallbacks)
-        {
-            delete this._afterCallbacks[key];
-        }
-
+        this.list = {};
+        this._beforeCallbacks = {};
+        this._afterCallbacks = {};
         this._frozen = false;
     },
 
@@ -257,7 +244,7 @@ var Data = new Class({
 
         set: function (value)
         {
-            this._frozen = (value) ? true : false;
+            this._frozen = !!value;
         }
 
     },

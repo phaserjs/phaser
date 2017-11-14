@@ -174,7 +174,7 @@ var File = new Class({
  */
 File.createObjectURL = function (image, blob, defaultType)
 {
-    if(URL)
+    if (typeof URL === 'function')
     {
         image.src = URL.createObjectURL(blob);
     }
@@ -182,9 +182,9 @@ File.createObjectURL = function (image, blob, defaultType)
     {
         var reader = new FileReader();
 
-        reader.onload = function()
+        reader.onload = function ()
         {
-            delete image.crossOrigin;
+            image.removeAttribute('crossOrigin');
             image.src = 'data:' + (blob.type || defaultType) + ';base64,' + reader.result.split(',')[1];
         };
 

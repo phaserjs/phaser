@@ -51,7 +51,7 @@ var DynamicBitmapText = new Class({
         this.cropWidth = 0;
         this.cropHeight = 0;
 
-        this.displayCallback;
+        this.displayCallback = null;
     },
 
     setSize: function (width, height)
