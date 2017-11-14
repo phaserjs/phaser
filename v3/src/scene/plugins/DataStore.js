@@ -142,13 +142,10 @@ var DataStore = new Class({
 
     kill: function (gameObject)
     {
-        if (this.list.hasOwnProperty(gameObject))
+        if (this.list[gameObject])
         {
-            var data = this.list[gameObject];
-
-            data.destroy();
-
-            delete this.list[gameObject];
+            this.list[gameObject].destroy();
+            this.list[gameObject] = undefined;
         }
     }
 
