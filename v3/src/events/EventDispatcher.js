@@ -212,7 +212,7 @@ var EventDispatcher = new Class({
     {
         for (var binding in this.bindings)
         {
-            binding.destroy();
+            this.bindings[binding].destroy();
         }
 
         this.bindings = {};
