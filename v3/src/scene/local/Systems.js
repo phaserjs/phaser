@@ -30,33 +30,33 @@ var Systems = new Class({
         this.sortChildrenFlag = false;
 
         //  Set by the GlobalSceneManager
-        this.canvas;
-        this.context;
+        this.canvas = null;
+        this.context = null;
 
         //  CORE (GLOBAL) SYSTEMS / PROPERTIES
 
-        this.game;
+        this.game = null;
 
-        this.anims;
-        this.cache;
-        this.registry;
-        this.textures;
+        this.anims = null;
+        this.cache = null;
+        this.registry = null;
+        this.textures = null;
 
         //  Reference to Scene specific managers (Factory, Tweens, Loader, Physics, etc)
-        this.add;
-        this.cameras;
-        this.data;
-        this.dataStore;
-        this.displayList;
-        this.events;
-        this.inputManager;
-        this.load;
-        this.make;
-        this.physicsManager;
-        this.sceneManager;
-        this.time;
-        this.tweens;
-        this.updateList;
+        this.add = null;
+        this.cameras = null;
+        this.data = null;
+        this.dataStore = null;
+        this.displayList = null;
+        this.events = null;
+        this.inputManager = null;
+        this.load = null;
+        this.make = null;
+        this.physicsManager = null;
+        this.sceneManager = null;
+        this.time = null;
+        this.tweens = null;
+        this.updateList = null;
     },
 
     init: function (game)

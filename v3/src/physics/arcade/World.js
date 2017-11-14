@@ -56,7 +56,7 @@ var World = new Class({
 
         this.drawDebug = GetValue(config, 'debug', false);
 
-        this.debugGraphic;
+        this.debugGraphic = null;
 
         this.defaults = {
             debugShowBody: GetValue(config, 'debugShowBody', true),

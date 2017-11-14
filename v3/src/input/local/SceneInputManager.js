@@ -18,10 +18,10 @@ var SceneInputManager = new Class({
         this.manager = scene.sys.game.input;
 
         //  A reference to this.scene.sys.displayList (set in boot)
-        this.displayList;
+        this.displayList = null;
 
         //  A reference to the this.scene.sys.cameras (set in boot)
-        this.cameras;
+        this.cameras = null;
 
         //  The Scene event dispatcher
         this.events = scene.sys.events;

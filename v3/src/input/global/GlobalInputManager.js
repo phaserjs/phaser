@@ -22,7 +22,7 @@ var GlobalInputManager = new Class({
     {
         this.game = game;
 
-        this.canvas;
+        this.canvas = null;
 
         this.config = config;
 

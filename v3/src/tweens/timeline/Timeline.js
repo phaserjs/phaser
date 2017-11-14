@@ -78,7 +78,7 @@ var Timeline = new Class({
             onYoyo: null
         };
 
-        this.callbackScope;
+        this.callbackScope = null;
     },
 
     setTimeScale: function (value)
@@ -204,7 +204,7 @@ var Timeline = new Class({
             {
                 //  Sequential
                 tween.calculatedOffset = offsetDuration;
-                
+
                 // console.log('Timeline.calcDuration', i, 'sequential', tween.calculatedOffset);
             }
 
@@ -280,7 +280,7 @@ var Timeline = new Class({
         if (this.paused)
         {
             this.paused = false;
-        
+
             this.manager.makeActive(this);
 
             return;
@@ -481,7 +481,7 @@ var Timeline = new Class({
                 return true;
             }
         }
-        
+
         return false;
     },
 

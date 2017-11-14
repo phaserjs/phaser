@@ -21,9 +21,9 @@ var GamepadManager = new Class({
 
         this.enabled = false;
 
-        this.target;
+        this.target = null;
 
-        this.handler;
+        this.handler = null;
 
         this.gamepads = [];
 
