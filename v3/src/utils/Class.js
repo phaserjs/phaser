@@ -8,7 +8,7 @@ function hasGetterOrSetter (def)
 function getProperty (definition, k, isClassDescriptor)
 {
     //  This may be a lightweight object, OR it might be a property that was defined previously.
-    
+
     //  For simple class descriptors we can just assume its NOT previously defined.
     var def = (isClassDescriptor) ? definition[k] : Object.getOwnPropertyDescriptor(definition, k);
 
@@ -74,7 +74,7 @@ function extend (ctor, definition, isClassDescriptor, extend)
         if (def !== false)
         {
             //  If Extends is used, we will check its prototype to see if the final variable exists.
-            
+
             var parent = extend || ctor;
 
             if (hasNonConfigurable(parent.prototype, k))
@@ -136,7 +136,7 @@ function mixin (myClass, mixins)
  * @example
  *
  *      var MyClass = new Phaser.Class({
- *      
+ *
  *          initialize: function() {
  *              this.foo = 2.0;
  *          },
@@ -171,21 +171,18 @@ function Class (definition)
         //  here since we only call this on class creation (i.e. not object creation).
         delete definition.initialize;
     }
+    else if (definition.Extends)
+    {
+        var base = definition.Extends;
+
+        initialize = function ()
+        {
+            base.apply(this, arguments);
+        };
+    }
     else
     {
-        if (definition.Extends)
-        {
-            var base = definition.Extends;
-
-            initialize = function ()
-            {
-                base.apply(this, arguments);
-            };
-        }
-        else
-        {
-            initialize = function () {};
-        }
+        initialize = function () {};
     }
 
     if (definition.Extends)
