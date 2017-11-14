@@ -9,7 +9,7 @@ var Camera = new Class({
 
     function Camera (x, y, width, height)
     {
-        this.scene;
+        this.scene = null;
 
         this.name = '';
 

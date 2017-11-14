@@ -30,7 +30,7 @@ var KeyboardManager = new Class({
 
         this.enabled = false;
 
-        this.target;
+        this.target = null;
 
         this.keys = [];
 
@@ -41,7 +41,7 @@ var KeyboardManager = new Class({
         //   Standard FIFO queue
         this.queue = [];
 
-        this.handler;
+        this.handler = null;
     },
 
     /**

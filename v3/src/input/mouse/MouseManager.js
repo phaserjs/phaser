@@ -16,9 +16,9 @@ var MouseManager = new Class({
 
         this.enabled = false;
 
-        this.target;
+        this.target = null;
 
-        this.handler;
+        this.handler = null;
     },
 
     boot: function ()

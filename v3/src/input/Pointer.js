@@ -21,7 +21,7 @@ var Pointer = new Class({
 
         this.id = id;
 
-        this.event;
+        this.event = null;
 
         //  The camera the Pointer interacted with during its last update
         //  A Pointer can only ever interact with 1 camera at once, which will be the top-most camera

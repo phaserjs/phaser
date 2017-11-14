@@ -33,17 +33,17 @@ var TimerEvent = new Class({
         /**
         * @property {function} callback - The callback that will be called when the TimerEvent occurs.
         */
-        this.callback;
+        this.callback = null;
 
         /**
         * @property {object} callbackContext - The context in which the callback will be called.
         */
-        this.callbackScope;
+        this.callbackScope = null;
 
         /**
         * @property {any[]} arguments - Additional arguments to be passed to the callback.
         */
-        this.args;
+        this.args = null;
 
         //  Scale the time causing this TimerEvent to update
         this.timeScale = 1;

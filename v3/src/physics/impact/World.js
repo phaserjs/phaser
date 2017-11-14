@@ -37,7 +37,7 @@ var World = new Class({
 
         this.drawDebug = GetFastValue(config, 'debug', false);
 
-        this.debugGraphic;
+        this.debugGraphic = null;
 
         var _maxVelocity = GetFastValue(config, 'maxVelocity', 100);
 
@@ -57,7 +57,7 @@ var World = new Class({
         * @property {object} walls - An object containing the 4 wall bodies that bound the physics world.
         */
         this.walls = { left: null, right: null, top: null, bottom: null };
-    
+
         this.delta = 0;
 
         this._lastId = 0;
@@ -331,12 +331,12 @@ var World = new Class({
         {
             bodyA.check(bodyB);
         }
-        
+
         if (bodyB.checkAgainst & bodyA.type)
         {
             bodyB.check(bodyA);
         }
-        
+
         if (bodyA.collides && bodyB.collides && bodyA.collides + bodyB.collides > COLLIDES.ACTIVE)
         {
             Solver(this, bodyA, bodyB);
