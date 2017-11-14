@@ -14,7 +14,8 @@ GameObjectCreator.register('tilemap', function (config)
     //     tileHeight: 32,
     //     width: 10,
     //     height: 10,
-    //     data: null (2D array of tile indices)
+    //     data: null (2D array of tile indices),
+    //     insertNull: false
     // }
 
     var key = GetFastValue(config, 'key', null);
@@ -22,12 +23,13 @@ GameObjectCreator.register('tilemap', function (config)
     var tileHeight = GetFastValue(config, 'tileHeight', 32);
     var width = GetFastValue(config, 'width', 10);
     var height = GetFastValue(config, 'height', 10);
+    var insertNull = GetFastValue(config, 'insertNull', false);
     var data = GetFastValue(config, 'data', null);
 
     var parsedData = null;
     if (key === null && Array.isArray(data))
     {
-        parsedData = Parse(key, Formats.TILEMAP_2D_ARRAY, data, tileWidth, tileHeight, width, height);
+        parsedData = Parse(key, Formats.TILEMAP_2D_ARRAY, data, tileWidth, tileHeight, insertNull);
     }
     else if (key !== null)
     {
@@ -39,7 +41,7 @@ GameObjectCreator.register('tilemap', function (config)
         }
         else
         {
-            parsedData = Parse(key, tilemapData.format, tilemapData.data, tileWidth, tileHeight, width, height);
+            parsedData = Parse(key, tilemapData.format, tilemapData.data, tileWidth, tileHeight, insertNull);
         }
     }
 
