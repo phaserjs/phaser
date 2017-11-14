@@ -14,10 +14,6 @@ var DynamicTilemapLayerCanvasRenderer = function (renderer, gameObject, interpol
     var image = gameObject.frame.source.image;
     var tileset = this.tileset;
 
-    // var scrollFactorX = gameObject.scrollFactorX;
-    // var scrollFactorY = gameObject.scrollFactorY;
-    // var alpha = gameObject.alpha;
-
     var tx = gameObject.x - camera.scrollX * gameObject.scrollFactorX;
     var ty = gameObject.y - camera.scrollY * gameObject.scrollFactorY;
     var ctx = renderer.gameContext;
@@ -34,6 +30,8 @@ var DynamicTilemapLayerCanvasRenderer = function (renderer, gameObject, interpol
 
         var tileTexCoords = tileset.getTileTextureCoordinates(tile.index);
         if (tileTexCoords === null) { continue; }
+
+        renderer.setAlpha(gameObject.alpha * tile.alpha);
 
         ctx.drawImage(
             image,

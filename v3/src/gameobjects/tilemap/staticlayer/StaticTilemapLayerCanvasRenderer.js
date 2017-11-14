@@ -33,6 +33,8 @@ var StaticTilemapLayerCanvasRenderer = function (renderer, gameObject, interpola
         var tileTexCoords = tileset.getTileTextureCoordinates(tile.index);
         if (tileTexCoords === null) { continue; }
 
+        renderer.setAlpha(gameObject.alpha * tile.alpha);
+
         ctx.drawImage(
             image,
             tileTexCoords.x, tileTexCoords.y,
