@@ -41,6 +41,7 @@ var BaseSoundManager = new Class({
          * @property {boolean} muteOnPause
          */
         this.muteOnPause = true;
+        this.sounds = [];
         /**
          * [description]
          *
