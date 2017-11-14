@@ -4,7 +4,17 @@ var BaseSound = require('./BaseSound');
 var WebAudioSound = new Class({
     Extends: BaseSound,
     initialize: function WebAudioSound(manager, key, config) {
-        // TODO update config duration
+        /**
+         * [description]
+         *
+         * @property {AudioBuffer} audioBuffer
+         */
+        this.audioBuffer = this.manager.game.cache.audio.get(key);
+        if (!this.audioBuffer) {
+            console.error('No audio loaded in cache with key: \'' + key + '\'!');
+            return;
+        }
+        config.duration = this.audioBuffer.duration;
         BaseSound.call(this, manager, key, config);
     }
 });
