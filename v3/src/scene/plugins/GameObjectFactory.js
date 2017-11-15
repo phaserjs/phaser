@@ -8,8 +8,8 @@ var GameObjectFactory = new Class({
     {
         this.scene = scene;
 
-        this.displayList;
-        this.updateList;
+        this.displayList = null;
+        this.updateList = null;
     },
 
     boot: function (sys)

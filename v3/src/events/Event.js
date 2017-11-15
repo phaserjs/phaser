@@ -9,7 +9,7 @@ var Event = new Class({
         this.type = type;
 
         //  The element that initiated the event.
-        this.target;
+        this.target = null;
 
         this._propagate = true;
     },

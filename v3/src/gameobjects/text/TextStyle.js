@@ -32,22 +32,22 @@ var TextStyle = new Class({
     {
         this.parent = text;
 
-        this.font;
-        this.backgroundColor;
-        this.fill;
-        this.stroke;
-        this.strokeThickness;
-        this.shadowOffsetX;
-        this.shadowOffsetY;
-        this.shadowColor;
-        this.shadowBlur;
-        this.shadowStroke;
-        this.shadowFill;
-        this.align;
-        this.maxLines;
-        this.fixedWidth;
-        this.fixedHeight;
-        this.rtl;
+        this.font = null;
+        this.backgroundColor = null;
+        this.fill = null;
+        this.stroke = null;
+        this.strokeThickness = null;
+        this.shadowOffsetX = null;
+        this.shadowOffsetY = null;
+        this.shadowColor = null;
+        this.shadowBlur = null;
+        this.shadowStroke = null;
+        this.shadowFill = null;
+        this.align = null;
+        this.maxLines = null;
+        this.fixedWidth = null;
+        this.fixedHeight = null;
+        this.rtl = null;
 
         //  Set to defaults
         this.reset();

@@ -28,7 +28,7 @@ var PathFollower = new Class({
 
         this.pathVector = new Vector2();
 
-        this.pathTween;
+        this.pathTween = null;
 
         this.pathConfig = null;
 
