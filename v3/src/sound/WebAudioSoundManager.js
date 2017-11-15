@@ -18,6 +18,13 @@ var WebAudioSoundManager = new Class({
          * @property {GainNode} masterVolumeNode
          */
         this.masterVolumeNode = this.context.createGain();
+        /**
+         * Destination node for connecting individual sounds to.
+         *
+         * @property {AudioNode} destination
+         */
+        this.destination = this.masterVolumeNode;
+        this.masterVolumeNode.connect(this.context.destination);
     },
     createAudioContext: function () {
         var audioConfig = this.game.config.audio;

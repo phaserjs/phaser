@@ -38,7 +38,7 @@ var WebAudioSound = new Class({
         var source = this.manager.context.createBufferSource();
         // TODO assign config values to buffer source
         source.buffer = this.audioBuffer;
-        source.connect(this.manager.context.destination);
+        source.connect(this.manager.destination);
         source.start();
         return this;
     }
