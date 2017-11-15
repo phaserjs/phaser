@@ -18,6 +18,12 @@ var WebAudioSound = new Class({
         /**
          * [description]
          *
+         * @property {AudioBufferSourceNode} source
+         */
+        this.source = null;
+        /**
+         * [description]
+         *
          * @property {GainNode} volumeNode
          */
         this.volumeNode = manager.context.createGain();
@@ -49,11 +55,11 @@ var WebAudioSound = new Class({
                 this.markers[marker].config = Extend(this.markers[marker].config, config);
             }
         }
-        var source = this.manager.context.createBufferSource();
+        this.source = this.manager.context.createBufferSource();
         // TODO assign config values to buffer source
-        source.buffer = this.audioBuffer;
-        source.connect(this.volumeNode);
-        source.start();
+        this.source.buffer = this.audioBuffer;
+        this.source.connect(this.volumeNode);
+        this.source.start();
         return this;
     }
 });
