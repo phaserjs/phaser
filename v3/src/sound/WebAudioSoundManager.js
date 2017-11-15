@@ -58,4 +58,16 @@ Object.defineProperty(WebAudioSoundManager.prototype, 'volume', {
         this.masterVolumeNode.gain.value = value;
     }
 });
+/**
+ * Global mute setting.
+ * @property {boolean} mute
+ */
+Object.defineProperty(WebAudioSoundManager.prototype, 'mute', {
+    get: function () {
+        return this.masterMuteNode.gain.value === 0;
+    },
+    set: function (value) {
+        this.masterMuteNode.gain.value = value ? 0 : 1;
+    }
+});
 module.exports = WebAudioSoundManager;
