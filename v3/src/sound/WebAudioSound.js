@@ -15,6 +15,12 @@ var WebAudioSound = new Class({
             console.error('No audio loaded in cache with key: \'' + key + '\'!');
             return;
         }
+        /**
+         * [description]
+         *
+         * @property {GainNode} volumeNode
+         */
+        this.volumeNode = manager.context.createGain();
         if (config === void 0) {
             config = {};
         }
