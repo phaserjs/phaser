@@ -7,10 +7,17 @@ var WebAudioSoundManager = new Class({
     initialize: function WebAudioSoundManager(game) {
         BaseSoundManager.call(this, game);
         /**
-         * @property {AudioContext} context - The AudioContext being used for playback.
-         * @default
+         * The AudioContext being used for playback.
+         *
+         * @property {AudioContext} context
          */
         this.context = this.createAudioContext();
+        /**
+         * [description]
+         *
+         * @property {GainNode} masterVolumeNode
+         */
+        this.masterVolumeNode = this.context.createGain();
     },
     createAudioContext: function () {
         var audioConfig = this.game.config.audio;
