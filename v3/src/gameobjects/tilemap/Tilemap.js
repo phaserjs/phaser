@@ -35,7 +35,7 @@ var Tilemap = new Class({
         this.tilesets = mapData.tilesets;
         this.tiles = mapData.tiles;
         this.objects = mapData.objects;
-        this.currentLayer = 0;
+        this.currentLayerIndex = 0;
 
         // TODO: collision, collideIndexes, imagecollections, images
         // TODO: debugging methods
@@ -149,7 +149,7 @@ var Tilemap = new Class({
     {
         if (layer === undefined)
         {
-            return this.currentLayer;
+            return this.currentLayerIndex;
         }
         else if (typeof layer === 'string')
         {
@@ -190,7 +190,7 @@ var Tilemap = new Class({
     layer: {
         get: function ()
         {
-            return this.layers[this.currentLayer];
+            return this.layers[this.currentLayerIndex];
         },
 
         set: function (layer)
@@ -204,7 +204,7 @@ var Tilemap = new Class({
         var index = this.getLayerIndex(layer);
         if (index !== null)
         {
-            this.currentLayer = index;
+            this.currentLayerIndex = index;
         }
         return this;
     }
