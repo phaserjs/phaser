@@ -9,9 +9,10 @@ var StaticTilemapLayerCanvasRenderer = function (renderer, gameObject, interpola
 
     gameObject.upload(camera);
 
-    var tiles = gameObject.tiles;
+    var tiles = gameObject.canvasTiles;
     var tileWidth = gameObject.map.tileWidth;
     var tileHeight = gameObject.map.tileHeight;
+    var tileset = this.tileset;
     var frame = gameObject.frame;
     var ctx = renderer.gameContext;
     var tileCount = tiles.length;
@@ -29,7 +30,18 @@ var StaticTilemapLayerCanvasRenderer = function (renderer, gameObject, interpola
     {
         var tile = tiles[index];
 
-        ctx.drawImage(image, tile.frameX, tile.frameY, tileWidth, tileHeight, tile.x, tile.y, tileWidth, tileHeight);
+        var tileTexCoords = tileset.getTileTextureCoordinates(tile.index);
+        if (tileTexCoords === null) { continue; }
+
+        renderer.setAlpha(gameObject.alpha * tile.alpha);
+
+        ctx.drawImage(
+            image,
+            tileTexCoords.x, tileTexCoords.y,
+            tile.width, tile.height,
+            tile.worldX, tile.worldY,
+            tile.width, tile.height
+        );
     }
 
     ctx.restore();

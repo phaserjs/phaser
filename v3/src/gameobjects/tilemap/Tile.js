@@ -1,9 +1,14 @@
 var Class = require('../../utils/Class');
-
-// Dummy Tile class
-// Todo: merge dynamic/tile into this
+var Components = require('../components');
 
 var Tile = new Class({
+
+    // TODO: Add in bounds mixin, or custom replacement
+    Mixins: [
+        Components.Alpha,
+        Components.Flip,
+        Components.Visible
+    ],
 
     initialize:
 
@@ -13,10 +18,14 @@ var Tile = new Class({
         this.index = index;
         this.x = x;
         this.y = y;
+        this.worldX = x * width;
+        this.worldY = y * height;
         this.width = width;
         this.height = height;
-    }
 
+        // TODO: update renders to allow for using Components.Tint
+        this.tint = 0xFFFFFF;
+    }
 });
 
 module.exports = Tile;

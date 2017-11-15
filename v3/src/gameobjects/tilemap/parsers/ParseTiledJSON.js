@@ -3,7 +3,7 @@ var Tileset = require('../Tileset');
 var Tile = require('../Tile');
 var Extend = require('../../../utils/object/Extend');
 
-var ParseJSONTiled = function (key, json)
+var ParseJSONTiled = function (key, json, insertNull)
 {
     if (json.orientation !== 'orthogonal')
     {
@@ -188,17 +188,10 @@ var ParseJSONTiled = function (key, json)
             }
             else
             {
-                row.push(new Tile(layer, -1, x, output.length, json.tilewidth, json.tileheight));
-
-                // TODO: enable insert null functionality
-                // if (Phaser.TilemapParser.INSERT_NULL)
-                // {
-                //     row.push(null);
-                // }
-                // else
-                // {
-                //     row.push(new Phaser.Tile(layer, -1, x, output.length, json.tilewidth, json.tileheight));
-                // }
+                var blankTile = insertNull
+                    ? null
+                    : new Tile(layer, -1, x, output.length, json.tilewidth, json.tileheight);
+                row.push(blankTile);
             }
 
             x++;

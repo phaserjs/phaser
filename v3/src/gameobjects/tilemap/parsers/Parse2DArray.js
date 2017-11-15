@@ -2,7 +2,7 @@ var GenerateEmptyMapData = require('../GenerateEmptyMapData');
 var Formats = require('../Formats');
 var Tile = require('../Tile');
 
-var Parse2DArray = function (key, data, tileWidth, tileHeight)
+var Parse2DArray = function (key, data, tileWidth, tileHeight, insertNull)
 {
     var map = GenerateEmptyMapData(Formats.TILEMAP_2D_ARRAY, key, tileWidth, tileHeight);
 
@@ -18,9 +18,17 @@ var Parse2DArray = function (key, data, tileWidth, tileHeight)
         for (var x = 0; x < row.length; x++)
         {
             var tileIndex = parseInt(row[x], 10);
-            if (Number.isNaN(tileIndex)) { tileIndex = -1; }
 
-            output[y][x] = new Tile(map.layers[0], tileIndex, x, y, tileWidth, tileHeight);
+            if (Number.isNaN(tileIndex))
+            {
+                output[y][x] = insertNull
+                    ? null
+                    : new Tile(map.layers[0], -1, x, y, tileWidth, tileHeight);
+            }
+            else
+            {
+                output[y][x] = new Tile(map.layers[0], tileIndex, x, y, tileWidth, tileHeight);
+            }
         }
 
         if (width === 0)

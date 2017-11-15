@@ -385,8 +385,8 @@ var SpriteBatch = new Class({
         // Inset UV coordinates by 0.5px to prevent tile bleeding
         var u0 = (rectX + 0.5) / textureWidth;
         var v0 = (rectY + 0.5) / textureHeight;
-        var u1 = (rectX - 0.5 + width) / textureWidth;
-        var v1 = (rectY - 0.5 + height) / textureHeight;
+        var u1 = (rectX - 0.5 + rectW) / textureWidth;
+        var v1 = (rectY - 0.5 + rectH) / textureHeight;
 
         mva = cameraMatrix[0];
         mvb = cameraMatrix[1];

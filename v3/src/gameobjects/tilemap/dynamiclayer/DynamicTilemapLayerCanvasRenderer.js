@@ -9,13 +9,10 @@ var DynamicTilemapLayerCanvasRenderer = function (renderer, gameObject, interpol
 
     gameObject.cull(camera);
 
-    var tiles = gameObject.culledTiles;
-    var tileCount = tiles.length;
+    var renderTiles = gameObject.culledTiles;
+    var length = renderTiles.length;
     var image = gameObject.frame.source.image;
-
-    // var scrollFactorX = gameObject.scrollFactorX;
-    // var scrollFactorY = gameObject.scrollFactorY;
-    // var alpha = gameObject.alpha;
+    var tileset = this.tileset;
 
     var tx = gameObject.x - camera.scrollX * gameObject.scrollFactorX;
     var ty = gameObject.y - camera.scrollY * gameObject.scrollFactorY;
@@ -27,22 +24,35 @@ var DynamicTilemapLayerCanvasRenderer = function (renderer, gameObject, interpol
     ctx.scale(gameObject.scaleX, gameObject.scaleY);
     ctx.scale(gameObject.flipX ? -1 : 1, gameObject.flipY ? -1 : 1);
 
-    for (var index = 0; index < tileCount; ++index)
+    for (var index = 0; index < length; ++index)
     {
-        var tile = tiles[index];
+        var tile = renderTiles[index];
 
-        if (tile.id <= 0 && gameObject.skipIndexZero)
+        var tileTexCoords = tileset.getTileTextureCoordinates(tile.index);
+        if (tileTexCoords === null) { continue; }
+
+        var halfWidth = tile.width / 2;
+        var halfHeight = tile.height / 2;
+
+        ctx.save();
+        ctx.translate(tile.worldX - halfWidth, tile.worldY - halfHeight);
+
+        if (tile.flipX || tile.flipY)
         {
-            continue;
+            ctx.scale(tile.flipX ? -1 : 1, tile.flipY ? -1 : 1);
         }
+
+        renderer.setAlpha(gameObject.alpha * tile.alpha);
 
         ctx.drawImage(
             image,
-            tile.frameX, tile.frameY,
-            tile.frameWidth, tile.frameHeight,
-            tile.x, tile.y,
-            tile.frameWidth, tile.frameHeight
+            tileTexCoords.x, tileTexCoords.y,
+            tile.width, tile.height,
+            -halfWidth, -halfHeight,
+            tile.width, tile.height
         );
+
+        ctx.restore();
     }
 
     ctx.restore();
