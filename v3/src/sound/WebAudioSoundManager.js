@@ -14,23 +14,23 @@ var WebAudioSoundManager = new Class({
         /**
          * [description]
          *
+         * @property {GainNode} masterMuteNode
+         */
+        this.masterMuteNode = this.context.createGain();
+        /**
+         * [description]
+         *
          * @property {GainNode} masterVolumeNode
          */
         this.masterVolumeNode = this.context.createGain();
+        this.masterMuteNode.connect(this.masterVolumeNode);
+        this.masterVolumeNode.connect(this.context.destination);
         /**
          * Destination node for connecting individual sounds to.
          *
          * @property {AudioNode} destination
          */
-        this.destination = this.masterVolumeNode;
-        /**
-         * [description]
-         *
-         * @property {GainNode} masterMuteNode
-         */
-        this.masterMuteNode = this.context.createGain();
-        this.masterVolumeNode.connect(this.masterMuteNode);
-        this.masterMuteNode.connect(this.context.destination);
+        this.destination = this.masterMuteNode;
         BaseSoundManager.call(this, game);
     },
     createAudioContext: function (game) {
@@ -47,18 +47,6 @@ var WebAudioSoundManager = new Class({
     }
 });
 /**
- * Global volume setting.
- * @property {number} volume
- */
-Object.defineProperty(WebAudioSoundManager.prototype, 'volume', {
-    get: function () {
-        return this.masterVolumeNode.gain.value;
-    },
-    set: function (value) {
-        this.masterVolumeNode.gain.value = value;
-    }
-});
-/**
  * Global mute setting.
  * @property {boolean} mute
  */
@@ -68,6 +56,18 @@ Object.defineProperty(WebAudioSoundManager.prototype, 'mute', {
     },
     set: function (value) {
         this.masterMuteNode.gain.value = value ? 0 : 1;
+    }
+});
+/**
+ * Global volume setting.
+ * @property {number} volume
+ */
+Object.defineProperty(WebAudioSoundManager.prototype, 'volume', {
+    get: function () {
+        return this.masterVolumeNode.gain.value;
+    },
+    set: function (value) {
+        this.masterVolumeNode.gain.value = value;
     }
 });
 module.exports = WebAudioSoundManager;
