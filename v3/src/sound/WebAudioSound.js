@@ -58,7 +58,7 @@ var WebAudioSound = new Class({
     }
 });
 /**
- * Global volume setting.
+ * Volume setting.
  * @property {number} volume
  */
 Object.defineProperty(WebAudioSound.prototype, 'volume', {
@@ -67,6 +67,18 @@ Object.defineProperty(WebAudioSound.prototype, 'volume', {
     },
     set: function (value) {
         this.volumeNode.gain.value = value;
+    }
+});
+/**
+ * Mute setting.
+ * @property {boolean} mute
+ */
+Object.defineProperty(WebAudioSound.prototype, 'mute', {
+    get: function () {
+        return this.muteNode.gain.value === 0;
+    },
+    set: function (value) {
+        this.muteNode.gain.value = value ? 0 : 1;
     }
 });
 module.exports = WebAudioSound;
