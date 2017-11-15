@@ -21,6 +21,7 @@ var WebAudioSound = new Class({
          * @property {GainNode} volumeNode
          */
         this.volumeNode = manager.context.createGain();
+        this.volumeNode.connect(manager.destination);
         if (config === void 0) {
             config = {};
         }
@@ -44,9 +45,21 @@ var WebAudioSound = new Class({
         var source = this.manager.context.createBufferSource();
         // TODO assign config values to buffer source
         source.buffer = this.audioBuffer;
-        source.connect(this.manager.destination);
+        source.connect(this.volumeNode);
         source.start();
         return this;
+    }
+});
+/**
+ * Global volume setting.
+ * @property {number} volume
+ */
+Object.defineProperty(WebAudioSound.prototype, 'volume', {
+    get: function () {
+        return this.volumeNode.gain.value;
+    },
+    set: function (value) {
+        this.volumeNode.gain.value = value;
     }
 });
 module.exports = WebAudioSound;
