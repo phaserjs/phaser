@@ -31,15 +31,28 @@ var DynamicTilemapLayerCanvasRenderer = function (renderer, gameObject, interpol
         var tileTexCoords = tileset.getTileTextureCoordinates(tile.index);
         if (tileTexCoords === null) { continue; }
 
+        var halfWidth = tile.width / 2;
+        var halfHeight = tile.height / 2;
+
+        ctx.save();
+        ctx.translate(tile.worldX - halfWidth, tile.worldY - halfHeight);
+
+        if (tile.flipX || tile.flipY)
+        {
+            ctx.scale(tile.flipX ? -1 : 1, tile.flipY ? -1 : 1);
+        }
+
         renderer.setAlpha(gameObject.alpha * tile.alpha);
 
         ctx.drawImage(
             image,
             tileTexCoords.x, tileTexCoords.y,
             tile.width, tile.height,
-            tile.worldX, tile.worldY,
+            -halfWidth, -halfHeight,
             tile.width, tile.height
         );
+
+        ctx.restore();
     }
 
     ctx.restore();

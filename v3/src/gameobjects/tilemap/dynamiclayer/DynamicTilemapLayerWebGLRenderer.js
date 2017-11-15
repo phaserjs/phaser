@@ -30,12 +30,17 @@ var DynamicTilemapLayerWebGLRenderer = function (renderer, gameObject, interpola
         var tileTexCoords = tileset.getTileTextureCoordinates(tile.index);
         if (tileTexCoords === null) { continue; }
 
+        var frameWidth = tile.width * (tile.flipX ? -1 : 1);
+        var frameHeight = tile.height * (tile.flipY ? -1 : 1);
+        var frameX = tileTexCoords.x + (tile.flipX ? tile.width : 0);
+        var frameY = tileTexCoords.y + (tile.flipY ? tile.height : 0);
+
         batch.addTileTextureRect(
             texture,
             x + tile.worldX, y + tile.worldY, tile.width, tile.height, alpha * tile.alpha, tile.tint,
             scrollFactorX, scrollFactorY,
             textureWidth, textureHeight,
-            tileTexCoords.x, tileTexCoords.y, tile.width, tile.height,
+            frameX, frameY, frameWidth, frameHeight,
             camera,
             renderTarget
         );
