@@ -127,6 +127,14 @@ var Tilemap = new Class({
         return layer;
     },
 
+    forEachTile: function (callback, context, tileX, tileY, width, height, layer)
+    {
+        layer = this.getLayer(layer);
+        if (layer === null) { return; }
+
+        TilemapComponents.ForEachTile(callback, context, tileX, tileY, width, height, layer);
+    },
+
     getIndex: function (location, name)
     {
         for (var i = 0; i < location.length; i++)
@@ -180,6 +188,14 @@ var Tilemap = new Class({
         if (layer === null) { return null; }
 
         return TilemapComponents.GetTileAt(tileX, tileY, layer, nonNull);
+    },
+
+    getTilesWithin: function (tileX, tileY, width, height, layer)
+    {
+        layer = this.getLayer(layer);
+        if (layer === null) { return null; }
+
+        return TilemapComponents.GetTilesWithin(tileX, tileY, width, height, layer);
     },
 
     getTilesetIndex: function (name)

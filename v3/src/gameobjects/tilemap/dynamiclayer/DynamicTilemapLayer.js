@@ -96,9 +96,19 @@ var DynamicTilemapLayer = new Class({
         return culledTiles;
     },
 
+    forEachTile: function (callback, context, tileX, tileY, width, height)
+    {
+        return TilemapComponents.ForEachTile(callback, context, tileX, tileY, width, height, this.layer);
+    },
+
     getTileAt: function (tileX, tileY, nonNull)
     {
         return TilemapComponents.GetTileAt(tileX, tileY, this.layer, nonNull);
+    },
+
+    getTilesWithin: function (tileX, tileY, width, height)
+    {
+        return TilemapComponents.GetTilesWithin(tileX, tileY, width, height, this.layer);
     },
 
     hasTileAt: function (tileX, tileY)
