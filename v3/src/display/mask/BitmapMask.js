@@ -122,6 +122,7 @@ var BitmapMask = new Class({
 
 			// Inject main render target & reset it at post rendering.
 			gameObject.renderTarget = this.mainRenderTarget;
+            renderer.setBlendMode(0);
 		}
 
 	},
@@ -129,6 +130,7 @@ var BitmapMask = new Class({
 	postRenderWebGL: function (renderer, gameObject)
 	{
 		var maskRenderer = renderer.maskRenderer;
+        var gl = renderer.gl;
 
 		// flush and reset
 		renderer.currentRenderer.flush(null, this.mainRenderTarget);
