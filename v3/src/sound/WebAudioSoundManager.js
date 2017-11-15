@@ -23,7 +23,14 @@ var WebAudioSoundManager = new Class({
          * @property {AudioNode} destination
          */
         this.destination = this.masterVolumeNode;
-        this.masterVolumeNode.connect(this.context.destination);
+        /**
+         * [description]
+         *
+         * @property {GainNode} masterMuteNode
+         */
+        this.masterMuteNode = this.context.createGain();
+        this.masterVolumeNode.connect(this.masterMuteNode);
+        this.masterMuteNode.connect(this.context.destination);
         BaseSoundManager.call(this, game);
     },
     createAudioContext: function (game) {
