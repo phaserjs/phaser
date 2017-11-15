@@ -44,17 +44,21 @@ var WebAudioSound = new Class({
     play: function (marker, config) {
         if (marker === void 0) { marker = ''; }
         if (typeof marker !== 'string') {
-            console.error('Sound marker has to be a string!');
+            console.error('Sound marker name has to be a string!');
             return;
         }
-        if (config) {
-            if (!marker) {
-                this.config = Extend(this.config, config);
-            }
-            else {
-                this.markers[marker].config = Extend(this.markers[marker].config, config);
-            }
+        if (!marker) {
+            this.currentConfig = this.config;
         }
+        else {
+            if (!this.markers[marker]) {
+                console.error('No marker with name \'' + marker + '\' found for sound \'' + this.key + '\'!');
+                return;
+            }
+            this.currentMarker = marker;
+            this.currentConfig = this.markers[marker].config;
+        }
+        this.currentConfig = Extend(this.currentConfig, config);
         this.source = this.manager.context.createBufferSource();
         // TODO assign config values to buffer source
         this.source.buffer = this.audioBuffer;
