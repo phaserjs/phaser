@@ -27,7 +27,8 @@ var WebAudioSound = new Class({
          * @property {GainNode} muteNode
          */
         this.muteNode = manager.context.createGain();
-        this.volumeNode.connect(manager.destination);
+        this.volumeNode.connect(this.muteNode);
+        this.muteNode.connect(manager.destination);
         if (config === void 0) {
             config = {};
         }
