@@ -1,10 +1,10 @@
-var GetTileAt = function (x, y, layer, nonNull)
+var GetTileAt = function (tileX, tileY, layer, nonNull)
 {
     if (nonNull === undefined) { nonNull = false; }
 
-    if (x >= 0 && x < layer.width && y >= 0 && y < layer.height)
+    if (tileX >= 0 && tileX < layer.width && tileY >= 0 && tileY < layer.height)
     {
-        var tile = layer.data[y][x];
+        var tile = layer.data[tileY][tileX];
         if (tile.index === -1)
         {
             return nonNull ? tile : null;

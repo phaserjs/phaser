@@ -1,5 +1,6 @@
 module.exports = {
 
-    GetTileAt: require('./GetTileAt')
+    GetTileAt: require('./GetTileAt'),
+    HasTileAt: require('./HasTileAt')
 
 };

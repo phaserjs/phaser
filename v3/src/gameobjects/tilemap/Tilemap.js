@@ -174,17 +174,25 @@ var Tilemap = new Class({
         return this.getIndex(this.layers, name);
     },
 
-    getTileAt: function (x, y, layer, nonNull)
+    getTileAt: function (tileX, tileY, layer, nonNull)
     {
         layer = this.getLayer(layer);
         if (layer === null) { return null; }
 
-        return TilemapComponents.GetTileAt(x, y, layer, nonNull);
+        return TilemapComponents.GetTileAt(tileX, tileY, layer, nonNull);
     },
 
     getTilesetIndex: function (name)
     {
         return this.getIndex(this.tilesets, name);
+    },
+
+    hasTileAt: function (tileX, tileY, layer)
+    {
+        layer = this.getLayer(layer);
+        if (layer === null) { return null; }
+
+        return TilemapComponents.HasTileAt(tileX, tileY, layer);
     },
 
     layer: {
