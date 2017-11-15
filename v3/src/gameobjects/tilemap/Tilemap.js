@@ -4,6 +4,7 @@ var StaticTilemapLayer = require('./staticlayer/StaticTilemapLayer.js');
 var DynamicTilemapLayer = require('./dynamiclayer/DynamicTilemapLayer.js');
 var Tileset = require('./Tileset');
 var Formats = require('./Formats');
+var TilemapComponents = require('./components');
 
 var Tilemap = new Class({
 
@@ -34,9 +35,45 @@ var Tilemap = new Class({
         this.tilesets = mapData.tilesets;
         this.tiles = mapData.tiles;
         this.objects = mapData.objects;
+        this.currentLayer = 0;
 
         // TODO: collision, collideIndexes, imagecollections, images
         // TODO: debugging methods
+    },
+
+    getLayer: function (layer)
+    {
+        var index = this.getLayerIndex(layer);
+        return index !== null ? this.layers[index] : null;
+    },
+
+    getLayerIndex: function (layer)
+    {
+        if (layer === undefined)
+        {
+            return this.currentLayer;
+        }
+        else if (typeof layer === 'string')
+        {
+            return this.getLayerIndexByName(layer);
+        }
+        else if (typeof layer === 'number' && layer < this.layers.length)
+        {
+            return layer;
+        }
+        else if (layer instanceof StaticTilemapLayer || layer instanceof DynamicTilemapLayer)
+        {
+            return layer.layerIndex;
+        }
+        else
+        {
+            return null;
+        }
+    },
+
+    getLayerIndexByName: function (name)
+    {
+        return this.getIndex(this.layers, name);
     },
 
     getTilesetIndex: function (name)
@@ -108,14 +145,9 @@ var Tilemap = new Class({
 
     createStaticLayer: function (layerID, tileset, x, y)
     {
-        var index = layerID;
+        var index = this.getLayerIndex(layerID);
 
-        if (typeof layerID === 'string')
-        {
-            index = this.getLayerIndex(layer);
-        }
-
-        if (index === null || index > this.layers.length)
+        if (index === null)
         {
             console.warn('Cannot create tilemap layer: invalid layer ID given: ' + index);
             return;
@@ -131,14 +163,9 @@ var Tilemap = new Class({
 
     createDynamicLayer: function (layerID, tileset, x, y)
     {
-        var index = layerID;
+        var index = this.getLayerIndex(layerID);
 
-        if (typeof layer === 'string')
-        {
-            index = this.getLayerIndex(layer);
-        }
-
-        if (index === null || index > this.layers.length)
+        if (index === null)
         {
             console.warn('Cannot create tilemap layer: invalid layer ID given: ' + index);
             return;
@@ -150,6 +177,14 @@ var Tilemap = new Class({
         var layer = new DynamicTilemapLayer(this.scene, this, index, tileset, x, y);
         this.scene.sys.displayList.add(layer);
         return layer;
+    },
+
+    getTileAt: function (x, y, layer, nonNull)
+    {
+        layer = this.getLayer(layer);
+        if (layer === null) { return null; }
+
+        return TilemapComponents.GetTileAt(x, y, layer, nonNull);
     }
 });
 
