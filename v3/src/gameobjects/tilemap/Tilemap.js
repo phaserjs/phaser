@@ -41,58 +41,6 @@ var Tilemap = new Class({
         // TODO: debugging methods
     },
 
-    getLayer: function (layer)
-    {
-        var index = this.getLayerIndex(layer);
-        return index !== null ? this.layers[index] : null;
-    },
-
-    getLayerIndex: function (layer)
-    {
-        if (layer === undefined)
-        {
-            return this.currentLayer;
-        }
-        else if (typeof layer === 'string')
-        {
-            return this.getLayerIndexByName(layer);
-        }
-        else if (typeof layer === 'number' && layer < this.layers.length)
-        {
-            return layer;
-        }
-        else if (layer instanceof StaticTilemapLayer || layer instanceof DynamicTilemapLayer)
-        {
-            return layer.layerIndex;
-        }
-        else
-        {
-            return null;
-        }
-    },
-
-    getLayerIndexByName: function (name)
-    {
-        return this.getIndex(this.layers, name);
-    },
-
-    getTilesetIndex: function (name)
-    {
-        return this.getIndex(this.tilesets, name);
-    },
-
-    getIndex: function (location, name)
-    {
-        for (var i = 0; i < location.length; i++)
-        {
-            if (location[i].name === name)
-            {
-                return i;
-            }
-        }
-        return null;
-    },
-
     addTilesetImage: function (tilesetName, key, tileWidth, tileHeight, tileMargin, tileSpacing, gid)
     {
         if (tilesetName === undefined) { return null; }
@@ -179,13 +127,88 @@ var Tilemap = new Class({
         return layer;
     },
 
+    getIndex: function (location, name)
+    {
+        for (var i = 0; i < location.length; i++)
+        {
+            if (location[i].name === name)
+            {
+                return i;
+            }
+        }
+        return null;
+    },
+
+    getLayer: function (layer)
+    {
+        var index = this.getLayerIndex(layer);
+        return index !== null ? this.layers[index] : null;
+    },
+
+    getLayerIndex: function (layer)
+    {
+        if (layer === undefined)
+        {
+            return this.currentLayer;
+        }
+        else if (typeof layer === 'string')
+        {
+            return this.getLayerIndexByName(layer);
+        }
+        else if (typeof layer === 'number' && layer < this.layers.length)
+        {
+            return layer;
+        }
+        else if (layer instanceof StaticTilemapLayer || layer instanceof DynamicTilemapLayer)
+        {
+            return layer.layerIndex;
+        }
+        else
+        {
+            return null;
+        }
+    },
+
+    getLayerIndexByName: function (name)
+    {
+        return this.getIndex(this.layers, name);
+    },
+
     getTileAt: function (x, y, layer, nonNull)
     {
         layer = this.getLayer(layer);
         if (layer === null) { return null; }
 
         return TilemapComponents.GetTileAt(x, y, layer, nonNull);
+    },
+
+    getTilesetIndex: function (name)
+    {
+        return this.getIndex(this.tilesets, name);
+    },
+
+    layer: {
+        get: function ()
+        {
+            return this.layers[this.currentLayer];
+        },
+
+        set: function (layer)
+        {
+            this.setLayer(layer);
+        }
+    },
+
+    setLayer: function (layer)
+    {
+        var index = this.getLayerIndex(layer);
+        if (index !== null)
+        {
+            this.currentLayer = index;
+        }
+        return this;
     }
+
 });
 
 module.exports = Tilemap;
