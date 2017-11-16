@@ -137,7 +137,7 @@ var QuadBatch = new Class({
 
     bind: function (shader)
     {
-        if (shader === undefined)
+        if (!shader)
         {
             this.shader.bind();
         }
@@ -172,7 +172,7 @@ var QuadBatch = new Class({
 
     resize: function (width, height, resolution, shader)
     {
-        var activeShader = shader !== undefined ? shader : this.shader;
+        var activeShader = shader ? shader : this.shader;
         
         this.width = width * resolution;
         this.height = height * resolution;

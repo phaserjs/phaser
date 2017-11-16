@@ -103,7 +103,7 @@ var EffectRenderer = new Class({
 
     bind: function (shader)
     {
-        if (shader === undefined)
+        if (!shader)
         {
             this.shader.bind();
         }
@@ -117,7 +117,7 @@ var EffectRenderer = new Class({
         this.vertexBufferObject.bind();
     },
 
-    flush: function (shader)
+    flush: function (shader, renderTarget)
     {
         var gl = this.glContext;
         var vertexDataBuffer = this.vertexDataBuffer;
@@ -127,6 +127,11 @@ var EffectRenderer = new Class({
             return;
         }
         
+        if (renderTarget)
+        {
+            gl.bindFramebuffer(gl.FRAMEBUFFER, renderTarget.framebufferObject);
+        }
+
         this.bind(shader);
         this.vertexBufferObject.updateResource(vertexDataBuffer.getUsedBufferAsFloat(), 0);
 
@@ -135,11 +140,16 @@ var EffectRenderer = new Class({
         vertexDataBuffer.clear();
 
         this.elementCount = 0;
+
+        if (renderTarget)
+        {
+            gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+        }
     },
 
     resize: function (width, height, resolution, shader)
     {
-        var activeShader = shader !== undefined ? shader : this.shader;
+        var activeShader = shader ? shader : this.shader;
 
         this.width = width * resolution;
         this.height = height * resolution;
@@ -251,7 +261,7 @@ var EffectRenderer = new Class({
         vertexBufferObjectU32[vertexOffset++] = tintTR;
         vertexBufferObjectF32[vertexOffset++] = alpha;
 
-        this.flush(gameObject.dstShader);
+        this.flush(gameObject.dstShader, gameObject.renderTarget);
 
         gameObject.dstRenderTarget.shouldClear = true;
     },

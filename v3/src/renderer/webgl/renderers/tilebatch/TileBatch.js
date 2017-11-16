@@ -103,7 +103,7 @@ var TileBatch = new Class({
 
     bind: function (shader)
     {
-        if (shader === undefined)
+        if (!shader)
         {
             this.shader.bind();
         }
@@ -149,7 +149,7 @@ var TileBatch = new Class({
 
     resize: function (width, height, resolution, shader)
     {
-        var activeShader = shader !== undefined ? shader : this.shader;
+        var activeShader = shader ? shader : this.shader;
         var location = activeShader == this.shader ? this.viewMatrixLocation : activeShader.getUniformLocation('u_view_matrix');
 
         this.width = width * resolution;
