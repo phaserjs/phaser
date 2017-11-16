@@ -1,6 +1,5 @@
 var Class = require('../utils/Class');
 var BaseSound = require('./BaseSound');
-var Extend = require('../utils/object/Extend');
 //  Phaser.Sound.WebAudioSound
 var WebAudioSound = new Class({
     Extends: BaseSound,
@@ -42,23 +41,9 @@ var WebAudioSound = new Class({
         BaseSound.call(this, manager, key, config);
     },
     play: function (marker, config) {
-        if (marker === void 0) { marker = ''; }
-        if (typeof marker !== 'string') {
-            console.error('Sound marker name has to be a string!');
-            return;
+        if (!BaseSound.prototype.play.call(this, marker, config)) {
+            return null;
         }
-        if (!marker) {
-            this.currentConfig = this.config;
-        }
-        else {
-            if (!this.markers[marker]) {
-                console.error('No marker with name \'' + marker + '\' found for sound \'' + this.key + '\'!');
-                return;
-            }
-            this.currentMarker = marker;
-            this.currentConfig = this.markers[marker].config;
-        }
-        this.currentConfig = Extend(this.currentConfig, config);
         this.source = this.manager.context.createBufferSource();
         this.source.buffer = this.audioBuffer;
         this.source.connect(this.muteNode);

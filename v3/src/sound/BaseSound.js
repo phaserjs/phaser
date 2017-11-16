@@ -113,6 +113,23 @@ var BaseSound = new Class({
         return false;
     },
     play: function (marker, config) {
+        if (marker === void 0) { marker = ''; }
+        if (typeof marker !== 'string') {
+            console.error('Sound marker name has to be a string!');
+            return null;
+        }
+        if (!marker) {
+            this.currentConfig = this.config;
+        }
+        else {
+            if (!this.markers[marker]) {
+                console.error('No marker with name \'' + marker + '\' found for sound \'' + this.key + '\'!');
+                return null;
+            }
+            this.currentMarker = marker;
+            this.currentConfig = this.markers[marker].config;
+        }
+        this.currentConfig = Extend(this.currentConfig, config);
         return this;
     },
     pause: function () {
