@@ -28,6 +28,13 @@ var BaseSound = new Class({
             duration: 0
         };
         /**
+         * Reference to the currently used config.
+         * It could be default config or marker config.
+         *
+         * @property {ISoundConfig} currentConfig
+         */
+        this.currentConfig = this.config;
+        /**
          * [description]
          *
          * @property {boolean} mute
@@ -64,13 +71,6 @@ var BaseSound = new Class({
          */
         this.pan = 0;
         this.config = Extend(this.config, config);
-        /**
-         * Reference to the currently used config.
-         * It could be default config or marker config.
-         *
-         * @property {ISoundConfig} currentConfig
-         */
-        this.currentConfig = this.config;
         /**
          * Flag indicating if sound is currently playing.
          *
