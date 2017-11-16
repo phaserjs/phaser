@@ -47,7 +47,10 @@ var BaseSound = new Class({
          */
         this.volume = 1;
         /**
-         * [description]
+         * Defines the speed at which the audio asset will be played.
+         * Value of 1.0 plays the audio at full speed, 0.5 plays the audio
+         * at half speed and 2.0 doubles the audio's playback speed.
+         * This value gets multiplied by global rate to have the final playback speed.
          *
          * @property {number} rate
          */
@@ -148,6 +151,7 @@ var BaseSound = new Class({
     applyConfig: function () {
         this.mute = this.currentConfig.mute;
         this.volume = this.currentConfig.volume;
+        this.rate = this.currentConfig.rate;
         // TODO assign other config values to buffer source
     },
     fadeTo: function (volume, duration) {
