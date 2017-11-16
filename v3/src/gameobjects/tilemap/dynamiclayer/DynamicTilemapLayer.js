@@ -96,9 +96,22 @@ var DynamicTilemapLayer = new Class({
         return culledTiles;
     },
 
+    copy: function (srcTileX, srcTileY, width, height, destTileX, destTileY)
+    {
+        TilemapComponents.Copy(srcTileX, srcTileY, width, height, destTileX, destTileY, this.layer);
+        return this;
+    },
+
+    fill: function (index, tileX, tileY, width, height)
+    {
+        TilemapComponents.Fill(index, tileX, tileY, width, height, this.layer);
+        return this;
+    },
+
     forEachTile: function (callback, context, tileX, tileY, width, height)
     {
-        return TilemapComponents.ForEachTile(callback, context, tileX, tileY, width, height, this.layer);
+        TilemapComponents.ForEachTile(callback, context, tileX, tileY, width, height, this.layer);
+        return this;
     },
 
     getTileAt: function (tileX, tileY, nonNull)
@@ -114,6 +127,18 @@ var DynamicTilemapLayer = new Class({
     hasTileAt: function (tileX, tileY)
     {
         return TilemapComponents.HasTileAt(tileX, tileY, this.layer);
+    },
+
+    randomize: function (tileX, tileY, width, height, indices)
+    {
+        TilemapComponents.Randomize(tileX, tileY, width, height, indices, this.layer);
+        return this;
+    },
+
+    shuffle: function (tileX, tileY, width, height)
+    {
+        TilemapComponents.Shuffle(tileX, tileY, width, height, this.layer);
+        return this;
     }
 
     // forEach: function (callback)
