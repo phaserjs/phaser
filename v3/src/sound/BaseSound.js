@@ -165,6 +165,7 @@ var BaseSound = new Class({
         this.mute = this.currentConfig.mute;
         this.volume = this.currentConfig.volume;
         this.rate = this.currentConfig.rate;
+        this.detune = this.currentConfig.detune;
         // TODO assign other config values to buffer source
     },
     fadeTo: function (volume, duration) {
