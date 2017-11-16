@@ -1,3 +1,5 @@
+var GenerateEmptyMapLayer = require('./GenerateEmptyMapLayer');
+
 var GenerateEmptyMapData = function (format, name, tileWidth, tileHeight, width, height)
 {
     return {
@@ -13,22 +15,7 @@ var GenerateEmptyMapData = function (format, name, tileWidth, tileHeight, width,
         widthInPixels: 0,
         heightInPixels: 0,
         layers: [
-            {
-                name: 'layer',
-                x: 0,
-                y: 0,
-                width: 0,
-                height: 0,
-                widthInPixels: 0,
-                heightInPixels: 0,
-                alpha: 1,
-                visible: true,
-                properties: {},
-                indexes: [],
-                callbacks: [],
-                bodies: [],
-                data: []
-            }
+            GenerateEmptyMapLayer('layer', tileWidth, tileHeight, width, height)
         ],
         images: [],
         objects: {},

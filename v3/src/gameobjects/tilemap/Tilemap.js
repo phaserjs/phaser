@@ -1,10 +1,12 @@
 var Class = require('../../utils/Class');
-var GenerateEmptyMapData = require('./GenerateEmptyMapData');
+var GenerateEmptyMapData = require('./emptymap/GenerateEmptyMapData');
+var GenerateEmptyMapLayer = require('./emptymap/GenerateEmptyMapLayer');
 var StaticTilemapLayer = require('./staticlayer/StaticTilemapLayer.js');
 var DynamicTilemapLayer = require('./dynamiclayer/DynamicTilemapLayer.js');
 var Tileset = require('./Tileset');
 var Formats = require('./Formats');
 var TilemapComponents = require('./components');
+var Tile = require('./Tile');
 
 var Tilemap = new Class({
 
@@ -91,6 +93,47 @@ var Tilemap = new Class({
         return tileset;
     },
 
+    // Creates & selects
+    createBlankDynamicLayer: function (name, tileset, x, y, width, height, tileWidth, tileHeight) {
+        if (tileWidth === undefined) { tileWidth = this.tileWidth; }
+        if (tileHeight === undefined) { tileHeight = this.tileHeight; }
+        if (width === undefined) { width = this.width; }
+        if (height === undefined) { height = this.height; }
+        if (x === undefined) { x = 0; }
+        if (y === undefined) { y = 0; }
+
+        var index = this.getLayerIndex(name);
+
+        if (index !== null)
+        {
+            console.warn('Cannot create blank layer: layer with matching name already exists ' + name);
+            return;
+        }
+
+        var layer = GenerateEmptyMapLayer(name, tileWidth, tileHeight, width, height);
+
+        var row;
+        for (var tileY = 0; tileY < height; tileY++)
+        {
+            row = [];
+            for (var tileX = 0; tileX < width; tileX++)
+            {
+                row.push(new Tile(layer, -1, tileX, tileY, tileWidth, tileHeight));
+            }
+            layer.data.push(row);
+        }
+
+        this.layers.push(layer);
+        this.currentLayerIndex = this.layers.length - 1;
+
+        // TODO: decide about v2 trimming to game width/height
+
+        var dynamicLayer = new DynamicTilemapLayer(this.scene, this, this.currentLayerIndex, tileset, x, y);
+        this.scene.sys.displayList.add(dynamicLayer);
+        return dynamicLayer;
+    },
+
+    // Creates & selects
     createStaticLayer: function (layerID, tileset, x, y)
     {
         var index = this.getLayerIndex(layerID);
@@ -104,11 +147,14 @@ var Tilemap = new Class({
         // TODO: new feature, allow multiple CSV layers
         // TODO: display dimension
 
+        this.currentLayerIndex = index;
+
         var layer = new StaticTilemapLayer(this.scene, this, index, tileset, x, y);
         this.scene.sys.displayList.add(layer);
         return layer;
     },
 
+    // Creates & selects
     createDynamicLayer: function (layerID, tileset, x, y)
     {
         var index = this.getLayerIndex(layerID);
@@ -121,6 +167,8 @@ var Tilemap = new Class({
 
         // TODO: new feature, allow multiple CSV layers
         // TODO: display dimension
+
+        this.currentLayerIndex = index;
 
         var layer = new DynamicTilemapLayer(this.scene, this, index, tileset, x, y);
         this.scene.sys.displayList.add(layer);

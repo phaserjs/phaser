@@ -1,4 +1,4 @@
-var GenerateEmptyMapData = require('../GenerateEmptyMapData');
+var GenerateEmptyMapData = require('../emptymap/GenerateEmptyMapData');
 var Formats = require('../Formats');
 var Tile = require('../Tile');
 
