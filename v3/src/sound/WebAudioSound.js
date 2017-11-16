@@ -50,6 +50,19 @@ var WebAudioSound = new Class({
         this.applyConfig();
         this.source.start();
         return this;
+    },
+    pause: function () {
+        return this;
+    },
+    resume: function () {
+        return this;
+    },
+    stop: function () {
+        return this;
+    },
+    update: function () {
+    },
+    destroy: function () {
     }
 });
 /**
