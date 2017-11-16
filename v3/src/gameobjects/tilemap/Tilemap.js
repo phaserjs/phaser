@@ -35,62 +35,10 @@ var Tilemap = new Class({
         this.tilesets = mapData.tilesets;
         this.tiles = mapData.tiles;
         this.objects = mapData.objects;
-        this.currentLayer = 0;
+        this.currentLayerIndex = 0;
 
         // TODO: collision, collideIndexes, imagecollections, images
         // TODO: debugging methods
-    },
-
-    getLayer: function (layer)
-    {
-        var index = this.getLayerIndex(layer);
-        return index !== null ? this.layers[index] : null;
-    },
-
-    getLayerIndex: function (layer)
-    {
-        if (layer === undefined)
-        {
-            return this.currentLayer;
-        }
-        else if (typeof layer === 'string')
-        {
-            return this.getLayerIndexByName(layer);
-        }
-        else if (typeof layer === 'number' && layer < this.layers.length)
-        {
-            return layer;
-        }
-        else if (layer instanceof StaticTilemapLayer || layer instanceof DynamicTilemapLayer)
-        {
-            return layer.layerIndex;
-        }
-        else
-        {
-            return null;
-        }
-    },
-
-    getLayerIndexByName: function (name)
-    {
-        return this.getIndex(this.layers, name);
-    },
-
-    getTilesetIndex: function (name)
-    {
-        return this.getIndex(this.tilesets, name);
-    },
-
-    getIndex: function (location, name)
-    {
-        for (var i = 0; i < location.length; i++)
-        {
-            if (location[i].name === name)
-            {
-                return i;
-            }
-        }
-        return null;
     },
 
     addTilesetImage: function (tilesetName, key, tileWidth, tileHeight, tileMargin, tileSpacing, gid)
@@ -179,13 +127,112 @@ var Tilemap = new Class({
         return layer;
     },
 
-    getTileAt: function (x, y, layer, nonNull)
+    forEachTile: function (callback, context, tileX, tileY, width, height, layer)
+    {
+        layer = this.getLayer(layer);
+        if (layer === null) { return; }
+
+        TilemapComponents.ForEachTile(callback, context, tileX, tileY, width, height, layer);
+    },
+
+    getIndex: function (location, name)
+    {
+        for (var i = 0; i < location.length; i++)
+        {
+            if (location[i].name === name)
+            {
+                return i;
+            }
+        }
+        return null;
+    },
+
+    getLayer: function (layer)
+    {
+        var index = this.getLayerIndex(layer);
+        return index !== null ? this.layers[index] : null;
+    },
+
+    getLayerIndex: function (layer)
+    {
+        if (layer === undefined)
+        {
+            return this.currentLayerIndex;
+        }
+        else if (typeof layer === 'string')
+        {
+            return this.getLayerIndexByName(layer);
+        }
+        else if (typeof layer === 'number' && layer < this.layers.length)
+        {
+            return layer;
+        }
+        else if (layer instanceof StaticTilemapLayer || layer instanceof DynamicTilemapLayer)
+        {
+            return layer.layerIndex;
+        }
+        else
+        {
+            return null;
+        }
+    },
+
+    getLayerIndexByName: function (name)
+    {
+        return this.getIndex(this.layers, name);
+    },
+
+    getTileAt: function (tileX, tileY, layer, nonNull)
     {
         layer = this.getLayer(layer);
         if (layer === null) { return null; }
 
-        return TilemapComponents.GetTileAt(x, y, layer, nonNull);
+        return TilemapComponents.GetTileAt(tileX, tileY, layer, nonNull);
+    },
+
+    getTilesWithin: function (tileX, tileY, width, height, layer)
+    {
+        layer = this.getLayer(layer);
+        if (layer === null) { return null; }
+
+        return TilemapComponents.GetTilesWithin(tileX, tileY, width, height, layer);
+    },
+
+    getTilesetIndex: function (name)
+    {
+        return this.getIndex(this.tilesets, name);
+    },
+
+    hasTileAt: function (tileX, tileY, layer)
+    {
+        layer = this.getLayer(layer);
+        if (layer === null) { return null; }
+
+        return TilemapComponents.HasTileAt(tileX, tileY, layer);
+    },
+
+    layer: {
+        get: function ()
+        {
+            return this.layers[this.currentLayerIndex];
+        },
+
+        set: function (layer)
+        {
+            this.setLayer(layer);
+        }
+    },
+
+    setLayer: function (layer)
+    {
+        var index = this.getLayerIndex(layer);
+        if (index !== null)
+        {
+            this.currentLayerIndex = index;
+        }
+        return this;
     }
+
 });
 
 module.exports = Tilemap;

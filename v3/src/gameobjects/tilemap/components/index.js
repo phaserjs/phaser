@@ -1,5 +1,8 @@
 module.exports = {
 
-    GetTileAt: require('./GetTileAt')
+    ForEachTile: require('./ForEachTile'),
+    GetTileAt: require('./GetTileAt'),
+    HasTileAt: require('./HasTileAt'),
+    GetTilesWithin: require('./GetTilesWithin')
 
 };

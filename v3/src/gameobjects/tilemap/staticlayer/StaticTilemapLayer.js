@@ -3,7 +3,7 @@ var GameObject = require('../../GameObject');
 var Components = require('../../components');
 var CONST = require('../../../renderer/webgl/renderers/tilemaprenderer/const');
 var StaticTilemapLayerRender = require('./StaticTilemapLayerRender');
-var TileComponents = require('../components');
+var TilemapComponents = require('../components');
 
 var StaticTilemapLayer = new Class({
 
@@ -269,9 +269,24 @@ var StaticTilemapLayer = new Class({
         }
     },
 
-    getTileAt: function (x, y, nonNull)
+    forEachTile: function (callback, context, tileX, tileY, width, height)
     {
-        return TileComponents.GetTileAt(x, y, this.layer, nonNull);
+        return TilemapComponents.ForEachTile(callback, context, tileX, tileY, width, height, this.layer);
+    },
+
+    getTileAt: function (tileX, tileY, nonNull)
+    {
+        return TilemapComponents.GetTileAt(tileX, tileY, this.layer, nonNull);
+    },
+
+    getTilesWithin: function (tileX, tileY, width, height)
+    {
+        return TilemapComponents.GetTilesWithin(tileX, tileY, width, height, this.layer);
+    },
+
+    hasTileAt: function (tileX, tileY)
+    {
+        return TilemapComponents.HasTileAt(tileX, tileY, this.layer);
     }
 
 });

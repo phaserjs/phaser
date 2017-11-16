@@ -2,7 +2,7 @@ var Class = require('../../../utils/Class');
 var GameObject = require('../../GameObject');
 var Components = require('../../components');
 var DynamicTilemapLayerRender = require('./DynamicTilemapLayerRender');
-var TileComponents = require('../components');
+var TilemapComponents = require('../components');
 
 var DynamicTilemapLayer = new Class({
 
@@ -96,9 +96,24 @@ var DynamicTilemapLayer = new Class({
         return culledTiles;
     },
 
-    getTileAt: function (x, y, nonNull)
+    forEachTile: function (callback, context, tileX, tileY, width, height)
     {
-        return TileComponents.GetTileAt(x, y, this.layer, nonNull);
+        return TilemapComponents.ForEachTile(callback, context, tileX, tileY, width, height, this.layer);
+    },
+
+    getTileAt: function (tileX, tileY, nonNull)
+    {
+        return TilemapComponents.GetTileAt(tileX, tileY, this.layer, nonNull);
+    },
+
+    getTilesWithin: function (tileX, tileY, width, height)
+    {
+        return TilemapComponents.GetTilesWithin(tileX, tileY, width, height, this.layer);
+    },
+
+    hasTileAt: function (tileX, tileY)
+    {
+        return TilemapComponents.HasTileAt(tileX, tileY, this.layer);
     }
 
     // forEach: function (callback)
