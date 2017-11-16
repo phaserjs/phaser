@@ -280,6 +280,11 @@ var StaticTilemapLayer = new Class({
         return TilemapComponents.GetTileAt(tileX, tileY, nonNull, this.layer);
     },
 
+    getTileAtWorldXY: function (worldX, worldY, nonNull)
+    {
+        return TilemapComponents.GetTileAtWorldXY(worldX, worldY, nonNull, this.layer);
+    },
+
     getTilesWithin: function (tileX, tileY, width, height)
     {
         return TilemapComponents.GetTilesWithin(tileX, tileY, width, height, this.layer);

@@ -76,6 +76,8 @@ var ParseJSONTiled = function (key, json, insertNull)
             y: curl.y,
             width: curl.width,
             height: curl.height,
+            tileWidth: json.tilewidth,
+            tileHeight: json.tileheight,
             widthInPixels: curl.width * json.tilewidth,
             heightInPixels: curl.height * json.tileheight,
             alpha: curl.opacity,

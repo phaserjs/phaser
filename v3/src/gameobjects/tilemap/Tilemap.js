@@ -259,6 +259,13 @@ var Tilemap = new Class({
         return TilemapComponents.GetTileAt(tileX, tileY, nonNull, layer);
     },
 
+    getTileAtWorldXY: function (worldX, worldY, nonNull, layer)
+    {
+        layer = this.getLayer(layer);
+        if (layer === null) { return null; }
+        return TilemapComponents.GetTileAtWorldXY(worldX, worldY, nonNull, layer);
+    },
+
     getTilesWithin: function (tileX, tileY, width, height, layer)
     {
         layer = this.getLayer(layer);

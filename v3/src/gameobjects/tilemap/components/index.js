@@ -4,6 +4,7 @@ module.exports = {
     Fill: require('./Fill'),
     ForEachTile: require('./ForEachTile'),
     GetTileAt: require('./GetTileAt'),
+    GetTileAtWorldXY: require('./GetTileAtWorldXY'),
     GetTilesWithin: require('./GetTilesWithin'),
     HasTileAt: require('./HasTileAt'),
     IsInLayerBounds: require('./IsInLayerBounds'),
