@@ -271,7 +271,8 @@ var StaticTilemapLayer = new Class({
 
     forEachTile: function (callback, context, tileX, tileY, width, height)
     {
-        return TilemapComponents.ForEachTile(callback, context, tileX, tileY, width, height, this.layer);
+        TilemapComponents.ForEachTile(callback, context, tileX, tileY, width, height, this.layer);
+        return this;
     },
 
     getTileAt: function (tileX, tileY, nonNull)

@@ -127,12 +127,34 @@ var Tilemap = new Class({
         return layer;
     },
 
+    copy: function (srcTileX, srcTileY, width, height, destTileX, destTileY, layer)
+    {
+        layer = this.getLayer(layer);
+        if (layer !== null)
+        {
+            TilemapComponents.Copy(srcTileX, srcTileY, width, height, destTileX, destTileY, layer);
+        }
+        return this;
+    },
+
+    fill: function (index, tileX, tileY, width, height, layer)
+    {
+        layer = this.getLayer(layer);
+        if (layer !== null)
+        {
+            TilemapComponents.Fill(index, tileX, tileY, width, height, layer);
+        }
+        return this;
+    },
+
     forEachTile: function (callback, context, tileX, tileY, width, height, layer)
     {
         layer = this.getLayer(layer);
-        if (layer === null) { return; }
-
-        TilemapComponents.ForEachTile(callback, context, tileX, tileY, width, height, layer);
+        if (layer !== null)
+        {
+            TilemapComponents.ForEachTile(callback, context, tileX, tileY, width, height, layer);
+        }
+        return this;
     },
 
     getIndex: function (location, name)
@@ -186,7 +208,6 @@ var Tilemap = new Class({
     {
         layer = this.getLayer(layer);
         if (layer === null) { return null; }
-
         return TilemapComponents.GetTileAt(tileX, tileY, layer, nonNull);
     },
 
@@ -194,7 +215,6 @@ var Tilemap = new Class({
     {
         layer = this.getLayer(layer);
         if (layer === null) { return null; }
-
         return TilemapComponents.GetTilesWithin(tileX, tileY, width, height, layer);
     },
 
@@ -207,7 +227,6 @@ var Tilemap = new Class({
     {
         layer = this.getLayer(layer);
         if (layer === null) { return null; }
-
         return TilemapComponents.HasTileAt(tileX, tileY, layer);
     },
 
@@ -223,12 +242,32 @@ var Tilemap = new Class({
         }
     },
 
+    randomize: function (tileX, tileY, width, height, indices, layer)
+    {
+        layer = this.getLayer(layer);
+        if (layer !== null)
+        {
+            TilemapComponents.Randomize(tileX, tileY, width, height, indices, layer);;
+        }
+        return this;
+    },
+
     setLayer: function (layer)
     {
         var index = this.getLayerIndex(layer);
         if (index !== null)
         {
             this.currentLayerIndex = index;
+        }
+        return this;
+    },
+
+    shuffle: function (tileX, tileY, width, height, layer)
+    {
+        layer = this.getLayer(layer);
+        if (layer !== null)
+        {
+            TilemapComponents.Shuffle(tileX, tileY, width, height, layer);
         }
         return this;
     }
