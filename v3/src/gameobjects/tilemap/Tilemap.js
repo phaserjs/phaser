@@ -252,11 +252,11 @@ var Tilemap = new Class({
         return this.getIndex(this.layers, name);
     },
 
-    getTileAt: function (tileX, tileY, layer, nonNull)
+    getTileAt: function (tileX, tileY, nonNull, layer)
     {
         layer = this.getLayer(layer);
         if (layer === null) { return null; }
-        return TilemapComponents.GetTileAt(tileX, tileY, layer, nonNull);
+        return TilemapComponents.GetTileAt(tileX, tileY, nonNull, layer);
     },
 
     getTilesWithin: function (tileX, tileY, width, height, layer)
@@ -290,14 +290,28 @@ var Tilemap = new Class({
         }
     },
 
+    putTile: function (tile, tileX, tileY, layer)
+    {
+        layer = this.getLayer(layer);
+        if (layer === null) { return null; }
+        return TilemapComponents.PutTile(tile, tileX, tileY, layer);
+    },
+
     randomize: function (tileX, tileY, width, height, indices, layer)
     {
         layer = this.getLayer(layer);
         if (layer !== null)
         {
-            TilemapComponents.Randomize(tileX, tileY, width, height, indices, layer);;
+            TilemapComponents.Randomize(tileX, tileY, width, height, indices, layer);
         }
         return this;
+    },
+
+    removeTile: function (tileX, tileY, replaceWithNull, layer)
+    {
+        layer = this.getLayer(layer);
+        if (layer === null) { return null; }
+        return TilemapComponents.RemoveTile(tileX, tileY, replaceWithNull, layer);
     },
 
     setLayer: function (layer)

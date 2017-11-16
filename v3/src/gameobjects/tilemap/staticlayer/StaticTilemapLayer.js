@@ -277,7 +277,7 @@ var StaticTilemapLayer = new Class({
 
     getTileAt: function (tileX, tileY, nonNull)
     {
-        return TilemapComponents.GetTileAt(tileX, tileY, this.layer, nonNull);
+        return TilemapComponents.GetTileAt(tileX, tileY, nonNull, this.layer);
     },
 
     getTilesWithin: function (tileX, tileY, width, height)

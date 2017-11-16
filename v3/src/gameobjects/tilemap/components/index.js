@@ -6,7 +6,10 @@ module.exports = {
     GetTileAt: require('./GetTileAt'),
     GetTilesWithin: require('./GetTilesWithin'),
     HasTileAt: require('./HasTileAt'),
+    IsInLayerBounds: require('./IsInLayerBounds'),
+    PutTile: require('./PutTile'),
     Randomize: require('./Randomize'),
+    RemoveTile: require('./RemoveTile'),
     Shuffle: require('./Shuffle')
 
 };

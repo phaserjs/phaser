@@ -11,6 +11,8 @@ var GenerateEmptyMapLayer = function (name, tileWidth, tileHeight, width, height
         y: 0,
         width: width,
         height: height,
+        tileWidth: tileWidth,
+        tileHeight: tileHeight,
         widthInPixels: width * tileWidth,
         heightInPixels: height * tileHeight,
         alpha: 1,

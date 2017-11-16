@@ -1,11 +1,17 @@
-var GetTileAt = function (tileX, tileY, layer, nonNull)
+var IsInLayerBounds = require('./IsInLayerBounds');
+
+var GetTileAt = function (tileX, tileY, nonNull, layer)
 {
     if (nonNull === undefined) { nonNull = false; }
 
-    if (tileX >= 0 && tileX < layer.width && tileY >= 0 && tileY < layer.height)
+    if (IsInLayerBounds(tileX, tileY, layer))
     {
         var tile = layer.data[tileY][tileX];
-        if (tile.index === -1)
+        if (tile === null)
+        {
+            return null;
+        }
+        else if (tile.index === -1)
         {
             return nonNull ? tile : null;
         }

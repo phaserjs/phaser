@@ -116,7 +116,7 @@ var DynamicTilemapLayer = new Class({
 
     getTileAt: function (tileX, tileY, nonNull)
     {
-        return TilemapComponents.GetTileAt(tileX, tileY, this.layer, nonNull);
+        return TilemapComponents.GetTileAt(tileX, tileY, nonNull, this.layer);
     },
 
     getTilesWithin: function (tileX, tileY, width, height)
@@ -129,10 +129,20 @@ var DynamicTilemapLayer = new Class({
         return TilemapComponents.HasTileAt(tileX, tileY, this.layer);
     },
 
+    putTile: function (tile, tileX, tileY)
+    {
+        return TilemapComponents.PutTile(tile, tileX, tileY, this.layer);
+    },
+
     randomize: function (tileX, tileY, width, height, indices)
     {
         TilemapComponents.Randomize(tileX, tileY, width, height, indices, this.layer);
         return this;
+    },
+
+    removeTile: function (tileX, tileY, replaceWithNull)
+    {
+        return TilemapComponents.RemoveTile(tileX, tileY, replaceWithNull, this.layer);
     },
 
     shuffle: function (tileX, tileY, width, height)
