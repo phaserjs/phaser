@@ -31,6 +31,13 @@ var WebAudioSoundManager = new Class({
          * @property {AudioNode} destination
          */
         this.destination = this.masterMuteNode;
+        /**
+         * Property that actually holds the value of global playback rate.
+         *
+         * @property {number} _rate
+         * @private
+         */
+        this._rate = 1;
         BaseSoundManager.call(this, game);
     },
     createAudioContext: function (game) {
@@ -68,6 +75,23 @@ Object.defineProperty(WebAudioSoundManager.prototype, 'volume', {
     },
     set: function (value) {
         this.masterVolumeNode.gain.value = value;
+    }
+});
+/**
+ * Global playback rate.
+ * @property {number} rate
+ */
+Object.defineProperty(WebAudioSoundManager.prototype, 'rate', {
+    get: function () {
+        return this._rate;
+    },
+    set: function (value) {
+        this._rate = value;
+        this.sounds.forEach(function (sound) {
+            // invoke sound's rate setter method to update
+            // value based on new global rate value
+            sound.rate = sound.rate;
+        }, this);
     }
 });
 module.exports = WebAudioSoundManager;
