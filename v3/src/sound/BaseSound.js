@@ -124,6 +124,11 @@ var BaseSound = new Class({
     stop: function () {
         return this;
     },
+    applyConfig: function () {
+        this.mute = this.currentConfig.mute;
+        this.volume = this.currentConfig.volume;
+        // TODO assign other config values to buffer source
+    },
     fadeTo: function (volume, duration) {
         return null;
     },

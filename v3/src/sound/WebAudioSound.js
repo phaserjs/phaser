@@ -60,9 +60,9 @@ var WebAudioSound = new Class({
         }
         this.currentConfig = Extend(this.currentConfig, config);
         this.source = this.manager.context.createBufferSource();
-        // TODO assign config values to buffer source
         this.source.buffer = this.audioBuffer;
         this.source.connect(this.muteNode);
+        this.applyConfig();
         this.source.start();
         return this;
     }
