@@ -6,23 +6,27 @@ var BaseSoundManager = new Class({
     initialize: function BaseSoundManager(game) {
         /**
          * Local reference to game.
+         *
          * @property {Phaser.Game} game
          */
         this.game = game;
         /**
          * Global mute setting.
+         *
          * @property {boolean} mute
          */
         this.mute = false;
         /**
          * Global volume setting.
+         *
          * @property {number} volume
          */
         this.volume = 1;
         /**
-         * Global playback rate at which the audio asset will be played.
+         * Global playback rate at which all the audio assets will be played.
          * Value of 1.0 plays the audio at full speed, 0.5 plays the audio at half speed
          * and 2.0 doubles the audio's playback speed.
+         *
          * @property {number} rate
          */
         this.rate = 1;
