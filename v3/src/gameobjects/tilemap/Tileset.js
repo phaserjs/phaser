@@ -45,6 +45,17 @@ var Tileset = new Class({
         return this.texCoordinates[tileIndex - this.firstgid];
     },
 
+    setSpacing: function (margin, spacing)
+    {
+        this.tileMargin = margin;
+        this.tileSpacing = spacing;
+
+        if (this.image)
+        {
+            this.updateTileData(this.image.source[0].width, this.image.source[0].height);
+        }
+    },
+
     updateTileData: function (imageWidth, imageHeight)
     {
         var rowCount = (imageHeight - this.tileMargin * 2 + this.tileSpacing) / (this.tileHeight + this.tileSpacing);
