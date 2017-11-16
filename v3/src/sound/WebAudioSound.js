@@ -91,4 +91,19 @@ Object.defineProperty(WebAudioSound.prototype, 'volume', {
         this.volumeNode.gain.value = value;
     }
 });
+/**
+ * Playback rate.
+ * @property {number} rate
+ */
+Object.defineProperty(WebAudioSound.prototype, 'rate', {
+    get: function () {
+        return this.currentConfig.rate;
+    },
+    set: function (value) {
+        this.currentConfig.rate = value;
+        if (this.source) {
+            this.source.playbackRate.value = value * this.manager.rate;
+        }
+    }
+});
 module.exports = WebAudioSound;
