@@ -76,6 +76,7 @@ Object.defineProperty(WebAudioSound.prototype, 'mute', {
         return this.muteNode.gain.value === 0;
     },
     set: function (value) {
+        this.currentConfig.mute = value;
         this.muteNode.gain.value = value ? 0 : 1;
     }
 });
@@ -88,6 +89,7 @@ Object.defineProperty(WebAudioSound.prototype, 'volume', {
         return this.volumeNode.gain.value;
     },
     set: function (value) {
+        this.currentConfig.volume = value;
         this.volumeNode.gain.value = value;
     }
 });
