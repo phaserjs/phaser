@@ -96,11 +96,11 @@ var BuildGameObject = function (scene, gameObject, config)
     if (add)
     {
         scene.sys.displayList.add(gameObject);
+    }
 
-        if (gameObject.preUpdate)
-        {
-            scene.sys.updateList.add(gameObject);
-        }
+    if (gameObject.preUpdate)
+    {
+        scene.sys.updateList.add(gameObject);
     }
 
     return gameObject;
