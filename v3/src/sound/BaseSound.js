@@ -114,6 +114,10 @@ var BaseSound = new Class({
     },
     play: function (marker, config) {
         if (marker === void 0) { marker = ''; }
+        if (typeof marker === 'object') {
+            config = marker;
+            marker = '';
+        }
         if (typeof marker !== 'string') {
             console.error('Sound marker name has to be a string!');
             return null;
