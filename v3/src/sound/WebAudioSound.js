@@ -106,4 +106,20 @@ Object.defineProperty(WebAudioSound.prototype, 'rate', {
         }
     }
 });
+/**
+ * Detuning of sound.
+ * @property {number} detune
+ */
+Object.defineProperty(WebAudioSound.prototype, 'detune', {
+    get: function () {
+        return this.currentConfig.detune;
+    },
+    set: function (value) {
+        this.currentConfig.detune = value;
+        if (this.source) {
+            this.source.detune.value =
+                Math.max(-1200, Math.min(value + this.manager.detune, 1200));
+        }
+    }
+});
 module.exports = WebAudioSound;
