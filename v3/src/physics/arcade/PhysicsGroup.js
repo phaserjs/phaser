@@ -28,7 +28,7 @@ var PhysicsGroup = new Class({
 
         config.createCallback = this.createCallback;
         config.removeCallback = this.removeCallback;
-        config.classType = ArcadeSprite;
+        config.classType = GetFastValue(config, 'classType', ArcadeSprite);
 
         this.physicsType = CONST.DYNAMIC_BODY;
 

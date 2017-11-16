@@ -5,6 +5,14 @@ var CONST = require('./const');
 var PhysicsGroup = require('./PhysicsGroup');
 var StaticPhysicsGroup = require('./StaticPhysicsGroup');
 
+//  When registering a factory function 'this' refers to the GameObjectFactory context.
+//  
+//  There are several properties available to use:
+//  
+//  this.scene - a reference to the Scene that owns the GameObjectFactory
+//  this.displayList - a reference to the Display List the Scene owns
+//  this.updateList - a reference to the Update List the Scene owns
+
 var Factory = new Class({
 
     initialize:
@@ -16,6 +24,10 @@ var Factory = new Class({
         this.scene = world.scene;
 
         this.sys = world.scene.sys;
+
+        // this.displayList = this.sys.
+        // this.displayList = sys.displayList;
+        // this.updateList = sys.updateList;
     },
 
     collider: function (object1, object2, collideCallback, processCallback, callbackContext)
@@ -76,12 +88,12 @@ var Factory = new Class({
 
     staticGroup: function (children, config)
     {
-        return new StaticPhysicsGroup(this.world, this.world.scene, children, config);
+        return this.sys.updateList.add(new StaticPhysicsGroup(this.world, this.world.scene, children, config));
     },
 
     group: function (children, config)
     {
-        return new PhysicsGroup(this.world, this.world.scene, children, config);
+        return this.sys.updateList.add(new PhysicsGroup(this.world, this.world.scene, children, config));
     }
 
 });

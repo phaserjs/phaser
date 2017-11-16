@@ -2,6 +2,7 @@ var Class = require('../../../utils/Class');
 var GameObject = require('../../GameObject');
 var Components = require('../../components');
 var DynamicTilemapLayerRender = require('./DynamicTilemapLayerRender');
+var TilemapComponents = require('../components');
 
 var DynamicTilemapLayer = new Class({
 
@@ -93,6 +94,51 @@ var DynamicTilemapLayer = new Class({
         }
 
         return culledTiles;
+    },
+
+    copy: function (srcTileX, srcTileY, width, height, destTileX, destTileY)
+    {
+        TilemapComponents.Copy(srcTileX, srcTileY, width, height, destTileX, destTileY, this.layer);
+        return this;
+    },
+
+    fill: function (index, tileX, tileY, width, height)
+    {
+        TilemapComponents.Fill(index, tileX, tileY, width, height, this.layer);
+        return this;
+    },
+
+    forEachTile: function (callback, context, tileX, tileY, width, height)
+    {
+        TilemapComponents.ForEachTile(callback, context, tileX, tileY, width, height, this.layer);
+        return this;
+    },
+
+    getTileAt: function (tileX, tileY, nonNull)
+    {
+        return TilemapComponents.GetTileAt(tileX, tileY, this.layer, nonNull);
+    },
+
+    getTilesWithin: function (tileX, tileY, width, height)
+    {
+        return TilemapComponents.GetTilesWithin(tileX, tileY, width, height, this.layer);
+    },
+
+    hasTileAt: function (tileX, tileY)
+    {
+        return TilemapComponents.HasTileAt(tileX, tileY, this.layer);
+    },
+
+    randomize: function (tileX, tileY, width, height, indices)
+    {
+        TilemapComponents.Randomize(tileX, tileY, width, height, indices, this.layer);
+        return this;
+    },
+
+    shuffle: function (tileX, tileY, width, height)
+    {
+        TilemapComponents.Shuffle(tileX, tileY, width, height, this.layer);
+        return this;
     }
 
     // forEach: function (callback)
