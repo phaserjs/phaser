@@ -11,6 +11,12 @@ var BaseSoundManager = new Class({
          */
         this.game = game;
         /**
+         * An array containing all added sounds.
+         *
+         * @property {Array} sounds
+         */
+        this.sounds = [];
+        /**
          * Global mute setting.
          *
          * @property {boolean} mute
@@ -45,7 +51,6 @@ var BaseSoundManager = new Class({
          * @property {boolean} muteOnPause
          */
         this.muteOnPause = true;
-        this.sounds = [];
         /**
          * [description]
          *
