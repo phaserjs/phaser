@@ -193,6 +193,7 @@ var Tilemap = new Class({
     copy: function (srcTileX, srcTileY, width, height, destTileX, destTileY, layer)
     {
         layer = this.getLayer(layer);
+        if (this._isStaticCall(layer, 'copy')) { return this; }
         if (layer !== null)
         {
             TilemapComponents.Copy(srcTileX, srcTileY, width, height, destTileX, destTileY, layer);
@@ -212,6 +213,7 @@ var Tilemap = new Class({
     fill: function (index, tileX, tileY, width, height, layer)
     {
         layer = this.getLayer(layer);
+        if (this._isStaticCall(layer, 'fill')) { return this; }
         if (layer !== null)
         {
             TilemapComponents.Fill(index, tileX, tileY, width, height, layer);
@@ -338,6 +340,7 @@ var Tilemap = new Class({
     randomize: function (tileX, tileY, width, height, indices, layer)
     {
         layer = this.getLayer(layer);
+        if (this._isStaticCall(layer, 'randomize')) { return this; }
         if (layer !== null)
         {
             TilemapComponents.Randomize(tileX, tileY, width, height, indices, layer);
@@ -355,6 +358,7 @@ var Tilemap = new Class({
     removeTile: function (tileX, tileY, replaceWithNull, layer)
     {
         layer = this.getLayer(layer);
+        if (this._isStaticCall(layer, 'removeTile')) { return null; }
         if (layer === null) { return null; }
         return TilemapComponents.RemoveTile(tileX, tileY, replaceWithNull, layer);
     },
@@ -362,6 +366,7 @@ var Tilemap = new Class({
     replaceByIndex: function (findIndex, newIndex, tileX, tileY, width, height, layer)
     {
         layer = this.getLayer(layer);
+        if (this._isStaticCall(layer, 'replaceByIndex')) { return this; }
         if (layer !== null)
         {
             TilemapComponents.ReplaceByIndex(findIndex, newIndex, tileX, tileY, width, height, layer);
@@ -390,6 +395,7 @@ var Tilemap = new Class({
     shuffle: function (tileX, tileY, width, height, layer)
     {
         layer = this.getLayer(layer);
+        if (this._isStaticCall(layer, 'shuffle')) { return this; }
         if (layer !== null)
         {
             TilemapComponents.Shuffle(tileX, tileY, width, height, layer);
@@ -400,11 +406,25 @@ var Tilemap = new Class({
     swapByIndex: function (indexA, indexB, tileX, tileY, width, height, layer)
     {
         layer = this.getLayer(layer);
+        if (this._isStaticCall(layer, 'swapByIndex')) { return this; }
         if (layer !== null)
         {
             TilemapComponents.SwapByIndex(indexA, indexB, tileX, tileY, width, height, layer);
         }
         return this;
+    },
+
+    _isStaticCall: function (layer, functionName)
+    {
+        if (layer.tilemapLayer instanceof StaticTilemapLayer)
+        {
+            console.warn(functionName + ': You cannot change the tiles in a static tilemap layer');
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 
 });
