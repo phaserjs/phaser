@@ -71,26 +71,32 @@ var WebAudioSound = new Class({
         return this;
     },
     pause: function () {
-        BaseSound.prototype.pause.call(this);
+        if (!BaseSound.prototype.pause.call(this)) {
+            return false;
+        }
         this.stopAndRemoveBufferSource();
         this.pausedTime = this.manager.context.currentTime - this.startTime;
-        return this;
+        return true;
     },
     resume: function () {
-        BaseSound.prototype.resume.call(this);
+        if (!BaseSound.prototype.resume.call(this)) {
+            return false;
+        }
         var offset = this.pausedTime; // TODO include marker start time
         var duration = this.currentConfig.duration - this.pausedTime;
         this.createAndStartBufferSource(offset, duration);
         this.startTime = this.manager.context.currentTime - this.pausedTime;
         this.pausedTime = 0;
-        return this;
+        return true;
     },
     stop: function () {
-        BaseSound.prototype.stop.call(this);
+        if (!BaseSound.prototype.stop.call(this)) {
+            return false;
+        }
         this.stopAndRemoveBufferSource();
         this.startTime = 0;
         this.pausedTime = 0;
-        return this;
+        return true;
     },
     /**
      * Used internally to do what the name says.
