@@ -156,6 +156,8 @@ var BaseSound = new Class({
             this.currentConfig = this.markers[marker].config;
         }
         this.currentConfig = Extend(this.currentConfig, config);
+        this.isPlaying = true;
+        this.isPaused = false;
         return this;
     },
     pause: function () {
