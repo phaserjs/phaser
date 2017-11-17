@@ -42,7 +42,7 @@ var DynamicTilemapLayerCanvasRenderer = function (renderer, gameObject, interpol
             ctx.scale(tile.flipX ? -1 : 1, tile.flipY ? -1 : 1);
         }
 
-        renderer.setAlpha(gameObject.alpha * tile.alpha);
+        ctx.globalAlpha = gameObject.alpha * tile.alpha;
 
         ctx.drawImage(
             image,
