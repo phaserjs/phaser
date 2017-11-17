@@ -1,5 +1,5 @@
 var BaseSoundManager = require('./BaseSoundManager');
-var WebAudioSoundManager = require('./WebAudioSoundManager');
+var WebAudioSoundManager = require('./webaudio/WebAudioSoundManager');
 
 var SoundManagerCreator = {
 
