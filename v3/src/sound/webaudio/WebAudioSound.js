@@ -1,7 +1,7 @@
 var Class = require('../../utils/Class');
 var BaseSound = require('../BaseSound');
 //  Phaser.Sound.WebAudioSound
-// TODO support webkitAudioContext implementation differences 
+// TODO support webkitAudioContext implementation differences
 // https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API/Porting_webkitAudioContext_code_to_standards_based_AudioContext
 var WebAudioSound = new Class({
     Extends: BaseSound,
@@ -72,8 +72,7 @@ var WebAudioSound = new Class({
     },
     pause: function () {
         BaseSound.prototype.pause.call(this);
-        this.source.stop();
-        this.source = null;
+        this.stopAndRemoveBufferSource();
         this.pausedTime = this.manager.context.currentTime - this.startTime;
         return this;
     },
@@ -88,8 +87,7 @@ var WebAudioSound = new Class({
     },
     stop: function () {
         BaseSound.prototype.stop.call(this);
-        this.source.stop();
-        this.source = null;
+        this.stopAndRemoveBufferSource();
         this.startTime = 0;
         this.pausedTime = 0;
         return this;
@@ -107,6 +105,15 @@ var WebAudioSound = new Class({
         this.source.connect(this.muteNode);
         this.applyConfig();
         this.source.start(0, offset, duration);
+    },
+    /**
+     * Used internally to do what the name says.
+     *
+     * @private
+     */
+    stopAndRemoveBufferSource: function () {
+        this.source.stop();
+        this.source = null;
     },
     update: function () {
     },
