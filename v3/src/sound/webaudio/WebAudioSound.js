@@ -32,6 +32,13 @@ var WebAudioSound = new Class({
          * @property {GainNode} volumeNode
          */
         this.volumeNode = manager.context.createGain();
+        /**
+         * The time the previous playback started at based on
+         * BaseAudioContext.currentTime value.
+         *
+         * @property {number} startTime
+         */
+        this.startTime = 0;
         this.muteNode.connect(this.volumeNode);
         this.volumeNode.connect(manager.destination);
         if (config === void 0) {
