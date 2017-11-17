@@ -150,7 +150,7 @@ var Common = require('../core/Common');
             j;
 
         // find the polygon's moment of inertia, using second moment of area
-        // http://www.physicsforums.com/showthread.php?t=25293
+        // from equations at http://www.physicsforums.com/showthread.php?t=25293
         for (var n = 0; n < v.length; n++) {
             j = (n + 1) % v.length;
             cross = Math.abs(Vector.cross(v[j], v[n]));
@@ -354,6 +354,7 @@ var Common = require('../core/Common');
      */
     Vertices.isConvex = function(vertices) {
         // http://paulbourke.net/geometry/polygonmesh/
+        // Copyright (c) Paul Bourke (use permitted)
 
         var flag = 0,
             n = vertices.length,
@@ -396,7 +397,7 @@ var Common = require('../core/Common');
      * @return [vertex] vertices
      */
     Vertices.hull = function(vertices) {
-        // http://en.wikibooks.org/wiki/Algorithm_Implementation/Geometry/Convex_hull/Monotone_chain
+        // http://geomalgorithms.com/a10-_hull-1.html
 
         var upper = [],
             lower = [], 
@@ -411,7 +412,7 @@ var Common = require('../core/Common');
         });
 
         // build lower hull
-        for (i = 0; i < vertices.length; i++) {
+        for (i = 0; i < vertices.length; i += 1) {
             vertex = vertices[i];
 
             while (lower.length >= 2 
@@ -423,7 +424,7 @@ var Common = require('../core/Common');
         }
 
         // build upper hull
-        for (i = vertices.length - 1; i >= 0; i--) {
+        for (i = vertices.length - 1; i >= 0; i -= 1) {
             vertex = vertices[i];
 
             while (upper.length >= 2 

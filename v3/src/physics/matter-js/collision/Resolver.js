@@ -89,7 +89,7 @@ var Bounds = require('../geometry/Bounds');
         for (i = 0; i < pairs.length; i++) {
             pair = pairs[i];
 
-            if (!pair.isActive || pair.isSensor || pair.separation < 0)
+            if (!pair.isActive || pair.isSensor)
                 continue;
             
             collision = pair.collision;

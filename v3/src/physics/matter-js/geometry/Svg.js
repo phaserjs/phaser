@@ -151,6 +151,9 @@ var Bounds = require('../geometry/Bounds');
 
     var _svgPathToAbsolute = function(path) {
         // http://phrogz.net/convert-svg-path-to-all-absolute-commands
+        // Copyright (c) Gavin Kistner
+        // http://phrogz.net/js/_ReuseLicense.txt
+        // Modifications: tidy formatting and naming
         var x0, y0, x1, y1, x2, y2, segs = path.pathSegList,
             x = 0, y = 0, len = segs.numberOfItems;
 
