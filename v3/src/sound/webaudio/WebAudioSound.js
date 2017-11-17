@@ -59,6 +59,7 @@ var WebAudioSound = new Class({
         this.source.connect(this.muteNode);
         this.applyConfig();
         this.source.start();
+        this.startTime = this.manager.context.currentTime;
         return this;
     },
     pause: function () {
