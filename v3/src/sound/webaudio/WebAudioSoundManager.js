@@ -6,6 +6,15 @@ var WebAudioSoundManager = new Class({
     Extends: BaseSoundManager,
     initialize: function WebAudioSoundManager(game) {
         /**
+         * Flag indicating if Web Audio implementation is webkit or standards based.
+         * There are certain cases where they have to be handled differently.
+         *
+         * https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API/Porting_webkitAudioContext_code_to_standards_based_AudioContext
+         *
+         * @property {boolean} webkit
+         */
+        this.webkit = !!window['webkitAudioContext'] && !window['AudioContext'];
+        /**
          * The AudioContext being used for playback.
          *
          * @property {AudioContext} context
