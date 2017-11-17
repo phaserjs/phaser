@@ -2,6 +2,8 @@ var Formats = require('../Formats');
 var Tileset = require('../Tileset');
 var Tile = require('../Tile');
 var Extend = require('../../../utils/object/Extend');
+var MapData = require('../mapdata/MapData');
+var LayerData = require('../mapdata/LayerData');
 
 var ParseJSONTiled = function (key, json, insertNull)
 {
@@ -12,7 +14,7 @@ var ParseJSONTiled = function (key, json, insertNull)
     }
 
     //  Map data will consist of: layers, objects, images, tilesets, sizes
-    var map = {
+    var mapData = new MapData({
         width: json.width,
         height: json.height,
         name: key,
@@ -21,10 +23,8 @@ var ParseJSONTiled = function (key, json, insertNull)
         orientation: json.orientation,
         format: Formats.TILED_JSON,
         version: json.version,
-        properties: json.properties,
-        widthInPixels: json.width * json.tilewidth,
-        heightInPixels: json.height * json.tileheight
-    };
+        properties: json.properties
+    });
 
     //  Tile Layers
     var layers = [];
@@ -69,8 +69,7 @@ var ParseJSONTiled = function (key, json, insertNull)
             continue;
         }
 
-        var layer = {
-
+        var layerData = new LayerData({
             name: curl.name,
             x: curl.x,
             y: curl.y,
@@ -78,20 +77,17 @@ var ParseJSONTiled = function (key, json, insertNull)
             height: curl.height,
             tileWidth: json.tilewidth,
             tileHeight: json.tileheight,
-            widthInPixels: curl.width * json.tilewidth,
-            heightInPixels: curl.height * json.tileheight,
             alpha: curl.opacity,
             visible: curl.visible,
             properties: {},
             indexes: [],
             callbacks: [],
             bodies: []
-
-        };
+        });
 
         if (curl.properties)
         {
-            layer.properties = curl.properties;
+            layerData.properties = curl.properties;
         }
 
         var x = 0;
@@ -175,7 +171,7 @@ var ParseJSONTiled = function (key, json, insertNull)
             //  index, x, y, width, height
             if (gid > 0)
             {
-                var tile = new Tile(layer, gid, x, output.length, json.tilewidth, json.tileheight);
+                var tile = new Tile(layerData, gid, x, output.length, json.tilewidth, json.tileheight);
 
                 tile.rotation = rotation;
                 tile.flipped = flipped;
@@ -192,7 +188,7 @@ var ParseJSONTiled = function (key, json, insertNull)
             {
                 var blankTile = insertNull
                     ? null
-                    : new Tile(layer, -1, x, output.length, json.tilewidth, json.tileheight);
+                    : new Tile(layerData, -1, x, output.length, json.tilewidth, json.tileheight);
                 row.push(blankTile);
             }
 
@@ -206,12 +202,12 @@ var ParseJSONTiled = function (key, json, insertNull)
             }
         }
 
-        layer.data = output;
+        layerData.data = output;
 
-        layers.push(layer);
+        layers.push(layerData);
     }
 
-    map.layers = layers;
+    mapData.layers = layers;
 
     //  Images
     var images = [];
@@ -246,7 +242,7 @@ var ParseJSONTiled = function (key, json, insertNull)
 
     }
 
-    map.images = images;
+    mapData.images = images;
 
     //  Tilesets & Image Collections
     var tilesets = [];
@@ -298,8 +294,8 @@ var ParseJSONTiled = function (key, json, insertNull)
         lastSet = set;
     }
 
-    map.tilesets = tilesets;
-    map.imagecollections = imagecollections;
+    mapData.tilesets = tilesets;
+    mapData.imagecollections = imagecollections;
 
     //  Objects & Collision Data (polylines, etc)
     var objects = {};
@@ -425,15 +421,15 @@ var ParseJSONTiled = function (key, json, insertNull)
         }
     }
 
-    map.objects = objects;
-    map.collision = collision;
+    mapData.objects = objects;
+    mapData.collision = collision;
 
-    map.tiles = [];
+    mapData.tiles = [];
 
     //  Finally lets build our super tileset index
-    for (var i = 0; i < map.tilesets.length; i++)
+    for (var i = 0; i < mapData.tilesets.length; i++)
     {
-        var set = map.tilesets[i];
+        var set = mapData.tilesets[i];
 
         var x = set.tileMargin;
         var y = set.tileMargin;
@@ -445,7 +441,7 @@ var ParseJSONTiled = function (key, json, insertNull)
         for (var t = set.firstgid; t < set.firstgid + set.total; t++)
         {
             //  Can add extra properties here as needed
-            map.tiles[t] = [ x, y, i ];
+            mapData.tiles[t] = [ x, y, i ];
 
             x += set.tileWidth + set.tileSpacing;
 
@@ -477,22 +473,22 @@ var ParseJSONTiled = function (key, json, insertNull)
 
     // assign tile properties
 
-    var layer;
+    var layerData;
     var tile;
     var sid;
     var set;
 
     // go through each of the map data layers
-    for (var i = 0; i < map.layers.length; i++)
+    for (var i = 0; i < mapData.layers.length; i++)
     {
-        layer = map.layers[i];
+        layerData = mapData.layers[i];
 
         set = null;
 
         // rows of tiles
-        for (var j = 0; j < layer.data.length; j++)
+        for (var j = 0; j < layerData.data.length; j++)
         {
-            row = layer.data[j];
+            row = layerData.data[j];
 
             // individual tiles
             for (var k = 0; k < row.length; k++)
@@ -506,8 +502,8 @@ var ParseJSONTiled = function (key, json, insertNull)
 
                 // find the relevant tileset
 
-                sid = map.tiles[tile.index][2];
-                set = map.tilesets[sid];
+                sid = mapData.tiles[tile.index][2];
+                set = mapData.tilesets[sid];
 
 
                 // if that tile type has any properties, add them to the tile object
@@ -520,7 +516,7 @@ var ParseJSONTiled = function (key, json, insertNull)
             }
         }
     }
-    return map;
+    return mapData;
 };
 
 module.exports = ParseJSONTiled;

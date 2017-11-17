@@ -1,33 +1,45 @@
-var GenerateEmptyMapData = require('../emptymap/GenerateEmptyMapData');
+var MapData = require('../mapdata/MapData');
+var LayerData = require('../mapdata/LayerData');
 var Formats = require('../Formats');
 var Tile = require('../Tile');
 
 var Parse2DArray = function (key, data, tileWidth, tileHeight, insertNull)
 {
-    var map = GenerateEmptyMapData(Formats.TILEMAP_2D_ARRAY, key, tileWidth, tileHeight);
+    var layerData = new LayerData({
+        tileWidth: tileWidth,
+        tileHeight: tileHeight
+    });
 
-    var output = [];
+    var mapData = new MapData({
+        name: key,
+        tileWidth: tileWidth,
+        tileHeight: tileHeight,
+        format: Formats.TILEMAP_2D_ARRAY,
+        layers: [ layerData ]
+    });
+
+    var tiles = [];
     var height = data.length;
     var width = 0;
 
     for (var y = 0; y < data.length; y++)
     {
-        output[y] = [];
+        tiles[y] = [];
         var row = data[y];
 
         for (var x = 0; x < row.length; x++)
         {
             var tileIndex = parseInt(row[x], 10);
 
-            if (Number.isNaN(tileIndex))
+            if (Number.isNaN(tileIndex) || tileIndex === -1)
             {
-                output[y][x] = insertNull
+                tiles[y][x] = insertNull
                     ? null
-                    : new Tile(map.layers[0], -1, x, y, tileWidth, tileHeight);
+                    : new Tile(layerData, -1, x, y, tileWidth, tileHeight);
             }
             else
             {
-                output[y][x] = new Tile(map.layers[0], tileIndex, x, y, tileWidth, tileHeight);
+                tiles[y][x] = new Tile(layerData, tileIndex, x, y, tileWidth, tileHeight);
             }
         }
 
@@ -37,20 +49,13 @@ var Parse2DArray = function (key, data, tileWidth, tileHeight, insertNull)
         }
     }
 
-    map.width = width;
-    map.height = height;
-    map.tileWidth = tileWidth;
-    map.tileHeight = tileHeight;
-    map.widthInPixels = width * tileWidth;
-    map.heightInPixels = height * tileHeight;
+    mapData.width = layerData.width = width;
+    mapData.height = layerData.height = height;
+    mapData.widthInPixels = layerData.widthInPixels = width * tileWidth;
+    mapData.heightInPixels = layerData.heightInPixels = height * tileHeight;
+    layerData.data = tiles;
 
-    map.layers[0].width = width;
-    map.layers[0].height = height;
-    map.layers[0].widthInPixels = map.widthInPixels;
-    map.layers[0].heightInPixels = map.heightInPixels;
-    map.layers[0].data = output;
-
-    return map;
+    return mapData;
 };
 
 module.exports = Parse2DArray;

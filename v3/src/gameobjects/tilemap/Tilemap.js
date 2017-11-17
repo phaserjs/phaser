@@ -1,6 +1,6 @@
 var Class = require('../../utils/Class');
-var GenerateEmptyMapData = require('./emptymap/GenerateEmptyMapData');
-var GenerateEmptyMapLayer = require('./emptymap/GenerateEmptyMapLayer');
+var MapData = require('./mapdata/MapData');
+var LayerData = require('./mapdata/LayerData');
 var StaticTilemapLayer = require('./staticlayer/StaticTilemapLayer.js');
 var DynamicTilemapLayer = require('./dynamiclayer/DynamicTilemapLayer.js');
 var Tileset = require('./Tileset');
@@ -18,7 +18,12 @@ var Tilemap = new Class({
 
         if (mapData === null)
         {
-            mapData = GenerateEmptyMapData(tileWidth, tileHeight, width, height);
+            mapData = new MapData({
+                tileWidth: tileWidth,
+                tileHeight: tileHeight,
+                width: width,
+                height: height
+            });
         }
 
         this.tilesets = [];
@@ -111,7 +116,13 @@ var Tilemap = new Class({
             return null;
         }
 
-        var layer = GenerateEmptyMapLayer(name, tileWidth, tileHeight, width, height);
+        var layerData = new LayerData({
+            name: name,
+            tileWidth: tileWidth,
+            tileHeight: tileHeight,
+            width: width,
+            height: height
+        });
 
         var row;
         for (var tileY = 0; tileY < height; tileY++)
@@ -119,12 +130,12 @@ var Tilemap = new Class({
             row = [];
             for (var tileX = 0; tileX < width; tileX++)
             {
-                row.push(new Tile(layer, -1, tileX, tileY, tileWidth, tileHeight));
+                row.push(new Tile(layerData, -1, tileX, tileY, tileWidth, tileHeight));
             }
-            layer.data.push(row);
+            layerData.data.push(row);
         }
 
-        this.layers.push(layer);
+        this.layers.push(layerData);
         this.currentLayerIndex = this.layers.length - 1;
 
         // TODO: decide about v2 trimming to game width/height
