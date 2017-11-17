@@ -67,14 +67,18 @@ var WebAudioSound = new Class({
         this.applyConfig();
         this.source.start();
         this.startTime = this.manager.context.currentTime;
+        this.pausedTime = 0;
         return this;
     },
     pause: function () {
         BaseSound.prototype.pause.call(this);
+        this.pausedTime = this.manager.context.currentTime - this.startTime;
         return this;
     },
     resume: function () {
         BaseSound.prototype.resume.call(this);
+        this.startTime = this.manager.context.currentTime - this.pausedTime;
+        this.pausedTime = 0;
         return this;
     },
     stop: function () {
@@ -82,6 +86,7 @@ var WebAudioSound = new Class({
         this.source.stop();
         this.source = null;
         this.startTime = 0;
+        this.pausedTime = 0;
         return this;
     },
     update: function () {
