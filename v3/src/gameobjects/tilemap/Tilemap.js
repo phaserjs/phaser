@@ -12,19 +12,9 @@ var Tilemap = new Class({
 
     initialize:
 
-    function Tilemap (scene, mapData, tileWidth, tileHeight, width, height)
+    function Tilemap (scene, mapData)
     {
         this.scene = scene;
-
-        if (mapData === null)
-        {
-            mapData = new MapData({
-                tileWidth: tileWidth,
-                tileHeight: tileHeight,
-                width: width,
-                height: height
-            });
-        }
 
         this.tilesets = [];
         this.tileWidth = mapData.tileWidth;
@@ -142,6 +132,7 @@ var Tilemap = new Class({
 
         var dynamicLayer = new DynamicTilemapLayer(this.scene, this, this.currentLayerIndex, tileset, x, y);
         this.scene.sys.displayList.add(dynamicLayer);
+
         return dynamicLayer;
     },
 
