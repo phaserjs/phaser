@@ -292,11 +292,11 @@ var Tilemap = new Class({
         return TilemapComponents.GetTileAt(tileX, tileY, nonNull, layer);
     },
 
-    getTileAtWorldXY: function (worldX, worldY, nonNull, layer)
+    getTileAtWorldXY: function (worldX, worldY, nonNull, camera, layer)
     {
         layer = this.getLayer(layer);
         if (layer === null) { return null; }
-        return TilemapComponents.GetTileAtWorldXY(worldX, worldY, nonNull, layer);
+        return TilemapComponents.GetTileAtWorldXY(worldX, worldY, nonNull, camera, layer);
     },
 
     getTilesWithin: function (tileX, tileY, width, height, layer)
@@ -318,6 +318,13 @@ var Tilemap = new Class({
         return TilemapComponents.HasTileAt(tileX, tileY, layer);
     },
 
+    hasTileAtWorldXY: function (worldX, worldY, camera, layer)
+    {
+        layer = this.getLayer(layer);
+        if (layer === null) { return null; }
+        return TilemapComponents.HasTileAtWorldXY(worldX, worldY, camera, layer);
+    },
+
     layer: {
         get: function ()
         {
@@ -336,6 +343,14 @@ var Tilemap = new Class({
         if (this._isStaticCall(layer, 'putTile')) { return null; }
         if (layer === null) { return null; }
         return TilemapComponents.PutTile(tile, tileX, tileY, layer);
+    },
+
+    putTileWorldXY: function (tile, worldX, worldY, camera, layer)
+    {
+        layer = this.getLayer(layer);
+        if (this._isStaticCall(layer, 'putTileWorldXY')) { return null; }
+        if (layer === null) { return null; }
+        return TilemapComponents.PutTileWorldXY(tile, worldX, worldY, camera, layer);
     },
 
     randomize: function (tileX, tileY, width, height, indices, layer)
@@ -362,6 +377,14 @@ var Tilemap = new Class({
         if (this._isStaticCall(layer, 'removeTile')) { return null; }
         if (layer === null) { return null; }
         return TilemapComponents.RemoveTile(tileX, tileY, replaceWithNull, layer);
+    },
+
+    removeTileWorldXY: function (worldX, worldY, replaceWithNull, camera, layer)
+    {
+        layer = this.getLayer(layer);
+        if (this._isStaticCall(layer, 'removeTileWorldXY')) { return null; }
+        if (layer === null) { return null; }
+        return TilemapComponents.RemoveTileWorldXY(worldX, worldY, replaceWithNull, camera, layer);
     },
 
     replaceByIndex: function (findIndex, newIndex, tileX, tileY, width, height, layer)

@@ -1,13 +1,12 @@
-var GetTileAt = require('./GetTileAt');
+var PutTile = require('./PutTile');
 var WorldToTileX = require('./WorldToTileX');
 var WorldToTileY = require('./WorldToTileY');
 
-var GetTileAtWorldXY = function (worldX, worldY, nonNull, camera, layer)
+var PutTileWorldXY = function (tile, worldX, worldY, camera, layer)
 {
     var tileX = WorldToTileX(worldX, camera, layer);
     var tileY = WorldToTileY(worldY, camera, layer);
-
-    return GetTileAt(tileX, tileY, nonNull, layer);
+    return PutTile(tile, tileX, tileY, layer);
 };
 
-module.exports = GetTileAtWorldXY;
+module.exports = PutTileWorldXY;
