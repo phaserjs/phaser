@@ -311,6 +311,21 @@ var StaticTilemapLayer = new Class({
     hasTileAt: function (tileX, tileY)
     {
         return TilemapComponents.HasTileAt(tileX, tileY, this.layer);
+    },
+
+    worldToTileX: function (worldX, camera)
+    {
+        return TilemapComponents.WorldToTileX(worldX, camera, this.layer);
+    },
+
+    worldToTileY: function (worldY, camera)
+    {
+        return TilemapComponents.WorldToTileY(worldY, camera, this.layer);
+    },
+
+    worldToTileXY: function (worldX, worldY, point, camera)
+    {
+        return TilemapComponents.WorldToTileXY(worldX, worldY, point, camera, this.layer);
     }
 
 });

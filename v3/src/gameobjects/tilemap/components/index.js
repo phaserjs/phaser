@@ -14,6 +14,9 @@ module.exports = {
     RemoveTile: require('./RemoveTile'),
     ReplaceByIndex: require('./ReplaceByIndex'),
     Shuffle: require('./Shuffle'),
-    SwapByIndex: require('./SwapByIndex')
+    SwapByIndex: require('./SwapByIndex'),
+    WorldToTileX: require('./WorldToTileX'),
+    WorldToTileXY: require('./WorldToTileXY'),
+    WorldToTileY: require('./WorldToTileY')
 
 };

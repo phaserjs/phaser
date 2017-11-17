@@ -333,6 +333,7 @@ var Tilemap = new Class({
     putTile: function (tile, tileX, tileY, layer)
     {
         layer = this.getLayer(layer);
+        if (this._isStaticCall(layer, 'putTile')) { return null; }
         if (layer === null) { return null; }
         return TilemapComponents.PutTile(tile, tileX, tileY, layer);
     },
@@ -412,6 +413,27 @@ var Tilemap = new Class({
             TilemapComponents.SwapByIndex(indexA, indexB, tileX, tileY, width, height, layer);
         }
         return this;
+    },
+
+    worldToTileX: function (worldX, camera, layer)
+    {
+        layer = this.getLayer(layer);
+        if (layer === null) { return null; }
+        return TilemapComponents.WorldToTileX(worldX, camera, layer);
+    },
+
+    worldToTileY: function (worldY, camera, layer)
+    {
+        layer = this.getLayer(layer);
+        if (layer === null) { return null; }
+        return TilemapComponents.WorldToTileY(worldY, camera, layer);
+    },
+
+    worldToTileXY: function (worldX, worldY, point, camera, layer)
+    {
+        layer = this.getLayer(layer);
+        if (layer === null) { return null; }
+        return TilemapComponents.WorldToTileXY(worldX, worldY, point, camera, layer);
     },
 
     _isStaticCall: function (layer, functionName)
