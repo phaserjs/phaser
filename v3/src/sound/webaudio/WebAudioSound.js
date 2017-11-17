@@ -39,6 +39,13 @@ var WebAudioSound = new Class({
          * @property {number} startTime
          */
         this.startTime = 0;
+        /**
+         * Relative time when sound was paused.
+         * Corresponds to the seek value at the time when pause() method was called on this sound.
+         *
+         * @property {number} pausedTime
+         */
+        this.pausedTime = 0;
         this.muteNode.connect(this.volumeNode);
         this.volumeNode.connect(manager.destination);
         if (config === void 0) {
