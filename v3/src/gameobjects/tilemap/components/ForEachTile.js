@@ -1,4 +1,4 @@
-var GetTilesWithin = require("./GetTilesWithin");
+var GetTilesWithin = require('./GetTilesWithin');
 
 var ForEachTile = function (callback, context, tileX, tileY, width, height, layer)
 {

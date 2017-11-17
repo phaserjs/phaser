@@ -269,6 +269,11 @@ var StaticTilemapLayer = new Class({
         }
     },
 
+    findByIndex: function (findIndex, skip, reverse)
+    {
+        return TilemapComponents.FindByIndex(findIndex, skip, reverse, this.layer);
+    },
+
     forEachTile: function (callback, context, tileX, tileY, width, height)
     {
         TilemapComponents.ForEachTile(callback, context, tileX, tileY, width, height, this.layer);

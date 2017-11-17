@@ -94,7 +94,8 @@ var Tilemap = new Class({
     },
 
     // Creates & selects
-    createBlankDynamicLayer: function (name, tileset, x, y, width, height, tileWidth, tileHeight) {
+    createBlankDynamicLayer: function (name, tileset, x, y, width, height, tileWidth, tileHeight)
+    {
         if (tileWidth === undefined) { tileWidth = this.tileWidth; }
         if (tileHeight === undefined) { tileHeight = this.tileHeight; }
         if (width === undefined) { width = this.width; }
@@ -107,7 +108,7 @@ var Tilemap = new Class({
         if (index !== null)
         {
             console.warn('Cannot create blank layer: layer with matching name already exists ' + name);
-            return;
+            return null;
         }
 
         var layer = GenerateEmptyMapLayer(name, tileWidth, tileHeight, width, height);
@@ -140,8 +141,8 @@ var Tilemap = new Class({
 
         if (index === null)
         {
-            console.warn('Cannot create tilemap layer: invalid layer ID given: ' + index);
-            return;
+            console.warn('Cannot create tilemap layer: invalid layer ID given: ' + layerID);
+            return null;
         }
 
         // TODO: new feature, allow multiple CSV layers
@@ -161,8 +162,8 @@ var Tilemap = new Class({
 
         if (index === null)
         {
-            console.warn('Cannot create tilemap layer: invalid layer ID given: ' + index);
-            return;
+            console.warn('Cannot create tilemap layer: invalid layer ID given: ' + layerID);
+            return null;
         }
 
         // TODO: new feature, allow multiple CSV layers
@@ -193,6 +194,13 @@ var Tilemap = new Class({
             TilemapComponents.Fill(index, tileX, tileY, width, height, layer);
         }
         return this;
+    },
+
+    findByIndex: function (findIndex, skip, reverse, layer)
+    {
+        layer = this.getLayer(layer);
+        if (layer === null) { return null; }
+        return TilemapComponents.FindByIndex(findIndex, skip, reverse, layer);
     },
 
     forEachTile: function (callback, context, tileX, tileY, width, height, layer)
@@ -321,6 +329,16 @@ var Tilemap = new Class({
         return TilemapComponents.RemoveTile(tileX, tileY, replaceWithNull, layer);
     },
 
+    replaceByIndex: function (findIndex, newIndex, tileX, tileY, width, height, layer)
+    {
+        layer = this.getLayer(layer);
+        if (layer !== null)
+        {
+            TilemapComponents.ReplaceByIndex(findIndex, newIndex, tileX, tileY, width, height, layer);
+        }
+        return this;
+    },
+
     setLayer: function (layer)
     {
         var index = this.getLayerIndex(layer);
@@ -337,6 +355,16 @@ var Tilemap = new Class({
         if (layer !== null)
         {
             TilemapComponents.Shuffle(tileX, tileY, width, height, layer);
+        }
+        return this;
+    },
+
+    swapByIndex: function (indexA, indexB, tileX, tileY, width, height, layer)
+    {
+        layer = this.getLayer(layer);
+        if (layer !== null)
+        {
+            TilemapComponents.SwapByIndex(indexA, indexB, tileX, tileY, width, height, layer);
         }
         return this;
     }

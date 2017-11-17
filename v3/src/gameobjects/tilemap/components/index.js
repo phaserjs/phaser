@@ -2,6 +2,7 @@ module.exports = {
 
     Copy: require('./Copy'),
     Fill: require('./Fill'),
+    FindByIndex: require('./FindByIndex'),
     ForEachTile: require('./ForEachTile'),
     GetTileAt: require('./GetTileAt'),
     GetTileAtWorldXY: require('./GetTileAtWorldXY'),
@@ -11,6 +12,8 @@ module.exports = {
     PutTile: require('./PutTile'),
     Randomize: require('./Randomize'),
     RemoveTile: require('./RemoveTile'),
-    Shuffle: require('./Shuffle')
+    ReplaceByIndex: require('./ReplaceByIndex'),
+    Shuffle: require('./Shuffle'),
+    SwapByIndex: require('./SwapByIndex')
 
 };

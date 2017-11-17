@@ -108,6 +108,11 @@ var DynamicTilemapLayer = new Class({
         return this;
     },
 
+    findByIndex: function (findIndex, skip, reverse)
+    {
+        return TilemapComponents.FindByIndex(findIndex, skip, reverse, this.layer);
+    },
+
     forEachTile: function (callback, context, tileX, tileY, width, height)
     {
         TilemapComponents.ForEachTile(callback, context, tileX, tileY, width, height, this.layer);
@@ -150,61 +155,23 @@ var DynamicTilemapLayer = new Class({
         return TilemapComponents.RemoveTile(tileX, tileY, replaceWithNull, this.layer);
     },
 
+    replaceByIndex: function (findIndex, newIndex, tileX, tileY, width, height)
+    {
+        TilemapComponents.ReplaceByIndex(findIndex, newIndex, tileX, tileY, width, height, this.layer);
+        return this;
+    },
+
     shuffle: function (tileX, tileY, width, height)
     {
         TilemapComponents.Shuffle(tileX, tileY, width, height, this.layer);
         return this;
+    },
+
+    swapByIndex: function (indexA, indexB, tileX, tileY, width, height)
+    {
+        TilemapComponents.SwapByIndex(indexA, indexB, tileX, tileY, width, height, this.layer);
+        return this;
     }
-
-    // forEach: function (callback)
-    // {
-    //     this.tileArray.forEach(callback);
-    // },
-
-    //  Returns Object containing:
-    //  {
-    //      alpha
-    //      frameWidth,
-    //      frameHeight,
-    //      frameX
-    //      frameY
-    //      id
-    //      index = the tile in the tileset to render
-    //      textureWidth = tileset texture size
-    //      textureHeight
-    //      tint
-    //      visible
-    //      width
-    //      x
-    //      y
-    //  }
-
-    // getTileAt: function (x, y)
-    // {
-    //     var ix = (x|0);
-    //     var iy = (y|0);
-    //     var tiles = this.tileArray;
-    //     var index = iy * this.mapWidth + ix;
-
-    //     if (index < tiles.length)
-    //     {
-    //         return tiles[index];
-    //     }
-
-    //     return null;
-    // },
-
-    // getTileAtIndex: function (index)
-    // {
-    //     var tiles = this.tileArray;
-
-    //     if (index < tiles.length)
-    //     {
-    //         return tiles[index];
-    //     }
-
-    //     return null;
-    // }
 
 });
 
