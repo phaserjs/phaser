@@ -45,8 +45,6 @@ var ParticleManagerCanvasRenderer = function (renderer, emitterManager, interpol
             }
 
             var frame = particle.frame;
-            var dx = frame.x;
-            var dy = frame.y;
             var width = frame.width;
             var height = frame.height;
             var ox = width * 0.5;
