@@ -161,7 +161,7 @@ var BaseSound = new Class({
         return this;
     },
     pause: function () {
-        if (this.isPaused) {
+        if (this.isPaused || !this.isPlaying) {
             return false;
         }
         this.isPlaying = false;
@@ -169,7 +169,7 @@ var BaseSound = new Class({
         return true;
     },
     resume: function () {
-        if (!this.isPaused) {
+        if (!this.isPaused || this.isPlaying) {
             return false;
         }
         this.isPlaying = true;
@@ -177,7 +177,7 @@ var BaseSound = new Class({
         return true;
     },
     stop: function () {
-        if (!this.isPlaying) {
+        if (!this.isPaused && !this.isPlaying) {
             return false;
         }
         this.isPlaying = false;
