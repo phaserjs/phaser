@@ -51,6 +51,9 @@ var WebAudioSound = new Class({
         if (!BaseSound.prototype.play.call(this, marker, config)) {
             return null;
         }
+        if (this.source) {
+            this.source.stop();
+        }
         this.source = this.manager.context.createBufferSource();
         this.source.buffer = this.audioBuffer;
         this.source.connect(this.muteNode);
