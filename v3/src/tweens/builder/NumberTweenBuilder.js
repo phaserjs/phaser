@@ -61,6 +61,10 @@ var NumberTweenBuilder = function (parent, config, defaults)
         false
     );
 
+    tweenData.start = from;
+    tweenData.current = from;
+    tweenData.to = to;
+
     data.push(tweenData);
 
     var tween = new Tween(parent, data, targets);
