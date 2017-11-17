@@ -161,19 +161,28 @@ var BaseSound = new Class({
         return this;
     },
     pause: function () {
+        if (this.isPaused) {
+            return false;
+        }
         this.isPlaying = false;
         this.isPaused = true;
-        return this;
+        return true;
     },
     resume: function () {
+        if (!this.isPaused) {
+            return false;
+        }
         this.isPlaying = true;
         this.isPaused = false;
-        return this;
+        return true;
     },
     stop: function () {
+        if (!this.isPlaying) {
+            return false;
+        }
         this.isPlaying = false;
         this.isPaused = false;
-        return this;
+        return true;
     },
     applyConfig: function () {
         this.mute = this.currentConfig.mute;
