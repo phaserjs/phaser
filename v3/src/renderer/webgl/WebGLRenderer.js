@@ -467,7 +467,7 @@ var WebGLRenderer = new Class({
 
             if (child.mask)
             {
-                child.mask.preRenderWebGL(this, child.mask, camera);
+                child.mask.preRenderWebGL(this, child, camera);
             }
 
             // drawing child

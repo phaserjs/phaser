@@ -112,6 +112,12 @@ var MaskRenderer = new Class({
         manager.setTexture(mainTexture, 0);
         manager.setTexture(maskTexture, 1);
 
+        gl.activeTexture(gl.TEXTURE0);
+        gl.bindTexture(gl.TEXTURE_2D, mainTexture.texture);
+
+        gl.activeTexture(gl.TEXTURE1);
+        gl.bindTexture(gl.TEXTURE_2D, maskTexture.texture);
+
         gl.drawArrays(gl.TRIANGLES, 0, 6);
         
         if (renderTarget)
