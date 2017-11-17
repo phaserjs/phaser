@@ -166,6 +166,8 @@ var BaseSound = new Class({
         return this;
     },
     resume: function () {
+        this.isPlaying = true;
+        this.isPaused = false;
         return this;
     },
     stop: function () {
