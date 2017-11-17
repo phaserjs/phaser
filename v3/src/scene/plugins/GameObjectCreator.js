@@ -7,11 +7,22 @@ var GameObjectCreator = new Class({
     function GameObjectCreator (scene)
     {
         this.scene = scene;
+
+        this.displayList;
+        this.updateList;
+    },
+
+    boot: function (sys)
+    {
+        this.displayList = sys.displayList;
+        this.updateList = sys.updateList;
     },
 
     destroy: function ()
     {
         this.scene = null;
+        this.displayList = null;
+        this.updateList = null;
     }
 
 });
@@ -20,8 +31,6 @@ var GameObjectCreator = new Class({
 
 GameObjectCreator.register = function (type, factoryFunction)
 {
-    // console.log('register', type);
-
     if (!GameObjectCreator.prototype.hasOwnProperty(type))
     {
         GameObjectCreator.prototype[type] = factoryFunction;

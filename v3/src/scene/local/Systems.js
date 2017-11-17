@@ -91,6 +91,7 @@ var Systems = new Class({
 
         //  Sometimes the managers need access to a system created after them
         this.add.boot(this);
+        this.make.boot(this);
         this.inputManager.boot();
         this.physicsManager.boot();
 

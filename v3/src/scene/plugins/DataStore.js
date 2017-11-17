@@ -77,18 +77,18 @@ var DataStore = new Class({
         return data.after(key, callback, scope);
     },
 
-    each: function (gameObject, callback, scope, args)
+    each: function (gameObject, callback, scope)
     {
         var data = this.getData(gameObject);
 
         return data.each(callback, scope);
     },
 
-    merge: function (gameObject, data, overwrite)
+    merge: function (gameObject, _data, overwrite)
     {
         var data = this.getData(gameObject);
 
-        return data.merge(data, overwrite);
+        return data.merge(_data, overwrite);
     },
 
     remove: function (gameObject, key)

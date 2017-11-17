@@ -149,7 +149,8 @@ var Body = require('../body/Body');
         // update all body position and rotation by integration
         _bodiesUpdate(allBodies, delta, timing.timeScale, correction, world.bounds);
 
-        // update all constraints
+        // update all constraints (first pass)
+        Constraint.preSolveAll(allBodies);
         for (i = 0; i < engine.constraintIterations; i++) {
             Constraint.solveAll(allConstraints, timing.timeScale);
         }
@@ -157,7 +158,6 @@ var Body = require('../body/Body');
 
         // broadphase pass: find potential collision pairs
         if (broadphase.controller) {
-
             // if world is dirty, we must flush the whole grid
             if (world.isModified)
                 broadphase.controller.clear(broadphase);
@@ -166,7 +166,6 @@ var Body = require('../body/Body');
             broadphase.controller.update(broadphase, allBodies, engine, world.isModified);
             broadphasePairs = broadphase.pairsList;
         } else {
-
             // if no broadphase set, we just pass all bodies
             broadphasePairs = allBodies;
         }
@@ -199,6 +198,13 @@ var Body = require('../body/Body');
             Resolver.solvePosition(pairs.list, timing.timeScale);
         }
         Resolver.postSolvePosition(allBodies);
+
+        // update all constraints (second pass)
+        Constraint.preSolveAll(allBodies);
+        for (i = 0; i < engine.constraintIterations; i++) {
+            Constraint.solveAll(allConstraints, timing.timeScale);
+        }
+        Constraint.postSolveAll(allBodies);
 
         // iteratively resolve velocity between collisions
         Resolver.preSolveVelocity(pairs.list);

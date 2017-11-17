@@ -33,7 +33,8 @@ var ParticleEmitterManager = new Class({
         this.frame = null;
         this.frameNames = [];
 
-        if (typeof frame === 'object' || Array.isArray(frame))
+        //  frame is optional and can contain the emitters array or object if skipped
+        if (frame !== null && (typeof frame === 'object' || Array.isArray(frame)))
         {
             emitters = frame;
             frame = null;
@@ -45,7 +46,7 @@ var ParticleEmitterManager = new Class({
 
         this.wells = new List(this);
 
-        if (emitters !== undefined)
+        if (emitters)
         {
             //  An array of emitter configs?
             if (!Array.isArray(emitters))

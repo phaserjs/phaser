@@ -41,7 +41,7 @@ var GameObjects = {
         Text: require('./text/static/TextFactory'),
         Tilemap: require('./tilemap/TilemapFactory'),
         TileSprite: require('./tilesprite/TileSpriteFactory'),
-        Zone: require('./zone/ZoneFactory'),
+        Zone: require('./zone/ZoneFactory')
     },
 
     Creators: {
@@ -51,14 +51,14 @@ var GameObjects = {
         Graphics: require('./graphics/GraphicsCreator'),
         Group: require('./group/GroupCreator'),
         Image: require('./image/ImageCreator'),
-        ParticleEmitter: require('./particles/ParticleManagerCreator'),
+        Particles: require('./particles/ParticleManagerCreator'),
         Sprite: require('./sprite/SpriteCreator'),
         Sprite3D: require('./sprite3d/Sprite3DCreator'),
         StaticBitmapText: require('./bitmaptext/static/BitmapTextCreator'),
         Text: require('./text/static/TextCreator'),
         Tilemap: require('./tilemap/TilemapCreator'),
         TileSprite: require('./tilesprite/TileSpriteCreator'),
-        Zone: require('./zone/ZoneCreator'),
+        Zone: require('./zone/ZoneCreator')
     }
 
 };
