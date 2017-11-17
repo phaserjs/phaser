@@ -186,6 +186,15 @@ var Tilemap = new Class({
         return this;
     },
 
+    destroy: function ()
+    {
+        this.layers.length = 0;
+        this.tilesets.length = 0;
+        this.tiles.length = 0;
+        this.objects.length = 0;
+        this.scene = undefined;
+    },
+
     fill: function (index, tileX, tileY, width, height, layer)
     {
         layer = this.getLayer(layer);
@@ -322,6 +331,13 @@ var Tilemap = new Class({
         return this;
     },
 
+    removeAllLayers: function ()
+    {
+        this.layers.length = 0;
+        this.currentLayerIndex = 0;
+        return this;
+    },
+
     removeTile: function (tileX, tileY, replaceWithNull, layer)
     {
         layer = this.getLayer(layer);
@@ -347,6 +363,14 @@ var Tilemap = new Class({
             this.currentLayerIndex = index;
         }
         return this;
+    },
+
+    setTileSize: function (tileWidth, tileHeight)
+    {
+        this.tileWidth = tileWidth;
+        this.tileHeight = tileHeight;
+        this.widthInPixels = this.width * tileWidth;
+        this.heightInPixels = this.height * tileHeight;
     },
 
     shuffle: function (tileX, tileY, width, height, layer)
