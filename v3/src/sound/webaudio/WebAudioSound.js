@@ -65,6 +65,10 @@ var WebAudioSound = new Class({
         return this;
     },
     stop: function () {
+        BaseSound.prototype.stop.call(this);
+        this.source.stop();
+        this.source = null;
+        this.startTime = 0;
         return this;
     },
     update: function () {
