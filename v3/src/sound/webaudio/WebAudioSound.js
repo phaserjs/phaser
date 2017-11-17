@@ -59,9 +59,11 @@ var WebAudioSound = new Class({
         return this;
     },
     pause: function () {
+        BaseSound.prototype.pause.call(this);
         return this;
     },
     resume: function () {
+        BaseSound.prototype.resume.call(this);
         return this;
     },
     stop: function () {
