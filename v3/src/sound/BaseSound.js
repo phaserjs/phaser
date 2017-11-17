@@ -94,6 +94,12 @@ var BaseSound = new Class({
          */
         this.isPlaying = false;
         /**
+         * Flag indicating if sound is currently paused.
+         *
+         * @property {boolean} isPaused
+         */
+        this.isPaused = false;
+        /**
          * Object containing markers definitions.
          *
          * @property {{}} markers
