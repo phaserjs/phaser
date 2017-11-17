@@ -73,9 +73,6 @@ var StaticTilemapLayer = new Class({
 
     upload: function (camera)
     {
-        // TODO: null tile handling when null tile feature is added
-        // TODO: canvas doesn't need to prepare an array of tiles
-
         var tileset = this.tileset;
         var mapWidth = this.layer.width;
         var mapHeight = this.layer.height;
