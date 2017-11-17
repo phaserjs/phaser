@@ -36,6 +36,9 @@ var StaticTilemapLayer = new Class({
         this.layer = tilemap.layers[layerIndex];
         this.tileset = tileset;
 
+        // Link the layer data with this dynamic tilemap layer
+        this.layer.tilemapLayer = this;
+
         this.vbo = null;
         this.gl = scene.sys.game.renderer.gl ? scene.sys.game.renderer.gl : null;
         this.tilemapRenderer = scene.sys.game.renderer.tilemapRenderer ? scene.sys.game.renderer.tilemapRenderer : null;
@@ -267,6 +270,16 @@ var StaticTilemapLayer = new Class({
             this.cullStart = (interY * this.layer.width + interX) * 6;
             this.cullEnd = ((interY + interHeight) * this.layer.height + interX) * 6;
         }
+    },
+
+    destroy: function ()
+    {
+        this.layer.tilemapLayer = undefined;
+        this.map = undefined;
+        this.layer = undefined;
+        this.tileset = undefined;
+        this.canvasTiles.length = 0;
+        GameObject.prototype.destroy.call(this);
     },
 
     findByIndex: function (findIndex, skip, reverse)

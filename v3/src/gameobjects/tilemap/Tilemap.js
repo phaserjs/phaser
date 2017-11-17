@@ -141,7 +141,14 @@ var Tilemap = new Class({
 
         if (index === null)
         {
-            console.warn('Cannot create tilemap layer: invalid layer ID given: ' + layerID);
+            console.warn('Cannot create tilemap layer, invalid layer ID given: ' + layerID);
+            return null;
+        }
+
+        // Check for an associated static or dynamic tilemap layer
+        if (this.layers[index].tilemapLayer)
+        {
+            console.warn('Cannot create static tilemap layer since a static or dynamic tilemap layer exists for layer ID:' + layerID);
             return null;
         }
 
@@ -162,7 +169,14 @@ var Tilemap = new Class({
 
         if (index === null)
         {
-            console.warn('Cannot create tilemap layer: invalid layer ID given: ' + layerID);
+            console.warn('Cannot create tilemap layer, invalid layer ID given: ' + layerID);
+            return null;
+        }
+
+        // Check for an associated static or dynamic tilemap layer
+        if (this.layers[index].tilemapLayer)
+        {
+            console.warn('Cannot create dynamic tilemap layer since a static or dynamic tilemap layer exists for layer ID:' + layerID);
             return null;
         }
 

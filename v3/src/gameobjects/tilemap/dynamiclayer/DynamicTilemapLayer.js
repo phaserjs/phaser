@@ -35,6 +35,9 @@ var DynamicTilemapLayer = new Class({
         this.layer = tilemap.layers[layerIndex];
         this.tileset = tileset;
 
+        // Link the layer data with this dynamic tilemap layer
+        this.layer.tilemapLayer = this;
+
         this.culledTiles = [];
 
         this.setTexture(tileset.image.key);
@@ -100,6 +103,16 @@ var DynamicTilemapLayer = new Class({
     {
         TilemapComponents.Copy(srcTileX, srcTileY, width, height, destTileX, destTileY, this.layer);
         return this;
+    },
+
+    destroy: function ()
+    {
+        this.layer.tilemapLayer = undefined;
+        this.map = undefined;
+        this.layer = undefined;
+        this.tileset = undefined;
+        this.culledTiles.length = 0;
+        GameObject.prototype.destroy.call(this);
     },
 
     fill: function (index, tileX, tileY, width, height)
