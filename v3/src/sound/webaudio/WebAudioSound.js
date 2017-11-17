@@ -61,11 +61,8 @@ var WebAudioSound = new Class({
         if (this.source) {
             this.source.stop();
         }
-        this.source = this.manager.context.createBufferSource();
-        this.source.buffer = this.audioBuffer;
-        this.source.connect(this.muteNode);
-        this.applyConfig();
-        this.source.start(0, 0, this.currentConfig.duration);
+        // TODO include config offset and marker start
+        this.createAndStartBufferSource(0, this.currentConfig.duration);
         this.startTime = this.manager.context.currentTime;
         this.pausedTime = 0;
         return this;
@@ -79,11 +76,9 @@ var WebAudioSound = new Class({
     },
     resume: function () {
         BaseSound.prototype.resume.call(this);
-        this.source = this.manager.context.createBufferSource();
-        this.source.buffer = this.audioBuffer;
-        this.source.connect(this.muteNode);
-        this.applyConfig();
-        this.source.start(0, this.pausedTime, this.currentConfig.duration - this.pausedTime);
+        var offset = this.pausedTime; // TODO include marker start time
+        var duration = this.currentConfig.duration - this.pausedTime;
+        this.createAndStartBufferSource(offset, duration);
         this.startTime = this.manager.context.currentTime - this.pausedTime;
         this.pausedTime = 0;
         return this;
@@ -95,6 +90,20 @@ var WebAudioSound = new Class({
         this.startTime = 0;
         this.pausedTime = 0;
         return this;
+    },
+    /**
+     * Used internally to do what the name says.
+     *
+     * @private
+     * @param {number} offset
+     * @param {number} duration
+     */
+    createAndStartBufferSource: function (offset, duration) {
+        this.source = this.manager.context.createBufferSource();
+        this.source.buffer = this.audioBuffer;
+        this.source.connect(this.muteNode);
+        this.applyConfig();
+        this.source.start(0, offset, duration);
     },
     update: function () {
     },
