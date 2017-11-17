@@ -275,7 +275,7 @@ var Group = new Class({
 
         for (var i = 0; i < children.length; i++)
         {
-            var gameObject = children[i];
+            gameObject = children[i];
 
             if (gameObject.active === state)
             {
