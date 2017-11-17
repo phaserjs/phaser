@@ -65,10 +65,10 @@ var DynamicTilemapLayer = new Class({
         var mapWidth = this.layer.width;
         var mapHeight = this.layer.height;
         var culledTiles = this.culledTiles;
-        var scrollX = camera.scrollX * this.scrollFactorX;
-        var scrollY = camera.scrollY * this.scrollFactorY;
         var cameraW = camera.width;
         var cameraH = camera.height;
+        var left = this.worldToTileX(0, camera);
+        var top = this.worldToTileY(0, camera);
 
         culledTiles.length = 0;
 
@@ -80,8 +80,8 @@ var DynamicTilemapLayer = new Class({
 
                 if (tile === null || (tile.index <= 0 && this.skipIndexZero)) { continue; }
 
-                var tileX = tile.worldX - scrollX;
-                var tileY = tile.worldY - scrollY;
+                var tileX = tile.worldX - left;
+                var tileY = tile.worldY - top;
                 var tileW = tile.width;
                 var tileH = tile.height;
                 var cullW = cameraW + tileW;
