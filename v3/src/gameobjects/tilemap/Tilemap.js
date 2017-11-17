@@ -74,7 +74,7 @@ var Tilemap = new Class({
 
         var index = this.getTilesetIndex(tilesetName);
 
-        if (index === null && this.format === Formats.TILED_JSON)
+        if (index === null && this.format === Formats.TILEMAP_TILED_JSON)
         {
             console.warn('No data found in the JSON tilemap from Tiled matching the tileset name: "' + tilesetName + '"');
             return null;
