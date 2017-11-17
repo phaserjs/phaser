@@ -65,18 +65,25 @@ var WebAudioSound = new Class({
         this.source.buffer = this.audioBuffer;
         this.source.connect(this.muteNode);
         this.applyConfig();
-        this.source.start();
+        this.source.start(0, 0, this.currentConfig.duration);
         this.startTime = this.manager.context.currentTime;
         this.pausedTime = 0;
         return this;
     },
     pause: function () {
         BaseSound.prototype.pause.call(this);
+        this.source.stop();
+        this.source = null;
         this.pausedTime = this.manager.context.currentTime - this.startTime;
         return this;
     },
     resume: function () {
         BaseSound.prototype.resume.call(this);
+        this.source = this.manager.context.createBufferSource();
+        this.source.buffer = this.audioBuffer;
+        this.source.connect(this.muteNode);
+        this.applyConfig();
+        this.source.start(0, this.pausedTime, this.currentConfig.duration - this.pausedTime);
         this.startTime = this.manager.context.currentTime - this.pausedTime;
         this.pausedTime = 0;
         return this;
