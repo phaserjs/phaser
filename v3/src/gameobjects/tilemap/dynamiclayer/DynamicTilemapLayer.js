@@ -112,14 +112,14 @@ var DynamicTilemapLayer = new Class({
         return TilemapComponents.HasTileAtWorldXY(worldX, worldY, camera, this.layer);
     },
 
-    putTile: function (tile, tileX, tileY)
+    putTileAt: function (tile, tileX, tileY)
     {
-        return TilemapComponents.PutTile(tile, tileX, tileY, this.layer);
+        return TilemapComponents.PutTileAt(tile, tileX, tileY, this.layer);
     },
 
-    putTileWorldXY: function (tile, worldX, worldY, camera)
+    putTileAtWorldXY: function (tile, worldX, worldY, camera)
     {
-        return TilemapComponents.PutTileWorldXY(tile, worldX, worldY, camera, this.layer);
+        return TilemapComponents.PutTileAtWorldXY(tile, worldX, worldY, camera, this.layer);
     },
 
     randomize: function (tileX, tileY, width, height, indices)
@@ -128,14 +128,14 @@ var DynamicTilemapLayer = new Class({
         return this;
     },
 
-    removeTile: function (tileX, tileY, replaceWithNull)
+    removeTileAt: function (tileX, tileY, replaceWithNull)
     {
-        return TilemapComponents.RemoveTile(tileX, tileY, replaceWithNull, this.layer);
+        return TilemapComponents.RemoveTileAt(tileX, tileY, replaceWithNull, this.layer);
     },
 
-    removeTileWorldXY: function (worldX, worldY, replaceWithNull, camera)
+    removeTileAtWorldXY: function (worldX, worldY, replaceWithNull, camera)
     {
-        return TilemapComponents.RemoveTileWorldXY(worldX, worldY, replaceWithNull, camera, this.layer);
+        return TilemapComponents.RemoveTileAtWorldXY(worldX, worldY, replaceWithNull, camera, this.layer);
     },
 
     replaceByIndex: function (findIndex, newIndex, tileX, tileY, width, height)
