@@ -2,7 +2,7 @@ var Tile = require('../Tile');
 var IsInLayerBounds = require('./IsInLayerBounds');
 
 // Remove and return Tile with option for placing a -1 index tile or null.
-var RemoveTile = function (tileX, tileY, replaceWithNull, layer)
+var RemoveTileAt = function (tileX, tileY, replaceWithNull, layer)
 {
     if (replaceWithNull === undefined) { replaceWithNull = false; }
 
@@ -25,4 +25,4 @@ var RemoveTile = function (tileX, tileY, replaceWithNull, layer)
     return tile;
 };
 
-module.exports = RemoveTile;
+module.exports = RemoveTileAt;

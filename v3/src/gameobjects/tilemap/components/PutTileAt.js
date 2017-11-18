@@ -3,7 +3,7 @@ var IsInLayerBounds = require('./IsInLayerBounds');
 
 // Put Phaser.Tile|number. Note: does not place a reference to tile, it copies the tile or creates a
 // new one.
-var PutTile = function (tile, tileX, tileY, layer)
+var PutTileAt = function (tile, tileX, tileY, layer)
 {
     if (!IsInLayerBounds(tileX, tileY, layer)) { return null; }
 
@@ -36,5 +36,5 @@ var PutTile = function (tile, tileX, tileY, layer)
     return layer.data[tileY][tileX];
 };
 
-module.exports = PutTile;
+module.exports = PutTileAt;
 
