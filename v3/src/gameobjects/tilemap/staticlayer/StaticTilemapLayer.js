@@ -47,9 +47,7 @@ var StaticTilemapLayer = new Class({
 
         this.dirty = true;
         this.vertexCount = 0;
-        this.cullStart = 0;
-        this.cullEnd = 0;
-        this.canvasTiles = [];
+        this.culledTiles = [];
 
         this.setTexture(tileset.image.key);
         this.setPosition(x, y);
@@ -85,7 +83,6 @@ var StaticTilemapLayer = new Class({
         var tile;
         var row;
         var col;
-        var tileIndex;
         var texCoords;
 
         if (this.gl)
@@ -186,6 +183,7 @@ var StaticTilemapLayer = new Class({
 
                 this.dirty = false;
             }
+
             var renderer = this.tilemapRenderer;
 
             renderer.shader.setConstantFloat2(renderer.scrollLocation, camera.scrollX, camera.scrollY);
@@ -203,70 +201,11 @@ var StaticTilemapLayer = new Class({
                 ]
             );
         }
-        else if (this.dirty && !this.gl)
-        {
-            this.canvasTiles.length = 0;
-
-            for (row = 0; row < mapHeight; ++row)
-            {
-                for (col = 0; col < mapWidth; ++col)
-                {
-                    tile = mapData[row][col];
-                    if (tile === null || (tile.index <= 0 && this.skipIndexZero)) { continue; }
-
-                    this.canvasTiles.push(tile);
-                }
-            }
-
-            this.dirty = false;
-        }
-    },
-
-    getTotalTileCount: function ()
-    {
-        return this.mapData.length;
-    },
-
-    getVisibleTileCount: function (camera)
-    {
-        this.cull(camera);
-
-        return (this.cullEnd - this.cullStart) / 6;
     },
 
     cull: function (camera)
     {
-        this.cullStart = 0;
-        this.cullEnd = 0;
-
-        var tileWidth = this.map.tileWidth;
-        var tileHeight = this.map.tileHeight;
-
-        var pixelX = this.x - (camera.scrollX * this.scrollFactorX);
-        var pixelY = this.y - (camera.scrollY * this.scrollFactorY);
-        var pixelWidth = this.layer.width * tileWidth;
-        var pixelHeight = this.layer.height * tileHeight;
-
-        if (pixelX < camera.x + camera.width + (tileWidth * 2) &&
-            pixelX + pixelWidth > camera.x + -(tileWidth * 2) &&
-            pixelY < camera.y + camera.height + (tileHeight * 2) &&
-            pixelY + pixelHeight > camera.y + -(tileHeight * 2))
-        {
-            var interX = Math.max(pixelX, camera.x + -(tileWidth * 2));
-            var interY = Math.max(pixelY, camera.y + -(tileHeight * 2));
-
-            var interWidth = Math.min(pixelX + pixelWidth, camera.x + camera.width + (tileWidth * 2)) - interX;
-            var interHeight = Math.min(pixelY + pixelHeight, camera.y + camera.height + (tileHeight * 2)) - interY;
-
-            interX = ((interX + (camera.scrollX * this.scrollFactorX)) / tileWidth) | 0;
-            interY = ((interY + (camera.scrollY * this.scrollFactorY)) / tileHeight) | 0;
-
-            interWidth = (interWidth / tileWidth) | 0;
-            interHeight = (interHeight / tileHeight) | 0;
-
-            this.cullStart = (interY * this.layer.width + interX) * 6;
-            this.cullEnd = ((interY + interHeight) * this.layer.height + interX) * 6;
-        }
+        TilemapComponents.CullTiles(this.layer, camera, this.culledTiles);
     },
 
     destroy: function ()
@@ -275,7 +214,6 @@ var StaticTilemapLayer = new Class({
         this.map = undefined;
         this.layer = undefined;
         this.tileset = undefined;
-        this.canvasTiles.length = 0;
         GameObject.prototype.destroy.call(this);
     },
 

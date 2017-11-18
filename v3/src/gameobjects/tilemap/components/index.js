@@ -1,6 +1,7 @@
 module.exports = {
 
     Copy: require('./Copy'),
+    CullTiles: require('./CullTiles'),
     Fill: require('./Fill'),
     FindByIndex: require('./FindByIndex'),
     ForEachTile: require('./ForEachTile'),

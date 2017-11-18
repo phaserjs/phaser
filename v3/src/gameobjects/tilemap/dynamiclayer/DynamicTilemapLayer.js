@@ -49,54 +49,9 @@ var DynamicTilemapLayer = new Class({
         this.skipIndexZero = false;
     },
 
-    getTotalTileCount: function ()
-    {
-        return this.tileArray.length;
-    },
-
-    getVisibleTileCount: function (camera)
-    {
-        return this.cull(camera).length;
-    },
-
     cull: function (camera)
     {
-        var mapData = this.layer.data;
-        var mapWidth = this.layer.width;
-        var mapHeight = this.layer.height;
-        var culledTiles = this.culledTiles;
-        var cameraW = camera.width;
-        var cameraH = camera.height;
-        var left = this.worldToTileX(0, camera);
-        var top = this.worldToTileY(0, camera);
-
-        culledTiles.length = 0;
-
-        for (var row = 0; row < mapHeight; ++row)
-        {
-            for (var col = 0; col < mapWidth; ++col)
-            {
-                var tile = mapData[row][col];
-
-                if (tile === null || (tile.index <= 0 && this.skipIndexZero)) { continue; }
-
-                var tileX = tile.worldX - left;
-                var tileY = tile.worldY - top;
-                var tileW = tile.width;
-                var tileH = tile.height;
-                var cullW = cameraW + tileW;
-                var cullH = cameraH + tileH;
-
-                if (tile.visible &&
-                    tileX > -tileW && tileY > -tileH &&
-                    tileX < cullW && tileY < cullH)
-                {
-                    culledTiles.push(tile);
-                }
-            }
-        }
-
-        return culledTiles;
+        TilemapComponents.CullTiles(this.layer, camera, this.culledTiles);
     },
 
     copy: function (srcTileX, srcTileY, width, height, destTileX, destTileY)
