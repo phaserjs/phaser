@@ -120,6 +120,14 @@ var Tile = new Class({
         this.collisionCallbackContext = context;
     },
 
+    setSize: function (tileWidth, tileHeight)
+    {
+        this.worldX = this.x * tileWidth;
+        this.worldY = this.y * tileHeight;
+        this.width = tileWidth;
+        this.height = tileHeight;
+    },
+
     // True if this tile can collide on any of its faces or has a collision callback set.
     canCollide: {
         get: function ()

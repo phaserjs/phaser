@@ -45,10 +45,21 @@ var Tileset = new Class({
         return this.texCoordinates[tileIndex - this.firstgid];
     },
 
+    setTileSize: function (tileWidth, tileHeight)
+    {
+        if (tileWidth !== undefined) { this.tileWidth = tileWidth; }
+        if (tileHeight !== undefined) { this.tileHeight = tileHeight; }
+
+        if (this.image)
+        {
+            this.updateTileData(this.image.source[0].width, this.image.source[0].height);
+        }
+    },
+
     setSpacing: function (margin, spacing)
     {
-        this.tileMargin = margin;
-        this.tileSpacing = spacing;
+        if (margin !== undefined) { this.tileMargin = margin; }
+        if (spacing !== undefined) { this.tileSpacing = spacing; }
 
         if (this.image)
         {

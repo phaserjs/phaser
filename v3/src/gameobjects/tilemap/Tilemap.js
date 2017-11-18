@@ -44,13 +44,6 @@ var Tilemap = new Class({
         if (key === undefined || key === null) { key = tilesetName; }
         if (tileWidth === undefined) { tileWidth = this.tileWidth; }
         if (tileHeight === undefined) { tileHeight = this.tileHeight; }
-        if (tileMargin === undefined) { tileMargin = 0; }
-        if (tileSpacing === undefined) { tileSpacing = 0; }
-        if (gid === undefined) { gid = 0; }
-
-        //  In-case we're working from a blank map
-        if (tileWidth === 0) { tileWidth = 32; }
-        if (tileHeight === 0) { tileHeight = 32; }
 
         if (!this.scene.sys.textures.exists(key))
         {
@@ -72,20 +65,22 @@ var Tilemap = new Class({
 
         if (this.tilesets[index])
         {
+            this.tilesets[index].setTileSize(tileWidth, tileHeight);
+            this.tilesets[index].setSpacing(tileMargin, tileSpacing);
             this.tilesets[index].setImage(texture);
             return this.tilesets[index];
         }
-        else
-        {
-            var tileset = new Tileset(tilesetName, gid, tileWidth, tileHeight, tileMargin, tileSpacing, {});
-            tileset.setImage(texture);
 
-            this.tilesets.push(tileset);
+        if (tileMargin === undefined) { tileMargin = 0; }
+        if (tileSpacing === undefined) { tileSpacing = 0; }
+        if (gid === undefined) { gid = 0; }
 
-            // TODO: add in GID & master list of tiles
-        }
-
+        var tileset = new Tileset(tilesetName, gid, tileWidth, tileHeight, tileMargin, tileSpacing, {});
+        tileset.setImage(texture);
+        this.tilesets.push(tileset);
         return tileset;
+
+        // TODO: add in GID & master list of tiles
     },
 
     // Creates & selects
@@ -416,6 +411,28 @@ var Tilemap = new Class({
         this.tileHeight = tileHeight;
         this.widthInPixels = this.width * tileWidth;
         this.heightInPixels = this.height * tileHeight;
+
+        // Update all the layers & tiles
+        for (var i = 0; i < this.layers.length; i++)
+        {
+            this.layers[i].tileWidth = tileWidth;
+            this.layers[i].tileHeight = tileHeight;
+
+            var mapData = this.layers[i].data;
+            var mapWidth = this.layers[i].width;
+            var mapHeight = this.layers[i].height;
+
+            for (var row = 0; row < mapHeight; ++row)
+            {
+                for (var col = 0; col < mapWidth; ++col)
+                {
+                    var tile = mapData[row][col];
+                    if (tile !== null) { tile.setSize(tileWidth, tileHeight); }
+                }
+            }
+        }
+
+        return this;
     },
 
     shuffle: function (tileX, tileY, width, height, layer)
