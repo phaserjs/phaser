@@ -262,7 +262,7 @@ var EventBinding = new Class({
 
     destroy: function ()
     {
-        delete this.dispatcher.bindings[this.type];
+        this.dispatcher.bindings[this.type] = undefined;
 
         this.active.length = 0;
 
