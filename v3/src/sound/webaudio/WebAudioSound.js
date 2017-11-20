@@ -108,6 +108,7 @@ var WebAudioSound = new Class({
         this.source.buffer = this.audioBuffer;
         this.source.connect(this.muteNode);
         this.applyConfig();
+        // TODO add onended event handler to reset sound state
         this.source.start(0, offset, duration);
     },
     /**
@@ -177,7 +178,7 @@ Object.defineProperty(WebAudioSound.prototype, 'detune', {
     },
     set: function (value) {
         this.currentConfig.detune = value;
-        if (this.source) {
+        if (this.source && this.source.detune) {
             this.source.detune.value =
                 Math.max(-1200, Math.min(value + this.manager.detune, 1200));
         }

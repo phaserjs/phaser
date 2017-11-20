@@ -65,6 +65,9 @@ var BaseSound = new Class({
          * Represents detuning of sound in [cents](https://en.wikipedia.org/wiki/Cent_%28music%29).
          * The range of the value is -1200 to 1200, but we recommend setting it to [50](https://en.wikipedia.org/wiki/50_Cent).
          *
+         * Standards based Web Audio implementation only.
+         * Webkit Web Audio implementation and HTML5 Audio don't support this.
+         *
          * @property {number} detune
          */
         this.detune = 0;
