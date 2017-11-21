@@ -51,13 +51,12 @@ var BaseSoundManager = new Class({
         this.pan = 0;
         // TODO add fields for global spatialization options
         /**
-         * Set to true to have all sound muted when the Phaser game
-         * pauses (such as on loss of focus), or set to false to keep audio playing, regardless of
-         * the game pause state. You may need to do this should you wish to control audio muting
-         * via external DOM buttons or similar.
-         * @property {boolean} muteOnPause
+         * Flag indicating if sounds should be paused when game looses focus,
+         * for instance when user switches tabs or to another program/app.
+         *
+         * @property {boolean} pauseOnBlur
          */
-        this.muteOnPause = true;
+        this.pauseOnBlur = true;
         /**
          * [description]
          *
