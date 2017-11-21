@@ -137,7 +137,7 @@ Object.defineProperty(WebAudioSound.prototype, 'mute', {
     },
     set: function (value) {
         this.currentConfig.mute = value;
-        this.muteNode.gain.value = value ? 0 : 1;
+        this.muteNode.gain.setValueAtTime(value ? 0 : 1, 0);
     }
 });
 /**
@@ -150,7 +150,7 @@ Object.defineProperty(WebAudioSound.prototype, 'volume', {
     },
     set: function (value) {
         this.currentConfig.volume = value;
-        this.volumeNode.gain.value = value;
+        this.volumeNode.gain.setValueAtTime(value, 0);
     }
 });
 /**
@@ -164,7 +164,7 @@ Object.defineProperty(WebAudioSound.prototype, 'rate', {
     set: function (value) {
         this.currentConfig.rate = value;
         if (this.source) {
-            this.source.playbackRate.value = value * this.manager.rate;
+            this.source.playbackRate.setValueAtTime(value * this.manager.rate, 0);
         }
     }
 });
@@ -179,8 +179,7 @@ Object.defineProperty(WebAudioSound.prototype, 'detune', {
     set: function (value) {
         this.currentConfig.detune = value;
         if (this.source && this.source.detune) {
-            this.source.detune.value =
-                Math.max(-1200, Math.min(value + this.manager.detune, 1200));
+            this.source.detune.setValueAtTime(Math.max(-1200, Math.min(value + this.manager.detune, 1200)), 0);
         }
     }
 });
