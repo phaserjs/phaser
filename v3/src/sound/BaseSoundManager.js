@@ -72,6 +72,8 @@ var BaseSoundManager = new Class({
     pauseAll: NOOP,
     resumeAll: NOOP,
     stopAll: NOOP,
+    onBlur: NOOP,
+    onFocus: NOOP,
     update: NOOP,
     destroy: NOOP
 });
