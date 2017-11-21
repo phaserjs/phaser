@@ -78,6 +78,12 @@ var WebAudioSoundManager = new Class({
             };
             document.body.addEventListener('touchstart', unlock_1, false);
         }
+    },
+    onBlur: function () {
+        this.context.suspend();
+    },
+    onFocus: function () {
+        this.context.resume();
     }
 });
 /**
