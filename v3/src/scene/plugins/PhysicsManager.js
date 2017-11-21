@@ -6,6 +6,7 @@ var NOOP = require('../../utils/NOOP');
 //  Physics Systems (TODO: Remove from here)
 var Arcade = require('../../physics/arcade/Arcade');
 var Impact = require('../../physics/impact/Impact');
+var Matter = require('../../physics/matter-js/Matter');
 
 var PhysicsManager = new Class({
 
@@ -53,6 +54,10 @@ var PhysicsManager = new Class({
 
             case 'impact':
                 this.system = new Impact(this, config);
+                break;
+
+            case 'matter':
+                this.system = new Matter(this, config);
                 break;
         }
     },

@@ -1,8 +1,14 @@
 //  Phaser.Physics.Matter
 
-//  World updated to run off the Phaser main loop.
-//  Body extended to support additional setter functions.
+var Matter = require('./lib/module/main');
 
+//  Add Phaser specific helpers to the Matter global
+
+// Matter.Phaser.
+
+module.exports = Matter;
+
+/*
 module.exports = {
 
     Body: require('./Body'),
@@ -10,59 +16,43 @@ module.exports = {
     // Group: require('./PhysicsGroup'),
     // Image: require('./MatterImage'),
     // Sprite: require('./MatterSprite'),
-    World: require('./World')
+    World: require('./World'),
+
+    Global: {
+
+        Body: require('./body/Body'),
+        Composite: require('./body/Composite'),
+        World: require('./body/World'),
+
+        Contact: require('./collision/Contact'),
+        Detector: require('./collision/Detector'),
+        Grid: require('./collision/Grid'),
+        Pairs: require('./collision/Pairs'),
+        Pair: require('./collision/Pair'),
+        Query: require('./collision/Query'),
+        Resolver: require('./collision/Resolver'),
+        SAT: require('./collision/SAT'),
+
+        Constraint: require('./constraint/Constraint'),
+        MouseConstraint: require('./constraint/MouseConstraint'),
+
+        Common: require('./core/Common'),
+        Engine: require('./core/Engine'),
+        Events: require('./core/Events'),
+        Mouse: require('./core/Mouse'),
+        Sleeping: require('./core/Sleeping'),
+        Plugin: require('./core/Plugin'),
+
+        Bodies: require('./factory/Bodies'),
+        Composites: require('./factory/Composites'),
+
+        Axes: require('./geometry/Axes'),
+        Bounds: require('./geometry/Bounds'),
+        Svg: require('./geometry/Svg'),
+        Vector: require('./geometry/Vector'),
+        Vertices: require('./geometry/Vertices')
+
+    }
   
 };
-
-//  Export globally for testing
-var Matter = module.exports = require('./core/Matter');
-
-Matter.Body = require('./body/Body');
-Matter.Composite = require('./body/Composite');
-Matter.World = require('./body/World');
-
-Matter.Contact = require('./collision/Contact');
-Matter.Detector = require('./collision/Detector');
-Matter.Grid = require('./collision/Grid');
-Matter.Pairs = require('./collision/Pairs');
-Matter.Pair = require('./collision/Pair');
-Matter.Query = require('./collision/Query');
-Matter.Resolver = require('./collision/Resolver');
-Matter.SAT = require('./collision/SAT');
-
-Matter.Constraint = require('./constraint/Constraint');
-Matter.MouseConstraint = require('./constraint/MouseConstraint');
-
-Matter.Common = require('./core/Common');
-Matter.Engine = require('./core/Engine');
-Matter.Events = require('./core/Events');
-Matter.Mouse = require('./core/Mouse');
-// Matter.Runner = require('./core/Runner');
-Matter.Sleeping = require('./core/Sleeping');
-Matter.Plugin = require('./core/Plugin');
-
-// @if DEBUG
-// Matter.Metrics = require('./core/Metrics');
-// @endif
-
-Matter.Bodies = require('./factory/Bodies');
-Matter.Composites = require('./factory/Composites');
-
-Matter.Axes = require('./geometry/Axes');
-Matter.Bounds = require('./geometry/Bounds');
-Matter.Svg = require('./geometry/Svg');
-Matter.Vector = require('./geometry/Vector');
-Matter.Vertices = require('./geometry/Vertices');
-
-// Matter.Render = require('./render/Render');
-// Matter.RenderPixi = require('./render/RenderPixi');
-
-// aliases
-
-Matter.World.add = Matter.Composite.add;
-Matter.World.remove = Matter.Composite.remove;
-Matter.World.addComposite = Matter.Composite.addComposite;
-Matter.World.addBody = Matter.Composite.addBody;
-Matter.World.addConstraint = Matter.Composite.addConstraint;
-Matter.World.clear = Matter.Composite.clear;
-Matter.Engine.run = Matter.Runner.run;
+*/

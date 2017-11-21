@@ -1,15 +1,17 @@
-//  Phaser.Physics.Arcade.World
+//  Phaser.Physics.Matter.World
 
-var Body = require('./Body');
+var Engine = require('./core/Engine');
+
+// var Body = require('./Body');
 var Class = require('../../utils/Class');
 // var CONST = require('./const');
 var GetValue = require('../../utils/object/GetValue');
 // var Rectangle = require('../../geom/rectangle/Rectangle');
 // var RTree = require('../../structs/RTree');
-var Set = require('../../structs/Set');
+// var Set = require('../../structs/Set');
 // var ProcessQueue = require('../../structs/ProcessQueue');
 // var StaticBody = require('./StaticBody');
-var Vector2 = require('../../math/Vector2');
+// var Vector2 = require('../../math/Vector2');
 
 var World = new Class({
 
@@ -35,13 +37,27 @@ var World = new Class({
 
         this.events = scene.sys.events;
 
-        // this.engine = Phaser.Physics.MatterJS.Engine;
-        // this.world = Phaser.Physics.MatterJS.World;
+        this.engine = Engine.create(defaults);
+
+        console.log('engine');
+        console.log(this.engine);
+
+        // this.world = this.engine.world;
+
+        // console.log('world?');
+        // console.log(this.world);
     },
 
     update: function (time, delta)
     {
-        // this.engine.update(this.engine, delta, correction);
+        var correction = 1;
+
+        this.engine.update(this.engine, delta, correction);
+    },
+
+    postUpdate: function ()
+    {
+        //  NOOP
     },
 
     shutdown: function ()
