@@ -253,6 +253,30 @@ var StaticTilemapLayer = new Class({
         return TilemapComponents.HasTileAtWorldXY(worldX, worldY, camera, this.layer);
     },
 
+    recalculateFaces: function ()
+    {
+        TilemapComponents.RecalculateFaces(this.layer);
+        return this;
+    },
+
+    setCollision: function (indexes, collides, recalculateFaces)
+    {
+        TilemapComponents.SetCollision(indexes, collides, recalculateFaces, this.layer);
+        return this;
+    },
+
+    setCollisionBetween: function (start, stop, collides, recalculateFaces)
+    {
+        TilemapComponents.SetCollisionBetween(start, stop, collides, recalculateFaces, this.layer);
+        return this;
+    },
+
+    setCollisionByExclusion: function (indexes, collides, recalculateFaces)
+    {
+        TilemapComponents.SetCollisionByExclusion(indexes, collides, recalculateFaces, this.layer);
+        return this;
+    },
+
     worldToTileX: function (worldX, camera)
     {
         return TilemapComponents.WorldToTileX(worldX, camera, this.layer);

@@ -128,6 +128,12 @@ var DynamicTilemapLayer = new Class({
         return this;
     },
 
+    recalculateFaces: function ()
+    {
+        TilemapComponents.RecalculateFaces(this.layer);
+        return this;
+    },
+
     removeTileAt: function (tileX, tileY, replaceWithNull)
     {
         return TilemapComponents.RemoveTileAt(tileX, tileY, replaceWithNull, this.layer);
@@ -141,6 +147,24 @@ var DynamicTilemapLayer = new Class({
     replaceByIndex: function (findIndex, newIndex, tileX, tileY, width, height)
     {
         TilemapComponents.ReplaceByIndex(findIndex, newIndex, tileX, tileY, width, height, this.layer);
+        return this;
+    },
+
+    setCollision: function (indexes, collides, recalculateFaces)
+    {
+        TilemapComponents.SetCollision(indexes, collides, recalculateFaces, this.layer);
+        return this;
+    },
+
+    setCollisionBetween: function (start, stop, collides, recalculateFaces)
+    {
+        TilemapComponents.SetCollisionBetween(start, stop, collides, recalculateFaces, this.layer);
+        return this;
+    },
+
+    setCollisionByExclusion: function (indexes, collides, recalculateFaces)
+    {
+        TilemapComponents.SetCollisionByExclusion(indexes, collides, recalculateFaces, this.layer);
         return this;
     },
 
