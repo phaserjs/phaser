@@ -95,7 +95,7 @@ Object.defineProperty(WebAudioSoundManager.prototype, 'mute', {
         return this.masterMuteNode.gain.value === 0;
     },
     set: function (value) {
-        this.masterMuteNode.gain.value = value ? 0 : 1;
+        this.masterMuteNode.gain.setValueAtTime(value ? 0 : 1, 0);
     }
 });
 /**
@@ -107,7 +107,7 @@ Object.defineProperty(WebAudioSoundManager.prototype, 'volume', {
         return this.masterVolumeNode.gain.value;
     },
     set: function (value) {
-        this.masterVolumeNode.gain.value = value;
+        this.masterVolumeNode.gain.setValueAtTime(value, 0);
     }
 });
 /**
