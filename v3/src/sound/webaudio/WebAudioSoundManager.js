@@ -54,6 +54,7 @@ var WebAudioSoundManager = new Class({
          * @private
          */
         this._detune = 0;
+        this.unlock();
         BaseSoundManager.call(this, game);
     },
     createAudioContext: function (game) {
@@ -67,6 +68,16 @@ var WebAudioSoundManager = new Class({
         var sound = new WebAudioSound(this, key, config);
         this.sounds.push(sound);
         return sound;
+    },
+    unlock: function () {
+        var _this = this;
+        if (this.context.state === 'suspended') {
+            var unlock_1 = function () {
+                document.body.removeEventListener('touchstart', unlock_1);
+                _this.context.resume();
+            };
+            document.body.addEventListener('touchstart', unlock_1, false);
+        }
     }
 });
 /**
