@@ -57,6 +57,16 @@ var BaseSoundManager = new Class({
          * @property {boolean} pauseOnBlur
          */
         this.pauseOnBlur = true;
+        game.events.on('ON_BLUR', function () {
+            if (this.pauseOnBlur) {
+                this.onBlur();
+            }
+        }.bind(this));
+        game.events.on('ON_FOCUS', function () {
+            if (this.pauseOnBlur) {
+                this.onFocus();
+            }
+        }.bind(this));
         /**
          * [description]
          *
