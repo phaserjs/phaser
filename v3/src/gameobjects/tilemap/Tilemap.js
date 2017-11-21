@@ -361,6 +361,14 @@ var Tilemap = new Class({
         return this;
     },
 
+    recalculateFaces: function (layer)
+    {
+        layer = this.getLayer(layer);
+        if (layer === null) { return this; }
+        TilemapComponents.RecalculateFaces(layer);
+        return this;
+    },
+
     removeAllLayers: function ()
     {
         this.layers.length = 0;
@@ -392,6 +400,30 @@ var Tilemap = new Class({
         {
             TilemapComponents.ReplaceByIndex(findIndex, newIndex, tileX, tileY, width, height, layer);
         }
+        return this;
+    },
+
+    setCollision: function (indexes, collides, recalculateFaces, layer)
+    {
+        layer = this.getLayer(layer);
+        if (layer === null) { return this; }
+        TilemapComponents.SetCollision(indexes, collides, recalculateFaces, layer);
+        return this;
+    },
+
+    setCollisionBetween: function (start, stop, collides, recalculateFaces, layer)
+    {
+        layer = this.getLayer(layer);
+        if (layer === null) { return this; }
+        TilemapComponents.SetCollisionBetween(start, stop, collides, recalculateFaces, layer);
+        return this;
+    },
+
+    setCollisionByExclusion: function (indexes, collides, recalculateFaces, layer)
+    {
+        layer = this.getLayer(layer);
+        if (layer === null) { return this; }
+        TilemapComponents.SetCollisionByExclusion(indexes, collides, recalculateFaces, layer);
         return this;
     },
 

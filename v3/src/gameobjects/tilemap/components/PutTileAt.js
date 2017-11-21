@@ -31,7 +31,7 @@ var PutTileAt = function (tile, tileX, tileY, layer)
         }
     }
 
-    // TODO: re-calculate faces
+    // TODO: collision & re-calculate faces
 
     return layer.data[tileY][tileX];
 };
