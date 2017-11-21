@@ -215,7 +215,18 @@ var CanvasRenderer = new Class({
         {
             var child = list[c];
 
+            if (child.mask)
+            {
+                child.mask.preRenderCanvas(this, child, camera);
+            }
+
             child.renderCanvas(this, child, interpolationPercentage, camera);
+
+            if (child.mask)
+            {
+                child.mask.postRenderCanvas(this, child, camera);
+            }
+
         }
 
         //  Call the Scene.render function
