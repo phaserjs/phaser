@@ -156,6 +156,7 @@ var BaseSound = new Class({
         }
         if (!marker) {
             this.currentConfig = this.config;
+            this.duration = this.totalDuration;
         }
         else {
             if (!this.markers[marker]) {
@@ -164,6 +165,7 @@ var BaseSound = new Class({
             }
             this.currentMarker = marker;
             this.currentConfig = this.markers[marker].config;
+            this.duration = this.currentMarker.duration;
         }
         this.currentConfig = Extend(this.currentConfig, config);
         this.isPlaying = true;
