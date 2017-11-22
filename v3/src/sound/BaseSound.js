@@ -116,13 +116,12 @@ var BaseSound = new Class({
          */
         this.markers = {};
         /**
-         * Name of the currently played marker.
-         * If no marker is played, but instead the whole sound
-         * the value is an empty string - ''.
+         * Currently playing marker.
+         * 'null' if whole sound is playing.
          *
-         * @property {string} currentMarker
+         * @property {ISoundMarker} currentMarker
          */
-        this.currentMarker = '';
+        this.currentMarker = null;
         /**
          * [description]
          *
@@ -163,8 +162,8 @@ var BaseSound = new Class({
                 console.error('No marker with name \'' + marker + '\' found for sound \'' + this.key + '\'!');
                 return null;
             }
-            this.currentMarker = marker;
-            this.currentConfig = this.markers[marker].config;
+            this.currentMarker = this.markers[marker];
+            this.currentConfig = this.currentMarker.config;
             this.duration = this.currentMarker.duration;
         }
         this.currentConfig = Extend(this.currentConfig, config);
