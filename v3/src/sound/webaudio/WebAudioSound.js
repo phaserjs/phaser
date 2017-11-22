@@ -6,6 +6,7 @@ var BaseSound = require('../BaseSound');
 var WebAudioSound = new Class({
     Extends: BaseSound,
     initialize: function WebAudioSound(manager, key, config) {
+        if (config === void 0) { config = {}; }
         /**
          * [description]
          *
