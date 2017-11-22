@@ -48,7 +48,6 @@ var WebAudioSound = new Class({
          * @property {number} pausedTime
          */
         this.pausedTime = 0;
-        // TODO add duration and total duration
         this.muteNode.connect(this.volumeNode);
         this.volumeNode.connect(manager.destination);
         BaseSound.call(this, manager, key, config);
