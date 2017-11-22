@@ -143,26 +143,26 @@ var BaseSound = new Class({
     removeMarker: function (markerName) {
         return false;
     },
-    play: function (marker, config) {
-        if (marker === void 0) { marker = ''; }
-        if (typeof marker === 'object') {
-            config = marker;
-            marker = '';
+    play: function (markerName, config) {
+        if (markerName === void 0) { markerName = ''; }
+        if (typeof markerName === 'object') {
+            config = markerName;
+            markerName = '';
         }
-        if (typeof marker !== 'string') {
+        if (typeof markerName !== 'string') {
             console.error('Sound marker name has to be a string!');
             return null;
         }
-        if (!marker) {
+        if (!markerName) {
             this.currentConfig = this.config;
             this.duration = this.totalDuration;
         }
         else {
-            if (!this.markers[marker]) {
-                console.error('No marker with name \'' + marker + '\' found for sound \'' + this.key + '\'!');
+            if (!this.markers[markerName]) {
+                console.error('No marker with name \'' + markerName + '\' found for sound \'' + this.key + '\'!');
                 return null;
             }
-            this.currentMarker = this.markers[marker];
+            this.currentMarker = this.markers[markerName];
             this.currentConfig = this.currentMarker.config;
             this.duration = this.currentMarker.duration;
         }
