@@ -3,9 +3,13 @@
 var Bodies = require('./lib/factory/Bodies');
 var Class = require('../../utils/Class');
 var Engine = require('./lib/core/Engine');
-var GetValue = require('../../utils/object/GetValue');
+var EventDispatcher = require('../../events/EventDispatcher');
 var GetFastValue = require('../../utils/object/GetFastValue');
+var GetValue = require('../../utils/object/GetValue');
+var MatterBody = require('./lib/body/Body');
+var MatterEvents = require('./lib/core/Events');
 var MatterWorld = require('./lib/body/World');
+var PhysicsEvent = require('./events/');
 
 var World = new Class({
 
@@ -19,8 +23,7 @@ var World = new Class({
 
         this.localWorld = this.engine.world;
 
-        //  Map to World events
-        this.events = scene.sys.events;
+        this.events = new EventDispatcher();
 
         var gravity = GetValue(config, 'gravity', null);
 
@@ -57,6 +60,31 @@ var World = new Class({
                 this.setBounds(x, y, width, height, thickness, left, right, top, bottom);
             }
         }
+
+        this.setEventsProxy();
+    },
+
+    setEventsProxy: function ()
+    {
+        var localEvents = this.events;
+
+        MatterEvents.on(this.engine, 'collisionStart', function (event) {
+
+            localEvents.dispatch(new PhysicsEvent.COLLISION_START(event.pairs));
+
+        });
+
+        MatterEvents.on(this.engine, 'collisionActive', function (event) {
+
+            localEvents.dispatch(new PhysicsEvent.COLLISION_ACTIVE(event));
+
+        });
+
+        MatterEvents.on(this.engine, 'collisionEnd', function (event) {
+
+            localEvents.dispatch(new PhysicsEvent.COLLISION_END(event));
+
+        });
     },
 
     /**
@@ -154,6 +182,16 @@ var World = new Class({
         MatterWorld.add(this.localWorld, body);
 
         return this;
+    },
+
+    nextGroup: function (isNonColliding)
+    {
+        return Body.nextGroup(isNonColliding);
+    },
+
+    nextCategory: function ()
+    {
+        return MatterBody.nextCategory();
     },
 
     update: function (time, delta)
