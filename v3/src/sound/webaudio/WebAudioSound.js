@@ -55,8 +55,8 @@ var WebAudioSound = new Class({
         this.duration = this.audioBuffer.duration;
         this.totalDuration = this.audioBuffer.duration;
     },
-    play: function (marker, config) {
-        if (!BaseSound.prototype.play.call(this, marker, config)) {
+    play: function (markerName, config) {
+        if (!BaseSound.prototype.play.call(this, markerName, config)) {
             return null;
         }
         this.stopAndRemoveBufferSource();
