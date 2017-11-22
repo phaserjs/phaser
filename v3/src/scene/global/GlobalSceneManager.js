@@ -30,22 +30,16 @@ var GlobalSceneManager = new Class({
                 {
                     //  The i === 0 part just starts the first Scene given
                     this._pending.push({
-                        index: i,
-                        key: 'default',
                         scene: sceneConfig[i],
-                        autoStart: (i === 0),
-                        data: {}
+                        autoStart: (i === 0)
                     });
                 }
             }
             else
             {
                 this._pending.push({
-                    index: 0,
-                    key: 'default',
                     scene: sceneConfig,
-                    autoStart: true,
-                    data: {}
+                    autoStart: true
                 });
             }
         }
