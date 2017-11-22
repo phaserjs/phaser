@@ -12,6 +12,7 @@ var MatterImage = new Class({
 
     Mixins: [
         Components.Bounce,
+        Components.Collision,
         Components.Force,
         Components.Friction,
         Components.Mass,
@@ -45,6 +46,8 @@ var MatterImage = new Class({
         {
             this.body = Bodies.rectangle(x, y, this.width, this.height, options);
         }
+
+        this.body.gameObject = this;
 
         world.add(this.body);
 

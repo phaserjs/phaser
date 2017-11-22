@@ -3,6 +3,7 @@
 module.exports = {
 
     Bounce: require('./Bounce'),
+    Collision: require('./Collision'),
     Force: require('./Force'),
     Friction: require('./Friction'),
     Mass: require('./Mass'),
