@@ -101,6 +101,7 @@ var WebAudioSound = new Class({
      * @param {number} offset
      * @param {number} duration
      */
+    // TODO add when param
     createAndStartBufferSource: function (offset, duration) {
         this.source = this.manager.context.createBufferSource();
         this.source.buffer = this.audioBuffer;
