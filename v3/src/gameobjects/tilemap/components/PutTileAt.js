@@ -1,11 +1,16 @@
 var Tile = require('../Tile');
 var IsInLayerBounds = require('./IsInLayerBounds');
+var RecalculateFacesAt = require('./RecalculateFacesAt');
 
 // Put Phaser.Tile|number. Note: does not place a reference to tile, it copies the tile or creates a
 // new one.
-var PutTileAt = function (tile, tileX, tileY, layer)
+var PutTileAt = function (tile, tileX, tileY, recalculateFaces, layer)
 {
     if (!IsInLayerBounds(tileX, tileY, layer)) { return null; }
+    if (recalculateFaces === undefined) { recalculateFaces = true; }
+
+    var oldTile = layer.data[tileY][tileX];
+    var oldTileCollides = oldTile && oldTile.collides;
 
     if (tile instanceof Tile)
     {
@@ -31,9 +36,24 @@ var PutTileAt = function (tile, tileX, tileY, layer)
         }
     }
 
-    // TODO: collision & re-calculate faces
+    // Updating colliding flag on the new tile
+    var newTile = layer.data[tileY][tileX];
+    if (layer.collideIndexes.indexOf(newTile.index) !== -1)
+    {
+        newTile.setCollision(true);
+    }
+    else
+    {
+        newTile.resetCollision();
+    }
 
-    return layer.data[tileY][tileX];
+    // Recalculate faces only if the colliding flag at (tileX, tileY) has changed
+    if (recalculateFaces && (oldTileCollides !== newTile.collides))
+    {
+        RecalculateFacesAt(tileX, tileY, layer);
+    }
+
+    return newTile;
 };
 
 module.exports = PutTileAt;

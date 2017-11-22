@@ -203,6 +203,12 @@ var StaticTilemapLayer = new Class({
         }
     },
 
+    calculateFacesWithin: function (tileX, tileY, width, height)
+    {
+        TilemapComponents.CalculateFacesWithin(tileX, tileY, width, height, this.layer);
+        return this;
+    },
+
     cull: function (camera)
     {
         TilemapComponents.CullTiles(this.layer, camera, this.culledTiles);
@@ -251,12 +257,6 @@ var StaticTilemapLayer = new Class({
     hasTileAtWorldXY: function (worldX, worldY, camera)
     {
         return TilemapComponents.HasTileAtWorldXY(worldX, worldY, camera, this.layer);
-    },
-
-    recalculateFaces: function ()
-    {
-        TilemapComponents.RecalculateFaces(this.layer);
-        return this;
     },
 
     setCollision: function (indexes, collides, recalculateFaces)

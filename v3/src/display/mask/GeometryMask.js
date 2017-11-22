@@ -46,6 +46,21 @@ var GeometryMask = new Class({
         // Force flush before disabling stencil test
         renderer.currentRenderer.flush();
         gl.disable(gl.STENCIL_TEST);
+    },
+
+    preRenderCanvas: function (renderer, mask, camera)
+    {
+        var geometryMask = this.geometryMask;
+        renderer.currentContext.save();
+        //renderer.currentContext.beginPath();
+        geometryMask.renderCanvas(renderer, geometryMask, 0.0, camera, null, true);
+        renderer.currentContext.clip();
+    },
+
+    postRenderCanvas: function (renderer)
+    {
+        //renderer.currentContext.closePath();
+        renderer.currentContext.restore();
     }
 
 });

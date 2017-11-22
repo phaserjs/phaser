@@ -22,6 +22,7 @@ var LayerData = new Class({
         this.visible = GetFastValue(config, 'visible', true);
         this.properties = GetFastValue(config, 'properties', {});
         this.indexes = GetFastValue(config, 'indexes', []);
+        this.collideIndexes = GetFastValue(config, 'collideIndexes', []);
         this.callbacks = GetFastValue(config, 'callbacks', []);
         this.bodies = GetFastValue(config, 'bodies', []);
         this.data = GetFastValue(config, 'data', []);
