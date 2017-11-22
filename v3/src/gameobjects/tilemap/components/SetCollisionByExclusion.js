@@ -1,5 +1,6 @@
 var SetTileCollision = require('./SetTileCollision');
 var RecalculateFaces = require('./RecalculateFaces');
+var SetLayerCollisionIndex = require('./SetLayerCollisionIndex');
 
 var SetCollisionByExclusion = function (indexes, collides, recalculateFaces, layer)
 {
@@ -15,6 +16,7 @@ var SetCollisionByExclusion = function (indexes, collides, recalculateFaces, lay
             if (tile && indexes.indexOf(tile.index) === -1)
             {
                 SetTileCollision(tile, collides);
+                SetLayerCollisionIndex(tile.index, collides, layer);
             }
         }
     }

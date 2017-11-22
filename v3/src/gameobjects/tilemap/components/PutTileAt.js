@@ -32,6 +32,16 @@ var PutTileAt = function (tile, tileX, tileY, layer)
     }
 
     // TODO: collision & re-calculate faces
+    // Updating colliding flag on the new tile
+    var newTile = layer.data[tileY][tileX];
+    if (layer.collideIndexes.indexOf(newTile.index) !== -1)
+    {
+        newTile.setCollision(true);
+    }
+    else
+    {
+        newTile.resetCollision();
+    }
 
     return layer.data[tileY][tileX];
 };
