@@ -308,7 +308,7 @@ var Body = require('../body/Body');
         for (var i = 0; i < bodies.length; i++) {
             var body = bodies[i];
 
-            if (body.isStatic || body.isSleeping)
+            if (body.ignoreGravity || body.isStatic || body.isSleeping)
                 continue;
 
             // apply gravity

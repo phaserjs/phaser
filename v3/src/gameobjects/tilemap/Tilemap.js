@@ -334,20 +334,20 @@ var Tilemap = new Class({
         }
     },
 
-    putTileAt: function (tile, tileX, tileY, layer)
+    putTileAt: function (tile, tileX, tileY, recalculateFaces, layer)
     {
         layer = this.getLayer(layer);
         if (this._isStaticCall(layer, 'putTileAt')) { return null; }
         if (layer === null) { return null; }
-        return TilemapComponents.PutTileAt(tile, tileX, tileY, layer);
+        return TilemapComponents.PutTileAt(tile, tileX, tileY, recalculateFaces, layer);
     },
 
-    putTileAtWorldXY: function (tile, worldX, worldY, camera, layer)
+    putTileAtWorldXY: function (tile, worldX, worldY, recalculateFaces, camera, layer)
     {
         layer = this.getLayer(layer);
         if (this._isStaticCall(layer, 'putTileAtWorldXY')) { return null; }
         if (layer === null) { return null; }
-        return TilemapComponents.PutTileAtWorldXY(tile, worldX, worldY, camera, layer);
+        return TilemapComponents.PutTileAtWorldXY(tile, worldX, worldY, recalculateFaces, camera, layer);
     },
 
     randomize: function (tileX, tileY, width, height, indices, layer)
@@ -361,11 +361,11 @@ var Tilemap = new Class({
         return this;
     },
 
-    recalculateFaces: function (layer)
+    calculateFacesWithin: function (tileX, tileY, width, height, layer)
     {
         layer = this.getLayer(layer);
         if (layer === null) { return this; }
-        TilemapComponents.RecalculateFaces(layer);
+        TilemapComponents.CalculateFacesWithin(tileX, tileY, width, height, layer);
         return this;
     },
 
@@ -376,20 +376,20 @@ var Tilemap = new Class({
         return this;
     },
 
-    removeTileAt: function (tileX, tileY, replaceWithNull, layer)
+    removeTileAt: function (tileX, tileY, replaceWithNull, recalculateFaces, layer)
     {
         layer = this.getLayer(layer);
         if (this._isStaticCall(layer, 'removeTileAt')) { return null; }
         if (layer === null) { return null; }
-        return TilemapComponents.RemoveTileAt(tileX, tileY, replaceWithNull, layer);
+        return TilemapComponents.RemoveTileAt(tileX, tileY, replaceWithNull, recalculateFaces, layer);
     },
 
-    removeTileAtWorldXY: function (worldX, worldY, replaceWithNull, camera, layer)
+    removeTileAtWorldXY: function (worldX, worldY, replaceWithNull, recalculateFaces, camera, layer)
     {
         layer = this.getLayer(layer);
         if (this._isStaticCall(layer, 'removeTileAtWorldXY')) { return null; }
         if (layer === null) { return null; }
-        return TilemapComponents.RemoveTileAtWorldXY(worldX, worldY, replaceWithNull, camera, layer);
+        return TilemapComponents.RemoveTileAtWorldXY(worldX, worldY, replaceWithNull, recalculateFaces, camera, layer);
     },
 
     replaceByIndex: function (findIndex, newIndex, tileX, tileY, width, height, layer)

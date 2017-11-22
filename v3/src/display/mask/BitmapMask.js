@@ -144,6 +144,16 @@ var BitmapMask = new Class({
 
         // Apply alpha masking using mask renderer      
         maskRenderer.draw(null, null, this.mainTexture, this.maskTexture);
+    },
+
+    preRenderCanvas: function (renderer, mask, camera)
+    {
+        // NOOP
+    },
+
+    postRenderCanvas: function (renderer)
+    {
+        // NOOP
     }
 
 });

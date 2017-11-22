@@ -1,7 +1,7 @@
 var Commands = require('./Commands');
 var GameObject = require('../GameObject');
 
-var GraphicsCanvasRenderer = function (renderer, src, interpolationPercentage, camera, renderTargetCtx)
+var GraphicsCanvasRenderer = function (renderer, src, interpolationPercentage, camera, renderTargetCtx, allowClip)
 {
     if (GameObject.RENDER_MASK !== src.renderFlags || (src.cameraFilter > 0 && (src.cameraFilter & camera._id)))
     {
@@ -102,20 +102,38 @@ var GraphicsCanvasRenderer = function (renderer, src, interpolationPercentage, c
                 break;
 
             case Commands.FILL_PATH:
-                ctx.fill();
+                if (!allowClip) 
+                {
+                    ctx.fill();
+                }
                 break;
 
             case Commands.STROKE_PATH:
-                ctx.stroke();
+                if (!allowClip)
+                {
+                    ctx.stroke();
+                }
                 break;
 
             case Commands.FILL_RECT:
-                ctx.fillRect(
-                    commandBuffer[index + 1],
-                    commandBuffer[index + 2],
-                    commandBuffer[index + 3],
-                    commandBuffer[index + 4]
-                );
+                if (!allowClip)
+                {
+                    ctx.fillRect(
+                        commandBuffer[index + 1],
+                        commandBuffer[index + 2],
+                        commandBuffer[index + 3],
+                        commandBuffer[index + 4]
+                    );
+                }
+                else
+                {
+                    ctx.rect(
+                        commandBuffer[index + 1],
+                        commandBuffer[index + 2],
+                        commandBuffer[index + 3],
+                        commandBuffer[index + 4]
+                    );
+                }
                 index += 4;
                 break;
 
@@ -125,7 +143,10 @@ var GraphicsCanvasRenderer = function (renderer, src, interpolationPercentage, c
                 ctx.lineTo(commandBuffer[index + 3], commandBuffer[index + 4]);
                 ctx.lineTo(commandBuffer[index + 5], commandBuffer[index + 6]);
                 ctx.closePath();
-                ctx.fill();
+                if (!allowClip) 
+                {
+                    ctx.fill();
+                }
                 index += 6;
                 break;
 
@@ -135,7 +156,10 @@ var GraphicsCanvasRenderer = function (renderer, src, interpolationPercentage, c
                 ctx.lineTo(commandBuffer[index + 3], commandBuffer[index + 4]);
                 ctx.lineTo(commandBuffer[index + 5], commandBuffer[index + 6]);
                 ctx.closePath();
-                ctx.stroke();
+                if (!allowClip)
+                {
+                    ctx.stroke();
+                }
                 index += 6;
                 break;
 

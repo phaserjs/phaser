@@ -103,6 +103,10 @@ var Tile = new Class({
 
     setCollision: function (left, right, up, down)
     {
+        if (right === undefined) { right = left; }
+        if (up === undefined) { up = left; }
+        if (down === undefined) { down = left; }
+
         this.collideLeft = left;
         this.collideRight = right;
         this.collideUp = up;
