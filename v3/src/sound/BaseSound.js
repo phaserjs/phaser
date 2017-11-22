@@ -24,15 +24,7 @@ var BaseSound = new Class({
          *
          * @property {ISoundConfig} config
          */
-        this.config = {
-            /**
-             * A value representing the duration, in seconds.
-             * It could be total sound duration or a marker duration.
-             *
-             * @type {number}
-             */
-            duration: 0
-        };
+        this.config = {};
         /**
          * Reference to the currently used config.
          * It could be default config or marker config.
