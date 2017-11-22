@@ -1,5 +1,5 @@
 var SetTileCollision = require('./SetTileCollision');
-var RecalculateFaces = require('./RecalculateFaces');
+var CalculateFacesWithin = require('./CalculateFacesWithin');
 var SetLayerCollisionIndex = require('./SetLayerCollisionIndex');
 
 var SetCollisionBetween = function (start, stop, collides, recalculateFaces, layer)
@@ -31,7 +31,7 @@ var SetCollisionBetween = function (start, stop, collides, recalculateFaces, lay
         }
     }
 
-    if (recalculateFaces) { RecalculateFaces(layer); }
+    if (recalculateFaces) { CalculateFacesWithin(0, 0, layer.width, layer.height, layer); }
 };
 
 module.exports = SetCollisionBetween;
