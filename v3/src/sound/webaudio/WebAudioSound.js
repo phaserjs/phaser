@@ -51,10 +51,6 @@ var WebAudioSound = new Class({
         // TODO add duration and total duration
         this.muteNode.connect(this.volumeNode);
         this.volumeNode.connect(manager.destination);
-        if (config === void 0) {
-            config = {};
-        }
-        config.duration = this.audioBuffer.duration;
         BaseSound.call(this, manager, key, config);
     },
     play: function (marker, config) {
