@@ -1,7 +1,8 @@
 var GetTilesWithin = require('./GetTilesWithin');
 var GetRandomElement = require('../../../utils/array/GetRandomElement');
 
-var Shuffle = function (tileX, tileY, width, height, indices, layer)
+// Randomizes indices, not other properties. Does not modify collisions. Matches v2 functionality.
+var Randomize = function (tileX, tileY, width, height, indices, layer)
 {
     var i;
     var tiles = GetTilesWithin(tileX, tileY, width, height, layer);
@@ -25,4 +26,4 @@ var Shuffle = function (tileX, tileY, width, height, indices, layer)
     }
 };
 
-module.exports = Shuffle;
+module.exports = Randomize;

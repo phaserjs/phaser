@@ -1,6 +1,7 @@
 var GetTilesWithin = require('./GetTilesWithin');
 
-var Fill = function (srcTileX, srcTileY, width, height, destTileX, destTileY, layer)
+// Copies indices, not other properties. Does not modify collisions.
+var Copy = function (srcTileX, srcTileY, width, height, destTileX, destTileY, layer)
 {
     if (srcTileX === undefined || srcTileX < 0) { srcTileX = 0; }
     if (srcTileY === undefined || srcTileY < 0) { srcTileY = 0; }
@@ -21,4 +22,4 @@ var Fill = function (srcTileX, srcTileY, width, height, destTileX, destTileY, la
     }
 };
 
-module.exports = Fill;
+module.exports = Copy;
