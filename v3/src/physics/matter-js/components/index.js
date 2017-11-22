@@ -6,6 +6,7 @@ module.exports = {
     Collision: require('./Collision'),
     Force: require('./Force'),
     Friction: require('./Friction'),
+    Gravity: require('./Gravity'),
     Mass: require('./Mass'),
     Static: require('./Static'),
     Sensor: require('./Sensor'),
