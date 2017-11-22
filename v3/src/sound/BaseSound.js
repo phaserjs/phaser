@@ -83,6 +83,14 @@ var BaseSound = new Class({
         this.pan = 0;
         this.config = Extend(this.config, config);
         /**
+         * A value representing the duration, in seconds.
+         * It could be total sound duration or a marker duration.
+         *
+         * @readonly
+         * @property {number} duration
+         */
+        this.duration = 0;
+        /**
          * Flag indicating if sound is currently playing.
          *
          * @property {boolean} isPlaying
