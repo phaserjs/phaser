@@ -16,6 +16,8 @@ var MatterImage = new Class({
         Components.Force,
         Components.Friction,
         Components.Mass,
+        Components.Sensor,
+        Components.Sleep,
         Components.Static,
         Components.Transform,
         Components.Velocity
@@ -48,6 +50,8 @@ var MatterImage = new Class({
         }
 
         this.body.gameObject = this;
+
+        this.world = world;
 
         world.add(this.body);
 
