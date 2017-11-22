@@ -60,7 +60,7 @@ var WebAudioSound = new Class({
         }
         this.stopAndRemoveBufferSource();
         // TODO include config offset and marker start
-        this.createAndStartBufferSource(0, this.currentConfig.duration);
+        this.createAndStartBufferSource(0, this.duration);
         this.startTime = this.manager.context.currentTime;
         this.pausedTime = 0;
         return this;
@@ -78,7 +78,7 @@ var WebAudioSound = new Class({
             return false;
         }
         var offset = this.pausedTime; // TODO include marker start time
-        var duration = this.currentConfig.duration - this.pausedTime;
+        var duration = this.duration - this.pausedTime;
         this.createAndStartBufferSource(offset, duration);
         this.startTime = this.manager.context.currentTime - this.pausedTime;
         this.pausedTime = 0;
