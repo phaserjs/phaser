@@ -1,6 +1,7 @@
 var Bodies = require('./lib/factory/Bodies');
 var Class = require('../../utils/Class');
 var Composites = require('./lib/factory/Composites');
+var Constraint = require('./lib/constraint/Constraint');
 var MatterImage = require('./MatterImage');
 var MatterSprite = require('./MatterSprite');
 
@@ -77,6 +78,34 @@ var Factory = new Class({
         this.world.add(stack);
 
         return stack;
+    },
+
+    //  To help those used to Box2D
+    joint: function (bodyA, bodyB, length, stiffness, options)
+    {
+        return this.constraint(bodyA, bodyB, length, stiffness, options);
+    },
+
+    spring: function (bodyA, bodyB, length, stiffness, options)
+    {
+        return this.constraint(bodyA, bodyB, length, stiffness, options);
+    },
+
+    constraint: function (bodyA, bodyB, length, stiffness, options)
+    {
+        if (stiffness === undefined) { stiffness = 1; }
+        if (options === undefined) { options = {}; }
+
+        options.bodyA = (bodyA.type === 'body') ? bodyA : bodyA.body;
+        options.bodyB = (bodyB.type === 'body') ? bodyB : bodyB.body;
+        options.length = length;
+        options.stiffness = stiffness;
+
+        var constraint = Constraint.create(options);
+
+        this.world.add(constraint);
+
+        return constraint;
     },
 
     image: function (x, y, key, frame, options)
