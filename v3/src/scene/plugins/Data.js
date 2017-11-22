@@ -1,5 +1,4 @@
 var Class = require('../../utils/Class');
-var Event = require('../../events/Event');
 var EventDispatcher = require('../../events/EventDispatcher');
 
 /**
@@ -14,7 +13,7 @@ var Data = new Class({
     {
         this.parent = parent;
 
-        this.events = (eventDispatcher) ? eventDispatcher : new EventDispatcher();
+        this.events = eventDispatcher || new EventDispatcher();
 
         this.list = {};
 
@@ -36,7 +35,10 @@ var Data = new Class({
 
         for (var key in this.list)
         {
-            results[key] = this.list[key];
+            if (this.list[key] !== undefined)
+            {
+                results[key] = this.list[key];
+            }
         }
 
         return results;
@@ -48,7 +50,7 @@ var Data = new Class({
 
         for (var key in this.list)
         {
-            if (key.match(search))
+            if (this.list[key] !== undefined && key.match(search))
             {
                 results[key] = this.list[key];
             }
@@ -147,6 +149,7 @@ var Data = new Class({
 
         for (var key in this.list)
         {
+            if (this.list[key] === undefined) { continue; }
             args[1] = key;
             args[2] = this.list[key];
 
@@ -161,7 +164,7 @@ var Data = new Class({
         //  Merge data from another component into this one
         for (var key in data)
         {
-            if (overwrite || (!overwrite && !this.has(key)))
+            if (overwrite || this.list[key] === undefined)
             {
                 this.list[key] = data;
             }
@@ -170,9 +173,9 @@ var Data = new Class({
 
     remove: function (key)
     {
-        if (!this._frozen && this.has(key))
+        if (!this._frozen && this.list[key] !== undefined)
         {
-            delete this.list[key];
+            this.list[key] = undefined;
 
             this.removeListeners(key);
         }
@@ -194,32 +197,26 @@ var Data = new Class({
     //  Gets the data associated with the given 'key', deletes it from this Data store, then returns it.
     pop: function (key)
     {
-        var data = undefined;
-
-        if (!this._frozen && this.has(key))
+        if (!this._frozen && this.list[key] !== undefined)
         {
-            data = this.list[key];
+            var data = this.list[key];
 
-            delete this.list[key];
+            this.list[key] = undefined;
 
             this.removeListeners(key);
-        }
 
-        return data;
+            return data;
+        }
     },
 
     has: function (key)
     {
-        return this.list.hasOwnProperty(key);
+        return this.list[key] !== undefined;
     },
 
     reset: function ()
     {
-        for (var key in this.list)
-        {
-            delete this.list[key];
-        }
-
+        this.list = {};
         for (key in this._beforeCallbacks)
         {
             delete this._beforeCallbacks[key];
@@ -257,7 +254,7 @@ var Data = new Class({
 
         set: function (value)
         {
-            this._frozen = (value) ? true : false;
+            this._frozen = !!value;
         }
 
     },
