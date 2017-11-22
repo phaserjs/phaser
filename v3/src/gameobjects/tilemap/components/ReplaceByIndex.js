@@ -1,5 +1,6 @@
 var GetTilesWithin = require('./GetTilesWithin');
 
+// Replaces indices, not other properties. Does not modify collisions. Matches v2 functionality.
 var ReplaceByIndex = function (findIndex, newIndex, tileX, tileY, width, height, layer)
 {
     var tiles = GetTilesWithin(tileX, tileY, width, height, layer);

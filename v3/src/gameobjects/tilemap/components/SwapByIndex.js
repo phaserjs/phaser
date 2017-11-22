@@ -1,6 +1,6 @@
 var GetTilesWithin = require('./GetTilesWithin');
 
-// Swaps indices, not other properties (matches v2 functionality)
+// Swaps indices, not other properties. Does not modify collisions. Matches v2 functionality.
 var SwapByIndex = function (indexA, indexB, tileX, tileY, width, height, layer)
 {
     var tiles = GetTilesWithin(tileX, tileY, width, height, layer);
