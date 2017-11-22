@@ -1,5 +1,6 @@
 var Bodies = require('./lib/factory/Bodies');
 var Class = require('../../utils/Class');
+var Composites = require('./lib/factory/Composites');
 var MatterImage = require('./MatterImage');
 var MatterSprite = require('./MatterSprite');
 
@@ -67,6 +68,15 @@ var Factory = new Class({
         this.world.add(body);
 
         return body;
+    },
+
+    stack: function (x, y, columns, rows, columnGap, rowGap, callback)
+    {
+        var stack = Composites.stack(x, y, columns, rows, columnGap, rowGap, callback);
+
+        this.world.add(stack);
+
+        return stack;
     },
 
     image: function (x, y, key, frame, options)
