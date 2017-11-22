@@ -91,6 +91,13 @@ var BaseSound = new Class({
          */
         this.duration = 0;
         /**
+         * Duration of the entire sound.
+         *
+         * @readonly
+         * @property {number}
+         */
+        this.totalDuration = 0;
+        /**
          * Flag indicating if sound is currently playing.
          *
          * @property {boolean} isPlaying
