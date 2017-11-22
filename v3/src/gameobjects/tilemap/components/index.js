@@ -14,7 +14,7 @@ module.exports = {
     PutTileAt: require('./PutTileAt'),
     PutTileAtWorldXY: require('./PutTileAtWorldXY'),
     Randomize: require('./Randomize'),
-    RecalculateFaces: require('./RecalculateFaces'),
+    CalculateFacesWithin: require('./CalculateFacesWithin'),
     RemoveTileAt: require('./RemoveTileAt'),
     RemoveTileAtWorldXY: require('./RemoveTileAtWorldXY'),
     ReplaceByIndex: require('./ReplaceByIndex'),
