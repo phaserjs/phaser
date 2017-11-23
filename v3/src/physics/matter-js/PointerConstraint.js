@@ -128,7 +128,7 @@ var PointerConstraint = new Class({
                 {
                     var body = bodies[i];
 
-                    if (Bounds.contains(body.bounds, position) &&
+                    if (!body.ignorePointer && Bounds.contains(body.bounds, position) &&
                         Detector.canCollide(body.collisionFilter, constraint.collisionFilter))
                     {
                         if (this.getBodyPart(body, position))
