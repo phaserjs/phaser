@@ -138,6 +138,10 @@ var BaseSound = new Class({
     },
     // TODO set default methods to NOOP if not used
     addMarker: function (marker) {
+        if (!marker) {
+            console.error('Marker object has to be provided to \'addMarker\' method!');
+            return false;
+        }
         this.markers[marker.name] = marker;
         return false;
     },
