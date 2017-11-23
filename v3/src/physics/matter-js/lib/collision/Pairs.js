@@ -91,7 +91,8 @@ var Common = require('../core/Common');
         // deactivate previously active pairs that are now inactive
         for (i = 0; i < pairsList.length; i++) {
             pair = pairsList[i];
-            if (pair.isActive && Common.indexOf(activePairIds, pair.id) === -1) {
+            // if (pair.isActive && Common.indexOf(activePairIds, pair.id) === -1) {
+            if (pair.isActive && activePairIds.indexOf(pair.id) === -1) {
                 Pair.setActive(pair, false, timestamp);
                 collisionEnd.push(pair);
             }
