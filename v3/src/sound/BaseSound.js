@@ -184,12 +184,13 @@ var BaseSound = new Class({
         return true;
     },
     removeMarker: function (markerName) {
-        if (!this.markers[markerName]) {
+        var marker = this.markers[markerName];
+        if (!marker) {
             console.error('removeMarker - Marker with name \'' + marker.name + '\' does not exist for sound \'' + this.key + '\'!');
-            return false;
+            return null;
         }
         this.markers[markerName] = null;
-        return true;
+        return marker;
     },
     play: function (markerName, config) {
         if (markerName === void 0) { markerName = ''; }
