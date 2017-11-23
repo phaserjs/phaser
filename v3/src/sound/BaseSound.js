@@ -145,6 +145,9 @@ var BaseSound = new Class({
         if (!marker.name || typeof marker.name !== 'string') {
             console.error('Marker has to have a valid name!');
         }
+        if (this.markers[marker.name]) {
+            console.error('Marker with name \'' + marker.name + '\' already exists for sound \'' + this.key + '\'!');
+        }
         marker = Extend(true, {
             name: '',
             start: 0,
@@ -160,7 +163,7 @@ var BaseSound = new Class({
             }
         }, marker);
         this.markers[marker.name] = marker;
-        return false;
+        return true;
     },
     removeMarker: function (markerName) {
         return false;
