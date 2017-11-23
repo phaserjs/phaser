@@ -172,6 +172,10 @@ var BaseSound = new Class({
             console.error('updateMarker - Marker object has to be provided!');
             return false;
         }
+        if (!marker.name || typeof marker.name !== 'string') {
+            console.error('updateMarker - Marker has to have a valid name!');
+            return false;
+        }
         this.markers[marker.name] = Extend(true, this.markers[marker.name], marker);
         return true;
     },
