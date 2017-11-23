@@ -80,7 +80,7 @@ var WebAudioSound = new Class({
         if (!BaseSound.prototype.resume.call(this)) {
             return false;
         }
-        var offset = this.pausedTime; // TODO include marker start time
+        var offset = (this.currentMarker ? this.currentMarker.start : 0) + this.pausedTime;
         var duration = this.duration - this.pausedTime;
         this.createAndStartBufferSource(offset, duration);
         this.startTime = this.manager.context.currentTime - this.pausedTime;
