@@ -4,6 +4,7 @@ var Composites = require('./lib/factory/Composites');
 var Constraint = require('./lib/constraint/Constraint');
 var MatterImage = require('./MatterImage');
 var MatterSprite = require('./MatterSprite');
+var PointerConstraint = require('./PointerConstraint');
 
 //  When registering a factory function 'this' refers to the GameObjectFactory context.
 //  
@@ -106,6 +107,20 @@ var Factory = new Class({
         this.world.add(constraint);
 
         return constraint;
+    },
+
+    mouseSpring: function (options)
+    {
+        return this.pointerConstraint(options);
+    },
+
+    pointerConstraint: function (options)
+    {
+        var pointerConstraint = new PointerConstraint(this.scene, this.world, options);
+
+        this.world.add(pointerConstraint.constraint);
+
+        return pointerConstraint;
     },
 
     image: function (x, y, key, frame, options)

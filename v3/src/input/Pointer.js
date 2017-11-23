@@ -1,6 +1,7 @@
 //  Phaser.Input.Pointer
 
 var Class = require('../utils/Class');
+var Vector2 = require('../math/Vector2');
 
 //  DOM event button value:
 // A number representing a given button:
@@ -36,8 +37,7 @@ var Pointer = new Class({
         // 16 : 5th button (typically the "Browser Forward" button)
         this.buttons = 0;
 
-        this.x = 0;
-        this.y = 0;
+        this.position = new Vector2();
 
         //  Coordinates and time of the pointer when Button 1 (left button), or Touch, was pressed, used for dragging objects
         this.downX = 0;
@@ -65,6 +65,34 @@ var Pointer = new Class({
         this.justDown = false;
         this.justUp = false;
         this.justMoved = false;
+    },
+
+    x: {
+
+        get: function ()
+        {
+            return this.position.x;
+        },
+
+        set: function (value)
+        {
+            this.position.x = value;
+        }
+
+    },
+
+    y: {
+
+        get: function ()
+        {
+            return this.position.y;
+        },
+
+        set: function (value)
+        {
+            this.position.y = value;
+        }
+
     },
 
     reset: function ()
