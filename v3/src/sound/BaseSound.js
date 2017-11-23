@@ -138,6 +138,7 @@ var BaseSound = new Class({
     },
     // TODO set default methods to NOOP if not used
     addMarker: function (marker) {
+        this.markers[marker.name] = marker;
         return false;
     },
     removeMarker: function (markerName) {
