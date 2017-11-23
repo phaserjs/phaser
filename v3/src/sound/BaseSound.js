@@ -168,7 +168,8 @@ var BaseSound = new Class({
         return true;
     },
     updateMarker: function (marker) {
-        return false;
+        this.markers[marker.name] = Extend(true, this.markers[marker.name], marker);
+        return true;
     },
     removeMarker: function (markerName) {
         return false;
