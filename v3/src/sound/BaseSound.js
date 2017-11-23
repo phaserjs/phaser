@@ -142,6 +142,20 @@ var BaseSound = new Class({
             console.error('Marker object has to be provided to \'addMarker\' method!');
             return false;
         }
+        marker = Extend(true, {
+            name: '',
+            start: 0,
+            duration: this.totalDuration,
+            config: {
+                mute: false,
+                volume: 1,
+                rate: 1,
+                detune: 0,
+                seek: 0,
+                loop: false,
+                pan: 0
+            }
+        }, marker);
         this.markers[marker.name] = marker;
         return false;
     },
