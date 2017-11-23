@@ -60,7 +60,7 @@ var WebAudioSound = new Class({
             return null;
         }
         this.stopAndRemoveBufferSource();
-        // TODO include config offset and marker start
+        // TODO include config seek
         var offset = this.currentMarker ? this.currentMarker.start : 0;
         var duration = this.duration;
         this.createAndStartBufferSource(offset, duration);
