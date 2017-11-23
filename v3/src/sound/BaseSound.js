@@ -184,7 +184,8 @@ var BaseSound = new Class({
         return true;
     },
     removeMarker: function (markerName) {
-        return false;
+        this.markers[markerName] = null;
+        return true;
     },
     play: function (markerName, config) {
         if (markerName === void 0) { markerName = ''; }
