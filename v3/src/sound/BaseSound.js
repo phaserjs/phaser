@@ -24,15 +24,7 @@ var BaseSound = new Class({
          *
          * @property {ISoundConfig} config
          */
-        this.config = {
-            /**
-             * A value representing the duration, in seconds.
-             * It could be total sound duration or a marker duration.
-             *
-             * @type {number}
-             */
-            duration: 0
-        };
+        this.config = {};
         /**
          * Reference to the currently used config.
          * It could be default config or marker config.
@@ -91,6 +83,21 @@ var BaseSound = new Class({
         this.pan = 0;
         this.config = Extend(this.config, config);
         /**
+         * A value representing the duration, in seconds.
+         * It could be total sound duration or a marker duration.
+         *
+         * @readonly
+         * @property {number} duration
+         */
+        this.duration = 0;
+        /**
+         * Duration of the entire sound.
+         *
+         * @readonly
+         * @property {number}
+         */
+        this.totalDuration = 0;
+        /**
          * Flag indicating if sound is currently playing.
          *
          * @property {boolean} isPlaying
@@ -109,13 +116,12 @@ var BaseSound = new Class({
          */
         this.markers = {};
         /**
-         * Name of the currently played marker.
-         * If no marker is played, but instead the whole sound
-         * the value is an empty string - ''.
+         * Currently playing marker.
+         * 'null' if whole sound is playing.
          *
-         * @property {string} currentMarker
+         * @property {ISoundMarker} currentMarker
          */
-        this.currentMarker = '';
+        this.currentMarker = null;
         /**
          * [description]
          *
@@ -137,26 +143,28 @@ var BaseSound = new Class({
     removeMarker: function (markerName) {
         return false;
     },
-    play: function (marker, config) {
-        if (marker === void 0) { marker = ''; }
-        if (typeof marker === 'object') {
-            config = marker;
-            marker = '';
+    play: function (markerName, config) {
+        if (markerName === void 0) { markerName = ''; }
+        if (typeof markerName === 'object') {
+            config = markerName;
+            markerName = '';
         }
-        if (typeof marker !== 'string') {
+        if (typeof markerName !== 'string') {
             console.error('Sound marker name has to be a string!');
             return null;
         }
-        if (!marker) {
+        if (!markerName) {
             this.currentConfig = this.config;
+            this.duration = this.totalDuration;
         }
         else {
-            if (!this.markers[marker]) {
-                console.error('No marker with name \'' + marker + '\' found for sound \'' + this.key + '\'!');
+            if (!this.markers[markerName]) {
+                console.error('No marker with name \'' + markerName + '\' found for sound \'' + this.key + '\'!');
                 return null;
             }
-            this.currentMarker = marker;
-            this.currentConfig = this.markers[marker].config;
+            this.currentMarker = this.markers[markerName];
+            this.currentConfig = this.currentMarker.config;
+            this.duration = this.currentMarker.duration;
         }
         this.currentConfig = Extend(this.currentConfig, config);
         this.isPlaying = true;

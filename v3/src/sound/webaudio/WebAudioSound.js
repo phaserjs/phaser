@@ -6,6 +6,7 @@ var BaseSound = require('../BaseSound');
 var WebAudioSound = new Class({
     Extends: BaseSound,
     initialize: function WebAudioSound(manager, key, config) {
+        if (config === void 0) { config = {}; }
         /**
          * [description]
          *
@@ -48,22 +49,19 @@ var WebAudioSound = new Class({
          * @property {number} pausedTime
          */
         this.pausedTime = 0;
-        // TODO add duration and total duration
         this.muteNode.connect(this.volumeNode);
         this.volumeNode.connect(manager.destination);
-        if (config === void 0) {
-            config = {};
-        }
-        config.duration = this.audioBuffer.duration;
         BaseSound.call(this, manager, key, config);
+        this.duration = this.audioBuffer.duration;
+        this.totalDuration = this.audioBuffer.duration;
     },
-    play: function (marker, config) {
-        if (!BaseSound.prototype.play.call(this, marker, config)) {
+    play: function (markerName, config) {
+        if (!BaseSound.prototype.play.call(this, markerName, config)) {
             return null;
         }
         this.stopAndRemoveBufferSource();
         // TODO include config offset and marker start
-        this.createAndStartBufferSource(0, this.currentConfig.duration);
+        this.createAndStartBufferSource(0, this.duration);
         this.startTime = this.manager.context.currentTime;
         this.pausedTime = 0;
         return this;
@@ -81,7 +79,7 @@ var WebAudioSound = new Class({
             return false;
         }
         var offset = this.pausedTime; // TODO include marker start time
-        var duration = this.currentConfig.duration - this.pausedTime;
+        var duration = this.duration - this.pausedTime;
         this.createAndStartBufferSource(offset, duration);
         this.startTime = this.manager.context.currentTime - this.pausedTime;
         this.pausedTime = 0;
@@ -103,6 +101,7 @@ var WebAudioSound = new Class({
      * @param {number} offset
      * @param {number} duration
      */
+    // TODO add when param
     createAndStartBufferSource: function (offset, duration) {
         this.source = this.manager.context.createBufferSource();
         this.source.buffer = this.audioBuffer;
@@ -137,7 +136,7 @@ Object.defineProperty(WebAudioSound.prototype, 'mute', {
     },
     set: function (value) {
         this.currentConfig.mute = value;
-        this.muteNode.gain.value = value ? 0 : 1;
+        this.muteNode.gain.setValueAtTime(value ? 0 : 1, 0);
     }
 });
 /**
@@ -150,7 +149,7 @@ Object.defineProperty(WebAudioSound.prototype, 'volume', {
     },
     set: function (value) {
         this.currentConfig.volume = value;
-        this.volumeNode.gain.value = value;
+        this.volumeNode.gain.setValueAtTime(value, 0);
     }
 });
 /**
@@ -164,7 +163,7 @@ Object.defineProperty(WebAudioSound.prototype, 'rate', {
     set: function (value) {
         this.currentConfig.rate = value;
         if (this.source) {
-            this.source.playbackRate.value = value * this.manager.rate;
+            this.source.playbackRate.setValueAtTime(value * this.manager.rate, 0);
         }
     }
 });
@@ -179,8 +178,7 @@ Object.defineProperty(WebAudioSound.prototype, 'detune', {
     set: function (value) {
         this.currentConfig.detune = value;
         if (this.source && this.source.detune) {
-            this.source.detune.value =
-                Math.max(-1200, Math.min(value + this.manager.detune, 1200));
+            this.source.detune.setValueAtTime(Math.max(-1200, Math.min(value + this.manager.detune, 1200)), 0);
         }
     }
 });
