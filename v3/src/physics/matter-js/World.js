@@ -123,7 +123,7 @@ var World = new Class({
         if (y === undefined) { y = 0; }
         if (width === undefined) { width = this.scene.sys.game.config.width; }
         if (height === undefined) { height = this.scene.sys.game.config.height; }
-        if (thickness === undefined) { thickness = 64; }
+        if (thickness === undefined) { thickness = 128; }
         if (left === undefined) { left = true; }
         if (right === undefined) { right = true; }
         if (top === undefined) { top = true; }
