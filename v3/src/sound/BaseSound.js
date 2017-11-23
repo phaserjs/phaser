@@ -1,6 +1,7 @@
 var Class = require('../utils/Class');
 var Extend = require('../utils/object/Extend');
 var EventDispatcher = require('../events/EventDispatcher');
+var NOOP = require('../utils/NOOP');
 //  Phaser.Sound.BaseSound
 var BaseSound = new Class({
     initialize: function BaseSound(manager, key, config) {
@@ -136,7 +137,6 @@ var BaseSound = new Class({
          */
         this.events = new EventDispatcher();
     },
-    // TODO set default methods to NOOP if not used
     addMarker: function (marker) {
         if (!marker) {
             console.error('addMarker - Marker object has to be provided!');
@@ -254,8 +254,7 @@ var BaseSound = new Class({
     fadeTo: function (volume, duration) {
         return null;
     },
-    update: function () {
-    },
+    update: NOOP,
     destroy: function () {
     }
 });
