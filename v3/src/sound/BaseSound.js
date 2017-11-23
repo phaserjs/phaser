@@ -168,6 +168,10 @@ var BaseSound = new Class({
         return true;
     },
     updateMarker: function (marker) {
+        if (!marker) {
+            console.error('updateMarker - Marker object has to be provided!');
+            return false;
+        }
         this.markers[marker.name] = Extend(true, this.markers[marker.name], marker);
         return true;
     },
