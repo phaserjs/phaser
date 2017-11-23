@@ -176,6 +176,10 @@ var BaseSound = new Class({
             console.error('updateMarker - Marker has to have a valid name!');
             return false;
         }
+        if (!this.markers[marker.name]) {
+            console.error('updateMarker - Marker with name \'' + marker.name + '\' does not exist for sound \'' + this.key + '\'!');
+            return false;
+        }
         this.markers[marker.name] = Extend(true, this.markers[marker.name], marker);
         return true;
     },
