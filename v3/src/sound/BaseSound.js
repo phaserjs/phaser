@@ -139,15 +139,15 @@ var BaseSound = new Class({
     // TODO set default methods to NOOP if not used
     addMarker: function (marker) {
         if (!marker) {
-            console.error('Marker object has to be provided to \'addMarker\' method!');
+            console.error('addMarker - Marker object has to be provided!');
             return false;
         }
         if (!marker.name || typeof marker.name !== 'string') {
-            console.error('Marker has to have a valid name!');
+            console.error('addMarker - Marker has to have a valid name!');
             return false;
         }
         if (this.markers[marker.name]) {
-            console.error('Marker with name \'' + marker.name + '\' already exists for sound \'' + this.key + '\'!');
+            console.error('addMarker - Marker with name \'' + marker.name + '\' already exists for sound \'' + this.key + '\'!');
             return false;
         }
         marker = Extend(true, {
