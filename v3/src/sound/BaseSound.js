@@ -167,6 +167,9 @@ var BaseSound = new Class({
         this.markers[marker.name] = marker;
         return true;
     },
+    updateMarker: function (marker) {
+        return false;
+    },
     removeMarker: function (markerName) {
         return false;
     },
