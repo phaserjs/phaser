@@ -72,6 +72,31 @@ var Factory = new Class({
         return body;
     },
 
+    imageStack: function (key, frame, x, y, columns, rows, columnGap, rowGap, options)
+    {
+        if (columnGap === undefined) { columnGap = 0; }
+        if (rowGap === undefined) { rowGap = 0; }
+        if (options === undefined) { options = {}; }
+
+        var world = this.world;
+        var displayList = this.sys.displayList;
+
+        options.addToWorld = false;
+
+        var stack = Composites.stack(x, y, columns, rows, columnGap, rowGap, function (x, y)
+        {
+            var image = new MatterImage(world, x, y, key, frame, options);
+
+            displayList.add(image);
+
+            return image.body;
+        });
+
+        world.add(stack);
+
+        return stack;
+    },
+
     stack: function (x, y, columns, rows, columnGap, rowGap, callback)
     {
         var stack = Composites.stack(x, y, columns, rows, columnGap, rowGap, callback);
