@@ -203,6 +203,7 @@ var BaseSound = new Class({
             return null;
         }
         if (!markerName) {
+            this.currentMarker = null;
             this.currentConfig = this.config;
             this.duration = this.totalDuration;
         }
