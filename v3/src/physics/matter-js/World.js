@@ -68,6 +68,18 @@ var World = new Class({
     {
         var localEvents = this.events;
 
+        MatterEvents.on(this.engine, 'beforeUpdate', function (event) {
+
+            localEvents.dispatch(new PhysicsEvent.BEFORE_UPDATE(event));
+
+        });
+
+        MatterEvents.on(this.engine, 'afterUpdate', function (event) {
+
+            localEvents.dispatch(new PhysicsEvent.AFTER_UPDATE(event));
+
+        });
+
         MatterEvents.on(this.engine, 'collisionStart', function (event) {
 
             localEvents.dispatch(new PhysicsEvent.COLLISION_START(event.pairs));
