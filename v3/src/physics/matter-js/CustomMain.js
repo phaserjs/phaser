@@ -14,12 +14,10 @@ Matter.Resolver = require('./lib/collision/Resolver');
 Matter.SAT = require('./lib/collision/SAT');
 
 Matter.Constraint = require('./lib/constraint/Constraint');
-Matter.MouseConstraint = require('./lib/constraint/MouseConstraint');
 
 Matter.Common = require('./lib/core/Common');
 Matter.Engine = require('./lib/core/Engine');
 Matter.Events = require('./lib/core/Events');
-Matter.Mouse = require('./lib/core/Mouse');
 Matter.Sleeping = require('./lib/core/Sleeping');
 Matter.Plugin = require('./lib/core/Plugin');
 
