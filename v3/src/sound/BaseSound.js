@@ -144,9 +144,11 @@ var BaseSound = new Class({
         }
         if (!marker.name || typeof marker.name !== 'string') {
             console.error('Marker has to have a valid name!');
+            return false;
         }
         if (this.markers[marker.name]) {
             console.error('Marker with name \'' + marker.name + '\' already exists for sound \'' + this.key + '\'!');
+            return false;
         }
         marker = Extend(true, {
             name: '',
