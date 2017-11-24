@@ -55,8 +55,8 @@ var ParseJSONTiled = function (key, json, insertNull)
 
         var layerData = new LayerData({
             name: curl.name,
-            x: curl.x,
-            y: curl.y,
+            x: GetFastValue(curl, 'offsetx', 0) + curl.x,
+            y: GetFastValue(curl, 'offsety', 0) + curl.y,
             width: curl.width,
             height: curl.height,
             tileWidth: json.tilewidth,
@@ -69,7 +69,6 @@ var ParseJSONTiled = function (key, json, insertNull)
         var x = 0;
         var row = [];
         var output = [];
-        var orientation;
         var gid;
 
         //  Loop through the data field in the JSON.
@@ -133,25 +132,15 @@ var ParseJSONTiled = function (key, json, insertNull)
 
         var curi = json.layers[i];
 
-        var image = {
-
+        images.push({
             name: curi.name,
             image: curi.image,
-            x: curi.x,
-            y: curi.y,
+            x: GetFastValue(curi, 'offsetx', 0) + curi.x,
+            y: GetFastValue(curi, 'offsety', 0) + curi.y,
             alpha: curi.opacity,
             visible: curi.visible,
-            properties: {}
-
-        };
-
-        if (curi.properties)
-        {
-            image.properties = curi.properties;
-        }
-
-        images.push(image);
-
+            properties: GetFastValue(curi.properties, {})
+        });
     }
 
     mapData.images = images;
@@ -237,13 +226,15 @@ var ParseJSONTiled = function (key, json, insertNull)
 
         var curo = json.layers[i];
         var layerName = curo.name;
+        var offsetX = GetFastValue(curo, 'offsetx', 0);
+        var offsetY = GetFastValue(curo, 'offsety', 0);
 
         objects[layerName] = [];
         collision[layerName] = [];
 
         for (var j = 0; j < curo.objects.length; j++)
         {
-            var parsedObject = ParseObject(curo.objects[j]);
+            var parsedObject = ParseObject(curo.objects[j], offsetX, offsetY);
 
             // Matching v2 where only polylines were added to collision prop of the map
             if (parsedObject.polyline) { collision[layerName].push(parsedObject); }

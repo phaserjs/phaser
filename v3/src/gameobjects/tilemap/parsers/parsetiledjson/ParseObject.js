@@ -5,9 +5,15 @@ var ParseGID = require('./ParseGID');
 var pointToArray = function (p) { return [ p.x, p.y ]; };
 var commonObjectProps = [ 'id', 'name', 'type', 'rotation', 'properties', 'visible', 'x', 'y' ];
 
-var ParseObject = function (tiledObject)
+var ParseObject = function (tiledObject, offsetX, offsetY)
 {
+    if (offsetX === undefined) { offsetX = 0; }
+    if (offsetY === undefined) { offsetY = 0; }
+
     var parsedObject = Pick(tiledObject, commonObjectProps);
+
+    parsedObject.x += offsetX;
+    parsedObject.y += offsetY;
 
     if (tiledObject.gid)
     {
