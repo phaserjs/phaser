@@ -1,7 +1,7 @@
 
 var Parse2DArray = require('./Parse2DArray');
 var ParseCSV = require('./ParseCSV');
-var ParseTiledJSON = require('./ParseTiledJSON');
+var ParseTiledJSON = require('./parsetiledjson/');
 var Formats = require('../Formats');
 
 var Parse = function (key, mapFormat, mapData, tileWidth, tileHeight, insertNull)
