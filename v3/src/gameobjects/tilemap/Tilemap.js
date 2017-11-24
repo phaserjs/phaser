@@ -29,6 +29,7 @@ var Tilemap = new Class({
         this.widthInPixels = mapData.widthInPixels;
         this.heightInPixels = mapData.heightInPixels;
         this.imageCollections = mapData.imageCollections;
+        this.images = mapData.images;
         this.collision = mapData.collision;
         this.layers = mapData.layers;
         this.tilesets = mapData.tilesets;
@@ -36,7 +37,6 @@ var Tilemap = new Class({
         this.objects = mapData.objects;
         this.currentLayerIndex = 0;
 
-        // TODO: images
         // TODO: debugging methods
     },
 
@@ -235,6 +235,11 @@ var Tilemap = new Class({
             TilemapComponents.ForEachTile(callback, context, tileX, tileY, width, height, layer);
         }
         return this;
+    },
+
+    getImageIndex: function (name)
+    {
+        return this.getIndex(this.images, name);
     },
 
     getIndex: function (location, name)

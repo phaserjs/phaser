@@ -139,7 +139,7 @@ var ParseJSONTiled = function (key, json, insertNull)
             y: GetFastValue(curi, 'offsety', 0) + curi.y,
             alpha: curi.opacity,
             visible: curi.visible,
-            properties: GetFastValue(curi.properties, {})
+            properties: GetFastValue(curi, "properties", {})
         });
     }
 
