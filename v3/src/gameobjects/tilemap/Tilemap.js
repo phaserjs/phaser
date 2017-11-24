@@ -29,13 +29,14 @@ var Tilemap = new Class({
         this.widthInPixels = mapData.widthInPixels;
         this.heightInPixels = mapData.heightInPixels;
         this.imageCollections = mapData.imageCollections;
+        this.collision = mapData.collision;
         this.layers = mapData.layers;
         this.tilesets = mapData.tilesets;
         this.tiles = mapData.tiles;
         this.objects = mapData.objects;
         this.currentLayerIndex = 0;
 
-        // TODO: collision, collideIndexes, imagecollections, images
+        // TODO: images
         // TODO: debugging methods
     },
 
