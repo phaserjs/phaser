@@ -65,7 +65,7 @@ var TransformMatrix = new Class({
         var radianSin = Math.sin(radian);
         var radianCos = Math.cos(radian);
 
-        return this.transform(radianCos, -radianSin, radianSin, radianCos, 0, 0);
+        return this.transform(radianCos, radianSin, -radianSin, radianCos, 0, 0);
     },
 
     multiply: function (otherMatrix)

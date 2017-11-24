@@ -54,7 +54,10 @@ var MatterImage = new Class({
 
         this.world = world;
 
-        world.add(this.body);
+        if (GetFastValue(options, 'addToWorld', true))
+        {
+            world.add(this.body);
+        }
 
         this.setPosition(x, y);
     }

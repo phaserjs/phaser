@@ -59,6 +59,7 @@ var Axes = require('../geometry/Axes');
             isStatic: false,
             isSleeping: false,
             ignoreGravity: false,
+            ignorePointer: false,
             motion: 0,
             sleepThreshold: 60,
             density: 0.001,

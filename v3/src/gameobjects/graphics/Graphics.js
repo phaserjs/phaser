@@ -44,6 +44,7 @@ var Graphics = new Class({
         this.defaultStrokeWidth = 1;
         this.defaultStrokeColor = -1;
         this.defaultStrokeAlpha = 1;
+        this._lineWidth = 1.0;
 
         this.setDefaultStyles(options);
 
@@ -88,6 +89,8 @@ var Graphics = new Class({
             Commands.LINE_STYLE,
             lineWidth, color, alpha
         );
+
+        this._lineWidth = lineWidth;
 
         return this;
     },
@@ -198,13 +201,33 @@ var Graphics = new Class({
 
     strokeRect: function (x, y, width, height)
     {
+        var lineWidthHalf = this._lineWidth / 2;
+        var minx = x - lineWidthHalf;
+        var maxx = x + lineWidthHalf;
+
         this.beginPath();
         this.moveTo(x, y);
-        this.lineTo(x + width, y);
-        this.lineTo(x + width, y + height);
         this.lineTo(x, y + height);
-        this.closePath();
         this.strokePath();
+        this.closePath();
+
+        this.beginPath();
+        this.moveTo(x + width, y);
+        this.lineTo(x + width, y + height);
+        this.strokePath();
+        this.closePath();
+
+        this.beginPath();
+        this.moveTo(minx, y);
+        this.lineTo(maxx + width, y);
+        this.strokePath();
+        this.closePath();
+
+        this.beginPath();
+        this.moveTo(minx, y + height);
+        this.lineTo(maxx + width, y + height);
+        this.strokePath();
+        this.closePath();
 
         return this;
     },

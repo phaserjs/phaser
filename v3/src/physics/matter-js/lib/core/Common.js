@@ -217,7 +217,7 @@ module.exports = Common;
      * @return {boolean} True if the object is a string, otherwise false
      */
     Common.isString = function(obj) {
-        return toString.call(obj) === '[object String]';
+        return Object.prototype.toString.call(obj) === '[object String]';
     };
     
     /**
@@ -369,7 +369,6 @@ module.exports = Common;
      * @param {array} haystack
      * @param {object} needle
      * @return {number} The position of needle in haystack, otherwise -1.
-     */
     Common.indexOf = function(haystack, needle) {
         if (haystack.indexOf)
             return haystack.indexOf(needle);
@@ -381,6 +380,7 @@ module.exports = Common;
 
         return -1;
     };
+     */
 
     /**
      * A cross browser compatible array map implementation.
