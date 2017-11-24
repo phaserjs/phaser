@@ -28,6 +28,7 @@ var Tilemap = new Class({
         this.properties = mapData.properties;
         this.widthInPixels = mapData.widthInPixels;
         this.heightInPixels = mapData.heightInPixels;
+        this.imageCollections = mapData.imageCollections;
         this.layers = mapData.layers;
         this.tilesets = mapData.tilesets;
         this.tiles = mapData.tiles;
