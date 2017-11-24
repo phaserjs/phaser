@@ -176,7 +176,6 @@ var Body = require('./Body');
      * @return {composite} The original compositeA with the composite removed
      */
     Composite.removeComposite = function(compositeA, compositeB, deep) {
-        // var position = Common.indexOf(compositeA.composites, compositeB);
         var position = compositeA.composites.indexOf(compositeB);
         if (position !== -1) {
             Composite.removeCompositeAt(compositeA, position);
@@ -230,7 +229,6 @@ var Body = require('./Body');
      * @return {composite} The original composite with the body removed
      */
     Composite.removeBody = function(composite, body, deep) {
-        // var position = Common.indexOf(composite.bodies, body);
         var position = composite.bodies.indexOf(body);
         if (position !== -1) {
             Composite.removeBodyAt(composite, position);
@@ -284,7 +282,6 @@ var Body = require('./Body');
      * @return {composite} The original composite with the constraint removed
      */
     Composite.removeConstraint = function(composite, constraint, deep) {
-        // var position = Common.indexOf(composite.constraints, constraint);
         var position = composite.constraints.indexOf(constraint);
         if (position !== -1) {
             Composite.removeConstraintAt(composite, position);

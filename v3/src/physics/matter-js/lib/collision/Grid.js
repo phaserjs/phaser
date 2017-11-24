@@ -272,7 +272,6 @@ var Common = require('../core/Common');
      */
     var _bucketRemoveBody = function(grid, bucket, body) {
         // remove from bucket
-        // bucket.splice(Common.indexOf(bucket, body), 1);
         bucket.splice(bucket.indexOf(body), 1);
 
         // update pair counts

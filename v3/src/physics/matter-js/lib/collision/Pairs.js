@@ -44,7 +44,6 @@ var Common = require('../core/Common');
             collisionStart = pairs.collisionStart,
             collisionEnd = pairs.collisionEnd,
             collisionActive = pairs.collisionActive,
-            activePairIds = [],
             collision,
             pairId,
             pair,
@@ -55,12 +54,15 @@ var Common = require('../core/Common');
         collisionEnd.length = 0;
         collisionActive.length = 0;
 
+        for (i = 0; i < pairsList.length; i++) {
+            pairsList[i].confirmedActive = false;
+        }
+
         for (i = 0; i < collisions.length; i++) {
             collision = collisions[i];
 
             if (collision.collided) {
                 pairId = Pair.id(collision.bodyA, collision.bodyB);
-                activePairIds.push(pairId);
 
                 pair = pairsTable[pairId];
                 
@@ -76,6 +78,7 @@ var Common = require('../core/Common');
 
                     // update the pair
                     Pair.update(pair, collision, timestamp);
+                    pair.confirmedActive = true;
                 } else {
                     // pair did not exist, create a new pair
                     pair = Pair.create(collision, timestamp);
@@ -91,8 +94,7 @@ var Common = require('../core/Common');
         // deactivate previously active pairs that are now inactive
         for (i = 0; i < pairsList.length; i++) {
             pair = pairsList[i];
-            // if (pair.isActive && Common.indexOf(activePairIds, pair.id) === -1) {
-            if (pair.isActive && activePairIds.indexOf(pair.id) === -1) {
+            if (!pair.confirmedActive) {
                 Pair.setActive(pair, false, timestamp);
                 collisionEnd.push(pair);
             }
