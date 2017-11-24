@@ -11,19 +11,20 @@
  */
 var BringToTop = function (scene)
 {
-    var index = (typeof scene === 'string') ? this.getActiveSceneIndexByKey(scene) : this.getActiveSceneIndex(scene);
+    if (typeof scene === 'string') { scene = this.getScene(scene); }
 
-    if (index < this.active.length)
+    var index = this.getActiveSceneIndex(scene);
+
+    if (index >= 0 && index < this.active.length - 1)
     {
-        var i = 0;
-        var entry = this.active.splice(index, 1);
+        // Move the scene to the front of the active scenes array
+        this.active.splice(index, 1);
+        this.active.push(scene);
 
-        for (i = 0; i < this.active.length; i++)
-        {
-            this.active[i].index = i;
-        }
-
-        this.active.push({ index: i, scene: entry[0].scene });
+        // Move the scene in front of all active scenes in the scenes array
+        this.scenes.splice(this.getSceneIndex(scene), 1);
+        index = this.getSceneIndex(this.active[this.active.length - 2]);
+        this.scenes.splice(index + 1, 0, scene);
     }
 };
 

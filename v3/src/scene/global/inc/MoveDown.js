@@ -11,16 +11,21 @@
  */
 var MoveDown = function (scene)
 {
-    var index = (typeof scene === 'string') ? this.getActiveSceneIndexByKey(scene) : this.getActiveSceneIndex(scene);
+    if (typeof scene === 'string') { scene = this.getScene(scene); }
+
+    var index = this.getActiveSceneIndex(scene);
 
     if (index > 0)
     {
-        var sceneB = this.getSceneAt(index - 1);
+        // Swap the scene with the scene behind it in the active scenes array
+        var sceneB = this.active[index - 1];
+        this.active[index - 1] = scene;
+        this.active[index] = sceneB;
 
-        if (sceneB)
-        {
-            this.swapPosition(scene, sceneB);
-        }
+        // Move the scene behind that scene in the scenes array
+        this.scenes.splice(this.getSceneIndex(scene), 1);
+        index = this.getSceneIndex(sceneB);
+        this.scenes.splice(index, 0, scene);
     }
 };
 

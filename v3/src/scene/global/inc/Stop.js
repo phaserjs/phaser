@@ -1,5 +1,3 @@
-var SortScenes = require('./SortScenes');
-
 /**
  * [description]
  *
@@ -10,20 +8,18 @@ var SortScenes = require('./SortScenes');
  */
 var Stop = function (key)
 {
-    var entry = this.getActiveScene(key);
+    var scene = this.getActiveScene(key);
 
-    if (entry)
+    if (scene)
     {
-        entry.scene.sys.shutdown();
+        scene.sys.shutdown();
 
         //  Remove from the active list
-        var index = this.active.indexOf(entry);
+        var index = this.active.indexOf(scene);
 
         if (index !== -1)
         {
             this.active.splice(index, 1);
-
-            this.active.sort(SortScenes);
         }
     }
 };
