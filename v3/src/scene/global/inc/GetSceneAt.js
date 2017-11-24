@@ -12,10 +12,7 @@
  */
 var GetSceneAt = function (index)
 {
-    if (this.active[index])
-    {
-        return this.active[index].scene;
-    }
+    return this.active[index];
 };
 
 module.exports = GetSceneAt;

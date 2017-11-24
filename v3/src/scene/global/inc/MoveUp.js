@@ -13,14 +13,11 @@ var MoveUp = function (scene)
 {
     var index = (typeof scene === 'string') ? this.getActiveSceneIndexByKey(scene) : this.getActiveSceneIndex(scene);
 
-    if (index !== -1 && index < this.active.length - 1)
+    if (index >= 0 && index < this.active.length - 1)
     {
-        var sceneB = this.getSceneAt(index + 1);
-
-        if (sceneB)
-        {
-            this.swapPosition(scene, sceneB);
-        }
+        var temp = this.active[index];
+        this.active[index] = this.active[index + 1];
+        this.active[index + 1] = temp;
     }
 };
 
