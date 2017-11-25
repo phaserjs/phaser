@@ -8,6 +8,7 @@ module.exports = {
     GetTileAt: require('./GetTileAt'),
     GetTileAtWorldXY: require('./GetTileAtWorldXY'),
     GetTilesWithin: require('./GetTilesWithin'),
+    GetTilesWithinWorldXY: require('./GetTilesWithinWorldXY'),
     HasTileAt: require('./HasTileAt'),
     HasTileAtWorldXY: require('./HasTileAtWorldXY'),
     IsInLayerBounds: require('./IsInLayerBounds'),

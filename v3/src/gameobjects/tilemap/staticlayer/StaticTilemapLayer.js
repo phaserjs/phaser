@@ -249,6 +249,11 @@ var StaticTilemapLayer = new Class({
         return TilemapComponents.GetTilesWithin(tileX, tileY, width, height, this.layer);
     },
 
+    getTilesWithinWorldXY: function (worldX, worldY, width, height, camera)
+    {
+        return TilemapComponents.GetTilesWithinWorldXY(worldX, worldY, width, height, camera, this.layer);
+    },
+
     hasTileAt: function (tileX, tileY)
     {
         return TilemapComponents.HasTileAt(tileX, tileY, this.layer);
