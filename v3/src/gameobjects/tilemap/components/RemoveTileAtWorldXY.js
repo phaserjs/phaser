@@ -7,6 +7,7 @@ var RemoveTileAtWorldXY = function (worldX, worldY, replaceWithNull, recalculate
     var tileX = WorldToTileX(worldX, camera, layer);
     var tileY = WorldToTileY(worldY, camera, layer);
     return RemoveTileAt(tileX, tileY, replaceWithNull, layer);
+    return RemoveTileAt(tileX, tileY, replaceWithNull, recalculateFaces, layer);
 };
 
 module.exports = RemoveTileAtWorldXY;
