@@ -496,25 +496,25 @@ var Tilemap = new Class({
         return this;
     },
 
-    worldToTileX: function (worldX, camera, layer)
+    worldToTileX: function (worldX, snapToFloor, camera, layer)
     {
         layer = this.getLayer(layer);
         if (layer === null) { return null; }
-        return TilemapComponents.WorldToTileX(worldX, camera, layer);
+        return TilemapComponents.WorldToTileX(worldX, snapToFloor, camera, layer);
     },
 
-    worldToTileY: function (worldY, camera, layer)
+    worldToTileY: function (worldY, snapToFloor, camera, layer)
     {
         layer = this.getLayer(layer);
         if (layer === null) { return null; }
-        return TilemapComponents.WorldToTileY(worldY, camera, layer);
+        return TilemapComponents.WorldToTileY(worldY, snapToFloor, camera, layer);
     },
 
-    worldToTileXY: function (worldX, worldY, point, camera, layer)
+    worldToTileXY: function (worldX, worldY, snapToFloor, point, camera, layer)
     {
         layer = this.getLayer(layer);
         if (layer === null) { return null; }
-        return TilemapComponents.WorldToTileXY(worldX, worldY, point, camera, layer);
+        return TilemapComponents.WorldToTileXY(worldX, worldY, snapToFloor, point, camera, layer);
     },
 
     _isStaticCall: function (layer, functionName)

@@ -1,7 +1,9 @@
 var SnapFloor = require('../../../math/snap/SnapFloor');
 
-var WorldToTileY = function (worldY, camera, layer)
+var WorldToTileY = function (worldY, snapToFloor, camera, layer)
 {
+    if (snapToFloor === undefined) { snapToFloor = true; }
+
     var tilemapLayer = layer.tilemapLayer;
     if (tilemapLayer)
     {
@@ -12,7 +14,9 @@ var WorldToTileY = function (worldY, camera, layer)
         worldY = worldY + (camera.scrollY * tilemapLayer.scrollFactorY) - tilemapLayer.y;
     }
 
-    return SnapFloor(worldY, layer.tileWidth) / layer.tileWidth;
+    return snapToFloor
+        ? SnapFloor(worldY, layer.tileHeight) / layer.tileHeight
+        : worldY / layer.tileHeight;
 };
 
 module.exports = WorldToTileY;

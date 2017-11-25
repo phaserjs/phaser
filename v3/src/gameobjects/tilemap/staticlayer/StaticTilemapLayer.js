@@ -277,19 +277,19 @@ var StaticTilemapLayer = new Class({
         return this;
     },
 
-    worldToTileX: function (worldX, camera)
+    worldToTileX: function (worldX, snapToFloor, camera)
     {
-        return TilemapComponents.WorldToTileX(worldX, camera, this.layer);
+        return TilemapComponents.WorldToTileX(worldX, snapToFloor, camera, this.layer);
     },
 
-    worldToTileY: function (worldY, camera)
+    worldToTileY: function (worldY, snapToFloor, camera)
     {
-        return TilemapComponents.WorldToTileY(worldY, camera, this.layer);
+        return TilemapComponents.WorldToTileY(worldY, snapToFloor, camera, this.layer);
     },
 
-    worldToTileXY: function (worldX, worldY, point, camera)
+    worldToTileXY: function (worldX, worldY, snapToFloor, point, camera)
     {
-        return TilemapComponents.WorldToTileXY(worldX, worldY, point, camera, this.layer);
+        return TilemapComponents.WorldToTileXY(worldX, worldY, snapToFloor, point, camera, this.layer);
     }
 
 });
