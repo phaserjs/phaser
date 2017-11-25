@@ -22,6 +22,8 @@ var DynamicTilemapLayerWebGLRenderer = function (renderer, gameObject, interpola
     var alpha = gameObject.alpha;
     var x = gameObject.x;
     var y = gameObject.y;
+    var sx = gameObject.scaleX;
+    var sy = gameObject.scaleY;
 
     for (var index = 0; index < length; ++index)
     {
@@ -37,7 +39,9 @@ var DynamicTilemapLayerWebGLRenderer = function (renderer, gameObject, interpola
 
         batch.addTileTextureRect(
             texture,
-            x + tile.worldX, y + tile.worldY, tile.width, tile.height, alpha * tile.alpha, tile.tint,
+            (x + tile.worldX) * sx, (y + tile.worldY) * sy,
+            tile.width * sx, tile.height * sy,
+            alpha * tile.alpha, tile.tint,
             scrollFactorX, scrollFactorY,
             textureWidth, textureHeight,
             frameX, frameY, frameWidth, frameHeight,
