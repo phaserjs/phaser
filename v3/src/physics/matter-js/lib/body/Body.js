@@ -538,11 +538,17 @@ var Axes = require('../geometry/Axes');
      * @param {vector} [point]
      */
     Body.scale = function(body, scaleX, scaleY, point) {
+        point = point || body.position;
+
         for (var i = 0; i < body.parts.length; i++) {
             var part = body.parts[i];
 
+            // scale position
+            part.position.x = point.x + (part.position.x - point.x) * scaleX;
+            part.position.y = point.y + (part.position.y - point.y) * scaleY;
+
             // scale vertices
-            Vertices.scale(part.vertices, scaleX, scaleY, body.position);
+            Vertices.scale(part.vertices, scaleX, scaleY, point);
 
             // update properties
             part.axes = Axes.fromVertices(part.vertices);
