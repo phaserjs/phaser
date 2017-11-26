@@ -41,7 +41,7 @@ var Tile = new Class({
         this.tint = 0xFFFFFF;
     },
 
-    // Copy everything except position
+    // Copy everything except position & interesting faces
     copy: function (tile)
     {
         this.index = tile.index;
