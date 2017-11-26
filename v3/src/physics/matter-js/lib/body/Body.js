@@ -671,16 +671,16 @@ var Axes = require('../geometry/Axes');
 
         // sum the properties of all compound parts of the parent body
         for (var i = body.parts.length === 1 ? 0 : 1; i < body.parts.length; i++) {
-            var part = body.parts[i];
+            var part = body.parts[i],
+                mass = part.mass !== Infinity ? part.mass : 1;
+
             properties.mass += part.mass;
             properties.area += part.area;
             properties.inertia += part.inertia;
-            properties.centre = Vector.add(properties.centre, 
-                                           Vector.mult(part.position, part.mass !== Infinity ? part.mass : 1));
+            properties.centre = Vector.add(properties.centre, Vector.mult(part.position, mass));
         }
 
-        properties.centre = Vector.div(properties.centre, 
-                                       properties.mass !== Infinity ? properties.mass : body.parts.length);
+        properties.centre = Vector.div(properties.centre, properties.mass);
 
         return properties;
     };
