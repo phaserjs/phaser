@@ -124,7 +124,7 @@ var WebAudioSound = new Class({
             }
             // else was stopped
         }.bind(this);
-        this.source.start(0, offset, duration);
+        this.source.start(0, Math.max(0, offset), Math.max(0, duration));
     },
     /**
      * Used internally to do what the name says.
