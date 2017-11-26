@@ -14,8 +14,8 @@ var TriangleToRectangle = function (triangle, rect)
 };
 
 // Circle, Line, Rect, Triangle in world coordinates.
-// Notes: circle is not working yet - see CircleToRectangle in geom. Could possibly be optimized
-// by copying the shape and shifting it into tilemapLayer coordinates instead of shifting the tiles.
+// Note: Could possibly be optimized by copying the shape and shifting it into tilemapLayer
+// coordinates instead of shifting the tiles.
 var GetTilesWithinShape = function (shape, filteringOptions, camera, layer)
 {
     if (shape === undefined) { return []; }

@@ -1,3 +1,12 @@
+/**
+ * Returns the tiles in the given layer that are within the camera's viewport. This is used
+ * internally.
+ *
+ * @param {LayerData} layer - [description]
+ * @param {Camera} camera - [description]
+ * @param {array} [outputArray] - [description]
+ * @returns {array}
+ */
 var CullTiles = function (layer, camera, outputArray)
 {
     if (outputArray === undefined) { outputArray = []; }
