@@ -85,7 +85,22 @@ var Axes = require('../geometry/Axes');
                     yOffset: 0
                 },
                 lineWidth: 0
-            }
+            },
+
+            events: null,
+            bounds: null,
+            chamfer: null,
+            circleRadius: 0,
+            positionPrev: null,
+            anglePrev: 0,
+            parent: null,
+
+            axes: null,
+            area: 0,
+            mass: 0,
+            inertia: 0,
+
+            _original: null
         };
 
         var body = Common.extend(defaults, options);
@@ -169,11 +184,11 @@ var Axes = require('../geometry/Axes');
      * Prefer to use the actual setter functions in performance critical situations.
      * @method set
      * @param {body} body
-     * @param {} settings A property name (or map of properties and values) to set on the body.
-     * @param {} value The value to set if `settings` is a single property name.
+     * @param {object} settings A map of properties and values to set on the body.
      */
-    Body.set = function(body, settings, value) {
-        var property;
+    Body.set = function(body, settings) {
+        var property,
+            value;
 
         if (typeof settings === 'string') {
             property = settings;
@@ -182,11 +197,11 @@ var Axes = require('../geometry/Axes');
         }
 
         for (property in settings) {
-            value = settings[property];
 
             if (!settings.hasOwnProperty(property))
                 continue;
 
+            value = settings[property];
             switch (property) {
 
             case 'isStatic':
@@ -272,7 +287,7 @@ var Axes = require('../geometry/Axes');
                 part.inverseMass = part._original.inverseMass;
                 part.inverseInertia = part._original.inverseInertia;
 
-                delete part._original;
+                part._original = null;
             }
         }
     };
