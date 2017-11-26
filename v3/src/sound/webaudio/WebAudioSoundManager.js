@@ -57,6 +57,11 @@ var WebAudioSoundManager = new Class({
         this.unlock();
         BaseSoundManager.call(this, game);
     },
+    /**
+     * @private
+     * @param game
+     * @returns {AudioContext}
+     */
     createAudioContext: function (game) {
         var audioConfig = game.config.audio;
         if (audioConfig && audioConfig.context) {
@@ -69,6 +74,9 @@ var WebAudioSoundManager = new Class({
         this.sounds.push(sound);
         return sound;
     },
+    /**
+     * @private
+     */
     unlock: function () {
         var _this = this;
         if (this.context.state === 'suspended') {

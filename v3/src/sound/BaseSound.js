@@ -245,6 +245,9 @@ var BaseSound = new Class({
         this.isPaused = false;
         return true;
     },
+    /**
+     * @private
+     */
     applyConfig: function () {
         this.mute = this.currentConfig.mute;
         this.volume = this.currentConfig.volume;
