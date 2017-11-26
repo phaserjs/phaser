@@ -123,8 +123,12 @@ var WebAudioSound = new Class({
      */
     stopAndRemoveBufferSource: function () {
         if (this.source) {
-            this.source.stop();
+            var source = this.source;
             this.source = null;
+            // Setting source to null before calling stop on it
+            // to determine if onended event was fired when sound
+            // ended or when it was stopped by user
+            source.stop();
         }
     },
     update: function () {
