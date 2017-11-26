@@ -87,9 +87,9 @@ var DynamicTilemapLayer = new Class({
         return TilemapComponents.FindByIndex(findIndex, skip, reverse, this.layer);
     },
 
-    forEachTile: function (callback, context, tileX, tileY, width, height)
+    forEachTile: function (callback, context, tileX, tileY, width, height, filteringOptions)
     {
-        TilemapComponents.ForEachTile(callback, context, tileX, tileY, width, height, this.layer);
+        TilemapComponents.ForEachTile(callback, context, tileX, tileY, width, height, filteringOptions, this.layer);
         return this;
     },
 
@@ -103,14 +103,14 @@ var DynamicTilemapLayer = new Class({
         return TilemapComponents.GetTileAtWorldXY(worldX, worldY, nonNull, camera, this.layer);
     },
 
-    getTilesWithin: function (tileX, tileY, width, height)
+    getTilesWithin: function (tileX, tileY, width, height, filteringOptions)
     {
-        return TilemapComponents.GetTilesWithin(tileX, tileY, width, height, this.layer);
+        return TilemapComponents.GetTilesWithin(tileX, tileY, width, height, filteringOptions, this.layer);
     },
 
-    getTilesWithinWorldXY: function (worldX, worldY, width, height, camera)
+    getTilesWithinWorldXY: function (worldX, worldY, width, height, filteringOptions, camera)
     {
-        return TilemapComponents.GetTilesWithinWorldXY(worldX, worldY, width, height, camera, this.layer);
+        return TilemapComponents.GetTilesWithinWorldXY(worldX, worldY, width, height, filteringOptions, camera, this.layer);
     },
 
     hasTileAt: function (tileX, tileY)

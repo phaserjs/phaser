@@ -1,12 +1,25 @@
-// TODO: add options for filtering by empty, collides, interestingFace
+
+
+var GetFastValue = require('../../../utils/object/GetFastValue');
+
 // Get tiles within the rectangular area specified. Note: this clips the x, y, w & h to the map's
 // boundries.
-var GetTilesWithin = function (tileX, tileY, width, height, layer)
+// Options:
+// {
+//      isNotEmpty: false,
+//      isColliding: false,
+//      hasInterestingFace: false
+// }
+var GetTilesWithin = function (tileX, tileY, width, height, filteringOptions, layer)
 {
     if (tileX === undefined) { tileX = 0; }
     if (tileY === undefined) { tileY = 0; }
     if (width === undefined) { width = layer.width; }
     if (height === undefined) { height = layer.height; }
+
+    var isNotEmpty = GetFastValue(filteringOptions, 'isNotEmpty', false);
+    var isColliding = GetFastValue(filteringOptions, 'isColliding', false);
+    var hasInterestingFace = GetFastValue(filteringOptions, 'hasInterestingFace', false);
 
     // Clip x, y to top left of map, while shrinking width/height to match.
     if (tileX < 0)
@@ -39,6 +52,9 @@ var GetTilesWithin = function (tileX, tileY, width, height, layer)
             var tile = layer.data[ty][tx];
             if (tile !== null)
             {
+                if (isNotEmpty && tile.index === -1) { continue; }
+                if (isColliding && !tile.collides) { continue; }
+                if (hasInterestingFace && !tile.hasInterestingFace) { continue; }
                 results.push(tile);
             }
         }

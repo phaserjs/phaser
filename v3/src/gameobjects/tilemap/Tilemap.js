@@ -227,12 +227,12 @@ var Tilemap = new Class({
         return TilemapComponents.FindByIndex(findIndex, skip, reverse, layer);
     },
 
-    forEachTile: function (callback, context, tileX, tileY, width, height, layer)
+    forEachTile: function (callback, context, tileX, tileY, width, height, filteringOptions, layer)
     {
         layer = this.getLayer(layer);
         if (layer !== null)
         {
-            TilemapComponents.ForEachTile(callback, context, tileX, tileY, width, height, layer);
+            TilemapComponents.ForEachTile(callback, context, tileX, tileY, width, height, filteringOptions, layer);
         }
         return this;
     },
@@ -303,18 +303,18 @@ var Tilemap = new Class({
         return TilemapComponents.GetTileAtWorldXY(worldX, worldY, nonNull, camera, layer);
     },
 
-    getTilesWithin: function (tileX, tileY, width, height, layer)
+    getTilesWithin: function (tileX, tileY, width, height, filteringOptions, layer)
     {
         layer = this.getLayer(layer);
         if (layer === null) { return null; }
-        return TilemapComponents.GetTilesWithin(tileX, tileY, width, height, layer);
+        return TilemapComponents.GetTilesWithin(tileX, tileY, width, height, filteringOptions, layer);
     },
 
-    getTilesWithinWorldXY: function (worldX, worldY, width, height, camera, layer)
+    getTilesWithinWorldXY: function (worldX, worldY, width, height, filteringOptions, camera, layer)
     {
         layer = this.getLayer(layer);
         if (layer === null) { return null; }
-        return TilemapComponents.GetTilesWithinWorldXY(worldX, worldY, width, height, camera, layer);
+        return TilemapComponents.GetTilesWithinWorldXY(worldX, worldY, width, height, filteringOptions, camera, layer);
     },
 
     getTilesetIndex: function (name)
