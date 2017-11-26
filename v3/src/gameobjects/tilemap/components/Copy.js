@@ -1,10 +1,12 @@
 var GetTilesWithin = require('./GetTilesWithin');
+var CalculateFacesWithin = require('./CalculateFacesWithin');
 
 // Copies indices, not other properties. Does not modify collisions.
-var Copy = function (srcTileX, srcTileY, width, height, destTileX, destTileY, layer)
+var Copy = function (srcTileX, srcTileY, width, height, destTileX, destTileY, recalculateFaces, layer)
 {
-    if (srcTileX === undefined || srcTileX < 0) { srcTileX = 0; }
-    if (srcTileY === undefined || srcTileY < 0) { srcTileY = 0; }
+    if (srcTileX < 0) { srcTileX = 0; }
+    if (srcTileY < 0) { srcTileY = 0; }
+    if (recalculateFaces === undefined) { recalculateFaces = true; }
 
     var srcTiles = GetTilesWithin(srcTileX, srcTileY, width, height, null, layer);
 
@@ -17,8 +19,17 @@ var Copy = function (srcTileX, srcTileY, width, height, destTileX, destTileY, la
         var tileY = srcTiles[i].y + offsetY;
         if (tileX >= 0 && tileX < layer.width && tileY >= 0 && tileY < layer.height)
         {
-            layer.data[tileY][tileX].index = srcTiles[i].index;
+            if (layer.data[tileY][tileX])
+            {
+                layer.data[tileY][tileX].copy(srcTiles[i]);
+            }
         }
+    }
+
+    if (recalculateFaces)
+    {
+        // Recalculate the faces within the destination area and neighboring tiles
+        CalculateFacesWithin(destTileX - 1, destTileY - 1, width + 2, height + 2, layer);
     }
 };
 

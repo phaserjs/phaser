@@ -189,13 +189,13 @@ var Tilemap = new Class({
         return layer;
     },
 
-    copy: function (srcTileX, srcTileY, width, height, destTileX, destTileY, layer)
+    copy: function (srcTileX, srcTileY, width, height, destTileX, destTileY, recalculateFaces, layer)
     {
         layer = this.getLayer(layer);
         if (this._isStaticCall(layer, 'copy')) { return this; }
         if (layer !== null)
         {
-            TilemapComponents.Copy(srcTileX, srcTileY, width, height, destTileX, destTileY, layer);
+            TilemapComponents.Copy(srcTileX, srcTileY, width, height, destTileX, destTileY, recalculateFaces, layer);
         }
         return this;
     },
