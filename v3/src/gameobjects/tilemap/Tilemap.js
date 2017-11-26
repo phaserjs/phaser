@@ -310,6 +310,13 @@ var Tilemap = new Class({
         return TilemapComponents.GetTilesWithin(tileX, tileY, width, height, filteringOptions, layer);
     },
 
+    getTilesWithinShape: function (shape, filteringOptions, camera, layer)
+    {
+        layer = this.getLayer(layer);
+        if (layer === null) { return null; }
+        return TilemapComponents.GetTilesWithinShape(shape, filteringOptions, camera, layer);
+    },
+
     getTilesWithinWorldXY: function (worldX, worldY, width, height, filteringOptions, camera, layer)
     {
         layer = this.getLayer(layer);

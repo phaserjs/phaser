@@ -108,6 +108,11 @@ var DynamicTilemapLayer = new Class({
         return TilemapComponents.GetTilesWithin(tileX, tileY, width, height, filteringOptions, this.layer);
     },
 
+    getTilesWithinShape: function (shape, filteringOptions, camera)
+    {
+        return TilemapComponents.GetTilesWithinShape(shape, filteringOptions, camera, this.layer);
+    },
+
     getTilesWithinWorldXY: function (worldX, worldY, width, height, filteringOptions, camera)
     {
         return TilemapComponents.GetTilesWithinWorldXY(worldX, worldY, width, height, filteringOptions, camera, this.layer);
