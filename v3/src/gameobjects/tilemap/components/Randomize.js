@@ -5,7 +5,7 @@ var GetRandomElement = require('../../../utils/array/GetRandomElement');
 var Randomize = function (tileX, tileY, width, height, indices, layer)
 {
     var i;
-    var tiles = GetTilesWithin(tileX, tileY, width, height, layer);
+    var tiles = GetTilesWithin(tileX, tileY, width, height, null, layer);
 
     // If no indicies are given, then find all the unique indices within the specified region
     if (indices === undefined)

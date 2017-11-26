@@ -6,7 +6,7 @@ var Copy = function (srcTileX, srcTileY, width, height, destTileX, destTileY, la
     if (srcTileX === undefined || srcTileX < 0) { srcTileX = 0; }
     if (srcTileY === undefined || srcTileY < 0) { srcTileY = 0; }
 
-    var srcTiles = GetTilesWithin(srcTileX, srcTileY, width, height, layer);
+    var srcTiles = GetTilesWithin(srcTileX, srcTileY, width, height, null, layer);
 
     var offsetX = destTileX - srcTileX;
     var offsetY = destTileY - srcTileY;

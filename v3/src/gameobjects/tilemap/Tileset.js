@@ -4,12 +4,14 @@ var Tileset = new Class({
 
     initialize:
 
-    function Tileset (name, firstgid, tileWidth, tileHeight, tileMargin, tileSpacing, properties)
+    function Tileset (name, firstgid, tileWidth, tileHeight, tileMargin, tileSpacing, properties, tileData)
     {
         if (tileWidth === undefined || tileWidth <= 0) { tileWidth = 32; }
         if (tileHeight === undefined || tileHeight <= 0) { tileHeight = 32; }
         if (tileMargin === undefined) { tileMargin = 0; }
         if (tileSpacing === undefined) { tileSpacing = 0; }
+        if (properties === undefined) { properties = {}; }
+        if (tileData === undefined) { tileData = {}; }
 
         this.name = name;
         this.firstgid = firstgid;
@@ -18,11 +20,24 @@ var Tileset = new Class({
         this.tileMargin = tileMargin;
         this.tileSpacing = tileSpacing;
         this.properties = properties;
+        this.tileData = tileData;
         this.image = null;
         this.rows = 0;
         this.columns = 0;
         this.total = 0;
         this.texCoordinates = [];
+    },
+
+    getTileProperty: function (tileIndex)
+    {
+        if (!this.containsTileIndex(tileIndex)) { return null; }
+        return this.properties[tileIndex - this.firstgid];
+    },
+
+    getTileData: function (tileIndex)
+    {
+        if (!this.containsTileIndex(tileIndex)) { return null; }
+        return this.tileData[tileIndex - this.firstgid];
     },
 
     setImage: function (texture)

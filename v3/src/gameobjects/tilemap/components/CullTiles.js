@@ -10,6 +10,8 @@ var CullTiles = function (layer, camera, outputArray)
     var mapHeight = layer.height;
     var left = (camera.scrollX * tilemapLayer.scrollFactorX) - tilemapLayer.x;
     var top = (camera.scrollY * tilemapLayer.scrollFactorY) - tilemapLayer.y;
+    var tileWidth = layer.tileWidth * tilemapLayer.scaleX;
+    var tileHeight = layer.tileHeight * tilemapLayer.scaleY;
 
     for (var row = 0; row < mapHeight; ++row)
     {
@@ -19,13 +21,13 @@ var CullTiles = function (layer, camera, outputArray)
 
             if (tile === null || (tile.index <= 0 && tilemapLayer.skipIndexZero)) { continue; }
 
-            var tileX = tile.worldX - left;
-            var tileY = tile.worldY - top;
-            var cullW = camera.width + tile.width;
-            var cullH = camera.height + tile.height;
+            var tileX = tile.x * tileWidth - left;
+            var tileY = tile.y * tileHeight - top;
+            var cullW = camera.width + tileWidth;
+            var cullH = camera.height + tileHeight;
 
             if (tile.visible &&
-                tileX > -tile.width && tileY > -tile.height &&
+                tileX > -tileWidth && tileY > -tileHeight &&
                 tileX < cullW && tileY < cullH)
             {
                 outputArray.push(tile);
