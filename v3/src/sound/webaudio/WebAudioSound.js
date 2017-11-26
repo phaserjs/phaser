@@ -49,6 +49,14 @@ var WebAudioSound = new Class({
          * @property {number} pausedTime
          */
         this.pausedTime = 0;
+        /**
+         * Used for keeping track when sound source playback has ended
+         * so it's state can be updated accordingly.
+         *
+         * @private
+         * @property {boolean} hasEnded
+         */
+        this.hasEnded = false;
         this.muteNode.connect(this.volumeNode);
         this.volumeNode.connect(manager.destination);
         BaseSound.call(this, manager, key, config);
