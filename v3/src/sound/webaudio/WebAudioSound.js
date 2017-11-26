@@ -110,7 +110,7 @@ var WebAudioSound = new Class({
         this.source.connect(this.muteNode);
         this.applyConfig();
         this.source.onended = function (ev) {
-            if (this.source) {
+            if (this.source && ev.target === this.source) {
                 this.stop();
             }
         }.bind(this);
