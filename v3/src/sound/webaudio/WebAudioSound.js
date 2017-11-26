@@ -138,6 +138,9 @@ var WebAudioSound = new Class({
         }
     },
     update: function () {
+        if (this.hasEnded) {
+            this.stop();
+        }
     },
     destroy: function () {
     }
