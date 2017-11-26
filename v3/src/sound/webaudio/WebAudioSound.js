@@ -110,7 +110,7 @@ var WebAudioSound = new Class({
         this.source.connect(this.muteNode);
         this.applyConfig();
         this.source.onended = function (ev) {
-            if (this.source && ev.target === this.source) {
+            if (ev.target === this.source) {
                 this.stop();
             }
         }.bind(this);
@@ -123,12 +123,8 @@ var WebAudioSound = new Class({
      */
     stopAndRemoveBufferSource: function () {
         if (this.source) {
-            var source = this.source;
+            this.source.stop();
             this.source = null;
-            // Setting source to null before calling stop on it
-            // to determine if onended event was fired when sound
-            // ended or when it was stopped by user
-            source.stop();
         }
     },
     update: function () {
