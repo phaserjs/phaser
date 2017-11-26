@@ -112,7 +112,7 @@ var WebAudioSound = new Class({
         this.source.onended = function (ev) {
             if (ev.target === this.source) {
                 // sound ended
-                this.stop();
+                this.stop(); // TODO creates race condition because it's called in separate thread
             }
             // else was stopped
         }.bind(this);
