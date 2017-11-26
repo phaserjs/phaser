@@ -109,7 +109,9 @@ var WebAudioSound = new Class({
         this.source.buffer = this.audioBuffer;
         this.source.connect(this.muteNode);
         this.applyConfig();
-        // TODO add onended event handler to reset sound state
+        this.source.onended = function (ev) {
+            this.stop();
+        }.bind(this);
         this.source.start(0, offset, duration);
     },
     /**
