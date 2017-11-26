@@ -292,19 +292,23 @@ var Axes = require('../geometry/Axes');
     };
 
     /**
-     * Sets the mass of the body. Inverse mass and density are automatically updated to reflect the change.
+     * Sets the mass of the body. Inverse mass, density and inertia are automatically updated to reflect the change.
      * @method setMass
      * @param {body} body
      * @param {number} mass
      */
     Body.setMass = function(body, mass) {
+        var moment = body.inertia / (body.mass / 6);
+        body.inertia = moment * (mass / 6);
+        body.inverseInertia = 1 / body.inertia;
+
         body.mass = mass;
         body.inverseMass = 1 / body.mass;
         body.density = body.mass / body.area;
     };
 
     /**
-     * Sets the density of the body. Mass is automatically updated to reflect the change.
+     * Sets the density of the body. Mass and inertia are automatically updated to reflect the change.
      * @method setDensity
      * @param {body} body
      * @param {number} density
