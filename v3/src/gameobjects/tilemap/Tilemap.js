@@ -189,13 +189,13 @@ var Tilemap = new Class({
         return layer;
     },
 
-    copy: function (srcTileX, srcTileY, width, height, destTileX, destTileY, layer)
+    copy: function (srcTileX, srcTileY, width, height, destTileX, destTileY, recalculateFaces, layer)
     {
         layer = this.getLayer(layer);
         if (this._isStaticCall(layer, 'copy')) { return this; }
         if (layer !== null)
         {
-            TilemapComponents.Copy(srcTileX, srcTileY, width, height, destTileX, destTileY, layer);
+            TilemapComponents.Copy(srcTileX, srcTileY, width, height, destTileX, destTileY, recalculateFaces, layer);
         }
         return this;
     },
@@ -209,13 +209,13 @@ var Tilemap = new Class({
         this.scene = undefined;
     },
 
-    fill: function (index, tileX, tileY, width, height, layer)
+    fill: function (index, tileX, tileY, width, height, recalculateFaces, layer)
     {
         layer = this.getLayer(layer);
         if (this._isStaticCall(layer, 'fill')) { return this; }
         if (layer !== null)
         {
-            TilemapComponents.Fill(index, tileX, tileY, width, height, layer);
+            TilemapComponents.Fill(index, tileX, tileY, width, height, recalculateFaces, layer);
         }
         return this;
     },

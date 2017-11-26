@@ -60,9 +60,9 @@ var DynamicTilemapLayer = new Class({
         TilemapComponents.CullTiles(this.layer, camera, this.culledTiles);
     },
 
-    copy: function (srcTileX, srcTileY, width, height, destTileX, destTileY)
+    copy: function (srcTileX, srcTileY, width, height, destTileX, destTileY, recalculateFaces)
     {
-        TilemapComponents.Copy(srcTileX, srcTileY, width, height, destTileX, destTileY, this.layer);
+        TilemapComponents.Copy(srcTileX, srcTileY, width, height, destTileX, destTileY, recalculateFaces, this.layer);
         return this;
     },
 
@@ -76,9 +76,9 @@ var DynamicTilemapLayer = new Class({
         GameObject.prototype.destroy.call(this);
     },
 
-    fill: function (index, tileX, tileY, width, height)
+    fill: function (index, tileX, tileY, width, height, recalculateFaces)
     {
-        TilemapComponents.Fill(index, tileX, tileY, width, height, this.layer);
+        TilemapComponents.Fill(index, tileX, tileY, width, height, recalculateFaces, this.layer);
         return this;
     },
 

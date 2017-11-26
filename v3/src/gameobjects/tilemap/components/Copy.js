@@ -1,10 +1,27 @@
 var GetTilesWithin = require('./GetTilesWithin');
+var CalculateFacesWithin = require('./CalculateFacesWithin');
 
-// Copies indices, not other properties. Does not modify collisions.
-var Copy = function (srcTileX, srcTileY, width, height, destTileX, destTileY, layer)
+/**
+ * Copies the tiles in the source rectangular area to a new destination (all specified in tile
+ * coordinates) within the layer. This copies all tile properties & recalculates interesting tile
+ * faces in the destination region.
+ *
+ * @param {number} srcTileX - [description]
+ * @param {number} srcTileY - [description]
+ * @param {number} width - [description]
+ * @param {number} height - [description]
+ * @param {number} destTileX - [description]
+ * @param {number} destTileY - [description]
+ * @param {number} destTileY - [description]
+ * @param {boolean} [recalculateFaces=true] - [description]
+ * @param {LayerData} layer - [description]
+ */
+
+var Copy = function (srcTileX, srcTileY, width, height, destTileX, destTileY, recalculateFaces, layer)
 {
-    if (srcTileX === undefined || srcTileX < 0) { srcTileX = 0; }
-    if (srcTileY === undefined || srcTileY < 0) { srcTileY = 0; }
+    if (srcTileX < 0) { srcTileX = 0; }
+    if (srcTileY < 0) { srcTileY = 0; }
+    if (recalculateFaces === undefined) { recalculateFaces = true; }
 
     var srcTiles = GetTilesWithin(srcTileX, srcTileY, width, height, null, layer);
 
@@ -17,8 +34,17 @@ var Copy = function (srcTileX, srcTileY, width, height, destTileX, destTileY, la
         var tileY = srcTiles[i].y + offsetY;
         if (tileX >= 0 && tileX < layer.width && tileY >= 0 && tileY < layer.height)
         {
-            layer.data[tileY][tileX].index = srcTiles[i].index;
+            if (layer.data[tileY][tileX])
+            {
+                layer.data[tileY][tileX].copy(srcTiles[i]);
+            }
         }
+    }
+
+    if (recalculateFaces)
+    {
+        // Recalculate the faces within the destination area and neighboring tiles
+        CalculateFacesWithin(destTileX - 1, destTileY - 1, width + 2, height + 2, layer);
     }
 };
 

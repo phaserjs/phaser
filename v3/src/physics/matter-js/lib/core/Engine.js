@@ -15,7 +15,6 @@ module.exports = Engine;
 var World = require('../body/World');
 var Sleeping = require('./Sleeping');
 var Resolver = require('../collision/Resolver');
-var Render = require('../render/Render');
 var Pairs = require('../collision/Pairs');
 var Metrics = require('./Metrics');
 var Grid = require('../collision/Grid');
@@ -63,6 +62,7 @@ var Body = require('../body/Body');
 
         var engine = Common.extend(defaults, options);
 
+        /*
         // @deprecated
         if (element || engine.render) {
             var renderDefaults = {
@@ -82,6 +82,7 @@ var Body = require('../body/Body');
         if (engine.render) {
             engine.render.engine = engine;
         }
+        */
 
         engine.world = options.world || World.create(engine.world);
         engine.pairs = Pairs.create();
@@ -195,7 +196,7 @@ var Body = require('../body/Body');
         // iteratively resolve position between collisions
         Resolver.preSolvePosition(pairs.list);
         for (i = 0; i < engine.positionIterations; i++) {
-            Resolver.solvePosition(pairs.list, timing.timeScale);
+            Resolver.solvePosition(pairs.list, allBodies, timing.timeScale);
         }
         Resolver.postSolvePosition(allBodies);
 

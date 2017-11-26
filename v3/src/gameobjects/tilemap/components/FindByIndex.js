@@ -1,6 +1,18 @@
-// Find first tile with given index, or null if nothing found.
-// Searches from top left to bottom right.
-// Skip a number of matches or reverse to search from bottom-right to top-left.
+/**
+ * Searches the entire map layer for the first tile matching the given index, then returns that Tile
+ * object. If no match is found, it returns null. The search starts from the top-left tile and
+ * continues horizontally until it hits the end of the row, then it drops down to the next column.
+ * If the reverse boolean is true, it scans starting from the bottom-right corner traveling up to
+ * the top-left.
+ *
+ * @param {number} index - The tile index value to search for.
+ * @param {number} [skip=0] - The number of times to skip a matching tile before returning.
+ * @param {number} [reverse=false] - If true it will scan the layer in reverse, starting at the
+ * bottom-right. Otherwise it scans from the top-left.
+ * @param {LayerData} layer - [description]
+ * @return {Tile|null} The first (or n skipped) tile with the matching index.
+ */
+
 var FindByIndex = function (findIndex, skip, reverse, layer)
 {
     if (skip === undefined) { skip = 0; }
