@@ -16,7 +16,7 @@ var Bounds = require('../geometry/Bounds');
 var Events = require('../core/Events');
 var Grid = require('../collision/Grid');
 var Vector = require('../geometry/Vector');
-var Mouse = require('../core/Mouse');
+// var Mouse = require('../core/Mouse');
 
 (function() {
     
@@ -247,12 +247,12 @@ var Mouse = require('../core/Mouse');
 
         // update mouse
         if (render.mouse) {
-            Mouse.setScale(render.mouse, {
-                x: (render.bounds.max.x - render.bounds.min.x) / render.canvas.width,
-                y: (render.bounds.max.y - render.bounds.min.y) / render.canvas.height
-            });
+            // Mouse.setScale(render.mouse, {
+            //     x: (render.bounds.max.x - render.bounds.min.x) / render.canvas.width,
+            //     y: (render.bounds.max.y - render.bounds.min.y) / render.canvas.height
+            // });
 
-            Mouse.setOffset(render.mouse, render.bounds.min);
+            // Mouse.setOffset(render.mouse, render.bounds.min);
         }
     };
 
@@ -347,12 +347,12 @@ var Mouse = require('../core/Mouse');
 
             // update mouse
             if (render.mouse) {
-                Mouse.setScale(render.mouse, {
-                    x: (render.bounds.max.x - render.bounds.min.x) / render.canvas.width,
-                    y: (render.bounds.max.y - render.bounds.min.y) / render.canvas.height
-                });
+                // Mouse.setScale(render.mouse, {
+                //     x: (render.bounds.max.x - render.bounds.min.x) / render.canvas.width,
+                //     y: (render.bounds.max.y - render.bounds.min.y) / render.canvas.height
+                // });
 
-                Mouse.setOffset(render.mouse, render.bounds.min);
+                // Mouse.setOffset(render.mouse, render.bounds.min);
             }
         } else {
             constraints = allConstraints;
@@ -394,8 +394,8 @@ var Mouse = require('../core/Mouse');
         if (options.showVertexNumbers)
             Render.vertexNumbers(render, bodies, context);
 
-        if (options.showMousePosition)
-            Render.mousePosition(render, render.mouse, context);
+        // if (options.showMousePosition)
+            // Render.mousePosition(render, render.mouse, context);
 
         Render.constraints(constraints, context);
 
