@@ -111,8 +111,10 @@ var WebAudioSound = new Class({
         this.applyConfig();
         this.source.onended = function (ev) {
             if (ev.target === this.source) {
+                // sound ended
                 this.stop();
             }
+            // else was stopped
         }.bind(this);
         this.source.start(0, offset, duration);
     },
