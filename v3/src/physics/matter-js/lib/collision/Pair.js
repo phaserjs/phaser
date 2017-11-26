@@ -8,8 +8,6 @@ var Pair = {};
 
 module.exports = Pair;
 
-var Contact = require('./Contact');
-
 (function() {
     
     /**
@@ -21,15 +19,12 @@ var Contact = require('./Contact');
      */
     Pair.create = function(collision, timestamp) {
         var bodyA = collision.bodyA,
-            bodyB = collision.bodyB,
-            parentA = collision.parentA,
-            parentB = collision.parentB;
+            bodyB = collision.bodyB;
 
         var pair = {
             id: Pair.id(bodyA, bodyB),
             bodyA: bodyA,
             bodyB: bodyB,
-            contacts: {},
             activeContacts: [],
             separation: 0,
             isActive: true,
@@ -37,11 +32,13 @@ var Contact = require('./Contact');
             isSensor: bodyA.isSensor || bodyB.isSensor,
             timeCreated: timestamp,
             timeUpdated: timestamp,
-            inverseMass: parentA.inverseMass + parentB.inverseMass,
-            friction: Math.min(parentA.friction, parentB.friction),
-            frictionStatic: Math.max(parentA.frictionStatic, parentB.frictionStatic),
-            restitution: Math.max(parentA.restitution, parentB.restitution),
-            slop: Math.max(parentA.slop, parentB.slop)
+
+            collision: null,
+            inverseMass: 0,
+            friction: 0,
+            frictionStatic: 0,
+            restitution: 0,
+            slop: 0
         };
 
         Pair.update(pair, collision, timestamp);
@@ -57,31 +54,41 @@ var Contact = require('./Contact');
      * @param {number} timestamp
      */
     Pair.update = function(pair, collision, timestamp) {
-        var contacts = pair.contacts,
-            supports = collision.supports,
-            activeContacts = pair.activeContacts,
-            parentA = collision.parentA,
-            parentB = collision.parentB;
+        // var contacts = pair.contacts,
+        //     supports = collision.supports,
+        //     activeContacts = pair.activeContacts,
+        //     parentA = collision.parentA,
+        //     parentB = collision.parentB;
         
         pair.collision = collision;
-        pair.inverseMass = parentA.inverseMass + parentB.inverseMass;
-        pair.friction = Math.min(parentA.friction, parentB.friction);
-        pair.frictionStatic = Math.max(parentA.frictionStatic, parentB.frictionStatic);
-        pair.restitution = Math.max(parentA.restitution, parentB.restitution);
-        pair.slop = Math.max(parentA.slop, parentB.slop);
-        activeContacts.length = 0;
+        // pair.inverseMass = parentA.inverseMass + parentB.inverseMass;
+        // pair.friction = Math.min(parentA.friction, parentB.friction);
+        // pair.frictionStatic = Math.max(parentA.frictionStatic, parentB.frictionStatic);
+        // pair.restitution = Math.max(parentA.restitution, parentB.restitution);
+        // pair.slop = Math.max(parentA.slop, parentB.slop);
+        // activeContacts.length = 0;
         
         if (collision.collided) {
-            for (var i = 0; i < supports.length; i++) {
-                var support = supports[i],
-                    contactId = Contact.id(support),
-                    contact = contacts[contactId];
 
-                if (contact) {
-                    activeContacts.push(contact);
-                } else {
-                    activeContacts.push(contacts[contactId] = Contact.create(support));
-                }
+            var supports = collision.supports,
+                activeContacts = pair.activeContacts,
+                parentA = collision.parentA,
+                parentB = collision.parentB;
+
+            pair.inverseMass = parentA.inverseMass + parentB.inverseMass;
+            pair.friction = Math.min(parentA.friction, parentB.friction);
+            pair.frictionStatic = Math.max(parentA.frictionStatic, parentB.frictionStatic);
+            pair.restitution = Math.max(parentA.restitution, parentB.restitution);
+            pair.slop = Math.max(parentA.slop, parentB.slop);
+
+            for (var i = 0; i < supports.length; i++) {
+                activeContacts[i] = supports[i].contact;
+            }
+
+            var supportCount = supports.length;
+
+            if (supportCount < activeContacts.length) {
+                activeContacts.length = supportCount;
             }
 
             pair.separation = collision.depth;
