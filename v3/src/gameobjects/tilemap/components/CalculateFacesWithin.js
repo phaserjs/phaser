@@ -8,7 +8,7 @@ var CalculateFacesWithin = function (tileX, tileY, width, height, layer)
     var left = null;
     var right = null;
 
-    var tiles = GetTilesWithin(tileX, tileY, width, height, layer);
+    var tiles = GetTilesWithin(tileX, tileY, width, height, null, layer);
 
     for (var i = 0; i < tiles.length; i++)
     {

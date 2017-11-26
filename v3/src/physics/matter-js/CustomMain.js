@@ -1,4 +1,4 @@
-var Matter = module.exports = require('./lib/core/Matter');
+var Matter = require('./lib/core/Matter');
 
 Matter.Body = require('./lib/body/Body');
 Matter.Composite = require('./lib/body/Composite');
@@ -38,3 +38,5 @@ Matter.World.addComposite = Matter.Composite.addComposite;
 Matter.World.addBody = Matter.Composite.addBody;
 Matter.World.addConstraint = Matter.Composite.addConstraint;
 Matter.World.clear = Matter.Composite.clear;
+
+module.exports = Matter;

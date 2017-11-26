@@ -28,13 +28,15 @@ var Tilemap = new Class({
         this.properties = mapData.properties;
         this.widthInPixels = mapData.widthInPixels;
         this.heightInPixels = mapData.heightInPixels;
+        this.imageCollections = mapData.imageCollections;
+        this.images = mapData.images;
+        this.collision = mapData.collision;
         this.layers = mapData.layers;
         this.tilesets = mapData.tilesets;
         this.tiles = mapData.tiles;
         this.objects = mapData.objects;
         this.currentLayerIndex = 0;
 
-        // TODO: collision, collideIndexes, imagecollections, images
         // TODO: debugging methods
     },
 
@@ -225,14 +227,19 @@ var Tilemap = new Class({
         return TilemapComponents.FindByIndex(findIndex, skip, reverse, layer);
     },
 
-    forEachTile: function (callback, context, tileX, tileY, width, height, layer)
+    forEachTile: function (callback, context, tileX, tileY, width, height, filteringOptions, layer)
     {
         layer = this.getLayer(layer);
         if (layer !== null)
         {
-            TilemapComponents.ForEachTile(callback, context, tileX, tileY, width, height, layer);
+            TilemapComponents.ForEachTile(callback, context, tileX, tileY, width, height, filteringOptions, layer);
         }
         return this;
+    },
+
+    getImageIndex: function (name)
+    {
+        return this.getIndex(this.images, name);
     },
 
     getIndex: function (location, name)
@@ -296,11 +303,25 @@ var Tilemap = new Class({
         return TilemapComponents.GetTileAtWorldXY(worldX, worldY, nonNull, camera, layer);
     },
 
-    getTilesWithin: function (tileX, tileY, width, height, layer)
+    getTilesWithin: function (tileX, tileY, width, height, filteringOptions, layer)
     {
         layer = this.getLayer(layer);
         if (layer === null) { return null; }
-        return TilemapComponents.GetTilesWithin(tileX, tileY, width, height, layer);
+        return TilemapComponents.GetTilesWithin(tileX, tileY, width, height, filteringOptions, layer);
+    },
+
+    getTilesWithinShape: function (shape, filteringOptions, camera, layer)
+    {
+        layer = this.getLayer(layer);
+        if (layer === null) { return null; }
+        return TilemapComponents.GetTilesWithinShape(shape, filteringOptions, camera, layer);
+    },
+
+    getTilesWithinWorldXY: function (worldX, worldY, width, height, filteringOptions, camera, layer)
+    {
+        layer = this.getLayer(layer);
+        if (layer === null) { return null; }
+        return TilemapComponents.GetTilesWithinWorldXY(worldX, worldY, width, height, filteringOptions, camera, layer);
     },
 
     getTilesetIndex: function (name)
@@ -489,25 +510,25 @@ var Tilemap = new Class({
         return this;
     },
 
-    worldToTileX: function (worldX, camera, layer)
+    worldToTileX: function (worldX, snapToFloor, camera, layer)
     {
         layer = this.getLayer(layer);
         if (layer === null) { return null; }
-        return TilemapComponents.WorldToTileX(worldX, camera, layer);
+        return TilemapComponents.WorldToTileX(worldX, snapToFloor, camera, layer);
     },
 
-    worldToTileY: function (worldY, camera, layer)
+    worldToTileY: function (worldY, snapToFloor, camera, layer)
     {
         layer = this.getLayer(layer);
         if (layer === null) { return null; }
-        return TilemapComponents.WorldToTileY(worldY, camera, layer);
+        return TilemapComponents.WorldToTileY(worldY, snapToFloor, camera, layer);
     },
 
-    worldToTileXY: function (worldX, worldY, point, camera, layer)
+    worldToTileXY: function (worldX, worldY, snapToFloor, point, camera, layer)
     {
         layer = this.getLayer(layer);
         if (layer === null) { return null; }
-        return TilemapComponents.WorldToTileXY(worldX, worldY, point, camera, layer);
+        return TilemapComponents.WorldToTileXY(worldX, worldY, snapToFloor, point, camera, layer);
     },
 
     _isStaticCall: function (layer, functionName)

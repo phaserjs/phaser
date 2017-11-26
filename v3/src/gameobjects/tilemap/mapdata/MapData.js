@@ -25,6 +25,7 @@ var MapData = new Class({
         this.objects = GetFastValue(config, 'objects', {});
         this.collision = GetFastValue(config, 'collision', {});
         this.tilesets = GetFastValue(config, 'tilesets', []);
+        this.imageCollections = GetFastValue(config, 'imageCollections', []);
         this.tiles = GetFastValue(config, 'tiles', []);
     }
 

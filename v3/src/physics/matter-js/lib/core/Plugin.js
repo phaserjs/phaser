@@ -171,7 +171,7 @@ var Common = require('./Common');
             module.used.push(plugin.name);
         }
 
-        if (status.length > 0) {
+        if (status.length > 0 && !plugin.silent) {
             Common.info(status.join('  '));
         }
     };

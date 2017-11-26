@@ -228,9 +228,9 @@ var StaticTilemapLayer = new Class({
         return TilemapComponents.FindByIndex(findIndex, skip, reverse, this.layer);
     },
 
-    forEachTile: function (callback, context, tileX, tileY, width, height)
+    forEachTile: function (callback, context, tileX, tileY, width, height, filteringOptions)
     {
-        TilemapComponents.ForEachTile(callback, context, tileX, tileY, width, height, this.layer);
+        TilemapComponents.ForEachTile(callback, context, tileX, tileY, width, height, filteringOptions, this.layer);
         return this;
     },
 
@@ -244,9 +244,19 @@ var StaticTilemapLayer = new Class({
         return TilemapComponents.GetTileAtWorldXY(worldX, worldY, nonNull, camera, this.layer);
     },
 
-    getTilesWithin: function (tileX, tileY, width, height)
+    getTilesWithin: function (tileX, tileY, width, height, filteringOptions)
     {
-        return TilemapComponents.GetTilesWithin(tileX, tileY, width, height, this.layer);
+        return TilemapComponents.GetTilesWithin(tileX, tileY, width, height, filteringOptions, this.layer);
+    },
+
+    getTilesWithinWorldXY: function (worldX, worldY, width, height, filteringOptions, camera)
+    {
+        return TilemapComponents.GetTilesWithinWorldXY(worldX, worldY, width, height, filteringOptions, camera, this.layer);
+    },
+
+    getTilesWithinShape: function (shape, filteringOptions, camera)
+    {
+        return TilemapComponents.GetTilesWithinShape(shape, filteringOptions, camera, this.layer);
     },
 
     hasTileAt: function (tileX, tileY)
@@ -277,19 +287,19 @@ var StaticTilemapLayer = new Class({
         return this;
     },
 
-    worldToTileX: function (worldX, camera)
+    worldToTileX: function (worldX, snapToFloor, camera)
     {
-        return TilemapComponents.WorldToTileX(worldX, camera, this.layer);
+        return TilemapComponents.WorldToTileX(worldX, snapToFloor, camera, this.layer);
     },
 
-    worldToTileY: function (worldY, camera)
+    worldToTileY: function (worldY, snapToFloor, camera)
     {
-        return TilemapComponents.WorldToTileY(worldY, camera, this.layer);
+        return TilemapComponents.WorldToTileY(worldY, snapToFloor, camera, this.layer);
     },
 
-    worldToTileXY: function (worldX, worldY, point, camera)
+    worldToTileXY: function (worldX, worldY, snapToFloor, point, camera)
     {
-        return TilemapComponents.WorldToTileXY(worldX, worldY, point, camera, this.layer);
+        return TilemapComponents.WorldToTileXY(worldX, worldY, snapToFloor, point, camera, this.layer);
     }
 
 });
