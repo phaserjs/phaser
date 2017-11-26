@@ -76,9 +76,9 @@ var DynamicTilemapLayer = new Class({
         GameObject.prototype.destroy.call(this);
     },
 
-    fill: function (index, tileX, tileY, width, height)
+    fill: function (index, tileX, tileY, width, height, recalculateFaces)
     {
-        TilemapComponents.Fill(index, tileX, tileY, width, height, this.layer);
+        TilemapComponents.Fill(index, tileX, tileY, width, height, recalculateFaces, this.layer);
         return this;
     },
 
