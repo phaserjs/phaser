@@ -1,7 +1,22 @@
 var GetTilesWithin = require('./GetTilesWithin');
 var CalculateFacesWithin = require('./CalculateFacesWithin');
 
-// Copies indices, not other properties. Does not modify collisions.
+/**
+ * Copies the tiles in the source rectangular area to a new destination (all specified in tile
+ * coordinates). This copies all tile properties & recalculates interesting tile faces in the
+ * destination region.
+ *
+ * @param {number} srcTileX - [description]
+ * @param {number} srcTileY - [description]
+ * @param {number} width - [description]
+ * @param {number} height - [description]
+ * @param {number} destTileX - [description]
+ * @param {number} destTileY - [description]
+ * @param {number} destTileY - [description]
+ * @param {boolean} [recalculateFaces=true] - [description]
+ * @param {LayerData} layer - [description]
+ */
+
 var Copy = function (srcTileX, srcTileY, width, height, destTileX, destTileY, recalculateFaces, layer)
 {
     if (srcTileX < 0) { srcTileX = 0; }
