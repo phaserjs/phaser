@@ -15,15 +15,12 @@ var EventDispatcher = new Class({
 
     getBinding: function (type)
     {
-        if (this.bindings.hasOwnProperty(type))
-        {
-            return this.bindings[type];
-        }
+        return this.bindings[type];
     },
 
     createBinding: function (type)
     {
-        if (!this.getBinding(type))
+        if (!this.bindings[type])
         {
             this.bindings[type] = new EventBinding(this, type);
         }
@@ -78,7 +75,7 @@ var EventDispatcher = new Class({
             //  Remove the filter
             this.filters.splice(i, 1);
         }
-        
+
         this.hasFilters = (this.filters.length > 0);
 
         return this;
@@ -86,11 +83,9 @@ var EventDispatcher = new Class({
 
     has: function (type, listener)
     {
-        var binding = this.getBinding(type);
-
-        if (binding)
+        if (this.bindings[type])
         {
-            return binding.has(listener);
+            return this.bindings[type].has(listener);
         }
         else
         {
@@ -100,11 +95,9 @@ var EventDispatcher = new Class({
 
     total: function (type)
     {
-        var binding = this.getBinding(type);
-
-        if (binding)
+        if (this.bindings[type])
         {
-            return binding.total();
+            return this.bindings[type].total();
         }
     },
 
@@ -112,11 +105,9 @@ var EventDispatcher = new Class({
     //  If there is no matching listener registered with the EventDispatcher, a call to this method has no effect.
     off: function (type, listener)
     {
-        var binding = this.getBinding(type);
-
-        if (binding)
+        if (this.bindings[type])
         {
-            binding.remove(listener);
+            this.bindings[type].remove(listener);
         }
 
         return this;
@@ -142,11 +133,9 @@ var EventDispatcher = new Class({
             }
         }
 
-        var binding = this.getBinding(event.type);
-
-        if (binding)
+        if (this.bindings[event.type])
         {
-            binding.dispatch(event);
+            this.bindings[event.type].dispatch(event);
         }
     },
 
@@ -168,11 +157,9 @@ var EventDispatcher = new Class({
     //  Removes all listeners, but retains the event type entries
     removeAll: function (type)
     {
-        var binding = this.getBinding(type);
-
-        if (binding)
+        if (this.bindings[type])
         {
-            binding.removeAll();
+            this.bindings[type].removeAll();
         }
 
         return this;
@@ -189,7 +176,7 @@ var EventDispatcher = new Class({
 
     delete: function (type)
     {
-        var binding = this.getBinding(type);
+        var binding = this.bindings[type];
 
         if (binding)
         {
@@ -197,7 +184,7 @@ var EventDispatcher = new Class({
             {
                 binding.destroy();
 
-                delete this.bindings[type];
+                this.bindings[type] = undefined;
             }
             else
             {
@@ -212,7 +199,10 @@ var EventDispatcher = new Class({
     {
         for (var binding in this.bindings)
         {
-            this.bindings[binding].destroy();
+            if (this.bindings[binding])
+            {
+                this.bindings[binding].destroy();
+            }
         }
 
         this.bindings = {};
