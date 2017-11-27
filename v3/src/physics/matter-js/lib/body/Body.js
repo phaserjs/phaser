@@ -40,6 +40,7 @@ var Axes = require('../geometry/Axes');
             id: Common.nextId(),
             type: 'body',
             label: 'Body',
+            gameObject: null,
             parts: [],
             plugin: {},
             angle: 0,
