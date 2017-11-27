@@ -19,6 +19,7 @@ var MatterSprite = new Class({
         Components.Gravity,
         Components.Mass,
         Components.Sensor,
+        Components.SetBody,
         Components.Sleep,
         Components.Static,
         Components.Transform,
@@ -38,28 +39,26 @@ var MatterSprite = new Class({
         this.setSizeToFrame();
         this.setOrigin();
 
-        this._tempVec2 = new Vector2();
+        this.world = world;
 
-        var isCircle = GetFastValue(options, 'isCircle', false);
+        this._tempVec2 = new Vector2(x, y);
 
-        if (isCircle)
+        var shape = GetFastValue(options, 'shape', null);
+
+        if (!shape)
         {
-            var radius = GetFastValue(options, 'radius', Math.max(this.width, this.height) / 2);
+            this.body = Bodies.rectangle(x, y, this.width, this.height, options);
 
-            this.body = Bodies.circle(x, y, radius, options);
+            this.body.gameObject = this;
+
+            if (GetFastValue(options, 'addToWorld', true))
+            {
+                world.add(this.body);
+            }
         }
         else
         {
-            this.body = Bodies.rectangle(x, y, this.width, this.height, options);
-        }
-
-        this.body.gameObject = this;
-
-        this.world = world;
-
-        if (GetFastValue(options, 'addToWorld', true))
-        {
-            world.add(this.body);
+            this.setBody(shape, options);
         }
 
         this.setPosition(x, y);

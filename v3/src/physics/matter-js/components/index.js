@@ -10,6 +10,7 @@ module.exports = {
     Mass: require('./Mass'),
     Static: require('./Static'),
     Sensor: require('./Sensor'),
+    SetBody: require('./SetBody'),
     Sleep: require('./Sleep'),
     Transform: require('./Transform'),
     Velocity: require('./Velocity')
