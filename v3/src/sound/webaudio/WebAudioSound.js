@@ -214,7 +214,7 @@ Object.defineProperty(WebAudioSound.prototype, 'detune', {
     set: function (value) {
         this.currentConfig.detune = value;
         if (this.source && this.source.detune) {
-            this.source.detune.setValueAtTime(Math.max(-1200, Math.min(value + this.manager.detune, 1200)), 0);
+            this.setRate();
         }
     }
 });
