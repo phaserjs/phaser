@@ -2,9 +2,9 @@ var GetTileAt = require('./GetTileAt');
 var GetTilesWithin = require('./GetTilesWithin');
 
 /**
- * Calculates interesting faces within the rectangular area specified (in tile coordinates).
- * Interesting faces are used internally for optimizing collisions against tiles. This method is
- * mostly used internally.
+ * Calculates interesting faces within the rectangular area specified (in tile coordinates) of the
+ * layer. Interesting faces are used internally for optimizing collisions against tiles. This method
+ * is mostly used internally.
  *
  * @param {number} [tileX=0] - [description]
  * @param {number} [tileY=0] - [description]

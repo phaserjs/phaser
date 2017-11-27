@@ -2,9 +2,9 @@ var GetTilesWithin = require('./GetTilesWithin');
 var CalculateFacesWithin = require('./CalculateFacesWithin');
 
 /**
- * Sets the tiles in the given rectangular area (in tile coordinates) with the specified index.
- * Tiles will be set to collide if the given index is a colliding index. Interesting tile faces in
- * the region will be recalculated.
+ * Sets the tiles in the given rectangular area (in tile coordinates) of the layer with the
+ * specified index. Tiles will be set to collide if the given index is a colliding index.
+ * Interesting tile faces in the region will be recalculated.
  *
  * @param {number} index - [description]
  * @param {number} tileX - [description]
@@ -14,8 +14,6 @@ var CalculateFacesWithin = require('./CalculateFacesWithin');
  * @param {boolean} [recalculateFaces=true] - [description]
  * @param {LayerData} layer - [description]
  */
-
-// Fills indices, not other properties. Does not modify collisions. Matches v2 functionality.
 var Fill = function (index, tileX, tileY, width, height, recalculateFaces, layer)
 {
     if (recalculateFaces === undefined) { recalculateFaces = true; }

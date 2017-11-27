@@ -219,6 +219,8 @@ var Game = new Class({
 
         this.input.update(time, delta);
 
+        this.sound.update(time, delta);
+
         //  Scenes
 
         this.onStepCallback();

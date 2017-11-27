@@ -1,6 +1,7 @@
 var Class = require('../utils/Class');
 var Extend = require('../utils/object/Extend');
 var EventDispatcher = require('../events/EventDispatcher');
+var NOOP = require('../utils/NOOP');
 //  Phaser.Sound.BaseSound
 var BaseSound = new Class({
     initialize: function BaseSound(manager, key, config) {
@@ -136,12 +137,60 @@ var BaseSound = new Class({
          */
         this.events = new EventDispatcher();
     },
-    // TODO set default methods to NOOP if not used
     addMarker: function (marker) {
-        return false;
+        if (!marker) {
+            console.error('addMarker - Marker object has to be provided!');
+            return false;
+        }
+        if (!marker.name || typeof marker.name !== 'string') {
+            console.error('addMarker - Marker has to have a valid name!');
+            return false;
+        }
+        if (this.markers[marker.name]) {
+            console.error('addMarker - Marker with name \'' + marker.name + '\' already exists for sound \'' + this.key + '\'!');
+            return false;
+        }
+        marker = Extend(true, {
+            name: '',
+            start: 0,
+            duration: this.totalDuration,
+            config: {
+                mute: false,
+                volume: 1,
+                rate: 1,
+                detune: 0,
+                seek: 0,
+                loop: false,
+                pan: 0
+            }
+        }, marker);
+        this.markers[marker.name] = marker;
+        return true;
+    },
+    updateMarker: function (marker) {
+        if (!marker) {
+            console.error('updateMarker - Marker object has to be provided!');
+            return false;
+        }
+        if (!marker.name || typeof marker.name !== 'string') {
+            console.error('updateMarker - Marker has to have a valid name!');
+            return false;
+        }
+        if (!this.markers[marker.name]) {
+            console.error('updateMarker - Marker with name \'' + marker.name + '\' does not exist for sound \'' + this.key + '\'!');
+            return false;
+        }
+        this.markers[marker.name] = Extend(true, this.markers[marker.name], marker);
+        return true;
     },
     removeMarker: function (markerName) {
-        return false;
+        var marker = this.markers[markerName];
+        if (!marker) {
+            console.error('removeMarker - Marker with name \'' + marker.name + '\' does not exist for sound \'' + this.key + '\'!');
+            return null;
+        }
+        this.markers[markerName] = null;
+        return marker;
     },
     play: function (markerName, config) {
         if (markerName === void 0) { markerName = ''; }
@@ -154,6 +203,7 @@ var BaseSound = new Class({
             return null;
         }
         if (!markerName) {
+            this.currentMarker = null;
             this.currentConfig = this.config;
             this.duration = this.totalDuration;
         }
@@ -195,6 +245,9 @@ var BaseSound = new Class({
         this.isPaused = false;
         return true;
     },
+    /**
+     * @private
+     */
     applyConfig: function () {
         this.mute = this.currentConfig.mute;
         this.volume = this.currentConfig.volume;
@@ -205,8 +258,7 @@ var BaseSound = new Class({
     fadeTo: function (volume, duration) {
         return null;
     },
-    update: function () {
-    },
+    update: NOOP,
     destroy: function () {
     }
 });
