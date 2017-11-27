@@ -199,7 +199,7 @@ Object.defineProperty(WebAudioSound.prototype, 'rate', {
     set: function (value) {
         this.currentConfig.rate = value;
         if (this.source) {
-            this.source.playbackRate.setValueAtTime(value * this.manager.rate, 0);
+            this.setRate();
         }
     }
 });
