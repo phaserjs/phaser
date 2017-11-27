@@ -105,21 +105,6 @@ Object.defineProperty(WebAudioSoundManager.prototype, 'volume', {
     }
 });
 /**
- * Global playback rate.
- * @property {number} rate
- */
-Object.defineProperty(WebAudioSoundManager.prototype, 'rate', {
-    get: function () {
-        return this._rate;
-    },
-    set: function (value) {
-        this._rate = value;
-        this.sounds.forEach(function (sound) {
-            sound.setRate();
-        }, this);
-    }
-});
-/**
  * Global detune.
  * @property {number} detune
  */
