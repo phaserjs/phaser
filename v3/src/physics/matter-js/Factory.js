@@ -106,6 +106,52 @@ var Factory = new Class({
         return stack;
     },
 
+    pyramid: function (x, y, columns, rows, columnGap, rowGap, callback)
+    {
+        var stack = Composites.pyramid(x, y, columns, rows, columnGap, rowGap, callback);
+
+        this.world.add(stack);
+
+        return stack;
+    },
+
+    chain: function (composite, xOffsetA, yOffsetA, xOffsetB, yOffsetB, options)
+    {
+        return Composites.chain(composite, xOffsetA, yOffsetA, xOffsetB, yOffsetB, options);
+    },
+
+    mesh: function (composite, columns, rows, crossBrace, options)
+    {
+        return Composites.mesh(composite, columns, rows, crossBrace, options);
+    },
+
+    newtonsCradle: function (x, y, number, size, length)
+    {
+        var composite = Composites.newtonsCradle(x, y, number, size, length);
+
+        this.world.add(composite);
+
+        return composite;
+    },
+
+    car: function (x, y, width, height, wheelSize)
+    {
+        var composite = Composites.car(x, y, width, height, wheelSize);
+
+        this.world.add(composite);
+
+        return composite;
+    },
+
+    softBody: function (x, y, columns, rows, columnGap, rowGap, crossBrace, particleRadius, particleOptions, constraintOptions)
+    {
+        var composite = Composites.softBody(x, y, columns, rows, columnGap, rowGap, crossBrace, particleRadius, particleOptions, constraintOptions);
+
+        this.world.add(composite);
+
+        return composite;
+    },
+
     //  To help those used to Box2D
     joint: function (bodyA, bodyB, length, stiffness, options)
     {
@@ -123,6 +169,22 @@ var Factory = new Class({
         if (options === undefined) { options = {}; }
 
         options.bodyA = (bodyA.type === 'body') ? bodyA : bodyA.body;
+        options.bodyB = (bodyB.type === 'body') ? bodyB : bodyB.body;
+        options.length = length;
+        options.stiffness = stiffness;
+
+        var constraint = Constraint.create(options);
+
+        this.world.add(constraint);
+
+        return constraint;
+    },
+
+    worldConstraint: function (bodyB, length, stiffness, options)
+    {
+        if (stiffness === undefined) { stiffness = 1; }
+        if (options === undefined) { options = {}; }
+
         options.bodyB = (bodyB.type === 'body') ? bodyB : bodyB.body;
         options.length = length;
         options.stiffness = stiffness;
@@ -165,14 +227,7 @@ var Factory = new Class({
         this.sys.updateList.add(sprite);
 
         return sprite;
-    },
-
-    /*
-    group: function (children, config)
-    {
-        return this.sys.updateList.add(new PhysicsGroup(this.world, this.world.scene, children, config));
     }
-    */
 
 });
 
