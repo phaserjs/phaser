@@ -111,4 +111,19 @@ var BaseSoundManager = new Class({
     },
     destroy: NOOP
 });
+/**
+ * Global playback rate.
+ * @property {number} rate
+ */
+Object.defineProperty(BaseSoundManager.prototype, 'rate', {
+    get: function () {
+        return this._rate;
+    },
+    set: function (value) {
+        this._rate = value;
+        this.sounds.forEach(function (sound) {
+            sound.setRate();
+        }, this);
+    }
+});
 module.exports = BaseSoundManager;
