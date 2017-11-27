@@ -2,6 +2,7 @@
 
 var Bodies = require('./lib/factory/Bodies');
 var Class = require('../../utils/Class');
+var Composite = require('./lib/body/Composite');
 var Engine = require('./lib/core/Engine');
 var EventDispatcher = require('../../events/EventDispatcher');
 var GetFastValue = require('../../utils/object/GetFastValue');
@@ -59,6 +60,26 @@ var World = new Class({
 
                 this.setBounds(x, y, width, height, thickness, left, right, top, bottom);
             }
+        }
+
+        this.isPaused = GetValue(config, 'isPaused', false);
+
+        this.drawDebug = GetValue(config, 'debug', false);
+
+        this.debugGraphic;
+
+        this.defaults = {
+            debugShowBody: GetValue(config, 'debugShowBody', true),
+            debugShowStaticBody: GetValue(config, 'debugShowStaticBody', true),
+            debugShowVelocity: GetValue(config, 'debugShowVelocity', true),
+            bodyDebugColor: GetValue(config, 'debugBodyColor', 0xff00ff),
+            staticBodyDebugColor: GetValue(config, 'debugBodyColor', 0x0000ff),
+            velocityDebugColor: GetValue(config, 'debugVelocityColor', 0x00ff00)
+        };
+
+        if (this.drawDebug)
+        {
+            this.createDebugGraphic();
         }
 
         this.setEventsProxy();
@@ -153,7 +174,7 @@ var World = new Class({
             x += (width / 2);
             y += (height / 2);
 
-            this.walls[position] = this.create(x, y, width, height, { isStatic: true });
+            this.walls[position] = this.create(x, y, width, height, { isStatic: true, friction: 0, frictionStatic: 0 });
         }
         else
         {
@@ -164,6 +185,28 @@ var World = new Class({
 
             this.walls[position] = null;
         }
+    },
+
+    createDebugGraphic: function ()
+    {
+        var graphic = this.scene.sys.add.graphics({ x: 0, y: 0 });
+
+        graphic.setZ(Number.MAX_SAFE_INTEGER);
+
+        this.debugGraphic = graphic;
+
+        this.drawDebug = true;
+
+        return graphic;
+    },
+
+    disableGravity: function ()
+    {
+        this.localWorld.gravity.x = 0;
+        this.localWorld.gravity.y = 0;
+        this.localWorld.gravity.scale = 0;
+
+        return this;
     },
 
     setGravity: function (x, y, scale)
@@ -188,10 +231,17 @@ var World = new Class({
         return body;
     },
 
-    //  body can be single or an array
-    add: function (body)
+    //  object can be single or an array, and can be a body, composite or constraint
+    add: function (object)
     {
-        MatterWorld.add(this.localWorld, body);
+        MatterWorld.add(this.localWorld, object);
+
+        return this;
+    },
+
+    remove: function (object, deep)
+    {
+        MatterWorld.remove(this.localWorld, object, deep);
 
         return this;
     },
@@ -208,6 +258,11 @@ var World = new Class({
 
     update: function (time, delta)
     {
+        if (this.isPaused)
+        {
+            return;
+        }
+
         var correction = 1;
 
         Engine.update(this.engine, delta, correction);
@@ -215,7 +270,51 @@ var World = new Class({
 
     postUpdate: function ()
     {
-        //  NOOP
+        if (this.drawDebug)
+        {
+            var graphics = this.debugGraphic;
+            var bodies = Composite.allBodies(this.localWorld);
+
+            graphics.clear();
+            graphics.lineStyle(1, this.defaults.bodyDebugColor);
+
+            for (var i = 0; i < bodies.length; i++)
+            {
+                body = bodies[i];
+
+                var vertices = body.vertices;
+
+                graphics.moveTo(vertices[0].x, vertices[0].y);
+
+                for (var j = 1; j < vertices.length; j++)
+                {
+                    graphics.lineTo(vertices[j].x, vertices[j].y);
+                }
+
+                graphics.lineTo(vertices[0].x, vertices[0].y);
+
+                graphics.strokePath();
+
+                // if (body.willDrawDebug())
+                // {
+                //     body.drawDebug(graphics);
+                // }
+            }
+        }
+    },
+
+    fromPath: function (path, points)
+    {
+        if (points === undefined) { points = []; }
+
+        var pathPattern = /L?\s*([\-\d\.e]+)[\s,]*([\-\d\.e]+)*/ig;
+
+        path.replace(pathPattern, function(match, x, y)
+        {
+            points.push({ x: parseFloat(x), y: parseFloat(y) });
+        });
+
+        return points;
     },
 
     shutdown: function ()

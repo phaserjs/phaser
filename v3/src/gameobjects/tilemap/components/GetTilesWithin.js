@@ -2,14 +2,23 @@
 
 var GetFastValue = require('../../../utils/object/GetFastValue');
 
-// Get tiles within the rectangular area specified. Note: this clips the x, y, w & h to the map's
-// boundries.
-// Options:
-// {
-//      isNotEmpty: false,
-//      isColliding: false,
-//      hasInterestingFace: false
-// }
+/**
+ * Gets the tiles in the given rectangular area (in tile coordinates) of the layer.
+ *
+ * @param {number} [tileX=0] - [description]
+ * @param {number} [tileY=0] - [description]
+ * @param {number} [width=max width based on tileX] - [description]
+ * @param {number} [height=max height based on tileY] - [description]
+ * @param {object} [filteringOptions] - Optional filters to apply when getting the tiles.
+ * @param {boolean} [filteringOptions.isNotEmpty=false] - If true, only return tiles that don't have
+ * -1 for an index.
+ * @param {boolean} [filteringOptions.isColliding=false] - If true, only return tiles that collide on
+ * at least one side.
+ * @param {boolean} [filteringOptions.hasInterestingFace=false] - If true, only return tiles that
+ * have at least one interesting face.
+ * @param {LayerData} layer - [description]
+ * @return {array} Array of Tile objects.
+ */
 var GetTilesWithin = function (tileX, tileY, width, height, filteringOptions, layer)
 {
     if (tileX === undefined) { tileX = 0; }

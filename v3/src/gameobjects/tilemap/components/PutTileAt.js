@@ -2,8 +2,19 @@ var Tile = require('../Tile');
 var IsInLayerBounds = require('./IsInLayerBounds');
 var RecalculateFacesAt = require('./RecalculateFacesAt');
 
-// Put Phaser.Tile|number. Note: does not place a reference to tile, it copies the tile or creates a
-// new one.
+/**
+ * Puts a tile at the given tile coordinates in the specified layer. You can pass in either an index
+ * or a Tile object. If you pass in a Tile, all attributes will be copied over to the specified
+ * location. If you pass in an index, only the index at the specified location will be changed.
+ * Collision information will be recalculated at the specified location.
+ *
+ * @param {number|Tile} tile - The index of this tile to set or a Tile object.
+ * @param {number} tileX - [description]
+ * @param {number} tileY - [description]
+ * @param {boolean} [recalculateFaces=true] - [description]
+ * @param {LayerData} layer - [description]
+ * @return {Tile} The Tile object that was created or added to this map.
+ */
 var PutTileAt = function (tile, tileX, tileY, recalculateFaces, layer)
 {
     if (!IsInLayerBounds(tileX, tileY, layer)) { return null; }
@@ -18,10 +29,7 @@ var PutTileAt = function (tile, tileX, tileY, recalculateFaces, layer)
         {
             layer.data[tileY][tileX] = new Tile(layer, tile.index, tileX, tileY, tile.width, tile.height);
         }
-        else
-        {
-            layer.data[tileY][tileX].copy(tile);
-        }
+        layer.data[tileY][tileX].copy(tile);
     }
     else
     {

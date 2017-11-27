@@ -40,6 +40,7 @@ var Axes = require('../geometry/Axes');
             id: Common.nextId(),
             type: 'body',
             label: 'Body',
+            gameObject: null,
             parts: [],
             plugin: {},
             angle: 0,
@@ -292,19 +293,23 @@ var Axes = require('../geometry/Axes');
     };
 
     /**
-     * Sets the mass of the body. Inverse mass and density are automatically updated to reflect the change.
+     * Sets the mass of the body. Inverse mass, density and inertia are automatically updated to reflect the change.
      * @method setMass
      * @param {body} body
      * @param {number} mass
      */
     Body.setMass = function(body, mass) {
+        var moment = body.inertia / (body.mass / 6);
+        body.inertia = moment * (mass / 6);
+        body.inverseInertia = 1 / body.inertia;
+
         body.mass = mass;
         body.inverseMass = 1 / body.mass;
         body.density = body.mass / body.area;
     };
 
     /**
-     * Sets the density of the body. Mass is automatically updated to reflect the change.
+     * Sets the density of the body. Mass and inertia are automatically updated to reflect the change.
      * @method setDensity
      * @param {body} body
      * @param {number} density
@@ -538,11 +543,17 @@ var Axes = require('../geometry/Axes');
      * @param {vector} [point]
      */
     Body.scale = function(body, scaleX, scaleY, point) {
+        point = point || body.position;
+
         for (var i = 0; i < body.parts.length; i++) {
             var part = body.parts[i];
 
+            // scale position
+            part.position.x = point.x + (part.position.x - point.x) * scaleX;
+            part.position.y = point.y + (part.position.y - point.y) * scaleY;
+
             // scale vertices
-            Vertices.scale(part.vertices, scaleX, scaleY, body.position);
+            Vertices.scale(part.vertices, scaleX, scaleY, point);
 
             // update properties
             part.axes = Axes.fromVertices(part.vertices);
@@ -671,16 +682,16 @@ var Axes = require('../geometry/Axes');
 
         // sum the properties of all compound parts of the parent body
         for (var i = body.parts.length === 1 ? 0 : 1; i < body.parts.length; i++) {
-            var part = body.parts[i];
+            var part = body.parts[i],
+                mass = part.mass !== Infinity ? part.mass : 1;
+
             properties.mass += part.mass;
             properties.area += part.area;
             properties.inertia += part.inertia;
-            properties.centre = Vector.add(properties.centre, 
-                                           Vector.mult(part.position, part.mass !== Infinity ? part.mass : 1));
+            properties.centre = Vector.add(properties.centre, Vector.mult(part.position, mass));
         }
 
-        properties.centre = Vector.div(properties.centre, 
-                                       properties.mass !== Infinity ? properties.mass : body.parts.length);
+        properties.centre = Vector.div(properties.centre, properties.mass);
 
         return properties;
     };

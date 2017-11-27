@@ -12,7 +12,6 @@
  * @param {LayerData} layer - [description]
  * @return {Tile|null} The first (or n skipped) tile with the matching index.
  */
-
 var FindByIndex = function (findIndex, skip, reverse, layer)
 {
     if (skip === undefined) { skip = 0; }

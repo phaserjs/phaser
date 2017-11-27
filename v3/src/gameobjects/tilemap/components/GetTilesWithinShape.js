@@ -13,9 +13,25 @@ var TriangleToRectangle = function (triangle, rect)
     return Intersects.RectangleToTriangle(rect, triangle);
 };
 
-// Circle, Line, Rect, Triangle in world coordinates.
 // Note: Could possibly be optimized by copying the shape and shifting it into tilemapLayer
 // coordinates instead of shifting the tiles.
+
+/**
+ * Gets the tiles that overlap with the given shape in the given layer. The shape must be a Circle,
+ * Line, Rectangle or Triangle. The shape should be in world coordinates.
+ *
+ * @param {Circle|Line|Rectangle|Triangle} shape - A shape in world (pixel) coordinates
+ * @param {object} [filteringOptions] - Optional filters to apply when getting the tiles.
+ * @param {boolean} [filteringOptions.isNotEmpty=false] - If true, only return tiles that don't have
+ * -1 for an index.
+ * @param {boolean} [filteringOptions.isColliding=false] - If true, only return tiles that collide on
+ * at least one side.
+ * @param {boolean} [filteringOptions.hasInterestingFace=false] - If true, only return tiles that
+ * have at least one interesting face.
+ * @param {Camera} [camera=main camera] - [description]
+ * @param {LayerData} layer - [description]
+ * @return {array} Array of Tile objects.
+ */
 var GetTilesWithinShape = function (shape, filteringOptions, camera, layer)
 {
     if (shape === undefined) { return []; }

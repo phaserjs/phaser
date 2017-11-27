@@ -2,13 +2,25 @@ var SetTileCollision = require('./SetTileCollision');
 var CalculateFacesWithin = require('./CalculateFacesWithin');
 var SetLayerCollisionIndex = require('./SetLayerCollisionIndex');
 
-// Note: this only updates layer.collideIndexes for tile indexes found currently in the layer
+/**
+ * Sets collision on all tiles in the given layer, except for tiles that have an index specified in
+ * the given array. The `collides` parameter controls if collision will be enabled (true) or
+ * disabled (false).
+ *
+ * @param {array} indexes - An array of the tile indexes to not be counted for collision.
+ * @param {boolean} [collides=true] - If true it will enable collision. If false it will clear
+ * collision.
+ * @param {boolean} [recalculateFaces=true] - Whether or not to recalculate the tile faces after the
+ * update.
+ * @param {LayerData} layer - [description]
+ */
 var SetCollisionByExclusion = function (indexes, collides, recalculateFaces, layer)
 {
     if (collides === undefined) { collides = true; }
     if (recalculateFaces === undefined) { recalculateFaces = true; }
     if (!Array.isArray(indexes)) { indexes = [ indexes ]; }
 
+    // Note: this only updates layer.collideIndexes for tile indexes found currently in the layer
     for (var ty = 0; ty < layer.height; ty++)
     {
         for (var tx = 0; tx < layer.width; tx++)

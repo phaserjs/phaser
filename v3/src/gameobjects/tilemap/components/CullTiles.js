@@ -3,7 +3,7 @@
  * internally.
  *
  * @param {LayerData} layer - [description]
- * @param {Camera} camera - [description]
+ * @param {Camera} [camera=main camera] - [description]
  * @param {array} [outputArray] - [description]
  * @returns {array}
  */

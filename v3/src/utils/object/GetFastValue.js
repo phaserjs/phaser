@@ -10,7 +10,7 @@ var GetFastValue = function (source, key, defaultValue)
     {
         return defaultValue;
     }
-    else if (source.hasOwnProperty(key))
+    else if (source.hasOwnProperty(key) && source[key] !== undefined)
     {
         return source[key];
     }

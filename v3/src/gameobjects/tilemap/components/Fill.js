@@ -4,13 +4,13 @@ var CalculateFacesWithin = require('./CalculateFacesWithin');
 /**
  * Sets the tiles in the given rectangular area (in tile coordinates) of the layer with the
  * specified index. Tiles will be set to collide if the given index is a colliding index.
- * Interesting tile faces in the region will be recalculated.
+ * Collision information in the region will be recalculated.
  *
  * @param {number} index - [description]
- * @param {number} tileX - [description]
- * @param {number} tileY - [description]
- * @param {number} width - [description]
- * @param {number} height - [description]
+ * @param {number} [tileX=0] - [description]
+ * @param {number} [tileY=0] - [description]
+ * @param {number} [width=max width based on tileX] - [description]
+ * @param {number} [height=max height based on tileY] - [description]
  * @param {boolean} [recalculateFaces=true] - [description]
  * @param {LayerData} layer - [description]
  */
