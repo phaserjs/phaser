@@ -73,6 +73,13 @@ var BaseSoundManager = new Class({
          * @property {Phaser.Events.EventDispatcher} events
          */
         this.events = new EventDispatcher();
+        /**
+         * Property that actually holds the value of global playback rate.
+         *
+         * @property {number} _rate
+         * @private
+         */
+        this._rate = 1;
     },
     add: NOOP,
     addAudioSprite: NOOP,
