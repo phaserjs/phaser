@@ -40,13 +40,6 @@ var WebAudioSoundManager = new Class({
          * @property {AudioNode} destination
          */
         this.destination = this.masterMuteNode;
-        /**
-         * Property that actually holds the value of global detune.
-         *
-         * @property {number} _detune
-         * @private
-         */
-        this._detune = 0;
         this.unlock();
         BaseSoundManager.call(this, game);
     },
