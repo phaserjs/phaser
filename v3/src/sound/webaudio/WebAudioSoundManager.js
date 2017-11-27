@@ -104,19 +104,4 @@ Object.defineProperty(WebAudioSoundManager.prototype, 'volume', {
         this.masterVolumeNode.gain.setValueAtTime(value, 0);
     }
 });
-/**
- * Global detune.
- * @property {number} detune
- */
-Object.defineProperty(WebAudioSoundManager.prototype, 'detune', {
-    get: function () {
-        return this._detune;
-    },
-    set: function (value) {
-        this._detune = value;
-        this.sounds.forEach(function (sound) {
-            sound.setRate();
-        }, this);
-    }
-});
 module.exports = WebAudioSoundManager;
