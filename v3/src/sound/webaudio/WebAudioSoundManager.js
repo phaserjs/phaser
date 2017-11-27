@@ -129,9 +129,7 @@ Object.defineProperty(WebAudioSoundManager.prototype, 'rate', {
     set: function (value) {
         this._rate = value;
         this.sounds.forEach(function (sound) {
-            // invoke sound's rate setter method to update
-            // value based on new global rate value
-            sound.rate = sound.rate;
+            sound.setRate();
         }, this);
     }
 });
