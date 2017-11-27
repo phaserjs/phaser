@@ -283,7 +283,12 @@ var World = new Class({
 
             for (var i = 0; i < bodies.length; i++)
             {
-                body = bodies[i];
+                var body = bodies[i];
+
+                if (!body.render.visible)
+                {
+                    continue;
+                }
 
                 var vertices = body.vertices;
 
@@ -297,11 +302,6 @@ var World = new Class({
                 graphics.lineTo(vertices[0].x, vertices[0].y);
 
                 graphics.strokePath();
-
-                // if (body.willDrawDebug())
-                // {
-                //     body.drawDebug(graphics);
-                // }
             }
         }
     },
