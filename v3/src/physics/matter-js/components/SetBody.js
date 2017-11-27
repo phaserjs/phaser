@@ -4,6 +4,28 @@ var GetFastValue = require('../../../utils/object/GetFastValue');
 
 var SetBody = {
 
+    //  Calling any of these methods resets previous properties you may have set on the body, including plugins, mass, etc
+
+    setRectangle: function (width, height, options)
+    {
+        return this.setBody({ type: 'rectangle', width: width, height: height }, options);
+    },
+
+    setCircle: function (radius, options)
+    {
+        return this.setBody({ type: 'circle', radius: radius }, options);
+    },
+
+    setPolygon: function (radius, sides, options)
+    {
+        return this.setBody({ type: 'polygon', sides: sides, radius: radius }, options);
+    },
+
+    setTrapezoid: function (width, height, slope, options)
+    {
+        return this.setBody({ type: 'trapezoid', width: width, height: height, slope: slope }, options);
+    },
+
     setBody: function (config, options)
     {
         //  Existing body? Remove it.
@@ -18,6 +40,13 @@ var SetBody = {
         }
         else
         {
+            //  Allow them to do: shape: 'circle' instead of shape: { type: 'circle' }
+            if (typeof config === 'string')
+            {
+                //  Using defaults
+                config = { type: config };
+            }
+
             var shapeType = GetFastValue(config, 'type', 'rectangle');
             var bodyX = GetFastValue(config, 'x', this._tempVec2.x);
             var bodyY = GetFastValue(config, 'y', this._tempVec2.y);
@@ -43,8 +72,8 @@ var SetBody = {
 
                 case 'polygon':
                     var sides = GetFastValue(config, 'sides', 5);
-                    var radius = GetFastValue(config, 'radius', Math.max(bodyWidth, bodyHeight) / 2);
-                    this.body = Bodies.polygon(bodyX, bodyY, sides, radius, options);
+                    var pradius = GetFastValue(config, 'radius', Math.max(bodyWidth, bodyHeight) / 2);
+                    this.body = Bodies.polygon(bodyX, bodyY, sides, pradius, options);
                     break;
 
                 case 'fromVertices':
