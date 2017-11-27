@@ -1,5 +1,11 @@
-// Internal method
-// Update layer.collideIndexes to either contain or not contain tileIndex
+/**
+ * Internally used method to keep track of the tile indexes that collide within a layer. This
+ * updates LayerData.collideIndexes to either contain or not contain the given `tileIndex`.
+ *
+ * @param {number} tileIndex - [description]
+ * @param {boolean} [collides=true] - [description]
+ * @param {LayerData} layer - [description]
+ */
 var SetLayerCollisionIndex = function (tileIndex, collides, layer)
 {
     var loc = layer.collideIndexes.indexOf(tileIndex);

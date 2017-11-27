@@ -2,7 +2,19 @@ var Tile = require('../Tile');
 var IsInLayerBounds = require('./IsInLayerBounds');
 var RecalculateFacesAt = require('./RecalculateFacesAt');
 
-// Remove and return Tile with option for placing a -1 index tile or null.
+/**
+ * Removes the tile at the given tile coordinates in the specified layer and updates the layer's
+ * collision information.
+ *
+ * @param {number|Tile} tile - The index of this tile to set or a Tile object.
+ * @param {number} tileX - [description]
+ * @param {number} tileY - [description]
+ * @param {boolean} [replaceWithNull=true] - If true, this will replace the tile at the specified
+ * location with null instead of a Tile with an index of -1.
+ * @param {boolean} [recalculateFaces=true] - [description]
+ * @param {LayerData} layer - [description]
+ * @return {Tile} The Tile object that was removed.
+ */
 var RemoveTileAt = function (tileX, tileY, replaceWithNull, recalculateFaces, layer)
 {
     if (replaceWithNull === undefined) { replaceWithNull = false; }

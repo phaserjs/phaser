@@ -2,6 +2,24 @@ var GetTilesWithin = require('./GetTilesWithin');
 var WorldToTileX = require('./WorldToTileX');
 var WorldToTileY = require('./WorldToTileY');
 
+/**
+ * Gets the tiles in the given rectangular area (in world coordinates) of the layer.
+ *
+ * @param {number} worldX - [description]
+ * @param {number} worldY - [description]
+ * @param {number} width - [description]
+ * @param {number} height - [description]
+ * @param {object} [filteringOptions] - Optional filters to apply when getting the tiles.
+ * @param {boolean} [filteringOptions.isNotEmpty=false] - If true, only return tiles that don't have
+ * -1 for an index.
+ * @param {boolean} [filteringOptions.isColliding=false] - If true, only return tiles that collide on
+ * at least one side.
+ * @param {boolean} [filteringOptions.hasInterestingFace=false] - If true, only return tiles that
+ * have at least one interesting face.
+ * @param {Camera} [camera=main camera] - [description]
+ * @param {LayerData} layer - [description]
+ * @return {array} Array of Tile objects.
+ */
 var GetTilesWithinWorldXY = function (worldX, worldY, width, height, filteringOptions, camera, layer)
 {
     // Top left corner of the rect, rounded down to include partial tiles

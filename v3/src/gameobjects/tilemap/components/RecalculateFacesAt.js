@@ -1,8 +1,14 @@
 var GetTileAt = require('./GetTileAt');
 
-// Recalculate the faces, assuming only one tile location has been changed
-// Used internally to update faces quickly for PutTileAt/RemoveTileAt/etc. Alternate approach to
-// 951.
+/**
+ * Calculates interesting faces at the given tile coordinates of the specified layer. Interesting
+ * faces are used internally for optimizing collisions against tiles. This method is mostly used
+ * internally to optimize recalculating faces when only one tile has been changed.
+ *
+ * @param {number} tileX - [description]
+ * @param {number} tileY - [description]
+ * @param {LayerData} layer - [description]
+ */
 var RecalculateFacesAt = function (tileX, tileY, layer)
 {
     var tile = GetTileAt(tileX, tileY, true, layer);

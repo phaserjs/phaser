@@ -3,8 +3,8 @@ var CalculateFacesWithin = require('./CalculateFacesWithin');
 
 /**
  * Copies the tiles in the source rectangular area to a new destination (all specified in tile
- * coordinates) within the layer. This copies all tile properties & recalculates interesting tile
- * faces in the destination region.
+ * coordinates) within the layer. This copies all tile properties & recalculates collision
+ * information in the destination region.
  *
  * @param {number} srcTileX - [description]
  * @param {number} srcTileY - [description]
@@ -16,7 +16,6 @@ var CalculateFacesWithin = require('./CalculateFacesWithin');
  * @param {boolean} [recalculateFaces=true] - [description]
  * @param {LayerData} layer - [description]
  */
-
 var Copy = function (srcTileX, srcTileY, width, height, destTileX, destTileY, recalculateFaces, layer)
 {
     if (srcTileX < 0) { srcTileX = 0; }
