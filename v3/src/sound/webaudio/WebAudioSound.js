@@ -155,11 +155,13 @@ var WebAudioSound = new Class({
      * @private
      */
     setRate: function () {
-        var cent = 1.0005777895065548; // Math.pow(2, 1/1200);
-        var totalDetune = Math.max(-1200, Math.min(this.currentConfig.detune + this.manager.detune, 1200));
-        var detuneRate = Math.pow(cent, totalDetune);
-        var totalRate = this.currentConfig.rate * this.manager.rate * detuneRate;
-        this.source.playbackRate.setValueAtTime(totalRate, 0);
+        if (this.source) {
+            var cent = 1.0005777895065548; // Math.pow(2, 1/1200);
+            var totalDetune = Math.max(-1200, Math.min(this.currentConfig.detune + this.manager.detune, 1200));
+            var detuneRate = Math.pow(cent, totalDetune);
+            var totalRate = this.currentConfig.rate * this.manager.rate * detuneRate;
+            this.source.playbackRate.setValueAtTime(totalRate, 0);
+        }
     }
 });
 /**
@@ -198,9 +200,7 @@ Object.defineProperty(WebAudioSound.prototype, 'rate', {
     },
     set: function (value) {
         this.currentConfig.rate = value;
-        if (this.source) {
-            this.setRate();
-        }
+        this.setRate();
     }
 });
 /**
@@ -213,9 +213,7 @@ Object.defineProperty(WebAudioSound.prototype, 'detune', {
     },
     set: function (value) {
         this.currentConfig.detune = value;
-        if (this.source && this.source.detune) {
-            this.setRate();
-        }
+        this.setRate();
     }
 });
 module.exports = WebAudioSound;
