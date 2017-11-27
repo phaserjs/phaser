@@ -144,9 +144,7 @@ Object.defineProperty(WebAudioSoundManager.prototype, 'detune', {
     set: function (value) {
         this._detune = value;
         this.sounds.forEach(function (sound) {
-            // invoke sound's detune setter method to update
-            // value based on new global detune value
-            sound.detune = sound.detune;
+            sound.setRate();
         }, this);
     }
 });
