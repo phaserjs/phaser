@@ -211,6 +211,9 @@ var World = new Class({
 
     setGravity: function (x, y, scale)
     {
+        if (x === undefined) { x = 0; }
+        if (y === undefined) { y = 1; }
+
         this.localWorld.gravity.x = x;
         this.localWorld.gravity.y = y;
 
@@ -248,7 +251,7 @@ var World = new Class({
 
     nextGroup: function (isNonColliding)
     {
-        return Body.nextGroup(isNonColliding);
+        return MatterBody.nextGroup(isNonColliding);
     },
 
     nextCategory: function ()
