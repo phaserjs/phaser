@@ -88,6 +88,7 @@ var WebAudioSound = new Class({
         if (!BaseSound.prototype.resume.call(this)) {
             return false;
         }
+        // TODO take in account playback rate
         var offset = (this.currentMarker ? this.currentMarker.start : 0) + this.pausedTime;
         var duration = this.duration - this.pausedTime;
         this.createAndStartBufferSource(offset, duration);
