@@ -41,13 +41,6 @@ var WebAudioSoundManager = new Class({
          */
         this.destination = this.masterMuteNode;
         /**
-         * Property that actually holds the value of global playback rate.
-         *
-         * @property {number} _rate
-         * @private
-         */
-        this._rate = 1;
-        /**
          * Property that actually holds the value of global detune.
          *
          * @property {number} _detune
