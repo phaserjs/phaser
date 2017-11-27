@@ -126,4 +126,19 @@ Object.defineProperty(BaseSoundManager.prototype, 'rate', {
         }, this);
     }
 });
+/**
+ * Global detune.
+ * @property {number} detune
+ */
+Object.defineProperty(BaseSoundManager.prototype, 'detune', {
+    get: function () {
+        return this._detune;
+    },
+    set: function (value) {
+        this._detune = value;
+        this.sounds.forEach(function (sound) {
+            sound.setRate();
+        }, this);
+    }
+});
 module.exports = BaseSoundManager;
