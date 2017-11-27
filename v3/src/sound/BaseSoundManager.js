@@ -80,6 +80,13 @@ var BaseSoundManager = new Class({
          * @private
          */
         this._rate = 1;
+        /**
+         * Property that actually holds the value of global detune.
+         *
+         * @property {number} _detune
+         * @private
+         */
+        this._detune = 0;
     },
     add: NOOP,
     addAudioSprite: NOOP,
