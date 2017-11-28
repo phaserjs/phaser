@@ -77,6 +77,8 @@ var Camera = new Class({
     ignore: require('./inc/Ignore'),
     preRender: require('./inc/PreRender'),
     removeBounds: require('./inc/RemoveBounds'),
+    screenToCamera: require('./inc/ScreenToCamera'),
+    setAngle: require('./inc/SetAngle'),
     setBackgroundColor: require('./inc/SetBackgroundColor'),
     setBounds: require('./inc/SetBounds'),
     setName: require('./inc/SetName'),
