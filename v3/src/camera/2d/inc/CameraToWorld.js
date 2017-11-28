@@ -1,4 +1,4 @@
-var CameraToScreen = function (pointIn, pointOut)
+var CameraToWorld = function (pointIn, pointOut)
 {
     var cameraMatrix = this.matrix.matrix;
     var mva = cameraMatrix[0];
@@ -24,9 +24,13 @@ var CameraToScreen = function (pointIn, pointOut)
     var imd = mva * determinant;
     var ime = (mvc * mvf - mvd * mve) * determinant;
     var imf = (mvb * mve - mva * mvf) * determinant;
-
-    var x = pointIn.x;
-    var y = pointIn.y;
+    var c = Math.cos(this.rotation);
+    var s = Math.sin(this.rotation);
+    var zoom = this.zoom;
+    var scrollX = this.scrollX;
+    var scrollY = this.scrollY;
+    var x = pointIn.x + ((scrollX * c - scrollY * s) * zoom);
+    var y = pointIn.y + ((scrollX * s + scrollY * c) * zoom);
 
     if (!pointOut)
     {
@@ -40,4 +44,4 @@ var CameraToScreen = function (pointIn, pointOut)
     return pointOut;
 };
 
-module.exports = CameraToScreen;
+module.exports = CameraToWorld;

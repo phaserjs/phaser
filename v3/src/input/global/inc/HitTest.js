@@ -17,7 +17,7 @@ var HitTest = function (tempMatrix, x, y, gameObjects, camera, output)
         return output;
     }
 
-    var screenPoint = camera.cameraToScreen({ x: x, y: y });
+    var screenPoint = camera.cameraToWorld({ x: x, y: y });
     var culledGameObjects = camera.cull(gameObjects);
 
     for (var i = 0; i < culledGameObjects.length; i++)

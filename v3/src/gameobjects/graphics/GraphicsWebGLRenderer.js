@@ -221,8 +221,8 @@ var GraphicsWebGLRenderer = function (renderer, gameObject, interpolationPercent
                     /* Graphics Game Object Properties */
                     srcX, srcY, srcScaleX, srcScaleY, srcRotation,
                     /* Rectangle properties */ 
-                    commandBuffer[cmdIndex + 1] - cameraScrollX,
-                    commandBuffer[cmdIndex + 2] - cameraScrollY,
+                    commandBuffer[cmdIndex + 1],
+                    commandBuffer[cmdIndex + 2],
                     commandBuffer[cmdIndex + 3],
                     commandBuffer[cmdIndex + 4],
                     fillColor,
@@ -241,12 +241,12 @@ var GraphicsWebGLRenderer = function (renderer, gameObject, interpolationPercent
                     /* Graphics Game Object Properties */
                     srcX, srcY, srcScaleX, srcScaleY, srcRotation,
                     /* Triangle properties */ 
-                    commandBuffer[cmdIndex + 1] - cameraScrollX,
-                    commandBuffer[cmdIndex + 2] - cameraScrollY,
-                    commandBuffer[cmdIndex + 3] - cameraScrollX,
-                    commandBuffer[cmdIndex + 4] - cameraScrollY,
-                    commandBuffer[cmdIndex + 5] - cameraScrollX,
-                    commandBuffer[cmdIndex + 6] - cameraScrollY,
+                    commandBuffer[cmdIndex + 1],
+                    commandBuffer[cmdIndex + 2],
+                    commandBuffer[cmdIndex + 3],
+                    commandBuffer[cmdIndex + 4],
+                    commandBuffer[cmdIndex + 5],
+                    commandBuffer[cmdIndex + 6],
                     fillColor,
                     fillAlpha,
                     /* Transform */
@@ -263,12 +263,12 @@ var GraphicsWebGLRenderer = function (renderer, gameObject, interpolationPercent
                     /* Graphics Game Object Properties */
                     srcX, srcY, srcScaleX, srcScaleY, srcRotation,
                     /* Triangle properties */ 
-                    commandBuffer[cmdIndex + 1] - cameraScrollX,
-                    commandBuffer[cmdIndex + 2] - cameraScrollY,
-                    commandBuffer[cmdIndex + 3] - cameraScrollX,
-                    commandBuffer[cmdIndex + 4] - cameraScrollY,
-                    commandBuffer[cmdIndex + 5] - cameraScrollX,
-                    commandBuffer[cmdIndex + 6] - cameraScrollY,
+                    commandBuffer[cmdIndex + 1],
+                    commandBuffer[cmdIndex + 2],
+                    commandBuffer[cmdIndex + 3],
+                    commandBuffer[cmdIndex + 4],
+                    commandBuffer[cmdIndex + 5],
+                    commandBuffer[cmdIndex + 6],
                     lineWidth,
                     lineColor,
                     lineAlpha,

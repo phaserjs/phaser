@@ -65,7 +65,7 @@ var Camera = new Class({
         this._id = 0;
     },
 
-    cameraToScreen: require('./inc/CameraToScreen'),
+    cameraToWorld: require('./inc/CameraToWorld'),
     centerToBounds: require('./inc/CenterToBounds'),
     centerToSize: require('./inc/CenterToSize'),
     cull: require('./inc/Cull'),
@@ -77,7 +77,6 @@ var Camera = new Class({
     ignore: require('./inc/Ignore'),
     preRender: require('./inc/PreRender'),
     removeBounds: require('./inc/RemoveBounds'),
-    screenToCamera: require('./inc/ScreenToCamera'),
     setAngle: require('./inc/SetAngle'),
     setBackgroundColor: require('./inc/SetBackgroundColor'),
     setBounds: require('./inc/SetBounds'),
@@ -94,7 +93,8 @@ var Camera = new Class({
     startFollow: require('./inc/StartFollow'),
     stopFollow: require('./inc/StopFollow'),
     toJSON: require('./inc/ToJSON'),
-    update: require('./inc/Update')
+    update: require('./inc/Update'),
+    worldToCamera: require('./inc/WorldToCamera')
 
 });
 
