@@ -5,9 +5,8 @@ var PointWithinGameObject = require('./PointWithinGameObject');
 //  Array contains matching Game Objects.
 //  Array will be empty if no objects were matched.
 
-var PointScreenToWorldHitTest = function (tempMatrix, x, y, gameObjectArray, camera, output) 
+var PointScreenToWorldHitTest = function (tempMatrix, x, y, gameObjectArray, camera, output)
 {
-    var length = gameObjectArray.length;
     var scrollX = camera.scrollX;
     var scrollY = camera.scrollY;
     var cameraW = camera.width;
@@ -21,17 +20,25 @@ var PointScreenToWorldHitTest = function (tempMatrix, x, y, gameObjectArray, cam
         return output;
     }
 
-    var screenPoint = camera.cameraToScreen({x: x, y: y});
+    var screenPoint = camera.cameraToScreen({ x: x, y: y });
+    var object;
+    var tpoint;
 
     if (Array.isArray(gameObjectArray))
     {
         var culled = camera.cull(gameObjectArray);
         var culledLength = culled.length;
 
-        for (var index = 0; index < culledLength; ++index)
+        for (var i = 0; i < culledLength; i++)
         {
-            var object = culled[index];
-            var tpoint = GetTransformedPoint(tempMatrix, object, screenPoint.x + scrollX * object.scrollFactorX, screenPoint.y + scrollY * object.scrollFactorY);
+            object = culled[i];
+
+            tpoint = GetTransformedPoint(
+                tempMatrix,
+                object,
+                screenPoint.x + scrollX * object.scrollFactorX,
+                screenPoint.y + scrollY * object.scrollFactorY
+            );
 
             if (PointWithinGameObject(object, tpoint.x, tpoint.y))
             {
@@ -41,9 +48,14 @@ var PointScreenToWorldHitTest = function (tempMatrix, x, y, gameObjectArray, cam
     }
     else
     {
-        var object = gameObjectArray;
+        object = gameObjectArray;
 
-        var tpoint = GetTransformedPoint(tempMatrix, object, screenPoint.x + scrollX * object.scrollFactorX, screenPoint.y + scrollY * object.scrollFactorY);
+        tpoint = GetTransformedPoint(
+            tempMatrix,
+            object,
+            screenPoint.x + scrollX * object.scrollFactorX,
+            screenPoint.y + scrollY * object.scrollFactorY
+        );
         
         if (PointWithinGameObject(object, tpoint.x, tpoint.y))
         {
