@@ -3,6 +3,7 @@ var Class = require('../../utils/Class');
 var Composite = require('./lib/body/Composite');
 var Constraint = require('./lib/constraint/Constraint');
 var Detector = require('./lib/collision/Detector');
+var GetFastValue = require('../../utils/object/GetFastValue');
 var Merge = require('../../utils/object/Merge');
 var Sleeping = require('./lib/core/Sleeping');
 var Vertices = require('./lib/geometry/Vertices');
@@ -34,6 +35,19 @@ var PointerConstraint = new Class({
         this.scene = scene;
 
         this.world = world;
+
+        var camera = GetFastValue(options, 'camera', null);
+
+        if (!camera)
+        {
+            this.camera = scene.sys.cameras.main;
+        }
+        else
+        {
+            this.camera = camera;
+
+            delete options.camera;
+        }
 
         this.pointer = null;
 
@@ -109,7 +123,8 @@ var PointerConstraint = new Class({
         }
         else
         {
-            var position = pointer.position;
+            // var position = this.camera.screenToCamera({ x: pointer.position.x, y: pointer.position.y });
+            var position = this.pointer.positionToCamera(this.camera);
 
             if (constraint.bodyB)
             {

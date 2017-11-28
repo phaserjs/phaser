@@ -67,6 +67,13 @@ var Pointer = new Class({
         this.justMoved = false;
     },
 
+    positionToCamera: function (camera, output)
+    {
+        if (output === undefined) { output = { x: 0, y: 0 }; }
+
+        return camera.screenToCamera(this.position.x, this.position.y, output);
+    },
+
     x: {
 
         get: function ()
