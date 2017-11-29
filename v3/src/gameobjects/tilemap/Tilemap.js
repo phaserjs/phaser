@@ -124,8 +124,6 @@ var Tilemap = new Class({
         var dynamicLayer = new DynamicTilemapLayer(this.scene, this, this.currentLayerIndex, tileset, x, y);
         this.scene.sys.displayList.add(dynamicLayer);
 
-        this.setTileSize(layerData);
-
         return dynamicLayer;
     },
 
