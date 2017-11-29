@@ -11,7 +11,7 @@ GameObjectCreator.register('tilemap', function (config)
     //     tileHeight: 32,
     //     width: 10,
     //     height: 10,
-    //     data: null (2D array of tile indices),
+    //     data: null (2D array of tile indexes),
     //     insertNull: false
     // }
 

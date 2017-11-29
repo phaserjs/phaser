@@ -149,9 +149,9 @@ var DynamicTilemapLayer = new Class({
         return TilemapComponents.PutTileAtWorldXY(tile, worldX, worldY, recalculateFaces, camera, this.layer);
     },
 
-    randomize: function (tileX, tileY, width, height, indices)
+    randomize: function (tileX, tileY, width, height, indexes)
     {
-        TilemapComponents.Randomize(tileX, tileY, width, height, indices, this.layer);
+        TilemapComponents.Randomize(tileX, tileY, width, height, indexes, this.layer);
         return this;
     },
 

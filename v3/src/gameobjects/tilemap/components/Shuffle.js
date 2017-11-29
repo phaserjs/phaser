@@ -17,12 +17,12 @@ var Shuffle = function (tileX, tileY, width, height, layer)
 {
     var tiles = GetTilesWithin(tileX, tileY, width, height, null, layer);
 
-    var indices = tiles.map(function (tile) { return tile.index; });
-    ShuffleArray(indices);
+    var indexes = tiles.map(function (tile) { return tile.index; });
+    ShuffleArray(indexes);
 
     for (var i = 0; i < tiles.length; i++)
     {
-        tiles[i].index = indices[i];
+        tiles[i].index = indexes[i];
     }
 };
 

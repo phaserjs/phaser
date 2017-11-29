@@ -511,13 +511,13 @@ var Tilemap = new Class({
         return TilemapComponents.PutTileAtWorldXY(tile, worldX, worldY, recalculateFaces, camera, layer);
     },
 
-    randomize: function (tileX, tileY, width, height, indices, layer)
+    randomize: function (tileX, tileY, width, height, indexes, layer)
     {
         layer = this.getLayer(layer);
         if (this._isStaticCall(layer, 'randomize')) { return this; }
         if (layer !== null)
         {
-            TilemapComponents.Randomize(tileX, tileY, width, height, indices, layer);
+            TilemapComponents.Randomize(tileX, tileY, width, height, indexes, layer);
         }
         return this;
     },

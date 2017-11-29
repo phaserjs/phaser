@@ -159,13 +159,13 @@ var ParseJSONTiled = function (key, json, insertNull)
         {
             var newSet = new Tileset(set.name, set.firstgid, set.tilewidth, set.tileheight, set.margin, set.spacing, set.properties);
 
-            // Properties stored per-tile in object with string indices starting at "0"
+            // Properties stored per-tile in object with string indexes starting at "0"
             if (set.tileproperties)
             {
                 newSet.tileProperties = set.tileproperties;
             }
 
-            // Object & terrain shapes stored per-tile in object with string indices starting at "0"
+            // Object & terrain shapes stored per-tile in object with string indexes starting at "0"
             if (set.tiles)
             {
                 newSet.tileData = set.tiles;
