@@ -123,8 +123,7 @@ var PointerConstraint = new Class({
         }
         else
         {
-            // var position = this.camera.screenToCamera({ x: pointer.position.x, y: pointer.position.y });
-            var position = this.pointer.positionToCamera(this.camera);
+            var position = this.camera.worldToCamera({ x: pointer.position.x, y: pointer.position.y });
 
             if (constraint.bodyB)
             {
