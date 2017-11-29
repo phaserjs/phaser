@@ -71,8 +71,8 @@ var BuildGameObject = function (scene, gameObject, config)
     }
     else if (origin !== null)
     {
-        var ox = GetAdvancedValue(config, 'x', 0.5);
-        var oy = GetAdvancedValue(config, 'y', 0.5);
+        var ox = GetAdvancedValue(origin, 'x', 0.5);
+        var oy = GetAdvancedValue(origin, 'y', 0.5);
 
         gameObject.setOrigin(ox, oy);
     }
