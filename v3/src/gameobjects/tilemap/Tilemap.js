@@ -143,7 +143,8 @@ var Tilemap = new Class({
      *
      * @param {string} name - The name of the object layer (from Tiled) to create Sprites from.
      * @param {number} id - Either the id (object), gid (tile object) or name (object or tile
-     * object) from Tiled.
+     * object) from Tiled. Ids are unique in Tiled, but a gid is shared by all tile objects with the
+     * same graphic. The same name can be used on multiple objects.
      * @param {object} spriteConfig - The config object to pass into the Sprite creator (i.e.
      * scene.make.sprite).
      * @param {Scene} [scene=the scene the map is within] - The Scene to create the Sprites within.
@@ -159,6 +160,8 @@ var Tilemap = new Class({
             console.warn('Cannot create from object. Invalid objectgroup name given: ' + name);
             return;
         }
+
+        var sprites = [];
 
         for (var i = 0; i < this.objects[name].length; i++)
         {
@@ -209,10 +212,12 @@ var Tilemap = new Class({
                 }
 
                 if (!obj.visible) { sprite.visible = false; }
+
+                sprites.push(sprite);
             }
         }
 
-        return sprite;
+        return sprites;
     },
 
     // Creates & selects
