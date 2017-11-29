@@ -164,6 +164,12 @@ var DynamicTilemapLayer = new Class({
         return TilemapComponents.RemoveTileAtWorldXY(worldX, worldY, replaceWithNull, recalculateFaces, camera, this.layer);
     },
 
+    renderDebug: function (graphics, styleConfig)
+    {
+        TilemapComponents.RenderDebug(graphics, styleConfig, this.layer);
+        return this;
+    },
+
     replaceByIndex: function (findIndex, newIndex, tileX, tileY, width, height)
     {
         TilemapComponents.ReplaceByIndex(findIndex, newIndex, tileX, tileY, width, height, this.layer);

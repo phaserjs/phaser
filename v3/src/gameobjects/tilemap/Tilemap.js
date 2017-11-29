@@ -514,6 +514,14 @@ var Tilemap = new Class({
         return TilemapComponents.RemoveTileAtWorldXY(worldX, worldY, replaceWithNull, recalculateFaces, camera, layer);
     },
 
+    renderDebug: function (graphics, styleConfig, layer)
+    {
+        layer = this.getLayer(layer);
+        if (layer === null) { return this; }
+        TilemapComponents.RenderDebug(graphics, styleConfig, layer);
+        return this;
+    },
+
     replaceByIndex: function (findIndex, newIndex, tileX, tileY, width, height, layer)
     {
         layer = this.getLayer(layer);

@@ -279,6 +279,12 @@ var StaticTilemapLayer = new Class({
         return TilemapComponents.HasTileAtWorldXY(worldX, worldY, camera, this.layer);
     },
 
+    renderDebug: function (graphics, styleConfig)
+    {
+        TilemapComponents.RenderDebug(graphics, styleConfig, this.layer);
+        return this;
+    },
+
     setCollision: function (indexes, collides, recalculateFaces)
     {
         TilemapComponents.SetCollision(indexes, collides, recalculateFaces, this.layer);
