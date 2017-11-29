@@ -276,6 +276,27 @@ var Tilemap = new Class({
         return layer;
     },
 
+    convertLayerToStatic: function (layer)
+    {
+        layer = this.getLayer(layer);
+        if (layer === null) { return null; }
+
+        var dynamicLayer = layer.tilemapLayer;
+
+        if (!dynamicLayer || !(dynamicLayer instanceof DynamicTilemapLayer))
+        {
+            return null;
+        }
+
+        var staticLayer = new StaticTilemapLayer(dynamicLayer.scene, dynamicLayer.map,
+            dynamicLayer.layerIndex, dynamicLayer.tileset, dynamicLayer.x, dynamicLayer.y);
+        this.scene.sys.displayList.add(staticLayer);
+
+        dynamicLayer.destroy();
+
+        return staticLayer;
+    },
+
     copy: function (srcTileX, srcTileY, width, height, destTileX, destTileY, recalculateFaces, layer)
     {
         layer = this.getLayer(layer);

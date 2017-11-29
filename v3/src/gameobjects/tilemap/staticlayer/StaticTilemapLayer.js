@@ -36,7 +36,7 @@ var StaticTilemapLayer = new Class({
         this.layer = tilemap.layers[layerIndex];
         this.tileset = tileset;
 
-        // Link the layer data with this dynamic tilemap layer
+        // Link the layer data with this static tilemap layer
         this.layer.tilemapLayer = this;
 
         this.vbo = null;
@@ -221,7 +221,8 @@ var StaticTilemapLayer = new Class({
 
     destroy: function ()
     {
-        this.layer.tilemapLayer = undefined;
+        // Uninstall this layer only if it is still installed on the LayerData object
+        if (this.layer.tilemapLayer === this) { this.layer.tilemapLayer = undefined; }
         this.map = undefined;
         this.layer = undefined;
         this.tileset = undefined;
