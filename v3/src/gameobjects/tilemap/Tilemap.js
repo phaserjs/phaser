@@ -186,25 +186,22 @@ var Tilemap = new Class({
                 if (obj.width) { sprite.displayWidth = obj.width; }
                 if (obj.height) { sprite.displayHeight = obj.height; }
 
-                // Origin is (0, 1) in Tiled, so shift it to match (0.5, 0.5) in Phaser
-                spriteConfig.x = obj.x + sprite.displayWidth / 2;
-                spriteConfig.y = obj.y - sprite.displayHeight / 2;
+                // Origin is (0, 1) in Tiled, so find the offset that matches the Sprite's origin.
+                var offset = {
+                    x: sprite.originX * sprite.displayWidth,
+                    y: (sprite.originY - 1) * sprite.displayHeight
+                };
 
-                // If the object is rotated, then perform an additional correction for the origin
-                // changing from (0, 1) to (0.5, 0.5)
+                // If the object is rotated, then the origin offset also needs to be rotated.
                 if (obj.rotation)
                 {
                     var angle = DegToRad(obj.rotation);
-                    var offset = {
-                        x: sprite.displayWidth / 2,
-                        y: - sprite.displayHeight / 2
-                    };
                     Rotate(offset, angle);
-
                     sprite.rotation = angle;
-                    sprite.x += offset.x;
-                    sprite.y += offset.y;
                 }
+
+                sprite.x += offset.x;
+                sprite.y += offset.y;
 
                 if (obj.flippedHorizontal !== undefined || obj.flippedVertical !== undefined)
                 {
