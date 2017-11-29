@@ -194,6 +194,12 @@ var DynamicTilemapLayer = new Class({
         return this;
     },
 
+    setTileLocationCallback: function (tileX, tileY, width, height, callback, callbackContext)
+    {
+        TilemapComponents.SetTileLocationCallback(tileX, tileY, width, height, callback, callbackContext, this.layer);
+        return this;
+    },
+
     shuffle: function (tileX, tileY, width, height)
     {
         TilemapComponents.Shuffle(tileX, tileY, width, height, this.layer);

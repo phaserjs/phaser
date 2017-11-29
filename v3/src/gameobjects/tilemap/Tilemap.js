@@ -557,6 +557,14 @@ var Tilemap = new Class({
         return this;
     },
 
+    setTileLocationCallback: function (tileX, tileY, width, height, callback, callbackContext, layer)
+    {
+        layer = this.getLayer(layer);
+        if (layer === null) { return this; }
+        TilemapComponents.SetTileLocationCallback(tileX, tileY, width, height, callback, callbackContext, layer);
+        return this;
+    },
+
     setLayer: function (layer)
     {
         var index = this.getLayerIndex(layer);

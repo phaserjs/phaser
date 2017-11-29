@@ -303,6 +303,12 @@ var StaticTilemapLayer = new Class({
         return this;
     },
 
+    setTileLocationCallback: function (tileX, tileY, width, height, callback, callbackContext)
+    {
+        TilemapComponents.SetTileLocationCallback(tileX, tileY, width, height, callback, callbackContext, this.layer);
+        return this;
+    },
+
     worldToTileX: function (worldX, snapToFloor, camera)
     {
         return TilemapComponents.WorldToTileX(worldX, snapToFloor, camera, this.layer);

@@ -120,8 +120,15 @@ var Tile = new Class({
 
     setCollisionCallback: function (callback, context)
     {
-        this.collisionCallback = callback;
-        this.collisionCallbackContext = context;
+        if (callback === null) {
+            this.collisionCallback = undefined;
+            this.collisionCallbackContext = undefined;
+        }
+        else
+        {
+            this.collisionCallback = callback;
+            this.collisionCallbackContext = context;
+        }
     },
 
     setSize: function (tileWidth, tileHeight)
