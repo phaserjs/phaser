@@ -327,9 +327,11 @@ var ParseJSONTiled = function (key, json, insertNull)
                 sid = mapData.tiles[tile.index][2];
                 set = mapData.tilesets[sid];
 
+                // Ensure that a tile's size matches its tileset
+                tile.width = set.tileWidth;
+                tile.height = set.tileHeight;
 
                 // if that tile type has any properties, add them to the tile object
-
                 if (set.tileProperties && set.tileProperties[tile.index - set.firstgid])
                 {
                     tile.properties = Extend(tile.properties, set.tileProperties[tile.index - set.firstgid]);

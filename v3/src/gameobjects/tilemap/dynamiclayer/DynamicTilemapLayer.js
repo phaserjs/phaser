@@ -44,7 +44,7 @@ var DynamicTilemapLayer = new Class({
         this.setPosition(x, y);
         this.setSizeToFrame();
         this.setOrigin();
-        this.setSize(this.map.tileWidth * this.layer.width, this.map.tileheight * this.layer.height);
+        this.setSize(this.layer.tileWidth * this.layer.width, this.layer.tileHeight * this.layer.height);
 
         this.skipIndexZero = false;
     },

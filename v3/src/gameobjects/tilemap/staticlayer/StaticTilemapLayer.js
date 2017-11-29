@@ -53,7 +53,7 @@ var StaticTilemapLayer = new Class({
         this.setPosition(x, y);
         this.setSizeToFrame();
         this.setOrigin();
-        this.setSize(this.map.tileWidth * this.layer.width, this.map.tileHeight * this.layer.height);
+        this.setSize(this.layer.tileWidth * this.layer.width, this.layer.tileHeight * this.layer.height);
 
         this.skipIndexZero = false;
 
@@ -74,8 +74,8 @@ var StaticTilemapLayer = new Class({
         var tileset = this.tileset;
         var mapWidth = this.layer.width;
         var mapHeight = this.layer.height;
-        var tileWidth = this.map.tileWidth;
-        var tileHeight = this.map.tileHeight;
+        var tileWidth = this.layer.tileWidth;
+        var tileHeight = this.layer.tileHeight;
         var width = this.texture.source[0].width;
         var height = this.texture.source[0].height;
         var mapData = this.layer.data;
