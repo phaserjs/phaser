@@ -55,6 +55,11 @@ var DynamicTilemapLayer = new Class({
         return this;
     },
 
+    createFromTiles: function (indexes, replacements, spriteConfig, scene, camera)
+    {
+        return TilemapComponents.CreateFromTiles(indexes, replacements, spriteConfig, scene, camera, this.layer);
+    },
+
     cull: function (camera)
     {
         TilemapComponents.CullTiles(this.layer, camera, this.culledTiles);
@@ -80,6 +85,11 @@ var DynamicTilemapLayer = new Class({
     {
         TilemapComponents.Fill(index, tileX, tileY, width, height, recalculateFaces, this.layer);
         return this;
+    },
+
+    filterTiles: function (callback, context, tileX, tileY, width, height, filteringOptions)
+    {
+        return TilemapComponents.FilterTiles(callback, context, tileX, tileY, width, height, filteringOptions, this.layer);
     },
 
     findByIndex: function (findIndex, skip, reverse)

@@ -200,6 +200,13 @@ var Tilemap = new Class({
         return this;
     },
 
+    createFromTiles: function (indexes, replacements, spriteConfig, scene, camera, layer)
+    {
+        layer = this.getLayer(layer);
+        if (layer === null) { return null; }
+        return TilemapComponents.CreateFromTiles(indexes, replacements, spriteConfig, scene, camera, layer);
+    },
+
     destroy: function ()
     {
         this.layers.length = 0;
@@ -218,6 +225,13 @@ var Tilemap = new Class({
             TilemapComponents.Fill(index, tileX, tileY, width, height, recalculateFaces, layer);
         }
         return this;
+    },
+
+    filterTiles: function (callback, context, tileX, tileY, width, height, filteringOptions, layer)
+    {
+        layer = this.getLayer(layer);
+        if (layer === null) { return null; }
+        return TilemapComponents.FilterTiles(callback, context, tileX, tileY, width, height, filteringOptions, layer);
     },
 
     findByIndex: function (findIndex, skip, reverse, layer)

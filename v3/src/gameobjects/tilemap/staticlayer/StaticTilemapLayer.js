@@ -209,6 +209,11 @@ var StaticTilemapLayer = new Class({
         return this;
     },
 
+    createFromTiles: function (indexes, replacements, spriteConfig, scene, camera)
+    {
+        return TilemapComponents.CreateFromTiles(indexes, replacements, spriteConfig, scene, camera, this.layer);
+    },
+
     cull: function (camera)
     {
         TilemapComponents.CullTiles(this.layer, camera, this.culledTiles);
@@ -226,6 +231,11 @@ var StaticTilemapLayer = new Class({
     findByIndex: function (findIndex, skip, reverse)
     {
         return TilemapComponents.FindByIndex(findIndex, skip, reverse, this.layer);
+    },
+
+    filterTiles: function (callback, context, tileX, tileY, width, height, filteringOptions)
+    {
+        return TilemapComponents.FilterTiles(callback, context, tileX, tileY, width, height, filteringOptions, this.layer);
     },
 
     forEachTile: function (callback, context, tileX, tileY, width, height, filteringOptions)

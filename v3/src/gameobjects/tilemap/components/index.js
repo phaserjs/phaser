@@ -1,9 +1,11 @@
 module.exports = {
 
     Copy: require('./Copy'),
+    CreateFromTiles: require('./CreateFromTiles'),
     CullTiles: require('./CullTiles'),
     Fill: require('./Fill'),
     FindByIndex: require('./FindByIndex'),
+    FilterTiles: require('./FilterTiles'),
     ForEachTile: require('./ForEachTile'),
     GetTileAt: require('./GetTileAt'),
     GetTileAtWorldXY: require('./GetTileAtWorldXY'),
