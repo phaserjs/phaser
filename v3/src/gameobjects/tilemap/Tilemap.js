@@ -212,7 +212,7 @@ var Tilemap = new Class({
         return sprites;
     },
 
-    // Creates & selects
+    // Creates & selects, uses layer offset if x,y undefined
     createStaticLayer: function (layerID, tileset, x, y)
     {
         var index = this.getLayerIndex(layerID);
@@ -232,12 +232,16 @@ var Tilemap = new Class({
 
         this.currentLayerIndex = index;
 
+        // Default the x/y position to match Tiled layer offset, if it exists.
+        if (x === undefined && this.layers[index].x) { x = this.layers[index].x; }
+        if (y === undefined && this.layers[index].y) { y = this.layers[index].y; }
+
         var layer = new StaticTilemapLayer(this.scene, this, index, tileset, x, y);
         this.scene.sys.displayList.add(layer);
         return layer;
     },
 
-    // Creates & selects
+    // Creates & selects, uses layer offset if x,y undefined
     createDynamicLayer: function (layerID, tileset, x, y)
     {
         var index = this.getLayerIndex(layerID);
@@ -256,6 +260,10 @@ var Tilemap = new Class({
         }
 
         this.currentLayerIndex = index;
+
+        // Default the x/y position to match Tiled layer offset, if it exists.
+        if (x === undefined && this.layers[index].x) { x = this.layers[index].x; }
+        if (y === undefined && this.layers[index].y) { y = this.layers[index].y; }
 
         var layer = new DynamicTilemapLayer(this.scene, this, index, tileset, x, y);
         this.scene.sys.displayList.add(layer);
