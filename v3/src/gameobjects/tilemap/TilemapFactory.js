@@ -11,6 +11,9 @@ var ParseToTilemap = require('./ParseToTilemap');
 
 /**
  * Creates a Tilemap from the given key or data, or creates a blank Tilemap if no key/data provided.
+ * When loading from CSV or a 2D array, you should specify the tileWidth & tileHeight. When parsing
+ * from a map from Tiled, the tileWidth, tileHeight, width & height will be pulled from the map
+ * data. For an empty map, you should specify tileWidth, tileHeight, width & height.
  *
  * @param {string} [key] - The key in the Phaser cache that corresponds to the loaded tilemap data.
  * @param {number} [tileWidth=32] - The width of a tile in pixels. Pass in `null` to leave as the

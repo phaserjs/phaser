@@ -4,7 +4,10 @@ var ParseToTilemap = require('./ParseToTilemap');
 //  When registering a factory function 'this' refers to the GameObjectCreator context.
 
 /**
- * Creates a Tilemap from the given key or data, or creates a blank Tilemap if no key/data provided.
+ * Creates a Tilemap from the given key or data, or creates a blank Tilemap if no key/data
+ * provided. When loading from CSV or a 2D array, you should specify the tileWidth & tileHeight. When
+ * parsing from a map from Tiled, the tileWidth, tileHeight, width & height will be pulled from the
+ * map data. For an empty map, you should specify tileWidth, tileHeight, width & height.
  *
  * @param {object} [config] - The config options for the Tilemap.
  * @param {string} [config.key] - The key in the Phaser cache that corresponds to the loaded tilemap
