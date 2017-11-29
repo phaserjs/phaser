@@ -38,8 +38,6 @@ var Tilemap = new Class({
         this.tiles = mapData.tiles;
         this.objects = mapData.objects;
         this.currentLayerIndex = 0;
-
-        // TODO: debugging methods
     },
 
     addTilesetImage: function (tilesetName, key, tileWidth, tileHeight, tileMargin, tileSpacing, gid)
@@ -56,8 +54,6 @@ var Tilemap = new Class({
         }
 
         var texture = this.scene.sys.textures.get(key);
-
-        // TODO: potentially add in v2 support for bitmap data
 
         var index = this.getTilesetIndex(tilesetName);
 
@@ -83,8 +79,6 @@ var Tilemap = new Class({
         tileset.setImage(texture);
         this.tilesets.push(tileset);
         return tileset;
-
-        // TODO: add in GID & master list of tiles
     },
 
     // Creates & selects
@@ -126,8 +120,6 @@ var Tilemap = new Class({
 
         this.layers.push(layerData);
         this.currentLayerIndex = this.layers.length - 1;
-
-        // TODO: decide about v2 trimming to game width/height
 
         var dynamicLayer = new DynamicTilemapLayer(this.scene, this, this.currentLayerIndex, tileset, x, y);
         this.scene.sys.displayList.add(dynamicLayer);
@@ -238,9 +230,6 @@ var Tilemap = new Class({
             return null;
         }
 
-        // TODO: new feature, allow multiple CSV layers
-        // TODO: display dimension
-
         this.currentLayerIndex = index;
 
         var layer = new StaticTilemapLayer(this.scene, this, index, tileset, x, y);
@@ -265,9 +254,6 @@ var Tilemap = new Class({
             console.warn('Cannot create dynamic tilemap layer since a static or dynamic tilemap layer exists for layer ID:' + layerID);
             return null;
         }
-
-        // TODO: new feature, allow multiple CSV layers
-        // TODO: display dimension
 
         this.currentLayerIndex = index;
 

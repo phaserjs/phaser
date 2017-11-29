@@ -1,5 +1,3 @@
-
-
 var GetFastValue = require('../../../utils/object/GetFastValue');
 
 /**

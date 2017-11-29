@@ -3,8 +3,6 @@ var Components = require('../components');
 
 var Tile = new Class({
 
-    // TODO: custom rotation or use transform component
-    // TODO: Add in bounds mixin, or custom replacement
     Mixins: [
         Components.Alpha,
         Components.Flip,
@@ -37,7 +35,7 @@ var Tile = new Class({
         this.collisionCallbackContext = this;
         this.scanned = false;
 
-        // TODO: update renders to allow for using Components.Tint
+        // Note: tint is currently a single color value instead of the 4 corner tint component
         this.tint = 0xFFFFFF;
     },
 
