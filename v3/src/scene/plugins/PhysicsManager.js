@@ -24,7 +24,7 @@ var PhysicsManager = new Class({
         this.system;
 
         //  This gets set by the physics system during boot
-        this.world = { update: NOOP, postUpdate: NOOP };
+        this.world = { update: NOOP, postUpdate: NOOP, shutdown: NOOP, destroy: NOOP };
 
         //  This gets set by the physics system during boot
         this.add;
@@ -70,6 +70,16 @@ var PhysicsManager = new Class({
     postUpdate: function ()
     {
         this.world.postUpdate();
+    },
+
+    shutdown: function ()
+    {
+        this.world.shutdown();
+    },
+
+    destroy: function ()
+    {
+        this.world.destroy();
     }
 
 });

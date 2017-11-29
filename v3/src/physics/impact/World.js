@@ -479,6 +479,11 @@ var World = new Class({
         return this;
     },
 
+    shutdown: function ()
+    {
+
+    },
+
     destroy: function ()
     {
         this.scene = null;
