@@ -134,13 +134,13 @@ var Tilemap = new Class({
      * property of alpha: 0.5 in the map editor will duplicate that when the Sprite is created.
      *
      * @param {string} name - The name of the object layer (from Tiled) to create Sprites from.
-     * @param {number} id - Either the id (object), gid (tile object) or name (object or tile
-     * object) from Tiled. Ids are unique in Tiled, but a gid is shared by all tile objects with the
-     * same graphic. The same name can be used on multiple objects.
+     * @param {integer|string} id - Either the id (object), gid (tile object) or name (object or
+     * tile object) from Tiled. Ids are unique in Tiled, but a gid is shared by all tile objects
+     * with the same graphic. The same name can be used on multiple objects.
      * @param {object} spriteConfig - The config object to pass into the Sprite creator (i.e.
      * scene.make.sprite).
      * @param {Scene} [scene=the scene the map is within] - The Scene to create the Sprites within.
-     * @return {array} An array of the Sprites that were created.
+     * @return {Sprite[]} An array of the Sprites that were created.
      */
     createFromObjects: function (name, id, spriteConfig, scene)
     {

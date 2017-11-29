@@ -7,7 +7,7 @@ var SetLayerCollisionIndex = require('./SetLayerCollisionIndex');
  * single numeric index or an array of indexes: [2, 3, 15, 20]. The `collides` parameter controls if
  * collision will be enabled (true) or disabled (false).
  *
- * @param {number|array} indexes - Either a single tile index, or an array of tile indexes.
+ * @param {integer|array} indexes - Either a single tile index, or an array of tile indexes.
  * @param {boolean} [collides=true] - If true it will enable collision. If false it will clear
  * collision.
  * @param {boolean} [recalculateFaces=true] - Whether or not to recalculate the tile faces after the

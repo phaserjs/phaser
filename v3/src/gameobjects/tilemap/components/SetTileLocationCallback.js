@@ -5,10 +5,10 @@ var GetTilesWithin = require('./GetTilesWithin');
  * If a callback is already set for the tile index it will be replaced. Set the callback to null to
  * remove it.
  *
- * @param {number} [tileX=0] - [description]
- * @param {number} [tileY=0] - [description]
- * @param {number} [width=max width based on tileX] - [description]
- * @param {number} [height=max height based on tileY] - [description]
+ * @param {integer} [tileX=0] - [description]
+ * @param {integer} [tileY=0] - [description]
+ * @param {integer} [width=max width based on tileX] - [description]
+ * @param {integer} [height=max height based on tileY] - [description]
  * @param {function} callback - The callback that will be invoked when the tile is collided with.
  * @param {object} callbackContext - The context under which the callback is called.
  * @param {LayerData} layer - [description]

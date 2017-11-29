@@ -5,8 +5,8 @@ var GetTileAt = require('./GetTileAt');
  * faces are used internally for optimizing collisions against tiles. This method is mostly used
  * internally to optimize recalculating faces when only one tile has been changed.
  *
- * @param {number} tileX - [description]
- * @param {number} tileY - [description]
+ * @param {integer} tileX - [description]
+ * @param {integer} tileY - [description]
  * @param {LayerData} layer - [description]
  */
 var RecalculateFacesAt = function (tileX, tileY, layer)

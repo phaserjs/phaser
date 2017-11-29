@@ -6,10 +6,10 @@ var GetTilesWithin = require('./GetTilesWithin');
  * layer. Interesting faces are used internally for optimizing collisions against tiles. This method
  * is mostly used internally.
  *
- * @param {number} [tileX=0] - [description]
- * @param {number} [tileY=0] - [description]
- * @param {number} [width=max width based on tileX] - [description]
- * @param {number} [height=max height based on tileY] - [description]
+ * @param {integer} [tileX=0] - [description]
+ * @param {integer} [tileY=0] - [description]
+ * @param {integer} [width=max width based on tileX] - [description]
+ * @param {integer} [height=max height based on tileY] - [description]
  * @param {LayerData} layer - [description]
  */
 var CalculateFacesWithin = function (tileX, tileY, width, height, layer)

@@ -3,10 +3,10 @@ var GetFastValue = require('../../../utils/object/GetFastValue');
 /**
  * Gets the tiles in the given rectangular area (in tile coordinates) of the layer.
  *
- * @param {number} [tileX=0] - [description]
- * @param {number} [tileY=0] - [description]
- * @param {number} [width=max width based on tileX] - [description]
- * @param {number} [height=max height based on tileY] - [description]
+ * @param {integer} [tileX=0] - [description]
+ * @param {integer} [tileY=0] - [description]
+ * @param {integer} [width=max width based on tileX] - [description]
+ * @param {integer} [height=max height based on tileY] - [description]
  * @param {object} [filteringOptions] - Optional filters to apply when getting the tiles.
  * @param {boolean} [filteringOptions.isNotEmpty=false] - If true, only return tiles that don't have
  * -1 for an index.
@@ -15,7 +15,7 @@ var GetFastValue = require('../../../utils/object/GetFastValue');
  * @param {boolean} [filteringOptions.hasInterestingFace=false] - If true, only return tiles that
  * have at least one interesting face.
  * @param {LayerData} layer - [description]
- * @return {array} Array of Tile objects.
+ * @return {Tile[]} Array of Tile objects.
  */
 var GetTilesWithin = function (tileX, tileY, width, height, filteringOptions, layer)
 {

@@ -8,7 +8,7 @@ var Tileset = new Class({
      * A Tileset is a combination of an image containing the tiles and a container for data about
      * each tile.
      *
-     * @class MapData
+     * @class Tileset
      * @constructor
      *
      * @param {string} name - The name of the tileset in the map data.
@@ -115,7 +115,7 @@ var Tileset = new Class({
         /**
          * The look-up table to specific tile image texture coordinates (UV in pixels). Each element
          * contains the coordinates for a tile in an object of the form {x, y}.
-         * @property {array} texCoordinates
+         * @property {object[]} texCoordinates
          * @readonly
         */
         this.texCoordinates = [];

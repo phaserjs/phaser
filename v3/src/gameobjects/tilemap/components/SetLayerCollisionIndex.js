@@ -2,7 +2,7 @@
  * Internally used method to keep track of the tile indexes that collide within a layer. This
  * updates LayerData.collideIndexes to either contain or not contain the given `tileIndex`.
  *
- * @param {number} tileIndex - [description]
+ * @param {integer} tileIndex - [description]
  * @param {boolean} [collides=true] - [description]
  * @param {LayerData} layer - [description]
  */
