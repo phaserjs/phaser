@@ -549,6 +549,14 @@ var Tilemap = new Class({
         return this;
     },
 
+    setTileIndexCallback: function (indexes, callback, callbackContext, layer)
+    {
+        layer = this.getLayer(layer);
+        if (layer === null) { return this; }
+        TilemapComponents.SetTileIndexCallback(indexes, callback, callbackContext, layer);
+        return this;
+    },
+
     setLayer: function (layer)
     {
         var index = this.getLayerIndex(layer);
