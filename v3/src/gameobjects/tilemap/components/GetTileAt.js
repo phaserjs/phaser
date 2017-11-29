@@ -3,8 +3,8 @@ var IsInLayerBounds = require('./IsInLayerBounds');
 /**
  * Gets a tile at the given tile coordinates from the given layer.
  *
- * @param {number} tileX - X position to get the tile from (given in tile units, not pixels)
- * @param {number} tileY - Y position to get the tile from (given in tile units, not pixels)
+ * @param {integer} tileX - X position to get the tile from (given in tile units, not pixels).
+ * @param {integer} tileY - Y position to get the tile from (given in tile units, not pixels).
  * @param {boolean} [nonNull=false] - If true getTile won't return null for empty tiles, but a Tile
  * object with an index of -1.
  * @param {LayerData} layer - [description]

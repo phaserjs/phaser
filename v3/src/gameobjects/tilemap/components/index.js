@@ -22,6 +22,7 @@ module.exports = {
     RemoveTileAt: require('./RemoveTileAt'),
     RemoveTileAtWorldXY: require('./RemoveTileAtWorldXY'),
     ReplaceByIndex: require('./ReplaceByIndex'),
+    RenderDebug: require('./RenderDebug'),
     SetCollision: require('./SetCollision'),
     SetCollisionBetween: require('./SetCollisionBetween'),
     SetCollisionByExclusion: require('./SetCollisionByExclusion'),

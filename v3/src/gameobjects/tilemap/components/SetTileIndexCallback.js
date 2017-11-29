@@ -4,7 +4,7 @@
  * will be replaced. Set the callback to null to remove it. If you want to set a callback for a tile
  * at a specific location on the map then see setTileLocationCallback.
  *
- * @param {number|array} indexes - Either a single tile index, or an array of tile indexes to have a
+ * @param {integer|array} indexes - Either a single tile index, or an array of tile indexes to have a
  * collision callback set for.
  * @param {function} callback - The callback that will be invoked when the tile is collided with.
  * @param {object} callbackContext - The context under which the callback is called.

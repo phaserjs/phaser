@@ -6,13 +6,13 @@ var CalculateFacesWithin = require('./CalculateFacesWithin');
  * coordinates) within the layer. This copies all tile properties & recalculates collision
  * information in the destination region.
  *
- * @param {number} srcTileX - [description]
- * @param {number} srcTileY - [description]
- * @param {number} width - [description]
- * @param {number} height - [description]
- * @param {number} destTileX - [description]
- * @param {number} destTileY - [description]
- * @param {number} destTileY - [description]
+ * @param {integer} srcTileX - [description]
+ * @param {integer} srcTileY - [description]
+ * @param {integer} width - [description]
+ * @param {integer} height - [description]
+ * @param {integer} destTileX - [description]
+ * @param {integer} destTileY - [description]
+ * @param {integer} destTileY - [description]
  * @param {boolean} [recalculateFaces=true] - [description]
  * @param {LayerData} layer - [description]
  */

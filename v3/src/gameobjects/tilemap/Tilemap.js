@@ -38,16 +38,12 @@ var Tilemap = new Class({
         this.tiles = mapData.tiles;
         this.objects = mapData.objects;
         this.currentLayerIndex = 0;
-
-        // TODO: debugging methods
     },
 
     addTilesetImage: function (tilesetName, key, tileWidth, tileHeight, tileMargin, tileSpacing, gid)
     {
         if (tilesetName === undefined) { return null; }
         if (key === undefined || key === null) { key = tilesetName; }
-        if (tileWidth === undefined) { tileWidth = this.tileWidth; }
-        if (tileHeight === undefined) { tileHeight = this.tileHeight; }
 
         if (!this.scene.sys.textures.exists(key))
         {
@@ -56,8 +52,6 @@ var Tilemap = new Class({
         }
 
         var texture = this.scene.sys.textures.get(key);
-
-        // TODO: potentially add in v2 support for bitmap data
 
         var index = this.getTilesetIndex(tilesetName);
 
@@ -75,6 +69,8 @@ var Tilemap = new Class({
             return this.tilesets[index];
         }
 
+        if (tileWidth === undefined) { tileWidth = this.tileWidth; }
+        if (tileHeight === undefined) { tileHeight = this.tileHeight; }
         if (tileMargin === undefined) { tileMargin = 0; }
         if (tileSpacing === undefined) { tileSpacing = 0; }
         if (gid === undefined) { gid = 0; }
@@ -83,15 +79,13 @@ var Tilemap = new Class({
         tileset.setImage(texture);
         this.tilesets.push(tileset);
         return tileset;
-
-        // TODO: add in GID & master list of tiles
     },
 
     // Creates & selects
     createBlankDynamicLayer: function (name, tileset, x, y, width, height, tileWidth, tileHeight)
     {
-        if (tileWidth === undefined) { tileWidth = this.tileWidth; }
-        if (tileHeight === undefined) { tileHeight = this.tileHeight; }
+        if (tileWidth === undefined) { tileWidth = tileset.tileWidth; }
+        if (tileHeight === undefined) { tileHeight = tileset.tileHeight; }
         if (width === undefined) { width = this.width; }
         if (height === undefined) { height = this.height; }
         if (x === undefined) { x = 0; }
@@ -127,8 +121,6 @@ var Tilemap = new Class({
         this.layers.push(layerData);
         this.currentLayerIndex = this.layers.length - 1;
 
-        // TODO: decide about v2 trimming to game width/height
-
         var dynamicLayer = new DynamicTilemapLayer(this.scene, this, this.currentLayerIndex, tileset, x, y);
         this.scene.sys.displayList.add(dynamicLayer);
 
@@ -142,13 +134,13 @@ var Tilemap = new Class({
      * property of alpha: 0.5 in the map editor will duplicate that when the Sprite is created.
      *
      * @param {string} name - The name of the object layer (from Tiled) to create Sprites from.
-     * @param {number} id - Either the id (object), gid (tile object) or name (object or tile
-     * object) from Tiled. Ids are unique in Tiled, but a gid is shared by all tile objects with the
-     * same graphic. The same name can be used on multiple objects.
+     * @param {integer|string} id - Either the id (object), gid (tile object) or name (object or
+     * tile object) from Tiled. Ids are unique in Tiled, but a gid is shared by all tile objects
+     * with the same graphic. The same name can be used on multiple objects.
      * @param {object} spriteConfig - The config object to pass into the Sprite creator (i.e.
      * scene.make.sprite).
      * @param {Scene} [scene=the scene the map is within] - The Scene to create the Sprites within.
-     * @return {array} An array of the Sprites that were created.
+     * @return {Sprite[]} An array of the Sprites that were created.
      */
     createFromObjects: function (name, id, spriteConfig, scene)
     {
@@ -220,7 +212,7 @@ var Tilemap = new Class({
         return sprites;
     },
 
-    // Creates & selects
+    // Creates & selects, uses layer offset if x,y undefined
     createStaticLayer: function (layerID, tileset, x, y)
     {
         var index = this.getLayerIndex(layerID);
@@ -231,24 +223,36 @@ var Tilemap = new Class({
             return null;
         }
 
+        var layerData = this.layers[index];
+
         // Check for an associated static or dynamic tilemap layer
-        if (this.layers[index].tilemapLayer)
+        if (layerData.tilemapLayer)
         {
             console.warn('Cannot create static tilemap layer since a static or dynamic tilemap layer exists for layer ID:' + layerID);
             return null;
         }
 
-        // TODO: new feature, allow multiple CSV layers
-        // TODO: display dimension
-
         this.currentLayerIndex = index;
+
+        // Make sure that all the LayerData & the tiles have the correct tile size. They usually
+        // are, but wouldn't match if you try to load a 2x or 4x res tileset when the map was made
+        // with a 1x res tileset.
+        if (layerData.tileWidth !== tileset.tileWidth || layerData.tileHeight !== tileset.tileHeight)
+        {
+            this.setLayerTileSize(tileset.tileWidth, tileset.tileHeight, index);
+        }
+
+        // Default the x/y position to match Tiled layer offset, if it exists.
+        if (x === undefined && this.layers[index].x) { x = this.layers[index].x; }
+        if (y === undefined && this.layers[index].y) { y = this.layers[index].y; }
 
         var layer = new StaticTilemapLayer(this.scene, this, index, tileset, x, y);
         this.scene.sys.displayList.add(layer);
+
         return layer;
     },
 
-    // Creates & selects
+    // Creates & selects, uses layer offset if x,y undefined
     createDynamicLayer: function (layerID, tileset, x, y)
     {
         var index = this.getLayerIndex(layerID);
@@ -259,21 +263,54 @@ var Tilemap = new Class({
             return null;
         }
 
+        var layerData = this.layers[index];
+
         // Check for an associated static or dynamic tilemap layer
-        if (this.layers[index].tilemapLayer)
+        if (layerData.tilemapLayer)
         {
             console.warn('Cannot create dynamic tilemap layer since a static or dynamic tilemap layer exists for layer ID:' + layerID);
             return null;
         }
 
-        // TODO: new feature, allow multiple CSV layers
-        // TODO: display dimension
-
         this.currentLayerIndex = index;
+
+        // Make sure that all the LayerData & the tiles have the correct tile size. They usually
+        // are, but wouldn't match if you try to load a 2x or 4x res tileset when the map was made
+        // with a 1x res tileset.
+        if (layerData.tileWidth !== tileset.tileWidth || layerData.tileHeight !== tileset.tileHeight)
+        {
+            this.setLayerTileSize(tileset.tileWidth, tileset.tileHeight, index);
+        }
+
+        // Default the x/y position to match Tiled layer offset, if it exists.
+        if (x === undefined && this.layers[index].x) { x = this.layers[index].x; }
+        if (y === undefined && this.layers[index].y) { y = this.layers[index].y; }
 
         var layer = new DynamicTilemapLayer(this.scene, this, index, tileset, x, y);
         this.scene.sys.displayList.add(layer);
+
         return layer;
+    },
+
+    convertLayerToStatic: function (layer)
+    {
+        layer = this.getLayer(layer);
+        if (layer === null) { return null; }
+
+        var dynamicLayer = layer.tilemapLayer;
+
+        if (!dynamicLayer || !(dynamicLayer instanceof DynamicTilemapLayer))
+        {
+            return null;
+        }
+
+        var staticLayer = new StaticTilemapLayer(dynamicLayer.scene, dynamicLayer.map,
+            dynamicLayer.layerIndex, dynamicLayer.tileset, dynamicLayer.x, dynamicLayer.y);
+        this.scene.sys.displayList.add(staticLayer);
+
+        dynamicLayer.destroy();
+
+        return staticLayer;
     },
 
     copy: function (srcTileX, srcTileY, width, height, destTileX, destTileY, recalculateFaces, layer)
@@ -472,13 +509,13 @@ var Tilemap = new Class({
         return TilemapComponents.PutTileAtWorldXY(tile, worldX, worldY, recalculateFaces, camera, layer);
     },
 
-    randomize: function (tileX, tileY, width, height, indices, layer)
+    randomize: function (tileX, tileY, width, height, indexes, layer)
     {
         layer = this.getLayer(layer);
         if (this._isStaticCall(layer, 'randomize')) { return this; }
         if (layer !== null)
         {
-            TilemapComponents.Randomize(tileX, tileY, width, height, indices, layer);
+            TilemapComponents.Randomize(tileX, tileY, width, height, indexes, layer);
         }
         return this;
     },
@@ -512,6 +549,14 @@ var Tilemap = new Class({
         if (this._isStaticCall(layer, 'removeTileAtWorldXY')) { return null; }
         if (layer === null) { return null; }
         return TilemapComponents.RemoveTileAtWorldXY(worldX, worldY, replaceWithNull, recalculateFaces, camera, layer);
+    },
+
+    renderDebug: function (graphics, styleConfig, layer)
+    {
+        layer = this.getLayer(layer);
+        if (layer === null) { return this; }
+        TilemapComponents.RenderDebug(graphics, styleConfig, layer);
+        return this;
     },
 
     replaceByIndex: function (findIndex, newIndex, tileX, tileY, width, height, layer)
@@ -575,30 +620,33 @@ var Tilemap = new Class({
         return this;
     },
 
-    setTileSize: function (tileWidth, tileHeight)
+    setBaseTileSize: function (tileWidth, tileHeight)
     {
         this.tileWidth = tileWidth;
         this.tileHeight = tileHeight;
         this.widthInPixels = this.width * tileWidth;
         this.heightInPixels = this.height * tileHeight;
+    },
 
-        // Update all the layers & tiles
-        for (var i = 0; i < this.layers.length; i++)
+    // Sets the tile size for a given layer
+    setLayerTileSize: function (tileWidth, tileHeight, layer)
+    {
+        layer = this.getLayer(layer);
+        if (layer === null) { return this; }
+
+        layer.tileWidth = tileWidth;
+        layer.tileHeight = tileHeight;
+
+        var mapData = layer.data;
+        var mapWidth = layer.width;
+        var mapHeight = layer.height;
+
+        for (var row = 0; row < mapHeight; ++row)
         {
-            this.layers[i].tileWidth = tileWidth;
-            this.layers[i].tileHeight = tileHeight;
-
-            var mapData = this.layers[i].data;
-            var mapWidth = this.layers[i].width;
-            var mapHeight = this.layers[i].height;
-
-            for (var row = 0; row < mapHeight; ++row)
+            for (var col = 0; col < mapWidth; ++col)
             {
-                for (var col = 0; col < mapWidth; ++col)
-                {
-                    var tile = mapData[row][col];
-                    if (tile !== null) { tile.setSize(tileWidth, tileHeight); }
-                }
+                var tile = mapData[row][col];
+                if (tile !== null) { tile.setSize(tileWidth, tileHeight); }
             }
         }
 

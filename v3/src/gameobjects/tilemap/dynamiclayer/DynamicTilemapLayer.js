@@ -44,7 +44,7 @@ var DynamicTilemapLayer = new Class({
         this.setPosition(x, y);
         this.setSizeToFrame();
         this.setOrigin();
-        this.setSize(this.map.tileWidth * this.layer.width, this.map.tileheight * this.layer.height);
+        this.setSize(this.layer.tileWidth * this.layer.width, this.layer.tileHeight * this.layer.height);
 
         this.skipIndexZero = false;
     },
@@ -73,7 +73,8 @@ var DynamicTilemapLayer = new Class({
 
     destroy: function ()
     {
-        this.layer.tilemapLayer = undefined;
+        // Uninstall this layer only if it is still installed on the LayerData object
+        if (this.layer.tilemapLayer === this) { this.layer.tilemapLayer = undefined; }
         this.map = undefined;
         this.layer = undefined;
         this.tileset = undefined;
@@ -148,9 +149,9 @@ var DynamicTilemapLayer = new Class({
         return TilemapComponents.PutTileAtWorldXY(tile, worldX, worldY, recalculateFaces, camera, this.layer);
     },
 
-    randomize: function (tileX, tileY, width, height, indices)
+    randomize: function (tileX, tileY, width, height, indexes)
     {
-        TilemapComponents.Randomize(tileX, tileY, width, height, indices, this.layer);
+        TilemapComponents.Randomize(tileX, tileY, width, height, indexes, this.layer);
         return this;
     },
 
@@ -162,6 +163,12 @@ var DynamicTilemapLayer = new Class({
     removeTileAtWorldXY: function (worldX, worldY, replaceWithNull, recalculateFaces, camera)
     {
         return TilemapComponents.RemoveTileAtWorldXY(worldX, worldY, replaceWithNull, recalculateFaces, camera, this.layer);
+    },
+
+    renderDebug: function (graphics, styleConfig)
+    {
+        TilemapComponents.RenderDebug(graphics, styleConfig, this.layer);
+        return this;
     },
 
     replaceByIndex: function (findIndex, newIndex, tileX, tileY, width, height)

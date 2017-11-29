@@ -36,7 +36,7 @@ var StaticTilemapLayer = new Class({
         this.layer = tilemap.layers[layerIndex];
         this.tileset = tileset;
 
-        // Link the layer data with this dynamic tilemap layer
+        // Link the layer data with this static tilemap layer
         this.layer.tilemapLayer = this;
 
         this.vbo = null;
@@ -53,7 +53,7 @@ var StaticTilemapLayer = new Class({
         this.setPosition(x, y);
         this.setSizeToFrame();
         this.setOrigin();
-        this.setSize(this.map.tileWidth * this.layer.width, this.map.tileHeight * this.layer.height);
+        this.setSize(this.layer.tileWidth * this.layer.width, this.layer.tileHeight * this.layer.height);
 
         this.skipIndexZero = false;
 
@@ -74,8 +74,8 @@ var StaticTilemapLayer = new Class({
         var tileset = this.tileset;
         var mapWidth = this.layer.width;
         var mapHeight = this.layer.height;
-        var tileWidth = this.map.tileWidth;
-        var tileHeight = this.map.tileHeight;
+        var tileWidth = this.layer.tileWidth;
+        var tileHeight = this.layer.tileHeight;
         var width = this.texture.source[0].width;
         var height = this.texture.source[0].height;
         var mapData = this.layer.data;
@@ -221,7 +221,8 @@ var StaticTilemapLayer = new Class({
 
     destroy: function ()
     {
-        this.layer.tilemapLayer = undefined;
+        // Uninstall this layer only if it is still installed on the LayerData object
+        if (this.layer.tilemapLayer === this) { this.layer.tilemapLayer = undefined; }
         this.map = undefined;
         this.layer = undefined;
         this.tileset = undefined;
@@ -277,6 +278,12 @@ var StaticTilemapLayer = new Class({
     hasTileAtWorldXY: function (worldX, worldY, camera)
     {
         return TilemapComponents.HasTileAtWorldXY(worldX, worldY, camera, this.layer);
+    },
+
+    renderDebug: function (graphics, styleConfig)
+    {
+        TilemapComponents.RenderDebug(graphics, styleConfig, this.layer);
+        return this;
     },
 
     setCollision: function (indexes, collides, recalculateFaces)

@@ -2,7 +2,7 @@
  * Internally used method to convert from tile Y coordinates to world Y coordinates, factoring in
  * layer position, scale and scroll.
  *
- * @param {number} tileY - [description]
+ * @param {integer} tileY - [description]
  * @param {Camera} [camera=main camera] - [description]
  * @param {LayerData} layer - [description]
  * @returns {number}

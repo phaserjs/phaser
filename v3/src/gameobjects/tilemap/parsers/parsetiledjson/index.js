@@ -10,7 +10,19 @@ var ParseGID = require('./ParseGID');
 var Base64Decode = require('./Base64Decode');
 var ParseObject = require('./ParseObject');
 
-var ParseJSONTiled = function (key, json, insertNull)
+/**
+ * Parses a Tiled JSON object into a new MapData object.
+ *
+ * @param {string} name - The name of the tilemap, used to set the name on the MapData.
+ * @param {object} json - The Tiled JSON object.
+ * @param {boolean} insertNull - Controls how empty tiles, tiles with an index of -1, in the map
+ * data are handled. If `true`, empty locations will get a value of `null`. If `false`, empty
+ * location will get a Tile object with an index of -1. If you've a large sparsely populated map and
+ * the tile data doesn't need to change then setting this value to `true` will help with memory
+ * consumption. However if your map is small or you need to update the tiles dynamically, then leave
+ * the default value set.
+ */
+var ParseJSONTiled = function (name, json, insertNull)
 {
     if (json.orientation !== 'orthogonal')
     {
@@ -22,7 +34,7 @@ var ParseJSONTiled = function (key, json, insertNull)
     var mapData = new MapData({
         width: json.width,
         height: json.height,
-        name: key,
+        name: name,
         tileWidth: json.tilewidth,
         tileHeight: json.tileheight,
         orientation: json.orientation,
@@ -139,7 +151,7 @@ var ParseJSONTiled = function (key, json, insertNull)
             y: GetFastValue(curi, 'offsety', 0) + curi.y,
             alpha: curi.opacity,
             visible: curi.visible,
-            properties: GetFastValue(curi, "properties", {})
+            properties: GetFastValue(curi, 'properties', {})
         });
     }
 
@@ -157,15 +169,15 @@ var ParseJSONTiled = function (key, json, insertNull)
 
         if (set.image)
         {
-            var newSet = new Tileset(set.name, set.firstgid, set.tilewidth, set.tileheight, set.margin, set.spacing, set.properties);
+            var newSet = new Tileset(set.name, set.firstgid, set.tilewidth, set.tileheight, set.margin, set.spacing);
 
-            // Properties stored per-tile in object with string indices starting at "0"
+            // Properties stored per-tile in object with string indexes starting at "0"
             if (set.tileproperties)
             {
                 newSet.tileProperties = set.tileproperties;
             }
 
-            // Object & terrain shapes stored per-tile in object with string indices starting at "0"
+            // Object & terrain shapes stored per-tile in object with string indexes starting at "0"
             if (set.tiles)
             {
                 newSet.tileData = set.tiles;
@@ -327,9 +339,11 @@ var ParseJSONTiled = function (key, json, insertNull)
                 sid = mapData.tiles[tile.index][2];
                 set = mapData.tilesets[sid];
 
+                // Ensure that a tile's size matches its tileset
+                tile.width = set.tileWidth;
+                tile.height = set.tileHeight;
 
                 // if that tile type has any properties, add them to the tile object
-
                 if (set.tileProperties && set.tileProperties[tile.index - set.firstgid])
                 {
                     tile.properties = Extend(tile.properties, set.tileProperties[tile.index - set.firstgid]);

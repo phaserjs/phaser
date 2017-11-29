@@ -5,12 +5,12 @@ var GetTilesWithin = require('./GetTilesWithin');
  * `indexA` and swaps then with `indexB`. This only modifies the index and does not change collision
  * information.
  *
- * @param {number} tileA - First tile index.
- * @param {number} tileB - Second tile index.
- * @param {number} [tileX=0] - [description]
- * @param {number} [tileY=0] - [description]
- * @param {number} [width=max width based on tileX] - [description]
- * @param {number} [height=max height based on tileY] - [description]
+ * @param {integer} tileA - First tile index.
+ * @param {integer} tileB - Second tile index.
+ * @param {integer} [tileX=0] - [description]
+ * @param {integer} [tileY=0] - [description]
+ * @param {integer} [width=max width based on tileX] - [description]
+ * @param {integer} [height=max height based on tileY] - [description]
  * @param {LayerData} layer - [description]
  */
 var SwapByIndex = function (indexA, indexB, tileX, tileY, width, height, layer)
