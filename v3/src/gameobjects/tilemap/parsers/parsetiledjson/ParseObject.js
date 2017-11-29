@@ -3,7 +3,7 @@ var Pick = require('./Pick');
 var ParseGID = require('./ParseGID');
 
 var pointToArray = function (p) { return [ p.x, p.y ]; };
-var commonObjectProps = [ 'id', 'name', 'type', 'rotation', 'properties', 'visible', 'x', 'y' ];
+var commonObjectProps = [ 'id', 'name', 'type', 'rotation', 'properties', 'visible', 'x', 'y', 'width', 'height' ];
 
 var ParseObject = function (tiledObject, offsetX, offsetY)
 {

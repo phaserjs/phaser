@@ -1,5 +1,5 @@
 var Class = require('../../utils/Class');
-var MapData = require('./mapdata/MapData');
+var Extend = require('../../utils/object/Extend');
 var LayerData = require('./mapdata/LayerData');
 var StaticTilemapLayer = require('./staticlayer/StaticTilemapLayer.js');
 var DynamicTilemapLayer = require('./dynamiclayer/DynamicTilemapLayer.js');
@@ -7,6 +7,8 @@ var Tileset = require('./Tileset');
 var Formats = require('./Formats');
 var TilemapComponents = require('./components');
 var Tile = require('./Tile');
+var Rotate = require('../../math/Rotate');
+var DegToRad = require('../../math/DegToRad');
 
 var Tilemap = new Class({
 
@@ -131,6 +133,89 @@ var Tilemap = new Class({
         this.scene.sys.displayList.add(dynamicLayer);
 
         return dynamicLayer;
+    },
+
+    /**
+     * Creates a Sprite for every object matching the given gid in the map data. All properties from
+     * the map data objectgroup are copied into the `spriteConfig`, so you can use this as an easy
+     * way to configure Sprite properties from within the map editor. For example giving an object a
+     * property of alpha: 0.5 in the map editor will duplicate that when the Sprite is created.
+     *
+     * @param {string} name - The name of the object layer (from Tiled) to create Sprites from.
+     * @param {number} id - Either the id (object), gid (tile object) or name (object or tile
+     * object) from Tiled.
+     * @param {object} spriteConfig - The config object to pass into the Sprite creator (i.e.
+     * scene.make.sprite).
+     * @param {Scene} [scene=the scene the map is within] - The Scene to create the Sprites within.
+     * @return {array} An array of the Sprites that were created.
+     */
+    createFromObjects: function (name, id, spriteConfig, scene)
+    {
+        if (spriteConfig === undefined) { spriteConfig = {}; }
+        if (scene === undefined) { scene = this.scene; }
+
+        if (!this.objects[name])
+        {
+            console.warn('Cannot create from object. Invalid objectgroup name given: ' + name);
+            return;
+        }
+
+        for (var i = 0; i < this.objects[name].length; i++)
+        {
+            var found = false;
+            var obj = this.objects[name][i];
+
+            if (obj.gid !== undefined && typeof id === 'number' && obj.gid === id ||
+                obj.id !== undefined && typeof id === 'number' && obj.id === id ||
+                obj.name !== undefined && typeof id === 'string' && obj.name === id)
+            {
+                found = true;
+            }
+
+            if (found)
+            {
+                Extend(spriteConfig, obj.properties);
+
+                spriteConfig.x = obj.x;
+                spriteConfig.y = obj.y;
+
+                var sprite = this.scene.make.sprite(spriteConfig);
+
+                sprite.name = obj.name;
+
+                if (obj.width) { sprite.displayWidth = obj.width; }
+                if (obj.height) { sprite.displayHeight = obj.height; }
+
+                // Origin is (0, 1) in Tiled, so shift it to match (0.5, 0.5) in Phaser
+                spriteConfig.x = obj.x + sprite.displayWidth / 2;
+                spriteConfig.y = obj.y - sprite.displayHeight / 2;
+
+                // If the object is rotated, then perform an additional correction for the origin
+                // changing from (0, 1) to (0.5, 0.5)
+                if (obj.rotation)
+                {
+                    var angle = DegToRad(obj.rotation);
+                    var offset = {
+                        x: sprite.displayWidth / 2,
+                        y: - sprite.displayHeight / 2
+                    };
+                    Rotate(offset, angle);
+
+                    sprite.rotation = angle;
+                    sprite.x += offset.x;
+                    sprite.y += offset.y;
+                }
+
+                if (obj.flippedHorizontal !== undefined || obj.flippedVertical !== undefined)
+                {
+                    sprite.setFlip(obj.flippedHorizontal, obj.flippedVertical);
+                }
+
+                if (!obj.visible) { sprite.visible = false; }
+            }
+        }
+
+        return sprite;
     },
 
     // Creates & selects
