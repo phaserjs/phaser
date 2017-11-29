@@ -1,4 +1,6 @@
-var CameraToWorld = function (pointIn, pointOut)
+var Vector2 = require('../../../math/Vector2');
+
+var GetWorldPoint = function (screenPoint, output)
 {
     var cameraMatrix = this.matrix.matrix;
     var mva = cameraMatrix[0];
@@ -13,7 +15,7 @@ var CameraToWorld = function (pointIn, pointOut)
 
     if (!determinant)
     {
-        return pointIn;
+        return screenPoint;
     }
 
     determinant = 1 / determinant;
@@ -29,19 +31,19 @@ var CameraToWorld = function (pointIn, pointOut)
     var zoom = this.zoom;
     var scrollX = this.scrollX;
     var scrollY = this.scrollY;
-    var x = pointIn.x + ((scrollX * c - scrollY * s) * zoom);
-    var y = pointIn.y + ((scrollX * s + scrollY * c) * zoom);
+    var x = screenPoint.x + ((scrollX * c - scrollY * s) * zoom);
+    var y = screenPoint.y + ((scrollX * s + scrollY * c) * zoom);
 
-    if (!pointOut)
+    if (!output)
     {
-        pointOut = { x: 0, y: 0 };
+        output = new Vector2();
     }
 
     /* Apply transform to point */
-    pointOut.x = (x * ima + y * imc + ime);
-    pointOut.y = (x * imb + y * imd + imf);
+    output.x = (x * ima + y * imc + ime);
+    output.y = (x * imb + y * imd + imf);
     
-    return pointOut;
+    return output;
 };
 
-module.exports = CameraToWorld;
+module.exports = GetWorldPoint;
