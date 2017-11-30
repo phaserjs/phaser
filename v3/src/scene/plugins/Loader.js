@@ -94,7 +94,14 @@ var Loader = new Class({
     //  config can include: instances
     audio: function (key, urls, config, xhrSettings)
     {
-        return AudioFile.create(this, key, urls, config, xhrSettings);
+        var audioFile = AudioFile.create(this, key, urls, config, xhrSettings);
+
+        if(audioFile)
+        {
+            this.addFile(audioFile);
+        }
+
+        return this;
     },
 
     tilemapCSV: function (key, url, xhrSettings)
