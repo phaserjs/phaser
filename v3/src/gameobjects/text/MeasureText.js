@@ -3,10 +3,8 @@ var CanvasPool = require('../../display/canvas/CanvasPool');
 /**
 * Calculates the ascent, descent and fontSize of a given font style.
 */
-var MeasureText = function (textStyle, testString)
+var MeasureText = function (textStyle)
 {
-    if (testString === undefined) { testString = '|MÉqgy'; }
-
     // @property {HTMLCanvasElement} canvas - The canvas element that the text is rendered.
     var canvas = CanvasPool.create(this);
 
@@ -15,7 +13,7 @@ var MeasureText = function (textStyle, testString)
 
     textStyle.syncFont(canvas, context);
 
-    var width = Math.ceil(context.measureText(testString).width * 1.2);
+    var width = Math.ceil(context.measureText(textStyle.testString).width * 1.2);
     var baseline = width;
     var height = 2 * baseline;
 
@@ -27,11 +25,11 @@ var MeasureText = function (textStyle, testString)
     context.fillStyle = '#f00';
     context.fillRect(0, 0, width, height);
 
-    context.font = textStyle.font;
+    context.font = textStyle._font;
 
     context.textBaseline = 'alphabetic';
     context.fillStyle = '#000';
-    context.fillText(testString, 0, baseline);
+    context.fillText(textStyle.testString, 0, baseline);
 
     var output = {
         ascent: 0,

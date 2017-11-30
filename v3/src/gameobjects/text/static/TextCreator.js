@@ -39,19 +39,16 @@ GameObjectCreator.register('text', function (config)
     text.resolution = GetAdvancedValue(config, 'resolution', 1);
 
     //  Padding
-    //  Either: { padding: 2 } or { padding: { x: 2, y: 2 }}
+    //      { padding: 2 }
+    //      { padding: { x: , y: }}
+    //      { padding: { left: , top: }}
+    //      { padding: { left: , right: , top: , bottom: }}
 
     var padding = GetAdvancedValue(config, 'padding', null);
 
-    if (typeof padding === 'number')
+    if (padding !== null)
     {
-        text.padding.x = padding;
-        text.padding.y = padding;
-    }
-    else if (padding !== null)
-    {
-        text.padding.x = GetAdvancedValue(padding, 'x', 1);
-        text.padding.y = GetAdvancedValue(padding, 'y', 1);
+        text.setPadding(padding);
     }
 
     text.updateText();

@@ -4,6 +4,7 @@ var Class = require('../../../utils/Class');
 var Components = require('../../components');
 var GameObject = require('../../GameObject');
 var GetTextSize = require('../GetTextSize');
+var GetValue = require('../../../utils/object/GetValue');
 var RemoveFromDOM = require('../../../dom/RemoveFromDOM');
 var TextRender = require('./TextRender');
 var TextStyle = require('../TextStyle');
@@ -68,10 +69,10 @@ var Text = new Class({
 
         /**
         * Specify a padding value which is added to the line width and height when calculating the Text size.
-        * Allows you to add extra spacing if Phaser is unable to accurately determine the true font dimensions.
+        * Allows you to add extra spacing if the browser is unable to accurately determine the true font dimensions.
         * @property {Phaser.Point} padding
         */
-        this.padding = { x: 0, y: 0 };
+        this.padding = { left: 0, right: 0, top: 0, bottom: 0 };
 
         this.width = 1;
         this.height = 1;
@@ -80,6 +81,11 @@ var Text = new Class({
         this.dirty = false;
 
         this.initRTL();
+
+        if (style && style.padding)
+        {
+            this.setPadding(style.padding);
+        }
 
         this.setText(text);
 
@@ -145,6 +151,21 @@ var Text = new Class({
         return this.style.setFont(font);
     },
 
+    setFontFamily: function (family)
+    {
+        return this.style.setFontFamily(family);
+    },
+
+    setFontSize: function (size)
+    {
+        return this.style.setFontSize(size);
+    },
+
+    setFontStyle: function (style)
+    {
+        return this.style.setFontStyle(style);
+    },
+
     setFixedSize: function (width, height)
     {
         return this.style.setFixedSize(width, height);
@@ -155,9 +176,9 @@ var Text = new Class({
         return this.style.setBackgroundColor(color);
     },
 
-    setFill: function (color)
+    setColor: function (color)
     {
-        return this.style.setFill(color);
+        return this.style.setColor(color);
     },
 
     setStroke: function (color, thickness)
@@ -200,6 +221,59 @@ var Text = new Class({
         return this.style.setAlign(align);
     },
 
+    //  'left' can be an object
+    //  if only 'left' and 'top' are given they are treated as 'x' and 'y'
+    setPadding: function (left, top, right, bottom)
+    {
+        if (typeof left === 'object')
+        {
+            var config = left;
+
+            //  If they specify x and/or y this applies to all
+            var x = GetValue(config, 'x', null);
+
+            if (x !== null)
+            {
+                left = x;
+                right = x;
+            }
+            else
+            {
+                left = GetValue(config, 'left', 0);
+                right = GetValue(config, 'right', left);
+            }
+
+            var y = GetValue(config, 'y', null);
+
+            if (y !== null)
+            {
+                top = y;
+                bottom = y;
+            }
+            else
+            {
+                top = GetValue(config, 'top', 0);
+                bottom = GetValue(config, 'bottom', top);
+            }
+        }
+        else
+        {
+            if (left === undefined) { left = 0; }
+            if (top === undefined) { top = left; }
+            if (right === undefined) { right = left; }
+            if (bottom === undefined) { bottom = top; }
+        }
+
+        this.padding.left = left;
+        this.padding.top = top;
+        this.padding.right = right;
+        this.padding.bottom = bottom;
+
+        console.log(this.padding);
+
+        return this.updateText();
+    },
+
     setMaxLines: function (max)
     {
         return this.style.setMaxLines(max);
@@ -238,8 +312,8 @@ var Text = new Class({
 
         var padding = this.padding;
 
-        var w = (textSize.width + (padding.x * 2)) * this.resolution;
-        var h = (textSize.height + (padding.y * 2)) * this.resolution;
+        var w = (textSize.width + padding.left + padding.right) * this.resolution;
+        var h = (textSize.height + padding.top + padding.bottom) * this.resolution;
 
         if (canvas.width !== w || canvas.height !== h)
         {
@@ -262,7 +336,7 @@ var Text = new Class({
         context.textBaseline = 'alphabetic';
 
         //  Apply padding
-        context.translate(padding.x, padding.y);
+        context.translate(padding.left, padding.top);
 
         var linePositionX;
         var linePositionY;
@@ -282,16 +356,13 @@ var Text = new Class({
             {
                 linePositionX = w - linePositionX;
             }
-            else
+            else if (style.align === 'right')
             {
-                if (style.align === 'right')
-                {
-                    linePositionX += textSize.width - textSize.lineWidths[i];
-                }
-                else if (style.align === 'center')
-                {
-                    linePositionX += (textSize.width - textSize.lineWidths[i]) / 2;
-                }
+                linePositionX += textSize.width - textSize.lineWidths[i];
+            }
+            else if (style.align === 'center')
+            {
+                linePositionX += (textSize.width - textSize.lineWidths[i]) / 2;
             }
 
             if (this.autoRound)
@@ -307,7 +378,7 @@ var Text = new Class({
                 context.strokeText(lines[i], linePositionX, linePositionY);
             }
 
-            if (style.fill)
+            if (style.color)
             {
                 this.style.syncShadow(context, style.shadowFill);
 
@@ -337,8 +408,10 @@ var Text = new Class({
             style: this.style.toJSON(),
             resolution: this.resolution,
             padding: {
-                x: this.padding.x,
-                y: this.padding.y
+                left: this.padding.left,
+                right: this.padding.right,
+                top: this.padding.top,
+                bottom: this.padding.bottom
             }
         };
 
