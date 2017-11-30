@@ -426,6 +426,17 @@ var BaseLoader = new Class({
                     cache.audio.add(file.key, file.data);
                     break;
 
+                case 'audioSprite':
+
+                    var files = [ file.fileA, file.fileB ];
+
+                    files.forEach(function (file)
+                    {
+                        cache[file.type].add(file.key, file.data);
+                    });
+
+                    break;
+
                 case 'glsl':
                     cache.shader.add(file.key, file.data);
                     break;
