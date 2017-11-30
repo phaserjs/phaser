@@ -287,6 +287,21 @@ var Tile = new Class({
     },
 
     /**
+     * Reset faces.
+     *
+     * @returns {this}
+     */
+    resetFaces: function ()
+    {
+        this.faceTop = false;
+        this.faceBottom = false;
+        this.faceLeft = false;
+        this.faceRight = false;
+
+        return this;
+    },
+
+    /**
      * Sets the collision flags for each side of this tile and updates the interesting faces list.
      *
      * @param {boolean} left - Indicating collide with any object on the left.

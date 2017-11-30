@@ -25,17 +25,24 @@ var CalculateFacesWithin = function (tileX, tileY, width, height, layer)
     {
         var tile = tiles[i];
 
-        if (tile && tile.collides)
+        if (tile)
         {
-            above = GetTileAt(tile.x, tile.y - 1, true, layer);
-            below = GetTileAt(tile.x, tile.y + 1, true, layer);
-            left = GetTileAt(tile.x - 1, tile.y, true, layer);
-            right = GetTileAt(tile.x + 1, tile.y, true, layer);
+            if (tile.collides)
+            {
+                above = GetTileAt(tile.x, tile.y - 1, true, layer);
+                below = GetTileAt(tile.x, tile.y + 1, true, layer);
+                left = GetTileAt(tile.x - 1, tile.y, true, layer);
+                right = GetTileAt(tile.x + 1, tile.y, true, layer);
 
-            tile.faceTop = (above && above.collides) ? false : true;
-            tile.faceBottom = (below && below.collides) ? false : true;
-            tile.faceLeft = (left && left.collides) ? false : true;
-            tile.faceRight = (right && right.collides) ? false : true;
+                tile.faceTop = (above && above.collides) ? false : true;
+                tile.faceBottom = (below && below.collides) ? false : true;
+                tile.faceLeft = (left && left.collides) ? false : true;
+                tile.faceRight = (right && right.collides) ? false : true;
+            }
+            else
+            {
+                tile.resetFaces();
+            }
         }
     }
 };
