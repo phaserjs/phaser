@@ -98,10 +98,10 @@ var BaseSoundManager = new Class({
          */
         sound.spritemap = this.game.cache.json.get(key).spritemap;
         for (var markerName in sound.spritemap) {
-            if (!this.spritemap.hasOwnProperty(markerName)) {
+            if (!sound.spritemap.hasOwnProperty(markerName)) {
                 continue;
             }
-            var marker = this.spritemap[markerName];
+            var marker = sound.spritemap[markerName];
             sound.addMarker({
                 name: markerName,
                 start: marker.start,
