@@ -12,6 +12,9 @@ var WebAudioSpriteSound = new Class({
          */
         this.spritemap = manager.game.cache.json.get(key).spritemap;
         for (var markerName in this.spritemap) {
+            if (!this.spritemap.hasOwnProperty(markerName)) {
+                continue;
+            }
             var marker = this.spritemap[markerName];
             this.addMarker({
                 name: markerName,
