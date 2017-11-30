@@ -6,9 +6,11 @@ var MeasureText = require('./MeasureText');
 //  Key: [ Object Key, Default Value ]
 
 var propertyMap = {
-    font: [ 'font', '16px Courier' ],
+    fontFamily: [ 'fontFamily', 'Courier' ],
+    fontSize: [ 'fontSize', '16px' ],
+    fontStyle: [ 'fontStyle', '' ],
     backgroundColor: [ 'backgroundColor', null ],
-    fill: [ 'fill', '#fff' ],
+    color: [ 'color', '#fff' ],
     stroke: [ 'stroke', '#fff' ],
     strokeThickness: [ 'strokeThickness', 0 ],
     shadowOffsetX: [ 'shadow.offsetX', 0 ],
@@ -21,7 +23,8 @@ var propertyMap = {
     maxLines: [ 'maxLines', 0 ],
     fixedWidth: [ 'fixedWidth', false ],
     fixedHeight: [ 'fixedHeight', false ],
-    rtl: [ 'rtl', false ]
+    rtl: [ 'rtl', false ],
+    testString: [ 'testString', '|MÉqgy' ]
 };
 
 var TextStyle = new Class({
@@ -32,9 +35,11 @@ var TextStyle = new Class({
     {
         this.parent = text;
 
-        this.font;
+        this.fontFamily;
+        this.fontSize;
+        this.fontStyle;
         this.backgroundColor;
-        this.fill;
+        this.color;
         this.stroke;
         this.strokeThickness;
         this.shadowOffsetX;
@@ -48,22 +53,17 @@ var TextStyle = new Class({
         this.fixedWidth;
         this.fixedHeight;
         this.rtl;
+        this.testString;
 
-        //  Set to defaults
-        this.reset();
+        this._font;
 
-        if (style)
-        {
-            for (var key in propertyMap)
-            {
-                this[key] = GetAdvancedValue(style, propertyMap[key][0], this[key]);
-            }
-        }
+        //  Set to defaults + user style
+        this.setStyle(style, false);
 
         var metrics = GetValue(style, 'metrics', false);
 
         //  Provide optional TextMetrics in the style object to avoid the canvas look-up / scanning
-        //  Doing this is un-done if you then change the font of this TextStyle after creation
+        //  Doing this is reset if you then change the font of this TextStyle after creation
         if (metrics)
         {
             this.metrics = {
@@ -78,11 +78,26 @@ var TextStyle = new Class({
         }
     },
 
-    reset: function ()
+    setStyle: function (style, updateText)
     {
+        if (updateText === undefined) { updateText = true; }
+
+        //  Avoid type mutation
+        if (style && style.hasOwnProperty('fontSize') && typeof style.fontSize === 'number')
+        {
+            style.fontSize = style.fontSize.toString() + 'px';
+        }
+
         for (var key in propertyMap)
         {
-            this[key] = propertyMap[key][1];
+            this[key] = GetAdvancedValue(style, propertyMap[key][0], propertyMap[key][1]);
+        }
+
+        this._font = [ this.fontStyle, this.fontSize, this.fontFamily ].join(' ');
+
+        if (updateText)
+        {
+            this.update(true);
         }
 
         return this;
@@ -90,10 +105,10 @@ var TextStyle = new Class({
 
     syncFont: function (canvas, context)
     {
-        context.font = this.font;
+        context.font = this._font;
         context.textBaseline = 'alphabetic';
 
-        context.fillStyle = this.fill;
+        context.fillStyle = this.color;
         context.strokeStyle = this.stroke;
 
         context.lineWidth = this.strokeThickness;
@@ -123,25 +138,53 @@ var TextStyle = new Class({
     {
         if (recalculateMetrics)
         {
+            this._font = [ this.fontStyle, this.fontSize, this.fontFamily ].join(' ');
+
             this.metrics = MeasureText(this);
         }
 
         return this.parent.updateText();
     },
 
-    setStyle: function (style)
+    //  Allows you to set them all in a single object
+    setFont: function (font)
     {
-        for (var key in propertyMap)
-        {
-            this[key] = GetAdvancedValue(style, propertyMap[key][0], this[key]);
-        }
+        this.fontFamily = GetValue(font, 'fontFamily', 'Courier');
+        this.fontSize = GetValue(font, 'fontSize', '16px');
+        this.fontStyle = GetValue(font, 'fontStyle', '');
 
         return this.update(true);
     },
 
-    setFont: function (font)
+    setFontFamily: function (family)
     {
-        this.font = font;
+        this.fontFamily = family;
+
+        return this.update(true);
+    },
+
+    setFontStyle: function (style)
+    {
+        this.fontStyle = style;
+
+        return this.update(true);
+    },
+
+    setFontSize: function (size)
+    {
+        if (typeof size === 'number')
+        {
+            size = size.toString() + 'px';
+        }
+
+        this.fontSize = size;
+
+        return this.update(true);
+    },
+
+    setTestString: function (string)
+    {
+        this.testString = string;
 
         return this.update(true);
     },
@@ -171,9 +214,9 @@ var TextStyle = new Class({
         return this.update(false);
     },
 
-    setFill: function (color)
+    setColor: function (color)
     {
-        this.fill = color;
+        this.color = color;
 
         return this.update(false);
     },
