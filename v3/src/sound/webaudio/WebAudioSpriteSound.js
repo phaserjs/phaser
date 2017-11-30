@@ -11,6 +11,14 @@ var WebAudioSpriteSound = new Class({
          * @property {object} spritemap
          */
         this.spritemap = manager.game.cache.json.get(key).spritemap;
+        for (var markerName in this.spritemap) {
+            this.addMarker({
+                name: markerName,
+                start: this.spritemap[markerName].start,
+                duration: this.spritemap[markerName].end - this.spritemap[markerName].start,
+                config: config
+            });
+        }
     }
 });
 module.exports = WebAudioSpriteSound;
