@@ -68,7 +68,7 @@ AudioFile.create = function (loader, key, urls, config, xhrSettings)
     {
         // TODO log not loading audio because sounds are disabled
         console.info('Skipping loading audio \'' + key + '\' since sounds are disabled.');
-        return;
+        return null;
     }
 
     var url = AudioFile.findAudioURL(game, urls);
@@ -77,18 +77,16 @@ AudioFile.create = function (loader, key, urls, config, xhrSettings)
     {
         // TODO log no supported types
         console.warn('No supported url provided for audio \'' + key + '\'!');
-        return;
+        return null;
     }
 
     if(deviceAudio.webAudio && !(audioConfig && audioConfig.disableWebAudio))
     {
-        loader.addFile(new AudioFile(key, url, loader.path, xhrSettings, game.sound.context));
-        return;
+        return new AudioFile(key, url, loader.path, xhrSettings, game.sound.context);
     }
 
     // TODO handle loading audio tags
-    loader.addFile(null);
-
+    return null;
 };
 
 // this.load.audio('sound', 'assets/audio/booom.ogg', config, xhrSettings);
