@@ -12,10 +12,11 @@ var WebAudioSpriteSound = new Class({
          */
         this.spritemap = manager.game.cache.json.get(key).spritemap;
         for (var markerName in this.spritemap) {
+            var marker = this.spritemap[markerName];
             this.addMarker({
                 name: markerName,
-                start: this.spritemap[markerName].start,
-                duration: this.spritemap[markerName].end - this.spritemap[markerName].start,
+                start: marker.start,
+                duration: marker.end - marker.start,
                 config: config
             });
         }
