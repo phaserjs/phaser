@@ -1,6 +1,6 @@
 /**
- * Internally used method to convert from tile Y coordinates to world Y coordinates, factoring in
- * layer position, scale and scroll.
+ * Converts from tile Y coordinates (tile units) to world Y coordinates (pixels), factoring in the
+ * layer's position, scale and scroll.
  *
  * @param {integer} tileY - [description]
  * @param {Camera} [camera=main camera] - [description]
@@ -17,7 +17,7 @@ var TileToWorldY = function (tileY, camera, layer)
     {
         if (camera === undefined) { camera = tilemapLayer.scene.cameras.main; }
 
-        layerWorldY = tilemapLayer.y - (camera.scrollY * tilemapLayer.scrollFactorY);
+        layerWorldY = (tilemapLayer.y + camera.scrollY * (1 - tilemapLayer.scrollFactorY));
 
         tileHeight *= tilemapLayer.scaleY;
     }

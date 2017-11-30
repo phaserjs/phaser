@@ -430,6 +430,36 @@ var DynamicTilemapLayer = new Class({
      *
      * @return {number}
      */
+    tileToWorldX: function (tileX, camera)
+    {
+        return TilemapComponents.TileToWorldX(tileX, camera, this.layer);
+    },
+
+    /**
+     * See component documentation.
+     *
+     * @return {number}
+     */
+    tileToWorldY: function (tileY, camera)
+    {
+        return TilemapComponents.TileToWorldY(tileY, camera, this.layer);
+    },
+
+    /**
+     * See component documentation.
+     *
+     * @return {Vector2}
+     */
+    tileToWorldXY: function (tileX, tileY, point, camera)
+    {
+        return TilemapComponents.TileToWorldXY(tileX, tileY, point, camera, this.layer);
+    },
+
+    /**
+     * See component documentation.
+     *
+     * @return {number}
+     */
     worldToTileX: function (worldX, snapToFloor, camera)
     {
         return TilemapComponents.WorldToTileX(worldX, snapToFloor, camera, this.layer);

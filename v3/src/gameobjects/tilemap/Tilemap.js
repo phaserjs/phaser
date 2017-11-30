@@ -1157,7 +1157,43 @@ var Tilemap = new Class({
     /**
      * See component documentation. If no layer specified, the map's current layer is used.
      *
-     * @return {number|null} Returns this, or null if the layer given was invalid.
+     * @return {number|null} Returns a number, or null if the layer given was invalid.
+     */
+    tileToWorldX: function (tileX, camera, layer)
+    {
+        layer = this.getLayer(layer);
+        if (layer === null) { return null; }
+        return TilemapComponents.TileToWorldX(tileX, camera, layer);
+    },
+
+    /**
+     * See component documentation. If no layer specified, the map's current layer is used.
+     *
+     * @return {number|null} Returns a number, or null if the layer given was invalid.
+     */
+    tileToWorldY: function (tileX, camera, layer)
+    {
+        layer = this.getLayer(layer);
+        if (layer === null) { return null; }
+        return TilemapComponents.TileToWorldY(tileX, camera, layer);
+    },
+
+    /**
+     * See component documentation. If no layer specified, the map's current layer is used.
+     *
+     * @return {Vector2|null} Returns a point, or null if the layer given was invalid.
+     */
+    tileToWorldXY: function (tileX, tileY, point, camera, layer)
+    {
+        layer = this.getLayer(layer);
+        if (layer === null) { return null; }
+        return TilemapComponents.TileToWorldXY(tileX, tileY, point, camera, layer);
+    },
+
+    /**
+     * See component documentation. If no layer specified, the map's current layer is used.
+     *
+     * @return {number|null} Returns a number, or null if the layer given was invalid.
      */
     worldToTileX: function (worldX, snapToFloor, camera, layer)
     {
@@ -1169,7 +1205,7 @@ var Tilemap = new Class({
     /**
      * See component documentation. If no layer specified, the map's current layer is used.
      *
-     * @return {number|null} Returns this, or null if the layer given was invalid.
+     * @return {number|null} Returns a number, or null if the layer given was invalid.
      */
     worldToTileY: function (worldY, snapToFloor, camera, layer)
     {
@@ -1181,7 +1217,7 @@ var Tilemap = new Class({
     /**
      * See component documentation. If no layer specified, the map's current layer is used.
      *
-     * @return {Vector|null} Returns this, or null if the layer given was invalid.
+     * @return {Vector2|null} Returns a point, or null if the layer given was invalid.
      */
     worldToTileXY: function (worldX, worldY, snapToFloor, point, camera, layer)
     {
