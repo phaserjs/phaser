@@ -32,10 +32,6 @@ var Text = new Class({
     {
         if (x === undefined) { x = 0; }
         if (y === undefined) { y = 0; }
-        if (text === undefined) { text = ''; }
-
-        //  Cast to string whatever our value may be (numeric, etc)
-        text = text.toString();
 
         GameObject.call(this, scene, 'Text');
 
@@ -64,7 +60,8 @@ var Text = new Class({
          */
         this.splitRegExp = /(?:\r\n|\r|\n)/;
 
-        this.text = (Array.isArray(text)) ? text.join('\n') : text;
+        //  This is populated in this.setText
+        this.text = '';
 
         this.resolution = 1;
 
@@ -81,10 +78,7 @@ var Text = new Class({
         this.canvasTexture = null;
         this.dirty = false;
 
-        if (text !== '')
-        {
-            this.updateText();
-        }
+        this.setText(text);
 
         var _this = this;
 
