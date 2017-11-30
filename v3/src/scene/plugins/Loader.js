@@ -277,6 +277,10 @@ var Loader = new Class({
                 entry = this.multiatlas(file.key, file.textureURLs, file.atlasURLs, file.textureXhrSettings, file.atlasXhrSettings);
                 break;
 
+            case 'audioSprite':
+                entry = this.audioSprite(file.key, file.urls, file.json, file.config, file.audioXhrSettings, file.jsonXhrSettings);
+                break;
+
             //  image, json, xml, binary, text, glsl, svg
             default:
                 entry = this[file.type](file.key, file.url, file.xhrSettings);
