@@ -1,6 +1,7 @@
 var BaseLoader = require('../../loader/BaseLoader');
 var Class = require('../../utils/Class');
 var NumberArray = require('../../utils/array/NumberArray');
+var CONST = require('../../loader/const');
 
 var AnimationJSONFile = require('../../loader/filetypes/AnimationJSONFile');
 var AtlasJSONFile = require('../../loader/filetypes/AtlasJSONFile');
@@ -124,7 +125,23 @@ var Loader = new Class({
 
         if(audioFile)
         {
-            var jsonFile = new JSONFile(key, json, this.path, jsonXhrSettings);
+            var jsonFile;
+
+            if (typeof json === 'string')
+            {
+                jsonFile = new JSONFile(key, json, this.path, jsonXhrSettings);
+
+                this.addFile(jsonFile);
+            }
+            else
+            {
+                jsonFile = {
+                    type: 'json',
+                    key: key,
+                    data: json,
+                    state: CONST.FILE_WAITING_LINKFILE
+                };
+            }
 
             //  Link them together
             audioFile.linkFile = jsonFile;
@@ -135,7 +152,6 @@ var Loader = new Class({
             jsonFile.linkType = 'audioSprite';
 
             this.addFile(audioFile);
-            this.addFile(jsonFile);
         }
 
         return this;
