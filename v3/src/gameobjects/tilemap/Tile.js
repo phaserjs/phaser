@@ -85,7 +85,6 @@ var Tile = new Class({
          */
         this.baseHeight = (baseHeight !== undefined) ? baseHeight : height;
 
-
         /**
          * The world x coordinate of the top left of this tile in pixels. This does not factor in
          * camera scroll, layer scale or layer position.

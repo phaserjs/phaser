@@ -1047,7 +1047,7 @@ var Tilemap = new Class({
 
     /**
      * Sets the base tile size for the map. Note: this does not necessarily match the tileWidth and
-     * tileHeight for all layers.
+     * tileHeight for all layers. This also updates the base size on all tiles across all layers.
      *
      * @param {integer} tileWidth - The width of the tiles the map uses for calculations.
      * @param {integer} tileHeight - The height of the tiles the map uses for calculations.
@@ -1059,6 +1059,26 @@ var Tilemap = new Class({
         this.tileHeight = tileHeight;
         this.widthInPixels = this.width * tileWidth;
         this.heightInPixels = this.height * tileHeight;
+
+        // Update the base tile size on all tiles
+        for (var i = 0; i < this.layers.length; i++)
+        {
+            var mapData = this.layers[i].data;
+            var mapWidth = this.layers[i].width;
+            var mapHeight = this.layers[i].height;
+
+            for (var row = 0; row < mapHeight; ++row)
+            {
+                for (var col = 0; col < mapWidth; ++col)
+                {
+                    var tile = mapData[row][col];
+                    if (tile !== null)
+                    {
+                        tile.setSize(undefined, undefined, tileWidth, tileHeight);
+                    }
+                }
+            }
+        }
 
         return this;
     },
