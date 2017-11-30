@@ -842,6 +842,23 @@ var Tilemap = new Class({
      *
      * @return {this|null} Returns this, or null if the layer given was invalid.
      */
+    putTilesAt: function (tilesArray, tileX, tileY, recalculateFaces, layer)
+    {
+        layer = this.getLayer(layer);
+        if (this._isStaticCall(layer, 'putTilesAt')) { return this; }
+        if (layer !== null)
+        {
+            TilemapComponents.PutTilesAt(tilesArray, tileX, tileY, recalculateFaces, layer);
+        }
+        return this;
+    },
+
+    /**
+     * See component documentation. If no layer specified, the map's current layer is used. This
+     * cannot be applied to StaticTilemapLayers.
+     *
+     * @return {this|null} Returns this, or null if the layer given was invalid.
+     */
     randomize: function (tileX, tileY, width, height, indexes, layer)
     {
         layer = this.getLayer(layer);

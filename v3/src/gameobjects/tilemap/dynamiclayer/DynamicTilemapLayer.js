@@ -289,6 +289,17 @@ var DynamicTilemapLayer = new Class({
      *
      * @return {this}
      */
+    putTilesAt: function (tilesArray, tileX, tileY, recalculateFaces)
+    {
+        TilemapComponents.PutTilesAt(tilesArray, tileX, tileY, recalculateFaces, this.layer);
+        return this;
+    },
+
+    /**
+     * See component documentation.
+     *
+     * @return {this}
+     */
     randomize: function (tileX, tileY, width, height, indexes)
     {
         TilemapComponents.Randomize(tileX, tileY, width, height, indexes, this.layer);
