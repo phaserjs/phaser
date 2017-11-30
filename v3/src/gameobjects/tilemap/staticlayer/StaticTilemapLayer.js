@@ -125,8 +125,6 @@ var StaticTilemapLayer = new Class({
         var tileset = this.tileset;
         var mapWidth = this.layer.width;
         var mapHeight = this.layer.height;
-        var tileWidth = this.layer.tileWidth;
-        var tileHeight = this.layer.tileHeight;
         var width = this.texture.source[0].width;
         var height = this.texture.source[0].height;
         var mapData = this.layer.data;
@@ -170,10 +168,10 @@ var StaticTilemapLayer = new Class({
                         tile = mapData[row][col];
                         if (tile === null || (tile.index <= 0 && this.skipIndexZero)) { continue; }
 
-                        var tx = col * tileWidth;
-                        var ty = row * tileHeight;
-                        var txw = tx + tileWidth;
-                        var tyh = ty + tileHeight;
+                        var tx = tile.worldX;
+                        var ty = tile.worldY;
+                        var txw = tx + tile.width;
+                        var tyh = ty + tile.height;
 
                         texCoords = tileset.getTileTextureCoordinates(tile.index);
                         if (texCoords === null) { continue; }
@@ -181,8 +179,8 @@ var StaticTilemapLayer = new Class({
                         // Inset UV coordinates by 0.5px to prevent tile bleeding
                         var u0 = (texCoords.x + 0.5) / width;
                         var v0 = (texCoords.y + 0.5) / height;
-                        var u1 = (texCoords.x + tileWidth - 0.5) / width;
-                        var v1 = (texCoords.y + tileHeight - 0.5) / height;
+                        var u1 = (texCoords.x + tile.width - 0.5) / width;
+                        var v1 = (texCoords.y + tile.height - 0.5) / height;
 
                         var tx0 = tx;
                         var ty0 = ty;

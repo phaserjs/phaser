@@ -25,8 +25,14 @@ var Tile = new Class({
      * @param {integer} y - The y coordinate of this tile in tile coordinates.
      * @param {integer} width - Width of the tile in pixels.
      * @param {integer} height - Height of the tile in pixels.
+     * @param {integer} baseWidth - The base width a tile in the map (in pixels). Tiled maps support
+     * multiple tileset sizes within one map, but they are still placed at intervals of the base
+     * tile width.
+     * @param {integer} baseHeight - The base height of the tile in pixels (in pixels). Tiled maps
+     * support multiple tileset sizes within one map, but they are still placed at intervals of the
+     * base tile height.
      */
-    function Tile (layer, index, x, y, width, height)
+    function Tile (layer, index, x, y, width, height, baseWidth, baseHeight)
     {
         /**
          * The LayerData in the Tilemap data that this tile belongs to.
@@ -54,20 +60,6 @@ var Tile = new Class({
         this.y = y;
 
         /**
-         * The world x coordinate of this tile in pixels. This does not factor in camera scroll,
-         * layer scale or layer position.
-         * @property {number} x
-         */
-        this.worldX = x * width;
-
-        /**
-         * The world y coordinate of this tile in pixels. This does not factor in camera scroll,
-         * layer scale or layer position.
-         * @property {number} y
-         */
-        this.worldY = y * height;
-
-        /**
          * The width of the tile in pixels.
          * @property {integer} width
          */
@@ -78,6 +70,37 @@ var Tile = new Class({
          * @property {integer} height
          */
         this.height = height;
+
+        /**
+         * The map's base width of a tile in pixels. Tiled maps support multiple tileset sizes
+         * within one map, but they are still placed at intervals of the base tile size.
+         * @property {integer} baseWidth
+         */
+        this.baseWidth = (baseWidth !== undefined) ? baseWidth : width;
+
+        /**
+         * The map's base height of a tile in pixels. Tiled maps support multiple tileset sizes
+         * within one map, but they are still placed at intervals of the base tile size.
+         * @property {integer} baseHeight
+         */
+        this.baseHeight = (baseHeight !== undefined) ? baseHeight : height;
+
+
+        /**
+         * The world x coordinate of the top left of this tile in pixels. This does not factor in
+         * camera scroll, layer scale or layer position.
+         * @property {number} x
+         */
+        this.worldX = 0;
+
+        /**
+         * The world y coordinate of the top left of this tile in pixels. This does not factor in
+         * camera scroll, layer scale or layer position.
+         * @property {number} y
+         */
+        this.worldY = 0;
+
+        this.updateWorldXY();
 
         /**
          * Tile specific properties. These usually come from Tiled.
@@ -321,14 +344,34 @@ var Tile = new Class({
      *
      * @param {integer} tileWidth - The width of the tile in pixels.
      * @param {integer} tileHeight - The height of the tile in pixels.
+     * @param {integer} baseWidth - The base width a tile in the map (in pixels).
+     * @param {integer} baseHeight - The base height of the tile in pixels (in pixels).
      * @returns {this}
      */
-    setSize: function (tileWidth, tileHeight)
+    setSize: function (tileWidth, tileHeight, baseWidth, baseHeight)
     {
-        this.worldX = this.x * tileWidth;
-        this.worldY = this.y * tileHeight;
-        this.width = tileWidth;
-        this.height = tileHeight;
+        if (tileWidth !== undefined) { this.width = tileWidth; }
+        if (tileHeight !== undefined) { this.height = tileHeight; }
+        if (baseWidth !== undefined) { this.baseWidth = baseWidth; }
+        if (baseHeight !== undefined) { this.baseHeight = baseHeight; }
+
+        this.updateWorldXY();
+
+        return this;
+    },
+
+    /**
+     * Used internally. Updates the tile's world XY position based on the current tile size.
+     *
+     * @returns {this}
+     */
+    updateWorldXY: function ()
+    {
+        // Tiled places tiles on a grid of baseWidth x baseHeight. The origin for a tile is the
+        // bottom left, while the Phaser renderer assumes the origin is the top left. The y
+        // coordinate needs to be adjusted by the difference.
+        this.worldX = this.x * this.baseWidth;
+        this.worldY = this.y * this.baseHeight - (this.height - this.baseHeight);
 
         return this;
     },
