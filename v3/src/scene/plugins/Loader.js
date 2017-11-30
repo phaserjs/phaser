@@ -111,6 +111,14 @@ var Loader = new Class({
     //  Multi-File Loaders
     //  ---------------------------------------------------
 
+    audioSprite: function (key, urls, json, config, audioXhrSettings, jsonXhrSettings)
+    {
+        this.audio(key, urls, config, audioXhrSettings);
+        this.json(key, json, jsonXhrSettings);
+
+        return this;
+    },
+
     unityAtlas: function (key, textureURL, atlasURL, textureXhrSettings, atlasXhrSettings)
     {
         //  Returns an object with two properties: 'texture' and 'data'
