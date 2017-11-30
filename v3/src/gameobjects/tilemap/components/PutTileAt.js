@@ -8,9 +8,9 @@ var RecalculateFacesAt = require('./RecalculateFacesAt');
  * location. If you pass in an index, only the index at the specified location will be changed.
  * Collision information will be recalculated at the specified location.
  *
- * @param {number|Tile} tile - The index of this tile to set or a Tile object.
- * @param {number} tileX - [description]
- * @param {number} tileY - [description]
+ * @param {integer|Tile} tile - The index of this tile to set or a Tile object.
+ * @param {integer} tileX - [description]
+ * @param {integer} tileY - [description]
  * @param {boolean} [recalculateFaces=true] - [description]
  * @param {LayerData} layer - [description]
  * @return {Tile} The Tile object that was created or added to this map.

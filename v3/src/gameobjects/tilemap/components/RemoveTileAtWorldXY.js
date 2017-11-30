@@ -6,7 +6,7 @@ var WorldToTileY = require('./WorldToTileY');
  * Removes the tile at the given world coordinates in the specified layer and updates the layer's
  * collision information.
  *
- * @param {number|Tile} tile - The index of this tile to set or a Tile object.
+ * @param {integer|Tile} tile - The index of this tile to set or a Tile object.
  * @param {number} worldX - [description]
  * @param {number} worldY - [description]
  * @param {boolean} [replaceWithNull=true] - If true, this will replace the tile at the specified

@@ -244,6 +244,11 @@ var GameObject = new Class({
      */
     destroy: function ()
     {
+        if (this.preDestroy)
+        {
+            this.preDestroy();
+        }
+
         this.scene.sys.displayList.remove(this);
         this.scene.sys.updateList.remove(this);
 

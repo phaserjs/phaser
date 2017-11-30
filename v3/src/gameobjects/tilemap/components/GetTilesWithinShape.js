@@ -30,7 +30,7 @@ var TriangleToRectangle = function (triangle, rect)
  * have at least one interesting face.
  * @param {Camera} [camera=main camera] - [description]
  * @param {LayerData} layer - [description]
- * @return {array} Array of Tile objects.
+ * @return {Tile[]} Array of Tile objects.
  */
 var GetTilesWithinShape = function (shape, filteringOptions, camera, layer)
 {

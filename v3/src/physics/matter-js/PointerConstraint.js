@@ -6,6 +6,7 @@ var Detector = require('./lib/collision/Detector');
 var GetFastValue = require('../../utils/object/GetFastValue');
 var Merge = require('../../utils/object/Merge');
 var Sleeping = require('./lib/core/Sleeping');
+var Vector2 = require('../../math/Vector2');
 var Vertices = require('./lib/geometry/Vertices');
 
 var PointerConstraint = new Class({
@@ -52,6 +53,9 @@ var PointerConstraint = new Class({
         this.pointer = null;
 
         this.active = true;
+
+        //  The transformed position
+        this.position = new Vector2();
 
         this.constraint = Constraint.create(Merge(options, defaults));
 
@@ -123,15 +127,17 @@ var PointerConstraint = new Class({
         }
         else
         {
-            var position = this.camera.worldToCamera({ x: pointer.position.x, y: pointer.position.y });
+            var pos = this.position;
+
+            this.camera.getWorldPoint(pointer.position, pos);
 
             if (constraint.bodyB)
             {
                 //  Pointer is down and we have bodyB, so wake it up
                 Sleeping.set(constraint.bodyB, false);
 
-                constraint.pointA.x = position.x;
-                constraint.pointA.y = position.y;
+                constraint.pointA.x = pos.x;
+                constraint.pointA.y = pos.y;
             }
             else
             {
@@ -142,10 +148,10 @@ var PointerConstraint = new Class({
                 {
                     var body = bodies[i];
 
-                    if (!body.ignorePointer && Bounds.contains(body.bounds, position) &&
+                    if (!body.ignorePointer && Bounds.contains(body.bounds, pos) &&
                         Detector.canCollide(body.collisionFilter, constraint.collisionFilter))
                     {
-                        if (this.getBodyPart(body, position))
+                        if (this.getBodyPart(body, pos))
                         {
                             break;
                         }

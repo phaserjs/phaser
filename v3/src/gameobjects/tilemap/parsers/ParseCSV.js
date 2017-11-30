@@ -6,8 +6,8 @@ var Parse2DArray = require('./Parse2DArray');
  *
  * @param {string} name - The name of the tilemap, used to set the name on the MapData.
  * @param {string} data - CSV string of tile indexes.
- * @param {number} tileWidth - The width of a tile in pixels.
- * @param {number} tileHeight - The height of a tile in pixels.
+ * @param {integer} tileWidth - The width of a tile in pixels.
+ * @param {integer} tileHeight - The height of a tile in pixels.
  * @param {boolean} insertNull - Controls how empty tiles, tiles with an index of -1, in the map
  * data are handled. If `true`, empty locations will get a value of `null`. If `false`, empty
  * location will get a Tile object with an index of -1. If you've a large sparsely populated map and

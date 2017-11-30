@@ -1,8 +1,8 @@
 /**
  * Checks if the given tile coordinates are within the bounds of the layer.
  *
- * @param {number} tileX - [description]
- * @param {number} tileY - [description]
+ * @param {integer} tileX - [description]
+ * @param {integer} tileY - [description]
  * @param {LayerData} layer - [description]
  * @return {boolean}
  */

@@ -90,11 +90,6 @@ var TextStyle = new Class({
 
     syncFont: function (canvas, context)
     {
-        if (this.rtl)
-        {
-            canvas.dir = 'rtl';
-        }
-
         context.font = this.font;
         context.textBaseline = 'alphabetic';
 

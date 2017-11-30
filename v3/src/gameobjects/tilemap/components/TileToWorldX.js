@@ -2,7 +2,7 @@
  * Internally used method to convert from tile X coordinates to world X coordinates, factoring in
  * layer position, scale and scroll.
  *
- * @param {number} tileX - [description]
+ * @param {integer} tileX - [description]
  * @param {Camera} [camera=main camera] - [description]
  * @param {LayerData} layer - [description]
  * @returns {number}

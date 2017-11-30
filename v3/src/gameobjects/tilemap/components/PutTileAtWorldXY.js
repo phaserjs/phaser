@@ -8,9 +8,9 @@ var WorldToTileY = require('./WorldToTileY');
  * specified location. If you pass in an index, only the index at the specified location will be
  * changed. Collision information will be recalculated at the specified location.
  *
- * @param {number|Tile} tile - The index of this tile to set or a Tile object.
- * @param {number} worldX - [description]
- * @param {number} worldY - [description]
+ * @param {integer|Tile} tile - The index of this tile to set or a Tile object.
+ * @param {integer} worldX - [description]
+ * @param {integer} worldY - [description]
  * @param {boolean} [recalculateFaces=true] - [description]
  * @param {Camera} [camera=main camera] - [description]
  * @param {LayerData} layer - [description]

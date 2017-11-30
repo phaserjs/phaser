@@ -167,7 +167,7 @@ var World = new Class({
         {
             if (wall)
             {
-                this.localWorld.remove(wall);
+                MatterWorld.remove(this.localWorld, wall);
             }
 
             //  adjust center
@@ -180,7 +180,7 @@ var World = new Class({
         {
             if (wall)
             {
-                this.localWorld.remove(wall);
+                MatterWorld.remove(this.localWorld, wall);
             }
 
             this.walls[position] = null;
@@ -322,12 +322,14 @@ var World = new Class({
 
     shutdown: function ()
     {
-
+        MatterWorld.clear(this.localWorld, false);
+        Engine.clear(this.engine);
     },
 
     destroy: function ()
     {
-
+        //  TODO
+        this.shutdown();
     }
 
 });

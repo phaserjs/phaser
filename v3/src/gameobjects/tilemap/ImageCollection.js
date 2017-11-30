@@ -1,3 +1,5 @@
+// Note: direct port from v2
+
 /**
 * An Image Collection is a special tileset containing mulitple images, with no slicing into each image.
 *

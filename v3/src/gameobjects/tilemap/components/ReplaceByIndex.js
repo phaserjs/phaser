@@ -5,12 +5,12 @@ var GetTilesWithin = require('./GetTilesWithin');
  * `findIndex` and updates their index to match `newIndex`. This only modifies the index and does
  * not change collision information.
  *
- * @param {number} findIndex - [description]
- * @param {number} newIndex - [description]
- * @param {number} [tileX=0] - [description]
- * @param {number} [tileY=0] - [description]
- * @param {number} [width=max width based on tileX] - [description]
- * @param {number} [height=max height based on tileY] - [description]
+ * @param {integer} findIndex - [description]
+ * @param {integer} newIndex - [description]
+ * @param {integer} [tileX=0] - [description]
+ * @param {integer} [tileY=0] - [description]
+ * @param {integer} [width=max width based on tileX] - [description]
+ * @param {integer} [height=max height based on tileY] - [description]
  * @param {LayerData} layer - [description]
  */
 var ReplaceByIndex = function (findIndex, newIndex, tileX, tileY, width, height, layer)

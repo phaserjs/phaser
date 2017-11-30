@@ -9,8 +9,8 @@ var ReplaceByIndex = require('./ReplaceByIndex');
  * created. This is useful if you want to lay down special tiles in a level that are converted to
  * Sprites, but want to replace the tile itself with a floor tile or similar once converted.
  *
- * @param {number|array} indexes - The tile index, or array of indexes, to create Sprites from.
- * @param {number|array} replacements - The tile index, or array of indexes, to change a converted
+ * @param {integer|array} indexes - The tile index, or array of indexes, to create Sprites from.
+ * @param {integer|array} replacements - The tile index, or array of indexes, to change a converted
  * tile to. Set to `null` to leave the tiles unchanged. If an array is given, it is assumed to be a
  * one-to-one mapping with the indexes array.
  * @param {object} spriteConfig - The config object to pass into the Sprite creator (i.e.
@@ -18,7 +18,7 @@ var ReplaceByIndex = require('./ReplaceByIndex');
  * @param {Scene} [scene=scene the map is within] - The Scene to create the Sprites within.
  * @param {Camera} [camera=main camera] - The Camera to use when determining the world XY
  * @param {LayerData} layer - [description]
- * @return {array} An array of the Sprites that were created.
+ * @return {Sprite[]} An array of the Sprites that were created.
  */
 var CreateFromTiles = function (indexes, replacements, spriteConfig, scene, camera, layer)
 {

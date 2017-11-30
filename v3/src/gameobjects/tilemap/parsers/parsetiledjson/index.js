@@ -169,7 +169,7 @@ var ParseJSONTiled = function (name, json, insertNull)
 
         if (set.image)
         {
-            var newSet = new Tileset(set.name, set.firstgid, set.tilewidth, set.tileheight, set.margin, set.spacing, set.properties);
+            var newSet = new Tileset(set.name, set.firstgid, set.tilewidth, set.tileheight, set.margin, set.spacing);
 
             // Properties stored per-tile in object with string indexes starting at "0"
             if (set.tileproperties)

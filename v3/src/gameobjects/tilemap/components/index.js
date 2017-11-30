@@ -17,6 +17,7 @@ module.exports = {
     IsInLayerBounds: require('./IsInLayerBounds'),
     PutTileAt: require('./PutTileAt'),
     PutTileAtWorldXY: require('./PutTileAtWorldXY'),
+    PutTilesAt: require('./PutTilesAt'),
     Randomize: require('./Randomize'),
     CalculateFacesWithin: require('./CalculateFacesWithin'),
     RemoveTileAt: require('./RemoveTileAt'),

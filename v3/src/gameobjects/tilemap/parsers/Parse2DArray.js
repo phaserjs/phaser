@@ -7,9 +7,9 @@ var Tile = require('../Tile');
  * Parses a 2D array of tile indexes into a new MapData object with a single layer.
  *
  * @param {string} name - The name of the tilemap, used to set the name on the MapData.
- * @param {array} data - 2D array, CSV string or Tiled JSON object.
- * @param {number} tileWidth - The width of a tile in pixels.
- * @param {number} tileHeight - The height of a tile in pixels.
+ * @param {integer[][]} data - 2D array, CSV string or Tiled JSON object.
+ * @param {integer} tileWidth - The width of a tile in pixels.
+ * @param {integer} tileHeight - The height of a tile in pixels.
  * @param {boolean} insertNull - Controls how empty tiles, tiles with an index of -1, in the map
  * data are handled. If `true`, empty locations will get a value of `null`. If `false`, empty
  * location will get a Tile object with an index of -1. If you've a large sparsely populated map and

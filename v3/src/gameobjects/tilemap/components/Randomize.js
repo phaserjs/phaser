@@ -8,11 +8,11 @@ var GetRandomElement = require('../../../utils/array/GetRandomElement');
  * indexes found within the region (excluding -1) will be used for randomly assigning new tile
  * indexes. This method only modifies tile indexes and does not change collision information.
  *
- * @param {number} [tileX=0] - [description]
- * @param {number} [tileY=0] - [description]
- * @param {number} [width=max width based on tileX] - [description]
- * @param {number} [height=max height based on tileY] - [description]
- * @param {array} [indexes] - An array of indexes to randomly draw from during randomization.
+ * @param {integer} [tileX=0] - [description]
+ * @param {integer} [tileY=0] - [description]
+ * @param {integer} [width=max width based on tileX] - [description]
+ * @param {integer} [height=max height based on tileY] - [description]
+ * @param {integer[]} [indexes] - An array of indexes to randomly draw from during randomization.
  * @param {LayerData} layer - [description]
  */
 var Randomize = function (tileX, tileY, width, height, indexes, layer)

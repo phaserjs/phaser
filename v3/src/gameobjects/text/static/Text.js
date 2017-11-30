@@ -1,11 +1,12 @@
-
-var Class = require('../../../utils/Class');
-var GameObject = require('../../GameObject');
-var Components = require('../../components');
+var AddToDOM = require('../../../dom/AddToDOM');
 var CanvasPool = require('../../../display/canvas/CanvasPool');
+var Class = require('../../../utils/Class');
+var Components = require('../../components');
+var GameObject = require('../../GameObject');
+var GetTextSize = require('../GetTextSize');
+var RemoveFromDOM = require('../../../dom/RemoveFromDOM');
 var TextRender = require('./TextRender');
 var TextStyle = require('../TextStyle');
-var GetTextSize = require('../GetTextSize');
 
 var Text = new Class({
 
@@ -32,10 +33,6 @@ var Text = new Class({
     {
         if (x === undefined) { x = 0; }
         if (y === undefined) { y = 0; }
-        if (text === undefined) { text = ''; }
-
-        //  Cast to string whatever our value may be (numeric, etc)
-        text = text.toString();
 
         GameObject.call(this, scene, 'Text');
 
@@ -64,7 +61,8 @@ var Text = new Class({
          */
         this.splitRegExp = /(?:\r\n|\r|\n)/;
 
-        this.text = (Array.isArray(text)) ? text.join('\n') : text;
+        //  This is populated in this.setText
+        this.text = '';
 
         this.resolution = 1;
 
@@ -81,10 +79,9 @@ var Text = new Class({
         this.canvasTexture = null;
         this.dirty = false;
 
-        if (text !== '')
-        {
-            this.updateText();
-        }
+        this.initRTL();
+
+        this.setText(text);
 
         var _this = this;
 
@@ -93,6 +90,32 @@ var Text = new Class({
             _this.canvasTexture = null;
             _this.dirty = true;
         });
+    },
+
+    initRTL: function ()
+    {
+        if (!this.style.rtl)
+        {
+            return;
+        }
+
+        //  Here is where the crazy starts.
+        //  
+        //  Due to browser implementation issues, you cannot fillText BiDi text to a canvas
+        //  that is not part of the DOM. It just completely ignores the direction property.
+
+        this.canvas.dir = 'rtl';
+
+        //  Experimental atm, but one day ...
+        this.context.direction = 'rtl';
+
+        //  Add it to the DOM, but hidden within the parent canvas.
+        this.canvas.style.display = 'none';
+
+        AddToDOM(this.canvas, this.scene.sys.canvas);
+
+        //  And finally we set the x origin
+        this.originX = 1;
     },
 
     setText: function (value)
@@ -255,13 +278,20 @@ var Text = new Class({
                 linePositionY += (textSize.lineSpacing * i);
             }
 
-            if (style.align === 'right')
+            if (style.rtl)
             {
-                linePositionX += textSize.width - textSize.lineWidths[i];
+                linePositionX = w - linePositionX;
             }
-            else if (style.align === 'center')
+            else
             {
-                linePositionX += (textSize.width - textSize.lineWidths[i]) / 2;
+                if (style.align === 'right')
+                {
+                    linePositionX += textSize.width - textSize.lineWidths[i];
+                }
+                else if (style.align === 'center')
+                {
+                    linePositionX += (textSize.width - textSize.lineWidths[i]) / 2;
+                }
             }
 
             if (this.autoRound)
@@ -315,7 +345,18 @@ var Text = new Class({
         out.data = data;
 
         return out;
+    },
+
+    preDestroy: function ()
+    {
+        if (this.style.rtl)
+        {
+            RemoveFromDOM(this.canvas);
+        }
+
+        CanvasPool.remove(this.canvas);
     }
+
 });
 
 module.exports = Text;

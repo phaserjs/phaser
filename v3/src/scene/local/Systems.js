@@ -243,6 +243,8 @@ var Systems = new Class({
     {
         //  Was stopped by the GlobalSceneManager
 
+        console.log('Scene.shutdown');
+
         this.settings.active = false;
         this.settings.visible = false;
 
@@ -250,6 +252,7 @@ var Systems = new Class({
         this.updateList.shutdown();
         this.time.shutdown();
         this.tweens.shutdown();
+        this.physicsManager.shutdown();
 
         if (this.scene.shutdown)
         {
@@ -257,14 +260,13 @@ var Systems = new Class({
         }
     },
 
-    //  Game level nuke
+    //  TODO: Game level nuke
     destroy: function ()
     {
-        //  TODO
-
         this.add.destroy();
         this.time.destroy();
         this.tweens.destroy();
+        this.physicsManager.destroy();
 
         //  etc
         if (this.scene.destroy)
