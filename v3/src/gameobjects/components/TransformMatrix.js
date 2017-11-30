@@ -68,10 +68,10 @@ var TransformMatrix = new Class({
         return this.transform(radianCos, radianSin, -radianSin, radianCos, 0, 0);
     },
 
-    multiply: function (lhs)
+    multiply: function (rhs)
     {
         var matrix = this.matrix;
-        var otherMatrix = lhs.matrix;
+        var otherMatrix = rhs.matrix;
 
         var a0 = matrix[0];
         var b0 = matrix[1];

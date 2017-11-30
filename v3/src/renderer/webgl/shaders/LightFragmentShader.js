@@ -43,7 +43,8 @@ var LightFragmentShader = function (maxLights)
         '        finalColor += attenuation * diffuse;',
         '    }',
 
-        '    gl_FragColor = vec4(uAmbientLightColor + finalColor, spriteColor.a);',
+        '    vec4 color_output = vec4(uAmbientLightColor + finalColor, spriteColor.a);',
+        '    gl_FragColor = vec4(color_output.rgb * color_output.a, color_output.a);',
         '}'
     ];
 
