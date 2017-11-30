@@ -31,6 +31,9 @@ module.exports = {
     SetTileLocationCallback: require('./SetTileLocationCallback'),
     Shuffle: require('./Shuffle'),
     SwapByIndex: require('./SwapByIndex'),
+    TileToWorldX: require('./TileToWorldX'),
+    TileToWorldXY: require('./TileToWorldXY'),
+    TileToWorldY: require('./TileToWorldY'),
     WorldToTileX: require('./WorldToTileX'),
     WorldToTileXY: require('./WorldToTileXY'),
     WorldToTileY: require('./WorldToTileY')
