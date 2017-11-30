@@ -306,7 +306,8 @@ var Tilemap = new Class({
             row = [];
             for (var tileX = 0; tileX < width; tileX++)
             {
-                row.push(new Tile(layerData, -1, tileX, tileY, tileWidth, tileHeight));
+                row.push(new Tile(layerData, -1, tileX, tileY, tileWidth, tileHeight,
+                    this.tileWidth, this.tileHeight));
             }
             layerData.data.push(row);
         }
