@@ -422,12 +422,12 @@ var Tilemap = new Class({
 
             if (found)
             {
-                Extend(spriteConfig, obj.properties);
+                var config = Extend({}, spriteConfig, obj.properties);
 
-                spriteConfig.x = obj.x;
-                spriteConfig.y = obj.y;
+                config.x = obj.x;
+                config.y = obj.y;
 
-                var sprite = this.scene.make.sprite(spriteConfig);
+                var sprite = this.scene.make.sprite(config);
 
                 sprite.name = obj.name;
 
