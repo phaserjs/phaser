@@ -67,10 +67,10 @@ var WebAudioSoundManager = new Class({
         var _this = this;
         if (this.context.state === 'suspended') {
             var unlock_1 = function () {
-                document.body.removeEventListener('touchstart', unlock_1);
+                document.body.removeEventListener('touchend', unlock_1);
                 _this.context.resume();
             };
-            document.body.addEventListener('touchstart', unlock_1, false);
+            document.body.addEventListener('touchend', unlock_1, false);
         }
     },
     onBlur: function () {
