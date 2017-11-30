@@ -14,7 +14,8 @@ module.exports = {
         'uniform sampler2D u_sampler;',
         'varying vec2 v_tex_coord;',
         'void main(void) {',
-        '   gl_FragColor = texture2D(u_sampler, v_tex_coord);',
+        '   vec4 output_color = texture2D(u_sampler, v_tex_coord);',
+        '   gl_FragColor = vec4(output_color.rgb * output_color.a, output_color.a);',
         '}'
     ].join('\n')
 };

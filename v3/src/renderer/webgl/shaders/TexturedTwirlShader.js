@@ -26,7 +26,8 @@ module.exports = {
         '       float c = cos(angleMod);',
         '       coord = vec2(coord.x * c - coord.y * s, coord.x * s + coord.y * c);',
         '   }',
-        '   gl_FragColor = texture2D(u_sampler, coord + offset);',
+        '   vec4 output_color = texture2D(u_sampler, coord + offset);',
+        '   gl_FragColor = vec4(output_color.rgb * output_color.a, output_color.a);',
         '}'
     ].join('\n')
 };

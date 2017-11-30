@@ -30,7 +30,8 @@ var ParticleShader = function ()
 
         'void main()',
         '{',
-        '    gl_FragColor = texture2D(u_main_sampler, v_tex_coord) * v_color;',
+        '    vec4 sample_color = texture2D(u_main_sampler, v_tex_coord) * v_color;',
+        '    gl_FragColor = vec4(sample_color.rgb * sample_color.a, sample_color.a);',
         '}'
     ];
 

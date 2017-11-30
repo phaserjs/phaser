@@ -17,7 +17,7 @@ var GBufferShader = function ()
         '    vec4 spriteColor = texture2D(uMainTexture, v_tex_coord) * vec4(v_color, v_alpha);',
         '    vec3 spriteNormal = texture2D(uNormTexture, v_tex_coord).rgb;',
             
-        '    gl_FragData[0] = spriteColor;',
+        '    gl_FragData[0] = vec4(spriteColor.rgb * spriteColor.a, spriteColor.a);',
         '    gl_FragData[1] = vec4(spriteNormal, spriteColor.a);',
         '}'
     ];

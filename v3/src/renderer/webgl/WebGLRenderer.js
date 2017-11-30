@@ -80,9 +80,9 @@ var WebGLRenderer = new Class({
             preserveDrawingBuffer: false,
 
             WebGLContextOptions: {
-                alpha: true,
+                alpha: false,
                 antialias: true,
-                premultipliedAlpha: true,
+                premultipliedAlpha: false,
                 stencil: true,
                 preserveDrawingBuffer: false
             }
@@ -142,6 +142,7 @@ var WebGLRenderer = new Class({
         gl.disable(gl.CULL_FACE);
         gl.enable(gl.BLEND);
         gl.clearColor(color.redGL, color.greenGL, color.blueGL, color.alphaGL);
+        gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
 
         //  Map Blend Modes
 
@@ -149,7 +150,7 @@ var WebGLRenderer = new Class({
 
         for (var i = 0; i <= 16; i++)
         {
-            this.blendModes.push({ func: [ gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA, gl.ONE, gl.ONE_MINUS_SRC_ALPHA ], equation: gl.FUNC_ADD });
+            this.blendModes.push({ func: [ gl.ONE, gl.ONE_MINUS_SRC_ALPHA ], equation: gl.FUNC_ADD });
         }
 
         //  Add

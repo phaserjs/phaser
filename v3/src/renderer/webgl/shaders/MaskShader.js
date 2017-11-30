@@ -18,8 +18,9 @@ module.exports = {
     '   vec2 uv = gl_FragCoord.xy / u_resolution;',
     '   vec4 main_color = texture2D(u_main_sampler, uv);',
     '   vec4 mask_color = texture2D(u_mask_sampler, uv);',
+    '   float alpha = mask_color.a * main_color.a;',
     '   // Just mask using alpha channel',
-    '   gl_FragColor = vec4(main_color.rgb, mask_color.a * main_color.a);',
+    '   gl_FragColor = vec4(main_color.rgb * alpha, alpha);',
     '}'
     ].join('\n')
 };
