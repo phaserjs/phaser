@@ -120,8 +120,19 @@ var Loader = new Class({
 
     audioSprite: function (key, urls, json, config, audioXhrSettings, jsonXhrSettings)
     {
-        this.audio(key, urls, config, audioXhrSettings);
-        this.json(key, json, jsonXhrSettings);
+        var audioFile = AudioFile.create(this, key, urls, config, audioXhrSettings);
+        var jsonFile = new JSONFile(key, json, this.path, jsonXhrSettings);
+
+        //  Link them together
+        audioFile.linkFile = jsonFile;
+        jsonFile.linkFile = audioFile;
+
+        //  Set the type
+        audioFile.linkType = 'audioSprite';
+        jsonFile.linkType = 'audioSprite';
+
+        this.addFile(audioFile);
+        this.addFile(jsonFile);
 
         return this;
     },
