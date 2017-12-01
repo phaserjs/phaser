@@ -156,11 +156,10 @@ var WebAudioSound = new Class({
      * @private
      */
     setRate: function () {
-        var totalRate = BaseSound.prototype.setRate.call(this);
+        BaseSound.prototype.setRate.call(this);
         if (this.source) {
-            this.source.playbackRate.setValueAtTime(totalRate, 0);
+            this.source.playbackRate.setValueAtTime(this.totalRate, 0);
         }
-        return totalRate;
     }
 });
 /**
