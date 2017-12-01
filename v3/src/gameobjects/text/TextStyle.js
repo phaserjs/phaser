@@ -93,7 +93,25 @@ var TextStyle = new Class({
             this[key] = GetAdvancedValue(style, propertyMap[key][0], propertyMap[key][1]);
         }
 
-        this._font = [ this.fontStyle, this.fontSize, this.fontFamily ].join(' ');
+        //  Allow for 'font' override
+        var font = GetValue(style, 'font', null);
+
+        if (font === null)
+        {
+            this._font = [ this.fontStyle, this.fontSize, this.fontFamily ].join(' ');
+        }
+        else
+        {
+            this._font = font;
+        }
+
+        //  Allow for 'fill' to be used in place of 'color'
+        var fill = GetValue(style, 'fill', null);
+
+        if (fill !== null)
+        {
+            this.color = fill;
+        }
 
         if (updateText)
         {
@@ -149,9 +167,18 @@ var TextStyle = new Class({
     //  Allows you to set them all in a single object
     setFont: function (font)
     {
-        this.fontFamily = GetValue(font, 'fontFamily', 'Courier');
-        this.fontSize = GetValue(font, 'fontSize', '16px');
-        this.fontStyle = GetValue(font, 'fontStyle', '');
+        if (typeof font === 'string')
+        {
+            this.fontFamily = font;
+            this.fontSize = '';
+            this.fontStyle = '';
+        }
+        else
+        {
+            this.fontFamily = GetValue(font, 'fontFamily', 'Courier');
+            this.fontSize = GetValue(font, 'fontSize', '16px');
+            this.fontStyle = GetValue(font, 'fontStyle', '');
+        }
 
         return this.update(true);
     },
@@ -210,6 +237,13 @@ var TextStyle = new Class({
     setBackgroundColor: function (color)
     {
         this.backgroundColor = color;
+
+        return this.update(false);
+    },
+
+    setFill: function (color)
+    {
+        this.color = color;
 
         return this.update(false);
     },
