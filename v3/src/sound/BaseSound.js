@@ -65,6 +65,14 @@ var BaseSound = new Class({
          */
         this.detune = 0;
         /**
+         * A property that holds the value of sound's actual playback rate,
+         * after its rate and detune values has been combined with global
+         * rate and detune values.
+         *
+         * @property {number} totalRate
+         */
+        this.totalRate = 1;
+        /**
          * [description]
          *
          * @property {number} seek
