@@ -1061,9 +1061,12 @@ var Tilemap = new Class({
         this.widthInPixels = this.width * tileWidth;
         this.heightInPixels = this.height * tileHeight;
 
-        // Update the base tile size on all tiles
+        // Update the base tile size on all layers & tiles
         for (var i = 0; i < this.layers.length; i++)
         {
+            this.layers[i].baseWidth = tileWidth;
+            this.layers[i].baseHeight = tileHeight;
+
             var mapData = this.layers[i].data;
             var mapWidth = this.layers[i].width;
             var mapHeight = this.layers[i].height;

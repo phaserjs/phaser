@@ -13,7 +13,7 @@ var WorldToTileX = function (worldX, snapToFloor, camera, layer)
 {
     if (snapToFloor === undefined) { snapToFloor = true; }
 
-    var tileWidth = layer.tileWidth;
+    var tileWidth = layer.baseTileWidth;
     var tilemapLayer = layer.tilemapLayer;
 
     if (tilemapLayer)

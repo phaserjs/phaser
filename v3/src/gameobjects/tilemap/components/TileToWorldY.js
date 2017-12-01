@@ -9,7 +9,7 @@
  */
 var TileToWorldY = function (tileY, camera, layer)
 {
-    var tileHeight = layer.tileHeight;
+    var tileHeight = layer.baseTileHeight;
     var tilemapLayer = layer.tilemapLayer;
     var layerWorldY = 0;
 
