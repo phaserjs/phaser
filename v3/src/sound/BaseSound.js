@@ -276,8 +276,8 @@ var BaseSound = new Class({
         var cent = 1.0005777895065548; // Math.pow(2, 1/1200);
         var totalDetune = Math.max(-1200, Math.min(this.currentConfig.detune + this.manager.detune, 1200));
         var detuneRate = Math.pow(cent, totalDetune);
-        var totalRate = this.currentConfig.rate * this.manager.rate * detuneRate;
-        return totalRate;
+        this.totalRate = this.currentConfig.rate * this.manager.rate * detuneRate;
+        return this.totalRate;
     }
 });
 module.exports = BaseSound;
