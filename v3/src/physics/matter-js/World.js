@@ -115,6 +115,8 @@ var World = new Class({
 
         MatterEvents.on(this.engine, 'collisionEnd', function (event) {
 
+            console.log(event);
+
             localEvents.dispatch(new PhysicsEvent.COLLISION_END(event));
 
         });

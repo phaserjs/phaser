@@ -13,7 +13,7 @@ var CollisionActiveEvent = new Class({
 
         this.pairs = pairs;
 
-        if (pairs.length === 1)
+        if (pairs.length > 0)
         {
             this.bodyA = pairs[0].bodyA;
             this.bodyB = pairs[0].bodyB;
