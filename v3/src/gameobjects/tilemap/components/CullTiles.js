@@ -32,8 +32,8 @@ var CullTiles = function (layer, camera, outputArray)
 
             if (tile === null || (tile.index <= 0 && tilemapLayer.skipIndexZero)) { continue; }
 
-            var tileX = tile.worldX * sx - left;
-            var tileY = tile.worldY * sy - top;
+            var tileX = tile.pixelX * sx - left;
+            var tileY = tile.pixelY * sy - top;
             var cullW = camera.width + tileWidth;
             var cullH = camera.height + tileHeight;
 

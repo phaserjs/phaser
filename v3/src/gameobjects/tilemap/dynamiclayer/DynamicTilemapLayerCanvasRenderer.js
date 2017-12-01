@@ -35,7 +35,7 @@ var DynamicTilemapLayerCanvasRenderer = function (renderer, gameObject, interpol
         var halfHeight = tile.height / 2;
 
         ctx.save();
-        ctx.translate(tile.worldX + halfWidth, tile.worldY + halfHeight);
+        ctx.translate(tile.pixelX + halfWidth, tile.pixelY + halfHeight);
 
         if (tile.flipX || tile.flipY)
         {

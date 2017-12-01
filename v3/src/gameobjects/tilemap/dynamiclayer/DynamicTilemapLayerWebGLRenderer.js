@@ -39,7 +39,7 @@ var DynamicTilemapLayerWebGLRenderer = function (renderer, gameObject, interpola
 
         batch.addTileTextureRect(
             texture,
-            x + tile.worldX * sx, y + tile.worldY * sy,
+            x + tile.pixelX * sx, y + tile.pixelY * sy,
             tile.width * sx, tile.height * sy,
             alpha * tile.alpha, tile.tint,
             scrollFactorX, scrollFactorY,

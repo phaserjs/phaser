@@ -168,8 +168,8 @@ var StaticTilemapLayer = new Class({
                         tile = mapData[row][col];
                         if (tile === null || (tile.index <= 0 && this.skipIndexZero)) { continue; }
 
-                        var tx = tile.worldX;
-                        var ty = tile.worldY;
+                        var tx = tile.pixelX;
+                        var ty = tile.pixelY;
                         var txw = tx + tile.width;
                         var tyh = ty + tile.height;
 

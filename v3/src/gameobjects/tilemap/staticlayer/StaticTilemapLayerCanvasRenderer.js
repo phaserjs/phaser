@@ -37,7 +37,7 @@ var StaticTilemapLayerCanvasRenderer = function (renderer, gameObject, interpola
             image,
             tileTexCoords.x, tileTexCoords.y,
             tile.width, tile.height,
-            tile.worldX, tile.worldY,
+            tile.pixelX, tile.pixelY,
             tile.width, tile.height
         );
     }
