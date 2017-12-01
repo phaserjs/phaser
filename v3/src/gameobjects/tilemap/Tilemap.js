@@ -592,6 +592,18 @@ var Tilemap = new Class({
     /**
      * See component documentation. If no layer specified, the map's current layer is used.
      *
+     * @return {Tile|null} Returns a Tiles, or null if the layer given was invalid.
+     */
+    findTile: function (callback, context, tileX, tileY, width, height, filteringOptions, layer)
+    {
+        layer = this.getLayer(layer);
+        if (layer === null) { return null; }
+        return TilemapComponents.FindTile(callback, context, tileX, tileY, width, height, filteringOptions, layer);
+    },
+
+    /**
+     * See component documentation. If no layer specified, the map's current layer is used.
+     *
      * @return {this|null} Returns this, or null if the layer given was invalid.
      */
     forEachTile: function (callback, context, tileX, tileY, width, height, filteringOptions, layer)

@@ -313,6 +313,16 @@ var StaticTilemapLayer = new Class({
     /**
      * See component documentation.
      *
+     * @return {Tile|null}
+     */
+    findTile: function (callback, context, tileX, tileY, width, height, filteringOptions)
+    {
+        return TilemapComponents.FindTile(callback, context, tileX, tileY, width, height, filteringOptions, this.layer);
+    },
+
+    /**
+     * See component documentation.
+     *
      * @return {Tile[]}
      */
     filterTiles: function (callback, context, tileX, tileY, width, height, filteringOptions)

@@ -5,6 +5,7 @@ module.exports = {
     CullTiles: require('./CullTiles'),
     Fill: require('./Fill'),
     FindByIndex: require('./FindByIndex'),
+    FindTile: require('./FindTile'),
     FilterTiles: require('./FilterTiles'),
     ForEachTile: require('./ForEachTile'),
     GetTileAt: require('./GetTileAt'),
