@@ -97,8 +97,6 @@ var StaticTilemapLayer = new Class({
         this.setOrigin();
         this.setSize(this.layer.tileWidth * this.layer.width, this.layer.tileHeight * this.layer.height);
 
-        this.skipIndexZero = false;
-
         scene.sys.game.renderer.addContextRestoredCallback(this.contextRestore.bind(this));
     },
 
@@ -166,7 +164,7 @@ var StaticTilemapLayer = new Class({
                     for (col = 0; col < mapWidth; ++col)
                     {
                         tile = mapData[row][col];
-                        if (tile === null || (tile.index <= 0 && this.skipIndexZero)) { continue; }
+                        if (tile === null || tile.index === -1) { continue; }
 
                         var tx = tile.pixelX;
                         var ty = tile.pixelY;
