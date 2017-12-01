@@ -80,9 +80,9 @@ var WebGLRenderer = new Class({
             preserveDrawingBuffer: false,
 
             WebGLContextOptions: {
-                alpha: false,
+                alpha: true,
                 antialias: true,
-                premultipliedAlpha: false,
+                premultipliedAlpha: true,
                 stencil: true,
                 preserveDrawingBuffer: false
             }
@@ -143,9 +143,8 @@ var WebGLRenderer = new Class({
         gl.enable(gl.BLEND);
         gl.clearColor(color.redGL, color.greenGL, color.blueGL, color.alphaGL);
         gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
-
+        
         //  Map Blend Modes
-
         this.blendModes = [];
 
         for (var i = 0; i <= 16; i++)
@@ -154,13 +153,13 @@ var WebGLRenderer = new Class({
         }
 
         //  Add
-        this.blendModes[1].func = [ gl.SRC_ALPHA, gl.DST_ALPHA ];
+        this.blendModes[1].func = [ gl.ONE, gl.DST_ALPHA ];
 
         //  Multiply
         this.blendModes[2].func = [ gl.DST_COLOR, gl.ONE_MINUS_SRC_ALPHA ];
 
         //  Screen
-        this.blendModes[3].func = [ gl.SRC_ALPHA, gl.ONE ];
+        this.blendModes[3].func = [ gl.ONE, gl.ONE_MINUS_SRC_COLOR ];
 
         this.blendMode = -1;
         this.extensions = gl.getSupportedExtensions();
@@ -550,12 +549,22 @@ var WebGLRenderer = new Class({
 
     setBlendMode: function (newBlendMode)
     {
+        var gl = this.gl;
+
         if (newBlendMode === BlendModes.SKIP_CHECK)
         {
             return;
         }
 
-        var gl = this.gl;
+        if (newBlendMode === BlendModes.NORMAL)
+        {
+            gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
+        }
+        else
+        {
+            gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, false);
+        }
+
         var renderer = this.currentRenderer;
 
         if (this.blendMode !== newBlendMode)
