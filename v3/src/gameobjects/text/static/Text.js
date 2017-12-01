@@ -306,11 +306,6 @@ var Text = new Class({
         var w = textSize.width + padding.left + padding.right;
         var h = textSize.height + padding.top + padding.bottom;
 
-        // console.log(textSize);
-        // console.log(padding);
-        // console.log(w, 'x', h);
-        // console.log('');
-
         if (!style.fixedWidth)
         {
             this.width = w;
@@ -335,6 +330,8 @@ var Text = new Class({
         {
             context.clearRect(0, 0, w, h);
         }
+
+        context.save();
 
         if (style.backgroundColor)
         {
@@ -396,6 +393,8 @@ var Text = new Class({
                 context.fillText(lines[i], linePositionX, linePositionY);
             }
         }
+
+        context.restore();
 
         this.dirty = true;
 
