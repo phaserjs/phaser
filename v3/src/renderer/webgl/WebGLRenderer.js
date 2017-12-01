@@ -556,15 +556,6 @@ var WebGLRenderer = new Class({
             return;
         }
 
-        if (newBlendMode === BlendModes.NORMAL)
-        {
-            gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
-        }
-        else
-        {
-            gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, false);
-        }
-
         var renderer = this.currentRenderer;
 
         if (this.blendMode !== newBlendMode)
