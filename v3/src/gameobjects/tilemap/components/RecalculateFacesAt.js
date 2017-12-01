@@ -52,6 +52,8 @@ var RecalculateFacesAt = function (tileX, tileY, layer)
         right.faceLeft = !tileCollides;
     }
 
+    if (tile && !tile.collides) { tile.resetFaces(); }
+
     return tile;
 };
 

@@ -29,15 +29,6 @@ GameObjectCreator.register('text', function (config)
     var content = GetAdvancedValue(config, 'text', '');
     var style = GetAdvancedValue(config, 'style', null);
 
-    var text = new Text(this.scene, 0, 0, content, style);
-
-    BuildGameObject(this.scene, text, config);
-
-    //  Text specific config options:
-
-    text.autoRound = GetAdvancedValue(config, 'autoRound', true);
-    text.resolution = GetAdvancedValue(config, 'resolution', 1);
-
     //  Padding
     //      { padding: 2 }
     //      { padding: { x: , y: }}
@@ -48,10 +39,17 @@ GameObjectCreator.register('text', function (config)
 
     if (padding !== null)
     {
-        text.setPadding(padding);
+        style.padding = padding;
     }
 
-    text.updateText();
+    var text = new Text(this.scene, 0, 0, content, style);
+
+    BuildGameObject(this.scene, text, config);
+
+    //  Text specific config options:
+
+    text.autoRound = GetAdvancedValue(config, 'autoRound', true);
+    text.resolution = GetAdvancedValue(config, 'resolution', 1);
 
     return text;
 });

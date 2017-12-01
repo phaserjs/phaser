@@ -176,6 +176,11 @@ var Text = new Class({
         return this.style.setBackgroundColor(color);
     },
 
+    setFill: function (color)
+    {
+        return this.style.setFill(color);
+    },
+
     setColor: function (color)
     {
         return this.style.setColor(color);
@@ -269,8 +274,6 @@ var Text = new Class({
         this.padding.right = right;
         this.padding.bottom = bottom;
 
-        console.log(this.padding);
-
         return this.updateText();
     },
 
@@ -298,22 +301,30 @@ var Text = new Class({
 
         var textSize = GetTextSize(this, size, lines);
 
+        var padding = this.padding;
+
+        var w = textSize.width + padding.left + padding.right;
+        var h = textSize.height + padding.top + padding.bottom;
+
+        // console.log(textSize);
+        // console.log(padding);
+        // console.log(w, 'x', h);
+        // console.log('');
+
         if (!style.fixedWidth)
         {
-            this.width = textSize.width;
+            this.width = w;
         }
 
         if (!style.fixedHeight)
         {
-            this.height = textSize.height;
+            this.height = h;
         }
 
         this.updateDisplayOrigin();
 
-        var padding = this.padding;
-
-        var w = (textSize.width + padding.left + padding.right) * this.resolution;
-        var h = (textSize.height + padding.top + padding.bottom) * this.resolution;
+        w *= this.resolution;
+        h *= this.resolution;
 
         if (canvas.width !== w || canvas.height !== h)
         {
