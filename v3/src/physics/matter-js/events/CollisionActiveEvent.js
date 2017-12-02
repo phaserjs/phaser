@@ -13,10 +13,10 @@ var CollisionActiveEvent = new Class({
 
         this.pairs = pairs;
 
-        if (pairs.length > 0)
+        if (pairs.pairs.length > 0)
         {
-            this.bodyA = pairs[0].bodyA;
-            this.bodyB = pairs[0].bodyB;
+            this.bodyA = pairs.pairs[0].bodyA;
+            this.bodyB = pairs.pairs[0].bodyB;
         }
     }
 
