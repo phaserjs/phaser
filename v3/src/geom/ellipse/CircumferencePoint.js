@@ -20,8 +20,8 @@ var CircumferencePoint = function (ellipse, angle, out)
     var halfWidth = ellipse.width / 2;
     var halfHeight = ellipse.height / 2;
 
-    out.x = ellipse.x + halfWidth + halfWidth * Math.cos(angle);
-    out.y = ellipse.y + halfHeight + halfHeight * Math.sin(angle);
+    out.x = ellipse.x + halfWidth * Math.cos(angle);
+    out.y = ellipse.y + halfHeight * Math.sin(angle);
 
     return out;
 };
