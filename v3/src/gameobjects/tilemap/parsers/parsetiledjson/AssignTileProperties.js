@@ -1,4 +1,5 @@
 var Extend = require('../../../../utils/object/Extend');
+var GetValue = require('../../../../utils/object/GetValue');
 
 // Copy properties from tileset to tiles
 var AssignTileProperties = function (mapData)
@@ -45,6 +46,17 @@ var AssignTileProperties = function (mapData)
                     tile.properties = Extend(
                         tile.properties, set.tileProperties[tile.index - set.firstgid]
                     );
+                }
+
+                // If that tile type has any collision info, add that to the tile object
+                if (set.tileData && set.tileData[tile.index - set.firstgid])
+                {
+                    var tileData = set.tileData[tile.index - set.firstgid];
+                    var objects = GetValue(tileData, 'objectgroup.objects', null);
+                    if (objects && objects.length > 0)
+                    {
+                        tile.collisionObjects = objects;
+                    }
                 }
             }
         }

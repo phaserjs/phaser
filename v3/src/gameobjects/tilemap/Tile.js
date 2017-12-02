@@ -140,6 +140,14 @@ var Tile = new Class({
         this.collideDown = false;
 
         /**
+         * An array of collision objects from Tiled. These are defined on the tileset. Each tile
+         * just gets a references to the objects stored in the tileset, so this is readonly.
+         * @property {array|null} collisionObjects
+         * @readonly
+         */
+        this.collisionObjects = null;
+
+        /**
          * Whether the tile's left edge is interesting for collisions.
          * @property {boolean} faceLeft
          */

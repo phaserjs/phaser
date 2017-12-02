@@ -2,7 +2,7 @@ var GetFastValue = require('../../../../utils/object/GetFastValue');
 var ParseObject = require('./ParseObject');
 
 //  Objects & Collision Data (polylines, etc)
-var ParseTilesets = function (json)
+var ParseObjectLayers = function (json)
 {
     var objects = {};
     var collision = {};
@@ -36,4 +36,4 @@ var ParseTilesets = function (json)
     return { objects: objects, collision: collision };
 };
 
-module.exports = ParseTilesets;
+module.exports = ParseObjectLayers;

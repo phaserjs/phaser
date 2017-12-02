@@ -40,7 +40,10 @@ var ParseTilesets = function (json)
                     var objectGroup = newSet.tileData[stringID].objectgroup;
                     if (objectGroup && objectGroup.objects)
                     {
-                        objectGroup.objects = objectGroup.objects.map(ParseObject);
+                        var parsedObjects = objectGroup.objects.map(
+                            function (obj) { return ParseObject(obj); }
+                        );
+                        newSet.tileData[stringID].objectgroup.objects = parsedObjects;
                     }
                 }
             }
