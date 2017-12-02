@@ -148,6 +148,20 @@ var Tileset = new Class({
     },
 
     /**
+     * Get a tile's data that is stored in the Tileset. Returns null if tile index is not
+     * contained in this Tileset.
+     *
+     * @param {integer} tileIndex - The unique id of the tile across all tilesets in the map.
+     * @returns {object|null}
+     */
+    getTileCollisionGroup: function (tileIndex)
+    {
+        var data = this.getTileData(tileIndex);
+        return (data && data.objectgroup) ? data.objectgroup : null;
+    },
+
+
+    /**
      * Returns true if and only if this Tileset contains the given tile index.
      *
      * @param {integer} tileIndex - The unique id of the tile across all tilesets in the map.
