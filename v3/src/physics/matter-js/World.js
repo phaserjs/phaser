@@ -115,8 +115,6 @@ var World = new Class({
 
         MatterEvents.on(this.engine, 'collisionEnd', function (event) {
 
-            console.log(event);
-
             localEvents.dispatch(new PhysicsEvent.COLLISION_END(event));
 
         });
@@ -246,7 +244,9 @@ var World = new Class({
 
     remove: function (object, deep)
     {
-        MatterWorld.remove(this.localWorld, object, deep);
+        var body = (object.body) ? object.body : object;
+
+        Composite.removeBody(this.localWorld, body, deep);
 
         return this;
     },
