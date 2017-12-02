@@ -3,11 +3,11 @@ var CanvasPool = require('../../display/canvas/CanvasPool');
 var Class = require('../../utils/Class');
 var Commands = require('./Commands');
 var Components = require('../components');
+var Ellipse = require('../../geom/ellipse/');
 var GameObject = require('../GameObject');
 var GetValue = require('../../utils/object/GetValue');
 var MATH_CONST = require('../../math/const');
 var Render = require('./GraphicsRender');
-var Ellipse = require('../../geom/ellipse/');
 
 var Graphics = new Class({
 
@@ -341,8 +341,10 @@ var Graphics = new Class({
 
     //  STROKE LINES BETWEEN AN ARRAY OF POINTS
 
-    strokePoints: function (points)
+    strokePoints: function (points, autoClose)
     {
+        if (autoClose === undefined) { autoClose = false; }
+
         this.beginPath();
 
         this.moveTo(points[0].x, points[0].y);
@@ -350,6 +352,11 @@ var Graphics = new Class({
         for (var i = 1; i < points.length; i++)
         {
             this.lineTo(points[i].x, points[i].y);
+        }
+
+        if (autoClose)
+        {
+            this.lineTo(points[0].x, points[0].y);
         }
 
         this.strokePath();
@@ -365,7 +372,7 @@ var Graphics = new Class({
 
         var points = ellipse.getPoints(smoothness);
 
-        return this.strokePoints(points);
+        return this.strokePoints(points, true);
     },
 
     strokeEllipse: function (x, y, width, height, smoothness)
@@ -376,10 +383,7 @@ var Graphics = new Class({
 
         var points = ellipse.getPoints(smoothness);
 
-        // Duplicate the first point to "close" the ellipse stroke
-        points.push(points[0]);
-
-        return this.strokePoints(points);
+        return this.strokePoints(points, true);
     },
 
     //  ARC
