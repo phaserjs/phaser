@@ -62,11 +62,6 @@ var MatterSprite = new Class({
         }
 
         this.setPosition(x, y);
-    },
-
-    preDestroy: function ()
-    {
-        this.world.remove(this.body, true);
     }
 
 });
