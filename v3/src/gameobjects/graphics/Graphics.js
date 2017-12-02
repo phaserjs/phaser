@@ -7,6 +7,7 @@ var GameObject = require('../GameObject');
 var GetValue = require('../../utils/object/GetValue');
 var MATH_CONST = require('../../math/const');
 var Render = require('./GraphicsRender');
+var Ellipse = require('../../geom/ellipse/');
 
 var Graphics = new Class({
 
@@ -375,6 +376,9 @@ var Graphics = new Class({
 
         var points = ellipse.getPoints(smoothness);
 
+        // Duplicate the first point to "close" the ellipse stroke
+        points.push(points[0]);
+
         return this.strokePoints(points);
     },
 
@@ -457,9 +461,9 @@ var Graphics = new Class({
         return this;
     },
 
-    //  If key is a string it'll generate a new texture using it and add it into the 
+    //  If key is a string it'll generate a new texture using it and add it into the
     //  Texture Manager (assuming no key conflict happens).
-    //  
+    //
     //  If key is a Canvas it will draw the texture to that canvas context. Note that it will NOT
     //  automatically upload it to the GPU in WebGL mode.
 
@@ -469,7 +473,7 @@ var Graphics = new Class({
 
         if (width === undefined) { width = sys.game.config.width; }
         if (height === undefined) { height = sys.game.config.height; }
-        
+
         Graphics.TargetCamera.setViewport(0, 0, width, height);
         Graphics.TargetCamera.scrollX = this.x;
         Graphics.TargetCamera.scrollY = this.y;

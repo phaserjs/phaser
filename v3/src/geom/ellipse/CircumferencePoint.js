@@ -17,11 +17,11 @@ var CircumferencePoint = function (ellipse, angle, out)
 {
     if (out === undefined) { out = new Point(); }
 
-    var a = ellipse.width / 2;
-    var b = ellipse.height / 2;
+    var halfWidth = ellipse.width / 2;
+    var halfHeight = ellipse.height / 2;
 
-    out.x = ellipse.x + a * Math.cos(angle);
-    out.y = ellipse.y + b * Math.sin(angle);
+    out.x = ellipse.x + halfWidth + halfWidth * Math.cos(angle);
+    out.y = ellipse.y + halfHeight + halfHeight * Math.sin(angle);
 
     return out;
 };
