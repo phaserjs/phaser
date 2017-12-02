@@ -38,6 +38,7 @@ var Group = new Class({
 
         this.createCallback = GetFastValue(config, 'createCallback', null);
         this.removeCallback = GetFastValue(config, 'removeCallback', null);
+        this.createMultipleCallback = GetFastValue(config, 'createMultipleCallback', null);
 
         if (config)
         {
@@ -184,6 +185,11 @@ var Group = new Class({
         if (grid)
         {
             Actions.GridAlign(entries, grid);
+        }
+
+        if (this.createMultipleCallback)
+        {
+            this.createMultipleCallback.call(this, entries);
         }
 
         return entries;
