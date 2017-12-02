@@ -137,6 +137,11 @@ var World = new Class({
         return object;
     },
 
+    remove: function (object)
+    {
+        this.disableBody(object);
+    },
+
     disable: function (object)
     {
         var i = 1;
@@ -203,9 +208,29 @@ var World = new Class({
         return graphic;
     },
 
-    setBounds: function (x, y, width, height)
+    setBounds: function (x, y, width, height, checkLeft, checkRight, checkUp, checkDown)
     {
         this.bounds.setTo(x, y, width, height);
+
+        if (checkLeft !== undefined)
+        {
+            this.setBoundsCollision(checkLeft, checkRight, checkUp, checkDown);
+        }
+
+        return this;
+    },
+
+    setBoundsCollision: function (left, right, up, down)
+    {
+        if (left === undefined) { left = true; }
+        if (right === undefined) { right = true; }
+        if (up === undefined) { up = true; }
+        if (down === undefined) { down = true; }
+
+        this.checkCollision.left = left;
+        this.checkCollision.right = right;
+        this.checkCollision.up = up;
+        this.checkCollision.down = down;
 
         return this;
     },
