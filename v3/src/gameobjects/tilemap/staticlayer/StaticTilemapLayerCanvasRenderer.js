@@ -24,7 +24,7 @@ var StaticTilemapLayerCanvasRenderer = function (renderer, gameObject, interpola
     ctx.rotate(gameObject.rotation);
     ctx.scale(gameObject.scaleX, gameObject.scaleY);
     ctx.scale(gameObject.flipX ? -1 : 1, gameObject.flipY ? -1 : 1);
-    renderer.setAlpha(gameObject.alpha);
+    ctx.globalAlpha = gameObject.alpha;
 
     for (var index = 0; index < tileCount; ++index)
     {
