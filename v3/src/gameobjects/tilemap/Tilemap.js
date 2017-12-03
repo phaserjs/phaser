@@ -1214,7 +1214,7 @@ var Tilemap = new Class({
     weightedRandomize: function (tileX, tileY, width, height, weightedIndexes, layer)
     {
         layer = this.getLayer(layer);
-        if (this._isStaticCall(layer, 'randomize')) { return this; }
+        if (this._isStaticCall(layer, 'weightedRandomize')) { return this; }
         if (layer !== null)
         {
             TilemapComponents.WeightedRandomize(tileX, tileY, width, height, weightedIndexes, layer);
