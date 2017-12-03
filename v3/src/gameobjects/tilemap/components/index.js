@@ -35,6 +35,7 @@ module.exports = {
     TileToWorldX: require('./TileToWorldX'),
     TileToWorldXY: require('./TileToWorldXY'),
     TileToWorldY: require('./TileToWorldY'),
+    WeightedRandomize: require('./WeightedRandomize'),
     WorldToTileX: require('./WorldToTileX'),
     WorldToTileXY: require('./WorldToTileXY'),
     WorldToTileY: require('./WorldToTileY')

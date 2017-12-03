@@ -466,6 +466,17 @@ var DynamicTilemapLayer = new Class({
     /**
      * See component documentation.
      *
+     * @return {this}
+     */
+    weightedRandomize: function (tileX, tileY, width, height, weightedIndexes)
+    {
+        TilemapComponents.WeightedRandomize(tileX, tileY, width, height, weightedIndexes, this.layer);
+        return this;
+    },
+
+    /**
+     * See component documentation.
+     *
      * @return {number}
      */
     worldToTileX: function (worldX, snapToFloor, camera)

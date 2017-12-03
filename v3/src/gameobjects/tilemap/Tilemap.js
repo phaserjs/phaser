@@ -1206,6 +1206,23 @@ var Tilemap = new Class({
     },
 
     /**
+     * See component documentation. If no layer specified, the map's current layer is used. This
+     * cannot be applied to StaticTilemapLayers.
+     *
+     * @return {this|null} Returns this, or null if the layer given was invalid.
+     */
+    weightedRandomize: function (tileX, tileY, width, height, weightedIndexes, layer)
+    {
+        layer = this.getLayer(layer);
+        if (this._isStaticCall(layer, 'randomize')) { return this; }
+        if (layer !== null)
+        {
+            TilemapComponents.WeightedRandomize(tileX, tileY, width, height, weightedIndexes, layer);
+        }
+        return this;
+    },
+
+    /**
      * See component documentation. If no layer specified, the map's current layer is used.
      *
      * @return {number|null} Returns a number, or null if the layer given was invalid.
