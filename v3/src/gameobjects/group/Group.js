@@ -344,19 +344,26 @@ var Group = new Class({
         }
     },
 
-    getTotalUsed: function ()
+    countActive: function (value)
     {
+        if (value === undefined) { value = true; }
+
         var total = 0;
 
         for (var i = 0; i < this.children.size; i++)
         {
-            if (this.children.entries[i].active)
+            if (this.children.entries[i].active === value)
             {
                 total++;
             }
         }
 
         return total;
+    },
+
+    getTotalUsed: function ()
+    {
+        return this.countActive();
     },
 
     getTotalFree: function ()
