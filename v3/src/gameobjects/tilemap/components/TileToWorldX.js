@@ -9,7 +9,7 @@
  */
 var TileToWorldX = function (tileX, camera, layer)
 {
-    var tileWidth = layer.tileWidth;
+    var tileWidth = layer.baseTileWidth;
     var tilemapLayer = layer.tilemapLayer;
     var layerWorldX = 0;
 

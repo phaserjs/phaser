@@ -27,6 +27,8 @@ var StaticPhysicsGroup = new Class({
 
         config.createCallback = this.createCallback;
         config.removeCallback = this.removeCallback;
+        config.createMultipleCallback = this.createMultipleCallback;
+
         config.classType = ArcadeSprite;
 
         this.physicsType = CONST.STATIC_BODY;
@@ -50,6 +52,11 @@ var StaticPhysicsGroup = new Class({
         }
     },
 
+    createMultipleCallback: function (entries)
+    {
+        this.refresh();
+    },
+
     refresh: function ()
     {
         var children = this.children.entries;
@@ -58,6 +65,8 @@ var StaticPhysicsGroup = new Class({
         {
             children[i].body.reset();
         }
+
+        return this;
     }
 
 });

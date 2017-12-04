@@ -3,6 +3,7 @@ var CanvasPool = require('../../display/canvas/CanvasPool');
 var Class = require('../../utils/Class');
 var Commands = require('./Commands');
 var Components = require('../components');
+var Ellipse = require('../../geom/ellipse/');
 var GameObject = require('../GameObject');
 var GetValue = require('../../utils/object/GetValue');
 var MATH_CONST = require('../../math/const');
@@ -340,8 +341,10 @@ var Graphics = new Class({
 
     //  STROKE LINES BETWEEN AN ARRAY OF POINTS
 
-    strokePoints: function (points)
+    strokePoints: function (points, autoClose)
     {
+        if (autoClose === undefined) { autoClose = false; }
+
         this.beginPath();
 
         this.moveTo(points[0].x, points[0].y);
@@ -349,6 +352,11 @@ var Graphics = new Class({
         for (var i = 1; i < points.length; i++)
         {
             this.lineTo(points[i].x, points[i].y);
+        }
+
+        if (autoClose)
+        {
+            this.lineTo(points[0].x, points[0].y);
         }
 
         this.strokePath();
@@ -364,7 +372,7 @@ var Graphics = new Class({
 
         var points = ellipse.getPoints(smoothness);
 
-        return this.strokePoints(points);
+        return this.strokePoints(points, true);
     },
 
     strokeEllipse: function (x, y, width, height, smoothness)
@@ -375,7 +383,7 @@ var Graphics = new Class({
 
         var points = ellipse.getPoints(smoothness);
 
-        return this.strokePoints(points);
+        return this.strokePoints(points, true);
     },
 
     //  ARC
@@ -457,9 +465,9 @@ var Graphics = new Class({
         return this;
     },
 
-    //  If key is a string it'll generate a new texture using it and add it into the 
+    //  If key is a string it'll generate a new texture using it and add it into the
     //  Texture Manager (assuming no key conflict happens).
-    //  
+    //
     //  If key is a Canvas it will draw the texture to that canvas context. Note that it will NOT
     //  automatically upload it to the GPU in WebGL mode.
 
@@ -469,7 +477,7 @@ var Graphics = new Class({
 
         if (width === undefined) { width = sys.game.config.width; }
         if (height === undefined) { height = sys.game.config.height; }
-        
+
         Graphics.TargetCamera.setViewport(0, 0, width, height);
         Graphics.TargetCamera.scrollX = this.x;
         Graphics.TargetCamera.scrollY = this.y;

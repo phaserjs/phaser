@@ -86,20 +86,22 @@ var Tile = new Class({
         this.baseHeight = (baseHeight !== undefined) ? baseHeight : height;
 
         /**
-         * The world x coordinate of the top left of this tile in pixels. This does not factor in
-         * camera scroll, layer scale or layer position.
-         * @property {number} x
+         * The x coordinate of the top left of this tile in pixels. This is relative to the top left
+         * of the layer this tile is being rendered within. This property does NOT factor in camera
+         * scroll, layer scale or layer position.
+         * @property {number} pixelX
          */
-        this.worldX = 0;
+        this.pixelX = 0;
 
         /**
-         * The world y coordinate of the top left of this tile in pixels. This does not factor in
-         * camera scroll, layer scale or layer position.
-         * @property {number} y
+         * The y coordinate of the top left of this tile in pixels. This is relative to the top left
+         * of the layer this tile is being rendered within. This property does NOT factor in camera
+         * scroll, layer scale or layer position.
+         * @property {number} pixelY
          */
-        this.worldY = 0;
+        this.pixelY = 0;
 
-        this.updateWorldXY();
+        this.updatePixelXY();
 
         /**
          * Tile specific properties. These usually come from Tiled.
@@ -192,7 +194,7 @@ var Tile = new Class({
      */
     containsPoint: function (x, y)
     {
-        return !(x < this.worldX || y < this.worldY || x > this.right || y > this.bottom);
+        return !(x < this.pixelX || y < this.pixelY || x > this.right || y > this.bottom);
     },
 
     /**
@@ -244,7 +246,7 @@ var Tile = new Class({
     intersects: function (x, y, right, bottom)
     {
         return !(
-            right <= this.worldX || bottom <= this.worldY ||
+            right <= this.pixelX || bottom <= this.pixelY ||
             x >= this.right || y >= this.bottom
         );
     },
@@ -354,7 +356,7 @@ var Tile = new Class({
     },
 
     /**
-     * Sets the size of the tile and updates its worldX and worldY.
+     * Sets the size of the tile and updates its pixelX and pixelY.
      *
      * @param {integer} tileWidth - The width of the tile in pixels.
      * @param {integer} tileHeight - The height of the tile in pixels.
@@ -369,7 +371,7 @@ var Tile = new Class({
         if (baseWidth !== undefined) { this.baseWidth = baseWidth; }
         if (baseHeight !== undefined) { this.baseHeight = baseHeight; }
 
-        this.updateWorldXY();
+        this.updatePixelXY();
 
         return this;
     },
@@ -379,13 +381,13 @@ var Tile = new Class({
      *
      * @returns {this}
      */
-    updateWorldXY: function ()
+    updatePixelXY: function ()
     {
         // Tiled places tiles on a grid of baseWidth x baseHeight. The origin for a tile is the
         // bottom left, while the Phaser renderer assumes the origin is the top left. The y
         // coordinate needs to be adjusted by the difference.
-        this.worldX = this.x * this.baseWidth;
-        this.worldY = this.y * this.baseHeight - (this.height - this.baseHeight);
+        this.pixelX = this.x * this.baseWidth;
+        this.pixelY = this.y * this.baseHeight - (this.height - this.baseHeight);
 
         return this;
     },
@@ -435,7 +437,7 @@ var Tile = new Class({
     left: {
         get: function ()
         {
-            return this.worldX;
+            return this.pixelX;
         }
     },
 
@@ -448,7 +450,7 @@ var Tile = new Class({
     right: {
         get: function ()
         {
-            return this.worldX + this.width;
+            return this.pixelX + this.width;
         }
     },
 
@@ -461,7 +463,7 @@ var Tile = new Class({
     top: {
         get: function ()
         {
-            return this.worldY;
+            return this.pixelY;
         }
     },
 
@@ -474,7 +476,7 @@ var Tile = new Class({
     bottom: {
         get: function ()
         {
-            return this.worldY + this.height;
+            return this.pixelY + this.height;
         }
     },
 
@@ -487,7 +489,7 @@ var Tile = new Class({
     centerX: {
         get: function ()
         {
-            return this.worldX + this.width / 2;
+            return this.pixelX + this.width / 2;
         }
     },
 
@@ -500,7 +502,7 @@ var Tile = new Class({
     centerY: {
         get: function ()
         {
-            return this.worldY + this.height / 2;
+            return this.pixelY + this.height / 2;
         }
     }
 

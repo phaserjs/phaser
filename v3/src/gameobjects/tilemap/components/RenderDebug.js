@@ -40,8 +40,8 @@ var RenderDebug = function (graphics, styleConfig, layer)
 
         var tw = tile.width;
         var th = tile.height;
-        var x = tile.worldX;
-        var y = tile.worldY;
+        var x = tile.pixelX;
+        var y = tile.pixelY;
 
         var color = tile.collides ? collidingTileColor : tileColor;
         if (color !== null)

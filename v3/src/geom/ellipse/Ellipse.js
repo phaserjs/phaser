@@ -8,6 +8,7 @@ var Ellipse = new Class({
 
     initialize:
 
+    //  x/y = center of the ellipse
     function Ellipse (x, y, width, height)
     {
         if (x === undefined) { x = 0; }
@@ -100,21 +101,12 @@ var Ellipse = new Class({
 
         get: function ()
         {
-            return this.x;
+            return this.x - (this.width / 2);
         },
 
         set: function (value)
         {
-            if (value >= this.right)
-            {
-                this.width = 0;
-            }
-            else
-            {
-                this.width = this.right - value;
-            }
-
-            this.x = value;
+            this.x = value + (this.width / 2);
         }
 
     },
@@ -123,19 +115,12 @@ var Ellipse = new Class({
 
         get: function ()
         {
-            return this.x + this.width;
+            return this.x + (this.width / 2);
         },
 
         set: function (value)
         {
-            if (value <= this.x)
-            {
-                this.width = 0;
-            }
-            else
-            {
-                this.width = value - this.x;
-            }
+            this.x = value - (this.width / 2);
         }
 
     },
@@ -144,20 +129,12 @@ var Ellipse = new Class({
 
         get: function ()
         {
-            return this.y;
+            return this.y - (this.height / 2);
         },
 
         set: function (value)
         {
-            if (value >= this.bottom)
-            {
-                this.height = 0;
-                this.y = value;
-            }
-            else
-            {
-                this.height = (this.bottom - value);
-            }
+            this.y = value + (this.height / 2);
         }
 
     },
@@ -166,19 +143,12 @@ var Ellipse = new Class({
 
         get: function ()
         {
-            return this.y + this.height;
+            return this.y + (this.height / 2);
         },
 
         set: function (value)
         {
-            if (value <= this.y)
-            {
-                this.height = 0;
-            }
-            else
-            {
-                this.height = value - this.y;
-            }
+            this.y = value - (this.height / 2);
         }
 
     }

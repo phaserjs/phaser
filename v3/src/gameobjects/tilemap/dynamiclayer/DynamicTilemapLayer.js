@@ -87,8 +87,6 @@ var DynamicTilemapLayer = new Class({
         this.setSizeToFrame();
         this.setOrigin();
         this.setSize(this.layer.tileWidth * this.layer.width, this.layer.tileHeight * this.layer.height);
-
-        this.skipIndexZero = false;
     },
 
     /**
@@ -181,6 +179,16 @@ var DynamicTilemapLayer = new Class({
     findByIndex: function (findIndex, skip, reverse)
     {
         return TilemapComponents.FindByIndex(findIndex, skip, reverse, this.layer);
+    },
+
+    /**
+     * See component documentation.
+     *
+     * @return {Tile|null}
+     */
+    findTile: function (callback, context, tileX, tileY, width, height, filteringOptions)
+    {
+        return TilemapComponents.FindTile(callback, context, tileX, tileY, width, height, filteringOptions, this.layer);
     },
 
     /**
@@ -453,6 +461,17 @@ var DynamicTilemapLayer = new Class({
     tileToWorldXY: function (tileX, tileY, point, camera)
     {
         return TilemapComponents.TileToWorldXY(tileX, tileY, point, camera, this.layer);
+    },
+
+    /**
+     * See component documentation.
+     *
+     * @return {this}
+     */
+    weightedRandomize: function (tileX, tileY, width, height, weightedIndexes)
+    {
+        TilemapComponents.WeightedRandomize(tileX, tileY, width, height, weightedIndexes, this.layer);
+        return this;
     },
 
     /**

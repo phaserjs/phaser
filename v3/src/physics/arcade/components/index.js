@@ -7,6 +7,7 @@ module.exports = {
     Bounce: require('./Bounce'),
     Debug: require('./Debug'),
     Drag: require('./Drag'),
+    Enable: require('./Enable'),
     Friction: require('./Friction'),
     Gravity: require('./Gravity'),
     Immovable: require('./Immovable'),

@@ -38,6 +38,7 @@ var Group = new Class({
 
         this.createCallback = GetFastValue(config, 'createCallback', null);
         this.removeCallback = GetFastValue(config, 'removeCallback', null);
+        this.createMultipleCallback = GetFastValue(config, 'createMultipleCallback', null);
 
         if (config)
         {
@@ -184,6 +185,11 @@ var Group = new Class({
         if (grid)
         {
             Actions.GridAlign(entries, grid);
+        }
+
+        if (this.createMultipleCallback)
+        {
+            this.createMultipleCallback.call(this, entries);
         }
 
         return entries;
@@ -338,19 +344,26 @@ var Group = new Class({
         }
     },
 
-    getTotalUsed: function ()
+    countActive: function (value)
     {
+        if (value === undefined) { value = true; }
+
         var total = 0;
 
         for (var i = 0; i < this.children.size; i++)
         {
-            if (this.children.entries[i].active)
+            if (this.children.entries[i].active === value)
             {
                 total++;
             }
         }
 
         return total;
+    },
+
+    getTotalUsed: function ()
+    {
+        return this.countActive();
     },
 
     getTotalFree: function ()

@@ -5,6 +5,7 @@ module.exports = {
     CullTiles: require('./CullTiles'),
     Fill: require('./Fill'),
     FindByIndex: require('./FindByIndex'),
+    FindTile: require('./FindTile'),
     FilterTiles: require('./FilterTiles'),
     ForEachTile: require('./ForEachTile'),
     GetTileAt: require('./GetTileAt'),
@@ -34,6 +35,7 @@ module.exports = {
     TileToWorldX: require('./TileToWorldX'),
     TileToWorldXY: require('./TileToWorldXY'),
     TileToWorldY: require('./TileToWorldY'),
+    WeightedRandomize: require('./WeightedRandomize'),
     WorldToTileX: require('./WorldToTileX'),
     WorldToTileXY: require('./WorldToTileXY'),
     WorldToTileY: require('./WorldToTileY')

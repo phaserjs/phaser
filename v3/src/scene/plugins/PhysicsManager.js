@@ -62,6 +62,11 @@ var PhysicsManager = new Class({
         }
     },
 
+    remove: function (object)
+    {
+        this.world.remove(object);
+    },
+
     update: function (time, delta)
     {
         this.world.update(time, delta);

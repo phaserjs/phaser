@@ -12,6 +12,7 @@ var ArcadeImage = new Class({
         Components.Bounce,
         Components.Debug,
         Components.Drag,
+        Components.Enable,
         Components.Friction,
         Components.Gravity,
         Components.Immovable,

@@ -194,6 +194,11 @@ var World = new Class({
         return body;
     },
 
+    remove: function (object)
+    {
+        this.bodies.delete(object);
+    },
+
     pause: function ()
     {
         this.enabled = false;

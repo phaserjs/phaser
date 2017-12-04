@@ -244,7 +244,9 @@ var World = new Class({
 
     remove: function (object, deep)
     {
-        MatterWorld.remove(this.localWorld, object, deep);
+        var body = (object.body) ? object.body : object;
+
+        Composite.removeBody(this.localWorld, body, deep);
 
         return this;
     },

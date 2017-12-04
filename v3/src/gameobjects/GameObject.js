@@ -246,7 +246,7 @@ var GameObject = new Class({
     {
         if (this.preDestroy)
         {
-            this.preDestroy();
+            this.preDestroy.call(this);
         }
 
         this.scene.sys.displayList.remove(this);
@@ -261,10 +261,15 @@ var GameObject = new Class({
         if (this.body)
         {
             this.scene.sys.physicsManager.remove(this);
+
             this.body = undefined;
         }
 
+        //  Tell the Scene to re-sort the children
+        this.scene.sys.sortChildrenFlag = true;
+
         this.active = false;
+        this.Visible = false;
 
         this.data = undefined;
 

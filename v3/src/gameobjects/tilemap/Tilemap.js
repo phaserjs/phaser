@@ -592,6 +592,18 @@ var Tilemap = new Class({
     /**
      * See component documentation. If no layer specified, the map's current layer is used.
      *
+     * @return {Tile|null} Returns a Tiles, or null if the layer given was invalid.
+     */
+    findTile: function (callback, context, tileX, tileY, width, height, filteringOptions, layer)
+    {
+        layer = this.getLayer(layer);
+        if (layer === null) { return null; }
+        return TilemapComponents.FindTile(callback, context, tileX, tileY, width, height, filteringOptions, layer);
+    },
+
+    /**
+     * See component documentation. If no layer specified, the map's current layer is used.
+     *
      * @return {this|null} Returns this, or null if the layer given was invalid.
      */
     forEachTile: function (callback, context, tileX, tileY, width, height, filteringOptions, layer)
@@ -1061,9 +1073,12 @@ var Tilemap = new Class({
         this.widthInPixels = this.width * tileWidth;
         this.heightInPixels = this.height * tileHeight;
 
-        // Update the base tile size on all tiles
+        // Update the base tile size on all layers & tiles
         for (var i = 0; i < this.layers.length; i++)
         {
+            this.layers[i].baseWidth = tileWidth;
+            this.layers[i].baseHeight = tileHeight;
+
             var mapData = this.layers[i].data;
             var mapWidth = this.layers[i].width;
             var mapHeight = this.layers[i].height;
@@ -1188,6 +1203,23 @@ var Tilemap = new Class({
         layer = this.getLayer(layer);
         if (layer === null) { return null; }
         return TilemapComponents.TileToWorldXY(tileX, tileY, point, camera, layer);
+    },
+
+    /**
+     * See component documentation. If no layer specified, the map's current layer is used. This
+     * cannot be applied to StaticTilemapLayers.
+     *
+     * @return {this|null} Returns this, or null if the layer given was invalid.
+     */
+    weightedRandomize: function (tileX, tileY, width, height, weightedIndexes, layer)
+    {
+        layer = this.getLayer(layer);
+        if (this._isStaticCall(layer, 'weightedRandomize')) { return this; }
+        if (layer !== null)
+        {
+            TilemapComponents.WeightedRandomize(tileX, tileY, width, height, weightedIndexes, layer);
+        }
+        return this;
     },
 
     /**
