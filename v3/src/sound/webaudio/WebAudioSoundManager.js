@@ -11,24 +11,28 @@ var WebAudioSoundManager = new Class({
          *
          * https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API/Porting_webkitAudioContext_code_to_standards_based_AudioContext
          *
+         * @private
          * @property {boolean} webkit
          */
         this.webkit = !!window['webkitAudioContext'] && !window['AudioContext'];
         /**
          * The AudioContext being used for playback.
          *
+         * @private
          * @property {AudioContext} context
          */
         this.context = this.createAudioContext(game);
         /**
          * [description]
          *
+         * @private
          * @property {GainNode} masterMuteNode
          */
         this.masterMuteNode = this.context.createGain();
         /**
          * [description]
          *
+         * @private
          * @property {GainNode} masterVolumeNode
          */
         this.masterVolumeNode = this.context.createGain();
@@ -37,6 +41,7 @@ var WebAudioSoundManager = new Class({
         /**
          * Destination node for connecting individual sounds to.
          *
+         * @private
          * @property {AudioNode} destination
          */
         this.destination = this.masterMuteNode;

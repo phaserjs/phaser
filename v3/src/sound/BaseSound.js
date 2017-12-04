@@ -8,6 +8,7 @@ var BaseSound = new Class({
         /**
          * Local reference to the sound manager.
          *
+         * @private
          * @property {Phaser.Sound.BaseSoundManager} manager
          */
         this.manager = manager;
@@ -20,9 +21,9 @@ var BaseSound = new Class({
         /**
          * [description]
          *
-         * Duration set explicitly, rest of default values
-         * will be set by other properties setters.
+         * Default values will be set by properties' setters.
          *
+         * @private
          * @property {ISoundConfig} config
          */
         this.config = {};
@@ -30,6 +31,7 @@ var BaseSound = new Class({
          * Reference to the currently used config.
          * It could be default config or marker config.
          *
+         * @private
          * @property {ISoundConfig} currentConfig
          */
         this.currentConfig = this.config;
@@ -57,9 +59,6 @@ var BaseSound = new Class({
         /**
          * Represents detuning of sound in [cents](https://en.wikipedia.org/wiki/Cent_%28music%29).
          * The range of the value is -1200 to 1200, but we recommend setting it to [50](https://en.wikipedia.org/wiki/50_Cent).
-         *
-         * Standards based Web Audio implementation only.
-         * Webkit Web Audio implementation and HTML5 Audio don't support this.
          *
          * @property {number} detune
          */
@@ -109,18 +108,21 @@ var BaseSound = new Class({
         /**
          * Flag indicating if sound is currently playing.
          *
+         * @readonly
          * @property {boolean} isPlaying
          */
         this.isPlaying = false;
         /**
          * Flag indicating if sound is currently paused.
          *
+         * @readonly
          * @property {boolean} isPaused
          */
         this.isPaused = false;
         /**
          * Object containing markers definitions.
          *
+         * @readonly
          * @property {{}} markers
          */
         this.markers = {};
@@ -128,12 +130,14 @@ var BaseSound = new Class({
          * Currently playing marker.
          * 'null' if whole sound is playing.
          *
+         * @readonly
          * @property {ISoundMarker} currentMarker
          */
         this.currentMarker = null;
         /**
          * [description]
          *
+         * @private
          * @property {Phaser.Tween}
          */
         this.fadeTween = null; // TODO see how to use global tween
@@ -266,6 +270,9 @@ var BaseSound = new Class({
     fadeTo: function (volume, duration) {
         return null;
     },
+    /**
+     * @private
+     */
     update: NOOP,
     destroy: function () {
     },

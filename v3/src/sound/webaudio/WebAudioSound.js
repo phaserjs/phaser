@@ -10,6 +10,7 @@ var WebAudioSound = new Class({
         /**
          * [description]
          *
+         * @private
          * @property {AudioBuffer} audioBuffer
          */
         this.audioBuffer = manager.game.cache.audio.get(key);
@@ -20,18 +21,21 @@ var WebAudioSound = new Class({
         /**
          * [description]
          *
+         * @private
          * @property {AudioBufferSourceNode} source
          */
         this.source = null;
         /**
          * [description]
          *
+         * @private
          * @property {GainNode} muteNode
          */
         this.muteNode = manager.context.createGain();
         /**
          * [description]
          *
+         * @private
          * @property {GainNode} volumeNode
          */
         this.volumeNode = manager.context.createGain();
@@ -39,6 +43,7 @@ var WebAudioSound = new Class({
          * The time the previous playback started at based on
          * BaseAudioContext.currentTime value.
          *
+         * @private
          * @property {number} startTime
          */
         this.startTime = 0;
@@ -46,6 +51,7 @@ var WebAudioSound = new Class({
          * Relative time when sound was paused.
          * Corresponds to the seek value at the time when pause() method was called on this sound.
          *
+         * @private
          * @property {number} pausedTime
          */
         this.pausedTime = 0;
