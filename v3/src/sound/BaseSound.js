@@ -274,7 +274,7 @@ var BaseSound = new Class({
      */
     setRate: function () {
         var cent = 1.0005777895065548; // Math.pow(2, 1/1200);
-        var totalDetune = Math.max(-1200, Math.min(this.currentConfig.detune + this.manager.detune, 1200));
+        var totalDetune = this.currentConfig.detune + this.manager.detune;
         var detuneRate = Math.pow(cent, totalDetune);
         this.totalRate = this.currentConfig.rate * this.manager.rate * detuneRate;
     }
