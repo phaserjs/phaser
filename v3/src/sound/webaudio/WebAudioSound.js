@@ -48,14 +48,6 @@ var WebAudioSound = new Class({
          */
         this.startTime = 0;
         /**
-         * Relative time when sound was paused.
-         * Corresponds to the seek value at the time when pause() method was called on this sound.
-         *
-         * @private
-         * @property {number} pausedTime
-         */
-        this.pausedTime = 0;
-        /**
          * An array where we keep track of all rate updates during playback.
          *
          * @private
@@ -87,7 +79,7 @@ var WebAudioSound = new Class({
         var duration = this.duration - seek;
         this.createAndStartBufferSource(offset, duration);
         this.startTime = this.manager.context.currentTime - seek;
-        this.pausedTime = 0;
+        this.currentConfig.seek = 0;
         return this;
     },
     pause: function () {
@@ -96,7 +88,7 @@ var WebAudioSound = new Class({
         }
         //  \/\/\/ isPlaying = false, isPaused = true \/\/\/
         this.stopAndRemoveBufferSource();
-        this.pausedTime = this.seek;
+        this.currentConfig.seek = this.seek; // Equivalent to setting paused time
         return true;
     },
     resume: function () {
@@ -105,11 +97,12 @@ var WebAudioSound = new Class({
         }
         //  \/\/\/ isPlaying = true, isPaused = false \/\/\/
         // TODO take in account playback rate
-        var offset = (this.currentMarker ? this.currentMarker.start : 0) + this.pausedTime;
-        var duration = this.duration - this.pausedTime;
+        var seek = this.currentConfig.seek;
+        var offset = (this.currentMarker ? this.currentMarker.start : 0) + seek;
+        var duration = this.duration - seek;
         this.createAndStartBufferSource(offset, duration);
-        this.startTime = this.manager.context.currentTime - this.pausedTime;
-        this.pausedTime = 0;
+        this.startTime = this.manager.context.currentTime - seek;
+        this.currentConfig.seek = 0;
         return true;
     },
     stop: function () {
@@ -119,7 +112,7 @@ var WebAudioSound = new Class({
         //  \/\/\/ isPlaying = false, isPaused = false \/\/\/
         this.stopAndRemoveBufferSource();
         this.startTime = 0;
-        this.pausedTime = 0;
+        this.currentConfig.seek = 0;
         return true;
     },
     /**
