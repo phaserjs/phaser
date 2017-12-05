@@ -84,6 +84,10 @@ var WebAudioSound = new Class({
         var seek = this.currentConfig.seek;
         var offset = (this.currentMarker ? this.currentMarker.start : 0) + seek;
         var duration = this.duration - seek;
+        this.rateUpdates.push({
+            time: 0,
+            rate: 1
+        });
         this.createAndStartBufferSource(offset, duration);
         this.startTime = this.manager.context.currentTime - seek;
         this.pausedTime = 0;
