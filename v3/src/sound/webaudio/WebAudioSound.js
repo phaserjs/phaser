@@ -277,6 +277,7 @@ Object.defineProperty(WebAudioSound.prototype, 'seek', {
         }
     },
     set: function (value) {
+        value = Math.min(Math.max(0, value), this.duration);
         this.currentConfig.seek = value;
     }
 });
