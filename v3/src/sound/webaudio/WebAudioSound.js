@@ -130,6 +130,7 @@ var WebAudioSound = new Class({
         this.source = this.manager.context.createBufferSource();
         this.source.buffer = this.audioBuffer;
         this.source.connect(this.muteNode);
+        this.rateUpdates.length = 0;
         this.applyConfig();
         this.source.onended = function (ev) {
             if (ev.target === this.source) {
