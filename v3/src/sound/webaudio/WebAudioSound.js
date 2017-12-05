@@ -83,7 +83,7 @@ var WebAudioSound = new Class({
         }
         //  \/\/\/ isPlaying = false, isPaused = true \/\/\/
         this.stopAndRemoveBufferSource();
-        this.currentConfig.seek = this.seek; // Equivalent to setting paused time
+        this.currentConfig.seek = this.getCurrentTime(); // Equivalent to setting paused time
         return true;
     },
     resume: function () {
