@@ -220,4 +220,14 @@ Object.defineProperty(WebAudioSound.prototype, 'detune', {
         this.setRate();
     }
 });
+/**
+ * Current position of playing sound.
+ * @property {number} seek
+ */
+Object.defineProperty(WebAudioSound.prototype, 'seek', {
+    get: function () {
+    },
+    set: function (value) {
+    }
+});
 module.exports = WebAudioSound;
