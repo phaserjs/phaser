@@ -101,7 +101,6 @@ var WebAudioSound = new Class({
         //  \/\/\/ isPlaying = false, isPaused = false \/\/\/
         this.stopAndRemoveBufferSource();
         this.startTime = 0;
-        this.currentConfig.seek = 0;
         return true;
     },
     /**
@@ -115,7 +114,6 @@ var WebAudioSound = new Class({
         var offset = (this.currentMarker ? this.currentMarker.start : 0) + seek;
         var duration = this.duration - seek;
         this.startTime = this.manager.context.currentTime - seek;
-        this.currentConfig.seek = 0;
         this.source = this.manager.context.createBufferSource();
         this.source.buffer = this.audioBuffer;
         this.source.connect(this.muteNode);
