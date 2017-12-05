@@ -130,7 +130,6 @@ var WebAudioSound = new Class({
         this.source = this.manager.context.createBufferSource();
         this.source.buffer = this.audioBuffer;
         this.source.connect(this.muteNode);
-        this.applyConfig();
         this.source.onended = function (ev) {
             if (ev.target === this.source) {
                 // sound ended
@@ -138,6 +137,7 @@ var WebAudioSound = new Class({
             }
             // else was stopped
         }.bind(this);
+        this.applyConfig();
         this.source.start(0, Math.max(0, offset), Math.max(0, duration));
     },
     /**
