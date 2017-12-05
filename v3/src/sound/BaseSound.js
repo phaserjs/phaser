@@ -260,6 +260,13 @@ var BaseSound = new Class({
         this.detune = this.currentConfig.detune;
         // TODO assign other config values to buffer source
     },
+    /**
+     * @protected
+     */
+    resetConfig: function () {
+        this.currentConfig.seek = 0;
+        // TODO add delay
+    },
     fadeTo: function (volume, duration) {
         return null;
     },
