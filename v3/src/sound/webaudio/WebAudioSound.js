@@ -265,6 +265,7 @@ Object.defineProperty(WebAudioSound.prototype, 'detune', {
  */
 Object.defineProperty(WebAudioSound.prototype, 'seek', {
     get: function () {
+        return this.getCurrentTime();
     },
     set: function (value) {
     }
