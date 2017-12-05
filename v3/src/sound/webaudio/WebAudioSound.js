@@ -277,6 +277,7 @@ Object.defineProperty(WebAudioSound.prototype, 'seek', {
         }
     },
     set: function (value) {
+        this.currentConfig.seek = value;
     }
 });
 module.exports = WebAudioSound;
