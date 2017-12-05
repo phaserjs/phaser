@@ -173,6 +173,10 @@ var WebAudioSound = new Class({
         if (this.source) {
             this.source.playbackRate.setValueAtTime(this.totalRate, 0);
         }
+        this.rateUpdates.push({
+            time: this.manager.context.currentTime,
+            rate: this.totalRate
+        });
     }
 });
 /**
