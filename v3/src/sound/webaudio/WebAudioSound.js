@@ -81,11 +81,11 @@ var WebAudioSound = new Class({
             return null;
         }
         this.stopAndRemoveBufferSource();
-        // TODO include config seek
-        var offset = this.currentMarker ? this.currentMarker.start : 0;
-        var duration = this.duration;
+        var seek = this.currentConfig.seek;
+        var offset = (this.currentMarker ? this.currentMarker.start : 0) + seek;
+        var duration = this.duration - seek;
         this.createAndStartBufferSource(offset, duration);
-        this.startTime = this.manager.context.currentTime;
+        this.startTime = this.manager.context.currentTime - seek;
         this.pausedTime = 0;
         return this;
     },
