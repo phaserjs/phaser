@@ -84,10 +84,6 @@ var WebAudioSound = new Class({
         var seek = this.currentConfig.seek;
         var offset = (this.currentMarker ? this.currentMarker.start : 0) + seek;
         var duration = this.duration - seek;
-        this.rateUpdates.push({
-            time: 0,
-            rate: 1
-        });
         this.createAndStartBufferSource(offset, duration);
         this.startTime = this.manager.context.currentTime - seek;
         this.pausedTime = 0;
@@ -134,7 +130,6 @@ var WebAudioSound = new Class({
         this.source = this.manager.context.createBufferSource();
         this.source.buffer = this.audioBuffer;
         this.source.connect(this.muteNode);
-        this.rateUpdates.length = 0;
         this.applyConfig();
         this.source.onended = function (ev) {
             if (ev.target === this.source) {
@@ -155,6 +150,14 @@ var WebAudioSound = new Class({
             this.source.stop();
             this.source = null;
         }
+    },
+    applyConfig: function () {
+        this.rateUpdates.length = 0;
+        this.rateUpdates.push({
+            time: 0,
+            rate: 1
+        });
+        BaseSound.prototype.applyConfig.call(this);
     },
     /**
      * Update method called on every game step.
