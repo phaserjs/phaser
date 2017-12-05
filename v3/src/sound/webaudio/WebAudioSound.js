@@ -108,7 +108,7 @@ var WebAudioSound = new Class({
      *
      * @private
      */
-    // TODO add when param
+    // TODO add delay param
     createAndStartBufferSource: function () {
         var seek = this.currentConfig.seek;
         var offset = (this.currentMarker ? this.currentMarker.start : 0) + seek;
