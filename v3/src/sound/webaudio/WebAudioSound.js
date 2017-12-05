@@ -188,6 +188,23 @@ var WebAudioSound = new Class({
                 rate: this.totalRate
             });
         }
+    },
+    /**
+     * @private
+     */
+    getCurrentTime: function () {
+        var currentTime = 0;
+        for (var i = 0; i < this.rateUpdates.length; i++) {
+            var nextTime = void 0;
+            if (i < this.rateUpdates.length - 1) {
+                nextTime = this.rateUpdates[i + 1].time;
+            }
+            else {
+                nextTime = this.manager.context.currentTime - this.startTime;
+            }
+            currentTime += (nextTime - this.rateUpdates[i].time) * this.rateUpdates[i].rate;
+        }
+        return currentTime;
     }
 });
 /**
