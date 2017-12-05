@@ -36,6 +36,20 @@ var BaseSound = new Class({
          */
         this.currentConfig = this.config;
         /**
+         * Flag indicating if sound is currently playing.
+         *
+         * @readonly
+         * @property {boolean} isPlaying
+         */
+        this.isPlaying = false;
+        /**
+         * Flag indicating if sound is currently paused.
+         *
+         * @readonly
+         * @property {boolean} isPaused
+         */
+        this.isPaused = false;
+        /**
          * [description]
          *
          * @property {boolean} mute
@@ -83,12 +97,6 @@ var BaseSound = new Class({
          * @property {boolean} loop
          */
         this.loop = false;
-        /**
-         * [description]
-         *
-         * @property {number} pan
-         */
-        this.pan = 0;
         this.config = Extend(this.config, config);
         /**
          * A value representing the duration, in seconds.
@@ -105,20 +113,6 @@ var BaseSound = new Class({
          * @property {number}
          */
         this.totalDuration = 0;
-        /**
-         * Flag indicating if sound is currently playing.
-         *
-         * @readonly
-         * @property {boolean} isPlaying
-         */
-        this.isPlaying = false;
-        /**
-         * Flag indicating if sound is currently paused.
-         *
-         * @readonly
-         * @property {boolean} isPaused
-         */
-        this.isPaused = false;
         /**
          * Object containing markers definitions.
          *
@@ -172,8 +166,7 @@ var BaseSound = new Class({
                 rate: 1,
                 detune: 0,
                 seek: 0,
-                loop: false,
-                pan: 0
+                loop: false
             }
         }, marker);
         this.markers[marker.name] = marker;
