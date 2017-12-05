@@ -131,7 +131,7 @@ var BaseSound = new Class({
         /**
          * [description]
          *
-         * @private
+         * @protected
          * @property {Phaser.Tween}
          */
         this.fadeTween = null; // TODO see how to use global tween
@@ -251,7 +251,7 @@ var BaseSound = new Class({
         return true;
     },
     /**
-     * @private
+     * @protected
      */
     applyConfig: function () {
         this.mute = this.currentConfig.mute;
@@ -264,13 +264,13 @@ var BaseSound = new Class({
         return null;
     },
     /**
-     * @private
+     * @protected
      */
     update: NOOP,
     destroy: function () {
     },
     /**
-     * @private
+     * @protected
      */
     setRate: function () {
         var cent = 1.0005777895065548; // Math.pow(2, 1/1200);
