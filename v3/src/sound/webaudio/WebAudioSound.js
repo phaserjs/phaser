@@ -94,7 +94,7 @@ var WebAudioSound = new Class({
             return false;
         }
         this.stopAndRemoveBufferSource();
-        this.pausedTime = this.manager.context.currentTime - this.startTime;
+        this.pausedTime = this.seek;
         return true;
     },
     resume: function () {
