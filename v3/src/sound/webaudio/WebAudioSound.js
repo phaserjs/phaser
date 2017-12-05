@@ -74,12 +74,7 @@ var WebAudioSound = new Class({
         }
         //  \/\/\/ isPlaying = true, isPaused = false \/\/\/
         this.stopAndRemoveBufferSource();
-        var seek = this.currentConfig.seek;
-        var offset = (this.currentMarker ? this.currentMarker.start : 0) + seek;
-        var duration = this.duration - seek;
-        this.createAndStartBufferSource(offset, duration);
-        this.startTime = this.manager.context.currentTime - seek;
-        this.currentConfig.seek = 0;
+        this.createAndStartBufferSource();
         return this;
     },
     pause: function () {
@@ -96,13 +91,7 @@ var WebAudioSound = new Class({
             return false;
         }
         //  \/\/\/ isPlaying = true, isPaused = false \/\/\/
-        // TODO take in account playback rate
-        var seek = this.currentConfig.seek;
-        var offset = (this.currentMarker ? this.currentMarker.start : 0) + seek;
-        var duration = this.duration - seek;
-        this.createAndStartBufferSource(offset, duration);
-        this.startTime = this.manager.context.currentTime - seek;
-        this.currentConfig.seek = 0;
+        this.createAndStartBufferSource();
         return true;
     },
     stop: function () {
@@ -119,11 +108,14 @@ var WebAudioSound = new Class({
      * Used internally to do what the name says.
      *
      * @private
-     * @param {number} offset
-     * @param {number} duration
      */
     // TODO add when param
-    createAndStartBufferSource: function (offset, duration) {
+    createAndStartBufferSource: function () {
+        var seek = this.currentConfig.seek;
+        var offset = (this.currentMarker ? this.currentMarker.start : 0) + seek;
+        var duration = this.duration - seek;
+        this.startTime = this.manager.context.currentTime - seek;
+        this.currentConfig.seek = 0;
         this.source = this.manager.context.createBufferSource();
         this.source.buffer = this.audioBuffer;
         this.source.connect(this.muteNode);
