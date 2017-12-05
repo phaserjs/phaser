@@ -221,6 +221,7 @@ var BaseSound = new Class({
             this.currentConfig = this.currentMarker.config;
             this.duration = this.currentMarker.duration;
         }
+        this.resetConfig();
         this.currentConfig = Extend(this.currentConfig, config);
         this.isPlaying = true;
         this.isPaused = false;
