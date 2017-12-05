@@ -56,6 +56,13 @@ var WebAudioSound = new Class({
          */
         this.pausedTime = 0;
         /**
+         * An array where we keep track of all rate updates during playback.
+         *
+         * @private
+         * @property {{ time: number, rate: number }[]} rateUpdates
+         */
+        this.rateUpdates = [];
+        /**
          * Used for keeping track when sound source playback has ended
          * so it's state can be updated accordingly.
          *
