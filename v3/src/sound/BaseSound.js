@@ -41,6 +41,21 @@ var BaseSound = new Class({
          */
         this.totalRate = 1;
         /**
+         * A value representing the duration, in seconds.
+         * It could be total sound duration or a marker duration.
+         *
+         * @readonly
+         * @property {number} duration
+         */
+        this.duration = 0;
+        /**
+         * Duration of the entire sound.
+         *
+         * @readonly
+         * @property {number}
+         */
+        this.totalDuration = 0;
+        /**
          * [description]
          *
          * Default values will be set by properties' setters.
@@ -98,21 +113,6 @@ var BaseSound = new Class({
          */
         this.loop = false;
         this.config = Extend(this.config, config);
-        /**
-         * A value representing the duration, in seconds.
-         * It could be total sound duration or a marker duration.
-         *
-         * @readonly
-         * @property {number} duration
-         */
-        this.duration = 0;
-        /**
-         * Duration of the entire sound.
-         *
-         * @readonly
-         * @property {number}
-         */
-        this.totalDuration = 0;
         /**
          * Object containing markers definitions.
          *
