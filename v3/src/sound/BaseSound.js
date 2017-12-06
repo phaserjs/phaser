@@ -47,14 +47,14 @@ var BaseSound = new Class({
          * @readonly
          * @property {number} duration
          */
-        this.duration = 0;
+        this.duration = this.duration || 0;
         /**
          * Duration of the entire sound.
          *
          * @readonly
          * @property {number}
          */
-        this.totalDuration = 0;
+        this.totalDuration = this.totalDuration || 0;
         /**
          * [description]
          *
