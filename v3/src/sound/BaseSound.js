@@ -19,23 +19,6 @@ var BaseSound = new Class({
          */
         this.key = key;
         /**
-         * [description]
-         *
-         * Default values will be set by properties' setters.
-         *
-         * @private
-         * @property {ISoundConfig} config
-         */
-        this.config = {};
-        /**
-         * Reference to the currently used config.
-         * It could be default config or marker config.
-         *
-         * @private
-         * @property {ISoundConfig} currentConfig
-         */
-        this.currentConfig = this.config;
-        /**
          * Flag indicating if sound is currently playing.
          *
          * @readonly
@@ -57,6 +40,23 @@ var BaseSound = new Class({
          * @property {number} totalRate
          */
         this.totalRate = 1;
+        /**
+         * [description]
+         *
+         * Default values will be set by properties' setters.
+         *
+         * @private
+         * @property {ISoundConfig} config
+         */
+        this.config = {};
+        /**
+         * Reference to the currently used config.
+         * It could be default config or marker config.
+         *
+         * @private
+         * @property {ISoundConfig} currentConfig
+         */
+        this.currentConfig = this.config;
         /**
          * [description]
          *
