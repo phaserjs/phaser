@@ -64,9 +64,9 @@ var WebAudioSound = new Class({
         this.hasEnded = false;
         this.muteNode.connect(this.volumeNode);
         this.volumeNode.connect(manager.destination);
-        BaseSound.call(this, manager, key, config);
         this.duration = this.audioBuffer.duration;
         this.totalDuration = this.audioBuffer.duration;
+        BaseSound.call(this, manager, key, config);
     },
     play: function (markerName, config) {
         if (!BaseSound.prototype.play.call(this, markerName, config)) {
