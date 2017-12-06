@@ -1,5 +1,7 @@
 module.exports = {
     vert: [
+    '// Tilemap Shader',
+
     'precision mediump float;',
     '',
     'uniform mat4 u_view_matrix;',
@@ -25,13 +27,15 @@ module.exports = {
     ''
     ].join('\n'),
     frag: [
+    '// Tilemap Shader',
+    
     'precision mediump float;',
     'uniform sampler2D u_sampler2D;',
     'varying vec2 v_tex_coord;',
     'void main()',
     '{',
     '    vec4 output_color = texture2D(u_sampler2D, v_tex_coord);',
-    '    gl_FragColor = vec4(output_color.rgb * output_color.a, output_color.a);',
+    '    gl_FragColor = output_color;',
     '}'
     ].join('\n')
 };

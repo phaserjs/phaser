@@ -1,5 +1,7 @@
 module.exports = {
     vert: [
+    '// Mask Shader ',
+
     'precision mediump float;',
     'attribute vec2 a_position;',
     'void main()',
@@ -9,6 +11,8 @@ module.exports = {
     ''
     ].join('\n'),
     frag: [
+    '// Mask Shader ',
+    
     'precision mediump float;',
     'uniform vec2 u_resolution;',
     'uniform sampler2D u_main_sampler;',

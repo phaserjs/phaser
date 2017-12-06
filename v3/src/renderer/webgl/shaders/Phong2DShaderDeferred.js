@@ -1,6 +1,8 @@
 var Phong2DShaderDeferred = function (maxLights)
 {
     var vert = [
+        '// Phong 2D Shader Deferred',
+        
         'precision mediump float;',
         'attribute vec2 vertexPosition;',
         'void main()',
@@ -10,6 +12,8 @@ var Phong2DShaderDeferred = function (maxLights)
     ];
 
     var frag = [
+        '// Phong 2D Shader Deferred',
+
         'precision mediump float;',
 
         'struct Light',
@@ -50,7 +54,7 @@ var Phong2DShaderDeferred = function (maxLights)
         '    }',
 
         '    vec4 color_output = vec4(uAmbientLightColor + finalColor, gbColor.a);',
-        '    gl_FragColor = vec4(color_output.rgb * color_output.a, color_output.a);',
+        '    gl_FragColor = color_output;',
         '}'
     ];
 

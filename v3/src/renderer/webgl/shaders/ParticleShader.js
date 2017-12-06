@@ -1,6 +1,8 @@
 var ParticleShader = function ()
 {
     var vert = [
+        '// Particle Shader',
+
         'precision mediump float;',
         'uniform mat4 u_view_matrix;',
 
@@ -21,6 +23,8 @@ var ParticleShader = function ()
     ];
 
     var frag = [
+        '// Particle Shader',
+        
         'precision mediump float;',
 
         'uniform sampler2D u_main_sampler;',
@@ -31,7 +35,7 @@ var ParticleShader = function ()
         'void main()',
         '{',
         '    vec4 sample_color = texture2D(u_main_sampler, v_tex_coord) * v_color;',
-        '    gl_FragColor = vec4(sample_color.rgb * sample_color.a, sample_color.a);',
+        '    gl_FragColor = sample_color;',
         '}'
     ];
 

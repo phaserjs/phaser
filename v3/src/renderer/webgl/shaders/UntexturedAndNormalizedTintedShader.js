@@ -1,5 +1,7 @@
 module.exports = {
     vert: [
+        '// Untextured And Normalized Tinted Shader',
+
         'precision mediump float;',
         'uniform mat4 u_view_matrix;',
         'attribute vec2 a_position;',
@@ -14,11 +16,13 @@ module.exports = {
         '}'
     ].join('\n'),
     frag: [
+        '// Untextured And Normalized Tinted Shader',
+        
         'precision mediump float;',
         'varying vec4 v_color;',
         'varying float v_alpha;',
         'void main() {',
-        '   gl_FragColor = vec4(v_color.bgr * v_alpha, v_alpha);',
+        '   gl_FragColor = vec4(v_color.bgr, v_alpha);',
         '}'
     ].join('\n')
 };

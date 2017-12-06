@@ -1,11 +1,15 @@
 module.exports = {
     vert: [
+        '// Untextured Plasma Shader',
+
         'attribute vec2 a_position;',
         'void main(void) {',
         '   gl_Position = vec4(a_position, 0.0, 1.0);',
         '}'
     ].join('\n'),
     frag: [
+        '// Untextured Plasma Shader',
+        
         'precision mediump float;',
         'uniform float time;',
         '// Oldskool plasma shader. (c) Victor Korsun, bitekas@gmail.com; 1996-2013.',
