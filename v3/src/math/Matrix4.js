@@ -84,6 +84,57 @@ var Matrix4 = new Class({
         return this;
     },
 
+    zero: function ()
+    {
+        var out = this.val;
+
+        out[0] = 0;
+        out[1] = 0;
+        out[2] = 0;
+        out[3] = 0;
+        out[4] = 0;
+        out[5] = 0;
+        out[6] = 0;
+        out[7] = 0;
+        out[8] = 0;
+        out[9] = 0;
+        out[10] = 0;
+        out[11] = 0;
+        out[12] = 0;
+        out[13] = 0;
+        out[14] = 0;
+        out[15] = 0;
+
+        return this;
+    },
+
+    xyz: function (x, y, z)
+    {
+        this.identity();
+
+        var out = this.val;
+
+        out[12] = x;
+        out[13] = y;
+        out[14] = z;
+
+        return this;
+    },
+
+    scaling: function (x, y, z)
+    {
+        this.zero();
+
+        var out = this.val;
+
+        out[0] = x;
+        out[5] = y;
+        out[10] = z;
+        out[15] = 1;
+
+        return this;
+    },
+
     identity: function ()
     {
         var out = this.val;
@@ -360,6 +411,35 @@ var Matrix4 = new Class({
         return this;
     },
 
+    multiplyLocal: function (src)
+    {
+        var a = [];
+        var m1 = this.val;
+        var m2 = src.val;
+
+        a[0] = m1[0] * m2[0] + m1[1] * m2[4] + m1[2] * m2[8] + m1[3] * m2[12];
+        a[1] = m1[0] * m2[1] + m1[1] * m2[5] + m1[2] * m2[9] + m1[3] * m2[13];
+        a[2] = m1[0] * m2[2] + m1[1] * m2[6] + m1[2] * m2[10] + m1[3] * m2[14];
+        a[3] = m1[0] * m2[3] + m1[1] * m2[7] + m1[2] * m2[11] + m1[3] * m2[15];
+
+        a[4] = m1[4] * m2[0] + m1[5] * m2[4] + m1[6] * m2[8] + m1[7] * m2[12];
+        a[5] = m1[4] * m2[1] + m1[5] * m2[5] + m1[6] * m2[9] + m1[7] * m2[13];
+        a[6] = m1[4] * m2[2] + m1[5] * m2[6] + m1[6] * m2[10] + m1[7] * m2[14];
+        a[7] = m1[4] * m2[3] + m1[5] * m2[7] + m1[6] * m2[11] + m1[7] * m2[15];
+
+        a[8] = m1[8] * m2[0] + m1[9] * m2[4] + m1[10] * m2[8] + m1[11] * m2[12];
+        a[9] = m1[8] * m2[1] + m1[9] * m2[5] + m1[10] * m2[9] + m1[11] * m2[13];
+        a[10] = m1[8] * m2[2] + m1[9] * m2[6] + m1[10] * m2[10] + m1[11] * m2[14];
+        a[11] = m1[8] * m2[3] + m1[9] * m2[7] + m1[10] * m2[11] + m1[11] * m2[15];
+
+        a[12] = m1[12] * m2[0] + m1[13] * m2[4] + m1[14] * m2[8] + m1[15] * m2[12];
+        a[13] = m1[12] * m2[1] + m1[13] * m2[5] + m1[14] * m2[9] + m1[15] * m2[13];
+        a[14] = m1[12] * m2[2] + m1[13] * m2[6] + m1[14] * m2[10] + m1[15] * m2[14];
+        a[15] = m1[12] * m2[3] + m1[13] * m2[7] + m1[14] * m2[11] + m1[15] * m2[15];
+
+        return this.fromArray(a);
+    },
+
     translate: function (v)
     {
         var x = v.x;
@@ -424,6 +504,7 @@ var Matrix4 = new Class({
         return this;
     },
 
+    //  aka rotationAxis
     rotate: function (rad, axis)
     {
         var a = this.val;
@@ -718,7 +799,8 @@ var Matrix4 = new Class({
     },
 
     /**
-     * Generates a perspective projection matrix with the given bounds
+     * Generates a perspective projection matrix with the given bounds.
+     * perspective fov lh
      *
      * @param {number} fovy Vertical field of view in radians
      * @param {number} aspect Aspect ratio. typically viewport width/height
@@ -750,6 +832,33 @@ var Matrix4 = new Class({
         out[12] = 0;
         out[13] = 0;
         out[14] = (2 * far * near) * nf;
+        out[15] = 0;
+
+        return this;
+    },
+
+    perspectiveLH: function (width, height, near, far)
+    {
+        var out = this.val;
+
+        out[0] = (2 * near) / width;
+        out[1] = 0;
+        out[2] = 0;
+        out[3] = 0;
+
+        out[4] = 0;
+        out[5] = (2 * near) / height;
+        out[6] = 0;
+        out[7] = 0;
+
+        out[8] = 0;
+        out[9] = 0;
+        out[10] = -far / (near - far);
+        out[11] = 1;
+
+        out[12] = 0;
+        out[13] = 0;
+        out[14] = (near * far) / (near - far);
         out[15] = 0;
 
         return this;
@@ -903,12 +1012,85 @@ var Matrix4 = new Class({
         out[15] = 1;
 
         return this;
+    },
+
+    yawPitchRoll: function (yaw, pitch, roll)
+    {
+        // return Matrix.RotationZ(roll).multiply(Matrix.RotationX(pitch)).multiply(Matrix.RotationY(yaw));
+
+        this.zero();
+        _tempMat1.zero();
+        _tempMat2.zero();
+
+        var m0 = this.val;
+        var m1 = _tempMat1.val;
+        var m2 = _tempMat2.val;
+
+        //  Rotate Z
+        var s = Math.sin(roll);
+        var c = Math.cos(roll);
+
+        m0[10] = 1;
+        m0[15] = 1;
+        m0[0] = c;
+        m0[1] = s;
+        m0[4] = -s;
+        m0[5] = c;
+
+        //  Rotate X
+        s = Math.sin(pitch);
+        c = Math.cos(pitch);
+
+        m1[0] = 1;
+        m1[15] = 1;
+        m1[5] = c;
+        m1[10] = c;
+        m1[9] = -s;
+        m1[6] = s;
+
+        //  Rotate Y
+        s = Math.sin(yaw);
+        c = Math.cos(yaw);
+
+        m2[5] = 1;
+        m2[15] = 1;
+        m2[0] = c;
+        m2[2] = -s;
+        m2[8] = s;
+        m2[10] = c;
+
+        this.multiplyLocal(_tempMat1);
+        this.multiplyLocal(_tempMat2);
+
+        return this;
+    },
+
+    setWorldMatrix: function (rotation, position, scale, viewMatrix, projectionMatrix)
+    {
+        this.yawPitchRoll(rotation.y, rotation.x, rotation.z);
+
+        _tempMat1.xyz(position.x, position.y, position.z);
+        _tempMat2.scaling(scale.x, scale.y, scale.z);
+
+        this.multiplyLocal(_tempMat1);
+        this.multiplyLocal(_tempMat2);
+
+        if (viewMatrix !== undefined)
+        {
+            this.multiplyLocal(viewMatrix);
+        }
+
+        if (projectionMatrix !== undefined)
+        {
+            this.multiplyLocal(projectionMatrix);
+        }
+
+        return this;
     }
 
 });
 
-Matrix4.prototype.mul = Matrix4.prototype.multiply;
-Matrix4.prototype.idt = Matrix4.prototype.identity;
-Matrix4.prototype.reset = Matrix4.prototype.idt;
+var _tempMat1 = new Matrix4();
+var _tempMat2 = new Matrix4();
 
 module.exports = Matrix4;
