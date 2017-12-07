@@ -207,6 +207,7 @@ var BaseSound = new Class({
             console.error('Sound marker name has to be a string!');
             return null;
         }
+        var previousConfig = this.currentConfig;
         if (!markerName) {
             this.currentMarker = null;
             this.currentConfig = this.config;
@@ -221,7 +222,9 @@ var BaseSound = new Class({
             this.currentConfig = this.currentMarker.config;
             this.duration = this.currentMarker.duration;
         }
-        this.resetConfig();
+        if (previousConfig !== this.currentConfig) {
+            this.resetConfig();
+        }
         this.currentConfig = Extend(this.currentConfig, config);
         this.isPlaying = true;
         this.isPaused = false;
