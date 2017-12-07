@@ -82,8 +82,8 @@ var WebAudioSound = new Class({
             return false;
         }
         //  \/\/\/ isPlaying = false, isPaused = true \/\/\/
-        this.stopAndRemoveBufferSource();
         this.currentConfig.seek = this.getCurrentTime(); // Equivalent to setting paused time
+        this.stopAndRemoveBufferSource();
         return true;
     },
     resume: function () {
