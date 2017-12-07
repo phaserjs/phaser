@@ -19,8 +19,11 @@ var Mesh = new Class({
         this.visible = true;
 
         this.thickness = 1;
-        this.color = 0x00ff00;
-        this.alpha = 1;
+        this.strokeColor = 0x00ff00;
+        this.strokeAlpha = 1;
+
+        this.fillColor = 0x00ff00;
+        this.fillAlpha = 1;
 
         this._pA = new Vector2();
         this._pB = new Vector2();
@@ -32,7 +35,37 @@ var Mesh = new Class({
         this.worldMatrix = new Matrix4();
     },
 
-    draw: function (graphics)
+    fill: function (graphics)
+    {
+        if (!this.visible || this.alpha === 0)
+        {
+            return;
+        }
+
+        var pa = this._pA;
+        var pb = this._pB;
+        var pc = this._pC;
+
+        var world = this.worldMatrix;
+
+        world.setWorldMatrix(this.rotation, this.position, this.scale, graphics.viewMatrix, graphics.projectionMatrix);
+
+        graphics.fillStyle(this.fillColor, this.fillAlpha);
+
+        for (var f = 0; f < this.faces.length; f++)
+        {
+            var face = this.faces[f];
+            var verts = this.vertices;
+
+            this.project(graphics, pa, verts[face.A].pos, world);
+            this.project(graphics, pb, verts[face.B].pos, world);
+            this.project(graphics, pc, verts[face.C].pos, world);
+
+            graphics.fillTriangle(pa.x, pa.y, pb.x, pb.y, pc.x, pc.y);
+        }
+    },
+
+    stroke: function (graphics)
     {
         if (!this.visible || this.alpha === 0)
         {
@@ -48,7 +81,7 @@ var Mesh = new Class({
 
         world.setWorldMatrix(this.rotation, this.position, this.scale, graphics.viewMatrix, graphics.projectionMatrix);
 
-        graphics.lineStyle(this.thickness, this.color, this.alpha);
+        graphics.lineStyle(this.thickness, this.strokeColor, this.strokeAlpha);
         graphics.beginPath();
 
         for (var f = 0; f < this.faces.length; f++)
@@ -132,25 +165,47 @@ var Mesh = new Class({
         return this;
     },
 
-    setColor: function (color)
+    setStrokeColor: function (color)
     {
-        this.color = color;
+        this.strokeColor = color;
 
         return this;
     },
 
-    setAlpha: function (alpha)
+    setStrokeAlpha: function (alpha)
     {
-        this.alpha = alpha;
+        this.strokeAlpha = alpha;
 
         return this;
     },
 
-    setLineStyle: function (color, thickness, alpha)
+    setFillColor: function (color)
     {
-        this.color = color;
-        this.thickness = thickness;
-        this.alpha = alpha;
+        this.fillColor = color;
+
+        return this;
+    },
+
+    setFillAlpha: function (alpha)
+    {
+        this.fillAlpha = alpha;
+
+        return this;
+    },
+
+    lineStyle: function (lineWidth, color, alpha)
+    {
+        this.thickness = lineWidth;
+        this.strokeColor = color;
+        this.strokeAlpha = alpha;
+
+        return this;
+    },
+
+    fillStyle: function (color, alpha)
+    {
+        this.fillColor = color;
+        this.fillAlpha = alpha;
 
         return this;
     },
