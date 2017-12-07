@@ -7,7 +7,10 @@ var Ellipse = require('../../geom/ellipse/');
 var GameObject = require('../GameObject');
 var GetValue = require('../../utils/object/GetValue');
 var MATH_CONST = require('../../math/const');
+var Matrix4 = require('../../math/Matrix4');
+var Mesh = require('../../geom/mesh/Mesh');
 var Render = require('./GraphicsRender');
+var Vector3 = require('../../math/Vector3');
 
 var Graphics = new Class({
 
@@ -48,6 +51,22 @@ var Graphics = new Class({
         this._lineWidth = 1.0;
 
         this.setDefaultStyles(options);
+
+        //  Mesh viewport camera
+
+        this.viewportWidth = scene.sys.game.config.width;
+        this.viewportHeight = scene.sys.game.config.height;
+
+        this.camera = {
+            position: new Vector3(),
+            target: new Vector3()
+        };
+
+        this.up = new Vector3().up();
+        this.projectionMatrix = new Matrix4();
+        this.viewMatrix = new Matrix4().lookAt(this.camera.position, this.camera.target, this.up);
+
+        this.setViewport(this.viewportWidth, this.viewportHeight);
 
         var resourceManager = scene.sys.game.renderer.resourceManager;
 
@@ -394,6 +413,158 @@ var Graphics = new Class({
             Commands.ARC,
             x, y, radius, startAngle, endAngle, anticlockwise
         );
+
+        return this;
+    },
+
+    //  MESH + VIEWPORT + CAMERA
+
+    cameraX: {
+
+        get: function ()
+        {
+            return this.camera.position.x;
+        },
+
+        set: function (value)
+        {
+            this.camera.position.x = value;
+            this.viewMatrix.lookAt(this.camera.position, this.camera.target, this.up);
+        }
+
+    },
+
+    cameraY: {
+
+        get: function ()
+        {
+            return this.camera.position.y;
+        },
+
+        set: function (value)
+        {
+            this.camera.position.y = value;
+            this.viewMatrix.lookAt(this.camera.position, this.camera.target, this.up);
+        }
+
+    },
+
+    cameraZ: {
+
+        get: function ()
+        {
+            return this.camera.position.z;
+        },
+
+        set: function (value)
+        {
+            this.camera.position.z = value;
+            this.viewMatrix.lookAt(this.camera.position, this.camera.target, this.up);
+        }
+
+    },
+
+    cameraTargetX: {
+
+        get: function ()
+        {
+            return this.camera.target.x;
+        },
+
+        set: function (value)
+        {
+            this.camera.target.x = value;
+            this.viewMatrix.lookAt(this.camera.position, this.camera.target, this.up);
+        }
+
+    },
+
+    cameraTargetY: {
+
+        get: function ()
+        {
+            return this.camera.target.y;
+        },
+
+        set: function (value)
+        {
+            this.camera.target.y = value;
+            this.viewMatrix.lookAt(this.camera.position, this.camera.target, this.up);
+        }
+
+    },
+
+    cameraTargetZ: {
+
+        get: function ()
+        {
+            return this.camera.target.z;
+        },
+
+        set: function (value)
+        {
+            this.camera.target.z = value;
+            this.viewMatrix.lookAt(this.camera.position, this.camera.target, this.up);
+        }
+
+    },
+
+    setCameraPosition: function (x, y, z)
+    {
+        this.camera.position.set(x, y, z);
+
+        this.viewMatrix.lookAt(this.camera.position, this.camera.target, this.up);
+
+        return this;
+    },
+
+    setCameraTarget: function (x, y, z)
+    {
+        this.camera.target.set(x, y, z);
+
+        this.viewMatrix.lookAt(this.camera.position, this.camera.target, this.up);
+
+        return this;
+    },
+
+    // @param {number} fovy Vertical field of view in radians
+    // @param {number} near Near bound of the frustum
+    // @param {number} far Far bound of the frustum
+    setViewport: function (width, height, fov, near, far)
+    {
+        if (fov === undefined) { fov = 0.8; }
+        if (near === undefined) { near = 0.01; }
+        if (far === undefined) { far = 1; }
+
+        this.viewportWidth = width;
+        this.viewportHeight = height;
+
+        //  fov, aspect, near, far
+        this.projectionMatrix.perspective(fov, width / height, near, far);
+
+        return this;
+    },
+
+    //  Allow key to be a data array OR object containing the rest of the properties + color etc
+    createMesh: function (key, x, y, z)
+    {
+        var data = this.scene.sys.cache.obj.get(key);
+
+        var mesh = new Mesh(data, x, y, z);
+
+        return mesh;
+    },
+
+    fillMesh: function (mesh)
+    {
+        mesh.fill(this);
+
+        return this;
+    },
+
+    strokeMesh: function (mesh)
+    {
+        mesh.stroke(this);
 
         return this;
     },

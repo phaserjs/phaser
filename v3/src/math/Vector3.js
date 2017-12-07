@@ -23,6 +23,15 @@ var Vector3 = new Class({
         }
     },
 
+    up: function ()
+    {
+        this.x = 0;
+        this.y = 1;
+        this.z = 0;
+
+        return this;
+    },
+
     clone: function ()
     {
         return new Vector3(this.x, this.y, this.z);
@@ -258,6 +267,25 @@ var Vector3 = new Class({
         return this;
     },
 
+    transformCoordinates: function (mat)
+    {
+        var x = this.x;
+        var y = this.y;
+        var z = this.z;
+        var m = mat.val;
+
+        var tx = (x * m[0]) + (y * m[4]) + (z * m[8]) + m[12];
+        var ty = (x * m[1]) + (y * m[5]) + (z * m[9]) + m[13];
+        var tz = (x * m[2]) + (y * m[6]) + (z * m[10]) + m[14];
+        var tw = (x * m[3]) + (y * m[7]) + (z * m[11]) + m[15];
+
+        this.x = tx / tw;
+        this.y = ty / tw;
+        this.z = tz / tw;
+
+        return this;
+    },
+
     transformQuat: function (q)
     {
         // benchmarks: http://jsperf.com/quaternion-transform-vec3-implementations
@@ -368,12 +396,76 @@ var Vector3 = new Class({
 
 });
 
-Vector3.prototype.sub = Vector3.prototype.subtract;
-Vector3.prototype.mul = Vector3.prototype.multiply;
-Vector3.prototype.div = Vector3.prototype.divide;
-Vector3.prototype.dist = Vector3.prototype.distance;
-Vector3.prototype.distSq = Vector3.prototype.distanceSq;
-Vector3.prototype.len = Vector3.prototype.length;
-Vector3.prototype.lenSq = Vector3.prototype.lengthSq;
+/*
+Vector3.Zero = function ()
+{
+    return new Vector3(0, 0, 0);
+};
+
+Vector3.Up = function ()
+{
+    return new Vector3(0, 1.0, 0);
+};
+
+Vector3.Copy = function (source)
+{
+    return new Vector3(source.x, source.y, source.z);
+};
+
+Vector3.TransformCoordinates = function (vector, transformation)
+{
+    var x = (vector.x * transformation.m[0]) + (vector.y * transformation.m[4]) + (vector.z * transformation.m[8]) + transformation.m[12];
+    var y = (vector.x * transformation.m[1]) + (vector.y * transformation.m[5]) + (vector.z * transformation.m[9]) + transformation.m[13];
+    var z = (vector.x * transformation.m[2]) + (vector.y * transformation.m[6]) + (vector.z * transformation.m[10]) + transformation.m[14];
+    var w = (vector.x * transformation.m[3]) + (vector.y * transformation.m[7]) + (vector.z * transformation.m[11]) + transformation.m[15];
+
+    return new Vector3(x / w, y / w, z / w);
+};
+
+Vector3.TransformNormal = function (vector, transformation)
+{
+    var x = (vector.x * transformation.m[0]) + (vector.y * transformation.m[4]) + (vector.z * transformation.m[8]);
+    var y = (vector.x * transformation.m[1]) + (vector.y * transformation.m[5]) + (vector.z * transformation.m[9]);
+    var z = (vector.x * transformation.m[2]) + (vector.y * transformation.m[6]) + (vector.z * transformation.m[10]);
+
+    return new Vector3(x, y, z);
+};
+
+Vector3.Dot = function (left, right)
+{
+    return (left.x * right.x + left.y * right.y + left.z * right.z);
+};
+
+Vector3.Cross = function (left, right)
+{
+    var x = left.y * right.z - left.z * right.y;
+    var y = left.z * right.x - left.x * right.z;
+    var z = left.x * right.y - left.y * right.x;
+
+    return new Vector3(x, y, z);
+};
+
+Vector3.Normalize = function (vector)
+{
+    var newVector = Vector3.Copy(vector);
+    newVector.normalize();
+
+    return newVector;
+};
+
+Vector3.Distance = function (value1, value2)
+{
+    return Math.sqrt(Vector3.DistanceSquared(value1, value2));
+};
+
+Vector3.DistanceSquared = function (value1, value2)
+{
+    var x = value1.x - value2.x;
+    var y = value1.y - value2.y;
+    var z = value1.z - value2.z;
+
+    return (x * x) + (y * y) + (z * z);
+};
+*/
 
 module.exports = Vector3;

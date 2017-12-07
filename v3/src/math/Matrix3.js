@@ -408,8 +408,4 @@ var Matrix3 = new Class({
 
 });
 
-Matrix3.prototype.mul = Matrix3.prototype.multiply;
-Matrix3.prototype.idt = Matrix3.prototype.identity;
-Matrix3.prototype.reset = Matrix3.prototype.identity;
-
 module.exports = Matrix3;

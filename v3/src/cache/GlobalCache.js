@@ -84,6 +84,14 @@ var GlobalCache = new Class({
         /**
          * [description]
          *
+         * @property {Phaser.Cache.BaseCache} obj
+         * @protected
+         */
+        this.obj = new BaseCache();
+
+        /**
+         * [description]
+         *
          * @property {Phaser.Cache.BaseCache} tilemap
          * @protected
          */
