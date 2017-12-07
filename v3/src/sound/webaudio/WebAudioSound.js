@@ -100,7 +100,6 @@ var WebAudioSound = new Class({
         }
         //  \/\/\/ isPlaying = false, isPaused = false \/\/\/
         this.stopAndRemoveBufferSource();
-        this.startTime = 0;
         return true;
     },
     /**
@@ -138,6 +137,7 @@ var WebAudioSound = new Class({
             this.source.stop();
             this.source = null;
         }
+        this.startTime = 0;
     },
     applyConfig: function () {
         this.rateUpdates.length = 0;
