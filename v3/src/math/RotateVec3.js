@@ -21,7 +21,7 @@ var tmpVec3 = new Vector3();
  *
  * @return {Phaser.Math.Vector3} [description]
  */
-var RotateVec3 = function(vec, axis, radians)
+var RotateVec3 = function (vec, axis, radians)
 {
     //  Set the quaternion to our axis angle
     tmpQuat.setAxisAngle(axis, radians);
