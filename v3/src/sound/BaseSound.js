@@ -79,7 +79,8 @@ var BaseSound = new Class({
          */
         this.mute = false;
         /**
-         * [description]
+         * Gets or sets the volume of this sound,
+         * a value between 0 (silence) and 1 (full volume).
          *
          * @property {number} volume
          */
