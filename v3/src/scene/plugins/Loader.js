@@ -1,10 +1,11 @@
 var BaseLoader = require('../../loader/BaseLoader');
 var Class = require('../../utils/Class');
-var NumberArray = require('../../utils/array/NumberArray');
 var CONST = require('../../loader/const');
+var NumberArray = require('../../utils/array/NumberArray');
 
 var AnimationJSONFile = require('../../loader/filetypes/AnimationJSONFile');
 var AtlasJSONFile = require('../../loader/filetypes/AtlasJSONFile');
+var AudioFile = require('../../loader/filetypes/AudioFile');
 var BinaryFile = require('../../loader/filetypes/BinaryFile');
 var BitmapFontFile = require('../../loader/filetypes/BitmapFontFile');
 var GLSLFile = require('../../loader/filetypes/GLSLFile');
@@ -15,11 +16,11 @@ var ScriptFile = require('../../loader/filetypes/ScriptFile');
 var SpriteSheet = require('../../loader/filetypes/SpriteSheet');
 var SVGFile = require('../../loader/filetypes/SVGFile');
 var TextFile = require('../../loader/filetypes/TextFile');
-var UnityAtlasFile = require('../../loader/filetypes/UnityAtlasFile');
-var XMLFile = require('../../loader/filetypes/XMLFile');
-var AudioFile = require('../../loader/filetypes/AudioFile');
 var TilemapCSVFile = require('../../loader/filetypes/TilemapCSVFile');
 var TilemapJSONFile = require('../../loader/filetypes/TilemapJSONFile');
+var UnityAtlasFile = require('../../loader/filetypes/UnityAtlasFile');
+var WavefrontFile = require('../../loader/filetypes/WavefrontFile');
+var XMLFile = require('../../loader/filetypes/XMLFile');
 
 var Loader = new Class({
 
@@ -84,6 +85,11 @@ var Loader = new Class({
     svg: function (key, url, xhrSettings)
     {
         return SVGFile.create(this, key, url, xhrSettings);
+    },
+
+    obj: function (key, url, xhrSettings)
+    {
+        return WavefrontFile.create(this, key, url, xhrSettings);
     },
 
     //  config can include: frameWidth, frameHeight, startFrame, endFrame, margin, spacing
@@ -281,7 +287,7 @@ var Loader = new Class({
                 entry = this.audioSprite(file.key, file.urls, file.json, file.config, file.audioXhrSettings, file.jsonXhrSettings);
                 break;
 
-            //  image, json, xml, binary, text, glsl, svg
+            //  image, json, xml, binary, text, glsl, svg, obj
             default:
                 entry = this[file.type](file.key, file.url, file.xhrSettings);
                 break;

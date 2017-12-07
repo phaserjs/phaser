@@ -1,5 +1,7 @@
 module.exports = {
     vert: [
+        '// Textured Shader',
+
         'uniform mat4 u_view_matrix;',
         'attribute vec2 a_position;',
         'attribute vec2 a_tex_coord;',
@@ -10,12 +12,14 @@ module.exports = {
         '}'
     ].join('\n'),
     frag: [
+        '// Textured Shader',
+        
         'precision mediump float;',
         'uniform sampler2D u_sampler;',
         'varying vec2 v_tex_coord;',
         'void main(void) {',
         '   vec4 output_color = texture2D(u_sampler, v_tex_coord);',
-        '   gl_FragColor = vec4(output_color.rgb * output_color.a, output_color.a);',
+        '   gl_FragColor = output_color;',
         '}'
     ].join('\n')
 };

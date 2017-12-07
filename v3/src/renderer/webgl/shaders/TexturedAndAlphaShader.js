@@ -1,5 +1,7 @@
 module.exports = {
     vert: [
+        '// Textured and Alpha Shader',
+
         'uniform mat4 u_view_matrix;',
         'attribute vec2 a_position;',
         'attribute vec2 a_tex_coord;',
@@ -13,13 +15,15 @@ module.exports = {
         '}'
     ].join('\n'),
     frag: [
+        '// Textured and Alpha Shader',
+        
         'precision mediump float;',
         'uniform sampler2D u_sampler2D;',
         'varying vec2 v_tex_coord;',
         'varying float v_alpha;',
         'void main() {',
         '   vec4 output_color = texture2D(u_sampler2D, v_tex_coord);',
-        '   gl_FragColor = vec4(output_color.rgb * v_alpha * output_color.a, v_alpha * output_color.a);',
+        '   gl_FragColor = output_color;',
         '}'
     ].join('\n')
 };

@@ -1,5 +1,7 @@
 module.exports = {
     vert: [
+        '// Textured Twirl Shader',
+
         'attribute vec2 a_position;',
         'attribute vec2 a_tex_coord;',
         'varying vec2 v_tex_coord;',
@@ -9,6 +11,8 @@ module.exports = {
         '}'
     ].join('\n'),
     frag: [
+        '// Textured Twirl Shader',
+        
         'precision mediump float;',
         'uniform sampler2D u_sampler;',
         'uniform float time;',
@@ -27,7 +31,7 @@ module.exports = {
         '       coord = vec2(coord.x * c - coord.y * s, coord.x * s + coord.y * c);',
         '   }',
         '   vec4 output_color = texture2D(u_sampler, coord + offset);',
-        '   gl_FragColor = vec4(output_color.rgb * output_color.a, output_color.a);',
+        '   gl_FragColor = output_color;',
         '}'
     ].join('\n')
 };

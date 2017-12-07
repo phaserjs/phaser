@@ -1,14 +1,15 @@
-var GameObject = require('../GameObject');
 var Commands = require('./Commands');
+var GameObject = require('../GameObject');
 var TransformMatrix = require('../components/TransformMatrix');
-var pathArray = [];
+
 var cos = Math.cos;
 var sin = Math.sin;
-var sqrt = Math.sqrt;
-var tempMatrix = new TransformMatrix();
+
+var currentMatrix = new TransformMatrix();
 var matrixStack = new Float32Array(6 * 1000);
 var matrixStackLength = 0;
-var currentMatrix = new TransformMatrix();
+var pathArray = [];
+var tempMatrix = new TransformMatrix();
 
 var Point = function (x, y, width, rgb, alpha)
 {
@@ -35,19 +36,14 @@ var GraphicsWebGLRenderer = function (renderer, gameObject, interpolationPercent
 
     var renderTarget = forceRenderTarget || gameObject.renderTarget;
     var shapeBatch = renderer.shapeBatch;
-    var vertexDataBuffer = shapeBatch.vertexDataBuffer;
-    var vertexBufferF32 = vertexDataBuffer.floatView;
-    var vertexBufferU32 = vertexDataBuffer.uintView;
-    var vertexOffset = 0;
     var cameraScrollX = camera.scrollX * gameObject.scrollFactorX;
     var cameraScrollY = camera.scrollY * gameObject.scrollFactorY;
-    const srcX = gameObject.x - cameraScrollX;
-    const srcY = gameObject.y - cameraScrollY;
-    const srcScaleX = gameObject.scaleX;
-    const srcScaleY = gameObject.scaleY;
-    const srcRotation = -gameObject.rotation;
+    var srcX = gameObject.x - cameraScrollX;
+    var srcY = gameObject.y - cameraScrollY;
+    var srcScaleX = gameObject.scaleX;
+    var srcScaleY = gameObject.scaleY;
+    var srcRotation = -gameObject.rotation;
     var commandBuffer = gameObject.commandBuffer;
-    var value;
     var lineAlpha = 1.0;
     var fillAlpha = 1.0;
     var lineColor = 0;
@@ -61,22 +57,10 @@ var GraphicsWebGLRenderer = function (renderer, gameObject, interpolationPercent
     var ty = 0;
     var ta = 0;
     var x, y, radius, startAngle, endAngle, anticlockwise;
-    var width, height, txw, tyh;
-    var vertexCount = shapeBatch.vertexCount;
-    var polygon = [];
-    var x0, y0, x1, y1, x2, y2;
-    var tx0, ty0, tx1, ty1, tx2, ty2;
-    var v0, v1, v2;
-    var polygonIndex;
     var path;
-    var pathLength;
-    var point;
-    var maxVertices = shapeBatch.maxVertices;
-    var translateX, translateY;
     var tempMatrixMatrix = tempMatrix.matrix;
     var sra, srb, src, srd, sre, srf, cma, cmb, cmc, cmd, cme, cmf;
     var mva, mvb, mvc, mvd, mve, mvf;
-    var abs = Math.abs;
 
     tempMatrix.applyITRS(srcX, srcY, srcRotation, srcScaleX, srcScaleY);
 
@@ -105,9 +89,9 @@ var GraphicsWebGLRenderer = function (renderer, gameObject, interpolationPercent
 
     for (var cmdIndex = 0, cmdLength = commandBuffer.length; cmdIndex < cmdLength; ++cmdIndex)
     {
-        var cmd = commandBuffer[cmdIndex];
+        cmd = commandBuffer[cmdIndex];
 
-        switch(cmd)
+        switch (cmd)
         {
             case Commands.ARC:
                 iteration = 0;
@@ -198,7 +182,7 @@ var GraphicsWebGLRenderer = function (renderer, gameObject, interpolationPercent
                     pathArrayIndex < pathArrayLength;
                     ++pathArrayIndex)
                 {
-                    var path = pathArray[pathArrayIndex];
+                    path = pathArray[pathArrayIndex];
                     shapeBatch.addStrokePath(
                         /* Graphics Game Object Properties */
                         srcX, srcY, srcScaleX, srcScaleY, srcRotation,
@@ -211,7 +195,6 @@ var GraphicsWebGLRenderer = function (renderer, gameObject, interpolationPercent
                         mva, mvb, mvc, mvd, mve, mvf,
                         path === this._lastPath,
                         currentMatrix
-
                     );
                 }
                 break;
@@ -230,7 +213,6 @@ var GraphicsWebGLRenderer = function (renderer, gameObject, interpolationPercent
                     /* Transform */
                     mva, mvb, mvc, mvd, mve, mvf,
                     currentMatrix
-
                 );
              
                 cmdIndex += 4;
@@ -252,7 +234,6 @@ var GraphicsWebGLRenderer = function (renderer, gameObject, interpolationPercent
                     /* Transform */
                     mva, mvb, mvc, mvd, mve, mvf,
                     currentMatrix
-
                 );
                 
                 cmdIndex += 6;
@@ -275,11 +256,10 @@ var GraphicsWebGLRenderer = function (renderer, gameObject, interpolationPercent
                     /* Transform */
                     mva, mvb, mvc, mvd, mve, mvf,
                     currentMatrix
-
                 );
                 
                 cmdIndex += 6;
-                break
+                break;
 
             case Commands.LINE_TO:
                 if (lastPath !== null)
@@ -304,8 +284,8 @@ var GraphicsWebGLRenderer = function (renderer, gameObject, interpolationPercent
                 if (lastPath !== null)
                 {
                     lastPath.points.push(new Point(
-                        commandBuffer[cmdIndex + 1], 
-                        commandBuffer[cmdIndex + 2], 
+                        commandBuffer[cmdIndex + 1],
+                        commandBuffer[cmdIndex + 2],
                         commandBuffer[cmdIndex + 3],
                         commandBuffer[cmdIndex + 4],
                         commandBuffer[cmdIndex + 5]
@@ -314,8 +294,8 @@ var GraphicsWebGLRenderer = function (renderer, gameObject, interpolationPercent
                 else
                 {
                     lastPath = new Path(
-                        commandBuffer[cmdIndex + 1], 
-                        commandBuffer[cmdIndex + 2], 
+                        commandBuffer[cmdIndex + 1],
+                        commandBuffer[cmdIndex + 2],
                         commandBuffer[cmdIndex + 3],
                         commandBuffer[cmdIndex + 4],
                         commandBuffer[cmdIndex + 5]
@@ -327,8 +307,8 @@ var GraphicsWebGLRenderer = function (renderer, gameObject, interpolationPercent
 
             case Commands.MOVE_FX_TO:
                 lastPath = new Path(
-                    commandBuffer[cmdIndex + 1], 
-                    commandBuffer[cmdIndex + 2], 
+                    commandBuffer[cmdIndex + 1],
+                    commandBuffer[cmdIndex + 2],
                     commandBuffer[cmdIndex + 3],
                     commandBuffer[cmdIndex + 4],
                     commandBuffer[cmdIndex + 5]
@@ -385,6 +365,7 @@ var GraphicsWebGLRenderer = function (renderer, gameObject, interpolationPercent
                 break;
         }
     }
+
     currentMatrix.loadIdentity();
     pathArray.length = 0;
 };

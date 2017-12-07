@@ -1,6 +1,8 @@
 var LightFragmentShader = function (maxLights)
 {
     var frag = [
+        '// Light Fragment Shader ',
+
         'precision mediump float;',
 
         'struct Light',

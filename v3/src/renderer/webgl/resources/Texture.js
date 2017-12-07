@@ -4,12 +4,13 @@ var Texture = new Class({
 
     initialize:
 
-    function Texture (texture, width, height)
+    function Texture (texture, width, height, pma)
     {
         this.texture = texture;
         this.width = width;
         this.height = height;
         this.isRenderTexture = false;
+        this.isAlphaPremultiplied = pma;
     }
 
 });

@@ -93,16 +93,19 @@ var ResourceManager = new Class({
         }
     },
 
-    createTexture: function (mipLevel, minFilter, magFilter, wrapT, wrapS, format, pixels, width, height)
+    createTexture: function (mipLevel, minFilter, magFilter, wrapT, wrapS, format, pixels, width, height, pma)
     {
         var gl = this.gl;
         var texture = gl.createTexture();
+
+        pma = (pma === undefined ||  pma === null) ? true : pma;
 
         gl.bindTexture(gl.TEXTURE_2D, texture);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, minFilter);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, magFilter);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, wrapS);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, wrapT);
+        gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, pma);
 
         if (pixels === null || pixels === undefined)
         {

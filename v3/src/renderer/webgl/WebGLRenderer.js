@@ -142,7 +142,6 @@ var WebGLRenderer = new Class({
         gl.disable(gl.CULL_FACE);
         gl.enable(gl.BLEND);
         gl.clearColor(color.redGL, color.greenGL, color.blueGL, color.alphaGL);
-        gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
         
         //  Map Blend Modes
         this.blendModes = [];
