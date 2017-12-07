@@ -101,7 +101,10 @@ var BaseSound = new Class({
          */
         this.detune = 0;
         /**
-         * [description]
+         * Property representing the position of playback for this sound, in seconds.
+         * Setting it to a specific value moves current playback to that position.
+         * The value given is clamped to the range 0 to current marker duration.
+         * Setting seek of a stopped sound has no effect.
          *
          * @property {number} seek
          */
