@@ -252,6 +252,7 @@ var BaseSound = new Class({
         }
         this.isPlaying = false;
         this.isPaused = false;
+        this.resetConfig();
         return true;
     },
     /**
