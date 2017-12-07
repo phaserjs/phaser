@@ -73,7 +73,8 @@ var BaseSound = new Class({
          */
         this.currentConfig = this.config;
         /**
-         * [description]
+         * Boolean indicating whether the sound is muted or not.
+         * Gets or sets the muted state of this sound.
          *
          * @property {boolean} mute
          */
