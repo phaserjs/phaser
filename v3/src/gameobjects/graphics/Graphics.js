@@ -555,9 +555,16 @@ var Graphics = new Class({
         return mesh;
     },
 
+    fillMesh: function (mesh)
+    {
+        mesh.fill(this);
+
+        return this;
+    },
+
     strokeMesh: function (mesh)
     {
-        mesh.draw(this);
+        mesh.stroke(this);
 
         return this;
     },
