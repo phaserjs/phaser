@@ -102,7 +102,7 @@ var GraphicsCanvasRenderer = function (renderer, src, interpolationPercentage, c
                 break;
 
             case Commands.FILL_PATH:
-                if (!allowClip) 
+                if (!allowClip)
                 {
                     ctx.fill();
                 }
@@ -143,7 +143,7 @@ var GraphicsCanvasRenderer = function (renderer, src, interpolationPercentage, c
                 ctx.lineTo(commandBuffer[index + 3], commandBuffer[index + 4]);
                 ctx.lineTo(commandBuffer[index + 5], commandBuffer[index + 6]);
                 ctx.closePath();
-                if (!allowClip) 
+                if (!allowClip)
                 {
                     ctx.fill();
                 }
