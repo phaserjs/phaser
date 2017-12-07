@@ -418,6 +418,10 @@ var BaseLoader = new Class({
                     cache.text.add(file.key, file.data);
                     break;
 
+                case 'obj':
+                    cache.obj.add(file.key, file.data);
+                    break;
+
                 case 'binary':
                     cache.binary.add(file.key, file.data);
                     break;
