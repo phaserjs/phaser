@@ -258,8 +258,11 @@ Object.defineProperty(WebAudioSound.prototype, 'seek', {
         if (this.isPlaying) {
             return this.getCurrentTime();
         }
-        else {
+        else if (this.isPaused) {
             return this.currentConfig.seek;
+        }
+        else {
+            return 0;
         }
     },
     set: function (value) {
