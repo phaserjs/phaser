@@ -1016,8 +1016,6 @@ var Matrix4 = new Class({
 
     yawPitchRoll: function (yaw, pitch, roll)
     {
-        // return Matrix.RotationZ(roll).multiply(Matrix.RotationX(pitch)).multiply(Matrix.RotationY(yaw));
-
         this.zero();
         _tempMat1.zero();
         _tempMat2.zero();
@@ -1069,8 +1067,8 @@ var Matrix4 = new Class({
     {
         this.yawPitchRoll(rotation.y, rotation.x, rotation.z);
 
-        _tempMat1.xyz(position.x, position.y, position.z);
-        _tempMat2.scaling(scale.x, scale.y, scale.z);
+        _tempMat1.scaling(scale.x, scale.y, scale.z);
+        _tempMat2.xyz(position.x, position.y, position.z);
 
         this.multiplyLocal(_tempMat1);
         this.multiplyLocal(_tempMat2);
