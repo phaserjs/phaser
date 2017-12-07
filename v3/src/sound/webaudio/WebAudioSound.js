@@ -139,6 +139,9 @@ var WebAudioSound = new Class({
         }
         this.startTime = 0;
     },
+    /**
+     * @protected
+     */
     applyConfig: function () {
         this.rateUpdates.length = 0;
         this.rateUpdates.push({
