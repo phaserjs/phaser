@@ -151,7 +151,7 @@ var Pointer = new Class({
 
         if (this.manager.mouse.locked)
         {
-            // Potentially multiple DOM events within one frame, but only one Phaser event will fire
+            // Multiple DOM events may occur within one frame, but only one Phaser event will fire
             this.movementX += event.movementX || event.mozMovementX || event.webkitMovementX || 0;
             this.movementY += event.movementY || event.mozMovementY || event.webkitMovementY || 0;
         }
