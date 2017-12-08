@@ -3,5 +3,6 @@
 module.exports = {
     DOWN: require('./MouseDownEvent'),
     UP: require('./MouseUpEvent'),
-    MOVE: require('./MouseMoveEvent')
+    MOVE: require('./MouseMoveEvent'),
+    POINTER_LOCK_CHANGE: require('./PointerLockChangeEvent')
 };
