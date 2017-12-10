@@ -282,6 +282,18 @@ var BaseSound = new Class({
      */
     update: NOOP,
     destroy: function () {
+        this.manager.remove(this); // TODO replace with pendingRemove
+        this.manager = null;
+        this.key = '';
+        this.isPlaying = false;
+        this.isPaused = false;
+        this.config = null;
+        this.currentConfig = null;
+        this.markers = null;
+        this.currentMarker = null;
+        this.fadeTween = null;
+        this.events.destroy();
+        this.events = null;
     },
     /**
      * @protected
