@@ -113,6 +113,11 @@ var GlobalInputManager = new Class({
                     this.events.dispatch(new MouseEvent.UP(event));
                     break;
 
+                case 'pointerlockchange':
+
+                    this.events.dispatch(new MouseEvent.POINTER_LOCK_CHANGE(event, this.mouse.locked));
+                    break;
+
                 case 'touchmove':
 
                     pointer.touchmove(event, time);

@@ -65,6 +65,18 @@ var Pointer = new Class({
         this.justDown = false;
         this.justUp = false;
         this.justMoved = false;
+
+        /**
+         * @property {number} movementX - If the mouse is locked, the horizontal relative movement
+         * of the Pointer in pixels since last frame.
+         */
+        this.movementX = 0;
+
+        /**
+         * @property {number} movementY - If the mouse is locked, the vertical relative movement of
+         * the Pointer in pixels since last frame.
+         */
+        this.movementY = 0;
     },
 
     positionToCamera: function (camera, output)
@@ -109,6 +121,8 @@ var Pointer = new Class({
         this.justDown = false;
         this.justUp = false;
         this.justMoved = false;
+        this.movementX = 0;
+        this.movementY = 0;
     },
 
     touchmove: function (event, time)
@@ -134,6 +148,13 @@ var Pointer = new Class({
 
         this.x = this.manager.transformX(event.pageX);
         this.y = this.manager.transformY(event.pageY);
+
+        if (this.manager.mouse.locked)
+        {
+            // Multiple DOM events may occur within one frame, but only one Phaser event will fire
+            this.movementX += event.movementX || event.mozMovementX || event.webkitMovementX || 0;
+            this.movementY += event.movementY || event.mozMovementY || event.webkitMovementY || 0;
+        }
 
         this.justMoved = true;
 
