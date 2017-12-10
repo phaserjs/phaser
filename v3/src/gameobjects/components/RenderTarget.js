@@ -1,6 +1,11 @@
 var RenderTarget = {
 
-    renderTarget: null
+    renderTarget: null,
+
+    setRenderTarget: function (renderTarget)
+    {
+        this.renderTarget = renderTarget; 
+    }
     
 };
 

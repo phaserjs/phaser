@@ -100,7 +100,7 @@ var ShapeBatch = new Class({
         this.vertexBufferObject.bind();
     },
 
-    flush: function (shader)
+    flush: function (shader, renderTarget)
     {
         var gl = this.glContext;
         var vertexDataBuffer = this.vertexDataBuffer;
@@ -108,6 +108,11 @@ var ShapeBatch = new Class({
         if (this.vertexCount === 0)
         {
             return;
+        }
+
+        if (renderTarget)
+        {
+            gl.bindFramebuffer(gl.FRAMEBUFFER, renderTarget.framebufferObject);
         }
 
         this.bind(shader);
@@ -118,6 +123,11 @@ var ShapeBatch = new Class({
         vertexDataBuffer.clear();
 
         this.vertexCount = 0;
+
+        if (renderTarget)
+        {
+            gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+        }
     },
 
     resize: function (width, height, resolution, shader)
@@ -128,7 +138,7 @@ var ShapeBatch = new Class({
         this.height = height * resolution;
 
         activeShader.setConstantMatrix4x4(
-            this.viewMatrixLocation,
+            activeShader.getUniformLocation('u_view_matrix'),
             new Float32Array([
                 2 / this.width, 0, 0, 0,
                 0, -2 / this.height, 0, 0,

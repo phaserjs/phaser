@@ -13,8 +13,9 @@ GameObjectCreator.register('renderPass', function (config)
     var height = GetAdvancedValue(config, 'height', 512);
     var shaderName = GetAdvancedValue(config, 'shaderName', '');
     var fragmentShader = GetAdvancedValue(config, 'fragmentShader', '');
+    var untextured = GetAdvancedValue(config, 'untextured', false);
 
-    var pass = new RenderPass(this.scene, x, y, width, height, shaderName, fragmentShader);
+    var pass = new RenderPass(this.scene, x, y, width, height, shaderName, fragmentShader, untextured);
 
     BuildGameObject(this.scene, pass, config);
 

@@ -11,8 +11,8 @@ var GameObjectFactory = require('../../scene/plugins/GameObjectFactory');
 
 if (WEBGL_RENDERER)
 {
-    GameObjectFactory.register('renderPass', function (x, y, width, height, shaderName, fragmentShader)
+    GameObjectFactory.register('renderPass', function (x, y, width, height, shaderName, fragmentShader, untextured)
     {
-        return this.displayList.add(new RenderPass(this.scene, x, y, width, height, shaderName, fragmentShader));
+        return this.displayList.add(new RenderPass(this.scene, x, y, width, height, shaderName, fragmentShader, untextured));
     });
 }

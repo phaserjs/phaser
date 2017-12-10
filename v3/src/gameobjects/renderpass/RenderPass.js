@@ -5,6 +5,7 @@ var GameObject = require('../GameObject');
 var Components = require('../components');
 var Render = require('./RenderPassRender');
 var TexturedAndNormalizedTintedShader = require('../../renderer/webgl/shaders/TexturedAndNormalizedTintedShader');
+var UntexturedAndNormalizedTintedShader = require('../../renderer/webgl/shaders/UntexturedAndNormalizedTintedShader');
 
 //   RenderPass - the user has a higher control on the rendering since you explicitly
 //   indicate what is rendered. RenderPass also has a render target but the difference
@@ -33,7 +34,7 @@ var RenderPass = new Class({
 
     initialize:
 
-    function RenderPass (scene, x, y, width, height, shaderName, fragmentShader)
+    function RenderPass (scene, x, y, width, height, shaderName, fragmentShader, untextured)
     {
         GameObject.call(this, scene, 'RenderPass');
        
@@ -53,7 +54,14 @@ var RenderPass = new Class({
         {
             gl = scene.sys.game.renderer.gl;
             wrap = pot ? gl.REPEAT : gl.CLAMP_TO_EDGE;
-            this.passShader = resourceManager.createShader(shaderName, {vert: TexturedAndNormalizedTintedShader.vert, frag: fragmentShader});
+            if (!untextured)
+            {
+                this.passShader = resourceManager.createShader(shaderName, {vert: TexturedAndNormalizedTintedShader.vert, frag: fragmentShader});
+            }
+            else
+            {
+                this.passShader = resourceManager.createShader(shaderName, {vert: UntexturedAndNormalizedTintedShader.vert, frag: fragmentShader});
+            }
             this.renderTexture = resourceManager.createTexture(0, gl.LINEAR, gl.LINEAR, wrap, wrap, gl.RGBA, null, width, height);
             this.passRenderTarget = resourceManager.createRenderTarget(width, height, this.renderTexture, null);
             scene.sys.game.renderer.currentTexture[0] = null; // force rebinding of prev texture
@@ -125,9 +133,9 @@ var RenderPass = new Class({
         var gl = renderer.gl;
 
         if (gl && !renderer.contextLost)
-        {
-            renderer.setRenderer(this.renderer.spriteBatch, null, null);
-            renderer.spriteBatch.addSprite(gameObject, camera);
+        {            
+            gameObject.renderWebGL(renderer, gameObject, 0.0, camera);
+
             for (var key in this.textures)
             {
                 var textureData = this.textures[key];
@@ -136,7 +144,7 @@ var RenderPass = new Class({
                 gl.bindTexture(gl.TEXTURE_2D, textureData.texture);
                 gl.activeTexture(gl.TEXTURE0);
             }
-            renderer.spriteBatch.flush(this.passShader, this.passRenderTarget);
+            renderer.currentRenderer.flush(this.passShader, this.passRenderTarget);
         }
     },
 
@@ -160,7 +168,7 @@ var RenderPass = new Class({
                 gl.bindTexture(gl.TEXTURE_2D, textureData.texture);
                 gl.activeTexture(gl.TEXTURE0);
             }
-            renderer.spriteBatch.flush(this.passShader, this.passRenderTarget.framebufferObject);
+            renderer.spriteBatch.flush(this.passShader, this.passRenderTarget);
         }
     },
 
