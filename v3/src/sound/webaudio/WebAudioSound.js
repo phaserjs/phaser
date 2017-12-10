@@ -163,6 +163,14 @@ var WebAudioSound = new Class({
         }
     },
     destroy: function () {
+        BaseSound.prototype.destroy.call(this);
+        this.audioBuffer = null;
+        this.stopAndRemoveBufferSource();
+        this.muteNode.disconnect();
+        this.muteNode = null;
+        this.volumeNode.disconnect();
+        this.volumeNode = null;
+        this.rateUpdates = null;
     },
     /**
      * @private
