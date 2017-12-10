@@ -141,6 +141,7 @@ var BaseSoundManager = new Class({
      * @param {number} delta - The delta time elapsed since the last frame.
      */
     update: function (time, delta) {
+        // TODO remove pending sounds
         this.sounds.forEach(function (sound) {
             sound.update(time, delta);
         });
