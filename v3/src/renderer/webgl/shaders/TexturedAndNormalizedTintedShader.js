@@ -27,6 +27,7 @@ module.exports = {
         'varying float v_alpha;',
         'void main() {',
         '   vec4 sample_color = texture2D(u_sampler2D, v_tex_coord);',
+        '   sample_color *= vec4(v_color * v_alpha, v_alpha);',
         '   gl_FragColor = sample_color;',
         '}'
     ].join('\n')
