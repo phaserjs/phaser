@@ -26,7 +26,7 @@ var EllipseTo = function (xRadius, yRadius, startAngle, endAngle, clockwise, rot
     //  Calculate where to center the ellipse
     var start = ellipse.getStartPoint(this._tmpVec2B);
 
-    end.sub(start);
+    end.subtract(start);
 
     ellipse.x = end.x;
     ellipse.y = end.y;
