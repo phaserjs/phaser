@@ -39,7 +39,7 @@ var GetTangent = function (t, out)
     this.getPoint(t1, this._tmpVec2A);
     this.getPoint(t2, out);
 
-    return out.sub(this._tmpVec2A).normalize();
+    return out.subtract(this._tmpVec2A).normalize();
 };
 
 module.exports = GetTangent;
