@@ -145,8 +145,11 @@ var WebAudioSound = new Class({
     /**
      * @private
      */
-    createLoopBufferSource: function () {
+    createAndStartLoopBufferSource: function () {
         this.loopSource = this.createBufferSource();
+        var offset = this.currentMarker ? this.currentMarker.start : 0;
+        var duration = this.duration;
+        this.loopSource.start(Math.max(0, this.startTime + duration), Math.max(0, offset), Math.max(0, duration));
     },
     /**
      * Used internally to do what the name says.
