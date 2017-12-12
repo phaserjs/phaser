@@ -103,34 +103,27 @@ var WebAudioSound = new Class({
         return true;
     },
     /**
-     * @private
-     */
-    createBufferSource: function () {
-        var _this = this;
-        var source = this.manager.context.createBufferSource();
-        source.buffer = this.audioBuffer;
-        source.connect(this.muteNode);
-        source.onended = function (ev) {
-            if (ev.target === _this.source) {
-                // sound ended
-                _this.hasEnded = true;
-            }
-            // else was stopped
-        };
-        return source;
-    },
-    /**
      * Used internally to do what the name says.
      *
      * @private
      */
     // TODO add delay param
     createAndStartBufferSource: function () {
+        var _this = this;
         var seek = this.currentConfig.seek;
         var offset = (this.currentMarker ? this.currentMarker.start : 0) + seek;
         var duration = this.duration - seek;
         this.startTime = this.manager.context.currentTime - seek;
-        this.source = this.createBufferSource();
+        this.source = this.manager.context.createBufferSource();
+        this.source.buffer = this.audioBuffer;
+        this.source.connect(this.muteNode);
+        this.source.onended = function (ev) {
+            if (ev.target === _this.source) {
+                // sound ended
+                _this.hasEnded = true;
+            }
+            // else was stopped
+        };
         this.applyConfig();
         this.source.start(0, Math.max(0, offset), Math.max(0, duration));
         this.resetConfig();
