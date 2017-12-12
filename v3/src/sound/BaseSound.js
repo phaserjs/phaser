@@ -266,7 +266,6 @@ var BaseSound = new Class({
         this.rate = this.currentConfig.rate;
         this.detune = this.currentConfig.detune;
         this.loop = this.currentConfig.loop;
-        // TODO assign other config values to buffer source
     },
     /**
      * @protected
