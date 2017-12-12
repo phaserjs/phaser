@@ -36,12 +36,12 @@
     "web audio"
   ],
   "devDependencies": {
-    "eslint": "^4.3.0",
-    "fs-extra": "^4.0.0",
+    "eslint": "^4.13.1",
+    "fs-extra": "^5.0.0",
     "node-sloc": "^0.1.10",
-    "uglifyjs-webpack-plugin": "^0.4.6",
+    "uglifyjs-webpack-plugin": "^1.1.2",
     "uuid": "^3.1.0",
-    "webpack": "^3.4.1",
+    "webpack": "^3.10.0",
     "webpack-shell-plugin": "^0.5.0"
   }
 }

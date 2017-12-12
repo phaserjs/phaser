@@ -32,11 +32,13 @@ module.exports = {
             include: /\.min\.js$/,
             parallel: true,
             sourceMap: false,
-            compress: true,
-            comments: false,
             uglifyOptions: {
+                compress: true,
                 ie8: false,
                 ecma: 5,
+                output: {
+                    comments: false
+                },
                 warnings: false
             },
             warningsFilter: (src) => false
