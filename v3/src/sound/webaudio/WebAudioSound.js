@@ -29,13 +29,6 @@ var WebAudioSound = new Class({
          * [description]
          *
          * @private
-         * @property {AudioBufferSourceNode} loopSource
-         */
-        this.loopSource = null;
-        /**
-         * [description]
-         *
-         * @private
          * @property {GainNode} muteNode
          */
         this.muteNode = manager.context.createGain();
@@ -143,25 +136,12 @@ var WebAudioSound = new Class({
         this.resetConfig();
     },
     /**
-     * @private
-     */
-    createAndStartLoopBufferSource: function () {
-        this.loopSource = this.createBufferSource();
-        var offset = this.currentMarker ? this.currentMarker.start : 0;
-        var duration = this.duration;
-        this.loopSource.start(Math.max(0, this.startTime + duration), Math.max(0, offset), Math.max(0, duration));
-    },
-    /**
      * Used internally to do what the name says.
      *
      * @private
      */
     stopAndRemoveBufferSource: function () {
         if (this.source) {
-            this.source.stop();
-            this.source = null;
-        }
-        if (this.loopSource) {
             this.source.stop();
             this.source = null;
         }
@@ -207,9 +187,6 @@ var WebAudioSound = new Class({
         BaseSound.prototype.setRate.call(this);
         if (this.source) {
             this.source.playbackRate.setValueAtTime(this.totalRate, 0);
-        }
-        if (this.loopSource) {
-            this.loopSource.playbackRate.setValueAtTime(this.totalRate, 0);
         }
         if (this.isPlaying) {
             this.rateUpdates.push({
