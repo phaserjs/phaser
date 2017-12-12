@@ -302,6 +302,7 @@ Object.defineProperty(WebAudioSound.prototype, 'loop', {
         return this.currentConfig.loop;
     },
     set: function (value) {
+        this.currentConfig.loop = value;
     }
 });
 module.exports = WebAudioSound;
