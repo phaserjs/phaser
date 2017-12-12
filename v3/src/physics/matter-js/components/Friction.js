@@ -1,6 +1,6 @@
 var Friction = {
 
-    setFriction: function (value, air, _static)
+    setFriction: function (value, air, fstatic)
     {
         this.body.friction = value;
 
@@ -9,9 +9,9 @@ var Friction = {
             this.body.frictionAir = air;
         }
 
-        if (_static !== undefined)
+        if (fstatic !== undefined)
         {
-            this.body.frictionStatic = _static;
+            this.body.frictionStatic = fstatic;
         }
 
         return this;
