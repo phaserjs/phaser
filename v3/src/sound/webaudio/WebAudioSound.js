@@ -299,6 +299,7 @@ Object.defineProperty(WebAudioSound.prototype, 'seek', {
  */
 Object.defineProperty(WebAudioSound.prototype, 'loop', {
     get: function () {
+        return this.currentConfig.loop;
     },
     set: function (value) {
     }
