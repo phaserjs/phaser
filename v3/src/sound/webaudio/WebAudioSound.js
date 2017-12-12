@@ -208,6 +208,9 @@ var WebAudioSound = new Class({
         if (this.source) {
             this.source.playbackRate.setValueAtTime(this.totalRate, 0);
         }
+        if (this.loopSource) {
+            this.loopSource.playbackRate.setValueAtTime(this.totalRate, 0);
+        }
         if (this.isPlaying) {
             this.rateUpdates.push({
                 time: this.manager.context.currentTime - this.startTime,
