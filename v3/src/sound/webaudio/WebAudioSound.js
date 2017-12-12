@@ -110,6 +110,23 @@ var WebAudioSound = new Class({
         return true;
     },
     /**
+     * @private
+     */
+    createBufferSource: function () {
+        var _this = this;
+        var source = this.manager.context.createBufferSource();
+        source.buffer = this.audioBuffer;
+        source.connect(this.muteNode);
+        source.onended = function (ev) {
+            if (ev.target === _this.source) {
+                // sound ended
+                _this.hasEnded = true;
+            }
+            // else was stopped
+        };
+        return source;
+    },
+    /**
      * Used internally to do what the name says.
      *
      * @private
@@ -120,16 +137,7 @@ var WebAudioSound = new Class({
         var offset = (this.currentMarker ? this.currentMarker.start : 0) + seek;
         var duration = this.duration - seek;
         this.startTime = this.manager.context.currentTime - seek;
-        this.source = this.manager.context.createBufferSource();
-        this.source.buffer = this.audioBuffer;
-        this.source.connect(this.muteNode);
-        this.source.onended = function (ev) {
-            if (ev.target === this.source) {
-                // sound ended
-                this.hasEnded = true;
-            }
-            // else was stopped
-        }.bind(this);
+        this.source = this.createBufferSource();
         this.applyConfig();
         this.source.start(0, Math.max(0, offset), Math.max(0, duration));
         this.resetConfig();
@@ -138,16 +146,7 @@ var WebAudioSound = new Class({
      * @private
      */
     createLoopBufferSource: function () {
-        this.loopSource = this.manager.context.createBufferSource();
-        this.loopSource.buffer = this.audioBuffer;
-        this.loopSource.connect(this.muteNode);
-        this.loopSource.onended = function (ev) {
-            if (ev.target === this.source) {
-                // sound ended
-                this.hasEnded = true;
-            }
-            // else was stopped
-        }.bind(this);
+        this.loopSource = this.createBufferSource();
     },
     /**
      * Used internally to do what the name says.
@@ -205,9 +204,6 @@ var WebAudioSound = new Class({
         BaseSound.prototype.setRate.call(this);
         if (this.source) {
             this.source.playbackRate.setValueAtTime(this.totalRate, 0);
-        }
-        if (this.loopSource) {
-            this.loopSource.playbackRate.setValueAtTime(this.totalRate, 0);
         }
         if (this.isPlaying) {
             this.rateUpdates.push({
