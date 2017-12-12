@@ -135,6 +135,21 @@ var WebAudioSound = new Class({
         this.resetConfig();
     },
     /**
+     * @private
+     */
+    createLoopBufferSource: function () {
+        this.loopSource = this.manager.context.createBufferSource();
+        this.loopSource.buffer = this.audioBuffer;
+        this.loopSource.connect(this.muteNode);
+        this.loopSource.onended = function (ev) {
+            if (ev.target === this.source) {
+                // sound ended
+                this.hasEnded = true;
+            }
+            // else was stopped
+        }.bind(this);
+    },
+    /**
      * Used internally to do what the name says.
      *
      * @private
@@ -190,6 +205,9 @@ var WebAudioSound = new Class({
         BaseSound.prototype.setRate.call(this);
         if (this.source) {
             this.source.playbackRate.setValueAtTime(this.totalRate, 0);
+        }
+        if (this.loopSource) {
+            this.loopSource.playbackRate.setValueAtTime(this.totalRate, 0);
         }
         if (this.isPlaying) {
             this.rateUpdates.push({
