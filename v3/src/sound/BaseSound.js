@@ -263,6 +263,7 @@ var BaseSound = new Class({
     applyConfig: function () {
         this.mute = this.currentConfig.mute;
         this.volume = this.currentConfig.volume;
+        this.loop = this.currentConfig.loop;
         this.rate = this.currentConfig.rate;
         this.detune = this.currentConfig.detune;
         // TODO assign other config values to buffer source
