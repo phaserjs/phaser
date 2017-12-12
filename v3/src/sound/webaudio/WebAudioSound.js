@@ -144,6 +144,10 @@ var WebAudioSound = new Class({
             this.source.stop();
             this.source = null;
         }
+        if (this.loopSource) {
+            this.source.stop();
+            this.source = null;
+        }
         this.startTime = 0;
     },
     /**
