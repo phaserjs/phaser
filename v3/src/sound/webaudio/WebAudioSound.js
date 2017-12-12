@@ -120,7 +120,12 @@ var WebAudioSound = new Class({
         this.source.onended = function (ev) {
             if (ev.target === _this.source) {
                 // sound ended
-                _this.hasEnded = true;
+                if (_this.currentConfig.loop) {
+                    _this.createAndStartBufferSource();
+                }
+                else {
+                    _this.hasEnded = true;
+                }
             }
             // else was stopped
         };
