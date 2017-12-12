@@ -121,6 +121,7 @@ var WebAudioSound = new Class({
             if (ev.target === _this.source) {
                 // sound ended
                 if (_this.currentConfig.loop) {
+                    _this.resetConfig();
                     _this.createAndStartBufferSource();
                 }
                 else {
