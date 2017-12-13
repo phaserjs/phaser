@@ -109,6 +109,7 @@ var WebAudioSound = new Class({
      */
     // TODO add delay param
     createAndStartBufferSource: function () {
+        var _this = this;
         var seek = this.currentConfig.seek;
         var offset = (this.currentMarker ? this.currentMarker.start : 0) + seek;
         var duration = this.duration - seek;
@@ -117,12 +118,18 @@ var WebAudioSound = new Class({
         this.source.buffer = this.audioBuffer;
         this.source.connect(this.muteNode);
         this.source.onended = function (ev) {
-            if (ev.target === this.source) {
+            if (ev.target === _this.source) {
                 // sound ended
-                this.hasEnded = true;
+                if (_this.currentConfig.loop) {
+                    _this.resetConfig();
+                    _this.createAndStartBufferSource();
+                }
+                else {
+                    _this.hasEnded = true;
+                }
             }
             // else was stopped
-        }.bind(this);
+        };
         this.applyConfig();
         this.source.start(0, Math.max(0, offset), Math.max(0, duration));
         this.resetConfig();
@@ -282,6 +289,20 @@ Object.defineProperty(WebAudioSound.prototype, 'seek', {
             this.stopAndRemoveBufferSource();
             this.createAndStartBufferSource();
         }
+    }
+});
+/**
+ * Property indicating whether or not
+ * the sound or current sound marker will loop.
+ *
+ * @property {boolean} loop
+ */
+Object.defineProperty(WebAudioSound.prototype, 'loop', {
+    get: function () {
+        return this.currentConfig.loop;
+    },
+    set: function (value) {
+        this.currentConfig.loop = value;
     }
 });
 module.exports = WebAudioSound;

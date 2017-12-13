@@ -106,7 +106,7 @@ var Text = new Class({
         }
 
         //  Here is where the crazy starts.
-        //  
+        //
         //  Due to browser implementation issues, you cannot fillText BiDi text to a canvas
         //  that is not part of the DOM. It just completely ignores the direction property.
 
@@ -122,6 +122,228 @@ var Text = new Class({
 
         //  And finally we set the x origin
         this.originX = 1;
+    },
+
+    /**
+     * Greedy wrapping algorithm that will wrap words as the line grows longer than its horizontal
+     * bounds.
+     *
+     * @param {string} text - The text to perform word wrap detection against.
+     * @return {string} The text after wrapping has been applied.
+     */
+    runWordWrap: function (text)
+    {
+        var style = this.style;
+        if (style.wordWrapCallback)
+        {
+            var wrappedLines = style.wordWrapCallback.call(style.wordWrapCallbackScope, text, this);
+            if (Array.isArray(wrappedLines))
+            {
+                wrappedLines = wrappedLines.join('\n');
+            }
+            return wrappedLines;
+        }
+        else if (style.wordWrapWidth)
+        {
+            if (style.wordWrapUseAdvanced)
+            {
+                return this.advancedWordWrap(text, this.context, this.style.wordWrapWidth);
+            }
+            else
+            {
+                return this.basicWordWrap(text, this.context, this.style.wordWrapWidth);
+            }
+        }
+        else
+        {
+            return text;
+        }
+    },
+
+    /**
+     * Advanced wrapping algorithm that will wrap words as the line grows longer than its horizontal
+     * bounds. Consecutive spaces will be collapsed and replaced with a single space. Lines will be
+     * trimmed of white space before processing. Throws an error if wordWrapWidth is less than a
+     * single character.
+     *
+     * @param {string} text - The text to perform word wrap detection against.
+     * @param {CanvasRenderingContext2D} context
+     * @param {number} wordWrapWidth
+     * @return {string} The wrapped text.
+     */
+    advancedWordWrap: function (text, context, wordWrapWidth)
+    {
+        var output = '';
+
+        // Condense consecutive spaces and split into lines
+        var lines = text
+            .replace(/ +/gi, ' ')
+            .split(this.splitRegExp);
+
+        var linesCount = lines.length;
+
+        for (var i = 0; i < linesCount; i++)
+        {
+            var line = lines[i];
+            var out = '';
+
+            // Trim whitespace
+            line = line.replace(/^ *|\s*$/gi, '');
+
+            // If entire line is less than wordWrapWidth append the entire line and exit early
+            var lineWidth = context.measureText(line).width;
+
+            if (lineWidth < wordWrapWidth)
+            {
+                output += line + '\n';
+                continue;
+            }
+
+            // Otherwise, calculate new lines
+            var currentLineWidth = wordWrapWidth;
+
+            // Split into words
+            var words = line.split(' ');
+
+            for (var j = 0; j < words.length; j++)
+            {
+                var word = words[j];
+                var wordWithSpace = word + ' ';
+                var wordWidth = context.measureText(wordWithSpace).width;
+
+                if (wordWidth > currentLineWidth)
+                {
+                    // Break word
+                    if (j === 0)
+                    {
+                        // Shave off letters from word until it's small enough
+                        var newWord = wordWithSpace;
+
+                        while (newWord.length)
+                        {
+                            newWord = newWord.slice(0, -1);
+                            wordWidth = context.measureText(newWord).width;
+
+                            if (wordWidth <= currentLineWidth)
+                            {
+                                break;
+                            }
+                        }
+
+                        // If wordWrapWidth is too small for even a single letter, shame user
+                        // failure with a fatal error
+                        if (!newWord.length)
+                        {
+                            throw new Error('This text\'s wordWrapWidth setting is less than a single character!');
+                        }
+
+                        // Replace current word in array with remainder
+                        var secondPart = word.substr(newWord.length);
+
+                        words[j] = secondPart;
+
+                        // Append first piece to output
+                        out += newWord;
+                    }
+
+                    // If existing word length is 0, don't include it
+                    var offset = (words[j].length) ? j : j + 1;
+
+                    // Collapse rest of sentence and remove any trailing white space
+                    var remainder = words.slice(offset).join(' ')
+                        .replace(/[ \n]*$/gi, '');
+
+                    // Prepend remainder to next line
+                    lines[i + 1] = remainder + ' ' + (lines[i + 1] || '');
+                    linesCount = lines.length;
+
+                    break; // Processing on this line
+
+                    // Append word with space to output
+                }
+                else
+                {
+                    out += wordWithSpace;
+                    currentLineWidth -= wordWidth;
+                }
+            }
+
+            // Append processed line to output
+            output += out.replace(/[ \n]*$/gi, '') + '\n';
+        }
+
+        // Trim the end of the string
+        output = output.replace(/[\s|\n]*$/gi, '');
+
+        return output;
+    },
+
+    /**
+     * Greedy wrapping algorithm that will wrap words as the line grows longer than its horizontal
+     * bounds. Spaces are not collapsed and whitespace is not trimmed.
+     *
+     * @param {string} text - The text to perform word wrap detection against.
+     * @param {CanvasRenderingContext2D} context
+     * @param {number} wordWrapWidth
+     * @return {string} The wrapped text.
+     */
+    basicWordWrap: function (text, context, wordWrapWidth)
+    {
+        var result = '';
+        var lines = text.split(this.splitRegExp);
+
+        for (var i = 0; i < lines.length; i++)
+        {
+            var spaceLeft = wordWrapWidth;
+            var words = lines[i].split(' ');
+
+            for (var j = 0; j < words.length; j++)
+            {
+                var wordWidth = context.measureText(words[j]).width;
+                var wordWidthWithSpace = wordWidth + context.measureText(' ').width;
+
+                if (wordWidthWithSpace > spaceLeft)
+                {
+                    // Skip printing the newline if it's the first word of the line that is greater
+                    // than the word wrap width.
+                    if (j > 0)
+                    {
+                        result += '\n';
+                    }
+                    result += words[j] + ' ';
+                    spaceLeft = wordWrapWidth - wordWidth;
+                }
+                else
+                {
+                    spaceLeft -= wordWidthWithSpace;
+                    result += words[j] + ' ';
+                }
+            }
+
+            if (i < lines.length - 1)
+            {
+                result += '\n';
+            }
+        }
+
+        return result;
+    },
+
+    /**
+     * Runs the given text through this Text object's word wrapping and returns the results as an
+     * array, where each element of the array corresponds to a wrapped line of text.
+     *
+     * @param {string} [text] - The text for which the wrapping will be calculated. If unspecified,
+     * the Text object's current text will be used.
+     * @return {array} An array of strings with the pieces of wrapped text.
+     */
+    getWrappedText: function (text)
+    {
+        if (text === undefined) { text = this.text; }
+
+        var wrappedLines = this.runWordWrap(text);
+
+        return wrappedLines.split(this.splitRegExp);
     },
 
     setText: function (value)
@@ -221,6 +443,37 @@ var Text = new Class({
         return this.style.setShadowFill(enabled);
     },
 
+    /**
+     * Set the width (in pixels) to use for wrapping lines. Pass in null to remove wrapping by
+     * width.
+     *
+     * @param {number|null} width - The maximum width of a line in pixels. Set to null to remove
+     * wrapping.
+     * @param {boolean} [useAdvancedWrap=false] - Whether or not to use the advanced wrapping
+     * algorithm. If true, spaces are collapsed and whitespace is trimmed from lines. If false,
+     * spaces and whitespace are left as is.
+     * @return {this}
+     */
+    setWordWrapWidth: function (width, useAdvancedWrap)
+    {
+        return this.style.setWordWrapWidth(width, useAdvancedWrap);
+    },
+
+    /**
+     * Set a custom callback for wrapping lines. Pass in null to remove wrapping by callback.
+     *
+     * @param {function} callback - A custom function that will be responsible for wrapping the
+     * text. It will receive two arguments: text (the string to wrap), textObject (this Text
+     * instance). It should return the wrapped lines either as an array of lines or as a string with
+     * newline characters in place to indicate where breaks should happen.
+     * @param {object} [scope=null] - The scope that will be applied when the callback is invoked.
+     * @return {this}
+     */
+    setWordWrapCallback: function (callback, scope)
+    {
+        return this.style.setWordWrapCallback(callback, scope);
+    },
+
     setAlign: function (align)
     {
         return this.style.setAlign(align);
@@ -289,12 +542,14 @@ var Text = new Class({
         var style = this.style;
         var size = style.metrics;
 
+        style.syncFont(canvas, context);
+
         var outputText = this.text;
 
-        // if (style.wordWrap)
-        // {
-        //     outputText = this.runWordWrap(this.text);
-        // }
+        if (style.wordWrapWidth || style.wordWrapCallback)
+        {
+            outputText = this.runWordWrap(this.text);
+        }
 
         //  Split text into lines
         var lines = outputText.split(this.splitRegExp);
@@ -325,6 +580,7 @@ var Text = new Class({
         {
             canvas.width = w;
             canvas.height = h;
+            style.syncFont(canvas, context); // Resizing resets the context
         }
         else
         {
@@ -339,7 +595,7 @@ var Text = new Class({
             context.fillRect(0, 0, w, h);
         }
 
-        style.syncFont(canvas, context);
+        style.syncStyle(canvas, context);
 
         context.textBaseline = 'alphabetic';
 
