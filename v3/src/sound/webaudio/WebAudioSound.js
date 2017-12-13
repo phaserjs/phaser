@@ -122,7 +122,8 @@ var WebAudioSound = new Class({
         var when = this.manager.context.currentTime + delay;
         var offset = (this.currentMarker ? this.currentMarker.start : 0) + seek;
         var duration = this.duration - seek;
-        this.playTime = this.manager.context.currentTime - seek;
+        this.playTime = when - seek;
+        this.startTime = when;
         this.source = this.manager.context.createBufferSource();
         this.source.buffer = this.audioBuffer;
         this.source.connect(this.muteNode);
