@@ -205,10 +205,15 @@ var WebAudioSound = new Class({
             this.source.playbackRate.setValueAtTime(this.totalRate, 0);
         }
         if (this.isPlaying) {
-            this.rateUpdates.push({
-                time: this.manager.context.currentTime - this.playTime,
-                rate: this.totalRate
-            });
+            if (this.manager.context.currentTime < this.startTime) {
+                this.rateUpdates[this.rateUpdates.length - 1].rate = this.totalRate;
+            }
+            else {
+                this.rateUpdates.push({
+                    time: this.manager.context.currentTime - this.playTime,
+                    rate: this.totalRate
+                });
+            }
         }
     },
     /**
