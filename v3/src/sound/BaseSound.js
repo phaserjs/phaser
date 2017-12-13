@@ -279,7 +279,6 @@ var BaseSound = new Class({
     resetConfig: function () {
         this.currentConfig.seek = 0;
         this.currentConfig.delay = 0;
-        // TODO add delay
     },
     fadeTo: function (volume, duration) {
         return null;
