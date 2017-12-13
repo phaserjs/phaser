@@ -85,6 +85,9 @@ var WebAudioSound = new Class({
         return this;
     },
     pause: function () {
+        if (this.manager.context.currentTime < this.startTime) {
+            return false;
+        }
         if (!BaseSound.prototype.pause.call(this)) {
             return false;
         }
