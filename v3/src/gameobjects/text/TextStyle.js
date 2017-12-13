@@ -1,6 +1,7 @@
 var Class = require('../../utils/Class');
 var GetValue = require('../../utils/object/GetValue');
 var GetAdvancedValue = require('../../utils/object/GetAdvancedValue');
+var GetValue = require('../../utils/object/GetValue');
 var MeasureText = require('./MeasureText');
 
 //  Key: [ Object Key, Default Value ]
@@ -24,7 +25,11 @@ var propertyMap = {
     fixedWidth: [ 'fixedWidth', false ],
     fixedHeight: [ 'fixedHeight', false ],
     rtl: [ 'rtl', false ],
-    testString: [ 'testString', '|MÉqgy' ]
+    testString: [ 'testString', '|MÉqgy' ],
+    wordWrapWidth: [ 'wordWrap.width', null ],
+    wordWrapCallback: [ 'wordWrap.callback', null ],
+    wordWrapCallbackScope: [ 'wordWrap.callbackScope', null ],
+    wordWrapUseAdvanced: [ 'wordWrap.useAdvancedWrap', false ]
 };
 
 var TextStyle = new Class({
@@ -90,7 +95,15 @@ var TextStyle = new Class({
 
         for (var key in propertyMap)
         {
-            this[key] = GetAdvancedValue(style, propertyMap[key][0], propertyMap[key][1]);
+            if (key === 'wordWrapCallback' || key === 'wordWrapCallbackScope')
+            {
+                // Callback & scope should be set without processing the values
+                this[key] = GetValue(style, propertyMap[key][0], propertyMap[key][1]);
+            }
+            else
+            {
+                this[key] = GetAdvancedValue(style, propertyMap[key][0], propertyMap[key][1]);
+            }
         }
 
         //  Allow for 'font' override
@@ -331,6 +344,28 @@ var TextStyle = new Class({
     setShadowFill: function (enabled)
     {
         this.shadowFill = enabled;
+
+        return this.update(false);
+    },
+
+    // Set to null to remove
+    setWordWrapWidth: function (width, useAdvancedWrap)
+    {
+        if (useAdvancedWrap === undefined) { useAdvancedWrap = false; }
+
+        this.wordWrapWidth = width;
+        this.wordWrapUseAdvanced = useAdvancedWrap;
+
+        return this.update(false);
+    },
+
+    // Set to null to remove
+    setWordWrapCallback: function (callback, scope)
+    {
+        if (scope === undefined) { scope = null; }
+
+        this.wordWrapCallback = callback;
+        this.wordWrapCallbackScope = scope;
 
         return this.update(false);
     },
