@@ -106,7 +106,7 @@ var Text = new Class({
         }
 
         //  Here is where the crazy starts.
-        //  
+        //
         //  Due to browser implementation issues, you cannot fillText BiDi text to a canvas
         //  that is not part of the DOM. It just completely ignores the direction property.
 
@@ -420,6 +420,18 @@ var Text = new Class({
         return this.style.setShadowFill(enabled);
     },
 
+    // Set to null to remove
+    setWordWrapWidth: function (width, useAdvancedWrap)
+    {
+        return this.style.setWordWrapWidth(width, useAdvancedWrap);
+    },
+
+    // Set to null to remove
+    setWordWrapCallback: function (callback, scope)
+    {
+        return this.style.setWordWrapCallback(callback, scope);
+    },
+
     setAlign: function (align)
     {
         return this.style.setAlign(align);
@@ -488,12 +500,14 @@ var Text = new Class({
         var style = this.style;
         var size = style.metrics;
 
+        style.syncFont(canvas, context);
+
         var outputText = this.text;
 
-        // if (style.wordWrap)
-        // {
-        //     outputText = this.runWordWrap(this.text);
-        // }
+        if (style.wordWrapWidth || style.wordWrapCallback)
+        {
+            outputText = this.runWordWrap(this.text);
+        }
 
         //  Split text into lines
         var lines = outputText.split(this.splitRegExp);
@@ -524,6 +538,7 @@ var Text = new Class({
         {
             canvas.width = w;
             canvas.height = h;
+            style.syncFont(canvas, context); // Resizing resets the context
         }
         else
         {
@@ -538,7 +553,7 @@ var Text = new Class({
             context.fillRect(0, 0, w, h);
         }
 
-        style.syncFont(canvas, context);
+        style.syncStyle(canvas, context);
 
         context.textBaseline = 'alphabetic';
 

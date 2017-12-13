@@ -137,6 +137,10 @@ var TextStyle = new Class({
     syncFont: function (canvas, context)
     {
         context.font = this._font;
+    },
+
+    syncStyle: function (canvas, context)
+    {
         context.textBaseline = 'alphabetic';
 
         context.fillStyle = this.color;
