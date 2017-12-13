@@ -40,8 +40,8 @@ var WebAudioSound = new Class({
          */
         this.volumeNode = manager.context.createGain();
         /**
-         * The time the previous playback started at based on
-         * BaseAudioContext.currentTime value.
+         * The time at which the sound should have started from the beginning.
+         * Based on BaseAudioContext.currentTime value.
          *
          * @private
          * @property {number} playTime
