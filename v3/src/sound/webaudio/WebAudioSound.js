@@ -44,9 +44,9 @@ var WebAudioSound = new Class({
          * BaseAudioContext.currentTime value.
          *
          * @private
-         * @property {number} startTime
+         * @property {number} playTime
          */
-        this.startTime = 0;
+        this.playTime = 0;
         /**
          * An array where we keep track of all rate updates during playback.
          *
@@ -115,7 +115,7 @@ var WebAudioSound = new Class({
         var when = this.manager.context.currentTime + delay;
         var offset = (this.currentMarker ? this.currentMarker.start : 0) + seek;
         var duration = this.duration - seek;
-        this.startTime = this.manager.context.currentTime - seek;
+        this.playTime = this.manager.context.currentTime - seek;
         this.source = this.manager.context.createBufferSource();
         this.source.buffer = this.audioBuffer;
         this.source.connect(this.muteNode);
@@ -146,7 +146,7 @@ var WebAudioSound = new Class({
             this.source.stop();
             this.source = null;
         }
-        this.startTime = 0;
+        this.playTime = 0;
     },
     /**
      * @protected
@@ -191,7 +191,7 @@ var WebAudioSound = new Class({
         }
         if (this.isPlaying) {
             this.rateUpdates.push({
-                time: this.manager.context.currentTime - this.startTime,
+                time: this.manager.context.currentTime - this.playTime,
                 rate: this.totalRate
             });
         }
@@ -207,7 +207,7 @@ var WebAudioSound = new Class({
                 nextTime = this.rateUpdates[i + 1].time;
             }
             else {
-                nextTime = this.manager.context.currentTime - this.startTime;
+                nextTime = this.manager.context.currentTime - this.playTime;
             }
             currentTime += (nextTime - this.rateUpdates[i].time) * this.rateUpdates[i].rate;
         }
