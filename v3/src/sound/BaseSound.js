@@ -176,7 +176,8 @@ var BaseSound = new Class({
                 rate: 1,
                 detune: 0,
                 seek: 0,
-                loop: false
+                loop: false,
+                delay: 0
             }
         }, marker);
         this.markers[marker.name] = marker;
