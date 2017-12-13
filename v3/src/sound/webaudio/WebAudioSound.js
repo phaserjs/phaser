@@ -121,7 +121,6 @@ var WebAudioSound = new Class({
      *
      * @private
      */
-    // TODO add delay param
     createAndStartBufferSource: function () {
         var _this = this;
         var seek = this.currentConfig.seek;
