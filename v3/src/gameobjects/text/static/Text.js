@@ -129,6 +129,7 @@ var Text = new Class({
      * bounds.
      *
      * @param {string} text - The text to perform word wrap detection against.
+     * @return {string} The text after wrapping has been applied.
      */
     runWordWrap: function (text)
     {
@@ -146,11 +147,11 @@ var Text = new Class({
         {
             if (style.wordWrapUseAdvanced)
             {
-                return this.advancedWordWrap(text);
+                return this.advancedWordWrap(text, this.context, this.style.wordWrapWidth);
             }
             else
             {
-                return this.basicWordWrap(text);
+                return this.basicWordWrap(text, this.context, this.style.wordWrapWidth);
             }
         }
         else
@@ -167,10 +168,8 @@ var Text = new Class({
      *
      * @param {string} text - The text to perform word wrap detection against.
      */
-    advancedWordWrap: function (text)
+    advancedWordWrap: function (text, context, wordWrapWidth)
     {
-        var context = this.context;
-        var wordWrapWidth = this.style.wordWrapWidth;
         var output = '';
 
         // condense consecutive spaces and split into lines
@@ -282,20 +281,20 @@ var Text = new Class({
      *
      * @param {string} text - The text to perform word wrap detection against.
      */
-    basicWordWrap: function (text)
+    basicWordWrap: function (text, context, wordWrapWidth)
     {
         var result = '';
         var lines = text.split('\n');
 
         for (var i = 0; i < lines.length; i++)
         {
-            var spaceLeft = this.style.wordWrapWidth;
+            var spaceLeft = wordWrapWidth;
             var words = lines[i].split(' ');
 
             for (var j = 0; j < words.length; j++)
             {
-                var wordWidth = this.context.measureText(words[j]).width;
-                var wordWidthWithSpace = wordWidth + this.context.measureText(' ').width;
+                var wordWidth = context.measureText(words[j]).width;
+                var wordWidthWithSpace = wordWidth + context.measureText(' ').width;
 
                 if (wordWidthWithSpace > spaceLeft)
                 {
@@ -306,7 +305,7 @@ var Text = new Class({
                         result += '\n';
                     }
                     result += words[j] + ' ';
-                    spaceLeft = this.style.wordWrapWidth - wordWidth;
+                    spaceLeft = wordWrapWidth - wordWidth;
                 }
                 else
                 {
