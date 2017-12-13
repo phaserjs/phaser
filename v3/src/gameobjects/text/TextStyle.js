@@ -1,7 +1,6 @@
 var Class = require('../../utils/Class');
 var GetValue = require('../../utils/object/GetValue');
 var GetAdvancedValue = require('../../utils/object/GetAdvancedValue');
-var GetValue = require('../../utils/object/GetValue');
 var MeasureText = require('./MeasureText');
 
 //  Key: [ Object Key, Default Value ]
