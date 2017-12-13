@@ -48,6 +48,13 @@ var WebAudioSound = new Class({
          */
         this.playTime = 0;
         /**
+         * [description]
+         *
+         * @private
+         * @property {number} startTime
+         */
+        this.startTime = 0;
+        /**
          * An array where we keep track of all rate updates during playback.
          *
          * @private
