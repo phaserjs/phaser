@@ -175,7 +175,7 @@ var Text = new Class({
     {
         var output = '';
 
-        // condense consecutive spaces and split into lines
+        // Condense consecutive spaces and split into lines
         var lines = text
             .replace(/ +/gi, ' ')
             .split(/\r?\n/gi);
@@ -187,10 +187,10 @@ var Text = new Class({
             var line = lines[i];
             var out = '';
 
-            // trim whitespace
+            // Trim whitespace
             line = line.replace(/^ *|\s*$/gi, '');
 
-            // if entire line is less than wordWrapWidth append the entire line and exit early
+            // If entire line is less than wordWrapWidth append the entire line and exit early
             var lineWidth = context.measureText(line).width;
 
             if (lineWidth < wordWrapWidth)
@@ -199,10 +199,10 @@ var Text = new Class({
                 continue;
             }
 
-            // otherwise, calculate new lines
+            // Otherwise, calculate new lines
             var currentLineWidth = wordWrapWidth;
 
-            // split into words
+            // Split into words
             var words = line.split(' ');
 
             for (var j = 0; j < words.length; j++)
@@ -213,10 +213,10 @@ var Text = new Class({
 
                 if (wordWidth > currentLineWidth)
                 {
-                    // break word
+                    // Break word
                     if (j === 0)
                     {
-                        // shave off letters from word until it's small enough
+                        // Shave off letters from word until it's small enough
                         var newWord = wordWithSpace;
 
                         while (newWord.length)
@@ -230,36 +230,36 @@ var Text = new Class({
                             }
                         }
 
-                        // if wordWrapWidth is too small for even a single letter, shame user
+                        // If wordWrapWidth is too small for even a single letter, shame user
                         // failure with a fatal error
                         if (!newWord.length)
                         {
                             throw new Error('This text\'s wordWrapWidth setting is less than a single character!');
                         }
 
-                        // replace current word in array with remainder
+                        // Replace current word in array with remainder
                         var secondPart = word.substr(newWord.length);
 
                         words[j] = secondPart;
 
-                        // append first piece to output
+                        // Append first piece to output
                         out += newWord;
                     }
 
-                    // if existing word length is 0, don't include it
+                    // If existing word length is 0, don't include it
                     var offset = (words[j].length) ? j : j + 1;
 
-                    // collapse rest of sentence and remove any trailing white space
+                    // Collapse rest of sentence and remove any trailing white space
                     var remainder = words.slice(offset).join(' ')
                         .replace(/[ \n]*$/gi, '');
 
-                    // prepend remainder to next line
+                    // Prepend remainder to next line
                     lines[i + 1] = remainder + ' ' + (lines[i + 1] || '');
                     linesCount = lines.length;
 
-                    break; // processing on this line
+                    break; // Processing on this line
 
-                    // append word with space to output
+                    // Append word with space to output
                 }
                 else
                 {
@@ -268,11 +268,11 @@ var Text = new Class({
                 }
             }
 
-            // append processed line to output
+            // Append processed line to output
             output += out.replace(/[ \n]*$/gi, '') + '\n';
         }
 
-        // trim the end of the string
+        // Trim the end of the string
         output = output.replace(/[\s|\n]*$/gi, '');
 
         return output;
