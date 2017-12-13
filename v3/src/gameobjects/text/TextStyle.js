@@ -351,7 +351,17 @@ var TextStyle = new Class({
         return this.update(false);
     },
 
-    // Set to null to remove
+    /**
+     * Set the width (in pixels) to use for wrapping lines. Pass in null to remove wrapping by
+     * width.
+     *
+     * @param {number|null} width - The maximum width of a line in pixels. Set to null to remove
+     * wrapping.
+     * @param {boolean} [useAdvancedWrap=false] - Whether or not to use the advanced wrapping
+     * algorithm. If true, spaces are collapsed and whitespace is trimmed from lines. If false,
+     * spaces and whitespace are left as is.
+     * @return {this}
+     */
     setWordWrapWidth: function (width, useAdvancedWrap)
     {
         if (useAdvancedWrap === undefined) { useAdvancedWrap = false; }
@@ -362,7 +372,16 @@ var TextStyle = new Class({
         return this.update(false);
     },
 
-    // Set to null to remove
+    /**
+     * Set a custom callback for wrapping lines. Pass in null to remove wrapping by callback.
+     *
+     * @param {function} callback - A custom function that will be responsible for wrapping the
+     * text. It will receive two arguments: text (the string to wrap), textObject (this Text
+     * instance). It should return the wrapped lines either as an array of lines or as a string with
+     * newline characters in place to indicate where breaks should happen.
+     * @param {object} [scope=null] - The scope that will be applied when the callback is invoked.
+     * @return {this}
+     */
     setWordWrapCallback: function (callback, scope)
     {
         if (scope === undefined) { scope = null; }

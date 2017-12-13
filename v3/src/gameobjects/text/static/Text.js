@@ -162,11 +162,14 @@ var Text = new Class({
 
     /**
      * Advanced wrapping algorithm that will wrap words as the line grows longer than its horizontal
-     * bounds. White space is condensed (e.g., consecutive spaces are replaced with one). Lines are
-     * trimmed of white space before processing. Throws an error if the user was smart enough to
-     * specify a wordWrapWidth less than a single character.
+     * bounds. Consecutive spaces will be collapsed and replaced with a single space. Lines will be
+     * trimmed of white space before processing. Throws an error if wordWrapWidth is less than a
+     * single character.
      *
      * @param {string} text - The text to perform word wrap detection against.
+     * @param {CanvasRenderingContext2D} context
+     * @param {number} wordWrapWidth
+     * @return {string} The wrapped text.
      */
     advancedWordWrap: function (text, context, wordWrapWidth)
     {
@@ -277,9 +280,12 @@ var Text = new Class({
 
     /**
      * Greedy wrapping algorithm that will wrap words as the line grows longer than its horizontal
-     * bounds.
+     * bounds. Spaces are not collapsed and whitespace is not trimmed.
      *
      * @param {string} text - The text to perform word wrap detection against.
+     * @param {CanvasRenderingContext2D} context
+     * @param {number} wordWrapWidth
+     * @return {string} The wrapped text.
      */
     basicWordWrap: function (text, context, wordWrapWidth)
     {
@@ -323,6 +329,14 @@ var Text = new Class({
         return result;
     },
 
+    /**
+     * Runs the given text through this Text object's word wrapping and returns the results as an
+     * array, where each element of the array corresponds to a wrapped line of text.
+     *
+     * @param {string} [text] - The text for which the wrapping will be calculated. If unspecified,
+     * the Text object's current text will be used.
+     * @return {array} An array of strings with the pieces of wrapped text.
+     */
     getWrappedText: function (text)
     {
         if (text === undefined) { text = this.text; }
@@ -429,13 +443,32 @@ var Text = new Class({
         return this.style.setShadowFill(enabled);
     },
 
-    // Set to null to remove
+    /**
+     * Set the width (in pixels) to use for wrapping lines. Pass in null to remove wrapping by
+     * width.
+     *
+     * @param {number|null} width - The maximum width of a line in pixels. Set to null to remove
+     * wrapping.
+     * @param {boolean} [useAdvancedWrap=false] - Whether or not to use the advanced wrapping
+     * algorithm. If true, spaces are collapsed and whitespace is trimmed from lines. If false,
+     * spaces and whitespace are left as is.
+     * @return {this}
+     */
     setWordWrapWidth: function (width, useAdvancedWrap)
     {
         return this.style.setWordWrapWidth(width, useAdvancedWrap);
     },
 
-    // Set to null to remove
+    /**
+     * Set a custom callback for wrapping lines. Pass in null to remove wrapping by callback.
+     *
+     * @param {function} callback - A custom function that will be responsible for wrapping the
+     * text. It will receive two arguments: text (the string to wrap), textObject (this Text
+     * instance). It should return the wrapped lines either as an array of lines or as a string with
+     * newline characters in place to indicate where breaks should happen.
+     * @param {object} [scope=null] - The scope that will be applied when the callback is invoked.
+     * @return {this}
+     */
     setWordWrapCallback: function (callback, scope)
     {
         return this.style.setWordWrapCallback(callback, scope);
