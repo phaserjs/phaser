@@ -288,6 +288,9 @@ Object.defineProperty(WebAudioSound.prototype, 'detune', {
 Object.defineProperty(WebAudioSound.prototype, 'seek', {
     get: function () {
         if (this.isPlaying) {
+            if (this.manager.context.currentTime < this.startTime) {
+                return this.startTime - this.playTime;
+            }
             return this.getCurrentTime();
         }
         else if (this.isPaused) {
