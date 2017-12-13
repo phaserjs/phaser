@@ -63,7 +63,12 @@ var BaseSound = new Class({
          * @private
          * @property {ISoundConfig} config
          */
-        this.config = {};
+        this.config = {
+            /**
+             * Initializing delay config setting
+             */
+            delay: 0
+        };
         /**
          * Reference to the currently used config.
          * It could be default config or marker config.
