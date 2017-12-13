@@ -97,6 +97,9 @@ var WebAudioSound = new Class({
         return true;
     },
     resume: function () {
+        if (this.manager.context.currentTime < this.startTime) {
+            return false;
+        }
         if (!BaseSound.prototype.resume.call(this)) {
             return false;
         }
