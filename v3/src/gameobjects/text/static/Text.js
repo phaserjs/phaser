@@ -323,6 +323,16 @@ var Text = new Class({
 
         return result;
     },
+
+    getWrappedText: function (text)
+    {
+        if (text === undefined) { text = this.text; }
+
+        var wrappedLines = this.runWordWrap(text);
+
+        return wrappedLines.split(/(?:\r\n|\r|\n)/);
+    },
+
     setText: function (value)
     {
         if (Array.isArray(value))
