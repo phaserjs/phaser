@@ -178,7 +178,7 @@ var Text = new Class({
         // Condense consecutive spaces and split into lines
         var lines = text
             .replace(/ +/gi, ' ')
-            .split(/\r?\n/gi);
+            .split(this.splitRegExp);
 
         var linesCount = lines.length;
 
@@ -290,7 +290,7 @@ var Text = new Class({
     basicWordWrap: function (text, context, wordWrapWidth)
     {
         var result = '';
-        var lines = text.split('\n');
+        var lines = text.split(this.splitRegExp);
 
         for (var i = 0; i < lines.length; i++)
         {
@@ -343,7 +343,7 @@ var Text = new Class({
 
         var wrappedLines = this.runWordWrap(text);
 
-        return wrappedLines.split(/(?:\r\n|\r|\n)/);
+        return wrappedLines.split(this.splitRegExp);
     },
 
     setText: function (value)
