@@ -155,6 +155,7 @@ var WebAudioSound = new Class({
             this.source = null;
         }
         this.playTime = 0;
+        this.startTime = 0;
     },
     /**
      * @protected
