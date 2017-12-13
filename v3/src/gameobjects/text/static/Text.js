@@ -124,6 +124,205 @@ var Text = new Class({
         this.originX = 1;
     },
 
+    /**
+     * Greedy wrapping algorithm that will wrap words as the line grows longer than its horizontal
+     * bounds.
+     *
+     * @param {string} text - The text to perform word wrap detection against.
+     */
+    runWordWrap: function (text)
+    {
+        var style = this.style;
+        if (style.wordWrapCallback)
+        {
+            var wrappedLines = style.wordWrapCallback.call(style.wordWrapCallbackScope, text, this);
+            if (Array.isArray(wrappedLines))
+            {
+                wrappedLines = wrappedLines.join('\n');
+            }
+            return wrappedLines;
+        }
+        else if (style.wordWrapWidth)
+        {
+            if (style.wordWrapUseAdvanced)
+            {
+                return this.advancedWordWrap(text);
+            }
+            else
+            {
+                return this.basicWordWrap(text);
+            }
+        }
+        else
+        {
+            return text;
+        }
+    },
+
+    /**
+     * Advanced wrapping algorithm that will wrap words as the line grows longer than its horizontal
+     * bounds. White space is condensed (e.g., consecutive spaces are replaced with one). Lines are
+     * trimmed of white space before processing. Throws an error if the user was smart enough to
+     * specify a wordWrapWidth less than a single character.
+     *
+     * @param {string} text - The text to perform word wrap detection against.
+     */
+    advancedWordWrap: function (text)
+    {
+        var context = this.context;
+        var wordWrapWidth = this.style.wordWrapWidth;
+        var output = '';
+
+        // condense consecutive spaces and split into lines
+        var lines = text
+            .replace(/ +/gi, ' ')
+            .split(/\r?\n/gi);
+
+        var linesCount = lines.length;
+
+        for (var i = 0; i < linesCount; i++)
+        {
+            var line = lines[i];
+            var out = '';
+
+            // trim whitespace
+            line = line.replace(/^ *|\s*$/gi, '');
+
+            // if entire line is less than wordWrapWidth append the entire line and exit early
+            var lineWidth = context.measureText(line).width;
+
+            if (lineWidth < wordWrapWidth)
+            {
+                output += line + '\n';
+                continue;
+            }
+
+            // otherwise, calculate new lines
+            var currentLineWidth = wordWrapWidth;
+
+            // split into words
+            var words = line.split(' ');
+
+            for (var j = 0; j < words.length; j++)
+            {
+                var word = words[j];
+                var wordWithSpace = word + ' ';
+                var wordWidth = context.measureText(wordWithSpace).width;
+
+                if (wordWidth > currentLineWidth)
+                {
+                    // break word
+                    if (j === 0)
+                    {
+                        // shave off letters from word until it's small enough
+                        var newWord = wordWithSpace;
+
+                        while (newWord.length)
+                        {
+                            newWord = newWord.slice(0, -1);
+                            wordWidth = context.measureText(newWord).width;
+
+                            if (wordWidth <= currentLineWidth)
+                            {
+                                break;
+                            }
+                        }
+
+                        // if wordWrapWidth is too small for even a single letter, shame user
+                        // failure with a fatal error
+                        if (!newWord.length)
+                        {
+                            throw new Error('This text\'s wordWrapWidth setting is less than a single character!');
+                        }
+
+                        // replace current word in array with remainder
+                        var secondPart = word.substr(newWord.length);
+
+                        words[j] = secondPart;
+
+                        // append first piece to output
+                        out += newWord;
+                    }
+
+                    // if existing word length is 0, don't include it
+                    var offset = (words[j].length) ? j : j + 1;
+
+                    // collapse rest of sentence and remove any trailing white space
+                    var remainder = words.slice(offset).join(' ')
+                        .replace(/[ \n]*$/gi, '');
+
+                    // prepend remainder to next line
+                    lines[i + 1] = remainder + ' ' + (lines[i + 1] || '');
+                    linesCount = lines.length;
+
+                    break; // processing on this line
+
+                    // append word with space to output
+                }
+                else
+                {
+                    out += wordWithSpace;
+                    currentLineWidth -= wordWidth;
+                }
+            }
+
+            // append processed line to output
+            output += out.replace(/[ \n]*$/gi, '') + '\n';
+        }
+
+        // trim the end of the string
+        output = output.replace(/[\s|\n]*$/gi, '');
+
+        return output;
+    },
+
+    /**
+     * Greedy wrapping algorithm that will wrap words as the line grows longer than its horizontal
+     * bounds.
+     *
+     * @param {string} text - The text to perform word wrap detection against.
+     */
+    basicWordWrap: function (text)
+    {
+        var result = '';
+        var lines = text.split('\n');
+
+        for (var i = 0; i < lines.length; i++)
+        {
+            var spaceLeft = this.style.wordWrapWidth;
+            var words = lines[i].split(' ');
+
+            for (var j = 0; j < words.length; j++)
+            {
+                var wordWidth = this.context.measureText(words[j]).width;
+                var wordWidthWithSpace = wordWidth + this.context.measureText(' ').width;
+
+                if (wordWidthWithSpace > spaceLeft)
+                {
+                    // Skip printing the newline if it's the first word of the line that is greater
+                    // than the word wrap width.
+                    if (j > 0)
+                    {
+                        result += '\n';
+                    }
+                    result += words[j] + ' ';
+                    spaceLeft = this.style.wordWrapWidth - wordWidth;
+                }
+                else
+                {
+                    spaceLeft -= wordWidthWithSpace;
+                    result += words[j] + ' ';
+                }
+            }
+
+            if (i < lines.length - 1)
+            {
+                result += '\n';
+            }
+        }
+
+        return result;
+    },
     setText: function (value)
     {
         if (Array.isArray(value))
