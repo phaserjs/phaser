@@ -111,6 +111,8 @@ var WebAudioSound = new Class({
     createAndStartBufferSource: function () {
         var _this = this;
         var seek = this.currentConfig.seek;
+        var delay = this.currentConfig.delay;
+        var when = this.manager.context.currentTime + delay;
         var offset = (this.currentMarker ? this.currentMarker.start : 0) + seek;
         var duration = this.duration - seek;
         this.startTime = this.manager.context.currentTime - seek;
@@ -131,7 +133,7 @@ var WebAudioSound = new Class({
             // else was stopped
         };
         this.applyConfig();
-        this.source.start(0, Math.max(0, offset), Math.max(0, duration));
+        this.source.start(Math.max(0, when), Math.max(0, offset), Math.max(0, duration));
         this.resetConfig();
     },
     /**
