@@ -9,8 +9,9 @@ var Mesh = new Class({
 
     function Mesh (data, x, y, z)
     {
-        this.vertices = data.verts;
-        this.faces = data.faces;
+        //  May contain multiple models
+        this.data = data;
+        this.vertices = data.vertices;
 
         this.position = new Vector3(x, y, z);
         this.rotation = new Vector3();
@@ -25,14 +26,23 @@ var Mesh = new Class({
         this.fillColor = 0x00ff00;
         this.fillAlpha = 1;
 
-        this._pA = new Vector2();
-        this._pB = new Vector2();
-        this._pC = new Vector2();
-        this._pD = new Vector2();
+        this.points = [];
 
         this._tempVec3 = new Vector3();
 
         this.worldMatrix = new Matrix4();
+
+        this.createPoints();
+    },
+
+    createPoints: function ()
+    {
+        var points = this.points;
+
+        for (var i = 0; i < this.data.maxVertices; i++)
+        {
+            points.push(new Vector2());
+        }
     },
 
     fill: function (graphics)
@@ -42,27 +52,62 @@ var Mesh = new Class({
             return;
         }
 
-        var pa = this._pA;
-        var pb = this._pB;
-        var pc = this._pC;
-
-        var world = this.worldMatrix;
-
-        world.setWorldMatrix(this.rotation, this.position, this.scale, graphics.viewMatrix, graphics.projectionMatrix);
+        this.worldMatrix.setWorldMatrix(this.rotation, this.position, this.scale, graphics.viewMatrix, graphics.projectionMatrix);
 
         graphics.fillStyle(this.fillColor, this.fillAlpha);
 
-        for (var f = 0; f < this.faces.length; f++)
+        for (var m = 0; m < this.data.models.length; m++)
         {
-            var face = this.faces[f];
-            var verts = this.vertices;
+            var model = this.data.models[m];
 
-            this.project(graphics, pa, verts[face.A].pos, world);
-            this.project(graphics, pb, verts[face.B].pos, world);
-            this.project(graphics, pc, verts[face.C].pos, world);
+            for (var f = 0; f < model.faces.length; f++)
+            {
+                var face = model.faces[f];
 
-            graphics.fillTriangle(pa.x, pa.y, pb.x, pb.y, pc.x, pc.y);
+                if (face.type === 0)
+                {
+                    this.fillTriangle(graphics, face);
+                }
+                else
+                {
+                    this.fillPoly(graphics, face);
+                }
+            }
         }
+
+    },
+
+    fillTriangle: function (graphics, face)
+    {
+        var a = this.points[0];
+        var b = this.points[1];
+        var c = this.points[2];
+
+        var verts = this.vertices;
+        var world = this.worldMatrix;
+
+        this.project(graphics, a, verts[face.vertices[0].vertexIndex], world);
+        this.project(graphics, b, verts[face.vertices[1].vertexIndex], world);
+        this.project(graphics, c, verts[face.vertices[2].vertexIndex], world);
+
+        graphics.fillTriangle(a.x, a.y, b.x, b.y, c.x, c.y);
+    },
+
+    fillPoly: function (graphics, face)
+    {
+        var points = this.points;
+        var verts = this.vertices;
+        var world = this.worldMatrix;
+
+        var size = face.vertices.length;
+
+        //  Project
+        for (var i = 0; i < size; i++)
+        {
+            this.project(graphics, points[i], verts[face.vertices[i].vertexIndex], world);
+        }
+
+        graphics.fillPoints(points, true, size);
     },
 
     stroke: function (graphics)
@@ -72,45 +117,64 @@ var Mesh = new Class({
             return;
         }
 
-        var pa = this._pA;
-        var pb = this._pB;
-        var pc = this._pC;
-        var pd = this._pD;
-
-        var world = this.worldMatrix;
-
-        world.setWorldMatrix(this.rotation, this.position, this.scale, graphics.viewMatrix, graphics.projectionMatrix);
+        this.worldMatrix.setWorldMatrix(this.rotation, this.position, this.scale, graphics.viewMatrix, graphics.projectionMatrix);
 
         graphics.lineStyle(this.thickness, this.strokeColor, this.strokeAlpha);
-        graphics.beginPath();
 
-        for (var f = 0; f < this.faces.length; f++)
+        for (var m = 0; m < this.data.models.length; m++)
         {
-            var face = this.faces[f];
-            var verts = this.vertices;
+            var model = this.data.models[m];
 
-            this.project(graphics, pa, verts[face.A].pos, world);
-            this.project(graphics, pb, verts[face.B].pos, world);
-            this.project(graphics, pc, verts[face.C].pos, world);
-            this.project(graphics, pd, verts[face.D].pos, world);
+            for (var f = 0; f < model.faces.length; f++)
+            {
+                var face = model.faces[f];
 
-            graphics.moveTo(pa.x, pa.y);
-            graphics.lineTo(pb.x, pb.y);
-
-            graphics.moveTo(pb.x, pb.y);
-            graphics.lineTo(pc.x, pc.y);
-
-            graphics.moveTo(pc.x, pc.y);
-            graphics.lineTo(pd.x, pd.y);
-
-            graphics.moveTo(pd.x, pd.y);
-            graphics.lineTo(pa.x, pa.y);
+                if (face.type === 0)
+                {
+                    this.strokeTriangle(graphics, face);
+                }
+                else
+                {
+                    this.strokePoly(graphics, face);
+                }
+            }
         }
-
-        graphics.closePath();
-        graphics.strokePath();
     },
 
+    strokeTriangle: function (graphics, face)
+    {
+        var a = this.points[0];
+        var b = this.points[1];
+        var c = this.points[2];
+
+        var verts = this.vertices;
+        var world = this.worldMatrix;
+
+        this.project(graphics, a, verts[face.vertices[0].vertexIndex], world);
+        this.project(graphics, b, verts[face.vertices[1].vertexIndex], world);
+        this.project(graphics, c, verts[face.vertices[2].vertexIndex], world);
+
+        graphics.strokeTriangle(a.x, a.y, b.x, b.y, c.x, c.y);
+    },
+
+    strokePoly: function (graphics, face)
+    {
+        var points = this.points;
+        var verts = this.vertices;
+        var world = this.worldMatrix;
+
+        var size = face.vertices.length;
+
+        //  Project
+        for (var i = 0; i < size; i++)
+        {
+            this.project(graphics, points[i], verts[face.vertices[i].vertexIndex], world);
+        }
+
+        graphics.strokePoints(points, true, size);
+    },
+
+    //  local is a Vec2 that is changed in place (so not returned)
     project: function (graphics, local, coord, transMat)
     {
         var w = graphics.viewportWidth;
