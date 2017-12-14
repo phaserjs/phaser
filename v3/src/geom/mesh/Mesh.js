@@ -26,6 +26,8 @@ var Mesh = new Class({
         this.fillColor = 0x00ff00;
         this.fillAlpha = 1;
 
+        this.backfaceCull = true;
+
         this.points = [];
 
         this._tempVec3 = new Vector3();
@@ -90,7 +92,10 @@ var Mesh = new Class({
         this.project(graphics, b, verts[face.vertices[1].vertexIndex], world);
         this.project(graphics, c, verts[face.vertices[2].vertexIndex], world);
 
-        graphics.fillTriangle(a.x, a.y, b.x, b.y, c.x, c.y);
+        if (this.backfaceCull && !this.isBackFacing(a, b, c))
+        {
+            graphics.fillTriangle(a.x, a.y, b.x, b.y, c.x, c.y);
+        }
     },
 
     fillPoly: function (graphics, face)
@@ -154,7 +159,10 @@ var Mesh = new Class({
         this.project(graphics, b, verts[face.vertices[1].vertexIndex], world);
         this.project(graphics, c, verts[face.vertices[2].vertexIndex], world);
 
-        graphics.strokeTriangle(a.x, a.y, b.x, b.y, c.x, c.y);
+        if (this.backfaceCull && !this.isBackFacing(a, b, c))
+        {
+            graphics.strokeTriangle(a.x, a.y, b.x, b.y, c.x, c.y);
+        }
     },
 
     strokePoly: function (graphics, face)
@@ -188,6 +196,19 @@ var Mesh = new Class({
 
         local.x = point.x * w + w / 2 >> 0;
         local.y = -point.y * h + h / 2 >> 0;
+    },
+
+    isBackFacing: function (a, b, c)
+    {
+        var ax = c.x - a.x;
+        var ay = c.y - a.y;
+
+        var bx = b.x - c.x;
+        var by = b.y - c.y;
+
+        var result = ax * by - ay * bx;
+
+        return (result >= 0);
     },
 
     setPosition: function (x, y, z)
