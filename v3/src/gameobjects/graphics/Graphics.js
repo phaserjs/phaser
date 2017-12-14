@@ -360,15 +360,16 @@ var Graphics = new Class({
 
     //  STROKE LINES BETWEEN AN ARRAY OF POINTS
 
-    strokePoints: function (points, autoClose)
+    strokePoints: function (points, autoClose, endIndex)
     {
         if (autoClose === undefined) { autoClose = false; }
+        if (endIndex === undefined) { endIndex = points.length; }
 
         this.beginPath();
 
         this.moveTo(points[0].x, points[0].y);
 
-        for (var i = 1; i < points.length; i++)
+        for (var i = 1; i < endIndex; i++)
         {
             this.lineTo(points[i].x, points[i].y);
         }
@@ -379,6 +380,30 @@ var Graphics = new Class({
         }
 
         this.strokePath();
+
+        return this;
+    },
+
+    fillPoints: function (points, autoClose, endIndex)
+    {
+        if (autoClose === undefined) { autoClose = false; }
+        if (endIndex === undefined) { endIndex = points.length; }
+
+        this.beginPath();
+
+        this.moveTo(points[0].x, points[0].y);
+
+        for (var i = 1; i < endIndex; i++)
+        {
+            this.lineTo(points[i].x, points[i].y);
+        }
+
+        if (autoClose)
+        {
+            this.lineTo(points[0].x, points[0].y);
+        }
+
+        this.fillPath();
 
         return this;
     },

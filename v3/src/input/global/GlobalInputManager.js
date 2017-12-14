@@ -43,6 +43,8 @@ var GlobalInputManager = new Class({
 
         this.scale = { x: 1, y: 1 };
 
+        this.bounds;
+
         this._tempMatrix = new TransformMatrix();
         this._tempPoint = { x: 0, y: 0 };
         this._tempHitTest = [];
@@ -56,10 +58,29 @@ var GlobalInputManager = new Class({
     {
         this.canvas = this.game.canvas;
 
+        this.updateBounds();
+
         this.keyboard.boot();
         this.mouse.boot();
         this.touch.boot();
         this.gamepad.boot();
+    },
+
+    updateBounds: function ()
+    {
+        var bounds = this.canvas.getBoundingClientRect();
+
+        if (window.scrollX)
+        {
+            bounds.left += window.scrollX;
+        }
+
+        if (window.scrollY)
+        {
+            bounds.top += window.scrollY;
+        }
+
+        this.bounds = bounds;
     },
 
     update: function (time, delta)
@@ -79,8 +100,10 @@ var GlobalInputManager = new Class({
             return;
         }
 
-        this.scale.x = this.game.config.width / this.canvas.offsetWidth;
-        this.scale.y = this.game.config.height / this.canvas.offsetHeight;
+        this.updateBounds();
+
+        this.scale.x = this.game.config.width / this.bounds.width;
+        this.scale.y = this.game.config.height / this.bounds.height;
 
         //  Clears the queue array, and also means we don't work on array data that could potentially
         //  be modified during the processing phase
@@ -158,32 +181,32 @@ var GlobalInputManager = new Class({
 
     transformX: function (pageX)
     {
-        return (pageX - this.canvas.offsetLeft) * this.scale.x;
+        return (pageX - this.bounds.left) * this.scale.x;
     },
 
     transformY: function (pageY)
     {
-        return (pageY - this.canvas.offsetTop) * this.scale.y;
+        return (pageY - this.bounds.top) * this.scale.y;
     },
 
     getOffsetX: function ()
     {
-        return this.canvas.offsetLeft;
+        return this.bounds.left;
     },
 
     getOffsetY: function ()
     {
-        return this.canvas.offsetTop;
+        return this.bounds.top;
     },
 
     getScaleX: function ()
     {
-        return this.game.config.width / this.canvas.offsetWidth;
+        return this.game.config.width / this.bounds.width;
     },
 
     getScaleY: function ()
     {
-        return this.game.config.height / this.canvas.offsetHeight;
+        return this.game.config.height / this.bounds.height;
     }
 
 });
