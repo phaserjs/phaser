@@ -101,7 +101,7 @@ var ShapeBatch = new Class({
     },
 
     flush: function (shader, renderTarget)
-    {
+    { 
         var gl = this.glContext;
         var vertexDataBuffer = this.vertexDataBuffer;
 
