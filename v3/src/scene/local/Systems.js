@@ -27,6 +27,8 @@ var Systems = new Class({
         this.config = config;
         this.settings = Settings.create(config);
 
+        this.renderList = [];
+
         this.sortChildrenFlag = false;
 
         //  Set by the GlobalSceneManager
@@ -151,7 +153,13 @@ var Systems = new Class({
             return;
         }
 
-        this.depthSort();
+        //  inlined to avoid branching
+        if (this.sortChildrenFlag)
+        {
+            StableSort.inplace(this.displayList.list, this.sortZ);
+
+            this.sortChildrenFlag = false;
+        }
 
         this.cameras.render(renderer, this.displayList, interpolation);
     },
