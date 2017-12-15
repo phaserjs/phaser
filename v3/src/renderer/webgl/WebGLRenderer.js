@@ -459,6 +459,11 @@ var WebGLRenderer = new Class({
         {
             var child = list[index];
 
+            if (!child.willRender())
+            {
+                continue;
+            }
+
             if (child.blendMode !== this.blendMode)
             {
                 this.setBlendMode(child.blendMode);
