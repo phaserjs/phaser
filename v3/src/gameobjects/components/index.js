@@ -14,6 +14,7 @@ module.exports = {
     RenderTarget: require('./RenderTarget'),
     ScaleMode: require('./ScaleMode'),
     ScrollFactor: require('./ScrollFactor'),
+    Shader: require('./Shader'),
     Size: require('./Size'),
     Texture: require('./Texture'),
     Tint: require('./Tint'),

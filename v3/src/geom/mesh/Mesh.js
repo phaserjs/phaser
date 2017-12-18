@@ -26,7 +26,8 @@ var Mesh = new Class({
         this.fillColor = 0x00ff00;
         this.fillAlpha = 1;
 
-        this.backfaceCull = true;
+        this.backfaceCullStroke = false;
+        this.backfaceCullFill = false;
 
         this.points = [];
 
@@ -58,6 +59,8 @@ var Mesh = new Class({
 
         graphics.fillStyle(this.fillColor, this.fillAlpha);
 
+        //  Depth Sort
+
         for (var m = 0; m < this.data.models.length; m++)
         {
             var model = this.data.models[m];
@@ -77,6 +80,18 @@ var Mesh = new Class({
             }
         }
 
+
+                // if (f % 2)
+                // {
+                //     graphics.fillStyle(0xff0000, this.fillAlpha);
+                // }
+                // else
+                // {
+                //     graphics.fillStyle(0xffffff, this.fillAlpha);
+                // }
+
+
+
     },
 
     fillTriangle: function (graphics, face)
@@ -92,7 +107,7 @@ var Mesh = new Class({
         this.project(graphics, b, verts[face.vertices[1].vertexIndex], world);
         this.project(graphics, c, verts[face.vertices[2].vertexIndex], world);
 
-        if (this.backfaceCull && !this.isBackFacing(a, b, c))
+        if (!this.backfaceCullFill || (this.backfaceCullFill && !this.isBackFaceTriangle(a, b, c)))
         {
             graphics.fillTriangle(a.x, a.y, b.x, b.y, c.x, c.y);
         }
@@ -112,7 +127,10 @@ var Mesh = new Class({
             this.project(graphics, points[i], verts[face.vertices[i].vertexIndex], world);
         }
 
-        graphics.fillPoints(points, true, size);
+        if (!this.backfaceCullFill || (this.backfaceCullFill && this.isBackFacePoly(points, size)))
+        {
+            graphics.fillPoints(points, true, size);
+        }
     },
 
     stroke: function (graphics)
@@ -159,7 +177,7 @@ var Mesh = new Class({
         this.project(graphics, b, verts[face.vertices[1].vertexIndex], world);
         this.project(graphics, c, verts[face.vertices[2].vertexIndex], world);
 
-        if (this.backfaceCull && !this.isBackFacing(a, b, c))
+        if (!this.backfaceCullStroke || (this.backfaceCullStroke && !this.isBackFaceTriangle(a, b, c)))
         {
             graphics.strokeTriangle(a.x, a.y, b.x, b.y, c.x, c.y);
         }
@@ -179,7 +197,10 @@ var Mesh = new Class({
             this.project(graphics, points[i], verts[face.vertices[i].vertexIndex], world);
         }
 
-        graphics.strokePoints(points, true, size);
+        if (!this.backfaceCullStroke || (this.backfaceCullStroke && this.isBackFacePoly(points, size)))
+        {
+            graphics.strokePoints(points, true, size);
+        }
     },
 
     //  local is a Vec2 that is changed in place (so not returned)
@@ -198,7 +219,7 @@ var Mesh = new Class({
         local.y = -point.y * h + h / 2 >> 0;
     },
 
-    isBackFacing: function (a, b, c)
+    isBackFaceTriangle: function (a, b, c)
     {
         var ax = c.x - a.x;
         var ay = c.y - a.y;
@@ -209,6 +230,29 @@ var Mesh = new Class({
         var result = ax * by - ay * bx;
 
         return (result >= 0);
+    },
+
+    isBackFacePoly: function (points, endIndex)
+    {
+        var area = 0;
+
+        for (var i = 0; i < endIndex; i++)
+        {
+            j = (i + 1) % endIndex;
+
+            area += points[i].x * points[j].y;
+            area -= points[j].x * points[i].y;
+        }
+
+        return (area / 2);
+    },
+
+    setBackfaceCull: function (stroke, fill)
+    {
+        this.backfaceCullStroke = stroke;
+        this.backfaceCullFill = fill;
+
+        return this;
     },
 
     setPosition: function (x, y, z)

@@ -11,5 +11,10 @@ var GameObjectFactory = require('../../scene/plugins/GameObjectFactory');
 
 GameObjectFactory.register('container', function (x, y)
 {
-    return new Container(this.scene, x, y);
+    var container = new Container(this.scene, x, y);
+
+    // this.displayList.add(container);
+    this.updateList.add(container);
+
+    return container;
 });

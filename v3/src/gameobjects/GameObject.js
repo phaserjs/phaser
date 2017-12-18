@@ -36,6 +36,16 @@ var GameObject = new Class({
         this.scene = scene;
 
         /**
+         * The parent Container of this Game Object, if any.
+         * Game Objects do not have to belong to Containers and can exist on the
+         * Display List on their own.
+         *
+         * @property {Phaser.GameObject.Container} parent
+         * @protected
+         */
+        this.parent = null;
+
+        /**
          * A textual representation of this Game Object, i.e. `sprite`.
          * Used internally by Phaser but is available for your own custom classes to populate.
          *
@@ -145,6 +155,24 @@ var GameObject = new Class({
     setName: function (value)
     {
         this.name = value;
+
+        return this;
+    },
+
+    //  Testing: Add this Game Object to a Container parent.
+    //  Can only belong to one Container at once.
+    //  The Container takes over its transform and depth management.
+    //  Call this method with no arguments to remove it from a parent.
+    setParent: function (newParent)
+    {
+        if (newParent)
+        {
+            newParent.add(this);
+        }
+        else if (this.parent)
+        {
+            this.parent.remove(this);
+        }
 
         return this;
     },
@@ -269,7 +297,7 @@ var GameObject = new Class({
         this.scene.sys.sortChildrenFlag = true;
 
         this.active = false;
-        this.Visible = false;
+        this.visible = false;
 
         this.data = undefined;
 

@@ -134,6 +134,8 @@ var RenderPass = new Class({
 
         if (gl && !renderer.contextLost)
         {            
+            //gameObject.setShader(this.passShader);
+            gameObject.setRenderTarget(this.passRenderTarget);
             gameObject.renderWebGL(renderer, gameObject, 0.0, camera);
 
             for (var key in this.textures)
@@ -145,6 +147,8 @@ var RenderPass = new Class({
                 gl.activeTexture(gl.TEXTURE0);
             }
             renderer.currentRenderer.flush(this.passShader, this.passRenderTarget);
+            gameObject.setRenderTarget(null);
+            //gameObject.setShader(null);
         }
     },
 

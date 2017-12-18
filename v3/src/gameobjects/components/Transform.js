@@ -14,25 +14,78 @@ var Transform = {
     _scaleY: 1,
     _rotation: 0,
     _depth: 0,
+    _dirty: false,
+    _world: { a: 1, b: 0, c: 0, d: 1, tx: 0, ty: 0, sr: 0, cr: 0 },
 
     //  public properties / methods
 
-    x: 0,
-    y: 0,
-    z: 0,
-    w: 0,
+    //  These are world coordinate values.
 
-    depth: {
+    //  If Game Object is a child of a Container, then you can modify its local position (relative to the Container)
+    //  by setting `localX`, `localY`, etc (or changing x/y directly, but remember the values given here are world based).
+    //  Changes to the parent Container are instantly reflected in the world coords here (x,y, etc)
+
+    _x: 0,
+    _y: 0,
+    _z: 0,
+    _w: 0,
+
+    x: {
 
         get: function ()
         {
-            return this._depth;
+            return this._x;
         },
 
         set: function (value)
         {
-            this.scene.sys.sortChildrenFlag = true;
-            this._depth = value;
+            this._x = value;
+            this._dirty = true;
+        }
+
+    },
+
+    y: {
+
+        get: function ()
+        {
+            return this._y;
+        },
+
+        set: function (value)
+        {
+            this._y = value;
+            this._dirty = true;
+        }
+
+    },
+
+    z: {
+
+        get: function ()
+        {
+            return this._z;
+        },
+
+        set: function (value)
+        {
+            this._z = value;
+            this._dirty = true;
+        }
+
+    },
+
+    w: {
+
+        get: function ()
+        {
+            return this._w;
+        },
+
+        set: function (value)
+        {
+            this._w = value;
+            this._dirty = true;
         }
 
     },
@@ -47,6 +100,7 @@ var Transform = {
         set: function (value)
         {
             this._scaleX = value;
+            this._dirty = true;
 
             if (this._scaleX === 0)
             {
@@ -70,6 +124,7 @@ var Transform = {
         set: function (value)
         {
             this._scaleY = value;
+            this._dirty = true;
 
             if (this._scaleY === 0)
             {
@@ -108,7 +163,27 @@ var Transform = {
         {
             //  value is in radians
             this._rotation = WrapAngle(value);
+
+            this._world.sr = Math.sin(this._rotation);
+            this._world.cr = Math.cos(this._rotation);
+
+            this._dirty = true;
         }
+    },
+
+    depth: {
+
+        get: function ()
+        {
+            return this._depth;
+        },
+
+        set: function (value)
+        {
+            this.scene.sys.sortChildrenFlag = true;
+            this._depth = value;
+        }
+
     },
 
     setPosition: function (x, y, z, w)
@@ -118,10 +193,12 @@ var Transform = {
         if (z === undefined) { z = 0; }
         if (w === undefined) { w = 0; }
 
-        this.x = x;
-        this.y = y;
-        this.z = z;
-        this.w = w;
+        this._x = x;
+        this._y = y;
+        this._z = z;
+        this._w = w;
+
+        this._dirty = true;
 
         return this;
     },
@@ -180,6 +257,38 @@ var Transform = {
         this.depth = value;
 
         return this;
+    },
+
+    updateTransform: function ()
+    {
+        if (!this.parent || !this._dirty)
+        {
+            return;
+        }
+
+        var tx = this._x;
+        var ty = this._y;
+        var world = this._world;
+
+        var parent = this.parent.world;
+
+        var a = world.cr * this._scaleX;
+        var b = world.sr * this._scaleX;
+        var c = -world.sr * this._scaleY;
+        var d = world.cr * this._scaleY;
+
+        world.a = (a * parent.a) + (b * parent.c);
+        world.b = (a * parent.b) + (b * parent.d);
+        world.c = (c * parent.a) + (d * parent.c);
+        world.d = (c * parent.b) + (d * parent.d);
+
+        // this._worldRotation = Math.atan2(-this.world.c, this.world.d);
+
+        world.tx = (tx * parent.a) + (ty * parent.c) + parent.tx;
+        world.ty = (tx * parent.b) + (ty * parent.d) + parent.ty;
+
+        // this._worldScaleX = this._scaleX * Math.sqrt((world.a * world.a) + (world.c * world.c));
+        // this._worldScaleY = this._scaleY * Math.sqrt((world.b * world.b) + (world.d * world.d));
     }
 
 };

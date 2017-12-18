@@ -60,15 +60,15 @@ var FX = new Class({
 
         //  Set the values
 
-        this.volume.gain.value = this.volumeValue;
-
+        this.volume.gain.setTargetAtTime(this.volumeValue, 0, 0.01);
+        
         if (!ctx.createStereoPanner)
         {
             this.pan.setPosition(this.panValue, 0, 1 - Math.abs(this.panValue));
         }
         else
         {
-            this.pan.pan.value = this.panValue;
+            this.pan.pan.setTargetAtTime(this.panValue, 0, 0.01);
         }
 
         //  Create an oscillator, gain and pan nodes, and connect them together to the destination
@@ -84,14 +84,14 @@ var FX = new Class({
 
         if (this.randomValue > 0)
         {
-            oscillator.frequency.value = Between(
+            oscillator.frequency.setTargetAtTime(Between(
                 this.frequencyValue - this.randomValue / 2,
                 this.frequencyValue + this.randomValue / 2
-            );
+            ), 0, 0.01);
         }
         else
         {
-            oscillator.frequency.value = this.frequencyValue;
+            oscillator.frequency.setTargetAtTime(this.frequencyValue, 0, 0.01);
         }
 
         //  Apply effects
@@ -149,7 +149,7 @@ var FX = new Class({
 
     fadeIn: function (volume)
     {
-        volume.gain.value = 0;
+        volume.gain.setTargetAtTime(0, this.audioContext.currentTime, 0.01);
 
         volume.gain.linearRampToValueAtTime(0, this.audioContext.currentTime + this.wait);
 
@@ -182,12 +182,12 @@ var FX = new Class({
 
         //  Set the node values
 
-        feedback.gain.value = this.echoFeedback;
-        delay.delayTime.value = this.echoDelay;
+        feedback.gain.setTargetAtTime(this.echoFeedback, 0, 0.01);
+        delay.delayTime.setTargetAtTime(this.echoDelay, 0, 0.01);
 
         if (this.echoFilter)
         {
-            filter.frequency.value = this.echoFilter;
+            filter.frequency.setTargetAtTime(this.echoFilter, 0, 0.01);
         }
 
         //  Create the delay feedback loop (with optional filtering)
@@ -245,8 +245,8 @@ var FX = new Class({
         var d2Volume = ctx.createGain();
 
         //  Set the volume to the `volumeValue`
-        d1Volume.gain.value = this.volumeValue;
-        d2Volume.gain.value = this.volumeValue;
+        d1Volume.gain.setTargetAtTime(this.volumeValue, 0, 0.01);
+        d2Volume.gain.setTargetAtTime(this.volumeValue, 0, 0.01);
 
         //  Connect the oscillators to the gain and destination nodes
         d1.connect(d1Volume);
@@ -261,8 +261,8 @@ var FX = new Class({
 
         //  Make the two oscillators play at frequencies above and below the main sound's frequency.
         //  Use whatever value was supplied by the `dissonance` argument
-        d1.frequency.value = this.frequencyValue + this.dissonance;
-        d2.frequency.value = this.frequencyValue - this.dissonance;
+        d1.frequency.setTargetAtTime(this.frequencyValue + this.dissonance, 0, 0.01);
+        d2.frequency.setTargetAtTime(this.frequencyValue - this.dissonance, 0, 0.01);
 
         //  Fade in / out, pitch bend and play the oscillators to match the main sound
         if (this.attack > 0)
