@@ -29,6 +29,13 @@ var WebAudioSound = new Class({
          * [description]
          *
          * @private
+         * @property {AudioBufferSourceNode} loopSource
+         */
+        this.loopSource = null;
+        /**
+         * [description]
+         *
+         * @private
          * @property {GainNode} muteNode
          */
         this.muteNode = manager.context.createGain();
