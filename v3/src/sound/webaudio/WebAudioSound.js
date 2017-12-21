@@ -160,6 +160,23 @@ var WebAudioSound = new Class({
             }
             // else was stopped
         };
+        if(this.currentConfig.loop) {
+            this.loopSource = this.manager.context.createBufferSource();
+            this.loopSource.buffer = this.audioBuffer;
+            this.loopSource.connect(this.muteNode);
+            this.loopSource.onended = function (ev) {
+                if (ev.target === _this.source) {
+                    // sound ended
+                    if (_this.currentConfig.loop) {
+                        _this.hasLooped = true;
+                    }
+                    else {
+                        _this.hasEnded = true;
+                    }
+                }
+                // else was stopped
+            };
+        }
         this.applyConfig();
         this.source.start(Math.max(0, when), Math.max(0, offset), Math.max(0, duration));
         this.resetConfig();
