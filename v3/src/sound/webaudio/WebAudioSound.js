@@ -192,6 +192,10 @@ var WebAudioSound = new Class({
             this.hasEnded = false;
             this.stop();
         }
+        else if (this.hasLooped) {
+            this.hasLooped = false;
+            // TODO handle looping
+        }
     },
     destroy: function () {
         BaseSound.prototype.destroy.call(this);
