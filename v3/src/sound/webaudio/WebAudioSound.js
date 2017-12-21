@@ -70,6 +70,14 @@ var WebAudioSound = new Class({
          * @property {boolean} hasEnded
          */
         this.hasEnded = false;
+        /**
+         * Used for keeping track when sound source has looped
+         * so it's state can be updated accordingly.
+         *
+         * @private
+         * @property {boolean} hasLooped
+         */
+        this.hasLooped = false;
         this.muteNode.connect(this.volumeNode);
         this.volumeNode.connect(manager.destination);
         this.duration = this.audioBuffer.duration;
