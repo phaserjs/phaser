@@ -351,12 +351,14 @@ Object.defineProperty(WebAudioSound.prototype, 'loop', {
     },
     set: function (value) {
         this.currentConfig.loop = value;
-        if(value) {
-            var when = 0;
-            var offset = this.currentMarker ? this.currentMarker.start : 0;
-            var duration = this.duration;
-            this.loopSource = this.createBufferSource();
-            this.loopSource.start(Math.max(0, when), Math.max(0, offset), Math.max(0, duration));
+        if(this.isPlaying) {
+            if(value) {
+                var when = 0;
+                var offset = this.currentMarker ? this.currentMarker.start : 0;
+                var duration = this.duration;
+                this.loopSource = this.createBufferSource();
+                this.loopSource.start(Math.max(0, when), Math.max(0, offset), Math.max(0, duration));
+            }
         }
     }
 });
