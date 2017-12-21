@@ -137,7 +137,6 @@ var WebAudioSound = new Class({
      * @private
      */
     createAndStartBufferSource: function () {
-        var _this = this;
         var seek = this.currentConfig.seek;
         var delay = this.currentConfig.delay;
         var when = this.manager.context.currentTime + delay;
@@ -145,10 +144,23 @@ var WebAudioSound = new Class({
         var duration = this.duration - seek;
         this.playTime = when - seek;
         this.startTime = when;
-        this.source = this.manager.context.createBufferSource();
-        this.source.buffer = this.audioBuffer;
-        this.source.connect(this.muteNode);
-        this.source.onended = function (ev) {
+        this.source = this.createBufferSource();
+        if(this.currentConfig.loop) {
+            this.loopSource = this.createBufferSource();
+        }
+        this.applyConfig();
+        this.source.start(Math.max(0, when), Math.max(0, offset), Math.max(0, duration));
+        this.resetConfig();
+    },
+    /**
+     * @private
+     */
+    createBufferSource: function () {
+        var _this = this;
+        var source = this.manager.context.createBufferSource();
+        source.buffer = this.audioBuffer;
+        source.connect(this.muteNode);
+        source.onended = function (ev) {
             if (ev.target === _this.source) {
                 // sound ended
                 if (_this.currentConfig.loop) {
@@ -160,26 +172,7 @@ var WebAudioSound = new Class({
             }
             // else was stopped
         };
-        if(this.currentConfig.loop) {
-            this.loopSource = this.manager.context.createBufferSource();
-            this.loopSource.buffer = this.audioBuffer;
-            this.loopSource.connect(this.muteNode);
-            this.loopSource.onended = function (ev) {
-                if (ev.target === _this.source) {
-                    // sound ended
-                    if (_this.currentConfig.loop) {
-                        _this.hasLooped = true;
-                    }
-                    else {
-                        _this.hasEnded = true;
-                    }
-                }
-                // else was stopped
-            };
-        }
-        this.applyConfig();
-        this.source.start(Math.max(0, when), Math.max(0, offset), Math.max(0, duration));
-        this.resetConfig();
+        return source;
     },
     /**
      * Used internally to do what the name says.
