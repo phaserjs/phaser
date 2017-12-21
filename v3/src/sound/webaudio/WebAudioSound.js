@@ -145,9 +145,6 @@ var WebAudioSound = new Class({
         this.playTime = when - seek;
         this.startTime = when;
         this.source = this.createBufferSource();
-        if(this.currentConfig.loop) {
-            this.loopSource = this.createBufferSource();
-        }
         this.applyConfig();
         this.source.start(Math.max(0, when), Math.max(0, offset), Math.max(0, duration));
         this.resetConfig();
@@ -354,6 +351,9 @@ Object.defineProperty(WebAudioSound.prototype, 'loop', {
     },
     set: function (value) {
         this.currentConfig.loop = value;
+        if(this.currentConfig.loop) {
+            this.loopSource = this.createBufferSource();
+        }
     }
 });
 module.exports = WebAudioSound;
