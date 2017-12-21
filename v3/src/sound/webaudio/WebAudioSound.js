@@ -150,6 +150,25 @@ var WebAudioSound = new Class({
         this.resetConfig();
     },
     /**
+     * Used internally to do what the name says.
+     *
+     * @private
+     */
+    createAndStartLoopBufferSource: function () {
+        var lastRateUpdateCurrentTime = 0;
+        for (var i = 0; i < this.rateUpdates.length - 1; i++) {
+            lastRateUpdateCurrentTime +=
+                (this.rateUpdates[i + 1].time - this.rateUpdates[i].time) * this.rateUpdates[i].rate;
+        }
+        var lastRateUpdate = this.rateUpdates[this.rateUpdates.length - 1];
+        var when = this.playTime + lastRateUpdate.time
+            + (this.duration - lastRateUpdateCurrentTime) / lastRateUpdate.rate;
+        var offset = this.currentMarker ? this.currentMarker.start : 0;
+        var duration = this.duration;
+        this.loopSource = this.createBufferSource();
+        this.loopSource.start(Math.max(0, when), Math.max(0, offset), Math.max(0, duration));
+    },
+    /**
      * @private
      */
     createBufferSource: function () {
@@ -351,20 +370,9 @@ Object.defineProperty(WebAudioSound.prototype, 'loop', {
     },
     set: function (value) {
         this.currentConfig.loop = value;
-        if(this.isPlaying) {
-            if(value) {
-                var lastRateUpdateCurrentTime = 0;
-                for (var i = 0; i < this.rateUpdates.length - 1; i++) {
-                    lastRateUpdateCurrentTime +=
-                        (this.rateUpdates[i + 1].time - this.rateUpdates[i].time) * this.rateUpdates[i].rate;
-                }
-                var lastRateUpdate = this.rateUpdates[this.rateUpdates.length - 1];
-                var when = this.playTime + lastRateUpdate.time
-                    + (this.duration - lastRateUpdateCurrentTime) / lastRateUpdate.rate;
-                var offset = this.currentMarker ? this.currentMarker.start : 0;
-                var duration = this.duration;
-                this.loopSource = this.createBufferSource();
-                this.loopSource.start(Math.max(0, when), Math.max(0, offset), Math.max(0, duration));
+        if (this.isPlaying) {
+            if (value) {
+                this.createAndStartLoopBufferSource();
             }
         }
     }
