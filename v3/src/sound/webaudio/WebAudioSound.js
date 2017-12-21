@@ -155,14 +155,7 @@ var WebAudioSound = new Class({
      * @private
      */
     createAndStartLoopBufferSource: function () {
-        var lastRateUpdateCurrentTime = 0;
-        for (var i = 0; i < this.rateUpdates.length - 1; i++) {
-            lastRateUpdateCurrentTime +=
-                (this.rateUpdates[i + 1].time - this.rateUpdates[i].time) * this.rateUpdates[i].rate;
-        }
-        var lastRateUpdate = this.rateUpdates[this.rateUpdates.length - 1];
-        var when = this.playTime + lastRateUpdate.time
-            + (this.duration - lastRateUpdateCurrentTime) / lastRateUpdate.rate;
+        var when = this.getLoopTime();
         var offset = this.currentMarker ? this.currentMarker.start : 0;
         var duration = this.duration;
         this.loopSource = this.createBufferSource();
@@ -271,6 +264,19 @@ var WebAudioSound = new Class({
             currentTime += (nextTime - this.rateUpdates[i].time) * this.rateUpdates[i].rate;
         }
         return currentTime;
+    },
+    /**
+     * @private
+     */
+    getLoopTime: function () {
+        var lastRateUpdateCurrentTime = 0;
+        for (var i = 0; i < this.rateUpdates.length - 1; i++) {
+            lastRateUpdateCurrentTime +=
+                (this.rateUpdates[i + 1].time - this.rateUpdates[i].time) * this.rateUpdates[i].rate;
+        }
+        var lastRateUpdate = this.rateUpdates[this.rateUpdates.length - 1];
+        return this.playTime + lastRateUpdate.time
+            + (this.duration - lastRateUpdateCurrentTime) / lastRateUpdate.rate;
     }
 });
 /**
