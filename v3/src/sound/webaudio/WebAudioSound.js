@@ -63,6 +63,14 @@ var WebAudioSound = new Class({
          */
         this.startTime = 0;
         /**
+         * The time at which the sound loop source should actually start playback.
+         * Based on BaseAudioContext.currentTime value.
+         *
+         * @private
+         * @property {number} loopTime
+         */
+        this.loopTime = 0;
+        /**
          * An array where we keep track of all rate updates during playback.
          *
          * @private
