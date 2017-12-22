@@ -257,6 +257,10 @@ var WebAudioSound = new Class({
                 time: Math.max(this.startTime, this.manager.context.currentTime) - this.playTime,
                 rate: this.totalRate
             });
+            if (this.loopSource) {
+                this.stopAndRemoveLoopBufferSource();
+                this.createAndStartLoopBufferSource();
+            }
         }
     },
     /**
