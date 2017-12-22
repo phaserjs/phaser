@@ -388,11 +388,9 @@ Object.defineProperty(WebAudioSound.prototype, 'loop', {
     set: function (value) {
         this.currentConfig.loop = value;
         if (this.isPlaying) {
+            this.stopAndRemoveLoopBufferSource();
             if (value) {
                 this.createAndStartLoopBufferSource();
-            }
-            else {
-                this.stopAndRemoveLoopBufferSource();
             }
         }
     }
