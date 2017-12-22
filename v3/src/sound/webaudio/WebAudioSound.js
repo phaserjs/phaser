@@ -250,12 +250,13 @@ var WebAudioSound = new Class({
      */
     setRate: function () {
         BaseSound.prototype.setRate.call(this);
+        var now = this.manager.context.currentTime;
         if (this.source) {
-            this.source.playbackRate.setValueAtTime(this.totalRate, 0);
+            this.source.playbackRate.setValueAtTime(this.totalRate, now);
         }
         if (this.isPlaying) {
             this.rateUpdates.push({
-                time: Math.max(this.startTime, this.manager.context.currentTime) - this.playTime,
+                time: Math.max(this.startTime, now) - this.playTime,
                 rate: this.totalRate
             });
             if (this.loopSource) {
