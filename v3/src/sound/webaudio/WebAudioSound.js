@@ -166,6 +166,9 @@ var WebAudioSound = new Class({
         var when = this.getLoopTime();
         var offset = this.currentMarker ? this.currentMarker.start : 0;
         var duration = this.duration;
+        this.loopTime = when;
+        console.log(this.key + ' loopTime: ' + this.loopTime);
+        console.log(this.key + ' delta: ' + (this.loopTime - this.startTime));
         this.loopSource = this.createBufferSource();
         this.loopSource.playbackRate.setValueAtTime(this.totalRate, 0);
         this.loopSource.start(Math.max(0, when), Math.max(0, offset), Math.max(0, duration));
