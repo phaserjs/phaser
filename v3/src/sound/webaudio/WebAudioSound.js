@@ -1,5 +1,6 @@
 var Class = require('../../utils/Class');
 var BaseSound = require('../BaseSound');
+var SoundEvent = require('../SoundEvent');
 //  Phaser.Sound.WebAudioSound
 // TODO support webkitAudioContext implementation differences
 // https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API/Porting_webkitAudioContext_code_to_standards_based_AudioContext
@@ -252,6 +253,7 @@ var WebAudioSound = new Class({
                 rate: this.totalRate
             });
             this.createAndStartLoopBufferSource();
+            this.events.dispatch(new SoundEvent(this, 'SOUND_LOOP'));
         }
     },
     destroy: function () {
