@@ -52,7 +52,7 @@ var PerspectiveCamera = new Class({
         this.view.lookAt(this.position, tmpVec3, this.up);
 
         //  Projection * view matrix
-        this.combined.copy(this.projection).mul(this.view);
+        this.combined.copy(this.projection).multiply(this.view);
 
         //  Invert combined matrix, used for unproject
         this.invProjectionView.copy(this.combined).invert();
