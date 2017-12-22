@@ -207,6 +207,7 @@ var WebAudioSound = new Class({
         }
         this.playTime = 0;
         this.startTime = 0;
+        this.stopAndRemoveLoopBufferSource();
     },
     /**
      * Used internally to do what the name says.
