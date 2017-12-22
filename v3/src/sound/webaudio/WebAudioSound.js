@@ -232,7 +232,9 @@ var WebAudioSound = new Class({
         }
         else if (this.hasLooped) {
             this.hasLooped = false;
-            // TODO handle looping
+            this.source = this.loopSource;
+            this.loopSource = null;
+            this.createAndStartLoopBufferSource();
         }
     },
     destroy: function () {
