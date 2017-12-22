@@ -197,6 +197,17 @@ var WebAudioSound = new Class({
         this.startTime = 0;
     },
     /**
+     * Used internally to do what the name says.
+     *
+     * @private
+     */
+    stopAndRemoveLoopBufferSource: function () {
+        if (this.loopSource) {
+            this.loopSource.stop();
+            this.loopSource = null;
+        }
+    },
+    /**
      * @protected
      */
     applyConfig: function () {
