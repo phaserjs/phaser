@@ -218,6 +218,7 @@ var WebAudioSound = new Class({
             this.loopSource.stop();
             this.loopSource = null;
         }
+        this.loopTime = 0;
     },
     /**
      * @protected
