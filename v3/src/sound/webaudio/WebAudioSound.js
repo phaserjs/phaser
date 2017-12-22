@@ -245,6 +245,7 @@ var WebAudioSound = new Class({
             this.hasLooped = false;
             this.source = this.loopSource;
             this.loopSource = null;
+            this.playTime = this.startTime = this.loopTime;
             this.createAndStartLoopBufferSource();
         }
     },
