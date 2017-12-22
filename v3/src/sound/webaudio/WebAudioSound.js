@@ -391,6 +391,9 @@ Object.defineProperty(WebAudioSound.prototype, 'loop', {
             if (value) {
                 this.createAndStartLoopBufferSource();
             }
+            else {
+                this.stopAndRemoveLoopBufferSource();
+            }
         }
     }
 });
