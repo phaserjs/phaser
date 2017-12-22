@@ -248,6 +248,11 @@ var WebAudioSound = new Class({
             this.source = this.loopSource;
             this.loopSource = null;
             this.playTime = this.startTime = this.loopTime;
+            this.rateUpdates.length = 0;
+            this.rateUpdates.push({
+                time: 0,
+                rate: this.totalRate
+            });
             this.createAndStartLoopBufferSource();
         }
     },
