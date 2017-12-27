@@ -14,7 +14,7 @@ var MouseManager = new Class({
         this.manager = inputManager;
 
         // @property {boolean} capture - If true the DOM mouse events will have event.preventDefault applied to them, if false they will propagate fully.
-        this.capture = false;
+        this.capture = true;
 
         this.enabled = false;
 
@@ -35,6 +35,7 @@ var MouseManager = new Class({
 
         this.enabled = config.inputMouse;
         this.target = config.inputMouseEventTarget;
+        this.capture = config.inputMouseCapture;
 
         if (!this.target)
         {
@@ -112,34 +113,56 @@ var MouseManager = new Class({
     startListeners: function ()
     {
         var queue = this.manager.queue;
+        var target = this.target;
 
-        var _this = this;
+        var passive = { passive: true };
+        var nonPassive = { passive: false };
 
-        var handler = function (event)
+        var handler;
+
+        if (this.capture)
         {
-            if (event.preventDefaulted)
+            handler = function (event)
             {
-                // Do nothing if event already handled
-                return;
-            }
+                if (event.preventDefaulted)
+                {
+                    // Do nothing if event already handled
+                    return;
+                }
 
-            queue.push(event);
+                queue.push(event);
 
-            if (_this.capture)
-            {
                 event.preventDefault();
-            }
-        };
+            };
+
+            target.addEventListener('mousemove', handler, nonPassive);
+            target.addEventListener('mousedown', handler, nonPassive);
+            target.addEventListener('mouseup', handler, nonPassive);
+        }
+        else
+        {
+            handler = function (event)
+            {
+                if (event.preventDefaulted)
+                {
+                    // Do nothing if event already handled
+                    return;
+                }
+
+                queue.push(event);
+            };
+
+            target.addEventListener('mousemove', handler, passive);
+            target.addEventListener('mousedown', handler, passive);
+            target.addEventListener('mouseup', handler, passive);
+        }
 
         this.handler = handler;
-
-        this.target.addEventListener('mousemove', handler, false);
-        this.target.addEventListener('mousedown', handler, false);
-        this.target.addEventListener('mouseup', handler, false);
 
         if (Features.pointerLock)
         {
             this.pointerLockChange = this.pointerLockChange.bind(this);
+
             document.addEventListener('pointerlockchange', this.pointerLockChange, true);
             document.addEventListener('mozpointerlockchange', this.pointerLockChange, true);
             document.addEventListener('webkitpointerlockchange', this.pointerLockChange, true);
@@ -148,9 +171,11 @@ var MouseManager = new Class({
 
     stopListeners: function ()
     {
-        this.target.removeEventListener('mousemove', this.handler);
-        this.target.removeEventListener('mousedown', this.handler);
-        this.target.removeEventListener('mouseup', this.handler);
+        var target = this.target;
+
+        target.removeEventListener('mousemove', this.handler);
+        target.removeEventListener('mousedown', this.handler);
+        target.removeEventListener('mouseup', this.handler);
 
         if (Features.pointerLock)
         {

@@ -13,7 +13,7 @@ var TouchManager = new Class({
         this.manager = inputManager;
 
         // @property {boolean} capture - If true the DOM events will have event.preventDefault applied to them, if false they will propagate fully.
-        this.capture = false;
+        this.capture = true;
 
         this.enabled = false;
 
@@ -28,6 +28,7 @@ var TouchManager = new Class({
 
         this.enabled = config.inputTouch;
         this.target = config.inputTouchEventTarget;
+        this.capture = config.inputTouchCapture;
 
         if (!this.target)
         {
@@ -43,39 +44,60 @@ var TouchManager = new Class({
     startListeners: function ()
     {
         var queue = this.manager.queue;
+        var target = this.target;
 
-        var _this = this;
+        var passive = { passive: true };
+        var nonPassive = { passive: false };
 
-        var handler = function (event)
+        var handler;
+
+        if (this.capture)
         {
-            if (event.preventDefaulted)
+            handler = function (event)
             {
-                // Do nothing if event already handled
-                return;
-            }
+                if (event.preventDefaulted)
+                {
+                    // Do nothing if event already handled
+                    return;
+                }
 
-            // console.log(event);
+                queue.push(event);
 
-            queue.push(event);
-
-            if (_this.capture)
-            {
                 event.preventDefault();
-            }
-        };
+            };
 
+            target.addEventListener('touchstart', handler, nonPassive);
+            target.addEventListener('touchmove', handler, nonPassive);
+            target.addEventListener('touchend', handler, nonPassive);
+        }
+        else
+        {
+            handler = function (event)
+            {
+                if (event.preventDefaulted)
+                {
+                    // Do nothing if event already handled
+                    return;
+                }
+
+                queue.push(event);
+            };
+
+            target.addEventListener('touchstart', handler, passive);
+            target.addEventListener('touchmove', handler, passive);
+            target.addEventListener('touchend', handler, passive);
+        }
+        
         this.handler = handler;
-
-        this.target.addEventListener('touchstart', handler, false);
-        this.target.addEventListener('touchmove', handler, false);
-        this.target.addEventListener('touchend', handler, false);
     },
 
     stopListeners: function ()
     {
-        this.target.removeEventListener('touchstart', this.handler);
-        this.target.removeEventListener('touchmove', this.handler);
-        this.target.removeEventListener('touchend', this.handler);
+        var target = this.target;
+
+        target.removeEventListener('touchstart', this.handler);
+        target.removeEventListener('touchmove', this.handler);
+        target.removeEventListener('touchend', this.handler);
     }
 
 });

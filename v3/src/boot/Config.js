@@ -46,6 +46,7 @@ var ValueToColor = require('../display/color/ValueToColor');
  * @property {object} [?input.mouse.target=null] - [description]
  * @property {boolean} [input.touch=true] - [description]
  * @property {object} [?input.touch.target=null] - [description]
+ * @property {object} [?input.touch.capture=true] - [description]
  * @property {boolean} [input.gamepad=false] - [description]
  * @property {boolean} [disableContextMenu=false] - [description]
  * @property {boolean} [banner=false] - [description]
@@ -124,9 +125,11 @@ var Config = new Class({
 
         this.inputMouse = GetValue(config, 'input.mouse', true);
         this.inputMouseEventTarget = GetValue(config, 'input.mouse.target', null);
+        this.inputMouseCapture = GetValue(config, 'input.mouse.capture', true);
 
         this.inputTouch = GetValue(config, 'input.touch', true);
         this.inputTouchEventTarget = GetValue(config, 'input.touch.target', null);
+        this.inputTouchCapture = GetValue(config, 'input.touch.capture', true);
 
         this.inputGamepad = GetValue(config, 'input.gamepad', false);
 
