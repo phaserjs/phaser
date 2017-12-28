@@ -4,6 +4,8 @@ var ProcessDownEvents = function (pointer)
 {
     var currentlyOver = this._temp;
 
+    console.log('ProcessDownEvents', this.topOnly);
+
     this.events.dispatch(new InputEvent.POINTER_DOWN(pointer, currentlyOver));
 
     //  Go through all objects the pointer was over and fire their events / callbacks

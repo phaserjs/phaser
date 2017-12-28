@@ -11,6 +11,9 @@ var ProcessOverOutEvents = function (pointer)
     var stillOver = [];
     var previouslyOver = this._over[pointer.id];
 
+    //  TODO - in a topOnly situation a new justOver entry at the top
+    //  should clear all previous justOut entries
+
     //  Go through all objects the pointer was previously over, and see if it still is
     for (i = 0; i < previouslyOver.length; i++)
     {
@@ -46,6 +49,8 @@ var ProcessOverOutEvents = function (pointer)
     //  Process the Just Out objects
     var total = justOut.length;
 
+    console.log('justOut', total);
+
     if (total > 0)
     {
         this.sortGameObjects(justOut);
@@ -68,6 +73,7 @@ var ProcessOverOutEvents = function (pointer)
 
             if (this.topOnly)
             {
+                console.log('break 1');
                 break;
             }
         }
@@ -75,6 +81,8 @@ var ProcessOverOutEvents = function (pointer)
 
     //  Process the Just Over objects
     total = justOver.length;
+
+    console.log('justOver', total);
 
     if (total > 0)
     {
@@ -98,6 +106,7 @@ var ProcessOverOutEvents = function (pointer)
 
             if (this.topOnly)
             {
+                console.log('break 2');
                 break;
             }
         }

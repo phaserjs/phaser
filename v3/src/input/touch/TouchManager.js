@@ -61,6 +61,8 @@ var TouchManager = new Class({
                     return;
                 }
 
+                // console.log('touch', event);
+
                 queue.push(event);
 
                 event.preventDefault();

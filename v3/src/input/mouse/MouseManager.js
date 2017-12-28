@@ -130,6 +130,8 @@ var MouseManager = new Class({
                     return;
                 }
 
+                // console.log('mouse', event);
+
                 queue.push(event);
 
                 event.preventDefault();
