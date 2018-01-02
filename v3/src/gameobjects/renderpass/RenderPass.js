@@ -67,7 +67,7 @@ var RenderPass = new Class({
             scene.sys.game.renderer.currentTexture[0] = null; // force rebinding of prev texture
         }
 
-        this.flipY = true;
+        this.setFlipY(true);
         this.setPosition(x, y);
         this.setSize(width, height);
         this.setOrigin(0, 0);

@@ -19,5 +19,7 @@ GameObjectCreator.register('renderPass', function (config)
 
     BuildGameObject(this.scene, pass, config);
 
+    pass.setFlipY(true);
+
     return pass;
 });
