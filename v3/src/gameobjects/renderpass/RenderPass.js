@@ -38,6 +38,7 @@ var RenderPass = new Class({
     {
         GameObject.call(this, scene, 'RenderPass');
        
+        var _this = this;
         var resourceManager = scene.sys.game.renderer.resourceManager;
         var pot = ((width & (width - 1)) == 0 && (height & (height - 1)) == 0);
         var gl;
@@ -49,6 +50,11 @@ var RenderPass = new Class({
         this.passShader = null;
         this.uniforms = {};
         this.textures = {};
+
+        this.setFlipY(true);
+        this.setPosition(x, y);
+        this.setSize(width, height);
+        this.setOrigin(0, 0);
 
         if (resourceManager !== undefined)
         {
@@ -65,14 +71,10 @@ var RenderPass = new Class({
             this.renderTexture = resourceManager.createTexture(0, gl.LINEAR, gl.LINEAR, wrap, wrap, gl.RGBA, null, width, height);
             this.passRenderTarget = resourceManager.createRenderTarget(width, height, this.renderTexture, null);
             scene.sys.game.renderer.currentTexture[0] = null; // force rebinding of prev texture
+            this.passShader.bind();
+            this.passShader.setConstantFloat2(this.passShader.getUniformLocation('uResolution'), width, height);
         }
 
-        this.setFlipY(true);
-        this.setPosition(x, y);
-        this.setSize(width, height);
-        this.setOrigin(0, 0);
-
-        var _this = this;
         scene.sys.game.renderer.addContextRestoredCallback(function (renderer) {
             var gl = renderer.gl;
             var wrap = pot ? gl.REPEAT : gl.CLAMP_TO_EDGE;
@@ -81,6 +83,8 @@ var RenderPass = new Class({
             _this.passRenderTarget = resourceManager.createRenderTarget(_this.width, _this.height, _this.renderTexture, null);
             _this.uniforms = {};
             _this.textures = {};
+            _this.passShader.bind();
+            _this.passShader.setConstantFloat2(_this.passShader.getUniformLocation('uResolution'), _this.width, _this.height);
             scene.sys.game.renderer.currentTexture[0] = null; // force rebinding of prev texture
         });
     },
