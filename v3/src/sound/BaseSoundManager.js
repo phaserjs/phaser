@@ -113,6 +113,7 @@ var BaseSoundManager = new Class({
         return sound;
     },
     play: NOOP,
+    playAudioSprite: NOOP,
     remove: NOOP,
     removeByKey: NOOP,
     pauseAll: NOOP,
