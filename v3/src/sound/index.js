@@ -2,8 +2,6 @@
 
 module.exports = {
 
-    Dynamic: require('./dynamic'),
-
     SoundManagerCreator: require('./SoundManagerCreator'),
 
     BaseSound: require('./BaseSound'),
