@@ -11,14 +11,6 @@ var ProcessOverOutEvents = function (pointer)
     var stillOver = [];
     var previouslyOver = this._over[pointer.id];
 
-    if (this.topOnly && currentlyOver.length)
-    {
-        this.sortGameObjects(currentlyOver);
-
-        //  Only the top-most one counts now, ignore the rest
-        currentlyOver.splice(1);
-    }
-
     //  Go through all objects the pointer was previously over, and see if it still is.
     //  Splits the previouslyOver array into two parts: justOut and stillOver
 

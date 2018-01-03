@@ -23,6 +23,12 @@ var Update = function (time, delta)
 
         this.sortGameObjects(this._temp);
 
+        if (this.topOnly && this._temp.length)
+        {
+            //  Only the top-most one counts now, so safely ignore the rest
+            this._temp.splice(1);
+        }
+
         this.processDragEvents(pointer, time);
 
         this.processOverOutEvents(pointer);

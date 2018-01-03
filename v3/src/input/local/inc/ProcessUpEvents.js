@@ -19,11 +19,6 @@ var ProcessUpEvents = function (pointer)
         this.events.dispatch(new InputEvent.GAME_OBJECT_UP(pointer, gameObject));
 
         gameObject.input.onUp(gameObject, pointer, gameObject.input.localX, gameObject.input.localY);
-
-        if (this.topOnly)
-        {
-            break;
-        }
     }
 };
 
