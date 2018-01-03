@@ -363,6 +363,7 @@ Object.defineProperty(WebAudioSound.prototype, 'rate', {
     set: function (value) {
         this.currentConfig.rate = value;
         this.setRate();
+        this.events.dispatch(new SoundValueEvent(this, 'SOUND_RATE', value));
     }
 });
 /**
