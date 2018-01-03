@@ -132,6 +132,7 @@ var WebAudioSound = new Class({
         }
         //  \/\/\/ isPlaying = true, isPaused = false \/\/\/
         this.createAndStartBufferSource();
+        this.events.dispatch(new SoundEvent(this, 'SOUND_RESUME'));
         return true;
     },
     stop: function () {
