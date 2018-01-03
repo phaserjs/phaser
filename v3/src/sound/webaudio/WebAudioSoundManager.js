@@ -112,6 +112,7 @@ Object.defineProperty(WebAudioSoundManager.prototype, 'volume', {
     },
     set: function (value) {
         this.masterVolumeNode.gain.setValueAtTime(value, 0);
+        this.events.dispatch(new SoundValueEvent(this, 'SOUND_VOLUME', value));
     }
 });
 module.exports = WebAudioSoundManager;
