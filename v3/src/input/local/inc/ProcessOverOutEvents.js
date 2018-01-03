@@ -11,17 +11,15 @@ var ProcessOverOutEvents = function (pointer)
     var stillOver = [];
     var previouslyOver = this._over[pointer.id];
 
-    //  TODO - in a topOnly situation a new justOver entry at the top
-    //  should clear all previous justOut entries
-
-    //  Go through all objects the pointer was previously over, and see if it still is
+    //  Go through all objects the pointer was previously over, and see if it still is.
+    //  Splits the previouslyOver array into two parts: justOut and stillOver
     for (i = 0; i < previouslyOver.length; i++)
     {
         gameObject = previouslyOver[i];
 
         if (currentlyOver.indexOf(gameObject) === -1)
         {
-            //  Not in the currentlyOver array
+            //  Not in the currentlyOver array, so must be outside of this object now
             justOut.push(gameObject);
         }
         else
@@ -31,7 +29,8 @@ var ProcessOverOutEvents = function (pointer)
         }
     }
 
-    //  Go through the hit test results
+    //  Go through the hit test results (the contents of currentlyOver)
+    //  and if not in the previouslyOver array we know it's a new entry, so add to justOver
     for (i = 0; i < currentlyOver.length; i++)
     {
         gameObject = currentlyOver[i];
@@ -46,10 +45,27 @@ var ProcessOverOutEvents = function (pointer)
 
     //  By this point the arrays are filled, so now we can process what happened...
 
+    //  In a topOnly situation a new justOver entry at the top
+    //  should clear all previous justOut entries and ignore the rest of the stillOver entries
+
+    if (this.topOnly && justOver.length)
+    {
+        this.sortGameObjects(justOver);
+
+        //  Only the top-most one counts now, ignore the rest
+        var topObject = justOver.shift();
+
+        console.log('topOnly', topObject.name);
+
+        justOver = [ topObject ];
+
+        justOut = justOut.concat(stillOver);
+
+        stillOver.length = 0;
+    }
+
     //  Process the Just Out objects
     var total = justOut.length;
-
-    console.log('justOut', total);
 
     if (total > 0)
     {
@@ -70,19 +86,11 @@ var ProcessOverOutEvents = function (pointer)
             this.events.dispatch(new InputEvent.GAME_OBJECT_OUT(pointer, gameObject));
 
             gameObject.input.onOut(gameObject, pointer);
-
-            if (this.topOnly)
-            {
-                console.log('break 1');
-                break;
-            }
         }
     }
 
     //  Process the Just Over objects
     total = justOver.length;
-
-    console.log('justOver', total);
 
     if (total > 0)
     {
@@ -103,12 +111,6 @@ var ProcessOverOutEvents = function (pointer)
             this.events.dispatch(new InputEvent.GAME_OBJECT_OVER(pointer, gameObject));
 
             gameObject.input.onOver(gameObject, pointer, gameObject.input.localX, gameObject.input.localY);
-
-            if (this.topOnly)
-            {
-                console.log('break 2');
-                break;
-            }
         }
     }
 
