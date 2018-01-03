@@ -19,6 +19,13 @@ var BaseSound = new Class({
          */
         this.key = key;
         /**
+         * Event dispatches used to handle all sound instance
+         * relevant events.
+         *
+         * @property {Phaser.Events.EventDispatcher}
+         */
+        this.events = new EventDispatcher();
+        /**
          * Flag indicating if sound is currently playing.
          *
          * @readonly
@@ -138,13 +145,6 @@ var BaseSound = new Class({
          * @property {ISoundMarker} currentMarker
          */
         this.currentMarker = null;
-        /**
-         * Event dispatches used to handle all sound instance
-         * relevant events.
-         *
-         * @property {Phaser.Events.EventDispatcher}
-         */
-        this.events = new EventDispatcher();
     },
     addMarker: function (marker) {
         if (!marker) {
