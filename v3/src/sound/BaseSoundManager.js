@@ -45,13 +45,6 @@ var BaseSoundManager = new Class({
          */
         this.detune = 0;
         /**
-         * Global amount of panning to apply.
-         * The value can range between -1 (full left pan) and 1 (full right pan).
-         * @property  {number} pan
-         */
-        this.pan = 0;
-        // TODO add fields for global spatialization options
-        /**
          * Flag indicating if sounds should be paused when game looses focus,
          * for instance when user switches tabs or to another program/app.
          *
@@ -119,7 +112,7 @@ var BaseSoundManager = new Class({
         }
         return sound;
     },
-    addOscillator: NOOP,
+    play: NOOP,
     remove: NOOP,
     removeByKey: NOOP,
     pauseAll: NOOP,
