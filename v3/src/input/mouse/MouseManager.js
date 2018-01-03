@@ -124,7 +124,7 @@ var MouseManager = new Class({
         {
             handler = function (event)
             {
-                if (event.preventDefaulted)
+                if (event.defaultPrevented)
                 {
                     // Do nothing if event already handled
                     return;
@@ -145,7 +145,7 @@ var MouseManager = new Class({
         {
             handler = function (event)
             {
-                if (event.preventDefaulted)
+                if (event.defaultPrevented)
                 {
                     // Do nothing if event already handled
                     return;

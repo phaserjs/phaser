@@ -55,7 +55,7 @@ var TouchManager = new Class({
         {
             handler = function (event)
             {
-                if (event.preventDefaulted)
+                if (event.defaultPrevented)
                 {
                     // Do nothing if event already handled
                     return;
@@ -76,7 +76,7 @@ var TouchManager = new Class({
         {
             handler = function (event)
             {
-                if (event.preventDefaulted)
+                if (event.defaultPrevented)
                 {
                     // Do nothing if event already handled
                     return;

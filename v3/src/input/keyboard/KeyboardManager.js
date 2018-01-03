@@ -68,7 +68,7 @@ var KeyboardManager = new Class({
 
         var handler = function (event)
         {
-            if (event.preventDefaulted)
+            if (event.defaultPrevented)
             {
                 // Do nothing if event already handled
                 return;
