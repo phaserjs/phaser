@@ -1,6 +1,7 @@
 var Class = require('../../utils/Class');
 var BaseSoundManager = require('../BaseSoundManager');
 var WebAudioSound = require('./WebAudioSound');
+var SoundValueEvent = require('../SoundValueEvent');
 //  Phaser.Loader.WebAudioSoundManager
 var WebAudioSoundManager = new Class({
     Extends: BaseSoundManager,
@@ -98,6 +99,7 @@ Object.defineProperty(WebAudioSoundManager.prototype, 'mute', {
     },
     set: function (value) {
         this.masterMuteNode.gain.setValueAtTime(value ? 0 : 1, 0);
+        this.events.dispatch(new SoundValueEvent(this, 'SOUND_MUTE', value));
     }
 });
 /**
