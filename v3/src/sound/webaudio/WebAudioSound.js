@@ -245,6 +245,7 @@ var WebAudioSound = new Class({
         if (this.hasEnded) {
             this.hasEnded = false;
             this.stop();
+            this.events.dispatch(new SoundEvent(this, 'SOUND_ENDED'));
         }
         else if (this.hasLooped) {
             this.hasLooped = false;
