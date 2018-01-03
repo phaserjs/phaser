@@ -244,7 +244,8 @@ var WebAudioSound = new Class({
     update: function (time, delta) {
         if (this.hasEnded) {
             this.hasEnded = false;
-            this.stop();
+            BaseSound.prototype.stop.call(this);
+            this.stopAndRemoveBufferSource();
             this.events.dispatch(new SoundEvent(this, 'SOUND_ENDED'));
         }
         else if (this.hasLooped) {
