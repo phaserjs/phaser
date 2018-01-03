@@ -1,6 +1,7 @@
 var Class = require('../utils/Class');
 var NOOP = require('../utils/NOOP');
 var EventDispatcher = require('../events/EventDispatcher');
+var SoundValueEvent = require('./SoundValueEvent');
 //  Phaser.Sound.BaseSoundManager
 var BaseSoundManager = new Class({
     initialize: function BaseSoundManager(game) {
@@ -155,6 +156,7 @@ Object.defineProperty(BaseSoundManager.prototype, 'rate', {
         this.sounds.forEach(function (sound) {
             sound.setRate();
         }, this);
+        this.events.dispatch(new SoundValueEvent(this, 'SOUND_RATE', value));
     }
 });
 /**
