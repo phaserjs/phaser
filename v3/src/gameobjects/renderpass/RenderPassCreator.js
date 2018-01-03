@@ -19,5 +19,9 @@ GameObjectCreator.register('renderPass', function (config)
 
     BuildGameObject(this.scene, pass, config);
 
+    pass.setPosition(x, y);
+    pass.setSize(width, height);
+    pass.setOrigin(0, 0);
+
     return pass;
 });
