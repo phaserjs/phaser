@@ -406,6 +406,7 @@ Object.defineProperty(WebAudioSound.prototype, 'seek', {
         if (this.isPlaying || this.isPaused) {
             value = Math.min(Math.max(0, value), this.duration);
             this.currentConfig.seek = value;
+            this.events.dispatch(new SoundValueEvent(this, 'SOUND_SEEK', value));
         }
         if (this.isPlaying) {
             this.stopAndRemoveBufferSource();
