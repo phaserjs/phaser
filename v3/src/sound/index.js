@@ -10,5 +10,6 @@ module.exports = {
     WebAudioSound: require('./webaudio/WebAudioSound'),
     WebAudioSoundManager: require('./webaudio/WebAudioSoundManager'),
 
-    SoundEvent: require('./SoundEvent')
+    SoundEvent: require('./SoundEvent'),
+    SoundValueEvent: require('./SoundValueEvent')
 };
