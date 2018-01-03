@@ -139,13 +139,6 @@ var BaseSound = new Class({
          */
         this.currentMarker = null;
         /**
-         * [description]
-         *
-         * @protected
-         * @property {Phaser.Tween}
-         */
-        this.fadeTween = null; // TODO see how to use global tween
-        /**
          * Event dispatches used to handle all sound instance
          * relevant events.
          *
