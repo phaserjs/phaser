@@ -120,6 +120,7 @@ var WebAudioSound = new Class({
         //  \/\/\/ isPlaying = false, isPaused = true \/\/\/
         this.currentConfig.seek = this.getCurrentTime(); // Equivalent to setting paused time
         this.stopAndRemoveBufferSource();
+        this.events.dispatch(new SoundEvent(this, 'SOUND_PAUSE'));
         return true;
     },
     resume: function () {
