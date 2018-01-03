@@ -91,6 +91,8 @@ var SceneInputManager = new Class({
     setPollAlways: require('./inc/SetPollAlways'),
     setPollOnMove: require('./inc/SetPollOnMove'),
 
+    setTopOnly: require('./inc/SetTopOnly'),
+
     setHitArea: require('./inc/SetHitArea'),
     setHitAreaCircle: require('./inc/SetHitAreaCircle'),
     setHitAreaEllipse: require('./inc/SetHitAreaEllipse'),
