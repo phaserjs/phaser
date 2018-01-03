@@ -377,6 +377,7 @@ Object.defineProperty(WebAudioSound.prototype, 'detune', {
     set: function (value) {
         this.currentConfig.detune = value;
         this.setRate();
+        this.events.dispatch(new SoundValueEvent(this, 'SOUND_DETUNE', value));
     }
 });
 /**
