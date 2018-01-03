@@ -30,6 +30,7 @@ var SpriteBatch = new Class({
         this.currentTexture2D = null;
         this.viewMatrixLocation = null;
         this.tempMatrix = new TransformMatrix();
+        this.usingRenderTexture = false;
 
         //   All of these settings will be able to be controlled via the Game Config
         this.config = {
@@ -369,7 +370,7 @@ var SpriteBatch = new Class({
         }
     },
 
-    addTileTextureRect: function (texture, x, y, width, height, alpha, tint, scrollFactorX, scrollFactorY, textureWidth, textureHeight, rectX, rectY, rectW, rectH, camera, renderTarget)
+    addTileTextureRect: function (texture, x, y, width, height, alpha, tint, scrollFactorX, scrollFactorY, textureWidth, textureHeight, rectX, rectY, rectW, rectH, camera, renderTarget, flipX, flipY)
     {
         var vertexDataBuffer = this.vertexDataBuffer;
         var vertexBufferObjectF32 = vertexDataBuffer.floatView;
@@ -382,6 +383,14 @@ var SpriteBatch = new Class({
         var scrollY = camera.scrollY * scrollFactorY;
         var mva, mvb, mvc, mvd, mve, mvf, tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3;
 
+        flipX = flipX ? flipX : false;
+        flipY = flipY ? flipY : false;
+
+        rectW = rectW * (flipX ? -1 : 1);
+        rectH = rectH * (flipY ? -1 : 1);
+        rectX = flipX ? -rectW : rectX;
+        rectY = flipY ? -rectH : rectY;
+        
         // Inset UV coordinates by 0.5px to prevent tile bleeding
         var u0 = (rectX + 0.5) / textureWidth;
         var v0 = (rectY + 0.5) / textureHeight;
@@ -446,16 +455,19 @@ var SpriteBatch = new Class({
         var vertexBufferObjectF32 = vertexDataBuffer.floatView;
         var vertexBufferObjectU32 = vertexDataBuffer.uintView;
         var vertexOffset = 0;
-        var width = rectWidth * (gameObject.flipX ? -1 : 1);
-        var height = rectHeight * (gameObject.flipY ? -1 : 1);
+        var forceFlipY = (texture.isRenderTexture ? true : false);
+        var flipX = gameObject.flipX;
+        var flipY = gameObject.flipY ^ forceFlipY;
+        var width = rectWidth * (flipX ? -1 : 1);
+        var height = rectHeight * (flipY ? -1 : 1);
         var translateX = gameObject.x - camera.scrollX * gameObject.scrollFactorX;
         var translateY = gameObject.y - camera.scrollY * gameObject.scrollFactorY;
         var scaleX = gameObject.scaleX;
         var scaleY = gameObject.scaleY;
         var rotation = -gameObject.rotation;
         var tempMatrixMatrix = tempMatrix.matrix;
-        var x = -gameObject.displayOriginX + ((rectWidth) * (gameObject.flipX ? 1 : 0.0));
-        var y = -gameObject.displayOriginY + ((rectHeight) * (gameObject.flipY ? 1 : 0.0));
+        var x = -gameObject.displayOriginX + ((rectWidth) * (flipX ? 1 : 0.0));
+        var y = -gameObject.displayOriginY + ((rectHeight) * (flipY ? 1 : 0.0));
         var xw = x + rectWidth;
         var yh = y + rectHeight;
         var cameraMatrix = camera.matrix.matrix;
@@ -552,16 +564,19 @@ var SpriteBatch = new Class({
         var vertexBufferObjectF32 = vertexDataBuffer.floatView;
         var vertexBufferObjectU32 = vertexDataBuffer.uintView;
         var vertexOffset = 0;
-        var width = textureWidth * (gameObject.flipX ? -1 : 1);
-        var height = textureHeight * (gameObject.flipY ? -1 : 1);
+        var forceFlipY = (texture.isRenderTexture ? true : false);
+        var flipX = gameObject.flipX;
+        var flipY = gameObject.flipY ^ forceFlipY;
+        var width = textureWidth * (flipX ? -1 : 1);
+        var height = textureHeight * (flipY ? -1 : 1);
         var translateX = gameObject.x - camera.scrollX * gameObject.scrollFactorX;
         var translateY = gameObject.y - camera.scrollY * gameObject.scrollFactorY;
         var scaleX = gameObject.scaleX;
         var scaleY = gameObject.scaleY;
         var rotation = -gameObject.rotation;
         var tempMatrixMatrix = tempMatrix.matrix;
-        var x = -gameObject.displayOriginX + ((textureWidth) * (gameObject.flipX ? 1 : 0.0));
-        var y = -gameObject.displayOriginY + ((textureHeight) * (gameObject.flipY ? 1 : 0.0));
+        var x = -gameObject.displayOriginX + ((textureWidth) * (flipX ? 1 : 0.0));
+        var y = -gameObject.displayOriginY + ((textureHeight) * (flipY ? 1 : 0.0));
         var xw = x + width;
         var yh = y + height;
         var cameraMatrix = camera.matrix.matrix;

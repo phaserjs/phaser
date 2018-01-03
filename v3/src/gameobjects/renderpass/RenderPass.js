@@ -72,7 +72,7 @@ var RenderPass = new Class({
             this.passRenderTarget = resourceManager.createRenderTarget(width, height, this.renderTexture, null);
             scene.sys.game.renderer.currentTexture[0] = null; // force rebinding of prev texture
             this.passShader.bind();
-            this.passShader.setConstantFloat2(this.passShader.getUniformLocation('uResolution'), width, height);
+            this.passShader.setConstantFloat2(this.passShader.getUniformLocation('u_resolution'), width, height);
         }
 
         scene.sys.game.renderer.addContextRestoredCallback(function (renderer) {
@@ -84,7 +84,7 @@ var RenderPass = new Class({
             _this.uniforms = {};
             _this.textures = {};
             _this.passShader.bind();
-            _this.passShader.setConstantFloat2(_this.passShader.getUniformLocation('uResolution'), _this.width, _this.height);
+            _this.passShader.setConstantFloat2(_this.passShader.getUniformLocation('u_resolution'), _this.width, _this.height);
             scene.sys.game.renderer.currentTexture[0] = null; // force rebinding of prev texture
         });
     },
@@ -166,7 +166,7 @@ var RenderPass = new Class({
             renderer.setRenderer(this.renderer.spriteBatch, null, null);
             renderer.spriteBatch.addTileTextureRect(
                 null, x, y, width, height, 1.0, 0xFFFFFFFF, this.scrollFactorX, this.scrollFactorY,
-                width, height, 0, 0, width, height, camera, null
+                this.width, this.height, 0, 0, width, height, camera, null, false, true
             );
             for (var key in this.textures)
             {
