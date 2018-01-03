@@ -172,6 +172,7 @@ Object.defineProperty(BaseSoundManager.prototype, 'detune', {
         this.sounds.forEach(function (sound) {
             sound.setRate();
         }, this);
+        this.events.dispatch(new SoundValueEvent(this, 'SOUND_DETUNE', value));
     }
 });
 module.exports = BaseSoundManager;
