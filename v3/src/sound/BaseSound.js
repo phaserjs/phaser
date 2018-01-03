@@ -290,7 +290,6 @@ var BaseSound = new Class({
         this.currentConfig = null;
         this.markers = null;
         this.currentMarker = null;
-        this.fadeTween = null;
         this.events.destroy();
         this.events = null;
     },
