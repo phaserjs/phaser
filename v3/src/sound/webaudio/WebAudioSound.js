@@ -107,6 +107,7 @@ var WebAudioSound = new Class({
         //  \/\/\/ isPlaying = true, isPaused = false \/\/\/
         this.stopAndRemoveBufferSource();
         this.createAndStartBufferSource();
+        this.events.dispatch(new SoundEvent(this, 'SOUND_PLAY'));
         return this;
     },
     pause: function () {
