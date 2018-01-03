@@ -273,9 +273,6 @@ var BaseSound = new Class({
         this.currentConfig.seek = 0;
         this.currentConfig.delay = 0;
     },
-    fadeTo: function (volume, duration) {
-        return null;
-    },
     /**
      * @protected
      */
