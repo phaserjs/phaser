@@ -12,6 +12,12 @@ var BaseSoundManager = new Class({
          */
         this.game = game;
         /**
+         * [description]
+         *
+         * @property {Phaser.Events.EventDispatcher} events
+         */
+        this.events = new EventDispatcher();
+        /**
          * An array containing all added sounds.
          *
          * @private
@@ -62,12 +68,6 @@ var BaseSoundManager = new Class({
                 this.onFocus();
             }
         }.bind(this));
-        /**
-         * [description]
-         *
-         * @property {Phaser.Events.EventDispatcher} events
-         */
-        this.events = new EventDispatcher();
         /**
          * Property that actually holds the value of global playback rate.
          *
