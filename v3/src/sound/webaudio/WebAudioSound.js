@@ -349,6 +349,7 @@ Object.defineProperty(WebAudioSound.prototype, 'volume', {
     set: function (value) {
         this.currentConfig.volume = value;
         this.volumeNode.gain.setValueAtTime(value, 0);
+        this.events.dispatch(new SoundValueEvent(this, 'SOUND_VOLUME', value));
     }
 });
 /**
