@@ -1,6 +1,7 @@
 var Class = require('../../utils/Class');
 var BaseSound = require('../BaseSound');
 var SoundEvent = require('../SoundEvent');
+var SoundValueEvent = require('../SoundValueEvent');
 //  Phaser.Sound.WebAudioSound
 // TODO support webkitAudioContext implementation differences
 // https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API/Porting_webkitAudioContext_code_to_standards_based_AudioContext
@@ -334,6 +335,7 @@ Object.defineProperty(WebAudioSound.prototype, 'mute', {
     set: function (value) {
         this.currentConfig.mute = value;
         this.muteNode.gain.setValueAtTime(value ? 0 : 1, 0);
+        this.events.dispatch(new SoundValueEvent(this, 'SOUND_MUTE', value));
     }
 });
 /**
