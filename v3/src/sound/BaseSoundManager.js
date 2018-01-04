@@ -129,7 +129,11 @@ var BaseSoundManager = new Class({
             sound.play();
         }
     },
-    playAudioSprite: NOOP,
+    playAudioSprite: function (key, spriteName, config) {
+        var sound = this.addAudioSprite(key);
+        sound.events.once('SOUND_ENDED', sound.destroy.bind(sound));
+        sound.play(spriteName, config);
+    },
     remove: NOOP,
     removeByKey: NOOP,
     pauseAll: NOOP,
