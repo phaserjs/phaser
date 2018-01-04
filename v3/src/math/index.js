@@ -53,6 +53,7 @@ module.exports = {
     SinCosTableGenerator: require('./SinCosTableGenerator'),
     SmootherStep: require('./SmootherStep'),
     SmoothStep: require('./SmoothStep'),
+    TransformXY: require('./TransformXY'),
     Within: require('./Within'),
     Wrap: require('./Wrap'),
 
