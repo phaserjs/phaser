@@ -164,17 +164,17 @@ var BaseSoundManager = new Class({
         return removed;
     },
     pauseAll: function () {
-        this.sounds.forEach(function (sound) {
+        this.forEachActiveSound(function (sound) {
             sound.pause();
         });
     },
     resumeAll: function () {
-        this.sounds.forEach(function (sound) {
+        this.forEachActiveSound(function (sound) {
             sound.resume();
         });
     },
     stopAll: function () {
-        this.sounds.forEach(function (sound) {
+        this.forEachActiveSound(function (sound) {
             sound.stop();
         });
     },
