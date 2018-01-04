@@ -37,7 +37,7 @@ var BaseSoundManager = new Class({
          */
         this.volume = 1;
         /**
-         * Global playback rate at which all the audio assets will be played.
+         * Global playback rate at which all the sounds will be played.
          * Value of 1.0 plays the audio at full speed, 0.5 plays the audio at half speed
          * and 2.0 doubles the audio's playback speed.
          *
@@ -113,7 +113,11 @@ var BaseSoundManager = new Class({
         }
         return sound;
     },
-    play: NOOP,
+    play: function (key, config) {
+        var sound = this.add(key);
+        sound.events.once('SOUND_ENDED', sound.destroy.bind(sound));
+        sound.play(config);
+    },
     playAudioSprite: NOOP,
     remove: NOOP,
     removeByKey: NOOP,
