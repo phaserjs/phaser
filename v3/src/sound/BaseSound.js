@@ -291,14 +291,14 @@ var BaseSound = new Class({
         this.pendingRemove = true;
         this.manager = null;
         this.key = '';
+        this.events.destroy();
+        this.events = null;
         this.isPlaying = false;
         this.isPaused = false;
         this.config = null;
         this.currentConfig = null;
         this.markers = null;
         this.currentMarker = null;
-        this.events.destroy();
-        this.events = null;
     },
     /**
      * @protected
