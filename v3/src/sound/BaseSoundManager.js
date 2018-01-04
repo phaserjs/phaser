@@ -113,10 +113,21 @@ var BaseSoundManager = new Class({
         }
         return sound;
     },
-    play: function (key, config) {
+    play: function (key, extra) {
         var sound = this.add(key);
         sound.events.once('SOUND_ENDED', sound.destroy.bind(sound));
-        sound.play(config);
+        if (extra) {
+            if (extra.name) {
+                sound.addMarker(extra);
+                sound.play(extra.name);
+            }
+            else {
+                sound.play(extra);
+            }
+        }
+        else {
+            sound.play();
+        }
     },
     playAudioSprite: NOOP,
     remove: NOOP,
