@@ -134,7 +134,14 @@ var BaseSoundManager = new Class({
         sound.events.once('SOUND_ENDED', sound.destroy.bind(sound));
         sound.play(spriteName, config);
     },
-    remove: NOOP,
+    remove: function (sound) {
+        var index = this.sounds.indexOf(sound);
+        if (index !== -1) {
+            this.sounds.splice(index, 1);
+            return true;
+        }
+        return false;
+    },
     removeByKey: NOOP,
     pauseAll: function () {
         this.sounds.forEach(function (sound) {
