@@ -145,6 +145,13 @@ var BaseSound = new Class({
          * @property {ISoundMarker} currentMarker
          */
         this.currentMarker = null;
+        /**
+         * Flag indicating if destroy method was called on this sound.
+         *
+         * @private
+         * @property {boolean} pendingRemove
+         */
+        this.pendingRemove = false;
     },
     addMarker: function (marker) {
         if (!marker) {
