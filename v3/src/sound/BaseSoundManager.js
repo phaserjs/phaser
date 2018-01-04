@@ -141,7 +141,11 @@ var BaseSoundManager = new Class({
             sound.pause();
         });
     },
-    resumeAll: NOOP,
+    resumeAll: function () {
+        this.sounds.forEach(function (sound) {
+            sound.resume();
+        });
+    },
     stopAll: function () {
         this.sounds.forEach(function (sound) {
             sound.stop();
