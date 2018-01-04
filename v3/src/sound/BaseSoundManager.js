@@ -142,7 +142,16 @@ var BaseSoundManager = new Class({
         }
         return false;
     },
-    removeByKey: NOOP,
+    removeByKey: function (key) {
+        var removed = 0;
+        for (var i = this.sounds.length - 1; i >= 0; i--) {
+            if (this.sounds[i].key === key) {
+                this.sounds.splice(i, 1);
+                removed++;
+            }
+        }
+        return removed;
+    },
     pauseAll: function () {
         this.sounds.forEach(function (sound) {
             sound.pause();
