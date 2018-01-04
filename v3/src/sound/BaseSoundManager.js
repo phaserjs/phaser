@@ -240,7 +240,7 @@ Object.defineProperty(BaseSoundManager.prototype, 'rate', {
     },
     set: function (value) {
         this._rate = value;
-        this.sounds.forEach(function (sound) {
+        this.forEachActiveSound(function (sound) {
             sound.setRate();
         }, this);
         this.events.dispatch(new SoundValueEvent(this, 'SOUND_RATE', value));
@@ -256,7 +256,7 @@ Object.defineProperty(BaseSoundManager.prototype, 'detune', {
     },
     set: function (value) {
         this._detune = value;
-        this.sounds.forEach(function (sound) {
+        this.forEachActiveSound(function (sound) {
             sound.setRate();
         }, this);
         this.events.dispatch(new SoundValueEvent(this, 'SOUND_DETUNE', value));
