@@ -119,7 +119,11 @@ var BaseSoundManager = new Class({
     removeByKey: NOOP,
     pauseAll: NOOP,
     resumeAll: NOOP,
-    stopAll: NOOP,
+    stopAll: function () {
+        this.sounds.forEach(function (sound) {
+            sound.stop();
+        });
+    },
     /**
      * @private
      */
