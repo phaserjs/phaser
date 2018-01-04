@@ -134,6 +134,12 @@ var BaseSoundManager = new Class({
         sound.events.once('SOUND_ENDED', sound.destroy.bind(sound));
         sound.play(spriteName, config);
     },
+    /**
+     *
+     *
+     * @param {ISound} sound
+     * @returns {boolean} True if the sound was removed successfully, otherwise false.
+     */
     remove: function (sound) {
         var index = this.sounds.indexOf(sound);
         if (index !== -1) {
@@ -142,6 +148,11 @@ var BaseSoundManager = new Class({
         }
         return false;
     },
+    /**
+     *
+     * @param {string} key
+     * @returns {number} The number of matching sound objects that were removed.
+     */
     removeByKey: function (key) {
         var removed = 0;
         for (var i = this.sounds.length - 1; i >= 0; i--) {
@@ -183,7 +194,15 @@ var BaseSoundManager = new Class({
      * @param {number} delta - The delta time elapsed since the last frame.
      */
     update: function (time, delta) {
-        // TODO remove pending sounds
+        this.sounds.sort(function (s1, s2) {
+            return (s1.pendingRemove === s2.pendingRemove) ? 0 : s1 ? 1 : -1;
+        });
+        for (var i = this.sounds.length - 1; i >= 0; i--) {
+            if (!this.sounds[i].pendingRemove) {
+                this.sounds.splice(this.sounds.length - 1 - i);
+                break;
+            }
+        }
         this.sounds.forEach(function (sound) {
             sound.update(time, delta);
         });
