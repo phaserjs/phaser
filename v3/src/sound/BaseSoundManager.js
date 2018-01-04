@@ -174,6 +174,7 @@ var BaseSoundManager = new Class({
         this.forEachActiveSound(function (sound) {
             sound.resume();
         });
+        this.events.dispatch(new SoundEvent(this, 'SOUND_RESUME'));
     },
     stopAll: function () {
         this.forEachActiveSound(function (sound) {
