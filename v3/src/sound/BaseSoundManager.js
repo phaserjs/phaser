@@ -180,6 +180,7 @@ var BaseSoundManager = new Class({
         this.forEachActiveSound(function (sound) {
             sound.stop();
         });
+        this.events.dispatch(new SoundEvent(this, 'SOUND_STOP'));
     },
     /**
      * @private
