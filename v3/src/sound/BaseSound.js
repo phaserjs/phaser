@@ -285,7 +285,10 @@ var BaseSound = new Class({
      */
     update: NOOP,
     destroy: function () {
-        this.manager.remove(this); // TODO replace with pendingRemove
+        if (this.pendingRemove) {
+            return;
+        }
+        this.pendingRemove = true;
         this.manager = null;
         this.key = '';
         this.isPlaying = false;
