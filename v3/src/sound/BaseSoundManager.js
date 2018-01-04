@@ -194,20 +194,20 @@ var BaseSoundManager = new Class({
      * @param {number} delta - The delta time elapsed since the last frame.
      */
     update: function (time, delta) {
-        this.sounds.sort(function (s1, s2) {
-            return (s1.pendingRemove === s2.pendingRemove) ? 0 : s1 ? 1 : -1;
-        });
-        for (var i = this.sounds.length - 1; i >= 0; i--) {
-            if (!this.sounds[i].pendingRemove) {
-                this.sounds.splice(this.sounds.length - 1 - i);
-                break;
-            }
-        }
+        // TODO remove pending sounds
         this.sounds.forEach(function (sound) {
             sound.update(time, delta);
         });
     },
-    destroy: NOOP
+    destroy: function () {
+        this.game = null;
+        this.events.destroy();
+        this.events = null;
+        this.sounds.forEach(function (sound) {
+            sound.destroy();
+        });
+        this.sounds = null;
+    }
 });
 /**
  * Global playback rate.
