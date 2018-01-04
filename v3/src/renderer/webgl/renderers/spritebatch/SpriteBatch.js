@@ -370,6 +370,18 @@ var SpriteBatch = new Class({
         }
     },
 
+    addRenderTargetTextureRect: function (renderTexture, x, y, width, height)
+    {
+        if (this.vertexCount > 0)
+        {
+            this.flush();
+        }
+
+        var vertexDataBuffer = this.vertexDataBuffer;
+        var vertexBufferObjectF32 = vertexDataBuffer.floatView;
+        var vertexBufferObjectU32 = vertexDataBuffer.uintView;
+    },
+
     addTileTextureRect: function (texture, x, y, width, height, alpha, tint, scrollFactorX, scrollFactorY, textureWidth, textureHeight, rectX, rectY, rectW, rectH, camera, renderTarget, flipX, flipY)
     {
         var vertexDataBuffer = this.vertexDataBuffer;
