@@ -29,12 +29,21 @@ var HitTest = function (tempMatrix, x, y, gameObjects, camera, output)
             continue;
         }
 
-        var point = GetTransformedPoint(
-            tempMatrix,
-            gameObject,
+        tempMatrix.applyITRS(gameObject.x, gameObject.y, -gameObject.rotation, gameObject.scaleX, gameObject.scaleY);
+
+        tempMatrix.invert();
+
+        var point = tempMatrix.transformPoint(
             screenPoint.x + camera.scrollX * gameObject.scrollFactorX,
             screenPoint.y + camera.scrollY * gameObject.scrollFactorY
         );
+
+        // var point = GetTransformedPoint(
+        //     tempMatrix,
+        //     gameObject,
+        //     screenPoint.x + camera.scrollX * gameObject.scrollFactorX,
+        //     screenPoint.y + camera.scrollY * gameObject.scrollFactorY
+        // );
    
         if (PointWithinHitArea(gameObject, point.x, point.y, camera))
         {

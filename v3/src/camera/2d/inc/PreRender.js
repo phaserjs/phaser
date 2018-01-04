@@ -20,27 +20,31 @@ var PreRender = function ()
     if (this.useBounds)
     {
         var bounds = this._bounds;
-        var boundsX = bounds.x;
-        var boundsY = bounds.y;
-        var boundsR = Math.max(bounds.right - width, width);
-        var boundsB = Math.max(bounds.bottom - height, height);
 
-        if (this.scrollX < boundsX)
+        // width = bounds.width;
+        // height = bounds.height;
+
+        // var boundsX = bounds.x;
+        // var boundsY = bounds.y;
+        // var boundsR = Math.max(bounds.right - width, width);
+        // var boundsB = Math.max(bounds.bottom - height, height);
+
+        if (this.scrollX < bounds.x)
         {
-            this.scrollX = boundsX;
+            this.scrollX = bounds.x;
         }
-        else if (this.scrollX > boundsR)
+        else if (this.scrollX > bounds.right)
         {
-            this.scrollX = boundsR;
+            this.scrollX = bounds.right;
         }
 
-        if (this.scrollY < boundsY)
+        if (this.scrollY < bounds.y)
         {
-            this.scrollY = boundsY;
+            this.scrollY = bounds.y;
         }
-        else if (this.scrollY > boundsB)
+        else if (this.scrollY > bounds.bottom)
         {
-            this.scrollY = boundsB;
+            this.scrollY = bounds.bottom;
         }
     }
 
