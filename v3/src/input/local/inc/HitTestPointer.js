@@ -1,3 +1,5 @@
+//  Called from SceneInputManager.update
+
 var HitTestPointer = function (pointer)
 {
     var camera = this.cameras.getCameraBelowPointer(pointer);

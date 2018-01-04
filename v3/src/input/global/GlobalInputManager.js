@@ -3,16 +3,12 @@
 var Class = require('../../utils/Class');
 var EventDispatcher = require('../../events/EventDispatcher');
 var Gamepad = require('../gamepad/GamepadManager');
-var GetTransformedPoint = require('./inc/GetTransformedPoint');
 var HitTest = require('./inc/HitTest');
 var Keyboard = require('../keyboard/KeyboardManager');
 var Mouse = require('../mouse/MouseManager');
 var MouseEvent = require('../mouse/events/');
 var Pointer = require('../Pointer');
-var PointScreenToWorldHitTest = require('./inc/PointScreenToWorldHitTest');
-var PointWithinGameObject = require('./inc/PointWithinGameObject');
 var Touch = require('../touch/TouchManager');
-var TransformMatrix = require('../../gameobjects/components/TransformMatrix');
 
 var GlobalInputManager = new Class({
 
@@ -45,7 +41,7 @@ var GlobalInputManager = new Class({
 
         this.bounds;
 
-        this._tempMatrix = new TransformMatrix();
+        // this._tempMatrix = new TransformMatrix();
         this._tempPoint = { x: 0, y: 0 };
         this._tempHitTest = [];
     },
@@ -159,26 +155,12 @@ var GlobalInputManager = new Class({
         }
     },
 
-    getTransformedPoint: function (gameObject, x, y)
-    {
-        return GetTransformedPoint(this._tempMatrix, gameObject, x, y, this._tempPoint);
-    },
-
-    pointWithinGameObject: function (gameObject, x, y)
-    {
-        return PointWithinGameObject(gameObject, x, y);
-    },
-
     hitTest: function (gameObjects, x, y, camera)
     {
-        return HitTest(this._tempMatrix, x, y, gameObjects, camera, this._tempHitTest);
+        return HitTest(this._tempPoint, x, y, gameObjects, camera, this._tempHitTest);
     },
 
-    pointScreenToWorldHitTest: function (gameObjects, x, y, camera)
-    {
-        return PointScreenToWorldHitTest(this._tempMatrix, x, y, gameObjects, camera, this._tempHitTest);
-    },
-
+    //  Called by Pointer class
     transformX: function (pageX)
     {
         return (pageX - this.bounds.left) * this.scale.x;
