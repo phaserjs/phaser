@@ -1,6 +1,7 @@
 var Class = require('../utils/Class');
 var NOOP = require('../utils/NOOP');
 var EventDispatcher = require('../events/EventDispatcher');
+var SoundEvent = require('./SoundEvent');
 var SoundValueEvent = require('./SoundValueEvent');
 //  Phaser.Sound.BaseSoundManager
 var BaseSoundManager = new Class({
@@ -167,6 +168,7 @@ var BaseSoundManager = new Class({
         this.forEachActiveSound(function (sound) {
             sound.pause();
         });
+        this.events.dispatch(new SoundEvent(this, 'SOUND_PAUSE'));
     },
     resumeAll: function () {
         this.forEachActiveSound(function (sound) {
