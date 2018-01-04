@@ -215,6 +215,19 @@ var BaseSoundManager = new Class({
             sound.destroy();
         });
         this.sounds = null;
+    },
+    /**
+     * @private
+     * @param {(value: ISound, index: number, array: ISound[]) => void} callbackfn
+     * @param thisArg
+     */
+    forEachActiveSound: function (callbackfn, thisArg) {
+        var _this = this;
+        this.sounds.forEach(function (sound, index) {
+            if (!sound.pendingRemove) {
+                callbackfn.call(thisArg || _this, sound, index, _this.sounds);
+            }
+        });
     }
 });
 /**
