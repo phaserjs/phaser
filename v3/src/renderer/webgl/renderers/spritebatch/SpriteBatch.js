@@ -370,7 +370,7 @@ var SpriteBatch = new Class({
         }
     },
 
-    addRenderPassRect: function (x, y, width, height, subWidth, subHeight, scrollFactorX, scrollFactorY, camera, passShader, passRenderTarget)
+    addRenderPassRect: function (x, y, width, height, scrollFactorX, scrollFactorY, camera, passShader, passRenderTarget)
     {
         if (this.vertexCount > 0)
         {
@@ -380,10 +380,12 @@ var SpriteBatch = new Class({
         this.drawIndexed = false;
         this.vertexCount = 6;
         this.vertexDataBuffer.allocate(36);
+
+        y += height;
         
         var gl = this.glContext;
-        var scrollX = 0;// camera.scrollX * scrollFactorX;
-        var scrollY = 0;// camera.scrollY * scrollFactorY;
+        var scrollX = camera.scrollX * scrollFactorX;
+        var scrollY = camera.scrollY * scrollFactorY;
         var vertexDataBuffer = this.vertexDataBuffer;
         var vertexBufferObjectF32 = vertexDataBuffer.floatView;
         var vertexBufferObjectU32 = vertexDataBuffer.uintView;
@@ -405,9 +407,9 @@ var SpriteBatch = new Class({
         var tx3 = (xw * mva + y * mvc + mve) - scrollX;
         var ty3 = (xw * mvb + y * mvd + mvf) - scrollY;
         var u0 = 0;
-        var v0 = 0;
+        var v0 = 1;
         var u1 = 1;
-        var v1 = 1;
+        var v1 = 0;
 
         //  Top Left
         vertexBufferObjectF32[0] = tx0;
@@ -457,7 +459,7 @@ var SpriteBatch = new Class({
         vertexBufferObjectU32[34] = 0xffffff;
         vertexBufferObjectF32[35] = 1.0;
 
-        gl.viewport(0, 0, width, height);
+        //gl.viewport(0, 0, subWidth, subHeight);
         this.flush(passShader, passRenderTarget);
     },
 
