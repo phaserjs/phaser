@@ -211,7 +211,7 @@ var BaseSoundManager = new Class({
         this.game = null;
         this.events.destroy();
         this.events = null;
-        this.sounds.forEach(function (sound) {
+        this.forEachActiveSound(function (sound) {
             sound.destroy();
         });
         this.sounds = null;
