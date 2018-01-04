@@ -118,6 +118,7 @@ var TransformMatrix = new Class({
         return this;
     },
 
+
     transformPoint: function (x, y, point)
     {
         if (point === undefined) { point = { x: 0, y: 0 }; }
