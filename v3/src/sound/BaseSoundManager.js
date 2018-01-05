@@ -201,9 +201,9 @@ var BaseSoundManager = new Class({
         this.sounds.sort(function (s1, s2) {
             return (s1.pendingRemove === s2.pendingRemove) ? 0 : s1 ? 1 : -1;
         });
-        for (var i = this.sounds.length - 1; i >= 0; i--) {
-            if (!this.sounds[i].pendingRemove) {
-                this.sounds.splice(this.sounds.length - 1 - i);
+        for (var i = 0; i < this.sounds.length; i++) {
+            if (this.sounds[i].pendingRemove) {
+                this.sounds.length = i;
                 break;
             }
         }
