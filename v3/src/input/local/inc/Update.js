@@ -17,36 +17,38 @@ var Update = function (time, delta)
         }
     }
 
-    if (runUpdate)
+    if (!runUpdate)
     {
-        this._temp = this.hitTestPointer(pointer);
+        return;
+    }
 
-        this.sortGameObjects(this._temp);
+    this._temp = this.hitTestPointer(pointer);
 
-        if (this.topOnly && this._temp.length)
-        {
-            //  Only the top-most one counts now, so safely ignore the rest
-            this._temp.splice(1);
-        }
+    this.sortGameObjects(this._temp);
 
-        this.processDragEvents(pointer, time);
+    if (this.topOnly && this._temp.length)
+    {
+        //  Only the top-most one counts now, so safely ignore the rest
+        this._temp.splice(1);
+    }
 
-        this.processOverOutEvents(pointer);
+    this.processDragEvents(pointer, time);
 
-        if (pointer.justDown)
-        {
-            this.processDownEvents(pointer);
-        }
+    this.processOverOutEvents(pointer);
 
-        if (pointer.justUp)
-        {
-            this.processUpEvents(pointer);
-        }
+    if (pointer.justDown)
+    {
+        this.processDownEvents(pointer);
+    }
 
-        if (pointer.justMoved)
-        {
-            this.processMoveEvents(pointer);
-        }
+    if (pointer.justUp)
+    {
+        this.processUpEvents(pointer);
+    }
+
+    if (pointer.justMoved)
+    {
+        this.processMoveEvents(pointer);
     }
 };
 

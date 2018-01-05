@@ -402,6 +402,7 @@ var WebGLRenderer = new Class({
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT | gl.STENCIL_BUFFER_BIT);
 
         this.setBlendMode(BlendModes.NORMAL);
+        this.gl.viewport(0, 0, this.width, this.height);
     },
 
     /**

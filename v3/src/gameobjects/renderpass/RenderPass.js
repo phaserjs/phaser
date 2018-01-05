@@ -176,6 +176,7 @@ var RenderPass = new Class({
                 gl.bindTexture(gl.TEXTURE_2D, textureData.texture);
                 gl.activeTexture(gl.TEXTURE0);
             }
+            //renderer.spriteBatch.addRenderPassRect(x, y, width, height, this.scrollFactorX, this.scrollFactorY, camera, this.passShader, this.passRenderTarget);
             renderer.spriteBatch.flush(this.passShader, this.passRenderTarget);
         }
     },

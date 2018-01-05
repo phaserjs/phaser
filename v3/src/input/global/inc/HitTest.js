@@ -1,11 +1,13 @@
-var GetTransformedPoint = require('./GetTransformedPoint');
 var PointWithinHitArea = require('./PointWithinHitArea');
+var TransformXY = require('../../../math/TransformXY');
 
 //  Will always return an array.
 //  Array contains matching Interactive Objects.
 //  Array will be empty if no objects were matched.
 
-var HitTest = function (tempMatrix, x, y, gameObjects, camera, output)
+//  x/y = pointer x/y (un-translated)
+
+var HitTest = function (tempPoint, x, y, gameObjects, camera, output)
 {
     var cameraW = camera.width;
     var cameraH = camera.height;
@@ -17,8 +19,12 @@ var HitTest = function (tempMatrix, x, y, gameObjects, camera, output)
         return output;
     }
 
-    var screenPoint = camera.getWorldPoint({ x: x, y: y });
+    //  Stores the world point inside of tempPoint
+    camera.getWorldPoint(x, y, tempPoint);
+
     var culledGameObjects = camera.cull(gameObjects);
+
+    var point = { x: 0, y: 0 };
 
     for (var i = 0; i < culledGameObjects.length; i++)
     {
@@ -29,23 +35,12 @@ var HitTest = function (tempMatrix, x, y, gameObjects, camera, output)
             continue;
         }
 
-        tempMatrix.applyITRS(gameObject.x, gameObject.y, -gameObject.rotation, gameObject.scaleX, gameObject.scaleY);
+        var px = tempPoint.x + (camera.scrollX * gameObject.scrollFactorX) - camera.scrollX;
+        var py = tempPoint.y + (camera.scrollY * gameObject.scrollFactorY) - camera.scrollY;
 
-        tempMatrix.invert();
+        TransformXY(px, py, gameObject.x, gameObject.y, gameObject.rotation, gameObject.scaleX, gameObject.scaleY, point);
 
-        var point = tempMatrix.transformPoint(
-            screenPoint.x + camera.scrollX * gameObject.scrollFactorX,
-            screenPoint.y + camera.scrollY * gameObject.scrollFactorY
-        );
-
-        // var point = GetTransformedPoint(
-        //     tempMatrix,
-        //     gameObject,
-        //     screenPoint.x + camera.scrollX * gameObject.scrollFactorX,
-        //     screenPoint.y + camera.scrollY * gameObject.scrollFactorY
-        // );
-   
-        if (PointWithinHitArea(gameObject, point.x, point.y, camera))
+        if (PointWithinHitArea(gameObject, point.x, point.y))
         {
             output.push(gameObject);
         }

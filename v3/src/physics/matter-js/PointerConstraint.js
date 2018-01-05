@@ -129,7 +129,7 @@ var PointerConstraint = new Class({
         {
             var pos = this.position;
 
-            this.camera.getWorldPoint(pointer.position, pos);
+            this.camera.getWorldPoint(pointer.x, pointer.y, pos);
 
             if (constraint.bodyB)
             {

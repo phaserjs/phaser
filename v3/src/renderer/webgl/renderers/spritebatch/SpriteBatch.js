@@ -370,6 +370,99 @@ var SpriteBatch = new Class({
         }
     },
 
+    addRenderPassRect: function (x, y, width, height, scrollFactorX, scrollFactorY, camera, passShader, passRenderTarget)
+    {
+        if (this.vertexCount > 0)
+        {
+            this.flush();
+        }
+
+        this.drawIndexed = false;
+        this.vertexCount = 6;
+        this.vertexDataBuffer.allocate(36);
+
+        y += height;
+        
+        var gl = this.glContext;
+        var scrollX = camera.scrollX * scrollFactorX;
+        var scrollY = camera.scrollY * scrollFactorY;
+        var vertexDataBuffer = this.vertexDataBuffer;
+        var vertexBufferObjectF32 = vertexDataBuffer.floatView;
+        var vertexBufferObjectU32 = vertexDataBuffer.uintView;
+        var cameraMatrix = camera.matrix.matrix;
+        var xw = x + width;
+        var yh = y + height;
+        var mva = cameraMatrix[0];
+        var mvb = cameraMatrix[1];
+        var mvc = cameraMatrix[2];
+        var mvd = cameraMatrix[3];
+        var mve = cameraMatrix[4];
+        var mvf = cameraMatrix[5];
+        var tx0 = (x * mva + y * mvc + mve) - scrollX;
+        var ty0 = (x * mvb + y * mvd + mvf) - scrollY;
+        var tx1 = (x * mva + yh * mvc + mve) - scrollX;
+        var ty1 = (x * mvb + yh * mvd + mvf) - scrollY;
+        var tx2 = (xw * mva + yh * mvc + mve) - scrollX;
+        var ty2 = (xw * mvb + yh * mvd + mvf) - scrollY;
+        var tx3 = (xw * mva + y * mvc + mve) - scrollX;
+        var ty3 = (xw * mvb + y * mvd + mvf) - scrollY;
+        var u0 = 0;
+        var v0 = 1;
+        var u1 = 1;
+        var v1 = 0;
+
+        //  Top Left
+        vertexBufferObjectF32[0] = tx0;
+        vertexBufferObjectF32[1] = ty0;
+        vertexBufferObjectF32[2] = u0;
+        vertexBufferObjectF32[3] = v0;
+        vertexBufferObjectU32[4] = 0xffffff;
+        vertexBufferObjectF32[5] = 1.0;
+
+        //  Bottom Left
+        vertexBufferObjectF32[6] = tx1;
+        vertexBufferObjectF32[7] = ty1;
+        vertexBufferObjectF32[8] = u0;
+        vertexBufferObjectF32[9] = v1;
+        vertexBufferObjectU32[10] = 0xffffff;
+        vertexBufferObjectF32[11] = 1.0;
+
+        //  Bottom Right
+        vertexBufferObjectF32[12] = tx2;
+        vertexBufferObjectF32[13] = ty2;
+        vertexBufferObjectF32[14] = u1;
+        vertexBufferObjectF32[15] = v1;
+        vertexBufferObjectU32[16] = 0xffffff;
+        vertexBufferObjectF32[17] = 1.0;
+
+        //  Top Left
+        vertexBufferObjectF32[18] = tx0;
+        vertexBufferObjectF32[19] = ty0;
+        vertexBufferObjectF32[20] = u0;
+        vertexBufferObjectF32[21] = v0;
+        vertexBufferObjectU32[22] = 0xffffff;
+        vertexBufferObjectF32[23] = 1.0;
+
+        //  Bottom Right
+        vertexBufferObjectF32[24] = tx2;
+        vertexBufferObjectF32[25] = ty2;
+        vertexBufferObjectF32[26] = u1;
+        vertexBufferObjectF32[27] = v1;
+        vertexBufferObjectU32[28] = 0xffffff;
+        vertexBufferObjectF32[29] = 1.0;
+
+        //  Top Right
+        vertexBufferObjectF32[30] = tx3;
+        vertexBufferObjectF32[31] = ty3;
+        vertexBufferObjectF32[32] = u1;
+        vertexBufferObjectF32[33] = v0;
+        vertexBufferObjectU32[34] = 0xffffff;
+        vertexBufferObjectF32[35] = 1.0;
+
+        //gl.viewport(0, 0, subWidth, subHeight);
+        this.flush(passShader, passRenderTarget);
+    },
+
     addTileTextureRect: function (texture, x, y, width, height, alpha, tint, scrollFactorX, scrollFactorY, textureWidth, textureHeight, rectX, rectY, rectW, rectH, camera, renderTarget, flipX, flipY)
     {
         var vertexDataBuffer = this.vertexDataBuffer;

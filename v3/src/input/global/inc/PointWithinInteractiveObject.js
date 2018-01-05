@@ -1,4 +1,4 @@
-//  x/y MUST be translated before being passed to this function, unless the gameObject is guarnateed to
+//  x/y MUST be translated before being passed to this function, unless the gameObject is guaranteed to
 //  be not rotated or scaled in any way
 
 var PointWithinInteractiveObject = function (object, x, y)

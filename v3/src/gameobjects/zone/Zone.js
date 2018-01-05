@@ -8,9 +8,10 @@ var GameObject = require('../GameObject');
 var Rectangle = require('../../geom/rectangle/Rectangle');
 var RectangleContains = require('../../geom/rectangle/Contains');
 
-//  A Zone is a non-rendering Game Object that has a position and size.
+//  A Zone is a non-rendering rectangular Game Object that has a position and size.
 //  It has no texture and never renders, but does live on the display list and
 //  can be moved, scaled and rotated like any other Game Object.
+
 //  The default origin is 0.5, the center of the Zone, the same as with Game Objects.
 //  It's useful for linking to drop zones and input hit areas and has a couple of helper methods specifically for this.
 //  Also useful for object overlap checks, or as a base for your own non-displaying objects.
@@ -23,7 +24,6 @@ var Zone = new Class({
         Components.GetBounds,
         Components.Origin,
         Components.ScaleMode,
-        Components.Size,
         Components.Transform,
         Components.ScrollFactor,
         Components.Visible
@@ -39,9 +39,63 @@ var Zone = new Class({
         GameObject.call(this, scene, 'Zone');
 
         this.setPosition(x, y);
-        this.setSize(width, height);
+
+        this.width = width;
+        this.height = height;
 
         this.blendMode = BlendModes.NORMAL;
+    },
+
+    displayWidth: {
+
+        get: function ()
+        {
+            return this.scaleX * this.width;
+        },
+
+        set: function (value)
+        {
+            this.scaleX = value / this.width;
+        }
+
+    },
+
+    displayHeight: {
+
+        get: function ()
+        {
+            return this.scaleY * this.height;
+        },
+
+        set: function (value)
+        {
+            this.scaleY = value / this.height;
+        }
+
+    },
+
+    setSize: function (width, height, resizeInput)
+    {
+        if (resizeInput === undefined) { resizeInput = true; }
+
+        this.width = width;
+        this.height = height;
+
+        if (resizeInput && this.input && this.input.hitArea instanceof Rectangle)
+        {
+            this.input.hitArea.width = width;
+            this.input.hitArea.height = height;
+        }
+
+        return this;
+    },
+
+    setDisplaySize: function (width, height)
+    {
+        this.displayWidth = width;
+        this.displayHeight = height;
+
+        return this;
     },
 
     //  Centered on the Zones x/y

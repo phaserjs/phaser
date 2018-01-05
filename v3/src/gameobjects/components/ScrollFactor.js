@@ -1,7 +1,7 @@
 var ScrollFactor = {
 
-    scrollFactorX: 1.0,
-    scrollFactorY: 1.0,
+    scrollFactorX: 1,
+    scrollFactorY: 1,
 
     setScrollFactor: function (x, y)
     {

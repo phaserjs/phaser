@@ -81,11 +81,22 @@ var SmoothedKeyControl = new Class({
     start: function ()
     {
         this.active = (this.camera !== null);
+
+        return this;
     },
 
     stop: function ()
     {
         this.active = false;
+
+        return this;
+    },
+
+    setCamera: function (camera)
+    {
+        this.camera = camera;
+
+        return this;
     },
 
     update: function (delta)

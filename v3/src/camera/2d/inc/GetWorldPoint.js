@@ -1,8 +1,11 @@
 var Vector2 = require('../../../math/Vector2');
 
-var GetWorldPoint = function (screenPoint, output)
+var GetWorldPoint = function (x, y, output)
 {
+    if (output === undefined) { output = new Vector2(); }
+
     var cameraMatrix = this.matrix.matrix;
+
     var mva = cameraMatrix[0];
     var mvb = cameraMatrix[1];
     var mvc = cameraMatrix[2];
@@ -15,7 +18,10 @@ var GetWorldPoint = function (screenPoint, output)
 
     if (!determinant)
     {
-        return screenPoint;
+        output.x = x;
+        output.y = y;
+
+        return output;
     }
 
     determinant = 1 / determinant;
@@ -26,22 +32,21 @@ var GetWorldPoint = function (screenPoint, output)
     var imd = mva * determinant;
     var ime = (mvc * mvf - mvd * mve) * determinant;
     var imf = (mvb * mve - mva * mvf) * determinant;
+
     var c = Math.cos(this.rotation);
     var s = Math.sin(this.rotation);
+
     var zoom = this.zoom;
+
     var scrollX = this.scrollX;
     var scrollY = this.scrollY;
-    var x = screenPoint.x + ((scrollX * c - scrollY * s) * zoom);
-    var y = screenPoint.y + ((scrollX * s + scrollY * c) * zoom);
 
-    if (!output)
-    {
-        output = new Vector2();
-    }
+    var sx = x + ((scrollX * c - scrollY * s) * zoom);
+    var sy = y + ((scrollX * s + scrollY * c) * zoom);
 
     /* Apply transform to point */
-    output.x = (x * ima + y * imc + ime);
-    output.y = (x * imb + y * imd + imf);
+    output.x = (sx * ima + sy * imc + ime);
+    output.y = (sx * imb + sy * imd + imf);
     
     return output;
 };

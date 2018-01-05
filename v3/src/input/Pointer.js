@@ -81,7 +81,7 @@ var Pointer = new Class({
 
     positionToCamera: function (camera, output)
     {
-        return camera.getWorldPoint(this.position, output);
+        return camera.getWorldPoint(this.x, this.y, output);
     },
 
     x: {
