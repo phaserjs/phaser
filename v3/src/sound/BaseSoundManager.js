@@ -198,13 +198,9 @@ var BaseSoundManager = new Class({
      * @param {number} delta - The delta time elapsed since the last frame.
      */
     update: function (time, delta) {
-        this.sounds.sort(function (s1, s2) {
-            return (s1.pendingRemove === s2.pendingRemove) ? 0 : s1 ? 1 : -1;
-        });
-        for (var i = 0; i < this.sounds.length; i++) {
+        for (var i = this.sounds.length - 1; i >= 0; i--) {
             if (this.sounds[i].pendingRemove) {
-                this.sounds.length = i;
-                break;
+                this.sounds.splice(i, 1);
             }
         }
         this.sounds.forEach(function (sound) {
