@@ -190,10 +190,6 @@ var EventBinding = new Class({
             //  All done, tidy the list in case there were any pending events added
             this.tidy();
         }
-        else if (this.state === CONST.DISPATCHER_DESTROYED)
-        {
-            this.dispatcher.delete(this.type);
-        }
         else
         {
             //  All done, just purge the list
@@ -246,7 +242,7 @@ var EventBinding = new Class({
             }
             else if (this.active[i].state === CONST.LISTENER_PENDING)
             {
-                this.active[i].state === CONST.LISTENER_ACTIVE;
+                this.active[i].state = CONST.LISTENER_ACTIVE;
                 added++;
             }
 
