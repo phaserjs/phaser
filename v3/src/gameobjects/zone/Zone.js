@@ -74,10 +74,18 @@ var Zone = new Class({
 
     },
 
-    setSize: function (width, height)
+    setSize: function (width, height, resizeInput)
     {
+        if (resizeInput === undefined) { resizeInput = true; }
+
         this.width = width;
         this.height = height;
+
+        if (resizeInput && this.input && this.input.hitArea instanceof Rectangle)
+        {
+            this.input.hitArea.width = width;
+            this.input.hitArea.height = height;
+        }
 
         return this;
     },
