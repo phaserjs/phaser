@@ -187,17 +187,6 @@ var Frame = new Class({
         return this.updateUVs();
     },
 
-    setCut: function (x, y, width, height)
-    {
-        this.cutX = x;
-        this.cutY = y;
-
-        this.cutWidth = width;
-        this.cutHeight = height;
-
-        return this.updateUVs();
-    },
-
     /**
     * Updates the internal WebGL UV cache and the drawImage cache.
     *
@@ -206,14 +195,19 @@ var Frame = new Class({
     */
     updateUVs: function ()
     {
+        var cx = this.cutX;
+        var cy = this.cutY;
+        var cw = this.cutWidth;
+        var ch = this.cutHeight;
+
         //  Canvas data
 
         var cd = this.data.drawImage;
 
-        cd.sWidth = this.cutWidth;
-        cd.sHeight = this.cutHeight;
-        cd.dWidth = this.cutWidth;
-        cd.dHeight = this.cutHeight;
+        cd.sWidth = cw;
+        cd.sHeight = ch;
+        cd.dWidth = cw;
+        cd.dHeight = ch;
 
         //  WebGL data
 
@@ -221,17 +215,17 @@ var Frame = new Class({
         var th = this.source.height;
         var uvs = this.data.uvs;
         
-        uvs.x0 = this.cutX / tw;
-        uvs.y0 = this.cutY / th;
+        uvs.x0 = cx / tw;
+        uvs.y0 = cy / th;
 
-        uvs.x1 = this.cutX / tw;
-        uvs.y1 = (this.cutY + this.cutHeight) / th;
+        uvs.x1 = cx / tw;
+        uvs.y1 = (cy + ch) / th;
 
-        uvs.x2 = (this.cutX + this.cutWidth) / tw;
-        uvs.y2 = (this.cutY + this.cutHeight) / th;
+        uvs.x2 = (cx + cw) / tw;
+        uvs.y2 = (cy + ch) / th;
 
-        uvs.x3 = (this.cutX + this.cutWidth) / tw;
-        uvs.y3 = this.cutY / th;
+        uvs.x3 = (cx + cw) / tw;
+        uvs.y3 = cy / th;
 
         return this;
     },
