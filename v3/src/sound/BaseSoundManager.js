@@ -3,8 +3,20 @@ var NOOP = require('../utils/NOOP');
 var EventDispatcher = require('../events/EventDispatcher');
 var SoundEvent = require('./SoundEvent');
 var SoundValueEvent = require('./SoundValueEvent');
-//  Phaser.Sound.BaseSoundManager
+/*!
+ * @author Pavle Goloskokovic <pgoloskokovic@gmail.com> (http://prunegames.com)
+ */
 var BaseSoundManager = new Class({
+    /**
+     * The sound manager is responsible for playing back audio via Web Audio API or HTML Audio tag as fallback.
+     * The audio file type and the encoding of those files are extremely important.
+     * Not all browsers can play all audio formats.
+     * There is a good guide to what's supported [here](https://developer.mozilla.org/en-US/Apps/Fundamentals/Audio_and_video_delivery/Cross-browser_audio_basics#Audio_Codec_Support).
+     *
+     * @class Phaser.Sound.BaseSoundManager
+     * @constructor
+     * @param {Phaser.Game} game - Reference to the current game instance.
+     */
     initialize: function BaseSoundManager(game) {
         /**
          * Local reference to game.
