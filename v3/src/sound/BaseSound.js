@@ -201,6 +201,13 @@ var BaseSound = new Class({
         this.markers[marker.name] = marker;
         return true;
     },
+    /**
+     * Updates previously added marker.
+     *
+     * @method Phaser.Sound.BaseSound#updateMarker
+     * @param {ISoundMarker} marker - Marker object with updated values.
+     * @returns {boolean} Whether the marker was updated successfully.
+     */
     updateMarker: function (marker) {
         if (!marker) {
             console.error('updateMarker - Marker object has to be provided!');
