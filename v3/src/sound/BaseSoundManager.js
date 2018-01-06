@@ -224,6 +224,11 @@ var BaseSoundManager = new Class({
         });
         this.events.dispatch(new SoundEvent(this, 'SOUND_PAUSE'));
     },
+    /**
+     * Resumes all the sounds in the game.
+     *
+     * @method Phaser.Sound.BaseSoundManager#resumeAll
+     */
     resumeAll: function () {
         this.forEachActiveSound(function (sound) {
             sound.resume();
