@@ -175,7 +175,7 @@ var WebAudioSound = new Class({
         this.loopTime = when;
         this.loopSource = this.createBufferSource();
         this.loopSource.playbackRate.setValueAtTime(this.totalRate, 0);
-        this.loopSource.start(Math.max(0, when), Math.max(0, offset), Math.max(0, duration));
+        (this.loopSource.start || this.loopSource.noteGrainOn).call(this.loopSource, Math.max(0, when), Math.max(0, offset), Math.max(0, duration));
     },
     /**
      * @private
