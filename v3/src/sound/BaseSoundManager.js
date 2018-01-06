@@ -138,6 +138,14 @@ var BaseSoundManager = new Class({
         }
         return sound;
     },
+    /**
+     * Enables playing sound on the fly without the need to keep a reference to it.
+     * Sound will auto destroy once its playback ends.
+     *
+     * @method Phaser.Sound.BaseSoundManager#play
+     * @param {string} key - Asset key for the sound.
+     * @param {ISoundConfig | ISoundMarker} [extra] - An optional additional object containing settings to be applied to the sound. It could be either config or marker object.
+     */
     play: function (key, extra) {
         var sound = this.add(key);
         sound.events.once('SOUND_ENDED', sound.destroy.bind(sound));
