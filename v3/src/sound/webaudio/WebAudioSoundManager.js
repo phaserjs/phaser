@@ -23,14 +23,14 @@ var WebAudioSoundManager = new Class({
          */
         this.context = this.createAudioContext(game);
         /**
-         * [description]
+         * Gain node responsible for controlling global muting.
          *
          * @private
          * @property {GainNode} masterMuteNode
          */
         this.masterMuteNode = this.context.createGain();
         /**
-         * [description]
+         * Gain node responsible for controlling global volume.
          *
          * @private
          * @property {GainNode} masterVolumeNode
