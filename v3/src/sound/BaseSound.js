@@ -294,6 +294,12 @@ var BaseSound = new Class({
         this.isPaused = true;
         return true;
     },
+    /**
+     * Resumes the sound.
+     *
+     * @method Phaser.Sound.BaseSound#resume
+     * @returns {boolean} Whether the sound was resumed successfully.
+     */
     resume: function () {
         if (!this.isPaused || this.isPlaying) {
             return false;
