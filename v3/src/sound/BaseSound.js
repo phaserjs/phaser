@@ -344,6 +344,11 @@ var BaseSound = new Class({
      * @protected
      */
     update: NOOP,
+    /**
+     * Destroys this sound and all associated events and marks it for removal from the sound manager.
+     *
+     * @method Phaser.Sound.BaseSound#destroy
+     */
     destroy: function () {
         if (this.pendingRemove) {
             return;
