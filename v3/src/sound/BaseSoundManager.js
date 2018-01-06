@@ -177,9 +177,11 @@ var BaseSoundManager = new Class({
         sound.play(spriteName, config);
     },
     /**
+     * Removes a sound from the sound manager.
+     * The removed sound is destroyed before removal.
      *
-     *
-     * @param {ISound} sound
+     * @method Phaser.Sound.BaseSoundManager#remove
+     * @param {ISound} sound - The sound object to remove.
      * @returns {boolean} True if the sound was removed successfully, otherwise false.
      */
     remove: function (sound) {
