@@ -160,7 +160,7 @@ var WebAudioSound = new Class({
         this.startTime = when;
         this.source = this.createBufferSource();
         this.applyConfig();
-        this.source.start(Math.max(0, when), Math.max(0, offset), Math.max(0, duration));
+        (this.source.start || this.source.noteGrainOn).call(this.source, Math.max(0, when), Math.max(0, offset), Math.max(0, duration));
         this.resetConfig();
     },
     /**
