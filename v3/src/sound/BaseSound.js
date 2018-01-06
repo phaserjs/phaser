@@ -144,7 +144,7 @@ var BaseSound = new Class({
          * Object containing markers definitions.
          *
          * @readonly
-         * @property {{}} markers
+         * @property {Object.<string, ISoundMarker>} markers
          */
         this.markers = {};
         /**
@@ -229,7 +229,7 @@ var BaseSound = new Class({
      *
      * @method Phaser.Sound.BaseSound#removeMarker
      * @param {string} markerName - The name of the marker to remove.
-     * @returns {ISoundMarker|null} Removed marker object or 'null' if there was no marker with provided name.
+     * @returns {ISoundMarker | null} Removed marker object or 'null' if there was no marker with provided name.
      */
     removeMarker: function (markerName) {
         var marker = this.markers[markerName];
@@ -248,7 +248,7 @@ var BaseSound = new Class({
      * @method Phaser.Sound.BaseSound#play
      * @param {string} [markerName=''] - If you want to play a marker then provide the marker name here, otherwise omit it to play the full sound.
      * @param {ISoundConfig} [config] - Optional sound config object to be applied to this marker or entire sound if no marker name is provided. It gets memorized for future plays of current section of the sound.
-     * @returns {ISound} This sound instance.
+     * @returns {ISound | null} This sound instance or 'null' if an error occurred.
      */
     play: function (markerName, config) {
         if (markerName === void 0) { markerName = ''; }
