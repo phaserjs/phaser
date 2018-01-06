@@ -29,7 +29,7 @@ var BaseSound = new Class({
          */
         this.key = key;
         /**
-         * Event dispatcher used to handle all sound instance relevant events.
+         * Event dispatcher used to handle all sound instance related events.
          *
          * @readonly
          * @property {Phaser.Events.EventDispatcher}
@@ -325,6 +325,7 @@ var BaseSound = new Class({
     },
     /**
      * @protected
+     * @method Phaser.Sound.BaseSound#applyConfig
      */
     applyConfig: function () {
         this.mute = this.currentConfig.mute;
@@ -335,6 +336,7 @@ var BaseSound = new Class({
     },
     /**
      * @protected
+     * @method Phaser.Sound.BaseSound#resetConfig
      */
     resetConfig: function () {
         this.currentConfig.seek = 0;
@@ -373,6 +375,7 @@ var BaseSound = new Class({
     },
     /**
      * @protected
+     * @method Phaser.Sound.BaseSound#setRate
      */
     setRate: function () {
         var cent = 1.0005777895065548; // Math.pow(2, 1/1200);
