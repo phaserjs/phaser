@@ -326,6 +326,8 @@ Object.defineProperty(BaseSoundManager.prototype, 'rate', {
 });
 /**
  * Global detune.
+ *
+ * @name Phaser.Sound.BaseSoundManager#detune
  * @property {number} detune
  */
 Object.defineProperty(BaseSoundManager.prototype, 'detune', {
