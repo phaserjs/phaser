@@ -100,6 +100,10 @@ var WebAudioSoundManager = new Class({
             document.body.addEventListener('touchend', unlock_1, false);
         }
     },
+    /**
+     * @protected
+     * @method Phaser.Sound.WebAudioSoundManager#onBlur
+     */
     onBlur: function () {
         this.context.suspend();
     },
