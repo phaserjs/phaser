@@ -162,6 +162,15 @@ var BaseSoundManager = new Class({
             sound.play();
         }
     },
+    /**
+     * Enables playing audio sprite sound on the fly without the need to keep a reference to it.
+     * Sound will auto destroy once its playback ends.
+     *
+     * @method Phaser.Sound.BaseSoundManager#playAudioSprite
+     * @param {string} key - Asset key for the sound.
+     * @param {string} spriteName - The name of the sound sprite to play.
+     * @param {ISoundConfig} [config] - An optional config object containing default sound settings.
+     */
     playAudioSprite: function (key, spriteName, config) {
         var sound = this.addAudioSprite(key);
         sound.events.once('SOUND_ENDED', sound.destroy.bind(sound));
