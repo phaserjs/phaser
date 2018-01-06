@@ -22,15 +22,16 @@ var BaseSound = new Class({
          */
         this.manager = manager;
         /**
-         * [description]
+         * Asset key for the sound.
          *
+         * @readonly
          * @property {string} key
          */
         this.key = key;
         /**
-         * Event dispatches used to handle all sound instance
-         * relevant events.
+         * Event dispatcher used to handle all sound instance relevant events.
          *
+         * @readonly
          * @property {Phaser.Events.EventDispatcher}
          */
         this.events = new EventDispatcher();
@@ -53,6 +54,7 @@ var BaseSound = new Class({
          * after its rate and detune values has been combined with global
          * rate and detune values.
          *
+         * @readonly
          * @property {number} totalRate
          */
         this.totalRate = 1;
@@ -65,15 +67,14 @@ var BaseSound = new Class({
          */
         this.duration = this.duration || 0;
         /**
-         * Duration of the entire sound.
+         * The total duration of the sound in seconds.
          *
          * @readonly
          * @property {number}
          */
         this.totalDuration = this.totalDuration || 0;
         /**
-         * [description]
-         *
+         * A config object used to store default sound settings' values.
          * Default values will be set by properties' setters.
          *
          * @private
@@ -133,7 +134,7 @@ var BaseSound = new Class({
          */
         this.seek = 0;
         /**
-         * [description]
+         * Flag indicating whether or not the sound or current sound marker will loop.
          *
          * @property {boolean} loop
          */
