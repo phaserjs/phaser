@@ -47,7 +47,7 @@ var WebAudioSound = new Class({
          * @private
          * @property {GainNode} volumeNode
          */
-        this.volumeNode = manager.context.createGain();
+        this.volumeNode = (manager.context.createGain || manager.context.createGainNode).call(manager.context);
         /**
          * The time at which the sound should have started from the beginning.
          * Based on BaseAudioContext.currentTime value.
