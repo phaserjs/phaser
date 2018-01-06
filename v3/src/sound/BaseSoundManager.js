@@ -247,11 +247,15 @@ var BaseSoundManager = new Class({
         this.events.dispatch(new SoundEvent(this, 'SOUND_STOP'));
     },
     /**
-     * @private
+     * @override
+     * @protected
+     * @method Phaser.Sound.BaseSoundManager#onBlur
      */
     onBlur: NOOP,
     /**
-     * @private
+     * @override
+     * @protected
+     * @method Phaser.Sound.BaseSoundManager#onFocus
      */
     onFocus: NOOP,
     /**
