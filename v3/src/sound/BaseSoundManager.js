@@ -187,6 +187,7 @@ var BaseSoundManager = new Class({
     remove: function (sound) {
         var index = this.sounds.indexOf(sound);
         if (index !== -1) {
+            sound.destroy();
             this.sounds.splice(index, 1);
             return true;
         }
