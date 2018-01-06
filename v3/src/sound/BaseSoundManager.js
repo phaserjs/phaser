@@ -98,6 +98,15 @@ var BaseSoundManager = new Class({
          */
         this._detune = 0;
     },
+    /**
+     * Adds a new sound into the sound manager.
+     *
+     * @override
+     * @method Phaser.Sound.BaseSoundManager#add
+     * @param {string} key - Asset key for the sound.
+     * @param {ISoundConfig} [config] - An optional config object containing default sound settings.
+     * @returns {ISound} The new sound instance.
+     */
     add: NOOP,
     /**
      * [description]
