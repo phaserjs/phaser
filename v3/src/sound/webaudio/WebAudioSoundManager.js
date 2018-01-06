@@ -36,7 +36,7 @@ var WebAudioSoundManager = new Class({
          * @private
          * @property {GainNode} masterVolumeNode
          */
-        this.masterVolumeNode = this.context.createGain();
+        this.masterVolumeNode = (this.context.createGain || this.context.createGainNode).call(this.context);
         this.masterMuteNode.connect(this.masterVolumeNode);
         this.masterVolumeNode.connect(this.context.destination);
         /**
