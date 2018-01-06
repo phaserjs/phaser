@@ -67,6 +67,14 @@ var WebAudioSoundManager = new Class({
         }
         return new (window['AudioContext'] || window['webkitAudioContext'])();
     },
+    /**
+     * Adds a new sound into the sound manager.
+     *
+     * @method Phaser.Sound.WebAudioSoundManager#add
+     * @param {string} key - Asset key for the sound.
+     * @param {ISoundConfig} [config] - An optional config object containing default sound settings.
+     * @returns {Phaser.Sound.WebAudioSound} The new sound instance.
+     */
     add: function (key, config) {
         var sound = new WebAudioSound(this, key, config);
         this.sounds.push(sound);
