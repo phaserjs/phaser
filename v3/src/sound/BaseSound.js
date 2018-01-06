@@ -2,8 +2,17 @@ var Class = require('../utils/Class');
 var Extend = require('../utils/object/Extend');
 var EventDispatcher = require('../events/EventDispatcher');
 var NOOP = require('../utils/NOOP');
-//  Phaser.Sound.BaseSound
+/*!
+ * @author Pavle Goloskokovic <pgoloskokovic@gmail.com> (http://prunegames.com)
+ */
 var BaseSound = new Class({
+    /**
+     * @class Phaser.Sound.BaseSound
+     * @constructor
+     * @param {ISoundManager} manager - Reference to the current sound manager instance.
+     * @param {string} key - Asset key for the sound.
+     * @param {ISoundConfig} [config] - An optional config object containing default sound settings.
+     */
     initialize: function BaseSound(manager, key, config) {
         /**
          * Local reference to the sound manager.
