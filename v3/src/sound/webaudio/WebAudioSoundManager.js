@@ -71,7 +71,7 @@ var WebAudioSoundManager = new Class({
      */
     unlock: function () {
         var _this = this;
-        if (this.context.state === 'suspended') {
+        if (this.context.state === 'suspended' && 'ontouchstart' in window) {
             var unlock_1 = function () {
                 _this.context.resume().then(function () {
                     document.body.removeEventListener('touchstart', unlock_1);
