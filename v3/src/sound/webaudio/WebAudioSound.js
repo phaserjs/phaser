@@ -40,7 +40,7 @@ var WebAudioSound = new Class({
          * @private
          * @property {GainNode} muteNode
          */
-        this.muteNode = manager.context.createGain();
+        this.muteNode = (manager.context.createGain || manager.context.createGainNode).call(manager.context);
         /**
          * [description]
          *
