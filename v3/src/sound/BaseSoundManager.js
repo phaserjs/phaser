@@ -293,8 +293,9 @@ var BaseSoundManager = new Class({
     },
     /**
      * @private
-     * @param {(value: ISound, index: number, array: ISound[]) => void} callbackfn
-     * @param thisArg
+     * @method Phaser.Sound.BaseSoundManager#forEachActiveSound
+     * @param {(sound: ISound, index: number, array: ISound[]) => void} callbackfn
+     * @param [thisArg=this]
      */
     forEachActiveSound: function (callbackfn, thisArg) {
         var _this = this;
