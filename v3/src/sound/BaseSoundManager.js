@@ -277,6 +277,11 @@ var BaseSoundManager = new Class({
             sound.update(time, delta);
         });
     },
+    /**
+     * Destroys all the sounds in the game and all associated events.
+     *
+     * @method Phaser.Sound.BaseSoundManager#destroy
+     */
     destroy: function () {
         this.game = null;
         this.events.destroy();
