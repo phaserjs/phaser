@@ -194,8 +194,11 @@ var BaseSoundManager = new Class({
         return false;
     },
     /**
+     * Removes all sounds from the sound manager that have an asset key matching the given value.
+     * The removed sounds are destroyed before removal.
      *
-     * @param {string} key
+     * @method Phaser.Sound.BaseSoundManager#removeByKey
+     * @param {string} key - The key to match when removing sound objects.
      * @returns {number} The number of matching sound objects that were removed.
      */
     removeByKey: function (key) {
