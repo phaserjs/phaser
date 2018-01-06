@@ -107,6 +107,10 @@ var WebAudioSoundManager = new Class({
     onBlur: function () {
         this.context.suspend();
     },
+    /**
+     * @protected
+     * @method Phaser.Sound.WebAudioSoundManager#onFocus
+     */
     onFocus: function () {
         this.context.resume();
     }
