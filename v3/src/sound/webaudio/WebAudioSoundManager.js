@@ -2,9 +2,18 @@ var Class = require('../../utils/Class');
 var BaseSoundManager = require('../BaseSoundManager');
 var WebAudioSound = require('./WebAudioSound');
 var SoundValueEvent = require('../SoundValueEvent');
-//  Phaser.Loader.WebAudioSoundManager
+/*!
+ * @author Pavle Goloskokovic <pgoloskokovic@gmail.com> (http://prunegames.com)
+ */
 var WebAudioSoundManager = new Class({
     Extends: BaseSoundManager,
+    /**
+     * Web Audio API implementation of the sound manager.
+     *
+     * @class Phaser.Sound.WebAudioSoundManager
+     * @constructor
+     * @param {Phaser.Game} game - Reference to the current game instance.
+     */
     initialize: function WebAudioSoundManager(game) {
         /**
          * The AudioContext being used for playback.
