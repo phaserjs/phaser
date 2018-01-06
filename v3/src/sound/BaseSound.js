@@ -280,6 +280,12 @@ var BaseSound = new Class({
         this.isPaused = false;
         return this;
     },
+    /**
+     * Pauses the sound.
+     *
+     * @method Phaser.Sound.BaseSound#pause
+     * @returns {boolean} Whether the sound was paused successfully.
+     */
     pause: function () {
         if (this.isPaused || !this.isPlaying) {
             return false;
