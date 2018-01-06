@@ -109,11 +109,12 @@ var BaseSoundManager = new Class({
      */
     add: NOOP,
     /**
-     * [description]
+     * Adds a new audio sprite sound into the sound manager.
      *
-     * @param {string} key
-     * @param {ISoundConfig} config
-     * @returns {IAudioSpriteSound}
+     * @method Phaser.Sound.BaseSoundManager#addAudioSprite
+     * @param {string} key - Asset key for the sound.
+     * @param {ISoundConfig} [config] - An optional config object containing default sound settings.
+     * @returns {IAudioSpriteSound} The new audio sprite sound instance.
      */
     addAudioSprite: function (key, config) {
         var sound = this.add(key, config);
