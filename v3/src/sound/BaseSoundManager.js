@@ -204,7 +204,9 @@ var BaseSoundManager = new Class({
     removeByKey: function (key) {
         var removed = 0;
         for (var i = this.sounds.length - 1; i >= 0; i--) {
-            if (this.sounds[i].key === key) {
+            var sound = this.sounds[i];
+            if (sound.key === key) {
+                sound.destroy();
                 this.sounds.splice(i, 1);
                 removed++;
             }
