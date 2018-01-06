@@ -38,14 +38,14 @@ var WebAudioSound = new Class({
          * @private
          * @property {GainNode} muteNode
          */
-        this.muteNode = (manager.context.createGain || manager.context.createGainNode).call(manager.context);
+        this.muteNode = manager.context.createGain();
         /**
          * [description]
          *
          * @private
          * @property {GainNode} volumeNode
          */
-        this.volumeNode = (manager.context.createGain || manager.context.createGainNode).call(manager.context);
+        this.volumeNode = manager.context.createGain();
         /**
          * The time at which the sound should have started from the beginning.
          * Based on BaseAudioContext.currentTime value.
@@ -158,7 +158,7 @@ var WebAudioSound = new Class({
         this.startTime = when;
         this.source = this.createBufferSource();
         this.applyConfig();
-        (this.source.start || this.source.noteGrainOn).call(this.source, Math.max(0, when), Math.max(0, offset), Math.max(0, duration));
+        this.source.start(Math.max(0, when), Math.max(0, offset), Math.max(0, duration));
         this.resetConfig();
     },
     /**
@@ -173,7 +173,7 @@ var WebAudioSound = new Class({
         this.loopTime = when;
         this.loopSource = this.createBufferSource();
         this.loopSource.playbackRate.setValueAtTime(this.totalRate, 0);
-        (this.loopSource.start || this.loopSource.noteGrainOn).call(this.loopSource, Math.max(0, when), Math.max(0, offset), Math.max(0, duration));
+        this.loopSource.start(Math.max(0, when), Math.max(0, offset), Math.max(0, duration));
     },
     /**
      * @private
@@ -204,7 +204,7 @@ var WebAudioSound = new Class({
      */
     stopAndRemoveBufferSource: function () {
         if (this.source) {
-            (this.source.stop || this.source.noteOff).call(this.source);
+            this.source.stop();
             this.source = null;
         }
         this.playTime = 0;
@@ -218,7 +218,7 @@ var WebAudioSound = new Class({
      */
     stopAndRemoveLoopBufferSource: function () {
         if (this.loopSource) {
-            (this.loopSource.stop || this.loopSource.noteOff).call(this.loopSource);
+            this.loopSource.stop();
             this.loopSource = null;
         }
         this.loopTime = 0;
