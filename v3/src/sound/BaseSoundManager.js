@@ -21,12 +21,14 @@ var BaseSoundManager = new Class({
         /**
          * Local reference to game.
          *
+         * @readonly
          * @property {Phaser.Game} game
          */
         this.game = game;
         /**
-         * [description]
+         * Event dispatcher used to handle all sound manager related events.
          *
+         * @readonly
          * @property {Phaser.Events.EventDispatcher} events
          */
         this.events = new EventDispatcher();
@@ -34,7 +36,7 @@ var BaseSoundManager = new Class({
          * An array containing all added sounds.
          *
          * @private
-         * @property {Array} sounds
+         * @property {ISound[]} sounds
          */
         this.sounds = [];
         /**
@@ -66,7 +68,7 @@ var BaseSoundManager = new Class({
         this.detune = 0;
         /**
          * Flag indicating if sounds should be paused when game looses focus,
-         * for instance when user switches tabs or to another program/app.
+         * for instance when user switches to another tab/program/app.
          *
          * @property {boolean} pauseOnBlur
          */
@@ -84,15 +86,15 @@ var BaseSoundManager = new Class({
         /**
          * Property that actually holds the value of global playback rate.
          *
-         * @property {number} _rate
          * @private
+         * @property {number} _rate
          */
         this._rate = 1;
         /**
          * Property that actually holds the value of global detune.
          *
-         * @property {number} _detune
          * @private
+         * @property {number} _detune
          */
         this._detune = 0;
     },
