@@ -235,6 +235,11 @@ var BaseSoundManager = new Class({
         });
         this.events.dispatch(new SoundEvent(this, 'SOUND_RESUME'));
     },
+    /**
+     * Stops all the sounds in the game.
+     *
+     * @method Phaser.Sound.BaseSoundManager#stopAll
+     */
     stopAll: function () {
         this.forEachActiveSound(function (sound) {
             sound.stop();
