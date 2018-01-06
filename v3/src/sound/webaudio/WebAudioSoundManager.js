@@ -49,9 +49,16 @@ var WebAudioSoundManager = new Class({
         BaseSoundManager.call(this, game);
     },
     /**
+     * Method responsible for instantiating and returning AudioContext instance.
+     * If an instance of an AudioContext class was provided trough the game config,
+     * that instance will be returned instead. This can come in handy if you are reloading
+     * a Phaser game on a page that never properly refreshes (such as in an SPA project)
+     * and you want to reuse already instantiated AudioContext.
+     *
      * @private
-     * @param game
-     * @returns {AudioContext}
+     * @method Phaser.Sound.WebAudioSoundManager#createAudioContext
+     * @param {Phaser.Game} game - Reference to the current game instance.
+     * @returns {AudioContext} The AudioContext instance to be used for playback.
      */
     createAudioContext: function (game) {
         var audioConfig = game.config.audio;
