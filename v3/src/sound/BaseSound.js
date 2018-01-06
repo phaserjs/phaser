@@ -224,6 +224,13 @@ var BaseSound = new Class({
         this.markers[marker.name] = Extend(true, this.markers[marker.name], marker);
         return true;
     },
+    /**
+     * Removes a marker from the sound.
+     *
+     * @method Phaser.Sound.BaseSound#removeMarker
+     * @param {string} markerName - The name of the marker to remove.
+     * @returns {ISoundMarker|null} Removed marker object or 'null' if there was no marker with provided name.
+     */
     removeMarker: function (markerName) {
         var marker = this.markers[markerName];
         if (!marker) {
