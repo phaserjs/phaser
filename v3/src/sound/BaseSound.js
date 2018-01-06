@@ -163,6 +163,14 @@ var BaseSound = new Class({
          */
         this.pendingRemove = false;
     },
+    /**
+     * Adds a marker into the current sound. A marker is represented by name, start time, duration, and optionally config object.
+     * This allows you to bundle multiple sounds together into a single audio file and use markers to jump between them for playback.
+     *
+     * @method Phaser.Sound.BaseSound#addMarker
+     * @param {ISoundMarker} marker - Marker object
+     * @returns {boolean} Whether the marker was added successfully
+     */
     addMarker: function (marker) {
         if (!marker) {
             console.error('addMarker - Marker object has to be provided!');
