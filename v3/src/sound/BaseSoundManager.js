@@ -213,6 +213,11 @@ var BaseSoundManager = new Class({
         }
         return removed;
     },
+    /**
+     * Pauses all the sounds in the game.
+     *
+     * @method Phaser.Sound.BaseSoundManager#pauseAll
+     */
     pauseAll: function () {
         this.forEachActiveSound(function (sound) {
             sound.pause();
