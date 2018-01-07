@@ -111,6 +111,9 @@ var WebAudioSoundManager = new Class({
         this.context.suspend();
     },
     /**
+     * Method used internally for resuming sound manager if
+     * Phaser.Sound.WebAudioSoundManager#pauseOnBlur is set to true.
+     *
      * @protected
      * @method Phaser.Sound.WebAudioSoundManager#onFocus
      */
