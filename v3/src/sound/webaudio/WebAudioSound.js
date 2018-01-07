@@ -117,6 +117,16 @@ var WebAudioSound = new Class({
         this.totalDuration = this.audioBuffer.duration;
         BaseSound.call(this, manager, key, config);
     },
+    /**
+     * Play this sound, or a marked section of it.
+     * It always plays the sound from the start. If you want to start playback from a specific time
+     * you can set 'seek' setting of the config object, provided to this call, to that value.
+     *
+     * @method Phaser.Sound.WebAudioSound#play
+     * @param {string} [markerName=''] - If you want to play a marker then provide the marker name here, otherwise omit it to play the full sound.
+     * @param {ISoundConfig} [config] - Optional sound config object to be applied to this marker or entire sound if no marker name is provided. It gets memorized for future plays of current section of the sound.
+     * @returns {Phaser.Sound.WebAudioSound | null} This sound instance or 'null' if an error occurred.
+     */
     play: function (markerName, config) {
         if (!BaseSound.prototype.play.call(this, markerName, config)) {
             return null;
