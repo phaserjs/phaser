@@ -255,6 +255,9 @@ var BaseSoundManager = new Class({
         this.events.dispatch(new SoundEvent(this, 'SOUND_STOP'));
     },
     /**
+     * Method used internally for pausing sound manager if
+     * Phaser.Sound.BaseSoundManager#pauseOnBlur is set to true.
+     *
      * @override
      * @protected
      * @method Phaser.Sound.BaseSoundManager#onBlur
