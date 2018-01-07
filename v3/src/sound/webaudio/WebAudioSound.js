@@ -45,7 +45,7 @@ var WebAudioSound = new Class({
          */
         this.loopSource = null;
         /**
-         * [description]
+         * Gain node responsible for controlling this sound's muting.
          *
          * @private
          * @property {GainNode} muteNode
