@@ -29,7 +29,7 @@ var WebAudioSound = new Class({
         }
         /**
          * A reference to an audio source node used for playing back audio from
-         * audio data stored in an Phaser.Sound.WebAudioSound#audioBuffer.
+         * audio data stored in Phaser.Sound.WebAudioSound#audioBuffer.
          *
          * @private
          * @property {AudioBufferSourceNode} source
@@ -228,6 +228,7 @@ var WebAudioSound = new Class({
      *
      * @private
      * @method Phaser.Sound.WebAudioSound#createBufferSource
+     * @returns {AudioBufferSourceNode}
      */
     createBufferSource: function () {
         var _this = this;
@@ -279,6 +280,8 @@ var WebAudioSound = new Class({
         this.loopTime = 0;
     },
     /**
+     * Method used internally for applying config values to some of the sound properties.
+     *
      * @protected
      * @method Phaser.Sound.WebAudioSound#applyConfig
      */
