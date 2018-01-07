@@ -90,6 +90,7 @@ var WebAudioSound = new Class({
          *
          * @private
          * @property {{ time: number, rate: number }[]} rateUpdates
+         * @default []
          */
         this.rateUpdates = [];
         /**
