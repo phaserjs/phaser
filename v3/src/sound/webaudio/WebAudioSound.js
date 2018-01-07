@@ -462,6 +462,8 @@ Object.defineProperty(WebAudioSound.prototype, 'detune', {
 });
 /**
  * Current position of playing sound.
+ *
+ * @name Phaser.Sound.WebAudioSound#seek
  * @property {number} seek
  */
 Object.defineProperty(WebAudioSound.prototype, 'seek', {
