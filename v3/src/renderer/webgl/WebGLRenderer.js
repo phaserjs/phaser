@@ -109,6 +109,8 @@ var WebGLRenderer = new Class({
         this.resourceManager = null;
         this.currentRenderTarget = null;
         this.snapshotCallback = null;
+        this.snapshotType = null;
+        this.snapshotEncoder = null;
 
         this.scissor = {
             enabled: false,
@@ -536,7 +538,7 @@ var WebGLRenderer = new Class({
 
         if (this.snapshotCallback)
         {
-            this.snapshotCallback(WebGLSnapshot(this.view));
+            this.snapshotCallback(WebGLSnapshot(this.view, this.snapshotType, this.snapshotEncoder));
             this.snapshotCallback = null;
         }
 
@@ -545,9 +547,11 @@ var WebGLRenderer = new Class({
         // console.log('%c render end ', 'color: #ffffff; background: #ff0000;');
     },
 
-    snapshot: function (callback)
+    snapshot: function (callback, type, encoderOptions)
     {
         this.snapshotCallback = callback;
+        this.snapshotType = type;
+        this.snapshotEncoder = encoderOptions;
     },
 
     createFBO: function () {},
