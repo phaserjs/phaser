@@ -268,6 +268,7 @@ var WebAudioSound = new Class({
      * Used internally to do what the name says.
      *
      * @private
+     * @method Phaser.Sound.WebAudioSound#stopAndRemoveLoopBufferSource
      */
     stopAndRemoveLoopBufferSource: function () {
         if (this.loopSource) {
