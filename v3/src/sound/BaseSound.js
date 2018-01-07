@@ -349,6 +349,8 @@ var BaseSound = new Class({
         this.loop = this.currentConfig.loop;
     },
     /**
+     * Method used internally for resetting values of some of the config properties.
+     *
      * @protected
      * @method Phaser.Sound.BaseSound#resetConfig
      */
