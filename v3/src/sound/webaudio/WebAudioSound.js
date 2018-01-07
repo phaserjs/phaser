@@ -500,6 +500,7 @@ Object.defineProperty(WebAudioSound.prototype, 'seek', {
  * Property indicating whether or not
  * the sound or current sound marker will loop.
  *
+ * @name Phaser.Sound.WebAudioSound#loop
  * @property {boolean} loop
  */
 Object.defineProperty(WebAudioSound.prototype, 'loop', {
