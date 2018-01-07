@@ -82,6 +82,7 @@ var WebAudioSound = new Class({
          *
          * @private
          * @property {number} loopTime
+         * @default 0
          */
         this.loopTime = 0;
         /**
