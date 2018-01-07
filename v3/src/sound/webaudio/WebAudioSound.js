@@ -336,7 +336,10 @@ var WebAudioSound = new Class({
         this.rateUpdates = null;
     },
     /**
-     * @private
+     * Method used internally to calculate total playback rate of the sound.
+     *
+     * @protected
+     * @method Phaser.Sound.WebAudioSound#setRate
      */
     setRate: function () {
         BaseSound.prototype.setRate.call(this);
