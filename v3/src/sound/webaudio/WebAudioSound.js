@@ -224,7 +224,10 @@ var WebAudioSound = new Class({
         this.loopSource.start(Math.max(0, when), Math.max(0, offset), Math.max(0, duration));
     },
     /**
+     * Used internally to do what the name says.
+     *
      * @private
+     * @method Phaser.Sound.WebAudioSound#createBufferSource
      */
     createBufferSource: function () {
         var _this = this;
