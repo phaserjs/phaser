@@ -306,10 +306,12 @@ var BaseSoundManager = new Class({
         this.sounds = null;
     },
     /**
+     * Method used internally for iterating only over active sounds and skipping sounds that are marked for removal.
+     *
      * @private
      * @method Phaser.Sound.BaseSoundManager#forEachActiveSound
-     * @param {(sound: ISound, index: number, array: ISound[]) => void} callbackfn
-     * @param [thisArg=this]
+     * @param {(sound: ISound, index: number, array: ISound[]) => void} callbackfn - Callback function.
+     * @param [thisArg=this] - Callback context.
      */
     forEachActiveSound: function (callbackfn, thisArg) {
         var _this = this;
