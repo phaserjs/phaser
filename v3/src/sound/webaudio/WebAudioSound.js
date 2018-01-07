@@ -137,6 +137,12 @@ var WebAudioSound = new Class({
         this.events.dispatch(new SoundEvent(this, 'SOUND_PLAY'));
         return this;
     },
+    /**
+     * Pauses the sound.
+     *
+     * @method Phaser.Sound.WebAudioSound#pause
+     * @returns {boolean} Whether the sound was paused successfully.
+     */
     pause: function () {
         if (this.manager.context.currentTime < this.startTime) {
             return false;
