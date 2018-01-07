@@ -205,6 +205,7 @@ var WebAudioSound = new Class({
     stopAndRemoveBufferSource: function () {
         if (this.source) {
             this.source.stop();
+            this.source.disconnect();
             this.source = null;
         }
         this.playTime = 0;
