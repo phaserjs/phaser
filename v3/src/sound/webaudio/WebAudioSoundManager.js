@@ -65,7 +65,7 @@ var WebAudioSoundManager = new Class({
         if (audioConfig && audioConfig.context) {
             return audioConfig.context;
         }
-        return new (window['AudioContext'] || window['webkitAudioContext'])();
+        return new AudioContext();
     },
     /**
      * Adds a new sound into the sound manager.
