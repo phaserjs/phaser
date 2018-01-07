@@ -280,6 +280,7 @@ var WebAudioSound = new Class({
     },
     /**
      * @protected
+     * @method Phaser.Sound.WebAudioSound#applyConfig
      */
     applyConfig: function () {
         this.rateUpdates.length = 0;
