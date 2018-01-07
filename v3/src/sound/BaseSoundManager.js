@@ -264,6 +264,9 @@ var BaseSoundManager = new Class({
      */
     onBlur: NOOP,
     /**
+     * Method used internally for resuming sound manager if
+     * Phaser.Sound.BaseSoundManager#pauseOnBlur is set to true.
+     *
      * @override
      * @protected
      * @method Phaser.Sound.BaseSoundManager#onFocus
