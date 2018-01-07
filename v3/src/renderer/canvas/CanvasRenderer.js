@@ -60,6 +60,10 @@ var CanvasRenderer = new Class({
 
         // this.tintMethod = this.tintWithPerPixel;
 
+        this.snapshotCallback = null;
+        this.snapshotType = null;
+        this.snapshotEncoder = null;
+
         this.init();
     },
 
@@ -278,16 +282,18 @@ var CanvasRenderer = new Class({
 
         if (this.snapshotCallback)
         {
-            this.snapshotCallback(CanvasSnapshot(this.gameCanvas));
+            this.snapshotCallback(CanvasSnapshot(this.gameCanvas, this.snapshotType, this.snapshotEncoder));
             this.snapshotCallback = null;
         }
 
         //  Add Post-render hook
     },
 
-    snapshot: function (callback)
+    snapshot: function (callback, type, encoderOptions)
     {
         this.snapshotCallback = callback;
+        this.snapshotType = type;
+        this.snapshotEncoder = encoderOptions;
     },
 
     /**
