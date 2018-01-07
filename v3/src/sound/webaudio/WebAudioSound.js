@@ -398,6 +398,8 @@ var WebAudioSound = new Class({
 });
 /**
  * Mute setting.
+ *
+ * @name Phaser.Sound.WebAudioSound#mute
  * @property {boolean} mute
  */
 Object.defineProperty(WebAudioSound.prototype, 'mute', {
