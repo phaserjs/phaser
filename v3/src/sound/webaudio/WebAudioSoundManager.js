@@ -101,6 +101,9 @@ var WebAudioSoundManager = new Class({
         }
     },
     /**
+     * Method used internally for pausing sound manager if
+     * Phaser.Sound.WebAudioSoundManager#pauseOnBlur is set to true.
+     *
      * @protected
      * @method Phaser.Sound.WebAudioSoundManager#onBlur
      */
