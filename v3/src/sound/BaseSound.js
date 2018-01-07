@@ -336,6 +336,8 @@ var BaseSound = new Class({
         return true;
     },
     /**
+     * Method used internally for applying config values to some of the sound properties.
+     *
      * @protected
      * @method Phaser.Sound.BaseSound#applyConfig
      */
