@@ -379,7 +379,11 @@ var WebAudioSound = new Class({
         return currentTime;
     },
     /**
+     * Method used internally for calculating the time
+     * at witch the loop source should start playing.
+     *
      * @private
+     * @method Phaser.Sound.WebAudioSound#getLoopTime
      */
     getLoopTime: function () {
         var lastRateUpdateCurrentTime = 0;
