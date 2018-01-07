@@ -390,6 +390,8 @@ var BaseSound = new Class({
         this.currentMarker = null;
     },
     /**
+     * Method used internally to calculate total playback rate of the sound.
+     *
      * @protected
      * @method Phaser.Sound.BaseSound#setRate
      */
