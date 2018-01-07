@@ -28,10 +28,12 @@ var WebAudioSound = new Class({
             return;
         }
         /**
-         * [description]
+         * A reference to an audio source node used for playing back audio from
+         * audio data stored in an Phaser.Sound.WebAudioSound#audioBuffer.
          *
          * @private
          * @property {AudioBufferSourceNode} source
+         * @default null
          */
         this.source = null;
         /**
