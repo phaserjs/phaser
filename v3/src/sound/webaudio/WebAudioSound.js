@@ -37,10 +37,11 @@ var WebAudioSound = new Class({
          */
         this.source = null;
         /**
-         * [description]
+         * A reference to a second audio source used for gapless looped playback.
          *
          * @private
          * @property {AudioBufferSourceNode} loopSource
+         * @default null
          */
         this.loopSource = null;
         /**
