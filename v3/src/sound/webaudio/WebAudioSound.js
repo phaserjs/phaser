@@ -220,6 +220,7 @@ var WebAudioSound = new Class({
     stopAndRemoveLoopBufferSource: function () {
         if (this.loopSource) {
             this.loopSource.stop();
+            this.loopSource.disconnect();
             this.loopSource = null;
         }
         this.loopTime = 0;
