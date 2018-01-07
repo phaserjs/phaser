@@ -1,5 +1,8 @@
-var WebGLSnapshot = function (sourceCanvas)
+var WebGLSnapshot = function (sourceCanvas, type, encoderOptions)
 {
+    if (type === undefined) { type = 'image/png'; }
+    if (encoderOptions === undefined) { encoderOptions = 0.92; }
+
     var gl = sourceCanvas.getContext('experimental-webgl');
     var pixels = new Uint8Array(gl.drawingBufferWidth * gl.drawingBufferHeight * 4);
     gl.readPixels(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight, gl.RGBA, gl.UNSIGNED_BYTE, pixels);
@@ -31,7 +34,7 @@ var WebGLSnapshot = function (sourceCanvas)
 
     ctx.putImageData(imageData, 0, 0);
 
-    var src = canvas.toDataURL();
+    var src = canvas.toDataURL(type, encoderOptions);
     var image = new Image();
 
     image.src = src;
