@@ -359,7 +359,10 @@ var WebAudioSound = new Class({
         }
     },
     /**
+     * Method used internally for calculating current playback time of a playing sound.
+     *
      * @private
+     * @method Phaser.Sound.WebAudioSound#getCurrentTime
      */
     getCurrentTime: function () {
         var currentTime = 0;
