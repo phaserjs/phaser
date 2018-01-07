@@ -95,10 +95,11 @@ var WebAudioSound = new Class({
         this.rateUpdates = [];
         /**
          * Used for keeping track when sound source playback has ended
-         * so it's state can be updated accordingly.
+         * so its state can be updated accordingly.
          *
          * @private
          * @property {boolean} hasEnded
+         * @default false
          */
         this.hasEnded = false;
         /**
