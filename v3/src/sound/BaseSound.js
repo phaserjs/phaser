@@ -40,6 +40,7 @@ var BaseSound = new Class({
          *
          * @readonly
          * @property {boolean} isPlaying
+         * @default false
          */
         this.isPlaying = false;
         /**
@@ -47,6 +48,7 @@ var BaseSound = new Class({
          *
          * @readonly
          * @property {boolean} isPaused
+         * @default false
          */
         this.isPaused = false;
         /**
@@ -56,6 +58,7 @@ var BaseSound = new Class({
          *
          * @readonly
          * @property {number} totalRate
+         * @default 1
          */
         this.totalRate = 1;
         /**
@@ -99,6 +102,7 @@ var BaseSound = new Class({
          * Gets or sets the muted state of this sound.
          *
          * @property {boolean} mute
+         * @default false
          */
         this.mute = false;
         /**
@@ -106,6 +110,7 @@ var BaseSound = new Class({
          * a value between 0 (silence) and 1 (full volume).
          *
          * @property {number} volume
+         * @default 1
          */
         this.volume = 1;
         /**
@@ -115,6 +120,7 @@ var BaseSound = new Class({
          * This value gets multiplied by global rate to have the final playback speed.
          *
          * @property {number} rate
+         * @default 1
          */
         this.rate = 1;
         /**
@@ -122,6 +128,7 @@ var BaseSound = new Class({
          * The range of the value is -1200 to 1200, but we recommend setting it to [50](https://en.wikipedia.org/wiki/50_Cent).
          *
          * @property {number} detune
+         * @default 0
          */
         this.detune = 0;
         /**
@@ -131,12 +138,14 @@ var BaseSound = new Class({
          * Setting seek of a stopped sound has no effect.
          *
          * @property {number} seek
+         * @default 0
          */
         this.seek = 0;
         /**
          * Flag indicating whether or not the sound or current sound marker will loop.
          *
          * @property {boolean} loop
+         * @default false
          */
         this.loop = false;
         this.config = Extend(this.config, config);
@@ -145,6 +154,7 @@ var BaseSound = new Class({
          *
          * @readonly
          * @property {Object.<string, ISoundMarker>} markers
+         * @default {}
          */
         this.markers = {};
         /**
@@ -153,6 +163,7 @@ var BaseSound = new Class({
          *
          * @readonly
          * @property {ISoundMarker} currentMarker
+         * @default null
          */
         this.currentMarker = null;
         /**
@@ -160,6 +171,7 @@ var BaseSound = new Class({
          *
          * @private
          * @property {boolean} pendingRemove
+         * @default false
          */
         this.pendingRemove = false;
     },
