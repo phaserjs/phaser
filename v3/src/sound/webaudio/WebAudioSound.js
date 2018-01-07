@@ -68,11 +68,12 @@ var WebAudioSound = new Class({
          */
         this.playTime = 0;
         /**
-         * The time at which the sound source should actually start playback.
+         * The time at which the sound source should have actually started playback.
          * Based on BaseAudioContext.currentTime value.
          *
          * @private
          * @property {number} startTime
+         * @default 0
          */
         this.startTime = 0;
         /**
