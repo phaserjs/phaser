@@ -59,11 +59,12 @@ var WebAudioSound = new Class({
          */
         this.volumeNode = manager.context.createGain();
         /**
-         * The time at which the sound should have started from the beginning.
+         * The time at which the sound should have started playback from the beginning.
          * Based on BaseAudioContext.currentTime value.
          *
          * @private
          * @property {number} playTime
+         * @default 0
          */
         this.playTime = 0;
         /**
