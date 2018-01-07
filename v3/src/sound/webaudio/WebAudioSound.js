@@ -430,6 +430,8 @@ Object.defineProperty(WebAudioSound.prototype, 'volume', {
 });
 /**
  * Playback rate.
+ *
+ * @name Phaser.Sound.WebAudioSound#rate
  * @property {number} rate
  */
 Object.defineProperty(WebAudioSound.prototype, 'rate', {
