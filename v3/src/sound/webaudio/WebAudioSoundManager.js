@@ -114,6 +114,12 @@ var WebAudioSoundManager = new Class({
     onFocus: function () {
         this.context.resume();
     },
+    /**
+     * Calls Phaser.Sound.BaseSoundManager#destroy method
+     * and cleans up all Web Audio API related stuff.
+     *
+     * @method Phaser.Sound.WebAudioSoundManager#destroy
+     */
     destroy: function () {
         BaseSoundManager.prototype.destroy.call(this);
         this.destination = null;
