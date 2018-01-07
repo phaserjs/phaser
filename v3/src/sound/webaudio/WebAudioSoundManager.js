@@ -113,6 +113,16 @@ var WebAudioSoundManager = new Class({
      */
     onFocus: function () {
         this.context.resume();
+    },
+    destroy: function () {
+        BaseSoundManager.prototype.destroy.call(this);
+        this.destination = null;
+        this.masterVolumeNode.disconnect();
+        this.masterVolumeNode = null;
+        this.masterMuteNode.disconnect();
+        this.masterMuteNode = null;
+        this.context.suspend();
+        this.context = null;
     }
 });
 /**
