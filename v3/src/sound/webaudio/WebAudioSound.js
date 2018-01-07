@@ -193,6 +193,7 @@ var WebAudioSound = new Class({
      * Used internally to do what the name says.
      *
      * @private
+     * @method Phaser.Sound.WebAudioSound#createAndStartBufferSource
      */
     createAndStartBufferSource: function () {
         var seek = this.currentConfig.seek;
