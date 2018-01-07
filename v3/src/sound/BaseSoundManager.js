@@ -37,18 +37,21 @@ var BaseSoundManager = new Class({
          *
          * @private
          * @property {ISound[]} sounds
+         * @default []
          */
         this.sounds = [];
         /**
          * Global mute setting.
          *
          * @property {boolean} mute
+         * @default false
          */
         this.mute = false;
         /**
          * Global volume setting.
          *
          * @property {number} volume
+         * @default 1
          */
         this.volume = 1;
         /**
@@ -57,6 +60,7 @@ var BaseSoundManager = new Class({
          * and 2.0 doubles the audio's playback speed.
          *
          * @property {number} rate
+         * @default 1
          */
         this.rate = 1;
         /**
@@ -64,6 +68,7 @@ var BaseSoundManager = new Class({
          * The range of the value is -1200 to 1200, but we recommend setting it to [50](https://en.wikipedia.org/wiki/50_Cent).
          *
          * @property {number} detune
+         * @default 0
          */
         this.detune = 0;
         /**
@@ -71,6 +76,7 @@ var BaseSoundManager = new Class({
          * for instance when user switches to another tab/program/app.
          *
          * @property {boolean} pauseOnBlur
+         * @default true
          */
         this.pauseOnBlur = true;
         game.events.on('ON_BLUR', function () {
@@ -88,6 +94,7 @@ var BaseSoundManager = new Class({
          *
          * @private
          * @property {number} _rate
+         * @default 1
          */
         this._rate = 1;
         /**
@@ -95,6 +102,7 @@ var BaseSoundManager = new Class({
          *
          * @private
          * @property {number} _detune
+         * @default 0
          */
         this._detune = 0;
     },
