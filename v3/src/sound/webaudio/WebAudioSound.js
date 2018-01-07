@@ -174,6 +174,12 @@ var WebAudioSound = new Class({
         this.events.dispatch(new SoundEvent(this, 'SOUND_RESUME'));
         return true;
     },
+    /**
+     * Stop playing this sound.
+     *
+     * @method Phaser.Sound.WebAudioSound#stop
+     * @returns {boolean} Whether the sound was stopped successfully.
+     */
     stop: function () {
         if (!BaseSound.prototype.stop.call(this)) {
             return false;
