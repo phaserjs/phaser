@@ -446,6 +446,8 @@ Object.defineProperty(WebAudioSound.prototype, 'rate', {
 });
 /**
  * Detuning of sound.
+ *
+ * @name Phaser.Sound.WebAudioSound#detune
  * @property {number} detune
  */
 Object.defineProperty(WebAudioSound.prototype, 'detune', {
