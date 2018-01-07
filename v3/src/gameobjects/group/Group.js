@@ -216,8 +216,10 @@ var Group = new Class({
         }
     },
 
-    add: function (child)
+    add: function (child, addToScene)
     {
+        if (addToScene === undefined) { addToScene = false; }
+
         this.children.set(child);
 
         if (this.createCallback)
@@ -225,31 +227,72 @@ var Group = new Class({
             this.createCallback.call(this, child);
         }
 
-        return this;
-    },
-
-    addMultiple: function (children)
-    {
-        if (Array.isArray(children))
+        if (addToScene)
         {
-            for (var i = 0; i < children.length; i++)
+            this.scene.sys.displayList.add(child);
+
+            if (child.preUpdate)
             {
-                this.add(children[i]);
+                this.scene.sys.updateList.add(child);
             }
         }
 
         return this;
     },
 
-    remove: function (child)
+    addMultiple: function (children, addToScene)
     {
-        this.children.delete(child);
+        if (addToScene === undefined) { addToScene = false; }
+
+        if (Array.isArray(children))
+        {
+            for (var i = 0; i < children.length; i++)
+            {
+                this.add(children[i], addToScene);
+            }
+        }
 
         return this;
     },
 
-    clear: function ()
+    remove: function (child, removeFromScene)
     {
+        if (removeFromScene === undefined) { removeFromScene = false; }
+
+        this.children.delete(child);
+
+        if (removeFromScene)
+        {
+            this.scene.sys.displayList.remove(child);
+
+            if (child.preUpdate)
+            {
+                this.scene.sys.updateList.remove(child);
+            }
+        }
+
+        return this;
+    },
+
+    clear: function (removeFromScene)
+    {
+        if (removeFromScene === undefined) { removeFromScene = false; }
+
+        if (removeFromScene)
+        {
+            for (var i = 0; i < children.length; i++)
+            {
+                gameObject = children[i];
+
+                this.scene.sys.displayList.remove(gameObject);
+
+                if (gameObject.preUpdate)
+                {
+                    this.scene.sys.updateList.remove(gameObject);
+                }
+            }
+        }
+
         this.children.clear();
 
         return this;
