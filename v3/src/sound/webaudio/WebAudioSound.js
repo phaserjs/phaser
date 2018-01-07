@@ -17,7 +17,7 @@ var WebAudioSound = new Class({
     initialize: function WebAudioSound(manager, key, config) {
         if (config === void 0) { config = {}; }
         /**
-         * [description]
+         * Audio buffer containing decoded data of the audio asset to be played.
          *
          * @private
          * @property {AudioBuffer} audioBuffer
