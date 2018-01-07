@@ -319,6 +319,12 @@ var WebAudioSound = new Class({
             this.events.dispatch(new SoundEvent(this, 'SOUND_LOOP'));
         }
     },
+    /**
+     * Calls Phaser.Sound.BaseSound#destroy method
+     * and cleans up all Web Audio API related stuff.
+     *
+     * @method Phaser.Sound.WebAudioSound#destroy
+     */
     destroy: function () {
         BaseSound.prototype.destroy.call(this);
         this.audioBuffer = null;
