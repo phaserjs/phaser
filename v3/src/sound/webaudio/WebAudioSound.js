@@ -2,9 +2,18 @@ var Class = require('../../utils/Class');
 var BaseSound = require('../BaseSound');
 var SoundEvent = require('../SoundEvent');
 var SoundValueEvent = require('../SoundValueEvent');
-//  Phaser.Sound.WebAudioSound
+/*!
+ * @author Pavle Goloskokovic <pgoloskokovic@gmail.com> (http://prunegames.com)
+ */
 var WebAudioSound = new Class({
     Extends: BaseSound,
+    /**
+     * @class Phaser.Sound.WebAudioSound
+     * @constructor
+     * @param {Phaser.Sound.WebAudioSoundManager} manager - Reference to the current sound manager instance.
+     * @param {string} key - Asset key for the sound.
+     * @param {ISoundConfig} [config={}] - An optional config object containing default sound settings.
+     */
     initialize: function WebAudioSound(manager, key, config) {
         if (config === void 0) { config = {}; }
         /**
