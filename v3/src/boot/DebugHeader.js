@@ -71,6 +71,7 @@ var DebugHeader = function (game)
 
         if (!config.hidePhaser)
         {
+            // TODO add audio
             c = c.concat('Phaser v' + CONST.VERSION + ' (' + renderType + ')');
         }
 
