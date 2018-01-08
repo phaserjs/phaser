@@ -58,6 +58,12 @@ var HTML5AudioSoundManager = new Class({
         this.onBlurPausedSounds = null;
     }
 });
+/**
+ * Global mute setting.
+ *
+ * @name Phaser.Sound.HTML5AudioSoundManager#mute
+ * @property {boolean} mute
+ */
 Object.defineProperty(HTML5AudioSoundManager.prototype, 'mute', {
     get: function () {
         return this._mute;
