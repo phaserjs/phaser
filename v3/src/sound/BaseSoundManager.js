@@ -303,6 +303,7 @@ var BaseSoundManager = new Class({
         this.forEachActiveSound(function (sound) {
             sound.destroy();
         });
+        this.sounds.length = 0;
         this.sounds = null;
     },
     /**
