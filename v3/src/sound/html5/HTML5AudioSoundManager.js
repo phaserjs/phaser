@@ -5,6 +5,7 @@ var HTML5AudioSoundManager = new Class({
     Extends: BaseSoundManager,
     initialize: function HTML5AudioSoundManager(game) {
         this.onBlurPausedSounds = [];
+        this._mute = false;
         BaseSoundManager.call(this, game);
     },
     add: function (key, config) {
