@@ -41,7 +41,7 @@ var HTML5AudioFile = new Class({
         audio.removeEventListener('canplaythrough', this.onProgress);
         audio.removeEventListener('error', this.onError);
 
-        if(this.filesLoaded++ === this.filesTotal)
+        if(++this.filesLoaded === this.filesTotal)
         {
             this.onLoad();
         }
