@@ -25,6 +25,16 @@ var HTML5AudioFile = new Class({
             File.call(this, fileConfig);
         },
 
+    onLoad: function ()
+    {
+        this.callback(this, true);
+    },
+
+    onError: function (event)
+    {
+        this.callback(this, false);
+    },
+
     //  Called by the Loader, starts the actual file downloading
     load: function (callback, baseURL)
     {
