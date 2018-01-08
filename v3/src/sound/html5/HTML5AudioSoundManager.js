@@ -19,6 +19,12 @@ var HTML5AudioSoundManager = new Class({
                 sound.pause();
             }
         });
+    },
+    onFocus: function () {
+        this.onBlurPausedSounds.forEach(function (sound) {
+            sound.resume();
+        });
+        this.onBlurPausedSounds.length = 0;
     }
 });
 module.exports = HTML5AudioSoundManager;
