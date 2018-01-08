@@ -111,30 +111,21 @@ var GlobalInputManager = new Class({
             var event = queue[i];
 
             //  TODO: Move to CONSTs so we can do integer comparisons instead of strings.
-            //  TODO: Remove the MouseEvent events. Devs should use Pointer events instead.
             switch (event.type)
             {
                 case 'mousemove':
 
                     pointer.move(event, time);
-                    this.events.dispatch(new MouseEvent.MOVE(event));
                     break;
 
                 case 'mousedown':
 
                     pointer.down(event, time);
-                    this.events.dispatch(new MouseEvent.DOWN(event));
                     break;
 
                 case 'mouseup':
 
                     pointer.up(event, time);
-                    this.events.dispatch(new MouseEvent.UP(event));
-                    break;
-
-                case 'pointerlockchange':
-
-                    this.events.dispatch(new MouseEvent.POINTER_LOCK_CHANGE(event, this.mouse.locked));
                     break;
 
                 case 'touchmove':
@@ -150,6 +141,11 @@ var GlobalInputManager = new Class({
                 case 'touchend':
 
                     pointer.touchend(event, time);
+                    break;
+
+                case 'pointerlockchange':
+
+                    this.events.dispatch(new MouseEvent.POINTER_LOCK_CHANGE(event, this.mouse.locked));
                     break;
             }
         }

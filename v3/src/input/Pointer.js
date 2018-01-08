@@ -66,6 +66,9 @@ var Pointer = new Class({
         this.justUp = false;
         this.justMoved = false;
 
+        //  Did the previous input event come from a Touch input (true) or Mouse? (false)
+        this.wasTouch = false;
+
         /**
          * @property {number} movementX - If the mouse is locked, the horizontal relative movement
          * of the Pointer in pixels since last frame.
@@ -135,6 +138,8 @@ var Pointer = new Class({
         this.justMoved = true;
 
         this.dirty = true;
+
+        this.wasTouch = true;
     },
 
     move: function (event, time)
@@ -159,6 +164,8 @@ var Pointer = new Class({
         this.justMoved = true;
 
         this.dirty = true;
+
+        this.wasTouch = false;
     },
 
     down: function (event, time)
@@ -186,6 +193,8 @@ var Pointer = new Class({
         this.isDown = true;
 
         this.dirty = true;
+
+        this.wasTouch = false;
     },
 
     touchstart: function (event, time)
@@ -206,6 +215,8 @@ var Pointer = new Class({
         this.isDown = true;
 
         this.dirty = true;
+
+        this.wasTouch = true;
     },
 
     up: function (event, time)
@@ -233,6 +244,8 @@ var Pointer = new Class({
         this.isDown = false;
 
         this.dirty = true;
+
+        this.wasTouch = false;
     },
 
     touchend: function (event, time)
@@ -253,6 +266,8 @@ var Pointer = new Class({
         this.isDown = false;
 
         this.dirty = true;
+
+        this.wasTouch = true;
     },
 
     noButtonDown: function ()
