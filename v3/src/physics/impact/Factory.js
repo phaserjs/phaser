@@ -19,6 +19,21 @@ var Factory = new Class({
         return new ImpactBody(this.world, x, y, width, height);
     },
 
+    existing: function (gameObject)
+    {
+        var x = gameObject.x - gameObject.frame.centerX;
+        var y = gameObject.y - gameObject.frame.centerY;
+        var w = gameObject.width;
+        var h = gameObject.height;
+
+        gameObject.body = this.world.create(x, y, w, h);
+
+        gameObject.body.parent = gameObject;
+        gameObject.body.gameObject = gameObject;
+
+        return gameObject;
+    },
+
     image: function (x, y, key, frame)
     {
         var image = new ImpactImage(this.world, x, y, key, frame);
