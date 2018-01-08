@@ -33,4 +33,10 @@ var HTML5AudioSoundManager = new Class({
         this.onBlurPausedSounds = null;
     }
 });
+Object.defineProperty(HTML5AudioSoundManager.prototype, 'mute', {
+    get: function () {
+    },
+    set: function (value) {
+    }
+});
 module.exports = HTML5AudioSoundManager;
