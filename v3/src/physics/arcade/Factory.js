@@ -40,6 +40,15 @@ var Factory = new Class({
         return this.world.addOverlap(object1, object2, collideCallback, processCallback, callbackContext);
     },
 
+    existing: function (gameObject, isStatic)
+    {
+        var type = (isStatic) ? CONST.STATIC_BODY : CONST.DYNAMIC_BODY;
+
+        this.world.enableBody(gameObject, type);
+
+        return gameObject;
+    },
+
     staticImage: function (x, y, key, frame)
     {
         var image = new ArcadeImage(this.scene, x, y, key, frame);
