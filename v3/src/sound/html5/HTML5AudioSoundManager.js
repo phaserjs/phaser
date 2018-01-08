@@ -35,6 +35,7 @@ var HTML5AudioSoundManager = new Class({
 });
 Object.defineProperty(HTML5AudioSoundManager.prototype, 'mute', {
     get: function () {
+        return this._mute;
     },
     set: function (value) {
     }
