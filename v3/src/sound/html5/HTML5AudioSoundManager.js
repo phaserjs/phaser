@@ -38,6 +38,10 @@ Object.defineProperty(HTML5AudioSoundManager.prototype, 'mute', {
         return this._mute;
     },
     set: function (value) {
+        this._mute = value;
+        this.forEachActiveSound(function (sound) {
+            sound.setMute();
+        });
     }
 });
 module.exports = HTML5AudioSoundManager;
