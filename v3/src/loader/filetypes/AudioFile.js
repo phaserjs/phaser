@@ -47,7 +47,6 @@ var AudioFile = new Class({
             },
             function (e)
             {
-                // TODO properly log decoding error
                 console.error('Error with decoding audio data for \'' + this.key + '\':', e.message);
 
                 _this.state = CONST.FILE_ERRORED;
