@@ -2,6 +2,7 @@ var Class = require('../../utils/Class');
 var File = require('../File');
 var GetFastValue = require('../../utils/object/GetFastValue');
 var CONST = require('../../const');
+var HTML5AudioFile = require('./HTML5AudioFile');
 
 //  Phaser.Loader.FileTypes.AudioFile
 
@@ -85,8 +86,7 @@ AudioFile.create = function (loader, key, urls, config, xhrSettings)
         return new AudioFile(key, url, loader.path, xhrSettings, game.sound.context);
     }
 
-    // TODO handle loading audio tags
-    return null;
+    return new HTML5AudioFile(key, url, loader.path, config);
 };
 
 // this.load.audio('sound', 'assets/audio/booom.ogg', config, xhrSettings);
