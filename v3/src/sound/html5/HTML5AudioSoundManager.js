@@ -50,6 +50,10 @@ Object.defineProperty(HTML5AudioSoundManager.prototype, 'volume', {
         return this._volume;
     },
     set: function (value) {
+        this._volume = value;
+        this.forEachActiveSound(function (sound) {
+            sound.setVolume();
+        });
     }
 });
 module.exports = HTML5AudioSoundManager;
