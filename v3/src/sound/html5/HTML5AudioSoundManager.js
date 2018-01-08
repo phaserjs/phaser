@@ -4,6 +4,14 @@ var HTML5AudioSound = require('./HTML5AudioSound');
 var HTML5AudioSoundManager = new Class({
     Extends: BaseSoundManager,
     initialize: function HTML5AudioSoundManager(game) {
+        /**
+         * An array for keeping track of all the sounds
+         * that were paused when game lost focus.
+         *
+         * @private
+         * @property {Phaser.Sound.HTML5AudioSound[]} onBlurPausedSounds
+         * @default []
+         */
         this.onBlurPausedSounds = [];
         this._mute = false;
         this._volume = 1;
