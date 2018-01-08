@@ -40,6 +40,13 @@ var HTML5AudioFile = new Class({
         var audio = event.target;
         audio.removeEventListener('canplaythrough', this.onProgress);
         audio.removeEventListener('error', this.onError);
+
+        if(this.filesLoaded++ === this.filesTotal)
+        {
+            this.onLoad();
+        }
+
+        this.percentComplete = Math.min((this.filesLoaded / this.filesTotal), 1);
     },
 
     //  Called by the Loader, starts the actual file downloading
@@ -50,6 +57,10 @@ var HTML5AudioFile = new Class({
         this.data = [];
 
         var instances = (this.config && this.config.instances) || 1;
+
+        this.filesTotal = instances;
+        this.filesLoaded = 0;
+        this.percentComplete = 0;
 
         for(var i = 0; i < instances; i++)
         {
