@@ -69,10 +69,15 @@ var HTML5AudioFile = new Class({
             audio.preload = 'auto';
             audio.oncanplaythrough = this.onProgress.bind(this);
             audio.onerror = this.onError.bind(this);
-            audio.src = GetURL(this, baseURL || '');
-            audio.load();
 
             this.data.push(audio);
+        }
+
+        for (i = 0; i < this.data.length; i++)
+        {
+            audio = this.data[i];
+            audio.src = GetURL(this, baseURL || '');
+            audio.load();
         }
     }
 
