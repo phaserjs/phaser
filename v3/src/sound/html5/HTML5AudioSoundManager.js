@@ -45,4 +45,10 @@ Object.defineProperty(HTML5AudioSoundManager.prototype, 'mute', {
         });
     }
 });
+Object.defineProperty(HTML5AudioSoundManager.prototype, 'volume', {
+    get: function () {
+    },
+    set: function (value) {
+    }
+});
 module.exports = HTML5AudioSoundManager;
