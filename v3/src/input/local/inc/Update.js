@@ -34,7 +34,10 @@ var Update = function (time, delta)
 
     this.processDragEvents(pointer, time);
 
-    this.processOverOutEvents(pointer);
+    if (!pointer.wasTouch)
+    {
+        this.processOverOutEvents(pointer);
+    }
 
     if (pointer.justDown)
     {
