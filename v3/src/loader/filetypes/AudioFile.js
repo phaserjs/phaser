@@ -67,7 +67,6 @@ AudioFile.create = function (loader, key, urls, config, xhrSettings)
 
     if ((audioConfig && audioConfig.noAudio) || (!deviceAudio.webAudio && !deviceAudio.audioData))
     {
-        // TODO log not loading audio because sounds are disabled
         console.info('Skipping loading audio \'' + key + '\' since sounds are disabled.');
         return null;
     }
