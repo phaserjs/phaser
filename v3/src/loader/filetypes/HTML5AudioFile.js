@@ -35,6 +35,13 @@ var HTML5AudioFile = new Class({
         this.callback(this, false);
     },
 
+    onProgress: function (event)
+    {
+        var audio = event.target;
+        audio.removeEventListener('canplaythrough', this.onProgress);
+        audio.removeEventListener('error', this.onError);
+    },
+
     //  Called by the Loader, starts the actual file downloading
     load: function (callback, baseURL)
     {
@@ -49,6 +56,8 @@ var HTML5AudioFile = new Class({
             var audio = new Audio();
             audio.name = this.key;
             audio.preload = 'auto';
+            audio.addEventListener('canplaythrough', this.onProgress, false);
+            audio.addEventListener('error', this.onProgress, false);
             audio.src = GetURL(this, baseURL || '');
             audio.load();
 
