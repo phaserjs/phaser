@@ -25,6 +25,11 @@ var HTML5AudioSoundManager = new Class({
             sound.resume();
         });
         this.onBlurPausedSounds.length = 0;
+    },
+    destroy: function () {
+        BaseSoundManager.prototype.destroy.call(this);
+        this.onBlurPausedSounds.length = 0;
+        this.onBlurPausedSounds = null;
     }
 });
 module.exports = HTML5AudioSoundManager;
