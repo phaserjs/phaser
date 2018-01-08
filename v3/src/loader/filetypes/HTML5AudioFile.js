@@ -38,8 +38,8 @@ var HTML5AudioFile = new Class({
     onProgress: function (event)
     {
         var audio = event.target;
-        audio.removeEventListener('canplaythrough', this.onProgress);
-        audio.removeEventListener('error', this.onError);
+        audio.oncanplaythrough = null;
+        audio.onerror = null;
 
         if(++this.filesLoaded === this.filesTotal)
         {
@@ -67,8 +67,8 @@ var HTML5AudioFile = new Class({
             var audio = new Audio();
             audio.name = this.key;
             audio.preload = 'auto';
-            audio.addEventListener('canplaythrough', this.onProgress, false);
-            audio.addEventListener('error', this.onProgress, false);
+            audio.oncanplaythrough = this.onProgress.bind(this);
+            audio.onerror = this.onError.bind(this);
             audio.src = GetURL(this, baseURL || '');
             audio.load();
 
