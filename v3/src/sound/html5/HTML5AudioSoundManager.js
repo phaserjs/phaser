@@ -11,6 +11,14 @@ var HTML5AudioSoundManager = new Class({
         var sound = new HTML5AudioSound(this, key, config);
         this.sounds.push(sound);
         return sound;
+    },
+    onBlur: function () {
+        this.forEachActiveSound(function (sound) {
+            if (sound.isPlaying) {
+                this.onBlurPausedSounds.push(sound);
+                sound.pause();
+            }
+        });
     }
 });
 module.exports = HTML5AudioSoundManager;
