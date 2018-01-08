@@ -13,7 +13,7 @@ var ValueToColor = require('../display/color/ValueToColor');
 
 /**
  * @typedef {object} FPSConfig
- * 
+ *
  * @property {integer} [min=10] - [description]
  * @property {integer} [target=60] - [description]
  * @property {boolean} [forceSetTimeOut=false] - [description]
@@ -25,7 +25,7 @@ var ValueToColor = require('../display/color/ValueToColor');
  * @typedef {object} GameConfig
  *
  * @todo Add Physics Config
- * 
+ *
  * @property {integer|string} [width=1024] - [description]
  * @property {integer|string} [height=768] - [description]
  * @property {number} [zoom=1] - [description]
@@ -81,7 +81,7 @@ var Config = new Class({
      * @since 3.0.0
      *
      * @param {object} [GameConfig] - The configuration object for your Phaser Game instance.
-     * 
+     *
      */
     function Config (config)
     {
@@ -135,6 +135,8 @@ var Config = new Class({
 
         this.disableContextMenu = GetValue(config, 'disableContextMenu', false);
 
+        this.audio = GetValue(config, 'audio');
+
         //  If you do: { banner: false } it won't display any banner at all
         this.hideBanner = (GetValue(config, 'banner', null) === false);
 
@@ -146,7 +148,7 @@ var Config = new Class({
         {
             this.hideBanner = true;
         }
-       
+
         //  Frame Rate config
         //      fps: {
         //          min: 10,
