@@ -32,6 +32,13 @@ var HTML5AudioFile = new Class({
 
     onError: function (event)
     {
+        for (var i = 0; i < this.data.length; i++)
+        {
+            var audio = this.data[i];
+            audio.oncanplaythrough = null;
+            audio.onerror = null;
+        }
+
         this.callback(this, false);
     },
 
