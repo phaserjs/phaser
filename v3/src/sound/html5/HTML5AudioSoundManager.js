@@ -22,6 +22,14 @@ var HTML5AudioSoundManager = new Class({
          * @default false
          */
         this._mute = false;
+        /**
+         * Property that actually holds the value of global volume
+         * for HTML5 Audio sound manager implementation.
+         *
+         * @private
+         * @property {boolean} _volume
+         * @default 1
+         */
         this._volume = 1;
         BaseSoundManager.call(this, game);
     },
