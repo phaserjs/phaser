@@ -75,7 +75,6 @@ AudioFile.create = function (loader, key, urls, config, xhrSettings)
 
     if (!url)
     {
-        // TODO log no supported types
         console.warn('No supported url provided for audio \'' + key + '\'!');
         return null;
     }
