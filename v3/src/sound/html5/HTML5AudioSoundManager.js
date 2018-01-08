@@ -13,6 +13,14 @@ var HTML5AudioSoundManager = new Class({
          * @default []
          */
         this.onBlurPausedSounds = [];
+        /**
+         * Property that actually holds the value of global mute
+         * for HTML5 Audio sound manager implementation.
+         *
+         * @private
+         * @property {boolean} _mute
+         * @default false
+         */
         this._mute = false;
         this._volume = 1;
         BaseSoundManager.call(this, game);
