@@ -14,16 +14,7 @@ var Start = function (key, data)
     //  if not booted, then put scene into a holding pattern
     if (!this.game.isBooted)
     {
-        for (var i = 0; i < this._pending.length; i++)
-        {
-            var entry = this._pending[i];
-
-            if (entry.key === key)
-            {
-                entry.autoStart = true;
-                entry.data = data;
-            }
-        }
+        this._start.push({key: key, data: data});
 
         return;
     }

@@ -10,14 +10,9 @@
  */
 var IsSleeping = function (key)
 {
-    var entry = this.getActiveScene(key);
+    var scene = this.getActiveScene(key);
 
-    if (entry)
-    {
-        return (!entry.scene.sys.settings.active && !entry.scene.sys.settings.visible);
-    }
-
-    return false;
+    return (scene && !scene.sys.settings.active && !scene.sys.settings.visible);
 };
 
 module.exports = IsSleeping;

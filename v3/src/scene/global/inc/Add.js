@@ -31,7 +31,6 @@ var Add = function (key, sceneConfig, autoStart)
     if (!this.game.isBooted)
     {
         this._pending.push({
-            index: this._pending.length,
             key: key,
             scene: sceneConfig,
             autoStart: autoStart
@@ -69,14 +68,7 @@ var Add = function (key, sceneConfig, autoStart)
 
     if (autoStart || newScene.sys.settings.active)
     {
-        if (this.game.isBooted)
-        {
-            this.start(key);
-        }
-        else
-        {
-            this._start.push(key);
-        }
+        this.start(key);
     }
 
     return newScene;

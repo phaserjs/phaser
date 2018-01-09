@@ -8,11 +8,11 @@
  */
 var Pause = function (key)
 {
-    var entry = this.getActiveScene(key);
+    var scene = this.getActiveScene(key);
 
-    if (entry)
+    if (scene)
     {
-        entry.scene.sys.pause();
+        scene.sys.pause();
     }
 };
 

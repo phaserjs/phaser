@@ -11,18 +11,20 @@
  */
 var SendToBack = function (scene)
 {
-    var index = (typeof scene === 'string') ? this.getActiveSceneIndexByKey(scene) : this.getActiveSceneIndex(scene);
+    if (typeof scene === 'string') { scene = this.getScene(scene); }
+
+    var index = this.getActiveSceneIndex(scene);
 
     if (index > 0)
     {
-        var entry = this.active.splice(index, 1);
+        // Move the scene to the back of the active scenes array
+        this.active.splice(index, 1);
+        this.active.unshift(scene);
 
-        this.active.unshift({ index: 0, scene: entry[0].scene });
-
-        for (var i = 0; i < this.active.length; i++)
-        {
-            this.active[i].index = i;
-        }
+        // Move the scene behind all active scenes in the scenes array
+        this.scenes.splice(this.getSceneIndex(scene), 1);
+        index = this.getSceneIndex(this.active[1]);
+        this.scenes.splice(index, 0, scene);
     }
 };
 

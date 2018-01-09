@@ -227,7 +227,7 @@ var Game = new Class({
 
         for (var i = 0; i < active.length; i++)
         {
-            active[i].scene.sys.step(time, delta);
+            active[i].sys.step(time, delta);
         }
 
         //  Render
@@ -239,7 +239,7 @@ var Game = new Class({
         //  This uses active.length, in case scene.update removed the scene from the active list
         for (i = 0; i < active.length; i++)
         {
-            active[i].scene.sys.render(0, renderer);
+            active[i].sys.render(0, renderer);
         }
 
         renderer.postRender();
@@ -260,7 +260,7 @@ var Game = new Class({
 
         // for (var i = 0; i < active.length; i++)
         // {
-        //     active[i].scene.sys.pause();
+        //     active[i].sys.pause();
         // }
     },
 
@@ -279,7 +279,7 @@ var Game = new Class({
 
         // for (var i = 0; i < active.length; i++)
         // {
-        //     active[i].scene.sys.resume();
+        //     active[i].sys.resume();
         // }
     },
 
