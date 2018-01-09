@@ -20,7 +20,7 @@ var Boot = function ()
     {
         entry = this._start[i];
 
-        this.start(entry);
+        this.start(entry.key, entry.data);
     }
 
     //  Clear the pending lists

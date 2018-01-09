@@ -12,12 +12,9 @@ var GetActiveScene = function (key)
 {
     var scene = this.getScene(key);
 
-    for (var i = 0; i < this.active.length; i++)
+    if (this.active.indexOf(scene) >= 0)
     {
-        if (this.active[i].scene === scene)
-        {
-            return this.active[i];
-        }
+        return scene;
     }
 };
 

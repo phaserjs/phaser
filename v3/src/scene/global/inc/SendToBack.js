@@ -15,14 +15,7 @@ var SendToBack = function (scene)
 
     if (index > 0)
     {
-        var entry = this.active.splice(index, 1);
-
-        this.active.unshift({ index: 0, scene: entry[0].scene });
-
-        for (var i = 0; i < this.active.length; i++)
-        {
-            this.active[i].index = i;
-        }
+        this.active.unshift(this.active.splice(index, 1)[0]);
     }
 };
 

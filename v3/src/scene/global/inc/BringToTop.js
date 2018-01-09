@@ -13,17 +13,9 @@ var BringToTop = function (scene)
 {
     var index = (typeof scene === 'string') ? this.getActiveSceneIndexByKey(scene) : this.getActiveSceneIndex(scene);
 
-    if (index < this.active.length)
+    if (index >= 0)
     {
-        var i = 0;
-        var entry = this.active.splice(index, 1);
-
-        for (i = 0; i < this.active.length; i++)
-        {
-            this.active[i].index = i;
-        }
-
-        this.active.push({ index: i, scene: entry[0].scene });
+        this.active.push(this.active.splice(index, 1)[0]);
     }
 };
 

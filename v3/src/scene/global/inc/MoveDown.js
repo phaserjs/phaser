@@ -15,12 +15,9 @@ var MoveDown = function (scene)
 
     if (index > 0)
     {
-        var sceneB = this.getSceneAt(index - 1);
-
-        if (sceneB)
-        {
-            this.swapPosition(scene, sceneB);
-        }
+        var temp = this.active[index];
+        this.active[index] = this.active[index - 1];
+        this.active[index - 1] = temp;
     }
 };
 
