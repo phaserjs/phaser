@@ -1,7 +1,0 @@
-[
-    "src/animation/AnimationManager.js",
-    "src/animation/Animation.js",
-    "src/animation/Frame.js",
-    "src/animation/FrameData.js",
-    "src/animation/AnimationParser.js"
-]

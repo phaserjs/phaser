@@ -1,6 +1,0 @@
-[
-    "src/gameobjects/Particle.js",
-    "src/particles/Particles.js",
-    "src/particles/arcade/ArcadeParticles.js",
-    "src/particles/arcade/Emitter.js"
-]
