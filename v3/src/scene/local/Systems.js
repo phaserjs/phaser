@@ -251,8 +251,6 @@ var Systems = new Class({
     {
         //  Was stopped by the GlobalSceneManager
 
-        console.log('Scene.shutdown');
-
         this.settings.active = false;
         this.settings.visible = false;
 
