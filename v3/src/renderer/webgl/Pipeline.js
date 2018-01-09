@@ -1,10 +1,10 @@
 var Class = require('../../../utils/Class');
 
-var BaseRenderer = new Class({
+var Pipeline = new Class({
 
 	initialize: 
 
-	function BaseRenderer(config)
+	function Pipeline(config)
 	{
 
 		this.name = config.name;
@@ -25,104 +25,83 @@ var BaseRenderer = new Class({
 		this.vertexSize = config.vertexSize;
 		this.currentRenderTarget = null;
 		this.currentProgram = null;
-		this.topology = config.gl.TRIANGLES;
-		this.viewMatrix = new Float32Array([
-			+2.0 / this.width,
-			+0.0,	
-			+0.0,
-			+0.0,
-			
-			+0.0,
-			-2.0 / this.height,
-			+0.0,
-			+0.0,
-
-			+0.0,
-			+0.0,
-			+1.0,
-			+1.0,
-
-			-1.0,
-			+1.0,
-			+0.0,
-			+0.0
-		]);
-	
-		this.init(config);
-
-	},
-
-	init: function (config)
-	{
-		var gl = this.glContext;
-		var resources = this.resources;
-		var vertexSize = this.vertexSize;
-		var vertexLayout = this.vertexLayout;
-		var program = resources.createShader(this.name, config.shader);
-		var vertexBuffer = resources.createBuffer(gl.ARRAY_BUFFER, this.vertexCapacity, gl.STREAM_DRAW);
-
-		for (var key in vertexLayout)
+		this.topology = config.topology;
+		
+		// Initialize Shaders and Buffers
 		{
-			var element = vertexLayout[key];
+			var gl = this.glContext;
+			var resources = this.resources;
+			var vertexSize = this.vertexSize;
+			var vertexLayout = this.vertexLayout;
+			var program = resources.createShader(this.name, config.shader);
+			var vertexBuffer = resources.createBuffer(gl.ARRAY_BUFFER, this.vertexCapacity, gl.STREAM_DRAW);
 
-			vertexBuffer.addAttribute(
-				program.getAttribLocation(key),
-				element.size,
-				element.type,
-				element.normalize,
-				vertexSize,
-				element.offset
-			);
+			for (var key in vertexLayout)
+			{
+				var element = vertexLayout[key];
+
+				vertexBuffer.addAttribute(
+					program.getAttribLocation(key),
+					element.size,
+					element.type,
+					element.normalize,
+					vertexSize,
+					element.offset
+				);
+			}
+
+			this.vertexBuffer = vertexBuffer;
+			this.program = program;
 		}
-
-		this.vertexBuffer = vertexBuffer;
-		this.program = program;
-
-		return this;
 	},
 
-	begin: function (renderTarget, program)
+	beginDraw: function (renderTarget, program)
 	{
 		if (this.currentRenderTarget !== null ||
 			this.currentProgram !== null)
 		{
-			this.end();
+			this.draw();
+			this.endDraw();
 		}
 
 		this.currentRenderTarget = (renderTarget || null);
 		this.currentProgram = (program || this.program);
+		this.currentProgram.bind();
+		this.vertexBuffer.bind();
+
+		gl.bindFramebuffer(gl.FRAMEBUFFER, this.currentRenderTarget.framebufferObject);
 
 		return this;
 	},
 
-	end: function ()
+	draw: function ()
 	{
-		var renderTarget = this.currentRenderTarget;
-		var program = this.currentProgram;
 		var gl = this.glContext;
 		var vertexCount = this.vertexCount;
-		var viewMatrix = this.viewMatrix;
 		var vertexBuffer = this.vertexBuffer;
 		var vertexData = this.vertexData;
 		var topology = this.topology;
 
+		if (vertexCount === 0) return;
+
+		vertexBuffer.updateResource(vertexData, 0);
+		gl.drawArrays(topology, 0, vertexCount);
+
+		this.vertexCount = 0;
+
+		return this;
+	},
+
+	endDraw: function ()
+	{
+		var renderTarget = this.currentRenderTarget;
+		var program = this.currentProgram;
+
+		gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+
 		this.currentRenderTarget = null;
 		this.program = null;
 		this.vertexCount = 0;
-
-		if (vertexCount === 0) return;
-
-		viewMatrix[0] = +2.0 / this.width;
-		viewMatrix[5] = -2.0 / this.height;
-
-		program.bind();
-		vertexBuffer.bind();
-		vertexBuffer.updateResource(vertexData, 0);
-
-		gl.bindFramebuffer(gl.FRAMEBUFFER, renderTarget.framebufferObject);
-		gl.uniformMatrix4fv(gl.getUniformLocation(program.program, 'u_view_matrix'), false, viewMatrix);
-		gl.drawArrays(topology, 0, vertexCount);
-		gl.bindFramebuffer(gl.FRAMEBUFFER, null);
 
 		return this;
 	},

@@ -28,6 +28,7 @@ var Blitter = new Class({
         Components.Transform,
         Components.Visible,
         Components.ScrollFactor,
+        Components.Shader,
         BlitterRender
     ],
 
