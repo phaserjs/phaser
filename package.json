@@ -1,7 +1,7 @@
 {
   "//": "npm publish --tag beta",
   "name": "phaser",
-  "version": "3.0.0-beta.15",
+  "version": "3.0.0-beta.17",
   "release": "Shadow Coast",
   "description": "A fast, free and fun HTML5 Game Framework for Desktop and Mobile web browsers.",
   "author": "Richard Davey <rdavey@gmail.com> (http://www.photonstorm.com)",
@@ -11,7 +11,6 @@
   "license": "MIT",
   "licenseUrl": "http://www.opensource.org/licenses/mit-license.php",
   "main": "./src/phaser.js",
-  "typings": "./typings/index.d.ts",
   "repository": {
     "type": "git",
     "url": "https://photonstorm@github.com/photonstorm/phaser.git"
