@@ -2,7 +2,7 @@ let fs = require('fs-extra');
 let sloc = require('node-sloc');
 
 let source = './dist/phaser.js';
-let dest = '../../phaser3-examples/public/build/dev.js';
+let dest = '../phaser3-examples/public/build/dev.js';
 
 if (fs.existsSync(dest))
 {
@@ -28,5 +28,5 @@ if (fs.existsSync(dest))
 }
 else
 {
-    console.log('Copy-to-Examples failed: Phaser 3 Examples not present at ../../phaser3-examples');
+    console.log('Copy-to-Examples failed: Phaser 3 Examples not present at ../phaser3-examples');
 }
