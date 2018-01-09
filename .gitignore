@@ -14,3 +14,4 @@ dist/
 /npm-debug.log
 out/
 v3/src/checksum.js
+src/checksum.js
