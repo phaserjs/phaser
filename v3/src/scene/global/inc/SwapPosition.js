@@ -24,8 +24,17 @@ var SwapPosition = function (scene1, scene2)
 
     if (index1 !== -1 && index2 !== -1 && index1 !== index2)
     {
-        this.active[index1].index = index2;
-        this.active[index2].index = index1;
+        this.active.forEach(function(scene){
+          if(scene.scene === this.scenes[index1])
+          {
+            scene.index = index2;
+          }
+
+          if(scene.scene === this.scenes[index2])
+          {
+            scene.index = index1;
+          }
+        }, this)
 
         this.active.sort(SortScenes);
     }
