@@ -37,23 +37,11 @@ Grab the source and join in the fun!
 
 <div align="center"><img src="http://phaser.io/images/github/news.jpg"></div>
 
-> 31st July 2017
+> 9th January 2018
 
-Welcome!
+Please excuse us as we put the final touches to the release of Phaser 3. We had to restructure our repository to make the transition easier, which means if you're looking to download Phaser to build a game with then you'll find it in the  [Phaser CE (Community Edition)](https://github.com/photonstorm/phaser-ce) repo. If you're looking for the last official version of Phaser 2 then that's [2.6.2](https://github.com/photonstorm/phaser/releases/tag/v2.6.2)
 
-Phaser has been split into 3 major versions:
-
-**[Phaser 2.6.2](https://github.com/photonstorm/phaser/blob/master/v2/)**
-
-This is the last official release of Phaser 2. If you're here for the first time then we would recommend you start here.
-
-**[Phaser CE (Community Edition)](https://github.com/photonstorm/phaser-ce)**
-
-In November 2016 we handed ownership of Phaser 2 over to the open source community so we could work freely on Phaser 3. Since then the community has added many enhancements, new features and fixed loads of bugs. This build is called Phaser CE (Community Edition) and at the time of writing is at version 2.8.3.
-
-**[Phaser 3](http://phaser.io/phaser3/)**
-
-Phaser 3 is the next generation of the Phaser game framework. We have been working hard on it all year and have a development roadmap in place and regular dev logs. We've recently released the first Alpha build, so if you've time to help us test that would be appreciated! It is not yet production ready, but gets closer with every build.
+**[Phaser 3](http://phaser.io/phaser3/)** is the next generation of the Phaser game framework. We have been working hard on it for over a year and are very close to release. Visit the site to see the roadmap, labs and weekly Dev Logs. If you've time to help us test that would be appreciated! It is not yet production ready, but gets closer with every build.
 
 For the latest information visit the Phaser web site, where we cover all three versions. Subscribe to [Phaser World](#newsletter), our weekly newsletter, for the latest news, tutorials and development updates on both Phaser 3 and Phaser CE.
 
@@ -101,20 +89,16 @@ Previous editions can found on our [Back Issues](http://phaser.io/community/back
 ![Download Phaser](http://phaser.io/images/github/div-download.png "Download Phaser")
 <a name="download"></a>
 
-All Phaser versions are [hosted on Github][phaser]. You can:
+All Phaser 2 versions are [hosted on Github][phaser]. You can:
 
 * Clone the git repository via [https][clone-http], [ssh][clone-ssh] or with the Github [Windows][clone-ghwin] or [Mac][clone-ghmac] clients.
 * Download as [zip][get-zip] or [tar.gz][get-tgz]
 * Download just the build files: [phaser.js][get-js] and [phaser.min.js][get-minjs]
 * Checkout with [svn][clone-svn]
 
-You can also get Phaser via Bower, npm and CDN. Please see the README files for the version you need for further details:
+You can also get Phaser 2 via [Bower, npm and CDN](https://github.com/photonstorm/phaser-ce/blob/master/README.md)
 
-* [Phaser 2 README](https://github.com/photonstorm/phaser/blob/master/v2/README.md)
-* [Phaser Community Edition README](https://github.com/photonstorm/phaser-ce/blob/master/README.md)
-* [Phaser 3 README](https://github.com/photonstorm/phaser/blob/master/v3/README.md)
-
-### Phaser Sandbox
+### Phaser 2 Sandbox
 
 If you'd like to try coding in Phaser right now, with nothing more than your web browser, then head over to the [Phaser Sandbox](http://phaser.io/sandbox). You'll find Quick Start templates, and a user-friendly editor filled with handy code-completion features.
 
@@ -290,7 +274,6 @@ If you code with [TypeScript](http://www.typescriptlang.org/) there are comprehe
 
 We have always been meticulous in recording changes to the Phaser code base, and where relevant, giving attribution to those in the community who helped with the change. You can find comprehensive Change Logs for all versions:
 
-* [Phaser 2 Change Log](https://github.com/photonstorm/phaser/blob/master/v2/CHANGELOG.md).
 * [Phaser Community Edition Change Log](https://github.com/photonstorm/phaser-ce/CHANGELOG.md).
 
 ![Contributing](http://phaser.io/images/github/div-contributing.png "Contributing")
@@ -316,7 +299,7 @@ Phaser is a [Photon Storm](http://www.photonstorm.com) production.
 
 Created by [Richard Davey](mailto:rich@photonstorm.com). Powered by coffee, anime, pixels and love.
 
-The Phaser logo and characters are &copy; 2017 Photon Storm Limited.
+The Phaser logo and characters are &copy; 2018 Photon Storm Limited.
 
 All rights reserved.
 
