@@ -53,6 +53,7 @@ var WeightedRandomize = function (tileX, tileY, width, height, weightedIndexes, 
                 randomIndex = Array.isArray(chosen)
                     ? chosen[Math.floor(Math.random() * chosen.length)]
                     : chosen;
+                break;
             }
         }
 
