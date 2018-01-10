@@ -6,28 +6,28 @@
 */
 
 var BlendModes = require('../BlendModes');
-var BlitterBatch = require('./renderers/blitterbatch/BlitterBatch');
+var BlitterBatch = require('./pipelines/blitterbatch/BlitterBatch');
 var Class = require('../../utils/Class');
 var CONST = require('../../const');
-var EffectRenderer = require('./renderers/effectrenderer/EffectRenderer');
+var EffectRenderer = require('./pipelines/effectrenderer/EffectRenderer');
 var IsSizePowerOfTwo = require('../../math/pow2/IsSizePowerOfTwo');
-var MaskRenderer = require('./renderers/maskrenderer/MaskRenderer');
-var QuadBatch = require('./renderers/quadbatch/QuadBatch');
-var ParticleRenderer = require('./renderers/particlerenderer/ParticleRenderer');
+var MaskRenderer = require('./pipelines/maskrenderer/MaskRenderer');
+var QuadBatch = require('./pipelines/quadbatch/QuadBatch');
+var ParticleRenderer = require('./pipelines/particlerenderer/ParticleRenderer');
 var ResourceManager = require('./ResourceManager');
 var Resources = require('./resources');
 var ScaleModes = require('../ScaleModes');
-var ShapeBatch = require('./renderers/shapebatch/ShapeBatch');
-var SpriteBatch = require('./renderers/spritebatch/SpriteBatch');
-var TileBatch = require('./renderers/tilebatch/TileBatch');
-var TilemapRenderer = require('./renderers/tilemaprenderer/TilemapRenderer');
+var ShapeBatch = require('./pipelines/shapebatch/ShapeBatch');
+var SpriteBatch = require('./pipelines/spritebatch/SpriteBatch');
+var TileBatch = require('./pipelines/tilebatch/TileBatch');
+var TilemapRenderer = require('./pipelines/tilemaprenderer/TilemapRenderer');
 var WebGLSnapshot = require('../snapshot/WebGLSnapshot');
 
-var WebGLRenderer = new Class({
+var WebGLpipeline = new Class({
 
     initialize:
 
-    function WebGLRenderer (game)
+    function WebGLpipeline (game)
     {
         var _this = this;
         this.game = game;
@@ -40,10 +40,10 @@ var WebGLRenderer = new Class({
         this.view = game.canvas;
         this.view.addEventListener('webglcontextlost', function (evt) {
             var callbacks = _this.onContextLostCallbacks;
-            var renderers = _this.rendererArray;
-            for (var index = 0; index < renderers.length; ++index)
+            var pipelines = _this.pipelines;
+            for (var index = 0; index < pipelines.length; ++index)
             {
-                renderers[index].destroy();
+                pipelines[index].destroy();
             }
             _this.contextLost = true;
             for (var index = 0; index < callbacks.length; ++index)
@@ -55,7 +55,7 @@ var WebGLRenderer = new Class({
 
         this.view.addEventListener('webglcontextrestored', function (evt) {
             var callbacks = _this.onContextRestoredCallbacks;
-            _this.rendererArray.length = 0;
+            _this.pipelines.length = 0;
             _this.resourceManager.shaderCache = {};
             _this.resourceManager.shaderCount = 0;
             _this.contextLost = false;
@@ -95,14 +95,14 @@ var WebGLRenderer = new Class({
         this.gl = null;
         this.extensions = null;
         this.extensionList = {};
-        this.rendererArray = [];
+        this.pipelines = [];
         this.blitterBatch = null;
         this.aaQuadBatch = null;
         this.spriteBatch = null;
         this.shapeBatch = null;
-        this.effectRenderer = null;
-        this.maskRenderer =  null;
-        this.currentRenderer = null;
+        this.EffectRenderer = null;
+        this.MaskRenderer =  null;
+        this.currentPipeline = null;
         this.currentTexture = [];
         this.shaderCache = {};
         this.currentShader = null;
@@ -130,7 +130,7 @@ var WebGLRenderer = new Class({
         if (!this.gl)
         {
             this.contextLost = true;
-            throw new Error('This browser does not support WebGL. Try using the Canvas renderer.');
+            throw new Error('This browser does not support WebGL. Try using the Canvas pipeline.');
         }
         var gl = this.gl;
 
@@ -164,16 +164,16 @@ var WebGLRenderer = new Class({
 
         this.blendMode = -1;
         this.extensions = gl.getSupportedExtensions();
-        this.blitterBatch = this.addRenderer(new BlitterBatch(this.game, gl, this));
-        this.quadBatch = this.addRenderer(new QuadBatch(this.game, gl, this));
-        this.spriteBatch = this.addRenderer(new SpriteBatch(this.game, gl, this));
-        this.shapeBatch = this.addRenderer(new ShapeBatch(this.game, gl, this));
-        this.effectRenderer = this.addRenderer(new EffectRenderer(this.game, gl, this));
-        this.tileBatch = this.addRenderer(new TileBatch(this.game, gl, this));
-        this.tilemapRenderer = this.addRenderer(new TilemapRenderer(this.game, gl, this));
-        this.particleRenderer = this.addRenderer(new ParticleRenderer(this.game, gl, this));
-        this.maskRenderer = this.addRenderer(new MaskRenderer(this.game, gl, this));
-        this.currentRenderer = this.spriteBatch;
+        this.blitterBatch = this.addPipeline(new BlitterBatch(this.game, gl, this));
+        //this.quadBatch = this.addPipeline(new QuadBatch(this.game, gl, this));
+        //this.spriteBatch = this.addPipeline(new SpriteBatch(this.game, gl, this));
+        //this.shapeBatch = this.addPipeline(new ShapeBatch(this.game, gl, this));
+        //this.EffectRenderer = this.addPipeline(new EffectRenderer(this.game, gl, this));
+        //this.tileBatch = this.addPipeline(new TileBatch(this.game, gl, this));
+        //this.TilemapRenderer = this.addPipeline(new TilemapRenderer(this.game, gl, this));
+        //this.ParticleRenderer = this.addPipeline(new ParticleRenderer(this.game, gl, this));
+        //this.MaskRenderer = this.addPipeline(new MaskRenderer(this.game, gl, this));
+        this.currentPipeline = this.blitterBatch;
         this.currentVertexBuffer = null;
         this.setBlendMode(0);
         this.resize(this.width, this.height);
@@ -298,7 +298,8 @@ var WebGLRenderer = new Class({
         {
             var gl = this.gl;
 
-            this.currentRenderer.flush();
+            this.currentPipeline.flush();
+            this.currentPipeline.endPass();
             
             gl.activeTexture(gl.TEXTURE0 + unit);
 
@@ -315,15 +316,14 @@ var WebGLRenderer = new Class({
         }
     },
 
-    setRenderer: function (renderer, texture, renderTarget)
+    setPipeline: function (pipeline)
     {
-        this.setTexture(texture);
-        this.setRenderTarget(renderTarget);
-        
-        if (this.currentRenderer !== renderer || this.currentRenderer.shouldFlush())
+        if (this.currentPipeline !== pipeline || 
+            this.currentPipeline.shouldFlush())
         {
-            this.currentRenderer.flush();
-            this.currentRenderer = renderer;
+            this.currentPipeline.flush();
+            this.currentPipeline.endPass();
+            this.currentPipeline = pipeline;
         }
     },
 
@@ -333,7 +333,7 @@ var WebGLRenderer = new Class({
 
         if (this.currentRenderTarget !== renderTarget)
         {
-            this.currentRenderer.flush();
+            this.currentPipeline.flush();
 
             if (renderTarget !== null)
             {
@@ -374,13 +374,13 @@ var WebGLRenderer = new Class({
 
         this.gl.viewport(0, 0, this.width, this.height);
 
-        for (var i = 0, l = this.rendererArray.length; i < l; ++i)
+        for (var i = 0, l = this.pipelines.length; i < l; ++i)
         {
-            this.rendererArray[i].bind();
-            this.rendererArray[i].resize(width, height, resolution);
+            //this.pipelines[i].bind();
+            //this.pipelines[i].resize(width, height, resolution);
         }
 
-        this.currentRenderer.bind();
+        //this.currentPipeline.bind();
     },
 
     //  Call at the start of the render loop
@@ -442,21 +442,18 @@ var WebGLRenderer = new Class({
         {
             var color = camera.backgroundColor;
 
-            quadBatch.bind();
-
-            quadBatch.add(
-                camera.x, camera.y, camera.width, camera.height,
-                color.redGL, color.greenGL, color.blueGL, color.alphaGL
-            );
-
-            quadBatch.flush();
-
-            this.currentRenderer.bind();
+            //quadBatch.bind();
+            //quadBatch.add(
+            //    camera.x, camera.y, camera.width, camera.height,
+            //    color.redGL, color.greenGL, color.blueGL, color.alphaGL
+            //);
+            //quadBatch.flush();
+            //this.currentPipeline.bind();
         }
 
         var list = children.list;
         var length = list.length;
-        var renderer;
+        var pipeline;
 
         for (var index = 0; index < length; ++index)
         {
@@ -485,42 +482,39 @@ var WebGLRenderer = new Class({
                 child.mask.postRenderWebGL(this, child);
             }
 
-            renderer = this.currentRenderer;
+            pipeline = this.currentPipeline;
 
-            if (renderer.isFull() || renderer.shouldFlush())
+            if (pipeline.shouldFlush())
             {
-                renderer.flush();
+                pipeline.flush();
             }
         }
         
-        this.currentRenderer.flush();
+        this.currentPipeline.flush();
         
         if (camera._fadeAlpha > 0 || camera._flashAlpha > 0)
         {
             this.setRenderTarget(null);
             this.setBlendMode(BlendModes.NORMAL);
 
-            // fade rendering
-            quadBatch.add(
-                camera.x, camera.y, camera.width, camera.height,
-                camera._fadeRed,
-                camera._fadeGreen,
-                camera._fadeBlue,
-                camera._fadeAlpha
-            );
-
-            // flash rendering
-            quadBatch.add(
-                camera.x, camera.y, camera.width, camera.height,
-                camera._flashRed,
-                camera._flashGreen,
-                camera._flashBlue,
-                camera._flashAlpha
-            );
-
-            quadBatch.flush();
-
-            this.currentRenderer.bind();
+            // // fade rendering
+            // quadBatch.add(
+            //     camera.x, camera.y, camera.width, camera.height,
+            //     camera._fadeRed,
+            //     camera._fadeGreen,
+            //     camera._fadeBlue,
+            //     camera._fadeAlpha
+            // );
+            // // flash rendering
+            // quadBatch.add(
+            //     camera.x, camera.y, camera.width, camera.height,
+            //     camera._flashRed,
+            //     camera._flashGreen,
+            //     camera._flashBlue,
+            //     camera._flashAlpha
+            // );
+            // quadBatch.flush();
+            // this.currentPipeline.bind();
         }
 
         if (this.scissor.enabled)
@@ -534,7 +528,7 @@ var WebGLRenderer = new Class({
     {
         if (this.contextLost) return;
 
-        this.currentRenderer.flush();
+        this.currentPipeline.flush();
 
         if (this.snapshotCallback)
         {
@@ -565,13 +559,13 @@ var WebGLRenderer = new Class({
             return;
         }
 
-        var renderer = this.currentRenderer;
+        var pipeline = this.currentPipeline;
 
         if (this.blendMode !== newBlendMode)
         {
-            if (renderer)
+            if (pipeline)
             {
-                renderer.flush();
+                pipeline.flush();
             }
 
             var blend = this.blendModes[newBlendMode].func;
@@ -592,14 +586,14 @@ var WebGLRenderer = new Class({
         }
     },
 
-    addRenderer: function (rendererInstance)
+    addPipeline: function (pipelineInstance)
     {
-        var index = this.rendererArray.indexOf(rendererInstance);
+        var index = this.pipelines.indexOf(pipelineInstance);
 
         if (index < 0)
         {
-            this.rendererArray.push(rendererInstance);
-            return rendererInstance;
+            this.pipelines.push(pipelineInstance);
+            return pipelineInstance;
         }
 
         return null;
@@ -640,7 +634,7 @@ var WebGLRenderer = new Class({
 
         if (dstTexture != this.currentTexture[0])
         {
-            this.currentRenderer.flush();
+            this.currentPipeline.flush();
         }
 
         gl.activeTexture(gl.TEXTURE0);
@@ -684,4 +678,4 @@ var WebGLRenderer = new Class({
 
 });
 
-module.exports = WebGLRenderer;
+module.exports = WebGLpipeline;

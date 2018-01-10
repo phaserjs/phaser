@@ -11,7 +11,7 @@ var BlitterBatch = new Class({
 
     function BlitterBatch(game, gl, manager)
     {
-        Pipeline.call(this, game, {
+        Pipeline.call(this, {
             name: 'BlitterBatch',
             game: game,
             gl: gl,
@@ -19,7 +19,7 @@ var BlitterBatch = new Class({
             topology: gl.TRIANGLES,
             shader: ShaderSource,
             vertexCapacity: 12000,
-            
+
             vertexSize: 
                 Float32Array.BYTES_PER_ELEMENT * 2 + 
                 Float32Array.BYTES_PER_ELEMENT * 2 + 
@@ -37,7 +37,7 @@ var BlitterBatch = new Class({
                     type: gl.FLOAT,
                     normalize: false,
                     offset: Float32Array.BYTES_PER_ELEMENT * 2
-                }
+                },
                 'inTint': {
                     size: 4,
                     type: gl.UNSIGNED_BYTE,
@@ -75,11 +75,15 @@ var BlitterBatch = new Class({
 
     drawBlitter: function (blitter, camera)
     {
-        this.beginDraw(blitter.shader, blitter.renderTarget);
-        
+        this.manager.setPipeline(this);
+        this.beginPass(blitter.shader, blitter.renderTarget);
+
         var vertexViewF32 = this.vertexViewF32;
         var vertexViewU32 = this.vertexViewU32;
+        var orthoViewMatrix = this.orthoViewMatrix;
         var manager = this.manager;
+        var gl = this.gl;
+        var shader = this.currentProgram;
         var list = blitter.getRenderList();
         var length = list.length;
         var cameraMatrix = camera.matrix.matrix;
@@ -93,6 +97,11 @@ var BlitterBatch = new Class({
         var cameraScrollY = camera.scrollY * blitter.scrollFactorY;
         var batchCount = Math.ceil(length / 2000);
         var batchOffset = 0;
+
+        orthoViewMatrix[0] = +2.0 / this.width;
+        orthoViewMatrix[5] = -2.0 / this.height;
+
+        shader.setConstantMatrix4x4(shader.getUniformLocation('uOrthoMatrix'), orthoViewMatrix);
 
         for (var batchIndex = 0; batchIndex < batchCount; ++batchIndex)
         {
@@ -122,8 +131,7 @@ var BlitterBatch = new Class({
                 // Bind Texture if texture wasn't bound.
                 // This needs to be here because of multiple
                 // texture atlas.
-
-                // manager.setTexture(frame.texture.source[frame.sourceIndex].glTexture, 0);
+                manager.setTexture(frame.texture.source[frame.sourceIndex].glTexture, 0);
             
                 vertexViewF32[vertexOffset + 0] = tx;
                 vertexViewF32[vertexOffset + 1] = ty;
@@ -168,10 +176,10 @@ var BlitterBatch = new Class({
             length -= batchSize;
 
             this.vertexCount = (batchSize * 6);
-            this.draw();
+            this.flush();
         }
 
-        this.endDraw();
+        this.endPass();
     }
 
 });

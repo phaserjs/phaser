@@ -1,7 +1,7 @@
 var Class = require('../../../utils/Class');
 var GameObject = require('../../GameObject');
 var Components = require('../../components');
-var CONST = require('../../../renderer/webgl/renderers/tilemaprenderer/const');
+var CONST = require('../../../renderer/webgl/pipelines/tilemaprenderer/const');
 var StaticTilemapLayerRender = require('./StaticTilemapLayerRender');
 var TilemapComponents = require('../components');
 
