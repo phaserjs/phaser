@@ -336,6 +336,7 @@ var WebAudioSound = new Class({
         this.muteNode = null;
         this.volumeNode.disconnect();
         this.volumeNode = null;
+        this.rateUpdates.length = 0;
         this.rateUpdates = null;
     },
     /**
@@ -491,11 +492,11 @@ Object.defineProperty(WebAudioSound.prototype, 'seek', {
         if (this.isPlaying || this.isPaused) {
             value = Math.min(Math.max(0, value), this.duration);
             this.currentConfig.seek = value;
+            if (this.isPlaying) {
+                this.stopAndRemoveBufferSource();
+                this.createAndStartBufferSource();
+            }
             this.events.dispatch(new SoundValueEvent(this, 'SOUND_SEEK', value));
-        }
-        if (this.isPlaying) {
-            this.stopAndRemoveBufferSource();
-            this.createAndStartBufferSource();
         }
     }
 });

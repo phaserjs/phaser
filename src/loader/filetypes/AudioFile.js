@@ -2,6 +2,7 @@ var Class = require('../../utils/Class');
 var File = require('../File');
 var GetFastValue = require('../../utils/object/GetFastValue');
 var CONST = require('../../const');
+var HTML5AudioFile = require('./HTML5AudioFile');
 
 //  Phaser.Loader.FileTypes.AudioFile
 
@@ -46,7 +47,6 @@ var AudioFile = new Class({
             },
             function (e)
             {
-                // TODO properly log decoding error
                 console.error('Error with decoding audio data for \'' + this.key + '\':', e.message);
 
                 _this.state = CONST.FILE_ERRORED;
@@ -66,7 +66,6 @@ AudioFile.create = function (loader, key, urls, config, xhrSettings)
 
     if ((audioConfig && audioConfig.noAudio) || (!deviceAudio.webAudio && !deviceAudio.audioData))
     {
-        // TODO log not loading audio because sounds are disabled
         console.info('Skipping loading audio \'' + key + '\' since sounds are disabled.');
         return null;
     }
@@ -75,7 +74,6 @@ AudioFile.create = function (loader, key, urls, config, xhrSettings)
 
     if (!url)
     {
-        // TODO log no supported types
         console.warn('No supported url provided for audio \'' + key + '\'!');
         return null;
     }
@@ -85,8 +83,7 @@ AudioFile.create = function (loader, key, urls, config, xhrSettings)
         return new AudioFile(key, url, loader.path, xhrSettings, game.sound.context);
     }
 
-    // TODO handle loading audio tags
-    return null;
+    return new HTML5AudioFile(key, url, loader.path, config);
 };
 
 // this.load.audio('sound', 'assets/audio/booom.ogg', config, xhrSettings);

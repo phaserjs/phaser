@@ -1,8 +1,8 @@
 var CameraManager = require('../../camera/local/CameraManager');
 var Class = require('../../utils/Class');
 var Clock = require('../../time/Clock');
-var Data = require('../plugins/Data');
-var DataStore = require('../plugins/DataStore');
+var Data = require('../../data/Data');
+var DataStore = require('../../data/DataStore');
 var DisplayList = require('../plugins/DisplayList');
 var EventDispatcher = require('../../events/EventDispatcher');
 var GameObjectCreator = require('../plugins/GameObjectCreator');
@@ -16,6 +16,8 @@ var StableSort = require('../../utils/array/StableSort');
 var TweenManager = require('../../tweens/manager/TweenManager');
 var UpdateList = require('../plugins/UpdateList');
 
+var PluginManager = require('../../plugins/PluginManager');
+
 var Systems = new Class({
 
     initialize:
@@ -26,8 +28,6 @@ var Systems = new Class({
 
         this.config = config;
         this.settings = Settings.create(config);
-
-        this.renderList = [];
 
         this.sortChildrenFlag = false;
 
@@ -59,6 +59,8 @@ var Systems = new Class({
         this.time;
         this.tweens;
         this.updateList;
+
+        this.plugins;
     },
 
     init: function (game)
@@ -73,6 +75,8 @@ var Systems = new Class({
         this.cache = game.cache;
         this.registry = game.registry;
         this.textures = game.textures;
+
+        this.plugins = new PluginManager(scene);
 
         //  Scene specific managers (Factory, Tweens, Loader, Physics, etc)
 

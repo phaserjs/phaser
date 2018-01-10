@@ -194,6 +194,11 @@ var BaseLoader = new Class({
     {
         // console.log('---> BaseLoader.finishedLoading PROCESSING', this.queue.size, 'files');
 
+        if(this.state === CONST.LOADER_PROCESSING)
+        {
+            return;
+        }
+
         this.state = CONST.LOADER_PROCESSING;
 
         this.storage.clear();

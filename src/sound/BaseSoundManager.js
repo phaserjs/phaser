@@ -303,6 +303,7 @@ var BaseSoundManager = new Class({
         this.forEachActiveSound(function (sound) {
             sound.destroy();
         });
+        this.sounds.length = 0;
         this.sounds = null;
     },
     /**
@@ -336,7 +337,7 @@ Object.defineProperty(BaseSoundManager.prototype, 'rate', {
         this._rate = value;
         this.forEachActiveSound(function (sound) {
             sound.setRate();
-        }, this);
+        });
         this.events.dispatch(new SoundValueEvent(this, 'SOUND_RATE', value));
     }
 });
@@ -354,7 +355,7 @@ Object.defineProperty(BaseSoundManager.prototype, 'detune', {
         this._detune = value;
         this.forEachActiveSound(function (sound) {
             sound.setRate();
-        }, this);
+        });
         this.events.dispatch(new SoundValueEvent(this, 'SOUND_DETUNE', value));
     }
 });

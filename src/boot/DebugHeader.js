@@ -20,6 +20,24 @@ var DebugHeader = function (game)
 
     var renderType = (config.renderType === CONST.CANVAS) ? 'Canvas' : 'WebGL';
 
+    var audioConfig = game.config.audio;
+    var deviceAudio = game.device.Audio;
+
+    var audioType;
+
+    if(deviceAudio.webAudio && !(audioConfig && audioConfig.disableWebAudio))
+    {
+        audioType = 'Web Audio';
+    }
+    else if((audioConfig && audioConfig.noAudio) || (!deviceAudio.webAudio && !deviceAudio.audioData))
+    {
+        audioType = 'No Audio';
+    }
+    else
+    {
+        audioType = 'HTML5 Audio';
+    }
+
     var ie = false;
 
     if (!ie)
@@ -71,8 +89,7 @@ var DebugHeader = function (game)
 
         if (!config.hidePhaser)
         {
-            // TODO add audio
-            c = c.concat('Phaser v' + CONST.VERSION + ' (' + renderType + ')');
+            c = c.concat('Phaser v' + CONST.VERSION + ' (' + renderType + ' | ' + audioType + ')');
         }
 
         c = c.concat(' %c ' + config.gameURL);
