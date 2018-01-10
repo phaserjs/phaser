@@ -1,6 +1,6 @@
-var Class = require('../../utils/Class');
-var Event = require('../../events/Event');
-var EventDispatcher = require('../../events/EventDispatcher');
+var Class = require('../utils/Class');
+var Event = require('../events/Event');
+var EventDispatcher = require('../events/EventDispatcher');
 
 /**
 * The Data Component features a means to store pieces of data specific to a Game Object,
