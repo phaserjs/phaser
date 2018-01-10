@@ -49,10 +49,10 @@ var WeightedRandomize = function (tileX, tileY, width, height, weightedIndexes, 
             sum += weightedIndexes[j].weight;
             if (rand <= sum)
             {
-                var chosen = weightedIndexes[j].index
+                var chosen = weightedIndexes[j].index;
                 randomIndex = Array.isArray(chosen)
                     ? chosen[Math.floor(Math.random() * chosen.length)]
-                    : chosen
+                    : chosen;
             }
         }
 
