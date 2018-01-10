@@ -20,7 +20,8 @@ var GetTilesWithin = require('./GetTilesWithin');
  * @param {integer} [width=max width based on tileX] - [description]
  * @param {integer} [height=max height based on tileY] - [description]
  * @param {object[]} [weightedIndexes] - An array of objects to randomly draw from during
- * randomization. They should be in the form: { index: 0, weight: 4 }.
+ * randomization. They should be in the form: { index: 0, weight: 4 } or
+ * { index: [0, 1], weight: 4 } if you wish to draw from multiple tile indexes.
  * @param {LayerData} layer - [description]
  */
 var WeightedRandomize = function (tileX, tileY, width, height, weightedIndexes, layer)
