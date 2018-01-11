@@ -44,6 +44,15 @@ var HTML5AudioSound = new Class({
         // TODO implement pause method
         this.events.dispatch(new SoundEvent(this, 'SOUND_PAUSE'));
         return true;
+    },
+    resume: function () {
+        if (!BaseSound.prototype.resume.call(this)) {
+            return false;
+        }
+        //  \/\/\/ isPlaying = true, isPaused = false \/\/\/
+        // TODO implement resume method
+        this.events.dispatch(new SoundEvent(this, 'SOUND_RESUME'));
+        return true;
     }
 });
 module.exports = HTML5AudioSound;
