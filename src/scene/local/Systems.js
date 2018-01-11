@@ -29,8 +29,6 @@ var Systems = new Class({
         this.config = config;
         this.settings = Settings.create(config);
 
-        this.sortChildrenFlag = false;
-
         //  Set by the GlobalSceneManager
         this.canvas;
         this.context;
@@ -157,37 +155,23 @@ var Systems = new Class({
             return;
         }
 
-        //  inlined to avoid branching
-        if (this.sortChildrenFlag)
-        {
-            StableSort.inplace(this.displayList.list, this.sortZ);
+        var displayList = this.displayList;
 
-            this.sortChildrenFlag = false;
-        }
+        displayList.process();
 
-        this.cameras.render(renderer, this.displayList, interpolation);
+        this.cameras.render(renderer, displayList, interpolation);
     },
 
     //  Force a sort of the display list on the next render
     queueDepthSort: function ()
     {
-        this.sortChildrenFlag = true;
+        this.displayList.queueDepthSort();
     },
 
     //  Immediately sorts the display list if the flag is set
     depthSort: function ()
     {
-        if (this.sortChildrenFlag)
-        {
-            StableSort.inplace(this.displayList.list, this.sortZ);
-
-            this.sortChildrenFlag = false;
-        }
-    },
-
-    sortZ: function (childA, childB)
-    {
-        return childA._depth - childB._depth;
+        this.displayList.depthSort();
     },
 
     //  A paused Scene still renders, it just doesn't run ANY of its update handlers or systems

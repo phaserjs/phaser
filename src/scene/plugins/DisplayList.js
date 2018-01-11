@@ -1,4 +1,5 @@
 var Class = require('../../utils/Class');
+var StableSort = require('../../utils/array/StableSort');
 
 var DisplayList = new Class({
 
@@ -13,7 +14,41 @@ var DisplayList = new Class({
         //  The equivalent of the old `Sprite.children` array.
         this.list = [];
 
+        this.sortChildrenFlag = false;
+
         this.position = 0;
+    },
+
+    process: function ()
+    {
+        if (this.sortChildrenFlag)
+        {
+            StableSort.inplace(this.list, this.sortZ);
+
+            this.sortChildrenFlag = false;
+        }
+    },
+
+    sortZ: function (childA, childB)
+    {
+        return childA._depth - childB._depth;
+    },
+
+    //  Force a sort of the display list on the next call to process
+    queueDepthSort: function ()
+    {
+        this.sortChildrenFlag = true;
+    },
+
+    //  Immediately sorts the display list if the flag is set
+    depthSort: function ()
+    {
+        if (this.sortChildrenFlag)
+        {
+            StableSort.inplace(this.list, this.sortZ);
+
+            this.sortChildrenFlag = false;
+        }
     },
 
     add: function (child)
