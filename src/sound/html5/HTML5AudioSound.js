@@ -1,5 +1,6 @@
 var Class = require('../../utils/Class');
 var BaseSound = require('../BaseSound');
+var SoundEvent = require('../SoundEvent');
 var SoundValueEvent = require('../SoundValueEvent');
 var HTML5AudioSound = new Class({
     Extends: BaseSound,
