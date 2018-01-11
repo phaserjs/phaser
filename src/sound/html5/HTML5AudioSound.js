@@ -44,6 +44,7 @@ var HTML5AudioSound = new Class({
         if (!BaseSound.prototype.play.call(this, markerName, config)) {
             return false;
         }
+        //  \/\/\/ isPlaying = true, isPaused = false \/\/\/
         if (!this.pickAndPlayAudioTag()) {
             return false;
         }
