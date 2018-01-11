@@ -48,6 +48,8 @@ var World = new Class({
 
         this.OVERLAP_BIAS = GetValue(config, 'overlapBias', 4);
 
+        this.TILE_BIAS = GetValue(config, 'tileBias', 16);
+
         this.forceX = GetValue(config, 'forceX', false);
 
         this.isPaused = GetValue(config, 'isPaused', false);

@@ -4,14 +4,16 @@ var ProcessTileCallbacks = require('./tilemap/ProcessTileCallbacks');
 
 var CollideSpriteVsTilemapLayer = function (sprite, tilemapLayer, collideCallback, processCallback, callbackContext, overlapOnly)
 {
-    if (!sprite.body.enable)
+    var body = sprite.body;
+
+    if (!body.enable)
     {
         return false;
     }
 
     var mapData = tilemapLayer.getTilesWithinWorldXY(
-        sprite.body.position.x, sprite.body.position.y,
-        sprite.body.width, sprite.body.height
+        body.position.x, body.position.y,
+        body.width, body.height
     );
 
     if (mapData.length === 0)
@@ -30,10 +32,10 @@ var CollideSpriteVsTilemapLayer = function (sprite, tilemapLayer, collideCallbac
         tileWorldRect.right = tileWorldRect.left + tile.width * tilemapLayer.scaleX;
         tileWorldRect.bottom = tileWorldRect.top + tile.height * tilemapLayer.scaleY;
 
-        if (TileIntersectsBody(tileWorldRect, sprite.body)
+        if (TileIntersectsBody(tileWorldRect, body)
             && (!processCallback || processCallback.call(callbackContext, sprite, tile))
             && ProcessTileCallbacks(tile)
-            && (overlapOnly || SeparateTile(i, sprite.body, tile, tileWorldRect, tilemapLayer)))
+            && (overlapOnly || SeparateTile(i, body, tile, tileWorldRect, tilemapLayer, this.TILE_BIAS)))
         {
             this._total++;
 
