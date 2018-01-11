@@ -73,6 +73,7 @@ var HTML5AudioFile = new Class({
         {
             var audio = new Audio();
             audio.name = this.key;
+            audio.dataset.used = 'false';
             audio.preload = 'auto';
 
             // TODO check if ios is locked
