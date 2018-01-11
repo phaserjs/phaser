@@ -419,4 +419,20 @@ Object.defineProperty(BaseSound.prototype, 'rate', {
         this.events.dispatch(new SoundValueEvent(this, 'SOUND_RATE', value));
     }
 });
+/**
+ * Detuning of sound.
+ *
+ * @name Phaser.Sound.BaseSound#detune
+ * @property {number} detune
+ */
+Object.defineProperty(BaseSound.prototype, 'detune', {
+    get: function () {
+        return this.currentConfig.detune;
+    },
+    set: function (value) {
+        this.currentConfig.detune = value;
+        this.setRate();
+        this.events.dispatch(new SoundValueEvent(this, 'SOUND_DETUNE', value));
+    }
+});
 module.exports = BaseSound;
