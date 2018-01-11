@@ -1,4 +1,3 @@
-var TILE_BIAS = 16;
 var ProcessTileSeparationY = require('./ProcessTileSeparationY');
 
 /**
@@ -11,7 +10,7 @@ var ProcessTileSeparationY = require('./ProcessTileSeparationY');
 * @param {Phaser.TilemapLayer} tilemapLayer - The tilemapLayer to collide against.
 * @return {number} The amount of separation that occurred.
 */
-var TileCheckY = function (body, tile, tilemapLayer)
+var TileCheckY = function (body, tile, tilemapLayer, tileBias)
 {
     var oy = 0;
     var tileTop = tilemapLayer.tileToWorldX(tile.y);
@@ -25,7 +24,7 @@ var TileCheckY = function (body, tile, tilemapLayer)
         {
             oy = body.y - tileBottom;
 
-            if (oy < -TILE_BIAS)
+            if (oy < -tileBias)
             {
                 oy = 0;
             }
@@ -38,7 +37,7 @@ var TileCheckY = function (body, tile, tilemapLayer)
         {
             oy = body.bottom - tileTop;
 
-            if (oy > TILE_BIAS)
+            if (oy > tileBias)
             {
                 oy = 0;
             }
