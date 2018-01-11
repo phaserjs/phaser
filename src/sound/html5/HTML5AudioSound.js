@@ -120,4 +120,23 @@ Object.defineProperty(HTML5AudioSound.prototype, 'volume', {
         this.events.dispatch(new SoundValueEvent(this, 'SOUND_VOLUME', value));
     }
 });
+/**
+ * Current position of playing sound.
+ *
+ * @name Phaser.Sound.HTML5AudioSound#seek
+ * @property {number} seek
+ */
+Object.defineProperty(HTML5AudioSound.prototype, 'seek', {
+    get: function () {
+        if (this.isPlaying) {
+            return this.audio.currentTime;
+        }
+        else if (this.isPaused) {
+            return this.currentConfig.seek;
+        }
+        else {
+            return 0;
+        }
+    }
+});
 module.exports = HTML5AudioSound;
