@@ -34,7 +34,10 @@ var HTML5AudioSound = new Class({
         if (!BaseSound.prototype.play.call(this, markerName, config)) {
             return false;
         }
-        // TODO implement play method
+        if (!this.pickAudioTag()) {
+            this.reset();
+            return false;
+        }
         this.events.dispatch(new SoundEvent(this, 'SOUND_PLAY'));
         return true;
     },
