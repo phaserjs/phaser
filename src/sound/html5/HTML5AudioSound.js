@@ -18,7 +18,7 @@ var HTML5AudioSound = new Class({
             return;
         }
         /**
-         * Reference to HTML5 Audio tag used for playing sound.
+         * Reference to an HTML5 Audio tag used for playing sound.
          *
          * @private
          * @property {HTMLAudioElement} audio
