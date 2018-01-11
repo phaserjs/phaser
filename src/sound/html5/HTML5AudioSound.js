@@ -62,6 +62,9 @@ var HTML5AudioSound = new Class({
         // TODO implement stop method
         this.events.dispatch(new SoundEvent(this, 'SOUND_STOP'));
         return true;
+    },
+    update: function (time, delta) {
+
     }
 });
 module.exports = HTML5AudioSound;
