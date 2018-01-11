@@ -54,7 +54,11 @@ var HTML5AudioSound = new Class({
         this.audio.currentTime = offset;
         this.applyConfig();
         if (delay === 0) {
+            this.startTime = 0;
             this.audio.play();
+        }
+        else {
+            this.startTime = window.performance.now() + delay;
         }
         this.resetConfig();
         this.events.dispatch(new SoundEvent(this, 'SOUND_PLAY'));
