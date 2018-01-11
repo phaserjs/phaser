@@ -28,6 +28,14 @@ var HTML5AudioSound = new Class({
         this.duration = this.tags[0].duration;
         this.totalDuration = this.tags[0].duration;
         BaseSound.call(this, manager, key, config);
+    },
+    play: function (markerName, config) {
+        if (!BaseSound.prototype.play.call(this, markerName, config)) {
+            return false;
+        }
+        // TODO implement play method
+        this.events.dispatch(new SoundEvent(this, 'SOUND_PLAY'));
+        return true;
     }
 });
 module.exports = HTML5AudioSound;
