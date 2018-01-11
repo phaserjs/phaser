@@ -25,6 +25,8 @@ var HTML5AudioSound = new Class({
          * @default null
          */
         this.audio = null;
+        this.duration = this.tags[0].duration;
+        this.totalDuration = this.tags[0].duration;
         BaseSound.call(this, manager, key, config);
     }
 });
