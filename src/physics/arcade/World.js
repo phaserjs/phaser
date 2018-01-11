@@ -387,6 +387,8 @@ var World = new Class({
     collideHandler: require('./inc/CollideHandler'),
     collideSpriteVsSprite: require('./inc/CollideSpriteVsSprite'),
     collideSpriteVsGroup: require('./inc/CollideSpriteVsGroup'),
+    collideGroupVsTilemapLayer: require('./inc/CollideGroupVsTilemapLayer'),
+    collideSpriteVsTilemapLayer: require('./inc/CollideSpriteVsTilemapLayer'),
 
     //  Utils
     accelerateTo: require('./utils/AccelerateTo'),
