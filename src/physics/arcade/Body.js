@@ -131,8 +131,6 @@ var Body = new Class({
 
         this.blocked = { none: true, up: false, down: false, left: false, right: false };
 
-        this.tilePadding = new Vector2();
-
         this.dirty = false;
 
         this.syncBounds = false;
