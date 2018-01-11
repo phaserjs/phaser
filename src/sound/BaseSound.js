@@ -2,6 +2,7 @@ var Class = require('../utils/Class');
 var Extend = require('../utils/object/Extend');
 var EventDispatcher = require('../events/EventDispatcher');
 var NOOP = require('../utils/NOOP');
+var SoundValueEvent = require('./SoundValueEvent');
 /*!
  * @author Pavle Goloskokovic <pgoloskokovic@gmail.com> (http://prunegames.com)
  */
@@ -400,6 +401,22 @@ var BaseSound = new Class({
         var totalDetune = this.currentConfig.detune + this.manager.detune;
         var detuneRate = Math.pow(cent, totalDetune);
         this.totalRate = this.currentConfig.rate * this.manager.rate * detuneRate;
+    }
+});
+/**
+ * Playback rate.
+ *
+ * @name Phaser.Sound.BaseSound#rate
+ * @property {number} rate
+ */
+Object.defineProperty(BaseSound.prototype, 'rate', {
+    get: function () {
+        return this.currentConfig.rate;
+    },
+    set: function (value) {
+        this.currentConfig.rate = value;
+        this.setRate();
+        this.events.dispatch(new SoundValueEvent(this, 'SOUND_RATE', value));
     }
 });
 module.exports = BaseSound;
