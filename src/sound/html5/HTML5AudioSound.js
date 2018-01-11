@@ -76,6 +76,9 @@ var HTML5AudioSound = new Class({
         return true;
     },
     resume: function () {
+        if (this.startTime > 0) {
+            return false;
+        }
         if (!BaseSound.prototype.resume.call(this)) {
             return false;
         }
