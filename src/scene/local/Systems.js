@@ -1,8 +1,8 @@
 var CameraManager = require('../../camera/local/CameraManager');
 var Class = require('../../utils/Class');
 var Clock = require('../../time/Clock');
-var Data = require('../plugins/Data');
-var DataStore = require('../plugins/DataStore');
+var Data = require('../../data/Data');
+var DataStore = require('../../data/DataStore');
 var DisplayList = require('../plugins/DisplayList');
 var EventDispatcher = require('../../events/EventDispatcher');
 var GameObjectCreator = require('../plugins/GameObjectCreator');
@@ -16,6 +16,8 @@ var StableSort = require('../../utils/array/StableSort');
 var TweenManager = require('../../tweens/manager/TweenManager');
 var UpdateList = require('../plugins/UpdateList');
 
+var PluginManager = require('../../plugins/PluginManager');
+
 var Systems = new Class({
 
     initialize:
@@ -26,10 +28,6 @@ var Systems = new Class({
 
         this.config = config;
         this.settings = Settings.create(config);
-
-        this.renderList = [];
-
-        this.sortChildrenFlag = false;
 
         //  Set by the GlobalSceneManager
         this.canvas;
@@ -42,6 +40,7 @@ var Systems = new Class({
         this.anims;
         this.cache;
         this.registry;
+        this.sound;
         this.textures;
 
         //  Reference to Scene specific managers (Factory, Tweens, Loader, Physics, etc)
@@ -59,6 +58,8 @@ var Systems = new Class({
         this.time;
         this.tweens;
         this.updateList;
+
+        this.plugins;
     },
 
     init: function (game)
@@ -72,7 +73,10 @@ var Systems = new Class({
         this.anims = game.anims;
         this.cache = game.cache;
         this.registry = game.registry;
+        this.sound = game.sound;
         this.textures = game.textures;
+
+        this.plugins = new PluginManager(scene);
 
         //  Scene specific managers (Factory, Tweens, Loader, Physics, etc)
 
@@ -153,37 +157,23 @@ var Systems = new Class({
             return;
         }
 
-        //  inlined to avoid branching
-        if (this.sortChildrenFlag)
-        {
-            StableSort.inplace(this.displayList.list, this.sortZ);
+        var displayList = this.displayList;
 
-            this.sortChildrenFlag = false;
-        }
+        displayList.process();
 
-        this.cameras.render(renderer, this.displayList, interpolation);
+        this.cameras.render(renderer, displayList, interpolation);
     },
 
     //  Force a sort of the display list on the next render
     queueDepthSort: function ()
     {
-        this.sortChildrenFlag = true;
+        this.displayList.queueDepthSort();
     },
 
     //  Immediately sorts the display list if the flag is set
     depthSort: function ()
     {
-        if (this.sortChildrenFlag)
-        {
-            StableSort.inplace(this.displayList.list, this.sortZ);
-
-            this.sortChildrenFlag = false;
-        }
-    },
-
-    sortZ: function (childA, childB)
-    {
-        return childA._depth - childB._depth;
+        this.displayList.depthSort();
     },
 
     //  A paused Scene still renders, it just doesn't run ANY of its update handlers or systems
