@@ -82,7 +82,7 @@ var HTML5AudioSound = new Class({
             return false;
         }
         //  \/\/\/ isPlaying = false, isPaused = false \/\/\/
-        // TODO implement stop method
+        this.stopAndReleaseAudioTag();
         this.events.dispatch(new SoundEvent(this, 'SOUND_STOP'));
         return true;
     },
@@ -138,6 +138,12 @@ var HTML5AudioSound = new Class({
             selectedSound.startTime = 0;
         }
         return true;
+    },
+    stopAndReleaseAudioTag: function () {
+        this.audio.pause();
+        this.audio.dataset.used = 'false';
+        this.audio = null;
+        this.startTime = 0;
     },
     reset: function () {
         BaseSound.prototype.stop.call(this);
