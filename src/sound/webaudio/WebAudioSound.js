@@ -433,22 +433,6 @@ Object.defineProperty(WebAudioSound.prototype, 'volume', {
     }
 });
 /**
- * Playback rate.
- *
- * @name Phaser.Sound.WebAudioSound#rate
- * @property {number} rate
- */
-Object.defineProperty(WebAudioSound.prototype, 'rate', {
-    get: function () {
-        return this.currentConfig.rate;
-    },
-    set: function (value) {
-        this.currentConfig.rate = value;
-        this.setRate();
-        this.events.dispatch(new SoundValueEvent(this, 'SOUND_RATE', value));
-    }
-});
-/**
  * Detuning of sound.
  *
  * @name Phaser.Sound.WebAudioSound#detune
