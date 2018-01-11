@@ -59,7 +59,10 @@ var HTML5AudioSound = new Class({
         if (!BaseSound.prototype.pause.call(this)) {
             return false;
         }
-        // TODO implement pause method
+        //  \/\/\/ isPlaying = false, isPaused = true \/\/\/
+        this.currentConfig.seek = this.audio.currentTime
+            - (this.currentMarker ? this.currentMarker.start : 0);
+        this.stopAndReleaseAudioTag();
         this.events.dispatch(new SoundEvent(this, 'SOUND_PAUSE'));
         return true;
     },
