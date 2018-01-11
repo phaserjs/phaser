@@ -65,6 +65,9 @@ var HTML5AudioSound = new Class({
         return true;
     },
     pause: function () {
+        if (this.startTime > 0) {
+            return false;
+        }
         if (!BaseSound.prototype.pause.call(this)) {
             return false;
         }
@@ -209,9 +212,6 @@ Object.defineProperty(HTML5AudioSound.prototype, 'seek', {
         }
     },
     set: function (value) {
-        if (this.startTime > 0) {
-            return;
-        }
         if (this.isPlaying || this.isPaused) {
             value = Math.min(Math.max(0, value), this.duration);
             if (this.isPlaying) {
