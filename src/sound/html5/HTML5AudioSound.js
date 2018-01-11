@@ -83,6 +83,12 @@ var HTML5AudioSound = new Class({
                     otherSounds_1.push(sound);
                 }
             });
+            otherSounds_1.sort(function (a1, a2) {
+                if (a1.loop === a2.loop) {
+                    return a2.seek - a1.seek;
+                }
+                return a1.loop ? 1 : -1;
+            });
             var selectedSound = otherSounds_1[0];
             this.audio = selectedSound.audio;
         }
