@@ -65,6 +65,10 @@ var HTML5AudioSound = new Class({
     },
     update: function (time, delta) {
 
+    },
+    destroy: function () {
+        BaseSound.prototype.destroy.call(this);
+        // TODO release all HTML5 Audio tag related stuff
     }
 });
 module.exports = HTML5AudioSound;
