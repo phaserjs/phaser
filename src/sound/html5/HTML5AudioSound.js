@@ -125,6 +125,7 @@ var HTML5AudioSound = new Class({
             this.audio = selectedSound.audio;
             selectedSound.reset();
             selectedSound.audio = null;
+            selectedSound.startTime = 0;
         }
         return true;
     },
