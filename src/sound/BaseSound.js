@@ -260,7 +260,7 @@ var BaseSound = new Class({
      * @method Phaser.Sound.BaseSound#play
      * @param {string} [markerName=''] - If you want to play a marker then provide the marker name here, otherwise omit it to play the full sound.
      * @param {ISoundConfig} [config] - Optional sound config object to be applied to this marker or entire sound if no marker name is provided. It gets memorized for future plays of current section of the sound.
-     * @returns {ISound | null} This sound instance or 'null' if an error occurred.
+     * @returns {boolean} Whether the sound started playing successfully.
      */
     play: function (markerName, config) {
         if (markerName === void 0) { markerName = ''; }
@@ -270,7 +270,7 @@ var BaseSound = new Class({
         }
         if (typeof markerName !== 'string') {
             console.error('Sound marker name has to be a string!');
-            return null;
+            return false;
         }
         if (!markerName) {
             this.currentMarker = null;
@@ -280,7 +280,7 @@ var BaseSound = new Class({
         else {
             if (!this.markers[markerName]) {
                 console.error('No marker with name \'' + markerName + '\' found for sound \'' + this.key + '\'!');
-                return null;
+                return false;
             }
             this.currentMarker = this.markers[markerName];
             this.currentConfig = this.currentMarker.config;
@@ -290,7 +290,7 @@ var BaseSound = new Class({
         this.currentConfig = Extend(this.currentConfig, config);
         this.isPlaying = true;
         this.isPaused = false;
-        return this;
+        return true;
     },
     /**
      * Pauses the sound.
