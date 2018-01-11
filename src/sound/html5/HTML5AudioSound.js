@@ -1,5 +1,6 @@
 var Class = require('../../utils/Class');
 var BaseSound = require('../BaseSound');
+var SoundValueEvent = require('../SoundValueEvent');
 var HTML5AudioSound = new Class({
     Extends: BaseSound,
     initialize: function HTML5AudioSound(manager, key, config) {
@@ -85,6 +86,22 @@ var HTML5AudioSound = new Class({
         if (this.audio) {
             this.audio.playbackRate = this.totalRate;
         }
+    }
+});
+/**
+ * Mute setting.
+ *
+ * @name Phaser.Sound.HTML5AudioSound#mute
+ * @property {boolean} mute
+ */
+Object.defineProperty(HTML5AudioSound.prototype, 'mute', {
+    get: function () {
+        return this.currentConfig.mute;
+    },
+    set: function (value) {
+        this.currentConfig.mute = value;
+        this.setMute();
+        this.events.dispatch(new SoundValueEvent(this, 'SOUND_MUTE', value));
     }
 });
 module.exports = HTML5AudioSound;
