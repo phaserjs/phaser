@@ -74,6 +74,11 @@ var HTML5AudioSound = new Class({
         if (this.audio) {
             this.audio.muted = this.currentConfig.mute || this.manager.mute;
         }
+    },
+    setVolume: function () {
+        if (this.audio) {
+            this.audio.volume = this.currentConfig.volume * this.manager.volume;
+        }
     }
 });
 module.exports = HTML5AudioSound;
