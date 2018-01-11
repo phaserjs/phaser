@@ -64,6 +64,19 @@ var HTML5AudioSound = new Class({
         this.events.dispatch(new SoundEvent(this, 'SOUND_STOP'));
         return true;
     },
+    pickAudioTag: function () {
+        if (!this.audio) {
+            for (var i = 0; i < this.tags.length; i++) {
+                var audio = this.tags[i];
+                if (audio.dataset.used === 'false') {
+                    audio.dataset.used = 'true';
+                    this.audio = audio;
+                    return true;
+                }
+            }
+        }
+        return true;
+    },
     update: function (time, delta) {
 
     },
