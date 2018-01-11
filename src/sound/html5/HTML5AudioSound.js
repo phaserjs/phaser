@@ -77,6 +77,14 @@ var HTML5AudioSound = new Class({
             if (!this.manager.override) {
                 return false;
             }
+            var otherSounds_1 = [];
+            this.manager.forEachActiveSound(function (sound) {
+                if (sound.key === this.key && sound.isPlaying) {
+                    otherSounds_1.push(sound);
+                }
+            });
+            var selectedSound = otherSounds_1[0];
+            this.audio = selectedSound.audio;
         }
         return true;
     },
