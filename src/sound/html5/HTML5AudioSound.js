@@ -13,6 +13,10 @@ var HTML5AudioSound = new Class({
          * @property {HTMLAudioElement[]} tags
          */
         this.tags = manager.game.cache.audio.get(key);
+        if (!this.tags) {
+            console.error('No audio loaded in cache with key: \'' + key + '\'!');
+            return;
+        }
         /**
          * Reference to HTML5 Audio tag used for playing sound.
          *
