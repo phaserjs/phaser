@@ -44,23 +44,9 @@ var HTML5AudioSound = new Class({
         if (!BaseSound.prototype.play.call(this, markerName, config)) {
             return false;
         }
-        if (!this.pickAudioTag()) {
-            this.reset();
+        if (!this.pickAndPlayAudioTag()) {
             return false;
         }
-        var seek = this.currentConfig.seek;
-        var delay = this.currentConfig.delay;
-        var offset = (this.currentMarker ? this.currentMarker.start : 0) + seek;
-        this.audio.currentTime = offset;
-        this.applyConfig();
-        if (delay === 0) {
-            this.startTime = 0;
-            this.audio.play();
-        }
-        else {
-            this.startTime = window.performance.now() + delay;
-        }
-        this.resetConfig();
         this.events.dispatch(new SoundEvent(this, 'SOUND_PLAY'));
         return true;
     },
@@ -94,6 +80,26 @@ var HTML5AudioSound = new Class({
         //  \/\/\/ isPlaying = false, isPaused = false \/\/\/
         // TODO implement stop method
         this.events.dispatch(new SoundEvent(this, 'SOUND_STOP'));
+        return true;
+    },
+    pickAndPlayAudioTag: function () {
+        if (!this.pickAudioTag()) {
+            this.reset();
+            return false;
+        }
+        var seek = this.currentConfig.seek;
+        var delay = this.currentConfig.delay;
+        var offset = (this.currentMarker ? this.currentMarker.start : 0) + seek;
+        this.audio.currentTime = offset;
+        this.applyConfig();
+        if (delay === 0) {
+            this.startTime = 0;
+            this.audio.play();
+        }
+        else {
+            this.startTime = window.performance.now() + delay;
+        }
+        this.resetConfig();
         return true;
     },
     pickAudioTag: function () {
