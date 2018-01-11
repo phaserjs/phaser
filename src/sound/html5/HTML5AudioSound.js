@@ -38,6 +38,15 @@ var HTML5AudioSound = new Class({
             this.reset();
             return false;
         }
+        var seek = this.currentConfig.seek;
+        var delay = this.currentConfig.delay;
+        var offset = (this.currentMarker ? this.currentMarker.start : 0) + seek;
+        this.audio.currentTime = offset;
+        this.applyConfig();
+        if (delay === 0) {
+            this.audio.play();
+        }
+        this.resetConfig();
         this.events.dispatch(new SoundEvent(this, 'SOUND_PLAY'));
         return true;
     },
