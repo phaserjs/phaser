@@ -79,6 +79,12 @@ var HTML5AudioSound = new Class({
         if (this.audio) {
             this.audio.volume = this.currentConfig.volume * this.manager.volume;
         }
+    },
+    setRate: function () {
+        BaseSound.prototype.setRate.call(this);
+        if (this.audio) {
+            this.audio.playbackRate = this.totalRate;
+        }
     }
 });
 module.exports = HTML5AudioSound;
