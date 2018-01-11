@@ -70,7 +70,9 @@ var HTML5AudioSound = new Class({
             return false;
         }
         //  \/\/\/ isPlaying = true, isPaused = false \/\/\/
-        // TODO implement resume method
+        if (!this.pickAndPlayAudioTag()) {
+            return false;
+        }
         this.events.dispatch(new SoundEvent(this, 'SOUND_RESUME'));
         return true;
     },
