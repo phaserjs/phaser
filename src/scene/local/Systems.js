@@ -40,6 +40,7 @@ var Systems = new Class({
         this.anims;
         this.cache;
         this.registry;
+        this.sound;
         this.textures;
 
         //  Reference to Scene specific managers (Factory, Tweens, Loader, Physics, etc)
@@ -72,6 +73,7 @@ var Systems = new Class({
         this.anims = game.anims;
         this.cache = game.cache;
         this.registry = game.registry;
+        this.sound = game.sound;
         this.textures = game.textures;
 
         this.plugins = new PluginManager(scene);
