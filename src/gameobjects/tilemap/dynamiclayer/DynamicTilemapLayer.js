@@ -50,6 +50,13 @@ var DynamicTilemapLayer = new Class({
         GameObject.call(this, scene, 'DynamicTilemapLayer');
 
         /**
+         * Used internally by physics system to perform fast type checks.
+         * @property {boolean} isTilemap
+         * @readonly
+         */
+        this.isTilemap = true;
+
+        /**
          * The Tilemap that this layer is a part of.
          * @property {Tilemap} map
          */
