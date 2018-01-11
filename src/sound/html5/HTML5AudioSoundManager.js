@@ -5,9 +5,10 @@ var HTML5AudioSoundManager = new Class({
     Extends: BaseSoundManager,
     initialize: function HTML5AudioSoundManager(game) {
         /**
-         * Flag indicating whether for particular sound if there are no idle instances
-         * of HTML5 Audio tag one of them should be stopped and used for succeeding playback
-         * or if succeeding Phaser.Sound.HTML5AudioSound#play call should be ignored.
+         * Flag indicating whether if there are no idle instances of HTML5 Audio tag,
+         * for any particular sound, if one of the used tags should be stopped and used
+         * for succeeding playback or if succeeding Phaser.Sound.HTML5AudioSound#play
+         * call should be ignored.
          *
          * @property {boolean} override
          * @default true
