@@ -125,17 +125,17 @@ var WebAudioSound = new Class({
      * @method Phaser.Sound.WebAudioSound#play
      * @param {string} [markerName=''] - If you want to play a marker then provide the marker name here, otherwise omit it to play the full sound.
      * @param {ISoundConfig} [config] - Optional sound config object to be applied to this marker or entire sound if no marker name is provided. It gets memorized for future plays of current section of the sound.
-     * @returns {Phaser.Sound.WebAudioSound | null} This sound instance or 'null' if an error occurred.
+     * @returns {boolean} Whether the sound started playing successfully.
      */
     play: function (markerName, config) {
         if (!BaseSound.prototype.play.call(this, markerName, config)) {
-            return null;
+            return false;
         }
         //  \/\/\/ isPlaying = true, isPaused = false \/\/\/
         this.stopAndRemoveBufferSource();
         this.createAndStartBufferSource();
         this.events.dispatch(new SoundEvent(this, 'SOUND_PLAY'));
-        return this;
+        return true;
     },
     /**
      * Pauses the sound.
