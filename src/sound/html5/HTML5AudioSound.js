@@ -91,8 +91,13 @@ var HTML5AudioSound = new Class({
             });
             var selectedSound = otherSounds_1[0];
             this.audio = selectedSound.audio;
+            selectedSound.reset();
+            selectedSound.audio = null;
         }
         return true;
+    },
+    reset: function () {
+        BaseSound.prototype.stop.call(this);
     },
     update: function (time, delta) {
 
@@ -169,10 +174,14 @@ Object.defineProperty(HTML5AudioSound.prototype, 'seek', {
         }
     },
     set: function (value) {
+        if (this.startTime > 0) {
+            return;
+        }
         if (this.isPlaying || this.isPaused) {
             value = Math.min(Math.max(0, value), this.duration);
             if (this.isPlaying) {
-                this.audio.currentTime = value;
+                this.previousTime =
+                    this.audio.currentTime = value;
             }
             else if (this.isPaused) {
                 this.currentConfig.seek = value;
