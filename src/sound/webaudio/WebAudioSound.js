@@ -433,22 +433,6 @@ Object.defineProperty(WebAudioSound.prototype, 'volume', {
     }
 });
 /**
- * Detuning of sound.
- *
- * @name Phaser.Sound.WebAudioSound#detune
- * @property {number} detune
- */
-Object.defineProperty(WebAudioSound.prototype, 'detune', {
-    get: function () {
-        return this.currentConfig.detune;
-    },
-    set: function (value) {
-        this.currentConfig.detune = value;
-        this.setRate();
-        this.events.dispatch(new SoundValueEvent(this, 'SOUND_DETUNE', value));
-    }
-});
-/**
  * Current position of playing sound.
  *
  * @name Phaser.Sound.WebAudioSound#seek
