@@ -74,6 +74,9 @@ var HTML5AudioSound = new Class({
                     return true;
                 }
             }
+            if (!this.manager.override) {
+                return false;
+            }
         }
         return true;
     },
