@@ -137,6 +137,18 @@ Object.defineProperty(HTML5AudioSound.prototype, 'seek', {
         else {
             return 0;
         }
+    },
+    set: function (value) {
+        if (this.isPlaying || this.isPaused) {
+            value = Math.min(Math.max(0, value), this.duration);
+            if (this.isPlaying) {
+                this.audio.currentTime = value;
+            }
+            else if (this.isPaused) {
+                this.currentConfig.seek = value;
+            }
+            this.events.dispatch(new SoundValueEvent(this, 'SOUND_SEEK', value));
+        }
     }
 });
 module.exports = HTML5AudioSound;
