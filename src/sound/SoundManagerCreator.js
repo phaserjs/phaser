@@ -1,5 +1,6 @@
 var BaseSoundManager = require('./BaseSoundManager');
 var WebAudioSoundManager = require('./webaudio/WebAudioSoundManager');
+var HTML5AudioSoundManager = require('./html5/HTML5AudioSoundManager');
 
 var SoundManagerCreator = {
 
@@ -19,8 +20,7 @@ var SoundManagerCreator = {
             return new WebAudioSoundManager(game);
         }
 
-        // TODO return HTML5 Audio sound manager
-        return new BaseSoundManager(game);
+        return new HTML5AudioSoundManager(game);
     }
 
 };
