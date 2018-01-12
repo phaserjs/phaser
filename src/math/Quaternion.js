@@ -168,7 +168,7 @@ var Quaternion = new Class({
 
         if (dot < -0.999999)
         {
-            if (tmpvec.copy(xUnitVec3).cross(a).len() < EPSILON)
+            if (tmpvec.copy(xUnitVec3).cross(a).length() < EPSILON)
             {
                 tmpvec.copy(yUnitVec3).cross(a);
             }

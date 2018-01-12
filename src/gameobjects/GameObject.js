@@ -121,7 +121,7 @@ var GameObject = new Class({
         this.body = null;
 
         //  Tell the Scene to re-sort the children
-        this.scene.sys.sortChildrenFlag = true;
+        this.scene.sys.queueDepthSort();
     },
 
     /**
@@ -294,7 +294,7 @@ var GameObject = new Class({
         }
 
         //  Tell the Scene to re-sort the children
-        this.scene.sys.sortChildrenFlag = true;
+        this.scene.sys.queueDepthSort();
 
         this.active = false;
         this.visible = false;

@@ -9,7 +9,7 @@ var CollideHandler = function (object1, object2, collideCallback, processCallbac
     //  If neither of the objects are set then bail out
     if (!object1 || !object2)
     {
-        return;
+        return false;
     }
 
     //  A Body
@@ -17,15 +17,15 @@ var CollideHandler = function (object1, object2, collideCallback, processCallbac
     {
         if (object2.body)
         {
-            this.collideSpriteVsSprite(object1, object2, collideCallback, processCallback, callbackContext, overlapOnly);
+            return this.collideSpriteVsSprite(object1, object2, collideCallback, processCallback, callbackContext, overlapOnly);
         }
         else if (object2.isParent)
         {
-            this.collideSpriteVsGroup(object1, object2, collideCallback, processCallback, callbackContext, overlapOnly);
+            return this.collideSpriteVsGroup(object1, object2, collideCallback, processCallback, callbackContext, overlapOnly);
         }
         else if (object2.isTilemap)
         {
-            this.collideSpriteVsTilemapLayer(object1, object2, collideCallback, processCallback, callbackContext, overlapOnly);
+            return this.collideSpriteVsTilemapLayer(object1, object2, collideCallback, processCallback, callbackContext, overlapOnly);
         }
     }
     //  GROUPS
@@ -33,15 +33,15 @@ var CollideHandler = function (object1, object2, collideCallback, processCallbac
     {
         if (object2.body)
         {
-            this.collideSpriteVsGroup(object2, object1, collideCallback, processCallback, callbackContext, overlapOnly);
+            return this.collideSpriteVsGroup(object2, object1, collideCallback, processCallback, callbackContext, overlapOnly);
         }
         else if (object2.isParent)
         {
-            this.collideGroupVsGroup(object1, object2, collideCallback, processCallback, callbackContext, overlapOnly);
+            return this.collideGroupVsGroup(object1, object2, collideCallback, processCallback, callbackContext, overlapOnly);
         }
         else if (object2.isTilemap)
         {
-            this.collideGroupVsTilemapLayer(object1, object2, collideCallback, processCallback, callbackContext, overlapOnly);
+            return this.collideGroupVsTilemapLayer(object1, object2, collideCallback, processCallback, callbackContext, overlapOnly);
         }
     }
     //  TILEMAP LAYERS
@@ -49,11 +49,11 @@ var CollideHandler = function (object1, object2, collideCallback, processCallbac
     {
         if (object2.body)
         {
-            this.collideSpriteVsTilemapLayer(object2, object1, collideCallback, processCallback, callbackContext, overlapOnly);
+            return this.collideSpriteVsTilemapLayer(object2, object1, collideCallback, processCallback, callbackContext, overlapOnly);
         }
         else if (object2.isParent)
         {
-            this.collideGroupVsTilemapLayer(object2, object1, collideCallback, processCallback, callbackContext, overlapOnly);
+            return this.collideGroupVsTilemapLayer(object2, object1, collideCallback, processCallback, callbackContext, overlapOnly);
         }
     }
 };

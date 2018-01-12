@@ -14,7 +14,7 @@ var Depth = {
 
         set: function (value)
         {
-            this.scene.sys.sortChildrenFlag = true;
+            this.scene.sys.queueDepthSort();
             this._depth = value;
         }
 

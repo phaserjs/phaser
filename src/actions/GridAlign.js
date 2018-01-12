@@ -1,9 +1,10 @@
 var AlignIn = require('../display/align/in/QuickSet');
 var CONST = require('../display/align/const');
 var GetValue = require('../utils/object/GetValue');
+var NOOP = require('../utils/NOOP');
 var Zone = require('../gameobjects/zone/Zone');
 
-var tempZone = new Zone({ sys: { sortChildrenFlag: false }}, 0, 0, 1, 1);
+var tempZone = new Zone({ sys: { queueDepthSort: NOOP }}, 0, 0, 1, 1);
 
 /**
  * [description]
