@@ -1,11 +1,15 @@
 var Class = require('../utils/Class');
 var Extend = require('../utils/object/Extend');
-var EventDispatcher = require('../events/EventDispatcher');
+var EventEmitter = require('eventemitter3');
 var NOOP = require('../utils/NOOP');
+
 /*!
  * @author Pavle Goloskokovic <pgoloskokovic@gmail.com> (http://prunegames.com)
  */
 var BaseSound = new Class({
+
+    Extends: EventEmitter,
+
     /**
      * @class Phaser.Sound.BaseSound
      * @constructor
@@ -14,6 +18,9 @@ var BaseSound = new Class({
      * @param {ISoundConfig} [config] - An optional config object containing default sound settings.
      */
     initialize: function BaseSound(manager, key, config) {
+
+        EventEmitter.call(this);
+
         /**
          * Local reference to the sound manager.
          *
@@ -28,13 +35,6 @@ var BaseSound = new Class({
          * @property {string} key
          */
         this.key = key;
-        /**
-         * Event dispatcher used to handle all sound instance related events.
-         *
-         * @readonly
-         * @property {Phaser.Events.EventDispatcher}
-         */
-        this.events = new EventDispatcher();
         /**
          * Flag indicating if sound is currently playing.
          *
@@ -380,8 +380,7 @@ var BaseSound = new Class({
         this.pendingRemove = true;
         this.manager = null;
         this.key = '';
-        this.events.destroy();
-        this.events = null;
+        this.removeAllListeners();
         this.isPlaying = false;
         this.isPaused = false;
         this.config = null;

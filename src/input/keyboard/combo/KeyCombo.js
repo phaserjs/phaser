@@ -95,7 +95,7 @@ var KeyCombo = new Class({
 
             if (matched)
             {
-                _this.manager.events.dispatch(new KeyComboMatchEvent(_this, event));
+                _this.manager.emit('keycombomatch', _this, event);
 
                 if (_this.resetOnMatch)
                 {
@@ -110,7 +110,7 @@ var KeyCombo = new Class({
 
         this.onKeyDown = onKeyDownHandler;
 
-        this.manager.events.on('KEY_DOWN_EVENT', onKeyDownHandler);
+        this.manager.on('keydown', onKeyDownHandler);
     },
 
     progress: {
@@ -128,7 +128,7 @@ var KeyCombo = new Class({
         this.enabled = false;
         this.keyCodes = [];
 
-        this.manager.events.off('KEY_DOWN', this.onKeyDown);
+        this.manager.off('keydown', this.onKeyDown);
         this.manager = undefined;
     }
 

@@ -1,14 +1,12 @@
-var Event = require('../events/Event');
-
 /**
  * [description]
  *
  * @function Phaser.Boot.VisibilityHandler
  * @since 3.0.0
  *
- * @param {Phaser.Events.EventDispatcher} eventDispatcher - The EventDispatcher that will dispatch the visibility events.
+ * @param {Phaser.Events.EventDispatcher} eventEmitter - The EventDispatcher that will dispatch the visibility events.
  */
-var VisibilityHandler = function (eventDispatcher)
+var VisibilityHandler = function (eventEmitter)
 {
     var hiddenVar;
 
@@ -39,11 +37,11 @@ var VisibilityHandler = function (eventDispatcher)
     {
         if (document.hidden || event.type === 'pause')
         {
-            eventDispatcher.dispatch(new Event('HIDDEN'));
+            eventEmitter.emit('hidden');
         }
         else
         {
-            eventDispatcher.dispatch(new Event('VISIBLE'));
+            eventEmitter.emit('visible');
         }
     };
 
@@ -60,12 +58,12 @@ var VisibilityHandler = function (eventDispatcher)
 
     window.onblur = function ()
     {
-        eventDispatcher.dispatch(new Event('ON_BLUR'));
+        eventEmitter.emit('blur');
     };
 
     window.onfocus = function ()
     {
-        eventDispatcher.dispatch(new Event('ON_FOCUS'));
+        eventEmitter.emit('focus');
     };
 };
 

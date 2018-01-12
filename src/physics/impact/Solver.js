@@ -1,7 +1,6 @@
 var SeperateX = require('./SeperateX');
 var SeperateY = require('./SeperateY');
 var COLLIDES = require('./COLLIDES');
-var Events = require('./events');
 
 //  Impact Physics Solver
 
@@ -32,7 +31,7 @@ var Solver = function (world, bodyA, bodyB)
         bodyA.collideWith(bodyB, 'y');
         bodyB.collideWith(bodyA, 'y');
 
-        world.events.dispatch(new Events.COLLIDE(bodyA, bodyB, 'y'));
+        world.emit('collide', bodyA, bodyB, 'y');
     }
     else if (bodyA.last.y + bodyA.size.y > bodyB.last.y && bodyA.last.y < bodyB.last.y + bodyB.size.y)
     {
@@ -48,7 +47,7 @@ var Solver = function (world, bodyA, bodyB)
         bodyA.collideWith(bodyB, 'x');
         bodyB.collideWith(bodyA, 'x');
 
-        world.events.dispatch(new Events.COLLIDE(bodyA, bodyB, 'x'));
+        world.emit('collide', bodyA, bodyB, 'x');
     }
 };
 

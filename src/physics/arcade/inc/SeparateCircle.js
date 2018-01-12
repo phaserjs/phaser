@@ -1,7 +1,6 @@
 var DistanceBetween = require('../../../math/distance/DistanceBetween');
 var GetOverlapX = require('./GetOverlapX');
 var GetOverlapY = require('./GetOverlapY');
-var PhysicsEvent = require('../events');
 
 var SeparateCircle = function (body1, body2, overlapOnly, bias)
 {
@@ -66,7 +65,7 @@ var SeparateCircle = function (body1, body2, overlapOnly, bias)
     {
         if (overlap !== 0 && (body1.onOverlap || body2.onOverlap))
         {
-            this.events.dispatch(new PhysicsEvent.OVERLAP(body1.gameObject, body2.gameObject));
+            this.emit('overlap', body1.gameObject, body2.gameObject, body1, body2);
         }
 
         //  return true if there was some overlap, otherwise false
@@ -176,7 +175,7 @@ var SeparateCircle = function (body1, body2, overlapOnly, bias)
 
     if (body1.onCollide || body2.onCollide)
     {
-        this.events.dispatch(new PhysicsEvent.COLLIDE(body1.gameObject, body2.gameObject));
+        this.emit('collide', body1.gameObject, body2.gameObject, body1, body2);
     }
 
     return true;

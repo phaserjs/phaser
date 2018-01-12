@@ -1,12 +1,10 @@
-
+var Class = require('../utils/Class');
 var CONST = require('./const');
 var CustomSet = require('../structs/Set');
-var XHRSettings = require('./XHRSettings');
-var Event = require('./events/');
-// var EventDispatcher = require('../events/EventDispatcher');
-var Class = require('../utils/Class');
+var EventEmitter = require('eventemitter3');
 var ParseXMLBitmapFont = require('../gameobjects/bitmaptext/ParseXMLBitmapFont');
-var TilemapFormats = require("../gameobjects/tilemap/Formats");
+var TilemapFormats = require('../gameobjects/tilemap/Formats');
+var XHRSettings = require('./XHRSettings');
 
 //  Phaser.Loader.BaseLoader
 
@@ -16,13 +14,15 @@ var TilemapFormats = require("../gameobjects/tilemap/Formats");
 
 var BaseLoader = new Class({
 
+    Extends: EventEmitter,
+
     initialize:
 
     function BaseLoader (scene)
     {
-        this.scene = scene;
+        EventEmitter.call(this);
 
-        this.events = scene.sys.events;
+        this.scene = scene;
 
         //  Move to a 'setURL' method?
         this.baseURL = '';
@@ -93,7 +93,7 @@ var BaseLoader = new Class({
             return;
         }
 
-        this.events.dispatch(new Event.LOADER_START_EVENT(this));
+        this.emit('start', this);
 
         if (this.list.size === 0)
         {
@@ -277,7 +277,7 @@ var BaseLoader = new Class({
 
         this.state = CONST.LOADER_COMPLETE;
 
-        this.events.dispatch(new Event.LOADER_COMPLETE_EVENT(this));
+        this.emit('complete', this, this.storage.size, this.failed.size);
     },
 
     //  The Loader has finished
@@ -500,8 +500,8 @@ var BaseLoader = new Class({
         this.queue.clear();
         this.storage.clear();
 
-        this.events.removeAll('LOADER_START_EVENT');
-        this.events.removeAll('LOADER_COMPLETE_EVENT');
+        this.removeAllListeners('start');
+        this.removeAllListeners('complete');
 
         this.tag = '';
         this.path = '';

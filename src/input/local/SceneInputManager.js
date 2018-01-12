@@ -1,4 +1,5 @@
 var Class = require('../../utils/Class');
+var EventEmitter = require('eventemitter3');
 
 //  Drag Events
 //  https://developer.mozilla.org/en-US/docs/Web/API/HTML_Drag_and_Drop_API
@@ -7,10 +8,14 @@ var Class = require('../../utils/Class');
 
 var SceneInputManager = new Class({
 
+    Extends: EventEmitter,
+
     initialize:
 
     function SceneInputManager (scene)
     {
+        EventEmitter.call(this);
+
         //  The Scene that owns this plugin
         this.scene = scene;
 
@@ -22,9 +27,6 @@ var SceneInputManager = new Class({
 
         //  A reference to the this.scene.sys.cameras (set in boot)
         this.cameras;
-
-        //  The Scene event dispatcher
-        this.events = scene.sys.events;
 
         //  Proxy references available via the Scene
         this.keyboard = this.manager.keyboard;
@@ -102,17 +104,6 @@ var SceneInputManager = new Class({
 
     setDraggable: require('./inc/SetDraggable'),
 
-    setCallback: require('./inc/SetCallback'),
-    setCallbacks: require('./inc/SetCallbacks'),
-    setOnDownCallback: require('./inc/SetOnDownCallback'),
-    setOnOutCallback: require('./inc/SetOnOutCallback'),
-    setOnOverCallback: require('./inc/SetOnOverCallback'),
-    setOnUpCallback: require('./inc/SetOnUpCallback'),
-    setOnMoveCallback: require('./inc/SetOnMoveCallback'),
-    setOnDragStartCallback: require('./inc/SetOnDragStartCallback'),
-    setOnDragCallback: require('./inc/SetOnDragCallback'),
-    setOnDragEndCallback: require('./inc/SetOnDragEndCallback'),
-
     processOverOutEvents: require('./inc/ProcessOverOutEvents'),
     processDownEvents: require('./inc/ProcessDownEvents'),
     processDragEvents: require('./inc/ProcessDragEvents'),
@@ -166,6 +157,8 @@ var SceneInputManager = new Class({
             this._drag[i] = [];
             this._over[i] = [];
         }
+
+        this.removeAllListeners();
     },
 
     //  Game level nuke

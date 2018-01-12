@@ -1,4 +1,3 @@
-var PhysicsEvent = require('../events');
 var SeparateX = require('./SeparateX');
 var SeparateY = require('./SeparateY');
 
@@ -84,11 +83,11 @@ var Separate = function (body1, body2, processCallback, callbackContext, overlap
     {
         if (overlapOnly && (body1.onOverlap || body2.onOverlap))
         {
-            this.events.dispatch(new PhysicsEvent.OVERLAP(body1.gameObject, body2.gameObject));
+            this.emit('overlap', body1.gameObject, body2.gameObject, body1, body2);
         }
         else if (body1.onCollide || body2.onCollide)
         {
-            this.events.dispatch(new PhysicsEvent.COLLIDE(body1.gameObject, body2.gameObject));
+            this.emit('overlap', body1.gameObject, body2.gameObject, body1, body2);
         }
     }
 

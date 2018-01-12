@@ -42,5 +42,8 @@
     "uuid": "^3.1.0",
     "webpack": "^3.10.0",
     "webpack-shell-plugin": "^0.5.0"
+  },
+  "dependencies": {
+    "eventemitter3": "^3.0.0"
   }
 }

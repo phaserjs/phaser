@@ -1,5 +1,3 @@
-var Event = require('../events/');
-
 /**
  * [description]
  *
@@ -15,7 +13,7 @@ var PauseAll = function ()
     {
         this.paused = true;
 
-        this.events.dispatch(new Event.PAUSE_ALL_ANIMATION_EVENT());
+        this.emit('pauseall');
     }
 
     return this;

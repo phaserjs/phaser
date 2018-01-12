@@ -4,7 +4,7 @@ var Clock = require('../../time/Clock');
 var Data = require('../../data/Data');
 var DataStore = require('../../data/DataStore');
 var DisplayList = require('../plugins/DisplayList');
-var EventDispatcher = require('../../events/EventDispatcher');
+var EventEmitter = require('eventemitter3');
 var GameObjectCreator = require('../plugins/GameObjectCreator');
 var GameObjectFactory = require('../plugins/GameObjectFactory');
 var InputManager = require('../plugins/InputManager');
@@ -12,11 +12,10 @@ var Loader = require('../plugins/Loader');
 var PhysicsManager = require('../plugins/PhysicsManager');
 var SceneManager = require('../plugins/SceneManager');
 var Settings = require('./Settings');
-var StableSort = require('../../utils/array/StableSort');
 var TweenManager = require('../../tweens/manager/TweenManager');
 var UpdateList = require('../plugins/UpdateList');
 
-var PluginManager = require('../../plugins/PluginManager');
+// var PluginManager = require('../../plugins/PluginManager');
 
 var Systems = new Class({
 
@@ -26,16 +25,18 @@ var Systems = new Class({
     {
         this.scene = scene;
 
+        this.game;
+
         this.config = config;
+
         this.settings = Settings.create(config);
 
-        //  Set by the GlobalSceneManager
+        //  Set by the GlobalSceneManager - a reference to the game canvas / context
+
         this.canvas;
         this.context;
 
-        //  CORE (GLOBAL) SYSTEMS / PROPERTIES
-
-        this.game;
+        //  Global Systems - these are global managers (belonging to Game)
 
         this.anims;
         this.cache;
@@ -43,23 +44,27 @@ var Systems = new Class({
         this.sound;
         this.textures;
 
-        //  Reference to Scene specific managers (Factory, Tweens, Loader, Physics, etc)
-        this.add;
+        //  These are core Scene plugins, needed by lots of the global systems (and each other)
+
         this.cameras;
-        this.data;
-        this.dataStore;
         this.displayList;
         this.events;
+        this.sceneManager;
+        this.time;
+        this.updateList;
+
+        //  Optional Scene plugins - not referenced by core systems, can be overridden with user code
+
+        // this.plugins;
+
+        this.add;
+        this.data;
+        this.dataStore;
         this.inputManager;
         this.load;
         this.make;
         this.physicsManager;
-        this.sceneManager;
-        this.time;
         this.tweens;
-        this.updateList;
-
-        this.plugins;
     },
 
     init: function (game)
@@ -68,7 +73,7 @@ var Systems = new Class({
 
         this.game = game;
 
-        //  Game (Global) level managers
+        //  Global Systems - these are global managers (belonging to Game)
 
         this.anims = game.anims;
         this.cache = game.cache;
@@ -76,24 +81,27 @@ var Systems = new Class({
         this.sound = game.sound;
         this.textures = game.textures;
 
-        this.plugins = new PluginManager(scene);
+        //  These are core Scene plugins, needed by lots of the global systems (and each other)
 
-        //  Scene specific managers (Factory, Tweens, Loader, Physics, etc)
+        this.cameras = new CameraManager(scene);
+        this.displayList = new DisplayList(scene);
+        this.events = new EventEmitter();
+        this.sceneManager = new SceneManager(scene);
+        this.time = new Clock(scene);
+        this.updateList = new UpdateList(scene);
+
+        //  Optional Scene plugins - not referenced by core systems, can be overridden with user code
 
         this.add = new GameObjectFactory(scene);
-        this.cameras = new CameraManager(scene);
         this.data = new Data(scene);
         this.dataStore = new DataStore(scene);
-        this.displayList = new DisplayList(scene);
-        this.events = new EventDispatcher();
         this.inputManager = new InputManager(scene);
         this.load = new Loader(scene);
         this.make = new GameObjectCreator(scene);
         this.physicsManager = new PhysicsManager(scene);
-        this.sceneManager = new SceneManager(scene);
-        this.time = new Clock(scene);
         this.tweens = new TweenManager(scene);
-        this.updateList = new UpdateList(scene);
+
+        // this.plugins = new PluginManager(scene);
 
         //  Sometimes the managers need access to a system created after them
         this.add.boot(this);

@@ -1,4 +1,3 @@
-var Event = require('../events/');
 var Animation = require('../../frame/Animation');
 
 /**
@@ -26,7 +25,7 @@ var CreateFrameAnimation = function (config)
 
     this.anims.set(key, anim);
 
-    this.events.dispatch(new Event.ADD_ANIMATION_EVENT(key, anim));
+    this.emit('add', key, anim);
 
     return anim;
 };

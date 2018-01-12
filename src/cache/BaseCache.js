@@ -1,7 +1,6 @@
 var Class = require('../utils/Class');
 var CustomMap = require('../structs/Map');
-var EventDispatcher = require('../events/EventDispatcher');
-var Events = require('./events');
+var EventEmitter = require('eventemitter3');
 
 var BaseCache = new Class({
 
@@ -29,7 +28,7 @@ var BaseCache = new Class({
          *
          * @property {Phaser.Events.EventDispatcher} events
          */
-        this.events = new EventDispatcher();
+        this.events = new EventEmitter();
     },
 
     /**
@@ -46,7 +45,7 @@ var BaseCache = new Class({
     {
         this.entries.set(key, data);
 
-        this.events.dispatch(new Events.CACHE_ADD_EVENT(this, key, data));
+        this.events.emit('add', this, key, data);
     },
 
     /**
@@ -96,7 +95,7 @@ var BaseCache = new Class({
         {
             this.entries.delete(key);
 
-            this.events.dispatch(new Events.CACHE_REMOVE_EVENT(this, key, entry.data));
+            this.events.emit('remove', this, key, entry.data);
         }
     },
 

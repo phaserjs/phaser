@@ -69,7 +69,7 @@ var Particle = new Class({
         return (this.lifeCurrent > 0);
     },
 
-    emit: function (x, y)
+    fire: function (x, y)
     {
         var emitter = this.emitter;
 

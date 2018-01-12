@@ -826,15 +826,15 @@ var ParticleEmitter = new Class({
     {
         this.frequency = -1;
 
-        return this.emit(count, x, y);
+        return this.emitParticle(count, x, y);
     },
 
-    emitAt: function (x, y, count)
+    emitParticleAt: function (x, y, count)
     {
-        return this.emit(count, x, y);
+        return this.emitParticle(count, x, y);
     },
 
-    emit: function (count, x, y)
+    emitParticle: function (count, x, y)
     {
         if (this.atLimit())
         {
@@ -861,7 +861,7 @@ var ParticleEmitter = new Class({
                 particle = new this.particleClass(this);
             }
 
-            particle.emit(x, y);
+            particle.fire(x, y);
 
             if (this.particleBringToTop)
             {
@@ -952,7 +952,7 @@ var ParticleEmitter = new Class({
 
         if (this.frequency === 0)
         {
-            this.emit();
+            this.emitParticle();
         }
         else if (this.frequency > 0)
         {
@@ -960,7 +960,7 @@ var ParticleEmitter = new Class({
 
             if (this._counter <= 0)
             {
-                this.emit();
+                this.emitParticle();
 
                 //  counter = frequency - remained from previous delta
                 this._counter = (this.frequency - Math.abs(this._counter));

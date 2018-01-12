@@ -2,7 +2,6 @@
 
 var Class = require('../../utils/Class');
 var Gamepad = require('./Gamepad');
-var GamepadEvent = require('./events/');
 
 // https://developer.mozilla.org/en-US/docs/Web/API/Gamepad_API
 // https://developer.mozilla.org/en-US/docs/Web/API/Gamepad_API/Using_the_Gamepad_API
@@ -186,7 +185,7 @@ var GamepadManager = new Class({
 
                     pad = this.getPad(event.gamepad.index);
 
-                    this.events.dispatch(new GamepadEvent.CONNECTED(pad, event));
+                    this.events.emit('connected', pad, event);
 
                     break;
 
@@ -194,7 +193,7 @@ var GamepadManager = new Class({
 
                     pad = this.getPad(event.gamepad.index);
 
-                    this.events.dispatch(new GamepadEvent.DISCONNECTED(pad, event));
+                    this.events.emit('disconnected', pad, event);
 
                     break;
             }
