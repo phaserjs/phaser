@@ -142,7 +142,7 @@ var HTML5AudioSound = new Class({
                 if (sound.key === this.key && sound.isPlaying) {
                     otherSounds_1.push(sound);
                 }
-            });
+            }, this);
             otherSounds_1.sort(function (a1, a2) {
                 if (a1.loop === a2.loop) {
                     return a2.seek - a1.seek;
