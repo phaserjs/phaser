@@ -188,11 +188,16 @@ var HTML5AudioSound = new Class({
                     this.reset();
                     this.stopAndReleaseAudioTag();
                     this.events.dispatch(new SoundEvent(this, 'SOUND_ENDED'));
+                    return;
                 }
             }
             else if (currentTime < startTime) {
                 this.audio.currentTime += startTime;
             }
+            if (currentTime < this.previousTime) {
+                this.events.dispatch(new SoundEvent(this, 'SOUND_LOOP'));
+            }
+            this.previousTime = currentTime;
         }
     },
     destroy: function () {
