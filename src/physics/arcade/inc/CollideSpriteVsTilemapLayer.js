@@ -43,6 +43,15 @@ var CollideSpriteVsTilemapLayer = function (sprite, tilemapLayer, collideCallbac
             {
                 collideCallback.call(callbackContext, sprite, tile);
             }
+
+            if (overlapOnly && body.onOverlap)
+            {
+                sprite.emit('overlap', body.gameObject, tile, body, null);
+            }
+            else if (body.onCollide)
+            {
+                sprite.emit('collide', body.gameObject, tile, body, null);
+            }
         }
     }
 };
