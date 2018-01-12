@@ -1,10 +1,10 @@
-#How to contribute
+# How to contribute
 
 It's important to us that you feel you can contribute towards the evolution of Phaser. This can take many forms: from helping to fix bugs or improve the docs, to adding in new features to the source. This guide should help you in making that process as smooth as possible.
 
 Before contributing, please read the [code of conduct](https://github.com/photonstorm/phaser/blob/master/v2/CODE_OF_CONDUCT.md).
 
-##Reporting issues
+## Reporting issues
 
 [GitHub Issues][0] is the place to report bugs you may have found. When submitting a bug please do the following:
 
@@ -19,12 +19,12 @@ Before contributing, please read the [code of conduct](https://github.com/photon
 **5. Share as much information as possible.** Include browser version affected, your OS, version of the library, steps to reproduce, etc. "X isn't working!!!1!" will probably just be closed.
 
 
-##Pixi and Phaser
+## Pixi and Phaser
 
 It's important to understand that internally Phaser 2 uses a heavily customized version of [Pixi.js v2](https://github.com/GoodBoyDigital/pixi.js/) for all rendering. It's possible you may find a bug that is generated on the Pixi level rather than Phaser. You're welcome to still report the issue of course, but if you get a reply saying we think it might be a Pixi issue, this is what we're talking about :)
 
 
-##Support Forum
+## Support Forum
 
 We have a very active [Phaser Support Forum][4]. If you need general support, or are struggling to understand how to do something or need your code checked over, then we would urge you to post it to our forum. There are a lot of friendly devs in there who can help, as well as the core Phaser and Pixi teams, so it's a great place to get support from. You're welcome to report bugs directly on GitHub, but for general support we'd always recommend using the forum first.
 
@@ -47,17 +47,17 @@ make your changes and submit a Pull Request:
 - **Only commit relevant changes.** Don't include changes that are not directly relevant to the fix you are making. The more focused a PR is, the faster it will get attention and be merged. Extra files changing only whitespace or trash files will likely get your PR closed.
 
 
-##Coding style preferences are not contributions
+## Coding style preferences are not contributions
 
 If your PR is doing little more than changing the Phaser source code into a format / coding style that you prefer then we will automatically close it. All PRs must adhere to the coding style already set-out across the thousands of lines of code in Phaser. Your personal preferences for how things should "look" or be structured do not apply here, sorry. PRs should fix bugs, fix documentation or add features. No changes for the sake of change.
 
 
-##I don't really like git / node.js, but I can fix this bug
+## I don't really like git / node.js, but I can fix this bug
 
 That is fine too. While Pull Requests are the best thing in the world for us, they are not the only way to help. You're welcome to post fixes to our forum or even just email them to us. All we ask is that you still adhere to the guidelines presented here re: JSHint, etc.
 
 
-##Code Style Guide
+## Code Style Guide
 
 - Use 4 spaces for tabs, never tab characters.
 

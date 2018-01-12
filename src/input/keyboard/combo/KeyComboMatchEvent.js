@@ -11,9 +11,7 @@ var KeyComboMatchEvent = new Class({
     {
         Event.call(this, 'KEY_COMBO_MATCH_EVENT');
 
-        this.target = keyCombo;
-
-        this.data = keyboardEvent;
+        this.data = keyCombo;
     }
 
 });
