@@ -181,6 +181,9 @@ var HTML5AudioSound = new Class({
                     this.events.dispatch(new SoundEvent(this, 'SOUND_ENDED'));
                 }
             }
+            else if (currentTime < startTime) {
+                this.audio.currentTime += startTime;
+            }
         }
     },
     destroy: function () {
