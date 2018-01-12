@@ -1,7 +1,6 @@
 //  Phaser.Input.Gamepad.Axis
 
 var Class = require('../../utils/Class');
-var GamepadEvent = require('./events/');
 
 var Axis = new Class({
 
@@ -36,7 +35,7 @@ var Axis = new Class({
             percentage = 0;
         }
 
-       return percentage * (this.value > 0 ? 1 : -1);
+        return percentage * (this.value > 0 ? 1 : -1);
     }
 
 });
