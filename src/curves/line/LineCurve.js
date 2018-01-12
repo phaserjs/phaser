@@ -59,7 +59,7 @@ var LineCurve = new Class({
             return out.copy(this.p1);
         }
 
-        out.copy(this.p1).sub(this.p0).scale(t).add(this.p0);
+        out.copy(this.p1).subtract(this.p0).scale(t).add(this.p0);
 
         return out;
     },
@@ -72,7 +72,7 @@ var LineCurve = new Class({
 
     getTangent: function ()
     {
-        var tangent = tmpVec2.copy(this.p1).sub(this.p0);
+        var tangent = tmpVec2.copy(this.p1).subtract(this.p0);
 
         return tangent.normalize();
     },
