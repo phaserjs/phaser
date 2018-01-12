@@ -1,5 +1,4 @@
 var Class = require('../utils/Class');
-var Event = require('../events/Event');
 var EventEmitter = require('eventemitter3');
 
 /**
@@ -10,11 +9,11 @@ var Data = new Class({
 
     initialize:
 
-    function Data (parent, eventDispatcher)
+    function Data (parent, eventEmitter)
     {
         this.parent = parent;
 
-        this.events = (eventDispatcher) ? eventDispatcher : new EventEmitter();
+        this.events = (eventEmitter) ? eventEmitter : new EventEmitter();
 
         this.list = {};
 
