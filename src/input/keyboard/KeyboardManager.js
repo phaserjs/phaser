@@ -1,5 +1,5 @@
 var Class = require('../../utils/Class');
-var Event = require('./events');
+var EventEmitter = require('eventemitter3');
 var Key = require('./keys/Key');
 var KeyCodes = require('./keys/KeyCodes');
 var KeyCombo = require('./combo/KeyCombo');
@@ -20,13 +20,15 @@ var ProcessKeyUp = require('./keys/ProcessKeyUp');
 
 var KeyboardManager = new Class({
 
+    Extends: EventEmitter,
+
     initialize:
 
     function KeyboardManager (inputManager)
     {
-        this.manager = inputManager;
+        EventEmitter.call(this);
 
-        this.events = inputManager.events;
+        this.manager = inputManager;
 
         this.enabled = false;
 
@@ -208,23 +210,18 @@ var KeyboardManager = new Class({
         var queue = this.queue.splice(0, len);
 
         var keys = this.keys;
-        var singleKey;
 
         //  Process the event queue, dispatching all of the events that have stored up
         for (var i = 0; i < len; i++)
         {
             var event = queue[i];
 
+            //  Will emit a keyboard or keyup event
+            this.emit(event.type, event);
+
             if (event.type === 'keydown')
             {
-                this.manager.events.dispatch(new Event.KEY_DOWN_EVENT(event));
-
-                singleKey = Event._DOWN[event.keyCode];
-
-                if (singleKey)
-                {
-                    this.manager.events.dispatch(new singleKey(event));
-                }
+                this.emit('down_' + event.keyCode, event);
 
                 if (keys[event.keyCode])
                 {
@@ -233,14 +230,7 @@ var KeyboardManager = new Class({
             }
             else
             {
-                this.manager.events.dispatch(new Event.KEY_UP_EVENT(event));
-
-                singleKey = Event._UP[event.keyCode];
-
-                if (singleKey)
-                {
-                    this.manager.events.dispatch(new singleKey(event));
-                }
+                this.emit('up_' + event.keyCode, event);
 
                 if (keys[event.keyCode])
                 {
@@ -248,6 +238,24 @@ var KeyboardManager = new Class({
                 }
             }
         }
+    },
+
+    shutdown: function ()
+    {
+        this.removeAllListeners();
+    },
+
+    destroy: function ()
+    {
+        this.stopListeners();
+
+        this.removeAllListeners();
+
+        this.keys = [];
+        this.combos = [];
+        this.captures = [];
+        this.queue = [];
+        this.handler = undefined;
     }
 
 });

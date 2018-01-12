@@ -5,61 +5,50 @@ var Plugin = new Class({
 
     initialize:
 
-    function Plugin (scene)
+    function Plugin (scene, systemName, sceneName)
     {
+        if (sceneName === undefined) { sceneName = systemName; }
+
         this.scene = scene;
 
-        this.mapping = '';
-
-        this.active = true;
-
-        this.priority = 0;
+        this.system = {
+            systemName: systemName,
+            sceneName: sceneName,
+            active: true,
+            visible: true,
+            priority: {
+                begin: 0,
+                update: 0,
+                postUpdate: 0,
+                render: 0,
+                postRender: 0
+            }
+        };
     },
 
-    pause: function ()
+    setPriority: function (type, value)
     {
-
+        this.system.priority[type] = value;
     },
 
-    resume: function ()
+    setActive: function (value)
     {
-
+        this.system.active = value;
     },
 
-    boot: function ()
+    setVisible: function (value)
     {
-
+        this.system.visible = value;
     },
 
-    begin: function (time, delta)
-    {
-
-    },
-
-    update: function (time, delta)
-    {
-
-    },
-
-    postUpdate: function (time, delta)
-    {
-
-    },
-
-    postRender: function (renderer)
-    {
-
-    },
-
-    shutdown: function ()
-    {
-
-    },
-
-    destroy: function ()
-    {
-
-    }
+    boot: NOOP,
+    begin: NOOP,
+    update: NOOP,
+    postUpdate: NOOP,
+    render: NOOP,
+    postRender: NOOP,
+    shutdown: NOOP,
+    destroy: NOOP
 
 });
 

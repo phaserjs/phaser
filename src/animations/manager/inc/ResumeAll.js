@@ -1,5 +1,3 @@
-var Event = require('../events/');
-
 /**
  * [description]
  *
@@ -15,7 +13,7 @@ var ResumeAll = function ()
     {
         this.paused = false;
 
-        this.events.dispatch(new Event.RESUME_ALL_ANIMATION_EVENT());
+        this.emit('resumeall');
     }
 
     return this;

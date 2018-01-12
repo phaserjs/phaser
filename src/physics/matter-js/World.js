@@ -4,7 +4,7 @@ var Bodies = require('./lib/factory/Bodies');
 var Class = require('../../utils/Class');
 var Composite = require('./lib/body/Composite');
 var Engine = require('./lib/core/Engine');
-var EventDispatcher = require('../../events/EventDispatcher');
+var EventEmitter = require('eventemitter3');
 var GetFastValue = require('../../utils/object/GetFastValue');
 var GetValue = require('../../utils/object/GetValue');
 var MatterBody = require('./lib/body/Body');
@@ -24,7 +24,7 @@ var World = new Class({
 
         this.localWorld = this.engine.world;
 
-        this.events = new EventDispatcher();
+        this.events = new EventEmitter();
 
         var gravity = GetValue(config, 'gravity', null);
 

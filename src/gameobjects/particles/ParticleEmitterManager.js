@@ -132,7 +132,7 @@ var ParticleEmitterManager = new Class({
         return this.addGravityWell(new GravityWell(config));
     },
 
-    emit: function (count, x, y)
+    emitParticle: function (count, x, y)
     {
         var emitters = this.emitters.list;
 
@@ -142,16 +142,16 @@ var ParticleEmitterManager = new Class({
 
             if (emitter.active)
             {
-                emitter.emit(count, x, y);
+                emitter.emitParticle(count, x, y);
             }
         }
 
         return this;
     },
 
-    emitAt: function (x, y, count)
+    emitParticleAt: function (x, y, count)
     {
-        return this.emit(count, x, y);
+        return this.emitParticle(count, x, y);
     },
 
     pause: function ()

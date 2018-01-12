@@ -6,7 +6,7 @@ var NOOP = require('../utils/NOOP');
 
 var AddToDOM = require('../dom/AddToDOM');
 var DOMContentLoaded = require('../dom/DOMContentLoaded');
-var EventDispatcher = require('../events/EventDispatcher');
+var EventEmitter = require('eventemitter3');
 var VisibilityHandler = require('./VisibilityHandler');
 
 var AnimationManager = require('../animations/manager/AnimationManager');
@@ -82,7 +82,7 @@ var Game = new Class({
          *
          * @property {Phaser.Events.EventDispatcher} events
          */
-        this.events = new EventDispatcher();
+        this.events = new EventEmitter();
 
         /**
          * [description]
@@ -195,10 +195,10 @@ var Game = new Class({
 
         VisibilityHandler(this.events);
 
-        this.events.on('HIDDEN', this.onHidden.bind(this));
-        this.events.on('VISIBLE', this.onVisible.bind(this));
-        this.events.on('ON_BLUR', this.onBlur.bind(this));
-        this.events.on('ON_FOCUS', this.onFocus.bind(this));
+        this.events.on('hidden', this.onHidden.bind(this));
+        this.events.on('visible', this.onVisible.bind(this));
+        this.events.on('blur', this.onBlur.bind(this));
+        this.events.on('focus', this.onFocus.bind(this));
     },
 
     /**

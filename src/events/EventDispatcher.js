@@ -178,6 +178,18 @@ var EventDispatcher = new Class({
         return this;
     },
 
+    removeAllListeners: function (type)
+    {
+        var binding = this.getBinding(type);
+
+        if (binding)
+        {
+            binding.removeAll();
+        }
+
+        return this;
+    },
+
     removeAllFilters: function ()
     {
         this.filters.length = 0;

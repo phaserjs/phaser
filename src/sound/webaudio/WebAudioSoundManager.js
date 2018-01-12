@@ -1,7 +1,7 @@
 var Class = require('../../utils/Class');
 var BaseSoundManager = require('../BaseSoundManager');
 var WebAudioSound = require('./WebAudioSound');
-var SoundValueEvent = require('../SoundValueEvent');
+
 /*!
  * @author Pavle Goloskokovic <pgoloskokovic@gmail.com> (http://prunegames.com)
  */
@@ -149,7 +149,7 @@ Object.defineProperty(WebAudioSoundManager.prototype, 'mute', {
     },
     set: function (value) {
         this.masterMuteNode.gain.setValueAtTime(value ? 0 : 1, 0);
-        this.events.dispatch(new SoundValueEvent(this, 'SOUND_MUTE', value));
+        this.emit('mute', value);
     }
 });
 /**
@@ -164,7 +164,7 @@ Object.defineProperty(WebAudioSoundManager.prototype, 'volume', {
     },
     set: function (value) {
         this.masterVolumeNode.gain.setValueAtTime(value, 0);
-        this.events.dispatch(new SoundValueEvent(this, 'SOUND_VOLUME', value));
+        this.emit('volume', value);
     }
 });
 module.exports = WebAudioSoundManager;

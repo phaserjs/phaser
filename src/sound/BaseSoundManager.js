@@ -1,12 +1,14 @@
 var Class = require('../utils/Class');
 var NOOP = require('../utils/NOOP');
-var EventDispatcher = require('../events/EventDispatcher');
-var SoundEvent = require('./SoundEvent');
-var SoundValueEvent = require('./SoundValueEvent');
+var EventEmitter = require('eventemitter3');
+
 /*!
  * @author Pavle Goloskokovic <pgoloskokovic@gmail.com> (http://prunegames.com)
  */
 var BaseSoundManager = new Class({
+
+    Extends: EventEmitter,
+
     /**
      * The sound manager is responsible for playing back audio via Web Audio API or HTML Audio tag as fallback.
      * The audio file type and the encoding of those files are extremely important.
@@ -18,6 +20,9 @@ var BaseSoundManager = new Class({
      * @param {Phaser.Game} game - Reference to the current game instance.
      */
     initialize: function BaseSoundManager(game) {
+
+        EventEmitter.call(this);
+
         /**
          * Local reference to game.
          *
@@ -25,13 +30,6 @@ var BaseSoundManager = new Class({
          * @property {Phaser.Game} game
          */
         this.game = game;
-        /**
-         * Event dispatcher used to handle all sound manager related events.
-         *
-         * @readonly
-         * @property {Phaser.Events.EventDispatcher} events
-         */
-        this.events = new EventDispatcher();
         /**
          * An array containing all added sounds.
          *
@@ -79,16 +77,16 @@ var BaseSoundManager = new Class({
          * @default true
          */
         this.pauseOnBlur = true;
-        game.events.on('ON_BLUR', function () {
+        game.events.on('blur', function () {
             if (this.pauseOnBlur) {
                 this.onBlur();
             }
-        }.bind(this));
-        game.events.on('ON_FOCUS', function () {
+        }, this);
+        game.events.on('focus', function () {
             if (this.pauseOnBlur) {
                 this.onFocus();
             }
-        }.bind(this));
+        }, this);
         /**
          * Property that actually holds the value of global playback rate.
          *
@@ -156,7 +154,7 @@ var BaseSoundManager = new Class({
      */
     play: function (key, extra) {
         var sound = this.add(key);
-        sound.events.once('SOUND_ENDED', sound.destroy.bind(sound));
+        sound.once('ended', sound.destroy, sound);
         if (extra) {
             if (extra.name) {
                 sound.addMarker(extra);
@@ -181,7 +179,7 @@ var BaseSoundManager = new Class({
      */
     playAudioSprite: function (key, spriteName, config) {
         var sound = this.addAudioSprite(key);
-        sound.events.once('SOUND_ENDED', sound.destroy.bind(sound));
+        sound.once('ended', sound.destroy, sound);
         sound.play(spriteName, config);
     },
     /**
@@ -230,7 +228,7 @@ var BaseSoundManager = new Class({
         this.forEachActiveSound(function (sound) {
             sound.pause();
         });
-        this.events.dispatch(new SoundEvent(this, 'SOUND_PAUSE'));
+        this.emit('pauseall');
     },
     /**
      * Resumes all the sounds in the game.
@@ -241,7 +239,7 @@ var BaseSoundManager = new Class({
         this.forEachActiveSound(function (sound) {
             sound.resume();
         });
-        this.events.dispatch(new SoundEvent(this, 'SOUND_RESUME'));
+        this.emit('resumeall');
     },
     /**
      * Stops all the sounds in the game.
@@ -252,7 +250,7 @@ var BaseSoundManager = new Class({
         this.forEachActiveSound(function (sound) {
             sound.stop();
         });
-        this.events.dispatch(new SoundEvent(this, 'SOUND_STOP'));
+        this.emit('stopall');
     },
     /**
      * Method used internally for pausing sound manager if
@@ -298,8 +296,7 @@ var BaseSoundManager = new Class({
      */
     destroy: function () {
         this.game = null;
-        this.events.destroy();
-        this.events = null;
+        this.removeAllListeners();
         this.forEachActiveSound(function (sound) {
             sound.destroy();
         });
@@ -338,7 +335,7 @@ Object.defineProperty(BaseSoundManager.prototype, 'rate', {
         this.forEachActiveSound(function (sound) {
             sound.setRate();
         });
-        this.events.dispatch(new SoundValueEvent(this, 'SOUND_RATE', value));
+        this.emit('rate', value);
     }
 });
 /**
@@ -356,7 +353,7 @@ Object.defineProperty(BaseSoundManager.prototype, 'detune', {
         this.forEachActiveSound(function (sound) {
             sound.setRate();
         });
-        this.events.dispatch(new SoundValueEvent(this, 'SOUND_DETUNE', value));
+        this.emit('detune', value);
     }
 });
 module.exports = BaseSoundManager;

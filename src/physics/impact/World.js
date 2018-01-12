@@ -4,6 +4,7 @@ var Body = require('./Body');
 var Class = require('../../utils/Class');
 var COLLIDES = require('./COLLIDES');
 var CollisionMap = require('./CollisionMap');
+var EventEmitter = require('eventemitter3');
 var GetFastValue = require('../../utils/object/GetFastValue');
 var Set = require('../../structs/Set');
 var Solver = require('./Solver');
@@ -11,13 +12,15 @@ var TYPE = require('./TYPE');
 
 var World = new Class({
 
+    Extends: EventEmitter,
+
     initialize:
 
     function World (scene, config)
     {
-        this.scene = scene;
+        EventEmitter.call(this);
 
-        this.events = scene.sys.events;
+        this.scene = scene;
 
         this.bodies = new Set();
 
@@ -486,14 +489,14 @@ var World = new Class({
 
     shutdown: function ()
     {
-
+        this.removeAllListeners();
     },
 
     destroy: function ()
     {
-        this.scene = null;
+        this.removeAllListeners();
 
-        this.events = null;
+        this.scene = null;
 
         this.bodies.clear();
 

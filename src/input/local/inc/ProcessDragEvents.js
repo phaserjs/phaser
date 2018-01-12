@@ -1,5 +1,4 @@
 var DistanceBetween = require('../../../math/distance/DistanceBetween');
-var InputEvent = require('../events');
 
 var ProcessDragEvents = function (pointer, time)
 {
@@ -118,12 +117,9 @@ var ProcessDragEvents = function (pointer, time)
             input.dragStartX = gameObject.x;
             input.dragStartY = gameObject.y;
 
-            this.events.dispatch(new InputEvent.DRAG_START(pointer, gameObject));
+            gameObject.emit('dragstart', pointer, input.dragX, input.dragY);
 
-            if (gameObject.input)
-            {
-                input.onDragStart(gameObject, pointer, input.dragX, input.dragY);
-            }
+            this.emit('dragstart', pointer, gameObject);
         }
 
         pointer.dragState = 4;
@@ -162,24 +158,29 @@ var ProcessDragEvents = function (pointer, time)
                 if (index === 0)
                 {
                     //  We're still over it, and it's still the top of the display list, phew ...
-                    this.events.dispatch(new InputEvent.DRAG_OVER(pointer, gameObject, input.target));
+                    gameObject.emit('dragover', pointer, input.target);
+
+                    this.emit('dragover', pointer, gameObject, input.target);
                 }
                 else if (index > 0)
                 {
                     //  Still over it but it's no longer top of the display list (targets must always be at the top)
-                    this.events.dispatch(new InputEvent.DRAG_LEAVE(pointer, gameObject, input.target));
+                    gameObject.emit('dragleave', pointer, input.target);
 
-                    if (gameObject.input)
-                    {
-                        input.target = dropZones[0];
-                    }
+                    this.emit('dragleave', pointer, gameObject, input.target);
 
-                    this.events.dispatch(new InputEvent.DRAG_ENTER(pointer, gameObject, input.target));
+                    input.target = dropZones[0];
+
+                    gameObject.emit('dragenter', pointer, input.target);
+
+                    this.emit('dragenter', pointer, gameObject, input.target);
                 }
                 else
                 {
                     //  Nope, we've moved on (or the target has!), leave the old target
-                    this.events.dispatch(new InputEvent.DRAG_LEAVE(pointer, gameObject, input.target));
+                    gameObject.emit('dragleave', pointer, input.target);
+
+                    this.emit('dragleave', pointer, gameObject, input.target);
 
                     //  Anything new to replace it?
                     //  Yup!
@@ -187,7 +188,9 @@ var ProcessDragEvents = function (pointer, time)
                     {
                         input.target = dropZones[0];
 
-                        this.events.dispatch(new InputEvent.DRAG_ENTER(pointer, gameObject, input.target));
+                        gameObject.emit('dragenter', pointer, input.target);
+
+                        this.emit('dragenter', pointer, gameObject, input.target);
                     }
                     else
                     {
@@ -200,15 +203,16 @@ var ProcessDragEvents = function (pointer, time)
             {
                 input.target = dropZones[0];
 
-                this.events.dispatch(new InputEvent.DRAG_ENTER(pointer, gameObject, input.target));
+                gameObject.emit('dragenter', pointer, input.target);
+
+                this.emit('dragenter', pointer, gameObject, input.target);
             }
 
             var dragEvent = new InputEvent.DRAG(pointer, gameObject);
 
-            this.events.dispatch(dragEvent);
+            gameObject.emit('drag', pointer, dragEvent.dragX, dragEvent.dragY);
 
-            //  Maybe it would be better to send the event to the callback? So you can get all the other stuff from it?
-            input.onDrag(gameObject, pointer, dragEvent.dragX, dragEvent.dragY);
+            this.emit('drag', dragEvent);
         }
     }
 
@@ -232,7 +236,9 @@ var ProcessDragEvents = function (pointer, time)
 
             if (input.target)
             {
-                this.events.dispatch(new InputEvent.DROP(pointer, gameObject, input.target));
+                gameObject.emit('drop', pointer, input.target);
+
+                this.emit('drop', pointer, gameObject, input.target);
 
                 input.target = null;
 
@@ -241,12 +247,9 @@ var ProcessDragEvents = function (pointer, time)
 
             //  And finally the dragend event
 
-            this.events.dispatch(new InputEvent.DRAG_END(pointer, gameObject, dropped));
+            gameObject.emit('dragend', pointer, input.dragX, input.dragY, dropped);
 
-            if (gameObject.input)
-            {
-                input.onDragEnd(gameObject, pointer, input.dragX, input.dragY);
-            }
+            this.emit('dragend', pointer, gameObject, dropped);
         }
 
         pointer.dragState = 0;

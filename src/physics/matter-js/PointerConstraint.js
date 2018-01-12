@@ -61,9 +61,9 @@ var PointerConstraint = new Class({
 
         this.world.events.on('BEFORE_UPDATE_EVENT', this.update, 0, this);
 
-        scene.sys.events.on('POINTER_DOWN_EVENT', this.onDown, 0, this);
+        scene.sys.events.on('pointerdown', this.onDown, 0, this);
 
-        scene.sys.events.on('POINTER_UP_EVENT', this.onUp, 0, this);
+        scene.sys.events.on('pointerup', this.onUp, 0, this);
     },
 
     onDown: function (event)
@@ -169,9 +169,9 @@ var PointerConstraint = new Class({
 
         this.world.events.off('BEFORE_UPDATE_EVENT', this.update);
 
-        this.scene.sys.events.off('POINTER_DOWN_EVENT', this.onDown, 0, this);
+        this.scene.sys.events.off('pointerdown', this.onDown, this);
 
-        this.scene.sys.events.off('POINTER_UP_EVENT', this.onUp, 0, this);
+        this.scene.sys.events.off('pointerup', this.onUp, this);
     }
 
 });

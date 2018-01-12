@@ -12,7 +12,7 @@ var GetValue = require('../../../utils/object/GetValue');
  *
  * @return {Phaser.Animations.AnimationFrame[]} [description]
  */
-var GetFrames = function (textureManager, frames)
+var GetFrames = function (textureManager, frames, defaultTextureKey)
 {
     //      frames: [
     //          { key: textureKey, frame: textureFrame },
@@ -38,7 +38,8 @@ var GetFrames = function (textureManager, frames)
 
         frames = [];
 
-        frameKeys.forEach(function (idx, value) {
+        frameKeys.forEach(function (idx, value)
+        {
             frames.push({ key: textureKey, frame: value });
         });
     }
@@ -54,7 +55,7 @@ var GetFrames = function (textureManager, frames)
     {
         var item = frames[i];
 
-        var key = GetValue(item, 'key', null);
+        var key = GetValue(item, 'key', defaultTextureKey);
 
         if (!key)
         {
