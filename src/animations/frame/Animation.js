@@ -25,7 +25,7 @@ var Animation = new Class({
         this.type = 'frame';
 
         //  Extract all the frame data into the frames array
-        this.frames = GetFrames(manager.textureManager, GetValue(config, 'frames', []));
+        this.frames = GetFrames(manager.textureManager, GetValue(config, 'frames', []), GetValue(config, 'defaultTextureKey', null));
 
         //  The frame rate of playback in frames per second (default 24 if duration is null)
         this.frameRate = GetValue(config, 'frameRate', null);
