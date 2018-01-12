@@ -101,10 +101,15 @@ var HTML5AudioSound = new Class({
         this.applyConfig();
         if (delay === 0) {
             this.startTime = 0;
-            this.audio.play();
+            if (this.audio.paused) {
+                this.audio.play();
+            }
         }
         else {
             this.startTime = window.performance.now() + delay;
+            if (!this.audio.paused) {
+                this.audio.pause();
+            }
         }
         this.resetConfig();
         return true;
