@@ -139,7 +139,7 @@ var HTML5AudioSound = new Class({
             }
             var otherSounds_1 = [];
             this.manager.forEachActiveSound(function (sound) {
-                if (sound.key === this.key && sound.isPlaying) {
+                if (sound.key === this.key && sound.audio) {
                     otherSounds_1.push(sound);
                 }
             }, this);
