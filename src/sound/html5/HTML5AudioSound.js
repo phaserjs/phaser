@@ -178,6 +178,7 @@ var HTML5AudioSound = new Class({
                 else {
                     this.reset();
                     this.stopAndReleaseAudioTag();
+                    this.events.dispatch(new SoundEvent(this, 'SOUND_ENDED'));
                 }
             }
         }
