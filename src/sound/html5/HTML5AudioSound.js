@@ -145,7 +145,8 @@ var HTML5AudioSound = new Class({
             }, this);
             otherSounds_1.sort(function (a1, a2) {
                 if (a1.loop === a2.loop) {
-                    return a2.seek - a1.seek;
+                    // sort by progress
+                    return (a2.seek / a2.duration) - (a1.seek / a1.duration);
                 }
                 return a1.loop ? 1 : -1;
             });
