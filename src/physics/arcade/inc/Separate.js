@@ -87,7 +87,7 @@ var Separate = function (body1, body2, processCallback, callbackContext, overlap
         }
         else if (body1.onCollide || body2.onCollide)
         {
-            this.emit('overlap', body1.gameObject, body2.gameObject, body1, body2);
+            this.emit('collide', body1.gameObject, body2.gameObject, body1, body2);
         }
     }
 
