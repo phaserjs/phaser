@@ -165,6 +165,16 @@ var HTML5AudioSound = new Class({
                     this.startTime = 0;
                     this.audio.play();
                 }
+                return;
+            }
+            // handle looping
+            var startTime = (this.currentMarker ? this.currentMarker.start : 0);
+            var endTime = startTime + this.duration;
+            var currentTime = this.audio.currentTime;
+            if (currentTime >= endTime) {
+                if (this.currentConfig.loop) {
+                    this.audio.currentTime = startTime + (currentTime - endTime);
+                }
             }
         }
     },
