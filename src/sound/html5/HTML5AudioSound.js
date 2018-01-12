@@ -210,7 +210,10 @@ var HTML5AudioSound = new Class({
     },
     destroy: function () {
         BaseSound.prototype.destroy.call(this);
-        // TODO release all HTML5 Audio tag related stuff
+        this.tags = null;
+        if (this.audio) {
+            this.stopAndReleaseAudioTag();
+        }
     },
     setMute: function () {
         if (this.audio) {
