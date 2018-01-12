@@ -169,6 +169,7 @@ var HTML5AudioSound = new Class({
         BaseSound.prototype.stop.call(this);
     },
     update: function (time, delta) {
+        // TODO include play method call delay
         if (this.isPlaying) {
             // handling delayed playback
             if (this.startTime > 0) {
