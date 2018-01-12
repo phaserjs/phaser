@@ -273,7 +273,8 @@ Object.defineProperty(HTML5AudioSound.prototype, 'volume', {
 Object.defineProperty(HTML5AudioSound.prototype, 'seek', {
     get: function () {
         if (this.isPlaying) {
-            return this.audio.currentTime;
+            return this.audio.currentTime -
+                (this.currentMarker ? this.currentMarker.start : 0);
         }
         else if (this.isPaused) {
             return this.currentConfig.seek;
