@@ -298,7 +298,7 @@ var Camera3D = new Class({
             dir.set(x, y, z);
         }
 
-        dir.sub(this.position).normalize();
+        dir.subtract(this.position).normalize();
 
         //  Calculate right vector
         tmpVec3.copy(dir).cross(up).normalize();
@@ -319,7 +319,7 @@ var Camera3D = new Class({
 
     rotateAround: function (point, radians, axis)
     {
-        tmpVec3.copy(point).sub(this.position);
+        tmpVec3.copy(point).subtract(this.position);
 
         this.translate(tmpVec3);
         this.rotate(radians, axis);
@@ -391,7 +391,7 @@ var Camera3D = new Class({
 
         direction.unproject(viewport, mtx);
 
-        direction.sub(origin).normalize();
+        direction.subtract(origin).normalize();
 
         return this.ray;
     },
@@ -419,7 +419,7 @@ var Camera3D = new Class({
         var dir = dirvec.set(this.direction).negate();
 
         // Better view-aligned billboards might use this:
-        // var dir = tmp.set(camera.position).sub(p).normalize();
+        // var dir = tmp.set(camera.position).subtract(p).normalize();
         
         var right = rightvec.set(this.up).cross(dir).normalize();
         var up = tmpVec3.set(dir).cross(right).normalize();
