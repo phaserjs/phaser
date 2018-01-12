@@ -167,13 +167,17 @@ var HTML5AudioSound = new Class({
                 }
                 return;
             }
-            // handle looping
-            var startTime = (this.currentMarker ? this.currentMarker.start : 0);
+            // handle looping and ending
+            var startTime = this.currentMarker ? this.currentMarker.start : 0;
             var endTime = startTime + this.duration;
             var currentTime = this.audio.currentTime;
             if (currentTime >= endTime) {
                 if (this.currentConfig.loop) {
                     this.audio.currentTime = startTime + (currentTime - endTime);
+                }
+                else {
+                    this.reset();
+                    this.stopAndReleaseAudioTag();
                 }
             }
         }
