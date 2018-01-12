@@ -284,7 +284,8 @@ Object.defineProperty(HTML5AudioSound.prototype, 'seek', {
         if (this.isPlaying || this.isPaused) {
             value = Math.min(Math.max(0, value), this.duration);
             if (this.isPlaying) {
-                this.audio.currentTime = value;
+                this.previousTime =
+                    this.audio.currentTime = value;
             }
             else if (this.isPaused) {
                 this.currentConfig.seek = value;
