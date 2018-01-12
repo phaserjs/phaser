@@ -102,6 +102,7 @@ Object.defineProperty(HTML5AudioSoundManager.prototype, 'volume', {
         this.forEachActiveSound(function (sound) {
             sound.setVolume();
         });
+        this.events.dispatch(new SoundValueEvent(this, 'SOUND_VOLUME', value));
     }
 });
 module.exports = HTML5AudioSoundManager;
