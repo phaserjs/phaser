@@ -153,6 +153,7 @@ var HTML5AudioSound = new Class({
             selectedSound.reset();
             selectedSound.audio = null;
             selectedSound.startTime = 0;
+            selectedSound.previousTime = 0;
         }
         return true;
     },
@@ -161,6 +162,7 @@ var HTML5AudioSound = new Class({
         this.audio.dataset.used = 'false';
         this.audio = null;
         this.startTime = 0;
+        this.previousTime = 0;
     },
     reset: function () {
         BaseSound.prototype.stop.call(this);
