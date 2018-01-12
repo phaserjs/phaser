@@ -3,7 +3,6 @@
 var Axis = require('./Axis');
 var Button = require('./Button');
 var Class = require('../../utils/Class');
-var GamepadEvent = require('./events/');
 
 var Gamepad = new Class({
 
