@@ -15,6 +15,8 @@ var Phaser = {
 
     DOM: require('./dom/'),
 
+    EventEmitter: require('./events/EventEmitter'),
+
     Game: require('./boot/Game'),
 
     Math: require('./math'),

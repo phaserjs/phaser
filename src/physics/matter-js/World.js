@@ -10,21 +10,22 @@ var GetValue = require('../../utils/object/GetValue');
 var MatterBody = require('./lib/body/Body');
 var MatterEvents = require('./lib/core/Events');
 var MatterWorld = require('./lib/body/World');
-var PhysicsEvent = require('./events/');
 
 var World = new Class({
+
+    Extends: EventEmitter,
 
     initialize:
 
     function World (scene, config)
     {
+        EventEmitter.call(this);
+
         this.scene = scene;
 
         this.engine = Engine.create(config);
 
         this.localWorld = this.engine.world;
-
-        this.events = new EventEmitter();
 
         var gravity = GetValue(config, 'gravity', null);
 
@@ -87,35 +88,66 @@ var World = new Class({
 
     setEventsProxy: function ()
     {
-        var localEvents = this.events;
+        var _this = this;
+        var engine = this.engine;
 
-        MatterEvents.on(this.engine, 'beforeUpdate', function (event) {
+        MatterEvents.on(engine, 'beforeUpdate', function (event) {
 
-            localEvents.dispatch(new PhysicsEvent.BEFORE_UPDATE(event));
-
-        });
-
-        MatterEvents.on(this.engine, 'afterUpdate', function (event) {
-
-            localEvents.dispatch(new PhysicsEvent.AFTER_UPDATE(event));
+            _this.emit('beforeupdate', event);
 
         });
 
-        MatterEvents.on(this.engine, 'collisionStart', function (event) {
+        MatterEvents.on(engine, 'afterUpdate', function (event) {
 
-            localEvents.dispatch(new PhysicsEvent.COLLISION_START(event.pairs));
-
-        });
-
-        MatterEvents.on(this.engine, 'collisionActive', function (event) {
-
-            localEvents.dispatch(new PhysicsEvent.COLLISION_ACTIVE(event));
+            _this.emit('afterupdate', event);
 
         });
 
-        MatterEvents.on(this.engine, 'collisionEnd', function (event) {
+        MatterEvents.on(engine, 'collisionStart', function (event) {
 
-            localEvents.dispatch(new PhysicsEvent.COLLISION_END(event));
+            var pairs = event.pairs;
+            var bodyA;
+            var bodyB;
+
+            if (pairs.length > 0)
+            {
+                bodyA = pairs[0].bodyA;
+                bodyB = pairs[0].bodyB;
+            }
+
+            _this.emit('collisionstart', event, bodyA, bodyB);
+
+        });
+
+        MatterEvents.on(engine, 'collisionActive', function (event) {
+
+            var pairs = event.pairs;
+            var bodyA;
+            var bodyB;
+
+            if (pairs.length > 0)
+            {
+                bodyA = pairs[0].bodyA;
+                bodyB = pairs[0].bodyB;
+            }
+
+            _this.emit('collisionactive', event, bodyA, bodyB);
+
+        });
+
+        MatterEvents.on(engine, 'collisionEnd', function (event) {
+
+            var pairs = event.pairs;
+            var bodyA;
+            var bodyB;
+
+            if (pairs.length > 0)
+            {
+                bodyA = pairs[0].bodyA;
+                bodyB = pairs[0].bodyB;
+            }
+
+            _this.emit('collisionend', event, bodyA, bodyB);
 
         });
     },

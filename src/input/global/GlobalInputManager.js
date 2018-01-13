@@ -6,7 +6,6 @@ var Gamepad = require('../gamepad/GamepadManager');
 var HitTest = require('./inc/HitTest');
 var Keyboard = require('../keyboard/KeyboardManager');
 var Mouse = require('../mouse/MouseManager');
-var MouseEvent = require('../mouse/events/');
 var Pointer = require('../Pointer');
 var Touch = require('../touch/TouchManager');
 
