@@ -1,865 +1,197 @@
 var Class = require('../../../../utils/Class');
-var CONST = require('./const');
-var DataBuffer16 = require('../../utils/DataBuffer16');
-var DataBuffer32 = require('../../utils/DataBuffer32');
-var PHASER_CONST = require('../../../../const');
-var TexturedAndNormalizedTintedShader = require('../../shaders/TexturedAndNormalizedTintedShader');
-var TransformMatrix = require('../../../../gameobjects/components/TransformMatrix');
+var ShaderSource = require('../../shaders/TextureTintShader');
+var Pipeline = require('../../Pipeline');
+var Utils = require('../../Utils');
 
 var SpriteBatch = new Class({
 
+    Extends: Pipeline,
+
     initialize:
 
-    function SpriteBatch (game, gl, manager)
+    function SpriteBatch(game, gl, manager)
     {
-        this.game = game;
-        this.type = PHASER_CONST.WEBGL;
-        this.view = game.canvas;
-        this.resolution = game.config.resolution;
-        this.width = game.config.width * game.config.resolution;
-        this.height = game.config.height * game.config.resolution;
-        this.glContext = gl;
-        this.maxSprites = null;
-        this.shader = null;
-        this.vertexBufferObject = null;
-        this.indexBufferObject = null;
-        this.indexBufferObjectForMesh = null;
-        this.vertexDataBuffer = null;
-        this.indexDataBuffer = null;
-        this.elementCount = 0;
-        this.currentTexture2D = null;
-        this.viewMatrixLocation = null;
-        this.tempMatrix = new TransformMatrix();
-        this.usingRenderTexture = false;
+        Pipeline.call(this, {
+            name: 'SpriteBatch',
+            game: game,
+            gl: gl,
+            manager: manager,
+            topology: gl.TRIANGLES,
+            shader: ShaderSource,
+            vertexCapacity: 12000,
 
-        //   All of these settings will be able to be controlled via the Game Config
-        this.config = {
-            clearBeforeRender: true,
-            transparent: false,
-            autoResize: false,
-            preserveDrawingBuffer: false,
+            vertexSize: 
+                Float32Array.BYTES_PER_ELEMENT * 2 + 
+                Float32Array.BYTES_PER_ELEMENT * 2 + 
+                Uint8Array.BYTES_PER_ELEMENT * 4,
 
-            WebGLContextOptions: {
-                alpha: true,
-                antialias: true,
-                premultipliedAlpha: true,
-                stencil: true,
-                preserveDrawingBuffer: false
+            vertexLayout: {
+                'inPosition': {
+                    size: 2,
+                    type: gl.FLOAT,
+                    normalize: false,
+                    offset: 0
+                },
+                'inTexCoord': {
+                    size: 2,
+                    type: gl.FLOAT,
+                    normalize: false,
+                    offset: Float32Array.BYTES_PER_ELEMENT * 2
+                },
+                'inTint': {
+                    size: 4,
+                    type: gl.UNSIGNED_BYTE,
+                    normalize: true,
+                    offset: Float32Array.BYTES_PER_ELEMENT * 4
+                }
             }
-        };
+        });
 
-        this.manager = manager;
-        this.dirty = false;
-        this.drawIndexed = true;
-        this.lastDrawIndexed = true;
-        this.lastDrawingMesh = false;
-        this.drawingMesh = false;
-        this.vertexCount = 0;
+        this.orthoViewMatrix = new Float32Array([
+            +2.0 / this.width,
+            +0.0,   
+            +0.0,
+            +0.0,
+            
+            +0.0,
+            -2.0 / this.height,
+            +0.0,
+            +0.0,
 
-        this.init(this.glContext);
+            +0.0,
+            +0.0,
+            +1.0,
+            +1.0,
+
+            -1.0,
+            +1.0,
+            +0.0,
+            +0.0
+        ]);
+
+        this.vertexViewF32 = new Float32Array(this.vertexData);
+        this.vertexViewU32 = new Uint32Array(this.vertexData);
     },
 
-    init: function (gl)
+    drawSprite: function (sprite, camera)
     {
-        var vertexDataBuffer = new DataBuffer32(CONST.VERTEX_SIZE * CONST.SPRITE_VERTEX_COUNT * CONST.MAX_SPRITES);
-        var indexDataBuffer = new DataBuffer16(CONST.INDEX_SIZE * CONST.SPRITE_INDEX_COUNT * CONST.MAX_SPRITES);
-        var shader = this.manager.resourceManager.createShader('TexturedAndNormalizedTintedShader', TexturedAndNormalizedTintedShader);
-        var indexBufferObject = this.manager.resourceManager.createBuffer(gl.ELEMENT_ARRAY_BUFFER, indexDataBuffer.getByteCapacity(), gl.STATIC_DRAW);
-        var indexBufferObjectForMesh = this.manager.resourceManager.createBuffer(gl.ELEMENT_ARRAY_BUFFER, indexDataBuffer.getByteCapacity(), gl.STREAM_DRAW);
-        var vertexBufferObject = this.manager.resourceManager.createBuffer(gl.ARRAY_BUFFER, vertexDataBuffer.getByteCapacity(), gl.STREAM_DRAW);
-        var viewMatrixLocation = shader.getUniformLocation('u_view_matrix');
-        var indexBuffer = indexDataBuffer.uintView;
-        var max = CONST.MAX_SPRITES * CONST.SPRITE_INDEX_COUNT;
+        this.manager.setPipeline(this);
+        this.beginPass(sprite.shader, sprite.renderTarget);
 
-        this.vertexDataBuffer = vertexDataBuffer;
-        this.indexDataBuffer = indexDataBuffer;
-        this.shader = shader;
-        this.indexBufferObject = indexBufferObject;
-        this.indexBufferObjectForMesh = indexBufferObjectForMesh;
-        this.vertexBufferObject = vertexBufferObject;
-        this.viewMatrixLocation = viewMatrixLocation;
-
-        vertexBufferObject.addAttribute(shader.getAttribLocation('a_position'), 2, gl.FLOAT, false, CONST.VERTEX_SIZE, 0);
-        vertexBufferObject.addAttribute(shader.getAttribLocation('a_tex_coord'), 2, gl.FLOAT, false, CONST.VERTEX_SIZE, 8);
-        vertexBufferObject.addAttribute(shader.getAttribLocation('a_color'), 3, gl.UNSIGNED_BYTE, true, CONST.VERTEX_SIZE, 16);
-        vertexBufferObject.addAttribute(shader.getAttribLocation('a_alpha'), 1, gl.FLOAT, false, CONST.VERTEX_SIZE, 20);
-
-        // Populate the index buffer only once
-        for (var indexA = 0, indexB = 0; indexA < max; indexA += CONST.SPRITE_INDEX_COUNT, indexB += CONST.SPRITE_VERTEX_COUNT)
-        {
-            indexBuffer[indexA + 0] = indexB + 0;
-            indexBuffer[indexA + 1] = indexB + 1;
-            indexBuffer[indexA + 2] = indexB + 2;
-            indexBuffer[indexA + 3] = indexB + 0;
-            indexBuffer[indexA + 4] = indexB + 2;
-            indexBuffer[indexA + 5] = indexB + 3;
-        }
-
-        indexBufferObject.updateResource(indexBuffer, 0);
-
-        this.resize(this.width, this.height, this.game.config.resolution);
-    },
-
-    shouldFlush: function ()
-    {
-        if (this.drawIndexed !== this.lastDrawIndexed || this.lastDrawingMesh !== this.drawingMesh || this.isFull())
-        {
-            this.lastDrawIndexed = this.drawIndexed;
-            this.lastDrawingMesh = this.drawingMesh;
-            return true;
-        }
-
-        return false;
-    },
-
-    isFull: function ()
-    {
-        return (this.vertexDataBuffer.getByteLength() >= this.vertexDataBuffer.getByteCapacity());
-    },
-
-    bind: function (shader)
-    {
-        if (!shader)
-        {
-            this.shader.bind();
-        }
-        else
-        {
-            shader.bind();
-            this.resize(this.width, this.height, this.game.config.resolution, shader);
-        }
-
-        this.vertexBufferObject.bind();
-    },
-
-    flush: function (shader, renderTarget)
-    {
-        var gl = this.glContext;
-        var vertexDataBuffer = this.vertexDataBuffer;
-
-        if (this.elementCount === 0 && this.vertexCount === 0)
-        {
-            return;
-        }
-
-        if (renderTarget)
-        {
-            gl.bindFramebuffer(gl.FRAMEBUFFER, renderTarget.framebufferObject);
-        }
-
-        this.bind(shader);
-        this.vertexBufferObject.updateResource(vertexDataBuffer.getUsedBufferAsFloat(), 0);
-
-        if (this.drawIndexed)
-        {
-            if (this.drawingMesh)
-            {
-                this.indexBufferObjectForMesh.bind();
-                this.indexBufferObjectForMesh.updateResource(this.indexDataBuffer.buffer, 0);
-            }
-            else
-            {
-                this.indexBufferObject.bind();
-            }
-
-            gl.drawElements(gl.TRIANGLES, this.elementCount, gl.UNSIGNED_SHORT, 0);
-        }
-        else
-        {
-            gl.drawArrays(gl.TRIANGLES, 0, this.vertexCount);
-        }
-
-        vertexDataBuffer.clear();
-        this.elementCount = 0;
-        this.vertexCount = 0;
-
-        if (renderTarget)
-        {
-            gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-        }
-    },
-
-    resize: function (width, height, resolution, shader)
-    {
-        var activeShader = (shader) ? shader : this.shader;
-        var location = (activeShader === this.shader) ? this.viewMatrixLocation : activeShader.getUniformLocation('u_view_matrix');
-
-        this.width = width * resolution;
-        this.height = height * resolution;
-        this.setProjectionMatrix(activeShader, location);
-    },
-
-    setProjectionMatrix: function (shader, location)
-    {
-        shader.setConstantMatrix4x4(
-            location,
-            new Float32Array([
-                2 / this.width, 0, 0, 0,
-                0, -2 / this.height, 0, 0,
-                0, 0, 1, 1,
-                -1, 1, 0, 0
-            ])
-        );
-    },
-
-    destroy: function ()
-    {
-        this.manager.resourceManager.deleteShader(this.shader);
-        this.manager.resourceManager.deleteBuffer(this.indexBufferObject);
-        this.manager.resourceManager.deleteBuffer(this.vertexBufferObject);
-
-        this.shader = null;
-        this.indexBufferObject = null;
-        this.vertexBufferObject = null;
-    },
-
-    addMeshIndexed: function (gameObject, camera)
-    {
-        var tempMatrix = this.tempMatrix;
-        var frame = gameObject.frame;
-        var vertexDataBuffer = this.vertexDataBuffer;
-        var vertexBufferObjectF32 = vertexDataBuffer.floatView;
-        var vertexBufferObjectU32 = vertexDataBuffer.uintView;
-        var vertexOffset = 0;
-        var translateX = gameObject.x - camera.scrollX * gameObject.scrollFactorX;
-        var translateY = gameObject.y - camera.scrollY * gameObject.scrollFactorY;
-        var scaleX = gameObject.scaleX;
-        var scaleY = gameObject.scaleY;
-        var rotation = -gameObject.rotation;
-        var tempMatrixMatrix = tempMatrix.matrix;
+        var vertexViewF32 = this.vertexViewF32;
+        var vertexViewU32 = this.vertexViewU32;
+        var orthoViewMatrix = this.orthoViewMatrix;
+        var manager = this.manager;
+        var gl = this.gl;
+        var shader = this.currentProgram;
         var cameraMatrix = camera.matrix.matrix;
-        var mva, mvb, mvc, mvd, mve, mvf;
-        var sra, srb, src, srd, sre, srf, cma, cmb, cmc, cmd, cme, cmf;
-        var vertices = gameObject.vertices;
-        var uv = gameObject.uv;
-        var length = vertices.length;
-        var totalVertices = (length / 2)|0;
-        var indexBuffer = this.indexDataBuffer.uintView;
-        var indices = gameObject.indices;
-        var colors = gameObject.colors;
-        var alphas = gameObject.alphas;
-        var indexLength = indices.length;
-        var indexOffset = 0;
-
-        tempMatrix.applyITRS(translateX, translateY, rotation, scaleX, scaleY);
-
-        sra = tempMatrixMatrix[0];
-        srb = tempMatrixMatrix[1];
-        src = tempMatrixMatrix[2];
-        srd = tempMatrixMatrix[3];
-        sre = tempMatrixMatrix[4];
-        srf = tempMatrixMatrix[5];
-
-        cma = cameraMatrix[0];
-        cmb = cameraMatrix[1];
-        cmc = cameraMatrix[2];
-        cmd = cameraMatrix[3];
-        cme = cameraMatrix[4];
-        cmf = cameraMatrix[5];
-
-        mva = sra * cma + srb * cmc;
-        mvb = sra * cmb + srb * cmd;
-        mvc = src * cma + srd * cmc;
-        mvd = src * cmb + srd * cmd;
-        mve = sre * cma + srf * cmc + cme;
-        mvf = sre * cmb + srf * cmd + cmf;
-
-        this.manager.setRenderer(this, frame.texture.source[frame.sourceIndex].glTexture, gameObject.renderTarget);
-        indexOffset = this.vertexCount;
-        this.drawIndexed = true;
-        this.drawingMesh = true;
-        this.vertexCount += totalVertices;
-
-        vertexOffset = vertexDataBuffer.allocate(totalVertices * 6);
-
-        var index;
-        var index0;
-
-        for (index = 0, index0 = 0; index < length; index += 2)
-        {
-            var x = vertices[index + 0];
-            var y = vertices[index + 1];
-            var tx = x * mva + y * mvc + mve;
-            var ty = x * mvb + y * mvd + mvf;
-            vertexBufferObjectF32[vertexOffset++] = tx;
-            vertexBufferObjectF32[vertexOffset++] = ty;
-            vertexBufferObjectF32[vertexOffset++] = uv[index + 0];
-            vertexBufferObjectF32[vertexOffset++] = uv[index + 1];
-            vertexBufferObjectU32[vertexOffset++] = colors[index0];
-            vertexBufferObjectF32[vertexOffset++] = alphas[index0];
-            index0 += 1;
-        }
-
-        var elementCount = this.elementCount;
-
-        for (index = 0; index < indexLength; ++index)
-        {
-            indexBuffer[elementCount + index] = indexOffset + indices[index];
-        }
-
-        this.elementCount += indexLength;
-    },
-
-    addMesh: function (gameObject, camera)
-    {
-        var tempMatrix = this.tempMatrix;
-        var frame = gameObject.frame;
-        var vertexDataBuffer = this.vertexDataBuffer;
-        var vertexBufferObjectF32 = vertexDataBuffer.floatView;
-        var vertexBufferObjectU32 = vertexDataBuffer.uintView;
-        var vertexOffset = 0;
-        var translateX = gameObject.x - camera.scrollX * gameObject.scrollFactorX;
-        var translateY = gameObject.y - camera.scrollY * gameObject.scrollFactorY;
-        var scaleX = gameObject.scaleX;
-        var scaleY = gameObject.scaleY;
-        var rotation = -gameObject.rotation;
-        var tempMatrixMatrix = tempMatrix.matrix;
-        var cameraMatrix = camera.matrix.matrix;
-        var mva, mvb, mvc, mvd, mve, mvf;
-        var sra, srb, src, srd, sre, srf, cma, cmb, cmc, cmd, cme, cmf;
-        var vertices = gameObject.vertices;
-        var uv = gameObject.uv;
-        var colors = gameObject.colors;
-        var alphas = gameObject.alphas;
-        var length = vertices.length;
-        var totalVertices = (length / 2)|0;
-
-        tempMatrix.applyITRS(translateX, translateY, rotation, scaleX, scaleY);
-
-        sra = tempMatrixMatrix[0];
-        srb = tempMatrixMatrix[1];
-        src = tempMatrixMatrix[2];
-        srd = tempMatrixMatrix[3];
-        sre = tempMatrixMatrix[4];
-        srf = tempMatrixMatrix[5];
-
-        cma = cameraMatrix[0];
-        cmb = cameraMatrix[1];
-        cmc = cameraMatrix[2];
-        cmd = cameraMatrix[3];
-        cme = cameraMatrix[4];
-        cmf = cameraMatrix[5];
-
-        mva = sra * cma + srb * cmc;
-        mvb = sra * cmb + srb * cmd;
-        mvc = src * cma + srd * cmc;
-        mvd = src * cmb + srd * cmd;
-        mve = sre * cma + srf * cmc + cme;
-        mvf = sre * cmb + srf * cmd + cmf;
-
-        this.manager.setRenderer(this, frame.texture.source[frame.sourceIndex].glTexture, gameObject.renderTarget);
-        this.drawIndexed = false;
-        this.drawingMesh = true;
-        this.vertexCount += totalVertices;
-
-        vertexOffset = vertexDataBuffer.allocate(totalVertices * 6);
-
-        for (var index = 0, index0 = 0; index < length; index += 2)
-        {
-            var x = vertices[index + 0];
-            var y = vertices[index + 1];
-            var tx = x * mva + y * mvc + mve;
-            var ty = x * mvb + y * mvd + mvf;
-            vertexBufferObjectF32[vertexOffset++] = tx;
-            vertexBufferObjectF32[vertexOffset++] = ty;
-            vertexBufferObjectF32[vertexOffset++] = uv[index + 0];
-            vertexBufferObjectF32[vertexOffset++] = uv[index + 1];
-            vertexBufferObjectU32[vertexOffset++] = colors[index0];
-            vertexBufferObjectF32[vertexOffset++] = alphas[index0];
-            index0 += 1;
-        }
-    },
-
-    addRenderPassRect: function (x, y, width, height, scrollFactorX, scrollFactorY, camera, passShader, passRenderTarget)
-    {
-        if (this.vertexCount > 0)
-        {
-            this.flush();
-        }
-
-        this.drawIndexed = false;
-        this.vertexCount = 6;
-        this.vertexDataBuffer.allocate(36);
-
-        y += height;
-        
-        var gl = this.glContext;
-        var scrollX = camera.scrollX * scrollFactorX;
-        var scrollY = camera.scrollY * scrollFactorY;
-        var vertexDataBuffer = this.vertexDataBuffer;
-        var vertexBufferObjectF32 = vertexDataBuffer.floatView;
-        var vertexBufferObjectU32 = vertexDataBuffer.uintView;
-        var cameraMatrix = camera.matrix.matrix;
-        var xw = x + width;
-        var yh = y + height;
-        var mva = cameraMatrix[0];
-        var mvb = cameraMatrix[1];
-        var mvc = cameraMatrix[2];
-        var mvd = cameraMatrix[3];
-        var mve = cameraMatrix[4];
-        var mvf = cameraMatrix[5];
-        var tx0 = (x * mva + y * mvc + mve) - scrollX;
-        var ty0 = (x * mvb + y * mvd + mvf) - scrollY;
-        var tx1 = (x * mva + yh * mvc + mve) - scrollX;
-        var ty1 = (x * mvb + yh * mvd + mvf) - scrollY;
-        var tx2 = (xw * mva + yh * mvc + mve) - scrollX;
-        var ty2 = (xw * mvb + yh * mvd + mvf) - scrollY;
-        var tx3 = (xw * mva + y * mvc + mve) - scrollX;
-        var ty3 = (xw * mvb + y * mvd + mvf) - scrollY;
-        var u0 = 0;
-        var v0 = 1;
-        var u1 = 1;
-        var v1 = 0;
-
-        //  Top Left
-        vertexBufferObjectF32[0] = tx0;
-        vertexBufferObjectF32[1] = ty0;
-        vertexBufferObjectF32[2] = u0;
-        vertexBufferObjectF32[3] = v0;
-        vertexBufferObjectU32[4] = 0xffffff;
-        vertexBufferObjectF32[5] = 1.0;
-
-        //  Bottom Left
-        vertexBufferObjectF32[6] = tx1;
-        vertexBufferObjectF32[7] = ty1;
-        vertexBufferObjectF32[8] = u0;
-        vertexBufferObjectF32[9] = v1;
-        vertexBufferObjectU32[10] = 0xffffff;
-        vertexBufferObjectF32[11] = 1.0;
-
-        //  Bottom Right
-        vertexBufferObjectF32[12] = tx2;
-        vertexBufferObjectF32[13] = ty2;
-        vertexBufferObjectF32[14] = u1;
-        vertexBufferObjectF32[15] = v1;
-        vertexBufferObjectU32[16] = 0xffffff;
-        vertexBufferObjectF32[17] = 1.0;
-
-        //  Top Left
-        vertexBufferObjectF32[18] = tx0;
-        vertexBufferObjectF32[19] = ty0;
-        vertexBufferObjectF32[20] = u0;
-        vertexBufferObjectF32[21] = v0;
-        vertexBufferObjectU32[22] = 0xffffff;
-        vertexBufferObjectF32[23] = 1.0;
-
-        //  Bottom Right
-        vertexBufferObjectF32[24] = tx2;
-        vertexBufferObjectF32[25] = ty2;
-        vertexBufferObjectF32[26] = u1;
-        vertexBufferObjectF32[27] = v1;
-        vertexBufferObjectU32[28] = 0xffffff;
-        vertexBufferObjectF32[29] = 1.0;
-
-        //  Top Right
-        vertexBufferObjectF32[30] = tx3;
-        vertexBufferObjectF32[31] = ty3;
-        vertexBufferObjectF32[32] = u1;
-        vertexBufferObjectF32[33] = v0;
-        vertexBufferObjectU32[34] = 0xffffff;
-        vertexBufferObjectF32[35] = 1.0;
-
-        //gl.viewport(0, 0, subWidth, subHeight);
-        this.flush(passShader, passRenderTarget);
-    },
-
-    addTileTextureRect: function (texture, x, y, width, height, alpha, tint, scrollFactorX, scrollFactorY, textureWidth, textureHeight, rectX, rectY, rectW, rectH, camera, renderTarget, flipX, flipY)
-    {
-        var vertexDataBuffer = this.vertexDataBuffer;
-        var vertexBufferObjectF32 = vertexDataBuffer.floatView;
-        var vertexBufferObjectU32 = vertexDataBuffer.uintView;
-        var vertexOffset = 0;
-        var xw = x + width;
-        var yh = y + height;
-        var cameraMatrix = camera.matrix.matrix;
-        var scrollX = camera.scrollX * scrollFactorX;
-        var scrollY = camera.scrollY * scrollFactorY;
-        var mva, mvb, mvc, mvd, mve, mvf, tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3;
-
-        flipX = flipX ? flipX : false;
-        flipY = flipY ? flipY : false;
-
-        rectW = rectW * (flipX ? -1 : 1);
-        rectH = rectH * (flipY ? -1 : 1);
-        rectX = flipX ? -rectW : rectX;
-        rectY = flipY ? -rectH : rectY;
-        
-        // Inset UV coordinates by 0.5px to prevent tile bleeding
-        var u0 = (rectX + 0.5) / textureWidth;
-        var v0 = (rectY + 0.5) / textureHeight;
-        var u1 = (rectX - 0.5 + rectW) / textureWidth;
-        var v1 = (rectY - 0.5 + rectH) / textureHeight;
-
-        mva = cameraMatrix[0];
-        mvb = cameraMatrix[1];
-        mvc = cameraMatrix[2];
-        mvd = cameraMatrix[3];
-        mve = cameraMatrix[4];
-        mvf = cameraMatrix[5];
-
-        tx0 = (x * mva + y * mvc + mve) - scrollX;
-        ty0 = (x * mvb + y * mvd + mvf) - scrollY;
-        tx1 = (x * mva + yh * mvc + mve) - scrollX;
-        ty1 = (x * mvb + yh * mvd + mvf) - scrollY;
-        tx2 = (xw * mva + yh * mvc + mve) - scrollX;
-        ty2 = (xw * mvb + yh * mvd + mvf) - scrollY;
-        tx3 = (xw * mva + y * mvc + mve) - scrollX;
-        ty3 = (xw * mvb + y * mvd + mvf) - scrollY;
-
-        this.manager.setRenderer(this, texture, renderTarget);
-        this.drawIndexed = true;
-        this.drawingMesh = false;
-        this.elementCount += 6;
-        vertexOffset = vertexDataBuffer.allocate(24);
-
-        vertexBufferObjectF32[vertexOffset++] = tx0;
-        vertexBufferObjectF32[vertexOffset++] = ty0;
-        vertexBufferObjectF32[vertexOffset++] = u0;
-        vertexBufferObjectF32[vertexOffset++] = v0;
-        vertexBufferObjectU32[vertexOffset++] = tint;
-        vertexBufferObjectF32[vertexOffset++] = alpha;
-
-        vertexBufferObjectF32[vertexOffset++] = tx1;
-        vertexBufferObjectF32[vertexOffset++] = ty1;
-        vertexBufferObjectF32[vertexOffset++] = u0;
-        vertexBufferObjectF32[vertexOffset++] = v1;
-        vertexBufferObjectU32[vertexOffset++] = tint;
-        vertexBufferObjectF32[vertexOffset++] = alpha;
-
-        vertexBufferObjectF32[vertexOffset++] = tx2;
-        vertexBufferObjectF32[vertexOffset++] = ty2;
-        vertexBufferObjectF32[vertexOffset++] = u1;
-        vertexBufferObjectF32[vertexOffset++] = v1;
-        vertexBufferObjectU32[vertexOffset++] = tint;
-        vertexBufferObjectF32[vertexOffset++] = alpha;
-
-        vertexBufferObjectF32[vertexOffset++] = tx3;
-        vertexBufferObjectF32[vertexOffset++] = ty3;
-        vertexBufferObjectF32[vertexOffset++] = u1;
-        vertexBufferObjectF32[vertexOffset++] = v0;
-        vertexBufferObjectU32[vertexOffset++] = tint;
-        vertexBufferObjectF32[vertexOffset++] = alpha;
-    },
-
-    addSpriteTextureRect: function (gameObject, camera, texture, rectX, rectY, rectWidth, rectHeight, textureWidth, textureHeight)
-    {
-        var tempMatrix = this.tempMatrix;
-        var vertexDataBuffer = this.vertexDataBuffer;
-        var vertexBufferObjectF32 = vertexDataBuffer.floatView;
-        var vertexBufferObjectU32 = vertexDataBuffer.uintView;
-        var vertexOffset = 0;
+        var a = cameraMatrix[0];
+        var b = cameraMatrix[1];
+        var c = cameraMatrix[2];
+        var d = cameraMatrix[3];
+        var e = cameraMatrix[4];
+        var f = cameraMatrix[5];
+        var frame = sprite.frame;
+        var texture = frame.texture.source[frame.sourceIndex].glTexture;
         var forceFlipY = (texture.isRenderTexture ? true : false);
-        var flipX = gameObject.flipX;
-        var flipY = gameObject.flipY ^ forceFlipY;
-        var width = rectWidth * (flipX ? -1 : 1);
-        var height = rectHeight * (flipY ? -1 : 1);
-        var translateX = gameObject.x - camera.scrollX * gameObject.scrollFactorX;
-        var translateY = gameObject.y - camera.scrollY * gameObject.scrollFactorY;
-        var scaleX = gameObject.scaleX;
-        var scaleY = gameObject.scaleY;
-        var rotation = -gameObject.rotation;
-        var tempMatrixMatrix = tempMatrix.matrix;
-        var x = -gameObject.displayOriginX + ((rectWidth) * (flipX ? 1 : 0.0));
-        var y = -gameObject.displayOriginY + ((rectHeight) * (flipY ? 1 : 0.0));
-        var xw = x + rectWidth;
-        var yh = y + rectHeight;
-        var cameraMatrix = camera.matrix.matrix;
-        var mva, mvb, mvc, mvd, mve, mvf, tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3;
-        var sra, srb, src, srd, sre, srf, cma, cmb, cmc, cmd, cme, cmf;
-        var alphaTL = gameObject._alphaTL;
-        var alphaTR = gameObject._alphaTR;
-        var alphaBL = gameObject._alphaBL;
-        var alphaBR = gameObject._alphaBR;
-        var tintTL = gameObject._tintTL;
-        var tintTR = gameObject._tintTR;
-        var tintBL = gameObject._tintBL;
-        var tintBR = gameObject._tintBR;
-        var u0 = 0; // rectX / textureWidth;
-        var v0 = 0; // rectY / textureHeight;
-        var u1 = 1; // u0 + (rectWidth / textureWidth);
-        var v1 = 1; // v0 + (rectHeight / textureHeight);
-
-        tempMatrix.applyITRS(translateX, translateY, rotation, scaleX, scaleY);
-
-        sra = tempMatrixMatrix[0];
-        srb = tempMatrixMatrix[1];
-        src = tempMatrixMatrix[2];
-        srd = tempMatrixMatrix[3];
-        sre = tempMatrixMatrix[4];
-        srf = tempMatrixMatrix[5];
-
-        cma = cameraMatrix[0];
-        cmb = cameraMatrix[1];
-        cmc = cameraMatrix[2];
-        cmd = cameraMatrix[3];
-        cme = cameraMatrix[4];
-        cmf = cameraMatrix[5];
-
-        mva = sra * cma + srb * cmc;
-        mvb = sra * cmb + srb * cmd;
-        mvc = src * cma + srd * cmc;
-        mvd = src * cmb + srd * cmd;
-        mve = sre * cma + srf * cmc + cme;
-        mvf = sre * cmb + srf * cmd + cmf;
-
-        tx0 = x * mva + y * mvc + mve;
-        ty0 = x * mvb + y * mvd + mvf;
-        tx1 = x * mva + yh * mvc + mve;
-        ty1 = x * mvb + yh * mvd + mvf;
-        tx2 = xw * mva + yh * mvc + mve;
-        ty2 = xw * mvb + yh * mvd + mvf;
-        tx3 = xw * mva + y * mvc + mve;
-        ty3 = xw * mvb + y * mvd + mvf;
-
-        this.manager.setRenderer(this, texture, gameObject.renderTarget);
-        this.drawIndexed = true;
-        this.drawingMesh = false;
-        vertexOffset = vertexDataBuffer.allocate(24);
-        this.elementCount += 6;
-
-        //  Top Left
-        vertexBufferObjectF32[vertexOffset++] = tx0;
-        vertexBufferObjectF32[vertexOffset++] = ty0;
-        vertexBufferObjectF32[vertexOffset++] = u0;
-        vertexBufferObjectF32[vertexOffset++] = v0;
-        vertexBufferObjectU32[vertexOffset++] = tintTL;
-        vertexBufferObjectF32[vertexOffset++] = alphaTL;
-
-        //  Bottom Left
-        vertexBufferObjectF32[vertexOffset++] = tx1;
-        vertexBufferObjectF32[vertexOffset++] = ty1;
-        vertexBufferObjectF32[vertexOffset++] = u0;
-        vertexBufferObjectF32[vertexOffset++] = v1;
-        vertexBufferObjectU32[vertexOffset++] = tintBL;
-        vertexBufferObjectF32[vertexOffset++] = alphaBL;
-
-        //  Bottom Right
-        vertexBufferObjectF32[vertexOffset++] = tx2;
-        vertexBufferObjectF32[vertexOffset++] = ty2;
-        vertexBufferObjectF32[vertexOffset++] = u1;
-        vertexBufferObjectF32[vertexOffset++] = v1;
-        vertexBufferObjectU32[vertexOffset++] = tintBR;
-        vertexBufferObjectF32[vertexOffset++] = alphaBR;
-
-        //  Top Right
-        vertexBufferObjectF32[vertexOffset++] = tx3;
-        vertexBufferObjectF32[vertexOffset++] = ty3;
-        vertexBufferObjectF32[vertexOffset++] = u1;
-        vertexBufferObjectF32[vertexOffset++] = v0;
-        vertexBufferObjectU32[vertexOffset++] = tintTR;
-        vertexBufferObjectF32[vertexOffset++] = alphaTR;
-    },
-
-    addSpriteTexture: function (gameObject, camera, texture, textureWidth, textureHeight)
-    {
-        var tempMatrix = this.tempMatrix;
-        var vertexDataBuffer = this.vertexDataBuffer;
-        var vertexBufferObjectF32 = vertexDataBuffer.floatView;
-        var vertexBufferObjectU32 = vertexDataBuffer.uintView;
-        var vertexOffset = 0;
-        var forceFlipY = (texture.isRenderTexture ? true : false);
-        var flipX = gameObject.flipX;
-        var flipY = gameObject.flipY ^ forceFlipY;
-        var width = textureWidth * (flipX ? -1 : 1);
-        var height = textureHeight * (flipY ? -1 : 1);
-        var translateX = gameObject.x - camera.scrollX * gameObject.scrollFactorX;
-        var translateY = gameObject.y - camera.scrollY * gameObject.scrollFactorY;
-        var scaleX = gameObject.scaleX;
-        var scaleY = gameObject.scaleY;
-        var rotation = -gameObject.rotation;
-        var tempMatrixMatrix = tempMatrix.matrix;
-        var x = -gameObject.displayOriginX + ((textureWidth) * (flipX ? 1 : 0.0));
-        var y = -gameObject.displayOriginY + ((textureHeight) * (flipY ? 1 : 0.0));
-        var xw = x + width;
-        var yh = y + height;
-        var cameraMatrix = camera.matrix.matrix;
-        var mva, mvb, mvc, mvd, mve, mvf, tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3;
-        var sra, srb, src, srd, sre, srf, cma, cmb, cmc, cmd, cme, cmf;
-        var alphaTL = gameObject._alphaTL;
-        var alphaTR = gameObject._alphaTR;
-        var alphaBL = gameObject._alphaBL;
-        var alphaBR = gameObject._alphaBR;
-        var tintTL = gameObject._tintTL;
-        var tintTR = gameObject._tintTR;
-        var tintBL = gameObject._tintBL;
-        var tintBR = gameObject._tintBR;
-
-        tempMatrix.applyITRS(translateX, translateY, rotation, scaleX, scaleY);
-
-        sra = tempMatrixMatrix[0];
-        srb = tempMatrixMatrix[1];
-        src = tempMatrixMatrix[2];
-        srd = tempMatrixMatrix[3];
-        sre = tempMatrixMatrix[4];
-        srf = tempMatrixMatrix[5];
-
-        cma = cameraMatrix[0];
-        cmb = cameraMatrix[1];
-        cmc = cameraMatrix[2];
-        cmd = cameraMatrix[3];
-        cme = cameraMatrix[4];
-        cmf = cameraMatrix[5];
-
-        mva = sra * cma + srb * cmc;
-        mvb = sra * cmb + srb * cmd;
-        mvc = src * cma + srd * cmc;
-        mvd = src * cmb + srd * cmd;
-        mve = sre * cma + srf * cmc + cme;
-        mvf = sre * cmb + srf * cmd + cmf;
-
-        tx0 = x * mva + y * mvc + mve;
-        ty0 = x * mvb + y * mvd + mvf;
-        tx1 = x * mva + yh * mvc + mve;
-        ty1 = x * mvb + yh * mvd + mvf;
-        tx2 = xw * mva + yh * mvc + mve;
-        ty2 = xw * mvb + yh * mvd + mvf;
-        tx3 = xw * mva + y * mvc + mve;
-        ty3 = xw * mvb + y * mvd + mvf;
-
-        this.manager.setRenderer(this, texture, gameObject.renderTarget);
-        this.drawIndexed = true;
-        this.drawingMesh = false;
-        vertexOffset = vertexDataBuffer.allocate(24);
-        this.elementCount += 6;
-
-        //  Top Left
-        vertexBufferObjectF32[vertexOffset++] = tx0;
-        vertexBufferObjectF32[vertexOffset++] = ty0;
-        vertexBufferObjectF32[vertexOffset++] = 0;
-        vertexBufferObjectF32[vertexOffset++] = 0;
-        vertexBufferObjectU32[vertexOffset++] = tintTL;
-        vertexBufferObjectF32[vertexOffset++] = alphaTL;
-
-        //  Bottom Left
-        vertexBufferObjectF32[vertexOffset++] = tx1;
-        vertexBufferObjectF32[vertexOffset++] = ty1;
-        vertexBufferObjectF32[vertexOffset++] = 0;
-        vertexBufferObjectF32[vertexOffset++] = 1;
-        vertexBufferObjectU32[vertexOffset++] = tintBL;
-        vertexBufferObjectF32[vertexOffset++] = alphaBL;
-
-        //  Bottom Right
-        vertexBufferObjectF32[vertexOffset++] = tx2;
-        vertexBufferObjectF32[vertexOffset++] = ty2;
-        vertexBufferObjectF32[vertexOffset++] = 1;
-        vertexBufferObjectF32[vertexOffset++] = 1;
-        vertexBufferObjectU32[vertexOffset++] = tintBR;
-        vertexBufferObjectF32[vertexOffset++] = alphaBR;
-
-        //  Top Right
-        vertexBufferObjectF32[vertexOffset++] = tx3;
-        vertexBufferObjectF32[vertexOffset++] = ty3;
-        vertexBufferObjectF32[vertexOffset++] = 1;
-        vertexBufferObjectF32[vertexOffset++] = 0;
-        vertexBufferObjectU32[vertexOffset++] = tintTR;
-        vertexBufferObjectF32[vertexOffset++] = alphaTR;
-    },
-
-    addSprite: function (gameObject, camera)
-    {
-        var tempMatrix = this.tempMatrix;
-        var frame = gameObject.frame;
-        var forceFlipY = (frame.texture.source[frame.sourceIndex].glTexture.isRenderTexture ? true : false);
-        var flipX = gameObject.flipX;
-        var flipY = gameObject.flipY ^ forceFlipY;
-        var vertexDataBuffer = this.vertexDataBuffer;
-        var vertexBufferObjectF32 = vertexDataBuffer.floatView;
-        var vertexBufferObjectU32 = vertexDataBuffer.uintView;
-        var vertexOffset = 0;
+        var flipX = sprite.flipX;
+        var flipY = sprite.flipY ^ forceFlipY;
         var uvs = frame.uvs;
-        var width = frame.width * (flipX ? -1 : 1);
-        var height = frame.height * (flipY ? -1 : 1);
-        var translateX = gameObject.x - camera.scrollX * gameObject.scrollFactorX;
-        var translateY = gameObject.y - camera.scrollY * gameObject.scrollFactorY;
-        var scaleX = gameObject.scaleX;
-        var scaleY = gameObject.scaleY;
-        var rotation = -gameObject.rotation;
-        var tempMatrixMatrix = tempMatrix.matrix;
-        var x = -gameObject.displayOriginX + frame.x + ((frame.width) * (flipX ? 1 : 0.0));
-        var y = -gameObject.displayOriginY + frame.y + ((frame.height) * (flipY ? 1 : 0.0));
+        var width = frame.width * (flipX ? -1.0 : 1.0);
+        var height = frame.height * (flipY ? -1.0 : 1.0);
+        var x = -sprite.displayOriginX + frame.x + ((frame.width) * (flipX ? 1.0 : 0.0));
+        var y = -sprite.displayOriginY + frame.y + ((frame.height) * (flipY ? 1.0 : 0.0));
         var xw = x + width;
         var yh = y + height;
-        var cameraMatrix = camera.matrix.matrix;
-        var mva, mvb, mvc, mvd, mve, mvf, tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3;
-        var sra, srb, src, srd, sre, srf, cma, cmb, cmc, cmd, cme, cmf;
-        var alphaTL = gameObject._alphaTL;
-        var alphaTR = gameObject._alphaTR;
-        var alphaBL = gameObject._alphaBL;
-        var alphaBR = gameObject._alphaBR;
-        var tintTL = gameObject._tintTL;
-        var tintTR = gameObject._tintTR;
-        var tintBL = gameObject._tintBL;
-        var tintBR = gameObject._tintBR;
+        var translateX = sprite.x - camera.scrollX * sprite.scrollFactorX;
+        var translateY = sprite.y - camera.scrollY * sprite.scrollFactorY;
+        var scaleX = sprite.scaleX;
+        var scaleY = sprite.scaleY;
+        var rotation = -sprite.rotation;
+        var alphaTL = sprite._alphaTL;
+        var alphaTR = sprite._alphaTR;
+        var alphaBL = sprite._alphaBL;
+        var alphaBR = sprite._alphaBR;
+        var tintTL = sprite._tintTL;
+        var tintTR = sprite._tintTR;
+        var tintBL = sprite._tintBL;
+        var tintBR = sprite._tintBR;
+        var sr = Math.sin(rotation);
+        var cr = Math.cos(rotation);
+        var sra = cr * scaleX;
+        var srb = -sr * scaleX;
+        var src = sr * scaleY;
+        var srd = cr * scaleY;
+        var sre = translateX;
+        var srf = translateY;
+        var cma = cameraMatrix[0];
+        var cmb = cameraMatrix[1];
+        var cmc = cameraMatrix[2];
+        var cmd = cameraMatrix[3];
+        var cme = cameraMatrix[4];
+        var cmf = cameraMatrix[5];
+        var mva = sra * cma + srb * cmc;
+        var mvb = sra * cmb + srb * cmd;
+        var mvc = src * cma + srd * cmc;
+        var mvd = src * cmb + srd * cmd;
+        var mve = sre * cma + srf * cmc + cme;
+        var mvf = sre * cmb + srf * cmd + cmf;
+        var tx0 = x * mva + y * mvc + mve;
+        var ty0 = x * mvb + y * mvd + mvf;
+        var tx1 = x * mva + yh * mvc + mve;
+        var ty1 = x * mvb + yh * mvd + mvf;
+        var tx2 = xw * mva + yh * mvc + mve;
+        var ty2 = xw * mvb + yh * mvd + mvf;
+        var tx3 = xw * mva + y * mvc + mve;
+        var ty3 = xw * mvb + y * mvd + mvf;
+        var getTint = Utils.getTintAppendFloatAlpha;
 
-        tempMatrix.applyITRS(translateX, translateY, rotation, scaleX, scaleY);
+        orthoViewMatrix[0] = +2.0 / this.width;
+        orthoViewMatrix[5] = -2.0 / this.height;
 
-        sra = tempMatrixMatrix[0];
-        srb = tempMatrixMatrix[1];
-        src = tempMatrixMatrix[2];
-        srd = tempMatrixMatrix[3];
-        sre = tempMatrixMatrix[4];
-        srf = tempMatrixMatrix[5];
+        shader.setConstantMatrix4x4(shader.getUniformLocation('uOrthoMatrix'), orthoViewMatrix);
+        manager.setTexture(texture, 0);
 
-        cma = cameraMatrix[0];
-        cmb = cameraMatrix[1];
-        cmc = cameraMatrix[2];
-        cmd = cameraMatrix[3];
-        cme = cameraMatrix[4];
-        cmf = cameraMatrix[5];
+        vertexViewF32[0] = tx0;
+        vertexViewF32[1] = ty0;
+        vertexViewF32[2] = uvs.x0;
+        vertexViewF32[3] = uvs.y0;
+        vertexViewU32[4] = getTint(tintTL, alphaTL);
 
-        mva = sra * cma + srb * cmc;
-        mvb = sra * cmb + srb * cmd;
-        mvc = src * cma + srd * cmc;
-        mvd = src * cmb + srd * cmd;
-        mve = sre * cma + srf * cmc + cme;
-        mvf = sre * cmb + srf * cmd + cmf;
+        vertexViewF32[5] = tx1;
+        vertexViewF32[6] = ty1;
+        vertexViewF32[7] = uvs.x1;
+        vertexViewF32[8] = uvs.y1;
+        vertexViewU32[9] = getTint(tintBL, alphaBL);
 
-        tx0 = x * mva + y * mvc + mve;
-        ty0 = x * mvb + y * mvd + mvf;
-        tx1 = x * mva + yh * mvc + mve;
-        ty1 = x * mvb + yh * mvd + mvf;
-        tx2 = xw * mva + yh * mvc + mve;
-        ty2 = xw * mvb + yh * mvd + mvf;
-        tx3 = xw * mva + y * mvc + mve;
-        ty3 = xw * mvb + y * mvd + mvf;
+        vertexViewF32[10] = tx2;
+        vertexViewF32[11] = ty2;
+        vertexViewF32[12] = uvs.x2;
+        vertexViewF32[13] = uvs.y2;
+        vertexViewU32[14] = getTint(tintBR, alphaBR);
 
-        this.manager.setRenderer(this, frame.texture.source[frame.sourceIndex].glTexture, gameObject.renderTarget);
-        this.drawIndexed = true;
-        this.drawingMesh = false;
-        vertexOffset = vertexDataBuffer.allocate(24);
-        this.elementCount += 6;
+        vertexViewF32[15] = tx0;
+        vertexViewF32[16] = ty0;
+        vertexViewF32[17] = uvs.x0;
+        vertexViewF32[18] = uvs.y0;
+        vertexViewU32[19] = getTint(tintTL, alphaTL);
 
-        //  Top Left
-        vertexBufferObjectF32[vertexOffset++] = tx0;
-        vertexBufferObjectF32[vertexOffset++] = ty0;
-        vertexBufferObjectF32[vertexOffset++] = uvs.x0;
-        vertexBufferObjectF32[vertexOffset++] = uvs.y0;
-        vertexBufferObjectU32[vertexOffset++] = tintTL;
-        vertexBufferObjectF32[vertexOffset++] = alphaTL;
+        vertexViewF32[20] = tx2;
+        vertexViewF32[21] = ty2;
+        vertexViewF32[22] = uvs.x2;
+        vertexViewF32[23] = uvs.y2;
+        vertexViewU32[24] = getTint(tintBR, alphaBR);
 
-        //  Bottom Left
-        vertexBufferObjectF32[vertexOffset++] = tx1;
-        vertexBufferObjectF32[vertexOffset++] = ty1;
-        vertexBufferObjectF32[vertexOffset++] = uvs.x1;
-        vertexBufferObjectF32[vertexOffset++] = uvs.y1;
-        vertexBufferObjectU32[vertexOffset++] = tintBL;
-        vertexBufferObjectF32[vertexOffset++] = alphaBL;
+        vertexViewF32[25] = tx3;
+        vertexViewF32[26] = ty3;
+        vertexViewF32[27] = uvs.x3;
+        vertexViewF32[28] = uvs.y3;
+        vertexViewU32[29] = getTint(tintTR, alphaTR);
 
-        //  Bottom Right
-        vertexBufferObjectF32[vertexOffset++] = tx2;
-        vertexBufferObjectF32[vertexOffset++] = ty2;
-        vertexBufferObjectF32[vertexOffset++] = uvs.x2;
-        vertexBufferObjectF32[vertexOffset++] = uvs.y2;
-        vertexBufferObjectU32[vertexOffset++] = tintBR;
-        vertexBufferObjectF32[vertexOffset++] = alphaBR;
+        this.vertexCount = 6;
 
-        //  Top Right
-        vertexBufferObjectF32[vertexOffset++] = tx3;
-        vertexBufferObjectF32[vertexOffset++] = ty3;
-        vertexBufferObjectF32[vertexOffset++] = uvs.x3;
-        vertexBufferObjectF32[vertexOffset++] = uvs.y3;
-        vertexBufferObjectU32[vertexOffset++] = tintTR;
-        vertexBufferObjectF32[vertexOffset++] = alphaTR;
+        this.flush();
+        this.endPass();
     }
 
 });

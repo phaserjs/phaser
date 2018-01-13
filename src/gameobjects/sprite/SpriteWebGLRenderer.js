@@ -7,7 +7,7 @@ var SpriteWebGLRenderer = function (renderer, src, interpolationPercentage, came
         return;
     }
 
-    renderer.spriteBatch.addSprite(src, camera);
+    renderer.spriteBatch.drawSprite(src, camera);
 };
 
 module.exports = SpriteWebGLRenderer;

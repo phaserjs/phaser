@@ -166,14 +166,14 @@ var WebGLpipeline = new Class({
         this.extensions = gl.getSupportedExtensions();
         this.blitterBatch = this.addPipeline(new BlitterBatch(this.game, gl, this));
         //this.quadBatch = this.addPipeline(new QuadBatch(this.game, gl, this));
-        //this.spriteBatch = this.addPipeline(new SpriteBatch(this.game, gl, this));
+        this.spriteBatch = this.addPipeline(new SpriteBatch(this.game, gl, this));
         //this.shapeBatch = this.addPipeline(new ShapeBatch(this.game, gl, this));
         //this.EffectRenderer = this.addPipeline(new EffectRenderer(this.game, gl, this));
         //this.tileBatch = this.addPipeline(new TileBatch(this.game, gl, this));
         //this.TilemapRenderer = this.addPipeline(new TilemapRenderer(this.game, gl, this));
         //this.ParticleRenderer = this.addPipeline(new ParticleRenderer(this.game, gl, this));
         //this.MaskRenderer = this.addPipeline(new MaskRenderer(this.game, gl, this));
-        this.currentPipeline = this.blitterBatch;
+        this.currentPipeline = this.spriteBatch;
         this.currentVertexBuffer = null;
         this.setBlendMode(0);
         this.resize(this.width, this.height);
