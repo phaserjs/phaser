@@ -188,8 +188,8 @@ var HTML5AudioSound = new Class({
             var currentTime = this.audio.currentTime;
             if (currentTime >= endTime) {
                 if (this.currentConfig.loop) {
-                    currentTime =
-                        this.audio.currentTime = startTime + (currentTime - endTime);
+                    this.audio.currentTime = startTime + (currentTime - endTime);
+                    currentTime = this.audio.currentTime;
                 }
                 else {
                     this.reset();
