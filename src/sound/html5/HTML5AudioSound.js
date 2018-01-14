@@ -270,7 +270,7 @@ Object.defineProperty(HTML5AudioSound.prototype, 'volume', {
     set: function (value) {
         this.currentConfig.volume = value;
         this.setVolume();
-        this.events.dispatch(new SoundValueEvent(this, 'SOUND_VOLUME', value));
+        this.emit('volume', this, value);
     }
 });
 /**
