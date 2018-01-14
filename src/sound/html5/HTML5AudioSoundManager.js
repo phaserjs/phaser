@@ -16,6 +16,18 @@ var HTML5AudioSoundManager = new Class({
          */
         this.override = true;
         /**
+         * Value representing time difference in seconds between calling
+         * play method on an audio tag and when it actually starts playing.
+         * It is used to achieve more accurate delayed sound playback.
+         *
+         * You might need to tweak this value to get the desired results
+         * since audio play delay varies depending on the browser/platform.
+         *
+         * @property {number} audioPlayDelay
+         * @default 0.1
+         */
+        this.audioPlayDelay = 0.1;
+        /**
          * An array for keeping track of all the sounds
          * that were paused when game lost focus.
          *
