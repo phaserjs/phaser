@@ -348,7 +348,7 @@ Object.defineProperty(BaseSoundManager.prototype, 'detune', {
         this.forEachActiveSound(function (sound) {
             sound.setRate();
         });
-        this.emit('detune', value);
+        this.emit('detune', this, value);
     }
 });
 module.exports = BaseSoundManager;
