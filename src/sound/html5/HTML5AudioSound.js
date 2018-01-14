@@ -169,6 +169,17 @@ var HTML5AudioSound = new Class({
     reset: function () {
         BaseSound.prototype.stop.call(this);
     },
+    onBlur: function () {
+        this.currentConfig.seek = this.audio.currentTime -
+            (this.currentMarker ? this.currentMarker.start : 0);
+        if (this.startTime > 0) {
+            this.currentConfig.delay = (this.startTime - window.performance.now()) / 1000;
+        }
+        else {
+            this.currentConfig.delay = 0;
+        }
+        this.stopAndReleaseAudioTag();
+    },
     update: function (time, delta) {
         // TODO include play method call delay
         if (this.isPlaying) {
