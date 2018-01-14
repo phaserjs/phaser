@@ -234,7 +234,7 @@ var BaseSoundManager = new Class({
         this.forEachActiveSound(function (sound) {
             sound.resume();
         });
-        this.emit('resumeall');
+        this.emit('resumeall', this);
     },
     /**
      * Stops all the sounds in the game.
