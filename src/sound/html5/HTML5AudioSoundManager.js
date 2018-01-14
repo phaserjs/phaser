@@ -76,7 +76,7 @@ var HTML5AudioSoundManager = new Class({
         this.forEachActiveSound(function (sound) {
             if (sound.isPlaying) {
                 this.onBlurPausedSounds.push(sound);
-                sound.pause();
+                sound.onBlur();
             }
         });
     },
