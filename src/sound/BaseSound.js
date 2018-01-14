@@ -6,9 +6,7 @@ var NOOP = require('../utils/NOOP');
  * @author Pavle Goloskokovic <pgoloskokovic@gmail.com> (http://prunegames.com)
  */
 var BaseSound = new Class({
-
     Extends: EventEmitter,
-
     /**
      * @class Phaser.Sound.BaseSound
      * @constructor
@@ -17,9 +15,7 @@ var BaseSound = new Class({
      * @param {ISoundConfig} [config] - An optional config object containing default sound settings.
      */
     initialize: function BaseSound(manager, key, config) {
-
         EventEmitter.call(this);
-
         /**
          * Local reference to the sound manager.
          *
@@ -413,7 +409,7 @@ Object.defineProperty(BaseSound.prototype, 'rate', {
     set: function (value) {
         this.currentConfig.rate = value;
         this.setRate();
-        this.events.dispatch(new SoundValueEvent(this, 'SOUND_RATE', value));
+        this.emit('rate', this, value);
     }
 });
 /**
