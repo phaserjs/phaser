@@ -93,7 +93,7 @@ var HTML5AudioSound = new Class({
         }
         //  \/\/\/ isPlaying = false, isPaused = false \/\/\/
         this.stopAndReleaseAudioTag();
-        this.events.dispatch(new SoundEvent(this, 'SOUND_STOP'));
+        this.emit('stop', this);
         return true;
     },
     pickAndPlayAudioTag: function () {
