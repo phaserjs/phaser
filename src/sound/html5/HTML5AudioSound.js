@@ -327,6 +327,7 @@ Object.defineProperty(HTML5AudioSound.prototype, 'loop', {
         if (this.audio) {
             this.audio.loop = value;
         }
+        this.emit('loop', this, value);
     }
 });
 module.exports = HTML5AudioSound;
