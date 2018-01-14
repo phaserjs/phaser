@@ -182,6 +182,11 @@ var HTML5AudioSound = new Class({
         }
         this.stopAndReleaseAudioTag();
     },
+    onFocus: function () {
+        this.isPlaying = true;
+        this.isPaused = false;
+        this.pickAndPlayAudioTag();
+    },
     update: function (time, delta) {
         // TODO include play method call delay
         if (this.isPlaying) {
