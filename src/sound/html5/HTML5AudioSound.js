@@ -211,7 +211,7 @@ var HTML5AudioSound = new Class({
                 this.audio.currentTime += startTime;
                 currentTime = this.audio.currentTime;
             }
-            if (currentTime < this.previousTime) {
+            if (this.currentConfig.loop && currentTime < this.previousTime) {
                 // TODO rename to looped and add loop for changing loop value
                 this.emit('loop', this);
             }
