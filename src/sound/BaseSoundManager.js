@@ -330,7 +330,7 @@ Object.defineProperty(BaseSoundManager.prototype, 'rate', {
         this.forEachActiveSound(function (sound) {
             sound.setRate();
         });
-        this.emit('rate', value);
+        this.emit('rate', this, value);
     }
 });
 /**
