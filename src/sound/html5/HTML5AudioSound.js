@@ -70,7 +70,7 @@ var HTML5AudioSound = new Class({
         this.currentConfig.seek = this.audio.currentTime
             - (this.currentMarker ? this.currentMarker.start : 0);
         this.stopAndReleaseAudioTag();
-        this.events.dispatch(new SoundEvent(this, 'SOUND_PAUSE'));
+        this.emit('pause', this);
         return true;
     },
     resume: function () {
