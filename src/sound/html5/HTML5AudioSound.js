@@ -116,7 +116,7 @@ var HTML5AudioSound = new Class({
             }
         }
         else {
-            this.startTime = window.performance.now() + delay;
+            this.startTime = window.performance.now() + delay * 1000;
             if (!this.audio.paused) {
                 this.audio.pause();
             }
