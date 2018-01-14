@@ -204,7 +204,7 @@ var HTML5AudioSound = new Class({
             else if (currentTime >= endTime) {
                 this.reset();
                 this.stopAndReleaseAudioTag();
-                this.events.dispatch(new SoundEvent(this, 'SOUND_ENDED'));
+                this.emit('ended', this);
                 return;
             }
             else if (currentTime < startTime) {
