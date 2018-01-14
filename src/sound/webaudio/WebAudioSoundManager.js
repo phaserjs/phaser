@@ -1,7 +1,6 @@
 var Class = require('../../utils/Class');
 var BaseSoundManager = require('../BaseSoundManager');
 var WebAudioSound = require('./WebAudioSound');
-
 /*!
  * @author Pavle Goloskokovic <pgoloskokovic@gmail.com> (http://prunegames.com)
  */
@@ -149,7 +148,7 @@ Object.defineProperty(WebAudioSoundManager.prototype, 'mute', {
     },
     set: function (value) {
         this.masterMuteNode.gain.setValueAtTime(value ? 0 : 1, 0);
-        this.emit('mute', value);
+        this.emit('mute', this, value);
     }
 });
 /**
