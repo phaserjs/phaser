@@ -106,8 +106,8 @@ var HTML5AudioSound = new Class({
         var seek = this.currentConfig.seek;
         var delay = this.currentConfig.delay;
         var offset = (this.currentMarker ? this.currentMarker.start : 0) + seek;
-        this.previousTime =
-            this.audio.currentTime = offset;
+        this.previousTime = offset;
+        this.audio.currentTime = offset;
         this.applyConfig();
         if (delay === 0) {
             this.startTime = 0;
