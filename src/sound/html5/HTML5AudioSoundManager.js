@@ -82,7 +82,7 @@ var HTML5AudioSoundManager = new Class({
     },
     onFocus: function () {
         this.onBlurPausedSounds.forEach(function (sound) {
-            sound.resume();
+            sound.onFocus();
         });
         this.onBlurPausedSounds.length = 0;
     },
