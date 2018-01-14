@@ -170,6 +170,8 @@ var HTML5AudioSound = new Class({
         BaseSound.prototype.stop.call(this);
     },
     onBlur: function () {
+        this.isPlaying = false;
+        this.isPaused = true;
         this.currentConfig.seek = this.audio.currentTime -
             (this.currentMarker ? this.currentMarker.start : 0);
         if (this.startTime > 0) {
