@@ -1,7 +1,6 @@
 var Class = require('../../utils/Class');
 var BaseSoundManager = require('../BaseSoundManager');
 var HTML5AudioSound = require('./HTML5AudioSound');
-var SoundValueEvent = require('../SoundValueEvent');
 var HTML5AudioSoundManager = new Class({
     Extends: BaseSoundManager,
     initialize: function HTML5AudioSoundManager(game) {
@@ -107,7 +106,7 @@ Object.defineProperty(HTML5AudioSoundManager.prototype, 'mute', {
         this.forEachActiveSound(function (sound) {
             sound.setMute();
         });
-        this.events.dispatch(new SoundValueEvent(this, 'SOUND_MUTE', value));
+        this.emit('mute', this, value);
     }
 });
 /**
