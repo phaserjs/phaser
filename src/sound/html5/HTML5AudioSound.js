@@ -254,7 +254,7 @@ Object.defineProperty(HTML5AudioSound.prototype, 'mute', {
     set: function (value) {
         this.currentConfig.mute = value;
         this.setMute();
-        this.events.dispatch(new SoundValueEvent(this, 'SOUND_MUTE', value));
+        this.emit('mute', this, value);
     }
 });
 /**
