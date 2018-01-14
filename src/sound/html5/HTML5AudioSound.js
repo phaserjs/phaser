@@ -174,12 +174,7 @@ var HTML5AudioSound = new Class({
         this.isPaused = true;
         this.currentConfig.seek = this.audio.currentTime -
             (this.currentMarker ? this.currentMarker.start : 0);
-        if (this.startTime > 0) {
-            this.currentConfig.delay = (this.startTime - window.performance.now()) / 1000;
-        }
-        else {
-            this.currentConfig.delay = 0;
-        }
+        this.currentConfig.delay = Math.max(0, (this.startTime - window.performance.now()) / 1000);
         this.stopAndReleaseAudioTag();
     },
     onFocus: function () {
