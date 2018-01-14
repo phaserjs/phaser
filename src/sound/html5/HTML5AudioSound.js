@@ -186,17 +186,15 @@ var HTML5AudioSound = new Class({
             var startTime = this.currentMarker ? this.currentMarker.start : 0;
             var endTime = startTime + this.duration;
             var currentTime = this.audio.currentTime;
-            if (currentTime >= endTime) {
-                if (this.currentConfig.loop) {
-                    this.audio.currentTime = startTime + (currentTime - endTime);
-                    currentTime = this.audio.currentTime;
-                }
-                else {
-                    this.reset();
-                    this.stopAndReleaseAudioTag();
-                    this.events.dispatch(new SoundEvent(this, 'SOUND_ENDED'));
-                    return;
-                }
+            if (this.currentConfig.loop && currentTime >= endTime - this.manager.loopEndOffset) {
+                this.audio.currentTime = startTime + Math.max(0, currentTime - endTime);
+                currentTime = this.audio.currentTime;
+            }
+            else if (currentTime >= endTime) {
+                this.reset();
+                this.stopAndReleaseAudioTag();
+                this.events.dispatch(new SoundEvent(this, 'SOUND_ENDED'));
+                return;
             }
             else if (currentTime < startTime) {
                 this.audio.currentTime += startTime;
