@@ -485,6 +485,7 @@ Object.defineProperty(WebAudioSound.prototype, 'loop', {
                 this.createAndStartLoopBufferSource();
             }
         }
+        this.emit('loop', this, value);
     }
 });
 module.exports = WebAudioSound;
