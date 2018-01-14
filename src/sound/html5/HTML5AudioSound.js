@@ -207,7 +207,7 @@ var HTML5AudioSound = new Class({
                 }
                 if (currentTime < this.previousTime) {
                     // TODO rename to looped and add loop for changing loop value
-                    this.emit('loop', this);
+                    this.emit('looped', this);
                 }
             }
             else if (currentTime >= endTime) {
