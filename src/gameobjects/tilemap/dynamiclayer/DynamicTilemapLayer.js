@@ -89,6 +89,7 @@ var DynamicTilemapLayer = new Class({
          */
         this.culledTiles = [];
 
+        this.setAlpha(this.layer.alpha);
         this.setTexture(tileset.image.key);
         this.setPosition(x, y);
         this.setSizeToFrame();
