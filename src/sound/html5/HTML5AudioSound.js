@@ -175,9 +175,9 @@ var HTML5AudioSound = new Class({
             // handling delayed playback
             if (this.startTime > 0) {
                 if (this.startTime < time) {
-                    this.previousTime =
-                        this.audio.currentTime += (time - this.startTime) / 1000;
+                    this.audio.currentTime += (time - this.startTime) / 1000;
                     this.startTime = 0;
+                    this.previousTime = this.audio.currentTime;
                     this.audio.play();
                 }
                 return;
