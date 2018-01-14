@@ -1,14 +1,11 @@
 var Class = require('../utils/Class');
 var NOOP = require('../utils/NOOP');
 var EventEmitter = require('eventemitter3');
-
 /*!
  * @author Pavle Goloskokovic <pgoloskokovic@gmail.com> (http://prunegames.com)
  */
 var BaseSoundManager = new Class({
-
     Extends: EventEmitter,
-
     /**
      * The sound manager is responsible for playing back audio via Web Audio API or HTML Audio tag as fallback.
      * The audio file type and the encoding of those files are extremely important.
@@ -20,9 +17,7 @@ var BaseSoundManager = new Class({
      * @param {Phaser.Game} game - Reference to the current game instance.
      */
     initialize: function BaseSoundManager(game) {
-
         EventEmitter.call(this);
-
         /**
          * Local reference to game.
          *
@@ -228,7 +223,7 @@ var BaseSoundManager = new Class({
         this.forEachActiveSound(function (sound) {
             sound.pause();
         });
-        this.emit('pauseall');
+        this.emit('pauseall', this);
     },
     /**
      * Resumes all the sounds in the game.
