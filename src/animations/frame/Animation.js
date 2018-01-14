@@ -25,7 +25,7 @@ var Animation = new Class({
         this.type = 'frame';
 
         //  Extract all the frame data into the frames array
-        this.frames = GetFrames(manager.textureManager, GetValue(config, 'frames', []));
+        this.frames = GetFrames(manager.textureManager, GetValue(config, 'frames', []), GetValue(config, 'defaultTextureKey', null));
 
         //  The frame rate of playback in frames per second (default 24 if duration is null)
         this.frameRate = GetValue(config, 'frameRate', null);
@@ -99,8 +99,8 @@ var Animation = new Class({
         //  Global pause, effects all Game Objects using this Animation instance
         this.paused = false;
 
-        this.manager.events.on('PAUSE_ALL_ANIMATION_EVENT', this.pause.bind(this));
-        this.manager.events.on('RESUME_ALL_ANIMATION_EVENT', this.resume.bind(this));
+        this.manager.on('pauseall', this.pause.bind(this));
+        this.manager.on('resumeall', this.resume.bind(this));
     },
 
     addFrame: require('./inc/AddFrame'),

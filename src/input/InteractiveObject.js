@@ -1,5 +1,3 @@
-var NOOP = require('../utils/NOOP');
-
 //  Phaser.Input.InteractiveObject
 
 var InteractiveObject = function (gameObject, hitArea, hitAreaCallback)
@@ -31,35 +29,7 @@ var InteractiveObject = function (gameObject, hitArea, hitAreaCallback)
         dragStartY: 0,
 
         dragX: 0,
-        dragY: 0,
-
-        //  Callbacks
-
-        callbackContext: gameObject,
-
-        //  gameObject, pointer, x, y
-        onUp: NOOP,
-
-        //  gameObject, pointer, x, y
-        onDown: NOOP,
-
-        //  gameObject, pointer, x, y
-        onOver: NOOP,
-
-        //  gameObject, pointer
-        onOut: NOOP,
-
-        //  gameObject, pointer, x, y
-        onMove: NOOP,
-
-        //  gameObject, pointer, x, y
-        onDragStart: NOOP,
-
-        //  gameObject, pointer, x, y
-        onDrag: NOOP,
-
-        //  gameObject, pointer, x, y
-        onDragEnd: NOOP
+        dragY: 0
 
     };
 };

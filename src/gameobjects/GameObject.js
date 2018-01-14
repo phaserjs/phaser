@@ -7,8 +7,11 @@
 var Class = require('../utils/Class');
 var Components = require('./components');
 var DataProxy = require('./components/DataProxy');
+var EventEmitter = require('eventemitter3');
 
 var GameObject = new Class({
+
+    Extends: EventEmitter,
 
     initialize:
 
@@ -26,6 +29,8 @@ var GameObject = new Class({
      */
     function GameObject (scene, type)
     {
+        EventEmitter.call(this);
+
         /**
          * The Scene to which this Game Object belongs.
          * Game Objects can only belong to one Scene.
@@ -286,6 +291,7 @@ var GameObject = new Class({
             this.input = undefined;
         }
 
+        //  TODO Keep a reference to the manager in Body, so body can remove itself, not via System
         if (this.body)
         {
             this.scene.sys.physicsManager.remove(this);
@@ -302,6 +308,8 @@ var GameObject = new Class({
         this.data = undefined;
 
         this.scene = undefined;
+
+        this.removeAllListeners();
     }
 
 });

@@ -1,6 +1,5 @@
 var Class = require('../utils/Class');
-var Event = require('../events/Event');
-var EventDispatcher = require('../events/EventDispatcher');
+var EventEmitter = require('eventemitter3');
 
 /**
 * The Data Component features a means to store pieces of data specific to a Game Object,
@@ -10,11 +9,11 @@ var Data = new Class({
 
     initialize:
 
-    function Data (parent, eventDispatcher)
+    function Data (parent, eventEmitter)
     {
         this.parent = parent;
 
-        this.events = (eventDispatcher) ? eventDispatcher : new EventDispatcher();
+        this.events = (eventEmitter) ? eventEmitter : new EventEmitter();
 
         this.list = {};
 

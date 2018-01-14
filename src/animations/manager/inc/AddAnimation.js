@@ -1,5 +1,3 @@
-var Event = require('../events/');
-
 /**
  * [description]
  *
@@ -16,7 +14,7 @@ var AddAnimation = function (key, animation)
 {
     if (this.anims.has(key))
     {
-        console.error('Animation with key', key, 'already exists');
+        console.warn('Animation with key', key, 'already exists');
         return;
     }
 
@@ -24,7 +22,7 @@ var AddAnimation = function (key, animation)
 
     this.anims.set(key, animation);
 
-    this.events.dispatch(new Event.ADD_ANIMATION_EVENT(key, animation));
+    this.emit('add', key, animation);
 
     return this;
 };

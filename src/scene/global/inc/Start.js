@@ -49,7 +49,7 @@ var Start = function (key, data)
 
             if (loader.loadArray(scene.sys.settings.files))
             {
-                loader.events.once('LOADER_COMPLETE_EVENT', this.payloadComplete.bind(this));
+                loader.once('complete', this.payloadComplete, this);
 
                 loader.start();
             }

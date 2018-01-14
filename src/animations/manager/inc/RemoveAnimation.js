@@ -1,5 +1,3 @@
-var Event = require('../events/');
-
 /**
  * [description]
  *
@@ -17,7 +15,7 @@ var RemoveAnimation = function (key)
 
     if (anim)
     {
-        this.events.dispatch(new Event.REMOVE_ANIMATION_EVENT(key, anim));
+        this.emit('remove', key, anim);
 
         this.anims.delete(key);
     }

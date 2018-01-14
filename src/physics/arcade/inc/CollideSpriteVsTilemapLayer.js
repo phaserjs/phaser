@@ -34,7 +34,7 @@ var CollideSpriteVsTilemapLayer = function (sprite, tilemapLayer, collideCallbac
 
         if (TileIntersectsBody(tileWorldRect, body)
             && (!processCallback || processCallback.call(callbackContext, sprite, tile))
-            && ProcessTileCallbacks(tile)
+            && ProcessTileCallbacks(tile, sprite)
             && (overlapOnly || SeparateTile(i, body, tile, tileWorldRect, tilemapLayer, this.TILE_BIAS)))
         {
             this._total++;
@@ -42,6 +42,15 @@ var CollideSpriteVsTilemapLayer = function (sprite, tilemapLayer, collideCallbac
             if (collideCallback)
             {
                 collideCallback.call(callbackContext, sprite, tile);
+            }
+
+            if (overlapOnly && body.onOverlap)
+            {
+                sprite.emit('overlap', body.gameObject, tile, body, null);
+            }
+            else if (body.onCollide)
+            {
+                sprite.emit('collide', body.gameObject, tile, body, null);
             }
         }
     }

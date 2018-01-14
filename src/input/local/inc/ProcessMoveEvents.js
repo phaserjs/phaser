@@ -1,10 +1,8 @@
-var InputEvent = require('../events');
-
 var ProcessMoveEvents = function (pointer)
 {
     var currentlyOver = this._temp;
 
-    this.events.dispatch(new InputEvent.POINTER_MOVE(pointer, currentlyOver));
+    this.emit('pointermove', pointer, currentlyOver);
 
     //  Go through all objects the pointer was over and fire their events / callbacks
     for (var i = 0; i < currentlyOver.length; i++)
@@ -16,9 +14,9 @@ var ProcessMoveEvents = function (pointer)
             continue;
         }
 
-        this.events.dispatch(new InputEvent.GAME_OBJECT_MOVE(pointer, gameObject));
+        gameObject.emit('pointermove', pointer, gameObject.input.localX, gameObject.input.localY);
 
-        gameObject.input.onMove(gameObject, pointer, gameObject.input.localX, gameObject.input.localY);
+        this.emit('gameobjectmove', pointer, gameObject);
 
         if (this.topOnly)
         {

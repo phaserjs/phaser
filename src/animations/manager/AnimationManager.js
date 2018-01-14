@@ -1,5 +1,5 @@
 var Class = require('../../utils/Class');
-var EventDispatcher = require('../../events/EventDispatcher');
+var EventEmitter = require('eventemitter3');
 var CustomMap = require('../../structs/Map');
 
 // Animations are managed by the global AnimationManager. This is a singleton class that is
@@ -8,6 +8,8 @@ var CustomMap = require('../../structs/Map');
 // Access it via `scene.anims`.
 
 var AnimationManager = new Class({
+
+    Extends: EventEmitter,
 
     initialize:
 
@@ -23,6 +25,8 @@ var AnimationManager = new Class({
      */
     function AnimationManager (game)
     {
+        EventEmitter.call(this);
+
         /**
          * [description]
          *
@@ -38,14 +42,6 @@ var AnimationManager = new Class({
          * @protected
          */
         this.textureManager = null;
-
-        /**
-         * [description]
-         *
-         * @property {Phaser.Events.EventDispatcher} events
-         * @protected
-         */
-        this.events = new EventDispatcher();
 
         /**
          * [description]

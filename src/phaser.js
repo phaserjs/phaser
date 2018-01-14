@@ -5,14 +5,6 @@ var Extend = require('./utils/object/Extend');
 
 //  This object is exported globally
 
-/*
-var Phaser = {
-
-    Game: require('./boot/Game')
-
-};
-*/
-
 var Phaser = {
 
     Actions: require('./actions/'),
@@ -23,10 +15,9 @@ var Phaser = {
 
     DOM: require('./dom/'),
 
-    Game: require('./boot/Game'),
+    EventEmitter: require('./events/EventEmitter'),
 
-    Event: require('./events/Event'),
-    EventDispatcher: require('./events/EventDispatcher'),
+    Game: require('./boot/Game'),
 
     Math: require('./math'),
 

@@ -1,5 +1,4 @@
 var MatterEvents = require('../lib/core/Events');
-var PhysicsEvent = require('../events/');
 
 var Sleep = {
 
@@ -24,10 +23,10 @@ var Sleep = {
     {
         if (value)
         {
-            var worldEvents = this.world.events;
+            var world = this.world;
 
             MatterEvents.on(this.body, 'sleepStart', function (event) {
-                worldEvents.dispatch(new PhysicsEvent.SLEEP_START(event, this));
+                world.emit('sleepstart', event, this);
             });
         }
         else
@@ -42,10 +41,10 @@ var Sleep = {
     {
         if (value)
         {
-            var worldEvents = this.world.events;
+            var world = this.world;
 
             MatterEvents.on(this.body, 'sleepEnd', function (event) {
-                worldEvents.dispatch(new PhysicsEvent.SLEEP_END(event, this));
+                world.emit('sleepend', event, this);
             });
         }
         else

@@ -1,7 +1,6 @@
 //  Phaser.Input.Gamepad.Button
 
 var Class = require('../../utils/Class');
-var GamepadEvent = require('./events/');
 
 var Button = new Class({
 
@@ -33,16 +32,13 @@ var Button = new Class({
             if (!this.pressed)
             {
                 this.pressed = true;
-                this.events.dispatch(new GamepadEvent.DOWN(this.pad, this, this.value, data));
+                this.events.emit('down', this.pad, this, this.value, data);
             }
         }
-        else
+        else if (this.pressed)
         {
-            if (this.pressed)
-            {
-                this.pressed = false;
-                this.events.dispatch(new GamepadEvent.UP(this.pad, this, this.value, data));
-            }
+            this.pressed = false;
+            this.events.emit('up', this.pad, this, this.value, data);
         }
     }
 

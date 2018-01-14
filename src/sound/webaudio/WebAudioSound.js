@@ -1,7 +1,6 @@
 var Class = require('../../utils/Class');
 var BaseSound = require('../BaseSound');
-var SoundEvent = require('../SoundEvent');
-var SoundValueEvent = require('../SoundValueEvent');
+
 /*!
  * @author Pavle Goloskokovic <pgoloskokovic@gmail.com> (http://prunegames.com)
  */
@@ -134,7 +133,7 @@ var WebAudioSound = new Class({
         //  \/\/\/ isPlaying = true, isPaused = false \/\/\/
         this.stopAndRemoveBufferSource();
         this.createAndStartBufferSource();
-        this.events.dispatch(new SoundEvent(this, 'SOUND_PLAY'));
+        this.emit('play', this);
         return true;
     },
     /**
@@ -153,7 +152,7 @@ var WebAudioSound = new Class({
         //  \/\/\/ isPlaying = false, isPaused = true \/\/\/
         this.currentConfig.seek = this.getCurrentTime(); // Equivalent to setting paused time
         this.stopAndRemoveBufferSource();
-        this.events.dispatch(new SoundEvent(this, 'SOUND_PAUSE'));
+        this.emit('pause', this);
         return true;
     },
     /**
@@ -171,7 +170,7 @@ var WebAudioSound = new Class({
         }
         //  \/\/\/ isPlaying = true, isPaused = false \/\/\/
         this.createAndStartBufferSource();
-        this.events.dispatch(new SoundEvent(this, 'SOUND_RESUME'));
+        this.emit('resume', this);
         return true;
     },
     /**
@@ -186,7 +185,7 @@ var WebAudioSound = new Class({
         }
         //  \/\/\/ isPlaying = false, isPaused = false \/\/\/
         this.stopAndRemoveBufferSource();
-        this.events.dispatch(new SoundEvent(this, 'SOUND_STOP'));
+        this.emit('stop', this);
         return true;
     },
     /**
@@ -306,7 +305,7 @@ var WebAudioSound = new Class({
             this.hasEnded = false;
             BaseSound.prototype.stop.call(this);
             this.stopAndRemoveBufferSource();
-            this.events.dispatch(new SoundEvent(this, 'SOUND_ENDED'));
+            this.emit('ended', this);
         }
         else if (this.hasLooped) {
             this.hasLooped = false;
@@ -319,7 +318,7 @@ var WebAudioSound = new Class({
                 rate: this.totalRate
             });
             this.createAndStartLoopBufferSource();
-            this.events.dispatch(new SoundEvent(this, 'SOUND_LOOP'));
+            this.emit('loop', this);
         }
     },
     /**
@@ -413,7 +412,7 @@ Object.defineProperty(WebAudioSound.prototype, 'mute', {
     set: function (value) {
         this.currentConfig.mute = value;
         this.muteNode.gain.setValueAtTime(value ? 0 : 1, 0);
-        this.events.dispatch(new SoundValueEvent(this, 'SOUND_MUTE', value));
+        this.emit('mute', this, value);
     }
 });
 /**
@@ -429,7 +428,7 @@ Object.defineProperty(WebAudioSound.prototype, 'volume', {
     set: function (value) {
         this.currentConfig.volume = value;
         this.volumeNode.gain.setValueAtTime(value, 0);
-        this.events.dispatch(new SoundValueEvent(this, 'SOUND_VOLUME', value));
+        this.emit('volume', this, value);
     }
 });
 /**
@@ -464,7 +463,7 @@ Object.defineProperty(WebAudioSound.prototype, 'seek', {
                 this.stopAndRemoveBufferSource();
                 this.createAndStartBufferSource();
             }
-            this.events.dispatch(new SoundValueEvent(this, 'SOUND_SEEK', value));
+            this.emit('seek', this, value);
         }
     }
 });

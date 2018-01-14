@@ -1,12 +1,11 @@
 //  Phaser.Input.GlobalInputManager
 
 var Class = require('../../utils/Class');
-var EventDispatcher = require('../../events/EventDispatcher');
+var EventEmitter = require('eventemitter3');
 var Gamepad = require('../gamepad/GamepadManager');
 var HitTest = require('./inc/HitTest');
 var Keyboard = require('../keyboard/KeyboardManager');
 var Mouse = require('../mouse/MouseManager');
-var MouseEvent = require('../mouse/events/');
 var Pointer = require('../Pointer');
 var Touch = require('../touch/TouchManager');
 
@@ -24,7 +23,7 @@ var GlobalInputManager = new Class({
 
         this.enabled = true;
 
-        this.events = new EventDispatcher();
+        this.events = new EventEmitter();
 
         //   Standard FIFO queue
         this.queue = [];
@@ -145,7 +144,7 @@ var GlobalInputManager = new Class({
 
                 case 'pointerlockchange':
 
-                    this.events.dispatch(new MouseEvent.POINTER_LOCK_CHANGE(event, this.mouse.locked));
+                    this.events.emit('pointerlockchange', event, this.mouse.locked);
                     break;
             }
         }

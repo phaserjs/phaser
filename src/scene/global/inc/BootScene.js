@@ -30,7 +30,7 @@ var BootScene = function (scene)
         {
             //  Start the loader going as we have something in the queue
 
-            loader.events.once('LOADER_COMPLETE_EVENT', this.loadComplete.bind(this));
+            loader.once('complete', this.loadComplete, this);
 
             loader.start();
         }

@@ -4,23 +4,26 @@ var Body = require('./Body');
 var Class = require('../../utils/Class');
 var Collider = require('./Collider');
 var CONST = require('./const');
+var EventEmitter = require('eventemitter3');
 var GetValue = require('../../utils/object/GetValue');
+var ProcessQueue = require('../../structs/ProcessQueue');
 var Rectangle = require('../../geom/rectangle/Rectangle');
 var RTree = require('../../structs/RTree');
 var Set = require('../../structs/Set');
-var ProcessQueue = require('../../structs/ProcessQueue');
 var StaticBody = require('./StaticBody');
 var Vector2 = require('../../math/Vector2');
 
 var World = new Class({
 
+    Extends: EventEmitter,
+
     initialize:
 
     function World (scene, config)
     {
-        this.scene = scene;
+        EventEmitter.call(this);
 
-        this.events = scene.sys.events;
+        this.scene = scene;
 
         //  Dynamic Bodies
         this.bodies = new Set();
@@ -241,12 +244,16 @@ var World = new Class({
     {
         this.isPaused = true;
 
+        this.emit('pause');
+
         return this;
     },
 
     resume: function ()
     {
         this.isPaused = false;
+
+        this.emit('resume');
 
         return this;
     },
@@ -413,12 +420,12 @@ var World = new Class({
 
     shutdown: function ()
     {
-
+        this.removeAllListeners();
     },
 
     destroy: function ()
     {
-
+        this.removeAllListeners();
     }
 
 });

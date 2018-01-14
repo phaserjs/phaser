@@ -6,9 +6,9 @@
  *
  * @param {object} event - [description]
  */
-var LoadComplete = function (event)
+var LoadComplete = function (loader)
 {
-    var scene = event.loader.scene;
+    var scene = loader.scene;
 
     this.create(scene);
 };
