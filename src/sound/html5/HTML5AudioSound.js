@@ -84,7 +84,7 @@ var HTML5AudioSound = new Class({
         if (!this.pickAndPlayAudioTag()) {
             return false;
         }
-        this.events.dispatch(new SoundEvent(this, 'SOUND_RESUME'));
+        this.emit('resume', this);
         return true;
     },
     stop: function () {
