@@ -245,7 +245,7 @@ var BaseSoundManager = new Class({
         this.forEachActiveSound(function (sound) {
             sound.stop();
         });
-        this.emit('stopall');
+        this.emit('stopall', this);
     },
     /**
      * Method used internally for pausing sound manager if
