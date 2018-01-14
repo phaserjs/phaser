@@ -1,6 +1,5 @@
 var Class = require('../../utils/Class');
 var BaseSound = require('../BaseSound');
-
 /*!
  * @author Pavle Goloskokovic <pgoloskokovic@gmail.com> (http://prunegames.com)
  */
@@ -318,7 +317,7 @@ var WebAudioSound = new Class({
                 rate: this.totalRate
             });
             this.createAndStartLoopBufferSource();
-            this.emit('loop', this);
+            this.emit('looped', this);
         }
     },
     /**
