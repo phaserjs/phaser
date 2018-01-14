@@ -1,7 +1,5 @@
 var Class = require('../../utils/Class');
 var BaseSound = require('../BaseSound');
-var SoundEvent = require('../SoundEvent');
-var SoundValueEvent = require('../SoundValueEvent');
 var HTML5AudioSound = new Class({
     Extends: BaseSound,
     initialize: function HTML5AudioSound(manager, key, config) {
@@ -58,7 +56,7 @@ var HTML5AudioSound = new Class({
         if (!this.pickAndPlayAudioTag()) {
             return false;
         }
-        this.events.dispatch(new SoundEvent(this, 'SOUND_PLAY'));
+        this.emit('play', this);
         return true;
     },
     pause: function () {
