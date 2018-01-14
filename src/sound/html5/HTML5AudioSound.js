@@ -212,7 +212,7 @@ var HTML5AudioSound = new Class({
                 currentTime = this.audio.currentTime;
             }
             if (currentTime < this.previousTime) {
-                this.events.dispatch(new SoundEvent(this, 'SOUND_LOOP'));
+                this.emit('loop', this);
             }
             this.previousTime = currentTime;
         }
