@@ -305,7 +305,7 @@ Object.defineProperty(HTML5AudioSound.prototype, 'seek', {
             else if (this.isPaused) {
                 this.currentConfig.seek = value;
             }
-            this.events.dispatch(new SoundValueEvent(this, 'SOUND_SEEK', value));
+            this.emit('seek', this, value);
         }
     }
 });
