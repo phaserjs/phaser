@@ -98,6 +98,7 @@ var StaticTilemapLayer = new Class({
         this.dirty = true;
         this.vertexCount = 0;
 
+        this.setAlpha(this.layer.alpha);
         this.setTexture(tileset.image.key);
         this.setPosition(x, y);
         this.setSizeToFrame();
