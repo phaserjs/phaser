@@ -110,7 +110,7 @@ function init ()
 
                 //  Can't be done on a webgl context
                 var image = ctx2D.createImageData(1, 1);
-    
+
                 /**
                 * Test to see if ImageData uses CanvasPixelArray or Uint8ClampedArray.
                 *
@@ -128,11 +128,11 @@ function init ()
                 return false;
             }
         }
-        
+
         return false;
     };
 
-    Features.webGL = true;//testWebGL();
+    Features.webGL = testWebGL();
 
     Features.worker = !!window['Worker'];
 
