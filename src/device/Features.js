@@ -121,7 +121,7 @@ function init ()
                 CanvasPool.remove(canvas);
                 CanvasPool.remove(canvas2D);
 
-                return (ctx !== null);
+                return !!ctx;
             }
             catch (e)
             {
