@@ -15,7 +15,7 @@ var Settings = require('./Settings');
 var TweenManager = require('../../tweens/manager/TweenManager');
 var UpdateList = require('../plugins/UpdateList');
 
-// var PluginManager = require('../../plugins/PluginManager');
+var TestPlugin = require('../../plugins/TestPlugin');
 
 var Systems = new Class({
 
@@ -31,7 +31,7 @@ var Systems = new Class({
 
         this.settings = Settings.create(config);
 
-        //  Set by the GlobalSceneManager - a reference to the game canvas / context
+        //  Set by the GlobalSceneManager - a reference to the Scene canvas / context
 
         this.canvas;
         this.context;
@@ -46,25 +46,14 @@ var Systems = new Class({
 
         //  These are core Scene plugins, needed by lots of the global systems (and each other)
 
+        this.add;
         this.cameras;
         this.displayList;
         this.events;
+        this.make;
         this.sceneManager;
         this.time;
         this.updateList;
-
-        //  Optional Scene plugins - not referenced by core systems, can be overridden with user code
-
-        // this.plugins;
-
-        this.add;
-        this.data;
-        this.dataStore;
-        this.inputManager;
-        this.load;
-        this.make;
-        this.physicsManager;
-        this.tweens;
     },
 
     init: function (game)
@@ -83,36 +72,42 @@ var Systems = new Class({
 
         //  These are core Scene plugins, needed by lots of the global systems (and each other)
 
-        this.cameras = new CameraManager(scene);
-        this.displayList = new DisplayList(scene);
         this.events = new EventEmitter();
-        this.sceneManager = new SceneManager(scene);
-        this.time = new Clock(scene);
-        this.updateList = new UpdateList(scene);
+
+        game.plugins.install(scene, [ 'displayList', 'updateList', 'sceneManager', 'time', 'cameras', 'add', 'make' ]);
 
         //  Optional Scene plugins - not referenced by core systems, can be overridden with user code
 
-        this.add = new GameObjectFactory(scene);
+        // game.plugins.install(scene, [ , 'test' ]);
+
         this.data = new Data(scene);
         this.dataStore = new DataStore(scene);
         this.inputManager = new InputManager(scene);
         this.load = new Loader(scene);
-        this.make = new GameObjectCreator(scene);
         this.physicsManager = new PhysicsManager(scene);
         this.tweens = new TweenManager(scene);
 
-        // this.plugins = new PluginManager(scene);
-
         //  Sometimes the managers need access to a system created after them
-        this.add.boot(this);
-        this.make.boot(this);
+
+        this.events.emit('boot', this);
+
         this.inputManager.boot();
         this.physicsManager.boot();
 
-        this.inject();
+        this.inject2();
     },
 
-    inject: function ()
+    inject: function (plugin)
+    {
+        var map = this.settings.map;
+
+        if (plugin.mapping && map.hasOwnProperty(plugin.mapping))
+        {
+            this.scene[plugin.mapping] = plugin;
+        }
+    },
+
+    inject2: function ()
     {
         var map = this.settings.map;
 
@@ -130,6 +125,7 @@ var Systems = new Class({
     step: function (time, delta)
     {
         //  Are there any pending SceneManager actions?
+        //  This plugin is a special case, as it can literally modify this Scene, so we update it directly.
         this.sceneManager.update();
 
         if (!this.settings.active)
@@ -137,23 +133,21 @@ var Systems = new Class({
             return;
         }
 
-        //  Move these into local arrays, so you can control which systems are registered here and their
-        //  execution order
+        this.events.emit('preupdate', time, delta);
 
-        this.updateList.begin(time);
-        this.time.begin(time);
         this.tweens.begin(time);
         this.inputManager.begin(time);
 
+        this.events.emit('update', time, delta);
+
         this.physicsManager.update(time, delta);
 
-        this.updateList.update(time, delta);
-        this.time.update(time, delta);
         this.tweens.update(time, delta);
-        this.cameras.update(time, delta);
         this.inputManager.update(time, delta);
 
         this.scene.update.call(this.scene, time, delta);
+
+        this.events.emit('postupdate', time, delta);
 
         this.physicsManager.postUpdate();
     },
@@ -252,9 +246,11 @@ var Systems = new Class({
         this.settings.active = false;
         this.settings.visible = false;
 
-        this.displayList.shutdown();
-        this.updateList.shutdown();
-        this.time.shutdown();
+        this.events.emit('shutdown', this);
+
+        // this.displayList.shutdown();
+        // this.updateList.shutdown();
+        // this.time.shutdown();
         this.tweens.shutdown();
         this.physicsManager.shutdown();
 
@@ -267,8 +263,10 @@ var Systems = new Class({
     //  TODO: Game level nuke
     destroy: function ()
     {
+        this.events.emit('destroy', this);
+
         this.add.destroy();
-        this.time.destroy();
+        // this.time.destroy();
         this.tweens.destroy();
         this.physicsManager.destroy();
 

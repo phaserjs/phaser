@@ -1,4 +1,5 @@
 var Class = require('../../utils/Class');
+var PluginManager = require('../../plugins/PluginManager');
 
 //  A proxy class to the Global Scene Manager
 var SceneManager = new Class({
@@ -10,6 +11,12 @@ var SceneManager = new Class({
         //  The Scene that owns this plugin
         this.scene = scene;
 
+        this.systems = scene.sys;
+
+        this.mapping = 'scene';
+
+        this.systems.events.on('boot', this.boot, this);
+
         this.settings = scene.sys.settings;
 
         this.key = scene.sys.settings.key;
@@ -19,6 +26,14 @@ var SceneManager = new Class({
 
         //  Private
         this._queue = [];
+    },
+
+    boot: function ()
+    {
+        this.systems.inject(this);
+
+        this.systems.events.on('shutdown', this.shutdown, this);
+        this.systems.events.on('destroy', this.destroy, this);
     },
 
     update: function ()
@@ -229,8 +244,20 @@ var SceneManager = new Class({
         if (key === undefined) { key = this.key; }
 
         return this.manager.isActive(key);
+    },
+
+    shutdown: function ()
+    {
+
+    },
+
+    destroy: function ()
+    {
+
     }
 
 });
+
+PluginManager.register('sceneManager', SceneManager);
 
 module.exports = SceneManager;
