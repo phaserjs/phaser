@@ -66,7 +66,7 @@
         "space-in-parens": [ "error",  "never" ],
         "space-infix-ops": [ "error", { "int32Hint": true } ],
         "wrap-regex": "error",
-        "spaced-comment": [ "error", "always", { "block": { "balanced": true }} ],
+        "spaced-comment": [ "error", "always", { "block": { "balanced": true }} ]
 
     }
 }
