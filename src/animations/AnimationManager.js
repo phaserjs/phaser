@@ -1,9 +1,9 @@
-var Animation = require('../frame/Animation');
-var Class = require('../../utils/Class');
-var CustomMap = require('../../structs/Map');
+var Animation = require('./Animation');
+var Class = require('../utils/Class');
+var CustomMap = require('../structs/Map');
 var EventEmitter = require('eventemitter3');
-var GetValue = require('../../utils/object/GetValue');
-var Pad = require('../../utils/string/Pad');
+var GetValue = require('../utils/object/GetValue');
+var Pad = require('../utils/string/Pad');
 
 // Animations are managed by the global AnimationManager. This is a singleton class that is
 // responsible for creating and delivering animations and their corresponding data to all Game Objects.

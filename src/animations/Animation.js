@@ -1,6 +1,6 @@
-var Class = require('../../utils/Class');
+var Class = require('../utils/Class');
 var Frame = require('./AnimationFrame');
-var GetValue = require('../../utils/object/GetValue');
+var GetValue = require('../utils/object/GetValue');
 
 //  A Frame based Animation
 //  This consists of a key, some default values (like the frame rate) and a bunch of Frame objects.

@@ -1,4 +1,4 @@
-var Class = require('../../utils/Class');
+var Class = require('../utils/Class');
 
 //  Phaser.Animations.AnimationFrame
 
