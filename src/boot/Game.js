@@ -12,7 +12,7 @@ var VisibilityHandler = require('./VisibilityHandler');
 var AnimationManager = require('../animations/AnimationManager');
 var CreateRenderer = require('./CreateRenderer');
 var Data = require('../data/Data');
-var GlobalCache = require('../cache/GlobalCache');
+var CacheManager = require('../cache/CacheManager');
 var InputManager = require('../input/InputManager');
 var GlobalSceneManager = require('../scene/global/GlobalSceneManager');
 var PluginManager = require('../plugins/PluginManager');
@@ -102,9 +102,9 @@ var Game = new Class({
         /**
          * [description]
          *
-         * @property {Phaser.Cache.GlobalCache} cache
+         * @property {Phaser.Cache.CacheManager} cache
          */
-        this.cache = new GlobalCache(this);
+        this.cache = new CacheManager(this);
 
         /**
          * [description]
