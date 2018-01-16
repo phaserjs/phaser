@@ -15,9 +15,10 @@ var Data = require('../data/Data');
 var GlobalCache = require('../cache/GlobalCache');
 var GlobalInputManager = require('../input/global/GlobalInputManager');
 var GlobalSceneManager = require('../scene/global/GlobalSceneManager');
+var PluginManager = require('../plugins/PluginManager');
+var SoundManagerCreator = require('../sound/SoundManagerCreator');
 var TextureManager = require('../textures/TextureManager');
 var TimeStep = require('./TimeStep');
-var SoundManagerCreator = require('../sound/SoundManagerCreator');
 
 var Game = new Class({
 
@@ -150,6 +151,13 @@ var Game = new Class({
         /**
          * [description]
          *
+         * @property {Phaser.Input.GlobalInputManager} input
+         */
+        this.plugins = new PluginManager(this, this.config);
+
+        /**
+         * [description]
+         *
          * @property {function} onStepCallback
          */
         this.onStepCallback = NOOP;
@@ -183,9 +191,11 @@ var Game = new Class({
 
         this.anims.boot(this.textures);
 
-        this.scene.boot();
+        this.plugins.boot();
 
         this.input.boot();
+
+        this.scene.boot();
 
         this.isRunning = true;
 
@@ -195,10 +205,10 @@ var Game = new Class({
 
         VisibilityHandler(this.events);
 
-        this.events.on('hidden', this.onHidden.bind(this));
-        this.events.on('visible', this.onVisible.bind(this));
-        this.events.on('blur', this.onBlur.bind(this));
-        this.events.on('focus', this.onFocus.bind(this));
+        this.events.on('hidden', this.onHidden, this);
+        this.events.on('visible', this.onVisible, this);
+        this.events.on('blur', this.onBlur, this);
+        this.events.on('focus', this.onFocus, this);
     },
 
     /**
@@ -215,7 +225,7 @@ var Game = new Class({
         var active = this.scene.active;
         var renderer = this.renderer;
 
-        //  Global Managers (Time, Input, etc)
+        //  Global Managers
 
         this.input.update(time, delta);
 
@@ -236,6 +246,8 @@ var Game = new Class({
 
         renderer.preRender();
 
+        this.events.emit('prerender');
+
         //  This uses active.length, in case scene.update removed the scene from the active list
         for (i = 0; i < active.length; i++)
         {
@@ -243,6 +255,8 @@ var Game = new Class({
         }
 
         renderer.postRender();
+
+        this.events.emit('postrender');
     },
 
     /**
@@ -256,12 +270,7 @@ var Game = new Class({
     {
         this.loop.pause();
 
-        // var active = this.scene.active;
-
-        // for (var i = 0; i < active.length; i++)
-        // {
-        //     active[i].scene.sys.pause();
-        // }
+        this.events.emit('pause');
     },
 
     /**
@@ -275,12 +284,7 @@ var Game = new Class({
     {
         this.loop.resume();
 
-        // var active = this.scene.active;
-
-        // for (var i = 0; i < active.length; i++)
-        // {
-        //     active[i].scene.sys.resume();
-        // }
+        this.events.emit('resume');
     },
 
     /**
