@@ -3,11 +3,11 @@
 var Class = require('../../utils/Class');
 var EventEmitter = require('eventemitter3');
 var Gamepad = require('../gamepad/GamepadManager');
-var HitTest = require('./inc/HitTest');
 var Keyboard = require('../keyboard/KeyboardManager');
 var Mouse = require('../mouse/MouseManager');
 var Pointer = require('../Pointer');
 var Touch = require('../touch/TouchManager');
+var TransformXY = require('../../math/TransformXY');
 
 var GlobalInputManager = new Class({
 
@@ -150,9 +150,99 @@ var GlobalInputManager = new Class({
         }
     },
 
-    hitTest: function (gameObjects, x, y, camera)
+    //  Will always return an array.
+    //  Array contains matching Interactive Objects.
+    //  Array will be empty if no objects were matched.
+
+    //  x/y = pointer x/y (un-translated)
+
+    hitTest: function (x, y, gameObjects, camera, output)
     {
-        return HitTest(this._tempPoint, x, y, gameObjects, camera, this._tempHitTest);
+        if (output === undefined) { output = this._tempHitTest; }
+
+        var tempPoint = this._tempPoint;
+        var cameraW = camera.width;
+        var cameraH = camera.height;
+
+        output.length = 0;
+
+        if (!(x >= camera.x && y >= camera.y && x <= camera.x + cameraW && y <= camera.y + cameraH))
+        {
+            return output;
+        }
+
+        //  Stores the world point inside of tempPoint
+        camera.getWorldPoint(x, y, tempPoint);
+
+        var culledGameObjects = camera.cull(gameObjects);
+
+        var point = { x: 0, y: 0 };
+
+        for (var i = 0; i < culledGameObjects.length; i++)
+        {
+            var gameObject = culledGameObjects[i];
+
+            if (!gameObject.input || !gameObject.input.enabled || !gameObject.willRender())
+            {
+                continue;
+            }
+
+            var px = tempPoint.x + (camera.scrollX * gameObject.scrollFactorX) - camera.scrollX;
+            var py = tempPoint.y + (camera.scrollY * gameObject.scrollFactorY) - camera.scrollY;
+
+            TransformXY(px, py, gameObject.x, gameObject.y, gameObject.rotation, gameObject.scaleX, gameObject.scaleY, point);
+
+            if (this.pointWithinHitArea(gameObject, point.x, point.y))
+            {
+                output.push(gameObject);
+            }
+        }
+
+        return output;
+    },
+
+    //  x/y MUST be translated before being passed to this function,
+    //  unless the gameObject is guaranteed to not be rotated or scaled in any way
+
+    pointWithinHitArea: function (gameObject, x, y)
+    {
+        var input = gameObject.input;
+
+        //  Normalize the origin
+        x += gameObject.displayOriginX;
+        y += gameObject.displayOriginY;
+
+        if (input.hitAreaCallback(input.hitArea, x, y, gameObject))
+        {
+            input.localX = x;
+            input.localY = y;
+
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    },
+
+    //  x/y MUST be translated before being passed to this function, unless the gameObject is guaranteed to
+    //  be not rotated or scaled in any way
+
+    pointWithinInteractiveObject: function (object, x, y)
+    {
+        if (!object.hitArea)
+        {
+            return false;
+        }
+
+        //  Normalize the origin
+        x += object.gameObject.displayOriginX;
+        y += object.gameObject.displayOriginY;
+
+        object.localX = x;
+        object.localY = y;
+
+        return object.hitAreaCallback(object.hitArea, x, y, object);
     },
 
     //  Called by Pointer class
