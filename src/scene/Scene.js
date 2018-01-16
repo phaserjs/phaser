@@ -1,5 +1,4 @@
-
-var Class = require('../../utils/Class');
+var Class = require('../utils/Class');
 var Systems = require('./Systems');
 
 var Scene = new Class({

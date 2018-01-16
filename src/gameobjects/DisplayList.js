@@ -1,6 +1,6 @@
-var Class = require('../../utils/Class');
-var StableSort = require('../../utils/array/StableSort');
-var PluginManager = require('../../plugins/PluginManager');
+var Class = require('../utils/Class');
+var StableSort = require('../utils/array/StableSort');
+var PluginManager = require('../plugins/PluginManager');
 
 var DisplayList = new Class({
 

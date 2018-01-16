@@ -1,6 +1,6 @@
-var CONST = require('../const');
-var ScaleModes = require('../../renderer/ScaleModes');
-var GetValue = require('../../utils/object/GetValue');
+var CONST = require('./const');
+var ScaleModes = require('../renderer/ScaleModes');
+var GetValue = require('../utils/object/GetValue');
 var InjectionMap = require('./InjectionMap');
 
 var Settings = {

@@ -1,21 +1,11 @@
-// var CameraManager = require('../../camera/local/CameraManager');
-var Class = require('../../utils/Class');
-var Clock = require('../../time/Clock');
-var Data = require('../../data/Data');
-var DataStore = require('../../data/DataStore');
-var DisplayList = require('../plugins/DisplayList');
-var EventEmitter = require('eventemitter3');
-var GameObjectCreator = require('../plugins/GameObjectCreator');
-var GameObjectFactory = require('../plugins/GameObjectFactory');
-var InputManager = require('../../input/InputPlugin');
-var Loader = require('../plugins/Loader');
-var PhysicsManager = require('../plugins/PhysicsManager');
-var SceneManager = require('../plugins/SceneManager');
+var Class = require('../utils/Class');
 var Settings = require('./Settings');
-var TweenManager = require('../../tweens/manager/TweenManager');
-var UpdateList = require('../plugins/UpdateList');
+var EventEmitter = require('eventemitter3');
 
-var TestPlugin = require('../../plugins/TestPlugin');
+// var Data = require('../../data/Data');
+// var DataStore = require('../../data/DataStore');
+// var InputManager = require('../../input/InputPlugin');
+// var PhysicsManager = require('../plugins/PhysicsManager');
 
 var Systems = new Class({
 
@@ -74,27 +64,21 @@ var Systems = new Class({
 
         this.events = new EventEmitter();
 
-        game.plugins.install(scene, [ 'displayList', 'updateList', 'sceneManager', 'time', 'cameras', 'add', 'make' ]);
+        game.plugins.install(scene, [ 'displayList', 'updateList', 'sceneManager', 'time', 'cameras', 'add', 'make', 'load', 'tweens' ]);
 
         //  Optional Scene plugins - not referenced by core systems, can be overridden with user code
 
         // game.plugins.install(scene, [ , 'test' ]);
 
-        this.data = new Data(scene);
-        this.dataStore = new DataStore(scene);
-        this.inputManager = new InputManager(scene);
-        this.load = new Loader(scene);
-        this.physicsManager = new PhysicsManager(scene);
-        this.tweens = new TweenManager(scene);
+        // this.data = new Data(scene);
+        // this.dataStore = new DataStore(scene);
+        // this.inputManager = new InputManager(scene);
+        // this.physicsManager = new PhysicsManager(scene);
+        // this.tweens = new TweenManager(scene);
 
         //  Sometimes the managers need access to a system created after them
 
         this.events.emit('boot', this);
-
-        this.inputManager.boot();
-        this.physicsManager.boot();
-
-        this.inject2();
     },
 
     inject: function (plugin)
@@ -104,21 +88,6 @@ var Systems = new Class({
         if (plugin.mapping && map.hasOwnProperty(plugin.mapping))
         {
             this.scene[plugin.mapping] = plugin;
-        }
-    },
-
-    inject2: function ()
-    {
-        var map = this.settings.map;
-
-        for (var key in map)
-        {
-            if (key === 'sys')
-            {
-                continue;
-            }
-
-            this.scene[map[key]] = this[key];
         }
     },
 
@@ -135,21 +104,21 @@ var Systems = new Class({
 
         this.events.emit('preupdate', time, delta);
 
-        this.tweens.begin(time);
-        this.inputManager.begin(time);
+        // this.tweens.begin(time);
+        // this.inputManager.begin(time);
 
         this.events.emit('update', time, delta);
 
-        this.physicsManager.update(time, delta);
+        // this.physicsManager.update(time, delta);
 
-        this.tweens.update(time, delta);
-        this.inputManager.update(time, delta);
+        // this.tweens.update(time, delta);
+        // this.inputManager.update(time, delta);
 
         this.scene.update.call(this.scene, time, delta);
 
         this.events.emit('postupdate', time, delta);
 
-        this.physicsManager.postUpdate();
+        // this.physicsManager.postUpdate();
     },
 
     render: function (interpolation, renderer)
@@ -251,8 +220,8 @@ var Systems = new Class({
         // this.displayList.shutdown();
         // this.updateList.shutdown();
         // this.time.shutdown();
-        this.tweens.shutdown();
-        this.physicsManager.shutdown();
+        // this.tweens.shutdown();
+        // this.physicsManager.shutdown();
 
         if (this.scene.shutdown)
         {
@@ -265,10 +234,10 @@ var Systems = new Class({
     {
         this.events.emit('destroy', this);
 
-        this.add.destroy();
+        // this.add.destroy();
         // this.time.destroy();
-        this.tweens.destroy();
-        this.physicsManager.destroy();
+        // this.tweens.destroy();
+        // this.physicsManager.destroy();
 
         //  etc
         if (this.scene.destroy)

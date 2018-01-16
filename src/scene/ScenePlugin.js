@@ -1,5 +1,5 @@
-var Class = require('../../utils/Class');
-var PluginManager = require('../../plugins/PluginManager');
+var Class = require('../utils/Class');
+var PluginManager = require('../plugins/PluginManager');
 
 //  A proxy class to the Global Scene Manager
 var SceneManager = new Class({
