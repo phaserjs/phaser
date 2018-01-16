@@ -17,7 +17,7 @@ var InjectionMap = {
     data: 'data',
     displayList: 'children',
     events: 'events',
-    inputManager: 'input',
+    input: 'input',
     load: 'load',
     make: 'make',
     physicsManager: 'physics',
