@@ -1,4 +1,4 @@
-var Camera = require('../../camera/2d/Camera.js');
+var Camera = require('../../cameras/2d/Camera.js');
 var CanvasPool = require('../../display/canvas/CanvasPool');
 var Class = require('../../utils/Class');
 var Commands = require('./Commands');

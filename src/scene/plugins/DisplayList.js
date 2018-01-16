@@ -1,5 +1,6 @@
 var Class = require('../../utils/Class');
 var StableSort = require('../../utils/array/StableSort');
+var PluginManager = require('../../plugins/PluginManager');
 
 var DisplayList = new Class({
 
@@ -10,6 +11,12 @@ var DisplayList = new Class({
         //  The Scene that owns this plugin
         this.scene = scene;
 
+        this.systems = scene.sys;
+
+        this.mapping = 'add';
+
+        this.systems.events.on('boot', this.boot, this);
+
         //  The objects that belong to this collection.
         //  The equivalent of the old `Sprite.children` array.
         this.list = [];
@@ -17,6 +24,14 @@ var DisplayList = new Class({
         this.sortChildrenFlag = false;
 
         this.position = 0;
+    },
+
+    boot: function ()
+    {
+        this.systems.inject(this);
+
+        this.systems.events.on('shutdown', this.shutdown, this);
+        this.systems.events.on('destroy', this.destroy, this);
     },
 
     process: function ()
@@ -371,11 +386,6 @@ var DisplayList = new Class({
         return this;
     },
 
-    shutdown: function ()
-    {
-        this.removeAll();
-    },
-
     /**
     * Brings the given child to the top of this group so it renders above all other children.
     *
@@ -621,6 +631,16 @@ var DisplayList = new Class({
         return newParent;
     },
 
+    shutdown: function ()
+    {
+        this.removeAll();
+    },
+
+    destroy: function ()
+    {
+        this.shutdown();
+    },
+
     length: {
 
         get: function ()
@@ -703,5 +723,7 @@ var DisplayList = new Class({
     }
 
 });
+
+PluginManager.register('displayList', DisplayList);
 
 module.exports = DisplayList;

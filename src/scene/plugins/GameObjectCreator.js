@@ -1,4 +1,5 @@
 var Class = require('../../utils/Class');
+var PluginManager = require('../../plugins/PluginManager');
 
 var GameObjectCreator = new Class({
 
@@ -6,16 +7,33 @@ var GameObjectCreator = new Class({
 
     function GameObjectCreator (scene)
     {
+        //  The Scene that owns this plugin
         this.scene = scene;
+
+        this.systems = scene.sys;
+
+        this.mapping = 'make';
+
+        this.systems.events.on('boot', this.boot, this);
 
         this.displayList;
         this.updateList;
     },
 
-    boot: function (sys)
+    boot: function ()
     {
-        this.displayList = sys.displayList;
-        this.updateList = sys.updateList;
+        this.systems.inject(this);
+
+        this.displayList = this.systems.displayList;
+        this.updateList = this.systems.updateList;
+
+        this.systems.events.on('shutdown', this.shutdown, this);
+        this.systems.events.on('destroy', this.destroy, this);
+    },
+
+    shutdown: function ()
+    {
+
     },
 
     destroy: function ()
@@ -36,5 +54,7 @@ GameObjectCreator.register = function (type, factoryFunction)
         GameObjectCreator.prototype[type] = factoryFunction;
     }
 };
+
+PluginManager.register('make', GameObjectCreator);
 
 module.exports = GameObjectCreator;

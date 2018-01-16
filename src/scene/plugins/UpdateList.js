@@ -1,4 +1,5 @@
 var Class = require('../../utils/Class');
+var PluginManager = require('../../plugins/PluginManager');
 
 //  TODO - Extend from ProcessQueue
 var UpdateList = new Class({
@@ -9,9 +10,25 @@ var UpdateList = new Class({
     {
         this.scene = scene;
 
+        this.systems = scene.sys;
+
+        this.mapping = 'children';
+
+        this.systems.events.on('boot', this.boot, this);
+
         this._list = [];
         this._pendingInsertion = [];
         this._pendingRemoval = [];
+    },
+
+    boot: function ()
+    {
+        this.systems.inject(this);
+
+        this.systems.events.on('preupdate', this.preUpdate, this);
+        this.systems.events.on('update', this.update, this);
+        this.systems.events.on('shutdown', this.shutdown, this);
+        this.systems.events.on('destroy', this.destroy, this);
     },
 
     add: function (child)
@@ -26,7 +43,7 @@ var UpdateList = new Class({
         return child;
     },
 
-    begin: function ()
+    preUpdate: function (time, delta)
     {
         var toRemove = this._pendingRemoval.length;
         var toInsert = this._pendingInsertion.length;
@@ -118,5 +135,7 @@ var UpdateList = new Class({
     }
 
 });
+
+PluginManager.register('updateList', UpdateList);
 
 module.exports = UpdateList;

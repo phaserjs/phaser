@@ -1,4 +1,5 @@
 var Class = require('../utils/Class');
+var PluginManager = require('../plugins/PluginManager');
 var TimerEvent = require('./TimerEvent');
 
 var Clock = new Class({
@@ -7,7 +8,14 @@ var Clock = new Class({
 
     function Clock (scene)
     {
+        //  The Scene that owns this plugin
         this.scene = scene;
+
+        this.systems = scene.sys;
+
+        this.mapping = 'time';
+
+        this.systems.events.on('boot', this.boot, this);
 
         this.now = Date.now();
 
@@ -20,6 +28,16 @@ var Clock = new Class({
         this._active = [];
         this._pendingInsertion = [];
         this._pendingRemoval = [];
+    },
+
+    boot: function ()
+    {
+        this.systems.inject(this);
+
+        this.systems.events.on('preupdate', this.preUpdate, this);
+        this.systems.events.on('update', this.update, this);
+        this.systems.events.on('shutdown', this.shutdown, this);
+        this.systems.events.on('destroy', this.destroy, this);
     },
 
     addEvent: function (config)
@@ -48,7 +66,7 @@ var Clock = new Class({
         return this;
     },
 
-    begin: function ()
+    preUpdate: function (time, delta)
     {
         var toRemove = this._pendingRemoval.length;
         var toInsert = this._pendingInsertion.length;
@@ -181,5 +199,7 @@ var Clock = new Class({
     }
 
 });
+
+PluginManager.register('time', Clock);
 
 module.exports = Clock;
