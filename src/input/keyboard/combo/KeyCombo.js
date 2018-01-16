@@ -90,7 +90,7 @@ var KeyCombo = new Class({
                 return;
             }
 
-            var matched = ProcessKeyCombo(event.data, _this);
+            var matched = ProcessKeyCombo(event, _this);
 
             if (matched)
             {
