@@ -1,21 +1,21 @@
 var BaseCache = require('./BaseCache');
 var Class = require('../utils/Class');
 
-var GlobalCache = new Class({
+var CacheManager = new Class({
 
     initialize:
 
     /**
      * [description]
      *
-     * @class GlobalCache
+     * @class CacheManager
      * @memberOf Phaser.Cache
      * @constructor
      * @since 3.0.0
      *
      * @param {Phaser.Game} game - [description]
      */
-    function GlobalCache (game)
+    function CacheManager (game)
     {
         /**
          * [description]
@@ -127,7 +127,7 @@ var GlobalCache = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Cache.GlobalCache#addCustom
+     * @method Phaser.Cache.CacheManager#addCustom
      * @since 3.0.0
      *
      * @param {string} key - [description]
@@ -146,4 +146,4 @@ var GlobalCache = new Class({
 
 });
 
-module.exports = GlobalCache;
+module.exports = CacheManager;

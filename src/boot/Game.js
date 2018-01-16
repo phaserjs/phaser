@@ -10,12 +10,12 @@ var EventEmitter = require('eventemitter3');
 var VisibilityHandler = require('./VisibilityHandler');
 
 var AnimationManager = require('../animations/AnimationManager');
+var CacheManager = require('../cache/CacheManager');
 var CreateRenderer = require('./CreateRenderer');
 var Data = require('../data/Data');
-var GlobalCache = require('../cache/GlobalCache');
 var InputManager = require('../input/InputManager');
-var GlobalSceneManager = require('../scene/global/GlobalSceneManager');
 var PluginManager = require('../plugins/PluginManager');
+var SceneManager = require('../scene/SceneManager');
 var SoundManagerCreator = require('../sound/SoundManagerCreator');
 var TextureManager = require('../textures/TextureManager');
 var TimeStep = require('./TimeStep');
@@ -102,9 +102,9 @@ var Game = new Class({
         /**
          * [description]
          *
-         * @property {Phaser.Cache.GlobalCache} cache
+         * @property {Phaser.Cache.CacheManager} cache
          */
-        this.cache = new GlobalCache(this);
+        this.cache = new CacheManager(this);
 
         /**
          * [description]
@@ -123,9 +123,9 @@ var Game = new Class({
         /**
          * [description]
          *
-         * @property {Phaser.Scenes.GlobalSceneManager} scene
+         * @property {Phaser.Scenes.SceneManager} scene
          */
-        this.scene = new GlobalSceneManager(this, this.config.sceneConfig);
+        this.scene = new SceneManager(this, this.config.sceneConfig);
 
         /**
          * [description]
