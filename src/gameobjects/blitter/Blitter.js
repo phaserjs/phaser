@@ -2,7 +2,7 @@ var BlitterRender = require('./BlitterRender');
 var Bob = require('./Bob');
 var Class = require('../../utils/Class');
 var Components = require('../components');
-var DisplayList = require('../../scene/plugins/DisplayList');
+var DisplayList = require('../DisplayList');
 var GameObject = require('../GameObject');
 
 /**

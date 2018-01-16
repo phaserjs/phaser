@@ -11,7 +11,7 @@ var UpdateList = new Class({
 
         this.systems = scene.sys;
 
-        this.mapping = 'children';
+        this.mapping = null;
 
         this.systems.events.on('boot', this.boot, this);
 

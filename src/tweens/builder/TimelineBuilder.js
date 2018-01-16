@@ -7,7 +7,7 @@ var GetTargets = require('./GetTargets');
 var GetTweens = require('./GetTweens');
 var GetValue = require('../../utils/object/GetValue');
 var GetAdvancedValue = require('../../utils/object/GetAdvancedValue');
-var Timeline = require('../timeline/Timeline');
+var Timeline = require('../Timeline');
 var TweenBuilder = require('./TweenBuilder');
 
 //  Phaser.Tweens.TimelineBuilder

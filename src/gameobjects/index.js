@@ -2,6 +2,11 @@
 
 var GameObjects = {
 
+    DisplayList: require('./DisplayList'),
+    UpdateList: require('./UpdateList'),
+    GameObjectCreator: require('./GameObjectCreator'),
+    GameObjectFactory: require('./GameObjectFactory'),
+
     Components: require('./components'),
 
     BitmapText: require('./bitmaptext/static/BitmapText'),

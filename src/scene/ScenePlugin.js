@@ -32,11 +32,12 @@ var SceneManager = new Class({
     {
         this.systems.inject(this);
 
+        this.systems.events.on('preupdate', this.preUpdate, this);
         this.systems.events.on('shutdown', this.shutdown, this);
         this.systems.events.on('destroy', this.destroy, this);
     },
 
-    update: function ()
+    preUpdate: function ()
     {
         var len = this._queue.length;
 

@@ -1,6 +1,6 @@
 var BuildGameObject = require('../BuildGameObject');
 var EffectLayer = require('./EffectLayer');
-var GameObjectCreator = require('../../scene/plugins/GameObjectCreator');
+var GameObjectCreator = require('../GameObjectCreator');
 var GetAdvancedValue = require('../../utils/object/GetAdvancedValue');
 
 //  When registering a factory function 'this' refers to the GameObjectCreator context.

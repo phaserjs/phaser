@@ -12,7 +12,7 @@ var GameObjectFactory = new Class({
 
         this.systems = scene.sys;
 
-        this.mapping = 'time';
+        this.mapping = 'add';
 
         this.systems.events.on('boot', this.boot, this);
 

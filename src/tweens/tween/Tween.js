@@ -1,6 +1,6 @@
 var Class = require('../../utils/Class');
-var GameObjectCreator = require('../../scene/plugins/GameObjectCreator');
-var GameObjectFactory = require('../../scene/plugins/GameObjectFactory');
+var GameObjectCreator = require('../../gameobjects/GameObjectCreator');
+var GameObjectFactory = require('../../gameobjects/GameObjectFactory');
 var TWEEN_CONST = require('./const');
 
 //  Phaser.Tweens.Tween

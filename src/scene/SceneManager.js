@@ -4,8 +4,8 @@ var Class = require('../utils/Class');
 var CONST = require('../const');
 var GetValue = require('../utils/object/GetValue');
 var NOOP = require('../utils/NOOP');
-var Scene = require('./local/Scene');
-var Systems = require('./local/Systems');
+var Scene = require('./Scene');
+var Systems = require('./Systems');
 
 var SceneManager = new Class({
 

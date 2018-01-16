@@ -1,12 +1,9 @@
 var Class = require('../../utils/Class');
 var Components = require('../components');
 var DataProxy = require('../components/DataProxy');
-var DisplayList = require('../../scene/plugins/DisplayList');
 var TransformMatrix = require('../components/TransformMatrix');
 
 var Container = new Class({
-
-    // Extends: DisplayList,
 
     // Mixins: [
     //     Components.Visible,
@@ -17,9 +14,6 @@ var Container = new Class({
 
     function Container (scene, x, y)
     {
-        //  this.list = children
-        // DisplayList.call(this, scene);
-
         this.scene = scene;
 
         this.type = 'Container';

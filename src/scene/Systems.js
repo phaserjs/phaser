@@ -1,10 +1,10 @@
 var Class = require('../utils/Class');
 var Settings = require('./Settings');
 var EventEmitter = require('eventemitter3');
+var ScenePlugin = require('./ScenePlugin');
 
 // var Data = require('../../data/Data');
 // var DataStore = require('../../data/DataStore');
-// var InputManager = require('../../input/InputPlugin');
 // var PhysicsManager = require('../plugins/PhysicsManager');
 
 var Systems = new Class({
@@ -21,7 +21,7 @@ var Systems = new Class({
 
         this.settings = Settings.create(config);
 
-        //  Set by the GlobalSceneManager - a reference to the Scene canvas / context
+        //  Set by the SceneManager - a reference to the Scene canvas / context
 
         this.canvas;
         this.context;
@@ -64,19 +64,16 @@ var Systems = new Class({
 
         this.events = new EventEmitter();
 
-        game.plugins.install(scene, [ 'displayList', 'updateList', 'sceneManager', 'time', 'cameras', 'add', 'make', 'load', 'tweens' ]);
+        game.plugins.install(scene,
+            [ 'anims', 'cache', 'registry', 'sound', 'textures' ],
+            [ 'displayList', 'updateList', 'sceneManager', 'time', 'cameras', 'add', 'make', 'load', 'tweens', 'input' ]
+        );
 
         //  Optional Scene plugins - not referenced by core systems, can be overridden with user code
 
-        // game.plugins.install(scene, [ , 'test' ]);
-
         // this.data = new Data(scene);
         // this.dataStore = new DataStore(scene);
-        // this.inputManager = new InputManager(scene);
         // this.physicsManager = new PhysicsManager(scene);
-        // this.tweens = new TweenManager(scene);
-
-        //  Sometimes the managers need access to a system created after them
 
         this.events.emit('boot', this);
     },
@@ -93,26 +90,16 @@ var Systems = new Class({
 
     step: function (time, delta)
     {
-        //  Are there any pending SceneManager actions?
-        //  This plugin is a special case, as it can literally modify this Scene, so we update it directly.
-        this.sceneManager.update();
+        this.events.emit('preupdate', time, delta);
 
         if (!this.settings.active)
         {
             return;
         }
 
-        this.events.emit('preupdate', time, delta);
-
-        // this.tweens.begin(time);
-        // this.inputManager.begin(time);
-
         this.events.emit('update', time, delta);
 
         // this.physicsManager.update(time, delta);
-
-        // this.tweens.update(time, delta);
-        // this.inputManager.update(time, delta);
 
         this.scene.update.call(this.scene, time, delta);
 
@@ -150,7 +137,7 @@ var Systems = new Class({
     //  A paused Scene still renders, it just doesn't run ANY of its update handlers or systems
     pause: function ()
     {
-        //  Was paused by the GlobalSceneManager
+        //  Was paused by the SceneManager
 
         this.settings.active = false;
 
@@ -162,7 +149,7 @@ var Systems = new Class({
 
     resume: function ()
     {
-        //  Was resumed by the GlobalSceneManager
+        //  Was resumed by the SceneManager
 
         this.settings.active = true;
 
@@ -174,7 +161,7 @@ var Systems = new Class({
 
     sleep: function ()
     {
-        //  Was sent to sleep by the GlobalSceneManager
+        //  Was sent to sleep by the SceneManager
 
         this.settings.active = false;
         this.settings.visible = false;
@@ -187,7 +174,7 @@ var Systems = new Class({
 
     wake: function ()
     {
-        //  Was woken up by the GlobalSceneManager
+        //  Was woken up by the SceneManager
 
         this.settings.active = true;
         this.settings.visible = true;
@@ -200,7 +187,7 @@ var Systems = new Class({
 
     start: function (data)
     {
-        //  Was started by the GlobalSceneManager
+        //  Was started by the SceneManager
 
         this.settings.data = data;
 
@@ -210,18 +197,12 @@ var Systems = new Class({
 
     shutdown: function ()
     {
-        //  Was stopped by the GlobalSceneManager
+        //  Was stopped by the SceneManager
 
         this.settings.active = false;
         this.settings.visible = false;
 
         this.events.emit('shutdown', this);
-
-        // this.displayList.shutdown();
-        // this.updateList.shutdown();
-        // this.time.shutdown();
-        // this.tweens.shutdown();
-        // this.physicsManager.shutdown();
 
         if (this.scene.shutdown)
         {
@@ -229,17 +210,10 @@ var Systems = new Class({
         }
     },
 
-    //  TODO: Game level nuke
     destroy: function ()
     {
         this.events.emit('destroy', this);
 
-        // this.add.destroy();
-        // this.time.destroy();
-        // this.tweens.destroy();
-        // this.physicsManager.destroy();
-
-        //  etc
         if (this.scene.destroy)
         {
             this.scene.destroy.call(this.scene);

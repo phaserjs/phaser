@@ -10,6 +10,7 @@ var Rectangle = require('../geom/rectangle/Rectangle');
 var RectangleContains = require('../geom/rectangle/Contains');
 var Triangle = require('../geom/triangle/Triangle');
 var TriangleContains = require('../geom/triangle/Contains');
+var PluginManager = require('../plugins/PluginManager');
 
 //  Drag Events
 //  https://developer.mozilla.org/en-US/docs/Web/API/HTML_Drag_and_Drop_API
@@ -28,6 +29,12 @@ var InputPlugin = new Class({
 
         //  The Scene that owns this plugin
         this.scene = scene;
+
+        this.systems = scene.sys;
+
+        this.mapping = 'input';
+
+        this.systems.events.on('boot', this.boot, this);
 
         //  InputManager
         this.manager = scene.sys.game.input;
@@ -87,36 +94,21 @@ var InputPlugin = new Class({
         this._validTypes = [ 'onDown', 'onUp', 'onOver', 'onOut', 'onMove', 'onDragStart', 'onDrag', 'onDragEnd', 'onDragEnter', 'onDragLeave', 'onDragOver', 'onDrop' ];
     },
 
-    activePointer: {
+    boot: function ()
+    {
+        this.systems.inject(this);
 
-        get: function ()
-        {
-            return this.manager.activePointer;
-        }
+        this.systems.events.on('preupdate', this.preUpdate, this);
+        this.systems.events.on('update', this.update, this);
+        this.systems.events.on('shutdown', this.shutdown, this);
+        this.systems.events.on('destroy', this.destroy, this);
 
+        this.cameras = this.systems.cameras;
+
+        this.displayList = this.systems.displayList;
     },
 
-    //  The x/y coordinates of the ActivePointer based on the first camera in the camera list.
-    //  This is only safe to use if your game has just 1 non-transformed camera and doesn't use multi-touch.
-    x: {
-
-        get: function ()
-        {
-            return this.manager.activePointer.x;
-        }
-
-    },
-
-    y: {
-
-        get: function ()
-        {
-            return this.manager.activePointer.y;
-        }
-
-    },
-
-    begin: function ()
+    preUpdate: function ()
     {
         var removeList = this._pendingRemoval;
         var insertList = this._pendingInsertion;
@@ -154,13 +146,6 @@ var InputPlugin = new Class({
 
         //  Move pendingInsertion to list (also clears pendingInsertion at the same time)
         this._list = current.concat(insertList.splice(0));
-    },
-
-    boot: function ()
-    {
-        this.cameras = this.scene.sys.cameras;
-
-        this.displayList = this.scene.sys.displayList;
     },
 
     clear: function (gameObject)
@@ -988,8 +973,39 @@ var InputPlugin = new Class({
         this.keyboard = undefined;
         this.mouse = undefined;
         this.gamepad = undefined;
-    }
+    },
+
+    activePointer: {
+
+        get: function ()
+        {
+            return this.manager.activePointer;
+        }
+
+    },
+
+    //  The x/y coordinates of the ActivePointer based on the first camera in the camera list.
+    //  This is only safe to use if your game has just 1 non-transformed camera and doesn't use multi-touch.
+    x: {
+
+        get: function ()
+        {
+            return this.manager.activePointer.x;
+        }
+
+    },
+
+    y: {
+
+        get: function ()
+        {
+            return this.manager.activePointer.y;
+        }
+
+    },
 
 });
+
+PluginManager.register('input', InputPlugin);
 
 module.exports = InputPlugin;
