@@ -13,7 +13,7 @@ var AnimationManager = require('../animations/AnimationManager');
 var CreateRenderer = require('./CreateRenderer');
 var Data = require('../data/Data');
 var GlobalCache = require('../cache/GlobalCache');
-var GlobalInputManager = require('../input/GlobalInputManager');
+var InputManager = require('../input/InputManager');
 var GlobalSceneManager = require('../scene/global/GlobalSceneManager');
 var PluginManager = require('../plugins/PluginManager');
 var SoundManagerCreator = require('../sound/SoundManagerCreator');
@@ -116,9 +116,9 @@ var Game = new Class({
         /**
          * [description]
          *
-         * @property {Phaser.Input.GlobalInputManager} input
+         * @property {Phaser.Input.InputManager} input
          */
-        this.input = new GlobalInputManager(this, this.config);
+        this.input = new InputManager(this, this.config);
 
         /**
          * [description]
@@ -151,7 +151,7 @@ var Game = new Class({
         /**
          * [description]
          *
-         * @property {Phaser.Input.GlobalInputManager} input
+         * @property {Phaser.Plugins.PluginManager} plugins
          */
         this.plugins = new PluginManager(this, this.config);
 

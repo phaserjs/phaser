@@ -1,4 +1,4 @@
-//  Phaser.Input.GlobalInputManager
+//  Phaser.Input.InputManager
 
 var Class = require('../utils/Class');
 var EventEmitter = require('eventemitter3');
@@ -9,11 +9,11 @@ var Pointer = require('./Pointer');
 var Touch = require('./touch/TouchManager');
 var TransformXY = require('../math/TransformXY');
 
-var GlobalInputManager = new Class({
+var InputManager = new Class({
 
     initialize:
 
-    function GlobalInputManager (game, config)
+    function InputManager (game, config)
     {
         this.game = game;
 
@@ -278,4 +278,4 @@ var GlobalInputManager = new Class({
 
 });
 
-module.exports = GlobalInputManager;
+module.exports = InputManager;

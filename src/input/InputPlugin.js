@@ -1,35 +1,35 @@
-var Class = require('../../utils/Class');
+var Class = require('../utils/Class');
 var EventEmitter = require('eventemitter3');
-var DistanceBetween = require('../../math/distance/DistanceBetween');
-var InteractiveObject = require('../InteractiveObject');
-var Circle = require('../../geom/circle/Circle');
-var CircleContains = require('../../geom/circle/Contains');
-var Ellipse = require('../../geom/ellipse/Ellipse');
-var EllipseContains = require('../../geom/ellipse/Contains');
-var Rectangle = require('../../geom/rectangle/Rectangle');
-var RectangleContains = require('../../geom/rectangle/Contains');
-var Triangle = require('../../geom/triangle/Triangle');
-var TriangleContains = require('../../geom/triangle/Contains');
+var DistanceBetween = require('../math/distance/DistanceBetween');
+var InteractiveObject = require('./InteractiveObject');
+var Circle = require('../geom/circle/Circle');
+var CircleContains = require('../geom/circle/Contains');
+var Ellipse = require('../geom/ellipse/Ellipse');
+var EllipseContains = require('../geom/ellipse/Contains');
+var Rectangle = require('../geom/rectangle/Rectangle');
+var RectangleContains = require('../geom/rectangle/Contains');
+var Triangle = require('../geom/triangle/Triangle');
+var TriangleContains = require('../geom/triangle/Contains');
 
 //  Drag Events
 //  https://developer.mozilla.org/en-US/docs/Web/API/HTML_Drag_and_Drop_API
 //  Mouse Events
 //  https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent
 
-var SceneInputManager = new Class({
+var InputPlugin = new Class({
 
     Extends: EventEmitter,
 
     initialize:
 
-    function SceneInputManager (scene)
+    function InputPlugin (scene)
     {
         EventEmitter.call(this);
 
         //  The Scene that owns this plugin
         this.scene = scene;
 
-        //  GlobalInputManager
+        //  InputManager
         this.manager = scene.sys.game.input;
 
         //  A reference to this.scene.sys.displayList (set in boot)
@@ -992,4 +992,4 @@ var SceneInputManager = new Class({
 
 });
 
-module.exports = SceneInputManager;
+module.exports = InputPlugin;
