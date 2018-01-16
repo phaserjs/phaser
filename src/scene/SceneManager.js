@@ -1,17 +1,17 @@
-var CanvasInterpolation = require('../../display/canvas/CanvasInterpolation');
-var CanvasPool = require('../../display/canvas/CanvasPool');
-var Class = require('../../utils/Class');
-var CONST = require('../../const');
-var GetValue = require('../../utils/object/GetValue');
-var NOOP = require('../../utils/NOOP');
-var Scene = require('../local/Scene');
-var Systems = require('../local/Systems');
+var CanvasInterpolation = require('../display/canvas/CanvasInterpolation');
+var CanvasPool = require('../display/canvas/CanvasPool');
+var Class = require('../utils/Class');
+var CONST = require('../const');
+var GetValue = require('../utils/object/GetValue');
+var NOOP = require('../utils/NOOP');
+var Scene = require('./local/Scene');
+var Systems = require('./local/Systems');
 
-var GlobalSceneManager = new Class({
+var SceneManager = new Class({
 
     initialize:
 
-    function GlobalSceneManager (game, sceneConfig)
+    function SceneManager (game, sceneConfig)
     {
         this.game = game;
 
@@ -72,7 +72,7 @@ var GlobalSceneManager = new Class({
      *
      * If a function is given then a new Scene will be created by calling it.
      *
-     * @method Phaser.Scenes.GlobalSceneManager#add
+     * @method Phaser.Scenes.SceneManager#add
      * @since 3.0.0
      *
      * @param {string} key - A unique key used to reference the Scene, i.e. `MainMenu` or `Level1`.
@@ -143,7 +143,7 @@ var GlobalSceneManager = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Scenes.GlobalSceneManager#boot
+     * @method Phaser.Scenes.SceneManager#boot
      * @since 3.0.0
      */
     boot: function ()
@@ -173,7 +173,7 @@ var GlobalSceneManager = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Scenes.GlobalSceneManager#bootScene
+     * @method Phaser.Scenes.SceneManager#bootScene
      * @since 3.0.0
      *
      * @param {Phaser.Scene} scene - [description]
@@ -220,7 +220,7 @@ var GlobalSceneManager = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Scenes.GlobalSceneManager#bringToTop
+     * @method Phaser.Scenes.SceneManager#bringToTop
      * @since 3.0.0
      *
      * @param {string|Phaser.Scene} scene - [description]
@@ -246,7 +246,7 @@ var GlobalSceneManager = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Scenes.GlobalSceneManager#create
+     * @method Phaser.Scenes.SceneManager#create
      * @since 3.0.0
      *
      * @param {Phaser.Scene} scene - [description]
@@ -271,7 +271,7 @@ var GlobalSceneManager = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Scenes.GlobalSceneManager#createSceneDisplay
+     * @method Phaser.Scenes.SceneManager#createSceneDisplay
      * @since 3.0.0
      *
      * @param {Phaser.Scene} scene - [description]
@@ -309,7 +309,7 @@ var GlobalSceneManager = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Scenes.GlobalSceneManager#createSceneFromFunction
+     * @method Phaser.Scenes.SceneManager#createSceneFromFunction
      * @since 3.0.0
      *
      * @param {string} key - [description]
@@ -386,7 +386,7 @@ var GlobalSceneManager = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Scenes.GlobalSceneManager#createSceneFromInstance
+     * @method Phaser.Scenes.SceneManager#createSceneFromInstance
      * @since 3.0.0
      *
      * @param {string} key - [description]
@@ -417,7 +417,7 @@ var GlobalSceneManager = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Scenes.GlobalSceneManager#createSceneFromObject
+     * @method Phaser.Scenes.SceneManager#createSceneFromObject
      * @since 3.0.0
      *
      * @param {string} key - [description]
@@ -484,7 +484,7 @@ var GlobalSceneManager = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Scenes.GlobalSceneManager#getActiveScene
+     * @method Phaser.Scenes.SceneManager#getActiveScene
      * @since 3.0.0
      *
      * @param {string} key - [description]
@@ -507,7 +507,7 @@ var GlobalSceneManager = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Scenes.GlobalSceneManager#getActiveSceneIndex
+     * @method Phaser.Scenes.SceneManager#getActiveSceneIndex
      * @since 3.0.0
      *
      * @param {Phaser.Scene} scene - [description]
@@ -530,7 +530,7 @@ var GlobalSceneManager = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Scenes.GlobalSceneManager#getActiveSceneIndexByKey
+     * @method Phaser.Scenes.SceneManager#getActiveSceneIndexByKey
      * @since 3.0.0
      *
      * @param {string} key - [description]
@@ -555,7 +555,7 @@ var GlobalSceneManager = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Scenes.GlobalSceneManager#getKey
+     * @method Phaser.Scenes.SceneManager#getKey
      * @since 3.0.0
      *
      * @param {string} key - [description]
@@ -595,7 +595,7 @@ var GlobalSceneManager = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Scenes.GlobalSceneManager#getScene
+     * @method Phaser.Scenes.SceneManager#getScene
      * @since 3.0.0
      *
      * @param {string} key - [description]
@@ -612,7 +612,7 @@ var GlobalSceneManager = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Scenes.GlobalSceneManager#getSceneAt
+     * @method Phaser.Scenes.SceneManager#getSceneAt
      * @since 3.0.0
      *
      * @param {integer} index - [description]
@@ -630,7 +630,7 @@ var GlobalSceneManager = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Scenes.GlobalSceneManager#getSceneIndex
+     * @method Phaser.Scenes.SceneManager#getSceneIndex
      * @since 3.0.0
      *
      * @param {Phaser.Scene} scene - [description]
@@ -645,7 +645,7 @@ var GlobalSceneManager = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Scenes.GlobalSceneManager#getSceneIndexByKey
+     * @method Phaser.Scenes.SceneManager#getSceneIndexByKey
      * @since 3.0.0
      *
      * @param {string} key - [description]
@@ -662,7 +662,7 @@ var GlobalSceneManager = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Scenes.GlobalSceneManager#isActive
+     * @method Phaser.Scenes.SceneManager#isActive
      * @since 3.0.0
      *
      * @param {string} key - [description]
@@ -679,7 +679,7 @@ var GlobalSceneManager = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Scenes.GlobalSceneManager#isSleeping
+     * @method Phaser.Scenes.SceneManager#isSleeping
      * @since 3.0.0
      *
      * @param {string} key - [description]
@@ -701,7 +701,7 @@ var GlobalSceneManager = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Scenes.GlobalSceneManager#loadComplete
+     * @method Phaser.Scenes.SceneManager#loadComplete
      * @since 3.0.0
      *
      * @param {object} event - [description]
@@ -719,7 +719,7 @@ var GlobalSceneManager = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Scenes.GlobalSceneManager#moveDown
+     * @method Phaser.Scenes.SceneManager#moveDown
      * @since 3.0.0
      *
      * @param {string|Phaser.Scene} scene - [description]
@@ -745,7 +745,7 @@ var GlobalSceneManager = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Scenes.GlobalSceneManager#moveUp
+     * @method Phaser.Scenes.SceneManager#moveUp
      * @since 3.0.0
      *
      * @param {string|Phaser.Scene} scene - [description]
@@ -768,7 +768,7 @@ var GlobalSceneManager = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Scenes.GlobalSceneManager#pause
+     * @method Phaser.Scenes.SceneManager#pause
      * @since 3.0.0
      *
      * @param {string} key - [description]
@@ -786,7 +786,7 @@ var GlobalSceneManager = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Scenes.GlobalSceneManager#payloadComplete
+     * @method Phaser.Scenes.SceneManager#payloadComplete
      * @since 3.0.0
      *
      * @param {object} event - [description]
@@ -801,7 +801,7 @@ var GlobalSceneManager = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Scenes.GlobalSceneManager#resume
+     * @method Phaser.Scenes.SceneManager#resume
      * @since 3.0.0
      *
      * @param {string} key - [description]
@@ -822,7 +822,7 @@ var GlobalSceneManager = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Scenes.GlobalSceneManager#sendToBack
+     * @method Phaser.Scenes.SceneManager#sendToBack
      * @since 3.0.0
      *
      * @param {string|Phaser.Scene} scene - [description]
@@ -847,7 +847,7 @@ var GlobalSceneManager = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Scenes.GlobalSceneManager#sleep
+     * @method Phaser.Scenes.SceneManager#sleep
      * @since 3.0.0
      *
      * @param {string} key - [description]
@@ -865,7 +865,7 @@ var GlobalSceneManager = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Scenes.GlobalSceneManager#sortScenes
+     * @method Phaser.Scenes.SceneManager#sortScenes
      * @since 3.0.0
      *
      * @param {object} sceneA - [description]
@@ -893,7 +893,7 @@ var GlobalSceneManager = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Scenes.GlobalSceneManager#start
+     * @method Phaser.Scenes.SceneManager#start
      * @since 3.0.0
      *
      * @param {string} key - [description]
@@ -960,7 +960,7 @@ var GlobalSceneManager = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Scenes.GlobalSceneManager#stop
+     * @method Phaser.Scenes.SceneManager#stop
      * @since 3.0.0
      *
      * @param {string} key - [description]
@@ -988,7 +988,7 @@ var GlobalSceneManager = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Scenes.GlobalSceneManager#swap
+     * @method Phaser.Scenes.SceneManager#swap
      * @since 3.0.0
      *
      * @param {string} from - [description]
@@ -1014,7 +1014,7 @@ var GlobalSceneManager = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Scenes.GlobalSceneManager#swapPosition
+     * @method Phaser.Scenes.SceneManager#swapPosition
      * @since 3.0.0
      *
      * @param {string|Phaser.Scene} scene1 - [description]
@@ -1042,7 +1042,7 @@ var GlobalSceneManager = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Scenes.GlobalSceneManager#wake
+     * @method Phaser.Scenes.SceneManager#wake
      * @since 3.0.0
      *
      * @param {string} key - [description]
@@ -1059,4 +1059,4 @@ var GlobalSceneManager = new Class({
 
 });
 
-module.exports = GlobalSceneManager;
+module.exports = SceneManager;
