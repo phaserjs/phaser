@@ -16,11 +16,15 @@ var dirvec = new Vector3();
 var rightvec = new Vector3();
 var billboardMatrix = new Matrix4();
 
-var Camera3D = new Class({
+//  @author attribute https://github.com/mattdesl/cam3d/wiki
+
+//  Phaser.Cameras.Sprite3D.Camera
+
+var Camera = new Class({
 
     initialize:
 
-    function Camera3D (scene)
+    function Camera (scene)
     {
         this.scene = scene;
 
@@ -335,8 +339,8 @@ var Camera3D = new Class({
         //  TODO: support viewport XY
         var viewportWidth = this.viewportWidth;
         var viewportHeight = this.viewportHeight;
-        var n = Camera3D.NEAR_RANGE;
-        var f = Camera3D.FAR_RANGE;
+        var n = Camera.NEAR_RANGE;
+        var f = Camera.FAR_RANGE;
 
         //  For useful Z and W values we should do the usual steps: clip space -> NDC -> window coords
 
@@ -577,7 +581,7 @@ var Camera3D = new Class({
 
 });
 
-Camera3D.FAR_RANGE = 1.0;
-Camera3D.NEAR_RANGE = 0.0;
+Camera.FAR_RANGE = 1.0;
+Camera.NEAR_RANGE = 0.0;
 
-module.exports = Camera3D;
+module.exports = Camera;

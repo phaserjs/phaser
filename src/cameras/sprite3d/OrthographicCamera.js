@@ -1,15 +1,15 @@
-var Camera3D = require('./Camera3D');
+var Camera = require('./Camera');
 var Class = require('../../utils/Class');
-var Matrix4 = require('../../math/Matrix4');
 var Vector3 = require('../../math/Vector3');
-var Vector4 = require('../../math/Vector4');
 
 //  Local cache vars
 var tmpVec3 = new Vector3();
 
+//  Phaser.Cameras.Sprite3D.OrthographicCamera
+
 var OrthographicCamera = new Class({
 
-    Extends: Camera3D,
+    Extends: Camera,
 
     initialize:
 
@@ -18,7 +18,7 @@ var OrthographicCamera = new Class({
         if (viewportWidth === undefined) { viewportWidth = 0; }
         if (viewportHeight === undefined) { viewportHeight = 0; }
 
-        Camera3D.call(this, scene);
+        Camera.call(this, scene);
 
         this.viewportWidth = viewportWidth;
         this.viewportHeight = viewportHeight;
@@ -49,7 +49,6 @@ var OrthographicCamera = new Class({
 
     update: function ()
     {
-        //TODO: support x/y offset
         var w = this.viewportWidth;
         var h = this.viewportHeight;
         var near = Math.abs(this.near);

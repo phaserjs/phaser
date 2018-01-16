@@ -1,4 +1,4 @@
-var CameraManager = require('../../camera/local/CameraManager');
+// var CameraManager = require('../../camera/local/CameraManager');
 var Class = require('../../utils/Class');
 var Clock = require('../../time/Clock');
 var Data = require('../../data/Data');

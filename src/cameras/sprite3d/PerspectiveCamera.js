@@ -1,13 +1,15 @@
-var Camera3D = require('./Camera3D');
+var Camera = require('./Camera');
 var Class = require('../../utils/Class');
 var Vector3 = require('../../math/Vector3');
 
 //  Local cache vars
 var tmpVec3 = new Vector3();
 
+//  Phaser.Cameras.Sprite3D.PerspectiveCamera
+
 var PerspectiveCamera = new Class({
 
-    Extends: Camera3D,
+    Extends: Camera,
 
     //  FOV is converted to radians automatically
     initialize:
@@ -18,7 +20,7 @@ var PerspectiveCamera = new Class({
         if (viewportWidth === undefined) { viewportWidth = 0; }
         if (viewportHeight === undefined) { viewportHeight = 0; }
 
-        Camera3D.call(this, scene);
+        Camera.call(this, scene);
 
         this.viewportWidth = viewportWidth;
         this.viewportHeight = viewportHeight;

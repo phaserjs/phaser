@@ -11,7 +11,7 @@ var Phaser = {
 
     Create: require('./create/'),
 
-    Cameras: require('./camera/'),
+    Cameras: require('./cameras/'),
 
     DOM: require('./dom/'),
 

@@ -1,5 +1,5 @@
-var Class = require('../../utils/Class');
-var GetValue = require('../../utils/object/GetValue');
+var Class = require('../../../utils/Class');
+var GetValue = require('../../../utils/object/GetValue');
 
 // var controlConfig = {
 //     camera: this.cameras.main,
@@ -14,6 +14,8 @@ var GetValue = require('../../utils/object/GetValue');
 //     drag: 0.0005,
 //     maxSpeed: 1.0
 // };
+
+//  Phaser.Cameras.Scene2D.Controls.SmoothedKeyControl
 
 var SmoothedKeyControl = new Class({
 

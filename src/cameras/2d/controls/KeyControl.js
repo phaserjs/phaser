@@ -1,5 +1,5 @@
-var Class = require('../../utils/Class');
-var GetValue = require('../../utils/object/GetValue');
+var Class = require('../../../utils/Class');
+var GetValue = require('../../../utils/object/GetValue');
 
 //  var camControl = new CameraControl({
 //      camera: this.cameras.main,
@@ -7,6 +7,8 @@ var GetValue = require('../../utils/object/GetValue');
 //      right: cursors.right,
 //      speed: float OR { x: 0, y: 0 }
 //  })
+
+//  Phaser.Cameras.Scene2D.Controls.KeyControl
 
 var KeyControl = new Class({
 
