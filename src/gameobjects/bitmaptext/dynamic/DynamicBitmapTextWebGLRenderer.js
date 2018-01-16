@@ -1,5 +1,6 @@
 var GameObject = require('../../GameObject');
 var TransformMatrix = require('../../components/TransformMatrix');
+var Utils = require('../../../renderer/webgl/Utils');
 var tempMatrix = new TransformMatrix();
 var tempMatrixChar = new TransformMatrix();
 
@@ -13,21 +14,21 @@ var DynamicBitmapTextWebGLRenderer = function (renderer, gameObject, interpolati
         return;
     }
 
+    var spriteRenderer = renderer.spriteRenderer;
     var displayCallback = gameObject.displayCallback;
     var textureFrame = gameObject.frame;
     var cameraScrollX = camera.scrollX * gameObject.scrollFactorX;
     var cameraScrollY = camera.scrollY * gameObject.scrollFactorY;
     var chars = gameObject.fontData.chars;
     var lineHeight = gameObject.fontData.lineHeight;
-    var spriteBatch = renderer.spriteBatch;
+    var getTint = Utils.getTintAppendFloatAlpha;
     var alpha = gameObject.alpha;
-    var tintTL = gameObject._tintTL;
-    var tintTR = gameObject._tintTR;
-    var tintBL = gameObject._tintBL;
-    var tintBR = gameObject._tintBR;
-    var vertexDataBuffer = spriteBatch.vertexDataBuffer;
-    var vertexBuffer = vertexDataBuffer.floatView;
-    var vertexBufferU32 = vertexDataBuffer.uintView;
+    var tintTL = getTint(gameObject._tintTL, alpha);
+    var tintTR = getTint(gameObject._tintTR, alpha);
+    var tintBL = getTint(gameObject._tintBL, alpha);
+    var tintBR = getTint(gameObject._tintBR, alpha);
+    var vertexViewF32 = spriteRenderer.vertexViewF32;
+    var vertexViewU32 = spriteRenderer.vertexViewU32;
     var vertexOffset = 0;
     var textureData = gameObject.texture.source[textureFrame.sourceIndex];
     var textureX = textureFrame.cutX;
@@ -57,48 +58,46 @@ var DynamicBitmapTextWebGLRenderer = function (renderer, gameObject, interpolati
     var lastCharCode = 0;
     var tempMatrixMatrix = tempMatrix.matrix;
     var cameraMatrix = camera.matrix.matrix;
-    var mva, mvb, mvc, mvd, mve, mvf, tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3;
-    var sra, srb, src, srd, sre, srf, cma, cmb, cmc, cmd, cme, cmf;
     var scale = (gameObject.fontSize / gameObject.fontData.size);
     var uta, utb, utc, utd, ute, utf;
     var tempMatrixCharMatrix = tempMatrixChar.matrix;
     var renderTarget = gameObject.renderTarget;
-
-    tempMatrix.applyITRS(
-        gameObject.x - cameraScrollX, gameObject.y - cameraScrollY,
-        -gameObject.rotation,
-        gameObject.scaleX, gameObject.scaleY
-    );
-
-    sra = tempMatrixMatrix[0];
-    srb = tempMatrixMatrix[1];
-    src = tempMatrixMatrix[2];
-    srd = tempMatrixMatrix[3];
-    sre = tempMatrixMatrix[4];
-    srf = tempMatrixMatrix[5];
-
-    cma = cameraMatrix[0];
-    cmb = cameraMatrix[1];
-    cmc = cameraMatrix[2];
-    cmd = cameraMatrix[3];
-    cme = cameraMatrix[4];
-    cmf = cameraMatrix[5];
-
-    mva = sra * cma + srb * cmc;
-    mvb = sra * cmb + srb * cmd;
-    mvc = src * cma + srd * cmc;
-    mvd = src * cmb + srd * cmd;
-    mve = sre * cma + srf * cmc + cme;
-    mvf = sre * cmb + srf * cmd + cmf;
-
+    var sr = Math.sin(-gameObject.rotation);
+    var cr = Math.cos(-gameObject.rotation);
+    var sra = cr * gameObject.scaleX;
+    var srb = -sr * gameObject.scaleX;
+    var src = sr * gameObject.scaleY;
+    var srd = cr * gameObject.scaleY;
+    var sre = gameObject.x - cameraScrollX;
+    var srf = gameObject.y - cameraScrollY;
+    var cma = cameraMatrix[0];
+    var cmb = cameraMatrix[1];
+    var cmc = cameraMatrix[2];
+    var cmd = cameraMatrix[3];
+    var cme = cameraMatrix[4];
+    var cmf = cameraMatrix[5];
+    var mva = sra * cma + srb * cmc;
+    var mvb = sra * cmb + srb * cmd;
+    var mvc = src * cma + srd * cmc;
+    var mvd = src * cmb + srd * cmd;
+    var mve = sre * cma + srf * cmc + cme;
+    var mvf = sre * cmb + srf * cmd + cmf;
     var gl = renderer.gl;
+    var shader = null;
+
+    renderer.setPipeline(spriteRenderer);
+    spriteRenderer.beginPass(gameObject.shader, gameObject.renderTarget);
+    renderer.setTexture(texture, 0);
+    shader = spriteRenderer.currentProgram;
+
+    spriteRenderer.orthoViewMatrix[0] = +2.0 / spriteRenderer.width;
+    spriteRenderer.orthoViewMatrix[5] = -2.0 / spriteRenderer.height;
+
+    shader.setConstantMatrix4x4(shader.getUniformLocation('uOrthoMatrix'), spriteRenderer.orthoViewMatrix);
 
     if (gameObject.cropWidth > 0 && gameObject.cropHeight > 0)
     {
-        if (renderer.currentRenderer !== null)
-        {
-            renderer.currentRenderer.flush();
-        }
+        spriteRenderer.flush();
 
         if (!renderer.scissor.enabled)
         {
@@ -171,6 +170,11 @@ var DynamicBitmapTextWebGLRenderer = function (renderer, gameObject, interpolati
                 tintBL = output.tint.bottomLeft;
                 tintBR = output.tint.bottomRight;
             }
+
+            tintTL = getTint(tintTL, alpha);
+            tintTR = getTint(tintTR, alpha);
+            tintBL = getTint(tintBL, alpha);
+            tintBR = getTint(tintBR, alpha);
         }
 
         x -= gameObject.scrollX | 0;
@@ -211,52 +215,60 @@ var DynamicBitmapTextWebGLRenderer = function (renderer, gameObject, interpolati
         vmin = glyphY / textureHeight;
         vmax = (glyphY + glyphH) / textureHeight;
 
-        if (spriteBatch.elementCount >= spriteBatch.maxParticles)
+        if (spriteRenderer.vertexCount >= spriteRenderer.vertexCapacity)
         {
-            spriteBatch.flush();
+            spriteRenderer.flush();
+            vertexOffset = 0;
         }
 
-        renderer.setRenderer(spriteBatch, texture, renderTarget);
-        vertexOffset = vertexDataBuffer.allocate(24);
-        spriteBatch.elementCount += 6;
+        spriteRenderer.vertexCount += 6;
 
-        vertexBuffer[vertexOffset++] = tx0;
-        vertexBuffer[vertexOffset++] = ty0;
-        vertexBuffer[vertexOffset++] = umin;
-        vertexBuffer[vertexOffset++] = vmin;
-        vertexBufferU32[vertexOffset++] = tintTL;
-        vertexBuffer[vertexOffset++] = alpha;
+        vertexViewF32[vertexOffset++] = tx0;
+        vertexViewF32[vertexOffset++] = ty0;
+        vertexViewF32[vertexOffset++] = umin;
+        vertexViewF32[vertexOffset++] = vmin;
+        vertexViewU32[vertexOffset++] = tintTL;
 
-        vertexBuffer[vertexOffset++] = tx1;
-        vertexBuffer[vertexOffset++] = ty1;
-        vertexBuffer[vertexOffset++] = umin;
-        vertexBuffer[vertexOffset++] = vmax;
-        vertexBufferU32[vertexOffset++] = tintBL;
-        vertexBuffer[vertexOffset++] = alpha;
+        vertexViewF32[vertexOffset++] = tx1;
+        vertexViewF32[vertexOffset++] = ty1;
+        vertexViewF32[vertexOffset++] = umin;
+        vertexViewF32[vertexOffset++] = vmax;
+        vertexViewU32[vertexOffset++] = tintBL;
 
-        vertexBuffer[vertexOffset++] = tx2;
-        vertexBuffer[vertexOffset++] = ty2;
-        vertexBuffer[vertexOffset++] = umax;
-        vertexBuffer[vertexOffset++] = vmax;
-        vertexBufferU32[vertexOffset++] = tintBR;
-        vertexBuffer[vertexOffset++] = alpha;
+        vertexViewF32[vertexOffset++] = tx2;
+        vertexViewF32[vertexOffset++] = ty2;
+        vertexViewF32[vertexOffset++] = umax;
+        vertexViewF32[vertexOffset++] = vmax;
+        vertexViewU32[vertexOffset++] = tintBR;
 
-        vertexBuffer[vertexOffset++] = tx3;
-        vertexBuffer[vertexOffset++] = ty3;
-        vertexBuffer[vertexOffset++] = umax;
-        vertexBuffer[vertexOffset++] = vmin;
-        vertexBufferU32[vertexOffset++] = tintTR;
-        vertexBuffer[vertexOffset++] = alpha;
+        vertexViewF32[vertexOffset++] = tx0;
+        vertexViewF32[vertexOffset++] = ty0;
+        vertexViewF32[vertexOffset++] = umin;
+        vertexViewF32[vertexOffset++] = vmin;
+        vertexViewU32[vertexOffset++] = tintTL;
+
+        vertexViewF32[vertexOffset++] = tx2;
+        vertexViewF32[vertexOffset++] = ty2;
+        vertexViewF32[vertexOffset++] = umax;
+        vertexViewF32[vertexOffset++] = vmax;
+        vertexViewU32[vertexOffset++] = tintBR;
+
+        vertexViewF32[vertexOffset++] = tx3;
+        vertexViewF32[vertexOffset++] = ty3;
+        vertexViewF32[vertexOffset++] = umax;
+        vertexViewF32[vertexOffset++] = vmin;
+        vertexViewU32[vertexOffset++] = tintTR;
 
         xAdvance += glyph.xAdvance;
         indexCount += 1;
         lastGlyph = glyph;
         lastCharCode = charCode;
+
     }
 
     if (gameObject.cropWidth > 0 && gameObject.cropHeight > 0)
     {
-        spriteBatch.flush();
+        spriteRenderer.flush();
 
         if (renderer.scissor.enabled)
         {
@@ -268,6 +280,9 @@ var DynamicBitmapTextWebGLRenderer = function (renderer, gameObject, interpolati
             gl.disable(gl.SCISSOR_TEST);
         }
     }
+
+    spriteRenderer.flush();
+    spriteRenderer.endPass();
 };
 
 module.exports = DynamicBitmapTextWebGLRenderer;

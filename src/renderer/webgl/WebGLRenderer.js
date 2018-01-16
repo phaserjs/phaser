@@ -18,7 +18,7 @@ var ResourceManager = require('./ResourceManager');
 var Resources = require('./resources');
 var ScaleModes = require('../ScaleModes');
 var ShapeBatch = require('./pipelines/shapebatch/ShapeBatch');
-var SpriteBatch = require('./pipelines/spritebatch/SpriteBatch');
+var SpriteRenderer = require('./pipelines/spriterenderer/SpriteRenderer');
 var TileBatch = require('./pipelines/tilebatch/TileBatch');
 var TilemapRenderer = require('./pipelines/tilemaprenderer/TilemapRenderer');
 var WebGLSnapshot = require('../snapshot/WebGLSnapshot');
@@ -166,14 +166,14 @@ var WebGLpipeline = new Class({
         this.extensions = gl.getSupportedExtensions();
         this.blitterBatch = this.addPipeline(new BlitterBatch(this.game, gl, this));
         //this.quadBatch = this.addPipeline(new QuadBatch(this.game, gl, this));
-        this.spriteBatch = this.addPipeline(new SpriteBatch(this.game, gl, this));
+        this.spriteRenderer = this.addPipeline(new SpriteRenderer(this.game, gl, this));
         //this.shapeBatch = this.addPipeline(new ShapeBatch(this.game, gl, this));
         //this.EffectRenderer = this.addPipeline(new EffectRenderer(this.game, gl, this));
         //this.tileBatch = this.addPipeline(new TileBatch(this.game, gl, this));
         //this.TilemapRenderer = this.addPipeline(new TilemapRenderer(this.game, gl, this));
         //this.ParticleRenderer = this.addPipeline(new ParticleRenderer(this.game, gl, this));
         //this.MaskRenderer = this.addPipeline(new MaskRenderer(this.game, gl, this));
-        this.currentPipeline = this.spriteBatch;
+        this.currentPipeline = this.spriteRenderer;
         this.currentVertexBuffer = null;
         this.setBlendMode(0);
         this.resize(this.width, this.height);
@@ -299,7 +299,6 @@ var WebGLpipeline = new Class({
             var gl = this.gl;
 
             this.currentPipeline.flush();
-            this.currentPipeline.endPass();
             
             gl.activeTexture(gl.TEXTURE0 + unit);
 
