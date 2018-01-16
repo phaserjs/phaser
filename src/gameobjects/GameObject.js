@@ -226,7 +226,7 @@ var GameObject = new Class({
      */
     setInteractive: function (shape, callback)
     {
-        this.scene.sys.inputManager.enable(this, shape, callback);
+        this.scene.sys.input.enable(this, shape, callback);
 
         return this;
     },
@@ -287,7 +287,7 @@ var GameObject = new Class({
 
         if (this.input)
         {
-            this.scene.sys.inputManager.clear(this);
+            this.scene.sys.input.clear(this);
             this.input = undefined;
         }
 

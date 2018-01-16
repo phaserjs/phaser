@@ -194,7 +194,7 @@ var InputPlugin = new Class({
 
             //  Get a list of all objects that can be seen by the camera below the pointer in the scene and store in 'output' array.
             //  All objects in this array are input enabled, as checked by the hitTest method, so we don't need to check later on as well.
-            return this.manager.hitTest(this._list, pointer.x, pointer.y, camera);
+            return this.manager.hitTest(pointer.x, pointer.y, this._list, camera);
         }
         else
         {
