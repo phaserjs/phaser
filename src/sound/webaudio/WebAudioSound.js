@@ -1,6 +1,5 @@
 var Class = require('../../utils/Class');
 var BaseSound = require('../BaseSound');
-
 /*!
  * @author Pavle Goloskokovic <pgoloskokovic@gmail.com> (http://prunegames.com)
  */
@@ -124,17 +123,17 @@ var WebAudioSound = new Class({
      * @method Phaser.Sound.WebAudioSound#play
      * @param {string} [markerName=''] - If you want to play a marker then provide the marker name here, otherwise omit it to play the full sound.
      * @param {ISoundConfig} [config] - Optional sound config object to be applied to this marker or entire sound if no marker name is provided. It gets memorized for future plays of current section of the sound.
-     * @returns {Phaser.Sound.WebAudioSound | null} This sound instance or 'null' if an error occurred.
+     * @returns {boolean} Whether the sound started playing successfully.
      */
     play: function (markerName, config) {
         if (!BaseSound.prototype.play.call(this, markerName, config)) {
-            return null;
+            return false;
         }
         //  \/\/\/ isPlaying = true, isPaused = false \/\/\/
         this.stopAndRemoveBufferSource();
         this.createAndStartBufferSource();
         this.emit('play', this);
-        return this;
+        return true;
     },
     /**
      * Pauses the sound.
@@ -318,7 +317,7 @@ var WebAudioSound = new Class({
                 rate: this.totalRate
             });
             this.createAndStartLoopBufferSource();
-            this.emit('loop', this);
+            this.emit('looped', this);
         }
     },
     /**
@@ -432,38 +431,6 @@ Object.defineProperty(WebAudioSound.prototype, 'volume', {
     }
 });
 /**
- * Playback rate.
- *
- * @name Phaser.Sound.WebAudioSound#rate
- * @property {number} rate
- */
-Object.defineProperty(WebAudioSound.prototype, 'rate', {
-    get: function () {
-        return this.currentConfig.rate;
-    },
-    set: function (value) {
-        this.currentConfig.rate = value;
-        this.setRate();
-        this.emit('rate', this, value);
-    }
-});
-/**
- * Detuning of sound.
- *
- * @name Phaser.Sound.WebAudioSound#detune
- * @property {number} detune
- */
-Object.defineProperty(WebAudioSound.prototype, 'detune', {
-    get: function () {
-        return this.currentConfig.detune;
-    },
-    set: function (value) {
-        this.currentConfig.detune = value;
-        this.setRate();
-        this.emit('detune', this, value);
-    }
-});
-/**
  * Current position of playing sound.
  *
  * @name Phaser.Sound.WebAudioSound#seek
@@ -518,6 +485,7 @@ Object.defineProperty(WebAudioSound.prototype, 'loop', {
                 this.createAndStartLoopBufferSource();
             }
         }
+        this.emit('loop', this, value);
     }
 });
 module.exports = WebAudioSound;

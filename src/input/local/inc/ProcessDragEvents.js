@@ -208,11 +208,12 @@ var ProcessDragEvents = function (pointer, time)
                 this.emit('dragenter', pointer, gameObject, input.target);
             }
 
-            var dragEvent = new InputEvent.DRAG(pointer, gameObject);
+            var dragX = pointer.x - gameObject.input.dragX;
+            var dragY = pointer.y - gameObject.input.dragY;
 
-            gameObject.emit('drag', pointer, dragEvent.dragX, dragEvent.dragY);
+            gameObject.emit('drag', pointer, dragX, dragY);
 
-            this.emit('drag', dragEvent);
+            this.emit('drag', pointer, gameObject, dragX, dragY);
         }
     }
 
