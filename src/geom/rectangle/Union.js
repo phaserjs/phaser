@@ -19,7 +19,7 @@ var Union = function (rectA, rectB, out)
     var x = Math.min(rectA.x, rectB.x);
     var y = Math.min(rectA.y, rectB.y);
 
-    return out.set(
+    return out.setTo(
         x,
         y,
         Math.max(rectA.right, rectB.right) - x,

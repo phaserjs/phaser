@@ -1,6 +1,6 @@
 var Point = require('../point/Point');
 
-//  The center of the Rectangle object, expressed as a Point object 
+//  The center of the Rectangle object, expressed as a Point object
 
 /**
  * [description]
@@ -17,8 +17,8 @@ var GetCenter = function (rect, out)
 {
     if (out === undefined) { out = new Point(); }
 
-    out.x = rect.right / 2;
-    out.y = rect.bottom / 2;
+    out.x = rect.centerX;
+    out.y = rect.centerY;
 
     return out;
 };
