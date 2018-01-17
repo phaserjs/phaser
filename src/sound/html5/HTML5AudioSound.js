@@ -322,7 +322,7 @@ Object.defineProperty(HTML5AudioSound.prototype, 'detune', {
     },
     set: function (value) {
         this.currentConfig.detune = value;
-        if (this.checkTouchLocked('property', 'detune', value)) {
+        if (this.manager.isLocked(this, 'detune', value)) {
             return;
         }
         Object.getOwnPropertyDescriptor(BaseSound.prototype, 'detune').set.call(this, value);
