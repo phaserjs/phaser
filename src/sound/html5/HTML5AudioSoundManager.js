@@ -47,6 +47,20 @@ var HTML5AudioSoundManager = new Class({
          */
         this.onBlurPausedSounds = [];
         /**
+         * A queue of all actions performed on sound objects while audio was locked.
+         * Once the audio gets unlocked, after an explicit user interaction,
+         * all actions will be performed in chronological order.
+         *
+         * @private
+         * @property {{
+         *   sound: Phaser.Sound.HTML5AudioSound,
+         *   name: string,
+         *   value?: any,
+         * }[]} lockedActionsQueue
+         * @default []
+         */
+        this.lockedActionsQueue = [];
+        /**
          * Property that actually holds the value of global mute
          * for HTML5 Audio sound manager implementation.
          *
