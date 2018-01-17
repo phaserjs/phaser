@@ -49,14 +49,9 @@ var ImpactPhysics = new Class({
 
         this.systems.inject(this);
 
-        this.systems.events.on('update', this.update, this);
+        this.systems.events.on('update', this.world.update, this.world);
         this.systems.events.on('shutdown', this.shutdown, this);
         this.systems.events.on('destroy', this.destroy, this);
-    },
-
-    update: function (time, delta)
-    {
-        this.world.update(time, delta);
     },
 
     shutdown: function ()

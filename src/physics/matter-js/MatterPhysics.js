@@ -72,8 +72,8 @@ var MatterPhysics = new Class({
 
         this.systems.inject(this);
 
-        this.systems.events.on('update', this.update, this);
-        this.systems.events.on('postupdate', this.postUpdate, this);
+        this.systems.events.on('update', this.world.update, this.world);
+        this.systems.events.on('postupdate', this.world.postUpdate, this.world);
         this.systems.events.on('shutdown', this.shutdown, this);
         this.systems.events.on('destroy', this.destroy, this);
     },
@@ -92,16 +92,6 @@ var MatterPhysics = new Class({
         Plugin.use(MatterLib, MatterWrap);
 
         return this;
-    },
-
-    update: function (time, delta)
-    {
-        this.world.update(time, delta);
-    },
-
-    postUpdate: function (time, delta)
-    {
-        this.world.postUpdate(time, delta);
     },
 
     shutdown: function ()
