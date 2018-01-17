@@ -64,6 +64,7 @@ var HTML5AudioSoundManager = new Class({
          * @default 1
          */
         this._volume = 1;
+        this.locked = 'ontouchstart' in window;
         BaseSoundManager.call(this, game);
     },
     add: function (key, config) {
