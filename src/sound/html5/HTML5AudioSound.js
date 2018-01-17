@@ -321,6 +321,21 @@ Object.defineProperty(HTML5AudioSound.prototype, 'volume', {
     }
 });
 /**
+ * Playback rate.
+ *
+ * @name Phaser.Sound.HTML5AudioSound#rate
+ * @property {number} rate
+ */
+Object.defineProperty(HTML5AudioSound.prototype, 'rate', {
+    set: function (value) {
+        this.currentConfig.rate = value;
+        if (this.checkTouchLocked('property', 'rate', value)) {
+            return;
+        }
+        Object.getOwnPropertyDescriptor(BaseSound.prototype, 'rate').set.call(this, value);
+    }
+});
+/**
  * Current position of playing sound.
  *
  * @name Phaser.Sound.HTML5AudioSound#seek
