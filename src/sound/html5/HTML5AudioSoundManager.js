@@ -114,6 +114,8 @@ var HTML5AudioSoundManager = new Class({
                     lockedAction.sound[lockedAction.name] = lockedAction.value;
                 }
             });
+            _this.lockedActionsQueue.length = 0;
+            _this.lockedActionsQueue = null;
         });
         document.body.addEventListener('touchend', unlock, false);
     },
