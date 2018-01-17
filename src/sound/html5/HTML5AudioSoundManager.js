@@ -93,15 +93,15 @@ var HTML5AudioSoundManager = new Class({
         if (this.touchLocked) {
             var unlock_1 = function () {
                 document.body.removeEventListener('touchend', unlock_1);
+                var allTags = [];
                 _this.game.cache.audio.entries.each(function (key, tags) {
                     for (var i = 0; i < tags.length; i++) {
-                        tags[i].load();
+                        allTags.push(tags[i]);
                     }
                     return true;
                 });
-                _this.forEachActiveSound(function (sound) {
-                    sound.pause();
-                    sound.resume();
+                allTags.forEach(function (tag) {
+                    tag.load();
                 });
             };
             document.body.addEventListener('touchend', unlock_1, false);
