@@ -92,6 +92,30 @@ var HTML5AudioSoundManager = new Class({
                 tag.load();
             });
         };
+        this.once('unlocked', function () {
+            var allSoundsTouchLockedActionQueue = [];
+            _this.forEachActiveSound(function (sound) {
+                sound.touchLockedActionQueue.forEach(function (touchLockedAction) {
+                    allSoundsTouchLockedActionQueue.push(touchLockedAction);
+                });
+                sound.touchLockedActionQueue.length = 0;
+                sound.touchLockedActionQueue = null;
+                // TODO set correct duration value
+            });
+            allSoundsTouchLockedActionQueue.sort(function (tla1, tla2) {
+                return tla1.time - tla2.time;
+            });
+            allSoundsTouchLockedActionQueue.forEach(function (touchLockedAction) {
+                switch (touchLockedAction.type) {
+                    case 'method':
+                        touchLockedAction.sound[touchLockedAction.name].apply(touchLockedAction.sound, touchLockedAction.value || []);
+                        break;
+                    case 'property':
+                        touchLockedAction.sound[touchLockedAction.name] = touchLockedAction.value;
+                        break;
+                }
+            });
+        });
         document.body.addEventListener('touchend', unlock, false);
     },
     onBlur: function () {
@@ -107,35 +131,6 @@ var HTML5AudioSoundManager = new Class({
             sound.onFocus();
         });
         this.onBlurPausedSounds.length = 0;
-    },
-    update: function () {
-        if (this.touchUnlocked) {
-            this.touchUnlocked = false;
-            this.touchLocked = false;
-            var allSoundsTouchLockedActionQueue_1 = [];
-            this.forEachActiveSound(function (sound) {
-                sound.touchLockedActionQueue.forEach(function (touchLockedAction) {
-                    allSoundsTouchLockedActionQueue_1.push(touchLockedAction);
-                });
-                sound.touchLockedActionQueue.length = 0;
-                sound.touchLockedActionQueue = null;
-                // TODO set correct duration value
-            });
-            allSoundsTouchLockedActionQueue_1.sort(function (tla1, tla2) {
-                return tla1.time - tla2.time;
-            });
-            allSoundsTouchLockedActionQueue_1.forEach(function (touchLockedAction) {
-                switch (touchLockedAction.type) {
-                    case 'method':
-                        touchLockedAction.sound[touchLockedAction.name].apply(touchLockedAction.sound, touchLockedAction.value || []);
-                        break;
-                    case 'property':
-                        touchLockedAction.sound[touchLockedAction.name] = touchLockedAction.value;
-                        break;
-                }
-            });
-        }
-        BaseSoundManager.prototype.update.call(this);
     },
     destroy: function () {
         BaseSoundManager.prototype.destroy.call(this);
