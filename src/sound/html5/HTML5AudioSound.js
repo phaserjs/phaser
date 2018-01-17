@@ -63,7 +63,7 @@ var HTML5AudioSound = new Class({
         return true;
     },
     pause: function () {
-        if (this.checkTouchLocked('method', 'pause')) {
+        if (this.manager.isLocked(this, 'pause')) {
             return false;
         }
         if (this.startTime > 0) {
