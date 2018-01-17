@@ -130,6 +130,22 @@ var HTML5AudioSoundManager = new Class({
         if (this.touchUnlocked) {
             this.touchUnlocked = false;
             this.touchLocked = false;
+            var allSoundsTouchLockedActionQueue_1 = [];
+            this.forEachActiveSound(function (sound) {
+                sound.touchLockedActionQueue.forEach(function (touchLockedAction) {
+                    allSoundsTouchLockedActionQueue_1.push(touchLockedAction);
+                });
+            });
+            allSoundsTouchLockedActionQueue_1.forEach(function (touchLockedAction) {
+                switch (touchLockedAction.type) {
+                    case 'method':
+                        touchLockedAction.sound[touchLockedAction.name].apply(touchLockedAction.sound, touchLockedAction.value || []);
+                        break;
+                    case 'property':
+                        touchLockedAction.sound[touchLockedAction.name] = touchLockedAction.value;
+                        break;
+                }
+            });
         }
         BaseSoundManager.prototype.update.call(this);
     },
