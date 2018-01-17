@@ -282,25 +282,27 @@ var GameObject = new Class({
             this.preDestroy.call(this);
         }
 
-        this.scene.sys.displayList.remove(this);
-        this.scene.sys.updateList.remove(this);
+        var sys = this.scene.sys;
+
+        sys.displayList.remove(this);
+        sys.updateList.remove(this);
 
         if (this.input)
         {
-            this.scene.sys.input.clear(this);
+            sys.input.clear(this);
             this.input = undefined;
         }
 
         //  TODO Keep a reference to the manager in Body, so body can remove itself, not via System
         if (this.body)
         {
-            this.scene.sys.physicsManager.remove(this);
+            sys.physicsManager.remove(this);
 
             this.body = undefined;
         }
 
         //  Tell the Scene to re-sort the children
-        this.scene.sys.queueDepthSort();
+        sys.queueDepthSort();
 
         this.active = false;
         this.visible = false;
