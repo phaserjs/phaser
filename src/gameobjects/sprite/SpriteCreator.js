@@ -1,6 +1,6 @@
 var BuildGameObject = require('../BuildGameObject');
 var BuildGameObjectAnimation = require('../BuildGameObjectAnimation');
-var GameObjectCreator = require('../../scene/plugins/GameObjectCreator');
+var GameObjectCreator = require('../GameObjectCreator');
 var GetAdvancedValue = require('../../utils/object/GetAdvancedValue');
 var Sprite = require('./Sprite');
 

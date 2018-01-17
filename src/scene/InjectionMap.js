@@ -1,5 +1,5 @@
 //  These properties get injected into the Scene and map to local systems
-//  The map key is the local system reference, the value is the property that is added to the Scene
+//  The map key is the property that is added to the Scene, the value is the Scene.Systems reference
 //  These defaults can be modified via the Scene config object
 
 var InjectionMap = {
@@ -14,14 +14,16 @@ var InjectionMap = {
 
     add: 'add',
     cameras: 'cameras',
+    children: 'displayList',
     data: 'data',
-    displayList: 'children',
     events: 'events',
-    inputManager: 'input',
+    impact: 'impactPhysics',
+    input: 'input',
     load: 'load',
     make: 'make',
-    physicsManager: 'physics',
-    sceneManager: 'scene',
+    matter: 'matterPhysics',
+    physics: 'arcadePhysics',
+    scene: 'sceneManager',
     time: 'time',
     tweens: 'tweens'
 

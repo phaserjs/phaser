@@ -1,4 +1,4 @@
-var GameObjectCreator = require('../../scene/plugins/GameObjectCreator');
+var GameObjectCreator = require('../GameObjectCreator');
 var Graphics = require('./Graphics');
 
 //  When registering a factory function 'this' refers to the GameObjectCreator context.

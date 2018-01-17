@@ -116,25 +116,6 @@ var CameraManager = new Class({
     },
     */
 
-    destroy: function ()
-    {
-        this.main = undefined;
-
-        for (var i = 0; i < this.cameras.length; i++)
-        {
-            this.cameras[i].destroy();
-        }
-
-        for (i = 0; i < this.cameraPool.length; i++)
-        {
-            this.cameraPool[i].destroy();
-        }
-
-        this.cameras = [];
-        this.cameraPool = [];
-        this.scene = undefined;
-    },
-
     /*
     {
         cameras: [
@@ -246,7 +227,7 @@ var CameraManager = new Class({
         }
     },
 
-    removeCamera: function (camera)
+    remove: function (camera)
     {
         var cameraIndex = this.cameras.indexOf(camera);
 
@@ -298,6 +279,25 @@ var CameraManager = new Class({
 
     shutdown: function ()
     {
+    },
+
+    destroy: function ()
+    {
+        this.main = undefined;
+
+        for (var i = 0; i < this.cameras.length; i++)
+        {
+            this.cameras[i].destroy();
+        }
+
+        for (i = 0; i < this.cameraPool.length; i++)
+        {
+            this.cameraPool[i].destroy();
+        }
+
+        this.cameras = [];
+        this.cameraPool = [];
+        this.scene = undefined;
     }
 
 });

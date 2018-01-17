@@ -1,5 +1,5 @@
-var Class = require('../../utils/Class');
-var PluginManager = require('../../plugins/PluginManager');
+var Class = require('../utils/Class');
+var PluginManager = require('../plugins/PluginManager');
 
 //  A proxy class to the Global Scene Manager
 var SceneManager = new Class({
@@ -32,11 +32,12 @@ var SceneManager = new Class({
     {
         this.systems.inject(this);
 
+        this.systems.events.on('preupdate', this.preUpdate, this);
         this.systems.events.on('shutdown', this.shutdown, this);
         this.systems.events.on('destroy', this.destroy, this);
     },
 
-    update: function ()
+    preUpdate: function ()
     {
         var len = this._queue.length;
 

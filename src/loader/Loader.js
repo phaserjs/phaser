@@ -1,26 +1,28 @@
-var BaseLoader = require('../../loader/BaseLoader');
-var Class = require('../../utils/Class');
-var CONST = require('../../loader/const');
-var NumberArray = require('../../utils/array/NumberArray');
+var BaseLoader = require('./BaseLoader');
+var Class = require('../utils/Class');
+var CONST = require('./const');
+var NumberArray = require('../utils/array/NumberArray');
+var PluginManager = require('../plugins/PluginManager');
 
-var AnimationJSONFile = require('../../loader/filetypes/AnimationJSONFile');
-var AtlasJSONFile = require('../../loader/filetypes/AtlasJSONFile');
-var AudioFile = require('../../loader/filetypes/AudioFile');
-var BinaryFile = require('../../loader/filetypes/BinaryFile');
-var BitmapFontFile = require('../../loader/filetypes/BitmapFontFile');
-var GLSLFile = require('../../loader/filetypes/GLSLFile');
-var HTMLFile = require('../../loader/filetypes/HTMLFile');
-var ImageFile = require('../../loader/filetypes/ImageFile');
-var JSONFile = require('../../loader/filetypes/JSONFile');
-var ScriptFile = require('../../loader/filetypes/ScriptFile');
-var SpriteSheet = require('../../loader/filetypes/SpriteSheet');
-var SVGFile = require('../../loader/filetypes/SVGFile');
-var TextFile = require('../../loader/filetypes/TextFile');
-var TilemapCSVFile = require('../../loader/filetypes/TilemapCSVFile');
-var TilemapJSONFile = require('../../loader/filetypes/TilemapJSONFile');
-var UnityAtlasFile = require('../../loader/filetypes/UnityAtlasFile');
-var WavefrontFile = require('../../loader/filetypes/WavefrontFile');
-var XMLFile = require('../../loader/filetypes/XMLFile');
+//  TODO - Injection mapped
+var AnimationJSONFile = require('./filetypes/AnimationJSONFile');
+var AtlasJSONFile = require('./filetypes/AtlasJSONFile');
+var AudioFile = require('./filetypes/AudioFile');
+var BinaryFile = require('./filetypes/BinaryFile');
+var BitmapFontFile = require('./filetypes/BitmapFontFile');
+var GLSLFile = require('./filetypes/GLSLFile');
+var HTMLFile = require('./filetypes/HTMLFile');
+var ImageFile = require('./filetypes/ImageFile');
+var JSONFile = require('./filetypes/JSONFile');
+var ScriptFile = require('./filetypes/ScriptFile');
+var SpriteSheet = require('./filetypes/SpriteSheet');
+var SVGFile = require('./filetypes/SVGFile');
+var TextFile = require('./filetypes/TextFile');
+var TilemapCSVFile = require('./filetypes/TilemapCSVFile');
+var TilemapJSONFile = require('./filetypes/TilemapJSONFile');
+var UnityAtlasFile = require('./filetypes/UnityAtlasFile');
+var WavefrontFile = require('./filetypes/WavefrontFile');
+var XMLFile = require('./filetypes/XMLFile');
 
 var Loader = new Class({
 
@@ -32,7 +34,21 @@ var Loader = new Class({
     {
         BaseLoader.call(this, scene);
 
+        this.systems = scene.sys;
+
+        this.mapping = 'load';
+
+        this.systems.events.on('boot', this.boot, this);
+
         this._multilist = {};
+    },
+
+    boot: function ()
+    {
+        this.systems.inject(this);
+
+        this.systems.events.on('shutdown', this.shutdown, this);
+        this.systems.events.on('destroy', this.destroy, this);
     },
 
     //  key can be either a string, an object or an array of objects
@@ -294,8 +310,15 @@ var Loader = new Class({
         }
 
         return entry;
+    },
+
+    shutdown: function ()
+    {
+
     }
 
 });
+
+PluginManager.register('load', Loader);
 
 module.exports = Loader;

@@ -1,8 +1,9 @@
-var Class = require('../../utils/Class');
-var TimelineBuilder = require('../builder/TimelineBuilder');
-var TweenBuilder = require('../builder/TweenBuilder');
-var NumberTweenBuilder = require('../builder/NumberTweenBuilder');
-var TWEEN_CONST = require('../tween/const');
+var Class = require('../utils/Class');
+var NumberTweenBuilder = require('./builder/NumberTweenBuilder');
+var PluginManager = require('../plugins/PluginManager');
+var TimelineBuilder = require('./builder/TimelineBuilder');
+var TWEEN_CONST = require('./tween/const');
+var TweenBuilder = require('./builder/TweenBuilder');
 
 //  Phaser.Tweens.TweenManager
 
@@ -12,8 +13,14 @@ var TweenManager = new Class({
 
     function TweenManager (scene)
     {
-        //  The Scene the Tween Manager belongs to (tweens are Scene specific, not Game global)
+        //  The Scene that owns this plugin
         this.scene = scene;
+
+        this.systems = scene.sys;
+
+        this.mapping = 'tweens';
+
+        this.systems.events.on('boot', this.boot, this);
 
         this.timeScale = 1;
 
@@ -25,9 +32,15 @@ var TweenManager = new Class({
         this._toProcess = 0;
     },
 
-    //  Scene is starting up
     boot: function ()
     {
+        this.systems.inject(this);
+
+        this.systems.events.on('preupdate', this.preUpdate, this);
+        this.systems.events.on('update', this.update, this);
+        this.systems.events.on('shutdown', this.shutdown, this);
+        this.systems.events.on('destroy', this.destroy, this);
+
         this.timeScale = 1;
     },
 
@@ -92,7 +105,7 @@ var TweenManager = new Class({
         return tween;
     },
 
-    begin: function ()
+    preUpdate: function ()
     {
         if (this._toProcess === 0)
         {
@@ -465,5 +478,7 @@ var TweenManager = new Class({
     }
 
 });
+
+PluginManager.register('tweens', TweenManager);
 
 module.exports = TweenManager;

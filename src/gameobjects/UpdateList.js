@@ -1,7 +1,6 @@
-var Class = require('../../utils/Class');
-var PluginManager = require('../../plugins/PluginManager');
+var Class = require('../utils/Class');
+var PluginManager = require('../plugins/PluginManager');
 
-//  TODO - Extend from ProcessQueue
 var UpdateList = new Class({
 
     initialize:
@@ -12,7 +11,7 @@ var UpdateList = new Class({
 
         this.systems = scene.sys;
 
-        this.mapping = 'children';
+        this.mapping = null;
 
         this.systems.events.on('boot', this.boot, this);
 

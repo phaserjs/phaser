@@ -1,6 +1,6 @@
-var Class = require('../../utils/Class');
-var StableSort = require('../../utils/array/StableSort');
-var PluginManager = require('../../plugins/PluginManager');
+var Class = require('../utils/Class');
+var StableSort = require('../utils/array/StableSort');
+var PluginManager = require('../plugins/PluginManager');
 
 var DisplayList = new Class({
 
@@ -13,7 +13,7 @@ var DisplayList = new Class({
 
         this.systems = scene.sys;
 
-        this.mapping = 'add';
+        this.mapping = 'children';
 
         this.systems.events.on('boot', this.boot, this);
 

@@ -11,10 +11,30 @@ var CollideSpriteVsTilemapLayer = function (sprite, tilemapLayer, collideCallbac
         return false;
     }
 
-    var mapData = tilemapLayer.getTilesWithinWorldXY(
-        body.position.x, body.position.y,
-        body.width, body.height
-    );
+    var x = body.position.x;
+    var y = body.position.y;
+    var w = body.width;
+    var h = body.height;
+
+    // TODO: this logic should be encapsulated within the Tilemap API at some point.
+    // If the map's base tile size differs from the layer's tile size, we need to adjust the
+    // selection area by the difference between the two.
+    var layerData = tilemapLayer.layer;
+    if (layerData.tileWidth > layerData.baseTileWidth)
+    {
+        // The x origin of a tile is the left side, so x and width need to be adjusted.
+        let xDiff = (layerData.tileWidth - layerData.baseTileWidth) * tilemapLayer.scaleX;
+        x -= xDiff;
+        w += xDiff;
+    }
+    if (layerData.tileHeight > layerData.baseTileHeight)
+    {
+        // The y origin of a tile is the bottom side, so just the height needs to be adjusted.
+        let yDiff = (layerData.tileHeight - layerData.baseTileHeight) * tilemapLayer.scaleY;
+        h += yDiff;
+    }
+
+    var mapData = tilemapLayer.getTilesWithinWorldXY(x, y, w, h);
 
     if (mapData.length === 0)
     {
@@ -29,6 +49,14 @@ var CollideSpriteVsTilemapLayer = function (sprite, tilemapLayer, collideCallbac
         tile = mapData[i];
         tileWorldRect.left = tilemapLayer.tileToWorldX(tile.x);
         tileWorldRect.top = tilemapLayer.tileToWorldY(tile.y);
+
+        // If the map's base tile size differs from the layer's tile size, only the top of the rect
+        // needs to be adjusted since it's origin is (0, 1).
+        if (tile.baseHeight !== tile.height)
+        {
+            tileWorldRect.top -= (tile.height - tile.baseHeight) * tilemapLayer.scaleY;
+        }
+
         tileWorldRect.right = tileWorldRect.left + tile.width * tilemapLayer.scaleX;
         tileWorldRect.bottom = tileWorldRect.top + tile.height * tilemapLayer.scaleY;
 

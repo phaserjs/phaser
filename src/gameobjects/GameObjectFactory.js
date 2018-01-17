@@ -1,5 +1,5 @@
-var Class = require('../../utils/Class');
-var PluginManager = require('../../plugins/PluginManager');
+var Class = require('../utils/Class');
+var PluginManager = require('../plugins/PluginManager');
 
 var GameObjectFactory = new Class({
 
@@ -12,7 +12,7 @@ var GameObjectFactory = new Class({
 
         this.systems = scene.sys;
 
-        this.mapping = 'time';
+        this.mapping = 'add';
 
         this.systems.events.on('boot', this.boot, this);
 

@@ -16,20 +16,29 @@ var PluginManager = new Class({
     {
     },
 
-    install: function (scene, config)
+    install: function (scene, globalPlugins, localPlugins)
     {
+        var i;
+        var pluginKey;
         var sys = scene.sys;
 
-        for (var i = 0; i < config.length; i++)
+        for (var i = 0; i < globalPlugins.length; i++)
         {
-            var p = config[i];
+            pluginKey = globalPlugins[i];
             
-            console.log('installing', p);
+            sys.scene[pluginKey] = sys[pluginKey];
+        }
 
-            if (plugins[p])
+        for (var i = 0; i < localPlugins.length; i++)
+        {
+            pluginKey = localPlugins[i];
+            
+            if (plugins[pluginKey])
             {
+                // console.log('installing', pluginKey);
+
                 //  Install a local reference inside of Systems
-                sys[p] = new plugins[p](scene);
+                sys[pluginKey] = new plugins[pluginKey](scene);
             }
         }
     },
@@ -52,7 +61,7 @@ PluginManager.register = function (key, plugin)
 {
     plugins[key] = plugin;
 
-    console.log('PluginManager.register', key);
+    // console.log('PluginManager.register', key);
 };
 
 module.exports = PluginManager;

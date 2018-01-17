@@ -1,5 +1,5 @@
 var Container = require('./Container');
-var GameObjectCreator = require('../../scene/plugins/GameObjectCreator');
+var GameObjectCreator = require('../GameObjectCreator');
 
 //  When registering a factory function 'this' refers to the GameObjectCreator context.
 

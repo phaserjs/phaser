@@ -307,36 +307,38 @@ var World = new Class({
 
     postUpdate: function ()
     {
-        if (this.drawDebug)
+        if (!this.drawDebug)
         {
-            var graphics = this.debugGraphic;
-            var bodies = Composite.allBodies(this.localWorld);
+            return;
+        }
 
-            graphics.clear();
-            graphics.lineStyle(1, this.defaults.bodyDebugColor);
+        var graphics = this.debugGraphic;
+        var bodies = Composite.allBodies(this.localWorld);
 
-            for (var i = 0; i < bodies.length; i++)
+        graphics.clear();
+        graphics.lineStyle(1, this.defaults.bodyDebugColor);
+
+        for (var i = 0; i < bodies.length; i++)
+        {
+            var body = bodies[i];
+
+            if (!body.render.visible)
             {
-                var body = bodies[i];
-
-                if (!body.render.visible)
-                {
-                    continue;
-                }
-
-                var vertices = body.vertices;
-
-                graphics.moveTo(vertices[0].x, vertices[0].y);
-
-                for (var j = 1; j < vertices.length; j++)
-                {
-                    graphics.lineTo(vertices[j].x, vertices[j].y);
-                }
-
-                graphics.lineTo(vertices[0].x, vertices[0].y);
-
-                graphics.strokePath();
+                continue;
             }
+
+            var vertices = body.vertices;
+
+            graphics.moveTo(vertices[0].x, vertices[0].y);
+
+            for (var j = 1; j < vertices.length; j++)
+            {
+                graphics.lineTo(vertices[j].x, vertices[j].y);
+            }
+
+            graphics.lineTo(vertices[0].x, vertices[0].y);
+
+            graphics.strokePath();
         }
     },
 
@@ -362,7 +364,6 @@ var World = new Class({
 
     destroy: function ()
     {
-        //  TODO
         this.shutdown();
     }
 

@@ -1,5 +1,5 @@
 var DynamicBitmapText = require('./DynamicBitmapText');
-var GameObjectFactory = require('../../../scene/plugins/GameObjectFactory');
+var GameObjectFactory = require('../../GameObjectFactory');
 
 //  When registering a factory function 'this' refers to the GameObjectFactory context.
 //  

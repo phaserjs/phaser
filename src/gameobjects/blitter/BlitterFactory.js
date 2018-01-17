@@ -1,5 +1,5 @@
 var Blitter = require('./Blitter');
-var GameObjectFactory = require('../../scene/plugins/GameObjectFactory');
+var GameObjectFactory = require('../GameObjectFactory');
 
 //  When registering a factory function 'this' refers to the GameObjectFactory context.
 //  
