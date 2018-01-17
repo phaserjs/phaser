@@ -336,6 +336,21 @@ Object.defineProperty(HTML5AudioSound.prototype, 'rate', {
     }
 });
 /**
+ * Detuning of sound.
+ *
+ * @name Phaser.Sound.HTML5AudioSound#detune
+ * @property {number} detune
+ */
+Object.defineProperty(HTML5AudioSound.prototype, 'detune', {
+    set: function (value) {
+        this.currentConfig.detune = value;
+        if (this.checkTouchLocked('property', 'detune', value)) {
+            return;
+        }
+        Object.getOwnPropertyDescriptor(BaseSound.prototype, 'detune').set.call(this, value);
+    }
+});
+/**
  * Current position of playing sound.
  *
  * @name Phaser.Sound.HTML5AudioSound#seek
