@@ -106,26 +106,12 @@ var HTML5AudioSoundManager = new Class({
             });
         };
         this.once('unlocked', function () {
-            var allSoundsTouchLockedActionQueue = [];
-            _this.forEachActiveSound(function (sound) {
-                sound.touchLockedActionQueue.forEach(function (touchLockedAction) {
-                    allSoundsTouchLockedActionQueue.push(touchLockedAction);
-                });
-                sound.touchLockedActionQueue.length = 0;
-                sound.touchLockedActionQueue = null;
-                // TODO set correct duration value
-            });
-            allSoundsTouchLockedActionQueue.sort(function (tla1, tla2) {
-                return tla1.time - tla2.time;
-            });
-            allSoundsTouchLockedActionQueue.forEach(function (touchLockedAction) {
-                switch (touchLockedAction.type) {
-                    case 'method':
-                        touchLockedAction.sound[touchLockedAction.name].apply(touchLockedAction.sound, touchLockedAction.value || []);
-                        break;
-                    case 'property':
-                        touchLockedAction.sound[touchLockedAction.name] = touchLockedAction.value;
-                        break;
+            _this.lockedActionsQueue.forEach(function (lockedAction) {
+                if (lockedAction.sound[lockedAction.name].apply) {
+                    lockedAction.sound[lockedAction.name].apply(lockedAction.sound, lockedAction.value || []);
+                }
+                else {
+                    lockedAction.sound[lockedAction.name] = lockedAction.value;
                 }
             });
         });
