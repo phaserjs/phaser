@@ -285,7 +285,7 @@ Object.defineProperty(HTML5AudioSound.prototype, 'volume', {
     },
     set: function (value) {
         this.currentConfig.volume = value;
-        if (this.checkTouchLocked('property', 'volume', value)) {
+        if (this.manager.isLocked(this, 'volume', value)) {
             return;
         }
         this.setVolume();
