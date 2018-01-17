@@ -105,9 +105,8 @@ var BaseSoundManager = new Class({
          *
          * @readonly
          * @property {boolean} locked
-         * @default false
          */
-        this.locked = false;
+        this.locked = this.locked || false;
         /**
          * Flag used internally for handling when the audio system
          * has been unlocked, if there ever was a need for it.
