@@ -46,6 +46,7 @@ var HTML5AudioSoundManager = new Class({
          * @default []
          */
         this.onBlurPausedSounds = [];
+        this.locked = 'ontouchstart' in window;
         /**
          * A queue of all actions performed on sound objects while audio was locked.
          * Once the audio gets unlocked, after an explicit user interaction,
@@ -57,9 +58,8 @@ var HTML5AudioSoundManager = new Class({
          *   name: string,
          *   value?: any,
          * }[]} lockedActionsQueue
-         * @default []
          */
-        this.lockedActionsQueue = [];
+        this.lockedActionsQueue = this.locked ? [] : null;
         /**
          * Property that actually holds the value of global mute
          * for HTML5 Audio sound manager implementation.
@@ -78,7 +78,6 @@ var HTML5AudioSoundManager = new Class({
          * @default 1
          */
         this._volume = 1;
-        this.locked = 'ontouchstart' in window;
         BaseSoundManager.call(this, game);
     },
     add: function (key, config) {
