@@ -93,6 +93,7 @@ var WebAudioSoundManager = new Class({
             _this.context.resume().then(function () {
                 document.body.removeEventListener('touchstart', unlock);
                 document.body.removeEventListener('touchend', unlock);
+                _this.unlocked = true;
             });
         };
         document.body.addEventListener('touchstart', unlock, false);
