@@ -107,11 +107,11 @@ var HTML5AudioSoundManager = new Class({
         };
         this.once('unlocked', function () {
             _this.lockedActionsQueue.forEach(function (lockedAction) {
-                if (lockedAction.sound[lockedAction.name].apply) {
-                    lockedAction.sound[lockedAction.name].apply(lockedAction.sound, lockedAction.value || []);
+                if (lockedAction.sound[lockedAction.prop].apply) {
+                    lockedAction.sound[lockedAction.prop].apply(lockedAction.sound, lockedAction.value || []);
                 }
                 else {
-                    lockedAction.sound[lockedAction.name] = lockedAction.value;
+                    lockedAction.sound[lockedAction.prop] = lockedAction.value;
                 }
             });
             _this.lockedActionsQueue.length = 0;
@@ -138,11 +138,11 @@ var HTML5AudioSoundManager = new Class({
         this.onBlurPausedSounds.length = 0;
         this.onBlurPausedSounds = null;
     },
-    isLocked: function (sound, name, value) {
+    isLocked: function (sound, prop, value) {
         if (this.locked) {
             this.lockedActionsQueue.push({
                 sound: sound,
-                name: name,
+                prop: prop,
                 value: value
             });
             return true;
