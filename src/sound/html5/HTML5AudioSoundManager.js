@@ -100,6 +100,11 @@ var HTML5AudioSoundManager = new Class({
                     }
                     return true;
                 });
+                var lastTag = allTags[allTags.length - 1];
+                lastTag.oncanplaythrough = function () {
+                    lastTag.oncanplaythrough = null;
+                    _this.touchUnlocked = true;
+                };
                 allTags.forEach(function (tag) {
                     tag.load();
                 });
