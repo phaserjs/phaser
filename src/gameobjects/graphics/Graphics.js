@@ -429,6 +429,26 @@ var Graphics = new Class({
 
         return this.strokePoints(points, true);
     },
+	 
+    fillEllipseShape: function (ellipse, smoothness)
+    {
+        if (smoothness === undefined) { smoothness = 32; }
+
+        var points = ellipse.getPoints(smoothness);
+
+        return this.fillPoints(points, true);
+    },
+
+    fillEllipse: function (x, y, width, height, smoothness)
+    {
+        if (smoothness === undefined) { smoothness = 32; }
+
+        var ellipse = new Ellipse(x, y, width, height);
+
+        var points = ellipse.getPoints(smoothness);
+
+        return this.fillPoints(points, true);
+    },
 
     //  ARC
 
