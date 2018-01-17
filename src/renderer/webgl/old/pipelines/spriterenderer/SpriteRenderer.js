@@ -290,7 +290,7 @@ var SpriteRenderer = new Class({
         orthoViewMatrix[0] = +2.0 / this.width;
         orthoViewMatrix[5] = -2.0 / this.height;
 
-        shader.setConstantMatrix4x4(shader.getUniformLocation('uOrthoMatrix'), orthoViewMatrix);
+        this.setMatrix4('uOrthoMatrix', orthoViewMatrix);
         manager.setTexture(texture, 0);
 
         vertexViewF32[0] = tx0;

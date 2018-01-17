@@ -22,19 +22,7 @@ var Pipeline = new Class({
         this.program = null;
         this.vertexLayout = config.vertexLayout;
         this.vertexSize = config.vertexSize;
-        this.currentRenderTarget = null;
-        this.currentProgram = null;
         this.topology = config.topology;
-        this.onBeginPassTarget = config.onBeginPassTarget || null;
-        this.onEndPassTarget = config.onBeginPassTarget || null;
-        this.onFlushTarget = config.onFlushTarget || null;
-        this.onBindTarget = config.onBindTarget || null;
-        this.onResizeTarget = config.onResizeTarget || null;
-        this.onBeginPass = config.onBeginPass || function onBeginPassStub(pipeline) {};
-        this.onEndPass = config.onEndPass || function onEndPassStub(pipeline) {};
-        this.onFlush = config.onFlush || function onFlushStub(pipeline) {};
-        this.onBind = config.onBind || function onBindStub(pipeline) {};
-        this.onResize = config.onResize || function onResize(width, height, resolution) {};
         
         // Initialize Shaders and Buffers
         {
@@ -69,42 +57,21 @@ var Pipeline = new Class({
         return this.vertexCount >= this.vertexCapacity;
     },
 
-    bind: function ()
-    {
-        this.onBind.call(this.onBindTarget, this);
-        return this;
-    },
-
     resize: function (width, height, resolution)
     {
-        this.onResize.call(this.onResizeTarget, width, height, resolution);
+        this.width = width * resolution;
+        this.height = height * resolution;
         return this;
     },
 
-    beginPass: function (renderTarget, program)
+    bind: function (overrideProgram)
     {
-        if (this.currentRenderTarget !== null ||
-            this.currentProgram !== null)
-        {
-            this.flush();
-            this.endPass();
-        }
+        // Check if we're using a custom program or 
+        // the default one from the pipeline.
+        if (!overrideProgram) this.program.bind();
+        else overrideProgram.bind();
 
-        this.currentRenderTarget = (renderTarget || null);
-        this.currentProgram = (program || this.program);
-        this.currentProgram.bind();
         this.vertexBuffer.bind();
-
-        if (this.currentRenderTarget !== null)
-        {
-            this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, this.currentRenderTarget.framebufferObject);
-        }
-        else
-        {
-            this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, null);
-        }
-
-        this.onBeginPass.call(this.onBeginPassTarget, this);
 
         return this;
     },
@@ -124,24 +91,6 @@ var Pipeline = new Class({
 
         this.vertexCount = 0;
 
-        this.onFlush.call(this.onFlushTarget, this);
-
-        return this;
-    },
-
-    endPass: function ()
-    {
-        var renderTarget = this.currentRenderTarget;
-        var program = this.currentProgram;
-
-        this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, null);
-
-        this.currentRenderTarget = null;
-        this.currentProgram = null;
-        this.vertexCount = 0;
-
-        this.onEndPass.call(this.onEndPassTarget, this);
-
         return this;
     },
 
@@ -155,6 +104,72 @@ var Pipeline = new Class({
         this.program = null;
         this.vertexBuffer = null;
 
+        return this;
+    },
+
+    setFloat1: function (name, x)
+    {
+        this.gl.uniform1f(this.gl.getUniformLocation(this.program.program, name), x);
+        return this;
+    },
+
+    setFloat2: function (name, x, y)
+    {
+        this.gl.uniform2f(this.gl.getUniformLocation(this.program.program, name), x, y);
+        return this;
+    },
+
+    setFloat3: function (name, x, y, z)
+    {
+        this.gl.uniform3f(this.gl.getUniformLocation(this.program.program, name), x, y, z);
+        return this;
+    },
+
+    setFloat4: function (name, x, y, z, w)
+    {
+        this.gl.uniform4f(this.gl.getUniformLocation(this.program.program, name), x, y, z, w);
+        return this;
+    },
+
+    setInt1: function (name, x)
+    {
+        this.gl.uniform1i(this.gl.getUniformLocation(this.program.program, name), x);
+        return this;
+    },
+
+    setInt2: function (name, x, y)
+    {
+        this.gl.uniform2i(this.gl.getUniformLocation(this.program.program, name), x, y);
+        return this;
+    },
+
+    setInt3: function (name, x, y, z)
+    {
+        this.gl.uniform3i(this.gl.getUniformLocation(this.program.program, name), x, y, z);
+        return this;
+    },
+
+    setInt4: function (name, x, y, z, w)
+    {
+        this.gl.uniform4i(this.gl.getUniformLocation(this.program.program, name), x, y, z, w);
+        return this;
+    },
+
+    setMatrix2: function (name, transpose, matrix)
+    {
+        this.gl.uniformMatrix2fv(this.gl.getUniformLocation(this.program.program, name), transpose, matrix);
+        return this;
+    },
+
+    setMatrix3: function (name, transpose, matrix)
+    {
+        this.gl.uniformMatrix2fv(this.gl.getUniformLocation(this.program.program, name), transpose, matrix);
+        return this;
+    },
+
+    setMatrix4: function (name, transpose, matrix)
+    {
+        this.gl.uniformMatrix2fv(this.gl.getUniformLocation(this.program.program, name), transpose, matrix);
         return this;
     }
 
