@@ -44,7 +44,6 @@ var WebAudioSoundManager = new Class({
          * @property {AudioNode} destination
          */
         this.destination = this.masterMuteNode;
-        this.unlock();
         BaseSoundManager.call(this, game);
     },
     /**
@@ -81,6 +80,7 @@ var WebAudioSoundManager = new Class({
     },
     /**
      * Unlocks Web Audio API on iOS devices on the initial touch event.
+     *
      * Read more about how this issue is handled here in [this article](TODO add link).
      *
      * @private
