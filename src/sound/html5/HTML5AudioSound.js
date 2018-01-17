@@ -64,6 +64,9 @@ var HTML5AudioSound = new Class({
         BaseSound.call(this, manager, key, config);
     },
     play: function (markerName, config) {
+        if (this.checkTouchLocked('method', 'play', [markerName, config])) {
+            return false;
+        }
         if (!BaseSound.prototype.play.call(this, markerName, config)) {
             return false;
         }
