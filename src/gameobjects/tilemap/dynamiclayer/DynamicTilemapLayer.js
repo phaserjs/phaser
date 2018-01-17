@@ -17,7 +17,6 @@ var DynamicTilemapLayer = new Class({
         Components.RenderTarget,
         Components.ScaleMode,
         Components.Size,
-        Components.Texture,
         Components.Transform,
         Components.Visible,
         Components.ScrollFactor,
@@ -90,9 +89,7 @@ var DynamicTilemapLayer = new Class({
         this.culledTiles = [];
 
         this.setAlpha(this.layer.alpha);
-        this.setTexture(tileset.image.key);
         this.setPosition(x, y);
-        this.setSizeToFrame();
         this.setOrigin();
         this.setSize(this.layer.tileWidth * this.layer.width, this.layer.tileHeight * this.layer.height);
     },

@@ -18,7 +18,6 @@ var StaticTilemapLayer = new Class({
         Components.RenderTarget,
         Components.ScaleMode,
         Components.Size,
-        Components.Texture,
         Components.Transform,
         Components.Visible,
         Components.ScrollFactor,
@@ -99,9 +98,7 @@ var StaticTilemapLayer = new Class({
         this.vertexCount = 0;
 
         this.setAlpha(this.layer.alpha);
-        this.setTexture(tileset.image.key);
         this.setPosition(x, y);
-        this.setSizeToFrame();
         this.setOrigin();
         this.setSize(this.layer.tileWidth * this.layer.width, this.layer.tileHeight * this.layer.height);
 
@@ -113,7 +110,6 @@ var StaticTilemapLayer = new Class({
      */
     contextRestore: function (renderer)
     {
-        this.tileTexture = null;
         this.dirty = true;
         this.vbo = null;
         this.gl = renderer.gl;
@@ -131,8 +127,8 @@ var StaticTilemapLayer = new Class({
         var tileset = this.tileset;
         var mapWidth = this.layer.width;
         var mapHeight = this.layer.height;
-        var width = this.texture.source[0].width;
-        var height = this.texture.source[0].height;
+        var width = tileset.image.get().width;
+        var height = tileset.image.get().height;
         var mapData = this.layer.data;
 
         var tile;
