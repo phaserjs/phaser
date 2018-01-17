@@ -252,19 +252,6 @@ var HTML5AudioSound = new Class({
         if (this.audio) {
             this.audio.playbackRate = this.totalRate;
         }
-    },
-    checkTouchLocked: function (type, name, value) {
-        if (this.manager.touchLocked) {
-            this.touchLockedActionQueue.push({
-                sound: this,
-                type: type,
-                name: name,
-                value: value,
-                time: window.performance.now()
-            });
-            return true;
-        }
-        return false;
     }
 });
 /**
