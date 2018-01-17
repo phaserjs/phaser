@@ -309,6 +309,10 @@ var BaseSoundManager = new Class({
      * @param {number} delta - The delta time elapsed since the last frame.
      */
     update: function (time, delta) {
+        if (this.unlocked) {
+            this.unlocked = false;
+            this.emit('unlocked', this);
+        }
         for (var i = this.sounds.length - 1; i >= 0; i--) {
             if (this.sounds[i].pendingRemove) {
                 this.sounds.splice(i, 1);
