@@ -97,6 +97,11 @@ var HTML5AudioFile = new Class({
                 audio.load();
             }
         }
+
+        if (touchLocked)
+        {
+            this.onLoad();
+        }
     }
 
 });
