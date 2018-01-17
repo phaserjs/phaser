@@ -137,6 +137,17 @@ var HTML5AudioSoundManager = new Class({
         BaseSoundManager.prototype.destroy.call(this);
         this.onBlurPausedSounds.length = 0;
         this.onBlurPausedSounds = null;
+    },
+    isLocked: function (sound, name, value) {
+        if (this.locked) {
+            this.lockedActionsQueue.push({
+                sound: sound,
+                name: name,
+                value: value
+            });
+            return true;
+        }
+        return false;
     }
 });
 /**
