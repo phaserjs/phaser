@@ -71,15 +71,13 @@ var HTML5AudioFile = new Class({
         this.filesLoaded = 0;
         this.percentComplete = 0;
 
-        var touchLocked = 'ontouchstart' in window;
-
         for(var i = 0; i < instances; i++)
         {
             var audio = new Audio();
             audio.dataset.name = this.key + ('0' + i).slice(-2); // Useful for debugging
             audio.dataset.used = 'false';
 
-            if (!touchLocked)
+            if (!this.touchLocked)
             {
                 audio.preload = 'auto';
                 audio.oncanplaythrough = this.onProgress.bind(this);
@@ -94,13 +92,13 @@ var HTML5AudioFile = new Class({
             audio = this.data[i];
             audio.src = GetURL(this, baseURL || '');
 
-            if (!touchLocked)
+            if (!this.touchLocked)
             {
                 audio.load();
             }
         }
 
-        if (touchLocked)
+        if (this.touchLocked)
         {
             setTimeout(function ()
             {
