@@ -348,7 +348,7 @@ Object.defineProperty(HTML5AudioSound.prototype, 'seek', {
         }
     },
     set: function (value) {
-        if (this.checkTouchLocked('property', 'seek', value)) {
+        if (this.manager.isLocked(this, 'seek', value)) {
             return;
         }
         if (this.startTime > 0) {
