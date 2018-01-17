@@ -380,7 +380,7 @@ Object.defineProperty(HTML5AudioSound.prototype, 'loop', {
     },
     set: function (value) {
         this.currentConfig.loop = value;
-        if (this.checkTouchLocked('property', 'loop', value)) {
+        if (this.manager.isLocked(this, 'loop', value)) {
             return;
         }
         if (this.audio) {
