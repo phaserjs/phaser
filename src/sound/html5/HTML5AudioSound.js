@@ -44,6 +44,21 @@ var HTML5AudioSound = new Class({
          * @default 0
          */
         this.previousTime = 0;
+        /**
+         * A queue of all actions performed on a sound object while audio was locked.
+         * Once the audio gets unlocked, after an explicit user interaction,
+         * all actions will be performed in chronological order.
+         *
+         * @private
+         * @property {{
+         *   sound: Phaser.Sound.HTML5AudioSound,
+         *   type: string,
+         *   name: string,
+         *   value?: any,
+         *   time: number,
+         * }[]} touchLockedActionQueue
+         */
+        this.touchLockedActionQueue = manager.touchLocked ? [] : null;
         this.duration = this.tags[0].duration;
         this.totalDuration = this.tags[0].duration;
         BaseSound.call(this, manager, key, config);
@@ -240,6 +255,19 @@ var HTML5AudioSound = new Class({
         if (this.audio) {
             this.audio.playbackRate = this.totalRate;
         }
+    },
+    checkTouchLocked: function (type, name, value) {
+        if (this.manager.touchLocked) {
+            this.touchLockedActionQueue.push({
+                sound: this,
+                type: type,
+                name: name,
+                value: value,
+                time: window.performance.now()
+            });
+            return true;
+        }
+        return false;
     }
 });
 /**
