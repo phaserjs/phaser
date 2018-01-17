@@ -98,6 +98,7 @@ var BaseSoundManager = new Class({
          * @default 0
          */
         this._detune = 0;
+        this.unlock();
     },
     /**
      * Adds a new sound into the sound manager.
