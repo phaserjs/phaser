@@ -98,6 +98,16 @@ var BaseSoundManager = new Class({
          * @default 0
          */
         this._detune = 0;
+        /**
+         * Mobile devices require sounds to be triggered from an explicit user action,
+         * such as a tap, before any sound can be loaded/played on a web page.
+         * Set to true if the audio system is currently locked awaiting user interaction.
+         *
+         * @readonly
+         * @property {boolean} locked
+         * @default false
+         */
+        this.locked = false;
         this.unlock();
     },
     /**
