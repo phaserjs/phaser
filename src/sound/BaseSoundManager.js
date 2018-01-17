@@ -311,6 +311,7 @@ var BaseSoundManager = new Class({
     update: function (time, delta) {
         if (this.unlocked) {
             this.unlocked = false;
+            this.locked = false;
             this.emit('unlocked', this);
         }
         for (var i = this.sounds.length - 1; i >= 0; i--) {
