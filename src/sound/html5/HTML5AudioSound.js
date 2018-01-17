@@ -294,6 +294,9 @@ Object.defineProperty(HTML5AudioSound.prototype, 'mute', {
     },
     set: function (value) {
         this.currentConfig.mute = value;
+        if (this.checkTouchLocked('property', 'mute', value)) {
+            return;
+        }
         this.setMute();
         this.emit('mute', this, value);
     }
