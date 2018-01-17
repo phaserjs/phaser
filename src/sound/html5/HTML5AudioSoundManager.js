@@ -126,6 +126,13 @@ var HTML5AudioSoundManager = new Class({
         });
         this.onBlurPausedSounds.length = 0;
     },
+    update: function () {
+        if (this.touchUnlocked) {
+            this.touchUnlocked = false;
+            this.touchLocked = false;
+        }
+        BaseSoundManager.prototype.update.call(this);
+    },
     destroy: function () {
         BaseSoundManager.prototype.destroy.call(this);
         this.onBlurPausedSounds.length = 0;
