@@ -55,6 +55,15 @@ var HTML5AudioSoundManager = new Class({
          */
         this.touchLocked = 'ontouchstart' in window;
         /**
+         * Flag used for indicating when the audio has been unlocked,
+         * if there ever was a need for it.
+         *
+         * @private
+         * @type {boolean}
+         * @default false
+         */
+        this.touchUnlocked = false;
+        /**
          * Property that actually holds the value of global mute
          * for HTML5 Audio sound manager implementation.
          *
