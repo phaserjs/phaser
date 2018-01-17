@@ -121,6 +121,7 @@ var HTML5AudioSoundManager = new Class({
                 });
                 sound.touchLockedActionQueue.length = 0;
                 sound.touchLockedActionQueue = null;
+                // TODO set correct duration value
             });
             allSoundsTouchLockedActionQueue_1.sort(function (tla1, tla2) {
                 return tla1.time - tla2.time;
