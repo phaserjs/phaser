@@ -47,14 +47,6 @@ var HTML5AudioSoundManager = new Class({
          */
         this.onBlurPausedSounds = [];
         /**
-         * HTML5 Audio streams cannot be loaded unless triggered by explicit user interaction, such as a tap.
-         * True if the audio system is currently locked awaiting user interaction.
-         *
-         * @private
-         * @property {boolean} touchLocked
-         */
-        this.touchLocked = 'ontouchstart' in window;
-        /**
          * Flag used for indicating when the audio has been unlocked,
          * if there ever was a need for it.
          *
