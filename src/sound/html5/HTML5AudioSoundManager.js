@@ -82,6 +82,10 @@ var HTML5AudioSoundManager = new Class({
                     }
                     return true;
                 });
+                _this.forEachActiveSound(function (sound) {
+                    sound.pause();
+                    sound.resume();
+                });
             };
             document.body.addEventListener('touchend', unlock_1, false);
         }
