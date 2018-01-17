@@ -86,7 +86,7 @@ var HTML5AudioSoundManager = new Class({
             var lastTag = allTags[allTags.length - 1];
             lastTag.oncanplaythrough = function () {
                 lastTag.oncanplaythrough = null;
-                _this.touchUnlocked = true;
+                _this.unlocked = true;
             };
             allTags.forEach(function (tag) {
                 tag.load();
