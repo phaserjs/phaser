@@ -11,8 +11,10 @@ var HTML5AudioFile = new Class({
 
     initialize:
 
-        function HTML5AudioFile (key, url, path, config)
+        function HTML5AudioFile (key, url, path, config, touchLocked)
         {
+            this.touchLocked = touchLocked;
+
             var fileConfig = {
                 type: 'audio',
                 extension: GetFastValue(url, 'type', ''),
