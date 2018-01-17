@@ -74,27 +74,25 @@ var HTML5AudioSoundManager = new Class({
     },
     unlock: function () {
         var _this = this;
-        if (this.touchLocked) {
-            var unlock_1 = function () {
-                document.body.removeEventListener('touchend', unlock_1);
-                var allTags = [];
-                _this.game.cache.audio.entries.each(function (key, tags) {
-                    for (var i = 0; i < tags.length; i++) {
-                        allTags.push(tags[i]);
-                    }
-                    return true;
-                });
-                var lastTag = allTags[allTags.length - 1];
-                lastTag.oncanplaythrough = function () {
-                    lastTag.oncanplaythrough = null;
-                    _this.touchUnlocked = true;
-                };
-                allTags.forEach(function (tag) {
-                    tag.load();
-                });
+        var unlock = function () {
+            document.body.removeEventListener('touchend', unlock);
+            var allTags = [];
+            _this.game.cache.audio.entries.each(function (key, tags) {
+                for (var i = 0; i < tags.length; i++) {
+                    allTags.push(tags[i]);
+                }
+                return true;
+            });
+            var lastTag = allTags[allTags.length - 1];
+            lastTag.oncanplaythrough = function () {
+                lastTag.oncanplaythrough = null;
+                _this.touchUnlocked = true;
             };
-            document.body.addEventListener('touchend', unlock_1, false);
-        }
+            allTags.forEach(function (tag) {
+                tag.load();
+            });
+        };
+        document.body.addEventListener('touchend', unlock, false);
     },
     onBlur: function () {
         this.forEachActiveSound(function (sound) {
