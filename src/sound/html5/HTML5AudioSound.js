@@ -95,6 +95,9 @@ var HTML5AudioSound = new Class({
         return true;
     },
     resume: function () {
+        if (this.checkTouchLocked('method', 'resume')) {
+            return false;
+        }
         if (this.startTime > 0) {
             return false;
         }
