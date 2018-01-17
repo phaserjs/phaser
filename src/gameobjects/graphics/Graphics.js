@@ -261,6 +261,16 @@ var Graphics = new Class({
 
     fillPoint: function (x, y, size)
     {
+        if (!size || size < 1)
+        {
+            size = 1;
+        }
+        else
+        {
+            x -= (size / 2);
+            y -= (size / 2);
+        }
+
         this.commandBuffer.push(
             Commands.FILL_RECT,
             x, y, size, size
