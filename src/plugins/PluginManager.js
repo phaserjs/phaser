@@ -33,10 +33,10 @@ var PluginManager = new Class({
         {
             pluginKey = localPlugins[i];
             
-            // console.log('installing', p);
-
             if (plugins[pluginKey])
             {
+                // console.log('installing', pluginKey);
+
                 //  Install a local reference inside of Systems
                 sys[pluginKey] = new plugins[pluginKey](scene);
             }

@@ -15,10 +15,14 @@
 module.exports = {
 
     Body: require('./Body'),
+    Body: require('./ImpactBody'),
     COLLIDES: require('./COLLIDES'),
     CollisionMap: require('./CollisionMap'),
+    Factory: require('./Factory'),
+    Image: require('./ImpactImage'),
+    ImpactPhysics: require('./ImpactPhysics'),
+    Sprite: require('./ImpactSprite'),
     TYPE: require('./TYPE'),
-    World: require('./World'),
-    Factory: require('./Factory')
+    World: require('./World')
   
 };

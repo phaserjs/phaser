@@ -1,15 +1,16 @@
 //  Phaser.Physics.Arcade
 
-//  World updated to run off the Phaser main loop.
-//  Body extended to support additional setter functions.
-
 module.exports = {
 
+    ArcadePhysics: require('./ArcadePhysics'),
     Body: require('./Body'),
+    Collider: require('./Collider'),
     Factory: require('./Factory'),
     Group: require('./PhysicsGroup'),
     Image: require('./ArcadeImage'),
     Sprite: require('./ArcadeSprite'),
+    StaticBody: require('./StaticBody'),
+    StaticGroup: require('./StaticPhysicsGroup'),
     World: require('./World')
   
 };

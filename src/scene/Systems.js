@@ -1,11 +1,8 @@
 var Class = require('../utils/Class');
-var Settings = require('./Settings');
 var EventEmitter = require('eventemitter3');
+var GetFastValue = require('../utils/object/GetFastValue');
 var ScenePlugin = require('./ScenePlugin');
-
-// var Data = require('../../data/Data');
-// var DataStore = require('../../data/DataStore');
-// var PhysicsManager = require('../plugins/PhysicsManager');
+var Settings = require('./Settings');
 
 var Systems = new Class({
 
@@ -69,13 +66,50 @@ var Systems = new Class({
             [ 'displayList', 'updateList', 'sceneManager', 'time', 'cameras', 'add', 'make', 'load', 'tweens', 'input' ]
         );
 
-        //  Optional Scene plugins - not referenced by core systems, can be overridden with user code
+        var physics = this.getPhysicsSystem();
 
-        // this.data = new Data(scene);
-        // this.dataStore = new DataStore(scene);
-        // this.physicsManager = new PhysicsManager(scene);
+        if (physics)
+        {
+            game.plugins.install(scene, [], physics);
+        }
 
         this.events.emit('boot', this);
+    },
+
+    getPhysicsSystem: function ()
+    {
+        var defaultSystem = this.game.config.defaultPhysicsSystem;
+        var sceneSystems = GetFastValue(this.settings, 'physics', false);
+
+        if (!defaultSystem && !sceneSystems)
+        {
+            //  No default physics system or systems in this scene
+            return;
+        }
+
+        //  Let's build the systems array
+        var output = [];
+
+        if (defaultSystem)
+        {
+            output.push(defaultSystem + 'Physics');
+        }
+
+        if (sceneSystems)
+        {
+            for (var key in sceneSystems)
+            {
+                key = key.concat('Physics');
+
+                if (output.indexOf(key) === -1)
+                {
+                    output.push(key);
+                }
+            }
+        }
+
+        //  An array of Physics systems to start for this Scene
+        return output;
     },
 
     inject: function (plugin)
@@ -99,13 +133,9 @@ var Systems = new Class({
 
         this.events.emit('update', time, delta);
 
-        // this.physicsManager.update(time, delta);
-
         this.scene.update.call(this.scene, time, delta);
 
         this.events.emit('postupdate', time, delta);
-
-        // this.physicsManager.postUpdate();
     },
 
     render: function (interpolation, renderer)
@@ -141,10 +171,7 @@ var Systems = new Class({
 
         this.settings.active = false;
 
-        if (this.scene.pause)
-        {
-            this.scene.pause.call(this.scene);
-        }
+        this.events.emit('pause', this);
     },
 
     resume: function ()
@@ -153,10 +180,7 @@ var Systems = new Class({
 
         this.settings.active = true;
 
-        if (this.scene.resume)
-        {
-            this.scene.resume.call(this.scene);
-        }
+        this.events.emit('resume', this);
     },
 
     sleep: function ()
@@ -166,10 +190,7 @@ var Systems = new Class({
         this.settings.active = false;
         this.settings.visible = false;
 
-        if (this.scene.sleep)
-        {
-            this.scene.sleep.call(this.scene);
-        }
+        this.events.emit('sleep', this);
     },
 
     wake: function ()
@@ -179,10 +200,7 @@ var Systems = new Class({
         this.settings.active = true;
         this.settings.visible = true;
 
-        if (this.scene.wake)
-        {
-            this.scene.wake.call(this.scene);
-        }
+        this.events.emit('wake', this);
     },
 
     start: function (data)
@@ -193,6 +211,8 @@ var Systems = new Class({
 
         this.settings.active = true;
         this.settings.visible = true;
+
+        this.events.emit('start', this);
     },
 
     shutdown: function ()
@@ -203,21 +223,11 @@ var Systems = new Class({
         this.settings.visible = false;
 
         this.events.emit('shutdown', this);
-
-        if (this.scene.shutdown)
-        {
-            this.scene.shutdown.call(this.scene);
-        }
     },
 
     destroy: function ()
     {
         this.events.emit('destroy', this);
-
-        if (this.scene.destroy)
-        {
-            this.scene.destroy.call(this.scene);
-        }
     }
 
 });

@@ -216,11 +216,6 @@ var World = new Class({
         return this;
     },
 
-    postUpdate: function ()
-    {
-        //  NOOP
-    },
-
     update: function (time, delta)
     {
         if (!this.enabled || this.bodies.size === 0)
