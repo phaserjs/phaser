@@ -11,7 +11,7 @@ var DynamicTilemapLayerCanvasRenderer = function (renderer, gameObject, interpol
 
     var renderTiles = gameObject.culledTiles;
     var length = renderTiles.length;
-    var image = gameObject.frame.source.image;
+    var image = gameObject.tileset.image.getSourceImage();
     var tileset = this.tileset;
 
     var tx = gameObject.x - camera.scrollX * gameObject.scrollFactorX;
