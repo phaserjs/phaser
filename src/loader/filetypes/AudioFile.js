@@ -83,7 +83,7 @@ AudioFile.create = function (loader, key, urls, config, xhrSettings)
         return new AudioFile(key, url, loader.path, xhrSettings, game.sound.context);
     }
 
-    return new HTML5AudioFile(key, url, loader.path, config);
+    return new HTML5AudioFile(key, url, loader.path, config, game.sound.touchLocked);
 };
 
 // this.load.audio('sound', 'assets/audio/booom.ogg', config, xhrSettings);
