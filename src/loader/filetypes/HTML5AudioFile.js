@@ -100,7 +100,11 @@ var HTML5AudioFile = new Class({
 
         if (touchLocked)
         {
-            this.onLoad();
+            setTimeout(function ()
+            {
+                this.onLoad();
+
+            }.bind(this));
         }
     }
 
