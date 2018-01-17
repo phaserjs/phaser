@@ -80,7 +80,7 @@ var HTML5AudioSound = new Class({
         return true;
     },
     resume: function () {
-        if (this.checkTouchLocked('method', 'resume')) {
+        if (this.manager.isLocked(this, 'resume')) {
             return false;
         }
         if (this.startTime > 0) {
