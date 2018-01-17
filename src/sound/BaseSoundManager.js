@@ -108,7 +108,9 @@ var BaseSoundManager = new Class({
          * @default false
          */
         this.locked = false;
-        this.unlock();
+        if (this.locked) {
+            this.unlock();
+        }
     },
     /**
      * Adds a new sound into the sound manager.
