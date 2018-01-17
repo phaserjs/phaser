@@ -74,12 +74,13 @@ var HTML5AudioFile = new Class({
             var audio = new Audio();
             audio.name = this.key + ('0' + i).slice(-2); // Useful for debugging
             audio.dataset.used = 'false';
-            audio.preload = 'auto';
 
-            // TODO check if ios is locked
-
-            audio.oncanplaythrough = this.onProgress.bind(this);
-            audio.onerror = this.onError.bind(this);
+            if (!('ontouchstart' in window))
+            {
+                audio.preload = 'auto';
+                audio.oncanplaythrough = this.onProgress.bind(this);
+                audio.onerror = this.onError.bind(this);
+            }
 
             this.data.push(audio);
         }
