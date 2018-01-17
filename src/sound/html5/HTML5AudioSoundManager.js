@@ -71,6 +71,23 @@ var HTML5AudioSoundManager = new Class({
         this.sounds.push(sound);
         return sound;
     },
+    unlock: function () {
+        var _this = this;
+        if ('ontouchstart' in window) {
+            var unlock_1 = function () {
+                document.body.removeEventListener('touchstart', unlock_1);
+                document.body.removeEventListener('touchend', unlock_1);
+                _this.game.cache.audio.entries.each(function (key, tags) {
+                    for (var i = 0; i < tags.length; i++) {
+                        tags[i].load();
+                    }
+                    return true;
+                });
+            };
+            document.body.addEventListener('touchstart', unlock_1, false);
+            document.body.addEventListener('touchend', unlock_1, false);
+        }
+    },
     onBlur: function () {
         this.forEachActiveSound(function (sound) {
             if (sound.isPlaying) {
