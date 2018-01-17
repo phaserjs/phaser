@@ -89,16 +89,14 @@ var WebAudioSoundManager = new Class({
      */
     unlock: function () {
         var _this = this;
-        if (this.context.state === 'suspended' && 'ontouchstart' in window) {
-            var unlock_1 = function () {
-                _this.context.resume().then(function () {
-                    document.body.removeEventListener('touchstart', unlock_1);
-                    document.body.removeEventListener('touchend', unlock_1);
-                });
-            };
-            document.body.addEventListener('touchstart', unlock_1, false);
-            document.body.addEventListener('touchend', unlock_1, false);
-        }
+        var unlock = function () {
+            _this.context.resume().then(function () {
+                document.body.removeEventListener('touchstart', unlock);
+                document.body.removeEventListener('touchend', unlock);
+            });
+        };
+        document.body.addEventListener('touchstart', unlock, false);
+        document.body.addEventListener('touchend', unlock, false);
     },
     /**
      * Method used internally for pausing sound manager if
