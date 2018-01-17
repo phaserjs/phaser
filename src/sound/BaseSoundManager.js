@@ -249,6 +249,17 @@ var BaseSoundManager = new Class({
         this.emit('stopall', this);
     },
     /**
+     * Method used internally for unlocking audio playback on devices that
+     * require user interaction before any sound can be played on a web page.
+     *
+     * Read more about how this issue is handled here in [this article](TODO add link).
+     *
+     * @override
+     * @protected
+     * @method Phaser.Sound.BaseSoundManager#unlock
+     */
+    unlock: NOOP,
+    /**
      * Method used internally for pausing sound manager if
      * Phaser.Sound.BaseSoundManager#pauseOnBlur is set to true.
      *
