@@ -90,7 +90,7 @@ var HTML5AudioSoundManager = new Class({
     },
     unlock: function () {
         var _this = this;
-        if ('ontouchstart' in window) {
+        if (this.touchLocked) {
             var unlock_1 = function () {
                 document.body.removeEventListener('touchend', unlock_1);
                 _this.game.cache.audio.entries.each(function (key, tags) {
