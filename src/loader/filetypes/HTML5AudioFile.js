@@ -102,6 +102,8 @@ var HTML5AudioFile = new Class({
         {
             setTimeout(function ()
             {
+                this.filesLoaded = this.filesTotal;
+                this.percentComplete = 1;
                 this.onLoad();
 
             }.bind(this));
