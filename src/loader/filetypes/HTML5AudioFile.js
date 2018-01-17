@@ -74,7 +74,7 @@ var HTML5AudioFile = new Class({
         for(var i = 0; i < instances; i++)
         {
             var audio = new Audio();
-            audio.name = this.key + ('0' + i).slice(-2); // Useful for debugging
+            audio.dataset.name = this.key + ('0' + i).slice(-2); // Useful for debugging
             audio.dataset.used = 'false';
 
             if (!touchLocked)
