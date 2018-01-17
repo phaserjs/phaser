@@ -327,6 +327,9 @@ Object.defineProperty(HTML5AudioSound.prototype, 'volume', {
  * @property {number} rate
  */
 Object.defineProperty(HTML5AudioSound.prototype, 'rate', {
+    get: function () {
+        return Object.getOwnPropertyDescriptor(BaseSound.prototype, 'rate').get.call(this);
+    },
     set: function (value) {
         this.currentConfig.rate = value;
         if (this.checkTouchLocked('property', 'rate', value)) {
