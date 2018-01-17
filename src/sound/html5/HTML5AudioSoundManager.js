@@ -136,6 +136,9 @@ var HTML5AudioSoundManager = new Class({
                     allSoundsTouchLockedActionQueue_1.push(touchLockedAction);
                 });
             });
+            allSoundsTouchLockedActionQueue_1.sort(function (tla1, tla2) {
+                return tla1.time - tla2.time;
+            });
             allSoundsTouchLockedActionQueue_1.forEach(function (touchLockedAction) {
                 switch (touchLockedAction.type) {
                     case 'method':
