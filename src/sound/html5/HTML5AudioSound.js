@@ -304,7 +304,7 @@ Object.defineProperty(HTML5AudioSound.prototype, 'rate', {
     },
     set: function (value) {
         this.currentConfig.rate = value;
-        if (this.checkTouchLocked('property', 'rate', value)) {
+        if (this.manager.isLocked(this, 'rate', value)) {
             return;
         }
         Object.getOwnPropertyDescriptor(BaseSound.prototype, 'rate').set.call(this, value);
