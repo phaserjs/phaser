@@ -119,9 +119,6 @@ var BaseSoundManager = new Class({
         if (this.locked) {
             this.unlock();
         }
-        else {
-            this.emit('ready', this);
-        }
     },
     /**
      * Adds a new sound into the sound manager.
@@ -315,7 +312,6 @@ var BaseSoundManager = new Class({
             this.unlocked = false;
             this.locked = false;
             this.emit('unlocked', this);
-            this.emit('ready', this);
         }
         for (var i = this.sounds.length - 1; i >= 0; i--) {
             if (this.sounds[i].pendingRemove) {
