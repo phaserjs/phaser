@@ -133,9 +133,14 @@ var Loader = new Class({
         return TilemapCSVFile.create(this, key, url, TILEMAP_FORMATS.CSV, xhrSettings);
     },
 
-    tilemapJSON: function (key, url, xhrSettings)
+    tilemapTiledJSON: function (key, url, xhrSettings)
     {
         return TilemapJSONFile.create(this, key, url, TILEMAP_FORMATS.TILED_JSON, xhrSettings);
+    },
+
+    tilemapWeltmeister: function (key, url, xhrSettings)
+    {
+        return TilemapJSONFile.create(this, key, url, TILEMAP_FORMATS.WELTMEISTER, xhrSettings);
     },
 
     //  ---------------------------------------------------

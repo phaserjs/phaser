@@ -2,6 +2,7 @@
 var Parse2DArray = require('./Parse2DArray');
 var ParseCSV = require('./ParseCSV');
 var ParseTiledJSON = require('./parsetiledjson/');
+var ParseWeltmister = require('./parseweltmeister/');
 var Formats = require('../Formats');
 
 /**
@@ -38,6 +39,9 @@ var Parse = function (name, mapFormat, data, tileWidth, tileHeight, insertNull)
             break;
         case (Formats.TILED_JSON):
             newMap = ParseTiledJSON(name, data, insertNull);
+            break;
+        case (Formats.WELTMEISTER):
+            newMap = ParseWeltmister(name, data, insertNull);
             break;
         default:
             console.warn('Unrecognized tilemap data format: ' + mapFormat);
