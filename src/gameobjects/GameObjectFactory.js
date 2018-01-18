@@ -12,8 +12,6 @@ var GameObjectFactory = new Class({
 
         this.systems = scene.sys;
 
-        this.mapping = 'add';
-
         this.systems.events.on('boot', this.boot, this);
 
         this.displayList;
@@ -22,8 +20,6 @@ var GameObjectFactory = new Class({
 
     boot: function ()
     {
-        this.systems.inject(this);
-
         this.displayList = this.systems.displayList;
         this.updateList = this.systems.updateList;
 
@@ -48,7 +44,7 @@ var GameObjectFactory = new Class({
 
     shutdown: function ()
     {
-
+        //  TODO
     },
 
     destroy: function ()
@@ -70,6 +66,6 @@ GameObjectFactory.register = function (type, factoryFunction)
     }
 };
 
-PluginManager.register('add', GameObjectFactory);
+PluginManager.register('GameObjectFactory', GameObjectFactory, 'add');
 
 module.exports = GameObjectFactory;

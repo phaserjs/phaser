@@ -11,8 +11,6 @@ var UpdateList = new Class({
 
         this.systems = scene.sys;
 
-        this.mapping = null;
-
         this.systems.events.on('boot', this.boot, this);
 
         this._list = [];
@@ -22,8 +20,6 @@ var UpdateList = new Class({
 
     boot: function ()
     {
-        this.systems.inject(this);
-
         this.systems.events.on('preupdate', this.preUpdate, this);
         this.systems.events.on('update', this.update, this);
         this.systems.events.on('shutdown', this.shutdown, this);
@@ -135,6 +131,6 @@ var UpdateList = new Class({
 
 });
 
-PluginManager.register('updateList', UpdateList);
+PluginManager.register('UpdateList', UpdateList, 'updateList');
 
 module.exports = UpdateList;

@@ -37,8 +37,6 @@ var Loader = new Class({
 
         this.systems = scene.sys;
 
-        this.mapping = 'load';
-
         this.systems.events.on('boot', this.boot, this);
 
         this._multilist = {};
@@ -46,8 +44,6 @@ var Loader = new Class({
 
     boot: function ()
     {
-        this.systems.inject(this);
-
         this.systems.events.on('shutdown', this.shutdown, this);
         this.systems.events.on('destroy', this.destroy, this);
     },
@@ -325,6 +321,6 @@ var Loader = new Class({
 
 });
 
-PluginManager.register('load', Loader);
+PluginManager.register('Loader', Loader, 'load');
 
 module.exports = Loader;

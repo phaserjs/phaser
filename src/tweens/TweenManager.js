@@ -18,8 +18,6 @@ var TweenManager = new Class({
 
         this.systems = scene.sys;
 
-        this.mapping = 'tweens';
-
         this.systems.events.on('boot', this.boot, this);
 
         this.timeScale = 1;
@@ -34,8 +32,6 @@ var TweenManager = new Class({
 
     boot: function ()
     {
-        this.systems.inject(this);
-
         this.systems.events.on('preupdate', this.preUpdate, this);
         this.systems.events.on('update', this.update, this);
         this.systems.events.on('shutdown', this.shutdown, this);
@@ -479,6 +475,6 @@ var TweenManager = new Class({
 
 });
 
-PluginManager.register('tweens', TweenManager);
+PluginManager.register('TweenManager', TweenManager, 'tweens');
 
 module.exports = TweenManager;

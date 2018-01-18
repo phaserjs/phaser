@@ -12,8 +12,6 @@ var GameObjectCreator = new Class({
 
         this.systems = scene.sys;
 
-        this.mapping = 'make';
-
         this.systems.events.on('boot', this.boot, this);
 
         this.displayList;
@@ -22,8 +20,6 @@ var GameObjectCreator = new Class({
 
     boot: function ()
     {
-        this.systems.inject(this);
-
         this.displayList = this.systems.displayList;
         this.updateList = this.systems.updateList;
 
@@ -33,7 +29,7 @@ var GameObjectCreator = new Class({
 
     shutdown: function ()
     {
-
+        //  TODO
     },
 
     destroy: function ()
@@ -55,6 +51,6 @@ GameObjectCreator.register = function (type, factoryFunction)
     }
 };
 
-PluginManager.register('make', GameObjectCreator);
+PluginManager.register('GameObjectCreator', GameObjectCreator, 'make');
 
 module.exports = GameObjectCreator;

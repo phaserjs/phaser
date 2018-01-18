@@ -17,15 +17,11 @@ var CameraManager = new Class({
 
         this.systems = scene.sys;
 
-        this.mapping = 'cameras';
-
         this.systems.events.on('boot', this.boot, this);
     },
 
     boot: function ()
     {
-        this.systems.inject(this);
-
         this.systems.events.on('update', this.update, this);
         this.systems.events.on('shutdown', this.shutdown, this);
         this.systems.events.on('destroy', this.destroy, this);
@@ -135,6 +131,6 @@ var CameraManager = new Class({
 
 });
 
-// PluginManager.register('cameras', CameraManager);
+PluginManager.register('CameraManager3D', CameraManager, 'cameras3d');
 
 module.exports = CameraManager;

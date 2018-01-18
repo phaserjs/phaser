@@ -13,8 +13,6 @@ var DisplayList = new Class({
 
         this.systems = scene.sys;
 
-        this.mapping = 'children';
-
         this.systems.events.on('boot', this.boot, this);
 
         //  The objects that belong to this collection.
@@ -28,8 +26,6 @@ var DisplayList = new Class({
 
     boot: function ()
     {
-        this.systems.inject(this);
-
         this.systems.events.on('shutdown', this.shutdown, this);
         this.systems.events.on('destroy', this.destroy, this);
     },
@@ -724,6 +720,6 @@ var DisplayList = new Class({
 
 });
 
-PluginManager.register('displayList', DisplayList);
+PluginManager.register('DisplayList', DisplayList, 'displayList');
 
 module.exports = DisplayList;

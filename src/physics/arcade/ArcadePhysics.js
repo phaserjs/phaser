@@ -18,8 +18,6 @@ var ArcadePhysics = new Class({
 
         this.systems = scene.sys;
 
-        this.mapping = 'physics';
-
         this.systems.events.on('boot', this.boot, this);
 
         this.config = this.getConfig();
@@ -46,8 +44,6 @@ var ArcadePhysics = new Class({
     {
         this.world = new World(this.scene, this.config);
         this.add = new Factory(this.world);
-
-        this.systems.inject(this);
 
         this.systems.events.on('update', this.world.update, this.world);
         this.systems.events.on('postupdate', this.world.postUpdate, this.world);
@@ -95,6 +91,6 @@ var ArcadePhysics = new Class({
 
 });
 
-PluginManager.register('arcadePhysics', ArcadePhysics);
+PluginManager.register('ArcadePhysics', ArcadePhysics, 'arcadePhysics');
 
 module.exports = ArcadePhysics;

@@ -32,8 +32,6 @@ var InputPlugin = new Class({
 
         this.systems = scene.sys;
 
-        this.mapping = 'input';
-
         this.systems.events.on('boot', this.boot, this);
 
         //  InputManager
@@ -96,8 +94,6 @@ var InputPlugin = new Class({
 
     boot: function ()
     {
-        this.systems.inject(this);
-
         this.systems.events.on('preupdate', this.preUpdate, this);
         this.systems.events.on('update', this.update, this);
         this.systems.events.on('shutdown', this.shutdown, this);
@@ -1006,6 +1002,6 @@ var InputPlugin = new Class({
 
 });
 
-PluginManager.register('input', InputPlugin);
+PluginManager.register('InputPlugin', InputPlugin, 'input');
 
 module.exports = InputPlugin;

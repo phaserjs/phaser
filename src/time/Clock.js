@@ -13,8 +13,6 @@ var Clock = new Class({
 
         this.systems = scene.sys;
 
-        this.mapping = 'time';
-
         this.systems.events.on('boot', this.boot, this);
 
         this.now = Date.now();
@@ -32,8 +30,6 @@ var Clock = new Class({
 
     boot: function ()
     {
-        this.systems.inject(this);
-
         this.systems.events.on('preupdate', this.preUpdate, this);
         this.systems.events.on('update', this.update, this);
         this.systems.events.on('shutdown', this.shutdown, this);
@@ -200,6 +196,6 @@ var Clock = new Class({
 
 });
 
-PluginManager.register('time', Clock);
+PluginManager.register('Clock', Clock, 'time');
 
 module.exports = Clock;
