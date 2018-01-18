@@ -1,5 +1,6 @@
 var Class = require('../utils/Class');
 var CONST = require('../const');
+var DefaultScenePlugins = require('../DefaultScenePlugins');
 var GetValue = require('../utils/object/GetValue');
 var MATH = require('../math/const');
 var NOOP = require('../utils/NOOP');
@@ -180,6 +181,9 @@ var Config = new Class({
         //  }
         this.physics = GetValue(config, 'physics', {});
         this.defaultPhysicsSystem = GetValue(this.physics, 'default', false);
+
+        //  Scene Plugins
+        this.defaultPlugins = GetValue(config, 'plugins', DefaultScenePlugins);
 
         //  Default / Missing Images
         var pngPrefix = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAg';
