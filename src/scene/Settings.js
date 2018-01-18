@@ -27,6 +27,8 @@ var Settings = {
             active: GetValue(config, 'active', false),
             visible: GetValue(config, 'visible', true),
 
+            isBooted: false,
+
             //  Loader payload array
 
             data: {},

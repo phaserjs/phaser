@@ -7,7 +7,7 @@ var PluginManager = new Class({
     initialize:
 
     //  The PluginManager is global and belongs to the Game instance, not a Scene.
-    function PluginManager (game, config)
+    function PluginManager (game)
     {
         this.game = game;
 
@@ -45,6 +45,7 @@ var PluginManager = new Class({
     {
         var scene = sys.scene;
         var map = sys.settings.map;
+        var isBooted = sys.settings.isBooted;
 
         for (var i = 0; i < scenePlugins.length; i++)
         {
@@ -53,13 +54,21 @@ var PluginManager = new Class({
             var source = plugins[pluginKey];
 
             // console.log('PluginManager.local', pluginKey, 'to', source.mapping);
+
+            var plugin = new source.plugin(scene);
             
-            sys[source.mapping] = new source.plugin(scene);
+            sys[source.mapping] = plugin;
 
             //  Scene level injection
             if (map.hasOwnProperty(source.mapping))
             {
-                scene[map[source.mapping]] = sys[source.mapping];
+                scene[map[source.mapping]] = plugin;
+            }
+
+            //  Scene is already booted, usually because this method is being called at run-time, so boot the plugin
+            if (isBooted)
+            {
+                plugin.boot();
             }
         }
     },

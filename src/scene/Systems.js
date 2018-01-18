@@ -1,7 +1,5 @@
 var Class = require('../utils/Class');
 var CoreScenePlugins = require('../CoreScenePlugins');
-var EventEmitter = require('eventemitter3');
-var GetFastValue = require('../utils/object/GetFastValue');
 var GetPhysicsPlugins = require('./GetPhysicsPlugins');
 var GetScenePlugins = require('./GetScenePlugins');
 var GlobalPlugins = require('../GlobalPlugins');
@@ -47,8 +45,6 @@ var Systems = new Class({
 
     init: function (game)
     {
-        var scene = this.scene;
-
         this.game = game;
 
         game.plugins.installGlobal(this, GlobalPlugins);
@@ -60,6 +56,18 @@ var Systems = new Class({
         game.plugins.installLocal(this, GetPhysicsPlugins(this));
 
         this.events.emit('boot', this);
+
+        this.settings.isBooted = true;
+    },
+
+    install: function (plugin)
+    {
+        if (!Array.isArray(plugin))
+        {
+            plugin = [ plugin ];
+        }
+
+        this.game.plugins.installLocal(this, plugin);
     },
 
     step: function (time, delta)
