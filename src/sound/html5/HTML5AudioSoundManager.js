@@ -92,6 +92,10 @@ var HTML5AudioSoundManager = new Class({
             moved = true;
         };
         var unlock = function () {
+            if (moved) {
+                moved = false;
+                return;
+            }
             document.body.removeEventListener('touchend', unlock);
             var allTags = [];
             _this.game.cache.audio.entries.each(function (key, tags) {
