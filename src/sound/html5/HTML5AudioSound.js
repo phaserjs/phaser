@@ -122,7 +122,7 @@ var HTML5AudioSound = new Class({
         if (delay === 0) {
             this.startTime = 0;
             if (this.audio.paused) {
-                this.audio.play();
+                this.playCatchPromise();
             }
         }
         else {
