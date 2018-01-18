@@ -11,9 +11,9 @@ var HTML5AudioFile = new Class({
 
     initialize:
 
-        function HTML5AudioFile (key, url, path, config, touchLocked)
+        function HTML5AudioFile (key, url, path, config, locked)
         {
-            this.touchLocked = touchLocked;
+            this.locked = locked;
 
             var fileConfig = {
                 type: 'audio',
@@ -77,7 +77,7 @@ var HTML5AudioFile = new Class({
             audio.dataset.name = this.key + ('0' + i).slice(-2); // Useful for debugging
             audio.dataset.used = 'false';
 
-            if (!this.touchLocked)
+            if (!this.locked)
             {
                 audio.preload = 'auto';
                 audio.oncanplaythrough = this.onProgress.bind(this);
@@ -92,13 +92,13 @@ var HTML5AudioFile = new Class({
             audio = this.data[i];
             audio.src = GetURL(this, baseURL || '');
 
-            if (!this.touchLocked)
+            if (!this.locked)
             {
                 audio.load();
             }
         }
 
-        if (this.touchLocked)
+        if (this.locked)
         {
             setTimeout(function ()
             {
