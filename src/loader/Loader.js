@@ -3,6 +3,7 @@ var Class = require('../utils/Class');
 var CONST = require('./const');
 var NumberArray = require('../utils/array/NumberArray');
 var PluginManager = require('../plugins/PluginManager');
+var TILEMAP_FORMATS = require('../gameobjects/tilemap/Formats');
 
 //  TODO - Injection mapped
 var AnimationJSONFile = require('./filetypes/AnimationJSONFile');
@@ -129,12 +130,12 @@ var Loader = new Class({
 
     tilemapCSV: function (key, url, xhrSettings)
     {
-        return TilemapCSVFile.create(this, key, url, xhrSettings);
+        return TilemapCSVFile.create(this, key, url, TILEMAP_FORMATS.CSV, xhrSettings);
     },
 
     tilemapJSON: function (key, url, xhrSettings)
     {
-        return TilemapJSONFile.create(this, key, url, xhrSettings);
+        return TilemapJSONFile.create(this, key, url, TILEMAP_FORMATS.TILED_JSON, xhrSettings);
     },
 
     //  ---------------------------------------------------

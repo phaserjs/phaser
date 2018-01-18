@@ -35,7 +35,7 @@ var ParseJSONTiled = function (name, json, insertNull)
         tileWidth: json.tilewidth,
         tileHeight: json.tileheight,
         orientation: json.orientation,
-        format: Formats.TILEMAP_TILED_JSON,
+        format: Formats.TILED_JSON,
         version: json.version,
         properties: json.properties
     });

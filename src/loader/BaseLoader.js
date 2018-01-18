@@ -3,7 +3,6 @@ var CONST = require('./const');
 var CustomSet = require('../structs/Set');
 var EventEmitter = require('eventemitter3');
 var ParseXMLBitmapFont = require('../gameobjects/bitmaptext/ParseXMLBitmapFont');
-var TilemapFormats = require('../gameobjects/tilemap/Formats');
 var XHRSettings = require('./XHRSettings');
 
 //  Phaser.Loader.BaseLoader
@@ -451,11 +450,8 @@ var BaseLoader = new Class({
                     break;
 
                 case 'tilemapCSV':
-                    cache.tilemap.add(file.key, { format: TilemapFormats.TILEMAP_CSV, data: file.data });
-                    break;
-
                 case 'tilemapJSON':
-                    cache.tilemap.add(file.key, { format: TilemapFormats.TILEMAP_TILED_JSON, data: file.data });
+                    cache.tilemap.add(file.key, { format: file.tilemapFormat, data: file.data });
                     break;
             }
         });
