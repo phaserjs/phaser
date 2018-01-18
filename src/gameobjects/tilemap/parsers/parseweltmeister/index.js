@@ -27,8 +27,8 @@ var ParseWeltmeister = function (name, json, insertNull)
     var height = 0;
     for (var i = 0; i < json.layer.length; i++)
     {
-        if (json.layer.width > width) { width = json.layer.width; }
-        if (json.layer.height > height) { height = json.layer.height; }
+        if (json.layer[i].width > width) { width = json.layer[i].width; }
+        if (json.layer[i].height > height) { height = json.layer[i].height; }
     }
 
     var mapData = new MapData({
