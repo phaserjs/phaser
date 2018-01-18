@@ -206,7 +206,7 @@ var HTML5AudioSound = new Class({
                     this.audio.currentTime += Math.max(0, time - this.startTime) / 1000;
                     this.startTime = 0;
                     this.previousTime = this.audio.currentTime;
-                    this.audio.play();
+                    this.playCatchPromise();
                 }
                 return;
             }
