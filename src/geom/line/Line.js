@@ -11,12 +11,16 @@ var Line = new Class({
 
     function Line (x1, y1, x2, y2)
     {
-        this.x1 = 0;
-        this.y1 = 0;
-        this.x2 = 0;
-        this.y2 = 0;
+        if (x1 === undefined) { x1 = 0; }
+        if (y1 === undefined) { y1 = 0; }
+        if (x2 === undefined) { x2 = 0; }
+        if (y2 === undefined) { y2 = 0; }
 
-        this.setTo(x1, y1, x2, y2);
+        this.x1 = x1;
+        this.y1 = y1;
+
+        this.x2 = x2;
+        this.y2 = y2;
     },
 
     getPoint: function (position, output)
@@ -52,12 +56,12 @@ var Line = new Class({
 
     getPointA: function ()
     {
-        return { x1: this.x1, y1: this.y1 };
+        return { x: this.x1, y: this.y1 };
     },
 
     getPointB: function ()
     {
-        return { x1: this.x2, y1: this.y2 };
+        return { x: this.x2, y: this.y2 };
     },
 
     left: {
