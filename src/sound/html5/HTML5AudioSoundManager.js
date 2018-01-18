@@ -106,6 +106,9 @@ var HTML5AudioSoundManager = new Class({
             });
         };
         this.once('unlocked', function () {
+            _this.forEachActiveSound(function (sound) {
+                sound.duration = sound.tags[0].duration;
+            });
             _this.lockedActionsQueue.forEach(function (lockedAction) {
                 if (lockedAction.sound[lockedAction.prop].apply) {
                     lockedAction.sound[lockedAction.prop].apply(lockedAction.sound, lockedAction.value || []);
