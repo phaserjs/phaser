@@ -187,16 +187,20 @@ var Game = new Class({
 
         AddToDOM(this.canvas, this.config.parent);
 
-        this.textures.boot();
+        this.events.emit('boot');
 
-        this.anims.boot(this.textures);
+        //  The Texture Manager has to wait on a couple of non-blocking events before it's fully ready, so it will emit this event
+        this.events.once('ready', this.start, this);
+    },
 
-        this.plugins.boot();
-
-        this.input.boot();
-
-        this.scene.boot();
-
+    /**
+     * [description]
+     *
+     * @method Phaser.Game#start
+     * @since 3.0.0
+     */
+    start: function ()
+    {
         this.isRunning = true;
 
         this.config.postBoot();

@@ -38,7 +38,7 @@ var ParseToTilemap = function (scene, key, tileWidth, tileHeight, width, height,
     if (Array.isArray(data))
     {
         var name = key !== undefined ? key : 'map';
-        mapData = Parse(name, Formats.TILEMAP_2D_ARRAY, data, tileWidth, tileHeight, insertNull);
+        mapData = Parse(name, Formats.ARRAY_2D, data, tileWidth, tileHeight, insertNull);
     }
     else if (key !== undefined)
     {

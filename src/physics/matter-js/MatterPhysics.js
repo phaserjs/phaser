@@ -25,9 +25,10 @@ var MatterPhysics = new Class({
 
         this.systems = scene.sys;
 
-        this.mapping = 'matter';
-
-        this.systems.events.on('boot', this.boot, this);
+        if (!scene.sys.settings.isBooted)
+        {
+            scene.sys.events.once('boot', this.boot, this);
+        }
 
         this.config = this.getConfig();
 
@@ -70,12 +71,12 @@ var MatterPhysics = new Class({
             Plugin.use(MatterLib, MatterWrap);
         }
 
-        this.systems.inject(this);
+        var eventEmitter = this.systems.events;
 
-        this.systems.events.on('update', this.world.update, this.world);
-        this.systems.events.on('postupdate', this.world.postUpdate, this.world);
-        this.systems.events.on('shutdown', this.shutdown, this);
-        this.systems.events.on('destroy', this.destroy, this);
+        eventEmitter.on('update', this.world.update, this.world);
+        eventEmitter.on('postupdate', this.world.postUpdate, this.world);
+        eventEmitter.on('shutdown', this.shutdown, this);
+        eventEmitter.on('destroy', this.destroy, this);
     },
 
     enableAttractorPlugin: function ()
@@ -106,6 +107,6 @@ var MatterPhysics = new Class({
 
 });
 
-PluginManager.register('matterPhysics', MatterPhysics);
+PluginManager.register('MatterPhysics', MatterPhysics, 'matterPhysics');
 
 module.exports = MatterPhysics;

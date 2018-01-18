@@ -28,8 +28,8 @@ var FromPoints = function (points, out)
         return out;
     }
 
-    var minX = Number.MAX_SAFE_INTEGER;
-    var minY = Number.MAX_SAFE_INTEGER;
+    var minX = Number.MAX_VALUE;
+    var minY = Number.MAX_VALUE;
 
     var maxX = Number.MIN_SAFE_INTEGER;
     var maxY = Number.MIN_SAFE_INTEGER;

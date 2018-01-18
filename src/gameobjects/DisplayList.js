@@ -13,9 +13,10 @@ var DisplayList = new Class({
 
         this.systems = scene.sys;
 
-        this.mapping = 'children';
-
-        this.systems.events.on('boot', this.boot, this);
+        if (!scene.sys.settings.isBooted)
+        {
+            scene.sys.events.once('boot', this.boot, this);
+        }
 
         //  The objects that belong to this collection.
         //  The equivalent of the old `Sprite.children` array.
@@ -28,10 +29,10 @@ var DisplayList = new Class({
 
     boot: function ()
     {
-        this.systems.inject(this);
+        var eventEmitter = this.systems.events;
 
-        this.systems.events.on('shutdown', this.shutdown, this);
-        this.systems.events.on('destroy', this.destroy, this);
+        eventEmitter.on('shutdown', this.shutdown, this);
+        eventEmitter.on('destroy', this.destroy, this);
     },
 
     process: function ()
@@ -724,6 +725,6 @@ var DisplayList = new Class({
 
 });
 
-PluginManager.register('displayList', DisplayList);
+PluginManager.register('DisplayList', DisplayList, 'displayList');
 
 module.exports = DisplayList;

@@ -18,9 +18,10 @@ var ArcadePhysics = new Class({
 
         this.systems = scene.sys;
 
-        this.mapping = 'physics';
-
-        this.systems.events.on('boot', this.boot, this);
+        if (!scene.sys.settings.isBooted)
+        {
+            scene.sys.events.once('boot', this.boot, this);
+        }
 
         this.config = this.getConfig();
 
@@ -47,12 +48,12 @@ var ArcadePhysics = new Class({
         this.world = new World(this.scene, this.config);
         this.add = new Factory(this.world);
 
-        this.systems.inject(this);
+        var eventEmitter = this.systems.events;
 
-        this.systems.events.on('update', this.world.update, this.world);
-        this.systems.events.on('postupdate', this.world.postUpdate, this.world);
-        this.systems.events.on('shutdown', this.shutdown, this);
-        this.systems.events.on('destroy', this.destroy, this);
+        eventEmitter.on('update', this.world.update, this.world);
+        eventEmitter.on('postupdate', this.world.postUpdate, this.world);
+        eventEmitter.on('shutdown', this.shutdown, this);
+        eventEmitter.on('destroy', this.destroy, this);
     },
 
     overlap: function (object1, object2, overlapCallback, processCallback, callbackContext)
@@ -95,6 +96,6 @@ var ArcadePhysics = new Class({
 
 });
 
-PluginManager.register('arcadePhysics', ArcadePhysics);
+PluginManager.register('ArcadePhysics', ArcadePhysics, 'arcadePhysics');
 
 module.exports = ArcadePhysics;

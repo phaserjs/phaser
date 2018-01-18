@@ -12,9 +12,10 @@ var GameObjectCreator = new Class({
 
         this.systems = scene.sys;
 
-        this.mapping = 'make';
-
-        this.systems.events.on('boot', this.boot, this);
+        if (!scene.sys.settings.isBooted)
+        {
+            scene.sys.events.once('boot', this.boot, this);
+        }
 
         this.displayList;
         this.updateList;
@@ -22,18 +23,18 @@ var GameObjectCreator = new Class({
 
     boot: function ()
     {
-        this.systems.inject(this);
-
         this.displayList = this.systems.displayList;
         this.updateList = this.systems.updateList;
 
-        this.systems.events.on('shutdown', this.shutdown, this);
-        this.systems.events.on('destroy', this.destroy, this);
+        var eventEmitter = this.systems.events;
+
+        eventEmitter.on('shutdown', this.shutdown, this);
+        eventEmitter.on('destroy', this.destroy, this);
     },
 
     shutdown: function ()
     {
-
+        //  TODO
     },
 
     destroy: function ()
@@ -55,6 +56,6 @@ GameObjectCreator.register = function (type, factoryFunction)
     }
 };
 
-PluginManager.register('make', GameObjectCreator);
+PluginManager.register('GameObjectCreator', GameObjectCreator, 'make');
 
 module.exports = GameObjectCreator;

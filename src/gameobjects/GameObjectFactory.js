@@ -12,9 +12,10 @@ var GameObjectFactory = new Class({
 
         this.systems = scene.sys;
 
-        this.mapping = 'add';
-
-        this.systems.events.on('boot', this.boot, this);
+        if (!scene.sys.settings.isBooted)
+        {
+            scene.sys.events.once('boot', this.boot, this);
+        }
 
         this.displayList;
         this.updateList;
@@ -22,13 +23,13 @@ var GameObjectFactory = new Class({
 
     boot: function ()
     {
-        this.systems.inject(this);
-
         this.displayList = this.systems.displayList;
         this.updateList = this.systems.updateList;
 
-        this.systems.events.on('shutdown', this.shutdown, this);
-        this.systems.events.on('destroy', this.destroy, this);
+        var eventEmitter = this.systems.events;
+
+        eventEmitter.on('shutdown', this.shutdown, this);
+        eventEmitter.on('destroy', this.destroy, this);
     },
 
     existing: function (child)
@@ -48,7 +49,7 @@ var GameObjectFactory = new Class({
 
     shutdown: function ()
     {
-
+        //  TODO
     },
 
     destroy: function ()
@@ -70,6 +71,6 @@ GameObjectFactory.register = function (type, factoryFunction)
     }
 };
 
-PluginManager.register('add', GameObjectFactory);
+PluginManager.register('GameObjectFactory', GameObjectFactory, 'add');
 
 module.exports = GameObjectFactory;

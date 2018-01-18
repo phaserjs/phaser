@@ -3,6 +3,7 @@ var Class = require('../utils/Class');
 var CONST = require('./const');
 var NumberArray = require('../utils/array/NumberArray');
 var PluginManager = require('../plugins/PluginManager');
+var TILEMAP_FORMATS = require('../gameobjects/tilemap/Formats');
 
 //  TODO - Injection mapped
 var AnimationJSONFile = require('./filetypes/AnimationJSONFile');
@@ -14,6 +15,7 @@ var GLSLFile = require('./filetypes/GLSLFile');
 var HTMLFile = require('./filetypes/HTMLFile');
 var ImageFile = require('./filetypes/ImageFile');
 var JSONFile = require('./filetypes/JSONFile');
+var PluginFile = require('./filetypes/PluginFile');
 var ScriptFile = require('./filetypes/ScriptFile');
 var SpriteSheet = require('./filetypes/SpriteSheet');
 var SVGFile = require('./filetypes/SVGFile');
@@ -36,19 +38,20 @@ var Loader = new Class({
 
         this.systems = scene.sys;
 
-        this.mapping = 'load';
-
-        this.systems.events.on('boot', this.boot, this);
+        if (!scene.sys.settings.isBooted)
+        {
+            scene.sys.events.once('boot', this.boot, this);
+        }
 
         this._multilist = {};
     },
 
     boot: function ()
     {
-        this.systems.inject(this);
+        var eventEmitter = this.systems.events;
 
-        this.systems.events.on('shutdown', this.shutdown, this);
-        this.systems.events.on('destroy', this.destroy, this);
+        eventEmitter.on('shutdown', this.shutdown, this);
+        eventEmitter.on('destroy', this.destroy, this);
     },
 
     //  key can be either a string, an object or an array of objects
@@ -71,6 +74,11 @@ var Loader = new Class({
     script: function (key, url, xhrSettings)
     {
         return ScriptFile.create(this, key, url, xhrSettings);
+    },
+
+    plugin: function (key, url, xhrSettings)
+    {
+        return PluginFile.create(this, key, url, xhrSettings);
     },
 
     xml: function (key, url, xhrSettings)
@@ -129,12 +137,17 @@ var Loader = new Class({
 
     tilemapCSV: function (key, url, xhrSettings)
     {
-        return TilemapCSVFile.create(this, key, url, xhrSettings);
+        return TilemapCSVFile.create(this, key, url, TILEMAP_FORMATS.CSV, xhrSettings);
     },
 
-    tilemapJSON: function (key, url, xhrSettings)
+    tilemapTiledJSON: function (key, url, xhrSettings)
     {
-        return TilemapJSONFile.create(this, key, url, xhrSettings);
+        return TilemapJSONFile.create(this, key, url, TILEMAP_FORMATS.TILED_JSON, xhrSettings);
+    },
+
+    tilemapWeltmeister: function (key, url, xhrSettings)
+    {
+        return TilemapJSONFile.create(this, key, url, TILEMAP_FORMATS.WELTMEISTER, xhrSettings);
     },
 
     //  ---------------------------------------------------
@@ -314,11 +327,11 @@ var Loader = new Class({
 
     shutdown: function ()
     {
-
+        //  TODO
     }
 
 });
 
-PluginManager.register('load', Loader);
+PluginManager.register('Loader', Loader, 'load');
 
 module.exports = Loader;

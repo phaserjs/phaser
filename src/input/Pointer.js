@@ -117,13 +117,14 @@ var Pointer = new Class({
 
     reset: function ()
     {
-        this.buttons = 0;
+        // this.buttons = 0;
 
         this.dirty = false;
-        this.isDown = false;
+
         this.justDown = false;
         this.justUp = false;
         this.justMoved = false;
+
         this.movementX = 0;
         this.movementY = 0;
     },

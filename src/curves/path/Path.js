@@ -282,8 +282,8 @@ var Path = new Class({
         if (out === undefined) { out = new Rectangle(); }
         if (accuracy === undefined) { accuracy = 16; }
 
-        out.x = Number.MAX_SAFE_INTEGER;
-        out.y = Number.MAX_SAFE_INTEGER;
+        out.x = Number.MAX_VALUE;
+        out.y = Number.MAX_VALUE;
 
         var bounds = new Rectangle();
         var maxRight = Number.MIN_SAFE_INTEGER;

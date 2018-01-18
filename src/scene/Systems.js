@@ -1,7 +1,8 @@
 var Class = require('../utils/Class');
-var EventEmitter = require('eventemitter3');
-var GetFastValue = require('../utils/object/GetFastValue');
-var ScenePlugin = require('./ScenePlugin');
+var CoreScenePlugins = require('../CoreScenePlugins');
+var GetPhysicsPlugins = require('./GetPhysicsPlugins');
+var GetScenePlugins = require('./GetScenePlugins');
+var GlobalPlugins = require('../GlobalPlugins');
 var Settings = require('./Settings');
 
 var Systems = new Class({
@@ -23,103 +24,55 @@ var Systems = new Class({
         this.canvas;
         this.context;
 
-        //  Global Systems - these are global managers (belonging to Game)
+        //  Global Systems - these are single-instance global managers that belong to Game
 
         this.anims;
         this.cache;
+        this.plugins;
         this.registry;
         this.sound;
         this.textures;
 
-        //  These are core Scene plugins, needed by lots of the global systems (and each other)
+        //  Core Plugins - these are non-optional Scene plugins, needed by lots of the other systems
 
         this.add;
         this.cameras;
         this.displayList;
         this.events;
         this.make;
-        this.sceneManager;
-        this.time;
+        this.scenePlugin;
         this.updateList;
     },
 
     init: function (game)
     {
-        var scene = this.scene;
-
         this.game = game;
 
-        //  Global Systems - these are global managers (belonging to Game)
+        var pluginManager = game.plugins;
 
-        this.anims = game.anims;
-        this.cache = game.cache;
-        this.registry = game.registry;
-        this.sound = game.sound;
-        this.textures = game.textures;
+        this.plugins = pluginManager;
 
-        //  These are core Scene plugins, needed by lots of the global systems (and each other)
+        pluginManager.installGlobal(this, GlobalPlugins);
 
-        this.events = new EventEmitter();
+        pluginManager.installLocal(this, CoreScenePlugins);
 
-        game.plugins.install(scene,
-            [ 'anims', 'cache', 'registry', 'sound', 'textures' ],
-            [ 'displayList', 'updateList', 'sceneManager', 'time', 'cameras', 'add', 'make', 'load', 'tweens', 'input' ]
-        );
+        pluginManager.installLocal(this, GetScenePlugins(this));
 
-        var physics = this.getPhysicsSystem();
-
-        if (physics)
-        {
-            game.plugins.install(scene, [], physics);
-        }
+        pluginManager.installLocal(this, GetPhysicsPlugins(this));
 
         this.events.emit('boot', this);
+
+        this.settings.isBooted = true;
     },
 
-    getPhysicsSystem: function ()
+    install: function (plugin)
     {
-        var defaultSystem = this.game.config.defaultPhysicsSystem;
-        var sceneSystems = GetFastValue(this.settings, 'physics', false);
-
-        if (!defaultSystem && !sceneSystems)
+        if (!Array.isArray(plugin))
         {
-            //  No default physics system or systems in this scene
-            return;
+            plugin = [ plugin ];
         }
 
-        //  Let's build the systems array
-        var output = [];
-
-        if (defaultSystem)
-        {
-            output.push(defaultSystem + 'Physics');
-        }
-
-        if (sceneSystems)
-        {
-            for (var key in sceneSystems)
-            {
-                key = key.concat('Physics');
-
-                if (output.indexOf(key) === -1)
-                {
-                    output.push(key);
-                }
-            }
-        }
-
-        //  An array of Physics systems to start for this Scene
-        return output;
-    },
-
-    inject: function (plugin)
-    {
-        var map = this.settings.map;
-
-        if (plugin.mapping && map.hasOwnProperty(plugin.mapping))
-        {
-            this.scene[plugin.mapping] = plugin;
-        }
+        this.plugins.installLocal(this, plugin);
     },
 
     step: function (time, delta)

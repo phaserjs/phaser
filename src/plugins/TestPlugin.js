@@ -15,7 +15,10 @@ var TestPlugin = new Class({
 
         console.log('TestPlugin is alive');
 
-        this.systems.events.on('boot', this.boot, this);
+        if (!scene.sys.settings.isBooted)
+        {
+            scene.sys.events.once('boot', this.boot, this);
+        }
     },
 
     boot: function ()

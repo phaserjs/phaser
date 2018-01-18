@@ -56,6 +56,87 @@ var SceneManager = new Class({
                 });
             }
         }
+
+        game.events.once('ready', this.boot, this);
+    },
+
+    /**
+     * [description]
+     *
+     * @method Phaser.Scenes.SceneManager#boot
+     * @since 3.0.0
+     */
+    boot: function ()
+    {
+        var i;
+        var entry;
+
+        for (i = 0; i < this._pending.length; i++)
+        {
+            entry = this._pending[i];
+
+            this.add(entry.key, entry.scene, entry.autoStart);
+        }
+
+        for (i = 0; i < this._start.length; i++)
+        {
+            entry = this._start[i];
+
+            this.start(entry);
+        }
+
+        //  Clear the pending lists
+        this._start = [];
+        this._pending = [];
+    },
+
+    /**
+     * [description]
+     *
+     * @method Phaser.Scenes.SceneManager#bootScene
+     * @since 3.0.0
+     *
+     * @param {Phaser.Scene} scene - [description]
+     */
+    bootScene: function (scene)
+    {
+        if (scene.init)
+        {
+            scene.init.call(scene, scene.sys.settings.data);
+        }
+
+        var loader;
+
+        if (scene.sys.load)
+        {
+            loader = scene.sys.load;
+                
+            loader.reset();
+        }
+
+        if (loader && scene.preload)
+        {
+            scene.preload(this.game);
+
+            //  Is the loader empty?
+            if (loader.list.size === 0)
+            {
+                this.create(scene);
+            }
+            else
+            {
+                //  Start the loader going as we have something in the queue
+
+                loader.once('complete', this.loadComplete, this);
+
+                loader.start();
+            }
+        }
+        else
+        {
+            //  No preload? Then there was nothing to load either
+            this.create(scene);
+        }
     },
 
     /**
@@ -138,80 +219,6 @@ var SceneManager = new Class({
         }
 
         return newScene;
-    },
-
-    /**
-     * [description]
-     *
-     * @method Phaser.Scenes.SceneManager#boot
-     * @since 3.0.0
-     */
-    boot: function ()
-    {
-        var i;
-        var entry;
-
-        for (i = 0; i < this._pending.length; i++)
-        {
-            entry = this._pending[i];
-
-            this.add(entry.key, entry.scene, entry.autoStart);
-        }
-
-        for (i = 0; i < this._start.length; i++)
-        {
-            entry = this._start[i];
-
-            this.start(entry);
-        }
-
-        //  Clear the pending lists
-        this._start = [];
-        this._pending = [];
-    },
-
-    /**
-     * [description]
-     *
-     * @method Phaser.Scenes.SceneManager#bootScene
-     * @since 3.0.0
-     *
-     * @param {Phaser.Scene} scene - [description]
-     */
-    bootScene: function (scene)
-    {
-        if (scene.init)
-        {
-            scene.init.call(scene, scene.sys.settings.data);
-        }
-
-        var loader = scene.sys.load;
-            
-        loader.reset();
-
-        if (scene.preload)
-        {
-            scene.preload(this.game);
-
-            //  Is the loader empty?
-            if (loader.list.size === 0)
-            {
-                this.create(scene);
-            }
-            else
-            {
-                //  Start the loader going as we have something in the queue
-
-                loader.once('complete', this.loadComplete, this);
-
-                loader.start();
-            }
-        }
-        else
-        {
-            //  No preload? Then there was nothing to load either
-            this.create(scene);
-        }
     },
 
     //  If the arguments are strings they are assumed to be keys, otherwise they are Scene objects
@@ -349,6 +356,7 @@ var SceneManager = new Class({
 
             //  Default required functions
 
+            /*
             if (!newScene.init)
             {
                 newScene.init = NOOP;
@@ -368,16 +376,19 @@ var SceneManager = new Class({
             {
                 newScene.shutdown = NOOP;
             }
+            */
 
             if (!newScene.update)
             {
                 newScene.update = NOOP;
             }
 
+            /*
             if (!newScene.render)
             {
                 newScene.render = NOOP;
             }
+            */
 
             return newScene;
         }
@@ -446,11 +457,16 @@ var SceneManager = new Class({
 
         //  Extract callbacks or set NOOP
 
-        var defaults = [ 'init', 'preload', 'create', 'shutdown', 'update', 'render' ];
+        var defaults = [ 'init', 'preload', 'create', 'update', 'render' ];
 
         for (var i = 0; i < defaults.length; i++)
         {
-            newScene[defaults[i]] = GetValue(sceneConfig, defaults[i], NOOP);
+            var sceneCallback = GetValue(sceneConfig, defaults[i], null);
+
+            if (sceneCallback)
+            {
+                newScene[defaults[i]] = sceneCallback;
+            }
         }
 
         //  Now let's move across any other functions or properties that may exist
@@ -932,7 +948,12 @@ var SceneManager = new Class({
 
             scene.sys.start(data);
 
-            var loader = scene.sys.load;
+            var loader;
+
+            if (scene.sys.load)
+            {
+                loader = scene.sys.load;
+            }
 
             //  Files payload?
             if (loader && Array.isArray(scene.sys.settings.files))

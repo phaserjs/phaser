@@ -12,20 +12,22 @@ var InjectionMap = {
     sound: 'sound',
     textures: 'textures',
 
-    add: 'add',
-    cameras: 'cameras',
-    children: 'displayList',
-    data: 'data',
     events: 'events',
-    impact: 'impactPhysics',
+    cameras: 'cameras',
+    add: 'add',
+    make: 'make',
+    scenePlugin: 'scene',
+    displayList: 'children',
+
+    data: 'data',
     input: 'input',
     load: 'load',
-    make: 'make',
-    matter: 'matterPhysics',
-    physics: 'arcadePhysics',
-    scene: 'sceneManager',
     time: 'time',
-    tweens: 'tweens'
+    tweens: 'tweens',
+
+    arcadePhysics: 'physics',
+    impactPhysics: 'impact',
+    matterPhysics: 'matter'
 
 };
 

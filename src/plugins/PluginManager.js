@@ -7,38 +7,68 @@ var PluginManager = new Class({
     initialize:
 
     //  The PluginManager is global and belongs to the Game instance, not a Scene.
-    function PluginManager (game, config)
+    function PluginManager (game)
     {
         this.game = game;
+
+        game.events.once('boot', this.boot, this);
     },
 
     boot: function ()
     {
     },
 
-    install: function (scene, globalPlugins, localPlugins)
+    installGlobal: function (sys, globalPlugins)
     {
-        var i;
-        var pluginKey;
-        var sys = scene.sys;
+        var game = sys.game;
+        var scene = sys.scene;
+        var map = sys.settings.map;
 
+        //  Reference the GlobalPlugins from Game into Scene.Systems
         for (var i = 0; i < globalPlugins.length; i++)
         {
-            pluginKey = globalPlugins[i];
-            
-            sys.scene[pluginKey] = sys[pluginKey];
-        }
+            var pluginKey = globalPlugins[i];
 
-        for (var i = 0; i < localPlugins.length; i++)
-        {
-            pluginKey = localPlugins[i];
+            // console.log('PluginManager.global', pluginKey);
             
-            if (plugins[pluginKey])
+            sys[pluginKey] = game[pluginKey];
+
+            //  Scene level injection
+            if (map.hasOwnProperty(pluginKey))
             {
-                // console.log('installing', pluginKey);
+                scene[map[pluginKey]] = sys[pluginKey];
+            }
+        }
+    },
 
-                //  Install a local reference inside of Systems
-                sys[pluginKey] = new plugins[pluginKey](scene);
+    installLocal: function (sys, scenePlugins)
+    {
+        var scene = sys.scene;
+        var map = sys.settings.map;
+        var isBooted = sys.settings.isBooted;
+
+        for (var i = 0; i < scenePlugins.length; i++)
+        {
+            var pluginKey = scenePlugins[i];
+
+            var source = plugins[pluginKey];
+
+            // console.log('PluginManager.local', pluginKey, 'to', source.mapping);
+
+            var plugin = new source.plugin(scene);
+            
+            sys[source.mapping] = plugin;
+
+            //  Scene level injection
+            if (map.hasOwnProperty(source.mapping))
+            {
+                scene[map[source.mapping]] = plugin;
+            }
+
+            //  Scene is already booted, usually because this method is being called at run-time, so boot the plugin
+            if (isBooted)
+            {
+                plugin.boot();
             }
         }
     },
@@ -56,12 +86,15 @@ var PluginManager = new Class({
 });
 
 //  Static method called directly by the Plugins
+//  Key is a reference used to get the plugin from the plugins object (i.e. InputPlugin)
+//  Plugin is the object to instantiate to create the plugin
+//  Mapping is what the plugin is injected into the Scene.Systems as (i.e. input)
 
-PluginManager.register = function (key, plugin)
+PluginManager.register = function (key, plugin, mapping)
 {
-    plugins[key] = plugin;
+    plugins[key] = { plugin: plugin, mapping: mapping };
 
-    // console.log('PluginManager.register', key);
+    // console.log('PluginManager.register', key, mapping);
 };
 
 module.exports = PluginManager;

@@ -17,18 +17,19 @@ var CameraManager = new Class({
 
         this.systems = scene.sys;
 
-        this.mapping = 'cameras';
-
-        this.systems.events.on('boot', this.boot, this);
+        if (!scene.sys.settings.isBooted)
+        {
+            scene.sys.events.once('boot', this.boot, this);
+        }
     },
 
     boot: function ()
     {
-        this.systems.inject(this);
+        var eventEmitter = this.systems.events;
 
-        this.systems.events.on('update', this.update, this);
-        this.systems.events.on('shutdown', this.shutdown, this);
-        this.systems.events.on('destroy', this.destroy, this);
+        eventEmitter.on('update', this.update, this);
+        eventEmitter.on('shutdown', this.shutdown, this);
+        eventEmitter.on('destroy', this.destroy, this);
     },
 
     add: function (fieldOfView, width, height)
@@ -135,6 +136,6 @@ var CameraManager = new Class({
 
 });
 
-// PluginManager.register('cameras', CameraManager);
+PluginManager.register('CameraManager3D', CameraManager, 'cameras3d');
 
 module.exports = CameraManager;

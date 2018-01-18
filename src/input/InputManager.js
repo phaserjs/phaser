@@ -43,6 +43,8 @@ var InputManager = new Class({
         // this._tempMatrix = new TransformMatrix();
         this._tempPoint = { x: 0, y: 0 };
         this._tempHitTest = [];
+
+        game.events.once('boot', this.boot, this);
     },
 
     /**

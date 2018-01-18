@@ -27,6 +27,8 @@ var Settings = {
             active: GetValue(config, 'active', false),
             visible: GetValue(config, 'visible', true),
 
+            isBooted: false,
+
             //  Loader payload array
 
             data: {},
@@ -42,7 +44,12 @@ var Settings = {
             map: GetValue(config, 'map', InjectionMap),
 
             //  Physics
+
             physics: GetValue(config, 'physics', {}),
+
+            //  Plugins
+
+            plugins: GetValue(config, 'plugins', false),
 
             //  Scene Render Settings (applies only to this Scene)
 

@@ -1,7 +1,10 @@
+//  Phaser.Utils.String
+
 module.exports = {
 
-    Pad: require('./Pad'),
     Format: require('./Format'),
-    Reverse: require('./Reverse')
+    Pad: require('./Pad'),
+    Reverse: require('./Reverse'),
+    UppercaseFirst: require('./UppercaseFirst')
 
 };

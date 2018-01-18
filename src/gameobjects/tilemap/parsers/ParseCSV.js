@@ -23,7 +23,7 @@ var ParseCSV = function (name, data, tileWidth, tileHeight, insertNull)
         .map(function (row) { return row.split(','); });
 
     var map = Parse2DArray(name, array2D, tileWidth, tileHeight, insertNull);
-    map.format = Formats.TILEMAP_CSV;
+    map.format = Formats.CSV;
 
     return map;
 };

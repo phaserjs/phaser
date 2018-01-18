@@ -1,5 +1,5 @@
-var Class = require('../../../utils/Class');
-var GetValue = require('../../../utils/object/GetValue');
+var Class = require('../../utils/Class');
+var GetValue = require('../../utils/object/GetValue');
 
 //  var camControl = new CameraControl({
 //      camera: this.cameras.main,
@@ -8,13 +8,13 @@ var GetValue = require('../../../utils/object/GetValue');
 //      speed: float OR { x: 0, y: 0 }
 //  })
 
-//  Phaser.Cameras.Scene2D.Controls.KeyControl
+//  Phaser.Cameras.Controls.Fixed
 
-var KeyControl = new Class({
+var FixedKeyControl = new Class({
 
     initialize:
 
-    function KeyControl (config)
+    function FixedKeyControl (config)
     {
         this.camera = GetValue(config, 'camera', null);
 
@@ -127,4 +127,4 @@ var KeyControl = new Class({
 
 });
 
-module.exports = KeyControl;
+module.exports = FixedKeyControl;
