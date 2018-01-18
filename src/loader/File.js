@@ -204,7 +204,7 @@ File.createObjectURL = function (image, blob, defaultType)
  */
 File.revokeObjectURL = function (image)
 {
-    if(URL)
+    if (typeof URL === 'function')
     {
         URL.revokeObjectURL(image.src);
     }

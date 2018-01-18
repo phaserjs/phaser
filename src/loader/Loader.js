@@ -15,6 +15,7 @@ var GLSLFile = require('./filetypes/GLSLFile');
 var HTMLFile = require('./filetypes/HTMLFile');
 var ImageFile = require('./filetypes/ImageFile');
 var JSONFile = require('./filetypes/JSONFile');
+var PluginFile = require('./filetypes/PluginFile');
 var ScriptFile = require('./filetypes/ScriptFile');
 var SpriteSheet = require('./filetypes/SpriteSheet');
 var SVGFile = require('./filetypes/SVGFile');
@@ -73,6 +74,11 @@ var Loader = new Class({
     script: function (key, url, xhrSettings)
     {
         return ScriptFile.create(this, key, url, xhrSettings);
+    },
+
+    plugin: function (key, url, xhrSettings)
+    {
+        return PluginFile.create(this, key, url, xhrSettings);
     },
 
     xml: function (key, url, xhrSettings)
@@ -321,7 +327,7 @@ var Loader = new Class({
 
     shutdown: function ()
     {
-
+        //  TODO
     }
 
 });
