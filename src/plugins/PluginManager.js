@@ -1,30 +1,100 @@
 var Class = require('../utils/Class');
-var ProcessQueue = require('../structs/ProcessQueue');
+
+var plugins = {};
 
 var PluginManager = new Class({
 
     initialize:
 
-    function PluginManager (scene)
+    //  The PluginManager is global and belongs to the Game instance, not a Scene.
+    function PluginManager (game)
     {
-        //  The Manager always has to belong to a Scene
-        this.scene = scene;
+        this.game = game;
 
-        this.plugins = [];
+        game.events.once('boot', this.boot, this);
     },
 
+    boot: function ()
+    {
+    },
 
+    installGlobal: function (sys, globalPlugins)
+    {
+        var game = sys.game;
+        var scene = sys.scene;
+        var map = sys.settings.map;
+
+        //  Reference the GlobalPlugins from Game into Scene.Systems
+        for (var i = 0; i < globalPlugins.length; i++)
+        {
+            var pluginKey = globalPlugins[i];
+
+            // console.log('PluginManager.global', pluginKey);
+            
+            sys[pluginKey] = game[pluginKey];
+
+            //  Scene level injection
+            if (map.hasOwnProperty(pluginKey))
+            {
+                scene[map[pluginKey]] = sys[pluginKey];
+            }
+        }
+    },
+
+    installLocal: function (sys, scenePlugins)
+    {
+        var scene = sys.scene;
+        var map = sys.settings.map;
+        var isBooted = sys.settings.isBooted;
+
+        for (var i = 0; i < scenePlugins.length; i++)
+        {
+            var pluginKey = scenePlugins[i];
+
+            var source = plugins[pluginKey];
+
+            // console.log('PluginManager.local', pluginKey, 'to', source.mapping);
+
+            var plugin = new source.plugin(scene);
+            
+            sys[source.mapping] = plugin;
+
+            //  Scene level injection
+            if (map.hasOwnProperty(source.mapping))
+            {
+                scene[map[source.mapping]] = plugin;
+            }
+
+            //  Scene is already booted, usually because this method is being called at run-time, so boot the plugin
+            if (isBooted)
+            {
+                plugin.boot();
+            }
+        }
+    },
+
+    remove: function (key)
+    {
+        delete plugins[key];
+    },
+
+    destroy: function ()
+    {
+        plugins = {};
+    }
 
 });
 
-//  Static method called directly by the Game Object factory functions
+//  Static method called directly by the Plugins
+//  Key is a reference used to get the plugin from the plugins object (i.e. InputPlugin)
+//  Plugin is the object to instantiate to create the plugin
+//  Mapping is what the plugin is injected into the Scene.Systems as (i.e. input)
 
-// GameObjectFactory.register = function (type, factoryFunction)
-// {
-//     if (!GameObjectFactory.prototype.hasOwnProperty(type))
-//     {
-//         GameObjectFactory.prototype[type] = factoryFunction;
-//     }
-// };
+PluginManager.register = function (key, plugin, mapping)
+{
+    plugins[key] = { plugin: plugin, mapping: mapping };
+
+    // console.log('PluginManager.register', key, mapping);
+};
 
 module.exports = PluginManager;

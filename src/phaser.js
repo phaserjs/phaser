@@ -7,46 +7,30 @@ var Extend = require('./utils/object/Extend');
 
 var Phaser = {
 
-    Actions: require('./actions/'),
-
-    Create: require('./create/'),
-
-    Cameras: require('./camera/'),
-
-    DOM: require('./dom/'),
-
-    EventEmitter: require('./events/EventEmitter'),
-
-    Game: require('./boot/Game'),
-
-    Math: require('./math'),
-
-    Geom: require('./geom'),
-
-    Display: require('./display'),
-
-    Input: require('./input'),
-
-    GameObjects: require('./gameobjects'),
-
-    Scene: require('./scene/local/Scene'),
-
-    Loader: {
-
-        ImageFile: require('./loader/filetypes/ImageFile')
-
-    },
-
-    Sound: require('./sound'),
-
-    Structs: require('./structs'),
-    
-    Curves: require('./curves'),
-
-    Physics: require('./physics'),
-
+    Actions: require('./actions'),
+    Animation: require('./animations'),
+    Cache: require('./cache'),
+    Cameras: require('./cameras'),
     Class: require('./utils/Class'),
-
+    Create: require('./create'),
+    Curves: require('./curves'),
+    Display: require('./display'),
+    DOM: require('./dom'),
+    EventEmitter: require('./events/EventEmitter'),
+    Game: require('./boot/Game'),
+    GameObjects: require('./gameobjects'),
+    Geom: require('./geom'),
+    Input: require('./input'),
+    Loader: require('./loader'),
+    Math: require('./math'),
+    Physics: require('./physics'),
+    Scene: require('./scene/Scene'),
+    Scenes: require('./scene'),
+    Sound: require('./sound'),
+    Structs: require('./structs'),
+    Textures: require('./textures'),
+    Time: require('./time'),
+    Tweens: require('./tweens'),
     Utils: require('./utils')
 
 };

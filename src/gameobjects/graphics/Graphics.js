@@ -1,4 +1,4 @@
-var Camera = require('../../camera/2d/Camera.js');
+var Camera = require('../../cameras/2d/Camera.js');
 var CanvasPool = require('../../display/canvas/CanvasPool');
 var Class = require('../../utils/Class');
 var Commands = require('./Commands');
@@ -261,6 +261,16 @@ var Graphics = new Class({
 
     fillPoint: function (x, y, size)
     {
+        if (!size || size < 1)
+        {
+            size = 1;
+        }
+        else
+        {
+            x -= (size / 2);
+            y -= (size / 2);
+        }
+
         this.commandBuffer.push(
             Commands.FILL_RECT,
             x, y, size, size
@@ -428,6 +438,26 @@ var Graphics = new Class({
         var points = ellipse.getPoints(smoothness);
 
         return this.strokePoints(points, true);
+    },
+	 
+    fillEllipseShape: function (ellipse, smoothness)
+    {
+        if (smoothness === undefined) { smoothness = 32; }
+
+        var points = ellipse.getPoints(smoothness);
+
+        return this.fillPoints(points, true);
+    },
+
+    fillEllipse: function (x, y, width, height, smoothness)
+    {
+        if (smoothness === undefined) { smoothness = 32; }
+
+        var ellipse = new Ellipse(x, y, width, height);
+
+        var points = ellipse.getPoints(smoothness);
+
+        return this.fillPoints(points, true);
     },
 
     //  ARC

@@ -27,12 +27,12 @@ var FitInside = function (target, source)
     else
     {
         //  Wider than Tall
-        target.setSize(source.width, source.width * ratio);
+        target.setSize(source.width, source.width / ratio);
     }
 
     return target.setPosition(
-        (source.right / 2) - (target.width / 2),
-        (source.bottom / 2) - (target.height / 2)
+        source.centerX - (target.width / 2),
+        source.centerY - (target.height / 2)
     );
 };
 

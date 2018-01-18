@@ -1,5 +1,3 @@
-//  Phaser.Physics.Arcade.World
-
 var Body = require('./Body');
 var Class = require('../../utils/Class');
 var Collider = require('./Collider');
@@ -12,6 +10,8 @@ var RTree = require('../../structs/RTree');
 var Set = require('../../structs/Set');
 var StaticBody = require('./StaticBody');
 var Vector2 = require('../../math/Vector2');
+
+//  Phaser.Physics.Arcade.World
 
 var World = new Class({
 
@@ -204,7 +204,7 @@ var World = new Class({
     {
         var graphic = this.scene.sys.add.graphics({ x: 0, y: 0 });
 
-        graphic.setZ(Number.MAX_SAFE_INTEGER);
+        graphic.setZ(Number.MAX_VALUE);
 
         this.debugGraphic = graphic;
 
@@ -398,16 +398,6 @@ var World = new Class({
     collideSpriteVsGroup: require('./inc/CollideSpriteVsGroup'),
     collideGroupVsTilemapLayer: require('./inc/CollideGroupVsTilemapLayer'),
     collideSpriteVsTilemapLayer: require('./inc/CollideSpriteVsTilemapLayer'),
-
-    //  Utils
-    accelerateTo: require('./utils/AccelerateTo'),
-    accelerateToObject: require('./utils/AccelerateToObject'),
-    closest: require('./utils/Closest'),
-    furthest: require('./utils/Furthest'),
-    moveTo: require('./utils/MoveTo'),
-    moveToObject: require('./utils/MoveToObject'),
-    velocityFromAngle: require('./utils/VelocityFromAngle'),
-    velocityFromRotation: require('./utils/VelocityFromRotation'),
 
     //  TODO
     collideGroupVsGroup: function (group1, group2, collideCallback, processCallback, callbackContext, overlapOnly)

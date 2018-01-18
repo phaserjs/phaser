@@ -9,6 +9,7 @@ var GetFastValue = require('../../utils/object/GetFastValue');
 var Set = require('../../structs/Set');
 var Solver = require('./Solver');
 var TYPE = require('./TYPE');
+var TILEMAP_FORMATS = require('../../gameobjects/tilemap/Formats');
 
 var World = new Class({
 
@@ -60,7 +61,7 @@ var World = new Class({
         * @property {object} walls - An object containing the 4 wall bodies that bound the physics world.
         */
         this.walls = { left: null, right: null, top: null, bottom: null };
-    
+
         this.delta = 0;
 
         this._lastId = 0;
@@ -95,9 +96,52 @@ var World = new Class({
         }
     },
 
-    setCollisionMap: function (tilesize, data)
+    /**
+    * Sets the collision map for the world either from a Weltmeister JSON level in the cache or from
+    * a 2D array. If loading from a Weltmeister level, the map must have a layer called "collision".
+    *
+    * @param {string|integer[][]} key - Either a string key that corresponds to a Weltmeister level
+    * in the cache, or a 2D array of collision IDs.
+    * @param {integer} tileSize - The size of a tile. This is optional if loading from a Weltmeister
+    * level in the cache.
+    * @return {CollisionMap|null} The newly created CollisionMap, or null if the method failed to
+    * create the CollisionMap.
+    */
+    setCollisionMap: function (key, tileSize)
     {
-        this.collisionMap = new CollisionMap(tilesize, data);
+        if (typeof key === 'string')
+        {
+            var tilemapData = this.scene.cache.tilemap.get(key);
+
+            if (!tilemapData || tilemapData.format !== TILEMAP_FORMATS.WELTMEISTER)
+            {
+                console.warn('The specified key does not correspond to a Weltmeister tilemap: ' + key);
+                return null;
+            }
+
+            var layers = tilemapData.data.layer;
+            var collisionLayer;
+            for (var i = 0; i < layers.length; i++)
+            {
+                if (layers[i].name === 'collision')
+                {
+                    collisionLayer = layers[i];
+                    break;
+                }
+            }
+
+            if (tileSize === undefined) { tileSize = collisionLayer.tilesize; }
+
+            this.collisionMap = new CollisionMap(tileSize, collisionLayer.data);
+        }
+        else if (Array.isArray(key))
+        {
+            this.collisionMap = new CollisionMap(tileSize, key);
+        }
+        else
+        {
+            console.warn('Invalid Weltmeister collision map data: ' + key);
+        }
 
         return this.collisionMap;
     },
@@ -174,7 +218,7 @@ var World = new Class({
     {
         var graphic = this.scene.sys.add.graphics({ x: 0, y: 0 });
 
-        graphic.setZ(Number.MAX_SAFE_INTEGER);
+        graphic.setZ(Number.MAX_VALUE);
 
         this.debugGraphic = graphic;
 
@@ -214,11 +258,6 @@ var World = new Class({
         this.enabled = true;
 
         return this;
-    },
-
-    postUpdate: function ()
-    {
-        //  NOOP
     },
 
     update: function (time, delta)
@@ -339,21 +378,21 @@ var World = new Class({
         {
             bodyA.check(bodyB);
         }
-        
+
         if (bodyB.checkAgainst & bodyA.type)
         {
             bodyB.check(bodyA);
         }
-        
+
         if (bodyA.collides && bodyB.collides && bodyA.collides + bodyB.collides > COLLIDES.ACTIVE)
         {
             Solver(this, bodyA, bodyB);
         }
     },
 
-    //////////////
+    // ////////////
     //  Helpers //
-    //////////////
+    // ////////////
 
     setCollidesNever: function (bodies)
     {

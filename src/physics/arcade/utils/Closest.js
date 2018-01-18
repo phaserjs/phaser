@@ -4,7 +4,7 @@ var Closest = function (source)
 {
     var bodies = this.tree.all();
 
-    var min = Number.MAX_SAFE_INTEGER;
+    var min = Number.MAX_VALUE;
     var closest = null;
     var x = source.x;
     var y = source.y;

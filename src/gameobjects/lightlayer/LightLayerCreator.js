@@ -1,5 +1,5 @@
 var BuildGameObject = require('../BuildGameObject');
-var GameObjectCreator = require('../../scene/plugins/GameObjectCreator');
+var GameObjectCreator = require('../GameObjectCreator');
 var GetAdvancedValue = require('../../utils/object/GetAdvancedValue');
 var LightLayer = require('./LightLayer');
 

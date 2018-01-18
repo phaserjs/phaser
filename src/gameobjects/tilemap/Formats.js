@@ -1,7 +1,8 @@
 module.exports = {
 
-    TILEMAP_CSV: 0,
-    TILEMAP_TILED_JSON: 1,
-    TILEMAP_2D_ARRAY: 2
+    CSV: 0,
+    TILED_JSON: 1,
+    ARRAY_2D: 2,
+    WELTMEISTER: 3
 
 };

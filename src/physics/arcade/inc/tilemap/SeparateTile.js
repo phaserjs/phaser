@@ -55,7 +55,7 @@ var SeparateTile = function (i, body, tile, tileWorldRect, tilemapLayer, tileBia
     {
         if (faceHorizontal)
         {
-            ox = TileCheckX(body, tile, tilemapLayer, tileBias);
+            ox = TileCheckX(body, tile, tileLeft, tileRight, tileBias);
 
             //  That's horizontal done, check if we still intersects? If not then we can return now
             if (ox !== 0 && !TileIntersectsBody(tileWorldRect, body))
@@ -66,14 +66,14 @@ var SeparateTile = function (i, body, tile, tileWorldRect, tilemapLayer, tileBia
 
         if (faceVertical)
         {
-            oy = TileCheckY(body, tile, tilemapLayer, tileBias);
+            oy = TileCheckY(body, tile, tileTop, tileBottom, tileBias);
         }
     }
     else
     {
         if (faceVertical)
         {
-            oy = TileCheckY(body, tile, tilemapLayer, tileBias);
+            oy = TileCheckY(body, tile, tileTop, tileBottom, tileBias);
 
             //  That's vertical done, check if we still intersects? If not then we can return now
             if (oy !== 0 && !TileIntersectsBody(tileWorldRect, body))
@@ -84,7 +84,7 @@ var SeparateTile = function (i, body, tile, tileWorldRect, tilemapLayer, tileBia
 
         if (faceHorizontal)
         {
-            ox = TileCheckX(body, tile, tilemapLayer, tileBias);
+            ox = TileCheckX(body, tile, tileLeft, tileRight, tileBias);
         }
     }
 

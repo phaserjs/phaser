@@ -12,10 +12,9 @@ var StaticTilemapLayerCanvasRenderer = function (renderer, gameObject, interpola
 
     var renderTiles = gameObject.culledTiles;
     var tileset = this.tileset;
-    var frame = gameObject.frame;
     var ctx = renderer.gameContext;
     var tileCount = renderTiles.length;
-    var image = frame.source.image;
+    var image = tileset.image.getSourceImage();
     var tx = gameObject.x - camera.scrollX * gameObject.scrollFactorX;
     var ty = gameObject.y - camera.scrollY * gameObject.scrollFactorY;
 

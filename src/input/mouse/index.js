@@ -2,6 +2,6 @@
 
 module.exports = {
 
-    MouseManager: require('./MouseManager') 
+    MouseManager: require('./MouseManager')
        
 };

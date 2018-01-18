@@ -28,7 +28,7 @@ var Parse2DArray = function (name, data, tileWidth, tileHeight, insertNull)
         name: name,
         tileWidth: tileWidth,
         tileHeight: tileHeight,
-        format: Formats.TILEMAP_2D_ARRAY,
+        format: Formats.ARRAY_2D,
         layers: [ layerData ]
     });
 

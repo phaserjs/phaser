@@ -1,4 +1,4 @@
-var GameObjectCreator = require('../../scene/plugins/GameObjectCreator');
+var GameObjectCreator = require('../GameObjectCreator');
 var GetFastValue = require('../../utils/object/GetFastValue');
 var GetAdvancedValue = require('../../utils/object/GetAdvancedValue');
 var ParticleEmitterManager = require('./ParticleEmitterManager');

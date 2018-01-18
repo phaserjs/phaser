@@ -9,15 +9,16 @@ var DOMContentLoaded = require('../dom/DOMContentLoaded');
 var EventEmitter = require('eventemitter3');
 var VisibilityHandler = require('./VisibilityHandler');
 
-var AnimationManager = require('../animations/manager/AnimationManager');
+var AnimationManager = require('../animations/AnimationManager');
+var CacheManager = require('../cache/CacheManager');
 var CreateRenderer = require('./CreateRenderer');
 var Data = require('../data/Data');
-var GlobalCache = require('../cache/GlobalCache');
-var GlobalInputManager = require('../input/global/GlobalInputManager');
-var GlobalSceneManager = require('../scene/global/GlobalSceneManager');
+var InputManager = require('../input/InputManager');
+var PluginManager = require('../plugins/PluginManager');
+var SceneManager = require('../scene/SceneManager');
+var SoundManagerCreator = require('../sound/SoundManagerCreator');
 var TextureManager = require('../textures/TextureManager');
 var TimeStep = require('./TimeStep');
-var SoundManagerCreator = require('../sound/SoundManagerCreator');
 
 var Game = new Class({
 
@@ -101,9 +102,9 @@ var Game = new Class({
         /**
          * [description]
          *
-         * @property {Phaser.Cache.GlobalCache} cache
+         * @property {Phaser.Cache.CacheManager} cache
          */
-        this.cache = new GlobalCache(this);
+        this.cache = new CacheManager(this);
 
         /**
          * [description]
@@ -115,16 +116,16 @@ var Game = new Class({
         /**
          * [description]
          *
-         * @property {Phaser.Input.GlobalInputManager} input
+         * @property {Phaser.Input.InputManager} input
          */
-        this.input = new GlobalInputManager(this, this.config);
+        this.input = new InputManager(this, this.config);
 
         /**
          * [description]
          *
-         * @property {Phaser.Scenes.GlobalSceneManager} scene
+         * @property {Phaser.Scenes.SceneManager} scene
          */
-        this.scene = new GlobalSceneManager(this, this.config.sceneConfig);
+        this.scene = new SceneManager(this, this.config.sceneConfig);
 
         /**
          * [description]
@@ -146,6 +147,13 @@ var Game = new Class({
          * @property {Phaser.Boot.TimeStep} loop
          */
         this.loop = new TimeStep(this, this.config.fps);
+
+        /**
+         * [description]
+         *
+         * @property {Phaser.Plugins.PluginManager} plugins
+         */
+        this.plugins = new PluginManager(this, this.config);
 
         /**
          * [description]
@@ -179,14 +187,20 @@ var Game = new Class({
 
         AddToDOM(this.canvas, this.config.parent);
 
-        this.textures.boot();
+        this.events.emit('boot');
 
-        this.anims.boot(this.textures);
+        //  The Texture Manager has to wait on a couple of non-blocking events before it's fully ready, so it will emit this event
+        this.events.once('ready', this.start, this);
+    },
 
-        this.scene.boot();
-
-        this.input.boot();
-
+    /**
+     * [description]
+     *
+     * @method Phaser.Game#start
+     * @since 3.0.0
+     */
+    start: function ()
+    {
         this.isRunning = true;
 
         this.config.postBoot();
@@ -195,10 +209,10 @@ var Game = new Class({
 
         VisibilityHandler(this.events);
 
-        this.events.on('hidden', this.onHidden.bind(this));
-        this.events.on('visible', this.onVisible.bind(this));
-        this.events.on('blur', this.onBlur.bind(this));
-        this.events.on('focus', this.onFocus.bind(this));
+        this.events.on('hidden', this.onHidden, this);
+        this.events.on('visible', this.onVisible, this);
+        this.events.on('blur', this.onBlur, this);
+        this.events.on('focus', this.onFocus, this);
     },
 
     /**
@@ -215,7 +229,7 @@ var Game = new Class({
         var active = this.scene.active;
         var renderer = this.renderer;
 
-        //  Global Managers (Time, Input, etc)
+        //  Global Managers
 
         this.input.update(time, delta);
 
@@ -236,6 +250,8 @@ var Game = new Class({
 
         renderer.preRender();
 
+        this.events.emit('prerender');
+
         //  This uses active.length, in case scene.update removed the scene from the active list
         for (i = 0; i < active.length; i++)
         {
@@ -243,6 +259,8 @@ var Game = new Class({
         }
 
         renderer.postRender();
+
+        this.events.emit('postrender');
     },
 
     /**
@@ -256,12 +274,7 @@ var Game = new Class({
     {
         this.loop.pause();
 
-        // var active = this.scene.active;
-
-        // for (var i = 0; i < active.length; i++)
-        // {
-        //     active[i].scene.sys.pause();
-        // }
+        this.events.emit('pause');
     },
 
     /**
@@ -275,12 +288,7 @@ var Game = new Class({
     {
         this.loop.resume();
 
-        // var active = this.scene.active;
-
-        // for (var i = 0; i < active.length; i++)
-        // {
-        //     active[i].scene.sys.resume();
-        // }
+        this.events.emit('resume');
     },
 
     /**

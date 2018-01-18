@@ -1,6 +1,6 @@
 var BitmapText = require('./BitmapText');
 var BuildGameObject = require('../../BuildGameObject');
-var GameObjectCreator = require('../../../scene/plugins/GameObjectCreator');
+var GameObjectCreator = require('../../GameObjectCreator');
 var GetAdvancedValue = require('../../../utils/object/GetAdvancedValue');
 var GetValue = require('../../../utils/object/GetValue');
 

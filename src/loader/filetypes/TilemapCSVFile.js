@@ -10,7 +10,7 @@ var TilemapCSVFile = new Class({
 
     initialize:
 
-    function TextFile (key, url, path, xhrSettings)
+    function TextFile (key, url, path, format, xhrSettings)
     {
         var fileConfig = {
             type: 'tilemapCSV',
@@ -23,6 +23,8 @@ var TilemapCSVFile = new Class({
         };
 
         File.call(this, fileConfig);
+
+        this.tilemapFormat = format;
     },
 
     onProcess: function (callback)
@@ -38,19 +40,19 @@ var TilemapCSVFile = new Class({
 
 });
 
-TilemapCSVFile.create = function (loader, key, url, xhrSettings)
+TilemapCSVFile.create = function (loader, key, url, format, xhrSettings)
 {
     if (Array.isArray(key))
     {
         for (var i = 0; i < key.length; i++)
         {
             //  If it's an array it has to be an array of Objects, so we get everything out of the 'key' object
-            loader.addFile(new TilemapCSVFile(key[i], url, loader.path, xhrSettings));
+            loader.addFile(new TilemapCSVFile(key[i], url, loader.path, format, xhrSettings));
         }
     }
     else
     {
-        loader.addFile(new TilemapCSVFile(key, url, loader.path, xhrSettings));
+        loader.addFile(new TilemapCSVFile(key, url, loader.path, format, xhrSettings));
     }
 
     //  For method chaining

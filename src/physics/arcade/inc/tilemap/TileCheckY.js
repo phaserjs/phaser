@@ -10,12 +10,9 @@ var ProcessTileSeparationY = require('./ProcessTileSeparationY');
 * @param {Phaser.TilemapLayer} tilemapLayer - The tilemapLayer to collide against.
 * @return {number} The amount of separation that occurred.
 */
-var TileCheckY = function (body, tile, tilemapLayer, tileBias)
+var TileCheckY = function (body, tile, tileTop, tileBottom, tileBias)
 {
     var oy = 0;
-    var tileTop = tilemapLayer.tileToWorldX(tile.y);
-    var tileHeight = tile.height * tilemapLayer.scaleY;
-    var tileBottom = tileTop + tileHeight;
 
     if (body.deltaY() < 0 && !body.blocked.up && tile.collideDown && body.checkCollision.up)
     {

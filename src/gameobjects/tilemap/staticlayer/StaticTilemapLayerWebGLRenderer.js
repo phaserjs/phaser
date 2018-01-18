@@ -8,10 +8,10 @@ var StaticTilemapLayerWebGLRenderer = function (renderer, src, interpolationPerc
     }
 
     var gameObject = src;
-    var frame = gameObject.frame;
     var gl = gameObject.gl;
+    var frame = gameObject.tileset.image.get();
 
-    renderer.setRenderer(gameObject.tilemapRenderer, frame.texture.source[frame.sourceIndex].glTexture, gameObject.renderTarget);
+    renderer.setRenderer(gameObject.tilemapRenderer, frame.source.glTexture, gameObject.renderTarget);
 
     gameObject.tilemapRenderer.bind();
     gameObject.upload(camera);

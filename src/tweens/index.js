@@ -2,9 +2,9 @@
 
 module.exports = {
 
-    TweenManager: require('./manager/TweenManager'),
+    TweenManager: require('./TweenManager'),
     Tween: require('./tween/Tween'),
     TweenData: require('./tween/TweenData'),
-    Timeline: require('./timeline/Timeline')
+    Timeline: require('./Timeline')
 
 };

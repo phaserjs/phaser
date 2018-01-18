@@ -1,5 +1,5 @@
 var Sprite3D = require('./Sprite3D');
-var GameObjectFactory = require('../../scene/plugins/GameObjectFactory');
+var GameObjectFactory = require('../GameObjectFactory');
 
 //  When registering a factory function 'this' refers to the GameObjectFactory context.
 //  
