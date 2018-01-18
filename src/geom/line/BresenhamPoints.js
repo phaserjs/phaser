@@ -27,7 +27,7 @@ var BresenhamPoints = function (line, stepRate, results)
     var sy = (y1 < y2) ? 1 : -1;
     var err = dx - dy;
 
-    results.push([ x1, y1 ]);
+    results.push({ x: x1, y: y1 });
 
     var i = 1;
 
@@ -49,7 +49,7 @@ var BresenhamPoints = function (line, stepRate, results)
 
         if (i % stepRate === 0)
         {
-            results.push([ x1, y1 ]);
+            results.push({ x: x1, y: y1 });
         }
 
         i++;
