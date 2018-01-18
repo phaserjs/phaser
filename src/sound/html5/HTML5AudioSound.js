@@ -169,6 +169,12 @@ var HTML5AudioSound = new Class({
         }
         return true;
     },
+    playCatchPromise: function () {
+        var playPromise = this.audio.play();
+        if (playPromise) {
+            playPromise.catch(function (reason) { });
+        }
+    },
     stopAndReleaseAudioTag: function () {
         this.audio.pause();
         this.audio.dataset.used = 'false';
