@@ -125,6 +125,7 @@ var HTML5AudioSoundManager = new Class({
             _this.lockedActionsQueue.length = 0;
             _this.lockedActionsQueue = null;
         });
+        document.body.addEventListener('touchmove', detectMove, false);
         document.body.addEventListener('touchend', unlock, false);
     },
     onBlur: function () {
