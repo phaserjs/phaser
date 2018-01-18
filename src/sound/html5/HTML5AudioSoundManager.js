@@ -87,6 +87,10 @@ var HTML5AudioSoundManager = new Class({
     },
     unlock: function () {
         var _this = this;
+        var moved = false;
+        var detectMove = function () {
+            moved = true;
+        };
         var unlock = function () {
             document.body.removeEventListener('touchend', unlock);
             var allTags = [];
