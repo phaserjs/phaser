@@ -18,7 +18,10 @@ var TweenManager = new Class({
 
         this.systems = scene.sys;
 
-        this.systems.events.on('boot', this.boot, this);
+        if (!scene.sys.settings.isBooted)
+        {
+            scene.sys.events.once('boot', this.boot, this);
+        }
 
         this.timeScale = 1;
 
@@ -32,10 +35,12 @@ var TweenManager = new Class({
 
     boot: function ()
     {
-        this.systems.events.on('preupdate', this.preUpdate, this);
-        this.systems.events.on('update', this.update, this);
-        this.systems.events.on('shutdown', this.shutdown, this);
-        this.systems.events.on('destroy', this.destroy, this);
+        var eventEmitter = this.systems.events;
+
+        eventEmitter.on('preupdate', this.preUpdate, this);
+        eventEmitter.on('update', this.update, this);
+        eventEmitter.on('shutdown', this.shutdown, this);
+        eventEmitter.on('destroy', this.destroy, this);
 
         this.timeScale = 1;
     },
