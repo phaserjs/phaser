@@ -1,4 +1,5 @@
 var GetFastValue = require('../utils/object/GetFastValue');
+var UppercaseFirst = require('../utils/string/UppercaseFirst');
 
 var GetPhysicsPlugins = function (sys)
 {
@@ -16,14 +17,14 @@ var GetPhysicsPlugins = function (sys)
 
     if (defaultSystem)
     {
-        output.push(defaultSystem + 'Physics');
+        output.push(UppercaseFirst(defaultSystem + 'Physics'));
     }
 
     if (sceneSystems)
     {
         for (var key in sceneSystems)
         {
-            key = key.concat('Physics');
+            key = UppercaseFirst(key.concat('Physics'));
 
             if (output.indexOf(key) === -1)
             {
