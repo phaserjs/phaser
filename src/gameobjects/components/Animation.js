@@ -180,7 +180,7 @@ var Animation = new Class({
         var anim = this.currentAnim;
 
         //  Should give us 9,007,199,254,740,991 safe repeats
-        this.repeatCounter = (this._repeat === -1) ? Number.MAX_SAFE_INTEGER : this._repeat;
+        this.repeatCounter = (this._repeat === -1) ? Number.MAX_VALUE : this._repeat;
 
         anim.getFirstTick(this);
 
