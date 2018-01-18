@@ -1,7 +1,7 @@
-
 var CanvasPool = require('../display/canvas/CanvasPool');
 var Class = require('../utils/Class');
 var Color = require('../display/color/Color');
+var EventEmitter = require('eventemitter3');
 var GenerateTexture = require('../create/GenerateTexture');
 var GetValue = require('../utils/object/GetValue');
 var Parser = require('./parsers');
@@ -17,10 +17,14 @@ var Texture = require('./Texture');
 */
 var TextureManager = new Class({
 
+    Extends: EventEmitter,
+
     initialize:
 
     function TextureManager (game)
     {
+        EventEmitter.call(this);
+
         this.game = game;
 
         this.name = 'TextureManager';
@@ -30,25 +34,53 @@ var TextureManager = new Class({
         this._tempCanvas = CanvasPool.create2D(this, 1, 1);
         this._tempContext = this._tempCanvas.getContext('2d');
 
+        this._pending = 0;
+
         game.events.once('boot', this.boot, this);
     },
 
     boot: function ()
     {
+        this._pending = 2;
+
+        this.on('onload', this.updatePending, this);
+        this.on('onerror', this.updatePending, this);
+
         this.addBase64('__DEFAULT', this.game.config.defaultImage);
         this.addBase64('__MISSING', this.game.config.missingImage);
+    },
+
+    updatePending: function ()
+    {
+        this._pending--;
+
+        if (this._pending === 0)
+        {
+            this.off('onload');
+            this.off('onerror');
+
+            this.game.events.emit('ready');
+        }
     },
 
     addBase64: function (key, data)
     {
         var _this = this;
+
         var image = new Image();
+
+        image.onerror = function ()
+        {
+            _this.emit('onerror', key);
+        };
 
         image.onload = function ()
         {
             var texture = _this.create(key, image);
         
             Parser.Image(texture, 0);
+
+            _this.emit('onload', key, texture);
         };
 
         image.src = data;

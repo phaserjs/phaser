@@ -189,6 +189,18 @@ var Game = new Class({
 
         this.events.emit('boot');
 
+        //  The Texture Manager has to wait on a couple of non-blocking events before it's fully ready, so it will emit this event
+        this.events.once('ready', this.start, this);
+    },
+
+    /**
+     * [description]
+     *
+     * @method Phaser.Game#start
+     * @since 3.0.0
+     */
+    start: function ()
+    {
         this.isRunning = true;
 
         this.config.postBoot();
