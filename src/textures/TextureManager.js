@@ -23,10 +23,14 @@ var TextureManager = new Class({
     {
         this.game = game;
 
+        this.name = 'TextureManager';
+
         this.list = {};
 
         this._tempCanvas = CanvasPool.create2D(this, 1, 1);
         this._tempContext = this._tempCanvas.getContext('2d');
+
+        game.events.once('boot', this.boot, this);
     },
 
     boot: function ()

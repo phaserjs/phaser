@@ -187,15 +187,7 @@ var Game = new Class({
 
         AddToDOM(this.canvas, this.config.parent);
 
-        this.textures.boot();
-
-        this.anims.boot(this.textures);
-
-        this.plugins.boot();
-
-        this.input.boot();
-
-        this.scene.boot();
+        this.events.emit('boot');
 
         this.isRunning = true;
 

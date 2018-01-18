@@ -67,6 +67,10 @@ var AnimationManager = new Class({
          * @property {boolean} [paused=false]
          */
         this.paused = false;
+
+        this.name = 'AnimationManager';
+
+        game.events.once('boot', this.boot, this);
     },
 
     /**
@@ -77,9 +81,9 @@ var AnimationManager = new Class({
      * 
      * @param {[type]} textureManager - [description]
      */
-    boot: function (textureManager)
+    boot: function ()
     {
-        this.textureManager = textureManager;
+        this.textureManager = this.game.textures;
     },
 
     /**

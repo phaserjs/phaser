@@ -56,6 +56,8 @@ var SceneManager = new Class({
                 });
             }
         }
+
+        game.events.once('boot', this.boot, this);
     },
 
     /**
@@ -185,11 +187,16 @@ var SceneManager = new Class({
             scene.init.call(scene, scene.sys.settings.data);
         }
 
-        var loader = scene.sys.load;
-            
-        loader.reset();
+        var loader;
 
-        if (scene.preload)
+        if (scene.sys.load)
+        {
+            loader = scene.sys.load;
+                
+            loader.reset();
+        }
+
+        if (loader && scene.preload)
         {
             scene.preload(this.game);
 
@@ -349,6 +356,7 @@ var SceneManager = new Class({
 
             //  Default required functions
 
+            /*
             if (!newScene.init)
             {
                 newScene.init = NOOP;
@@ -368,16 +376,19 @@ var SceneManager = new Class({
             {
                 newScene.shutdown = NOOP;
             }
+            */
 
             if (!newScene.update)
             {
                 newScene.update = NOOP;
             }
 
+            /*
             if (!newScene.render)
             {
                 newScene.render = NOOP;
             }
+            */
 
             return newScene;
         }
@@ -446,11 +457,16 @@ var SceneManager = new Class({
 
         //  Extract callbacks or set NOOP
 
-        var defaults = [ 'init', 'preload', 'create', 'shutdown', 'update', 'render' ];
+        var defaults = [ 'init', 'preload', 'create', 'update', 'render' ];
 
         for (var i = 0; i < defaults.length; i++)
         {
-            newScene[defaults[i]] = GetValue(sceneConfig, defaults[i], NOOP);
+            var sceneCallback = GetValue(sceneConfig, defaults[i], null);
+
+            if (sceneCallback)
+            {
+                newScene[defaults[i]] = sceneCallback;
+            }
         }
 
         //  Now let's move across any other functions or properties that may exist
@@ -932,7 +948,12 @@ var SceneManager = new Class({
 
             scene.sys.start(data);
 
-            var loader = scene.sys.load;
+            var loader;
+
+            if (scene.sys.load)
+            {
+                loader = scene.sys.load;
+            }
 
             //  Files payload?
             if (loader && Array.isArray(scene.sys.settings.files))
