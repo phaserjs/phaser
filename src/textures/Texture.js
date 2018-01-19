@@ -36,6 +36,9 @@ var Texture = new Class({
 
         this.frames = {};
 
+        //  Any additional data that was set in the source JSON (if any), or any extra data you'd like to store relating to this texture
+        this.customData = {};
+
         this.firstFrame = '__BASE';
 
         this.frameTotal = 0;
