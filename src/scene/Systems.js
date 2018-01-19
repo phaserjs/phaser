@@ -28,6 +28,7 @@ var Systems = new Class({
 
         this.anims;
         this.cache;
+        this.plugins;
         this.registry;
         this.sound;
         this.textures;
@@ -47,13 +48,17 @@ var Systems = new Class({
     {
         this.game = game;
 
-        game.plugins.installGlobal(this, GlobalPlugins);
+        var pluginManager = game.plugins;
 
-        game.plugins.installLocal(this, CoreScenePlugins);
+        this.plugins = pluginManager;
 
-        game.plugins.installLocal(this, GetScenePlugins(this));
+        pluginManager.installGlobal(this, GlobalPlugins);
 
-        game.plugins.installLocal(this, GetPhysicsPlugins(this));
+        pluginManager.installLocal(this, CoreScenePlugins);
+
+        pluginManager.installLocal(this, GetScenePlugins(this));
+
+        pluginManager.installLocal(this, GetPhysicsPlugins(this));
 
         this.events.emit('boot', this);
 
@@ -67,7 +72,7 @@ var Systems = new Class({
             plugin = [ plugin ];
         }
 
-        this.game.plugins.installLocal(this, plugin);
+        this.plugins.installLocal(this, plugin);
     },
 
     step: function (time, delta)
