@@ -105,6 +105,14 @@ var SceneManager = new Class({
             scene.init.call(scene, scene.sys.settings.data);
         }
 
+        //  Insert at the correct index, or it just all goes wrong :)
+        var i = this.getSceneIndex(scene);
+
+        this.active.push({ index: i, scene: scene });
+
+        //  Sort the 'active' array based on the index property
+        this.active.sort(this.sortScenes);
+
         var loader;
 
         if (scene.sys.load)
@@ -126,7 +134,6 @@ var SceneManager = new Class({
             else
             {
                 //  Start the loader going as we have something in the queue
-
                 loader.once('complete', this.loadComplete, this);
 
                 loader.start();
@@ -260,15 +267,6 @@ var SceneManager = new Class({
      */
     create: function (scene)
     {
-        //  Insert at the correct index, or it just all goes wrong :)
-
-        var i = this.getSceneIndex(scene);
-
-        this.active.push({ index: i, scene: scene });
-
-        //  Sort the 'active' array based on the index property
-        this.active.sort(this.sortScenes);
-
         if (scene.create)
         {
             scene.create.call(scene, scene.sys.settings.data);
@@ -354,41 +352,10 @@ var SceneManager = new Class({
 
             this.createSceneDisplay(newScene);
 
-            //  Default required functions
-
-            /*
-            if (!newScene.init)
-            {
-                newScene.init = NOOP;
-            }
-
-            if (!newScene.preload)
-            {
-                newScene.preload = NOOP;
-            }
-
-            if (!newScene.create)
-            {
-                newScene.create = NOOP;
-            }
-
-            if (!newScene.shutdown)
-            {
-                newScene.shutdown = NOOP;
-            }
-            */
-
             if (!newScene.update)
             {
                 newScene.update = NOOP;
             }
-
-            /*
-            if (!newScene.render)
-            {
-                newScene.render = NOOP;
-            }
-            */
 
             return newScene;
         }
@@ -455,13 +422,19 @@ var SceneManager = new Class({
 
         this.createSceneDisplay(newScene);
 
-        //  Extract callbacks or set NOOP
+        //  Extract callbacks
 
-        var defaults = [ 'init', 'preload', 'create', 'update', 'render' ];
+        var defaults = [ 'init', 'preload', 'create', 'update', 'render', 'shutdown', 'destroy' ];
 
         for (var i = 0; i < defaults.length; i++)
         {
             var sceneCallback = GetValue(sceneConfig, defaults[i], null);
+
+            //  Must always have an update function, no matter what (the rest are optional)
+            if (defaults[i] === 'update' && !sceneCallback)
+            {
+                sceneCallback = NOOP;
+            }
 
             if (sceneCallback)
             {
@@ -469,7 +442,7 @@ var SceneManager = new Class({
             }
         }
 
-        //  Now let's move across any other functions or properties that may exist
+        //  Now let's move across any other functions or properties that may exist in the extend object:
 
         /*
         scene: {
@@ -487,10 +460,7 @@ var SceneManager = new Class({
         {
             for (var propertyKey in sceneConfig.extend)
             {
-                if (defaults.indexOf(propertyKey) === -1)
-                {
-                    newScene[propertyKey] = sceneConfig.extend[propertyKey];
-                }
+                newScene[propertyKey] = sceneConfig.extend[propertyKey];
             }
         }
 
