@@ -86,7 +86,14 @@ var File = new Class({
     {
         this.resetXHR();
 
-        this.callback(this, true);
+        if (event.target && event.target.status !== 200)
+        {
+            this.callback(this, false);
+        }
+        else
+        {
+            this.callback(this, true);
+        }
     },
 
     onError: function (event)
