@@ -200,42 +200,43 @@ var HTML5AudioSound = new Class({
         this.pickAndPlayAudioTag();
     },
     update: function (time, delta) {
-        if (this.isPlaying) {
-            // handling delayed playback
-            if (this.startTime > 0) {
-                if (this.startTime < time - this.manager.audioPlayDelay) {
-                    this.audio.currentTime += Math.max(0, time - this.startTime) / 1000;
-                    this.startTime = 0;
-                    this.previousTime = this.audio.currentTime;
-                    this.playCatchPromise();
-                }
-                return;
-            }
-            // handle looping and ending
-            var startTime = this.currentMarker ? this.currentMarker.start : 0;
-            var endTime = startTime + this.duration;
-            var currentTime = this.audio.currentTime;
-            if (this.currentConfig.loop) {
-                if (currentTime >= endTime - this.manager.loopEndOffset) {
-                    this.audio.currentTime = startTime + Math.max(0, currentTime - endTime);
-                    currentTime = this.audio.currentTime;
-                }
-                else if (currentTime < startTime) {
-                    this.audio.currentTime += startTime;
-                    currentTime = this.audio.currentTime;
-                }
-                if (currentTime < this.previousTime) {
-                    this.emit('looped', this);
-                }
-            }
-            else if (currentTime >= endTime) {
-                this.reset();
-                this.stopAndReleaseAudioTag();
-                this.emit('ended', this);
-                return;
-            }
-            this.previousTime = currentTime;
+        if (!this.isPlaying) {
+            return;
         }
+        // handling delayed playback
+        if (this.startTime > 0) {
+            if (this.startTime < time - this.manager.audioPlayDelay) {
+                this.audio.currentTime += Math.max(0, time - this.startTime) / 1000;
+                this.startTime = 0;
+                this.previousTime = this.audio.currentTime;
+                this.playCatchPromise();
+            }
+            return;
+        }
+        // handle looping and ending
+        var startTime = this.currentMarker ? this.currentMarker.start : 0;
+        var endTime = startTime + this.duration;
+        var currentTime = this.audio.currentTime;
+        if (this.currentConfig.loop) {
+            if (currentTime >= endTime - this.manager.loopEndOffset) {
+                this.audio.currentTime = startTime + Math.max(0, currentTime - endTime);
+                currentTime = this.audio.currentTime;
+            }
+            else if (currentTime < startTime) {
+                this.audio.currentTime += startTime;
+                currentTime = this.audio.currentTime;
+            }
+            if (currentTime < this.previousTime) {
+                this.emit('looped', this);
+            }
+        }
+        else if (currentTime >= endTime) {
+            this.reset();
+            this.stopAndReleaseAudioTag();
+            this.emit('ended', this);
+            return;
+        }
+        this.previousTime = currentTime;
     },
     destroy: function () {
         BaseSound.prototype.destroy.call(this);
