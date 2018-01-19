@@ -60,7 +60,7 @@ var AudioFile = new Class({
 
 AudioFile.create = function (loader, key, urls, config, xhrSettings)
 {
-    var game = loader.scene.game;
+    var game = loader.scene.sys.game;
     var audioConfig = game.config.audio;
     var deviceAudio = game.device.Audio;
 
