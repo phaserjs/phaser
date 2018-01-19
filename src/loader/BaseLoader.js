@@ -4,6 +4,8 @@ var CustomSet = require('../structs/Set');
 var EventEmitter = require('eventemitter3');
 var ParseXMLBitmapFont = require('../gameobjects/bitmaptext/ParseXMLBitmapFont');
 var XHRSettings = require('./XHRSettings');
+var FileTypesManager = require('./FileTypesManager');
+var PluginManager = require('../plugins/PluginManager');
 
 //  Phaser.Loader.BaseLoader
 
@@ -22,6 +24,18 @@ var BaseLoader = new Class({
         EventEmitter.call(this);
 
         this.scene = scene;
+
+        this.systems = scene.sys;
+
+        if (!scene.sys.settings.isBooted)
+        {
+            scene.sys.events.once('boot', this.boot, this);
+        }
+
+        this._multilist = {};
+
+        //  Inject the available filetypes into the Loader
+        FileTypesManager.install(this);
 
         //  Move to a 'setURL' method?
         this.baseURL = '';
@@ -43,6 +57,14 @@ var BaseLoader = new Class({
         this.storage = new CustomSet();
 
         this.state = CONST.LOADER_IDLE;
+    },
+
+    boot: function ()
+    {
+        var eventEmitter = this.systems.events;
+
+        eventEmitter.on('shutdown', this.shutdown, this);
+        eventEmitter.on('destroy', this.destroy, this);
     },
 
     setPath: function (path)
@@ -513,5 +535,7 @@ var BaseLoader = new Class({
     }
 
 });
+
+PluginManager.register('Loader', Loader, 'load');
 
 module.exports = BaseLoader;
