@@ -2,26 +2,36 @@ var Class = require('../utils/Class');
 var CONST = require('./const');
 var CustomSet = require('../structs/Set');
 var EventEmitter = require('eventemitter3');
+var FileTypesManager = require('./FileTypesManager');
 var ParseXMLBitmapFont = require('../gameobjects/bitmaptext/ParseXMLBitmapFont');
+var PluginManager = require('../plugins/PluginManager');
 var XHRSettings = require('./XHRSettings');
 
-//  Phaser.Loader.BaseLoader
+//  Phaser.Loader.LoaderPlugin
 
-//  To finish the loader ...
-//
-//  3) Progress update
-
-var BaseLoader = new Class({
+var LoaderPlugin = new Class({
 
     Extends: EventEmitter,
 
     initialize:
 
-    function BaseLoader (scene)
+    function LoaderPlugin (scene)
     {
         EventEmitter.call(this);
 
         this.scene = scene;
+
+        this.systems = scene.sys;
+
+        if (!scene.sys.settings.isBooted)
+        {
+            scene.sys.events.once('boot', this.boot, this);
+        }
+
+        this._multilist = {};
+
+        //  Inject the available filetypes into the Loader
+        FileTypesManager.install(this);
 
         //  Move to a 'setURL' method?
         this.baseURL = '';
@@ -43,6 +53,14 @@ var BaseLoader = new Class({
         this.storage = new CustomSet();
 
         this.state = CONST.LOADER_IDLE;
+    },
+
+    boot: function ()
+    {
+        var eventEmitter = this.systems.events;
+
+        eventEmitter.on('shutdown', this.shutdown, this);
+        eventEmitter.on('destroy', this.destroy, this);
     },
 
     setPath: function (path)
@@ -85,7 +103,7 @@ var BaseLoader = new Class({
 
     start: function ()
     {
-        console.log(this.scene.sys.settings.key, '- BaseLoader start. Files to load:', this.list.size);
+        console.log(this.scene.sys.settings.key, '- LoaderPlugin start. Files to load:', this.list.size);
 
         if (!this.isReady())
         {
@@ -121,7 +139,7 @@ var BaseLoader = new Class({
 
     processLoadQueue: function ()
     {
-        // console.log('======== BaseLoader processLoadQueue');
+        // console.log('======== LoaderPlugin processLoadQueue');
         // console.log('List size', this.list.size);
         // console.log(this.inflight.size, 'items still in flight. Can load another', (this.maxParallelDownloads - this.inflight.size));
 
@@ -191,7 +209,7 @@ var BaseLoader = new Class({
 
     finishedLoading: function ()
     {
-        // console.log('---> BaseLoader.finishedLoading PROCESSING', this.queue.size, 'files');
+        // console.log('---> LoaderPlugin.finishedLoading PROCESSING', this.queue.size, 'files');
 
         if(this.state === CONST.LOADER_PROCESSING)
         {
@@ -474,7 +492,7 @@ var BaseLoader = new Class({
         if (filename === undefined) { filename = 'file.json'; }
         if (filetype === undefined) { filetype = 'application/json'; }
 
-        var blob = new Blob([data], { type: filetype });
+        var blob = new Blob([ data ], { type: filetype });
 
         var url = URL.createObjectURL(blob);
 
@@ -506,6 +524,12 @@ var BaseLoader = new Class({
         this.state = CONST.LOADER_IDLE;
     },
 
+    shutdown: function ()
+    {
+        this.reset();
+        this.state = CONST.LOADER_SHUTDOWN;
+    },
+
     destroy: function ()
     {
         this.reset();
@@ -514,4 +538,6 @@ var BaseLoader = new Class({
 
 });
 
-module.exports = BaseLoader;
+PluginManager.register('Loader', LoaderPlugin, 'load');
+
+module.exports = LoaderPlugin;

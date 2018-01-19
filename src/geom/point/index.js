@@ -14,6 +14,7 @@ Point.Floor = require('./Floor');
 Point.GetCentroid = require('./GetCentroid');
 Point.GetMagnitude = require('./GetMagnitude');
 Point.GetMagnitudeSq = require('./GetMagnitudeSq');
+Point.GetRectangleFromPoints = require('./GetRectangleFromPoints');
 Point.Interpolate = require('./Interpolate');
 Point.Invert = require('./Invert');
 Point.Multiply = require('./Multiply');
