@@ -59,6 +59,36 @@ var AudioFile = new Class({
 
 });
 
+AudioFile.create = function (loader, key, urls, config, xhrSettings)
+{
+    var game = loader.systems.game;
+    var audioConfig = game.config.audio;
+    var deviceAudio = game.device.Audio;
+
+    if ((audioConfig && audioConfig.noAudio) || (!deviceAudio.webAudio && !deviceAudio.audioData))
+    {
+        console.info('Skipping loading audio \'' + key + '\' since sounds are disabled.');
+        return null;
+    }
+
+    var url = AudioFile.findAudioURL(game, urls);
+
+    if (!url)
+    {
+        console.warn('No supported url provided for audio \'' + key + '\'!');
+        return null;
+    }
+
+    if (deviceAudio.webAudio && !(audioConfig && audioConfig.disableWebAudio))
+    {
+        return new AudioFile(key, url, this.path, xhrSettings, game.sound.context);
+    }
+    else
+    {
+        return new HTML5AudioFile(key, url, this.path, config);
+    }
+};
+
 //  When registering a factory function 'this' refers to the Loader context.
 //  
 //  There are several properties available to use:
@@ -67,34 +97,7 @@ var AudioFile = new Class({
 
 FileTypesManager.register('audio', function (key, urls, config, xhrSettings)
 {
-    var game = this.systems.game;
-    var audioConfig = game.config.audio;
-    var deviceAudio = game.device.Audio;
-
-    if ((audioConfig && audioConfig.noAudio) || (!deviceAudio.webAudio && !deviceAudio.audioData))
-    {
-        console.info('Skipping loading audio \'' + key + '\' since sounds are disabled.');
-        return this;
-    }
-
-    var url = AudioFile.findAudioURL(game, urls);
-
-    if (!url)
-    {
-        console.warn('No supported url provided for audio \'' + key + '\'!');
-        return this;
-    }
-
-    var audioFile;
-
-    if (deviceAudio.webAudio && !(audioConfig && audioConfig.disableWebAudio))
-    {
-        audioFile = new AudioFile(key, url, this.path, xhrSettings, game.sound.context);
-    }
-    else
-    {
-        audioFile = new HTML5AudioFile(key, url, this.path, config);
-    }
+    var audioFile = AudioFile.create(this, key, urls, config, xhrSettings);
 
     if (audioFile)
     {
