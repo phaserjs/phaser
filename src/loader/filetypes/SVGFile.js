@@ -1,6 +1,7 @@
 var Class = require('../../utils/Class');
 var CONST = require('../const');
 var File = require('../File');
+var FileTypesManager = require('../FileTypesManager');
 var GetFastValue = require('../../utils/object/GetFastValue');
 
 //  Phaser.Loader.FileTypes.SVGFile
@@ -90,23 +91,29 @@ var SVGFile = new Class({
 
 });
 
-SVGFile.create = function (loader, key, url, xhrSettings)
+//  When registering a factory function 'this' refers to the Loader context.
+//  
+//  There are several properties available to use:
+//  
+//  this.scene - a reference to the Scene that owns the GameObjectFactory
+
+FileTypesManager.register('svg', function (key, url, xhrSettings)
 {
     if (Array.isArray(key))
     {
         for (var i = 0; i < key.length; i++)
         {
             //  If it's an array it has to be an array of Objects, so we get everything out of the 'key' object
-            loader.addFile(new SVGFile(key[i], url, loader.path, xhrSettings));
+            this.addFile(new SVGFile(key[i], url, this.path, xhrSettings));
         }
     }
     else
     {
-        loader.addFile(new SVGFile(key, url, loader.path, xhrSettings));
+        this.addFile(new SVGFile(key, url, this.path, xhrSettings));
     }
 
     //  For method chaining
-    return loader;
-};
+    return this;
+});
 
 module.exports = SVGFile;

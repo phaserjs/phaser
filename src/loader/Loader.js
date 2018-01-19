@@ -1,30 +1,9 @@
 var BaseLoader = require('./BaseLoader');
 var Class = require('../utils/Class');
 var CONST = require('./const');
+var FileTypesManager = require('./FileTypesManager');
 var NumberArray = require('../utils/array/NumberArray');
 var PluginManager = require('../plugins/PluginManager');
-var TILEMAP_FORMATS = require('../gameobjects/tilemap/Formats');
-
-//  TODO - Injection mapped
-var AnimationJSONFile = require('./filetypes/AnimationJSONFile');
-var AtlasJSONFile = require('./filetypes/AtlasJSONFile');
-var AudioFile = require('./filetypes/AudioFile');
-var BinaryFile = require('./filetypes/BinaryFile');
-var BitmapFontFile = require('./filetypes/BitmapFontFile');
-var GLSLFile = require('./filetypes/GLSLFile');
-var HTMLFile = require('./filetypes/HTMLFile');
-var ImageFile = require('./filetypes/ImageFile');
-var JSONFile = require('./filetypes/JSONFile');
-var PluginFile = require('./filetypes/PluginFile');
-var ScriptFile = require('./filetypes/ScriptFile');
-var SpriteSheet = require('./filetypes/SpriteSheet');
-var SVGFile = require('./filetypes/SVGFile');
-var TextFile = require('./filetypes/TextFile');
-var TilemapCSVFile = require('./filetypes/TilemapCSVFile');
-var TilemapJSONFile = require('./filetypes/TilemapJSONFile');
-var UnityAtlasFile = require('./filetypes/UnityAtlasFile');
-var WavefrontFile = require('./filetypes/WavefrontFile');
-var XMLFile = require('./filetypes/XMLFile');
 
 var Loader = new Class({
 
@@ -44,6 +23,9 @@ var Loader = new Class({
         }
 
         this._multilist = {};
+
+        //  Inject the available filetypes into the Loader
+        FileTypesManager.install(this);
     },
 
     boot: function ()
@@ -56,6 +38,7 @@ var Loader = new Class({
 
     //  key can be either a string, an object or an array of objects
 
+    /*
     image: function (key, url, xhrSettings)
     {
         return ImageFile.create(this, key, url, xhrSettings);
@@ -86,6 +69,7 @@ var Loader = new Class({
         return XMLFile.create(this, key, url, xhrSettings);
     },
 
+    /*
     binary: function (key, url, xhrSettings)
     {
         return BinaryFile.create(this, key, url, xhrSettings);
@@ -121,8 +105,10 @@ var Loader = new Class({
     {
         return SpriteSheet.create(this, key, url, config, xhrSettings);
     },
+    */
 
     //  config can include: instances
+    /*
     audio: function (key, urls, config, xhrSettings)
     {
         var audioFile = AudioFile.create(this, key, urls, config, xhrSettings);
@@ -134,7 +120,9 @@ var Loader = new Class({
 
         return this;
     },
+    */
 
+    /*
     tilemapCSV: function (key, url, xhrSettings)
     {
         return TilemapCSVFile.create(this, key, url, TILEMAP_FORMATS.CSV, xhrSettings);
@@ -149,6 +137,7 @@ var Loader = new Class({
     {
         return TilemapJSONFile.create(this, key, url, TILEMAP_FORMATS.WELTMEISTER, xhrSettings);
     },
+    */
 
     //  ---------------------------------------------------
     //  Multi-File Loaders
@@ -192,6 +181,7 @@ var Loader = new Class({
         return this;
     },
 
+    /*
     unityAtlas: function (key, textureURL, atlasURL, textureXhrSettings, atlasXhrSettings)
     {
         //  Returns an object with two properties: 'texture' and 'data'
@@ -224,6 +214,7 @@ var Loader = new Class({
 
         return this;
     },
+    */
 
     multiatlas: function (key, textureURLs, atlasURLs, textureXhrSettings, atlasXhrSettings)
     {

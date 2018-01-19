@@ -1,5 +1,6 @@
 var Class = require('../../utils/Class');
 var File = require('../File');
+var FileTypesManager = require('../FileTypesManager');
 var GetFastValue = require('../../utils/object/GetFastValue');
 var CONST = require('../../const');
 var HTML5AudioFile = require('./HTML5AudioFile');
@@ -58,16 +59,22 @@ var AudioFile = new Class({
 
 });
 
-AudioFile.create = function (loader, key, urls, config, xhrSettings)
+//  When registering a factory function 'this' refers to the Loader context.
+//  
+//  There are several properties available to use:
+//  
+//  this.scene - a reference to the Scene that owns the GameObjectFactory
+
+FileTypesManager.register('audio', function (key, urls, config, xhrSettings)
 {
-    var game = loader.scene.game;
+    var game = this.systems.game;
     var audioConfig = game.config.audio;
     var deviceAudio = game.device.Audio;
 
     if ((audioConfig && audioConfig.noAudio) || (!deviceAudio.webAudio && !deviceAudio.audioData))
     {
         console.info('Skipping loading audio \'' + key + '\' since sounds are disabled.');
-        return null;
+        return this;
     }
 
     var url = AudioFile.findAudioURL(game, urls);
@@ -75,16 +82,27 @@ AudioFile.create = function (loader, key, urls, config, xhrSettings)
     if (!url)
     {
         console.warn('No supported url provided for audio \'' + key + '\'!');
-        return null;
+        return this;
     }
 
-    if(deviceAudio.webAudio && !(audioConfig && audioConfig.disableWebAudio))
+    var audioFile;
+
+    if (deviceAudio.webAudio && !(audioConfig && audioConfig.disableWebAudio))
     {
-        return new AudioFile(key, url, loader.path, xhrSettings, game.sound.context);
+        audioFile = new AudioFile(key, url, this.path, xhrSettings, game.sound.context);
+    }
+    else
+    {
+        audioFile = new HTML5AudioFile(key, url, this.path, config);
     }
 
-    return new HTML5AudioFile(key, url, loader.path, config);
-};
+    if (audioFile)
+    {
+        this.addFile(audioFile);
+    }
+
+    return this;
+});
 
 // this.load.audio('sound', 'assets/audio/booom.ogg', config, xhrSettings);
 //
@@ -129,6 +147,7 @@ AudioFile.create = function (loader, key, urls, config, xhrSettings)
 //         }
 //     ],
 //     config, xhrSettings);
+
 AudioFile.findAudioURL = function (game, urls)
 {
     if (urls.constructor !== Array)
