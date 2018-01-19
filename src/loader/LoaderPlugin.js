@@ -34,11 +34,14 @@ var LoaderPlugin = new Class({
         //  Inject the available filetypes into the Loader
         FileTypesManager.install(this);
 
-        var sceneConfig = this.systems.settings.loader;
         var gameConfig = this.systems.game.config;
+        var sceneConfig = this.systems.settings.loader;
+
+        this.path = '';
+        this.baseURL = '';
 
         this.baseURL = GetFastValue(sceneConfig, 'baseURL', gameConfig.loaderBaseURL);
-        this.path = GetFastValue(sceneConfig, 'path', gameConfig.loaderPath);
+        this.setPath(GetFastValue(sceneConfig, 'path', gameConfig.loaderPath));
 
         this.enableParallel = GetFastValue(sceneConfig, 'enableParallel', gameConfig.loaderEnableParallel);
         this.maxParallelDownloads = GetFastValue(sceneConfig, 'maxParallelDownloads', gameConfig.loaderMaxParallelDownloads);
@@ -547,9 +550,11 @@ var LoaderPlugin = new Class({
         this.removeAllListeners('loaderror');
         this.removeAllListeners('complete');
 
-        this.tag = '';
-        this.path = '';
-        this.baseURL = '';
+        var gameConfig = this.systems.game.config;
+        var sceneConfig = this.systems.settings.loader;
+
+        this.baseURL = GetFastValue(sceneConfig, 'baseURL', gameConfig.loaderBaseURL);
+        this.setPath(GetFastValue(sceneConfig, 'path', gameConfig.loaderPath));
 
         this.state = CONST.LOADER_IDLE;
     },
