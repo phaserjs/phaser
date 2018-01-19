@@ -135,38 +135,39 @@ var HTML5AudioSound = new Class({
         return true;
     },
     pickAudioTag: function () {
-        if (!this.audio) {
-            for (var i = 0; i < this.tags.length; i++) {
-                var audio = this.tags[i];
-                if (audio.dataset.used === 'false') {
-                    audio.dataset.used = 'true';
-                    this.audio = audio;
-                    return true;
-                }
-            }
-            if (!this.manager.override) {
-                return false;
-            }
-            var otherSounds_1 = [];
-            this.manager.forEachActiveSound(function (sound) {
-                if (sound.key === this.key && sound.audio) {
-                    otherSounds_1.push(sound);
-                }
-            }, this);
-            otherSounds_1.sort(function (a1, a2) {
-                if (a1.loop === a2.loop) {
-                    // sort by progress
-                    return (a2.seek / a2.duration) - (a1.seek / a1.duration);
-                }
-                return a1.loop ? 1 : -1;
-            });
-            var selectedSound = otherSounds_1[0];
-            this.audio = selectedSound.audio;
-            selectedSound.reset();
-            selectedSound.audio = null;
-            selectedSound.startTime = 0;
-            selectedSound.previousTime = 0;
+        if (this.audio) {
+            return true;
         }
+        for (var i = 0; i < this.tags.length; i++) {
+            var audio = this.tags[i];
+            if (audio.dataset.used === 'false') {
+                audio.dataset.used = 'true';
+                this.audio = audio;
+                return true;
+            }
+        }
+        if (!this.manager.override) {
+            return false;
+        }
+        var otherSounds = [];
+        this.manager.forEachActiveSound(function (sound) {
+            if (sound.key === this.key && sound.audio) {
+                otherSounds.push(sound);
+            }
+        }, this);
+        otherSounds.sort(function (a1, a2) {
+            if (a1.loop === a2.loop) {
+                // sort by progress
+                return (a2.seek / a2.duration) - (a1.seek / a1.duration);
+            }
+            return a1.loop ? 1 : -1;
+        });
+        var selectedSound = otherSounds[0];
+        this.audio = selectedSound.audio;
+        selectedSound.reset();
+        selectedSound.audio = null;
+        selectedSound.startTime = 0;
+        selectedSound.previousTime = 0;
         return true;
     },
     playCatchPromise: function () {
