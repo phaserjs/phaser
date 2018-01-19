@@ -79,7 +79,7 @@ var LoaderPlugin = new Class({
 
     setBaseURL: function (url)
     {
-        if (url.substr(-1) !== '/')
+        if (url !== '' && url.substr(-1) !== '/')
         {
             url = url.concat('/');
         }
@@ -91,7 +91,7 @@ var LoaderPlugin = new Class({
 
     setPath: function (path)
     {
-        if (path.substr(-1) !== '/')
+        if (path !== '' && path.substr(-1) !== '/')
         {
             path = path.concat('/');
         }
@@ -164,6 +164,8 @@ var LoaderPlugin = new Class({
     updateProgress: function ()
     {
         this.progress = 1 - (this.list.size / this.totalToLoad);
+
+        // console.log(this.progress);
 
         this.emit('progress', this.progress);
     },
@@ -257,11 +259,19 @@ var LoaderPlugin = new Class({
 
         this.storage.clear();
 
-        this.queue.each(function (file)
+        if (this.queue.size === 0)
         {
-            // console.log('%c Calling process on ' + file.key, 'color: #000000; background: #ffff00;');
-            file.onProcess(this.processUpdate.bind(this));
-        }, this);
+            //  Everything failed, so nothing to process
+            this.processComplete();
+        }
+        else
+        {
+            this.queue.each(function (file)
+            {
+                // console.log('%c Calling process on ' + file.key, 'color: #000000; background: #ffff00;');
+                file.onProcess(this.processUpdate.bind(this));
+            }, this);
+        }
     },
 
     //  Called automatically by the File when it has finished processing
