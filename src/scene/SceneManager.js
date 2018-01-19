@@ -777,11 +777,9 @@ var SceneManager = new Class({
      *
      * @param {object} event - [description]
      */
-    payloadComplete: function (event)
+    payloadComplete: function (loader)
     {
-        var scene = event.loader.scene;
-
-        this.bootScene(scene);
+        this.bootScene(loader.scene);
     },
 
     /**
