@@ -47,6 +47,10 @@ var Settings = {
 
             physics: GetValue(config, 'physics', {}),
 
+            //  Loader
+
+            loader: GetValue(config, 'loader', {}),
+
             //  Plugins
 
             plugins: GetValue(config, 'plugins', false),

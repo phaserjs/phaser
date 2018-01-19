@@ -81,8 +81,7 @@ var File = new Class({
         this.xhrLoader.onprogress = undefined;
     },
 
-    //  Called when the Image loads
-    //  ProgressEvent
+    //  Called when the file loads, is sent a DOM ProgressEvent
     onLoad: function (event)
     {
         this.resetXHR();

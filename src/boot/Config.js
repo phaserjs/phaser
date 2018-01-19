@@ -182,6 +182,18 @@ var Config = new Class({
         this.physics = GetValue(config, 'physics', {});
         this.defaultPhysicsSystem = GetValue(this.physics, 'default', false);
 
+        //  Loader Defaults
+        this.loaderBaseURL = GetValue(config, 'loader.baseURL', '');
+        this.loaderPath = GetValue(config, 'loader.path', '');
+        this.loaderEnableParallel = GetValue(config, 'loader.enableParallel', true);
+        this.loaderMaxParallelDownloads = GetValue(config, 'loader.maxParallelDownloads', 4);
+        this.loaderCrossOrigin = GetValue(config, 'loader.crossOrigin', undefined);
+        this.loaderResponseType = GetValue(config, 'loader.responseType', '');
+        this.loaderAsync = GetValue(config, 'loader.async', true);
+        this.loaderUser = GetValue(config, 'loader.user', '');
+        this.loaderPassword = GetValue(config, 'loader.password', '');
+        this.loaderTimeout = GetValue(config, 'loader.timeout', 0);
+
         //  Scene Plugins
         this.defaultPlugins = GetValue(config, 'plugins', DefaultScenePlugins);
 

@@ -3,6 +3,7 @@ var CONST = require('./const');
 var CustomSet = require('../structs/Set');
 var EventEmitter = require('eventemitter3');
 var FileTypesManager = require('./FileTypesManager');
+var GetFastValue = require('../utils/object/GetFastValue');
 var ParseXMLBitmapFont = require('../gameobjects/bitmaptext/ParseXMLBitmapFont');
 var PluginManager = require('../plugins/PluginManager');
 var XHRSettings = require('./XHRSettings');
@@ -33,17 +34,25 @@ var LoaderPlugin = new Class({
         //  Inject the available filetypes into the Loader
         FileTypesManager.install(this);
 
-        this.baseURL = '';
-        this.path = '';
+        var sceneConfig = this.systems.settings.loader;
+        var gameConfig = this.systems.game.config;
 
-        //  Read from Game / Scene Config
-        this.enableParallel = true;
-        this.maxParallelDownloads = 4;
+        this.baseURL = GetFastValue(sceneConfig, 'baseURL', gameConfig.loaderBaseURL);
+        this.path = GetFastValue(sceneConfig, 'path', gameConfig.loaderPath);
+
+        this.enableParallel = GetFastValue(sceneConfig, 'enableParallel', gameConfig.loaderEnableParallel);
+        this.maxParallelDownloads = GetFastValue(sceneConfig, 'maxParallelDownloads', gameConfig.loaderMaxParallelDownloads);
 
         //  xhr specific global settings (can be overridden on a per-file basis)
-        this.xhr = XHRSettings();
+        this.xhr = XHRSettings(
+            GetFastValue(sceneConfig, 'responseType', gameConfig.loaderResponseType),
+            GetFastValue(sceneConfig, 'async', gameConfig.loaderAsync),
+            GetFastValue(sceneConfig, 'user', gameConfig.loaderUser),
+            GetFastValue(sceneConfig, 'password', gameConfig.loaderPassword),
+            GetFastValue(sceneConfig, 'timeout', gameConfig.loaderTimeout)
+        );
 
-        this.crossOrigin = undefined;
+        this.crossOrigin = GetFastValue(sceneConfig, 'crossOrigin', gameConfig.loaderCrossOrigin);
 
         this.totalToLoad = 0;
         this.progress = 0;
@@ -59,10 +68,6 @@ var LoaderPlugin = new Class({
 
     boot: function ()
     {
-        //  Set values from scene / game configs
-
-
-
         var eventEmitter = this.systems.events;
 
         eventEmitter.on('shutdown', this.shutdown, this);
@@ -193,7 +198,7 @@ var LoaderPlugin = new Class({
             file.crossOrigin = this.crossOrigin;
         }
 
-        file.load(this.nextFile.bind(this), this.baseURL);
+        file.load(this.nextFile.bind(this), this.baseURL, this.xhr);
     },
 
     nextFile: function (previousFile, success)
