@@ -105,7 +105,7 @@ var DebugHeader = function (game)
     }
 
     // Keep this during dev build only
-    console.log(CHECKSUM.build);
+    // console.log(CHECKSUM.build);
 };
 
 module.exports = DebugHeader;
