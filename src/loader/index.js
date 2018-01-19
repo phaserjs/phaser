@@ -2,10 +2,9 @@
 
 module.exports = {
 
-    BaseLoader: require('./BaseLoader'),
+    LoaderPlugin: require('./LoaderPlugin'),
     File: require('./File'),
     FileTypesManager: require('./FileTypesManager'),
-    LoaderPlugin: require('./Loader'),
 
     FileTypes: {
         AnimationJSONFile: require('./filetypes/AnimationJSONFile'),

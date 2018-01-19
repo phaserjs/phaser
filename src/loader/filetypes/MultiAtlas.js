@@ -1,7 +1,7 @@
 var FileTypesManager = require('../FileTypesManager');
 var ImageFile = require('./ImageFile.js');
 var JSONFile = require('./JSONFile.js');
-var NumberArray = require('../utils/array/NumberArray');
+var NumberArray = require('../../utils/array/NumberArray');
 
 //  Phaser.Loader.FileTypes.MultiAtlas
 
