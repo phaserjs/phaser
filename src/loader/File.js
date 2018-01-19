@@ -48,6 +48,9 @@ var File = new Class({
             this.xhrSettings = MergeXHRSettings(this.xhrSettings, GetFastValue(fileConfig, 'xhrSettings', {}));
         }
 
+        //  The LoaderPlugin instance that is loading this file
+        this.loader = null;
+
         this.xhrLoader = null;
 
         this.state = CONST.FILE_PENDING;
@@ -70,8 +73,6 @@ var File = new Class({
         //  Multipart file? (i.e. an atlas and its json together)
         this.linkFile = undefined;
         this.linkType = '';
-
-        this.callback = null;
     },
 
     resetXHR: function ()
@@ -81,6 +82,33 @@ var File = new Class({
         this.xhrLoader.onprogress = undefined;
     },
 
+    //  Called by the Loader, starts the actual file downloading.
+    //  During the load the methods onLoad, onProgress, etc are called based on the XHR events.
+    load: function (loader)
+    {
+        this.loader = loader;
+
+        if (this.state === CONST.FILE_POPULATED)
+        {
+            this.onComplete();
+
+            loader.nextFile(this);
+        }
+        else
+        {
+            this.src = GetURL(this, loader.baseURL);
+
+            if (this.src.indexOf('data:') === 0)
+            {
+                console.log('Local data URI');
+            }
+            else
+            {
+                this.xhrLoader = XHRLoader(this, loader.xhr);
+            }
+        }
+    },
+
     //  Called when the file loads, is sent a DOM ProgressEvent
     onLoad: function (event)
     {
@@ -88,19 +116,20 @@ var File = new Class({
 
         if (event.target && event.target.status !== 200)
         {
-            this.callback(this, false);
+            this.loader.nextFile(this, false);
         }
         else
         {
-            this.callback(this, true);
+            this.loader.nextFile(this, true);
         }
     },
 
+    //  Called when the file errors, is sent a DOM ProgressEvent
     onError: function (event)
     {
         this.resetXHR();
 
-        this.callback(this, false);
+        this.loader.nextFile(this, false);
     },
 
     onProgress: function (event)
@@ -111,11 +140,14 @@ var File = new Class({
             this.bytesTotal = event.total;
 
             this.percentComplete = Math.min((this.bytesLoaded / this.bytesTotal), 1);
-        }
 
-        // console.log(this.percentComplete + '% (' + this.bytesLoaded + ' bytes)');
+            // console.log(this.percentComplete + '% (' + this.bytesLoaded + ' bytes)');
+            this.loader.emit('fileprogress', this, this.percentComplete);
+        }
     },
 
+    //  Usually overriden by the FileTypes and is called by Loader.finishedLoading.
+    //  The callback is Loader.processUpdate
     onProcess: function (callback)
     {
         this.state = CONST.FILE_PROCESSING;
@@ -144,34 +176,6 @@ var File = new Class({
         else
         {
             this.state = CONST.FILE_COMPLETE;
-        }
-    },
-
-    //  Called by the Loader, starts the actual file downloading
-    load: function (callback, baseURL, globalXHR)
-    {
-        if (baseURL === undefined) { baseURL = ''; }
-
-        this.callback = callback;
-
-        if (this.state === CONST.FILE_POPULATED)
-        {
-            this.onComplete();
-
-            callback(this);
-        }
-        else
-        {
-            this.src = GetURL(this, baseURL);
-
-            if (this.src.indexOf('data:') === 0)
-            {
-                console.log('Local data URI');
-            }
-            else
-            {
-                this.xhrLoader = XHRLoader(this, globalXHR);
-            }
         }
     }
 
