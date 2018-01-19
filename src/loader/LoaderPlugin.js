@@ -208,7 +208,7 @@ var LoaderPlugin = new Class({
             file.crossOrigin = this.crossOrigin;
         }
 
-        file.load(this.nextFile.bind(this), this.baseURL, this.xhr);
+        file.load(this);
     },
 
     nextFile: function (previousFile, success)
@@ -572,6 +572,55 @@ var LoaderPlugin = new Class({
         this.setPath(GetFastValue(sceneConfig, 'path', gameConfig.loaderPath));
 
         this.state = CONST.LOADER_IDLE;
+    },
+
+    loadArray: function (files)
+    {
+        if (Array.isArray(files))
+        {
+            for (var i = 0; i < files.length; i++)
+            {
+                this.file(files[i]);
+            }
+        }
+
+        return (this.list.size > 0);
+    },
+
+    file: function (file)
+    {
+        var entry;
+        var key = file.key;
+
+        switch (file.type)
+        {
+            case 'spritesheet':
+                entry = this.spritesheet(key, file.url, file.config, file.xhrSettings);
+                break;
+
+            case 'atlas':
+                entry = this.atlas(key, file.textureURL, file.atlasURL, file.textureXhrSettings, file.atlasXhrSettings);
+                break;
+
+            case 'bitmapFont':
+                entry = this.bitmapFont(key, file.textureURL, file.xmlURL, file.textureXhrSettings, file.xmlXhrSettings);
+                break;
+
+            case 'multiatlas':
+                entry = this.multiatlas(key, file.textureURLs, file.atlasURLs, file.textureXhrSettings, file.atlasXhrSettings);
+                break;
+
+            case 'audioSprite':
+                entry = this.audioSprite(key, file.urls, file.json, file.config, file.audioXhrSettings, file.jsonXhrSettings);
+                break;
+
+            //  image, json, xml, binary, text, glsl, svg, obj
+            default:
+                entry = this[file.type](key, file.url, file.xhrSettings);
+                break;
+        }
+
+        return entry;
     },
 
     shutdown: function ()
