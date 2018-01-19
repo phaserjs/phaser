@@ -154,15 +154,24 @@ var File = new Class({
 
         this.callback = callback;
 
-        this.src = GetURL(this, baseURL);
-
-        if (this.src.indexOf('data:') === 0)
+        if (this.state === CONST.FILE_POPULATED)
         {
-            console.log('Local data URI');
+            this.onComplete();
+
+            callback(this);
         }
         else
         {
-            this.xhrLoader = XHRLoader(this, globalXHR);
+            this.src = GetURL(this, baseURL);
+
+            if (this.src.indexOf('data:') === 0)
+            {
+                console.log('Local data URI');
+            }
+            else
+            {
+                this.xhrLoader = XHRLoader(this, globalXHR);
+            }
         }
     }
 

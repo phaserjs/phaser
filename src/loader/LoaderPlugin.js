@@ -178,7 +178,7 @@ var LoaderPlugin = new Class({
 
         this.list.each(function (file)
         {
-            if (file.state === CONST.FILE_PENDING && this.inflight.size < this.maxParallelDownloads)
+            if (file.state === CONST.FILE_POPULATED || (file.state === CONST.FILE_PENDING && this.inflight.size < this.maxParallelDownloads))
             {
                 this.inflight.set(file);
 

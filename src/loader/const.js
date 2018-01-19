@@ -34,6 +34,9 @@ var FILE_CONST = {
     //  File has been destroyed
     FILE_DESTROYED: 18,
 
+    //  File was populated from local data and doesn't need an HTTP request
+    FILE_POPULATED: 19,
+
     TEXTURE_ATLAS_JSON_ARRAY: 20,
     TEXTURE_ATLAS_JSON_HASH: 21
 
