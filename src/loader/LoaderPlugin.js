@@ -33,7 +33,6 @@ var LoaderPlugin = new Class({
         //  Inject the available filetypes into the Loader
         FileTypesManager.install(this);
 
-        //  Move to a 'setURL' method?
         this.baseURL = '';
         this.path = '';
 
@@ -46,6 +45,9 @@ var LoaderPlugin = new Class({
 
         this.crossOrigin = undefined;
 
+        this.totalToLoad = 0;
+        this.progress = 0;
+
         this.list = new CustomSet();
         this.inflight = new CustomSet();
         this.failed = new CustomSet();
@@ -57,10 +59,21 @@ var LoaderPlugin = new Class({
 
     boot: function ()
     {
+        //  Set values from scene / game configs
+
+
+
         var eventEmitter = this.systems.events;
 
         eventEmitter.on('shutdown', this.shutdown, this);
         eventEmitter.on('destroy', this.destroy, this);
+    },
+
+    setBaseURL: function (url)
+    {
+        this.baseURL = url;
+
+        return this;
     },
 
     setPath: function (path)
@@ -103,12 +116,15 @@ var LoaderPlugin = new Class({
 
     start: function ()
     {
-        console.log(this.scene.sys.settings.key, '- LoaderPlugin start. Files to load:', this.list.size);
+        // console.log(this.scene.sys.settings.key, '- Loader start. Files to load:', this.list.size);
 
         if (!this.isReady())
         {
             return;
         }
+
+        this.progress = 0;
+        this.totalToLoad = this.list.size;
 
         this.emit('start', this);
 
@@ -134,7 +150,9 @@ var LoaderPlugin = new Class({
 
     updateProgress: function ()
     {
+        this.progress = 1 - (this.list.size / this.totalToLoad);
 
+        this.emit('progress', this.progress);
     },
 
     processLoadQueue: function ()
@@ -186,14 +204,18 @@ var LoaderPlugin = new Class({
 
         if (success)
         {
+            this.emit('load', previousFile);
             this.queue.set(previousFile);
         }
         else
         {
+            this.emit('loaderror', previousFile);
             this.failed.set(previousFile);
         }
 
         this.inflight.delete(previousFile);
+
+        this.updateProgress();
 
         if (this.list.size > 0)
         {
@@ -211,10 +233,12 @@ var LoaderPlugin = new Class({
     {
         // console.log('---> LoaderPlugin.finishedLoading PROCESSING', this.queue.size, 'files');
 
-        if(this.state === CONST.LOADER_PROCESSING)
+        if (this.state === CONST.LOADER_PROCESSING)
         {
             return;
         }
+
+        this.progress = 1;
 
         this.state = CONST.LOADER_PROCESSING;
 
@@ -223,7 +247,6 @@ var LoaderPlugin = new Class({
         this.queue.each(function (file)
         {
             // console.log('%c Calling process on ' + file.key, 'color: #000000; background: #ffff00;');
-
             file.onProcess(this.processUpdate.bind(this));
         }, this);
     },
@@ -284,7 +307,7 @@ var LoaderPlugin = new Class({
 
     processComplete: function ()
     {
-        console.log(this.scene.sys.settings.key, '- Loader Complete. Loaded:', this.storage.size, 'Failed:', this.failed.size);
+        // console.log(this.scene.sys.settings.key, '- Loader Complete. Loaded:', this.storage.size, 'Failed:', this.failed.size);
 
         this.list.clear();
         this.inflight.clear();
@@ -515,6 +538,8 @@ var LoaderPlugin = new Class({
         this.storage.clear();
 
         this.removeAllListeners('start');
+        this.removeAllListeners('load');
+        this.removeAllListeners('loaderror');
         this.removeAllListeners('complete');
 
         this.tag = '';
