@@ -40,7 +40,7 @@ var LoaderPlugin = new Class({
         this.path = '';
         this.baseURL = '';
 
-        this.baseURL = GetFastValue(sceneConfig, 'baseURL', gameConfig.loaderBaseURL);
+        this.setBaseURL(GetFastValue(sceneConfig, 'baseURL', gameConfig.loaderBaseURL));
         this.setPath(GetFastValue(sceneConfig, 'path', gameConfig.loaderPath));
 
         this.enableParallel = GetFastValue(sceneConfig, 'enableParallel', gameConfig.loaderEnableParallel);
@@ -79,6 +79,11 @@ var LoaderPlugin = new Class({
 
     setBaseURL: function (url)
     {
+        if (url.substr(-1) !== '/')
+        {
+            url = url.concat('/');
+        }
+
         this.baseURL = url;
 
         return this;
@@ -553,7 +558,7 @@ var LoaderPlugin = new Class({
         var gameConfig = this.systems.game.config;
         var sceneConfig = this.systems.settings.loader;
 
-        this.baseURL = GetFastValue(sceneConfig, 'baseURL', gameConfig.loaderBaseURL);
+        this.setBaseURL(GetFastValue(sceneConfig, 'baseURL', gameConfig.loaderBaseURL));
         this.setPath(GetFastValue(sceneConfig, 'path', gameConfig.loaderPath));
 
         this.state = CONST.LOADER_IDLE;
