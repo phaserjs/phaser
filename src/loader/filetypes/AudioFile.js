@@ -1,5 +1,6 @@
 var Class = require('../../utils/Class');
 var File = require('../File');
+var FileTypesManager = require('../FileTypesManager');
 var GetFastValue = require('../../utils/object/GetFastValue');
 var CONST = require('../../const');
 var HTML5AudioFile = require('./HTML5AudioFile');
@@ -60,7 +61,7 @@ var AudioFile = new Class({
 
 AudioFile.create = function (loader, key, urls, config, xhrSettings)
 {
-    var game = loader.scene.game;
+    var game = loader.systems.game;
     var audioConfig = game.config.audio;
     var deviceAudio = game.device.Audio;
 
@@ -78,13 +79,33 @@ AudioFile.create = function (loader, key, urls, config, xhrSettings)
         return null;
     }
 
-    if(deviceAudio.webAudio && !(audioConfig && audioConfig.disableWebAudio))
+    if (deviceAudio.webAudio && !(audioConfig && audioConfig.disableWebAudio))
     {
-        return new AudioFile(key, url, loader.path, xhrSettings, game.sound.context);
+        return new AudioFile(key, url, this.path, xhrSettings, game.sound.context);
+    }
+    else
+    {
+        return new HTML5AudioFile(key, url, this.path, config, game.sound.locked);
+    }
+};
+
+//  When registering a factory function 'this' refers to the Loader context.
+//
+//  There are several properties available to use:
+//
+//  this.scene - a reference to the Scene that owns the GameObjectFactory
+
+FileTypesManager.register('audio', function (key, urls, config, xhrSettings)
+{
+    var audioFile = AudioFile.create(this, key, urls, config, xhrSettings);
+
+    if (audioFile)
+    {
+        this.addFile(audioFile);
     }
 
-    return new HTML5AudioFile(key, url, loader.path, config);
-};
+    return this;
+});
 
 // this.load.audio('sound', 'assets/audio/booom.ogg', config, xhrSettings);
 //
@@ -129,6 +150,7 @@ AudioFile.create = function (loader, key, urls, config, xhrSettings)
 //         }
 //     ],
 //     config, xhrSettings);
+
 AudioFile.findAudioURL = function (game, urls)
 {
     if (urls.constructor !== Array)

@@ -23,14 +23,14 @@ var CollideSpriteVsTilemapLayer = function (sprite, tilemapLayer, collideCallbac
     if (layerData.tileWidth > layerData.baseTileWidth)
     {
         // The x origin of a tile is the left side, so x and width need to be adjusted.
-        let xDiff = (layerData.tileWidth - layerData.baseTileWidth) * tilemapLayer.scaleX;
+        var xDiff = (layerData.tileWidth - layerData.baseTileWidth) * tilemapLayer.scaleX;
         x -= xDiff;
         w += xDiff;
     }
     if (layerData.tileHeight > layerData.baseTileHeight)
     {
         // The y origin of a tile is the bottom side, so just the height needs to be adjusted.
-        let yDiff = (layerData.tileHeight - layerData.baseTileHeight) * tilemapLayer.scaleY;
+        var yDiff = (layerData.tileHeight - layerData.baseTileHeight) * tilemapLayer.scaleY;
         h += yDiff;
     }
 

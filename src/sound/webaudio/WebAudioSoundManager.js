@@ -44,7 +44,7 @@ var WebAudioSoundManager = new Class({
          * @property {AudioNode} destination
          */
         this.destination = this.masterMuteNode;
-        this.unlock();
+        this.locked = this.context.state === 'suspended' && 'ontouchstart' in window;
         BaseSoundManager.call(this, game);
     },
     /**
@@ -81,6 +81,7 @@ var WebAudioSoundManager = new Class({
     },
     /**
      * Unlocks Web Audio API on iOS devices on the initial touch event.
+     *
      * Read more about how this issue is handled here in [this article](TODO add link).
      *
      * @private
@@ -88,16 +89,15 @@ var WebAudioSoundManager = new Class({
      */
     unlock: function () {
         var _this = this;
-        if (this.context.state === 'suspended' && 'ontouchstart' in window) {
-            var unlock_1 = function () {
-                _this.context.resume().then(function () {
-                    document.body.removeEventListener('touchstart', unlock_1);
-                    document.body.removeEventListener('touchend', unlock_1);
-                });
-            };
-            document.body.addEventListener('touchstart', unlock_1, false);
-            document.body.addEventListener('touchend', unlock_1, false);
-        }
+        var unlock = function () {
+            _this.context.resume().then(function () {
+                document.body.removeEventListener('touchstart', unlock);
+                document.body.removeEventListener('touchend', unlock);
+                _this.unlocked = true;
+            });
+        };
+        document.body.addEventListener('touchstart', unlock, false);
+        document.body.addEventListener('touchend', unlock, false);
     },
     /**
      * Method used internally for pausing sound manager if

@@ -20,7 +20,7 @@ var DebugHeader = function (game)
 
     var renderType = (config.renderType === CONST.CANVAS) ? 'Canvas' : 'WebGL';
 
-    var audioConfig = game.config.audio;
+    var audioConfig = config.audio;
     var deviceAudio = game.device.Audio;
 
     var audioType;
@@ -105,7 +105,7 @@ var DebugHeader = function (game)
     }
 
     // Keep this during dev build only
-    console.log(CHECKSUM.build);
+    // console.log(CHECKSUM.build);
 };
 
 module.exports = DebugHeader;

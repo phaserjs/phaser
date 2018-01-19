@@ -98,6 +98,27 @@ var BaseSoundManager = new Class({
          * @default 0
          */
         this._detune = 0;
+        /**
+         * Mobile devices require sounds to be triggered from an explicit user action,
+         * such as a tap, before any sound can be loaded/played on a web page.
+         * Set to true if the audio system is currently locked awaiting user interaction.
+         *
+         * @readonly
+         * @property {boolean} locked
+         */
+        this.locked = this.locked || false;
+        /**
+         * Flag used internally for handling when the audio system
+         * has been unlocked, if there ever was a need for it.
+         *
+         * @private
+         * @property {boolean} unlocked
+         * @default false
+         */
+        this.unlocked = false;
+        if (this.locked) {
+            this.unlock();
+        }
     },
     /**
      * Adds a new sound into the sound manager.
@@ -249,6 +270,17 @@ var BaseSoundManager = new Class({
         this.emit('stopall', this);
     },
     /**
+     * Method used internally for unlocking audio playback on devices that
+     * require user interaction before any sound can be played on a web page.
+     *
+     * Read more about how this issue is handled here in [this article](TODO add link).
+     *
+     * @override
+     * @protected
+     * @method Phaser.Sound.BaseSoundManager#unlock
+     */
+    unlock: NOOP,
+    /**
      * Method used internally for pausing sound manager if
      * Phaser.Sound.BaseSoundManager#pauseOnBlur is set to true.
      *
@@ -276,6 +308,11 @@ var BaseSoundManager = new Class({
      * @param {number} delta - The delta time elapsed since the last frame.
      */
     update: function (time, delta) {
+        if (this.unlocked) {
+            this.unlocked = false;
+            this.locked = false;
+            this.emit('unlocked', this);
+        }
         for (var i = this.sounds.length - 1; i >= 0; i--) {
             if (this.sounds[i].pendingRemove) {
                 this.sounds.splice(i, 1);

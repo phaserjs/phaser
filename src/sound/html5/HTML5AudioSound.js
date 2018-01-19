@@ -49,6 +49,9 @@ var HTML5AudioSound = new Class({
         BaseSound.call(this, manager, key, config);
     },
     play: function (markerName, config) {
+        if (this.manager.isLocked(this, 'play', [markerName, config])) {
+            return false;
+        }
         if (!BaseSound.prototype.play.call(this, markerName, config)) {
             return false;
         }
@@ -60,6 +63,9 @@ var HTML5AudioSound = new Class({
         return true;
     },
     pause: function () {
+        if (this.manager.isLocked(this, 'pause')) {
+            return false;
+        }
         if (this.startTime > 0) {
             return false;
         }
@@ -74,6 +80,9 @@ var HTML5AudioSound = new Class({
         return true;
     },
     resume: function () {
+        if (this.manager.isLocked(this, 'resume')) {
+            return false;
+        }
         if (this.startTime > 0) {
             return false;
         }
@@ -88,6 +97,9 @@ var HTML5AudioSound = new Class({
         return true;
     },
     stop: function () {
+        if (this.manager.isLocked(this, 'stop')) {
+            return false;
+        }
         if (!BaseSound.prototype.stop.call(this)) {
             return false;
         }
@@ -110,7 +122,7 @@ var HTML5AudioSound = new Class({
         if (delay === 0) {
             this.startTime = 0;
             if (this.audio.paused) {
-                this.audio.play();
+                this.playCatchPromise();
             }
         }
         else {
@@ -123,39 +135,46 @@ var HTML5AudioSound = new Class({
         return true;
     },
     pickAudioTag: function () {
-        if (!this.audio) {
-            for (var i = 0; i < this.tags.length; i++) {
-                var audio = this.tags[i];
-                if (audio.dataset.used === 'false') {
-                    audio.dataset.used = 'true';
-                    this.audio = audio;
-                    return true;
-                }
-            }
-            if (!this.manager.override) {
-                return false;
-            }
-            var otherSounds_1 = [];
-            this.manager.forEachActiveSound(function (sound) {
-                if (sound.key === this.key && sound.audio) {
-                    otherSounds_1.push(sound);
-                }
-            }, this);
-            otherSounds_1.sort(function (a1, a2) {
-                if (a1.loop === a2.loop) {
-                    // sort by progress
-                    return (a2.seek / a2.duration) - (a1.seek / a1.duration);
-                }
-                return a1.loop ? 1 : -1;
-            });
-            var selectedSound = otherSounds_1[0];
-            this.audio = selectedSound.audio;
-            selectedSound.reset();
-            selectedSound.audio = null;
-            selectedSound.startTime = 0;
-            selectedSound.previousTime = 0;
+        if (this.audio) {
+            return true;
         }
+        for (var i = 0; i < this.tags.length; i++) {
+            var audio = this.tags[i];
+            if (audio.dataset.used === 'false') {
+                audio.dataset.used = 'true';
+                this.audio = audio;
+                return true;
+            }
+        }
+        if (!this.manager.override) {
+            return false;
+        }
+        var otherSounds = [];
+        this.manager.forEachActiveSound(function (sound) {
+            if (sound.key === this.key && sound.audio) {
+                otherSounds.push(sound);
+            }
+        }, this);
+        otherSounds.sort(function (a1, a2) {
+            if (a1.loop === a2.loop) {
+                // sort by progress
+                return (a2.seek / a2.duration) - (a1.seek / a1.duration);
+            }
+            return a1.loop ? 1 : -1;
+        });
+        var selectedSound = otherSounds[0];
+        this.audio = selectedSound.audio;
+        selectedSound.reset();
+        selectedSound.audio = null;
+        selectedSound.startTime = 0;
+        selectedSound.previousTime = 0;
         return true;
+    },
+    playCatchPromise: function () {
+        var playPromise = this.audio.play();
+        if (playPromise) {
+            playPromise.catch(function (reason) { });
+        }
     },
     stopAndReleaseAudioTag: function () {
         this.audio.pause();
@@ -181,42 +200,43 @@ var HTML5AudioSound = new Class({
         this.pickAndPlayAudioTag();
     },
     update: function (time, delta) {
-        if (this.isPlaying) {
-            // handling delayed playback
-            if (this.startTime > 0) {
-                if (this.startTime < time - this.manager.audioPlayDelay) {
-                    this.audio.currentTime += Math.max(0, time - this.startTime) / 1000;
-                    this.startTime = 0;
-                    this.previousTime = this.audio.currentTime;
-                    this.audio.play();
-                }
-                return;
-            }
-            // handle looping and ending
-            var startTime = this.currentMarker ? this.currentMarker.start : 0;
-            var endTime = startTime + this.duration;
-            var currentTime = this.audio.currentTime;
-            if (this.currentConfig.loop) {
-                if (currentTime >= endTime - this.manager.loopEndOffset) {
-                    this.audio.currentTime = startTime + Math.max(0, currentTime - endTime);
-                    currentTime = this.audio.currentTime;
-                }
-                else if (currentTime < startTime) {
-                    this.audio.currentTime += startTime;
-                    currentTime = this.audio.currentTime;
-                }
-                if (currentTime < this.previousTime) {
-                    this.emit('looped', this);
-                }
-            }
-            else if (currentTime >= endTime) {
-                this.reset();
-                this.stopAndReleaseAudioTag();
-                this.emit('ended', this);
-                return;
-            }
-            this.previousTime = currentTime;
+        if (!this.isPlaying) {
+            return;
         }
+        // handling delayed playback
+        if (this.startTime > 0) {
+            if (this.startTime < time - this.manager.audioPlayDelay) {
+                this.audio.currentTime += Math.max(0, time - this.startTime) / 1000;
+                this.startTime = 0;
+                this.previousTime = this.audio.currentTime;
+                this.playCatchPromise();
+            }
+            return;
+        }
+        // handle looping and ending
+        var startTime = this.currentMarker ? this.currentMarker.start : 0;
+        var endTime = startTime + this.duration;
+        var currentTime = this.audio.currentTime;
+        if (this.currentConfig.loop) {
+            if (currentTime >= endTime - this.manager.loopEndOffset) {
+                this.audio.currentTime = startTime + Math.max(0, currentTime - endTime);
+                currentTime = this.audio.currentTime;
+            }
+            else if (currentTime < startTime) {
+                this.audio.currentTime += startTime;
+                currentTime = this.audio.currentTime;
+            }
+            if (currentTime < this.previousTime) {
+                this.emit('looped', this);
+            }
+        }
+        else if (currentTime >= endTime) {
+            this.reset();
+            this.stopAndReleaseAudioTag();
+            this.emit('ended', this);
+            return;
+        }
+        this.previousTime = currentTime;
     },
     destroy: function () {
         BaseSound.prototype.destroy.call(this);
@@ -254,6 +274,9 @@ Object.defineProperty(HTML5AudioSound.prototype, 'mute', {
     },
     set: function (value) {
         this.currentConfig.mute = value;
+        if (this.manager.isLocked(this, 'mute', value)) {
+            return;
+        }
         this.setMute();
         this.emit('mute', this, value);
     }
@@ -270,8 +293,47 @@ Object.defineProperty(HTML5AudioSound.prototype, 'volume', {
     },
     set: function (value) {
         this.currentConfig.volume = value;
+        if (this.manager.isLocked(this, 'volume', value)) {
+            return;
+        }
         this.setVolume();
         this.emit('volume', this, value);
+    }
+});
+/**
+ * Playback rate.
+ *
+ * @name Phaser.Sound.HTML5AudioSound#rate
+ * @property {number} rate
+ */
+Object.defineProperty(HTML5AudioSound.prototype, 'rate', {
+    get: function () {
+        return Object.getOwnPropertyDescriptor(BaseSound.prototype, 'rate').get.call(this);
+    },
+    set: function (value) {
+        this.currentConfig.rate = value;
+        if (this.manager.isLocked(this, 'rate', value)) {
+            return;
+        }
+        Object.getOwnPropertyDescriptor(BaseSound.prototype, 'rate').set.call(this, value);
+    }
+});
+/**
+ * Detuning of sound.
+ *
+ * @name Phaser.Sound.HTML5AudioSound#detune
+ * @property {number} detune
+ */
+Object.defineProperty(HTML5AudioSound.prototype, 'detune', {
+    get: function () {
+        return Object.getOwnPropertyDescriptor(BaseSound.prototype, 'detune').get.call(this);
+    },
+    set: function (value) {
+        this.currentConfig.detune = value;
+        if (this.manager.isLocked(this, 'detune', value)) {
+            return;
+        }
+        Object.getOwnPropertyDescriptor(BaseSound.prototype, 'detune').set.call(this, value);
     }
 });
 /**
@@ -294,6 +356,9 @@ Object.defineProperty(HTML5AudioSound.prototype, 'seek', {
         }
     },
     set: function (value) {
+        if (this.manager.isLocked(this, 'seek', value)) {
+            return;
+        }
         if (this.startTime > 0) {
             return;
         }
@@ -323,6 +388,9 @@ Object.defineProperty(HTML5AudioSound.prototype, 'loop', {
     },
     set: function (value) {
         this.currentConfig.loop = value;
+        if (this.manager.isLocked(this, 'loop', value)) {
+            return;
+        }
         if (this.audio) {
             this.audio.loop = value;
         }

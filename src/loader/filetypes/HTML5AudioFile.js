@@ -11,8 +11,10 @@ var HTML5AudioFile = new Class({
 
     initialize:
 
-        function HTML5AudioFile (key, url, path, config)
+        function HTML5AudioFile (key, url, path, config, locked)
         {
+            this.locked = locked;
+
             var fileConfig = {
                 type: 'audio',
                 extension: GetFastValue(url, 'type', ''),
@@ -72,14 +74,15 @@ var HTML5AudioFile = new Class({
         for(var i = 0; i < instances; i++)
         {
             var audio = new Audio();
-            audio.name = this.key + ('0' + i).slice(-2); // Useful for debugging
+            audio.dataset.name = this.key + ('0' + i).slice(-2); // Useful for debugging
             audio.dataset.used = 'false';
-            audio.preload = 'auto';
 
-            // TODO check if ios is locked
-
-            audio.oncanplaythrough = this.onProgress.bind(this);
-            audio.onerror = this.onError.bind(this);
+            if (!this.locked)
+            {
+                audio.preload = 'auto';
+                audio.oncanplaythrough = this.onProgress.bind(this);
+                audio.onerror = this.onError.bind(this);
+            }
 
             this.data.push(audio);
         }
@@ -88,7 +91,22 @@ var HTML5AudioFile = new Class({
         {
             audio = this.data[i];
             audio.src = GetURL(this, baseURL || '');
-            audio.load();
+
+            if (!this.locked)
+            {
+                audio.load();
+            }
+        }
+
+        if (this.locked)
+        {
+            setTimeout(function ()
+            {
+                this.filesLoaded = this.filesTotal;
+                this.percentComplete = 1;
+                this.onLoad();
+
+            }.bind(this));
         }
     }
 

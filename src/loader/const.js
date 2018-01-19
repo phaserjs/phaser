@@ -4,17 +4,38 @@ var FILE_CONST = {
     LOADER_LOADING: 1,
     LOADER_PROCESSING: 2,
     LOADER_COMPLETE: 3,
-    LOADER_DESTROYED: 4,
+    LOADER_SHUTDOWN: 4,
+    LOADER_DESTROYED: 5,
 
-    FILE_PENDING: 5,      // file is in the load queue but not yet started
-    FILE_LOADING: 6,      // file has been started to load by the loader (onLoad called)
-    FILE_LOADED: 7,       // file has loaded successfully, awaiting processing
-    FILE_FAILED: 8,       // file failed to load
-    FILE_PROCESSING: 9,   // file is being processed (onProcess callback)
-    FILE_WAITING_LINKFILE: 10,   // file is being processed (onProcess callback)
-    FILE_ERRORED: 11,   // file is being processed (onProcess callback)
-    FILE_COMPLETE: 12,     // file has finished processing
-    FILE_DESTROYED: 13,     // file has been destroyed
+    //  File is in the load queue but not yet started
+    FILE_PENDING: 10,
+
+    //  File has been started to load by the loader (onLoad called)
+    FILE_LOADING: 11,
+
+    //  File has loaded successfully, awaiting processing    
+    FILE_LOADED: 12,
+
+    //  File failed to load
+    FILE_FAILED: 13,
+
+    //  File is being processed (onProcess callback)
+    FILE_PROCESSING: 14,
+
+    //  File is being processed (onProcess callback)
+    FILE_WAITING_LINKFILE: 15,
+
+    //  File is being processed (onProcess callback)
+    FILE_ERRORED: 16,
+
+    //  File has finished processing
+    FILE_COMPLETE: 17,
+
+    //  File has been destroyed
+    FILE_DESTROYED: 18,
+
+    //  File was populated from local data and doesn't need an HTTP request
+    FILE_POPULATED: 19,
 
     TEXTURE_ATLAS_JSON_ARRAY: 20,
     TEXTURE_ATLAS_JSON_HASH: 21
