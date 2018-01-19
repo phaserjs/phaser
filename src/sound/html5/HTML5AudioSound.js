@@ -213,17 +213,10 @@ var HTML5AudioSound = new Class({
             }
             return;
         }
-        var currentTime = this.audio.currentTime;
-        // skipping looping and ending logic if current time is 0
-        // since some HTML5 Audio implementations set currentTime
-        // value to 0 when changing playback rate or performing any
-        // other operation on an audio tag object
-        if (currentTime === 0) {
-            return;
-        }
         // handle looping and ending
         var startTime = this.currentMarker ? this.currentMarker.start : 0;
         var endTime = startTime + this.duration;
+        var currentTime = this.audio.currentTime;
         if (this.currentConfig.loop) {
             if (currentTime >= endTime - this.manager.loopEndOffset) {
                 this.audio.currentTime = startTime + Math.max(0, currentTime - endTime);
