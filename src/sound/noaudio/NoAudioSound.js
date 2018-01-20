@@ -1,6 +1,6 @@
 var Class = require('../../utils/Class');
 var EventEmitter = require('eventemitter3');
-var Extend = require('../utils/object/Extend');
+var Extend = require('../../utils/object/Extend');
 var BaseSound = require('../BaseSound');
 var NoAudioSound = new Class({
     Extends: EventEmitter,
