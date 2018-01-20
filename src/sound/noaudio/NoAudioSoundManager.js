@@ -42,6 +42,9 @@ var NoAudioSoundManager = new Class({
     pauseAll: NOOP,
     resumeAll: NOOP,
     stopAll: NOOP,
-    update: NOOP
+    update: NOOP,
+    destroy: function () {
+        BaseSoundManager.prototype.destroy.call(this);
+    }
 });
 module.exports = NoAudioSoundManager;
