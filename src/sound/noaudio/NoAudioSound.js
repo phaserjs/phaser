@@ -5,6 +5,7 @@ var NoAudioSound = new Class({
     initialize: function NoAudioSound(manager, key, config) {
         EventEmitter.call(this);
         this.manager = manager;
+        this.key = key;
     }
 });
 module.exports = NoAudioSound;
