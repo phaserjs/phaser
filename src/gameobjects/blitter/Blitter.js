@@ -90,7 +90,7 @@ var Blitter = new Class({
     //  frame MUST be part of the Blitter texture
     createMultiple: function (quantity, frame, visible)
     {
-        if (frame === undefined) { frame = this.frame; }
+        if (frame === undefined) { frame = this.frame.name; }
         if (visible === undefined) { visible = true; }
 
         if (!Array.isArray(frame))
