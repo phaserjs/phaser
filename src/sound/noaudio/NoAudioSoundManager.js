@@ -4,6 +4,7 @@ var NoAudioSoundManager = new Class({
     Extends: EventEmitter,
     initialize: function NoAudioSoundManager(game) {
         EventEmitter.call(this);
+        this.game = game;
     }
 });
 module.exports = NoAudioSoundManager;
