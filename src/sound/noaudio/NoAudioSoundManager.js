@@ -1,6 +1,7 @@
 var Class = require('../../utils/Class');
 var EventEmitter = require('eventemitter3');
 var NoAudioSound = require('./NoAudioSound');
+var BaseSoundManager = require('../BaseSoundManager');
 var NoAudioSoundManager = new Class({
     Extends: EventEmitter,
     initialize: function NoAudioSoundManager(game) {
@@ -30,6 +31,9 @@ var NoAudioSoundManager = new Class({
     },
     playAudioSprite: function (key, spriteName, config) {
         return false;
+    },
+    remove: function (sound) {
+        return BaseSoundManager.prototype.remove.call(this, sound);
     }
 });
 module.exports = NoAudioSoundManager;
