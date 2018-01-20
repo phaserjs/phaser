@@ -49,6 +49,9 @@ var NoAudioSound = new Class({
     },
     resume: function () {
         return false;
+    },
+    stop: function () {
+        return false;
     }
 });
 module.exports = NoAudioSound;
