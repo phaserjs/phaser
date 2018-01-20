@@ -25,6 +25,7 @@ var NoAudioSound = new Class({
         this.mute = false;
         this.volume = 1;
         this.rate = 1;
+        this.detune = 0;
     }
 });
 module.exports = NoAudioSound;
