@@ -40,6 +40,9 @@ var NoAudioSound = new Class({
     },
     removeMarker: function (markerName) {
         return null;
+    },
+    play: function (markerName, config) {
+        return false;
     }
 });
 module.exports = NoAudioSound;
