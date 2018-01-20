@@ -19,6 +19,11 @@ var NoAudioSoundManager = new Class({
         var sound = new NoAudioSound(this, key, config);
         this.sounds.push(sound);
         return sound;
+    },
+    addAudioSprite: function (key, config) {
+        var sound = this.add(key, config);
+        sound.spritemap = {};
+        return sound;
     }
 });
 module.exports = NoAudioSoundManager;
