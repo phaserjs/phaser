@@ -170,8 +170,6 @@ var CanvasRenderer = new Class({
      */
     render: function (scene, children, interpolationPercentage, camera)
     {
-        // var w = scene.sys.width;
-        // var h = scene.sys.height;
         var ctx = scene.sys.context;
         var settings = scene.sys.settings;
         var scissor = (camera.x !== 0 || camera.y !== 0 || camera.width !== ctx.canvas.width || camera.height !== ctx.canvas.height);
@@ -230,13 +228,12 @@ var CanvasRenderer = new Class({
             {
                 child.mask.postRenderCanvas(this, child, camera);
             }
-
         }
 
-        //  Call the Scene.render function
-        scene.render.call(scene, ctx, interpolationPercentage);
-        
         ctx.setTransform(1, 0, 0, 1, 0, 0);
+
+        //  Emit a scene render event?
+        // scene.sys.events.emit('render', scene, ctx, camera);
 
         if (camera._fadeAlpha > 0 || camera._flashAlpha > 0)
         {
@@ -260,18 +257,10 @@ var CanvasRenderer = new Class({
         {
             ctx.restore();
         }
-        
-        //  Blast it to the Game Canvas (if needed)
-        // if (settings.renderToTexture)
-        // {
-            // this.gameContext.drawImage(scene.sys.canvas, 0, 0, w, h, settings.x, settings.y, w, h);
-        // }
     },
 
     postRender: function ()
     {
-        // console.log('%c render end ', 'color: #ffffff; background: #ff0000;');
-
         var ctx = this.gameContext;
 
         ctx.globalAlpha = 1;
@@ -285,8 +274,6 @@ var CanvasRenderer = new Class({
             this.snapshotCallback(CanvasSnapshot(this.gameCanvas, this.snapshotType, this.snapshotEncoder));
             this.snapshotCallback = null;
         }
-
-        //  Add Post-render hook
     },
 
     snapshot: function (callback, type, encoderOptions)
