@@ -8,6 +8,7 @@ var NoAudioSound = new Class({
         this.key = key;
         this.isPlaying = false;
         this.isPaused = false;
+        this.totalRate = 1;
     }
 });
 module.exports = NoAudioSound;
