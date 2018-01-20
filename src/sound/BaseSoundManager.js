@@ -194,11 +194,12 @@ var BaseSoundManager = new Class({
      * @param {string} key - Asset key for the sound.
      * @param {string} spriteName - The name of the sound sprite to play.
      * @param {ISoundConfig} [config] - An optional config object containing default sound settings.
+     * @returns {boolean} Whether the audio sprite sound started playing successfully.
      */
     playAudioSprite: function (key, spriteName, config) {
         var sound = this.addAudioSprite(key);
         sound.once('ended', sound.destroy, sound);
-        sound.play(spriteName, config);
+        return sound.play(spriteName, config);
     },
     /**
      * Removes a sound from the sound manager.
