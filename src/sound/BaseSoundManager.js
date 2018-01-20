@@ -167,6 +167,7 @@ var BaseSoundManager = new Class({
      * @method Phaser.Sound.BaseSoundManager#play
      * @param {string} key - Asset key for the sound.
      * @param {ISoundConfig | ISoundMarker} [extra] - An optional additional object containing settings to be applied to the sound. It could be either config or marker object.
+     * @returns {boolean} Whether the sound started playing successfully.
      */
     play: function (key, extra) {
         var sound = this.add(key);
@@ -175,14 +176,14 @@ var BaseSoundManager = new Class({
         if (extra) {
             if (extra.name) {
                 sound.addMarker(extra);
-                sound.play(extra.name);
+                return sound.play(extra.name);
             }
             else {
-                sound.play(extra);
+                return sound.play(extra);
             }
         }
         else {
-            sound.play();
+            return sound.play();
         }
     },
     /**
