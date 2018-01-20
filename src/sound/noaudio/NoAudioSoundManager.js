@@ -11,6 +11,7 @@ var NoAudioSoundManager = new Class({
         this.rate = 1;
         this.detune = 0;
         this.pauseOnBlur = true;
+        this.locked = false;
     }
 });
 module.exports = NoAudioSoundManager;
