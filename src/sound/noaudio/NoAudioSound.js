@@ -10,6 +10,7 @@ var NoAudioSound = new Class({
         this.isPaused = false;
         this.totalRate = 1;
         this.duration = 0;
+        this.totalDuration = 0;
     }
 });
 module.exports = NoAudioSound;
