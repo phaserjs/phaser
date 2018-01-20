@@ -77,7 +77,7 @@ var Texture = new Class({
 
     get: function (name)
     {
-        if (name === undefined || name === null || typeof name !== 'string')
+        if (name === undefined || name === null || (typeof name !== 'string' && typeof name !== 'number'))
         {
             name = (this.frameTotal === 1) ? '__BASE' : this.firstFrame;
         }
