@@ -29,6 +29,7 @@ var NoAudioSound = new Class({
         this.seek = 0;
         this.loop = false;
         this.markers = {};
+        this.currentMarker = null;
     }
 });
 module.exports = NoAudioSound;
