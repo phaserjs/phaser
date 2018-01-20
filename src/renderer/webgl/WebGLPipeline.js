@@ -15,41 +15,13 @@ var WebGLPipeline = new Class({
         this.gl = config.gl;
         this.vertexCount = 0;
         this.vertexCapacity = config.vertexCapacity;
-        this.manager = config.manager;
-        this.resources = config.manager.resourceManager;
+        this.renderer = config.renderer;
         this.vertexData = new ArrayBuffer(config.vertexCapacity * config.vertexSize);
-        this.vertexBuffer = null;
-        this.program = null;
-        this.vertexLayout = config.vertexLayout;
+        this.vertexBuffer = renderer.createVertexBuffer(this.vertexData.byteLength, gl.STREAM_DRAW);
+        this.program = renderer.createProgram(config.shader.vert, config.shader.frag);
+        this.attributes = config.attributes;
         this.vertexSize = config.vertexSize;
         this.topology = config.topology;
-        
-        // Initialize Shaders and Buffers
-        {
-            var gl = this.gl;
-            var resources = this.resources;
-            var vertexSize = this.vertexSize;
-            var vertexLayout = this.vertexLayout;
-            var program = resources.createShader(this.name, config.shader);
-            var vertexBuffer = resources.createBuffer(gl.ARRAY_BUFFER, this.vertexData.byteLength, gl.STREAM_DRAW);
-
-            for (var key in vertexLayout)
-            {
-                var element = vertexLayout[key];
-
-                vertexBuffer.addAttribute(
-                    program.getAttribLocation(key),
-                    element.size,
-                    element.type,
-                    element.normalize,
-                    vertexSize,
-                    element.offset
-                );
-            }
-
-            this.vertexBuffer = vertexBuffer;
-            this.program = program;
-        }
     },
 
     shouldFlush: function ()
@@ -66,12 +38,31 @@ var WebGLPipeline = new Class({
 
     bind: function (overrideProgram)
     {
-        // Check if we're using a custom program or 
-        // the default one from the pipeline.
-        if (!overrideProgram) this.program.bind();
-        else overrideProgram.bind();
+        var gl = this.gl;
+        var vertexBuffer = this.vertexBuffer;
+        var attributes = this.attributes;
+        var program = (!overrideProgram ? this.program : overrideProgram); 
+        var renderer = this.renderer;
+        var vertexSize = this.vertexSize;
 
-        this.vertexBuffer.bind();
+        renderer.setProgram(program);
+        renderer.setVertexBuffer(vertexBuffer);
+
+        for (var index = 0; index < attributes.length; ++index)
+        {
+            var element = attributes[index];
+            var location = gl.getAttribLocation(program, element.name);
+
+            if (location >= 0)
+            {
+                gl.enableVertexAttribArray(location);
+                gl.vertexAttribPointer(location, element.size, element.type, element.normalized, vertexSize, element.offset);
+            }
+            else
+            {
+                gl.disableVertexAttribArray(location);
+            }
+        }
 
         return this;
     },
@@ -86,7 +77,7 @@ var WebGLPipeline = new Class({
 
         if (vertexCount === 0) return;
 
-        vertexBuffer.updateResource(vertexData, 0);
+        gl.bufferSubData(gl.ARRAY_BUFFER, 0, vertexData);
         gl.drawArrays(topology, 0, vertexCount);
 
         this.vertexCount = 0;
@@ -96,10 +87,10 @@ var WebGLPipeline = new Class({
 
     destroy: function ()
     {
-        var resources = this.resources;
+        var gl = this.gl;
 
-        resources.deleteShader(this.program);
-        resources.deleteBuffer(this.vertexBuffer);
+        gl.deleteShader(this.program);
+        gl.deleteBuffer(this.vertexBuffer);
 
         this.program = null;
         this.vertexBuffer = null;
@@ -109,67 +100,67 @@ var WebGLPipeline = new Class({
 
     setFloat1: function (name, x)
     {
-        this.gl.uniform1f(this.gl.getUniformLocation(this.program.program, name), x);
+        this.gl.uniform1f(this.gl.getUniformLocation(this.program, name), x);
         return this;
     },
 
     setFloat2: function (name, x, y)
     {
-        this.gl.uniform2f(this.gl.getUniformLocation(this.program.program, name), x, y);
+        this.gl.uniform2f(this.gl.getUniformLocation(this.program, name), x, y);
         return this;
     },
 
     setFloat3: function (name, x, y, z)
     {
-        this.gl.uniform3f(this.gl.getUniformLocation(this.program.program, name), x, y, z);
+        this.gl.uniform3f(this.gl.getUniformLocation(this.program, name), x, y, z);
         return this;
     },
 
     setFloat4: function (name, x, y, z, w)
     {
-        this.gl.uniform4f(this.gl.getUniformLocation(this.program.program, name), x, y, z, w);
+        this.gl.uniform4f(this.gl.getUniformLocation(this.program, name), x, y, z, w);
         return this;
     },
 
     setInt1: function (name, x)
     {
-        this.gl.uniform1i(this.gl.getUniformLocation(this.program.program, name), x);
+        this.gl.uniform1i(this.gl.getUniformLocation(this.program, name), x);
         return this;
     },
 
     setInt2: function (name, x, y)
     {
-        this.gl.uniform2i(this.gl.getUniformLocation(this.program.program, name), x, y);
+        this.gl.uniform2i(this.gl.getUniformLocation(this.program, name), x, y);
         return this;
     },
 
     setInt3: function (name, x, y, z)
     {
-        this.gl.uniform3i(this.gl.getUniformLocation(this.program.program, name), x, y, z);
+        this.gl.uniform3i(this.gl.getUniformLocation(this.program, name), x, y, z);
         return this;
     },
 
     setInt4: function (name, x, y, z, w)
     {
-        this.gl.uniform4i(this.gl.getUniformLocation(this.program.program, name), x, y, z, w);
+        this.gl.uniform4i(this.gl.getUniformLocation(this.program, name), x, y, z, w);
         return this;
     },
 
     setMatrix2: function (name, transpose, matrix)
     {
-        this.gl.uniformMatrix2fv(this.gl.getUniformLocation(this.program.program, name), transpose, matrix);
+        this.gl.uniformMatrix2fv(this.gl.getUniformLocation(this.program, name), transpose, matrix);
         return this;
     },
 
     setMatrix3: function (name, transpose, matrix)
     {
-        this.gl.uniformMatrix2fv(this.gl.getUniformLocation(this.program.program, name), transpose, matrix);
+        this.gl.uniformMatrix2fv(this.gl.getUniformLocation(this.program, name), transpose, matrix);
         return this;
     },
 
     setMatrix4: function (name, transpose, matrix)
     {
-        this.gl.uniformMatrix2fv(this.gl.getUniformLocation(this.program.program, name), transpose, matrix);
+        this.gl.uniformMatrix2fv(this.gl.getUniformLocation(this.program, name), transpose, matrix);
         return this;
     }
 

@@ -1,5 +1,7 @@
 var Class = require('../../utils/Class');
 var CONST = require('../../const');
+var WebGLSnapshot = require('../snapshot/WebGLSnapshot');
+var IsSizePowerOfTwo = require('../../math/pow2/IsSizePowerOfTwo');
 
 var WebGLRenderer = new Class({
 
@@ -30,6 +32,11 @@ var WebGLRenderer = new Class({
         this.contextLost = false;
         this.autoResize = false;
         this.pipelines = null;
+        this.snapshotState = {
+            callback: null,
+            type: null,
+            encoder: null
+        };
 
         for (var i = 0; i <= 16; i++)
         {
@@ -108,6 +115,7 @@ var WebGLRenderer = new Class({
     resize: function (width, height, resolution)
     {
         var gl = this.gl;
+        var piplines = this.pipelines;
 
         this.width = width * resolution;
         this.height = height * resolution;
@@ -124,6 +132,10 @@ var WebGLRenderer = new Class({
         gl.viewport(0, 0, this.width, this.height);
 
         // Update all registered pipelines
+        for (var pipelineName in pipelines)
+        {
+            pipeline[pipelineName].resize(width, height, resolution);
+        }
 
         return this;
     },
@@ -143,6 +155,14 @@ var WebGLRenderer = new Class({
         }
 
         return this.extensions[extensionName];
+    },
+
+    flush: function ()
+    {
+        if (this.currentPipeline)
+        {
+            this.currentPipeline.flush();
+        }
     },
 
     /* Renderer State Manipulation Functions */
@@ -174,18 +194,30 @@ var WebGLRenderer = new Class({
         return this;
     },
 
+    setPipeline: function (pipelineName)
+    {
+        var pipeline = this.getPipeline(pipelineName);
+
+        if (this.currentPipeline !== pipeline)
+        {
+            this.currentPipeline = pipeline;
+            this.currentPipeline.bind();
+        }
+
+        return pipeline;
+    },
+
     setBlendMode: function (blendModeId)
     {
         var gl = this.gl;
-        var pipeline = this.currentPipeline;
         var blendMode = this.blendModes[blendModeId];
 
-        if (blendModeId === CONST.BlendModes.SKIP_CHECK || !pipeline)
+        if (blendModeId === CONST.BlendModes.SKIP_CHECK)
             return;
 
         if (this.currentBlendMode !== blendModeId)
         {
-            pipeline.flush();
+            this.flush();
 
             gl.enable(gl.BLEND);
             gl.blendEquation(blendMode.equation);
@@ -257,6 +289,44 @@ var WebGLRenderer = new Class({
     },
 
     /* Renderer Resource Creation Functions */
+    createTextureFromSource: function (source, width, height)
+    {   
+        var gl = this.gl;
+        var filter = gl.NEAREST;
+        var wrap = gl.CLAMP_TO_EDGE;
+
+        width = source ? source.width : width;
+        height = source ? source.height : height;
+
+        if (IsSizePowerOfTwo(width, height))
+        {
+            wrap = gl.REPEAT;
+        }
+
+        if (!source.glTexture)
+        {
+            if (source.scaleMode === ScaleModes.LINEAR)
+            {
+                filter = gl.LINEAR;
+            }
+            else if (source.scaleMode === ScaleModes.NEAREST || this.game.config.pixelArt)
+            {
+                filter = gl.NEAREST;
+            }
+
+            if (!source && typeof width === 'number' && typeof height === 'number')
+            {
+                source.glTexture = this.createTexture2D(0, filter, filter, wrap, wrap, gl.RGBA, null, width, height);
+            }
+            else
+            {
+                source.glTexture = this.createTexture2D(0, filter, filter, wrap, wrap, gl.RGBA, source.image);
+            }
+        }
+
+        return source;
+    },
+
     createTexture2D: function (mipLevel, minFilter, magFilter, wrapT, wrapS, format, pixels, width, height, pma)
     {
         var gl = this.gl;
@@ -389,6 +459,82 @@ var WebGLRenderer = new Class({
         this.setIndexBuffer(null);
 
         return indexBuffer;
+    },
+
+    /* Rendering Functions */
+    preRender: function ()
+    {
+        if (this.contextLost) return;
+
+    },
+
+    render: function (scene, children, interpolationPercentage, camera)
+    {
+        if (this.contextLost) return;
+
+    },
+
+    postRender: function ()
+    {
+        if (this.contextLost) return;
+
+        if (this.snapshotState.callback)
+        {
+            this.snapshotState.callback(WebGLSnapshot(this.canvas, this.snapshotState.type, this.snapshotState.encoder));
+            this.snapshotState.callback = null;
+        }
+    },
+
+    snapshot: function (callback, type, encoderOptions)
+    {
+        this.snapshotState.callback = callback;
+        this.snapshotState.type = type;
+        this.snapshotState.encoder = encoderOptions;
+        return this;
+    },
+
+    canvasToTexture: function (srcCanvas, dstTexture, shouldReallocate)
+    {
+        var gl = this.gl;
+
+        if (!dstTexture)
+        {
+            dstTexture = this.createTextureFromSource(srcCanvas, srcCanvas.width, srcCanvas.height);
+        }
+        else
+        {
+            this.setTexture2D(dstTexture);
+
+            if (!shouldReallocate)
+            {
+                gl.texSubImage2D(0, 0, 0, gl.RGBA, gl.UNSIGNED_BYTE, srcCanvas);
+            }
+            else
+            {
+                gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, srcCanvas);
+                dstTexture.width = srcCanvas.width;
+                dstTexture.height = srcCanvas.height;
+            }
+
+            this.setTexture2D(null);
+        }
+
+        return dstTexture;
+    },
+
+    setTextureFilter: function (texture, filter)
+    {
+        var gl = this.gl;
+        var glFilter = [ gl.LINEAR, gl.NEAREST ][filter];
+
+        this.setTexture2D(texture, 0);
+
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, glFilter);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, glFilter);
+
+        this.setTexture2D(null, 0);
+
+        return this;
     }
 
 });
