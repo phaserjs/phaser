@@ -27,6 +27,7 @@ var NoAudioSound = new Class({
         this.rate = 1;
         this.detune = 0;
         this.seek = 0;
+        this.loop = false;
     }
 });
 module.exports = NoAudioSound;
