@@ -55,7 +55,6 @@ var NoAudioSound = new Class({
     stop: function () {
         return false;
     },
-    update: NOOP,
     destroy: function () {
         BaseSound.prototype.destroy.call(this);
     }
