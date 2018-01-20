@@ -1,6 +1,6 @@
-var BaseSoundManager = require('./BaseSoundManager');
 var WebAudioSoundManager = require('./webaudio/WebAudioSoundManager');
 var HTML5AudioSoundManager = require('./html5/HTML5AudioSoundManager');
+var NoAudioSoundManager = require('./noaudio/NoAudioSoundManager');
 
 var SoundManagerCreator = {
 
@@ -11,8 +11,7 @@ var SoundManagerCreator = {
 
         if ((audioConfig && audioConfig.noAudio) || (!deviceAudio.webAudio && !deviceAudio.audioData))
         {
-            // TODO add no audio implementation of BaseSoundManager
-            return new BaseSoundManager(game);
+            return new NoAudioSoundManager(game);
         }
 
         if(deviceAudio.webAudio && !(audioConfig && audioConfig.disableWebAudio))
