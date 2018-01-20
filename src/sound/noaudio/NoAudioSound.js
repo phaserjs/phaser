@@ -22,6 +22,7 @@ var NoAudioSound = new Class({
             delay: 0
         }, config);
         this.currentConfig = this.config;
+        this.mute = false;
     }
 });
 module.exports = NoAudioSound;
