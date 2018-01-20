@@ -15,7 +15,6 @@ var NoAudioSoundManager = new Class({
         this.detune = 0;
         this.pauseOnBlur = true;
         this.locked = false;
-        this.unlocked = false;
     },
     add: function (key, config) {
         var sound = new NoAudioSound(this, key, config);
