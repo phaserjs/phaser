@@ -23,6 +23,7 @@ var NoAudioSound = new Class({
         }, config);
         this.currentConfig = this.config;
         this.mute = false;
+        this.volume = 1;
     }
 });
 module.exports = NoAudioSound;
