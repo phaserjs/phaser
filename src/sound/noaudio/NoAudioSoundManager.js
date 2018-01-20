@@ -28,5 +28,8 @@ var NoAudioSoundManager = new Class({
     play: function (key, extra) {
         return false;
     },
+    playAudioSprite: function (key, spriteName, config) {
+        return false;
+    }
 });
 module.exports = NoAudioSoundManager;
