@@ -3,6 +3,7 @@ var Bob = require('./Bob');
 var Class = require('../../utils/Class');
 var Components = require('../components');
 var DisplayList = require('../DisplayList');
+var Frame = require('../../textures/Frame');
 var GameObject = require('../GameObject');
 
 /**
@@ -59,7 +60,7 @@ var Blitter = new Class({
         {
             frame = this.frame;
         }
-        else if (typeof frame === 'string')
+        else if (!(frame instanceof Frame))
         {
             frame = this.texture.get(frame);
         }
