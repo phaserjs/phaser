@@ -30,6 +30,7 @@ var NoAudioSound = new Class({
         this.loop = false;
         this.markers = {};
         this.currentMarker = null;
+        this.pendingRemove = false;
     }
 });
 module.exports = NoAudioSound;
