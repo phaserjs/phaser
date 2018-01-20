@@ -2,6 +2,7 @@ var Class = require('../../utils/Class');
 var EventEmitter = require('eventemitter3');
 var Extend = require('../utils/object/Extend');
 var NOOP = require('../../utils/NOOP');
+var BaseSound = require('../BaseSound');
 var NoAudioSound = new Class({
     Extends: EventEmitter,
     initialize: function NoAudioSound(manager, key, config) {
@@ -54,6 +55,9 @@ var NoAudioSound = new Class({
     stop: function () {
         return false;
     },
-    update: NOOP
+    update: NOOP,
+    destroy: function () {
+        BaseSound.prototype.destroy.call(this);
+    }
 });
 module.exports = NoAudioSound;
