@@ -257,30 +257,138 @@ var WebGLRenderer = new Class({
     },
 
     /* Renderer Resource Creation Functions */
-
-    createTexture2D: function ()
+    createTexture2D: function (mipLevel, minFilter, magFilter, wrapT, wrapS, format, pixels, width, height, pma)
     {
+        var gl = this.gl;
+        var texture = gl.createTexture();
+
+        pma = (pma === undefined ||  pma === null) ? true : pma;
+
+        this.setTexture2D(texture, 0);
         
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, minFilter);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, magFilter);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, wrapS);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, wrapT);
+        gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, pma);
+
+        if (pixels === null || pixels === undefined)
+        {
+            gl.texImage2D(gl.TEXTURE_2D, mipLevel, format, width, height, 0, format, gl.UNSIGNED_BYTE, null);
+        }
+        else
+        {
+            gl.texImage2D(gl.TEXTURE_2D, mipLevel, format, format, gl.UNSIGNED_BYTE, pixels);
+            width = pixels.width;
+            height = pixels.height;
+        }
+
+        this.setTexture2D(null, 0);
+
+        texture.isAlphaPremultiplied = pma;
+        texture.isRenderTexture = false;
+        texture.width = width;
+        texture.height = height;
+
+        return texture;
     },
 
-    createFramebuffer: function ()
+    createFramebuffer: function (width, height, renderTexture, addDepthStencilBuffer)
     {
+        var gl = this.gl;
+        var framebuffer = gl.createFramebuffer();
+        var complete = 0;
 
+        this.setFramebuffer(framebuffer);
+
+        if (addDepthStencilBuffer)
+        {
+            var depthStencilBuffer = gl.createRenderbuffer();
+            gl.bindRenderbuffer(gl.RENDERBUFFER, depthStencilBuffer);
+            gl.renderbufferStorage(gl.RENDERBUFFER, gl.DEPTH_STENCIL, width, height);
+            gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.DEPTH_STENCIL_ATTACHMENT, gl.RENDERBUFFER, depthStencilBuffer);
+        }
+
+        renderTexture.isRenderTexture = true;
+        renderTexture.isAlphaPremultiplied = false;
+
+        gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, renderTexture, 0);
+
+        complete = gl.checkFramebufferStatus(gl.FRAMEBUFFER);
+
+        if (complete !== gl.FRAMEBUFFER_COMPLETE)
+        {
+            var errors = {
+                36054: 'Incomplete Attachment',
+                36055: 'Missing Attachment',
+                36057: 'Incomplete Dimensions',
+                36061: 'Framebuffer Unsupported'
+            };
+            throw new Error('Framebuffer incomplete. Framebuffer status: ' + errors[complete]);
+        }
+
+        framebuffer.renderTexture = renderTexture;
+
+        this.setFramebuffer(null);
+
+        return framebuffer;
     },
 
-    createProgram: function ()
+    createProgram: function (vertexShader, fragmentShader)
     {
+        var gl = this.gl;
+        var program = gl.createProgram();
+        var vs = gl.createShader(gl.VERTEX_SHADER);
+        var fs = gl.createShader(gl.FRAGMENT_SHADER);
 
+        gl.shaderSource(vs, vertexShader);
+        gl.shaderSource(fs, fragmentShader);
+        gl.compileShader(vs);
+        gl.compileShader(fs);
+
+        if (!gl.getShaderParameter(vs, gl.COMPILE_STATUS))
+        {
+            return new Error('Failed to compile Vertex Shader:\n' + gl.getShaderInfoLog(vs));
+        }
+        if (!gl.getShaderParameter(fs, gl.COMPILE_STATUS))
+        {
+            return new Error('Failed to compile Fragment Shader:\n' + gl.getShaderInfoLog(fs));
+        }
+
+        gl.attachShader(program, vs);
+        gl.attachShader(program, fs);
+        gl.linkProgram(program);
+
+        if (!gl.getProgramParameter(program, gl.LINK_STATUS))
+        {
+            return new Error('Failed to link program:\n' + gl.getProgramInfoLog(program));
+        }
+
+        return program;
     },
 
-    createVertexBuffer: function ()
+    createVertexBuffer: function (initialDataOrSize, bufferUsage)
     {
+        var gl = this.gl;
+        var vertexBuffer = gl.createBuffer();
 
+        this.setVertexBuffer(vertexBuffer);
+        gl.bufferData(gl.ARRAY_BUFFER, initialDataOrSize, bufferUsage);
+        this.setVertexBuffer(null);
+
+        return vertexBuffer;
     },
 
     createIndexBuffer: function ()
     {
-        
+        var gl = this.gl;
+        var indexBuffer = gl.createBuffer();
+
+        this.setIndexBuffer(indexBuffer);
+        gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, initialDataOrSize, bufferUsage);
+        this.setIndexBuffer(null);
+
+        return indexBuffer;
     }
 
 });
