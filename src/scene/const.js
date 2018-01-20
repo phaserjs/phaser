@@ -2,14 +2,13 @@
 module.exports = {
 
     PENDING: 0,
-    INSTALLED: 1,
-
-    BOOT: 0,
     INIT: 1,
-    PRELOAD: 2,
-    CREATE: 3,
-    UPDATE: 4,
-    RENDER: 5,
-    SHUTDOWN: 6
+    START: 2,
+    LOADING: 3,
+    RUNNING: 4,
+    PAUSED: 5,
+    SLEEPING: 6,
+    SHUTDOWN: 7,
+    DESTROYED: 8
 
 };

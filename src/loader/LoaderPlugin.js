@@ -3,6 +3,7 @@ var CONST = require('./const');
 var CustomSet = require('../structs/Set');
 var EventEmitter = require('eventemitter3');
 var FileTypesManager = require('./FileTypesManager');
+var GetFastValue = require('../utils/object/GetFastValue');
 var ParseXMLBitmapFont = require('../gameobjects/bitmaptext/ParseXMLBitmapFont');
 var PluginManager = require('../plugins/PluginManager');
 var XHRSettings = require('./XHRSettings');
@@ -33,18 +34,31 @@ var LoaderPlugin = new Class({
         //  Inject the available filetypes into the Loader
         FileTypesManager.install(this);
 
-        //  Move to a 'setURL' method?
-        this.baseURL = '';
-        this.path = '';
+        var gameConfig = this.systems.game.config;
+        var sceneConfig = this.systems.settings.loader;
 
-        //  Read from Game / Scene Config
-        this.enableParallel = true;
-        this.maxParallelDownloads = 4;
+        this.path = '';
+        this.baseURL = '';
+
+        this.setBaseURL(GetFastValue(sceneConfig, 'baseURL', gameConfig.loaderBaseURL));
+        this.setPath(GetFastValue(sceneConfig, 'path', gameConfig.loaderPath));
+
+        this.enableParallel = GetFastValue(sceneConfig, 'enableParallel', gameConfig.loaderEnableParallel);
+        this.maxParallelDownloads = GetFastValue(sceneConfig, 'maxParallelDownloads', gameConfig.loaderMaxParallelDownloads);
 
         //  xhr specific global settings (can be overridden on a per-file basis)
-        this.xhr = XHRSettings();
+        this.xhr = XHRSettings(
+            GetFastValue(sceneConfig, 'responseType', gameConfig.loaderResponseType),
+            GetFastValue(sceneConfig, 'async', gameConfig.loaderAsync),
+            GetFastValue(sceneConfig, 'user', gameConfig.loaderUser),
+            GetFastValue(sceneConfig, 'password', gameConfig.loaderPassword),
+            GetFastValue(sceneConfig, 'timeout', gameConfig.loaderTimeout)
+        );
 
-        this.crossOrigin = undefined;
+        this.crossOrigin = GetFastValue(sceneConfig, 'crossOrigin', gameConfig.loaderCrossOrigin);
+
+        this.totalToLoad = 0;
+        this.progress = 0;
 
         this.list = new CustomSet();
         this.inflight = new CustomSet();
@@ -63,9 +77,21 @@ var LoaderPlugin = new Class({
         eventEmitter.on('destroy', this.destroy, this);
     },
 
+    setBaseURL: function (url)
+    {
+        if (url !== '' && url.substr(-1) !== '/')
+        {
+            url = url.concat('/');
+        }
+
+        this.baseURL = url;
+
+        return this;
+    },
+
     setPath: function (path)
     {
-        if (path.substr(-1) !== '/')
+        if (path !== '' && path.substr(-1) !== '/')
         {
             path = path.concat('/');
         }
@@ -103,12 +129,15 @@ var LoaderPlugin = new Class({
 
     start: function ()
     {
-        console.log(this.scene.sys.settings.key, '- LoaderPlugin start. Files to load:', this.list.size);
+        // console.log(this.scene.sys.settings.key, '- Loader start. Files to load:', this.list.size);
 
         if (!this.isReady())
         {
             return;
         }
+
+        this.progress = 0;
+        this.totalToLoad = this.list.size;
 
         this.emit('start', this);
 
@@ -134,7 +163,11 @@ var LoaderPlugin = new Class({
 
     updateProgress: function ()
     {
+        this.progress = 1 - (this.list.size / this.totalToLoad);
 
+        // console.log(this.progress);
+
+        this.emit('progress', this.progress);
     },
 
     processLoadQueue: function ()
@@ -145,7 +178,7 @@ var LoaderPlugin = new Class({
 
         this.list.each(function (file)
         {
-            if (file.state === CONST.FILE_PENDING && this.inflight.size < this.maxParallelDownloads)
+            if (file.state === CONST.FILE_POPULATED || (file.state === CONST.FILE_PENDING && this.inflight.size < this.maxParallelDownloads))
             {
                 this.inflight.set(file);
 
@@ -175,7 +208,7 @@ var LoaderPlugin = new Class({
             file.crossOrigin = this.crossOrigin;
         }
 
-        file.load(this.nextFile.bind(this), this.baseURL);
+        file.load(this);
     },
 
     nextFile: function (previousFile, success)
@@ -186,14 +219,18 @@ var LoaderPlugin = new Class({
 
         if (success)
         {
+            this.emit('load', previousFile);
             this.queue.set(previousFile);
         }
         else
         {
+            this.emit('loaderror', previousFile);
             this.failed.set(previousFile);
         }
 
         this.inflight.delete(previousFile);
+
+        this.updateProgress();
 
         if (this.list.size > 0)
         {
@@ -211,21 +248,30 @@ var LoaderPlugin = new Class({
     {
         // console.log('---> LoaderPlugin.finishedLoading PROCESSING', this.queue.size, 'files');
 
-        if(this.state === CONST.LOADER_PROCESSING)
+        if (this.state === CONST.LOADER_PROCESSING)
         {
             return;
         }
+
+        this.progress = 1;
 
         this.state = CONST.LOADER_PROCESSING;
 
         this.storage.clear();
 
-        this.queue.each(function (file)
+        if (this.queue.size === 0)
         {
-            // console.log('%c Calling process on ' + file.key, 'color: #000000; background: #ffff00;');
-
-            file.onProcess(this.processUpdate.bind(this));
-        }, this);
+            //  Everything failed, so nothing to process
+            this.processComplete();
+        }
+        else
+        {
+            this.queue.each(function (file)
+            {
+                // console.log('%c Calling process on ' + file.key, 'color: #000000; background: #ffff00;');
+                file.onProcess(this.processUpdate.bind(this));
+            }, this);
+        }
     },
 
     //  Called automatically by the File when it has finished processing
@@ -284,7 +330,7 @@ var LoaderPlugin = new Class({
 
     processComplete: function ()
     {
-        console.log(this.scene.sys.settings.key, '- Loader Complete. Loaded:', this.storage.size, 'Failed:', this.failed.size);
+        // console.log(this.scene.sys.settings.key, '- Loader Complete. Loaded:', this.storage.size, 'Failed:', this.failed.size);
 
         this.list.clear();
         this.inflight.clear();
@@ -515,13 +561,66 @@ var LoaderPlugin = new Class({
         this.storage.clear();
 
         this.removeAllListeners('start');
+        this.removeAllListeners('load');
+        this.removeAllListeners('loaderror');
         this.removeAllListeners('complete');
 
-        this.tag = '';
-        this.path = '';
-        this.baseURL = '';
+        var gameConfig = this.systems.game.config;
+        var sceneConfig = this.systems.settings.loader;
+
+        this.setBaseURL(GetFastValue(sceneConfig, 'baseURL', gameConfig.loaderBaseURL));
+        this.setPath(GetFastValue(sceneConfig, 'path', gameConfig.loaderPath));
 
         this.state = CONST.LOADER_IDLE;
+    },
+
+    loadArray: function (files)
+    {
+        if (Array.isArray(files))
+        {
+            for (var i = 0; i < files.length; i++)
+            {
+                this.file(files[i]);
+            }
+        }
+
+        return (this.list.size > 0);
+    },
+
+    file: function (file)
+    {
+        var entry;
+        var key = file.key;
+
+        switch (file.type)
+        {
+            case 'spritesheet':
+                entry = this.spritesheet(key, file.url, file.config, file.xhrSettings);
+                break;
+
+            case 'atlas':
+                entry = this.atlas(key, file.textureURL, file.atlasURL, file.textureXhrSettings, file.atlasXhrSettings);
+                break;
+
+            case 'bitmapFont':
+                entry = this.bitmapFont(key, file.textureURL, file.xmlURL, file.textureXhrSettings, file.xmlXhrSettings);
+                break;
+
+            case 'multiatlas':
+                entry = this.multiatlas(key, file.textureURLs, file.atlasURLs, file.textureXhrSettings, file.atlasXhrSettings);
+                break;
+
+            case 'audioSprite':
+                entry = this.audioSprite(key, file.urls, file.json, file.config, file.audioXhrSettings, file.jsonXhrSettings);
+                break;
+
+            //  image, json, xml, binary, text, glsl, svg, obj
+            default:
+                entry = this[file.type](key, file.url, file.xhrSettings);
+                break;
+        }
+
+        return entry;
     },
 
     shutdown: function ()

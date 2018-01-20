@@ -20,6 +20,20 @@ var Bob = new Class({
         this.flipY = false;
     },
 
+    setFrame: function (frame)
+    {
+        if (frame === undefined)
+        {
+            frame = this.parent.frame;
+        }
+        else
+        {
+            frame = this.parent.texture.get(frame);
+        }
+
+        return this;
+    },
+
     resetFlip: function ()
     {
         this.flipX = false;
@@ -31,6 +45,42 @@ var Bob = new Class({
         this.x = x;
         this.y = y;
         this.frame = frame;
+    },
+
+    setFlipX: function (value)
+    {
+        this.flipX = value;
+
+        return this;
+    },
+
+    setFlipY: function (value)
+    {
+        this.flipY = value;
+
+        return this;
+    },
+
+    setFlip: function (x, y)
+    {
+        this.flipX = x;
+        this.flipY = y;
+
+        return this;
+    },
+
+    setVisible: function (value)
+    {
+        this.visible = value;
+
+        return this;
+    },
+
+    setAlpha: function (value)
+    {
+        this.alpha = value;
+
+        return this;
     },
 
     destroy: function ()

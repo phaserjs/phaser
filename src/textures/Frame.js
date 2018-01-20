@@ -81,6 +81,16 @@ var Frame = new Class({
         this.centerY = Math.floor(height / 2);
 
         /**
+        * @property {number} pivotX - The horizontal pivot point of this Frame.
+        */
+        this.pivotX = 0;
+
+        /**
+        * @property {number} height - The vertical pivot point of this Frame.
+        */
+        this.pivotY = 0;
+
+        /**
         * Is this frame is rotated or not in the Texture?
         * Rotation allows you to use rotated frames in texture atlas packing.
         * It has nothing to do with Sprite rotation.
@@ -92,6 +102,9 @@ var Frame = new Class({
 
         //  Over-rides the Renderer setting? -1 = use Renderer Setting, 0 = No rounding, 1 = Round
         this.autoRound = -1;
+
+        //  Any Frame specific custom data can be stored here
+        this.customData = {};
 
         /**
         * The un-modified source frame, trim and UV data.

@@ -12,6 +12,8 @@ var JSONFile = new Class({
 
     initialize:
 
+    //  url can either be a string, in which case it is treated like a proper url, or an object, in which case it is treated as a ready-made JS Object
+
     function JSONFile (key, url, path, xhrSettings)
     {
         var fileKey = (typeof key === 'string') ? key : GetFastValue(key, 'key', '');
@@ -27,6 +29,14 @@ var JSONFile = new Class({
         };
 
         File.call(this, fileConfig);
+
+        if (typeof fileConfig.url === 'object')
+        {
+            //  Object provided instead of a URL, so no need to actually load it (populate data with value)
+            this.data = fileConfig.url;
+
+            this.state = CONST.FILE_POPULATED;
+        }
     },
 
     onProcess: function (callback)

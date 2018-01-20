@@ -36,6 +36,9 @@ var Texture = new Class({
 
         this.frames = {};
 
+        //  Any additional data that was set in the source JSON (if any), or any extra data you'd like to store relating to this texture
+        this.customData = {};
+
         this.firstFrame = '__BASE';
 
         this.frameTotal = 0;
@@ -74,7 +77,7 @@ var Texture = new Class({
 
     get: function (name)
     {
-        if (name === undefined || name === null)
+        if (name === undefined || name === null || (typeof name !== 'string' && typeof name !== 'number'))
         {
             name = (this.frameTotal === 1) ? '__BASE' : this.firstFrame;
         }

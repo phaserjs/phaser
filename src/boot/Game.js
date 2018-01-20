@@ -226,9 +226,6 @@ var Game = new Class({
      */
     step: function (time, delta)
     {
-        var active = this.scene.active;
-        var renderer = this.renderer;
-
         //  Global Managers
 
         this.input.update(time, delta);
@@ -239,28 +236,21 @@ var Game = new Class({
 
         this.onStepCallback();
 
-        for (var i = 0; i < active.length; i++)
-        {
-            active[i].scene.sys.step(time, delta);
-        }
+        this.scene.update(time, delta);
 
         //  Render
 
-        // var interpolation = this.frameDelta / this.timestep;
+        var renderer = this.renderer;
 
         renderer.preRender();
 
-        this.events.emit('prerender');
+        this.events.emit('prerender', renderer);
 
-        //  This uses active.length, in case scene.update removed the scene from the active list
-        for (i = 0; i < active.length; i++)
-        {
-            active[i].scene.sys.render(0, renderer);
-        }
+        this.scene.render(renderer);
 
         renderer.postRender();
 
-        this.events.emit('postrender');
+        this.events.emit('postrender', renderer);
     },
 
     /**

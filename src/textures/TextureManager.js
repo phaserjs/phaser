@@ -323,6 +323,21 @@ var TextureManager = new Class({
         }
     },
 
+    getTextureKeys: function ()
+    {
+        var output = [];
+
+        for (var key in this.list)
+        {
+            if (key !== '__DEFAULT' && key !== '__MISSING')
+            {
+                output.push(key);
+            }
+        }
+
+        return output;
+    },
+
     getPixel: function (x, y, key, frame)
     {
         var textureFrame = this.getFrame(key, frame);

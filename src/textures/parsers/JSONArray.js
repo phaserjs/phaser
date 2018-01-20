@@ -1,3 +1,5 @@
+var Clone = require('../../utils/object/Clone');
+
 var JSONArray = function (texture, sourceIndex, json)
 {
     //  Malformed?
@@ -9,6 +11,7 @@ var JSONArray = function (texture, sourceIndex, json)
 
     //  Add in a __BASE entry (for the entire atlas)
     var source = texture.source[sourceIndex];
+
     texture.add('__BASE', sourceIndex, 0, 0, source.width, source.height);
 
     //  By this stage frames is a fully parsed array
@@ -39,6 +42,27 @@ var JSONArray = function (texture, sourceIndex, json)
         {
             newFrame.rotated = true;
             newFrame.updateUVsInverted();
+        }
+
+        //  Copy over any extra data
+        newFrame.customData = Clone(src);
+    }
+
+    //  Copy over any additional data that was in the JSON to Texture.customData
+    for (var dataKey in json)
+    {
+        if (dataKey === 'frames')
+        {
+            continue;
+        }
+
+        if (Array.isArray(json[dataKey]))
+        {
+            texture.customData[dataKey] = json[dataKey].slice(0);
+        }
+        else
+        {
+            texture.customData[dataKey] = json[dataKey];
         }
     }
 

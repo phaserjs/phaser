@@ -23,7 +23,10 @@ var BlitterCanvasRenderer = function (renderer, src, interpolationPercentage, ca
             ca = renderer.setAlpha(bob.alpha);
         }
 
-        renderer.blitImage(bob.x, bob.y, bob.frame, camera);
+        // var x = src.x + bob.x + frame.x - cameraScrollX + ((frame.width) * (bob.flipX ? 1 : 0));
+        // var y = src.y + bob.y + frame.y - cameraScrollY + ((frame.height) * (bob.flipY ? 1 : 0));
+
+        renderer.blitImage(src.x + bob.x, src.y + bob.y, bob.frame, camera);
     }
 };
 
