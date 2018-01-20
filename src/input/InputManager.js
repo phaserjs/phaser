@@ -38,9 +38,16 @@ var InputManager = new Class({
 
         this.scale = { x: 1, y: 1 };
 
+        //  If the top-most Scene in the Scene List receives an input it will stop input from
+        //  propagating any lower down the scene list, i.e. if you have a UI Scene at the top
+        //  and click something on it, that click will not then be passed down to any other
+        //  Scene below. Disable this to have input events passed through all Scenes, all the time.
+        this.globalTopOnly = true;
+
+        this.ignoreEvents = false;
+
         this.bounds;
 
-        // this._tempMatrix = new TransformMatrix();
         this._tempPoint = { x: 0, y: 0 };
         this._tempHitTest = [];
 
@@ -84,6 +91,8 @@ var InputManager = new Class({
     {
         this.keyboard.update();
         this.gamepad.update();
+
+        this.ignoreEvents = false;
 
         var len = this.queue.length;
 
