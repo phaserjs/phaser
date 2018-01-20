@@ -6,6 +6,7 @@ var NoAudioSound = new Class({
         EventEmitter.call(this);
         this.manager = manager;
         this.key = key;
+        this.isPlaying = false;
     }
 });
 module.exports = NoAudioSound;
