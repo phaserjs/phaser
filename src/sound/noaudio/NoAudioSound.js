@@ -56,6 +56,7 @@ var NoAudioSound = new Class({
         return false;
     },
     destroy: function () {
+        this.manager.remove(this);
         BaseSound.prototype.destroy.call(this);
     }
 });
