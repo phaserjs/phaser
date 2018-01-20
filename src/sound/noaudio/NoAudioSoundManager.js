@@ -7,6 +7,7 @@ var NoAudioSoundManager = new Class({
         this.game = game;
         this.sounds = [];
         this.mute = false;
+        this.volume = 1;
     }
 });
 module.exports = NoAudioSoundManager;
