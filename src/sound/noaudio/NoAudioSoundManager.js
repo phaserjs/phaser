@@ -2,6 +2,7 @@ var Class = require('../../utils/Class');
 var EventEmitter = require('eventemitter3');
 var NoAudioSound = require('./NoAudioSound');
 var BaseSoundManager = require('../BaseSoundManager');
+var NOOP = require('../../utils/NOOP');
 var NoAudioSoundManager = new Class({
     Extends: EventEmitter,
     initialize: function NoAudioSoundManager(game) {
@@ -37,6 +38,7 @@ var NoAudioSoundManager = new Class({
     },
     removeByKey: function (key) {
         return BaseSoundManager.prototype.removeByKey.call(this, key);
-    }
+    },
+    pauseAll: NOOP
 });
 module.exports = NoAudioSoundManager;
