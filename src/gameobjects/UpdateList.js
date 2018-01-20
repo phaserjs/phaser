@@ -1,34 +1,14 @@
 var Class = require('../utils/Class');
-var PluginManager = require('../plugins/PluginManager');
 
 var UpdateList = new Class({
 
     initialize:
 
-    function UpdateList (scene)
+    function UpdateList ()
     {
-        this.scene = scene;
-
-        this.systems = scene.sys;
-
-        if (!scene.sys.settings.isBooted)
-        {
-            scene.sys.events.once('boot', this.boot, this);
-        }
-
         this._list = [];
         this._pendingInsertion = [];
         this._pendingRemoval = [];
-    },
-
-    boot: function ()
-    {
-        var eventEmitter = this.systems.events;
-
-        eventEmitter.on('preupdate', this.preUpdate, this);
-        eventEmitter.on('update', this.update, this);
-        eventEmitter.on('shutdown', this.shutdown, this);
-        eventEmitter.on('destroy', this.destroy, this);
     },
 
     add: function (child)
@@ -130,12 +110,8 @@ var UpdateList = new Class({
     destroy: function ()
     {
         this.shutdown();
-
-        this.scene = undefined;
     }
 
 });
-
-PluginManager.register('UpdateList', UpdateList, 'updateList');
 
 module.exports = UpdateList;
