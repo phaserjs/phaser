@@ -34,6 +34,9 @@ var NoAudioSound = new Class({
     },
     addMarker: function (marker) {
         return false;
+    },
+    updateMarker: function (marker) {
+        return false;
     }
 });
 module.exports = NoAudioSound;
