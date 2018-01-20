@@ -39,6 +39,7 @@ var NoAudioSoundManager = new Class({
     removeByKey: function (key) {
         return BaseSoundManager.prototype.removeByKey.call(this, key);
     },
-    pauseAll: NOOP
+    pauseAll: NOOP,
+    resumeAll: NOOP
 });
 module.exports = NoAudioSoundManager;
