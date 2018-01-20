@@ -24,6 +24,9 @@ var NoAudioSoundManager = new Class({
         var sound = this.add(key, config);
         sound.spritemap = {};
         return sound;
-    }
+    },
+    play: function (key, extra) {
+        return false;
+    },
 });
 module.exports = NoAudioSoundManager;
