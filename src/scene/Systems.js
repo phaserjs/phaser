@@ -1,4 +1,5 @@
 var Class = require('../utils/Class');
+var CONST = require('./const');
 var CoreScenePlugins = require('../CoreScenePlugins');
 var GetPhysicsPlugins = require('./GetPhysicsPlugins');
 var GetScenePlugins = require('./GetScenePlugins');
@@ -19,8 +20,7 @@ var Systems = new Class({
 
         this.settings = Settings.create(config);
 
-        //  Set by the SceneManager - a reference to the Scene canvas / context
-
+        //  A handy reference to the Scene canvas / context
         this.canvas;
         this.context;
 
@@ -47,6 +47,9 @@ var Systems = new Class({
     init: function (game)
     {
         this.game = game;
+
+        this.canvas = game.canvas;
+        this.context = game.context;
 
         var pluginManager = game.plugins;
 
@@ -79,11 +82,6 @@ var Systems = new Class({
     {
         this.events.emit('preupdate', time, delta);
 
-        if (!this.settings.active)
-        {
-            return;
-        }
-
         this.events.emit('update', time, delta);
 
         this.scene.update.call(this.scene, time, delta);
@@ -91,18 +89,15 @@ var Systems = new Class({
         this.events.emit('postupdate', time, delta);
     },
 
-    render: function (interpolation, renderer)
+    render: function (renderer)
     {
-        if (!this.settings.visible)
-        {
-            return;
-        }
-
         var displayList = this.displayList;
 
         displayList.process();
 
-        this.cameras.render(renderer, displayList, interpolation);
+        this.cameras.render(renderer, displayList);
+
+        this.events.emit('render', renderer);
     },
 
     //  Force a sort of the display list on the next render
@@ -120,26 +115,26 @@ var Systems = new Class({
     //  A paused Scene still renders, it just doesn't run ANY of its update handlers or systems
     pause: function ()
     {
-        //  Was paused by the SceneManager
+        if (this.settings.active)
+        {
+            this.settings.active = false;
 
-        this.settings.active = false;
-
-        this.events.emit('pause', this);
+            this.events.emit('pause', this);
+        }
     },
 
     resume: function ()
     {
-        //  Was resumed by the SceneManager
+        if (!this.settings.active)
+        {
+            this.settings.active = true;
 
-        this.settings.active = true;
-
-        this.events.emit('resume', this);
+            this.events.emit('resume', this);
+        }
     },
 
     sleep: function ()
     {
-        //  Was sent to sleep by the SceneManager
-
         this.settings.active = false;
         this.settings.visible = false;
 
@@ -148,18 +143,43 @@ var Systems = new Class({
 
     wake: function ()
     {
-        //  Was woken up by the SceneManager
-
         this.settings.active = true;
         this.settings.visible = true;
 
         this.events.emit('wake', this);
     },
 
+    isSleeping: function ()
+    {
+        return (!this.settings.active && !this.settings.visible);
+    },
+
+    isActive: function ()
+    {
+        return this.settings.active;
+    },
+
+    isVisible: function ()
+    {
+        return this.settings.visible;
+    },
+
+    setVisible: function (value)
+    {
+        this.settings.visible = value;
+
+        return this;
+    },
+
+    setActive: function (value)
+    {
+        this.settings.active = value;
+
+        return this;
+    },
+
     start: function (data)
     {
-        //  Was started by the SceneManager
-
         this.settings.data = data;
 
         this.settings.active = true;
@@ -170,8 +190,6 @@ var Systems = new Class({
 
     shutdown: function ()
     {
-        //  Was stopped by the SceneManager
-
         this.settings.active = false;
         this.settings.visible = false;
 
