@@ -43,6 +43,9 @@ var NoAudioSound = new Class({
     },
     play: function (markerName, config) {
         return false;
+    },
+    pause: function () {
+        return false;
     }
 });
 module.exports = NoAudioSound;
