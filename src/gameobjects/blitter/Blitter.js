@@ -41,7 +41,7 @@ var Blitter = new Class({
         this.setTexture(texture, frame);
         this.setPosition(x, y);
 
-        this.children = new DisplayList(this);
+        this.children = new DisplayList();
 
         this.renderList = [];
 
