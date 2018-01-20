@@ -46,6 +46,8 @@ var Systems = new Class({
 
     init: function (game)
     {
+        this.settings.status = CONST.INIT;
+
         this.game = game;
 
         this.canvas = game.canvas;
@@ -117,6 +119,8 @@ var Systems = new Class({
     {
         if (this.settings.active)
         {
+            this.settings.status = CONST.PAUSED;
+
             this.settings.active = false;
 
             this.events.emit('pause', this);
@@ -127,6 +131,8 @@ var Systems = new Class({
     {
         if (!this.settings.active)
         {
+            this.settings.status = CONST.RUNNING;
+
             this.settings.active = true;
 
             this.events.emit('resume', this);
@@ -135,6 +141,8 @@ var Systems = new Class({
 
     sleep: function ()
     {
+        this.settings.status = CONST.SLEEPING;
+
         this.settings.active = false;
         this.settings.visible = false;
 
@@ -143,6 +151,8 @@ var Systems = new Class({
 
     wake: function ()
     {
+        this.settings.status = CONST.RUNNING;
+
         this.settings.active = true;
         this.settings.visible = true;
 
@@ -151,12 +161,12 @@ var Systems = new Class({
 
     isSleeping: function ()
     {
-        return (!this.settings.active && !this.settings.visible);
+        return (this.settings.status === CONST.SLEEPING);
     },
 
     isActive: function ()
     {
-        return this.settings.active;
+        return (this.settings.status === CONST.RUNNING);
     },
 
     isVisible: function ()
@@ -173,13 +183,20 @@ var Systems = new Class({
 
     setActive: function (value)
     {
-        this.settings.active = value;
-
-        return this;
+        if (value)
+        {
+            return this.resume();
+        }
+        else
+        {
+            return this.pause();
+        }
     },
 
     start: function (data)
     {
+        this.settings.status = CONST.START;
+
         this.settings.data = data;
 
         this.settings.active = true;
@@ -190,6 +207,8 @@ var Systems = new Class({
 
     shutdown: function ()
     {
+        this.settings.status = CONST.SHUTDOWN;
+
         this.settings.active = false;
         this.settings.visible = false;
 
@@ -198,6 +217,8 @@ var Systems = new Class({
 
     destroy: function ()
     {
+        this.settings.status = CONST.DESTROYED;
+
         this.events.emit('destroy', this);
     }
 

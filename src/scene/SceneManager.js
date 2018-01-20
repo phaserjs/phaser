@@ -1,7 +1,7 @@
 var CanvasInterpolation = require('../display/canvas/CanvasInterpolation');
 var CanvasPool = require('../display/canvas/CanvasPool');
 var Class = require('../utils/Class');
-var CONST = require('../const');
+var CONST = require('./const');
 var GetValue = require('../utils/object/GetValue');
 var NOOP = require('../utils/NOOP');
 var Scene = require('./Scene');
@@ -230,6 +230,8 @@ var SceneManager = new Class({
             }
             else
             {
+                scene.sys.settings.status = CONST.LOADING;
+
                 //  Start the loader going as we have something in the queue
                 loader.once('complete', this.loadComplete, this);
 
@@ -295,7 +297,7 @@ var SceneManager = new Class({
         {
             var sys = this.scenes[i].sys;
 
-            if (sys.settings.active)
+            if (sys.settings.status === CONST.RUNNING)
             {
                 sys.step(time, delta);
             }
@@ -342,6 +344,8 @@ var SceneManager = new Class({
         {
             scene.create.call(scene, scene.sys.settings.data);
         }
+        
+        scene.sys.settings.status = CONST.RUNNING;
     },
 
     /**
@@ -781,6 +785,8 @@ var SceneManager = new Class({
 
                 if (loader.loadArray(scene.sys.settings.files))
                 {
+                    scene.sys.settings.status = CONST.LOADING;
+
                     loader.once('complete', this.payloadComplete, this);
 
                     loader.start();
