@@ -34,6 +34,9 @@ var NoAudioSoundManager = new Class({
     },
     remove: function (sound) {
         return BaseSoundManager.prototype.remove.call(this, sound);
+    },
+    removeByKey: function (key) {
+        return BaseSoundManager.prototype.removeByKey.call(this, key);
     }
 });
 module.exports = NoAudioSoundManager;
