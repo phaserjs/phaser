@@ -19,7 +19,7 @@ var Animation = new Class({
      * [description]
      *
      * @class Animation
-     * @memberOf Phaser.Animations.Animation
+     * @memberOf Phaser.Animations
      * @constructor
      * @since 3.0.0
      *
@@ -29,14 +29,13 @@ var Animation = new Class({
      */
     function Animation (manager, key, config)
     {
-
         /**
          * [description]
          *
          * @property {Phaser.Animations.AnimationManager} manager
+         * @since 3.0.0
          */
         this.manager = manager;
-
 
         /**
          * [description]
@@ -75,6 +74,7 @@ var Animation = new Class({
          *
          * @property {integer} frameRate
          * @default 24
+         * @since 3.0.0
          */
         this.frameRate = GetValue(config, 'frameRate', null);
 
@@ -85,6 +85,7 @@ var Animation = new Class({
          * [description]
          *
          * @property {integer} duration
+         * @since 3.0.0
          */
         this.duration = GetValue(config, 'duration', null);
 
