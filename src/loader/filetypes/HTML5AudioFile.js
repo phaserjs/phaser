@@ -113,13 +113,7 @@ var HTML5AudioFile = new Class({
 
         if (this.locked)
         {
-            setTimeout(function ()
-            {
-                this.filesLoaded = this.filesTotal;
-                this.percentComplete = 1;
-                this.onLoad();
-
-            }.bind(this));
+            setTimeout(this.onLoad.bind(this));
         }
     }
 
