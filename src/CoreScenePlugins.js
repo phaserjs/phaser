@@ -11,8 +11,8 @@ var CoreScenePlugins = [
     'GameObjectCreator',
     'GameObjectFactory',
     'ScenePlugin',
-    'DisplayList',
-    'UpdateList'
+    'DisplayListPlugin',
+    'UpdateListPlugin'
 
 ];
 

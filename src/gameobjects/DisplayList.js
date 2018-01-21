@@ -1,23 +1,12 @@
 var Class = require('../utils/Class');
 var StableSort = require('../utils/array/StableSort');
-var PluginManager = require('../plugins/PluginManager');
 
 var DisplayList = new Class({
 
     initialize:
 
-    function DisplayList (scene)
+    function DisplayList ()
     {
-        //  The Scene that owns this plugin
-        this.scene = scene;
-
-        this.systems = scene.sys;
-
-        if (!scene.sys.settings.isBooted)
-        {
-            scene.sys.events.once('boot', this.boot, this);
-        }
-
         //  The objects that belong to this collection.
         //  The equivalent of the old `Sprite.children` array.
         this.list = [];
@@ -25,14 +14,6 @@ var DisplayList = new Class({
         this.sortChildrenFlag = false;
 
         this.position = 0;
-    },
-
-    boot: function ()
-    {
-        var eventEmitter = this.systems.events;
-
-        eventEmitter.on('shutdown', this.shutdown, this);
-        eventEmitter.on('destroy', this.destroy, this);
     },
 
     process: function ()
@@ -724,7 +705,5 @@ var DisplayList = new Class({
     }
 
 });
-
-PluginManager.register('DisplayList', DisplayList, 'displayList');
 
 module.exports = DisplayList;

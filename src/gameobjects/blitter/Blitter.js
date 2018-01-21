@@ -3,6 +3,7 @@ var Bob = require('./Bob');
 var Class = require('../../utils/Class');
 var Components = require('../components');
 var DisplayList = require('../DisplayList');
+var Frame = require('../../textures/Frame');
 var GameObject = require('../GameObject');
 
 /**
@@ -41,7 +42,7 @@ var Blitter = new Class({
         this.setTexture(texture, frame);
         this.setPosition(x, y);
 
-        this.children = new DisplayList(this);
+        this.children = new DisplayList();
 
         this.renderList = [];
 
@@ -49,6 +50,7 @@ var Blitter = new Class({
     },
 
     //  frame MUST be part of the Blitter texture
+    //  and can be either a Frame object or a string
     create: function (x, y, frame, visible, index)
     {
         if (visible === undefined) { visible = true; }
@@ -58,7 +60,7 @@ var Blitter = new Class({
         {
             frame = this.frame;
         }
-        else
+        else if (!(frame instanceof Frame))
         {
             frame = this.texture.get(frame);
         }
@@ -90,7 +92,7 @@ var Blitter = new Class({
     //  frame MUST be part of the Blitter texture
     createMultiple: function (quantity, frame, visible)
     {
-        if (frame === undefined) { frame = this.frame; }
+        if (frame === undefined) { frame = this.frame.name; }
         if (visible === undefined) { visible = true; }
 
         if (!Array.isArray(frame))

@@ -210,6 +210,8 @@ var InputPlugin = new Class({
         //  Contains ALL Game Objects currently over in the array
         this.emit('pointerdown', pointer, currentlyOver);
 
+        var total = 0;
+
         //  Go through all objects the pointer was over and fire their events / callbacks
         for (var i = 0; i < currentlyOver.length; i++)
         {
@@ -220,10 +222,14 @@ var InputPlugin = new Class({
                 continue;
             }
 
+            total++;
+
             gameObject.emit('pointerdown', pointer, gameObject.input.localX, gameObject.input.localY, pointer.camera);
 
             this.emit('gameobjectdown', pointer, gameObject);
         }
+
+        return total;
     },
 
     processDragEvents: function (pointer, time)
@@ -231,7 +237,7 @@ var InputPlugin = new Class({
         if (this._draggable.length === 0)
         {
             //  There are no draggable items, so let's not even bother going further
-            return;
+            return 0;
         }
 
         var i;
@@ -481,6 +487,8 @@ var InputPlugin = new Class({
 
             pointer.dragState = 0;
         }
+        
+        return (pointer.dragState > 0);
     },
 
     processMoveEvents: function (pointer)
@@ -488,6 +496,8 @@ var InputPlugin = new Class({
         var currentlyOver = this._temp;
 
         this.emit('pointermove', pointer, currentlyOver);
+
+        var total = 0;
 
         //  Go through all objects the pointer was over and fire their events / callbacks
         for (var i = 0; i < currentlyOver.length; i++)
@@ -499,6 +509,8 @@ var InputPlugin = new Class({
                 continue;
             }
 
+            total++;
+
             gameObject.emit('pointermove', pointer, gameObject.input.localX, gameObject.input.localY);
 
             this.emit('gameobjectmove', pointer, gameObject);
@@ -508,6 +520,8 @@ var InputPlugin = new Class({
                 break;
             }
         }
+
+        return total;
     },
 
     processOverOutEvents: function (pointer)
@@ -611,6 +625,8 @@ var InputPlugin = new Class({
 
         //  Then sort it into display list order
         this._over[pointer.id] = this.sortGameObjects(previouslyOver);
+
+        return previouslyOver.length;
     },
 
     processUpEvents: function (pointer)
@@ -808,6 +824,13 @@ var InputPlugin = new Class({
         return this;
     },
 
+    setGlobalTopOnly: function (value)
+    {
+        this.manager.globalTopOnly = value;
+
+        return this;
+    },
+
     setTopOnly: function (value)
     {
         this.topOnly = value;
@@ -887,9 +910,27 @@ var InputPlugin = new Class({
         return interactiveObjects.sort(this.sortHandlerIO.bind(this));
     },
 
+    stopPropagation: function ()
+    {
+        if (this.manager.globalTopOnly)
+        {
+            this.manager.ignoreEvents = true;
+        }
+
+        return this;
+    },
+
     update: function (time, delta)
     {
-        var pointer = this.manager.activePointer;
+        var manager = this.manager;
+
+        //  Another Scene above this one has already consumed the input events
+        if (manager.globalTopOnly && manager.ignoreEvents)
+        {
+            return;
+        }
+
+        var pointer = manager.activePointer;
 
         var runUpdate = (pointer.dirty || this.pollRate === 0);
 
@@ -921,16 +962,16 @@ var InputPlugin = new Class({
             this._temp.splice(1);
         }
 
-        this.processDragEvents(pointer, time);
+        var total = this.processDragEvents(pointer, time);
 
         if (!pointer.wasTouch)
         {
-            this.processOverOutEvents(pointer);
+            total += this.processOverOutEvents(pointer);
         }
 
         if (pointer.justDown)
         {
-            this.processDownEvents(pointer);
+            total += this.processDownEvents(pointer);
         }
 
         if (pointer.justUp)
@@ -940,7 +981,13 @@ var InputPlugin = new Class({
 
         if (pointer.justMoved)
         {
-            this.processMoveEvents(pointer);
+            total += this.processMoveEvents(pointer);
+        }
+
+        if (total > 0 && manager.globalTopOnly)
+        {
+            //  We interacted with an event in this Scene, so block any Scenes below us from doing the same this frame
+            manager.ignoreEvents = true;
         }
     },
 

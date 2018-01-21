@@ -33,89 +33,8 @@ var ScenePlugin = new Class({
     {
         var eventEmitter = this.systems.events;
 
-        eventEmitter.on('preupdate', this.preUpdate, this);
         eventEmitter.on('shutdown', this.shutdown, this);
         eventEmitter.on('destroy', this.destroy, this);
-    },
-
-    preUpdate: function ()
-    {
-        var len = this._queue.length;
-
-        if (len === 0)
-        {
-            return;
-        }
-
-        var manager = this.manager;
-
-        //  Process the queue
-        for (var i = 0; i < len; i++)
-        {
-            var action = this._queue[i];
-
-            switch (action.type)
-            {
-                case 'add':
-                    manager.add(action.key, action.data, action.autoStart);
-                    break;
-
-                case 'start':
-                    manager.stop(this.key);
-                    manager.start(action.key, action.data);
-                    break;
-
-                case 'launch':
-                    manager.start(action.key, action.data);
-                    break;
-
-                case 'pause':
-                    manager.pause(action.key);
-                    break;
-
-                case 'resume':
-                    manager.resume(action.key);
-                    break;
-
-                case 'stop':
-                    manager.stop(action.key);
-                    break;
-
-                case 'swap':
-                    manager.swap(this.key, action.key);
-                    break;
-
-                case 'moveUp':
-                    manager.moveUp(this.key);
-                    break;
-
-                case 'moveDown':
-                    manager.moveDown(this.key);
-                    break;
-
-                case 'bringToTop':
-                    manager.bringToTop(this.key);
-                    break;
-
-                case 'sendToBack':
-                    manager.sendToBack(this.key);
-                    break;
-
-                case 'swapPosition':
-                    manager.swapPosition(this.key, action.key);
-                    break;
-
-                case 'sleep':
-                    manager.sleep(action.key);
-                    break;
-
-                case 'wake':
-                    manager.wake(action.key);
-                    break;
-            }
-        }
-
-        this._queue.length = 0;
     },
 
     //  Shutdown this Scene and run the given one
@@ -123,7 +42,11 @@ var ScenePlugin = new Class({
     {
         if (key === undefined) { key = this.key; }
 
-        this._queue.push({ type: 'start', key: key, data: data });
+        if (key !== this.key)
+        {
+            this.manager.stop(this.key);
+            this.manager.start(key);
+        }
 
         return this;
     },
@@ -131,7 +54,7 @@ var ScenePlugin = new Class({
     //  Add the Scene into the Scene Manager and start it if 'autoStart' is true or the Scene config 'active' property is set
     add: function (key, sceneConfig, autoStart)
     {
-        this._queue.push({ type: 'add', key: key, data: sceneConfig, autoStart: autoStart });
+        this.manager.add(key, sceneConfig, autoStart);
 
         return this;
     },
@@ -139,9 +62,10 @@ var ScenePlugin = new Class({
     //  Launch the given Scene and run it in parallel with this one
     launch: function (key, data)
     {
-        if (key === undefined) { key = this.key; }
-
-        this._queue.push({ type: 'launch', key: key, data: data });
+        if (key && key !== this.key)
+        {
+            this.manager.start(key);
+        }
 
         return this;
     },
@@ -151,7 +75,7 @@ var ScenePlugin = new Class({
     {
         if (key === undefined) { key = this.key; }
 
-        this._queue.push({ type: 'pause', key: key });
+        this.manager.pause(key);
 
         return this;
     },
@@ -161,7 +85,7 @@ var ScenePlugin = new Class({
     {
         if (key === undefined) { key = this.key; }
 
-        this._queue.push({ type: 'resume', key: key });
+        this.manager.resume(key);
 
         return this;
     },
@@ -169,7 +93,9 @@ var ScenePlugin = new Class({
     //  Makes the Scene sleep (no update, no render) but doesn't shutdown
     sleep: function (key)
     {
-        this._queue.push({ type: 'sleep', key: key });
+        if (key === undefined) { key = this.key; }
+
+        this.manager.sleep(key);
 
         return this;
     },
@@ -177,15 +103,20 @@ var ScenePlugin = new Class({
     //  Makes the Scene wake-up (starts update and render)
     wake: function (key)
     {
-        this._queue.push({ type: 'wake', key: key });
+        if (key === undefined) { key = this.key; }
+
+        this.manager.wake(key);
 
         return this;
     },
 
     //  Makes this Scene sleep then starts the Scene given
-    swap: function (key)
+    switch: function (key)
     {
-        this._queue.push({ type: 'swap', key: key });
+        if (key !== this.key)
+        {
+            this.manager.switch(this.key, key);
+        }
 
         return this;
     },
@@ -195,7 +126,14 @@ var ScenePlugin = new Class({
     {
         if (key === undefined) { key = this.key; }
 
-        this._queue.push({ type: 'stop', key: key });
+        this.manager.stop(key);
+
+        return this;
+    },
+
+    setActive: function (value)
+    {
+        this.settings.active = value;
 
         return this;
     },
@@ -207,38 +145,11 @@ var ScenePlugin = new Class({
         return this;
     },
 
-    swapPosition: function (key)
+    isSleeping: function (key)
     {
-        this._queue.push({ type: 'swapPosition', key: key });
-    },
+        if (key === undefined) { key = this.key; }
 
-    moveUp: function ()
-    {
-        this._queue.push({ type: 'moveUp' });
-    },
-
-    moveDown: function ()
-    {
-        this._queue.push({ type: 'moveDown' });
-    },
-
-    bringToTop: function ()
-    {
-        this._queue.push({ type: 'bringToTop' });
-    },
-
-    sendToBack: function ()
-    {
-        this._queue.push({ type: 'sendToBack' });
-    },
-
-    get: function (key)
-    {
-        return this.manager.getScene(key);
-    },
-
-    transitionTo: function (key, duration)
-    {
+        return this.manager.isSleeping(key);
     },
 
     isActive: function (key)
@@ -246,6 +157,64 @@ var ScenePlugin = new Class({
         if (key === undefined) { key = this.key; }
 
         return this.manager.isActive(key);
+    },
+
+    isVisible: function (key)
+    {
+        if (key === undefined) { key = this.key; }
+
+        return this.manager.isVisible(key);
+    },
+
+    swapPosition: function (key)
+    {
+        if (key && key !== this.key)
+        {
+            this.manager.swapPosition(this.key, key);
+        }
+
+        return this;
+    },
+
+    moveUp: function (key)
+    {
+        if (key === undefined) { key = this.key; }
+
+        this.manager.moveUp(key);
+
+        return this;
+    },
+
+    moveDown: function (key)
+    {
+        if (key === undefined) { key = this.key; }
+
+        this.manager.moveDown(key);
+
+        return this;
+    },
+
+    bringToTop: function (key)
+    {
+        if (key === undefined) { key = this.key; }
+
+        this.manager.bringToTop(key);
+
+        return this;
+    },
+
+    sendToBack: function (key)
+    {
+        if (key === undefined) { key = this.key; }
+
+        this.manager.sendToBack(key);
+
+        return this;
+    },
+
+    get: function (key)
+    {
+        return this.manager.getScene(key);
     },
 
     shutdown: function ()

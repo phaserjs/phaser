@@ -1,4 +1,5 @@
 module.exports = {
+
     BACKSPACE: 8,
     TAB: 9,
     ENTER: 13,
@@ -84,5 +85,9 @@ module.exports = {
     PERIOD: 190,
     FORWAD_SLASH: 191,
     BACK_SLASH: 220,
-    QUOTES: 222
+    QUOTES: 222,
+    BACKTICK: 192,
+    OPEN_BRACKET: 219,
+    CLOSED_BRACKET: 221
+
 };
