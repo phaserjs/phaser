@@ -15,6 +15,8 @@ var HTML5AudioFile = new Class({
         {
             this.locked = locked;
 
+            this.loaded = false;
+
             var fileConfig = {
                 type: 'audio',
                 extension: GetFastValue(url, 'type', ''),
@@ -29,6 +31,13 @@ var HTML5AudioFile = new Class({
 
     onLoad: function ()
     {
+        if(this.loaded)
+        {
+            return;
+        }
+
+        this.loaded = true;
+
         this.loader.nextFile(this, true);
     },
 
