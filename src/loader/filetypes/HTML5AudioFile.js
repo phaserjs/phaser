@@ -50,7 +50,7 @@ var HTML5AudioFile = new Class({
             audio.onerror = null;
         }
 
-        this.callback(this, false);
+        this.loader.nextFile(this, false);
     },
 
     onProgress: function (event)
