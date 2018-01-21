@@ -59,9 +59,9 @@ var HTML5AudioFile = new Class({
     },
 
     //  Called by the Loader, starts the actual file downloading
-    load: function (callback, baseURL)
+    load: function (loader)
     {
-        this.callback = callback;
+        this.loader = loader;
 
         this.data = [];
 
@@ -90,7 +90,7 @@ var HTML5AudioFile = new Class({
         for (i = 0; i < this.data.length; i++)
         {
             audio = this.data[i];
-            audio.src = GetURL(this, baseURL || '');
+            audio.src = GetURL(this, loader.baseURL);
 
             if (!this.locked)
             {
