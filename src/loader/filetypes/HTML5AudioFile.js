@@ -29,7 +29,7 @@ var HTML5AudioFile = new Class({
 
     onLoad: function ()
     {
-        this.callback(this, true);
+        this.loader.nextFile(this, true);
     },
 
     onError: function (event)
