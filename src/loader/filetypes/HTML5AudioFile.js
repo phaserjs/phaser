@@ -59,12 +59,16 @@ var HTML5AudioFile = new Class({
         audio.oncanplaythrough = null;
         audio.onerror = null;
 
-        if(++this.filesLoaded === this.filesTotal)
+        this.filesLoaded++;
+
+        this.percentComplete = Math.min((this.filesLoaded / this.filesTotal), 1);
+
+        this.loader.emit('fileprogress', this, this.percentComplete);
+
+        if(this.filesLoaded === this.filesTotal)
         {
             this.onLoad();
         }
-
-        this.percentComplete = Math.min((this.filesLoaded / this.filesTotal), 1);
     },
 
     //  Called by the Loader, starts the actual file downloading
