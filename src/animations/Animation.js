@@ -15,16 +15,52 @@ var Animation = new Class({
 
     initialize:
 
+    /**
+     * [description]
+     *
+     * @class Animation
+     * @memberOf Phaser.Animations
+     * @constructor
+     * @since 3.0.0
+     *
+     * @param {undefined} manager - [description]
+     * @param {undefined} key - [description]
+     * @param {undefined} config - [description]
+     */
     function Animation (manager, key, config)
     {
+        /**
+         * [description]
+         *
+         * @property {Phaser.Animations.AnimationManager} manager
+         * @since 3.0.0
+         */
         this.manager = manager;
 
+        /**
+         * [description]
+         *
+         * @property {string} key
+         */
         this.key = key;
 
         //  A frame based animation (as opposed to a bone based animation)
+
+        /**
+         * [description]
+         *
+         * @property {string} type
+         * @default frame
+         */
         this.type = 'frame';
 
         //  Extract all the frame data into the frames array
+
+        /**
+         * [description]
+         *
+         * @property {array} frames
+         */
         this.frames = this.getFrames(
             manager.textureManager,
             GetValue(config, 'frames', []),
@@ -32,10 +68,25 @@ var Animation = new Class({
         );
 
         //  The frame rate of playback in frames per second (default 24 if duration is null)
+
+        /**
+         * [description]
+         *
+         * @property {integer} frameRate
+         * @default 24
+         * @since 3.0.0
+         */
         this.frameRate = GetValue(config, 'frameRate', null);
 
         //  How long the animation should play for. If frameRate is set it overrides this value
         //  otherwise frameRate is derived from duration
+
+        /**
+         * [description]
+         *
+         * @property {integer} duration
+         * @since 3.0.0
+         */
         this.duration = GetValue(config, 'duration', null);
 
         if (this.duration === null && this.frameRate === null)
@@ -60,49 +111,171 @@ var Animation = new Class({
         }
 
         //  ms per frame (without including frame specific modifiers)
+
+        /**
+         * [description]
+         *
+         * @property {integer} msPerFrame
+         */
         this.msPerFrame = 1000 / this.frameRate;
 
         //  Skip frames if the time lags, or always advanced anyway?
+
+        /**
+         * [description]
+         *
+         * @property {boolean} skipMissedFrames
+         * @default false
+         */
         this.skipMissedFrames = GetValue(config, 'skipMissedFrames', true);
 
         //  Delay before starting playback (in seconds)
+
+        /**
+         * [description]
+         *
+         * @property {integer} delay
+         * @default 0
+         */
         this.delay = GetValue(config, 'delay', 0);
 
         //  Number of times to repeat the animation (-1 for infinity)
+
+        /**
+         * [description]
+         *
+         * @property {integer} repeat
+         * @default 0
+         */
         this.repeat = GetValue(config, 'repeat', 0);
 
         //  Delay before the repeat starts (in seconds)
+
+        /**
+         * [description]
+         *
+         * @property {integer} repeatDelay
+         * @default 0
+         */
         this.repeatDelay = GetValue(config, 'repeatDelay', 0);
 
         //  Should the animation yoyo? (reverse back down to the start) before repeating?
+
+        /**
+         * [description]
+         *
+         * @property {boolean} yoyo
+         * @default false
+         */
         this.yoyo = GetValue(config, 'yoyo', false);
 
         //  Should sprite.visible = true when the animation starts to play?
+
+        /**
+         * [description]
+         *
+         * @property {boolean} showOnStart
+         * @default false
+         */
         this.showOnStart = GetValue(config, 'showOnStart', false);
 
         //  Should sprite.visible = false when the animation finishes?
+
+        /**
+         * [description]
+         *
+         * @property {boolean} hideOnComplete
+         * @default false
+         */
         this.hideOnComplete = GetValue(config, 'hideOnComplete', false);
 
         //  Callbacks
+
+        /**
+         * [description]
+         *
+         * @property {object} callbackScope
+         */
         this.callbackScope = GetValue(config, 'callbackScope', this);
 
+
+        /**
+         * [description]
+         *
+         * @property {function} onStart
+         */
         this.onStart = GetValue(config, 'onStart', false);
+
+        /**
+         * [description]
+         *
+         * @property {array} onStartParams
+         */
         this.onStartParams = GetValue(config, 'onStartParams', []);
 
+
+        /**
+         * [description]
+         *
+         * @property {function} onRepeat
+         */
         this.onRepeat = GetValue(config, 'onRepeat', false);
+
+        /**
+         * [description]
+         *
+         * @property {array} onRepeatParams
+         */
         this.onRepeatParams = GetValue(config, 'onRepeatParams', []);
 
         //  Called for EVERY frame of the animation.
         //  See AnimationFrame.onUpdate for a frame specific callback.
+
+        /**
+         * [description]
+         *
+         * @property {function} onUpdate
+         */
         this.onUpdate = GetValue(config, 'onUpdate', false);
+
+        /**
+         * [description]
+         *
+         * @property {array} onUpdateParams
+         */
         this.onUpdateParams = GetValue(config, 'onUpdateParams', []);
 
+
+        /**
+         * [description]
+         *
+         * @property {function} onComplete
+         */
         this.onComplete = GetValue(config, 'onComplete', false);
+
+        /**
+         * [description]
+         *
+         * @property {array} onCompleteParams
+         */
         this.onCompleteParams = GetValue(config, 'onCompleteParams', []);
 
         //  Global pause, effects all Game Objects using this Animation instance
+
+        /**
+         * [description]
+         *
+         * @property {boolean} paused
+         * @default false
+         */
         this.paused = false;
 
+
+        /**
+         * [description]
+         *
+         * @property {null} manager.on('pauseall', this.pause.bind(this))
+         */
         this.manager.on('pauseall', this.pause.bind(this));
         this.manager.on('resumeall', this.resume.bind(this));
     },
