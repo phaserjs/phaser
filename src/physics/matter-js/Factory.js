@@ -5,11 +5,12 @@ var Constraint = require('./lib/constraint/Constraint');
 var MatterImage = require('./MatterImage');
 var MatterSprite = require('./MatterSprite');
 var PointerConstraint = require('./PointerConstraint');
+var MatterTileBody = require('./MatterTileBody');
 
 //  When registering a factory function 'this' refers to the GameObjectFactory context.
-//  
+//
 //  There are several properties available to use:
-//  
+//
 //  this.scene - a reference to the Scene that owns the GameObjectFactory
 //  this.displayList - a reference to the Display List the Scene owns
 //  this.updateList - a reference to the Update List the Scene owns
@@ -217,6 +218,13 @@ var Factory = new Class({
         this.sys.displayList.add(image);
 
         return image;
+    },
+
+    tileBody: function (tile, options)
+    {
+        var tileBody = new MatterTileBody(this.world, tile, options);
+
+        return tileBody;
     },
 
     sprite: function (x, y, key, frame, options)

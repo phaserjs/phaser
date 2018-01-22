@@ -10,6 +10,7 @@ var GetValue = require('../../utils/object/GetValue');
 var MatterBody = require('./lib/body/Body');
 var MatterEvents = require('./lib/core/Events');
 var MatterWorld = require('./lib/body/World');
+var MatterTileBody = require('./MatterTileBody');
 
 var World = new Class({
 
@@ -38,7 +39,7 @@ var World = new Class({
         * @property {object} walls - An object containing the 4 wall bodies that bound the physics world.
         */
         this.walls = { left: null, right: null, top: null, bottom: null };
-    
+
         if (GetFastValue(config, 'setBounds', false))
         {
             var boundsConfig = config['setBounds'];
@@ -279,6 +280,39 @@ var World = new Class({
         var body = (object.body) ? object.body : object;
 
         Composite.removeBody(this.localWorld, body, deep);
+
+        return this;
+    },
+
+    /**
+     * All colliding tiles will be set
+     */
+    convertTilemapLayer: function (tilemapLayer, options)
+    {
+        var layerData = tilemapLayer.layer;
+        var tiles = tilemapLayer.getTilesWithin(0, 0, layerData.width, layerData.height, {
+            isColliding: true
+        });
+
+        this.convertTiles(tiles, options);
+
+        return this;
+    },
+
+    /**
+     * Array of tiles
+     */
+    convertTiles: function (tiles, options)
+    {
+        if (tiles.length === 0)
+        {
+            return this;
+        }
+
+        for (var i = 0; i < tiles.length; i++)
+        {
+            new MatterTileBody(this, tiles[i], options);
+        }
 
         return this;
     },

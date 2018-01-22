@@ -576,6 +576,9 @@ var Text = new Class({
         w *= this.resolution;
         h *= this.resolution;
 
+        w = Math.max(w, 1);
+        h = Math.max(h, 1);
+
         if (canvas.width !== w || canvas.height !== h)
         {
             canvas.width = w;
