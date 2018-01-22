@@ -182,6 +182,12 @@ var Tile = new Class({
          * @default
          */
         this.tint = 0xffffff;
+
+        /**
+         * An empty object where physics-engine specific information (e.g. bodies) may be stored.
+         * @property {object} physics
+         */
+        this.physics = {};
     },
 
     /**

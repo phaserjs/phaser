@@ -11,6 +11,9 @@ module.exports = {
     WebAudioSoundManager: require('./webaudio/WebAudioSoundManager'),
 
     HTML5AudioSound: require('./html5/HTML5AudioSound'),
-    HTML5AudioSoundManager: require('./html5/HTML5AudioSoundManager')
+    HTML5AudioSoundManager: require('./html5/HTML5AudioSoundManager'),
+
+    NoAudioSound: require('./noaudio/NoAudioSound'),
+    NoAudioSoundManager: require('./noaudio/NoAudioSoundManager')
 
 };

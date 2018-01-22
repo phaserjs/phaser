@@ -46,7 +46,7 @@
         "indent": [ "error", 4, { "SwitchCase": 1 } ],
         "key-spacing": [ "error", { "beforeColon": false, "afterColon": true }],
         "linebreak-style": [ "off" ],
-        "lines-around-comment": [ "error", { "beforeBlockComment": true, "afterBlockComment": false, "beforeLineComment": true, "afterLineComment": false, "allowBlockStart": true, "allowBlockEnd": false, "allowObjectStart": true, "allowArrayStart": true, "allowBlockEnd": true }],
+        "lines-around-comment": [ "error", { "beforeBlockComment": true, "afterBlockComment": false, "beforeLineComment": true, "afterLineComment": false, "allowBlockStart": true, "allowBlockEnd": false, "allowObjectStart": true, "allowArrayStart": true }],
         "new-parens": "error",
         "no-array-constructor": "error",
         "no-lonely-if": "error",
@@ -66,7 +66,7 @@
         "space-in-parens": [ "error",  "never" ],
         "space-infix-ops": [ "error", { "int32Hint": true } ],
         "wrap-regex": "error",
-        "spaced-comment": [ "error", "always", { "block": { "balanced": true }} ]
+        "spaced-comment": [ "error", "always", { "block": { "balanced": true, "exceptions": ["*", "!"] }} ]
 
     }
 }

@@ -167,6 +167,7 @@ var BaseSoundManager = new Class({
      * @method Phaser.Sound.BaseSoundManager#play
      * @param {string} key - Asset key for the sound.
      * @param {ISoundConfig | ISoundMarker} [extra] - An optional additional object containing settings to be applied to the sound. It could be either config or marker object.
+     * @returns {boolean} Whether the sound started playing successfully.
      */
     play: function (key, extra) {
         var sound = this.add(key);
@@ -175,14 +176,14 @@ var BaseSoundManager = new Class({
         if (extra) {
             if (extra.name) {
                 sound.addMarker(extra);
-                sound.play(extra.name);
+                return sound.play(extra.name);
             }
             else {
-                sound.play(extra);
+                return sound.play(extra);
             }
         }
         else {
-            sound.play();
+            return sound.play();
         }
     },
     /**
@@ -193,11 +194,12 @@ var BaseSoundManager = new Class({
      * @param {string} key - Asset key for the sound.
      * @param {string} spriteName - The name of the sound sprite to play.
      * @param {ISoundConfig} [config] - An optional config object containing default sound settings.
+     * @returns {boolean} Whether the audio sprite sound started playing successfully.
      */
     playAudioSprite: function (key, spriteName, config) {
         var sound = this.addAudioSprite(key);
         sound.once('ended', sound.destroy, sound);
-        sound.play(spriteName, config);
+        return sound.play(spriteName, config);
     },
     /**
      * Removes a sound from the sound manager.

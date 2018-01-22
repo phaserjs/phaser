@@ -17,9 +17,9 @@ var TilemapJSONFile = function (key, url, path, format, xhrSettings)
 };
 
 //  When registering a factory function 'this' refers to the Loader context.
-//  
+//
 //  There are several properties available to use:
-//  
+//
 //  this.scene - a reference to the Scene that owns the GameObjectFactory
 
 FileTypesManager.register('tilemapTiledJSON', function (key, url, xhrSettings)
@@ -48,12 +48,12 @@ FileTypesManager.register('tilemapWeltmeister', function (key, url, xhrSettings)
         for (var i = 0; i < key.length; i++)
         {
             //  If it's an array it has to be an array of Objects, so we get everything out of the 'key' object
-            this.addFile(TilemapJSONFile(key[i], url, this.path, TILEMAP_FORMATS.WELTMEISTER.TILED_JSON, xhrSettings));
+            this.addFile(TilemapJSONFile(key[i], url, this.path, TILEMAP_FORMATS.WELTMEISTER, xhrSettings));
         }
     }
     else
     {
-        this.addFile(TilemapJSONFile(key, url, this.path, TILEMAP_FORMATS.WELTMEISTER.TILED_JSON, xhrSettings));
+        this.addFile(TilemapJSONFile(key, url, this.path, TILEMAP_FORMATS.WELTMEISTER, xhrSettings));
     }
 
     //  For method chaining
