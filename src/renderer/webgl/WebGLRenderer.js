@@ -496,9 +496,24 @@ var WebGLRenderer = new Class({
         var list = children.list;
         var childCount = list.length;
         var color = this.game.config.backgroundColor;
+        var scissorEnabled = (camera.x !== 0 || camera.y !== 0 || camera.width !== gl.canvas.width || camera.height !== gl.canvas.height);
+        var pipeline = null;
 
         gl.clearColor(color.redGL, color.greenGL, color.blueGL, color.alphaGL);
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT | gl.STENCIL_BUFFER_BIT);
+
+        this.currentScissorState.enabled = scissorEnabled;
+
+        if (scissorEnabled)
+        {
+            gl.enable(gl.SCISSOR_TEST);
+            this.currentScissorState.x = camera.x;
+            this.currentScissorState.y = gl.drawingBufferHeight - camera.y - camera.height;
+            this.currentScissorState.width = camera.width;
+            this.currentScissorState.height = camera.height;
+
+            gl.scissor(this.currentScissorState.x, this.currentScissorState.y, this.currentScissorState.width, this.currentScissorState.height);
+        }
 
         for (var index = 0; index < childCount; ++index)
         {
@@ -509,8 +524,34 @@ var WebGLRenderer = new Class({
                 continue;
             }
 
+            if (child.blendMode !== this.currentBlendMode)
+            {
+                this.setBlendMode(child.blendMode);
+            }
+
+            if (child.mask)
+            {
+                child.mask.preRenderWebGL(this, child, camera);
+            }
+
             child.renderWebGL(this, child, interpolationPercentage, camera);
 
+            if (child.mask)
+            {
+                child.mask.postRenderWebGL(this, child);
+            }
+            
+            pipeline = this.currentPipeline;
+
+            if (pipeline && pipeline.shouldFlush())
+            {
+                pipeline.flush();
+            }
+        }
+
+        if (scissorEnabled)
+        {
+            gl.disable(gl.SCISSOR_TEST);
         }
     },
 
