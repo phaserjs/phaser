@@ -17,11 +17,13 @@ var WebGLPipeline = new Class({
         this.vertexCapacity = config.vertexCapacity;
         this.renderer = config.renderer;
         this.vertexData = new ArrayBuffer(config.vertexCapacity * config.vertexSize);
-        this.vertexBuffer = renderer.createVertexBuffer(this.vertexData.byteLength, gl.STREAM_DRAW);
-        this.program = renderer.createProgram(config.shader.vert, config.shader.frag);
+        this.vertexBuffer = this.renderer.createVertexBuffer(this.vertexData.byteLength, this.gl.STREAM_DRAW);
+        this.program = this.renderer.createProgram(config.shader.vert, config.shader.frag);
         this.attributes = config.attributes;
         this.vertexSize = config.vertexSize;
         this.topology = config.topology;
+        this.currentProgram = this.program;
+        this.bytes = new Uint8Array(this.vertexData);
     },
 
     shouldFlush: function ()
@@ -64,6 +66,8 @@ var WebGLPipeline = new Class({
             }
         }
 
+        this.currentProgram = program;
+
         return this;
     },
 
@@ -74,10 +78,11 @@ var WebGLPipeline = new Class({
         var vertexBuffer = this.vertexBuffer;
         var vertexData = this.vertexData;
         var topology = this.topology;
+        var vertexSize = this.vertexSize;
 
         if (vertexCount === 0) return;
 
-        gl.bufferSubData(gl.ARRAY_BUFFER, 0, vertexData);
+        gl.bufferSubData(gl.ARRAY_BUFFER, 0, this.bytes.subarray(0, vertexCount * vertexSize));
         gl.drawArrays(topology, 0, vertexCount);
 
         this.vertexCount = 0;
@@ -95,72 +100,6 @@ var WebGLPipeline = new Class({
         this.program = null;
         this.vertexBuffer = null;
 
-        return this;
-    },
-
-    setFloat1: function (name, x)
-    {
-        this.gl.uniform1f(this.gl.getUniformLocation(this.program, name), x);
-        return this;
-    },
-
-    setFloat2: function (name, x, y)
-    {
-        this.gl.uniform2f(this.gl.getUniformLocation(this.program, name), x, y);
-        return this;
-    },
-
-    setFloat3: function (name, x, y, z)
-    {
-        this.gl.uniform3f(this.gl.getUniformLocation(this.program, name), x, y, z);
-        return this;
-    },
-
-    setFloat4: function (name, x, y, z, w)
-    {
-        this.gl.uniform4f(this.gl.getUniformLocation(this.program, name), x, y, z, w);
-        return this;
-    },
-
-    setInt1: function (name, x)
-    {
-        this.gl.uniform1i(this.gl.getUniformLocation(this.program, name), x);
-        return this;
-    },
-
-    setInt2: function (name, x, y)
-    {
-        this.gl.uniform2i(this.gl.getUniformLocation(this.program, name), x, y);
-        return this;
-    },
-
-    setInt3: function (name, x, y, z)
-    {
-        this.gl.uniform3i(this.gl.getUniformLocation(this.program, name), x, y, z);
-        return this;
-    },
-
-    setInt4: function (name, x, y, z, w)
-    {
-        this.gl.uniform4i(this.gl.getUniformLocation(this.program, name), x, y, z, w);
-        return this;
-    },
-
-    setMatrix2: function (name, transpose, matrix)
-    {
-        this.gl.uniformMatrix2fv(this.gl.getUniformLocation(this.program, name), transpose, matrix);
-        return this;
-    },
-
-    setMatrix3: function (name, transpose, matrix)
-    {
-        this.gl.uniformMatrix2fv(this.gl.getUniformLocation(this.program, name), transpose, matrix);
-        return this;
-    },
-
-    setMatrix4: function (name, transpose, matrix)
-    {
-        this.gl.uniformMatrix2fv(this.gl.getUniformLocation(this.program, name), transpose, matrix);
         return this;
     }
 

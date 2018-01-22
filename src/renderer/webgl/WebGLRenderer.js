@@ -3,6 +3,9 @@ var CONST = require('../../const');
 var WebGLSnapshot = require('../snapshot/WebGLSnapshot');
 var IsSizePowerOfTwo = require('../../math/pow2/IsSizePowerOfTwo');
 
+// Default Pipelines
+var BlitterPipeline = require('./pipelines/BlitterPipeline');
+
 var WebGLRenderer = new Class({
 
     initialize:
@@ -51,9 +54,10 @@ var WebGLRenderer = new Class({
         this.currentTextures = new Array(16);
         this.currentFramebuffer = null;
         this.currentPipeline = null;
+        this.currentProgram = null;
         this.currentVertexBuffer = null;
         this.currentIndexBuffer = null;
-        this.currentBlendMode = CONST.BlendModes.NORMAL;
+        this.currentBlendMode = Infinity;
         this.currentScissorState = { enabled: false, x: 0, y: 0, w: 0, h: 0 };
 
         // Setup context lost and restore event listeners
@@ -87,6 +91,8 @@ var WebGLRenderer = new Class({
             throw new Error('This browser does not support WebGL. Try using the Canvas pipeline.');
         }
 
+        this.gl = gl;
+
         // Load supported extensions
         this.supportedExtensions = gl.getSupportedExtensions();
 
@@ -106,6 +112,8 @@ var WebGLRenderer = new Class({
         // Clear previous pipelines and reload default ones
         this.pipelines = {};
 
+        this.addPipeline('BlitterPipeline', new BlitterPipeline(this.game, gl, this));
+
         this.setBlendMode(CONST.BlendModes.NORMAL);
         this.resize(this.width, this.height, this.game.config.resolution);
     
@@ -115,7 +123,7 @@ var WebGLRenderer = new Class({
     resize: function (width, height, resolution)
     {
         var gl = this.gl;
-        var piplines = this.pipelines;
+        var pipelines = this.pipelines;
 
         this.width = width * resolution;
         this.height = height * resolution;
@@ -134,7 +142,7 @@ var WebGLRenderer = new Class({
         // Update all registered pipelines
         for (var pipelineName in pipelines)
         {
-            pipeline[pipelineName].resize(width, height, resolution);
+            pipelines[pipelineName].resize(width, height, resolution);
         }
 
         return this;
@@ -194,14 +202,14 @@ var WebGLRenderer = new Class({
         return this;
     },
 
-    setPipeline: function (pipelineName)
+    setPipeline: function (pipelineName, overrideProgram)
     {
         var pipeline = this.getPipeline(pipelineName);
 
         if (this.currentPipeline !== pipeline)
         {
             this.currentPipeline = pipeline;
-            this.currentPipeline.bind();
+            this.currentPipeline.bind(overrideProgram);
         }
 
         return pipeline;
@@ -264,6 +272,18 @@ var WebGLRenderer = new Class({
         return this;
     },
 
+    setProgram: function (program)
+    {
+        var gl = this.gl;
+
+        if (program !== this.currentProgram)
+        {
+            gl.useProgram(program);
+        }
+
+        return this;
+    },
+
     setVertexBuffer: function (vertexBuffer)
     {
         var gl = this.gl;
@@ -305,11 +325,11 @@ var WebGLRenderer = new Class({
 
         if (!source.glTexture)
         {
-            if (source.scaleMode === ScaleModes.LINEAR)
+            if (source.scaleMode === CONST.ScaleModes.LINEAR)
             {
                 filter = gl.LINEAR;
             }
-            else if (source.scaleMode === ScaleModes.NEAREST || this.game.config.pixelArt)
+            else if (source.scaleMode === CONST.ScaleModes.NEAREST || this.game.config.pixelArt)
             {
                 filter = gl.NEAREST;
             }
@@ -472,6 +492,26 @@ var WebGLRenderer = new Class({
     {
         if (this.contextLost) return;
 
+        var gl = this.gl;
+        var list = children.list;
+        var childCount = list.length;
+        var color = this.game.config.backgroundColor;
+
+        gl.clearColor(color.redGL, color.greenGL, color.blueGL, color.alphaGL);
+        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT | gl.STENCIL_BUFFER_BIT);
+
+        for (var index = 0; index < childCount; ++index)
+        {
+            var child = list[index];
+
+            if (!child.willRender())
+            {
+                continue;
+            }
+
+            child.renderWebGL(this, child, interpolationPercentage, camera);
+
+        }
     },
 
     postRender: function ()
@@ -534,6 +574,83 @@ var WebGLRenderer = new Class({
 
         this.setTexture2D(null, 0);
 
+        return this;
+    },
+
+    setFloat1: function (program, name, x)
+    {
+        this.setProgram(program);
+        this.gl.uniform1f(this.gl.getUniformLocation(program, name), x);
+        return this;
+    },
+
+    setFloat2: function (program, name, x, y)
+    {
+        this.setProgram(program);
+        this.gl.uniform2f(this.gl.getUniformLocation(program, name), x, y);
+        return this;
+    },
+
+    setFloat3: function (program, name, x, y, z)
+    {
+        this.setProgram(program);
+        this.gl.uniform3f(this.gl.getUniformLocation(program, name), x, y, z);
+        return this;
+    },
+
+    setFloat4: function (program, name, x, y, z, w)
+    {
+        this.setProgram(program);
+        this.gl.uniform4f(this.gl.getUniformLocation(program, name), x, y, z, w);
+        return this;
+    },
+
+    setInt1: function (program, name, x)
+    {
+        this.setProgram(program);
+        this.gl.uniform1i(this.gl.getUniformLocation(program, name), x);
+        return this;
+    },
+
+    setInt2: function (program, name, x, y)
+    {
+        this.setProgram(program);
+        this.gl.uniform2i(this.gl.getUniformLocation(program, name), x, y);
+        return this;
+    },
+
+    setInt3: function (program, name, x, y, z)
+    {
+        this.setProgram(program);
+        this.gl.uniform3i(this.gl.getUniformLocation(program, name), x, y, z);
+        return this;
+    },
+
+    setInt4: function (program, name, x, y, z, w)
+    {
+        this.setProgram(program);
+        this.gl.uniform4i(this.gl.getUniformLocation(program, name), x, y, z, w);
+        return this;
+    },
+
+    setMatrix2: function (program, name, transpose, matrix)
+    {
+        this.setProgram(program);
+        this.gl.uniformMatrix2fv(this.gl.getUniformLocation(program, name), transpose, matrix);
+        return this;
+    },
+
+    setMatrix3: function (program, name, transpose, matrix)
+    {
+        this.setProgram(program);
+        this.gl.uniformMatrix3fv(this.gl.getUniformLocation(program, name), transpose, matrix);
+        return this;
+    },
+
+    setMatrix4: function (program, name, transpose, matrix)
+    {
+        this.setProgram(program);
+        this.gl.uniformMatrix4fv(this.gl.getUniformLocation(program, name), transpose, matrix);
         return this;
     }
 

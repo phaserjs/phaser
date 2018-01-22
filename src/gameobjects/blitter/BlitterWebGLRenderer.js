@@ -7,7 +7,7 @@ var BlitterWebGLRenderer = function (renderer, gameObject, interpolationPercenta
         return;
     }
 
-    renderer.blitterBatch.drawBlitter(gameObject, camera)
+    renderer.pipelines.BlitterPipeline.drawBlitter(gameObject, camera);
 };
 
 module.exports = BlitterWebGLRenderer;
