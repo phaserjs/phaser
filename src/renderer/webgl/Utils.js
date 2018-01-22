@@ -18,6 +18,27 @@ module.exports = {
         var ua = ((a * 255.0)|0) & 0xFF;
 
         return ((ua << 24) | (ub << 16) | (ug << 8) | ur) >>> 0;
+    },
+
+    getComponentCount: function (attributes)
+    {
+        var count = 0;
+
+        for (var index = 0; index < attributes.length; ++index)
+        {
+            var element = attributes[index];
+            
+            if (element.type === WebGLRenderingContext.FLOAT)
+            {
+                count += element.size;
+            }
+            else
+            {
+                count += 1; // We'll force any other type to be 32 bit. for now
+            }
+        }
+
+        return count;
     }
 
 };

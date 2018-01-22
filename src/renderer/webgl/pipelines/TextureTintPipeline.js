@@ -3,21 +3,22 @@ var ShaderSource = require('../shaders/TextureTintShader');
 var WebGLPipeline = require('../WebGLPipeline');
 var Utils = require('../Utils');
 
-var BlitterPipeline = new Class({
+var TextureTintPipeline = new Class({
 
     Extends: WebGLPipeline,
 
     initialize:
 
-    function BlitterPipeline(game, gl, renderer)
+    function TextureTintPipeline(game, gl, renderer)
     {
         WebGLPipeline.call(this, {
-            name: 'BlitterPipeline',
+            name: 'TextureTintPipeline',
             game: game,
             gl: gl,
             renderer: renderer,
             topology: gl.TRIANGLES,
-            shader: ShaderSource,
+            vertShader: ShaderSource.vert,
+            fragShader: ShaderSource.frag,
             vertexCapacity: 12000,
 
             vertexSize: 
@@ -91,7 +92,7 @@ var BlitterPipeline = new Class({
 
     drawBlitter: function (blitter, camera)
     {
-        this.renderer.setPipeline('BlitterPipeline', blitter.shader);
+        this.renderer.setPipeline('TextureTintPipeline', blitter.shader);
 
         var vertexViewF32 = this.vertexViewF32;
         var vertexViewU32 = this.vertexViewU32;
@@ -192,4 +193,4 @@ var BlitterPipeline = new Class({
     }
 });
 
-module.exports = BlitterPipeline;
+module.exports = TextureTintPipeline;

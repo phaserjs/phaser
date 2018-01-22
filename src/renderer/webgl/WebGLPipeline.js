@@ -1,4 +1,5 @@
 var Class = require('../../utils/Class');
+var Utils = require('./Utils');
 
 var WebGLPipeline = new Class({
 
@@ -18,12 +19,14 @@ var WebGLPipeline = new Class({
         this.renderer = config.renderer;
         this.vertexData = new ArrayBuffer(config.vertexCapacity * config.vertexSize);
         this.vertexBuffer = this.renderer.createVertexBuffer(this.vertexData.byteLength, this.gl.STREAM_DRAW);
-        this.program = this.renderer.createProgram(config.shader.vert, config.shader.frag);
+        this.program = this.renderer.createProgram(config.vertShader, config.fragShader);
         this.attributes = config.attributes;
         this.vertexSize = config.vertexSize;
         this.topology = config.topology;
         this.currentProgram = this.program;
         this.bytes = new Uint8Array(this.vertexData);
+        // This will store the amount of components of 32 bit length
+        this.vertexComponentCount = Utils.getComponentCount(config.attributes.length);
     },
 
     shouldFlush: function ()

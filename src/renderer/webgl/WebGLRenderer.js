@@ -4,7 +4,8 @@ var WebGLSnapshot = require('../snapshot/WebGLSnapshot');
 var IsSizePowerOfTwo = require('../../math/pow2/IsSizePowerOfTwo');
 
 // Default Pipelines
-var BlitterPipeline = require('./pipelines/BlitterPipeline');
+var TextureTintPipeline = require('./pipelines/TextureTintPipeline');
+var FlatTintPipeline = require('./pipelines/FlatTintPipeline');
 
 var WebGLRenderer = new Class({
 
@@ -112,7 +113,8 @@ var WebGLRenderer = new Class({
         // Clear previous pipelines and reload default ones
         this.pipelines = {};
 
-        this.addPipeline('BlitterPipeline', new BlitterPipeline(this.game, gl, this));
+        this.addPipeline('TextureTintPipeline', new TextureTintPipeline(this.game, gl, this));
+        this.addPipeline('FlatTintPipeline', new FlatTintPipeline(this.game, gl, this));
 
         this.setBlendMode(CONST.BlendModes.NORMAL);
         this.resize(this.width, this.height, this.game.config.resolution);
@@ -486,6 +488,12 @@ var WebGLRenderer = new Class({
     {
         if (this.contextLost) return;
 
+        var gl = this.gl;
+        var color = this.game.config.backgroundColor;
+
+        // Bind custom framebuffer here
+        gl.clearColor(color.redGL, color.greenGL, color.blueGL, color.alphaGL);
+        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT | gl.STENCIL_BUFFER_BIT);
     },
 
     render: function (scene, children, interpolationPercentage, camera)
@@ -495,12 +503,8 @@ var WebGLRenderer = new Class({
         var gl = this.gl;
         var list = children.list;
         var childCount = list.length;
-        var color = this.game.config.backgroundColor;
         var scissorEnabled = (camera.x !== 0 || camera.y !== 0 || camera.width !== gl.canvas.width || camera.height !== gl.canvas.height);
         var pipeline = null;
-
-        gl.clearColor(color.redGL, color.greenGL, color.blueGL, color.alphaGL);
-        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT | gl.STENCIL_BUFFER_BIT);
 
         this.currentScissorState.enabled = scissorEnabled;
 
@@ -540,7 +544,7 @@ var WebGLRenderer = new Class({
             {
                 child.mask.postRenderWebGL(this, child);
             }
-            
+
             pipeline = this.currentPipeline;
 
             if (pipeline && pipeline.shouldFlush())
@@ -558,6 +562,8 @@ var WebGLRenderer = new Class({
     postRender: function ()
     {
         if (this.contextLost) return;
+
+        // Unbind custom framebuffer here
 
         if (this.snapshotState.callback)
         {
