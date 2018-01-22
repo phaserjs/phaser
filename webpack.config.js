@@ -25,7 +25,7 @@ module.exports = {
     module: {
         rules: [
           {
-            test: /\.txt$/,
+            test: /\.vert$/,
             use: 'raw-loader'
           }
         ]
