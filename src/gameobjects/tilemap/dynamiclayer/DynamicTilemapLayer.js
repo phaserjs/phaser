@@ -14,7 +14,6 @@ var DynamicTilemapLayer = new Class({
         Components.Flip,
         Components.GetBounds,
         Components.Origin,
-        Components.RenderTarget,
         Components.ScaleMode,
         Components.Size,
         Components.Transform,

@@ -12,7 +12,6 @@ var DynamicBitmapText = new Class({
         Components.Alpha,
         Components.BlendMode,
         Components.Origin,
-        Components.RenderTarget,
         Components.Texture,
         Components.Tint,
         Components.Transform,

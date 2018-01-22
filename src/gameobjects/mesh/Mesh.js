@@ -14,7 +14,6 @@ var Mesh = new Class({
         Components.Flip,
         Components.GetBounds,
         Components.Origin,
-        Components.RenderTarget,
         Components.ScaleMode,
         Components.Size,
         Components.Texture,

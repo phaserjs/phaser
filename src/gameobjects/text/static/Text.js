@@ -19,7 +19,6 @@ var Text = new Class({
         Components.Flip,
         Components.GetBounds,
         Components.Origin,
-        Components.RenderTarget,
         Components.ScaleMode,
         Components.ScrollFactor,
         Components.Tint,

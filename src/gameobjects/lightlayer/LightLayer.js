@@ -23,7 +23,6 @@ var LightLayer = new Class({
         Components.Alpha,
         Components.BlendMode,
         Components.Origin,
-        Components.RenderTarget,
         Components.ScrollFactor,
         Components.Visible,
         Render
