@@ -22,6 +22,15 @@ module.exports = {
         umdNamedDefine: true,
     },
 
+    module: {
+        rules: [
+          {
+            test: /\.txt$/,
+            use: 'raw-loader'
+          }
+        ]
+    },
+
     plugins: [
 
         new webpack.DefinePlugin({
