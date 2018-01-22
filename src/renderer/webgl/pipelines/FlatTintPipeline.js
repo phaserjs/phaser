@@ -2,7 +2,8 @@ var Class = require('../../../utils/Class');
 var WebGLPipeline = require('../WebGLPipeline');
 var Utils = require('../Utils');
 var Earcut = require('../../../geom/polygon/Earcut');
-var ShaderSource = require('../shaders/FlatTintShader');
+var ShaderSourceVS = require('../shaders/FlatTint.vert'); 
+var ShaderSourceFS = require('../shaders/FlatTint.frag'); 
 
 var FlatTintPipeline = new Class({
 
@@ -18,8 +19,8 @@ var FlatTintPipeline = new Class({
             gl: gl,
             renderer: renderer,
             topology: gl.TRIANGLES,
-            vertShader: ShaderSource.vert,
-            fragShader: ShaderSource.frag,
+            vertShader: ShaderSourceVS,
+            fragShader: ShaderSourceFS,
             vertexCapacity: 12000,
 
             vertexSize: 

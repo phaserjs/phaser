@@ -1,7 +1,8 @@
 var Class = require('../../../utils/Class');
-var ShaderSource = require('../shaders/TextureTintShader');
 var WebGLPipeline = require('../WebGLPipeline');
 var Utils = require('../Utils');
+var ShaderSourceVS = require('../shaders/TextureTint.vert'); 
+var ShaderSourceFS = require('../shaders/TextureTint.frag'); 
 
 var TextureTintPipeline = new Class({
 
@@ -17,8 +18,8 @@ var TextureTintPipeline = new Class({
             gl: gl,
             renderer: renderer,
             topology: gl.TRIANGLES,
-            vertShader: ShaderSource.vert,
-            fragShader: ShaderSource.frag,
+            vertShader: ShaderSourceVS,
+            fragShader: ShaderSourceFS,
             vertexCapacity: 12000,
 
             vertexSize: 
