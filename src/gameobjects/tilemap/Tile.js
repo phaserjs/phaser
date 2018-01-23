@@ -230,6 +230,17 @@ var Tile = new Class({
     },
 
     /**
+     * The collision group for this Tile, defined within the Tileset. This returns a reference to
+     * the collision group stored within the Tileset, so any modification of the returned object
+     * will impact all tiles that have the same index as this tile.
+     * @returns {object|null} tileset
+     */
+    getCollisionGroup: function ()
+    {
+        return this.tileset ? this.tileset.getTileCollisionGroup(this.index) : null;
+    },
+
+    /**
      * Clean up memory.
      */
     destroy: function ()
