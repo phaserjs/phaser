@@ -204,13 +204,11 @@ var WebGLRenderer = new Class({
         return this;
     },
 
-    setPipeline: function (pipelineName, overrideProgram)
+    setPipeline: function (pipelineInstance, overrideProgram)
     {
-        var pipeline = this.getPipeline(pipelineName);
-
-        if (this.currentPipeline !== pipeline)
+        if (this.currentPipeline !== pipelineInstance)
         {
-            this.currentPipeline = pipeline;
+            this.currentPipeline = pipelineInstance;
             this.currentPipeline.bind(overrideProgram);
         }
 
