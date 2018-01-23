@@ -2,10 +2,10 @@ var SetTileCollision = require('./SetTileCollision');
 var CalculateFacesWithin = require('./CalculateFacesWithin');
 
 /**
- * Sets collision on the tiles within a layer by checking if the tile has a collision group
- * (typically defined in Tiled within the tileset collision editor). If any collision objects are
- * found, the tile's colliding information will be set. The `collides` parameter controls if
- * collision will be enabled (true) or disabled (false).
+ * Sets collision on the tiles within a layer by checking each tile's collision group data
+ * (typically defined in Tiled within the tileset collision editor). If any objects are found within
+ * a tile's collision group, the tile's colliding information will be set. The `collides` parameter
+ * controls if collision will be enabled (true) or disabled (false).
  *
  * @param {boolean} [collides=true] - If true it will enable collision. If false it will clear
  * collision.
