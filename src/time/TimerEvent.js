@@ -81,7 +81,7 @@ var TimerEvent = new Class({
 
         this.paused = GetFastValue(config, 'paused', false);
 
-        this.elapsed = 0;
+        this.elapsed = this.startAt;
         this.hasDispatched = false;
         this.repeatCount = (this.repeat === -1 || this.loop) ? 999999999999 : this.repeat;
 
