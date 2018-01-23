@@ -510,8 +510,35 @@ var Tile = new Class({
         {
             return this.pixelY + this.height / 2;
         }
-    }
+    },
 
+    /**
+     * The tileset that contains this Tile. This will only return null if accessed from a LayerData
+     * instance before the tile is placed within a StaticTilemapLayer or DynamicTilemapLayer.
+     * @property {Tileset|null} tileset
+     * @readonly
+     */
+    tileset: {
+        get: function ()
+        {
+            var tilemapLayer = this.tilemapLayer;
+            return tilemapLayer ? tilemapLayer.tileset : null;
+        }
+    },
+
+    /**
+     * The tilemap layer that contains this Tile. This will only return null if accessed from a
+     * LayerData instance before the tile is placed within a StaticTilemapLayer or
+     * DynamicTilemapLayer.
+     * @property {StaticTilemapLayer|DynamicTilemapLayer|null} tilemapLayer
+     * @readonly
+     */
+    tilemapLayer: {
+        get: function ()
+        {
+            return this.layer.tilemapLayer;
+        }
+    }
 });
 
 module.exports = Tile;
