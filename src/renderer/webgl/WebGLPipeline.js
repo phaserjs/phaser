@@ -26,7 +26,7 @@ var WebGLPipeline = new Class({
         this.currentProgram = this.program;
         this.bytes = new Uint8Array(this.vertexData);
         // This will store the amount of components of 32 bit length
-        this.vertexComponentCount = Utils.getComponentCount(config.attributes.length);
+        this.vertexComponentCount = Utils.getComponentCount(config.attributes);
     },
 
     shouldFlush: function ()

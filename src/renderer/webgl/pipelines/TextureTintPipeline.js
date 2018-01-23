@@ -205,7 +205,6 @@ var TextureTintPipeline = new Class({
         var vertexViewF32 = this.vertexViewF32;
         var vertexViewU32 = this.vertexViewU32;
         var renderer = this.renderer;
-        var vertexOffset = this.vertexCount * this.vertexComponentCount;
         var cameraMatrix = camera.matrix.matrix;
         var a = cameraMatrix[0];
         var b = cameraMatrix[1];
@@ -270,8 +269,11 @@ var TextureTintPipeline = new Class({
         var tint1 = getTint(tintTR, alphaTR);
         var tint2 = getTint(tintBL, alphaBL);
         var tint3 = getTint(tintBR, alphaBR);
-    
+        var vertexOffset = 0;
+
         renderer.setTexture2D(texture, 0);
+
+        vertexOffset = this.vertexCount * this.vertexComponentCount;
 
         vertexViewF32[vertexOffset + 0] = tx0;
         vertexViewF32[vertexOffset + 1] = ty0;
@@ -309,10 +311,11 @@ var TextureTintPipeline = new Class({
 
     batchMesh: function (mesh, camera)
     {
-        this.renderer.setPipeline(this);
         var vertices = mesh.vertices;
         var length = vertices.length;
         var vertexCount = (length / 2)|0;
+
+        this.renderer.setPipeline(this);
 
         if (this.vertexCount + vertexCount > this.vertexCapacity)
         {
@@ -326,7 +329,6 @@ var TextureTintPipeline = new Class({
         var vertexViewF32 = this.vertexViewF32;
         var vertexViewU32 = this.vertexViewU32;
         var renderer = this.renderer;
-        var vertexOffset = this.vertexCount * this.vertexComponentCount;
         var cameraMatrix = camera.matrix.matrix;
         var a = cameraMatrix[0];
         var b = cameraMatrix[1];
@@ -361,8 +363,10 @@ var TextureTintPipeline = new Class({
         var mvd = src * cmb + srd * cmd;
         var mve = sre * cma + srf * cmc + cme;
         var mvf = sre * cmb + srf * cmd + cmf;
-    
+        var vertexOffset = 0;
+        
         renderer.setTexture2D(texture, 0);
+        vertexOffset = this.vertexCount * this.vertexComponentCount;
 
         for (var index = 0, index0 = 0; index < length; index += 2)
         {
