@@ -80,7 +80,7 @@ var Tileset = new Class({
 
         /**
         * Tileset-specific data per tile that are typically defined in the Tiled editor, e.g. within
-        * the Tilset collision editor. This is where collision objects and terrain are stored.
+        * the Tileset collision editor. This is where collision objects and terrain are stored.
         * @property {object} tileData
         */
         this.tileData = tileData;
