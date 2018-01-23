@@ -120,7 +120,7 @@ var Clock = new Class({
             return;
         }
 
-        delta * this.timeScale;
+        delta *= this.timeScale;
 
         for (var i = 0; i < this._active.length; i++)
         {

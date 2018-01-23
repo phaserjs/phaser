@@ -72,14 +72,15 @@ var Tileset = new Class({
         this.tileSpacing = tileSpacing;
 
         /**
-        * Tileset-specific properties per tile that are typically defined in the Tiled editor.
+        * Tileset-specific properties per tile that are typically defined in the Tiled editor in the
+        * Tileset editor.
         * @property {object} tileProperties
         */
         this.tileProperties = tileProperties;
 
         /**
-        * Tileset-specific data per tile that are typically defined in the Tiled editor. This is
-        * where collision objects and terrain are stored.
+        * Tileset-specific data per tile that are typically defined in the Tiled editor, e.g. within
+        * the Tileset collision editor. This is where collision objects and terrain are stored.
         * @property {object} tileData
         */
         this.tileData = tileData;
@@ -123,20 +124,21 @@ var Tileset = new Class({
 
     /**
      * Get a tile's properties that are stored in the Tileset. Returns null if tile index is not
-     * contained in this Tileset.
+     * contained in this Tileset. This is typically defined in Tiled under the Tileset editor.
      *
      * @param {integer} tileIndex - The unique id of the tile across all tilesets in the map.
      * @returns {object|undefined|null}
      */
-    getTileProperty: function (tileIndex)
+    getTileProperties: function (tileIndex)
     {
         if (!this.containsTileIndex(tileIndex)) { return null; }
         return this.tileProperties[tileIndex - this.firstgid];
     },
 
     /**
-     * Get a tile's data that is stored in the Tileset. Returns null if tile index is not
-     * contained in this Tileset.
+     * Get a tile's data that is stored in the Tileset. Returns null if tile index is not contained
+     * in this Tileset. This is typically defined in Tiled and will contain both Tileset collision
+     * info and terrain mapping.
      *
      * @param {integer} tileIndex - The unique id of the tile across all tilesets in the map.
      * @returns {object|undefined|null}
@@ -148,8 +150,8 @@ var Tileset = new Class({
     },
 
     /**
-     * Get a tile's data that is stored in the Tileset. Returns null if tile index is not
-     * contained in this Tileset.
+     * Get a tile's collision group that is stored in the Tileset. Returns null if tile index is not
+     * contained in this Tileset. This is typically defined within Tiled's tileset collision editor.
      *
      * @param {integer} tileIndex - The unique id of the tile across all tilesets in the map.
      * @returns {object|null}
