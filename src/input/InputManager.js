@@ -1,13 +1,14 @@
-//  Phaser.Input.InputManager
-
 var Class = require('../utils/Class');
 var EventEmitter = require('eventemitter3');
 var Gamepad = require('./gamepad/GamepadManager');
 var Keyboard = require('./keyboard/KeyboardManager');
 var Mouse = require('./mouse/MouseManager');
 var Pointer = require('./Pointer');
+var Rectangle = require('../geom/rectangle/Rectangle');
 var Touch = require('./touch/TouchManager');
 var TransformXY = require('../math/TransformXY');
+
+//  Phaser.Input.InputManager
 
 var InputManager = new Class({
 
@@ -46,7 +47,7 @@ var InputManager = new Class({
 
         this.ignoreEvents = false;
 
-        this.bounds;
+        this.bounds = new Rectangle();
 
         this._tempPoint = { x: 0, y: 0 };
         this._tempHitTest = [];
@@ -72,22 +73,16 @@ var InputManager = new Class({
 
     updateBounds: function ()
     {
-        var bounds = this.canvas.getBoundingClientRect();
+        var clientRect = this.canvas.getBoundingClientRect();
+        var bounds = this.bounds;
 
-        if (window.scrollX)
-        {
-            bounds.left += window.scrollX;
-        }
-
-        if (window.scrollY)
-        {
-            bounds.top += window.scrollY;
-        }
-
-        this.bounds = bounds;
+        bounds.left = clientRect.left + window.pageXOffset;
+        bounds.top = clientRect.top + window.pageYOffset;
+        bounds.width = clientRect.width;
+        bounds.height = clientRect.height;
     },
 
-    update: function (time, delta)
+    update: function (time)
     {
         this.keyboard.update();
         this.gamepad.update();

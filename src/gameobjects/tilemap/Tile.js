@@ -182,6 +182,12 @@ var Tile = new Class({
          * @default
          */
         this.tint = 0xffffff;
+
+        /**
+         * An empty object where physics-engine specific information (e.g. bodies) may be stored.
+         * @property {object} physics
+         */
+        this.physics = {};
     },
 
     /**
@@ -221,6 +227,17 @@ var Tile = new Class({
         this.collisionCallbackContext = tile.collisionCallbackContext;
 
         return this;
+    },
+
+    /**
+     * The collision group for this Tile, defined within the Tileset. This returns a reference to
+     * the collision group stored within the Tileset, so any modification of the returned object
+     * will impact all tiles that have the same index as this tile.
+     * @returns {object|null} tileset
+     */
+    getCollisionGroup: function ()
+    {
+        return this.tileset ? this.tileset.getTileCollisionGroup(this.index) : null;
     },
 
     /**
@@ -504,8 +521,35 @@ var Tile = new Class({
         {
             return this.pixelY + this.height / 2;
         }
-    }
+    },
 
+    /**
+     * The tileset that contains this Tile. This will only return null if accessed from a LayerData
+     * instance before the tile is placed within a StaticTilemapLayer or DynamicTilemapLayer.
+     * @property {Tileset|null} tileset
+     * @readonly
+     */
+    tileset: {
+        get: function ()
+        {
+            var tilemapLayer = this.tilemapLayer;
+            return tilemapLayer ? tilemapLayer.tileset : null;
+        }
+    },
+
+    /**
+     * The tilemap layer that contains this Tile. This will only return null if accessed from a
+     * LayerData instance before the tile is placed within a StaticTilemapLayer or
+     * DynamicTilemapLayer.
+     * @property {StaticTilemapLayer|DynamicTilemapLayer|null} tilemapLayer
+     * @readonly
+     */
+    tilemapLayer: {
+        get: function ()
+        {
+            return this.layer.tilemapLayer;
+        }
+    }
 });
 
 module.exports = Tile;

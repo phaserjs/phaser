@@ -1,7 +1,7 @@
 {
   "//": "npm publish --tag beta",
   "name": "phaser",
-  "version": "3.0.0-beta.18",
+  "version": "3.0.0-beta.19",
   "release": "Shadow Coast",
   "description": "A fast, free and fun HTML5 Game Framework for Desktop and Mobile web browsers.",
   "author": "Richard Davey <rdavey@gmail.com> (http://www.photonstorm.com)",
@@ -38,6 +38,7 @@
     "eslint": "^4.13.1",
     "fs-extra": "^5.0.0",
     "node-sloc": "^0.1.10",
+    "raw-loader": "^0.5.1",
     "uglifyjs-webpack-plugin": "^1.1.2",
     "uuid": "^3.1.0",
     "webpack": "^3.10.0",

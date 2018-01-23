@@ -1006,11 +1006,37 @@ var Tilemap = new Class({
      *
      * @return {this|null} Returns this, or null if the layer given was invalid.
      */
+    setCollisionByProperty: function (properties, collides, recalculateFaces, layer)
+    {
+        layer = this.getLayer(layer);
+        if (layer === null) { return this; }
+        TilemapComponents.SetCollisionByProperty(properties, collides, recalculateFaces, layer);
+        return this;
+    },
+
+    /**
+     * See component documentation. If no layer specified, the map's current layer is used.
+     *
+     * @return {this|null} Returns this, or null if the layer given was invalid.
+     */
     setCollisionByExclusion: function (indexes, collides, recalculateFaces, layer)
     {
         layer = this.getLayer(layer);
         if (layer === null) { return this; }
         TilemapComponents.SetCollisionByExclusion(indexes, collides, recalculateFaces, layer);
+        return this;
+    },
+
+    /**
+     * See component documentation. If no layer specified, the map's current layer is used.
+     *
+     * @return {this|null} Returns this, or null if the layer given was invalid.
+     */
+    setCollisionFromCollisionGroup: function (collides, recalculateFaces, layer)
+    {
+        layer = this.getLayer(layer);
+        if (layer === null) { return this; }
+        TilemapComponents.SetCollisionFromCollisionGroup(collides, recalculateFaces, layer);
         return this;
     },
 
