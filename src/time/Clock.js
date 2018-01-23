@@ -101,8 +101,6 @@ var Clock = new Class({
         {
             event = this._pendingInsertion[i];
 
-            event.elapsed = event.startAt * event.timeScale;
-
             this._active.push(event);
         }
 
