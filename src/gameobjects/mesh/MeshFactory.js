@@ -11,7 +11,7 @@ var GameObjectFactory = require('../GameObjectFactory');
 
 if (WEBGL_RENDERER)
 {
-    GameObjectFactory.register('mesh', function (x, y, vertices, uv, key, frame)
+    GameObjectFactory.register('mesh', function (x, y, vertices, uv, colors, alphas, texture, frame)
     {
         return this.displayList.add(new Mesh(this.scene, x, y, vertices, uv, key, frame));
     });

@@ -212,7 +212,7 @@ var WebGLRenderer = new Class({
             this.currentPipeline.bind(overrideProgram);
         }
 
-        return pipeline;
+        return this.currentPipeline;
     },
 
     setBlendMode: function (blendModeId)
@@ -251,6 +251,8 @@ var WebGLRenderer = new Class({
 
         if (texture !== this.currentTextures[textureUnit])
         {
+            this.flush();
+
             gl.activeTexture(gl.TEXTURE0 + textureUnit);
             gl.bindTexture(gl.TEXTURE_2D, texture);
 
@@ -266,6 +268,8 @@ var WebGLRenderer = new Class({
 
         if (framebuffer !== this.currentFramebuffer)
         {
+            this.flush();
+
             gl.bindFramebuffer(gl.FRAMEBUFFER, framebuffer);
         }
 
@@ -278,6 +282,8 @@ var WebGLRenderer = new Class({
 
         if (program !== this.currentProgram)
         {
+            this.flush();
+
             gl.useProgram(program);
         }
 
@@ -290,6 +296,8 @@ var WebGLRenderer = new Class({
 
         if (vertexBuffer !== this.currentVertexBuffer)
         {
+            this.flush();
+
             gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
         }
 
@@ -302,6 +310,8 @@ var WebGLRenderer = new Class({
 
         if (indexBuffer !== this.currentIndexBuffer)
         {
+            this.flush();
+            
             gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
         }
 
@@ -545,10 +555,11 @@ var WebGLRenderer = new Class({
 
             pipeline = this.currentPipeline;
 
-            if (pipeline && pipeline.shouldFlush())
-            {
-                pipeline.flush();
-            }
+        }
+
+        if (pipeline && pipeline.vertexCount > 0)
+        {
+            pipeline.flush();
         }
 
         if (scissorEnabled)

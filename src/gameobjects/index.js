@@ -22,7 +22,7 @@ var GameObjects = {
     //Particles: require('./particles/ParticleEmitterManager'),
     //PathFollower: require('./pathfollower/PathFollower'),
     //Sprite3D: require('./sprite3d/Sprite3D'),
-    //Sprite: require('./sprite/Sprite'),
+    Sprite: require('./sprite/Sprite'),
     //StaticTilemapLayer: require('./tilemap/staticlayer/StaticTilemapLayer'),
     //Text: require('./text/static/Text'),
     //Tile: require('./tilemap/Tile'),
@@ -42,7 +42,7 @@ var GameObjects = {
         //Image: require('./image/ImageFactory'),
         //Particles: require('./particles/ParticleManagerFactory'),
         //PathFollower: require('./pathfollower/PathFollowerFactory'),
-        //Sprite: require('./sprite/SpriteFactory'),
+        Sprite: require('./sprite/SpriteFactory'),
         //Sprite3D: require('./sprite3d/Sprite3DFactory'),
         //StaticBitmapText: require('./bitmaptext/static/BitmapTextFactory'),
         //Text: require('./text/static/TextFactory'),
@@ -59,7 +59,7 @@ var GameObjects = {
         //Group: require('./group/GroupCreator'),
         //Image: require('./image/ImageCreator'),
         //Particles: require('./particles/ParticleManagerCreator'),
-        //Sprite: require('./sprite/SpriteCreator'),
+        Sprite: require('./sprite/SpriteCreator'),
         //Sprite3D: require('./sprite3d/Sprite3DCreator'),
         //StaticBitmapText: require('./bitmaptext/static/BitmapTextCreator'),
         //Text: require('./text/static/TextCreator'),
@@ -74,17 +74,17 @@ if (WEBGL_RENDERER)
 {
     //  WebGL only Game Objects
     //GameObjects.LightLayer = require('./lightlayer/LightLayer');
-    //GameObjects.Mesh = require('./mesh/Mesh');
+    GameObjects.Mesh = require('./mesh/Mesh');
     //GameObjects.Quad = require('./quad/Quad');
 
     //GameObjects.Factories.EffectLayer = require('./effectlayer/EffectLayerFactory');
     //GameObjects.Factories.LightLayer = require('./lightlayer/LightLayerFactory');
-    //GameObjects.Factories.Mesh = require('./mesh/MeshFactory');
+    GameObjects.Factories.Mesh = require('./mesh/MeshFactory');
     //GameObjects.Factories.Quad = require('./quad/QuadFactory');
 
     //GameObjects.Creators.EffectLayer = require('./effectlayer/EffectLayerCreator');
     //GameObjects.Creators.LightLayer = require('./lightlayer/LightLayerCreator');
-    //GameObjects.Creators.Mesh = require('./mesh/MeshCreator');
+    GameObjects.Creators.Mesh = require('./mesh/MeshCreator');
     //GameObjects.Creators.Quad = require('./quad/QuadCreator');
 }
 
