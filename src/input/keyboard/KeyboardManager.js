@@ -3,6 +3,7 @@ var EventEmitter = require('eventemitter3');
 var Key = require('./keys/Key');
 var KeyCodes = require('./keys/KeyCodes');
 var KeyCombo = require('./combo/KeyCombo');
+var KeyMap = require('./keys/KeyMap');
 var ProcessKeyCombo = require('./combo/ProcessKeyCombo');
 var ProcessKeyDown = require('./keys/ProcessKeyDown');
 var ProcessKeyUp = require('./keys/ProcessKeyUp');
@@ -215,26 +216,30 @@ var KeyboardManager = new Class({
         for (var i = 0; i < len; i++)
         {
             var event = queue[i];
+            var code = event.keyCode;
 
             //  Will emit a keyboard or keyup event
             this.emit(event.type, event);
 
             if (event.type === 'keydown')
             {
-                this.emit('down_' + event.keyCode, event);
-
-                if (keys[event.keyCode])
+                if (KeyMap[code])
                 {
-                    ProcessKeyDown(keys[event.keyCode], event);
+                    this.emit('keydown_' + KeyMap[code], event);
+                }
+
+                if (keys[code])
+                {
+                    ProcessKeyDown(keys[code], event);
                 }
             }
             else
             {
-                this.emit('up_' + event.keyCode, event);
+                this.emit('keyup_' + KeyMap[code], event);
 
-                if (keys[event.keyCode])
+                if (keys[code])
                 {
-                    ProcessKeyUp(keys[event.keyCode], event);
+                    ProcessKeyUp(keys[code], event);
                 }
             }
         }

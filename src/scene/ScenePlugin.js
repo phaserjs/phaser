@@ -1,4 +1,5 @@
 var Class = require('../utils/Class');
+var CONST = require('./const');
 var PluginManager = require('../plugins/PluginManager');
 
 //  A proxy class to the Global Scene Manager
@@ -44,8 +45,16 @@ var ScenePlugin = new Class({
 
         if (key !== this.key)
         {
-            this.manager.stop(this.key);
-            this.manager.start(key);
+            if (this.settings.status !== CONST.RUNNING)
+            {
+                this.manager.queueOp('stop', this.key);
+                this.manager.queueOp('start', key);
+            }
+            else
+            {
+                this.manager.stop(this.key);
+                this.manager.start(key);
+            }
         }
 
         return this;
@@ -64,7 +73,14 @@ var ScenePlugin = new Class({
     {
         if (key && key !== this.key)
         {
-            this.manager.start(key);
+            if (this.settings.status !== CONST.RUNNING)
+            {
+                this.manager.queueOp('start', key);
+            }
+            else
+            {
+                this.manager.start(key);
+            }
         }
 
         return this;
@@ -115,7 +131,14 @@ var ScenePlugin = new Class({
     {
         if (key !== this.key)
         {
-            this.manager.switch(this.key, key);
+            if (this.settings.status !== CONST.RUNNING)
+            {
+                this.manager.queueOp('switch', this.key, key);
+            }
+            else
+            {
+                this.manager.switch(this.key, key);
+            }
         }
 
         return this;

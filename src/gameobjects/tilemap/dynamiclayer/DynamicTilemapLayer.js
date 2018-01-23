@@ -387,9 +387,31 @@ var DynamicTilemapLayer = new Class({
      *
      * @return {this}
      */
+    setCollisionByProperty: function (properties, collides, recalculateFaces)
+    {
+        TilemapComponents.SetCollisionByProperty(properties, collides, recalculateFaces, this.layer);
+        return this;
+    },
+
+    /**
+     * See component documentation.
+     *
+     * @return {this}
+     */
     setCollisionByExclusion: function (indexes, collides, recalculateFaces)
     {
         TilemapComponents.SetCollisionByExclusion(indexes, collides, recalculateFaces, this.layer);
+        return this;
+    },
+
+    /**
+     * See component documentation.
+     *
+     * @return {this}
+     */
+    setCollisionFromCollisionGroup: function (collides, recalculateFaces)
+    {
+        TilemapComponents.SetCollisionFromCollisionGroup(collides, recalculateFaces, this.layer);
         return this;
     },
 

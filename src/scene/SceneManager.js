@@ -90,25 +90,21 @@ var SceneManager = new Class({
 
                 this.start(entry);
             }
+
+            //  Clear the pending lists
+            this._start.length = 0;
+            this._pending.length = 0;
+
+            return;
         }
 
         for (i = 0; i < queueLength; i++)
         {
             entry = this._queue[i];
 
-            if (entry.op === 'swapPosition')
-            {
-                this.swapPosition(entry.keyA, entry.keyB);
-            }
-            else
-            {
-                this[entry.op](entry.key);
-            }
+            this[entry.op](entry.keyA, entry.keyB);
         }
-
-        //  Clear the pending lists
-        this._start.length = 0;
-        this._pending.length = 0;
+        
         this._queue.length = 0;
     },
 
@@ -342,9 +338,11 @@ var SceneManager = new Class({
     {
         if (scene.create)
         {
+            scene.sys.settings.status = CONST.CREATING;
+
             scene.create.call(scene, scene.sys.settings.data);
         }
-        
+
         scene.sys.settings.status = CONST.RUNNING;
     },
 
@@ -902,7 +900,7 @@ var SceneManager = new Class({
     {
         if (this._processing)
         {
-            this._queue.push( { op: 'bringToTop', key: key });
+            this._queue.push( { op: 'bringToTop', keyA: key, keyB: null });
         }
         else
         {
@@ -934,7 +932,7 @@ var SceneManager = new Class({
     {
         if (this._processing)
         {
-            this._queue.push( { op: 'sendToBack', key: key });
+            this._queue.push( { op: 'sendToBack', keyA: key, keyB: null });
         }
         else
         {
@@ -966,7 +964,7 @@ var SceneManager = new Class({
     {
         if (this._processing)
         {
-            this._queue.push( { op: 'moveDown', key: key });
+            this._queue.push( { op: 'moveDown', keyA: key, keyB: null });
         }
         else
         {
@@ -1000,7 +998,7 @@ var SceneManager = new Class({
     {
         if (this._processing)
         {
-            this._queue.push( { op: 'moveUp', key: key });
+            this._queue.push( { op: 'moveUp', keyA: key, keyB: null });
         }
         else
         {
@@ -1016,6 +1014,13 @@ var SceneManager = new Class({
                 this.scenes[indexB] = sceneA;
             }
         }
+
+        return this;
+    },
+
+    queueOp: function (op, keyA, keyB)
+    {
+        this._queue.push( { op: op, keyA: keyA, keyB: keyB });
 
         return this;
     },
