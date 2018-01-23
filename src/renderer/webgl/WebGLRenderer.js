@@ -204,6 +204,40 @@ var WebGLRenderer = new Class({
         return this;
     },
 
+    beginScissor: function (x, y, width, height)
+    {
+        var gl = this.gl;
+        var scissorState = this.currentScissorState;
+
+        if (!x !== 0 || y !== 0 || width !== gl.canvas.width || height !== gl.canvas.height) 
+        {
+                return;
+        }
+        
+        if (!scissorState.enabled)
+        {
+            gl.enable(gl.SCISSOR_TEST);
+            scissorState.enabled = true;
+        }
+
+        scissorState.x = x;
+        scissorState.y = gl.drawingBufferHeight - y - height;
+        scissorState.width = width;
+        scissorState.height = height;
+        gl.scissor(scissorState.x, scissorState.y, scissorState.width, scissorState.height);
+    },
+
+    endScissor: function ()
+    {
+        var gl = this.gl;
+        var scissorState = this.currentScissorState;
+
+        if (scissorState.enabled)
+        {
+            gl.disable(gl.SCISSOR_TEST);
+        }
+    },
+
     setPipeline: function (pipelineInstance, overrideProgram)
     {
         if (this.currentPipeline !== pipelineInstance)
@@ -511,21 +545,8 @@ var WebGLRenderer = new Class({
         var gl = this.gl;
         var list = children.list;
         var childCount = list.length;
-        var scissorEnabled = (camera.x !== 0 || camera.y !== 0 || camera.width !== gl.canvas.width || camera.height !== gl.canvas.height);
-        var pipeline = null;
 
-        this.currentScissorState.enabled = scissorEnabled;
-
-        if (scissorEnabled)
-        {
-            gl.enable(gl.SCISSOR_TEST);
-            this.currentScissorState.x = camera.x;
-            this.currentScissorState.y = gl.drawingBufferHeight - camera.y - camera.height;
-            this.currentScissorState.width = camera.width;
-            this.currentScissorState.height = camera.height;
-
-            gl.scissor(this.currentScissorState.x, this.currentScissorState.y, this.currentScissorState.width, this.currentScissorState.height);
-        }
+        this.beginScissor(camera.x, camera.y, camera.width, camera.height);
 
         for (var index = 0; index < childCount; ++index)
         {
@@ -552,20 +573,10 @@ var WebGLRenderer = new Class({
             {
                 child.mask.postRenderWebGL(this, child);
             }
-
-            pipeline = this.currentPipeline;
-
         }
 
-        if (pipeline && pipeline.vertexCount > 0)
-        {
-            pipeline.flush();
-        }
-
-        if (scissorEnabled)
-        {
-            gl.disable(gl.SCISSOR_TEST);
-        }
+        this.flush();
+        this.endScissor();
     },
 
     postRender: function ()

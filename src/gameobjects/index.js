@@ -11,7 +11,7 @@ var GameObjects = {
 
     Components: require('./components'),
 
-    //BitmapText: require('./bitmaptext/static/BitmapText'),
+    BitmapText: require('./bitmaptext/static/BitmapText'),
     Blitter: require('./blitter/Blitter'),
     //Container: require('./container/Container'),
     //DynamicBitmapText: require('./bitmaptext/dynamic/DynamicBitmapText'),
@@ -44,7 +44,7 @@ var GameObjects = {
         //PathFollower: require('./pathfollower/PathFollowerFactory'),
         Sprite: require('./sprite/SpriteFactory'),
         //Sprite3D: require('./sprite3d/Sprite3DFactory'),
-        //StaticBitmapText: require('./bitmaptext/static/BitmapTextFactory'),
+        StaticBitmapText: require('./bitmaptext/static/BitmapTextFactory'),
         //Text: require('./text/static/TextFactory'),
         //Tilemap: require('./tilemap/TilemapFactory'),
         //TileSprite: require('./tilesprite/TileSpriteFactory'),
@@ -61,7 +61,7 @@ var GameObjects = {
         //Particles: require('./particles/ParticleManagerCreator'),
         Sprite: require('./sprite/SpriteCreator'),
         //Sprite3D: require('./sprite3d/Sprite3DCreator'),
-        //StaticBitmapText: require('./bitmaptext/static/BitmapTextCreator'),
+        StaticBitmapText: require('./bitmaptext/static/BitmapTextCreator'),
         //Text: require('./text/static/TextCreator'),
         //Tilemap: require('./tilemap/TilemapCreator'),
         //TileSprite: require('./tilesprite/TileSpriteCreator'),
