@@ -27,6 +27,7 @@ module.exports = {
     RenderDebug: require('./RenderDebug'),
     SetCollision: require('./SetCollision'),
     SetCollisionBetween: require('./SetCollisionBetween'),
+    SetCollisionByProperty: require('./SetCollisionByProperty'),
     SetCollisionByExclusion: require('./SetCollisionByExclusion'),
     SetTileIndexCallback: require('./SetTileIndexCallback'),
     SetTileLocationCallback: require('./SetTileLocationCallback'),
