@@ -81,11 +81,11 @@ AudioFile.create = function (loader, key, urls, config, xhrSettings)
 
     if (deviceAudio.webAudio && !(audioConfig && audioConfig.disableWebAudio))
     {
-        return new AudioFile(key, url, this.path, xhrSettings, game.sound.context);
+        return new AudioFile(key, url, loader.path, xhrSettings, game.sound.context);
     }
     else
     {
-        return new HTML5AudioFile(key, url, this.path, config, game.sound.locked);
+        return new HTML5AudioFile(key, url, loader.path, config, game.sound.locked);
     }
 };
 
