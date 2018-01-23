@@ -128,7 +128,7 @@ var Tileset = new Class({
      * @param {integer} tileIndex - The unique id of the tile across all tilesets in the map.
      * @returns {object|undefined|null}
      */
-    getTileProperty: function (tileIndex)
+    getTileProperties: function (tileIndex)
     {
         if (!this.containsTileIndex(tileIndex)) { return null; }
         return this.tileProperties[tileIndex - this.firstgid];
