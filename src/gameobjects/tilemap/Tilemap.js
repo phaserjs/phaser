@@ -1032,6 +1032,19 @@ var Tilemap = new Class({
      *
      * @return {this|null} Returns this, or null if the layer given was invalid.
      */
+    setCollisionFromCollisionGroup: function (collides, recalculateFaces, layer)
+    {
+        layer = this.getLayer(layer);
+        if (layer === null) { return this; }
+        TilemapComponents.SetCollisionFromCollisionGroup(collides, recalculateFaces, layer);
+        return this;
+    },
+
+    /**
+     * See component documentation. If no layer specified, the map's current layer is used.
+     *
+     * @return {this|null} Returns this, or null if the layer given was invalid.
+     */
     setTileIndexCallback: function (indexes, callback, callbackContext, layer)
     {
         layer = this.getLayer(layer);

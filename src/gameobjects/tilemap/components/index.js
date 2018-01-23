@@ -29,6 +29,7 @@ module.exports = {
     SetCollisionBetween: require('./SetCollisionBetween'),
     SetCollisionByProperty: require('./SetCollisionByProperty'),
     SetCollisionByExclusion: require('./SetCollisionByExclusion'),
+    SetCollisionFromCollisionGroup: require('./SetCollisionFromCollisionGroup'),
     SetTileIndexCallback: require('./SetTileIndexCallback'),
     SetTileLocationCallback: require('./SetTileLocationCallback'),
     Shuffle: require('./Shuffle'),

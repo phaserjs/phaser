@@ -410,6 +410,17 @@ var DynamicTilemapLayer = new Class({
      *
      * @return {this}
      */
+    setCollisionFromCollisionGroup: function (collides, recalculateFaces)
+    {
+        TilemapComponents.SetCollisionFromCollisionGroup(collides, recalculateFaces, this.layer);
+        return this;
+    },
+
+    /**
+     * See component documentation.
+     *
+     * @return {this}
+     */
     setTileIndexCallback: function (indexes, callback, callbackContext)
     {
         TilemapComponents.SetTileIndexCallback(indexes, callback, callbackContext, this.layer);

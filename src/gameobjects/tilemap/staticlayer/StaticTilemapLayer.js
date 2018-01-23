@@ -486,6 +486,17 @@ var StaticTilemapLayer = new Class({
      *
      * @return {this}
      */
+    setCollisionFromCollisionGroup: function (collides, recalculateFaces)
+    {
+        TilemapComponents.SetCollisionFromCollisionGroup(collides, recalculateFaces, this.layer);
+        return this;
+    },
+
+    /**
+     * See component documentation.
+     *
+     * @return {this}
+     */
     setTileLocationCallback: function (tileX, tileY, width, height, callback, callbackContext)
     {
         TilemapComponents.SetTileLocationCallback(tileX, tileY, width, height, callback, callbackContext, this.layer);
