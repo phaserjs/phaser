@@ -745,9 +745,9 @@ var Graphics = new Class({
         {
             this.renderCanvas(sys.game.renderer, this, 0, Graphics.TargetCamera, ctx);
 
-            if (this.gl && texture)
+            if (sys.game.renderer.gl && texture)
             {
-                sys.game.renderer.uploadCanvasToGPU(ctx.canvas, texture.source[0].glTexture, true);
+                texture.source[0].glTexture = sys.game.renderer.canvasToTexture(ctx.canvas, texture.source[0].glTexture, true, 0);
             }
         }
 

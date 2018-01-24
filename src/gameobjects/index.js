@@ -16,7 +16,7 @@ var GameObjects = {
     //Container: require('./container/Container'),
     //DynamicBitmapText: require('./bitmaptext/dynamic/DynamicBitmapText'),
     //DynamicTilemapLayer: require('./tilemap/dynamiclayer/DynamicTilemapLayer'),
-    //Graphics: require('./graphics/Graphics.js'),
+    Graphics: require('./graphics/Graphics.js'),
     //Group: require('./group/Group'),
     Image: require('./image/Image'),
     //Particles: require('./particles/ParticleEmitterManager'),
@@ -37,7 +37,7 @@ var GameObjects = {
         Blitter: require('./blitter/BlitterFactory'),
         //Container: require('./container/ContainerFactory'),
         //DynamicBitmapText: require('./bitmaptext/dynamic/DynamicBitmapTextFactory'),
-        //Graphics: require('./graphics/GraphicsFactory'),
+        Graphics: require('./graphics/GraphicsFactory'),
         //Group: require('./group/GroupFactory'),
         Image: require('./image/ImageFactory'),
         //Particles: require('./particles/ParticleManagerFactory'),
@@ -55,7 +55,7 @@ var GameObjects = {
         Blitter: require('./blitter/BlitterCreator'),
         //Container: require('./container/ContainerCreator'),
         //DynamicBitmapText: require('./bitmaptext/dynamic/DynamicBitmapTextCreator'),
-        //Graphics: require('./graphics/GraphicsCreator'),
+        Graphics: require('./graphics/GraphicsCreator'),
         //Group: require('./group/GroupCreator'),
         Image: require('./image/ImageCreator'),
         //Particles: require('./particles/ParticleManagerCreator'),
@@ -77,12 +77,10 @@ if (WEBGL_RENDERER)
     GameObjects.Mesh = require('./mesh/Mesh');
     GameObjects.Quad = require('./quad/Quad');
 
-    //GameObjects.Factories.EffectLayer = require('./effectlayer/EffectLayerFactory');
     //GameObjects.Factories.LightLayer = require('./lightlayer/LightLayerFactory');
     GameObjects.Factories.Mesh = require('./mesh/MeshFactory');
     GameObjects.Factories.Quad = require('./quad/QuadFactory');
 
-    //GameObjects.Creators.EffectLayer = require('./effectlayer/EffectLayerCreator');
     //GameObjects.Creators.LightLayer = require('./lightlayer/LightLayerCreator');
     GameObjects.Creators.Mesh = require('./mesh/MeshCreator');
     GameObjects.Creators.Quad = require('./quad/QuadCreator');

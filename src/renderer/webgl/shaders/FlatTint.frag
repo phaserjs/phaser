@@ -5,5 +5,5 @@ precision mediump float;
 varying vec4 outTint;
 
 void main() {
-    gl_FragColor = vec4(outTint.bgr * outTint.a, outTint.a);
+    gl_FragColor = vec4(outTint.rgb * outTint.a, outTint.a);
 }

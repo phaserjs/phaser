@@ -632,7 +632,7 @@ var WebGLRenderer = new Class({
         }
         else
         {
-            this.setTexture2D(dstTexture);
+            this.setTexture2D(dstTexture, 0);
 
             if (!shouldReallocate)
             {
@@ -645,7 +645,7 @@ var WebGLRenderer = new Class({
                 dstTexture.height = srcCanvas.height;
             }
 
-            this.setTexture2D(null);
+            this.setTexture2D(null, 0);
         }
 
         return dstTexture;
