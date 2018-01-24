@@ -531,7 +531,7 @@ var TextureTintPipeline = new Class({
         var cameraScrollY = camera.scrollY * bitmapText.scrollFactorY;
         var fontData = bitmapText.fontData;
         var lineHeight = fontData.lineHeight;
-        var scale = (bitmapText.fontSize / fontData.size);
+        var scale = (bitmapText.fontSize / bitmapText.fontData.size);
         var chars = fontData.chars;
         var alpha = bitmapText.alpha;
         var tint0 = getTint(bitmapText._tintTL, alpha);
@@ -589,6 +589,8 @@ var TextureTintPipeline = new Class({
         var mvd = src * cmb + srd * cmd;
         var mve = sre * cma + srf * cmc + cme;
         var mvf = sre * cmb + srf * cmd + cmf;
+        var crop = (bitmapText.cropWidth > 0 || bitmapText.cropHeight > 0);
+        var uta, utb, utc, utd, ute, utf;
         var vertexOffset = 0;
 
         renderer.setTexture2D(texture, 0);
@@ -615,38 +617,44 @@ var TextureTintPipeline = new Class({
 
             glyphX = textureX + glyph.x;
             glyphY = textureY + glyph.y;
+
             glyphW = glyph.width;
             glyphH = glyph.height;
-            x = (indexCount + glyph.xOffset + xAdvance) * scale;
-            y = (glyph.yOffset + yAdvance) * scale;
+
+            x = (indexCount + glyph.xOffset + xAdvance) - scrollX;
+            y = (glyph.yOffset + yAdvance) - scrollY;
 
             if (lastGlyph !== null)
             {
                 var kerningOffset = glyph.kerning[lastCharCode];
                 x += (kerningOffset !== undefined) ? kerningOffset : 0;
-            }
+            }            
 
-            xAdvance += glyph.xAdvance;
-            indexCount += 1;
-            lastGlyph = glyph;
-            lastCharCode = charCode;
+            uta = scale;
+            utb = 0;
+            utc = 0;
+            utd = scale;
+            ute = x * scale;
+            utf = y * scale;
 
-            //  Nothing to render or a space? Then skip to the next glyph
-            if (glyphW === 0 || glyphH === 0 || charCode === 32)
-            {
-                continue;
-            }
+            sra = uta * mva + utb * mvc;
+            srb = uta * mvb + utb * mvd;
+            src = utc * mva + utd * mvc;
+            srd = utc * mvb + utd * mvd;
+            sre = ute * mva + utf * mvc + mve;
+            srf = ute * mvb + utf * mvd + mvf;
 
-            xw = x + glyphW * scale;
-            yh = y + glyphH * scale;
-            tx0 = x * mva + y * mvc + mve;
-            ty0 = x * mvb + y * mvd + mvf;
-            tx1 = x * mva + yh * mvc + mve;
-            ty1 = x * mvb + yh * mvd + mvf;
-            tx2 = xw * mva + yh * mvc + mve;
-            ty2 = xw * mvb + yh * mvd + mvf;
-            tx3 = xw * mva + y * mvc + mve;
-            ty3 = xw * mvb + y * mvd + mvf;
+            xw = glyphW;
+            yh = glyphH;
+            tx0 = sre;
+            ty0 = srf;
+            tx1 = yh * src + sre;
+            ty1 = yh * srd + srf;
+            tx2 = xw * sra + yh * src + sre;
+            ty2 = xw * srb + yh * srd + srf;
+            tx3 = xw * sra + sre;
+            ty3 = xw * srb + srf;
+
             umin = glyphX / textureWidth;
             umax = (glyphX + glyphW) / textureWidth;
             vmin = glyphY / textureHeight;
@@ -689,8 +697,293 @@ var TextureTintPipeline = new Class({
             vertexViewF32[vertexOffset + 27] = umax;
             vertexViewF32[vertexOffset + 28] = vmin;
             vertexViewU32[vertexOffset + 29] = tint3;
+
+            xAdvance += glyph.xAdvance;
+            indexCount += 1;
+            lastGlyph = glyph;
+            lastCharCode = charCode;
         
             this.vertexCount += 6;
+        }
+
+        if (crop)
+        {
+            renderer.popScissor();
+        }
+    },
+
+    batchDynamicBitmapText: function (bitmapText, camera)
+    {
+        this.renderer.setPipeline(this);
+
+        if (this.vertexCount + 6 > this.vertexCapacity)
+        {
+            this.flush();
+        }
+
+        var displayCallback = bitmapText.displayCallback;
+        var text = bitmapText.text;
+        var textLength = text.length;
+        var getTint = Utils.getTintAppendFloatAlpha;
+        var vertexViewF32 = this.vertexViewF32;
+        var vertexViewU32 = this.vertexViewU32;
+        var renderer = this.renderer;
+        var cameraMatrix = camera.matrix.matrix;
+        var cameraWidth = camera.width + 50;
+        var cameraHeight = camera.height + 50;
+        var cameraX = -50;
+        var cameraY = -50;
+        var frame = bitmapText.frame;
+        var textureSource = bitmapText.texture.source[frame.sourceIndex];
+        var cameraScrollX = camera.scrollX * bitmapText.scrollFactorX;
+        var cameraScrollY = camera.scrollY * bitmapText.scrollFactorY;
+        var scrollX = bitmapText.scrollX;
+        var scrollY = bitmapText.scrollY;
+        var fontData = bitmapText.fontData;
+        var lineHeight = fontData.lineHeight;
+        var scale = (bitmapText.fontSize / fontData.size);
+        var chars = fontData.chars;
+        var alpha = bitmapText.alpha;
+        var tint0 = getTint(bitmapText._tintTL, alpha);
+        var tint1 = getTint(bitmapText._tintTR, alpha);
+        var tint2 = getTint(bitmapText._tintBL, alpha);
+        var tint3 = getTint(bitmapText._tintBR, alpha);
+        var srcX = bitmapText.x;
+        var srcY = bitmapText.y;
+        var textureX = frame.cutX;
+        var textureY = frame.cutY;
+        var textureWidth = textureSource.width;
+        var textureHeight = textureSource.height;
+        var texture = textureSource.glTexture;
+        var xAdvance = 0;
+        var yAdvance = 0;
+        var indexCount = 0;
+        var charCode = 0;
+        var glyph = null;
+        var glyphX = 0;
+        var glyphY = 0;
+        var glyphW = 0;
+        var glyphH = 0;
+        var x = 0;
+        var y = 0;
+        var xw = 0;
+        var yh = 0;
+        var umin = 0;
+        var umax = 0;
+        var vmin = 0;
+        var vmax = 0;
+        var lastGlyph = null;
+        var lastCharCode = 0;
+        var translateX = srcX + frame.x;
+        var translateY = srcY + frame.y;
+        var rotation = -bitmapText.rotation;
+        var scaleX = bitmapText.scaleX;
+        var scaleY = bitmapText.scaleY;
+        var sr = Math.sin(rotation);
+        var cr = Math.cos(rotation);
+        var sra = cr * scaleX;
+        var srb = -sr * scaleX;
+        var src = sr * scaleY;
+        var srd = cr * scaleY;
+        var sre = translateX;
+        var srf = translateY;
+        var cma = cameraMatrix[0];
+        var cmb = cameraMatrix[1];
+        var cmc = cameraMatrix[2];
+        var cmd = cameraMatrix[3];
+        var cme = cameraMatrix[4];
+        var cmf = cameraMatrix[5];
+        var mva = sra * cma + srb * cmc;
+        var mvb = sra * cmb + srb * cmd;
+        var mvc = src * cma + srd * cmc;
+        var mvd = src * cmb + srd * cmd;
+        var mve = sre * cma + srf * cmc + cme;
+        var mvf = sre * cmb + srf * cmd + cmf;
+        var crop = (bitmapText.cropWidth > 0 || bitmapText.cropHeight > 0);
+        var uta, utb, utc, utd, ute, utf;
+        var vertexOffset = 0;
+
+        renderer.setTexture2D(texture, 0);
+
+        if (crop)
+        {
+            renderer.pushScissor(
+                bitmapText.x, 
+                bitmapText.y, 
+                bitmapText.cropWidth * bitmapText.scaleX, 
+                bitmapText.cropHeight * bitmapText.scaleY
+            );
+        }        
+
+        for (var index = 0; index < textLength; ++index)
+        {
+            scale = (bitmapText.fontSize / bitmapText.fontData.size);
+            rotation = 0;
+
+            charCode = text.charCodeAt(index);
+
+            if (charCode === 10)
+            {
+                xAdvance = 0;
+                indexCount = 0;
+                yAdvance += lineHeight;
+                lastGlyph = null;
+                continue;
+            }
+
+            glyph = chars[charCode];
+
+            if (!glyph)
+            {
+                continue;
+            }
+
+            glyphX = textureX + glyph.x;
+            glyphY = textureY + glyph.y;
+
+            glyphW = glyph.width;
+            glyphH = glyph.height;
+            
+            x = (indexCount + glyph.xOffset + xAdvance) - scrollX;
+            y = (glyph.yOffset + yAdvance) - scrollY;
+
+            if (lastGlyph !== null)
+            {
+                var kerningOffset = glyph.kerning[lastCharCode];
+                x += (kerningOffset !== undefined) ? kerningOffset : 0;
+            }
+
+            if (displayCallback)
+            {
+                var output = displayCallback({ 
+                    color: 0, 
+                    tint: { 
+                        topLeft: tint0, 
+                        topRight: tint1, 
+                        bottomLeft: tint2, 
+                        bottomRight: tint3 
+                    }, 
+                    index: index, 
+                    charCode: charCode, 
+                    x: x, 
+                    y: y, 
+                    scale: scale, 
+                    rotation: 0, 
+                    data: glyph.data 
+                });
+
+                x = output.x;
+                y = output.y;
+                scale = output.scale;
+                rotation = output.rotation;
+
+                if (output.color)
+                {
+                    tint0 = output.color;
+                    tint1 = output.color;
+                    tint2 = output.color;
+                    tint3 = output.color;
+                }
+                else
+                {
+                    tint0 = output.tint.topLeft;
+                    tint1 = output.tint.topRight;
+                    tint2 = output.tint.bottomLeft;
+                    tint3 = output.tint.bottomRight;
+                }
+
+                tint0 = getTint(tint0, alpha);
+                tint1 = getTint(tint1, alpha);
+                tint2 = getTint(tint2, alpha);
+                tint3 = getTint(tint3, alpha);
+            }
+
+            x *= scale;
+            y *= scale;
+            x -= cameraScrollX;
+            y -= cameraScrollY;
+
+            sr = Math.sin(-rotation);
+            cr = Math.cos(-rotation);
+            uta = cr * scale;
+            utb = -sr * scale;
+            utc = sr * scale;
+            utd = cr * scale;
+            ute = x;
+            utf = y;
+
+            sra = uta * mva + utb * mvc;
+            srb = uta * mvb + utb * mvd;
+            src = utc * mva + utd * mvc;
+            srd = utc * mvb + utd * mvd;
+            sre = ute * mva + utf * mvc + mve;
+            srf = ute * mvb + utf * mvd + mvf;
+
+            xw = glyphW;
+            yh = glyphH;
+            tx0 = sre;
+            ty0 = srf;
+            tx1 = yh * src + sre;
+            ty1 = yh * srd + srf;
+            tx2 = xw * sra + yh * src + sre;
+            ty2 = xw * srb + yh * srd + srf;
+            tx3 = xw * sra + sre;
+            ty3 = xw * srb + srf;
+
+            umin = glyphX / textureWidth;
+            umax = (glyphX + glyphW) / textureWidth;
+            vmin = glyphY / textureHeight;
+            vmax = (glyphY + glyphH) / textureHeight;
+
+            if (this.vertexCount + 6 > this.vertexCapacity)
+            {
+                this.flush();
+            }
+            
+            vertexOffset = this.vertexCount * this.vertexComponentCount;
+
+            vertexViewF32[vertexOffset + 0] = tx0;
+            vertexViewF32[vertexOffset + 1] = ty0;
+            vertexViewF32[vertexOffset + 2] = umin;
+            vertexViewF32[vertexOffset + 3] = vmin;
+            vertexViewU32[vertexOffset + 4] = tint0;
+            vertexViewF32[vertexOffset + 5] = tx1;
+            vertexViewF32[vertexOffset + 6] = ty1;
+            vertexViewF32[vertexOffset + 7] = umin;
+            vertexViewF32[vertexOffset + 8] = vmax;
+            vertexViewU32[vertexOffset + 9] = tint1;
+            vertexViewF32[vertexOffset + 10] = tx2;
+            vertexViewF32[vertexOffset + 11] = ty2;
+            vertexViewF32[vertexOffset + 12] = umax;
+            vertexViewF32[vertexOffset + 13] = vmax;
+            vertexViewU32[vertexOffset + 14] = tint2;
+            vertexViewF32[vertexOffset + 15] = tx0;
+            vertexViewF32[vertexOffset + 16] = ty0;
+            vertexViewF32[vertexOffset + 17] = umin;
+            vertexViewF32[vertexOffset + 18] = vmin;
+            vertexViewU32[vertexOffset + 19] = tint0;
+            vertexViewF32[vertexOffset + 20] = tx2;
+            vertexViewF32[vertexOffset + 21] = ty2;
+            vertexViewF32[vertexOffset + 22] = umax;
+            vertexViewF32[vertexOffset + 23] = vmax;
+            vertexViewU32[vertexOffset + 24] = tint2;
+            vertexViewF32[vertexOffset + 25] = tx3;
+            vertexViewF32[vertexOffset + 26] = ty3;
+            vertexViewF32[vertexOffset + 27] = umax;
+            vertexViewF32[vertexOffset + 28] = vmin;
+            vertexViewU32[vertexOffset + 29] = tint3;
+
+            xAdvance += glyph.xAdvance;
+            indexCount += 1;
+            lastGlyph = glyph;
+            lastCharCode = charCode;
+        
+            this.vertexCount += 6;
+        }
+
+        if (crop)
+        {
+            renderer.popScissor();
         }
     }
 });

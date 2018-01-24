@@ -62,7 +62,10 @@ var WebGLRenderer = new Class({
         this.currentVertexBuffer = null;
         this.currentIndexBuffer = null;
         this.currentBlendMode = Infinity;
-        this.currentScissorState = { enabled: false, x: 0, y: 0, w: 0, h: 0 };
+        this.currentScissorEnabled = false;
+        this.currentScissor = new Uint32Array([0, 0, this.width, this.height]);
+        this.currentScissorIdx = 0;
+        this.scissorStack = new Uint32Array(4 *  1000);
 
         // Setup context lost and restore event listeners
         this.canvas.addEventListener('webglcontextlost', function (event) {
@@ -229,45 +232,70 @@ var WebGLRenderer = new Class({
         return this;
     },
 
-    beginScissor: function (x, y, width, height)
+    setScissor: function (x, y, w, h)
     {
         var gl = this.gl;
-        var scissorState = this.currentScissorState;
+        var currentScissor = this.currentScissor;
+        var enabled = (x == 0 && y == 0 && w == gl.canvas.width && h == gl.canvas.height && w >= 0 && h >= 0);
 
-        if (x == 0 && 
-            y == 0 && 
-            width == gl.canvas.width && 
-            height == gl.canvas.height &&
-            width > 0 &&
-            height > 0)
-        {
-            return;
-        }
-        
-        if (!scissorState.enabled)
+        if (currentScissor[0] !== x || 
+            currentScissor[1] !== y || 
+            currentScissor[2] !== w || 
+            currentScissor[3] !== h)
         {
             this.flush();
-            gl.enable(gl.SCISSOR_TEST);
-            scissorState.enabled = true;
         }
 
-        scissorState.x = x;
-        scissorState.y = gl.drawingBufferHeight - y - height;
-        scissorState.width = width;
-        scissorState.height = height;
-        gl.scissor(scissorState.x, scissorState.y, scissorState.width, scissorState.height);
-    },
+        currentScissor[0] = x;
+        currentScissor[1] = y;
+        currentScissor[2] = w;
+        currentScissor[3] = h;
 
-    endScissor: function ()
-    {
-        var gl = this.gl;
-        var scissorState = this.currentScissorState;
+        this.currentScissorEnabled = enabled;
 
-        if (scissorState.enabled)
+        if (enabled)
         {
             gl.disable(gl.SCISSOR_TEST);
-            scissorState.enabled = false;
+            return;
         }
+
+        gl.enable(gl.SCISSOR_TEST);
+        gl.scissor(x, (gl.drawingBufferHeight - y - h), w, h);
+
+        return this;
+    },
+
+    pushScissor: function (x, y, w, h)
+    {
+        var scissorStack = this.scissorStack;
+        var stackIndex = this.currentScissorIdx;
+        var currentScissor = this.currentScissor;
+
+        scissorStack[stackIndex + 0] = currentScissor[0];
+        scissorStack[stackIndex + 1] = currentScissor[1];
+        scissorStack[stackIndex + 2] = currentScissor[2];
+        scissorStack[stackIndex + 3] = currentScissor[3];
+        
+        this.currentScissorIdx += 4;
+        this.setScissor(x, y, w, h);
+
+        return this;
+    },
+
+    popScissor: function ()
+    {
+        var scissorStack = this.scissorStack;
+        var stackIndex = this.currentScissorIdx - 4;
+        
+        var x = scissorStack[stackIndex + 0];
+        var y = scissorStack[stackIndex + 1];
+        var w = scissorStack[stackIndex + 2];
+        var h = scissorStack[stackIndex + 3];
+
+        this.currentScissorIdx = stackIndex;
+        this.setScissor(x, y, w, h); 
+        
+        return this;
     },
 
     setPipeline: function (pipelineInstance, overrideProgram)
@@ -559,7 +587,7 @@ var WebGLRenderer = new Class({
     /* Rendering Functions */
     preRenderCamera: function (camera)
     {
-        this.beginScissor(camera.x, camera.y, camera.width, camera.height);
+        this.pushScissor(camera.x, camera.y, camera.width, camera.height);
         
         if (camera.backgroundColor.alphaGL > 0)
         {
@@ -608,7 +636,7 @@ var WebGLRenderer = new Class({
             FlatTintPipeline.flush();
         }
 
-        this.endScissor();
+        this.popScissor();
     },
 
     preRender: function ()
