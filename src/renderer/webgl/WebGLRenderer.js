@@ -266,6 +266,7 @@ var WebGLRenderer = new Class({
     {
         if (this.currentPipeline !== pipelineInstance)
         {
+            this.flush();
             this.currentPipeline = pipelineInstance;
             this.currentPipeline.bind(overrideProgram);
         }
