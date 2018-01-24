@@ -2,6 +2,7 @@ var Class = require('../../utils/Class');
 var CONST = require('../../const');
 var WebGLSnapshot = require('../snapshot/WebGLSnapshot');
 var IsSizePowerOfTwo = require('../../math/pow2/IsSizePowerOfTwo');
+var Utils = require('./Utils');
 
 // Default Pipelines
 var TextureTintPipeline = require('./pipelines/TextureTintPipeline');
@@ -233,13 +234,19 @@ var WebGLRenderer = new Class({
         var gl = this.gl;
         var scissorState = this.currentScissorState;
 
-        if (!x !== 0 || y !== 0 || width !== gl.canvas.width || height !== gl.canvas.height) 
+        if (x == 0 && 
+            y == 0 && 
+            width == gl.canvas.width && 
+            height == gl.canvas.height &&
+            width > 0 &&
+            height > 0)
         {
-                return;
+            return;
         }
         
         if (!scissorState.enabled)
         {
+            this.flush();
             gl.enable(gl.SCISSOR_TEST);
             scissorState.enabled = true;
         }
@@ -259,6 +266,7 @@ var WebGLRenderer = new Class({
         if (scissorState.enabled)
         {
             gl.disable(gl.SCISSOR_TEST);
+            scissorState.enabled = false;
         }
     },
 
@@ -549,6 +557,60 @@ var WebGLRenderer = new Class({
     },
 
     /* Rendering Functions */
+    preRenderCamera: function (camera)
+    {
+        this.beginScissor(camera.x, camera.y, camera.width, camera.height);
+        
+        if (camera.backgroundColor.alphaGL > 0)
+        {
+            var color = camera.backgroundColor;
+            var FlatTintPipeline = this.pipelines.FlatTintPipeline;
+
+            FlatTintPipeline.batchFillRect(
+                0, 0, 1, 1, 0, 
+                camera.x, camera.y, camera.width, camera.height, 
+                Utils.getTintFromFloats(color.redGL, color.greenGL, color.blueGL, 1.0),
+                color.alphaGL,
+                1, 0, 0, 1, 0, 0,
+                [1, 0, 0, 1, 0, 0]
+            );
+
+            FlatTintPipeline.flush();
+        }
+    },
+
+    postRenderCamera: function (camera)
+    {
+        if (camera._fadeAlpha > 0 || camera._flashAlpha > 0)
+        {
+            var FlatTintPipeline = this.pipelines.FlatTintPipeline;
+
+            // Fade
+            FlatTintPipeline.batchFillRect(
+                0, 0, 1, 1, 0, 
+                camera.x, camera.y, camera.width, camera.height, 
+                Utils.getTintFromFloats(camera._fadeRed, camera._fadeGreen, camera._fadeBlue, 1.0),
+                camera._fadeAlpha,
+                1, 0, 0, 1, 0, 0,
+                [1, 0, 0, 1, 0, 0]
+            );
+
+            // Flash
+            FlatTintPipeline.batchFillRect(
+                0, 0, 1, 1, 0, 
+                camera.x, camera.y, camera.width, camera.height, 
+                Utils.getTintFromFloats(camera._flashRed, camera._flashGreen, camera._flashBlue, 1.0),
+                camera._flashAlpha,
+                1, 0, 0, 1, 0, 0,
+                [1, 0, 0, 1, 0, 0]
+            );
+
+            FlatTintPipeline.flush();
+        }
+
+        this.endScissor();
+    },
+
     preRender: function ()
     {
         if (this.contextLost) return;
@@ -569,7 +631,7 @@ var WebGLRenderer = new Class({
         var list = children.list;
         var childCount = list.length;
 
-        this.beginScissor(camera.x, camera.y, camera.width, camera.height);
+        this.preRenderCamera(camera);
 
         for (var index = 0; index < childCount; ++index)
         {
@@ -599,7 +661,8 @@ var WebGLRenderer = new Class({
         }
 
         this.flush();
-        this.endScissor();
+        this.setBlendMode(CONST.BlendModes.NORMAL);
+        this.postRenderCamera(camera);
     },
 
     postRender: function ()

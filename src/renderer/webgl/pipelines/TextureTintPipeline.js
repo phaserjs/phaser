@@ -144,13 +144,7 @@ var TextureTintPipeline = new Class({
                 var ty0 = x * b + y * d + f;
                 var tx1 = xw * a + yh * c + e;
                 var ty1 = xw * b + yh * d + f;
-
-                if ((tx0 < cameraX || tx0 > cameraWidth || ty0 < cameraX || ty0 > cameraHeight) &&
-                    (tx1 < cameraY || tx1 > cameraWidth || ty1 < cameraY || ty1 > cameraHeight))
-                {
-                    continue;
-                }
-
+                
                 // Bind Texture if texture wasn't bound.
                 // This needs to be here because of multiple
                 // texture atlas.
@@ -270,15 +264,6 @@ var TextureTintPipeline = new Class({
         var tx3 = xw * mva + y * mvc + mve;
         var ty3 = xw * mvb + y * mvd + mvf;
         var vertexOffset = 0;
-
-        if ((tx0 < cameraX || tx0 > cameraWidth || ty0 < cameraY || ty0 > cameraHeight) &&
-            (tx1 < cameraX || tx1 > cameraWidth || ty1 < cameraY || ty1 > cameraHeight) &&
-            (tx2 < cameraX || tx2 > cameraWidth || ty2 < cameraY || ty2 > cameraHeight) &&
-            (tx3 < cameraX || tx3 > cameraWidth || ty3 < cameraY || ty3 > cameraHeight))
-        {
-            return;
-        }
-
         var u0 = frameX / texture.width;
         var v0 = frameY / texture.height;
         var u1 = frameX / texture.width;
@@ -402,14 +387,6 @@ var TextureTintPipeline = new Class({
         var tint2 = getTint(tintBL, alphaBL);
         var tint3 = getTint(tintBR, alphaBR);
         var vertexOffset = 0;
-
-        if ((tx0 < cameraX || tx0 > cameraWidth || ty0 < cameraY || ty0 > cameraHeight) &&
-            (tx1 < cameraX || tx1 > cameraWidth || ty1 < cameraY || ty1 > cameraHeight) &&
-            (tx2 < cameraX || tx2 > cameraWidth || ty2 < cameraY || ty2 > cameraHeight) &&
-            (tx3 < cameraX || tx3 > cameraWidth || ty3 < cameraY || ty3 > cameraHeight))
-        {
-            return;
-        }
 
         renderer.setTexture2D(texture, 0);
 
@@ -674,14 +651,6 @@ var TextureTintPipeline = new Class({
             umax = (glyphX + glyphW) / textureWidth;
             vmin = glyphY / textureHeight;
             vmax = (glyphY + glyphH) / textureHeight;
-
-            if ((tx0 < cameraX || tx0 > cameraWidth || ty0 < cameraY || ty0 > cameraHeight) &&
-                (tx1 < cameraX || tx1 > cameraWidth || ty1 < cameraY || ty1 > cameraHeight) &&
-                (tx2 < cameraX || tx2 > cameraWidth || ty2 < cameraY || ty2 > cameraHeight) &&
-                (tx3 < cameraX || tx3 > cameraWidth || ty3 < cameraY || ty3 > cameraHeight))
-            {
-                continue;
-            }
 
             if (this.vertexCount + 6 > this.vertexCapacity)
             {
