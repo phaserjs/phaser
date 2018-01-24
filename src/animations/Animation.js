@@ -462,8 +462,6 @@ var Animation = new Class({
             });
         }
 
-        // console.table(frames);
-
         if (!Array.isArray(frames) || frames.length === 0)
         {
             return out;
@@ -480,22 +478,16 @@ var Animation = new Class({
                 continue;
             }
 
+            //  Could be an integer or a string
             var frame = GetValue(item, 'frame', 0);
 
+            //  The actual texture frame
             var textureFrame = textureManager.getFrame(key, frame);
 
             animationFrame = new Frame(key, frame, index, textureFrame);
 
             animationFrame.duration = GetValue(item, 'duration', 0);
             animationFrame.onUpdate = GetValue(item, 'onUpdate', null);
-
-            var visible = GetValue(item, 'visible', null);
-
-            if (visible !== null)
-            {
-                animationFrame.setVisible = true;
-                animationFrame.visible = visible;
-            }
 
             animationFrame.isFirst = (!prev);
 
