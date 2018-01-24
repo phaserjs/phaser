@@ -1,29 +1,28 @@
 var GameObject = require('../../GameObject');
+var Utils = require('../../../renderer/webgl/Utils');
 
-var DynamicTilemapLayerWebGLRenderer = function (renderer, gameObject, interpolationPercentage, camera)
+var DynamicTilemapLayerWebGLRenderer = function (renderer, tilemapLayer, interpolationPercentage, camera)
 {
-    if (GameObject.RENDER_MASK !== gameObject.renderFlags || (gameObject.cameraFilter > 0 && (gameObject.cameraFilter & camera._id)))
+    if (GameObject.RENDER_MASK !== tilemapLayer.renderFlags || (tilemapLayer.cameraFilter > 0 && (tilemapLayer.cameraFilter & camera._id)))
     {
         return;
     }
 
-    gameObject.cull(camera);
+    tilemapLayer.cull(camera);
 
-    var renderTiles = gameObject.culledTiles;
+    var renderTiles = tilemapLayer.culledTiles;
     var length = renderTiles.length;
-    var batch = renderer.spriteBatch;
-    var texture = gameObject.tileset.image.get().source.glTexture;
-    var textureWidth = texture.width;
-    var textureHeight = texture.height;
-    var tileset = this.tileset;
-    var renderTarget = gameObject.renderTarget;
-    var scrollFactorX = gameObject.scrollFactorX;
-    var scrollFactorY = gameObject.scrollFactorY;
-    var alpha = gameObject.alpha;
-    var x = gameObject.x;
-    var y = gameObject.y;
-    var sx = gameObject.scaleX;
-    var sy = gameObject.scaleY;
+    var texture = tilemapLayer.tileset.image.get().source.glTexture;
+    var tileset = tilemapLayer.tileset;
+    var scrollFactorX = tilemapLayer.scrollFactorX;
+    var scrollFactorY = tilemapLayer.scrollFactorY;
+    var alpha = tilemapLayer.alpha;
+    var x = tilemapLayer.x;
+    var y = tilemapLayer.y;
+    var sx = tilemapLayer.scaleX;
+    var sy = tilemapLayer.scaleY;
+    var getTint = Utils.getTintAppendFloatAlpha;
+    var pipeline = renderer.pipelines.TextureTintPipeline; 
 
     for (var index = 0; index < length; ++index)
     {
@@ -36,19 +35,22 @@ var DynamicTilemapLayerWebGLRenderer = function (renderer, gameObject, interpola
         var frameHeight = tile.height * (tile.flipY ? -1 : 1);
         var frameX = tileTexCoords.x + (tile.flipX ? tile.width : 0);
         var frameY = tileTexCoords.y + (tile.flipY ? tile.height : 0);
+        var tint = getTint(tile.tint, alpha * tile.alpha);
 
-        batch.addTileTextureRect(
+        pipeline.batchTexture(
             texture,
-            x + tile.pixelX * sx, y + tile.pixelY * sy,
-            tile.width * sx, tile.height * sy,
-            alpha * tile.alpha, tile.tint,
+            tile.pixelX, tile.pixelY,
+            tile.width, tile.height,
+            1, 1,
+            0,
+            false, false,
             scrollFactorX, scrollFactorY,
-            textureWidth, textureHeight,
+            0, 0,
             frameX, frameY, frameWidth, frameHeight,
-            camera,
-            renderTarget
+            tint, tint, tint, tint,
+            camera
         );
-    }
+    }    
 };
 
 module.exports = DynamicTilemapLayerWebGLRenderer;

@@ -198,7 +198,8 @@ var TextureTintPipeline = new Class({
 
     batchTexture: function (
         texture,
-        dstX, dstY,
+        srcX, srcY,
+        srcWidth, srcHeight,
         scaleX, scaleY,
         rotation,
         flipX, flipY,
@@ -227,14 +228,14 @@ var TextureTintPipeline = new Class({
         var cameraHeight = camera.height + 50;
         var cameraX = -50;
         var cameraY = -50;
-        var width = frameWidth * (flipX ? -1.0 : 1.0);
-        var height = frameHeight * (flipY ? -1.0 : 1.0);
-        var x = -displayOriginX + frameX + ((frameWidth) * (flipX ? 1.0 : 0.0));
-        var y = -displayOriginY + frameY + ((frameHeight) * (flipY ? 1.0 : 0.0));
+        var width = srcWidth * (flipX ? -1.0 : 1.0);
+        var height = srcHeight * (flipY ? -1.0 : 1.0);
+        var x = -displayOriginX + ((srcWidth) * (flipX ? 1.0 : 0.0));
+        var y = -displayOriginY + ((srcHeight) * (flipY ? 1.0 : 0.0));
         var xw = x + width;
         var yh = y + height;
-        var translateX = dstX - camera.scrollX * scrollFactorX;
-        var translateY = dstY - camera.scrollY * scrollFactorY;
+        var translateX = srcX - camera.scrollX * scrollFactorX;
+        var translateY = srcY - camera.scrollY * scrollFactorY;
         var sr = Math.sin(rotation);
         var cr = Math.cos(rotation);
         var sra = cr * scaleX;
@@ -986,6 +987,7 @@ var TextureTintPipeline = new Class({
             renderer.popScissor();
         }
     }
+
 });
 
 module.exports = TextureTintPipeline;

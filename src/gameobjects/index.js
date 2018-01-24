@@ -15,7 +15,7 @@ var GameObjects = {
     Blitter: require('./blitter/Blitter'),
     //Container: require('./container/Container'),
     DynamicBitmapText: require('./bitmaptext/dynamic/DynamicBitmapText'),
-    //DynamicTilemapLayer: require('./tilemap/dynamiclayer/DynamicTilemapLayer'),
+    DynamicTilemapLayer: require('./tilemap/dynamiclayer/DynamicTilemapLayer'),
     Graphics: require('./graphics/Graphics.js'),
     //Group: require('./group/Group'),
     Image: require('./image/Image'),
@@ -26,7 +26,7 @@ var GameObjects = {
     //StaticTilemapLayer: require('./tilemap/staticlayer/StaticTilemapLayer'),
     Text: require('./text/static/Text'),
     //Tile: require('./tilemap/Tile'),
-    //Tilemap: require('./tilemap/Tilemap'),
+    Tilemap: require('./tilemap/Tilemap'),
     //Tileset: require('./tilemap/Tileset'),
     //TileSprite: require('./tilesprite/TileSprite'),
     //Zone: require('./zone/Zone'),
@@ -46,7 +46,7 @@ var GameObjects = {
         //Sprite3D: require('./sprite3d/Sprite3DFactory'),
         StaticBitmapText: require('./bitmaptext/static/BitmapTextFactory'),
         Text: require('./text/static/TextFactory'),
-        //Tilemap: require('./tilemap/TilemapFactory'),
+        Tilemap: require('./tilemap/TilemapFactory'),
         //TileSprite: require('./tilesprite/TileSpriteFactory'),
         //Zone: require('./zone/ZoneFactory')
     },
@@ -63,7 +63,7 @@ var GameObjects = {
         //Sprite3D: require('./sprite3d/Sprite3DCreator'),
         StaticBitmapText: require('./bitmaptext/static/BitmapTextCreator'),
         Text: require('./text/static/TextCreator'),
-        //Tilemap: require('./tilemap/TilemapCreator'),
+        Tilemap: require('./tilemap/TilemapCreator'),
         //TileSprite: require('./tilesprite/TileSpriteCreator'),
         //Zone: require('./zone/ZoneCreator')
     }

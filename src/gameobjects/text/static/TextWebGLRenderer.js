@@ -19,6 +19,7 @@ var TextWebGLRenderer = function (renderer, text, interpolationPercentage, camer
     renderer.pipelines.TextureTintPipeline.batchTexture(
         text.canvasTexture,
         text.x, text.y,
+        text.canvasTexture.width, text.canvasTexture.height,
         text.scaleX, text.scaleY,
         text.rotation,
         text.flipX, text.flipY,
