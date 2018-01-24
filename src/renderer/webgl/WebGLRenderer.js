@@ -32,6 +32,8 @@ var WebGLRenderer = new Class({
         this.width = game.config.width * game.config.resolution;
         this.height = game.config.height * game.config.resolution;
         this.canvas = game.canvas;
+        this.lostContextCallbacks = [];
+        this.restoredContextCallbacks = [];
         this.blendModes = [];
         this.contextLost = false;
         this.autoResize = false;
@@ -65,11 +67,21 @@ var WebGLRenderer = new Class({
         this.canvas.addEventListener('webglcontextlost', function (event) {
             renderer.contextLost = true;
             event.preventDefault();
+            for (var index = 0; index < renderer.lostContextCallbacks.length; ++index)
+            {
+                var callback = renderer.lostContextCallbacks[index];
+                callback[0].call(callback[1], renderer);
+            }
         }, false);
 
         this.canvas.addEventListener('webglcontextrestored', function (event) {
             renderer.contextLost = false;
             renderer.init(config);
+            for (var index = 0; index < renderer.restoredContextCallbacks.length; ++index)
+            {
+                var callback = renderer.restoredContextCallbacks[index];
+                callback[0].call(callback[1], renderer);
+            }
         }, false);
 
         // This are initialized post context creation
@@ -147,6 +159,18 @@ var WebGLRenderer = new Class({
             pipelines[pipelineName].resize(width, height, resolution);
         }
 
+        return this;
+    },
+
+    onContextRestored: function (callback, target)
+    {
+        this.restoredContextCallbacks.push([callback, target]);
+        return this;
+    },
+
+    onContextLost: function (callback, target)
+    {
+        this.lostContextCallbacks.push([callback, target]);
         return this;
     },
 
@@ -353,11 +377,12 @@ var WebGLRenderer = new Class({
     },
 
     /* Renderer Resource Creation Functions */
-    createTextureFromSource: function (source, width, height)
+    createTextureFromSource: function (source, width, height, scaleMode)
     {   
         var gl = this.gl;
         var filter = gl.NEAREST;
         var wrap = gl.CLAMP_TO_EDGE;
+        var texture = null;
 
         width = source ? source.width : width;
         height = source ? source.height : height;
@@ -367,28 +392,25 @@ var WebGLRenderer = new Class({
             wrap = gl.REPEAT;
         }
 
-        if (!source.glTexture)
+        if (scaleMode === CONST.ScaleModes.LINEAR)
         {
-            if (source.scaleMode === CONST.ScaleModes.LINEAR)
-            {
-                filter = gl.LINEAR;
-            }
-            else if (source.scaleMode === CONST.ScaleModes.NEAREST || this.game.config.pixelArt)
-            {
-                filter = gl.NEAREST;
-            }
-
-            if (!source && typeof width === 'number' && typeof height === 'number')
-            {
-                source.glTexture = this.createTexture2D(0, filter, filter, wrap, wrap, gl.RGBA, null, width, height);
-            }
-            else
-            {
-                source.glTexture = this.createTexture2D(0, filter, filter, wrap, wrap, gl.RGBA, source.image);
-            }
+            filter = gl.LINEAR;
+        }
+        else if (scaleMode === CONST.ScaleModes.NEAREST || this.game.config.pixelArt)
+        {
+            filter = gl.NEAREST;
         }
 
-        return source;
+        if (!source && typeof width === 'number' && typeof height === 'number')
+        {
+            texture = this.createTexture2D(0, filter, filter, wrap, wrap, gl.RGBA, null, width, height);
+        }
+        else
+        {
+            texture = this.createTexture2D(0, filter, filter, wrap, wrap, gl.RGBA, source);
+        }
+
+        return texture;
     },
 
     createTexture2D: function (mipLevel, minFilter, magFilter, wrapT, wrapS, format, pixels, width, height, pma)
@@ -600,13 +622,13 @@ var WebGLRenderer = new Class({
         return this;
     },
 
-    canvasToTexture: function (srcCanvas, dstTexture, shouldReallocate)
+    canvasToTexture: function (srcCanvas, dstTexture, shouldReallocate, scaleMode)
     {
         var gl = this.gl;
 
         if (!dstTexture)
         {
-            dstTexture = this.createTextureFromSource(srcCanvas, srcCanvas.width, srcCanvas.height);
+            dstTexture = this.createTextureFromSource(srcCanvas, srcCanvas.width, srcCanvas.height, scaleMode);
         }
         else
         {

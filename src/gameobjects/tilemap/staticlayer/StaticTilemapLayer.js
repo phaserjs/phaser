@@ -101,7 +101,7 @@ var StaticTilemapLayer = new Class({
         this.setOrigin();
         this.setSize(this.layer.tileWidth * this.layer.width, this.layer.tileHeight * this.layer.height);
 
-        scene.sys.game.renderer.addContextRestoredCallback(this.contextRestore.bind(this));
+        scene.sys.game.renderer.onContextRestored(this.contextRestore, this);
     },
 
     /**

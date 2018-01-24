@@ -1,19 +1,36 @@
 var GameObject = require('../../GameObject');
+var Utils = require('../../../renderer/webgl/Utils');
 
-var TextWebGLRenderer = function (renderer, src, interpolationPercentage, camera)
+var TextWebGLRenderer = function (renderer, text, interpolationPercentage, camera)
 {
-    if (GameObject.RENDER_MASK !== src.renderFlags || (src.cameraFilter > 0 && (src.cameraFilter & camera._id)) || src.text === '')
+    if (GameObject.RENDER_MASK !== text.renderFlags || (text.cameraFilter > 0 && (text.cameraFilter & camera._id)) || text.text === '')
     {
         return;
     }
     
-    if (src.dirty)
+    if (text.dirty)
     {
-        src.canvasTexture = renderer.uploadCanvasToGPU(src.canvas, src.canvasTexture, true);
-        src.dirty = false;
+        text.canvasTexture = renderer.canvasToTexture(text.canvas, text.canvasTexture, true, text.scaleMode);
+        text.dirty = false;
     }
-    
-    renderer.spriteBatch.addSpriteTexture(src, camera, src.canvasTexture, src.canvas.width, src.canvas.height);
+
+    var getTint = Utils.getTintAppendFloatAlpha;
+
+    renderer.pipelines.TextureTintPipeline.batchTexture(
+        text.canvasTexture,
+        text.x, text.y,
+        text.scaleX, text.scaleY,
+        text.rotation,
+        text.flipX, text.flipY,
+        text.scrollFactorX, text.scrollFactorY,
+        text.displayOriginX, text.displayOriginY,
+        0, 0, text.canvasTexture.width, text.canvasTexture.height,
+        getTint(text._tintTL, text._alphaTL), 
+        getTint(text._tintTR, text._alphaTR), 
+        getTint(text._tintBL, text._alphaBL), 
+        getTint(text._tintBR, text._alphaBR),
+        camera
+    );
 };
 
 module.exports = TextWebGLRenderer;

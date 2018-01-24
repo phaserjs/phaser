@@ -96,11 +96,11 @@ var CanvasRenderer = new Class({
         }
     },
 
-    addContextLostCallback: function (callback)
+    onContextLost: function (callback)
     {
     },
 
-    addContextRestoredCallback: function (callback)
+    onContextRestored: function (callback)
     {
     },
 

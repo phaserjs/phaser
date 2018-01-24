@@ -38,7 +38,7 @@ var TextureSource = new Class({
 
         if (game.config.renderType === CONST.WEBGL)
         {
-            game.renderer.createTextureFromSource(this, this.width, this.height);
+            this.glTexture = game.renderer.createTextureFromSource(this.image, this.width, this.height, this.scaleMode);
         }
 
         if (game.config.pixelArt)

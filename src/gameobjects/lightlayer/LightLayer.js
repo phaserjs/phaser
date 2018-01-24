@@ -48,7 +48,7 @@ var LightLayer = new Class({
         this._z = 0;
         this.setOrigin(0, 0);
 
-        scene.sys.game.renderer.addContextRestoredCallback(function (renderer) {
+        scene.sys.game.renderer.onContextRestored(function (renderer) {
             _this.onContextRestored(renderer);
         });
 

@@ -62,7 +62,7 @@ var TileSprite = new Class({
         this.updateTileTexture();
 
         var _this = this;
-        scene.sys.game.renderer.addContextRestoredCallback(function (renderer) {
+        scene.sys.game.renderer.onContextRestored(function (renderer) {
             _this.tileTexture = null;
             _this.dirty = true;
             _this.tileTexture = resourceManager.createTexture(0, gl.LINEAR, gl.LINEAR, gl.REPEAT, gl.REPEAT, gl.RGBA, _this.canvasBuffer, _this.potWidth, _this.potHeight);

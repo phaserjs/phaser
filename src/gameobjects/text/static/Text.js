@@ -90,7 +90,7 @@ var Text = new Class({
 
         var _this = this;
 
-        scene.sys.game.renderer.addContextRestoredCallback(function ()
+        scene.sys.game.renderer.onContextRestored(function ()
         {
             _this.canvasTexture = null;
             _this.dirty = true;
