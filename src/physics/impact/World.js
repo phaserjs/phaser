@@ -10,6 +10,8 @@ var Set = require('../../structs/Set');
 var Solver = require('./Solver');
 var TYPE = require('./TYPE');
 var TILEMAP_FORMATS = require('../../gameobjects/tilemap/Formats');
+var HasValue = require('../../utils/object/HasValue');
+var GetFastValue = require('../../utils/object/GetFastValue');
 
 var World = new Class({
 
@@ -142,6 +144,76 @@ var World = new Class({
         {
             console.warn('Invalid Weltmeister collision map data: ' + key);
         }
+
+        return this.collisionMap;
+    },
+
+    /**
+    * Sets the collision map for the world from a tilemap layer. Only tiles that are marked as
+    * colliding will be used. You can specify the mapping from tiles to slope IDs in a couple of
+    * ways. The easiest is to use Tiled and the slopeTileProperty option. Alternatively, you can
+    * manually create a slopeMap that stores the mapping between tile indices and slope IDs.
+    *
+    * @param {StaticTilemapLayer|DynamicTilemapLayer} tilemapLayer - The tilemap layer to use.
+    * @param {object} [options] - Options for controlling the mapping from tiles to slope IDs.
+    * @param {string} [options.slopeTileProperty=null] - Slope IDs can be stored on tiles directly
+    * using Tiled's tileset editor. If a tile has a property with the given slopeTileProperty string
+    * name, the value of that property for the tile will be used for its slope mapping. E.g. a 45
+    * degree slope upward could be given a "slope" property with a value of 2.
+    * @param {object} [options.slopeMap=null] - A tile index to slope definition map.
+    * @param {integer} [options.defaultCollidingSlope=null] - If specified, the default slope ID to
+    * assign to a colliding tile. If not specified, the tile's index is used.
+    * @param {integer} [options.defaultNonCollidingSlope=0] - The default slope ID to assign to a
+    * non-colliding tile.
+    * @return {CollisionMap} The newly created CollisionMap.
+    */
+    setCollisionMapFromTilemapLayer: function (tilemapLayer, options)
+    {
+        if (options === undefined) { options = {}; }
+        var slopeProperty = GetFastValue(options, 'slopeProperty', null);
+        var slopeMap = GetFastValue(options, 'slopeMap', null);
+        var collidingSlope = GetFastValue(options, 'defaultCollidingSlope', null);
+        var nonCollidingSlope = GetFastValue(options, 'defaultNonCollidingSlope', 0);
+
+        var layerData = tilemapLayer.layer;
+        var tileSize = layerData.baseTileWidth;
+        var collisionData = [];
+
+        for (var ty = 0; ty < layerData.height; ty++)
+        {
+            collisionData[ty] = [];
+
+            for (var tx = 0; tx < layerData.width; tx++)
+            {
+                var tile = layerData.data[ty][tx];
+
+                if (tile && tile.collides)
+                {
+                    if (slopeProperty !== null && HasValue(tile.properties, slopeProperty))
+                    {
+                        collisionData[ty][tx] = parseInt(tile.properties[slopeProperty], 10);
+                    }
+                    else if (slopeMap !== null && HasValue(slopeMap, tile.index))
+                    {
+                        collisionData[ty][tx] = slopeMap[tile.index];
+                    }
+                    else if (collidingSlope !== null)
+                    {
+                        collisionData[ty][tx] = collidingSlope;
+                    }
+                    else
+                    {
+                        collisionData[ty][tx] = tile.index;
+                    }
+                }
+                else
+                {
+                    collisionData[ty][tx] = nonCollidingSlope;
+                }
+            }
+        }
+
+        this.collisionMap = new CollisionMap(tileSize, collisionData);
 
         return this.collisionMap;
     },
