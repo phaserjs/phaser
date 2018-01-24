@@ -18,14 +18,40 @@ var Quad = new Class({
         //  |    \
         //  1----2
 
-        //  Array sequence: tl, bl, br, tr
-        var vertices = [ 0, 0, 0, 0, 0, 0, 0, 0 ];
-        var uv = [ 0, 0, 0, 1, 1, 1, 1, 0 ];
-        var indices = [ 0, 1, 2, 0, 2, 3 ];
-        var colors = [ 0xffffff, 0xffffff, 0xffffff, 0xffffff ];
-        var alphas = [ 1, 1, 1, 1 ];
+        var vertices = [ 
+            0, 0, // tl 
+            0, 0, // bl
+            0, 0, // br
+            0, 0, // tl
+            0, 0, // br
+            0, 0  // tr
+        ];
+        var uv = [ 
+            0, 0, // tl
+            0, 1, // bl
+            1, 1, // br
+            0, 0, // tl
+            1, 1, // br
+            1, 0  // tr
+        ];
+        var colors = [ 
+            0xffffff, // tl
+            0xffffff, // bl
+            0xffffff, // br
+            0xffffff, // tl
+            0xffffff, // br
+            0xffffff  // tr
+        ];
+        var alphas = [ 
+            1, // tl
+            1, // bl
+            1, // br
+            1, // tl
+            1, // br
+            1  // tr
+        ];
 
-        Mesh.call(this, scene, x, y, vertices, uv, indices, colors, alphas, texture, frame);
+        Mesh.call(this, scene, x, y, vertices, uv, colors, alphas, texture, frame);
 
         this.resetPosition();
     },
@@ -40,6 +66,7 @@ var Quad = new Class({
         set: function (value)
         {
             this.vertices[0] = value - this.x;
+            this.vertices[6] = value - this.x;
         }
 
     },
@@ -54,6 +81,7 @@ var Quad = new Class({
         set: function (value)
         {
             this.vertices[1] = value - this.y;
+            this.vertices[7] = value - this.y;
         }
 
     },
@@ -62,12 +90,12 @@ var Quad = new Class({
 
         get: function ()
         {
-            return this.x + this.vertices[6];
+            return this.x + this.vertices[10];
         },
 
         set: function (value)
         {
-            this.vertices[6] = value - this.x;
+            this.vertices[10] = value - this.x;
         }
 
     },
@@ -76,12 +104,12 @@ var Quad = new Class({
 
         get: function ()
         {
-            return this.y + this.vertices[7];
+            return this.y + this.vertices[11];
         },
 
         set: function (value)
         {
-            this.vertices[7] = value - this.y;
+            this.vertices[11] = value - this.y;
         }
 
     },
@@ -124,6 +152,7 @@ var Quad = new Class({
         set: function (value)
         {
             this.vertices[4] = value - this.x;
+            this.vertices[8] = value - this.x;
         }
 
     },
@@ -138,6 +167,7 @@ var Quad = new Class({
         set: function (value)
         {
             this.vertices[5] = value - this.y;
+            this.vertices[9] = value - this.y;
         }
 
     },
@@ -154,6 +184,7 @@ var Quad = new Class({
         set: function (value)
         {
             this.alphas[0] = value;
+            this.alphas[3] = value;
         }
 
     },
@@ -162,12 +193,12 @@ var Quad = new Class({
 
         get: function ()
         {
-            return this.alphas[3];
+            return this.alphas[5];
         },
 
         set: function (value)
         {
-            this.alphas[3] = value;
+            this.alphas[5] = value;
         }
 
     },
@@ -196,6 +227,7 @@ var Quad = new Class({
         set: function (value)
         {
             this.alphas[2] = value;
+            this.alphas[4] = value;
         }
 
     },
@@ -210,6 +242,7 @@ var Quad = new Class({
         set: function (value)
         {
             this.colors[0] = value;
+            this.colors[3] = value;
         }
 
     },
@@ -218,12 +251,12 @@ var Quad = new Class({
 
         get: function ()
         {
-            return this.colors[3];
+            return this.colors[5];
         },
 
         set: function (value)
         {
-            this.colors[3] = value;
+            this.colors[5] = value;
         }
 
     },
@@ -252,6 +285,7 @@ var Quad = new Class({
         set: function (value)
         {
             this.colors[2] = value;
+            this.colors[4] = value;
         }
 
     },
@@ -311,6 +345,8 @@ var Quad = new Class({
         alphas[1] = 1;
         alphas[2] = 1;
         alphas[3] = 1;
+        alphas[4] = 1;
+        alphas[5] = 1;
 
         return this;
     },
@@ -323,6 +359,8 @@ var Quad = new Class({
         colors[1] = 0xffffff;
         colors[2] = 0xffffff;
         colors[3] = 0xffffff;
+        colors[4] = 0xffffff;
+        colors[5] = 0xffffff;
 
         return this;
     },
