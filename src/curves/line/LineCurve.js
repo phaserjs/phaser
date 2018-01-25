@@ -17,6 +17,18 @@ var LineCurve = new Class({
     initialize:
 
     //  vec2s or array
+    /**
+     * [description]
+     *
+     * @class LineCurve
+     * @extends Phaser.Curves.Curve
+     * @memberOf Phaser.Curves
+     * @constructor
+     * @since 3.0.0
+     *
+     * @param {[type]} p0 - [description]
+     * @param {[type]} p1 - [description]
+     */
     function LineCurve (p0, p1)
     {
         Curve.call(this, 'LineCurve');
@@ -27,10 +39,33 @@ var LineCurve = new Class({
             p0 = new Vector2(p0[0], p0[1]);
         }
 
+        /**
+         * [description]
+         *
+         * @property {[type]} p0
+         * @since 3.0.0
+         */
         this.p0 = p0;
+
+        /**
+         * [description]
+         *
+         * @property {[type]} p1
+         * @since 3.0.0
+         */
         this.p1 = p1;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Curves.LineCurve#getBounds
+     * @since 3.0.0
+     *
+     * @param {[type]} out - [description]
+     *
+     * @return {[type]} [description]
+     */
     getBounds: function (out)
     {
         if (out === undefined) { out = new Rectangle(); }
@@ -38,6 +73,16 @@ var LineCurve = new Class({
         return FromPoints([ this.p0, this.p1 ], out);
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Curves.LineCurve#getStartPoint
+     * @since 3.0.0
+     *
+     * @param {[type]} out - [description]
+     *
+     * @return {[type]} [description]
+     */
     getStartPoint: function (out)
     {
         if (out === undefined) { out = new Vector2(); }
@@ -45,11 +90,30 @@ var LineCurve = new Class({
         return out.copy(this.p0);
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Curves.LineCurve#getResolution
+     * @since 3.0.0
+     *
+     * @return {integer} [description]
+     */
     getResolution: function ()
     {
         return 1;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Curves.LineCurve#getPoint
+     * @since 3.0.0
+     *
+     * @param {[type]} t - [description]
+     * @param {[type]} out - [description]
+     *
+     * @return {[type]} [description]
+     */
     getPoint: function (t, out)
     {
         if (out === undefined) { out = new Vector2(); }
@@ -65,11 +129,30 @@ var LineCurve = new Class({
     },
 
     // Line curve is linear, so we can overwrite default getPointAt
+    /**
+     * [description]
+     *
+     * @method Phaser.Curves.LineCurve#getPointAt
+     * @since 3.0.0
+     *
+     * @param {[type]} u - [description]
+     * @param {[type]} out - [description]
+     *
+     * @return {[type]} [description]
+     */
     getPointAt: function (u, out)
     {
         return this.getPoint(u, out);
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Curves.LineCurve#getTangent
+     * @since 3.0.0
+     *
+     * @return {[type]} [description]
+     */
     getTangent: function ()
     {
         var tangent = tmpVec2.copy(this.p1).subtract(this.p0);
@@ -78,6 +161,16 @@ var LineCurve = new Class({
     },
 
     //  Override default Curve.draw because this is better than calling getPoints on a line!
+    /**
+     * [description]
+     *
+     * @method Phaser.Curves.LineCurve#draw
+     * @since 3.0.0
+     *
+     * @param {[type]} graphics - [description]
+     *
+     * @return {[type]} [description]
+     */
     draw: function (graphics)
     {
         graphics.lineBetween(this.p0.x, this.p0.y, this.p1.x, this.p1.y);
@@ -86,6 +179,14 @@ var LineCurve = new Class({
         return graphics;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Curves.LineCurve#toJSON
+     * @since 3.0.0
+     *
+     * @return {[type]} [description]
+     */
     toJSON: function ()
     {
         return {

@@ -17,6 +17,20 @@ var CubicBezierCurve = new Class({
     //  p1 = control point 1
     //  p2 = control point 2
     //  p3 = end point
+    /**
+     * [description]
+     *
+     * @class CubicBezierCurve
+     * @extends Phaser.Curves.Curve
+     * @memberOf Phaser.Curves
+     * @constructor
+     * @since 3.0.0
+     *
+     * @param {[type]} p0 - [description]
+     * @param {[type]} p1 - [description]
+     * @param {[type]} p2 - [description]
+     * @param {[type]} p3 - [description]
+     */
     function CubicBezierCurve (p0, p1, p2, p3)
     {
         Curve.call(this, 'CubicBezierCurve');
@@ -29,12 +43,49 @@ var CubicBezierCurve = new Class({
             p0 = new Vector2(p0[0], p0[1]);
         }
 
+        /**
+         * [description]
+         *
+         * @property {[type]} p0
+         * @since 3.0.0
+         */
         this.p0 = p0;
+
+        /**
+         * [description]
+         *
+         * @property {[type]} p1
+         * @since 3.0.0
+         */
         this.p1 = p1;
+
+        /**
+         * [description]
+         *
+         * @property {[type]} p2
+         * @since 3.0.0
+         */
         this.p2 = p2;
+
+        /**
+         * [description]
+         *
+         * @property {[type]} p3
+         * @since 3.0.0
+         */
         this.p3 = p3;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Curves.CubicBezierCurve#getStartPoint
+     * @since 3.0.0
+     *
+     * @param {[type]} out - [description]
+     *
+     * @return {[type]} [description]
+     */
     getStartPoint: function (out)
     {
         if (out === undefined) { out = new Vector2(); }
@@ -42,11 +93,32 @@ var CubicBezierCurve = new Class({
         return out.copy(this.p0);
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Curves.CubicBezierCurve#getResolution
+     * @since 3.0.0
+     *
+     * @param {[type]} divisions - [description]
+     *
+     * @return {[type]} [description]
+     */
     getResolution: function (divisions)
     {
         return divisions;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Curves.CubicBezierCurve#getPoint
+     * @since 3.0.0
+     *
+     * @param {[type]} t - [description]
+     * @param {[type]} out - [description]
+     *
+     * @return {[type]} [description]
+     */
     getPoint: function (t, out)
     {
         if (out === undefined) { out = new Vector2(); }
@@ -59,6 +131,17 @@ var CubicBezierCurve = new Class({
         return out.set(CubicBezier(t, p0.x, p1.x, p2.x, p3.x), CubicBezier(t, p0.y, p1.y, p2.y, p3.y));
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Curves.CubicBezierCurve#draw
+     * @since 3.0.0
+     *
+     * @param {[type]} graphics - [description]
+     * @param {[type]} pointsTotal - [description]
+     *
+     * @return {[type]} [description]
+     */
     draw: function (graphics, pointsTotal)
     {
         if (pointsTotal === undefined) { pointsTotal = 32; }
@@ -79,6 +162,14 @@ var CubicBezierCurve = new Class({
         return graphics;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Curves.CubicBezierCurve#toJSON
+     * @since 3.0.0
+     *
+     * @return {[type]} [description]
+     */
     toJSON: function ()
     {
         return {

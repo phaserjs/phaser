@@ -26,8 +26,8 @@ var TimeStep = new Class({
      * @constructor
      * @since 3.0.0
      *
-     * @param {Phaser.Game} game - [description]
-     * @param {FPSConfig]} config - [description]
+     * @param {Phaser.Game} game - A reference to the Phaser.Game instance that owns this Time Step.
+     * @param {FPSConfig} config
      */
     function TimeStep (game, config)
     {
@@ -36,6 +36,7 @@ var TimeStep = new Class({
          *
          * @property {Phaser.Game} game
          * @readOnly
+         * @since 3.0.0
          */
         this.game = game;
 
@@ -44,64 +45,82 @@ var TimeStep = new Class({
          *
          * @property {Phaser.DOM.RequestAnimationFrame} raf
          * @readOnly
+         * @since 3.0.0
          */
         this.raf = new RequestAnimationFrame();
 
         /**
-         * [description]
+         * A flag that is set once the TimeStep has started running and toggled when it stops.
          *
          * @property {boolean} started
          * @readOnly
+         * @default false
+         * @since 3.0.0
          */
         this.started = false;
 
         /**
-         * [description]
+         * A flag that is set once the TimeStep has started running and toggled when it stops.
+         * The difference between this value and `started` is that `running` is toggled when
+         * the TimeStep is sent to sleep, where-as `started` remains `true`, only changing if
+         * the TimeStep is actually stopped, not just paused.
          *
          * @property {boolean} running
          * @readOnly
+         * @default false
+         * @since 3.0.0
          */
         this.running = false;
         
         /**
-         * [description]
+         * The minimum fps rate you want the Time Step to run at.
          *
          * @property {integer} minFps
+         * @default 5
+         * @since 3.0.0
          */
         this.minFps = GetValue(config, 'min', 5);
 
         /**
-         * [description]
+         * The target fps rate for the Time Step to run at.
+         * 
+         * Setting this value will not actually change the speed at which the browser runs, that is beyond
+         * the control of Phaser. Instead, it allows you to determine performance issues and if the Time Step
+         * is spiraling out of control.
          *
          * @property {integer} targetFps
+         * @default 60
+         * @since 3.0.0
          */
         this.targetFps = GetValue(config, 'target', 60);
 
         /**
-         * [description]
+         * The minFps value in ms.
+         * Defaults to 200ms between frames (i.e. super slow!)
          *
          * @property {number} _min
          * @private
+         * @since 3.0.0
          */
-        this._min = 1000 / this.minFps;         //  200ms between frames (i.e. super slow!)
+        this._min = 1000 / this.minFps;
 
         /**
-         * [description]
+         * The targetFps value in ms.
+         * Defaults to 16.66ms between frames (i.e. normal)
          *
          * @property {number} _target
          * @private
+         * @since 3.0.0
          */
-        this._target = 1000 / this.targetFps;   //  16.666ms between frames (i.e. normal)
-
-        //  200 / 1000 = 0.2 (5fps)
-        //  8.333 / 1000 = 0.008333 (120fps)
-        //  16.666 / 1000 = 0.01666 (60fps)
+        this._target = 1000 / this.targetFps;
 
         /**
          * An exponential moving average of the frames per second.
          *
          * @property {integer} actualFps
          * @readOnly
+         * @default 60
+         * @since 3.0.0
          */
         this.actualFps = this.targetFps;
 
@@ -110,29 +129,38 @@ var TimeStep = new Class({
          *
          * @property {integer} nextFpsUpdate
          * @readOnly
+         * @default 0
+         * @since 3.0.0
          */
         this.nextFpsUpdate = 0;
 
         /**
-         * [description]
+         * The number of frames processed this second.
          *
          * @property {integer} framesThisSecond
          * @readOnly
+         * @default 0
+         * @since 3.0.0
          */
         this.framesThisSecond = 0;
 
         /**
-         * [description]
+         * A callback to be invoked each time the Time Step steps.
          *
          * @property {function} callback
+         * @default NOOP
+         * @since 3.0.0
          */
         this.callback = NOOP;
 
         /**
-         * [description]
+         * You can force the Time Step to use Set Timeout instead of Request Animation Frame by setting
+         * the `forceSetTimeOut` property to `true` in the Game Configuration object. It cannot be changed at run-time.
          *
          * @property {boolean} forceSetTimeOut
          * @readOnly
+         * @default false
+         * @since 3.0.0
          */
         this.forceSetTimeOut = GetValue(config, 'forceSetTimeOut', false);
 
@@ -140,6 +168,8 @@ var TimeStep = new Class({
          * [description]
          *
          * @property {integer} time
+         * @default 0
+         * @since 3.0.0
          */
         this.time = 0;
 
@@ -147,6 +177,8 @@ var TimeStep = new Class({
          * [description]
          *
          * @property {integer} startTime
+         * @default 0
+         * @since 3.0.0
          */
         this.startTime = 0;
 
@@ -154,6 +186,8 @@ var TimeStep = new Class({
          * [description]
          *
          * @property {integer} lastTime
+         * @default 0
+         * @since 3.0.0
          */
         this.lastTime = 0;
 
@@ -162,6 +196,8 @@ var TimeStep = new Class({
          *
          * @property {integer} frame
          * @readOnly
+         * @default 0
+         * @since 3.0.0
          */
         this.frame = 0;
 
@@ -170,6 +206,8 @@ var TimeStep = new Class({
          *
          * @property {boolean} inFocus
          * @readOnly
+         * @default true
+         * @since 3.0.0
          */
         this.inFocus = true;
 
@@ -178,6 +216,8 @@ var TimeStep = new Class({
          *
          * @property {integer} _pauseTime
          * @private
+         * @default 0
+         * @since 3.0.0
          */
         this._pauseTime = 0;
 
@@ -186,6 +226,8 @@ var TimeStep = new Class({
          *
          * @property {integer} _coolDown
          * @private
+         * @default 0
+         * @since 3.0.0
          */
         this._coolDown = 0;
 
@@ -193,6 +235,8 @@ var TimeStep = new Class({
          * [description]
          *
          * @property {integer} delta
+         * @default 0
+         * @since 3.0.0
          */
         this.delta = 0;
 
@@ -200,6 +244,8 @@ var TimeStep = new Class({
          * [description]
          *
          * @property {integer} deltaIndex
+         * @default 0
+         * @since 3.0.0
          */
         this.deltaIndex = 0;
 
@@ -207,6 +253,8 @@ var TimeStep = new Class({
          * [description]
          *
          * @property {array} deltaHistory
+         * @default 0
+         * @since 3.0.0
          */
         this.deltaHistory = [];
 
@@ -215,6 +263,7 @@ var TimeStep = new Class({
          *
          * @property {integer} deltaSmoothingMax
          * @default 10
+         * @since 3.0.0
          */
         this.deltaSmoothingMax = GetValue(config, 'deltaHistory', 10);
 
@@ -223,6 +272,7 @@ var TimeStep = new Class({
          *
          * @property {integer} panicMax
          * @default 120
+         * @since 3.0.0
          */
         this.panicMax = GetValue(config, 'panicMax', 120);
 
@@ -232,6 +282,8 @@ var TimeStep = new Class({
          * So please be careful when using this value in calculations.
          *
          * @property {number} rawDelta
+         * @default 0
+         * @since 3.0.0
          */
         this.rawDelta = 0;
     },
@@ -261,7 +313,7 @@ var TimeStep = new Class({
     },
 
     /**
-     * Called when the visibility API says the game is 'hidden' (tab switch, etc)
+     * Called when the visibility API says the game is 'hidden' (tab switch out of view, etc)
      *
      * @method Phaser.Boot.TimeStep#pause
      * @since 3.0.0
@@ -272,7 +324,7 @@ var TimeStep = new Class({
     },
 
     /**
-     * Called when the visibility API says the game is 'visible' again (tab switch, etc)
+     * Called when the visibility API says the game is 'visible' again (tab switch back into view, etc)
      *
      * @method Phaser.Boot.TimeStep#resume
      * @since 3.0.0
@@ -314,12 +366,13 @@ var TimeStep = new Class({
     },
 
     /**
-     * [description]
+     * Starts the Time Step running, if it is not already doing so.
+     * Called automatically by the Game Boot process.
      *
      * @method Phaser.Boot.TimeStep#start
      * @since 3.0.0
      *
-     * @param {function} callback - [description]
+     * @param {function} callback - The callback to be invoked each time the Time Step steps.
      */
     start: function (callback)
     {
@@ -346,7 +399,9 @@ var TimeStep = new Class({
     },
 
     /**
-     * [description]
+     * The main step method. This is called each time the browser updates, either by Request Animation Frame,
+     * or by Set Timeout. It is responsible for calculating the delta values, frame totals, cool down history and more.
+     * You generally should never call this method directly.
      *
      * @method Phaser.Boot.TimeStep#step
      * @since 3.0.0
@@ -461,7 +516,7 @@ var TimeStep = new Class({
     },
 
     /**
-     * [description]
+     * Manually calls TimeStep.step, passing in the performance.now value to it.
      *
      * @method Phaser.Boot.TimeStep#tick
      * @since 3.0.0
@@ -472,7 +527,7 @@ var TimeStep = new Class({
     },
 
     /**
-     * [description]
+     * Sends the TimeStep to sleep, stopping Request Animation Frame (or SetTimeout) and toggling the `running` flag to false.
      *
      * @method Phaser.Boot.TimeStep#sleep
      * @since 3.0.0
@@ -488,12 +543,13 @@ var TimeStep = new Class({
     },
 
     /**
-     * [description]
+     * Wakes-up the TimeStep, restarting Request Animation Frame (or SetTimeout) and toggling the `running` flag to true.
+     * The `seamless` argument controls if the wake-up should adjust the start time or not.
      *
      * @method Phaser.Boot.TimeStep#wake
      * @since 3.0.0
      *
-     * @param {boolean} [seamless=false] - [description]
+     * @param {boolean} [seamless=false] - Adjust the startTime based on the lastTime values.
      */
     wake: function (seamless)
     {
@@ -514,42 +570,12 @@ var TimeStep = new Class({
     },
 
     /**
-     * [description]
-     *
-     * @method Phaser.Boot.TimeStep#setFps
-     * @since 3.0.0
-     *
-     * @param {integer} value - [description]
-     */
-    setFps: function (value)
-    {
-        this.sleep();
-
-        this.fps = value;
-
-        this.wake();
-    },
-
-    /**
-     * [description]
-     *
-     * @method Phaser.Boot.TimeStep#getFps
-     * @since 3.0.0
-     *
-     * @return {integer} [description]
-     */
-    getFps: function ()
-    {
-        return this.fps;
-    },
-
-    /**
-     * [description]
+     * Stops the TimeStep running.
      *
      * @method Phaser.Boot.TimeStep#stop
      * @since 3.0.0
      *
-     * @return {[type]} [description]
+     * @return {Phaser.Boot.TimeStep} The TimeStep object.
      */
     stop: function ()
     {
@@ -562,7 +588,8 @@ var TimeStep = new Class({
     },
 
     /**
-     * [description]
+     * Destroys the TimeStep. This will stop Request Animation Frame, stop the step, clear the callbacks and null
+     * any objects.
      *
      * @method Phaser.Boot.TimeStep#destroy
      * @since 3.0.0
@@ -570,6 +597,10 @@ var TimeStep = new Class({
     destroy: function ()
     {
         this.stop();
+
+        this.callback = null;
+        this.raf = null;
+        this.game = null;
     }
 
 });

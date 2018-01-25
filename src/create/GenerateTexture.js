@@ -1,7 +1,17 @@
-var GetValue = require('../utils/object/GetValue');
 var Arne16 = require('./palettes/Arne16');
 var CanvasPool = require('../display/canvas/CanvasPool');
+var GetValue = require('../utils/object/GetValue');
 
+/**
+ * [description]
+ *
+ * @function Phaser.Create.GenerateTexture
+ * @since 3.0.0
+ *
+ * @param {object} config - [description]
+ *
+ * @return {HTMLCanvasElement} [description]
+ */
 var GenerateTexture = function (config)
 {
     var data = GetValue(config, 'data', []);

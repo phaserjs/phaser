@@ -341,6 +341,8 @@ var LoaderPlugin = new Class({
         this.state = CONST.LOADER_COMPLETE;
 
         this.emit('complete', this, this.storage.size, this.failed.size);
+
+        this.removeAllListeners();
     },
 
     //  The Loader has finished
@@ -559,11 +561,6 @@ var LoaderPlugin = new Class({
         this.failed.clear();
         this.queue.clear();
         this.storage.clear();
-
-        this.removeAllListeners('start');
-        this.removeAllListeners('load');
-        this.removeAllListeners('loaderror');
-        this.removeAllListeners('complete');
 
         var gameConfig = this.systems.game.config;
         var sceneConfig = this.systems.settings.loader;

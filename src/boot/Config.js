@@ -23,9 +23,22 @@ var ValueToColor = require('../display/color/ValueToColor');
  */
 
 /**
- * @typedef {object} GameConfig
+ * @typedef {object} LoaderConfig
  *
- * @todo Add Physics Config
+ * @property {string} [baseURL] - [description]
+ * @property {string} [path] - [description]
+ * @property {boolean} [enableParallel=true] - [description]
+ * @property {integer} [maxParallelDownloads=4] - [description]
+ * @property {string|undefined} [crossOrigin=undefined] - [description]
+ * @property {string} [responseType] - [description]
+ * @property {boolean} [async=true] - [description]
+ * @property {string} [user] - [description]
+ * @property {string} [password] - [description]
+ * @property {integer} [timeout=0] - [description]
+ */
+
+/**
+ * @typedef {object} GameConfig
  *
  * @property {integer|string} [width=1024] - [description]
  * @property {integer|string} [height=768] - [description]
@@ -59,11 +72,10 @@ var ValueToColor = require('../display/color/ValueToColor');
  * @property {boolean} [transparent=false] - [description]
  * @property {boolean} [clearBeforeRender=true] - [description]
  * @property {string|number} [backgroundColor=0x000000] - [description]
- * @property {boolean} [preserveDrawingBuffer=false] - [description]
  * @property {object} [?callbacks] - [description]
  * @property {function} [callbacks.preBoot=NOOP] - [description]
  * @property {function} [callbacks.postBoot=NOOP] - [description]
- * @property {boolean} [useTicker=false] - [description]
+ * @property {LoaderConfig} [?loader] - [description]
  * @property {object} [?images] - [description]
  * @property {string} [images.default] - [description]
  * @property {string} [images.missing] - [description]
@@ -164,13 +176,10 @@ var Config = new Class({
         this.transparent = GetValue(config, 'transparent', false);
         this.clearBeforeRender = GetValue(config, 'clearBeforeRender', true);
         this.backgroundColor = ValueToColor(GetValue(config, 'backgroundColor', 0));
-        this.preserveDrawingBuffer = GetValue(config, 'preserveDrawingBuffer', false);
 
         //  Callbacks
         this.preBoot = GetValue(config, 'callbacks.preBoot', NOOP);
         this.postBoot = GetValue(config, 'callbacks.postBoot', NOOP);
-
-        this.useTicker = GetValue(config, 'useTicker', false);
 
         //  Physics
         //  physics: {

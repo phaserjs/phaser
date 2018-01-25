@@ -1,15 +1,17 @@
-var CONST = require('../const');
-var CanvasPool = require('../display/canvas/CanvasPool');
-var Features = require('../device/Features');
 var CanvasInterpolation = require('../display/canvas/CanvasInterpolation');
+var CanvasPool = require('../display/canvas/CanvasPool');
+var CONST = require('../const');
+var Features = require('../device/Features');
 
 /**
- * [description]
+ * Called automatically by Phaser.Game and responsible for creating the renderer it will use.
+ *
+ * Relies upon two webpack global flags to be defined: `WEBGL_RENDERER` and `CANVAS_RENDERER` during build time, but not at run-time.
  *
  * @function Phaser.Boot.CreateRenderer
  * @since 3.0.0
  *
- * @param {Phaser.Game} game - [description]
+ * @param {Phaser.Game} game - The Phaser.Game instance on which the renderer will be set.
  */
 var CreateRenderer = function (game)
 {

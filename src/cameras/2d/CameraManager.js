@@ -4,17 +4,36 @@ var GetFastValue = require('../../utils/object/GetFastValue');
 var PluginManager = require('../../plugins/PluginManager');
 var RectangleContains = require('../../geom/rectangle/Contains');
 
-//  Phaser.Cameras.Scene2D.CameraManager
-
 var CameraManager = new Class({
 
     initialize:
 
+    /**
+     * [description]
+     *
+     * @class CameraManager
+     * @memberOf Phaser.Cameras.Scene2D
+     * @constructor
+     * @since 3.0.0
+     *
+     * @param {Phaser.Scene} scene - The Scene that owns the Camera Manager plugin.
+     */
     function CameraManager (scene)
     {
-        //  The Scene that owns this plugin
+        /**
+         * The Scene that owns the Camera Manager plugin.
+         *
+         * @property {Phaser.Scene} scene
+         * @since 3.0.0
+         */
         this.scene = scene;
 
+        /**
+         * A reference to the Scene.Systems handler for the Scene that owns the Camera Manager.
+         *
+         * @property {Phaser.Scenes.Systems} systems
+         * @since 3.0.0
+         */
         this.systems = scene.sys;
 
         if (!scene.sys.settings.isBooted)
@@ -22,9 +41,30 @@ var CameraManager = new Class({
             scene.sys.events.once('boot', this.boot, this);
         }
 
+        /**
+         * The current Camera ID.
+         *
+         * @property {number} currentCameraId
+         * @default 1
+         * @readOnly
+         * @since 3.0.0
+         */
         this.currentCameraId = 1;
 
+        /**
+         * An Array of the Camera objects being managed by this Camera Manager.
+         *
+         * @property {Phaser.Cameras.Scene2D.Camera[]} cameras
+         * @since 3.0.0
+         */
         this.cameras = [];
+
+        /**
+         * A pool of Camera objects available to be used by the Camera Manager.
+         *
+         * @property {Phaser.Cameras.Scene2D.Camera[]} cameraPool
+         * @since 3.0.0
+         */
         this.cameraPool = [];
 
         if (scene.sys.settings.cameras)
@@ -38,10 +78,22 @@ var CameraManager = new Class({
             this.add();
         }
 
-        //  Set the default camera
+        /**
+         * The default Camera in the Camera Manager.
+         *
+         * @property {Phaser.Cameras.Scene2D.Camera} main
+         * @since 3.0.0
+         */
         this.main = this.cameras[0];
     },
 
+    /**
+     * Called when the Camera Manager boots.
+     * Starts the event listeners running.
+     *
+     * @method Phaser.Cameras.Scene2D.CameraManager#boot
+     * @since 3.0.0
+     */
     boot: function ()
     {
         var eventEmitter = this.systems.events;
@@ -51,6 +103,21 @@ var CameraManager = new Class({
         eventEmitter.on('destroy', this.destroy, this);
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Cameras.Scene2D.CameraManager#add
+     * @since 3.0.0
+     *
+     * @param {number} [x=0] - [description]
+     * @param {number} [y=0] - [description]
+     * @param {number} [width] - [description]
+     * @param {number} [height] - [description]
+     * @param {boolean} [makeMain=false] - [description]
+     * @param {string} [name=''] - [description]
+     *
+     * @return {Phaser.Cameras.Scene2D.Camera} [description]
+     */
     add: function (x, y, width, height, makeMain, name)
     {
         if (x === undefined) { x = 0; }
@@ -90,6 +157,16 @@ var CameraManager = new Class({
         return camera;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Cameras.Scene2D.CameraManager#addExisting
+     * @since 3.0.0
+     *
+     * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
+     *
+     * @return {Phaser.Cameras.Scene2D.Camera} [description]
+     */
     addExisting: function (camera)
     {
         var index = this.cameras.indexOf(camera);
@@ -105,17 +182,35 @@ var CameraManager = new Class({
         return null;
     },
 
-    /*
+    /**
+     * [description]
+     *
+     * @method Phaser.Cameras.Scene2D.CameraManager#addKeyControl
+     * @since 3.0.0
+     *
+     * @param {[type]} config - [description]
+     *
+     * @return {[type]} [description]
+     */
     addKeyControl: function (config)
     {
         return new KeyControl(config);
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Cameras.Scene2D.CameraManager#addSmoothedKeyControl
+     * @since 3.0.0
+     *
+     * @param {[type]} config - [description]
+     *
+     * @return {[type]} [description]
+     */
     addSmoothedKeyControl: function (config)
     {
         return new SmoothedKeyControl(config);
     },
-    */
 
     /*
     {
@@ -143,6 +238,16 @@ var CameraManager = new Class({
     }
     */
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Cameras.Scene2D.CameraManager#fromJSON
+     * @since 3.0.0
+     *
+     * @param {[type]} config - [description]
+     *
+     * @return {[type]} [description]
+     */
     fromJSON: function (config)
     {
         if (!Array.isArray(config))
@@ -199,6 +304,16 @@ var CameraManager = new Class({
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Cameras.Scene2D.CameraManager#getCamera
+     * @since 3.0.0
+     *
+     * @param {string} name - [description]
+     *
+     * @return {Phaser.Cameras.Scene2D.Camera} [description]
+     */
     getCamera: function (name)
     {
         this.cameras.forEach(function (camera)
@@ -212,6 +327,16 @@ var CameraManager = new Class({
         return null;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Cameras.Scene2D.CameraManager#getCameraBelowPointer
+     * @since 3.0.0
+     *
+     * @param {[type]} pointer - [description]
+     *
+     * @return {Phaser.Cameras.Scene2D.Camera} [description]
+     */
     getCameraBelowPointer: function (pointer)
     {
         var cameras = this.cameras;
@@ -228,6 +353,14 @@ var CameraManager = new Class({
         }
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Cameras.Scene2D.CameraManager#remove
+     * @since 3.0.0
+     *
+     * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
+     */
     remove: function (camera)
     {
         var cameraIndex = this.cameras.indexOf(camera);
@@ -244,6 +377,16 @@ var CameraManager = new Class({
         }
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Cameras.Scene2D.CameraManager#render
+     * @since 3.0.0
+     *
+     * @param {[type]} renderer - [description]
+     * @param {[type]} children - [description]
+     * @param {[type]} interpolation - [description]
+     */
     render: function (renderer, children, interpolation)
     {
         var cameras = this.cameras;
@@ -258,6 +401,14 @@ var CameraManager = new Class({
         }
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Cameras.Scene2D.CameraManager#resetAll
+     * @since 3.0.0
+     *
+     * @return {Phaser.Cameras.Scene2D.Camera} [description]
+     */
     resetAll: function ()
     {
         while (this.cameras.length > 0)
@@ -270,6 +421,15 @@ var CameraManager = new Class({
         return this.main;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Cameras.Scene2D.CameraManager#update
+     * @since 3.0.0
+     *
+     * @param {[type]} timestep - [description]
+     * @param {[type]} delta - [description]
+     */
     update: function (timestep, delta)
     {
         for (var i = 0, l = this.cameras.length; i < l; ++i)
@@ -278,10 +438,23 @@ var CameraManager = new Class({
         }
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Cameras.Scene2D.CameraManager#shutdown
+     * @since 3.0.0
+     */
     shutdown: function ()
     {
+        //  TODO
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Cameras.Scene2D.CameraManager#destroy
+     * @since 3.0.0
+     */
     destroy: function ()
     {
         this.main = undefined;

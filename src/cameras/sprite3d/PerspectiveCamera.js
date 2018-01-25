@@ -14,6 +14,20 @@ var PerspectiveCamera = new Class({
     //  FOV is converted to radians automatically
     initialize:
 
+    /**
+     * [description]
+     *
+     * @class PerspectiveCamera
+     * @extends Phaser.Cameras.Sprite3D.Camera
+     * @memberOf Phaser.Cameras.Sprite3D
+     * @constructor
+     * @since 3.0.0
+     *
+     * @param {Phaser.Scene} scene - [description]
+     * @param {integer} fieldOfView - [description]
+     * @param {integer} viewportWidth - [description]
+     * @param {integer} viewportHeight - [description]
+     */
     function PerspectiveCamera (scene, fieldOfView, viewportWidth, viewportHeight)
     {
         if (fieldOfView === undefined) { fieldOfView = 80; }
@@ -22,13 +36,46 @@ var PerspectiveCamera = new Class({
 
         Camera.call(this, scene);
 
+        /**
+         * [description]
+         *
+         * @property {integer} viewportWidth
+         * @default 0
+         * @since 3.0.0
+         */
         this.viewportWidth = viewportWidth;
+
+        /**
+         * [description]
+         *
+         * @property {integer} viewportHeight
+         * @default 0
+         * @since 3.0.0
+         */
         this.viewportHeight = viewportHeight;
+
+        /**
+         * [description]
+         *
+         * @property {integer} fieldOfView
+         * @default 80
+         * @since 3.0.0
+         */
         this.fieldOfView = fieldOfView * Math.PI / 180;
 
         this.update();
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Cameras.Sprite3D.PerspectiveCamera#setFOV
+     * @since 3.0.0
+     *
+     * @param {[type]} value - [description]
+     *
+     * @return {[type]} [description]
+     */
     setFOV: function (value)
     {
         this.fieldOfView = value * Math.PI / 180;
@@ -36,6 +83,14 @@ var PerspectiveCamera = new Class({
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Cameras.Sprite3D.PerspectiveCamera#update
+     * @since 3.0.0
+     *
+     * @return {[type]} [description]
+     */
     update: function ()
     {
         var aspect = this.viewportWidth / this.viewportHeight;
