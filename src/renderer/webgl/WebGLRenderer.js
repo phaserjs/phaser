@@ -315,10 +315,8 @@ var WebGLRenderer = new Class({
         var gl = this.gl;
         var blendMode = this.blendModes[blendModeId];
 
-        if (blendModeId === CONST.BlendModes.SKIP_CHECK)
-            return;
-
-        if (this.currentBlendMode !== blendModeId)
+        if (blendModeId !== CONST.BlendModes.SKIP_CHECK &&
+            this.currentBlendMode !== blendModeId)
         {
             this.flush();
 

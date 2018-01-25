@@ -76,6 +76,7 @@ var TextureTintPipeline = new Class({
 
         this.vertexViewF32 = new Float32Array(this.vertexData);
         this.vertexViewU32 = new Uint32Array(this.vertexData);
+        this.maxQuads = 2000;
     },
 
     resize: function (width, height, resolution)
@@ -91,6 +92,147 @@ var TextureTintPipeline = new Class({
         return this;
     },
 
+    drawEmitterManager: function (emitterManager, camera)
+    {
+        this.renderer.setPipeline(this);
+
+        var emitters = emitterManager.emitters.list;
+        var emitterCount = emitters.length;
+        var getTint = Utils.getTintAppendFloatAlpha;
+        var vertexViewF32 = this.vertexViewF32;
+        var vertexViewU32 = this.vertexViewU32;
+        var renderer = this.renderer;
+        var maxQuads = this.maxQuads;
+        var cameraScrollX = camera.scrollX;
+        var cameraScrollY = camera.scrollY;
+        var cameraMatrix = camera.matrix.matrix;
+        var cma = cameraMatrix[0];
+        var cmb = cameraMatrix[1];
+        var cmc = cameraMatrix[2];
+        var cmd = cameraMatrix[3];
+        var cme = cameraMatrix[4];
+        var cmf = cameraMatrix[5];
+        var sin = Math.sin;
+        var cos = Math.cos;
+        var vertexComponentCount = this.vertexComponentCount;
+        var vertexCapacity = this.vertexCapacity;
+
+        renderer.setTexture2D(emitterManager.defaultFrame.source.glTexture, 0);
+
+        for (var emitterIndex = 0; emitterIndex < emitterCount; ++emitterIndex)
+        {
+            var emitter = emitters[emitterIndex];
+            var particles = emitter.alive;
+            var aliveLength = particles.length;
+            var batchCount = Math.ceil(aliveLength / maxQuads);
+            var particleOffset = 0;
+            var scrollX = cameraScrollX * emitter.scrollFactorX;
+            var scrollY = cameraScrollY * emitter.scrollFactorY;
+
+            if (!emitter.visible || aliveLength === 0)
+            {
+                continue;
+            }
+
+            renderer.setBlendMode(emitter.blendMode);
+
+            if (this.vertexCount > 0)
+            {
+                this.flush();
+            }
+
+            for (var batchIndex = 0; batchIndex < batchCount; ++batchIndex)
+            {
+                var batchSize = Math.min(aliveLength, maxQuads);
+                var vertexCount = 0;
+
+                for (var index = 0; index < batchSize; ++index)
+                {
+                    var particle = particles[particleOffset + index];
+
+                    if (particle.alpha <= 0)
+                    {
+                        continue;
+                    }
+
+                    var frame = particle.frame;
+                    var uvs = frame.uvs;
+                    var x = -(frame.halfWidth);
+                    var y = -(frame.halfHeight);
+                    var color = particle.color;
+                    var xw = x + frame.width;
+                    var yh = y + frame.height;
+                    var sr = sin(particle.rotation);
+                    var cr = cos(particle.rotation);
+                    var sra = cr * particle.scaleX;
+                    var srb = -sr * particle.scaleX;
+                    var src = sr * particle.scaleY;
+                    var srd = cr * particle.scaleY;
+                    var sre = particle.x - scrollX * particle.scrollFactorX;
+                    var srf = particle.y - scrollY * particle.scrollFactorY;
+                    var mva = sra * cma + srb * cmc;
+                    var mvb = sra * cmb + srb * cmd;
+                    var mvc = src * cma + srd * cmc;
+                    var mvd = src * cmb + srd * cmd;
+                    var mve = sre * cma + srf * cmc + cme;
+                    var mvf = sre * cmb + srf * cmd + cmf;
+                    var tx0 = x * mva + y * mvc + mve;
+                    var ty0 = x * mvb + y * mvd + mvf;
+                    var tx1 = x * mva + yh * mvc + mve;
+                    var ty1 = x * mvb + yh * mvd + mvf;
+                    var tx2 = xw * mva + yh * mvc + mve;
+                    var ty2 = xw * mvb + yh * mvd + mvf;
+                    var tx3 = xw * mva + y * mvc + mve;
+                    var ty3 = xw * mvb + y * mvd + mvf;
+                    var vertexOffset = vertexCount * vertexComponentCount;
+
+                    vertexViewF32[vertexOffset + 0] = tx0;
+                    vertexViewF32[vertexOffset + 1] = ty0;
+                    vertexViewF32[vertexOffset + 2] = uvs.x0;
+                    vertexViewF32[vertexOffset + 3] = uvs.y0;
+                    vertexViewU32[vertexOffset + 4] = color;
+                    vertexViewF32[vertexOffset + 5] = tx1;
+                    vertexViewF32[vertexOffset + 6] = ty1;
+                    vertexViewF32[vertexOffset + 7] = uvs.x1;
+                    vertexViewF32[vertexOffset + 8] = uvs.y1;
+                    vertexViewU32[vertexOffset + 9] = color;
+                    vertexViewF32[vertexOffset + 10] = tx2;
+                    vertexViewF32[vertexOffset + 11] = ty2;
+                    vertexViewF32[vertexOffset + 12] = uvs.x2;
+                    vertexViewF32[vertexOffset + 13] = uvs.y2;
+                    vertexViewU32[vertexOffset + 14] = color;
+                    vertexViewF32[vertexOffset + 15] = tx0;
+                    vertexViewF32[vertexOffset + 16] = ty0;
+                    vertexViewF32[vertexOffset + 17] = uvs.x0;
+                    vertexViewF32[vertexOffset + 18] = uvs.y0;
+                    vertexViewU32[vertexOffset + 19] = color;
+                    vertexViewF32[vertexOffset + 20] = tx2;
+                    vertexViewF32[vertexOffset + 21] = ty2;
+                    vertexViewF32[vertexOffset + 22] = uvs.x2;
+                    vertexViewF32[vertexOffset + 23] = uvs.y2;
+                    vertexViewU32[vertexOffset + 24] = color;
+                    vertexViewF32[vertexOffset + 25] = tx3;
+                    vertexViewF32[vertexOffset + 26] = ty3;
+                    vertexViewF32[vertexOffset + 27] = uvs.x3;
+                    vertexViewF32[vertexOffset + 28] = uvs.y3;
+                    vertexViewU32[vertexOffset + 29] = color;
+
+                    vertexCount += 6;
+                }
+
+                particleOffset += batchSize;
+                aliveLength -= batchSize;
+
+                this.vertexCount = vertexCount;
+
+                if (vertexCount >= vertexCapacity)
+                {
+                    this.flush();
+                }
+            }
+        }
+    },
+
     drawBlitter: function (blitter, camera)
     {
         this.renderer.setPipeline(this);
@@ -102,10 +244,6 @@ var TextureTintPipeline = new Class({
         var list = blitter.getRenderList();
         var length = list.length;
         var cameraMatrix = camera.matrix.matrix;
-        var cameraWidth = camera.width + 50;
-        var cameraHeight = camera.height + 50;
-        var cameraX = -50;
-        var cameraY = -50;
         var a = cameraMatrix[0];
         var b = cameraMatrix[1];
         var c = cameraMatrix[2];
@@ -114,14 +252,14 @@ var TextureTintPipeline = new Class({
         var f = cameraMatrix[5];
         var cameraScrollX = camera.scrollX * blitter.scrollFactorX;
         var cameraScrollY = camera.scrollY * blitter.scrollFactorY;
-        var batchCount = Math.ceil(length / 2000);
+        var batchCount = Math.ceil(length / this.maxQuads);
         var batchOffset = 0;
         var blitterX = blitter.x;
         var blitterY = blitter.y;
 
         for (var batchIndex = 0; batchIndex < batchCount; ++batchIndex)
         {
-            var batchSize = Math.min(length, 2000);
+            var batchSize = Math.min(length, this.maxQuads);
             var vertexOffset = 0;
             var vertexCount = 0;
 
@@ -226,10 +364,6 @@ var TextureTintPipeline = new Class({
         var vertexViewU32 = this.vertexViewU32;
         var renderer = this.renderer;
         var cameraMatrix = camera.matrix.matrix;
-        var cameraWidth = camera.width + 50;
-        var cameraHeight = camera.height + 50;
-        var cameraX = -50;
-        var cameraY = -50;
         var width = srcWidth * (flipX ? -1.0 : 1.0);
         var height = srcHeight * (flipY ? -1.0 : 1.0);
         var x = -displayOriginX + ((srcWidth) * (flipX ? 1.0 : 0.0));
@@ -328,10 +462,6 @@ var TextureTintPipeline = new Class({
         var vertexViewU32 = this.vertexViewU32;
         var renderer = this.renderer;
         var cameraMatrix = camera.matrix.matrix;
-        var cameraWidth = camera.width + 50;
-        var cameraHeight = camera.height + 50;
-        var cameraX = -50;
-        var cameraY = -50;
         var frame = sprite.frame;
         var texture = frame.texture.source[frame.sourceIndex].glTexture;
         var forceFlipY = (texture.isRenderTexture ? true : false);
@@ -524,10 +654,6 @@ var TextureTintPipeline = new Class({
         var vertexViewU32 = this.vertexViewU32;
         var renderer = this.renderer;
         var cameraMatrix = camera.matrix.matrix;
-        var cameraWidth = camera.width + 50;
-        var cameraHeight = camera.height + 50;
-        var cameraX = -50;
-        var cameraY = -50;
         var frame = bitmapText.frame;
         var textureSource = bitmapText.texture.source[frame.sourceIndex];
         var cameraScrollX = camera.scrollX * bitmapText.scrollFactorX;
@@ -732,10 +858,6 @@ var TextureTintPipeline = new Class({
         var vertexViewU32 = this.vertexViewU32;
         var renderer = this.renderer;
         var cameraMatrix = camera.matrix.matrix;
-        var cameraWidth = camera.width + 50;
-        var cameraHeight = camera.height + 50;
-        var cameraX = -50;
-        var cameraY = -50;
         var frame = bitmapText.frame;
         var textureSource = bitmapText.texture.source[frame.sourceIndex];
         var cameraScrollX = camera.scrollX * bitmapText.scrollFactorX;

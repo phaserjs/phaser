@@ -13,59 +13,59 @@ var GameObjects = {
 
     BitmapText: require('./bitmaptext/static/BitmapText'),
     Blitter: require('./blitter/Blitter'),
-    //Container: require('./container/Container'),
+    Container: require('./container/Container'),
     DynamicBitmapText: require('./bitmaptext/dynamic/DynamicBitmapText'),
     DynamicTilemapLayer: require('./tilemap/dynamiclayer/DynamicTilemapLayer'),
     Graphics: require('./graphics/Graphics.js'),
-    //Group: require('./group/Group'),
+    Group: require('./group/Group'),
     Image: require('./image/Image'),
-    //Particles: require('./particles/ParticleEmitterManager'),
-    //PathFollower: require('./pathfollower/PathFollower'),
-    //Sprite3D: require('./sprite3d/Sprite3D'),
+    Particles: require('./particles/ParticleEmitterManager'),
+    PathFollower: require('./pathfollower/PathFollower'),
+    Sprite3D: require('./sprite3d/Sprite3D'),
     Sprite: require('./sprite/Sprite'),
     //StaticTilemapLayer: require('./tilemap/staticlayer/StaticTilemapLayer'),
     Text: require('./text/static/Text'),
-    //Tile: require('./tilemap/Tile'),
+    Tile: require('./tilemap/Tile'),
     Tilemap: require('./tilemap/Tilemap'),
-    //Tileset: require('./tilemap/Tileset'),
+    Tileset: require('./tilemap/Tileset'),
     TileSprite: require('./tilesprite/TileSprite'),
-    //Zone: require('./zone/Zone'),
+    Zone: require('./zone/Zone'),
 
     //  Game Object Factories
 
     Factories: {
         Blitter: require('./blitter/BlitterFactory'),
-        //Container: require('./container/ContainerFactory'),
+        Container: require('./container/ContainerFactory'),
         DynamicBitmapText: require('./bitmaptext/dynamic/DynamicBitmapTextFactory'),
         Graphics: require('./graphics/GraphicsFactory'),
-        //Group: require('./group/GroupFactory'),
+        Group: require('./group/GroupFactory'),
         Image: require('./image/ImageFactory'),
-        //Particles: require('./particles/ParticleManagerFactory'),
-        //PathFollower: require('./pathfollower/PathFollowerFactory'),
+        Particles: require('./particles/ParticleManagerFactory'),
+        PathFollower: require('./pathfollower/PathFollowerFactory'),
         Sprite: require('./sprite/SpriteFactory'),
-        //Sprite3D: require('./sprite3d/Sprite3DFactory'),
+        Sprite3D: require('./sprite3d/Sprite3DFactory'),
         StaticBitmapText: require('./bitmaptext/static/BitmapTextFactory'),
         Text: require('./text/static/TextFactory'),
         Tilemap: require('./tilemap/TilemapFactory'),
         TileSprite: require('./tilesprite/TileSpriteFactory'),
-        //Zone: require('./zone/ZoneFactory')
+        Zone: require('./zone/ZoneFactory')
     },
 
     Creators: {
         Blitter: require('./blitter/BlitterCreator'),
-        //Container: require('./container/ContainerCreator'),
+        Container: require('./container/ContainerCreator'),
         DynamicBitmapText: require('./bitmaptext/dynamic/DynamicBitmapTextCreator'),
         Graphics: require('./graphics/GraphicsCreator'),
-        //Group: require('./group/GroupCreator'),
+        Group: require('./group/GroupCreator'),
         Image: require('./image/ImageCreator'),
-        //Particles: require('./particles/ParticleManagerCreator'),
+        Particles: require('./particles/ParticleManagerCreator'),
         Sprite: require('./sprite/SpriteCreator'),
-        //Sprite3D: require('./sprite3d/Sprite3DCreator'),
+        Sprite3D: require('./sprite3d/Sprite3DCreator'),
         StaticBitmapText: require('./bitmaptext/static/BitmapTextCreator'),
         Text: require('./text/static/TextCreator'),
         Tilemap: require('./tilemap/TilemapCreator'),
         TileSprite: require('./tilesprite/TileSpriteCreator'),
-        //Zone: require('./zone/ZoneCreator')
+        Zone: require('./zone/ZoneCreator')
     }
 
 };
