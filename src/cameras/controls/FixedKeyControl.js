@@ -8,25 +8,109 @@ var GetValue = require('../../utils/object/GetValue');
 //      speed: float OR { x: 0, y: 0 }
 //  })
 
-//  Phaser.Cameras.Controls.Fixed
-
 var FixedKeyControl = new Class({
 
     initialize:
 
+    /**
+     * [description]
+     *
+     * @class FixedKeyControl
+     * @memberOf Phaser.Cameras.Controls
+     * @constructor
+     * @since 3.0.0
+     *
+     * @param {object} config - [description]
+     */
     function FixedKeyControl (config)
     {
+        /**
+         * The Camera that this Control will update.
+         *
+         * @property {Phaser.Cameras.Scene2D.Camera} camera
+         * @default null
+         * @since 3.0.0
+         */
         this.camera = GetValue(config, 'camera', null);
 
+        /**
+         * The Key to be pressed that will move the Camera left.
+         *
+         * @property {Phaser.Input.Keyboard} left
+         * @default null
+         * @since 3.0.0
+         */
         this.left = GetValue(config, 'left', null);
+
+        /**
+         * The Key to be pressed that will move the Camera right.
+         *
+         * @property {Phaser.Input.Keyboard} right
+         * @default null
+         * @since 3.0.0
+         */
         this.right = GetValue(config, 'right', null);
+
+        /**
+         * The Key to be pressed that will move the Camera up.
+         *
+         * @property {Phaser.Input.Keyboard} up
+         * @default null
+         * @since 3.0.0
+         */
         this.up = GetValue(config, 'up', null);
+
+        /**
+         * The Key to be pressed that will move the Camera down.
+         *
+         * @property {Phaser.Input.Keyboard} down
+         * @default null
+         * @since 3.0.0
+         */
         this.down = GetValue(config, 'down', null);
 
+        /**
+         * The Key to be pressed that will zoom the Camera in.
+         *
+         * @property {Phaser.Input.Keyboard} zoomIn
+         * @default null
+         * @since 3.0.0
+         */
         this.zoomIn = GetValue(config, 'zoomIn', null);
+
+        /**
+         * The Key to be pressed that will zoom the Camera out.
+         *
+         * @property {Phaser.Input.Keyboard} zoomOut
+         * @default null
+         * @since 3.0.0
+         */
         this.zoomOut = GetValue(config, 'zoomOut', null);
+
+        /**
+         * The speed at which the camera will zoom if the `zoomIn` or `zoomOut` keys are pressed.
+         *
+         * @property {float} zoomSpeed
+         * @default 0.01
+         * @since 3.0.0
+         */
         this.zoomSpeed = GetValue(config, 'zoomSpeed', 0.01);
 
+        /**
+         * The horizontal speed the camera will move.
+         *
+         * @property {float} speedX
+         * @default 0
+         * @since 3.0.0
+         */
+
+        /**
+         * The vertical speed the camera will move.
+         *
+         * @property {float} speedY
+         * @default 0
+         * @since 3.0.0
+         */
         var speed = GetValue(config, 'speed', null);
 
         if (typeof speed === 'number')
@@ -40,11 +124,33 @@ var FixedKeyControl = new Class({
             this.speedY = GetValue(config, 'speed.y', 0);
         }
 
+        /**
+         * [description]
+         *
+         * @property {number} _zoom
+         * @private
+         * @default 0
+         * @since 3.0.0
+         */
         this._zoom = 0;
 
+        /**
+         * A flag controlling if the Controls will update the Camera or not.
+         *
+         * @property {boolean} active
+         * @since 3.0.0
+         */
         this.active = (this.camera !== null);
     },
 
+    /**
+     * Starts the Key Control running, providing it has been linked to a camera.
+     *
+     * @method Phaser.Cameras.Controls.FixedKeyControl#start
+     * @since 3.0.0
+     *
+     * @return {Phaser.Cameras.Controls.FixedKeyControl} This Key Control instance.
+     */
     start: function ()
     {
         this.active = (this.camera !== null);
@@ -52,6 +158,14 @@ var FixedKeyControl = new Class({
         return this;
     },
 
+    /**
+     * Stops this Key Control from running. Call `start` to start it again.
+     *
+     * @method Phaser.Cameras.Controls.FixedKeyControl#stop
+     * @since 3.0.0
+     *
+     * @return {Phaser.Cameras.Controls.FixedKeyControl} This Key Control instance.
+     */
     stop: function ()
     {
         this.active = false;
@@ -59,6 +173,16 @@ var FixedKeyControl = new Class({
         return this;
     },
 
+    /**
+     * Binds this Key Control to a camera.
+     *
+     * @method Phaser.Cameras.Controls.FixedKeyControl#setCamera
+     * @since 3.0.0
+     *
+     * @param {Phaser.Cameras.Scene2D.Camera} camera - The camera to bind this Key Control to.
+     *
+     * @return {Phaser.Cameras.Controls.FixedKeyControl} This Key Control instance.
+     */
     setCamera: function (camera)
     {
         this.camera = camera;
@@ -66,6 +190,14 @@ var FixedKeyControl = new Class({
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Cameras.Controls.FixedKeyControl#update
+     * @since 3.0.0
+     *
+     * @param {[type]} delta - [description]
+     */
     update: function (delta)
     {
         if (!this.active)
@@ -112,6 +244,12 @@ var FixedKeyControl = new Class({
         }
     },
 
+    /**
+     * Destroys this Key Control.
+     *
+     * @method Phaser.Cameras.Controls.FixedKeyControl#destroy
+     * @since 3.0.0
+     */
     destroy: function ()
     {
         this.camera = null;
