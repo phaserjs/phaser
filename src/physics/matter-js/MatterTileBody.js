@@ -41,8 +41,7 @@ var MatterTileBody = new Class({
         var addToWorld = GetFastValue(options, 'addToWorld', true);
         if (!body)
         {
-            var tileset = tile.layer.tilemapLayer.tileset;
-            var collisionGroup = tileset.getTileCollisionGroup(tile.index);
+            var collisionGroup = tile.getCollisionGroup();
             var collisionObjects = GetFastValue(collisionGroup, 'objects', []);
             if (collisionObjects.length > 0)
             {
@@ -65,14 +64,10 @@ var MatterTileBody = new Class({
         if (!HasValue(options, "isStatic")) { options.isStatic = true; }
         if (!HasValue(options, "addToWorld")) { options.addToWorld = true; }
 
-        var tile = this.tile;
-        var tilemapLayer = tile.layer.tilemapLayer;
-        var tileset = tilemapLayer.tileset;
-        var w = tile.width * tilemapLayer.scaleX;
-        var h = tile.height * tilemapLayer.scaleY;
-        var x = tilemapLayer.tileToWorldX(tile.x);
-        var y = tilemapLayer.tileToWorldY(tile.y);
-        var body = Bodies.rectangle(x + (w / 2), y + (h / 2), w, h, options);
+        var bounds = this.tile.getBounds();
+        var cx = bounds.x + (bounds.w / 2);
+        var cy = bounds.y + (bounds.y / 2);
+        var body = Bodies.rectangle(cx, cy, bounds.w, bounds.h, options);
         this.setBody(body, options.addToWorld);
 
         return this;
@@ -84,23 +79,17 @@ var MatterTileBody = new Class({
         if (!HasValue(options, "isStatic")) { options.isStatic = true; }
         if (!HasValue(options, "addToWorld")) { options.addToWorld = true; }
 
-        var tile = this.tile;
-        var tilemapLayer = tile.layer.tilemapLayer;
-        var tileset = tilemapLayer.tileset;
-        var w = tile.width * tilemapLayer.scaleX;
-        var h = tile.height * tilemapLayer.scaleY;
-        var x = tilemapLayer.tileToWorldX(tile.x);
-        var y = tilemapLayer.tileToWorldY(tile.y);
-
-        var collisionGroup = tileset.getTileCollisionGroup(tile.index);
+        var tileX = this.tile.getLeft();
+        var tileY = this.tile.getTop();
+        var collisionGroup = this.tile.getCollisionGroup();
         var collisionObjects = GetFastValue(collisionGroup, 'objects', []);
 
         var parts = [];
         for (var i = 0; i < collisionObjects.length; i++)
         {
             var object = collisionObjects[i];
-            var ox = x + object.x;
-            var oy = y + object.y;
+            var ox = tileX + object.x;
+            var oy = tileY + object.y;
             var ow = object.width;
             var oh = object.height;
             var body = null;
