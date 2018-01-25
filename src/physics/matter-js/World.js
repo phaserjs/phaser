@@ -285,7 +285,17 @@ var World = new Class({
     },
 
     /**
-     * All colliding tiles will be set
+     * Adds MatterTileBody instances for all the colliding tiles within the given tilemap layer. Set
+     * the appropriate tiles in your layer to collide before calling this method!
+     *
+     * @method Phaser.Physics.Matter.World#convertTilemapLayer
+     * @since 3.0.0
+     *
+     * @param {Phaser.GameObjects.StaticTilemapLayer|Phaser.GameObjects.DynamicTilemapLayer} tiles -
+     * An array of tiles.
+     * @param {object} [options] - Options to be passed to the MatterTileBody constructor. See
+     * Phaser.Physics.Matter.TileBody.
+     * @return {this}
      */
     convertTilemapLayer: function (tilemapLayer, options)
     {
@@ -300,7 +310,16 @@ var World = new Class({
     },
 
     /**
-     * Array of tiles
+     * Adds MatterTileBody instances for the given tiles. This adds bodies regardless of whether the
+     * tiles are set to collide or not.
+     *
+     * @method Phaser.Physics.Matter.World#convertTiles
+     * @since 3.0.0
+     *
+     * @param {Phaser.GameObjects.Tile[]} tiles - An array of tiles.
+     * @param {object} [options] - Options to be passed to the MatterTileBody constructor. See
+     * Phaser.Physics.Matter.TileBody.
+     * @return {this}
      */
     convertTiles: function (tiles, options)
     {
