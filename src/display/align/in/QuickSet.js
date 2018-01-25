@@ -12,11 +12,24 @@ AlignInMap[ALIGN_CONST.TOP_CENTER] = require('./TopCenter');
 AlignInMap[ALIGN_CONST.TOP_LEFT] = require('./TopLeft');
 AlignInMap[ALIGN_CONST.TOP_RIGHT] = require('./TopRight');
 
-//  Phaser.Display.Align.In.QuickSet
-
-var QuickSet = function (child, container, position, offsetX, offsetY)
+/**
+ * Takes given Game Object and aligns it so that it is positioned relative to the other.
+ * The alignment used is based on the `position` argument, which is an `ALIGN_CONST` value, such as `LEFT_CENTER` or `TOP_RIGHT`.
+ *
+ * @function Phaser.Display.Align.In.QuickSet
+ * @since 3.0.0
+ *
+ * @param {Phaser.GameObjects.GameObject} child - The Game Object that will be positioned.
+ * @param {Phaser.GameObjects.GameObject} alignIn - The Game Object to base the alignment position on.
+ * @param {integer} position - The position to align the Game Object with. This is an align constant, such as `ALIGN_CONST.LEFT_CENTER`.
+ * @param {number} [offsetX=0] - Optional horizontal offset from the position.
+ * @param {number} [offsetY=0] - Optional vertical offset from the position.
+ *
+ * @return {Phaser.GameObjects.GameObject} The Game Object that was aligned.
+ */
+var QuickSet = function (child, alignIn, position, offsetX, offsetY)
 {
-    return AlignInMap[position](child, container, offsetX, offsetY);
+    return AlignInMap[position](child, alignIn, offsetX, offsetY);
 };
 
 module.exports = QuickSet;
