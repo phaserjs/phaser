@@ -554,6 +554,20 @@ var Tile = new Class({
         {
             return this.layer.tilemapLayer;
         }
+    },
+
+    /**
+     * The tilemap that contains this Tile. This will only return null if accessed from a LayerData
+     * instance before the tile is placed within a StaticTilemapLayer or DynamicTilemapLayer.
+     * @property {Tilemap|null} tilemap
+     * @readonly
+     */
+    tilemap: {
+        get: function ()
+        {
+            var tilemapLayer = this.tilemapLayer;
+            return tilemapLayer ? tilemapLayer.map : null;
+        }
     }
 });
 
