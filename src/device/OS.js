@@ -1,73 +1,60 @@
+/**
+ * Determines the operating system of the device running this Phaser Game instance.
+ * These values are read-only and populated during the boot sequence of the game.
+ * They are then referenced by internal game systems and are available for you to access
+ * via `this.sys.game.device.os` from within any Scene.
+ * 
+ * @namespace Phaser.Device.OS
+ * @typedef {object} DeviceOS
+ * @since 3.0.0
+ *
+ * @property {boolean} android - Is running on android?
+ * @property {boolean} chromeOS - Is running on chromeOS?
+ * @property {boolean} cocoonJS - Is the game running under CocoonJS?
+ * @property {boolean} cocoonJSApp - Is this game running with CocoonJS.App?
+ * @property {boolean} cordova - Is the game running under Apache Cordova?
+ * @property {boolean} crosswalk - Is the game running under the Intel Crosswalk XDK?
+ * @property {boolean} desktop - Is running on a desktop?
+ * @property {boolean} ejecta - Is the game running under Ejecta?
+ * @property {boolean} electron - Is the game running under GitHub Electron?
+ * @property {boolean} iOS - Is running on iOS?
+ * @property {boolean} iPad - Is running on iPad?
+ * @property {boolean} iPhone - Is running on iPhone?
+ * @property {boolean} kindle - Is running on an Amazon Kindle?
+ * @property {boolean} linux - Is running on linux?
+ * @property {boolean} macOS - Is running on macOS?
+ * @property {boolean} node - Is the game running under Node.js?
+ * @property {boolean} nodeWebkit - Is the game running under Node-Webkit?
+ * @property {boolean} webApp - Set to true if running as a WebApp, i.e. within a WebView
+ * @property {boolean} windows - Is running on windows?
+ * @property {boolean} windowsPhone - Is running on a Windows Phone?
+ * @property {number} iOSVersion - If running in iOS this will contain the major version number.
+ * @property {number} pixelRatio - PixelRatio of the host device?
+ */
 var OS = {
 
-    //  @property {boolean} desktop - Is running on a desktop?
-    desktop: false,
-
-    //  @property {boolean} webApp - Set to true if running as a WebApp, i.e. within a WebView
-    webApp: false,
-
-    //  @property {boolean} iOS - Is running on iOS?
-    iOS: false,
-
-    //  @property {number} iOSVersion - If running in iOS this will contain the major version number.
-    iOSVersion: 0,
-
-    //  @property {boolean} iPhone - Is running on iPhone?
-    iPhone: false,
-
-    //  @property {boolean} iPad - Is running on iPad?
-    iPad: false,
-
-    //  @property {boolean} cocoonJS - Is the game running under CocoonJS?
-    cocoonJS: false,
-    
-    //  @property {boolean} cocoonJSApp - Is this game running with CocoonJS.App?
-    cocoonJSApp: false,
-    
-    //  @property {boolean} cordova - Is the game running under Apache Cordova?
-    cordova: false,
-    
-    //  @property {boolean} node - Is the game running under Node.js?
-    node: false,
-    
-    //  @property {boolean} nodeWebkit - Is the game running under Node-Webkit?
-    nodeWebkit: false,
-    
-    //  @property {boolean} electron - Is the game running under GitHub Electron?
-    electron: false,
-    
-    //  @property {boolean} ejecta - Is the game running under Ejecta?
-    ejecta: false,
-
-    //  @property {boolean} crosswalk - Is the game running under the Intel Crosswalk XDK?
-    crosswalk: false,
-
-    //  @property {boolean} android - Is running on android?
     android: false,
-
-    //  @property {boolean} chromeOS - Is running on chromeOS?
     chromeOS: false,
-
-    //  @property {boolean} linux - Is running on linux?
-    linux: false,
-
-    //  @property {boolean} macOS - Is running on macOS?
-    macOS: false,
-
-    //  @property {boolean} windows - Is running on windows?
-    windows: false,
-
-    //  @property {boolean} windowsPhone - Is running on a Windows Phone?
-    windowsPhone: false,
-
-    //  @property {boolean} vita - Is running on a PlayStation Vita?
-    vita: false,
-
-    //  @property {boolean} kindle - Is running on an Amazon Kindle?
+    cocoonJS: false,
+    cocoonJSApp: false,
+    cordova: false,
+    crosswalk: false,
+    desktop: false,
+    ejecta: false,
+    electron: false,
+    iOS: false,
+    iOSVersion: 0,
+    iPad: false,
+    iPhone: false,
     kindle: false,
-
-    //  @property {number} pixelRatio - PixelRatio of the host device?
-    pixelRatio: 1
+    linux: false,
+    macOS: false,
+    node: false,
+    nodeWebkit: false,
+    pixelRatio: 1,
+    webApp: false,
+    windows: false,
+    windowsPhone: false
 
 };
 
@@ -107,10 +94,6 @@ function init ()
     else if (/CrOS/.test(ua))
     {
         OS.chromeOS = true;
-    }
-    else if ((/Playstation Vita/).test(ua))
-    {
-        OS.vita = true;
     }
 
     if (/Windows Phone/i.test(ua) || (/IEMobile/i).test(ua))

@@ -3,26 +3,17 @@
 //  Which means all instances of Phaser Games can share it,
 //  without having to re-poll the device all over again
 
-var OS = require('./OS');
-var Browser = require('./Browser');
-var Features = require('./Features');
-var Input = require('./Input');
-var Audio = require('./Audio');
-var Video = require('./Video');
-var Fullscreen = require('./Fullscreen');
-var CanvasFeatures = require('./CanvasFeatures');
-
 //  Phaser.Device
 
 module.exports = {
 
-    OS: OS,
-    Browser: Browser,
-    Features: Features,
-    Input: Input,
-    Audio: Audio,
-    Video: Video,
-    Fullscreen: Fullscreen,
-    CanvasFeatures: CanvasFeatures
+    os: require('./OS'),
+    browser: require('./Browser'),
+    features: require('./Features'),
+    input: require('./Input'),
+    audio: require('./Audio'),
+    video: require('./Video'),
+    fullscreen: require('./Fullscreen'),
+    canvasFeatures: require('./CanvasFeatures')
 
 };

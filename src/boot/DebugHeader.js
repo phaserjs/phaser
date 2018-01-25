@@ -23,7 +23,7 @@ var DebugHeader = function (game)
     var renderType = (config.renderType === CONST.CANVAS) ? 'Canvas' : 'WebGL';
 
     var audioConfig = config.audio;
-    var deviceAudio = game.device.Audio;
+    var deviceAudio = game.device.audio;
 
     var audioType;
 
@@ -40,7 +40,7 @@ var DebugHeader = function (game)
         audioType = 'HTML5 Audio';
     }
 
-    if (!game.device.Browser.ie)
+    if (!game.device.browser.ie)
     {
         var c = '';
         var args = [ c ];
