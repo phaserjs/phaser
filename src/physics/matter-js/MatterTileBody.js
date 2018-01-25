@@ -23,12 +23,52 @@ var MatterTileBody = new Class({
 
     initialize:
 
+    /**
+     * A wrapper around a Tile that provides access to a corresponding Matter body. A tile can only
+     * have one Matter body associated with it. You can either pass in an existing Matter body for
+     * the tile or allow the constructor to create the corresponding body for you. If the Tile has a
+     * collision group (defined in Tiled), those shapes will be used to create the body. If not, the
+     * tile's rectangle bounding box will be used.
+     *
+     * The corresponding body will be accessible on the Tile itself via Tile.physics.matterBody.
+     *
+     * Note: not all Tiled collision shapes are supported. See
+     * Phaser.Physics.Matter.TileBody#setFromTileCollision for more information.
+     *
+     * @class MatterTileBody
+     * @memberOf Phaser.Physics.Matter.TileBody
+     * @constructor
+     * @since 3.0.0
+     *
+     * @param {Phaser.Physics.Matter.World} world - [description]
+     * @param {Phaser.GameObjects.Tile} tile - The target tile that should have a Matter body.
+     * @param {object} [options] - Options to be used when creating the Matter body. See
+     * Phaser.Physics.Matter.Matter.Body for a list of what Matter accepts.
+     * @param {Phaser.Physics.Matter.Matter.Body} [options.body=null] - An existing Matter body to
+     * be used instead of creating a new one.
+     * @param {boolean} [options.isStatic=true] - Whether or not the newly created body should be
+     * made static. This defaults to true since typically tiles should not be moved.
+     * @param {boolean} [options.addToWorld=true] - Whether or not to add the newly created body (or
+     * existing body if options.body is used) to the Matter world.
+     */
     function MatterTileBody (world, tile, options)
     {
+        /**
+         * The tile object the body is associated with.
+         * @property {Phaser.GameObjects.Tile} tile
+         * @since 3.0.0
+         */
         this.tile = tile;
+
+        /**
+         * The Matter world the body exists within.
+         * @property {Phaser.Physics.Matter.World} world
+         * @since 3.0.0
+         */
         this.world = world;
 
-        // A tile is only allowed one matter body
+        // Install a reference to 'this' on the tile and ensure there can only be one matter body
+        // associated with the tile
         if (tile.physics.matterBody)
         {
             tile.physics.matterBody.destroy();
@@ -58,6 +98,20 @@ var MatterTileBody = new Class({
         }
     },
 
+    /**
+     * Sets the current body to a rectangle that matches the bounds of the tile.
+     *
+     * @method Phaser.Physics.Matter.TileBody#setFromTileRectangle
+     * @since 3.0.0
+     *
+     * @param {object} [options] - Options to be used when creating the Matter body. See
+     * Phaser.Physics.Matter.Matter.Body for a list of what Matter accepts.
+     * @param {boolean} [options.isStatic=true] - Whether or not the newly created body should be
+     * made static. This defaults to true since typically tiles should not be moved.
+     * @param {boolean} [options.addToWorld=true] - Whether or not to add the newly created body (or
+     * existing body if options.body is used) to the Matter world.
+     * @return {this}
+     */
     setFromTileRectangle: function (options)
     {
         if (options === undefined) { options = {}; }
@@ -73,6 +127,27 @@ var MatterTileBody = new Class({
         return this;
     },
 
+    /**
+     * Sets the current body from the collision group associated with the Tile. This is typically
+     * set up in Tiled's collision editor.
+     *
+     * Note: Matter doesn't support all shapes from Tiled. Rectangles and polygons are directly
+     * supported. Ellipses are converted into circle bodies. Polylines are treated as if they are
+     * closed polygons. If a tile has multiple shapes, a multi-part body will be created. Concave
+     * shapes are supported if poly-decomp library is included, but it's usually best to manually
+     * decompose a concave polygon into multiple convex polygons.
+     *
+     * @method Phaser.Physics.Matter.TileBody#setFromTileCollision
+     * @since 3.0.0
+     *
+     * @param {object} [options] - Options to be used when creating the Matter body. See
+     * Phaser.Physics.Matter.Matter.Body for a list of what Matter accepts.
+     * @param {boolean} [options.isStatic=true] - Whether or not the newly created body should be
+     * made static. This defaults to true since typically tiles should not be moved.
+     * @param {boolean} [options.addToWorld=true] - Whether or not to add the newly created body (or
+     * existing body if options.body is used) to the Matter world.
+     * @return {this}
+     */
     setFromTileCollision: function (options)
     {
         if (options === undefined) { options = {}; }
@@ -104,9 +179,7 @@ var MatterTileBody = new Class({
             }
             else if (object.polygon || object.polyline)
             {
-                // Polygons and polylines are both treated as closed polygons. Concave shapes are
-                // supported if poly-decomp library is included, but it's best to manually create
-                // convex polygons.
+                // Polygons and polylines are both treated as closed polygons
                 var originalPoints = object.polygon ? object.polygon : object.polyline;
                 var points = originalPoints.map(function (p) {
                     return { x: p[0], y: p[1] };
@@ -137,6 +210,17 @@ var MatterTileBody = new Class({
         return this;
     },
 
+    /**
+     * Sets the current body to the given body. This will remove the previous body, if one already
+     * exists.
+     *
+     * @method Phaser.Physics.Matter.TileBody#setBody
+     * @since 3.0.0
+     *
+     * @param {Phaser.Physics.Matter.Matter.Body} body - The new Matter body to use.
+     * @param {boolean} [addToWorld=true] - Whether or not to add the body to the Matter world.
+     * @return {this}
+     */
     setBody: function (body, addToWorld)
     {
         if (addToWorld === undefined) { addToWorld = true; }
@@ -157,6 +241,14 @@ var MatterTileBody = new Class({
         return this;
     },
 
+    /**
+     * Removes the current body from the MatterTileBody and from the Matter world
+     *
+     * @method Phaser.Physics.Matter.TileBody#removeBody
+     * @since 3.0.0
+     *
+     * @return {this}
+     */
     removeBody: function ()
     {
         if (this.body)
@@ -165,8 +257,18 @@ var MatterTileBody = new Class({
             this.body.gameObject = undefined;
             this.body = undefined;
         }
+
+        return this;
     },
 
+    /**
+     * Removes the current body from the tile and the world.
+     *
+     * @method Phaser.Physics.Matter.TileBody#removeBody
+     * @since 3.0.0
+     *
+     * @return {this}
+     */
     destroy: function ()
     {
         this.removeBody();
