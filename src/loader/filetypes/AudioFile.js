@@ -63,7 +63,7 @@ AudioFile.create = function (loader, key, urls, config, xhrSettings)
 {
     var game = loader.systems.game;
     var audioConfig = game.config.audio;
-    var deviceAudio = game.device.Audio;
+    var deviceAudio = game.device.audio;
 
     if ((audioConfig && audioConfig.noAudio) || (!deviceAudio.webAudio && !deviceAudio.audioData))
     {
@@ -170,7 +170,7 @@ AudioFile.findAudioURL = function (game, urls)
         var type = url.match(/\.([a-zA-Z0-9]+)($|\?)/);
         type = GetFastValue(urls[i], 'type', type ? type[1] : '').toLowerCase();
 
-        if (game.device.Audio[type])
+        if (game.device.audio[type])
         {
             return {
                 uri: url,

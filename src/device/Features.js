@@ -2,43 +2,43 @@ var OS = require('./OS');
 var Browser = require('./Browser');
 var CanvasPool = require('../display/canvas/CanvasPool');
 
+/**
+ * Determines the features of the browser running this Phaser Game instance.
+ * These values are read-only and populated during the boot sequence of the game.
+ * They are then referenced by internal game systems and are available for you to access
+ * via `this.sys.game.device.features` from within any Scene.
+ * 
+ * @namespace Phaser.Device.Features
+ * @typedef {object} DeviceFeatures
+ * @since 3.0.0
+ * 
+ * @property {?boolean} canvasBitBltShift - True if canvas supports a 'copy' bitblt onto itself when the source and destination regions overlap.
+ * @property {boolean} canvas - Is canvas available?
+ * @property {boolean} file - Is file available?
+ * @property {boolean} fileSystem - Is fileSystem available?
+ * @property {boolean} getUserMedia - Does the device support the getUserMedia API?
+ * @property {boolean} littleEndian - Is the device big or little endian? (only detected if the browser supports TypedArrays)
+ * @property {boolean} localStorage - Is localStorage available?
+ * @property {boolean} pointerLock - Is Pointer Lock available?
+ * @property {boolean} support32bit - Does the device context support 32bit pixel manipulation using array buffer views?
+ * @property {boolean} vibration - Does the device support the Vibration API?
+ * @property {boolean} webGL - Is webGL available?
+ * @property {boolean} worker - Is worker available?
+ */
 var Features = {
 
-    //  @property {boolean} canvas - Is canvas available?
     canvas: false,
-
-    //  @property {?boolean} canvasBitBltShift - True if canvas supports a 'copy' bitblt onto itself when the source and destination regions overlap.
     canvasBitBltShift: null,
-
-    //  @property {boolean} webGL - Is webGL available?
-    webGL: false,
-
-    //  @property {boolean} file - Is file available?
     file: false,
-
-    //  @property {boolean} fileSystem - Is fileSystem available?
     fileSystem: false,
-
-    //  @property {boolean} localStorage - Is localStorage available?
-    localStorage: false,
-
-    //  @property {boolean} worker - Is worker available?
-    worker: false,
-
-    //  @property {boolean} pointerLock - Is Pointer Lock available?
-    pointerLock: false,
-
-    //  @property {boolean} vibration - Does the device support the Vibration API?
-    vibration: false,
-
-    //  @property {boolean} getUserMedia - Does the device support the getUserMedia API?
     getUserMedia: true,
-
-    //  @property {boolean} littleEndian - Is the device big or little endian? (only detected if the browser supports TypedArrays)
     littleEndian: false,
-
-    //  @property {boolean} support32bit - Does the device context support 32bit pixel manipulation using array buffer views?
-    support32bit: false
+    localStorage: false,
+    pointerLock: false,
+    support32bit: false,
+    vibration: false,
+    webGL: false,
+    worker: false
 
 };
 

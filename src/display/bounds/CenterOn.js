@@ -2,23 +2,16 @@ var SetCenterX = require('./SetCenterX');
 var SetCenterY = require('./SetCenterY');
 
 /**
-* The center x coordinate of the Game Object.
-* This is the same as `(x - offsetX) + (width / 2)`.
-*
-* @property {number} centerX
-*/
-
-/**
- * [description]
+ * Positions the Game Object so that it is centered on the given coordinates.
  *
  * @function Phaser.Display.Bounds.CenterOn
  * @since 3.0.0
  *
- * @param {Phaser.GameObjects.GameObject} gameObject - [description]
- * @param {number} x - [description]
- * @param {number} y - [description]
+ * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object that will be re-positioned.
+ * @param {number} x - The horizontal coordinate to position the Game Object on.
+ * @param {number} y - The vertical coordinate to position the Game Object on.
  *
- * @return {Phaser.GameObjects.GameObject} [description]
+ * @return {Phaser.GameObjects.GameObject} The Game Object that was positioned.
  */
 var CenterOn = function (gameObject, x, y)
 {

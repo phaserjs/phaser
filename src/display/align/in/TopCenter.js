@@ -4,25 +4,25 @@ var SetCenterX = require('../../bounds/SetCenterX');
 var SetTop = require('../../bounds/SetTop');
 
 /**
- * [description]
+ * Takes given Game Object and aligns it so that it is positioned in the top center of the other.
  *
  * @function Phaser.Display.Align.In.TopCenter
  * @since 3.0.0
  *
- * @param {Phaser.GameObjects.GameObject} gameObject - [description]
- * @param {Phaser.GameObjects.GameObject} container - [description]
- * @param {number} [offsetX=0] - [description]
- * @param {number} [offsetY=0] - [description]
+ * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object that will be positioned.
+ * @param {Phaser.GameObjects.GameObject} alignIn - The Game Object to base the alignment position on.
+ * @param {number} [offsetX=0] - Optional horizontal offset from the position.
+ * @param {number} [offsetY=0] - Optional vertical offset from the position.
  *
- * @return {Phaser.GameObjects.GameObject} [description]
+ * @return {Phaser.GameObjects.GameObject} The Game Object that was aligned.
  */
-var TopCenter = function (gameObject, container, offsetX, offsetY)
+var TopCenter = function (gameObject, alignIn, offsetX, offsetY)
 {
     if (offsetX === undefined) { offsetX = 0; }
     if (offsetY === undefined) { offsetY = 0; }
 
-    SetCenterX(gameObject, GetCenterX(container) + offsetX);
-    SetTop(gameObject, GetTop(container) - offsetY);
+    SetCenterX(gameObject, GetCenterX(alignIn) + offsetX);
+    SetTop(gameObject, GetTop(alignIn) - offsetY);
 
     return gameObject;
 };

@@ -159,7 +159,7 @@ var Game = new Class({
         this.scene = new SceneManager(this, this.config.sceneConfig);
 
         /**
-         * An instance of the Device inspector.
+         * A reference to the Device inspector.
          *
          * Contains information about the device running this game, such as OS, browser vendor and feature support.
          * Used by various systems to determine capabilities and code paths.
