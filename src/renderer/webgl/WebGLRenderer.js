@@ -300,12 +300,15 @@ var WebGLRenderer = new Class({
 
     setPipeline: function (pipelineInstance, overrideProgram)
     {
-        if (this.currentPipeline !== pipelineInstance)
+        if (this.currentPipeline !== pipelineInstance ||
+            this.currentPipeline.vertexBuffer !== this.currentVertexBuffer)
         {
             this.flush();
             this.currentPipeline = pipelineInstance;
             this.currentPipeline.bind(overrideProgram);
         }
+
+        this.currentPipeline.onBind();
 
         return this.currentPipeline;
     },
@@ -364,6 +367,7 @@ var WebGLRenderer = new Class({
             this.flush();
 
             gl.bindFramebuffer(gl.FRAMEBUFFER, framebuffer);
+            this.currentFramebuffer = framebuffer;
         }
 
         return this;
@@ -378,6 +382,7 @@ var WebGLRenderer = new Class({
             this.flush();
 
             gl.useProgram(program);
+            this.currentProgram = program;
         }
 
         return this;
@@ -392,6 +397,7 @@ var WebGLRenderer = new Class({
             this.flush();
 
             gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
+            this.currentVertexBuffer = vertexBuffer;
         }
 
         return this;
@@ -406,6 +412,7 @@ var WebGLRenderer = new Class({
             this.flush();
             
             gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
+            this.currentIndexBuffer = indexBuffer;
         }
 
         return this;

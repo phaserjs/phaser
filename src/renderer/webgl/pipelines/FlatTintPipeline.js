@@ -5,6 +5,7 @@ var Earcut = require('../../../geom/polygon/Earcut');
 var ShaderSourceVS = require('../shaders/FlatTint.vert'); 
 var ShaderSourceFS = require('../shaders/FlatTint.frag'); 
 var Commands = require('../../../gameobjects/graphics/Commands');
+var ModelViewProjection = require('./components/ModelViewProjection');
 
 var Point = function (x, y, width, rgb, alpha)
 {
@@ -30,6 +31,10 @@ var pathArray = [];
 var FlatTintPipeline = new Class({
 
     Extends: WebGLPipeline,
+
+    Mixins: [
+        ModelViewProjection
+    ],
 
     initialize:
 
@@ -67,28 +72,6 @@ var FlatTintPipeline = new Class({
             ]
         });
 
-        this.orthoViewMatrix = new Float32Array([
-            +2.0 / this.width,
-            +0.0,   
-            +0.0,
-            +0.0,
-            
-            +0.0,
-            -2.0 / this.height,
-            +0.0,
-            +0.0,
-
-            +0.0,
-            +0.0,
-            +1.0,
-            +1.0,
-
-            -1.0,
-            +1.0,
-            +0.0,
-            +0.0
-        ]);
-
         this.vertexViewF32 = new Float32Array(this.vertexData);
         this.vertexViewU32 = new Uint32Array(this.vertexData);
         this.tempTriangle = [
@@ -98,18 +81,22 @@ var FlatTintPipeline = new Class({
             {x: 0, y: 0, width: 0, rgb: 0xFFFFFF, alpha: 1.0}
         ];
         this.polygonCache = [];
+        this.mvpInit();
+    },
+
+    onBind: function ()
+    {
+        WebGLPipeline.prototype.onBind.call(this);
+        this.mvpUpdate();
+
+        return this;
     },
 
     resize: function (width, height, resolution)
     {
         WebGLPipeline.prototype.resize.call(this, width, height, resolution);
-
-        var orthoViewMatrix = this.orthoViewMatrix;
-        orthoViewMatrix[0] = +2.0 / this.width;
-        orthoViewMatrix[5] = -2.0 / this.height;
-
-        this.renderer.setMatrix4(this.currentProgram, 'uOrthoMatrix', false, orthoViewMatrix);
-
+        this.projOrtho(0, this.width, this.height, 0, -1000.0, 1000.0);
+        
         return this;
     },
 
@@ -483,6 +470,8 @@ var FlatTintPipeline = new Class({
 
     batchGraphics: function (graphics, camera)
     {
+        if (graphics.commandBuffer.length <= 0) return;
+        
         this.renderer.setPipeline(this);
 
         var cameraScrollX = camera.scrollX * graphics.scrollFactorX;

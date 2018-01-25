@@ -1,7 +1,6 @@
 var Class = require('../../../utils/Class');
 var GameObject = require('../../GameObject');
 var Components = require('../../components');
-var CONST = require('../../../renderer/webgl/pipelines/tilemaprenderer/const');
 var StaticTilemapLayerRender = require('./StaticTilemapLayerRender');
 var TilemapComponents = require('../components');
 
@@ -87,11 +86,11 @@ var StaticTilemapLayer = new Class({
          */
         this.culledTiles = [];
 
-        this.vbo = null;
-        this.gl = scene.sys.game.renderer.gl ? scene.sys.game.renderer.gl : null;
-        this.tilemapRenderer = scene.sys.game.renderer.tilemapRenderer ? scene.sys.game.renderer.tilemapRenderer : null;
-        this.resourceManager = this.gl ? scene.sys.game.renderer.resourceManager : null;
+        this.vertexBuffer = null;
+        this.renderer = scene.sys.game.renderer;
         this.bufferData = null;
+        this.vertexViewF32 = null;
+        this.vertexViewU32 = null;
 
         this.dirty = true;
         this.vertexCount = 0;
@@ -100,8 +99,7 @@ var StaticTilemapLayer = new Class({
         this.setPosition(x, y);
         this.setOrigin();
         this.setSize(this.layer.tileWidth * this.layer.width, this.layer.tileHeight * this.layer.height);
-
-        scene.sys.game.renderer.onContextRestored(this.contextRestore, this);
+        this.renderer.onContextRestored(this.contextRestore, this);
     },
 
     /**
@@ -110,9 +108,7 @@ var StaticTilemapLayer = new Class({
     contextRestore: function (renderer)
     {
         this.dirty = true;
-        this.vbo = null;
-        this.gl = renderer.gl;
-        this.tilemapRenderer = renderer.tilemapRenderer;
+        this.vertexBuffer = null;
         return this;
     },
 
@@ -129,38 +125,36 @@ var StaticTilemapLayer = new Class({
         var width = tileset.image.get().width;
         var height = tileset.image.get().height;
         var mapData = this.layer.data;
-
+        var renderer = this.renderer;
         var tile;
         var row;
         var col;
         var texCoords;
 
-        if (this.gl)
+        if (renderer.gl)
         {
+            var pipeline = renderer.pipelines.TextureTintPipeline;
+
             if (this.dirty)
             {
-                var gl = this.gl;
-                var vbo = this.vbo;
+                var gl = renderer.gl;
+                var vertexBuffer = this.vertexBuffer;
                 var bufferData = this.bufferData;
-                var bufferF32;
                 var voffset = 0;
                 var vertexCount = 0;
+                var bufferSize = (mapWidth * mapHeight) * pipeline.vertexSize * 6;
+                var tint = 0xffffffff;
 
-                if (this.vbo === null)
+                if (bufferData === null)
                 {
-                    vbo = this.resourceManager.createBuffer(gl.ARRAY_BUFFER, (4 * 6 * (mapWidth * mapHeight)) * 4, gl.STATIC_DRAW);
-
-                    vbo.addAttribute(this.tilemapRenderer.shader.getAttribLocation('a_position'), 2, gl.FLOAT, false, CONST.VERTEX_SIZE, 0);
-                    vbo.addAttribute(this.tilemapRenderer.shader.getAttribLocation('a_tex_coord'), 2, gl.FLOAT, false, CONST.VERTEX_SIZE, 8);
-
-                    bufferData = this.bufferData = new ArrayBuffer((4 * 6 * (mapWidth * mapHeight)) * 4);
-
-                    this.vbo = vbo;
-
-                    vbo.bind();
+                    bufferData = new ArrayBuffer(bufferSize);
+                    this.bufferData = bufferData;
+                    this.vertexViewF32 = new Float32Array(bufferData);
+                    this.vertexViewU32 = new Uint32Array(bufferData);
                 }
 
-                bufferF32 = new Float32Array(bufferData);
+                vertexViewF32 = this.vertexViewF32;
+                vertexViewU32 = this.vertexViewU32;
 
                 for (row = 0; row < mapHeight; ++row)
                 {
@@ -192,64 +186,59 @@ var StaticTilemapLayer = new Class({
                         var tx3 = txw;
                         var ty3 = ty;
 
-                        bufferF32[voffset + 0] = tx0;
-                        bufferF32[voffset + 1] = ty0;
-                        bufferF32[voffset + 2] = u0;
-                        bufferF32[voffset + 3] = v0;
+                        vertexViewF32[voffset + 0] = tx0;
+                        vertexViewF32[voffset + 1] = ty0;
+                        vertexViewF32[voffset + 2] = u0;
+                        vertexViewF32[voffset + 3] = v0;
+                        vertexViewU32[voffset + 4] = tint;
+                        vertexViewF32[voffset + 5] = tx1;
+                        vertexViewF32[voffset + 6] = ty1;
+                        vertexViewF32[voffset + 7] = u0;
+                        vertexViewF32[voffset + 8] = v1;
+                        vertexViewU32[voffset + 9] = tint;
+                        vertexViewF32[voffset + 10] = tx2;
+                        vertexViewF32[voffset + 11] = ty2;
+                        vertexViewF32[voffset + 12] = u1;
+                        vertexViewF32[voffset + 13] = v1;
+                        vertexViewU32[voffset + 14] = tint;
+                        vertexViewF32[voffset + 15] = tx0;
+                        vertexViewF32[voffset + 16] = ty0;
+                        vertexViewF32[voffset + 17] = u0;
+                        vertexViewF32[voffset + 18] = v0;
+                        vertexViewU32[voffset + 19] = tint;
+                        vertexViewF32[voffset + 20] = tx2;
+                        vertexViewF32[voffset + 21] = ty2;
+                        vertexViewF32[voffset + 22] = u1;
+                        vertexViewF32[voffset + 23] = v1;
+                        vertexViewU32[voffset + 24] = tint;
+                        vertexViewF32[voffset + 25] = tx3;
+                        vertexViewF32[voffset + 26] = ty3;
+                        vertexViewF32[voffset + 27] = u1;
+                        vertexViewF32[voffset + 28] = v0;
+                        vertexViewU32[voffset + 29] = tint;
 
-                        bufferF32[voffset + 4] = tx1;
-                        bufferF32[voffset + 5] = ty1;
-                        bufferF32[voffset + 6] = u0;
-                        bufferF32[voffset + 7] = v1;
-
-                        bufferF32[voffset + 8] = tx2;
-                        bufferF32[voffset + 9] = ty2;
-                        bufferF32[voffset + 10] = u1;
-                        bufferF32[voffset + 11] = v1;
-
-                        bufferF32[voffset + 12] = tx0;
-                        bufferF32[voffset + 13] = ty0;
-                        bufferF32[voffset + 14] = u0;
-                        bufferF32[voffset + 15] = v0;
-
-                        bufferF32[voffset + 16] = tx2;
-                        bufferF32[voffset + 17] = ty2;
-                        bufferF32[voffset + 18] = u1;
-                        bufferF32[voffset + 19] = v1;
-
-                        bufferF32[voffset + 20] = tx3;
-                        bufferF32[voffset + 21] = ty3;
-                        bufferF32[voffset + 22] = u1;
-                        bufferF32[voffset + 23] = v0;
-
-                        voffset += 24;
+                        voffset += 30;
                         vertexCount += 6;
                     }
                 }
 
                 this.vertexCount = vertexCount;
-
-                vbo.updateResource(bufferData, 0);
-
                 this.dirty = false;
+
+                if (this.vertexBuffer === null)
+                {
+                    this.vertexBuffer = renderer.createVertexBuffer(bufferData, gl.STATIC_DRAW);
+                }
+                else
+                {
+                    renderer.setVertexBuffer(this.vertexBuffer);
+                    gl.bufferSubData(gl.ARRAY_BUFFER, 0, bufferData);
+                }
             }
 
-            var renderer = this.tilemapRenderer;
-
-            renderer.shader.setConstantFloat2(renderer.scrollLocation, camera.scrollX, camera.scrollY);
-            renderer.shader.setConstantFloat2(renderer.scrollFactorLocation, this.scrollFactorX, this.scrollFactorY);
-            renderer.shader.setConstantFloat2(renderer.tilemapPositionLocation, this.x, this.y);
-
-            var cmat = camera.matrix.matrix;
-
-            renderer.shader.setConstantMatrix3x3(
-                renderer.cameraTransformLocation,
-                [
-                    cmat[0], cmat[1], 0.0,
-                    cmat[2], cmat[3], 0.0,
-                    cmat[4], cmat[5], 1.0
-                ]
-            );
+            pipeline.modelIdentity();
+            pipeline.modelTranslate(this.x - (camera.scrollX * this.scrollFactorX), this.y - (camera.scrollY * this.scrollFactorY), 0.0);
+            pipeline.viewLoad2D(camera.matrix.matrix);
         }
 
         return this;

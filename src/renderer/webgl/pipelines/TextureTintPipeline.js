@@ -2,11 +2,16 @@ var Class = require('../../../utils/Class');
 var WebGLPipeline = require('../WebGLPipeline');
 var Utils = require('../Utils');
 var ShaderSourceVS = require('../shaders/TextureTint.vert'); 
-var ShaderSourceFS = require('../shaders/TextureTint.frag'); 
+var ShaderSourceFS = require('../shaders/TextureTint.frag');
+var ModelViewProjection = require('./components/ModelViewProjection');
 
 var TextureTintPipeline = new Class({
 
     Extends: WebGLPipeline,
+
+    Mixins: [
+        ModelViewProjection
+    ],
 
     initialize:
 
@@ -52,44 +57,55 @@ var TextureTintPipeline = new Class({
             ]
         });
 
-        this.orthoViewMatrix = new Float32Array([
-            +2.0 / this.width,
-            +0.0,   
-            +0.0,
-            +0.0,
-            
-            +0.0,
-            -2.0 / this.height,
-            +0.0,
-            +0.0,
-
-            +0.0,
-            +0.0,
-            +1.0,
-            +1.0,
-
-            -1.0,
-            +1.0,
-            +0.0,
-            +0.0
-        ]);
-
         this.vertexViewF32 = new Float32Array(this.vertexData);
         this.vertexViewU32 = new Uint32Array(this.vertexData);
         this.maxQuads = 2000;
+        this.mvpInit();
+    },
+
+    onBind: function ()
+    {
+        WebGLPipeline.prototype.onBind.call(this);
+        this.mvpUpdate();
+
+        return this;
     },
 
     resize: function (width, height, resolution)
     {
         WebGLPipeline.prototype.resize.call(this, width, height, resolution);
-
-        var orthoViewMatrix = this.orthoViewMatrix;
-        orthoViewMatrix[0] = +2.0 / this.width;
-        orthoViewMatrix[5] = -2.0 / this.height;
-
-        this.renderer.setMatrix4(this.currentProgram, 'uOrthoMatrix', false, orthoViewMatrix);
+        this.projOrtho(0, this.width, this.height, 0, -1000.0, 1000.0);
 
         return this;
+    },
+
+    drawStaticTilemapLayer: function (tilemap, camera)
+    {
+        if (tilemap.vertexCount > 0)
+        {
+            var pipelineVertexBuffer = this.vertexBuffer;
+            var gl = this.gl;
+            var renderer = this.renderer;
+            var frame = tilemap.tileset.image.get();
+
+            if (renderer.currentPipeline &&
+                renderer.currentPipeline.vertexCount > 0)
+            {
+                renderer.flush();
+            }
+
+            this.vertexBuffer = tilemap.vertexBuffer;
+            
+            renderer.setTexture2D(frame.source.glTexture, 0);
+            renderer.setPipeline(this);
+
+            gl.drawArrays(this.topology, 0, tilemap.vertexCount);
+    
+            this.vertexBuffer = pipelineVertexBuffer;
+        }
+
+        if (this.viewMatrixDirty) this.viewIdentity();
+        if (this.modelMatrixDirty) this.modelIdentity();
     },
 
     drawEmitterManager: function (emitterManager, camera)
@@ -401,14 +417,10 @@ var TextureTintPipeline = new Class({
         var tx3 = xw * mva + y * mvc + mve;
         var ty3 = xw * mvb + y * mvd + mvf;
         var vertexOffset = 0;
-        var u0 = (frameX / textureWidth) + uOffset;
-        var v0 = (frameY / textureHeight) + vOffset;
-        var u1 = (frameX / textureWidth) + uOffset;
-        var v1 = ((frameY + frameHeight) / textureHeight) + vOffset;
-        var u2 = ((frameX + frameWidth) / textureWidth) + uOffset;
-        var v2 = ((frameY + frameHeight) / textureHeight) + vOffset;
-        var u3 = ((frameX + frameWidth) / textureWidth) + uOffset;
-        var v3 = (frameY / textureHeight) + vOffset;
+        var u0 = ((frameX + 0.5) / textureWidth) + uOffset;
+        var v0 = ((frameY + 0.5) / textureHeight) + vOffset;
+        var u1 = ((frameX - 0.5 + frameWidth) / textureWidth) + uOffset;
+        var v1 = ((frameY - 0.5 + frameHeight) / textureHeight) + vOffset;
 
         renderer.setTexture2D(texture, 0);
 
@@ -421,13 +433,13 @@ var TextureTintPipeline = new Class({
         vertexViewU32[vertexOffset + 4] = tintTL;
         vertexViewF32[vertexOffset + 5] = tx1;
         vertexViewF32[vertexOffset + 6] = ty1;
-        vertexViewF32[vertexOffset + 7] = u1;
+        vertexViewF32[vertexOffset + 7] = u0;
         vertexViewF32[vertexOffset + 8] = v1;
         vertexViewU32[vertexOffset + 9] = tintTR;
         vertexViewF32[vertexOffset + 10] = tx2;
         vertexViewF32[vertexOffset + 11] = ty2;
-        vertexViewF32[vertexOffset + 12] = u2;
-        vertexViewF32[vertexOffset + 13] = v2;
+        vertexViewF32[vertexOffset + 12] = u1;
+        vertexViewF32[vertexOffset + 13] = v1;
         vertexViewU32[vertexOffset + 14] = tintBL;
         vertexViewF32[vertexOffset + 15] = tx0;
         vertexViewF32[vertexOffset + 16] = ty0;
@@ -436,13 +448,13 @@ var TextureTintPipeline = new Class({
         vertexViewU32[vertexOffset + 19] = tintTL;
         vertexViewF32[vertexOffset + 20] = tx2;
         vertexViewF32[vertexOffset + 21] = ty2;
-        vertexViewF32[vertexOffset + 22] = u2;
-        vertexViewF32[vertexOffset + 23] = v2;
+        vertexViewF32[vertexOffset + 22] = u1;
+        vertexViewF32[vertexOffset + 23] = v1;
         vertexViewU32[vertexOffset + 24] = tintBL;
         vertexViewF32[vertexOffset + 25] = tx3;
         vertexViewF32[vertexOffset + 26] = ty3;
-        vertexViewF32[vertexOffset + 27] = u3;
-        vertexViewF32[vertexOffset + 28] = v3;
+        vertexViewF32[vertexOffset + 27] = u1;
+        vertexViewF32[vertexOffset + 28] = v0;
         vertexViewU32[vertexOffset + 29] = tintBR;
 
         this.vertexCount += 6;

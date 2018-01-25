@@ -40,8 +40,8 @@ var DynamicTilemapLayerWebGLRenderer = function (renderer, tilemapLayer, interpo
         pipeline.batchTexture(
             texture,
             texture.width, texture.height,
-            tile.pixelX, tile.pixelY,
-            tile.width, tile.height,
+            x + tile.pixelX * sx, y + tile.pixelY * sy,
+            tile.width * sx, tile.height * sy,
             1, 1,
             0,
             false, false,

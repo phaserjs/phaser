@@ -74,6 +74,12 @@ var WebGLPipeline = new Class({
         return this;
     },
 
+    onBind: function ()
+    {
+        // This is for updating uniform data it's called on each bind attempt.
+        return this;
+    },
+
     flush: function ()
     {
         var gl = this.gl;

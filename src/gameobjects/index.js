@@ -23,7 +23,7 @@ var GameObjects = {
     PathFollower: require('./pathfollower/PathFollower'),
     Sprite3D: require('./sprite3d/Sprite3D'),
     Sprite: require('./sprite/Sprite'),
-    //StaticTilemapLayer: require('./tilemap/staticlayer/StaticTilemapLayer'),
+    StaticTilemapLayer: require('./tilemap/staticlayer/StaticTilemapLayer'),
     Text: require('./text/static/Text'),
     Tile: require('./tilemap/Tile'),
     Tilemap: require('./tilemap/Tilemap'),
