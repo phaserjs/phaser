@@ -119,9 +119,9 @@ var MatterTileBody = new Class({
         if (!HasValue(options, "addToWorld")) { options.addToWorld = true; }
 
         var bounds = this.tile.getBounds();
-        var cx = bounds.x + (bounds.w / 2);
-        var cy = bounds.y + (bounds.y / 2);
-        var body = Bodies.rectangle(cx, cy, bounds.w, bounds.h, options);
+        var cx = bounds.x + (bounds.width / 2);
+        var cy = bounds.y + (bounds.height / 2);
+        var body = Bodies.rectangle(cx, cy, bounds.width, bounds.height, options);
         this.setBody(body, options.addToWorld);
 
         return this;
