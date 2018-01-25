@@ -7,6 +7,16 @@ var Color = require('./Color');
 *
 * An alpha channel is _not_ supported.
 */
+/**
+ * [description]
+ *
+ * @function Phaser.Display.Color.HexStringToColor
+ * @since 3.0.0
+ *
+ * @param {string} hex - [description]
+ *
+ * @return {Phaser.Color} [description]
+ */
 var HexStringToColor = function (hex)
 {
     var color = new Color();

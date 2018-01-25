@@ -1,3 +1,11 @@
+/**
+ * [description]
+ *
+ * @function Phaser.Display.Color.ColorToRGBA
+ * @since 3.0.0
+ *
+ * @param {number} color - [description]
+ */
 var ColorToRGBA = function (color)
 {
     var output = {
