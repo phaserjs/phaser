@@ -66,14 +66,6 @@ var Graphics = new Class({
         this.viewMatrix = new Matrix4().lookAt(this.camera.position, this.camera.target, this.up);
 
         this.setViewport(this.viewportWidth, this.viewportHeight);
-
-        var resourceManager = scene.sys.game.renderer.resourceManager;
-
-        if (resourceManager !== undefined)
-        {
-            this.resourceManager = resourceManager;
-            this.gl = scene.sys.game.renderer.gl;
-        }
     },
 
     //  STYLES
