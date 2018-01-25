@@ -7,6 +7,7 @@ var Utils = require('./Utils');
 // Default Pipelines
 var TextureTintPipeline = require('./pipelines/TextureTintPipeline');
 var FlatTintPipeline = require('./pipelines/FlatTintPipeline');
+var BitmapMaskPipeline = require('./pipelines/BitmapMaskPipeline');
 
 var WebGLRenderer = new Class({
 
@@ -131,7 +132,8 @@ var WebGLRenderer = new Class({
 
         this.addPipeline('TextureTintPipeline', new TextureTintPipeline(this.game, gl, this));
         this.addPipeline('FlatTintPipeline', new FlatTintPipeline(this.game, gl, this));
-
+        this.addPipeline('BitmapMaskPipeline', new BitmapMaskPipeline(this.game, gl, this));
+        
         this.setBlendMode(CONST.BlendModes.NORMAL);
         this.resize(this.width, this.height, this.game.config.resolution);
     
@@ -546,11 +548,11 @@ var WebGLRenderer = new Class({
 
         if (!gl.getShaderParameter(vs, gl.COMPILE_STATUS))
         {
-            return new Error('Failed to compile Vertex Shader:\n' + gl.getShaderInfoLog(vs));
+            throw new Error('Failed to compile Vertex Shader:\n' + gl.getShaderInfoLog(vs));
         }
         if (!gl.getShaderParameter(fs, gl.COMPILE_STATUS))
         {
-            return new Error('Failed to compile Fragment Shader:\n' + gl.getShaderInfoLog(fs));
+            throw new Error('Failed to compile Fragment Shader:\n' + gl.getShaderInfoLog(fs));
         }
 
         gl.attachShader(program, vs);
@@ -559,7 +561,7 @@ var WebGLRenderer = new Class({
 
         if (!gl.getProgramParameter(program, gl.LINK_STATUS))
         {
-            return new Error('Failed to link program:\n' + gl.getProgramInfoLog(program));
+            throw new Error('Failed to link program:\n' + gl.getProgramInfoLog(program));
         }
 
         return program;

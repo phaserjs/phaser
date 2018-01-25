@@ -20,7 +20,7 @@ var GeometryMask = new Class({
         var geometryMask = this.geometryMask;
 
         // Force flushing before drawing to stencil buffer
-        renderer.currentRenderer.flush();
+        renderer.flush();
 
         // Enable and setup GL state to write to stencil buffer
         gl.enable(gl.STENCIL_TEST);
@@ -31,7 +31,7 @@ var GeometryMask = new Class({
 
         // Write stencil buffer
         geometryMask.renderWebGL(renderer, geometryMask, 0.0, camera);
-        renderer.currentRenderer.flush();
+        renderer.flush();
 
         // Use stencil buffer to affect next rendering object
         gl.colorMask(true, true, true, true);
@@ -44,7 +44,7 @@ var GeometryMask = new Class({
         var gl = renderer.gl;
 
         // Force flush before disabling stencil test
-        renderer.currentRenderer.flush();
+        renderer.flush();
         gl.disable(gl.STENCIL_TEST);
     },
 
