@@ -39,6 +39,7 @@ var DynamicTilemapLayerWebGLRenderer = function (renderer, tilemapLayer, interpo
 
         pipeline.batchTexture(
             texture,
+            texture.width, texture.height,
             tile.pixelX, tile.pixelY,
             tile.width, tile.height,
             1, 1,
@@ -48,6 +49,7 @@ var DynamicTilemapLayerWebGLRenderer = function (renderer, tilemapLayer, interpo
             0, 0,
             frameX, frameY, frameWidth, frameHeight,
             tint, tint, tint, tint,
+            0, 0,
             camera
         );
     }    

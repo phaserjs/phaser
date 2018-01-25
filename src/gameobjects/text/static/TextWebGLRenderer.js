@@ -18,6 +18,7 @@ var TextWebGLRenderer = function (renderer, text, interpolationPercentage, camer
 
     renderer.pipelines.TextureTintPipeline.batchTexture(
         text.canvasTexture,
+        text.canvasTexture.width, text.canvasTexture.height,
         text.x, text.y,
         text.canvasTexture.width, text.canvasTexture.height,
         text.scaleX, text.scaleY,
@@ -30,6 +31,7 @@ var TextWebGLRenderer = function (renderer, text, interpolationPercentage, camer
         getTint(text._tintTR, text._alphaTR), 
         getTint(text._tintBL, text._alphaBL), 
         getTint(text._tintBR, text._alphaBR),
+        0, 0,
         camera
     );
 };

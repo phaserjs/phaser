@@ -572,7 +572,7 @@ var WebGLRenderer = new Class({
         return vertexBuffer;
     },
 
-    createIndexBuffer: function ()
+    createIndexBuffer: function (initialDataOrSize, bufferUsage)
     {
         var gl = this.gl;
         var indexBuffer = gl.createBuffer();
@@ -582,6 +582,26 @@ var WebGLRenderer = new Class({
         this.setIndexBuffer(null);
 
         return indexBuffer;
+    },
+
+    deleteTexture: function (texture)
+    {
+        return this;
+    },
+
+    deleteFramebuffer: function (framebuffer)
+    {
+        return this;
+    },
+
+    deleteProgram: function (program)
+    {
+        return this;
+    },
+
+    deleteBuffer: function (vertexBuffer)
+    {
+        return this;
     },
 
     /* Rendering Functions */

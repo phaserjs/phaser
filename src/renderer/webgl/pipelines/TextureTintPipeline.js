@@ -198,6 +198,7 @@ var TextureTintPipeline = new Class({
 
     batchTexture: function (
         texture,
+        textureWidth, textureHeight,
         srcX, srcY,
         srcWidth, srcHeight,
         scaleX, scaleY,
@@ -207,6 +208,7 @@ var TextureTintPipeline = new Class({
         displayOriginX, displayOriginY,
         frameX, frameY, frameWidth, frameHeight,
         tintTL, tintTR, tintBL, tintBR,
+        uOffset, vOffset,
         camera)
     {
         this.renderer.setPipeline(this);
@@ -265,14 +267,14 @@ var TextureTintPipeline = new Class({
         var tx3 = xw * mva + y * mvc + mve;
         var ty3 = xw * mvb + y * mvd + mvf;
         var vertexOffset = 0;
-        var u0 = frameX / texture.width;
-        var v0 = frameY / texture.height;
-        var u1 = frameX / texture.width;
-        var v1 = (frameY + frameHeight) / texture.height;
-        var u2 = (frameX + frameWidth) / texture.width;
-        var v2 = (frameY + frameHeight) / texture.height;
-        var u3 = (frameX + frameWidth) / texture.width;
-        var v3 = frameY / texture.height;
+        var u0 = (frameX / textureWidth) + uOffset;
+        var v0 = (frameY / textureHeight) + vOffset;
+        var u1 = (frameX / textureWidth) + uOffset;
+        var v1 = ((frameY + frameHeight) / textureHeight) + vOffset;
+        var u2 = ((frameX + frameWidth) / textureWidth) + uOffset;
+        var v2 = ((frameY + frameHeight) / textureHeight) + vOffset;
+        var u3 = ((frameX + frameWidth) / textureWidth) + uOffset;
+        var v3 = (frameY / textureHeight) + vOffset;
 
         renderer.setTexture2D(texture, 0);
 

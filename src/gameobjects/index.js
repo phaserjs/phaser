@@ -28,7 +28,7 @@ var GameObjects = {
     //Tile: require('./tilemap/Tile'),
     Tilemap: require('./tilemap/Tilemap'),
     //Tileset: require('./tilemap/Tileset'),
-    //TileSprite: require('./tilesprite/TileSprite'),
+    TileSprite: require('./tilesprite/TileSprite'),
     //Zone: require('./zone/Zone'),
 
     //  Game Object Factories
@@ -47,7 +47,7 @@ var GameObjects = {
         StaticBitmapText: require('./bitmaptext/static/BitmapTextFactory'),
         Text: require('./text/static/TextFactory'),
         Tilemap: require('./tilemap/TilemapFactory'),
-        //TileSprite: require('./tilesprite/TileSpriteFactory'),
+        TileSprite: require('./tilesprite/TileSpriteFactory'),
         //Zone: require('./zone/ZoneFactory')
     },
 
@@ -64,7 +64,7 @@ var GameObjects = {
         StaticBitmapText: require('./bitmaptext/static/BitmapTextCreator'),
         Text: require('./text/static/TextCreator'),
         Tilemap: require('./tilemap/TilemapCreator'),
-        //TileSprite: require('./tilesprite/TileSpriteCreator'),
+        TileSprite: require('./tilesprite/TileSpriteCreator'),
         //Zone: require('./zone/ZoneCreator')
     }
 

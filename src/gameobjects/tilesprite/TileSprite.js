@@ -29,7 +29,7 @@ var TileSprite = new Class({
 
     function TileSprite (scene, x, y, width, height, texture, frame)
     {
-        var resourceManager = scene.sys.game.renderer.resourceManager;
+        var renderer = scene.sys.game.renderer;
 
         GameObject.call(this, scene, 'TileSprite');
 
@@ -37,7 +37,7 @@ var TileSprite = new Class({
         this.tilePositionY = 0;
         this.dirty = true;
         this.tileTexture = null;
-        this.renderer = null;
+        this.renderer = renderer;
 
         this.setTexture(texture, frame);
         this.setPosition(x, y);
@@ -47,26 +47,16 @@ var TileSprite = new Class({
         this.potWidth = GetPowerOfTwo(this.frame.width);
         this.potHeight = GetPowerOfTwo(this.frame.height);
         this.canvasPattern = null;
-
-        if (resourceManager)
-        {
-            this.renderer = scene.sys.game.renderer;
-            var gl = scene.sys.game.renderer.gl;
-
-            this.tileTexture = resourceManager.createTexture(0, gl.LINEAR, gl.LINEAR, gl.REPEAT, gl.REPEAT, gl.RGBA, this.canvasBuffer, this.potWidth, this.potHeight);
-        }
-
         this.canvasBuffer = CanvasPool.create2D(null, this.potWidth, this.potHeight);
         this.canvasBufferCtx = this.canvasBuffer.getContext('2d');
 
         this.updateTileTexture();
 
-        var _this = this;
         scene.sys.game.renderer.onContextRestored(function (renderer) {
-            _this.tileTexture = null;
-            _this.dirty = true;
-            _this.tileTexture = resourceManager.createTexture(0, gl.LINEAR, gl.LINEAR, gl.REPEAT, gl.REPEAT, gl.RGBA, _this.canvasBuffer, _this.potWidth, _this.potHeight);
-        });
+            this.tileTexture = null;
+            this.dirty = true;
+            this.tileTexture = renderer.createTexture2D(0, gl.LINEAR, gl.LINEAR, gl.REPEAT, gl.REPEAT, gl.RGBA, this.canvasBuffer, this.potWidth, this.potHeight);
+        }, this);
     },
 
     updateTileTexture: function ()
@@ -84,9 +74,9 @@ var TileSprite = new Class({
             this.potWidth, this.potHeight
         );
 
-        if (this.renderer)
+        if (this.renderer.gl)
         {
-            this.renderer.uploadCanvasToGPU(this.canvasBuffer, this.tileTexture, false);
+            this.tileTexture = this.renderer.canvasToTexture(this.canvasBuffer, this.tileTexture, (this.tileTexture === null), this.scaleMode);
         }
         else
         {
@@ -100,7 +90,7 @@ var TileSprite = new Class({
     {
         if (this.renderer)
         {
-            this.renderer.gl.deleteTexture(this.tileTexture);
+            this.renderer.deleteTexture(this.tileTexture);
         }
 
         CanvasPool.remove(this.canvasBuffer);
