@@ -3,15 +3,9 @@ var Class = require('../../utils/Class');
 var Components = require('../components');
 var Const = require('./Const');
 var GameObject = require('../GameObject');
-var GBufferShader = require('../../renderer/webgl/shaders/GBufferShader');
 var Light = require('./Light');
-var LightFragmentShader = require('../../renderer/webgl/shaders/LightFragmentShader');
-var Phong2DShaderDeferred = require('../../renderer/webgl/shaders/Phong2DShaderDeferred');
 var Render = require('./LightLayerRender');
 var SpriteNormalPair = require('./SpriteNormalPair');
-var TexturedAndNormalizedTintedShader = require('../../renderer/webgl/shaders/TexturedAndNormalizedTintedShader');
-var VertexBuffer = require('../../renderer/webgl/resources/VertexBuffer');
-var WebGLSupportedExtensions = require('../../renderer/webgl/WebGLSupportedExtensions');
 
 // http://cpetry.github.io/NormalMap-Online/
 
@@ -36,6 +30,7 @@ var LightLayer = new Class({
 
         GameObject.call(this, scene, 'LightLayer');
 
+        this.renderer = scene.sys.game.renderer;
         this.passShader = null;
         this.gl = null;
         this.ambientLightColorR = 0.0;
@@ -48,24 +43,24 @@ var LightLayer = new Class({
         this._z = 0;
         this.setOrigin(0, 0);
 
-        scene.sys.game.renderer.onContextRestored(function (renderer) {
-            _this.onContextRestored(renderer);
-        });
+        this.renderer.onContextRestored(function (renderer) {
+            this.onContextRestored(renderer);
+        }, this);
 
-        this.init(scene.sys.game.renderer, WebGLSupportedExtensions.has('WEBGL_draw_buffers'));
+        this.init(scene.sys.game.renderer, this.renderer.hasExtension('WEBGL_draw_buffers'));
     },
 
     onContextRestored: function (renderer)
     {
         /* It won't allow the use of drawBuffers on restored context */
         this.init(renderer, false); 
-        this.renderWebGL = require('./ForwardRenderer');
+        //this.renderWebGL = require('./ForwardRenderer');
         this.lights.length = Math.min(this.lights.length, Const.MAX_LIGHTS);
     },
 
     init: function (renderer, deferred)
     {
-        var resourceManager = renderer.resourceManager;
+        /*var resourceManager = renderer.resourceManager;
         
         this._isDeferred = deferred;
         this.renderer = renderer;
@@ -151,7 +146,7 @@ var LightLayer = new Class({
                 };
             }
 
-            /* Setup render targets */
+            // Setup render targets
             this.gBufferFbo = gl.createFramebuffer();
             this.gBufferColorTex = gl.createTexture();
             this.gBufferNormalTex = gl.createTexture();
@@ -191,7 +186,7 @@ var LightLayer = new Class({
 
             gl.bindFramebuffer(gl.FRAMEBUFFER, null);
             VertexBuffer.SetDirty();
-        }
+        }*/
     },
 
     forEachLight: function (callback)
@@ -308,7 +303,7 @@ var LightLayer = new Class({
 
     updateLights: function (renderer, camera, shader)
     {
-        if (this.gl !== null)
+        /*if (this.gl !== null)
         {
             var locations = this.lightsLocations;
             var lights = this.lights;
@@ -333,7 +328,7 @@ var LightLayer = new Class({
                 gl.uniform3f(locations[index].position, point.x - (camera.scrollX * light.scrollFactorX * camera.zoom), height - (point.y - (camera.scrollY * light.scrollFactorY) * camera.zoom), light.z);
                 gl.uniform3f(locations[index].color, light.r, light.g, light.b);
             }
-        }
+        }*/
     }
 
 });
