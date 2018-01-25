@@ -154,6 +154,8 @@ var MatterTileBody = new Class({
         if (!HasValue(options, "isStatic")) { options.isStatic = true; }
         if (!HasValue(options, "addToWorld")) { options.addToWorld = true; }
 
+        var sx = this.tile.tilemapLayer.scaleX;
+        var sy = this.tile.tilemapLayer.scaleY;
         var tileX = this.tile.getLeft();
         var tileY = this.tile.getTop();
         var collisionGroup = this.tile.getCollisionGroup();
@@ -163,10 +165,10 @@ var MatterTileBody = new Class({
         for (var i = 0; i < collisionObjects.length; i++)
         {
             var object = collisionObjects[i];
-            var ox = tileX + object.x;
-            var oy = tileY + object.y;
-            var ow = object.width;
-            var oh = object.height;
+            var ox = tileX + (object.x * sx);
+            var oy = tileY + (object.y * sy);
+            var ow = object.width * sx;
+            var oh = object.height * sy;
             var body = null;
 
             if (object.rectangle)
@@ -182,7 +184,7 @@ var MatterTileBody = new Class({
                 // Polygons and polylines are both treated as closed polygons
                 var originalPoints = object.polygon ? object.polygon : object.polyline;
                 var points = originalPoints.map(function (p) {
-                    return { x: p[0], y: p[1] };
+                    return { x: p[0] * sx, y: p[1] * sy };
                 });
                 var vertices = Vertices.create(points);
 
