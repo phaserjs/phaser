@@ -33,8 +33,8 @@ var Curve = new Class({
          * The default number of divisions within the curve.
          *
          * @property {integer} defaultDivisions
-         * @since 3.0.0
          * @default 5
+         * @since 3.0.0
          */
         this.defaultDivisions = 5;
 
@@ -42,8 +42,8 @@ var Curve = new Class({
          * The quantity of arc length divisions within the curve.
          *
          * @property {integer} arcLengthDivisions
-         * @since 3.0.0
          * @default 100
+         * @since 3.0.0
          */
         this.arcLengthDivisions = 100;
 
@@ -51,8 +51,8 @@ var Curve = new Class({
          * An array of cached arc length values.
          *
          * @property {array} cacheArcLengths
-         * @since 3.0.0
          * @default []
+         * @since 3.0.0
          */
         this.cacheArcLengths = [];
 
@@ -60,8 +60,8 @@ var Curve = new Class({
          * Does the data of this curve need updating?
          *
          * @property {boolean} needsUpdate
-         * @since 3.0.0
          * @default true
+         * @since 3.0.0
          */
         this.needsUpdate = true;
 
@@ -69,8 +69,8 @@ var Curve = new Class({
          * [description]
          *
          * @property {boolean} active
-         * @since 3.0.0
          * @default true
+         * @since 3.0.0
          */
         this.active = true;
 
@@ -78,8 +78,8 @@ var Curve = new Class({
          * A temporary calculation Vector.
          *
          * @property {Phaser.Math.Vector2} _tmpVec2A
-         * @since 3.0.0
          * @private
+         * @since 3.0.0
          */
         this._tmpVec2A = new Vector2();
 
@@ -87,8 +87,8 @@ var Curve = new Class({
          * A temporary calculation Vector.
          *
          * @property {Phaser.Math.Vector2} _tmpVec2B
-         * @since 3.0.0
          * @private
+         * @since 3.0.0
          */
         this._tmpVec2B = new Vector2();
     },

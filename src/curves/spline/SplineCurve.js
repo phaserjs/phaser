@@ -13,7 +13,17 @@ var SplineCurve = new Class({
 
     initialize:
 
-    //  Array of vec2s
+    /**
+     * [description]
+     *
+     * @class SplineCurve
+     * @extends Phaser.Curves.Curve
+     * @memberOf Phaser.Curves
+     * @constructor
+     * @since 3.0.0
+     *
+     * @param {Phaser.Geom.Point[]} [points] - [description]
+     */
     function SplineCurve (points)
     {
         if (points === undefined) { points = []; }
@@ -22,11 +32,28 @@ var SplineCurve = new Class({
 
         //  if points is an array of numbers ...
 
+        /**
+         * [description]
+         *
+         * @property {Phaser.Geom.Point[]} points
+         * @default []
+         * @since 3.0.0
+         */
         this.points = [];
 
         this.addPoints(points);
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Curves.SplineCurve#addPoints
+     * @since 3.0.0
+     *
+     * @param {[type]} points - [description]
+     *
+     * @return {[type]} [description]
+     */
     addPoints: function (points)
     {
         for (var i = 0; i < points.length; i++)
@@ -57,6 +84,17 @@ var SplineCurve = new Class({
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Curves.SplineCurve#addPoint
+     * @since 3.0.0
+     *
+     * @param {[type]} x - [description]
+     * @param {[type]} y - [description]
+     *
+     * @return {[type]} [description]
+     */
     addPoint: function (x, y)
     {
         var vec = new Vector2(x, y);
@@ -66,6 +104,16 @@ var SplineCurve = new Class({
         return vec;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Curves.SplineCurve#getStartPoint
+     * @since 3.0.0
+     *
+     * @param {[type]} out - [description]
+     *
+     * @return {[type]} [description]
+     */
     getStartPoint: function (out)
     {
         if (out === undefined) { out = new Vector2(); }
@@ -73,11 +121,32 @@ var SplineCurve = new Class({
         return out.copy(this.points[0]);
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Curves.SplineCurve#getResolution
+     * @since 3.0.0
+     *
+     * @param {[type]} divisions - [description]
+     *
+     * @return {[type]} [description]
+     */
     getResolution: function (divisions)
     {
         return divisions * this.points.length;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Curves.SplineCurve#getPoint
+     * @since 3.0.0
+     *
+     * @param {[type]} t - [description]
+     * @param {[type]} out - [description]
+     *
+     * @return {[type]} [description]
+     */
     getPoint: function (t, out)
     {
         if (out === undefined) { out = new Vector2(); }
@@ -98,6 +167,14 @@ var SplineCurve = new Class({
         return out.set(CatmullRom(weight, p0.x, p1.x, p2.x, p3.x), CatmullRom(weight, p0.y, p1.y, p2.y, p3.y));
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Curves.SplineCurve#toJSON
+     * @since 3.0.0
+     *
+     * @return {[type]} [description]
+     */
     toJSON: function ()
     {
         var points = [];
