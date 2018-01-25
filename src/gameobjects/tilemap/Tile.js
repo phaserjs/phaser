@@ -566,7 +566,7 @@ var Tile = new Class({
         get: function ()
         {
             var tilemapLayer = this.tilemapLayer;
-            return tilemapLayer ? tilemapLayer.map : null;
+            return tilemapLayer ? tilemapLayer.tilemap : null;
         }
     }
 });
