@@ -134,8 +134,9 @@ var MatterTileBody = new Class({
      * Note: Matter doesn't support all shapes from Tiled. Rectangles and polygons are directly
      * supported. Ellipses are converted into circle bodies. Polylines are treated as if they are
      * closed polygons. If a tile has multiple shapes, a multi-part body will be created. Concave
-     * shapes are supported if poly-decomp library is included, but it's usually best to manually
-     * decompose a concave polygon into multiple convex polygons.
+     * shapes are supported if poly-decomp library is included. Decomposition is not guaranteed to
+     * work for complex shapes (e.g. holes), so it's often best to manually decompose a concave
+     * polygon into multiple convex polygons yourself.
      *
      * @method Phaser.Physics.Matter.TileBody#setFromTileCollision
      * @since 3.0.0
@@ -188,9 +189,17 @@ var MatterTileBody = new Class({
                 });
                 var vertices = Vertices.create(points);
 
-                // Translate from object position to center of mass
-                var center = Vertices.centre(vertices);
-                body = Bodies.fromVertices(ox + center.x, oy + center.y, vertices, options);
+                // Points are relative to the object's origin (first point placed in Tiled), but
+                // matter expects points to be relative to the center of mass. This only applies to
+                // convex shapes. When a concave shape is decomposed, multiple parts are created and
+                // the individual parts are positioned relative to (ox, oy).
+                if (Vertices.isConvex(points)) {
+                    var center = Vertices.centre(vertices);
+                    ox += center.x;
+                    oy += center.y
+                }
+
+                body = Bodies.fromVertices(ox, oy, vertices, options);
             }
 
             if (body)
