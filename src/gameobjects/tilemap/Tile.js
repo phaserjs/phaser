@@ -240,6 +240,17 @@ var Tile = new Class({
         return this.tileset ? this.tileset.getTileCollisionGroup(this.index) : null;
     },
 
+    /**
+     * The tile data for this Tile, defined within the Tileset. This typically contains Tiled
+     * collision data, tile animations and terrain information. This returns a reference to the tile
+     * data stored within the Tileset, so any modification of the returned object will impact all
+     * tiles that have the same index as this tile.
+     * @returns {object|null} tileset
+     */
+    getTileData: function ()
+    {
+        return this.tileset ? this.tileset.getTileData(this.index) : null;
+    },
 
     /**
      * Gets the world X position of the left side of the tile, factoring in the layer's position,
@@ -553,6 +564,20 @@ var Tile = new Class({
         get: function ()
         {
             return this.layer.tilemapLayer;
+        }
+    },
+
+    /**
+     * The tilemap that contains this Tile. This will only return null if accessed from a LayerData
+     * instance before the tile is placed within a StaticTilemapLayer or DynamicTilemapLayer.
+     * @property {Tilemap|null} tilemap
+     * @readonly
+     */
+    tilemap: {
+        get: function ()
+        {
+            var tilemapLayer = this.tilemapLayer;
+            return tilemapLayer ? tilemapLayer.tilemap : null;
         }
     }
 });

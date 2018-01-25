@@ -57,9 +57,9 @@ var DynamicTilemapLayer = new Class({
 
         /**
          * The Tilemap that this layer is a part of.
-         * @property {Tilemap} map
+         * @property {Tilemap} tilemap
          */
-        this.map = tilemap;
+        this.tilemap = tilemap;
 
         /**
          * The index of the LayerData associated with this layer.
@@ -148,7 +148,7 @@ var DynamicTilemapLayer = new Class({
         {
             this.layer.tilemapLayer = undefined;
         }
-        this.map = undefined;
+        this.tilemap = undefined;
         this.layer = undefined;
         this.tileset = undefined;
         this.culledTiles.length = 0;

@@ -16,6 +16,8 @@ var Velocity = {
 
     setVelocity: function (x, y)
     {
+        if (y === undefined) { y = x; }
+
         this.vel.x = x;
         this.vel.y = y;
 

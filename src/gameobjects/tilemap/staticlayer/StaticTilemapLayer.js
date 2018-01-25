@@ -57,9 +57,9 @@ var StaticTilemapLayer = new Class({
 
         /**
          * The Tilemap that this layer is a part of.
-         * @property {Tilemap} map
+         * @property {Tilemap} tilemap
          */
-        this.map = tilemap;
+        this.tilemap = tilemap;
 
         /**
          * The index of the LayerData associated with this layer.
@@ -298,7 +298,7 @@ var StaticTilemapLayer = new Class({
         {
             this.layer.tilemapLayer = undefined;
         }
-        this.map = undefined;
+        this.tilemap = undefined;
         this.layer = undefined;
         this.tileset = undefined;
         GameObject.prototype.destroy.call(this);
