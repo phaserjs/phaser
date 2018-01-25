@@ -7,6 +7,7 @@ module.exports = {
     Matter: require('./CustomMain'),
     MatterPhysics: require('./MatterPhysics'),
     Sprite: require('./MatterSprite'),
+    TileBody: require('./MatterTileBody'),
     World: require('./World')
-  
+
 };

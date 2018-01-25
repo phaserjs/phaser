@@ -1,5 +1,6 @@
 var Class = require('../../utils/Class');
 var Components = require('../components');
+var Rectangle = require('../../geom/rectangle');
 
 var Tile = new Class({
 
@@ -310,6 +311,25 @@ var Tile = new Class({
         return tilemapLayer
             ? this.getTop(camera) + this.height * tilemapLayer.scaleY
             : this.getTop(camera) + this.height;
+    },
+
+
+    /**
+     * Gets the world rectangle bounding box for the tile, factoring in the layer's position,
+     * scale and scroll.
+     * @param {Camera} [camera=main camera] - [description]
+     * @param {object} [output] - [description]
+     * @returns {Phaser.Geom.Rectangle|object}
+     */
+    getBounds: function (camera, output)
+    {
+        if (output === undefined) { output = new Rectangle(); }
+
+        output.x = this.getLeft();
+        output.y = this.getTop();
+        output.width = this.getRight() - output.x;
+        output.height = this.getBottom() - output.y;
+        return output;
     },
 
     /**
