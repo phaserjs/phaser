@@ -343,6 +343,10 @@ var HTML5AudioSound = new Class({
                 currentTime = this.audio.currentTime;
             }
             if (currentTime < this.previousTime) {
+                /**
+                 * @event Phaser.Sound.HTML5AudioSound#looped
+                 * @param {Phaser.Sound.HTML5AudioSound} sound - Reference to the sound that emitted event.
+                 */
                 this.emit('looped', this);
             }
         }
