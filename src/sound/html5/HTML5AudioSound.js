@@ -60,6 +60,16 @@ var HTML5AudioSound = new Class({
         this.totalDuration = this.tags[0].duration;
         BaseSound.call(this, manager, key, config);
     },
+    /**
+     * Play this sound, or a marked section of it.
+     * It always plays the sound from the start. If you want to start playback from a specific time
+     * you can set 'seek' setting of the config object, provided to this call, to that value.
+     *
+     * @method Phaser.Sound.HTML5AudioSound#play
+     * @param {string} [markerName=''] - If you want to play a marker then provide the marker name here, otherwise omit it to play the full sound.
+     * @param {ISoundConfig} [config] - Optional sound config object to be applied to this marker or entire sound if no marker name is provided. It gets memorized for future plays of current section of the sound.
+     * @returns {boolean} Whether the sound started playing successfully.
+     */
     play: function (markerName, config) {
         if (this.manager.isLocked(this, 'play', [markerName, config])) {
             return false;
