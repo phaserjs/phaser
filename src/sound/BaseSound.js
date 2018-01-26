@@ -430,6 +430,11 @@ Object.defineProperty(BaseSound.prototype, 'detune', {
     set: function (value) {
         this.currentConfig.detune = value;
         this.setRate();
+        /**
+         * @event Phaser.Sound.BaseSound#detune
+         * @param {Phaser.Sound.BaseSound} sound - Reference to the sound that emitted event.
+         * @param {number} value - An updated value of Phaser.Sound.BaseSound#detune property.
+         */
         this.emit('detune', this, value);
     }
 });
