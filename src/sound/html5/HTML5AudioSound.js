@@ -353,6 +353,10 @@ var HTML5AudioSound = new Class({
         else if (currentTime >= endTime) {
             this.reset();
             this.stopAndReleaseAudioTag();
+            /**
+             * @event Phaser.Sound.HTML5AudioSound#ended
+             * @param {Phaser.Sound.HTML5AudioSound} sound - Reference to the sound that emitted event.
+             */
             this.emit('ended', this);
             return;
         }
