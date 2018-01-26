@@ -155,6 +155,13 @@ var HTML5AudioSoundManager = new Class({
         document.body.addEventListener('touchmove', detectMove, false);
         document.body.addEventListener('touchend', unlock, false);
     },
+    /**
+     * Method used internally for pausing sound manager if
+     * Phaser.Sound.HTML5AudioSoundManager#pauseOnBlur is set to true.
+     *
+     * @protected
+     * @method Phaser.Sound.HTML5AudioSoundManager#onBlur
+     */
     onBlur: function () {
         this.forEachActiveSound(function (sound) {
             if (sound.isPlaying) {
