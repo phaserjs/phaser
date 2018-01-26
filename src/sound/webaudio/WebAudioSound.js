@@ -498,6 +498,11 @@ Object.defineProperty(WebAudioSound.prototype, 'seek', {
                 this.stopAndRemoveBufferSource();
                 this.createAndStartBufferSource();
             }
+            /**
+             * @event Phaser.Sound.WebAudioSound#seek
+             * @param {Phaser.Sound.WebAudioSound} sound - Reference to the sound that emitted event.
+             * @param {number} value - An updated value of Phaser.Sound.WebAudioSound#seek property.
+             */
             this.emit('seek', this, value);
         }
     }
