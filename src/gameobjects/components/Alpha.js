@@ -1,6 +1,13 @@
 var Clamp = require('../../math/Clamp');
 
-//  Alpha Component
+/**
+ * Provides methods used for setting the alpha properties of a Game Object.
+ * Should be applied as a mixin and not used directly.
+ * 
+ * @name Phaser.GameObjects.Components.Alpha
+ * @mixin
+ * @since 3.0.0
+ */
 
 //  bitmask flag for GameObject.renderMask
 var _FLAG = 2; // 0010
@@ -14,11 +21,32 @@ var Alpha = {
     _alphaBL: 1,
     _alphaBR: 1,
 
+    /**
+     * [description]
+     *
+     * @method Phaser.GameObjects.Components.Alpha.clearAlpha
+     * @since 3.0.0
+     * 
+     * @return {Phaser.GameObjects.GameObject} This Game Object instance.
+     */
     clearAlpha: function ()
     {
         return this.setAlpha(1);
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.GameObjects.Components.Alpha.setAlpha
+     * @since 3.0.0
+     * 
+     * @param {float} [topLeft=1] - The alpha value used for the top-left of the Game Object. If this is the only value given it's applied across the whole Game Object.
+     * @param {float} [topRight] - The alpha value used for the top-right of the Game Object.
+     * @param {float} [bottomLeft] - The alpha value used for the bottom-left of the Game Object.
+     * @param {float} [bottomRight] - The alpha value used for the bottom-right of the Game Object.
+     * 
+     * @return {Phaser.GameObjects.GameObject} This Game Object instance.
+     */
     setAlpha: function (topLeft, topRight, bottomLeft, bottomRight)
     {
         if (topLeft === undefined) { topLeft = 1; }
@@ -39,7 +67,13 @@ var Alpha = {
         return this;
     },
 
-    //  Global Alpha value. If changed this adjusts all alpha properties (topLeft, topRight, etc)
+    /**
+     * [description]
+     * 
+     * @name Phaser.GameObjects.Components.Alpha#alpha
+     * @property {float} alpha
+     * @since 3.0.0
+     */
     alpha: {
 
         get: function ()
@@ -69,7 +103,14 @@ var Alpha = {
 
     },
 
-    //  Adjusts the alpha value of the top-left vertex (WebGL only)
+    /**
+     * [description]
+     * 
+     * @name Phaser.GameObjects.Components.Alpha#alphaTopLeft
+     * @property {float} alphaTopLeft
+     * @webglOnly
+     * @since 3.0.0
+     */
     alphaTopLeft: {
 
         get: function ()
@@ -81,7 +122,7 @@ var Alpha = {
         {
             var v = Clamp(value, 0, 1);
 
-            this._alphaTL = v
+            this._alphaTL = v;
 
             if (v !== 0)
             {
@@ -91,6 +132,14 @@ var Alpha = {
 
     },
 
+    /**
+     * [description]
+     * 
+     * @name Phaser.GameObjects.Components.Alpha#alphaTopRight
+     * @property {float} alphaTopRight
+     * @webglOnly
+     * @since 3.0.0
+     */
     alphaTopRight: {
 
         get: function ()
@@ -102,7 +151,7 @@ var Alpha = {
         {
             var v = Clamp(value, 0, 1);
 
-            this._alphaTR = v
+            this._alphaTR = v;
 
             if (v !== 0)
             {
@@ -112,6 +161,14 @@ var Alpha = {
 
     },
 
+    /**
+     * [description]
+     * 
+     * @name Phaser.GameObjects.Components.Alpha#alphaBottomLeft
+     * @property {float} alphaBottomLeft
+     * @webglOnly
+     * @since 3.0.0
+     */
     alphaBottomLeft: {
 
         get: function ()
@@ -123,7 +180,7 @@ var Alpha = {
         {
             var v = Clamp(value, 0, 1);
 
-            this._alphaBL = v
+            this._alphaBL = v;
 
             if (v !== 0)
             {
@@ -133,6 +190,14 @@ var Alpha = {
 
     },
 
+    /**
+     * [description]
+     * 
+     * @name Phaser.GameObjects.Components.Alpha#alphaBottomRight
+     * @property {float} alphaBottomRight
+     * @webglOnly
+     * @since 3.0.0
+     */
     alphaBottomRight: {
 
         get: function ()
@@ -144,7 +209,7 @@ var Alpha = {
         {
             var v = Clamp(value, 0, 1);
 
-            this._alphaBR = v
+            this._alphaBR = v;
 
             if (v !== 0)
             {
