@@ -87,6 +87,14 @@ var HTML5AudioSoundManager = new Class({
         this._volume = 1;
         BaseSoundManager.call(this, game);
     },
+    /**
+     * Adds a new sound into the sound manager.
+     *
+     * @method Phaser.Sound.HTML5AudioSoundManager#add
+     * @param {string} key - Asset key for the sound.
+     * @param {ISoundConfig} [config] - An optional config object containing default sound settings.
+     * @returns {Phaser.Sound.HTML5AudioSound} The new sound instance.
+     */
     add: function (key, config) {
         var sound = new HTML5AudioSound(this, key, config);
         this.sounds.push(sound);
