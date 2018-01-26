@@ -16,7 +16,7 @@ var HTML5AudioSoundManager = new Class({
     initialize: function HTML5AudioSoundManager(game) {
         /**
          * Flag indicating whether if there are no idle instances of HTML5 Audio tag,
-         * for any particular sound, if one of the used tags should be stopped and used
+         * for any particular sound, if one of the used tags should be hijacked and used
          * for succeeding playback or if succeeding Phaser.Sound.HTML5AudioSound#play
          * call should be ignored.
          *
