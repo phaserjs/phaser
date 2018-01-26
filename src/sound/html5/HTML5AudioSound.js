@@ -529,6 +529,11 @@ Object.defineProperty(HTML5AudioSound.prototype, 'seek', {
             else if (this.isPaused) {
                 this.currentConfig.seek = value;
             }
+            /**
+             * @event Phaser.Sound.HTML5AudioSound#seek
+             * @param {Phaser.Sound.HTML5AudioSound} sound - Reference to the sound that emitted event.
+             * @param {number} value - An updated value of Phaser.Sound.HTML5AudioSound#seek property.
+             */
             this.emit('seek', this, value);
         }
     }
