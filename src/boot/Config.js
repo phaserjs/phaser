@@ -1,6 +1,6 @@
 var Class = require('../utils/Class');
 var CONST = require('../const');
-var DefaultScenePlugins = require('../DefaultScenePlugins');
+var DefaultScenePlugins = require('../plugins/DefaultScenePlugins');
 var GetValue = require('../utils/object/GetValue');
 var MATH = require('../math/const');
 var NOOP = require('../utils/NOOP');

@@ -1,9 +1,9 @@
 var Class = require('../utils/Class');
 var CONST = require('./const');
-var CoreScenePlugins = require('../CoreScenePlugins');
+var CoreScenePlugins = require('../plugins/CoreScenePlugins');
 var GetPhysicsPlugins = require('./GetPhysicsPlugins');
 var GetScenePlugins = require('./GetScenePlugins');
-var GlobalPlugins = require('../GlobalPlugins');
+var GlobalPlugins = require('../plugins/GlobalPlugins');
 var Settings = require('./Settings');
 
 var Systems = new Class({

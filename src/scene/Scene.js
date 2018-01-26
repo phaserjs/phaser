@@ -14,11 +14,6 @@ var Scene = new Class({
     //  Should be overridden by your own Scenes
     update: function ()
     {
-    },
-
-    //  Should be overridden by your own Scenes
-    render: function ()
-    {
     }
 
 });
