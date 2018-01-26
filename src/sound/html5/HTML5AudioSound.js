@@ -338,6 +338,12 @@ var HTML5AudioSound = new Class({
         }
         this.previousTime = currentTime;
     },
+    /**
+     * Calls Phaser.Sound.BaseSound#destroy method
+     * and cleans up all HTML5 Audio related stuff.
+     *
+     * @method Phaser.Sound.HTML5AudioSound#destroy
+     */
     destroy: function () {
         BaseSound.prototype.destroy.call(this);
         this.tags = null;
