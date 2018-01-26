@@ -1,17 +1,16 @@
 var Point = require('../point/Point');
 
 /**
- * Given an angle this will return a Point object containing the coordinates of the point
- * on the circumference of the ellipse.
+ * Returns a Point object containing the coordinates of a point on the circumference of the Ellipse based on the given angle.
  *
  * @function Phaser.Geom.Ellipse.CircumferencePoint
  * @since 3.0.0
  *
- * @param {Phaser.Geom.Ellipse} ellipse - [description]
- * @param {float} angle - [description]
- * @param {Phaser.Geom.Point|object} [out] - [description]
+ * @param {Phaser.Geom.Ellipse} ellipse - The Ellipse to get the circumference point on.
+ * @param {number} angle - The angle from the center of the Ellipse to the circumference to return the point from. Given in radians.
+ * @param {Phaser.Geom.Point|object} [out] - A Point, or point-like object, to store the results in. If not given a Point will be created.
  *
- * @return {Phaser.Geom.Point|object} [description]
+ * @return {Phaser.Geom.Point|object} A Point object where the `x` and `y` properties are the point on the circumference.
  */
 var CircumferencePoint = function (ellipse, angle, out)
 {

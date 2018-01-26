@@ -8,7 +8,23 @@ var Ellipse = new Class({
 
     initialize:
 
-    //  x/y = center of the ellipse
+    /**
+     * An Ellipse object.
+     *
+     * This is a geometry object, containing numerical values and related methods to inspect and modify them.
+     * It is not a Game Object, in that you cannot add it to the display list, and it has no texture.
+     * To render an Ellipse you should look at the capabilities of the Graphics class.
+     *
+     * @class Ellipse
+     * @memberOf Phaser.Geom
+     * @constructor
+     * @since 3.0.0
+     *
+     * @param {number} [x=0] - The x position of the center of the ellipse.
+     * @param {number} [y=0] - The y position of the center of the ellipse.
+     * @param {number} [width=0] - The width of the ellipse.
+     * @param {number} [height=0] - The height of the ellipse.
+     */
     function Ellipse (x, y, width, height)
     {
         if (x === undefined) { x = 0; }
@@ -16,35 +32,119 @@ var Ellipse = new Class({
         if (width === undefined) { width = 0; }
         if (height === undefined) { height = 0; }
 
+        /**
+         * The x position of the center of the ellipse.
+         *
+         * @property {number} x
+         * @since 3.0.0
+         */
         this.x = x;
 
+        /**
+         * The y position of the center of the ellipse.
+         *
+         * @property {number} y
+         * @since 3.0.0
+         */
         this.y = y;
 
+        /**
+         * The width of the ellipse.
+         *
+         * @property {number} width
+         * @since 3.0.0
+         */
         this.width = width;
 
+        /**
+         * The height of the ellipse.
+         *
+         * @property {number} height
+         * @since 3.0.0
+         */
         this.height = height;
     },
 
+    /**
+     * Check to see if the Ellipse contains the given x / y coordinates.
+     *
+     * @method Phaser.Geom.Ellipse#contains
+     * @since 3.0.0
+     *
+     * @param {number} x - The x coordinate to check within the ellipse.
+     * @param {number} y - The y coordinate to check within the ellipse.
+     *
+     * @return {boolean} True if the coordinates are within the ellipse, otherwise false.
+     */
     contains: function (x, y)
     {
         return Contains(this, x, y);
     },
 
+    /**
+     * Returns a Point object containing the coordinates of a point on the circumference of the Ellipse
+     * based on the given angle normalized to the range 0 to 1. I.e. a value of 0.5 will give the point
+     * at 180 degrees around the circle.
+     *
+     * @method Phaser.Geom.Ellipse#getPoint
+     * @since 3.0.0
+     *
+     * @param {float} position - A value between 0 and 1, where 0 equals 0 degrees, 0.5 equals 180 degrees and 1 equals 360 around the ellipse.
+     * @param {Phaser.Geom.Point|object} [out] - An object to store the return values in. If not given a Point object will be created.
+     *
+     * @return {Phaser.Geom.Point|object} A Point, or point-like object, containing the coordinates of the point around the ellipse.
+     */
     getPoint: function (position, point)
     {
         return GetPoint(this, position, point);
     },
 
+    /**
+     * Returns an array of Point objects containing the coordinates of the points around the circumference of the Ellipse,
+     * based on the given quantity or stepRate values.
+     *
+     * @method Phaser.Geom.Ellipse#getPoints
+     * @since 3.0.0
+     *
+     * @param {integer} quantity - The amount of points to return. If a falsey value the quantity will be derived from the `stepRate` instead.
+     * @param {number} [stepRate] - Sets the quantity by getting the circumference of the ellipse and dividing it by the stepRate.
+     * @param {array} [output] - An array to insert the points in to. If not provided a new array will be created.
+     *
+     * @return {Phaser.Geom.Point[]} An array of Point objects pertaining to the points around the circumference of the ellipse.
+     */
     getPoints: function (quantity, stepRate, output)
     {
         return GetPoints(this, quantity, stepRate, output);
     },
 
+    /**
+     * Returns a uniformly distributed random point from anywhere within the given Ellipse.
+     *
+     * @method Phaser.Geom.Ellipse#getRandomPoint
+     * @since 3.0.0
+     *
+     * @param {Phaser.Geom.Point|object} [point] - A Point or point-like object to set the random `x` and `y` values in.
+     *
+     * @return {Phaser.Geom.Point|object} A Point object with the random values set in the `x` and `y` properties.
+     */
     getRandomPoint: function (point)
     {
         return Random(this, point);
     },
 
+    /**
+     * Sets the x, y, width and height of this ellipse.
+     *
+     * @method Phaser.Geom.Ellipse#setTo
+     * @since 3.0.0
+     *
+     * @param {number} x - The x position of the center of the ellipse.
+     * @param {number} y - The y position of the center of the ellipse.
+     * @param {number} width - The width of the ellipse.
+     * @param {number} height - The height of the ellipse.
+     *
+     * @return {Phaser.Geom.Ellipse} This Ellipse object.
+     */
     setTo: function (x, y, width, height)
     {
         this.x = x;
@@ -55,11 +155,34 @@ var Ellipse = new Class({
         return this;
     },
 
+    /**
+     * Sets this Ellipse to be empty with a width and height of zero.
+     * Does not change its position.
+     *
+     * @method Phaser.Geom.Ellipse#setEmpty
+     * @since 3.0.0
+     *
+     * @return {Phaser.Geom.Ellipse} This Ellipse object.
+     */
     setEmpty: function ()
     {
-        return this.setTo(0, 0, 0, 0);
+        this.width = 0;
+        this.height = 0;
+
+        return this;
     },
 
+    /**
+     * Sets the position of this Ellipse.
+     *
+     * @method Phaser.Geom.Ellipse#setPosition
+     * @since 3.0.0
+     *
+     * @param {number} x - The x position of the center of the ellipse.
+     * @param {number} y - The y position of the center of the ellipse.
+     *
+     * @return {Phaser.Geom.Ellipse} This Ellipse object.
+     */
     setPosition: function (x, y)
     {
         if (y === undefined) { y = x; }
@@ -70,6 +193,18 @@ var Ellipse = new Class({
         return this;
     },
 
+    /**
+     * Sets the size of this Ellipse.
+     * Does not change its position.
+     *
+     * @method Phaser.Geom.Ellipse#setSize
+     * @since 3.0.0
+     *
+     * @param {number} width - The width of the ellipse.
+     * @param {number} [height=width] - The height of the ellipse.
+     *
+     * @return {Phaser.Geom.Ellipse} This Ellipse object.
+     */
     setSize: function (width, height)
     {
         if (height === undefined) { height = width; }
@@ -80,23 +215,52 @@ var Ellipse = new Class({
         return this;
     },
 
+    /**
+     * Checks to see if the Ellipse is empty: has a width or height equal to zero.
+     *
+     * @method Phaser.Geom.Ellipse#isEmpty
+     * @since 3.0.0
+     *
+     * @return {boolean} True if the Ellipse is empty, otherwise false.
+     */
     isEmpty: function ()
     {
         return (this.width <= 0 || this.height <= 0);
     },
 
-    //  AKA Semi Minor Axis
+    /**
+     * Returns the minor radius of the ellipse. Also known as the Semi Minor Axis.
+     *
+     * @method Phaser.Geom.Ellipse#getMinorRadius
+     * @since 3.0.0
+     *
+     * @return {number} The minor radius.
+     */
     getMinorRadius: function ()
     {
         return Math.min(this.width, this.height) / 2;
     },
 
-    //  AKA Semi Major Axis
+    /**
+     * Returns the major radius of the ellipse. Also known as the Semi Major Axis.
+     *
+     * @method Phaser.Geom.Ellipse#getMajorRadius
+     * @since 3.0.0
+     *
+     * @return {number} The major radius.
+     */
     getMajorRadius: function ()
     {
         return Math.max(this.width, this.height) / 2;
     },
 
+    /**
+     * The left position of the Ellipse.
+     * 
+     * @name Phaser.Geom.Ellipse#left
+     * @property {number} left
+     * @since 3.0.0
+     */
     left: {
 
         get: function ()
@@ -111,6 +275,13 @@ var Ellipse = new Class({
 
     },
 
+    /**
+     * The right position of the Ellipse.
+     * 
+     * @name Phaser.Geom.Ellipse#right
+     * @property {number} right
+     * @since 3.0.0
+     */
     right: {
 
         get: function ()
@@ -125,6 +296,13 @@ var Ellipse = new Class({
 
     },
 
+    /**
+     * The top position of the Ellipse.
+     * 
+     * @name Phaser.Geom.Ellipse#top
+     * @property {number} top
+     * @since 3.0.0
+     */
     top: {
 
         get: function ()
@@ -139,6 +317,13 @@ var Ellipse = new Class({
 
     },
 
+    /**
+     * The bottom position of the Ellipse.
+     * 
+     * @name Phaser.Geom.Ellipse#bottom
+     * @property {number} bottom
+     * @since 3.0.0
+     */
     bottom: {
 
         get: function ()
