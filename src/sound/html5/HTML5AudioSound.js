@@ -148,6 +148,13 @@ var HTML5AudioSound = new Class({
         this.emit('stop', this);
         return true;
     },
+    /**
+     * Used internally to do what the name says.
+     *
+     * @private
+     * @method Phaser.Sound.HTML5AudioSound#pickAndPlayAudioTag
+     * @returns {boolean} Whether the sound was assigned an audio tag successfully.
+     */
     pickAndPlayAudioTag: function () {
         if (!this.pickAudioTag()) {
             this.reset();
