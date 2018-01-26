@@ -22,6 +22,7 @@ var NoAudioSound = new Class({
      * @param {ISoundConfig} [config={}] - An optional config object containing default sound settings.
      */
     initialize: function NoAudioSound(manager, key, config) {
+        if (config === void 0) { config = {}; }
         EventEmitter.call(this);
         this.manager = manager;
         this.key = key;
