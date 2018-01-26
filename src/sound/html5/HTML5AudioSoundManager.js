@@ -170,6 +170,13 @@ var HTML5AudioSoundManager = new Class({
             }
         });
     },
+    /**
+     * Method used internally for resuming sound manager if
+     * Phaser.Sound.HTML5AudioSoundManager#pauseOnBlur is set to true.
+     *
+     * @protected
+     * @method Phaser.Sound.HTML5AudioSoundManager#onFocus
+     */
     onFocus: function () {
         this.onBlurPausedSounds.forEach(function (sound) {
             sound.onFocus();
