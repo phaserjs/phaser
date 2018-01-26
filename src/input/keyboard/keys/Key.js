@@ -1,78 +1,167 @@
 var Class = require('../../../utils/Class');
 
-//  Phaser.Input.Keyboard.Key
-
-//  A generic Key object which can be passed to the Process functions (and so on)
-//  keycode must be an integer
-
 var Key = new Class({
 
     initialize:
 
+    /**
+     * A generic Key object which can be passed to the Process functions (and so on)
+     * keycode must be an integer
+     *
+     * @class Key
+     * @memberOf Phaser.Input.Keyboard
+     * @constructor
+     * @since 3.0.0
+     *
+     * @param {integer} keyCode - The keycode of this key.
+     */
     function Key (keyCode)
     {
-        //  @property {integer} keyCode - The keycode of this key.
+        /**
+         * The keycode of this key.
+         *
+         * @property {integer} keyCode
+         * @since 3.0.0
+         */
         this.keyCode = keyCode;
 
-        //  @property {KeyboardEvent} originalEvent - The original DOM event.
+        /**
+         * The original DOM event.
+         *
+         * @property {KeyboardEvent} originalEvent
+         * @since 3.0.0
+         */
         this.originalEvent = undefined;
 
-        //  @property {boolean} preventDefault - Should this Key prevent event propagation?
-        //  @default
+        /**
+         * Should this Key prevent event propagation?
+         *
+         * @property {boolean} preventDefault
+         * @default true
+         * @since 3.0.0
+         */
         this.preventDefault = true;
 
-        //  @property {boolean} enabled - Can this Key be processed?
-        //  @default
+        /**
+         * Can this Key be processed?
+         *
+         * @property {boolean} enabled
+         * @default true
+         * @since 3.0.0
+         */
         this.enabled = true;
 
-        //  @property {boolean} isDown - The "down" state of the key. This will remain `true` for as long as the keyboard thinks this key is held down.
-        //  @default
+        /**
+         * The "down" state of the key. This will remain `true` for as long as the keyboard thinks this key is held down.
+         *
+         * @property {boolean} isDown
+         * @default false
+         * @since 3.0.0
+         */
         this.isDown = false;
 
-        //  @property {boolean} isUp - The "up" state of the key. This will remain `true` for as long as the keyboard thinks this key is up.
-        //  @default
+        /**
+         * The "up" state of the key. This will remain `true` for as long as the keyboard thinks this key is up.
+         *
+         * @property {boolean} isUp
+         * @default true
+         * @since 3.0.0
+         */
         this.isUp = true;
 
-        //  @property {boolean} altKey - The down state of the ALT key, if pressed at the same time as this key.
-        //  @default
+        /**
+         * The down state of the ALT key, if pressed at the same time as this key.
+         *
+         * @property {boolean} altKey
+         * @default false
+         * @since 3.0.0
+         */
         this.altKey = false;
 
-        //  @property {boolean} ctrlKey - The down state of the CTRL key, if pressed at the same time as this key.
-        //  @default
+        /**
+         * The down state of the CTRL key, if pressed at the same time as this key.
+         *
+         * @property {boolean} ctrlKey
+         * @default false
+         * @since 3.0.0
+         */
         this.ctrlKey = false;
 
-        //  @property {boolean} shiftKey - The down state of the SHIFT key, if pressed at the same time as this key.
-        //  @default
+        /**
+         * The down state of the SHIFT key, if pressed at the same time as this key.
+         *
+         * @property {boolean} shiftKey
+         * @default false
+         * @since 3.0.0
+         */
         this.shiftKey = false;
 
-        //  @property {integer} location - The location of the modifier key. 0 for standard (or unknown), 1 for left, 2 for right, 3 for numpad.
-        //  @default
+        /**
+         * The location of the modifier key. 0 for standard (or unknown), 1 for left, 2 for right, 3 for numpad.
+         *
+         * @property {number} location
+         * @default 0
+         * @since 3.0.0
+         */
         this.location = 0;
 
-        //  @property {number} timeDown - The timestamp when the key was last pressed down. This is based on Game.time.now.
+        /**
+         * The timestamp when the key was last pressed down.
+         *
+         * @property {number} timeDown
+         * @default 0
+         * @since 3.0.0
+         */
         this.timeDown = 0;
 
-        //  If the key is down this value holds the duration of that key press and is constantly updated.
-        //  If the key is up it holds the duration of the previous down session.
-        //  @property {number} duration - The number of milliseconds this key has been held down for.
-        //  @default
+        /**
+         * The number of milliseconds this key has been held down for.
+         * If the key is down this value holds the duration of that key press and is constantly updated.
+         * If the key is up it holds the duration of the previous down session.
+         *
+         * @property {number} duration
+         * @default 0
+         * @since 3.0.0
+         */
         this.duration = 0;
 
-        //  @property {number} timeUp - The timestamp when the key was last released. This is based on Game.time.now.
-        //  @default
+        /**
+         * The timestamp when the key was last released.
+         *
+         * @property {number} timeUp
+         * @default 0
+         * @since 3.0.0
+         */
         this.timeUp = 0;
 
-        //  @property {number} repeats - If a key is held down this holds down the number of times the key has 'repeated'.
-        //  @default
+        /**
+         * If a key is held down this holds down the number of times the key has 'repeated'.
+         *
+         * @property {number} repeats
+         * @default 0
+         * @since 3.0.0
+         */
         this.repeats = 0;
 
-         // @property {boolean} _justDown - True if the key has just been pressed (NOTE: requires to be reset, see justDown getter)
-         // @private
-         this._justDown = false;
+        /**
+         * True if the key has just been pressed (NOTE: requires to be reset, see justDown getter)
+         *
+         * @property {boolean} _justDown
+         * @private
+         * @default false
+         * @since 3.0.0
+         */
+        this._justDown = false;
 
-         // @property {boolean} _justUp - True if the key has just been pressed (NOTE: requires to be reset, see justDown getter)
-         // @private
-         this._justUp = false;
+        /**
+         * True if the key has just been pressed (NOTE: requires to be reset, see justDown getter)
+         *
+         * @property {boolean} _justUp
+         * @private
+         * @default false
+         * @since 3.0.0
+         */
+        this._justUp = false;
     }
 
 });

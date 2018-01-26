@@ -1,6 +1,15 @@
-//  Resets a Key object back to its default settings.
-//  Optionally resets the keyCode as well.
-
+/**
+ *  Resets a Key object back to its default settings.
+ *  Optionally resets the keyCode as well.
+ *
+ * @function Phaser.Input.Keyboard.Keys.ResetKey
+ * @since 3.0.0
+ *
+ * @param {Phaser.Input.Keyboard.Key} key - [description]
+ * @param {boolean} [clearKeyCode=false] - [description]
+ *
+ * @return {Phaser.Input.Keyboard.Key} [description]
+ */
 var ResetKey = function (key, clearKeyCode)
 {
     if (clearKeyCode === undefined) { clearKeyCode = false; }
