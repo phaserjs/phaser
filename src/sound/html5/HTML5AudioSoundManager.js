@@ -100,6 +100,13 @@ var HTML5AudioSoundManager = new Class({
         this.sounds.push(sound);
         return sound;
     },
+    /**
+     * Unlocks HTML5 Audio loading and playback on mobile
+     * devices on the initial explicit user interaction.
+     *
+     * @private
+     * @method Phaser.Sound.HTML5AudioSoundManager#unlock
+     */
     unlock: function () {
         var _this = this;
         var moved = false;
