@@ -3,8 +3,23 @@ var EventEmitter = require('eventemitter3');
 var NoAudioSound = require('./NoAudioSound');
 var BaseSoundManager = require('../BaseSoundManager');
 var NOOP = require('../../utils/NOOP');
+/*!
+ * @author Pavle Goloskokovic <pgoloskokovic@gmail.com> (http://prunegames.com)
+ */
 var NoAudioSoundManager = new Class({
     Extends: EventEmitter,
+    /**
+     * No audio implementation of the sound manager. It is used if audio has been
+     * disabled in the game config or the device doesn't support any audio.
+     *
+     * It represents a graceful degradation of sound manager logic that provides
+     * minimal functionality and prevents Phaser projects that use audio from
+     * breaking on devices that don't support any audio playback technologies.
+     *
+     * @class Phaser.Sound.NoAudioSoundManager
+     * @constructor
+     * @param {Phaser.Game} game - Reference to the current game instance.
+     */
     initialize: function NoAudioSoundManager(game) {
         EventEmitter.call(this);
         this.game = game;
