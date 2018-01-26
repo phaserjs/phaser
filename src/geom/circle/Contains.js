@@ -1,14 +1,14 @@
 /**
- * [description]
+ * Check to see if the Circle contains the given x / y coordinates.
  *
  * @function Phaser.Geom.Circle.Contains
  * @since 3.0.0
  *
- * @param {Phaser.Geom.Circle} circle - [description]
- * @param {number} x - [description]
- * @param {number} y - [description]
+ * @param {Phaser.Geom.Circle} circle - The Circle to check.
+ * @param {number} x - The x coordinate to check within the circle.
+ * @param {number} y - The y coordinate to check within the circle.
  *
- * @return {boolean} [description]
+ * @return {boolean} True if the coordinates are within the circle, otherwise false.
  */
 var Contains = function (circle, x, y)
 {

@@ -1,5 +1,5 @@
 /**
- * [description]
+ * Calculates the area of the circle.
  *
  * @function Phaser.Geom.Circle.Area
  * @since 3.0.0

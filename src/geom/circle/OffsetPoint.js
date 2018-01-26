@@ -1,13 +1,13 @@
 /**
- * [description]
+ * Offsets the Circle by the values given in the `x` and `y` properties of the Point object.
  *
  * @function Phaser.Geom.Circle.OffsetPoint
  * @since 3.0.0
  *
- * @param {Phaser.Geom.Circle} circle - [description]
- * @param {Phaser.Geom.Point|object} point - [description]
+ * @param {Phaser.Geom.Circle} circle - The Circle to be offset (translated.)
+ * @param {Phaser.Geom.Point|object} point - The Point object containing the values to offset the Circle by.
  *
- * @return {Phaser.Geom.Circle} [description]
+ * @return {Phaser.Geom.Circle} The Circle that was offset.
  */
 var OffsetPoint = function (circle, point)
 {

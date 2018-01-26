@@ -1,15 +1,15 @@
 var Contains = require('./Contains');
 
 /**
- * [description]
+ * Check to see if the Circle contains the given Point object.
  *
  * @function Phaser.Geom.Circle.ContainsPoint
  * @since 3.0.0
  *
- * @param {Phaser.Geom.Circle} circle - [description]
- * @param {Phaser.Geom.Point|object} point - [description]
+ * @param {Phaser.Geom.Circle} circle - The Circle to check.
+ * @param {Phaser.Geom.Point|object} point - The Point object to check if it's within the Circle or not.
  *
- * @return {boolean} [description]
+ * @return {boolean} True if the Point coordinates are within the circle, otherwise false.
  */
 var ContainsPoint = function (circle, point)
 {
