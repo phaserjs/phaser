@@ -171,7 +171,6 @@ var BaseSoundManager = new Class({
      */
     play: function (key, extra) {
         var sound = this.add(key);
-        // TODO document all events
         sound.once('ended', sound.destroy, sound);
         if (extra) {
             if (extra.name) {
