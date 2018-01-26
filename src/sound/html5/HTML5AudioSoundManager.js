@@ -194,6 +194,18 @@ var HTML5AudioSoundManager = new Class({
         this.onBlurPausedSounds.length = 0;
         this.onBlurPausedSounds = null;
     },
+    /**
+     * Method used internally by Phaser.Sound.HTML5AudioSound class methods and property setters
+     * to check if sound manager is locked and then either perform action immediately or queue it
+     * to be performed once the sound manager gets unlocked.
+     *
+     * @private
+     * @method Phaser.Sound.HTML5AudioSoundManager#isLocked
+     * @param {Phaser.Sound.HTML5AudioSound} sound - Sound object on which to perform queued action.
+     * @param {string} prop - Name of the method to be called or property to be assigned a value to.
+     * @param {*} [value] - An optional parameter that either holds an array of arguments to be passed to the method call or value to be set to the property.
+     * @returns {boolean} Whether the sound manager is locked.
+     */
     isLocked: function (sound, prop, value) {
         if (this.locked) {
             this.lockedActionsQueue.push({
