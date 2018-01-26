@@ -3,7 +3,9 @@ var OS = require('../device/OS');
 var isBooted = false;
 
 /**
- * [description]
+ * Inspects the readyState of the document. If the document is already complete then it invokes the given callback.
+ * If not complete it sets up several event listeners such as `deviceready`, and once those fire, it invokes the callback.
+ * Called automatically by the Phaser.Game instance. Should not usually be access directly.
  *
  * @function Phaser.Dom.DOMContentLoaded
  * @since 3.0.0
