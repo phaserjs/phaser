@@ -37,8 +37,9 @@ var HTML5AudioSoundManager = new Class({
          */
         this.audioPlayDelay = 0.1;
         /**
-         * A value by which we should offset the loop end marker of the looping sound to compensate
-         * for lag, caused by changing audio tag position, in order to achieve gapless looping.
+         * A value by which we should offset the loop end marker of the
+         * looping sound to compensate for lag, caused by changing audio
+         * tag playback position, in order to achieve gapless looping.
          *
          * You might need to tweak this value to get the desired results
          * since loop lag varies depending on the browser/platform.
