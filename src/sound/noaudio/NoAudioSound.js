@@ -2,11 +2,13 @@ var Class = require('../../utils/Class');
 var EventEmitter = require('eventemitter3');
 var Extend = require('../../utils/object/Extend');
 var BaseSound = require('../BaseSound');
+
 /*!
  * @author Pavle Goloskokovic <pgoloskokovic@gmail.com> (http://prunegames.com)
  */
 var NoAudioSound = new Class({
     Extends: EventEmitter,
+
     /**
      * No audio implementation of the sound. It is used if audio has been
      * disabled in the game config or the device doesn't support any audio.
@@ -21,7 +23,8 @@ var NoAudioSound = new Class({
      * @param {string} key - Asset key for the sound.
      * @param {ISoundConfig} [config={}] - An optional config object containing default sound settings.
      */
-    initialize: function NoAudioSound(manager, key, config) {
+    initialize: function NoAudioSound (manager, key, config)
+    {
         if (config === void 0) { config = {}; }
         EventEmitter.call(this);
         this.manager = manager;
@@ -51,28 +54,36 @@ var NoAudioSound = new Class({
         this.currentMarker = null;
         this.pendingRemove = false;
     },
-    addMarker: function (marker) {
+    addMarker: function (marker)
+    {
         return false;
     },
-    updateMarker: function (marker) {
+    updateMarker: function (marker)
+    {
         return false;
     },
-    removeMarker: function (markerName) {
+    removeMarker: function (markerName)
+    {
         return null;
     },
-    play: function (markerName, config) {
+    play: function (markerName, config)
+    {
         return false;
     },
-    pause: function () {
+    pause: function ()
+    {
         return false;
     },
-    resume: function () {
+    resume: function ()
+    {
         return false;
     },
-    stop: function () {
+    stop: function ()
+    {
         return false;
     },
-    destroy: function () {
+    destroy: function ()
+    {
         this.manager.remove(this);
         BaseSound.prototype.destroy.call(this);
     }
