@@ -426,6 +426,11 @@ Object.defineProperty(HTML5AudioSound.prototype, 'mute', {
             return;
         }
         this.setMute();
+        /**
+         * @event Phaser.Sound.HTML5AudioSound#mute
+         * @param {Phaser.Sound.HTML5AudioSound} sound - Reference to the sound that emitted event.
+         * @param {boolean} value - An updated value of Phaser.Sound.HTML5AudioSound#mute property.
+         */
         this.emit('mute', this, value);
     }
 });
