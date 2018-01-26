@@ -198,6 +198,10 @@ var WebAudioSound = new Class({
         }
         //  \/\/\/ isPlaying = false, isPaused = false \/\/\/
         this.stopAndRemoveBufferSource();
+        /**
+         * @event Phaser.Sound.WebAudioSound#stop
+         * @param {Phaser.Sound.WebAudioSound} sound - Reference to the sound that emitted event.
+         */
         this.emit('stop', this);
         return true;
     },
