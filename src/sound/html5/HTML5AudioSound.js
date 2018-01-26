@@ -181,6 +181,17 @@ var HTML5AudioSound = new Class({
         this.resetConfig();
         return true;
     },
+    /**
+     * This method performs the audio tag pooling logic. It first looks for
+     * unused audio tag to assign to this sound object. If there are no unused
+     * audio tags, based on HTML5AudioSoundManager#override property value, it
+     * looks for sound with most advanced playback and hijacks its audio tag or
+     * does nothing.
+     *
+     * @private
+     * @method Phaser.Sound.HTML5AudioSound#pickAudioTag
+     * @returns {boolean} Whether the sound was assigned an audio tag successfully.
+     */
     pickAudioTag: function () {
         if (this.audio) {
             return true;
