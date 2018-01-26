@@ -241,6 +241,12 @@ var HTML5AudioSound = new Class({
             playPromise.catch(function (reason) { });
         }
     },
+    /**
+     * Used internally to do what the name says.
+     *
+     * @private
+     * @method Phaser.Sound.HTML5AudioSound#stopAndReleaseAudioTag
+     */
     stopAndReleaseAudioTag: function () {
         this.audio.pause();
         this.audio.dataset.used = 'false';
