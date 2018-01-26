@@ -6,6 +6,8 @@ var BaseSound = require('../BaseSound');
 var WebAudioSound = new Class({
     Extends: BaseSound,
     /**
+     * Web Audio API implementation of the sound.
+     *
      * @class Phaser.Sound.WebAudioSound
      * @constructor
      * @param {Phaser.Sound.WebAudioSoundManager} manager - Reference to the current sound manager instance.
