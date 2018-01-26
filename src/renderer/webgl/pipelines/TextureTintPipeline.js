@@ -25,7 +25,7 @@ var TextureTintPipeline = new Class({
             topology: gl.TRIANGLES,
             vertShader: ShaderSourceVS,
             fragShader: ShaderSourceFS,
-            vertexCapacity: 12000,
+            vertexCapacity: 6 * 10000,
 
             vertexSize: 
                 Float32Array.BYTES_PER_ELEMENT * 2 + 
@@ -59,7 +59,7 @@ var TextureTintPipeline = new Class({
 
         this.vertexViewF32 = new Float32Array(this.vertexData);
         this.vertexViewU32 = new Uint32Array(this.vertexData);
-        this.maxQuads = 2000;
+        this.maxQuads = 10000;
         this.mvpInit();
     },
 
@@ -666,6 +666,10 @@ var TextureTintPipeline = new Class({
         var vertexViewU32 = this.vertexViewU32;
         var renderer = this.renderer;
         var cameraMatrix = camera.matrix.matrix;
+        var cameraWidth = camera.width + 50;
+        var cameraHeight = camera.height + 50;
+        var cameraX = -50;
+        var cameraY = -50;
         var frame = bitmapText.frame;
         var textureSource = bitmapText.texture.source[frame.sourceIndex];
         var cameraScrollX = camera.scrollX * bitmapText.scrollFactorX;
@@ -785,6 +789,11 @@ var TextureTintPipeline = new Class({
             sre = ute * mva + utf * mvc + mve;
             srf = ute * mvb + utf * mvd + mvf;
 
+            xAdvance += glyph.xAdvance;
+            indexCount += 1;
+            lastGlyph = glyph;
+            lastCharCode = charCode;
+
             xw = glyphW;
             yh = glyphH;
             tx0 = sre;
@@ -800,6 +809,15 @@ var TextureTintPipeline = new Class({
             umax = (glyphX + glyphW) / textureWidth;
             vmin = glyphY / textureHeight;
             vmax = (glyphY + glyphH) / textureHeight;
+
+            if ((tx0 < cameraX || tx0 > cameraWidth || ty0 < cameraY || ty0 > cameraHeight) &&
+                (tx1 < cameraX || tx1 > cameraWidth || ty1 < cameraY || ty1 > cameraHeight) &&
+                (tx2 < cameraX || tx2 > cameraWidth || ty2 < cameraY || ty2 > cameraHeight) &&
+                (tx3 < cameraX || tx3 > cameraWidth || ty3 < cameraY || ty3 > cameraHeight) ||
+                (glyphW === 0 || glyphH === 0 || charCode === 32))
+            {
+                continue;
+            }
 
             if (this.vertexCount + 6 > this.vertexCapacity)
             {
@@ -838,18 +856,8 @@ var TextureTintPipeline = new Class({
             vertexViewF32[vertexOffset + 27] = umax;
             vertexViewF32[vertexOffset + 28] = vmin;
             vertexViewU32[vertexOffset + 29] = tint3;
-
-            xAdvance += glyph.xAdvance;
-            indexCount += 1;
-            lastGlyph = glyph;
-            lastCharCode = charCode;
         
             this.vertexCount += 6;
-        }
-
-        if (crop)
-        {
-            renderer.popScissor();
         }
     },
 
