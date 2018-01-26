@@ -386,6 +386,11 @@ Object.defineProperty(BaseSoundManager.prototype, 'rate', {
         this.forEachActiveSound(function (sound) {
             sound.setRate();
         });
+        /**
+         * @event Phaser.Sound.BaseSoundManager#rate
+         * @param {Phaser.Sound.BaseSoundManager} soundManager - Reference to the sound manager that emitted event.
+         * @param {number} value - An updated value of Phaser.Sound.BaseSoundManager#rate property.
+         */
         this.emit('rate', this, value);
     }
 });
