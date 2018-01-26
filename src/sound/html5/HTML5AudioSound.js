@@ -84,6 +84,12 @@ var HTML5AudioSound = new Class({
         this.emit('play', this);
         return true;
     },
+    /**
+     * Pauses the sound.
+     *
+     * @method Phaser.Sound.HTML5AudioSound#pause
+     * @returns {boolean} Whether the sound was paused successfully.
+     */
     pause: function () {
         if (this.manager.isLocked(this, 'pause')) {
             return false;
