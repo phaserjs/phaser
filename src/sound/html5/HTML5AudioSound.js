@@ -108,6 +108,10 @@ var HTML5AudioSound = new Class({
         this.currentConfig.seek = this.audio.currentTime
             - (this.currentMarker ? this.currentMarker.start : 0);
         this.stopAndReleaseAudioTag();
+        /**
+         * @event Phaser.Sound.HTML5AudioSound#pause
+         * @param {Phaser.Sound.HTML5AudioSound} sound - Reference to the sound that emitted event.
+         */
         this.emit('pause', this);
         return true;
     },
