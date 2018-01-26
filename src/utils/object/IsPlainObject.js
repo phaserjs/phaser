@@ -1,10 +1,14 @@
 /**
-* This is a slightly modified version of jQuery.isPlainObject.
-* A plain object is an object whose internal class property is [object Object].
-* @method Phaser.Utils.isPlainObject
-* @param {object} obj - The object to inspect.
-* @return {boolean} - true if the object is plain, otherwise false.
-*/
+ * This is a slightly modified version of jQuery.isPlainObject.
+ * A plain object is an object whose internal class property is [object Object].
+ *
+ * @function Phaser.Utils.Object.IsPlainObject
+ * @since 3.0.0
+ *
+ * @param {object} obj - The object to inspect.
+ *
+ * @return {boolean} `true` if the object is plain, otherwise `false`.
+ */
 var IsPlainObject = function (obj)
 {
     // Not plain objects:

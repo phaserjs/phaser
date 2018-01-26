@@ -1,11 +1,8 @@
 var SpliceOne = require('./SpliceOne');
 
-// Removes a random object from the given array and returns it.
-// Will return null if there are no array items that fall within the specified range
-// or if there is no item for the randomly chosen index.
-
 /**
- * [description]
+ * Removes a random object from the given array and returns it.
+ * Will return null if there are no array items that fall within the specified range or if there is no item for the randomly chosen index.
  *
  * @function Phaser.Utils.Array.RemoveRandomElement
  * @since 3.0.0

@@ -1,13 +1,17 @@
 var IsPlainObject = require('./IsPlainObject');
 
+// @param {boolean} deep - Perform a deep copy?
+// @param {object} target - The target object to copy to.
+// @return {object} The extended object.
+
 /**
-* This is a slightly modified version of http://api.jquery.com/jQuery.extend/
-* 
-* @method Phaser.Utils.extend
-* @param {boolean} deep - Perform a deep copy?
-* @param {object} target - The target object to copy to.
-* @return {object} The extended object.
-*/
+ * This is a slightly modified version of http://api.jquery.com/jQuery.extend/
+ *
+ * @function Phaser.Utils.Object.Extend
+ * @since 3.0.0
+ *
+ * @return {object} [description]
+ */
 var Extend = function ()
 {
     var options, name, src, copy, copyIsArray, clone,
@@ -17,10 +21,11 @@ var Extend = function ()
         deep = false;
 
     // Handle a deep copy situation
-    if (typeof target === "boolean")
+    if (typeof target === 'boolean')
     {
         deep = target;
         target = arguments[1] || {};
+
         // skip the boolean and the target
         i = 2;
     }

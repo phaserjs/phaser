@@ -2,8 +2,21 @@ var FileTypesManager = require('../FileTypesManager');
 var ImageFile = require('./ImageFile.js');
 var JSONFile = require('./JSONFile.js');
 
-//  Phaser.Loader.FileTypes.AtlasJSONFile
-
+/**
+ * [description]
+ *
+ * @function Phaser.Loader.Filetypes.AtlasJSONFile
+ * @since 3.0.0
+ *
+ * @param {string} key - [description]
+ * @param {string} textureURL - [description]
+ * @param {string} atlasURL - [description]
+ * @param {string} path - [description]
+ * @param {object} textureXhrSettings - [description]
+ * @param {object} atlasXhrSettings - [description]
+ *
+ * @return {object} [description]
+ */
 var AtlasJSONFile = function (key, textureURL, atlasURL, path, textureXhrSettings, atlasXhrSettings)
 {
     var image = new ImageFile(key, textureURL, path, textureXhrSettings);
