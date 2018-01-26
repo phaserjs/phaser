@@ -747,7 +747,7 @@ var WebGLRenderer = new Class({
 
         if (!dstTexture)
         {
-            dstTexture = this.createTextureFromSource(srcCanvas, srcCanvas.width, srcCanvas.height, scaleMode);
+            dstTexture = this.createTexture2D(0, gl.NEAREST, gl.NEAREST, gl.CLAMP_TO_EDGE, gl.CLAMP_TO_EDGE, gl.RGBA, srcCanvas, srcCanvas.width, srcCanvas.height, true);
         }
         else
         {
