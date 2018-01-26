@@ -275,7 +275,7 @@ var BaseSoundManager = new Class({
      * Method used internally for unlocking audio playback on devices that
      * require user interaction before any sound can be played on a web page.
      *
-     * Read more about how this issue is handled here in [this article](TODO add link).
+     * Read more about how this issue is handled here in [this article](https://medium.com/@pgoloskokovic/unlocking-web-audio-the-smarter-way-8858218c0e09).
      *
      * @override
      * @protected
