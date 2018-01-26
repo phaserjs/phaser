@@ -1,6 +1,19 @@
 var Length = require('../line/Length');
 var Point = require('../point/Point');
 
+/**
+ * [description]
+ *
+ * @function Phaser.Geom.Triangle.GetPoints
+ * @since 3.0.0
+ *
+ * @param {Phaser.Geom.Triangle} triangle - [description]
+ * @param {integer} quantity - [description]
+ * @param {number} stepRate - [description]
+ * @param {[type]} out - [description]
+ *
+ * @return {[type]} [description]
+ */
 var GetPoints = function (triangle, quantity, stepRate, out)
 {
     if (out === undefined) { out = []; }

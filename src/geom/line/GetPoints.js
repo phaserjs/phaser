@@ -1,6 +1,19 @@
 var Length = require('./Length');
 var Point = require('../point/Point');
 
+/**
+ * [description]
+ *
+ * @function Phaser.Geom.Line.GetPoints
+ * @since 3.0.0
+ *
+ * @param {Phaser.Geom.Line} line - [description]
+ * @param {integer} quantity - [description]
+ * @param {integer} [stepRate] - [description]
+ * @param {array} out - [description]
+ *
+ * @return {array} [description]
+ */
 var GetPoints = function (line, quantity, stepRate, out)
 {
     if (out === undefined) { out = []; }
