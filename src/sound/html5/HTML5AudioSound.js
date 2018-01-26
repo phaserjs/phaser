@@ -450,6 +450,11 @@ Object.defineProperty(HTML5AudioSound.prototype, 'volume', {
             return;
         }
         this.setVolume();
+        /**
+         * @event Phaser.Sound.HTML5AudioSound#volume
+         * @param {Phaser.Sound.HTML5AudioSound} sound - Reference to the sound that emitted event.
+         * @param {number} value - An updated value of Phaser.Sound.HTML5AudioSound#volume property.
+         */
         this.emit('volume', this, value);
     }
 });
