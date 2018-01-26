@@ -1,7 +1,19 @@
 var Class = require('../../utils/Class');
 var BaseSound = require('../BaseSound');
+/*!
+ * @author Pavle Goloskokovic <pgoloskokovic@gmail.com> (http://prunegames.com)
+ */
 var HTML5AudioSound = new Class({
     Extends: BaseSound,
+    /**
+     * HTML5 Audio implementation of the sound.
+     *
+     * @class Phaser.Sound.HTML5AudioSound
+     * @constructor
+     * @param {Phaser.Sound.HTML5AudioSoundManager} manager - Reference to the current sound manager instance.
+     * @param {string} key - Asset key for the sound.
+     * @param {ISoundConfig} [config={}] - An optional config object containing default sound settings.
+     */
     initialize: function HTML5AudioSound(manager, key, config) {
         if (config === void 0) { config = {}; }
         /**
