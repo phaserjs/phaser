@@ -183,6 +183,12 @@ var HTML5AudioSoundManager = new Class({
         });
         this.onBlurPausedSounds.length = 0;
     },
+    /**
+     * Calls Phaser.Sound.BaseSoundManager#destroy method
+     * and cleans up all HTML5 Audio related stuff.
+     *
+     * @method Phaser.Sound.HTML5AudioSoundManager#destroy
+     */
     destroy: function () {
         BaseSoundManager.prototype.destroy.call(this);
         this.onBlurPausedSounds.length = 0;
