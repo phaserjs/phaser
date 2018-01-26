@@ -25,7 +25,7 @@ var TextureTintPipeline = new Class({
             topology: gl.TRIANGLES,
             vertShader: ShaderSourceVS,
             fragShader: ShaderSourceFS,
-            vertexCapacity: 6 * 10000,
+            vertexCapacity: 6 * 2000,
 
             vertexSize: 
                 Float32Array.BYTES_PER_ELEMENT * 2 + 
@@ -59,7 +59,7 @@ var TextureTintPipeline = new Class({
 
         this.vertexViewF32 = new Float32Array(this.vertexData);
         this.vertexViewU32 = new Uint32Array(this.vertexData);
-        this.maxQuads = 10000;
+        this.maxQuads = 2000;
         this.mvpInit();
     },
 
@@ -676,7 +676,7 @@ var TextureTintPipeline = new Class({
         var cameraScrollY = camera.scrollY * bitmapText.scrollFactorY;
         var fontData = bitmapText.fontData;
         var lineHeight = fontData.lineHeight;
-        var scale = (bitmapText.fontSize / bitmapText.fontData.size);
+        var scale = (bitmapText.fontSize / fontData.size);
         var chars = fontData.chars;
         var alpha = bitmapText.alpha;
         var tint0 = getTint(bitmapText._tintTL, alpha);
@@ -734,8 +734,6 @@ var TextureTintPipeline = new Class({
         var mvd = src * cmb + srd * cmd;
         var mve = sre * cma + srf * cmc + cme;
         var mvf = sre * cmb + srf * cmd + cmf;
-        var crop = (bitmapText.cropWidth > 0 || bitmapText.cropHeight > 0);
-        var uta, utb, utc, utd, ute, utf;
         var vertexOffset = 0;
 
         renderer.setTexture2D(texture, 0);
@@ -766,8 +764,8 @@ var TextureTintPipeline = new Class({
             glyphW = glyph.width;
             glyphH = glyph.height;
 
-            x = (indexCount + glyph.xOffset + xAdvance) - scrollX;
-            y = (glyph.yOffset + yAdvance) - scrollY;
+            x = (indexCount + glyph.xOffset + xAdvance) * scale;
+            y = (glyph.yOffset + yAdvance) * scale;
 
             if (lastGlyph !== null)
             {
@@ -775,35 +773,27 @@ var TextureTintPipeline = new Class({
                 x += (kerningOffset !== undefined) ? kerningOffset : 0;
             }            
 
-            uta = scale;
-            utb = 0;
-            utc = 0;
-            utd = scale;
-            ute = x * scale;
-            utf = y * scale;
-
-            sra = uta * mva + utb * mvc;
-            srb = uta * mvb + utb * mvd;
-            src = utc * mva + utd * mvc;
-            srd = utc * mvb + utd * mvd;
-            sre = ute * mva + utf * mvc + mve;
-            srf = ute * mvb + utf * mvd + mvf;
-
             xAdvance += glyph.xAdvance;
             indexCount += 1;
             lastGlyph = glyph;
             lastCharCode = charCode;
 
-            xw = glyphW;
-            yh = glyphH;
-            tx0 = sre;
-            ty0 = srf;
-            tx1 = yh * src + sre;
-            ty1 = yh * srd + srf;
-            tx2 = xw * sra + yh * src + sre;
-            ty2 = xw * srb + yh * srd + srf;
-            tx3 = xw * sra + sre;
-            ty3 = xw * srb + srf;
+            //  Nothing to render or a space? Then skip to the next glyph
+            if (glyphW === 0 || glyphH === 0 || charCode === 32)
+            {
+                continue;
+            }
+
+            xw = x + glyphW * scale;
+            yh = y + glyphH * scale;
+            tx0 = x * mva + y * mvc + mve;
+            ty0 = x * mvb + y * mvd + mvf;
+            tx1 = x * mva + yh * mvc + mve;
+            ty1 = x * mvb + yh * mvd + mvf;
+            tx2 = xw * mva + yh * mvc + mve;
+            ty2 = xw * mvb + yh * mvd + mvf;
+            tx3 = xw * mva + y * mvc + mve;
+            ty3 = xw * mvb + y * mvd + mvf;
 
             umin = glyphX / textureWidth;
             umax = (glyphX + glyphW) / textureWidth;
@@ -813,8 +803,7 @@ var TextureTintPipeline = new Class({
             if ((tx0 < cameraX || tx0 > cameraWidth || ty0 < cameraY || ty0 > cameraHeight) &&
                 (tx1 < cameraX || tx1 > cameraWidth || ty1 < cameraY || ty1 > cameraHeight) &&
                 (tx2 < cameraX || tx2 > cameraWidth || ty2 < cameraY || ty2 > cameraHeight) &&
-                (tx3 < cameraX || tx3 > cameraWidth || ty3 < cameraY || ty3 > cameraHeight) ||
-                (glyphW === 0 || glyphH === 0 || charCode === 32))
+                (tx3 < cameraX || tx3 > cameraWidth || ty3 < cameraY || ty3 > cameraHeight))
             {
                 continue;
             }
@@ -998,6 +987,17 @@ var TextureTintPipeline = new Class({
                 x += (kerningOffset !== undefined) ? kerningOffset : 0;
             }
 
+            xAdvance += glyph.xAdvance;
+            indexCount += 1;
+            lastGlyph = glyph;
+            lastCharCode = charCode;
+
+            //  Nothing to render or a space? Then skip to the next glyph
+            if (glyphW === 0 || glyphH === 0 || charCode === 32)
+            {
+                continue;
+            }
+
             if (displayCallback)
             {
                 var output = displayCallback({ 
@@ -1117,11 +1117,6 @@ var TextureTintPipeline = new Class({
             vertexViewF32[vertexOffset + 27] = umax;
             vertexViewF32[vertexOffset + 28] = vmin;
             vertexViewU32[vertexOffset + 29] = tint3;
-
-            xAdvance += glyph.xAdvance;
-            indexCount += 1;
-            lastGlyph = glyph;
-            lastCharCode = charCode;
         
             this.vertexCount += 6;
         }
