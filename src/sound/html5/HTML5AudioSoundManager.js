@@ -64,11 +64,7 @@ var HTML5AudioSoundManager = new Class({
          * all actions will be performed in chronological order.
          *
          * @private
-         * @property {{
-         *   sound: Phaser.Sound.HTML5AudioSound,
-         *   name: string,
-         *   value?: any,
-         * }[]} lockedActionsQueue
+         * @property {{ sound: Phaser.Sound.HTML5AudioSound, name: string, value?: * }[]} lockedActionsQueue
          */
         this.lockedActionsQueue = this.locked ? [] : null;
         /**
