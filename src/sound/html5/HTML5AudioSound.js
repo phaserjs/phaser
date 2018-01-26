@@ -107,6 +107,12 @@ var HTML5AudioSound = new Class({
         this.emit('pause', this);
         return true;
     },
+    /**
+     * Resumes the sound.
+     *
+     * @method Phaser.Sound.HTML5AudioSound#resume
+     * @returns {boolean} Whether the sound was resumed successfully.
+     */
     resume: function () {
         if (this.manager.isLocked(this, 'resume')) {
             return false;
