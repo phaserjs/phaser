@@ -7,6 +7,17 @@ var Vector2 = new Class({
 
     initialize:
 
+    /**
+     * [description]
+     *
+     * @class Vector2
+     * @memberOf Phaser.Math
+     * @constructor
+     * @since 3.0.0
+     *
+     * @param {number} [x] - [description]
+     * @param {number} [y] - [description]
+     */
     function Vector2 (x, y)
     {
         if (typeof x === 'object')
@@ -23,11 +34,29 @@ var Vector2 = new Class({
         }
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Math.Vector2#clone
+     * @since 3.0.0
+     *
+     * @return {[type]} [description]
+     */
     clone: function ()
     {
         return new Vector2(this.x, this.y);
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Math.Vector2#copy
+     * @since 3.0.0
+     *
+     * @param {[type]} src - [description]
+     *
+     * @return {[type]} [description]
+     */
     copy: function (src)
     {
         this.x = src.x || 0;
@@ -36,6 +65,16 @@ var Vector2 = new Class({
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Math.Vector2#setFromObject
+     * @since 3.0.0
+     *
+     * @param {[type]} obj - [description]
+     *
+     * @return {[type]} [description]
+     */
     setFromObject: function (obj)
     {
         this.x = obj.x || 0;
@@ -44,6 +83,17 @@ var Vector2 = new Class({
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Math.Vector2#set
+     * @since 3.0.0
+     *
+     * @param {[type]} x - [description]
+     * @param {[type]} y - [description]
+     *
+     * @return {[type]} [description]
+     */
     set: function (x, y)
     {
         if (y === undefined) { y = x; }
@@ -57,6 +107,17 @@ var Vector2 = new Class({
     // Sets the `x` and `y` values of this object from a given polar coordinate.
     // @param {number} azimuth - The angular coordinate, in radians.
     // @param {number} [radius=1] - The radial coordinate (length).
+    /**
+     * [description]
+     *
+     * @method Phaser.Math.Vector2#setToPolar
+     * @since 3.0.0
+     *
+     * @param {[type]} azimuth - [description]
+     * @param {[type]} radius - [description]
+     *
+     * @return {[type]} [description]
+     */
     setToPolar: function (azimuth, radius)
     {
         if (radius == null) { radius = 1; }
@@ -67,11 +128,29 @@ var Vector2 = new Class({
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Math.Vector2#equals
+     * @since 3.0.0
+     *
+     * @param {[type]} v - [description]
+     *
+     * @return {[type]} [description]
+     */
     equals: function (v)
     {
         return ((this.x === v.x) && (this.y === v.y));
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Math.Vector2#angle
+     * @since 3.0.0
+     *
+     * @return {[type]} [description]
+     */
     angle: function ()
     {
         // computes the angle in radians with respect to the positive x-axis
@@ -86,6 +165,16 @@ var Vector2 = new Class({
         return angle;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Math.Vector2#add
+     * @since 3.0.0
+     *
+     * @param {[type]} src - [description]
+     *
+     * @return {[type]} [description]
+     */
     add: function (src)
     {
         this.x += src.x;
@@ -94,6 +183,16 @@ var Vector2 = new Class({
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Math.Vector2#subtract
+     * @since 3.0.0
+     *
+     * @param {[type]} src - [description]
+     *
+     * @return {[type]} [description]
+     */
     subtract: function (src)
     {
         this.x -= src.x;
@@ -102,6 +201,16 @@ var Vector2 = new Class({
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Math.Vector2#multiply
+     * @since 3.0.0
+     *
+     * @param {[type]} src - [description]
+     *
+     * @return {[type]} [description]
+     */
     multiply: function (src)
     {
         this.x *= src.x;
@@ -110,6 +219,16 @@ var Vector2 = new Class({
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Math.Vector2#scale
+     * @since 3.0.0
+     *
+     * @param {[type]} value - [description]
+     *
+     * @return {[type]} [description]
+     */
     scale: function (value)
     {
         if (isFinite(value))
@@ -126,6 +245,16 @@ var Vector2 = new Class({
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Math.Vector2#divide
+     * @since 3.0.0
+     *
+     * @param {[type]} src - [description]
+     *
+     * @return {[type]} [description]
+     */
     divide: function (src)
     {
         this.x /= src.x;
@@ -134,6 +263,14 @@ var Vector2 = new Class({
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Math.Vector2#negate
+     * @since 3.0.0
+     *
+     * @return {[type]} [description]
+     */
     negate: function ()
     {
         this.x = -this.x;
@@ -142,6 +279,16 @@ var Vector2 = new Class({
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Math.Vector2#distance
+     * @since 3.0.0
+     *
+     * @param {[type]} src - [description]
+     *
+     * @return {[type]} [description]
+     */
     distance: function (src)
     {
         var dx = src.x - this.x;
@@ -150,6 +297,16 @@ var Vector2 = new Class({
         return Math.sqrt(dx * dx + dy * dy);
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Math.Vector2#distanceSq
+     * @since 3.0.0
+     *
+     * @param {[type]} src - [description]
+     *
+     * @return {[type]} [description]
+     */
     distanceSq: function (src)
     {
         var dx = src.x - this.x;
@@ -158,6 +315,14 @@ var Vector2 = new Class({
         return dx * dx + dy * dy;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Math.Vector2#length
+     * @since 3.0.0
+     *
+     * @return {[type]} [description]
+     */
     length: function ()
     {
         var x = this.x;
@@ -166,6 +331,14 @@ var Vector2 = new Class({
         return Math.sqrt(x * x + y * y);
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Math.Vector2#lengthSq
+     * @since 3.0.0
+     *
+     * @return {[type]} [description]
+     */
     lengthSq: function ()
     {
         var x = this.x;
@@ -174,6 +347,14 @@ var Vector2 = new Class({
         return x * x + y * y;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Math.Vector2#normalize
+     * @since 3.0.0
+     *
+     * @return {[type]} [description]
+     */
     normalize: function ()
     {
         var x = this.x;
@@ -193,6 +374,14 @@ var Vector2 = new Class({
     /**
     * Right-hand normalize (make unit length) this Vector
     */
+    /**
+     * [description]
+     *
+     * @method Phaser.Math.Vector2#normalizeRightHand
+     * @since 3.0.0
+     *
+     * @return {[type]} [description]
+     */
     normalizeRightHand: function ()
     {
         var x = this.x;
@@ -203,16 +392,47 @@ var Vector2 = new Class({
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Math.Vector2#dot
+     * @since 3.0.0
+     *
+     * @param {[type]} src - [description]
+     *
+     * @return {[type]} [description]
+     */
     dot: function (src)
     {
         return this.x * src.x + this.y * src.y;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Math.Vector2#cross
+     * @since 3.0.0
+     *
+     * @param {[type]} src - [description]
+     *
+     * @return {[type]} [description]
+     */
     cross: function (src)
     {
         return this.x * src.y - this.y * src.x;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Math.Vector2#lerp
+     * @since 3.0.0
+     *
+     * @param {[type]} src - [description]
+     * @param {[type]} t - [description]
+     *
+     * @return {[type]} [description]
+     */
     lerp: function (src, t)
     {
         if (t === undefined) { t = 0; }
@@ -226,6 +446,16 @@ var Vector2 = new Class({
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Math.Vector2#transformMat3
+     * @since 3.0.0
+     *
+     * @param {[type]} mat - [description]
+     *
+     * @return {[type]} [description]
+     */
     transformMat3: function (mat)
     {
         var x = this.x;
@@ -238,6 +468,16 @@ var Vector2 = new Class({
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Math.Vector2#transformMat4
+     * @since 3.0.0
+     *
+     * @param {[type]} mat - [description]
+     *
+     * @return {[type]} [description]
+     */
     transformMat4: function (mat)
     {
         var x = this.x;
@@ -250,6 +490,14 @@ var Vector2 = new Class({
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Math.Vector2#reset
+     * @since 3.0.0
+     *
+     * @return {[type]} [description]
+     */
     reset: function ()
     {
         this.x = 0;
