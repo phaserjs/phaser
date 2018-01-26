@@ -437,6 +437,11 @@ Object.defineProperty(WebAudioSound.prototype, 'mute', {
     set: function (value) {
         this.currentConfig.mute = value;
         this.muteNode.gain.setValueAtTime(value ? 0 : 1, 0);
+        /**
+         * @event Phaser.Sound.WebAudioSound#mute
+         * @param {Phaser.Sound.WebAudioSound} sound - Reference to the sound that emitted event.
+         * @param {boolean} value - An updated value of Phaser.Sound.WebAudioSound#mute property.
+         */
         this.emit('mute', this, value);
     }
 });
