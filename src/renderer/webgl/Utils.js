@@ -7,10 +7,16 @@ module.exports = {
         var ub = ((b * 255.0)|0) & 0xFF;
         var ua = ((a * 255.0)|0) & 0xFF;
 
-        return ((ua << 24) | (ub << 16) | (ug << 8) | ur) >>> 0;
+        return ((ua << 24) | (ur << 16) | (ug << 8) | ub) >>> 0;
     },
 
     getTintAppendFloatAlpha: function (rgb, a)
+    {
+        var ua = ((a * 255.0)|0) & 0xFF;
+        return ((ua << 24) | rgb) >>> 0;
+    },
+
+    getTintAppendFloatAlphaAndSwap: function (rgb, a)
     {
         var ur = ((rgb >> 16)|0) & 0xff;
         var ug = ((rgb >> 8)|0) & 0xff;

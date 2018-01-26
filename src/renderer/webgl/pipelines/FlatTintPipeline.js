@@ -134,7 +134,7 @@ var FlatTintPipeline = new Class({
         var ty2 = xw * b + yh * d + f;
         var tx3 = xw * a + y * c + e;
         var ty3 = xw * b + y * d + f;
-        var tint = Utils.getTintAppendFloatAlpha(fillColor, fillAlpha);
+        var tint = Utils.getTintAppendFloatAlphaAndSwap(fillColor, fillAlpha);
 
         vertexViewF32[vertexOffset + 0] = tx0;
         vertexViewF32[vertexOffset + 1] = ty0;
@@ -188,7 +188,7 @@ var FlatTintPipeline = new Class({
         var ty1 = x1 * b + y1 * d + f;
         var tx2 = x2 * a + y2 * c + e;
         var ty2 = x2 * b + y2 * d + f;
-        var tint = Utils.getTintAppendFloatAlpha(fillColor, fillAlpha);
+        var tint = Utils.getTintAppendFloatAlphaAndSwap(fillColor, fillAlpha);
 
         vertexViewF32[vertexOffset + 0] = tx0;
         vertexViewF32[vertexOffset + 1] = ty0;
@@ -264,7 +264,7 @@ var FlatTintPipeline = new Class({
         var d = c1 * b0 + d1 * d0;
         var e = e1 * a0 + f1 * c0 + e0;
         var f = e1 * b0 + f1 * d0 + f0;
-        var tint = Utils.getTintAppendFloatAlpha(fillColor, fillAlpha);
+        var tint = Utils.getTintAppendFloatAlphaAndSwap(fillColor, fillAlpha);
 
         for (var pathIndex = 0; pathIndex < length; ++pathIndex)
         {
@@ -330,7 +330,7 @@ var FlatTintPipeline = new Class({
         var vertexViewU32 = this.vertexViewU32;
         var vertexOffset;
         var line;
-        var getTint = Utils.getTintAppendFloatAlpha;
+        var getTint = Utils.getTintAppendFloatAlphaAndSwap;
 
         for (var pathIndex = 0; pathIndex + 1 < pathLength; pathIndex += 1)
         {
@@ -434,7 +434,7 @@ var FlatTintPipeline = new Class({
         var y2 = lx2 * b + ly2 * d + f;
         var x3 = lx3 * a + ly3 * c + e;
         var y3 = lx3 * b + ly3 * d + f;
-        var getTint = Utils.getTintAppendFloatAlpha;
+        var getTint = Utils.getTintAppendFloatAlphaAndSwap;
         var aTint = getTint(aLineColor, lineAlpha);
         var bTint = getTint(bLineColor, lineAlpha);
         var vertexOffset = this.vertexCount * this.vertexComponentCount;
