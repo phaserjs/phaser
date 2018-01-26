@@ -277,6 +277,10 @@ var BaseSoundManager = new Class({
         this.forEachActiveSound(function (sound) {
             sound.stop();
         });
+        /**
+         * @event Phaser.Sound.BaseSoundManager#stopall
+         * @param {Phaser.Sound.BaseSoundManager} soundManager - Reference to the sound manager that emitted event.
+         */
         this.emit('stopall', this);
     },
     /**
