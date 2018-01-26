@@ -228,6 +228,13 @@ var HTML5AudioSound = new Class({
         selectedSound.previousTime = 0;
         return true;
     },
+    /**
+     * Method used for playing audio tag and catching possible exceptions
+     * thrown from rejected Promise returned from play method call.
+     *
+     * @private
+     * @method Phaser.Sound.HTML5AudioSound#playCatchPromise
+     */
     playCatchPromise: function () {
         var playPromise = this.audio.play();
         if (playPromise) {
