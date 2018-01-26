@@ -157,6 +157,10 @@ var WebAudioSound = new Class({
         //  \/\/\/ isPlaying = false, isPaused = true \/\/\/
         this.currentConfig.seek = this.getCurrentTime(); // Equivalent to setting paused time
         this.stopAndRemoveBufferSource();
+        /**
+         * @event Phaser.Sound.WebAudioSound#pause
+         * @param {Phaser.Sound.WebAudioSound} sound - Reference to the sound that emitted event.
+         */
         this.emit('pause', this);
         return true;
     },
