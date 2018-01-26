@@ -80,6 +80,18 @@ var WebGLPipeline = new Class({
         return this;
     },
 
+    onPreRender: function ()
+    {
+        // called once every frame
+        return this;
+    },
+
+    onPostRender: function ()
+    {
+        // called once every frame
+        return this;
+    },
+
     flush: function ()
     {
         var gl = this.gl;

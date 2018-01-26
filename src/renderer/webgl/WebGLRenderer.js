@@ -672,10 +672,16 @@ var WebGLRenderer = new Class({
 
         var gl = this.gl;
         var color = this.game.config.backgroundColor;
+        var pipelines = this.pipelines;
 
         // Bind custom framebuffer here
         gl.clearColor(color.redGL, color.greenGL, color.blueGL, color.alphaGL);
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT | gl.STENCIL_BUFFER_BIT);
+
+        for (var key in pipelines)
+        {
+            pipelines[key].onPreRender();
+        }
     },
 
     render: function (scene, children, interpolationPercentage, camera)
@@ -730,6 +736,13 @@ var WebGLRenderer = new Class({
         {
             this.snapshotState.callback(WebGLSnapshot(this.canvas, this.snapshotState.type, this.snapshotState.encoder));
             this.snapshotState.callback = null;
+        }
+
+        var pipelines = this.pipelines;
+
+        for (var key in pipelines)
+        {
+            pipelines[key].onPostRender();
         }
     },
 

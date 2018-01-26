@@ -15,7 +15,7 @@ var TextureTintPipeline = new Class({
 
     initialize:
 
-    function TextureTintPipeline(game, gl, renderer)
+    function TextureTintPipeline(game, gl, renderer, overrideFragmentShader)
     {
         WebGLPipeline.call(this, {
             name: 'TextureTintPipeline',
@@ -24,7 +24,7 @@ var TextureTintPipeline = new Class({
             renderer: renderer,
             topology: gl.TRIANGLES,
             vertShader: ShaderSourceVS,
-            fragShader: ShaderSourceFS,
+            fragShader: (overrideFragmentShader ? overrideFragmentShader : ShaderSourceFS),
             vertexCapacity: 6 * 2000,
 
             vertexSize: 
