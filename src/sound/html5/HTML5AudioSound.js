@@ -279,6 +279,13 @@ var HTML5AudioSound = new Class({
         this.currentConfig.delay = Math.max(0, (this.startTime - window.performance.now()) / 1000);
         this.stopAndReleaseAudioTag();
     },
+    /**
+     * Method used internally by sound manager for resuming sound if
+     * Phaser.Sound.HTML5AudioSoundManager#pauseOnBlur is set to true.
+     *
+     * @private
+     * @method Phaser.Sound.HTML5AudioSound#onFocus
+     */
     onFocus: function () {
         this.isPlaying = true;
         this.isPaused = false;
