@@ -82,7 +82,7 @@ var WebAudioSoundManager = new Class({
     /**
      * Unlocks Web Audio API on iOS devices on the initial touch event.
      *
-     * Read more about how this issue is handled here in [this article](TODO add link).
+     * Read more about how this issue is handled here in [this article](https://medium.com/@pgoloskokovic/unlocking-web-audio-the-smarter-way-8858218c0e09).
      *
      * @private
      * @method Phaser.Sound.WebAudioSoundManager#unlock
