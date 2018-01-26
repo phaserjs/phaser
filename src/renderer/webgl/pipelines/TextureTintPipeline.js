@@ -104,8 +104,8 @@ var TextureTintPipeline = new Class({
             this.vertexBuffer = pipelineVertexBuffer;
         }
 
-        if (this.viewMatrixDirty) this.viewIdentity();
-        if (this.modelMatrixDirty) this.modelIdentity();
+        this.viewIdentity();
+        this.modelIdentity();
     },
 
     drawEmitterManager: function (emitterManager, camera)

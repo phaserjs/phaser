@@ -524,6 +524,8 @@ var FlatTintPipeline = new Class({
         var mve = sre * cma + srf * cmc + cme;
         var mvf = sre * cmb + srf * cmd + cmf;
 
+        pathArray.length = 0;
+
         for (var cmdIndex = 0, cmdLength = commands.length; cmdIndex < cmdLength; ++cmdIndex)
         {
             cmd = commands[cmdIndex];
