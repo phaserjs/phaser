@@ -6,15 +6,6 @@ var DisplayList = require('../DisplayList');
 var Frame = require('../../textures/Frame');
 var GameObject = require('../GameObject');
 
-/**
-* A Blitter Game Object.
-*
-* The Blitter Game Object is a special type of Container, that contains Blitter.Bob objects.
-* These objects can be thought of as just texture frames with a position and nothing more.
-* Bobs don't have any update methods, or the ability to have children, or any kind of special effects.
-* They are essentially just super-fast texture frame renderers, and the Blitter object creates and manages them.
-*/
-
 var Blitter = new Class({
 
     Extends: GameObject,
@@ -33,22 +24,70 @@ var Blitter = new Class({
 
     initialize:
 
+    /**
+     * A Blitter Game Object.
+     *
+     * The Blitter Game Object is a special type of Container, that contains Blitter.Bob objects.
+     * These objects can be thought of as just texture frames with a position and nothing more.
+     * Bobs don't have any update methods, or the ability to have children, or any kind of special effects.
+     * They are essentially just super-fast texture frame renderers, and the Blitter object creates and manages them.
+     *
+     * @class Blitter
+     * @extends Phaser.GameObjects.GameObject
+     * @memberOf Phaser.GameObjects
+     * @constructor
+     * @since 3.0.0
+     *
+     * @mixes Phaser.GameObjects.Components.Alpha
+     *
+     * @param {Phaser.Scene} scene - The Scene to which this Game Object belongs. It can only belong to one Scene at any given time.
+     * @param {number} [x==] - The x coordinate of this Game Object in world space.
+     * @param {number} [y=0] - The y coordinate of this Game Object in world space.
+     * @param {string} [texture='__DEFAULT'] - The key of the texture this Game Object will use for rendering. The Texture must already exist in the Texture Manager.
+     * @param {string|integer} [frame=0] - The Frame of the Texture that this Game Object will use. Only set if the Texture has multiple frames, such as a Texture Atlas or Sprite Sheet.
+     */
     function Blitter (scene, x, y, texture, frame)
     {
         GameObject.call(this, scene, 'Blitter');
 
         this.setTexture(texture, frame);
+
         this.setPosition(x, y);
 
+        /**
+         * [description]
+         *
+         * @property {Phaser.GameObjects.DisplayList} children
+         * @since 3.0.0
+         */
         this.children = new DisplayList();
 
+        /**
+         * [description]
+         *
+         * @property {array} renderList
+         * @default []
+         * @since 3.0.0
+         */
         this.renderList = [];
 
         this.dirty = false;
     },
 
-    //  frame MUST be part of the Blitter texture
-    //  and can be either a Frame object or a string
+    /**
+     * [description]
+     *
+     * @method Phaser.GameObjects.Blitter#create
+     * @since 3.0.0
+     *
+     * @param {number} x - The x position of the Bob. Bob coordinate are relative to the position of the Blitter object.
+     * @param {number} y - The y position of the Bob. Bob coordinate are relative to the position of the Blitter object.
+     * @param {string|integer|Phaser.Textures.Frame} [frame] - The Frame the Bob will use. It _must_ be part of the Texture the parent Blitter object is using.
+     * @param {boolean} [visible=true] - Should the created Bob render or not?
+     * @param {integer} [index] - The position in the Blitters Display List to add the new Bob at. Defaults to the top of the list.
+     *
+     * @return {Phaser.GameObjects.Blitter.Bob} The newly created Bob object.
+     */
     create: function (x, y, frame, visible, index)
     {
         if (visible === undefined) { visible = true; }
@@ -73,6 +112,19 @@ var Blitter = new Class({
     },
 
     //  frame MUST be part of the Blitter texture
+    /**
+     * [description]
+     *
+     * @method Phaser.GameObjects.Blitter#createFromCallback
+     * @since 3.0.0
+     *
+     * @param {[type]} callback - [description]
+     * @param {[type]} quantity - [description]
+     * @param {[type]} frame - [description]
+     * @param {[type]} visible - [description]
+     *
+     * @return {[type]} [description]
+     */
     createFromCallback: function (callback, quantity, frame, visible)
     {
         var bobs = this.createMultiple(quantity, frame, visible);
@@ -88,6 +140,18 @@ var Blitter = new Class({
     },
 
     //  frame MUST be part of the Blitter texture
+    /**
+     * [description]
+     *
+     * @method Phaser.GameObjects.Blitter#createMultiple
+     * @since 3.0.0
+     *
+     * @param {[type]} quantity - [description]
+     * @param {[type]} frame - [description]
+     * @param {[type]} visible - [description]
+     *
+     * @return {[type]} [description]
+     */
     createMultiple: function (quantity, frame, visible)
     {
         if (frame === undefined) { frame = this.frame.name; }
@@ -112,11 +176,29 @@ var Blitter = new Class({
         return bobs;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.GameObjects.Blitter#childCanRender
+     * @since 3.0.0
+     *
+     * @param {[type]} child - [description]
+     *
+     * @return {[type]} [description]
+     */
     childCanRender: function (child)
     {
         return (child.visible && child.alpha > 0);
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.GameObjects.Blitter#getRenderList
+     * @since 3.0.0
+     *
+     * @return {[type]} [description]
+     */
     getRenderList: function ()
     {
         if (this.dirty)
@@ -128,6 +210,12 @@ var Blitter = new Class({
         return this.renderList;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.GameObjects.Blitter#clear
+     * @since 3.0.0
+     */
     clear: function ()
     {
         this.children.removeAll();
