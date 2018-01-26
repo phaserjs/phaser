@@ -325,6 +325,10 @@ var BaseSoundManager = new Class({
         if (this.unlocked) {
             this.unlocked = false;
             this.locked = false;
+            /**
+             * @event Phaser.Sound.BaseSoundManager#unlocked
+             * @param {Phaser.Sound.BaseSoundManager} soundManager - Reference to the sound manager that emitted event.
+             */
             this.emit('unlocked', this);
         }
         for (var i = this.sounds.length - 1; i >= 0; i--) {
