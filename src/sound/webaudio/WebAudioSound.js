@@ -526,6 +526,11 @@ Object.defineProperty(WebAudioSound.prototype, 'loop', {
                 this.createAndStartLoopBufferSource();
             }
         }
+        /**
+         * @event Phaser.Sound.WebAudioSound#loop
+         * @param {Phaser.Sound.WebAudioSound} sound - Reference to the sound that emitted event.
+         * @param {boolean} value - An updated value of Phaser.Sound.WebAudioSound#loop property.
+         */
         this.emit('loop', this, value);
     }
 });
