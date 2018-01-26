@@ -199,7 +199,7 @@ var HTML5AudioSoundManager = new Class({
      * to check if sound manager is locked and then either perform action immediately or queue it
      * to be performed once the sound manager gets unlocked.
      *
-     * @private
+     * @protected
      * @method Phaser.Sound.HTML5AudioSoundManager#isLocked
      * @param {Phaser.Sound.HTML5AudioSound} sound - Sound object on which to perform queued action.
      * @param {string} prop - Name of the method to be called or property to be assigned a value to.
@@ -233,6 +233,11 @@ Object.defineProperty(HTML5AudioSoundManager.prototype, 'mute', {
         this.forEachActiveSound(function (sound) {
             sound.setMute();
         });
+        /**
+         * @event Phaser.Sound.HTML5AudioSoundManager#mute
+         * @param {Phaser.Sound.HTML5AudioSoundManager} soundManager - Reference to the sound manager that emitted event.
+         * @param {boolean} value - An updated value of Phaser.Sound.HTML5AudioSoundManager#mute property.
+         */
         this.emit('mute', this, value);
     }
 });
@@ -251,6 +256,11 @@ Object.defineProperty(HTML5AudioSoundManager.prototype, 'volume', {
         this.forEachActiveSound(function (sound) {
             sound.setVolume();
         });
+        /**
+         * @event Phaser.Sound.HTML5AudioSoundManager#volume
+         * @param {Phaser.Sound.HTML5AudioSoundManager} soundManager - Reference to the sound manager that emitted event.
+         * @param {number} value - An updated value of Phaser.Sound.HTML5AudioSoundManager#volume property.
+         */
         this.emit('volume', this, value);
     }
 });
