@@ -1,8 +1,18 @@
 var Class = require('../../utils/Class');
 var BaseSoundManager = require('../BaseSoundManager');
 var HTML5AudioSound = require('./HTML5AudioSound');
+/*!
+ * @author Pavle Goloskokovic <pgoloskokovic@gmail.com> (http://prunegames.com)
+ */
 var HTML5AudioSoundManager = new Class({
     Extends: BaseSoundManager,
+    /**
+     * HTML5 Audio implementation of the sound manager.
+     *
+     * @class Phaser.Sound.HTML5AudioSoundManager
+     * @constructor
+     * @param {Phaser.Game} game - Reference to the current game instance.
+     */
     initialize: function HTML5AudioSoundManager(game) {
         /**
          * Flag indicating whether if there are no idle instances of HTML5 Audio tag,
