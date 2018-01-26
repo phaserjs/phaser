@@ -148,6 +148,11 @@ Object.defineProperty(WebAudioSoundManager.prototype, 'mute', {
     },
     set: function (value) {
         this.masterMuteNode.gain.setValueAtTime(value ? 0 : 1, 0);
+        /**
+         * @event Phaser.Sound.WebAudioSoundManager#mute
+         * @param {Phaser.Sound.WebAudioSoundManager} soundManager - Reference to the sound manager that emitted event.
+         * @param {boolean} value - An updated value of Phaser.Sound.WebAudioSoundManager#mute property.
+         */
         this.emit('mute', this, value);
     }
 });
