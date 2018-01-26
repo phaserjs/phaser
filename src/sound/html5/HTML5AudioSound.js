@@ -373,6 +373,12 @@ var HTML5AudioSound = new Class({
             this.audio.volume = this.currentConfig.volume * this.manager.volume;
         }
     },
+    /**
+     * Method used internally to calculate total playback rate of the sound.
+     *
+     * @protected
+     * @method Phaser.Sound.HTML5AudioSound#setRate
+     */
     setRate: function () {
         BaseSound.prototype.setRate.call(this);
         if (this.audio) {
