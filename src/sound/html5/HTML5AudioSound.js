@@ -351,6 +351,12 @@ var HTML5AudioSound = new Class({
             this.stopAndReleaseAudioTag();
         }
     },
+    /**
+     * Method used internally to determine mute setting of the sound.
+     *
+     * @private
+     * @method Phaser.Sound.HTML5AudioSound#setMute
+     */
     setMute: function () {
         if (this.audio) {
             this.audio.muted = this.currentConfig.mute || this.manager.mute;
