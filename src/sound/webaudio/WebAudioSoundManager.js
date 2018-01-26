@@ -168,6 +168,11 @@ Object.defineProperty(WebAudioSoundManager.prototype, 'volume', {
     },
     set: function (value) {
         this.masterVolumeNode.gain.setValueAtTime(value, 0);
+        /**
+         * @event Phaser.Sound.WebAudioSoundManager#volume
+         * @param {Phaser.Sound.WebAudioSoundManager} soundManager - Reference to the sound manager that emitted event.
+         * @param {number} value - An updated value of Phaser.Sound.WebAudioSoundManager#volume property.
+         */
         this.emit('volume', this, value);
     }
 });
