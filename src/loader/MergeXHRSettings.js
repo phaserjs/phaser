@@ -1,3 +1,4 @@
+var Extend = require('../utils/object/Extend');
 var XHRSettings = require('./XHRSettings');
 
 //  Takes two XHR Objects and creates a new object
@@ -7,7 +8,7 @@ var XHRSettings = require('./XHRSettings');
 
 var MergeXHRSettings = function (global, local)
 {
-    var output = (global === undefined) ? XHRSettings() : Object.assign(global);
+    var output = (global === undefined) ? XHRSettings() : Extend(global);
 
     if (local)
     {
