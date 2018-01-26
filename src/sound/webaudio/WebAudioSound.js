@@ -458,6 +458,11 @@ Object.defineProperty(WebAudioSound.prototype, 'volume', {
     set: function (value) {
         this.currentConfig.volume = value;
         this.volumeNode.gain.setValueAtTime(value, 0);
+        /**
+         * @event Phaser.Sound.WebAudioSound#volume
+         * @param {Phaser.Sound.WebAudioSound} sound - Reference to the sound that emitted event.
+         * @param {number} value - An updated value of Phaser.Sound.WebAudioSound#volume property.
+         */
         this.emit('volume', this, value);
     }
 });
