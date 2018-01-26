@@ -322,6 +322,10 @@ var WebAudioSound = new Class({
             this.hasEnded = false;
             BaseSound.prototype.stop.call(this);
             this.stopAndRemoveBufferSource();
+            /**
+             * @event Phaser.Sound.WebAudioSound#ended
+             * @param {Phaser.Sound.WebAudioSound} sound - Reference to the sound that emitted event.
+             */
             this.emit('ended', this);
         }
         else if (this.hasLooped) {
