@@ -254,6 +254,13 @@ var HTML5AudioSound = new Class({
         this.startTime = 0;
         this.previousTime = 0;
     },
+    /**
+     * Method used internally to reset sound state, usually when stopping sound
+     * or when hijacking audio tag from another sound.
+     *
+     * @private
+     * @method Phaser.Sound.HTML5AudioSound#reset
+     */
     reset: function () {
         BaseSound.prototype.stop.call(this);
     },
