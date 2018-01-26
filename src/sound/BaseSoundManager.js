@@ -409,6 +409,11 @@ Object.defineProperty(BaseSoundManager.prototype, 'detune', {
         this.forEachActiveSound(function (sound) {
             sound.setRate();
         });
+        /**
+         * @event Phaser.Sound.BaseSoundManager#detune
+         * @param {Phaser.Sound.BaseSoundManager} soundManager - Reference to the sound manager that emitted event.
+         * @param {number} value - An updated value of Phaser.Sound.BaseSoundManager#detune property.
+         */
         this.emit('detune', this, value);
     }
 });
