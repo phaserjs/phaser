@@ -557,6 +557,11 @@ Object.defineProperty(HTML5AudioSound.prototype, 'loop', {
         if (this.audio) {
             this.audio.loop = value;
         }
+        /**
+         * @event Phaser.Sound.HTML5AudioSound#loop
+         * @param {Phaser.Sound.HTML5AudioSound} sound - Reference to the sound that emitted event.
+         * @param {boolean} value - An updated value of Phaser.Sound.HTML5AudioSound#loop property.
+         */
         this.emit('loop', this, value);
     }
 });
