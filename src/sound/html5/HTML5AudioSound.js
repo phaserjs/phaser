@@ -362,6 +362,12 @@ var HTML5AudioSound = new Class({
             this.audio.muted = this.currentConfig.mute || this.manager.mute;
         }
     },
+    /**
+     * Method used internally to calculate total volume of the sound.
+     *
+     * @private
+     * @method Phaser.Sound.HTML5AudioSound#setVolume
+     */
     setVolume: function () {
         if (this.audio) {
             this.audio.volume = this.currentConfig.volume * this.manager.volume;
