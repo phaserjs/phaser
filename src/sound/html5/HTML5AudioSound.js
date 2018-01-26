@@ -130,6 +130,12 @@ var HTML5AudioSound = new Class({
         this.emit('resume', this);
         return true;
     },
+    /**
+     * Stop playing this sound.
+     *
+     * @method Phaser.Sound.HTML5AudioSound#stop
+     * @returns {boolean} Whether the sound was stopped successfully.
+     */
     stop: function () {
         if (this.manager.isLocked(this, 'stop')) {
             return false;
