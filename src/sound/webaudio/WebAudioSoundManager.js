@@ -1,11 +1,13 @@
 var Class = require('../../utils/Class');
 var BaseSoundManager = require('../BaseSoundManager');
 var WebAudioSound = require('./WebAudioSound');
+
 /*!
  * @author Pavle Goloskokovic <pgoloskokovic@gmail.com> (http://prunegames.com)
  */
 var WebAudioSoundManager = new Class({
     Extends: BaseSoundManager,
+
     /**
      * Web Audio API implementation of the sound manager.
      *
@@ -13,7 +15,8 @@ var WebAudioSoundManager = new Class({
      * @constructor
      * @param {Phaser.Game} game - Reference to the current game instance.
      */
-    initialize: function WebAudioSoundManager(game) {
+    initialize: function WebAudioSoundManager (game)
+    {
         /**
          * The AudioContext being used for playback.
          *
@@ -21,6 +24,7 @@ var WebAudioSoundManager = new Class({
          * @property {AudioContext} context
          */
         this.context = this.createAudioContext(game);
+
         /**
          * Gain node responsible for controlling global muting.
          *
@@ -28,6 +32,7 @@ var WebAudioSoundManager = new Class({
          * @property {GainNode} masterMuteNode
          */
         this.masterMuteNode = this.context.createGain();
+
         /**
          * Gain node responsible for controlling global volume.
          *
@@ -37,6 +42,7 @@ var WebAudioSoundManager = new Class({
         this.masterVolumeNode = this.context.createGain();
         this.masterMuteNode.connect(this.masterVolumeNode);
         this.masterVolumeNode.connect(this.context.destination);
+
         /**
          * Destination node for connecting individual sounds to.
          *
@@ -47,6 +53,7 @@ var WebAudioSoundManager = new Class({
         this.locked = this.context.state === 'suspended' && 'ontouchstart' in window;
         BaseSoundManager.call(this, game);
     },
+
     /**
      * Method responsible for instantiating and returning AudioContext instance.
      * If an instance of an AudioContext class was provided trough the game config,
@@ -59,13 +66,16 @@ var WebAudioSoundManager = new Class({
      * @param {Phaser.Game} game - Reference to the current game instance.
      * @returns {AudioContext} The AudioContext instance to be used for playback.
      */
-    createAudioContext: function (game) {
+    createAudioContext: function (game)
+    {
         var audioConfig = game.config.audio;
-        if (audioConfig && audioConfig.context) {
+        if (audioConfig && audioConfig.context)
+        {
             return audioConfig.context;
         }
         return new AudioContext();
     },
+
     /**
      * Adds a new sound into the sound manager.
      *
@@ -74,11 +84,13 @@ var WebAudioSoundManager = new Class({
      * @param {ISoundConfig} [config] - An optional config object containing default sound settings.
      * @returns {Phaser.Sound.WebAudioSound} The new sound instance.
      */
-    add: function (key, config) {
+    add: function (key, config)
+    {
         var sound = new WebAudioSound(this, key, config);
         this.sounds.push(sound);
         return sound;
     },
+
     /**
      * Unlocks Web Audio API on iOS devices on the initial touch event.
      *
@@ -87,10 +99,13 @@ var WebAudioSoundManager = new Class({
      * @private
      * @method Phaser.Sound.WebAudioSoundManager#unlock
      */
-    unlock: function () {
+    unlock: function ()
+    {
         var _this = this;
-        var unlock = function () {
-            _this.context.resume().then(function () {
+        var unlock = function ()
+        {
+            _this.context.resume().then(function ()
+            {
                 document.body.removeEventListener('touchstart', unlock);
                 document.body.removeEventListener('touchend', unlock);
                 _this.unlocked = true;
@@ -99,6 +114,7 @@ var WebAudioSoundManager = new Class({
         document.body.addEventListener('touchstart', unlock, false);
         document.body.addEventListener('touchend', unlock, false);
     },
+
     /**
      * Method used internally for pausing sound manager if
      * Phaser.Sound.WebAudioSoundManager#pauseOnBlur is set to true.
@@ -106,9 +122,11 @@ var WebAudioSoundManager = new Class({
      * @protected
      * @method Phaser.Sound.WebAudioSoundManager#onBlur
      */
-    onBlur: function () {
+    onBlur: function ()
+    {
         this.context.suspend();
     },
+
     /**
      * Method used internally for resuming sound manager if
      * Phaser.Sound.WebAudioSoundManager#pauseOnBlur is set to true.
@@ -116,16 +134,19 @@ var WebAudioSoundManager = new Class({
      * @protected
      * @method Phaser.Sound.WebAudioSoundManager#onFocus
      */
-    onFocus: function () {
+    onFocus: function ()
+    {
         this.context.resume();
     },
+
     /**
      * Calls Phaser.Sound.BaseSoundManager#destroy method
      * and cleans up all Web Audio API related stuff.
      *
      * @method Phaser.Sound.WebAudioSoundManager#destroy
      */
-    destroy: function () {
+    destroy: function ()
+    {
         BaseSoundManager.prototype.destroy.call(this);
         this.destination = null;
         this.masterVolumeNode.disconnect();
@@ -136,6 +157,7 @@ var WebAudioSoundManager = new Class({
         this.context = null;
     }
 });
+
 /**
  * Global mute setting.
  *
@@ -143,11 +165,14 @@ var WebAudioSoundManager = new Class({
  * @property {boolean} mute
  */
 Object.defineProperty(WebAudioSoundManager.prototype, 'mute', {
-    get: function () {
+    get: function ()
+    {
         return this.masterMuteNode.gain.value === 0;
     },
-    set: function (value) {
+    set: function (value)
+    {
         this.masterMuteNode.gain.setValueAtTime(value ? 0 : 1, 0);
+
         /**
          * @event Phaser.Sound.WebAudioSoundManager#mute
          * @param {Phaser.Sound.WebAudioSoundManager} soundManager - Reference to the sound manager that emitted event.
@@ -156,6 +181,7 @@ Object.defineProperty(WebAudioSoundManager.prototype, 'mute', {
         this.emit('mute', this, value);
     }
 });
+
 /**
  * Global volume setting.
  *
@@ -163,11 +189,14 @@ Object.defineProperty(WebAudioSoundManager.prototype, 'mute', {
  * @property {number} volume
  */
 Object.defineProperty(WebAudioSoundManager.prototype, 'volume', {
-    get: function () {
+    get: function ()
+    {
         return this.masterVolumeNode.gain.value;
     },
-    set: function (value) {
+    set: function (value)
+    {
         this.masterVolumeNode.gain.setValueAtTime(value, 0);
+
         /**
          * @event Phaser.Sound.WebAudioSoundManager#volume
          * @param {Phaser.Sound.WebAudioSoundManager} soundManager - Reference to the sound manager that emitted event.
