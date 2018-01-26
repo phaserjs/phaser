@@ -262,6 +262,10 @@ var BaseSoundManager = new Class({
         this.forEachActiveSound(function (sound) {
             sound.resume();
         });
+        /**
+         * @event Phaser.Sound.BaseSoundManager#resumeall
+         * @param {Phaser.Sound.BaseSoundManager} soundManager - Reference to the sound manager that emitted event.
+         */
         this.emit('resumeall', this);
     },
     /**
