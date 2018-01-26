@@ -339,6 +339,10 @@ var WebAudioSound = new Class({
                 rate: this.totalRate
             });
             this.createAndStartLoopBufferSource();
+            /**
+             * @event Phaser.Sound.WebAudioSound#looped
+             * @param {Phaser.Sound.WebAudioSound} sound - Reference to the sound that emitted event.
+             */
             this.emit('looped', this);
         }
     },
