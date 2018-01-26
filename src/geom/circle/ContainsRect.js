@@ -1,15 +1,15 @@
 var Contains = require('./Contains');
 
 /**
- * [description]
+ * Check to see if the Circle contains all four points of the given Rectangle object.
  *
  * @function Phaser.Geom.Circle.ContainsRect
  * @since 3.0.0
  *
- * @param {Phaser.Geom.Circle} circle - [description]
- * @param {Phaser.Geom.Rectangle|object} rect - [description]
+ * @param {Phaser.Geom.Circle} circle - The Circle to check.
+ * @param {Phaser.Geom.Rectangle|object} rect - The Rectangle object to check if it's within the Circle or not.
  *
- * @return {boolean} [description]
+ * @return {boolean} True if all of the Rectangle coordinates are within the circle, otherwise false.
  */
 var ContainsRect = function (circle, rect)
 {

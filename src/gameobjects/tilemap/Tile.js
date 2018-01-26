@@ -1,5 +1,6 @@
 var Class = require('../../utils/Class');
 var Components = require('../components');
+var Rectangle = require('../../geom/rectangle');
 
 var Tile = new Class({
 
@@ -241,6 +242,119 @@ var Tile = new Class({
     },
 
     /**
+     * The tile data for this Tile, defined within the Tileset. This typically contains Tiled
+     * collision data, tile animations and terrain information. This returns a reference to the tile
+     * data stored within the Tileset, so any modification of the returned object will impact all
+     * tiles that have the same index as this tile.
+     * @returns {object|null} tileset
+     */
+    getTileData: function ()
+    {
+        return this.tileset ? this.tileset.getTileData(this.index) : null;
+    },
+
+    /**
+     * Gets the world X position of the left side of the tile, factoring in the layer's position,
+     * scale and scroll.
+     * @param {Camera} [camera=main camera] - [description]
+     * @returns {number}
+     */
+    getLeft: function (camera)
+    {
+        var tilemapLayer = this.tilemapLayer;
+        return tilemapLayer
+            ? tilemapLayer.tileToWorldX(this.x, camera)
+            : this.x * this.baseWidth;
+    },
+
+    /**
+     * Gets the world X position of the right side of the tile, factoring in the layer's position,
+     * scale and scroll.
+     * @param {Camera} [camera=main camera] - [description]
+     * @returns {number}
+     */
+    getRight: function (camera)
+    {
+        var tilemapLayer = this.tilemapLayer;
+        return tilemapLayer
+            ? this.getLeft(camera) + this.width * tilemapLayer.scaleX
+            : this.getLeft(camera) + this.width;
+    },
+
+    /**
+     * Gets the world Y position of the top side of the tile, factoring in the layer's position,
+     * scale and scroll.
+     * @param {Camera} [camera=main camera] - [description]
+     * @returns {number}
+     */
+    getTop: function (camera)
+    {
+        var tilemapLayer = this.tilemapLayer;
+
+        // Tiled places tiles on a grid of baseWidth x baseHeight. The origin for a tile in grid
+        // units is the bottom left, so the y coordinate needs to be adjusted by the difference
+        // between the base size and this tile's size.
+        return tilemapLayer
+            ? tilemapLayer.tileToWorldY(this.y, camera) - (this.height - this.baseHeight) * tilemapLayer.scaleY
+            : this.y * this.baseHeight - (this.height - this.baseHeight);
+    },
+
+    /**
+     * Gets the world Y position of the bottom side of the tile, factoring in the layer's position,
+     * scale and scroll.
+     * @param {Camera} [camera=main camera] - [description]
+     * @returns {number}
+     */
+    getBottom: function (camera)
+    {
+        var tilemapLayer = this.tilemapLayer;
+        return tilemapLayer
+            ? this.getTop(camera) + this.height * tilemapLayer.scaleY
+            : this.getTop(camera) + this.height;
+    },
+
+
+    /**
+     * Gets the world rectangle bounding box for the tile, factoring in the layer's position,
+     * scale and scroll.
+     * @param {Camera} [camera=main camera] - [description]
+     * @param {object} [output] - [description]
+     * @returns {Phaser.Geom.Rectangle|object}
+     */
+    getBounds: function (camera, output)
+    {
+        if (output === undefined) { output = new Rectangle(); }
+
+        output.x = this.getLeft();
+        output.y = this.getTop();
+        output.width = this.getRight() - output.x;
+        output.height = this.getBottom() - output.y;
+        return output;
+    },
+
+    /**
+     * Gets the world X position of the center of the tile, factoring in the layer's position,
+     * scale and scroll.
+     * @param {Camera} [camera=main camera] - [description]
+     * @returns {number}
+     */
+    getCenterX: function (camera)
+    {
+        return this.getLeft(camera) + this.width / 2;
+    },
+
+    /**
+     * Gets the world Y position of the center of the tile, factoring in the layer's position,
+     * scale and scroll.
+     * @param {Camera} [camera=main camera] - [description]
+     * @returns {number}
+     */
+    getCenterY: function (camera)
+    {
+        return this.getTop(camera) + this.height / 2;
+    },
+
+    /**
      * Clean up memory.
      */
     destroy: function ()
@@ -446,84 +560,6 @@ var Tile = new Class({
     },
 
     /**
-     * The world position of the left side of the tile. This does not factor in camera scroll, layer
-     * scale or layer position.
-     * @property {integer} left
-     * @readonly
-     */
-    left: {
-        get: function ()
-        {
-            return this.pixelX;
-        }
-    },
-
-    /**
-     * The world position of the right side of the tile. This does not factor in camera scroll,
-     * layer scale or layer position.
-     * @property {integer} right
-     * @readonly
-     */
-    right: {
-        get: function ()
-        {
-            return this.pixelX + this.width;
-        }
-    },
-
-    /**
-     * The world position of the top side of the tile. This does not factor in camera scroll,
-     * layer scale or layer position.
-     * @property {integer} top
-     * @readonly
-     */
-    top: {
-        get: function ()
-        {
-            return this.pixelY;
-        }
-    },
-
-    /**
-     * The world position of the bottom side of the tile. This does not factor in camera scroll,
-     * layer scale or layer position.
-     * @property {integer} bottom
-     * @readonly
-     */
-    bottom: {
-        get: function ()
-        {
-            return this.pixelY + this.height;
-        }
-    },
-
-    /**
-     * The x world position of the center of the tile. This does not factor in camera scroll, layer
-     * scale or layer position.
-     * @property {integer} centerX
-     * @readonly
-     */
-    centerX: {
-        get: function ()
-        {
-            return this.pixelX + this.width / 2;
-        }
-    },
-
-    /**
-     * The y world position of the center of the tile. This does not factor in camera scroll, layer
-     * scale or layer position.
-     * @property {integer} centerY
-     * @readonly
-     */
-    centerY: {
-        get: function ()
-        {
-            return this.pixelY + this.height / 2;
-        }
-    },
-
-    /**
      * The tileset that contains this Tile. This will only return null if accessed from a LayerData
      * instance before the tile is placed within a StaticTilemapLayer or DynamicTilemapLayer.
      * @property {Tileset|null} tileset
@@ -548,6 +584,20 @@ var Tile = new Class({
         get: function ()
         {
             return this.layer.tilemapLayer;
+        }
+    },
+
+    /**
+     * The tilemap that contains this Tile. This will only return null if accessed from a LayerData
+     * instance before the tile is placed within a StaticTilemapLayer or DynamicTilemapLayer.
+     * @property {Tilemap|null} tilemap
+     * @readonly
+     */
+    tilemap: {
+        get: function ()
+        {
+            var tilemapLayer = this.tilemapLayer;
+            return tilemapLayer ? tilemapLayer.tilemap : null;
         }
     }
 });

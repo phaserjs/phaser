@@ -1,5 +1,4 @@
-var Normalize = require('./Normalize');
-var Multiply = require('./Multiply');
+var GetMagnitude = require('./GetMagnitude');
 
 /**
  * [description]
@@ -14,9 +13,18 @@ var Multiply = require('./Multiply');
  */
 var SetMagnitude = function (point, magnitude)
 {
-    Normalize(point);
+    if (point.x !== 0 || point.y !== 0)
+    {
+        var m = GetMagnitude(point);
 
-    return Multiply(point, magnitude, magnitude);
+        point.x /= m;
+        point.y /= m;
+    }
+
+    point.x *= magnitude;
+    point.y *= magnitude;
+
+    return point;
 };
 
 module.exports = SetMagnitude;

@@ -1,4 +1,17 @@
 
+/**
+ * [description]
+ *
+ * @function Phaser.Math.SinCosTableGenerator
+ * @since 3.0.0
+ *
+ * @param {number} length - [description]
+ * @param {number} sinAmp - [description]
+ * @param {number} cosAmp - [description]
+ * @param {number} frequency - [description]
+ *
+ * @return {object} [description]
+ */
 var SinCosTableGenerator = function (length, sinAmp, cosAmp, frequency)
 {
     if (sinAmp === undefined) { sinAmp = 1; }

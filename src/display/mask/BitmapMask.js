@@ -2,155 +2,172 @@ var Class = require('../../utils/Class');
 
 var BitmapMask = new Class({
     
-    initialize: 
+    initialize:
 
-    function BitmapMask(scene, renderable)
+    /**
+     * [description]
+     *
+     * @class BitmapMask
+     * @memberOf Phaser.Display.Masks
+     * @constructor
+     * @since 3.0.0
+     *
+     * @param {Phaser.Scene} scene - [description]
+     * @param {[type]} renderable - [description]
+     */
+    function BitmapMask (scene, renderable)
     {
         var renderer = scene.sys.game.renderer;
-        var resourceManager = renderer.resourceManager;
+
+        /**
+         * [description]
+         *
+         * @property {[type]} bitmapMask
+         * @since 3.0.0
+         */
         this.bitmapMask = renderable;
+
+        /**
+         * [description]
+         *
+         * @property {?[type]} maskRenderTarget
+         * @default null
+         * @since 3.0.0
+         */
         this.maskRenderTarget = null;
+
+        /**
+         * [description]
+         *
+         * @property {?[type]} mainRenderTarget
+         * @default null
+         * @since 3.0.0
+         */
         this.mainRenderTarget = null;
+
+        /**
+         * [description]
+         *
+         * @property {?[type]} maskTexture
+         * @default null
+         * @since 3.0.0
+         */
         this.maskTexture = null;
+
+        /**
+         * [description]
+         *
+         * @property {?[type]} mainTexture
+         * @default null
+         * @since 3.0.0
+         */
         this.mainTexture = null;
+
+        /**
+         * [description]
+         *
+         * @property {boolean} dirty
+         * @default true
+         * @since 3.0.0
+         */
         this.dirty = true;
 
-        if (resourceManager !== undefined)
+        if (renderer.gl)
         {
             var width = renderer.width;
             var height = renderer.height;
-            var pot = ((width & (width - 1)) == 0 && (height & (height - 1)) == 0);
+            var pot = ((width & (width - 1)) === 0 && (height & (height - 1)) === 0);
             var gl = renderer.gl;
             var wrap = pot ? gl.REPEAT : gl.CLAMP_TO_EDGE;
+            var filter = gl.LINEAR;
 
-            this.maskTexture = resourceManager.createTexture(
-                0,
-                gl.LINEAR, gl.LINEAR,
-                wrap, wrap,
-                gl.RGBA,
-                null, width, height
-            );
+            this.mainTexture = renderer.createTexture2D(0, filter, filter, wrap, wrap, gl.RGBA, null, width, height);
+            this.maskTexture = renderer.createTexture2D(0, filter, filter, wrap, wrap, gl.RGBA, null, width, height);
+            this.mainFramebuffer = renderer.createFramebuffer(width, height, this.mainTexture, false);
+            this.maskFramebuffer = renderer.createFramebuffer(width, height, this.maskTexture, false);
+            
+            renderer.onContextRestored(function (renderer)
+            {
+                var width = renderer.width;
+                var height = renderer.height;
+                var pot = ((width & (width - 1)) === 0 && (height & (height - 1)) === 0);
+                var gl = renderer.gl;
+                var wrap = pot ? gl.REPEAT : gl.CLAMP_TO_EDGE;
+                var filter = gl.LINEAR;
 
-            this.mainTexture = resourceManager.createTexture(
-                0,
-                gl.LINEAR, gl.LINEAR,
-                wrap, wrap,
-                gl.RGBA,
-                null, width, height
-            );
+                this.mainTexture = renderer.createTexture2D(0, filter, filter, wrap, wrap, gl.RGBA, null, width, height);
+                this.maskTexture = renderer.createTexture2D(0, filter, filter, wrap, wrap, gl.RGBA, null, width, height);
+                this.mainFramebuffer = renderer.createFramebuffer(width, height, this.mainTexture, false);
+                this.maskFramebuffer = renderer.createFramebuffer(width, height, this.maskTexture, false);
 
-            this.maskRenderTarget = resourceManager.createRenderTarget(
-                width, height, 
-                this.maskTexture, 
-                null
-            );
-            this.mainRenderTarget = resourceManager.createRenderTarget(
-                width, height, 
-                this.mainTexture, 
-                null
-            );
-
-            scene.sys.game.renderer.currentTexture[0] = null;
+            }, this);
         }
-
-        var _this = this;
-
-        renderer.addContextRestoredCallback(function (renderer) {
-            var resourceManager = renderer.resourceManager;
-            var gl = renderer.gl;
-            var wrap = pot ? gl.REPEAT : gl.CLAMP_TO_EDGE;
-
-            _this.maskTexture = resourceManager.createTexture(
-                0,
-                gl.LINEAR, gl.LINEAR,
-                wrap, wrap,
-                gl.RGBA,
-                null, width, height
-            );
-            _this.mainTexture = resourceManager.createTexture(
-                0,
-                gl.LINEAR, gl.LINEAR,
-                wrap, wrap,
-                gl.RGBA,
-                null, width, height
-            );
-
-            _this.maskRenderTarget = resourceManager.createRenderTarget(
-                width, height, 
-                _this.maskTexture, 
-                null
-            );
-            _this.mainRenderTarget = resourceManager.createRenderTarget(
-                width, height, 
-                _this.mainTexture, 
-                null
-            );
-
-            // force rebinding of prev texture
-            scene.sys.game.renderer.currentTexture[0] = null; 
-        });
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Display.Masks.BitmapMask#setBitmap
+     * @since 3.0.0
+     *
+     * @param {[type]} renderable - [description]
+     */
     setBitmap: function (renderable)
     {
         this.bitmapMask = renderable;
     },
 
-    preRenderWebGL: function (renderer, gameObject, camera)
+    /**
+     * [description]
+     *
+     * @method Phaser.Display.Masks.BitmapMask#preRenderWebGL
+     * @since 3.0.0
+     *
+     * @param {[type]} renderer - [description]
+     * @param {[type]} maskedObject - [description]
+     * @param {[type]} camera - [description]
+     */
+    preRenderWebGL: function (renderer, maskedObject, camera)
     {
-        var bitmapMask = this.bitmapMask;
-        var maskRenderTarget = this.maskRenderTarget;
-        var mainRenderTarget = this.mainRenderTarget;
-        var prevRenderTarget = null;
-        var visible = bitmapMask.visible;
-        
-        if (bitmapMask)
-        {
-            /* Clear render targets first */
-            var gl = renderer.gl;
-
-            gl.clearColor(0.0, 0.0, 0.0, 0.0);
-            gl.bindFramebuffer(gl.FRAMEBUFFER, maskRenderTarget.framebufferObject);
-            gl.clear(gl.COLOR_BUFFER_BIT);
-            gl.bindFramebuffer(gl.FRAMEBUFFER, mainRenderTarget.framebufferObject);
-            gl.clear(gl.COLOR_BUFFER_BIT);
-            gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-
-            // Inject mask render target & reset it after rendering.
-            prevRenderTarget = bitmapMask.renderTarget;
-            bitmapMask.renderTarget = maskRenderTarget;
-            bitmapMask.visible = true;
-            bitmapMask.renderWebGL(renderer, bitmapMask, 0.0, camera);
-            renderer.currentRenderer.flush(null, maskRenderTarget);
-            bitmapMask.renderTarget = prevRenderTarget;
-            bitmapMask.visible = visible;
-
-            // Inject main render target & reset it at post rendering.
-            gameObject.renderTarget = this.mainRenderTarget;
-            renderer.setBlendMode(0);
-        }
-
+        renderer.pipelines.BitmapMaskPipeline.beginMask(this, maskedObject, camera);
     },
 
-    postRenderWebGL: function (renderer, gameObject)
+    /**
+     * [description]
+     *
+     * @method Phaser.Display.Masks.BitmapMask#postRenderWebGL
+     * @since 3.0.0
+     *
+     * @param {[type]} renderer - [description]
+     */
+    postRenderWebGL: function (renderer)
     {
-        var maskRenderer = renderer.maskRenderer;
-        var gl = renderer.gl;
-        var prevRenderTarget = gameObject.renderTarget;
-
-        // flush and reset
-        renderer.currentRenderer.flush(null, this.mainRenderTarget);
-        gameObject.renderTarget = prevRenderTarget;
-
-        // Apply alpha masking using mask renderer      
-        maskRenderer.draw(null, null, this.mainTexture, this.maskTexture);
+        renderer.pipelines.BitmapMaskPipeline.endMask(this);
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Display.Masks.BitmapMask#preRenderCanvas
+     * @since 3.0.0
+     *
+     * @param {[type]} renderer - [description]
+     * @param {[type]} mask - [description]
+     * @param {[type]} camera - [description]
+     */
     preRenderCanvas: function (renderer, mask, camera)
     {
         // NOOP
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Display.Masks.BitmapMask#postRenderCanvas
+     * @since 3.0.0
+     *
+     * @param {[type]} renderer - [description]
+     */
     postRenderCanvas: function (renderer)
     {
         // NOOP

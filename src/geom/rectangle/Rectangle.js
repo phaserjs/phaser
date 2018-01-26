@@ -4,13 +4,23 @@ var GetPoint = require('./GetPoint');
 var GetPoints = require('./GetPoints');
 var Random = require('./Random');
 
-//  Encapsulates a 2D rectangle defined by its corner point in the top-left
-//  and its extends in x (width) and y (height)
-
 var Rectangle = new Class({
 
     initialize:
 
+    /**
+     * Encapsulates a 2D rectangle defined by its corner point in the top-left and its extends in x (width) and y (height)
+     *
+     * @class Rectangle
+     * @memberOf Phaser.Geom
+     * @constructor
+     * @since 3.0.0
+     *
+     * @param {number} [x] - [description]
+     * @param {number} [y] - [description]
+     * @param {number} [width] - [description]
+     * @param {number} [height] - [description]
+     */
     function Rectangle (x, y, width, height)
     {
         if (x === undefined) { x = 0; }
@@ -18,35 +28,116 @@ var Rectangle = new Class({
         if (width === undefined) { width = 0; }
         if (height === undefined) { height = 0; }
 
+        /**
+         * [description]
+         *
+         * @property {number} x
+         * @since 3.0.0
+         */
         this.x = x;
 
+        /**
+         * [description]
+         *
+         * @property {number} y
+         * @since 3.0.0
+         */
         this.y = y;
 
+        /**
+         * [description]
+         *
+         * @property {number} width
+         * @since 3.0.0
+         */
         this.width = width;
 
+        /**
+         * [description]
+         *
+         * @property {number} height
+         * @since 3.0.0
+         */
         this.height = height;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Geom.Rectangle#contains
+     * @since 3.0.0
+     *
+     * @param {[type]} x - [description]
+     * @param {[type]} y - [description]
+     *
+     * @return {[type]} [description]
+     */
     contains: function (x, y)
     {
         return Contains(this, x, y);
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Geom.Rectangle#getPoint
+     * @since 3.0.0
+     *
+     * @param {[type]} position - [description]
+     * @param {[type]} output - [description]
+     *
+     * @return {[type]} [description]
+     */
     getPoint: function (position, output)
     {
         return GetPoint(this, position, output);
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Geom.Rectangle#getPoints
+     * @since 3.0.0
+     *
+     * @param {[type]} quantity - [description]
+     * @param {[type]} stepRate - [description]
+     * @param {[type]} output - [description]
+     *
+     * @return {[type]} [description]
+     */
     getPoints: function (quantity, stepRate, output)
     {
         return GetPoints(this, quantity, stepRate, output);
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Geom.Rectangle#getRandomPoint
+     * @since 3.0.0
+     *
+     * @param {[type]} point - [description]
+     *
+     * @return {[type]} [description]
+     */
     getRandomPoint: function (point)
     {
         return Random(this, point);
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Geom.Rectangle#setTo
+     * @since 3.0.0
+     *
+     * @param {[type]} x - [description]
+     * @param {[type]} y - [description]
+     * @param {[type]} width - [description]
+     * @param {[type]} height - [description]
+     *
+     * @return {[type]} [description]
+     */
     setTo: function (x, y, width, height)
     {
         this.x = x;
@@ -57,11 +148,30 @@ var Rectangle = new Class({
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Geom.Rectangle#setEmpty
+     * @since 3.0.0
+     *
+     * @return {[type]} [description]
+     */
     setEmpty: function ()
     {
         return this.setTo(0, 0, 0, 0);
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Geom.Rectangle#setPosition
+     * @since 3.0.0
+     *
+     * @param {[type]} x - [description]
+     * @param {[type]} y - [description]
+     *
+     * @return {[type]} [description]
+     */
     setPosition: function (x, y)
     {
         if (y === undefined) { y = x; }
@@ -72,6 +182,17 @@ var Rectangle = new Class({
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Geom.Rectangle#setSize
+     * @since 3.0.0
+     *
+     * @param {[type]} width - [description]
+     * @param {[type]} height - [description]
+     *
+     * @return {[type]} [description]
+     */
     setSize: function (width, height)
     {
         if (height === undefined) { height = width; }
@@ -82,35 +203,82 @@ var Rectangle = new Class({
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Geom.Rectangle#isEmpty
+     * @since 3.0.0
+     *
+     * @return {[type]} [description]
+     */
     isEmpty: function ()
     {
         return (this.width <= 0 || this.height <= 0);
     },
 
     //  TOP
+    /**
+     * [description]
+     *
+     * @method Phaser.Geom.Rectangle#getLineA
+     * @since 3.0.0
+     *
+     * @return {[type]} [description]
+     */
     getLineA: function ()
     {
         return { x1: this.x, y1: this.y, x2: this.right, y2: this.y };
     },
 
     //  RIGHT
+    /**
+     * [description]
+     *
+     * @method Phaser.Geom.Rectangle#getLineB
+     * @since 3.0.0
+     *
+     * @return {[type]} [description]
+     */
     getLineB: function ()
     {
         return { x1: this.right, y1: this.y, x2: this.right, y2: this.bottom };
     },
 
     //  BOTTOM
+    /**
+     * [description]
+     *
+     * @method Phaser.Geom.Rectangle#getLineC
+     * @since 3.0.0
+     *
+     * @return {[type]} [description]
+     */
     getLineC: function ()
     {
         return { x1: this.right, y1: this.bottom, x2: this.x, y2: this.bottom };
     },
 
     //  LEFT
+    /**
+     * [description]
+     *
+     * @method Phaser.Geom.Rectangle#getLineD
+     * @since 3.0.0
+     *
+     * @return {[type]} [description]
+     */
     getLineD: function ()
     {
         return { x1: this.x, y1: this.bottom, x2: this.x, y2: this.y };
     },
 
+    /**
+     * [description]
+     * 
+     * @name Phaser.Geom.Rectangle#left
+     * @property {number} left
+     * @since 3.0.0
+     */
     left: {
 
         get: function ()
@@ -134,6 +302,13 @@ var Rectangle = new Class({
 
     },
 
+    /**
+     * [description]
+     * 
+     * @name Phaser.Geom.Rectangle#right
+     * @property {number} right
+     * @since 3.0.0
+     */
     right: {
 
         get: function ()
@@ -155,6 +330,13 @@ var Rectangle = new Class({
 
     },
 
+    /**
+     * [description]
+     * 
+     * @name Phaser.Geom.Rectangle#top
+     * @property {number} top
+     * @since 3.0.0
+     */
     top: {
 
         get: function ()
@@ -177,6 +359,13 @@ var Rectangle = new Class({
 
     },
 
+    /**
+     * [description]
+     * 
+     * @name Phaser.Geom.Rectangle#bottom
+     * @property {number} bottom
+     * @since 3.0.0
+     */
     bottom: {
 
         get: function ()
@@ -198,6 +387,13 @@ var Rectangle = new Class({
 
     },
 
+    /**
+     * [description]
+     * 
+     * @name Phaser.Geom.Rectangle#centerX
+     * @property {number} centerX
+     * @since 3.0.0
+     */
     centerX: {
 
         get: function ()
@@ -212,6 +408,13 @@ var Rectangle = new Class({
 
     },
 
+    /**
+     * [description]
+     * 
+     * @name Phaser.Geom.Rectangle#centerY
+     * @property {number} centerY
+     * @since 3.0.0
+     */
     centerY: {
 
         get: function ()

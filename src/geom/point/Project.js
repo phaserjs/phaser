@@ -1,4 +1,3 @@
-var Dot = require('./Dot');
 var Point = require('./Point');
 var GetMagnitudeSq = require('./GetMagnitudeSq');
 
@@ -18,7 +17,8 @@ var Project = function (pointA, pointB, out)
 {
     if (out === undefined) { out = new Point(); }
 
-    var amt = Dot(pointA, pointB) / GetMagnitudeSq(pointB);
+    var dot = ((pointA.x * pointB.x) + (pointA.y * pointB.y));
+    var amt = dot / GetMagnitudeSq(pointB);
 
     if (amt !== 0)
     {

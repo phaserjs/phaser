@@ -1,10 +1,10 @@
 /**
- * [description]
+ * Attempts to remove the element from its parentNode in the DOM.
  *
  * @function Phaser.Dom.RemoveFromDOM
  * @since 3.0.0
  *
- * @param {any} element - [description]
+ * @param {any} element - The DOM element to remove from its parent node.
  */
 var RemoveFromDOM = function (element)
 {

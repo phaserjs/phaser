@@ -1,18 +1,18 @@
 var ComponentToHex = require('./ComponentToHex');
 
 /**
- * [description]
+ * Converts the color values into an HTML compatible color string, prefixed with either `#` or `0x`.
  *
  * @function Phaser.Display.Color.RGBToString
  * @since 3.0.0
  *
- * @param {integer} r - [description]
- * @param {integer} g - [description]
- * @param {integer} b - [description]
- * @param {integer} [a=255] - [description]
- * @param {string} [prefix=#] - [description]
+ * @param {integer} r - The red color value. A number between 0 and 255.
+ * @param {integer} g - The green color value. A number between 0 and 255.
+ * @param {integer} b - The blue color value. A number between 0 and 255.
+ * @param {integer} [a=255] - The alpha value. A number between 0 and 255.
+ * @param {string} [prefix=#] - The prefix of the string. Either `#` or `0x`.
  *
- * @return {string} [description]
+ * @return {string} A string-based representation of the color values.
  */
 var RGBToString = function (r, g, b, a, prefix)
 {

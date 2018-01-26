@@ -14,23 +14,84 @@ var Path = new Class({
 
     initialize:
 
+    /**
+     * [description]
+     *
+     * @class Path
+     * @memberOf Phaser.Curves
+     * @constructor
+     * @since 3.0.0
+     *
+     * @param {number} [x=0] - [description]
+     * @param {number} [y=0] - [description]
+     */
     function Path (x, y)
     {
         if (x === undefined) { x = 0; }
         if (y === undefined) { y = 0; }
 
+        /**
+         * [description]
+         *
+         * @property {string} name
+         * @default ''
+         * @since 3.0.0
+         */
         this.name = '';
 
+        /**
+         * [description]
+         *
+         * @property {array} curves
+         * @default []
+         * @since 3.0.0
+         */
         this.curves = [];
 
+        /**
+         * [description]
+         *
+         * @property {array} cacheLengths
+         * @default []
+         * @since 3.0.0
+         */
         this.cacheLengths = [];
 
         // Automatically closes the path
+
+        /**
+         * [description]
+         *
+         * @property {boolean} autoClose
+         * @default false
+         * @since 3.0.0
+         */
         this.autoClose = false;
 
+        /**
+         * [description]
+         *
+         * @property {Phaser.Math.Vector2} startPoint
+         * @since 3.0.0
+         */
         this.startPoint = new Vector2();
 
+        /**
+         * [description]
+         *
+         * @property {Phaser.Math.Vector2} _tmpVec2A
+         * @private
+         * @since 3.0.0
+         */
         this._tmpVec2A = new Vector2();
+
+        /**
+         * [description]
+         *
+         * @property {Phaser.Math.Vector2} _tmpVec2B
+         * @private
+         * @since 3.0.0
+         */
         this._tmpVec2B = new Vector2();
 
         if (typeof x === 'object')

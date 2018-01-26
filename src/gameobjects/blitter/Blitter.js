@@ -22,14 +22,12 @@ var Blitter = new Class({
     Mixins: [
         Components.Alpha,
         Components.BlendMode,
-        Components.RenderTarget,
         Components.ScaleMode,
         Components.Size,
         Components.Texture,
         Components.Transform,
         Components.Visible,
         Components.ScrollFactor,
-        Components.Shader,
         BlitterRender
     ],
 

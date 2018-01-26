@@ -14,7 +14,6 @@ var BitmapText = new Class({
         Components.Alpha,
         Components.BlendMode,
         Components.Origin,
-        Components.RenderTarget,
         Components.ScaleMode,
         Components.Texture,
         Components.Tint,

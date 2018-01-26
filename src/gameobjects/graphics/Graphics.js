@@ -20,7 +20,6 @@ var Graphics = new Class({
         Components.Alpha,
         Components.BlendMode,
         Components.Transform,
-        Components.RenderTarget,
         Components.Visible,
         Components.ScrollFactor,
         Render
@@ -67,14 +66,6 @@ var Graphics = new Class({
         this.viewMatrix = new Matrix4().lookAt(this.camera.position, this.camera.target, this.up);
 
         this.setViewport(this.viewportWidth, this.viewportHeight);
-
-        var resourceManager = scene.sys.game.renderer.resourceManager;
-
-        if (resourceManager !== undefined)
-        {
-            this.resourceManager = resourceManager;
-            this.gl = scene.sys.game.renderer.gl;
-        }
     },
 
     //  STYLES
@@ -746,9 +737,9 @@ var Graphics = new Class({
         {
             this.renderCanvas(sys.game.renderer, this, 0, Graphics.TargetCamera, ctx);
 
-            if (this.gl && texture)
+            if (sys.game.renderer.gl && texture)
             {
-                sys.game.renderer.uploadCanvasToGPU(ctx.canvas, texture.source[0].glTexture, true);
+                texture.source[0].glTexture = sys.game.renderer.canvasToTexture(ctx.canvas, texture.source[0].glTexture, true, 0);
             }
         }
 

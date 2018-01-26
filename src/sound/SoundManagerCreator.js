@@ -7,7 +7,7 @@ var SoundManagerCreator = {
     create: function (game)
     {
         var audioConfig = game.config.audio;
-        var deviceAudio = game.device.Audio;
+        var deviceAudio = game.device.audio;
 
         if ((audioConfig && audioConfig.noAudio) || (!deviceAudio.webAudio && !deviceAudio.audioData))
         {

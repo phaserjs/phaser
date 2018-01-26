@@ -17,6 +17,7 @@ var MatterSprite = new Class({
         Components.Force,
         Components.Friction,
         Components.Gravity,
+        Components.Inertia,
         Components.Mass,
         Components.Sensor,
         Components.SetBody,

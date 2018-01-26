@@ -1,19 +1,27 @@
 var OS = require('./OS');
 var Browser = require('./Browser');
 
+/**
+ * Determines the input support of the browser running this Phaser Game instance.
+ * These values are read-only and populated during the boot sequence of the game.
+ * They are then referenced by internal game systems and are available for you to access
+ * via `this.sys.game.device.input` from within any Scene.
+ * 
+ * @namespace Phaser.Device.Input
+ * @typedef {object} DeviceInput
+ * @since 3.0.0
+ *
+ * @property {?string} wheelType - The newest type of Wheel/Scroll event supported: 'wheel', 'mousewheel', 'DOMMouseScroll'
+ * @property {boolean} gamepads - Is navigator.getGamepads available?
+ * @property {boolean} mspointer - Is mspointer available?
+ * @property {boolean} touch - Is touch available?
+ */
 var Input = {
 
-    // @property {boolean} touch - Is touch available?
-    touch: false,
-
-    // @property {boolean} mspointer - Is mspointer available?
+    gamepads: false,
     mspointer: false,
-
-    // @property {?string} wheelType - The newest type of Wheel/Scroll event supported: 'wheel', 'mousewheel', 'DOMMouseScroll'
-    wheelEvent: null,
-
-    // @property {boolean} gamepads - Is navigator.getGamepads available?
-    gamepads: false
+    touch: false,
+    wheelEvent: null
     
 };
 

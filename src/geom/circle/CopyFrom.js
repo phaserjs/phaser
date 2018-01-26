@@ -6,7 +6,7 @@
  * @since 3.0.0
  *
  * @param {Phaser.Geom.Circle} source - The source Circle to copy the values from.
- * @param {Phaser.Geom.Circle} dest - The destination Circle to copy the values in to.
+ * @param {Phaser.Geom.Circle} dest - The destination Circle to copy the values to.
  *
  * @return {Phaser.Geom.Circle} The dest Circle.
  */

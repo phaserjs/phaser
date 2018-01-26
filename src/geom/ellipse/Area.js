@@ -1,12 +1,12 @@
 /**
- * [description]
+ * Calculates the area of the Ellipse.
  *
  * @function Phaser.Geom.Ellipse.Area
  * @since 3.0.0
  *
- * @param {Phaser.Geom.Ellipse} ellipse - [description]
+ * @param {Phaser.Geom.Ellipse} ellipse - The Ellipse to get the area of.
  *
- * @return {number} [description]
+ * @return {number} The area of the Ellipse.
  */
 var Area = function (ellipse)
 {

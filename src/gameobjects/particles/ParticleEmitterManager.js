@@ -12,7 +12,6 @@ var ParticleEmitterManager = new Class({
 
     Mixins: [
         Components.Depth,
-        Components.RenderTarget,
         Components.Visible,
         Render
     ],

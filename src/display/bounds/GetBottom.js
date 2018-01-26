@@ -1,12 +1,12 @@
 /**
- * [description]
+ * Returns the bottom coordinate from the bounds of the Game Object.
  *
  * @function Phaser.Display.Bounds.GetBottom
  * @since 3.0.0
  *
- * @param {Phaser.GameObjects.GameObject} gameObject - [description]
+ * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object to get the bounds value from.
  *
- * @return {number} [description]
+ * @return {number} The bottom coordinate of the bounds of the Game Object.
  */
 var GetBottom = function (gameObject)
 {

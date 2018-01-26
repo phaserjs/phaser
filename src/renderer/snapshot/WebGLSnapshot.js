@@ -1,7 +1,7 @@
 var WebGLSnapshot = function (sourceCanvas, type, encoderOptions)
 {
-    if (type === undefined) { type = 'image/png'; }
-    if (encoderOptions === undefined) { encoderOptions = 0.92; }
+    if (!type) { type = 'image/png'; }
+    if (!encoderOptions) { encoderOptions = 0.92; }
 
     var gl = sourceCanvas.getContext('experimental-webgl');
     var pixels = new Uint8Array(gl.drawingBufferWidth * gl.drawingBufferHeight * 4);

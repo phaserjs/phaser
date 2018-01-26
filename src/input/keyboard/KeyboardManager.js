@@ -4,20 +4,8 @@ var Key = require('./keys/Key');
 var KeyCodes = require('./keys/KeyCodes');
 var KeyCombo = require('./combo/KeyCombo');
 var KeyMap = require('./keys/KeyMap');
-var ProcessKeyCombo = require('./combo/ProcessKeyCombo');
 var ProcessKeyDown = require('./keys/ProcessKeyDown');
 var ProcessKeyUp = require('./keys/ProcessKeyUp');
-
-/**
-* The Keyboard class monitors keyboard input and dispatches keyboard events.
-*
-* _Note_: many keyboards are unable to process certain combinations of keys due to hardware limitations known as ghosting.
-* See http://www.html5gamedevs.com/topic/4876-impossible-to-use-more-than-2-keyboard-input-buttons-at-the-same-time/ for more details.
-*
-* Also please be aware that certain browser extensions can disable or override Phaser keyboard handling.
-* For example the Chrome extension vimium is known to disable Phaser from using the D key. And there are others.
-* So please check your extensions before opening Phaser issues.
-*/
 
 var KeyboardManager = new Class({
 
@@ -25,32 +13,104 @@ var KeyboardManager = new Class({
 
     initialize:
 
+    /**
+     * The Keyboard class monitors keyboard input and dispatches keyboard events.
+     *
+     * _Note_: many keyboards are unable to process certain combinations of keys due to hardware limitations known as ghosting.
+     * See http://www.html5gamedevs.com/topic/4876-impossible-to-use-more-than-2-keyboard-input-buttons-at-the-same-time/ for more details.
+     *
+     * Also please be aware that certain browser extensions can disable or override Phaser keyboard handling.
+     * For example the Chrome extension vimium is known to disable Phaser from using the D key. And there are others.
+     * So please check your extensions before opening Phaser issues.
+     *
+     * @class KeyboardManager
+     * @extends eventemitter3
+     * @memberOf Phaser.Input.Keyboard
+     * @constructor
+     * @since 3.0.0
+     *
+     * @param {Phaser.Input.InputManager} inputManager - [description]
+     */
     function KeyboardManager (inputManager)
     {
         EventEmitter.call(this);
 
+        /**
+         * [description]
+         *
+         * @property {Phaser.Input.InputManager} manager
+         * @since 3.0.0
+         */
         this.manager = inputManager;
 
+        /**
+         * [description]
+         *
+         * @property {boolean} enabled
+         * @default false
+         * @since 3.0.0
+         */
         this.enabled = false;
 
+        /**
+         * [description]
+         *
+         * @property {null} target
+         * @since 3.0.0
+         */
         this.target;
 
+        /**
+         * [description]
+         *
+         * @property {array} keys
+         * @default []
+         * @since 3.0.0
+         */
         this.keys = [];
 
+        /**
+         * [description]
+         *
+         * @property {array} combos
+         * @default []
+         * @since 3.0.0
+         */
         this.combos = [];
 
+        /**
+         * [description]
+         *
+         * @property {array} captures
+         * @default []
+         * @since 3.0.0
+         */
         this.captures = [];
 
-        //   Standard FIFO queue
+        /**
+         * [description]
+         *
+         * @property {array} queue
+         * @default []
+         * @since 3.0.0
+         */
         this.queue = [];
 
+        /**
+         * [description]
+         *
+         * @property {any} handler
+         * @since 3.0.0
+         */
         this.handler;
     },
 
     /**
-    * The Boot handler is called by Phaser.Game when it first starts up.
-    * The renderer is available by now.
-    */
+     * The Boot handler is called by Phaser.Game when it first starts up.
+     *
+     * @method Phaser.Input.Keyboard.KeyboardManager#boot
+     * @since 3.0.0
+     */
     boot: function ()
     {
         var config = this.manager.config;
@@ -64,6 +124,14 @@ var KeyboardManager = new Class({
         }
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Input.Keyboard.KeyboardManager#startListeners
+     * @since 3.0.0
+     *
+     * @return {[type]} [description]
+     */
     startListeners: function ()
     {
         var queue = this.queue;
@@ -91,6 +159,12 @@ var KeyboardManager = new Class({
         this.target.addEventListener('keyup', handler, false);
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Input.Keyboard.KeyboardManager#stopListeners
+     * @since 3.0.0
+     */
     stopListeners: function ()
     {
         this.target.removeEventListener('keydown', this.handler);
@@ -98,8 +172,13 @@ var KeyboardManager = new Class({
     },
 
     /**
-    * Creates and returns an object containing 4 hotkeys for Up, Down, Left and Right and also space and shift.
-    */
+     * Creates and returns an object containing 4 hotkeys for Up, Down, Left and Right, and also space and shift.
+     *
+     * @method Phaser.Input.Keyboard.KeyboardManager#createCursorKeys
+     * @since 3.0.0
+     *
+     * @return {[type]} [description]
+     */
     createCursorKeys: function ()
     {
         return this.addKeys({
@@ -113,14 +192,21 @@ var KeyboardManager = new Class({
     },
 
     /**
-    * A practical way to create an object containing user selected hotkeys.
-    *
-    * For example,
-    *
-    *     addKeys( { 'up': Phaser.KeyCode.W, 'down': Phaser.KeyCode.S, 'left': Phaser.KeyCode.A, 'right': Phaser.KeyCode.D } );
-    *
-    * would return an object containing properties (`up`, `down`, `left` and `right`) referring to {@link Phaser.Key} object.
-    */
+     * A practical way to create an object containing user selected hotkeys.
+     *
+     * For example,
+     *
+     *     addKeys( { 'up': Phaser.KeyCode.W, 'down': Phaser.KeyCode.S, 'left': Phaser.KeyCode.A, 'right': Phaser.KeyCode.D } );
+     *
+     * would return an object containing properties (`up`, `down`, `left` and `right`) referring to {@link Phaser.Key} object.
+     *
+     * @method Phaser.Input.Keyboard.KeyboardManager#addKeys
+     * @since 3.0.0
+     *
+     * @param {[type]} keys - [description]
+     *
+     * @return {[type]} [description]
+     */
     addKeys: function (keys)
     {
         var output = {};
@@ -134,9 +220,16 @@ var KeyboardManager = new Class({
     },
 
     /**
-    * If you need more fine-grained control over a Key you can create a new Phaser.Key object via this method.
-    * The Key object can then be polled, have events attached to it, etc.
-    */
+     * If you need more fine-grained control over a Key you can create a new Phaser.Key object via this method.
+     * The Key object can then be polled, have events attached to it, etc.
+     *
+     * @method Phaser.Input.Keyboard.KeyboardManager#addKey
+     * @since 3.0.0
+     *
+     * @param {[type]} keyCode - [description]
+     *
+     * @return {[type]} [description]
+     */
     addKey: function (keyCode)
     {
         var keys = this.keys;
@@ -151,8 +244,13 @@ var KeyboardManager = new Class({
     },
 
     /**
-    * Removes a Key object from the Keyboard manager.
-    */
+     * Removes a Key object from the Keyboard manager.
+     *
+     * @method Phaser.Input.Keyboard.KeyboardManager#removeKey
+     * @since 3.0.0
+     *
+     * @param {[type]} keyCode - [description]
+     */
     removeKey: function (keyCode)
     {
         if (this.keys[keyCode])
@@ -162,6 +260,14 @@ var KeyboardManager = new Class({
         }
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Input.Keyboard.KeyboardManager#addKeyCapture
+     * @since 3.0.0
+     *
+     * @param {[type]} keyCodes - [description]
+     */
     addKeyCapture: function (keyCodes)
     {
         if (!Array.isArray(keyCodes))
@@ -175,6 +281,14 @@ var KeyboardManager = new Class({
         }
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Input.Keyboard.KeyboardManager#removeKeyCapture
+     * @since 3.0.0
+     *
+     * @param {[type]} keyCodes - [description]
+     */
     removeKeyCapture: function (keyCodes)
     {
         if (!Array.isArray(keyCodes))
@@ -188,15 +302,30 @@ var KeyboardManager = new Class({
         }
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Input.Keyboard.KeyboardManager#createCombo
+     * @since 3.0.0
+     *
+     * @param {[type]} keys - [description]
+     * @param {[type]} config - [description]
+     *
+     * @return {[type]} [description]
+     */
     createCombo: function (keys, config)
     {
         return new KeyCombo(this, keys, config);
     },
 
-    //  https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/KeyboardEvent
-    //  type = 'keydown', 'keyup'
-    //  keyCode = integer
-
+    /**
+     * [description]
+     *
+     * @method Phaser.Input.Keyboard.KeyboardManager#update
+     * @since 3.0.0
+     *
+     * @return {[type]} [description]
+     */
     update: function ()
     {
         var len = this.queue.length;
@@ -245,11 +374,23 @@ var KeyboardManager = new Class({
         }
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Input.Keyboard.KeyboardManager#shutdown
+     * @since 3.0.0
+     */
     shutdown: function ()
     {
         this.removeAllListeners();
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Input.Keyboard.KeyboardManager#destroy
+     * @since 3.0.0
+     */
     destroy: function ()
     {
         this.stopListeners();

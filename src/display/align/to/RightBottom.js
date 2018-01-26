@@ -1,28 +1,28 @@
-var GetRight = require('../../bounds/GetRight');
 var GetBottom = require('../../bounds/GetBottom');
-var SetLeft = require('../../bounds/SetLeft');
+var GetRight = require('../../bounds/GetRight');
 var SetBottom = require('../../bounds/SetBottom');
+var SetLeft = require('../../bounds/SetLeft');
 
 /**
- * [description]
+ * Takes given Game Object and aligns it so that it is positioned next to the right bottom position of the other.
  *
  * @function Phaser.Display.Align.To.RightBottom
  * @since 3.0.0
  *
- * @param {Phaser.GameObjects.GameObject} gameObject - [description]
- * @param {Phaser.GameObjects.GameObject} container - [description]
- * @param {number} [offsetX=0] - [description]
- * @param {number} [offsetY=0] - [description]
+ * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object that will be positioned.
+ * @param {Phaser.GameObjects.GameObject} alignTo - The Game Object to base the alignment position on.
+ * @param {number} [offsetX=0] - Optional horizontal offset from the position.
+ * @param {number} [offsetY=0] - Optional vertical offset from the position.
  *
- * @return {Phaser.GameObjects.GameObject} [description]
+ * @return {Phaser.GameObjects.GameObject} The Game Object that was aligned.
  */
-var RightBottom = function (gameObject, parent, offsetX, offsetY)
+var RightBottom = function (gameObject, alignTo, offsetX, offsetY)
 {
     if (offsetX === undefined) { offsetX = 0; }
     if (offsetY === undefined) { offsetY = 0; }
 
-    SetLeft(gameObject, GetRight(parent) + offsetX);
-    SetBottom(gameObject, GetBottom(parent) + offsetY);
+    SetLeft(gameObject, GetRight(alignTo) + offsetX);
+    SetBottom(gameObject, GetBottom(alignTo) + offsetY);
 
     return gameObject;
 };

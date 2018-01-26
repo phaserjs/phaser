@@ -1,18 +1,16 @@
-//  Based on the three.js Curve classes created by [zz85](http://www.lab4games.net/zz85/blog)
-
 var Class = require('../../utils/Class');
 var FromPoints = require('../../geom/rectangle/FromPoints');
 var Rectangle = require('../../geom/rectangle/Rectangle');
 var Vector2 = require('../../math/Vector2');
-
-//  Our Base Curve which all other curves extend
 
 var Curve = new Class({
 
     initialize:
 
     /**
-     * [description]
+     * A Base Curve class, which all other curve types extend.
+     *
+     * Based on the three.js Curve classes created by [zz85](http://www.lab4games.net/zz85/blog)
      *
      * @class Curve
      * @memberOf Phaser.Curves
@@ -24,41 +22,46 @@ var Curve = new Class({
     function Curve (type)
     {
         /**
-         * String based identifier
+         * String based identifier for the type of curve.
          *
          * @property {string} type
+         * @since 3.0.0
          */
         this.type = type;
 
         /**
-         * [description]
+         * The default number of divisions within the curve.
          *
          * @property {integer} defaultDivisions
          * @default 5
+         * @since 3.0.0
          */
         this.defaultDivisions = 5;
 
         /**
-         * [description]
+         * The quantity of arc length divisions within the curve.
          *
          * @property {integer} arcLengthDivisions
          * @default 100
+         * @since 3.0.0
          */
         this.arcLengthDivisions = 100;
 
         /**
-         * [description]
+         * An array of cached arc length values.
          *
          * @property {array} cacheArcLengths
          * @default []
+         * @since 3.0.0
          */
         this.cacheArcLengths = [];
 
         /**
-         * [description]
+         * Does the data of this curve need updating?
          *
          * @property {boolean} needsUpdate
          * @default true
+         * @since 3.0.0
          */
         this.needsUpdate = true;
 
@@ -67,36 +70,42 @@ var Curve = new Class({
          *
          * @property {boolean} active
          * @default true
+         * @since 3.0.0
          */
         this.active = true;
 
         /**
-         * [description]
+         * A temporary calculation Vector.
          *
          * @property {Phaser.Math.Vector2} _tmpVec2A
          * @private
+         * @since 3.0.0
          */
         this._tmpVec2A = new Vector2();
 
         /**
-         * [description]
+         * A temporary calculation Vector.
          *
          * @property {Phaser.Math.Vector2} _tmpVec2B
          * @private
+         * @since 3.0.0
          */
         this._tmpVec2B = new Vector2();
     },
 
     /**
-     * [description]
+     * Draws this curve on the given Graphics object.
+     * 
+     * The curve is drawn using `Graphics.strokePoints` so will be drawn at whatever the present Graphics stroke color is.
+     * The Graphics object is not cleared before the draw, so the curve will appear on-top of anything else already rendered to it.
      *
      * @method Phaser.Curves.Curve#draw
      * @since 3.0.0
      *
-     * @param {Phaser.GameObjects.Graphics} graphics - [description]
-     * @param {integer} [pointsTotal=32] - [description]
+     * @param {Phaser.GameObjects.Graphics} graphics - The Graphics instance onto which this curve will be drawn.
+     * @param {integer} [pointsTotal=32] - The resolution of the curve. The higher the value the smoother it will render, at the cost of rendering performance.
      *
-     * @return {Phaser.GameObjects.Graphics} [description]
+     * @return {Phaser.GameObjects.Graphics} The Graphics object to which the curve was drawn.
      */
     draw: function (graphics, pointsTotal)
     {
@@ -107,19 +116,22 @@ var Curve = new Class({
     },
 
     /**
-     * [description]
+     * Returns a Rectangle where the position and dimensions match the bounds of this Curve.
+     *
+     * You can control the accuracy of the bounds. The value given is used to work out how many points
+     * to plot across the curve. Higher values are more accurate at the cost of calculation speed.
      *
      * @method Phaser.Curves.Curve#getBounds
      * @since 3.0.0
      *
-     * @param {Phaser.Geom.Rectangle} out - [description]
-     * @param {integer} [accuracy=16] - [description]
+     * @param {Phaser.Geom.Rectangle} out - The Rectangle to store the bounds in. If falsey a new object will be created.
+     * @param {integer} [accuracy=16] - The accuracy of the bounds calculations.
      *
-     * @return {Phaser.Geom.Rectangle} [description]
+     * @return {Phaser.Geom.Rectangle} A Rectangle containing the bounds values of this Curve.
      */
     getBounds: function (out, accuracy)
     {
-        if (out === undefined) { out = new Rectangle(); }
+        if (!out) { out = new Rectangle(); }
         if (accuracy === undefined) { accuracy = 16; }
 
         var len = this.getLength();
@@ -137,17 +149,16 @@ var Curve = new Class({
         return FromPoints(this.getSpacedPoints(spaced), out);
     },
 
-    //  Return an array of points, spaced out X distance pixels apart
-
     /**
-     * [description]
+     * Returns an array of points, spaced out X distance pixels apart.
+     * The smaller the distance, the larger the array will be.
      *
      * @method Phaser.Curves.Curve#getDistancePoints
      * @since 3.0.0
      *
-     * @param {integer} distance - [description]
+     * @param {integer} distance - The distance, in pixels, between each point along the curve.
      *
-     * @return {Phaser.Geom.Point[]} [description]
+     * @return {Phaser.Geom.Point[]} An Array of Point objects.
      */
     getDistancePoints: function (distance)
     {

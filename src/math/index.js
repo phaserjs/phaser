@@ -57,10 +57,6 @@ module.exports = {
     Within: require('./Within'),
     Wrap: require('./Wrap'),
 
-    //  Classes
-    MinMax2: require('./MinMax2'),
-    MinMax4: require('./MinMax4'),
-
     //  Vector classes
     Vector2: require('./Vector2'),
     Vector3: require('./Vector3'),

@@ -1,67 +1,149 @@
+var Class = require('../utils/Class');
 var NOOP = require('../utils/NOOP');
 
-// Abstracts away the use of RAF or setTimeOut for the core game update loop.
-var RequestAnimationFrame = function ()
-{
-    // @property {boolean} isRunning - true if RequestAnimationFrame is running, otherwise false.
-    this.isRunning = false;
+var RequestAnimationFrame = new Class({
 
-    this.callback = NOOP;
+    initialize:
 
-    this.tick = 0;
-
-    // @property {boolean} isSetTimeOut  - True if the browser is using setTimeout instead of rAf.
-    this.isSetTimeOut = false;
-
-    // @property {number} timeOutID - The callback setTimeout or rAf callback ID used when calling cancel.
-    this.timeOutID = null;
-
-    var _this = this;
-
-    //  timestamp = DOMHighResTimeStamp
-    var step = function (timestamp)
+    /**
+     * Abstracts away the use of RAF or setTimeOut for the core game update loop.
+     * This is invoked automatically by the Phaser.Game instance.
+     *
+     * @class RequestAnimationFrame
+     * @memberOf Phaser.DOM
+     * @constructor
+     * @since 3.0.0
+     */
+    function RequestAnimationFrame ()
     {
-        _this.tick = timestamp;
+        /**
+         * True if RequestAnimationFrame is running, otherwise false.
+         *
+         * @property {boolean} isRunning
+         * @default false
+         * @since 3.0.0
+         */
+        this.isRunning = false;
 
-        _this.callback(timestamp);
+        /**
+         * The callback to be invoked each step.
+         *
+         * @property {function} callback
+         * @since 3.0.0
+         */
+        this.callback = NOOP;
 
-        _this.timeOutID = window.requestAnimationFrame(step);
-    };
+        /**
+         * The most recent timestamp. Either a DOMHighResTimeStamp under RAF or `Date.now` under SetTimeout.
+         *
+         * @property {DOMHighResTimeStamp|number} tick
+         * @default 0
+         * @since 3.0.0
+         */
+        this.tick = 0;
 
-    var stepTimeout = function ()
-    {
-        var d = Date.now();
+        /**
+         * True if the step is using setTimeout instead of RAF.
+         *
+         * @property {boolean} isSetTimeOut
+         * @default false
+         * @since 3.0.0
+         */
+        this.isSetTimeOut = false;
 
-        _this.tick = d;
+        /**
+         * The setTimeout or RAF callback ID used when canceling them.
+         *
+         * @property {?number} timeOutID
+         * @default null
+         * @since 3.0.0
+         */
+        this.timeOutID = null;
 
-        _this.callback(d);
+        /**
+         * The previous time the step was called.
+         *
+         * @property {number} lastTime
+         * @default 0
+         * @since 3.0.0
+         */
+        this.lastTime = 0;
 
-        _this.timeOutID = window.setTimeout(stepTimeout, _this.timeToCall);
-    };
+        var _this = this;
 
-    this.step = step;
-    this.stepTimeout = stepTimeout;
-};
+        /**
+         * The RAF step function.
+         * Updates the local tick value, invokes the callback and schedules another call to requestAnimationFrame.
+         *
+         * @property {function} step
+         * @since 3.0.0
+         */
+        this.step = function step (timestamp)
+        {
+            // DOMHighResTimeStamp
+            _this.lastTime = _this.tick;
 
-RequestAnimationFrame.prototype.constructor = RequestAnimationFrame;
+            _this.tick = timestamp;
 
-RequestAnimationFrame.prototype = {
+            _this.callback(timestamp);
 
-    // Starts the requestAnimationFrame running or setTimeout if unavailable in browser
+            _this.timeOutID = window.requestAnimationFrame(step);
+        };
+
+        /**
+         * The SetTimeout step function.
+         * Updates the local tick value, invokes the callback and schedules another call to setTimeout.
+         *
+         * @property {function} stepTimeout
+         * @since 3.0.0
+         */
+        this.stepTimeout = function stepTimeout ()
+        {
+            var d = Date.now();
+
+            var delay = Math.max(16 + _this.lastTime - d, 0);
+
+            _this.lastTime = _this.tick;
+
+            _this.tick = d;
+
+            _this.callback(d);
+
+            _this.timeOutID = window.setTimeout(stepTimeout, delay);
+        };
+    },
+
+    /**
+     * Starts the requestAnimationFrame or setTimeout process running.
+     *
+     * @method Phaser.DOM.RequestAnimationFrame#start
+     * @since 3.0.0
+     *
+     * @param {function} callback - The callback to invoke each step.
+     * @param {boolean} forceSetTimeOut - Should it use SetTimeout, even if RAF is available?
+     */
     start: function (callback, forceSetTimeOut)
     {
+        if (this.isRunning)
+        {
+            return;
+        }
+
         this.callback = callback;
 
         this.isSetTimeOut = forceSetTimeOut;
 
         this.isRunning = true;
 
-        var _this = this;
-
-        this.timeOutID = (forceSetTimeOut) ? window.setTimeout(_this.stepTimeout, 0) : window.requestAnimationFrame(_this.step);
+        this.timeOutID = (forceSetTimeOut) ? window.setTimeout(this.stepTimeout, 0) : window.requestAnimationFrame(this.step);
     },
 
-    // Stops the requestAnimationFrame from running.
+    /**
+     * Stops the requestAnimationFrame or setTimeout from running.
+     *
+     * @method Phaser.DOM.RequestAnimationFrame#stop
+     * @since 3.0.0
+     */
     stop: function ()
     {
         this.isRunning = false;
@@ -76,6 +158,12 @@ RequestAnimationFrame.prototype = {
         }
     },
 
+    /**
+     * Stops the step from running and clears the callback reference.
+     *
+     * @method Phaser.DOM.RequestAnimationFrame#destroy
+     * @since 3.0.0
+     */
     destroy: function ()
     {
         this.stop();
@@ -83,6 +171,6 @@ RequestAnimationFrame.prototype = {
         this.callback = NOOP;
     }
 
-};
+});
 
 module.exports = RequestAnimationFrame;

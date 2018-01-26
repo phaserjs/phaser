@@ -13,6 +13,19 @@ var OrthographicCamera = new Class({
 
     initialize:
 
+    /**
+     * [description]
+     *
+     * @class OrthographicCamera
+     * @extends Phaser.Cameras.Sprite3D.Camera
+     * @memberOf Phaser.Cameras.Sprite3D
+     * @constructor
+     * @since 3.0.0
+     *
+     * @param {Phaser.Scene} scene - [description]
+     * @param {integer} viewportWidth - [description]
+     * @param {integer} viewportHeight - [description]
+     */
     function OrthographicCamera (scene, viewportWidth, viewportHeight)
     {
         if (viewportWidth === undefined) { viewportWidth = 0; }
@@ -20,16 +33,55 @@ var OrthographicCamera = new Class({
 
         Camera.call(this, scene);
 
+        /**
+         * [description]
+         *
+         * @property {integer} viewportWidth
+         * @since 3.0.0
+         */
         this.viewportWidth = viewportWidth;
+
+        /**
+         * [description]
+         *
+         * @property {integer} viewportHeight
+         * @since 3.0.0
+         */
         this.viewportHeight = viewportHeight;
 
+        /**
+         * [description]
+         *
+         * @property {float} _zoom
+         * @private
+         * @since 3.0.0
+         */
         this._zoom = 1.0;
 
+        /**
+         * [description]
+         *
+         * @property {number} near
+         * @default 0
+         * @since 3.0.0
+         */
         this.near = 0;
 
         this.update();
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Cameras.Sprite3D.OrthographicCamera#setToOrtho
+     * @since 3.0.0
+     *
+     * @param {[type]} yDown - [description]
+     * @param {[type]} viewportWidth - [description]
+     * @param {[type]} viewportHeight - [description]
+     *
+     * @return {[type]} [description]
+     */
     setToOrtho: function (yDown, viewportWidth, viewportHeight)
     {
         if (viewportWidth === undefined) { viewportWidth = this.viewportWidth; }
@@ -47,6 +99,14 @@ var OrthographicCamera = new Class({
         return this.update();
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Cameras.Sprite3D.OrthographicCamera#update
+     * @since 3.0.0
+     *
+     * @return {[type]} [description]
+     */
     update: function ()
     {
         var w = this.viewportWidth;

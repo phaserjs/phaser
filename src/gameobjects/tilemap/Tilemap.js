@@ -232,7 +232,7 @@ var Tilemap = new Class({
             return null;
         }
 
-        var staticLayer = new StaticTilemapLayer(dynamicLayer.scene, dynamicLayer.map,
+        var staticLayer = new StaticTilemapLayer(dynamicLayer.scene, dynamicLayer.tilemap,
             dynamicLayer.layerIndex, dynamicLayer.tileset, dynamicLayer.x, dynamicLayer.y);
         this.scene.sys.displayList.add(staticLayer);
 

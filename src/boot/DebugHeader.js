@@ -1,13 +1,15 @@
-var CONST = require('../const');
 var CHECKSUM = require('../checksum');
+var CONST = require('../const');
 
 /**
- * [description]
+ * Called automatically by Phaser.Game and responsible for creating the console.log debug header.
+ *
+ * You can customize or disable the header via the Game Config object.
  *
  * @function Phaser.Boot.DebugHeader
  * @since 3.0.0
  *
- * @param {Phaser.Game} game - [description]
+ * @param {Phaser.Game} game - The Phaser.Game instance which will output this debug header.
  */
 var DebugHeader = function (game)
 {
@@ -21,15 +23,15 @@ var DebugHeader = function (game)
     var renderType = (config.renderType === CONST.CANVAS) ? 'Canvas' : 'WebGL';
 
     var audioConfig = config.audio;
-    var deviceAudio = game.device.Audio;
+    var deviceAudio = game.device.audio;
 
     var audioType;
 
-    if(deviceAudio.webAudio && !(audioConfig && audioConfig.disableWebAudio))
+    if (deviceAudio.webAudio && !(audioConfig && audioConfig.disableWebAudio))
     {
         audioType = 'Web Audio';
     }
-    else if((audioConfig && audioConfig.noAudio) || (!deviceAudio.webAudio && !deviceAudio.audioData))
+    else if ((audioConfig && audioConfig.noAudio) || (!deviceAudio.webAudio && !deviceAudio.audioData))
     {
         audioType = 'No Audio';
     }
@@ -38,9 +40,7 @@ var DebugHeader = function (game)
         audioType = 'HTML5 Audio';
     }
 
-    var ie = false;
-
-    if (!ie)
+    if (!game.device.browser.ie)
     {
         var c = '';
         var args = [ c ];
@@ -103,9 +103,6 @@ var DebugHeader = function (game)
     {
         console.log('Phaser v' + CONST.VERSION + ' / http://phaser.io');
     }
-
-    // Keep this during dev build only
-    // console.log(CHECKSUM.build);
 };
 
 module.exports = DebugHeader;

@@ -4,23 +4,52 @@ var GeometryMask = new Class({
 
     initialize:
 
-    function GeometryMask(scene, graphicsGeometry)
+    /**
+     * [description]
+     *
+     * @class GeometryMask
+     * @memberOf Phaser.Display.Masks
+     * @constructor
+     * @since 3.0.0
+     *
+     * @param {Phaser.Scene} scene - [description]
+     * @param {[type]} graphicsGeometry - [description]
+     */
+    function GeometryMask (scene, graphicsGeometry)
     {
         this.geometryMask = graphicsGeometry;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Display.Masks.GeometryMask#setShape
+     * @since 3.0.0
+     *
+     * @param {[type]} graphicsGeometry - [description]
+     */
     setShape: function (graphicsGeometry)
     {
         this.geometryMask = graphicsGeometry;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Display.Masks.GeometryMask#preRenderWebGL
+     * @since 3.0.0
+     *
+     * @param {[type]} renderer - [description]
+     * @param {[type]} mask - [description]
+     * @param {[type]} camera - [description]
+     */
     preRenderWebGL: function (renderer, mask, camera)
     {
         var gl = renderer.gl;
         var geometryMask = this.geometryMask;
 
         // Force flushing before drawing to stencil buffer
-        renderer.currentRenderer.flush();
+        renderer.flush();
 
         // Enable and setup GL state to write to stencil buffer
         gl.enable(gl.STENCIL_TEST);
@@ -31,7 +60,7 @@ var GeometryMask = new Class({
 
         // Write stencil buffer
         geometryMask.renderWebGL(renderer, geometryMask, 0.0, camera);
-        renderer.currentRenderer.flush();
+        renderer.flush();
 
         // Use stencil buffer to affect next rendering object
         gl.colorMask(true, true, true, true);
@@ -39,15 +68,33 @@ var GeometryMask = new Class({
         gl.stencilOp(gl.INVERT, gl.INVERT, gl.INVERT);
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Display.Masks.GeometryMask#postRenderWebGL
+     * @since 3.0.0
+     *
+     * @param {[type]} renderer - [description]
+     */
     postRenderWebGL: function (renderer)
     {
         var gl = renderer.gl;
 
         // Force flush before disabling stencil test
-        renderer.currentRenderer.flush();
+        renderer.flush();
         gl.disable(gl.STENCIL_TEST);
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Display.Masks.GeometryMask#preRenderCanvas
+     * @since 3.0.0
+     *
+     * @param {[type]} renderer - [description]
+     * @param {[type]} mask - [description]
+     * @param {[type]} camera - [description]
+     */
     preRenderCanvas: function (renderer, mask, camera)
     {
         var geometryMask = this.geometryMask;
@@ -57,6 +104,14 @@ var GeometryMask = new Class({
         renderer.currentContext.clip();
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Display.Masks.GeometryMask#postRenderCanvas
+     * @since 3.0.0
+     *
+     * @param {[type]} renderer - [description]
+     */
     postRenderCanvas: function (renderer)
     {
         //renderer.currentContext.closePath();

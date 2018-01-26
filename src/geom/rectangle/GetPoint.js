@@ -1,7 +1,18 @@
 var Perimeter = require('./Perimeter');
 var Point = require('../point/Point');
 
-//  Position is a value between 0 and 1 where 0 = the top-left of the rectangle and 0.5 = the bottom right
+/**
+ * Position is a value between 0 and 1 where 0 = the top-left of the rectangle and 0.5 = the bottom right.
+ *
+ * @function Phaser.Geom.Rectangle.GetPoint
+ * @since 3.0.0
+ *
+ * @param {Phaser.Geom.Rectangle} rectangle - [description]
+ * @param {float} position - [description]
+ * @param {Phaser.Geom.Point|object} [out] - [description]
+ *
+ * @return {Phaser.Geom.Point} [description]
+ */
 var GetPoint = function (rectangle, position, out)
 {
     if (out === undefined) { out = new Point(); }

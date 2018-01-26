@@ -2,6 +2,18 @@ var Point = require('../point/Point');
 var Length = require('../line/Length');
 
 //  Position is a value between 0 and 1
+/**
+ * [description]
+ *
+ * @function Phaser.Geom.Triangle.GetPoint
+ * @since 3.0.0
+ *
+ * @param {Phaser.Geom.Triangle} triangle - [description]
+ * @param {float} position - [description]
+ * @param {[type]} out - [description]
+ *
+ * @return {[type]} [description]
+ */
 var GetPoint = function (triangle, position, out)
 {
     if (out === undefined) { out = new Point(); }

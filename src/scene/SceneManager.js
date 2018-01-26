@@ -1,5 +1,3 @@
-var CanvasInterpolation = require('../display/canvas/CanvasInterpolation');
-var CanvasPool = require('../display/canvas/CanvasPool');
 var Class = require('../utils/Class');
 var CONST = require('./const');
 var GetValue = require('../utils/object/GetValue');

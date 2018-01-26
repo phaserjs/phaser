@@ -1,14 +1,15 @@
 /**
- * [description]
+ * Adds the given element to the DOM. If a parent is provided the element is added as a child of the parent, providing it was able to access it.
+ * If no parent was given or falls back to using `document.body`.
  *
  * @function Phaser.Dom.AddToDOM
  * @since 3.0.0
  *
- * @param {any} element - [description]
- * @param {any} parent - [description]
+ * @param {object} element - The element to be added to the DOM. Usually a Canvas object.
+ * @param {string|object} [parent] - The parent in which to add the element. Can be a string which is passed to `getElementById` or an actual DOM object.
  * @param {boolean} [overflowHidden=true] - [description]
  *
- * @return {any} [description]
+ * @return {object} The element that was added to the DOM.
  */
 var AddToDOM = function (element, parent, overflowHidden)
 {

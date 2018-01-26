@@ -1,3 +1,5 @@
+//  Phaser.Create.Palettes
+
 module.exports = {
 
     ARNE16: require('./Arne16'),

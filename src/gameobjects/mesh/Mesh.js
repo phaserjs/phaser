@@ -14,7 +14,6 @@ var Mesh = new Class({
         Components.Flip,
         Components.GetBounds,
         Components.Origin,
-        Components.RenderTarget,
         Components.ScaleMode,
         Components.Size,
         Components.Texture,
@@ -26,7 +25,7 @@ var Mesh = new Class({
 
     initialize:
 
-    function Mesh (scene, x, y, vertices, uv, indices, colors, alphas, texture, frame)
+    function Mesh (scene, x, y, vertices, uv, colors, alphas, texture, frame)
     {
         GameObject.call(this, scene, 'Mesh');
 
@@ -72,7 +71,6 @@ var Mesh = new Class({
 
         this.vertices = new Float32Array(vertices);
         this.uv = new Float32Array(uv);
-        this.indices = new Uint16Array(indices);
         this.colors = new Uint32Array(colors);
         this.alphas = new Float32Array(alphas);
     }

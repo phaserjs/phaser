@@ -1,15 +1,15 @@
 var Rectangle = require('../rectangle/Rectangle');
 
 /**
- * [description]
+ * Returns the bounds of the Ellipse object.
  *
  * @function Phaser.Geom.Ellipse.GetBounds
  * @since 3.0.0
  *
- * @param {Phaser.Geom.Ellipse} ellipse - [description]
- * @param {Phaser.Geom.Rectangle|object} [out] - [description]
+ * @param {Phaser.Geom.Ellipse} ellipse - The Ellipse to get the bounds from.
+ * @param {Phaser.Geom.Rectangle|object} [out] - A Rectangle, or rectangle-like object, to store the ellipse bounds in. If not given a new Rectangle will be created.
  *
- * @return {Phaser.Geom.Rectangle} [description]
+ * @return {Phaser.Geom.Rectangle|object} The Rectangle object containing the Ellipse bounds.
  */
 var GetBounds = function (ellipse, out)
 {
