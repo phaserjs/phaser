@@ -135,6 +135,10 @@ var HTML5AudioSound = new Class({
         if (!this.pickAndPlayAudioTag()) {
             return false;
         }
+        /**
+         * @event Phaser.Sound.HTML5AudioSound#resume
+         * @param {Phaser.Sound.HTML5AudioSound} sound - Reference to the sound that emitted event.
+         */
         this.emit('resume', this);
         return true;
     },
