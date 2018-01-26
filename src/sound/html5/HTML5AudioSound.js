@@ -157,6 +157,10 @@ var HTML5AudioSound = new Class({
         }
         //  \/\/\/ isPlaying = false, isPaused = false \/\/\/
         this.stopAndReleaseAudioTag();
+        /**
+         * @event Phaser.Sound.HTML5AudioSound#stop
+         * @param {Phaser.Sound.HTML5AudioSound} sound - Reference to the sound that emitted event.
+         */
         this.emit('stop', this);
         return true;
     },
