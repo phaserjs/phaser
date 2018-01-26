@@ -409,6 +409,11 @@ Object.defineProperty(BaseSound.prototype, 'rate', {
     set: function (value) {
         this.currentConfig.rate = value;
         this.setRate();
+        /**
+         * @event Phaser.Sound.BaseSound#rate
+         * @param {Phaser.Sound.BaseSound} sound - Reference to the sound that emitted event.
+         * @param {number} value - An updated value of Phaser.Sound.BaseSound#rate property.
+         */
         this.emit('rate', this, value);
     }
 });
