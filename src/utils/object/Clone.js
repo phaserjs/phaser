@@ -1,5 +1,13 @@
-//  Shallow Object Clone. Will not clone nested objects.
-
+/**
+ * Shallow Object Clone. Will not clone nested objects.
+ *
+ * @function Phaser.Utils.Object.Clone
+ * @since 3.0.0
+ *
+ * @param {object} obj - [description]
+ *
+ * @return {object} [description]
+ */
 var Clone = function (obj)
 {
     var clone = {};

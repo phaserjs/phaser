@@ -1,8 +1,19 @@
 var FileTypesManager = require('../FileTypesManager');
 var JSONFile = require('./JSONFile.js');
 
-//  Phaser.Loader.FileTypes.AnimationJSONFile
-
+/**
+ * [description]
+ *
+ * @function Phaser.Loader.Filetypes.AnimationJSONFile
+ * @since 3.0.0
+ *
+ * @param {string} key - [description]
+ * @param {string} url - [description]
+ * @param {string} path - [description]
+ * @param {object} xhrSettings - [description]
+ *
+ * @return {Phaser.Loader.Filetypes.AnimationJSONFile} [description]
+ */
 var AnimationJSONFile = function (key, url, path, xhrSettings)
 {
     var json = new JSONFile(key, url, path, xhrSettings);

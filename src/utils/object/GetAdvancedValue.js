@@ -28,6 +28,18 @@ var GetValue = require('./GetValue');
 //      x: { randFloat: [min, max] }
 //  }
 
+/**
+ * [description]
+ *
+ * @function Phaser.Utils.Object.GetAdvancedValue
+ * @since 3.0.0
+ *
+ * @param {object} source - [description]
+ * @param {string} key - [description]
+ * @param {any} defaultValue - [description]
+ *
+ * @return {any} [description]
+ */
 var GetAdvancedValue = function (source, key, defaultValue)
 {
     var value = GetValue(source, key, null);

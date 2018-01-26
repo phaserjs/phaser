@@ -7,6 +7,18 @@
 // Rearrange items so that all items in the [left, k] range are smaller than all items in (k, right];
 // The k-th element will have the (k - left + 1)th smallest value in [left, right]
 
+/**
+ * [description]
+ *
+ * @function Phaser.Utils.Array.QuickSelect
+ * @since 3.0.0
+ *
+ * @param {[type]} arr - [description]
+ * @param {[type]} k - [description]
+ * @param {[type]} left - [description]
+ * @param {[type]} right - [description]
+ * @param {[type]} compare - [description]
+ */
 var QuickSelect = function (arr, k, left, right, compare)
 {
     left = left || 0;

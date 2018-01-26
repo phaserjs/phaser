@@ -1,11 +1,9 @@
 var Class = require('../../utils/Class');
+var CONST = require('../../const');
 var File = require('../File');
 var FileTypesManager = require('../FileTypesManager');
 var GetFastValue = require('../../utils/object/GetFastValue');
-var CONST = require('../../const');
 var HTML5AudioFile = require('./HTML5AudioFile');
-
-//  Phaser.Loader.FileTypes.AudioFile
 
 var AudioFile = new Class({
 
@@ -13,8 +11,29 @@ var AudioFile = new Class({
 
     initialize:
 
+    /**
+     * [description]
+     *
+     * @class AudioFile
+     * @extends Phaser.Loader.File
+     * @memberOf Phaser.Loader.FileTypes
+     * @constructor
+     * @since 3.0.0
+     *
+     * @param {string} key - [description]
+     * @param {string} url - [description]
+     * @param {string} path - [description]
+     * @param {object} xhrSettings - [description]
+     * @param {[type]} audioContext - [description]
+     */
     function AudioFile (key, url, path, xhrSettings, audioContext)
     {
+        /**
+         * [description]
+         *
+         * @property {[type]} context
+         * @since 3.0.0
+         */
         this.context = audioContext;
 
         var fileConfig = {
@@ -30,6 +49,14 @@ var AudioFile = new Class({
         File.call(this, fileConfig);
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Loader.FileTypes.AudioFile#onProcess
+     * @since 3.0.0
+     *
+     * @param {[type]} callback - [description]
+     */
     onProcess: function (callback)
     {
         this.state = CONST.FILE_PROCESSING;
@@ -65,6 +92,16 @@ AudioFile.create = function (loader, key, urls, config, xhrSettings)
     var audioConfig = game.config.audio;
     var deviceAudio = game.device.audio;
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Loader.FileTypes.AudioFile#
+     * @since 3.0.0
+     *
+     * @param {[type]} (audioConfig && audioConfig.noAudio) || (!deviceAudio.webAudio && !deviceAudio.audioData) - [description]
+     *
+     * @return {[type]} [description]
+     */
     if ((audioConfig && audioConfig.noAudio) || (!deviceAudio.webAudio && !deviceAudio.audioData))
     {
         console.info('Skipping loading audio \'' + key + '\' since sounds are disabled.');
@@ -73,16 +110,44 @@ AudioFile.create = function (loader, key, urls, config, xhrSettings)
 
     var url = AudioFile.findAudioURL(game, urls);
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Loader.FileTypes.AudioFile#
+     * @since 3.0.0
+     *
+     * @param {[type]} !url - [description]
+     *
+     * @return {[type]} [description]
+     */
     if (!url)
     {
         console.warn('No supported url provided for audio \'' + key + '\'!');
         return null;
     }
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Loader.FileTypes.AudioFile#
+     * @since 3.0.0
+     *
+     * @param {[type]} deviceAudio.webAudio && !(audioConfig && audioConfig.disableWebAudio) - [description]
+     *
+     * @return {[type]} [description]
+     */
     if (deviceAudio.webAudio && !(audioConfig && audioConfig.disableWebAudio))
     {
         return new AudioFile(key, url, loader.path, xhrSettings, game.sound.context);
     }
+    /**
+     * [description]
+     *
+     * @method Phaser.Loader.FileTypes.AudioFile#
+     * @since 3.0.0
+     *
+     * @return {[type]} [description]
+     */
     else
     {
         return new HTML5AudioFile(key, url, loader.path, config, game.sound.locked);
@@ -99,6 +164,14 @@ FileTypesManager.register('audio', function (key, urls, config, xhrSettings)
 {
     var audioFile = AudioFile.create(this, key, urls, config, xhrSettings);
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Loader.FileTypes.AudioFile#
+     * @since 3.0.0
+     *
+     * @param {[type]} audioFile - [description]
+     */
     if (audioFile)
     {
         this.addFile(audioFile);
@@ -153,11 +226,29 @@ FileTypesManager.register('audio', function (key, urls, config, xhrSettings)
 
 AudioFile.findAudioURL = function (game, urls)
 {
+    /**
+     * [description]
+     *
+     * @method Phaser.Loader.FileTypes.AudioFile#
+     * @since 3.0.0
+     *
+     * @param {[type]} urls.constructor !== Array - [description]
+     */
     if (urls.constructor !== Array)
     {
         urls = [ urls ];
     }
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Loader.FileTypes.AudioFile#
+     * @since 3.0.0
+     *
+     * @param {[type]} var i = 0; i < urls.length; i++ - [description]
+     *
+     * @return {[type]} [description]
+     */
     for (var i = 0; i < urls.length; i++)
     {
         var url = GetFastValue(urls[i], 'uri', urls[i]);

@@ -1,9 +1,7 @@
-//  Removes a single item from an array and returns it
-//  without creating gc (like the native splice does)
 //  Based on code by Mike Reinstein
 
 /**
- * [description]
+ * Removes a single item from an array and returns it without creating gc (like the native splice does)
  *
  * @function Phaser.Utils.Array.SpliceOne
  * @since 3.0.0

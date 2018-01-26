@@ -1,8 +1,6 @@
-// Moves the element at the start of the array to the end, shifting all items in the process.
-// The "rotation" happens to the left.
-
 /**
- * [description]
+ * Moves the element at the start of the array to the end, shifting all items in the process.
+ * The "rotation" happens to the left.
  *
  * @function Phaser.Utils.Array.RotateLeft
  * @since 3.0.0
