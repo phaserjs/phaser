@@ -390,7 +390,7 @@ var Tween = new Class({
         else if (this.paused)
         {
             this.paused = false;
-        
+
             this.parent.makeActive(this);
         }
         else
@@ -454,12 +454,12 @@ var Tween = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Tweens.Tween#pause
+     * @method Phaser.Tweens.Tween#resume
      * @since 3.0.0
      *
      * @return {Phaser.Tweens.Tween} [description]
      */
-    pause: function ()
+    resume: function ()
     {
         if (this.state === TWEEN_CONST.PAUSED)
         {
@@ -982,9 +982,9 @@ Tween.TYPES = [
 ];
 
 //  When registering a factory function 'this' refers to the GameObjectFactory context.
-//  
+//
 //  There are several properties available to use:
-//  
+//
 //  this.scene - a reference to the Scene that owns the GameObjectFactory
 //  this.displayList - a reference to the Display List the Scene owns
 //  this.updateList - a reference to the Update List the Scene owns
