@@ -12,24 +12,84 @@ var GamepadManager = new Class({
 
     initialize:
 
+    /**
+     * [description]
+     *
+     * @class GamepadManager
+     * @memberOf Phaser.Input.Gamepad
+     * @constructor
+     * @since 3.0.0
+     *
+     * @param {Phaser.Input.InputManager} inputManager - [description]
+     */
     function GamepadManager (inputManager)
     {
+        /**
+         * [description]
+         *
+         * @property {Phaser.Input.InputManager} manager
+         * @since 3.0.0
+         */
         this.manager = inputManager;
 
+        /**
+         * [description]
+         *
+         * @property {[type]} events
+         * @since 3.0.0
+         */
         this.events = inputManager.events;
 
+        /**
+         * [description]
+         *
+         * @property {boolean} enabled
+         * @default false
+         * @since 3.0.0
+         */
         this.enabled = false;
 
+        /**
+         * [description]
+         *
+         * @property {null} target
+         * @since 3.0.0
+         */
         this.target;
 
+        /**
+         * [description]
+         *
+         * @property {null} handler
+         * @since 3.0.0
+         */
         this.handler;
 
+        /**
+         * [description]
+         *
+         * @property {array} gamepads
+         * @default []
+         * @since 3.0.0
+         */
         this.gamepads = [];
 
-        //   Standard FIFO queue
+        /**
+         * Standard FIFO queue.
+         *
+         * @property {array} queue
+         * @default []
+         * @since 3.0.0
+         */
         this.queue = [];
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Input.Gamepad.GamepadManager#boot
+     * @since 3.0.0
+     */
     boot: function ()
     {
         var config = this.manager.config;
@@ -44,11 +104,19 @@ var GamepadManager = new Class({
         }
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Input.Gamepad.GamepadManager#startListeners
+     * @since 3.0.0
+     *
+     * @return {[type]} [description]
+     */
     startListeners: function ()
     {
         var queue = this.queue;
 
-        var handler = function (event)
+        var handler = function handler (event)
         {
             if (event.defaultPrevented)
             {
@@ -61,25 +129,42 @@ var GamepadManager = new Class({
 
         this.handler = handler;
 
-        this.target.addEventListener('gamepadconnected', handler, false);
-        this.target.addEventListener('gamepaddisconnected', handler, false);
+        var target = this.target;
+
+        target.addEventListener('gamepadconnected', handler, false);
+        target.addEventListener('gamepaddisconnected', handler, false);
 
         //  FF only for now:
-        this.target.addEventListener('gamepadbuttondown', handler, false);
-        this.target.addEventListener('gamepadbuttonup', handler, false);
-        this.target.addEventListener('gamepadaxismove', handler, false);
+        target.addEventListener('gamepadbuttondown', handler, false);
+        target.addEventListener('gamepadbuttonup', handler, false);
+        target.addEventListener('gamepadaxismove', handler, false);
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Input.Gamepad.GamepadManager#stopListeners
+     * @since 3.0.0
+     */
     stopListeners: function ()
     {
-        this.target.removeEventListener('gamepadconnected', this.handler);
-        this.target.removeEventListener('gamepaddisconnected', this.handler);
+        var target = this.target;
+        var handler = this.handler;
 
-        this.target.removeEventListener('gamepadbuttondown', this.handler);
-        this.target.removeEventListener('gamepadbuttonup', this.handler);
-        this.target.removeEventListener('gamepadaxismove', this.handler);
+        target.removeEventListener('gamepadconnected', handler);
+        target.removeEventListener('gamepaddisconnected', handler);
+
+        target.removeEventListener('gamepadbuttondown', handler);
+        target.removeEventListener('gamepadbuttonup', handler);
+        target.removeEventListener('gamepadaxismove', handler);
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Input.Gamepad.GamepadManager#disconnectAll
+     * @since 3.0.0
+     */
     disconnectAll: function ()
     {
         for (var i = 0; i < this.gamepads.length; i++)
@@ -88,6 +173,16 @@ var GamepadManager = new Class({
         }
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Input.Gamepad.GamepadManager#addPad
+     * @since 3.0.0
+     *
+     * @param {[type]} pad - [description]
+     *
+     * @return {[type]} [description]
+     */
     addPad: function (pad)
     {
         var gamepad = new Gamepad(this, pad.id, pad.index);
@@ -97,10 +192,28 @@ var GamepadManager = new Class({
         return gamepad;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Input.Gamepad.GamepadManager#removePad
+     * @since 3.0.0
+     *
+     * @param {[type]} index - [description]
+     * @param {[type]} pad - [description]
+     */
     removePad: function (index, pad)
     {
+        //  TODO
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Input.Gamepad.GamepadManager#refreshPads
+     * @since 3.0.0
+     *
+     * @param {[type]} pads - [description]
+     */
     refreshPads: function (pads)
     {
         if (!pads)
@@ -129,6 +242,14 @@ var GamepadManager = new Class({
         }
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Input.Gamepad.GamepadManager#getAll
+     * @since 3.0.0
+     *
+     * @return {[type]} [description]
+     */
     getAll: function ()
     {
         var out = [];
@@ -144,6 +265,16 @@ var GamepadManager = new Class({
         return out;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Input.Gamepad.GamepadManager#getPad
+     * @since 3.0.0
+     *
+     * @param {[type]} index - [description]
+     *
+     * @return {[type]} [description]
+     */
     getPad: function (index)
     {
         for (var i = 0; i < this.gamepads.length; i++)
@@ -155,6 +286,14 @@ var GamepadManager = new Class({
         }
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Input.Gamepad.GamepadManager#update
+     * @since 3.0.0
+     *
+     * @return {[type]} [description]
+     */
     update: function ()
     {
         if (!this.enabled)
@@ -200,6 +339,13 @@ var GamepadManager = new Class({
         }
     },
 
+    /**
+     * The total number of connected game pads.
+     * 
+     * @name Phaser.Input.Gamepad.GamepadManager#total
+     * @property {number} total
+     * @since 3.0.0
+     */
     total: {
 
         get: function ()

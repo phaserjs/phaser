@@ -14,51 +14,175 @@ var InputManager = new Class({
 
     initialize:
 
+    /**
+     * [description]
+     *
+     * @class InputManager
+     * @memberOf Phaser.Input
+     * @constructor
+     * @since 3.0.0
+     *
+     * @param {Phaser.Game} game - [description]
+     * @param {object} config - [description]
+     */
     function InputManager (game, config)
     {
+        /**
+         * [description]
+         *
+         * @property {[type]} game
+         * @since 3.0.0
+         */
         this.game = game;
 
+        /**
+         * [description]
+         *
+         * @property {HTMLCanvasElement} canvas
+         * @since 3.0.0
+         */
         this.canvas;
 
+        /**
+         * [description]
+         *
+         * @property {object} config
+         * @since 3.0.0
+         */
         this.config = config;
 
+        /**
+         * [description]
+         *
+         * @property {boolean} enabled
+         * @default true
+         * @since 3.0.0
+         */
         this.enabled = true;
 
+        /**
+         * [description]
+         *
+         * @property {[type]} events
+         * @since 3.0.0
+         */
         this.events = new EventEmitter();
 
-        //   Standard FIFO queue
+        /**
+         * Standard FIFO queue.
+         *
+         * @property {array} queue
+         * @default []
+         * @since 3.0.0
+         */
         this.queue = [];
 
-        //  Listeners (will be based on config)
+        /**
+         * [description]
+         *
+         * @property {Phaser.Input.Keyboard.KeyboardManager} keyboard
+         * @since 3.0.0
+         */
         this.keyboard = new Keyboard(this);
+
+        /**
+         * [description]
+         *
+         * @property {Phaser.Input.Mouse.MouseManager} mouse
+         * @since 3.0.0
+         */
         this.mouse = new Mouse(this);
+
+        /**
+         * [description]
+         *
+         * @property {Phaser.Input.Touch.TouchManager} touch
+         * @since 3.0.0
+         */
         this.touch = new Touch(this);
+
+        /**
+         * [description]
+         *
+         * @property {Phaser.Input.Gamepad.GamepadManager} gamepad
+         * @since 3.0.0
+         */
         this.gamepad = new Gamepad(this);
 
+        /**
+         * [description]
+         *
+         * @property {[type]} activePointer
+         * @since 3.0.0
+         */
         this.activePointer = new Pointer(this, 0);
 
+        /**
+         * [description]
+         *
+         * @property {object} scale
+         * @since 3.0.0
+         */
         this.scale = { x: 1, y: 1 };
 
-        //  If the top-most Scene in the Scene List receives an input it will stop input from
-        //  propagating any lower down the scene list, i.e. if you have a UI Scene at the top
-        //  and click something on it, that click will not then be passed down to any other
-        //  Scene below. Disable this to have input events passed through all Scenes, all the time.
+        /**
+         * If the top-most Scene in the Scene List receives an input it will stop input from
+         * propagating any lower down the scene list, i.e. if you have a UI Scene at the top
+         * and click something on it, that click will not then be passed down to any other
+         * Scene below. Disable this to have input events passed through all Scenes, all the time.
+         *
+         * @property {boolean} globalTopOnly
+         * @default true
+         * @since 3.0.0
+         */
         this.globalTopOnly = true;
 
+        /**
+         * [description]
+         *
+         * @property {boolean} ignoreEvents
+         * @default false
+         * @since 3.0.0
+         */
         this.ignoreEvents = false;
 
+        /**
+         * [description]
+         *
+         * @property {Phaser.Geom.Rectangle} bounds
+         * @since 3.0.0
+         */
         this.bounds = new Rectangle();
 
+        /**
+         * [description]
+         *
+         * @property {object} _tempPoint
+         * @private
+         * @since 3.0.0
+         */
         this._tempPoint = { x: 0, y: 0 };
+
+        /**
+         * [description]
+         *
+         * @property {array} _tempHitTest
+         * @private
+         * @default []
+         * @since 3.0.0
+         */
         this._tempHitTest = [];
 
         game.events.once('boot', this.boot, this);
     },
 
     /**
-    * The Boot handler is called by Phaser.Game when it first starts up.
-    * The renderer is available by now.
-    */
+     * The Boot handler is called by Phaser.Game when it first starts up.
+     * The renderer is available by now.
+     *
+     * @method Phaser.Input.InputManager#boot
+     * @since 3.0.0
+     */
     boot: function ()
     {
         this.canvas = this.game.canvas;
@@ -71,6 +195,12 @@ var InputManager = new Class({
         this.gamepad.boot();
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Input.InputManager#updateBounds
+     * @since 3.0.0
+     */
     updateBounds: function ()
     {
         var clientRect = this.canvas.getBoundingClientRect();
@@ -82,6 +212,14 @@ var InputManager = new Class({
         bounds.height = clientRect.height;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Input.InputManager#update
+     * @since 3.0.0
+     *
+     * @param {[type]} time - [description]
+     */
     update: function (time)
     {
         this.keyboard.update();
@@ -156,12 +294,23 @@ var InputManager = new Class({
         }
     },
 
-    //  Will always return an array.
-    //  Array contains matching Interactive Objects.
-    //  Array will be empty if no objects were matched.
-
-    //  x/y = pointer x/y (un-translated)
-
+    /**
+     * Will always return an array.
+     * Array contains matching Interactive Objects.
+     * Array will be empty if no objects were matched.
+     * x/y = pointer x/y (un-translated)
+     *
+     * @method Phaser.Input.InputManager#hitTest
+     * @since 3.0.0
+     *
+     * @param {[type]} x - [description]
+     * @param {[type]} y - [description]
+     * @param {[type]} gameObjects - [description]
+     * @param {[type]} camera - [description]
+     * @param {[type]} output - [description]
+     *
+     * @return {[type]} [description]
+     */
     hitTest: function (x, y, gameObjects, camera, output)
     {
         if (output === undefined) { output = this._tempHitTest; }
@@ -207,9 +356,19 @@ var InputManager = new Class({
         return output;
     },
 
-    //  x/y MUST be translated before being passed to this function,
-    //  unless the gameObject is guaranteed to not be rotated or scaled in any way
-
+    /**
+     * x/y MUST be translated before being passed to this function,
+     * unless the gameObject is guaranteed to not be rotated or scaled in any way.
+     *
+     * @method Phaser.Input.InputManager#pointWithinHitArea
+     * @since 3.0.0
+     *
+     * @param {[type]} gameObject - [description]
+     * @param {[type]} x - [description]
+     * @param {[type]} y - [description]
+     *
+     * @return {boolean} [description]
+     */
     pointWithinHitArea: function (gameObject, x, y)
     {
         var input = gameObject.input;
@@ -231,9 +390,19 @@ var InputManager = new Class({
         }
     },
 
-    //  x/y MUST be translated before being passed to this function, unless the gameObject is guaranteed to
-    //  be not rotated or scaled in any way
-
+    /**
+     * x/y MUST be translated before being passed to this function,
+     * unless the gameObject is guaranteed to not be rotated or scaled in any way.
+     *
+     * @method Phaser.Input.InputManager#pointWithinInteractiveObject
+     * @since 3.0.0
+     *
+     * @param {[type]} object - [description]
+     * @param {[type]} x - [description]
+     * @param {[type]} y - [description]
+     *
+     * @return {boolean} [description]
+     */
     pointWithinInteractiveObject: function (object, x, y)
     {
         if (!object.hitArea)
@@ -251,32 +420,83 @@ var InputManager = new Class({
         return object.hitAreaCallback(object.hitArea, x, y, object);
     },
 
-    //  Called by Pointer class
+    /**
+     * [description]
+     *
+     * @method Phaser.Input.InputManager#transformX
+     * @since 3.0.0
+     *
+     * @param {[type]} pageX - [description]
+     *
+     * @return {number} [description]
+     */
     transformX: function (pageX)
     {
         return (pageX - this.bounds.left) * this.scale.x;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Input.InputManager#transformY
+     * @since 3.0.0
+     *
+     * @param {[type]} pageY - [description]
+     *
+     * @return {number} [description]
+     */
     transformY: function (pageY)
     {
         return (pageY - this.bounds.top) * this.scale.y;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Input.InputManager#getOffsetX
+     * @since 3.0.0
+     *
+     * @return {number} [description]
+     */
     getOffsetX: function ()
     {
         return this.bounds.left;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Input.InputManager#getOffsetY
+     * @since 3.0.0
+     *
+     * @return {number} [description]
+     */
     getOffsetY: function ()
     {
         return this.bounds.top;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Input.InputManager#getScaleX
+     * @since 3.0.0
+     *
+     * @return {number} [description]
+     */
     getScaleX: function ()
     {
         return this.game.config.width / this.bounds.width;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Input.InputManager#getScaleY
+     * @since 3.0.0
+     *
+     * @return {number} [description]
+     */
     getScaleY: function ()
     {
         return this.game.config.height / this.bounds.height;

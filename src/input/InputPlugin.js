@@ -1,21 +1,16 @@
-var Class = require('../utils/Class');
-var EventEmitter = require('eventemitter3');
-var DistanceBetween = require('../math/distance/DistanceBetween');
-var InteractiveObject = require('./InteractiveObject');
 var Circle = require('../geom/circle/Circle');
 var CircleContains = require('../geom/circle/Contains');
+var Class = require('../utils/Class');
+var DistanceBetween = require('../math/distance/DistanceBetween');
 var Ellipse = require('../geom/ellipse/Ellipse');
 var EllipseContains = require('../geom/ellipse/Contains');
+var EventEmitter = require('eventemitter3');
+var InteractiveObject = require('./InteractiveObject');
+var PluginManager = require('../plugins/PluginManager');
 var Rectangle = require('../geom/rectangle/Rectangle');
 var RectangleContains = require('../geom/rectangle/Contains');
 var Triangle = require('../geom/triangle/Triangle');
 var TriangleContains = require('../geom/triangle/Contains');
-var PluginManager = require('../plugins/PluginManager');
-
-//  Drag Events
-//  https://developer.mozilla.org/en-US/docs/Web/API/HTML_Drag_and_Drop_API
-//  Mouse Events
-//  https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent
 
 var InputPlugin = new Class({
 
@@ -23,13 +18,35 @@ var InputPlugin = new Class({
 
     initialize:
 
+    /**
+     * [description]
+     *
+     * @class InputPlugin
+     * @extends EventEmitter
+     * @memberOf Phaser.Input
+     * @constructor
+     * @since 3.0.0
+     *
+     * @param {Phaser.Scene} scene - The Scene that owns this plugin.
+     */
     function InputPlugin (scene)
     {
         EventEmitter.call(this);
 
-        //  The Scene that owns this plugin
+        /**
+         * The Scene that owns this plugin.
+         *
+         * @property {Phaser.Scene} scene
+         * @since 3.0.0
+         */
         this.scene = scene;
 
+        /**
+         * [description]
+         *
+         * @property {[type]} systems
+         * @since 3.0.0
+         */
         this.systems = scene.sys;
 
         if (!scene.sys.settings.isBooted)
@@ -37,64 +54,189 @@ var InputPlugin = new Class({
             scene.sys.events.once('boot', this.boot, this);
         }
 
-        //  InputManager
+        /**
+         * [description]
+         *
+         * @property {Phaser.Input.InputManager} manager
+         * @since 3.0.0
+         */
         this.manager = scene.sys.game.input;
 
-        //  A reference to this.scene.sys.displayList (set in boot)
+        /**
+         * A reference to this.scene.sys.displayList (set in boot)
+         *
+         * @property {null} displayList
+         * @since 3.0.0
+         */
         this.displayList;
 
-        //  A reference to the this.scene.sys.cameras (set in boot)
+        /**
+         * A reference to the this.scene.sys.cameras (set in boot)
+         *
+         * @property {null} cameras
+         * @since 3.0.0
+         */
         this.cameras;
 
-        //  Proxy references available via the Scene
+        /**
+         * [description]
+         *
+         * @property {Phaser.Input.Keyboard.KeyboardManager} keyboard
+         * @since 3.0.0
+         */
         this.keyboard = this.manager.keyboard;
+
+        /**
+         * [description]
+         *
+         * @property {Phaser.Input.Mouse.MouseManager} mouse
+         * @since 3.0.0
+         */
         this.mouse = this.manager.mouse;
+
+        /**
+         * [description]
+         *
+         * @property {Phaser.Input.Gamepad.GamepadManager} gamepad
+         * @since 3.0.0
+         */
         this.gamepad = this.manager.gamepad;
 
-        //  Only fire callbacks and events on the top-most Game Object in the display list (emulating DOM behavior)
-        //  and ignore any GOs below it, or call them all?
+        /**
+         * Only fire callbacks and events on the top-most Game Object in the display list (emulating DOM behavior)
+         * and ignore any GOs below it, or call them all?
+         *
+         * @property {boolean} topOnly
+         * @default true
+         * @since 3.0.0
+         */
         this.topOnly = true;
 
-        //  How often should the pointer input be checked?
-        //  Time given in ms
-        //  Pointer will *always* be checked if it has been moved by the user.
-        //  This controls how often it will be polled if it hasn't been moved.
-        //  Set to 0 to poll constantly. Set to -1 to only poll on user movement.
+        /**
+         * How often should the pointer input be checked?
+         * Time given in ms
+         * Pointer will *always* be checked if it has been moved by the user.
+         * This controls how often it will be polled if it hasn't been moved.
+         * Set to 0 to poll constantly. Set to -1 to only poll on user movement.
+         *
+         * @property {integer} pollRate
+         * @default -1
+         * @since 3.0.0
+         */
         this.pollRate = -1;
 
-        //  Internal counter
+        /**
+         * [description]
+         *
+         * @property {number} _pollTimer
+         * @private
+         * @default 0
+         * @since 3.0.0
+         */
         this._pollTimer = 0;
 
-        //  The distance, in pixels, the pointer has to move while being held down, before it thinks it is being dragged.
+        /**
+         * The distance, in pixels, the pointer has to move while being held down, before it thinks it is being dragged.
+         *
+         * @property {number} dragDistanceThreshold
+         * @default 0
+         * @since 3.0.0
+         */
         this.dragDistanceThreshold = 0;
 
-        //  The amount of time, in ms, the pointer has to be held down before it thinks it is dragging.
+        /**
+         * The amount of time, in ms, the pointer has to be held down before it thinks it is dragging.
+         *
+         * @property {number} dragTimeThreshold
+         * @default 0
+         * @since 3.0.0
+         */
         this.dragTimeThreshold = 0;
 
-        //  Used to temporarily store the results of the Hit Test
+        /**
+         * Used to temporarily store the results of the Hit Test
+         *
+         * @property {array} _temp
+         * @private
+         * @default []
+         * @since 3.0.0
+         */
         this._temp = [];
 
-        //  list: A list of all Game Objects that have been set to be interactive
+        /**
+         * A list of all Game Objects that have been set to be interactive.
+         *
+         * @property {array} _list
+         * @private
+         * @default []
+         * @since 3.0.0
+         */
         this._list = [];
 
-        //  pendingInsertion: Objects waiting to be inserted to the list on the next call to 'begin'
+        /**
+         * Objects waiting to be inserted to the list on the next call to 'begin'.
+         *
+         * @property {array} _pendingInsertion
+         * @private
+         * @default []
+         * @since 3.0.0
+         */
         this._pendingInsertion = [];
 
-        //  pendingRemoval: Objects waiting to be removed from the list on the next call to 'begin'
+        /**
+         * Objects waiting to be removed from the list on the next call to 'begin'.
+         *
+         * @property {array} _pendingRemoval
+         * @private
+         * @default []
+         * @since 3.0.0
+         */
         this._pendingRemoval = [];
 
-        //  draggable: A list of all Game Objects that have been enabled for dragging
+        /**
+         * A list of all Game Objects that have been enabled for dragging.
+         *
+         * @property {array} _draggable
+         * @private
+         * @default []
+         * @since 3.0.0
+         */
         this._draggable = [];
 
-        //  drag: A list of all Interactive Objects currently considered as being 'draggable' by any pointer, indexed by pointer ID
+        /**
+         * A list of all Interactive Objects currently considered as being 'draggable' by any pointer, indexed by pointer ID.
+         *
+         * @property {[type]} _drag
+         * @private
+         * @since 3.0.0
+         */
         this._drag = { 0: [], 1: [], 2: [], 3: [], 4: [], 5: [], 6: [], 7: [], 8: [], 9: [] };
 
-        //  over: A list of all Interactive Objects currently considered as being 'over' by any pointer, indexed by pointer ID
+        /**
+         * A list of all Interactive Objects currently considered as being 'over' by any pointer, indexed by pointer ID.
+         *
+         * @property {[type]} _over
+         * @private
+         * @since 3.0.0
+         */
         this._over = { 0: [], 1: [], 2: [], 3: [], 4: [], 5: [], 6: [], 7: [], 8: [], 9: [] };
 
+        /**
+         * [description]
+         *
+         * @property {[type]} _validTypes
+         * @private
+         * @since 3.0.0
+         */
         this._validTypes = [ 'onDown', 'onUp', 'onOver', 'onOut', 'onMove', 'onDragStart', 'onDrag', 'onDragEnd', 'onDragEnter', 'onDragLeave', 'onDragOver', 'onDrop' ];
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Input.InputPlugin#boot
+     * @since 3.0.0
+     */
     boot: function ()
     {
         var eventEmitter = this.systems.events;
@@ -109,6 +251,14 @@ var InputPlugin = new Class({
         this.displayList = this.systems.displayList;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Input.InputPlugin#preUpdate
+     * @since 3.0.0
+     *
+     * @return {[type]} [description]
+     */
     preUpdate: function ()
     {
         var removeList = this._pendingRemoval;
@@ -149,6 +299,16 @@ var InputPlugin = new Class({
         this._list = current.concat(insertList.splice(0));
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Input.InputPlugin#clear
+     * @since 3.0.0
+     *
+     * @param {[type]} gameObject - [description]
+     *
+     * @return {[type]} [description]
+     */
     clear: function (gameObject)
     {
         var input = gameObject.input;
@@ -164,11 +324,31 @@ var InputPlugin = new Class({
         return gameObject;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Input.InputPlugin#disable
+     * @since 3.0.0
+     *
+     * @param {[type]} gameObject - [description]
+     */
     disable: function (gameObject)
     {
         gameObject.input.enabled = false;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Input.InputPlugin#enable
+     * @since 3.0.0
+     *
+     * @param {[type]} gameObject - [description]
+     * @param {[type]} shape - [description]
+     * @param {[type]} callback - [description]
+     *
+     * @return {[type]} [description]
+     */
     enable: function (gameObject, shape, callback)
     {
         if (gameObject.input)
@@ -185,6 +365,16 @@ var InputPlugin = new Class({
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Input.InputPlugin#hitTestPointer
+     * @since 3.0.0
+     *
+     * @param {[type]} pointer - [description]
+     *
+     * @return {[type]} [description]
+     */
     hitTestPointer: function (pointer)
     {
         var camera = this.cameras.getCameraBelowPointer(pointer);
@@ -203,6 +393,16 @@ var InputPlugin = new Class({
         }
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Input.InputPlugin#processDownEvents
+     * @since 3.0.0
+     *
+     * @param {[type]} pointer - [description]
+     *
+     * @return {[type]} [description]
+     */
     processDownEvents: function (pointer)
     {
         var currentlyOver = this._temp;
@@ -232,6 +432,17 @@ var InputPlugin = new Class({
         return total;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Input.InputPlugin#processDragEvents
+     * @since 3.0.0
+     *
+     * @param {[type]} pointer - [description]
+     * @param {[type]} time - [description]
+     *
+     * @return {[type]} [description]
+     */
     processDragEvents: function (pointer, time)
     {
         if (this._draggable.length === 0)
@@ -491,6 +702,16 @@ var InputPlugin = new Class({
         return (pointer.dragState > 0);
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Input.InputPlugin#processMoveEvents
+     * @since 3.0.0
+     *
+     * @param {[type]} pointer - [description]
+     *
+     * @return {[type]} [description]
+     */
     processMoveEvents: function (pointer)
     {
         var currentlyOver = this._temp;
@@ -524,6 +745,16 @@ var InputPlugin = new Class({
         return total;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Input.InputPlugin#processOverOutEvents
+     * @since 3.0.0
+     *
+     * @param {[type]} pointer - [description]
+     *
+     * @return {[type]} [description]
+     */
     processOverOutEvents: function (pointer)
     {
         var currentlyOver = this._temp;
@@ -629,6 +860,14 @@ var InputPlugin = new Class({
         return previouslyOver.length;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Input.InputPlugin#processUpEvents
+     * @since 3.0.0
+     *
+     * @param {[type]} pointer - [description]
+     */
     processUpEvents: function (pointer)
     {
         var currentlyOver = this._temp;
@@ -652,7 +891,16 @@ var InputPlugin = new Class({
         }
     },
 
-    //  Queues a Game Object for insertion into this Input Manager on the next update.
+    /**
+     * Queues a Game Object for insertion into this Input Manager on the next update.
+     *
+     * @method Phaser.Input.InputPlugin#queueForInsertion
+     * @since 3.0.0
+     *
+     * @param {[type]} child - [description]
+     *
+     * @return {[type]} [description]
+     */
     queueForInsertion: function (child)
     {
         if (this._pendingInsertion.indexOf(child) === -1 && this._list.indexOf(child) === -1)
@@ -663,7 +911,16 @@ var InputPlugin = new Class({
         return this;
     },
 
-    //  Queues a Game Object for removal from this Input Manager on the next update.
+    /**
+     * Queues a Game Object for removal from this Input Manager on the next update.
+     *
+     * @method Phaser.Input.InputPlugin#queueForRemoval
+     * @since 3.0.0
+     *
+     * @param {[type]} child - [description]
+     *
+     * @return {[type]} [description]
+     */
     queueForRemoval: function (child)
     {
         this._pendingRemoval.push(child);
@@ -671,6 +928,17 @@ var InputPlugin = new Class({
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Input.InputPlugin#setDraggable
+     * @since 3.0.0
+     *
+     * @param {[type]} gameObjects - [description]
+     * @param {[type]} value - [description]
+     *
+     * @return {[type]} [description]
+     */
     setDraggable: function (gameObjects, value)
     {
         if (value === undefined) { value = true; }
@@ -701,6 +969,18 @@ var InputPlugin = new Class({
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Input.InputPlugin#setHitArea
+     * @since 3.0.0
+     *
+     * @param {[type]} gameObjects - [description]
+     * @param {[type]} shape - [description]
+     * @param {[type]} callback - [description]
+     *
+     * @return {[type]} [description]
+     */
     setHitArea: function (gameObjects, shape, callback)
     {
         if (shape === undefined)
@@ -725,6 +1005,20 @@ var InputPlugin = new Class({
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Input.InputPlugin#setHitAreaCircle
+     * @since 3.0.0
+     *
+     * @param {[type]} gameObjects - [description]
+     * @param {[type]} x - [description]
+     * @param {[type]} y - [description]
+     * @param {[type]} radius - [description]
+     * @param {[type]} callback - [description]
+     *
+     * @return {[type]} [description]
+     */
     setHitAreaCircle: function (gameObjects, x, y, radius, callback)
     {
         if (callback === undefined) { callback = CircleContains; }
@@ -734,6 +1028,21 @@ var InputPlugin = new Class({
         return this.setHitArea(gameObjects, shape, callback);
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Input.InputPlugin#setHitAreaEllipse
+     * @since 3.0.0
+     *
+     * @param {[type]} gameObjects - [description]
+     * @param {[type]} x - [description]
+     * @param {[type]} y - [description]
+     * @param {[type]} width - [description]
+     * @param {[type]} height - [description]
+     * @param {[type]} callback - [description]
+     *
+     * @return {[type]} [description]
+     */
     setHitAreaEllipse: function (gameObjects, x, y, width, height, callback)
     {
         if (callback === undefined) { callback = EllipseContains; }
@@ -743,6 +1052,17 @@ var InputPlugin = new Class({
         return this.setHitArea(gameObjects, shape, callback);
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Input.InputPlugin#setHitAreaFromTexture
+     * @since 3.0.0
+     *
+     * @param {[type]} gameObjects - [description]
+     * @param {[type]} callback - [description]
+     *
+     * @return {[type]} [description]
+     */
     setHitAreaFromTexture: function (gameObjects, callback)
     {
         if (callback === undefined) { callback = RectangleContains; }
@@ -782,6 +1102,21 @@ var InputPlugin = new Class({
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Input.InputPlugin#setHitAreaRectangle
+     * @since 3.0.0
+     *
+     * @param {[type]} gameObjects - [description]
+     * @param {[type]} x - [description]
+     * @param {[type]} y - [description]
+     * @param {[type]} width - [description]
+     * @param {[type]} height - [description]
+     * @param {[type]} callback - [description]
+     *
+     * @return {[type]} [description]
+     */
     setHitAreaRectangle: function (gameObjects, x, y, width, height, callback)
     {
         if (callback === undefined) { callback = RectangleContains; }
@@ -791,6 +1126,23 @@ var InputPlugin = new Class({
         return this.setHitArea(gameObjects, shape, callback);
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Input.InputPlugin#setHitAreaTriangle
+     * @since 3.0.0
+     *
+     * @param {[type]} gameObjects - [description]
+     * @param {[type]} x1 - [description]
+     * @param {[type]} y1 - [description]
+     * @param {[type]} x2 - [description]
+     * @param {[type]} y2 - [description]
+     * @param {[type]} x3 - [description]
+     * @param {[type]} y3 - [description]
+     * @param {[type]} callback - [description]
+     *
+     * @return {[type]} [description]
+     */
     setHitAreaTriangle: function (gameObjects, x1, y1, x2, y2, x3, y3, callback)
     {
         if (callback === undefined) { callback = TriangleContains; }
@@ -800,6 +1152,14 @@ var InputPlugin = new Class({
         return this.setHitArea(gameObjects, shape, callback);
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Input.InputPlugin#setPollAlways
+     * @since 3.0.0
+     *
+     * @return {[type]} [description]
+     */
     setPollAlways: function ()
     {
         this.pollRate = 0;
@@ -808,6 +1168,14 @@ var InputPlugin = new Class({
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Input.InputPlugin#setPollOnMove
+     * @since 3.0.0
+     *
+     * @return {[type]} [description]
+     */
     setPollOnMove: function ()
     {
         this.pollRate = -1;
@@ -816,6 +1184,16 @@ var InputPlugin = new Class({
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Input.InputPlugin#setPollRate
+     * @since 3.0.0
+     *
+     * @param {[type]} value - [description]
+     *
+     * @return {[type]} [description]
+     */
     setPollRate: function (value)
     {
         this.pollRate = value;
@@ -824,6 +1202,16 @@ var InputPlugin = new Class({
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Input.InputPlugin#setGlobalTopOnly
+     * @since 3.0.0
+     *
+     * @param {[type]} value - [description]
+     *
+     * @return {[type]} [description]
+     */
     setGlobalTopOnly: function (value)
     {
         this.manager.globalTopOnly = value;
@@ -831,6 +1219,16 @@ var InputPlugin = new Class({
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Input.InputPlugin#setTopOnly
+     * @since 3.0.0
+     *
+     * @param {[type]} value - [description]
+     *
+     * @return {[type]} [description]
+     */
     setTopOnly: function (value)
     {
         this.topOnly = value;
@@ -838,8 +1236,17 @@ var InputPlugin = new Class({
         return this;
     },
 
-    //  Given an array of Game Objects, sort the array and return it,
-    //  so that the objects are in index order with the lowest at the bottom.
+    /**
+     * Given an array of Game Objects, sort the array and return it,
+     * so that the objects are in index order with the lowest at the bottom.
+     *
+     * @method Phaser.Input.InputPlugin#sortGameObjects
+     * @since 3.0.0
+     *
+     * @param {[type]} gameObjects - [description]
+     *
+     * @return {[type]} [description]
+     */
     sortGameObjects: function (gameObjects)
     {
         if (gameObjects.length < 2)
@@ -852,7 +1259,17 @@ var InputPlugin = new Class({
         return gameObjects.sort(this.sortHandlerGO.bind(this));
     },
 
-    //  Return the child lowest down the display list (with the smallest index)
+    /**
+     * Return the child lowest down the display list (with the smallest index)
+     *
+     * @method Phaser.Input.InputPlugin#sortHandlerGO
+     * @since 3.0.0
+     *
+     * @param {[type]} childA - [description]
+     * @param {[type]} childB - [description]
+     *
+     * @return {[type]} [description]
+     */
     sortHandlerGO: function (childA, childB)
     {
         //  The higher the index, the lower down the display list they are.
@@ -874,7 +1291,17 @@ var InputPlugin = new Class({
         return 0;
     },
 
-    //  Return the child lowest down the display list (with the smallest index)
+    /**
+     * Return the child lowest down the display list (with the smallest index)
+     *
+     * @method Phaser.Input.InputPlugin#sortHandlerIO
+     * @since 3.0.0
+     *
+     * @param {[type]} childA - [description]
+     * @param {[type]} childB - [description]
+     *
+     * @return {[type]} [description]
+     */
     sortHandlerIO: function (childA, childB)
     {
         //  The higher the index, the lower down the display list they are.
@@ -896,8 +1323,17 @@ var InputPlugin = new Class({
         return 0;
     },
 
-    //  Given an array of Interactive Objects, sort the array and return it,
-    //  so that the objects are in index order with the lowest at the bottom.
+    /**
+     * Given an array of Interactive Objects, sort the array and return it,
+     * so that the objects are in index order with the lowest at the bottom.
+     *
+     * @method Phaser.Input.InputPlugin#sortInteractiveObjects
+     * @since 3.0.0
+     *
+     * @param {[type]} interactiveObjects - [description]
+     *
+     * @return {[type]} [description]
+     */
     sortInteractiveObjects: function (interactiveObjects)
     {
         if (interactiveObjects.length < 2)
@@ -910,6 +1346,14 @@ var InputPlugin = new Class({
         return interactiveObjects.sort(this.sortHandlerIO.bind(this));
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Input.InputPlugin#stopPropagation
+     * @since 3.0.0
+     *
+     * @return {[type]} [description]
+     */
     stopPropagation: function ()
     {
         if (this.manager.globalTopOnly)
@@ -920,6 +1364,17 @@ var InputPlugin = new Class({
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Input.InputPlugin#update
+     * @since 3.0.0
+     *
+     * @param {[type]} time - [description]
+     * @param {[type]} delta - [description]
+     *
+     * @return {[type]} [description]
+     */
     update: function (time, delta)
     {
         var manager = this.manager;
@@ -991,7 +1446,12 @@ var InputPlugin = new Class({
         }
     },
 
-    //  Scene that owns this is shutting down
+    /**
+     * The Scene that owns this plugin is shutting down.
+     *
+     * @method Phaser.Input.InputPlugin#shutdown
+     * @since 3.0.0
+     */
     shutdown: function ()
     {
         this._temp.length = 0;
@@ -1009,7 +1469,12 @@ var InputPlugin = new Class({
         this.removeAllListeners();
     },
 
-    //  Game level nuke
+    /**
+     * [description]
+     *
+     * @method Phaser.Input.InputPlugin#destroy
+     * @since 3.0.0
+     */
     destroy: function ()
     {
         this.shutdown();
@@ -1023,6 +1488,13 @@ var InputPlugin = new Class({
         this.gamepad = undefined;
     },
 
+    /**
+     * The current active input Pointer.
+     * 
+     * @name Phaser.Input.InputPlugin#activePointer
+     * @property {Phaser.Input.Pointer} activePointer
+     * @since 3.0.0
+     */
     activePointer: {
 
         get: function ()
@@ -1032,8 +1504,14 @@ var InputPlugin = new Class({
 
     },
 
-    //  The x/y coordinates of the ActivePointer based on the first camera in the camera list.
-    //  This is only safe to use if your game has just 1 non-transformed camera and doesn't use multi-touch.
+    /**
+     * The x coordinates of the ActivePointer based on the first camera in the camera list.
+     * This is only safe to use if your game has just 1 non-transformed camera and doesn't use multi-touch.
+     * 
+     * @name Phaser.Input.InputPlugin#x
+     * @property {number} x
+     * @since 3.0.0
+     */
     x: {
 
         get: function ()
@@ -1043,6 +1521,14 @@ var InputPlugin = new Class({
 
     },
 
+    /**
+     * The y coordinates of the ActivePointer based on the first camera in the camera list.
+     * This is only safe to use if your game has just 1 non-transformed camera and doesn't use multi-touch.
+     * 
+     * @name Phaser.Input.InputPlugin#y
+     * @property {number} y
+     * @since 3.0.0
+     */
     y: {
 
         get: function ()
@@ -1050,7 +1536,7 @@ var InputPlugin = new Class({
             return this.manager.activePointer.y;
         }
 
-    },
+    }
 
 });
 
