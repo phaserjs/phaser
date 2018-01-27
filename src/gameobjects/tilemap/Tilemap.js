@@ -564,6 +564,37 @@ var Tilemap = new Class({
     },
 
     /**
+     * For each object in the given object layer, run the given filter callback function. Any
+     * objects that pass the filter test (i.e. where the callback returns true) will returned as a
+     * new array. Similar to Array.prototype.Filter in vanilla JS.
+     *
+     * @param {ObjectLayer|string} [objectLayer] - The name of an object layer (from Tiled) or an
+     * ObjectLayer instance.
+     * @param {function} callback - The callback. Each object in the given area will be passed to
+     * this callback as the first and only parameter.
+     * @param {object} [context] - The context under which the callback should be run.
+     * @return {object[]|null} An array of object that match the search, or null if the objectLayer
+     * given was invalid.
+     */
+    filterObjects: function (objectLayer, callback, context)
+    {
+        if (typeof objectLayer === 'string')
+        {
+            var name = objectLayer;
+
+            objectLayer = this.getObjectLayer(objectLayer);
+
+            if (!objectLayer)
+            {
+                console.warn('No object layer found with the name: ' + name);
+                return null;
+            }
+        }
+
+        return objectLayer.objects.filter(callback, context);
+    },
+
+    /**
      * See component documentation. If no layer specified, the map's current layer is used.
      *
      * @return {Tile[]|null} Returns an array of Tiles, or null if the layer given was invalid.
@@ -585,6 +616,36 @@ var Tilemap = new Class({
         layer = this.getLayer(layer);
         if (layer === null) { return null; }
         return TilemapComponents.FindByIndex(findIndex, skip, reverse, layer);
+    },
+
+    /**
+     * Find the first object in the given object layer that satisfies the provided testing function.
+     * I.e. finds the first object for which `callback` returns true. Similar to
+     * Array.prototype.find in vanilla JS.
+     *
+     * @param {ObjectLayer|string} [objectLayer] - The name of an object layer (from Tiled) or an
+     * ObjectLayer instance.
+     * @param {function} callback - The callback. Each object in the given area will be passed to
+     * this callback as the first and only parameter.
+     * @param {object} [context] - The context under which the callback should be run.
+     * @return {object|null} An object that matches the search, or null if no object found
+     */
+    findObject: function (objectLayer, callback, context)
+    {
+        if (typeof objectLayer === 'string')
+        {
+            var name = objectLayer;
+
+            objectLayer = this.getObjectLayer(objectLayer);
+
+            if (!objectLayer)
+            {
+                console.warn('No object layer found with the name: ' + name);
+                return null;
+            }
+        }
+
+        return objectLayer.objects.find(callback, context) || null;
     },
 
     /**
