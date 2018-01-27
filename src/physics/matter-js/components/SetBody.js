@@ -26,81 +26,94 @@ var SetBody = {
         return this.setBody({ type: 'trapezoid', width: width, height: height, slope: slope }, options);
     },
 
-    setBody: function (config, options)
+    setExistingBody: function (body, addToWorld)
     {
-        //  Existing body? Remove it.
+        if (addToWorld === undefined)
+        {
+            addToWorld = true;
+        }
+
         if (this.body)
         {
             this.world.remove(this.body);
         }
 
+        this.body = body;
+        this.body.gameObject = this;
+
+        if (addToWorld)
+        {
+            this.world.add(this.body);
+        }
+
+        return this;
+    },
+
+    setBody: function (config, options)
+    {
         if (!config)
         {
             return this;
         }
-        else
+
+        var body;
+
+        //  Allow them to do: shape: 'circle' instead of shape: { type: 'circle' }
+        if (typeof config === 'string')
         {
-            //  Allow them to do: shape: 'circle' instead of shape: { type: 'circle' }
-            if (typeof config === 'string')
-            {
-                //  Using defaults
-                config = { type: config };
-            }
-
-            var shapeType = GetFastValue(config, 'type', 'rectangle');
-            var bodyX = GetFastValue(config, 'x', this._tempVec2.x);
-            var bodyY = GetFastValue(config, 'y', this._tempVec2.y);
-            var bodyWidth = GetFastValue(config, 'width', this.width);
-            var bodyHeight = GetFastValue(config, 'height', this.height);
-
-            switch (shapeType)
-            {
-                case 'rectangle':
-                    this.body = Bodies.rectangle(bodyX, bodyY, bodyWidth, bodyHeight, options);
-                    break;
-
-                case 'circle':
-                    var radius = GetFastValue(config, 'radius', Math.max(bodyWidth, bodyHeight) / 2);
-                    var maxSides = GetFastValue(config, 'maxSides', 25);
-                    this.body = Bodies.circle(bodyX, bodyY, radius, options, maxSides);
-                    break;
-
-                case 'trapezoid':
-                    var slope = GetFastValue(config, 'slope', 0.5);
-                    this.body = Bodies.trapezoid(bodyX, bodyY, bodyWidth, bodyHeight, slope, options);
-                    break;
-
-                case 'polygon':
-                    var sides = GetFastValue(config, 'sides', 5);
-                    var pradius = GetFastValue(config, 'radius', Math.max(bodyWidth, bodyHeight) / 2);
-                    this.body = Bodies.polygon(bodyX, bodyY, sides, pradius, options);
-                    break;
-
-                case 'fromVertices':
-                case 'fromVerts':
-                    var verts = GetFastValue(config, 'verts', []);
-
-                    if (this.body)
-                    {
-                        Body.setVertices(this.body, verts);
-                    }
-                    else
-                    {
-                        var flagInternal = GetFastValue(config, 'flagInternal', false);
-                        var removeCollinear = GetFastValue(config, 'removeCollinear', 0.01);
-                        var minimumArea = GetFastValue(config, 'minimumArea', 10);
-                        this.body = Bodies.fromVertices(bodyX, bodyY, verts, options, flagInternal, removeCollinear, minimumArea);
-                    }
-                    break;
-            }
+            //  Using defaults
+            config = { type: config };
         }
 
-        this.body.gameObject = this;
-        
-        if (GetFastValue(config, 'addToWorld', true))
+        var shapeType = GetFastValue(config, 'type', 'rectangle');
+        var bodyX = GetFastValue(config, 'x', this._tempVec2.x);
+        var bodyY = GetFastValue(config, 'y', this._tempVec2.y);
+        var bodyWidth = GetFastValue(config, 'width', this.width);
+        var bodyHeight = GetFastValue(config, 'height', this.height);
+
+        switch (shapeType)
         {
-            this.world.add(this.body);
+            case 'rectangle':
+                body = Bodies.rectangle(bodyX, bodyY, bodyWidth, bodyHeight, options);
+                break;
+
+            case 'circle':
+                var radius = GetFastValue(config, 'radius', Math.max(bodyWidth, bodyHeight) / 2);
+                var maxSides = GetFastValue(config, 'maxSides', 25);
+                body = Bodies.circle(bodyX, bodyY, radius, options, maxSides);
+                break;
+
+            case 'trapezoid':
+                var slope = GetFastValue(config, 'slope', 0.5);
+                body = Bodies.trapezoid(bodyX, bodyY, bodyWidth, bodyHeight, slope, options);
+                break;
+
+            case 'polygon':
+                var sides = GetFastValue(config, 'sides', 5);
+                var pradius = GetFastValue(config, 'radius', Math.max(bodyWidth, bodyHeight) / 2);
+                body = Bodies.polygon(bodyX, bodyY, sides, pradius, options);
+                break;
+
+            case 'fromVertices':
+            case 'fromVerts':
+                var verts = GetFastValue(config, 'verts', []);
+
+                if (this.body)
+                {
+                    Body.setVertices(this.body, verts);
+                    body = this.body;
+                }
+                else
+                {
+                    var flagInternal = GetFastValue(config, 'flagInternal', false);
+                    var removeCollinear = GetFastValue(config, 'removeCollinear', 0.01);
+                    var minimumArea = GetFastValue(config, 'minimumArea', 10);
+                    body = Bodies.fromVertices(bodyX, bodyY, verts, options, flagInternal, removeCollinear, minimumArea);
+                }
+                break;
         }
+
+        this.setExisiting(body, config.addToWorld);
 
         return this;
     }
