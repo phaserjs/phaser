@@ -373,25 +373,30 @@ var World = new Class({
 
         for (var i = 0; i < bodies.length; i++)
         {
-            var body = bodies[i];
-
-            if (!body.render.visible)
+            if (!bodies[i].render.visible)
             {
-                continue;
+                return;
             }
 
-            var vertices = body.vertices;
-
-            graphics.moveTo(vertices[0].x, vertices[0].y);
-
-            for (var j = 1; j < vertices.length; j++)
+            // Handle drawing both single bodies and compound bodies. If compound, draw both the
+            // convex hull (first part) and the rest of the bodies.
+            for (var j = 0; j < bodies[i].parts.length; j++)
             {
-                graphics.lineTo(vertices[j].x, vertices[j].y);
+                var body = bodies[i].parts[j];
+
+                var vertices = body.vertices;
+
+                graphics.moveTo(vertices[0].x, vertices[0].y);
+
+                for (var k = 1; k < vertices.length; k++)
+                {
+                    graphics.lineTo(vertices[k].x, vertices[k].y);
+                }
+
+                graphics.lineTo(vertices[0].x, vertices[0].y);
+
+                graphics.strokePath();
             }
-
-            graphics.lineTo(vertices[0].x, vertices[0].y);
-
-            graphics.strokePath();
         }
     },
 
