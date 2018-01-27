@@ -283,7 +283,7 @@ var MatterTileBody = new Class({
     destroy: function ()
     {
         this.removeBody();
-        tile.physics.matterBody = undefined;
+        this.tile.physics.matterBody = undefined;
     }
 });
 
