@@ -2,7 +2,7 @@
 var Pick = require('./Pick');
 var ParseGID = require('./ParseGID');
 
-var pointToArray = function (p) { return [ p.x, p.y ]; };
+var copyPoints = function (p) { return { x: p.x, y: p.y }; };
 var commonObjectProps = [ 'id', 'name', 'type', 'rotation', 'properties', 'visible', 'x', 'y', 'width', 'height' ];
 
 var ParseObject = function (tiledObject, offsetX, offsetY)
@@ -26,11 +26,11 @@ var ParseObject = function (tiledObject, offsetX, offsetY)
     }
     else if (tiledObject.polyline)
     {
-        parsedObject.polyline = tiledObject.polyline.map(pointToArray);
+        parsedObject.polyline = tiledObject.polyline.map(copyPoints);
     }
     else if (tiledObject.polygon)
     {
-        parsedObject.polygon = tiledObject.polygon.map(pointToArray);
+        parsedObject.polygon = tiledObject.polygon.map(copyPoints);
     }
     else if (tiledObject.ellipse)
     {

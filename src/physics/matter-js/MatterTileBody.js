@@ -185,7 +185,7 @@ var MatterTileBody = new Class({
                 // Polygons and polylines are both treated as closed polygons
                 var originalPoints = object.polygon ? object.polygon : object.polyline;
                 var points = originalPoints.map(function (p) {
-                    return { x: p[0] * sx, y: p[1] * sy };
+                    return { x: p.x * sx, y: p.y * sy };
                 });
                 var vertices = Vertices.create(points);
 
