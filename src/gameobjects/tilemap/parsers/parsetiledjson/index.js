@@ -47,9 +47,7 @@ var ParseJSONTiled = function (name, json, insertNull)
     mapData.tilesets = sets.tilesets;
     mapData.imageCollections = sets.imageCollections;
 
-    var objs = ParseObjectLayers(json);
-    mapData.objects = objs.objects;
-    mapData.collision = objs.collision;
+    mapData.objects = ParseObjectLayers(json);
 
     mapData.tiles = BuildTilesetIndex(mapData);
 
