@@ -117,12 +117,6 @@ var Tilemap = new Class({
         this.images = mapData.images;
 
         /**
-         * An array of collision data. Specifically, any polyline objects defined in object layers.
-         * @property {array} collision
-         */
-        this.collision = mapData.collision; // Note: this probably isn't useful anymore
-
-        /**
          * @property {LayerData[]} layers - An array of Tilemap layer data.
          */
         this.layers = mapData.layers;
@@ -134,8 +128,8 @@ var Tilemap = new Class({
         this.tilesets = mapData.tilesets;
 
         /**
-         * An array of Tiled Object Layers.
-         * @property {array} objects
+         * An array of ObjectLayer instances parsed from Tiled object layers.
+         * @property {ObjectLayer[]} objects
          */
         this.objects = mapData.objects;
 
@@ -402,18 +396,20 @@ var Tilemap = new Class({
         if (spriteConfig === undefined) { spriteConfig = {}; }
         if (scene === undefined) { scene = this.scene; }
 
-        if (!this.objects[name])
+        var objectLayer = this.getObjectLayer(name);
+        if (!objectLayer)
         {
             console.warn('Cannot create from object. Invalid objectgroup name given: ' + name);
             return;
         }
 
+        var objects = objectLayer.objects;
         var sprites = [];
 
-        for (var i = 0; i < this.objects[name].length; i++)
+        for (var i = 0; i < objects.length; i++)
         {
             var found = false;
-            var obj = this.objects[name][i];
+            var obj = objects[i];
 
             if (obj.gid !== undefined && typeof id === 'number' && obj.gid === id ||
                 obj.id !== undefined && typeof id === 'number' && obj.id === id ||
@@ -663,6 +659,19 @@ var Tilemap = new Class({
     {
         var index = this.getLayerIndex(layer);
         return index !== null ? this.layers[index] : null;
+    },
+
+    /**
+     * Gets the ObjectLayer from this.objects that has the given `name`, or null if no ObjectLayer
+     * is found with that name.
+     *
+     * @param {string} [name] - The name of the object layer from Tiled.
+     * @return {ObjectLayer|null} The corresponding ObjectLayer within this.objects or null.
+     */
+    getObjectLayer: function (name)
+    {
+        var index = this.getIndex(this.objects, name);
+        return index !== null ? this.objects[index] : null;
     },
 
     /**

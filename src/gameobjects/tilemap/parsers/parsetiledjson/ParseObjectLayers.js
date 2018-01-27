@@ -1,9 +1,10 @@
 var GetFastValue = require('../../../../utils/object/GetFastValue');
 var ParseObject = require('./ParseObject');
+var ObjectLayer = require('../../mapdata/ObjectLayer');
 
 var ParseObjectLayers = function (json)
 {
-    var objects = {};
+    var objectLayers = [];
 
     for (var i = 0; i < json.layers.length; i++)
     {
@@ -13,21 +14,24 @@ var ParseObjectLayers = function (json)
         }
 
         var curo = json.layers[i];
-        var layerName = curo.name;
         var offsetX = GetFastValue(curo, 'offsetx', 0);
         var offsetY = GetFastValue(curo, 'offsety', 0);
-
-        objects[layerName] = [];
+        var objects = [];
 
         for (var j = 0; j < curo.objects.length; j++)
         {
             var parsedObject = ParseObject(curo.objects[j], offsetX, offsetY);
 
-            objects[layerName].push(parsedObject);
+            objects.push(parsedObject);
         }
+
+        var objectLayer = new ObjectLayer(curo);
+        objectLayer.objects = objects;
+
+        objectLayers.push(objectLayer);
     }
 
-    return objects;
+    return objectLayers;
 };
 
 module.exports = ParseObjectLayers;
