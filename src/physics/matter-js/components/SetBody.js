@@ -113,7 +113,7 @@ var SetBody = {
                 break;
         }
 
-        this.setExisiting(body, config.addToWorld);
+        this.setExistingBody(body, config.addToWorld);
 
         return this;
     }
