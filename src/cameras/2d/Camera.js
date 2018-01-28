@@ -375,7 +375,7 @@ var Camera = new Class({
     {
         this.scrollX = (this._bounds.width * 0.5) - (this.width * 0.5);
         this.scrollY = (this._bounds.height * 0.5) - (this.height * 0.5);
-        
+
         return this;
     },
 
@@ -391,7 +391,7 @@ var Camera = new Class({
     {
         this.scrollX = this.width * 0.5;
         this.scrollY = this.height * 0.5;
-        
+
         return this;
     },
 
@@ -418,7 +418,7 @@ var Camera = new Class({
         var mvb = cameraMatrix[1];
         var mvc = cameraMatrix[2];
         var mvd = cameraMatrix[3];
-        
+
         /* First Invert Matrix */
         var determinant = (mva * mvd) - (mvb * mvc);
 
@@ -495,7 +495,7 @@ var Camera = new Class({
         var mvb = cameraMatrix[1];
         var mvc = cameraMatrix[2];
         var mvd = cameraMatrix[3];
-        
+
         /* First Invert Matrix */
         var determinant = (mva * mvd) - (mvb * mvc);
 
@@ -566,7 +566,7 @@ var Camera = new Class({
         var mvb = cameraMatrix[1];
         var mvc = cameraMatrix[2];
         var mvd = cameraMatrix[3];
-        
+
         /* First Invert Matrix */
         var determinant = (mva * mvd) - (mvb * mvc);
 
@@ -718,7 +718,7 @@ var Camera = new Class({
         var mvd = cameraMatrix[3];
         var mve = cameraMatrix[4];
         var mvf = cameraMatrix[5];
-        
+
         /* First Invert Matrix */
         var determinant = (mva * mvd) - (mvb * mvc);
 
@@ -753,7 +753,7 @@ var Camera = new Class({
         /* Apply transform to point */
         output.x = (sx * ima + sy * imc + ime);
         output.y = (sx * imb + sy * imd + imf);
-        
+
         return output;
     },
 
@@ -764,7 +764,7 @@ var Camera = new Class({
      * @since 3.0.0
      *
      * @param {[type]} gameObjectOrArray - [description]
-     * 
+     *
      * @return {Phaser.Cameras.Scene2D.Camera} This Camera instance.
      */
     ignore: function (gameObjectOrArray)
@@ -806,7 +806,7 @@ var Camera = new Class({
         {
             originX = follow.x;
             originY = follow.y;
-            
+
             this.scrollX = originX - width * 0.5;
             this.scrollY = originY - height * 0.5;
         }
@@ -1164,7 +1164,7 @@ var Camera = new Class({
      *
      * @method Phaser.Cameras.Scene2D.Camera#stopFollow
      * @since 3.0.0
-     * 
+     *
      * @return {Phaser.Cameras.Scene2D.Camera} This Camera instance.
      */
     stopFollow: function ()
@@ -1209,6 +1209,26 @@ var Camera = new Class({
         }
 
         return output;
+    },
+
+    /**
+     * Resets any active FX, such as a fade, flash or shake. Useful to call after a fade in order to
+     * remove the fade.
+     *
+     * @method Phaser.Cameras.Scene2D.Camera#resetFX
+     * @since 3.0.0
+     *
+     * @return {Phaser.Cameras.Scene2D.Camera} This Camera instance.
+     */
+    resetFX: function ()
+    {
+        this._flashAlpha = 0;
+        this._fadeAlpha = 0;
+        this._shakeOffsetX = 0.0;
+        this._shakeOffsetY = 0.0;
+        this._shakeDuration = 0;
+
+        return this;
     },
 
     /**
