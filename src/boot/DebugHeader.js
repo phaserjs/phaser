@@ -101,7 +101,7 @@ var DebugHeader = function (game)
     }
     else if (window['console'])
     {
-        console.log('Phaser v' + CONST.VERSION + ' / http://phaser.io');
+        console.log('Phaser v' + CONST.VERSION + ' / https://phaser.io');
     }
 };
 
