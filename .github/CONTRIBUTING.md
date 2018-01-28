@@ -29,7 +29,7 @@ It's important to understand that internally Phaser 2 uses a heavily customized 
 We have a very active [Phaser Support Forum][4]. If you need general support, or are struggling to understand how to do something or need your code checked over, then we would urge you to post it to our forum. There are a lot of friendly devs in there who can help, as well as the core Phaser and Pixi teams, so it's a great place to get support from. You're welcome to report bugs directly on GitHub, but for general support we'd always recommend using the forum first.
 
 
-##Making Changes
+## Making Changes
 
 To take advantage of our grunt build script and jshint config it will be easiest for you if you have node.js and grunt installed locally.
 
