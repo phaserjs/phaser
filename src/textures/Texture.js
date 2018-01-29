@@ -34,6 +34,8 @@ var Texture = new Class({
         */
         this.source = [];
 
+        this.dataSource = [];
+
         this.frames = {};
 
         //  Any additional data that was set in the source JSON (if any), or any extra data you'd like to store relating to this texture
@@ -172,11 +174,31 @@ var Texture = new Class({
         }
     },
 
+    setDataSource: function (data)
+    {
+        if (!Array.isArray(data))
+        {
+            data = [ data ];
+        }
+
+        for (var i = 0; i < data.length; i++)
+        {
+            var source = this.source[i];
+
+            this.dataSource.push(new TextureSource(this, data[i], source.width, source.height));
+        }
+    },
+
     setFilter: function (filterMode)
     {
         for (var i = 0; i < this.source.length; i++)
         {
             this.source[i].setFilter(filterMode);
+        }
+
+        for (var i = 0; i < this.dataSource.length; i++)
+        {
+            this.dataSource[i].setFilter(filterMode);
         }
     },
 

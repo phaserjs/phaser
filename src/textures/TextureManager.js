@@ -86,11 +86,16 @@ var TextureManager = new Class({
         image.src = data;
     },
 
-    addImage: function (key, source)
+    addImage: function (key, source, dataSource)
     {
         var texture = this.create(key, source);
         
         Parser.Image(texture, 0);
+
+        if (dataSource)
+        {
+            texture.setDataSource(dataSource);
+        }
 
         return texture;
     },

@@ -112,7 +112,7 @@ var LoaderPlugin = new Class({
 
         this.list.set(file);
 
-        return this;
+        return file;
     },
 
     //  Is the Loader actively loading (or processing loaded files)
@@ -437,6 +437,21 @@ var LoaderPlugin = new Class({
                     else
                     {
                         textures.addAtlas(fileB.key, fileB.data, fileA.data);
+                    }
+                    break;
+
+                case 'dataimage':
+
+                    fileA = file.fileA;
+                    fileB = file.fileB;
+
+                    if (fileA.linkParent)
+                    {
+                        textures.addImage(fileA.key, fileA.data, fileB.data);
+                    }
+                    else
+                    {
+                        textures.addImage(fileB.key, fileB.data, fileA.data);
                     }
                     break;
 

@@ -29,13 +29,13 @@ var TextureSource = new Class({
 
         this.isPowerOf2 = IsSizePowerOfTwo(this.width, this.height);
 
+        this.glTexture = null;
+
         this.init(game);
     },
 
     init: function (game)
     {
-        this.glTexture = null;
-
         if (game.config.renderType === CONST.WEBGL)
         {
             this.glTexture = game.renderer.createTextureFromSource(this.image, this.width, this.height, this.scaleMode);

@@ -177,6 +177,35 @@ var File = new Class({
          * @since 3.0.0
          */
         this.linkType = '';
+
+        /**
+         * [description]
+         *
+         * @property {boolean} linkParent
+         * @default false
+         * @since 3.0.0
+         */
+        this.linkParent = false;
+    },
+
+    /**
+     * [description]
+     *
+     * @method Phaser.Loader.File#setLinkFile
+     * @since 3.0.0
+     * 
+     * @param {Phaser.Loader.File} fileB - [description]
+     * @param {string} linkType - [description]
+     */
+    setLinkFile: function (fileB, linkType)
+    {
+        this.linkFile = fileB;
+        fileB.linkFile = this;
+
+        this.linkType = linkType;
+        fileB.linkType = linkType;
+
+        this.linkParent = true;
     },
 
     /**

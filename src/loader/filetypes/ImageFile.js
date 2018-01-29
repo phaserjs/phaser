@@ -92,12 +92,36 @@ FileTypesManager.register('image', function (key, url, xhrSettings)
         for (var i = 0; i < key.length; i++)
         {
             //  If it's an array it has to be an array of Objects, so we get everything out of the 'key' object
-            this.addFile(new ImageFile(key[i], url, this.path, xhrSettings));
+            var urls = GetFastValue(key[i], 'file', url);
+
+            if (Array.isArray(urls) && urls.length === 2)
+            {
+                var fileA = this.addFile(new ImageFile(key[i], urls[0], this.path, xhrSettings));
+                var fileB = this.addFile(new ImageFile(key[i], urls[1], this.path, xhrSettings));
+
+                fileA.setLinkFile(fileB, 'dataimage');
+            }
+            else
+            {
+                this.addFile(new ImageFile(key[i], url, this.path, xhrSettings));
+            }
         }
     }
     else
     {
-        this.addFile(new ImageFile(key, url, this.path, xhrSettings));
+        var urls = GetFastValue(key, 'file', url);
+
+        if (Array.isArray(urls) && urls.length === 2)
+        {
+            var fileA = this.addFile(new ImageFile(key, urls[0], this.path, xhrSettings));
+            var fileB = this.addFile(new ImageFile(key, urls[1], this.path, xhrSettings));
+
+            fileA.setLinkFile(fileB, 'dataimage');
+        }
+        else
+        {
+            this.addFile(new ImageFile(key, url, this.path, xhrSettings));
+        }
     }
 
     //  For method chaining
