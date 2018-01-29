@@ -19,6 +19,7 @@ var Graphics = new Class({
     Mixins: [
         Components.Alpha,
         Components.BlendMode,
+        Components.Pipeline,
         Components.Transform,
         Components.Visible,
         Components.ScrollFactor,
@@ -35,6 +36,7 @@ var Graphics = new Class({
         GameObject.call(this, scene, 'Graphics');
 
         this.setPosition(x, y);
+        this.initPipeline('FlatTintPipeline');
 
         this.displayOriginX = 0;
         this.displayOriginY = 0;

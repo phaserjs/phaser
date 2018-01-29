@@ -86,6 +86,12 @@ var WebGLPipeline = new Class({
         return this;
     },
 
+    onRender: function (scene, camera)
+    {
+        // called for each camera
+        return this;
+    },
+
     onPostRender: function ()
     {
         // called once every frame

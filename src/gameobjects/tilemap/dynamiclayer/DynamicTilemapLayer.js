@@ -14,6 +14,7 @@ var DynamicTilemapLayer = new Class({
         Components.Flip,
         Components.GetBounds,
         Components.Origin,
+        Components.Pipeline,
         Components.ScaleMode,
         Components.Size,
         Components.Transform,
@@ -91,6 +92,7 @@ var DynamicTilemapLayer = new Class({
         this.setPosition(x, y);
         this.setOrigin();
         this.setSize(this.layer.tileWidth * this.layer.width, this.layer.tileHeight * this.layer.height);
+        this.initPipeline('TextureTintPipeline');
     },
 
     /**

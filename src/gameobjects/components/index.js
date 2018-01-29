@@ -11,6 +11,7 @@ module.exports = {
     Flip: require('./Flip'),
     GetBounds: require('./GetBounds'),
     Origin: require('./Origin'),
+    Pipeline: require('./Pipeline'),
     ScaleMode: require('./ScaleMode'),
     ScrollFactor: require('./ScrollFactor'),
     Size: require('./Size'),

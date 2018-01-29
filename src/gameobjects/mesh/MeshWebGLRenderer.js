@@ -7,7 +7,7 @@ var MeshWebGLRenderer = function (renderer, src, interpolationPercentage, camera
         return;
     }
 
-    renderer.pipelines.TextureTintPipeline.batchMesh(src, camera);
+    this.pipeline.batchMesh(src, camera);
 };
 
 module.exports = MeshWebGLRenderer;

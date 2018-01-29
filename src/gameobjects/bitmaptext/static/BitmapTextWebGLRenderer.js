@@ -12,7 +12,7 @@ var BitmapTextWebGLRenderer = function (renderer, gameObject, interpolationPerce
         return;
     }
 
-    renderer.pipelines.TextureTintPipeline.batchBitmapText(this, camera);
+    this.pipeline.batchBitmapText(this, camera);
 };
 
 module.exports = BitmapTextWebGLRenderer;

@@ -25,8 +25,8 @@ varying vec4 outTint;
 void main()
 {
     vec3 finalColor = vec3(0.0, 0.0, 0.0);
-    vec4 color = texture2D(uMainTexture, outTexCoord) * vec4(outTint.rgb * outTint.a, outTint.a);
-    vec3 normalMap = texture2D(uNormTexture, outTexCoord).rgb;
+    vec4 color = texture2D(uMainSampler, outTexCoord) * vec4(outTint.rgb * outTint.a, outTint.a);
+    vec3 normalMap = texture2D(uNormSampler, outTexCoord).rgb;
     vec3 normal = normalize(vec3(normalMap * 2.0 - 1.0));
     vec2 res = vec2(min(uResolution.x, uResolution.y)) * uCamera.w;
 

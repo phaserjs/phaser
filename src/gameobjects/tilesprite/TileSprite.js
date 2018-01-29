@@ -15,6 +15,7 @@ var TileSprite = new Class({
         Components.Flip,
         Components.GetBounds,
         Components.Origin,
+        Components.Pipeline,
         Components.ScaleMode,
         Components.ScrollFactor,
         Components.Size,
@@ -43,6 +44,7 @@ var TileSprite = new Class({
         this.setPosition(x, y);
         this.setSize(width, height);
         this.setOrigin();
+        this.initPipeline('TextureTintPipeline');
 
         this.potWidth = GetPowerOfTwo(this.frame.width);
         this.potHeight = GetPowerOfTwo(this.frame.height);

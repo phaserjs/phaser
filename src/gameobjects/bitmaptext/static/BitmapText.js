@@ -14,6 +14,7 @@ var BitmapText = new Class({
         Components.Alpha,
         Components.BlendMode,
         Components.Origin,
+        Components.Pipeline,
         Components.ScaleMode,
         Components.Texture,
         Components.Tint,
@@ -44,6 +45,7 @@ var BitmapText = new Class({
         this.setTexture(entry.texture, entry.frame);
         this.setPosition(x, y);
         this.setOrigin(0, 0);
+        this.initPipeline('TextureTintPipeline');
 
         this._bounds = this.getTextBounds();
     },

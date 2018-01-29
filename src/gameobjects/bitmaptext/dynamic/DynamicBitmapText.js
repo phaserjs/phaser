@@ -12,6 +12,7 @@ var DynamicBitmapText = new Class({
         Components.Alpha,
         Components.BlendMode,
         Components.Origin,
+        Components.Pipeline,
         Components.Texture,
         Components.Tint,
         Components.Transform,
@@ -41,6 +42,7 @@ var DynamicBitmapText = new Class({
         this.setTexture(entry.texture, entry.frame);
         this.setPosition(x, y);
         this.setOrigin(0, 0);
+        this.initPipeline('TextureTintPipeline');
 
         this._bounds = this.getTextBounds();
 

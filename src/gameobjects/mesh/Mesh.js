@@ -14,6 +14,7 @@ var Mesh = new Class({
         Components.Flip,
         Components.GetBounds,
         Components.Origin,
+        Components.Pipeline,
         Components.ScaleMode,
         Components.Size,
         Components.Texture,
@@ -33,6 +34,7 @@ var Mesh = new Class({
         this.setPosition(x, y);
         this.setSizeToFrame();
         this.setOrigin();
+        this.initPipeline('TextureTintPipeline');
 
         if (vertices.length !== uv.length)
         {

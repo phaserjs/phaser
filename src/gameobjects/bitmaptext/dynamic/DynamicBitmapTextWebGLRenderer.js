@@ -14,7 +14,7 @@ var DynamicBitmapTextWebGLRenderer = function (renderer, bitmapText, interpolati
         return;
     }
 
-    renderer.pipelines.TextureTintPipeline.batchDynamicBitmapText(bitmapText, camera);
+    this.pipeline.batchDynamicBitmapText(bitmapText, camera);
 };
 
 module.exports = DynamicBitmapTextWebGLRenderer;

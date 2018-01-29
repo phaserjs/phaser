@@ -13,6 +13,7 @@ var Sprite = new Class({
         Components.Flip,
         Components.GetBounds,
         Components.Origin,
+        Components.Pipeline,
         Components.ScaleMode,
         Components.ScrollFactor,
         Components.Size,
@@ -35,6 +36,7 @@ var Sprite = new Class({
         this.setPosition(x, y);
         this.setSizeToFrame();
         this.setOrigin();
+        this.initPipeline('TextureTintPipeline');
     },
 
     preUpdate: function (time, delta)
