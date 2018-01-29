@@ -402,10 +402,14 @@ var Tile = new Class({
     /**
      * Reset collision status flags.
      *
+     * @param {boolean} [recalculateFaces=true] - Whether or not to recalculate interesting faces
+     * for this tile and its neighbors.
      * @returns {this}
      */
-    resetCollision: function ()
+    resetCollision: function (recalculateFaces)
     {
+        if (recalculateFaces === undefined) { recalculateFaces = true; }
+
         this.collideLeft = false;
         this.collideRight = false;
         this.collideUp = false;
@@ -415,6 +419,15 @@ var Tile = new Class({
         this.faceBottom = false;
         this.faceLeft = false;
         this.faceRight = false;
+
+        if (recalculateFaces)
+        {
+            var tilemapLayer = this.tilemapLayer;
+            if (tilemapLayer)
+            {
+                this.tilemapLayer.calculateFacesAt(this.x, this.y);
+            }
+        }
 
         return this;
     },
@@ -441,13 +454,16 @@ var Tile = new Class({
      * @param {boolean} right - Indicating collide with any object on the right.
      * @param {boolean} up - Indicating collide with any object on the top.
      * @param {boolean} down - Indicating collide with any object on the bottom.
+     * @param {boolean} [recalculateFaces=true] - Whether or not to recalculate interesting faces
+     * for this tile and its neighbors.
      * @returns {this}
      */
-    setCollision: function (left, right, up, down)
+    setCollision: function (left, right, up, down, recalculateFaces)
     {
         if (right === undefined) { right = left; }
         if (up === undefined) { up = left; }
         if (down === undefined) { down = left; }
+        if (recalculateFaces === undefined) { recalculateFaces = true; }
 
         this.collideLeft = left;
         this.collideRight = right;
@@ -458,6 +474,15 @@ var Tile = new Class({
         this.faceRight = right;
         this.faceTop = up;
         this.faceBottom = down;
+
+        if (recalculateFaces)
+        {
+            var tilemapLayer = this.tilemapLayer;
+            if (tilemapLayer)
+            {
+                this.tilemapLayer.calculateFacesAt(this.x, this.y);
+            }
+        }
 
         return this;
     },

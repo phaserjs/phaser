@@ -1,5 +1,6 @@
 var GetTilesWithin = require('./GetTilesWithin');
 var CalculateFacesWithin = require('./CalculateFacesWithin');
+var SetTileCollision = require('./SetTileCollision');
 
 /**
  * Sets the tiles in the given rectangular area (in tile coordinates) of the layer with the
@@ -25,14 +26,7 @@ var Fill = function (index, tileX, tileY, width, height, recalculateFaces, layer
     {
         tiles[i].index = index;
 
-        if (doesIndexCollide)
-        {
-            tiles[i].setCollision(true);
-        }
-        else
-        {
-            tiles[i].resetCollision();
-        }
+        SetTileCollision(tiles[i], doesIndexCollide);
     }
 
     if (recalculateFaces)
