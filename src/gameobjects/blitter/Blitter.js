@@ -13,6 +13,7 @@ var Blitter = new Class({
     Mixins: [
         Components.Alpha,
         Components.BlendMode,
+        Components.Pipeline,
         Components.ScaleMode,
         Components.Size,
         Components.Texture,
@@ -51,8 +52,8 @@ var Blitter = new Class({
         GameObject.call(this, scene, 'Blitter');
 
         this.setTexture(texture, frame);
-
         this.setPosition(x, y);
+        this.initPipeline('TextureTintPipeline');
 
         /**
          * [description]

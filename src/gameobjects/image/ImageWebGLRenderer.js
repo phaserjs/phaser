@@ -7,7 +7,7 @@ var ImageWebGLRenderer = function (renderer, src, interpolationPercentage, camer
         return;
     }
     
-    renderer.pipelines.TextureTintPipeline.batchSprite(src, camera);
+    this.pipeline.batchSprite(src, camera);
 };
 
 module.exports = ImageWebGLRenderer;

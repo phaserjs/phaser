@@ -19,6 +19,7 @@ var Text = new Class({
         Components.Flip,
         Components.GetBounds,
         Components.Origin,
+        Components.Pipeline,
         Components.ScaleMode,
         Components.ScrollFactor,
         Components.Tint,
@@ -38,6 +39,7 @@ var Text = new Class({
 
         this.setPosition(x, y);
         this.setOrigin(0, 0);
+        this.initPipeline('TextureTintPipeline');
 
         /**
          * @property {HTMLCanvasElement} canvas - The canvas element that the text is rendered.

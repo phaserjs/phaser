@@ -13,6 +13,7 @@ var ParticleEmitterManager = new Class({
     Mixins: [
         Components.Depth,
         Components.Visible,
+        Components.Pipeline,
         Render
     ],
 
@@ -40,6 +41,7 @@ var ParticleEmitterManager = new Class({
         }
 
         this.setTexture(texture, frame);
+        this.initPipeline('TextureTintPipeline');
 
         this.emitters = new List(this);
 

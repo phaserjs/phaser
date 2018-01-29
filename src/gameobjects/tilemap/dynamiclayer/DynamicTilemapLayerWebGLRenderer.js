@@ -22,7 +22,7 @@ var DynamicTilemapLayerWebGLRenderer = function (renderer, tilemapLayer, interpo
     var sx = tilemapLayer.scaleX;
     var sy = tilemapLayer.scaleY;
     var getTint = Utils.getTintAppendFloatAlpha;
-    var pipeline = renderer.pipelines.TextureTintPipeline; 
+    var pipeline = this.pipeline; 
 
     for (var index = 0; index < length; ++index)
     {

@@ -7,7 +7,7 @@ var GraphicsWebGLRenderer = function (renderer, graphics, interpolationPercentag
         return;
     }
 
-    renderer.pipelines.FlatTintPipeline.batchGraphics(this, camera);
+    this.pipeline.batchGraphics(this, camera);
 };
 
 module.exports = GraphicsWebGLRenderer;

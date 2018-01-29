@@ -8,7 +8,7 @@ var StaticTilemapLayerWebGLRenderer = function (renderer, tilemap, interpolation
     }
 
     tilemap.upload(camera);
-    renderer.pipelines.TextureTintPipeline.drawStaticTilemapLayer(tilemap, camera);
+    this.pipeline.drawStaticTilemapLayer(tilemap, camera);
 };
 
 module.exports = StaticTilemapLayerWebGLRenderer;

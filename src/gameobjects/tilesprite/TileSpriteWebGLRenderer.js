@@ -12,7 +12,7 @@ var TileSpriteWebGLRenderer = function (renderer, tileSprite, interpolationPerce
 
     var getTint = Utils.getTintAppendFloatAlpha;
 
-    renderer.pipelines.TextureTintPipeline.batchTexture(
+    this.pipeline.batchTexture(
         tileSprite.tileTexture,
         tileSprite.frame.width,  tileSprite.frame.height,
         tileSprite.x, tileSprite.y,

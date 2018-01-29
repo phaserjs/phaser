@@ -16,7 +16,7 @@ var TextWebGLRenderer = function (renderer, text, interpolationPercentage, camer
 
     var getTint = Utils.getTintAppendFloatAlpha;
 
-    renderer.pipelines.TextureTintPipeline.batchTexture(
+    this.pipeline.batchTexture(
         text.canvasTexture,
         text.canvasTexture.width, text.canvasTexture.height,
         text.x, text.y,

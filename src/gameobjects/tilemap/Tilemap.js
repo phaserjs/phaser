@@ -960,6 +960,19 @@ var Tilemap = new Class({
      *
      * @return {this|null} Returns this, or null if the layer given was invalid.
      */
+    calculateFacesAt: function (tileX, tileY, layer)
+    {
+        layer = this.getLayer(layer);
+        if (layer === null) { return this; }
+        TilemapComponents.CalculateFacesAt(tileX, tileY, layer);
+        return this;
+    },
+
+    /**
+     * See component documentation. If no layer specified, the map's current layer is used.
+     *
+     * @return {this|null} Returns this, or null if the layer given was invalid.
+     */
     calculateFacesWithin: function (tileX, tileY, width, height, layer)
     {
         layer = this.getLayer(layer);

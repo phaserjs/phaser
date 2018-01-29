@@ -9,7 +9,7 @@ var ParticleManagerWebGLRenderer = function (renderer, emitterManager, interpola
         return;
     }
 
-    renderer.pipelines.TextureTintPipeline.drawEmitterManager(emitterManager, camera);
+    this.pipeline.drawEmitterManager(emitterManager, camera);
 };
 
 module.exports = ParticleManagerWebGLRenderer;

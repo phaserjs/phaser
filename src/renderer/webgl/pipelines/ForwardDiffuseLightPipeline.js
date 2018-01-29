@@ -12,7 +12,8 @@ var ForwardDiffuseLightPipeline = new Class({
 
     function ForwardDiffuseLightPipeline(game, gl, renderer)
     {
-        TextureTintPipeline.call(game, gl, ShaderSourceFS);
+        TextureTintPipeline.call(this, game, gl, renderer, ShaderSourceFS);
+        this.name = 'ForwardDiffuseLightPipeline';
     },
 
     onBind: function ()
@@ -24,9 +25,14 @@ var ForwardDiffuseLightPipeline = new Class({
 
         this.mvpUpdate();
 
-        renderer.setInt1(program, 'uNormSampler', 1);
+        //renderer.setInt1(program, 'uNormSampler', 1);
         renderer.setFloat2(program, 'uResolution', this.width, this.height);
 
+        return this;
+    },
+
+    onRender: function (scene, camera)
+    {
         return this;
     },
 

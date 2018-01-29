@@ -8,6 +8,7 @@ var Utils = require('./Utils');
 var TextureTintPipeline = require('./pipelines/TextureTintPipeline');
 var FlatTintPipeline = require('./pipelines/FlatTintPipeline');
 var BitmapMaskPipeline = require('./pipelines/BitmapMaskPipeline');
+var ForwardDiffuseLightPipeline = require('./pipelines/ForwardDiffuseLightPipeline');
 
 var WebGLRenderer = new Class({
 
@@ -133,6 +134,7 @@ var WebGLRenderer = new Class({
         this.addPipeline('TextureTintPipeline', new TextureTintPipeline(this.game, gl, this));
         this.addPipeline('FlatTintPipeline', new FlatTintPipeline(this.game, gl, this));
         this.addPipeline('BitmapMaskPipeline', new BitmapMaskPipeline(this.game, gl, this));
+        this.addPipeline('LightPipeline', new ForwardDiffuseLightPipeline(this.game, gl, this));
         
         this.setBlendMode(CONST.BlendModes.NORMAL);
         this.resize(this.width, this.height, this.game.config.resolution);
@@ -691,6 +693,12 @@ var WebGLRenderer = new Class({
         var gl = this.gl;
         var list = children.list;
         var childCount = list.length;
+        var pipelines = this.pipelines;
+
+        for (var key in pipelines)
+        {
+            pipelines[key].onRender(scene, camera);
+        }
 
         this.preRenderCamera(camera);
 

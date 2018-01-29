@@ -9,7 +9,7 @@ var GetTileAt = require('./GetTileAt');
  * @param {integer} tileY - [description]
  * @param {LayerData} layer - [description]
  */
-var RecalculateFacesAt = function (tileX, tileY, layer)
+var CalculateFacesAt = function (tileX, tileY, layer)
 {
     var tile = GetTileAt(tileX, tileY, true, layer);
     var above = GetTileAt(tileX, tileY - 1, true, layer);
@@ -57,4 +57,4 @@ var RecalculateFacesAt = function (tileX, tileY, layer)
     return tile;
 };
 
-module.exports = RecalculateFacesAt;
+module.exports = CalculateFacesAt;
