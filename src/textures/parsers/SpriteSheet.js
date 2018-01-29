@@ -21,8 +21,8 @@ var SpriteSheet = function (texture, sourceIndex, x, y, width, height, config)
     var margin = GetFastValue(config, 'margin', 0);
     var spacing = GetFastValue(config, 'spacing', 0);
 
-    var row = Math.floor((width - margin) / (frameWidth + spacing));
-    var column = Math.floor((height - margin) / (frameHeight + spacing));
+    var row = Math.floor((width - margin + spacing) / (frameWidth + spacing));
+    var column = Math.floor((height - margin + spacing) / (frameHeight + spacing));
     var total = row * column;
 
     if (startFrame > total || startFrame < -total)

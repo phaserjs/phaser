@@ -28,8 +28,8 @@ var SpriteSheetFromAtlas = function (texture, frame, config)
     var sheetWidth = frame.realWidth;
     var sheetHeight = frame.realHeight;
 
-    var row = Math.floor((sheetWidth - margin) / (frameWidth + spacing));
-    var column = Math.floor((sheetHeight - margin) / (frameHeight + spacing));
+    var row = Math.floor((sheetWidth - margin + spacing) / (frameWidth + spacing));
+    var column = Math.floor((sheetHeight - margin + spacing) / (frameHeight + spacing));
     var total = row * column;
 
     //  trim offsets
