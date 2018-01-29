@@ -1,6 +1,6 @@
 var Tile = require('../Tile');
 var IsInLayerBounds = require('./IsInLayerBounds');
-var RecalculateFacesAt = require('./RecalculateFacesAt');
+var CalculateFacesAt = require('./CalculateFacesAt');
 
 /**
  * Puts a tile at the given tile coordinates in the specified layer. You can pass in either an index
@@ -58,7 +58,7 @@ var PutTileAt = function (tile, tileX, tileY, recalculateFaces, layer)
     // Recalculate faces only if the colliding flag at (tileX, tileY) has changed
     if (recalculateFaces && (oldTileCollides !== newTile.collides))
     {
-        RecalculateFacesAt(tileX, tileY, layer);
+        CalculateFacesAt(tileX, tileY, layer);
     }
 
     return newTile;

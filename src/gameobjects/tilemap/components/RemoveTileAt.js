@@ -1,6 +1,6 @@
 var Tile = require('../Tile');
 var IsInLayerBounds = require('./IsInLayerBounds');
-var RecalculateFacesAt = require('./RecalculateFacesAt');
+var CalculateFacesAt = require('./CalculateFacesAt');
 
 /**
  * Removes the tile at the given tile coordinates in the specified layer and updates the layer's
@@ -36,7 +36,7 @@ var RemoveTileAt = function (tileX, tileY, replaceWithNull, recalculateFaces, la
     // Recalculate faces only if the removed tile was a colliding tile
     if (recalculateFaces && tile && tile.collides)
     {
-        RecalculateFacesAt(tileX, tileY, layer);
+        CalculateFacesAt(tileX, tileY, layer);
     }
 
     return tile;

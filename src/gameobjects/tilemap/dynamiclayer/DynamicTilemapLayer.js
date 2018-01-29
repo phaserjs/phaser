@@ -100,6 +100,17 @@ var DynamicTilemapLayer = new Class({
      *
      * @return {this}
      */
+    calculateFacesAt: function (tileX, tileY)
+    {
+        TilemapComponents.CalculateFacesAt(tileX, tileY, this.layer);
+        return this;
+    },
+
+    /**
+     * See component documentation.
+     *
+     * @return {this}
+     */
     calculateFacesWithin: function (tileX, tileY, width, height)
     {
         TilemapComponents.CalculateFacesWithin(tileX, tileY, width, height, this.layer);
