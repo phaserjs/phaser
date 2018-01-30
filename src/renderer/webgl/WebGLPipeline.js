@@ -7,7 +7,7 @@ var WebGLPipeline = new Class({
 
     function WebGLPipeline(config)
     {
-        this.name = config.name;
+        this.name = 'WebGLPipeline';
         this.game = config.game;
         this.view = config.game.canvas;
         this.resolution = config.game.config.resolution;

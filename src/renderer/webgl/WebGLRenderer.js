@@ -231,6 +231,7 @@ var WebGLRenderer = new Class({
         if (!this.hasPipeline(pipelineName)) this.pipelines[pipelineName] = pipelineInstance;
         else console.warn('Pipeline', pipelineName, ' already exists.');
 
+        pipelineInstance.name = pipelineName;
         this.pipelines[pipelineName].resize(this.width, this.height, this.game.config.resolution);
 
         return this;

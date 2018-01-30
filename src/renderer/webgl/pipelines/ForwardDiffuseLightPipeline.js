@@ -3,6 +3,7 @@ var WebGLPipeline = require('../WebGLPipeline');
 var Utils = require('../Utils');
 var TextureTintPipeline = require('./TextureTintPipeline');
 var ShaderSourceFS = require('../shaders/ForwardDiffuse.frag');
+var LIGHT_COUNT = 10;
 
 var ForwardDiffuseLightPipeline = new Class({
 
@@ -12,8 +13,7 @@ var ForwardDiffuseLightPipeline = new Class({
 
     function ForwardDiffuseLightPipeline(game, gl, renderer)
     {
-        TextureTintPipeline.call(this, game, gl, renderer, ShaderSourceFS);
-        this.name = 'ForwardDiffuseLightPipeline';
+        TextureTintPipeline.call(this, game, gl, renderer, ShaderSourceFS.replace('%LIGHT_COUNT%', LIGHT_COUNT.toString()));
     },
 
     onBind: function ()
@@ -35,17 +35,28 @@ var ForwardDiffuseLightPipeline = new Class({
     {
         var renderer = this.renderer;
         var program = this.program;
-        //var lights = scene.light.lights;
-        
-        // for (var index = 0; index < lights.length; ++index)
-        // {
-        //     var light = lights[index];
-        //     var lightName = 'uLights[' + index + '].';
-        //     renderer.setFloat3(program, lightName + 'position', light.x, this.height - light.y, light.z);
-        //     renderer.setFloat3(program, lightName + 'color', light.r, light.g, light.b);
-        //     renderer.setFloat1(program, lightName + 'attenuation', light.attenuation);
-        //     renderer.setFloat1(program, lightName + 'radius', light.radius);
-        // }
+        var lightManager = scene.lights;
+        var lights = scene.lights.cull(camera);
+        var lightCount = Math.min(lights.length, LIGHT_COUNT);
+        var cameraMatrix = camera.matrix;
+        var point = {x: 0, y: 0};
+        var height = renderer.height;
+
+        if (lightCount <= 0) return; // If not visible lights just passthrough
+
+        renderer.setFloat4(program, 'uCamera', camera.x, camera.y, camera.rotation, camera.zoom);
+        renderer.setFloat3(program, 'uAmbientLightColor', lightManager.ambientColor.r, lightManager.ambientColor.g, lightManager.ambientColor.b);
+
+        for (var index = 0; index < lightCount; ++index)
+        {
+            var light = lights[index];
+            var lightName = 'uLights[' + index + '].';
+            cameraMatrix.transformPoint(light.x, light.y, point);
+            renderer.setFloat2(program, lightName + 'position', point.x - (camera.scrollX * light.scrollFactorX * camera.zoom), height - (point.y - (camera.scrollY * light.scrollFactorY) * camera.zoom));
+            renderer.setFloat3(program, lightName + 'color', light.r, light.g, light.b);
+            renderer.setFloat1(program, lightName + 'intensity', light.intensity);
+            renderer.setFloat1(program, lightName + 'radius', light.radius);
+        }
 
         return this;
     },

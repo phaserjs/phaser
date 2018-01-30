@@ -13,7 +13,6 @@ var BitmapMaskPipeline = new Class({
     function BitmapMaskPipeline(game, gl, renderer)
     {
         WebGLPipeline.call(this, {
-            name: 'BitmapMaskPipeline',
             game: game,
             gl: gl,
             renderer: renderer,

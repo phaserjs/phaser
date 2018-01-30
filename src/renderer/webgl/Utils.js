@@ -26,6 +26,15 @@ module.exports = {
         return ((ua << 24) | (ub << 16) | (ug << 8) | ur) >>> 0;
     },
 
+    getFloatsFromUintRGB: function (rgb)
+    {
+        var ur = ((rgb >> 16)|0) & 0xff;
+        var ug = ((rgb >> 8)|0) & 0xff;
+        var ub = (rgb|0) & 0xff;
+
+        return [ ur / 255.0, ug / 255.0, ub / 255.0 ];
+    },
+
     getComponentCount: function (attributes)
     {
         var count = 0;

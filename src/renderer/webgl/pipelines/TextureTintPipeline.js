@@ -18,7 +18,6 @@ var TextureTintPipeline = new Class({
     function TextureTintPipeline(game, gl, renderer, overrideFragmentShader)
     {
         WebGLPipeline.call(this, {
-            name: 'TextureTintPipeline',
             game: game,
             gl: gl,
             renderer: renderer,
