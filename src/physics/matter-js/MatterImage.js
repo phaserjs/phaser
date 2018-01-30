@@ -3,6 +3,7 @@ var Class = require('../../utils/Class');
 var Components = require('./components');
 var GameObject = require('../../gameobjects/GameObject');
 var GetFastValue = require('../../utils/object/GetFastValue');
+var Pipeline = require('../../gameobjects/components/Pipeline');
 var Image = require('../../gameobjects/image/Image');
 var Vector2 = require('../../math/Vector2');
 
@@ -22,7 +23,8 @@ var MatterImage = new Class({
         Components.Sleep,
         Components.Static,
         Components.Transform,
-        Components.Velocity
+        Components.Velocity,
+        Pipeline
     ],
 
     initialize:
@@ -59,6 +61,8 @@ var MatterImage = new Class({
         }
 
         this.setPosition(x, y);
+
+        this.initPipeline('TextureTintPipeline');
     }
 
 });
