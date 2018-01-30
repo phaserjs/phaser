@@ -274,7 +274,7 @@ If you code with [TypeScript](http://www.typescriptlang.org/) there are comprehe
 
 We have always been meticulous in recording changes to the Phaser code base, and where relevant, giving attribution to those in the community who helped with the change. You can find comprehensive Change Logs for all versions:
 
-* [Phaser Community Edition Change Log](https://github.com/photonstorm/phaser-ce/CHANGELOG.md).
+* [Phaser Community Edition Change Log](https://github.com/photonstorm/phaser-ce/blob/master/CHANGELOG.md).
 
 ![Contributing](http://phaser.io/images/github/div-contributing.png "Contributing")
 <a name="contributing"></a>
