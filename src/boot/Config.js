@@ -129,7 +129,7 @@ var Config = new Class({
         MATH.RND.init(this.seed);
 
         this.gameTitle = GetValue(config, 'title', '');
-        this.gameURL = GetValue(config, 'url', 'http://phaser.io');
+        this.gameURL = GetValue(config, 'url', 'https://phaser.io');
         this.gameVersion = GetValue(config, 'version', '');
 
         //  Input
