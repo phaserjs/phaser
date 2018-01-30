@@ -14,6 +14,7 @@ var Phaser = {
     Class: require('./utils/Class'),
     Create: require('./create'),
     Curves: require('./curves'),
+    Data: require('./data'),
     Display: require('./display'),
     DOM: require('./dom'),
     EventEmitter: require('./events/EventEmitter'),

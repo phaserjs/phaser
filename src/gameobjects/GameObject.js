@@ -1,12 +1,6 @@
-/**
- * @author       Richard Davey <rich@phaser.io>
- * @copyright    2017 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
- */
-
 var Class = require('../utils/Class');
 var Components = require('./components');
-var DataProxy = require('./components/DataProxy');
+var DataManager = require('../data/DataManager');
 var EventEmitter = require('eventemitter3');
 
 var GameObject = new Class({
@@ -39,16 +33,6 @@ var GameObject = new Class({
          * @protected
          */
         this.scene = scene;
-
-        /**
-         * The parent Container of this Game Object, if any.
-         * Game Objects do not have to belong to Containers and can exist on the
-         * Display List on their own.
-         *
-         * @property {Phaser.GameObject.Container} parent
-         * @protected
-         */
-        this.parent = null;
 
         /**
          * A textual representation of this Game Object, i.e. `sprite`.
@@ -84,12 +68,13 @@ var GameObject = new Class({
         this.tabIndex = -1;
 
         /**
-         * A proxy to the Data class.
+         * A Data Manager.
          * It allows you to store, query and get key/value paired information specific to this Game Object.
+         * `null` by default. Automatically created if you use `getData` or `setData` or `setDataEnabled`.
          *
-         * @property {DataProxy} data
+         * @property {Phaser.Data.DataManager} data
          */
-        this.data = new DataProxy(scene, this);
+        this.data = null;
 
         /**
          * The flags that are compared against `RENDER_MASK` to determine if this Game Object will render or not.
@@ -164,19 +149,11 @@ var GameObject = new Class({
         return this;
     },
 
-    //  Testing: Add this Game Object to a Container parent.
-    //  Can only belong to one Container at once.
-    //  The Container takes over its transform and depth management.
-    //  Call this method with no arguments to remove it from a parent.
-    setParent: function (newParent)
+    setDataEnabled: function ()
     {
-        if (newParent)
+        if (!this.data)
         {
-            newParent.add(this);
-        }
-        else if (this.parent)
-        {
-            this.parent.remove(this);
+            this.data = new DataManager(this);
         }
 
         return this;
@@ -194,6 +171,11 @@ var GameObject = new Class({
      */
     setData: function (key, value)
     {
+        if (!this.data)
+        {
+            this.data = new DataManager(this);
+        }
+
         this.data.set(key, value);
 
         return this;
@@ -209,6 +191,11 @@ var GameObject = new Class({
      */
     getData: function (key)
     {
+        if (!this.data)
+        {
+            this.data = new DataManager(this);
+        }
+
         return this.data.get(key);
     },
 
@@ -293,6 +280,13 @@ var GameObject = new Class({
             this.input = undefined;
         }
 
+        if (this.data)
+        {
+            this.data.destroy();
+
+            this.data = undefined;
+        }
+
         //  TODO Keep a reference to the manager in Body, so body can remove itself, not via System
         if (this.body)
         {
@@ -306,8 +300,6 @@ var GameObject = new Class({
 
         this.active = false;
         this.visible = false;
-
-        this.data = undefined;
 
         this.scene = undefined;
 

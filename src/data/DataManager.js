@@ -1,24 +1,30 @@
 var Class = require('../utils/Class');
-var EventEmitter = require('eventemitter3');
+
+//  Phaser.Data.DataManager
 
 /**
-* The Data Component features a means to store pieces of data specific to a Game Object,
-* search it, query it, and retrieve it.
+* The Data Component features a means to store pieces of data specific to a Game Object, System or Plugin.
+* You can then search, query it, and retrieve the data. The parent must either extend EventEmitter,
+* or have a property called `events` that is an instance of it.
 */
-var Data = new Class({
+var DataManager = new Class({
 
     initialize:
 
-    function Data (parent, eventEmitter)
+    function DataManager (parent, eventEmitter)
     {
         this.parent = parent;
 
-        this.events = (eventEmitter) ? eventEmitter : new EventEmitter();
+        this.events = eventEmitter;
+
+        if (!eventEmitter)
+        {
+            this.events = (parent.events) ? parent.events : parent;
+        }
 
         this.list = {};
 
-        this._beforeCallbacks = {};
-        this._afterCallbacks = {};
+        this.blockSet = false;
 
         this._frozen = false;
     },
@@ -63,68 +69,33 @@ var Data = new Class({
             return this;
         }
 
-        var listener;
-        var result;
-
-        //  If there is a 'before' callback, then check it for a result
-        //  This means a property can only ever have 1 callback, which isn't right - we may need more
-        //  Dispatch event instead?
-        if (this._beforeCallbacks.hasOwnProperty(key))
+        if (this.events.listenerCount('changedata') > 0)
         {
-            listener = this._beforeCallbacks[key];
+            this.blockSet = false;
 
-            result = listener.callback.call(listener.scope, this.parent, key, data);
+            var _this = this;
 
-            if (result !== undefined)
+            var resetFunction = function (value)
             {
-                data = result;
+                _this.blockSet = true;
+                _this.list[key] = value;
+                _this.events.emit('setdata', _this.parent, key, value);
+            };
+
+            this.events.emit('changedata', this.parent, key, data, resetFunction);
+
+            //  One of the listeners blocked this update from being set, so abort
+            if (this.blockSet)
+            {
+                return this;
             }
         }
-
-        // this.events.dispatch(new Event.LOADER_START_EVENT(this));
 
         this.list[key] = data;
 
-        //  If there is a 'after' callback, then check it for a result
-        if (this._afterCallbacks.hasOwnProperty(key))
-        {
-            listener = this._afterCallbacks[key];
-
-            result = listener.callback.call(listener.scope, this.parent, key, data);
-
-            if (result !== undefined)
-            {
-                this.list[key] = result;
-            }
-        }
+        this.events.emit('setdata', this.parent, key, data);
 
         return this;
-    },
-
-    before: function (key, callback, scope)
-    {
-        if (callback === undefined)
-        {
-            //  Remove entry
-            delete this._beforeCallbacks[key];
-        }
-        else
-        {
-            this._beforeCallbacks[key] = { callback: callback, scope: scope };
-        }
-    },
-
-    after: function (key, callback, scope)
-    {
-        if (callback === undefined)
-        {
-            //  Remove entry
-            delete this._afterCallbacks[key];
-        }
-        else
-        {
-            this._afterCallbacks[key] = { callback: callback, scope: scope };
-        }
     },
 
     /**
@@ -151,6 +122,8 @@ var Data = new Class({
 
             callback.apply(scope, args);
         }
+
+        return this;
     },
 
     merge: function (data, overwrite)
@@ -165,29 +138,22 @@ var Data = new Class({
                 this.list[key] = data;
             }
         }
+
+        return this;
     },
 
     remove: function (key)
     {
         if (!this._frozen && this.has(key))
         {
+            var data = this.list[key];
+
             delete this.list[key];
 
-            this.removeListeners(key);
-        }
-    },
-
-    removeListeners: function (key)
-    {
-        if (this._beforeCallbacks.hasOwnProperty(key))
-        {
-            delete this._beforeCallbacks[key];
+            this.events.emit('removedata', this, key, data);
         }
 
-        if (this._afterCallbacks.hasOwnProperty(key))
-        {
-            delete this._afterCallbacks[key];
-        }
+        return this;
     },
 
     //  Gets the data associated with the given 'key', deletes it from this Data store, then returns it.
@@ -201,7 +167,7 @@ var Data = new Class({
 
             delete this.list[key];
 
-            this.removeListeners(key);
+            this.events.emit('removedata', this, key, data);
         }
 
         return data;
@@ -212,6 +178,13 @@ var Data = new Class({
         return this.list.hasOwnProperty(key);
     },
 
+    setFreeze: function (value)
+    {
+        this._frozen = value;
+
+        return this;
+    },
+
     reset: function ()
     {
         for (var key in this.list)
@@ -219,16 +192,7 @@ var Data = new Class({
             delete this.list[key];
         }
 
-        for (key in this._beforeCallbacks)
-        {
-            delete this._beforeCallbacks[key];
-        }
-
-        for (key in this._afterCallbacks)
-        {
-            delete this._afterCallbacks[key];
-        }
-
+        this.blockSet = false;
         this._frozen = false;
     },
 
@@ -236,9 +200,11 @@ var Data = new Class({
     {
         this.reset();
 
-        this.parent = null;
+        this.events.off('changedata');
+        this.events.off('setdata');
+        this.events.off('removedata');
 
-        this.events = null;
+        this.parent = null;
     },
 
     /**
@@ -282,4 +248,4 @@ var Data = new Class({
 
 });
 
-module.exports = Data;
+module.exports = DataManager;

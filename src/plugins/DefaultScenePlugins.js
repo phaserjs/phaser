@@ -5,11 +5,10 @@
 
 //  They are always created in the order in which they appear in the array.
 
-//  TODO - Add Data
-
 var DefaultScenePlugins = [
 
     'Clock',
+    'DataManagerPlugin',
     'InputPlugin',
     'Loader',
     'TweenManager'
