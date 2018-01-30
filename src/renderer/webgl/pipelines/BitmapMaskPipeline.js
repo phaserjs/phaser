@@ -50,9 +50,9 @@ var BitmapMaskPipeline = new Class({
         WebGLPipeline.prototype.onBind.call(this);
 
         var renderer = this.renderer;
-        var program = this.currentProgram;
+        var program = this.program;
         
-        if (this.resolutionDirty || (this.currentProgram !== this.program))
+        if (this.resolutionDirty)
         {
             renderer.setFloat2(program, 'uResolution', this.width, this.height);
             renderer.setInt1(program, 'uMainSampler', 0);

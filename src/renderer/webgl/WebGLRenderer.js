@@ -134,7 +134,7 @@ var WebGLRenderer = new Class({
         this.addPipeline('TextureTintPipeline', new TextureTintPipeline(this.game, gl, this));
         this.addPipeline('FlatTintPipeline', new FlatTintPipeline(this.game, gl, this));
         this.addPipeline('BitmapMaskPipeline', new BitmapMaskPipeline(this.game, gl, this));
-        this.addPipeline('LightPipeline', new ForwardDiffuseLightPipeline(this.game, gl, this));
+        this.addPipeline('Light2D', new ForwardDiffuseLightPipeline(this.game, gl, this));
         
         this.setBlendMode(CONST.BlendModes.NORMAL);
         this.resize(this.width, this.height, this.game.config.resolution);
@@ -302,14 +302,15 @@ var WebGLRenderer = new Class({
         return this;
     },
 
-    setPipeline: function (pipelineInstance, overrideProgram)
+    setPipeline: function (pipelineInstance)
     {
         if (this.currentPipeline !== pipelineInstance ||
-            this.currentPipeline.vertexBuffer !== this.currentVertexBuffer)
+            this.currentPipeline.vertexBuffer !== this.currentVertexBuffer ||
+            this.currentPipeline.program !== this.currentProgram)
         {
             this.flush();
             this.currentPipeline = pipelineInstance;
-            this.currentPipeline.bind(overrideProgram);
+            this.currentPipeline.bind();
         }
 
         this.currentPipeline.onBind();

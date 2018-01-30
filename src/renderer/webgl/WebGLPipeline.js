@@ -23,7 +23,6 @@ var WebGLPipeline = new Class({
         this.attributes = config.attributes;
         this.vertexSize = config.vertexSize;
         this.topology = config.topology;
-        this.currentProgram = this.program;
         this.bytes = new Uint8Array(this.vertexData);
         // This will store the amount of components of 32 bit length
         this.vertexComponentCount = Utils.getComponentCount(config.attributes);
@@ -41,12 +40,12 @@ var WebGLPipeline = new Class({
         return this;
     },
 
-    bind: function (overrideProgram)
+    bind: function ()
     {
         var gl = this.gl;
         var vertexBuffer = this.vertexBuffer;
         var attributes = this.attributes;
-        var program = (!overrideProgram ? this.program : overrideProgram); 
+        var program = this.program;
         var renderer = this.renderer;
         var vertexSize = this.vertexSize;
 
@@ -68,8 +67,6 @@ var WebGLPipeline = new Class({
                 gl.disableVertexAttribArray(location);
             }
         }
-
-        this.currentProgram = program;
 
         return this;
     },

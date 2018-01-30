@@ -39,21 +39,23 @@ var ModelViewProjection = {
 
     mvpUpdate: function ()
     {
+        var program = this.program;
+
         if (this.modelMatrixDirty)
         {
-            this.renderer.setMatrix4(this.currentProgram, 'uModelMatrix', false, this.modelMatrix);
+            this.renderer.setMatrix4(program, 'uModelMatrix', false, this.modelMatrix);
             this.modelMatrixDirty = false;
         }
         
         if (this.viewMatrixDirty)
         {
-            this.renderer.setMatrix4(this.currentProgram, 'uViewMatrix', false, this.viewMatrix);
+            this.renderer.setMatrix4(program, 'uViewMatrix', false, this.viewMatrix);
             this.viewMatrixDirty = false;
         }
 
         if (this.projectionMatrixDirty)
         {
-            this.renderer.setMatrix4(this.currentProgram, 'uProjectionMatrix', false, this.projectionMatrix);
+            this.renderer.setMatrix4(program, 'uProjectionMatrix', false, this.projectionMatrix);
             this.projectionMatrixDirty = false;
         }
 

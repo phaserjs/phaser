@@ -814,7 +814,48 @@ var FlatTintPipeline = new Class({
                     break;
             }
         }
+    },
 
+    // Stubs
+
+    drawStaticTilemapLayer: function (tilemap, camera)
+    {
+    },
+
+    drawEmitterManager: function (emitterManager, camera)
+    {
+    },
+
+    drawBlitter: function (blitter, camera)
+    {
+    },
+
+    batchSprite: function (sprite, camera)
+    {
+    },
+
+    batchMesh: function (mesh, camera)
+    {
+    },
+
+    batchBitmapText: function (bitmapText, camera)
+    {
+    },
+
+    batchDynamicBitmapText: function (bitmapText, camera)
+    {
+    },
+
+    batchText: function (text, camera)
+    {
+    },
+
+    batchDynamicTilemapLayer: function (tilemapLayer, camera)
+    {
+    },
+
+    batchTileSprite: function (tileSprite, camera)
+    {
     }
 
 });

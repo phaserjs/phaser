@@ -14,26 +14,7 @@ var TextWebGLRenderer = function (renderer, text, interpolationPercentage, camer
         text.dirty = false;
     }
 
-    var getTint = Utils.getTintAppendFloatAlpha;
-
-    this.pipeline.batchTexture(
-        text.canvasTexture,
-        text.canvasTexture.width, text.canvasTexture.height,
-        text.x, text.y,
-        text.canvasTexture.width, text.canvasTexture.height,
-        text.scaleX, text.scaleY,
-        text.rotation,
-        text.flipX, text.flipY,
-        text.scrollFactorX, text.scrollFactorY,
-        text.displayOriginX, text.displayOriginY,
-        0, 0, text.canvasTexture.width, text.canvasTexture.height,
-        getTint(text._tintTL, text._alphaTL), 
-        getTint(text._tintTR, text._alphaTR), 
-        getTint(text._tintBL, text._alphaBL), 
-        getTint(text._tintBR, text._alphaBR),
-        0, 0,
-        camera
-    );
+    this.pipeline.batchText(this, camera);
 };
 
 module.exports = TextWebGLRenderer;

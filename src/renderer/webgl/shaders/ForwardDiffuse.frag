@@ -39,11 +39,11 @@ void main()
         float diffuseFactor = max(dot(normal, lightNormal), 0.0);
         float radius = (light.radius / res.x * uCamera.w) * uCamera.w;
         float attenuation = clamp(1.0 - distToSurf * distToSurf / (radius * radius), 0.0, 1.0);
-        vec3 diffuse = light.color * color.rgb * diffuseFactor;
+        vec3 diffuse = light.color * diffuseFactor;
         finalColor += attenuation * diffuse;
     }
 
-    vec4 colorOutput = vec4(uAmbientLightColor + finalColor, color.a);
-    gl_FragColor = vec4(colorOutput.rgb * colorOutput.a, colorOutput.a);
+    vec4 colorOutput = vec4(uAmbientLightColor + finalColor, 1.0);
+    gl_FragColor = color * vec4(colorOutput.rgb * colorOutput.a, colorOutput.a);
 
 }

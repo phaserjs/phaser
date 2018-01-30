@@ -350,116 +350,6 @@ var TextureTintPipeline = new Class({
         }
     },
 
-    batchTexture: function (
-        texture,
-        textureWidth, textureHeight,
-        srcX, srcY,
-        srcWidth, srcHeight,
-        scaleX, scaleY,
-        rotation,
-        flipX, flipY,
-        scrollFactorX, scrollFactorY,
-        displayOriginX, displayOriginY,
-        frameX, frameY, frameWidth, frameHeight,
-        tintTL, tintTR, tintBL, tintBR,
-        uOffset, vOffset,
-        camera)
-    {
-        this.renderer.setPipeline(this);
-
-        if (this.vertexCount + 6 > this.vertexCapacity)
-        {
-            this.flush();
-        }
-
-        flipY = flipY ^ (texture.isRenderTexture ? 1 : 0);
-        rotation = -rotation;
-
-        var getTint = Utils.getTintAppendFloatAlpha;
-        var vertexViewF32 = this.vertexViewF32;
-        var vertexViewU32 = this.vertexViewU32;
-        var renderer = this.renderer;
-        var cameraMatrix = camera.matrix.matrix;
-        var width = srcWidth * (flipX ? -1.0 : 1.0);
-        var height = srcHeight * (flipY ? -1.0 : 1.0);
-        var x = -displayOriginX + ((srcWidth) * (flipX ? 1.0 : 0.0));
-        var y = -displayOriginY + ((srcHeight) * (flipY ? 1.0 : 0.0));
-        var xw = x + width;
-        var yh = y + height;
-        var translateX = srcX - camera.scrollX * scrollFactorX;
-        var translateY = srcY - camera.scrollY * scrollFactorY;
-        var sr = Math.sin(rotation);
-        var cr = Math.cos(rotation);
-        var sra = cr * scaleX;
-        var srb = -sr * scaleX;
-        var src = sr * scaleY;
-        var srd = cr * scaleY;
-        var sre = translateX;
-        var srf = translateY;
-        var cma = cameraMatrix[0];
-        var cmb = cameraMatrix[1];
-        var cmc = cameraMatrix[2];
-        var cmd = cameraMatrix[3];
-        var cme = cameraMatrix[4];
-        var cmf = cameraMatrix[5];
-        var mva = sra * cma + srb * cmc;
-        var mvb = sra * cmb + srb * cmd;
-        var mvc = src * cma + srd * cmc;
-        var mvd = src * cmb + srd * cmd;
-        var mve = sre * cma + srf * cmc + cme;
-        var mvf = sre * cmb + srf * cmd + cmf;
-        var tx0 = x * mva + y * mvc + mve;
-        var ty0 = x * mvb + y * mvd + mvf;
-        var tx1 = x * mva + yh * mvc + mve;
-        var ty1 = x * mvb + yh * mvd + mvf;
-        var tx2 = xw * mva + yh * mvc + mve;
-        var ty2 = xw * mvb + yh * mvd + mvf;
-        var tx3 = xw * mva + y * mvc + mve;
-        var ty3 = xw * mvb + y * mvd + mvf;
-        var vertexOffset = 0;
-        var u0 = ((frameX + 0.5) / textureWidth) + uOffset;
-        var v0 = ((frameY + 0.5) / textureHeight) + vOffset;
-        var u1 = ((frameX - 0.5 + frameWidth) / textureWidth) + uOffset;
-        var v1 = ((frameY - 0.5 + frameHeight) / textureHeight) + vOffset;
-
-        renderer.setTexture2D(texture, 0);
-
-        vertexOffset = this.vertexCount * this.vertexComponentCount;
-
-        vertexViewF32[vertexOffset + 0] = tx0;
-        vertexViewF32[vertexOffset + 1] = ty0;
-        vertexViewF32[vertexOffset + 2] = u0;
-        vertexViewF32[vertexOffset + 3] = v0;
-        vertexViewU32[vertexOffset + 4] = tintTL;
-        vertexViewF32[vertexOffset + 5] = tx1;
-        vertexViewF32[vertexOffset + 6] = ty1;
-        vertexViewF32[vertexOffset + 7] = u0;
-        vertexViewF32[vertexOffset + 8] = v1;
-        vertexViewU32[vertexOffset + 9] = tintTR;
-        vertexViewF32[vertexOffset + 10] = tx2;
-        vertexViewF32[vertexOffset + 11] = ty2;
-        vertexViewF32[vertexOffset + 12] = u1;
-        vertexViewF32[vertexOffset + 13] = v1;
-        vertexViewU32[vertexOffset + 14] = tintBL;
-        vertexViewF32[vertexOffset + 15] = tx0;
-        vertexViewF32[vertexOffset + 16] = ty0;
-        vertexViewF32[vertexOffset + 17] = u0;
-        vertexViewF32[vertexOffset + 18] = v0;
-        vertexViewU32[vertexOffset + 19] = tintTL;
-        vertexViewF32[vertexOffset + 20] = tx2;
-        vertexViewF32[vertexOffset + 21] = ty2;
-        vertexViewF32[vertexOffset + 22] = u1;
-        vertexViewF32[vertexOffset + 23] = v1;
-        vertexViewU32[vertexOffset + 24] = tintBL;
-        vertexViewF32[vertexOffset + 25] = tx3;
-        vertexViewF32[vertexOffset + 26] = ty3;
-        vertexViewF32[vertexOffset + 27] = u1;
-        vertexViewF32[vertexOffset + 28] = v0;
-        vertexViewU32[vertexOffset + 29] = tintBR;
-
-        this.vertexCount += 6;
-    },
-
     batchSprite: function (sprite, camera)
     {
         this.renderer.setPipeline(this);
@@ -1125,6 +1015,220 @@ var TextureTintPipeline = new Class({
         {
             renderer.popScissor();
         }
+    },
+
+    batchText: function (text, camera)
+    {
+        var getTint = Utils.getTintAppendFloatAlpha;
+
+        this.batchTexture(
+            text,
+            text.canvasTexture,
+            text.canvasTexture.width, text.canvasTexture.height,
+            text.x, text.y,
+            text.canvasTexture.width, text.canvasTexture.height,
+            text.scaleX, text.scaleY,
+            text.rotation,
+            text.flipX, text.flipY,
+            text.scrollFactorX, text.scrollFactorY,
+            text.displayOriginX, text.displayOriginY,
+            0, 0, text.canvasTexture.width, text.canvasTexture.height,
+            getTint(text._tintTL, text._alphaTL), 
+            getTint(text._tintTR, text._alphaTR), 
+            getTint(text._tintBL, text._alphaBL), 
+            getTint(text._tintBR, text._alphaBR),
+            0, 0,
+            camera
+        );
+    },
+
+    batchDynamicTilemapLayer: function (tilemapLayer, camera)
+    {
+        var renderTiles = tilemapLayer.culledTiles;
+        var length = renderTiles.length;
+        var texture = tilemapLayer.tileset.image.get().source.glTexture;
+        var tileset = tilemapLayer.tileset;
+        var scrollFactorX = tilemapLayer.scrollFactorX;
+        var scrollFactorY = tilemapLayer.scrollFactorY;
+        var alpha = tilemapLayer.alpha;
+        var x = tilemapLayer.x;
+        var y = tilemapLayer.y;
+        var sx = tilemapLayer.scaleX;
+        var sy = tilemapLayer.scaleY;
+        var getTint = Utils.getTintAppendFloatAlpha;
+
+        for (var index = 0; index < length; ++index)
+        {
+            var tile = renderTiles[index];
+
+            var tileTexCoords = tileset.getTileTextureCoordinates(tile.index);
+            if (tileTexCoords === null) { continue; }
+
+            var frameWidth = tile.width * (tile.flipX ? -1 : 1);
+            var frameHeight = tile.height * (tile.flipY ? -1 : 1);
+            var frameX = tileTexCoords.x + (tile.flipX ? tile.width : 0);
+            var frameY = tileTexCoords.y + (tile.flipY ? tile.height : 0);
+            var tint = getTint(tile.tint, alpha * tile.alpha);
+
+            this.batchTexture(
+                tilemapLayer,
+                texture,
+                texture.width, texture.height,
+                x + tile.pixelX * sx, y + tile.pixelY * sy,
+                tile.width * sx, tile.height * sy,
+                1, 1,
+                0,
+                false, false,
+                scrollFactorX, scrollFactorY,
+                0, 0,
+                frameX, frameY, frameWidth, frameHeight,
+                tint, tint, tint, tint,
+                0, 0,
+                camera
+            );
+        }   
+    },
+
+    batchTileSprite: function (tileSprite, camera)
+    {
+        var getTint = Utils.getTintAppendFloatAlpha;
+
+        this.batchTexture(
+            tileSprite,
+            tileSprite.tileTexture,
+            tileSprite.frame.width,  tileSprite.frame.height,
+            tileSprite.x, tileSprite.y,
+            tileSprite.width, tileSprite.height,
+            tileSprite.scaleX, tileSprite.scaleY,
+            tileSprite.rotation,
+            tileSprite.flipX, tileSprite.flipY,
+            tileSprite.scrollFactorX, tileSprite.scrollFactorY,
+            tileSprite.originX * tileSprite.width, tileSprite.originY * tileSprite.height,
+            0, 0, tileSprite.width, tileSprite.height,
+            getTint(tileSprite._tintTL, tileSprite._alphaTL), 
+            getTint(tileSprite._tintTR, tileSprite._alphaTR), 
+            getTint(tileSprite._tintBL, tileSprite._alphaBL), 
+            getTint(tileSprite._tintBR, tileSprite._alphaBR),
+            tileSprite.tilePositionX / tileSprite.frame.width, 
+            tileSprite.tilePositionY / tileSprite.frame.height,
+            camera
+        );
+    },
+
+    batchTexture: function (
+        gameObject,
+        texture,
+        textureWidth, textureHeight,
+        srcX, srcY,
+        srcWidth, srcHeight,
+        scaleX, scaleY,
+        rotation,
+        flipX, flipY,
+        scrollFactorX, scrollFactorY,
+        displayOriginX, displayOriginY,
+        frameX, frameY, frameWidth, frameHeight,
+        tintTL, tintTR, tintBL, tintBR,
+        uOffset, vOffset,
+        camera)
+    {
+        this.renderer.setPipeline(this);
+
+        if (this.vertexCount + 6 > this.vertexCapacity)
+        {
+            this.flush();
+        }
+
+        flipY = flipY ^ (texture.isRenderTexture ? 1 : 0);
+        rotation = -rotation;
+
+        var getTint = Utils.getTintAppendFloatAlpha;
+        var vertexViewF32 = this.vertexViewF32;
+        var vertexViewU32 = this.vertexViewU32;
+        var renderer = this.renderer;
+        var cameraMatrix = camera.matrix.matrix;
+        var width = srcWidth * (flipX ? -1.0 : 1.0);
+        var height = srcHeight * (flipY ? -1.0 : 1.0);
+        var x = -displayOriginX + ((srcWidth) * (flipX ? 1.0 : 0.0));
+        var y = -displayOriginY + ((srcHeight) * (flipY ? 1.0 : 0.0));
+        var xw = x + width;
+        var yh = y + height;
+        var translateX = srcX - camera.scrollX * scrollFactorX;
+        var translateY = srcY - camera.scrollY * scrollFactorY;
+        var sr = Math.sin(rotation);
+        var cr = Math.cos(rotation);
+        var sra = cr * scaleX;
+        var srb = -sr * scaleX;
+        var src = sr * scaleY;
+        var srd = cr * scaleY;
+        var sre = translateX;
+        var srf = translateY;
+        var cma = cameraMatrix[0];
+        var cmb = cameraMatrix[1];
+        var cmc = cameraMatrix[2];
+        var cmd = cameraMatrix[3];
+        var cme = cameraMatrix[4];
+        var cmf = cameraMatrix[5];
+        var mva = sra * cma + srb * cmc;
+        var mvb = sra * cmb + srb * cmd;
+        var mvc = src * cma + srd * cmc;
+        var mvd = src * cmb + srd * cmd;
+        var mve = sre * cma + srf * cmc + cme;
+        var mvf = sre * cmb + srf * cmd + cmf;
+        var tx0 = x * mva + y * mvc + mve;
+        var ty0 = x * mvb + y * mvd + mvf;
+        var tx1 = x * mva + yh * mvc + mve;
+        var ty1 = x * mvb + yh * mvd + mvf;
+        var tx2 = xw * mva + yh * mvc + mve;
+        var ty2 = xw * mvb + yh * mvd + mvf;
+        var tx3 = xw * mva + y * mvc + mve;
+        var ty3 = xw * mvb + y * mvd + mvf;
+        var vertexOffset = 0;
+        var u0 = ((frameX + 0.5) / textureWidth) + uOffset;
+        var v0 = ((frameY + 0.5) / textureHeight) + vOffset;
+        var u1 = ((frameX - 0.5 + frameWidth) / textureWidth) + uOffset;
+        var v1 = ((frameY - 0.5 + frameHeight) / textureHeight) + vOffset;
+
+        renderer.setTexture2D(texture, 0);
+
+        vertexOffset = this.vertexCount * this.vertexComponentCount;
+
+        vertexViewF32[vertexOffset + 0] = tx0;
+        vertexViewF32[vertexOffset + 1] = ty0;
+        vertexViewF32[vertexOffset + 2] = u0;
+        vertexViewF32[vertexOffset + 3] = v0;
+        vertexViewU32[vertexOffset + 4] = tintTL;
+        vertexViewF32[vertexOffset + 5] = tx1;
+        vertexViewF32[vertexOffset + 6] = ty1;
+        vertexViewF32[vertexOffset + 7] = u0;
+        vertexViewF32[vertexOffset + 8] = v1;
+        vertexViewU32[vertexOffset + 9] = tintTR;
+        vertexViewF32[vertexOffset + 10] = tx2;
+        vertexViewF32[vertexOffset + 11] = ty2;
+        vertexViewF32[vertexOffset + 12] = u1;
+        vertexViewF32[vertexOffset + 13] = v1;
+        vertexViewU32[vertexOffset + 14] = tintBL;
+        vertexViewF32[vertexOffset + 15] = tx0;
+        vertexViewF32[vertexOffset + 16] = ty0;
+        vertexViewF32[vertexOffset + 17] = u0;
+        vertexViewF32[vertexOffset + 18] = v0;
+        vertexViewU32[vertexOffset + 19] = tintTL;
+        vertexViewF32[vertexOffset + 20] = tx2;
+        vertexViewF32[vertexOffset + 21] = ty2;
+        vertexViewF32[vertexOffset + 22] = u1;
+        vertexViewF32[vertexOffset + 23] = v1;
+        vertexViewU32[vertexOffset + 24] = tintBL;
+        vertexViewF32[vertexOffset + 25] = tx3;
+        vertexViewF32[vertexOffset + 26] = ty3;
+        vertexViewF32[vertexOffset + 27] = u1;
+        vertexViewF32[vertexOffset + 28] = v0;
+        vertexViewU32[vertexOffset + 29] = tintBR;
+
+        this.vertexCount += 6;
+    },
+
+    batchGraphics: function (graphics, camera) 
+    {
+        // Stub
     }
 
 });

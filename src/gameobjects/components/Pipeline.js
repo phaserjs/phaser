@@ -13,9 +13,10 @@ var Pipeline = {
         {
             this.defaultPipeline = renderer.getPipeline(pipelineName);
             this.pipeline = this.defaultPipeline;
+            return true;
         }
 
-        return this;
+        return false;
     },
 
     setPipeline: function (pipelineName)
@@ -25,15 +26,16 @@ var Pipeline = {
         if (renderer.gl && renderer.hasPipeline(pipelineName))
         {
             this.pipeline = renderer.getPipeline(pipelineName);
+            return true;
         }
         
-        return this;
+        return false;
     },
 
     resetPipeline: function ()
     {
         this.pipeline = this.defaultPipeline;
-        return this;
+        return (this.pipeline !== null);
     }
 
 };
