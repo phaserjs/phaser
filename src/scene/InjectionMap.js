@@ -14,6 +14,7 @@ var InjectionMap = {
 
     events: 'events',
     cameras: 'cameras',
+    cameras3d: 'cameras3d',
     add: 'add',
     make: 'make',
     scenePlugin: 'scene',

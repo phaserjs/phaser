@@ -7,6 +7,7 @@
 
 var DefaultScenePlugins = [
 
+    'CameraManager3D',
     'Clock',
     'DataManagerPlugin',
     'InputPlugin',

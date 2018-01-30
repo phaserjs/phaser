@@ -31,12 +31,15 @@ var PluginManager = new Class({
 
             // console.log('PluginManager.global', pluginKey);
             
-            sys[pluginKey] = game[pluginKey];
-
-            //  Scene level injection
-            if (map.hasOwnProperty(pluginKey))
+            if (game[pluginKey])
             {
-                scene[map[pluginKey]] = sys[pluginKey];
+                sys[pluginKey] = game[pluginKey];
+
+                //  Scene level injection
+                if (map.hasOwnProperty(pluginKey))
+                {
+                    scene[map[pluginKey]] = sys[pluginKey];
+                }
             }
         }
     },
@@ -50,6 +53,11 @@ var PluginManager = new Class({
         for (var i = 0; i < scenePlugins.length; i++)
         {
             var pluginKey = scenePlugins[i];
+
+            if (!plugins[pluginKey])
+            {
+                continue;
+            }
 
             var source = plugins[pluginKey];
 

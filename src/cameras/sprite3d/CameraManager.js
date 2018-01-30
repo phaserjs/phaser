@@ -1,5 +1,4 @@
 var Class = require('../../utils/Class');
-var GetFastValue = require('../../utils/object/GetFastValue');
 var OrthographicCamera = require('./OrthographicCamera');
 var PerspectiveCamera = require('./PerspectiveCamera');
 var PluginManager = require('../../plugins/PluginManager');
@@ -37,6 +36,14 @@ var CameraManager = new Class({
          * @since 3.0.0
          */
         this.systems = scene.sys;
+
+        /**
+         * An Array of the Camera objects being managed by this Camera Manager.
+         *
+         * @property {Phaser.Cameras.Sprite3D.Camera[]} cameras
+         * @since 3.0.0
+         */
+        this.cameras = [];
 
         if (!scene.sys.settings.isBooted)
         {
@@ -96,6 +103,8 @@ var CameraManager = new Class({
 
         var camera = new OrthographicCamera(this.scene, width, height);
 
+        this.cameras.push(camera);
+
         return camera;
     },
 
@@ -121,18 +130,9 @@ var CameraManager = new Class({
 
         var camera = new PerspectiveCamera(this.scene, fieldOfView, width, height);
 
-        return camera;
-    },
+        this.cameras.push(camera);
 
-    /**
-     * [description]
-     *
-     * @method Phaser.Cameras.Sprite3D.CameraManager#destroy
-     * @since 3.0.0
-     */
-    destroy: function ()
-    {
-        this.scene = undefined;
+        return camera;
     },
 
     /**
@@ -170,58 +170,28 @@ var CameraManager = new Class({
     {
         var cameraIndex = this.cameras.indexOf(camera);
 
-        if (cameraIndex >= 0 && this.cameras.length > 1)
+        if (cameraIndex !== -1)
         {
-            this.cameraPool.push(this.cameras[cameraIndex]);
             this.cameras.splice(cameraIndex, 1);
-
-            if (this.main === camera)
-            {
-                this.main = this.cameras[0];
-            }
         }
     },
 
     /**
      * [description]
      *
-     * @method Phaser.Cameras.Sprite3D.CameraManager#render
-     * @since 3.0.0
-     *
-     * @param {[type]} renderer - [description]
-     * @param {[type]} children - [description]
-     * @param {[type]} interpolation - [description]
-     */
-    render: function (renderer, children, interpolation)
-    {
-        var cameras = this.cameras;
-
-        for (var i = 0, l = cameras.length; i < l; ++i)
-        {
-            var camera = cameras[i];
-
-            camera.preRender();
-
-            renderer.render(this.scene, children, interpolation, camera);
-        }
-    },
-
-    /**
-     * [description]
-     *
-     * @method Phaser.Cameras.Sprite3D.CameraManager#resetAll
+     * @method Phaser.Cameras.Sprite3D.CameraManager#removeAll
      * @since 3.0.0
      *
      * @return {[type]} [description]
      */
-    resetAll: function ()
+    removeAll: function ()
     {
         while (this.cameras.length > 0)
         {
-            this.cameraPool.push(this.cameras.pop());
-        }
+            var camera = this.cameras.pop();
 
-        this.main = this.add();
+            camera.destroy();
+        }
 
         return this.main;
     },
@@ -251,6 +221,17 @@ var CameraManager = new Class({
      */
     shutdown: function ()
     {
+    },
+
+    /**
+     * [description]
+     *
+     * @method Phaser.Cameras.Sprite3D.CameraManager#destroy
+     * @since 3.0.0
+     */
+    destroy: function ()
+    {
+        this.scene = undefined;
     }
 
 });

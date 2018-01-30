@@ -182,36 +182,6 @@ var CameraManager = new Class({
         return null;
     },
 
-    /**
-     * [description]
-     *
-     * @method Phaser.Cameras.Scene2D.CameraManager#addKeyControl
-     * @since 3.0.0
-     *
-     * @param {[type]} config - [description]
-     *
-     * @return {[type]} [description]
-     */
-    addKeyControl: function (config)
-    {
-        return new KeyControl(config);
-    },
-
-    /**
-     * [description]
-     *
-     * @method Phaser.Cameras.Scene2D.CameraManager#addSmoothedKeyControl
-     * @since 3.0.0
-     *
-     * @param {[type]} config - [description]
-     *
-     * @return {[type]} [description]
-     */
-    addSmoothedKeyControl: function (config)
-    {
-        return new SmoothedKeyControl(config);
-    },
-
     /*
     {
         cameras: [
