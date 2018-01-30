@@ -21,6 +21,15 @@ module.exports = {
         umdNamedDefine: true
     },
 
+    module: {
+        rules: [
+          {
+            test: [ /\.vert$/, /\.frag$/ ],
+            use: 'raw-loader'
+          }
+        ]
+    },
+
     plugins: [
 
         new webpack.DefinePlugin({
