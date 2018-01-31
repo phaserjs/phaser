@@ -1,4 +1,6 @@
-//  Phaser.Animations
+/**
+ * @namespace Phaser.Animations
+ */
 
 module.exports = {
 

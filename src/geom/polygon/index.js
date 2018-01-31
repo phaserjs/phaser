@@ -1,4 +1,6 @@
-//  Phaser.Geom.Polygon
+/**
+ * @namespace Phaser.Geom.Polygon
+ */
 
 var Polygon = require('./Polygon');
 

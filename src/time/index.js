@@ -1,4 +1,6 @@
-//  Phaser.Time
+/**
+ * @namespace Phaser.Time
+ */
 
 module.exports = {
 

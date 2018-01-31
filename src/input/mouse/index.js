@@ -1,4 +1,6 @@
-//  Phaser.Input.Mouse
+/**
+ * @namespace Phaser.Input.Mouse
+ */
 
 module.exports = {
 

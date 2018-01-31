@@ -1,4 +1,6 @@
-//  Phaser.Tweens
+/**
+ * @namespace Phaser.Tweens
+ */
 
 module.exports = {
 

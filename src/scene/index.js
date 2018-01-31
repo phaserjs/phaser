@@ -1,4 +1,6 @@
-//  Phaser.Scenes
+/**
+ * @namespace Phaser.Scenes
+ */
 
 module.exports = {
 

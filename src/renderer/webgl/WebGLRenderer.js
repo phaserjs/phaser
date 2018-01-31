@@ -10,6 +10,10 @@ var FlatTintPipeline = require('./pipelines/FlatTintPipeline');
 var BitmapMaskPipeline = require('./pipelines/BitmapMaskPipeline');
 var ForwardDiffuseLightPipeline = require('./pipelines/ForwardDiffuseLightPipeline');
 
+/**
+ * @namespace Phaser.Renderer.WebGLRenderer
+ */
+
 var WebGLRenderer = new Class({
 
     initialize:

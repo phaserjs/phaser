@@ -1,4 +1,6 @@
-//  Phaser.Input.Keyboard
+/**
+ * @namespace Phaser.Input.Keyboard
+ */
 
 module.exports = {
 

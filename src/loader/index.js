@@ -1,4 +1,10 @@
-//  Phaser.Loader
+/**
+ * @namespace Phaser.Loader
+ */
+
+/**
+ * @namespace Phaser.Loader.FileTypes
+ */
 
 module.exports = {
 

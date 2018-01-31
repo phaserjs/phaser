@@ -1,4 +1,6 @@
-//  Phaser.Display.Align.To
+/**
+ * @namespace Phaser.Display.Align.To
+ */
 
 module.exports = {
 

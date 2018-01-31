@@ -3,24 +3,25 @@ var Components = require('./components');
 var DataManager = require('../data/DataManager');
 var EventEmitter = require('eventemitter3');
 
+/**
+ * The base class that all Game Objects extend.
+ * You don't create GameObjects directly and they cannot be added to the display list.
+ * Instead, use them as the base for your own custom classes.
+ *
+ * @class GameObject
+ * @memberOf Phaser.GameObjects
+ * @constructor
+ * @since 3.0.0
+ *
+ * @param {Phaser.Scene} scene - The Scene to which this Game Object belongs.
+ * @param {string} type - A textual representation of the type of Game Object, i.e. `sprite`.
+ */
 var GameObject = new Class({
 
     Extends: EventEmitter,
 
     initialize:
 
-    /**
-     * The base class that all Game Objects extend.
-     * You don't create GameObjects directly and they cannot be added to the display list.
-     * Instead, use them as the base for your own custom classes.
-     *
-     * @class GameObject
-     * @memberof Phaser.GameObjects
-     * @constructor
-     *
-     * @param {Phaser.Scene} scene - The Scene to which this Game Object belongs.
-     * @param {string} type - A textual representation of the type of Game Object, i.e. `sprite`.
-     */
     function GameObject (scene, type)
     {
         EventEmitter.call(this);
@@ -31,6 +32,7 @@ var GameObject = new Class({
          *
          * @property {Phaser.Scene} scene
          * @protected
+         * @since 3.0.0
          */
         this.scene = scene;
 
@@ -39,6 +41,7 @@ var GameObject = new Class({
          * Used internally by Phaser but is available for your own custom classes to populate.
          *
          * @property {string} type
+         * @since 3.0.0
          */
         this.type = type;
 
@@ -47,6 +50,7 @@ var GameObject = new Class({
          * Empty by default and never populated by Phaser, this is left for developers to use.
          *
          * @property {string} [name='']
+         * @since 3.0.0
          */
         this.name = '';
 
@@ -56,6 +60,7 @@ var GameObject = new Class({
          * An active object is one which is having its logic and internal systems updated.
          *
          * @property {boolean} [active=true]
+         * @since 3.0.0
          */
         this.active = true;
 
@@ -64,6 +69,7 @@ var GameObject = new Class({
          * Reserved for future use by plugins and the Input Manager.
          *
          * @property {integer} [tabIndex=-1]
+         * @since 3.0.0
          */
         this.tabIndex = -1;
 
@@ -73,6 +79,7 @@ var GameObject = new Class({
          * `null` by default. Automatically created if you use `getData` or `setData` or `setDataEnabled`.
          *
          * @property {Phaser.Data.DataManager} data
+         * @since 3.0.0
          */
         this.data = null;
 
@@ -82,6 +89,7 @@ var GameObject = new Class({
          * If those components are not used by your custom class then you can use this bitmask as you wish.
          *
          * @property {integer} [renderFlags=15]
+         * @since 3.0.0
          */
         this.renderFlags = 15;
 
@@ -91,6 +99,7 @@ var GameObject = new Class({
          *
          * @property {number} [cameraFilter=0]
          * @see Phaser.Cameras.Camera.ignore
+         * @since 3.0.0
          */
         this.cameraFilter = 0;
 
@@ -100,6 +109,7 @@ var GameObject = new Class({
          *
          * @property {?Phaser.Input.InteractiveObject} [input=null]
          * @see setInteractive
+         * @since 3.0.0
          */
         this.input = null;
 
@@ -107,6 +117,7 @@ var GameObject = new Class({
          * If this Game Object is enabled for physics then this property will contain a reference to a Physics Body.
          *
          * @property {?Phaser.Physics.Body} [body=null]
+         * @since 3.0.0
          */
         this.body = null;
 
@@ -118,10 +129,12 @@ var GameObject = new Class({
      * Sets the `active` property of this Game Object and returns this Game Object for further chaining.
      * A Game Object with its `active` property set to `true` will be updated by the Scenes UpdateList.
      *
-     * @method setActive
+     * @method Phaser.GameObjects.GameObject#setActive
+     * @since 3.0.0
      *
      * @param {boolean} value - True if this Game Object should be set as active, false if not.
-     * @return {GameObject} This GameObject.
+     * 
+     * @return {Phaser.GameObjects.GameObject} This GameObject.
      */
     setActive: function (value)
     {
@@ -134,13 +147,12 @@ var GameObject = new Class({
      * Sets the `name` property of this Game Object and returns this Game Object for further chaining.
      * The `name` property is not populated by Phaser and is presented for your own use.
      *
-     * @example game objects/image/set name.js
-     * @tutorial game objects/basics
-     *
-     * @method setName
+     * @method Phaser.GameObjects.GameObject#setName
+     * @since 3.0.0
      *
      * @param {string} value - The name to be given to this Game Object.
-     * @return {GameObject} This GameObject.
+     * 
+     * @return {Phaser.GameObjects.GameObject} This GameObject.
      */
     setName: function (value)
     {
@@ -149,6 +161,14 @@ var GameObject = new Class({
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.GameObjects.GameObject#setDataEnabled
+     * @since 3.0.0
+     *
+     * @return {Phaser.GameObjects.GameObject} This GameObject.
+     */
     setDataEnabled: function ()
     {
         if (!this.data)
@@ -163,11 +183,13 @@ var GameObject = new Class({
      * This is a quick chainable alias to the `DataProxy.set` method.
      * It allows you to set a key and value in this Game Objects data store.
      *
-     * @method setData
+     * @method Phaser.GameObjects.GameObject#setData
+     * @since 3.0.0
      *
      * @param {string} key - The key of the property to be stored.
      * @param {any} value - The value to store with the key. Can be a string, number, array or object.
-     * @return {GameObject} This GameObject.
+     * 
+     * @return {Phaser.GameObjects.GameObject} This GameObject.
      */
     setData: function (key, value)
     {
@@ -184,9 +206,11 @@ var GameObject = new Class({
     /**
      * This is a quick alias to the `DataProxy.get` method to remain consistent with `setData`.
      *
-     * @method getData
+     * @method Phaser.GameObjects.GameObject#getData
+     * @since 3.0.0
      *
-     * @param {string} key - The key of the property to be retrieve.
+     * @param {string} key - The key of the property to be retrieved.
+     * 
      * @return {any} The data, if present in the Data Store.
      */
     getData: function (key)
@@ -202,14 +226,13 @@ var GameObject = new Class({
     /**
      * Pass this Game Object to the Input Manager to enable it for Input.
      *
-     * @example game objects/image/set interactive.js
-     * @tutorial input/basics
-     * 
-     * @method setInteractive
+     * @method Phaser.GameObjects.GameObject#setInteractive
+     * @since 3.0.0
      *
      * @param {any} [shape] - A geometric shape that defines the hit area for the Game Object. If not specified a Rectangle will be used.
      * @param {function} [callback] - A callback to be invoked when the Game Object is interacted with.
-     * @return {GameObject} This GameObject.
+     * 
+     * @return {Phaser.GameObjects.GameObject} This GameObject.
      */
     setInteractive: function (shape, callback)
     {
@@ -218,7 +241,12 @@ var GameObject = new Class({
         return this;
     },
 
-    //  To be overridden by custom GameObjects. Allows base objects to be used in a Pool.
+    /**
+     * To be overridden by custom GameObjects. Allows base objects to be used in a Pool.
+     *
+     * @method Phaser.GameObjects.GameObject#update
+     * @since 3.0.0
+     */
     update: function ()
     {
     },
@@ -226,7 +254,8 @@ var GameObject = new Class({
     /**
      * Returns a JSON representation of the Game Object.
      *
-     * @method toJSON
+     * @method Phaser.GameObjects.GameObject#toJSON
+     * @since 3.0.0
      *
      * @return {object} A JSON representation of the Game Object.
      */
@@ -238,7 +267,8 @@ var GameObject = new Class({
     /**
      * Compares the renderMask with the renderFlags to see if this Game Object will render or not.
      *
-     * @method willRender
+     * @method Phaser.GameObjects.GameObject#willRender
+     * @since 3.0.0
      *
      * @return {boolean} True if the Game Object should be rendered, otherwise false.
      */
@@ -260,7 +290,8 @@ var GameObject = new Class({
      * If you just want to temporarily disable an object then look at using the
      * Game Object Pool instead of destroying it, as destroyed objects cannot be resurrected.
      *
-     * @method destroy
+     * @method Phaser.GameObjects.GameObject#destroy
+     * @since 3.0.0
      */
     destroy: function ()
     {

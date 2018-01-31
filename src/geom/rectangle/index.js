@@ -1,4 +1,6 @@
-//  Phaser.Geom.Rectangle
+/**
+ * @namespace Phaser.Geom.Rectangle
+ */
 
 var Rectangle = require('./Rectangle');
 

@@ -1,4 +1,6 @@
-//  Phaser.Sound
+/**
+ * @namespace Phaser.Sound
+ */
 
 module.exports = {
 

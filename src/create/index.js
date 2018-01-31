@@ -1,4 +1,6 @@
-//  Phaser.Create
+/**
+ * @namespace Phaser.Create
+ */
 
 module.exports = {
   

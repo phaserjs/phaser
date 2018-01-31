@@ -1,4 +1,6 @@
-//  Phaser.Cameras
+/**
+ * @namespace Phaser.Cameras
+ */
 
 module.exports = {
 

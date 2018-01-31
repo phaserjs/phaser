@@ -3,7 +3,9 @@ require('./polyfills');
 var CONST = require('./const');
 var Extend = require('./utils/object/Extend');
 
-//  This object is exported globally
+/**
+* @namespace Phaser
+*/
 
 var Phaser = {
 

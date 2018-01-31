@@ -1,5 +1,9 @@
 var RND = require('./random-data-generator/RandomDataGenerator');
 
+/**
+ * @namespace Phaser.Math
+ */
+
 module.exports = {
 
     //  Consts

@@ -1,4 +1,6 @@
-//  Phaser.Geom.Intersects
+/**
+ * @namespace Phaser.Geom.Intersects
+ */
 
 module.exports = {
 

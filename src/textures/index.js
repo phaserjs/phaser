@@ -1,4 +1,6 @@
-//  Phaser.Textures
+/**
+ * @namespace Phaser.Textures
+ */
 
 module.exports = {
 

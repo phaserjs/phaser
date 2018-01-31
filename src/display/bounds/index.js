@@ -1,4 +1,6 @@
-//  Phaser.Display.Bounds
+/**
+ * @namespace Phaser.Display.Bounds
+ */
 
 module.exports = {
 

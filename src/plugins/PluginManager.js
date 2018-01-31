@@ -2,6 +2,10 @@ var Class = require('../utils/Class');
 
 var plugins = {};
 
+/**
+ * @namespace Phaser.Plugins
+ */
+
 var PluginManager = new Class({
 
     initialize:
