@@ -82,7 +82,8 @@ var Map = new Class({
         Object.keys(this.entries).forEach(function (prop)
         {
             delete this.entries[prop];
-        });
+
+        }, this);
 
         this.size = 0;
 
