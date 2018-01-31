@@ -28,6 +28,7 @@ var GameObject = require('../GameObject');
  * @param {string} [texture='__DEFAULT'] - The key of the texture this Game Object will use for rendering. The Texture must already exist in the Texture Manager.
  * @param {string|integer} [frame=0] - The Frame of the Texture that this Game Object will use. Only set if the Texture has multiple frames, such as a Texture Atlas or Sprite Sheet.
  */
+
 var Blitter = new Class({
 
     Extends: GameObject,
@@ -59,6 +60,7 @@ var Blitter = new Class({
          * [description]
          *
          * @property {Phaser.GameObjects.DisplayList} children
+         * @alias Phaser.GameObjects.Blitter#children
          * @since 3.0.0
          */
         this.children = new DisplayList();
@@ -67,6 +69,7 @@ var Blitter = new Class({
          * [description]
          *
          * @property {array} renderList
+         * @alias Phaser.GameObjects.Blitter#renderList
          * @default []
          * @since 3.0.0
          */

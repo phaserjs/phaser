@@ -31,6 +31,7 @@ var GameObject = new Class({
          * Game Objects can only belong to one Scene.
          *
          * @property {Phaser.Scene} scene
+         * @alias Phaser.GameObjects.GameObject#scene
          * @protected
          * @since 3.0.0
          */
@@ -41,6 +42,7 @@ var GameObject = new Class({
          * Used internally by Phaser but is available for your own custom classes to populate.
          *
          * @property {string} type
+         * @alias Phaser.GameObjects.GameObject#type
          * @since 3.0.0
          */
         this.type = type;
@@ -50,6 +52,7 @@ var GameObject = new Class({
          * Empty by default and never populated by Phaser, this is left for developers to use.
          *
          * @property {string} [name='']
+         * @alias Phaser.GameObjects.GameObject#name
          * @since 3.0.0
          */
         this.name = '';
@@ -60,6 +63,7 @@ var GameObject = new Class({
          * An active object is one which is having its logic and internal systems updated.
          *
          * @property {boolean} [active=true]
+         * @alias Phaser.GameObjects.GameObject#active
          * @since 3.0.0
          */
         this.active = true;
@@ -69,6 +73,7 @@ var GameObject = new Class({
          * Reserved for future use by plugins and the Input Manager.
          *
          * @property {integer} [tabIndex=-1]
+         * @alias Phaser.GameObjects.GameObject#tabIndex
          * @since 3.0.0
          */
         this.tabIndex = -1;
@@ -79,6 +84,7 @@ var GameObject = new Class({
          * `null` by default. Automatically created if you use `getData` or `setData` or `setDataEnabled`.
          *
          * @property {Phaser.Data.DataManager} data
+         * @alias Phaser.GameObjects.GameObject#data
          * @since 3.0.0
          */
         this.data = null;
@@ -89,6 +95,7 @@ var GameObject = new Class({
          * If those components are not used by your custom class then you can use this bitmask as you wish.
          *
          * @property {integer} [renderFlags=15]
+         * @alias Phaser.GameObjects.GameObject#renderFlags
          * @since 3.0.0
          */
         this.renderFlags = 15;
@@ -98,7 +105,7 @@ var GameObject = new Class({
          * Not usually set directly. Instead call `Camera.ignore`.
          *
          * @property {number} [cameraFilter=0]
-         * @see Phaser.Cameras.Camera.ignore
+         * @alias Phaser.GameObjects.GameObject#cameraFilter
          * @since 3.0.0
          */
         this.cameraFilter = 0;
@@ -108,7 +115,7 @@ var GameObject = new Class({
          * Not usually set directly. Instead call `GameObject.setInteractive()`.
          *
          * @property {?Phaser.Input.InteractiveObject} [input=null]
-         * @see setInteractive
+         * @alias Phaser.GameObjects.GameObject#input
          * @since 3.0.0
          */
         this.input = null;
@@ -117,6 +124,7 @@ var GameObject = new Class({
          * If this Game Object is enabled for physics then this property will contain a reference to a Physics Body.
          *
          * @property {?Phaser.Physics.Body} [body=null]
+         * @alias Phaser.GameObjects.GameObject#body
          * @since 3.0.0
          */
         this.body = null;
@@ -343,6 +351,7 @@ var GameObject = new Class({
  * The bitmask that `GameObject.renderFlags` is compared against to determine if the Game Object will render or not.
  *
  * @constant {integer} RENDER_MASK
+ * @memberOf Phaser.GameObjects.GameObject
  * @default
  */
 GameObject.RENDER_MASK = 15;
