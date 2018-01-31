@@ -71,6 +71,7 @@ var WebAudioSoundManager = new Class({
         var audioConfig = game.config.audio;
         if (audioConfig && audioConfig.context)
         {
+            audioConfig.context.resume();
             return audioConfig.context;
         }
         return new AudioContext();
