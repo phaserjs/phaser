@@ -33,16 +33,29 @@ var ForwardDiffuseLightPipeline = new Class({
 
     onRender: function (scene, camera)
     {
+        var lightManager = scene.lights;
+
+        lightManager.culledLights.length = 0;
+
+        if (lightManager.lights.length <= 0 || !lightManager.active)
+        {
+            return this; // If not visible lights just passthrough
+        }
+
         var renderer = this.renderer;
         var program = this.program;
-        var lightManager = scene.lights;
         var lights = scene.lights.cull(camera);
         var lightCount = Math.min(lights.length, LIGHT_COUNT);
         var cameraMatrix = camera.matrix;
         var point = {x: 0, y: 0};
         var height = renderer.height;
 
-        if (lightCount <= 0) return; // If not visible lights just passthrough
+        for (var index = 0; index < LIGHT_COUNT; ++index)
+        {
+            renderer.setFloat1(program, 'uLights[' + index + '].radius', 0); // reset lights
+        }
+
+        if (lightCount <= 0) return this;
 
         renderer.setFloat4(program, 'uCamera', camera.x, camera.y, camera.rotation, camera.zoom);
         renderer.setFloat3(program, 'uAmbientLightColor', lightManager.ambientColor.r, lightManager.ambientColor.g, lightManager.ambientColor.b);
@@ -57,7 +70,7 @@ var ForwardDiffuseLightPipeline = new Class({
             renderer.setFloat1(program, lightName + 'intensity', light.intensity);
             renderer.setFloat1(program, lightName + 'radius', light.radius);
         }
-
+        
         return this;
     },
 
@@ -215,5 +228,7 @@ var ForwardDiffuseLightPipeline = new Class({
     }
 
 });
+
+ForwardDiffuseLightPipeline.LIGHT_COUNT = LIGHT_COUNT;
 
 module.exports = ForwardDiffuseLightPipeline;

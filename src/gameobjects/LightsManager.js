@@ -1,5 +1,6 @@
 var Class = require('../utils/Class');
 var Utils = require('../renderer/webgl/Utils');
+var LightPipeline = require('../renderer/webgl/pipelines/ForwardDiffuseLightPipeline');
 
 var Light = new Class({
 
@@ -76,6 +77,21 @@ var LightsManager = new Class({
         this.lights = [];
         this.culledLights = [];
         this.ambientColor = { r: 0.1, g: 0.1, b: 0.1 };
+        this.active = false;
+    },
+
+    enable: function ()
+    {
+        this.active = true;
+
+        return this;
+    },
+
+    disable: function ()
+    {
+        this.active = false;
+        
+        return this;
     },
 
     shutdown: function ()
@@ -102,11 +118,27 @@ var LightsManager = new Class({
         var lights = this.lights;
         var culledLights = this.culledLights;
         var length = lights.length;
+        var cameraCenterX = camera.x + camera.width / 2.0;
+        var cameraCenterY = camera.y + camera.height / 2.0;
+        var cameraRadius = (camera.width + camera.height) / 2.0;
+
         culledLights.length = 0;
 
-        for (var index = 0; index < length; ++index)
+
+        for (var index = 0; index < length && culledLights.length < LightPipeline.LIGHT_COUNT; ++index)
         {
-            culledLights.push(lights[index]);
+            var light = lights[index];
+
+            // We'll just use bounding spheres to test 
+            // if lights should be rendered
+            var dx = cameraCenterX - light.x;
+            var dy = cameraCenterY - light.y;
+            var distance = Math.sqrt(dx * dx + dy * dy); 
+
+            if (distance < light.radius + cameraRadius)
+            {
+                culledLights.push(lights[index]);
+            }
         }
 
         return culledLights;
