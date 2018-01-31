@@ -82,6 +82,8 @@ var AudioFile = new Class({
                 callback(_this);
             }
         );
+
+        this.context = null;
     }
 
 });
