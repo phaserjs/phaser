@@ -32,6 +32,13 @@ var Light = new Class({
         this.scrollFactorY = 1.0;
     },
 
+    setScrollFactor: function (x, y)
+    {
+        this.scrollFactorX = x;
+        this.scrollFactorY = (y === undefined) ? x : y;
+        return this;
+    },
+
     setColor: function (rgb)
     {
         var color = Utils.getFloatsFromUintRGB(rgb);
@@ -90,7 +97,7 @@ var LightsManager = new Class({
     disable: function ()
     {
         this.active = false;
-        
+
         return this;
     },
 
@@ -121,6 +128,9 @@ var LightsManager = new Class({
         var cameraCenterX = camera.x + camera.width / 2.0;
         var cameraCenterY = camera.y + camera.height / 2.0;
         var cameraRadius = (camera.width + camera.height) / 2.0;
+        var point = { x: 0, y: 0 };
+        var cameraMatrix = camera.matrix;
+        var viewportHeight = this.systems.game.config.height;
 
         culledLights.length = 0;
 
@@ -129,10 +139,12 @@ var LightsManager = new Class({
         {
             var light = lights[index];
 
+            cameraMatrix.transformPoint(light.x, light.y, point);
+
             // We'll just use bounding spheres to test 
             // if lights should be rendered
-            var dx = cameraCenterX - light.x;
-            var dy = cameraCenterY - light.y;
+            var dx = cameraCenterX - (point.x - (camera.scrollX * light.scrollFactorX * camera.zoom));
+            var dy = cameraCenterY - (viewportHeight - (point.y - (camera.scrollY * light.scrollFactorY) * camera.zoom));
             var distance = Math.sqrt(dx * dx + dy * dy); 
 
             if (distance < light.radius + cameraRadius)
