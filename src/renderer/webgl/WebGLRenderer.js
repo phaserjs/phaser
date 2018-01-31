@@ -42,6 +42,7 @@ var WebGLRenderer = new Class({
         this.lostContextCallbacks = [];
         this.restoredContextCallbacks = [];
         this.blendModes = [];
+        this.nativeTextures = [];
         this.contextLost = false;
         this.autoResize = false;
         this.pipelines = null;
@@ -77,6 +78,7 @@ var WebGLRenderer = new Class({
         this.canvas.addEventListener('webglcontextlost', function (event) {
             renderer.contextLost = true;
             event.preventDefault();
+
             for (var index = 0; index < renderer.lostContextCallbacks.length; ++index)
             {
                 var callback = renderer.lostContextCallbacks[index];
@@ -498,6 +500,8 @@ var WebGLRenderer = new Class({
         texture.width = width;
         texture.height = height;
 
+        this.nativeTextures.push(texture);
+
         return texture;
     },
 
@@ -891,10 +895,32 @@ var WebGLRenderer = new Class({
 
     destroy: function ()
     {
-        //  Clear-up anything that should be cleared :)
-        this.contextLost = true;
+        var gl = this.gl;
 
-        this.game = null;
+        //  Clear-up anything that should be cleared :)
+        for (var key in this.pipelines)
+        {
+            this.pipelines[key].destroy();
+            delete this.pipelines[key];
+        }
+
+        for (var index = 0; index < this.nativeTextures.length; ++index)
+        {
+            this.deleteTexture(this.nativeTextures[index]);
+            delete this.nativeTextures[index];                
+        }
+
+        if (this.hasExtension('WEBGL_lose_context'))
+        {
+            this.getExtension('WEBGL_lose_context').loseContext();
+        }
+        
+        delete this.gl;
+        delete this.game;
+
+        this.contextLost = true;
+        this.extensions = {};
+        this.nativeTextures.length = 0;
     }
 
 });

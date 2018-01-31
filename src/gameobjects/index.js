@@ -74,15 +74,12 @@ var GameObjects = {
 if (WEBGL_RENDERER)
 {
     //  WebGL only Game Objects
-    GameObjects.LightLayer = require('./lightlayer/LightLayer');
     GameObjects.Mesh = require('./mesh/Mesh');
     GameObjects.Quad = require('./quad/Quad');
 
-    GameObjects.Factories.LightLayer = require('./lightlayer/LightLayerFactory');
     GameObjects.Factories.Mesh = require('./mesh/MeshFactory');
     GameObjects.Factories.Quad = require('./quad/QuadFactory');
 
-    GameObjects.Creators.LightLayer = require('./lightlayer/LightLayerCreator');
     GameObjects.Creators.Mesh = require('./mesh/MeshCreator');
     GameObjects.Creators.Quad = require('./quad/QuadCreator');
 }
