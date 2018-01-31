@@ -1,4 +1,6 @@
-//  Phaser.Input
+/**
+ * @namespace Phaser.Input
+ */
 
 module.exports = {
 

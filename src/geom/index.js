@@ -1,4 +1,6 @@
-//  Phaser.Geom
+/**
+ * @namespace Phaser.Geom
+ */
 
 module.exports = {
     

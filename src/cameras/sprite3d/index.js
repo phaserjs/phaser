@@ -1,4 +1,6 @@
-//  Phaser.Cameras.Sprite3D
+/**
+ * @namespace Phaser.Cameras.Sprite3D
+ */
 
 module.exports = {
 

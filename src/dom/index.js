@@ -1,4 +1,6 @@
-//  Phaser.DOM
+/**
+ * @namespace Phaser.DOM
+ */
 
 module.exports = {
 

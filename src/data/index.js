@@ -1,4 +1,6 @@
-//  Phaser.Data
+/**
+ * @namespace Phaser.Data
+ */
 
 module.exports = {
 

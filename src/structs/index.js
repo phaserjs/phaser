@@ -1,4 +1,6 @@
-//  Phaser.Structs
+/**
+ * @namespace Phaser.Structs
+ */
 
 module.exports = {
 

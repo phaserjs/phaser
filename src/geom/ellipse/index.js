@@ -1,4 +1,6 @@
-//  Phaser.Geom.Ellipse
+/**
+ * @namespace Phaser.Geom.Ellipse
+ */
 
 var Ellipse = require('./Ellipse');
 

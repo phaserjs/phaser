@@ -1,4 +1,6 @@
-//  Phaser.Geom.Point
+/**
+ * @namespace Phaser.Geom.Point
+ */
 
 var Point = require('./Point');
 

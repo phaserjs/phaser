@@ -1,4 +1,6 @@
-//  Phaser.Geom.Triangle
+/**
+ * @namespace Phaser.Geom.Triangle
+ */
 
 var Triangle = require('./Triangle');
 

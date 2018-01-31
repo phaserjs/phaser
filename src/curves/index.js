@@ -1,4 +1,6 @@
-//  Phaser.Curves
+/**
+ * @namespace Phaser.Curves
+ */
 
 module.exports = {
 

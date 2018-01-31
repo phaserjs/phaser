@@ -1,4 +1,6 @@
-//  Phaser.Geom.Circle
+/**
+ * @namespace Phaser.Geom.Circle
+ */
 
 var Circle = require('./Circle');
 

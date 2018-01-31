@@ -1,4 +1,6 @@
-//  Phaser.Input.Touch
+/**
+ * @namespace Phaser.Input.Touch
+ */
 
 module.exports = {
 

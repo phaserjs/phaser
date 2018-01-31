@@ -1,3 +1,6 @@
+/**
+ * @namespace Phaser.Display.Masks
+ */
 
 module.exports = {
 

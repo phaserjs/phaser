@@ -1,4 +1,6 @@
-//  Phaser.Geom.Line
+/**
+ * @namespace Phaser.Geom.Line
+ */
 
 var Line = require('./Line');
 

@@ -1,4 +1,6 @@
-//  Phaser.Physics
+/**
+ * @namespace Phaser.Physics
+ */
 
 module.exports = {
 

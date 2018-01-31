@@ -1,4 +1,6 @@
-//  Phaser.Cache
+/**
+ * @namespace Phaser.Cache
+ */
 
 module.exports = {
 

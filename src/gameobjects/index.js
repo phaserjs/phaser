@@ -1,4 +1,6 @@
-//  Phaser.GameObjects
+/**
+ * @namespace Phaser.GameObjects
+ */
 
 var GameObjects = {
 

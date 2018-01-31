@@ -6,6 +6,28 @@ var DisplayList = require('../DisplayList');
 var Frame = require('../../textures/Frame');
 var GameObject = require('../GameObject');
 
+/**
+ * A Blitter Game Object.
+ *
+ * The Blitter Game Object is a special type of Container, that contains Blitter.Bob objects.
+ * These objects can be thought of as just texture frames with a position and nothing more.
+ * Bobs don't have any update methods, or the ability to have children, or any kind of special effects.
+ * They are essentially just super-fast texture frame renderers, and the Blitter object creates and manages them.
+ *
+ * @class Blitter
+ * @extends Phaser.GameObjects.GameObject
+ * @memberOf Phaser.GameObjects
+ * @constructor
+ * @since 3.0.0
+ *
+ * @mixes Phaser.GameObjects.Components.Alpha
+ *
+ * @param {Phaser.Scene} scene - The Scene to which this Game Object belongs. It can only belong to one Scene at any given time.
+ * @param {number} [x==] - The x coordinate of this Game Object in world space.
+ * @param {number} [y=0] - The y coordinate of this Game Object in world space.
+ * @param {string} [texture='__DEFAULT'] - The key of the texture this Game Object will use for rendering. The Texture must already exist in the Texture Manager.
+ * @param {string|integer} [frame=0] - The Frame of the Texture that this Game Object will use. Only set if the Texture has multiple frames, such as a Texture Atlas or Sprite Sheet.
+ */
 var Blitter = new Class({
 
     Extends: GameObject,
@@ -25,28 +47,6 @@ var Blitter = new Class({
 
     initialize:
 
-    /**
-     * A Blitter Game Object.
-     *
-     * The Blitter Game Object is a special type of Container, that contains Blitter.Bob objects.
-     * These objects can be thought of as just texture frames with a position and nothing more.
-     * Bobs don't have any update methods, or the ability to have children, or any kind of special effects.
-     * They are essentially just super-fast texture frame renderers, and the Blitter object creates and manages them.
-     *
-     * @class Blitter
-     * @extends Phaser.GameObjects.GameObject
-     * @memberOf Phaser.GameObjects
-     * @constructor
-     * @since 3.0.0
-     *
-     * @mixes Phaser.GameObjects.Components.Alpha
-     *
-     * @param {Phaser.Scene} scene - The Scene to which this Game Object belongs. It can only belong to one Scene at any given time.
-     * @param {number} [x==] - The x coordinate of this Game Object in world space.
-     * @param {number} [y=0] - The y coordinate of this Game Object in world space.
-     * @param {string} [texture='__DEFAULT'] - The key of the texture this Game Object will use for rendering. The Texture must already exist in the Texture Manager.
-     * @param {string|integer} [frame=0] - The Frame of the Texture that this Game Object will use. Only set if the Texture has multiple frames, such as a Texture Atlas or Sprite Sheet.
-     */
     function Blitter (scene, x, y, texture, frame)
     {
         GameObject.call(this, scene, 'Blitter');

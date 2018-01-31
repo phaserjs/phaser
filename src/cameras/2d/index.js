@@ -1,4 +1,6 @@
-//  Phaser.Cameras.Scene2D
+/**
+ * @namespace Phaser.Cameras.Scene2D
+ */
 
 module.exports = {
 

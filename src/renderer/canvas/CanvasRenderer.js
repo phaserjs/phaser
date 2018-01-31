@@ -7,6 +7,10 @@ var GetBlendModes = require('./utils/GetBlendModes');
 var ScaleModes = require('../ScaleModes');
 var Smoothing = require('../../display/canvas/Smoothing');
 
+/**
+ * @namespace Phaser.Renderer.CanvasRenderer
+ */
+
 var CanvasRenderer = new Class({
 
     initialize:

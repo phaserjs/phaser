@@ -3,7 +3,9 @@
 //  Which means all instances of Phaser Games can share it,
 //  without having to re-poll the device all over again
 
-//  Phaser.Device
+/**
+ * @namespace Phaser.Device
+ */
 
 module.exports = {
 

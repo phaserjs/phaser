@@ -1,4 +1,6 @@
-//  Phaser.Display.Color
+/**
+ * @namespace Phaser.Display.Color
+ */
 
 var Color = require('./Color');
 
