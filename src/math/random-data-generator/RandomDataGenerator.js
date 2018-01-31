@@ -1,25 +1,26 @@
 var Class = require('../../utils/Class');
 
+/**
+ * [description]
+ *
+ * @class RandomDataGenerator
+ * @memberOf Phaser.Math
+ * @constructor
+ * @since 3.0.0
+ *
+ * @param {array} [seeds] - [description]
+ */
 var RandomDataGenerator = new Class({
 
     initialize:
 
-    /**
-     * [description]
-     *
-     * @class RandomDataGenerator
-     * @memberOf Phaser.Math
-     * @constructor
-     * @since 3.0.0
-     *
-     * @param {array} [seeds] - [description]
-     */
     function RandomDataGenerator (seeds)
     {
         /**
          * Internal var.
          *
          * @property {number} c
+         * @alias Phaser.Math.RandomDataGenerator#c
          * @private
          * @default 1
          * @since 3.0.0
@@ -30,6 +31,7 @@ var RandomDataGenerator = new Class({
          * Internal var.
          *
          * @property {number} s0
+         * @alias Phaser.Math.RandomDataGenerator#s0
          * @private
          * @default 0
          * @since 3.0.0
@@ -40,6 +42,7 @@ var RandomDataGenerator = new Class({
          * Internal var.
          *
          * @property {number} s1
+         * @alias Phaser.Math.RandomDataGenerator#s1
          * @private
          * @default 0
          * @since 3.0.0
@@ -50,6 +53,7 @@ var RandomDataGenerator = new Class({
          * Internal var.
          *
          * @property {number} s2
+         * @alias Phaser.Math.RandomDataGenerator#s2
          * @private
          * @default 0
          * @since 3.0.0
@@ -60,6 +64,7 @@ var RandomDataGenerator = new Class({
          * [description]
          *
          * @property {array} sign
+         * @alias Phaser.Math.RandomDataGenerator#sign
          * @since 3.0.0
          */
         this.sign = [ -1, 1 ];

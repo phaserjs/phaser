@@ -1,4 +1,6 @@
-//  Phaser.Math.Easing
+/**
+ * @namespace Phaser.Math.Easing
+ */
 
 module.exports = {
 

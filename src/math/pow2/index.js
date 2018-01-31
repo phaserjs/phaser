@@ -1,3 +1,7 @@
+/**
+ * @namespace Phaser.Math.Pow2
+ */
+
 module.exports = {
 
     GetNext: require('./GetPowerOfTwo'),

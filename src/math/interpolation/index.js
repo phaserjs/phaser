@@ -1,4 +1,6 @@
-//  Phaser.Math.Interpolation
+/**
+ * @namespace Phaser.Math.Interpolation
+ */
 
 module.exports = {
 

@@ -6,7 +6,7 @@
  *
  * @param {number} value - [description]
  * @param {number} [place=0] - [description]
- * @param {integer]} [base=10] - [description]
+ * @param {integer} [base=10] - [description]
  *
  * @return {number} [description]
  */

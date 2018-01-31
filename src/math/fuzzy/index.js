@@ -1,3 +1,7 @@
+/**
+ * @namespace Phaser.Math.Fuzzy
+ */
+
 module.exports = {
 
     Ceil: require('./Ceil'),

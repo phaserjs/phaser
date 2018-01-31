@@ -1,4 +1,6 @@
-//  Phaser.Utils.Array
+/**
+ * @namespace Phaser.Utils.Array
+ */
 
 module.exports = {
 

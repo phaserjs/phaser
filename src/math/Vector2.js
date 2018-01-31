@@ -3,21 +3,21 @@
 
 var Class = require('../utils/Class');
 
+/**
+ * [description]
+ *
+ * @class Vector2
+ * @memberOf Phaser.Math
+ * @constructor
+ * @since 3.0.0
+ *
+ * @param {number} [x] - [description]
+ * @param {number} [y] - [description]
+ */
 var Vector2 = new Class({
 
     initialize:
 
-    /**
-     * [description]
-     *
-     * @class Vector2
-     * @memberOf Phaser.Math
-     * @constructor
-     * @since 3.0.0
-     *
-     * @param {number} [x] - [description]
-     * @param {number} [y] - [description]
-     */
     function Vector2 (x, y)
     {
         if (typeof x === 'object')

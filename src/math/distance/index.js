@@ -1,4 +1,6 @@
-//  Phaser.Math.Distance
+/**
+ * @namespace Phaser.Math.Distance
+ */
 
 module.exports = {
 

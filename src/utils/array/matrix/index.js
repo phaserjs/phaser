@@ -1,3 +1,7 @@
+/**
+ * @namespace Phaser.Utils.Array.Matrix
+ */
+
 module.exports = {
 
     CheckMatrix: require('./CheckMatrix'),

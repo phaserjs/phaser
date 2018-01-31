@@ -1,3 +1,7 @@
+/**
+ * @namespace Phaser.Math.Angle
+ */
+
 module.exports = {
 
     Between: require('./Between'),

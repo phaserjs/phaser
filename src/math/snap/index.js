@@ -1,3 +1,7 @@
+/**
+ * @namespace Phaser.Math.Snap
+ */
+
 module.exports = {
 
     Ceil: require('./SnapCeil'),
