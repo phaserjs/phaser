@@ -96,7 +96,6 @@ var BaseSoundManager = new Class({
                 this.onFocus();
             }
         }, this);
-
         game.events.once('destroy', this.destroy, this);
 
         /**
@@ -412,15 +411,12 @@ var BaseSoundManager = new Class({
     destroy: function ()
     {
         this.removeAllListeners();
-
         this.forEachActiveSound(function (sound)
         {
             sound.destroy();
         });
-
         this.sounds.length = 0;
         this.sounds = null;
-
         this.game = null;
     },
 
