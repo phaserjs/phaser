@@ -118,11 +118,12 @@ var WebGLPipeline = new Class({
     {
         var gl = this.gl;
 
-        gl.deleteShader(this.program);
+        gl.deleteProgram(this.program);
         gl.deleteBuffer(this.vertexBuffer);
 
-        this.program = null;
-        this.vertexBuffer = null;
+        delete this.program;
+        delete this.vertexBuffer;
+        delete this.gl;
 
         return this;
     }
