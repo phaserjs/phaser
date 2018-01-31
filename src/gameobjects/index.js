@@ -2,6 +2,8 @@
 
 var GameObjects = {
 
+    LightsManager: require('./LightsManager'),
+    LightsPlugin: require('./LightsPlugin'),
     DisplayList: require('./DisplayList'),
     DisplayListPlugin: require('./DisplayListPlugin'),
     UpdateList: require('./UpdateList'),

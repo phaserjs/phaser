@@ -41,7 +41,6 @@ var FlatTintPipeline = new Class({
     function FlatTintPipeline(game, gl, renderer)
     {
         WebGLPipeline.call(this, {
-            name: 'FlatTintPipeline',
             game: game,
             gl: gl,
             renderer: renderer,

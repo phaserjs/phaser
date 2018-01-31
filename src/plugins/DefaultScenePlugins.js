@@ -12,7 +12,8 @@ var DefaultScenePlugins = [
     'DataManagerPlugin',
     'InputPlugin',
     'Loader',
-    'TweenManager'
+    'TweenManager',
+    'LightsPlugin'
 
 ];
 

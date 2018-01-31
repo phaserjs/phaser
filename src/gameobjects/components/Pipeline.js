@@ -36,6 +36,11 @@ var Pipeline = {
     {
         this.pipeline = this.defaultPipeline;
         return (this.pipeline !== null);
+    },
+
+    getPipelineName: function ()
+    {
+        return this.pipeline.name;
     }
 
 };

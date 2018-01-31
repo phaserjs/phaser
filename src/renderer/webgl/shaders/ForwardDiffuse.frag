@@ -4,13 +4,13 @@ precision mediump float;
 
 struct Light
 {
-    vec3 position;
+    vec2 position;
     vec3 color;
-    float attenuation;
+    float intensity;
     float radius;
 };
 
-const int kMaxLights = 10;
+const int kMaxLights = %LIGHT_COUNT%;
 
 uniform vec4 uCamera; /* x, y, rotation, zoom */
 uniform vec2 uResolution;
@@ -33,14 +33,14 @@ void main()
     for (int index = 0; index < kMaxLights; ++index)
     {
         Light light = uLights[index];
-        vec3 lightDir = vec3((light.position.xy / res) - (gl_FragCoord.xy / res), light.position.z);
+        vec3 lightDir = vec3((light.position.xy / res) - (gl_FragCoord.xy / res), 0.1);
         vec3 lightNormal = normalize(lightDir);
         float distToSurf = length(lightDir) * uCamera.w;
         float diffuseFactor = max(dot(normal, lightNormal), 0.0);
         float radius = (light.radius / res.x * uCamera.w) * uCamera.w;
         float attenuation = clamp(1.0 - distToSurf * distToSurf / (radius * radius), 0.0, 1.0);
         vec3 diffuse = light.color * diffuseFactor;
-        finalColor += attenuation * diffuse;
+        finalColor += (attenuation * diffuse) * light.intensity;
     }
 
     vec4 colorOutput = vec4(uAmbientLightColor + finalColor, 1.0);

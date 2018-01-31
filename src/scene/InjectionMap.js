@@ -19,6 +19,7 @@ var InjectionMap = {
     make: 'make',
     scenePlugin: 'scene',
     displayList: 'children',
+    lights: 'lights',
 
     data: 'data',
     input: 'input',
