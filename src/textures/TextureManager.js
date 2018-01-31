@@ -48,6 +48,8 @@ var TextureManager = new Class({
 
         this.addBase64('__DEFAULT', this.game.config.defaultImage);
         this.addBase64('__MISSING', this.game.config.missingImage);
+
+        this.game.events.once('destroy', this.destroy, this);
     },
 
     updatePending: function ()
@@ -410,6 +412,18 @@ var TextureManager = new Class({
 
             callback.apply(thisArg, args);
         }
+    },
+
+    destroy: function ()
+    {
+        for (var texture in this.list)
+        {
+            this.list[texture].destroy();
+        }
+
+        this.list = {};
+
+        this.game = null;
     }
 
 });

@@ -598,7 +598,8 @@ var TimeStep = new Class({
     {
         this.stop();
 
-        this.callback = null;
+        this.callback = NOOP;
+
         this.raf = null;
         this.game = null;
     }

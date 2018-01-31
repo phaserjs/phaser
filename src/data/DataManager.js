@@ -27,6 +27,8 @@ var DataManager = new Class({
         this.blockSet = false;
 
         this._frozen = false;
+
+        this.events.once('destroy', this.destroy, this);
     },
 
     //  Retrieves the value for the given key, or undefined if it doesn't exist.

@@ -402,6 +402,8 @@ var KeyboardManager = new Class({
         this.captures = [];
         this.queue = [];
         this.handler = undefined;
+
+        this.manager = null;
     }
 
 });

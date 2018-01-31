@@ -104,7 +104,6 @@ var CanvasRenderer = new Class({
     {
     },
 
-
     resetTransform: function ()
     {
         this.currentContext.setTransform(1, 0, 0, 1, 0, 0);
@@ -284,17 +283,14 @@ var CanvasRenderer = new Class({
     },
 
     /**
-     * Removes everything from the renderer and optionally removes the Canvas DOM element.
-     *
      * @method destroy
-     * @param [removegameCanvas=true] {boolean} Removes the Canvas element from the DOM.
      */
     destroy: function ()
     {
-        //  CanvasPool
-
         this.gameCanvas = null;
         this.gameContext = null;
+
+        this.game = null;
     }
 
 });

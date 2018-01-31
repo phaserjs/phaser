@@ -302,6 +302,9 @@ var Frame = new Class({
 
     destroy: function ()
     {
+        this.texture = null;
+
+        this.source = null;
     },
 
     /**

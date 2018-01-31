@@ -97,6 +97,8 @@ var BaseSoundManager = new Class({
             }
         }, this);
 
+        game.events.once('destroy', this.destroy, this);
+
         /**
          * Property that actually holds the value of global playback rate.
          *
@@ -409,14 +411,17 @@ var BaseSoundManager = new Class({
      */
     destroy: function ()
     {
-        this.game = null;
         this.removeAllListeners();
+
         this.forEachActiveSound(function (sound)
         {
             sound.destroy();
         });
+
         this.sounds.length = 0;
         this.sounds = null;
+
+        this.game = null;
     },
 
     /**

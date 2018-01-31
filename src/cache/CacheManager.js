@@ -131,6 +131,8 @@ var CacheManager = new Class({
          * @since 3.0.0
          */
         this.custom = {};
+
+        this.game.events.once('destroy', this.destroy, this);
     },
 
     /**

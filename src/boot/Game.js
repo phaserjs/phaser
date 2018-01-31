@@ -1,10 +1,11 @@
 var AddToDOM = require('../dom/AddToDOM');
 var AnimationManager = require('../animations/AnimationManager');
 var CacheManager = require('../cache/CacheManager');
+var CanvasPool = require('../display/canvas/CanvasPool');
 var Class = require('../utils/Class');
 var Config = require('./Config');
 var CreateRenderer = require('./CreateRenderer');
-var Data = require('../data/DataManager');
+var DataManager = require('../data/DataManager');
 var DebugHeader = require('./DebugHeader');
 var Device = require('../device');
 var DOMContentLoaded = require('../dom/DOMContentLoaded');
@@ -133,10 +134,10 @@ var Game = new Class({
         /**
          * [description]
          *
-         * @property {Phaser.Data} registry
+         * @property {Phaser.Data.DataManager} registry
          * @since 3.0.0
          */
-        this.registry = new Data(this);
+        this.registry = new DataManager(this);
 
         /**
          * An instance of the Input Manager.
@@ -212,9 +213,6 @@ var Game = new Class({
 
         //  Wait for the DOM Ready event, then call boot.
         DOMContentLoaded(this.boot.bind(this));
-
-        //  For debugging only
-        window.game = this;
     },
 
     /**
@@ -425,9 +423,24 @@ var Game = new Class({
      * @method Phaser.Game#destroy
      * @since 3.0.0
      */
-    destroy: function ()
+    destroy: function (removeCanvas)
     {
-        //  TODO
+        this.loop.destroy();
+
+        this.scene.destroy();
+
+        this.renderer.destroy();
+
+        this.events.emit('destroy');
+
+        this.events.removeAllListeners();
+
+        this.onStepCallback = null;
+
+        if (removeCanvas)
+        {
+            CanvasPool.remove(this.canvas);
+        }
     }
 
 });

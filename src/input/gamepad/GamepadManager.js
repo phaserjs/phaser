@@ -340,6 +340,20 @@ var GamepadManager = new Class({
     },
 
     /**
+     * [description]
+     *
+     * @method Phaser.Input.Gamepad.GamepadManager#destroy
+     * @since 3.0.0
+     */
+    destroy: function ()
+    {
+        this.stopListeners();
+        this.disconnectAll();
+
+        this.gamepads = [];
+    },
+
+    /**
      * The total number of connected game pads.
      * 
      * @name Phaser.Input.Gamepad.GamepadManager#total

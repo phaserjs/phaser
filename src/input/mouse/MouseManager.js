@@ -267,6 +267,19 @@ var MouseManager = new Class({
             document.removeEventListener('mozpointerlockchange', this.pointerLockChange, true);
             document.removeEventListener('webkitpointerlockchange', this.pointerLockChange, true);
         }
+    },
+
+    /**
+     * [description]
+     *
+     * @method Phaser.Input.Mouse.MouseManager#destroy
+     * @since 3.0.0
+     */
+    destroy: function ()
+    {
+        this.stopListeners();
+
+        this.manager = null;
     }
 
 });

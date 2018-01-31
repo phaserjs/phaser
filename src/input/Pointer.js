@@ -584,6 +584,19 @@ var Pointer = new Class({
     forwardButtonDown: function ()
     {
         return (this.buttons & 16);
+    },
+
+    /**
+     * [description]
+     *
+     * @method Phaser.Input.Pointer#destroy
+     * @since 3.0.0
+     */
+    destroy: function ()
+    {
+        this.camera = null;
+        this.manager = null;
+        this.position = null;
     }
 
 });

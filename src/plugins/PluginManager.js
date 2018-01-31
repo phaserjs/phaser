@@ -16,6 +16,7 @@ var PluginManager = new Class({
 
     boot: function ()
     {
+        this.game.events.once('destroy', this.destroy, this);
     },
 
     installGlobal: function (sys, globalPlugins)
@@ -88,7 +89,7 @@ var PluginManager = new Class({
 
     destroy: function ()
     {
-        plugins = {};
+        this.game = null;
     }
 
 });

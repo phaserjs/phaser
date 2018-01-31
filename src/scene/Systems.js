@@ -219,6 +219,9 @@ var Systems = new Class({
     {
         this.settings.status = CONST.DESTROYED;
 
+        this.settings.active = false;
+        this.settings.visible = false;
+
         this.events.emit('destroy', this);
     }
 

@@ -159,6 +159,19 @@ var TouchManager = new Class({
         target.removeEventListener('touchstart', this.handler);
         target.removeEventListener('touchmove', this.handler);
         target.removeEventListener('touchend', this.handler);
+    },
+
+    /**
+     * [description]
+     *
+     * @method Phaser.Input.Touch.TouchManager#destroy
+     * @since 3.0.0
+     */
+    destroy: function ()
+    {
+        this.stopListeners();
+
+        this.manager = null;
     }
 
 });

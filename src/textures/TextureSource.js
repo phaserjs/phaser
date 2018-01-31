@@ -55,6 +55,13 @@ var TextureSource = new Class({
         {
             game.renderer.setTextureFilter(this.glTexture, filterMode);
         }
+    },
+
+    destroy: function ()
+    {
+        this.texture = null;
+
+        this.image = null;
     }
 
 });

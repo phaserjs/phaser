@@ -193,6 +193,8 @@ var InputManager = new Class({
         this.mouse.boot();
         this.touch.boot();
         this.gamepad.boot();
+
+        this.game.events.once('destroy', this.destroy, this);
     },
 
     /**
@@ -500,6 +502,28 @@ var InputManager = new Class({
     getScaleY: function ()
     {
         return this.game.config.height / this.bounds.height;
+    },
+
+    /**
+     * [description]
+     *
+     * @method Phaser.Input.InputManager#destroy
+     * @since 3.0.0
+     */
+    destroy: function ()
+    {
+        this.events.removeAllListeners();
+
+        this.keyboard.destroy();
+        this.mouse.destroy();
+        this.touch.destroy();
+        this.gamepad.destroy();
+
+        this.activePointer.destroy();
+
+        this.queue = [];
+
+        this.game = null;
     }
 
 });

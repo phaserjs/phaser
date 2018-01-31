@@ -1070,7 +1070,20 @@ var SceneManager = new Class({
      */
     destroy: function ()
     {
-        //  TODO
+        for (var i = this.scenes.length - 1; i >= 0; i--)
+        {
+            var sys = this.scenes[i].sys;
+
+            sys.destroy();
+        }
+
+        this.scenes = [];
+
+        this._pending = [];
+        this._start = [];
+        this._queue = [];
+
+        this.game = null;
     }
 
 });

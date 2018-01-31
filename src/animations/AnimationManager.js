@@ -84,6 +84,8 @@ var AnimationManager = new Class({
     boot: function ()
     {
         this.textureManager = this.game.textures;
+
+        this.game.events.once('destroy', this.destroy, this);
     },
 
     /**
@@ -551,7 +553,11 @@ var AnimationManager = new Class({
      */
     destroy: function ()
     {
-        //  TODO
+        this.anims.clear();
+
+        this.textureManager = null;
+
+        this.game = null;
     }
 
 });

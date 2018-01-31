@@ -191,12 +191,14 @@ var Texture = new Class({
 
     setFilter: function (filterMode)
     {
-        for (var i = 0; i < this.source.length; i++)
+        var i;
+
+        for (i = 0; i < this.source.length; i++)
         {
             this.source[i].setFilter(filterMode);
         }
 
-        for (var i = 0; i < this.dataSource.length; i++)
+        for (i = 0; i < this.dataSource.length; i++)
         {
             this.dataSource[i].setFilter(filterMode);
         }
@@ -204,6 +206,28 @@ var Texture = new Class({
 
     destroy: function ()
     {
+        var i;
+
+        for (i = 0; i < this.source.length; i++)
+        {
+            this.source[i].destroy();
+        }
+
+        for (i = 0; i < this.dataSource.length; i++)
+        {
+            this.dataSource[i].destroy();
+        }
+
+        for (var frameName in this.frames)
+        {
+            var frame = this.frames[frameName];
+
+            frame.destroy();
+        }
+
+        this.source = [];
+        this.dataSource = [];
+        this.frames = {};
     }
 
 });

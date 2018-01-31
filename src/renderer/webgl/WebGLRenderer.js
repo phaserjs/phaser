@@ -882,6 +882,14 @@ var WebGLRenderer = new Class({
         this.setProgram(program);
         this.gl.uniformMatrix4fv(this.gl.getUniformLocation(program, name), transpose, matrix);
         return this;
+    },
+
+    destroy: function ()
+    {
+        //  Clear-up anything that should be cleared :)
+        this.contextLost = true;
+
+        this.game = null;
     }
 
 });
