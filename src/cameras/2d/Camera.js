@@ -799,7 +799,7 @@ var Camera = new Class({
     {
         var width = this.width;
         var height = this.height;
-        var zoom = this.zoom + baseScale;
+        var zoom = this.zoom * baseScale;
         var matrix = this.matrix;
         var originX = width / 2;
         var originY = height / 2;
