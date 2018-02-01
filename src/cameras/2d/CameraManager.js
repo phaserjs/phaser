@@ -85,6 +85,14 @@ var CameraManager = new Class({
          * @since 3.0.0
          */
         this.main = this.cameras[0];
+
+        /**
+         * This scale affects all cameras. It's used by Scale Manager.
+         *
+         * @property {number} baseScale
+         * @since 3.0.0
+         */
+        this.baseScale = 1.0;
     },
 
     /**
@@ -360,12 +368,13 @@ var CameraManager = new Class({
     render: function (renderer, children, interpolation)
     {
         var cameras = this.cameras;
+        var baseScale = this.baseScale;
 
         for (var i = 0, l = cameras.length; i < l; ++i)
         {
             var camera = cameras[i];
 
-            camera.preRender();
+            camera.preRender(baseScale);
 
             renderer.render(this.scene, children, interpolation, camera);
         }

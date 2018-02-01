@@ -791,12 +791,15 @@ var Camera = new Class({
      *
      * @method Phaser.Cameras.Scene2D.Camera#preRender
      * @since 3.0.0
+     *
+     * @param {number} baseScale - [description]
+     *
      */
-    preRender: function ()
+    preRender: function (baseScale)
     {
         var width = this.width;
         var height = this.height;
-        var zoom = this.zoom;
+        var zoom = this.zoom + baseScale;
         var matrix = this.matrix;
         var originX = width / 2;
         var originY = height / 2;
