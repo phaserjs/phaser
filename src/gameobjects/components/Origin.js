@@ -1,4 +1,3 @@
-
 /**
  * Provides methods used for getting and setting the origin of a Game Object.
  * Values are normalized, given in the range 0 to 1.
