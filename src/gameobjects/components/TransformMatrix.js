@@ -1,5 +1,20 @@
 var Class = require('../../utils/Class');
 
+/**
+ * [description]
+ *
+ * @class TransformMatrix
+ * @memberOf Phaser.GameObjects.Components
+ * @constructor
+ * @since 3.0.0
+ *
+ * @param {number} [a=1] - [description]
+ * @param {number} [b=0] - [description]
+ * @param {number} [c=0] - [description]
+ * @param {number} [d=1] - [description]
+ * @param {number} [tx=0] - [description]
+ * @param {number} [ty=0] - [description]
+ */
 var TransformMatrix = new Class({
 
     initialize:
@@ -13,8 +28,22 @@ var TransformMatrix = new Class({
         if (tx === undefined) { tx = 0; }
         if (ty === undefined) { ty = 0; }
 
+        /**
+         * [description]
+         *
+         * @name Phaser.GameObjects.Components.TransformMatrix#matrix
+         * @type {Float32Array}
+         * @since 3.0.0
+         */
         this.matrix = new Float32Array([ a, b, c, d, tx, ty, 0, 0, 1 ]);
 
+        /**
+         * [description]
+         *
+         * @name Phaser.GameObjects.Components.TransformMatrix#decomposedMatrix
+         * @type {object}
+         * @since 3.0.0
+         */
         this.decomposedMatrix = {
             translateX: 0,
             translateY: 0,
@@ -24,6 +53,14 @@ var TransformMatrix = new Class({
         };
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.GameObjects.Components.TransformMatrix#loadIdentity
+     * @since 3.0.0
+     *
+     * @return {Phaser.GameObjects.Components.TransformMatrix} This TransformMatrix.
+     */
     loadIdentity: function ()
     {
         var matrix = this.matrix;
@@ -38,6 +75,17 @@ var TransformMatrix = new Class({
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.GameObjects.Components.TransformMatrix#translate
+     * @since 3.0.0
+     *
+     * @param {number} x - [description]
+     * @param {number} y - [description]
+     *
+     * @return {Phaser.GameObjects.Components.TransformMatrix} This TransformMatrix.
+     */
     translate: function (x, y)
     {
         var matrix = this.matrix;
@@ -48,6 +96,17 @@ var TransformMatrix = new Class({
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.GameObjects.Components.TransformMatrix#scale
+     * @since 3.0.0
+     *
+     * @param {number} x - [description]
+     * @param {number} y - [description]
+     *
+     * @return {Phaser.GameObjects.Components.TransformMatrix} This TransformMatrix.
+     */
     scale: function (x, y)
     {
         var matrix = this.matrix;
@@ -60,6 +119,16 @@ var TransformMatrix = new Class({
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.GameObjects.Components.TransformMatrix#rotate
+     * @since 3.0.0
+     *
+     * @param {number} radian - [description]
+     *
+     * @return {Phaser.GameObjects.Components.TransformMatrix} This TransformMatrix.
+     */
     rotate: function (radian)
     {
         var radianSin = Math.sin(radian);
@@ -68,6 +137,16 @@ var TransformMatrix = new Class({
         return this.transform(radianCos, radianSin, -radianSin, radianCos, 0, 0);
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.GameObjects.Components.TransformMatrix#multiply
+     * @since 3.0.0
+     *
+     * @param {Phaser.GameObjects.Components.TransformMatrix} rhs - [description]
+     *
+     * @return {Phaser.GameObjects.Components.TransformMatrix} This TransformMatrix.
+     */
     multiply: function (rhs)
     {
         var matrix = this.matrix;
@@ -97,6 +176,21 @@ var TransformMatrix = new Class({
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.GameObjects.Components.TransformMatrix#transform
+     * @since 3.0.0
+     *
+     * @param {number} a - [description]
+     * @param {number} b - [description]
+     * @param {number} c - [description]
+     * @param {number} d - [description]
+     * @param {number} tx - [description]
+     * @param {number} ty - [description]
+     *
+     * @return {Phaser.GameObjects.Components.TransformMatrix} This TransformMatrix.
+     */
     transform: function (a, b, c, d, tx, ty)
     {
         var matrix = this.matrix;
@@ -118,7 +212,18 @@ var TransformMatrix = new Class({
         return this;
     },
 
-
+    /**
+     * [description]
+     *
+     * @method Phaser.GameObjects.Components.TransformMatrix#transformPoint
+     * @since 3.0.0
+     *
+     * @param {number} x - [description]
+     * @param {number} y - [description]
+     * @param {Phaser.Geom.Point|Phaser.Math.Vec2|object} point - [description]
+     *
+     * @return {Phaser.Geom.Point|Phaser.Math.Vec2|object} [description]
+     */
     transformPoint: function (x, y, point)
     {
         if (point === undefined) { point = { x: 0, y: 0 }; }
@@ -138,6 +243,14 @@ var TransformMatrix = new Class({
         return point;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.GameObjects.Components.TransformMatrix#invert
+     * @since 3.0.0
+     *
+     * @return {Phaser.GameObjects.Components.TransformMatrix} This TransformMatrix.
+     */
     invert: function ()
     {
         var matrix = this.matrix;
@@ -161,6 +274,21 @@ var TransformMatrix = new Class({
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.GameObjects.Components.TransformMatrix#setTransform
+     * @since 3.0.0
+     *
+     * @param {number} a - [description]
+     * @param {number} b - [description]
+     * @param {number} c - [description]
+     * @param {number} d - [description]
+     * @param {number} tx - [description]
+     * @param {number} ty - [description]
+     *
+     * @return {Phaser.GameObjects.Components.TransformMatrix} This TransformMatrix.
+     */
     setTransform: function (a, b, c, d, tx, ty)
     {
         var matrix = this.matrix;
@@ -175,6 +303,14 @@ var TransformMatrix = new Class({
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.GameObjects.Components.TransformMatrix#decomposeMatrix
+     * @since 3.0.0
+     *
+     * @return {object} [description]
+     */
     decomposeMatrix: function ()
     {
         var decomposedMatrix = this.decomposedMatrix;
@@ -205,7 +341,20 @@ var TransformMatrix = new Class({
         return decomposedMatrix;
     },
 
-    /* identity + translate + rotate + scale */
+    /**
+     * Identity + Translate + Rotate + Scale
+     *
+     * @method Phaser.GameObjects.Components.TransformMatrix#applyITRS
+     * @since 3.0.0
+     *
+     * @param {number} x - [description]
+     * @param {number} y - [description]
+     * @param {number} rotation - [description]
+     * @param {number} scaleX - [description]
+     * @param {number} scaleY - [description]
+     *
+     * @return {Phaser.GameObjects.Components.TransformMatrix} This TransformMatrix.
+     */
     applyITRS: function (x, y, rotation, scaleX, scaleY)
     {
         var matrix = this.matrix;

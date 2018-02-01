@@ -22,6 +22,15 @@ var GameObject = require('../GameObject');
  *
  * Mixins:
  * @extends Phaser.GameObjects.Components.Alpha
+ * @extends Phaser.GameObjects.Components.BlendMode
+ * @extends Phaser.GameObjects.Components.Depth
+ * @extends Phaser.GameObjects.Components.Pipeline
+ * @extends Phaser.GameObjects.Components.ScaleMode
+ * @extends Phaser.GameObjects.Components.ScrollFactor
+ * @extends Phaser.GameObjects.Components.Size
+ * @extends Phaser.GameObjects.Components.Texture
+ * @extends Phaser.GameObjects.Components.Transform
+ * @extends Phaser.GameObjects.Components.Visible
  *
  * @param {Phaser.Scene} scene - The Scene to which this Game Object belongs. It can only belong to one Scene at any given time.
  * @param {number} [x==] - The x coordinate of this Game Object in world space.
@@ -39,11 +48,11 @@ var Blitter = new Class({
         Components.Depth,
         Components.Pipeline,
         Components.ScaleMode,
+        Components.ScrollFactor,
         Components.Size,
         Components.Texture,
         Components.Transform,
         Components.Visible,
-        Components.ScrollFactor,
         BlitterRender
     ],
 
