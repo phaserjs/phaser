@@ -5,7 +5,13 @@ var WrapAngleDegrees = require('../../math/angle/WrapDegrees');
 //  global bitmask flag for GameObject.renderMask (used by Scale)
 var _FLAG = 4; // 0100
 
-//  Transform Component
+/**
+ * Provides methods used for getting and setting the position, scale and rotation of a Game Object.
+ * 
+ * @name Phaser.GameObjects.Components.Transform
+ * @mixin
+ * @since 3.0.0
+ */
 
 var Transform = {
 
@@ -13,83 +19,56 @@ var Transform = {
     _scaleX: 1,
     _scaleY: 1,
     _rotation: 0,
-    _depth: 0,
-    _dirty: false,
-    _world: { a: 1, b: 0, c: 0, d: 1, tx: 0, ty: 0, sr: 0, cr: 0 },
 
-    //  public properties / methods
+    /**
+     * The x position of this Game Object.
+     * 
+     * @name Phaser.GameObjects.Components.Transform#x
+     * @type {number}
+     * @default 0
+     * @since 3.0.0
+     */
+    x: 0,
 
-    //  These are world coordinate values.
+    /**
+     * The y position of this Game Object.
+     * 
+     * @name Phaser.GameObjects.Components.Transform#y
+     * @type {number}
+     * @default 0
+     * @since 3.0.0
+     */
+    y: 0,
 
-    //  If Game Object is a child of a Container, then you can modify its local position (relative to the Container)
-    //  by setting `localX`, `localY`, etc (or changing x/y directly, but remember the values given here are world based).
-    //  Changes to the parent Container are instantly reflected in the world coords here (x,y, etc)
+    /**
+     * The z position of this Game Object.
+     * Note: Do not use this value to set the z-index, instead see the `depth` property.
+     * 
+     * @name Phaser.GameObjects.Components.Transform#z
+     * @type {number}
+     * @default 0
+     * @since 3.0.0
+     */
+    z: 0,
 
-    _x: 0,
-    _y: 0,
-    _z: 0,
-    _w: 0,
+    /**
+     * The w position of this Game Object.
+     * 
+     * @name Phaser.GameObjects.Components.Transform#w
+     * @type {number}
+     * @default 0
+     * @since 3.0.0
+     */
+    w: 0,
 
-    x: {
-
-        get: function ()
-        {
-            return this._x;
-        },
-
-        set: function (value)
-        {
-            this._x = value;
-            this._dirty = true;
-        }
-
-    },
-
-    y: {
-
-        get: function ()
-        {
-            return this._y;
-        },
-
-        set: function (value)
-        {
-            this._y = value;
-            this._dirty = true;
-        }
-
-    },
-
-    z: {
-
-        get: function ()
-        {
-            return this._z;
-        },
-
-        set: function (value)
-        {
-            this._z = value;
-            this._dirty = true;
-        }
-
-    },
-
-    w: {
-
-        get: function ()
-        {
-            return this._w;
-        },
-
-        set: function (value)
-        {
-            this._w = value;
-            this._dirty = true;
-        }
-
-    },
-
+    /**
+     * The horizontal scale of this Game Object.
+     * 
+     * @name Phaser.GameObjects.Components.Transform#scaleX
+     * @type {number}
+     * @default 1
+     * @since 3.0.0
+     */
     scaleX: {
 
         get: function ()
@@ -100,7 +79,6 @@ var Transform = {
         set: function (value)
         {
             this._scaleX = value;
-            this._dirty = true;
 
             if (this._scaleX === 0)
             {
@@ -114,6 +92,14 @@ var Transform = {
 
     },
 
+    /**
+     * The vertical scale of this Game Object.
+     * 
+     * @name Phaser.GameObjects.Components.Transform#scaleY
+     * @type {number}
+     * @default 1
+     * @since 3.0.0
+     */
     scaleY: {
 
         get: function ()
@@ -124,7 +110,6 @@ var Transform = {
         set: function (value)
         {
             this._scaleY = value;
-            this._dirty = true;
 
             if (this._scaleY === 0)
             {
@@ -138,6 +123,18 @@ var Transform = {
 
     },
 
+    /**
+     * The angle of this Game Object as expressed in degrees.
+     * 
+     * Where 0 is to the right, 90 is down, 180 is left.
+     * 
+     * If you prefer to work in radians, see the `rotation` property instead.
+     * 
+     * @name Phaser.GameObjects.Components.Transform#angle
+     * @type {integer}
+     * @default 0
+     * @since 3.0.0
+     */
     angle: {
 
         get: function ()
@@ -152,6 +149,16 @@ var Transform = {
         }
     },
 
+    /**
+     * The angle of this Game Object in radians.
+     * 
+     * If you prefer to work in degrees, see the `angle` property instead.
+     * 
+     * @name Phaser.GameObjects.Components.Transform#rotation
+     * @type {number}
+     * @default 1
+     * @since 3.0.0
+     */
     rotation: {
 
         get: function ()
@@ -163,29 +170,22 @@ var Transform = {
         {
             //  value is in radians
             this._rotation = WrapAngle(value);
-
-            this._world.sr = Math.sin(this._rotation);
-            this._world.cr = Math.cos(this._rotation);
-
-            this._dirty = true;
         }
     },
 
-    depth: {
-
-        get: function ()
-        {
-            return this._depth;
-        },
-
-        set: function (value)
-        {
-            this.scene.sys.queueDepthSort();
-            this._depth = value;
-        }
-
-    },
-
+    /**
+     * Sets the position of this Game Object.
+     * 
+     * @method Phaser.GameObjects.Components.Transform.setPosition
+     * @since 3.0.0
+     *
+     * @param {number} [x=0] - The x position of this Game Object.
+     * @param {number} [y] - The y position of this Game Object. If not set it will use the `x` value.
+     * @param {number} [z=0] - The z position of this Game Object.
+     * @param {number} [w=0] - The w position of this Game Object.
+     * 
+     * @return {Phaser.GameObjects.GameObject} This Game Object instance.
+     */
     setPosition: function (x, y, z, w)
     {
         if (x === undefined) { x = 0; }
@@ -193,16 +193,24 @@ var Transform = {
         if (z === undefined) { z = 0; }
         if (w === undefined) { w = 0; }
 
-        this._x = x;
-        this._y = y;
-        this._z = z;
-        this._w = w;
-
-        this._dirty = true;
+        this.x = x;
+        this.y = y;
+        this.z = z;
+        this.w = w;
 
         return this;
     },
 
+    /**
+     * Sets the rotation of this Game Object.
+     * 
+     * @method Phaser.GameObjects.Components.Transform.setRotation
+     * @since 3.0.0
+     *
+     * @param {number} [radians=0] - The rotation of this Game Object, in radians.
+     * 
+     * @return {Phaser.GameObjects.GameObject} This Game Object instance.
+     */
     setRotation: function (radians)
     {
         if (radians === undefined) { radians = 0; }
@@ -212,6 +220,16 @@ var Transform = {
         return this;
     },
 
+    /**
+     * Sets the angle of this Game Object.
+     * 
+     * @method Phaser.GameObjects.Components.Transform.setAngle
+     * @since 3.0.0
+     *
+     * @param {number} [degrees=0] - The rotation of this Game Object, in degrees.
+     * 
+     * @return {Phaser.GameObjects.GameObject} This Game Object instance.
+     */
     setAngle: function (degrees)
     {
         if (degrees === undefined) { degrees = 0; }
@@ -221,6 +239,17 @@ var Transform = {
         return this;
     },
 
+    /**
+     * Sets the scale of this Game Object.
+     * 
+     * @method Phaser.GameObjects.Components.Transform.setScale
+     * @since 3.0.0
+     *
+     * @param {number} x - The horizontal scale of this Game Object.
+     * @param {number} [y] - The vertical scale of this Game Object. If not set it will use the `x` value.
+     * 
+     * @return {Phaser.GameObjects.GameObject} This Game Object instance.
+     */
     setScale: function (x, y)
     {
         if (x === undefined) { x = 1; }
@@ -232,6 +261,54 @@ var Transform = {
         return this;
     },
 
+    /**
+     * Sets the x position of this Game Object.
+     * 
+     * @method Phaser.GameObjects.Components.Transform.setX
+     * @since 3.0.0
+     *
+     * @param {number} [value=0] - The x position of this Game Object.
+     * 
+     * @return {Phaser.GameObjects.GameObject} This Game Object instance.
+     */
+    setX: function (value)
+    {
+        if (value === undefined) { value = 0; }
+
+        this.x = value;
+
+        return this;
+    },
+
+    /**
+     * Sets the y position of this Game Object.
+     * 
+     * @method Phaser.GameObjects.Components.Transform.setY
+     * @since 3.0.0
+     *
+     * @param {number} [value=0] - The y position of this Game Object.
+     * 
+     * @return {Phaser.GameObjects.GameObject} This Game Object instance.
+     */
+    setY: function (value)
+    {
+        if (value === undefined) { value = 0; }
+
+        this.y = value;
+
+        return this;
+    },
+
+    /**
+     * Sets the z position of this Game Object.
+     * 
+     * @method Phaser.GameObjects.Components.Transform.setZ
+     * @since 3.0.0
+     *
+     * @param {number} [value=0] - The z position of this Game Object.
+     * 
+     * @return {Phaser.GameObjects.GameObject} This Game Object instance.
+     */
     setZ: function (value)
     {
         if (value === undefined) { value = 0; }
@@ -241,6 +318,16 @@ var Transform = {
         return this;
     },
 
+    /**
+     * Sets the w position of this Game Object.
+     * 
+     * @method Phaser.GameObjects.Components.Transform.setW
+     * @since 3.0.0
+     *
+     * @param {number} [value=0] - The w position of this Game Object.
+     * 
+     * @return {Phaser.GameObjects.GameObject} This Game Object instance.
+     */
     setW: function (value)
     {
         if (value === undefined) { value = 0; }
@@ -248,47 +335,6 @@ var Transform = {
         this.w = value;
 
         return this;
-    },
-
-    setDepth: function (value)
-    {
-        if (value === undefined) { value = 0; }
-
-        this.depth = value;
-
-        return this;
-    },
-
-    updateTransform: function ()
-    {
-        if (!this.parent || !this._dirty)
-        {
-            return;
-        }
-
-        var tx = this._x;
-        var ty = this._y;
-        var world = this._world;
-
-        var parent = this.parent.world;
-
-        var a = world.cr * this._scaleX;
-        var b = world.sr * this._scaleX;
-        var c = -world.sr * this._scaleY;
-        var d = world.cr * this._scaleY;
-
-        world.a = (a * parent.a) + (b * parent.c);
-        world.b = (a * parent.b) + (b * parent.d);
-        world.c = (c * parent.a) + (d * parent.c);
-        world.d = (c * parent.b) + (d * parent.d);
-
-        // this._worldRotation = Math.atan2(-this.world.c, this.world.d);
-
-        world.tx = (tx * parent.a) + (ty * parent.c) + parent.tx;
-        world.ty = (tx * parent.b) + (ty * parent.d) + parent.ty;
-
-        // this._worldScaleX = this._scaleX * Math.sqrt((world.a * world.a) + (world.c * world.c));
-        // this._worldScaleY = this._scaleY * Math.sqrt((world.b * world.b) + (world.d * world.d));
     }
 
 };

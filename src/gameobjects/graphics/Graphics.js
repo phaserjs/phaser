@@ -19,6 +19,7 @@ var Graphics = new Class({
     Mixins: [
         Components.Alpha,
         Components.BlendMode,
+        Components.Depth,
         Components.Pipeline,
         Components.Transform,
         Components.Visible,

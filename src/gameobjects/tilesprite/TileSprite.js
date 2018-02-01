@@ -12,6 +12,7 @@ var TileSprite = new Class({
     Mixins: [
         Components.Alpha,
         Components.BlendMode,
+        Components.Depth,
         Components.Flip,
         Components.GetBounds,
         Components.Origin,

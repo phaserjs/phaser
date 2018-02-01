@@ -36,6 +36,7 @@ var Blitter = new Class({
     Mixins: [
         Components.Alpha,
         Components.BlendMode,
+        Components.Depth,
         Components.Pipeline,
         Components.ScaleMode,
         Components.Size,

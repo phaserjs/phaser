@@ -13,6 +13,7 @@ var BitmapText = new Class({
     Mixins: [
         Components.Alpha,
         Components.BlendMode,
+        Components.Depth,
         Components.Origin,
         Components.Pipeline,
         Components.ScaleMode,
