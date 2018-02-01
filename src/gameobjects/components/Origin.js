@@ -1,16 +1,56 @@
-//  Origin Component
-//  Values are normalized, given in the range 0 to 1.
-//  Display values contain the calculated pixel values.
+
+/**
+ * Provides methods used for getting and setting the origin of a Game Object.
+ * Values are normalized, given in the range 0 to 1.
+ * Display values contain the calculated pixel values.
+ * Should be applied as a mixin and not used directly.
+ * 
+ * @name Phaser.GameObjects.Components.Origin
+ * @mixin
+ * @since 3.0.0
+ */
 
 var Origin = {
 
+    /**
+     * The horizontal origin of this Game Object.
+     * The origin maps the relationship between the size and position of the Game Object.
+     * The default value is 0.5, meaning all Game Objects are positioned based on their center.
+     * Setting the value to 0 means the position now relates to the left of the Game Object.
+     * 
+     * @name Phaser.GameObjects.Components.Origin#originX
+     * @type {float}
+     * @default 0.5
+     * @since 3.0.0
+     */
     originX: 0.5,
+
+    /**
+     * The vertical origin of this Game Object.
+     * The origin maps the relationship between the size and position of the Game Object.
+     * The default value is 0.5, meaning all Game Objects are positioned based on their center.
+     * Setting the value to 0 means the position now relates to the top of the Game Object.
+     * 
+     * @name Phaser.GameObjects.Components.Origin#originY
+     * @type {float}
+     * @default 0.5
+     * @since 3.0.0
+     */
     originY: 0.5,
 
     //  READ ONLY
     _displayOriginX: 0,
     _displayOriginY: 0,
 
+    /**
+     * The horizontal display origin of this Game Object.
+     * The origin is a normalized value between 0 and 1.
+     * The displayOrigin is a pixel value, based on the size of the Game Object combined with the origin.
+     * 
+     * @name Phaser.GameObjects.Components.Origin#displayOriginX
+     * @type {float}
+     * @since 3.0.0
+     */
     displayOriginX: {
 
         get: function ()
@@ -26,6 +66,15 @@ var Origin = {
 
     },
 
+    /**
+     * The vertical display origin of this Game Object.
+     * The origin is a normalized value between 0 and 1.
+     * The displayOrigin is a pixel value, based on the size of the Game Object combined with the origin.
+     * 
+     * @name Phaser.GameObjects.Components.Origin#displayOriginY
+     * @type {float}
+     * @since 3.0.0
+     */
     displayOriginY: {
 
         get: function ()
@@ -41,6 +90,19 @@ var Origin = {
 
     },
 
+    /**
+     * Sets the origin of this Game Object.
+     *
+     * The values are given in the range 0 to 1.
+     * 
+     * @method Phaser.GameObjects.Components.Origin.setOrigin
+     * @since 3.0.0
+     *
+     * @param {number} [x=0.5] - The horizontal origin value.
+     * @param {number} [y=0.5] - The vertical origin value. If not defined it will be set to the value of `x`.
+     * 
+     * @return {Phaser.GameObjects.GameObject} This Game Object instance.
+     */
     setOrigin: function (x, y)
     {
         if (x === undefined) { x = 0.5; }
@@ -52,6 +114,18 @@ var Origin = {
         return this.updateDisplayOrigin();
     },
 
+    /**
+     * Sets the display origin of this Game Object.
+     * The difference between this and setting the origin is that you can use pixel values for setting the display origin.
+     * 
+     * @method Phaser.GameObjects.Components.Origin.setDisplayOrigin
+     * @since 3.0.0
+     *
+     * @param {number} [x=0] - The horizontal display origin value.
+     * @param {number} [y=0] - The vertical display origin value. If not defined it will be set to the value of `x`.
+     * 
+     * @return {Phaser.GameObjects.GameObject} This Game Object instance.
+     */
     setDisplayOrigin: function (x, y)
     {
         if (x === undefined) { x = 0; }
@@ -63,6 +137,15 @@ var Origin = {
         return this;
     },
 
+    /**
+     * Updates the Display Origin cached values internally stored on this Game Object.
+     * You don't usually call this directly, but it is exposed for edge-cases where you may.
+     * 
+     * @method Phaser.GameObjects.Components.Origin.updateDisplayOrigin
+     * @since 3.0.0
+     * 
+     * @return {Phaser.GameObjects.GameObject} This Game Object instance.
+     */
     updateDisplayOrigin: function ()
     {
         this._displayOriginX = Math.round(this.originX * this.width);

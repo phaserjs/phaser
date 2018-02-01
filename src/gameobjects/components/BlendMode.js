@@ -1,11 +1,25 @@
 var BlendModes = require('../../renderer/BlendModes');
 
-//  BlendMode Component
+/**
+ * Provides methods used for setting the blend mode of a Game Object.
+ * Should be applied as a mixin and not used directly.
+ * 
+ * @name Phaser.GameObjects.Components.BlendMode
+ * @mixin
+ * @since 3.0.0
+ */
 
 var BlendMode = {
 
     _blendMode: BlendModes.NORMAL,
 
+    /**
+     * [description]
+     * 
+     * @name Phaser.GameObjects.Components.BlendMode#blendMode
+     * @type {integer|string}
+     * @since 3.0.0
+     */
     blendMode: {
 
         get: function ()
@@ -30,7 +44,28 @@ var BlendMode = {
 
     },
 
-    //  const or string
+    /**
+     * Sets the Blend Mode being used by this Game Object.
+     * 
+     * This can be a const, such as `Phaser.BlendModes.SCREEN`, or an integer, such as 4 (for Overlay)
+     * 
+     * Under WebGL only the following Blend Modes are available:
+     * 
+     * * ADD
+     * * MULTIPLY
+     * * SCREEN
+     *
+     * Canvas has more available depending on browser support.
+     *
+     * You can also create your own custom Blend Modes in WebGL.
+     *
+     * @method Phaser.GameObjects.Components.BlendMode.setBlendMode
+     * @since 3.0.0
+     *
+     * @param {string|integer} value - The BlendMode value. Either a string or a CONST.
+     * 
+     * @return {Phaser.GameObjects.GameObject} This Game Object instance.
+     */
     setBlendMode: function (value)
     {
         this.blendMode = value;

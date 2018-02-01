@@ -1,4 +1,6 @@
-//  Phaser.GameObjects.Components
+/**
+ * @namespace Phaser.GameObjects.Components
+ */
 
 module.exports = {
 
@@ -6,7 +8,6 @@ module.exports = {
     Animation: require('./Animation'),
     BlendMode: require('./BlendMode'),
     ComputedSize: require('./ComputedSize'),
-    DataProxy: require('./DataProxy'),
     Depth: require('./Depth'),
     Flip: require('./Flip'),
     GetBounds: require('./GetBounds'),

@@ -22,7 +22,8 @@ var Alpha = {
     _alphaBR: 1,
 
     /**
-     * [description]
+     * Clears all alpha values associated with this Game Object.
+     * Immediately sets the alpha levels back to 1 (fully opaque)
      *
      * @method Phaser.GameObjects.Components.Alpha.clearAlpha
      * @since 3.0.0
@@ -35,15 +36,19 @@ var Alpha = {
     },
 
     /**
-     * [description]
+     * Set the Alpha level of this Game Object. The alpha controls the opacity of the Game Object as it renders.
+     * Alpha values are provided as a float between 0, fully transparent, and 1, fully opaque.
+     *
+     * If your game is running under WebGL you can optionally specify four different alpha values, each of which
+     * correspond to the four corners of the Game Object. Under Canvas only the `topLeft` value given is used.
      *
      * @method Phaser.GameObjects.Components.Alpha.setAlpha
      * @since 3.0.0
      * 
      * @param {float} [topLeft=1] - The alpha value used for the top-left of the Game Object. If this is the only value given it's applied across the whole Game Object.
-     * @param {float} [topRight] - The alpha value used for the top-right of the Game Object.
-     * @param {float} [bottomLeft] - The alpha value used for the bottom-left of the Game Object.
-     * @param {float} [bottomRight] - The alpha value used for the bottom-right of the Game Object.
+     * @param {float} [topRight] - The alpha value used for the top-right of the Game Object. WebGL only.
+     * @param {float} [bottomLeft] - The alpha value used for the bottom-left of the Game Object. WebGL only.
+     * @param {float} [bottomRight] - The alpha value used for the bottom-right of the Game Object. WebGL only.
      * 
      * @return {Phaser.GameObjects.GameObject} This Game Object instance.
      */
@@ -71,7 +76,7 @@ var Alpha = {
      * [description]
      * 
      * @name Phaser.GameObjects.Components.Alpha#alpha
-     * @property {float} alpha
+     * @type {float}
      * @since 3.0.0
      */
     alpha: {
@@ -107,7 +112,7 @@ var Alpha = {
      * [description]
      * 
      * @name Phaser.GameObjects.Components.Alpha#alphaTopLeft
-     * @property {float} alphaTopLeft
+     * @type {float}
      * @webglOnly
      * @since 3.0.0
      */
@@ -136,7 +141,7 @@ var Alpha = {
      * [description]
      * 
      * @name Phaser.GameObjects.Components.Alpha#alphaTopRight
-     * @property {float} alphaTopRight
+     * @type {float}
      * @webglOnly
      * @since 3.0.0
      */
@@ -165,7 +170,7 @@ var Alpha = {
      * [description]
      * 
      * @name Phaser.GameObjects.Components.Alpha#alphaBottomLeft
-     * @property {float} alphaBottomLeft
+     * @type {float}
      * @webglOnly
      * @since 3.0.0
      */
@@ -194,7 +199,7 @@ var Alpha = {
      * [description]
      * 
      * @name Phaser.GameObjects.Components.Alpha#alphaBottomRight
-     * @property {float} alphaBottomRight
+     * @type {float}
      * @webglOnly
      * @since 3.0.0
      */

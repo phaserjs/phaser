@@ -1,8 +1,40 @@
+/**
+ * Provides methods used for setting the blend mode of a Game Object.
+ * Should be applied as a mixin and not used directly.
+ * 
+ * @name Phaser.GameObjects.Components.ComputedSize
+ * @mixin
+ * @since 3.0.0
+ */
+
 var ComputedSize = {
 
+    /**
+     * The native (un-scaled) width of this Game Object.
+     * 
+     * @name Phaser.GameObjects.Components.ComputedSize#width
+     * @type {number}
+     * @since 3.0.0
+     */
     width: 0,
+
+    /**
+     * The native (un-scaled) height of this Game Object.
+     * 
+     * @name Phaser.GameObjects.Components.ComputedSize#height
+     * @type {number}
+     * @since 3.0.0
+     */
     height: 0,
 
+    /**
+     * The displayed width of this Game Object.
+     * This value takes into account the scale factor.
+     * 
+     * @name Phaser.GameObjects.Components.ComputedSize#displayWidth
+     * @type {number}
+     * @since 3.0.0
+     */
     displayWidth: {
 
         get: function ()
@@ -17,6 +49,14 @@ var ComputedSize = {
 
     },
 
+    /**
+     * The displayed height of this Game Object.
+     * This value takes into account the scale factor.
+     * 
+     * @name Phaser.GameObjects.Components.ComputedSize#displayHeight
+     * @type {number}
+     * @since 3.0.0
+     */
     displayHeight: {
 
         get: function ()

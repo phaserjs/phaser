@@ -1,8 +1,8 @@
 var Class = require('../../../utils/Class');
-var GameObject = require('../../GameObject');
 var Components = require('../../components');
-var Render = require('./DynamicBitmapTextRender');
+var GameObject = require('../../GameObject');
 var GetBitmapTextSize = require('../GetBitmapTextSize');
+var Render = require('./DynamicBitmapTextRender');
 
 var DynamicBitmapText = new Class({
 
