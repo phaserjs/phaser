@@ -3,8 +3,18 @@ var BuildGameObject = require('../BuildGameObject');
 var GameObjectCreator = require('../GameObjectCreator');
 var GetAdvancedValue = require('../../utils/object/GetAdvancedValue');
 
-//  When registering a factory function 'this' refers to the GameObjectCreator context.
-
+/**
+ * Creates a new Blitter Game Object and returns it.
+ *
+ * Note: This method will only be available if the Blitter Game Object has been built into Phaser.
+ *
+ * @method Phaser.GameObjects.GameObjectCreator#blitter
+ * @since 3.0.0
+ *
+ * @param {object} config - [description]
+ *
+ * @return {Phaser.GameObjects.Blitter} The Game Object that was created.
+ */
 GameObjectCreator.register('blitter', function (config)
 {
     var key = GetAdvancedValue(config, 'key', null);
@@ -16,3 +26,5 @@ GameObjectCreator.register('blitter', function (config)
 
     return blitter;
 });
+
+//  When registering a factory function 'this' refers to the GameObjectCreator context.

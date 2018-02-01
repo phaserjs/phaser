@@ -125,19 +125,18 @@ var Blitter = new Class({
         return bob;
     },
 
-    //  frame MUST be part of the Blitter texture
     /**
      * [description]
      *
      * @method Phaser.GameObjects.Blitter#createFromCallback
      * @since 3.0.0
      *
-     * @param {[type]} callback - [description]
-     * @param {[type]} quantity - [description]
-     * @param {[type]} frame - [description]
-     * @param {[type]} visible - [description]
+     * @param {function} callback - The callback to invoke after creating a bob. It will be sent two arguments: The Bob and the index of the Bob.
+     * @param {integer} quantity - The quantity of Bob objects to create.
+     * @param {string} [frame] - The Frame the Bobs will use. It must be part of the Blitter Texture.
+     * @param {boolean} [visible=true] - [description]
      *
-     * @return {[type]} [description]
+     * @return {Phaser.GameObjects.Blitter.Bob[]} An array of Bob objects that were created.
      */
     createFromCallback: function (callback, quantity, frame, visible)
     {
@@ -153,18 +152,17 @@ var Blitter = new Class({
         return bobs;
     },
 
-    //  frame MUST be part of the Blitter texture
     /**
      * [description]
      *
      * @method Phaser.GameObjects.Blitter#createMultiple
      * @since 3.0.0
      *
-     * @param {[type]} quantity - [description]
-     * @param {[type]} frame - [description]
-     * @param {[type]} visible - [description]
+     * @param {integer} quantity - The quantity of Bob objects to create.
+     * @param {string} [frame] - The Frame the Bobs will use. It must be part of the Blitter Texture.
+     * @param {boolean} [visible=true] - [description]
      *
-     * @return {[type]} [description]
+     * @return {Phaser.GameObjects.Blitter.Bob[]} An array of Bob objects that were created.
      */
     createMultiple: function (quantity, frame, visible)
     {
@@ -196,9 +194,9 @@ var Blitter = new Class({
      * @method Phaser.GameObjects.Blitter#childCanRender
      * @since 3.0.0
      *
-     * @param {[type]} child - [description]
+     * @param {Phaser.GameObjects.Blitter.Bob} child - [description]
      *
-     * @return {[type]} [description]
+     * @return {boolean} [description]
      */
     childCanRender: function (child)
     {
