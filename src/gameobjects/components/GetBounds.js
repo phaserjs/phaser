@@ -7,7 +7,6 @@ var Vector2 = require('../../math/Vector2');
  * Should be applied as a mixin and not used directly.
  * 
  * @name Phaser.GameObjects.Components.GetBounds
- * @mixin
  * @since 3.0.0
  */
 
@@ -16,7 +15,7 @@ var GetBounds = {
     /**
      * Gets the center coordinate of this Game Object, regardless of origin.
      * 
-     * @method Phaser.GameObjects.Components.GetBounds.getCenter
+     * @method Phaser.GameObjects.Components.GetBounds#getCenter
      * @since 3.0.0
      *
      * @param {Phaser.Math.Vector2|object} [output] - An object to store the values in. If not provided a new Vector2 will be created.
@@ -36,7 +35,7 @@ var GetBounds = {
     /**
      * Gets the top-left corner coordinate of this Game Object, regardless of origin.
      * 
-     * @method Phaser.GameObjects.Components.GetBounds.getTopLeft
+     * @method Phaser.GameObjects.Components.GetBounds#getTopLeft
      * @since 3.0.0
      *
      * @param {Phaser.Math.Vector2|object} [output] - An object to store the values in. If not provided a new Vector2 will be created.
@@ -61,7 +60,7 @@ var GetBounds = {
     /**
      * Gets the top-right corner coordinate of this Game Object, regardless of origin.
      * 
-     * @method Phaser.GameObjects.Components.GetBounds.getTopRight
+     * @method Phaser.GameObjects.Components.GetBounds#getTopRight
      * @since 3.0.0
      *
      * @param {Phaser.Math.Vector2|object} [output] - An object to store the values in. If not provided a new Vector2 will be created.
@@ -86,7 +85,7 @@ var GetBounds = {
     /**
      * Gets the bottom-left corner coordinate of this Game Object, regardless of origin.
      * 
-     * @method Phaser.GameObjects.Components.GetBounds.getBottomLeft
+     * @method Phaser.GameObjects.Components.GetBounds#getBottomLeft
      * @since 3.0.0
      *
      * @param {Phaser.Math.Vector2|object} [output] - An object to store the values in. If not provided a new Vector2 will be created.
@@ -111,7 +110,7 @@ var GetBounds = {
     /**
      * Gets the bottom-right corner coordinate of this Game Object, regardless of origin.
      * 
-     * @method Phaser.GameObjects.Components.GetBounds.getBottomRight
+     * @method Phaser.GameObjects.Components.GetBounds#getBottomRight
      * @since 3.0.0
      *
      * @param {Phaser.Math.Vector2|object} [output] - An object to store the values in. If not provided a new Vector2 will be created.
@@ -137,7 +136,7 @@ var GetBounds = {
      * Gets the bounds of this Game Object, regardless of origin.
      * The values are stored and returned in a Rectangle, or Rectangle-like, object.
      * 
-     * @method Phaser.GameObjects.Components.GetBounds.getBounds
+     * @method Phaser.GameObjects.Components.GetBounds#getBounds
      * @since 3.0.0
      *
      * @param {Phaser.Geom.Rectangle|object} [output] - An object to store the values in. If not provided a new Rectangle will be created.
@@ -176,74 +175,8 @@ var GetBounds = {
         output.height = Math.max(TLy, TRy, BLy, BRy) - output.y;
 
         return output;
-    },
-
-    //  Works but only if originX/Y = 0
-
-    /*
-    getBounds: function (output)
-    {
-        if (output === undefined) { output = new Rectangle(); }
-
-        var x = this.x;
-        var y = this.y;
-
-        var w = this.displayWidth;
-        var h = this.displayHeight;
-
-        var r = this.rotation;
-
-        var wct = w * Math.cos(r);
-        var hct = h * Math.cos(r);
-
-        var wst = w * Math.sin(r);
-        var hst = h * Math.sin(r);
-
-        var xMin = x;
-        var xMax = x;
-        var yMin = y;
-        var yMax = y;
-
-        if (r > 0)
-        {
-            if (r < 1.5707963267948966)
-            {
-                // 0 < theta < 90
-                yMax = y + hct + wst;
-                xMin = x - hst;
-                xMax = x + wct;
-            }
-            else
-            {
-                // 90 <= theta <= 180
-                yMin = y + hct;
-                yMax = y + wst;
-                xMin = x - hst + wct;
-            }
-        }
-        else if (r > -1.5707963267948966)
-        {
-            // -90 < theta <= 0
-            yMin = y + wst;
-            yMax = y + hct;
-            xMax = x + wct - hst;
-        }
-        else
-        {
-            // -180 <= theta <= -90
-            yMin = y + wst + hct;
-            xMin = x + wct;
-            xMax = x - hst;
-        }
-
-        output.x = xMin;
-        output.y = yMin;
-        output.width = xMax - xMin;
-        output.height = yMax - yMin;
-
-        return output;
     }
-    */
+
 };
 
 module.exports = GetBounds;

@@ -9,7 +9,6 @@ var _FLAG = 4; // 0100
  * Provides methods used for getting and setting the position, scale and rotation of a Game Object.
  * 
  * @name Phaser.GameObjects.Components.Transform
- * @mixin
  * @since 3.0.0
  */
 
@@ -176,7 +175,7 @@ var Transform = {
     /**
      * Sets the position of this Game Object.
      * 
-     * @method Phaser.GameObjects.Components.Transform.setPosition
+     * @method Phaser.GameObjects.Components.Transform#setPosition
      * @since 3.0.0
      *
      * @param {number} [x=0] - The x position of this Game Object.
@@ -204,7 +203,7 @@ var Transform = {
     /**
      * Sets the rotation of this Game Object.
      * 
-     * @method Phaser.GameObjects.Components.Transform.setRotation
+     * @method Phaser.GameObjects.Components.Transform#setRotation
      * @since 3.0.0
      *
      * @param {number} [radians=0] - The rotation of this Game Object, in radians.
@@ -223,7 +222,7 @@ var Transform = {
     /**
      * Sets the angle of this Game Object.
      * 
-     * @method Phaser.GameObjects.Components.Transform.setAngle
+     * @method Phaser.GameObjects.Components.Transform#setAngle
      * @since 3.0.0
      *
      * @param {number} [degrees=0] - The rotation of this Game Object, in degrees.
@@ -242,7 +241,7 @@ var Transform = {
     /**
      * Sets the scale of this Game Object.
      * 
-     * @method Phaser.GameObjects.Components.Transform.setScale
+     * @method Phaser.GameObjects.Components.Transform#setScale
      * @since 3.0.0
      *
      * @param {number} x - The horizontal scale of this Game Object.
@@ -264,7 +263,7 @@ var Transform = {
     /**
      * Sets the x position of this Game Object.
      * 
-     * @method Phaser.GameObjects.Components.Transform.setX
+     * @method Phaser.GameObjects.Components.Transform#setX
      * @since 3.0.0
      *
      * @param {number} [value=0] - The x position of this Game Object.
@@ -283,7 +282,7 @@ var Transform = {
     /**
      * Sets the y position of this Game Object.
      * 
-     * @method Phaser.GameObjects.Components.Transform.setY
+     * @method Phaser.GameObjects.Components.Transform#setY
      * @since 3.0.0
      *
      * @param {number} [value=0] - The y position of this Game Object.
@@ -302,7 +301,7 @@ var Transform = {
     /**
      * Sets the z position of this Game Object.
      * 
-     * @method Phaser.GameObjects.Components.Transform.setZ
+     * @method Phaser.GameObjects.Components.Transform#setZ
      * @since 3.0.0
      *
      * @param {number} [value=0] - The z position of this Game Object.
@@ -321,7 +320,7 @@ var Transform = {
     /**
      * Sets the w position of this Game Object.
      * 
-     * @method Phaser.GameObjects.Components.Transform.setW
+     * @method Phaser.GameObjects.Components.Transform#setW
      * @since 3.0.0
      *
      * @param {number} [value=0] - The w position of this Game Object.

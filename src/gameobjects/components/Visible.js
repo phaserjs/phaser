@@ -6,7 +6,6 @@ var _FLAG = 1; // 0001
  * Should be applied as a mixin and not used directly.
  * 
  * @name Phaser.GameObjects.Components.Visible
- * @mixin
  * @since 3.0.0
  */
 
@@ -49,7 +48,7 @@ var Visible = {
     /**
      * Sets the visibility of this Game Object.
      *
-     * @method Phaser.GameObjects.Components.Visible.setVisible
+     * @method Phaser.GameObjects.Components.Visible#setVisible
      * @since 3.0.0
      *
      * @param {boolean} value - The visible state of the Game Object.

@@ -2,7 +2,6 @@
  * Provides methods used for getting and setting the Scroll Factor of a Game Object.
  * 
  * @name Phaser.GameObjects.Components.ScrollFactor
- * @mixin
  * @since 3.0.0
  */
 
@@ -58,7 +57,7 @@ var ScrollFactor = {
      * A value of 0 means it will not move at all, even if the camera moves.
      * Other values control the degree to which the camera movement is mapped to this Game Object.
      * 
-     * @method Phaser.GameObjects.Components.ScrollFactor.setScrollFactor
+     * @method Phaser.GameObjects.Components.ScrollFactor#setScrollFactor
      * @since 3.0.0
      *
      * @param {number} x - The horizontal scroll factor of this Game Object.

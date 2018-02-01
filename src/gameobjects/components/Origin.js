@@ -5,7 +5,6 @@
  * Should be applied as a mixin and not used directly.
  * 
  * @name Phaser.GameObjects.Components.Origin
- * @mixin
  * @since 3.0.0
  */
 
@@ -37,7 +36,7 @@ var Origin = {
      */
     originY: 0.5,
 
-    //  READ ONLY
+    //  private + read only
     _displayOriginX: 0,
     _displayOriginY: 0,
 
@@ -94,7 +93,7 @@ var Origin = {
      *
      * The values are given in the range 0 to 1.
      * 
-     * @method Phaser.GameObjects.Components.Origin.setOrigin
+     * @method Phaser.GameObjects.Components.Origin#setOrigin
      * @since 3.0.0
      *
      * @param {number} [x=0.5] - The horizontal origin value.
@@ -117,7 +116,7 @@ var Origin = {
      * Sets the display origin of this Game Object.
      * The difference between this and setting the origin is that you can use pixel values for setting the display origin.
      * 
-     * @method Phaser.GameObjects.Components.Origin.setDisplayOrigin
+     * @method Phaser.GameObjects.Components.Origin#setDisplayOrigin
      * @since 3.0.0
      *
      * @param {number} [x=0] - The horizontal display origin value.
@@ -140,7 +139,7 @@ var Origin = {
      * Updates the Display Origin cached values internally stored on this Game Object.
      * You don't usually call this directly, but it is exposed for edge-cases where you may.
      * 
-     * @method Phaser.GameObjects.Components.Origin.updateDisplayOrigin
+     * @method Phaser.GameObjects.Components.Origin#updateDisplayOrigin
      * @since 3.0.0
      * 
      * @return {Phaser.GameObjects.GameObject} This Game Object instance.

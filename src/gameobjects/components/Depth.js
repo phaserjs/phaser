@@ -3,13 +3,11 @@
  * Should be applied as a mixin and not used directly.
  * 
  * @name Phaser.GameObjects.Components.Depth
- * @mixin
  * @since 3.0.0
  */
 
 var Depth = {
 
-    //  "private" properties
     _depth: 0,
 
     /**
@@ -53,7 +51,7 @@ var Depth = {
      *
      * Setting the depth will queue a depth sort event within the Scene.
      * 
-     * @method Phaser.GameObjects.Components.Depth.setDepth
+     * @method Phaser.GameObjects.Components.Depth#setDepth
      * @since 3.0.0
      *
      * @param {integer} value - The depth of this Game Object.

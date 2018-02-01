@@ -1,16 +1,15 @@
 var Clamp = require('../../math/Clamp');
 
+//  bitmask flag for GameObject.renderMask
+var _FLAG = 2; // 0010
+
 /**
  * Provides methods used for setting the alpha properties of a Game Object.
  * Should be applied as a mixin and not used directly.
  * 
  * @name Phaser.GameObjects.Components.Alpha
- * @mixin
  * @since 3.0.0
  */
-
-//  bitmask flag for GameObject.renderMask
-var _FLAG = 2; // 0010
 
 var Alpha = {
 
@@ -25,7 +24,7 @@ var Alpha = {
      * Clears all alpha values associated with this Game Object.
      * Immediately sets the alpha levels back to 1 (fully opaque)
      *
-     * @method Phaser.GameObjects.Components.Alpha.clearAlpha
+     * @method Phaser.GameObjects.Components.Alpha#clearAlpha
      * @since 3.0.0
      * 
      * @return {Phaser.GameObjects.GameObject} This Game Object instance.
@@ -42,7 +41,7 @@ var Alpha = {
      * If your game is running under WebGL you can optionally specify four different alpha values, each of which
      * correspond to the four corners of the Game Object. Under Canvas only the `topLeft` value given is used.
      *
-     * @method Phaser.GameObjects.Components.Alpha.setAlpha
+     * @method Phaser.GameObjects.Components.Alpha#setAlpha
      * @since 3.0.0
      * 
      * @param {float} [topLeft=1] - The alpha value used for the top-left of the Game Object. If this is the only value given it's applied across the whole Game Object.

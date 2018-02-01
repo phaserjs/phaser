@@ -5,7 +5,6 @@ var BlendModes = require('../../renderer/BlendModes');
  * Should be applied as a mixin and not used directly.
  * 
  * @name Phaser.GameObjects.Components.BlendMode
- * @mixin
  * @since 3.0.0
  */
 
@@ -59,7 +58,7 @@ var BlendMode = {
      *
      * You can also create your own custom Blend Modes in WebGL.
      *
-     * @method Phaser.GameObjects.Components.BlendMode.setBlendMode
+     * @method Phaser.GameObjects.Components.BlendMode#setBlendMode
      * @since 3.0.0
      *
      * @param {string|integer} value - The BlendMode value. Either a string or a CONST.

@@ -8,7 +8,6 @@ var GetColor = function (value)
  * Should be applied as a mixin and not used directly.
  * 
  * @name Phaser.GameObjects.Components.Tint
- * @mixin
  * @webglOnly
  * @since 3.0.0
  */
@@ -25,7 +24,7 @@ var Tint = {
      * Clears all tint values associated with this Game Object.
      * Immediately sets the alpha levels back to 0xffffff (no tint)
      *
-     * @method Phaser.GameObjects.Components.Tint.clearTint
+     * @method Phaser.GameObjects.Components.Tint#clearTint
      * @webglOnly
      * @since 3.0.0
      * 
@@ -41,7 +40,7 @@ var Tint = {
     /**
      * Sets the tint values for this Game Object.
      *
-     * @method Phaser.GameObjects.Components.Tint.setTint
+     * @method Phaser.GameObjects.Components.Tint#setTint
      * @webglOnly
      * @since 3.0.0
      *

@@ -5,7 +5,6 @@ var _FLAG = 8; // 1000
  * Provides methods used for getting and setting the texture of a Game Object.
  * 
  * @name Phaser.GameObjects.Components.Texture
- * @mixin
  * @since 3.0.0
  */
 
@@ -34,7 +33,7 @@ var Texture = {
      *
      * Textures are referenced by their string-based keys, as stored in the Texture Manager.
      * 
-     * @method Phaser.GameObjects.Components.Texture.setTexture
+     * @method Phaser.GameObjects.Components.Texture#setTexture
      * @since 3.0.0
      *
      * @param {string} key - The key of the texture to be used, as stored in the Texture Manager.
@@ -56,7 +55,7 @@ var Texture = {
      *
      * It can be either a string or an index.
      * 
-     * @method Phaser.GameObjects.Components.Texture.setFrame
+     * @method Phaser.GameObjects.Components.Texture#setFrame
      * @since 3.0.0
      *
      * @param {string|integer} frame - The name or index of the frame within the Texture.

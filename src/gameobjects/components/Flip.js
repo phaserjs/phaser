@@ -3,7 +3,6 @@
  * Should be applied as a mixin and not used directly.
  * 
  * @name Phaser.GameObjects.Components.Flip
- * @mixin
  * @since 3.0.0
  */
 
@@ -36,7 +35,7 @@ var Flip = {
     /**
      * Toggles the horizontal flipped state of this Game Object.
      * 
-     * @method Phaser.GameObjects.Components.Flip.toggleFlipX
+     * @method Phaser.GameObjects.Components.Flip#toggleFlipX
      * @since 3.0.0
      * 
      * @return {Phaser.GameObjects.GameObject} This Game Object instance.
@@ -51,7 +50,7 @@ var Flip = {
     /**
      * Toggles the vertical flipped state of this Game Object.
      * 
-     * @method Phaser.GameObjects.Components.Flip.toggleFlipY
+     * @method Phaser.GameObjects.Components.Flip#toggleFlipY
      * @since 3.0.0
      * 
      * @return {Phaser.GameObjects.GameObject} This Game Object instance.
@@ -66,7 +65,7 @@ var Flip = {
     /**
      * Sets the horizontal flipped state of this Game Object.
      * 
-     * @method Phaser.GameObjects.Components.Flip.setFlipX
+     * @method Phaser.GameObjects.Components.Flip#setFlipX
      * @since 3.0.0
      *
      * @param {boolean} value - The flipped state. `false` for no flip, or `true` to be flipped.
@@ -83,7 +82,7 @@ var Flip = {
     /**
      * Sets the vertical flipped state of this Game Object.
      * 
-     * @method Phaser.GameObjects.Components.Flip.setFlipY
+     * @method Phaser.GameObjects.Components.Flip#setFlipY
      * @since 3.0.0
      *
      * @param {boolean} value - The flipped state. `false` for no flip, or `true` to be flipped.
@@ -100,7 +99,7 @@ var Flip = {
     /**
      * Sets the horizontal and vertical flipped state of this Game Object.
      * 
-     * @method Phaser.GameObjects.Components.Flip.setFlip
+     * @method Phaser.GameObjects.Components.Flip#setFlip
      * @since 3.0.0
      *
      * @param {boolean} x - The horizontal flipped state. `false` for no flip, or `true` to be flipped.
@@ -119,7 +118,7 @@ var Flip = {
     /**
      * Resets the horizontal and vertical flipped state of this Game Object back to their default un-flipped state.
      * 
-     * @method Phaser.GameObjects.Components.Flip.resetFlip
+     * @method Phaser.GameObjects.Components.Flip#resetFlip
      * @since 3.0.0
      *
      * @return {Phaser.GameObjects.GameObject} This Game Object instance.

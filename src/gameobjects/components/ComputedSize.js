@@ -3,7 +3,6 @@
  * Should be applied as a mixin and not used directly.
  * 
  * @name Phaser.GameObjects.Components.ComputedSize
- * @mixin
  * @since 3.0.0
  */
 

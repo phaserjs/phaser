@@ -2,7 +2,6 @@
  * Provides methods used for getting and setting the size of a Game Object.
  * 
  * @name Phaser.GameObjects.Components.Size
- * @mixin
  * @since 3.0.0
  */
 
@@ -73,7 +72,7 @@ var Size = {
     /**
      * Sets the size of this Game Object to be that of the given Frame.
      * 
-     * @method Phaser.GameObjects.Components.Size.setSizeToFrame
+     * @method Phaser.GameObjects.Components.Size#setSizeToFrame
      * @since 3.0.0
      *
      * @param {Phaser.Textures.Frame} frame - The frame to base the size of this Game Object on.
@@ -93,7 +92,7 @@ var Size = {
     /**
      * Sets the size of this Game Object.
      * 
-     * @method Phaser.GameObjects.Components.Size.setSize
+     * @method Phaser.GameObjects.Components.Size#setSize
      * @since 3.0.0
      *
      * @param {number} width - The width of this Game Object.
@@ -113,7 +112,7 @@ var Size = {
      * Sets the display size of this Game Object.
      * Calling this will adjust the scale.
      * 
-     * @method Phaser.GameObjects.Components.Size.setDisplaySize
+     * @method Phaser.GameObjects.Components.Size#setDisplaySize
      * @since 3.0.0
      *
      * @param {number} width - The width of this Game Object.
