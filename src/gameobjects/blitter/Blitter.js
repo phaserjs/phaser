@@ -20,7 +20,6 @@ var GameObject = require('../GameObject');
  * @constructor
  * @since 3.0.0
  *
- * Mixins:
  * @extends Phaser.GameObjects.Components.Alpha
  * @extends Phaser.GameObjects.Components.BlendMode
  * @extends Phaser.GameObjects.Components.Depth
