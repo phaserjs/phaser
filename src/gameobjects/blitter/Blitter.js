@@ -32,7 +32,7 @@ var GameObject = require('../GameObject');
  * @extends Phaser.GameObjects.Components.Visible
  * 
  * @param {Phaser.Scene} scene - The Scene to which this Game Object belongs. It can only belong to one Scene at any given time.
- * @param {number} [x==] - The x coordinate of this Game Object in world space.
+ * @param {number} [x=0] - The x coordinate of this Game Object in world space.
  * @param {number} [y=0] - The y coordinate of this Game Object in world space.
  * @param {string} [texture='__DEFAULT'] - The key of the texture this Game Object will use for rendering. The Texture must already exist in the Texture Manager.
  * @param {string|integer} [frame=0] - The Frame of the Texture that this Game Object will use. Only set if the Texture has multiple frames, such as a Texture Atlas or Sprite Sheet.

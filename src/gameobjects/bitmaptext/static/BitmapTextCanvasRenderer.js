@@ -1,5 +1,19 @@
 var GameObject = require('../../GameObject');
 
+/**
+ * Renders this Game Object with the Canvas Renderer to the given Camera.
+ * The object will not render if any of its renderFlags are set or it is being actively filtered out by the Camera.
+ * This method should not be called directly. It is a utility function of the Render module.
+ *
+ * @method Phaser.GameObjects.BitmapText#renderCanvas
+ * @since 3.0.0
+ * @private
+ *
+ * @param {Phaser.Renderer.CanvasRenderer} renderer - A reference to the current active Canvas renderer.
+ * @param {Phaser.GameObjects.BitmapText} src - The Game Object being rendered in this call.
+ * @param {number} interpolationPercentage - Reserved for future use and custom pipelines.
+ * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera that is rendering the Game Object.
+ */
 var BitmapTextCanvasRenderer = function (renderer, src, interpolationPercentage, camera)
 {
     var text = src.text;
