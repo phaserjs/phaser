@@ -174,11 +174,10 @@ var StaticTilemapLayer = new Class({
                         texCoords = tileset.getTileTextureCoordinates(tile.index);
                         if (texCoords === null) { continue; }
 
-                        // Inset UV coordinates by 0.5px to prevent tile bleeding
-                        var u0 = (texCoords.x + 0.5) / width;
-                        var v0 = (texCoords.y + 0.5) / height;
-                        var u1 = (texCoords.x + tile.width - 0.5) / width;
-                        var v1 = (texCoords.y + tile.height - 0.5) / height;
+                        var u0 = texCoords.x / width;
+                        var v0 = texCoords.y / height;
+                        var u1 = (texCoords.x + tile.width) / width;
+                        var v1 = (texCoords.y + tile.height) / height;
 
                         var tx0 = tx;
                         var ty0 = ty;

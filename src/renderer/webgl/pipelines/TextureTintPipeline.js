@@ -117,6 +117,8 @@ var TextureTintPipeline = new Class({
         var vertexViewF32 = this.vertexViewF32;
         var vertexViewU32 = this.vertexViewU32;
         var renderer = this.renderer;
+        var roundPixels = camera.roundPixels;
+        var resolution = renderer.gameConfig.resolution;
         var maxQuads = this.maxQuads;
         var cameraScrollX = camera.scrollX;
         var cameraScrollY = camera.scrollY;
@@ -201,6 +203,18 @@ var TextureTintPipeline = new Class({
                     var ty3 = xw * mvb + y * mvd + mvf;
                     var vertexOffset = vertexCount * vertexComponentCount;
 
+                    if (roundPixels)
+                    {
+                        tx0 = ((tx0 * resolution)|0) / resolution;
+                        ty0 = ((ty0 * resolution)|0) / resolution;
+                        tx1 = ((tx1 * resolution)|0) / resolution;
+                        ty1 = ((ty1 * resolution)|0) / resolution;
+                        tx2 = ((tx2 * resolution)|0) / resolution;
+                        ty2 = ((ty2 * resolution)|0) / resolution;
+                        tx3 = ((tx3 * resolution)|0) / resolution;
+                        ty3 = ((ty3 * resolution)|0) / resolution;
+                    }
+
                     vertexViewF32[vertexOffset + 0] = tx0;
                     vertexViewF32[vertexOffset + 1] = ty0;
                     vertexViewF32[vertexOffset + 2] = uvs.x0;
@@ -256,6 +270,8 @@ var TextureTintPipeline = new Class({
         var vertexViewF32 = this.vertexViewF32;
         var vertexViewU32 = this.vertexViewU32;
         var renderer = this.renderer;
+        var roundPixels = camera.roundPixels;
+        var resolution = renderer.gameConfig.resolution;
         var list = blitter.getRenderList();
         var length = list.length;
         var cameraMatrix = camera.matrix.matrix;
@@ -297,7 +313,19 @@ var TextureTintPipeline = new Class({
                 var ty0 = x * b + y * d + f;
                 var tx1 = xw * a + yh * c + e;
                 var ty1 = xw * b + yh * d + f;
-                
+
+                if (roundPixels)
+                {
+                    tx0 = ((tx0 * resolution)|0) / resolution;
+                    ty0 = ((ty0 * resolution)|0) / resolution;
+                    tx1 = ((tx1 * resolution)|0) / resolution;
+                    ty1 = ((ty1 * resolution)|0) / resolution;
+                    tx2 = ((tx2 * resolution)|0) / resolution;
+                    ty2 = ((ty2 * resolution)|0) / resolution;
+                    tx3 = ((tx3 * resolution)|0) / resolution;
+                    ty3 = ((ty3 * resolution)|0) / resolution;
+                }
+            
                 // Bind Texture if texture wasn't bound.
                 // This needs to be here because of multiple
                 // texture atlas.
@@ -362,6 +390,8 @@ var TextureTintPipeline = new Class({
         var vertexViewF32 = this.vertexViewF32;
         var vertexViewU32 = this.vertexViewU32;
         var renderer = this.renderer;
+        var roundPixels = camera.roundPixels;
+        var resolution = renderer.gameConfig.resolution;
         var cameraMatrix = camera.matrix.matrix;
         var frame = sprite.frame;
         var texture = frame.texture.source[frame.sourceIndex].glTexture;
@@ -426,6 +456,18 @@ var TextureTintPipeline = new Class({
 
         vertexOffset = this.vertexCount * this.vertexComponentCount;
 
+        if (roundPixels)
+        {
+            tx0 = ((tx0 * resolution)|0) / resolution;
+            ty0 = ((ty0 * resolution)|0) / resolution;
+            tx1 = ((tx1 * resolution)|0) / resolution;
+            ty1 = ((ty1 * resolution)|0) / resolution;
+            tx2 = ((tx2 * resolution)|0) / resolution;
+            ty2 = ((ty2 * resolution)|0) / resolution;
+            tx3 = ((tx3 * resolution)|0) / resolution;
+            ty3 = ((ty3 * resolution)|0) / resolution;
+        }
+
         vertexViewF32[vertexOffset + 0] = tx0;
         vertexViewF32[vertexOffset + 1] = ty0;
         vertexViewF32[vertexOffset + 2] = uvs.x0;
@@ -480,6 +522,8 @@ var TextureTintPipeline = new Class({
         var vertexViewF32 = this.vertexViewF32;
         var vertexViewU32 = this.vertexViewU32;
         var renderer = this.renderer;
+        var roundPixels = camera.roundPixels;
+        var resolution = renderer.gameConfig.resolution;
         var cameraMatrix = camera.matrix.matrix;
         var a = cameraMatrix[0];
         var b = cameraMatrix[1];
@@ -526,6 +570,12 @@ var TextureTintPipeline = new Class({
             var tx = x * mva + y * mvc + mve;
             var ty = x * mvb + y * mvd + mvf;
 
+            if (roundPixels)
+            {
+                tx = ((tx * resolution)|0) / resolution;
+                tx = ((tx * resolution)|0) / resolution;
+            }
+
             vertexViewF32[vertexOffset + 0] = tx;
             vertexViewF32[vertexOffset + 1] = ty;
             vertexViewF32[vertexOffset + 2] = uvs[index + 0];
@@ -554,6 +604,8 @@ var TextureTintPipeline = new Class({
         var vertexViewF32 = this.vertexViewF32;
         var vertexViewU32 = this.vertexViewU32;
         var renderer = this.renderer;
+        var roundPixels = camera.roundPixels;
+        var resolution = renderer.gameConfig.resolution;
         var cameraMatrix = camera.matrix.matrix;
         var cameraWidth = camera.width + 50;
         var cameraHeight = camera.height + 50;
@@ -704,6 +756,18 @@ var TextureTintPipeline = new Class({
             
             vertexOffset = this.vertexCount * this.vertexComponentCount;
 
+            if (roundPixels)
+            {
+                tx0 = ((tx0 * resolution)|0) / resolution;
+                ty0 = ((ty0 * resolution)|0) / resolution;
+                tx1 = ((tx1 * resolution)|0) / resolution;
+                ty1 = ((ty1 * resolution)|0) / resolution;
+                tx2 = ((tx2 * resolution)|0) / resolution;
+                ty2 = ((ty2 * resolution)|0) / resolution;
+                tx3 = ((tx3 * resolution)|0) / resolution;
+                ty3 = ((ty3 * resolution)|0) / resolution;
+            }
+
             vertexViewF32[vertexOffset + 0] = tx0;
             vertexViewF32[vertexOffset + 1] = ty0;
             vertexViewF32[vertexOffset + 2] = umin;
@@ -755,6 +819,8 @@ var TextureTintPipeline = new Class({
         var vertexViewF32 = this.vertexViewF32;
         var vertexViewU32 = this.vertexViewU32;
         var renderer = this.renderer;
+        var roundPixels = camera.roundPixels;
+        var resolution = renderer.gameConfig.resolution;
         var cameraMatrix = camera.matrix.matrix;
         var frame = bitmapText.frame;
         var textureSource = bitmapText.texture.source[frame.sourceIndex];
@@ -976,6 +1042,18 @@ var TextureTintPipeline = new Class({
             
             vertexOffset = this.vertexCount * this.vertexComponentCount;
 
+            if (roundPixels)
+            {
+                tx0 = ((tx0 * resolution)|0) / resolution;
+                ty0 = ((ty0 * resolution)|0) / resolution;
+                tx1 = ((tx1 * resolution)|0) / resolution;
+                ty1 = ((ty1 * resolution)|0) / resolution;
+                tx2 = ((tx2 * resolution)|0) / resolution;
+                ty2 = ((ty2 * resolution)|0) / resolution;
+                tx3 = ((tx3 * resolution)|0) / resolution;
+                ty3 = ((ty3 * resolution)|0) / resolution;
+            }
+
             vertexViewF32[vertexOffset + 0] = tx0;
             vertexViewF32[vertexOffset + 1] = ty0;
             vertexViewF32[vertexOffset + 2] = umin;
@@ -1144,6 +1222,8 @@ var TextureTintPipeline = new Class({
         var vertexViewF32 = this.vertexViewF32;
         var vertexViewU32 = this.vertexViewU32;
         var renderer = this.renderer;
+        var roundPixels = camera.roundPixels;
+        var resolution = renderer.gameConfig.resolution;
         var cameraMatrix = camera.matrix.matrix;
         var width = srcWidth * (flipX ? -1.0 : 1.0);
         var height = srcHeight * (flipY ? -1.0 : 1.0);
@@ -1182,14 +1262,26 @@ var TextureTintPipeline = new Class({
         var tx3 = xw * mva + y * mvc + mve;
         var ty3 = xw * mvb + y * mvd + mvf;
         var vertexOffset = 0;
-        var u0 = ((frameX + 0.5) / textureWidth) + uOffset;
-        var v0 = ((frameY + 0.5) / textureHeight) + vOffset;
-        var u1 = ((frameX - 0.5 + frameWidth) / textureWidth) + uOffset;
-        var v1 = ((frameY - 0.5 + frameHeight) / textureHeight) + vOffset;
+        var u0 = (frameX / textureWidth) + uOffset;
+        var v0 = (frameY / textureHeight) + vOffset;
+        var u1 = (frameX + frameWidth) / textureWidth + uOffset;
+        var v1 = (frameY + frameHeight) / textureHeight + vOffset;
 
         renderer.setTexture2D(texture, 0);
 
         vertexOffset = this.vertexCount * this.vertexComponentCount;
+
+        if (roundPixels)
+        {
+            tx0 = ((tx0 * resolution)|0) / resolution;
+            ty0 = ((ty0 * resolution)|0) / resolution;
+            tx1 = ((tx1 * resolution)|0) / resolution;
+            ty1 = ((ty1 * resolution)|0) / resolution;
+            tx2 = ((tx2 * resolution)|0) / resolution;
+            ty2 = ((ty2 * resolution)|0) / resolution;
+            tx3 = ((tx3 * resolution)|0) / resolution;
+            ty3 = ((ty3 * resolution)|0) / resolution;
+        }
 
         vertexViewF32[vertexOffset + 0] = tx0;
         vertexViewF32[vertexOffset + 1] = ty0;

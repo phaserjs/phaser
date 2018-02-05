@@ -21,20 +21,20 @@ var WebGLRenderer = new Class({
     function WebGLRenderer (game)
     {
         var renderer = this;
-        var config = {
-            backgroundColor: game.config.backgroundColor,
-            contextCreation: {
-                alpha: false,
-                depth: false, // enable when 3D is added in the future
-                antialias: true,
-                premultipliedAlpha: true,
-                stencil: true,
-                preserveDrawingBuffer: false,
-                failIfMajorPerformanceCaveat: false
-            }
+        var contextCreationConfig = {
+            alpha: game.config.transparent,
+            depth: false, // enable when 3D is added in the future
+            antialias: game.config.antialias,
+            premultipliedAlpha: game.config.transparent,
+            stencil: true,
+            preserveDrawingBuffer: game.config.preserveDrawingBuffer,
+            failIfMajorPerformanceCaveat: false,
+            powerPreference: game.config.powerPreference
         };
 
+        this.contextCreationConfig = contextCreationConfig;
         this.game = game;
+        this.gameConfig = game.config;
         this.type = CONST.WEBGL;
         this.width = game.config.width * game.config.resolution;
         this.height = game.config.height * game.config.resolution;
@@ -88,7 +88,7 @@ var WebGLRenderer = new Class({
 
         this.canvas.addEventListener('webglcontextrestored', function (event) {
             renderer.contextLost = false;
-            renderer.init(config);
+            renderer.init(renderer.gameConfig, renderer.contextCreationConfig);
             for (var index = 0; index < renderer.restoredContextCallbacks.length; ++index)
             {
                 var callback = renderer.restoredContextCallbacks[index];
@@ -101,14 +101,14 @@ var WebGLRenderer = new Class({
         this.supportedExtensions = null;
         this.extensions = {};
 
-        this.init(config);
+        this.init(this.gameConfig, this.contextCreationConfig);
     },
 
-    init: function (config)
+    init: function (config, contextCreationConfig)
     {
         var canvas = this.canvas;
         var clearColor = config.backgroundColor;
-        var gl = canvas.getContext('webgl', config.contextCreation) || canvas.getContext('experimental-webgl', config.contextCreation);
+        var gl = canvas.getContext('webgl', contextCreationConfig) || canvas.getContext('experimental-webgl', contextCreationConfig);
     
         if (!gl)
         {
@@ -143,7 +143,7 @@ var WebGLRenderer = new Class({
         this.addPipeline('Light2D', new ForwardDiffuseLightPipeline(this.game, gl, this));
         
         this.setBlendMode(CONST.BlendModes.NORMAL);
-        this.resize(this.width, this.height, this.game.config.resolution);
+        this.resize(this.width, this.height, config.resolution);
     
         return this;
     },
@@ -238,7 +238,7 @@ var WebGLRenderer = new Class({
         else console.warn('Pipeline', pipelineName, ' already exists.');
 
         pipelineInstance.name = pipelineName;
-        this.pipelines[pipelineName].resize(this.width, this.height, this.game.config.resolution);
+        this.pipelines[pipelineName].resize(this.width, this.height, this.gameConfig.resolution);
 
         return this;
     },
@@ -450,7 +450,7 @@ var WebGLRenderer = new Class({
         {
             filter = gl.LINEAR;
         }
-        else if (scaleMode === CONST.ScaleModes.NEAREST || this.game.config.pixelArt)
+        else if (scaleMode === CONST.ScaleModes.NEAREST || this.gameConfig.pixelArt)
         {
             filter = gl.NEAREST;
         }
@@ -683,12 +683,14 @@ var WebGLRenderer = new Class({
         if (this.contextLost) return;
 
         var gl = this.gl;
-        var color = this.game.config.backgroundColor;
+        var color = this.gameConfig.backgroundColor;
         var pipelines = this.pipelines;
 
         // Bind custom framebuffer here
         gl.clearColor(color.redGL, color.greenGL, color.blueGL, color.alphaGL);
-        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT | gl.STENCIL_BUFFER_BIT);
+
+        if (this.gameConfig.clearBeforeRender)
+            gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT | gl.STENCIL_BUFFER_BIT);
 
         for (var key in pipelines)
         {
