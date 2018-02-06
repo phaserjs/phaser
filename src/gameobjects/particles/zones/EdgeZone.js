@@ -1,6 +1,20 @@
 var Class = require('../../../utils/Class');
 var Wrap = require('../../../math/Wrap');
 
+/**
+ * [description]
+ *
+ * @class EdgeZone
+ * @memberOf Phaser.GameObjects.Particles.Zones
+ * @constructor
+ * @since 3.0.0
+ *
+ * @param {object} source - [description]
+ * @param {number} quantity - [description]
+ * @param {number} stepRate - [description]
+ * @param {boolean} yoyo - [description]
+ * @param {boolean} seamless - [description]
+ */
 var EdgeZone = new Class({
 
     initialize:
@@ -10,28 +24,104 @@ var EdgeZone = new Class({
         if (yoyo === undefined) { yoyo = false; }
         if (seamless === undefined) { seamless = true; }
 
+        /**
+         * [description]
+         *
+         * @name Phaser.GameObjects.Particles.Zones.EdgeZone#source
+         * @type {object}
+         * @since 3.0.0
+         */
         this.source = source;
 
+        /**
+         * [description]
+         *
+         * @name Phaser.GameObjects.Particles.Zones.EdgeZone#points
+         * @type {Phaser.Geom.Point[]}
+         * @default []
+         * @since 3.0.0
+         */
         this.points = [];
 
+        /**
+         * [description]
+         *
+         * @name Phaser.GameObjects.Particles.Zones.EdgeZone#quantity
+         * @type {number}
+         * @since 3.0.0
+         */
         this.quantity = quantity;
 
+        /**
+         * [description]
+         *
+         * @name Phaser.GameObjects.Particles.Zones.EdgeZone#stepRate
+         * @type {number}
+         * @since 3.0.0
+         */
         this.stepRate = stepRate;
 
+        /**
+         * [description]
+         *
+         * @name Phaser.GameObjects.Particles.Zones.EdgeZone#yoyo
+         * @type {boolean}
+         * @since 3.0.0
+         */
         this.yoyo = yoyo;
 
+        /**
+         * [description]
+         *
+         * @name Phaser.GameObjects.Particles.Zones.EdgeZone#counter
+         * @type {number}
+         * @default -1
+         * @since 3.0.0
+         */
         this.counter = -1;
 
+        /**
+         * [description]
+         *
+         * @name Phaser.GameObjects.Particles.Zones.EdgeZone#seamless
+         * @type {boolean}
+         * @since 3.0.0
+         */
         this.seamless = seamless;
 
+        /**
+         * [description]
+         *
+         * @name Phaser.GameObjects.Particles.Zones.EdgeZone#_length
+         * @type {number}
+         * @private
+         * @default 0
+         * @since 3.0.0
+         */
         this._length = 0;
 
-        //  0 = forwards, 1 = backwards
+        /**
+         * 0 = forwards, 1 = backwards
+         *
+         * @name Phaser.GameObjects.Particles.Zones.EdgeZone#_direction
+         * @type {number}
+         * @private
+         * @default 0
+         * @since 3.0.0
+         */
         this._direction = 0;
 
         this.updateSource();
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.GameObjects.Particles.Zones.EdgeZone#updateSource
+     * @since 3.0.0
+     *
+     * @return {Phaser.GameObjects.Particles.Zones.EdgeZone} This Edge Zone.
+     */
     updateSource: function ()
     {
         this.points = this.source.getPoints(this.quantity, this.stepRate);
@@ -61,6 +151,16 @@ var EdgeZone = new Class({
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.GameObjects.Particles.Zones.EdgeZone#changeSource
+     * @since 3.0.0
+     *
+     * @param {object} source - [description]
+     *
+     * @return {Phaser.GameObjects.Particles.Zones.EdgeZone} This Edge Zone.
+     */
     changeSource: function (source)
     {
         this.source = source;
@@ -68,6 +168,14 @@ var EdgeZone = new Class({
         return this.updateSource();
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.GameObjects.Particles.Zones.EdgeZone#getPoint
+     * @since 3.0.0
+     *
+     * @param {Phaser.GameObjects.Particles.Particle} particle - [description]
+     */
     getPoint: function (particle)
     {
         if (this._direction === 0)

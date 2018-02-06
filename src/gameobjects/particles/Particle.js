@@ -2,61 +2,279 @@ var Class = require('../../utils/Class');
 var DegToRad = require('../../math/DegToRad');
 var DistanceBetween = require('../../math/distance/DistanceBetween');
 
-//  Phaser.GameObjects.Particle
-
+/**
+ * [description]
+ *
+ * @class Particle
+ * @memberOf Phaser.GameObjects.Particles
+ * @constructor
+ * @since 3.0.0
+ *
+ * @param {Phaser.GameObjects.Particles.ParticleEmitter} emitter - The Emitter to which this Particle belongs.
+ */
 var Particle = new Class({
 
     initialize:
 
     function Particle (emitter)
     {
+        /**
+         * The Emitter to which this Particle belongs.
+         *
+         * A Particle can only belong to a single Emitter and is created, updated and destroyed via it.
+         *
+         * @name Phaser.GameObjects.Particles.Particle#emitter
+         * @type {Phaser.GameObjects.Particles.ParticleEmitter}
+         * @since 3.0.0
+         */
         this.emitter = emitter;
 
-        //  Phaser.Texture.Frame
+        /**
+         * [description]
+         *
+         * @name Phaser.GameObjects.Particles.Particle#frame
+         * @type {Phaser.Texture.Frame}
+         * @default null
+         * @since 3.0.0
+         */
         this.frame = null;
 
+        /**
+         * [description]
+         *
+         * @name Phaser.GameObjects.Particles.Particle#index
+         * @type {number}
+         * @default 0
+         * @since 3.0.0
+         */
         this.index = 0;
 
+        /**
+         * The x coordinate of this Particle.
+         *
+         * @name Phaser.GameObjects.Particles.Particle#x
+         * @type {number}
+         * @default 0
+         * @since 3.0.0
+         */
         this.x = 0;
+
+        /**
+         * The y coordinate of this Particle.
+         *
+         * @name Phaser.GameObjects.Particles.Particle#y
+         * @type {number}
+         * @default 0
+         * @since 3.0.0
+         */
         this.y = 0;
 
+        /**
+         * The x velocity of this Particle.
+         *
+         * @name Phaser.GameObjects.Particles.Particle#velocityX
+         * @type {number}
+         * @default 0
+         * @since 3.0.0
+         */
         this.velocityX = 0;
+
+        /**
+         * The y velocity of this Particle.
+         *
+         * @name Phaser.GameObjects.Particles.Particle#velocityY
+         * @type {number}
+         * @default 0
+         * @since 3.0.0
+         */
         this.velocityY = 0;
 
+        /**
+         * The x acceleration of this Particle.
+         *
+         * @name Phaser.GameObjects.Particles.Particle#accelerationX
+         * @type {number}
+         * @default 0
+         * @since 3.0.0
+         */
         this.accelerationX = 0;
+
+        /**
+         * The y acceleration of this Particle.
+         *
+         * @name Phaser.GameObjects.Particles.Particle#accelerationY
+         * @type {number}
+         * @default 0
+         * @since 3.0.0
+         */
         this.accelerationY = 0;
 
+        /**
+         * The maximum horizontal velocity this Particle can travel at.
+         *
+         * @name Phaser.GameObjects.Particles.Particle#maxVelocityX
+         * @type {number}
+         * @default 10000
+         * @since 3.0.0
+         */
         this.maxVelocityX = 10000;
+
+        /**
+         * The maximum vertical velocity this Particle can travel at.
+         *
+         * @name Phaser.GameObjects.Particles.Particle#maxVelocityY
+         * @type {number}
+         * @default 10000
+         * @since 3.0.0
+         */
         this.maxVelocityY = 10000;
 
+        /**
+         * The bounciness, or restitution, of this Particle.
+         *
+         * @name Phaser.GameObjects.Particles.Particle#bounce
+         * @type {number}
+         * @default 0
+         * @since 3.0.0
+         */
         this.bounce = 0;
 
+        /**
+         * The horizontal scale of this Particle.
+         *
+         * @name Phaser.GameObjects.Particles.Particle#scaleX
+         * @type {float}
+         * @default 1
+         * @since 3.0.0
+         */
         this.scaleX = 1;
+
+        /**
+         * The vertical scale of this Particle.
+         *
+         * @name Phaser.GameObjects.Particles.Particle#scaleY
+         * @type {float}
+         * @default 1
+         * @since 3.0.0
+         */
         this.scaleY = 1;
 
+        /**
+         * The alpha value of this Particle.
+         *
+         * @name Phaser.GameObjects.Particles.Particle#alpha
+         * @type {float}
+         * @default 1
+         * @since 3.0.0
+         */
         this.alpha = 1;
 
-        //  degs
+        /**
+         * The angle of this Particle in degrees.
+         *
+         * @name Phaser.GameObjects.Particles.Particle#angle
+         * @type {number}
+         * @default 0
+         * @since 3.0.0
+         */
         this.angle = 0;
 
-        //  rads
+        /**
+         * The angle of this Particle in radians.
+         *
+         * @name Phaser.GameObjects.Particles.Particle#rotation
+         * @type {number}
+         * @default 0
+         * @since 3.0.0
+         */
         this.rotation = 0;
 
+        /**
+         * The horizontal scroll factor of this Particle.
+         *
+         * @name Phaser.GameObjects.Particles.Particle#scrollFactorX
+         * @type {number}
+         * @default 1
+         * @since 3.0.0
+         */
         this.scrollFactorX = 1;
+
+        /**
+         * The vertical scroll factor of this Particle.
+         *
+         * @name Phaser.GameObjects.Particles.Particle#scrollFactorY
+         * @type {number}
+         * @default 1
+         * @since 3.0.0
+         */
         this.scrollFactorY = 1;
 
+        /**
+         * The tint applied to this Particle.
+         *
+         * @name Phaser.GameObjects.Particles.Particle#tint
+         * @type {number}
+         * @webglOnly
+         * @since 3.0.0
+         */
         this.tint = 0xffffffff;
+
+        /**
+         * [description]
+         *
+         * @name Phaser.GameObjects.Particles.Particle#color
+         * @type {number}
+         * @since 3.0.0
+         */
         this.color = 0xffffffff;
 
-        //  in ms
+        /**
+         * The lifespan of this Particle in ms.
+         *
+         * @name Phaser.GameObjects.Particles.Particle#life
+         * @type {number}
+         * @default 1000
+         * @since 3.0.0
+         */
         this.life = 1000;
+
+        /**
+         * The current life of this Particle in ms.
+         *
+         * @name Phaser.GameObjects.Particles.Particle#lifeCurrent
+         * @type {number}
+         * @default 1000
+         * @since 3.0.0
+         */
         this.lifeCurrent = 1000;
+
+        /**
+         * The delay applied to this Particle upon emission, in ms.
+         *
+         * @name Phaser.GameObjects.Particles.Particle#delayCurrent
+         * @type {number}
+         * @default 0
+         * @since 3.0.0
+         */
         this.delayCurrent = 0;
 
-        //  0-1
+        /**
+         * The normalized lifespan T value.
+         *
+         * @name Phaser.GameObjects.Particles.Particle#lifeT
+         * @type {float}
+         * @default 0
+         * @since 3.0.0
+         */
         this.lifeT = 0;
 
-        //  ease data
+        /**
+         * The data used by the ease equation.
+         *
+         * @name Phaser.GameObjects.Particles.Particle#data
+         * @type {object}
+         * @since 3.0.0
+         */
         this.data = {
             tint: { min: 0xffffff, max: 0xffffff, current: 0xffffff },
             alpha: { min: 1, max: 1 },
@@ -66,11 +284,28 @@ var Particle = new Class({
         };
     },
 
+    /**
+     * Checks to see if this Particle is alive and updating.
+     *
+     * @method Phaser.GameObjects.Particles.Particle#isAlive
+     * @since 3.0.0
+     *
+     * @return {boolean} `true` if this Particle is alive and updating, otherwise `false`.
+     */
     isAlive: function ()
     {
         return (this.lifeCurrent > 0);
     },
 
+    /**
+     * Starts this Particle from the given coordinates.
+     *
+     * @method Phaser.GameObjects.Particles.Particle#fire
+     * @since 3.0.0
+     *
+     * @param {number} x - The x coordinate to launch this Particle from.
+     * @param {number} y - The y coordinate to launch this Particle from.
+     */
     fire: function (x, y)
     {
         var emitter = this.emitter;
@@ -174,6 +409,17 @@ var Particle = new Class({
         this.index = emitter.alive.length;
     },
 
+    /**
+     * An internal method that calculates the velocity of the Particle.
+     *
+     * @method Phaser.GameObjects.Particles.Particle#computeVelocity
+     * @since 3.0.0
+     *
+     * @param {Phaser.GameObjects.Particles.ParticleEmitter} emitter - The Emitter that is updating this Particle.
+     * @param {number} delta - The delta time in ms.
+     * @param {float} step - The delta value divided by 1000.
+     * @param {array} processors - [description]
+     */
     computeVelocity: function (emitter, delta, step, processors)
     {
         var vx = this.velocityX;
@@ -226,6 +472,16 @@ var Particle = new Class({
         }
     },
 
+    /**
+     * Checks if this Particle is still within the bounds defined by the given Emitter.
+     *
+     * If not, and depending on the Emitter collision flags, the Particle may either stop or rebound.
+     *
+     * @method Phaser.GameObjects.Particles.Particle#checkBounds
+     * @since 3.0.0
+     *
+     * @param {Phaser.GameObjects.Particles.ParticleEmitter} emitter - The Emitter to check the bounds against.
+     */
     checkBounds: function (emitter)
     {
         var bounds = emitter.bounds;
@@ -254,7 +510,20 @@ var Particle = new Class({
         }
     },
 
-    //  delta = ms, step = delta / 1000
+    /**
+     * The main update method for this Particle.
+     *
+     * Updates its life values, computes the velocity and repositions the Particle.
+     *
+     * @method Phaser.GameObjects.Particles.Particle#update
+     * @since 3.0.0
+     *
+     * @param {number} delta - The delta time in ms.
+     * @param {float} step - The delta value divided by 1000.
+     * @param {array} processors - An optional array of update processors.
+     *
+     * @return {boolean} Returns `true` if this Particle has now expired and should be removed, otherwise `false` if still active.
+     */
     update: function (delta, step, processors)
     {
         if (this.delayCurrent > 0)

@@ -13,7 +13,7 @@ var ParticleEmitterManager = require('./ParticleEmitterManager');
  * @param {string|integer|object} [frame] - [description]
  * @param {object} [emitters] - [description]
  * 
- * @return {Phaser.GameObjects.Particles.EmitterManager} The Game Object that was created.
+ * @return {Phaser.GameObjects.Particles.ParticleEmitterManager} The Game Object that was created.
  */
 GameObjectFactory.register('particles', function (key, frame, emitters)
 {
