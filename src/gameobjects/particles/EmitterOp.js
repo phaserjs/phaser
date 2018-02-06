@@ -4,6 +4,19 @@ var GetEaseFunction = require('../../tweens/builder/GetEaseFunction');
 var GetFastValue = require('../../utils/object/GetFastValue');
 var Wrap = require('../../math/Wrap');
 
+/**
+ * [description]
+ *
+ * @class EmitterOp
+ * @memberOf Phaser.GameObjects.Particles
+ * @constructor
+ * @since 3.0.0
+ *
+ * @param {object} config - [description]
+ * @param {string} key - [description]
+ * @param {number} defaultValue - [description]
+ * @param {boolean} [emitOnly=false] - [description]
+ */
 var EmitterOp = new Class({
 
     initialize:
@@ -12,25 +25,121 @@ var EmitterOp = new Class({
     {
         if (emitOnly === undefined) { emitOnly = false; }
 
+        /**
+         * [description]
+         *
+         * @name Phaser.GameObjects.Particles.EmitterOp#propertyKey
+         * @type {string}
+         * @since 3.0.0
+         */
         this.propertyKey = key;
+
+        /**
+         * [description]
+         *
+         * @name Phaser.GameObjects.Particles.EmitterOp#propertyValue
+         * @type {number}
+         * @since 3.0.0
+         */
         this.propertyValue = defaultValue;
+
+        /**
+         * [description]
+         *
+         * @name Phaser.GameObjects.Particles.EmitterOp#defaultValue
+         * @type {number}
+         * @since 3.0.0
+         */
         this.defaultValue = defaultValue;
 
+        /**
+         * [description]
+         *
+         * @name Phaser.GameObjects.Particles.EmitterOp#steps
+         * @type {number}
+         * @default 0
+         * @since 3.0.0
+         */
         this.steps = 0;
+
+        /**
+         * [description]
+         *
+         * @name Phaser.GameObjects.Particles.EmitterOp#counter
+         * @type {number}
+         * @default 0
+         * @since 3.0.0
+         */
         this.counter = 0;
 
+        /**
+         * [description]
+         *
+         * @name Phaser.GameObjects.Particles.EmitterOp#start
+         * @type {number}
+         * @default 0
+         * @since 3.0.0
+         */
         this.start = 0;
+
+        /**
+         * [description]
+         *
+         * @name Phaser.GameObjects.Particles.EmitterOp#end
+         * @type {number}
+         * @default 0
+         * @since 3.0.0
+         */
         this.end = 0;
+
+        /**
+         * [description]
+         *
+         * @name Phaser.GameObjects.Particles.EmitterOp#ease
+         * @type {?function}
+         * @since 3.0.0
+         */
         this.ease;
 
+        /**
+         * [description]
+         *
+         * @name Phaser.GameObjects.Particles.EmitterOp#emitOnly
+         * @type {boolean}
+         * @since 3.0.0
+         */
         this.emitOnly = emitOnly;
 
+        /**
+         * [description]
+         *
+         * @name Phaser.GameObjects.Particles.EmitterOp#onEmit
+         * @type {[type]}
+         * @since 3.0.0
+         */
         this.onEmit = this.defaultEmit;
+
+        /**
+         * [description]
+         *
+         * @name Phaser.GameObjects.Particles.EmitterOp#onUpdate
+         * @type {[type]}
+         * @since 3.0.0
+         */
         this.onUpdate = this.defaultUpdate;
 
         this.loadConfig(config);
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.GameObjects.Particles.EmitterOp#loadConfig
+     * @since 3.0.0
+     *
+     * @param {object} config - [description]
+     * @param {string} newKey - [description]
+     */
     loadConfig: function (config, newKey)
     {
         if (config === undefined) { config = {}; }
@@ -51,11 +160,29 @@ var EmitterOp = new Class({
         }
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.GameObjects.Particles.EmitterOp#toJSON
+     * @since 3.0.0
+     *
+     * @return {object} [description]
+     */
     toJSON: function ()
     {
         return JSON.stringify(this.propertyValue);
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.GameObjects.Particles.EmitterOp#onChange
+     * @since 3.0.0
+     *
+     * @param {[type]} value - [description]
+     *
+     * @return {Phaser.GameObjects.Particles.EmitterOp} This Emitter Op object.
+     */
     onChange: function (value)
     {
         this.propertyValue = value;
@@ -63,6 +190,14 @@ var EmitterOp = new Class({
         return this.setMethods();
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.GameObjects.Particles.EmitterOp#setMethods
+     * @since 3.0.0
+     *
+     * @return {Phaser.GameObjects.Particles.EmitterOp} This Emitter Op object.
+     */
     setMethods: function ()
     {
         var value = this.propertyValue;
@@ -195,43 +330,125 @@ var EmitterOp = new Class({
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.GameObjects.Particles.EmitterOp#has
+     * @since 3.0.0
+     *
+     * @param {object} object - [description]
+     * @param {string} key - [description]
+     *
+     * @return {boolean} [description]
+     */
     has: function (object, key)
     {
         return (object.hasOwnProperty(key));
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.GameObjects.Particles.EmitterOp#hasBoth
+     * @since 3.0.0
+     *
+     * @param {object} object - [description]
+     * @param {string} key1 - [description]
+     * @param {string} key2 - [description]
+     *
+     * @return {boolean} [description]
+     */
     hasBoth: function (object, key1, key2)
     {
         return (object.hasOwnProperty(key1) && object.hasOwnProperty(key2));
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.GameObjects.Particles.EmitterOp#hasEither
+     * @since 3.0.0
+     *
+     * @param {object} object - [description]
+     * @param {string} key1 - [description]
+     * @param {string} key2 - [description]
+     *
+     * @return {boolean} [description]
+     */
     hasEither: function (object, key1, key2)
     {
         return (object.hasOwnProperty(key1) || object.hasOwnProperty(key2));
     },
 
-    //  The returned value sets what the property will be at the START of the particles life, on emit
+    /**
+     * The returned value sets what the property will be at the START of the particles life, on emit.
+     *
+     * @method Phaser.GameObjects.Particles.EmitterOp#defaultEmit
+     * @since 3.0.0
+     *
+     * @param {Phaser.GameObjects.Particles.Particle} particle - [description]
+     * @param {string} key - [description]
+     * @param {number} value - [description]
+     *
+     * @return {number} [description]
+     */
     defaultEmit: function (particle, key, value)
     {
         return value;
     },
 
-    //  The returned value updates the property for the duration of the particles life
+    /**
+     * The returned value updates the property for the duration of the particles life.
+     *
+     * @method Phaser.GameObjects.Particles.EmitterOp#defaultUpdate
+     * @since 3.0.0
+     *
+     * @param {Phaser.GameObjects.Particles.Particle} particle - [description]
+     * @param {string} key - [description]
+     * @param {float} t - The T value (between 0 and 1)
+     * @param {number} value - [description]
+     *
+     * @return {number} [description]
+     */
     defaultUpdate: function (particle, key, t, value)
     {
         return value;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.GameObjects.Particles.EmitterOp#staticValueEmit
+     * @since 3.0.0
+     *
+     * @return {number} [description]
+     */
     staticValueEmit: function ()
     {
         return this.propertyValue;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.GameObjects.Particles.EmitterOp#staticValueUpdate
+     * @since 3.0.0
+     *
+     * @return {number} [description]
+     */
     staticValueUpdate: function ()
     {
         return this.propertyValue;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.GameObjects.Particles.EmitterOp#randomStaticValueEmit
+     * @since 3.0.0
+     *
+     * @return {number} [description]
+     */
     randomStaticValueEmit: function ()
     {
         var randomIndex = Math.floor(Math.random() * this.propertyValue.length);
@@ -239,6 +456,17 @@ var EmitterOp = new Class({
         return this.propertyValue[randomIndex];
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.GameObjects.Particles.EmitterOp#randomRangedValueEmit
+     * @since 3.0.0
+     *
+     * @param {Phaser.GameObjects.Particles.Particle} particle - [description]
+     * @param {string} key - [description]
+     *
+     * @return {number} [description]
+     */
     randomRangedValueEmit: function (particle, key)
     {
         var value = FloatBetween(this.start, this.end);
@@ -251,6 +479,14 @@ var EmitterOp = new Class({
         return value;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.GameObjects.Particles.EmitterOp#steppedEmit
+     * @since 3.0.0
+     *
+     * @return {number} [description]
+     */
     steppedEmit: function ()
     {
         var current = this.counter;
@@ -262,6 +498,17 @@ var EmitterOp = new Class({
         return current;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.GameObjects.Particles.EmitterOp#easedValueEmit
+     * @since 3.0.0
+     *
+     * @param {Phaser.GameObjects.Particles.Particle} particle - [description]
+     * @param {string} key - [description]
+     *
+     * @return {number} [description]
+     */
     easedValueEmit: function (particle, key)
     {
         if (particle && particle.data[key])
@@ -275,6 +522,19 @@ var EmitterOp = new Class({
         return this.start;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.GameObjects.Particles.EmitterOp#easeValueUpdate
+     * @since 3.0.0
+     *
+     * @param {Phaser.GameObjects.Particles.Particle} particle - [description]
+     * @param {string} key - [description]
+     * @param {float} t - The T value (between 0 and 1)
+     * @param {number} value - [description]
+     *
+     * @return {number} [description]
+     */
     easeValueUpdate: function (particle, key, t, value)
     {
         var data = particle.data[key];
