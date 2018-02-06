@@ -285,8 +285,8 @@ var TextureTintPipeline = new Class({
         var cameraScrollY = camera.scrollY * blitter.scrollFactorY;
         var batchCount = Math.ceil(length / this.maxQuads);
         var batchOffset = 0;
-        var blitterX = blitter.x;
-        var blitterY = blitter.y;
+        var blitterX = blitter.x - cameraScrollX;
+        var blitterY = blitter.y - cameraScrollY;
 
         for (var batchIndex = 0; batchIndex < batchCount; ++batchIndex)
         {
@@ -305,8 +305,8 @@ var TextureTintPipeline = new Class({
                 var flipY = bob.flipY;
                 var width = frame.width * (flipX ? -1.0 : 1.0); 
                 var height = frame.height * (flipY ? -1.0 : 1.0);
-                var x = blitterX + bob.x + frame.x - cameraScrollX + (width * ((flipX) ? 1.0 : 0.0));
-                var y = blitterY + bob.y + frame.y - cameraScrollY + (height * ((flipY) ? 1.0 : 0.0));
+                var x = blitterX + bob.x + frame.x + (frame.width * ((flipX) ? 1.0 : 0.0));
+                var y = blitterY + bob.y + frame.y + (frame.height * ((flipY) ? 1.0 : 0.0));
                 var xw = x + width;                
                 var yh = y + height;
                 var tx0 = x * a + y * c + e;

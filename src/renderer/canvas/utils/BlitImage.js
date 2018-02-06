@@ -1,6 +1,6 @@
 
 //  No scaling, anchor, rotation or effects, literally draws the frame directly to the canvas
-var BlitImage = function (dx, dy, frame, camera)
+var BlitImage = function (dx, dy, frame)
 {
     var ctx = this.currentContext;
     var cd = frame.canvasData;
@@ -11,8 +11,8 @@ var BlitImage = function (dx, dy, frame, camera)
         cd.sy,
         cd.sWidth,
         cd.sHeight,
-        dx - camera.scrollX,
-        dy - camera.scrollY,
+        dx,
+        dy,
         cd.dWidth,
         cd.dHeight
     );

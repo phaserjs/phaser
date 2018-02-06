@@ -26,21 +26,46 @@ var BlitterCanvasRenderer = function (renderer, src, interpolationPercentage, ca
     renderer.setBlendMode(src.blendMode);
 
     var ca = renderer.currentAlpha;
+    var ctx = renderer.gameContext;
+    var cameraScrollX = src.x - camera.scrollX * src.scrollFactorX;
+    var cameraScrollY = src.y - camera.scrollY * src.scrollFactorY;
 
     //  Render bobs
     for (var i = 0; i < list.length; i++)
     {
         var bob = list[i];
+        var flip = (bob.flipX || bob.flipY);
+        var frame = bob.frame;
+        var cd = frame.canvasData;
+        var dx = frame.x;
+        var dy = frame.y;
+        var fx = 1;
+        var fy = 1;
 
-        if (ca !== bob.alpha)
+        if (!flip)
         {
-            ca = renderer.setAlpha(bob.alpha);
+            renderer.blitImage(dx + bob.x + cameraScrollX, dy + bob.y + cameraScrollY, bob.frame);
         }
+        else
+        {
+            if (bob.flipX)
+            {
+                fx = -1;
+                dx -= cd.dWidth;
+            }
 
-        // var x = src.x + bob.x + frame.x - cameraScrollX + ((frame.width) * (bob.flipX ? 1 : 0));
-        // var y = src.y + bob.y + frame.y - cameraScrollY + ((frame.height) * (bob.flipY ? 1 : 0));
+            if (bob.flipY)
+            {
+                fy = -1;
+                dy -= cd.dHeight;
+            }
 
-        renderer.blitImage(src.x + bob.x, src.y + bob.y, bob.frame, camera);
+            ctx.save();
+            ctx.translate(bob.x + cameraScrollX, bob.y + cameraScrollY);
+            ctx.scale(fx, fy);
+            ctx.drawImage(frame.source.image, cd.sx, cd.sy, cd.sWidth, cd.sHeight, dx, dy, cd.dWidth, cd.dHeight);
+            ctx.restore();
+        }
     }
 };
 
