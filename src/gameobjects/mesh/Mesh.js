@@ -1,9 +1,42 @@
-
 var Class = require('../../utils/Class');
-var GameObject = require('../GameObject');
 var Components = require('../components');
+var GameObject = require('../GameObject');
 var MeshRender = require('./MeshRender');
 
+/**
+ * A Mesh Game Object.
+ *
+ * @class Mesh
+ * @extends Phaser.GameObjects.GameObject
+ * @memberOf Phaser.GameObjects
+ * @constructor
+ * @webglOnly
+ * @since 3.0.0
+ *
+ * @extends Phaser.GameObjects.Components.Alpha
+ * @extends Phaser.GameObjects.Components.BlendMode
+ * @extends Phaser.GameObjects.Components.Depth
+ * @extends Phaser.GameObjects.Components.Flip
+ * @extends Phaser.GameObjects.Components.GetBounds
+ * @extends Phaser.GameObjects.Components.Origin
+ * @extends Phaser.GameObjects.Components.Pipeline
+ * @extends Phaser.GameObjects.Components.ScaleMode
+ * @extends Phaser.GameObjects.Components.Size
+ * @extends Phaser.GameObjects.Components.Texture
+ * @extends Phaser.GameObjects.Components.Transform
+ * @extends Phaser.GameObjects.Components.Visible
+ * @extends Phaser.GameObjects.Components.ScrollFactor
+ *
+ * @param {Phaser.Scene} scene - The Scene to which this Game Object belongs. A Game Object can only belong to one Scene at a time.
+ * @param {number} x - The horizontal position of this Game Object in the world.
+ * @param {number} y - The vertical position of this Game Object in the world.
+ * @param {array} vertices - [description]
+ * @param {array} uv - [description]
+ * @param {array} colors - [description]
+ * @param {array} alphas - [description]
+ * @param {string} texture - The key of the Texture this Game Object will use to render with, as stored in the Texture Manager.
+ * @param {string|integer} [frame] - An optional frame from the Texture this Game Object is rendering with.
+ */
 var Mesh = new Class({
 
     Extends: GameObject,
@@ -39,19 +72,19 @@ var Mesh = new Class({
 
         if (vertices.length !== uv.length)
         {
-            throw new Error('Phaser: Vertex count must match UV count');
+            throw new Error('Mesh Vertex count must match UV count');
         }
 
         var verticesUB = (vertices.length / 2) | 0;
 
         if (colors.length > 0 && colors.length < verticesUB)
         {
-            throw new Error('Phaser: Color count must match Vertex count');
+            throw new Error('Mesh Color count must match Vertex count');
         }
 
         if (alphas.length > 0 && alphas.length < verticesUB)
         {
-            throw new Error('Phaser: Alpha count must match Vertex count');
+            throw new Error('Mesh Alpha count must match Vertex count');
         }
 
         var i;
@@ -72,9 +105,40 @@ var Mesh = new Class({
             }
         }
 
+        /**
+         * [description]
+         *
+         * @name Phaser.GameObjects.Mesh#vertices
+         * @type {Float32Array}
+         * @since 3.0.0
+         */
         this.vertices = new Float32Array(vertices);
+
+        /**
+         * [description]
+         *
+         * @name Phaser.GameObjects.Mesh#uv
+         * @type {Float32Array}
+         * @since 3.0.0
+         */
         this.uv = new Float32Array(uv);
+
+        /**
+         * [description]
+         *
+         * @name Phaser.GameObjects.Mesh#colors
+         * @type {Uint32Array}
+         * @since 3.0.0
+         */
         this.colors = new Uint32Array(colors);
+
+        /**
+         * [description]
+         *
+         * @name Phaser.GameObjects.Mesh#alphas
+         * @type {Float32Array}
+         * @since 3.0.0
+         */
         this.alphas = new Float32Array(alphas);
     }
 

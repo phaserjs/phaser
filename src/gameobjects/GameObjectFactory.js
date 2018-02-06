@@ -2,14 +2,18 @@ var Class = require('../utils/Class');
 var PluginManager = require('../plugins/PluginManager');
 
 /**
- * [description]
+ * The Game Object Factory is a Scene plugin that allows you to quickly create many common
+ * types of Game Objects and have them automatically registered with the Scene.
+ *
+ * Game Objects directly register themselves with the Factory and inject their own creation
+ * methods into the class.
  *
  * @class GameObjectFactory
  * @memberOf Phaser.GameObjects
  * @constructor
  * @since 3.0.0
  *
- * @param {Phaser.Scene} scene - The Scene to which this Game Object belongs.
+ * @param {Phaser.Scene} scene - The Scene to which this Game Object Factory belongs.
  */
 var GameObjectFactory = new Class({
 
@@ -18,8 +22,7 @@ var GameObjectFactory = new Class({
     function GameObjectFactory (scene)
     {
         /**
-         * The Scene to which this Game Object belongs.
-         * Game Objects can only belong to one Scene.
+         * The Scene to which this Game Object Factory belongs.
          *
          * @name Phaser.GameObjects.GameObjectFactory#scene
          * @type {Phaser.Scene}
@@ -43,8 +46,24 @@ var GameObjectFactory = new Class({
             scene.sys.events.once('boot', this.boot, this);
         }
 
+        /**
+         * A reference to the Scene Display List.
+         *
+         * @name Phaser.GameObjects.GameObjectFactory#displayList
+         * @type {Phaser.GameObjects.DisplayList}
+         * @protected
+         * @since 3.0.0
+         */
         this.displayList;
 
+        /**
+         * A reference to the Scene Update List.
+         *
+         * @name Phaser.GameObjects.GameObjectFactory#updateList;
+         * @type {Phaser.GameObjects.UpdateList}
+         * @protected
+         * @since 3.0.0
+         */
         this.updateList;
     },
 
