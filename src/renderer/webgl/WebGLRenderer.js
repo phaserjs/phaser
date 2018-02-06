@@ -780,7 +780,14 @@ var WebGLRenderer = new Class({
 
         if (!dstTexture)
         {
-            dstTexture = this.createTexture2D(0, gl.NEAREST, gl.NEAREST, gl.CLAMP_TO_EDGE, gl.CLAMP_TO_EDGE, gl.RGBA, srcCanvas, srcCanvas.width, srcCanvas.height, true);
+            var wrapping = gl.CLAMP_TO_EDGE;
+
+            if (IsSizePowerOfTwo(srcCanvas.width, srcCanvas.height))
+            {
+                wrapping = gl.REPEAT;
+            }
+
+            dstTexture = this.createTexture2D(0, gl.NEAREST, gl.NEAREST, wrapping, wrapping, gl.RGBA, srcCanvas, srcCanvas.width, srcCanvas.height, true);
         }
         else
         {
