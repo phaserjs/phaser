@@ -4,8 +4,18 @@ var GameObjectCreator = require('../GameObjectCreator');
 var GetAdvancedValue = require('../../utils/object/GetAdvancedValue');
 var Sprite3D = require('./Sprite3D');
 
-//  When registering a factory function 'this' refers to the GameObjectCreator context.
-
+/**
+ * Creates a new Sprite3D Game Object and returns it.
+ *
+ * Note: This method will only be available if the Sprite3D Game Object has been built into Phaser.
+ *
+ * @method Phaser.GameObjects.GameObjectCreator#sprite3D
+ * @since 3.0.0
+ *
+ * @param {object} config - [description]
+ *
+ * @return {Phaser.GameObjects.Sprite3D} The Game Object that was created.
+ */
 GameObjectCreator.register('sprite3D', function (config)
 {
     var key = GetAdvancedValue(config, 'key', null);
@@ -23,3 +33,5 @@ GameObjectCreator.register('sprite3D', function (config)
 
     return sprite;
 });
+
+//  When registering a factory function 'this' refers to the GameObjectCreator context.

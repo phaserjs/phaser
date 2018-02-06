@@ -5,6 +5,38 @@ var GameObject = require('../GameObject');
 var GetPowerOfTwo = require('../../math/pow2/GetPowerOfTwo');
 var TileSpriteRender = require('./TileSpriteRender');
 
+/**
+ * [description]
+ *
+ * @class TileSprite
+ * @extends Phaser.GameObjects.GameObject
+ * @memberOf Phaser.GameObjects
+ * @constructor
+ * @since 3.0.0
+ *
+ * @extends Phaser.GameObjects.Components.Alpha
+ * @extends Phaser.GameObjects.Components.BlendMode
+ * @extends Phaser.GameObjects.Components.Depth
+ * @extends Phaser.GameObjects.Components.Flip
+ * @extends Phaser.GameObjects.Components.GetBounds
+ * @extends Phaser.GameObjects.Components.Origin
+ * @extends Phaser.GameObjects.Components.Pipeline
+ * @extends Phaser.GameObjects.Components.ScaleMode
+ * @extends Phaser.GameObjects.Components.ScrollFactor
+ * @extends Phaser.GameObjects.Components.Size
+ * @extends Phaser.GameObjects.Components.Texture
+ * @extends Phaser.GameObjects.Components.Tint
+ * @extends Phaser.GameObjects.Components.Transform
+ * @extends Phaser.GameObjects.Components.Visible
+ *
+ * @param {Phaser.Scene} scene - The Scene to which this Game Object belongs. A Game Object can only belong to one Scene at a time.
+ * @param {number} x - The horizontal position of this Game Object in the world.
+ * @param {number} y - The vertical position of this Game Object in the world.
+ * @param {number} width - The width of the Game Object.
+ * @param {number} height - The height of the Game Object.
+ * @param {string} texture - The key of the Texture this Game Object will use to render with, as stored in the Texture Manager.
+ * @param {string|integer} [frame] - An optional frame from the Texture this Game Object is rendering with.
+ */
 var TileSprite = new Class({
 
     Extends: GameObject,
@@ -35,10 +67,53 @@ var TileSprite = new Class({
 
         GameObject.call(this, scene, 'TileSprite');
 
+        /**
+         * [description]
+         *
+         * @name Phaser.GameObjects.TileSprite#tilePositionX
+         * @type {number}
+         * @default 0
+         * @since 3.0.0
+         */
         this.tilePositionX = 0;
+
+        /**
+         * [description]
+         *
+         * @name Phaser.GameObjects.TileSprite#tilePositionY
+         * @type {number}
+         * @default 0
+         * @since 3.0.0
+         */
         this.tilePositionY = 0;
+
+        /**
+         * [description]
+         *
+         * @name Phaser.GameObjects.TileSprite#dirty
+         * @type {boolean}
+         * @default true
+         * @since 3.0.0
+         */
         this.dirty = true;
+
+        /**
+         * [description]
+         *
+         * @name Phaser.GameObjects.TileSprite#tileTexture
+         * @type {?[type]}
+         * @default null
+         * @since 3.0.0
+         */
         this.tileTexture = null;
+
+        /**
+         * [description]
+         *
+         * @name Phaser.GameObjects.TileSprite#renderer
+         * @type {[type]}
+         * @since 3.0.0
+         */
         this.renderer = renderer;
 
         this.setTexture(texture, frame);
@@ -47,10 +122,50 @@ var TileSprite = new Class({
         this.setOrigin();
         this.initPipeline('TextureTintPipeline');
 
+        /**
+         * The next power of two value from the width of the Frame.
+         *
+         * @name Phaser.GameObjects.TileSprite#potWidth
+         * @type {integer}
+         * @since 3.0.0
+         */
         this.potWidth = GetPowerOfTwo(this.frame.width);
+
+        /**
+         * The next power of two value from the height of the Frame.
+         *
+         * @name Phaser.GameObjects.TileSprite#potHeight
+         * @type {integer}
+         * @since 3.0.0
+         */
         this.potHeight = GetPowerOfTwo(this.frame.height);
+
+        /**
+         * [description]
+         *
+         * @name Phaser.GameObjects.TileSprite#canvasPattern
+         * @type {?CanvasPattern}
+         * @default null
+         * @since 3.0.0
+         */
         this.canvasPattern = null;
+
+        /**
+         * [description]
+         *
+         * @name Phaser.GameObjects.TileSprite#canvasBuffer
+         * @type {HTMLCanvasElement}
+         * @since 3.0.0
+         */
         this.canvasBuffer = CanvasPool.create2D(null, this.potWidth, this.potHeight);
+
+        /**
+         * [description]
+         *
+         * @name Phaser.GameObjects.TileSprite#canvasBufferCtx
+         * @type {CanvasRenderingContext2D}
+         * @since 3.0.0
+         */
         this.canvasBufferCtx = this.canvasBuffer.getContext('2d');
 
         this.updateTileTexture();
@@ -62,6 +177,12 @@ var TileSprite = new Class({
         }, this);
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.GameObjects.TileSprite#updateTileTexture
+     * @since 3.0.0
+     */
     updateTileTexture: function ()
     {
         if (!this.dirty)
@@ -89,6 +210,12 @@ var TileSprite = new Class({
         this.dirty = false;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.GameObjects.TileSprite#destroy
+     * @since 3.0.0
+     */
     destroy: function ()
     {
         if (this.renderer)

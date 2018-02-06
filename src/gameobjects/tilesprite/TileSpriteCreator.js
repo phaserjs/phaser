@@ -3,8 +3,18 @@ var GameObjectCreator = require('../GameObjectCreator');
 var GetAdvancedValue = require('../../utils/object/GetAdvancedValue');
 var TileSprite = require('./TileSprite');
 
-//  When registering a factory function 'this' refers to the GameObjectCreator context.
-
+/**
+ * Creates a new TileSprite Game Object and returns it.
+ *
+ * Note: This method will only be available if the TileSprite Game Object has been built into Phaser.
+ *
+ * @method Phaser.GameObjects.GameObjectCreator#tileSprite
+ * @since 3.0.0
+ *
+ * @param {object} config - [description]
+ *
+ * @return {Phaser.GameObjects.TileSprite} The Game Object that was created.
+ */
 GameObjectCreator.register('tileSprite', function (config)
 {
     var x = GetAdvancedValue(config, 'x', 0);
@@ -20,3 +30,5 @@ GameObjectCreator.register('tileSprite', function (config)
 
     return tile;
 });
+
+//  When registering a factory function 'this' refers to the GameObjectCreator context.
