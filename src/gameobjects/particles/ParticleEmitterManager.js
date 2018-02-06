@@ -6,6 +6,16 @@ var List = require('../../structs/List');
 var ParticleEmitter = require('./ParticleEmitter');
 var Render = require('./ParticleManagerRender');
 
+//  Phaser.GameObjects.Particles
+
+//  Phaser.GameObjects.Particles.EmitterManager
+//  Phaser.GameObjects.Particles.Emitter
+//  Phaser.GameObjects.Particles.Particle
+//  Phaser.GameObjects.Particles.GravityWell
+//  Phaser.GameObjects.Particles.Zones.DeathZone
+//  Phaser.GameObjects.Particles.Zones.EdgeZone
+//  Phaser.GameObjects.Particles.Zones.RandomZone
+
 var ParticleEmitterManager = new Class({
 
     Extends: GameObject,

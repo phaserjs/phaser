@@ -16,6 +16,8 @@ var StableSort = require('../../utils/array/StableSort');
 var Vector2 = require('../../math/Vector2');
 var Wrap = require('../../math/Wrap');
 
+//  Phaser.GameObjects.ParticleEmitter
+
 var ParticleEmitter = new Class({
 
     Mixins: [
