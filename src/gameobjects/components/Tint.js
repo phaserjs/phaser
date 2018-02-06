@@ -72,6 +72,7 @@ var Tint = {
 
     /**
      * The tint value being applied to the top-left of the Game Object.
+     * This value is interpolated from the corner to the center of the Game Object.
      * 
      * @name Phaser.GameObjects.Components.Tint#tintTopLeft
      * @type {integer}
@@ -94,6 +95,7 @@ var Tint = {
 
     /**
      * The tint value being applied to the top-right of the Game Object.
+     * This value is interpolated from the corner to the center of the Game Object.
      * 
      * @name Phaser.GameObjects.Components.Tint#tintTopRight
      * @type {integer}
@@ -116,6 +118,7 @@ var Tint = {
 
     /**
      * The tint value being applied to the bottom-left of the Game Object.
+     * This value is interpolated from the corner to the center of the Game Object.
      * 
      * @name Phaser.GameObjects.Components.Tint#tintBottomLeft
      * @type {integer}
@@ -138,6 +141,7 @@ var Tint = {
 
     /**
      * The tint value being applied to the bottom-right of the Game Object.
+     * This value is interpolated from the corner to the center of the Game Object.
      * 
      * @name Phaser.GameObjects.Components.Tint#tintBottomRight
      * @type {integer}

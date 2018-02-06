@@ -72,7 +72,9 @@ var Alpha = {
     },
 
     /**
-     * [description]
+     * The alpha value of the Game Object.
+     *
+     * This is a global value, impacting the entire Game Object, not just a region of it.
      * 
      * @name Phaser.GameObjects.Components.Alpha#alpha
      * @type {float}
@@ -108,7 +110,8 @@ var Alpha = {
     },
 
     /**
-     * [description]
+     * The alpha value starting from the top-left of the Game Object.
+     * This value is interpolated from the corner to the center of the Game Object.
      * 
      * @name Phaser.GameObjects.Components.Alpha#alphaTopLeft
      * @type {float}
@@ -137,7 +140,8 @@ var Alpha = {
     },
 
     /**
-     * [description]
+     * The alpha value starting from the top-right of the Game Object.
+     * This value is interpolated from the corner to the center of the Game Object.
      * 
      * @name Phaser.GameObjects.Components.Alpha#alphaTopRight
      * @type {float}
@@ -166,7 +170,8 @@ var Alpha = {
     },
 
     /**
-     * [description]
+     * The alpha value starting from the bottom-left of the Game Object.
+     * This value is interpolated from the corner to the center of the Game Object.
      * 
      * @name Phaser.GameObjects.Components.Alpha#alphaBottomLeft
      * @type {float}
@@ -195,7 +200,8 @@ var Alpha = {
     },
 
     /**
-     * [description]
+     * The alpha value starting from the bottom-right of the Game Object.
+     * This value is interpolated from the corner to the center of the Game Object.
      * 
      * @name Phaser.GameObjects.Components.Alpha#alphaBottomRight
      * @type {float}

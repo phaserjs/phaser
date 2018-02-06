@@ -16,7 +16,7 @@ var Visible = {
     /**
      * The visible state of the Game Object.
      * 
-     * An invisible Game Object will skip rendering, but still process update logic.
+     * An invisible Game Object will skip rendering, but will still process update logic.
      * 
      * @name Phaser.GameObjects.Components.Visible#visible
      * @type {boolean}
@@ -47,6 +47,8 @@ var Visible = {
 
     /**
      * Sets the visibility of this Game Object.
+     * 
+     * An invisible Game Object will skip rendering, but will still process update logic.
      *
      * @method Phaser.GameObjects.Components.Visible#setVisible
      * @since 3.0.0

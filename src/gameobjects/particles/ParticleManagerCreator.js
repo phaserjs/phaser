@@ -1,16 +1,20 @@
 var GameObjectCreator = require('../GameObjectCreator');
-var GetFastValue = require('../../utils/object/GetFastValue');
 var GetAdvancedValue = require('../../utils/object/GetAdvancedValue');
+var GetFastValue = require('../../utils/object/GetFastValue');
 var ParticleEmitterManager = require('./ParticleEmitterManager');
 
-//  When registering a factory function 'this' refers to the GameObjectCreator context.
-//  
-//  There are several properties available to use:
-//  
-//  this.scene - a reference to the Scene that owns the GameObjectFactory
-//  this.displayList - a reference to the Display List the Scene owns
-//  this.updateList - a reference to the Update List the Scene owns
-
+/**
+ * Creates a new Particle Emitter Manager Game Object and returns it.
+ *
+ * Note: This method will only be available if the Particles Game Object has been built into Phaser.
+ *
+ * @method Phaser.GameObjects.GameObjectCreator#particles
+ * @since 3.0.0
+ *
+ * @param {object} config - [description]
+ *
+ * @return {Phaser.GameObjects.Particles.EmitterManager} The Game Object that was created.
+ */
 GameObjectCreator.register('particles', function (config)
 {
     var key = GetAdvancedValue(config, 'key', null);
@@ -31,3 +35,11 @@ GameObjectCreator.register('particles', function (config)
 
     return manager;
 });
+
+//  When registering a factory function 'this' refers to the GameObjectCreator context.
+//  
+//  There are several properties available to use:
+//  
+//  this.scene - a reference to the Scene that owns the GameObjectFactory
+//  this.displayList - a reference to the Display List the Scene owns
+//  this.updateList - a reference to the Update List the Scene owns

@@ -3,8 +3,18 @@ var GameObjectCreator = require('../GameObjectCreator');
 var GetAdvancedValue = require('../../utils/object/GetAdvancedValue');
 var Quad = require('./Quad');
 
-//  When registering a factory function 'this' refers to the GameObjectCreator context.
-
+/**
+ * Creates a new Quad Game Object and returns it.
+ *
+ * Note: This method will only be available if the Quad Game Object and WebGL support have been built into Phaser.
+ *
+ * @method Phaser.GameObjects.GameObjectCreator#quad
+ * @since 3.0.0
+ *
+ * @param {object} config - [description]
+ *
+ * @return {Phaser.GameObjects.Quad} The Game Object that was created.
+ */
 GameObjectCreator.register('quad', function (config)
 {
     var x = GetAdvancedValue(config, 'x', 0);
@@ -18,3 +28,5 @@ GameObjectCreator.register('quad', function (config)
 
     return quad;
 });
+
+//  When registering a factory function 'this' refers to the GameObjectCreator context.

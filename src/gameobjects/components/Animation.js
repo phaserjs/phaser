@@ -1,87 +1,276 @@
 var Class = require('../../utils/Class');
 
-//  Game Object Animation Controller
-
-//  Phaser.GameObjects.Components.Animation
-
+/**
+ * A Game Object Animation Controller.
+ *
+ * This controller lives as an instance within a Game Object, accessible as `sprite.anims`.
+ *
+ * @class Animation
+ * @memberOf Phaser.GameObjects.Components
+ * @constructor
+ * @since 3.0.0
+ *
+ * @param {Phaser.GameObjects.GameObject} parent - The Game Object to which this animation controller belongs.
+ */
 var Animation = new Class({
 
     initialize:
 
     function Animation (parent)
     {
-        //  Sprite / Game Object
+        /**
+         * The Game Object to which this animation controller belongs.
+         *
+         * @name Phaser.GameObjects.Components.Animation#parent
+         * @type {Phaser.GameObjects.GameObject}
+         * @since 3.0.0
+         */
         this.parent = parent;
 
+        /**
+         * A reference to the global Animation Manager.
+         *
+         * @name Phaser.GameObjects.Components.Animation#animationManager
+         * @type {Phaser.Animations.AnimationManager}
+         * @since 3.0.0
+         */
         this.animationManager = parent.scene.sys.anims;
 
         this.animationManager.once('remove', this.remove, this);
 
+        /**
+         * Is an animation currently playing or not?
+         *
+         * @name Phaser.GameObjects.Components.Animation#isPlaying
+         * @type {boolean}
+         * @default false
+         * @since 3.0.0
+         */
         this.isPlaying = false;
 
         //  Reference to the Phaser.Animation object
+
+        /**
+         * The current Animation loaded into this Animation Controller.
+         *
+         * @name Phaser.GameObjects.Components.Animation#currentAnim
+         * @type {?Phaser.Animations.Animation}
+         * @default null
+         * @since 3.0.0
+         */
         this.currentAnim = null;
 
-        //  Reference to the Phaser.AnimationFrame object
+        /**
+         * The current AnimationFrame being displayed by this Animation Controller.
+         *
+         * @name Phaser.GameObjects.Components.Animation#currentFrame
+         * @type {?Phaser.Animations.AnimationFrame}
+         * @default null
+         * @since 3.0.0
+         */
         this.currentFrame = null;
 
-        //  Animation specific values
-        //  -------------------------
-
-        //  Scale the time (make it go faster / slower)
-        //  Factor that's used to scale time where 1 = normal speed (the default), 0.5 = half speed, 2 = double speed, etc.
+        /**
+         * Time scale factor.
+         *
+         * @name Phaser.GameObjects.Components.Animation#_timeScale
+         * @type {number}
+         * @private
+         * @default 1
+         * @since 3.0.0
+         */
         this._timeScale = 1;
 
-        //  The frame rate of playback in frames per second (default 24 if duration is null)
+        /**
+         * The frame rate of playback in frames per second.
+         * The default is 24 if the `duration` property is `null`.
+         *
+         * @name Phaser.GameObjects.Components.Animation#frameRate
+         * @type {number}
+         * @default 0
+         * @since 3.0.0
+         */
         this.frameRate = 0;
 
-        //  How long the animation should play for. If frameRate is set it overrides this value
-        //  otherwise frameRate is derived from duration
+        /**
+         * How long the animation should play for.
+         * If the `frameRate` property has been set then it overrides this value,
+         * otherwise frameRate is derived from `duration`.
+         *
+         * @name Phaser.GameObjects.Components.Animation#duration
+         * @type {number}
+         * @default 0
+         * @since 3.0.0
+         */
         this.duration = 0;
 
-        //  ms per frame (without including frame specific modifiers)
+        /**
+         * ms per frame, not including frame specific modifiers that may be present in the Animation data.
+         *
+         * @name Phaser.GameObjects.Components.Animation#msPerFrame
+         * @type {number}
+         * @default 0
+         * @since 3.0.0
+         */
         this.msPerFrame = 0;
 
-        //  Skip frames if the time lags, or always advanced anyway?
+        /**
+         * Skip frames if the time lags, or always advanced anyway?
+         *
+         * @name Phaser.GameObjects.Components.Animation#skipMissedFrames
+         * @type {boolean}
+         * @default true
+         * @since 3.0.0
+         */
         this.skipMissedFrames = true;
 
-        //  Delay before starting playback (in seconds)
+        /**
+         * A delay before starting playback, in seconds.
+         *
+         * @name Phaser.GameObjects.Components.Animation#_delay
+         * @type {number}
+         * @private
+         * @default 0
+         * @since 3.0.0
+         */
         this._delay = 0;
 
-        //  Number of times to repeat the animation (-1 for infinity)
+        /**
+         * Number of times to repeat the animation (-1 for infinity)
+         *
+         * @name Phaser.GameObjects.Components.Animation#_repeat
+         * @type {number}
+         * @private
+         * @default 0
+         * @since 3.0.0
+         */
         this._repeat = 0;
 
-        //  Delay before the repeat starts (in seconds)
+        /**
+         * Delay before the repeat starts, in seconds.
+         *
+         * @name Phaser.GameObjects.Components.Animation#_repeatDelay
+         * @type {number}
+         * @private
+         * @default 0
+         * @since 3.0.0
+         */
         this._repeatDelay = 0;
 
-        //  Should the animation yoyo? (reverse back down to the start) before repeating?
+        /**
+         * Should the animation yoyo? (reverse back down to the start) before repeating?
+         *
+         * @name Phaser.GameObjects.Components.Animation#_yoyo
+         * @type {boolean}
+         * @private
+         * @default false
+         * @since 3.0.0
+         */
         this._yoyo = false;
 
-        //  Playhead values
-        //  ---------------
-
-        //  Move the playhead forward (true) or in reverse (false)
+        /**
+         * Will the playhead move forwards (`true`) or in reverse (`false`)
+         *
+         * @name Phaser.GameObjects.Components.Animation#forward
+         * @type {boolean}
+         * @default true
+         * @since 3.0.0
+         */
         this.forward = true;
 
+        /**
+         * Internal time overflow accumulator.
+         *
+         * @name Phaser.GameObjects.Components.Animation#accumulator
+         * @type {number}
+         * @default 0
+         * @since 3.0.0
+         */
         this.accumulator = 0;
+
+        /**
+         * The time point at which the next animation frame will change.
+         *
+         * @name Phaser.GameObjects.Components.Animation#nextTick
+         * @type {number}
+         * @default 0
+         * @since 3.0.0
+         */
         this.nextTick = 0;
 
+        /**
+         * An internal counter keeping track of how many repeats are left to play.
+         *
+         * @name Phaser.GameObjects.Components.Animation#repeatCounter
+         * @type {number}
+         * @default 0
+         * @since 3.0.0
+         */
         this.repeatCounter = 0;
 
+        /**
+         * An internal flag keeping track of pending repeats.
+         *
+         * @name Phaser.GameObjects.Components.Animation#pendingRepeat
+         * @type {boolean}
+         * @default false
+         * @since 3.0.0
+         */
         this.pendingRepeat = false;
 
+        /**
+         * Is the Animation paused?
+         *
+         * @name Phaser.GameObjects.Components.Animation#_paused
+         * @type {boolean}
+         * @private
+         * @default false
+         * @since 3.0.0
+         */
         this._paused = false;
+
+        /**
+         * Was the animation previously playing before being paused?
+         *
+         * @name Phaser.GameObjects.Components.Animation#_wasPlaying
+         * @type {boolean}
+         * @private
+         * @default false
+         * @since 3.0.0
+         */
         this._wasPlaying = false;
 
+        /**
+         * Container for the callback arguments.
+         *
+         * @name Phaser.GameObjects.Components.Animation#_callbackArgs
+         * @type {array}
+         * @private
+         * @since 3.0.0
+         */
         this._callbackArgs = [ parent, null ];
+
+        /**
+         * Container for the update arguments.
+         *
+         * @name Phaser.GameObjects.Components.Animation#_updateParams
+         * @type {array}
+         * @private
+         * @since 3.0.0
+         */
         this._updateParams = [];
     },
 
-    //  Gets or sets the amount of time in seconds between repeats.
-    //  For example, if repeat is 2 and repeatDelay is 1, the animation will play initially,
-    //  then wait for 1 second before it repeats, then play again, then wait 1 second again
-    //  before doing its final repeat.
-
+    /**
+     * Sets the amount of time, in seconds that the animation will be delayed before starting playback.
+     * 
+     * @method Phaser.GameObjects.Components.Animation#delay
+     * @since 3.0.0
+     *
+     * @param {number} value - The amount of time, in seconds, to wait before starting playback.
+     *
+     * @return {Phaser.GameObjects.GameObject} This Game Object.
+     */
     delay: function (value)
     {
         if (value === undefined)
@@ -96,6 +285,18 @@ var Animation = new Class({
         }
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.GameObjects.Components.Animation#delayedPlay
+     * @since 3.0.0
+     *
+     * @param {[type]} delay - [description]
+     * @param {[type]} key - [description]
+     * @param {[type]} startFrame - [description]
+     *
+     * @return {Phaser.GameObjects.GameObject} This Game Object.
+     */
     delayedPlay: function (delay, key, startFrame)
     {
         this.play(key, true, startFrame);
@@ -105,6 +306,14 @@ var Animation = new Class({
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.GameObjects.Components.Animation#getCurrentKey
+     * @since 3.0.0
+     *
+     * @return {[type]} [description]
+     */
     getCurrentKey: function ()
     {
         if (this.currentAnim)
@@ -113,6 +322,17 @@ var Animation = new Class({
         }
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.GameObjects.Components.Animation#load
+     * @since 3.0.0
+     *
+     * @param {[type]} key - [description]
+     * @param {[type]} startFrame - [description]
+     *
+     * @return {Phaser.GameObjects.GameObject} This Game Object.
+     */
     load: function (key, startFrame)
     {
         if (startFrame === undefined) { startFrame = 0; }
@@ -128,6 +348,16 @@ var Animation = new Class({
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.GameObjects.Components.Animation#pause
+     * @since 3.0.0
+     *
+     * @param {[type]} atFrame - [description]
+     *
+     * @return {Phaser.GameObjects.GameObject} This Game Object.
+     */
     pause: function (atFrame)
     {
         if (!this._paused)
@@ -145,6 +375,16 @@ var Animation = new Class({
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.GameObjects.Components.Animation#paused
+     * @since 3.0.0
+     *
+     * @param {[type]} value - [description]
+     *
+     * @return {[type]} [description]
+     */
     paused: function (value)
     {
         if (value !== undefined)
@@ -165,6 +405,18 @@ var Animation = new Class({
         }
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.GameObjects.Components.Animation#play
+     * @since 3.0.0
+     *
+     * @param {[type]} key - [description]
+     * @param {[type]} ignoreIfPlaying - [description]
+     * @param {[type]} startFrame - [description]
+     *
+     * @return {Phaser.GameObjects.GameObject} This Game Object.
+     */
     play: function (key, ignoreIfPlaying, startFrame)
     {
         if (ignoreIfPlaying === undefined) { ignoreIfPlaying = false; }
@@ -204,6 +456,16 @@ var Animation = new Class({
     //  Value between 0 and 1. How far this animation is through, ignoring repeats and yoyos.
     //  If the animation has a non-zero repeat defined, progress and totalProgress will be different
     //  because progress doesn't include any repeats or repeatDelays whereas totalProgress does.
+    /**
+     * [description]
+     *
+     * @method Phaser.GameObjects.Components.Animation#progress
+     * @since 3.0.0
+     *
+     * @param {[type]} value - [description]
+     *
+     * @return {[type]} [description]
+     */
     progress: function (value)
     {
         if (value === undefined)
@@ -225,6 +487,14 @@ var Animation = new Class({
         }
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.GameObjects.Components.Animation#remove
+     * @since 3.0.0
+     *
+     * @param {[type]} event - [description]
+     */
     remove: function (event)
     {
         if (event === undefined) { event = this.currentAnim; }
@@ -248,6 +518,16 @@ var Animation = new Class({
     //  play a total of twice (the initial play plus 1 repeat).
     //  To repeat indefinitely, use -1. repeat should always be an integer.
 
+    /**
+     * [description]
+     *
+     * @method Phaser.GameObjects.Components.Animation#repeat
+     * @since 3.0.0
+     *
+     * @param {[type]} value - [description]
+     *
+     * @return {[type]} [description]
+     */
     repeat: function (value)
     {
         if (value === undefined)
@@ -268,6 +548,16 @@ var Animation = new Class({
     //  then wait for 1 second before it repeats, then play again, then wait 1 second again
     //  before doing its final repeat.
 
+    /**
+     * [description]
+     *
+     * @method Phaser.GameObjects.Components.Animation#repeatDelay
+     * @since 3.0.0
+     *
+     * @param {[type]} value - [description]
+     *
+     * @return {[type]} [description]
+     */
     repeatDelay: function (value)
     {
         if (value === undefined)
@@ -282,6 +572,16 @@ var Animation = new Class({
         }
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.GameObjects.Components.Animation#restart
+     * @since 3.0.0
+     *
+     * @param {[type]} includeDelay - [description]
+     *
+     * @return {Phaser.GameObjects.GameObject} This Game Object.
+     */
     restart: function (includeDelay)
     {
         if (includeDelay === undefined) { includeDelay = false; }
@@ -299,6 +599,16 @@ var Animation = new Class({
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.GameObjects.Components.Animation#resume
+     * @since 3.0.0
+     *
+     * @param {[type]} fromFrame - [description]
+     *
+     * @return {Phaser.GameObjects.GameObject} This Game Object.
+     */
     resume: function (fromFrame)
     {
         if (this._paused)
@@ -315,6 +625,16 @@ var Animation = new Class({
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.GameObjects.Components.Animation#stop
+     * @since 3.0.0
+     *
+     * @param {[type]} dispatchCallbacks - [description]
+     *
+     * @return {Phaser.GameObjects.GameObject} This Game Object.
+     */
     stop: function (dispatchCallbacks)
     {
         if (dispatchCallbacks === undefined) { dispatchCallbacks = false; }
@@ -331,6 +651,19 @@ var Animation = new Class({
         return this;
     },
 
+        //  Scale the time (make it go faster / slower)
+        //  Factor that's used to scale time where 1 = normal speed (the default), 0.5 = half speed, 2 = double speed, etc.
+
+    /**
+     * [description]
+     *
+     * @method Phaser.GameObjects.Components.Animation#timeScale
+     * @since 3.0.0
+     *
+     * @param {[type]} value - [description]
+     *
+     * @return {[type]} [description]
+     */
     timeScale: function (value)
     {
         if (value === undefined)
@@ -345,6 +678,14 @@ var Animation = new Class({
         }
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.GameObjects.Components.Animation#totalFrames
+     * @since 3.0.0
+     *
+     * @return {[type]} [description]
+     */
     totalFrames: function ()
     {
         return this.currentAnim.frames.length;
@@ -353,11 +694,26 @@ var Animation = new Class({
     //  Value between 0 and 1. How far this animation is through, including things like delays
     //  repeats, custom frame durations, etc. If the animation is set to repeat -1 it can never
     //  have a duration, therefore this will return -1.
+    /**
+     * [description]
+     *
+     * @method Phaser.GameObjects.Components.Animation#totalProgres
+     * @since 3.0.0
+     */
     totalProgres: function ()
     {
         // TODO
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.GameObjects.Components.Animation#update
+     * @since 3.0.0
+     *
+     * @param {[type]} timestamp - [description]
+     * @param {[type]} delta - [description]
+     */
     update: function (timestamp, delta)
     {
         if (!this.isPlaying || this.currentAnim.paused)
@@ -373,6 +729,14 @@ var Animation = new Class({
         }
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.GameObjects.Components.Animation#updateFrame
+     * @since 3.0.0
+     *
+     * @param {[type]} animationFrame - [description]
+     */
     updateFrame: function (animationFrame)
     {
         var sprite = this.parent;
@@ -403,6 +767,16 @@ var Animation = new Class({
         }
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.GameObjects.Components.Animation#yoyo
+     * @since 3.0.0
+     *
+     * @param {[type]} value - [description]
+     *
+     * @return {[type]} [description]
+     */
     yoyo: function (value)
     {
         if (value === undefined)
@@ -417,6 +791,12 @@ var Animation = new Class({
         }
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.GameObjects.Components.Animation#destroy
+     * @since 3.0.0
+     */
     destroy: function ()
     {
         //  TODO
