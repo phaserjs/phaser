@@ -1,3 +1,4 @@
+
 var Class = require('../../../utils/Class');
 var WebGLPipeline = require('../WebGLPipeline');
 var Utils = require('../Utils');
