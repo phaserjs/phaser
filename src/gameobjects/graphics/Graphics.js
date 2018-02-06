@@ -12,6 +12,26 @@ var Mesh = require('../../geom/mesh/Mesh');
 var Render = require('./GraphicsRender');
 var Vector3 = require('../../math/Vector3');
 
+/**
+ * [description]
+ *
+ * @class Graphics
+ * @extends Phaser.GameObjects.GameObject
+ * @memberOf Phaser.GameObjects
+ * @constructor
+ * @since 3.0.0
+ *
+ * @extends Phaser.GameObjects.Components.Alpha
+ * @extends Phaser.GameObjects.Components.BlendMode
+ * @extends Phaser.GameObjects.Components.Depth
+ * @extends Phaser.GameObjects.Components.Pipeline
+ * @extends Phaser.GameObjects.Components.Transform
+ * @extends Phaser.GameObjects.Components.Visible
+ * @extends Phaser.GameObjects.Components.ScrollFactor
+ *
+ * @param {Phaser.Scene} scene - [description]
+ * @param {object} options - [description]
+ */
 var Graphics = new Class({
 
     Extends: GameObject,
@@ -39,40 +59,168 @@ var Graphics = new Class({
         this.setPosition(x, y);
         this.initPipeline('FlatTintPipeline');
 
+        /**
+         * [description]
+         *
+         * @name Phaser.GameObjects.Graphics#displayOriginX
+         * @type {number}
+         * @default 0
+         * @since 3.0.0
+         */
         this.displayOriginX = 0;
+
+        /**
+         * [description]
+         *
+         * @name Phaser.GameObjects.Graphics#displayOriginY
+         * @type {number}
+         * @default 0
+         * @since 3.0.0
+         */
         this.displayOriginY = 0;
 
+        /**
+         * [description]
+         *
+         * @name Phaser.GameObjects.Graphics#commandBuffer
+         * @type {array}
+         * @default []
+         * @since 3.0.0
+         */
         this.commandBuffer = [];
 
+        /**
+         * [description]
+         *
+         * @name Phaser.GameObjects.Graphics#defaultFillColor
+         * @type {number}
+         * @default -1
+         * @since 3.0.0
+         */
         this.defaultFillColor = -1;
+
+        /**
+         * [description]
+         *
+         * @name Phaser.GameObjects.Graphics#defaultFillAlpha
+         * @type {number}
+         * @default 1
+         * @since 3.0.0
+         */
         this.defaultFillAlpha = 1;
 
+        /**
+         * [description]
+         *
+         * @name Phaser.GameObjects.Graphics#defaultStrokeWidth
+         * @type {number}
+         * @default 1
+         * @since 3.0.0
+         */
         this.defaultStrokeWidth = 1;
+
+        /**
+         * [description]
+         *
+         * @name Phaser.GameObjects.Graphics#defaultStrokeColor
+         * @type {number}
+         * @default -1
+         * @since 3.0.0
+         */
         this.defaultStrokeColor = -1;
+
+        /**
+         * [description]
+         *
+         * @name Phaser.GameObjects.Graphics#defaultStrokeAlpha
+         * @type {number}
+         * @default 1
+         * @since 3.0.0
+         */
         this.defaultStrokeAlpha = 1;
+
+        /**
+         * [description]
+         *
+         * @name Phaser.GameObjects.Graphics#_lineWidth
+         * @type {number}
+         * @private
+         * @since 3.0.0
+         */
         this._lineWidth = 1.0;
 
         this.setDefaultStyles(options);
 
-        //  Mesh viewport camera
-
+        /**
+         * [description]
+         *
+         * @name Phaser.GameObjects.Graphics#viewportWidth
+         * @type {number}
+         * @since 3.0.0
+         */
         this.viewportWidth = scene.sys.game.config.width;
+
+        /**
+         * [description]
+         *
+         * @name Phaser.GameObjects.Graphics#viewportHeight
+         * @type {number}
+         * @since 3.0.0
+         */
         this.viewportHeight = scene.sys.game.config.height;
 
+        /**
+         * [description]
+         *
+         * @name Phaser.GameObjects.Graphics#camera
+         * @type {object}
+         * @since 3.0.0
+         */
         this.camera = {
             position: new Vector3(),
             target: new Vector3()
         };
 
+        /**
+         * [description]
+         *
+         * @name Phaser.GameObjects.Graphics#up
+         * @type {Phaser.Math.Vector3}
+         * @since 3.0.0
+         */
         this.up = new Vector3().up();
+
+        /**
+         * [description]
+         *
+         * @name Phaser.GameObjects.Graphics#projectionMatrix
+         * @type {Phaser.Math.Matrix4}
+         * @since 3.0.0
+         */
         this.projectionMatrix = new Matrix4();
+
+        /**
+         * [description]
+         *
+         * @name Phaser.GameObjects.Graphics#viewMatrix
+         * @type {Phaser.Math.Matrix4}
+         * @since 3.0.0
+         */
         this.viewMatrix = new Matrix4().lookAt(this.camera.position, this.camera.target, this.up);
 
         this.setViewport(this.viewportWidth, this.viewportHeight);
     },
 
-    //  STYLES
-
+    /**
+     * [description]
+     *
+     * @method Phaser.GameObjects.Graphics#setDefaultStyles
+     * @since 3.0.0
+     *
+     * @param {object} options - [description]
+     *
+     * @return {Phaser.GameObjects.Graphics} This Game Object.
+     */
     setDefaultStyles: function (options)
     {
         if (GetValue(options, 'lineStyle', null))
@@ -95,6 +243,18 @@ var Graphics = new Class({
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.GameObjects.Graphics#lineStyle
+     * @since 3.0.0
+     *
+     * @param {number} lineWidth - [description]
+     * @param {number} color - [description]
+     * @param {float} [alpha=1] - [description]
+     *
+     * @return {Phaser.GameObjects.Graphics} This Game Object.
+     */
     lineStyle: function (lineWidth, color, alpha)
     {
         if (alpha === undefined) { alpha = 1; }
@@ -109,6 +269,17 @@ var Graphics = new Class({
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.GameObjects.Graphics#fillStyle
+     * @since 3.0.0
+     *
+     * @param {number} color - [description]
+     * @param {float} [alpha=1] - [description]
+     *
+     * @return {Phaser.GameObjects.Graphics} This Game Object.
+     */
     fillStyle: function (color, alpha)
     {
         if (alpha === undefined) { alpha = 1; }
@@ -121,8 +292,14 @@ var Graphics = new Class({
         return this;
     },
 
-    //  PATH
-
+    /**
+     * [description]
+     *
+     * @method Phaser.GameObjects.Graphics#beginPath
+     * @since 3.0.0
+     *
+     * @return {Phaser.GameObjects.Graphics} This Game Object.
+     */
     beginPath: function ()
     {
         this.commandBuffer.push(
@@ -132,6 +309,14 @@ var Graphics = new Class({
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.GameObjects.Graphics#closePath
+     * @since 3.0.0
+     *
+     * @return {Phaser.GameObjects.Graphics} This Game Object.
+     */
     closePath: function ()
     {
         this.commandBuffer.push(
@@ -141,6 +326,14 @@ var Graphics = new Class({
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.GameObjects.Graphics#fillPath
+     * @since 3.0.0
+     *
+     * @return {Phaser.GameObjects.Graphics} This Game Object.
+     */
     fillPath: function ()
     {
         this.commandBuffer.push(
@@ -150,6 +343,14 @@ var Graphics = new Class({
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.GameObjects.Graphics#strokePath
+     * @since 3.0.0
+     *
+     * @return {Phaser.GameObjects.Graphics} This Game Object.
+     */
     strokePath: function ()
     {
         this.commandBuffer.push(
@@ -159,18 +360,48 @@ var Graphics = new Class({
         return this;
     },
 
-    //  CIRCLE
-
+    /**
+     * [description]
+     *
+     * @method Phaser.GameObjects.Graphics#fillCircleShape
+     * @since 3.0.0
+     *
+     * @param {Phaser.Geom.Circle} circle - [description]
+     *
+     * @return {Phaser.GameObjects.Graphics} This Game Object.
+     */
     fillCircleShape: function (circle)
     {
         return this.fillCircle(circle.x, circle.y, circle.radius);
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.GameObjects.Graphics#strokeCircleShape
+     * @since 3.0.0
+     *
+     * @param {Phaser.Geom.Circle} circle - [description]
+     *
+     * @return {Phaser.GameObjects.Graphics} This Game Object.
+     */
     strokeCircleShape: function (circle)
     {
         return this.strokeCircle(circle.x, circle.y, circle.radius);
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.GameObjects.Graphics#fillCircle
+     * @since 3.0.0
+     *
+     * @param {number} x - [description]
+     * @param {number} y - [description]
+     * @param {number} radius - [description]
+     *
+     * @return {Phaser.GameObjects.Graphics} This Game Object.
+     */
     fillCircle: function (x, y, radius)
     {
         this.beginPath();
@@ -181,6 +412,18 @@ var Graphics = new Class({
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.GameObjects.Graphics#strokeCircle
+     * @since 3.0.0
+     *
+     * @param {number} x - [description]
+     * @param {number} y - [description]
+     * @param {number} radius - [description]
+     *
+     * @return {Phaser.GameObjects.Graphics} This Game Object.
+     */
     strokeCircle: function (x, y, radius)
     {
         this.beginPath();
@@ -191,18 +434,49 @@ var Graphics = new Class({
         return this;
     },
 
-    //  RECTANGLE
-
+    /**
+     * [description]
+     *
+     * @method Phaser.GameObjects.Graphics#fillRectShape
+     * @since 3.0.0
+     *
+     * @param {Phaser.Geom.Rectangle} rect - [description]
+     *
+     * @return {Phaser.GameObjects.Graphics} This Game Object.
+     */
     fillRectShape: function (rect)
     {
         return this.fillRect(rect.x, rect.y, rect.width, rect.height);
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.GameObjects.Graphics#strokeRectShape
+     * @since 3.0.0
+     *
+     * @param {Phaser.Geom.Rectangle} rect - [description]
+     *
+     * @return {Phaser.GameObjects.Graphics} This Game Object.
+     */
     strokeRectShape: function (rect)
     {
         return this.strokeRect(rect.x, rect.y, rect.width, rect.height);
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.GameObjects.Graphics#fillRect
+     * @since 3.0.0
+     *
+     * @param {number} x - [description]
+     * @param {number} y - [description]
+     * @param {number} width - [description]
+     * @param {number} height - [description]
+     *
+     * @return {Phaser.GameObjects.Graphics} This Game Object.
+     */
     fillRect: function (x, y, width, height)
     {
         this.commandBuffer.push(
@@ -213,6 +487,19 @@ var Graphics = new Class({
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.GameObjects.Graphics#strokeRect
+     * @since 3.0.0
+     *
+     * @param {number} x - [description]
+     * @param {number} y - [description]
+     * @param {number} width - [description]
+     * @param {number} height - [description]
+     *
+     * @return {Phaser.GameObjects.Graphics} This Game Object.
+     */
     strokeRect: function (x, y, width, height)
     {
         var lineWidthHalf = this._lineWidth / 2;
@@ -246,13 +533,34 @@ var Graphics = new Class({
         return this;
     },
 
-    //  POINT
-
+    /**
+     * [description]
+     *
+     * @method Phaser.GameObjects.Graphics#fillPointShape
+     * @since 3.0.0
+     *
+     * @param {Phaser.Geom.Point|Phaser.Math.Vector2|object} point - [description]
+     * @param {number} [size=1] - [description]
+     *
+     * @return {Phaser.GameObjects.Graphics} This Game Object.
+     */
     fillPointShape: function (point, size)
     {
         return this.fillPoint(point.x, point.y, size);
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.GameObjects.Graphics#fillPoint
+     * @since 3.0.0
+     *
+     * @param {number} x - [description]
+     * @param {number} y - [description]
+     * @param {number} [size=1] - [description]
+     *
+     * @return {Phaser.GameObjects.Graphics} This Game Object.
+     */
     fillPoint: function (x, y, size)
     {
         if (!size || size < 1)
@@ -273,18 +581,51 @@ var Graphics = new Class({
         return this;
     },
 
-    //  TRIANGLE
-
+    /**
+     * [description]
+     *
+     * @method Phaser.GameObjects.Graphics#fillTriangleShape
+     * @since 3.0.0
+     *
+     * @param {Phaser.Geom.Triangle} triangle - [description]
+     *
+     * @return {Phaser.GameObjects.Graphics} This Game Object.
+     */
     fillTriangleShape: function (triangle)
     {
         return this.fillTriangle(triangle.x1, triangle.y1, triangle.x2, triangle.y2, triangle.x3, triangle.y3);
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.GameObjects.Graphics#strokeTriangleShape
+     * @since 3.0.0
+     *
+     * @param {Phaser.Geom.Triangle} triangle - [description]
+     *
+     * @return {Phaser.GameObjects.Graphics} This Game Object.
+     */
     strokeTriangleShape: function (triangle)
     {
         return this.strokeTriangle(triangle.x1, triangle.y1, triangle.x2, triangle.y2, triangle.x3, triangle.y3);
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.GameObjects.Graphics#fillTriangle
+     * @since 3.0.0
+     *
+     * @param {number} x0 - [description]
+     * @param {number} y0 - [description]
+     * @param {number} x1 - [description]
+     * @param {number} y1 - [description]
+     * @param {number} x2 - [description]
+     * @param {number} y2 - [description]
+     *
+     * @return {Phaser.GameObjects.Graphics} This Game Object.
+     */
     fillTriangle: function (x0, y0, x1, y1, x2, y2)
     {
         this.commandBuffer.push(
@@ -295,6 +636,21 @@ var Graphics = new Class({
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.GameObjects.Graphics#strokeTriangle
+     * @since 3.0.0
+     *
+     * @param {number} x0 - [description]
+     * @param {number} y0 - [description]
+     * @param {number} x1 - [description]
+     * @param {number} y1 - [description]
+     * @param {number} x2 - [description]
+     * @param {number} y2 - [description]
+     *
+     * @return {Phaser.GameObjects.Graphics} This Game Object.
+     */
     strokeTriangle: function (x0, y0, x1, y1, x2, y2)
     {
         this.commandBuffer.push(
@@ -305,13 +661,34 @@ var Graphics = new Class({
         return this;
     },
 
-    //  LINE
-
+    /**
+     * [description]
+     *
+     * @method Phaser.GameObjects.Graphics#strokeLineShape
+     * @since 3.0.0
+     *
+     * @param {Phaser.Geom.Line} line - [description]
+     *
+     * @return {Phaser.GameObjects.Graphics} This Game Object.
+     */
     strokeLineShape: function (line)
     {
         return this.lineBetween(line.x1, line.y1, line.x2, line.y2);
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.GameObjects.Graphics#lineBetween
+     * @since 3.0.0
+     *
+     * @param {number} x1 - [description]
+     * @param {number} y1 - [description]
+     * @param {number} x2 - [description]
+     * @param {number} y2 - [description]
+     *
+     * @return {Phaser.GameObjects.Graphics} This Game Object.
+     */
     lineBetween: function (x1, y1, x2, y2)
     {
         this.beginPath();
@@ -322,6 +699,17 @@ var Graphics = new Class({
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.GameObjects.Graphics#lineTo
+     * @since 3.0.0
+     *
+     * @param {number} x - [description]
+     * @param {number} y - [description]
+     *
+     * @return {Phaser.GameObjects.Graphics} This Game Object.
+     */
     lineTo: function (x, y)
     {
         this.commandBuffer.push(
@@ -332,6 +720,17 @@ var Graphics = new Class({
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.GameObjects.Graphics#moveTo
+     * @since 3.0.0
+     *
+     * @param {number} x - [description]
+     * @param {number} y - [description]
+     *
+     * @return {Phaser.GameObjects.Graphics} This Game Object.
+     */
     moveTo: function (x, y)
     {
         this.commandBuffer.push(
@@ -342,6 +741,19 @@ var Graphics = new Class({
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.GameObjects.Graphics#lineFxTo
+     * @since 3.0.0
+     *
+     * @param {number} x - [description]
+     * @param {number} y - [description]
+     * @param {number} width - [description]
+     * @param {number} rgb - [description]
+     *
+     * @return {Phaser.GameObjects.Graphics} This Game Object.
+     */
     lineFxTo: function (x, y, width, rgb)
     {
         this.commandBuffer.push(
@@ -352,6 +764,19 @@ var Graphics = new Class({
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.GameObjects.Graphics#moveFxTo
+     * @since 3.0.0
+     *
+     * @param {number} x - [description]
+     * @param {number} y - [description]
+     * @param {number} width - [description]
+     * @param {number} rgb - [description]
+     *
+     * @return {Phaser.GameObjects.Graphics} This Game Object.
+     */
     moveFxTo: function (x, y, width, rgb)
     {
         this.commandBuffer.push(
@@ -362,8 +787,18 @@ var Graphics = new Class({
         return this;
     },
 
-    //  STROKE LINES BETWEEN AN ARRAY OF POINTS
-
+    /**
+     * [description]
+     *
+     * @method Phaser.GameObjects.Graphics#strokePoints
+     * @since 3.0.0
+     *
+     * @param {array|Phaser.Geom.Point[]} points - [description]
+     * @param {boolean} [autoClose=false] - [description]
+     * @param {integer} [endIndex] - [description]
+     *
+     * @return {Phaser.GameObjects.Graphics} This Game Object.
+     */
     strokePoints: function (points, autoClose, endIndex)
     {
         if (autoClose === undefined) { autoClose = false; }
@@ -388,6 +823,18 @@ var Graphics = new Class({
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.GameObjects.Graphics#fillPoints
+     * @since 3.0.0
+     *
+     * @param {array|Phaser.Geom.Point[]} points - [description]
+     * @param {boolean} [autoClose=false] - [description]
+     * @param {integer} [endIndex] - [description]
+     *
+     * @return {Phaser.GameObjects.Graphics} This Game Object.
+     */
     fillPoints: function (points, autoClose, endIndex)
     {
         if (autoClose === undefined) { autoClose = false; }
@@ -412,8 +859,17 @@ var Graphics = new Class({
         return this;
     },
 
-    //  ELLIPSE
-
+    /**
+     * [description]
+     *
+     * @method Phaser.GameObjects.Graphics#strokeEllipseShape
+     * @since 3.0.0
+     *
+     * @param {Phaser.Geom.Ellipse} ellipse - [description]
+     * @param {integer} [smoothness=32] - [description]
+     *
+     * @return {Phaser.GameObjects.Graphics} This Game Object.
+     */
     strokeEllipseShape: function (ellipse, smoothness)
     {
         if (smoothness === undefined) { smoothness = 32; }
@@ -423,6 +879,20 @@ var Graphics = new Class({
         return this.strokePoints(points, true);
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.GameObjects.Graphics#strokeEllipse
+     * @since 3.0.0
+     *
+     * @param {number} x - [description]
+     * @param {number} y - [description]
+     * @param {number} width - [description]
+     * @param {number} height - [description]
+     * @param {integer} [smoothness=32] - [description]
+     *
+     * @return {Phaser.GameObjects.Graphics} This Game Object.
+     */
     strokeEllipse: function (x, y, width, height, smoothness)
     {
         if (smoothness === undefined) { smoothness = 32; }
@@ -434,6 +904,17 @@ var Graphics = new Class({
         return this.strokePoints(points, true);
     },
 	 
+    /**
+     * [description]
+     *
+     * @method Phaser.GameObjects.Graphics#fillEllipseShape
+     * @since 3.0.0
+     *
+     * @param {Phaser.Geom.Ellipse} ellipse - [description]
+     * @param {integer} [smoothness=32] - [description]
+     *
+     * @return {Phaser.GameObjects.Graphics} This Game Object.
+     */
     fillEllipseShape: function (ellipse, smoothness)
     {
         if (smoothness === undefined) { smoothness = 32; }
@@ -443,6 +924,20 @@ var Graphics = new Class({
         return this.fillPoints(points, true);
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.GameObjects.Graphics#fillEllipse
+     * @since 3.0.0
+     *
+     * @param {number} x - [description]
+     * @param {number} y - [description]
+     * @param {number} width - [description]
+     * @param {number} height - [description]
+     * @param {integer} [smoothness=32] - [description]
+     *
+     * @return {Phaser.GameObjects.Graphics} This Game Object.
+     */
     fillEllipse: function (x, y, width, height, smoothness)
     {
         if (smoothness === undefined) { smoothness = 32; }
@@ -454,8 +949,21 @@ var Graphics = new Class({
         return this.fillPoints(points, true);
     },
 
-    //  ARC
-
+    /**
+     * [description]
+     *
+     * @method Phaser.GameObjects.Graphics#arc
+     * @since 3.0.0
+     *
+     * @param {number} x - [description]
+     * @param {number} y - [description]
+     * @param {number} radius - [description]
+     * @param {number} startAngle - [description]
+     * @param {number} endAngle - [description]
+     * @param {boolean} anticlockwise - [description]
+     *
+     * @return {Phaser.GameObjects.Graphics} This Game Object.
+     */
     arc: function (x, y, radius, startAngle, endAngle, anticlockwise)
     {
         this.commandBuffer.push(
@@ -466,8 +974,13 @@ var Graphics = new Class({
         return this;
     },
 
-    //  MESH + VIEWPORT + CAMERA
-
+    /**
+     * [description]
+     * 
+     * @name Phaser.GameObjects.Graphics#cameraX
+     * @type {number}
+     * @since 3.0.0
+     */
     cameraX: {
 
         get: function ()
@@ -483,6 +996,13 @@ var Graphics = new Class({
 
     },
 
+    /**
+     * [description]
+     * 
+     * @name Phaser.GameObjects.Graphics#cameraY
+     * @type {number}
+     * @since 3.0.0
+     */
     cameraY: {
 
         get: function ()
@@ -498,6 +1018,13 @@ var Graphics = new Class({
 
     },
 
+    /**
+     * [description]
+     * 
+     * @name Phaser.GameObjects.Graphics#cameraZ
+     * @type {number}
+     * @since 3.0.0
+     */
     cameraZ: {
 
         get: function ()
@@ -513,6 +1040,13 @@ var Graphics = new Class({
 
     },
 
+    /**
+     * [description]
+     * 
+     * @name Phaser.GameObjects.Graphics#cameraTargetX
+     * @type {number}
+     * @since 3.0.0
+     */
     cameraTargetX: {
 
         get: function ()
@@ -528,6 +1062,13 @@ var Graphics = new Class({
 
     },
 
+    /**
+     * [description]
+     * 
+     * @name Phaser.GameObjects.Graphics#cameraTargetY
+     * @type {number}
+     * @since 3.0.0
+     */
     cameraTargetY: {
 
         get: function ()
@@ -543,6 +1084,13 @@ var Graphics = new Class({
 
     },
 
+    /**
+     * [description]
+     * 
+     * @name Phaser.GameObjects.Graphics#cameraTargetZ
+     * @type {number}
+     * @since 3.0.0
+     */
     cameraTargetZ: {
 
         get: function ()
@@ -558,6 +1106,18 @@ var Graphics = new Class({
 
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.GameObjects.Graphics#setCameraPosition
+     * @since 3.0.0
+     *
+     * @param {number} x - [description]
+     * @param {number} y - [description]
+     * @param {number} z - [description]
+     *
+     * @return {Phaser.GameObjects.Graphics} This Game Object.
+     */
     setCameraPosition: function (x, y, z)
     {
         this.camera.position.set(x, y, z);
@@ -567,6 +1127,18 @@ var Graphics = new Class({
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.GameObjects.Graphics#setCameraTarget
+     * @since 3.0.0
+     *
+     * @param {number} x - [description]
+     * @param {number} y - [description]
+     * @param {number} z - [description]
+     *
+     * @return {Phaser.GameObjects.Graphics} This Game Object.
+     */
     setCameraTarget: function (x, y, z)
     {
         this.camera.target.set(x, y, z);
@@ -576,9 +1148,20 @@ var Graphics = new Class({
         return this;
     },
 
-    // @param {number} fovy Vertical field of view in radians
-    // @param {number} near Near bound of the frustum
-    // @param {number} far Far bound of the frustum
+    /**
+     * [description]
+     *
+     * @method Phaser.GameObjects.Graphics#setViewport
+     * @since 3.0.0
+     *
+     * @param {number} width - [description]
+     * @param {number} height - [description]
+     * @param {number} fov - Vertical field of view in radians.
+     * @param {number} near - Near bounds of the frustum.
+     * @param {number} far - Far bounds of the frustum.
+     *
+     * @return {Phaser.GameObjects.Graphics} This Game Object.
+     */
     setViewport: function (width, height, fov, near, far)
     {
         if (fov === undefined) { fov = 0.8; }
@@ -594,7 +1177,19 @@ var Graphics = new Class({
         return this;
     },
 
-    //  Allow key to be a data array OR object containing the rest of the properties + color etc
+    /**
+     * [description]
+     *
+     * @method Phaser.GameObjects.Graphics#createMesh
+     * @since 3.0.0
+     *
+     * @param {string} key - [description]
+     * @param {number} x - [description]
+     * @param {number} y - [description]
+     * @param {number} z - [description]
+     *
+     * @return {Phaser.Geom.Mesh} The Mesh that was added to this Graphics object.
+     */
     createMesh: function (key, x, y, z)
     {
         var data = this.scene.sys.cache.obj.get(key);
@@ -604,6 +1199,16 @@ var Graphics = new Class({
         return mesh;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.GameObjects.Graphics#fillMesh
+     * @since 3.0.0
+     *
+     * @param {Phaser.Geom.Mesh} mesh - [description]
+     *
+     * @return {Phaser.GameObjects.Graphics} This Game Object.
+     */
     fillMesh: function (mesh)
     {
         mesh.fill(this);
@@ -611,6 +1216,16 @@ var Graphics = new Class({
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.GameObjects.Graphics#strokeMesh
+     * @since 3.0.0
+     *
+     * @param {Phaser.Geom.Mesh} mesh - [description]
+     *
+     * @return {Phaser.GameObjects.Graphics} This Game Object.
+     */
     strokeMesh: function (mesh)
     {
         mesh.stroke(this);
@@ -618,8 +1233,14 @@ var Graphics = new Class({
         return this;
     },
 
-    //  TRANSFORM
-
+    /**
+     * [description]
+     *
+     * @method Phaser.GameObjects.Graphics#save
+     * @since 3.0.0
+     *
+     * @return {Phaser.GameObjects.Graphics} This Game Object.
+     */
     save: function ()
     {
         this.commandBuffer.push(
@@ -629,6 +1250,14 @@ var Graphics = new Class({
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.GameObjects.Graphics#restore
+     * @since 3.0.0
+     *
+     * @return {Phaser.GameObjects.Graphics} This Game Object.
+     */
     restore: function ()
     {
         this.commandBuffer.push(
@@ -638,6 +1267,17 @@ var Graphics = new Class({
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.GameObjects.Graphics#translate
+     * @since 3.0.0
+     *
+     * @param {number} x - [description]
+     * @param {number} y - [description]
+     *
+     * @return {Phaser.GameObjects.Graphics} This Game Object.
+     */
     translate: function (x, y)
     {
         this.commandBuffer.push(
@@ -648,6 +1288,17 @@ var Graphics = new Class({
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.GameObjects.Graphics#scale
+     * @since 3.0.0
+     *
+     * @param {number} x - [description]
+     * @param {number} y - [description]
+     *
+     * @return {Phaser.GameObjects.Graphics} This Game Object.
+     */
     scale: function (x, y)
     {
         this.commandBuffer.push(
@@ -658,16 +1309,34 @@ var Graphics = new Class({
         return this;
     },
 
-    rotate: function (radian)
+    /**
+     * [description]
+     *
+     * @method Phaser.GameObjects.Graphics#rotate
+     * @since 3.0.0
+     *
+     * @param {number} radians - [description]
+     *
+     * @return {Phaser.GameObjects.Graphics} This Game Object.
+     */
+    rotate: function (radians)
     {
         this.commandBuffer.push(
             Commands.ROTATE,
-            radian
+            radians
         );
 
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.GameObjects.Graphics#clear
+     * @since 3.0.0
+     *
+     * @return {Phaser.GameObjects.Graphics} This Game Object.
+     */
     clear: function ()
     {
         this.commandBuffer.length = 0;
@@ -685,12 +1354,22 @@ var Graphics = new Class({
         return this;
     },
 
-    //  If key is a string it'll generate a new texture using it and add it into the
-    //  Texture Manager (assuming no key conflict happens).
-    //
-    //  If key is a Canvas it will draw the texture to that canvas context. Note that it will NOT
-    //  automatically upload it to the GPU in WebGL mode.
-
+    /**
+     * If key is a string it'll generate a new texture using it and add it into the
+     * Texture Manager (assuming no key conflict happens).
+     *
+     * If key is a Canvas it will draw the texture to that canvas context. Note that it will NOT
+     * automatically upload it to the GPU in WebGL mode.
+     *
+     * @method Phaser.GameObjects.Graphics#generateTexture
+     * @since 3.0.0
+     *
+     * @param {string|HTMLCanvasElement} key - [description]
+     * @param {integer} [width] - [description]
+     * @param {integer} [height] - [description]
+     *
+     * @return {Phaser.GameObjects.Graphics} This Game Object.
+     */
     generateTexture: function (key, width, height)
     {
         var sys = this.scene.sys;
