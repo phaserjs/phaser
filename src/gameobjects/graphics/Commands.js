@@ -1,4 +1,9 @@
+/**
+ * @namespace Phaser.GameObjects.Graphics.Commands
+ */
+
 module.exports = {
+
     ARC: 0,
     BEGIN_PATH: 1,
     CLOSE_PATH: 2,
@@ -18,4 +23,5 @@ module.exports = {
     TRANSLATE: 16,
     SCALE: 17,
     ROTATE: 18
+
 };

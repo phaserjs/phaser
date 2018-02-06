@@ -1,9 +1,38 @@
-
 var Class = require('../../utils/Class');
-var GameObject = require('../GameObject');
 var Components = require('../components');
+var GameObject = require('../GameObject');
 var ImageRender = require('./ImageRender');
 
+/**
+ * [description]
+ *
+ * @class Image
+ * @extends Phaser.GameObjects.GameObject
+ * @memberOf Phaser.GameObjects
+ * @constructor
+ * @since 3.0.0
+ *
+ * @extends Phaser.GameObjects.Components.Alpha
+ * @extends Phaser.GameObjects.Components.BlendMode
+ * @extends Phaser.GameObjects.Components.Depth
+ * @extends Phaser.GameObjects.Components.Flip
+ * @extends Phaser.GameObjects.Components.GetBounds
+ * @extends Phaser.GameObjects.Components.Origin
+ * @extends Phaser.GameObjects.Components.Pipeline
+ * @extends Phaser.GameObjects.Components.ScaleMode
+ * @extends Phaser.GameObjects.Components.ScrollFactor
+ * @extends Phaser.GameObjects.Components.Size
+ * @extends Phaser.GameObjects.Components.Texture
+ * @extends Phaser.GameObjects.Components.Tint
+ * @extends Phaser.GameObjects.Components.Transform
+ * @extends Phaser.GameObjects.Components.Visible
+ *
+ * @param {Phaser.Scene} scene - [description]
+ * @param {number} x - [description]
+ * @param {number} y - [description]
+ * @param {string} texture - [description]
+ * @param {string|integer} frame - [description]
+ */
 var Image = new Class({
 
     Extends: GameObject,

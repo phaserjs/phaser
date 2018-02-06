@@ -3,8 +3,18 @@ var GameObjectCreator = require('../GameObjectCreator');
 var GetAdvancedValue = require('../../utils/object/GetAdvancedValue');
 var Image = require('./Image');
 
-//  When registering a factory function 'this' refers to the GameObjectCreator context.
-
+/**
+ * Creates a new Image Game Object and returns it.
+ *
+ * Note: This method will only be available if the Image Game Object has been built into Phaser.
+ *
+ * @method Phaser.GameObjects.GameObjectCreator#image
+ * @since 3.0.0
+ *
+ * @param {object} config - [description]
+ *
+ * @return {Phaser.GameObjects.Image} The Game Object that was created.
+ */
 GameObjectCreator.register('image', function (config)
 {
     var key = GetAdvancedValue(config, 'key', null);
@@ -16,3 +26,5 @@ GameObjectCreator.register('image', function (config)
 
     return image;
 });
+
+//  When registering a factory function 'this' refers to the GameObjectCreator context.
