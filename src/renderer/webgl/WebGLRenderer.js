@@ -32,9 +32,14 @@ var WebGLRenderer = new Class({
             powerPreference: game.config.powerPreference
         };
 
-        this.contextCreationConfig = contextCreationConfig;
+        this.config = {
+            clearBeforeRender: game.config.clearBeforeRender,
+            pixelArt: game.config.pixelArt,
+            backgroundColor: game.config.backgroundColor,
+            contextCreation: contextCreationConfig,
+            resolution: game.config.resolution
+        };
         this.game = game;
-        this.gameConfig = game.config;
         this.type = CONST.WEBGL;
         this.width = game.config.width * game.config.resolution;
         this.height = game.config.height * game.config.resolution;
@@ -88,7 +93,7 @@ var WebGLRenderer = new Class({
 
         this.canvas.addEventListener('webglcontextrestored', function (event) {
             renderer.contextLost = false;
-            renderer.init(renderer.gameConfig, renderer.contextCreationConfig);
+            renderer.init(renderer.config);
             for (var index = 0; index < renderer.restoredContextCallbacks.length; ++index)
             {
                 var callback = renderer.restoredContextCallbacks[index];
@@ -101,14 +106,14 @@ var WebGLRenderer = new Class({
         this.supportedExtensions = null;
         this.extensions = {};
 
-        this.init(this.gameConfig, this.contextCreationConfig);
+        this.init(this.config);
     },
 
-    init: function (config, contextCreationConfig)
+    init: function (config)
     {
         var canvas = this.canvas;
         var clearColor = config.backgroundColor;
-        var gl = canvas.getContext('webgl', contextCreationConfig) || canvas.getContext('experimental-webgl', contextCreationConfig);
+        var gl = canvas.getContext('webgl', config.contextCreation) || canvas.getContext('experimental-webgl', config.contextCreation);
     
         if (!gl)
         {
@@ -238,7 +243,7 @@ var WebGLRenderer = new Class({
         else console.warn('Pipeline', pipelineName, ' already exists.');
 
         pipelineInstance.name = pipelineName;
-        this.pipelines[pipelineName].resize(this.width, this.height, this.gameConfig.resolution);
+        this.pipelines[pipelineName].resize(this.width, this.height, this.config.resolution);
 
         return this;
     },
@@ -450,7 +455,7 @@ var WebGLRenderer = new Class({
         {
             filter = gl.LINEAR;
         }
-        else if (scaleMode === CONST.ScaleModes.NEAREST || this.gameConfig.pixelArt)
+        else if (scaleMode === CONST.ScaleModes.NEAREST || this.config.pixelArt)
         {
             filter = gl.NEAREST;
         }
@@ -683,13 +688,13 @@ var WebGLRenderer = new Class({
         if (this.contextLost) return;
 
         var gl = this.gl;
-        var color = this.gameConfig.backgroundColor;
+        var color = this.config.backgroundColor;
         var pipelines = this.pipelines;
 
         // Bind custom framebuffer here
         gl.clearColor(color.redGL, color.greenGL, color.blueGL, color.alphaGL);
 
-        if (this.gameConfig.clearBeforeRender)
+        if (this.config.clearBeforeRender)
             gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT | gl.STENCIL_BUFFER_BIT);
 
         for (var key in pipelines)
@@ -780,7 +785,14 @@ var WebGLRenderer = new Class({
 
         if (!dstTexture)
         {
-            dstTexture = this.createTexture2D(0, gl.NEAREST, gl.NEAREST, gl.CLAMP_TO_EDGE, gl.CLAMP_TO_EDGE, gl.RGBA, srcCanvas, srcCanvas.width, srcCanvas.height, true);
+            var wrapping = gl.CLAMP_TO_EDGE;
+
+            if (IsSizePowerOfTwo(srcCanvas.width, srcCanvas.height))
+            {
+                wrapping = gl.REPEAT;
+            }
+
+            dstTexture = this.createTexture2D(0, gl.NEAREST, gl.NEAREST, wrapping, wrapping, gl.RGBA, srcCanvas, srcCanvas.width, srcCanvas.height, true);
         }
         else
         {
