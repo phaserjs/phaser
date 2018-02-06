@@ -30,10 +30,10 @@ var MeshRender = require('./MeshRender');
  * @param {Phaser.Scene} scene - The Scene to which this Game Object belongs. A Game Object can only belong to one Scene at a time.
  * @param {number} x - The horizontal position of this Game Object in the world.
  * @param {number} y - The vertical position of this Game Object in the world.
- * @param {array} vertices - [description]
- * @param {array} uv - [description]
- * @param {array} colors - [description]
- * @param {array} alphas - [description]
+ * @param {array} vertices - An array containing the vertices data for this Mesh.
+ * @param {array} uv - An array containing the uv data for this Mesh.
+ * @param {array} colors - An array containing the color data for this Mesh.
+ * @param {array} alphas - An array containing the alpha data for this Mesh.
  * @param {string} texture - The key of the Texture this Game Object will use to render with, as stored in the Texture Manager.
  * @param {string|integer} [frame] - An optional frame from the Texture this Game Object is rendering with.
  */
