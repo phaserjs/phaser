@@ -1,4 +1,3 @@
-
 var BlendModes = require('../../renderer/BlendModes');
 var Circle = require('../../geom/circle/Circle');
 var CircleContains = require('../../geom/circle/Contains');
@@ -8,14 +7,38 @@ var GameObject = require('../GameObject');
 var Rectangle = require('../../geom/rectangle/Rectangle');
 var RectangleContains = require('../../geom/rectangle/Contains');
 
-//  A Zone is a non-rendering rectangular Game Object that has a position and size.
-//  It has no texture and never renders, but does live on the display list and
-//  can be moved, scaled and rotated like any other Game Object.
+/**
+ * A Zone Game Object.
+ *
+ * A Zone is a non-rendering rectangular Game Object that has a position and size.
+ * It has no texture and never displays, but does live on the display list and
+ * can be moved, scaled and rotated like any other Game Object.
+ *
+ * Its primary use is for creating Drop Zones and Input Hit Areas and it has a couple of helper methods
+ * specifically for this. It is also useful for object overlap checks, or as a base for your own
+ * non-displaying Game Objects.
 
-//  The default origin is 0.5, the center of the Zone, the same as with Game Objects.
-//  It's useful for linking to drop zones and input hit areas and has a couple of helper methods specifically for this.
-//  Also useful for object overlap checks, or as a base for your own non-displaying objects.
-
+ * The default origin is 0.5, the center of the Zone, the same as with Game Objects.
+ *
+ * @class Zone
+ * @extends Phaser.GameObjects.GameObject
+ * @memberOf Phaser.GameObjects
+ * @constructor
+ * @since 3.0.0
+ *
+ * @extends Phaser.GameObjects.Components.GetBounds
+ * @extends Phaser.GameObjects.Components.Origin
+ * @extends Phaser.GameObjects.Components.ScaleMode
+ * @extends Phaser.GameObjects.Components.Transform
+ * @extends Phaser.GameObjects.Components.ScrollFactor
+ * @extends Phaser.GameObjects.Components.Visible
+ *
+ * @param {Phaser.Scene} scene - [description]
+ * @param {number} x - The horizontal position of this Game Object in the world.
+ * @param {number} y - The vertical position of this Game Object in the world.
+ * @param {number} [width=1] - The width of the Game Object.
+ * @param {number} [height=1] - The height of the Game Object.
+ */
 var Zone = new Class({
 
     Extends: GameObject,
@@ -40,12 +63,44 @@ var Zone = new Class({
 
         this.setPosition(x, y);
 
+        /**
+         * The native (un-scaled) width of this Game Object.
+         *
+         * @name Phaser.GameObjects.Zone#width
+         * @type {number}
+         * @since 3.0.0
+         */
         this.width = width;
+
+        /**
+         * The native (un-scaled) height of this Game Object.
+         *
+         * @name Phaser.GameObjects.Zone#height
+         * @type {number}
+         * @since 3.0.0
+         */
         this.height = height;
 
+        /**
+         * The Blend Mode of the Game Object.
+         * Although a Zone never renders, it still has a blend mode to allow it to fit seamlessly into
+         * display lists without causing a batch flush.
+         *
+         * @name Phaser.GameObjects.Zone#blendMode
+         * @type {integer}
+         * @since 3.0.0
+         */
         this.blendMode = BlendModes.NORMAL;
     },
 
+    /**
+     * The displayed width of this Game Object.
+     * This value takes into account the scale factor.
+     * 
+     * @name Phaser.GameObjects.Zone#displayWidth
+     * @type {number}
+     * @since 3.0.0
+     */
     displayWidth: {
 
         get: function ()
@@ -60,6 +115,14 @@ var Zone = new Class({
 
     },
 
+    /**
+     * The displayed height of this Game Object.
+     * This value takes into account the scale factor.
+     * 
+     * @name Phaser.GameObjects.Zone#displayHeight
+     * @type {number}
+     * @since 3.0.0
+     */
     displayHeight: {
 
         get: function ()
@@ -74,6 +137,18 @@ var Zone = new Class({
 
     },
 
+    /**
+     * Sets the size of this Game Object.
+     *
+     * @method Phaser.GameObjects.Zone#setSize
+     * @since 3.0.0
+     *
+     * @param {number} width - The width of this Game Object.
+     * @param {number} height - The height of this Game Object.
+     * @param {boolean} [resizeInput=true] - If this Zone has a Rectangle for a hit area this argument will resize the hit area as well.
+     *
+     * @return {Phaser.GameObjects.Zone} This Game Object.
+     */
     setSize: function (width, height, resizeInput)
     {
         if (resizeInput === undefined) { resizeInput = true; }
@@ -90,6 +165,18 @@ var Zone = new Class({
         return this;
     },
 
+    /**
+     * Sets the display size of this Game Object.
+     * Calling this will adjust the scale.
+     *
+     * @method Phaser.GameObjects.Zone#setDisplaySize
+     * @since 3.0.0
+     *
+     * @param {number} width - The width of this Game Object.
+     * @param {number} height - The height of this Game Object.
+     *
+     * @return {Phaser.GameObjects.Zone} This Game Object.
+     */
     setDisplaySize: function (width, height)
     {
         this.displayWidth = width;
@@ -98,13 +185,34 @@ var Zone = new Class({
         return this;
     },
 
-    //  Centered on the Zones x/y
+    /**
+     * Sets this Zone to be a Circular Drop Zone.
+     * The circle is centered on this Zones `x` and `y` coordinates.
+     *
+     * @method Phaser.GameObjects.Zone#setCircleDropZone
+     * @since 3.0.0
+     *
+     * @param {number} radius - The radius of the Circle that will form the Drop Zone.
+     *
+     * @return {Phaser.GameObjects.Zone} This Game Object.
+     */
     setCircleDropZone: function (radius)
     {
         return this.setDropZone(new Circle(0, 0, radius), CircleContains);
     },
 
-    //  Centered on the Zones x/y position
+    /**
+     * Sets this Zone to be a Rectangle Drop Zone.
+     * The rectangle is centered on this Zones `x` and `y` coordinates.
+     *
+     * @method Phaser.GameObjects.Zone#setRectangleDropZone
+     * @since 3.0.0
+     *
+     * @param {number} width - The width of the rectangle drop zone.
+     * @param {number} height - The height of the rectangle drop zone.
+     *
+     * @return {Phaser.GameObjects.Zone} This Game Object.
+     */
     setRectangleDropZone: function (width, height)
     {
         var x = -(width / 2);
@@ -113,7 +221,17 @@ var Zone = new Class({
         return this.setDropZone(new Rectangle(x, y, width, height), RectangleContains);
     },
 
-    //  Define your own shape as the drop zone
+    /**
+     * Allows you to define your own Geometry shape to be used as a Drop Zone.
+     *
+     * @method Phaser.GameObjects.Zone#setDropZone
+     * @since 3.0.0
+     *
+     * @param {object} shape - A Geometry shape instance, such as Phaser.Geom.Ellipse, or your own custom shape.
+     * @param {function} callback - A function that will return `true` if the given x/y coords it is sent are within the shape.
+     *
+     * @return {Phaser.GameObjects.Zone} This Game Object.
+     */
     setDropZone: function (shape, callback)
     {
         if (shape === undefined)
@@ -133,14 +251,26 @@ var Zone = new Class({
         return this;
     },
 
+    /**
+     * A Zone does not render.
+     *
+     * @method Phaser.GameObjects.Zone#renderCanvas
+     * @private
+     * @since 3.0.0
+     */
     renderCanvas: function ()
     {
-        return;
     },
 
+    /**
+     * A Zone does not render.
+     *
+     * @method Phaser.GameObjects.Zone#renderWebGL
+     * @private
+     * @since 3.0.0
+     */
     renderWebGL: function ()
     {
-        return;
     }
 
 });
