@@ -37,6 +37,11 @@ var DynamicTilemapLayerCanvasRenderer = function (renderer, gameObject, interpol
         ctx.save();
         ctx.translate(tile.pixelX + halfWidth, tile.pixelY + halfHeight);
 
+        if (tile.rotation !== 0)
+        {
+            ctx.rotate(tile.rotation);
+        }
+
         if (tile.flipX || tile.flipY)
         {
             ctx.scale(tile.flipX ? -1 : 1, tile.flipY ? -1 : 1);

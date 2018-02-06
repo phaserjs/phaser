@@ -36,7 +36,8 @@ var WebGLRenderer = new Class({
             clearBeforeRender: game.config.clearBeforeRender,
             pixelArt: game.config.pixelArt,
             backgroundColor: game.config.backgroundColor,
-            contextCreation: contextCreationConfig
+            contextCreation: contextCreationConfig,
+            resolution: game.config.resolution
         };
         this.game = game;
         this.type = CONST.WEBGL;
