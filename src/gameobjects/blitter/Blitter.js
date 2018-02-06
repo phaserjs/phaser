@@ -9,10 +9,17 @@ var GameObject = require('../GameObject');
 /**
  * A Blitter Game Object.
  *
- * The Blitter Game Object is a special type of Container, that contains Blitter.Bob objects.
- * These objects can be thought of as just texture frames with a position and nothing more.
- * Bobs don't have any update methods, or the ability to have children, or any kind of special effects.
- * They are essentially just super-fast texture frame renderers, and the Blitter object creates and manages them.
+ * The Blitter Game Object is a special kind of container that creates, updates and manages Bob objects.
+ * Bobs are designed for rendering speed rather than flexibility. They consist of a texture, or frame from a texture,
+ * a position and an alpha value. You cannot scale or rotate them. They use a batched drawing method for speed
+ * during rendering.
+ *
+ * A Blitter Game Object has one texture bound to it. Bobs created by the Blitter can use any Frame from this
+ * Texture to render with, but they cannot use any other Texture. It is this single texture-bind that allows
+ * them their speed.
+ *
+ * If you have a need to blast a large volume of frames around the screen then Blitter objects are well worth
+ * investigating. They are especially useful for using as a base for your own special effects systems.
  *
  * @class Blitter
  * @extends Phaser.GameObjects.GameObject

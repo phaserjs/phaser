@@ -4,7 +4,12 @@ var GameObject = require('../GameObject');
 var ImageRender = require('./ImageRender');
 
 /**
- * [description]
+ * An Image Game Object.
+ * 
+ * An Image is a light-weight Game Object useful for the display of static images in your game,
+ * such as logos, backgrounds, scenery or other non-animated elements. Images can have input
+ * events and physics bodies, or be tweened, tinted or scrolled. The main difference between an
+ * Image and a Sprite is that you cannot animate an Image as they do not have the Animation component.
  *
  * @class Image
  * @extends Phaser.GameObjects.GameObject
@@ -27,11 +32,11 @@ var ImageRender = require('./ImageRender');
  * @extends Phaser.GameObjects.Components.Transform
  * @extends Phaser.GameObjects.Components.Visible
  *
- * @param {Phaser.Scene} scene - [description]
- * @param {number} x - [description]
- * @param {number} y - [description]
- * @param {string} texture - [description]
- * @param {string|integer} frame - [description]
+ * @param {Phaser.Scene} scene - The Scene to which this Game Object belongs. A Game Object can only belong to one Scene at a time.
+ * @param {number} x - The horizontal position of this Game Object in the world.
+ * @param {number} y - The vertical position of this Game Object in the world.
+ * @param {string} texture - The key of the Texture this Game Object will use to render with, as stored in the Texture Manager.
+ * @param {string|integer} [frame] - An optional frame from the Texture this Game Object is rendering with.
  */
 var Image = new Class({
 

@@ -9,10 +9,10 @@ var GameObjectFactory = require('../GameObjectFactory');
  * @method Phaser.GameObjects.GameObjectFactory#image
  * @since 3.0.0
  *
- * @param {number} x - The x position of the Game Object.
- * @param {number} y - The y position of the Game Object.
- * @param {string} key - The key of the Texture the Game Object will use.
- * @param {string|integer} [frame] - The Texture Frame the Game Object will use.
+ * @param {number} x - The horizontal position of this Game Object in the world.
+ * @param {number} y - The vertical position of this Game Object in the world.
+ * @param {string} texture - The key of the Texture this Game Object will use to render with, as stored in the Texture Manager.
+ * @param {string|integer} [frame] - An optional frame from the Texture this Game Object is rendering with.
  * 
  * @return {Phaser.GameObjects.Image} The Game Object that was created.
  */
