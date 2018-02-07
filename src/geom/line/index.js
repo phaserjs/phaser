@@ -1,7 +1,3 @@
-/**
- * @namespace Phaser.Geom.Line
- */
-
 var Line = require('./Line');
 
 Line.Angle = require('./Angle');

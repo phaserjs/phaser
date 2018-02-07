@@ -1,7 +1,3 @@
-/**
- * @namespace Phaser.Geom.Circle
- */
-
 var Circle = require('./Circle');
 
 Circle.Area = require('./Area');

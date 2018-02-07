@@ -1,7 +1,3 @@
-/**
- * @namespace Phaser.Geom.Point
- */
-
 var Point = require('./Point');
 
 Point.Ceil = require('./Ceil');

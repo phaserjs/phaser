@@ -1,7 +1,3 @@
-/**
- * @namespace Phaser.Geom.Polygon
- */
-
 var Polygon = require('./Polygon');
 
 Polygon.Clone = require('./Clone');

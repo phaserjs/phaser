@@ -1,7 +1,3 @@
-/**
- * @namespace Phaser.Geom.Triangle
- */
-
 var Triangle = require('./Triangle');
 
 Triangle.Area = require('./Area');

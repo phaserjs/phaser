@@ -1,7 +1,3 @@
-/**
- * @namespace Phaser.Geom.Rectangle
- */
-
 var Rectangle = require('./Rectangle');
 
 Rectangle.Area = require('./Area');
