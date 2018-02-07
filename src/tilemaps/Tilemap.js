@@ -1,14 +1,14 @@
 var Class = require('../utils/Class');
-var Extend = require('../utils/object/Extend');
-var LayerData = require('./mapdata/LayerData');
-var StaticTilemapLayer = require('./staticlayer/StaticTilemapLayer.js');
-var DynamicTilemapLayer = require('./dynamiclayer/DynamicTilemapLayer.js');
-var Tileset = require('./Tileset');
-var Formats = require('./Formats');
-var TilemapComponents = require('./components');
-var Tile = require('./Tile');
-var Rotate = require('../math/Rotate');
 var DegToRad = require('../math/DegToRad');
+var DynamicTilemapLayer = require('./dynamiclayer/DynamicTilemapLayer.js');
+var Extend = require('../utils/object/Extend');
+var Formats = require('./Formats');
+var LayerData = require('./mapdata/LayerData');
+var Rotate = require('../math/Rotate');
+var StaticTilemapLayer = require('./staticlayer/StaticTilemapLayer.js');
+var Tile = require('./Tile');
+var TilemapComponents = require('./components');
+var Tileset = require('./Tileset');
 
 /**
  * @classdesc
@@ -29,10 +29,12 @@ var DegToRad = require('../math/DegToRad');
  * it.
  *
  * @class Tilemap
+ * @memberOf Phaser.Tilemaps
  * @constructor
+ * @since 3.0.0
  *
- * @param {Scene} scene - [description]
- * @param {MapData} mapData - A MapData instance containing Tilemap data.
+ * @param {Phaser.Scene} scene - The Scene to which this Tilemap belongs.
+ * @param {Phaser.Tilemaps.MapData} mapData - A MapData instance containing Tilemap data.
  */
 var Tilemap = new Class({
 
@@ -41,102 +43,154 @@ var Tilemap = new Class({
     function Tilemap (scene, mapData)
     {
         /**
-         * @property {Scene} Scene
+         * @name Phaser.Tilemaps.Tilemap#scene
+         * @type {Phaser.Scene}
+         * @since 3.0.0
          */
         this.scene = scene;
 
         /**
          * The base width of a tile in pixels. Note that individual layers may have a different tile
          * width.
-         * @property {integer} tileWidth
+         * 
+         * @name Phaser.Tilemaps.Tilemap#tileWidth
+         * @type {integer}
+         * @since 3.0.0
          */
         this.tileWidth = mapData.tileWidth;
 
         /**
          * The base height of a tile in pixels. Note that individual layers may have a different
          * tile height.
-         * @property {integer} tileHeight
+         * 
+         * @name Phaser.Tilemaps.Tilemap#tileHeight
+         * @type {integer}
+         * @since 3.0.0
          */
         this.tileHeight = mapData.tileHeight;
 
         /**
          * The width of the map (in tiles).
-         * @property {number} width
+         * 
+         * @name Phaser.Tilemaps.Tilemap#width
+         * @type {number}
+         * @since 3.0.0
          */
         this.width = mapData.width;
 
         /**
          * The height of the map (in tiles).
-         * @property {number} width
+         * 
+         * @name Phaser.Tilemaps.Tilemap#height
+         * @type {number}
+         * @since 3.0.0
          */
         this.height = mapData.height;
 
         /**
          * The orientation of the map data (as specified in Tiled), usually 'orthogonal'.
-         * @property {string} orientation
+         * 
+         * @name Phaser.Tilemaps.Tilemap#orientation
+         * @type {string}
+         * @since 3.0.0
          */
         this.orientation = mapData.orientation;
 
         /**
-         * @property {number} format - The format of the map data.
+         * The format of the map data.
+         * 
+         * @name Phaser.Tilemaps.Tilemap#format
+         * @type {number}
+         * @since 3.0.0
          */
         this.format = mapData.format;
 
         /**
          * The version of the map data (as specified in Tiled, usually 1).
-         * @property {number} version
+         * 
+         * @name Phaser.Tilemaps.Tilemap#version
+         * @type {number}
+         * @since 3.0.0
          */
         this.version = mapData.version;
 
         /**
          * Map specific properties as specified in Tiled.
-         * @property {object} properties
+         * 
+         * @name Phaser.Tilemaps.Tilemap#properties
+         * @type {object}
+         * @since 3.0.0
          */
         this.properties = mapData.properties;
 
         /**
          * The width of the map in pixels based on width * tileWidth.
-         * @property {number} widthInPixels
+         * 
+         * @name Phaser.Tilemaps.Tilemap#widthInPixels
+         * @type {number}
+         * @since 3.0.0
          */
         this.widthInPixels = mapData.widthInPixels;
 
         /**
          * The height of the map in pixels based on height * tileHeight.
-         * @property {number} heightInPixels
+         * 
+         * @name Phaser.Tilemaps.Tilemap#heightInPixels
+         * @type {number}
+         * @since 3.0.0
          */
         this.heightInPixels = mapData.heightInPixels;
 
         /**
-         * @property {ImageCollection[]} imagecollections
+         * 
+         * @name Phaser.Tilemaps.Tilemap#imageCollections
+         * @type {Phaser.Tilemaps.ImageCollection[]}
+         * @since 3.0.0
          */
         this.imageCollections = mapData.imageCollections;
 
         /**
          * An array of Tiled Image Layers.
-         * @property {array} images
+         * 
+         * @name Phaser.Tilemaps.Tilemap#images
+         * @type {array}
+         * @since 3.0.0
          */
         this.images = mapData.images;
 
         /**
-         * @property {LayerData[]} layers - An array of Tilemap layer data.
+         * An array of Tilemap layer data.
+         * 
+         * @name Phaser.Tilemaps.Tilemap#layers
+         * @type {Phaser.Tilemaps.LayerData[]}
+         * @since 3.0.0
          */
         this.layers = mapData.layers;
 
         /**
          * An array of Tilesets used in the map.
-         * @property {Tileset[]} tilesets
+         * 
+         * @name Phaser.Tilemaps.Tilemap#tilesets
+         * @type {Phaser.Tilemaps.Tileset[]}
+         * @since 3.0.0
          */
         this.tilesets = mapData.tilesets;
 
         /**
          * An array of ObjectLayer instances parsed from Tiled object layers.
-         * @property {ObjectLayer[]} objects
+         * 
+         * @name Phaser.Tilemaps.Tilemap#objects
+         * @type {Phaser.Tilemaps.ObjectLayer[]}
+         * @since 3.0.0
          */
         this.objects = mapData.objects;
 
         /**
          * The index of the currently selected LayerData object.
-         * @property {integer} currentLayerIndex
+         * 
+         * @name Phaser.Tilemaps.Tilemap#currentLayerIndex
+         * @type {integer}
+         * @since 3.0.0
          */
         this.currentLayerIndex = 0;
     },
@@ -146,6 +200,9 @@ var Tilemap = new Class({
      * Note that the tileset name can be found in the JSON file exported from Tiled, or in the Tiled
      * editor.
      *
+     * @method Phaser.Tilemaps.Tilemap#addTilesetImage
+     * @since 3.0.0
+     * 
      * @param {string} tilesetName - The name of the tileset as specified in the map data.
      * @param {string} [key] - The key of the Phaser.Cache image used for this tileset. If
      * `undefined` or `null` it will look for an image with a key matching the tileset parameter.
@@ -161,7 +218,8 @@ var Tilemap = new Class({
      * If not specified, it will default to 0 or the value specified in the Tiled JSON file.
      * @param {integer} [gid=0] - If adding multiple tilesets to a blank map, specify the starting
      * GID this set will use here.
-     * @return {Tileset|null} Returns the Tileset object that was created or updated, or null if it
+     * 
+     * @return {Phaser.Tilemaps.Tileset|null} Returns the Tileset object that was created or updated, or null if it
      * failed.
      */
     addTilesetImage: function (tilesetName, key, tileWidth, tileHeight, tileMargin, tileSpacing, gid)
@@ -202,6 +260,7 @@ var Tilemap = new Class({
         var tileset = new Tileset(tilesetName, gid, tileWidth, tileHeight, tileMargin, tileSpacing);
         tileset.setImage(texture);
         this.tilesets.push(tileset);
+
         return tileset;
     },
 
@@ -212,14 +271,19 @@ var Tilemap = new Class({
      * Note: the DynamicTilemapLayer passed in is destroyed, so make sure to store the value
      * returned from this method if you want to manipulate the new StaticTilemapLayer.
      *
-     * @param {string|integer|DynamicTilemapLayer} [layer] - The name of the layer from Tiled, the
-     * index of the layer in the map, or a StaticTilemapLayer.
-     * @return {StaticTilemapLayer|null} Returns the new layer that was created, or null if it
+     * @method Phaser.Tilemaps.Tilemap#convertLayerToStatic
+     * @since 3.0.0
+     *
+     * @param {string|integer|Phaser.Tilemaps.DynamicTilemapLayer} [layer] - The name of the layer from Tiled, the
+     * index of the layer in the map, or a DynamicTilemapLayer.
+     * 
+     * @return {Phaser.Tilemaps.StaticTilemapLayer|null} Returns the new layer that was created, or null if it
      * failed.
      */
     convertLayerToStatic: function (layer)
     {
         layer = this.getLayer(layer);
+
         if (layer === null) { return null; }
 
         var dynamicLayer = layer.tilemapLayer;
@@ -229,8 +293,15 @@ var Tilemap = new Class({
             return null;
         }
 
-        var staticLayer = new StaticTilemapLayer(dynamicLayer.scene, dynamicLayer.tilemap,
-            dynamicLayer.layerIndex, dynamicLayer.tileset, dynamicLayer.x, dynamicLayer.y);
+        var staticLayer = new StaticTilemapLayer(
+            dynamicLayer.scene,
+            dynamicLayer.tilemap,
+            dynamicLayer.layerIndex,
+            dynamicLayer.tileset,
+            dynamicLayer.x,
+            dynamicLayer.y
+        );
+
         this.scene.sys.displayList.add(staticLayer);
 
         dynamicLayer.destroy();
@@ -242,17 +313,27 @@ var Tilemap = new Class({
      * See component documentation. If no layer specified, the map's current layer is used. This
      * cannot be applied to StaticTilemapLayers.
      *
-     * @return {this|null} Returns this, or null if the layer given was invalid.
+     * @method Phaser.Tilemaps.Tilemap#copy
+     * @since 3.0.0
+     *
+     * @return {Phaser.Tilemaps.Tilemap|null} Returns this, or null if the layer given was invalid.
      */
     copy: function (srcTileX, srcTileY, width, height, destTileX, destTileY, recalculateFaces, layer)
     {
         layer = this.getLayer(layer);
+
         if (this._isStaticCall(layer, 'copy')) { return this; }
+
         if (layer !== null)
         {
-            TilemapComponents.Copy(srcTileX, srcTileY, width, height, destTileX, destTileY,
-                recalculateFaces, layer);
+            TilemapComponents.Copy(
+                srcTileX, srcTileY,
+                width, height,
+                destTileX, destTileY,
+                recalculateFaces, layer
+            );
         }
+
         return this;
     },
 
@@ -260,8 +341,11 @@ var Tilemap = new Class({
      * Creates a new and empty DynamicTilemapLayer. The currently selected layer in the map is set
      * to this new layer.
      *
+     * @method Phaser.Tilemaps.Tilemap#createBlankDynamicLayer
+     * @since 3.0.0
+     * 
      * @param {string} name - The name of this layer. Must be unique within the map.
-     * @param {Tileset} tileset - The tileset the new layer will use.
+     * @param {Phaser.Tilemaps.Tileset} tileset - The tileset the new layer will use.
      * @param {integer} width - The width of the layer in tiles. If not specified, it will default
      * to the map's width.
      * @param {integer} height - The height of the layer in tiles. If not specified, it will default
@@ -270,7 +354,7 @@ var Tilemap = new Class({
      * specified, it will default to the map's tileWidth.
      * @param {integer} tileHeight - The height of the tiles the layer uses for calculations. If not
      * specified, it will default to the map's tileHeight.
-     * @return {DynamicTilemapLayer|null} Returns the new layer was created, or null if it failed.
+     * @return {Phaser.Tilemaps.DynamicTilemapLayer|null} Returns the new layer was created, or null if it failed.
      */
     createBlankDynamicLayer: function (name, tileset, x, y, width, height, tileWidth, tileHeight)
     {
@@ -298,14 +382,16 @@ var Tilemap = new Class({
         });
 
         var row;
+
         for (var tileY = 0; tileY < height; tileY++)
         {
             row = [];
+
             for (var tileX = 0; tileX < width; tileX++)
             {
-                row.push(new Tile(layerData, -1, tileX, tileY, tileWidth, tileHeight,
-                    this.tileWidth, this.tileHeight));
+                row.push(new Tile(layerData, -1, tileX, tileY, tileWidth, tileHeight, this.tileWidth, this.tileHeight));
             }
+
             layerData.data.push(row);
         }
 
@@ -329,14 +415,18 @@ var Tilemap = new Class({
      * Unlike a static layer, a dynamic layer can be modified. See DynamicTilemapLayer for more
      * information.
      *
+     * @method Phaser.Tilemaps.Tilemap#createDynamicLayer
+     * @since 3.0.0
+     *
      * @param {integer|string} layerID - The layer array index value, or if a string is given, the
      * layer name from Tiled.
-     * @param {Tileset} tileset - The tileset the new layer will use.
+     * @param {Phaser.Tilemaps.Tileset} tileset - The tileset the new layer will use.
      * @param {number} x - The x position to place the layer in the world. If not specified, it will
      * default to the layer offset from Tiled or 0.
      * @param {number} y - The y position to place the layer in the world. If not specified, it will
      * default to the layer offset from Tiled or 0.
-     * @return {DynamicTilemapLayer|null} Returns the new layer was created, or null if it failed.
+     * 
+     * @return {Phaser.Tilemaps.DynamicTilemapLayer|null} Returns the new layer was created, or null if it failed.
      */
     createDynamicLayer: function (layerID, tileset, x, y)
     {
@@ -383,14 +473,18 @@ var Tilemap = new Class({
      * way to configure Sprite properties from within the map editor. For example giving an object a
      * property of alpha: 0.5 in the map editor will duplicate that when the Sprite is created.
      *
+     * @method Phaser.Tilemaps.Tilemap#createFromObjects
+     * @since 3.0.0
+     *
      * @param {string} name - The name of the object layer (from Tiled) to create Sprites from.
      * @param {integer|string} id - Either the id (object), gid (tile object) or name (object or
      * tile object) from Tiled. Ids are unique in Tiled, but a gid is shared by all tile objects
      * with the same graphic. The same name can be used on multiple objects.
      * @param {object} spriteConfig - The config object to pass into the Sprite creator (i.e.
      * scene.make.sprite).
-     * @param {Scene} [scene=the scene the map is within] - The Scene to create the Sprites within.
-     * @return {Sprite[]} An array of the Sprites that were created.
+     * @param {Phaser.Scene} [scene=the scene the map is within] - The Scene to create the Sprites within.
+     * 
+     * @return {Phaser.GameObjects.Sprite[]} An array of the Sprites that were created.
      */
     createFromObjects: function (name, id, spriteConfig, scene)
     {
@@ -465,14 +559,32 @@ var Tilemap = new Class({
     },
 
     /**
-     * See component documentation. If no layer specified, the map's current layer is used.
+     * Creates a Sprite for every object matching the given tile indexes in the layer. You can
+     * optionally specify if each tile will be replaced with a new tile after the Sprite has been
+     * created. This is useful if you want to lay down special tiles in a level that are converted to
+     * Sprites, but want to replace the tile itself with a floor tile or similar once converted.
      *
-     * @return {Sprite[]|null} Returns an array of Tiles, or null if the layer given was invalid.
+     * @method Phaser.Tilemaps.Tilemap#createFromTiles
+     * @since 3.0.0
+     * 
+     * @param {integer|array} indexes - The tile index, or array of indexes, to create Sprites from.
+     * @param {integer|array} replacements - The tile index, or array of indexes, to change a converted
+     * tile to. Set to `null` to leave the tiles unchanged. If an array is given, it is assumed to be a
+     * one-to-one mapping with the indexes array.
+     * @param {object} spriteConfig - The config object to pass into the Sprite creator (i.e.
+     * scene.make.sprite).
+     * @param {Phaser.Scene} [scene=scene the map is within] - The Scene to create the Sprites within.
+     * @param {Phaser.Cameras.Scene2D.Camera} [camera=main camera] - The Camera to use when determining the world XY
+     * @param {Phaser.Tilemaps.LayerData} layer - [description]
+     *
+     * @return {Phaser.GameObjects.Sprite[]|null} Returns an array of Tiles, or null if the layer given was invalid.
      */
     createFromTiles: function (indexes, replacements, spriteConfig, scene, camera, layer)
     {
         layer = this.getLayer(layer);
+
         if (layer === null) { return null; }
+
         return TilemapComponents.CreateFromTiles(indexes, replacements, spriteConfig, scene, camera, layer);
     },
 
@@ -487,14 +599,18 @@ var Tilemap = new Class({
      * It's important to remember that a static layer cannot be modified. See StaticTilemapLayer for
      * more information.
      *
+     * @method Phaser.Tilemaps.Tilemap#createStaticLayer
+     * @since 3.0.0
+     *
      * @param {integer|string} layerID - The layer array index value, or if a string is given, the
      * layer name from Tiled.
-     * @param {Tileset} tileset - The tileset the new layer will use.
+     * @param {Phaser.Tilemaps.Tileset} tileset - The tileset the new layer will use.
      * @param {number} x - The x position to place the layer in the world. If not specified, it will
      * default to the layer offset from Tiled or 0.
      * @param {number} y - The y position to place the layer in the world. If not specified, it will
      * default to the layer offset from Tiled or 0.
-     * @return {StaticTilemapLayer|null} Returns the new layer was created, or null if it failed.
+     * 
+     * @return {Phaser.Tilemaps.StaticTilemapLayer|null} Returns the new layer was created, or null if it failed.
      */
     createStaticLayer: function (layerID, tileset, x, y)
     {
@@ -538,6 +654,9 @@ var Tilemap = new Class({
     /**
      * Removes all layer data from this Tilemap and nulls the scene reference. This will destroy any
      * StaticTilemapLayers or DynamicTilemapLayers that have been linked to LayerData.
+     *
+     * @method Phaser.Tilemaps.Tilemap#destroy
+     * @since 3.0.0
      */
     destroy: function ()
     {
@@ -548,19 +667,37 @@ var Tilemap = new Class({
     },
 
     /**
-     * See component documentation. If no layer specified, the map's current layer is used. This
-     * cannot be applied to StaticTilemapLayers.
+     * Sets the tiles in the given rectangular area (in tile coordinates) of the layer with the
+     * specified index. Tiles will be set to collide if the given index is a colliding index.
+     * Collision information in the region will be recalculated.
+     * 
+     * If no layer specified, the map's current layer is used.
+     * This cannot be applied to StaticTilemapLayers.
      *
-     * @return {this|null} Returns this, or null if the layer given was invalid.
+     * @method Phaser.Tilemaps.Tilemap#fill
+     * @since 3.0.0
+     * 
+     * @param {integer} index - [description]
+     * @param {integer} [tileX=0] - [description]
+     * @param {integer} [tileY=0] - [description]
+     * @param {integer} [width=max width based on tileX] - [description]
+     * @param {integer} [height=max height based on tileY] - [description]
+     * @param {boolean} [recalculateFaces=true] - [description]
+     * @param {Phaser.Tilemaps.LayerData} layer - [description]
+     *
+     * @return {Phaser.Tilemaps.Tilemap|null} Returns this, or null if the layer given was invalid.
      */
     fill: function (index, tileX, tileY, width, height, recalculateFaces, layer)
     {
         layer = this.getLayer(layer);
+
         if (this._isStaticCall(layer, 'fill')) { return this; }
+
         if (layer !== null)
         {
             TilemapComponents.Fill(index, tileX, tileY, width, height, recalculateFaces, layer);
         }
+
         return this;
     },
 
@@ -569,11 +706,15 @@ var Tilemap = new Class({
      * objects that pass the filter test (i.e. where the callback returns true) will returned as a
      * new array. Similar to Array.prototype.Filter in vanilla JS.
      *
-     * @param {ObjectLayer|string} [objectLayer] - The name of an object layer (from Tiled) or an
+     * @method Phaser.Tilemaps.Tilemap#filterObjects
+     * @since 3.0.0
+     *
+     * @param {Phaser.Tilemaps.ObjectLayer|string} [objectLayer] - The name of an object layer (from Tiled) or an
      * ObjectLayer instance.
      * @param {function} callback - The callback. Each object in the given area will be passed to
      * this callback as the first and only parameter.
      * @param {object} [context] - The context under which the callback should be run.
+     * 
      * @return {object[]|null} An array of object that match the search, or null if the objectLayer
      * given was invalid.
      */
@@ -596,26 +737,67 @@ var Tilemap = new Class({
     },
 
     /**
-     * See component documentation. If no layer specified, the map's current layer is used.
+     * For each tile in the given rectangular area (in tile coordinates) of the layer, run the given
+     * filter callback function. Any tiles that pass the filter test (i.e. where the callback returns
+     * true) will returned as a new array. Similar to Array.prototype.Filter in vanilla JS.
+     * If no layer specified, the map's current layer is used.
      *
-     * @return {Tile[]|null} Returns an array of Tiles, or null if the layer given was invalid.
+     * @method Phaser.Tilemaps.Tilemap#filterTiles
+     * @since 3.0.0
+     *
+     * @param {function} callback - The callback. Each tile in the given area will be passed to this
+     * callback as the first and only parameter. The callback should return true for tiles that pass the
+     * filter.
+     * @param {object} [context] - The context under which the callback should be run.
+     * @param {integer} [tileX=0] - [description]
+     * @param {integer} [tileY=0] - [description]
+     * @param {integer} [width=max width based on tileX] - [description]
+     * @param {integer} [height=max height based on tileY] - [description]
+     * @param {object} [filteringOptions] - Optional filters to apply when getting the tiles.
+     * @param {boolean} [filteringOptions.isNotEmpty=false] - If true, only return tiles that don't have
+     * -1 for an index.
+     * @param {boolean} [filteringOptions.isColliding=false] - If true, only return tiles that collide
+     * on at least one side.
+     * @param {boolean} [filteringOptions.hasInterestingFace=false] - If true, only return tiles that
+     * have at least one interesting face.
+     * @param {Phaser.Tilemaps.LayerData} layer - [description]
+     *
+     * @return {Phaser.Tilemaps.Tile[]|null} Returns an array of Tiles, or null if the layer given was invalid.
      */
     filterTiles: function (callback, context, tileX, tileY, width, height, filteringOptions, layer)
     {
         layer = this.getLayer(layer);
+
         if (layer === null) { return null; }
+
         return TilemapComponents.FilterTiles(callback, context, tileX, tileY, width, height, filteringOptions, layer);
     },
 
     /**
-     * See component documentation. If no layer specified, the map's current layer is used.
+     * Searches the entire map layer for the first tile matching the given index, then returns that Tile
+     * object. If no match is found, it returns null. The search starts from the top-left tile and
+     * continues horizontally until it hits the end of the row, then it drops down to the next column.
+     * If the reverse boolean is true, it scans starting from the bottom-right corner traveling up to
+     * the top-left.
+     * If no layer specified, the map's current layer is used.
      *
-     * @return {Tile|null} Returns a Tiles, or null if the layer given was invalid.
+     * @method Phaser.Tilemaps.Tilemap#findByIndex
+     * @since 3.0.0
+     * 
+     * @param {integer} index - The tile index value to search for.
+     * @param {integer} [skip=0] - The number of times to skip a matching tile before returning.
+     * @param {boolean} [reverse=false] - If true it will scan the layer in reverse, starting at the
+     * bottom-right. Otherwise it scans from the top-left.
+     * @param {Phaser.Tilemaps.LayerData} layer - [description]
+     *
+     * @return {Phaser.Tilemaps.Tile|null} Returns a Tiles, or null if the layer given was invalid.
      */
     findByIndex: function (findIndex, skip, reverse, layer)
     {
         layer = this.getLayer(layer);
+
         if (layer === null) { return null; }
+
         return TilemapComponents.FindByIndex(findIndex, skip, reverse, layer);
     },
 
@@ -624,11 +806,15 @@ var Tilemap = new Class({
      * I.e. finds the first object for which `callback` returns true. Similar to
      * Array.prototype.find in vanilla JS.
      *
-     * @param {ObjectLayer|string} [objectLayer] - The name of an object layer (from Tiled) or an
+     * @method Phaser.Tilemaps.Tilemap#findObject
+     * @since 3.0.0
+     *
+     * @param {Phaser.Tilemaps.ObjectLayer|string} [objectLayer] - The name of an object layer (from Tiled) or an
      * ObjectLayer instance.
      * @param {function} callback - The callback. Each object in the given area will be passed to
      * this callback as the first and only parameter.
      * @param {object} [context] - The context under which the callback should be run.
+     * 
      * @return {object|null} An object that matches the search, or null if no object found
      */
     findObject: function (objectLayer, callback, context)
@@ -650,37 +836,88 @@ var Tilemap = new Class({
     },
 
     /**
-     * See component documentation. If no layer specified, the map's current layer is used.
+     * Find the first tile in the given rectangular area (in tile coordinates) of the layer that
+     * satisfies the provided testing function. I.e. finds the first tile for which `callback` returns
+     * true. Similar to Array.prototype.find in vanilla JS.
+     * If no layer specified, the maps current layer is used.
      *
-     * @return {Tile|null} Returns a Tiles, or null if the layer given was invalid.
+     * @method Phaser.Tilemaps.Tilemap#findTile
+     * @since 3.0.0
+     * 
+     * @param {function} callback - The callback. Each tile in the given area will be passed to this
+     * callback as the first and only parameter.
+     * @param {object} [context] - The context under which the callback should be run.
+     * @param {integer} [tileX=0] - [description]
+     * @param {integer} [tileY=0] - [description]
+     * @param {integer} [width=max width based on tileX] - [description]
+     * @param {integer} [height=max height based on tileY] - [description]
+     * @param {object} [filteringOptions] - Optional filters to apply when getting the tiles.
+     * @param {boolean} [filteringOptions.isNotEmpty=false] - If true, only return tiles that don't have
+     * -1 for an index.
+     * @param {boolean} [filteringOptions.isColliding=false] - If true, only return tiles that collide
+     * on at least one side.
+     * @param {boolean} [filteringOptions.hasInterestingFace=false] - If true, only return tiles that
+     * have at least one interesting face.
+     * @param {Phaser.Tilemaps.LayerData} layer - [description]
+     *
+     * @return {Phaser.Tilemaps.Tile|null} Returns a Tiles, or null if the layer given was invalid.
      */
     findTile: function (callback, context, tileX, tileY, width, height, filteringOptions, layer)
     {
         layer = this.getLayer(layer);
+
         if (layer === null) { return null; }
+
         return TilemapComponents.FindTile(callback, context, tileX, tileY, width, height, filteringOptions, layer);
     },
 
     /**
-     * See component documentation. If no layer specified, the map's current layer is used.
+     * For each tile in the given rectangular area (in tile coordinates) of the layer, run the given
+     * callback. Similar to Array.prototype.forEach in vanilla JS.
+     * 
+     * If no layer specified, the map's current layer is used.
      *
-     * @return {this|null} Returns this, or null if the layer given was invalid.
+     * @method Phaser.Tilemaps.Tilemap#forEachTile
+     * @since 3.0.0
+     *
+     * @param {function} callback - The callback. Each tile in the given area will be passed to this
+     * callback as the first and only parameter.
+     * @param {object} [context] - The context under which the callback should be run.
+     * @param {integer} [tileX=0] - [description]
+     * @param {integer} [tileY=0] - [description]
+     * @param {integer} [width=max width based on tileX] - [description]
+     * @param {integer} [height=max height based on tileY] - [description]
+     * @param {object} [filteringOptions] - Optional filters to apply when getting the tiles.
+     * @param {boolean} [filteringOptions.isNotEmpty=false] - If true, only return tiles that don't have
+     * -1 for an index.
+     * @param {boolean} [filteringOptions.isColliding=false] - If true, only return tiles that collide
+     * on at least one side.
+     * @param {boolean} [filteringOptions.hasInterestingFace=false] - If true, only return tiles that
+     * have at least one interesting face.
+     * @param {LayerData} layer - [description]
+     *
+     * @return {Phaser.Tilemaps.Tilemap|null} Returns this, or null if the layer given was invalid.
      */
     forEachTile: function (callback, context, tileX, tileY, width, height, filteringOptions, layer)
     {
         layer = this.getLayer(layer);
+
         if (layer !== null)
         {
             TilemapComponents.ForEachTile(callback, context, tileX, tileY, width, height, filteringOptions, layer);
         }
+
         return this;
     },
 
     /**
      * Gets the image layer index based on its name.
      *
-     * @method Phaser.Tilemap#getImageIndex
+     * @method Phaser.Tilemaps.Tilemap#getImageIndex
+     * @since 3.0.0
+     *
      * @param {string} name - The name of the image to get.
+     * 
      * @return {integer} The index of the image in this tilemap, or null if not found.
      */
     getImageIndex: function (name)
@@ -689,11 +926,15 @@ var Tilemap = new Class({
     },
 
     /**
-     * Internally used. Returns the index of the object in one of the Tilemap's arrays whose name
+     * Internally used. Returns the index of the object in one of the Tilemaps arrays whose name
      * property matches the given `name`.
+     *
+     * @method Phaser.Tilemaps.Tilemap#getIndex
+     * @since 3.0.0
      *
      * @param {array} location - The Tilemap array to search.
      * @param {string} name - The name of the array element to get.
+     * 
      * @return {number} The index of the element in the array, or null if not found.
      */
     getIndex: function (location, name)
@@ -705,6 +946,7 @@ var Tilemap = new Class({
                 return i;
             }
         }
+
         return null;
     },
 
@@ -712,14 +954,19 @@ var Tilemap = new Class({
      * Gets the LayerData from this.layers that is associated with `layer`, or null if an invalid
      * `layer` is given.
      *
-     * @param {string|integer|DynamicTilemapLayer|StaticTilemapLayer} [layer] - The name of the
+     * @method Phaser.Tilemaps.Tilemap#getLayer
+     * @since 3.0.0
+     *
+     * @param {string|integer|Phaser.Tilemaps.DynamicTilemapLayer|Phaser.Tilemaps.StaticTilemapLayer} [layer] - The name of the
      * layer from Tiled, the index of the layer in the map, a DynamicTilemapLayer or a
-     * StaticTilemapLayer. If not given will default to the map's current layer index.
-     * @return {LayerData} The corresponding LayerData within this.layers.
+     * StaticTilemapLayer. If not given will default to the maps current layer index.
+     * 
+     * @return {Phaser.Tilemaps.LayerData} The corresponding LayerData within this.layers.
      */
     getLayer: function (layer)
     {
         var index = this.getLayerIndex(layer);
+
         return index !== null ? this.layers[index] : null;
     },
 
@@ -727,12 +974,17 @@ var Tilemap = new Class({
      * Gets the ObjectLayer from this.objects that has the given `name`, or null if no ObjectLayer
      * is found with that name.
      *
+     * @method Phaser.Tilemaps.Tilemap#getObjectLayer
+     * @since 3.0.0
+     *
      * @param {string} [name] - The name of the object layer from Tiled.
-     * @return {ObjectLayer|null} The corresponding ObjectLayer within this.objects or null.
+     * 
+     * @return {Phaser.Tilemaps.ObjectLayer|null} The corresponding ObjectLayer within this.objects or null.
      */
     getObjectLayer: function (name)
     {
         var index = this.getIndex(this.objects, name);
+
         return index !== null ? this.objects[index] : null;
     },
 
@@ -740,9 +992,13 @@ var Tilemap = new Class({
      * Gets the LayerData index of the given `layer` within this.layers, or null if an invalid
      * `layer` is given.
      *
-     * @param {string|integer|DynamicTilemapLayer|StaticTilemapLayer} [layer] - The name of the
+     * @method Phaser.Tilemaps.Tilemap#getLayerIndex
+     * @since 3.0.0
+     *
+     * @param {string|integer|Phaser.Tilemaps.DynamicTilemapLayer|Phaser.Tilemaps.StaticTilemapLayer} [layer] - The name of the
      * layer from Tiled, the index of the layer in the map, a DynamicTilemapLayer or a
      * StaticTilemapLayer. If not given will default to the map's current layer index.
+     * 
      * @return {integer} The LayerData index within this.layers.
      */
     getLayerIndex: function (layer)
@@ -773,7 +1029,11 @@ var Tilemap = new Class({
      * Gets the index of the LayerData within this.layers that has the given `name`, or null if an
      * invalid `name` is given.
      *
+     * @method Phaser.Tilemaps.Tilemap#getLayerIndexByName
+     * @since 3.0.0
+     *
      * @param {string} name - The name of the layer to get.
+     * 
      * @return {integer} The LayerData index within this.layers.
      */
     getLayerIndexByName: function (name)
@@ -782,62 +1042,145 @@ var Tilemap = new Class({
     },
 
     /**
-     * See component documentation. If no layer specified, the map's current layer is used.
+     * Gets a tile at the given tile coordinates from the given layer.
+     * If no layer specified, the map's current layer is used.
      *
-     * @return {Tile|null} Returns a Tile, or null if the layer given was invalid.
+     * @method Phaser.Tilemaps.Tilemap#getTileAt
+     * @since 3.0.0
+     * 
+     * @param {integer} tileX - X position to get the tile from (given in tile units, not pixels).
+     * @param {integer} tileY - Y position to get the tile from (given in tile units, not pixels).
+     * @param {boolean} [nonNull=false] - If true getTile won't return null for empty tiles, but a Tile
+     * object with an index of -1.
+     * @param {Phaser.Tilemaps.LayerData} layer - [description]
+     *
+     * @return {Phaser.Tilemaps.Tile|null} Returns a Tile, or null if the layer given was invalid.
      */
     getTileAt: function (tileX, tileY, nonNull, layer)
     {
         layer = this.getLayer(layer);
+
         if (layer === null) { return null; }
+
         return TilemapComponents.GetTileAt(tileX, tileY, nonNull, layer);
     },
 
     /**
-     * See component documentation. If no layer specified, the map's current layer is used.
+     * Gets a tile at the given world coordinates from the given layer.
+     * If no layer specified, the map's current layer is used.
      *
-     * @return {Tile|null} Returns a Tile, or null if the layer given was invalid.
+     * @method Phaser.Tilemaps.Tilemap#getTileAtWorldXY
+     * @since 3.0.0
+     * 
+     * @param {number} worldX - X position to get the tile from (given in pixels)
+     * @param {number} worldY - Y position to get the tile from (given in pixels)
+     * @param {boolean} [nonNull=false] - If true, function won't return null for empty tiles, but a Tile
+     * object with an index of -1.
+     * @param {Phaser.Cameras.Scene2D.Camera} [camera=main camera] - [description]
+     * @param {Phaser.Tilemaps.LayerData} layer - [description]
+     *
+     * @return {Phaser.Tilemaps.Tile|null} Returns a Tile, or null if the layer given was invalid.
      */
     getTileAtWorldXY: function (worldX, worldY, nonNull, camera, layer)
     {
         layer = this.getLayer(layer);
+
+
         if (layer === null) { return null; }
+
         return TilemapComponents.GetTileAtWorldXY(worldX, worldY, nonNull, camera, layer);
     },
 
     /**
-     * See component documentation. If no layer specified, the map's current layer is used.
+     * Gets the tiles in the given rectangular area (in tile coordinates) of the layer.
+     * If no layer specified, the maps current layer is used.
      *
-     * @return {Tile[]|null} Returns an array of Tiles, or null if the layer given was invalid.
+     * @method Phaser.Tilemaps.Tilemap#getTilesWithin
+     * @since 3.0.0
+     * 
+     * @param {integer} [tileX=0] - [description]
+     * @param {integer} [tileY=0] - [description]
+     * @param {integer} [width=max width based on tileX] - [description]
+     * @param {integer} [height=max height based on tileY] - [description]
+     * @param {object} [filteringOptions] - Optional filters to apply when getting the tiles.
+     * @param {boolean} [filteringOptions.isNotEmpty=false] - If true, only return tiles that don't have
+     * -1 for an index.
+     * @param {boolean} [filteringOptions.isColliding=false] - If true, only return tiles that collide on
+     * at least one side.
+     * @param {boolean} [filteringOptions.hasInterestingFace=false] - If true, only return tiles that
+     * have at least one interesting face.
+     * @param {Phaser.Tilemaps.LayerData} layer - [description]
+     *
+     * @return {Phaser.Tilemaps.Tile[]|null} Returns an array of Tiles, or null if the layer given was invalid.
      */
     getTilesWithin: function (tileX, tileY, width, height, filteringOptions, layer)
     {
         layer = this.getLayer(layer);
+
         if (layer === null) { return null; }
+
         return TilemapComponents.GetTilesWithin(tileX, tileY, width, height, filteringOptions, layer);
     },
 
     /**
-     * See component documentation. If no layer specified, the map's current layer is used.
+     * Gets the tiles that overlap with the given shape in the given layer. The shape must be a Circle,
+     * Line, Rectangle or Triangle. The shape should be in world coordinates.
+     * If no layer specified, the maps current layer is used.
      *
-     * @return {Tile[]|null} Returns an array of Tiles, or null if the layer given was invalid.
+     * @method Phaser.Tilemaps.Tilemap#getTilesWithinShape
+     * @since 3.0.0
+     * 
+     * @param {Phaser.Geom.Circle|Phaser.Geom.Line|Phaser.Geom.Rectangle|Phaser.Geom.Triangle} shape - A shape in world (pixel) coordinates
+     * @param {object} [filteringOptions] - Optional filters to apply when getting the tiles.
+     * @param {boolean} [filteringOptions.isNotEmpty=false] - If true, only return tiles that don't have
+     * -1 for an index.
+     * @param {boolean} [filteringOptions.isColliding=false] - If true, only return tiles that collide on
+     * at least one side.
+     * @param {boolean} [filteringOptions.hasInterestingFace=false] - If true, only return tiles that
+     * have at least one interesting face.
+     * @param {Phaser.Cameras.Scene2D.Camera} [camera=main camera] - [description]
+     * @param {Phaser.Tilemaps.LayerData} layer - [description]
+     *
+     * @return {Phaser.Tilemaps.Tile[]|null} Returns an array of Tiles, or null if the layer given was invalid.
      */
     getTilesWithinShape: function (shape, filteringOptions, camera, layer)
     {
         layer = this.getLayer(layer);
+
         if (layer === null) { return null; }
+
         return TilemapComponents.GetTilesWithinShape(shape, filteringOptions, camera, layer);
     },
 
     /**
-     * See component documentation. If no layer specified, the map's current layer is used.
+     * Gets the tiles in the given rectangular area (in world coordinates) of the layer.
+     * If no layer specified, the maps current layer is used.
      *
-     * @return {Tile[]|null} Returns an array of Tiles, or null if the layer given was invalid.
+     * @method Phaser.Tilemaps.Tilemap#getTilesWithinWorldXY
+     * @since 3.0.0
+     * 
+     * @param {number} worldX - [description]
+     * @param {number} worldY - [description]
+     * @param {number} width - [description]
+     * @param {number} height - [description]
+     * @param {object} [filteringOptions] - Optional filters to apply when getting the tiles.
+     * @param {boolean} [filteringOptions.isNotEmpty=false] - If true, only return tiles that don't have
+     * -1 for an index.
+     * @param {boolean} [filteringOptions.isColliding=false] - If true, only return tiles that collide on
+     * at least one side.
+     * @param {boolean} [filteringOptions.hasInterestingFace=false] - If true, only return tiles that
+     * have at least one interesting face.
+     * @param {Phaser.Cameras.Scene2D.Camera} [camera=main camera] - [description]
+     * @param {Phaser.Tilemaps.LayerData} layer - [description]
+     *
+     * @return {Phaser.Tilemaps.Tile[]|null} Returns an array of Tiles, or null if the layer given was invalid.
      */
     getTilesWithinWorldXY: function (worldX, worldY, width, height, filteringOptions, camera, layer)
     {
         layer = this.getLayer(layer);
+
         if (layer === null) { return null; }
+
         return TilemapComponents.GetTilesWithinWorldXY(worldX, worldY, width, height, filteringOptions, camera, layer);
     },
 
@@ -845,7 +1188,11 @@ var Tilemap = new Class({
      * Gets the index of the Tileset within this.tilesets that has the given `name`, or null if an
      * invalid `name` is given.
      *
+     * @method Phaser.Tilemaps.Tilemap#getTilesetIndex
+     * @since 3.0.0
+     *
      * @param {string} name - The name of the Tileset to get.
+     * 
      * @return {integer} The Tileset index within this.tilesets.
      */
     getTilesetIndex: function (name)
@@ -854,33 +1201,61 @@ var Tilemap = new Class({
     },
 
     /**
-     * See component documentation. If no layer specified, the map's current layer is used.
+     * Checks if there is a tile at the given location (in tile coordinates) in the given layer. Returns
+     * false if there is no tile or if the tile at that location has an index of -1.
+     *
+     * If no layer specified, the map's current layer is used.
+     *
+     * @method Phaser.Tilemaps.Tilemap#hasTileAt
+     * @since 3.0.0
+     * 
+     * @param {integer} tileX - [description]
+     * @param {integer} tileY - [description]
+     * @param {Phaser.Tilemaps.LayerData} layer - [description]
      *
      * @return {boolean|null} Returns a boolean, or null if the layer given was invalid.
      */
     hasTileAt: function (tileX, tileY, layer)
     {
         layer = this.getLayer(layer);
+
         if (layer === null) { return null; }
+
         return TilemapComponents.HasTileAt(tileX, tileY, layer);
     },
 
     /**
-     * See component documentation. If no layer specified, the map's current layer is used.
+     * Checks if there is a tile at the given location (in world coordinates) in the given layer. Returns
+     * false if there is no tile or if the tile at that location has an index of -1.
+     * 
+     * If no layer specified, the maps current layer is used.
+     *
+     * @method Phaser.Tilemaps.Tilemap#hasTileAtWorldXY
+     * @since 3.0.0
+     *
+     * @param {number} worldX - [description]
+     * @param {number} worldY - [description]
+     * @param {Phaser.Cameras.Scene2D.Camera} [camera=main camera] - [description]
+     * @param {Phaser.Tilemaps.LayerData} layer - [description]
      *
      * @return {boolean|null} Returns a boolean, or null if the layer given was invalid.
      */
     hasTileAtWorldXY: function (worldX, worldY, camera, layer)
     {
         layer = this.getLayer(layer);
+
         if (layer === null) { return null; }
+
         return TilemapComponents.HasTileAtWorldXY(worldX, worldY, camera, layer);
     },
 
     /**
      * The LayerData object that is currently selected in the map. You can set this property using
      * any type supported by setLayer.
-     * @property {LayerData} layer
+     * 
+     * @name Phaser.Tilemaps.Tilemap#layer
+     * @type {Phaser.Tilemaps.LayerData}
+     * @since 3.0.0
      */
     layer: {
         get: function ()
@@ -895,90 +1270,194 @@ var Tilemap = new Class({
     },
 
     /**
-     * See component documentation. If no layer specified, the map's current layer is used. This
-     * cannot be applied to StaticTilemapLayers.
+     * Puts a tile at the given tile coordinates in the specified layer. You can pass in either an index
+     * or a Tile object. If you pass in a Tile, all attributes will be copied over to the specified
+     * location. If you pass in an index, only the index at the specified location will be changed.
+     * Collision information will be recalculated at the specified location.
+     * 
+     * If no layer specified, the maps current layer is used.
+     * 
+     * This cannot be applied to StaticTilemapLayers.
      *
-     * @return {Tile|null} Returns a Tile, or null if the layer given was invalid.
+     * @method Phaser.Tilemaps.Tilemap#putTileAt
+     * @since 3.0.0
+     *
+     * @param {integer|Phaser.Tilemaps.Tile} tile - The index of this tile to set or a Tile object.
+     * @param {integer} tileX - [description]
+     * @param {integer} tileY - [description]
+     * @param {boolean} [recalculateFaces=true] - [description]
+     * @param {Phaser.Tilemaps.LayerData} layer - [description]
+     * 
+     * @return {Phaser.Tilemaps.Tile|null} Returns a Tile, or null if the layer given was invalid.
      */
     putTileAt: function (tile, tileX, tileY, recalculateFaces, layer)
     {
         layer = this.getLayer(layer);
+
         if (this._isStaticCall(layer, 'putTileAt')) { return null; }
+
         if (layer === null) { return null; }
+
         return TilemapComponents.PutTileAt(tile, tileX, tileY, recalculateFaces, layer);
     },
 
     /**
-     * See component documentation. If no layer specified, the map's current layer is used. This
+     * Puts a tile at the given world coordinates (pixels) in the specified layer. You can pass in either
+     * an index or a Tile object. If you pass in a Tile, all attributes will be copied over to the
+     * specified location. If you pass in an index, only the index at the specified location will be
+     * changed. Collision information will be recalculated at the specified location.
+     *
+     * If no layer specified, the maps current layer is used. This
      * cannot be applied to StaticTilemapLayers.
      *
-     * @return {Tile|null} Returns a Tile, or null if the layer given was invalid.
+     * @method Phaser.Tilemaps.Tilemap#putTileAtWorldXY
+     * @since 3.0.0
+     * 
+     * @param {integer|Phaser.Tilemaps.Tile} tile - The index of this tile to set or a Tile object.
+     * @param {integer} worldX - [description]
+     * @param {integer} worldY - [description]
+     * @param {boolean} [recalculateFaces=true] - [description]
+     * @param {Phaser.Cameras.Scene2D.Camera} [camera=main camera] - [description]
+     * @param {Phaser.Tilemaps.LayerData} layer - [description]
+     *
+     * @return {Phaser.Tilemaps.Tile|null} Returns a Tile, or null if the layer given was invalid.
      */
     putTileAtWorldXY: function (tile, worldX, worldY, recalculateFaces, camera, layer)
     {
         layer = this.getLayer(layer);
+
         if (this._isStaticCall(layer, 'putTileAtWorldXY')) { return null; }
+
         if (layer === null) { return null; }
+
         return TilemapComponents.PutTileAtWorldXY(tile, worldX, worldY, recalculateFaces, camera, layer);
     },
 
     /**
-     * See component documentation. If no layer specified, the map's current layer is used. This
-     * cannot be applied to StaticTilemapLayers.
+     * Puts an array of tiles or a 2D array of tiles at the given tile coordinates in the specified
+     * layer. The array can be composed of either tile indexes or Tile objects. If you pass in a Tile,
+     * all attributes will be copied over to the specified location. If you pass in an index, only the
+     * index at the specified location will be changed. Collision information will be recalculated
+     * within the region tiles were changed.
+     * 
+     * If no layer specified, the maps current layer is used.
+     * This cannot be applied to StaticTilemapLayers.
      *
-     * @return {this|null} Returns this, or null if the layer given was invalid.
+     * @method Phaser.Tilemaps.Tilemap#putTilesAt
+     * @since 3.0.0
+     * 
+     * @param {integer[]|integer[][]|Phaser.Tilemaps.Tile[]|Phaser.Tilemaps.Tile[][]} tile - A row (array) or grid (2D array) of Tiles
+     * or tile indexes to place.
+     * @param {integer} tileX - [description]
+     * @param {integer} tileY - [description]
+     * @param {boolean} [recalculateFaces=true] - [description]
+     * @param {Phaser.Tilemaps.LayerData} layer - [description]
+     *
+     * @return {Phaser.Tilemaps.Tilemap|null} Returns this, or null if the layer given was invalid.
      */
     putTilesAt: function (tilesArray, tileX, tileY, recalculateFaces, layer)
     {
         layer = this.getLayer(layer);
+
         if (this._isStaticCall(layer, 'putTilesAt')) { return this; }
+
         if (layer !== null)
         {
             TilemapComponents.PutTilesAt(tilesArray, tileX, tileY, recalculateFaces, layer);
         }
+
         return this;
     },
 
     /**
-     * See component documentation. If no layer specified, the map's current layer is used. This
-     * cannot be applied to StaticTilemapLayers.
+     * Randomizes the indexes of a rectangular region of tiles (in tile coordinates) within the
+     * specified layer. Each tile will recieve a new index. If an array of indexes is passed in, then
+     * those will be used for randomly assigning new tile indexes. If an array is not provided, the
+     * indexes found within the region (excluding -1) will be used for randomly assigning new tile
+     * indexes. This method only modifies tile indexes and does not change collision information.
      *
-     * @return {this|null} Returns this, or null if the layer given was invalid.
+     * If no layer specified, the maps current layer is used.
+     * This cannot be applied to StaticTilemapLayers.
+     *
+     * @method Phaser.Tilemaps.Tilemap#randomize
+     * @since 3.0.0
+     * 
+     * @param {integer} [tileX=0] - [description]
+     * @param {integer} [tileY=0] - [description]
+     * @param {integer} [width=max width based on tileX] - [description]
+     * @param {integer} [height=max height based on tileY] - [description]
+     * @param {integer[]} [indexes] - An array of indexes to randomly draw from during randomization.
+     * @param {Phaser.Tilemaps.LayerData} layer - [description]
+     *
+     * @return {Phaser.Tilemaps.Tilemap|null} Returns this, or null if the layer given was invalid.
      */
     randomize: function (tileX, tileY, width, height, indexes, layer)
     {
         layer = this.getLayer(layer);
+
         if (this._isStaticCall(layer, 'randomize')) { return this; }
+
         if (layer !== null)
         {
             TilemapComponents.Randomize(tileX, tileY, width, height, indexes, layer);
         }
+
         return this;
     },
 
     /**
-     * See component documentation. If no layer specified, the map's current layer is used.
+     * Calculates interesting faces at the given tile coordinates of the specified layer. Interesting
+     * faces are used internally for optimizing collisions against tiles. This method is mostly used
+     * internally to optimize recalculating faces when only one tile has been changed.
+     * 
+     * If no layer specified, the maps current layer is used.
      *
-     * @return {this|null} Returns this, or null if the layer given was invalid.
+     * @method Phaser.Tilemaps.Tilemap#calculateFacesAt
+     * @since 3.0.0
+     *
+     * @param {integer} tileX - [description]
+     * @param {integer} tileY - [description]
+     * @param {Phaser.Tilemaps.LayerData} layer - [description]
+     *
+     * @return {Phaser.Tilemaps.Tilemap|null} Returns this, or null if the layer given was invalid.
      */
     calculateFacesAt: function (tileX, tileY, layer)
     {
         layer = this.getLayer(layer);
+
         if (layer === null) { return this; }
+
         TilemapComponents.CalculateFacesAt(tileX, tileY, layer);
+
         return this;
     },
 
     /**
-     * See component documentation. If no layer specified, the map's current layer is used.
+     * Calculates interesting faces within the rectangular area specified (in tile coordinates) of the
+     * layer. Interesting faces are used internally for optimizing collisions against tiles. This method
+     * is mostly used internally.
+     * 
+     * If no layer specified, the map's current layer is used.
      *
-     * @return {this|null} Returns this, or null if the layer given was invalid.
+     * @method Phaser.Tilemaps.Tilemap#calculateFacesWithin
+     * @since 3.0.0
+     * 
+     * @param {integer} [tileX=0] - [description]
+     * @param {integer} [tileY=0] - [description]
+     * @param {integer} [width=max width based on tileX] - [description]
+     * @param {integer} [height=max height based on tileY] - [description]
+     * @param {Phaser.Tilemaps.LayerData} layer - [description]
+     *
+     * @return {Phaser.Tilemaps.Tilemap|null} Returns this, or null if the layer given was invalid.
      */
     calculateFacesWithin: function (tileX, tileY, width, height, layer)
     {
         layer = this.getLayer(layer);
+
         if (layer === null) { return this; }
+
         TilemapComponents.CalculateFacesWithin(tileX, tileY, width, height, layer);
+
         return this;
     },
 
@@ -986,7 +1465,10 @@ var Tilemap = new Class({
      * Removes all layers from this Tilemap and destroys any associated StaticTilemapLayers or
      * DynamicTilemapLayers.
      *
-     * @return {this}
+     * @method Phaser.Tilemaps.Tilemap#removeAllLayers
+     * @since 3.0.0
+     *
+     * @return {Phaser.Tilemaps.Tilemap} This Tilemap object.
      */
     removeAllLayers: function ()
     {
@@ -998,36 +1480,73 @@ var Tilemap = new Class({
                 this.layers[i].tilemapLayer.destroy();
             }
         }
+
         this.layers.length = 0;
         this.currentLayerIndex = 0;
+
         return this;
     },
 
     /**
-     * See component documentation. If no layer specified, the map's current layer is used. This
-     * cannot be applied to StaticTilemapLayers.
+     * Removes the tile at the given tile coordinates in the specified layer and updates the layer's
+     * collision information.
+     * 
+     * If no layer specified, the maps current layer is used.
+     * This cannot be applied to StaticTilemapLayers.
      *
-     * @return {Tile|null} Returns a Tile, or null if the layer given was invalid.
+     * @method Phaser.Tilemaps.Tilemap#removeTileAt
+     * @since 3.0.0
+     *
+     * @param {integer|Phaser.Tilemaps.Tile} tile - The index of this tile to set or a Tile object.
+     * @param {integer} tileX - [description]
+     * @param {integer} tileY - [description]
+     * @param {boolean} [replaceWithNull=true] - If true, this will replace the tile at the specified
+     * location with null instead of a Tile with an index of -1.
+     * @param {boolean} [recalculateFaces=true] - [description]
+     * @param {Phaser.Tilemaps.LayerData} layer - [description]
+     *
+     * @return {Phaser.Tilemaps.Tile|null} Returns a Tile, or null if the layer given was invalid.
      */
     removeTileAt: function (tileX, tileY, replaceWithNull, recalculateFaces, layer)
     {
         layer = this.getLayer(layer);
+
         if (this._isStaticCall(layer, 'removeTileAt')) { return null; }
+
         if (layer === null) { return null; }
+
         return TilemapComponents.RemoveTileAt(tileX, tileY, replaceWithNull, recalculateFaces, layer);
     },
 
     /**
-     * See component documentation. If no layer specified, the map's current layer is used. This
-     * cannot be applied to StaticTilemapLayers.
+     * Removes the tile at the given world coordinates in the specified layer and updates the layer's
+     * collision information.
+     * 
+     * If no layer specified, the maps current layer is used.
+     * This cannot be applied to StaticTilemapLayers.
      *
-     * @return {Tile|null} Returns a Tile, or null if the layer given was invalid.
+     * @method Phaser.Tilemaps.Tilemap#removeTileAtWorldXY
+     * @since 3.0.0
+     * 
+     * @param {integer|Phaser.Tilemaps.Tile} tile - The index of this tile to set or a Tile object.
+     * @param {number} worldX - [description]
+     * @param {number} worldY - [description]
+     * @param {boolean} [replaceWithNull=true] - If true, this will replace the tile at the specified
+     * location with null instead of a Tile with an index of -1.
+     * @param {boolean} [recalculateFaces=true] - [description]
+     * @param {Phaser.Cameras.Scene2D.Camera} [camera=main camera] - [description]
+     * @param {Phaser.Tilemaps.LayerData} layer - [description]
+     *
+     * @return {Phaser.Tilemaps.Tile|null} Returns a Tile, or null if the layer given was invalid.
      */
     removeTileAtWorldXY: function (worldX, worldY, replaceWithNull, recalculateFaces, camera, layer)
     {
         layer = this.getLayer(layer);
+
         if (this._isStaticCall(layer, 'removeTileAtWorldXY')) { return null; }
+
         if (layer === null) { return null; }
+
         return TilemapComponents.RemoveTileAtWorldXY(worldX, worldY, replaceWithNull, recalculateFaces, camera, layer);
     },
 

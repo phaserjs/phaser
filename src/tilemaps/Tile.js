@@ -46,7 +46,7 @@ var Tile = new Class({
          * The LayerData in the Tilemap data that this tile belongs to.
          * 
          * @name Phaser.Tilemaps.ImageCollection#layer
-         * @property {Phaser.Tilemaps.LayerData}
+         * @type {Phaser.Tilemaps.LayerData}
          * @since 3.0.0
          */
         this.layer = layer;
@@ -56,7 +56,7 @@ var Tile = new Class({
          * represents a blank tile.
          * 
          * @name Phaser.Tilemaps.ImageCollection#index
-         * @property {integer}
+         * @type {integer}
          * @since 3.0.0
          */
         this.index = index;
@@ -65,7 +65,7 @@ var Tile = new Class({
          * The x map coordinate of this tile in tile units.
          * 
          * @name Phaser.Tilemaps.ImageCollection#x
-         * @property {integer}
+         * @type {integer}
          * @since 3.0.0
          */
         this.x = x;
@@ -74,7 +74,7 @@ var Tile = new Class({
          * The y map coordinate of this tile in tile units.
          * 
          * @name Phaser.Tilemaps.ImageCollection#y
-         * @property {integer}
+         * @type {integer}
          * @since 3.0.0
          */
         this.y = y;
@@ -83,7 +83,7 @@ var Tile = new Class({
          * The width of the tile in pixels.
          * 
          * @name Phaser.Tilemaps.ImageCollection#width
-         * @property {integer}
+         * @type {integer}
          * @since 3.0.0
          */
         this.width = width;
@@ -92,7 +92,7 @@ var Tile = new Class({
          * The height of the tile in pixels.
          * 
          * @name Phaser.Tilemaps.ImageCollection#height
-         * @property {integer}
+         * @type {integer}
          * @since 3.0.0
          */
         this.height = height;
@@ -102,7 +102,7 @@ var Tile = new Class({
          * within one map, but they are still placed at intervals of the base tile size.
          * 
          * @name Phaser.Tilemaps.ImageCollection#baseWidth
-         * @property {integer}
+         * @type {integer}
          * @since 3.0.0
          */
         this.baseWidth = (baseWidth !== undefined) ? baseWidth : width;
@@ -112,7 +112,7 @@ var Tile = new Class({
          * within one map, but they are still placed at intervals of the base tile size.
          * 
          * @name Phaser.Tilemaps.ImageCollection#baseHeight
-         * @property {integer}
+         * @type {integer}
          * @since 3.0.0
          */
         this.baseHeight = (baseHeight !== undefined) ? baseHeight : height;
@@ -123,7 +123,7 @@ var Tile = new Class({
          * scroll, layer scale or layer position.
          * 
          * @name Phaser.Tilemaps.ImageCollection#pixelX
-         * @property {number}
+         * @type {number}
          * @since 3.0.0
          */
         this.pixelX = 0;
@@ -134,7 +134,7 @@ var Tile = new Class({
          * scroll, layer scale or layer position.
          * 
          * @name Phaser.Tilemaps.ImageCollection#pixelY
-         * @property {number}
+         * @type {number}
          * @since 3.0.0
          */
         this.pixelY = 0;
@@ -145,7 +145,7 @@ var Tile = new Class({
          * Tile specific properties. These usually come from Tiled.
          * 
          * @name Phaser.Tilemaps.ImageCollection#properties
-         * @property {object}
+         * @type {object}
          * @since 3.0.0
          */
         this.properties = {};
@@ -154,7 +154,7 @@ var Tile = new Class({
          * The rotation angle of this tile.
          * 
          * @name Phaser.Tilemaps.ImageCollection#rotation
-         * @property {number}
+         * @type {number}
          * @since 3.0.0
          */
         this.rotation = 0;
@@ -163,7 +163,7 @@ var Tile = new Class({
          * Whether the tile should collide with any object on the left side.
          * 
          * @name Phaser.Tilemaps.ImageCollection#collideLeft
-         * @property {boolean}
+         * @type {boolean}
          * @since 3.0.0
          */
         this.collideLeft = false;
@@ -172,7 +172,7 @@ var Tile = new Class({
          * Whether the tile should collide with any object on the right side.
          * 
          * @name Phaser.Tilemaps.ImageCollection#collideRight
-         * @property {boolean}
+         * @type {boolean}
          * @since 3.0.0
          */
         this.collideRight = false;
@@ -181,7 +181,7 @@ var Tile = new Class({
          * Whether the tile should collide with any object on the top side.
          * 
          * @name Phaser.Tilemaps.ImageCollection#collideUp
-         * @property {boolean}
+         * @type {boolean}
          * @since 3.0.0
          */
         this.collideUp = false;
@@ -190,7 +190,7 @@ var Tile = new Class({
          * Whether the tile should collide with any object on the bottom side.
          * 
          * @name Phaser.Tilemaps.ImageCollection#collideDown
-         * @property {boolean}
+         * @type {boolean}
          * @since 3.0.0
          */
         this.collideDown = false;
@@ -199,7 +199,7 @@ var Tile = new Class({
          * Whether the tile's left edge is interesting for collisions.
          * 
          * @name Phaser.Tilemaps.ImageCollection#faceLeft
-         * @property {boolean}
+         * @type {boolean}
          * @since 3.0.0
          */
         this.faceLeft = false;
@@ -208,7 +208,7 @@ var Tile = new Class({
          * Whether the tile's right edge is interesting for collisions.
          * 
          * @name Phaser.Tilemaps.ImageCollection#faceRight
-         * @property {boolean}
+         * @type {boolean}
          * @since 3.0.0
          */
         this.faceRight = false;
@@ -217,7 +217,7 @@ var Tile = new Class({
          * Whether the tile's top edge is interesting for collisions.
          * 
          * @name Phaser.Tilemaps.ImageCollection#faceTop
-         * @property {boolean}
+         * @type {boolean}
          * @since 3.0.0
          */
         this.faceTop = false;
@@ -226,7 +226,7 @@ var Tile = new Class({
          * Whether the tile's bottom edge is interesting for collisions.
          * 
          * @name Phaser.Tilemaps.ImageCollection#faceBottom
-         * @property {boolean}
+         * @type {boolean}
          * @since 3.0.0
          */
         this.faceBottom = false;
@@ -235,7 +235,7 @@ var Tile = new Class({
          * Tile collision callback.
          * 
          * @name Phaser.Tilemaps.ImageCollection#collisionCallback
-         * @property {function}
+         * @type {function}
          * @since 3.0.0
          */
         this.collisionCallback = null;
@@ -244,7 +244,7 @@ var Tile = new Class({
          * The context in which the collision callback will be called.
          * 
          * @name Phaser.Tilemaps.ImageCollection#collisionCallbackContext
-         * @property {object}
+         * @type {object}
          * @since 3.0.0
          */
         this.collisionCallbackContext = this;
@@ -254,7 +254,7 @@ var Tile = new Class({
          * the 4 corner tint component on other GameObjects.
          * 
          * @name Phaser.Tilemaps.ImageCollection#tint
-         * @property {number}
+         * @type {number}
          * @default
          * @since 3.0.0
          */
@@ -264,7 +264,7 @@ var Tile = new Class({
          * An empty object where physics-engine specific information (e.g. bodies) may be stored.
          * 
          * @name Phaser.Tilemaps.ImageCollection#physics
-         * @property {object}
+         * @type {object}
          * @since 3.0.0
          */
         this.physics = {};
