@@ -2067,82 +2067,156 @@ var Tilemap = new Class({
     },
 
     /**
+     * Converts from tile XY coordinates (tile units) to world XY coordinates (pixels), factoring in the
+     * layers position, scale and scroll. This will return a new Vector2 object or update the given
+     * `point` object.
+     * 
      * If no layer specified, the maps current layer is used.
      *
-     * @method Phaser.Tilemaps.Tilemap#removeTileAtWorldXY
+     * @method Phaser.Tilemaps.Tilemap#tileToWorldXY
      * @since 3.0.0
      *
-     * @return {Vector2|null} Returns a point, or null if the layer given was invalid.
+     * @param {integer} tileX - [description]
+     * @param {integer} tileY - [description]
+     * @param {Phaser.Math.Vector2} [point] - [description]
+     * @param {Phaser.Cameras.Scene2D.Camera} [camera=main camera] - [description]
+     * @param {Phaser.Tilemaps.LayerData} layer - [description]
+     *
+     * @return {Phaser.Math.Vector2|null} Returns a point, or null if the layer given was invalid.
      */
     tileToWorldXY: function (tileX, tileY, point, camera, layer)
     {
         layer = this.getLayer(layer);
+
         if (layer === null) { return null; }
+
         return TilemapComponents.TileToWorldXY(tileX, tileY, point, camera, layer);
     },
 
     /**
+     * Randomizes the indexes of a rectangular region of tiles (in tile coordinates) within the
+     * specified layer. Each tile will receive a new index. New indexes are drawn from the given
+     * weightedIndexes array. An example weighted array:
+     *
+     * [
+     *  { index: 6, weight: 4 },    // Probability of index 6 is 4 / 8
+     *  { index: 7, weight: 2 },    // Probability of index 7 would be 2 / 8
+     *  { index: 8, weight: 1.5 },  // Probability of index 8 would be 1.5 / 8
+     *  { index: 26, weight: 0.5 }  // Probability of index 27 would be 0.5 / 8
+     * ]
+     *
+     * The probability of any index being choose is (the index's weight) / (sum of all weights). This
+     * method only modifies tile indexes and does not change collision information.
+     * 
      * If no layer specified, the map's current layer is used. This
      * cannot be applied to StaticTilemapLayers.
      *
-     * @method Phaser.Tilemaps.Tilemap#removeTileAtWorldXY
+     * @method Phaser.Tilemaps.Tilemap#weightedRandomize
      * @since 3.0.0
+     *
+     * @param {integer} [tileX=0] - [description]
+     * @param {integer} [tileY=0] - [description]
+     * @param {integer} [width=max width based on tileX] - [description]
+     * @param {integer} [height=max height based on tileY] - [description]
+     * @param {object[]} [weightedIndexes] - An array of objects to randomly draw from during
+     * randomization. They should be in the form: { index: 0, weight: 4 } or
+     * { index: [0, 1], weight: 4 } if you wish to draw from multiple tile indexes.
+     * @param {Phaser.Tilemaps.LayerData} layer - [description]
      *
      * @returns {Phaser.Tilemaps.Tilemap|null} Return this Tilemap object, or null if the layer given was invalid.
      */
     weightedRandomize: function (tileX, tileY, width, height, weightedIndexes, layer)
     {
         layer = this.getLayer(layer);
+
         if (this._isStaticCall(layer, 'weightedRandomize')) { return this; }
+
         if (layer !== null)
         {
             TilemapComponents.WeightedRandomize(tileX, tileY, width, height, weightedIndexes, layer);
         }
+
         return this;
     },
 
     /**
+     * Converts from world X coordinates (pixels) to tile X coordinates (tile units), factoring in the
+     * layers position, scale and scroll.
+     * 
      * If no layer specified, the maps current layer is used.
      *
-     * @method Phaser.Tilemaps.Tilemap#removeTileAtWorldXY
+     * @method Phaser.Tilemaps.Tilemap#worldToTileX
      * @since 3.0.0
+     *
+     * @param {number} worldX - [description]
+     * @param {boolean} [snapToFloor=true] - Whether or not to round the tile coordinate down to the
+     * nearest integer.
+     * @param {Phaser.Cameras.Scene2D.Camera} [camera=main camera] - [description]
+     * @param {Phaser.Tilemaps.LayerData} layer - [description]
      *
      * @return {number|null} Returns a number, or null if the layer given was invalid.
      */
     worldToTileX: function (worldX, snapToFloor, camera, layer)
     {
         layer = this.getLayer(layer);
+
         if (layer === null) { return null; }
+
         return TilemapComponents.WorldToTileX(worldX, snapToFloor, camera, layer);
     },
 
     /**
+     * Converts from world Y coordinates (pixels) to tile Y coordinates (tile units), factoring in the
+     * layers position, scale and scroll.
+     * 
      * If no layer specified, the maps current layer is used.
      *
-     * @method Phaser.Tilemaps.Tilemap#removeTileAtWorldXY
+     * @method Phaser.Tilemaps.Tilemap#worldToTileY
      * @since 3.0.0
+     *
+     * @param {number} worldY - [description]
+     * @param {boolean} [snapToFloor=true] - Whether or not to round the tile coordinate down to the
+     * nearest integer.
+     * @param {Phaser.Cameras.Scene2D.Camera} [camera=main camera] - [description]
+     * @param {Phaser.Tilemaps.LayerData} layer - [description]
      *
      * @return {number|null} Returns a number, or null if the layer given was invalid.
      */
     worldToTileY: function (worldY, snapToFloor, camera, layer)
     {
         layer = this.getLayer(layer);
+
         if (layer === null) { return null; }
+
         return TilemapComponents.WorldToTileY(worldY, snapToFloor, camera, layer);
     },
 
     /**
+     * Converts from world XY coordinates (pixels) to tile XY coordinates (tile units), factoring in the
+     * layers position, scale and scroll. This will return a new Vector2 object or update the given
+     * `point` object.
+     * 
      * If no layer specified, the maps current layer is used.
      *
-     * @method Phaser.Tilemaps.Tilemap#removeTileAtWorldXY
+     * @method Phaser.Tilemaps.Tilemap#worldToTileXY
      * @since 3.0.0
      *
-     * @return {Vector2|null} Returns a point, or null if the layer given was invalid.
+     * @param {number} worldX - [description]
+     * @param {number} worldY - [description]
+     * @param {boolean} [snapToFloor=true] - Whether or not to round the tile coordinate down to the
+     * nearest integer.
+     * @param {Phaser.Math.Vector2} [point] - [description]
+     * @param {Phaser.Cameras.Scene2D.Camera} [camera=main camera] - [description]
+     * @param {Phaser.Tilemaps.LayerData} layer - [description]
+     *
+     * @return {Phaser.Math.Vector2|null} Returns a point, or null if the layer given was invalid.
      */
     worldToTileXY: function (worldX, worldY, snapToFloor, point, camera, layer)
     {
         layer = this.getLayer(layer);
+
         if (layer === null) { return null; }
+
         return TilemapComponents.WorldToTileXY(worldX, worldY, snapToFloor, point, camera, layer);
     },
 
