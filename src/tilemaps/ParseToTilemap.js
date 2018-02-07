@@ -1,6 +1,6 @@
 var Formats = require('./Formats');
-var Parse = require('./parsers/Parse');
 var MapData = require('./mapdata/MapData');
+var Parse = require('./parsers/Parse');
 var Tilemap = require('./Tilemap');
 
 /**
@@ -9,7 +9,10 @@ var Tilemap = require('./Tilemap');
  * a map from Tiled, the tileWidth, tileHeight, width & height will be pulled from the map data. For
  * an empty map, you should specify tileWidth, tileHeight, width & height.
  *
- * @param {Scene} scene - [description]
+ * @function Phaser.Tilemaps.ParseToTilemap
+ * @since 3.0.0
+ * 
+ * @param {Phaser.Scene} scene - The Scene to which this Tilemap belongs.
  * @param {string} [key] - The key in the Phaser cache that corresponds to the loaded tilemap data.
  * @param {integer} [tileWidth=32] - The width of a tile in pixels.
  * @param {integer} [tileHeight=32] - The height of a tile in pixels.
@@ -23,7 +26,8 @@ var Tilemap = require('./Tilemap');
  * the tile data doesn't need to change then setting this value to `true` will help with memory
  * consumption. However if your map is small or you need to update the tiles dynamically, then leave
  * the default value set.
- * @returns {Tilemap}
+ * 
+ * @returns {Phaser.Tilemaps.Tilemap}
  */
 var ParseToTilemap = function (scene, key, tileWidth, tileHeight, width, height, data, insertNull)
 {
@@ -68,4 +72,3 @@ var ParseToTilemap = function (scene, key, tileWidth, tileHeight, width, height,
 };
 
 module.exports = ParseToTilemap;
-

@@ -1,20 +1,11 @@
-var RND = require('./random-data-generator/RandomDataGenerator');
+var CONST = require('./const');
+var Extend = require('../utils/object/Extend');
 
 /**
  * @namespace Phaser.Math
  */
 
-module.exports = {
-
-    //  Consts
-    PI2: Math.PI * 2,
-    TAU: Math.PI * 0.5,
-    EPSILON: 1.0e-6,
-    DEG_TO_RAD: Math.PI / 180,
-    RAD_TO_DEG: 180 / Math.PI,
-
-    //  Random Data Generator
-    RND: new RND(),
+var PhaserMath = {
 
     //  Collections of functions
     Angle: require('./angle/'),
@@ -71,3 +62,11 @@ module.exports = {
     RotateVec3: require('./RotateVec3')
 
 };
+
+//   Merge in the consts
+
+PhaserMath = Extend(false, PhaserMath, CONST);
+
+//  Export it
+
+module.exports = PhaserMath;
