@@ -1,7 +1,7 @@
-var Class = require('../../../utils/Class');
-var Components = require('../../components');
+var Class = require('../../utils/Class');
+var Components = require('../../gameobjects/components');
 var DynamicTilemapLayerRender = require('./DynamicTilemapLayerRender');
-var GameObject = require('../../GameObject');
+var GameObject = require('../../gameobjects/GameObject');
 var TilemapComponents = require('../components');
 
 /**

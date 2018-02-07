@@ -1,4 +1,4 @@
-var GetFastValue = require('../../../../utils/object/GetFastValue');
+var GetFastValue = require('../../../utils/object/GetFastValue');
 
 var ParseImageLayers = function (json)
 {

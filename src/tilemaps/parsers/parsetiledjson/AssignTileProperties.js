@@ -1,5 +1,4 @@
-var Extend = require('../../../../utils/object/Extend');
-var GetValue = require('../../../../utils/object/GetValue');
+var Extend = require('../../../utils/object/Extend');
 
 // Copy properties from tileset to tiles
 var AssignTileProperties = function (mapData)

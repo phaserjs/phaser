@@ -1,5 +1,4 @@
-var GameObject = require('../../GameObject');
-var Utils = require('../../../renderer/webgl/Utils');
+var GameObject = require('../../gameobjects/GameObject');
 
 var DynamicTilemapLayerWebGLRenderer = function (renderer, tilemapLayer, interpolationPercentage, camera)
 {

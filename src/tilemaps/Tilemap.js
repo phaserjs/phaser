@@ -1,5 +1,5 @@
-var Class = require('../../utils/Class');
-var Extend = require('../../utils/object/Extend');
+var Class = require('../utils/Class');
+var Extend = require('../utils/object/Extend');
 var LayerData = require('./mapdata/LayerData');
 var StaticTilemapLayer = require('./staticlayer/StaticTilemapLayer.js');
 var DynamicTilemapLayer = require('./dynamiclayer/DynamicTilemapLayer.js');
@@ -7,8 +7,8 @@ var Tileset = require('./Tileset');
 var Formats = require('./Formats');
 var TilemapComponents = require('./components');
 var Tile = require('./Tile');
-var Rotate = require('../../math/Rotate');
-var DegToRad = require('../../math/DegToRad');
+var Rotate = require('../math/Rotate');
+var DegToRad = require('../math/DegToRad');
 
 /**
  * @classdesc

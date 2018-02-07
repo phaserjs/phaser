@@ -1,5 +1,5 @@
-var renderWebGL = require('../../../utils/NOOP');
-var renderCanvas = require('../../../utils/NOOP');
+var renderWebGL = require('../../utils/NOOP');
+var renderCanvas = require('../../utils/NOOP');
 
 if (WEBGL_RENDERER)
 {

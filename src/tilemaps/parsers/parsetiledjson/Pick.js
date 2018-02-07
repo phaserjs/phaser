@@ -1,4 +1,4 @@
-var HasValue = require('../../../../utils/object/HasValue');
+var HasValue = require('../../../utils/object/HasValue');
 
 var pick = function (object, keys)
 {

@@ -2,7 +2,7 @@ var Class = require('../../utils/Class');
 var CONST = require('../const');
 var File = require('../File');
 var FileTypesManager = require('../FileTypesManager');
-var TILEMAP_FORMATS = require('../../gameobjects/tilemap/Formats');
+var TILEMAP_FORMATS = require('../../tilemaps/Formats');
 
 //  Phaser.Loader.FileTypes.TilemapCSVFile
 

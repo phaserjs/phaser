@@ -1,6 +1,6 @@
-var Class = require('../../utils/Class');
-var Components = require('../components');
-var Rectangle = require('../../geom/rectangle');
+var Class = require('../utils/Class');
+var Components = require('../gameobjects/components');
+var Rectangle = require('../geom/rectangle');
 
 /**
  * @classdesc

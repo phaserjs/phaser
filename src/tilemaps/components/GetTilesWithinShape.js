@@ -4,9 +4,9 @@ var WorldToTileX = require('./WorldToTileX');
 var WorldToTileY = require('./WorldToTileY');
 var TileToWorldX = require('./TileToWorldX');
 var TileToWorldY = require('./TileToWorldY');
-var Geom = require('../../../geom/');
-var Intersects = require('../../../geom/intersects/');
-var NOOP = require('../../../utils/NOOP');
+var Geom = require('../../geom/');
+var Intersects = require('../../geom/intersects/');
+var NOOP = require('../../utils/NOOP');
 
 var TriangleToRectangle = function (triangle, rect)
 {

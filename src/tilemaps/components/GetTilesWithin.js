@@ -1,4 +1,4 @@
-var GetFastValue = require('../../../utils/object/GetFastValue');
+var GetFastValue = require('../../utils/object/GetFastValue');
 
 /**
  * Gets the tiles in the given rectangular area (in tile coordinates) of the layer.

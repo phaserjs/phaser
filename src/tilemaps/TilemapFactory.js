@@ -1,4 +1,4 @@
-var GameObjectFactory = require('../GameObjectFactory');
+var GameObjectFactory = require('../gameobjects/GameObjectFactory');
 var ParseToTilemap = require('./ParseToTilemap');
 
 //  When registering a factory function 'this' refers to the GameObjectFactory context.

@@ -1,4 +1,4 @@
-var GameObject = require('../../GameObject');
+var GameObject = require('../../gameobjects/GameObject');
 
 var StaticTilemapLayerCanvasRenderer = function (renderer, gameObject, interpolationPercentage, camera)
 {

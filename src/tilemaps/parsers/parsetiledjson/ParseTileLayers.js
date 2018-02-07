@@ -1,5 +1,5 @@
 var Base64Decode = require('./Base64Decode');
-var GetFastValue = require('../../../../utils/object/GetFastValue');
+var GetFastValue = require('../../../utils/object/GetFastValue');
 var LayerData = require('../../mapdata/LayerData');
 var ParseGID = require('./ParseGID');
 var Tile = require('../../Tile');

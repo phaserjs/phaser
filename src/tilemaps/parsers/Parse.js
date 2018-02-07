@@ -1,4 +1,3 @@
-
 var Parse2DArray = require('./Parse2DArray');
 var ParseCSV = require('./ParseCSV');
 var ParseTiledJSON = require('./parsetiledjson/');

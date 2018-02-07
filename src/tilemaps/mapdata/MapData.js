@@ -1,5 +1,5 @@
-var Class = require('../../../utils/Class');
-var GetFastValue = require('../../../utils/object/GetFastValue');
+var Class = require('../../utils/Class');
+var GetFastValue = require('../../utils/object/GetFastValue');
 
 /**
  * @classdesc

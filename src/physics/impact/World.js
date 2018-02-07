@@ -9,7 +9,7 @@ var GetFastValue = require('../../utils/object/GetFastValue');
 var Set = require('../../structs/Set');
 var Solver = require('./Solver');
 var TYPE = require('./TYPE');
-var TILEMAP_FORMATS = require('../../gameobjects/tilemap/Formats');
+var TILEMAP_FORMATS = require('../../tilemaps/Formats');
 var HasValue = require('../../utils/object/HasValue');
 var GetFastValue = require('../../utils/object/GetFastValue');
 

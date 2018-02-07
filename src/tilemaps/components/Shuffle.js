@@ -1,5 +1,5 @@
 var GetTilesWithin = require('./GetTilesWithin');
-var ShuffleArray = require('../../../utils/array/Shuffle');
+var ShuffleArray = require('../../utils/array/Shuffle');
 
 /**
  * Shuffles the tiles in a rectangular region (specified in tile coordinates) within the given

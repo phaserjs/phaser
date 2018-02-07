@@ -1,5 +1,5 @@
 var GetTilesWithin = require('./GetTilesWithin');
-var Color = require('../../../display/color');
+var Color = require('../../display/color');
 
 /**
  * Draws a debug representation of the layer to the given Graphics. This is helpful when you want to

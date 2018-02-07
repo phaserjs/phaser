@@ -1,6 +1,6 @@
 var WorldToTileX = require('./WorldToTileX');
 var WorldToTileY = require('./WorldToTileY');
-var Vector2 = require('../../../math/Vector2');
+var Vector2 = require('../../math/Vector2');
 
 /**
  * Converts from world XY coordinates (pixels) to tile XY coordinates (tile units), factoring in the

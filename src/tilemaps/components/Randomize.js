@@ -1,5 +1,5 @@
 var GetTilesWithin = require('./GetTilesWithin');
-var GetRandomElement = require('../../../utils/array/GetRandomElement');
+var GetRandomElement = require('../../utils/array/GetRandomElement');
 
 /**
  * Randomizes the indexes of a rectangular region of tiles (in tile coordinates) within the

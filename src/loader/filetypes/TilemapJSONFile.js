@@ -1,6 +1,6 @@
 var FileTypesManager = require('../FileTypesManager');
 var JSONFile = require('./JSONFile.js');
-var TILEMAP_FORMATS = require('../../gameobjects/tilemap/Formats');
+var TILEMAP_FORMATS = require('../../tilemaps/Formats');
 
 //  Phaser.Loader.FileTypes.TilemapJSONFile
 

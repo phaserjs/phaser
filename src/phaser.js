@@ -32,6 +32,7 @@ var Phaser = {
     Sound: require('./sound'),
     Structs: require('./structs'),
     Textures: require('./textures'),
+    Tilemaps: require('./tilemaps'),
     Time: require('./time'),
     Tweens: require('./tweens'),
     Utils: require('./utils')
