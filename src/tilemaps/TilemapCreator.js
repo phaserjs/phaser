@@ -1,14 +1,15 @@
 var GameObjectCreator = require('../gameobjects/GameObjectCreator');
 var ParseToTilemap = require('./ParseToTilemap');
 
-//  When registering a factory function 'this' refers to the GameObjectCreator context.
-
 /**
  * Creates a Tilemap from the given key or data, or creates a blank Tilemap if no key/data provided.
  * When loading from CSV or a 2D array, you should specify the tileWidth & tileHeight. When parsing
  * from a map from Tiled, the tileWidth, tileHeight, width & height will be pulled from the map
  * data. For an empty map, you should specify tileWidth, tileHeight, width & height.
  *
+ * @method Phaser.GameObjects.GameObjectCreator#tilemap
+ * @since 3.0.0
+ * 
  * @param {object} [config] - The config options for the Tilemap.
  * @param {string} [config.key] - The key in the Phaser cache that corresponds to the loaded tilemap
  * data.
@@ -24,12 +25,24 @@ var ParseToTilemap = require('./ParseToTilemap');
  * map and the tile data doesn't need to change then setting this value to `true` will help with
  * memory consumption. However if your map is small or you need to update the tiles dynamically,
  * then leave the default value set.
- * @returns {Tilemap}
+ * 
+ * @return {Phaser.Tilemaps.Tilemap}
  */
 GameObjectCreator.register('tilemap', function (config)
 {
     // Defaults are applied in ParseToTilemap
-    var c = config !== undefined ? config : {};
-    return ParseToTilemap(this.scene, c.key, c.tileWidth, c.tileHeight, c.width, c.height, c.data,
-        c.insertNull);
+    var c = (config !== undefined) ? config : {};
+
+    return ParseToTilemap(
+        this.scene,
+        c.key,
+        c.tileWidth,
+        c.tileHeight,
+        c.width,
+        c.height,
+        c.data,
+        c.insertNull
+    );
 });
+
+//  When registering a factory function 'this' refers to the GameObjectCreator context.

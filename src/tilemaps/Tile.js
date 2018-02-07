@@ -296,7 +296,7 @@ var Tile = new Class({
      * 
      * @param {Phaser.Tilemaps.Tile} tile - The tile to copy from.
      * 
-     * @returns {Phaser.Tilemaps.Tile} This Tile object.
+     * @return {Phaser.Tilemaps.Tile} This Tile object.
      */
     copy: function (tile)
     {
@@ -325,7 +325,7 @@ var Tile = new Class({
      * @method Phaser.Tilemaps.Tile#getCollisionGroup
      * @since 3.0.0
      * 
-     * @returns {object|null} tileset
+     * @return {object|null} tileset
      */
     getCollisionGroup: function ()
     {
@@ -341,7 +341,7 @@ var Tile = new Class({
      * @method Phaser.Tilemaps.Tile#getTileData
      * @since 3.0.0
      * 
-     * @returns {object|null} tileset
+     * @return {object|null} tileset
      */
     getTileData: function ()
     {
@@ -357,7 +357,7 @@ var Tile = new Class({
      * 
      * @param {Phaser.Cameras.Scene2D.Camera} [camera] - The Camera to use to perform the check.
      * 
-     * @returns {number}
+     * @return {number}
      */
     getLeft: function (camera)
     {
@@ -375,7 +375,7 @@ var Tile = new Class({
      * 
      * @param {Phaser.Cameras.Scene2D.Camera} [camera] - The Camera to use to perform the check.
      * 
-     * @returns {number}
+     * @return {number}
      */
     getRight: function (camera)
     {
@@ -393,7 +393,7 @@ var Tile = new Class({
      * 
      * @param {Phaser.Cameras.Scene2D.Camera} [camera] - The Camera to use to perform the check.
      * 
-     * @returns {number}
+     * @return {number}
      */
     getTop: function (camera)
     {
@@ -416,7 +416,7 @@ var Tile = new Class({
      * 
      * @param {Phaser.Cameras.Scene2D.Camera} [camera] - The Camera to use to perform the check.
      * 
-     * @returns {number}
+     * @return {number}
      */
     getBottom: function (camera)
     {
@@ -437,7 +437,7 @@ var Tile = new Class({
      * @param {Phaser.Cameras.Scene2D.Camera} [camera] - The Camera to use to perform the check.
      * @param {object} [output] - [description]
      * 
-     * @returns {Phaser.Geom.Rectangle|object}
+     * @return {Phaser.Geom.Rectangle|object}
      */
     getBounds: function (camera, output)
     {
@@ -460,7 +460,7 @@ var Tile = new Class({
      * 
      * @param {Phaser.Cameras.Scene2D.Camera} [camera] - The Camera to use to perform the check.
      * 
-     * @returns {number}
+     * @return {number}
      */
     getCenterX: function (camera)
     {
@@ -476,7 +476,7 @@ var Tile = new Class({
      * 
      * @param {Phaser.Cameras.Scene2D.Camera} [camera] - The Camera to use to perform the check.
      * 
-     * @returns {number}
+     * @return {number}
      */
     getCenterY: function (camera)
     {
@@ -527,7 +527,7 @@ var Tile = new Class({
      * @param {boolean} collides - If true, will consider the tile interesting if it collides on any side.
      * @param {boolean} faces - If true, will consider the tile interesting if it has an interesting face.
      * 
-     * @returns {boolean} True if the Tile is interesting, otherwise false.
+     * @return {boolean} True if the Tile is interesting, otherwise false.
      */
     isInteresting: function (collides, faces)
     {
@@ -545,7 +545,7 @@ var Tile = new Class({
      * 
      * @param {boolean} [recalculateFaces=true] - Whether or not to recalculate interesting faces for this tile and its neighbors.
      * 
-     * @returns {Phaser.Tilemaps.Tile} This Tile object.
+     * @return {Phaser.Tilemaps.Tile} This Tile object.
      */
     resetCollision: function (recalculateFaces)
     {
@@ -580,7 +580,7 @@ var Tile = new Class({
      * @method Phaser.Tilemaps.Tile#resetFaces
      * @since 3.0.0
      *
-     * @returns {Phaser.Tilemaps.Tile} This Tile object.
+     * @return {Phaser.Tilemaps.Tile} This Tile object.
      */
     resetFaces: function ()
     {
@@ -605,7 +605,7 @@ var Tile = new Class({
      * @param {boolean} [recalculateFaces=true] - Whether or not to recalculate interesting faces
      * for this tile and its neighbors.
      * 
-     * @returns {Phaser.Tilemaps.Tile} This Tile object.
+     * @return {Phaser.Tilemaps.Tile} This Tile object.
      */
     setCollision: function (left, right, up, down, recalculateFaces)
     {
@@ -647,7 +647,7 @@ var Tile = new Class({
      * @param {function} callback - Callback function.
      * @param {object} context - Callback will be called within this context.
      * 
-     * @returns {Phaser.Tilemaps.Tile} This Tile object.
+     * @return {Phaser.Tilemaps.Tile} This Tile object.
      */
     setCollisionCallback: function (callback, context)
     {
@@ -676,7 +676,7 @@ var Tile = new Class({
      * @param {integer} baseWidth - The base width a tile in the map (in pixels).
      * @param {integer} baseHeight - The base height of the tile in pixels (in pixels).
      * 
-     * @returns {Phaser.Tilemaps.Tile} This Tile object.
+     * @return {Phaser.Tilemaps.Tile} This Tile object.
      */
     setSize: function (tileWidth, tileHeight, baseWidth, baseHeight)
     {
@@ -696,7 +696,7 @@ var Tile = new Class({
      * @method Phaser.Tilemaps.Tile#updatePixelXY
      * @since 3.0.0
      *
-     * @returns {Phaser.Tilemaps.Tile} This Tile object.
+     * @return {Phaser.Tilemaps.Tile} This Tile object.
      */
     updatePixelXY: function ()
     {

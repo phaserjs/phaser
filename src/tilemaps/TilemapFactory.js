@@ -1,19 +1,14 @@
 var GameObjectFactory = require('../gameobjects/GameObjectFactory');
 var ParseToTilemap = require('./ParseToTilemap');
 
-//  When registering a factory function 'this' refers to the GameObjectFactory context.
-//
-//  There are several properties available to use:
-//
-//  this.scene - a reference to the Scene that owns the GameObjectFactory
-//  this.displayList - a reference to the Display List the Scene owns
-//  this.updateList - a reference to the Update List the Scene owns
-
 /**
  * Creates a Tilemap from the given key or data, or creates a blank Tilemap if no key/data provided.
  * When loading from CSV or a 2D array, you should specify the tileWidth & tileHeight. When parsing
  * from a map from Tiled, the tileWidth, tileHeight, width & height will be pulled from the map
  * data. For an empty map, you should specify tileWidth, tileHeight, width & height.
+ *
+ * @method Phaser.GameObjects.GameObjectFactory#tilemap
+ * @since 3.0.0
  *
  * @param {string} [key] - The key in the Phaser cache that corresponds to the loaded tilemap data.
  * @param {integer} [tileWidth=32] - The width of a tile in pixels. Pass in `null` to leave as the
@@ -32,13 +27,15 @@ var ParseToTilemap = require('./ParseToTilemap');
  * the tile data doesn't need to change then setting this value to `true` will help with memory
  * consumption. However if your map is small or you need to update the tiles dynamically, then leave
  * the default value set.
- * @returns {Tilemap}
+ * 
+ * @return {Phaser.Tilemaps.Tilemap}
  */
 GameObjectFactory.register('tilemap', function (key, tileWidth, tileHeight, width, height, data, insertNull)
 {
     // Allow users to specify null to indicate that they want the default value, since null is
     // shorter & more legible than undefined. Convert null to undefined to allow ParseToTilemap
     // defaults to take effect.
+
     if (key === null) { key = undefined; }
     if (tileWidth === null) { tileWidth = undefined; }
     if (tileHeight === null) { tileHeight = undefined; }
@@ -47,3 +44,11 @@ GameObjectFactory.register('tilemap', function (key, tileWidth, tileHeight, widt
 
     return ParseToTilemap(this.scene, key, tileWidth, tileHeight, width, height, data, insertNull);
 });
+
+//  When registering a factory function 'this' refers to the GameObjectFactory context.
+//
+//  There are several properties available to use:
+//
+//  this.scene - a reference to the Scene that owns the GameObjectFactory
+//  this.displayList - a reference to the Display List the Scene owns
+//  this.updateList - a reference to the Update List the Scene owns

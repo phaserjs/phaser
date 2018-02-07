@@ -1571,7 +1571,7 @@ var Tilemap = new Class({
      * tile faces. If set to null, interesting tile faces will not be drawn.
      * @param {Phaser.Tilemaps.LayerData} layer - [description]
      *
-     * @returns {Phaser.Tilemaps.Tilemap|null} Return this Tilemap object, or null if the layer given was invalid.
+     * @return {Phaser.Tilemaps.Tilemap|null} Return this Tilemap object, or null if the layer given was invalid.
      */
     renderDebug: function (graphics, styleConfig, layer)
     {
@@ -1603,7 +1603,7 @@ var Tilemap = new Class({
      * @param {integer} [height=max height based on tileY] - [description]
      * @param {Phaser.Tilemaps.LayerData} layer - [description]
      *
-     * @returns {Phaser.Tilemaps.Tilemap|null} Return this Tilemap object, or null if the layer given was invalid.
+     * @return {Phaser.Tilemaps.Tilemap|null} Return this Tilemap object, or null if the layer given was invalid.
      */
     replaceByIndex: function (findIndex, newIndex, tileX, tileY, width, height, layer)
     {
@@ -1636,7 +1636,7 @@ var Tilemap = new Class({
      * update.
      * @param {Phaser.Tilemaps.LayerData} layer - [description]
      *
-     * @returns {Phaser.Tilemaps.Tilemap|null} Return this Tilemap object, or null if the layer given was invalid.
+     * @return {Phaser.Tilemaps.Tilemap|null} Return this Tilemap object, or null if the layer given was invalid.
      */
     setCollision: function (indexes, collides, recalculateFaces, layer)
     {
@@ -1668,7 +1668,7 @@ var Tilemap = new Class({
      * update.
      * @param {Phaser.Tilemaps.LayerData} layer - [description]
      *
-     * @returns {Phaser.Tilemaps.Tilemap|null} Return this Tilemap object, or null if the layer given was invalid.
+     * @return {Phaser.Tilemaps.Tilemap|null} Return this Tilemap object, or null if the layer given was invalid.
      */
     setCollisionBetween: function (start, stop, collides, recalculateFaces, layer)
     {
@@ -1703,7 +1703,7 @@ var Tilemap = new Class({
      * update.
      * @param {Phaser.Tilemaps.LayerData} layer - [description]
      *
-     * @returns {Phaser.Tilemaps.Tilemap|null} Return this Tilemap object, or null if the layer given was invalid.
+     * @return {Phaser.Tilemaps.Tilemap|null} Return this Tilemap object, or null if the layer given was invalid.
      */
     setCollisionByProperty: function (properties, collides, recalculateFaces, layer)
     {
@@ -1733,7 +1733,7 @@ var Tilemap = new Class({
      * update.
      * @param {Phaser.Tilemaps.LayerData} layer - [description]
      *
-     * @returns {Phaser.Tilemaps.Tilemap|null} Return this Tilemap object, or null if the layer given was invalid.
+     * @return {Phaser.Tilemaps.Tilemap|null} Return this Tilemap object, or null if the layer given was invalid.
      */
     setCollisionByExclusion: function (indexes, collides, recalculateFaces, layer)
     {
@@ -1763,7 +1763,7 @@ var Tilemap = new Class({
      * update.
      * @param {Phaser.Tilemaps.LayerData} layer - [description]
      *
-     * @returns {Phaser.Tilemaps.Tilemap|null} Return this Tilemap object, or null if the layer given was invalid.
+     * @return {Phaser.Tilemaps.Tilemap|null} Return this Tilemap object, or null if the layer given was invalid.
      */
     setCollisionFromCollisionGroup: function (collides, recalculateFaces, layer)
     {
@@ -1793,7 +1793,7 @@ var Tilemap = new Class({
      * @param {object} callbackContext - The context under which the callback is called.
      * @param {Phaser.Tilemaps.LayerData} layer - [description]
      *
-     * @returns {Phaser.Tilemaps.Tilemap|null} Return this Tilemap object, or null if the layer given was invalid.
+     * @return {Phaser.Tilemaps.Tilemap|null} Return this Tilemap object, or null if the layer given was invalid.
      */
     setTileIndexCallback: function (indexes, callback, callbackContext, layer)
     {
@@ -1824,7 +1824,7 @@ var Tilemap = new Class({
      * @param {object} callbackContext - The context under which the callback is called.
      * @param {Phaser.Tilemaps.LayerData} layer - [description]
      *
-     * @returns {Phaser.Tilemaps.Tilemap|null} Return this Tilemap object, or null if the layer given was invalid.
+     * @return {Phaser.Tilemaps.Tilemap|null} Return this Tilemap object, or null if the layer given was invalid.
      */
     setTileLocationCallback: function (tileX, tileY, width, height, callback, callbackContext, layer)
     {
@@ -1967,7 +1967,7 @@ var Tilemap = new Class({
      * @param {integer} [height=max height based on tileY] - [description]
      * @param {Phaser.Tilemaps.LayerData} layer - [description]
      *
-     * @returns {Phaser.Tilemaps.Tilemap|null} Return this Tilemap object, or null if the layer given was invalid.
+     * @return {Phaser.Tilemaps.Tilemap|null} Return this Tilemap object, or null if the layer given was invalid.
      */
     shuffle: function (tileX, tileY, width, height, layer)
     {
@@ -2002,7 +2002,7 @@ var Tilemap = new Class({
      * @param {integer} [height=max height based on tileY] - [description]
      * @param {Phaser.Tilemaps.LayerData} layer - [description]
      *
-     * @returns {Phaser.Tilemaps.Tilemap|null} Return this Tilemap object, or null if the layer given was invalid.
+     * @return {Phaser.Tilemaps.Tilemap|null} Return this Tilemap object, or null if the layer given was invalid.
      */
     swapByIndex: function (indexA, indexB, tileX, tileY, width, height, layer)
     {
@@ -2123,7 +2123,7 @@ var Tilemap = new Class({
      * { index: [0, 1], weight: 4 } if you wish to draw from multiple tile indexes.
      * @param {Phaser.Tilemaps.LayerData} layer - [description]
      *
-     * @returns {Phaser.Tilemaps.Tilemap|null} Return this Tilemap object, or null if the layer given was invalid.
+     * @return {Phaser.Tilemaps.Tilemap|null} Return this Tilemap object, or null if the layer given was invalid.
      */
     weightedRandomize: function (tileX, tileY, width, height, weightedIndexes, layer)
     {

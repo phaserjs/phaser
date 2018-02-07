@@ -14,7 +14,7 @@ var Vector2 = require('../../math/Vector2');
  * @param {Vector2} [point] - [description]
  * @param {Camera} [camera=main camera] - [description]
  * @param {LayerData} layer - [description]
- * @returns {Vector2} The XY location in tile units.
+ * @return {Vector2} The XY location in tile units.
  */
 var WorldToTileXY = function (worldX, worldY, snapToFloor, point, camera, layer)
 {

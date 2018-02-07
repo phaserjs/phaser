@@ -7,7 +7,7 @@
  * nearest integer.
  * @param {Camera} [camera=main camera] - [description]
  * @param {LayerData} layer - [description]
- * @returns {number} The Y location in tile units.
+ * @return {number} The Y location in tile units.
  */
 var WorldToTileY = function (worldY, snapToFloor, camera, layer)
 {

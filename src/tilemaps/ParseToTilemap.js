@@ -27,7 +27,7 @@ var Tilemap = require('./Tilemap');
  * consumption. However if your map is small or you need to update the tiles dynamically, then leave
  * the default value set.
  * 
- * @returns {Phaser.Tilemaps.Tilemap}
+ * @return {Phaser.Tilemaps.Tilemap}
  */
 var ParseToTilemap = function (scene, key, tileWidth, tileHeight, width, height, data, insertNull)
 {

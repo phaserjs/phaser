@@ -5,7 +5,7 @@
  * @param {integer} tileX - [description]
  * @param {Camera} [camera=main camera] - [description]
  * @param {LayerData} layer - [description]
- * @returns {number}
+ * @return {number}
  */
 var TileToWorldX = function (tileX, camera, layer)
 {

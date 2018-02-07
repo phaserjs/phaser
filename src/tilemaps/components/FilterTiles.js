@@ -21,7 +21,7 @@ var GetTilesWithin = require('./GetTilesWithin');
  * @param {boolean} [filteringOptions.hasInterestingFace=false] - If true, only return tiles that
  * have at least one interesting face.
  * @param {LayerData} layer - [description]
- * @returns {Tile[]} The filtered array of Tiles.
+ * @return {Tile[]} The filtered array of Tiles.
  */
 var FilterTiles = function (callback, context, tileX, tileY, width, height, filteringOptions, layer)
 {

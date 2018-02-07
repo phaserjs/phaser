@@ -5,7 +5,7 @@
  * @param {LayerData} layer - [description]
  * @param {Camera} [camera=main camera] - [description]
  * @param {array} [outputArray] - [description]
- * @returns {Tile[]}
+ * @return {Tile[]}
  */
 var CullTiles = function (layer, camera, outputArray)
 {
