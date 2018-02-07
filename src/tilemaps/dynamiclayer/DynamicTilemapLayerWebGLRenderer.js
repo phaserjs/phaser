@@ -1,14 +1,29 @@
 var GameObject = require('../../gameobjects/GameObject');
 
-var DynamicTilemapLayerWebGLRenderer = function (renderer, tilemapLayer, interpolationPercentage, camera)
+/**
+ * Renders this Game Object with the WebGL Renderer to the given Camera.
+ * The object will not render if any of its renderFlags are set or it is being actively filtered out by the Camera.
+ * This method should not be called directly. It is a utility function of the Render module.
+ *
+ * @method Phaser.Tilemaps.DynamicTilemapLayer#renderWebGL
+ * @since 3.0.0
+ * @private
+ *
+ * @param {Phaser.Renderer.WebGLRenderer} renderer - A reference to the current active WebGL renderer.
+ * @param {Phaser.Tilemaps.DynamicTilemapLayer} src - The Game Object being rendered in this call.
+ * @param {number} interpolationPercentage - Reserved for future use and custom pipelines.
+ * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera that is rendering the Game Object.
+ */
+var DynamicTilemapLayerWebGLRenderer = function (renderer, src, interpolationPercentage, camera)
 {
-    if (GameObject.RENDER_MASK !== tilemapLayer.renderFlags || (tilemapLayer.cameraFilter > 0 && (tilemapLayer.cameraFilter & camera._id)))
+    if (GameObject.RENDER_MASK !== src.renderFlags || (src.cameraFilter > 0 && (src.cameraFilter & camera._id)))
     {
         return;
     }
 
-    tilemapLayer.cull(camera);
-    this.pipeline.batchDynamicTilemapLayer(tilemapLayer, camera); 
+    src.cull(camera);
+
+    this.pipeline.batchDynamicTilemapLayer(src, camera); 
 };
 
 module.exports = DynamicTilemapLayerWebGLRenderer;

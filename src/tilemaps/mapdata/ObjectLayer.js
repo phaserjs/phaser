@@ -11,7 +11,9 @@ var GetFastValue = require('../../utils/object/GetFastValue');
  *  - "draworder" is ignored.
  *
  * @class ObjectLayer
+ * @memberOf Phaser.Tilemaps
  * @constructor
+ * @since 3.0.0
  *
  * @param {object} [config] - [description]
  */
@@ -23,12 +25,67 @@ var ObjectLayer = new Class({
     {
         if (config === undefined) { config = {}; }
 
+        /**
+         * [description]
+         * 
+         * @name Phaser.Tilemaps.ObjectLayer#name
+         * @type {string}
+         * @since 3.0.0
+         */
         this.name = GetFastValue(config, 'name', 'object layer');
+
+        /**
+         * [description]
+         * 
+         * @name Phaser.Tilemaps.ObjectLayer#opacity
+         * @type {number}
+         * @since 3.0.0
+         */
         this.opacity = GetFastValue(config, 'opacity', 1);
+
+        /**
+         * [description]
+         * 
+         * @name Phaser.Tilemaps.ObjectLayer#properties
+         * @type {object}
+         * @since 3.0.0
+         */
         this.properties = GetFastValue(config, 'properties', {});
+
+        /**
+         * [description]
+         * 
+         * @name Phaser.Tilemaps.ObjectLayer#propertyTypes
+         * @type {object}
+         * @since 3.0.0
+         */
         this.propertyTypes = GetFastValue(config, 'propertytypes', {});
+
+        /**
+         * [description]
+         * 
+         * @name Phaser.Tilemaps.ObjectLayer#type
+         * @type {string}
+         * @since 3.0.0
+         */
         this.type = GetFastValue(config, 'type', 'objectgroup');
+
+        /**
+         * [description]
+         * 
+         * @name Phaser.Tilemaps.ObjectLayer#visible
+         * @type {boolean}
+         * @since 3.0.0
+         */
         this.visible = GetFastValue(config, 'visible', true);
+
+        /**
+         * [description]
+         * 
+         * @name Phaser.Tilemaps.ObjectLayer#objects
+         * @type {array}
+         * @since 3.0.0
+         */
         this.objects = GetFastValue(config, 'objects', []);
     }
 
