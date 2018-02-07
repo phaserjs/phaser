@@ -14,21 +14,22 @@ var RequestAnimationFrame = require('../dom/RequestAnimationFrame');
 
 // http://www.testufo.com/#test=animation-time-graph
 
+/**
+ * @classdesc
+ * [description]
+ *
+ * @class TimeStep
+ * @memberOf Phaser.Boot
+ * @constructor
+ * @since 3.0.0
+ *
+ * @param {Phaser.Game} game - A reference to the Phaser.Game instance that owns this Time Step.
+ * @param {FPSConfig} config
+ */
 var TimeStep = new Class({
 
     initialize:
 
-    /**
-     * [description]
-     *
-     * @class TimeStep
-     * @memberOf Phaser.Boot
-     * @constructor
-     * @since 3.0.0
-     *
-     * @param {Phaser.Game} game - A reference to the Phaser.Game instance that owns this Time Step.
-     * @param {FPSConfig} config
-     */
     function TimeStep (game, config)
     {
         /**

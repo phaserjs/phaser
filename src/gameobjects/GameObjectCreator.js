@@ -2,6 +2,7 @@ var Class = require('../utils/Class');
 var PluginManager = require('../plugins/PluginManager');
 
 /**
+ * @classdesc
  * The Game Object Creator is a Scene plugin that allows you to quickly create many common
  * types of Game Objects and return them. Unlike the Game Object Factory, they are not automatically
  * added to the Scene.

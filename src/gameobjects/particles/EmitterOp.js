@@ -5,6 +5,7 @@ var GetFastValue = require('../../utils/object/GetFastValue');
 var Wrap = require('../../math/Wrap');
 
 /**
+ * @classdesc
  * [description]
  *
  * @class EmitterOp

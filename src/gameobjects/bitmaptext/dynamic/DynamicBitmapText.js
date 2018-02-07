@@ -5,6 +5,7 @@ var GetBitmapTextSize = require('../GetBitmapTextSize');
 var Render = require('./DynamicBitmapTextRender');
 
 /**
+ * @classdesc
  * [description]
  *
  * @class DynamicBitmapText

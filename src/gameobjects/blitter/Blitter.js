@@ -7,6 +7,7 @@ var Frame = require('../../textures/Frame');
 var GameObject = require('../GameObject');
 
 /**
+ * @classdesc
  * A Blitter Game Object.
  *
  * The Blitter Game Object is a special kind of container that creates, updates and manages Bob objects.

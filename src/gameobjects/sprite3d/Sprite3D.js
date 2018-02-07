@@ -5,6 +5,7 @@ var Vector2 = require('../../math/Vector2');
 var Vector4 = require('../../math/Vector4');
 
 /**
+ * @classdesc
  * A Sprite 3D Game Object.
  *
  * The Sprite 3D object is an encapsulation of a standard Sprite object, with additional methods to allow

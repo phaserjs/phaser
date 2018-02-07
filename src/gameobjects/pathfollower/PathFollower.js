@@ -7,6 +7,7 @@ var TWEEN_CONST = require('../../tweens/tween/const');
 var Vector2 = require('../../math/Vector2');
 
 /**
+ * @classdesc
  * A PathFollower Game Object.
  *
  * A PathFollower is a Sprite Game Object with some extra helpers to allow it to follow a Path automatically.

@@ -4,6 +4,25 @@ var Components = require('../../components');
 var StaticTilemapLayerRender = require('./StaticTilemapLayerRender');
 var TilemapComponents = require('../components');
 
+/**
+ * @classdesc
+ * A StaticTilemapLayer is a game object that renders LayerData from a Tilemap. A
+ * StaticTilemapLayer can only render tiles from a single tileset.
+ *
+ * A StaticTilemapLayer is optimized for speed over flexibility. You cannot apply per-tile
+ * effects like tint or alpha. You cannot change the tiles in a StaticTilemapLayer. Use this
+ * over a DynamicTilemapLayer when you don't need either of those features.
+ *
+ * @class StaticTilemapLayer
+ * @constructor
+ *
+ * @param {Scene} scene - [description]
+ * @param {Tilemap} tilemap - The Tilemap this layer is a part of.
+ * @param {integer} layerIndex - The index of the LayerData associated with this layer.
+ * @param {Tileset} tileset - The tileset used to render the tiles in this layer.
+ * @param {number} [x=0] - The world x position where the top left of this layer will be placed.
+ * @param {number} [y=0] - The world y position where the top left of this layer will be placed.
+ */
 var StaticTilemapLayer = new Class({
 
     Extends: GameObject,
@@ -26,24 +45,6 @@ var StaticTilemapLayer = new Class({
 
     initialize:
 
-    /**
-     * A StaticTilemapLayer is a game object that renders LayerData from a Tilemap. A
-     * StaticTilemapLayer can only render tiles from a single tileset.
-     *
-     * A StaticTilemapLayer is optimized for speed over flexibility. You cannot apply per-tile
-     * effects like tint or alpha. You cannot change the tiles in a StaticTilemapLayer. Use this
-     * over a DynamicTilemapLayer when you don't need either of those features.
-     *
-     * @class StaticTilemapLayer
-     * @constructor
-     *
-     * @param {Scene} scene - [description]
-     * @param {Tilemap} tilemap - The Tilemap this layer is a part of.
-     * @param {integer} layerIndex - The index of the LayerData associated with this layer.
-     * @param {Tileset} tileset - The tileset used to render the tiles in this layer.
-     * @param {number} [x=0] - The world x position where the top left of this layer will be placed.
-     * @param {number} [y=0] - The world y position where the top left of this layer will be placed.
-     */
     function StaticTilemapLayer (scene, tilemap, layerIndex, tileset, x, y)
     {
         GameObject.call(this, scene, 'StaticTilemapLayer');

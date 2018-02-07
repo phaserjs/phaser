@@ -17,6 +17,7 @@ var Vector2 = require('../../math/Vector2');
 var Wrap = require('../../math/Wrap');
 
 /**
+ * @classdesc
  * [description]
  *
  * @class ParticleEmitter

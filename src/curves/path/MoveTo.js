@@ -1,21 +1,22 @@
 var Class = require('../../utils/Class');
 var Vector2 = require('../../math/Vector2');
 
+/**
+ * @classdesc
+ * [description]
+ *
+ * @class MoveTo
+ * @memberOf Phaser.Curves
+ * @constructor
+ * @since 3.0.0
+ *
+ * @param {number} [x] - [description]
+ * @param {number} [y] - [description]
+ */
 var MoveTo = new Class({
 
     initialize:
 
-    /**
-     * [description]
-     *
-     * @class MoveTo
-     * @memberOf Phaser.Curves
-     * @constructor
-     * @since 3.0.0
-     *
-     * @param {number} [x] - [description]
-     * @param {number} [y] - [description]
-     */
     function MoveTo (x, y)
     {
         //  Skip length calcs in paths

@@ -1,22 +1,21 @@
-//  Phaser.Input.Gamepad.Axis
-
 var Class = require('../../utils/Class');
 
+/**
+ * @classdesc
+ * [description]
+ *
+ * @class Axis
+ * @memberOf Phaser.Input.Gamepad
+ * @constructor
+ * @since 3.0.0
+ *
+ * @param {[type]} pad - [description]
+ * @param {integer} index - [description]
+ */
 var Axis = new Class({
 
     initialize:
 
-    /**
-     * [description]
-     *
-     * @class Axis
-     * @memberOf Phaser.Input.Gamepad
-     * @constructor
-     * @since 3.0.0
-     *
-     * @param {[type]} pad - [description]
-     * @param {integer} index - [description]
-     */
     function Axis (pad, index)
     {
         /**

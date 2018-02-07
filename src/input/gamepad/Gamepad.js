@@ -1,25 +1,24 @@
-//  Phaser.Input.Gamepad.Gamepad
-
 var Axis = require('./Axis');
 var Button = require('./Button');
 var Class = require('../../utils/Class');
 
+/**
+ * @classdesc
+ * [description]
+ *
+ * @class Gamepad
+ * @memberOf Phaser.Input.Gamepad
+ * @constructor
+ * @since 3.0.0
+ *
+ * @param {Phaser.Input.Gamepad.GamepadManager} manager - [description]
+ * @param {[type]} id - [description]
+ * @param {[type]} index - [description]
+ */
 var Gamepad = new Class({
 
     initialize:
 
-    /**
-     * [description]
-     *
-     * @class Gamepad
-     * @memberOf Phaser.Input.Gamepad
-     * @constructor
-     * @since 3.0.0
-     *
-     * @param {Phaser.Input.Gamepad.GamepadManager} manager - [description]
-     * @param {[type]} id - [description]
-     * @param {[type]} index - [description]
-     */
     function Gamepad (manager, id, index)
     {
         /**

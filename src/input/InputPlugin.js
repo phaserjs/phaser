@@ -12,23 +12,24 @@ var RectangleContains = require('../geom/rectangle/Contains');
 var Triangle = require('../geom/triangle/Triangle');
 var TriangleContains = require('../geom/triangle/Contains');
 
+/**
+ * @classdesc
+ * [description]
+ *
+ * @class InputPlugin
+ * @extends EventEmitter
+ * @memberOf Phaser.Input
+ * @constructor
+ * @since 3.0.0
+ *
+ * @param {Phaser.Scene} scene - The Scene that owns this plugin.
+ */
 var InputPlugin = new Class({
 
     Extends: EventEmitter,
 
     initialize:
 
-    /**
-     * [description]
-     *
-     * @class InputPlugin
-     * @extends EventEmitter
-     * @memberOf Phaser.Input
-     * @constructor
-     * @since 3.0.0
-     *
-     * @param {Phaser.Scene} scene - The Scene that owns this plugin.
-     */
     function InputPlugin (scene)
     {
         EventEmitter.call(this);

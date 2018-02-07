@@ -5,25 +5,24 @@ var Class = require('../../utils/Class');
 var Curve = require('../curve/Curve');
 var Vector2 = require('../../math/Vector2');
 
-//  Phaser.Curves.Spline
-
+/**
+ * @classdesc
+ * [description]
+ *
+ * @class SplineCurve
+ * @extends Phaser.Curves.Curve
+ * @memberOf Phaser.Curves
+ * @constructor
+ * @since 3.0.0
+ *
+ * @param {Phaser.Geom.Point[]} [points] - [description]
+ */
 var SplineCurve = new Class({
 
     Extends: Curve,
 
     initialize:
 
-    /**
-     * [description]
-     *
-     * @class SplineCurve
-     * @extends Phaser.Curves.Curve
-     * @memberOf Phaser.Curves
-     * @constructor
-     * @since 3.0.0
-     *
-     * @param {Phaser.Geom.Point[]} [points] - [description]
-     */
     function SplineCurve (points)
     {
         if (points === undefined) { points = []; }

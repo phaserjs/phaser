@@ -3,6 +3,7 @@ var Components = require('../components');
 var Rectangle = require('../../geom/rectangle');
 
 /**
+ * @classdesc
  * A Tile is a representation of a single tile within the Tilemap. This is a lightweight data
  * representation, so it's position information is stored without factoring in scroll, layer
  * scale or layer position.

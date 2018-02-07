@@ -1,23 +1,21 @@
-// Note: direct port from v2
-
-/**
-* An Image Collection is a special tileset containing mulitple images, with no slicing into each image.
-*
-* Image Collections are normally created automatically when Tiled data is loaded.
-*
-* @class Phaser.ImageCollection
-* @constructor
-* @param {string} name - The name of the image collection in the map data.
-* @param {integer} firstgid - The first image index this image collection contains.
-* @param {integer} [width=32] - Width of widest image (in pixels).
-* @param {integer} [height=32] - Height of tallest image (in pixels).
-* @param {integer} [margin=0] - The margin around all images in the collection (in pixels).
-* @param {integer} [spacing=0] - The spacing between each image in the collection (in pixels).
-* @param {object} [properties={}] - Custom Image Collection properties.
-*/
-
 var Class = require('../../utils/Class');
 
+/**
+ * @classdesc
+ * An Image Collection is a special tileset containing mulitple images, with no slicing into each image.
+ *
+ * Image Collections are normally created automatically when Tiled data is loaded.
+ *
+ * @class Phaser.ImageCollection
+ * @constructor
+ * @param {string} name - The name of the image collection in the map data.
+ * @param {integer} firstgid - The first image index this image collection contains.
+ * @param {integer} [width=32] - Width of widest image (in pixels).
+ * @param {integer} [height=32] - Height of tallest image (in pixels).
+ * @param {integer} [margin=0] - The margin around all images in the collection (in pixels).
+ * @param {integer} [spacing=0] - The spacing between each image in the collection (in pixels).
+ * @param {object} [properties={}] - Custom Image Collection properties.
+ */
 var ImageCollection = new Class({
 
     initialize:

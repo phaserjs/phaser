@@ -1,6 +1,7 @@
 var Class = require('../../utils/Class');
 
 /**
+ * @classdesc
  * A Game Object Animation Controller.
  *
  * This controller lives as an instance within a Game Object, accessible as `sprite.anims`.

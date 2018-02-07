@@ -4,6 +4,7 @@
 var Class = require('../utils/Class');
 
 /**
+ * @classdesc
  * [description]
  *
  * @class Vector2
@@ -20,6 +21,24 @@ var Vector2 = new Class({
 
     function Vector2 (x, y)
     {
+        /**
+         * The x component of this Vector.
+         *
+         * @name Phaser.Math.Vector2#x
+         * @type {number}
+         * @default 0
+         * @since 3.0.0
+         */
+
+        /**
+         * The y component of this Vector.
+         *
+         * @name Phaser.Math.Vector2#y
+         * @type {number}
+         * @default 0
+         * @since 3.0.0
+         */
+
         if (typeof x === 'object')
         {
             this.x = x.x || 0;
@@ -40,7 +59,7 @@ var Vector2 = new Class({
      * @method Phaser.Math.Vector2#clone
      * @since 3.0.0
      *
-     * @return {[type]} [description]
+     * @return {Phaser.Math.Vector2} A clone of this Vector2.
      */
     clone: function ()
     {
@@ -55,7 +74,7 @@ var Vector2 = new Class({
      *
      * @param {[type]} src - [description]
      *
-     * @return {[type]} [description]
+     * @return {Phaser.Math.Vector2} This Vector2.
      */
     copy: function (src)
     {
@@ -73,7 +92,7 @@ var Vector2 = new Class({
      *
      * @param {[type]} obj - [description]
      *
-     * @return {[type]} [description]
+     * @return {Phaser.Math.Vector2} This Vector2.
      */
     setFromObject: function (obj)
     {
@@ -92,7 +111,7 @@ var Vector2 = new Class({
      * @param {[type]} x - [description]
      * @param {[type]} y - [description]
      *
-     * @return {[type]} [description]
+     * @return {Phaser.Math.Vector2} This Vector2.
      */
     set: function (x, y)
     {
@@ -116,7 +135,7 @@ var Vector2 = new Class({
      * @param {[type]} azimuth - [description]
      * @param {[type]} radius - [description]
      *
-     * @return {[type]} [description]
+     * @return {Phaser.Math.Vector2} This Vector2.
      */
     setToPolar: function (azimuth, radius)
     {
@@ -136,7 +155,7 @@ var Vector2 = new Class({
      *
      * @param {[type]} v - [description]
      *
-     * @return {[type]} [description]
+     * @return {boolean} [description]
      */
     equals: function (v)
     {
@@ -149,7 +168,7 @@ var Vector2 = new Class({
      * @method Phaser.Math.Vector2#angle
      * @since 3.0.0
      *
-     * @return {[type]} [description]
+     * @return {number} [description]
      */
     angle: function ()
     {
@@ -173,7 +192,7 @@ var Vector2 = new Class({
      *
      * @param {[type]} src - [description]
      *
-     * @return {[type]} [description]
+     * @return {Phaser.Math.Vector2} This Vector2.
      */
     add: function (src)
     {
@@ -191,7 +210,7 @@ var Vector2 = new Class({
      *
      * @param {[type]} src - [description]
      *
-     * @return {[type]} [description]
+     * @return {Phaser.Math.Vector2} This Vector2.
      */
     subtract: function (src)
     {
@@ -209,7 +228,7 @@ var Vector2 = new Class({
      *
      * @param {[type]} src - [description]
      *
-     * @return {[type]} [description]
+     * @return {Phaser.Math.Vector2} This Vector2.
      */
     multiply: function (src)
     {
@@ -227,7 +246,7 @@ var Vector2 = new Class({
      *
      * @param {[type]} value - [description]
      *
-     * @return {[type]} [description]
+     * @return {Phaser.Math.Vector2} This Vector2.
      */
     scale: function (value)
     {
@@ -253,7 +272,7 @@ var Vector2 = new Class({
      *
      * @param {[type]} src - [description]
      *
-     * @return {[type]} [description]
+     * @return {Phaser.Math.Vector2} This Vector2.
      */
     divide: function (src)
     {
@@ -269,7 +288,7 @@ var Vector2 = new Class({
      * @method Phaser.Math.Vector2#negate
      * @since 3.0.0
      *
-     * @return {[type]} [description]
+     * @return {Phaser.Math.Vector2} This Vector2.
      */
     negate: function ()
     {
@@ -287,7 +306,7 @@ var Vector2 = new Class({
      *
      * @param {[type]} src - [description]
      *
-     * @return {[type]} [description]
+     * @return {number} [description]
      */
     distance: function (src)
     {
@@ -305,7 +324,7 @@ var Vector2 = new Class({
      *
      * @param {[type]} src - [description]
      *
-     * @return {[type]} [description]
+     * @return {number} [description]
      */
     distanceSq: function (src)
     {
@@ -321,7 +340,7 @@ var Vector2 = new Class({
      * @method Phaser.Math.Vector2#length
      * @since 3.0.0
      *
-     * @return {[type]} [description]
+     * @return {number} [description]
      */
     length: function ()
     {
@@ -337,7 +356,7 @@ var Vector2 = new Class({
      * @method Phaser.Math.Vector2#lengthSq
      * @since 3.0.0
      *
-     * @return {[type]} [description]
+     * @return {number} [description]
      */
     lengthSq: function ()
     {
@@ -353,7 +372,7 @@ var Vector2 = new Class({
      * @method Phaser.Math.Vector2#normalize
      * @since 3.0.0
      *
-     * @return {[type]} [description]
+     * @return {Phaser.Math.Vector2} This Vector2.
      */
     normalize: function ()
     {
@@ -380,7 +399,7 @@ var Vector2 = new Class({
      * @method Phaser.Math.Vector2#normalizeRightHand
      * @since 3.0.0
      *
-     * @return {[type]} [description]
+     * @return {Phaser.Math.Vector2} This Vector2.
      */
     normalizeRightHand: function ()
     {
@@ -400,7 +419,7 @@ var Vector2 = new Class({
      *
      * @param {[type]} src - [description]
      *
-     * @return {[type]} [description]
+     * @return {number} [description]
      */
     dot: function (src)
     {
@@ -415,7 +434,7 @@ var Vector2 = new Class({
      *
      * @param {[type]} src - [description]
      *
-     * @return {[type]} [description]
+     * @return {number} [description]
      */
     cross: function (src)
     {
@@ -431,7 +450,7 @@ var Vector2 = new Class({
      * @param {[type]} src - [description]
      * @param {[type]} t - [description]
      *
-     * @return {[type]} [description]
+     * @return {Phaser.Math.Vector2} This Vector2.
      */
     lerp: function (src, t)
     {
@@ -454,7 +473,7 @@ var Vector2 = new Class({
      *
      * @param {[type]} mat - [description]
      *
-     * @return {[type]} [description]
+     * @return {Phaser.Math.Vector2} This Vector2.
      */
     transformMat3: function (mat)
     {
@@ -476,7 +495,7 @@ var Vector2 = new Class({
      *
      * @param {[type]} mat - [description]
      *
-     * @return {[type]} [description]
+     * @return {Phaser.Math.Vector2} This Vector2.
      */
     transformMat4: function (mat)
     {
@@ -496,7 +515,7 @@ var Vector2 = new Class({
      * @method Phaser.Math.Vector2#reset
      * @since 3.0.0
      *
-     * @return {[type]} [description]
+     * @return {Phaser.Math.Vector2} This Vector2.
      */
     reset: function ()
     {

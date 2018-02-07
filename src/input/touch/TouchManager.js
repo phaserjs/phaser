@@ -4,20 +4,21 @@ var Class = require('../../utils/Class');
 // https://patrickhlauke.github.io/touch/tests/results/
 // https://www.html5rocks.com/en/mobile/touch/
 
+/**
+ * @classdesc
+ * [description]
+ *
+ * @class TouchManager
+ * @memberOf Phaser.Input.Touch
+ * @constructor
+ * @since 3.0.0
+ *
+ * @param {Phaser.Input.InputManager} inputManager - [description]
+ */
 var TouchManager = new Class({
 
     initialize:
 
-    /**
-     * [description]
-     *
-     * @class TouchManager
-     * @memberOf Phaser.Input.Touch
-     * @constructor
-     * @since 3.0.0
-     *
-     * @param {Phaser.Input.InputManager} inputManager - [description]
-     */
     function TouchManager (inputManager)
     {
         /**

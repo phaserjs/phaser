@@ -1,9 +1,29 @@
 var Class = require('../../../utils/Class');
-var GameObject = require('../../GameObject');
 var Components = require('../../components');
 var DynamicTilemapLayerRender = require('./DynamicTilemapLayerRender');
+var GameObject = require('../../GameObject');
 var TilemapComponents = require('../components');
 
+/**
+ * @classdesc
+ * A DynamicTilemapLayer is a game object that renders LayerData from a Tilemap. A
+ * DynamicTilemapLayer can only render tiles from a single tileset.
+ *
+ * A DynamicTilemapLayer trades some speed for being able to apply powerful effects. Unlike a
+ * StaticTilemapLayer, you can apply per-tile effects like tint or alpha, and you can change the
+ * tiles in a DynamicTilemapLayer. Use this over a StaticTilemapLayer when you need those
+ * features.
+ *
+ * @class DynamicTilemapLayer
+ * @constructor
+ *
+ * @param {Scene} scene - [description]
+ * @param {Tilemap} tilemap - The Tilemap this layer is a part of.
+ * @param {integer} layerIndex - The index of the LayerData associated with this layer.
+ * @param {Tileset} tileset - The tileset used to render the tiles in this layer.
+ * @param {number} [x=0] - The world x position where the top left of this layer will be placed.
+ * @param {number} [y=0] - The world y position where the top left of this layer will be placed.
+ */
 var DynamicTilemapLayer = new Class({
 
     Extends: GameObject,
@@ -26,25 +46,6 @@ var DynamicTilemapLayer = new Class({
 
     initialize:
 
-    /**
-     * A DynamicTilemapLayer is a game object that renders LayerData from a Tilemap. A
-     * DynamicTilemapLayer can only render tiles from a single tileset.
-     *
-     * A DynamicTilemapLayer trades some speed for being able to apply powerful effects. Unlike a
-     * StaticTilemapLayer, you can apply per-tile effects like tint or alpha, and you can change the
-     * tiles in a DynamicTilemapLayer. Use this over a StaticTilemapLayer when you need those
-     * features.
-     *
-     * @class DynamicTilemapLayer
-     * @constructor
-     *
-     * @param {Scene} scene - [description]
-     * @param {Tilemap} tilemap - The Tilemap this layer is a part of.
-     * @param {integer} layerIndex - The index of the LayerData associated with this layer.
-     * @param {Tileset} tileset - The tileset used to render the tiles in this layer.
-     * @param {number} [x=0] - The world x position where the top left of this layer will be placed.
-     * @param {number} [y=0] - The world y position where the top left of this layer will be placed.
-     */
     function DynamicTilemapLayer (scene, tilemap, layerIndex, tileset, x, y)
     {
         GameObject.call(this, scene, 'DynamicTilemapLayer');

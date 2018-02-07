@@ -3,28 +3,29 @@ var GetFastValue = require('../../../utils/object/GetFastValue');
 var ProcessKeyCombo = require('./ProcessKeyCombo');
 var ResetKeyCombo = require('./ResetKeyCombo');
 
+/**
+ * @classdesc
+ * [description]
+ *
+ * `keys` argument can be:
+ * 
+ * A string (ATARI)
+ * An array of either integers (key codes) or strings, or a mixture of both
+ * An array of objects (such as Key objects) with a public 'keyCode' property
+ *
+ * @class KeyCombo
+ * @memberOf Phaser.Input.Keyboard
+ * @constructor
+ * @since 3.0.0
+ *
+ * @param {Phaser.Input.Keyboard.KeyboardManager} keyboardManager - [description]
+ * @param {string|integers[]|object[]} keys - [description]
+ * @param {object} [config] - [description]
+ */
 var KeyCombo = new Class({
 
     initialize:
 
-    /**
-     * [description]
-     *
-     * `keys` argument can be:
-     * 
-     * A string (ATARI)
-     * An array of either integers (key codes) or strings, or a mixture of both
-     * An array of objects (such as Key objects) with a public 'keyCode' property
-     *
-     * @class KeyCombo
-     * @memberOf Phaser.Input.Keyboard
-     * @constructor
-     * @since 3.0.0
-     *
-     * @param {Phaser.Input.Keyboard.KeyboardManager} keyboardManager - [description]
-     * @param {string|integers[]|object[]} keys - [description]
-     * @param {object} [config] - [description]
-     */
     function KeyCombo (keyboardManager, keys, config)
     {
         if (config === undefined) { config = {}; }

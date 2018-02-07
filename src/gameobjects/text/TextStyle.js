@@ -32,6 +32,7 @@ var propertyMap = {
 };
 
 /**
+ * @classdesc
  * [description]
  *
  * @class TextStyle

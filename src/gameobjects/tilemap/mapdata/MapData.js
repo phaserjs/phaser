@@ -1,20 +1,21 @@
 var Class = require('../../../utils/Class');
 var GetFastValue = require('../../../utils/object/GetFastValue');
 
+/**
+ * @classdesc
+ * A class for representing data about a map. Maps are parsed from CSV, Tiled, etc. into this
+ * format. A Tilemap object get a copy of this data and then unpacks the needed properties into
+ * itself.
+ *
+ * @class MapData
+ * @constructor
+ *
+ * @param {object} [config] - [description]
+ */
 var MapData = new Class({
 
     initialize:
 
-    /**
-     * A class for representing data about a map. Maps are parsed from CSV, Tiled, etc. into this
-     * format. A Tilemap object get a copy of this data and then unpacks the needed properties into
-     * itself.
-     *
-     * @class MapData
-     * @constructor
-     *
-     * @param {object} [config] - [description]
-     */
     function MapData (config)
     {
         if (config === undefined) { config = {}; }

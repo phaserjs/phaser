@@ -3,6 +3,7 @@ var DegToRad = require('../../math/DegToRad');
 var DistanceBetween = require('../../math/distance/DistanceBetween');
 
 /**
+ * @classdesc
  * [description]
  *
  * @class Particle

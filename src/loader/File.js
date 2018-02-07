@@ -6,21 +6,21 @@ var MergeXHRSettings = require('./MergeXHRSettings');
 var XHRLoader = require('./XHRLoader');
 var XHRSettings = require('./XHRSettings');
 
+/**
+ * @classdesc
+ * [description]
+ *
+ * @class File
+ * @memberOf Phaser.Loader
+ * @constructor
+ * @since 3.0.0
+ *
+ * @param {object} fileConfig - [description]
+ */
 var File = new Class({
 
     initialize:
 
-    // old signature: type, key, url, responseType, xhrSettings, config
-    /**
-     * [description]
-     *
-     * @class File
-     * @memberOf Phaser.Loader
-     * @constructor
-     * @since 3.0.0
-     *
-     * @param {object} fileConfig - [description]
-     */
     function File (fileConfig)
     {
         /**

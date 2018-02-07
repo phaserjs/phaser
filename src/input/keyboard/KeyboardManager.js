@@ -7,30 +7,31 @@ var KeyMap = require('./keys/KeyMap');
 var ProcessKeyDown = require('./keys/ProcessKeyDown');
 var ProcessKeyUp = require('./keys/ProcessKeyUp');
 
+/**
+ * @classdesc
+ * The Keyboard class monitors keyboard input and dispatches keyboard events.
+ *
+ * _Note_: many keyboards are unable to process certain combinations of keys due to hardware limitations known as ghosting.
+ * See http://www.html5gamedevs.com/topic/4876-impossible-to-use-more-than-2-keyboard-input-buttons-at-the-same-time/ for more details.
+ *
+ * Also please be aware that certain browser extensions can disable or override Phaser keyboard handling.
+ * For example the Chrome extension vimium is known to disable Phaser from using the D key. And there are others.
+ * So please check your extensions before opening Phaser issues.
+ *
+ * @class KeyboardManager
+ * @extends eventemitter3
+ * @memberOf Phaser.Input.Keyboard
+ * @constructor
+ * @since 3.0.0
+ *
+ * @param {Phaser.Input.InputManager} inputManager - [description]
+ */
 var KeyboardManager = new Class({
 
     Extends: EventEmitter,
 
     initialize:
 
-    /**
-     * The Keyboard class monitors keyboard input and dispatches keyboard events.
-     *
-     * _Note_: many keyboards are unable to process certain combinations of keys due to hardware limitations known as ghosting.
-     * See http://www.html5gamedevs.com/topic/4876-impossible-to-use-more-than-2-keyboard-input-buttons-at-the-same-time/ for more details.
-     *
-     * Also please be aware that certain browser extensions can disable or override Phaser keyboard handling.
-     * For example the Chrome extension vimium is known to disable Phaser from using the D key. And there are others.
-     * So please check your extensions before opening Phaser issues.
-     *
-     * @class KeyboardManager
-     * @extends eventemitter3
-     * @memberOf Phaser.Input.Keyboard
-     * @constructor
-     * @since 3.0.0
-     *
-     * @param {Phaser.Input.InputManager} inputManager - [description]
-     */
     function KeyboardManager (inputManager)
     {
         EventEmitter.call(this);

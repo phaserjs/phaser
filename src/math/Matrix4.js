@@ -5,27 +5,28 @@ var Class = require('../utils/Class');
 
 var EPSILON = 0.000001;
 
+/**
+ * @classdesc
+ * [description]
+ *
+ * @class Matrix4
+ * @memberOf Phaser.Math
+ * @constructor
+ * @since 3.0.0
+ *
+ * @param {Phaser.Math.Matrix4} [m] - [description]
+ */
 var Matrix4 = new Class({
 
     initialize:
 
-    /**
-     * [description]
-     *
-     * @class Matrix4
-     * @memberOf Phaser.Math
-     * @constructor
-     * @since 3.0.0
-     *
-     * @param {Phaser.Math.Matrix4} [m] - [description]
-     */
     function Matrix4 (m)
     {
-
         /**
          * [description]
          *
-         * @property {Float32Array} val
+         * @name Phaser.Math.Matrix4#val
+         * @type {Float32Array}
          * @since 3.0.0
          */
         this.val = new Float32Array(16);

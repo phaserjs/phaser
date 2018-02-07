@@ -5,27 +5,28 @@ var FileTypesManager = require('../FileTypesManager');
 var GetFastValue = require('../../utils/object/GetFastValue');
 var HTML5AudioFile = require('./HTML5AudioFile');
 
+/**
+ * @classdesc
+ * [description]
+ *
+ * @class AudioFile
+ * @extends Phaser.Loader.File
+ * @memberOf Phaser.Loader.FileTypes
+ * @constructor
+ * @since 3.0.0
+ *
+ * @param {string} key - [description]
+ * @param {string} url - [description]
+ * @param {string} path - [description]
+ * @param {object} xhrSettings - [description]
+ * @param {[type]} audioContext - [description]
+ */
 var AudioFile = new Class({
 
     Extends: File,
 
     initialize:
 
-    /**
-     * [description]
-     *
-     * @class AudioFile
-     * @extends Phaser.Loader.File
-     * @memberOf Phaser.Loader.FileTypes
-     * @constructor
-     * @since 3.0.0
-     *
-     * @param {string} key - [description]
-     * @param {string} url - [description]
-     * @param {string} path - [description]
-     * @param {object} xhrSettings - [description]
-     * @param {[type]} audioContext - [description]
-     */
     function AudioFile (key, url, path, xhrSettings, audioContext)
     {
         /**

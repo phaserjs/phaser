@@ -1,20 +1,21 @@
 var Class = require('../../utils/Class');
 
+/**
+ * @classdesc
+ * [description]
+ *
+ * @class GeometryMask
+ * @memberOf Phaser.Display.Masks
+ * @constructor
+ * @since 3.0.0
+ *
+ * @param {Phaser.Scene} scene - [description]
+ * @param {[type]} graphicsGeometry - [description]
+ */
 var GeometryMask = new Class({
 
     initialize:
 
-    /**
-     * [description]
-     *
-     * @class GeometryMask
-     * @memberOf Phaser.Display.Masks
-     * @constructor
-     * @since 3.0.0
-     *
-     * @param {Phaser.Scene} scene - [description]
-     * @param {[type]} graphicsGeometry - [description]
-     */
     function GeometryMask (scene, graphicsGeometry)
     {
         this.geometryMask = graphicsGeometry;

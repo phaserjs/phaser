@@ -8,23 +8,22 @@ var Rectangle = require('../geom/rectangle/Rectangle');
 var Touch = require('./touch/TouchManager');
 var TransformXY = require('../math/TransformXY');
 
-//  Phaser.Input.InputManager
-
+/**
+ * @classdesc
+ * [description]
+ *
+ * @class InputManager
+ * @memberOf Phaser.Input
+ * @constructor
+ * @since 3.0.0
+ *
+ * @param {Phaser.Game} game - [description]
+ * @param {object} config - [description]
+ */
 var InputManager = new Class({
 
     initialize:
 
-    /**
-     * [description]
-     *
-     * @class InputManager
-     * @memberOf Phaser.Input
-     * @constructor
-     * @since 3.0.0
-     *
-     * @param {Phaser.Game} game - [description]
-     * @param {object} config - [description]
-     */
     function InputManager (game, config)
     {
         /**

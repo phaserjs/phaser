@@ -1,24 +1,25 @@
 var BaseCache = require('./BaseCache');
 var Class = require('../utils/Class');
 
+/**
+ * @classdesc
+ * The Cache Manager is the global cache owned and maintained by the Game instance.
+ * 
+ * Various systems, such as the file Loader, rely on this cache in order to store the files
+ * it has loaded. The manager itself doesn't store any files, but instead owns multiple BaseCache
+ * instances, one per type of file. You can also add your own custom caches.
+ *
+ * @class CacheManager
+ * @memberOf Phaser.Cache
+ * @constructor
+ * @since 3.0.0
+ *
+ * @param {Phaser.Game} game - A reference to the Phaser.Game instance that owns this CacheManager.
+ */
 var CacheManager = new Class({
 
     initialize:
 
-    /**
-     * The Cache Manager is the global cache owned and maintained by the Game instance.
-     * 
-     * Various systems, such as the file Loader, rely on this cache in order to store the files
-     * it has loaded. The manager itself doesn't store any files, but instead owns multiple BaseCache
-     * instances, one per type of file. You can also add your own custom caches.
-     *
-     * @class CacheManager
-     * @memberOf Phaser.Cache
-     * @constructor
-     * @since 3.0.0
-     *
-     * @param {Phaser.Game} game - A reference to the Phaser.Game instance that owns this CacheManager.
-     */
     function CacheManager (game)
     {
         /**

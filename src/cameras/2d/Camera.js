@@ -5,23 +5,24 @@ var TransformMatrix = require('../../gameobjects/components/TransformMatrix');
 var ValueToColor = require('../../display/color/ValueToColor');
 var Vector2 = require('../../math/Vector2');
 
+/**
+ * @classdesc
+ * [description]
+ *
+ * @class Camera
+ * @memberOf Phaser.Cameras.Scene2D
+ * @constructor
+ * @since 3.0.0
+ *
+ * @param {number} x - The x position of the Camera, relative to the top-left of the game canvas.
+ * @param {number} y - The y position of the Camera, relative to the top-left of the game canvas.
+ * @param {number} width - The width of the Camera, in pixels.
+ * @param {number} height - The height of the Camera, in pixels.
+ */
 var Camera = new Class({
 
     initialize:
 
-    /**
-     * [description]
-     *
-     * @class Camera
-     * @memberOf Phaser.Cameras.Scene2D
-     * @constructor
-     * @since 3.0.0
-     *
-     * @param {number} x - The x position of the Camera, relative to the top-left of the game canvas.
-     * @param {number} y - The y position of the Camera, relative to the top-left of the game canvas.
-     * @param {number} width - The width of the Camera, in pixels.
-     * @param {number} height - The height of the Camera, in pixels.
-     */
     function Camera (x, y, width, height)
     {
         /**

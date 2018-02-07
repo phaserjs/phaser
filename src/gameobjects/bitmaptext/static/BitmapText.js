@@ -7,6 +7,7 @@ var ParseRetroFont = require('../ParseRetroFont');
 var Render = require('./BitmapTextRender');
 
 /**
+ * @classdesc
  * [description]
  *
  * @class BitmapText

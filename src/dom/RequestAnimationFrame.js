@@ -1,19 +1,20 @@
 var Class = require('../utils/Class');
 var NOOP = require('../utils/NOOP');
 
+/**
+ * @classdesc
+ * Abstracts away the use of RAF or setTimeOut for the core game update loop.
+ * This is invoked automatically by the Phaser.Game instance.
+ *
+ * @class RequestAnimationFrame
+ * @memberOf Phaser.DOM
+ * @constructor
+ * @since 3.0.0
+ */
 var RequestAnimationFrame = new Class({
 
     initialize:
 
-    /**
-     * Abstracts away the use of RAF or setTimeOut for the core game update loop.
-     * This is invoked automatically by the Phaser.Game instance.
-     *
-     * @class RequestAnimationFrame
-     * @memberOf Phaser.DOM
-     * @constructor
-     * @since 3.0.0
-     */
     function RequestAnimationFrame ()
     {
         /**

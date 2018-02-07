@@ -2,22 +2,23 @@ var Class = require('../utils/Class');
 var CustomMap = require('../structs/Map');
 var EventEmitter = require('eventemitter3');
 
+/**
+ * @classdesc
+ * The BaseCache is a base Cache class that can be used for storing references to any kind of data.
+ *
+ * Data can be added, retrieved and removed based on the given keys.
+ *
+ * Keys are string-based.
+ *
+ * @class BaseCache
+ * @memberOf Phaser.Cache
+ * @constructor
+ * @since 3.0.0
+ */
 var BaseCache = new Class({
 
     initialize:
 
-    /**
-     * The BaseCache is a base Cache class that can be used for storing references to any kind of data.
-     *
-     * Data can be added, retrieved and removed based on the given keys.
-     *
-     * Keys are string-based.
-     *
-     * @class BaseCache
-     * @memberOf Phaser.Cache
-     * @constructor
-     * @since 3.0.0
-     */
     function BaseCache ()
     {
         /**

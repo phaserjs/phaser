@@ -7,32 +7,31 @@ var GetValue = require('../../utils/object/GetValue');
 var RadToDeg = require('../../math/RadToDeg');
 var Vector2 = require('../../math/Vector2');
 
-//  Phaser.Curves.Ellipse
-
+/**
+ * @classdesc
+ * [description]
+ *
+ * @class EllipseCurve
+ * @extends Phaser.Curves.Curve
+ * @memberOf Phaser.Curves
+ * @constructor
+ * @since 3.0.0
+ *
+ * @param {number} [x=0] - [description]
+ * @param {number} [y=0] - [description]
+ * @param {number} [xRadius=0] - [description]
+ * @param {number} [yRadius=0] - [description]
+ * @param {number} [startAngle=0] - [description]
+ * @param {number} [endAngle=360] - [description]
+ * @param {boolean} [clockwise=false] - [description]
+ * @param {number} [rotation=0] - [description]
+ */
 var EllipseCurve = new Class({
 
     Extends: Curve,
 
     initialize:
 
-    /**
-     * [description]
-     *
-     * @class EllipseCurve
-     * @extends Phaser.Curves.Curve
-     * @memberOf Phaser.Curves
-     * @constructor
-     * @since 3.0.0
-     *
-     * @param {number} [x=0] - [description]
-     * @param {number} [y=0] - [description]
-     * @param {number} [xRadius=0] - [description]
-     * @param {number} [yRadius=0] - [description]
-     * @param {number} [startAngle=0] - [description]
-     * @param {number} [endAngle=360] - [description]
-     * @param {boolean} [clockwise=false] - [description]
-     * @param {number} [rotation=0] - [description]
-     */
     function EllipseCurve (x, y, xRadius, yRadius, startAngle, endAngle, clockwise, rotation)
     {
         if (typeof x === 'object')

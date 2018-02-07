@@ -4,28 +4,28 @@ var GetPoint = require('./GetPoint');
 var GetPoints = require('./GetPoints');
 var Random = require('./Random');
 
-
+/**
+ * @classdesc
+ * A triangle is a plane created by connecting three points.
+ * The first two arguments specify the first point, the middle two arguments
+ * specify the second point, and the last two arguments specify the third point.
+ *
+ * @class Triangle
+ * @memberOf Phaser.Geom
+ * @constructor
+ * @since 3.0.0
+ *
+ * @param {number} [x1=0] - [description]
+ * @param {number} [y1=0] - [description]
+ * @param {number} [x2=0] - [description]
+ * @param {number} [y2=0] - [description]
+ * @param {number} [x3=0] - [description]
+ * @param {number} [y3=0] - [description]
+ */
 var Triangle = new Class({
 
     initialize:
 
-    /**
-     * A triangle is a plane created by connecting three points.
-     * The first two arguments specify the first point, the middle two arguments
-     * specify the second point, and the last two arguments specify the third point.
-     *
-     * @class Triangle
-     * @memberOf Phaser.Geom
-     * @constructor
-     * @since 3.0.0
-     *
-     * @param {number} x1 - [description]
-     * @param {number} y1 - [description]
-     * @param {number} x2 - [description]
-     * @param {number} y2 - [description]
-     * @param {number} x3 - [description]
-     * @param {number} y3 - [description]
-     */
     function Triangle (x1, y1, x2, y2, x3, y3)
     {
         if (x1 === undefined) { x1 = 0; }
@@ -38,7 +38,9 @@ var Triangle = new Class({
         /**
          * [description]
          *
-         * @property {number} x1
+         * @name Phaser.Geom.Triangle#x1
+         * @type {number}
+         * @default 0
          * @since 3.0.0
          */
         this.x1 = x1;
@@ -46,7 +48,9 @@ var Triangle = new Class({
         /**
          * [description]
          *
-         * @property {number} y1
+         * @name Phaser.Geom.Triangle#y1
+         * @type {number}
+         * @default 0
          * @since 3.0.0
          */
         this.y1 = y1;
@@ -54,7 +58,9 @@ var Triangle = new Class({
         /**
          * [description]
          *
-         * @property {number} x2
+         * @name Phaser.Geom.Triangle#x2
+         * @type {number}
+         * @default 0
          * @since 3.0.0
          */
         this.x2 = x2;
@@ -62,7 +68,9 @@ var Triangle = new Class({
         /**
          * [description]
          *
-         * @property {number} y2
+         * @name Phaser.Geom.Triangle#y2
+         * @type {number}
+         * @default 0
          * @since 3.0.0
          */
         this.y2 = y2;
@@ -70,7 +78,9 @@ var Triangle = new Class({
         /**
          * [description]
          *
-         * @property {number} x3
+         * @name Phaser.Geom.Triangle#x3
+         * @type {number}
+         * @default 0
          * @since 3.0.0
          */
         this.x3 = x3;
@@ -78,7 +88,9 @@ var Triangle = new Class({
         /**
          * [description]
          *
-         * @property {number} y3
+         * @name Phaser.Geom.Triangle#y3
+         * @type {number}
+         * @default 0
          * @since 3.0.0
          */
         this.y3 = y3;
@@ -161,7 +173,7 @@ var Triangle = new Class({
      * @param {[type]} x3 - [description]
      * @param {[type]} y3 - [description]
      *
-     * @return {[type]} [description]
+     * @return {Phaser.Geom.Triangle} This Triangle object.
      */
     setTo: function (x1, y1, x2, y2, x3, y3)
     {
@@ -227,7 +239,7 @@ var Triangle = new Class({
      * [description]
      * 
      * @name Phaser.Geom.Triangle#left
-     * @property {number} left
+     * @type {number}
      * @since 3.0.0
      */
     left: {
@@ -265,7 +277,7 @@ var Triangle = new Class({
      * [description]
      * 
      * @name Phaser.Geom.Triangle#right
-     * @property {number} right
+     * @type {number}
      * @since 3.0.0
      */
     right: {
@@ -303,7 +315,7 @@ var Triangle = new Class({
      * [description]
      * 
      * @name Phaser.Geom.Triangle#top
-     * @property {number} top
+     * @type {number}
      * @since 3.0.0
      */
     top: {
@@ -341,7 +353,7 @@ var Triangle = new Class({
      * [description]
      * 
      * @name Phaser.Geom.Triangle#bottom
-     * @property {number} bottom
+     * @type {number}
      * @since 3.0.0
      */
     bottom: {

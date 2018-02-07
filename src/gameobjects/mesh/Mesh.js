@@ -4,6 +4,7 @@ var GameObject = require('../GameObject');
 var MeshRender = require('./MeshRender');
 
 /**
+ * @classdesc
  * A Mesh Game Object.
  *
  * @class Mesh

@@ -1,34 +1,36 @@
 var Class = require('../utils/Class');
 
+/**
+ * @classdesc
+ * A single frame in an Animation sequence.
+ *
+ * An AnimationFrame consists of a reference to the Texture it uses for rendering, references to other
+ * frames in the animation, and index data. It also has the ability to fire its own `onUpdate` callback
+ * and modify the animation timing.
+ *
+ * AnimationFrames are generated automatically by the Animation class.
+ *
+ * @class AnimationFrame
+ * @memberOf Phaser.Animations
+ * @constructor
+ * @since 3.0.0
+ *
+ * @param {string} textureKey - The key of the Texture this AnimationFrame uses.
+ * @param {string|integer} textureFrame - The key of the Frame within the Texture that this AnimationFrame uses.
+ * @param {integer} index - The index of this AnimationFrame within the Animation sequence.
+ * @param {Phaser.Textures.Frame} frame - A reference to the Texture Frame this AnimationFrame uses for rendering.
+ */
 var AnimationFrame = new Class({
 
     initialize:
 
-    /**
-     * A single frame in an Animation sequence.
-     *
-     * An AnimationFrame consists of a reference to the Texture it uses for rendering, references to other
-     * frames in the animation, and index data. It also has the ability to fire its own `onUpdate` callback
-     * and modify the animation timing.
-     *
-     * AnimationFrames are generated automatically by the Animation class.
-     *
-     * @class AnimationFrame
-     * @memberOf Phaser.Animations
-     * @constructor
-     * @since 3.0.0
-     *
-     * @param {string} textureKey - The key of the Texture this AnimationFrame uses.
-     * @param {string|integer} textureFrame - The key of the Frame within the Texture that this AnimationFrame uses.
-     * @param {integer} index - The index of this AnimationFrame within the Animation sequence.
-     * @param {Phaser.Textures.Frame} frame - A reference to the Texture Frame this AnimationFrame uses for rendering.
-     */
     function AnimationFrame (textureKey, textureFrame, index, frame)
     {
         /**
          * The key of the Texture this AnimationFrame uses.
          *
-         * @property {string} textureKey
+         * @name Phaser.Animations.AnimationFrame#textureKey
+         * @type {string}
          * @since 3.0.0
          */
         this.textureKey = textureKey;
@@ -36,7 +38,8 @@ var AnimationFrame = new Class({
         /**
          * The key of the Frame within the Texture that this AnimationFrame uses.
          *
-         * @property {string|integer} textureFrame
+         * @name Phaser.Animations.AnimationFrame#textureFrame
+         * @type {string|integer}
          * @since 3.0.0
          */
         this.textureFrame = textureFrame;
@@ -44,7 +47,8 @@ var AnimationFrame = new Class({
         /**
          * The index of this AnimationFrame within the Animation sequence.
          *
-         * @property {integer} index
+         * @name Phaser.Animations.AnimationFrame#index
+         * @type {integer}
          * @since 3.0.0
          */
         this.index = index;
@@ -52,7 +56,8 @@ var AnimationFrame = new Class({
         /**
          * A reference to the Texture Frame this AnimationFrame uses for rendering.
          *
-         * @property {Phaser.Textures.Frame} frame
+         * @name Phaser.Animations.AnimationFrame#frame
+         * @type {Phaser.Textures.Frame}
          * @since 3.0.0
          */
         this.frame = frame;
@@ -60,7 +65,8 @@ var AnimationFrame = new Class({
         /**
          * Is this the first frame in an animation sequence?
          *
-         * @property {boolean} isFirst
+         * @name Phaser.Animations.AnimationFrame#isFirst
+         * @type {boolean}
          * @default false
          * @readOnly
          * @since 3.0.0
@@ -70,7 +76,8 @@ var AnimationFrame = new Class({
         /**
          * Is this the last frame in an animation sequence?
          *
-         * @property {boolean} isLast
+         * @name Phaser.Animations.AnimationFrame#isLast
+         * @type {boolean}
          * @default false
          * @readOnly
          * @since 3.0.0
@@ -80,7 +87,8 @@ var AnimationFrame = new Class({
         /**
          * A reference to the AnimationFrame that comes before this one in the animation, if any.
          *
-         * @property {?Phaser.Animations.AnimationFrame} prevFrame
+         * @name Phaser.Animations.AnimationFrame#prevFrame
+         * @type {?Phaser.Animations.AnimationFrame}
          * @default null
          * @readOnly
          * @since 3.0.0
@@ -90,7 +98,8 @@ var AnimationFrame = new Class({
         /**
          * A reference to the AnimationFrame that comes after this one in the animation, if any.
          *
-         * @property {?Phaser.Animations.AnimationFrame} nextFrame
+         * @name Phaser.Animations.AnimationFrame#nextFrame
+         * @type {?Phaser.Animations.AnimationFrame}
          * @default null
          * @readOnly
          * @since 3.0.0
@@ -101,7 +110,8 @@ var AnimationFrame = new Class({
          * Additional time (in ms) that this frame should appear for during playback.
          * The value is added onto the msPerFrame set by the animation.
          *
-         * @property {number} duration
+         * @name Phaser.Animations.AnimationFrame#duration
+         * @type {number}
          * @default 0
          * @since 3.0.0
          */
@@ -111,7 +121,8 @@ var AnimationFrame = new Class({
          * What % through the animation does this frame come?
          * This value is generated when the animation is created and cached here.
          *
-         * @property {number} progress
+         * @name Phaser.Animations.AnimationFrame#progress
+         * @type {number}
          * @default 0
          * @readOnly
          * @since 3.0.0
@@ -121,7 +132,8 @@ var AnimationFrame = new Class({
         /**
          * A frame specific callback, invoked if this frame gets displayed and the callback is set.
          *
-         * @property {?function} onUpdate
+         * @name Phaser.Animations.AnimationFrame#onUpdate
+         * @type {?function}
          * @default null
          * @since 3.0.0
          */

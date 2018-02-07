@@ -1,40 +1,38 @@
 var Class = require('../../utils/Class');
 var Contains = require('./Contains');
 
+/**
+ * @classdesc
+ * [description]
+ *
+ * @class Polygon
+ * @memberOf Phaser.Geom
+ * @constructor
+ * @since 3.0.0
+ *
+ * @param {Phaser.Geom.Point[]} [points] - [description]
+ */
 var Polygon = new Class({
 
     initialize:
 
-    /**
-     * [description]
-     *
-     * @class Polygon
-     * @memberOf Phaser.Input.Touch
-     * @constructor
-     * @since 3.0.0
-     *
-     * @param {Phaser.Geom.Point[]} points - [description]
-     */
     function Polygon (points)
     {
-        // @property {number} area - The area of this Polygon.
-
         /**
-         * [description]
+         * The area of this Polygon.
          *
-         * @property {number} area
+         * @name Phaser.Geom.Polygon#area
+         * @type {number}
          * @default 0
          * @since 3.0.0
          */
         this.area = 0;
 
-        // @property {array} points - An array of number pair objects that make up this polygon. I.e. [ {x,y}, {x,y}, {x,y} ]
-
         /**
-         * [description]
+         * An array of number pair objects that make up this polygon. I.e. [ {x,y}, {x,y}, {x,y} ]
          *
-         * @property {Phaser.Geom.Point[]} points
-         * @default []
+         * @name Phaser.Geom.Polygon#points
+         * @type {Phaser.Geom.Point[]}
          * @since 3.0.0
          */
         this.points = [];
@@ -48,7 +46,7 @@ var Polygon = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Input.Touch.Polygon#contains
+     * @method Phaser.Geom.Polygon#contains
      * @since 3.0.0
      *
      * @param {[type]} x - [description]
@@ -72,16 +70,13 @@ var Polygon = new Class({
      * - An array of arrays with two elements representing x/y coordinates: `[[x1, y1], [x2, y2], ...]`
      *
      * `setTo` may also be called without any arguments to remove all points.
-     */
-    /**
-     * [description]
      *
-     * @method Phaser.Input.Touch.Polygon#setTo
+     * @method Phaser.Geom.Polygon#setTo
      * @since 3.0.0
      *
      * @param {[type]} points - [description]
      *
-     * @return {[type]} [description]
+     * @return {Phaser.Geom.Polygon} This Polygon object.
      */
     setTo: function (points)
     {
@@ -136,18 +131,13 @@ var Polygon = new Class({
 
     /**
      * Calculates the area of the Polygon. This is available in the property Polygon.area
-     */
-    /**
-     * [description]
      *
-     * @method Phaser.Input.Touch.Polygon#calculateArea
+     * @method Phaser.Geom.Polygon#calculateArea
      * @since 3.0.0
      *
-     * @param {[type]} y0 - [description]
-     *
-     * @return {[type]} [description]
+     * @return {number} [description]
      */
-    calculateArea: function (y0)
+    calculateArea: function ()
     {
         if (this.points.length < 3)
         {
@@ -174,29 +164,6 @@ var Polygon = new Class({
         sum += (p1.x - p2.x) * (p2.y + p1.y);
 
         this.area = -sum * 0.5;
-
-        // var p1;
-        // var p2;
-        // var avgHeight;
-        // var width;
-
-        // for (var i = 0, len = this.points.length; i < len; i++)
-        // {
-        //     p1 = this.points[i];
-
-        //     if (i === len - 1)
-        //     {
-        //         p2 = this.points[0];
-        //     }
-        //     else
-        //     {
-        //         p2 = this.points[i + 1];
-        //     }
-
-        //     avgHeight = ((p1.y - y0) + (p2.y - y0)) / 2;
-        //     width = p1.x - p2.x;
-        //     this.area += avgHeight * width;
-        // }
 
         return this.area;
     }

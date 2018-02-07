@@ -3,22 +3,21 @@ var OrthographicCamera = require('./OrthographicCamera');
 var PerspectiveCamera = require('./PerspectiveCamera');
 var PluginManager = require('../../plugins/PluginManager');
 
-//  Phaser.Cameras.Sprite3D.CameraManager
-
+/**
+ * @classdesc
+ * [description]
+ *
+ * @class CameraManager
+ * @memberOf Phaser.Cameras.Sprite3D
+ * @constructor
+ * @since 3.0.0
+ *
+ * @param {Phaser.Scene} scene - [description]
+ */
 var CameraManager = new Class({
 
     initialize:
 
-    /**
-     * [description]
-     *
-     * @class CameraManager
-     * @memberOf Phaser.Cameras.Sprite3D
-     * @constructor
-     * @since 3.0.0
-     *
-     * @param {Phaser.Scene} scene - [description]
-     */
     function CameraManager (scene)
     {
         /**

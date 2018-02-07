@@ -5,27 +5,26 @@ var Vector3 = require('../../math/Vector3');
 //  Local cache vars
 var tmpVec3 = new Vector3();
 
-//  Phaser.Cameras.Sprite3D.OrthographicCamera
-
+/**
+ * @classdesc
+ * [description]
+ *
+ * @class OrthographicCamera
+ * @extends Phaser.Cameras.Sprite3D.Camera
+ * @memberOf Phaser.Cameras.Sprite3D
+ * @constructor
+ * @since 3.0.0
+ *
+ * @param {Phaser.Scene} scene - [description]
+ * @param {integer} viewportWidth - [description]
+ * @param {integer} viewportHeight - [description]
+ */
 var OrthographicCamera = new Class({
 
     Extends: Camera,
 
     initialize:
 
-    /**
-     * [description]
-     *
-     * @class OrthographicCamera
-     * @extends Phaser.Cameras.Sprite3D.Camera
-     * @memberOf Phaser.Cameras.Sprite3D
-     * @constructor
-     * @since 3.0.0
-     *
-     * @param {Phaser.Scene} scene - [description]
-     * @param {integer} viewportWidth - [description]
-     * @param {integer} viewportHeight - [description]
-     */
     function OrthographicCamera (scene, viewportWidth, viewportHeight)
     {
         if (viewportWidth === undefined) { viewportWidth = 0; }

@@ -6,6 +6,7 @@ var GetPowerOfTwo = require('../../math/pow2/GetPowerOfTwo');
 var TileSpriteRender = require('./TileSpriteRender');
 
 /**
+ * @classdesc
  * [description]
  *
  * @class TileSprite

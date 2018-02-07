@@ -17,25 +17,62 @@ var yUnitVec3 = new Vector3(0, 1, 0);
 var tmpvec = new Vector3();
 var tmpMat3 = new Matrix3();
 
+/**
+ * @classdesc
+ * [description]
+ *
+ * @class Quaternion
+ * @memberOf Phaser.Math
+ * @constructor
+ * @since 3.0.0
+ *
+ * @param {number} [x] - [description]
+ * @param {number} [y] - [description]
+ * @param {number} [z] - [description]
+ * @param {number} [w] - [description]
+ */
 var Quaternion = new Class({
 
     initialize:
 
-    /**
-     * [description]
-     *
-     * @class Quaternion
-     * @memberOf Phaser.Math
-     * @constructor
-     * @since 3.0.0
-     *
-     * @param {number} [x] - [description]
-     * @param {number} [y] - [description]
-     * @param {number} [z] - [description]
-     * @param {number} [w] - [description]
-     */
     function Quaternion (x, y, z, w)
     {
+        /**
+         * The x component of this Quaternion.
+         *
+         * @name Phaser.Math.Quaternion#x
+         * @type {number}
+         * @default 0
+         * @since 3.0.0
+         */
+
+        /**
+         * The y component of this Quaternion.
+         *
+         * @name Phaser.Math.Quaternion#y
+         * @type {number}
+         * @default 0
+         * @since 3.0.0
+         */
+
+        /**
+         * The z component of this Quaternion.
+         *
+         * @name Phaser.Math.Quaternion#z
+         * @type {number}
+         * @default 0
+         * @since 3.0.0
+         */
+
+        /**
+         * The w component of this Quaternion.
+         *
+         * @name Phaser.Math.Quaternion#w
+         * @type {number}
+         * @default 0
+         * @since 3.0.0
+         */
+
         if (typeof x === 'object')
         {
             this.x = x.x || 0;

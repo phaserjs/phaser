@@ -3,25 +3,62 @@
 
 var Class = require('../utils/Class');
 
+/**
+ * @classdesc
+ * [description]
+ *
+ * @class Vector4
+ * @memberOf Phaser.Math
+ * @constructor
+ * @since 3.0.0
+ *
+ * @param {number} [x] - [description]
+ * @param {number} [y] - [description]
+ * @param {number} [z] - [description]
+ * @param {number} [w] - [description]
+ */
 var Vector4 = new Class({
 
     initialize:
 
-    /**
-     * [description]
-     *
-     * @class Vector4
-     * @memberOf Phaser.Math
-     * @constructor
-     * @since 3.0.0
-     *
-     * @param {number} [x] - [description]
-     * @param {number} [y] - [description]
-     * @param {number} [z] - [description]
-     * @param {number} [w] - [description]
-     */
     function Vector4 (x, y, z, w)
     {
+        /**
+         * The x component of this Vector.
+         *
+         * @name Phaser.Math.Vector3#x
+         * @type {number}
+         * @default 0
+         * @since 3.0.0
+         */
+
+        /**
+         * The y component of this Vector.
+         *
+         * @name Phaser.Math.Vector3#y
+         * @type {number}
+         * @default 0
+         * @since 3.0.0
+         */
+
+        /**
+         * The z component of this Vector.
+         *
+         * @name Phaser.Math.Vector3#z
+         * @type {number}
+         * @default 0
+         * @since 3.0.0
+         */
+
+        /**
+         * The w component of this Vector.
+         *
+         * @name Phaser.Math.Vector3#w
+         * @type {number}
+         * @default 0
+         * @since 3.0.0
+         */
+
         if (typeof x === 'object')
         {
             this.x = x.x || 0;

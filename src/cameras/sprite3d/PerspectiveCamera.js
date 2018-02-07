@@ -5,8 +5,21 @@ var Vector3 = require('../../math/Vector3');
 //  Local cache vars
 var tmpVec3 = new Vector3();
 
-//  Phaser.Cameras.Sprite3D.PerspectiveCamera
-
+/**
+ * @classdesc
+ * [description]
+ *
+ * @class PerspectiveCamera
+ * @extends Phaser.Cameras.Sprite3D.Camera
+ * @memberOf Phaser.Cameras.Sprite3D
+ * @constructor
+ * @since 3.0.0
+ *
+ * @param {Phaser.Scene} scene - [description]
+ * @param {integer} fieldOfView - [description]
+ * @param {integer} viewportWidth - [description]
+ * @param {integer} viewportHeight - [description]
+ */
 var PerspectiveCamera = new Class({
 
     Extends: Camera,
@@ -14,20 +27,6 @@ var PerspectiveCamera = new Class({
     //  FOV is converted to radians automatically
     initialize:
 
-    /**
-     * [description]
-     *
-     * @class PerspectiveCamera
-     * @extends Phaser.Cameras.Sprite3D.Camera
-     * @memberOf Phaser.Cameras.Sprite3D
-     * @constructor
-     * @since 3.0.0
-     *
-     * @param {Phaser.Scene} scene - [description]
-     * @param {integer} fieldOfView - [description]
-     * @param {integer} viewportWidth - [description]
-     * @param {integer} viewportHeight - [description]
-     */
     function PerspectiveCamera (scene, fieldOfView, viewportWidth, viewportHeight)
     {
         if (fieldOfView === undefined) { fieldOfView = 80; }

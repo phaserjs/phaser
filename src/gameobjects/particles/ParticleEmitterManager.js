@@ -7,6 +7,7 @@ var ParticleEmitter = require('./ParticleEmitter');
 var Render = require('./ParticleManagerRender');
 
 /**
+ * @classdesc
  * [description]
  *
  * @class ParticleEmitterManager

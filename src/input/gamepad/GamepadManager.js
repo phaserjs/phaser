@@ -1,5 +1,3 @@
-//  Phaser.Input.Gamepad.GamepadManager
-
 var Class = require('../../utils/Class');
 var Gamepad = require('./Gamepad');
 
@@ -8,20 +6,21 @@ var Gamepad = require('./Gamepad');
 // https://www.smashingmagazine.com/2015/11/gamepad-api-in-web-games/
 // http://html5gamepad.com/
 
+/**
+ * @classdesc
+ * [description]
+ *
+ * @class GamepadManager
+ * @memberOf Phaser.Input.Gamepad
+ * @constructor
+ * @since 3.0.0
+ *
+ * @param {Phaser.Input.InputManager} inputManager - [description]
+ */
 var GamepadManager = new Class({
 
     initialize:
 
-    /**
-     * [description]
-     *
-     * @class GamepadManager
-     * @memberOf Phaser.Input.Gamepad
-     * @constructor
-     * @since 3.0.0
-     *
-     * @param {Phaser.Input.InputManager} inputManager - [description]
-     */
     function GamepadManager (inputManager)
     {
         /**

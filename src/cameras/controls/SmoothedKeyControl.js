@@ -15,20 +15,21 @@ var GetValue = require('../../utils/object/GetValue');
 //     maxSpeed: 1.0
 // };
 
+/**
+ * @classdesc
+ * [description]
+ *
+ * @class SmoothedKeyControl
+ * @memberOf Phaser.Cameras.Controls
+ * @constructor
+ * @since 3.0.0
+ *
+ * @param {object} config - [description]
+ */
 var SmoothedKeyControl = new Class({
 
     initialize:
 
-    /**
-     * [description]
-     *
-     * @class SmoothedKeyControl
-     * @memberOf Phaser.Cameras.Controls
-     * @constructor
-     * @since 3.0.0
-     *
-     * @param {object} config - [description]
-     */
     function SmoothedKeyControl (config)
     {
         /**

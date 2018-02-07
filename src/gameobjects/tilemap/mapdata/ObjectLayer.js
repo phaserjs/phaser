@@ -1,24 +1,24 @@
 var Class = require('../../../utils/Class');
 var GetFastValue = require('../../../utils/object/GetFastValue');
 
+/**
+ * @classdesc
+ * A class for representing a Tiled object layer in a map. This mirrors the structure of a Tiled
+ * object layer, except:
+ *  - "x" & "y" properties are ignored since these cannot be changed in Tiled.
+ *  - "offsetx" & "offsety" are applied to the individual object coordinates directly, so they
+ *    are ignored as well.
+ *  - "draworder" is ignored.
+ *
+ * @class ObjectLayer
+ * @constructor
+ *
+ * @param {object} [config] - [description]
+ */
 var ObjectLayer = new Class({
 
     initialize:
 
-
-    /**
-     * A class for representing a Tiled object layer in a map. This mirrors the structure of a Tiled
-     * object layer, except:
-     *  - "x" & "y" properties are ignored since these cannot be changed in Tiled.
-     *  - "offsetx" & "offsety" are applied to the individual object coordinates directly, so they
-     *    are ignored as well.
-     *  - "draworder" is ignored.
-     *
-     * @class ObjectLayer
-     * @constructor
-     *
-     * @param {object} [config] - [description]
-     */
     function ObjectLayer (config)
     {
         if (config === undefined) { config = {}; }

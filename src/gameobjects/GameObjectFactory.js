@@ -2,6 +2,7 @@ var Class = require('../utils/Class');
 var PluginManager = require('../plugins/PluginManager');
 
 /**
+ * @classdesc
  * The Game Object Factory is a Scene plugin that allows you to quickly create many common
  * types of Game Objects and have them automatically registered with the Scene.
  *

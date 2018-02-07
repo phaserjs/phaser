@@ -1,6 +1,7 @@
 var Class = require('../../utils/Class');
 
 /**
+ * @classdesc
  * A Bob Game Object.
  *
  * A Bob belongs to a Blitter Game Object. The Blitter is responsible for managing and rendering this object.

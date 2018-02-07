@@ -8,20 +8,21 @@ var GetValue = require('../../utils/object/GetValue');
 //      speed: float OR { x: 0, y: 0 }
 //  })
 
+/**
+ * @classdesc
+ * [description]
+ *
+ * @class FixedKeyControl
+ * @memberOf Phaser.Cameras.Controls
+ * @constructor
+ * @since 3.0.0
+ *
+ * @param {object} config - [description]
+ */
 var FixedKeyControl = new Class({
 
     initialize:
 
-    /**
-     * [description]
-     *
-     * @class FixedKeyControl
-     * @memberOf Phaser.Cameras.Controls
-     * @constructor
-     * @since 3.0.0
-     *
-     * @param {object} config - [description]
-     */
     function FixedKeyControl (config)
     {
         /**

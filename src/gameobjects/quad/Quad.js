@@ -2,6 +2,7 @@ var Class = require('../../utils/Class');
 var Mesh = require('../mesh/Mesh');
 
 /**
+ * @classdesc
  * A Quad Game Object.
  *
  * A Quad is a Mesh Game Object pre-configured with two triangles arranged into a rectangle, with a single

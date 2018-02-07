@@ -10,21 +10,22 @@ var Rectangle = require('../../geom/rectangle/Rectangle');
 var SplineCurve = require('../spline/SplineCurve');
 var Vector2 = require('../../math/Vector2');
 
+/**
+ * @classdesc
+ * [description]
+ *
+ * @class Path
+ * @memberOf Phaser.Curves
+ * @constructor
+ * @since 3.0.0
+ *
+ * @param {number} [x=0] - [description]
+ * @param {number} [y=0] - [description]
+ */
 var Path = new Class({
 
     initialize:
 
-    /**
-     * [description]
-     *
-     * @class Path
-     * @memberOf Phaser.Curves
-     * @constructor
-     * @since 3.0.0
-     *
-     * @param {number} [x=0] - [description]
-     * @param {number} [y=0] - [description]
-     */
     function Path (x, y)
     {
         if (x === undefined) { x = 0; }

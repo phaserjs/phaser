@@ -1,6 +1,7 @@
 var Class = require('../../../utils/Class');
 
 /**
+ * @classdesc
  * A Death Zone.
  *
  * A Death Zone is a special type of zone that will kill a Particle as soon as it either enters, or leaves, the zone.

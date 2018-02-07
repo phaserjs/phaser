@@ -81,21 +81,22 @@ var ValueToColor = require('../display/color/ValueToColor');
  * @property {string} [images.missing] - [description]
  */
 
+/**
+ * @classdesc
+ * [description]
+ *
+ * @class Config
+ * @memberOf Phaser.Boot
+ * @constructor
+ * @since 3.0.0
+ *
+ * @param {object} [GameConfig] - The configuration object for your Phaser Game instance.
+ *
+ */
 var Config = new Class({
 
     initialize:
 
-    /**
-     * [description]
-     *
-     * @class Config
-     * @memberOf Phaser.Boot
-     * @constructor
-     * @since 3.0.0
-     *
-     * @param {object} [GameConfig] - The configuration object for your Phaser Game instance.
-     *
-     */
     function Config (config)
     {
         if (config === undefined) { config = {}; }

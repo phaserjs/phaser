@@ -1,20 +1,21 @@
 var Class = require('../../utils/Class');
 
+/**
+ * @classdesc
+ * [description]
+ *
+ * @class BitmapMask
+ * @memberOf Phaser.Display.Masks
+ * @constructor
+ * @since 3.0.0
+ *
+ * @param {Phaser.Scene} scene - [description]
+ * @param {[type]} renderable - [description]
+ */
 var BitmapMask = new Class({
     
     initialize:
 
-    /**
-     * [description]
-     *
-     * @class BitmapMask
-     * @memberOf Phaser.Display.Masks
-     * @constructor
-     * @since 3.0.0
-     *
-     * @param {Phaser.Scene} scene - [description]
-     * @param {[type]} renderable - [description]
-     */
     function BitmapMask (scene, renderable)
     {
         var renderer = scene.sys.game.renderer;

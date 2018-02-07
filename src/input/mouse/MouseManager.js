@@ -4,20 +4,21 @@ var Features = require('../../device/Features');
 //  https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent
 //  https://github.com/WICG/EventListenerOptions/blob/gh-pages/explainer.md
 
+/**
+ * @classdesc
+ * [description]
+ *
+ * @class MouseManager
+ * @memberOf Phaser.Input.Mouse
+ * @constructor
+ * @since 3.0.0
+ *
+ * @param {Phaser.Input.InputManager} inputManager - [description]
+ */
 var MouseManager = new Class({
 
     initialize:
 
-    /**
-     * [description]
-     *
-     * @class MouseManager
-     * @memberOf Phaser.Input.Mouse
-     * @constructor
-     * @since 3.0.0
-     *
-     * @param {Phaser.Input.InputManager} inputManager - [description]
-     */
     function MouseManager (inputManager)
     {
         /**

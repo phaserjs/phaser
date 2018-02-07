@@ -18,22 +18,21 @@ var billboardMatrix = new Matrix4();
 
 //  @author attribute https://github.com/mattdesl/cam3d/wiki
 
-//  Phaser.Cameras.Sprite3D.Camera
-
+/**
+ * @classdesc
+ * [description]
+ *
+ * @class Camera
+ * @memberOf Phaser.Cameras.Sprite3D
+ * @constructor
+ * @since 3.0.0
+ *
+ * @param {Phaser.Scene} scene - [description]
+ */
 var Camera = new Class({
 
     initialize:
 
-    /**
-     * [description]
-     *
-     * @class Camera
-     * @memberOf Phaser.Cameras.Sprite3D
-     * @constructor
-     * @since 3.0.0
-     *
-     * @param {Phaser.Scene} scene - [description]
-     */
     function Camera (scene)
     {
         /**

@@ -4,6 +4,7 @@ var DataManager = require('../data/DataManager');
 var EventEmitter = require('eventemitter3');
 
 /**
+ * @classdesc
  * The base class that all Game Objects extend.
  * You don't create GameObjects directly and they cannot be added to the display list.
  * Instead, use them as the base for your own custom classes.

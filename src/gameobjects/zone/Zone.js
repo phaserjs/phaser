@@ -8,6 +8,7 @@ var Rectangle = require('../../geom/rectangle/Rectangle');
 var RectangleContains = require('../../geom/rectangle/Contains');
 
 /**
+ * @classdesc
  * A Zone Game Object.
  *
  * A Zone is a non-rendering rectangular Game Object that has a position and size.

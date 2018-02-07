@@ -5,27 +5,29 @@ var EventEmitter = require('eventemitter3');
 var GetValue = require('../utils/object/GetValue');
 var Pad = require('../utils/string/Pad');
 
-// Animations are managed by the global AnimationManager. This is a singleton class that is
-// responsible for creating and delivering animations and their corresponding data to all Game Objects.
-// Sprites and other Game Objects get the data they need from the AnimationManager.
-// Access it via `scene.anims`.
-
+/**
+ * @classdesc
+ * The Animation Manager.
+ * 
+ * Animations are managed by the global Animation Manager. This is a singleton class that is
+ * responsible for creating and delivering animations and their corresponding data to all Game Objects.
+ * Unlike plugins it is owned by the Game instance, not the Scene.
+ * 
+ * Sprites and other Game Objects get the data they need from the AnimationManager.
+ *
+ * @class AnimationManager
+ * @memberOf Phaser.Animations
+ * @constructor
+ * @since 3.0.0
+ * 
+ * @param {Phaser.Game} game - [description]
+ */
 var AnimationManager = new Class({
 
     Extends: EventEmitter,
 
     initialize:
 
-    /**
-     * [description]
-     *
-     * @class AnimationManager
-     * @memberOf Phaser.Animations
-     * @constructor
-     * @since 3.0.0
-     * 
-     * @param {Phaser.Game} game - [description]
-     */
     function AnimationManager (game)
     {
         EventEmitter.call(this);
@@ -33,41 +35,60 @@ var AnimationManager = new Class({
         /**
          * [description]
          *
-         * @property {Phaser.Game} game
+         * @name Phaser.Animations.AnimationManager#game
+         * @type {Phaser.Game}
          * @protected
+         * @since 3.0.0
          */
         this.game = game;
 
         /**
          * [description]
          *
-         * @property {[type]} textureManager
+         * @name Phaser.Animations.AnimationManager#textureManager
+         * @type {Phaser.Textures.TextureManager}
          * @protected
+         * @since 3.0.0
          */
         this.textureManager = null;
 
         /**
          * [description]
          *
-         * @property {number} [globalTimeScale=1]
+         * @name Phaser.Animations.AnimationManager#globalTimeScale
+         * @type {number}
+         * @default 1
+         * @since 3.0.0
          */
         this.globalTimeScale = 1;
 
         /**
          * [description]
          *
-         * @property {Phaser.Structs.Map} anims
+         * @name Phaser.Animations.AnimationManager#anims
+         * @type {Phaser.Structs.Map}
          * @protected
+         * @since 3.0.0
          */
         this.anims = new CustomMap();
 
         /**
          * [description]
          *
-         * @property {boolean} [paused=false]
+         * @name Phaser.Animations.AnimationManager#paused
+         * @type {boolean}
+         * @default false
+         * @since 3.0.0
          */
         this.paused = false;
 
+        /**
+         * [description]
+         *
+         * @name Phaser.Animations.AnimationManager#name
+         * @type {string}
+         * @since 3.0.0
+         */
         this.name = 'AnimationManager';
 
         game.events.once('boot', this.boot, this);
@@ -78,8 +99,6 @@ var AnimationManager = new Class({
      *
      * @method Phaser.Animations.AnimationManager#boot
      * @since 3.0.0
-     * 
-     * @param {[type]} textureManager - [description]
      */
     boot: function ()
     {
@@ -98,7 +117,7 @@ var AnimationManager = new Class({
      * @param {string} key - [description]
      * @param {Phaser.Animations.Animation} animation - [description]
      * 
-     * @return {Phaser.Animations.AnimationManager} The Animation Manager for method chaining.
+     * @return {Phaser.Animations.AnimationManager} This Animation Manager.
      */
     add: function (key, animation)
     {
@@ -384,7 +403,7 @@ var AnimationManager = new Class({
      * @fires PauseAllAnimationEvent
      * @since 3.0.0
      * 
-     * @return {Phaser.Animations.AnimationManager} The Animation Manager for method chaining.
+     * @return {Phaser.Animations.AnimationManager} This Animation Manager.
      */
     pauseAll: function ()
     {
@@ -407,7 +426,7 @@ var AnimationManager = new Class({
      * @param {string} key - [description]
      * @param {Phaser.GameObjects.GameObject} child - [description]
      * 
-     * @return {Phaser.Animations.AnimationManager} The Animation Manager for method chaining.
+     * @return {Phaser.Animations.AnimationManager} This Animation Manager.
      */
     play: function (key, child)
     {
@@ -463,7 +482,7 @@ var AnimationManager = new Class({
      * @fires ResumeAllAnimationEvent
      * @since 3.0.0
      * 
-     * @return {Phaser.Animations.AnimationManager} The Animation Manager for method chaining.
+     * @return {Phaser.Animations.AnimationManager} This Animation Manager.
      */
     resumeAll: function ()
     {
@@ -487,7 +506,7 @@ var AnimationManager = new Class({
      * @param {Phaser.GameObjects.GameObject} child - [description]
      * @param {number} [stagger=0] - [description]
      * 
-     * @return {Phaser.Animations.AnimationManager} The Animation Manager for method chaining.
+     * @return {Phaser.Animations.AnimationManager} This Animation Manager.
      */
     staggerPlay: function (key, child, stagger)
     {

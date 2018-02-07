@@ -3,27 +3,29 @@
 
 var Class = require('../utils/Class');
 
+/**
+ * @classdesc
+ * [description]
+ *
+ * @class Matrix3
+ * @memberOf Phaser.Math
+ * @constructor
+ * @since 3.0.0
+ *
+ * @param {Phaser.Math.Matrix3} [m] - [description]
+ */
+
 var Matrix3 = new Class({
 
     initialize:
 
-    /**
-     * [description]
-     *
-     * @class Matrix3
-     * @memberOf Phaser.Math
-     * @constructor
-     * @since 3.0.0
-     *
-     * @param {Phaser.Math.Matrix3} [m] - [description]
-     */
     function Matrix3 (m)
     {
-
         /**
          * [description]
          *
-         * @property {Float32Array} val
+         * @name Phaser.Math.Matrix3#val
+         * @type {Float32Array}
          * @since 3.0.0
          */
         this.val = new Float32Array(9);

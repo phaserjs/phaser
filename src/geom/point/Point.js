@@ -1,37 +1,42 @@
 var Class = require('../../utils/Class');
 
+/**
+ * @classdesc
+ * [description]
+ *
+ * @class Point
+ * @memberOf Phaser.Geom
+ * @constructor
+ * @since 3.0.0
+ *
+ * @param {number} [x=0] - The x coordinate of this Point.
+ * @param {number} [y=0] - The y coordinate of this Point.
+ */
 var Point = new Class({
 
     initialize:
 
-    /**
-     * [description]
-     *
-     * @class Point
-     * @memberOf Phaser.Geom
-     * @constructor
-     * @since 3.0.0
-     *
-     * @param {number} [x] - [description]
-     * @param {number} [y] - [description]
-     */
     function Point (x, y)
     {
         if (x === undefined) { x = 0; }
         if (y === undefined) { y = x; }
 
         /**
-         * [description]
+         * The x coordinate of this Point.
          *
-         * @property {number} x
+         * @name Phaser.Geom.Point#x
+         * @type {number}
+         * @default 0
          * @since 3.0.0
          */
         this.x = x;
 
         /**
-         * [description]
+         * The y coordinate of this Point.
          *
-         * @property {number} y
+         * @name Phaser.Geom.Point#y
+         * @type {number}
+         * @default 0
          * @since 3.0.0
          */
         this.y = y;
@@ -43,10 +48,10 @@ var Point = new Class({
      * @method Phaser.Geom.Point#setTo
      * @since 3.0.0
      *
-     * @param {[type]} x - [description]
-     * @param {[type]} y - [description]
+     * @param {number} [x=0] - The x coordinate of this Point.
+     * @param {number} [y=0] - The y coordinate of this Point.
      *
-     * @return {[type]} [description]
+     * @return {Phaser.Geom.Point} This Point object.
      */
     setTo: function (x, y)
     {

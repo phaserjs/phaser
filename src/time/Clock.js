@@ -3,6 +3,7 @@ var PluginManager = require('../plugins/PluginManager');
 var TimerEvent = require('./TimerEvent');
 
 /**
+ * @classdesc
  * [description]
  *
  * @class Clock

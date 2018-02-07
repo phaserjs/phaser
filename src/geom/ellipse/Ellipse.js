@@ -4,27 +4,28 @@ var GetPoint = require('./GetPoint');
 var GetPoints = require('./GetPoints');
 var Random = require('./Random');
 
+/**
+ * @classdesc
+ * An Ellipse object.
+ *
+ * This is a geometry object, containing numerical values and related methods to inspect and modify them.
+ * It is not a Game Object, in that you cannot add it to the display list, and it has no texture.
+ * To render an Ellipse you should look at the capabilities of the Graphics class.
+ *
+ * @class Ellipse
+ * @memberOf Phaser.Geom
+ * @constructor
+ * @since 3.0.0
+ *
+ * @param {number} [x=0] - The x position of the center of the ellipse.
+ * @param {number} [y=0] - The y position of the center of the ellipse.
+ * @param {number} [width=0] - The width of the ellipse.
+ * @param {number} [height=0] - The height of the ellipse.
+ */
 var Ellipse = new Class({
 
     initialize:
 
-    /**
-     * An Ellipse object.
-     *
-     * This is a geometry object, containing numerical values and related methods to inspect and modify them.
-     * It is not a Game Object, in that you cannot add it to the display list, and it has no texture.
-     * To render an Ellipse you should look at the capabilities of the Graphics class.
-     *
-     * @class Ellipse
-     * @memberOf Phaser.Geom
-     * @constructor
-     * @since 3.0.0
-     *
-     * @param {number} [x=0] - The x position of the center of the ellipse.
-     * @param {number} [y=0] - The y position of the center of the ellipse.
-     * @param {number} [width=0] - The width of the ellipse.
-     * @param {number} [height=0] - The height of the ellipse.
-     */
     function Ellipse (x, y, width, height)
     {
         if (x === undefined) { x = 0; }
@@ -35,7 +36,9 @@ var Ellipse = new Class({
         /**
          * The x position of the center of the ellipse.
          *
-         * @property {number} x
+         * @name Phaser.Geom.Ellipse#x
+         * @type {number}
+         * @default 0
          * @since 3.0.0
          */
         this.x = x;
@@ -43,7 +46,9 @@ var Ellipse = new Class({
         /**
          * The y position of the center of the ellipse.
          *
-         * @property {number} y
+         * @name Phaser.Geom.Ellipse#y
+         * @type {number}
+         * @default 0
          * @since 3.0.0
          */
         this.y = y;
@@ -51,7 +56,9 @@ var Ellipse = new Class({
         /**
          * The width of the ellipse.
          *
-         * @property {number} width
+         * @name Phaser.Geom.Ellipse#width
+         * @type {number}
+         * @default 0
          * @since 3.0.0
          */
         this.width = width;
@@ -59,7 +66,9 @@ var Ellipse = new Class({
         /**
          * The height of the ellipse.
          *
-         * @property {number} height
+         * @name Phaser.Geom.Ellipse#height
+         * @type {number}
+         * @default 0
          * @since 3.0.0
          */
         this.height = height;
@@ -258,7 +267,7 @@ var Ellipse = new Class({
      * The left position of the Ellipse.
      * 
      * @name Phaser.Geom.Ellipse#left
-     * @property {number} left
+     * @type {number}
      * @since 3.0.0
      */
     left: {
@@ -279,7 +288,7 @@ var Ellipse = new Class({
      * The right position of the Ellipse.
      * 
      * @name Phaser.Geom.Ellipse#right
-     * @property {number} right
+     * @type {number}
      * @since 3.0.0
      */
     right: {
@@ -300,7 +309,7 @@ var Ellipse = new Class({
      * The top position of the Ellipse.
      * 
      * @name Phaser.Geom.Ellipse#top
-     * @property {number} top
+     * @type {number}
      * @since 3.0.0
      */
     top: {
@@ -321,7 +330,7 @@ var Ellipse = new Class({
      * The bottom position of the Ellipse.
      * 
      * @name Phaser.Geom.Ellipse#bottom
-     * @property {number} bottom
+     * @type {number}
      * @since 3.0.0
      */
     bottom: {

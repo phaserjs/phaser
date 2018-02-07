@@ -10,6 +10,7 @@ var TextRender = require('./TextRender');
 var TextStyle = require('../TextStyle');
 
 /**
+ * @classdesc
  * [description]
  *
  * @class Text

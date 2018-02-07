@@ -19,26 +19,27 @@ var TextureManager = require('../textures/TextureManager');
 var TimeStep = require('./TimeStep');
 var VisibilityHandler = require('./VisibilityHandler');
 
+/**
+ * @classdesc
+ * The Phaser.Game instance is the main controller for the entire Phaser game. It is responsible
+ * for handling the boot process, parsing the configuration values, creating the renderer,
+ * and setting-up all of the global Phaser systems, such as sound and input.
+ * Once that is complete it will start the Scene Manager and then begin the main game loop.
+ *
+ * You should generally avoid accessing any of the systems created by Game, and instead use those
+ * made available to you via the Phaser.Scene Systems class instead.
+ *
+ * @class Game
+ * @memberOf Phaser
+ * @constructor
+ * @since 3.0.0
+ *
+ * @param {object} [GameConfig] - The configuration object for your Phaser Game instance.
+ */
 var Game = new Class({
 
     initialize:
 
-    /**
-     * The Phaser.Game instance is the main controller for the entire Phaser game. It is responsible
-     * for handling the boot process, parsing the configuration values, creating the renderer,
-     * and setting-up all of the global Phaser systems, such as sound and input.
-     * Once that is complete it will start the Scene Manager and then begin the main game loop.
-     *
-     * You should generally avoid accessing any of the systems created by Game, and instead use those
-     * made available to you via the Phaser.Scene Systems class instead.
-     *
-     * @class Game
-     * @memberOf Phaser
-     * @constructor
-     * @since 3.0.0
-     *
-     * @param {object} [GameConfig] - The configuration object for your Phaser Game instance.
-     */
     function Game (config)
     {
         /**

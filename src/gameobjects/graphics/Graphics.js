@@ -13,6 +13,7 @@ var Render = require('./GraphicsRender');
 var Vector3 = require('../../math/Vector3');
 
 /**
+ * @classdesc
  * [description]
  *
  * @class Graphics

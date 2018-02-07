@@ -1,13 +1,40 @@
-var AnimationComponent = require('../../gameobjects/components/Animation');
 var Bodies = require('./lib/factory/Bodies');
+var Body = require('./lib/body/Body');
 var Class = require('../../utils/Class');
 var Components = require('./components');
 var GetFastValue = require('../../utils/object/GetFastValue');
 var HasValue = require('../../utils/object/HasValue');
-var Extend = require('../../utils/object/Extend');
-var Body = require('./lib/body/Body');
 var Vertices = require('./lib/geometry/Vertices');
 
+/**
+ * @classdesc
+ * A wrapper around a Tile that provides access to a corresponding Matter body. A tile can only
+ * have one Matter body associated with it. You can either pass in an existing Matter body for
+ * the tile or allow the constructor to create the corresponding body for you. If the Tile has a
+ * collision group (defined in Tiled), those shapes will be used to create the body. If not, the
+ * tile's rectangle bounding box will be used.
+ *
+ * The corresponding body will be accessible on the Tile itself via Tile.physics.matterBody.
+ *
+ * Note: not all Tiled collision shapes are supported. See
+ * Phaser.Physics.Matter.TileBody#setFromTileCollision for more information.
+ *
+ * @class MatterTileBody
+ * @memberOf Phaser.Physics.Matter.TileBody
+ * @constructor
+ * @since 3.0.0
+ *
+ * @param {Phaser.Physics.Matter.World} world - [description]
+ * @param {Phaser.GameObjects.Tile} tile - The target tile that should have a Matter body.
+ * @param {object} [options] - Options to be used when creating the Matter body. See
+ * Phaser.Physics.Matter.Matter.Body for a list of what Matter accepts.
+ * @param {Phaser.Physics.Matter.Matter.Body} [options.body=null] - An existing Matter body to
+ * be used instead of creating a new one.
+ * @param {boolean} [options.isStatic=true] - Whether or not the newly created body should be
+ * made static. This defaults to true since typically tiles should not be moved.
+ * @param {boolean} [options.addToWorld=true] - Whether or not to add the newly created body (or
+ * existing body if options.body is used) to the Matter world.
+ */
 var MatterTileBody = new Class({
 
     Mixins: [
@@ -23,34 +50,6 @@ var MatterTileBody = new Class({
 
     initialize:
 
-    /**
-     * A wrapper around a Tile that provides access to a corresponding Matter body. A tile can only
-     * have one Matter body associated with it. You can either pass in an existing Matter body for
-     * the tile or allow the constructor to create the corresponding body for you. If the Tile has a
-     * collision group (defined in Tiled), those shapes will be used to create the body. If not, the
-     * tile's rectangle bounding box will be used.
-     *
-     * The corresponding body will be accessible on the Tile itself via Tile.physics.matterBody.
-     *
-     * Note: not all Tiled collision shapes are supported. See
-     * Phaser.Physics.Matter.TileBody#setFromTileCollision for more information.
-     *
-     * @class MatterTileBody
-     * @memberOf Phaser.Physics.Matter.TileBody
-     * @constructor
-     * @since 3.0.0
-     *
-     * @param {Phaser.Physics.Matter.World} world - [description]
-     * @param {Phaser.GameObjects.Tile} tile - The target tile that should have a Matter body.
-     * @param {object} [options] - Options to be used when creating the Matter body. See
-     * Phaser.Physics.Matter.Matter.Body for a list of what Matter accepts.
-     * @param {Phaser.Physics.Matter.Matter.Body} [options.body=null] - An existing Matter body to
-     * be used instead of creating a new one.
-     * @param {boolean} [options.isStatic=true] - Whether or not the newly created body should be
-     * made static. This defaults to true since typically tiles should not be moved.
-     * @param {boolean} [options.addToWorld=true] - Whether or not to add the newly created body (or
-     * existing body if options.body is used) to the Matter world.
-     */
     function MatterTileBody (world, tile, options)
     {
         /**
@@ -73,16 +72,19 @@ var MatterTileBody = new Class({
         {
             tile.physics.matterBody.destroy();
         }
+
         tile.physics.matterBody = this;
 
         // Set the body either from an existing body (if provided), the shapes in the tileset
         // collision layer (if it exists) or a rectangle matching the tile.
         var body = GetFastValue(options, 'body', null);
         var addToWorld = GetFastValue(options, 'addToWorld', true);
+
         if (!body)
         {
             var collisionGroup = tile.getCollisionGroup();
             var collisionObjects = GetFastValue(collisionGroup, 'objects', []);
+
             if (collisionObjects.length > 0)
             {
                 this.setFromTileCollision(options);
@@ -115,13 +117,14 @@ var MatterTileBody = new Class({
     setFromTileRectangle: function (options)
     {
         if (options === undefined) { options = {}; }
-        if (!HasValue(options, "isStatic")) { options.isStatic = true; }
-        if (!HasValue(options, "addToWorld")) { options.addToWorld = true; }
+        if (!HasValue(options, 'isStatic')) { options.isStatic = true; }
+        if (!HasValue(options, 'addToWorld')) { options.addToWorld = true; }
 
         var bounds = this.tile.getBounds();
         var cx = bounds.x + (bounds.width / 2);
         var cy = bounds.y + (bounds.height / 2);
         var body = Bodies.rectangle(cx, cy, bounds.width, bounds.height, options);
+
         this.setBody(body, options.addToWorld);
 
         return this;
@@ -152,8 +155,8 @@ var MatterTileBody = new Class({
     setFromTileCollision: function (options)
     {
         if (options === undefined) { options = {}; }
-        if (!HasValue(options, "isStatic")) { options.isStatic = true; }
-        if (!HasValue(options, "addToWorld")) { options.addToWorld = true; }
+        if (!HasValue(options, 'isStatic')) { options.isStatic = true; }
+        if (!HasValue(options, 'addToWorld')) { options.addToWorld = true; }
 
         var sx = this.tile.tilemapLayer.scaleX;
         var sy = this.tile.tilemapLayer.scaleY;
@@ -163,6 +166,7 @@ var MatterTileBody = new Class({
         var collisionObjects = GetFastValue(collisionGroup, 'objects', []);
 
         var parts = [];
+
         for (var i = 0; i < collisionObjects.length; i++)
         {
             var object = collisionObjects[i];
@@ -184,19 +188,23 @@ var MatterTileBody = new Class({
             {
                 // Polygons and polylines are both treated as closed polygons
                 var originalPoints = object.polygon ? object.polygon : object.polyline;
-                var points = originalPoints.map(function (p) {
+
+                var points = originalPoints.map(function (p)
+                {
                     return { x: p.x * sx, y: p.y * sy };
                 });
+
                 var vertices = Vertices.create(points);
 
                 // Points are relative to the object's origin (first point placed in Tiled), but
                 // matter expects points to be relative to the center of mass. This only applies to
                 // convex shapes. When a concave shape is decomposed, multiple parts are created and
                 // the individual parts are positioned relative to (ox, oy).
-                if (Vertices.isConvex(points)) {
+                if (Vertices.isConvex(points))
+                {
                     var center = Vertices.centre(vertices);
                     ox += center.x;
-                    oy += center.y
+                    oy += center.y;
                 }
 
                 body = Bodies.fromVertices(ox, oy, vertices, options);

@@ -4,20 +4,21 @@ var GetFastValue = require('../../utils/object/GetFastValue');
 var PluginManager = require('../../plugins/PluginManager');
 var RectangleContains = require('../../geom/rectangle/Contains');
 
+/**
+ * @classdesc
+ * [description]
+ *
+ * @class CameraManager
+ * @memberOf Phaser.Cameras.Scene2D
+ * @constructor
+ * @since 3.0.0
+ *
+ * @param {Phaser.Scene} scene - The Scene that owns the Camera Manager plugin.
+ */
 var CameraManager = new Class({
 
     initialize:
 
-    /**
-     * [description]
-     *
-     * @class CameraManager
-     * @memberOf Phaser.Cameras.Scene2D
-     * @constructor
-     * @since 3.0.0
-     *
-     * @param {Phaser.Scene} scene - The Scene that owns the Camera Manager plugin.
-     */
     function CameraManager (scene)
     {
         /**

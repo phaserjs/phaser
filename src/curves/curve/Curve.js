@@ -3,22 +3,23 @@ var FromPoints = require('../../geom/rectangle/FromPoints');
 var Rectangle = require('../../geom/rectangle/Rectangle');
 var Vector2 = require('../../math/Vector2');
 
+/**
+ * @classdesc
+ * A Base Curve class, which all other curve types extend.
+ *
+ * Based on the three.js Curve classes created by [zz85](http://www.lab4games.net/zz85/blog)
+ *
+ * @class Curve
+ * @memberOf Phaser.Curves
+ * @constructor
+ * @since 3.0.0
+ *
+ * @param {string} type - [description]
+ */
 var Curve = new Class({
 
     initialize:
 
-    /**
-     * A Base Curve class, which all other curve types extend.
-     *
-     * Based on the three.js Curve classes created by [zz85](http://www.lab4games.net/zz85/blog)
-     *
-     * @class Curve
-     * @memberOf Phaser.Curves
-     * @constructor
-     * @since 3.0.0
-     *
-     * @param {string} type - [description]
-     */
     function Curve (type)
     {
         /**

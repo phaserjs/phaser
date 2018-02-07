@@ -1,6 +1,7 @@
 var Class = require('../../utils/Class');
 
 /**
+ * @classdesc
  * [description]
  *
  * @class TransformMatrix

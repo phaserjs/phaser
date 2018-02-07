@@ -2,6 +2,7 @@ var Class = require('../../../utils/Class');
 var Wrap = require('../../../math/Wrap');
 
 /**
+ * @classdesc
  * [description]
  *
  * @class EdgeZone

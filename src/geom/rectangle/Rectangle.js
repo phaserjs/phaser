@@ -4,23 +4,24 @@ var GetPoint = require('./GetPoint');
 var GetPoints = require('./GetPoints');
 var Random = require('./Random');
 
+/**
+ * @classdesc
+ * Encapsulates a 2D rectangle defined by its corner point in the top-left and its extends in x (width) and y (height)
+ *
+ * @class Rectangle
+ * @memberOf Phaser.Geom
+ * @constructor
+ * @since 3.0.0
+ *
+ * @param {number} [x] - [description]
+ * @param {number} [y] - [description]
+ * @param {number} [width] - [description]
+ * @param {number} [height] - [description]
+ */
 var Rectangle = new Class({
 
     initialize:
 
-    /**
-     * Encapsulates a 2D rectangle defined by its corner point in the top-left and its extends in x (width) and y (height)
-     *
-     * @class Rectangle
-     * @memberOf Phaser.Geom
-     * @constructor
-     * @since 3.0.0
-     *
-     * @param {number} [x] - [description]
-     * @param {number} [y] - [description]
-     * @param {number} [width] - [description]
-     * @param {number} [height] - [description]
-     */
     function Rectangle (x, y, width, height)
     {
         if (x === undefined) { x = 0; }
@@ -31,7 +32,9 @@ var Rectangle = new Class({
         /**
          * [description]
          *
-         * @property {number} x
+         * @name Phaser.Geom.Rectangle#x
+         * @type {number}
+         * @default 0
          * @since 3.0.0
          */
         this.x = x;
@@ -39,7 +42,9 @@ var Rectangle = new Class({
         /**
          * [description]
          *
-         * @property {number} y
+         * @name Phaser.Geom.Rectangle#y
+         * @type {number}
+         * @default 0
          * @since 3.0.0
          */
         this.y = y;
@@ -47,7 +52,9 @@ var Rectangle = new Class({
         /**
          * [description]
          *
-         * @property {number} width
+         * @name Phaser.Geom.Rectangle#width
+         * @type {number}
+         * @default 0
          * @since 3.0.0
          */
         this.width = width;
@@ -55,7 +62,9 @@ var Rectangle = new Class({
         /**
          * [description]
          *
-         * @property {number} height
+         * @name Phaser.Geom.Rectangle#height
+         * @type {number}
+         * @default 0
          * @since 3.0.0
          */
         this.height = height;
@@ -136,7 +145,7 @@ var Rectangle = new Class({
      * @param {[type]} width - [description]
      * @param {[type]} height - [description]
      *
-     * @return {[type]} [description]
+     * @return {Phaser.Geom.Rectangle} This Rectangle object.
      */
     setTo: function (x, y, width, height)
     {
@@ -154,7 +163,7 @@ var Rectangle = new Class({
      * @method Phaser.Geom.Rectangle#setEmpty
      * @since 3.0.0
      *
-     * @return {[type]} [description]
+     * @return {Phaser.Geom.Rectangle} This Rectangle object.
      */
     setEmpty: function ()
     {
@@ -170,7 +179,7 @@ var Rectangle = new Class({
      * @param {[type]} x - [description]
      * @param {[type]} y - [description]
      *
-     * @return {[type]} [description]
+     * @return {Phaser.Geom.Rectangle} This Rectangle object.
      */
     setPosition: function (x, y)
     {
@@ -191,7 +200,7 @@ var Rectangle = new Class({
      * @param {[type]} width - [description]
      * @param {[type]} height - [description]
      *
-     * @return {[type]} [description]
+     * @return {Phaser.Geom.Rectangle} This Rectangle object.
      */
     setSize: function (width, height)
     {
@@ -209,7 +218,7 @@ var Rectangle = new Class({
      * @method Phaser.Geom.Rectangle#isEmpty
      * @since 3.0.0
      *
-     * @return {[type]} [description]
+     * @return {boolean} [description]
      */
     isEmpty: function ()
     {
@@ -276,7 +285,7 @@ var Rectangle = new Class({
      * [description]
      * 
      * @name Phaser.Geom.Rectangle#left
-     * @property {number} left
+     * @type {number}
      * @since 3.0.0
      */
     left: {
@@ -306,7 +315,7 @@ var Rectangle = new Class({
      * [description]
      * 
      * @name Phaser.Geom.Rectangle#right
-     * @property {number} right
+     * @type {number}
      * @since 3.0.0
      */
     right: {
@@ -334,7 +343,7 @@ var Rectangle = new Class({
      * [description]
      * 
      * @name Phaser.Geom.Rectangle#top
-     * @property {number} top
+     * @type {number}
      * @since 3.0.0
      */
     top: {
@@ -363,7 +372,7 @@ var Rectangle = new Class({
      * [description]
      * 
      * @name Phaser.Geom.Rectangle#bottom
-     * @property {number} bottom
+     * @type {number}
      * @since 3.0.0
      */
     bottom: {
@@ -391,7 +400,7 @@ var Rectangle = new Class({
      * [description]
      * 
      * @name Phaser.Geom.Rectangle#centerX
-     * @property {number} centerX
+     * @type {number}
      * @since 3.0.0
      */
     centerX: {
@@ -412,7 +421,7 @@ var Rectangle = new Class({
      * [description]
      * 
      * @name Phaser.Geom.Rectangle#centerY
-     * @property {number} centerY
+     * @type {number}
      * @since 3.0.0
      */
     centerY: {

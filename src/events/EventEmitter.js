@@ -6,21 +6,22 @@ var PluginManager = require('../plugins/PluginManager');
  * @namespace Phaser.Events
  */
 
+/**
+ * @classdesc
+ * EventEmitter is a Scene Systems plugin compatible version of eventemitter3.
+ *
+ * @class EventEmitter
+ * @extends eventemitter3
+ * @memberOf Phaser.Events
+ * @constructor
+ * @since 3.0.0
+ */
 var EventEmitter = new Class({
 
     Extends: EE,
 
     initialize:
 
-    /**
-     * EventEmitter is a Scene Systems plugin compatible version of eventemitter3.
-     *
-     * @class EventEmitter
-     * @extends eventemitter3
-     * @memberOf Phaser.Events
-     * @constructor
-     * @since 3.0.0
-     */
     function EventEmitter ()
     {
         EE.call(this);

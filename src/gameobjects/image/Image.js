@@ -4,6 +4,7 @@ var GameObject = require('../GameObject');
 var ImageRender = require('./ImageRender');
 
 /**
+ * @classdesc
  * An Image Game Object.
  * 
  * An Image is a light-weight Game Object useful for the display of static images in your game,

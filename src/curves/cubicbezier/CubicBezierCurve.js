@@ -5,8 +5,21 @@ var CubicBezier = require('../../math/interpolation/CubicBezierInterpolation');
 var Curve = require('../curve/Curve');
 var Vector2 = require('../../math/Vector2');
 
-//  Phaser.Curves.CubicBezier
-
+/**
+ * @classdesc
+ * [description]
+ *
+ * @class CubicBezierCurve
+ * @extends Phaser.Curves.Curve
+ * @memberOf Phaser.Curves
+ * @constructor
+ * @since 3.0.0
+ *
+ * @param {[type]} p0 - [description]
+ * @param {[type]} p1 - [description]
+ * @param {[type]} p2 - [description]
+ * @param {[type]} p3 - [description]
+ */
 var CubicBezierCurve = new Class({
 
     Extends: Curve,
@@ -17,20 +30,6 @@ var CubicBezierCurve = new Class({
     //  p1 = control point 1
     //  p2 = control point 2
     //  p3 = end point
-    /**
-     * [description]
-     *
-     * @class CubicBezierCurve
-     * @extends Phaser.Curves.Curve
-     * @memberOf Phaser.Curves
-     * @constructor
-     * @since 3.0.0
-     *
-     * @param {[type]} p0 - [description]
-     * @param {[type]} p1 - [description]
-     * @param {[type]} p2 - [description]
-     * @param {[type]} p3 - [description]
-     */
     function CubicBezierCurve (p0, p1, p2, p3)
     {
         Curve.call(this, 'CubicBezierCurve');

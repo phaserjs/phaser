@@ -6,10 +6,21 @@ var FromPoints = require('../../geom/rectangle/FromPoints');
 var Rectangle = require('../../geom/rectangle/Rectangle');
 var Vector2 = require('../../math/Vector2');
 
-//  Phaser.Curves.Line
-
 var tmpVec2 = new Vector2();
 
+/**
+ * @classdesc
+ * [description]
+ *
+ * @class LineCurve
+ * @extends Phaser.Curves.Curve
+ * @memberOf Phaser.Curves
+ * @constructor
+ * @since 3.0.0
+ *
+ * @param {[type]} p0 - [description]
+ * @param {[type]} p1 - [description]
+ */
 var LineCurve = new Class({
 
     Extends: Curve,
@@ -17,18 +28,6 @@ var LineCurve = new Class({
     initialize:
 
     //  vec2s or array
-    /**
-     * [description]
-     *
-     * @class LineCurve
-     * @extends Phaser.Curves.Curve
-     * @memberOf Phaser.Curves
-     * @constructor
-     * @since 3.0.0
-     *
-     * @param {[type]} p0 - [description]
-     * @param {[type]} p1 - [description]
-     */
     function LineCurve (p0, p1)
     {
         Curve.call(this, 'LineCurve');

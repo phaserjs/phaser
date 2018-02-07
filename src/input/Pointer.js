@@ -10,21 +10,22 @@ var Vector2 = require('../math/Vector2');
 // 4: Fifth button, typically the Browser Forward button
 // For a mouse configured for left-handed use, the button actions are reversed. In this case, the values are read from right to left.
 
+/**
+ * @classdesc
+ * [description]
+ *
+ * @class Pointer
+ * @memberOf Phaser.Input
+ * @constructor
+ * @since 3.0.0
+ *
+ * @param {Phaser.Input.InputManager} manager - [description]
+ * @param {integer} id - [description]
+ */
 var Pointer = new Class({
 
     initialize:
 
-    /**
-     * [description]
-     *
-     * @class Pointer
-     * @memberOf Phaser.Input
-     * @constructor
-     * @since 3.0.0
-     *
-     * @param {Phaser.Input.InputManager} manager - [description]
-     * @param {integer} id - [description]
-     */
     function Pointer (manager, id)
     {
         /**

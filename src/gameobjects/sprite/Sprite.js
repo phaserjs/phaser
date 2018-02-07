@@ -4,6 +4,7 @@ var GameObject = require('../GameObject');
 var SpriteRender = require('./SpriteRender');
 
 /**
+ * @classdesc
  * A Sprite Game Object.
  *
  * A Sprite Game Object is used for the display of both static and animated images in your game.

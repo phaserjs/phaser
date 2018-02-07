@@ -1,6 +1,7 @@
 var Class = require('../../utils/Class');
 
 /**
+ * @classdesc
  * [description]
  *
  * @class RandomDataGenerator
@@ -19,10 +20,10 @@ var RandomDataGenerator = new Class({
         /**
          * Internal var.
          *
-         * @property {number} c
-         * @alias Phaser.Math.RandomDataGenerator#c
-         * @private
+         * @name Phaser.Math.RandomDataGenerator#c
+         * @type {number}
          * @default 1
+         * @private
          * @since 3.0.0
          */
         this.c = 1;
@@ -30,10 +31,10 @@ var RandomDataGenerator = new Class({
         /**
          * Internal var.
          *
-         * @property {number} s0
-         * @alias Phaser.Math.RandomDataGenerator#s0
-         * @private
+         * @name Phaser.Math.RandomDataGenerator#s0
+         * @type {number}
          * @default 0
+         * @private
          * @since 3.0.0
          */
         this.s0 = 0;
@@ -41,10 +42,10 @@ var RandomDataGenerator = new Class({
         /**
          * Internal var.
          *
-         * @property {number} s1
-         * @alias Phaser.Math.RandomDataGenerator#s1
-         * @private
+         * @name Phaser.Math.RandomDataGenerator#s1
+         * @type {number}
          * @default 0
+         * @private
          * @since 3.0.0
          */
         this.s1 = 0;
@@ -52,10 +53,10 @@ var RandomDataGenerator = new Class({
         /**
          * Internal var.
          *
-         * @property {number} s2
-         * @alias Phaser.Math.RandomDataGenerator#s2
-         * @private
+         * @name Phaser.Math.RandomDataGenerator#s2
+         * @type {number}
          * @default 0
+         * @private
          * @since 3.0.0
          */
         this.s2 = 0;
@@ -63,8 +64,8 @@ var RandomDataGenerator = new Class({
         /**
          * [description]
          *
-         * @property {array} sign
-         * @alias Phaser.Math.RandomDataGenerator#sign
+         * @name Phaser.Math.RandomDataGenerator#sign
+         * @type {array}
          * @since 3.0.0
          */
         this.sign = [ -1, 1 ];

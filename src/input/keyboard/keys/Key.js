@@ -1,20 +1,21 @@
 var Class = require('../../../utils/Class');
 
+/**
+ * @classdesc
+ * A generic Key object which can be passed to the Process functions (and so on)
+ * keycode must be an integer
+ *
+ * @class Key
+ * @memberOf Phaser.Input.Keyboard
+ * @constructor
+ * @since 3.0.0
+ *
+ * @param {integer} keyCode - The keycode of this key.
+ */
 var Key = new Class({
 
     initialize:
 
-    /**
-     * A generic Key object which can be passed to the Process functions (and so on)
-     * keycode must be an integer
-     *
-     * @class Key
-     * @memberOf Phaser.Input.Keyboard
-     * @constructor
-     * @since 3.0.0
-     *
-     * @param {integer} keyCode - The keycode of this key.
-     */
     function Key (keyCode)
     {
         /**
