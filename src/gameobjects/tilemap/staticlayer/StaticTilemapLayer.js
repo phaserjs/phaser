@@ -157,8 +157,8 @@ var StaticTilemapLayer = new Class({
                     this.vertexViewU32 = new Uint32Array(bufferData);
                 }
 
-                vertexViewF32 = this.vertexViewF32;
-                vertexViewU32 = this.vertexViewU32;
+                var vertexViewF32 = this.vertexViewF32;
+                var vertexViewU32 = this.vertexViewU32;
 
                 for (row = 0; row < mapHeight; ++row)
                 {
