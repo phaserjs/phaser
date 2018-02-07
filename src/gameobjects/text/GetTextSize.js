@@ -1,3 +1,6 @@
+/**
+ * Returns an object containing dimensions of the Text object.
+ */
 
 var GetTextSize = function (text, size, lines)
 {

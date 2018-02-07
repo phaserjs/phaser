@@ -2,6 +2,29 @@ var Class = require('../../utils/Class');
 var Components = require('../components');
 var Rectangle = require('../../geom/rectangle');
 
+/**
+ * A Tile is a representation of a single tile within the Tilemap. This is a lightweight data
+ * representation, so it's position information is stored without factoring in scroll, layer
+ * scale or layer position.
+ *
+ * @class Tile
+ * @memberOf Phaser.GameObjects.Tilemaps
+ * @constructor
+ * @since 3.0.0
+ *
+ * @param {LayerData} layer - The LayerData object in the Tilemap that this tile belongs to.
+ * @param {integer} index - The unique index of this tile within the map.
+ * @param {integer} x - The x coordinate of this tile in tile coordinates.
+ * @param {integer} y - The y coordinate of this tile in tile coordinates.
+ * @param {integer} width - Width of the tile in pixels.
+ * @param {integer} height - Height of the tile in pixels.
+ * @param {integer} baseWidth - The base width a tile in the map (in pixels). Tiled maps support
+ * multiple tileset sizes within one map, but they are still placed at intervals of the base
+ * tile width.
+ * @param {integer} baseHeight - The base height of the tile in pixels (in pixels). Tiled maps
+ * support multiple tileset sizes within one map, but they are still placed at intervals of the
+ * base tile height.
+ */
 var Tile = new Class({
 
     Mixins: [
@@ -12,27 +35,6 @@ var Tile = new Class({
 
     initialize:
 
-    /**
-     * A Tile is a representation of a single tile within the Tilemap. This is a lightweight data
-     * representation, so it's position information is stored without factoring in scroll, layer
-     * scale or layer position.
-     *
-     * @class Tile
-     * @constructor
-     *
-     * @param {LayerData} layer - The LayerData object in the Tilemap that this tile belongs to.
-     * @param {integer} index - The unique index of this tile within the map.
-     * @param {integer} x - The x coordinate of this tile in tile coordinates.
-     * @param {integer} y - The y coordinate of this tile in tile coordinates.
-     * @param {integer} width - Width of the tile in pixels.
-     * @param {integer} height - Height of the tile in pixels.
-     * @param {integer} baseWidth - The base width a tile in the map (in pixels). Tiled maps support
-     * multiple tileset sizes within one map, but they are still placed at intervals of the base
-     * tile width.
-     * @param {integer} baseHeight - The base height of the tile in pixels (in pixels). Tiled maps
-     * support multiple tileset sizes within one map, but they are still placed at intervals of the
-     * base tile height.
-     */
     function Tile (layer, index, x, y, width, height, baseWidth, baseHeight)
     {
         /**

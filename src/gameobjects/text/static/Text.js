@@ -512,7 +512,7 @@ var Text = new Class({
      *
      * @param {object} style - [description]
      *
-     * @return {Phaser.GameObjects.Components.TextStyle} The TextStyle component.
+     * @return {Phaser.GameObjects.Text} This Text object.
      */
     setStyle: function (style)
     {
@@ -525,9 +525,9 @@ var Text = new Class({
      * @method Phaser.GameObjects.Text#setFont
      * @since 3.0.0
      *
-     * @param {[type]} font - [description]
+     * @param {string} font - [description]
      *
-     * @return {Phaser.GameObjects.Components.TextStyle} The TextStyle component.
+     * @return {Phaser.GameObjects.Text} This Text object.
      */
     setFont: function (font)
     {
@@ -540,9 +540,9 @@ var Text = new Class({
      * @method Phaser.GameObjects.Text#setFontFamily
      * @since 3.0.0
      *
-     * @param {[type]} family - [description]
+     * @param {string} family - [description]
      *
-     * @return {Phaser.GameObjects.Components.TextStyle} The TextStyle component.
+     * @return {Phaser.GameObjects.Text} This Text object.
      */
     setFontFamily: function (family)
     {
@@ -557,7 +557,7 @@ var Text = new Class({
      *
      * @param {number} size - [description]
      *
-     * @return {Phaser.GameObjects.Components.TextStyle} The TextStyle component.
+     * @return {Phaser.GameObjects.Text} This Text object.
      */
     setFontSize: function (size)
     {
@@ -570,9 +570,9 @@ var Text = new Class({
      * @method Phaser.GameObjects.Text#setFontStyle
      * @since 3.0.0
      *
-     * @param {[type]} style - [description]
+     * @param {string} style - [description]
      *
-     * @return {[type]} [description]
+     * @return {Phaser.GameObjects.Text} This Text object.
      */
     setFontStyle: function (style)
     {
@@ -585,10 +585,10 @@ var Text = new Class({
      * @method Phaser.GameObjects.Text#setFixedSize
      * @since 3.0.0
      *
-     * @param {[type]} width - [description]
-     * @param {[type]} height - [description]
+     * @param {number} width - [description]
+     * @param {number} height - [description]
      *
-     * @return {[type]} [description]
+     * @return {Phaser.GameObjects.Text} This Text object.
      */
     setFixedSize: function (width, height)
     {
@@ -601,9 +601,9 @@ var Text = new Class({
      * @method Phaser.GameObjects.Text#setBackgroundColor
      * @since 3.0.0
      *
-     * @param {[type]} color - [description]
+     * @param {string} color - [description]
      *
-     * @return {[type]} [description]
+     * @return {Phaser.GameObjects.Text} This Text object.
      */
     setBackgroundColor: function (color)
     {
@@ -616,9 +616,9 @@ var Text = new Class({
      * @method Phaser.GameObjects.Text#setFill
      * @since 3.0.0
      *
-     * @param {[type]} color - [description]
+     * @param {string} color - [description]
      *
-     * @return {[type]} [description]
+     * @return {Phaser.GameObjects.Text} This Text object.
      */
     setFill: function (color)
     {
@@ -631,9 +631,9 @@ var Text = new Class({
      * @method Phaser.GameObjects.Text#setColor
      * @since 3.0.0
      *
-     * @param {[type]} color - [description]
+     * @param {string} color - [description]
      *
-     * @return {[type]} [description]
+     * @return {Phaser.GameObjects.Text} This Text object.
      */
     setColor: function (color)
     {
@@ -646,10 +646,10 @@ var Text = new Class({
      * @method Phaser.GameObjects.Text#setStroke
      * @since 3.0.0
      *
-     * @param {[type]} color - [description]
-     * @param {[type]} thickness - [description]
+     * @param {string} color - [description]
+     * @param {number} thickness - [description]
      *
-     * @return {[type]} [description]
+     * @return {Phaser.GameObjects.Text} This Text object.
      */
     setStroke: function (color, thickness)
     {
@@ -662,14 +662,14 @@ var Text = new Class({
      * @method Phaser.GameObjects.Text#setShadow
      * @since 3.0.0
      *
-     * @param {[type]} x - [description]
-     * @param {[type]} y - [description]
-     * @param {[type]} color - [description]
-     * @param {[type]} blur - [description]
-     * @param {[type]} shadowStroke - [description]
-     * @param {[type]} shadowFill - [description]
+     * @param {number} x - [description]
+     * @param {number} y - [description]
+     * @param {string} color - [description]
+     * @param {number} blur - [description]
+     * @param {boolean} shadowStroke - [description]
+     * @param {boolean} shadowFill - [description]
      *
-     * @return {[type]} [description]
+     * @return {Phaser.GameObjects.Text} This Text object.
      */
     setShadow: function (x, y, color, blur, shadowStroke, shadowFill)
     {
@@ -682,10 +682,10 @@ var Text = new Class({
      * @method Phaser.GameObjects.Text#setShadowOffset
      * @since 3.0.0
      *
-     * @param {[type]} x - [description]
-     * @param {[type]} y - [description]
+     * @param {number} x - [description]
+     * @param {number} y - [description]
      *
-     * @return {[type]} [description]
+     * @return {Phaser.GameObjects.Text} This Text object.
      */
     setShadowOffset: function (x, y)
     {
@@ -698,9 +698,9 @@ var Text = new Class({
      * @method Phaser.GameObjects.Text#setShadowColor
      * @since 3.0.0
      *
-     * @param {[type]} color - [description]
+     * @param {string} color - [description]
      *
-     * @return {[type]} [description]
+     * @return {Phaser.GameObjects.Text} This Text object.
      */
     setShadowColor: function (color)
     {
@@ -713,9 +713,9 @@ var Text = new Class({
      * @method Phaser.GameObjects.Text#setShadowBlur
      * @since 3.0.0
      *
-     * @param {[type]} blur - [description]
+     * @param {number} blur - [description]
      *
-     * @return {[type]} [description]
+     * @return {Phaser.GameObjects.Text} This Text object.
      */
     setShadowBlur: function (blur)
     {
@@ -728,9 +728,9 @@ var Text = new Class({
      * @method Phaser.GameObjects.Text#setShadowStroke
      * @since 3.0.0
      *
-     * @param {[type]} enabled - [description]
+     * @param {boolean} enabled - [description]
      *
-     * @return {[type]} [description]
+     * @return {Phaser.GameObjects.Text} This Text object.
      */
     setShadowStroke: function (enabled)
     {
@@ -743,9 +743,9 @@ var Text = new Class({
      * @method Phaser.GameObjects.Text#setShadowFill
      * @since 3.0.0
      *
-     * @param {[type]} enabled - [description]
+     * @param {boolean} enabled - [description]
      *
-     * @return {[type]} [description]
+     * @return {Phaser.GameObjects.Text} This Text object.
      */
     setShadowFill: function (enabled)
     {
@@ -753,26 +753,17 @@ var Text = new Class({
     },
 
     /**
-     * Set the width (in pixels) to use for wrapping lines. Pass in null to remove wrapping by
-     * width.
-     *
-     * @param {number|null} width - The maximum width of a line in pixels. Set to null to remove
-     * wrapping.
-     * @param {boolean} [useAdvancedWrap=false] - Whether or not to use the advanced wrapping
-     * algorithm. If true, spaces are collapsed and whitespace is trimmed from lines. If false,
-     * spaces and whitespace are left as is.
-     * @return {this}
-     */
-    /**
-     * [description]
+     * Set the width (in pixels) to use for wrapping lines. Pass in null to remove wrapping by width.
      *
      * @method Phaser.GameObjects.Text#setWordWrapWidth
      * @since 3.0.0
      *
-     * @param {[type]} width - [description]
-     * @param {[type]} useAdvancedWrap - [description]
+     * @param {number|null} width - The maximum width of a line in pixels. Set to null to remove wrapping.
+     * @param {boolean} [useAdvancedWrap=false] - Whether or not to use the advanced wrapping
+     * algorithm. If true, spaces are collapsed and whitespace is trimmed from lines. If false,
+     * spaces and whitespace are left as is.
      *
-     * @return {[type]} [description]
+     * @return {Phaser.GameObjects.Text} This Text object.
      */
     setWordWrapWidth: function (width, useAdvancedWrap)
     {
@@ -782,23 +773,16 @@ var Text = new Class({
     /**
      * Set a custom callback for wrapping lines. Pass in null to remove wrapping by callback.
      *
+     * @method Phaser.GameObjects.Text#setWordWrapCallback
+     * @since 3.0.0
+     *
      * @param {function} callback - A custom function that will be responsible for wrapping the
      * text. It will receive two arguments: text (the string to wrap), textObject (this Text
      * instance). It should return the wrapped lines either as an array of lines or as a string with
      * newline characters in place to indicate where breaks should happen.
      * @param {object} [scope=null] - The scope that will be applied when the callback is invoked.
-     * @return {this}
-     */
-    /**
-     * [description]
      *
-     * @method Phaser.GameObjects.Text#setWordWrapCallback
-     * @since 3.0.0
-     *
-     * @param {[type]} callback - [description]
-     * @param {[type]} scope - [description]
-     *
-     * @return {[type]} [description]
+     * @return {Phaser.GameObjects.Text} This Text object.
      */
     setWordWrapCallback: function (callback, scope)
     {
@@ -811,29 +795,28 @@ var Text = new Class({
      * @method Phaser.GameObjects.Text#setAlign
      * @since 3.0.0
      *
-     * @param {[type]} align - [description]
+     * @param {string} align - [description]
      *
-     * @return {[type]} [description]
+     * @return {Phaser.GameObjects.Text} This Text object.
      */
     setAlign: function (align)
     {
         return this.style.setAlign(align);
     },
 
-    //  'left' can be an object
-    //  if only 'left' and 'top' are given they are treated as 'x' and 'y'
     /**
-     * [description]
+     * 'left' can be an object.
+     * If only 'left' and 'top' are given they are treated as 'x' and 'y'
      *
      * @method Phaser.GameObjects.Text#setPadding
      * @since 3.0.0
      *
-     * @param {[type]} left - [description]
-     * @param {[type]} top - [description]
-     * @param {[type]} right - [description]
-     * @param {[type]} bottom - [description]
+     * @param {number|object} left - [description]
+     * @param {number} top - [description]
+     * @param {number} right - [description]
+     * @param {number} bottom - [description]
      *
-     * @return {[type]} [description]
+     * @return {Phaser.GameObjects.Text} This Text object.
      */
     setPadding: function (left, top, right, bottom)
     {
@@ -890,9 +873,9 @@ var Text = new Class({
      * @method Phaser.GameObjects.Text#setMaxLines
      * @since 3.0.0
      *
-     * @param {[type]} max - [description]
+     * @param {integer} [max=0] - [description]
      *
-     * @return {[type]} [description]
+     * @return {Phaser.GameObjects.Text} This Text object.
      */
     setMaxLines: function (max)
     {
@@ -905,7 +888,7 @@ var Text = new Class({
      * @method Phaser.GameObjects.Text#updateText
      * @since 3.0.0
      *
-     * @return {[type]} [description]
+     * @return {Phaser.GameObjects.Text} This Text object.
      */
     updateText: function ()
     {
@@ -933,12 +916,12 @@ var Text = new Class({
         var w = textSize.width + padding.left + padding.right;
         var h = textSize.height + padding.top + padding.bottom;
 
-        if (!style.fixedWidth)
+        if (style.fixedWidth === 0)
         {
             this.width = w;
         }
 
-        if (!style.fixedHeight)
+        if (style.fixedHeight === 0)
         {
             this.height = h;
         }
@@ -1038,7 +1021,7 @@ var Text = new Class({
      * @method Phaser.GameObjects.Text#getTextMetrics
      * @since 3.0.0
      *
-     * @return {[type]} [description]
+     * @return {object} [description]
      */
     getTextMetrics: function ()
     {
@@ -1051,7 +1034,7 @@ var Text = new Class({
      * @method Phaser.GameObjects.Text#toJSON
      * @since 3.0.0
      *
-     * @return {[type]} [description]
+     * @return {object} [description]
      */
     toJSON: function ()
     {

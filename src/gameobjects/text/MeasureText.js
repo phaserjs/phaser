@@ -1,8 +1,9 @@
 var CanvasPool = require('../../display/canvas/CanvasPool');
 
 /**
-* Calculates the ascent, descent and fontSize of a given font style.
-*/
+ * Calculates the ascent, descent and fontSize of a given font style.
+ */
+
 var MeasureText = function (textStyle)
 {
     // @property {HTMLCanvasElement} canvas - The canvas element that the text is rendered.
