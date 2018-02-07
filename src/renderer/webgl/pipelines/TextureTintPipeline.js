@@ -1141,23 +1141,23 @@ var TextureTintPipeline = new Class({
             var tileTexCoords = tileset.getTileTextureCoordinates(tile.index);
             if (tileTexCoords === null) { continue; }
 
-            var frameWidth = tile.width * (tile.flipX ? -1 : 1);
-            var frameHeight = tile.height * (tile.flipY ? -1 : 1);
-            var frameX = tileTexCoords.x + (tile.flipX ? tile.width : 0);
-            var frameY = tileTexCoords.y + (tile.flipY ? tile.height : 0);
+            var frameWidth = tile.width;
+            var frameHeight = tile.height;
+            var frameX = tileTexCoords.x;
+            var frameY = tileTexCoords.y;
             var tint = getTint(tile.tint, alpha * tile.alpha);
 
             this.batchTexture(
                 tilemapLayer,
                 texture,
                 texture.width, texture.height,
-                x + tile.pixelX * sx, y + tile.pixelY * sy,
-                tile.width * sx, tile.height * sy,
-                1, 1,
-                0,
-                false, false,
+                tile.width / 2 + x + tile.pixelX, tile.height / 2 + y + tile.pixelY,
+                tile.width, tile.height,
+                sx, sy,
+                tile.rotation,
+                tile.flipX, tile.flipY,
                 scrollFactorX, scrollFactorY,
-                0, 0,
+                tile.width / 2, tile.height / 2,
                 frameX, frameY, frameWidth, frameHeight,
                 tint, tint, tint, tint,
                 0, 0,
