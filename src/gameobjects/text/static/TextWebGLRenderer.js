@@ -1,17 +1,30 @@
 var GameObject = require('../../GameObject');
-var Utils = require('../../../renderer/webgl/Utils');
 
-var TextWebGLRenderer = function (renderer, text, interpolationPercentage, camera)
+/**
+ * Renders this Game Object with the WebGL Renderer to the given Camera.
+ * The object will not render if any of its renderFlags are set or it is being actively filtered out by the Camera.
+ * This method should not be called directly. It is a utility function of the Render module.
+ *
+ * @method Phaser.GameObjects.Text#renderWebGL
+ * @since 3.0.0
+ * @private
+ *
+ * @param {Phaser.Renderer.WebGLRenderer} renderer - A reference to the current active WebGL renderer.
+ * @param {Phaser.GameObjects.Text} src - The Game Object being rendered in this call.
+ * @param {number} interpolationPercentage - Reserved for future use and custom pipelines.
+ * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera that is rendering the Game Object.
+ */
+var TextWebGLRenderer = function (renderer, src, interpolationPercentage, camera)
 {
-    if (GameObject.RENDER_MASK !== text.renderFlags || (text.cameraFilter > 0 && (text.cameraFilter & camera._id)) || text.text === '')
+    if (GameObject.RENDER_MASK !== src.renderFlags || (src.cameraFilter > 0 && (src.cameraFilter & camera._id)) || src.text === '')
     {
         return;
     }
     
-    if (text.dirty)
+    if (src.dirty)
     {
-        text.canvasTexture = renderer.canvasToTexture(text.canvas, text.canvasTexture, true, text.scaleMode);
-        text.dirty = false;
+        src.canvasTexture = renderer.canvasToTexture(src.canvas, src.canvasTexture, true, src.scaleMode);
+        src.dirty = false;
     }
 
     this.pipeline.batchText(this, camera);

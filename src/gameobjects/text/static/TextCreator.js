@@ -3,8 +3,18 @@ var GameObjectCreator = require('../../GameObjectCreator');
 var GetAdvancedValue = require('../../../utils/object/GetAdvancedValue');
 var Text = require('./Text');
 
-//  When registering a factory function 'this' refers to the GameObjectCreator context.
-
+/**
+ * Creates a new Text Game Object and returns it.
+ *
+ * Note: This method will only be available if the Text Game Object has been built into Phaser.
+ *
+ * @method Phaser.GameObjects.GameObjectCreator#text
+ * @since 3.0.0
+ *
+ * @param {object} config - [description]
+ *
+ * @return {Phaser.GameObjects.Text} The Game Object that was created.
+ */
 GameObjectCreator.register('text', function (config)
 {
     // style Object = {
@@ -53,3 +63,5 @@ GameObjectCreator.register('text', function (config)
 
     return text;
 });
+
+//  When registering a factory function 'this' refers to the GameObjectCreator context.
