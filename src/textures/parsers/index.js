@@ -1,5 +1,9 @@
+/**
+ * @namespace Phaser.Textures.Parsers
+ */
 
 module.exports = {
+
     Canvas: require('./Canvas'),
     Image: require('./Image'),
     JSONArray: require('./JSONArray'),
@@ -9,4 +13,5 @@ module.exports = {
     SpriteSheetFromAtlas: require('./SpriteSheetFromAtlas'),
     StarlingXML: require('./StarlingXML'),
     UnityYAML: require('./UnityYAML')
+
 };

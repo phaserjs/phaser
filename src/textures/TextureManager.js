@@ -8,13 +8,22 @@ var Parser = require('./parsers');
 var Texture = require('./Texture');
 
 /**
-* Textures are managed by the global TextureManager. This is a singleton class that is
-* responsible for creating and delivering Textures and their corresponding Frames to Game Objects.
-*
-* Sprites and other Game Objects get the texture data they need from the TextureManager.
-*
-* Access it via `scene.textures`.
-*/
+ * @classdesc
+ * Textures are managed by the global TextureManager. This is a singleton class that is
+ * responsible for creating and delivering Textures and their corresponding Frames to Game Objects.
+ *
+ * Sprites and other Game Objects get the texture data they need from the TextureManager.
+ *
+ * Access it via `scene.textures`.
+ *
+ * @class TextureManager
+ * @extends Phaser.Textures.EventEmitter
+ * @memberOf Phaser.Textures
+ * @constructor
+ * @since 3.0.0
+ *
+ * @param {Phaser.Game} game - [description]
+ */
 var TextureManager = new Class({
 
     Extends: EventEmitter,
@@ -25,20 +34,74 @@ var TextureManager = new Class({
     {
         EventEmitter.call(this);
 
+        /**
+         * [description]
+         *
+         * @name Phaser.Textures.TextureManager#game
+         * @type {Phaser.Game}
+         * @since 3.0.0
+         */
         this.game = game;
 
+        /**
+         * [description]
+         *
+         * @name Phaser.Textures.TextureManager#name
+         * @type {string}
+         * @since 3.0.0
+         */
         this.name = 'TextureManager';
 
+        /**
+         * [description]
+         *
+         * @name Phaser.Textures.TextureManager#list
+         * @type {object}
+         * @default {}
+         * @since 3.0.0
+         */
         this.list = {};
 
+        /**
+         * [description]
+         *
+         * @name Phaser.Textures.TextureManager#_tempCanvas
+         * @type {HTMLCanvasElement}
+         * @private
+         * @since 3.0.0
+         */
         this._tempCanvas = CanvasPool.create2D(this, 1, 1);
+
+        /**
+         * [description]
+         *
+         * @name Phaser.Textures.TextureManager#_tempContext
+         * @type {CanvasRenderingContext2D}
+         * @private
+         * @since 3.0.0
+         */
         this._tempContext = this._tempCanvas.getContext('2d');
 
+        /**
+         * [description]
+         *
+         * @name Phaser.Textures.TextureManager#_pending
+         * @type {integer}
+         * @private
+         * @default 0
+         * @since 3.0.0
+         */
         this._pending = 0;
 
         game.events.once('boot', this.boot, this);
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Textures.TextureManager#boot
+     * @since 3.0.0
+     */
     boot: function ()
     {
         this._pending = 2;
@@ -52,6 +115,12 @@ var TextureManager = new Class({
         this.game.events.once('destroy', this.destroy, this);
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Textures.TextureManager#updatePending
+     * @since 3.0.0
+     */
     updatePending: function ()
     {
         this._pending--;
@@ -65,6 +134,15 @@ var TextureManager = new Class({
         }
     },
 
+    /**
+     * Adds a new Texture to the Texture Manager created from the given Base64 encoded data.
+     *
+     * @method Phaser.Textures.TextureManager#addBase64
+     * @since 3.0.0
+     *
+     * @param {string} key - The unique string-based key of the Texture.
+     * @param {any} data - The Base64 encoded data.
+     */
     addBase64: function (key, data)
     {
         var _this = this;
@@ -88,6 +166,18 @@ var TextureManager = new Class({
         image.src = data;
     },
 
+    /**
+     * Adds a new Texture to the Texture Manager created from the given Image element.
+     *
+     * @method Phaser.Textures.TextureManager#addImage
+     * @since 3.0.0
+     *
+     * @param {string} key - The unique string-based key of the Texture.
+     * @param {Image} source - The source Image element.
+     * @param {Image} [dataSource] - An optional data Image element.
+     *
+     * @return {Phaser.Textures.Texture} The Texture that was created.
+     */
     addImage: function (key, source, dataSource)
     {
         var texture = this.create(key, source);
@@ -102,6 +192,17 @@ var TextureManager = new Class({
         return texture;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Textures.TextureManager#generate
+     * @since 3.0.0
+     *
+     * @param {[type]} key - [description]
+     * @param {[type]} config - [description]
+     *
+     * @return {[type]} [description]
+     */
     generate: function (key, config)
     {
         var canvas = CanvasPool.create(this, 1, 1);
@@ -113,6 +214,18 @@ var TextureManager = new Class({
         return this.addCanvas(key, canvas);
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Textures.TextureManager#createCanvas
+     * @since 3.0.0
+     *
+     * @param {[type]} key - [description]
+     * @param {[type]} width - [description]
+     * @param {[type]} height - [description]
+     *
+     * @return {[type]} [description]
+     */
     createCanvas: function (key, width, height)
     {
         if (width === undefined) { width = 256; }
@@ -123,6 +236,17 @@ var TextureManager = new Class({
         return this.addCanvas(key, canvas);
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Textures.TextureManager#addCanvas
+     * @since 3.0.0
+     *
+     * @param {[type]} key - [description]
+     * @param {[type]} source - [description]
+     *
+     * @return {[type]} [description]
+     */
     addCanvas: function (key, source)
     {
         var texture = this.create(key, source);
@@ -132,6 +256,18 @@ var TextureManager = new Class({
         return texture;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Textures.TextureManager#addAtlas
+     * @since 3.0.0
+     *
+     * @param {[type]} key - [description]
+     * @param {[type]} source - [description]
+     * @param {[type]} data - [description]
+     *
+     * @return {[type]} [description]
+     */
     addAtlas: function (key, source, data)
     {
         //  Is it a Hash or an Array?
@@ -146,6 +282,18 @@ var TextureManager = new Class({
         }
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Textures.TextureManager#addAtlasJSONArray
+     * @since 3.0.0
+     *
+     * @param {[type]} key - [description]
+     * @param {[type]} source - [description]
+     * @param {[type]} data - [description]
+     *
+     * @return {[type]} [description]
+     */
     addAtlasJSONArray: function (key, source, data)
     {
         var texture = this.create(key, source);
@@ -165,6 +313,18 @@ var TextureManager = new Class({
         return texture;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Textures.TextureManager#addAtlasJSONHash
+     * @since 3.0.0
+     *
+     * @param {[type]} key - [description]
+     * @param {[type]} source - [description]
+     * @param {[type]} data - [description]
+     *
+     * @return {[type]} [description]
+     */
     addAtlasJSONHash: function (key, source, data)
     {
         var texture = this.create(key, source);
@@ -184,6 +344,18 @@ var TextureManager = new Class({
         return texture;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Textures.TextureManager#addUnityAtlas
+     * @since 3.0.0
+     *
+     * @param {[type]} key - [description]
+     * @param {[type]} source - [description]
+     * @param {[type]} data - [description]
+     *
+     * @return {[type]} [description]
+     */
     addUnityAtlas: function (key, source, data)
     {
         var texture = this.create(key, source);
@@ -205,6 +377,18 @@ var TextureManager = new Class({
      * @param {number} [config.margin=0] - If the frames have been drawn with a margin, specify the amount here.
      * @param {number} [config.spacing=0] - If the frames have been drawn with spacing between them, specify the amount here.
      */
+    /**
+     * [description]
+     *
+     * @method Phaser.Textures.TextureManager#addSpriteSheet
+     * @since 3.0.0
+     *
+     * @param {[type]} key - [description]
+     * @param {[type]} source - [description]
+     * @param {[type]} config - [description]
+     *
+     * @return {[type]} [description]
+     */
     addSpriteSheet: function (key, source, config)
     {
         var texture = this.create(key, source);
@@ -217,6 +401,17 @@ var TextureManager = new Class({
         return texture;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Textures.TextureManager#addSpriteSheetFromAtlas
+     * @since 3.0.0
+     *
+     * @param {[type]} key - [description]
+     * @param {[type]} config - [description]
+     *
+     * @return {[type]} [description]
+     */
     addSpriteSheetFromAtlas: function (key, config)
     {
         var atlasKey = GetValue(config, 'atlas', null);
@@ -248,6 +443,18 @@ var TextureManager = new Class({
         }
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Textures.TextureManager#addAtlasStarlingXML
+     * @since 3.0.0
+     *
+     * @param {[type]} key - [description]
+     * @param {[type]} source - [description]
+     * @param {[type]} data - [description]
+     *
+     * @return {[type]} [description]
+     */
     addAtlasStarlingXML: function (key, source, data)
     {
         var texture = this.create(key, source);
@@ -267,6 +474,18 @@ var TextureManager = new Class({
         return texture;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Textures.TextureManager#addAtlasPyxel
+     * @since 3.0.0
+     *
+     * @param {[type]} key - [description]
+     * @param {[type]} source - [description]
+     * @param {[type]} data - [description]
+     *
+     * @return {[type]} [description]
+     */
     addAtlasPyxel: function (key, source, data)
     {
         var texture = this.create(key, source);
@@ -286,6 +505,19 @@ var TextureManager = new Class({
         return texture;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Textures.TextureManager#create
+     * @since 3.0.0
+     *
+     * @param {[type]} key - [description]
+     * @param {[type]} source - [description]
+     * @param {[type]} width - [description]
+     * @param {[type]} height - [description]
+     *
+     * @return {[type]} [description]
+     */
     create: function (key, source, width, height)
     {
         var texture = new Texture(this, key, source, width, height);
@@ -295,11 +527,31 @@ var TextureManager = new Class({
         return texture;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Textures.TextureManager#exists
+     * @since 3.0.0
+     *
+     * @param {[type]} key - [description]
+     *
+     * @return {[type]} [description]
+     */
     exists: function (key)
     {
         return (this.list.hasOwnProperty(key));
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Textures.TextureManager#get
+     * @since 3.0.0
+     *
+     * @param {[type]} key - [description]
+     *
+     * @return {[type]} [description]
+     */
     get: function (key)
     {
         if (key === undefined) { key = '__DEFAULT'; }
@@ -314,6 +566,17 @@ var TextureManager = new Class({
         }
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Textures.TextureManager#cloneFrame
+     * @since 3.0.0
+     *
+     * @param {[type]} key - [description]
+     * @param {[type]} frame - [description]
+     *
+     * @return {[type]} [description]
+     */
     cloneFrame: function (key, frame)
     {
         if (this.list[key])
@@ -322,6 +585,17 @@ var TextureManager = new Class({
         }
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Textures.TextureManager#getFrame
+     * @since 3.0.0
+     *
+     * @param {[type]} key - [description]
+     * @param {[type]} frame - [description]
+     *
+     * @return {[type]} [description]
+     */
     getFrame: function (key, frame)
     {
         if (this.list[key])
@@ -330,6 +604,14 @@ var TextureManager = new Class({
         }
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Textures.TextureManager#getTextureKeys
+     * @since 3.0.0
+     *
+     * @return {[type]} [description]
+     */
     getTextureKeys: function ()
     {
         var output = [];
@@ -345,6 +627,19 @@ var TextureManager = new Class({
         return output;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Textures.TextureManager#getPixel
+     * @since 3.0.0
+     *
+     * @param {[type]} x - [description]
+     * @param {[type]} y - [description]
+     * @param {[type]} key - [description]
+     * @param {[type]} frame - [description]
+     *
+     * @return {[type]} [description]
+     */
     getPixel: function (x, y, key, frame)
     {
         var textureFrame = this.getFrame(key, frame);
@@ -378,6 +673,18 @@ var TextureManager = new Class({
         return null;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Textures.TextureManager#setTexture
+     * @since 3.0.0
+     *
+     * @param {[type]} gameObject - [description]
+     * @param {[type]} key - [description]
+     * @param {[type]} frame - [description]
+     *
+     * @return {[type]} [description]
+     */
     setTexture: function (gameObject, key, frame)
     {
         if (this.list[key])
@@ -397,6 +704,15 @@ var TextureManager = new Class({
     * @param {object} [thisArg] - Value to use as `this` when executing callback.
     * @param {...*} [arguments] - Additional arguments that will be passed to the callback, after the child.
     */
+    /**
+     * [description]
+     *
+     * @method Phaser.Textures.TextureManager#each
+     * @since 3.0.0
+     *
+     * @param {[type]} callback - [description]
+     * @param {[type]} thisArg - [description]
+     */
     each: function (callback, thisArg)
     {
         var args = [ null ];
@@ -414,6 +730,12 @@ var TextureManager = new Class({
         }
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Textures.TextureManager#destroy
+     * @since 3.0.0
+     */
     destroy: function ()
     {
         for (var texture in this.list)

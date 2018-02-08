@@ -1,5 +1,20 @@
 var GetFastValue = require('../../utils/object/GetFastValue');
 
+/**
+ * Parses a Sprite Sheet and adds the Frames to the Texture, where the Sprite Sheet is stored as a frame within an Atlas.
+ * 
+ * In Phaser terminology a Sprite Sheet is a texture containing different frames, but each frame is the exact
+ * same size and cannot be trimmed or rotated.
+ *
+ * @function Phaser.Textures.Parsers.SpriteSheetFromAtlas
+ * @since 3.0.0
+ *
+ * @param {Phaser.Textures.Texture} texture - The Texture to add the Frames to.
+ * @param {Phaser.Textures.Frame} frame - The Frame that contains the Sprite Sheet.
+ * @param {object} config - [description]
+ *
+ * @return {Phaser.Textures.Texture} The Texture modified by this parser.
+ */
 var SpriteSheetFromAtlas = function (texture, frame, config)
 {
     var frameWidth = GetFastValue(config, 'frameWidth', null);

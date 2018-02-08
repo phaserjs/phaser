@@ -1,3 +1,14 @@
+/**
+ * Parses a Pyxel JSON object and adds the Frames to a Texture.
+ *
+ * @function Phaser.Textures.Parsers.Pyxel
+ * @since 3.0.0
+ *
+ * @param {Phaser.Textures.Texture} texture - The Texture to add the Frames to.
+ * @param {object} json - The JSON data.
+ *
+ * @return {Phaser.Textures.Texture} The Texture modified by this parser.
+ */
 var Pyxel = function (texture, json)
 {
     //  Malformed? There are a few keys to check here.

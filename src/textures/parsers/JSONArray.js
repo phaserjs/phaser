@@ -1,5 +1,18 @@
 var Clone = require('../../utils/object/Clone');
 
+/**
+ * Parses a Texture Atlas JSON Array and adds the Frames to the Texture.
+ * JSON format expected to match that defined by Texture Packer, with the frames property containing an array of Frames.
+ *
+ * @function Phaser.Textures.Parsers.JSONArray
+ * @since 3.0.0
+ *
+ * @param {Phaser.Textures.Texture} texture - The Texture to add the Frames to.
+ * @param {integer} sourceIndex - The index of the TextureSource.
+ * @param {object} json - The JSON data.
+ *
+ * @return {Phaser.Textures.Texture} The Texture modified by this parser.
+ */
 var JSONArray = function (texture, sourceIndex, json)
 {
     //  Malformed?
