@@ -2,10 +2,14 @@
  * Returns the tiles in the given layer that are within the camera's viewport. This is used
  * internally.
  *
- * @param {LayerData} layer - [description]
- * @param {Camera} [camera=main camera] - [description]
+ * @function Phaser.Tilemaps.Components.CullTiles
+ * @since 3.0.0
+ *
+ * @param {Phaser.Tilemaps.LayerData} layer - [description]
+ * @param {Phaser.Cameras.Scene2D.Camera} [camera=main camera] - [description]
  * @param {array} [outputArray] - [description]
- * @return {Tile[]}
+ * 
+ * @return {Phaser.Tilemaps.Tile[]}
  */
 var CullTiles = function (layer, camera, outputArray)
 {

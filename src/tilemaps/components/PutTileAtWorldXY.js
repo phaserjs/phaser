@@ -8,13 +8,17 @@ var WorldToTileY = require('./WorldToTileY');
  * specified location. If you pass in an index, only the index at the specified location will be
  * changed. Collision information will be recalculated at the specified location.
  *
- * @param {integer|Tile} tile - The index of this tile to set or a Tile object.
+ * @function Phaser.Tilemaps.Components.PutTileAtWorldXY
+ * @since 3.0.0
+ *
+ * @param {integer|Phaser.Tilemaps.Tile} tile - The index of this tile to set or a Tile object.
  * @param {integer} worldX - [description]
  * @param {integer} worldY - [description]
  * @param {boolean} [recalculateFaces=true] - [description]
- * @param {Camera} [camera=main camera] - [description]
- * @param {LayerData} layer - [description]
- * @return {Tile} The Tile object that was created or added to this map.
+ * @param {Phaser.Cameras.Scene2D.Camera} [camera=main camera] - [description]
+ * @param {Phaser.Tilemaps.LayerData} layer - [description]
+ * 
+ * @return {Phaser.Tilemaps.Tile} The Tile object that was created or added to this map.
  */
 var PutTileAtWorldXY = function (tile, worldX, worldY, recalculateFaces, camera, layer)
 {

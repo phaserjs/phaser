@@ -6,10 +6,14 @@ var WorldToTileY = require('./WorldToTileY');
  * Checks if there is a tile at the given location (in world coordinates) in the given layer. Returns
  * false if there is no tile or if the tile at that location has an index of -1.
  *
+ * @function Phaser.Tilemaps.Components.HasTileAtWorldXY
+ * @since 3.0.0
+ *
  * @param {number} worldX - [description]
  * @param {number} worldY - [description]
- * @param {Camera} [camera=main camera] - [description]
- * @param {LayerData} layer - [description]
+ * @param {Phaser.Cameras.Scene2D.Camera} [camera=main camera] - [description]
+ * @param {Phaser.Tilemaps.LayerData} layer - [description]
+ * 
  * @return {boolean}
  */
 var HasTileAtWorldXY = function (worldX, worldY, camera, layer)

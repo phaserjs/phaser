@@ -5,12 +5,16 @@
  * If the reverse boolean is true, it scans starting from the bottom-right corner traveling up to
  * the top-left.
  *
+ * @function Phaser.Tilemaps.Components.FindByIndex
+ * @since 3.0.0
+ *
  * @param {integer} index - The tile index value to search for.
  * @param {integer} [skip=0] - The number of times to skip a matching tile before returning.
  * @param {boolean} [reverse=false] - If true it will scan the layer in reverse, starting at the
  * bottom-right. Otherwise it scans from the top-left.
- * @param {LayerData} layer - [description]
- * @return {Tile|null} The first (or n skipped) tile with the matching index.
+ * @param {Phaser.Tilemaps.LayerData} layer - [description]
+ * 
+ * @return {Phaser.Tilemaps.Tile|null} The first (or n skipped) tile with the matching index.
  */
 var FindByIndex = function (findIndex, skip, reverse, layer)
 {

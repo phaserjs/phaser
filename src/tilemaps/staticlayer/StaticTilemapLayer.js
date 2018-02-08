@@ -1,6 +1,6 @@
 var Class = require('../../utils/Class');
-var GameObject = require('../../gameobjects/GameObject');
 var Components = require('../../gameobjects/components');
+var GameObject = require('../../gameobjects/GameObject');
 var StaticTilemapLayerRender = require('./StaticTilemapLayerRender');
 var TilemapComponents = require('../components');
 
@@ -14,12 +14,28 @@ var TilemapComponents = require('../components');
  * over a DynamicTilemapLayer when you don't need either of those features.
  *
  * @class StaticTilemapLayer
+ * @extends Phaser.GameObjects.GameObject
+ * @memberOf Phaser.Tilemaps
  * @constructor
+ * @since 3.0.0
+ * 
+ * @extends Phaser.GameObjects.Components.Alpha
+ * @extends Phaser.GameObjects.Components.BlendMode
+ * @extends Phaser.GameObjects.Components.Depth
+ * @extends Phaser.GameObjects.Components.Flip
+ * @extends Phaser.GameObjects.Components.GetBounds
+ * @extends Phaser.GameObjects.Components.Origin
+ * @extends Phaser.GameObjects.Components.Pipeline
+ * @extends Phaser.GameObjects.Components.ScaleMode
+ * @extends Phaser.GameObjects.Components.Size
+ * @extends Phaser.GameObjects.Components.Transform
+ * @extends Phaser.GameObjects.Components.Visible
+ * @extends Phaser.GameObjects.Components.ScrollFactor
  *
- * @param {Scene} scene - [description]
- * @param {Tilemap} tilemap - The Tilemap this layer is a part of.
+ * @param {Phaser.Scene} scene - [description]
+ * @param {Phaser.Tilemaps.Tilemap} tilemap - The Tilemap this layer is a part of.
  * @param {integer} layerIndex - The index of the LayerData associated with this layer.
- * @param {Tileset} tileset - The tileset used to render the tiles in this layer.
+ * @param {Phaser.Tilemaps.Tileset} tileset - The tileset used to render the tiles in this layer.
  * @param {number} [x=0] - The world x position where the top left of this layer will be placed.
  * @param {number} [y=0] - The world y position where the top left of this layer will be placed.
  */

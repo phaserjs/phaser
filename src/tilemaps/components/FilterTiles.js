@@ -5,6 +5,9 @@ var GetTilesWithin = require('./GetTilesWithin');
  * filter callback function. Any tiles that pass the filter test (i.e. where the callback returns
  * true) will returned as a new array. Similar to Array.prototype.Filter in vanilla JS.
  *
+ * @function Phaser.Tilemaps.Components.FilterTiles
+ * @since 3.0.0
+ *
  * @param {function} callback - The callback. Each tile in the given area will be passed to this
  * callback as the first and only parameter. The callback should return true for tiles that pass the
  * filter.
@@ -20,8 +23,9 @@ var GetTilesWithin = require('./GetTilesWithin');
  * on at least one side.
  * @param {boolean} [filteringOptions.hasInterestingFace=false] - If true, only return tiles that
  * have at least one interesting face.
- * @param {LayerData} layer - [description]
- * @return {Tile[]} The filtered array of Tiles.
+ * @param {Phaser.Tilemaps.LayerData} layer - [description]
+ * 
+ * @return {Phaser.Tilemaps.Tile[]} The filtered array of Tiles.
  */
 var FilterTiles = function (callback, context, tileX, tileY, width, height, filteringOptions, layer)
 {

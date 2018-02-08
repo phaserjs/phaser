@@ -5,6 +5,9 @@ var GetTilesWithin = require('./GetTilesWithin');
  * satisfies the provided testing function. I.e. finds the first tile for which `callback` returns
  * true. Similar to Array.prototype.find in vanilla JS.
  *
+ * @function Phaser.Tilemaps.Components.FindTile
+ * @since 3.0.0
+ *
  * @param {function} callback - The callback. Each tile in the given area will be passed to this
  * callback as the first and only parameter.
  * @param {object} [context] - The context under which the callback should be run.
@@ -19,8 +22,9 @@ var GetTilesWithin = require('./GetTilesWithin');
  * on at least one side.
  * @param {boolean} [filteringOptions.hasInterestingFace=false] - If true, only return tiles that
  * have at least one interesting face.
- * @param {LayerData} layer - [description]
- * @return {Tile|null} A Tile that matches the search, or null if no Tile found
+ * @param {Phaser.Tilemaps.LayerData} layer - [description]
+ * 
+ * @return {Phaser.Tilemaps.Tile|null} A Tile that matches the search, or null if no Tile found
  */
 var FindTile = function (callback, context, tileX, tileY, width, height, filteringOptions, layer)
 {

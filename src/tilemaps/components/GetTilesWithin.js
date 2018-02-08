@@ -3,6 +3,9 @@ var GetFastValue = require('../../utils/object/GetFastValue');
 /**
  * Gets the tiles in the given rectangular area (in tile coordinates) of the layer.
  *
+ * @function Phaser.Tilemaps.Components.GetTilesWithin
+ * @since 3.0.0
+ *
  * @param {integer} [tileX=0] - [description]
  * @param {integer} [tileY=0] - [description]
  * @param {integer} [width=max width based on tileX] - [description]
@@ -14,8 +17,9 @@ var GetFastValue = require('../../utils/object/GetFastValue');
  * at least one side.
  * @param {boolean} [filteringOptions.hasInterestingFace=false] - If true, only return tiles that
  * have at least one interesting face.
- * @param {LayerData} layer - [description]
- * @return {Tile[]} Array of Tile objects.
+ * @param {Phaser.Tilemaps.LayerData} layer - [description]
+ * 
+ * @return {Phaser.Tilemaps.Tile[]} Array of Tile objects.
  */
 var GetTilesWithin = function (tileX, tileY, width, height, filteringOptions, layer)
 {

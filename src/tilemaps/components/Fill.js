@@ -7,13 +7,16 @@ var SetTileCollision = require('./SetTileCollision');
  * specified index. Tiles will be set to collide if the given index is a colliding index.
  * Collision information in the region will be recalculated.
  *
+ * @function Phaser.Tilemaps.Components.Fill
+ * @since 3.0.0
+ *
  * @param {integer} index - [description]
  * @param {integer} [tileX=0] - [description]
  * @param {integer} [tileY=0] - [description]
  * @param {integer} [width=max width based on tileX] - [description]
  * @param {integer} [height=max height based on tileY] - [description]
  * @param {boolean} [recalculateFaces=true] - [description]
- * @param {LayerData} layer - [description]
+ * @param {Phaser.Tilemaps.LayerData} layer - [description]
  */
 var Fill = function (index, tileX, tileY, width, height, recalculateFaces, layer)
 {

@@ -3,17 +3,20 @@ var GetRandomElement = require('../../utils/array/GetRandomElement');
 
 /**
  * Randomizes the indexes of a rectangular region of tiles (in tile coordinates) within the
- * specified layer. Each tile will recieve a new index. If an array of indexes is passed in, then
+ * specified layer. Each tile will receive a new index. If an array of indexes is passed in, then
  * those will be used for randomly assigning new tile indexes. If an array is not provided, the
  * indexes found within the region (excluding -1) will be used for randomly assigning new tile
  * indexes. This method only modifies tile indexes and does not change collision information.
+ *
+ * @function Phaser.Tilemaps.Components.Randomize
+ * @since 3.0.0
  *
  * @param {integer} [tileX=0] - [description]
  * @param {integer} [tileY=0] - [description]
  * @param {integer} [width=max width based on tileX] - [description]
  * @param {integer} [height=max height based on tileY] - [description]
  * @param {integer[]} [indexes] - An array of indexes to randomly draw from during randomization.
- * @param {LayerData} layer - [description]
+ * @param {Phaser.Tilemaps.LayerData} layer - [description]
  */
 var Randomize = function (tileX, tileY, width, height, indexes, layer)
 {

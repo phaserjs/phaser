@@ -7,14 +7,18 @@ var Vector2 = require('../../math/Vector2');
  * layer's position, scale and scroll. This will return a new Vector2 object or update the given
  * `point` object.
  *
+ * @function Phaser.Tilemaps.Components.WorldToTileXY
+ * @since 3.0.0
+ *
  * @param {number} worldX - [description]
  * @param {number} worldY - [description]
  * @param {boolean} [snapToFloor=true] - Whether or not to round the tile coordinate down to the
  * nearest integer.
- * @param {Vector2} [point] - [description]
- * @param {Camera} [camera=main camera] - [description]
- * @param {LayerData} layer - [description]
- * @return {Vector2} The XY location in tile units.
+ * @param {Phaser.Math.Vector2} [point] - [description]
+ * @param {Phaser.Cameras.Scene2D.Camera} [camera=main camera] - [description]
+ * @param {Phaser.Tilemaps.LayerData} layer - [description]
+ * 
+ * @return {Phaser.Math.Vector2} The XY location in tile units.
  */
 var WorldToTileXY = function (worldX, worldY, snapToFloor, point, camera, layer)
 {

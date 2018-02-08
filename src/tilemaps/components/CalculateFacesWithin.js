@@ -6,11 +6,14 @@ var GetTilesWithin = require('./GetTilesWithin');
  * layer. Interesting faces are used internally for optimizing collisions against tiles. This method
  * is mostly used internally.
  *
+ * @function Phaser.Tilemaps.Components.CalculateFacesWithin
+ * @since 3.0.0
+ *
  * @param {integer} [tileX=0] - [description]
  * @param {integer} [tileY=0] - [description]
  * @param {integer} [width=max width based on tileX] - [description]
  * @param {integer} [height=max height based on tileY] - [description]
- * @param {LayerData} layer - [description]
+ * @param {Phaser.Tilemaps.LayerData} layer - [description]
  */
 var CalculateFacesWithin = function (tileX, tileY, width, height, layer)
 {

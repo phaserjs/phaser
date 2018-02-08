@@ -5,9 +5,12 @@ var GetTileAt = require('./GetTileAt');
  * faces are used internally for optimizing collisions against tiles. This method is mostly used
  * internally to optimize recalculating faces when only one tile has been changed.
  *
+ * @function Phaser.Tilemaps.Components.CalculateFacesAt
+ * @since 3.0.0
+ * 
  * @param {integer} tileX - [description]
  * @param {integer} tileY - [description]
- * @param {LayerData} layer - [description]
+ * @param {Phaser.Tilemaps.LayerData} layer - [description]
  */
 var CalculateFacesAt = function (tileX, tileY, layer)
 {

@@ -7,11 +7,14 @@ var ShuffleArray = require('../../utils/array/Shuffle');
  * appear to have changed! This method only modifies tile indexes and does not change collision
  * information.
  *
+ * @function Phaser.Tilemaps.Components.Shuffle
+ * @since 3.0.0
+ *
  * @param {integer} [tileX=0] - [description]
  * @param {integer} [tileY=0] - [description]
  * @param {integer} [width=max width based on tileX] - [description]
  * @param {integer} [height=max height based on tileY] - [description]
- * @param {LayerData} layer - [description]
+ * @param {Phaser.Tilemaps.LayerData} layer - [description]
  */
 var Shuffle = function (tileX, tileY, width, height, layer)
 {

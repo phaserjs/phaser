@@ -6,6 +6,9 @@ var CalculateFacesWithin = require('./CalculateFacesWithin');
  * coordinates) within the layer. This copies all tile properties & recalculates collision
  * information in the destination region.
  *
+ * @function Phaser.Tilemaps.Components.Copy
+ * @since 3.0.0
+ *
  * @param {integer} srcTileX - [description]
  * @param {integer} srcTileY - [description]
  * @param {integer} width - [description]
@@ -14,7 +17,7 @@ var CalculateFacesWithin = require('./CalculateFacesWithin');
  * @param {integer} destTileY - [description]
  * @param {integer} destTileY - [description]
  * @param {boolean} [recalculateFaces=true] - [description]
- * @param {LayerData} layer - [description]
+ * @param {Phaser.Tilemaps.LayerData} layer - [description]
  */
 var Copy = function (srcTileX, srcTileY, width, height, destTileX, destTileY, recalculateFaces, layer)
 {

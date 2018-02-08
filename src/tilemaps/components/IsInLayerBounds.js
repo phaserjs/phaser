@@ -1,9 +1,13 @@
 /**
  * Checks if the given tile coordinates are within the bounds of the layer.
  *
+ * @function Phaser.Tilemaps.Components.IsInLayerBounds
+ * @since 3.0.0
+ *
  * @param {integer} tileX - [description]
  * @param {integer} tileY - [description]
- * @param {LayerData} layer - [description]
+ * @param {Phaser.Tilemaps.LayerData} layer - [description]
+ * 
  * @return {boolean}
  */
 var IsInLayerBounds = function (tileX, tileY, layer)

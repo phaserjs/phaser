@@ -2,9 +2,13 @@
  * Converts from tile Y coordinates (tile units) to world Y coordinates (pixels), factoring in the
  * layer's position, scale and scroll.
  *
+ * @function Phaser.Tilemaps.Components.TileToWorldY
+ * @since 3.0.0
+ *
  * @param {integer} tileY - [description]
- * @param {Camera} [camera=main camera] - [description]
- * @param {LayerData} layer - [description]
+ * @param {Phaser.Cameras.Scene2D.Camera} [camera=main camera] - [description]
+ * @param {Phaser.Tilemaps.LayerData} layer - [description]
+ * 
  * @return {number}
  */
 var TileToWorldY = function (tileY, camera, layer)

@@ -8,12 +8,15 @@ var PutTileAt = require('./PutTileAt');
  * index at the specified location will be changed. Collision information will be recalculated
  * within the region tiles were changed.
  *
- * @param {integer[]|integer[][]|Tile[]|Tile[][]} tile - A row (array) or grid (2D array) of Tiles
+ * @function Phaser.Tilemaps.Components.PutTilesAt
+ * @since 3.0.0
+ *
+ * @param {integer[]|integer[][]|Phaser.Tilemaps.Tile[]|Phaser.Tilemaps.Tile[][]} tile - A row (array) or grid (2D array) of Tiles
  * or tile indexes to place.
  * @param {integer} tileX - [description]
  * @param {integer} tileY - [description]
  * @param {boolean} [recalculateFaces=true] - [description]
- * @param {LayerData} layer - [description]
+ * @param {Phaser.Tilemaps.LayerData} layer - [description]
  */
 var PutTilesAt = function (tilesArray, tileX, tileY, recalculateFaces, layer)
 {

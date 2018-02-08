@@ -13,7 +13,10 @@ var GetTilesWithin = require('./GetTilesWithin');
  * ]
  *
  * The probability of any index being choose is (the index's weight) / (sum of all weights). This
- * method only modifies tile indexes and does not change collisioninformation.
+ * method only modifies tile indexes and does not change collision information.
+ *
+ * @function Phaser.Tilemaps.Components.WeightedRandomize
+ * @since 3.0.0
  *
  * @param {integer} [tileX=0] - [description]
  * @param {integer} [tileY=0] - [description]
@@ -22,7 +25,7 @@ var GetTilesWithin = require('./GetTilesWithin');
  * @param {object[]} [weightedIndexes] - An array of objects to randomly draw from during
  * randomization. They should be in the form: { index: 0, weight: 4 } or
  * { index: [0, 1], weight: 4 } if you wish to draw from multiple tile indexes.
- * @param {LayerData} layer - [description]
+ * @param {Phaser.Tilemaps.LayerData} layer - [description]
  */
 var WeightedRandomize = function (tileX, tileY, width, height, weightedIndexes, layer)
 {

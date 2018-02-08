@@ -1,9 +1,12 @@
 var GetTilesWithin = require('./GetTilesWithin');
 
 /**
- * Sets a collision callback for the given rectangular area (in tile coordindates) within the layer.
+ * Sets a collision callback for the given rectangular area (in tile coordinates) within the layer.
  * If a callback is already set for the tile index it will be replaced. Set the callback to null to
  * remove it.
+ *
+ * @function Phaser.Tilemaps.Components.SetTileLocationCallback
+ * @since 3.0.0
  *
  * @param {integer} [tileX=0] - [description]
  * @param {integer} [tileY=0] - [description]
@@ -11,7 +14,7 @@ var GetTilesWithin = require('./GetTilesWithin');
  * @param {integer} [height=max height based on tileY] - [description]
  * @param {function} callback - The callback that will be invoked when the tile is collided with.
  * @param {object} callbackContext - The context under which the callback is called.
- * @param {LayerData} layer - [description]
+ * @param {Phaser.Tilemaps.LayerData} layer - [description]
  */
 var SetTileLocationCallback = function (tileX, tileY, width, height, callback, callbackContext, layer)
 {

@@ -2,9 +2,12 @@
  * Internally used method to keep track of the tile indexes that collide within a layer. This
  * updates LayerData.collideIndexes to either contain or not contain the given `tileIndex`.
  *
+ * @function Phaser.Tilemaps.Components.SetLayerCollisionIndex
+ * @since 3.0.0
+ *
  * @param {integer} tileIndex - [description]
  * @param {boolean} [collides=true] - [description]
- * @param {LayerData} layer - [description]
+ * @param {Phaser.Tilemaps.LayerData} layer - [description]
  */
 var SetLayerCollisionIndex = function (tileIndex, collides, layer)
 {

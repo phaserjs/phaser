@@ -5,13 +5,16 @@ var GetTilesWithin = require('./GetTilesWithin');
  * `findIndex` and updates their index to match `newIndex`. This only modifies the index and does
  * not change collision information.
  *
+ * @function Phaser.Tilemaps.Components.ReplaceByIndex
+ * @since 3.0.0
+ *
  * @param {integer} findIndex - [description]
  * @param {integer} newIndex - [description]
  * @param {integer} [tileX=0] - [description]
  * @param {integer} [tileY=0] - [description]
  * @param {integer} [width=max width based on tileX] - [description]
  * @param {integer} [height=max height based on tileY] - [description]
- * @param {LayerData} layer - [description]
+ * @param {Phaser.Tilemaps.LayerData} layer - [description]
  */
 var ReplaceByIndex = function (findIndex, newIndex, tileX, tileY, width, height, layer)
 {

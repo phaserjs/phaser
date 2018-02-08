@@ -4,6 +4,8 @@
 
 module.exports = {
 
+    Components: require('components/'),
+
     Formats: require('./Formats'),
     ImageCollection: require('./ImageCollection'),
     ParseToTilemap: require('./ParseToTilemap'),

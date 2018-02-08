@@ -5,6 +5,9 @@ var WorldToTileY = require('./WorldToTileY');
 /**
  * Gets the tiles in the given rectangular area (in world coordinates) of the layer.
  *
+ * @function Phaser.Tilemaps.Components.GetTilesWithinWorldXY
+ * @since 3.0.0
+ *
  * @param {number} worldX - [description]
  * @param {number} worldY - [description]
  * @param {number} width - [description]
@@ -16,9 +19,10 @@ var WorldToTileY = require('./WorldToTileY');
  * at least one side.
  * @param {boolean} [filteringOptions.hasInterestingFace=false] - If true, only return tiles that
  * have at least one interesting face.
- * @param {Camera} [camera=main camera] - [description]
- * @param {LayerData} layer - [description]
- * @return {Tile[]} Array of Tile objects.
+ * @param {Phaser.Cameras.Scene2D.Camera} [camera=main camera] - [description]
+ * @param {Phaser.Tilemaps.LayerData} layer - [description]
+ * 
+ * @return {Phaser.Tilemaps.Tile[]} Array of Tile objects.
  */
 var GetTilesWithinWorldXY = function (worldX, worldY, width, height, filteringOptions, camera, layer)
 {

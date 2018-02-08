@@ -2,11 +2,15 @@
  * Converts from world X coordinates (pixels) to tile X coordinates (tile units), factoring in the
  * layer's position, scale and scroll.
  *
+ * @function Phaser.Tilemaps.Components.WorldToTileX
+ * @since 3.0.0
+ *
  * @param {number} worldX - [description]
  * @param {boolean} [snapToFloor=true] - Whether or not to round the tile coordinate down to the
  * nearest integer.
- * @param {Camera} [camera=main camera] - [description]
- * @param {LayerData} layer - [description]
+ * @param {Phaser.Cameras.Scene2D.Camera} [camera=main camera] - [description]
+ * @param {Phaser.Tilemaps.LayerData} layer - [description]
+ * 
  * @return {number} The X location in tile units.
  */
 var WorldToTileX = function (worldX, snapToFloor, camera, layer)

@@ -1,12 +1,18 @@
+/**
+ * @namespace Phaser.Tilemaps.Components
+ */
+
 module.exports = {
 
+    CalculateFacesAt: require('./CalculateFacesAt'),
+    CalculateFacesWithin: require('./CalculateFacesWithin'),
     Copy: require('./Copy'),
     CreateFromTiles: require('./CreateFromTiles'),
     CullTiles: require('./CullTiles'),
     Fill: require('./Fill'),
+    FilterTiles: require('./FilterTiles'),
     FindByIndex: require('./FindByIndex'),
     FindTile: require('./FindTile'),
-    FilterTiles: require('./FilterTiles'),
     ForEachTile: require('./ForEachTile'),
     GetTileAt: require('./GetTileAt'),
     GetTileAtWorldXY: require('./GetTileAtWorldXY'),
@@ -20,16 +26,14 @@ module.exports = {
     PutTileAtWorldXY: require('./PutTileAtWorldXY'),
     PutTilesAt: require('./PutTilesAt'),
     Randomize: require('./Randomize'),
-    CalculateFacesAt: require('./CalculateFacesAt'),
-    CalculateFacesWithin: require('./CalculateFacesWithin'),
     RemoveTileAt: require('./RemoveTileAt'),
     RemoveTileAtWorldXY: require('./RemoveTileAtWorldXY'),
-    ReplaceByIndex: require('./ReplaceByIndex'),
     RenderDebug: require('./RenderDebug'),
+    ReplaceByIndex: require('./ReplaceByIndex'),
     SetCollision: require('./SetCollision'),
     SetCollisionBetween: require('./SetCollisionBetween'),
-    SetCollisionByProperty: require('./SetCollisionByProperty'),
     SetCollisionByExclusion: require('./SetCollisionByExclusion'),
+    SetCollisionByProperty: require('./SetCollisionByProperty'),
     SetCollisionFromCollisionGroup: require('./SetCollisionFromCollisionGroup'),
     SetTileIndexCallback: require('./SetTileIndexCallback'),
     SetTileLocationCallback: require('./SetTileLocationCallback'),

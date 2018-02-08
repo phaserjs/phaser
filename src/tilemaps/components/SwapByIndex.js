@@ -5,13 +5,16 @@ var GetTilesWithin = require('./GetTilesWithin');
  * `indexA` and swaps then with `indexB`. This only modifies the index and does not change collision
  * information.
  *
+ * @function Phaser.Tilemaps.Components.SwapByIndex
+ * @since 3.0.0
+ *
  * @param {integer} tileA - First tile index.
  * @param {integer} tileB - Second tile index.
  * @param {integer} [tileX=0] - [description]
  * @param {integer} [tileY=0] - [description]
  * @param {integer} [width=max width based on tileX] - [description]
  * @param {integer} [height=max height based on tileY] - [description]
- * @param {LayerData} layer - [description]
+ * @param {Phaser.Tilemaps.LayerData} layer - [description]
  */
 var SwapByIndex = function (indexA, indexB, tileX, tileY, width, height, layer)
 {
