@@ -1,5 +1,17 @@
-//  Creates an XHRSettings Object with default values
-
+/**
+ * Creates an XHRSettings Object with default values.
+ *
+ * @function Phaser.Loader.XHRSettings
+ * @since 3.0.0
+ *
+ * @param {string} [responseType] - The responseType, such as 'text'.
+ * @param {boolean} [async=true] - Should the XHR request use async or not?
+ * @param {string} [user] - Optional username for the XHR request.
+ * @param {string} [password] - Optional password for the XHR request.
+ * @param {integer} [timeout=0] - Optional XHR timeout value.
+ *
+ * @return {Phaser.Loader.XHRSettings} The XHRSettings object as used by the Loader.
+ */
 var XHRSettings = function (responseType, async, user, password, timeout)
 {
     if (responseType === undefined) { responseType = ''; }
@@ -34,7 +46,6 @@ var XHRSettings = function (responseType, async, user, password, timeout)
         overrideMimeType: undefined
 
     };
-    
 };
 
 module.exports = XHRSettings;

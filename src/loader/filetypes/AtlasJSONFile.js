@@ -3,19 +3,19 @@ var ImageFile = require('./ImageFile.js');
 var JSONFile = require('./JSONFile.js');
 
 /**
- * [description]
+ * An Atlas JSON File.
  *
  * @function Phaser.Loader.Filetypes.AtlasJSONFile
  * @since 3.0.0
  *
- * @param {string} key - [description]
- * @param {string} textureURL - [description]
- * @param {string} atlasURL - [description]
- * @param {string} path - [description]
- * @param {object} textureXhrSettings - [description]
- * @param {object} atlasXhrSettings - [description]
+ * @param {string} key - The key of the file within the loader.
+ * @param {string} textureURL - The url to load the texture file from.
+ * @param {string} atlasURL - The url to load the atlas file from.
+ * @param {string} path - The path of the file.
+ * @param {object} textureXhrSettings - Optional texture file specific XHR settings.
+ * @param {object} atlasXhrSettings - Optional atlas file specific XHR settings.
  *
- * @return {object} [description]
+ * @return {object} An object containing two File objects to be added to the loader.
  */
 var AtlasJSONFile = function (key, textureURL, atlasURL, path, textureXhrSettings, atlasXhrSettings)
 {
