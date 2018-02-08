@@ -4,7 +4,7 @@
 
 module.exports = {
 
-    Components: require('components/'),
+    Components: require('./components/'),
 
     Formats: require('./Formats'),
     ImageCollection: require('./ImageCollection'),
