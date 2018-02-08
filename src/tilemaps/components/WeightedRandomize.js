@@ -25,7 +25,7 @@ var GetTilesWithin = require('./GetTilesWithin');
  * @param {object[]} [weightedIndexes] - An array of objects to randomly draw from during
  * randomization. They should be in the form: { index: 0, weight: 4 } or
  * { index: [0, 1], weight: 4 } if you wish to draw from multiple tile indexes.
- * @param {Phaser.Tilemaps.LayerData} layer - [description]
+ * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.
  */
 var WeightedRandomize = function (tileX, tileY, width, height, weightedIndexes, layer)
 {

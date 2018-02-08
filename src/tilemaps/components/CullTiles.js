@@ -5,11 +5,11 @@
  * @function Phaser.Tilemaps.Components.CullTiles
  * @since 3.0.0
  *
- * @param {Phaser.Tilemaps.LayerData} layer - [description]
- * @param {Phaser.Cameras.Scene2D.Camera} [camera=main camera] - [description]
+ * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.
+ * @param {Phaser.Cameras.Scene2D.Camera} [camera] - The Camera to run the cull check against.
  * @param {array} [outputArray] - [description]
  * 
- * @return {Phaser.Tilemaps.Tile[]}
+ * @return {Phaser.Tilemaps.Tile[]} An array of Tile objects.
  */
 var CullTiles = function (layer, camera, outputArray)
 {

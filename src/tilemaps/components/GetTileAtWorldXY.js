@@ -13,7 +13,7 @@ var WorldToTileY = require('./WorldToTileY');
  * @param {boolean} [nonNull=false] - If true, function won't return null for empty tiles, but a Tile
  * object with an index of -1.
  * @param {Phaser.Cameras.Scene2D.Camera} [camera=main camera] - [description]
- * @param {Phaser.Tilemaps.LayerData} layer - [description]
+ * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.
  * 
  * @return {Phaser.Tilemaps.Tile} The tile at the given coordinates or null if no tile was found or the coordinates
  * were invalid.

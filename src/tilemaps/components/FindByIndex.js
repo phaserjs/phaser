@@ -12,7 +12,7 @@
  * @param {integer} [skip=0] - The number of times to skip a matching tile before returning.
  * @param {boolean} [reverse=false] - If true it will scan the layer in reverse, starting at the
  * bottom-right. Otherwise it scans from the top-left.
- * @param {Phaser.Tilemaps.LayerData} layer - [description]
+ * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.
  * 
  * @return {Phaser.Tilemaps.Tile|null} The first (or n skipped) tile with the matching index.
  */

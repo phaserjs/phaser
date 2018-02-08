@@ -17,7 +17,7 @@ var CalculateFacesWithin = require('./CalculateFacesWithin');
  * @param {integer} destTileY - [description]
  * @param {integer} destTileY - [description]
  * @param {boolean} [recalculateFaces=true] - [description]
- * @param {Phaser.Tilemaps.LayerData} layer - [description]
+ * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.
  */
 var Copy = function (srcTileX, srcTileY, width, height, destTileX, destTileY, recalculateFaces, layer)
 {

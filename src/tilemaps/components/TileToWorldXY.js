@@ -14,7 +14,7 @@ var Vector2 = require('../../math/Vector2');
  * @param {integer} tileY - [description]
  * @param {Phaser.Math.Vector2} [point] - [description]
  * @param {Phaser.Cameras.Scene2D.Camera} [camera=main camera] - [description]
- * @param {Phaser.Tilemaps.LayerData} layer - [description]
+ * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.
  * 
  * @return {Phaser.Math.Vector2} The XY location in world coordinates.
  */

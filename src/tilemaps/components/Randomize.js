@@ -16,7 +16,7 @@ var GetRandomElement = require('../../utils/array/GetRandomElement');
  * @param {integer} [width=max width based on tileX] - [description]
  * @param {integer} [height=max height based on tileY] - [description]
  * @param {integer[]} [indexes] - An array of indexes to randomly draw from during randomization.
- * @param {Phaser.Tilemaps.LayerData} layer - [description]
+ * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.
  */
 var Randomize = function (tileX, tileY, width, height, indexes, layer)
 {

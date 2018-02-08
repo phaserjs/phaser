@@ -16,7 +16,7 @@ var WorldToTileY = require('./WorldToTileY');
  * location with null instead of a Tile with an index of -1.
  * @param {boolean} [recalculateFaces=true] - [description]
  * @param {Phaser.Cameras.Scene2D.Camera} [camera=main camera] - [description]
- * @param {Phaser.Tilemaps.LayerData} layer - [description]
+ * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.
  * 
  * @return {Phaser.Tilemaps.Tile} The Tile object that was removed.
  */

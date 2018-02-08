@@ -16,7 +16,7 @@ var PutTileAt = require('./PutTileAt');
  * @param {integer} tileX - [description]
  * @param {integer} tileY - [description]
  * @param {boolean} [recalculateFaces=true] - [description]
- * @param {Phaser.Tilemaps.LayerData} layer - [description]
+ * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.
  */
 var PutTilesAt = function (tilesArray, tileX, tileY, recalculateFaces, layer)
 {

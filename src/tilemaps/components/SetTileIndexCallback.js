@@ -11,7 +11,7 @@
  * collision callback set for.
  * @param {function} callback - The callback that will be invoked when the tile is collided with.
  * @param {object} callbackContext - The context under which the callback is called.
- * @param {Phaser.Tilemaps.LayerData} layer - [description]
+ * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.
  */
 var SetTileIndexCallback = function (indexes, callback, callbackContext, layer)
 {

@@ -16,7 +16,7 @@ var SetTileCollision = require('./SetTileCollision');
  * @param {integer} tileX - [description]
  * @param {integer} tileY - [description]
  * @param {boolean} [recalculateFaces=true] - [description]
- * @param {Phaser.Tilemaps.LayerData} layer - [description]
+ * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.
  * 
  * @return {Phaser.Tilemaps.Tile} The Tile object that was created or added to this map.
  */

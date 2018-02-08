@@ -13,7 +13,7 @@ var GetTilesWithin = require('./GetTilesWithin');
  * @param {integer} [tileY=0] - [description]
  * @param {integer} [width=max width based on tileX] - [description]
  * @param {integer} [height=max height based on tileY] - [description]
- * @param {Phaser.Tilemaps.LayerData} layer - [description]
+ * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.
  */
 var CalculateFacesWithin = function (tileX, tileY, width, height, layer)
 {

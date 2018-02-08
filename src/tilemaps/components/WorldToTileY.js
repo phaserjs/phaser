@@ -9,7 +9,7 @@
  * @param {boolean} [snapToFloor=true] - Whether or not to round the tile coordinate down to the
  * nearest integer.
  * @param {Phaser.Cameras.Scene2D.Camera} [camera=main camera] - [description]
- * @param {Phaser.Tilemaps.LayerData} layer - [description]
+ * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.
  * 
  * @return {number} The Y location in tile units.
  */

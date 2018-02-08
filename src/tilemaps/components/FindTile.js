@@ -22,7 +22,7 @@ var GetTilesWithin = require('./GetTilesWithin');
  * on at least one side.
  * @param {boolean} [filteringOptions.hasInterestingFace=false] - If true, only return tiles that
  * have at least one interesting face.
- * @param {Phaser.Tilemaps.LayerData} layer - [description]
+ * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.
  * 
  * @return {Phaser.Tilemaps.Tile|null} A Tile that matches the search, or null if no Tile found
  */

@@ -6,7 +6,7 @@
  *
  * @param {integer} tileX - [description]
  * @param {integer} tileY - [description]
- * @param {Phaser.Tilemaps.LayerData} layer - [description]
+ * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.
  * 
  * @return {boolean}
  */

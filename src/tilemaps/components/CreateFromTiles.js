@@ -20,7 +20,7 @@ var ReplaceByIndex = require('./ReplaceByIndex');
  * scene.make.sprite).
  * @param {Phaser.Scene} [scene=scene the map is within] - The Scene to create the Sprites within.
  * @param {Phaser.Cameras.Scene2D.Camera} [camera=main camera] - The Camera to use when determining the world XY
- * @param {Phaser.Tilemaps.LayerData} layer - [description]
+ * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.
  * 
  * @return {Phaser.GameObjects.Sprite[]} An array of the Sprites that were created.
  */

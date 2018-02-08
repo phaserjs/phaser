@@ -14,7 +14,7 @@ var GetTilesWithin = require('./GetTilesWithin');
  * @param {integer} [height=max height based on tileY] - [description]
  * @param {function} callback - The callback that will be invoked when the tile is collided with.
  * @param {object} callbackContext - The context under which the callback is called.
- * @param {Phaser.Tilemaps.LayerData} layer - [description]
+ * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.
  */
 var SetTileLocationCallback = function (tileX, tileY, width, height, callback, callbackContext, layer)
 {

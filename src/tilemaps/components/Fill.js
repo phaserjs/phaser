@@ -16,7 +16,7 @@ var SetTileCollision = require('./SetTileCollision');
  * @param {integer} [width=max width based on tileX] - [description]
  * @param {integer} [height=max height based on tileY] - [description]
  * @param {boolean} [recalculateFaces=true] - [description]
- * @param {Phaser.Tilemaps.LayerData} layer - [description]
+ * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.
  */
 var Fill = function (index, tileX, tileY, width, height, recalculateFaces, layer)
 {

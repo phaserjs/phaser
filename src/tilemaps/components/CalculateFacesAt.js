@@ -8,9 +8,9 @@ var GetTileAt = require('./GetTileAt');
  * @function Phaser.Tilemaps.Components.CalculateFacesAt
  * @since 3.0.0
  * 
- * @param {integer} tileX - [description]
- * @param {integer} tileY - [description]
- * @param {Phaser.Tilemaps.LayerData} layer - [description]
+ * @param {integer} tileX - The x coordinate.
+ * @param {integer} tileY - The y coordinate.
+ * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.
  */
 var CalculateFacesAt = function (tileX, tileY, layer)
 {

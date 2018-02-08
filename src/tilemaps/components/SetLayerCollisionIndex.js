@@ -7,7 +7,7 @@
  *
  * @param {integer} tileIndex - [description]
  * @param {boolean} [collides=true] - [description]
- * @param {Phaser.Tilemaps.LayerData} layer - [description]
+ * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.
  */
 var SetLayerCollisionIndex = function (tileIndex, collides, layer)
 {

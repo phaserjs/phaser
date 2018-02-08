@@ -17,7 +17,7 @@ var SetLayerCollisionIndex = require('./SetLayerCollisionIndex');
  * collision.
  * @param {boolean} [recalculateFaces=true] - Whether or not to recalculate the tile faces after the
  * update.
- * @param {Phaser.Tilemaps.LayerData} layer - [description]
+ * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.
  */
 var SetCollisionBetween = function (start, stop, collides, recalculateFaces, layer)
 {
