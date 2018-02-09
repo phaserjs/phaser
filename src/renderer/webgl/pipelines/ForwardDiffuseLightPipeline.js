@@ -1,22 +1,44 @@
-
 var Class = require('../../../utils/Class');
-var WebGLPipeline = require('../WebGLPipeline');
-var Utils = require('../Utils');
-var TextureTintPipeline = require('./TextureTintPipeline');
 var ShaderSourceFS = require('../shaders/ForwardDiffuse.frag');
+var TextureTintPipeline = require('./TextureTintPipeline');
+var Utils = require('../Utils');
+var WebGLPipeline = require('../WebGLPipeline');
+
 var LIGHT_COUNT = 10;
 
+/**
+ * @classdesc
+ * [description]
+ *
+ * @class ForwardDiffuseLightPipeline
+ * @extends Phaser.Renderer.WebGL.TextureTintPipeline
+ * @memberOf Phaser.Renderer.WebGL
+ * @constructor
+ * @since 3.0.0
+ *
+ * @param {Phaser.Game} game - [description]
+ * @param {[type]} gl - [description]
+ * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - [description]
+ */
 var ForwardDiffuseLightPipeline = new Class({
 
     Extends: TextureTintPipeline,
 
     initialize:
 
-    function ForwardDiffuseLightPipeline(game, gl, renderer)
+    function ForwardDiffuseLightPipeline (game, gl, renderer)
     {
         TextureTintPipeline.call(this, game, gl, renderer, ShaderSourceFS.replace('%LIGHT_COUNT%', LIGHT_COUNT.toString()));
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Renderer.WebGL.ForwardDiffuseLightPipeline#onBind
+     * @since 3.0.0
+     *
+     * @return {Phaser.Renderer.WebGL.ForwardDiffuseLightPipeline} [description]
+     */
     onBind: function ()
     {
         TextureTintPipeline.prototype.onBind.call(this);
@@ -32,6 +54,17 @@ var ForwardDiffuseLightPipeline = new Class({
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Renderer.WebGL.ForwardDiffuseLightPipeline#onRender
+     * @since 3.0.0
+     *
+     * @param {Phaser.Scene} scene - [description]
+     * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
+     *
+     * @return {Phaser.Renderer.WebGL.ForwardDiffuseLightPipeline} [description]
+     */
     onRender: function (scene, camera)
     {
         var lightManager = scene.lights;
@@ -75,6 +108,17 @@ var ForwardDiffuseLightPipeline = new Class({
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Renderer.WebGL.ForwardDiffuseLightPipeline#drawStaticTilemapLayer
+     * @since 3.0.0
+     *
+     * @param {[type]} tilemap - [description]
+     * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
+     *
+     * @return {[type]} [description]
+     */
     drawStaticTilemapLayer: function (tilemap, camera)
     {
         var normalTexture = tilemap.texture.dataSource[0];
@@ -90,6 +134,17 @@ var ForwardDiffuseLightPipeline = new Class({
         }
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Renderer.WebGL.ForwardDiffuseLightPipeline#drawEmitterManager
+     * @since 3.0.0
+     *
+     * @param {[type]} emitterManager - [description]
+     * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
+     *
+     * @return {[type]} [description]
+     */
     drawEmitterManager: function (emitterManager, camera)
     {
         var normalTexture = emitterManager.texture.dataSource[0];
@@ -105,6 +160,17 @@ var ForwardDiffuseLightPipeline = new Class({
         }
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Renderer.WebGL.ForwardDiffuseLightPipeline#drawBlitter
+     * @since 3.0.0
+     *
+     * @param {Phaser.GameObjects.Blitter} blitter - [description]
+     * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
+     *
+     * @return {[type]} [description]
+     */
     drawBlitter: function (blitter, camera)
     {
         var normalTexture = blitter.texture.dataSource[0];
@@ -120,6 +186,17 @@ var ForwardDiffuseLightPipeline = new Class({
         }
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Renderer.WebGL.ForwardDiffuseLightPipeline#batchSprite
+     * @since 3.0.0
+     *
+     * @param {Phaser.GameObjects.Sprite} sprite - [description]
+     * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
+     *
+     * @return {[type]} [description]
+     */
     batchSprite: function (sprite, camera)
     {
         var normalTexture = sprite.texture.dataSource[0];
@@ -136,6 +213,17 @@ var ForwardDiffuseLightPipeline = new Class({
         }
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Renderer.WebGL.ForwardDiffuseLightPipeline#batchMesh
+     * @since 3.0.0
+     *
+     * @param {Phaser.GameObjects.Mesh} mesh - [description]
+     * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
+     *
+     * @return {[type]} [description]
+     */
     batchMesh: function (mesh, camera)
     {
         var normalTexture = mesh.texture.dataSource[0];
@@ -153,6 +241,17 @@ var ForwardDiffuseLightPipeline = new Class({
         }
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Renderer.WebGL.ForwardDiffuseLightPipeline#batchBitmapText
+     * @since 3.0.0
+     *
+     * @param {[type]} bitmapText - [description]
+     * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
+     *
+     * @return {[type]} [description]
+     */
     batchBitmapText: function (bitmapText, camera)
     {
         var normalTexture = bitmapText.texture.dataSource[0];
@@ -168,6 +267,17 @@ var ForwardDiffuseLightPipeline = new Class({
         }
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Renderer.WebGL.ForwardDiffuseLightPipeline#batchDynamicBitmapText
+     * @since 3.0.0
+     *
+     * @param {[type]} bitmapText - [description]
+     * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
+     *
+     * @return {[type]} [description]
+     */
     batchDynamicBitmapText: function (bitmapText, camera)
     {
         var normalTexture = bitmapText.texture.dataSource[0];
@@ -183,6 +293,17 @@ var ForwardDiffuseLightPipeline = new Class({
         }
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Renderer.WebGL.ForwardDiffuseLightPipeline#batchText
+     * @since 3.0.0
+     *
+     * @param {[type]} text - [description]
+     * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
+     *
+     * @return {[type]} [description]
+     */
     batchText: function (text, camera)
     {
         var normalTexture = text.texture.dataSource[0];
@@ -198,6 +319,17 @@ var ForwardDiffuseLightPipeline = new Class({
         }
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Renderer.WebGL.ForwardDiffuseLightPipeline#batchDynamicTilemapLayer
+     * @since 3.0.0
+     *
+     * @param {[type]} tilemapLayer - [description]
+     * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
+     *
+     * @return {[type]} [description]
+     */
     batchDynamicTilemapLayer: function (tilemapLayer, camera)
     {
         var normalTexture = tilemapLayer.texture.dataSource[0];
@@ -213,6 +345,17 @@ var ForwardDiffuseLightPipeline = new Class({
         }
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Renderer.WebGL.ForwardDiffuseLightPipeline#batchTileSprite
+     * @since 3.0.0
+     *
+     * @param {Phaser.GameObjects.TileSprite} tileSprite - [description]
+     * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
+     *
+     * @return {[type]} [description]
+     */
     batchTileSprite: function (tileSprite, camera)
     {
         var normalTexture = tileSprite.texture.dataSource[0];

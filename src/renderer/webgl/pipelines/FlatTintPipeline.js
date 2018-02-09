@@ -1,11 +1,11 @@
 var Class = require('../../../utils/Class');
-var WebGLPipeline = require('../WebGLPipeline');
-var Utils = require('../Utils');
-var Earcut = require('../../../geom/polygon/Earcut');
-var ShaderSourceVS = require('../shaders/FlatTint.vert'); 
-var ShaderSourceFS = require('../shaders/FlatTint.frag'); 
 var Commands = require('../../../gameobjects/graphics/Commands');
+var Earcut = require('../../../geom/polygon/Earcut');
 var ModelViewProjection = require('./components/ModelViewProjection');
+var ShaderSourceFS = require('../shaders/FlatTint.frag'); 
+var ShaderSourceVS = require('../shaders/FlatTint.vert'); 
+var Utils = require('../Utils');
+var WebGLPipeline = require('../WebGLPipeline');
 
 var Point = function (x, y, width, rgb, alpha)
 {
@@ -28,6 +28,20 @@ var matrixStack = new Float32Array(6 * 1000);
 var matrixStackLength = 0;
 var pathArray = [];
 
+/**
+ * @classdesc
+ * [description]
+ *
+ * @class FlatTintPipeline
+ * @extends Phaser.Renderer.WebGL.WebGLPipeline
+ * @memberOf Phaser.Renderer.WebGL
+ * @constructor
+ * @since 3.0.0
+ *
+ * @param {Phaser.Game} game - [description]
+ * @param {[type]} gl - [description]
+ * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - [description]
+ */
 var FlatTintPipeline = new Class({
 
     Extends: WebGLPipeline,
@@ -38,7 +52,7 @@ var FlatTintPipeline = new Class({
 
     initialize:
 
-    function FlatTintPipeline(game, gl, renderer)
+    function FlatTintPipeline (game, gl, renderer)
     {
         WebGLPipeline.call(this, {
             game: game,
@@ -71,18 +85,59 @@ var FlatTintPipeline = new Class({
             ]
         });
 
+        /**
+         * [description]
+         *
+         * @name Phaser.Renderer.WebGL.FlatTintPipeline#vertexViewF32
+         * @type {Float32Array}
+         * @since 3.0.0
+         */
         this.vertexViewF32 = new Float32Array(this.vertexData);
+
+        /**
+         * [description]
+         *
+         * @name Phaser.Renderer.WebGL.FlatTintPipeline#vertexViewU32
+         * @type {Uint32Array}
+         * @since 3.0.0
+         */
         this.vertexViewU32 = new Uint32Array(this.vertexData);
+
+        /**
+         * [description]
+         *
+         * @name Phaser.Renderer.WebGL.FlatTintPipeline#tempTriangle
+         * @type {array}
+         * @since 3.0.0
+         */
         this.tempTriangle = [
             {x: 0, y: 0, width: 0, rgb: 0xFFFFFF, alpha: 1.0},
             {x: 0, y: 0, width: 0, rgb: 0xFFFFFF, alpha: 1.0},
             {x: 0, y: 0, width: 0, rgb: 0xFFFFFF, alpha: 1.0},
             {x: 0, y: 0, width: 0, rgb: 0xFFFFFF, alpha: 1.0}
         ];
+
+        /**
+         * [description]
+         *
+         * @name Phaser.Renderer.WebGL.FlatTintPipeline#polygonCache
+         * @type {array}
+         * @default []
+         * @since 3.0.0
+         */
         this.polygonCache = [];
+
         this.mvpInit();
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Renderer.WebGL.FlatTintPipeline#onBind
+     * @since 3.0.0
+     *
+     * @return {Phaser.Renderer.WebGL.FlatTintPipeline} [description]
+     */
     onBind: function ()
     {
         WebGLPipeline.prototype.onBind.call(this);
@@ -91,6 +146,18 @@ var FlatTintPipeline = new Class({
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Renderer.WebGL.FlatTintPipeline#resize
+     * @since 3.0.0
+     *
+     * @param {number} width - [description]
+     * @param {number} height - [description]
+     * @param {number} resolution - [description]
+     *
+     * @return {Phaser.Renderer.WebGL.FlatTintPipeline} [description]
+     */
     resize: function (width, height, resolution)
     {
         WebGLPipeline.prototype.resize.call(this, width, height, resolution);
@@ -99,6 +166,32 @@ var FlatTintPipeline = new Class({
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Renderer.WebGL.FlatTintPipeline#batchFillRect
+     * @since 3.0.0
+     *
+     * @param {[type]} srcX - [description]
+     * @param {[type]} srcY - [description]
+     * @param {[type]} srcScaleX - [description]
+     * @param {[type]} srcScaleY - [description]
+     * @param {[type]} srcRotation - [description]
+     * @param {[type]} x - [description]
+     * @param {[type]} y - [description]
+     * @param {[type]} width - [description]
+     * @param {[type]} height - [description]
+     * @param {[type]} fillColor - [description]
+     * @param {[type]} fillAlpha - [description]
+     * @param {[type]} a1 - [description]
+     * @param {[type]} b1 - [description]
+     * @param {[type]} c1 - [description]
+     * @param {[type]} d1 - [description]
+     * @param {[type]} e1 - [description]
+     * @param {[type]} f1 - [description]
+     * @param {[type]} currentMatrix - [description]
+     * @param {[type]} roundPixels - [description]
+     */
     batchFillRect: function (srcX, srcY, srcScaleX, srcScaleY, srcRotation, x, y, width, height, fillColor, fillAlpha, a1, b1, c1, d1, e1, f1, currentMatrix, roundPixels)
     {        
         this.renderer.setPipeline(this);
@@ -171,6 +264,34 @@ var FlatTintPipeline = new Class({
         this.vertexCount += 6;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Renderer.WebGL.FlatTintPipeline#batchFillTriangle
+     * @since 3.0.0
+     *
+     * @param {[type]} srcX - [description]
+     * @param {[type]} srcY - [description]
+     * @param {[type]} srcScaleX - [description]
+     * @param {[type]} srcScaleY - [description]
+     * @param {[type]} srcRotation - [description]
+     * @param {[type]} x0 - [description]
+     * @param {[type]} y0 - [description]
+     * @param {[type]} x1 - [description]
+     * @param {[type]} y1 - [description]
+     * @param {[type]} x2 - [description]
+     * @param {[type]} y2 - [description]
+     * @param {[type]} fillColor - [description]
+     * @param {[type]} fillAlpha - [description]
+     * @param {[type]} a1 - [description]
+     * @param {[type]} b1 - [description]
+     * @param {[type]} c1 - [description]
+     * @param {[type]} d1 - [description]
+     * @param {[type]} e1 - [description]
+     * @param {[type]} f1 - [description]
+     * @param {[type]} currentMatrix - [description]
+     * @param {[type]} roundPixels - [description]
+     */
     batchFillTriangle: function (srcX, srcY, srcScaleX, srcScaleY, srcRotation, x0, y0, x1, y1, x2, y2, fillColor, fillAlpha, a1, b1, c1, d1, e1, f1, currentMatrix, roundPixels)
     {
         this.renderer.setPipeline(this);
@@ -228,9 +349,37 @@ var FlatTintPipeline = new Class({
         this.vertexCount += 3;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Renderer.WebGL.FlatTintPipeline#batchStrokeTriangle
+     * @since 3.0.0
+     *
+     * @param {[type]} srcX - [description]
+     * @param {[type]} srcY - [description]
+     * @param {[type]} srcScaleX - [description]
+     * @param {[type]} srcScaleY - [description]
+     * @param {[type]} srcRotation - [description]
+     * @param {[type]} x0 - [description]
+     * @param {[type]} y0 - [description]
+     * @param {[type]} x1 - [description]
+     * @param {[type]} y1 - [description]
+     * @param {[type]} x2 - [description]
+     * @param {[type]} y2 - [description]
+     * @param {[type]} lineWidth - [description]
+     * @param {[type]} lineColor - [description]
+     * @param {[type]} lineAlpha - [description]
+     * @param {[type]} a - [description]
+     * @param {[type]} b - [description]
+     * @param {[type]} c - [description]
+     * @param {[type]} d - [description]
+     * @param {[type]} e - [description]
+     * @param {[type]} f - [description]
+     * @param {[type]} currentMatrix - [description]
+     * @param {[type]} roundPixels - [description]
+     */
     batchStrokeTriangle: function (srcX, srcY, srcScaleX, srcScaleY, srcRotation, x0, y0, x1, y1, x2, y2, lineWidth, lineColor, lineAlpha, a, b, c, d, e, f, currentMatrix, roundPixels)
     {
-
         var tempTriangle = this.tempTriangle;
 
         tempTriangle[0].x = x0;
@@ -264,6 +413,29 @@ var FlatTintPipeline = new Class({
         );
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Renderer.WebGL.FlatTintPipeline#batchFillPath
+     * @since 3.0.0
+     *
+     * @param {[type]} srcX - [description]
+     * @param {[type]} srcY - [description]
+     * @param {[type]} srcScaleX - [description]
+     * @param {[type]} srcScaleY - [description]
+     * @param {[type]} srcRotation - [description]
+     * @param {[type]} path - [description]
+     * @param {[type]} fillColor - [description]
+     * @param {[type]} fillAlpha - [description]
+     * @param {[type]} a1 - [description]
+     * @param {[type]} b1 - [description]
+     * @param {[type]} c1 - [description]
+     * @param {[type]} d1 - [description]
+     * @param {[type]} e1 - [description]
+     * @param {[type]} f1 - [description]
+     * @param {[type]} currentMatrix - [description]
+     * @param {[type]} roundPixels - [description]
+     */
     batchFillPath: function (srcX, srcY, srcScaleX, srcScaleY, srcRotation, path, fillColor, fillAlpha, a1, b1, c1, d1, e1, f1, currentMatrix, roundPixels)
     {
         this.renderer.setPipeline(this);
@@ -356,6 +528,31 @@ var FlatTintPipeline = new Class({
         polygonCache.length = 0;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Renderer.WebGL.FlatTintPipeline#batchStrokePath
+     * @since 3.0.0
+     *
+     * @param {[type]} srcX - [description]
+     * @param {[type]} srcY - [description]
+     * @param {[type]} srcScaleX - [description]
+     * @param {[type]} srcScaleY - [description]
+     * @param {[type]} srcRotation - [description]
+     * @param {[type]} path - [description]
+     * @param {[type]} lineWidth - [description]
+     * @param {[type]} lineColor - [description]
+     * @param {[type]} lineAlpha - [description]
+     * @param {[type]} a - [description]
+     * @param {[type]} b - [description]
+     * @param {[type]} c - [description]
+     * @param {[type]} d - [description]
+     * @param {[type]} e - [description]
+     * @param {[type]} f - [description]
+     * @param {[type]} isLastPath - [description]
+     * @param {[type]} currentMatrix - [description]
+     * @param {[type]} roundPixels - [description]
+     */
     batchStrokePath: function (srcX, srcY, srcScaleX, srcScaleY, srcRotation, path, lineWidth, lineColor, lineAlpha, a, b, c, d, e, f, isLastPath, currentMatrix, roundPixels)
     {
         this.renderer.setPipeline(this);
@@ -424,9 +621,37 @@ var FlatTintPipeline = new Class({
         }
 
         polylines.length = 0;
-
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Renderer.WebGL.FlatTintPipeline#batchLine
+     * @since 3.0.0
+     *
+     * @param {[type]} srcX - [description]
+     * @param {[type]} srcY - [description]
+     * @param {[type]} srcScaleX - [description]
+     * @param {[type]} srcScaleY - [description]
+     * @param {[type]} srcRotation - [description]
+     * @param {[type]} ax - [description]
+     * @param {[type]} ay - [description]
+     * @param {[type]} bx - [description]
+     * @param {[type]} by - [description]
+     * @param {[type]} aLineWidth - [description]
+     * @param {[type]} bLineWidth - [description]
+     * @param {[type]} aLineColor - [description]
+     * @param {[type]} bLineColor - [description]
+     * @param {[type]} lineAlpha - [description]
+     * @param {[type]} a1 - [description]
+     * @param {[type]} b1 - [description]
+     * @param {[type]} c1 - [description]
+     * @param {[type]} d1 - [description]
+     * @param {[type]} e1 - [description]
+     * @param {[type]} f1 - [description]
+     * @param {[type]} currentMatrix - [description]
+     * @param {[type]} roundPixels - [description]
+     */
     batchLine: function (srcX, srcY, srcScaleX, srcScaleY, srcRotation, ax, ay, bx, by, aLineWidth, bLineWidth, aLineColor, bLineColor, lineAlpha, a1, b1, c1, d1, e1, f1, currentMatrix, roundPixels) 
     {
         this.renderer.setPipeline(this);
@@ -521,6 +746,15 @@ var FlatTintPipeline = new Class({
         ];
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Renderer.WebGL.FlatTintPipeline#batchGraphics
+     * @since 3.0.0
+     *
+     * @param {Phaser.GameObjects.Graphics} graphics - [description]
+     * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
+     */
     batchGraphics: function (graphics, camera)
     {
         if (graphics.commandBuffer.length <= 0) return;
@@ -877,42 +1111,132 @@ var FlatTintPipeline = new Class({
 
     // Stubs
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Renderer.WebGL.FlatTintPipeline#drawStaticTilemapLayer
+     * @since 3.0.0
+     *
+     * @param {[type]} tilemap - [description]
+     * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
+     */
     drawStaticTilemapLayer: function (tilemap, camera)
     {
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Renderer.WebGL.FlatTintPipeline#drawEmitterManager
+     * @since 3.0.0
+     *
+     * @param {[type]} emitterManager - [description]
+     * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
+     */
     drawEmitterManager: function (emitterManager, camera)
     {
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Renderer.WebGL.FlatTintPipeline#drawBlitter
+     * @since 3.0.0
+     *
+     * @param {[type]} blitter - [description]
+     * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
+     */
     drawBlitter: function (blitter, camera)
     {
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Renderer.WebGL.FlatTintPipeline#batchSprite
+     * @since 3.0.0
+     *
+     * @param {[type]} sprite - [description]
+     * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
+     */
     batchSprite: function (sprite, camera)
     {
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Renderer.WebGL.FlatTintPipeline#batchMesh
+     * @since 3.0.0
+     *
+     * @param {[type]} mesh - [description]
+     * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
+     */
     batchMesh: function (mesh, camera)
     {
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Renderer.WebGL.FlatTintPipeline#batchBitmapText
+     * @since 3.0.0
+     *
+     * @param {[type]} bitmapText - [description]
+     * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
+     */
     batchBitmapText: function (bitmapText, camera)
     {
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Renderer.WebGL.FlatTintPipeline#batchDynamicBitmapText
+     * @since 3.0.0
+     *
+     * @param {[type]} bitmapText - [description]
+     * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
+     */
     batchDynamicBitmapText: function (bitmapText, camera)
     {
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Renderer.WebGL.FlatTintPipeline#batchText
+     * @since 3.0.0
+     *
+     * @param {[type]} text - [description]
+     * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
+     */
     batchText: function (text, camera)
     {
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Renderer.WebGL.FlatTintPipeline#batchDynamicTilemapLayer
+     * @since 3.0.0
+     *
+     * @param {[type]} tilemapLayer - [description]
+     * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
+     */
     batchDynamicTilemapLayer: function (tilemapLayer, camera)
     {
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Renderer.WebGL.FlatTintPipeline#batchTileSprite
+     * @since 3.0.0
+     *
+     * @param {[type]} tileSprite - [description]
+     * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
+     */
     batchTileSprite: function (tileSprite, camera)
     {
     }
