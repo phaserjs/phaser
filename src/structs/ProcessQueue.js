@@ -1,20 +1,75 @@
-//  Phaser.Structs.ProcessQueue
-
 var Class = require('../utils/Class');
 
+/**
+ * @classdesc
+ * [description]
+ *
+ * @class ProcessQueue
+ * @memberOf Phaser.Structs
+ * @constructor
+ * @since 3.0.0
+ */
 var ProcessQueue = new Class({
 
     initialize:
 
     function ProcessQueue ()
     {
+        /**
+         * [description]
+         *
+         * @name Phaser.Structs.ProcessQueue#_pending
+         * @type {array}
+         * @private
+         * @default []
+         * @since 3.0.0
+         */
         this._pending = [];
+
+        /**
+         * [description]
+         *
+         * @name Phaser.Structs.ProcessQueue#_active
+         * @type {array}
+         * @private
+         * @default []
+         * @since 3.0.0
+         */
         this._active = [];
+
+        /**
+         * [description]
+         *
+         * @name Phaser.Structs.ProcessQueue#_destroy
+         * @type {array}
+         * @private
+         * @default []
+         * @since 3.0.0
+         */
         this._destroy = [];
 
+        /**
+         * [description]
+         *
+         * @name Phaser.Structs.ProcessQueue#_toProcess
+         * @type {integer}
+         * @private
+         * @default 0
+         * @since 3.0.0
+         */
         this._toProcess = 0;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Structs.ProcessQueue#add
+     * @since 3.0.0
+     *
+     * @param {any} item - [description]
+     *
+     * @return {Phaser.Structs.ProcessQueue} This Process Queue object.
+     */
     add: function (item)
     {
         this._pending.push(item);
@@ -24,6 +79,16 @@ var ProcessQueue = new Class({
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Structs.ProcessQueue#remove
+     * @since 3.0.0
+     *
+     * @param {any} item - [description]
+     *
+     * @return {Phaser.Structs.ProcessQueue} This Process Queue object.
+     */
     remove: function (item)
     {
         this._destroy.push(item);
@@ -33,6 +98,14 @@ var ProcessQueue = new Class({
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Structs.ProcessQueue#update
+     * @since 3.0.0
+     *
+     * @return {array} [description]
+     */
     update: function ()
     {
         if (this._toProcess === 0)
@@ -82,11 +155,25 @@ var ProcessQueue = new Class({
         return this._active;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Structs.ProcessQueue#getActive
+     * @since 3.0.0
+     *
+     * @return {array} [description]
+     */
     getActive: function ()
     {
         return this._active;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Structs.ProcessQueue#destroy
+     * @since 3.0.0
+     */
     destroy: function ()
     {
         this._pending = [];

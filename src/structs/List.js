@@ -1,20 +1,62 @@
 var Class = require('../utils/Class');
 
+/**
+ * @classdesc
+ * [description]
+ *
+ * @class List
+ * @memberOf Phaser.Structs
+ * @constructor
+ * @since 3.0.0
+ *
+ * @param {any} parent - [description]
+ */
 var List = new Class({
 
     initialize:
 
     function List (parent)
     {
-        //  The parent of this list
+        /**
+         * The parent of this list.
+         *
+         * @name Phaser.Structs.List#parent
+         * @type {any}
+         * @since 3.0.0
+         */
         this.parent = parent;
 
-        //  The objects that belong to this collection.
+        /**
+         * The objects that belong to this collection.
+         *
+         * @name Phaser.Structs.List#list
+         * @type {array}
+         * @default []
+         * @since 3.0.0
+         */
         this.list = [];
 
+        /**
+         * [description]
+         *
+         * @name Phaser.Structs.List#position
+         * @type {integer}
+         * @default 0
+         * @since 3.0.0
+         */
         this.position = 0;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Structs.List#add
+     * @since 3.0.0
+     *
+     * @param {object} child - [description]
+     *
+     * @return {object} [description]
+     */
     add: function (child)
     {
         //  Is child already in this display list?
@@ -27,6 +69,17 @@ var List = new Class({
         return child;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Structs.List#addAt
+     * @since 3.0.0
+     *
+     * @param {object} child - [description]
+     * @param {integer} index - [description]
+     *
+     * @return {object} [description]
+     */
     addAt: function (child, index)
     {
         if (index === undefined) { index = 0; }
@@ -47,6 +100,16 @@ var List = new Class({
         return child;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Structs.List#addMultiple
+     * @since 3.0.0
+     *
+     * @param {array} children - [description]
+     *
+     * @return {array} [description]
+     */
     addMultiple: function (children)
     {
         if (Array.isArray(children))
@@ -60,19 +123,48 @@ var List = new Class({
         return children;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Structs.List#getAt
+     * @since 3.0.0
+     *
+     * @param {integer} index - [description]
+     *
+     * @return {object} [description]
+     */
     getAt: function (index)
     {
         return this.list[index];
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Structs.List#getIndex
+     * @since 3.0.0
+     *
+     * @param {object} child - [description]
+     *
+     * @return {integer} [description]
+     */
     getIndex: function (child)
     {
         //  Return -1 if given child isn't a child of this display list
         return this.list.indexOf(child);
     },
 
-    //  Given an array of objects, sort the array and return it,
-    //  so that the objects are in index order with the lowest at the bottom.
+    /**
+     * Given an array of objects, sort the array and return it,
+     * so that the objects are in index order with the lowest at the bottom.
+     *
+     * @method Phaser.Structs.List#sort
+     * @since 3.0.0
+     *
+     * @param {array} children - [description]
+     *
+     * @return {array} [description]
+     */
     sort: function (children)
     {
         if (children === undefined) { children = this.list; }
@@ -80,7 +172,17 @@ var List = new Class({
         return children.sort(this.sortIndexHandler.bind(this));
     },
 
-    //  Return the child lowest down the display list (with the smallest index)
+    /**
+     * [description]
+     *
+     * @method Phaser.Structs.List#sortIndexHandler
+     * @since 3.0.0
+     *
+     * @param {object} childA - [description]
+     * @param {object} childB - [description]
+     *
+     * @return {integer} [description]
+     */
     sortIndexHandler: function (childA, childB)
     {
         //  The lower the index, the lower down the display list they are
@@ -102,14 +204,17 @@ var List = new Class({
     },
 
     /**
-    * Gets the first item from the set based on the property strictly equaling the value given.
-    * Returns null if not found.
-    *
-    * @method Phaser.ArraySet#getByKey
-    * @param {string} property - The property to check against the value.
-    * @param {any} value - The value to check if the property strictly equals.
-    * @return {any} The item that was found, or null if nothing matched.
-    */
+     * Gets the first item from the set based on the property strictly equaling the value given.
+     * Returns null if not found.
+     *
+     * @method Phaser.Structs.List#getByKey
+     * @since 3.0.0
+     *
+     * @param {string} property - The property to check against the value.
+     * @param {any} value - The value to check if the property strictly equals.
+     *
+     * @return {any} The item that was found, or null if nothing matched.
+     */
     getByKey: function (property, value)
     {
         for (var i = 0; i < this.list.length; i++)
@@ -124,27 +229,33 @@ var List = new Class({
     },
 
     /**
-    * Searches the Group for the first instance of a child with the `name`
-    * property matching the given argument. Should more than one child have
-    * the same name only the first instance is returned.
-    *
-    * @method Phaser.Group#getByName
-    * @param {string} name - The name to search for.
-    * @return {any} The first child with a matching name, or null if none were found.
-    */
+     * Searches the Group for the first instance of a child with the `name`
+     * property matching the given argument. Should more than one child have
+     * the same name only the first instance is returned.
+     *
+     * @method Phaser.Structs.List#getByName
+     * @since 3.0.0
+     *
+     * @param {string} name - The name to search for.
+     *
+     * @return {any} The first child with a matching name, or null if none were found.
+     */
     getByName: function (name)
     {
         return this.getByKey('name', name);
     },
 
     /**
-    * Returns a random child from the group.
-    *
-    * @method Phaser.Group#getRandom
-    * @param {integer} [startIndex=0] - Offset from the front of the group (lowest child).
-    * @param {integer} [length=(to top)] - Restriction on the number of values you want to randomly select from.
-    * @return {any} A random child of this Group.
-    */
+     * Returns a random child from the group.
+     *
+     * @method Phaser.Structs.List#getRandom
+     * @since 3.0.0
+     *
+     * @param {integer} [startIndex=0] - Offset from the front of the group (lowest child).
+     * @param {integer} [length=(to top)] - Restriction on the number of values you want to randomly select from.
+     *
+     * @return {any} A random child of this Group.
+     */
     getRandom: function (startIndex, length)
     {
         if (startIndex === undefined) { startIndex = 0; }
@@ -160,6 +271,19 @@ var List = new Class({
         return this.list[randomIndex];
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Structs.List#getFirst
+     * @since 3.0.0
+     *
+     * @param {[type]} property - [description]
+     * @param {[type]} value - [description]
+     * @param {[type]} startIndex - [description]
+     * @param {[type]} endIndex - [description]
+     *
+     * @return {[type]} [description]
+     */
     getFirst: function (property, value, startIndex, endIndex)
     {
         if (startIndex === undefined) { startIndex = 0; }
@@ -179,23 +303,26 @@ var List = new Class({
     },
 
     /**
-    * Returns all children in this Group.
-    *
-    * You can optionally specify a matching criteria using the `property` and `value` arguments.
-    *
-    * For example: `getAll('exists', true)` would return only children that have their exists property set.
-    *
-    * Optionally you can specify a start and end index. For example if this Group had 100 children,
-    * and you set `startIndex` to 0 and `endIndex` to 50, it would return matches from only
-    * the first 50 children in the Group.
-    *
-    * @method Phaser.Group#getAll
-    * @param {string} [property] - An optional property to test against the value argument.
-    * @param {any} [value] - If property is set then Child.property must strictly equal this value to be included in the results.
-    * @param {integer} [startIndex=0] - The first child index to start the search from.
-    * @param {integer} [endIndex] - The last child index to search up until.
-    * @return {any} A random existing child of this Group.
-    */
+     * Returns all children in this List.
+     *
+     * You can optionally specify a matching criteria using the `property` and `value` arguments.
+     *
+     * For example: `getAll('visible', true)` would return only children that have their visible property set.
+     *
+     * Optionally you can specify a start and end index. For example if this List had 100 children,
+     * and you set `startIndex` to 0 and `endIndex` to 50, it would return matches from only
+     * the first 50 children in the List.
+     *
+     * @method Phaser.Structs.List#getAll
+     * @since 3.0.0
+     *
+     * @param {string} [property] - An optional property to test against the value argument.
+     * @param {any} [value] - If property is set then Child.property must strictly equal this value to be included in the results.
+     * @param {integer} [startIndex=0] - The first child index to start the search from.
+     * @param {integer} [endIndex] - The last child index to search up until.
+     *
+     * @return {array} [description]
+     */
     getAll: function (property, value, startIndex, endIndex)
     {
         if (startIndex === undefined) { startIndex = 0; }
@@ -223,6 +350,17 @@ var List = new Class({
         return output;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Structs.List#count
+     * @since 3.0.0
+     *
+     * @param {string} property - [description]
+     * @param {any} value - [description]
+     *
+     * @return {integer} [description]
+     */
     count: function (property, value)
     {
         var total = 0;
@@ -240,6 +378,15 @@ var List = new Class({
         return total;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Structs.List#swap
+     * @since 3.0.0
+     *
+     * @param {object} child1 - [description]
+     * @param {object} child2 - [description]
+     */
     swap: function (child1, child2)
     {
         if (child1 === child2)
@@ -259,7 +406,17 @@ var List = new Class({
         this.list[index2] = child1;
     },
 
-    //   was setIndex
+    /**
+     * [description]
+     *
+     * @method Phaser.Structs.List#moveTo
+     * @since 3.0.0
+     *
+     * @param {object} child - [description]
+     * @param {integer} index - [description]
+     *
+     * @return {object} [description]
+     */
     moveTo: function (child, index)
     {
         var currentIndex = this.getIndex(child);
@@ -278,6 +435,16 @@ var List = new Class({
         return child;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Structs.List#remove
+     * @since 3.0.0
+     *
+     * @param {object} child - [description]
+     *
+     * @return {object} [description]
+     */
     remove: function (child)
     {
         var index = this.list.indexOf(child);
@@ -290,6 +457,16 @@ var List = new Class({
         return child;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Structs.List#removeAt
+     * @since 3.0.0
+     *
+     * @param {integer} index - [description]
+     *
+     * @return {object} [description]
+     */
     removeAt: function (index)
     {
         var child = this.list[index];
@@ -302,6 +479,17 @@ var List = new Class({
         return child;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Structs.List#removeBetween
+     * @since 3.0.0
+     *
+     * @param {integer} beginIndex - [description]
+     * @param {integer} endIndex - [description]
+     *
+     * @return {array} [description]
+     */
     removeBetween: function (beginIndex, endIndex)
     {
         if (beginIndex === undefined) { beginIndex = 0; }
@@ -326,10 +514,13 @@ var List = new Class({
     },
 
     /**
-    * Removes all the items.
-    *
-    * @method Phaser.ArraySet#removeAll
-    */
+     * Removes all the items.
+     *
+     * @method Phaser.Structs.List#removeAll
+     * @since 3.0.0
+     *
+     * @return {Phaser.Structs.List} This List object.
+     */
     removeAll: function ()
     {
         var i = this.list.length;
@@ -342,18 +533,27 @@ var List = new Class({
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Structs.List#shutdown
+     * @since 3.0.0
+     */
     shutdown: function ()
     {
         this.removeAll();
     },
 
     /**
-    * Brings the given child to the top of this group so it renders above all other children.
-    *
-    * @method Phaser.Group#bringToTop
-    * @param {any} child - The child to bring to the top of this group.
-    * @return {any} The child that was moved.
-    */
+     * Brings the given child to the top of this List.
+     *
+     * @method Phaser.Structs.List#bringToTop
+     * @since 3.0.0
+     *
+     * @param {object} child - [description]
+     *
+     * @return {object} [description]
+     */
     bringToTop: function (child)
     {
         if (this.getIndex(child) < this.list.length)
@@ -366,12 +566,15 @@ var List = new Class({
     },
 
     /**
-    * Sends the given child to the bottom of this group so it renders below all other children.
-    *
-    * @method Phaser.Group#sendToBack
-    * @param {any} child - The child to send to the bottom of this group.
-    * @return {any} The child that was moved.
-    */
+     * Sends the given child to the bottom of this List.
+     *
+     * @method Phaser.Structs.List#sendToBack
+     * @since 3.0.0
+     *
+     * @param {object} child - [description]
+     *
+     * @return {object} [description]
+     */
     sendToBack: function (child)
     {
         if (this.getIndex(child) > 0)
@@ -384,12 +587,15 @@ var List = new Class({
     },
 
     /**
-    * Moves the given child up one place in this group unless it's already at the top.
-    *
-    * @method Phaser.Group#moveUp
-    * @param {any} child - The child to move up in the group.
-    * @return {any} The child that was moved.
-    */
+     * Moves the given child up one place in this group unless it's already at the top.
+     *
+     * @method Phaser.Structs.List#moveUp
+     * @since 3.0.0
+     *
+     * @param {object} child - [description]
+     *
+     * @return {object} [description]
+     */
     moveUp: function (child)
     {
         var a = this.getIndex(child);
@@ -408,12 +614,15 @@ var List = new Class({
     },
 
     /**
-    * Moves the given child down one place in this group unless it's already at the bottom.
-    *
-    * @method Phaser.Group#moveDown
-    * @param {any} child - The child to move down in the group.
-    * @return {any} The child that was moved.
-    */
+     * Moves the given child down one place in this group unless it's already at the bottom.
+     *
+     * @method Phaser.Structs.List#moveDown
+     * @since 3.0.0
+     *
+     * @param {object} child - [description]
+     *
+     * @return {object} [description]
+     */
     moveDown: function (child)
     {
         var a = this.getIndex(child);
@@ -432,12 +641,13 @@ var List = new Class({
     },
 
     /**
-    * Reverses all children in this group.
-    *
-    * This operation applies only to immediate children and does not propagate to subgroups.
-    *
-    * @method Phaser.Group#reverse
-    */
+     * Reverses the order of all children in this List.
+     *
+     * @method Phaser.Structs.List#reverse
+     * @since 3.0.0
+     *
+     * @return {Phaser.Structs.List} This List object.
+     */
     reverse: function ()
     {
         this.list.reverse();
@@ -445,6 +655,14 @@ var List = new Class({
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Structs.List#shuffle
+     * @since 3.0.0
+     *
+     * @return {Phaser.Structs.List} This List object.
+     */
     shuffle: function ()
     {
         for (var i = this.list.length - 1; i > 0; i--)
@@ -459,17 +677,16 @@ var List = new Class({
     },
 
     /**
-    * Replaces a child of this Group with the given newChild. The newChild cannot be a member of this Group.
-    *
-    * If `Group.enableBody` is set, then a physics body will be created on the object, so long as one does not already exist.
-    *
-    * If `Group.inputEnableChildren` is set, then an Input Handler will be created on the object, so long as one does not already exist.
-    *
-    * @method Phaser.Group#replace
-    * @param {any} oldChild - The child in this group that will be replaced.
-    * @param {any} newChild - The child to be inserted into this group.
-    * @return {any} Returns the oldChild that was replaced within this group.
-    */
+     * Replaces a child of this List with the given newChild. The newChild cannot be a member of this List.
+     *
+     * @method Phaser.Structs.List#replace
+     * @since 3.0.0
+     *
+     * @param {object} oldChild - The child in this List that will be replaced.
+     * @param {object} newChild - The child to be inserted into this List.
+     *
+     * @return {object} Returns the oldChild that was replaced within this group.
+     */
     replace: function (oldChild, newChild)
     {
         var index = this.getIndex(oldChild);
@@ -485,24 +702,29 @@ var List = new Class({
     },
 
     /**
-    * Checks for the item within this list.
-    *
-    * @method Phaser.ArraySet#exists
-    * @param {any} item - The element to get the list index for.
-    * @return {boolean} True if the item is found in the list, otherwise false.
-    */
+     * [description]
+     *
+     * @method Phaser.Structs.List#exists
+     * @since 3.0.0
+     *
+     * @param {object} child - [description]
+     *
+     * @return {boolean} True if the item is found in the list, otherwise false.
+     */
     exists: function (child)
     {
         return (this.list.indexOf(child) > -1);
     },
 
     /**
-    * Sets the property `key` to the given value on all members of this list.
-    *
-    * @method Phaser.ArraySet#setAll
-    * @param {any} key - The property of the item to set.
-    * @param {any} value - The value to set the property to.
-    */
+     * Sets the property `key` to the given value on all members of this List.
+     *
+     * @method Phaser.Structs.List#setAll
+     * @since 3.0.0
+     *
+     * @param {string} key - [description]
+     * @param {any} value - [description]
+     */
     setAll: function (key, value)
     {
         for (var i = 0; i < this.list.length; i++)
@@ -515,13 +737,15 @@ var List = new Class({
     },
 
     /**
-    * Passes all children to the given callback.
-    *
-    * @method each
-    * @param {function} callback - The function to call.
-    * @param {object} [thisArg] - Value to use as `this` when executing callback.
-    * @param {...*} [arguments] - Additional arguments that will be passed to the callback, after the child.
-    */
+     * Passes all children to the given callback.
+     *
+     * @method Phaser.Structs.List#each
+     * @since 3.0.0
+     *
+     * @param {function} callback - The function to call.
+     * @param {object} [thisArg] - Value to use as `this` when executing callback.
+     * @param {...*} [arguments] - Additional arguments that will be passed to the callback, after the child.
+     */
     each: function (callback, thisArg)
     {
         var args = [ null ];
@@ -538,6 +762,14 @@ var List = new Class({
         }
     },
 
+    /**
+     * [description]
+     *
+     * @name Phaser.Structs.List#length
+     * @type {integer}
+     * @readOnly
+     * @since 3.0.0
+     */
     length: {
 
         get: function ()
@@ -547,6 +779,14 @@ var List = new Class({
 
     },
 
+    /**
+     * [description]
+     *
+     * @name Phaser.Structs.List#first
+     * @type {integer}
+     * @readOnly
+     * @since 3.0.0
+     */
     first: {
 
         get: function ()
@@ -565,6 +805,14 @@ var List = new Class({
 
     },
 
+    /**
+     * [description]
+     *
+     * @name Phaser.Structs.List#last
+     * @type {integer}
+     * @readOnly
+     * @since 3.0.0
+     */
     last: {
 
         get: function ()
@@ -583,6 +831,14 @@ var List = new Class({
 
     },
 
+    /**
+     * [description]
+     *
+     * @name Phaser.Structs.List#next
+     * @type {integer}
+     * @readOnly
+     * @since 3.0.0
+     */
     next: {
 
         get: function ()
@@ -601,6 +857,14 @@ var List = new Class({
 
     },
 
+    /**
+     * [description]
+     *
+     * @name Phaser.Structs.List#previous
+     * @type {integer}
+     * @readOnly
+     * @since 3.0.0
+     */
     previous: {
 
         get: function ()
