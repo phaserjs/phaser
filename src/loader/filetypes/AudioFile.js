@@ -95,16 +95,6 @@ AudioFile.create = function (loader, key, urls, config, xhrSettings)
     var audioConfig = game.config.audio;
     var deviceAudio = game.device.audio;
 
-    /**
-     * [description]
-     *
-     * @method Phaser.Loader.FileTypes.AudioFile#
-     * @since 3.0.0
-     *
-     * @param {[type]} (audioConfig && audioConfig.noAudio) || (!deviceAudio.webAudio && !deviceAudio.audioData) - [description]
-     *
-     * @return {[type]} [description]
-     */
     if ((audioConfig && audioConfig.noAudio) || (!deviceAudio.webAudio && !deviceAudio.audioData))
     {
         console.info('Skipping loading audio \'' + key + '\' since sounds are disabled.');
@@ -113,68 +103,44 @@ AudioFile.create = function (loader, key, urls, config, xhrSettings)
 
     var url = AudioFile.findAudioURL(game, urls);
 
-    /**
-     * [description]
-     *
-     * @method Phaser.Loader.FileTypes.AudioFile#
-     * @since 3.0.0
-     *
-     * @param {[type]} !url - [description]
-     *
-     * @return {[type]} [description]
-     */
     if (!url)
     {
         console.warn('No supported url provided for audio \'' + key + '\'!');
         return null;
     }
 
-    /**
-     * [description]
-     *
-     * @method Phaser.Loader.FileTypes.AudioFile#
-     * @since 3.0.0
-     *
-     * @param {[type]} deviceAudio.webAudio && !(audioConfig && audioConfig.disableWebAudio) - [description]
-     *
-     * @return {[type]} [description]
-     */
     if (deviceAudio.webAudio && !(audioConfig && audioConfig.disableWebAudio))
     {
         return new AudioFile(key, url, loader.path, xhrSettings, game.sound.context);
     }
-    /**
-     * [description]
-     *
-     * @method Phaser.Loader.FileTypes.AudioFile#
-     * @since 3.0.0
-     *
-     * @return {[type]} [description]
-     */
     else
     {
         return new HTML5AudioFile(key, url, loader.path, config, game.sound.locked);
     }
 };
 
-//  When registering a factory function 'this' refers to the Loader context.
-//
-//  There are several properties available to use:
-//
-//  this.scene - a reference to the Scene that owns the GameObjectFactory
-
+/**
+ * Adds an Audio file to the current load queue.
+ * 
+ * Note: This method will only be available if the Audio File type has been built into Phaser.
+ *
+ * The file is **not** loaded immediately after calling this method.
+ * Instead, the file is added to a queue within the Loader, which is processed automatically when the Loader starts.
+ *
+ * @method Phaser.Loader.LoaderPlugin#audio
+ * @since 3.0.0
+ *
+ * @param {string} key - [description]
+ * @param {string|string[]} urls - [description]
+ * @param {object} config - [description]
+ * @param {object} xhrSettings - [description]
+ * 
+ * @return {Phaser.Loader.LoaderPlugin} The Loader.
+ */
 FileTypesManager.register('audio', function (key, urls, config, xhrSettings)
 {
     var audioFile = AudioFile.create(this, key, urls, config, xhrSettings);
 
-    /**
-     * [description]
-     *
-     * @method Phaser.Loader.FileTypes.AudioFile#
-     * @since 3.0.0
-     *
-     * @param {[type]} audioFile - [description]
-     */
     if (audioFile)
     {
         this.addFile(audioFile);
@@ -229,29 +195,11 @@ FileTypesManager.register('audio', function (key, urls, config, xhrSettings)
 
 AudioFile.findAudioURL = function (game, urls)
 {
-    /**
-     * [description]
-     *
-     * @method Phaser.Loader.FileTypes.AudioFile#
-     * @since 3.0.0
-     *
-     * @param {[type]} urls.constructor !== Array - [description]
-     */
     if (urls.constructor !== Array)
     {
         urls = [ urls ];
     }
 
-    /**
-     * [description]
-     *
-     * @method Phaser.Loader.FileTypes.AudioFile#
-     * @since 3.0.0
-     *
-     * @param {[type]} var i = 0; i < urls.length; i++ - [description]
-     *
-     * @return {[type]} [description]
-     */
     for (var i = 0; i < urls.length; i++)
     {
         var url = GetFastValue(urls[i], 'uri', urls[i]);

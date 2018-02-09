@@ -3,8 +3,22 @@ var File = require('../File');
 var GetFastValue = require('../../utils/object/GetFastValue');
 var GetURL = require('../GetURL');
 
-//  Phaser.Loader.FileTypes.HTML5AudioFile
-
+/**
+ * @classdesc
+ * [description]
+ *
+ * @class HTML5AudioFile
+ * @extends Phaser.Loader.File
+ * @memberOf Phaser.Loader.FileTypes
+ * @constructor
+ * @since 3.0.0
+ *
+ * @param {string} key - [description]
+ * @param {string} url - [description]
+ * @param {string} path - [description]
+ * @param {object} config - [description]
+ * @param {boolean} locked - [description]
+ */
 var HTML5AudioFile = new Class({
 
     Extends: File,

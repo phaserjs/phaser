@@ -1,9 +1,17 @@
+var COLLIDES = require('./COLLIDES');
 var SeperateX = require('./SeperateX');
 var SeperateY = require('./SeperateY');
-var COLLIDES = require('./COLLIDES');
 
-//  Impact Physics Solver
-
+/**
+ * Impact Physics Solver
+ *
+ * @function Phaser.Physics.Impact.Solver
+ * @since 3.0.0
+ *
+ * @param {Phaser.Physics.Impact.World} world - [description]
+ * @param {Phaser.Physics.Impact.Body} bodyA - [description]
+ * @param {Phaser.Physics.Impact.Body} bodyB - [description]
+ */
 var Solver = function (world, bodyA, bodyB)
 {
     var weak = null;

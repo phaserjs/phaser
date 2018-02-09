@@ -1,8 +1,8 @@
+var Formats = require('../Formats');
 var Parse2DArray = require('./Parse2DArray');
 var ParseCSV = require('./ParseCSV');
-var ParseTiledJSON = require('./parsetiledjson/');
-var ParseWeltmister = require('./parseweltmeister/');
-var Formats = require('../Formats');
+var ParseTiledJSON = require('./tiled/');
+var ParseWeltmister = require('./impact/');
 
 /**
  * Parses raw data of a given Tilemap format into a new MapData object. If no recognized data format

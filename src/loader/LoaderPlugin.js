@@ -8,8 +8,18 @@ var ParseXMLBitmapFont = require('../gameobjects/bitmaptext/ParseXMLBitmapFont')
 var PluginManager = require('../plugins/PluginManager');
 var XHRSettings = require('./XHRSettings');
 
-//  Phaser.Loader.LoaderPlugin
-
+/**
+ * @classdesc
+ * [description]
+ *
+ * @class LoaderPlugin
+ * @extends Phaser.Loader.EventEmitter
+ * @memberOf Phaser.Loader
+ * @constructor
+ * @since 3.0.0
+ *
+ * @param {Phaser.Scene} scene - [description]
+ */
 var LoaderPlugin = new Class({
 
     Extends: EventEmitter,
@@ -20,8 +30,22 @@ var LoaderPlugin = new Class({
     {
         EventEmitter.call(this);
 
+        /**
+         * [description]
+         *
+         * @name Phaser.Loader.LoaderPlugin#scene
+         * @type {Phaser.Scene}
+         * @since 3.0.0
+         */
         this.scene = scene;
 
+        /**
+         * [description]
+         *
+         * @name Phaser.Loader.LoaderPlugin#systems
+         * @type {Phaser.Scenes.Systems}
+         * @since 3.0.0
+         */
         this.systems = scene.sys;
 
         if (!scene.sys.settings.isBooted)
@@ -29,6 +53,15 @@ var LoaderPlugin = new Class({
             scene.sys.events.once('boot', this.boot, this);
         }
 
+        /**
+         * [description]
+         *
+         * @name Phaser.Loader.LoaderPlugin#_multilist
+         * @type {object}
+         * @private
+         * @default {}
+         * @since 3.0.0
+         */
         this._multilist = {};
 
         //  Inject the available filetypes into the Loader
@@ -37,16 +70,55 @@ var LoaderPlugin = new Class({
         var gameConfig = this.systems.game.config;
         var sceneConfig = this.systems.settings.loader;
 
+        /**
+         * [description]
+         *
+         * @name Phaser.Loader.LoaderPlugin#path
+         * @type {string}
+         * @default ''
+         * @since 3.0.0
+         */
         this.path = '';
+
+        /**
+         * [description]
+         *
+         * @name Phaser.Loader.LoaderPlugin#baseURL
+         * @type {string}
+         * @default ''
+         * @since 3.0.0
+         */
         this.baseURL = '';
 
         this.setBaseURL(GetFastValue(sceneConfig, 'baseURL', gameConfig.loaderBaseURL));
+
         this.setPath(GetFastValue(sceneConfig, 'path', gameConfig.loaderPath));
 
+        /**
+         * [description]
+         *
+         * @name Phaser.Loader.LoaderPlugin#enableParallel
+         * @type {boolean}
+         * @since 3.0.0
+         */
         this.enableParallel = GetFastValue(sceneConfig, 'enableParallel', gameConfig.loaderEnableParallel);
+
+        /**
+         * [description]
+         *
+         * @name Phaser.Loader.LoaderPlugin#maxParallelDownloads
+         * @type {integer}
+         * @since 3.0.0
+         */
         this.maxParallelDownloads = GetFastValue(sceneConfig, 'maxParallelDownloads', gameConfig.loaderMaxParallelDownloads);
 
-        //  xhr specific global settings (can be overridden on a per-file basis)
+        /**
+         * xhr specific global settings (can be overridden on a per-file basis)
+         *
+         * @name Phaser.Loader.LoaderPlugin#xhr
+         * @type {Phaser.Loader.XHRSettings}
+         * @since 3.0.0
+         */
         this.xhr = XHRSettings(
             GetFastValue(sceneConfig, 'responseType', gameConfig.loaderResponseType),
             GetFastValue(sceneConfig, 'async', gameConfig.loaderAsync),
@@ -55,20 +127,96 @@ var LoaderPlugin = new Class({
             GetFastValue(sceneConfig, 'timeout', gameConfig.loaderTimeout)
         );
 
+        /**
+         * [description]
+         *
+         * @name Phaser.Loader.LoaderPlugin#crossOrigin
+         * @type {string}
+         * @since 3.0.0
+         */
         this.crossOrigin = GetFastValue(sceneConfig, 'crossOrigin', gameConfig.loaderCrossOrigin);
 
+        /**
+         * [description]
+         *
+         * @name Phaser.Loader.LoaderPlugin#totalToLoad
+         * @type {number}
+         * @default 0
+         * @since 3.0.0
+         */
         this.totalToLoad = 0;
+
+        /**
+         * [description]
+         *
+         * @name Phaser.Loader.LoaderPlugin#progress
+         * @type {number}
+         * @default 0
+         * @since 3.0.0
+         */
         this.progress = 0;
 
+        /**
+         * [description]
+         *
+         * @name Phaser.Loader.LoaderPlugin#list
+         * @type {Phaser.Structs.Set}
+         * @since 3.0.0
+         */
         this.list = new CustomSet();
+
+        /**
+         * [description]
+         *
+         * @name Phaser.Loader.LoaderPlugin#inflight
+         * @type {Phaser.Structs.Set}
+         * @since 3.0.0
+         */
         this.inflight = new CustomSet();
+
+        /**
+         * [description]
+         *
+         * @name Phaser.Loader.LoaderPlugin#failed
+         * @type {Phaser.Structs.Set}
+         * @since 3.0.0
+         */
         this.failed = new CustomSet();
+
+        /**
+         * [description]
+         *
+         * @name Phaser.Loader.LoaderPlugin#queue
+         * @type {Phaser.Structs.Set}
+         * @since 3.0.0
+         */
         this.queue = new CustomSet();
+
+        /**
+         * [description]
+         *
+         * @name Phaser.Loader.LoaderPlugin#storage
+         * @type {Phaser.Structs.Set}
+         * @since 3.0.0
+         */
         this.storage = new CustomSet();
 
+        /**
+         * [description]
+         *
+         * @name Phaser.Loader.LoaderPlugin#state
+         * @type {integer}
+         * @since 3.0.0
+         */
         this.state = CONST.LOADER_IDLE;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Loader.LoaderPlugin#boot
+     * @since 3.0.0
+     */
     boot: function ()
     {
         var eventEmitter = this.systems.events;
@@ -77,6 +225,16 @@ var LoaderPlugin = new Class({
         eventEmitter.on('destroy', this.destroy, this);
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Loader.LoaderPlugin#setBaseURL
+     * @since 3.0.0
+     *
+     * @param {string} url - [description]
+     *
+     * @return {Phaser.Loader.LoaderPlugin} This Loader object.
+     */
     setBaseURL: function (url)
     {
         if (url !== '' && url.substr(-1) !== '/')
@@ -89,6 +247,16 @@ var LoaderPlugin = new Class({
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Loader.LoaderPlugin#setPath
+     * @since 3.0.0
+     *
+     * @param {string} path - [description]
+     *
+     * @return {Phaser.Loader.LoaderPlugin} This Loader object.
+     */
     setPath: function (path)
     {
         if (path !== '' && path.substr(-1) !== '/')
@@ -101,6 +269,16 @@ var LoaderPlugin = new Class({
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Loader.LoaderPlugin#addFile
+     * @since 3.0.0
+     *
+     * @param {Phaser.Loader.File} file - [description]
+     *
+     * @return {Phaser.Loader.File} [description]
+     */
     addFile: function (file)
     {
         if (!this.isReady())
@@ -115,22 +293,40 @@ var LoaderPlugin = new Class({
         return file;
     },
 
-    //  Is the Loader actively loading (or processing loaded files)
+    /**
+     * Is the Loader actively loading (or processing loaded files)
+     *
+     * @method Phaser.Loader.LoaderPlugin#isLoading
+     * @since 3.0.0
+     *
+     * @return {boolean} [description]
+     */
     isLoading: function ()
     {
         return (this.state === CONST.LOADER_LOADING || this.state === CONST.LOADER_PROCESSING);
     },
 
-    //  Is the Loader ready to start a new load?
+    /**
+     * Is the Loader ready to start a new load?
+     *
+     * @method Phaser.Loader.LoaderPlugin#isReady
+     * @since 3.0.0
+     *
+     * @return {boolean} [description]
+     */
     isReady: function ()
     {
         return (this.state === CONST.LOADER_IDLE || this.state === CONST.LOADER_COMPLETE || this.state === CONST.LOADER_FAILED);
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Loader.LoaderPlugin#start
+     * @since 3.0.0
+     */
     start: function ()
     {
-        // console.log(this.scene.sys.settings.key, '- Loader start. Files to load:', this.list.size);
-
         if (!this.isReady())
         {
             return;
@@ -161,21 +357,27 @@ var LoaderPlugin = new Class({
         }
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Loader.LoaderPlugin#updateProgress
+     * @since 3.0.0
+     */
     updateProgress: function ()
     {
         this.progress = 1 - (this.list.size / this.totalToLoad);
 
-        // console.log(this.progress);
-
         this.emit('progress', this.progress);
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Loader.LoaderPlugin#processLoadQueue
+     * @since 3.0.0
+     */
     processLoadQueue: function ()
     {
-        // console.log('======== LoaderPlugin processLoadQueue');
-        // console.log('List size', this.list.size);
-        // console.log(this.inflight.size, 'items still in flight. Can load another', (this.maxParallelDownloads - this.inflight.size));
-
         this.list.each(function (file)
         {
             if (file.state === CONST.FILE_POPULATED || (file.state === CONST.FILE_PENDING && this.inflight.size < this.maxParallelDownloads))
@@ -196,11 +398,16 @@ var LoaderPlugin = new Class({
         }, this);
     },
 
-    //  private
+    /**
+     * [description]
+     *
+     * @method Phaser.Loader.LoaderPlugin#loadFile
+     * @since 3.0.0
+     *
+     * @param {Phaser.Loader.File} file - [description]
+     */
     loadFile: function (file)
     {
-        // console.log('LOADING', file.key);
-
         //  If the file doesn't have its own crossOrigin set,
         //  we'll use the Loaders (which is undefined by default)
         if (!file.crossOrigin)
@@ -211,10 +418,17 @@ var LoaderPlugin = new Class({
         file.load(this);
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Loader.LoaderPlugin#nextFile
+     * @since 3.0.0
+     *
+     * @param {Phaser.Loader.File} previousFile - [description]
+     * @param {boolean} success - [description]
+     */
     nextFile: function (previousFile, success)
     {
-        // console.log('LOADED:', previousFile.src, success);
-
         //  Move the file that just loaded from the inflight list to the queue or failed Set
 
         if (success)
@@ -234,20 +448,22 @@ var LoaderPlugin = new Class({
 
         if (this.list.size > 0)
         {
-            // console.log('nextFile - still something in the list');
             this.processLoadQueue();
         }
         else if (this.inflight.size === 0)
         {
-            // console.log('nextFile calling finishedLoading');
             this.finishedLoading();
         }
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Loader.LoaderPlugin#finishedLoading
+     * @since 3.0.0
+     */
     finishedLoading: function ()
     {
-        // console.log('---> LoaderPlugin.finishedLoading PROCESSING', this.queue.size, 'files');
-
         if (this.state === CONST.LOADER_PROCESSING)
         {
             return;
@@ -268,17 +484,21 @@ var LoaderPlugin = new Class({
         {
             this.queue.each(function (file)
             {
-                // console.log('%c Calling process on ' + file.key, 'color: #000000; background: #ffff00;');
                 file.onProcess(this.processUpdate.bind(this));
             }, this);
         }
     },
 
-    //  Called automatically by the File when it has finished processing
+    /**
+     * Called automatically by the File when it has finished processing.
+     *
+     * @method Phaser.Loader.LoaderPlugin#processUpdate
+     * @since 3.0.0
+     *
+     * @param {Phaser.Loader.File} file - [description]
+     */
     processUpdate: function (file)
     {
-        // console.log('-> processUpdate', file.key, file.state);
-
         //  This file has failed to load, so move it to the failed Set
         if (file.state === CONST.FILE_ERRORED)
         {
@@ -317,6 +537,14 @@ var LoaderPlugin = new Class({
         }
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Loader.LoaderPlugin#removeFromQueue
+     * @since 3.0.0
+     *
+     * @param {Phaser.Loader.File} file - [description]
+     */
     removeFromQueue: function (file)
     {
         this.queue.delete(file);
@@ -328,10 +556,14 @@ var LoaderPlugin = new Class({
         }
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Loader.LoaderPlugin#processComplete
+     * @since 3.0.0
+     */
     processComplete: function ()
     {
-        // console.log(this.scene.sys.settings.key, '- Loader Complete. Loaded:', this.storage.size, 'Failed:', this.failed.size);
-
         this.list.clear();
         this.inflight.clear();
         this.queue.clear();
@@ -345,7 +577,12 @@ var LoaderPlugin = new Class({
         this.removeAllListeners();
     },
 
-    //  The Loader has finished
+    /**
+     * The Loader has finished.
+     *
+     * @method Phaser.Loader.LoaderPlugin#processCallback
+     * @since 3.0.0
+     */
     processCallback: function ()
     {
         if (this.storage.size === 0)
@@ -545,11 +782,34 @@ var LoaderPlugin = new Class({
         this.storage.clear();
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Loader.LoaderPlugin#saveJSON
+     * @since 3.0.0
+     *
+     * @param {[type]} data - [description]
+     * @param {[type]} filename - [description]
+     *
+     * @return {[type]} [description]
+     */
     saveJSON: function (data, filename)
     {
         return this.save(JSON.stringify(data), filename);
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Loader.LoaderPlugin#save
+     * @since 3.0.0
+     *
+     * @param {[type]} data - [description]
+     * @param {[type]} filename - [description]
+     * @param {[type]} filetype - [description]
+     *
+     * @return {Phaser.Loader.LoaderPlugin} This Loader plugin.
+     */
     save: function (data, filename, filetype)
     {
         if (filename === undefined) { filename = 'file.json'; }
@@ -569,6 +829,12 @@ var LoaderPlugin = new Class({
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Loader.LoaderPlugin#reset
+     * @since 3.0.0
+     */
     reset: function ()
     {
         this.list.clear();
@@ -586,6 +852,16 @@ var LoaderPlugin = new Class({
         this.state = CONST.LOADER_IDLE;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Loader.LoaderPlugin#loadArray
+     * @since 3.0.0
+     *
+     * @param {array} files - [description]
+     *
+     * @return {boolean} [description]
+     */
     loadArray: function (files)
     {
         if (Array.isArray(files))
@@ -599,6 +875,16 @@ var LoaderPlugin = new Class({
         return (this.list.size > 0);
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Loader.LoaderPlugin#file
+     * @since 3.0.0
+     *
+     * @param {object} file - [description]
+     *
+     * @return {Phaser.Loader.File} [description]
+     */
     file: function (file)
     {
         var entry;
@@ -635,12 +921,24 @@ var LoaderPlugin = new Class({
         return entry;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Loader.LoaderPlugin#shutdown
+     * @since 3.0.0
+     */
     shutdown: function ()
     {
         this.reset();
         this.state = CONST.LOADER_SHUTDOWN;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Loader.LoaderPlugin#destroy
+     * @since 3.0.0
+     */
     destroy: function ()
     {
         this.reset();

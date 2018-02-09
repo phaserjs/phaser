@@ -5,6 +5,7 @@
 module.exports = {
 
     Components: require('./components/'),
+    Parsers: require('./parsers'),
 
     Formats: require('./Formats'),
     ImageCollection: require('./ImageCollection'),
