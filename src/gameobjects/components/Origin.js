@@ -113,6 +113,29 @@ var Origin = {
     },
 
     /**
+     * Sets the origin of this Game Object based on the Pivot values in its Frame.
+     * 
+     * @method Phaser.GameObjects.Components.Origin#setOriginFromFrame
+     * @since 3.0.0
+     * 
+     * @return {Phaser.GameObjects.GameObject} This Game Object instance.
+     */
+    setOriginFromFrame: function ()
+    {
+        if (!this.frame || !this.frame.customPivot)
+        {
+            return this.setOrigin();
+        }
+        else
+        {
+            this.originX = this.frame.pivotX;
+            this.originY = this.frame.pivotY;
+        }
+
+        return this.updateDisplayOrigin();
+    },
+
+    /**
      * Sets the display origin of this Game Object.
      * The difference between this and setting the origin is that you can use pixel values for setting the display origin.
      * 
