@@ -1,3 +1,15 @@
+/**
+ * [description]
+ *
+ * @function Phaser.Renderer.Snapshot.Canvas
+ * @since 3.0.0
+ *
+ * @param {HTMLCanvasElement} canvas - [description]
+ * @param {string} [type='image/png'] - [description]
+ * @param {float} [encoderOptions=0.92] - [description]
+ *
+ * @return {Image} [description]
+ */
 var CanvasSnapshot = function (canvas, type, encoderOptions)
 {
     if (type === undefined) { type = 'image/png'; }

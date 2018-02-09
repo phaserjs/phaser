@@ -1,4 +1,12 @@
-
+/**
+ * [description]
+ *
+ * @function Phaser.Renderer.Canvas.DrawImage
+ * @since 3.0.0
+ *
+ * @param {Phaser.GameObjects.GameObject} src - [description]
+ * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
+ */
 var DrawImage = function (src, camera)
 {
     var ctx = this.currentContext;

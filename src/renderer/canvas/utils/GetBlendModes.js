@@ -1,6 +1,14 @@
 var modes = require('../../BlendModes');
 var CanvasFeatures = require('../../../device/CanvasFeatures');
 
+/**
+ * [description]
+ *
+ * @function Phaser.Renderer.Canvas.GetBlendModes
+ * @since 3.0.0
+ *
+ * @return {array} [description]
+ */
 var GetBlendModes = function ()
 {
     var output = [];

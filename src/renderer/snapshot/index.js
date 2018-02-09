@@ -1,4 +1,6 @@
-//  Phaser.Renderer.Snapshot
+/**
+ * @namespace Phaser.Renderer.Snapshot
+ */
 
 module.exports = {
 
