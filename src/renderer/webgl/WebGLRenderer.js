@@ -37,19 +37,19 @@ var WebGLRenderer = new Class({
             pixelArt: game.config.pixelArt,
             backgroundColor: game.config.backgroundColor,
             contextCreation: contextCreationConfig,
-            resolution: game.config.resolution
+            resolution: game.config.resolution,
+            autoResize: game.config.autoResize
         };
         this.game = game;
         this.type = CONST.WEBGL;
-        this.width = game.config.width * game.config.resolution;
-        this.height = game.config.height * game.config.resolution;
+        this.width = game.config.width;
+        this.height = game.config.height;
         this.canvas = game.canvas;
         this.lostContextCallbacks = [];
         this.restoredContextCallbacks = [];
         this.blendModes = [];
         this.nativeTextures = [];
         this.contextLost = false;
-        this.autoResize = false;
         this.pipelines = null;
         this.snapshotState = {
             callback: null,
@@ -148,15 +148,16 @@ var WebGLRenderer = new Class({
         this.addPipeline('Light2D', new ForwardDiffuseLightPipeline(this.game, gl, this));
         
         this.setBlendMode(CONST.BlendModes.NORMAL);
-        this.resize(this.width, this.height, config.resolution);
+        this.resize(this.width, this.height);
     
         return this;
     },
 
-    resize: function (width, height, resolution)
+    resize: function (width, height)
     {
         var gl = this.gl;
         var pipelines = this.pipelines;
+        var resolution = this.config.resolution;
 
         this.width = width * resolution;
         this.height = height * resolution;
@@ -164,7 +165,7 @@ var WebGLRenderer = new Class({
         this.canvas.width = this.width;
         this.canvas.height = this.height;
 
-        if (this.autoResize)
+        //if (this.config.autoResize)
         {
             this.canvas.style.width = (this.width / resolution) + 'px';
             this.canvas.style.height = (this.height / resolution) + 'px';
@@ -177,6 +178,7 @@ var WebGLRenderer = new Class({
         {
             pipelines[pipelineName].resize(width, height, resolution);
         }
+        
 
         return this;
     },
