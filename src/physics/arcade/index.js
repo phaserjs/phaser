@@ -1,4 +1,6 @@
-//  Phaser.Physics.Arcade
+/**
+ * @namespace Phaser.Physics.Arcade
+ */
 
 module.exports = {
 

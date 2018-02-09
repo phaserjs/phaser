@@ -1,5 +1,22 @@
+/**
+ * [description]
+ *
+ * @name Phaser.Physics.Impact.Components.SetGameObject
+ * @since 3.0.0
+ */
 var SetGameObject = {
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Physics.Impact.Components.SetGameObject#setGameObject
+     * @since 3.0.0
+     *
+     * @param {[type]} gameObject - [description]
+     * @param {[type]} sync - [description]
+     *
+     * @return {[type]} [description]
+     */
     setGameObject: function (gameObject, sync)
     {
         if (sync === undefined) { sync = true; }
@@ -21,6 +38,14 @@ var SetGameObject = {
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Physics.Impact.Components.SetGameObject#syncGameObject
+     * @since 3.0.0
+     *
+     * @return {[type]} [description]
+     */
     syncGameObject: function ()
     {
         var gameObject = this.body.gameObject;

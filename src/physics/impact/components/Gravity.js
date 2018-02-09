@@ -1,5 +1,21 @@
+/**
+ * [description]
+ *
+ * @name Phaser.Physics.Impact.Components.Gravity
+ * @since 3.0.0
+ */
 var Gravity = {
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Physics.Impact.Components.Gravity#setGravity
+     * @since 3.0.0
+     *
+     * @param {[type]} value - [description]
+     *
+     * @return {[type]} [description]
+     */
     setGravity: function (value)
     {
         this.body.gravityFactor = value;
@@ -7,6 +23,13 @@ var Gravity = {
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @name Phaser.Physics.Impact.Components.Gravity#gravity
+     * @type {[type]}
+     * @since 3.0.0
+     */
     gravity: {
 
         get: function ()

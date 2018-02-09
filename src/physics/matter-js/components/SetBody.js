@@ -2,30 +2,95 @@ var Bodies = require('../lib/factory/Bodies');
 var Body = require('../lib/body/Body');
 var GetFastValue = require('../../../utils/object/GetFastValue');
 
+/**
+ * [description]
+ *
+ * @name Phaser.Physics.Matter.Components.SetBody
+ * @since 3.0.0
+ */
 var SetBody = {
 
     //  Calling any of these methods resets previous properties you may have set on the body, including plugins, mass, etc
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Physics.Matter.Components.SetBody#setRectangle
+     * @since 3.0.0
+     *
+     * @param {[type]} width - [description]
+     * @param {[type]} height - [description]
+     * @param {[type]} options - [description]
+     *
+     * @return {[type]} [description]
+     */
     setRectangle: function (width, height, options)
     {
         return this.setBody({ type: 'rectangle', width: width, height: height }, options);
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Physics.Matter.Components.SetBody#setCircle
+     * @since 3.0.0
+     *
+     * @param {[type]} radius - [description]
+     * @param {[type]} options - [description]
+     *
+     * @return {[type]} [description]
+     */
     setCircle: function (radius, options)
     {
         return this.setBody({ type: 'circle', radius: radius }, options);
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Physics.Matter.Components.SetBody#setPolygon
+     * @since 3.0.0
+     *
+     * @param {[type]} radius - [description]
+     * @param {[type]} sides - [description]
+     * @param {[type]} options - [description]
+     *
+     * @return {[type]} [description]
+     */
     setPolygon: function (radius, sides, options)
     {
         return this.setBody({ type: 'polygon', sides: sides, radius: radius }, options);
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Physics.Matter.Components.SetBody#setTrapezoid
+     * @since 3.0.0
+     *
+     * @param {[type]} width - [description]
+     * @param {[type]} height - [description]
+     * @param {[type]} slope - [description]
+     * @param {[type]} options - [description]
+     *
+     * @return {[type]} [description]
+     */
     setTrapezoid: function (width, height, slope, options)
     {
         return this.setBody({ type: 'trapezoid', width: width, height: height, slope: slope }, options);
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Physics.Matter.Components.SetBody#setExistingBody
+     * @since 3.0.0
+     *
+     * @param {[type]} body - [description]
+     * @param {[type]} addToWorld - [description]
+     *
+     * @return {[type]} [description]
+     */
     setExistingBody: function (body, addToWorld)
     {
         if (addToWorld === undefined)
@@ -49,6 +114,17 @@ var SetBody = {
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Physics.Matter.Components.SetBody#setBody
+     * @since 3.0.0
+     *
+     * @param {[type]} config - [description]
+     * @param {[type]} options - [description]
+     *
+     * @return {[type]} [description]
+     */
     setBody: function (config, options)
     {
         if (!config)

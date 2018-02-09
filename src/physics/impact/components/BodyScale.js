@@ -1,5 +1,22 @@
+/**
+ * [description]
+ *
+ * @name Phaser.Physics.Impact.Components.BodyScale
+ * @since 3.0.0
+ */
 var BodyScale = {
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Physics.Impact.Components.BodyScale#setBodySize
+     * @since 3.0.0
+     *
+     * @param {[type]} width - [description]
+     * @param {[type]} height - [description]
+     *
+     * @return {[type]} [description]
+     */
     setBodySize: function (width, height)
     {
         if (height === undefined) { height = width; }
@@ -10,6 +27,17 @@ var BodyScale = {
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Physics.Impact.Components.BodyScale#setBodyScale
+     * @since 3.0.0
+     *
+     * @param {[type]} scaleX - [description]
+     * @param {[type]} scaleY - [description]
+     *
+     * @return {[type]} [description]
+     */
     setBodyScale: function (scaleX, scaleY)
     {
         if (scaleY === undefined) { scaleY = scaleX; }

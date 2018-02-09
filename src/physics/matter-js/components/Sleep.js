@@ -1,7 +1,23 @@
 var MatterEvents = require('../lib/core/Events');
 
+/**
+ * [description]
+ *
+ * @name Phaser.Physics.Matter.Components.Sleep
+ * @since 3.0.0
+ */
 var Sleep = {
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Physics.Matter.Components.Sleep#setSleepThreshold
+     * @since 3.0.0
+     *
+     * @param {[type]} value - [description]
+     *
+     * @return {[type]} [description]
+     */
     setSleepThreshold: function (value)
     {
         if (value === undefined) { value = 60; }
@@ -11,6 +27,17 @@ var Sleep = {
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Physics.Matter.Components.Sleep#setSleepEvents
+     * @since 3.0.0
+     *
+     * @param {[type]} start - [description]
+     * @param {[type]} end - [description]
+     *
+     * @return {[type]} [description]
+     */
     setSleepEvents: function (start, end)
     {
         this.setSleepStartEvent(start);
@@ -19,6 +46,16 @@ var Sleep = {
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Physics.Matter.Components.Sleep#setSleepStartEvent
+     * @since 3.0.0
+     *
+     * @param {[type]} value - [description]
+     *
+     * @return {[type]} [description]
+     */
     setSleepStartEvent: function (value)
     {
         if (value)
@@ -37,6 +74,16 @@ var Sleep = {
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Physics.Matter.Components.Sleep#setSleepEndEvent
+     * @since 3.0.0
+     *
+     * @param {[type]} value - [description]
+     *
+     * @return {[type]} [description]
+     */
     setSleepEndEvent: function (value)
     {
         if (value)

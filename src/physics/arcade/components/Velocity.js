@@ -1,5 +1,22 @@
+/**
+ * [description]
+ *
+ * @name Phaser.Physics.Arcade.Components.Velocity
+ * @since 3.0.0
+ */
 var Velocity = {
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Physics.Arcade.Components.Velocity#setVelocity
+     * @since 3.0.0
+     *
+     * @param {[type]} x - [description]
+     * @param {[type]} y - [description]
+     *
+     * @return {[type]} [description]
+     */
     setVelocity: function (x, y)
     {
         this.body.velocity.set(x, y);
@@ -7,6 +24,16 @@ var Velocity = {
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Physics.Arcade.Components.Velocity#setVelocityX
+     * @since 3.0.0
+     *
+     * @param {[type]} x - [description]
+     *
+     * @return {[type]} [description]
+     */
     setVelocityX: function (x)
     {
         this.body.velocity.x = x;
@@ -14,6 +41,16 @@ var Velocity = {
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Physics.Arcade.Components.Velocity#setVelocityY
+     * @since 3.0.0
+     *
+     * @param {[type]} y - [description]
+     *
+     * @return {[type]} [description]
+     */
     setVelocityY: function (y)
     {
         this.body.velocity.y = y;
@@ -21,6 +58,17 @@ var Velocity = {
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Physics.Arcade.Components.Velocity#setMaxVelocity
+     * @since 3.0.0
+     *
+     * @param {[type]} x - [description]
+     * @param {[type]} y - [description]
+     *
+     * @return {[type]} [description]
+     */
     setMaxVelocity: function (x, y)
     {
         if (y === undefined) { y = x; }

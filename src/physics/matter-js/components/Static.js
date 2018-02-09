@@ -1,7 +1,23 @@
 var Body = require('../lib/body/Body');
 
+/**
+ * [description]
+ *
+ * @name Phaser.Physics.Matter.Components.Static
+ * @since 3.0.0
+ */
 var Static = {
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Physics.Matter.Components.Static#setStatic
+     * @since 3.0.0
+     *
+     * @param {[type]} value - [description]
+     *
+     * @return {[type]} [description]
+     */
     setStatic: function (value)
     {
         Body.setStatic(this.body, value);
@@ -9,6 +25,14 @@ var Static = {
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Physics.Matter.Components.Static#isStatic
+     * @since 3.0.0
+     *
+     * @return {[type]} [description]
+     */
     isStatic: function ()
     {
         return this.body.isStatic;

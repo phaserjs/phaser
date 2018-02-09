@@ -4,7 +4,7 @@
 
 module.exports = {
 
-    FileTypes: require('./filetypes')
+    FileTypes: require('./filetypes'),
 
     File: require('./File'),
     FileTypesManager: require('./FileTypesManager'),

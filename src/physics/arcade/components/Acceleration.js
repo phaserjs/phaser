@@ -1,5 +1,22 @@
+/**
+ * [description]
+ *
+ * @name Phaser.Physics.Arcade.Components.Acceleration
+ * @since 3.0.0
+ */
 var Acceleration = {
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Physics.Arcade.Components.Acceleration#setAcceleration
+     * @since 3.0.0
+     *
+     * @param {[type]} x - [description]
+     * @param {[type]} y - [description]
+     *
+     * @return {[type]} [description]
+     */
     setAcceleration: function (x, y)
     {
         this.body.acceleration.set(x, y);
@@ -7,6 +24,16 @@ var Acceleration = {
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Physics.Arcade.Components.Acceleration#setAccelerationX
+     * @since 3.0.0
+     *
+     * @param {[type]} value - [description]
+     *
+     * @return {[type]} [description]
+     */
     setAccelerationX: function (value)
     {
         this.body.acceleration.x = value;
@@ -14,6 +41,16 @@ var Acceleration = {
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Physics.Arcade.Components.Acceleration#setAccelerationY
+     * @since 3.0.0
+     *
+     * @param {[type]} value - [description]
+     *
+     * @return {[type]} [description]
+     */
     setAccelerationY: function (value)
     {
         this.body.acceleration.y = value;

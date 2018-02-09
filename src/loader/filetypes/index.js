@@ -34,7 +34,7 @@ module.exports = {
     BinaryFile: require('./BinaryFile'),
     BitmapFontFile: require('./BitmapFontFile'),
     GLSLFile: require('./GLSLFile'),
-    HTMLAudioFile: require('./HTMLAudioFile'),
+    HTML5AudioFile: require('./HTML5AudioFile'),
     HTMLFile: require('./HTMLFile'),
     ImageFile: require('./ImageFile'),
     JSONFile: require('./JSONFile'),

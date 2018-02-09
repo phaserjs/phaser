@@ -1,5 +1,21 @@
+/**
+ * [description]
+ *
+ * @name Phaser.Physics.Impact.Components.Acceleration
+ * @since 3.0.0
+ */
 var Acceleration = {
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Physics.Impact.Components.Acceleration#setAccelerationX
+     * @since 3.0.0
+     *
+     * @param {[type]} x - [description]
+     *
+     * @return {[type]} [description]
+     */
     setAccelerationX: function (x)
     {
         this.accel.x = x;
@@ -7,6 +23,16 @@ var Acceleration = {
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Physics.Impact.Components.Acceleration#setAccelerationY
+     * @since 3.0.0
+     *
+     * @param {[type]} y - [description]
+     *
+     * @return {[type]} [description]
+     */
     setAccelerationY: function (y)
     {
         this.accel.y = y;
@@ -14,6 +40,17 @@ var Acceleration = {
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Physics.Impact.Components.Acceleration#setAcceleration
+     * @since 3.0.0
+     *
+     * @param {[type]} x - [description]
+     * @param {[type]} y - [description]
+     *
+     * @return {[type]} [description]
+     */
     setAcceleration: function (x, y)
     {
         this.accel.x = x;

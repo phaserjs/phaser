@@ -8,8 +8,21 @@ var _FLAG = 4; // 0100
 
 //  Transform Component
 
+/**
+ * [description]
+ *
+ * @name Phaser.Physics.Matter.Components.Transform
+ * @since 3.0.0
+ */
 var Transform = {
 
+    /**
+     * [description]
+     *
+     * @name Phaser.Physics.Matter.Components.Transform#x
+     * @type {[type]}
+     * @since 3.0.0
+     */
     x: {
 
         get: function ()
@@ -26,6 +39,13 @@ var Transform = {
 
     },
 
+    /**
+     * [description]
+     *
+     * @name Phaser.Physics.Matter.Components.Transform#y
+     * @type {[type]}
+     * @since 3.0.0
+     */
     y: {
 
         get: function ()
@@ -42,6 +62,13 @@ var Transform = {
 
     },
 
+    /**
+     * [description]
+     *
+     * @name Phaser.Physics.Matter.Components.Transform#scaleX
+     * @type {[type]}
+     * @since 3.0.0
+     */
     scaleX: {
 
         get: function ()
@@ -67,6 +94,13 @@ var Transform = {
 
     },
 
+    /**
+     * [description]
+     *
+     * @name Phaser.Physics.Matter.Components.Transform#scaleY
+     * @type {[type]}
+     * @since 3.0.0
+     */
     scaleY: {
 
         get: function ()
@@ -92,6 +126,13 @@ var Transform = {
 
     },
 
+    /**
+     * [description]
+     *
+     * @name Phaser.Physics.Matter.Components.Transform#angle
+     * @type {[type]}
+     * @since 3.0.0
+     */
     angle: {
 
         get: function ()
@@ -106,6 +147,13 @@ var Transform = {
         }
     },
 
+    /**
+     * [description]
+     *
+     * @name Phaser.Physics.Matter.Components.Transform#rotation
+     * @type {[type]}
+     * @since 3.0.0
+     */
     rotation: {
 
         get: function ()
@@ -122,6 +170,17 @@ var Transform = {
         }
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Physics.Matter.Components.Transform#setPosition
+     * @since 3.0.0
+     *
+     * @param {[type]} x - [description]
+     * @param {[type]} y - [description]
+     *
+     * @return {[type]} [description]
+     */
     setPosition: function (x, y)
     {
         if (x === undefined) { x = 0; }
@@ -134,6 +193,16 @@ var Transform = {
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Physics.Matter.Components.Transform#setRotation
+     * @since 3.0.0
+     *
+     * @param {[type]} radians - [description]
+     *
+     * @return {[type]} [description]
+     */
     setRotation: function (radians)
     {
         if (radians === undefined) { radians = 0; }
@@ -145,6 +214,14 @@ var Transform = {
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Physics.Matter.Components.Transform#setFixedRotation
+     * @since 3.0.0
+     *
+     * @return {[type]} [description]
+     */
     setFixedRotation: function ()
     {
         Body.setInertia(this.body, Infinity);
@@ -152,6 +229,16 @@ var Transform = {
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Physics.Matter.Components.Transform#setAngle
+     * @since 3.0.0
+     *
+     * @param {[type]} degrees - [description]
+     *
+     * @return {[type]} [description]
+     */
     setAngle: function (degrees)
     {
         if (degrees === undefined) { degrees = 0; }
@@ -163,6 +250,18 @@ var Transform = {
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Physics.Matter.Components.Transform#setScale
+     * @since 3.0.0
+     *
+     * @param {[type]} x - [description]
+     * @param {[type]} y - [description]
+     * @param {[type]} point - [description]
+     *
+     * @return {[type]} [description]
+     */
     setScale: function (x, y, point)
     {
         if (x === undefined) { x = 1; }
