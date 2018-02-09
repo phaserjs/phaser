@@ -277,9 +277,8 @@ var TextureManager = new Class({
      */
     addAtlas: function (key, source, data)
     {
-        //  Is it a Hash or an Array?
-
-        if (Array.isArray(data.frames))
+        //  New Texture Packer format?
+        if (Array.isArray(data.textures) || Array.isArray(data.frames))
         {
             return this.addAtlasJSONArray(key, source, data);
         }
