@@ -59,7 +59,7 @@ var PointerConstraint = new Class({
 
         this.constraint = Constraint.create(Merge(options, defaults));
 
-        this.world.events.on('BEFORE_UPDATE_EVENT', this.update, 0, this);
+        this.world.on('BEFORE_UPDATE_EVENT', this.update, 0, this);
 
         scene.sys.events.on('pointerdown', this.onDown, 0, this);
 
@@ -167,7 +167,7 @@ var PointerConstraint = new Class({
 
         this.constraint = null;
 
-        this.world.events.off('BEFORE_UPDATE_EVENT', this.update);
+        this.world.off('BEFORE_UPDATE_EVENT', this.update);
 
         this.scene.sys.events.off('pointerdown', this.onDown, this);
 
