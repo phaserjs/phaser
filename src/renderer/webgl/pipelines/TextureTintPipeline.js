@@ -1,10 +1,25 @@
 var Class = require('../../../utils/Class');
-var WebGLPipeline = require('../WebGLPipeline');
-var Utils = require('../Utils');
-var ShaderSourceVS = require('../shaders/TextureTint.vert'); 
-var ShaderSourceFS = require('../shaders/TextureTint.frag');
 var ModelViewProjection = require('./components/ModelViewProjection');
+var ShaderSourceFS = require('../shaders/TextureTint.frag');
+var ShaderSourceVS = require('../shaders/TextureTint.vert'); 
+var Utils = require('../Utils');
+var WebGLPipeline = require('../WebGLPipeline');
 
+/**
+ * @classdesc
+ * [description]
+ *
+ * @class TextureTintPipeline
+ * @extends Phaser.Renderer.WebGL.WebGLPipeline
+ * @memberOf Phaser.Renderer.WebGL
+ * @constructor
+ * @since 3.0.0
+ *
+ * @param {Phaser.Game} game - [description]
+ * @param {[type]} gl - [description]
+ * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - [description]
+ * @param {boolean} overrideFragmentShader - [description]
+ */
 var TextureTintPipeline = new Class({
 
     Extends: WebGLPipeline,
@@ -15,7 +30,7 @@ var TextureTintPipeline = new Class({
 
     initialize:
 
-    function TextureTintPipeline(game, gl, renderer, overrideFragmentShader)
+    function TextureTintPipeline (game, gl, renderer, overrideFragmentShader)
     {
         WebGLPipeline.call(this, {
             game: game,
@@ -56,12 +71,45 @@ var TextureTintPipeline = new Class({
             ]
         });
 
+        /**
+         * [description]
+         *
+         * @name Phaser.Renderer.WebGL.TextureTintPipeline#vertexViewF32
+         * @type {Float32Array}
+         * @since 3.0.0
+         */
         this.vertexViewF32 = new Float32Array(this.vertexData);
+
+        /**
+         * [description]
+         *
+         * @name Phaser.Renderer.WebGL.TextureTintPipeline#vertexViewU32
+         * @type {Uint32Array}
+         * @since 3.0.0
+         */
         this.vertexViewU32 = new Uint32Array(this.vertexData);
+
+        /**
+         * [description]
+         *
+         * @name Phaser.Renderer.WebGL.TextureTintPipeline#maxQuads
+         * @type {integer}
+         * @default 2000
+         * @since 3.0.0
+         */
         this.maxQuads = 2000;
+
         this.mvpInit();
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Renderer.WebGL.TextureTintPipeline#onBind
+     * @since 3.0.0
+     *
+     * @return {Phaser.Renderer.WebGL.TextureTintPipeline} [description]
+     */
     onBind: function ()
     {
         WebGLPipeline.prototype.onBind.call(this);
@@ -70,14 +118,34 @@ var TextureTintPipeline = new Class({
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Renderer.WebGL.TextureTintPipeline#resize
+     * @since 3.0.0
+     *
+     * @param {number} width - [description]
+     * @param {number} height - [description]
+     * @param {number} resolution - [description]
+     *
+     * @return {Phaser.Renderer.WebGL.TextureTintPipeline} [description]
+     */
     resize: function (width, height, resolution)
     {
         WebGLPipeline.prototype.resize.call(this, width, height, resolution);
         this.projOrtho(0, this.width, this.height, 0, -1000.0, 1000.0);
-
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Renderer.WebGL.TextureTintPipeline#drawStaticTilemapLayer
+     * @since 3.0.0
+     *
+     * @param {[type]} tilemap - [description]
+     * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
+     */
     drawStaticTilemapLayer: function (tilemap, camera)
     {
         if (tilemap.vertexCount > 0)
@@ -107,6 +175,15 @@ var TextureTintPipeline = new Class({
         this.modelIdentity();
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Renderer.WebGL.TextureTintPipeline#drawEmitterManager
+     * @since 3.0.0
+     *
+     * @param {[type]} emitterManager - [description]
+     * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
+     */
     drawEmitterManager: function (emitterManager, camera)
     {
         this.renderer.setPipeline(this);
@@ -262,6 +339,15 @@ var TextureTintPipeline = new Class({
         }
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Renderer.WebGL.TextureTintPipeline#drawBlitter
+     * @since 3.0.0
+     *
+     * @param {Phaser.GameObjects.Blitter} blitter - [description]
+     * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
+     */
     drawBlitter: function (blitter, camera)
     {
         this.renderer.setPipeline(this);
@@ -377,6 +463,15 @@ var TextureTintPipeline = new Class({
         }
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Renderer.WebGL.TextureTintPipeline#batchSprite
+     * @since 3.0.0
+     *
+     * @param {Phaser.GameObjects.Sprite} sprite - [description]
+     * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
+     */
     batchSprite: function (sprite, camera)
     {
         this.renderer.setPipeline(this);
@@ -502,6 +597,15 @@ var TextureTintPipeline = new Class({
         this.vertexCount += 6;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Renderer.WebGL.TextureTintPipeline#batchMesh
+     * @since 3.0.0
+     *
+     * @param {Phaser.GameObjects.Mesh} mesh - [description]
+     * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
+     */
     batchMesh: function (mesh, camera)
     {
         var vertices = mesh.vertices;
@@ -589,6 +693,15 @@ var TextureTintPipeline = new Class({
         this.vertexCount += vertexCount;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Renderer.WebGL.TextureTintPipeline#batchBitmapText
+     * @since 3.0.0
+     *
+     * @param {[type]} bitmapText - [description]
+     * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
+     */
     batchBitmapText: function (bitmapText, camera)
     {
         this.renderer.setPipeline(this);
@@ -803,6 +916,15 @@ var TextureTintPipeline = new Class({
         }
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Renderer.WebGL.TextureTintPipeline#batchDynamicBitmapText
+     * @since 3.0.0
+     *
+     * @param {[type]} bitmapText - [description]
+     * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
+     */
     batchDynamicBitmapText: function (bitmapText, camera)
     {
         this.renderer.setPipeline(this);
@@ -1094,6 +1216,15 @@ var TextureTintPipeline = new Class({
         }
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Renderer.WebGL.TextureTintPipeline#batchText
+     * @since 3.0.0
+     *
+     * @param {[type]} text - [description]
+     * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
+     */
     batchText: function (text, camera)
     {
         var getTint = Utils.getTintAppendFloatAlpha;
@@ -1119,6 +1250,15 @@ var TextureTintPipeline = new Class({
         );
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Renderer.WebGL.TextureTintPipeline#batchDynamicTilemapLayer
+     * @since 3.0.0
+     *
+     * @param {[type]} tilemapLayer - [description]
+     * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
+     */
     batchDynamicTilemapLayer: function (tilemapLayer, camera)
     {
         var renderTiles = tilemapLayer.culledTiles;
@@ -1166,6 +1306,15 @@ var TextureTintPipeline = new Class({
         }   
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Renderer.WebGL.TextureTintPipeline#batchTileSprite
+     * @since 3.0.0
+     *
+     * @param {Phaser.GameObjects.TileSprite} tileSprite - [description]
+     * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
+     */
     batchTileSprite: function (tileSprite, camera)
     {
         var getTint = Utils.getTintAppendFloatAlpha;
@@ -1192,6 +1341,41 @@ var TextureTintPipeline = new Class({
         );
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Renderer.WebGL.TextureTintPipeline#batchTexture
+     * @since 3.0.0
+     *
+     * @param {Phaser.GameObjects.GameObject} gameObject - [description]
+     * @param {[type]} texture - [description]
+     * @param {[type]} textureWidth - [description]
+     * @param {[type]} textureHeight - [description]
+     * @param {[type]} srcX - [description]
+     * @param {[type]} srcY - [description]
+     * @param {[type]} srcWidth - [description]
+     * @param {[type]} srcHeight - [description]
+     * @param {[type]} scaleX - [description]
+     * @param {[type]} scaleY - [description]
+     * @param {[type]} rotation - [description]
+     * @param {[type]} flipX - [description]
+     * @param {[type]} flipY - [description]
+     * @param {[type]} scrollFactorX - [description]
+     * @param {[type]} scrollFactorY - [description]
+     * @param {[type]} displayOriginX - [description]
+     * @param {[type]} displayOriginY - [description]
+     * @param {[type]} frameX - [description]
+     * @param {[type]} frameY - [description]
+     * @param {[type]} frameWidth - [description]
+     * @param {[type]} frameHeight - [description]
+     * @param {[type]} tintTL - [description]
+     * @param {[type]} tintTR - [description]
+     * @param {[type]} tintBL - [description]
+     * @param {[type]} tintBR - [description]
+     * @param {[type]} uOffset - [description]
+     * @param {[type]} vOffset - [description]
+     * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
+     */
     batchTexture: function (
         gameObject,
         texture,
@@ -1317,6 +1501,15 @@ var TextureTintPipeline = new Class({
         this.vertexCount += 6;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Renderer.WebGL.TextureTintPipeline#batchGraphics
+     * @since 3.0.0
+     *
+     * @param {[type]} graphics - [description]
+     * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
+     */
     batchGraphics: function (graphics, camera) 
     {
         // Stub

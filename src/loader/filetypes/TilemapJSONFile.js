@@ -2,8 +2,20 @@ var FileTypesManager = require('../FileTypesManager');
 var JSONFile = require('./JSONFile.js');
 var TILEMAP_FORMATS = require('../../tilemaps/Formats');
 
-//  Phaser.Loader.FileTypes.TilemapJSONFile
-
+/**
+ * A Tilemap File.
+ *
+ * @function Phaser.Loader.Filetypes.TilemapJSONFile
+ * @since 3.0.0
+ *
+ * @param {string} key - [description]
+ * @param {string} url - [description]
+ * @param {string} path - [description]
+ * @param {string} format - [description]
+ * @param {object} xhrSettings - [description]
+ *
+ * @return {object} An object containing two File objects to be added to the loader.
+ */
 var TilemapJSONFile = function (key, url, path, format, xhrSettings)
 {
     var json = new JSONFile(key, url, path, xhrSettings);
@@ -16,12 +28,23 @@ var TilemapJSONFile = function (key, url, path, format, xhrSettings)
     return json;
 };
 
-//  When registering a factory function 'this' refers to the Loader context.
-//
-//  There are several properties available to use:
-//
-//  this.scene - a reference to the Scene that owns the GameObjectFactory
-
+/**
+ * Adds a Tilemap (Tiled JSON Format) file to the current load queue.
+ * 
+ * Note: This method will only be available if the Tilemap File type has been built into Phaser.
+ *
+ * The file is **not** loaded immediately after calling this method.
+ * Instead, the file is added to a queue within the Loader, which is processed automatically when the Loader starts.
+ *
+ * @method Phaser.Loader.LoaderPlugin#tilemapTiledJSON
+ * @since 3.0.0
+ *
+ * @param {string} key - [description]
+ * @param {string} url - [description]
+ * @param {object} xhrSettings - [description]
+ * 
+ * @return {Phaser.Loader.LoaderPlugin} The Loader.
+ */
 FileTypesManager.register('tilemapTiledJSON', function (key, url, xhrSettings)
 {
     if (Array.isArray(key))
@@ -41,6 +64,23 @@ FileTypesManager.register('tilemapTiledJSON', function (key, url, xhrSettings)
     return this;
 });
 
+/**
+ * Adds a Tilemap (Weltmeister Format) file to the current load queue.
+ * 
+ * Note: This method will only be available if the Tilemap File type has been built into Phaser.
+ *
+ * The file is **not** loaded immediately after calling this method.
+ * Instead, the file is added to a queue within the Loader, which is processed automatically when the Loader starts.
+ *
+ * @method Phaser.Loader.LoaderPlugin#tilemapWeltmeister
+ * @since 3.0.0
+ *
+ * @param {string} key - [description]
+ * @param {string} url - [description]
+ * @param {object} xhrSettings - [description]
+ * 
+ * @return {Phaser.Loader.LoaderPlugin} The Loader.
+ */
 FileTypesManager.register('tilemapWeltmeister', function (key, url, xhrSettings)
 {
     if (Array.isArray(key))

@@ -1,16 +1,30 @@
 var Class = require('../../../utils/Class');
-var WebGLPipeline = require('../WebGLPipeline');
-var Utils = require('../Utils');
-var ShaderSourceVS = require('../shaders/BitmapMask.vert'); 
 var ShaderSourceFS = require('../shaders/BitmapMask.frag');
+var ShaderSourceVS = require('../shaders/BitmapMask.vert'); 
+var Utils = require('../Utils');
+var WebGLPipeline = require('../WebGLPipeline');
 
+/**
+ * @classdesc
+ * [description]
+ *
+ * @class BitmapMaskPipeline
+ * @extends Phaser.Renderer.WebGL.WebGLPipeline
+ * @memberOf Phaser.Renderer.WebGL
+ * @constructor
+ * @since 3.0.0
+ *
+ * @param {Phaser.Game} game - [description]
+ * @param {[type]} gl - [description]
+ * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - [description]
+ */
 var BitmapMaskPipeline = new Class({
 
     Extends: WebGLPipeline,
     
     initialize:
 
-    function BitmapMaskPipeline(game, gl, renderer)
+    function BitmapMaskPipeline (game, gl, renderer)
     {
         WebGLPipeline.call(this, {
             game: game,
@@ -39,11 +53,44 @@ var BitmapMaskPipeline = new Class({
             ]
         });
 
+        /**
+         * [description]
+         *
+         * @name Phaser.Renderer.WebGL.BitmapMaskPipeline#vertexViewF32
+         * @type {Float32Array}
+         * @since 3.0.0
+         */
         this.vertexViewF32 = new Float32Array(this.vertexData);
+
+        /**
+         * [description]
+         *
+         * @name Phaser.Renderer.WebGL.BitmapMaskPipeline#maxQuads
+         * @type {number}
+         * @default 1
+         * @since 3.0.0
+         */
         this.maxQuads = 1;
+
+        /**
+         * [description]
+         *
+         * @name Phaser.Renderer.WebGL.BitmapMaskPipeline#resolutionDirty
+         * @type {boolean}
+         * @default true
+         * @since 3.0.0
+         */
         this.resolutionDirty = true;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Renderer.WebGL.BitmapMaskPipeline#onBind
+     * @since 3.0.0
+     *
+     * @return {Phaser.Renderer.WebGL.BitmapMaskPipeline} [description]
+     */
     onBind: function ()
     {
         WebGLPipeline.prototype.onBind.call(this);
@@ -62,6 +109,18 @@ var BitmapMaskPipeline = new Class({
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Renderer.WebGL.BitmapMaskPipeline#resize
+     * @since 3.0.0
+     *
+     * @param {number} width - [description]
+     * @param {number} height - [description]
+     * @param {number} resolution - [description]
+     *
+     * @return {Phaser.Renderer.WebGL.BitmapMaskPipeline} [description]
+     */
     resize: function (width, height, resolution)
     {
         WebGLPipeline.prototype.resize.call(this, width, height, resolution);
@@ -69,6 +128,16 @@ var BitmapMaskPipeline = new Class({
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Renderer.WebGL.BitmapMaskPipeline#beginMask
+     * @since 3.0.0
+     *
+     * @param {[type]} mask - [description]
+     * @param {[type]} maskedObject - [description]
+     * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
+     */
     beginMask: function (mask, maskedObject, camera)
     {
         var bitmapMask = mask.bitmapMask;
@@ -96,6 +165,14 @@ var BitmapMaskPipeline = new Class({
         }
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Renderer.WebGL.BitmapMaskPipeline#endMask
+     * @since 3.0.0
+     *
+     * @param {[type]} mask - [description]
+     */
     endMask: function (mask)
     {
         var bitmapMask = mask.bitmapMask;

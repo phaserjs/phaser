@@ -1,18 +1,28 @@
-//  Phaser.Physics.Impact.World
-
 var Body = require('./Body');
 var Class = require('../../utils/Class');
 var COLLIDES = require('./COLLIDES');
 var CollisionMap = require('./CollisionMap');
 var EventEmitter = require('eventemitter3');
 var GetFastValue = require('../../utils/object/GetFastValue');
+var HasValue = require('../../utils/object/HasValue');
 var Set = require('../../structs/Set');
 var Solver = require('./Solver');
-var TYPE = require('./TYPE');
 var TILEMAP_FORMATS = require('../../tilemaps/Formats');
-var HasValue = require('../../utils/object/HasValue');
-var GetFastValue = require('../../utils/object/GetFastValue');
+var TYPE = require('./TYPE');
 
+/**
+ * @classdesc
+ * [description]
+ *
+ * @class World
+ * @extends Phaser.Physics.Impact.EventEmitter
+ * @memberOf Phaser.Physics.Impact
+ * @constructor
+ * @since 3.0.0
+ *
+ * @param {Phaser.Scene} scene - [description]
+ * @param {object} config - [description]
+ */
 var World = new Class({
 
     Extends: EventEmitter,
@@ -23,30 +33,110 @@ var World = new Class({
     {
         EventEmitter.call(this);
 
+        /**
+         * [description]
+         *
+         * @name Phaser.Physics.Impact.World#scene
+         * @type {Phaser.Scene}
+         * @since 3.0.0
+         */
         this.scene = scene;
 
+        /**
+         * [description]
+         *
+         * @name Phaser.Physics.Impact.World#bodies
+         * @type {Phaser.Structs.Set}
+         * @since 3.0.0
+         */
         this.bodies = new Set();
 
+        /**
+         * [description]
+         *
+         * @name Phaser.Physics.Impact.World#gravity
+         * @type {number}
+         * @default 0
+         * @since 3.0.0
+         */
         this.gravity = GetFastValue(config, 'gravity', 0);
 
-        //  Spatial hash cell dimensions
+        /**
+         * Spatial hash cell dimensions
+         *
+         * @name Phaser.Physics.Impact.World#cellSize
+         * @type {integer}
+         * @default 64
+         * @since 3.0.0
+         */
         this.cellSize = GetFastValue(config, 'cellSize', 64);
 
+        /**
+         * [description]
+         *
+         * @name Phaser.Physics.Impact.World#collisionMap
+         * @type {Phaser.Physics.Impact.CollisionMap}
+         * @since 3.0.0
+         */
         this.collisionMap = new CollisionMap();
 
+        /**
+         * [description]
+         *
+         * @name Phaser.Physics.Impact.World#timeScale
+         * @type {float}
+         * @default 1
+         * @since 3.0.0
+         */
         this.timeScale = GetFastValue(config, 'timeScale', 1);
 
-        //  Impacts maximum time step is 20 fps.
+        /**
+         * Impacts maximum time step is 20 fps.
+         *
+         * @name Phaser.Physics.Impact.World#maxStep
+         * @type {number}
+         * @default 0.05
+         * @since 3.0.0
+         */
         this.maxStep = GetFastValue(config, 'maxStep', 0.05);
 
+        /**
+         * [description]
+         *
+         * @name Phaser.Physics.Impact.World#enabled
+         * @type {boolean}
+         * @default true
+         * @since 3.0.0
+         */
         this.enabled = true;
 
+        /**
+         * [description]
+         *
+         * @name Phaser.Physics.Impact.World#drawDebug
+         * @type {boolean}
+         * @since 3.0.0
+         */
         this.drawDebug = GetFastValue(config, 'debug', false);
 
+        /**
+         * [description]
+         *
+         * @name Phaser.Physics.Impact.World#debugGraphic
+         * @type {Phaser.GameObjects.Graphics}
+         * @since 3.0.0
+         */
         this.debugGraphic;
 
         var _maxVelocity = GetFastValue(config, 'maxVelocity', 100);
 
+        /**
+         * [description]
+         *
+         * @name Phaser.Physics.Impact.World#defaults
+         * @type {object}
+         * @since 3.0.0
+         */
         this.defaults = {
             debugShowBody: GetFastValue(config, 'debugShowBody', true),
             debugShowVelocity: GetFastValue(config, 'debugShowVelocity', true),
@@ -60,12 +150,33 @@ var World = new Class({
         };
 
         /**
-        * @property {object} walls - An object containing the 4 wall bodies that bound the physics world.
-        */
+         * An object containing the 4 wall bodies that bound the physics world.
+         *
+         * @name Phaser.Physics.Impact.World#walls
+         * @type {object}
+         * @since 3.0.0
+         */
         this.walls = { left: null, right: null, top: null, bottom: null };
 
+        /**
+         * [description]
+         *
+         * @name Phaser.Physics.Impact.World#delta
+         * @type {number}
+         * @default 0
+         * @since 3.0.0
+         */
         this.delta = 0;
 
+        /**
+         * [description]
+         *
+         * @name Phaser.Physics.Impact.World#_lastId
+         * @type {number}
+         * @private
+         * @default 0
+         * @since 3.0.0
+         */
         this._lastId = 0;
 
         if (GetFastValue(config, 'setBounds', false))
@@ -99,16 +210,20 @@ var World = new Class({
     },
 
     /**
-    * Sets the collision map for the world either from a Weltmeister JSON level in the cache or from
-    * a 2D array. If loading from a Weltmeister level, the map must have a layer called "collision".
-    *
-    * @param {string|integer[][]} key - Either a string key that corresponds to a Weltmeister level
-    * in the cache, or a 2D array of collision IDs.
-    * @param {integer} tileSize - The size of a tile. This is optional if loading from a Weltmeister
-    * level in the cache.
-    * @return {CollisionMap|null} The newly created CollisionMap, or null if the method failed to
-    * create the CollisionMap.
-    */
+     * Sets the collision map for the world either from a Weltmeister JSON level in the cache or from
+     * a 2D array. If loading from a Weltmeister level, the map must have a layer called "collision".
+     *
+     * @method Phaser.Physics.Impact.World#setCollisionMap
+     * @since 3.0.0
+     *
+     * @param {string|integer[][]} key - Either a string key that corresponds to a Weltmeister level
+     * in the cache, or a 2D array of collision IDs.
+     * @param {integer} tileSize - The size of a tile. This is optional if loading from a Weltmeister
+     * level in the cache.
+     *
+     * @return {CollisionMap|null} The newly created CollisionMap, or null if the method failed to
+     * create the CollisionMap.
+     */
     setCollisionMap: function (key, tileSize)
     {
         if (typeof key === 'string')
@@ -149,24 +264,28 @@ var World = new Class({
     },
 
     /**
-    * Sets the collision map for the world from a tilemap layer. Only tiles that are marked as
-    * colliding will be used. You can specify the mapping from tiles to slope IDs in a couple of
-    * ways. The easiest is to use Tiled and the slopeTileProperty option. Alternatively, you can
-    * manually create a slopeMap that stores the mapping between tile indices and slope IDs.
-    *
-    * @param {StaticTilemapLayer|DynamicTilemapLayer} tilemapLayer - The tilemap layer to use.
-    * @param {object} [options] - Options for controlling the mapping from tiles to slope IDs.
-    * @param {string} [options.slopeTileProperty=null] - Slope IDs can be stored on tiles directly
-    * using Tiled's tileset editor. If a tile has a property with the given slopeTileProperty string
-    * name, the value of that property for the tile will be used for its slope mapping. E.g. a 45
-    * degree slope upward could be given a "slope" property with a value of 2.
-    * @param {object} [options.slopeMap=null] - A tile index to slope definition map.
-    * @param {integer} [options.defaultCollidingSlope=null] - If specified, the default slope ID to
-    * assign to a colliding tile. If not specified, the tile's index is used.
-    * @param {integer} [options.defaultNonCollidingSlope=0] - The default slope ID to assign to a
-    * non-colliding tile.
-    * @return {CollisionMap} The newly created CollisionMap.
-    */
+     * Sets the collision map for the world from a tilemap layer. Only tiles that are marked as
+     * colliding will be used. You can specify the mapping from tiles to slope IDs in a couple of
+     * ways. The easiest is to use Tiled and the slopeTileProperty option. Alternatively, you can
+     * manually create a slopeMap that stores the mapping between tile indices and slope IDs.
+     *
+     * @method Phaser.Physics.Impact.World#setCollisionMapFromTilemapLayer
+     * @since 3.0.0
+     *
+     * @param {StaticTilemapLayer|DynamicTilemapLayer} tilemapLayer - The tilemap layer to use.
+     * @param {object} [options] - Options for controlling the mapping from tiles to slope IDs.
+     * @param {string} [options.slopeTileProperty=null] - Slope IDs can be stored on tiles directly
+     * using Tiled's tileset editor. If a tile has a property with the given slopeTileProperty string
+     * name, the value of that property for the tile will be used for its slope mapping. E.g. a 45
+     * degree slope upward could be given a "slope" property with a value of 2.
+     * @param {object} [options.slopeMap=null] - A tile index to slope definition map.
+     * @param {integer} [options.defaultCollidingSlope=null] - If specified, the default slope ID to
+     * assign to a colliding tile. If not specified, the tile's index is used.
+     * @param {integer} [options.defaultNonCollidingSlope=0] - The default slope ID to assign to a
+     * non-colliding tile.
+     *
+     * @return {Phaser.Physics.Impact.CollisionMap} The newly created CollisionMap.
+     */
     setCollisionMapFromTilemapLayer: function (tilemapLayer, options)
     {
         if (options === undefined) { options = {}; }
@@ -219,23 +338,28 @@ var World = new Class({
     },
 
     /**
-    * Sets the bounds of the Physics world to match the given world pixel dimensions.
-    * You can optionally set which 'walls' to create: left, right, top or bottom.
-    * If none of the walls are given it will default to use the walls settings it had previously.
-    * I.e. if you previously told it to not have the left or right walls, and you then adjust the world size
-    * the newly created bounds will also not have the left and right walls.
-    * Explicitly state them in the parameters to override this.
-    *
-    * @method Phaser.Physics.P2#setBounds
-    * @param {number} x - The x coordinate of the top-left corner of the bounds.
-    * @param {number} y - The y coordinate of the top-left corner of the bounds.
-    * @param {number} width - The width of the bounds.
-    * @param {number} height - The height of the bounds.
-    * @param {boolean} [left=true] - If true will create the left bounds wall.
-    * @param {boolean} [right=true] - If true will create the right bounds wall.
-    * @param {boolean} [top=true] - If true will create the top bounds wall.
-    * @param {boolean} [bottom=true] - If true will create the bottom bounds wall.
-    */
+     * Sets the bounds of the Physics world to match the given world pixel dimensions.
+     * You can optionally set which 'walls' to create: left, right, top or bottom.
+     * If none of the walls are given it will default to use the walls settings it had previously.
+     * I.e. if you previously told it to not have the left or right walls, and you then adjust the world size
+     * the newly created bounds will also not have the left and right walls.
+     * Explicitly state them in the parameters to override this.
+     *
+     * @method Phaser.Physics.Impact.World#setBounds
+     * @since 3.0.0
+     *
+     * @param {number} [x] - The x coordinate of the top-left corner of the bounds.
+     * @param {number} [y] - The y coordinate of the top-left corner of the bounds.
+     * @param {number} [width] - The width of the bounds.
+     * @param {number} [height] - The height of the bounds.
+     * @param {number} [thickness=64] - [description]
+     * @param {boolean} [left=true] - If true will create the left bounds wall.
+     * @param {boolean} [right=true] - If true will create the right bounds wall.
+     * @param {boolean} [top=true] - If true will create the top bounds wall.
+     * @param {boolean} [bottom=true] - If true will create the bottom bounds wall.
+     *
+     * @return {Phaser.Physics.Impact.World} This World object.
+     */
     setBounds: function (x, y, width, height, thickness, left, right, top, bottom)
     {
         if (x === undefined) { x = 0; }
@@ -256,7 +380,19 @@ var World = new Class({
         return this;
     },
 
-    //  position = 'left', 'right', 'top' or 'bottom'
+    /**
+     * position = 'left', 'right', 'top' or 'bottom'
+     *
+     * @method Phaser.Physics.Impact.World#updateWall
+     * @since 3.0.0
+     *
+     * @param {boolean} add - [description]
+     * @param {string} position - [description]
+     * @param {number} x - [description]
+     * @param {number} y - [description]
+     * @param {number} width - [description]
+     * @param {number} height - [description]
+     */
     updateWall: function (add, position, x, y, width, height)
     {
         var wall = this.walls[position];
@@ -286,11 +422,19 @@ var World = new Class({
         }
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Physics.Impact.World#createDebugGraphic
+     * @since 3.0.0
+     *
+     * @return {Phaser.GameObjects.Graphics} [description]
+     */
     createDebugGraphic: function ()
     {
         var graphic = this.scene.sys.add.graphics({ x: 0, y: 0 });
 
-        graphic.setZ(Number.MAX_VALUE);
+        graphic.setDepth(Number.MAX_VALUE);
 
         this.debugGraphic = graphic;
 
@@ -299,11 +443,32 @@ var World = new Class({
         return graphic;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Physics.Impact.World#getNextID
+     * @since 3.0.0
+     *
+     * @return {integer} [description]
+     */
     getNextID: function ()
     {
         return this._lastId++;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Physics.Impact.World#create
+     * @since 3.0.0
+     *
+     * @param {number} x - [description]
+     * @param {number} y - [description]
+     * @param {number} sizeX - [description]
+     * @param {number} sizeY - [description]
+     *
+     * @return {Phaser.Physics.Impact.Body} The Body that was added to this World.
+     */
     create: function (x, y, sizeX, sizeY)
     {
         var body = new Body(this, x, y, sizeX, sizeY);
@@ -313,25 +478,62 @@ var World = new Class({
         return body;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Physics.Impact.World#remove
+     * @since 3.0.0
+     *
+     * @param {Phaser.Physics.Impact.Body} object - The Body to remove from this World.
+     */
     remove: function (object)
     {
         this.bodies.delete(object);
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Physics.Impact.World#pause
+     * @since 3.0.0
+     *
+     * @return {Phaser.Physics.Impact.World} This World object.
+     */
     pause: function ()
     {
         this.enabled = false;
 
+        this.emit('pause');
+
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Physics.Impact.World#resume
+     * @since 3.0.0
+     *
+     * @return {Phaser.Physics.Impact.World} This World object.
+     */
     resume: function ()
     {
         this.enabled = true;
 
+        this.emit('resume');
+
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Physics.Impact.World#update
+     * @since 3.0.0
+     *
+     * @param {number} time - [description]
+     * @param {number} delta - [description]
+     */
     update: function (time, delta)
     {
         if (!this.enabled || this.bodies.size === 0)
@@ -394,7 +596,16 @@ var World = new Class({
         }
     },
 
-    //  Check the body against the spatial hash
+    /**
+     * Check the body against the spatial hash.
+     *
+     * @method Phaser.Physics.Impact.World#checkHash
+     * @since 3.0.0
+     *
+     * @param {Phaser.Physics.Impact.Body} body - [description]
+     * @param {object} hash - [description]
+     * @param {number} size - [description]
+     */
     checkHash: function (body, hash, size)
     {
         var checked = {};
@@ -437,6 +648,15 @@ var World = new Class({
         }
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Physics.Impact.World#checkBodies
+     * @since 3.0.0
+     *
+     * @param {Phaser.Physics.Impact.Body} bodyA - [description]
+     * @param {Phaser.Physics.Impact.Body} bodyB - [description]
+     */
     checkBodies: function (bodyA, bodyB)
     {
         //  2 fixed bodies won't do anything
@@ -462,10 +682,16 @@ var World = new Class({
         }
     },
 
-    // ////////////
-    //  Helpers //
-    // ////////////
-
+    /**
+     * [description]
+     *
+     * @method Phaser.Physics.Impact.World#setCollidesNever
+     * @since 3.0.0
+     *
+     * @param {Phaser.Physics.Impact.Body[]} bodies - An Array of Impact Bodies to set the collides value on.
+     *
+     * @return {Phaser.Physics.Impact.World} This World object.
+     */
     setCollidesNever: function (bodies)
     {
         for (var i = 0; i < bodies.length; i++)
@@ -476,6 +702,16 @@ var World = new Class({
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Physics.Impact.World#setLite
+     * @since 3.0.0
+     *
+     * @param {Phaser.Physics.Impact.Body[]} bodies - An Array of Impact Bodies to set the collides value on.
+     *
+     * @return {Phaser.Physics.Impact.World} This World object.
+     */
     setLite: function (bodies)
     {
         for (var i = 0; i < bodies.length; i++)
@@ -486,6 +722,16 @@ var World = new Class({
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Physics.Impact.World#setPassive
+     * @since 3.0.0
+     *
+     * @param {Phaser.Physics.Impact.Body[]} bodies - An Array of Impact Bodies to set the collides value on.
+     *
+     * @return {Phaser.Physics.Impact.World} This World object.
+     */
     setPassive: function (bodies)
     {
         for (var i = 0; i < bodies.length; i++)
@@ -496,6 +742,16 @@ var World = new Class({
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Physics.Impact.World#setActive
+     * @since 3.0.0
+     *
+     * @param {Phaser.Physics.Impact.Body[]} bodies - An Array of Impact Bodies to set the collides value on.
+     *
+     * @return {Phaser.Physics.Impact.World} This World object.
+     */
     setActive: function (bodies)
     {
         for (var i = 0; i < bodies.length; i++)
@@ -506,6 +762,16 @@ var World = new Class({
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Physics.Impact.World#setFixed
+     * @since 3.0.0
+     *
+     * @param {Phaser.Physics.Impact.Body[]} bodies - An Array of Impact Bodies to set the collides value on.
+     *
+     * @return {Phaser.Physics.Impact.World} This World object.
+     */
     setFixed: function (bodies)
     {
         for (var i = 0; i < bodies.length; i++)
@@ -516,6 +782,16 @@ var World = new Class({
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Physics.Impact.World#setTypeNone
+     * @since 3.0.0
+     *
+     * @param {Phaser.Physics.Impact.Body[]} bodies - An Array of Impact Bodies to set the type value on.
+     *
+     * @return {Phaser.Physics.Impact.World} This World object.
+     */
     setTypeNone: function (bodies)
     {
         for (var i = 0; i < bodies.length; i++)
@@ -526,6 +802,16 @@ var World = new Class({
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Physics.Impact.World#setTypeA
+     * @since 3.0.0
+     *
+     * @param {Phaser.Physics.Impact.Body[]} bodies - An Array of Impact Bodies to set the type value on.
+     *
+     * @return {Phaser.Physics.Impact.World} This World object.
+     */
     setTypeA: function (bodies)
     {
         for (var i = 0; i < bodies.length; i++)
@@ -536,6 +822,16 @@ var World = new Class({
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Physics.Impact.World#setTypeB
+     * @since 3.0.0
+     *
+     * @param {Phaser.Physics.Impact.Body[]} bodies - An Array of Impact Bodies to set the type value on.
+     *
+     * @return {Phaser.Physics.Impact.World} This World object.
+     */
     setTypeB: function (bodies)
     {
         for (var i = 0; i < bodies.length; i++)
@@ -546,6 +842,16 @@ var World = new Class({
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Physics.Impact.World#setAvsB
+     * @since 3.0.0
+     *
+     * @param {Phaser.Physics.Impact.Body[]} bodies - An Array of Impact Bodies to set the type value on.
+     *
+     * @return {Phaser.Physics.Impact.World} This World object.
+     */
     setAvsB: function (bodies)
     {
         for (var i = 0; i < bodies.length; i++)
@@ -557,6 +863,16 @@ var World = new Class({
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Physics.Impact.World#setBvsA
+     * @since 3.0.0
+     *
+     * @param {Phaser.Physics.Impact.Body[]} bodies - An Array of Impact Bodies to set the type value on.
+     *
+     * @return {Phaser.Physics.Impact.World} This World object.
+     */
     setBvsA: function (bodies)
     {
         for (var i = 0; i < bodies.length; i++)
@@ -568,6 +884,16 @@ var World = new Class({
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Physics.Impact.World#setCheckAgainstNone
+     * @since 3.0.0
+     *
+     * @param {Phaser.Physics.Impact.Body[]} bodies - An Array of Impact Bodies to set the type value on.
+     *
+     * @return {Phaser.Physics.Impact.World} This World object.
+     */
     setCheckAgainstNone: function (bodies)
     {
         for (var i = 0; i < bodies.length; i++)
@@ -578,6 +904,16 @@ var World = new Class({
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Physics.Impact.World#setCheckAgainstA
+     * @since 3.0.0
+     *
+     * @param {Phaser.Physics.Impact.Body[]} bodies - An Array of Impact Bodies to set the type value on.
+     *
+     * @return {Phaser.Physics.Impact.World} This World object.
+     */
     setCheckAgainstA: function (bodies)
     {
         for (var i = 0; i < bodies.length; i++)
@@ -588,6 +924,16 @@ var World = new Class({
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Physics.Impact.World#setCheckAgainstB
+     * @since 3.0.0
+     *
+     * @param {Phaser.Physics.Impact.Body[]} bodies - An Array of Impact Bodies to set the type value on.
+     *
+     * @return {Phaser.Physics.Impact.World} This World object.
+     */
     setCheckAgainstB: function (bodies)
     {
         for (var i = 0; i < bodies.length; i++)
@@ -598,11 +944,23 @@ var World = new Class({
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Physics.Impact.World#shutdown
+     * @since 3.0.0
+     */
     shutdown: function ()
     {
         this.removeAllListeners();
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Physics.Impact.World#destroy
+     * @since 3.0.0
+     */
     destroy: function ()
     {
         this.removeAllListeners();

@@ -4,8 +4,21 @@ var File = require('../File');
 var FileTypesManager = require('../FileTypesManager');
 var GetFastValue = require('../../utils/object/GetFastValue');
 
-//  Phaser.Loader.FileTypes.GLSLFile
-
+/**
+ * @classdesc
+ * [description]
+ *
+ * @class GLSLFile
+ * @extends Phaser.Loader.File
+ * @memberOf Phaser.Loader.FileTypes
+ * @constructor
+ * @since 3.0.0
+ *
+ * @param {string} key - [description]
+ * @param {string} url - [description]
+ * @param {string} path - [description]
+ * @param {object} xhrSettings - [description]
+ */
 var GLSLFile = new Class({
 
     Extends: File,
@@ -42,12 +55,23 @@ var GLSLFile = new Class({
 
 });
 
-//  When registering a factory function 'this' refers to the Loader context.
-//  
-//  There are several properties available to use:
-//  
-//  this.scene - a reference to the Scene that owns the GameObjectFactory
-
+/**
+ * Adds a GLSL file to the current load queue.
+ * 
+ * Note: This method will only be available if the GLSL File type has been built into Phaser.
+ *
+ * The file is **not** loaded immediately after calling this method.
+ * Instead, the file is added to a queue within the Loader, which is processed automatically when the Loader starts.
+ *
+ * @method Phaser.Loader.LoaderPlugin#glsl
+ * @since 3.0.0
+ *
+ * @param {string} key - [description]
+ * @param {string} url - [description]
+ * @param {object} xhrSettings - [description]
+ * 
+ * @return {Phaser.Loader.LoaderPlugin} The Loader.
+ */
 FileTypesManager.register('glsl', function (key, url, xhrSettings)
 {
     if (Array.isArray(key))

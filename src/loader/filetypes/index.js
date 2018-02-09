@@ -41,7 +41,7 @@ module.exports = {
     MultiAtlas: require('./MultiAtlas'),
     PluginFile: require('./PluginFile'),
     ScriptFile: require('./ScriptFile'),
-    SpriteSheet: require('./SpriteSheet'),
+    SpriteSheetFile: require('./SpriteSheetFile'),
     SVGFile: require('./SVGFile'),
     TextFile: require('./TextFile'),
     TilemapCSVFile: require('./TilemapCSVFile'),
