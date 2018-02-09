@@ -75,6 +75,11 @@ var Texture = {
             this.renderFlags |= _FLAG;
         }
 
+        if (this.frame.customPivot)
+        {
+            this.setOrigin(this.frame.pivotX, this.frame.pivotY);
+        }
+
         return this;
     }
 
