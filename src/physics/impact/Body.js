@@ -505,7 +505,7 @@ var Body = new Class({
      * [description]
      *
      * @method Phaser.Physics.Impact.Body#fromJSON
-     * @todo
+     * @todo Code it!
      * @since 3.0.0
      *
      * @param {object} config - [description]

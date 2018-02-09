@@ -115,6 +115,32 @@ var ImpactPhysics = new Class({
     /**
      * [description]
      *
+     * @method Phaser.Physics.Impact.ImpactPhysics#pause
+     * @since 3.0.0
+     *
+     * @return {[type]} [description]
+     */
+    pause: function ()
+    {
+        return this.world.pause();
+    },
+
+    /**
+     * [description]
+     *
+     * @method Phaser.Physics.Impact.ImpactPhysics#resume
+     * @since 3.0.0
+     *
+     * @return {[type]} [description]
+     */
+    resume: function ()
+    {
+        return this.world.resume();
+    },
+
+    /**
+     * [description]
+     *
      * @method Phaser.Physics.Impact.ImpactPhysics#shutdown
      * @since 3.0.0
      */
