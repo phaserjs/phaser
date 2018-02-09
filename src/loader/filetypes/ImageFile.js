@@ -4,8 +4,22 @@ var File = require('../File');
 var FileTypesManager = require('../FileTypesManager');
 var GetFastValue = require('../../utils/object/GetFastValue');
 
-//  Phaser.Loader.FileTypes.ImageFile
-
+/**
+ * @classdesc
+ * [description]
+ *
+ * @class ImageFile
+ * @extends Phaser.Loader.File
+ * @memberOf Phaser.Loader.FileTypes
+ * @constructor
+ * @since 3.0.0
+ *
+ * @param {string} key - [description]
+ * @param {string} url - [description]
+ * @param {string} path - [description]
+ * @param {object} xhrSettings - [description]
+ * @param {object} config - [description]
+ */
 var ImageFile = new Class({
 
     Extends: File,
@@ -79,25 +93,40 @@ var ImageFile = new Class({
 
 });
 
-//  When registering a factory function 'this' refers to the Loader context.
-//  
-//  There are several properties available to use:
-//  
-//  this.scene - a reference to the Scene that owns the GameObjectFactory
-
+/**
+ * Adds an Image file to the current load queue.
+ * 
+ * Note: This method will only be available if the Image File type has been built into Phaser.
+ *
+ * The file is **not** loaded immediately after calling this method.
+ * Instead, the file is added to a queue within the Loader, which is processed automatically when the Loader starts.
+ *
+ * @method Phaser.Loader.LoaderPlugin#image
+ * @since 3.0.0
+ *
+ * @param {string} key - [description]
+ * @param {string} url - [description]
+ * @param {object} xhrSettings - [description]
+ * 
+ * @return {Phaser.Loader.LoaderPlugin} The Loader.
+ */
 FileTypesManager.register('image', function (key, url, xhrSettings)
 {
+    var urls;
+    var fileA;
+    var fileB;
+
     if (Array.isArray(key))
     {
         for (var i = 0; i < key.length; i++)
         {
             //  If it's an array it has to be an array of Objects, so we get everything out of the 'key' object
-            var urls = GetFastValue(key[i], 'file', url);
+            urls = GetFastValue(key[i], 'file', url);
 
             if (Array.isArray(urls) && urls.length === 2)
             {
-                var fileA = this.addFile(new ImageFile(key[i], urls[0], this.path, xhrSettings));
-                var fileB = this.addFile(new ImageFile(key[i], urls[1], this.path, xhrSettings));
+                fileA = this.addFile(new ImageFile(key[i], urls[0], this.path, xhrSettings));
+                fileB = this.addFile(new ImageFile(key[i], urls[1], this.path, xhrSettings));
 
                 fileA.setLinkFile(fileB, 'dataimage');
             }
@@ -109,12 +138,12 @@ FileTypesManager.register('image', function (key, url, xhrSettings)
     }
     else
     {
-        var urls = GetFastValue(key, 'file', url);
+        urls = GetFastValue(key, 'file', url);
 
         if (Array.isArray(urls) && urls.length === 2)
         {
-            var fileA = this.addFile(new ImageFile(key, urls[0], this.path, xhrSettings));
-            var fileB = this.addFile(new ImageFile(key, urls[1], this.path, xhrSettings));
+            fileA = this.addFile(new ImageFile(key, urls[0], this.path, xhrSettings));
+            fileB = this.addFile(new ImageFile(key, urls[1], this.path, xhrSettings));
 
             fileA.setLinkFile(fileB, 'dataimage');
         }

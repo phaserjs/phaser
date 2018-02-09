@@ -3,8 +3,25 @@ var ImageFile = require('./ImageFile.js');
 var JSONFile = require('./JSONFile.js');
 var NumberArray = require('../../utils/array/NumberArray');
 
-//  Phaser.Loader.FileTypes.MultiAtlas
-
+/**
+ * Adds a Multi File Texture Atlas to the current load queue.
+ * 
+ * Note: This method will only be available if the Multi Atlas File type has been built into Phaser.
+ *
+ * The file is **not** loaded immediately after calling this method.
+ * Instead, the file is added to a queue within the Loader, which is processed automatically when the Loader starts.
+ *
+ * @method Phaser.Loader.LoaderPlugin#multiatlas
+ * @since 3.0.0
+ *
+ * @param {string} key - [description]
+ * @param {string[]} textureURLs - [description]
+ * @param {string[]} atlasURLs - [description]
+ * @param {object} textureXhrSettings - [description]
+ * @param {object} atlasXhrSettings - [description]
+ * 
+ * @return {Phaser.Loader.LoaderPlugin} The Loader.
+ */
 FileTypesManager.register('multiatlas', function (key, textureURLs, atlasURLs, textureXhrSettings, atlasXhrSettings)
 {
     if (typeof textureURLs === 'number')

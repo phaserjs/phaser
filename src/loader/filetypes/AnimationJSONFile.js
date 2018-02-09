@@ -31,8 +31,6 @@ var AnimationJSONFile = function (key, url, path, xhrSettings)
  *
  * The file is **not** loaded immediately after calling this method.
  * Instead, the file is added to a queue within the Loader, which is processed automatically when the Loader starts.
- * 
- *
  *
  * @method Phaser.Loader.LoaderPlugin#animation
  * @since 3.0.0
