@@ -1,13 +1,17 @@
 var quickselect = require('../utils/array/QuickSelect');
 
-//  Phaser.Structs.RTree
-
 /**
+ * @classdesc
  * RBush is a high-performance JavaScript library for 2D spatial indexing of points and rectangles.
  * It's based on an optimized R-tree data structure with bulk insertion support.
  *
  * Spatial index is a special data structure for points and rectangles that allows you to perform queries like
  * "all items within this bounding box" very efficiently (e.g. hundreds of times faster than looping over all items).
+ *
+ * @class RTree
+ * @memberOf Phaser.Structs
+ * @constructor
+ * @since 3.0.0
  */
 
 function rbush (maxEntries, format)

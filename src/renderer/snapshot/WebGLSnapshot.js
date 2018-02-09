@@ -1,3 +1,15 @@
+/**
+ * [description]
+ *
+ * @function Phaser.Renderer.Snapshot.WebGL
+ * @since 3.0.0
+ *
+ * @param {HTMLCanvasElement} sourceCanvas - [description]
+ * @param {string} [type='image/png'] - [description]
+ * @param {float} [encoderOptions=0.92] - [description]
+ *
+ * @return {Image} [description]
+ */
 var WebGLSnapshot = function (sourceCanvas, type, encoderOptions)
 {
     if (!type) { type = 'image/png'; }

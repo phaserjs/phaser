@@ -83,7 +83,7 @@ var Sprite = new Class({
         this.setTexture(texture, frame);
         this.setPosition(x, y);
         this.setSizeToFrame();
-        this.setOrigin();
+        this.setOriginFromFrame();
         this.initPipeline('TextureTintPipeline');
     },
 

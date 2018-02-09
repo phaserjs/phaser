@@ -145,7 +145,6 @@ var Frame = new Class({
          */
         this.halfWidth = Math.floor(width * 0.5);
 
-
         /**
          * Half the height, floored.
          * Precalculated for the renderer.
@@ -193,6 +192,16 @@ var Frame = new Class({
          * @since 3.0.0
          */
         this.pivotY = 0;
+
+        /**
+         * Does this Frame have a custom pivot point?
+         *
+         * @name Phaser.Textures.Frame#customPivot
+         * @type {boolean}
+         * @default false
+         * @since 3.0.0
+         */
+        this.customPivot = false;
 
         /**
          * **CURRENTLY UNSUPPORTED**

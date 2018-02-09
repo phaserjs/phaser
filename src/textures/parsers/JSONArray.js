@@ -16,9 +16,9 @@ var Clone = require('../../utils/object/Clone');
 var JSONArray = function (texture, sourceIndex, json)
 {
     //  Malformed?
-    if (!json['frames'])
+    if (!json['frames'] && !json['textures'])
     {
-        console.warn('Invalid Texture Atlas JSON Array given, missing \'frames\' array');
+        console.warn('Invalid Texture Atlas JSON Array given, missing \'frames\' and \'textures\' array');
         return;
     }
 
@@ -28,7 +28,8 @@ var JSONArray = function (texture, sourceIndex, json)
     texture.add('__BASE', sourceIndex, 0, 0, source.width, source.height);
 
     //  By this stage frames is a fully parsed array
-    var frames = json['frames'];
+    var frames = (Array.isArray(json.textures)) ? json.textures[0].frames : json.frames;
+
     var newFrame;
 
     for (var i = 0; i < frames.length; i++)
@@ -55,6 +56,13 @@ var JSONArray = function (texture, sourceIndex, json)
         {
             newFrame.rotated = true;
             newFrame.updateUVsInverted();
+        }
+
+        if (src.anchor)
+        {
+            newFrame.customPivot = true;
+            newFrame.pivotX = src.anchor.x;
+            newFrame.pivotY = src.anchor.y;
         }
 
         //  Copy over any extra data

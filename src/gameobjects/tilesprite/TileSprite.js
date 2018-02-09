@@ -120,7 +120,7 @@ var TileSprite = new Class({
         this.setTexture(texture, frame);
         this.setPosition(x, y);
         this.setSize(width, height);
-        this.setOrigin();
+        this.setOriginFromFrame();
         this.initPipeline('TextureTintPipeline');
 
         /**
