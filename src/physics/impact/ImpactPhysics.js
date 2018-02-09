@@ -5,17 +5,39 @@ var Merge = require('../../utils/object/Merge');
 var PluginManager = require('../../plugins/PluginManager');
 var World = require('./World');
 
-//  Phaser.Physics.Impact.ImpactPhysics
-
+/**
+ * @classdesc
+ * [description]
+ *
+ * @class ImpactPhysics
+ * @memberOf Phaser.Physics.Impact
+ * @constructor
+ * @since 3.0.0
+ *
+ * @param {Phaser.Scene} scene - [description]
+ */
 var ImpactPhysics = new Class({
 
     initialize:
 
     function ImpactPhysics (scene)
     {
-        //  The Scene that owns this plugin
+        /**
+         * [description]
+         *
+         * @name Phaser.Physics.Impact.ImpactPhysics#scene
+         * @type {Phaser.Scene}
+         * @since 3.0.0
+         */
         this.scene = scene;
 
+        /**
+         * [description]
+         *
+         * @name Phaser.Physics.Impact.ImpactPhysics#systems
+         * @type {Phaser.Scenes.Systems}
+         * @since 3.0.0
+         */
         this.systems = scene.sys;
 
         if (!scene.sys.settings.isBooted)
@@ -23,13 +45,42 @@ var ImpactPhysics = new Class({
             scene.sys.events.once('boot', this.boot, this);
         }
 
+        /**
+         * [description]
+         *
+         * @name Phaser.Physics.Impact.ImpactPhysics#config
+         * @type {object}
+         * @since 3.0.0
+         */
         this.config = this.getConfig();
 
+        /**
+         * [description]
+         *
+         * @name Phaser.Physics.Impact.ImpactPhysics#world
+         * @type {Phaser.Physics.Impact.World}
+         * @since 3.0.0
+         */
         this.world;
 
+        /**
+         * [description]
+         *
+         * @name Phaser.Physics.Impact.ImpactPhysics#add
+         * @type {Phaser.Physics.Impact.Factory}
+         * @since 3.0.0
+         */
         this.add;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Physics.Impact.ImpactPhysics#getConfig
+     * @since 3.0.0
+     *
+     * @return {object} [description]
+     */
     getConfig: function ()
     {
         var gameConfig = this.systems.game.config.physics;
@@ -43,6 +94,12 @@ var ImpactPhysics = new Class({
         return config;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Physics.Impact.ImpactPhysics#boot
+     * @since 3.0.0
+     */
     boot: function ()
     {
         this.world = new World(this.scene, this.config);
@@ -55,11 +112,23 @@ var ImpactPhysics = new Class({
         eventEmitter.on('destroy', this.destroy, this);
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Physics.Impact.ImpactPhysics#shutdown
+     * @since 3.0.0
+     */
     shutdown: function ()
     {
         this.world.shutdown();
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Physics.Impact.ImpactPhysics#destroy
+     * @since 3.0.0
+     */
     destroy: function ()
     {
         this.world.destroy();

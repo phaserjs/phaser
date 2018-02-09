@@ -1,18 +1,28 @@
-//  Phaser.Physics.Impact.World
-
 var Body = require('./Body');
 var Class = require('../../utils/Class');
 var COLLIDES = require('./COLLIDES');
 var CollisionMap = require('./CollisionMap');
 var EventEmitter = require('eventemitter3');
 var GetFastValue = require('../../utils/object/GetFastValue');
+var HasValue = require('../../utils/object/HasValue');
 var Set = require('../../structs/Set');
 var Solver = require('./Solver');
-var TYPE = require('./TYPE');
 var TILEMAP_FORMATS = require('../../tilemaps/Formats');
-var HasValue = require('../../utils/object/HasValue');
-var GetFastValue = require('../../utils/object/GetFastValue');
+var TYPE = require('./TYPE');
 
+/**
+ * @classdesc
+ * [description]
+ *
+ * @class World
+ * @extends Phaser.Physics.Impact.EventEmitter
+ * @memberOf Phaser.Physics.Impact
+ * @constructor
+ * @since 3.0.0
+ *
+ * @param {Phaser.Scene} scene - [description]
+ * @param {object} config - [description]
+ */
 var World = new Class({
 
     Extends: EventEmitter,
@@ -23,30 +33,119 @@ var World = new Class({
     {
         EventEmitter.call(this);
 
+
+        /**
+         * [description]
+         *
+         * @name Phaser.Physics.Impact.World#scene
+         * @type {Phaser.Scene}
+         * @since 3.0.0
+         */
         this.scene = scene;
 
+
+        /**
+         * [description]
+         *
+         * @name Phaser.Physics.Impact.World#bodies
+         * @type {[type]}
+         * @since 3.0.0
+         */
         this.bodies = new Set();
 
+
+        /**
+         * [description]
+         *
+         * @name Phaser.Physics.Impact.World#gravity
+         * @type {[type]}
+         * @since 3.0.0
+         */
         this.gravity = GetFastValue(config, 'gravity', 0);
 
         //  Spatial hash cell dimensions
+
+        /**
+         * [description]
+         *
+         * @name Phaser.Physics.Impact.World#cellSize
+         * @type {[type]}
+         * @since 3.0.0
+         */
         this.cellSize = GetFastValue(config, 'cellSize', 64);
 
+
+        /**
+         * [description]
+         *
+         * @name Phaser.Physics.Impact.World#collisionMap
+         * @type {[type]}
+         * @since 3.0.0
+         */
         this.collisionMap = new CollisionMap();
 
+
+        /**
+         * [description]
+         *
+         * @name Phaser.Physics.Impact.World#timeScale
+         * @type {[type]}
+         * @since 3.0.0
+         */
         this.timeScale = GetFastValue(config, 'timeScale', 1);
 
         //  Impacts maximum time step is 20 fps.
+
+        /**
+         * [description]
+         *
+         * @name Phaser.Physics.Impact.World#maxStep
+         * @type {[type]}
+         * @since 3.0.0
+         */
         this.maxStep = GetFastValue(config, 'maxStep', 0.05);
 
+
+        /**
+         * [description]
+         *
+         * @name Phaser.Physics.Impact.World#enabled
+         * @type {boolean}
+         * @default true
+         * @since 3.0.0
+         */
         this.enabled = true;
 
+
+        /**
+         * [description]
+         *
+         * @name Phaser.Physics.Impact.World#drawDebug
+         * @type {[type]}
+         * @since 3.0.0
+         */
         this.drawDebug = GetFastValue(config, 'debug', false);
 
+
+        /**
+         * [description]
+         *
+         * @name Phaser.Physics.Impact.World#debugGraphic
+         * @type {null}
+         * @since 3.0.0
+         */
         this.debugGraphic;
 
         var _maxVelocity = GetFastValue(config, 'maxVelocity', 100);
 
+
+        /**
+         * [description]
+         *
+         * @name Phaser.Physics.Impact.World#defaults
+         * @type {[type]}
+         * @since 3.0.0
+         */
         this.defaults = {
             debugShowBody: GetFastValue(config, 'debugShowBody', true),
             debugShowVelocity: GetFastValue(config, 'debugShowVelocity', true),
@@ -62,10 +161,37 @@ var World = new Class({
         /**
         * @property {object} walls - An object containing the 4 wall bodies that bound the physics world.
         */
+
+        /**
+         * [description]
+         *
+         * @name Phaser.Physics.Impact.World#walls
+         * @type {[type]}
+         * @since 3.0.0
+         */
         this.walls = { left: null, right: null, top: null, bottom: null };
 
+
+        /**
+         * [description]
+         *
+         * @name Phaser.Physics.Impact.World#delta
+         * @type {number}
+         * @default 0
+         * @since 3.0.0
+         */
         this.delta = 0;
 
+
+        /**
+         * [description]
+         *
+         * @name Phaser.Physics.Impact.World#_lastId
+         * @type {number}
+         * @private
+         * @default 0
+         * @since 3.0.0
+         */
         this._lastId = 0;
 
         if (GetFastValue(config, 'setBounds', false))
@@ -109,6 +235,17 @@ var World = new Class({
     * @return {CollisionMap|null} The newly created CollisionMap, or null if the method failed to
     * create the CollisionMap.
     */
+    /**
+     * [description]
+     *
+     * @method Phaser.Physics.Impact.World#setCollisionMap
+     * @since 3.0.0
+     *
+     * @param {[type]} key - [description]
+     * @param {[type]} tileSize - [description]
+     *
+     * @return {[type]} [description]
+     */
     setCollisionMap: function (key, tileSize)
     {
         if (typeof key === 'string')
@@ -167,6 +304,17 @@ var World = new Class({
     * non-colliding tile.
     * @return {CollisionMap} The newly created CollisionMap.
     */
+    /**
+     * [description]
+     *
+     * @method Phaser.Physics.Impact.World#setCollisionMapFromTilemapLayer
+     * @since 3.0.0
+     *
+     * @param {[type]} tilemapLayer - [description]
+     * @param {[type]} options - [description]
+     *
+     * @return {[type]} [description]
+     */
     setCollisionMapFromTilemapLayer: function (tilemapLayer, options)
     {
         if (options === undefined) { options = {}; }
@@ -236,6 +384,24 @@ var World = new Class({
     * @param {boolean} [top=true] - If true will create the top bounds wall.
     * @param {boolean} [bottom=true] - If true will create the bottom bounds wall.
     */
+    /**
+     * [description]
+     *
+     * @method Phaser.Physics.Impact.World#setBounds
+     * @since 3.0.0
+     *
+     * @param {[type]} x - [description]
+     * @param {[type]} y - [description]
+     * @param {[type]} width - [description]
+     * @param {[type]} height - [description]
+     * @param {[type]} thickness - [description]
+     * @param {[type]} left - [description]
+     * @param {[type]} right - [description]
+     * @param {[type]} top - [description]
+     * @param {[type]} bottom - [description]
+     *
+     * @return {[type]} [description]
+     */
     setBounds: function (x, y, width, height, thickness, left, right, top, bottom)
     {
         if (x === undefined) { x = 0; }
@@ -257,6 +423,19 @@ var World = new Class({
     },
 
     //  position = 'left', 'right', 'top' or 'bottom'
+    /**
+     * [description]
+     *
+     * @method Phaser.Physics.Impact.World#updateWall
+     * @since 3.0.0
+     *
+     * @param {[type]} add - [description]
+     * @param {[type]} position - [description]
+     * @param {[type]} x - [description]
+     * @param {[type]} y - [description]
+     * @param {[type]} width - [description]
+     * @param {[type]} height - [description]
+     */
     updateWall: function (add, position, x, y, width, height)
     {
         var wall = this.walls[position];
@@ -286,6 +465,14 @@ var World = new Class({
         }
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Physics.Impact.World#createDebugGraphic
+     * @since 3.0.0
+     *
+     * @return {[type]} [description]
+     */
     createDebugGraphic: function ()
     {
         var graphic = this.scene.sys.add.graphics({ x: 0, y: 0 });
@@ -299,11 +486,32 @@ var World = new Class({
         return graphic;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Physics.Impact.World#getNextID
+     * @since 3.0.0
+     *
+     * @return {[type]} [description]
+     */
     getNextID: function ()
     {
         return this._lastId++;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Physics.Impact.World#create
+     * @since 3.0.0
+     *
+     * @param {[type]} x - [description]
+     * @param {[type]} y - [description]
+     * @param {[type]} sizeX - [description]
+     * @param {[type]} sizeY - [description]
+     *
+     * @return {[type]} [description]
+     */
     create: function (x, y, sizeX, sizeY)
     {
         var body = new Body(this, x, y, sizeX, sizeY);
@@ -313,11 +521,27 @@ var World = new Class({
         return body;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Physics.Impact.World#remove
+     * @since 3.0.0
+     *
+     * @param {[type]} object - [description]
+     */
     remove: function (object)
     {
         this.bodies.delete(object);
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Physics.Impact.World#pause
+     * @since 3.0.0
+     *
+     * @return {[type]} [description]
+     */
     pause: function ()
     {
         this.enabled = false;
@@ -325,6 +549,14 @@ var World = new Class({
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Physics.Impact.World#resume
+     * @since 3.0.0
+     *
+     * @return {[type]} [description]
+     */
     resume: function ()
     {
         this.enabled = true;
@@ -332,6 +564,17 @@ var World = new Class({
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Physics.Impact.World#update
+     * @since 3.0.0
+     *
+     * @param {[type]} time - [description]
+     * @param {[type]} delta - [description]
+     *
+     * @return {[type]} [description]
+     */
     update: function (time, delta)
     {
         if (!this.enabled || this.bodies.size === 0)
@@ -395,6 +638,16 @@ var World = new Class({
     },
 
     //  Check the body against the spatial hash
+    /**
+     * [description]
+     *
+     * @method Phaser.Physics.Impact.World#checkHash
+     * @since 3.0.0
+     *
+     * @param {[type]} body - [description]
+     * @param {[type]} hash - [description]
+     * @param {[type]} size - [description]
+     */
     checkHash: function (body, hash, size)
     {
         var checked = {};
@@ -437,6 +690,17 @@ var World = new Class({
         }
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Physics.Impact.World#checkBodies
+     * @since 3.0.0
+     *
+     * @param {[type]} bodyA - [description]
+     * @param {[type]} bodyB - [description]
+     *
+     * @return {[type]} [description]
+     */
     checkBodies: function (bodyA, bodyB)
     {
         //  2 fixed bodies won't do anything
@@ -466,6 +730,16 @@ var World = new Class({
     //  Helpers //
     // ////////////
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Physics.Impact.World#setCollidesNever
+     * @since 3.0.0
+     *
+     * @param {[type]} bodies - [description]
+     *
+     * @return {[type]} [description]
+     */
     setCollidesNever: function (bodies)
     {
         for (var i = 0; i < bodies.length; i++)
@@ -476,6 +750,16 @@ var World = new Class({
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Physics.Impact.World#setLite
+     * @since 3.0.0
+     *
+     * @param {[type]} bodies - [description]
+     *
+     * @return {[type]} [description]
+     */
     setLite: function (bodies)
     {
         for (var i = 0; i < bodies.length; i++)
@@ -486,6 +770,16 @@ var World = new Class({
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Physics.Impact.World#setPassive
+     * @since 3.0.0
+     *
+     * @param {[type]} bodies - [description]
+     *
+     * @return {[type]} [description]
+     */
     setPassive: function (bodies)
     {
         for (var i = 0; i < bodies.length; i++)
@@ -496,6 +790,16 @@ var World = new Class({
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Physics.Impact.World#setActive
+     * @since 3.0.0
+     *
+     * @param {[type]} bodies - [description]
+     *
+     * @return {[type]} [description]
+     */
     setActive: function (bodies)
     {
         for (var i = 0; i < bodies.length; i++)
@@ -506,6 +810,16 @@ var World = new Class({
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Physics.Impact.World#setFixed
+     * @since 3.0.0
+     *
+     * @param {[type]} bodies - [description]
+     *
+     * @return {[type]} [description]
+     */
     setFixed: function (bodies)
     {
         for (var i = 0; i < bodies.length; i++)
@@ -516,6 +830,16 @@ var World = new Class({
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Physics.Impact.World#setTypeNone
+     * @since 3.0.0
+     *
+     * @param {[type]} bodies - [description]
+     *
+     * @return {[type]} [description]
+     */
     setTypeNone: function (bodies)
     {
         for (var i = 0; i < bodies.length; i++)
@@ -526,6 +850,16 @@ var World = new Class({
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Physics.Impact.World#setTypeA
+     * @since 3.0.0
+     *
+     * @param {[type]} bodies - [description]
+     *
+     * @return {[type]} [description]
+     */
     setTypeA: function (bodies)
     {
         for (var i = 0; i < bodies.length; i++)
@@ -536,6 +870,16 @@ var World = new Class({
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Physics.Impact.World#setTypeB
+     * @since 3.0.0
+     *
+     * @param {[type]} bodies - [description]
+     *
+     * @return {[type]} [description]
+     */
     setTypeB: function (bodies)
     {
         for (var i = 0; i < bodies.length; i++)
@@ -546,6 +890,16 @@ var World = new Class({
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Physics.Impact.World#setAvsB
+     * @since 3.0.0
+     *
+     * @param {[type]} bodies - [description]
+     *
+     * @return {[type]} [description]
+     */
     setAvsB: function (bodies)
     {
         for (var i = 0; i < bodies.length; i++)
@@ -557,6 +911,16 @@ var World = new Class({
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Physics.Impact.World#setBvsA
+     * @since 3.0.0
+     *
+     * @param {[type]} bodies - [description]
+     *
+     * @return {[type]} [description]
+     */
     setBvsA: function (bodies)
     {
         for (var i = 0; i < bodies.length; i++)
@@ -568,6 +932,16 @@ var World = new Class({
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Physics.Impact.World#setCheckAgainstNone
+     * @since 3.0.0
+     *
+     * @param {[type]} bodies - [description]
+     *
+     * @return {[type]} [description]
+     */
     setCheckAgainstNone: function (bodies)
     {
         for (var i = 0; i < bodies.length; i++)
@@ -578,6 +952,16 @@ var World = new Class({
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Physics.Impact.World#setCheckAgainstA
+     * @since 3.0.0
+     *
+     * @param {[type]} bodies - [description]
+     *
+     * @return {[type]} [description]
+     */
     setCheckAgainstA: function (bodies)
     {
         for (var i = 0; i < bodies.length; i++)
@@ -588,6 +972,16 @@ var World = new Class({
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Physics.Impact.World#setCheckAgainstB
+     * @since 3.0.0
+     *
+     * @param {[type]} bodies - [description]
+     *
+     * @return {[type]} [description]
+     */
     setCheckAgainstB: function (bodies)
     {
         for (var i = 0; i < bodies.length; i++)
@@ -598,11 +992,23 @@ var World = new Class({
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Physics.Impact.World#shutdown
+     * @since 3.0.0
+     */
     shutdown: function ()
     {
         this.removeAllListeners();
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Physics.Impact.World#destroy
+     * @since 3.0.0
+     */
     destroy: function ()
     {
         this.removeAllListeners();

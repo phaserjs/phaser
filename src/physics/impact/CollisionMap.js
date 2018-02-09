@@ -1,8 +1,18 @@
-//  Phaser.Physics.Impact.CollisionMap
-
 var Class = require('../../utils/Class');
 var DefaultDefs = require('./DefaultDefs');
 
+/**
+ * @classdesc
+ * [description]
+ *
+ * @class CollisionMap
+ * @memberOf Phaser.Physics.Impact
+ * @constructor
+ * @since 3.0.0
+ *
+ * @param {integer} [tilesize=32] - [description]
+ * @param {array} data - [description]
+ */
 var CollisionMap = new Class({
 
     initialize:
@@ -11,18 +21,78 @@ var CollisionMap = new Class({
     {
         if (tilesize === undefined) { tilesize = 32; }
 
+        /**
+         * [description]
+         *
+         * @name Phaser.Physics.Impact.CollisionMap#tilesize
+         * @type {integer}
+         * @default 32
+         * @since 3.0.0
+         */
         this.tilesize = tilesize;
 
+        /**
+         * [description]
+         *
+         * @name Phaser.Physics.Impact.CollisionMap#data
+         * @type {array}
+         * @since 3.0.0
+         */
         this.data = (Array.isArray(data)) ? data : [];
 
+        /**
+         * [description]
+         *
+         * @name Phaser.Physics.Impact.CollisionMap#width
+         * @type {number}
+         * @since 3.0.0
+         */
         this.width = (Array.isArray(data)) ? data[0].length : 0;
+
+        /**
+         * [description]
+         *
+         * @name Phaser.Physics.Impact.CollisionMap#height
+         * @type {number}
+         * @since 3.0.0
+         */
         this.height = (Array.isArray(data)) ? data.length : 0;
 
+        /**
+         * [description]
+         *
+         * @name Phaser.Physics.Impact.CollisionMap#lastSlope
+         * @type {integer}
+         * @default 55
+         * @since 3.0.0
+         */
         this.lastSlope = 55;
 
+        /**
+         * [description]
+         *
+         * @name Phaser.Physics.Impact.CollisionMap#tiledef
+         * @type {object}
+         * @since 3.0.0
+         */
         this.tiledef = DefaultDefs;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Physics.Impact.CollisionMap#trace
+     * @since 3.0.0
+     *
+     * @param {number} x - [description]
+     * @param {number} y - [description]
+     * @param {number} vx - [description]
+     * @param {number} vy - [description]
+     * @param {number} objectWidth - [description]
+     * @param {number} objectHeight - [description]
+     *
+     * @return {boolean} [description]
+     */
     trace: function (x, y, vx, vy, objectWidth, objectHeight)
     {
         // Set up the trace-result
@@ -77,6 +147,23 @@ var CollisionMap = new Class({
         return res;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Physics.Impact.CollisionMap#step
+     * @since 3.0.0
+     *
+     * @param {object} res - [description]
+     * @param {number} x - [description]
+     * @param {number} y - [description]
+     * @param {number} vx - [description]
+     * @param {number} vy - [description]
+     * @param {number} width - [description]
+     * @param {number} height - [description]
+     * @param {number} rvx - [description]
+     * @param {number} rvy - [description]
+     * @param {number} step - [description]
+     */
     step: function (res, x, y, vx, vy, width, height, rvx, rvy, step)
     {
         var t = 0;
@@ -191,6 +278,25 @@ var CollisionMap = new Class({
         }
     },
     
+    /**
+     * [description]
+     *
+     * @method Phaser.Physics.Impact.CollisionMap#checkDef
+     * @since 3.0.0
+     *
+     * @param {object} res - [description]
+     * @param {number} t - [description]
+     * @param {number} x - [description]
+     * @param {number} y - [description]
+     * @param {number} vx - [description]
+     * @param {number} vy - [description]
+     * @param {number} width - [description]
+     * @param {number} height - [description]
+     * @param {number} tileX - [description]
+     * @param {number} tileY - [description]
+     *
+     * @return {boolean} [description]
+     */
     checkDef: function (res, t, x, y, vx, vy, width, height, tileX, tileY)
     {
         var def = this.tiledef[t];
