@@ -1,5 +1,18 @@
 var GetOverlapY = require('./GetOverlapY');
 
+/**
+ * [description]
+ *
+ * @function Phaser.Physics.Arcade.SeparateY
+ * @since 3.0.0
+ *
+ * @param {Phaser.Physics.Arcade.Body} body1 - [description]
+ * @param {Phaser.Physics.Arcade.Body} body2 - [description]
+ * @param {boolean} overlapOnly - [description]
+ * @param {number} bias - [description]
+ *
+ * @return {boolean} [description]
+ */
 var SeparateY = function (body1, body2, overlapOnly, bias)
 {
     var overlap = GetOverlapY(body1, body2, overlapOnly, bias);

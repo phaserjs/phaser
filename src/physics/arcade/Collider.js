@@ -1,27 +1,108 @@
-//  Phaser.Physics.Arcade.Collider
-
 var Class = require('../../utils/Class');
 
+/**
+ * @classdesc
+ * [description]
+ *
+ * @class Collider
+ * @memberOf Phaser.Physics.Arcade
+ * @constructor
+ * @since 3.0.0
+ *
+ * @param {Phaser.Physics.Arcade.World} world - [description]
+ * @param {boolean} overlapOnly - [description]
+ * @param {Phaser.Physics.Arcade.Body} object1 - The first object to check for collision.
+ * @param {Phaser.Physics.Arcade.Body} object2 - The second object to check for collision.
+ * @param {function} collideCallback - The callback to invoke when the two objects collide.
+ * @param {function} processCallback - The callback to invoke when the two objects collide. Must return a boolean.
+ * @param {object} callbackContext - The scope in which to call the callbacks.
+ */
 var Collider = new Class({
 
     initialize:
 
     function Collider (world, overlapOnly, object1, object2, collideCallback, processCallback, callbackContext)
     {
+        /**
+         * [description]
+         *
+         * @name Phaser.Physics.Arcade.Collider#world
+         * @type {Phaser.Physics.Arcade.World}
+         * @since 3.0.0
+         */
         this.world = world;
 
+        /**
+         * [description]
+         *
+         * @name Phaser.Physics.Arcade.Collider#active
+         * @type {boolean}
+         * @default true
+         * @since 3.0.0
+         */
         this.active = true;
 
+        /**
+         * [description]
+         *
+         * @name Phaser.Physics.Arcade.Collider#overlapOnly
+         * @type {boolean}
+         * @since 3.0.0
+         */
         this.overlapOnly = overlapOnly;
 
+        /**
+         * [description]
+         *
+         * @name Phaser.Physics.Arcade.Collider#object1
+         * @type {Phaser.Physics.Arcade.Body}
+         * @since 3.0.0
+         */
         this.object1 = object1;
+
+        /**
+         * [description]
+         *
+         * @name Phaser.Physics.Arcade.Collider#object2
+         * @type {Phaser.Physics.Arcade.Body}
+         * @since 3.0.0
+         */
         this.object2 = object2;
 
+        /**
+         * [description]
+         *
+         * @name Phaser.Physics.Arcade.Collider#collideCallback
+         * @type {function}
+         * @since 3.0.0
+         */
         this.collideCallback = collideCallback;
+
+        /**
+         * [description]
+         *
+         * @name Phaser.Physics.Arcade.Collider#processCallback
+         * @type {function}
+         * @since 3.0.0
+         */
         this.processCallback = processCallback;
+
+        /**
+         * [description]
+         *
+         * @name Phaser.Physics.Arcade.Collider#callbackContext
+         * @type {object}
+         * @since 3.0.0
+         */
         this.callbackContext = callbackContext;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Physics.Arcade.Collider#update
+     * @since 3.0.0
+     */
     update: function ()
     {
         this.world.collideObjects(
@@ -34,6 +115,12 @@ var Collider = new Class({
         );
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Physics.Arcade.Collider#destroy
+     * @since 3.0.0
+     */
     destroy: function ()
     {
         this.world.removeCollider(this);

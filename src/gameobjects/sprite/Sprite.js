@@ -8,7 +8,7 @@ var SpriteRender = require('./SpriteRender');
  * A Sprite Game Object.
  *
  * A Sprite Game Object is used for the display of both static and animated images in your game.
- * Sprites can have inpt events and physics bodies. They can also be tweened, tinted, scrolled
+ * Sprites can have input events and physics bodies. They can also be tweened, tinted, scrolled
  * and animated.
  *
  * The main difference between a Sprite and an Image Game Object is that you cannot animate Images.

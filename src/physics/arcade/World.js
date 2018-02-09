@@ -211,7 +211,7 @@ var World = new Class({
     {
         var graphic = this.scene.sys.add.graphics({ x: 0, y: 0 });
 
-        graphic.setZ(Number.MAX_VALUE);
+        graphic.setDepth(Number.MAX_VALUE);
 
         this.debugGraphic = graphic;
 

@@ -1,15 +1,19 @@
 var ProcessTileSeparationY = require('./ProcessTileSeparationY');
 
 /**
-* Check the body against the given tile on the Y axis.
-*
-* @private
-* @method Phaser.Physics.Arcade#tileCheckY
-* @param {Phaser.Physics.Arcade.Body} body - The Body object to separate.
-* @param {Phaser.Tile} tile - The tile to check.
-* @param {Phaser.TilemapLayer} tilemapLayer - The tilemapLayer to collide against.
-* @return {number} The amount of separation that occurred.
-*/
+ * Check the body against the given tile on the Y axis.
+ *
+ * @function Phaser.Physics.Arcade.Tilemap.TileCheckY
+ * @since 3.0.0
+ *
+ * @param {Phaser.Physics.Arcade.Body} body - The Body object to separate.
+ * @param {Phaser.Tilemaps.Tile} tile - The tile to check.
+ * @param {number} tileTop - [description]
+ * @param {number} tileBottom - [description]
+ * @param {number} tileBias - [description]
+ *
+ * @return {number} The amount of separation that occurred.
+ */
 var TileCheckY = function (body, tile, tileTop, tileBottom, tileBias)
 {
     var oy = 0;

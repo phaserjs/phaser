@@ -5,9 +5,16 @@ var TileIntersectsBody = require('./TileIntersectsBody');
 /**
  * The core separation function to separate a physics body and a tile.
  *
+ * @function Phaser.Physics.Arcade.Tilemap.SeparateTile
+ * @since 3.0.0
+ *
+ * @param {number} i - [description]
  * @param {Phaser.Physics.Arcade.Body} body - The Body object to separate.
- * @param {Phaser.Tile} tile - The tile to collide against.
- * @param {Phaser.TilemapLayer} tilemapLayer - The tilemapLayer to collide against.
+ * @param {Phaser.Tilemaps.Tile} tile - The tile to collide against.
+ * @param {Phaser.Geom.Rectangle} tileWorldRect - [description]
+ * @param {Phaser.Tilemaps.DynamicTilemapLayer|Phaser.Tilemaps.StaticTilemapLayer} tilemapLayer - The tilemapLayer to collide against.
+ * @param {number} tileBias - [description]
+ *
  * @return {boolean} Returns true if the body was separated, otherwise false.
  */
 var SeparateTile = function (i, body, tile, tileWorldRect, tilemapLayer, tileBias)

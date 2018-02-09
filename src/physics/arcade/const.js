@@ -1,54 +1,84 @@
 module.exports = {
 
     /**
-    * A constant used for the sortDirection value.
-    * Use this if you don't wish to perform any pre-collision sorting at all, or will manually sort your Groups.
-    * @constant
-    * @type {number}
-    */
-    SORT_NONE: 0,
+     * [description]
+     * 
+     * @name Phaser.Physics.Arcade.DYNAMIC_BODY
+     * @type {number}
+     * @since 3.0.0
+     */
+    DYNAMIC_BODY: 0,
 
     /**
-    * A constant used for the sortDirection value.
-    * Use this if your game world is wide but short and scrolls from the left to the right (i.e. Mario)
-    * @constant
-    * @type {number}
-    */
-    LEFT_RIGHT: 1,
+     * [description]
+     * 
+     * @name Phaser.Physics.Arcade.STATIC_BODY
+     * @type {number}
+     * @since 3.0.0
+     */
+    STATIC_BODY: 1,
 
     /**
-    * A constant used for the sortDirection value.
-    * Use this if your game world is wide but short and scrolls from the right to the left (i.e. Mario backwards)
-    * @constant
-    * @type {number}
-    */
-    RIGHT_LEFT: 2,
+     * [description]
+     * 
+     * @name Phaser.Physics.Arcade.GROUP
+     * @type {number}
+     * @since 3.0.0
+     */
+    GROUP: 2,
 
     /**
-    * A constant used for the sortDirection value.
-    * Use this if your game world is narrow but tall and scrolls from the top to the bottom (i.e. Dig Dug)
-    * @constant
-    * @type {number}
-    */
-    TOP_BOTTOM: 3,
+     * [description]
+     * 
+     * @name Phaser.Physics.Arcade.TILEMAPLAYER
+     * @type {number}
+     * @since 3.0.0
+     */
+    TILEMAPLAYER: 3,
 
     /**
-    * A constant used for the sortDirection value.
-    * Use this if your game world is narrow but tall and scrolls from the bottom to the top (i.e. Commando or a vertically scrolling shoot-em-up)
-    * @constant
-    * @type {number}
-    */
-    BOTTOM_TOP: 4,
-
-    DYNAMIC_BODY: 5,
-    STATIC_BODY: 6,
-    GROUP: 7,
-    TILEMAPLAYER: 8,
-
+     * [description]
+     * 
+     * @name Phaser.Physics.Arcade.FACING_NONE
+     * @type {number}
+     * @since 3.0.0
+     */
     FACING_NONE: 10,
+
+    /**
+     * [description]
+     * 
+     * @name Phaser.Physics.Arcade.FACING_UP
+     * @type {number}
+     * @since 3.0.0
+     */
     FACING_UP: 11,
+
+    /**
+     * [description]
+     * 
+     * @name Phaser.Physics.Arcade.FACING_DOWN
+     * @type {number}
+     * @since 3.0.0
+     */
     FACING_DOWN: 12,
+
+    /**
+     * [description]
+     * 
+     * @name Phaser.Physics.Arcade.FACING_LEFT
+     * @type {number}
+     * @since 3.0.0
+     */
     FACING_LEFT: 13,
+
+    /**
+     * [description]
+     * 
+     * @name Phaser.Physics.Arcade.FACING_RIGHT
+     * @type {number}
+     * @since 3.0.0
+     */
     FACING_RIGHT: 14
 
 };

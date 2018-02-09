@@ -1,3 +1,16 @@
+/**
+ * [description]
+ *
+ * @function Phaser.Physics.Arcade.GetOverlapX
+ * @since 3.0.0
+ *
+ * @param {Phaser.Physics.Arcade.Body} body1 - [description]
+ * @param {Phaser.Physics.Arcade.Body} body2 - [description]
+ * @param {boolean} overlapOnly - [description]
+ * @param {number} bias - [description]
+ *
+ * @return {number} [description]
+ */
 var GetOverlapX = function (body1, body2, overlapOnly, bias)
 {
     var overlap = 0;

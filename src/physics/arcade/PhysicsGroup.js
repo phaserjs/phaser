@@ -1,11 +1,26 @@
-//  Phaser.Physics.Arcade.PhysicsGroup
-
 var ArcadeSprite = require('./ArcadeSprite');
 var Class = require('../../utils/Class');
 var CONST = require('./const');
 var GetFastValue = require('../../utils/object/GetFastValue');
 var Group = require('../../gameobjects/group/Group');
 
+/**
+ * @classdesc
+ * An Arcade Physics Group object.
+ * 
+ * All Game Objects created by this Group will automatically be dynamic Arcade Physics objects.
+ *
+ * @class Group
+ * @extends Phaser.GameObjects.Group
+ * @memberOf Phaser.Physics.Arcade
+ * @constructor
+ * @since 3.0.0
+ *
+ * @param {Phaser.Physics.Arcade.World} world - [description]
+ * @param {Phaser.Scene} scene - [description]
+ * @param {array} children - [description]
+ * @param {object} config - [description]
+ */
 var PhysicsGroup = new Class({
 
     Extends: Group,
@@ -24,6 +39,13 @@ var PhysicsGroup = new Class({
             config = {};
         }
 
+        /**
+         * [description]
+         *
+         * @name Phaser.Physics.Arcade.Group#world
+         * @type {Phaser.Physics.Arcade.World}
+         * @since 3.0.0
+         */
         this.world = world;
 
         config.createCallback = this.createCallback;
@@ -31,8 +53,22 @@ var PhysicsGroup = new Class({
 
         config.classType = GetFastValue(config, 'classType', ArcadeSprite);
 
+        /**
+         * [description]
+         *
+         * @name Phaser.Physics.Arcade.Group#physicsType
+         * @type {integer}
+         * @since 3.0.0
+         */
         this.physicsType = CONST.DYNAMIC_BODY;
 
+        /**
+         * [description]
+         *
+         * @name Phaser.Physics.Arcade.Group#defaults
+         * @type {object}
+         * @since 3.0.0
+         */
         this.defaults = {
             setCollideWorldBounds: GetFastValue(config, 'collideWorldBounds', false),
             setAccelerationX: GetFastValue(config, 'accelerationX', 0),
@@ -57,6 +93,14 @@ var PhysicsGroup = new Class({
         Group.call(this, scene, children, config);
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Physics.Arcade.Group#createCallback
+     * @since 3.0.0
+     *
+     * @param {Phaser.GameObjects.GameObject} child - [description]
+     */
     createCallback: function (child)
     {
         if (!child.body)
@@ -72,6 +116,14 @@ var PhysicsGroup = new Class({
         }
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Physics.Arcade.Group#removeCallback
+     * @since 3.0.0
+     *
+     * @param {Phaser.GameObjects.GameObject} child - [description]
+     */
     removeCallback: function (child)
     {
         if (child.body)
@@ -80,6 +132,18 @@ var PhysicsGroup = new Class({
         }
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Physics.Arcade.Group#setVelocity
+     * @since 3.0.0
+     *
+     * @param {number} x - [description]
+     * @param {number} y - [description]
+     * @param {number} step - [description]
+     *
+     * @return {Phaser.Physics.Arcade.Group} This Physics Group object.
+     */
     setVelocity: function (x, y, step)
     {
         if (step === undefined) { step = 0; }
@@ -94,6 +158,17 @@ var PhysicsGroup = new Class({
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Physics.Arcade.Group#setVelocityX
+     * @since 3.0.0
+     *
+     * @param {number} value - [description]
+     * @param {number} step - [description]
+     *
+     * @return {Phaser.Physics.Arcade.Group} This Physics Group object.
+     */
     setVelocityX: function (value, step)
     {
         if (step === undefined) { step = 0; }
@@ -108,6 +183,17 @@ var PhysicsGroup = new Class({
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Physics.Arcade.Group#setVelocityY
+     * @since 3.0.0
+     *
+     * @param {number} value - [description]
+     * @param {number} step - [description]
+     *
+     * @return {Phaser.Physics.Arcade.Group} This Physics Group object.
+     */
     setVelocityY: function (value, step)
     {
         if (step === undefined) { step = 0; }

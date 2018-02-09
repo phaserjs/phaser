@@ -1,3 +1,14 @@
+/**
+ * [description]
+ *
+ * @function Phaser.Physics.Arcade.Tilemap.TileIntersectsBody
+ * @since 3.0.0
+ *
+ * @param {[type]} tileWorldRect - [description]
+ * @param {[type]} body - [description]
+ *
+ * @return {boolean} [description]
+ */
 var TileIntersectsBody = function (tileWorldRect, body)
 {
     // Currently, all bodies are treated as rectangles when colliding with a Tile. Eventually, this
