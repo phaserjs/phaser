@@ -1,6 +1,6 @@
-var MapData = require('../mapdata/MapData');
-var LayerData = require('../mapdata/LayerData');
 var Formats = require('../Formats');
+var LayerData = require('../mapdata/LayerData');
+var MapData = require('../mapdata/MapData');
 var Tile = require('../Tile');
 
 /**
