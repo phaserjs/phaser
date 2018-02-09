@@ -1,4 +1,14 @@
-
+/**
+ * [description]
+ *
+ * @function Phaser.Physics.Impact.SeperateY
+ * @since 3.0.0
+ *
+ * @param {Phaser.Physics.Impact.World} world - [description]
+ * @param {Phaser.Physics.Impact.Body} top - [description]
+ * @param {Phaser.Physics.Impact.Body} bottom - [description]
+ * @param {Phaser.Physics.Impact.Body} [weak] - [description]
+ */
 var SeperateY = function (world, top, bottom, weak)
 {
     var nudge = (top.pos.y + top.size.y - bottom.pos.y);

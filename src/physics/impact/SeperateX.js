@@ -1,4 +1,14 @@
-
+/**
+ * [description]
+ *
+ * @function Phaser.Physics.Impact.SeperateX
+ * @since 3.0.0
+ *
+ * @param {Phaser.Physics.Impact.World} world - [description]
+ * @param {Phaser.Physics.Impact.Body} left - [description]
+ * @param {Phaser.Physics.Impact.Body} right - [description]
+ * @param {Phaser.Physics.Impact.Body} [weak] - [description]
+ */
 var SeperateX = function (world, left, right, weak)
 {
     var nudge = left.pos.x + left.size.x - right.pos.x;
