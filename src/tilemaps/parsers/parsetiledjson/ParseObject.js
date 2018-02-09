@@ -1,4 +1,3 @@
-
 var Pick = require('./Pick');
 var ParseGID = require('./ParseGID');
 
