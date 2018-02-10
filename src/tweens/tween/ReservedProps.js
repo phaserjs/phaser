@@ -5,6 +5,8 @@
 //  duration: The duration of the tween
 //  ease: The ease function used by the tween
 //  easeParams: The parameters to go with the ease function (if any)
+//  flipX: flip X the GameObject on tween end
+//  flipY: flip Y the GameObject on tween end//  hold: The time the tween will pause before running a yoyo
 //  hold: The time the tween will pause before running a yoyo
 //  loop: The time the tween will pause before starting either a yoyo or returning to the start for a repeat
 //  loopDelay: 
