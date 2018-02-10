@@ -3,87 +3,268 @@ var GameObjectCreator = require('../../gameobjects/GameObjectCreator');
 var GameObjectFactory = require('../../gameobjects/GameObjectFactory');
 var TWEEN_CONST = require('./const');
 
-//  Phaser.Tweens.Tween
-
+/**
+ * @classdesc
+ * [description]
+ *
+ * @class Tween
+ * @memberOf Phaser.Tweens
+ * @constructor
+ * @since 3.0.0
+ *
+ * @param {Phaser.Tweens.TweenManager|Phaser.Tweens.Timeline} parent - [description]
+ * @param {Phaser.Tweens.TweenData[]} data - [description]
+ * @param {array} targets - [description]
+ */
 var Tween = new Class({
 
     initialize:
 
     function Tween (parent, data, targets)
     {
+        /**
+         * [description]
+         *
+         * @name Phaser.Tweens.Tween#parent
+         * @type {Phaser.Tweens.TweenManager|Phaser.Tweens.Timeline}
+         * @since 3.0.0
+         */
         this.parent = parent;
 
-        //  Is the parent of this Tween a Timeline?
+        /**
+         * Is the parent of this Tween a Timeline?
+         *
+         * @name Phaser.Tweens.Tween#parentIsTimeline
+         * @type {boolean}
+         * @since 3.0.0
+         */
         this.parentIsTimeline = parent.hasOwnProperty('isTimeline');
 
-        //  An array of TweenData objects, each containing a unique property and target being tweened.
+        /**
+         * An array of TweenData objects, each containing a unique property and target being tweened.
+         *
+         * @name Phaser.Tweens.Tween#data
+         * @type {Phaser.Tweens.TweenData[]}
+         * @since 3.0.0
+         */
         this.data = data;
 
-        //  data array doesn't change, so we can cache the length
+        /**
+         * data array doesn't change, so we can cache the length
+         *
+         * @name Phaser.Tweens.Tween#totalData
+         * @type {integer}
+         * @since 3.0.0
+         */
         this.totalData = data.length;
 
-        //  An array of references to the target/s this Tween is operating on
+        /**
+         * An array of references to the target/s this Tween is operating on
+         *
+         * @name Phaser.Tweens.Tween#targets
+         * @type {object[]}
+         * @since 3.0.0
+         */
         this.targets = targets;
 
-        //  Cached target total (not necessarily the same as the data total)
+        /**
+         * Cached target total (not necessarily the same as the data total)
+         *
+         * @name Phaser.Tweens.Tween#totalTargets
+         * @type {integer}
+         * @since 3.0.0
+         */
         this.totalTargets = targets.length;
 
-        //  If true then duration, delay, etc values are all frame totals
+        /**
+         * If true then duration, delay, etc values are all frame totals.
+         *
+         * @name Phaser.Tweens.Tween#useFrames
+         * @type {boolean}
+         * @default false
+         * @since 3.0.0
+         */
         this.useFrames = false;
 
-        //  Scales the time applied to this Tween. A value of 1 runs in real-time. A value of 0.5 runs 50% slower, and so on.
-        //  Value isn't used when calculating total duration of the tween, it's a run-time delta adjustment only.
+        /**
+         * Scales the time applied to this Tween. A value of 1 runs in real-time. A value of 0.5 runs 50% slower, and so on.
+         * Value isn't used when calculating total duration of the tween, it's a run-time delta adjustment only.
+         *
+         * @name Phaser.Tweens.Tween#timeScale
+         * @type {number}
+         * @default 1
+         * @since 3.0.0
+         */
         this.timeScale = 1;
 
-        //  Loop this tween? Can be -1 for an infinite loop, or an integer.
-        //  When enabled it will play through ALL TweenDatas again (use TweenData.repeat to loop a single TD)
+        /**
+         * Loop this tween? Can be -1 for an infinite loop, or an integer.
+         * When enabled it will play through ALL TweenDatas again (use TweenData.repeat to loop a single TD)
+         *
+         * @name Phaser.Tweens.Tween#loop
+         * @type {number}
+         * @default 0
+         * @since 3.0.0
+         */
         this.loop = 0;
 
-        //  Time in ms/frames before the tween loops.
+        /**
+         * Time in ms/frames before the tween loops.
+         *
+         * @name Phaser.Tweens.Tween#loopDelay
+         * @type {number}
+         * @default 0
+         * @since 3.0.0
+         */
         this.loopDelay = 0;
 
-        //  How many loops are left to run?
+        /**
+         * How many loops are left to run?
+         *
+         * @name Phaser.Tweens.Tween#loopCounter
+         * @type {number}
+         * @default 0
+         * @since 3.0.0
+         */
         this.loopCounter = 0;
 
-        //  Time in ms/frames before the 'onComplete' event fires. This never fires if loop = -1 (as it never completes)
+        /**
+         * Time in ms/frames before the 'onComplete' event fires. This never fires if loop = -1 (as it never completes)
+         *
+         * @name Phaser.Tweens.Tween#completeDelay
+         * @type {number}
+         * @default 0
+         * @since 3.0.0
+         */
         this.completeDelay = 0;
 
-        //  Countdown timer (used by timeline offset, loopDelay and completeDelay)
+        /**
+         * Countdown timer (used by timeline offset, loopDelay and completeDelay)
+         *
+         * @name Phaser.Tweens.Tween#countdown
+         * @type {number}
+         * @default 0
+         * @since 3.0.0
+         */
         this.countdown = 0;
 
-        //  Set only if this Tween is part of a Timeline.
+        /**
+         * Set only if this Tween is part of a Timeline.
+         *
+         * @name Phaser.Tweens.Tween#offset
+         * @type {number}
+         * @default 0
+         * @since 3.0.0
+         */
         this.offset = 0;
 
-        //  Set only if this Tween is part of a Timeline. The calculated offset amount.
+        /**
+         * Set only if this Tween is part of a Timeline. The calculated offset amount.
+         *
+         * @name Phaser.Tweens.Tween#calculatedOffset
+         * @type {number}
+         * @default 0
+         * @since 3.0.0
+         */
         this.calculatedOffset = 0;
 
-        //  The current state of the tween
+        /**
+         * The current state of the tween
+         *
+         * @name Phaser.Tweens.Tween#state
+         * @type {integer}
+         * @since 3.0.0
+         */
         this.state = TWEEN_CONST.PENDING_ADD;
 
-        //  The state of the tween when it was paused (used by Resume)
+        /**
+         * The state of the tween when it was paused (used by Resume)
+         *
+         * @name Phaser.Tweens.Tween#_pausedState
+         * @type {integer}
+         * @private
+         * @since 3.0.0
+         */
         this._pausedState = TWEEN_CONST.PENDING_ADD;
 
-        //  Does the Tween start off paused? (if so it needs to be started with Tween.play)
+        /**
+         * Does the Tween start off paused? (if so it needs to be started with Tween.play)
+         *
+         * @name Phaser.Tweens.Tween#paused
+         * @type {boolean}
+         * @default false
+         * @since 3.0.0
+         */
         this.paused = false;
 
-        //  Elapsed time in ms/frames of this run through the Tween.
+        /**
+         * Elapsed time in ms/frames of this run through the Tween.
+         *
+         * @name Phaser.Tweens.Tween#elapsed
+         * @type {number}
+         * @default 0
+         * @since 3.0.0
+         */
         this.elapsed = 0;
 
-        //  Total elapsed time in ms/frames of the entire Tween, including looping.
+        /**
+         * Total elapsed time in ms/frames of the entire Tween, including looping.
+         *
+         * @name Phaser.Tweens.Tween#totalElapsed
+         * @type {number}
+         * @default 0
+         * @since 3.0.0
+         */
         this.totalElapsed = 0;
 
-        //  Time in ms/frames for the whole Tween to play through once, excluding loop amounts and loop delays
+        /**
+         * Time in ms/frames for the whole Tween to play through once, excluding loop amounts and loop delays.
+         *
+         * @name Phaser.Tweens.Tween#duration
+         * @type {number}
+         * @default 0
+         * @since 3.0.0
+         */
         this.duration = 0;
 
-        //  Value between 0 and 1. The amount through the Tween, excluding loops.
+        /**
+         * Value between 0 and 1. The amount through the Tween, excluding loops.
+         *
+         * @name Phaser.Tweens.Tween#progress
+         * @type {number}
+         * @default 0
+         * @since 3.0.0
+         */
         this.progress = 0;
 
-        //  Time in ms/frames for the Tween to complete (including looping)
+        /**
+         * Time in ms/frames for the Tween to complete (including looping)
+         *
+         * @name Phaser.Tweens.Tween#totalDuration
+         * @type {number}
+         * @default 0
+         * @since 3.0.0
+         */
         this.totalDuration = 0;
 
-        //  Value between 0 and 1. The amount through the entire Tween, including looping.
+        /**
+         * Value between 0 and 1. The amount through the entire Tween, including looping.
+         *
+         * @name Phaser.Tweens.Tween#totalProgress
+         * @type {number}
+         * @default 0
+         * @since 3.0.0
+         */
         this.totalProgress = 0;
 
+        /**
+         * An object containing the various Tween callback references.
+         *
+         * @name Phaser.Tweens.Tween#callbacks
+         * @type {object}
+         * @default 0
+         * @since 3.0.0
+         */
         this.callbacks = {
             onComplete: null,
             onLoop: null,
@@ -96,11 +277,29 @@ var Tween = new Class({
         this.callbackScope;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Tweens.Tween#getValue
+     * @since 3.0.0
+     *
+     * @return {[type]} [description]
+     */
     getValue: function ()
     {
         return this.data[0].current;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Tweens.Tween#setTimeScale
+     * @since 3.0.0
+     *
+     * @param {number} value - [description]
+     *
+     * @return {Phaser.Tweens.Tween} This Tween object.
+     */
     setTimeScale: function (value)
     {
         this.timeScale = value;
@@ -108,26 +307,72 @@ var Tween = new Class({
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Tweens.Tween#getTimeScale
+     * @since 3.0.0
+     *
+     * @return {number} [description]
+     */
     getTimeScale: function ()
     {
         return this.timeScale;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Tweens.Tween#isPlaying
+     * @since 3.0.0
+     *
+     * @return {boolean} [description]
+     */
     isPlaying: function ()
     {
         return (this.state === TWEEN_CONST.ACTIVE);
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Tweens.Tween#isPaused
+     * @since 3.0.0
+     *
+     * @return {boolean} [description]
+     */
     isPaused: function ()
     {
         return (this.state === TWEEN_CONST.PAUSED);
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Tweens.Tween#hasTarget
+     * @since 3.0.0
+     *
+     * @param {object} target - [description]
+     *
+     * @return {boolean} [description]
+     */
     hasTarget: function (target)
     {
         return (this.targets.indexOf(target) !== -1);
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Tweens.Tween#updateTo
+     * @since 3.0.0
+     *
+     * @param {string} key - [description]
+     * @param {any} value - [description]
+     * @param {boolean} startToCurrent - [description]
+     *
+     * @return {Phaser.Tweens.Tween} This Tween object.
+     */
     updateTo: function (key, value, startToCurrent)
     {
         for (var i = 0; i < this.totalData; i++)
@@ -150,6 +395,12 @@ var Tween = new Class({
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Tweens.Tween#restart
+     * @since 3.0.0
+     */
     restart: function ()
     {
         this.stop();
@@ -324,7 +575,7 @@ var Tween = new Class({
      * @method Phaser.Tweens.Tween#pause
      * @since 3.0.0
      *
-     * @return {Phaser.Tweens.Tween} [description]
+     * @return {Phaser.Tweens.Tween} This Tween object.
      */
     pause: function ()
     {
@@ -338,6 +589,8 @@ var Tween = new Class({
         this._pausedState = this.state;
 
         this.state = TWEEN_CONST.PAUSED;
+
+        this.emit('pause', this);
 
         return this;
     },
@@ -457,7 +710,7 @@ var Tween = new Class({
      * @method Phaser.Tweens.Tween#resume
      * @since 3.0.0
      *
-     * @return {Phaser.Tweens.Tween} [description]
+     * @return {Phaser.Tweens.Tween} This Tween object.
      */
     resume: function ()
     {
@@ -467,6 +720,8 @@ var Tween = new Class({
 
             this.state = this._pausedState;
         }
+
+        this.emit('resume', this);
 
         return this;
     },
@@ -550,10 +805,10 @@ var Tween = new Class({
      *
      * @param {string} type - [description]
      * @param {function} callback - [description]
-     * @param {array} params - [description]
-     * @param {object} scope - [description]
+     * @param {array} [params] - [description]
+     * @param {object} [scope] - [description]
      *
-     * @return {Phaser.Tweens.Tween} [description]
+     * @return {Phaser.Tweens.Tween} This Tween object.
      */
     setCallback: function (type, callback, params, scope)
     {
@@ -567,6 +822,8 @@ var Tween = new Class({
      *
      * @method Phaser.Tweens.Tween#stop
      * @since 3.0.0
+     *
+     * @param {float} [resetTo] - A value between 0 and 1.
      */
     stop: function (resetTo)
     {
@@ -585,7 +842,7 @@ var Tween = new Class({
      * @since 3.0.0
      *
      * @param {number} timestamp - [description]
-     * @param {float} delta - [description]
+     * @param {number} delta - [description]
      *
      * @return {boolean} Returns `true` if this Tween has finished and should be removed from the Tween Manager, otherwise returns `false`.
      */
@@ -684,6 +941,18 @@ var Tween = new Class({
         return (this.state === TWEEN_CONST.PENDING_REMOVE);
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Tweens.Tween#setStateFromEnd
+     * @since 3.0.0
+     *
+     * @param {Phaser.Tweens.Tween} tween - [description]
+     * @param {Phaser.Tweens.TweenData} tweenData - [description]
+     * @param {number} diff - [description]
+     *
+     * @return {integer} The state of this Tween.
+     */
     setStateFromEnd: function (tween, tweenData, diff)
     {
         if (tweenData.yoyo)
@@ -717,8 +986,6 @@ var Tween = new Class({
                 onYoyo.func.apply(onYoyo.scope, onYoyo.params);
             }
 
-            // console.log('SetStateFromEnd-a', tweenData.start, tweenData.end);
-
             tweenData.start = tweenData.getStartValue(tweenData.target, tweenData.key, tweenData.start);
 
             return TWEEN_CONST.PLAYING_BACKWARD;
@@ -734,9 +1001,6 @@ var Tween = new Class({
             tweenData.elapsed = diff;
             tweenData.progress = diff / tweenData.duration;
 
-            // tweenData.elapsed = 0;
-            // tweenData.progress = 0;
-
             if (tweenData.flipX)
             {
                 tweenData.target.toggleFlipX();
@@ -756,8 +1020,6 @@ var Tween = new Class({
 
                 onRepeat.func.apply(onRepeat.scope, onRepeat.params);
             }
-
-            // console.log('SetStateFromEnd-b', tweenData.start, tweenData.end);
 
             tweenData.start = tweenData.getStartValue(tweenData.target, tweenData.key, tweenData.start);
 
@@ -783,7 +1045,18 @@ var Tween = new Class({
         return TWEEN_CONST.COMPLETE;
     },
 
-    //  Was PLAYING_BACKWARD and has hit the start
+    /**
+     * Was PLAYING_BACKWARD and has hit the start.
+     *
+     * @method Phaser.Tweens.Tween#setStateFromStart
+     * @since 3.0.0
+     *
+     * @param {Phaser.Tweens.Tween} tween - [description]
+     * @param {Phaser.Tweens.TweenData} tweenData - [description]
+     * @param {number} diff - [description]
+     *
+     * @return {integer} The state of this Tween.
+     */
     setStateFromStart: function (tween, tweenData, diff)
     {
         if (tweenData.repeatCounter > 0)
@@ -793,9 +1066,6 @@ var Tween = new Class({
             //  Account for any extra time we got from the previous frame
             tweenData.elapsed = diff;
             tweenData.progress = diff / tweenData.duration;
-
-            // tweenData.elapsed = 0;
-            // tweenData.progress = 0;
 
             if (tweenData.flipX)
             {
@@ -816,8 +1086,6 @@ var Tween = new Class({
 
                 onRepeat.func.apply(onRepeat.scope, onRepeat.params);
             }
-
-            // console.log('SetStateFromStart', tweenData.start, tweenData.end);
 
             tweenData.end = tweenData.getEndValue(tweenData.target, tweenData.key, tweenData.start);
 
@@ -841,7 +1109,19 @@ var Tween = new Class({
         return TWEEN_CONST.COMPLETE;
     },
 
-    //  Delta is either a value in ms, or 1 if Tween.useFrames is true
+    //  
+    /**
+     * [description]
+     *
+     * @method Phaser.Tweens.Tween#updateTweenData
+     * @since 3.0.0
+     *
+     * @param {Phaser.Tweens.Tween} tween - [description]
+     * @param {Phaser.Tweens.TweenData} tweenData - [description]
+     * @param {number} delta - Either a value in ms, or 1 if Tween.useFrames is true
+     *
+     * @return {boolean} [description]
+     */
     updateTweenData: function (tween, tweenData, delta)
     {
         switch (tweenData.state)
@@ -981,6 +1261,23 @@ Tween.TYPES = [
     'onYoyo'
 ];
 
+/**
+ * Creates a new Tween object.
+ *
+ * Note: This method will only be available Tweens have been built into Phaser.
+ *
+ * @method Phaser.GameObjects.GameObjectFactory#tween
+ * @since 3.0.0
+ *
+ * @param {object} config - The Tween configuration.
+ * 
+ * @return {Phaser.Tweens.Tween} The Tween that was created.
+ */
+GameObjectFactory.register('tween', function (config)
+{
+    return this.scene.sys.tweens.add(config);
+});
+
 //  When registering a factory function 'this' refers to the GameObjectFactory context.
 //
 //  There are several properties available to use:
@@ -989,16 +1286,23 @@ Tween.TYPES = [
 //  this.displayList - a reference to the Display List the Scene owns
 //  this.updateList - a reference to the Update List the Scene owns
 
-GameObjectFactory.register('tween', function (config)
-{
-    return this.scene.sys.tweens.add(config);
-});
-
-//  When registering a factory function 'this' refers to the GameObjectCreator context.
-
+/**
+ * Creates a new Tween object and returns it.
+ *
+ * Note: This method will only be available if Tweens have been built into Phaser.
+ *
+ * @method Phaser.GameObjects.GameObjectCreator#tween
+ * @since 3.0.0
+ *
+ * @param {object} config - The Tween configuration.
+ * 
+ * @return {Phaser.Tweens.Tween} The Tween that was created.
+ */
 GameObjectCreator.register('tween', function (config)
 {
     return this.scene.sys.tweens.create(config);
 });
+
+//  When registering a factory function 'this' refers to the GameObjectCreator context.
 
 module.exports = Tween;

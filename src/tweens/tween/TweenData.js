@@ -1,5 +1,25 @@
-//  Phaser.Tweens.TweenData
-
+/**
+ * [description]
+ *
+ * @function Phaser.Tweens.TweenData
+ * @since 3.0.0
+ *
+ * @param {object} target - [description]
+ * @param {string} key - [description]
+ * @param {function} getEnd - [description]
+ * @param {function} getStart - [description]
+ * @param {function} ease - [description]
+ * @param {number} delay - [description]
+ * @param {number} duration - [description]
+ * @param {boolean} yoyo - [description]
+ * @param {number} hold - [description]
+ * @param {number} repeat - [description]
+ * @param {number} repeatDelay - [description]
+ * @param {boolean} flipX - [description]
+ * @param {boolean} flipY - [description]
+ *
+ * @return {Phaser.Tweens.TweenData} [description]
+ */
 var TweenData = function (target, key, getEnd, getStart, ease, delay, duration, yoyo, hold, repeat, repeatDelay, flipX, flipY)
 {
     return {
