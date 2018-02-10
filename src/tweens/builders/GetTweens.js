@@ -1,5 +1,15 @@
 var GetValue = require('../../utils/object/GetValue');
 
+/**
+ * [description]
+ *
+ * @function Phaser.Tweens.Builders.GetTweens
+ * @since 3.0.0
+ *
+ * @param {object} config - [description]
+ *
+ * @return {array} [description]
+ */
 var GetTweens = function (config)
 {
     var tweens = GetValue(config, 'tweens', null);

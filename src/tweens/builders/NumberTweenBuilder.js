@@ -8,8 +8,18 @@ var GetValueOp = require('./GetValueOp');
 var Tween = require('../tween/Tween');
 var TweenData = require('../tween/TweenData');
 
-//  Phaser.Tweens.NumberTweenBuilder
-
+/**
+ * [description]
+ *
+ * @function Phaser.Tweens.Builders.NumberTweenBuilder
+ * @since 3.0.0
+ *
+ * @param {Phaser.Tweens.TweenManager|Phaser.Tweens.Timeline} parent - [description]
+ * @param {object} config - [description]
+ * @param {Phaser.Tweens.Tween~ConfigDefaults} defaults - [description]
+ *
+ * @return {Phaser.Tweens.Tween} [description]
+ */
 var NumberTweenBuilder = function (parent, config, defaults)
 {
     if (defaults === undefined)

@@ -11,6 +11,7 @@ var EventEmitter = require('eventemitter3');
  *
  * @class GameObject
  * @memberOf Phaser.GameObjects
+ * @extends EventEmitter
  * @constructor
  * @since 3.0.0
  *

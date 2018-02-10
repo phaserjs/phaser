@@ -1,17 +1,26 @@
 var Clone = require('../../utils/object/Clone');
 var Defaults = require('../tween/Defaults');
+var GetAdvancedValue = require('../../utils/object/GetAdvancedValue');
 var GetBoolean = require('./GetBoolean');
 var GetEaseFunction = require('./GetEaseFunction');
 var GetNewValue = require('./GetNewValue');
 var GetTargets = require('./GetTargets');
 var GetTweens = require('./GetTweens');
 var GetValue = require('../../utils/object/GetValue');
-var GetAdvancedValue = require('../../utils/object/GetAdvancedValue');
 var Timeline = require('../Timeline');
 var TweenBuilder = require('./TweenBuilder');
 
-//  Phaser.Tweens.TimelineBuilder
-
+/**
+ * [description]
+ *
+ * @function Phaser.Tweens.Builders.TimelineBuilder
+ * @since 3.0.0
+ *
+ * @param {Phaser.Tweens.TweenManager} manager - [description]
+ * @param {object} config - [description]
+ *
+ * @return {Phaser.Tweens.Timeline} [description]
+ */
 var TimelineBuilder = function (manager, config)
 {
     var timeline = new Timeline(manager);
