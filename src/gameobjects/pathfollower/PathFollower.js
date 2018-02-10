@@ -1,6 +1,6 @@
 var Class = require('../../utils/Class');
 var DegToRad = require('../../math/DegToRad');
-var GetBoolean = require('../../tweens/builder/GetBoolean');
+var GetBoolean = require('../../tweens/builders/GetBoolean');
 var GetValue = require('../../utils/object/GetValue');
 var Sprite = require('../sprite/Sprite');
 var TWEEN_CONST = require('../../tweens/tween/const');

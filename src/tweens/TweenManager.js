@@ -1,9 +1,9 @@
 var Class = require('../utils/Class');
-var NumberTweenBuilder = require('./builder/NumberTweenBuilder');
+var NumberTweenBuilder = require('./builders/NumberTweenBuilder');
 var PluginManager = require('../plugins/PluginManager');
-var TimelineBuilder = require('./builder/TimelineBuilder');
+var TimelineBuilder = require('./builders/TimelineBuilder');
 var TWEEN_CONST = require('./tween/const');
-var TweenBuilder = require('./builder/TweenBuilder');
+var TweenBuilder = require('./builders/TweenBuilder');
 
 //  Phaser.Tweens.TweenManager
 

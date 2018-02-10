@@ -1,6 +1,6 @@
 var Class = require('../../utils/Class');
 var FloatBetween = require('../../math/FloatBetween');
-var GetEaseFunction = require('../../tweens/builder/GetEaseFunction');
+var GetEaseFunction = require('../../tweens/builders/GetEaseFunction');
 var GetFastValue = require('../../utils/object/GetFastValue');
 var Wrap = require('../../math/Wrap');
 
