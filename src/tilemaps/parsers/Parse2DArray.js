@@ -6,6 +6,9 @@ var Tile = require('../Tile');
 /**
  * Parses a 2D array of tile indexes into a new MapData object with a single layer.
  *
+ * @function Phaser.Tilemaps.Parsers.Parse2DArray
+ * @since 3.0.0
+ * 
  * @param {string} name - The name of the tilemap, used to set the name on the MapData.
  * @param {integer[][]} data - 2D array, CSV string or Tiled JSON object.
  * @param {integer} tileWidth - The width of a tile in pixels.
@@ -16,6 +19,8 @@ var Tile = require('../Tile');
  * the tile data doesn't need to change then setting this value to `true` will help with memory
  * consumption. However if your map is small or you need to update the tiles dynamically, then leave
  * the default value set.
+ * 
+ * @return {[type]} [description]
  */
 var Parse2DArray = function (name, data, tileWidth, tileHeight, insertNull)
 {

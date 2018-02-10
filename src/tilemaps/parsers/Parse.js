@@ -1,14 +1,17 @@
 var Formats = require('../Formats');
 var Parse2DArray = require('./Parse2DArray');
 var ParseCSV = require('./ParseCSV');
-var ParseTiledJSON = require('./tiled/');
-var ParseWeltmister = require('./impact/');
+var ParseJSONTiled = require('./tiled/ParseJSONTiled');
+var ParseWeltmeister = require('./impact/ParseWeltmeister');
 
 /**
  * Parses raw data of a given Tilemap format into a new MapData object. If no recognized data format
  * is found, returns `null`. When loading from CSV or a 2D array, you should specify the tileWidth &
  * tileHeight. When parsing from a map from Tiled, the tileWidth & tileHeight will be pulled from
  * the map data.
+ *
+ * @function Phaser.Tilemaps.Parsers.Parse
+ * @since 3.0.0
  *
  * @param {string} name - The name of the tilemap, used to set the name on the MapData.
  * @param {integer} mapFormat - See ../Formats.js.
@@ -23,12 +26,14 @@ var ParseWeltmister = require('./impact/');
  * the tile data doesn't need to change then setting this value to `true` will help with memory
  * consumption. However if your map is small or you need to update the tiles dynamically, then leave
  * the default value set.
+ *
+ * @return {[type]} [description]
  */
 var Parse = function (name, mapFormat, data, tileWidth, tileHeight, insertNull)
 {
     var newMap;
 
-    switch(mapFormat)
+    switch (mapFormat)
     {
         case (Formats.ARRAY_2D):
             newMap = Parse2DArray(name, data, tileWidth, tileHeight, insertNull);
@@ -37,10 +42,10 @@ var Parse = function (name, mapFormat, data, tileWidth, tileHeight, insertNull)
             newMap = ParseCSV(name, data, tileWidth, tileHeight, insertNull);
             break;
         case (Formats.TILED_JSON):
-            newMap = ParseTiledJSON(name, data, insertNull);
+            newMap = ParseJSONTiled(name, data, insertNull);
             break;
         case (Formats.WELTMEISTER):
-            newMap = ParseWeltmister(name, data, insertNull);
+            newMap = ParseWeltmeister(name, data, insertNull);
             break;
         default:
             console.warn('Unrecognized tilemap data format: ' + mapFormat);

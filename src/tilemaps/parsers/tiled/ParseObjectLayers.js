@@ -2,6 +2,16 @@ var GetFastValue = require('../../../utils/object/GetFastValue');
 var ParseObject = require('./ParseObject');
 var ObjectLayer = require('../../mapdata/ObjectLayer');
 
+/**
+ * [description]
+ *
+ * @function Phaser.Tilemaps.Parsers.Tiled.ParseObjectLayers
+ * @since 3.0.0
+ *
+ * @param {object} json - [description]
+ *
+ * @return {array} [description]
+ */
 var ParseObjectLayers = function (json)
 {
     var objectLayers = [];

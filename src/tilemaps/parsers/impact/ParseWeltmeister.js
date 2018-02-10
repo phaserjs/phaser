@@ -1,10 +1,13 @@
 var Formats = require('../../Formats');
 var MapData = require('../../mapdata/MapData');
-var ParseTilesets = require('./ParseTilesets');
 var ParseTileLayers = require('./ParseTileLayers');
+var ParseTilesets = require('./ParseTilesets');
 
 /**
  * Parses a Weltmeister JSON object into a new MapData object.
+ *
+ * @function Phaser.Tilemaps.Parsers.Impact.ParseWeltmeister
+ * @since 3.0.0
  *
  * @param {string} name - The name of the tilemap, used to set the name on the MapData.
  * @param {object} json - The Weltmeister JSON object.
@@ -14,6 +17,8 @@ var ParseTileLayers = require('./ParseTileLayers');
  * the tile data doesn't need to change then setting this value to `true` will help with memory
  * consumption. However if your map is small or you need to update the tiles dynamically, then leave
  * the default value set.
+ *
+ * @return {object|null} [description]
  */
 var ParseWeltmeister = function (name, json, insertNull)
 {
@@ -25,6 +30,7 @@ var ParseWeltmeister = function (name, json, insertNull)
 
     var width = 0;
     var height = 0;
+
     for (var i = 0; i < json.layer.length; i++)
     {
         if (json.layer[i].width > width) { width = json.layer[i].width; }

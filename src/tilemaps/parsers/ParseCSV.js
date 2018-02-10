@@ -4,6 +4,9 @@ var Parse2DArray = require('./Parse2DArray');
 /**
  * Parses a CSV string of tile indexes into a new MapData object with a single layer.
  *
+ * @function Phaser.Tilemaps.Parsers.ParseCSV
+ * @since 3.0.0
+ * 
  * @param {string} name - The name of the tilemap, used to set the name on the MapData.
  * @param {string} data - CSV string of tile indexes.
  * @param {integer} tileWidth - The width of a tile in pixels.
@@ -14,6 +17,8 @@ var Parse2DArray = require('./Parse2DArray');
  * the tile data doesn't need to change then setting this value to `true` will help with memory
  * consumption. However if your map is small or you need to update the tiles dynamically, then leave
  * the default value set.
+ * 
+ * @return {[type]} [description]
  */
 var ParseCSV = function (name, data, tileWidth, tileHeight, insertNull)
 {

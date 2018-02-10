@@ -2,7 +2,16 @@ var Tileset = require('../../Tileset');
 var ImageCollection = require('../../ImageCollection');
 var ParseObject = require('./ParseObject');
 
-//  Tilesets & Image Collections
+/**
+ * Tilesets & Image Collections
+ *
+ * @function Phaser.Tilemaps.Parsers.Tiled.ParseTilesets
+ * @since 3.0.0
+ *
+ * @param {object} json - [description]
+ *
+ * @return {object} [description]
+ */
 var ParseTilesets = function (json)
 {
     var tilesets = [];
