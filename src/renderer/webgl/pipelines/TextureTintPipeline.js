@@ -134,8 +134,6 @@ var TextureTintPipeline = new Class({
     {
         WebGLPipeline.prototype.resize.call(this, width, height, resolution);
         this.projOrtho(0, this.width, this.height, 0, -1000.0, 1000.0);
-        this.viewScale(resolution, resolution, 1.0);
-        this.modelScale(resolution, resolution, 1.0);
         return this;
     },
 
