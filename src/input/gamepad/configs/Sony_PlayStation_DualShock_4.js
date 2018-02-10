@@ -1,4 +1,11 @@
-//  Sony PlayStation DualShock 4 (v2) wireless controller
+/**
+ * PlayStation DualShock 4 Gamepad Configuration.
+ * Sony PlayStation DualShock 4 (v2) wireless controller
+ * 
+ * @name Phaser.Input.Gamepad.Configs.DUALSHOCK_4
+ * @type {object}
+ * @since 3.0.0
+ */
 
 module.exports = {
 
