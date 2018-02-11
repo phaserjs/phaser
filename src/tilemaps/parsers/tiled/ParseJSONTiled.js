@@ -10,6 +10,9 @@ var AssignTileProperties = require('./AssignTileProperties');
 /**
  * Parses a Tiled JSON object into a new MapData object.
  *
+ * @function Phaser.Tilemaps.Parsers.Tiled.ParseJSONTiled
+ * @since 3.0.0
+ *
  * @param {string} name - The name of the tilemap, used to set the name on the MapData.
  * @param {object} json - The Tiled JSON object.
  * @param {boolean} insertNull - Controls how empty tiles, tiles with an index of -1, in the map
@@ -18,6 +21,8 @@ var AssignTileProperties = require('./AssignTileProperties');
  * the tile data doesn't need to change then setting this value to `true` will help with memory
  * consumption. However if your map is small or you need to update the tiles dynamically, then leave
  * the default value set.
+ *
+ * @return {Phaser.Tilemaps.MapData|null} [description]
  */
 var ParseJSONTiled = function (name, json, insertNull)
 {

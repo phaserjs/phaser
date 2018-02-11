@@ -1,5 +1,15 @@
 var RESERVED = require('../tween/ReservedProps');
 
+/**
+ * [description]
+ *
+ * @function Phaser.Tweens.Builders.GetProps
+ * @since 3.0.0
+ *
+ * @param {object} config - [description]
+ *
+ * @return {array} [description]
+ */
 var GetProps = function (config)
 {
     var key;

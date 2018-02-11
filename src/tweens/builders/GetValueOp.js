@@ -13,6 +13,17 @@ function hasGetters (def)
     return hasGetStart(def) || hasGetEnd(def);
 }
 
+/**
+ * [description]
+ *
+ * @function Phaser.Tweens.Builders.GetValueOp
+ * @since 3.0.0
+ *
+ * @param {string} key - [description]
+ * @param {any} propertyValue - [description]
+ *
+ * @return {function} [description]
+ */
 var GetValueOp = function (key, propertyValue)
 {
     var callbacks;

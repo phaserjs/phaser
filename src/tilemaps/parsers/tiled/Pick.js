@@ -6,10 +6,10 @@ var HasValue = require('../../../utils/object/HasValue');
  * @function Phaser.Tilemaps.Parsers.Tiled.Pick
  * @since 3.0.0
  *
- * @param {[type]} object - [description]
- * @param {[type]} keys - [description]
+ * @param {object} object - [description]
+ * @param {array} keys - [description]
  *
- * @return {[type]} [description]
+ * @return {object} [description]
  */
 var Pick = function (object, keys)
 {

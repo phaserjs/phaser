@@ -1,6 +1,17 @@
 var LayerData = require('../../mapdata/LayerData');
 var Tile = require('../../Tile');
 
+/**
+ * [description]
+ *
+ * @function Phaser.Tilemaps.Parsers.Impact.ParseTileLayers
+ * @since 3.0.0
+ *
+ * @param {object} json - [description]
+ * @param {boolean} insertNull - [description]
+ *
+ * @return {array} [description]
+ */
 var ParseTileLayers = function (json, insertNull)
 {
     var tileLayers = [];

@@ -1,3 +1,13 @@
+/**
+ * [description]
+ *
+ * @function Phaser.Tilemaps.Parsers.Tiled.Base64Decode
+ * @since 3.0.0
+ *
+ * @param {object} data - [description]
+ *
+ * @return {array} [description]
+ */
 var Base64Decode = function (data)
 {
     var binaryString = window.atob(data);

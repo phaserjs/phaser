@@ -1,4 +1,6 @@
-//  Phaser.Input.Gamepad.Configs
+/**
+ * @namespace Phaser.Input.Gamepad.Configs
+ */
 
 module.exports = {
 

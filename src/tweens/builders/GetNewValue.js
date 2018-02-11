@@ -1,3 +1,15 @@
+/**
+ * [description]
+ *
+ * @function Phaser.Tweens.Builders.GetNewValue
+ * @since 3.0.0
+ *
+ * @param {object} source - [description]
+ * @param {string} key - [description]
+ * @param {any} defaultValue - [description]
+ *
+ * @return {function} [description]
+ */
 var GetNewValue = function (source, key, defaultValue)
 {
     var valueCallback;

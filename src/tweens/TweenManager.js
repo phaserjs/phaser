@@ -1,21 +1,45 @@
 var Class = require('../utils/Class');
-var NumberTweenBuilder = require('./builder/NumberTweenBuilder');
+var NumberTweenBuilder = require('./builders/NumberTweenBuilder');
 var PluginManager = require('../plugins/PluginManager');
-var TimelineBuilder = require('./builder/TimelineBuilder');
+var TimelineBuilder = require('./builders/TimelineBuilder');
 var TWEEN_CONST = require('./tween/const');
-var TweenBuilder = require('./builder/TweenBuilder');
+var TweenBuilder = require('./builders/TweenBuilder');
 
 //  Phaser.Tweens.TweenManager
 
+/**
+ * @classdesc
+ * [description]
+ *
+ * @class TweenManager
+ * @memberOf Phaser.Tweens
+ * @constructor
+ * @since 3.0.0
+ *
+ * @param {Phaser.Scene} scene - [description]
+ */
 var TweenManager = new Class({
 
     initialize:
 
     function TweenManager (scene)
     {
-        //  The Scene that owns this plugin
+        /**
+         * [description]
+         *
+         * @name Phaser.Tweens.TweenManager#scene
+         * @type {Phaser.Scene}
+         * @since 3.0.0
+         */
         this.scene = scene;
 
+        /**
+         * [description]
+         *
+         * @name Phaser.Tweens.TweenManager#systems
+         * @type {Phaser.Scenes.Systems}
+         * @since 3.0.0
+         */
         this.systems = scene.sys;
 
         if (!scene.sys.settings.isBooted)
@@ -23,16 +47,74 @@ var TweenManager = new Class({
             scene.sys.events.once('boot', this.boot, this);
         }
 
+        /**
+         * [description]
+         *
+         * @name Phaser.Tweens.TweenManager#timeScale
+         * @type {number}
+         * @default 1
+         * @since 3.0.0
+         */
         this.timeScale = 1;
 
+        /**
+         * [description]
+         *
+         * @name Phaser.Tweens.TweenManager#_add
+         * @type {array}
+         * @private
+         * @since 3.0.0
+         */
         this._add = [];
+
+        /**
+         * [description]
+         *
+         * @name Phaser.Tweens.TweenManager#_pending
+         * @type {array}
+         * @private
+         * @since 3.0.0
+         */
         this._pending = [];
+
+        /**
+         * [description]
+         *
+         * @name Phaser.Tweens.TweenManager#_active
+         * @type {array}
+         * @private
+         * @since 3.0.0
+         */
         this._active = [];
+
+        /**
+         * [description]
+         *
+         * @name Phaser.Tweens.TweenManager#_destroy
+         * @type {array}
+         * @private
+         * @since 3.0.0
+         */
         this._destroy = [];
 
+        /**
+         * [description]
+         *
+         * @name Phaser.Tweens.TweenManager#_toProcess
+         * @type {integer}
+         * @private
+         * @default 0
+         * @since 3.0.0
+         */
         this._toProcess = 0;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Tweens.TweenManager#boot
+     * @since 3.0.0
+     */
     boot: function ()
     {
         var eventEmitter = this.systems.events;
@@ -45,13 +127,31 @@ var TweenManager = new Class({
         this.timeScale = 1;
     },
 
-    //  Create a Tween Timeline and return it, but do NOT add it to the active or pending Tween lists
+    /**
+     * Create a Tween Timeline and return it, but do NOT add it to the active or pending Tween lists.
+     *
+     * @method Phaser.Tweens.TweenManager#createTimeline
+     * @since 3.0.0
+     *
+     * @param {object} config - [description]
+     *
+     * @return {Phaser.Tweens.Timeline} [description]
+     */
     createTimeline: function (config)
     {
         return TimelineBuilder(this, config);
     },
 
-    //  Create a Tween Timeline and add it to the active Tween list
+    /**
+     * Create a Tween Timeline and add it to the active Tween list/
+     *
+     * @method Phaser.Tweens.TweenManager#timeline
+     * @since 3.0.0
+     *
+     * @param {object} config - [description]
+     *
+     * @return {Phaser.Tweens.Timeline} [description]
+     */
     timeline: function (config)
     {
         var timeline = TimelineBuilder(this, config);
@@ -66,13 +166,31 @@ var TweenManager = new Class({
         return timeline;
     },
 
-    //  Create a Tween and return it, but do NOT add it to the active or pending Tween lists
+    /**
+     * Create a Tween and return it, but do NOT add it to the active or pending Tween lists.
+     *
+     * @method Phaser.Tweens.TweenManager#create
+     * @since 3.0.0
+     *
+     * @param {object} config - [description]
+     *
+     * @return {Phaser.Tweens.Tween} [description]
+     */
     create: function (config)
     {
         return TweenBuilder(this, config);
     },
 
-    //  Create a Tween and add it to the active Tween list
+    /**
+     * Create a Tween and add it to the active Tween list.
+     *
+     * @method Phaser.Tweens.TweenManager#add
+     * @since 3.0.0
+     *
+     * @param {[type]} config - [description]
+     *
+     * @return {Phaser.Tweens.Tween} [description]
+     */
     add: function (config)
     {
         var tween = TweenBuilder(this, config);
@@ -84,7 +202,16 @@ var TweenManager = new Class({
         return tween;
     },
 
-    //  Add an existing tween into the active Tween list
+    /**
+     * Add an existing tween into the active Tween list.
+     *
+     * @method Phaser.Tweens.TweenManager#existing
+     * @since 3.0.0
+     *
+     * @param {Phaser.Tweens.Tween} tween - [description]
+     *
+     * @return {Phaser.Tweens.TweenManager} This Tween Manager object.
+     */
     existing: function (tween)
     {
         this._add.push(tween);
@@ -94,7 +221,16 @@ var TweenManager = new Class({
         return this;
     },
 
-    //  Create a Tween and add it to the active Tween list
+    /**
+     * Create a Tween and add it to the active Tween list.
+     *
+     * @method Phaser.Tweens.TweenManager#addCounter
+     * @since 3.0.0
+     *
+     * @param {object} config - [description]
+     *
+     * @return {Phaser.Tweens.Tween} [description]
+     */
     addCounter: function (config)
     {
         var tween = NumberTweenBuilder(this, config);
@@ -106,6 +242,12 @@ var TweenManager = new Class({
         return tween;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Tweens.TweenManager#preUpdate
+     * @since 3.0.0
+     */
     preUpdate: function ()
     {
         if (this._toProcess === 0)
@@ -163,6 +305,15 @@ var TweenManager = new Class({
         this._toProcess = 0;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Tweens.TweenManager#update
+     * @since 3.0.0
+     *
+     * @param {number} timestamp - [description]
+     * @param {number} delta - [description]
+     */
     update: function (timestamp, delta)
     {
         //  Process active tweens
@@ -186,6 +337,16 @@ var TweenManager = new Class({
         }
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Tweens.TweenManager#makeActive
+     * @since 3.0.0
+     *
+     * @param {Phaser.Tweens.Tween} tween - [description]
+     *
+     * @return {Phaser.Tweens.TweenManager} This Tween Manager object.
+     */
     makeActive: function (tween)
     {
         if (this._add.indexOf(tween) !== -1 || this._active.indexOf(tween) !== -1)
@@ -209,19 +370,17 @@ var TweenManager = new Class({
         return this;
     },
 
-    // Passes all Tweens to the given callback.
-
     /**
-     * [description]
+     * Passes all Tweens to the given callback.
      *
      * @method Phaser.Tweens.TweenManager#each
      * @since 3.0.0
      *
      * @param {function} callback - [description]
-     * @param {object} [thisArg] - [description]
+     * @param {object} [scope] - [description]
      * @param {...*} [arguments] - [description]
      */
-    each: function (callback, thisArg)
+    each: function (callback, scope)
     {
         var args = [ null ];
 
@@ -234,7 +393,7 @@ var TweenManager = new Class({
         {
             args[0] = this.list[texture];
 
-            callback.apply(thisArg, args);
+            callback.apply(scope, args);
         }
     },
 
@@ -326,7 +485,7 @@ var TweenManager = new Class({
      * @method Phaser.Tweens.TweenManager#isTweening
      * @since 3.0.0
      *
-     * @param {any} target - [description]
+     * @param {object} target - [description]
      *
      * @return {boolean} [description]
      */
@@ -447,10 +606,8 @@ var TweenManager = new Class({
         return this;
     },
 
-    //  Scene that owns this manager is shutting down
-
     /**
-     * [description]
+     * Scene that owns this manager is shutting down.
      *
      * @method Phaser.Tweens.TweenManager#shutdown
      * @since 3.0.0

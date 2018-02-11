@@ -2,12 +2,19 @@ var FLIPPED_HORIZONTAL = 0x80000000;
 var FLIPPED_VERTICAL = 0x40000000;
 var FLIPPED_ANTI_DIAGONAL = 0x20000000; // Top-right is swapped with bottom-left corners
 
-// See Tiled documentation on tile flipping:
-// http://docs.mapeditor.org/en/latest/reference/tmx-map-format/
-
+/**
+ * See Tiled documentation on tile flipping:
+ * http://docs.mapeditor.org/en/latest/reference/tmx-map-format/
+ *
+ * @function Phaser.Tilemaps.Parsers.Tiled.ParseGID
+ * @since 3.0.0
+ *
+ * @param {number} gid - [description]
+ *
+ * @return {object} [description]
+ */
 var ParseGID = function (gid)
 {
-
     var flippedHorizontal = Boolean(gid & FLIPPED_HORIZONTAL);
     var flippedVertical = Boolean(gid & FLIPPED_VERTICAL);
     var flippedAntiDiagonal = Boolean(gid & FLIPPED_ANTI_DIAGONAL);

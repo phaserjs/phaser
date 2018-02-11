@@ -2,8 +2,21 @@ var Pick = require('./Pick');
 var ParseGID = require('./ParseGID');
 
 var copyPoints = function (p) { return { x: p.x, y: p.y }; };
+
 var commonObjectProps = [ 'id', 'name', 'type', 'rotation', 'properties', 'visible', 'x', 'y', 'width', 'height' ];
 
+/**
+ * [description]
+ *
+ * @function Phaser.Tilemaps.Parsers.Tiled.ParseObject
+ * @since 3.0.0
+ *
+ * @param {object} tiledObject - [description]
+ * @param {number} [offsetX=0] - [description]
+ * @param {number} [offsetY=0] - [description]
+ *
+ * @return {object} [description]
+ */
 var ParseObject = function (tiledObject, offsetX, offsetY)
 {
     if (offsetX === undefined) { offsetX = 0; }

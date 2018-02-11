@@ -1,5 +1,15 @@
 var GetFastValue = require('../../../utils/object/GetFastValue');
 
+/**
+ * [description]
+ *
+ * @function Phaser.Tilemaps.Parsers.Tiled.ParseImageLayers
+ * @since 3.0.0
+ *
+ * @param {object} json - [description]
+ *
+ * @return {array} [description]
+ */
 var ParseImageLayers = function (json)
 {
     var images = [];
