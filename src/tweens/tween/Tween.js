@@ -612,7 +612,7 @@ var Tween = new Class({
         else if (this.state === TWEEN_CONST.PENDING_REMOVE || this.state === TWEEN_CONST.REMOVED)
         {
             this.init();
-            this.parent.makeActive(this);
+            this.parent.manager.makeActive(this);
             resetFromTimeline = true;
         }
 
