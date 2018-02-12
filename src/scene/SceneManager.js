@@ -11,29 +11,93 @@ var NOOP = require('../utils/NOOP');
 var Scene = require('./Scene');
 var Systems = require('./Systems');
 
+/**
+ * @classdesc
+ * The Scene Systems class.
+ *
+ * This class is available from within a Scene under the property `sys`.
+ * It is responsible for managing all of the plugins a Scene has running, including the display list, and
+ * handling the update step and renderer. It also contains references to global systems belonging to Game.
+ *
+ * @class SceneManager
+ * @memberOf Phaser.Scenes
+ * @constructor
+ * @since 3.0.0
+ *
+ * @param {Phaser.Game} game - The Phaser.Game instance this Scene Manager belongs to.
+ * @param {object} sceneConfig - Scene specific configuration settings.
+ */
 var SceneManager = new Class({
 
     initialize:
 
     function SceneManager (game, sceneConfig)
     {
+        /**
+         * [description]
+         *
+         * @name Phaser.Scenes.SceneManager#game
+         * @type {Phaser.Game}
+         * @since 3.0.0
+         */
         this.game = game;
 
-        //   An object that maps the keys to the scene so we can quickly get a scene from a key without iteration
+        /**
+         * An object that maps the keys to the scene so we can quickly get a scene from a key without iteration.
+         *
+         * @name Phaser.Scenes.SceneManager#keys
+         * @type {object}
+         * @since 3.0.0
+         */
         this.keys = {};
 
-        //  The array in which all of the scenes are kept
+        /**
+         * The array in which all of the scenes are kept.
+         *
+         * @name Phaser.Scenes.SceneManager#scenes
+         * @type {array}
+         * @since 3.0.0
+         */
         this.scenes = [];
 
-        //  Scenes pending to be added are stored in here until the manager has time to add it
+        /**
+         * Scenes pending to be added are stored in here until the manager has time to add it.
+         *
+         * @name Phaser.Scenes.SceneManager#_pending
+         * @type {array}
+         * @private
+         * @since 3.0.0
+         */
         this._pending = [];
 
-        //  An array of scenes waiting to be started once the game has booted
+        /**
+         * An array of scenes waiting to be started once the game has booted.
+         *
+         * @name Phaser.Scenes.SceneManager#_start
+         * @type {array}
+         * @private
+         * @since 3.0.0
+         */
         this._start = [];
 
-        //  An operations queue, because we don't manipulate the scenes array during processing
+        /**
+         * An operations queue, because we don't manipulate the scenes array during processing.
+         *
+         * @name Phaser.Scenes.SceneManager#_queue
+         * @type {array}
+         * @private
+         * @since 3.0.0
+         */
         this._queue = [];
 
+        /**
+         * The number of Scenes to process.
+         *
+         * @name Phaser.Scenes.SceneManager#_processing
+         * @type {integer}
+         * @private
+         * @since 3.0.0
+         */
         this._processing = 0;
 
         if (sceneConfig)
@@ -197,9 +261,8 @@ var SceneManager = new Class({
      * [description]
      *
      * @method Phaser.Scenes.SceneManager#bootScene
-     * @since 3.0.0
-     *
      * @private
+     * @since 3.0.0
      *
      * @param {Phaser.Scene} scene - [description]
      */
@@ -249,11 +312,10 @@ var SceneManager = new Class({
      * [description]
      *
      * @method Phaser.Scenes.SceneManager#loadComplete
+     * @private
      * @since 3.0.0
      *
-     * @private
-     *
-     * @param {object} event - [description]
+     * @param {object} loader - [description]
      */
     loadComplete: function (loader)
     {
@@ -266,11 +328,10 @@ var SceneManager = new Class({
      * [description]
      *
      * @method Phaser.Scenes.SceneManager#payloadComplete
+     * @private
      * @since 3.0.0
      *
-     * @private
-     *
-     * @param {object} event - [description]
+     * @param {object} loader - [description]
      */
     payloadComplete: function (loader)
     {
@@ -332,9 +393,8 @@ var SceneManager = new Class({
      * [description]
      *
      * @method Phaser.Scenes.SceneManager#create
-     * @since 3.0.0
-     *
      * @private
+     * @since 3.0.0
      *
      * @param {Phaser.Scene} scene - [description]
      */
@@ -354,9 +414,8 @@ var SceneManager = new Class({
      * [description]
      *
      * @method Phaser.Scenes.SceneManager#createSceneFromFunction
-     * @since 3.0.0
-     *
      * @private
+     * @since 3.0.0
      *
      * @param {string} key - [description]
      * @param {function} scene - [description]
@@ -404,9 +463,8 @@ var SceneManager = new Class({
      * [description]
      *
      * @method Phaser.Scenes.SceneManager#createSceneFromInstance
-     * @since 3.0.0
-     *
      * @private
+     * @since 3.0.0
      *
      * @param {string} key - [description]
      * @param {Phaser.Scene} newScene - [description]
@@ -435,9 +493,8 @@ var SceneManager = new Class({
      * [description]
      *
      * @method Phaser.Scenes.SceneManager#createSceneFromObject
-     * @since 3.0.0
-     *
      * @private
+     * @since 3.0.0
      *
      * @param {string} key - [description]
      * @param {object} sceneConfig - [description]
@@ -510,9 +567,8 @@ var SceneManager = new Class({
      * [description]
      *
      * @method Phaser.Scenes.SceneManager#getKey
-     * @since 3.0.0
-     * 
      * @private
+     * @since 3.0.0
      *
      * @param {string} key - [description]
      * @param {Phaser.Scene|object|function} sceneConfig - [description]
@@ -904,7 +960,7 @@ var SceneManager = new Class({
     {
         if (this._processing)
         {
-            this._queue.push( { op: 'bringToTop', keyA: key, keyB: null });
+            this._queue.push({ op: 'bringToTop', keyA: key, keyB: null });
         }
         else
         {
@@ -936,7 +992,7 @@ var SceneManager = new Class({
     {
         if (this._processing)
         {
-            this._queue.push( { op: 'sendToBack', keyA: key, keyB: null });
+            this._queue.push({ op: 'sendToBack', keyA: key, keyB: null });
         }
         else
         {
@@ -968,7 +1024,7 @@ var SceneManager = new Class({
     {
         if (this._processing)
         {
-            this._queue.push( { op: 'moveDown', keyA: key, keyB: null });
+            this._queue.push({ op: 'moveDown', keyA: key, keyB: null });
         }
         else
         {
@@ -1002,7 +1058,7 @@ var SceneManager = new Class({
     {
         if (this._processing)
         {
-            this._queue.push( { op: 'moveUp', keyA: key, keyB: null });
+            this._queue.push({ op: 'moveUp', keyA: key, keyB: null });
         }
         else
         {
@@ -1024,7 +1080,7 @@ var SceneManager = new Class({
 
     queueOp: function (op, keyA, keyB)
     {
-        this._queue.push( { op: op, keyA: keyA, keyB: keyB });
+        this._queue.push({ op: op, keyA: keyA, keyB: keyB });
 
         return this;
     },
@@ -1049,7 +1105,7 @@ var SceneManager = new Class({
 
         if (this._processing)
         {
-            this._queue.push( { op: 'swapPosition', keyA: keyA, keyB: keyB });
+            this._queue.push({ op: 'swapPosition', keyA: keyA, keyB: keyB });
         }
         else
         {
