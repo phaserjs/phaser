@@ -4,87 +4,16 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Class = require('../utils/Class');
-var Utils = require('../renderer/webgl/Utils');
-var LightPipeline = require('../renderer/webgl/pipelines/ForwardDiffuseLightPipeline');
-
-var Light = new Class({
-
-    initialize:
-
-    function Light (x, y, radius, r, g, b, intensity)
-    {
-        this.x = x;
-        this.y = y;
-        this.radius = radius;
-        this.r = r;
-        this.g = g;
-        this.b = b;
-        this.intensity = intensity;
-        this.scrollFactorX = 1.0;
-        this.scrollFactorY = 1.0;
-    },
-
-    set: function (x, y, radius, r, g, b, intensity)
-    {
-        this.x = x;
-        this.y = y;
-        this.radius = radius;
-        this.r = r;
-        this.g = g;
-        this.b = b;
-        this.intensity = intensity;
-        this.scrollFactorX = 1.0;
-        this.scrollFactorY = 1.0;
-    },
-
-    setScrollFactor: function (x, y)
-    {
-        this.scrollFactorX = x;
-        this.scrollFactorY = (y === undefined) ? x : y;
-        return this;
-    },
-
-    setColor: function (rgb)
-    {
-        var color = Utils.getFloatsFromUintRGB(rgb);
-        
-        this.r = color[0];
-        this.g = color[1];
-        this.b = color[2];
-        
-        return this;
-    },
-
-    setIntensity: function (intensity)
-    {
-        this.intensity = intensity;
-
-        return this;
-    },
-
-    setPosition: function (x, y)
-    {
-        this.x = x;
-        this.y = y;
-
-        return this;
-    },
-
-    setRadius: function (radius)
-    {
-        this.radius = radius;
-
-        return this;
-    }
-
-});
+var Class = require('../../utils/Class');
+var Light = require('./Light');
+var LightPipeline = require('../../renderer/webgl/pipelines/ForwardDiffuseLightPipeline');
+var Utils = require('../../renderer/webgl/Utils');
 
 var LightsManager = new Class({
 
     initialize:
 
-    function LightsManager()
+    function LightsManager ()
     {
         this.lightPool = [];
         this.lights = [];
@@ -105,25 +34,6 @@ var LightsManager = new Class({
         this.active = false;
 
         return this;
-    },
-
-    shutdown: function ()
-    {
-        while (this.lights.length > 0)
-        {
-            this.lightPool.push(this.lights.pop());
-        }
-        
-        this.ambientColor = { r: 0.1, g: 0.1, b: 0.1 };
-        this.culledLights.length = 0;
-        this.lights.length = 0;
-
-        return this;
-    },
-
-    destroy: function ()
-    {
-        this.shutdown();
     },
 
     cull: function (camera)
@@ -151,7 +61,7 @@ var LightsManager = new Class({
             // if lights should be rendered
             var dx = cameraCenterX - (point.x - (camera.scrollX * light.scrollFactorX * camera.zoom));
             var dy = cameraCenterY - (viewportHeight - (point.y - (camera.scrollY * light.scrollFactorY) * camera.zoom));
-            var distance = Math.sqrt(dx * dx + dy * dy); 
+            var distance = Math.sqrt(dx * dx + dy * dy);
 
             if (distance < light.radius + cameraRadius)
             {
@@ -239,6 +149,25 @@ var LightsManager = new Class({
             this.lightPool.push(light);
             this.lights.splice(index, 1);
         }
+    },
+
+    shutdown: function ()
+    {
+        while (this.lights.length > 0)
+        {
+            this.lightPool.push(this.lights.pop());
+        }
+        
+        this.ambientColor = { r: 0.1, g: 0.1, b: 0.1 };
+        this.culledLights.length = 0;
+        this.lights.length = 0;
+
+        return this;
+    },
+
+    destroy: function ()
+    {
+        this.shutdown();
     }
 
 });

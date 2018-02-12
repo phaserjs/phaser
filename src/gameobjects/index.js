@@ -13,8 +13,6 @@ var GameObjects = {
     DisplayList: require('./DisplayList'),
     GameObjectCreator: require('./GameObjectCreator'),
     GameObjectFactory: require('./GameObjectFactory'),
-    LightsManager: require('./LightsManager'),
-    LightsPlugin: require('./LightsPlugin'),
     UpdateList: require('./UpdateList'),
 
     Components: require('./components'),
@@ -79,6 +77,11 @@ if (WEBGL_RENDERER)
 
     GameObjects.Creators.Mesh = require('./mesh/MeshCreator');
     GameObjects.Creators.Quad = require('./quad/QuadCreator');
+
+    GameObjects.Light = require('./lights/List');
+
+    require('./lights/LightsManager');
+    require('./lights/LightsPlugin');
 }
 
 module.exports = GameObjects;
