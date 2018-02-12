@@ -1,5 +1,15 @@
 var GetFastValue = require('../utils/object/GetFastValue');
 
+/**
+ * Builds an array of which plugins (not including physics plugins) should be activated for the given Scene.
+ *
+ * @function Phaser.Scenes.GetScenePlugins
+ * @since 3.0.0
+ *
+ * @param {Phaser.Scenes.Systems} sys - [description]
+ *
+ * @return {array} [description]
+ */
 var GetScenePlugins = function (sys)
 {
     var defaultPlugins = sys.game.config.defaultPlugins;

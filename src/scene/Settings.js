@@ -2,6 +2,16 @@ var CONST = require('./const');
 var GetValue = require('../utils/object/GetValue');
 var InjectionMap = require('./InjectionMap');
 
+/**
+ * Takes a Scene configuration object and returns a fully formed Systems object.
+ *
+ * @function Phaser.Scenes.Settings.create
+ * @since 3.0.0
+ *
+ * @param {object} config - [description]
+ *
+ * @return {object} [description]
+ */
 var Settings = {
 
     create: function (config)
