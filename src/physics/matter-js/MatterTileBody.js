@@ -24,6 +24,15 @@ var Vertices = require('./lib/geometry/Vertices');
  * @constructor
  * @since 3.0.0
  *
+ * @extends Phaser.Physics.Matter.Components.Bounce
+ * @extends Phaser.Physics.Matter.Components.Collision
+ * @extends Phaser.Physics.Matter.Components.Friction
+ * @extends Phaser.Physics.Matter.Components.Gravity
+ * @extends Phaser.Physics.Matter.Components.Mass
+ * @extends Phaser.Physics.Matter.Components.Sensor
+ * @extends Phaser.Physics.Matter.Components.Sleep
+ * @extends Phaser.Physics.Matter.Components.Static
+ *
  * @param {Phaser.Physics.Matter.World} world - [description]
  * @param {Phaser.GameObjects.Tile} tile - The target tile that should have a Matter body.
  * @param {object} [options] - Options to be used when creating the Matter body. See
@@ -54,14 +63,18 @@ var MatterTileBody = new Class({
     {
         /**
          * The tile object the body is associated with.
-         * @property {Phaser.GameObjects.Tile} tile
+         *
+         * @name Phaser.Physics.Matter.MatterTileBody#tile
+         * @type {Phaser.GameObjects.Tile}
          * @since 3.0.0
          */
         this.tile = tile;
 
         /**
          * The Matter world the body exists within.
-         * @property {Phaser.Physics.Matter.World} world
+         *
+         * @name Phaser.Physics.Matter.MatterTileBody#world
+         * @type {Phaser.Physics.Matter.World}
          * @since 3.0.0
          */
         this.world = world;
@@ -112,7 +125,8 @@ var MatterTileBody = new Class({
      * made static. This defaults to true since typically tiles should not be moved.
      * @param {boolean} [options.addToWorld=true] - Whether or not to add the newly created body (or
      * existing body if options.body is used) to the Matter world.
-     * @return {this}
+     * 
+     * @return {Phaser.Physics.Matter.TileBody} This TileBody object.
      */
     setFromTileRectangle: function (options)
     {
@@ -150,7 +164,8 @@ var MatterTileBody = new Class({
      * made static. This defaults to true since typically tiles should not be moved.
      * @param {boolean} [options.addToWorld=true] - Whether or not to add the newly created body (or
      * existing body if options.body is used) to the Matter world.
-     * @return {this}
+     * 
+     * @return {Phaser.Physics.Matter.TileBody} This TileBody object.
      */
     setFromTileCollision: function (options)
     {
@@ -238,7 +253,8 @@ var MatterTileBody = new Class({
      *
      * @param {Phaser.Physics.Matter.Matter.Body} body - The new Matter body to use.
      * @param {boolean} [addToWorld=true] - Whether or not to add the body to the Matter world.
-     * @return {this}
+     * 
+     * @return {Phaser.Physics.Matter.TileBody} This TileBody object.
      */
     setBody: function (body, addToWorld)
     {
@@ -266,7 +282,7 @@ var MatterTileBody = new Class({
      * @method Phaser.Physics.Matter.TileBody#removeBody
      * @since 3.0.0
      *
-     * @return {this}
+     * @return {Phaser.Physics.Matter.TileBody} This TileBody object.
      */
     removeBody: function ()
     {
@@ -286,13 +302,14 @@ var MatterTileBody = new Class({
      * @method Phaser.Physics.Matter.TileBody#removeBody
      * @since 3.0.0
      *
-     * @return {this}
+     * @return {Phaser.Physics.Matter.TileBody} This TileBody object.
      */
     destroy: function ()
     {
         this.removeBody();
         this.tile.physics.matterBody = undefined;
     }
+
 });
 
 module.exports = MatterTileBody;

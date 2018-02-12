@@ -28,7 +28,8 @@ var Camera = new Class({
         /**
          * A reference to the Scene this camera belongs to.
          *
-         * @property {Phaser.Scene} scene
+         * @name Phaser.Cameras.Scene2D.Camera#scene
+         * @type {Phaser.Scene}
          * @since 3.0.0
          */
         this.scene;
@@ -36,16 +37,18 @@ var Camera = new Class({
         /**
          * The name of the Camera. This is left empty for your own use.
          *
-         * @property {string} name
-         * @since 3.0.0
+         * @name Phaser.Cameras.Scene2D.Camera#name
+         * @type {string}
          * @default ''
+         * @since 3.0.0
          */
         this.name = '';
 
         /**
          * The x position of the Camera, relative to the top-left of the game canvas.
          *
-         * @property {number} x
+         * @name Phaser.Cameras.Scene2D.Camera#x
+         * @type {number}
          * @since 3.0.0
          */
         this.x = x;
@@ -53,7 +56,8 @@ var Camera = new Class({
         /**
          * The y position of the Camera, relative to the top-left of the game canvas.
          *
-         * @property {number} y
+         * @name Phaser.Cameras.Scene2D.Camera#y
+         * @type {number}
          * @since 3.0.0
          */
         this.y = y;
@@ -61,7 +65,8 @@ var Camera = new Class({
         /**
          * The width of the Camera, in pixels.
          *
-         * @property {number} width
+         * @name Phaser.Cameras.Scene2D.Camera#width
+         * @type {number}
          * @since 3.0.0
          */
         this.width = width;
@@ -69,7 +74,8 @@ var Camera = new Class({
         /**
          * The height of the Camera, in pixels.
          *
-         * @property {number} height
+         * @name Phaser.Cameras.Scene2D.Camera#height
+         * @type {number}
          * @since 3.0.0
          */
         this.height = height;
@@ -77,9 +83,10 @@ var Camera = new Class({
         /**
          * Should this camera round its pixel values to integers?
          *
-         * @property {boolean} roundPixels
-         * @since 3.0.0
+         * @name Phaser.Cameras.Scene2D.Camera#roundPixels
+         * @type {boolean}
          * @default false
+         * @since 3.0.0
          */
         this.roundPixels = false;
 
@@ -87,25 +94,28 @@ var Camera = new Class({
          * Is this Camera using a bounds to restrict scrolling movement?
          * Set this property along with the bounds via `Camera.setBounds`.
          *
-         * @property {boolean} useBounds
-         * @since 3.0.0
+         * @name Phaser.Cameras.Scene2D.Camera#useBounds
+         * @type {boolean}
          * @default false
+         * @since 3.0.0
          */
         this.useBounds = false;
 
         /**
          * The bounds the camera is restrained to during scrolling.
          *
-         * @property {Phaser.Geom.Rectangle} _bounds
-         * @since 3.0.0
+         * @name Phaser.Cameras.Scene2D.Camera#_bounds
+         * @type {Phaser.Geom.Rectangle}
          * @private
+         * @since 3.0.0
          */
         this._bounds = new Rectangle();
 
         /**
          * Does this Camera allow the Game Objects it renders to receive input events?
          *
-         * @property {boolean} inputEnabled
+         * @name Phaser.Cameras.Scene2D.Camera#inputEnabled
+         * @type {boolean}
          * @default true
          * @since 3.0.0
          */
@@ -115,7 +125,8 @@ var Camera = new Class({
          * The horizontal scroll position of this camera.
          * Optionally restricted via the Camera bounds.
          *
-         * @property {number} scrollX
+         * @name Phaser.Cameras.Scene2D.Camera#scrollX
+         * @type {number}
          * @default 0
          * @since 3.0.0
          */
@@ -125,7 +136,8 @@ var Camera = new Class({
          * The vertical scroll position of this camera.
          * Optionally restricted via the Camera bounds.
          *
-         * @property {number} scrollY
+         * @name Phaser.Cameras.Scene2D.Camera#scrollY
+         * @type {number}
          * @default 0
          * @since 3.0.0
          */
@@ -135,7 +147,8 @@ var Camera = new Class({
          * The Camera zoom value. Change this value to zoom in, or out of, a Scene.
          * Set to 1 to return to the default zoom level.
          *
-         * @property {float} zoom
+         * @name Phaser.Cameras.Scene2D.Camera#zoom
+         * @type {float}
          * @default 1
          * @since 3.0.0
          */
@@ -144,7 +157,8 @@ var Camera = new Class({
         /**
          * The rotation of the Camera. This influences the rendering of all Game Objects visible by this camera.
          *
-         * @property {number} rotation
+         * @name Phaser.Cameras.Scene2D.Camera#rotation
+         * @type {number}
          * @default 0
          * @since 3.0.0
          */
@@ -153,7 +167,8 @@ var Camera = new Class({
         /**
          * A local transform matrix used for internal calculations.
          *
-         * @property {TransformMatrix} matrix
+         * @name Phaser.Cameras.Scene2D.Camera#matrix
+         * @type {TransformMatrix}
          * @since 3.0.0
          */
         this.matrix = new TransformMatrix(1, 0, 0, 1, 0, 0);
@@ -161,7 +176,8 @@ var Camera = new Class({
         /**
          * Does this Camera have a transparent background?
          *
-         * @property {boolean} transparent
+         * @name Phaser.Cameras.Scene2D.Camera#transparent
+         * @type {boolean}
          * @default true
          * @since 3.0.0
          */
@@ -170,7 +186,8 @@ var Camera = new Class({
         /**
          * TODO
          *
-         * @property {boolean} clearBeforeRender
+         * @name Phaser.Cameras.Scene2D.Camera#clearBeforeRender
+         * @type {boolean}
          * @default true
          * @since 3.0.0
          */
@@ -179,7 +196,8 @@ var Camera = new Class({
         /**
          * The background color of this Camera. Only used if `transparent` is `false`.
          *
-         * @property {Phaser.Display.Color} backgroundColor
+         * @name Phaser.Cameras.Scene2D.Camera#backgroundColor
+         * @type {Phaser.Display.Color}
          * @since 3.0.0
          */
         this.backgroundColor = ValueToColor('rgba(0,0,0,0)');
@@ -188,7 +206,8 @@ var Camera = new Class({
          * Should the camera cull Game Objects before rendering?
          * In some special cases it may be beneficial to disable this.
          *
-         * @property {boolean} disableCull
+         * @name Phaser.Cameras.Scene2D.Camera#disableCull
+         * @type {boolean}
          * @default false
          * @since 3.0.0
          */
@@ -197,7 +216,8 @@ var Camera = new Class({
         /**
          * A temporary array of culled objects.
          *
-         * @property {array} culledObjects
+         * @name Phaser.Cameras.Scene2D.Camera#culledObjects
+         * @type {array}
          * @default []
          * @since 3.0.0
          */
@@ -206,7 +226,8 @@ var Camera = new Class({
         /**
          * [description]
          *
-         * @property {number} _shakeDuration
+         * @name Phaser.Cameras.Scene2D.Camera#_shakeDuration
+         * @type {number}
          * @private
          * @default 0
          * @since 3.0.0
@@ -216,7 +237,8 @@ var Camera = new Class({
         /**
          * [description]
          *
-         * @property {number} _shakeIntensity
+         * @name Phaser.Cameras.Scene2D.Camera#_shakeIntensity
+         * @type {number}
          * @private
          * @default 0
          * @since 3.0.0
@@ -226,7 +248,8 @@ var Camera = new Class({
         /**
          * [description]
          *
-         * @property {number} _shakeOffsetX
+         * @name Phaser.Cameras.Scene2D.Camera#_shakeOffsetX
+         * @type {number}
          * @private
          * @default 0
          * @since 3.0.0
@@ -236,7 +259,8 @@ var Camera = new Class({
         /**
          * [description]
          *
-         * @property {number} _shakeOffsetY
+         * @name Phaser.Cameras.Scene2D.Camera#_shakeOffsetY
+         * @type {number}
          * @private
          * @default 0
          * @since 3.0.0
@@ -246,7 +270,8 @@ var Camera = new Class({
         /**
          * [description]
          *
-         * @property {number} _fadeDuration
+         * @name Phaser.Cameras.Scene2D.Camera#_fadeDuration
+         * @type {number}
          * @private
          * @default 0
          * @since 3.0.0
@@ -256,7 +281,8 @@ var Camera = new Class({
         /**
          * [description]
          *
-         * @property {number} _fadeRed
+         * @name Phaser.Cameras.Scene2D.Camera#_fadeRed
+         * @type {number}
          * @private
          * @default 0
          * @since 3.0.0
@@ -266,7 +292,8 @@ var Camera = new Class({
         /**
          * [description]
          *
-         * @property {number} _fadeGreen
+         * @name Phaser.Cameras.Scene2D.Camera#_fadeGreen
+         * @type {number}
          * @private
          * @default 0
          * @since 3.0.0
@@ -276,7 +303,8 @@ var Camera = new Class({
         /**
          * [description]
          *
-         * @property {number} _fadeBlue
+         * @name Phaser.Cameras.Scene2D.Camera#_fadeBlue
+         * @type {number}
          * @private
          * @default 0
          * @since 3.0.0
@@ -286,7 +314,8 @@ var Camera = new Class({
         /**
          * [description]
          *
-         * @property {number} _fadeAlpha
+         * @name Phaser.Cameras.Scene2D.Camera#_fadeAlpha
+         * @type {number}
          * @private
          * @default 0
          * @since 3.0.0
@@ -296,7 +325,8 @@ var Camera = new Class({
         /**
          * [description]
          *
-         * @property {number} _flashDuration
+         * @name Phaser.Cameras.Scene2D.Camera#_flashDuration
+         * @type {number}
          * @private
          * @default 0
          * @since 3.0.0
@@ -306,7 +336,8 @@ var Camera = new Class({
         /**
          * [description]
          *
-         * @property {number} _flashRed
+         * @name Phaser.Cameras.Scene2D.Camera#_flashRed
+         * @type {number}
          * @private
          * @default 1
          * @since 3.0.0
@@ -316,7 +347,8 @@ var Camera = new Class({
         /**
          * [description]
          *
-         * @property {number} _flashGreen
+         * @name Phaser.Cameras.Scene2D.Camera#_flashGreen
+         * @type {number}
          * @private
          * @default 1
          * @since 3.0.0
@@ -326,7 +358,8 @@ var Camera = new Class({
         /**
          * [description]
          *
-         * @property {number} _flashBlue
+         * @name Phaser.Cameras.Scene2D.Camera#_flashBlue
+         * @type {number}
          * @private
          * @default 1
          * @since 3.0.0
@@ -336,7 +369,8 @@ var Camera = new Class({
         /**
          * [description]
          *
-         * @property {number} _flashAlpha
+         * @name Phaser.Cameras.Scene2D.Camera#_flashAlpha
+         * @type {number}
          * @private
          * @default 0
          * @since 3.0.0
@@ -346,7 +380,8 @@ var Camera = new Class({
         /**
          * [description]
          *
-         * @property {?any} _follow
+         * @name Phaser.Cameras.Scene2D.Camera#_follow
+         * @type {?any}
          * @private
          * @default null
          * @since 3.0.0
@@ -356,7 +391,8 @@ var Camera = new Class({
         /**
          * [description]
          *
-         * @property {integer} _id
+         * @name Phaser.Cameras.Scene2D.Camera#_id
+         * @type {integer}
          * @private
          * @default 0
          * @since 3.0.0
@@ -402,9 +438,9 @@ var Camera = new Class({
      * @method Phaser.Cameras.Scene2D.Camera#cull
      * @since 3.0.0
      *
-     * @param {[type]} renderableObjects - [description]
+     * @param {array} renderableObjects - [description]
      *
-     * @return {[type]} [description]
+     * @return {array} [description]
      */
     cull: function (renderableObjects)
     {
@@ -479,9 +515,9 @@ var Camera = new Class({
      * @method Phaser.Cameras.Scene2D.Camera#cullHitTest
      * @since 3.0.0
      *
-     * @param {[type]} interactiveObjects - [description]
+     * @param {array} interactiveObjects - [description]
      *
-     * @return {[type]} [description]
+     * @return {array} [description]
      */
     cullHitTest: function (interactiveObjects)
     {
@@ -555,9 +591,9 @@ var Camera = new Class({
      * @method Phaser.Cameras.Scene2D.Camera#cullTilemap
      * @since 3.0.0
      *
-     * @param {[type]} tilemap - [description]
+     * @param {array} tilemap - [description]
      *
-     * @return {[type]} [description]
+     * @return {array} [description]
      */
     cullTilemap: function (tilemap)
     {
@@ -701,11 +737,11 @@ var Camera = new Class({
      * @method Phaser.Cameras.Scene2D.Camera#getWorldPoint
      * @since 3.0.0
      *
-     * @param {[type]} x - [description]
-     * @param {[type]} y - [description]
-     * @param {[type]} output - [description]
+     * @param {number} x - [description]
+     * @param {number} y - [description]
+     * @param {object|Phaser.Math.Vector2} output - [description]
      *
-     * @return {[type]} [description]
+     * @return {Phaser.Math.Vector2} [description]
      */
     getWorldPoint: function (x, y, output)
     {
@@ -764,14 +800,12 @@ var Camera = new Class({
      * @method Phaser.Cameras.Scene2D.Camera#ignore
      * @since 3.0.0
      *
-     * @param {[type]} gameObjectOrArray - [description]
+     * @param {Phaser.GameObjects.GameObject|Phaser.GameObjects.GameObject[]} gameObjectOrArray - [description]
      *
      * @return {Phaser.Cameras.Scene2D.Camera} This Camera instance.
      */
     ignore: function (gameObjectOrArray)
     {
-
-
         if (gameObjectOrArray instanceof Array)
         {
             for (var index = 0; index < gameObjectOrArray.length; ++index)
@@ -878,7 +912,7 @@ var Camera = new Class({
      * @method Phaser.Cameras.Scene2D.Camera#setAngle
      * @since 3.0.0
      *
-     * @param {[type]} value - [description]
+     * @param {number} value - [description]
      *
      * @return {Phaser.Cameras.Scene2D.Camera} This Camera instance.
      */
@@ -897,7 +931,7 @@ var Camera = new Class({
      * @method Phaser.Cameras.Scene2D.Camera#setBackgroundColor
      * @since 3.0.0
      *
-     * @param {[type]} color - [description]
+     * @param {integer} color - [description]
      *
      * @return {Phaser.Cameras.Scene2D.Camera} This Camera instance.
      */
@@ -918,10 +952,10 @@ var Camera = new Class({
      * @method Phaser.Cameras.Scene2D.Camera#setBounds
      * @since 3.0.0
      *
-     * @param {[type]} x - [description]
-     * @param {[type]} y - [description]
-     * @param {[type]} width - [description]
-     * @param {[type]} height - [description]
+     * @param {number} x - [description]
+     * @param {number} y - [description]
+     * @param {number} width - [description]
+     * @param {number} height - [description]
      *
      * @return {Phaser.Cameras.Scene2D.Camera} This Camera instance.
      */
@@ -940,7 +974,7 @@ var Camera = new Class({
      * @method Phaser.Cameras.Scene2D.Camera#setName
      * @since 3.0.0
      *
-     * @param {[type]} value - [description]
+     * @param {string} value - [description]
      *
      * @return {Phaser.Cameras.Scene2D.Camera} This Camera instance.
      */
@@ -959,8 +993,8 @@ var Camera = new Class({
      * @method Phaser.Cameras.Scene2D.Camera#setPosition
      * @since 3.0.0
      *
-     * @param {[type]} x - [description]
-     * @param {[type]} y - [description]
+     * @param {number} x - [description]
+     * @param {number} y - [description]
      *
      * @return {Phaser.Cameras.Scene2D.Camera} This Camera instance.
      */
@@ -980,7 +1014,7 @@ var Camera = new Class({
      * @method Phaser.Cameras.Scene2D.Camera#setRotation
      * @since 3.0.0
      *
-     * @param {[type]} value - [description]
+     * @param {number} value - [description]
      *
      * @return {Phaser.Cameras.Scene2D.Camera} This Camera instance.
      */
@@ -999,7 +1033,7 @@ var Camera = new Class({
      * @method Phaser.Cameras.Scene2D.Camera#setRoundPixels
      * @since 3.0.0
      *
-     * @param {[type]} value - [description]
+     * @param {boolean} value - [description]
      *
      * @return {Phaser.Cameras.Scene2D.Camera} This Camera instance.
      */
@@ -1016,7 +1050,7 @@ var Camera = new Class({
      * @method Phaser.Cameras.Scene2D.Camera#setScene
      * @since 3.0.0
      *
-     * @param {[type]} scene - [description]
+     * @param {Phaser.Scene} scene - [description]
      *
      * @return {Phaser.Cameras.Scene2D.Camera} This Camera instance.
      */
@@ -1033,8 +1067,8 @@ var Camera = new Class({
      * @method Phaser.Cameras.Scene2D.Camera#setScroll
      * @since 3.0.0
      *
-     * @param {[type]} x - [description]
-     * @param {[type]} y - [description]
+     * @param {number} x - [description]
+     * @param {number} y - [description]
      *
      * @return {Phaser.Cameras.Scene2D.Camera} This Camera instance.
      */
@@ -1054,8 +1088,8 @@ var Camera = new Class({
      * @method Phaser.Cameras.Scene2D.Camera#setSize
      * @since 3.0.0
      *
-     * @param {[type]} width - [description]
-     * @param {[type]} height - [description]
+     * @param {number} width - [description]
+     * @param {number} height - [description]
      *
      * @return {Phaser.Cameras.Scene2D.Camera} This Camera instance.
      */
@@ -1075,10 +1109,10 @@ var Camera = new Class({
      * @method Phaser.Cameras.Scene2D.Camera#setViewport
      * @since 3.0.0
      *
-     * @param {[type]} x - [description]
-     * @param {[type]} y - [description]
-     * @param {[type]} width - [description]
-     * @param {[type]} height - [description]
+     * @param {number} x - [description]
+     * @param {number} y - [description]
+     * @param {number} width - [description]
+     * @param {number} height - [description]
      *
      * @return {Phaser.Cameras.Scene2D.Camera} This Camera instance.
      */
@@ -1098,7 +1132,7 @@ var Camera = new Class({
      * @method Phaser.Cameras.Scene2D.Camera#setZoom
      * @since 3.0.0
      *
-     * @param {[type]} value - [description]
+     * @param {float} value - [description]
      *
      * @return {Phaser.Cameras.Scene2D.Camera} This Camera instance.
      */
@@ -1117,9 +1151,9 @@ var Camera = new Class({
      * @method Phaser.Cameras.Scene2D.Camera#shake
      * @since 3.0.0
      *
-     * @param {[type]} duration - [description]
-     * @param {[type]} intensity - [description]
-     * @param {[type]} force - [description]
+     * @param {number} duration - [description]
+     * @param {number} intensity - [description]
+     * @param {number} force - [description]
      *
      * @return {Phaser.Cameras.Scene2D.Camera} This Camera instance.
      */
@@ -1146,8 +1180,8 @@ var Camera = new Class({
      * @method Phaser.Cameras.Scene2D.Camera#startFollow
      * @since 3.0.0
      *
-     * @param {[type]} gameObjectOrPoint - [description]
-     * @param {[type]} roundPx - [description]
+     * @param {Phaser.GameObjects.GameObject|object} gameObjectOrPoint - [description]
+     * @param {boolean} roundPx - [description]
      *
      * @return {Phaser.Cameras.Scene2D.Camera} This Camera instance.
      */
@@ -1184,7 +1218,7 @@ var Camera = new Class({
      * @method Phaser.Cameras.Scene2D.Camera#toJSON
      * @since 3.0.0
      *
-     * @return {[type]} [description]
+     * @return {object} [description]
      */
     toJSON: function ()
     {
@@ -1297,7 +1331,7 @@ var Camera = new Class({
         this.matrix = undefined;
         this.culledObjects = [];
         this.scene = undefined;
-    },
+    }
 
 });
 
