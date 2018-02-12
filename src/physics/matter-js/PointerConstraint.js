@@ -9,6 +9,19 @@ var Sleeping = require('./lib/core/Sleeping');
 var Vector2 = require('../../math/Vector2');
 var Vertices = require('./lib/geometry/Vertices');
 
+/**
+ * @classdesc
+ * [description]
+ *
+ * @class PointerConstraint
+ * @memberOf Phaser.Physics.Matter
+ * @constructor
+ * @since 3.0.0
+ *
+ * @param {Phaser.Scene} scene - [description]
+ * @param {Phaser.Physics.Matter.World} world - [description]
+ * @param {object} options - [description]
+ */
 var PointerConstraint = new Class({
 
     initialize:
@@ -33,10 +46,31 @@ var PointerConstraint = new Class({
             }
         };
 
+        /**
+         * [description]
+         *
+         * @name Phaser.Physics.Matter.PointerConstraint#scene
+         * @type {Phaser.Scene}
+         * @since 3.0.0
+         */
         this.scene = scene;
 
+        /**
+         * [description]
+         *
+         * @name Phaser.Physics.Matter.PointerConstraint#world
+         * @type {Phaser.Physics.Matter.World}
+         * @since 3.0.0
+         */
         this.world = world;
 
+        /**
+         * [description]
+         *
+         * @name Phaser.Physics.Matter.PointerConstraint#camera
+         * @type {Phaser.Cameras.Scene2D.Camera}
+         * @since 3.0.0
+         */
         var camera = GetFastValue(options, 'camera', null);
 
         if (!camera)
@@ -50,32 +84,86 @@ var PointerConstraint = new Class({
             delete options.camera;
         }
 
+        /**
+         * [description]
+         *
+         * @name Phaser.Physics.Matter.PointerConstraint#pointer
+         * @type {Phaser.Input.Pointer}
+         * @default null
+         * @since 3.0.0
+         */
         this.pointer = null;
 
+        /**
+         * [description]
+         *
+         * @name Phaser.Physics.Matter.PointerConstraint#active
+         * @type {boolean}
+         * @default true
+         * @since 3.0.0
+         */
         this.active = true;
 
-        //  The transformed position
+        /**
+         * The transformed position.
+         *
+         * @name Phaser.Physics.Matter.PointerConstraint#position
+         * @type {Phaser.Math.Vector2}
+         * @since 3.0.0
+         */
         this.position = new Vector2();
 
+        /**
+         * [description]
+         *
+         * @name Phaser.Physics.Matter.PointerConstraint#constraint
+         * @type {object}
+         * @since 3.0.0
+         */
         this.constraint = Constraint.create(Merge(options, defaults));
 
-        this.world.on('BEFORE_UPDATE_EVENT', this.update, 0, this);
+        this.world.on('beforeupdate', this.update, this);
 
-        scene.sys.events.on('pointerdown', this.onDown, 0, this);
+        scene.sys.input.on('pointerdown', this.onDown, this);
 
-        scene.sys.events.on('pointerup', this.onUp, 0, this);
+        scene.sys.input.on('pointerup', this.onUp, this);
     },
 
-    onDown: function (event)
+    /**
+     * [description]
+     *
+     * @method Phaser.Physics.Matter.PointerConstraint#onDown
+     * @since 3.0.0
+     *
+     * @param {Phaser.Input.Pointer} pointer - [description]
+     */
+    onDown: function (pointer)
     {
-        this.pointer = event.pointer;
+        this.pointer = pointer;
     },
 
-    onUp: function (event)
+    /**
+     * [description]
+     *
+     * @method Phaser.Physics.Matter.PointerConstraint#onUp
+     * @since 3.0.0
+     */
+    onUp: function ()
     {
         this.pointer = null;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Physics.Matter.PointerConstraint#getBodyPart
+     * @since 3.0.0
+     *
+     * @param {[type]} body - [description]
+     * @param {[type]} position - [description]
+     *
+     * @return {boolean} [description]
+     */
     getBodyPart: function (body, position)
     {
         var constraint = this.constraint;
@@ -107,6 +195,12 @@ var PointerConstraint = new Class({
         return false;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Physics.Matter.PointerConstraint#update
+     * @since 3.0.0
+     */
     update: function ()
     {
         if (!this.active)
@@ -161,17 +255,23 @@ var PointerConstraint = new Class({
         }
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Physics.Matter.PointerConstraint#destroy
+     * @since 3.0.0
+     */
     destroy: function ()
     {
         this.world.remove(this.constraint);
 
         this.constraint = null;
 
-        this.world.off('BEFORE_UPDATE_EVENT', this.update);
+        this.world.off('beforeupdate', this.update);
 
-        this.scene.sys.events.off('pointerdown', this.onDown, this);
+        this.scene.sys.input.off('pointerdown', this.onDown, this);
 
-        this.scene.sys.events.off('pointerup', this.onUp, this);
+        this.scene.sys.input.off('pointerup', this.onUp, this);
     }
 
 });
