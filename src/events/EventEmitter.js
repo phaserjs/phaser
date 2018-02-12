@@ -6,7 +6,7 @@
 
 var Class = require('../utils/Class');
 var EE = require('eventemitter3');
-var PluginManager = require('../plugins/PluginManager');
+var PluginManager = require('../boot/PluginManager');
 
 /**
  * @namespace Phaser.Events

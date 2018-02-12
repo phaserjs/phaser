@@ -6,7 +6,7 @@
 
 var Class = require('../utils/Class');
 var List = require('../structs/List');
-var PluginManager = require('../plugins/PluginManager');
+var PluginManager = require('../boot/PluginManager');
 var StableSort = require('../utils/array/StableSort');
 
 /**

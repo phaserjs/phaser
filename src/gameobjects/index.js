@@ -78,7 +78,7 @@ if (WEBGL_RENDERER)
     GameObjects.Creators.Mesh = require('./mesh/MeshCreator');
     GameObjects.Creators.Quad = require('./quad/QuadCreator');
 
-    GameObjects.Light = require('./lights/List');
+    GameObjects.Light = require('./lights/Light');
 
     require('./lights/LightsManager');
     require('./lights/LightsPlugin');

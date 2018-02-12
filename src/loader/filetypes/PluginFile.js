@@ -9,7 +9,7 @@ var CONST = require('../const');
 var File = require('../File');
 var FileTypesManager = require('../FileTypesManager');
 var GetFastValue = require('../../utils/object/GetFastValue');
-var PluginManager = require('../../plugins/PluginManager');
+var PluginManager = require('../../boot/PluginManager');
 
 /**
  * @classdesc

@@ -8,10 +8,6 @@ var Class = require('../utils/Class');
 
 var plugins = {};
 
-/**
- * @namespace Phaser.Plugins
- */
-
 var PluginManager = new Class({
 
     initialize:
@@ -72,8 +68,6 @@ var PluginManager = new Class({
 
             var source = plugins[pluginKey];
 
-            // console.log('PluginManager.local', pluginKey, 'to', source.mapping);
-
             var plugin = new source.plugin(scene);
             
             sys[source.mapping] = plugin;
@@ -112,8 +106,6 @@ var PluginManager = new Class({
 PluginManager.register = function (key, plugin, mapping)
 {
     plugins[key] = { plugin: plugin, mapping: mapping };
-
-    // console.log('PluginManager.register', key, mapping);
 };
 
 module.exports = PluginManager;

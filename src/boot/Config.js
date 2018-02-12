@@ -6,10 +6,10 @@
 
 var Class = require('../utils/Class');
 var CONST = require('../const');
-var DefaultScenePlugins = require('../plugins/DefaultScenePlugins');
 var GetValue = require('../utils/object/GetValue');
 var MATH = require('../math/const');
 var NOOP = require('../utils/NOOP');
+var Plugins = require('../plugins');
 var ValueToColor = require('../display/color/ValueToColor');
 
 /**
@@ -211,7 +211,7 @@ var Config = new Class({
         this.loaderTimeout = GetValue(config, 'loader.timeout', 0);
 
         //  Scene Plugins
-        this.defaultPlugins = GetValue(config, 'plugins', DefaultScenePlugins);
+        this.defaultPlugins = GetValue(config, 'plugins', Plugins.DefaultScene);
 
         //  Default / Missing Images
         var pngPrefix = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAg';

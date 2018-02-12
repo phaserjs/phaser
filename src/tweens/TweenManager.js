@@ -6,7 +6,7 @@
 
 var Class = require('../utils/Class');
 var NumberTweenBuilder = require('./builders/NumberTweenBuilder');
-var PluginManager = require('../plugins/PluginManager');
+var PluginManager = require('../boot/PluginManager');
 var TimelineBuilder = require('./builders/TimelineBuilder');
 var TWEEN_CONST = require('./tween/const');
 var TweenBuilder = require('./builders/TweenBuilder');

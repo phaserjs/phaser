@@ -11,7 +11,7 @@ var EventEmitter = require('eventemitter3');
 var FileTypesManager = require('./FileTypesManager');
 var GetFastValue = require('../utils/object/GetFastValue');
 var ParseXMLBitmapFont = require('../gameobjects/bitmaptext/ParseXMLBitmapFont');
-var PluginManager = require('../plugins/PluginManager');
+var PluginManager = require('../boot/PluginManager');
 var XHRSettings = require('./XHRSettings');
 
 /**

@@ -13,7 +13,7 @@ var MatterLib = require('./lib/core/Matter');
 var MatterWrap = require('./lib/plugins/MatterWrap');
 var Merge = require('../../utils/object/Merge');
 var Plugin = require('./lib/core/Plugin');
-var PluginManager = require('../../plugins/PluginManager');
+var PluginManager = require('../../boot/PluginManager');
 var World = require('./World');
 
 /**

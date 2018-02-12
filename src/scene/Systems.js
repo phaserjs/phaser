@@ -6,10 +6,9 @@
 
 var Class = require('../utils/Class');
 var CONST = require('./const');
-var CoreScenePlugins = require('../plugins/CoreScenePlugins');
 var GetPhysicsPlugins = require('./GetPhysicsPlugins');
 var GetScenePlugins = require('./GetScenePlugins');
-var GlobalPlugins = require('../plugins/GlobalPlugins');
+var Plugins = require('../plugins');
 var Settings = require('./Settings');
 
 /**
@@ -231,9 +230,9 @@ var Systems = new Class({
 
         this.plugins = pluginManager;
 
-        pluginManager.installGlobal(this, GlobalPlugins);
+        pluginManager.installGlobal(this, Plugins.Global);
 
-        pluginManager.installLocal(this, CoreScenePlugins);
+        pluginManager.installLocal(this, Plugins.CoreScene);
 
         pluginManager.installLocal(this, GetScenePlugins(this));
 

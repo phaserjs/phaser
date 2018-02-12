@@ -6,7 +6,7 @@
 
 var Class = require('../utils/Class');
 var CONST = require('./const');
-var PluginManager = require('../plugins/PluginManager');
+var PluginManager = require('../boot/PluginManager');
 
 /**
  * @classdesc

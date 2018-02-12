@@ -13,6 +13,7 @@ module.exports = {
     Config: require('./Config'),
     CreateRenderer: require('./CreateRenderer'),
     DebugHeader: require('./DebugHeader'),
+    PluginManager: require('./PluginManager'),
     TimeStep: require('./TimeStep'),
     VisibilityHandler: require('./VisibilityHandler')
 

@@ -7,7 +7,7 @@
 var Class = require('../../utils/Class');
 var OrthographicCamera = require('./OrthographicCamera');
 var PerspectiveCamera = require('./PerspectiveCamera');
-var PluginManager = require('../../plugins/PluginManager');
+var PluginManager = require('../../boot/PluginManager');
 
 /**
  * @classdesc
