@@ -834,6 +834,7 @@ var Camera = new Class({
      * @since 3.0.0
      *
      * @param {number} baseScale - [description]
+     * @param {number} resolution - [description]
      *
      */
     preRender: function (baseScale, resolution)

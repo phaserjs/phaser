@@ -24,6 +24,13 @@ var GeometryMask = new Class({
 
     function GeometryMask (scene, graphicsGeometry)
     {
+        /**
+         * [description]
+         *
+         * @name Phaser.Display.Masks.GeometryMask#geometryMask
+         * @type {Phaser.GameObjects.Graphics}
+         * @since 3.0.0
+         */
         this.geometryMask = graphicsGeometry;
     },
 
@@ -33,7 +40,7 @@ var GeometryMask = new Class({
      * @method Phaser.Display.Masks.GeometryMask#setShape
      * @since 3.0.0
      *
-     * @param {[type]} graphicsGeometry - [description]
+     * @param {Phaser.GameObjects.Graphics} graphicsGeometry - [description]
      */
     setShape: function (graphicsGeometry)
     {
@@ -48,7 +55,7 @@ var GeometryMask = new Class({
      *
      * @param {[type]} renderer - [description]
      * @param {[type]} mask - [description]
-     * @param {[type]} camera - [description]
+     * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
      */
     preRenderWebGL: function (renderer, mask, camera)
     {
@@ -100,14 +107,16 @@ var GeometryMask = new Class({
      *
      * @param {[type]} renderer - [description]
      * @param {[type]} mask - [description]
-     * @param {[type]} camera - [description]
+     * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
      */
     preRenderCanvas: function (renderer, mask, camera)
     {
         var geometryMask = this.geometryMask;
+
         renderer.currentContext.save();
-        //renderer.currentContext.beginPath();
+
         geometryMask.renderCanvas(renderer, geometryMask, 0.0, camera, null, true);
+
         renderer.currentContext.clip();
     },
 
@@ -121,11 +130,9 @@ var GeometryMask = new Class({
      */
     postRenderCanvas: function (renderer)
     {
-        //renderer.currentContext.closePath();
         renderer.currentContext.restore();
     }
 
 });
-
 
 module.exports = GeometryMask;

@@ -36,7 +36,8 @@ var Color = new Class({
         /**
          * The internal red color value.
          *
-         * @property {number} r
+         * @name Phaser.Display.Color#r
+         * @type {number}
          * @private
          * @default 0
          * @since 3.0.0
@@ -46,7 +47,8 @@ var Color = new Class({
         /**
          * The internal green color value.
          *
-         * @property {number} g
+         * @name Phaser.Display.Color#g
+         * @type {number}
          * @private
          * @default 0
          * @since 3.0.0
@@ -56,7 +58,8 @@ var Color = new Class({
         /**
          * The internal blue color value.
          *
-         * @property {number} b
+         * @name Phaser.Display.Color#b
+         * @type {number}
          * @private
          * @default 0
          * @since 3.0.0
@@ -66,7 +69,8 @@ var Color = new Class({
         /**
          * The internal alpha color value.
          *
-         * @property {number} a
+         * @name Phaser.Display.Color#a
+         * @type {number}
          * @private
          * @default 255
          * @since 3.0.0
@@ -76,7 +80,8 @@ var Color = new Class({
         /**
          * An array containing the calculated color values for WebGL use.
          *
-         * @property {array} gl
+         * @name Phaser.Display.Color#gl
+         * @type {array}
          * @since 3.0.0
          */
         this.gl = [ 0, 0, 0, 1 ];
@@ -84,7 +89,8 @@ var Color = new Class({
         /**
          * Pre-calculated internal color value.
          *
-         * @property {number} _color
+         * @name Phaser.Display.Color#_color
+         * @type {number}
          * @private
          * @default 0
          * @since 3.0.0
@@ -94,7 +100,8 @@ var Color = new Class({
         /**
          * Pre-calculated internal color32 value.
          *
-         * @property {number} _color32
+         * @name Phaser.Display.Color#_color32
+         * @type {number}
          * @private
          * @default 0
          * @since 3.0.0
@@ -104,7 +111,8 @@ var Color = new Class({
         /**
          * Pre-calculated internal color rgb string value.
          *
-         * @property {string} _rgba
+         * @name Phaser.Display.Color#_rgba
+         * @type {string}
          * @private
          * @default ''
          * @since 3.0.0
@@ -240,7 +248,7 @@ var Color = new Class({
      * The color of this Color component, not including the alpha channel.
      * 
      * @name Phaser.Display.Color#color
-     * @property {number} color
+     * @type {number}
      * @readOnly
      * @since 3.0.0
      */
@@ -257,7 +265,7 @@ var Color = new Class({
      * The color of this Color component, including the alpha channel.
      * 
      * @name Phaser.Display.Color#color32
-     * @property {number} color32
+     * @type {number}
      * @readOnly
      * @since 3.0.0
      */
@@ -274,7 +282,7 @@ var Color = new Class({
      * The color of this Color component as a string which can be used in CSS color values.
      * 
      * @name Phaser.Display.Color#rgba
-     * @property {string} rgba
+     * @type {string}
      * @readOnly
      * @since 3.0.0
      */
@@ -291,7 +299,7 @@ var Color = new Class({
      * The red color value, normalized to the range 0 to 1.
      * 
      * @name Phaser.Display.Color#redGL
-     * @property {float} redGL
+     * @type {float}
      * @since 3.0.0
      */
     redGL: {
@@ -316,7 +324,7 @@ var Color = new Class({
      * The green color value, normalized to the range 0 to 1.
      * 
      * @name Phaser.Display.Color#greenGL
-     * @property {float} greenGL
+     * @type {float}
      * @since 3.0.0
      */
     greenGL: {
@@ -341,7 +349,7 @@ var Color = new Class({
      * The blue color value, normalized to the range 0 to 1.
      * 
      * @name Phaser.Display.Color#blueGL
-     * @property {float} blueGL
+     * @type {float}
      * @since 3.0.0
      */
     blueGL: {
@@ -366,7 +374,7 @@ var Color = new Class({
      * The alpha color value, normalized to the range 0 to 1.
      * 
      * @name Phaser.Display.Color#alphaGL
-     * @property {float} alphaGL
+     * @type {float}
      * @since 3.0.0
      */
     alphaGL: {
@@ -391,7 +399,7 @@ var Color = new Class({
      * The red color value, normalized to the range 0 to 255.
      * 
      * @name Phaser.Display.Color#red
-     * @property {float} red
+     * @type {float}
      * @since 3.0.0
      */
     red: {
@@ -418,7 +426,7 @@ var Color = new Class({
      * The green color value, normalized to the range 0 to 255.
      * 
      * @name Phaser.Display.Color#green
-     * @property {float} green
+     * @type {float}
      * @since 3.0.0
      */
     green: {
@@ -445,7 +453,7 @@ var Color = new Class({
      * The blue color value, normalized to the range 0 to 255.
      * 
      * @name Phaser.Display.Color#blue
-     * @property {float} blue
+     * @type {float}
      * @since 3.0.0
      */
     blue: {
@@ -472,7 +480,7 @@ var Color = new Class({
      * The alpha color value, normalized to the range 0 to 255.
      * 
      * @name Phaser.Display.Color#alpha
-     * @property {float} alpha
+     * @type {float}
      * @since 3.0.0
      */
     alpha: {
