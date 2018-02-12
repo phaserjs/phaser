@@ -8,23 +8,57 @@ var Class = require('../utils/Class');
 
 var plugins = {};
 
+/**
+ * @classdesc
+ * The PluginManager is global and belongs to the Game instance, not a Scene.
+ * It handles the installation and removal of all global and Scene based plugins.
+ * Plugins automatically register themselves with the PluginManager in their respective classes.
+ *
+ * @class PluginManager
+ * @memberOf Phaser.Boot
+ * @constructor
+ * @since 3.0.0
+ *
+ * @param {Phaser.Game} game - [description]
+ */
 var PluginManager = new Class({
 
     initialize:
 
-    //  The PluginManager is global and belongs to the Game instance, not a Scene.
     function PluginManager (game)
     {
+        /**
+         * [description]
+         *
+         * @name Phaser.Boot.PluginManager#game
+         * @type {Phaser.Game}
+         * @since 3.0.0
+         */
         this.game = game;
 
         game.events.once('boot', this.boot, this);
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Boot.PluginManager#boot
+     * @since 3.0.0
+     */
     boot: function ()
     {
         this.game.events.once('destroy', this.destroy, this);
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Boot.PluginManager#installGlobal
+     * @since 3.0.0
+     *
+     * @param {Phaser.Scenes.Systems} sys - [description]
+     * @param {array} globalPlugins - [description]
+     */
     installGlobal: function (sys, globalPlugins)
     {
         var game = sys.game;
@@ -51,6 +85,15 @@ var PluginManager = new Class({
         }
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Boot.PluginManager#installLocal
+     * @since 3.0.0
+     *
+     * @param {Phaser.Scenes.Systems} sys - [description]
+     * @param {array} scenePlugins - [description]
+     */
     installLocal: function (sys, scenePlugins)
     {
         var scene = sys.scene;
@@ -86,11 +129,25 @@ var PluginManager = new Class({
         }
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Boot.PluginManager#remove
+     * @since 3.0.0
+     *
+     * @param {string} key - [description]
+     */
     remove: function (key)
     {
         delete plugins[key];
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Boot.PluginManager#destroy
+     * @since 3.0.0
+     */
     destroy: function ()
     {
         this.game = null;
@@ -98,11 +155,19 @@ var PluginManager = new Class({
 
 });
 
-//  Static method called directly by the Plugins
-//  Key is a reference used to get the plugin from the plugins object (i.e. InputPlugin)
-//  Plugin is the object to instantiate to create the plugin
-//  Mapping is what the plugin is injected into the Scene.Systems as (i.e. input)
-
+/**
+ * Static method called directly by the Plugins
+ * Key is a reference used to get the plugin from the plugins object (i.e. InputPlugin)
+ * Plugin is the object to instantiate to create the plugin
+ * Mapping is what the plugin is injected into the Scene.Systems as (i.e. input)
+ *
+ * @name PluginManager.register
+ * @since 3.0.0
+ * 
+ * @param {string} key - [description]
+ * @param {object} plugin - [description]
+ * @param {string} mapping - [description]
+ */
 PluginManager.register = function (key, plugin, mapping)
 {
     plugins[key] = { plugin: plugin, mapping: mapping };

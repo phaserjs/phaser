@@ -18,7 +18,7 @@ var DOMContentLoaded = require('../dom/DOMContentLoaded');
 var EventEmitter = require('eventemitter3');
 var InputManager = require('../input/InputManager');
 var NOOP = require('../utils/NOOP');
-var PluginManager = require('../boot/PluginManager');
+var PluginManager = require('./PluginManager');
 var SceneManager = require('../scene/SceneManager');
 var SoundManagerCreator = require('../sound/SoundManagerCreator');
 var TextureManager = require('../textures/TextureManager');
@@ -50,9 +50,11 @@ var Game = new Class({
     {
         /**
          * The parsed Game Configuration object.
+         * 
          * The values stored within this object are read-only and should not be changed at run-time.
          *
-         * @property {Phaser.Boot.Config} config
+         * @name Phaser.Game#config
+         * @type {Phaser.Boot.Config}
          * @readOnly
          * @since 3.0.0
          */
@@ -61,7 +63,8 @@ var Game = new Class({
         /**
          * A reference to either the Canvas or WebGL Renderer that this Game is using.
          *
-         * @property {Phaser.Renderer.Canvas.CanvasRenderer|Phaser.Renderer.WebGL.WebGLRenderer} renderer
+         * @name Phaser.Game#renderer
+         * @type {Phaser.Renderer.Canvas.CanvasRenderer|Phaser.Renderer.WebGL.WebGLRenderer}
          * @since 3.0.0
          */
         this.renderer = null;
@@ -69,7 +72,8 @@ var Game = new Class({
         /**
          * A reference to the HTML Canvas Element on which the renderer is drawing.
          *
-         * @property {HTMLCanvasElement} canvas
+         * @name Phaser.Game#canvas
+         * @type {HTMLCanvasElement}
          * @since 3.0.0
          */
         this.canvas = null;
@@ -77,7 +81,8 @@ var Game = new Class({
         /**
          * A reference to the Canvas Rendering Context belonging to the Canvas Element this game is rendering to.
          *
-         * @property {CanvasRenderingContext2D} context
+         * @name Phaser.Game#context
+         * @type {CanvasRenderingContext2D}
          * @since 3.0.0
          */
         this.context = null;
@@ -85,7 +90,8 @@ var Game = new Class({
         /**
          * A flag indicating when this Game instance has finished its boot process.
          *
-         * @property {boolean} isBooted
+         * @name Phaser.Game#isBooted
+         * @type {boolean}
          * @readOnly
          * @since 3.0.0
          */
@@ -94,7 +100,8 @@ var Game = new Class({
         /**
          * A flag indicating if this Game is currently running its game step or not.
          *
-         * @property {boolean} isRunning
+         * @name Phaser.Game#isRunning
+         * @type {boolean}
          * @readOnly
          * @since 3.0.0
          */
@@ -103,7 +110,8 @@ var Game = new Class({
         /**
          * An Event Emitter which is used to broadcast game-level events from the global systems.
          *
-         * @property {EventEmitter} events
+         * @name Phaser.Game#events
+         * @type {EventEmitter}
          * @since 3.0.0
          */
         this.events = new EventEmitter();
@@ -113,7 +121,8 @@ var Game = new Class({
          * 
          * The Animation Manager is a global system responsible for managing all animations used within your game.
          *
-         * @property {Phaser.Animations.AnimationManager} anims
+         * @name Phaser.Game#anims
+         * @type {Phaser.Animations.AnimationManager}
          * @since 3.0.0
          */
         this.anims = new AnimationManager(this);
@@ -123,7 +132,8 @@ var Game = new Class({
          * 
          * The Texture Manager is a global system responsible for managing all textures being used by your game.
          *
-         * @property {Phaser.Textures.TextureManager} textures
+         * @name Phaser.Game#textures
+         * @type {Phaser.Textures.TextureManager}
          * @since 3.0.0
          */
         this.textures = new TextureManager(this);
@@ -133,7 +143,8 @@ var Game = new Class({
          * 
          * The Cache Manager is a global system responsible for caching, accessing and releasing external game assets.
          *
-         * @property {Phaser.Cache.CacheManager} cache
+         * @name Phaser.Game#cache
+         * @type {Phaser.Cache.CacheManager}
          * @since 3.0.0
          */
         this.cache = new CacheManager(this);
@@ -141,7 +152,8 @@ var Game = new Class({
         /**
          * [description]
          *
-         * @property {Phaser.Data.DataManager} registry
+         * @name Phaser.Game#registry
+         * @type {Phaser.Data.DataManager}
          * @since 3.0.0
          */
         this.registry = new DataManager(this);
@@ -151,7 +163,8 @@ var Game = new Class({
          * 
          * The Input Manager is a global system responsible for the capture of browser-level input events.
          *
-         * @property {Phaser.Input.InputManager} input
+         * @name Phaser.Game#input
+         * @type {Phaser.Input.InputManager}
          * @since 3.0.0
          */
         this.input = new InputManager(this, this.config);
@@ -161,7 +174,8 @@ var Game = new Class({
          * 
          * The Scene Manager is a global system responsible for creating, modifying and updating the Scenes in your game.
          *
-         * @property {Phaser.Scenes.SceneManager} scene
+         * @name Phaser.Game#scene
+         * @type {Phaser.Scenes.SceneManager}
          * @since 3.0.0
          */
         this.scene = new SceneManager(this, this.config.sceneConfig);
@@ -172,7 +186,8 @@ var Game = new Class({
          * Contains information about the device running this game, such as OS, browser vendor and feature support.
          * Used by various systems to determine capabilities and code paths.
          *
-         * @property {Phaser.Device} device
+         * @name Phaser.Game#device
+         * @type {Phaser.Device}
          * @since 3.0.0
          */
         this.device = Device;
@@ -182,7 +197,8 @@ var Game = new Class({
          *
          * The Sound Manager is a global system responsible for the playback and updating of all audio in your game.
          *
-         * @property {Phaser.BaseSoundManager} sound
+         * @name Phaser.Game#sound
+         * @type {Phaser.BaseSoundManager}
          * @since 3.0.0
          */
         this.sound = SoundManagerCreator.create(this);
@@ -193,7 +209,8 @@ var Game = new Class({
          * The Time Step is a global system responsible for setting-up and responding to the browser frame events, processing
          * them and calculating delta values. It then automatically calls the game step.
          *
-         * @property {Phaser.Boot.TimeStep} loop
+         * @name Phaser.Game#loop
+         * @type {Phaser.Boot.TimeStep}
          * @since 3.0.0
          */
         this.loop = new TimeStep(this, this.config.fps);
@@ -204,7 +221,8 @@ var Game = new Class({
          * The Plugin Manager is a global system that allows plugins to register themselves with it, and can then install
          * those plugins into Scenes as required.
          *
-         * @property {Phaser.Plugins.PluginManager} plugins
+         * @name Phaser.Game#plugins
+         * @type {Phaser.Boot.PluginManager}
          * @since 3.0.0
          */
         this.plugins = new PluginManager(this, this.config);
@@ -213,7 +231,9 @@ var Game = new Class({
          * The `onStepCallback` is a callback that is fired each time the Time Step ticks.
          * It is set automatically when the Game boot process has completed.
          *
-         * @property {function} onStepCallback
+         * @name Phaser.Game#onStepCallback
+         * @type {function}
+         * @private
          * @since 3.0.0
          */
         this.onStepCallback = NOOP;
