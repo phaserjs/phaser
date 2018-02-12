@@ -284,6 +284,13 @@ var World = new Class({
         return this;
     },
 
+    removeConstraint: function (constraint, deep)
+    {
+        Composite.remove(this.localWorld, constraint, deep);
+
+        return this;
+    },
+
     /**
      * Adds MatterTileBody instances for all the colliding tiles within the given tilemap layer. Set
      * the appropriate tiles in your layer to collide before calling this method!
