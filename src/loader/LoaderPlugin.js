@@ -574,7 +574,8 @@ var LoaderPlugin = new Class({
 
         this.emit('complete', this, this.storage.size, this.failed.size);
 
-        this.removeAllListeners();
+        //  Move to a User setting:
+        // this.removeAllListeners();
     },
 
     /**
