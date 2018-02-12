@@ -263,7 +263,7 @@ var PointerConstraint = new Class({
      */
     destroy: function ()
     {
-        this.world.remove(this.constraint);
+        this.world.removeConstraint(this.constraint);
 
         this.constraint = null;
 
