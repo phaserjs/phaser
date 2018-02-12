@@ -1,3 +1,9 @@
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
 //  Source object
 //  The key as a string, can only be 1 level deep (no periods), must exist at the top level of the source object
 //  The default value to use if the key doesn't exist

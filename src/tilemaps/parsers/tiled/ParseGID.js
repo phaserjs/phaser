@@ -1,3 +1,9 @@
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
 var FLIPPED_HORIZONTAL = 0x80000000;
 var FLIPPED_VERTICAL = 0x40000000;
 var FLIPPED_ANTI_DIAGONAL = 0x20000000; // Top-right is swapped with bottom-left corners

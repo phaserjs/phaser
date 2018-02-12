@@ -1,4 +1,10 @@
 /**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
+/**
  * Copies the `x`, `y`, `width` and `height` properties from the `source` Ellipse
  * into the given `dest` Ellipse, then returns the `dest` Ellipse.
  *

@@ -1,4 +1,10 @@
 /**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
+/**
  * Converts from world Y coordinates (pixels) to tile Y coordinates (tile units), factoring in the
  * layer's position, scale and scroll.
  *

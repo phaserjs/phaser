@@ -1,4 +1,10 @@
 /**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
+/**
  * Given a File and a baseURL value this returns the URL the File will use to download from.
  *
  * @function Phaser.Loader.GetURL

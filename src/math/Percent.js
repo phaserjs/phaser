@@ -1,4 +1,10 @@
 /**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
+/**
  * Work out what percentage `value` is of the range between `min` and `max`.
  * If `max` isn't given then it will return the percentage of `value` to `min`.
  *

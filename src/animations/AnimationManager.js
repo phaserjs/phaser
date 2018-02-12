@@ -1,3 +1,9 @@
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
 var Animation = require('./Animation');
 var Class = require('../utils/Class');
 var CustomMap = require('../structs/Map');

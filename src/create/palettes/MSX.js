@@ -1,4 +1,10 @@
 /**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
+/**
  * @constant
  * @name Phaser.Create.Palettes.MSX
  * @description A 16 color palette inspired by Japanese computers like the MSX.

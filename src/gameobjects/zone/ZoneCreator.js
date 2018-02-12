@@ -1,3 +1,9 @@
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
 var GameObjectCreator = require('../GameObjectCreator');
 var GetAdvancedValue = require('../../utils/object/GetAdvancedValue');
 var Zone = require('./Zone');

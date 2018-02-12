@@ -1,3 +1,9 @@
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
 var Base64Decode = require('./Base64Decode');
 var GetFastValue = require('../../../utils/object/GetFastValue');
 var LayerData = require('../../mapdata/LayerData');

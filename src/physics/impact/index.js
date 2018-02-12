@@ -1,4 +1,10 @@
 /**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
+/**
  * An Impact.js compatible physics world, body and solver, for those who are used
  * to the Impact way of defining and controlling physics bodies. Also works with
  * the new Loader support for Weltmeister map data.

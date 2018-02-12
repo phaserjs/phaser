@@ -1,3 +1,9 @@
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
 var AlignIn = require('../display/align/in/QuickSet');
 var CONST = require('../display/align/const');
 var GetValue = require('../utils/object/GetValue');

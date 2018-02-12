@@ -1,4 +1,10 @@
 /**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
+/**
  * Provides methods used for getting and setting the origin of a Game Object.
  * Values are normalized, given in the range 0 to 1.
  * Display values contain the calculated pixel values.

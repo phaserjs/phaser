@@ -1,3 +1,9 @@
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
 //! stable.js 0.1.6, https://github.com/Two-Screen/stable
 //! © 2017 Angry Bytes and contributors. MIT licensed.
 

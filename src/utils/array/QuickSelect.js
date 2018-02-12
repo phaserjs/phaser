@@ -1,3 +1,9 @@
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
 //  This is from the quickselect npm package: https://www.npmjs.com/package/quickselect
 //  Coded by https://www.npmjs.com/~mourner (Vladimir Agafonkin)
 

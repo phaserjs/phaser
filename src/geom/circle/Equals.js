@@ -1,4 +1,10 @@
 /**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
+/**
  * Compares the `x`, `y` and `radius` properties of the two given Circles.
  * Returns `true` if they all match, otherwise returns `false`.
  *

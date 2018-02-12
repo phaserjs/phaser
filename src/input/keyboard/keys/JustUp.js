@@ -1,4 +1,10 @@
 /**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
+/**
  * The justUp value allows you to test if this Key has just been released or not.
  * When you check this value it will return `true` if the Key is up, otherwise `false`.
  * You can only call justUp once per key release. It will only return `true` once, until the Key is pressed down and released again.

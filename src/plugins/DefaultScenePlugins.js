@@ -1,3 +1,9 @@
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
 //  These plugins are created in Scene.Systems by default, in addition to the CoreScenePlugins.
 //  You can elect not to have these plugins by either creating a DefaultPlugins object as part
 //  of the Game Config, or by creating a Plugins object as part of a Scene Config.

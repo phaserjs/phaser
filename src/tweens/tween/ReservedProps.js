@@ -1,3 +1,9 @@
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
 //  RESERVED properties that a Tween config object uses
 
 //  completeDelay: The time the tween will wait before the onComplete event is dispatched once it has completed

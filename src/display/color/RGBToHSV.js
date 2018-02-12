@@ -1,4 +1,10 @@
 /**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
+/**
  * Converts an RGB color value to HSV (hue, saturation and value).
  * Conversion forumla from http://en.wikipedia.org/wiki/HSL_color_space.
  * Assumes RGB values are contained in the set [0, 255] and returns h, s and v in the set [0, 1].

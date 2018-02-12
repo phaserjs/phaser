@@ -1,4 +1,10 @@
 /**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
+/**
  * Adds the given element to the DOM. If a parent is provided the element is added as a child of the parent, providing it was able to access it.
  * If no parent was given or falls back to using `document.body`.
  *

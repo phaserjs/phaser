@@ -1,4 +1,10 @@
 /**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
+/**
  * Takes the given data string and parses it as XML.
  * First tries to use the window.DOMParser and reverts to the Microsoft.XMLDOM if that fails.
  * The parsed XML object is returned, or `null` if there was an error while parsing the data.

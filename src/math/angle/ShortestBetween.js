@@ -1,4 +1,10 @@
 /**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
+/**
  * Gets the shortest angle between `angle1` and `angle2`.
  * Both angles must be in the range -180 to 180, which is the same clamped
  * range that `sprite.angle` uses, so you can pass in two sprite angles to

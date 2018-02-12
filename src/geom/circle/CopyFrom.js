@@ -1,4 +1,10 @@
 /**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
+/**
  * Copies the `x`, `y` and `radius` properties from the `source` Circle
  * into the given `dest` Circle, then returns the `dest` Circle.
  *

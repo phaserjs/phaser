@@ -1,4 +1,10 @@
 /**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
+/**
  * Return the component parts of a color as an Object with the properties alpha, red, green, blue.
  *
  * Alpha will only be set if it exists in the given color (0xAARRGGBB)

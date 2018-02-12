@@ -1,3 +1,9 @@
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
 //  Adapted from [gl-matrix](https://github.com/toji/gl-matrix) by toji 
 //  and [vecmath](https://github.com/mattdesl/vecmath) by mattdesl
 

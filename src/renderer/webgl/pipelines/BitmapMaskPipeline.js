@@ -1,3 +1,9 @@
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
 var Class = require('../../../utils/Class');
 var ShaderSourceFS = require('../shaders/BitmapMask.frag');
 var ShaderSourceVS = require('../shaders/BitmapMask.vert'); 

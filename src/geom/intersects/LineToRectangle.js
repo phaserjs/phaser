@@ -1,4 +1,10 @@
 /**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
+/**
  * Checks for intersection between the Line and a Rectangle shape, or a rectangle-like
  * object, with public `x`, `y`, `right` and `bottom` properties, such as a Sprite or Body.
  *

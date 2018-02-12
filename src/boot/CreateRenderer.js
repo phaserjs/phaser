@@ -1,3 +1,9 @@
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
 var CanvasInterpolation = require('../display/canvas/CanvasInterpolation');
 var CanvasPool = require('../display/canvas/CanvasPool');
 var CONST = require('../const');

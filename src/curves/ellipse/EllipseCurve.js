@@ -1,3 +1,9 @@
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
 //  Based on the three.js Curve classes created by [zz85](http://www.lab4games.net/zz85/blog)
 
 var Class = require('../../utils/Class');

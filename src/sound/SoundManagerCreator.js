@@ -1,3 +1,9 @@
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
 var HTML5AudioSoundManager = require('./html5/HTML5AudioSoundManager');
 var NoAudioSoundManager = require('./noaudio/NoAudioSoundManager');
 var WebAudioSoundManager = require('./webaudio/WebAudioSoundManager');

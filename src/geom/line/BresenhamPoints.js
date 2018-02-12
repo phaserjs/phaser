@@ -1,4 +1,10 @@
 /**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
+/**
  * Using Bresenham's line algorithm this will return an array of all coordinates on this line.
  * The start and end points are rounded before this runs as the algorithm works on integers.
  *

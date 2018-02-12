@@ -1,4 +1,10 @@
 /**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
+/**
  * @constant
  * @name Phaser.Create.Palettes.ARNE16
  * @description A 16 color palette by [Arne](http://androidarts.com/palette/16pal.htm)

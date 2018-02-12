@@ -1,4 +1,10 @@
 /**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
+/**
  * @typedef {object} Phaser.Tweens.Tween~ConfigDefaults
  * @property {object|object[]} targets - [description]
  * @property {number} [delay=0] - [description]

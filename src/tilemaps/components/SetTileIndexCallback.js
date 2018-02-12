@@ -1,4 +1,10 @@
 /**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
+/**
  * Sets a global collision callback for the given tile index within the layer. This will affect all
  * tiles on this layer that have the same index. If a callback is already set for the tile index it
  * will be replaced. Set the callback to null to remove it. If you want to set a callback for a tile

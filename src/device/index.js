@@ -1,3 +1,9 @@
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
 //  This singleton is instantiated as soon as Phaser loads,
 //  before a Phaser.Game instance has even been created.
 //  Which means all instances of Phaser Games can share it,

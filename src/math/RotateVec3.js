@@ -1,3 +1,9 @@
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
 var Vector3 = require('../math/Vector3');
 var Matrix4 = require('../math/Matrix4');
 var Quaternion = require('../math/Quaternion');

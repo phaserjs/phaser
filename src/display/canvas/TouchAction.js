@@ -1,4 +1,10 @@
 /**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
+/**
  * Sets the touch-action property on the canvas style. Can be used to disable default browser touch actions.
  *
  * @function Phaser.Display.Canvas.TouchAction

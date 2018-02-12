@@ -1,4 +1,10 @@
 /**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
+/**
  * Internally used method to keep track of the tile indexes that collide within a layer. This
  * updates LayerData.collideIndexes to either contain or not contain the given `tileIndex`.
  *

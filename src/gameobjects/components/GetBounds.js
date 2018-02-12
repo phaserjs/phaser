@@ -1,3 +1,9 @@
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
 var Rectangle = require('../../geom/rectangle/Rectangle');
 var RotateAround = require('../../math/RotateAround');
 var Vector2 = require('../../math/Vector2');

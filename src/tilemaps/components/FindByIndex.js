@@ -1,4 +1,10 @@
 /**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
+/**
  * Searches the entire map layer for the first tile matching the given index, then returns that Tile
  * object. If no match is found, it returns null. The search starts from the top-left tile and
  * continues horizontally until it hits the end of the row, then it drops down to the next column.
