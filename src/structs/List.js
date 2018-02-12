@@ -540,17 +540,6 @@ var List = new Class({
     },
 
     /**
-     * [description]
-     *
-     * @method Phaser.Structs.List#shutdown
-     * @since 3.0.0
-     */
-    shutdown: function ()
-    {
-        this.removeAll();
-    },
-
-    /**
      * Brings the given child to the top of this List.
      *
      * @method Phaser.Structs.List#bringToTop
@@ -766,6 +755,32 @@ var List = new Class({
             args[0] = this.list[i];
             callback.apply(thisArg, args);
         }
+    },
+
+    /**
+     * [description]
+     *
+     * @method Phaser.Structs.List#shutdown
+     * @since 3.0.0
+     */
+    shutdown: function ()
+    {
+        this.removeAll();
+    },
+
+    /**
+     * [description]
+     *
+     * @method Phaser.Structs.List#destroy
+     * @since 3.0.0
+     */
+    destroy: function ()
+    {
+        this.removeAll();
+
+        this.list = [];
+
+        this.parent = null;
     },
 
     /**

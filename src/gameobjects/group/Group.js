@@ -286,9 +286,11 @@ var Group = new Class({
 
         if (removeFromScene)
         {
+            var children = this.children;
+
             for (var i = 0; i < children.length; i++)
             {
-                gameObject = children[i];
+                var gameObject = children[i];
 
                 this.scene.sys.displayList.remove(gameObject);
 

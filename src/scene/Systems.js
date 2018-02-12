@@ -295,7 +295,7 @@ var Systems = new Class({
     {
         var displayList = this.displayList;
 
-        displayList.process();
+        displayList.depthSort();
 
         this.cameras.render(renderer, displayList);
 

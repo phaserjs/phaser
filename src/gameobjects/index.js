@@ -11,7 +11,6 @@
 var GameObjects = {
 
     DisplayList: require('./DisplayList'),
-    DisplayListPlugin: require('./DisplayListPlugin'),
     GameObjectCreator: require('./GameObjectCreator'),
     GameObjectFactory: require('./GameObjectFactory'),
     LightsManager: require('./LightsManager'),
