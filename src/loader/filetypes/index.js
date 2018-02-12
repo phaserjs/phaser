@@ -53,7 +53,6 @@ module.exports = {
     TilemapCSVFile: require('./TilemapCSVFile'),
     TilemapJSONFile: require('./TilemapJSONFile'),
     UnityAtlasFile: require('./UnityAtlasFile'),
-    WavefrontFile: require('./WavefrontFile'),
     XMLFile: require('./XMLFile')
 
 };
