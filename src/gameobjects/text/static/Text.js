@@ -490,6 +490,11 @@ var Text = new Class({
      */
     setText: function (value)
     {
+        if (!value)
+        {
+            value = '';
+        }
+
         if (Array.isArray(value))
         {
             value = value.join('\n');
