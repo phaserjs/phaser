@@ -4,8 +4,25 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
+/**
+ * @namespace Phaser.Renderer.WebGL.Utils
+ * @since 3.0.0
+ */
 module.exports = {
 
+    /**
+     * [description]
+     *
+     * @function Phaser.Renderer.WebGL.Utils.getTintFromFloats
+     * @since 3.0.0
+     * 
+     * @param {number} r - [description]
+     * @param {number} g - [description]
+     * @param {number} b - [description]
+     * @param {number} a - [description]
+     * 
+     * @return {number} [description]
+     */
     getTintFromFloats: function (r, g, b, a)
     {
         var ur = ((r * 255.0)|0) & 0xFF;
@@ -16,12 +33,34 @@ module.exports = {
         return ((ua << 24) | (ur << 16) | (ug << 8) | ub) >>> 0;
     },
 
+    /**
+     * [description]
+     *
+     * @function Phaser.Renderer.WebGL.Utils.getTintAppendFloatAlpha
+     * @since 3.0.0
+     * 
+     * @param {number} rgb - [description]
+     * @param {number} a - [description]
+     * 
+     * @return {number} [description]
+     */
     getTintAppendFloatAlpha: function (rgb, a)
     {
         var ua = ((a * 255.0)|0) & 0xFF;
         return ((ua << 24) | rgb) >>> 0;
     },
 
+    /**
+     * [description]
+     *
+     * @function Phaser.Renderer.WebGL.Utils.getTintAppendFloatAlphaAndSwap
+     * @since 3.0.0
+     * 
+     * @param {number} rgb - [description]
+     * @param {number} a - [description]
+     * 
+     * @return {number} [description]
+     */
     getTintAppendFloatAlphaAndSwap: function (rgb, a)
     {
         var ur = ((rgb >> 16)|0) & 0xff;
@@ -32,6 +71,16 @@ module.exports = {
         return ((ua << 24) | (ub << 16) | (ug << 8) | ur) >>> 0;
     },
 
+    /**
+     * [description]
+     *
+     * @function Phaser.Renderer.WebGL.Utils.getFloatsFromUintRGB
+     * @since 3.0.0
+     * 
+     * @param {number} rgb - [description]
+     * 
+     * @return {number} [description]
+     */
     getFloatsFromUintRGB: function (rgb)
     {
         var ur = ((rgb >> 16)|0) & 0xff;
@@ -41,6 +90,16 @@ module.exports = {
         return [ ur / 255.0, ug / 255.0, ub / 255.0 ];
     },
 
+    /**
+     * [description]
+     *
+     * @function Phaser.Renderer.WebGL.Utils.getComponentCount
+     * @since 3.0.0
+     * 
+     * @param {number} attributes - [description]
+     * 
+     * @return {number} [description]
+     */
     getComponentCount: function (attributes)
     {
         var count = 0;
