@@ -5,11 +5,12 @@
  */
 
 /**
- * @constant
+ * A 16 color palette inspired by Japanese computers like the MSX.
+ * 
  * @name Phaser.Create.Palettes.MSX
- * @description A 16 color palette inspired by Japanese computers like the MSX.
- * @type {object}
  * @since 3.0.0
+ * 
+ * @type {object}
  * @property {string} 0 - Color value 1.
  * @property {string} 1 - Color value 2.
  * @property {string} 2 - Color value 3.

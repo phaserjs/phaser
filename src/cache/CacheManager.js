@@ -31,7 +31,8 @@ var CacheManager = new Class({
         /**
          * A reference to the Phaser.Game instance that owns this CacheManager.
          *
-         * @property {Phaser.Game} game
+         * @name Phaser.Cache.CacheManager#game
+         * @type {Phaser.Game}
          * @protected
          * @since 3.0.0
          */
@@ -40,7 +41,8 @@ var CacheManager = new Class({
         /**
          * A Cache storing all binary files, typically added via the Loader.
          *
-         * @property {Phaser.Cache.BaseCache} binary
+         * @name Phaser.Cache.CacheManager#binary
+         * @type {Phaser.Cache.BaseCache}
          * @protected
          * @since 3.0.0
          */
@@ -50,7 +52,8 @@ var CacheManager = new Class({
          * A Cache storing all bitmap font data files, typically added via the Loader.
          * Only the font data is stored in this cache, the textures are part of the Texture Manager.
          *
-         * @property {Phaser.Cache.BaseCache} bitmapFont
+         * @name Phaser.Cache.CacheManager#bitmapFont
+         * @type {Phaser.Cache.BaseCache}
          * @protected
          * @since 3.0.0
          */
@@ -59,7 +62,8 @@ var CacheManager = new Class({
         /**
          * A Cache storing all JSON data files, typically added via the Loader.
          *
-         * @property {Phaser.Cache.BaseCache} json
+         * @name Phaser.Cache.CacheManager#json
+         * @type {Phaser.Cache.BaseCache}
          * @protected
          * @since 3.0.0
          */
@@ -68,7 +72,8 @@ var CacheManager = new Class({
         /**
          * A Cache storing all physics data files, typically added via the Loader.
          *
-         * @property {Phaser.Cache.BaseCache} physics
+         * @name Phaser.Cache.CacheManager#physics
+         * @type {Phaser.Cache.BaseCache}
          * @protected
          * @since 3.0.0
          */
@@ -77,7 +82,8 @@ var CacheManager = new Class({
         /**
          * A Cache storing all shader source files, typically added via the Loader.
          *
-         * @property {Phaser.Cache.BaseCache} shader
+         * @name Phaser.Cache.CacheManager#shader
+         * @type {Phaser.Cache.BaseCache}
          * @protected
          * @since 3.0.0
          */
@@ -86,7 +92,8 @@ var CacheManager = new Class({
         /**
          * A Cache storing all non-streaming audio files, typically added via the Loader.
          *
-         * @property {Phaser.Cache.BaseCache} audio
+         * @name Phaser.Cache.CacheManager#audio
+         * @type {Phaser.Cache.BaseCache}
          * @protected
          * @since 3.0.0
          */
@@ -95,7 +102,8 @@ var CacheManager = new Class({
         /**
          * A Cache storing all text files, typically added via the Loader.
          *
-         * @property {Phaser.Cache.BaseCache} text
+         * @name Phaser.Cache.CacheManager#text
+         * @type {Phaser.Cache.BaseCache}
          * @protected
          * @since 3.0.0
          */
@@ -104,7 +112,8 @@ var CacheManager = new Class({
         /**
          * A Cache storing all WaveFront OBJ files, typically added via the Loader.
          *
-         * @property {Phaser.Cache.BaseCache} obj
+         * @name Phaser.Cache.CacheManager#obj
+         * @type {Phaser.Cache.BaseCache}
          * @protected
          * @since 3.0.0
          */
@@ -114,7 +123,8 @@ var CacheManager = new Class({
          * A Cache storing all tilemap data files, typically added via the Loader.
          * Only the data is stored in this cache, the textures are part of the Texture Manager.
          *
-         * @property {Phaser.Cache.BaseCache} tilemap
+         * @name Phaser.Cache.CacheManager#tilemap
+         * @type {Phaser.Cache.BaseCache}
          * @protected
          * @since 3.0.0
          */
@@ -123,7 +133,8 @@ var CacheManager = new Class({
         /**
          * A Cache storing all xml data files, typically added via the Loader.
          *
-         * @property {Phaser.Cache.BaseCache} xml
+         * @name Phaser.Cache.CacheManager#xml
+         * @type {Phaser.Cache.BaseCache}
          * @protected
          * @since 3.0.0
          */
@@ -133,7 +144,8 @@ var CacheManager = new Class({
          * An object that contains your own custom BaseCache entries.
          * Add to this via the `addCustom` method.
          *
-         * @property {object.<Phaser.Cache.BaseCache>} custom
+         * @name Phaser.Cache.CacheManager#custom
+         * @type {object.<Phaser.Cache.BaseCache>}
          * @protected
          * @since 3.0.0
          */

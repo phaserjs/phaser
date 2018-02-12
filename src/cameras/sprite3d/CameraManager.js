@@ -29,7 +29,8 @@ var CameraManager = new Class({
         /**
          * [description]
          *
-         * @property {Phaser.Scene} scene
+         * @name Phaser.Cameras.Sprite3D#scene
+         * @type {Phaser.Scene}
          * @since 3.0.0
          */
         this.scene = scene;
@@ -37,7 +38,8 @@ var CameraManager = new Class({
         /**
          * [description]
          *
-         * @property {[type]} systems
+         * @name Phaser.Cameras.Sprite3D#systems
+         * @type {Phaser.Scenes.Systems}
          * @since 3.0.0
          */
         this.systems = scene.sys;
@@ -45,7 +47,8 @@ var CameraManager = new Class({
         /**
          * An Array of the Camera objects being managed by this Camera Manager.
          *
-         * @property {Phaser.Cameras.Sprite3D.Camera[]} cameras
+         * @name Phaser.Cameras.Sprite3D#cameras
+         * @type {array}
          * @since 3.0.0
          */
         this.cameras = [];

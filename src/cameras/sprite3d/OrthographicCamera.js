@@ -41,7 +41,8 @@ var OrthographicCamera = new Class({
         /**
          * [description]
          *
-         * @property {integer} viewportWidth
+         * @name Phaser.Cameras.Sprite3D.OrthographicCamera#viewportWidth
+         * @type {integer}
          * @since 3.0.0
          */
         this.viewportWidth = viewportWidth;
@@ -49,7 +50,8 @@ var OrthographicCamera = new Class({
         /**
          * [description]
          *
-         * @property {integer} viewportHeight
+         * @name Phaser.Cameras.Sprite3D.OrthographicCamera#viewportHeight
+         * @type {integer}
          * @since 3.0.0
          */
         this.viewportHeight = viewportHeight;
@@ -57,7 +59,8 @@ var OrthographicCamera = new Class({
         /**
          * [description]
          *
-         * @property {float} _zoom
+         * @name Phaser.Cameras.Sprite3D.OrthographicCamera#_zoom
+         * @type {float}
          * @private
          * @since 3.0.0
          */
@@ -66,7 +69,8 @@ var OrthographicCamera = new Class({
         /**
          * [description]
          *
-         * @property {number} near
+         * @name Phaser.Cameras.Sprite3D.OrthographicCamera#near
+         * @type {number}
          * @default 0
          * @since 3.0.0
          */
@@ -151,6 +155,13 @@ var OrthographicCamera = new Class({
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @name Phaser.Cameras.Sprite3D.OrthographicCamera#zoom
+     * @type {number}
+     * @since 3.0.0
+     */
     zoom: {
 
         get: function ()

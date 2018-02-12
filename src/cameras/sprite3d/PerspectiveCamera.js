@@ -44,7 +44,8 @@ var PerspectiveCamera = new Class({
         /**
          * [description]
          *
-         * @property {integer} viewportWidth
+         * @name Phaser.Cameras.Sprite3D.PerspectiveCamera#viewportWidth
+         * @type {integer}
          * @default 0
          * @since 3.0.0
          */
@@ -53,7 +54,8 @@ var PerspectiveCamera = new Class({
         /**
          * [description]
          *
-         * @property {integer} viewportHeight
+         * @name Phaser.Cameras.Sprite3D.PerspectiveCamera#viewportHeight
+         * @type {integer}
          * @default 0
          * @since 3.0.0
          */
@@ -62,7 +64,8 @@ var PerspectiveCamera = new Class({
         /**
          * [description]
          *
-         * @property {integer} fieldOfView
+         * @name Phaser.Cameras.Sprite3D.PerspectiveCamera#fieldOfView
+         * @type {integer}
          * @default 80
          * @since 3.0.0
          */

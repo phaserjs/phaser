@@ -32,7 +32,8 @@ var BaseCache = new Class({
          *
          * You can query the Map directly or use the BaseCache methods.
          *
-         * @property {Phaser.Structs.Map} entries
+         * @name Phaser.Cache.BaseCache#entries
+         * @type {Phaser.Structs.Map}
          * @since 3.0.0
          */
         this.entries = new CustomMap();
@@ -40,7 +41,8 @@ var BaseCache = new Class({
         /**
          * An instance of EventEmitter used by the cache to emit related events.
          *
-         * @property {Phaser.EventEmitter} events
+         * @name Phaser.Cache.BaseCache#events
+         * @type {Phaser.EventEmitter}
          * @since 3.0.0
          */
         this.events = new EventEmitter();
@@ -51,7 +53,7 @@ var BaseCache = new Class({
      *
      * This event is fired by the Cache each time a new object is added to it.
      *
-     * @event Phaser.Cache.BaseCache#add
+     * @event Phaser.Cache.BaseCache#addEvent
      * @param {Phaser.Cache.BaseCache} The BaseCache to which the object was added.
      * @param {string} The key of the object added to the cache.
      * @param {any} A reference to the object added to the cache.
@@ -62,7 +64,7 @@ var BaseCache = new Class({
      * for setting and keeping track of. The item can only be retrieved by using this string.
      *
      * @method Phaser.Cache.BaseCache#add
-     * @fires Phaser.Cache.BaseCache#add
+     * @fires Phaser.Cache.BaseCache#addEvent
      * @since 3.0.0
      *
      * @param {string} key - The unique key by which the data added to the cache will be referenced.
@@ -114,7 +116,7 @@ var BaseCache = new Class({
      *
      * This event is fired by the Cache each time an object is removed from it.
      *
-     * @event Phaser.Cache.BaseCache#remove
+     * @event Phaser.Cache.BaseCache#removeEvent
      * @param {Phaser.Cache.BaseCache} The BaseCache from which the object was removed.
      * @param {string} The key of the object removed from the cache.
      * @param {any} The object that was removed from the cache.
@@ -128,7 +130,7 @@ var BaseCache = new Class({
      * are relying on this item, it is up to you to sever those relationships prior to removing the item.
      *
      * @method Phaser.Cache.BaseCache#remove
-     * @fires Phaser.Cache.BaseCache#remove
+     * @fires Phaser.Cache.BaseCache#removeEvent
      * @since 3.0.0
      *
      * @param {string} key - The unique key of the item to remove from the cache.

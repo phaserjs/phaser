@@ -30,7 +30,8 @@ var CameraManager = new Class({
         /**
          * The Scene that owns the Camera Manager plugin.
          *
-         * @property {Phaser.Scene} scene
+         * @name Phaser.Cameras.Scene2D.CameraManager#scene
+         * @type {Phaser.Scene}
          * @since 3.0.0
          */
         this.scene = scene;
@@ -38,7 +39,8 @@ var CameraManager = new Class({
         /**
          * A reference to the Scene.Systems handler for the Scene that owns the Camera Manager.
          *
-         * @property {Phaser.Scenes.Systems} systems
+         * @name Phaser.Cameras.Scene2D.CameraManager#systems
+         * @type {Phaser.Scenes.Systems}
          * @since 3.0.0
          */
         this.systems = scene.sys;
@@ -51,7 +53,8 @@ var CameraManager = new Class({
         /**
          * The current Camera ID.
          *
-         * @property {number} currentCameraId
+         * @name Phaser.Cameras.Scene2D.CameraManager#currentCameraId
+         * @type {number}
          * @default 1
          * @readOnly
          * @since 3.0.0
@@ -61,7 +64,8 @@ var CameraManager = new Class({
         /**
          * An Array of the Camera objects being managed by this Camera Manager.
          *
-         * @property {Phaser.Cameras.Scene2D.Camera[]} cameras
+         * @name Phaser.Cameras.Scene2D.CameraManager#cameras
+         * @type {Phaser.Cameras.Scene2D.Camera[]}
          * @since 3.0.0
          */
         this.cameras = [];
@@ -69,7 +73,8 @@ var CameraManager = new Class({
         /**
          * A pool of Camera objects available to be used by the Camera Manager.
          *
-         * @property {Phaser.Cameras.Scene2D.Camera[]} cameraPool
+         * @name Phaser.Cameras.Scene2D.CameraManager#cameraPool
+         * @type {Phaser.Cameras.Scene2D.Camera[]}
          * @since 3.0.0
          */
         this.cameraPool = [];
@@ -88,7 +93,8 @@ var CameraManager = new Class({
         /**
          * The default Camera in the Camera Manager.
          *
-         * @property {Phaser.Cameras.Scene2D.Camera} main
+         * @name Phaser.Cameras.Scene2D.CameraManager#main
+         * @type {Phaser.Cameras.Scene2D.Camera}
          * @since 3.0.0
          */
         this.main = this.cameras[0];
@@ -96,7 +102,8 @@ var CameraManager = new Class({
         /**
          * This scale affects all cameras. It's used by Scale Manager.
          *
-         * @property {number} baseScale
+         * @name Phaser.Cameras.Scene2D.CameraManager#baseScale
+         * @type {number}
          * @since 3.0.0
          */
         this.baseScale = 1.0;
@@ -413,8 +420,8 @@ var CameraManager = new Class({
      * @method Phaser.Cameras.Scene2D.CameraManager#update
      * @since 3.0.0
      *
-     * @param {[type]} timestep - [description]
-     * @param {[type]} delta - [description]
+     * @param {number} timestep - [description]
+     * @param {number} delta - [description]
      */
     update: function (timestep, delta)
     {

@@ -5,11 +5,12 @@
  */
 
 /**
- * @constant
+ * A 16 color JMP palette by [Arne](http://androidarts.com/palette/16pal.htm)
+ * 
  * @name Phaser.Create.Palettes.JMP
- * @description A 16 color JMP palette by [Arne](http://androidarts.com/palette/16pal.htm)
  * @type {object}
  * @since 3.0.0
+ * 
  * @property {string} 0 - Color value 1.
  * @property {string} 1 - Color value 2.
  * @property {string} 2 - Color value 3.
