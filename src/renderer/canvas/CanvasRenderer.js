@@ -28,7 +28,7 @@ var CanvasRenderer = new Class({
          * The Phaser Game instance that owns this renderer.
          *
          * @name Phaser.Renderer.Canvas.CanvasRenderer#game
-         * @type {[type]}
+         * @type {Phaser.Game}
          * @since 3.0.0
          */
         this.game = game;
@@ -74,7 +74,7 @@ var CanvasRenderer = new Class({
          * [description]
          *
          * @name Phaser.Renderer.Canvas.CanvasRenderer#resolution
-         * @type {[type]}
+         * @type {number}
          * @since 3.0.0
          */
         this.resolution = game.config.resolution;

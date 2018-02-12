@@ -1,7 +1,15 @@
-var WebAudioSoundManager = require('./webaudio/WebAudioSoundManager');
 var HTML5AudioSoundManager = require('./html5/HTML5AudioSoundManager');
 var NoAudioSoundManager = require('./noaudio/NoAudioSoundManager');
+var WebAudioSoundManager = require('./webaudio/WebAudioSoundManager');
 
+/**
+ * Creates a Web Audio, HTML5 Audio or No Audio Sound Manager based on config and device settings.
+ *
+ * @function Phaser.Sound.SoundManagerCreator
+ * @since 3.0.0
+ *
+ * @param {Phaser.Game} game - Reference to the current game instance.
+ */
 var SoundManagerCreator = {
 
     create: function (game)
@@ -14,7 +22,7 @@ var SoundManagerCreator = {
             return new NoAudioSoundManager(game);
         }
 
-        if(deviceAudio.webAudio && !(audioConfig && audioConfig.disableWebAudio))
+        if (deviceAudio.webAudio && !(audioConfig && audioConfig.disableWebAudio))
         {
             return new WebAudioSoundManager(game);
         }

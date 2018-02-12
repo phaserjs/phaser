@@ -1,57 +1,71 @@
 var Class = require('../utils/Class');
-var NOOP = require('../utils/NOOP');
 var EventEmitter = require('eventemitter3');
+var NOOP = require('../utils/NOOP');
 
-/*!
+/**
+ * @classdesc
+ * The sound manager is responsible for playing back audio via Web Audio API or HTML Audio tag as fallback.
+ * The audio file type and the encoding of those files are extremely important.
+ * Not all browsers can play all audio formats.
+ * There is a good guide to what's supported [here](https://developer.mozilla.org/en-US/Apps/Fundamentals/Audio_and_video_delivery/Cross-browser_audio_basics#Audio_Codec_Support).
+ *
+ * @class BaseSound
+ * @extends Phaser.Sound.EventEmitter
+ * @memberOf Phaser.Sound
+ * @constructor
  * @author Pavle Goloskokovic <pgoloskokovic@gmail.com> (http://prunegames.com)
+ * @since 3.0.0
+ *
+ * @param {Phaser.Game} game - Reference to the current game instance.
  */
 var BaseSoundManager = new Class({
+
     Extends: EventEmitter,
 
-    /**
-     * The sound manager is responsible for playing back audio via Web Audio API or HTML Audio tag as fallback.
-     * The audio file type and the encoding of those files are extremely important.
-     * Not all browsers can play all audio formats.
-     * There is a good guide to what's supported [here](https://developer.mozilla.org/en-US/Apps/Fundamentals/Audio_and_video_delivery/Cross-browser_audio_basics#Audio_Codec_Support).
-     *
-     * @class Phaser.Sound.BaseSoundManager
-     * @constructor
-     * @param {Phaser.Game} game - Reference to the current game instance.
-     */
-    initialize: function BaseSoundManager (game)
+    initialize:
+
+    function BaseSoundManager (game)
     {
         EventEmitter.call(this);
 
         /**
          * Local reference to game.
          *
-         * @readonly
-         * @property {Phaser.Game} game
+         * @name Phaser.Sound.BaseSoundManager#game
+         * @type {Phaser.Game}
+         * @readOnly
+         * @since 3.0.0
          */
         this.game = game;
 
         /**
          * An array containing all added sounds.
          *
-         * @private
-         * @property {ISound[]} sounds
+         * @name Phaser.Sound.BaseSoundManager#sounds
+         * @type {array}
          * @default []
+         * @private
+         * @since 3.0.0
          */
         this.sounds = [];
 
         /**
          * Global mute setting.
          *
-         * @property {boolean} mute
+         * @name Phaser.Sound.BaseSoundManager#mute
+         * @type {boolean}
          * @default false
+         * @since 3.0.0
          */
         this.mute = false;
 
         /**
          * Global volume setting.
          *
-         * @property {number} volume
+         * @name Phaser.Sound.BaseSoundManager#volume
+         * @type {number}
          * @default 1
+         * @since 3.0.0
          */
         this.volume = 1;
 
@@ -60,8 +74,10 @@ var BaseSoundManager = new Class({
          * Value of 1.0 plays the audio at full speed, 0.5 plays the audio at half speed
          * and 2.0 doubles the audio's playback speed.
          *
-         * @property {number} rate
+         * @name Phaser.Sound.BaseSoundManager#rate
+         * @type {number}
          * @default 1
+         * @since 3.0.0
          */
         this.rate = 1;
 
@@ -69,8 +85,10 @@ var BaseSoundManager = new Class({
          * Global detuning of all sounds in [cents](https://en.wikipedia.org/wiki/Cent_%28music%29).
          * The range of the value is -1200 to 1200, but we recommend setting it to [50](https://en.wikipedia.org/wiki/50_Cent).
          *
-         * @property {number} detune
+         * @name Phaser.Sound.BaseSoundManager#detune
+         * @type {number}
          * @default 0
+         * @since 3.0.0
          */
         this.detune = 0;
 
@@ -78,10 +96,13 @@ var BaseSoundManager = new Class({
          * Flag indicating if sounds should be paused when game looses focus,
          * for instance when user switches to another tab/program/app.
          *
-         * @property {boolean} pauseOnBlur
+         * @name Phaser.Sound.BaseSoundManager#pauseOnBlur
+         * @type {boolean}
          * @default true
+         * @since 3.0.0
          */
         this.pauseOnBlur = true;
+
         game.events.on('blur', function ()
         {
             if (this.pauseOnBlur)
@@ -89,6 +110,7 @@ var BaseSoundManager = new Class({
                 this.onBlur();
             }
         }, this);
+
         game.events.on('focus', function ()
         {
             if (this.pauseOnBlur)
@@ -96,23 +118,28 @@ var BaseSoundManager = new Class({
                 this.onFocus();
             }
         }, this);
+
         game.events.once('destroy', this.destroy, this);
 
         /**
          * Property that actually holds the value of global playback rate.
          *
+         * @name Phaser.Sound.BaseSoundManager#_rate
+         * @type {number}
          * @private
-         * @property {number} _rate
          * @default 1
+         * @since 3.0.0
          */
         this._rate = 1;
 
         /**
          * Property that actually holds the value of global detune.
          *
+         * @name Phaser.Sound.BaseSoundManager#_detune
+         * @type {number}
          * @private
-         * @property {number} _detune
          * @default 0
+         * @since 3.0.0
          */
         this._detune = 0;
 
@@ -121,8 +148,9 @@ var BaseSoundManager = new Class({
          * such as a tap, before any sound can be loaded/played on a web page.
          * Set to true if the audio system is currently locked awaiting user interaction.
          *
-         * @readonly
-         * @property {boolean} locked
+         * @name Phaser.Sound.BaseSoundManager#locked
+         * @type {boolean}
+         * @since 3.0.0
          */
         this.locked = this.locked || false;
 
@@ -130,11 +158,13 @@ var BaseSoundManager = new Class({
          * Flag used internally for handling when the audio system
          * has been unlocked, if there ever was a need for it.
          *
-         * @private
-         * @property {boolean} unlocked
+         * @name Phaser.Sound.BaseSoundManager#unlocked
+         * @type {boolean}
          * @default false
+         * @since 3.0.0
          */
         this.unlocked = false;
+
         if (this.locked)
         {
             this.unlock();
@@ -144,11 +174,14 @@ var BaseSoundManager = new Class({
     /**
      * Adds a new sound into the sound manager.
      *
-     * @override
      * @method Phaser.Sound.BaseSoundManager#add
+     * @override
+     * @since 3.0.0
+     * 
      * @param {string} key - Asset key for the sound.
      * @param {ISoundConfig} [config] - An optional config object containing default sound settings.
-     * @returns {ISound} The new sound instance.
+     * 
+     * @return {ISound} The new sound instance.
      */
     add: NOOP,
 
@@ -156,9 +189,12 @@ var BaseSoundManager = new Class({
      * Adds a new audio sprite sound into the sound manager.
      *
      * @method Phaser.Sound.BaseSoundManager#addAudioSprite
+     * @since 3.0.0
+     * 
      * @param {string} key - Asset key for the sound.
      * @param {ISoundConfig} [config] - An optional config object containing default sound settings.
-     * @returns {IAudioSpriteSound} The new audio sprite sound instance.
+     * 
+     * @return {IAudioSpriteSound} The new audio sprite sound instance.
      */
     addAudioSprite: function (key, config)
     {
@@ -170,13 +206,16 @@ var BaseSoundManager = new Class({
          * @property {object} spritemap
          */
         sound.spritemap = this.game.cache.json.get(key).spritemap;
+
         for (var markerName in sound.spritemap)
         {
             if (!sound.spritemap.hasOwnProperty(markerName))
             {
                 continue;
             }
+
             var marker = sound.spritemap[markerName];
+
             sound.addMarker({
                 name: markerName,
                 start: marker.start,
@@ -184,6 +223,7 @@ var BaseSoundManager = new Class({
                 config: config
             });
         }
+
         return sound;
     },
 
@@ -192,14 +232,19 @@ var BaseSoundManager = new Class({
      * Sound will auto destroy once its playback ends.
      *
      * @method Phaser.Sound.BaseSoundManager#play
+     * @since 3.0.0
+     * 
      * @param {string} key - Asset key for the sound.
      * @param {ISoundConfig | ISoundMarker} [extra] - An optional additional object containing settings to be applied to the sound. It could be either config or marker object.
-     * @returns {boolean} Whether the sound started playing successfully.
+     * 
+     * @return {boolean} Whether the sound started playing successfully.
      */
     play: function (key, extra)
     {
         var sound = this.add(key);
+
         sound.once('ended', sound.destroy, sound);
+
         if (extra)
         {
             if (extra.name)
@@ -223,15 +268,20 @@ var BaseSoundManager = new Class({
      * Sound will auto destroy once its playback ends.
      *
      * @method Phaser.Sound.BaseSoundManager#playAudioSprite
+     * @since 3.0.0
+     * 
      * @param {string} key - Asset key for the sound.
      * @param {string} spriteName - The name of the sound sprite to play.
      * @param {ISoundConfig} [config] - An optional config object containing default sound settings.
-     * @returns {boolean} Whether the audio sprite sound started playing successfully.
+     * 
+     * @return {boolean} Whether the audio sprite sound started playing successfully.
      */
     playAudioSprite: function (key, spriteName, config)
     {
         var sound = this.addAudioSprite(key);
+
         sound.once('ended', sound.destroy, sound);
+
         return sound.play(spriteName, config);
     },
 
@@ -240,8 +290,11 @@ var BaseSoundManager = new Class({
      * The removed sound is destroyed before removal.
      *
      * @method Phaser.Sound.BaseSoundManager#remove
+     * @since 3.0.0
+     * 
      * @param {ISound} sound - The sound object to remove.
-     * @returns {boolean} True if the sound was removed successfully, otherwise false.
+     * 
+     * @return {boolean} True if the sound was removed successfully, otherwise false.
      */
     remove: function (sound)
     {
@@ -260,8 +313,11 @@ var BaseSoundManager = new Class({
      * The removed sounds are destroyed before removal.
      *
      * @method Phaser.Sound.BaseSoundManager#removeByKey
+     * @since 3.0.0
+     * 
      * @param {string} key - The key to match when removing sound objects.
-     * @returns {number} The number of matching sound objects that were removed.
+     * 
+     * @return {number} The number of matching sound objects that were removed.
      */
     removeByKey: function (key)
     {
@@ -283,6 +339,7 @@ var BaseSoundManager = new Class({
      * Pauses all the sounds in the game.
      *
      * @method Phaser.Sound.BaseSoundManager#pauseAll
+     * @since 3.0.0
      */
     pauseAll: function ()
     {
@@ -302,6 +359,7 @@ var BaseSoundManager = new Class({
      * Resumes all the sounds in the game.
      *
      * @method Phaser.Sound.BaseSoundManager#resumeAll
+     * @since 3.0.0
      */
     resumeAll: function ()
     {
@@ -321,6 +379,7 @@ var BaseSoundManager = new Class({
      * Stops all the sounds in the game.
      *
      * @method Phaser.Sound.BaseSoundManager#stopAll
+     * @since 3.0.0
      */
     stopAll: function ()
     {
@@ -342,9 +401,10 @@ var BaseSoundManager = new Class({
      *
      * Read more about how this issue is handled here in [this article](https://medium.com/@pgoloskokovic/unlocking-web-audio-the-smarter-way-8858218c0e09).
      *
+     * @method Phaser.Sound.BaseSoundManager#unlock
      * @override
      * @protected
-     * @method Phaser.Sound.BaseSoundManager#unlock
+     * @since 3.0.0
      */
     unlock: NOOP,
 
@@ -352,9 +412,10 @@ var BaseSoundManager = new Class({
      * Method used internally for pausing sound manager if
      * Phaser.Sound.BaseSoundManager#pauseOnBlur is set to true.
      *
+     * @method Phaser.Sound.BaseSoundManager#onBlur
      * @override
      * @protected
-     * @method Phaser.Sound.BaseSoundManager#onBlur
+     * @since 3.0.0
      */
     onBlur: NOOP,
 
@@ -362,9 +423,10 @@ var BaseSoundManager = new Class({
      * Method used internally for resuming sound manager if
      * Phaser.Sound.BaseSoundManager#pauseOnBlur is set to true.
      *
+     * @method Phaser.Sound.BaseSoundManager#onFocus
      * @override
      * @protected
-     * @method Phaser.Sound.BaseSoundManager#onFocus
+     * @since 3.0.0
      */
     onFocus: NOOP,
 
@@ -372,8 +434,10 @@ var BaseSoundManager = new Class({
      * Update method called on every game step.
      * Removes destroyed sounds and updates every active sound in the game.
      *
-     * @protected
      * @method Phaser.Sound.BaseSoundManager#update
+     * @protected
+     * @since 3.0.0
+     * 
      * @param {number} time - The current timestamp as generated by the Request Animation Frame or SetTimeout.
      * @param {number} delta - The delta time elapsed since the last frame.
      */
@@ -390,6 +454,7 @@ var BaseSoundManager = new Class({
              */
             this.emit('unlocked', this);
         }
+
         for (var i = this.sounds.length - 1; i >= 0; i--)
         {
             if (this.sounds[i].pendingRemove)
@@ -397,6 +462,7 @@ var BaseSoundManager = new Class({
                 this.sounds.splice(i, 1);
             }
         }
+
         this.sounds.forEach(function (sound)
         {
             sound.update(time, delta);
@@ -407,14 +473,17 @@ var BaseSoundManager = new Class({
      * Destroys all the sounds in the game and all associated events.
      *
      * @method Phaser.Sound.BaseSoundManager#destroy
+     * @since 3.0.0
      */
     destroy: function ()
     {
         this.removeAllListeners();
+
         this.forEachActiveSound(function (sound)
         {
             sound.destroy();
         });
+
         this.sounds.length = 0;
         this.sounds = null;
         this.game = null;
@@ -423,35 +492,42 @@ var BaseSoundManager = new Class({
     /**
      * Method used internally for iterating only over active sounds and skipping sounds that are marked for removal.
      *
-     * @private
      * @method Phaser.Sound.BaseSoundManager#forEachActiveSound
-     * @param {(sound: ISound, index: number, array: ISound[]) => void} callbackfn - Callback function.
-     * @param [thisArg=this] - Callback context.
+     * @private
+     * @since 3.0.0
+     * 
+     * @param {function} callbackfn - Callback function. (sound: ISound, index: number, array: ISound[]) => void
+     * @param [scope] - Callback context.
      */
-    forEachActiveSound: function (callbackfn, thisArg)
+    forEachActiveSound: function (callbackfn, scope)
     {
         var _this = this;
+
         this.sounds.forEach(function (sound, index)
         {
             if (!sound.pendingRemove)
             {
-                callbackfn.call(thisArg || _this, sound, index, _this.sounds);
+                callbackfn.call(scope || _this, sound, index, _this.sounds);
             }
         });
     }
+
 });
 
 /**
  * Global playback rate.
  *
  * @name Phaser.Sound.BaseSoundManager#rate
- * @property {number} rate
+ * @type {number}
+ * @since 3.0.0
  */
 Object.defineProperty(BaseSoundManager.prototype, 'rate', {
+
     get: function ()
     {
         return this._rate;
     },
+
     set: function (value)
     {
         this._rate = value;
@@ -467,19 +543,23 @@ Object.defineProperty(BaseSoundManager.prototype, 'rate', {
          */
         this.emit('rate', this, value);
     }
+
 });
 
 /**
  * Global detune.
  *
  * @name Phaser.Sound.BaseSoundManager#detune
- * @property {number} detune
+ * @type {number}
+ * @since 3.0.0
  */
 Object.defineProperty(BaseSoundManager.prototype, 'detune', {
+
     get: function ()
     {
         return this._detune;
     },
+
     set: function (value)
     {
         this._detune = value;
@@ -495,5 +575,7 @@ Object.defineProperty(BaseSoundManager.prototype, 'detune', {
          */
         this.emit('detune', this, value);
     }
+
 });
+
 module.exports = BaseSoundManager;
