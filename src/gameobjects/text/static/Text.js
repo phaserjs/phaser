@@ -907,6 +907,7 @@ var Text = new Class({
         var canvas = this.canvas;
         var context = this.context;
         var style = this.style;
+        var resolution = this.resolution;
         var size = style.metrics;
 
         style.syncFont(canvas, context);
@@ -940,8 +941,8 @@ var Text = new Class({
 
         this.updateDisplayOrigin();
 
-        w *= this.resolution;
-        h *= this.resolution;
+        w *= resolution;
+        h *= resolution;
 
         w = Math.max(w, 1);
         h = Math.max(h, 1);
@@ -958,6 +959,7 @@ var Text = new Class({
         }
 
         context.save();
+        //context.scale(resolution, resolution);
 
         if (style.backgroundColor)
         {

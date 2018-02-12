@@ -28,6 +28,7 @@ var TextCanvasRenderer = function (renderer, src, interpolationPercentage, camer
     }
     
     var ctx = renderer.currentContext;
+    var resolution = src.resolution;
 
     //  Blend Mode
     if (renderer.currentBlendMode !== src.blendMode)
@@ -52,6 +53,7 @@ var TextCanvasRenderer = function (renderer, src, interpolationPercentage, camer
     var canvas = src.canvas;
 
     ctx.save();
+    //ctx.scale(1.0 / resolution, 1.0 / resolution);
     ctx.translate(src.x - camera.scrollX * src.scrollFactorX, src.y - camera.scrollY * src.scrollFactorY);
     ctx.rotate(src.rotation);
     ctx.scale(src.scaleX, src.scaleY);

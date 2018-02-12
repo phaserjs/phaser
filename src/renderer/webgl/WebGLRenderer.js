@@ -430,7 +430,7 @@ var WebGLRenderer = new Class({
         this.canvas.width = this.width;
         this.canvas.height = this.height;
 
-        //if (this.config.autoResize)
+        if (this.config.autoResize)
         {
             this.canvas.style.width = (this.width / resolution) + 'px';
             this.canvas.style.height = (this.height / resolution) + 'px';
@@ -1217,7 +1217,9 @@ var WebGLRenderer = new Class({
      */
     preRenderCamera: function (camera)
     {
-        this.pushScissor(camera.x, camera.y, camera.width, camera.height);
+        var resolution = this.config.resolution;
+
+        this.pushScissor(camera.x * resolution, camera.y * resolution, camera.width * resolution, camera.height * resolution);
         
         if (camera.backgroundColor.alphaGL > 0)
         {

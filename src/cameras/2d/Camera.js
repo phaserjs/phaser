@@ -836,7 +836,7 @@ var Camera = new Class({
      * @param {number} baseScale - [description]
      *
      */
-    preRender: function (baseScale)
+    preRender: function (baseScale, resolution)
     {
         var width = this.width;
         var height = this.height;
@@ -888,6 +888,7 @@ var Camera = new Class({
         }
 
         matrix.loadIdentity();
+        matrix.scale(resolution, resolution);
         matrix.translate(this.x + originX, this.y + originY);
         matrix.rotate(this.rotation);
         matrix.scale(zoom, zoom);

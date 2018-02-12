@@ -381,7 +381,7 @@ var CameraManager = new Class({
         {
             var camera = cameras[i];
 
-            camera.preRender(baseScale);
+            camera.preRender(baseScale, renderer.config.resolution);
 
             renderer.render(this.scene, children, interpolation, camera);
         }

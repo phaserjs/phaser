@@ -65,7 +65,7 @@ var CanvasRenderer = new Class({
          * @type {number}
          * @since 3.0.0
          */
-        this.width = game.config.width * game.config.resolution;
+        this.width = game.config.width;
 
         /**
          * [description]
@@ -74,16 +74,22 @@ var CanvasRenderer = new Class({
          * @type {number}
          * @since 3.0.0
          */
-        this.height = game.config.height * game.config.resolution;
+        this.height = game.config.height;
 
         /**
          * [description]
          *
-         * @name Phaser.Renderer.Canvas.CanvasRenderer#resolution
-         * @type {number}
+         * @name Phaser.Renderer.Canvas.CanvasRenderer#config
+         * @type {object}
          * @since 3.0.0
          */
-        this.resolution = game.config.resolution;
+        this.config = {
+            clearBeforeRender: game.config.clearBeforeRender,
+            pixelArt: game.config.pixelArt,
+            backgroundColor: game.config.backgroundColor,
+            resolution: game.config.resolution,
+            autoResize: game.config.autoResize
+        };
 
         /**
          * [description]
@@ -111,15 +117,6 @@ var CanvasRenderer = new Class({
          * @since 3.0.0
          */
         this.gameContext = this.gameCanvas.getContext('2d');
-
-        /**
-         * [description]
-         *
-         * @name Phaser.Renderer.Canvas.CanvasRenderer#gameConfig
-         * @type {Phaser.Boot.Config}
-         * @since 3.0.0
-         */
-        this.gameConfig = game.config;
 
         /**
          * [description]
@@ -242,18 +239,18 @@ var CanvasRenderer = new Class({
      */
     resize: function (width, height)
     {
-        var res = this.game.config.resolution;
+        var resolution = this.config.resolution;
 
-        this.width = width * res;
-        this.height = height * res;
-
+        this.width = width * resolution;
+        this.height = height * resolution;
+        
         this.gameCanvas.width = this.width;
         this.gameCanvas.height = this.height;
 
-        if (this.autoResize)
+        if (this.config.autoResize)
         {
-            this.gameCanvas.style.width = (this.width / res) + 'px';
-            this.gameCanvas.style.height = (this.height / res) + 'px';
+            this.gameCanvas.style.width = (this.width / resolution) + 'px';
+            this.gameCanvas.style.height = (this.height / resolution) + 'px';
         }
 
         //  Resizing a canvas will reset imageSmoothingEnabled (and probably other properties)
@@ -349,7 +346,7 @@ var CanvasRenderer = new Class({
     preRender: function ()
     {
         var ctx = this.gameContext;
-        var config = this.gameConfig;
+        var config = this.config;
 
         var width = this.width;
         var height = this.height;
@@ -384,6 +381,7 @@ var CanvasRenderer = new Class({
         var ctx = scene.sys.context;
         var scissor = (camera.x !== 0 || camera.y !== 0 || camera.width !== ctx.canvas.width || camera.height !== ctx.canvas.height);
         var list = children.list;
+        var resolution = this.config.resolution;
 
         this.currentContext = ctx;
 
@@ -415,7 +413,7 @@ var CanvasRenderer = new Class({
         {
             ctx.save();
             ctx.beginPath();
-            ctx.rect(camera.x, camera.y, camera.width, camera.height);
+            ctx.rect(camera.x * resolution, camera.y * resolution, camera.width * resolution, camera.height * resolution);
             ctx.clip();
         }
 
