@@ -118,7 +118,7 @@ var ImpactPhysics = new Class({
      * @method Phaser.Physics.Impact.ImpactPhysics#pause
      * @since 3.0.0
      *
-     * @return {[type]} [description]
+     * @return {Phaser.Physics.Impact.World} The Impact World object.
      */
     pause: function ()
     {
@@ -131,7 +131,7 @@ var ImpactPhysics = new Class({
      * @method Phaser.Physics.Impact.ImpactPhysics#resume
      * @since 3.0.0
      *
-     * @return {[type]} [description]
+     * @return {Phaser.Physics.Impact.World} The Impact World object.
      */
     resume: function ()
     {

@@ -10,19 +10,39 @@ var Plugin = require('./lib/core/Plugin');
 var PluginManager = require('../../plugins/PluginManager');
 var World = require('./World');
 
-//  Phaser.Physics.Matter.MatterPhysics
-
+/**
+ * @classdesc
+ * [description]
+ *
+ * @class MatterPhysics
+ * @memberOf Phaser.Physics.Matter
+ * @constructor
+ * @since 3.0.0
+ *
+ * @param {Phaser.Scene} scene - [description]
+ */
 var MatterPhysics = new Class({
 
     initialize:
 
-    //  Referenced from the Scene PhysicsManager as `system`
-
     function MatterPhysics (scene)
     {
-        //  The Scene that owns this plugin
+        /**
+         * [description]
+         *
+         * @name Phaser.Physics.Matter.MatterPhysics#scene
+         * @type {Phaser.Scene}
+         * @since 3.0.0
+         */
         this.scene = scene;
 
+        /**
+         * [description]
+         *
+         * @name Phaser.Physics.Matter.MatterPhysics#systems
+         * @type {Phaser.Scenes.Systems}
+         * @since 3.0.0
+         */
         this.systems = scene.sys;
 
         if (!scene.sys.settings.isBooted)
@@ -30,13 +50,42 @@ var MatterPhysics = new Class({
             scene.sys.events.once('boot', this.boot, this);
         }
 
+        /**
+         * [description]
+         *
+         * @name Phaser.Physics.Matter.MatterPhysics#config
+         * @type {object}
+         * @since 3.0.0
+         */
         this.config = this.getConfig();
 
+        /**
+         * [description]
+         *
+         * @name Phaser.Physics.Matter.MatterPhysics#world
+         * @type {Phaser.Physics.Matter.World}
+         * @since 3.0.0
+         */
         this.world;
 
+        /**
+         * [description]
+         *
+         * @name Phaser.Physics.Matter.MatterPhysics#add
+         * @type {Phaser.Physics.Matter.Factory}
+         * @since 3.0.0
+         */
         this.add;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Physics.Matter.MatterPhysics#getConfig
+     * @since 3.0.0
+     *
+     * @return {object} [description]
+     */
     getConfig: function ()
     {
         var gameConfig = this.systems.game.config.physics;
@@ -50,6 +99,12 @@ var MatterPhysics = new Class({
         return config;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Physics.Matter.MatterPhysics#boot
+     * @since 3.0.0
+     */
     boot: function ()
     {
         var config = this.config;
@@ -79,6 +134,12 @@ var MatterPhysics = new Class({
         eventEmitter.on('destroy', this.destroy, this);
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Physics.Matter.MatterPhysics#enableAttractorPlugin
+     * @since 3.0.0
+     */
     enableAttractorPlugin: function ()
     {
         Plugin.register(MatterAttractors);
@@ -87,6 +148,12 @@ var MatterPhysics = new Class({
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Physics.Matter.MatterPhysics#enableWrapPlugin
+     * @since 3.0.0
+     */
     enableWrapPlugin: function ()
     {
         Plugin.register(MatterWrap);
@@ -95,11 +162,49 @@ var MatterPhysics = new Class({
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Physics.Matter.MatterPhysics#pause
+     * @since 3.0.0
+     *
+     * @return {Phaser.Physics.Matter.World} The Matter World object.
+     */
+    pause: function ()
+    {
+        return this.world.pause();
+    },
+
+    /**
+     * [description]
+     *
+     * @method Phaser.Physics.Matter.MatterPhysics#resume
+     * @since 3.0.0
+     *
+     * @return {Phaser.Physics.Matter.World} The Matter World object.
+     */
+    resume: function ()
+    {
+        return this.world.resume();
+    },
+
+    /**
+     * [description]
+     *
+     * @method Phaser.Physics.Matter.MatterPhysics#shutdown
+     * @since 3.0.0
+     */
     shutdown: function ()
     {
         this.world.shutdown();
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Physics.Matter.MatterPhysics#destroy
+     * @since 3.0.0
+     */
     destroy: function ()
     {
         this.world.destroy();
