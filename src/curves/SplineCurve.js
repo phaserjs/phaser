@@ -6,10 +6,10 @@
 
 //  Based on the three.js Curve classes created by [zz85](http://www.lab4games.net/zz85/blog)
 
-var CatmullRom = require('../../math/CatmullRom');
-var Class = require('../../utils/Class');
-var Curve = require('../curve/Curve');
-var Vector2 = require('../../math/Vector2');
+var CatmullRom = require('../math/CatmullRom');
+var Class = require('../utils/Class');
+var Curve = require('./Curve');
+var Vector2 = require('../math/Vector2');
 
 /**
  * @classdesc
@@ -21,7 +21,7 @@ var Vector2 = require('../../math/Vector2');
  * @constructor
  * @since 3.0.0
  *
- * @param {Phaser.Geom.Point[]} [points] - [description]
+ * @param {Phaser.Math.Vector2[]} [points] - [description]
  */
 var SplineCurve = new Class({
 
@@ -35,12 +35,11 @@ var SplineCurve = new Class({
 
         Curve.call(this, 'SplineCurve');
 
-        //  if points is an array of numbers ...
-
         /**
          * [description]
          *
-         * @property {Phaser.Geom.Point[]} points
+         * @name Phaser.Curves.SplineCurve#points
+         * @type {Phaser.Math.Vector2[]}
          * @default []
          * @since 3.0.0
          */
@@ -178,7 +177,7 @@ var SplineCurve = new Class({
      * @method Phaser.Curves.SplineCurve#toJSON
      * @since 3.0.0
      *
-     * @return {[type]} [description]
+     * @return {object} [description]
      */
     toJSON: function ()
     {

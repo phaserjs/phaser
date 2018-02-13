@@ -42,7 +42,7 @@ var BaseCache = new Class({
          * An instance of EventEmitter used by the cache to emit related events.
          *
          * @name Phaser.Cache.BaseCache#events
-         * @type {Phaser.EventEmitter}
+         * @type {EventEmitter}
          * @since 3.0.0
          */
         this.events = new EventEmitter();

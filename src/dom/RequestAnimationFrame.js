@@ -26,7 +26,8 @@ var RequestAnimationFrame = new Class({
         /**
          * True if RequestAnimationFrame is running, otherwise false.
          *
-         * @property {boolean} isRunning
+         * @name Phaser.DOM.RequestAnimationFrame#isRunning
+         * @type {boolean}
          * @default false
          * @since 3.0.0
          */
@@ -35,7 +36,8 @@ var RequestAnimationFrame = new Class({
         /**
          * The callback to be invoked each step.
          *
-         * @property {function} callback
+         * @name Phaser.DOM.RequestAnimationFrame#callback
+         * @type {function}
          * @since 3.0.0
          */
         this.callback = NOOP;
@@ -43,7 +45,8 @@ var RequestAnimationFrame = new Class({
         /**
          * The most recent timestamp. Either a DOMHighResTimeStamp under RAF or `Date.now` under SetTimeout.
          *
-         * @property {DOMHighResTimeStamp|number} tick
+         * @name Phaser.DOM.RequestAnimationFrame#tick
+         * @type {DOMHighResTimeStamp|number}
          * @default 0
          * @since 3.0.0
          */
@@ -52,7 +55,8 @@ var RequestAnimationFrame = new Class({
         /**
          * True if the step is using setTimeout instead of RAF.
          *
-         * @property {boolean} isSetTimeOut
+         * @name Phaser.DOM.RequestAnimationFrame#isSetTimeOut
+         * @type {boolean}
          * @default false
          * @since 3.0.0
          */
@@ -61,7 +65,8 @@ var RequestAnimationFrame = new Class({
         /**
          * The setTimeout or RAF callback ID used when canceling them.
          *
-         * @property {?number} timeOutID
+         * @name Phaser.DOM.RequestAnimationFrame#timeOutID
+         * @type {?number}
          * @default null
          * @since 3.0.0
          */
@@ -70,7 +75,8 @@ var RequestAnimationFrame = new Class({
         /**
          * The previous time the step was called.
          *
-         * @property {number} lastTime
+         * @name Phaser.DOM.RequestAnimationFrame#lastTime
+         * @type {number}
          * @default 0
          * @since 3.0.0
          */
@@ -82,7 +88,8 @@ var RequestAnimationFrame = new Class({
          * The RAF step function.
          * Updates the local tick value, invokes the callback and schedules another call to requestAnimationFrame.
          *
-         * @property {function} step
+         * @name Phaser.DOM.RequestAnimationFrame#step
+         * @type {function}
          * @since 3.0.0
          */
         this.step = function step (timestamp)
@@ -101,7 +108,8 @@ var RequestAnimationFrame = new Class({
          * The SetTimeout step function.
          * Updates the local tick value, invokes the callback and schedules another call to setTimeout.
          *
-         * @property {function} stepTimeout
+         * @name Phaser.DOM.RequestAnimationFrame#stepTimeout
+         * @type {function}
          * @since 3.0.0
          */
         this.stepTimeout = function stepTimeout ()

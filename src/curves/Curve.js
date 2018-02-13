@@ -4,10 +4,10 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Class = require('../../utils/Class');
-var FromPoints = require('../../geom/rectangle/FromPoints');
-var Rectangle = require('../../geom/rectangle/Rectangle');
-var Vector2 = require('../../math/Vector2');
+var Class = require('../utils/Class');
+var FromPoints = require('../geom/rectangle/FromPoints');
+var Rectangle = require('../geom/rectangle/Rectangle');
+var Vector2 = require('../math/Vector2');
 
 /**
  * @classdesc
@@ -31,7 +31,8 @@ var Curve = new Class({
         /**
          * String based identifier for the type of curve.
          *
-         * @property {string} type
+         * @name Phaser.Curves.Curve#type
+         * @type {string}
          * @since 3.0.0
          */
         this.type = type;
@@ -39,7 +40,8 @@ var Curve = new Class({
         /**
          * The default number of divisions within the curve.
          *
-         * @property {integer} defaultDivisions
+         * @name Phaser.Curves.Curve#defaultDivisions
+         * @type {integer}
          * @default 5
          * @since 3.0.0
          */
@@ -48,7 +50,8 @@ var Curve = new Class({
         /**
          * The quantity of arc length divisions within the curve.
          *
-         * @property {integer} arcLengthDivisions
+         * @name Phaser.Curves.Curve#arcLengthDivisions
+         * @type {integer}
          * @default 100
          * @since 3.0.0
          */
@@ -57,7 +60,8 @@ var Curve = new Class({
         /**
          * An array of cached arc length values.
          *
-         * @property {array} cacheArcLengths
+         * @name Phaser.Curves.Curve#cacheArcLengths
+         * @type {array}
          * @default []
          * @since 3.0.0
          */
@@ -66,7 +70,8 @@ var Curve = new Class({
         /**
          * Does the data of this curve need updating?
          *
-         * @property {boolean} needsUpdate
+         * @name Phaser.Curves.Curve#needsUpdate
+         * @type {boolean}
          * @default true
          * @since 3.0.0
          */
@@ -75,7 +80,8 @@ var Curve = new Class({
         /**
          * [description]
          *
-         * @property {boolean} active
+         * @name Phaser.Curves.Curve#active
+         * @type {boolean}
          * @default true
          * @since 3.0.0
          */
@@ -84,7 +90,8 @@ var Curve = new Class({
         /**
          * A temporary calculation Vector.
          *
-         * @property {Phaser.Math.Vector2} _tmpVec2A
+         * @name Phaser.Curves.Curve#_tmpVec2A
+         * @type {Phaser.Math.Vector2}
          * @private
          * @since 3.0.0
          */
@@ -93,7 +100,8 @@ var Curve = new Class({
         /**
          * A temporary calculation Vector.
          *
-         * @property {Phaser.Math.Vector2} _tmpVec2B
+         * @name Phaser.Curves.Curve#_tmpVec2B
+         * @type {Phaser.Math.Vector2}
          * @private
          * @since 3.0.0
          */

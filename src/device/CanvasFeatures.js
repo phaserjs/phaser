@@ -12,10 +12,10 @@ var CanvasPool = require('../display/canvas/CanvasPool');
  * They are then referenced by internal game systems and are available for you to access
  * via `this.sys.game.device.canvasFeatures` from within any Scene.
  * 
- * @namespace Phaser.Device.CanvasFeatures
- * @typedef {object} DeviceCanvasFeatures
+ * @name Phaser.Device.CanvasFeatures
  * @since 3.0.0
  *
+ * @type {object}
  * @property {boolean} supportInverseAlpha - Set to true if the browser supports inversed alpha.
  * @property {boolean} supportNewBlendModes - Set to true if the browser supports new canvas blend modes.
  */

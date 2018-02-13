@@ -10,10 +10,10 @@
  * They are then referenced by internal game systems and are available for you to access
  * via `this.sys.game.device.fullscreen` from within any Scene.
  * 
- * @namespace Phaser.Device.Fullscreen
- * @typedef {object} DeviceFullscreen
+ * @name Phaser.Device.Fullscreen
  * @since 3.0.0
  *
+ * @type {object}
  * @property {boolean} available - Does the browser support the Full Screen API?
  * @property {boolean} keyboard - Does the browser support access to the Keyboard during Full Screen mode?
  * @property {string} cancel - If the browser supports the Full Screen API this holds the call you need to use to cancel it.

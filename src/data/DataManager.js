@@ -39,7 +39,7 @@ var DataManager = new Class({
          * [description]
          *
          * @name Phaser.Data.DataManager#events
-         * @type {Phaser.Events.EventEmitter}
+         * @type {EventEmitter}
          * @since 3.0.0
          */
         this.events = eventEmitter;

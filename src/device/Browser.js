@@ -12,10 +12,10 @@ var OS = require('./OS');
  * They are then referenced by internal game systems and are available for you to access
  * via `this.sys.game.device.browser` from within any Scene.
  * 
- * @namespace Phaser.Device.Browser
- * @typedef {object} DeviceBrowser
+ * @name Phaser.Device.Browser
  * @since 3.0.0
  *
+ * @type {object}
  * @property {boolean} chrome - Set to true if running in Chrome.
  * @property {boolean} edge - Set to true if running in Microsoft Edge browser.
  * @property {boolean} firefox - Set to true if running in Firefox.

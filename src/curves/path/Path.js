@@ -7,13 +7,13 @@
 //  Based on the three.js Curve classes created by [zz85](http://www.lab4games.net/zz85/blog)
 
 var Class = require('../../utils/Class');
-var CubicBezierCurve = require('../cubicbezier/CubicBezierCurve');
-var EllipseCurve = require('../ellipse/EllipseCurve');
+var CubicBezierCurve = require('../CubicBezierCurve');
+var EllipseCurve = require('../EllipseCurve');
 var GameObjectFactory = require('../../gameobjects/GameObjectFactory');
-var LineCurve = require('../line/LineCurve');
+var LineCurve = require('../LineCurve');
 var MovePathTo = require('./MoveTo');
 var Rectangle = require('../../geom/rectangle/Rectangle');
-var SplineCurve = require('../spline/SplineCurve');
+var SplineCurve = require('../SplineCurve');
 var Vector2 = require('../../math/Vector2');
 
 /**
@@ -40,7 +40,8 @@ var Path = new Class({
         /**
          * [description]
          *
-         * @property {string} name
+         * @name Phaser.Curves.Path#name
+         * @type {string}
          * @default ''
          * @since 3.0.0
          */
@@ -49,7 +50,8 @@ var Path = new Class({
         /**
          * [description]
          *
-         * @property {array} curves
+         * @name Phaser.Curves.Path#curves
+         * @type {array}
          * @default []
          * @since 3.0.0
          */
@@ -58,18 +60,18 @@ var Path = new Class({
         /**
          * [description]
          *
-         * @property {array} cacheLengths
+         * @name Phaser.Curves.Path#cacheLengths
+         * @type {array}
          * @default []
          * @since 3.0.0
          */
         this.cacheLengths = [];
 
-        // Automatically closes the path
-
         /**
-         * [description]
+         * Automatically closes the path.
          *
-         * @property {boolean} autoClose
+         * @name Phaser.Curves.Path#autoClose
+         * @type {boolean}
          * @default false
          * @since 3.0.0
          */
@@ -78,7 +80,8 @@ var Path = new Class({
         /**
          * [description]
          *
-         * @property {Phaser.Math.Vector2} startPoint
+         * @name {Phaser.MathPhaser.Curves.Path#startPoint
+         * @type {Phaser.Math.Vector2}
          * @since 3.0.0
          */
         this.startPoint = new Vector2();
@@ -86,7 +89,8 @@ var Path = new Class({
         /**
          * [description]
          *
-         * @property {Phaser.Math.Vector2} _tmpVec2A
+         * @name {Phaser.MathPhaser.Curves.Path#_tmpVec2A
+         * @type {Phaser.Math.Vector2}
          * @private
          * @since 3.0.0
          */
@@ -95,7 +99,8 @@ var Path = new Class({
         /**
          * [description]
          *
-         * @property {Phaser.Math.Vector2} _tmpVec2B
+         * @name {Phaser.MathPhaser.Curves.Path#_tmpVec2B
+         * @type {Phaser.Math.Vector2}
          * @private
          * @since 3.0.0
          */
@@ -180,10 +185,10 @@ var Path = new Class({
      *
      * @param {number} x - [description]
      * @param {number} y - [description]
-     * @param {Phaser.Math.Vector2} control1X - [description]
-     * @param {Phaser.Math.Vector2} control1Y - [description]
-     * @param {Phaser.Math.Vector2} control2X - [description]
-     * @param {Phaser.Math.Vector2} control2Y - [description]
+     * @param {Phaser.Math.Vector2} control1X - {Phaser.Math[description]
+     * @param {Phaser.Math.Vector2} control1Y - {Phaser.Math[description]
+     * @param {Phaser.Math.Vector2} control2X - {Phaser.Math[description]
+     * @param {Phaser.Math.Vector2} control2Y - {Phaser.Math[description]
      *
      * @return {Phaser.Curves.Path} [description]
      */
@@ -252,10 +257,8 @@ var Path = new Class({
         return graphics;
     },
 
-    //  Creates an ellipse curve positioned at the previous end point, using the given parameters
-
     /**
-     * [description]
+     * Creates an ellipse curve positioned at the previous end point, using the given parameters.
      *
      * @method Phaser.Curves.Path#ellipseTo
      * @since 3.0.0
@@ -422,9 +425,9 @@ var Path = new Class({
      * @method Phaser.Curves.Path#getEndPoint
      * @since 3.0.0
      *
-     * @param {Phaser.Math.Vector2} [out] - [description]
+     * @param {Phaser.Math.Vector2} [out] - {Phaser.Math[description]
      *
-     * @return {Phaser.Math.Vector2} [description]
+     * @return {Phaser.Math.Vector2} {Phaser.Math[description]
      */
     getEndPoint: function (out)
     {
@@ -473,7 +476,7 @@ var Path = new Class({
      * @since 3.0.0
      *
      * @param {number} t - [description]
-     * @param {Phaser.Math.Vector2} [out] - [description]
+     * @param {Phaser.Math.Vector2} [out] - {Phaser.Math[description]
      *
      * @return {Phaser.Math.Vector2|null} [description]
      */
@@ -565,9 +568,9 @@ var Path = new Class({
      * @method Phaser.Curves.Path#getRandomPoint
      * @since 3.0.0
      *
-     * @param {Phaser.Math.Vector2} [out] - [description]
+     * @param {Phaser.Math.Vector2} [out] - {Phaser.Math[description]
      *
-     * @return {Phaser.Math.Vector2} [description]
+     * @return {Phaser.Math.Vector2} {Phaser.Math[description]
      */
     getRandomPoint: function (out)
     {
@@ -611,9 +614,9 @@ var Path = new Class({
      * @method Phaser.Curves.Path#getStartPoint
      * @since 3.0.0
      *
-     * @param {Phaser.Math.Vector2} [out] - [description]
+     * @param {Phaser.Math.Vector2} [out] - {Phaser.Math[description]
      *
-     * @return {Phaser.Math.Vector2} [description]
+     * @return {Phaser.Math.Vector2} {Phaser.Math[description]
      */
     getStartPoint: function (out)
     {
@@ -630,7 +633,7 @@ var Path = new Class({
      * @method Phaser.Curves.Path#lineTo
      * @since 3.0.0
      *
-     * @param {number|Phaser.Math.Vector2} x - [description]
+     * @param {number|Phaser.Math.Vector2} x - {Phaser.Math[description]
      * @param {number} [y] - [description]
      *
      * @return {Phaser.Curves.Path} [description]
@@ -729,6 +732,22 @@ var Path = new Class({
 
 });
 
+/**
+ * Creates a new Path Object.
+ *
+ * @method Phaser.GameObjects.GameObjectFactory#path
+ * @since 3.0.0
+ *
+ * @param {number} x - The horizontal position of this Path.
+ * @param {number} y - The vertical position of this Path.
+ * 
+ * @return {Phaser.Curves.Path} The Path Object that was created.
+ */
+GameObjectFactory.register('path', function (x, y)
+{
+    return new Path(x, y);
+});
+
 //  When registering a factory function 'this' refers to the GameObjectFactory context.
 //  
 //  There are several properties available to use:
@@ -736,10 +755,5 @@ var Path = new Class({
 //  this.scene - a reference to the Scene that owns the GameObjectFactory
 //  this.displayList - a reference to the Display List the Scene owns
 //  this.updateList - a reference to the Update List the Scene owns
-
-GameObjectFactory.register('path', function (x, y)
-{
-    return new Path(x, y);
-});
 
 module.exports = Path;

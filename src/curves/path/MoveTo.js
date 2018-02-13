@@ -30,12 +30,20 @@ var MoveTo = new Class({
         /**
          * [description]
          *
-         * @property {boolean} active
+         * @name Phaser.Curves.MoveTo#active
+         * @type {boolean}
          * @default false
          * @since 3.0.0
          */
         this.active = false;
 
+        /**
+         * [description]
+         *
+         * @name Phaser.Curves.MoveTo#p0
+         * @type {Phaser.Math.Vector2}
+         * @since 3.0.0
+         */
         this.p0 = new Vector2(x, y);
     },
 

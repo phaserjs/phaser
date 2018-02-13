@@ -6,10 +6,10 @@
 
 //  Based on the three.js Curve classes created by [zz85](http://www.lab4games.net/zz85/blog)
 
-var Class = require('../../utils/Class');
-var CubicBezier = require('../../math/interpolation/CubicBezierInterpolation');
-var Curve = require('../curve/Curve');
-var Vector2 = require('../../math/Vector2');
+var Class = require('../utils/Class');
+var CubicBezier = require('../math/interpolation/CubicBezierInterpolation');
+var Curve = require('./Curve');
+var Vector2 = require('../math/Vector2');
 
 /**
  * @classdesc
@@ -21,10 +21,10 @@ var Vector2 = require('../../math/Vector2');
  * @constructor
  * @since 3.0.0
  *
- * @param {[type]} p0 - [description]
- * @param {[type]} p1 - [description]
- * @param {[type]} p2 - [description]
- * @param {[type]} p3 - [description]
+ * @param {Phaser.Math.Vector2|Phaser.Math.Vector2[]} p0 - Start point, or an array of point pairs.
+ * @param {Phaser.Math.Vector2} p1 - Control Point 1.
+ * @param {Phaser.Math.Vector2} p2 - Control Point 2.
+ * @param {Phaser.Math.Vector2} p3 - End Point.
  */
 var CubicBezierCurve = new Class({
 
@@ -32,10 +32,6 @@ var CubicBezierCurve = new Class({
 
     initialize:
 
-    //  p0 = start point (or an array of point pairs)
-    //  p1 = control point 1
-    //  p2 = control point 2
-    //  p3 = end point
     function CubicBezierCurve (p0, p1, p2, p3)
     {
         Curve.call(this, 'CubicBezierCurve');
@@ -51,7 +47,8 @@ var CubicBezierCurve = new Class({
         /**
          * [description]
          *
-         * @property {[type]} p0
+         * @name Phaser.Curves.CubicBezierCurve#p0
+         * @type {Phaser.Math.Vector2}
          * @since 3.0.0
          */
         this.p0 = p0;
@@ -59,7 +56,8 @@ var CubicBezierCurve = new Class({
         /**
          * [description]
          *
-         * @property {[type]} p1
+         * @name Phaser.Curves.CubicBezierCurve#p1
+         * @type {Phaser.Math.Vector2}
          * @since 3.0.0
          */
         this.p1 = p1;
@@ -67,7 +65,8 @@ var CubicBezierCurve = new Class({
         /**
          * [description]
          *
-         * @property {[type]} p2
+         * @name Phaser.Curves.CubicBezierCurve#p2
+         * @type {Phaser.Math.Vector2}
          * @since 3.0.0
          */
         this.p2 = p2;
@@ -75,7 +74,8 @@ var CubicBezierCurve = new Class({
         /**
          * [description]
          *
-         * @property {[type]} p3
+         * @name Phaser.Curves.CubicBezierCurve#p3
+         * @type {Phaser.Math.Vector2}
          * @since 3.0.0
          */
         this.p3 = p3;
@@ -87,9 +87,9 @@ var CubicBezierCurve = new Class({
      * @method Phaser.Curves.CubicBezierCurve#getStartPoint
      * @since 3.0.0
      *
-     * @param {[type]} out - [description]
+     * @param {Phaser.Math.Vector2} out - [description]
      *
-     * @return {[type]} [description]
+     * @return {Phaser.Math.Vector2} [description]
      */
     getStartPoint: function (out)
     {
@@ -142,10 +142,10 @@ var CubicBezierCurve = new Class({
      * @method Phaser.Curves.CubicBezierCurve#draw
      * @since 3.0.0
      *
-     * @param {[type]} graphics - [description]
-     * @param {[type]} pointsTotal - [description]
+     * @param {Phaser.GameObjects.Graphics} graphics - [description]
+     * @param {integer} [pointsTotal=32] - [description]
      *
-     * @return {[type]} [description]
+     * @return {Phaser.GameObjects.Graphics} [description]
      */
     draw: function (graphics, pointsTotal)
     {
@@ -173,7 +173,7 @@ var CubicBezierCurve = new Class({
      * @method Phaser.Curves.CubicBezierCurve#toJSON
      * @since 3.0.0
      *
-     * @return {[type]} [description]
+     * @return {object} [description]
      */
     toJSON: function ()
     {

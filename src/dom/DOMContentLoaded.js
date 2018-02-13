@@ -11,7 +11,7 @@ var OS = require('../device/OS');
  * If not complete it sets up several event listeners such as `deviceready`, and once those fire, it invokes the callback.
  * Called automatically by the Phaser.Game instance. Should not usually be accessed directly.
  *
- * @function Phaser.Dom.DOMContentLoaded
+ * @function Phaser.DOM.DOMContentLoaded
  * @since 3.0.0
  *
  * @param {function} callback - The callback to be invoked when the device is ready and the DOM content is loaded.

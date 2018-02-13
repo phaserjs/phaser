@@ -6,11 +6,11 @@
 
 //  Based on the three.js Curve classes created by [zz85](http://www.lab4games.net/zz85/blog)
 
-var Class = require('../../utils/Class');
-var Curve = require('../curve/Curve');
-var FromPoints = require('../../geom/rectangle/FromPoints');
-var Rectangle = require('../../geom/rectangle/Rectangle');
-var Vector2 = require('../../math/Vector2');
+var Class = require('../utils/Class');
+var Curve = require('./Curve');
+var FromPoints = require('../geom/rectangle/FromPoints');
+var Rectangle = require('../geom/rectangle/Rectangle');
+var Vector2 = require('../math/Vector2');
 
 var tmpVec2 = new Vector2();
 
@@ -24,8 +24,8 @@ var tmpVec2 = new Vector2();
  * @constructor
  * @since 3.0.0
  *
- * @param {[type]} p0 - [description]
- * @param {[type]} p1 - [description]
+ * @param {Phaser.Math.Vector2} p0 - [description]
+ * @param {Phaser.Math.Vector2} p1 - [description]
  */
 var LineCurve = new Class({
 
@@ -47,7 +47,8 @@ var LineCurve = new Class({
         /**
          * [description]
          *
-         * @property {[type]} p0
+         * @name Phaser.Curves.LineCurve#p0
+         * @type {Phaser.Math.Vector2}
          * @since 3.0.0
          */
         this.p0 = p0;
@@ -55,7 +56,8 @@ var LineCurve = new Class({
         /**
          * [description]
          *
-         * @property {[type]} p1
+         * @property Phaser.Curves.LineCurve#p1
+         * @type {Phaser.Math.Vector2}
          * @since 3.0.0
          */
         this.p1 = p1;

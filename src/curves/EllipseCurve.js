@@ -6,12 +6,12 @@
 
 //  Based on the three.js Curve classes created by [zz85](http://www.lab4games.net/zz85/blog)
 
-var Class = require('../../utils/Class');
-var Curve = require('../curve/Curve');
-var DegToRad = require('../../math/DegToRad');
-var GetValue = require('../../utils/object/GetValue');
-var RadToDeg = require('../../math/RadToDeg');
-var Vector2 = require('../../math/Vector2');
+var Class = require('../utils/Class');
+var Curve = require('./Curve');
+var DegToRad = require('../math/DegToRad');
+var GetValue = require('../utils/object/GetValue');
+var RadToDeg = require('../math/RadToDeg');
+var Vector2 = require('../math/Vector2');
 
 /**
  * @classdesc
@@ -69,7 +69,8 @@ var EllipseCurve = new Class({
         /**
          * [description]
          *
-         * @property {[type]} p0
+         * @name {Phaser.MathPhaser.Curves.EllipseCurve#p0
+         * @type {Phaser.Math.Vector2}
          * @since 3.0.0
          */
         this.p0 = new Vector2(x, y);
@@ -77,7 +78,8 @@ var EllipseCurve = new Class({
         /**
          * [description]
          *
-         * @property {[type]} _xRadius
+         * @name Phaser.Curves.EllipseCurve#_xRadius
+         * @type {number}
          * @private
          * @since 3.0.0
          */
@@ -86,7 +88,8 @@ var EllipseCurve = new Class({
         /**
          * [description]
          *
-         * @property {[type]} _yRadius
+         * @name Phaser.Curves.EllipseCurve#_yRadius
+         * @type {number}
          * @private
          * @since 3.0.0
          */
@@ -97,7 +100,8 @@ var EllipseCurve = new Class({
         /**
          * [description]
          *
-         * @property {[type]} _startAngle
+         * @name Phaser.Curves.EllipseCurve#_startAngle
+         * @type {number}
          * @private
          * @since 3.0.0
          */
@@ -106,24 +110,31 @@ var EllipseCurve = new Class({
         /**
          * [description]
          *
-         * @property {[type]} _endAngle
+         * @name Phaser.Curves.EllipseCurve#_endAngle
+         * @type {number}
          * @private
          * @since 3.0.0
          */
         this._endAngle = DegToRad(endAngle);
 
-        //  Boolean (anti-clockwise direction)
-
         /**
-         * [description]
+         * Anti-clockwise direction.
          *
-         * @property {[type]} _clockwise
+         * @name Phaser.Curves.EllipseCurve#_clockwise
+         * @type {boolean}
          * @private
          * @since 3.0.0
          */
         this._clockwise = clockwise;
 
-        //  The rotation of the arc
+        /**
+         * The rotation of the arc.
+         *
+         * @name Phaser.Curves.EllipseCurve#_rotation
+         * @type {number}
+         * @private
+         * @since 3.0.0
+         */
         this._rotation = DegToRad(rotation);
     },
 
@@ -369,6 +380,13 @@ var EllipseCurve = new Class({
         return this;
     },
 
+    /**
+     * [description]
+     *
+     * @name Phaser.Curves.EllipseCurve#x
+     * @type {number}
+     * @since 3.0.0
+     */
     x: {
 
         get: function ()
@@ -383,6 +401,13 @@ var EllipseCurve = new Class({
 
     },
 
+    /**
+     * [description]
+     *
+     * @name Phaser.Curves.EllipseCurve#y
+     * @type {number}
+     * @since 3.0.0
+     */
     y: {
 
         get: function ()
@@ -397,6 +422,13 @@ var EllipseCurve = new Class({
 
     },
 
+    /**
+     * [description]
+     *
+     * @name Phaser.Curves.EllipseCurve#xRadius
+     * @type {number}
+     * @since 3.0.0
+     */
     xRadius: {
 
         get: function ()
@@ -411,6 +443,13 @@ var EllipseCurve = new Class({
 
     },
 
+    /**
+     * [description]
+     *
+     * @name Phaser.Curves.EllipseCurve#yRadius
+     * @type {number}
+     * @since 3.0.0
+     */
     yRadius: {
 
         get: function ()
@@ -425,6 +464,13 @@ var EllipseCurve = new Class({
 
     },
 
+    /**
+     * [description]
+     *
+     * @name Phaser.Curves.EllipseCurve#startAngle
+     * @type {number}
+     * @since 3.0.0
+     */
     startAngle: {
 
         get: function ()
@@ -439,6 +485,13 @@ var EllipseCurve = new Class({
 
     },
 
+    /**
+     * [description]
+     *
+     * @name Phaser.Curves.EllipseCurve#endAngle
+     * @type {number}
+     * @since 3.0.0
+     */
     endAngle: {
 
         get: function ()
@@ -453,6 +506,13 @@ var EllipseCurve = new Class({
 
     },
 
+    /**
+     * [description]
+     *
+     * @name Phaser.Curves.EllipseCurve#clockwise
+     * @type {number}
+     * @since 3.0.0
+     */
     clockwise: {
 
         get: function ()
@@ -467,6 +527,13 @@ var EllipseCurve = new Class({
 
     },
 
+    /**
+     * [description]
+     *
+     * @name Phaser.Curves.EllipseCurve#rotation
+     * @type {number}
+     * @since 3.0.0
+     */
     rotation: {
 
         get: function ()
@@ -487,7 +554,7 @@ var EllipseCurve = new Class({
      * @method Phaser.Curves.EllipseCurve#toJSON
      * @since 3.0.0
      *
-     * @return {[type]} [description]
+     * @return {object} [description]
      */
     toJSON: function ()
     {

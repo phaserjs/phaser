@@ -14,10 +14,10 @@ var CanvasPool = require('../display/canvas/CanvasPool');
  * They are then referenced by internal game systems and are available for you to access
  * via `this.sys.game.device.features` from within any Scene.
  * 
- * @namespace Phaser.Device.Features
- * @typedef {object} DeviceFeatures
+ * @name Phaser.Device.Features
  * @since 3.0.0
  * 
+ * @type {object}
  * @property {?boolean} canvasBitBltShift - True if canvas supports a 'copy' bitblt onto itself when the source and destination regions overlap.
  * @property {boolean} canvas - Is canvas available?
  * @property {boolean} file - Is file available?
