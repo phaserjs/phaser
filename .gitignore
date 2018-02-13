@@ -11,6 +11,5 @@ node_modules/
 
 # Build
 /npm-debug.log
+build/
 out/
-v3/src/checksum.js
-src/checksum.js

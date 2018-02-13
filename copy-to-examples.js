@@ -1,8 +1,8 @@
 let fs = require('fs-extra');
 let sloc = require('node-sloc');
 
-let source = './dist/phaser.js';
-let sourceMap = './dist/phaser.js.map';
+let source = './build/phaser.js';
+let sourceMap = './build/phaser.js.map';
 let dest = '../phaser3-examples/public/build/dev.js';
 let destMap = '../phaser3-examples/public/build/phaser.js.map';
 

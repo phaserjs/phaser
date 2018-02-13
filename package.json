@@ -34,6 +34,7 @@
     "web audio"
   ],
   "devDependencies": {
+    "clean-webpack-plugin": "^0.1.18",
     "eslint": "^4.13.1",
     "fs-extra": "^5.0.0",
     "node-sloc": "^0.1.10",

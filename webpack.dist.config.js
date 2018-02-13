@@ -2,6 +2,7 @@
 
 const webpack = require('webpack');
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
+const CleanWebpackPlugin = require('clean-webpack-plugin');
 
 module.exports = {
 
@@ -37,6 +38,8 @@ module.exports = {
             'CANVAS_RENDERER': JSON.stringify(true),
             'WEBGL_RENDERER': JSON.stringify(true)
         }),
+
+        new CleanWebpackPlugin(['dist']),
 
         new UglifyJSPlugin({
             include: /\.min\.js$/,
