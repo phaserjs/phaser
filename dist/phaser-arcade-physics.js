@@ -106583,6 +106583,23 @@ var LoaderPlugin = new Class({
     /**
      * [description]
      *
+     * @method Phaser.Loader.LoaderPlugin#setCORS
+     * @since 3.0.0
+     *
+     * @param {string} crossOrigin - [description]
+     *
+     * @return {Phaser.Loader.LoaderPlugin} This Loader object.
+     */
+    setCORS: function (crossOrigin)
+    {
+        this.crossOrigin = crossOrigin;
+
+        return this;
+    },
+
+    /**
+     * [description]
+     *
      * @method Phaser.Loader.LoaderPlugin#addFile
      * @since 3.0.0
      *
