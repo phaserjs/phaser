@@ -469,8 +469,8 @@ var ModelViewProjection = {
     projPersp: function (fovy, aspectRatio, near, far)
     {
         var projectionMatrix = this.projectionMatrix;
-        let fov = 1.0 / Math.tan(fovy / 2.0);
-        let nearFar = 1.0 / (near - far);
+        var fov = 1.0 / Math.tan(fovy / 2.0);
+        var nearFar = 1.0 / (near - far);
         
         projectionMatrix[0] = fov / aspectRatio;
         projectionMatrix[1] = 0.0;
