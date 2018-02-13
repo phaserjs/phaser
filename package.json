@@ -1,10 +1,9 @@
 {
-  "//": "npm publish --tag beta",
   "name": "phaser",
-  "version": "3.0.0-beta.20",
+  "version": "3.0.0",
   "release": "Shadow Coast",
   "description": "A fast, free and fun HTML5 Game Framework for Desktop and Mobile web browsers.",
-  "author": "Richard Davey <rdavey@gmail.com> (http://www.photonstorm.com)",
+  "author": "Richard Davey <rich@photonstorm.com> (http://www.photonstorm.com)",
   "logo": "https://raw.github.com/photonstorm/phaser/master/phaser-logo-small.png",
   "homepage": "http://phaser.io",
   "bugs": "https://github.com/photonstorm/phaser/issues",
@@ -41,7 +40,7 @@
     "raw-loader": "^0.5.1",
     "uglifyjs-webpack-plugin": "^1.1.2",
     "uuid": "^3.1.0",
-    "webpack": "^3.10.0",
+    "webpack": "^3.11.0",
     "webpack-shell-plugin": "^0.5.0"
   },
   "dependencies": {

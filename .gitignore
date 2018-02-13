@@ -10,7 +10,6 @@ Thumbs.db
 node_modules/
 
 # Build
-dist/
 /npm-debug.log
 out/
 v3/src/checksum.js

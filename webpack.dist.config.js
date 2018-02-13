@@ -1,7 +1,6 @@
 'use strict';
 
 const webpack = require('webpack');
-const WebpackShellPlugin = require('webpack-shell-plugin');
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 
 module.exports = {
@@ -9,8 +8,10 @@ module.exports = {
     context: `${__dirname}/src/`,
 
     entry: {
-        phaser: './phaser.js',
-        'phaser.min': './phaser.js'
+        'phaser': './phaser.js',
+        'phaser.min': './phaser.js',
+        'phaser-arcade-physics': './phaser-arcade-physics.js',
+        'phaser-arcade-physics.min': './phaser-arcade-physics.js'
     },
 
     output: {
@@ -51,10 +52,6 @@ module.exports = {
                 warnings: false
             },
             warningsFilter: (src) => false
-        }),
-
-        new WebpackShellPlugin({
-            onBuildStart: 'node create-checksum.js'
         })
 
     ]
