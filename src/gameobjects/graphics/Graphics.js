@@ -4,6 +4,7 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
+var Camera = require('../../cameras/2d/Camera.js');
 var Class = require('../../utils/Class');
 var Commands = require('./Commands');
 var Components = require('../components');
@@ -1113,5 +1114,7 @@ var Graphics = new Class({
     }
 
 });
+
+Graphics.TargetCamera = new Camera(0, 0, 0, 0);
 
 module.exports = Graphics;
