@@ -39,12 +39,11 @@ module.exports = {
         }),
 
         new WebpackShellPlugin({
-            onBuildStart: 'node create-checksum.js',
             onBuildEnd: 'node copy-to-examples.js'
         })
 
     ],
 
-    devtool: 'inline-source-map'
+    devtool: 'source-map'
 
 };

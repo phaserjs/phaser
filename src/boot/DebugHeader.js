@@ -4,7 +4,6 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var CHECKSUM = require('../checksum');
 var CONST = require('../const');
 
 /**
