@@ -30,13 +30,13 @@ After 1.5 years in the making, tens of thousands of lines of code, hundreds of e
 
 Please understand this is a bleeding-edge and brand new release. There are features we've had to leave out, areas of the documentation that need completing and so many cool new things we wanted to add. But we had to draw a line in the sand somewhere and 3.0.0 represents that.
 
-For us this is just the start of a new chapter in Phasers life. We will be jumping on bug reports as quickly as we can and releasing new versions rapidly. We've structured v3 in such a way that we can push out point releases as fast needed.
+For us this is just the start of a new chapter in Phaser's life. We will be jumping on bug reports as quickly as we can and releasing new versions rapidly. We've structured v3 in such a way that we can push out point releases as fast as needed.
 
 We publish our [Developer Logs](https://phaser.io/phaser3/devlog) in the weekly [Phaser World](https://phaser.io/community/newsletter) newsletter. Subscribe to stay in touch and get all the latest news from us and the wider Phaser community.
 
 You can also follow Phaser on [Twitter](https://twitter.com/phaser_) and chat with fellow Phaser devs in our [Slack](https://phaser.io/community/slack) and [Discord](https://phaser.io/community/discord) channels.
 
-Phaser 3 wouldn't have been possible without the fantastic support of the community and Patreon. Thank you to everyone who supports our work, who shares our belief in the future of HTML5 gaming, and Phasers role in that.
+Phaser 3 wouldn't have been possible without the fantastic support of the community and Patreon. Thank you to everyone who supports our work, who shares our belief in the future of HTML5 gaming, and Phaser's role in that.
 
 Happy coding everyone!
 
@@ -114,13 +114,13 @@ Phaser 3 is so brand new the paint is still wet. As such we don't yet have any g
 
 ### Source Code Examples
 
-During our development of Phaser 3 we created hundreds of examples, with the full source code and assets available. Until these are fully integrated with the Phaser web site you can browser them in the [Phaser 3 Labs](http://labs.phaser.io), or clone the [examples repo][examples]. Note: Not all examples work, sorry! We're tidying them up as fast as we can.
+During our development of Phaser 3 we created hundreds of examples, with the full source code and assets available. Until those are fully integrated with the Phaser web site, you'll have to browse them in the [Phaser 3 Labs](http://labs.phaser.io), or clone the [examples repo][examples]. Note: Not all examples work, sorry! We're tidying them up as fast as we can.
 
 ### Create Your First Phaser 3 Example
 
 Create an `index.html` page locally and paste the following code into it:
 
-```
+```html
 <!DOCTYPE html>
 <html>
 <head>
@@ -136,7 +136,7 @@ Create an `index.html` page locally and paste the following code into it:
 
 This is a standard empty web page. You'll notice it's pulling in a build of Phaser 3 in the script tag, but otherwise doesn't do anything yet. Now let's set-up the game config. Paste the following between the `<script></script>` tags:
 
-```
+```javascript
 var config = {
     type: Phaser.AUTO,
     width: 800,
@@ -156,7 +156,7 @@ var config = {
 
 This is a pretty standard Phaser 3 Game Configuration object. We'll tell it to use the WebGL renderer if it can, set the canvas to a size of 800x600 pixels, enable Arcade Physics and finally call the `preload` and `create` functions. These don't exist yet, so if you run this it will just error. So add the following after the config object:
 
-```
+```javascript
 var game = new Phaser.Game(config);
 
 function preload ()
@@ -177,7 +177,7 @@ This creates a Phaser Game instance, using our configuration object. It also pro
 
 The create function is empty, so it's time to fill it in:
 
-```
+```javascript
 function create ()
 {
     this.add.image(400, 300, 'sky');
