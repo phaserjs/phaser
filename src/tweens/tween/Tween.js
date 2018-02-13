@@ -596,8 +596,6 @@ var Tween = new Class({
 
         this.state = TWEEN_CONST.PAUSED;
 
-        this.emit('pause', this);
-
         return this;
     },
 
@@ -726,8 +724,6 @@ var Tween = new Class({
 
             this.state = this._pausedState;
         }
-
-        this.emit('resume', this);
 
         return this;
     },
