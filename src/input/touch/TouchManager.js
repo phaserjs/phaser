@@ -30,7 +30,8 @@ var TouchManager = new Class({
         /**
          * [description]
          *
-         * @property {Phaser.Input.InputManager} manager
+         * @name Phaser.Input.Touch.TouchManager#manager
+         * @type {Phaser.Input.InputManager}
          * @since 3.0.0
          */
         this.manager = inputManager;
@@ -38,7 +39,8 @@ var TouchManager = new Class({
         /**
          * If true the DOM events will have event.preventDefault applied to them, if false they will propagate fully.
          *
-         * @property {boolean} capture
+         * @name Phaser.Input.Touch.TouchManager#capture
+         * @type {boolean}
          * @default true
          * @since 3.0.0
          */
@@ -47,7 +49,8 @@ var TouchManager = new Class({
         /**
          * [description]
          *
-         * @property {boolean} enabled
+         * @name Phaser.Input.Touch.TouchManager#enabled
+         * @type {boolean}
          * @default false
          * @since 3.0.0
          */
@@ -56,7 +59,8 @@ var TouchManager = new Class({
         /**
          * [description]
          *
-         * @property {null} target
+         * @name Phaser.Input.Touch.TouchManager#target
+         * @type {null}
          * @since 3.0.0
          */
         this.target;
@@ -64,7 +68,8 @@ var TouchManager = new Class({
         /**
          * [description]
          *
-         * @property {function} handler
+         * @name Phaser.Input.Touch.TouchManager#handler
+         * @type {function}
          * @since 3.0.0
          */
         this.handler;

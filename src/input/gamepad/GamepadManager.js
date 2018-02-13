@@ -32,7 +32,8 @@ var GamepadManager = new Class({
         /**
          * [description]
          *
-         * @property {Phaser.Input.InputManager} manager
+         * @name Phaser.Input.Gamepad.GamepadManager#manager
+         * @type {Phaser.Input.InputManager}
          * @since 3.0.0
          */
         this.manager = inputManager;
@@ -40,7 +41,8 @@ var GamepadManager = new Class({
         /**
          * [description]
          *
-         * @property {[type]} events
+         * @name Phaser.Input.Gamepad.GamepadManager#events
+         * @type {[type]}
          * @since 3.0.0
          */
         this.events = inputManager.events;
@@ -48,7 +50,8 @@ var GamepadManager = new Class({
         /**
          * [description]
          *
-         * @property {boolean} enabled
+         * @name Phaser.Input.Gamepad.GamepadManager#enabled
+         * @type {boolean}
          * @default false
          * @since 3.0.0
          */
@@ -57,7 +60,8 @@ var GamepadManager = new Class({
         /**
          * [description]
          *
-         * @property {null} target
+         * @name Phaser.Input.Gamepad.GamepadManager#target
+         * @type {null}
          * @since 3.0.0
          */
         this.target;
@@ -65,7 +69,8 @@ var GamepadManager = new Class({
         /**
          * [description]
          *
-         * @property {null} handler
+         * @name Phaser.Input.Gamepad.GamepadManager#handler
+         * @type {null}
          * @since 3.0.0
          */
         this.handler;
@@ -73,7 +78,8 @@ var GamepadManager = new Class({
         /**
          * [description]
          *
-         * @property {array} gamepads
+         * @name Phaser.Input.Gamepad.GamepadManager#gamepads
+         * @type {array}
          * @default []
          * @since 3.0.0
          */
@@ -82,7 +88,8 @@ var GamepadManager = new Class({
         /**
          * Standard FIFO queue.
          *
-         * @property {array} queue
+         * @name Phaser.Input.Gamepad.GamepadManager#queue
+         * @type {array}
          * @default []
          * @since 3.0.0
          */
@@ -362,7 +369,7 @@ var GamepadManager = new Class({
      * The total number of connected game pads.
      * 
      * @name Phaser.Input.Gamepad.GamepadManager#total
-     * @property {number} total
+     * @type {number}
      * @since 3.0.0
      */
     total: {

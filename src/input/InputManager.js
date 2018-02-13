@@ -35,7 +35,8 @@ var InputManager = new Class({
         /**
          * [description]
          *
-         * @property {[type]} game
+         * @name Phaser.Input.InputManager#game
+         * @type {Phaser.Game}
          * @since 3.0.0
          */
         this.game = game;
@@ -43,7 +44,8 @@ var InputManager = new Class({
         /**
          * [description]
          *
-         * @property {HTMLCanvasElement} canvas
+         * @name Phaser.Input.InputManager#canvas
+         * @type {HTMLCanvasElement}
          * @since 3.0.0
          */
         this.canvas;
@@ -51,7 +53,8 @@ var InputManager = new Class({
         /**
          * [description]
          *
-         * @property {object} config
+         * @name Phaser.Input.InputManager#config
+         * @type {object}
          * @since 3.0.0
          */
         this.config = config;
@@ -59,7 +62,8 @@ var InputManager = new Class({
         /**
          * [description]
          *
-         * @property {boolean} enabled
+         * @name Phaser.Input.InputManager#enabled
+         * @type {boolean}
          * @default true
          * @since 3.0.0
          */
@@ -68,7 +72,8 @@ var InputManager = new Class({
         /**
          * [description]
          *
-         * @property {[type]} events
+         * @name Phaser.Input.InputManager#events
+         * @type {EventEmitter}
          * @since 3.0.0
          */
         this.events = new EventEmitter();
@@ -76,7 +81,8 @@ var InputManager = new Class({
         /**
          * Standard FIFO queue.
          *
-         * @property {array} queue
+         * @name Phaser.Input.InputManager#queue
+         * @type {array}
          * @default []
          * @since 3.0.0
          */
@@ -85,7 +91,8 @@ var InputManager = new Class({
         /**
          * [description]
          *
-         * @property {Phaser.Input.Keyboard.KeyboardManager} keyboard
+         * @name Phaser.Input.InputManager#keyboard
+         * @type {Phaser.Input.Keyboard.KeyboardManager}
          * @since 3.0.0
          */
         this.keyboard = new Keyboard(this);
@@ -93,7 +100,8 @@ var InputManager = new Class({
         /**
          * [description]
          *
-         * @property {Phaser.Input.Mouse.MouseManager} mouse
+         * @name Phaser.Input.InputManager#mouse
+         * @type {Phaser.Input.Mouse.MouseManager}
          * @since 3.0.0
          */
         this.mouse = new Mouse(this);
@@ -101,7 +109,8 @@ var InputManager = new Class({
         /**
          * [description]
          *
-         * @property {Phaser.Input.Touch.TouchManager} touch
+         * @name Phaser.Input.InputManager#touch
+         * @type {Phaser.Input.Touch.TouchManager}
          * @since 3.0.0
          */
         this.touch = new Touch(this);
@@ -109,7 +118,8 @@ var InputManager = new Class({
         /**
          * [description]
          *
-         * @property {Phaser.Input.Gamepad.GamepadManager} gamepad
+         * @name Phaser.Input.InputManager#gamepad
+         * @type {Phaser.Input.Gamepad.GamepadManager}
          * @since 3.0.0
          */
         this.gamepad = new Gamepad(this);
@@ -117,7 +127,8 @@ var InputManager = new Class({
         /**
          * [description]
          *
-         * @property {[type]} activePointer
+         * @name Phaser.Input.InputManager#activePointer
+         * @type {[type]}
          * @since 3.0.0
          */
         this.activePointer = new Pointer(this, 0);
@@ -125,7 +136,8 @@ var InputManager = new Class({
         /**
          * [description]
          *
-         * @property {object} scale
+         * @name Phaser.Input.InputManager#scale
+         * @type {object}
          * @since 3.0.0
          */
         this.scale = { x: 1, y: 1 };
@@ -136,7 +148,8 @@ var InputManager = new Class({
          * and click something on it, that click will not then be passed down to any other
          * Scene below. Disable this to have input events passed through all Scenes, all the time.
          *
-         * @property {boolean} globalTopOnly
+         * @name Phaser.Input.InputManager#globalTopOnly
+         * @type {boolean}
          * @default true
          * @since 3.0.0
          */
@@ -145,7 +158,8 @@ var InputManager = new Class({
         /**
          * [description]
          *
-         * @property {boolean} ignoreEvents
+         * @name Phaser.Input.InputManager#ignoreEvents
+         * @type {boolean}
          * @default false
          * @since 3.0.0
          */
@@ -154,7 +168,8 @@ var InputManager = new Class({
         /**
          * [description]
          *
-         * @property {Phaser.Geom.Rectangle} bounds
+         * @name Phaser.Input.InputManager#bounds
+         * @type {Phaser.Geom.Rectangle}
          * @since 3.0.0
          */
         this.bounds = new Rectangle();
@@ -162,7 +177,8 @@ var InputManager = new Class({
         /**
          * [description]
          *
-         * @property {object} _tempPoint
+         * @name Phaser.Input.InputManager#_tempPoint
+         * @type {object}
          * @private
          * @since 3.0.0
          */
@@ -171,7 +187,8 @@ var InputManager = new Class({
         /**
          * [description]
          *
-         * @property {array} _tempHitTest
+         * @name Phaser.Input.InputManager#_tempHitTest
+         * @type {array}
          * @private
          * @default []
          * @since 3.0.0
@@ -225,7 +242,7 @@ var InputManager = new Class({
      * @method Phaser.Input.InputManager#update
      * @since 3.0.0
      *
-     * @param {[type]} time - [description]
+     * @param {number} time - [description]
      */
     update: function (time)
     {
@@ -310,13 +327,13 @@ var InputManager = new Class({
      * @method Phaser.Input.InputManager#hitTest
      * @since 3.0.0
      *
-     * @param {[type]} x - [description]
-     * @param {[type]} y - [description]
-     * @param {[type]} gameObjects - [description]
-     * @param {[type]} camera - [description]
-     * @param {[type]} output - [description]
+     * @param {number} x - [description]
+     * @param {number} y - [description]
+     * @param {array} gameObjects - [description]
+     * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
+     * @param {array} output - [description]
      *
-     * @return {[type]} [description]
+     * @return {array} [description]
      */
     hitTest: function (x, y, gameObjects, camera, output)
     {
@@ -370,9 +387,9 @@ var InputManager = new Class({
      * @method Phaser.Input.InputManager#pointWithinHitArea
      * @since 3.0.0
      *
-     * @param {[type]} gameObject - [description]
-     * @param {[type]} x - [description]
-     * @param {[type]} y - [description]
+     * @param {Phaser.GameObjects.GameObject} gameObject - [description]
+     * @param {number} x - [description]
+     * @param {number} y - [description]
      *
      * @return {boolean} [description]
      */
@@ -404,9 +421,9 @@ var InputManager = new Class({
      * @method Phaser.Input.InputManager#pointWithinInteractiveObject
      * @since 3.0.0
      *
-     * @param {[type]} object - [description]
-     * @param {[type]} x - [description]
-     * @param {[type]} y - [description]
+     * @param {Phaser.Input.InteractiveObject} object - [description]
+     * @param {number} x - [description]
+     * @param {number} y - [description]
      *
      * @return {boolean} [description]
      */
@@ -433,7 +450,7 @@ var InputManager = new Class({
      * @method Phaser.Input.InputManager#transformX
      * @since 3.0.0
      *
-     * @param {[type]} pageX - [description]
+     * @param {number} pageX - [description]
      *
      * @return {number} [description]
      */
@@ -448,7 +465,7 @@ var InputManager = new Class({
      * @method Phaser.Input.InputManager#transformY
      * @since 3.0.0
      *
-     * @param {[type]} pageY - [description]
+     * @param {number} pageY - [description]
      *
      * @return {number} [description]
      */

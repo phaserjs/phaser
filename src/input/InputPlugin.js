@@ -43,7 +43,8 @@ var InputPlugin = new Class({
         /**
          * The Scene that owns this plugin.
          *
-         * @property {Phaser.Scene} scene
+         * @name Phaser.Input.InputPlugin#scene
+         * @type {Phaser.Scene}
          * @since 3.0.0
          */
         this.scene = scene;
@@ -51,7 +52,8 @@ var InputPlugin = new Class({
         /**
          * [description]
          *
-         * @property {[type]} systems
+         * @name Phaser.Input.InputPlugin#systems
+         * @type {Phaser.Scenes.Systems}
          * @since 3.0.0
          */
         this.systems = scene.sys;
@@ -64,7 +66,8 @@ var InputPlugin = new Class({
         /**
          * [description]
          *
-         * @property {Phaser.Input.InputManager} manager
+         * @name Phaser.Input.InputPlugin#manager
+         * @type {Phaser.Input.InputManager}
          * @since 3.0.0
          */
         this.manager = scene.sys.game.input;
@@ -72,7 +75,8 @@ var InputPlugin = new Class({
         /**
          * A reference to this.scene.sys.displayList (set in boot)
          *
-         * @property {null} displayList
+         * @name Phaser.Input.InputPlugin#displayList
+         * @type {Phaser.GameObjects.DisplayList}
          * @since 3.0.0
          */
         this.displayList;
@@ -80,7 +84,8 @@ var InputPlugin = new Class({
         /**
          * A reference to the this.scene.sys.cameras (set in boot)
          *
-         * @property {null} cameras
+         * @name Phaser.Input.InputPlugin#cameras
+         * @type {null}
          * @since 3.0.0
          */
         this.cameras;
@@ -88,7 +93,8 @@ var InputPlugin = new Class({
         /**
          * [description]
          *
-         * @property {Phaser.Input.Keyboard.KeyboardManager} keyboard
+         * @name Phaser.Input.InputPlugin#keyboard
+         * @type {Phaser.Input.Keyboard.KeyboardManager}
          * @since 3.0.0
          */
         this.keyboard = this.manager.keyboard;
@@ -96,7 +102,8 @@ var InputPlugin = new Class({
         /**
          * [description]
          *
-         * @property {Phaser.Input.Mouse.MouseManager} mouse
+         * @name Phaser.Input.InputPlugin#mouse
+         * @type {Phaser.Input.Mouse.MouseManager}
          * @since 3.0.0
          */
         this.mouse = this.manager.mouse;
@@ -104,7 +111,8 @@ var InputPlugin = new Class({
         /**
          * [description]
          *
-         * @property {Phaser.Input.Gamepad.GamepadManager} gamepad
+         * @name Phaser.Input.InputPlugin#gamepad
+         * @type {Phaser.Input.Gamepad.GamepadManager}
          * @since 3.0.0
          */
         this.gamepad = this.manager.gamepad;
@@ -113,7 +121,8 @@ var InputPlugin = new Class({
          * Only fire callbacks and events on the top-most Game Object in the display list (emulating DOM behavior)
          * and ignore any GOs below it, or call them all?
          *
-         * @property {boolean} topOnly
+         * @name Phaser.Input.InputPlugin#topOnly
+         * @type {boolean}
          * @default true
          * @since 3.0.0
          */
@@ -126,7 +135,8 @@ var InputPlugin = new Class({
          * This controls how often it will be polled if it hasn't been moved.
          * Set to 0 to poll constantly. Set to -1 to only poll on user movement.
          *
-         * @property {integer} pollRate
+         * @name Phaser.Input.InputPlugin#pollRate
+         * @type {integer}
          * @default -1
          * @since 3.0.0
          */
@@ -135,7 +145,8 @@ var InputPlugin = new Class({
         /**
          * [description]
          *
-         * @property {number} _pollTimer
+         * @name Phaser.Input.InputPlugin#_pollTimer
+         * @type {number}
          * @private
          * @default 0
          * @since 3.0.0
@@ -145,7 +156,8 @@ var InputPlugin = new Class({
         /**
          * The distance, in pixels, the pointer has to move while being held down, before it thinks it is being dragged.
          *
-         * @property {number} dragDistanceThreshold
+         * @name Phaser.Input.InputPlugin#dragDistanceThreshold
+         * @type {number}
          * @default 0
          * @since 3.0.0
          */
@@ -154,7 +166,8 @@ var InputPlugin = new Class({
         /**
          * The amount of time, in ms, the pointer has to be held down before it thinks it is dragging.
          *
-         * @property {number} dragTimeThreshold
+         * @name Phaser.Input.InputPlugin#dragTimeThreshold
+         * @type {number}
          * @default 0
          * @since 3.0.0
          */
@@ -163,7 +176,8 @@ var InputPlugin = new Class({
         /**
          * Used to temporarily store the results of the Hit Test
          *
-         * @property {array} _temp
+         * @name Phaser.Input.InputPlugin#_temp
+         * @type {array}
          * @private
          * @default []
          * @since 3.0.0
@@ -173,7 +187,8 @@ var InputPlugin = new Class({
         /**
          * A list of all Game Objects that have been set to be interactive.
          *
-         * @property {array} _list
+         * @name Phaser.Input.InputPlugin#_list
+         * @type {array}
          * @private
          * @default []
          * @since 3.0.0
@@ -183,7 +198,8 @@ var InputPlugin = new Class({
         /**
          * Objects waiting to be inserted to the list on the next call to 'begin'.
          *
-         * @property {array} _pendingInsertion
+         * @name Phaser.Input.InputPlugin#_pendingInsertion
+         * @type {array}
          * @private
          * @default []
          * @since 3.0.0
@@ -193,7 +209,8 @@ var InputPlugin = new Class({
         /**
          * Objects waiting to be removed from the list on the next call to 'begin'.
          *
-         * @property {array} _pendingRemoval
+         * @name Phaser.Input.InputPlugin#_pendingRemoval
+         * @type {array}
          * @private
          * @default []
          * @since 3.0.0
@@ -203,7 +220,8 @@ var InputPlugin = new Class({
         /**
          * A list of all Game Objects that have been enabled for dragging.
          *
-         * @property {array} _draggable
+         * @name Phaser.Input.InputPlugin#_draggable
+         * @type {array}
          * @private
          * @default []
          * @since 3.0.0
@@ -213,7 +231,8 @@ var InputPlugin = new Class({
         /**
          * A list of all Interactive Objects currently considered as being 'draggable' by any pointer, indexed by pointer ID.
          *
-         * @property {[type]} _drag
+         * @name Phaser.Input.InputPlugin#_drag
+         * @type {[type]}
          * @private
          * @since 3.0.0
          */
@@ -222,7 +241,8 @@ var InputPlugin = new Class({
         /**
          * A list of all Interactive Objects currently considered as being 'over' by any pointer, indexed by pointer ID.
          *
-         * @property {[type]} _over
+         * @name Phaser.Input.InputPlugin#_over
+         * @type {[type]}
          * @private
          * @since 3.0.0
          */
@@ -231,7 +251,8 @@ var InputPlugin = new Class({
         /**
          * [description]
          *
-         * @property {[type]} _validTypes
+         * @name Phaser.Input.InputPlugin#_validTypes
+         * @type {[type]}
          * @private
          * @since 3.0.0
          */
@@ -1499,7 +1520,8 @@ var InputPlugin = new Class({
      * The current active input Pointer.
      * 
      * @name Phaser.Input.InputPlugin#activePointer
-     * @property {Phaser.Input.Pointer} activePointer
+     * @type {Phaser.Input.Pointer}
+     * @readOnly
      * @since 3.0.0
      */
     activePointer: {
@@ -1516,7 +1538,8 @@ var InputPlugin = new Class({
      * This is only safe to use if your game has just 1 non-transformed camera and doesn't use multi-touch.
      * 
      * @name Phaser.Input.InputPlugin#x
-     * @property {number} x
+     * @type {number}
+     * @readOnly
      * @since 3.0.0
      */
     x: {
@@ -1533,7 +1556,8 @@ var InputPlugin = new Class({
      * This is only safe to use if your game has just 1 non-transformed camera and doesn't use multi-touch.
      * 
      * @name Phaser.Input.InputPlugin#y
-     * @property {number} y
+     * @type {number}
+     * @readOnly
      * @since 3.0.0
      */
     y: {

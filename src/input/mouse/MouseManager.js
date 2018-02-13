@@ -30,7 +30,8 @@ var MouseManager = new Class({
         /**
          * [description]
          *
-         * @property {Phaser.Input.InputManager} manager
+         * @name Phaser.Input.Mouse.MouseManager#manager
+         * @type {Phaser.Input.InputManager}
          * @since 3.0.0
          */
         this.manager = inputManager;
@@ -38,7 +39,8 @@ var MouseManager = new Class({
         /**
          * If true the DOM mouse events will have event.preventDefault applied to them, if false they will propagate fully.
          *
-         * @property {boolean} capture
+         * @name Phaser.Input.Mouse.MouseManager#capture
+         * @type {boolean}
          * @default true
          * @since 3.0.0
          */
@@ -47,7 +49,8 @@ var MouseManager = new Class({
         /**
          * [description]
          *
-         * @property {boolean} enabled
+         * @name Phaser.Input.Mouse.MouseManager#enabled
+         * @type {boolean}
          * @default false
          * @since 3.0.0
          */
@@ -56,7 +59,8 @@ var MouseManager = new Class({
         /**
          * [description]
          *
-         * @property {null} target
+         * @name Phaser.Input.Mouse.MouseManager#target
+         * @type {null}
          * @since 3.0.0
          */
         this.target;
@@ -64,7 +68,8 @@ var MouseManager = new Class({
         /**
          * [description]
          *
-         * @property {null} handler
+         * @name Phaser.Input.Mouse.MouseManager#handler
+         * @type {null}
          * @since 3.0.0
          */
         this.handler;
@@ -72,7 +77,8 @@ var MouseManager = new Class({
         /**
          * If the mouse has been pointer locked successfully this will be set to true.
          *
-         * @property {boolean} locked
+         * @name Phaser.Input.Mouse.MouseManager#locked
+         * @type {boolean}
          * @default false
          * @since 3.0.0
          */
@@ -115,7 +121,7 @@ var MouseManager = new Class({
      * @method Phaser.Input.Mouse.MouseManager#disableContextMenu
      * @since 3.0.0
      *
-     * @return {[type]} [description]
+     * @return {Phaser.Input.Mouse.MouseManager} [description]
      */
     disableContextMenu: function ()
     {

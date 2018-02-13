@@ -30,7 +30,8 @@ var Gamepad = new Class({
         /**
          * [description]
          *
-         * @property {Phaser.Input.Gamepad.GamepadManager} manager
+         * @name Phaser.Input.Gamepad.Gamepad#manager
+         * @type {Phaser.Input.Gamepad.GamepadManager}
          * @since 3.0.0
          */
         this.manager = manager;
@@ -38,7 +39,8 @@ var Gamepad = new Class({
         /**
          * [description]
          *
-         * @property {[type]} events
+         * @name Phaser.Input.Gamepad.Gamepad#events
+         * @type {[type]}
          * @since 3.0.0
          */
         this.events = manager.events;
@@ -46,7 +48,8 @@ var Gamepad = new Class({
         /**
          * [description]
          *
-         * @property {[type]} id
+         * @name Phaser.Input.Gamepad.Gamepad#id
+         * @type {[type]}
          * @since 3.0.0
          */
         this.id = id;
@@ -54,7 +57,8 @@ var Gamepad = new Class({
         /**
          * [description]
          *
-         * @property {[type]} index
+         * @name Phaser.Input.Gamepad.Gamepad#index
+         * @type {[type]}
          * @since 3.0.0
          */
         this.index = index;
@@ -62,7 +66,8 @@ var Gamepad = new Class({
         /**
          * [description]
          *
-         * @property {boolean} connected
+         * @name Phaser.Input.Gamepad.Gamepad#connected
+         * @type {boolean}
          * @default true
          * @since 3.0.0
          */
@@ -71,7 +76,8 @@ var Gamepad = new Class({
         /**
          * [description]
          *
-         * @property {number} timestamp
+         * @name Phaser.Input.Gamepad.Gamepad#timestamp
+         * @type {number}
          * @default 0
          * @since 3.0.0
          */
@@ -80,7 +86,8 @@ var Gamepad = new Class({
         /**
          * [description]
          *
-         * @property {array} buttons
+         * @name Phaser.Input.Gamepad.Gamepad#buttons
+         * @type {array}
          * @default []
          * @since 3.0.0
          */
@@ -89,7 +96,8 @@ var Gamepad = new Class({
         /**
          * [description]
          *
-         * @property {array} axes
+         * @name Phaser.Input.Gamepad.Gamepad#axes
+         * @type {array}
          * @default []
          * @since 3.0.0
          */

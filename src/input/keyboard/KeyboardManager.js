@@ -25,7 +25,7 @@ var ProcessKeyUp = require('./keys/ProcessKeyUp');
  * So please check your extensions before opening Phaser issues.
  *
  * @class KeyboardManager
- * @extends eventemitter3
+ * @extends EventEmitter
  * @memberOf Phaser.Input.Keyboard
  * @constructor
  * @since 3.0.0
@@ -45,7 +45,8 @@ var KeyboardManager = new Class({
         /**
          * [description]
          *
-         * @property {Phaser.Input.InputManager} manager
+         * @name Phaser.Input.Keyboard.KeyboardManager#manager
+         * @type {Phaser.Input.InputManager}
          * @since 3.0.0
          */
         this.manager = inputManager;
@@ -53,7 +54,8 @@ var KeyboardManager = new Class({
         /**
          * [description]
          *
-         * @property {boolean} enabled
+         * @name Phaser.Input.Keyboard.KeyboardManager#enabled
+         * @type {boolean}
          * @default false
          * @since 3.0.0
          */
@@ -62,7 +64,8 @@ var KeyboardManager = new Class({
         /**
          * [description]
          *
-         * @property {null} target
+         * @name Phaser.Input.Keyboard.KeyboardManager#target
+         * @type {null}
          * @since 3.0.0
          */
         this.target;
@@ -70,7 +73,8 @@ var KeyboardManager = new Class({
         /**
          * [description]
          *
-         * @property {array} keys
+         * @name Phaser.Input.Keyboard.KeyboardManager#keys
+         * @type {array}
          * @default []
          * @since 3.0.0
          */
@@ -79,7 +83,8 @@ var KeyboardManager = new Class({
         /**
          * [description]
          *
-         * @property {array} combos
+         * @name Phaser.Input.Keyboard.KeyboardManager#combos
+         * @type {array}
          * @default []
          * @since 3.0.0
          */
@@ -88,7 +93,8 @@ var KeyboardManager = new Class({
         /**
          * [description]
          *
-         * @property {array} captures
+         * @name Phaser.Input.Keyboard.KeyboardManager#captures
+         * @type {array}
          * @default []
          * @since 3.0.0
          */
@@ -97,7 +103,8 @@ var KeyboardManager = new Class({
         /**
          * [description]
          *
-         * @property {array} queue
+         * @name Phaser.Input.Keyboard.KeyboardManager#queue
+         * @type {array}
          * @default []
          * @since 3.0.0
          */
@@ -106,7 +113,8 @@ var KeyboardManager = new Class({
         /**
          * [description]
          *
-         * @property {any} handler
+         * @name Phaser.Input.Keyboard.KeyboardManager#handler
+         * @type {any}
          * @since 3.0.0
          */
         this.handler;

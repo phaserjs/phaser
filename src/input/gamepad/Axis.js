@@ -27,7 +27,8 @@ var Axis = new Class({
         /**
          * [description]
          *
-         * @property {[type]} pad
+         * @name Phaser.Input.Gamepad.Axis#pad
+         * @type {Phaser.Input.Gamepad.Gamepad}
          * @since 3.0.0
          */
         this.pad = pad;
@@ -35,7 +36,8 @@ var Axis = new Class({
         /**
          * [description]
          *
-         * @property {[type]} events
+         * @name Phaser.Input.Gamepad.Axis#events
+         * @type {[type]}
          * @since 3.0.0
          */
         this.events = pad.events;
@@ -43,7 +45,8 @@ var Axis = new Class({
         /**
          * [description]
          *
-         * @property {integer} index
+         * @name Phaser.Input.Gamepad.Axis#index
+         * @type {integer}
          * @since 3.0.0
          */
         this.index = index;
@@ -51,7 +54,8 @@ var Axis = new Class({
         /**
          * Between -1 and 1 with 0 being dead center.
          *
-         * @property {float} value
+         * @name Phaser.Input.Gamepad.Axis#value
+         * @type {float}
          * @default 0
          * @since 3.0.0
          */

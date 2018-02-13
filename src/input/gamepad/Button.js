@@ -27,7 +27,8 @@ var Button = new Class({
         /**
          * [description]
          *
-         * @property {[type]} pad
+         * @name Phaser.Input.Gamepad.Button#pad
+         * @type {[type]}
          * @since 3.0.0
          */
         this.pad = pad;
@@ -35,7 +36,8 @@ var Button = new Class({
         /**
          * [description]
          *
-         * @property {[type]} events
+         * @name Phaser.Input.Gamepad.Button#events
+         * @type {[type]}
          * @since 3.0.0
          */
         this.events = pad.events;
@@ -43,7 +45,8 @@ var Button = new Class({
         /**
          * [description]
          *
-         * @property {integer} index
+         * @name Phaser.Input.Gamepad.Button#index
+         * @type {integer}
          * @since 3.0.0
          */
         this.index = index;
@@ -51,7 +54,8 @@ var Button = new Class({
         /**
          * Between 0 and 1.
          *
-         * @property {float} value
+         * @name Phaser.Input.Gamepad.Button#value
+         * @type {float}
          * @default 0
          * @since 3.0.0
          */
@@ -60,7 +64,8 @@ var Button = new Class({
         /**
          * Can be set for Analogue buttons to enable a 'pressure' threshold before considered as 'pressed'.
          *
-         * @property {float} threshold
+         * @name Phaser.Input.Gamepad.Button#threshold
+         * @type {float}
          * @default 0
          * @since 3.0.0
          */
@@ -69,7 +74,8 @@ var Button = new Class({
         /**
          * Is the Button being pressed down or not?
          *
-         * @property {boolean} pressed
+         * @name Phaser.Input.Gamepad.Button#pressed
+         * @type {boolean}
          * @default false
          * @since 3.0.0
          */

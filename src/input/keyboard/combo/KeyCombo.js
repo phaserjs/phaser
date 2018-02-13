@@ -45,7 +45,8 @@ var KeyCombo = new Class({
         /**
          * [description]
          *
-         * @property {Phaser.Input.Keyboard.KeyboardManager} manager
+         * @name Phaser.Input.Keyboard.KeyCombo#manager
+         * @type {Phaser.Input.Keyboard.KeyboardManager}
          * @since 3.0.0
          */
         this.manager = keyboardManager;
@@ -53,7 +54,8 @@ var KeyCombo = new Class({
         /**
          * [description]
          *
-         * @property {boolean} enabled
+         * @name Phaser.Input.Keyboard.KeyCombo#enabled
+         * @type {boolean}
          * @default true
          * @since 3.0.0
          */
@@ -62,7 +64,8 @@ var KeyCombo = new Class({
         /**
          * [description]
          *
-         * @property {array} keyCodes
+         * @name Phaser.Input.Keyboard.KeyCombo#keyCodes
+         * @type {array}
          * @default []
          * @since 3.0.0
          */
@@ -91,7 +94,8 @@ var KeyCombo = new Class({
         /**
          * The current keyCode the combo is waiting for.
          *
-         * @property {[type]} current
+         * @name Phaser.Input.Keyboard.KeyCombo#current
+         * @type {integer}
          * @since 3.0.0
          */
         this.current = this.keyCodes[0];
@@ -99,7 +103,8 @@ var KeyCombo = new Class({
         /**
          * The current index of the key being waited for in the 'keys' string.
          *
-         * @property {number} index
+         * @name Phaser.Input.Keyboard.KeyCombo#index
+         * @type {number}
          * @default 0
          * @since 3.0.0
          */
@@ -108,7 +113,8 @@ var KeyCombo = new Class({
         /**
          * The length of this combo (in keycodes)
          *
-         * @property {[type]} size
+         * @name Phaser.Input.Keyboard.KeyCombo#size
+         * @type {[type]}
          * @since 3.0.0
          */
         this.size = this.keyCodes.length;
@@ -116,7 +122,8 @@ var KeyCombo = new Class({
         /**
          * The time the previous key in the combo was matched.
          *
-         * @property {number} timeLastMatched
+         * @name Phaser.Input.Keyboard.KeyCombo#timeLastMatched
+         * @type {number}
          * @default 0
          * @since 3.0.0
          */
@@ -125,7 +132,8 @@ var KeyCombo = new Class({
         /**
          * Has this Key Combo been matched yet?
          *
-         * @property {boolean} matched
+         * @name Phaser.Input.Keyboard.KeyCombo#matched
+         * @type {boolean}
          * @default false
          * @since 3.0.0
          */
@@ -134,7 +142,8 @@ var KeyCombo = new Class({
         /**
          * The time the entire combo was matched.
          *
-         * @property {number} timeMatched
+         * @name Phaser.Input.Keyboard.KeyCombo#timeMatched
+         * @type {number}
          * @default 0
          * @since 3.0.0
          */
@@ -143,7 +152,8 @@ var KeyCombo = new Class({
         /**
          * If they press the wrong key do we reset the combo?
          *
-         * @property {boolean} resetOnWrongKey
+         * @name Phaser.Input.Keyboard.KeyCombo#resetOnWrongKey
+         * @type {boolean}
          * @default 0
          * @since 3.0.0
          */
@@ -152,7 +162,8 @@ var KeyCombo = new Class({
         /**
          * The max delay in ms between each key press. Above this the combo is reset. 0 means disabled.
          *
-         * @property {integer} maxKeyDelay
+         * @name Phaser.Input.Keyboard.KeyCombo#maxKeyDelay
+         * @type {integer}
          * @default 0
          * @since 3.0.0
          */
@@ -161,7 +172,8 @@ var KeyCombo = new Class({
         /**
          * If previously matched and they press Key 1 again, will it reset?
          *
-         * @property {boolean} resetOnMatch
+         * @name Phaser.Input.Keyboard.KeyCombo#resetOnMatch
+         * @type {boolean}
          * @default false
          * @since 3.0.0
          */
@@ -170,7 +182,8 @@ var KeyCombo = new Class({
         /**
          * If the combo matches, will it delete itself?
          *
-         * @property {boolean} deleteOnMatch
+         * @name Phaser.Input.Keyboard.KeyCombo#deleteOnMatch
+         * @type {boolean}
          * @default false
          * @since 3.0.0
          */
@@ -205,7 +218,8 @@ var KeyCombo = new Class({
         /**
          * [description]
          *
-         * @property {function} onKeyDown
+         * @name Phaser.Input.Keyboard.KeyCombo#onKeyDown
+         * @type {function}
          * @since 3.0.0
          */
         this.onKeyDown = onKeyDownHandler;
@@ -217,7 +231,7 @@ var KeyCombo = new Class({
      * How far complete is this combo? A value between 0 and 1.
      * 
      * @name Phaser.Input.Keyboard.KeyCombo#progress
-     * @property {number} progress
+     * @type {number}
      * @readOnly
      * @since 3.0.0
      */

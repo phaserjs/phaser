@@ -27,7 +27,8 @@ var Key = new Class({
         /**
          * The keycode of this key.
          *
-         * @property {integer} keyCode
+         * @name Phaser.Input.Keyboard.Key#keyCode
+         * @type {integer}
          * @since 3.0.0
          */
         this.keyCode = keyCode;
@@ -35,7 +36,8 @@ var Key = new Class({
         /**
          * The original DOM event.
          *
-         * @property {KeyboardEvent} originalEvent
+         * @name Phaser.Input.Keyboard.Key#originalEvent
+         * @type {KeyboardEvent}
          * @since 3.0.0
          */
         this.originalEvent = undefined;
@@ -43,7 +45,8 @@ var Key = new Class({
         /**
          * Should this Key prevent event propagation?
          *
-         * @property {boolean} preventDefault
+         * @name Phaser.Input.Keyboard.Key#preventDefault
+         * @type {boolean}
          * @default true
          * @since 3.0.0
          */
@@ -52,7 +55,8 @@ var Key = new Class({
         /**
          * Can this Key be processed?
          *
-         * @property {boolean} enabled
+         * @name Phaser.Input.Keyboard.Key#enabled
+         * @type {boolean}
          * @default true
          * @since 3.0.0
          */
@@ -61,7 +65,8 @@ var Key = new Class({
         /**
          * The "down" state of the key. This will remain `true` for as long as the keyboard thinks this key is held down.
          *
-         * @property {boolean} isDown
+         * @name Phaser.Input.Keyboard.Key#isDown
+         * @type {boolean}
          * @default false
          * @since 3.0.0
          */
@@ -70,7 +75,8 @@ var Key = new Class({
         /**
          * The "up" state of the key. This will remain `true` for as long as the keyboard thinks this key is up.
          *
-         * @property {boolean} isUp
+         * @name Phaser.Input.Keyboard.Key#isUp
+         * @type {boolean}
          * @default true
          * @since 3.0.0
          */
@@ -79,7 +85,8 @@ var Key = new Class({
         /**
          * The down state of the ALT key, if pressed at the same time as this key.
          *
-         * @property {boolean} altKey
+         * @name Phaser.Input.Keyboard.Key#altKey
+         * @type {boolean}
          * @default false
          * @since 3.0.0
          */
@@ -88,7 +95,8 @@ var Key = new Class({
         /**
          * The down state of the CTRL key, if pressed at the same time as this key.
          *
-         * @property {boolean} ctrlKey
+         * @name Phaser.Input.Keyboard.Key#ctrlKey
+         * @type {boolean}
          * @default false
          * @since 3.0.0
          */
@@ -97,7 +105,8 @@ var Key = new Class({
         /**
          * The down state of the SHIFT key, if pressed at the same time as this key.
          *
-         * @property {boolean} shiftKey
+         * @name Phaser.Input.Keyboard.Key#shiftKey
+         * @type {boolean}
          * @default false
          * @since 3.0.0
          */
@@ -106,7 +115,8 @@ var Key = new Class({
         /**
          * The location of the modifier key. 0 for standard (or unknown), 1 for left, 2 for right, 3 for numpad.
          *
-         * @property {number} location
+         * @name Phaser.Input.Keyboard.Key#location
+         * @type {number}
          * @default 0
          * @since 3.0.0
          */
@@ -115,7 +125,8 @@ var Key = new Class({
         /**
          * The timestamp when the key was last pressed down.
          *
-         * @property {number} timeDown
+         * @name Phaser.Input.Keyboard.Key#timeDown
+         * @type {number}
          * @default 0
          * @since 3.0.0
          */
@@ -126,7 +137,8 @@ var Key = new Class({
          * If the key is down this value holds the duration of that key press and is constantly updated.
          * If the key is up it holds the duration of the previous down session.
          *
-         * @property {number} duration
+         * @name Phaser.Input.Keyboard.Key#duration
+         * @type {number}
          * @default 0
          * @since 3.0.0
          */
@@ -135,7 +147,8 @@ var Key = new Class({
         /**
          * The timestamp when the key was last released.
          *
-         * @property {number} timeUp
+         * @name Phaser.Input.Keyboard.Key#timeUp
+         * @type {number}
          * @default 0
          * @since 3.0.0
          */
@@ -144,7 +157,8 @@ var Key = new Class({
         /**
          * If a key is held down this holds down the number of times the key has 'repeated'.
          *
-         * @property {number} repeats
+         * @name Phaser.Input.Keyboard.Key#repeats
+         * @type {number}
          * @default 0
          * @since 3.0.0
          */
@@ -153,7 +167,8 @@ var Key = new Class({
         /**
          * True if the key has just been pressed (NOTE: requires to be reset, see justDown getter)
          *
-         * @property {boolean} _justDown
+         * @name Phaser.Input.Keyboard.Key#_justDown
+         * @type {boolean}
          * @private
          * @default false
          * @since 3.0.0
@@ -163,7 +178,8 @@ var Key = new Class({
         /**
          * True if the key has just been pressed (NOTE: requires to be reset, see justDown getter)
          *
-         * @property {boolean} _justUp
+         * @name Phaser.Input.Keyboard.Key#_justUp
+         * @type {boolean}
          * @private
          * @default false
          * @since 3.0.0

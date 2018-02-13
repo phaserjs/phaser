@@ -37,7 +37,8 @@ var Pointer = new Class({
         /**
          * [description]
          *
-         * @property {Phaser.Input.InputManager} manager
+         * @name Phaser.Input.Pointer#manager
+         * @type {Phaser.Input.InputManager}
          * @since 3.0.0
          */
         this.manager = manager;
@@ -45,7 +46,8 @@ var Pointer = new Class({
         /**
          * [description]
          *
-         * @property {integer} id
+         * @name Phaser.Input.Pointer#id
+         * @type {integer}
          * @since 3.0.0
          */
         this.id = id;
@@ -53,7 +55,8 @@ var Pointer = new Class({
         /**
          * [description]
          *
-         * @property {null} event
+         * @name Phaser.Input.Pointer#event
+         * @type {null}
          * @since 3.0.0
          */
         this.event;
@@ -63,7 +66,8 @@ var Pointer = new Class({
          * A Pointer can only ever interact with one camera at once, which will be the top-most camera
          * in the list should multiple cameras be positioned on-top of each other.
          *
-         * @property {Phaser.Cameras.Scene2D.Camera} camera
+         * @name Phaser.Input.Pointer#camera
+         * @type {Phaser.Cameras.Scene2D.Camera}
          * @default null
          * @since 3.0.0
          */
@@ -77,7 +81,8 @@ var Pointer = new Class({
          * 8: 4th button (typically the "Browser Back" button)
          * 16: 5th button (typically the "Browser Forward" button)
          *
-         * @property {number} buttons
+         * @name Phaser.Input.Pointer#buttons
+         * @type {number}
          * @default 0
          * @since 3.0.0
          */
@@ -86,7 +91,8 @@ var Pointer = new Class({
         /**
          * [description]
          *
-         * @property {Phaser.Math.Vector2} position
+         * @name Phaser.Input.Pointer#position
+         * @type {Phaser.Math.Vector2}
          * @since 3.0.0
          */
         this.position = new Vector2();
@@ -94,7 +100,8 @@ var Pointer = new Class({
         /**
          * X coordinate of the Pointer when Button 1 (left button), or Touch, was pressed, used for dragging objects.
          *
-         * @property {number} downX
+         * @name Phaser.Input.Pointer#downX
+         * @type {number}
          * @default 0
          * @since 3.0.0
          */
@@ -103,7 +110,8 @@ var Pointer = new Class({
         /**
          * Y coordinate of the Pointer when Button 1 (left button), or Touch, was pressed, used for dragging objects.
          *
-         * @property {number} downY
+         * @name Phaser.Input.Pointer#downY
+         * @type {number}
          * @default 0
          * @since 3.0.0
          */
@@ -112,7 +120,8 @@ var Pointer = new Class({
         /**
          * Time when Button 1 (left button), or Touch, was pressed, used for dragging objects.
          *
-         * @property {number} downTime
+         * @name Phaser.Input.Pointer#downTime
+         * @type {number}
          * @default 0
          * @since 3.0.0
          */
@@ -121,7 +130,8 @@ var Pointer = new Class({
         /**
          * X coordinate of the Pointer when Button 1 (left button), or Touch, was released, used for dragging objects.
          *
-         * @property {number} upX
+         * @name Phaser.Input.Pointer#upX
+         * @type {number}
          * @default 0
          * @since 3.0.0
          */
@@ -130,7 +140,8 @@ var Pointer = new Class({
         /**
          * Y coordinate of the Pointer when Button 1 (left button), or Touch, was released, used for dragging objects.
          *
-         * @property {number} upY
+         * @name Phaser.Input.Pointer#upY
+         * @type {number}
          * @default 0
          * @since 3.0.0
          */
@@ -139,7 +150,8 @@ var Pointer = new Class({
         /**
          * Time when Button 1 (left button), or Touch, was released, used for dragging objects.
          *
-         * @property {number} upTime
+         * @name Phaser.Input.Pointer#upTime
+         * @type {number}
          * @default 0
          * @since 3.0.0
          */
@@ -148,7 +160,8 @@ var Pointer = new Class({
         /**
          * Is the primary button down? (usually button 0, the left mouse button)
          *
-         * @property {boolean} primaryDown
+         * @name Phaser.Input.Pointer#primaryDown
+         * @type {boolean}
          * @default false
          * @since 3.0.0
          */
@@ -162,7 +175,8 @@ var Pointer = new Class({
          * 1 = Being checked if dragging
          * 2 = Dragging something
          *
-         * @property {number} dragState
+         * @name Phaser.Input.Pointer#dragState
+         * @type {number}
          * @default 0
          * @since 3.0.0
          */
@@ -171,7 +185,8 @@ var Pointer = new Class({
         /**
          * Is _any_ button on this pointer considered as being down?
          *
-         * @property {boolean} isDown
+         * @name Phaser.Input.Pointer#isDown
+         * @type {boolean}
          * @default false
          * @since 3.0.0
          */
@@ -180,7 +195,8 @@ var Pointer = new Class({
         /**
          * [description]
          *
-         * @property {boolean} dirty
+         * @name Phaser.Input.Pointer#dirty
+         * @type {boolean}
          * @default false
          * @since 3.0.0
          */
@@ -189,7 +205,8 @@ var Pointer = new Class({
         /**
          * [description]
          *
-         * @property {boolean} justDown
+         * @name Phaser.Input.Pointer#justDown
+         * @type {boolean}
          * @default false
          * @since 3.0.0
          */
@@ -198,7 +215,8 @@ var Pointer = new Class({
         /**
          * [description]
          *
-         * @property {boolean} justUp
+         * @name Phaser.Input.Pointer#justUp
+         * @type {boolean}
          * @default false
          * @since 3.0.0
          */
@@ -207,7 +225,8 @@ var Pointer = new Class({
         /**
          * [description]
          *
-         * @property {boolean} justMoved
+         * @name Phaser.Input.Pointer#justMoved
+         * @type {boolean}
          * @default false
          * @since 3.0.0
          */
@@ -216,7 +235,8 @@ var Pointer = new Class({
         /**
          * Did the previous input event come from a Touch input (true) or Mouse? (false)
          *
-         * @property {boolean} wasTouch
+         * @name Phaser.Input.Pointer#wasTouch
+         * @type {boolean}
          * @default false
          * @since 3.0.0
          */
@@ -225,7 +245,8 @@ var Pointer = new Class({
         /**
          * If the mouse is locked, the horizontal relative movement of the Pointer in pixels since last frame.
          *
-         * @property {number} movementX
+         * @name Phaser.Input.Pointer#movementX
+         * @type {number}
          * @default 0
          * @since 3.0.0
          */
@@ -234,7 +255,8 @@ var Pointer = new Class({
         /**
          * If the mouse is locked, the vertical relative movement of the Pointer in pixels since last frame.
          *
-         * @property {number} movementY
+         * @name Phaser.Input.Pointer#movementY
+         * @type {number}
          * @default 0
          * @since 3.0.0
          */
@@ -261,7 +283,7 @@ var Pointer = new Class({
      * [description]
      * 
      * @name Phaser.Input.Pointer#x
-     * @property {number} x
+     * @type {number}
      * @since 3.0.0
      */    
     x: {
@@ -282,7 +304,7 @@ var Pointer = new Class({
      * [description]
      * 
      * @name Phaser.Input.Pointer#y
-     * @property {number} y
+     * @type {number}
      * @since 3.0.0
      */    
     y: {
