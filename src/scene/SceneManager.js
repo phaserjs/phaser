@@ -13,11 +13,11 @@ var Systems = require('./Systems');
 
 /**
  * @classdesc
- * The Scene Systems class.
+ * The Scene Manager.
  *
- * This class is available from within a Scene under the property `sys`.
- * It is responsible for managing all of the plugins a Scene has running, including the display list, and
- * handling the update step and renderer. It also contains references to global systems belonging to Game.
+ * The Scene Manager is a Game level system, responsible for creating, processing and updating all of the
+ * Scenes in a Game instance.
+ *
  *
  * @class SceneManager
  * @memberOf Phaser.Scenes

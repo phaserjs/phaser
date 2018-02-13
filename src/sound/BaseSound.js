@@ -14,7 +14,7 @@ var NOOP = require('../utils/NOOP');
  * [description]
  *
  * @class BaseSound
- * @extends Phaser.Sound.EventEmitter
+ * @extends EventEmitter
  * @memberOf Phaser.Sound
  * @constructor
  * @author Pavle Goloskokovic <pgoloskokovic@gmail.com> (http://prunegames.com)

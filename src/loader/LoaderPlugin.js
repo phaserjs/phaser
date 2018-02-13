@@ -19,7 +19,7 @@ var XHRSettings = require('./XHRSettings');
  * [description]
  *
  * @class LoaderPlugin
- * @extends Phaser.Loader.EventEmitter
+ * @extends EventEmitter
  * @memberOf Phaser.Loader
  * @constructor
  * @since 3.0.0

@@ -16,7 +16,7 @@ var NOOP = require('../utils/NOOP');
  * There is a good guide to what's supported [here](https://developer.mozilla.org/en-US/Apps/Fundamentals/Audio_and_video_delivery/Cross-browser_audio_basics#Audio_Codec_Support).
  *
  * @class BaseSoundManager
- * @extends Phaser.Sound.EventEmitter
+ * @extends EventEmitter
  * @memberOf Phaser.Sound
  * @constructor
  * @author Pavle Goloskokovic <pgoloskokovic@gmail.com> (http://prunegames.com)

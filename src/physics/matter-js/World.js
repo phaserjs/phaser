@@ -23,7 +23,7 @@ var MatterTileBody = require('./MatterTileBody');
  * [description]
  *
  * @class World
- * @extends Phaser.Physics.Matter.EventEmitter
+ * @extends EventEmitter
  * @memberOf Phaser.Physics.Matter
  * @constructor
  * @since 3.0.0

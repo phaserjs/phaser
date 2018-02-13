@@ -20,7 +20,7 @@ var NOOP = require('../../utils/NOOP');
  * breaking on devices that don't support any audio playback technologies.
  *
  * @class NoAudioSoundManager
- * @extends Phaser.Sound.EventEmitter
+ * @extends EventEmitter
  * @memberOf Phaser.Sound
  * @constructor
  * @author Pavle Goloskokovic <pgoloskokovic@gmail.com> (http://prunegames.com)

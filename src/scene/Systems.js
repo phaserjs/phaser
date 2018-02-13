@@ -176,7 +176,7 @@ var Systems = new Class({
          * [description]
          *
          * @name Phaser.Scenes.Systems#events
-         * @type {EventEmitter3}
+         * @type {EventEmitter}
          * @since 3.0.0
          */
         this.events;

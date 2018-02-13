@@ -29,7 +29,7 @@ var Vector2 = require('../../math/Vector2');
  * [description]
  *
  * @class World
- * @extends Phaser.Events.EventEmitter
+ * @extends EventEmitter
  * @memberOf Phaser.Physics.Arcade
  * @constructor
  * @since 3.0.0

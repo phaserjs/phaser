@@ -19,7 +19,7 @@ var Extend = require('../../utils/object/Extend');
  * breaking on devices that don't support any audio playback technologies.
  *
  * @class NoAudioSound
- * @extends Phaser.Sound.EventEmitter
+ * @extends EventEmitter
  * @memberOf Phaser.Sound
  * @constructor
  * @author Pavle Goloskokovic <pgoloskokovic@gmail.com> (http://prunegames.com)
