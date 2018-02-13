@@ -22,7 +22,7 @@ var WebGLPipeline = require('../WebGLPipeline');
  * @since 3.0.0
  *
  * @param {Phaser.Game} game - [description]
- * @param {[type]} gl - [description]
+ * @param {WebGLRenderingContext} gl - [description]
  * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - [description]
  * @param {boolean} overrideFragmentShader - [description]
  */
@@ -149,7 +149,7 @@ var TextureTintPipeline = new Class({
      * @method Phaser.Renderer.WebGL.TextureTintPipeline#drawStaticTilemapLayer
      * @since 3.0.0
      *
-     * @param {[type]} tilemap - [description]
+     * @param {Phaser.Tilemaps.StaticTilemapLayer} tilemap - [description]
      * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
      */
     drawStaticTilemapLayer: function (tilemap, camera)
@@ -187,7 +187,7 @@ var TextureTintPipeline = new Class({
      * @method Phaser.Renderer.WebGL.TextureTintPipeline#drawEmitterManager
      * @since 3.0.0
      *
-     * @param {[type]} emitterManager - [description]
+     * @param {Phaser.GameObjects.Particles.ParticleEmitterManager} emitterManager - [description]
      * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
      */
     drawEmitterManager: function (emitterManager, camera)
@@ -705,7 +705,7 @@ var TextureTintPipeline = new Class({
      * @method Phaser.Renderer.WebGL.TextureTintPipeline#batchBitmapText
      * @since 3.0.0
      *
-     * @param {[type]} bitmapText - [description]
+     * @param {Phaser.GameObjects.BitmapText} bitmapText - [description]
      * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
      */
     batchBitmapText: function (bitmapText, camera)
@@ -928,7 +928,7 @@ var TextureTintPipeline = new Class({
      * @method Phaser.Renderer.WebGL.TextureTintPipeline#batchDynamicBitmapText
      * @since 3.0.0
      *
-     * @param {[type]} bitmapText - [description]
+     * @param {Phaser.GameObjects.DynamicBitmapText} bitmapText - [description]
      * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
      */
     batchDynamicBitmapText: function (bitmapText, camera)
@@ -1228,7 +1228,7 @@ var TextureTintPipeline = new Class({
      * @method Phaser.Renderer.WebGL.TextureTintPipeline#batchText
      * @since 3.0.0
      *
-     * @param {[type]} text - [description]
+     * @param {Phaser.GameObjects.Text} text - [description]
      * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
      */
     batchText: function (text, camera)
@@ -1262,7 +1262,7 @@ var TextureTintPipeline = new Class({
      * @method Phaser.Renderer.WebGL.TextureTintPipeline#batchDynamicTilemapLayer
      * @since 3.0.0
      *
-     * @param {[type]} tilemapLayer - [description]
+     * @param {Phaser.Tilemaps.DynamicTilemapLayer} tilemapLayer - [description]
      * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
      */
     batchDynamicTilemapLayer: function (tilemapLayer, camera)
@@ -1354,32 +1354,32 @@ var TextureTintPipeline = new Class({
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.GameObject} gameObject - [description]
-     * @param {[type]} texture - [description]
-     * @param {[type]} textureWidth - [description]
-     * @param {[type]} textureHeight - [description]
-     * @param {[type]} srcX - [description]
-     * @param {[type]} srcY - [description]
-     * @param {[type]} srcWidth - [description]
-     * @param {[type]} srcHeight - [description]
-     * @param {[type]} scaleX - [description]
-     * @param {[type]} scaleY - [description]
-     * @param {[type]} rotation - [description]
-     * @param {[type]} flipX - [description]
-     * @param {[type]} flipY - [description]
-     * @param {[type]} scrollFactorX - [description]
-     * @param {[type]} scrollFactorY - [description]
-     * @param {[type]} displayOriginX - [description]
-     * @param {[type]} displayOriginY - [description]
-     * @param {[type]} frameX - [description]
-     * @param {[type]} frameY - [description]
-     * @param {[type]} frameWidth - [description]
-     * @param {[type]} frameHeight - [description]
-     * @param {[type]} tintTL - [description]
-     * @param {[type]} tintTR - [description]
-     * @param {[type]} tintBL - [description]
-     * @param {[type]} tintBR - [description]
-     * @param {[type]} uOffset - [description]
-     * @param {[type]} vOffset - [description]
+     * @param {WebGLTexture} texture - [description]
+     * @param {int} textureWidth - [description]
+     * @param {int} textureHeight - [description]
+     * @param {float} srcX - [description]
+     * @param {float} srcY - [description]
+     * @param {float} srcWidth - [description]
+     * @param {float} srcHeight - [description]
+     * @param {float} scaleX - [description]
+     * @param {float} scaleY - [description]
+     * @param {float} rotation - [description]
+     * @param {boolean} flipX - [description]
+     * @param {boolean} flipY - [description]
+     * @param {float} scrollFactorX - [description]
+     * @param {float} scrollFactorY - [description]
+     * @param {float} displayOriginX - [description]
+     * @param {float} displayOriginY - [description]
+     * @param {float} frameX - [description]
+     * @param {float} frameY - [description]
+     * @param {float} frameWidth - [description]
+     * @param {float} frameHeight - [description]
+     * @param {int} tintTL - [description]
+     * @param {int} tintTR - [description]
+     * @param {int} tintBL - [description]
+     * @param {int} tintBR - [description]
+     * @param {float} uOffset - [description]
+     * @param {float} vOffset - [description]
      * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
      */
     batchTexture: function (
@@ -1513,7 +1513,7 @@ var TextureTintPipeline = new Class({
      * @method Phaser.Renderer.WebGL.TextureTintPipeline#batchGraphics
      * @since 3.0.0
      *
-     * @param {[type]} graphics - [description]
+     * @param {Phaser.GameObjects.Graphics} graphics - [description]
      * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
      */
     batchGraphics: function (graphics, camera) 

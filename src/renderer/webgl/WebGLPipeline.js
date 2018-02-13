@@ -82,7 +82,7 @@ var WebGLPipeline = new Class({
          * [description]
          *
          * @name Phaser.Renderer.WebGL.WebGLPipeline#gl
-         * @type {[type]}
+         * @type {WebGLRenderingContext}
          * @since 3.0.0
          */
         this.gl = config.gl;
@@ -119,7 +119,7 @@ var WebGLPipeline = new Class({
          * [description]
          *
          * @name Phaser.Renderer.WebGL.WebGLPipeline#vertexData
-         * @type {[type]}
+         * @type {ArrayBuffer}
          * @since 3.0.0
          */
         this.vertexData = (config.vertices ? config.vertices : new ArrayBuffer(config.vertexCapacity * config.vertexSize));
@@ -128,7 +128,7 @@ var WebGLPipeline = new Class({
          * [description]
          *
          * @name Phaser.Renderer.WebGL.WebGLPipeline#vertexBuffer
-         * @type {[type]}
+         * @type {WebGLBuffer}
          * @since 3.0.0
          */
         this.vertexBuffer = this.renderer.createVertexBuffer((config.vertices ? config.vertices : this.vertexData.byteLength), this.gl.STREAM_DRAW);
@@ -137,7 +137,7 @@ var WebGLPipeline = new Class({
          * [description]
          *
          * @name Phaser.Renderer.WebGL.WebGLPipeline#program
-         * @type {[type]}
+         * @type {WebGLProgram}
          * @since 3.0.0
          */
         this.program = this.renderer.createProgram(config.vertShader, config.fragShader);
@@ -146,7 +146,7 @@ var WebGLPipeline = new Class({
          * [description]
          *
          * @name Phaser.Renderer.WebGL.WebGLPipeline#attributes
-         * @type {[type]}
+         * @type {object}
          * @since 3.0.0
          */
         this.attributes = config.attributes;
@@ -155,7 +155,7 @@ var WebGLPipeline = new Class({
          * [description]
          *
          * @name Phaser.Renderer.WebGL.WebGLPipeline#vertexSize
-         * @type {[type]}
+         * @type {int}
          * @since 3.0.0
          */
         this.vertexSize = config.vertexSize;
@@ -164,7 +164,7 @@ var WebGLPipeline = new Class({
          * [description]
          *
          * @name Phaser.Renderer.WebGL.WebGLPipeline#topology
-         * @type {[type]}
+         * @type {int}
          * @since 3.0.0
          */
         this.topology = config.topology;
@@ -182,7 +182,7 @@ var WebGLPipeline = new Class({
          * This will store the amount of components of 32 bit length
          *
          * @name Phaser.Renderer.WebGL.WebGLPipeline#vertexComponentCount
-         * @type {[type]}
+         * @type {int}
          * @since 3.0.0
          */
         this.vertexComponentCount = Utils.getComponentCount(config.attributes);

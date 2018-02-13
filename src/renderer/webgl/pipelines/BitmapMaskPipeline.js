@@ -21,7 +21,7 @@ var WebGLPipeline = require('../WebGLPipeline');
  * @since 3.0.0
  *
  * @param {Phaser.Game} game - [description]
- * @param {[type]} gl - [description]
+ * @param {WebGLRenderingContext} gl - [description]
  * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - [description]
  */
 var BitmapMaskPipeline = new Class({
@@ -140,8 +140,8 @@ var BitmapMaskPipeline = new Class({
      * @method Phaser.Renderer.WebGL.BitmapMaskPipeline#beginMask
      * @since 3.0.0
      *
-     * @param {[type]} mask - [description]
-     * @param {[type]} maskedObject - [description]
+     * @param {Phaser.GameObjects.GameObject} mask - [description]
+     * @param {Phaser.GameObjects.GameObject} maskedObject - [description]
      * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
      */
     beginMask: function (mask, maskedObject, camera)
@@ -177,7 +177,7 @@ var BitmapMaskPipeline = new Class({
      * @method Phaser.Renderer.WebGL.BitmapMaskPipeline#endMask
      * @since 3.0.0
      *
-     * @param {[type]} mask - [description]
+     * @param {Phaser.GameObjects.GameObject} mask - [description]
      */
     endMask: function (mask)
     {
