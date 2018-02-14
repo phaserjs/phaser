@@ -92,7 +92,7 @@ var Body = new Class({
          * @name Phaser.Physics.Arcade.Body#pendingDestroy
          * @type {boolean}
          * @default false
-         * @since 3.0.0
+         * @since 3.0.1
          */
         this.pendingDestroy = false;
 

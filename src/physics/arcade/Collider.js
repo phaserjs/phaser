@@ -43,7 +43,7 @@ var Collider = new Class({
          *
          * @name Phaser.Physics.Arcade.Collider#name
          * @type {string}
-         * @since 3.0.0
+         * @since 3.0.1
          */
         this.name = '';
 
@@ -116,7 +116,7 @@ var Collider = new Class({
      * [description]
      *
      * @method Phaser.Physics.Arcade.Collider#setName
-     * @since 3.0.0
+     * @since 3.0.1
      *
      * @param {string} name - [description]
      *
