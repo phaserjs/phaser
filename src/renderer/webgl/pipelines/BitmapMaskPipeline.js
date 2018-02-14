@@ -153,10 +153,8 @@ var BitmapMaskPipeline = new Class({
 
         if (bitmapMask && gl)
         {
-            renderer.flush();
-            
             // First we clear the mask framebuffer
-            gl.bindFramebuffer(gl.FRAMEBUFFER, mask.maskFramebuffer);
+            renderer.setFramebuffer(mask.maskFramebuffer);
             gl.clearColor(0, 0, 0, 0);
             gl.clear(gl.COLOR_BUFFER_BIT);
 
@@ -167,7 +165,7 @@ var BitmapMaskPipeline = new Class({
             renderer.flush();
 
             // Bind and clear our main source (masked object)
-            gl.bindFramebuffer(gl.FRAMEBUFFER, mask.mainFramebuffer);
+            renderer.setFramebuffer(mask.mainFramebuffer);
             gl.clearColor(0, 0, 0, 0);
             gl.clear(gl.COLOR_BUFFER_BIT);
         }
@@ -189,19 +187,14 @@ var BitmapMaskPipeline = new Class({
 
         if (bitmapMask)
         {
-            renderer.flush();
-
             // Return to default framebuffer
-            gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+            renderer.setFramebuffer(null);
             
             // Bind bitmap mask pipeline and draw
             renderer.setPipeline(this);
             
-            gl.activeTexture(gl.TEXTURE1);
-            gl.bindTexture(gl.TEXTURE_2D, mask.maskTexture);
-
-            gl.activeTexture(gl.TEXTURE0);
-            gl.bindTexture(gl.TEXTURE_2D, mask.mainTexture);
+            renderer.setTexture2D(mask.maskTexture, 1);
+            renderer.setTexture2D(mask.mainTexture, 0);
             
             // Finally draw a triangle filling the whole screen
             gl.drawArrays(this.topology, 0, 3);

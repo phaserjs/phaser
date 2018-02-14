@@ -158,7 +158,11 @@ var TextureTintPipeline = new Class({
 
     flush: function ()
     {
+        if (this.flushLocked) return this;
+        this.flushLocked = true;
+
         var gl = this.gl;
+        var renderer = this.renderer;
         var vertexCount = this.vertexCount;
         var vertexBuffer = this.vertexBuffer;
         var vertexData = this.vertexData;
@@ -170,8 +174,11 @@ var TextureTintPipeline = new Class({
         var batch = null;
         var nextBatch = null;
 
-        if (batchCount === 0 || vertexCount === 0) return;
-
+        if (batchCount === 0 || vertexCount === 0) 
+        {
+            this.flushLocked = false;
+            return this;
+        }
         gl.bufferSubData(gl.ARRAY_BUFFER, 0, this.bytes.subarray(0, vertexCount * vertexSize));
 
         for (var index = 0; index < batches.length - 1; ++index)
@@ -186,8 +193,7 @@ var TextureTintPipeline = new Class({
                     var nTexture = batch.textures[textureIndex];
                     if (nTexture)
                     {
-                        gl.activeTexture(gl.TEXTURE0 + 1 + textureIndex);
-                        gl.bindTexture(gl.TEXTURE_2D, nTexture);
+                        renderer.setTexture2D(nTexture, 1 + textureIndex);
                     }
                 }
                 gl.activeTexture(gl.TEXTURE0);
@@ -197,7 +203,7 @@ var TextureTintPipeline = new Class({
 
             if (batch.texture === null || batchVertexCount <= 0) continue;
 
-            gl.bindTexture(gl.TEXTURE_2D, batch.texture);
+            renderer.setTexture2D(batch.texture, 0);
             gl.drawArrays(topology, batch.first, batchVertexCount);
         }
 
@@ -211,8 +217,7 @@ var TextureTintPipeline = new Class({
                 var nTexture = batch.textures[textureIndex];
                 if (nTexture)
                 {
-                    gl.activeTexture(gl.TEXTURE0 + 1 + textureIndex);
-                    gl.bindTexture(gl.TEXTURE_2D, nTexture);
+                    renderer.setTexture2D(nTexture, 1 + textureIndex);
                 }
             }
             gl.activeTexture(gl.TEXTURE0);
@@ -222,12 +227,13 @@ var TextureTintPipeline = new Class({
 
         if (batch.texture && batchVertexCount > 0)
         {
-            gl.bindTexture(gl.TEXTURE_2D, batch.texture);
+            renderer.setTexture2D(batch.texture, 0);
             gl.drawArrays(topology, batch.first, batchVertexCount);
         }
 
         this.vertexCount = 0;
         batches.length = 0;
+        this.flushLocked = false;
 
         return this;
     },

@@ -192,6 +192,16 @@ var WebGLRenderer = new Class({
         /**
          * [description]
          *
+         * @name Phaser.Renderer.WebGL.WebGLRenderer#currentActiveTextureUnit
+         * @type {int}
+         * @since 3.0.0
+         */
+        this.currentActiveTextureUnit = 0;
+
+
+        /**
+         * [description]
+         *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#currentTextures
          * @type {array}
          * @since 3.0.0
@@ -817,7 +827,11 @@ var WebGLRenderer = new Class({
         {
             this.flush();
 
-            gl.activeTexture(gl.TEXTURE0 + textureUnit);
+            if (this.currentActiveTextureUnit !== textureUnit)
+            {
+                gl.activeTexture(gl.TEXTURE0 + textureUnit);
+                this.currentActiveTextureUnit = textureUnit;
+            }
             gl.bindTexture(gl.TEXTURE_2D, texture);
 
             this.currentTextures[textureUnit] = texture;
