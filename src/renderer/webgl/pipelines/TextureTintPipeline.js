@@ -105,7 +105,123 @@ var TextureTintPipeline = new Class({
          */
         this.maxQuads = 2000;
 
+        this.batches = [];
+
         this.mvpInit();
+    },
+
+    setTexture2D: function (texture, unit)
+    {
+        if (!texture) return;
+
+        var batches = this.batches;
+
+        if (batches.length === 0)
+        {
+            this.pushBatch();
+        }
+
+        var batch = batches[batches.length - 1];
+
+        if (unit > 0)
+        {
+            if (batch.textures[unit - 1] &&
+                batch.textures[unit - 1] !== texture)
+            {
+                this.pushBatch();
+            }
+
+            batches[batches.length - 1].textures[unit - 1] = texture;
+        }
+        else
+        {
+            if (batch.texture !== null &&
+                batch.texture !== texture)
+            {
+                this.pushBatch();
+            }
+
+            batches[batches.length - 1].texture = texture;
+        }
+    },
+
+    pushBatch: function ()
+    {
+        var batch = {
+            first: this.vertexCount,
+            texture: null,
+            textures: []
+        };
+
+        this.batches.push(batch);
+    },
+
+    flush: function ()
+    {
+        var gl = this.gl;
+        var vertexCount = this.vertexCount;
+        var vertexBuffer = this.vertexBuffer;
+        var vertexData = this.vertexData;
+        var topology = this.topology;
+        var vertexSize = this.vertexSize;
+        var batches = this.batches;
+        var batchCount = batches.length;
+        var batch = null;
+        var nextBatch = null;
+
+        if (batchCount === 0 || vertexCount === 0) return;
+
+        gl.bufferSubData(gl.ARRAY_BUFFER, 0, this.bytes.subarray(0, vertexCount * vertexSize));
+
+        for (var index = 0; index < batches.length - 1; ++index)
+        {
+            batch = batches[index];
+            batchNext = batches[index + 1];
+
+            if (batch.textures.length > 0)
+            {
+                for (var textureIndex = 0; textureIndex < batch.textures.length; ++textureIndex)
+                {
+                    var nTexture = batch.textures[textureIndex];
+                    if (nTexture)
+                    {
+                        gl.activeTexture(gl.TEXTURE0 + 1 + textureIndex);
+                        gl.bindTexture(gl.TEXTURE_2D, nTexture);
+                    }
+                }
+                gl.activeTexture(gl.TEXTURE0);
+            }
+
+            gl.bindTexture(gl.TEXTURE_2D, batch.texture);
+            gl.drawArrays(topology, batch.first, batchNext.first - batch.first);
+        }
+
+        // Left over data
+        batch = batches[batches.length - 1];
+
+        if (batch.textures.length > 0)
+        {
+            for (var textureIndex = 0; textureIndex < batch.textures.length; ++textureIndex)
+            {
+                var nTexture = batch.textures[textureIndex];
+                if (nTexture)
+                {
+                    gl.activeTexture(gl.TEXTURE0 + 1 + textureIndex);
+                    gl.bindTexture(gl.TEXTURE_2D, nTexture);
+                }
+            }
+            gl.activeTexture(gl.TEXTURE0);
+        }
+
+        gl.bindTexture(gl.TEXTURE_2D, batch.texture);
+        gl.drawArrays(topology, batch.first, vertexCount - batch.first);
+
+        this.vertexCount = 0;
+        batches.length = 0;
+
+        this.pushBatch();
+
+        return this;
     },
 
     /**
@@ -120,6 +236,11 @@ var TextureTintPipeline = new Class({
     {
         WebGLPipeline.prototype.onBind.call(this);
         this.mvpUpdate();
+
+        if (this.batches.length === 0)
+        {
+            this.pushBatch();
+        }
 
         return this;
     },
@@ -216,9 +337,10 @@ var TextureTintPipeline = new Class({
         var cos = Math.cos;
         var vertexComponentCount = this.vertexComponentCount;
         var vertexCapacity = this.vertexCapacity;
+        var texture = emitterManager.defaultFrame.source.glTexture;
 
-        renderer.setTexture2D(emitterManager.defaultFrame.source.glTexture, 0);
-
+        this.setTexture2D(texture, 0);
+        
         for (var emitterIndex = 0; emitterIndex < emitterCount; ++emitterIndex)
         {
             var emitter = emitters[emitterIndex];
@@ -236,15 +358,15 @@ var TextureTintPipeline = new Class({
 
             renderer.setBlendMode(emitter.blendMode);
 
-            if (this.vertexCount > 0)
+            if (this.vertexCount >= vertexCapacity)
             {
                 this.flush();
+                this.setTexture2D(texture, 0);
             }
 
             for (var batchIndex = 0; batchIndex < batchCount; ++batchIndex)
             {
                 var batchSize = Math.min(aliveLength, maxQuads);
-                var vertexCount = 0;
 
                 for (var index = 0; index < batchSize; ++index)
                 {
@@ -284,7 +406,7 @@ var TextureTintPipeline = new Class({
                     var ty2 = xw * mvb + yh * mvd + mvf;
                     var tx3 = xw * mva + y * mvc + mve;
                     var ty3 = xw * mvb + y * mvd + mvf;
-                    var vertexOffset = vertexCount * vertexComponentCount;
+                    var vertexOffset = this.vertexCount * vertexComponentCount;
 
                     if (roundPixels)
                     {
@@ -329,17 +451,16 @@ var TextureTintPipeline = new Class({
                     vertexViewF32[vertexOffset + 28] = uvs.y3;
                     vertexViewU32[vertexOffset + 29] = color;
 
-                    vertexCount += 6;
+                    this.vertexCount += 6;
                 }
 
                 particleOffset += batchSize;
                 aliveLength -= batchSize;
 
-                this.vertexCount = vertexCount;
-
-                if (vertexCount >= vertexCapacity)
+                if (this.vertexCount >= vertexCapacity)
                 {
                     this.flush();
+                    this.setTexture2D(texture, 0);
                 }
             }
         }
@@ -421,7 +542,7 @@ var TextureTintPipeline = new Class({
                 // Bind Texture if texture wasn't bound.
                 // This needs to be here because of multiple
                 // texture atlas.
-                renderer.setTexture2D(frame.texture.source[frame.sourceIndex].glTexture, 0);
+                this.setTexture2D(frame.texture.source[frame.sourceIndex].glTexture, 0);
             
                 vertexViewF32[vertexOffset + 0] = tx0;
                 vertexViewF32[vertexOffset + 1] = ty0;
@@ -553,7 +674,7 @@ var TextureTintPipeline = new Class({
         var tint3 = getTint(tintBR, alphaBR);
         var vertexOffset = 0;
 
-        renderer.setTexture2D(texture, 0);
+        this.setTexture2D(texture, 0);
 
         vertexOffset = this.vertexCount * this.vertexComponentCount;
 
@@ -670,7 +791,8 @@ var TextureTintPipeline = new Class({
         var mvf = sre * cmb + srf * cmd + cmf;
         var vertexOffset = 0;
 
-        renderer.setTexture2D(texture, 0);
+        this.setTexture2D(texture, 0);
+
         vertexOffset = this.vertexCount * this.vertexComponentCount;
 
         for (var index = 0, index0 = 0; index < length; index += 2)
@@ -796,7 +918,7 @@ var TextureTintPipeline = new Class({
         var mvf = sre * cmb + srf * cmd + cmf;
         var vertexOffset = 0;
 
-        renderer.setTexture2D(texture, 0);
+        this.setTexture2D(texture, 0);
 
         for (var index = 0; index < textLength; ++index)
         {
@@ -1020,7 +1142,7 @@ var TextureTintPipeline = new Class({
         var uta, utb, utc, utd, ute, utf;
         var vertexOffset = 0;
 
-        renderer.setTexture2D(texture, 0);
+        this.setTexture2D(texture, 0);
 
         if (crop)
         {
@@ -1456,8 +1578,8 @@ var TextureTintPipeline = new Class({
         var v0 = (frameY / textureHeight) + vOffset;
         var u1 = (frameX + frameWidth) / textureWidth + uOffset;
         var v1 = (frameY + frameHeight) / textureHeight + vOffset;
-
-        renderer.setTexture2D(texture, 0);
+        
+        this.setTexture2D(texture, 0);
 
         vertexOffset = this.vertexCount * this.vertexComponentCount;
 
