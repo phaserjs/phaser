@@ -766,6 +766,38 @@ var WebGLRenderer = new Class({
         return this;
     },
 
+    addBlendMode: function (func, equation)
+    {
+        var index = this.blendModes.push({ func: func, equation: equation });
+
+        return index - 1;
+    },
+
+    updateBlendMode: function (index, func, equation)
+    {
+        if (this.blendModes[index])
+        {
+            this.blendModes[index].func = func;
+
+            if (equation)
+            {
+                this.blendModes[index].equation = equation;
+            }
+        }
+
+        return this;
+    },
+
+    removeBlendMode: function (index)
+    {
+        if (index > 16 && this.blendModes[index])
+        {
+            this.blendModes.splice(index, 1);
+        }
+
+        return this;
+    },
+
     /**
      * [description]
      *

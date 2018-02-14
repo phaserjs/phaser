@@ -166,6 +166,7 @@ var TextureTintPipeline = new Class({
         var vertexSize = this.vertexSize;
         var batches = this.batches;
         var batchCount = batches.length;
+        var batchVertexCount = 0;
         var batch = null;
         var nextBatch = null;
 
@@ -192,8 +193,12 @@ var TextureTintPipeline = new Class({
                 gl.activeTexture(gl.TEXTURE0);
             }
 
+            batchVertexCount = batchNext.first - batch.first;
+
+            if (batch.texture === null || batchVertexCount <= 0) continue;
+
             gl.bindTexture(gl.TEXTURE_2D, batch.texture);
-            gl.drawArrays(topology, batch.first, batchNext.first - batch.first);
+            gl.drawArrays(topology, batch.first, batchVertexCount);
         }
 
         // Left over data
@@ -213,13 +218,16 @@ var TextureTintPipeline = new Class({
             gl.activeTexture(gl.TEXTURE0);
         }
 
-        gl.bindTexture(gl.TEXTURE_2D, batch.texture);
-        gl.drawArrays(topology, batch.first, vertexCount - batch.first);
+        batchVertexCount = vertexCount - batch.first;
+
+        if (batch.texture && batchVertexCount > 0)
+        {
+            gl.bindTexture(gl.TEXTURE_2D, batch.texture);
+            gl.drawArrays(topology, batch.first, batchVertexCount);
+        }
 
         this.vertexCount = 0;
         batches.length = 0;
-
-        this.pushBatch();
 
         return this;
     },
