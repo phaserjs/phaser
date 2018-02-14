@@ -105,14 +105,32 @@ var TextureTintPipeline = new Class({
          */
         this.maxQuads = 2000;
 
+        /**
+         * [description]
+         *
+         * @name Phaser.Renderer.WebGL.TextureTintPipeline#batches
+         * @type {array}
+         * @since 3.0.1
+         */
         this.batches = [];
 
         this.mvpInit();
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Renderer.WebGL.TextureTintPipeline#setTexture2D
+     * @since 3.0.1
+     *
+     * @param {WebGLTexture} texture - [description]
+     * @param {int} textureUnit - [description]
+     *
+     * @return {Phaser.Renderer.WebGL.TextureTintPipeline} [description]
+     */
     setTexture2D: function (texture, unit)
     {
-        if (!texture) return;
+        if (!texture) return this;
 
         var batches = this.batches;
 
@@ -143,8 +161,16 @@ var TextureTintPipeline = new Class({
 
             batches[batches.length - 1].texture = texture;
         }
+
+        return this;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Renderer.WebGL.TextureTintPipeline#pushBatch
+     * @since 3.0.1
+     */
     pushBatch: function ()
     {
         var batch = {
@@ -156,6 +182,12 @@ var TextureTintPipeline = new Class({
         this.batches.push(batch);
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Renderer.WebGL.TextureTintPipeline#flush
+     * @since 3.0.1
+     */
     flush: function ()
     {
         if (this.flushLocked) return this;

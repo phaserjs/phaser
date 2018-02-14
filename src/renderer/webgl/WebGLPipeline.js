@@ -193,7 +193,7 @@ var WebGLPipeline = new Class({
          *
          * @name Phaser.Renderer.WebGL.WebGLPipeline#flushLocked
          * @type {boolean}
-         * @since 3.0.0
+         * @since 3.0.1
          */
         this.flushLocked = false;
     },
