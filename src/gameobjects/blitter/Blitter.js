@@ -8,9 +8,9 @@ var BlitterRender = require('./BlitterRender');
 var Bob = require('./Bob');
 var Class = require('../../utils/Class');
 var Components = require('../components');
-var DisplayList = require('../DisplayList');
 var Frame = require('../../textures/Frame');
 var GameObject = require('../GameObject');
+var List = require('../../structs/List');
 
 /**
  * @classdesc
@@ -83,10 +83,10 @@ var Blitter = new Class({
          * [description]
          *
          * @name Phaser.GameObjects.Blitter#children
-         * @type {Phaser.GameObjects.DisplayList}
+         * @type {Phaser.Structs.List}
          * @since 3.0.0
          */
-        this.children = new DisplayList();
+        this.children = new List();
 
         /**
          * [description]
@@ -222,7 +222,7 @@ var Blitter = new Class({
      * @method Phaser.GameObjects.Blitter#getRenderList
      * @since 3.0.0
      *
-     * @return {[type]} [description]
+     * @return {Phaser.GameObjects.Blitter.Bob[]} An array of Bob objects that will be rendered this frame.
      */
     getRenderList: function ()
     {
