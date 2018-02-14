@@ -512,8 +512,6 @@ var TextureTintPipeline = new Class({
         for (var batchIndex = 0; batchIndex < batchCount; ++batchIndex)
         {
             var batchSize = Math.min(length, this.maxQuads);
-            var vertexOffset = 0;
-            var vertexCount = 0;
 
             for (var index = 0; index < batchSize; ++index)
             {
@@ -551,6 +549,8 @@ var TextureTintPipeline = new Class({
                 // This needs to be here because of multiple
                 // texture atlas.
                 this.setTexture2D(frame.texture.source[frame.sourceIndex].glTexture, 0);
+                var vertexOffset = this.vertexCount * this.vertexComponentCount;
+
             
                 vertexViewF32[vertexOffset + 0] = tx0;
                 vertexViewF32[vertexOffset + 1] = ty0;
@@ -583,16 +583,19 @@ var TextureTintPipeline = new Class({
                 vertexViewF32[vertexOffset + 28] = uvs.y3;
                 vertexViewU32[vertexOffset + 29] = tint;
 
-                vertexOffset += 30;
-                vertexCount += 6;
+                this.vertexCount += 6;
+
+                if (this.vertexCount >= this.vertexCapacity)
+                {
+                    this.flush();
+                }
             }
 
             batchOffset += batchSize;
             length -= batchSize;
 
-            if (vertexCount <= this.vertexCapacity)
+            if (this.vertexCount >= this.vertexCapacity)
             {
-                this.vertexCount = vertexCount;
                 this.flush();
             }
         }
