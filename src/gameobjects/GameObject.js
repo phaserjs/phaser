@@ -342,11 +342,9 @@ var GameObject = new Class({
             this.data = undefined;
         }
 
-        //  TODO Keep a reference to the manager in Body, so body can remove itself, not via System
         if (this.body)
         {
-            // sys.physicsManager.remove(this);
-
+            this.body.destroy();
             this.body = undefined;
         }
 

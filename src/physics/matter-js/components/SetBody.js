@@ -112,6 +112,14 @@ var SetBody = {
         this.body = body;
         this.body.gameObject = this;
 
+        var _this = this;
+
+        this.body.destroy = function ()
+        {
+            _this.world.remove(_this.body);
+            _this.body.gameObject = null;
+        };
+
         if (addToWorld)
         {
             this.world.add(this.body);

@@ -98,7 +98,7 @@ npm install phaser
 or the minified version:
 
 ```html
-<script src="//cdn.jsdelivr.net/npm/phaser@3.0.0"></script>
+<script src="//cdn.jsdelivr.net/npm/phaser@3.0.0/dist/phaser.min.js"></script>
 ```
 
 ### License

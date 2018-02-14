@@ -572,6 +572,8 @@ var Body = new Class({
      */
     destroy: function ()
     {
+        this.world.remove(this);
+
         this.enabled = false;
 
         this.world = null;

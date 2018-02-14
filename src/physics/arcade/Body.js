@@ -85,6 +85,18 @@ var Body = new Class({
         this.enable = true;
 
         /**
+         * If Body.destroy is called during the main physics update loop then this flag is set.
+         * The Body is then actually destroyed during World.postUpdate.
+         * You can also toggle it yourself.
+         *
+         * @name Phaser.Physics.Arcade.Body#pendingDestroy
+         * @type {boolean}
+         * @default false
+         * @since 3.0.0
+         */
+        this.pendingDestroy = false;
+
+        /**
          * [description]
          *
          * @name Phaser.Physics.Arcade.Body#isCircle
@@ -1267,8 +1279,17 @@ var Body = new Class({
      */
     destroy: function ()
     {
-        this.gameObject.body = null;
-        this.gameObject = null;
+        if (!this.pendingDestroy)
+        {
+            //  Will be removed the next time World.postUpdate runs, not before.
+            this.pendingDestroy = true;
+        }
+        else
+        {
+            this.world.disableBody(this);
+
+            this.world = null;
+        }
     },
 
     /**

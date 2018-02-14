@@ -41,6 +41,15 @@ var Collider = new Class({
         /**
          * [description]
          *
+         * @name Phaser.Physics.Arcade.Collider#name
+         * @type {string}
+         * @since 3.0.0
+         */
+        this.name = '';
+
+        /**
+         * [description]
+         *
          * @name Phaser.Physics.Arcade.Collider#active
          * @type {boolean}
          * @default true
@@ -101,6 +110,23 @@ var Collider = new Class({
          * @since 3.0.0
          */
         this.callbackContext = callbackContext;
+    },
+
+    /**
+     * [description]
+     *
+     * @method Phaser.Physics.Arcade.Collider#setName
+     * @since 3.0.0
+     *
+     * @param {string} name - [description]
+     *
+     * @return {Phaser.Physics.Arcade.Collider} [description]
+     */
+    setName: function (name)
+    {
+        this.name = name;
+
+        return this;
     },
 
     /**
