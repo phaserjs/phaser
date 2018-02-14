@@ -364,7 +364,7 @@ var World = new Class({
                 }
                 else
                 {
-                    this.disableBody(object[i]);
+                    this.disableGameObjectBody(object[i]);
                 }
             }
         }
@@ -375,21 +375,21 @@ var World = new Class({
         }
         else
         {
-            this.disableBody(object);
+            this.disableGameObjectBody(object);
         }
     },
 
     /**
      * [description]
      *
-     * @method Phaser.Physics.Arcade.World#disableBody
+     * @method Phaser.Physics.Arcade.World#disableGameObjectBody
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.GameObject} object - [description]
      *
      * @return {Phaser.GameObjects.GameObject} [description]
      */
-    disableBody: function (object)
+    disableGameObjectBody: function (object)
     {
         if (object.body)
         {
@@ -403,11 +403,34 @@ var World = new Class({
                 this.staticTree.remove(object.body);
             }
 
-            object.body.destroy();
-            object.body = null;
+            object.body.enable = false;
         }
 
         return object;
+    },
+
+    /**
+     * [description]
+     *
+     * @method Phaser.Physics.Arcade.World#disableBody
+     * @since 3.0.0
+     *
+     * @param {Phaser.Physics.Arcade.Body} body - [description]
+     */
+    disableBody: function (body)
+    {
+        if (body.physicsType === CONST.DYNAMIC_BODY)
+        {
+            this.tree.remove(body);
+            this.bodies.delete(body);
+        }
+        else if (body.physicsType === CONST.STATIC_BODY)
+        {
+            this.staticBodies.delete(body);
+            this.staticTree.remove(body);
+        }
+
+        body.enable = false;
     },
 
     /**
@@ -662,6 +685,8 @@ var World = new Class({
         var bodies = this.bodies.entries;
         var len = bodies.length;
 
+        var toDestroy = [];
+
         for (i = 0; i < len; i++)
         {
             body = bodies[i];
@@ -669,6 +694,11 @@ var World = new Class({
             if (body.enable)
             {
                 body.postUpdate();
+            }
+
+            if (body.pendingDestroy)
+            {
+                toDestroy.push(body);
             }
         }
 
@@ -700,6 +730,15 @@ var World = new Class({
                     body.drawDebug(graphics);
                 }
             }
+        }
+
+        for (i = 0; i < toDestroy.length; i++)
+        {
+            body = toDestroy[i];
+
+            this.emit('destroybody', this, body);
+
+            body.destroy();
         }
     },
 
@@ -1403,12 +1442,12 @@ var World = new Class({
      */
     collideSpriteVsGroup: function (sprite, group, collideCallback, processCallback, callbackContext, overlapOnly)
     {
-        if (group.length === 0)
+        var bodyA = sprite.body;
+
+        if (group.length === 0 || !bodyA)
         {
             return;
         }
-
-        var bodyA = sprite.body;
 
         //  Does sprite collide with anything?
 
@@ -1608,6 +1647,13 @@ var World = new Class({
         {
             return;
         }
+
+        var children = group1.getChildren();
+
+        for (var i = 0; i < children.length; i++)
+        {
+            this.collideSpriteVsGroup(children[i], group2, collideCallback, processCallback, callbackContext, overlapOnly);
+        }
     },
 
     /**
@@ -1629,6 +1675,12 @@ var World = new Class({
      */
     destroy: function ()
     {
+        this.tree.clear();
+        this.staticTree.clear();
+        this.bodies.clear();
+        this.staticBodies.clear();
+        this.colliders.destroy();
+
         this.removeAllListeners();
     }
 
