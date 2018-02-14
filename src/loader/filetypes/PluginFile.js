@@ -34,6 +34,13 @@ var PluginFile = new Class({
 
     function PluginFile (key, url, path, xhrSettings)
     {
+        // If the url variable refers to a class, add the plugin directly
+        if(typeof url === "function"){
+            this.key = key;
+            window[key] = url;
+            window[key].register(PluginManager);
+        }
+
         var fileKey = (typeof key === 'string') ? key : GetFastValue(key, 'key', '');
 
         var fileConfig = {
