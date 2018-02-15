@@ -23,7 +23,7 @@ var XHRSettings = require('./XHRSettings');
  */
 var MergeXHRSettings = function (global, local)
 {
-    var output = (global === undefined) ? XHRSettings() : Extend(global);
+    var output = (global === undefined) ? XHRSettings() : Extend({}, global);
 
     if (local)
     {
