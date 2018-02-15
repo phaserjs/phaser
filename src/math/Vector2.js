@@ -78,7 +78,7 @@ var Vector2 = new Class({
      * @method Phaser.Math.Vector2#copy
      * @since 3.0.0
      *
-     * @param {[type]} src - [description]
+     * @param {Phaser.Math.Vector2|object} src - [description]
      *
      * @return {Phaser.Math.Vector2} This Vector2.
      */
@@ -532,5 +532,13 @@ var Vector2 = new Class({
     }
 
 });
+
+/**
+ * A static zero Vector2 for use by reference.
+ *
+ * @method Phaser.Math.Vector2.ZERO
+ * @since 3.0.1
+ */
+Vector2.ZERO = new Vector2();
 
 module.exports = Vector2;
