@@ -120,7 +120,7 @@ var StaticBody = new Class({
          * @type {number}
          * @since 3.0.0
          */
-        this.width = gameObject.width;
+        this.width = gameObject.displayWidth;
 
         /**
          * [description]
@@ -129,31 +129,7 @@ var StaticBody = new Class({
          * @type {number}
          * @since 3.0.0
          */
-        this.height = gameObject.height;
-
-        /**
-         * [description]
-         *
-         * @name Phaser.Physics.Arcade.StaticBody#sourceWidth
-         * @type {number}
-         * @since 3.0.0
-         */
-        this.sourceWidth = gameObject.width;
-
-        /**
-         * [description]
-         *
-         * @name Phaser.Physics.Arcade.StaticBody#sourceHeight
-         * @type {number}
-         * @since 3.0.0
-         */
-        this.sourceHeight = gameObject.height;
-
-        if (gameObject.frame)
-        {
-            this.sourceWidth = gameObject.frame.realWidth;
-            this.sourceHeight = gameObject.frame.realHeight;
-        }
+        this.height = gameObject.displayHeight;
 
         /**
          * [description]
@@ -162,7 +138,7 @@ var StaticBody = new Class({
          * @type {number}
          * @since 3.0.0
          */
-        this.halfWidth = Math.abs(gameObject.width / 2);
+        this.halfWidth = Math.abs(this.width / 2);
 
         /**
          * [description]
@@ -171,7 +147,7 @@ var StaticBody = new Class({
          * @type {number}
          * @since 3.0.0
          */
-        this.halfHeight = Math.abs(gameObject.height / 2);
+        this.halfHeight = Math.abs(this.height / 2);
 
         /**
          * [description]
@@ -189,7 +165,7 @@ var StaticBody = new Class({
          * @type {Phaser.Math.Vector2}
          * @since 3.0.0
          */
-        this.velocity = new Vector2();
+        this.velocity = Vector2.ZERO;
 
         /**
          * [description]
@@ -208,7 +184,7 @@ var StaticBody = new Class({
          * @type {Phaser.Math.Vector2}
          * @since 3.0.0
          */
-        this.gravity = new Vector2();
+        this.gravity = Vector2.ZERO;
 
         /**
          * [description]
@@ -217,7 +193,7 @@ var StaticBody = new Class({
          * @type {Phaser.Math.Vector2}
          * @since 3.0.0
          */
-        this.bounce = new Vector2();
+        this.bounce = Vector2.ZERO;
 
         //  If true this Body will dispatch events
 
@@ -270,16 +246,6 @@ var StaticBody = new Class({
          * @since 3.0.0
          */
         this.immovable = true;
-
-        /**
-         * [description]
-         *
-         * @name Phaser.Physics.Arcade.StaticBody#moves
-         * @type {boolean}
-         * @default false
-         * @since 3.0.0
-         */
-        this.moves = false;
 
         /**
          * [description]
@@ -395,36 +361,70 @@ var StaticBody = new Class({
          * @since 3.0.0
          */
         this.physicsType = CONST.STATIC_BODY;
+    },
 
-        /**
-         * [description]
-         *
-         * @name Phaser.Physics.Arcade.StaticBody#_sx
-         * @type {number}
-         * @private
-         * @since 3.0.0
-         */
-        this._sx = gameObject.scaleX;
+    /**
+     * Changes the Game Object this Body is bound to.
+     * First it removes its reference from the old Game Object, then sets the new one.
+     * You can optionally update the position and dimensions of this Body to reflect that of the new Game Object.
+     *
+     * @method Phaser.Physics.Arcade.StaticBody#setGameObject
+     * @since 3.0.1
+     *
+     * @param {Phaser.GameObjects.GameObject} gameObject - The new Game Object that will own this Body.
+     * @param {boolean} [update=true] - Reposition and resize this Body to match the new Game Object?
+     *
+     * @return {Phaser.Physics.Arcade.StaticBody} This Static Body object.
+     */
+    setGameObject: function (gameObject, update)
+    {
+        if (gameObject && gameObject !== this.gameObject)
+        {
+            //  Remove this body from the old game object
+            this.gameObject.body = null;
 
-        /**
-         * [description]
-         *
-         * @name Phaser.Physics.Arcade.StaticBody#_sy
-         * @type {number}
-         * @private
-         * @since 3.0.0
-         */
-        this._sy = gameObject.scaleY;
+            gameObject.body = this;
 
-        /**
-         * [description]
-         *
-         * @name Phaser.Physics.Arcade.StaticBody#_bounds
-         * @type {Phaser.Geom.Rectangle}
-         * @private
-         * @since 3.0.0
-         */
-        this._bounds = new Rectangle();
+            //  Update our reference
+            this.gameObject = gameObject;
+        }
+
+        if (update)
+        {
+            this.updateFromGameObject();
+        }
+
+        return this;
+    },
+
+    /**
+     * Updates this Static Body so that its position and dimensions are updated
+     * based on the current Game Object it is bound to.
+     *
+     * @method Phaser.Physics.Arcade.StaticBody#updateFromGameObject
+     * @since 3.0.1
+     *
+     * @return {Phaser.Physics.Arcade.StaticBody} This Static Body object.
+     */
+    updateFromGameObject: function ()
+    {
+        this.world.staticTree.remove(this);
+
+        var gameObject = this.gameObject;
+
+        gameObject.getTopLeft(this.position);
+
+        this.width = gameObject.displayWidth;
+        this.height = gameObject.displayHeight;
+
+        this.halfWidth = Math.abs(this.width / 2);
+        this.halfHeight = Math.abs(this.height / 2);
+
+        this.center.set(this.position.x + this.halfWidth, this.position.y + this.halfHeight);
+
+        this.world.staticTree.insert(this);
+
+        return this;
     },
 
     /**
@@ -447,12 +447,12 @@ var StaticBody = new Class({
 
         this.world.staticTree.remove(this);
 
-        this.sourceWidth = width;
-        this.sourceHeight = height;
-        this.width = this.sourceWidth * this._sx;
-        this.height = this.sourceHeight * this._sy;
-        this.halfWidth = Math.floor(this.width / 2);
-        this.halfHeight = Math.floor(this.height / 2);
+        this.width = width;
+        this.height = height;
+
+        this.halfWidth = Math.floor(width / 2);
+        this.halfHeight = Math.floor(height / 2);
+
         this.offset.set(offsetX, offsetY);
 
         this.updateCenter();
@@ -487,13 +487,11 @@ var StaticBody = new Class({
             this.world.staticTree.remove(this);
 
             this.isCircle = true;
+
             this.radius = radius;
 
-            this.sourceWidth = radius * 2;
-            this.sourceHeight = radius * 2;
-
-            this.width = this.sourceWidth * this._sx;
-            this.height = this.sourceHeight * this._sy;
+            this.width = radius * 2;
+            this.height = radius * 2;
 
             this.halfWidth = Math.floor(this.width / 2);
             this.halfHeight = Math.floor(this.height / 2);
@@ -534,17 +532,14 @@ var StaticBody = new Class({
      */
     reset: function (x, y)
     {
-        var sprite = this.gameObject;
+        var gameObject = this.gameObject;
 
-        if (x === undefined) { x = sprite.x; }
-        if (y === undefined) { y = sprite.y; }
+        if (x === undefined) { x = gameObject.x; }
+        if (y === undefined) { y = gameObject.y; }
 
         this.world.staticTree.remove(this);
 
-        this.position.x = x - sprite.displayOriginX + (sprite.scaleX * this.offset.x);
-        this.position.y = y - sprite.displayOriginY + (sprite.scaleY * this.offset.y);
-
-        this.rotation = this.gameObject.angle;
+        gameObject.getTopLeft(this.position);
 
         this.updateCenter();
 
@@ -673,8 +668,9 @@ var StaticBody = new Class({
      */
     destroy: function ()
     {
-        this.gameObject.body = null;
-        this.gameObject = null;
+        this.enable = false;
+
+        this.world.pendingDestroy.set(this);
     },
 
     /**
@@ -748,9 +744,10 @@ var StaticBody = new Class({
 
         set: function (value)
         {
+            this.world.staticTree.remove(this);
+
             this.position.x = value;
 
-            this.world.staticTree.remove(this);
             this.world.staticTree.insert(this);
         }
 
@@ -772,9 +769,10 @@ var StaticBody = new Class({
 
         set: function (value)
         {
+            this.world.staticTree.remove(this);
+
             this.position.y = value;
 
-            this.world.staticTree.remove(this);
             this.world.staticTree.insert(this);
         }
 
