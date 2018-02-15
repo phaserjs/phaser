@@ -65,7 +65,7 @@ var File = new Class({
         {
             this.url = GetFastValue(fileConfig, 'path', '') + this.key + '.' + GetFastValue(fileConfig, 'extension', '');
         }
-        else if(typeof(this.url) !== "function")
+        else if (typeof(this.url) !== 'function')
         {
             this.url = GetFastValue(fileConfig, 'path', '').concat(this.url);
         }
