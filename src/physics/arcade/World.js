@@ -75,6 +75,15 @@ var World = new Class({
         this.staticBodies = new Set();
 
         /**
+         * Static Bodies
+         *
+         * @name Phaser.Physics.Arcade.World#pendingDestroy
+         * @type {Phaser.Structs.Set}
+         * @since 3.0.1
+         */
+        this.pendingDestroy = new Set();
+
+        /**
          * [description]
          *
          * @name Phaser.Physics.Arcade.World#colliders
@@ -682,10 +691,13 @@ var World = new Class({
     {
         var i;
         var body;
-        var bodies = this.bodies.entries;
-        var len = bodies.length;
 
-        var toDestroy = [];
+        var dynamic = this.bodies;
+        var static = this.staticBodies;
+        var pending = this.pendingDestroy;
+
+        var bodies = dynamic.entries;
+        var len = bodies.length;
 
         for (i = 0; i < len; i++)
         {
@@ -694,11 +706,6 @@ var World = new Class({
             if (body.enable)
             {
                 body.postUpdate();
-            }
-
-            if (body.pendingDestroy)
-            {
-                toDestroy.push(body);
             }
         }
 
@@ -718,7 +725,7 @@ var World = new Class({
                 }
             }
 
-            bodies = this.staticBodies.entries;
+            bodies = static.entries;
             len = bodies.length;
 
             for (i = 0; i < len; i++)
@@ -732,13 +739,34 @@ var World = new Class({
             }
         }
 
-        for (i = 0; i < toDestroy.length; i++)
+        if (pending.size > 0)
         {
-            body = toDestroy[i];
+            var dynamicTree = this.tree;
+            var staticTree = this.staticTree;
 
-            this.emit('destroybody', this, body);
+            bodies = pending.entries;
+            len = bodies.length;
 
-            body.destroy();
+            for (i = 0; i < len; i++)
+            {
+                body = bodies[i];
+
+                if (body.physicsType === CONST.DYNAMIC_BODY)
+                {
+                    dynamicTree.remove(body);
+                    dynamic.delete(body);
+                }
+                else if (body.physicsType === CONST.STATIC_BODY)
+                {
+                    staticTree.remove(body);
+                    static.delete(body);
+                }
+
+                body.world = undefined;
+                body.gameObject = undefined;
+            }
+
+            pending.clear();
         }
     },
 
