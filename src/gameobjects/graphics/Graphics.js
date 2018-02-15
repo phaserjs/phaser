@@ -1115,6 +1115,13 @@ var Graphics = new Class({
 
 });
 
+/**
+ * A Camera used specifically by the Graphics system for rendering to textures.
+ *
+ * @name Phaser.GameObjects.Graphics.TargetCamera
+ * @type {Phaser.Cameras.Scene2D.Camera}
+ * @since 3.1.0
+ */
 Graphics.TargetCamera = new Camera(0, 0, 0, 0);
 
 module.exports = Graphics;
