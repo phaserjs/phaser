@@ -192,6 +192,16 @@ var WebGLRenderer = new Class({
         /**
          * [description]
          *
+         * @name Phaser.Renderer.WebGL.WebGLRenderer#currentActiveTextureUnit
+         * @type {int}
+         * @since 3.0.1
+         */
+        this.currentActiveTextureUnit = 0;
+
+
+        /**
+         * [description]
+         *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#currentTextures
          * @type {array}
          * @since 3.0.0
@@ -766,6 +776,38 @@ var WebGLRenderer = new Class({
         return this;
     },
 
+    addBlendMode: function (func, equation)
+    {
+        var index = this.blendModes.push({ func: func, equation: equation });
+
+        return index - 1;
+    },
+
+    updateBlendMode: function (index, func, equation)
+    {
+        if (this.blendModes[index])
+        {
+            this.blendModes[index].func = func;
+
+            if (equation)
+            {
+                this.blendModes[index].equation = equation;
+            }
+        }
+
+        return this;
+    },
+
+    removeBlendMode: function (index)
+    {
+        if (index > 16 && this.blendModes[index])
+        {
+            this.blendModes.splice(index, 1);
+        }
+
+        return this;
+    },
+
     /**
      * [description]
      *
@@ -785,7 +827,11 @@ var WebGLRenderer = new Class({
         {
             this.flush();
 
-            gl.activeTexture(gl.TEXTURE0 + textureUnit);
+            if (this.currentActiveTextureUnit !== textureUnit)
+            {
+                gl.activeTexture(gl.TEXTURE0 + textureUnit);
+                this.currentActiveTextureUnit = textureUnit;
+            }
             gl.bindTexture(gl.TEXTURE_2D, texture);
 
             this.currentTextures[textureUnit] = texture;

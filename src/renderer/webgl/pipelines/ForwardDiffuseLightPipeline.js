@@ -130,6 +130,8 @@ var ForwardDiffuseLightPipeline = new Class({
 
         if (normalTexture)
         {
+            this.renderer.setPipeline(this);
+            this.setTexture2D(normalTexture.glTexture, 1);
             TextureTintPipeline.prototype.drawStaticTilemapLayer.call(this, tilemap, camera);
         }
         else
@@ -155,6 +157,8 @@ var ForwardDiffuseLightPipeline = new Class({
 
         if (normalTexture)
         {
+            this.renderer.setPipeline(this);
+            this.setTexture2D(normalTexture.glTexture, 1);
             TextureTintPipeline.prototype.drawEmitterManager.call(this, emitterManager, camera);
         }
         else
@@ -180,6 +184,8 @@ var ForwardDiffuseLightPipeline = new Class({
 
         if (normalTexture)
         {
+            this.renderer.setPipeline(this);
+            this.setTexture2D(normalTexture.glTexture, 1);
             TextureTintPipeline.prototype.drawBlitter.call(this, blitter, camera);
         }
         else
@@ -205,7 +211,8 @@ var ForwardDiffuseLightPipeline = new Class({
 
         if (normalTexture)
         {
-            this.renderer.setTexture2D(normalTexture.glTexture, 1);
+            this.renderer.setPipeline(this);
+            this.setTexture2D(normalTexture.glTexture, 1);
             TextureTintPipeline.prototype.batchSprite.call(this, sprite, camera);
         }
         else
@@ -231,7 +238,8 @@ var ForwardDiffuseLightPipeline = new Class({
 
         if (normalTexture)
         {
-            this.renderer.setTexture2D(normalTexture.glTexture, 1);
+            this.renderer.setPipeline(this);
+            this.setTexture2D(normalTexture.glTexture, 1);
             TextureTintPipeline.prototype.batchMesh.call(this, mesh, camera);
         }
         else
@@ -258,6 +266,8 @@ var ForwardDiffuseLightPipeline = new Class({
 
         if (normalTexture)
         {
+            this.renderer.setPipeline(this);
+            this.setTexture2D(normalTexture.glTexture, 1);
             TextureTintPipeline.prototype.batchBitmapText.call(this, bitmapText, camera);
         }
         else
@@ -283,6 +293,8 @@ var ForwardDiffuseLightPipeline = new Class({
 
         if (normalTexture)
         {
+            this.renderer.setPipeline(this);
+            this.setTexture2D(normalTexture.glTexture, 1);
             TextureTintPipeline.prototype.batchDynamicBitmapText.call(this, bitmapText, camera);
         }
         else
@@ -308,6 +320,8 @@ var ForwardDiffuseLightPipeline = new Class({
 
         if (normalTexture)
         {
+            this.renderer.setPipeline(this);
+            this.setTexture2D(normalTexture.glTexture, 1);
             TextureTintPipeline.prototype.batchText.call(this, text, camera);
         }
         else
@@ -333,6 +347,8 @@ var ForwardDiffuseLightPipeline = new Class({
 
         if (normalTexture)
         {
+            this.renderer.setPipeline(this);
+            this.setTexture2D(normalTexture.glTexture, 1);
             TextureTintPipeline.prototype.batchDynamicTilemapLayer.call(this, tilemapLayer, camera);
         }
         else
@@ -358,6 +374,8 @@ var ForwardDiffuseLightPipeline = new Class({
 
         if (normalTexture)
         {
+            this.renderer.setPipeline(this);
+            this.setTexture2D(normalTexture.glTexture, 1);
             TextureTintPipeline.prototype.batchTileSprite.call(this, tileSprite, camera);
         }
         else

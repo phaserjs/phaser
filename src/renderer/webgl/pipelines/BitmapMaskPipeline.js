@@ -192,9 +192,10 @@ var BitmapMaskPipeline = new Class({
             
             // Bind bitmap mask pipeline and draw
             renderer.setPipeline(this);
-            renderer.setTexture2D(mask.mainTexture, 0);
+            
             renderer.setTexture2D(mask.maskTexture, 1);
-
+            renderer.setTexture2D(mask.mainTexture, 0);
+            
             // Finally draw a triangle filling the whole screen
             gl.drawArrays(this.topology, 0, 3);
         }

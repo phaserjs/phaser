@@ -9,6 +9,7 @@ var Components = require('../../gameobjects/components');
 var GameObject = require('../../gameobjects/GameObject');
 var StaticTilemapLayerRender = require('./StaticTilemapLayerRender');
 var TilemapComponents = require('../components');
+var Utils = require('../../renderer/webgl/Utils');
 
 /**
  * @classdesc
@@ -248,7 +249,6 @@ var StaticTilemapLayer = new Class({
                 var voffset = 0;
                 var vertexCount = 0;
                 var bufferSize = (mapWidth * mapHeight) * pipeline.vertexSize * 6;
-                var tint = 0xffffffff;
 
                 if (bufferData === null)
                 {
@@ -289,6 +289,7 @@ var StaticTilemapLayer = new Class({
                         var ty2 = tyh;
                         var tx3 = txw;
                         var ty3 = ty;
+                        var tint = Utils.getTintAppendFloatAlpha(0xffffff, tile.alpha);
 
                         vertexViewF32[voffset + 0] = tx0;
                         vertexViewF32[voffset + 1] = ty0;
