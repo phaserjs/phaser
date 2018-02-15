@@ -194,7 +194,7 @@ var WebGLRenderer = new Class({
          *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#currentActiveTextureUnit
          * @type {int}
-         * @since 3.0.1
+         * @since 3.1.0
          */
         this.currentActiveTextureUnit = 0;
 

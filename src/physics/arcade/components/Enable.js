@@ -88,7 +88,7 @@ var Enable = {
      * in the Physics World, based on its Game Object.
      *
      * @method Phaser.Physics.Arcade.Components.Enable#refreshBody
-     * @since 3.0.1
+     * @since 3.1.0
      *
      * @return {Phaser.GameObjects.GameObject} This Game Object.
      */

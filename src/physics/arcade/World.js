@@ -79,7 +79,7 @@ var World = new Class({
          *
          * @name Phaser.Physics.Arcade.World#pendingDestroy
          * @type {Phaser.Structs.Set}
-         * @since 3.0.1
+         * @since 3.1.0
          */
         this.pendingDestroy = new Set();
 
@@ -392,7 +392,7 @@ var World = new Class({
      * [description]
      *
      * @method Phaser.Physics.Arcade.World#disableGameObjectBody
-     * @since 3.0.1
+     * @since 3.1.0
      *
      * @param {Phaser.GameObjects.GameObject} object - [description]
      *

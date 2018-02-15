@@ -110,7 +110,7 @@ var TextureTintPipeline = new Class({
          *
          * @name Phaser.Renderer.WebGL.TextureTintPipeline#batches
          * @type {array}
-         * @since 3.0.1
+         * @since 3.1.0
          */
         this.batches = [];
 
@@ -121,7 +121,7 @@ var TextureTintPipeline = new Class({
      * [description]
      *
      * @method Phaser.Renderer.WebGL.TextureTintPipeline#setTexture2D
-     * @since 3.0.1
+     * @since 3.1.0
      *
      * @param {WebGLTexture} texture - [description]
      * @param {int} textureUnit - [description]
@@ -169,7 +169,7 @@ var TextureTintPipeline = new Class({
      * [description]
      *
      * @method Phaser.Renderer.WebGL.TextureTintPipeline#pushBatch
-     * @since 3.0.1
+     * @since 3.1.0
      */
     pushBatch: function ()
     {
@@ -186,7 +186,7 @@ var TextureTintPipeline = new Class({
      * [description]
      *
      * @method Phaser.Renderer.WebGL.TextureTintPipeline#flush
-     * @since 3.0.1
+     * @since 3.1.0
      */
     flush: function ()
     {

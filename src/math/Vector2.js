@@ -537,7 +537,7 @@ var Vector2 = new Class({
  * A static zero Vector2 for use by reference.
  *
  * @method Phaser.Math.Vector2.ZERO
- * @since 3.0.1
+ * @since 3.1.0
  */
 Vector2.ZERO = new Vector2();
 

@@ -369,7 +369,7 @@ var StaticBody = new Class({
      * You can optionally update the position and dimensions of this Body to reflect that of the new Game Object.
      *
      * @method Phaser.Physics.Arcade.StaticBody#setGameObject
-     * @since 3.0.1
+     * @since 3.1.0
      *
      * @param {Phaser.GameObjects.GameObject} gameObject - The new Game Object that will own this Body.
      * @param {boolean} [update=true] - Reposition and resize this Body to match the new Game Object?
@@ -402,7 +402,7 @@ var StaticBody = new Class({
      * based on the current Game Object it is bound to.
      *
      * @method Phaser.Physics.Arcade.StaticBody#updateFromGameObject
-     * @since 3.0.1
+     * @since 3.1.0
      *
      * @return {Phaser.Physics.Arcade.StaticBody} This Static Body object.
      */
