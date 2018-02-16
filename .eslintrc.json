@@ -10,6 +10,7 @@
         "CANVAS_RENDERER": true,
         "Phaser": true,
         "p2": true,
+        "process": true,
         "ActiveXObject": true
     },
     "rules": {
