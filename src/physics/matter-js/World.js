@@ -664,6 +664,9 @@ var World = new Class({
     {
         if (points === undefined) { points = []; }
 
+        // var pathPattern = /L?\s*([-\d.e]+)[\s,]*([-\d.e]+)*/ig;
+
+        // eslint-disable-next-line no-useless-escape
         var pathPattern = /L?\s*([\-\d\.e]+)[\s,]*([\-\d\.e]+)*/ig;
 
         path.replace(pathPattern, function (match, x, y)

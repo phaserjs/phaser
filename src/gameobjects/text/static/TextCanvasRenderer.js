@@ -28,7 +28,8 @@ var TextCanvasRenderer = function (renderer, src, interpolationPercentage, camer
     }
     
     var ctx = renderer.currentContext;
-    var resolution = src.resolution;
+
+    // var resolution = src.resolution;
 
     //  Blend Mode
     if (renderer.currentBlendMode !== src.blendMode)

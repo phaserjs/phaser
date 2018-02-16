@@ -136,7 +136,7 @@ var GravityWell = new Class({
      * @param {number} delta - The delta time in ms.
      * @param {float} step - The delta value divided by 1000.
      */
-    update: function (particle, delta, step)
+    update: function (particle, delta)
     {
         var x = this.x - particle.x;
         var y = this.y - particle.y;

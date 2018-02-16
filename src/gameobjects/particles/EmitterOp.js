@@ -538,11 +538,10 @@ var EmitterOp = new Class({
      * @param {Phaser.GameObjects.Particles.Particle} particle - [description]
      * @param {string} key - [description]
      * @param {float} t - The T value (between 0 and 1)
-     * @param {number} value - [description]
      *
      * @return {number} [description]
      */
-    easeValueUpdate: function (particle, key, t, value)
+    easeValueUpdate: function (particle, key, t)
     {
         var data = particle.data[key];
 

@@ -559,7 +559,7 @@ var Body = new Class({
      *
      * @return {boolean} [description]
      */
-    handleMovementTrace: function (res)
+    handleMovementTrace: function ()
     {
         return true;
     },

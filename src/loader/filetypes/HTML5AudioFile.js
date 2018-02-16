@@ -61,7 +61,7 @@ var HTML5AudioFile = new Class({
         this.loader.nextFile(this, true);
     },
 
-    onError: function (event)
+    onError: function ()
     {
         for (var i = 0; i < this.data.length; i++)
         {

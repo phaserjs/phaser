@@ -818,6 +818,9 @@ var FlatTintPipeline = new Class({
         var mvf = sre * cmb + srf * cmd + cmf;
         var roundPixels = camera.roundPixels;
 
+        var pathArrayIndex;
+        var pathArrayLength;
+
         pathArray.length = 0;
 
         for (var cmdIndex = 0, cmdLength = commands.length; cmdIndex < cmdLength; ++cmdIndex)
@@ -892,7 +895,7 @@ var FlatTintPipeline = new Class({
                     break;
 
                 case Commands.FILL_PATH:
-                    for (var pathArrayIndex = 0, pathArrayLength = pathArray.length;
+                    for (pathArrayIndex = 0, pathArrayLength = pathArray.length;
                         pathArrayIndex < pathArrayLength;
                         ++pathArrayIndex)
                     {
@@ -915,7 +918,7 @@ var FlatTintPipeline = new Class({
                     break;
 
                 case Commands.STROKE_PATH:
-                    for (var pathArrayIndex = 0, pathArrayLength = pathArray.length;
+                    for (pathArrayIndex = 0, pathArrayLength = pathArray.length;
                         pathArrayIndex < pathArrayLength;
                         ++pathArrayIndex)
                     {
