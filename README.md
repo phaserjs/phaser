@@ -11,7 +11,7 @@ Along with the fantastic open source community, Phaser is actively developed and
 Thousands of developers worldwide use Phaser. From indies and multi-national digital agencies, to schools and Universities. Each creating their own incredible [games](https://phaser.io/games/).
 
 **Visit:** The [Phaser website](https://phaser.io) and follow on [Twitter](https://twitter.com/phaser_) (#phaserjs)<br />
-**Learn:** [API Docs](https://phaser.io/docs), [Support Forum][forum] and [StackOverflow](https://stackoverflow.com/questions/tagged/phaser-framework)<br />
+**Learn:** [API Docs](https://github.com/photonstorm/phaser3-docs), [Support Forum][forum] and [StackOverflow](https://stackoverflow.com/questions/tagged/phaser-framework)<br />
 **Code:** 700+ [Examples](https://labs.phaser.io) (source available in this [repo][examples])<br />
 **Read:** Weekly [Phaser World](#newsletter) Newsletter<br />
 **Chat:** [Slack](https://phaser.io/community/slack) and [Discord](https://phaser.io/community/discord)<br />
@@ -24,7 +24,9 @@ Grab the source and join in the fun!
 
 <div align="center"><img src="https://phaser.io/images/github/news.jpg"></div>
 
-> 12th February 2018
+> 16th February 2018
+
+**Updated:** Thank you for the amazing response to the 3.0.0 release! We've been hard at work and have now prepared 3.1.0 for you, which is available today. This fixes a few issues that crept in and further speeds up the WebGL rendering. Check out the [Change Log](#changelog) for more details.
 
 After 1.5 years in the making, tens of thousands of lines of code, hundreds of examples and countless hours of relentless work: Phaser 3 is finally out. It has been a real labor of love and then some!
 
@@ -92,13 +94,13 @@ npm install phaser
 [Phaser is on jsDelivr](http://www.jsdelivr.com/projects/phaser), a "super-fast CDN for developers". Include the following in your html:
 
 ```html
-<script src="//cdn.jsdelivr.net/npm/phaser@3.0.0/dist/phaser.js"></script>
+<script src="//cdn.jsdelivr.net/npm/phaser@3.1.0/dist/phaser.js"></script>
 ```
 
 or the minified version:
 
 ```html
-<script src="//cdn.jsdelivr.net/npm/phaser@3.0.0/dist/phaser.min.js"></script>
+<script src="//cdn.jsdelivr.net/npm/phaser@3.1.0/dist/phaser.min.js"></script>
 ```
 
 ### License
@@ -229,8 +231,38 @@ Should you wish to build Phaser 3 from source ensure you have the required packa
 You can then run `webpack` to perform a dev build to the `build` folder, including source maps for local testing, or run `npm run dist` to create a minified packaged build into the `dist` folder.
 
 ![Change Log](https://phaser.io/images/github/div-change-log.png "Change Log")
+<a name="changelog"></a>
 
-We have always been meticulous in recording changes to the Phaser code base, and where relevant, giving attribution to those in the community who helped. This is something we'll continue with Phaser 3 and you'll see this section expand as we push through the 3.0.0 releases.
+## Version 3.1.0 - Onishi - 16th February 2018
+
+### Updates
+
+* Vertex resource handling code updated, further optimizing the WebGL batching. You should now see less gl ops per frame across all batches.
+* The `Blitter` game object has been updated to use the `List` structure instead of `DisplayList`.
+* Arcade Physics World `disableBody` has been renamed `disableGameObjectBody` to more accurately reflect what it does.
+* Lots of un-used properties were removed from the Arcade Physics Static Body object.
+* Arcade Physics Static Body can now refresh itself from its parent via `refreshBody`.
+
+### Bug Fixes
+
+* A couple of accidental uses of `let` existed, which broke Image loading in Safari # (thanks Yat Hin Wong)
+* Added the static property `Graphics.TargetCamera` was added back in which fixed `Graphics.generateTexture`.
+* The SetHitArea Action now calls `setInteractive`, fixing `Group.createMultiple` when a hitArea has been set.
+* Removed rogue Tween emit calls. Fix #3222 (thanks @ZaDarkSide)
+* Fixed incorrect call to TweenManager.makeActive. Fix #3219 (thanks @ZaDarkSide)
+* The Depth component was missing from the Zone Game Object. Fix #3213 (thanks @Twilrom)
+* Fixed issue with `Blitter` overwriting previous objects vertex data.
+* The `Tile` game object tinting was fixed, so tiles now honor alpha values correctly.
+* The `BitmapMask` would sometimes incorrectly bind its resources.
+* Fixed the wrong Extend target in MergeXHRSettings (thanks @samme)
+
+### New Features
+
+* Destroying a Game Object will now call destroy on its physics body, if it has one set.
+* Arcade Physics Colliders have a new `name` property and corresponding `setName` method.
+* Matter.js bodies now have an inlined destroy method that removes them from the World.
+* Impact bodies now remove themselves from the World when destroyed.
+* Added Vector2.ZERO static property.
 
 Looking for a v2 change? Check out the [Phaser CE Change Log](https://github.com/photonstorm/phaser-ce/blob/master/CHANGELOG.md)
 
