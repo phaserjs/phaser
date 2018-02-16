@@ -350,7 +350,6 @@ var Graphics = new Class({
     {
         this.beginPath();
         this.arc(x, y, radius, 0, MATH_CONST.PI2);
-        this.closePath();
         this.fillPath();
 
         return this;
@@ -372,7 +371,6 @@ var Graphics = new Class({
     {
         this.beginPath();
         this.arc(x, y, radius, 0, MATH_CONST.PI2);
-        this.closePath();
         this.strokePath();
 
         return this;
@@ -454,25 +452,21 @@ var Graphics = new Class({
         this.moveTo(x, y);
         this.lineTo(x, y + height);
         this.strokePath();
-        this.closePath();
 
         this.beginPath();
         this.moveTo(x + width, y);
         this.lineTo(x + width, y + height);
         this.strokePath();
-        this.closePath();
 
         this.beginPath();
         this.moveTo(minx, y);
         this.lineTo(maxx + width, y);
         this.strokePath();
-        this.closePath();
 
         this.beginPath();
         this.moveTo(minx, y + height);
         this.lineTo(maxx + width, y + height);
         this.strokePath();
-        this.closePath();
 
         return this;
     },
