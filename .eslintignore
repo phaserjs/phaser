@@ -1,3 +1,4 @@
+src/phaser-arcade-physics.js
 src/physics/matter-js/lib/
 src/physics/matter-js/poly-decomp/
 src/polyfills/
