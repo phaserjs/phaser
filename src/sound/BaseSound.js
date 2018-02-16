@@ -262,20 +262,14 @@ var BaseSound = new Class({
      */
     addMarker: function (marker)
     {
-        if (!marker)
+        if (!marker || !marker.name || typeof marker.name !== 'string')
         {
-            console.error('addMarker - Marker object has to be provided!');
-            return false;
-        }
-
-        if (!marker.name || typeof marker.name !== 'string')
-        {
-            console.error('addMarker - Marker has to have a valid name!');
             return false;
         }
 
         if (this.markers[marker.name])
         {
+            // eslint-disable-next-line no-console
             console.error('addMarker - Marker with name \'' + marker.name + '\' already exists for sound \'' + this.key + '\'!');
             return false;
         }
@@ -312,20 +306,14 @@ var BaseSound = new Class({
      */
     updateMarker: function (marker)
     {
-        if (!marker)
+        if (!marker || !marker.name || typeof marker.name !== 'string')
         {
-            console.error('updateMarker - Marker object has to be provided!');
-            return false;
-        }
-
-        if (!marker.name || typeof marker.name !== 'string')
-        {
-            console.error('updateMarker - Marker has to have a valid name!');
             return false;
         }
 
         if (!this.markers[marker.name])
         {
+            // eslint-disable-next-line no-console
             console.error('updateMarker - Marker with name \'' + marker.name + '\' does not exist for sound \'' + this.key + '\'!');
             return false;
         }
@@ -351,7 +339,6 @@ var BaseSound = new Class({
 
         if (!marker)
         {
-            console.error('removeMarker - Marker with name \'' + marker.name + '\' does not exist for sound \'' + this.key + '\'!');
             return null;
         }
 
@@ -375,7 +362,7 @@ var BaseSound = new Class({
      */
     play: function (markerName, config)
     {
-        if (markerName === void 0) { markerName = ''; }
+        if (markerName === undefined) { markerName = ''; }
 
         if (typeof markerName === 'object')
         {
@@ -385,6 +372,7 @@ var BaseSound = new Class({
 
         if (typeof markerName !== 'string')
         {
+            // eslint-disable-next-line no-console
             console.error('Sound marker name has to be a string!');
             return false;
         }
@@ -399,6 +387,7 @@ var BaseSound = new Class({
         {
             if (!this.markers[markerName])
             {
+                // eslint-disable-next-line no-console
                 console.error('No marker with name \'' + markerName + '\' found for sound \'' + this.key + '\'!');
                 return false;
             }
