@@ -899,6 +899,7 @@ var FlatTintPipeline = new Class({
 
                 case Commands.BEGIN_PATH:
                     pathArray.length = 0;
+                    lastPath = null;
                     break;
 
                 case Commands.CLOSE_PATH:
