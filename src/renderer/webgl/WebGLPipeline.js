@@ -338,7 +338,7 @@ var WebGLPipeline = new Class({
      */
     flush: function ()
     {
-        if (this.flushLocked) return this;
+        if (this.flushLocked) { return this; }
         this.flushLocked = true;
 
         var gl = this.gl;
@@ -348,7 +348,7 @@ var WebGLPipeline = new Class({
         var topology = this.topology;
         var vertexSize = this.vertexSize;
 
-        if (vertexCount === 0) 
+        if (vertexCount === 0)
         {
             this.flushLocked = false;
             return;

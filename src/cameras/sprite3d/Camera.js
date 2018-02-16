@@ -892,8 +892,8 @@ var Camera = new Class({
     {
         if (out === undefined) { out = new Vector2(); }
 
-        //TODO: optimize this with a simple distance calculation:
-        //https://developer.valvesoftware.com/wiki/Field_of_View
+        // TODO: optimize this with a simple distance calculation:
+        // https://developer.valvesoftware.com/wiki/Field_of_View
 
         if (this.billboardMatrixDirty)
         {

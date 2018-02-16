@@ -1388,6 +1388,7 @@ var World = new Class({
                 return this.collideSpriteVsTilemapLayer(object1, object2, collideCallback, processCallback, callbackContext, overlapOnly);
             }
         }
+
         //  GROUPS
         else if (object1.isParent)
         {
@@ -1404,6 +1405,7 @@ var World = new Class({
                 return this.collideGroupVsTilemapLayer(object1, object2, collideCallback, processCallback, callbackContext, overlapOnly);
             }
         }
+
         //  TILEMAP LAYERS
         else if (object1.isTilemap)
         {
@@ -1546,7 +1548,8 @@ var World = new Class({
         {
             if (children[i].body)
             {
-                if (this.collideSpriteVsTilemapLayer(children[i], tilemapLayer, collideCallback, processCallback, callbackContext, overlapOnly)) {
+                if (this.collideSpriteVsTilemapLayer(children[i], tilemapLayer, collideCallback, processCallback, callbackContext, overlapOnly))
+                {
                     didCollide = true;
                 }
             }

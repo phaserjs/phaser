@@ -46,37 +46,37 @@ var Quad = new Class({
         //  |    \
         //  1----2
 
-        var vertices = [ 
+        var vertices = [
             0, 0, // tl 
             0, 0, // bl
             0, 0, // br
             0, 0, // tl
             0, 0, // br
-            0, 0  // tr
+            0, 0 // tr
         ];
-        var uv = [ 
+        var uv = [
             0, 0, // tl
             0, 1, // bl
             1, 1, // br
             0, 0, // tl
             1, 1, // br
-            1, 0  // tr
+            1, 0 // tr
         ];
-        var colors = [ 
+        var colors = [
             0xffffff, // tl
             0xffffff, // bl
             0xffffff, // br
             0xffffff, // tl
             0xffffff, // br
-            0xffffff  // tr
+            0xffffff // tr
         ];
-        var alphas = [ 
+        var alphas = [
             1, // tl
             1, // bl
             1, // br
             1, // tl
             1, // br
-            1  // tr
+            1 // tr
         ];
 
         Mesh.call(this, scene, x, y, vertices, uv, colors, alphas, texture, frame);

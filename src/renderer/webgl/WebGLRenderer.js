@@ -183,9 +183,9 @@ var WebGLRenderer = new Class({
             this.blendModes.push({ func: [ WebGLRenderingContext.ONE, WebGLRenderingContext.ONE_MINUS_SRC_ALPHA ], equation: WebGLRenderingContext.FUNC_ADD });
         }
 
-        this.blendModes[1].func = [ WebGLRenderingContext.ONE,          WebGLRenderingContext.DST_ALPHA ];
-        this.blendModes[2].func = [ WebGLRenderingContext.DST_COLOR,    WebGLRenderingContext.ONE_MINUS_SRC_ALPHA ];
-        this.blendModes[3].func = [ WebGLRenderingContext.ONE,          WebGLRenderingContext.ONE_MINUS_SRC_COLOR ];
+        this.blendModes[1].func = [ WebGLRenderingContext.ONE, WebGLRenderingContext.DST_ALPHA ];
+        this.blendModes[2].func = [ WebGLRenderingContext.DST_COLOR, WebGLRenderingContext.ONE_MINUS_SRC_ALPHA ];
+        this.blendModes[3].func = [ WebGLRenderingContext.ONE, WebGLRenderingContext.ONE_MINUS_SRC_COLOR ];
 
         // Internal Renderer State (Textures, Framebuffers, Pipelines, Buffers, etc)
 
@@ -283,7 +283,7 @@ var WebGLRenderer = new Class({
          * @type {Uint32Array}
          * @since 3.0.0
          */
-        this.currentScissor = new Uint32Array([0, 0, this.width, this.height]);
+        this.currentScissor = new Uint32Array([ 0, 0, this.width, this.height ]);
 
         /**
          * [description]
@@ -302,11 +302,12 @@ var WebGLRenderer = new Class({
          * @type {Uint32Array}
          * @since 3.0.0
          */
-        this.scissorStack = new Uint32Array(4 *  1000);
+        this.scissorStack = new Uint32Array(4 * 1000);
 
         // Setup context lost and restore event listeners
 
-        this.canvas.addEventListener('webglcontextlost', function (event) {
+        this.canvas.addEventListener('webglcontextlost', function (event)
+        {
             renderer.contextLost = true;
             event.preventDefault();
 
@@ -317,7 +318,8 @@ var WebGLRenderer = new Class({
             }
         }, false);
 
-        this.canvas.addEventListener('webglcontextrestored', function (event) {
+        this.canvas.addEventListener('webglcontextrestored', function (event)
+        {
             renderer.contextLost = false;
             renderer.init(renderer.config);
             for (var index = 0; index < renderer.restoredContextCallbacks.length; ++index)
@@ -469,7 +471,7 @@ var WebGLRenderer = new Class({
      */
     onContextRestored: function (callback, target)
     {
-        this.restoredContextCallbacks.push([callback, target]);
+        this.restoredContextCallbacks.push([ callback, target ]);
         return this;
     },
 
@@ -486,7 +488,7 @@ var WebGLRenderer = new Class({
      */
     onContextLost: function (callback, target)
     {
-        this.lostContextCallbacks.push([callback, target]);
+        this.lostContextCallbacks.push([ callback, target ]);
         return this;
     },
 
@@ -517,7 +519,7 @@ var WebGLRenderer = new Class({
      */
     getExtension: function (extensionName)
     {
-        if (!this.hasExtension(extensionName)) return null;
+        if (!this.hasExtension(extensionName)) { return null; }
 
         if (!(extensionName in this.extensions))
         {
@@ -602,8 +604,8 @@ var WebGLRenderer = new Class({
      */
     addPipeline: function (pipelineName, pipelineInstance)
     {
-        if (!this.hasPipeline(pipelineName)) this.pipelines[pipelineName] = pipelineInstance;
-        else console.warn('Pipeline', pipelineName, ' already exists.');
+        if (!this.hasPipeline(pipelineName)) { this.pipelines[pipelineName] = pipelineInstance; }
+        else { console.warn('Pipeline', pipelineName, ' already exists.'); }
 
         pipelineInstance.name = pipelineName;
         this.pipelines[pipelineName].resize(this.width, this.height, this.config.resolution);
@@ -630,9 +632,9 @@ var WebGLRenderer = new Class({
         var currentScissor = this.currentScissor;
         var enabled = (x == 0 && y == 0 && w == gl.canvas.width && h == gl.canvas.height && w >= 0 && h >= 0);
 
-        if (currentScissor[0] !== x || 
-            currentScissor[1] !== y || 
-            currentScissor[2] !== w || 
+        if (currentScissor[0] !== x ||
+            currentScissor[1] !== y ||
+            currentScissor[2] !== w ||
             currentScissor[3] !== h)
         {
             this.flush();
@@ -706,7 +708,7 @@ var WebGLRenderer = new Class({
         var h = scissorStack[stackIndex + 3];
 
         this.currentScissorIdx = stackIndex;
-        this.setScissor(x, y, w, h); 
+        this.setScissor(x, y, w, h);
         
         return this;
     },
@@ -954,7 +956,7 @@ var WebGLRenderer = new Class({
      * @return {WebGLTexture} [description]
      */
     createTextureFromSource: function (source, width, height, scaleMode)
-    {   
+    {
         var gl = this.gl;
         var filter = gl.NEAREST;
         var wrap = gl.CLAMP_TO_EDGE;
@@ -1013,7 +1015,7 @@ var WebGLRenderer = new Class({
         var gl = this.gl;
         var texture = gl.createTexture();
 
-        pma = (pma === undefined ||  pma === null) ? true : pma;
+        pma = (pma === undefined || pma === null) ? true : pma;
 
         this.setTexture2D(texture, 0);
         
@@ -1272,12 +1274,12 @@ var WebGLRenderer = new Class({
             var FlatTintPipeline = this.pipelines.FlatTintPipeline;
 
             FlatTintPipeline.batchFillRect(
-                0, 0, 1, 1, 0, 
-                camera.x, camera.y, camera.width, camera.height, 
+                0, 0, 1, 1, 0,
+                camera.x, camera.y, camera.width, camera.height,
                 Utils.getTintFromFloats(color.redGL, color.greenGL, color.blueGL, 1.0),
                 color.alphaGL,
                 1, 0, 0, 1, 0, 0,
-                [1, 0, 0, 1, 0, 0]
+                [ 1, 0, 0, 1, 0, 0 ]
             );
 
             FlatTintPipeline.flush();
@@ -1300,22 +1302,22 @@ var WebGLRenderer = new Class({
 
             // Fade
             FlatTintPipeline.batchFillRect(
-                0, 0, 1, 1, 0, 
-                camera.x, camera.y, camera.width, camera.height, 
+                0, 0, 1, 1, 0,
+                camera.x, camera.y, camera.width, camera.height,
                 Utils.getTintFromFloats(camera._fadeRed, camera._fadeGreen, camera._fadeBlue, 1.0),
                 camera._fadeAlpha,
                 1, 0, 0, 1, 0, 0,
-                [1, 0, 0, 1, 0, 0]
+                [ 1, 0, 0, 1, 0, 0 ]
             );
 
             // Flash
             FlatTintPipeline.batchFillRect(
-                0, 0, 1, 1, 0, 
-                camera.x, camera.y, camera.width, camera.height, 
+                0, 0, 1, 1, 0,
+                camera.x, camera.y, camera.width, camera.height,
                 Utils.getTintFromFloats(camera._flashRed, camera._flashGreen, camera._flashBlue, 1.0),
                 camera._flashAlpha,
                 1, 0, 0, 1, 0, 0,
-                [1, 0, 0, 1, 0, 0]
+                [ 1, 0, 0, 1, 0, 0 ]
             );
 
             FlatTintPipeline.flush();
@@ -1332,7 +1334,7 @@ var WebGLRenderer = new Class({
      */
     preRender: function ()
     {
-        if (this.contextLost) return;
+        if (this.contextLost) { return; }
 
         var gl = this.gl;
         var color = this.config.backgroundColor;
@@ -1342,7 +1344,7 @@ var WebGLRenderer = new Class({
         gl.clearColor(color.redGL, color.greenGL, color.blueGL, color.alphaGL);
 
         if (this.config.clearBeforeRender)
-            gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT | gl.STENCIL_BUFFER_BIT);
+        { gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT | gl.STENCIL_BUFFER_BIT); }
 
         for (var key in pipelines)
         {
@@ -1363,7 +1365,7 @@ var WebGLRenderer = new Class({
      */
     render: function (scene, children, interpolationPercentage, camera)
     {
-        if (this.contextLost) return;
+        if (this.contextLost) { return; }
 
         var gl = this.gl;
         var list = children.list;
@@ -1417,7 +1419,7 @@ var WebGLRenderer = new Class({
      */
     postRender: function ()
     {
-        if (this.contextLost) return;
+        if (this.contextLost) { return; }
 
         // Unbind custom framebuffer here
 
@@ -1774,7 +1776,7 @@ var WebGLRenderer = new Class({
         for (var index = 0; index < this.nativeTextures.length; ++index)
         {
             this.deleteTexture(this.nativeTextures[index]);
-            delete this.nativeTextures[index];                
+            delete this.nativeTextures[index];
         }
 
         if (this.hasExtension('WEBGL_lose_context'))

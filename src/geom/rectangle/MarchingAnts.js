@@ -56,6 +56,7 @@ var MarchingAnts = function (rect, step, quantity, out)
 
         switch (face)
         {
+
             //  Top face
             case 0:
                 x += step;

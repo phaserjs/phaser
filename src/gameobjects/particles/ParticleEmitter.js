@@ -942,7 +942,7 @@ var ParticleEmitter = new Class({
             if (this._frameCounter === this.frameQuantity)
             {
                 this._frameCounter = 0;
-                this.currentFrame = Wrap(this.currentFrame + 1, 0, this._frameLength);                
+                this.currentFrame = Wrap(this.currentFrame + 1, 0, this._frameLength);
             }
 
             return frame;

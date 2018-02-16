@@ -68,7 +68,8 @@ var Sleep = {
         {
             var world = this.world;
 
-            MatterEvents.on(this.body, 'sleepStart', function (event) {
+            MatterEvents.on(this.body, 'sleepStart', function (event)
+            {
                 world.emit('sleepstart', event, this);
             });
         }
@@ -96,7 +97,8 @@ var Sleep = {
         {
             var world = this.world;
 
-            MatterEvents.on(this.body, 'sleepEnd', function (event) {
+            MatterEvents.on(this.body, 'sleepEnd', function (event)
+            {
                 world.emit('sleepend', event, this);
             });
         }

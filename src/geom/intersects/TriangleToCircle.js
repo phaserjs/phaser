@@ -20,7 +20,7 @@ var Contains = require('../triangle/Contains');
  */
 var TriangleToCircle = function (triangle, circle)
 {
-     //  First the cheapest ones:
+    //  First the cheapest ones:
 
     if (
         triangle.left > circle.right ||

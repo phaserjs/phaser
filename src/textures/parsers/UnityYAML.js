@@ -63,6 +63,7 @@ var UnityYAML = function (texture, sourceIndex, yaml)
     var prevSprite = '';
     var currentSprite = '';
     var rect = { x: 0, y: 0, width: 0, height: 0 };
+
     // var pivot = { x: 0, y: 0 };
     // var border = { x: 0, y: 0, z: 0, w: 0 };
 

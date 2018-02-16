@@ -95,7 +95,7 @@ var ForwardDiffuseLightPipeline = new Class({
             renderer.setFloat1(program, 'uLights[' + index + '].radius', 0); // reset lights
         }
 
-        if (lightCount <= 0) return this;
+        if (lightCount <= 0) { return this; }
 
         renderer.setFloat4(program, 'uCamera', camera.x, camera.y, camera.rotation, camera.zoom);
         renderer.setFloat3(program, 'uAmbientLightColor', lightManager.ambientColor.r, lightManager.ambientColor.g, lightManager.ambientColor.b);

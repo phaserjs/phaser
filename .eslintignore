@@ -1,4 +1,5 @@
 src/physics/matter-js/lib/
+src/physics/matter-js/poly-decomp/
 src/polyfills/
 src/renderer/webgl/shaders/
 src/geom/polygon/Earcut.js

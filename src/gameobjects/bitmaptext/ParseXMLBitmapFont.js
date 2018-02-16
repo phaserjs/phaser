@@ -56,13 +56,13 @@ var ParseXMLBitmapFont = function (xml, xSpacing, ySpacing, frame)
             // if (gx + gw > frame.width)
             // {
             //     diff = frame.width - (gx + gw);
-                // gw -= diff;
+            // gw -= diff;
             // }
 
             // if (gy + gh > frame.height)
             // {
             //     diff = frame.height - (gy + gh);
-                // gh -= diff;
+            // gh -= diff;
             // }
 
             if (gx < left)

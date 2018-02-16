@@ -658,8 +658,8 @@ var Animation = new Class({
         return this;
     },
 
-        //  Scale the time (make it go faster / slower)
-        //  Factor that's used to scale time where 1 = normal speed (the default), 0.5 = half speed, 2 = double speed, etc.
+    //  Scale the time (make it go faster / slower)
+    //  Factor that's used to scale time where 1 = normal speed (the default), 0.5 = half speed, 2 = double speed, etc.
 
     /**
      * [description]

@@ -959,7 +959,8 @@ var Text = new Class({
         }
 
         context.save();
-        //context.scale(resolution, resolution);
+
+        // context.scale(resolution, resolution);
 
         if (style.backgroundColor)
         {
