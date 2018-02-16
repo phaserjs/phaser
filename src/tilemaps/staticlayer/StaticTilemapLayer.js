@@ -205,7 +205,7 @@ var StaticTilemapLayer = new Class({
      *
      * @return {Phaser.Tilemaps.StaticTilemapLayer} This Tilemap Layer object.
      */
-    contextRestore: function (renderer)
+    contextRestore: function ()
     {
         this.dirty = true;
         this.vertexBuffer = null;
@@ -330,13 +330,13 @@ var StaticTilemapLayer = new Class({
                 this.vertexCount = vertexCount;
                 this.dirty = false;
 
-                if (this.vertexBuffer === null)
+                if (vertexBuffer === null)
                 {
-                    this.vertexBuffer = renderer.createVertexBuffer(bufferData, gl.STATIC_DRAW);
+                    vertexBuffer = renderer.createVertexBuffer(bufferData, gl.STATIC_DRAW);
                 }
                 else
                 {
-                    renderer.setVertexBuffer(this.vertexBuffer);
+                    renderer.setVertexBuffer(vertexBuffer);
                     gl.bufferSubData(gl.ARRAY_BUFFER, 0, bufferData);
                 }
             }

@@ -29,7 +29,7 @@ var DynamicTilemapLayerWebGLRenderer = function (renderer, src, interpolationPer
 
     src.cull(camera);
 
-    this.pipeline.batchDynamicTilemapLayer(src, camera); 
+    this.pipeline.batchDynamicTilemapLayer(src, camera);
 };
 
 module.exports = DynamicTilemapLayerWebGLRenderer;

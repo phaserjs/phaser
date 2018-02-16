@@ -20,8 +20,8 @@ var CheckMatrix = require('./CheckMatrix');
  *
  * @return {string} [description]
  */
- var MatrixToString = function (matrix)
- {
+var MatrixToString = function (matrix)
+{
     var str = '';
 
     if (!CheckMatrix(matrix))

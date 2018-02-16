@@ -774,7 +774,7 @@ var Tween = new Class({
                 ms -= tweenData.delay;
                 ms -= tweenData.t1;
 
-                var repeats = Math.floor(ms / tweenData.t2);
+                // var repeats = Math.floor(ms / tweenData.t2);
 
                 //  remainder
                 ms = ((ms / tweenData.t2) % 1) * tweenData.t2;
@@ -793,7 +793,12 @@ var Tween = new Class({
 
             tweenData.current = tweenData.start + ((tweenData.end - tweenData.start) * v);
 
-            // console.log(tweenData.key, 'Seek', tweenData.target[tweenData.key], 'to', tweenData.current, 'pro', tweenData.progress, 'marker', marker, progress);
+            // console.log(tweenData.key, 'Seek', tweenData.target[tweenData.key], 'to', tweenData.current, 'pro', tweenData.progress, 'marker', toPosition, progress);
+
+            // if (tweenData.current === 0)
+            // {
+            //     console.log('zero', tweenData.start, tweenData.end, v, 'progress', progress);
+            // }
 
             tweenData.target[tweenData.key] = tweenData.current;
         }

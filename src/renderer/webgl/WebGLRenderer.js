@@ -187,17 +187,16 @@ var WebGLRenderer = new Class({
         this.blendModes[2].func = [ WebGLRenderingContext.DST_COLOR,    WebGLRenderingContext.ONE_MINUS_SRC_ALPHA ];
         this.blendModes[3].func = [ WebGLRenderingContext.ONE,          WebGLRenderingContext.ONE_MINUS_SRC_COLOR ];
 
-        // Intenal Renderer State (Textures, Framebuffers, Pipelines, Buffers, etc)
+        // Internal Renderer State (Textures, Framebuffers, Pipelines, Buffers, etc)
 
         /**
          * [description]
          *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#currentActiveTextureUnit
-         * @type {int}
+         * @type {integer}
          * @since 3.1.0
          */
         this.currentActiveTextureUnit = 0;
-
 
         /**
          * [description]
@@ -262,7 +261,7 @@ var WebGLRenderer = new Class({
          * [description]
          *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#currentBlendMode
-         * @type {int}
+         * @type {integer}
          * @since 3.0.0
          */
         this.currentBlendMode = Infinity;
@@ -618,10 +617,10 @@ var WebGLRenderer = new Class({
      * @method Phaser.Renderer.WebGL.WebGLRenderer#setScissor
      * @since 3.0.0
      *
-     * @param {int} x - [description]
-     * @param {int} y - [description]
-     * @param {int} w - [description]
-     * @param {int} h - [description]
+     * @param {integer} x - [description]
+     * @param {integer} y - [description]
+     * @param {integer} w - [description]
+     * @param {integer} h - [description]
      *
      * @return {Phaser.Renderer.WebGL.WebGLRenderer} [description]
      */
@@ -664,10 +663,10 @@ var WebGLRenderer = new Class({
      * @method Phaser.Renderer.WebGL.WebGLRenderer#pushScissor
      * @since 3.0.0
      *
-     * @param {int} x - [description]
-     * @param {int} y - [description]
-     * @param {int} w - [description]
-     * @param {int} h - [description]
+     * @param {integer} x - [description]
+     * @param {integer} y - [description]
+     * @param {integer} w - [description]
+     * @param {integer} h - [description]
      *
      * @return {Phaser.Renderer.WebGL.WebGLRenderer} [description]
      */
@@ -744,7 +743,7 @@ var WebGLRenderer = new Class({
      * @method Phaser.Renderer.WebGL.WebGLRenderer#setBlendMode
      * @since 3.0.0
      *
-     * @param {int} blendModeId - [description]
+     * @param {integer} blendModeId - [description]
      *
      * @return {Phaser.Renderer.WebGL.WebGLRenderer} [description]
      */
@@ -815,7 +814,7 @@ var WebGLRenderer = new Class({
      * @since 3.0.0
      *
      * @param {WebGLTexture} texture - [description]
-     * @param {int} textureUnit - [description]
+     * @param {integer} textureUnit - [description]
      *
      * @return {Phaser.Renderer.WebGL.WebGLRenderer} [description]
      */
@@ -948,9 +947,9 @@ var WebGLRenderer = new Class({
      * @since 3.0.0
      *
      * @param {object} source - [description]
-     * @param {int} width - [description]
-     * @param {int} height - [description]
-     * @param {int} scaleMode - [description]
+     * @param {integer} width - [description]
+     * @param {integer} height - [description]
+     * @param {integer} scaleMode - [description]
      *
      * @return {WebGLTexture} [description]
      */
@@ -996,15 +995,15 @@ var WebGLRenderer = new Class({
      * @method Phaser.Renderer.WebGL.WebGLRenderer#createTexture2D
      * @since 3.0.0
      *
-     * @param {int} mipLevel - [description]
-     * @param {int} minFilter - [description]
-     * @param {int} magFilter - [description]
-     * @param {int} wrapT - [description]
-     * @param {int} wrapS - [description]
-     * @param {int} format - [description]
+     * @param {integer} mipLevel - [description]
+     * @param {integer} minFilter - [description]
+     * @param {integer} magFilter - [description]
+     * @param {integer} wrapT - [description]
+     * @param {integer} wrapS - [description]
+     * @param {integer} format - [description]
      * @param {object} pixels - [description]
-     * @param {int} width - [description]
-     * @param {int} height - [description]
+     * @param {integer} width - [description]
+     * @param {integer} height - [description]
      * @param {boolean} pma - [description]
      *
      * @return {WebGLTexture} [description]
@@ -1053,8 +1052,8 @@ var WebGLRenderer = new Class({
      * @method Phaser.Renderer.WebGL.WebGLRenderer#createFramebuffer
      * @since 3.0.0
      *
-     * @param {int} width - [description]
-     * @param {int} height - [description]
+     * @param {integer} width - [description]
+     * @param {integer} height - [description]
      * @param {WebGLFramebuffer} renderTexture - [description]
      * @param {boolean} addDepthStencilBuffer - [description]
      *
@@ -1152,7 +1151,7 @@ var WebGLRenderer = new Class({
      * @since 3.0.0
      *
      * @param {ArrayBuffer} initialDataOrSize - [description]
-     * @param {int} bufferUsage - [description]
+     * @param {integer} bufferUsage - [description]
      *
      * @return {WebGLBuffer} [description]
      */
@@ -1175,7 +1174,7 @@ var WebGLRenderer = new Class({
      * @since 3.0.0
      *
      * @param {ArrayBuffer} initialDataOrSize - [description]
-     * @param {int} bufferUsage - [description]
+     * @param {integer} bufferUsage - [description]
      *
      * @return {WebGLBuffer} [description]
      */
@@ -1465,7 +1464,7 @@ var WebGLRenderer = new Class({
      * @param {HTMLCanvasElement} srcCanvas - [description]
      * @param {WebGLTexture} dstTexture - [description]
      * @param {boolean} shouldReallocate - [description]
-     * @param {int} scaleMode - [description]
+     * @param {integer} scaleMode - [description]
      *
      * @return {WebGLTexture} [description]
      */
@@ -1511,8 +1510,8 @@ var WebGLRenderer = new Class({
      * @method Phaser.Renderer.WebGL.WebGLRenderer#setTextureFilter
      * @since 3.0.0
      *
-     * @param {int} texture - [description]
-     * @param {int} filter - [description]
+     * @param {integer} texture - [description]
+     * @param {integer} filter - [description]
      *
      * @return {Phaser.Renderer.WebGL.WebGLRenderer} [description]
      */
@@ -1621,7 +1620,7 @@ var WebGLRenderer = new Class({
      *
      * @param {WebGLProgram} program - [description]
      * @param {string} name - [description]
-     * @param {int} x - [description]
+     * @param {integer} x - [description]
      *
      * @return {Phaser.Renderer.WebGL.WebGLRenderer} [description]
      */
@@ -1640,8 +1639,8 @@ var WebGLRenderer = new Class({
      *
      * @param {WebGLProgram} program - [description]
      * @param {string} name - [description]
-     * @param {int} x - [description]
-     * @param {int} y - [description]
+     * @param {integer} x - [description]
+     * @param {integer} y - [description]
      *
      * @return {Phaser.Renderer.WebGL.WebGLRenderer} [description]
      */
@@ -1660,9 +1659,9 @@ var WebGLRenderer = new Class({
      *
      * @param {WebGLProgram} program - [description]
      * @param {string} name - [description]
-     * @param {int} x - [description]
-     * @param {int} y - [description]
-     * @param {int} z - [description]
+     * @param {integer} x - [description]
+     * @param {integer} y - [description]
+     * @param {integer} z - [description]
      *
      * @return {Phaser.Renderer.WebGL.WebGLRenderer} [description]
      */
@@ -1681,10 +1680,10 @@ var WebGLRenderer = new Class({
      *
      * @param {WebGLProgram} program - [description]
      * @param {string} name - [description]
-     * @param {int} x - [description]
-     * @param {int} y - [description]
-     * @param {int} z - [description]
-     * @param {int} w - [description]
+     * @param {integer} x - [description]
+     * @param {integer} y - [description]
+     * @param {integer} z - [description]
+     * @param {integer} w - [description]
      *
      * @return {Phaser.Renderer.WebGL.WebGLRenderer} [description]
      */

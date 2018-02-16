@@ -7,7 +7,7 @@
 var Class = require('../../../utils/Class');
 var ModelViewProjection = require('./components/ModelViewProjection');
 var ShaderSourceFS = require('../shaders/TextureTint.frag');
-var ShaderSourceVS = require('../shaders/TextureTint.vert'); 
+var ShaderSourceVS = require('../shaders/TextureTint.vert');
 var Utils = require('../Utils');
 var WebGLPipeline = require('../WebGLPipeline');
 
@@ -47,9 +47,9 @@ var TextureTintPipeline = new Class({
             fragShader: (overrideFragmentShader ? overrideFragmentShader : ShaderSourceFS),
             vertexCapacity: 6 * 2000,
 
-            vertexSize: 
-                Float32Array.BYTES_PER_ELEMENT * 2 + 
-                Float32Array.BYTES_PER_ELEMENT * 2 + 
+            vertexSize:
+                Float32Array.BYTES_PER_ELEMENT * 2 +
+                Float32Array.BYTES_PER_ELEMENT * 2 +
                 Uint8Array.BYTES_PER_ELEMENT * 4,
 
             attributes: [
@@ -124,13 +124,16 @@ var TextureTintPipeline = new Class({
      * @since 3.1.0
      *
      * @param {WebGLTexture} texture - [description]
-     * @param {int} textureUnit - [description]
+     * @param {integer} textureUnit - [description]
      *
      * @return {Phaser.Renderer.WebGL.TextureTintPipeline} [description]
      */
     setTexture2D: function (texture, unit)
     {
-        if (!texture) return this;
+        if (!texture)
+        {
+            return this;
+        }
 
         var batches = this.batches;
 
@@ -190,27 +193,32 @@ var TextureTintPipeline = new Class({
      */
     flush: function ()
     {
-        if (this.flushLocked) return this;
+        if (this.flushLocked)
+        {
+            return this;
+        }
+
         this.flushLocked = true;
 
         var gl = this.gl;
         var renderer = this.renderer;
         var vertexCount = this.vertexCount;
-        var vertexBuffer = this.vertexBuffer;
-        var vertexData = this.vertexData;
         var topology = this.topology;
         var vertexSize = this.vertexSize;
         var batches = this.batches;
         var batchCount = batches.length;
         var batchVertexCount = 0;
         var batch = null;
-        var nextBatch = null;
+        var batchNext;
+        var textureIndex;
+        var nTexture;
 
-        if (batchCount === 0 || vertexCount === 0) 
+        if (batchCount === 0 || vertexCount === 0)
         {
             this.flushLocked = false;
             return this;
         }
+
         gl.bufferSubData(gl.ARRAY_BUFFER, 0, this.bytes.subarray(0, vertexCount * vertexSize));
 
         for (var index = 0; index < batches.length - 1; ++index)
@@ -220,20 +228,22 @@ var TextureTintPipeline = new Class({
 
             if (batch.textures.length > 0)
             {
-                for (var textureIndex = 0; textureIndex < batch.textures.length; ++textureIndex)
+                for (textureIndex = 0; textureIndex < batch.textures.length; ++textureIndex)
                 {
-                    var nTexture = batch.textures[textureIndex];
+                    nTexture = batch.textures[textureIndex];
+
                     if (nTexture)
                     {
                         renderer.setTexture2D(nTexture, 1 + textureIndex);
                     }
                 }
+
                 gl.activeTexture(gl.TEXTURE0);
             }
 
             batchVertexCount = batchNext.first - batch.first;
 
-            if (batch.texture === null || batchVertexCount <= 0) continue;
+            if (batch.texture === null || batchVertexCount <= 0) { continue; }
 
             renderer.setTexture2D(batch.texture, 0);
             gl.drawArrays(topology, batch.first, batchVertexCount);
@@ -244,14 +254,16 @@ var TextureTintPipeline = new Class({
 
         if (batch.textures.length > 0)
         {
-            for (var textureIndex = 0; textureIndex < batch.textures.length; ++textureIndex)
+            for (textureIndex = 0; textureIndex < batch.textures.length; ++textureIndex)
             {
-                var nTexture = batch.textures[textureIndex];
+                nTexture = batch.textures[textureIndex];
+
                 if (nTexture)
                 {
                     renderer.setTexture2D(nTexture, 1 + textureIndex);
                 }
             }
+
             gl.activeTexture(gl.TEXTURE0);
         }
 
@@ -319,7 +331,7 @@ var TextureTintPipeline = new Class({
      * @param {Phaser.Tilemaps.StaticTilemapLayer} tilemap - [description]
      * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
      */
-    drawStaticTilemapLayer: function (tilemap, camera)
+    drawStaticTilemapLayer: function (tilemap)
     {
         if (tilemap.vertexCount > 0)
         {
@@ -363,7 +375,6 @@ var TextureTintPipeline = new Class({
 
         var emitters = emitterManager.emitters.list;
         var emitterCount = emitters.length;
-        var getTint = Utils.getTintAppendFloatAlpha;
         var vertexViewF32 = this.vertexViewF32;
         var vertexViewU32 = this.vertexViewU32;
         var renderer = this.renderer;
@@ -556,15 +567,15 @@ var TextureTintPipeline = new Class({
                 var bob = list[batchOffset + index];
                 var frame = bob.frame;
                 var alpha = bob.alpha;
-                var tint =  getTint(0xffffff, bob.alpha);
+                var tint = getTint(0xffffff, alpha);
                 var uvs = frame.uvs;
                 var flipX = bob.flipX;
                 var flipY = bob.flipY;
-                var width = frame.width * (flipX ? -1.0 : 1.0); 
+                var width = frame.width * (flipX ? -1.0 : 1.0);
                 var height = frame.height * (flipY ? -1.0 : 1.0);
                 var x = blitterX + bob.x + frame.x + (frame.width * ((flipX) ? 1.0 : 0.0));
                 var y = blitterY + bob.y + frame.y + (frame.height * ((flipY) ? 1.0 : 0.0));
-                var xw = x + width;                
+                var xw = x + width;
                 var yh = y + height;
                 var tx0 = x * a + y * c + e;
                 var ty0 = x * b + y * d + f;
@@ -577,18 +588,14 @@ var TextureTintPipeline = new Class({
                     ty0 = ((ty0 * resolution)|0) / resolution;
                     tx1 = ((tx1 * resolution)|0) / resolution;
                     ty1 = ((ty1 * resolution)|0) / resolution;
-                    tx2 = ((tx2 * resolution)|0) / resolution;
-                    ty2 = ((ty2 * resolution)|0) / resolution;
-                    tx3 = ((tx3 * resolution)|0) / resolution;
-                    ty3 = ((ty3 * resolution)|0) / resolution;
                 }
             
                 // Bind Texture if texture wasn't bound.
                 // This needs to be here because of multiple
                 // texture atlas.
                 this.setTexture2D(frame.texture.source[frame.sourceIndex].glTexture, 0);
-                var vertexOffset = this.vertexCount * this.vertexComponentCount;
 
+                var vertexOffset = this.vertexCount * this.vertexComponentCount;
             
                 vertexViewF32[vertexOffset + 0] = tx0;
                 vertexViewF32[vertexOffset + 1] = ty0;
@@ -805,12 +812,6 @@ var TextureTintPipeline = new Class({
         var roundPixels = camera.roundPixels;
         var resolution = renderer.config.resolution;
         var cameraMatrix = camera.matrix.matrix;
-        var a = cameraMatrix[0];
-        var b = cameraMatrix[1];
-        var c = cameraMatrix[2];
-        var d = cameraMatrix[3];
-        var e = cameraMatrix[4];
-        var f = cameraMatrix[5];
         var frame = mesh.frame;
         var texture = mesh.texture.source[frame.sourceIndex].glTexture;
         var translateX = mesh.x - camera.scrollX * mesh.scrollFactorX;
@@ -934,6 +935,16 @@ var TextureTintPipeline = new Class({
         var y = 0;
         var xw = 0;
         var yh = 0;
+
+        var tx0;
+        var ty0;
+        var tx1;
+        var ty1;
+        var tx2;
+        var ty2;
+        var tx3;
+        var ty3;
+
         var umin = 0;
         var umax = 0;
         var vmin = 0;
@@ -1002,7 +1013,7 @@ var TextureTintPipeline = new Class({
             {
                 var kerningOffset = glyph.kerning[lastCharCode];
                 x += (kerningOffset !== undefined) ? kerningOffset : 0;
-            }            
+            }
 
             xAdvance += glyph.xAdvance;
             indexCount += 1;
@@ -1155,6 +1166,14 @@ var TextureTintPipeline = new Class({
         var x = 0;
         var y = 0;
         var xw = 0;
+        var tx0;
+        var ty0;
+        var tx1;
+        var ty1;
+        var tx2;
+        var ty2;
+        var tx3;
+        var ty3;
         var yh = 0;
         var umin = 0;
         var umax = 0;
@@ -1196,12 +1215,12 @@ var TextureTintPipeline = new Class({
         if (crop)
         {
             renderer.pushScissor(
-                bitmapText.x, 
-                bitmapText.y, 
-                bitmapText.cropWidth * bitmapText.scaleX, 
+                bitmapText.x,
+                bitmapText.y,
+                bitmapText.cropWidth * bitmapText.scaleX,
                 bitmapText.cropHeight * bitmapText.scaleY
             );
-        }        
+        }
 
         for (var index = 0; index < textLength; ++index)
         {
@@ -1254,21 +1273,21 @@ var TextureTintPipeline = new Class({
 
             if (displayCallback)
             {
-                var output = displayCallback({ 
-                    color: 0, 
-                    tint: { 
-                        topLeft: tint0, 
-                        topRight: tint1, 
-                        bottomLeft: tint2, 
-                        bottomRight: tint3 
-                    }, 
-                    index: index, 
-                    charCode: charCode, 
-                    x: x, 
-                    y: y, 
-                    scale: scale, 
-                    rotation: 0, 
-                    data: glyph.data 
+                var output = displayCallback({
+                    color: 0,
+                    tint: {
+                        topLeft: tint0,
+                        topRight: tint1,
+                        bottomLeft: tint2,
+                        bottomRight: tint3
+                    },
+                    index: index,
+                    charCode: charCode,
+                    x: x,
+                    y: y,
+                    scale: scale,
+                    rotation: 0,
+                    data: glyph.data
                 });
 
                 x = output.x;
@@ -1418,9 +1437,9 @@ var TextureTintPipeline = new Class({
             text.scrollFactorX, text.scrollFactorY,
             text.displayOriginX, text.displayOriginY,
             0, 0, text.canvasTexture.width, text.canvasTexture.height,
-            getTint(text._tintTL, text._alphaTL), 
-            getTint(text._tintTR, text._alphaTR), 
-            getTint(text._tintBL, text._alphaBL), 
+            getTint(text._tintTL, text._alphaTL),
+            getTint(text._tintTR, text._alphaTR),
+            getTint(text._tintBL, text._alphaBL),
             getTint(text._tintBR, text._alphaBR),
             0, 0,
             camera
@@ -1480,7 +1499,7 @@ var TextureTintPipeline = new Class({
                 0, 0,
                 camera
             );
-        }   
+        }
     },
 
     /**
@@ -1499,7 +1518,7 @@ var TextureTintPipeline = new Class({
         this.batchTexture(
             tileSprite,
             tileSprite.tileTexture,
-            tileSprite.frame.width,  tileSprite.frame.height,
+            tileSprite.frame.width, tileSprite.frame.height,
             tileSprite.x, tileSprite.y,
             tileSprite.width, tileSprite.height,
             tileSprite.scaleX, tileSprite.scaleY,
@@ -1508,11 +1527,11 @@ var TextureTintPipeline = new Class({
             tileSprite.scrollFactorX, tileSprite.scrollFactorY,
             tileSprite.originX * tileSprite.width, tileSprite.originY * tileSprite.height,
             0, 0, tileSprite.width, tileSprite.height,
-            getTint(tileSprite._tintTL, tileSprite._alphaTL), 
-            getTint(tileSprite._tintTR, tileSprite._alphaTR), 
-            getTint(tileSprite._tintBL, tileSprite._alphaBL), 
+            getTint(tileSprite._tintTL, tileSprite._alphaTL),
+            getTint(tileSprite._tintTR, tileSprite._alphaTR),
+            getTint(tileSprite._tintBL, tileSprite._alphaBL),
             getTint(tileSprite._tintBR, tileSprite._alphaBR),
-            tileSprite.tilePositionX / tileSprite.frame.width, 
+            tileSprite.tilePositionX / tileSprite.frame.width,
             tileSprite.tilePositionY / tileSprite.frame.height,
             camera
         );
@@ -1526,8 +1545,8 @@ var TextureTintPipeline = new Class({
      *
      * @param {Phaser.GameObjects.GameObject} gameObject - [description]
      * @param {WebGLTexture} texture - [description]
-     * @param {int} textureWidth - [description]
-     * @param {int} textureHeight - [description]
+     * @param {integer} textureWidth - [description]
+     * @param {integer} textureHeight - [description]
      * @param {float} srcX - [description]
      * @param {float} srcY - [description]
      * @param {float} srcWidth - [description]
@@ -1545,10 +1564,10 @@ var TextureTintPipeline = new Class({
      * @param {float} frameY - [description]
      * @param {float} frameWidth - [description]
      * @param {float} frameHeight - [description]
-     * @param {int} tintTL - [description]
-     * @param {int} tintTR - [description]
-     * @param {int} tintBL - [description]
-     * @param {int} tintBR - [description]
+     * @param {integer} tintTL - [description]
+     * @param {integer} tintTR - [description]
+     * @param {integer} tintBL - [description]
+     * @param {integer} tintBR - [description]
      * @param {float} uOffset - [description]
      * @param {float} vOffset - [description]
      * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
@@ -1579,7 +1598,6 @@ var TextureTintPipeline = new Class({
         flipY = flipY ^ (texture.isRenderTexture ? 1 : 0);
         rotation = -rotation;
 
-        var getTint = Utils.getTintAppendFloatAlpha;
         var vertexViewF32 = this.vertexViewF32;
         var vertexViewU32 = this.vertexViewU32;
         var renderer = this.renderer;
@@ -1687,7 +1705,7 @@ var TextureTintPipeline = new Class({
      * @param {Phaser.GameObjects.Graphics} graphics - [description]
      * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
      */
-    batchGraphics: function (graphics, camera) 
+    batchGraphics: function ()
     {
         // Stub
     }
