@@ -179,6 +179,7 @@ var TileSprite = new Class({
 
         scene.sys.game.renderer.onContextRestored(function (renderer)
         {
+            var gl = renderer.gl;
             this.tileTexture = null;
             this.dirty = true;
             this.tileTexture = renderer.createTexture2D(0, gl.LINEAR, gl.LINEAR, gl.REPEAT, gl.REPEAT, gl.RGBA, this.canvasBuffer, this.potWidth, this.potHeight);
