@@ -1,5 +1,16 @@
 # Change Log
 
+## Version 3.1.1 - In Development
+
+### Bug Fixes
+
+* Math.Fuzzy.Floor had an incorrect method signature.
+* Arcade Physics World didn't import GetOverlapX or GetOverlapY, causing `separateCircle` to break.
+* TileSprite was missing a gl reference, causing it to fail during a context loss and restore.
+* The Mesh Game Object Factory entry had incorrect arguments passed to Mesh constructor.
+
+
+
 ## Version 3.1.0 - Onishi - 16th February 2018
 
 ### Updates
