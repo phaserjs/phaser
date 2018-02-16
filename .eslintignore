@@ -1,8 +1,8 @@
-merge/Intro.js
-merge/Outro.js
-merge/plugins/path/
-merge/physics/p2/p2.js
-merge/animation/creature/
-src/physics/matter-js/
-src/renderer/webgl/renderers/shapebatch/earcut.js
-webpack.*.js
+src/physics/matter-js/lib/
+src/polyfills/
+src/renderer/webgl/shaders/
+src/geom/polygon/Earcut.js
+src/sound/
+src/utils/array/StableSort.js
+src/utils/object/Extend.js
+src/structs/RTree.js
