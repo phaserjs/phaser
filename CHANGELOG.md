@@ -2,14 +2,16 @@
 
 ## Version 3.1.1 - In Development
 
+### Updates
+
+* The entire codebase now passes our eslint config (which helped highlight a few errors), if you're submitting a PR, please ensure your PR passes the config too.
+
 ### Bug Fixes
 
 * Math.Fuzzy.Floor had an incorrect method signature.
 * Arcade Physics World didn't import GetOverlapX or GetOverlapY, causing `separateCircle` to break.
 * TileSprite was missing a gl reference, causing it to fail during a context loss and restore.
 * The Mesh Game Object Factory entry had incorrect arguments passed to Mesh constructor.
-
-
 
 ## Version 3.1.0 - Onishi - 16th February 2018
 
