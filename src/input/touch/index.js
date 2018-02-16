@@ -8,10 +8,10 @@
  * @namespace Phaser.Input.Touch
  */
 
-/*eslint-disable */
+/* eslint-disable */
 module.exports = {
 
     TouchManager: require('./TouchManager')
        
 };
-/*eslint-enable */
+/* eslint-enable */

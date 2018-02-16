@@ -16,7 +16,7 @@
  * @param {number} interpolationPercentage - Reserved for future use and custom pipelines.
  * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera that is rendering the Game Object.
  */
-var MeshCanvasRenderer = function (renderer, src, interpolationPercentage, camera)
+var MeshCanvasRenderer = function ()
 {
 };
 

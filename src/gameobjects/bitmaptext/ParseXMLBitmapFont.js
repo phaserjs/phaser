@@ -25,10 +25,6 @@ var ParseXMLBitmapFont = function (xml, xSpacing, ySpacing, frame)
 
     var letters = xml.getElementsByTagName('char');
 
-    var x = 0;
-    var y = 0;
-    var cx = 0;
-    var cy = 0;
     var adjustForTrim = (frame !== undefined && frame.trimmed);
 
     if (adjustForTrim)
@@ -36,8 +32,6 @@ var ParseXMLBitmapFont = function (xml, xSpacing, ySpacing, frame)
         var top = frame.height;
         var left = frame.width;
     }
-
-    var diff = 0;
 
     for (var i = 0; i < letters.length; i++)
     {
@@ -53,18 +47,6 @@ var ParseXMLBitmapFont = function (xml, xSpacing, ySpacing, frame)
 
         if (adjustForTrim)
         {
-            // if (gx + gw > frame.width)
-            // {
-            //     diff = frame.width - (gx + gw);
-            // gw -= diff;
-            // }
-
-            // if (gy + gh > frame.height)
-            // {
-            //     diff = frame.height - (gy + gh);
-            // gh -= diff;
-            // }
-
             if (gx < left)
             {
                 left = gx;

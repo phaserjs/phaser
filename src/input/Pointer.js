@@ -350,7 +350,7 @@ var Pointer = new Class({
      * @param {[type]} event - [description]
      * @param {[type]} time - [description]
      */
-    touchmove: function (event, time)
+    touchmove: function (event)
     {
         this.event = event;
 
@@ -373,7 +373,7 @@ var Pointer = new Class({
      * @param {[type]} event - [description]
      * @param {[type]} time - [description]
      */
-    move: function (event, time)
+    move: function (event)
     {
         if (event.buttons)
         {

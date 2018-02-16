@@ -8,10 +8,10 @@
  * @namespace Phaser.Input.Mouse
  */
 
-/*eslint-disable */
+/* eslint-disable */
 module.exports = {
 
     MouseManager: require('./MouseManager')
        
 };
-/*eslint-enable */
+/* eslint-enable */

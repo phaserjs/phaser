@@ -249,7 +249,7 @@ var GraphicsCanvasRenderer = function (renderer, src, interpolationPercentage, c
                 break;
 
             default:
-                console.error('Phaser: Invalid Graphics Command ID ' + commandID);
+                // console.error('Phaser: Invalid Graphics Command ID ' + commandID);
                 break;
         }
     }

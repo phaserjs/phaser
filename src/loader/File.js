@@ -311,7 +311,7 @@ var File = new Class({
      *
      * @param {ProgressEvent} event - The DOM ProgressEvent that resulted from this error.
      */
-    onError: function (event)
+    onError: function ()
     {
         this.resetXHR();
 

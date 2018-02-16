@@ -31,7 +31,6 @@ var BlitterCanvasRenderer = function (renderer, src, interpolationPercentage, ca
 
     renderer.setBlendMode(src.blendMode);
 
-    var ca = renderer.currentAlpha;
     var ctx = renderer.gameContext;
     var cameraScrollX = src.x - camera.scrollX * src.scrollFactorX;
     var cameraScrollY = src.y - camera.scrollY * src.scrollFactorY;
