@@ -903,13 +903,9 @@ var FlatTintPipeline = new Class({
                     break;
 
                 case Commands.CLOSE_PATH:
-                    if (lastPath !== null && lastPath.points.length > 0)
+                    if (lastPath && lastPath.points.length)
                     {
-                        var firstPoint = lastPath.points[0];
-                        var lastPoint = lastPath.points[lastPath.points.length - 1];
-                        lastPath.points.push(firstPoint);
-                        lastPath = new Path(lastPoint.x, lastPoint.y, lastPoint.width, lastPoint.rgb, lastPoint.alpha);
-                        pathArray.push(lastPath);
+                        lastPath.points.push(lastPath.points[0]);
                     }
                     break;
 
