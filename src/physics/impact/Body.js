@@ -516,7 +516,7 @@ var Body = new Class({
      *
      * @param {object} config - [description]
      */
-    fromJSON: function (config)
+    fromJSON: function ()
     {
     },
 
@@ -526,9 +526,9 @@ var Body = new Class({
      * @method Phaser.Physics.Impact.Body#check
      * @since 3.0.0
      *
-     * @param {[type]} other - [description]
+     * @param {Phaser.Physics.Impact.Body} other - [description]
      */
-    check: function (other)
+    check: function ()
     {
     },
 

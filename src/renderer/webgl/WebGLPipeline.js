@@ -308,7 +308,7 @@ var WebGLPipeline = new Class({
      *
      * @return {Phaser.Renderer.WebGL.WebGLPipeline} [description]
      */
-    onRender: function (scene, camera)
+    onRender: function ()
     {
         // called for each camera
         return this;
@@ -339,12 +339,11 @@ var WebGLPipeline = new Class({
     flush: function ()
     {
         if (this.flushLocked) { return this; }
+
         this.flushLocked = true;
 
         var gl = this.gl;
         var vertexCount = this.vertexCount;
-        var vertexBuffer = this.vertexBuffer;
-        var vertexData = this.vertexData;
         var topology = this.topology;
         var vertexSize = this.vertexSize;
 
@@ -353,6 +352,7 @@ var WebGLPipeline = new Class({
             this.flushLocked = false;
             return;
         }
+
         gl.bufferSubData(gl.ARRAY_BUFFER, 0, this.bytes.subarray(0, vertexCount * vertexSize));
         gl.drawArrays(topology, 0, vertexCount);
 

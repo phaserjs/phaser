@@ -33,6 +33,7 @@ var WebGLRenderer = new Class({
 
     function WebGLRenderer (game)
     {
+        // eslint-disable-next-line consistent-this
         var renderer = this;
 
         var contextCreationConfig = {
@@ -318,7 +319,7 @@ var WebGLRenderer = new Class({
             }
         }, false);
 
-        this.canvas.addEventListener('webglcontextrestored', function (event)
+        this.canvas.addEventListener('webglcontextrestored', function ()
         {
             renderer.contextLost = false;
             renderer.init(renderer.config);
@@ -630,7 +631,7 @@ var WebGLRenderer = new Class({
     {
         var gl = this.gl;
         var currentScissor = this.currentScissor;
-        var enabled = (x == 0 && y == 0 && w == gl.canvas.width && h == gl.canvas.height && w >= 0 && h >= 0);
+        var enabled = (x === 0 && y === 0 && w === gl.canvas.width && h === gl.canvas.height && w >= 0 && h >= 0);
 
         if (currentScissor[0] !== x ||
             currentScissor[1] !== y ||
@@ -1202,7 +1203,7 @@ var WebGLRenderer = new Class({
      *
      * @return {Phaser.Renderer.WebGL.WebGLRenderer} [description]
      */
-    deleteTexture: function (texture)
+    deleteTexture: function ()
     {
         return this;
     },
@@ -1217,7 +1218,7 @@ var WebGLRenderer = new Class({
      *
      * @return {Phaser.Renderer.WebGL.WebGLRenderer} [description]
      */
-    deleteFramebuffer: function (framebuffer)
+    deleteFramebuffer: function ()
     {
         return this;
     },
@@ -1232,7 +1233,7 @@ var WebGLRenderer = new Class({
      *
      * @return {Phaser.Renderer.WebGL.WebGLRenderer} [description]
      */
-    deleteProgram: function (program)
+    deleteProgram: function ()
     {
         return this;
     },
@@ -1247,7 +1248,7 @@ var WebGLRenderer = new Class({
      *
      * @return {Phaser.Renderer.WebGL.WebGLRenderer} [description]
      */
-    deleteBuffer: function (vertexBuffer)
+    deleteBuffer: function ()
     {
         return this;
     },
@@ -1367,7 +1368,6 @@ var WebGLRenderer = new Class({
     {
         if (this.contextLost) { return; }
 
-        var gl = this.gl;
         var list = children.list;
         var childCount = list.length;
         var pipelines = this.pipelines;
@@ -1470,7 +1470,7 @@ var WebGLRenderer = new Class({
      *
      * @return {WebGLTexture} [description]
      */
-    canvasToTexture: function (srcCanvas, dstTexture, shouldReallocate, scaleMode)
+    canvasToTexture: function (srcCanvas, dstTexture, shouldReallocate)
     {
         var gl = this.gl;
 
@@ -1764,8 +1764,6 @@ var WebGLRenderer = new Class({
      */
     destroy: function ()
     {
-        var gl = this.gl;
-
         //  Clear-up anything that should be cleared :)
         for (var key in this.pipelines)
         {

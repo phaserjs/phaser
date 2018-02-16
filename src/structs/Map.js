@@ -219,7 +219,7 @@ var Map = new Class({
     {
         var entries = this.entries;
 
-        // eslint-disable-next-line no-use-before-define
+        // eslint-disable-next-line no-console
         console.group('Map');
 
         for (var key in entries)
@@ -227,7 +227,7 @@ var Map = new Class({
             console.log(key, entries[key]);
         }
 
-        // eslint-disable-next-line no-use-before-define
+        // eslint-disable-next-line no-console
         console.groupEnd();
     },
 

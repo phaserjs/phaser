@@ -129,7 +129,7 @@ var Set = new Class({
      */
     dump: function ()
     {
-        // eslint-disable-next-line no-use-before-define
+        // eslint-disable-next-line no-console
         console.group('Set');
 
         for (var i = 0; i < this.entries.length; i++)
@@ -138,7 +138,7 @@ var Set = new Class({
             console.log(entry);
         }
 
-        // eslint-disable-next-line no-use-before-define
+        // eslint-disable-next-line no-console
         console.groupEnd();
     },
 

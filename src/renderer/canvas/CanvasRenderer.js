@@ -268,7 +268,7 @@ var CanvasRenderer = new Class({
      *
      * @param {function} callback - [description]
      */
-    onContextLost: function (callback)
+    onContextLost: function ()
     {
     },
 
@@ -280,7 +280,7 @@ var CanvasRenderer = new Class({
      *
      * @param {function} callback - [description]
      */
-    onContextRestored: function (callback)
+    onContextRestored: function ()
     {
     },
 

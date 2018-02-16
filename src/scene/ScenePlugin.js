@@ -111,7 +111,7 @@ var ScenePlugin = new Class({
      *
      * @return {Phaser.Scenes.ScenePlugin} This ScenePlugin object.
      */
-    start: function (key, data)
+    start: function (key)
     {
         if (key === undefined) { key = this.key; }
 
@@ -162,7 +162,7 @@ var ScenePlugin = new Class({
      *
      * @return {Phaser.Scenes.ScenePlugin} This ScenePlugin object.
      */
-    launch: function (key, data)
+    launch: function (key)
     {
         if (key && key !== this.key)
         {
