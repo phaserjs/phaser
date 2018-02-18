@@ -39,15 +39,6 @@ var NoAudioSoundManager = new Class({
         EventEmitter.call(this);
         this.game = game;
         this.sounds = [];
-
-        /**
-         * [description]
-         *
-         * @name Phaser.Sound.NoAudioSoundManager#mute
-         * @type {boolean}
-         * @default false
-         * @since 3.0.0
-         */
         this.mute = false;
 
         /**
