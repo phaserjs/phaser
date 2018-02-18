@@ -198,12 +198,6 @@ var WebAudioSoundManager = new Class({
     }
 });
 
-/**
- * Global mute setting.
- *
- * @name Phaser.Sound.WebAudioSoundManager#mute
- * @type {boolean}
- */
 Object.defineProperty(WebAudioSoundManager.prototype, 'mute', {
 
     get: function ()
