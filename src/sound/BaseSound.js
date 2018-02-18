@@ -223,7 +223,7 @@ var BaseSound = new Class({
          * 'null' if whole sound is playing.
          *
          * @name Phaser.Sound.BaseSound#currentMarker
-         * @type {?ISoundMarker}
+         * @type {SoundMarker}
          * @default null
          * @readOnly
          * @since 3.0.0
