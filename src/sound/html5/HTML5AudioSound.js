@@ -290,7 +290,6 @@ var HTML5AudioSound = new Class({
         for (var i = 0; i < this.tags.length; i++)
         {
             var audio = this.tags[i];
-
             if (audio.dataset.used === 'false')
             {
                 audio.dataset.used = 'true';
@@ -298,14 +297,11 @@ var HTML5AudioSound = new Class({
                 return true;
             }
         }
-
         if (!this.manager.override)
         {
             return false;
         }
-
         var otherSounds = [];
-
         this.manager.forEachActiveSound(function (sound)
         {
             if (sound.key === this.key && sound.audio)
@@ -313,7 +309,6 @@ var HTML5AudioSound = new Class({
                 otherSounds.push(sound);
             }
         }, this);
-
         otherSounds.sort(function (a1, a2)
         {
             if (a1.loop === a2.loop)
@@ -323,15 +318,12 @@ var HTML5AudioSound = new Class({
             }
             return a1.loop ? 1 : -1;
         });
-
         var selectedSound = otherSounds[0];
-
         this.audio = selectedSound.audio;
         selectedSound.reset();
         selectedSound.audio = null;
         selectedSound.startTime = 0;
         selectedSound.previousTime = 0;
-
         return true;
     },
 
