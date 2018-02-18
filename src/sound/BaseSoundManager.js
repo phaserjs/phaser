@@ -524,14 +524,6 @@ var BaseSoundManager = new Class({
     }
 
 });
-
-/**
- * Global playback rate.
- *
- * @name Phaser.Sound.BaseSoundManager#rate
- * @type {number}
- * @since 3.0.0
- */
 Object.defineProperty(BaseSoundManager.prototype, 'rate', {
 
     get: function ()
