@@ -37,14 +37,6 @@ var NoAudioSoundManager = new Class({
     function NoAudioSoundManager (game)
     {
         EventEmitter.call(this);
-
-        /**
-         * Reference to the current game instance.
-         *
-         * @name Phaser.Sound.NoAudioSoundManager#game
-         * @type {Phaser.Game}
-         * @since 3.0.0
-         */
         this.game = game;
 
         /**
