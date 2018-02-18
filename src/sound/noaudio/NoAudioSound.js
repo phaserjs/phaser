@@ -40,14 +40,6 @@ var NoAudioSound = new Class({
         if (config === void 0) { config = {}; }
         EventEmitter.call(this);
         this.manager = manager;
-
-        /**
-         * [description]
-         *
-         * @name Phaser.Sound.NoAudioSound#key
-         * @type {string}
-         * @since 3.0.0
-         */
         this.key = key;
 
         /**
