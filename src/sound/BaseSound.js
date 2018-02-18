@@ -115,7 +115,8 @@ var BaseSound = new Class({
          * Default values will be set by properties' setters.
          *
          * @name Phaser.Sound.BaseSound#config
-         * @type {object}
+         * @type {SoundConfig}
+         * @private
          * @since 3.0.0
          */
         this.config = {
