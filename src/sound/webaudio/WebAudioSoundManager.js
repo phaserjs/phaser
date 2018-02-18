@@ -3,7 +3,6 @@
  * @copyright    2018 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
-
 var Class = require('../../utils/Class');
 var BaseSoundManager = require('../BaseSoundManager');
 var WebAudioSound = require('./WebAudioSound');
@@ -22,12 +21,8 @@ var WebAudioSound = require('./WebAudioSound');
  * @param {Phaser.Game} game - Reference to the current game instance.
  */
 var WebAudioSoundManager = new Class({
-
     Extends: BaseSoundManager,
-
-    initialize:
-
-    function WebAudioSoundManager (game)
+    initialize: function WebAudioSoundManager (game)
     {
         /**
          * The AudioContext being used for playback.
@@ -58,7 +53,6 @@ var WebAudioSoundManager = new Class({
          * @since 3.0.0
          */
         this.masterVolumeNode = this.context.createGain();
-
         this.masterMuteNode.connect(this.masterVolumeNode);
         this.masterVolumeNode.connect(this.context.destination);
 
@@ -71,9 +65,7 @@ var WebAudioSoundManager = new Class({
          * @since 3.0.0
          */
         this.destination = this.masterMuteNode;
-
         this.locked = this.context.state === 'suspended' && 'ontouchstart' in window;
-
         BaseSoundManager.call(this, game);
     },
 
@@ -95,13 +87,11 @@ var WebAudioSoundManager = new Class({
     createAudioContext: function (game)
     {
         var audioConfig = game.config.audio;
-
         if (audioConfig && audioConfig.context)
         {
             audioConfig.context.resume();
             return audioConfig.context;
         }
-
         return new AudioContext();
     },
 
@@ -119,9 +109,7 @@ var WebAudioSoundManager = new Class({
     add: function (key, config)
     {
         var sound = new WebAudioSound(this, key, config);
-
         this.sounds.push(sound);
-
         return sound;
     },
 
@@ -137,7 +125,6 @@ var WebAudioSoundManager = new Class({
     unlock: function ()
     {
         var _this = this;
-
         var unlock = function ()
         {
             _this.context.resume().then(function ()
@@ -147,7 +134,6 @@ var WebAudioSoundManager = new Class({
                 _this.unlocked = true;
             });
         };
-
         document.body.addEventListener('touchstart', unlock, false);
         document.body.addEventListener('touchend', unlock, false);
     },
@@ -197,14 +183,11 @@ var WebAudioSoundManager = new Class({
         this.context = null;
     }
 });
-
 Object.defineProperty(WebAudioSoundManager.prototype, 'mute', {
-
     get: function ()
     {
         return this.masterMuteNode.gain.value === 0;
     },
-
     set: function (value)
     {
         this.masterMuteNode.gain.setValueAtTime(value ? 0 : 1, 0);
@@ -216,16 +199,12 @@ Object.defineProperty(WebAudioSoundManager.prototype, 'mute', {
          */
         this.emit('mute', this, value);
     }
-
 });
-
 Object.defineProperty(WebAudioSoundManager.prototype, 'volume', {
-
     get: function ()
     {
         return this.masterVolumeNode.gain.value;
     },
-
     set: function (value)
     {
         this.masterVolumeNode.gain.setValueAtTime(value, 0);
@@ -237,7 +216,5 @@ Object.defineProperty(WebAudioSoundManager.prototype, 'volume', {
          */
         this.emit('volume', this, value);
     }
-
 });
-
 module.exports = WebAudioSoundManager;
