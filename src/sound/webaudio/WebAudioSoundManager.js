@@ -60,7 +60,6 @@ var WebAudioSoundManager = new Class({
         this.masterVolumeNode = this.context.createGain();
 
         this.masterMuteNode.connect(this.masterVolumeNode);
-
         this.masterVolumeNode.connect(this.context.destination);
 
         /**
@@ -68,6 +67,7 @@ var WebAudioSoundManager = new Class({
          *
          * @name Phaser.Sound.WebAudioSoundManager#destination
          * @type {AudioNode}
+         * @private
          * @since 3.0.0
          */
         this.destination = this.masterMuteNode;
