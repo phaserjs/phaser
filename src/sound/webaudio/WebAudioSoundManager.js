@@ -44,6 +44,7 @@ var WebAudioSoundManager = new Class({
          *
          * @name Phaser.Sound.WebAudioSoundManager#masterMuteNode
          * @type {GainNode}
+         * @private
          * @since 3.0.0
          */
         this.masterMuteNode = this.context.createGain();
