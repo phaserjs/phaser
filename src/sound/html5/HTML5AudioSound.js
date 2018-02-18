@@ -541,20 +541,11 @@ var HTML5AudioSound = new Class({
         }
     }
 });
-
-/**
- * Mute setting.
- *
- * @name Phaser.Sound.HTML5AudioSound#mute
- * @type {boolean}
- */
 Object.defineProperty(HTML5AudioSound.prototype, 'mute', {
-
     get: function ()
     {
         return this.currentConfig.mute;
     },
-
     set: function (value)
     {
         this.currentConfig.mute = value;
@@ -571,7 +562,6 @@ Object.defineProperty(HTML5AudioSound.prototype, 'mute', {
          */
         this.emit('mute', this, value);
     }
-
 });
 
 /**
