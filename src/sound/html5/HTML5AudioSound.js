@@ -242,18 +242,15 @@ var HTML5AudioSound = new Class({
             this.reset();
             return false;
         }
-
         var seek = this.currentConfig.seek;
         var delay = this.currentConfig.delay;
         var offset = (this.currentMarker ? this.currentMarker.start : 0) + seek;
         this.previousTime = offset;
         this.audio.currentTime = offset;
         this.applyConfig();
-
         if (delay === 0)
         {
             this.startTime = 0;
-
             if (this.audio.paused)
             {
                 this.playCatchPromise();
@@ -262,15 +259,12 @@ var HTML5AudioSound = new Class({
         else
         {
             this.startTime = window.performance.now() + delay * 1000;
-
             if (!this.audio.paused)
             {
                 this.audio.pause();
             }
         }
-
         this.resetConfig();
-
         return true;
     },
 
