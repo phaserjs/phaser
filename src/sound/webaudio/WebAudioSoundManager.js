@@ -173,7 +173,6 @@ var WebAudioSoundManager = new Class({
      */
     destroy: function ()
     {
-        BaseSoundManager.prototype.destroy.call(this);
         this.destination = null;
         this.masterVolumeNode.disconnect();
         this.masterVolumeNode = null;
@@ -181,6 +180,7 @@ var WebAudioSoundManager = new Class({
         this.masterMuteNode = null;
         this.context.suspend();
         this.context = null;
+        BaseSoundManager.prototype.destroy.call(this);
     }
 });
 Object.defineProperty(WebAudioSoundManager.prototype, 'mute', {
