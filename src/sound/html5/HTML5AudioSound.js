@@ -664,21 +664,11 @@ Object.defineProperty(HTML5AudioSound.prototype, 'seek', {
         }
     }
 });
-
-/**
- * Property indicating whether or not
- * the sound or current sound marker will loop.
- *
- * @name Phaser.Sound.HTML5AudioSound#loop
- * @type {boolean}
- */
 Object.defineProperty(HTML5AudioSound.prototype, 'loop', {
-
     get: function ()
     {
         return this.currentConfig.loop;
     },
-
     set: function (value)
     {
         this.currentConfig.loop = value;
@@ -698,7 +688,5 @@ Object.defineProperty(HTML5AudioSound.prototype, 'loop', {
          */
         this.emit('loop', this, value);
     }
-
 });
-
 module.exports = HTML5AudioSound;
