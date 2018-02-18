@@ -44,15 +44,6 @@ var NoAudioSoundManager = new Class({
         this.rate = 1;
         this.detune = 0;
         this.pauseOnBlur = true;
-
-        /**
-         * [description]
-         *
-         * @name Phaser.Sound.NoAudioSoundManager#locked
-         * @type {boolean}
-         * @default false
-         * @since 3.0.0
-         */
         this.locked = false;
     },
 
