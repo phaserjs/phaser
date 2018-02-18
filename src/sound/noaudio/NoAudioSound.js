@@ -76,16 +76,8 @@ var NoAudioSound = new Class({
     {
         return false;
     },
-
-    /**
-     * [description]
-     *
-     * @method Phaser.Sound.NoAudioSound#removeMarker
-     * @since 3.0.0
-     *
-     * @return {boolean} False
-     */
-    removeMarker: function ()
+    // eslint-disable-next-line no-unused-vars
+    removeMarker: function (markerName)
     {
         return null;
     },
