@@ -286,21 +286,11 @@ var HTML5AudioSoundManager = new Class({
         return false;
     }
 });
-
-/**
- * Global mute setting.
- *
- * @name Phaser.Sound.HTML5AudioSoundManager#mute
- * @type {boolean}
- * @since 3.0.0
- */
 Object.defineProperty(HTML5AudioSoundManager.prototype, 'mute', {
-
     get: function ()
     {
         return this._mute;
     },
-
     set: function (value)
     {
         this._mute = value;
@@ -316,7 +306,6 @@ Object.defineProperty(HTML5AudioSoundManager.prototype, 'mute', {
          */
         this.emit('mute', this, value);
     }
-
 });
 
 /**
