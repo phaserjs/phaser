@@ -3,7 +3,6 @@
  * @copyright    2018 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
-
 var BaseSoundManager = require('../BaseSoundManager');
 var Class = require('../../utils/Class');
 var EventEmitter = require('eventemitter3');
@@ -29,12 +28,8 @@ var NOOP = require('../../utils/NOOP');
  * @param {Phaser.Game} game - Reference to the current game instance.
  */
 var NoAudioSoundManager = new Class({
-
     Extends: EventEmitter,
-
-    initialize:
-
-    function NoAudioSoundManager (game)
+    initialize: function NoAudioSoundManager (game)
     {
         EventEmitter.call(this);
         this.game = game;
@@ -49,9 +44,7 @@ var NoAudioSoundManager = new Class({
     add: function (key, config)
     {
         var sound = new NoAudioSound(this, key, config);
-
         this.sounds.push(sound);
-
         return sound;
     },
     addAudioSprite: function (key, config)
@@ -90,7 +83,5 @@ var NoAudioSoundManager = new Class({
     {
         BaseSoundManager.prototype.forEachActiveSound.call(this, callbackfn, scope);
     }
-
 });
-
 module.exports = NoAudioSoundManager;
