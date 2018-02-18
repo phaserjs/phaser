@@ -131,7 +131,7 @@ var BaseSound = new Class({
          * It could be default config or marker config.
          *
          * @name Phaser.Sound.BaseSound#currentConfig
-         * @type {object}
+         * @type {SoundConfig}
          * @private
          * @since 3.0.0
          */
