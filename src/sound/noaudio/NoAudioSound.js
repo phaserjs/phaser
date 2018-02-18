@@ -64,15 +64,6 @@ var NoAudioSound = new Class({
         this.loop = false;
         this.markers = {};
         this.currentMarker = null;
-
-        /**
-         * [description]
-         *
-         * @name Phaser.Sound.NoAudioSound#pendingRemove
-         * @type {boolean}
-         * @default null
-         * @since 3.0.0
-         */
         this.pendingRemove = false;
     },
 
