@@ -349,7 +349,7 @@ var BaseSound = new Class({
      * @since 3.0.0
      *
      * @param {string} [markerName=''] - If you want to play a marker then provide the marker name here, otherwise omit it to play the full sound.
-     * @param {ISoundConfig} [config] - Optional sound config object to be applied to this marker or entire sound if no marker name is provided. It gets memorized for future plays of current section of the sound.
+     * @param {SoundConfig} [config] - Optional sound config object to be applied to this marker or entire sound if no marker name is provided. It gets memorized for future plays of current section of the sound.
      *
      * @return {boolean} Whether the sound started playing successfully.
      */
