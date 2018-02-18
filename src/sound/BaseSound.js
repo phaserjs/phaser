@@ -293,7 +293,7 @@ var BaseSound = new Class({
      * @method Phaser.Sound.BaseSound#updateMarker
      * @since 3.0.0
      *
-     * @param {ISoundMarker} marker - Marker object with updated values.
+     * @param {SoundMarker} marker - Marker object with updated values.
      *
      * @return {boolean} Whether the marker was updated successfully.
      */
