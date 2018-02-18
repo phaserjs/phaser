@@ -48,7 +48,7 @@ var BaseSoundManager = new Class({
          * An array containing all added sounds.
          *
          * @name Phaser.Sound.BaseSoundManager#sounds
-         * @type {Phaser.Sound.BaseSound[]}
+         * @type {array}
          * @default []
          * @private
          * @since 3.0.0
