@@ -54,18 +54,6 @@ var NoAudioSoundManager = new Class({
 
         return sound;
     },
-
-    /**
-     * [description]
-     *
-     * @method Phaser.Sound.NoAudioSoundManager#addAudioSprite
-     * @since 3.0.0
-     *
-     * @param {string} key - Asset key for the sound.
-     * @param {ISoundConfig} [config] - An optional config object containing default sound settings.
-     *
-     * @return {IAudioSpriteSound} The new audio sprite sound instance.
-     */
     addAudioSprite: function (key, config)
     {
         var sound = this.add(key, config);
