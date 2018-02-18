@@ -168,6 +168,7 @@ var BaseSoundManager = new Class({
          * @name Phaser.Sound.BaseSoundManager#unlocked
          * @type {boolean}
          * @default false
+         * @private
          * @since 3.0.0
          */
         this.unlocked = false;
