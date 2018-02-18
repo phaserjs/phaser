@@ -187,9 +187,9 @@ var BaseSoundManager = new Class({
      * @since 3.0.0
      *
      * @param {string} key - Asset key for the sound.
-     * @param {ISoundConfig} [config] - An optional config object containing default sound settings.
+     * @param {SoundConfig} [config] - An optional config object containing default sound settings.
      *
-     * @return {ISound} The new sound instance.
+     * @return {Phaser.Sound.BaseSound} The new sound instance.
      */
     add: NOOP,
 
