@@ -338,10 +338,10 @@ var HTML5AudioSound = new Class({
     playCatchPromise: function ()
     {
         var playPromise = this.audio.play();
-
         if (playPromise)
         {
-            playPromise.catch(function () { });
+            // eslint-disable-next-line no-unused-vars
+            playPromise.catch(function (reason) { });
         }
     },
 
