@@ -270,7 +270,7 @@ var BaseSound = new Class({
         marker = Extend(true, {
             name: '',
             start: 0,
-            duration: this.totalDuration,
+            duration: this.totalDuration - (marker.start || 0),
             config: {
                 mute: false,
                 volume: 1,
