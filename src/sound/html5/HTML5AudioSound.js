@@ -585,20 +585,11 @@ Object.defineProperty(HTML5AudioSound.prototype, 'volume', {
         this.emit('volume', this, value);
     }
 });
-
-/**
- * Playback rate.
- *
- * @name Phaser.Sound.HTML5AudioSound#rate
- * @type {number}
- */
 Object.defineProperty(HTML5AudioSound.prototype, 'rate', {
-
     get: function ()
     {
         return Object.getOwnPropertyDescriptor(BaseSound.prototype, 'rate').get.call(this);
     },
-
     set: function (value)
     {
         this.currentConfig.rate = value;
@@ -608,22 +599,12 @@ Object.defineProperty(HTML5AudioSound.prototype, 'rate', {
         }
         Object.getOwnPropertyDescriptor(BaseSound.prototype, 'rate').set.call(this, value);
     }
-
 });
-
-/**
- * Detuning of sound.
- *
- * @name Phaser.Sound.HTML5AudioSound#detune
- * @type {number}
- */
 Object.defineProperty(HTML5AudioSound.prototype, 'detune', {
-
     get: function ()
     {
         return Object.getOwnPropertyDescriptor(BaseSound.prototype, 'detune').get.call(this);
     },
-
     set: function (value)
     {
         this.currentConfig.detune = value;
@@ -633,7 +614,6 @@ Object.defineProperty(HTML5AudioSound.prototype, 'detune', {
         }
         Object.getOwnPropertyDescriptor(BaseSound.prototype, 'detune').set.call(this, value);
     }
-
 });
 
 /**
