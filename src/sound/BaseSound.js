@@ -208,10 +208,10 @@ var BaseSound = new Class({
         this.config = Extend(this.config, config);
 
         /**
-         * Object containing markers definitions.
+         * Object containing markers definitions (Object.<string, SoundMarker>).
          *
          * @name Phaser.Sound.BaseSound#markers
-         * @type {Object.<string, SoundMarker>}
+         * @type {object}
          * @default {}
          * @readOnly
          * @since 3.0.0
@@ -355,7 +355,7 @@ var BaseSound = new Class({
      */
     play: function (markerName, config)
     {
-        if (markerName === undefined) { markerName = ''; }
+        if (markerName === void 0) { markerName = ''; }
 
         if (typeof markerName === 'object')
         {
