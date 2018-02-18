@@ -303,7 +303,7 @@ var BaseSoundManager = new Class({
      * @method Phaser.Sound.BaseSoundManager#remove
      * @since 3.0.0
      *
-     * @param {ISound} sound - The sound object to remove.
+     * @param {Phaser.Sound.BaseSound} sound - The sound object to remove.
      *
      * @return {boolean} True if the sound was removed successfully, otherwise false.
      */
