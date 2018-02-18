@@ -41,15 +41,6 @@ var NoAudioSoundManager = new Class({
         this.sounds = [];
         this.mute = false;
         this.volume = 1;
-
-        /**
-         * [description]
-         *
-         * @name Phaser.Sound.NoAudioSoundManager#rate
-         * @type {number}
-         * @default 1
-         * @since 3.0.0
-         */
         this.rate = 1;
 
         /**
