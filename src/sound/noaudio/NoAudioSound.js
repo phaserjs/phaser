@@ -3,7 +3,6 @@
  * @copyright    2018 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
-
 var BaseSound = require('../BaseSound');
 var Class = require('../../utils/Class');
 var EventEmitter = require('eventemitter3');
@@ -30,12 +29,8 @@ var Extend = require('../../utils/object/Extend');
  * @param {SoundConfig} [config={}] - An optional config object containing default sound settings.
  */
 var NoAudioSound = new Class({
-
     Extends: EventEmitter,
-
-    initialize:
-
-    function NoAudioSound (manager, key, config)
+    initialize: function NoAudioSound (manager, key, config)
     {
         if (config === void 0) { config = {}; }
         EventEmitter.call(this);
@@ -101,10 +96,7 @@ var NoAudioSound = new Class({
     destroy: function ()
     {
         this.manager.remove(this);
-
         BaseSound.prototype.destroy.call(this);
     }
-
 });
-
 module.exports = NoAudioSound;
