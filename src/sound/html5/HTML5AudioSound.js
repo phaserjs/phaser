@@ -615,15 +615,7 @@ Object.defineProperty(HTML5AudioSound.prototype, 'detune', {
         Object.getOwnPropertyDescriptor(BaseSound.prototype, 'detune').set.call(this, value);
     }
 });
-
-/**
- * Current position of playing sound.
- *
- * @name Phaser.Sound.HTML5AudioSound#seek
- * @type {number}
- */
 Object.defineProperty(HTML5AudioSound.prototype, 'seek', {
-
     get: function ()
     {
         if (this.isPlaying)
@@ -640,7 +632,6 @@ Object.defineProperty(HTML5AudioSound.prototype, 'seek', {
             return 0;
         }
     },
-
     set: function (value)
     {
         if (this.manager.isLocked(this, 'seek', value))
