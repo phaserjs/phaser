@@ -55,6 +55,7 @@ var WebAudioSound = new Class({
          *
          * @name Phaser.Sound.WebAudioSound#source
          * @type {AudioBufferSourceNode}
+         * @private
          * @default null
          * @since 3.0.0
          */
