@@ -86,16 +86,6 @@ var NoAudioSoundManager = new Class({
     {
         BaseSoundManager.prototype.destroy.call(this);
     },
-
-    /**
-     * [description]
-     *
-     * @method Phaser.Sound.NoAudioSoundManager#forEachActiveSound
-     * @since 3.0.0
-     *
-     * @param {function} callbackfn - Callback function. (sound: ISound, index: number, array: ISound[]) => void
-     * @param [scope] - Callback context.
-     */
     forEachActiveSound: function (callbackfn, scope)
     {
         BaseSoundManager.prototype.forEachActiveSound.call(this, callbackfn, scope);
