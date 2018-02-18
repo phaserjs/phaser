@@ -165,16 +165,8 @@ var WebAudioSound = new Class({
         this.hasLooped = false;
 
         this.muteNode.connect(this.volumeNode);
-
         this.volumeNode.connect(manager.destination);
 
-        /**
-         * [description]
-         *
-         * @name Phaser.Sound.WebAudioSound#duration
-         * @type {number}
-         * @since 3.0.0
-         */
         this.duration = this.audioBuffer.duration;
 
         /**
