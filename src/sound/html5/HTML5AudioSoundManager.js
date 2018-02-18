@@ -307,21 +307,11 @@ Object.defineProperty(HTML5AudioSoundManager.prototype, 'mute', {
         this.emit('mute', this, value);
     }
 });
-
-/**
- * Global volume setting.
- *
- * @name Phaser.Sound.HTML5AudioSoundManager#volume
- * @type {number}
- * @since 3.0.0
- */
 Object.defineProperty(HTML5AudioSoundManager.prototype, 'volume', {
-
     get: function ()
     {
         return this._volume;
     },
-
     set: function (value)
     {
         this._volume = value;
@@ -337,7 +327,5 @@ Object.defineProperty(HTML5AudioSoundManager.prototype, 'volume', {
          */
         this.emit('volume', this, value);
     }
-
 });
-
 module.exports = HTML5AudioSoundManager;
