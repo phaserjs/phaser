@@ -41,15 +41,6 @@ var NoAudioSound = new Class({
         EventEmitter.call(this);
         this.manager = manager;
         this.key = key;
-
-        /**
-         * [description]
-         *
-         * @name Phaser.Sound.NoAudioSound#isPlaying
-         * @type {boolean}
-         * @default false
-         * @since 3.0.0
-         */
         this.isPlaying = false;
 
         /**
