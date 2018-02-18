@@ -56,15 +56,6 @@ var NoAudioSound = new Class({
             delay: 0
         }, config);
         this.currentConfig = this.config;
-
-        /**
-         * [description]
-         *
-         * @name Phaser.Sound.NoAudioSound#mute
-         * @type {boolean}
-         * @default false
-         * @since 3.0.0
-         */
         this.mute = false;
 
         /**
