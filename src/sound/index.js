@@ -6,6 +6,8 @@
 
 /**
  * @namespace Phaser.Sound
+ *
+ * @author Pavle Goloskokovic <pgoloskokovic@gmail.com> (http://prunegames.com)
  */
 
 /**
