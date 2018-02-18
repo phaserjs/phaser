@@ -208,10 +208,10 @@ var BaseSound = new Class({
         this.config = Extend(this.config, config);
 
         /**
-         * Object containing markers definitions (Object.<string, ISoundMarker>)
+         * Object containing markers definitions.
          *
          * @name Phaser.Sound.BaseSound#markers
-         * @type {object}
+         * @type {Object.<string, SoundMarker>}
          * @default {}
          * @readOnly
          * @since 3.0.0
