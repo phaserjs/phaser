@@ -205,14 +205,6 @@ var BaseSound = new Class({
          * @since 3.0.0
          */
         this.loop = false;
-
-        /**
-         * [description]
-         *
-         * @name Phaser.Sound.BaseSound#config
-         * @type {object}
-         * @since 3.0.0
-         */
         this.config = Extend(this.config, config);
 
         /**
