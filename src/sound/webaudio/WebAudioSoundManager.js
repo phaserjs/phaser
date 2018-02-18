@@ -72,13 +72,6 @@ var WebAudioSoundManager = new Class({
          */
         this.destination = this.masterMuteNode;
 
-        /**
-         * Is the Sound Manager touch locked?
-         *
-         * @name Phaser.Sound.WebAudioSoundManager#locked
-         * @type {boolean}
-         * @since 3.0.0
-         */
         this.locked = this.context.state === 'suspended' && 'ontouchstart' in window;
 
         BaseSoundManager.call(this, game);
