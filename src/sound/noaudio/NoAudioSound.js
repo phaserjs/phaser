@@ -19,15 +19,15 @@ var Extend = require('../../utils/object/Extend');
  * breaking on devices that don't support any audio playback technologies.
  *
  * @class NoAudioSound
- * @extends EventEmitter
+ * @extends Phaser.Sound.BaseSound
  * @memberOf Phaser.Sound
  * @constructor
  * @author Pavle Goloskokovic <pgoloskokovic@gmail.com> (http://prunegames.com)
  * @since  3.0.0
- * 
+ *
  * @param {Phaser.Sound.NoAudioSoundManager} manager - Reference to the current sound manager instance.
  * @param {string} key - Asset key for the sound.
- * @param {ISoundConfig} [config={}] - An optional config object containing default sound settings.
+ * @param {SoundConfig} [config={}] - An optional config object containing default sound settings.
  */
 var NoAudioSound = new Class({
 
