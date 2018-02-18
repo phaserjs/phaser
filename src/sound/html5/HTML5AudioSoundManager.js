@@ -77,7 +77,6 @@ var HTML5AudioSoundManager = new Class({
          * @since 3.0.0
          */
         this.onBlurPausedSounds = [];
-
         this.locked = 'ontouchstart' in window;
 
         /**
@@ -116,7 +115,6 @@ var HTML5AudioSoundManager = new Class({
          * @since 3.0.0
          */
         this._volume = 1;
-
         BaseSoundManager.call(this, game);
     },
 
@@ -127,7 +125,7 @@ var HTML5AudioSoundManager = new Class({
      * @since 3.0.0
      *
      * @param {string} key - Asset key for the sound.
-     * @param {ISoundConfig} [config] - An optional config object containing default sound settings.
+     * @param {SoundConfig} [config] - An optional config object containing default sound settings.
      *
      * @return {Phaser.Sound.HTML5AudioSound} The new sound instance.
      */
