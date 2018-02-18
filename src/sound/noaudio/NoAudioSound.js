@@ -59,15 +59,6 @@ var NoAudioSound = new Class({
         this.mute = false;
         this.volume = 1;
         this.rate = 1;
-
-        /**
-         * [description]
-         *
-         * @name Phaser.Sound.NoAudioSound#detune
-         * @type {number}
-         * @default 0
-         * @since 3.0.0
-         */
         this.detune = 0;
 
         /**
