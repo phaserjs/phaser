@@ -3,7 +3,6 @@
  * @copyright    2018 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
-
 var Class = require('../../utils/Class');
 var BaseSoundManager = require('../BaseSoundManager');
 var HTML5AudioSound = require('./HTML5AudioSound');
@@ -17,16 +16,12 @@ var HTML5AudioSound = require('./HTML5AudioSound');
  * @constructor
  * @author Pavle Goloskokovic <pgoloskokovic@gmail.com> (http://prunegames.com)
  * @since 3.0.0
- * 
+ *
  * @param {Phaser.Game} game - Reference to the current game instance.
  */
 var HTML5AudioSoundManager = new Class({
-
     Extends: BaseSoundManager,
-
-    initialize:
-
-    function HTML5AudioSoundManager (game)
+    initialize: function HTML5AudioSoundManager (game)
     {
         /**
          * Flag indicating whether if there are no idle instances of HTML5 Audio tag,
@@ -130,10 +125,10 @@ var HTML5AudioSoundManager = new Class({
      *
      * @method Phaser.Sound.HTML5AudioSoundManager#add
      * @since 3.0.0
-     * 
+     *
      * @param {string} key - Asset key for the sound.
      * @param {ISoundConfig} [config] - An optional config object containing default sound settings.
-     * 
+     *
      * @return {Phaser.Sound.HTML5AudioSound} The new sound instance.
      */
     add: function (key, config)
@@ -272,11 +267,11 @@ var HTML5AudioSoundManager = new Class({
      * @method Phaser.Sound.HTML5AudioSoundManager#isLocked
      * @protected
      * @since 3.0.0
-     * 
+     *
      * @param {Phaser.Sound.HTML5AudioSound} sound - Sound object on which to perform queued action.
      * @param {string} prop - Name of the method to be called or property to be assigned a value to.
      * @param {*} [value] - An optional parameter that either holds an array of arguments to be passed to the method call or value to be set to the property.
-     * 
+     *
      * @return {boolean} Whether the sound manager is locked.
      */
     isLocked: function (sound, prop, value)
