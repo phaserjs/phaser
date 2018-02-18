@@ -22,6 +22,17 @@
  * @property {number} [delay=0] - Time, in seconds, that should elapse before the sound actually starts its playback.
  */
 
+/**
+ * Marked section of a sound represented by name, and optionally start time, duration, and config object.
+ *
+ * @typedef {object} SoundMarker
+ *
+ * @property {string} name - Unique identifier of a sound marker.
+ * @property {number} [start=0] - Sound position offset at witch playback should start.
+ * @property {number} [duration] - Playback duration of this marker.
+ * @property {SoundConfig} [config] - An optional config object containing default marker settings.
+ */
+
 module.exports = {
 
     SoundManagerCreator: require('./SoundManagerCreator'),
