@@ -3,7 +3,6 @@
  * @copyright    2018 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
-
 var Class = require('../../utils/Class');
 var BaseSound = require('../BaseSound');
 
@@ -23,12 +22,8 @@ var BaseSound = require('../BaseSound');
  * @param {SoundConfig} [config={}] - An optional config object containing default sound settings.
  */
 var WebAudioSound = new Class({
-
     Extends: BaseSound,
-
-    initialize:
-
-    function WebAudioSound (manager, key, config)
+    initialize: function WebAudioSound (manager, key, config)
     {
         if (config === void 0) { config = {}; }
 
@@ -41,7 +36,6 @@ var WebAudioSound = new Class({
          * @since 3.0.0
          */
         this.audioBuffer = manager.game.cache.audio.get(key);
-
         if (!this.audioBuffer)
         {
             // eslint-disable-next-line no-console
@@ -163,13 +157,10 @@ var WebAudioSound = new Class({
          * @since 3.0.0
          */
         this.hasLooped = false;
-
         this.muteNode.connect(this.volumeNode);
         this.volumeNode.connect(manager.destination);
-
         this.duration = this.audioBuffer.duration;
         this.totalDuration = this.audioBuffer.duration;
-
         BaseSound.call(this, manager, key, config);
     },
 
@@ -202,7 +193,6 @@ var WebAudioSound = new Class({
          * @param {Phaser.Sound.WebAudioSound} sound - Reference to the sound that emitted event.
          */
         this.emit('play', this);
-
         return true;
     },
 
@@ -220,7 +210,6 @@ var WebAudioSound = new Class({
         {
             return false;
         }
-
         if (!BaseSound.prototype.pause.call(this))
         {
             return false;
@@ -235,7 +224,6 @@ var WebAudioSound = new Class({
          * @param {Phaser.Sound.WebAudioSound} sound - Reference to the sound that emitted event.
          */
         this.emit('pause', this);
-
         return true;
     },
 
@@ -253,7 +241,6 @@ var WebAudioSound = new Class({
         {
             return false;
         }
-
         if (!BaseSound.prototype.resume.call(this))
         {
             return false;
@@ -267,7 +254,6 @@ var WebAudioSound = new Class({
          * @param {Phaser.Sound.WebAudioSound} sound - Reference to the sound that emitted event.
          */
         this.emit('resume', this);
-
         return true;
     },
 
@@ -294,7 +280,6 @@ var WebAudioSound = new Class({
          * @param {Phaser.Sound.WebAudioSound} sound - Reference to the sound that emitted event.
          */
         this.emit('stop', this);
-
         return true;
     },
 
@@ -350,11 +335,9 @@ var WebAudioSound = new Class({
     createBufferSource: function ()
     {
         var _this = this;
-
         var source = this.manager.context.createBufferSource();
         source.buffer = this.audioBuffer;
         source.connect(this.muteNode);
-
         source.onended = function (ev)
         {
             if (ev.target === _this.source)
@@ -372,7 +355,6 @@ var WebAudioSound = new Class({
 
             // else was stopped
         };
-
         return source;
     },
 
@@ -391,7 +373,6 @@ var WebAudioSound = new Class({
             this.source.disconnect();
             this.source = null;
         }
-
         this.playTime = 0;
         this.startTime = 0;
         this.stopAndRemoveLoopBufferSource();
@@ -412,7 +393,6 @@ var WebAudioSound = new Class({
             this.loopSource.disconnect();
             this.loopSource = null;
         }
-
         this.loopTime = 0;
     },
 
@@ -575,14 +555,11 @@ var WebAudioSound = new Class({
             + (this.duration - lastRateUpdateCurrentTime) / lastRateUpdate.rate;
     }
 });
-
 Object.defineProperty(WebAudioSound.prototype, 'mute', {
-
     get: function ()
     {
         return this.muteNode.gain.value === 0;
     },
-
     set: function (value)
     {
         this.currentConfig.mute = value;
@@ -595,16 +572,12 @@ Object.defineProperty(WebAudioSound.prototype, 'mute', {
          */
         this.emit('mute', this, value);
     }
-
 });
-
 Object.defineProperty(WebAudioSound.prototype, 'volume', {
-
     get: function ()
     {
         return this.volumeNode.gain.value;
     },
-
     set: function (value)
     {
         this.currentConfig.volume = value;
@@ -617,11 +590,8 @@ Object.defineProperty(WebAudioSound.prototype, 'volume', {
          */
         this.emit('volume', this, value);
     }
-
 });
-
 Object.defineProperty(WebAudioSound.prototype, 'seek', {
-
     get: function ()
     {
         if (this.isPlaying)
@@ -641,7 +611,6 @@ Object.defineProperty(WebAudioSound.prototype, 'seek', {
             return 0;
         }
     },
-
     set: function (value)
     {
         if (this.manager.context.currentTime < this.startTime)
@@ -666,16 +635,12 @@ Object.defineProperty(WebAudioSound.prototype, 'seek', {
             this.emit('seek', this, value);
         }
     }
-
 });
-
 Object.defineProperty(WebAudioSound.prototype, 'loop', {
-
     get: function ()
     {
         return this.currentConfig.loop;
     },
-
     set: function (value)
     {
         this.currentConfig.loop = value;
@@ -695,7 +660,5 @@ Object.defineProperty(WebAudioSound.prototype, 'loop', {
          */
         this.emit('loop', this, value);
     }
-
 });
-
 module.exports = WebAudioSound;
