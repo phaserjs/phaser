@@ -43,15 +43,6 @@ var NoAudioSound = new Class({
         this.key = key;
         this.isPlaying = false;
         this.isPaused = false;
-
-        /**
-         * [description]
-         *
-         * @name Phaser.Sound.NoAudioSound#totalRate
-         * @type {number}
-         * @default 1
-         * @since 3.0.0
-         */
         this.totalRate = 1;
 
         /**
