@@ -543,14 +543,6 @@ var BaseSound = new Class({
         this.totalRate = this.currentConfig.rate * this.manager.rate * detuneRate;
     }
 });
-
-/**
- * Playback rate.
- *
- * @name Phaser.Sound.BaseSound#rate
- * @type {number}
- * @since 3.0.0
- */
 Object.defineProperty(BaseSound.prototype, 'rate', {
 
     get: function ()
