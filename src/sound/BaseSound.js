@@ -22,7 +22,7 @@ var NOOP = require('../utils/NOOP');
  *
  * @param {Phaser.Sound.BaseSoundManager} manager - Reference to the current sound manager instance.
  * @param {string} key - Asset key for the sound.
- * @param {object} config - An optional config object containing default sound settings.
+ * @param {SoundConfig} [config] - An optional config object containing default sound settings.
  */
 var BaseSound = new Class({
 
