@@ -65,16 +65,8 @@ var NoAudioSoundManager = new Class({
     {
         return false;
     },
-
-    /**
-     * [description]
-     *
-     * @method Phaser.Sound.NoAudioSoundManager#playAudioSprite
-     * @since 3.0.0
-     *
-     * @return {boolean} No Audio methods always return `false`.
-     */
-    playAudioSprite: function ()
+    // eslint-disable-next-line no-unused-vars
+    playAudioSprite: function (key, spriteName, config)
     {
         return false;
     },
