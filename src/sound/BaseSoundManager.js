@@ -283,7 +283,7 @@ var BaseSoundManager = new Class({
      *
      * @param {string} key - Asset key for the sound.
      * @param {string} spriteName - The name of the sound sprite to play.
-     * @param {ISoundConfig} [config] - An optional config object containing default sound settings.
+     * @param {SoundConfig} [config] - An optional config object containing default sound settings.
      *
      * @return {boolean} Whether the audio sprite sound started playing successfully.
      */
