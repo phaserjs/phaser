@@ -18,7 +18,7 @@ var WebAudioSound = require('./WebAudioSound');
  * @constructor
  * @author Pavle Goloskokovic <pgoloskokovic@gmail.com> (http://prunegames.com)
  * @since 3.0.0
- * 
+ *
  * @param {Phaser.Game} game - Reference to the current game instance.
  */
 var WebAudioSoundManager = new Class({
@@ -34,6 +34,7 @@ var WebAudioSoundManager = new Class({
          *
          * @name Phaser.Sound.WebAudioSoundManager#context
          * @type {AudioContext}
+         * @private
          * @since 3.0.0
          */
         this.context = this.createAudioContext(game);
@@ -91,9 +92,9 @@ var WebAudioSoundManager = new Class({
      * @method Phaser.Sound.WebAudioSoundManager#createAudioContext
      * @private
      * @since 3.0.0
-     * 
+     *
      * @param {Phaser.Game} game - Reference to the current game instance.
-     * 
+     *
      * @return {AudioContext} The AudioContext instance to be used for playback.
      */
     createAudioContext: function (game)
@@ -114,10 +115,10 @@ var WebAudioSoundManager = new Class({
      *
      * @method Phaser.Sound.WebAudioSoundManager#add
      * @since 3.0.0
-     * 
+     *
      * @param {string} key - Asset key for the sound.
      * @param {ISoundConfig} [config] - An optional config object containing default sound settings.
-     * 
+     *
      * @return {Phaser.Sound.WebAudioSound} The new sound instance.
      */
     add: function (key, config)
