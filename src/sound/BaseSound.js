@@ -324,7 +324,7 @@ var BaseSound = new Class({
      *
      * @param {string} markerName - The name of the marker to remove.
      *
-     * @return {ISoundMarker|null} Removed marker object or 'null' if there was no marker with provided name.
+     * @return {SoundMarker|null} Removed marker object or 'null' if there was no marker with provided name.
      */
     removeMarker: function (markerName)
     {
