@@ -156,6 +156,7 @@ var BaseSoundManager = new Class({
          *
          * @name Phaser.Sound.BaseSoundManager#locked
          * @type {boolean}
+         * @readOnly
          * @since 3.0.0
          */
         this.locked = this.locked || false;
