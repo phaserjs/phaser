@@ -137,12 +137,10 @@ var HTML5AudioSound = new Class({
         {
             return false;
         }
-
         if (this.startTime > 0)
         {
             return false;
         }
-
         if (!BaseSound.prototype.pause.call(this))
         {
             return false;
@@ -158,7 +156,6 @@ var HTML5AudioSound = new Class({
          * @param {Phaser.Sound.HTML5AudioSound} sound - Reference to the sound that emitted event.
          */
         this.emit('pause', this);
-
         return true;
     },
 
