@@ -20,7 +20,7 @@ var NOOP = require('../../utils/NOOP');
  * breaking on devices that don't support any audio playback technologies.
  *
  * @class NoAudioSoundManager
- * @extends EventEmitter
+ * @extends Phaser.Sound.BaseSoundManager
  * @memberOf Phaser.Sound
  * @constructor
  * @author Pavle Goloskokovic <pgoloskokovic@gmail.com> (http://prunegames.com)
@@ -126,7 +126,7 @@ var NoAudioSoundManager = new Class({
      *
      * @param {string} key - Asset key for the sound.
      * @param {ISoundConfig} [config] - An optional config object containing default sound settings.
-     * 
+     *
      * @return {ISound} The new sound instance.
      */
     add: function (key, config)
@@ -146,7 +146,7 @@ var NoAudioSoundManager = new Class({
      *
      * @param {string} key - Asset key for the sound.
      * @param {ISoundConfig} [config] - An optional config object containing default sound settings.
-     * 
+     *
      * @return {IAudioSpriteSound} The new audio sprite sound instance.
      */
     addAudioSprite: function (key, config)
@@ -189,7 +189,7 @@ var NoAudioSoundManager = new Class({
      * @since 3.0.0
      *
      * @param {ISound} sound - The sound object to remove.
-     * 
+     *
      * @return {boolean} True if the sound was removed successfully, otherwise false.
      */
     remove: function (sound)
@@ -204,7 +204,7 @@ var NoAudioSoundManager = new Class({
      * @since 3.0.0
      *
      * @param {string} key - The key to match when removing sound objects.
-     * 
+     *
      * @return {number} The number of matching sound objects that were removed.
      */
     removeByKey: function (key)
