@@ -249,9 +249,9 @@ var BaseSound = new Class({
      * @method Phaser.Sound.BaseSound#addMarker
      * @since 3.0.0
      *
-     * @param {ISoundMarker} marker - Marker object
+     * @param {SoundMarker} marker - Marker object.
      *
-     * @return {boolean} Whether the marker was added successfully
+     * @return {boolean} Whether the marker was added successfully.
      */
     addMarker: function (marker)
     {
