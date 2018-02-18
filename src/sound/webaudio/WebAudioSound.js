@@ -598,12 +598,6 @@ Object.defineProperty(WebAudioSound.prototype, 'mute', {
 
 });
 
-/**
- * Volume setting.
- *
- * @name Phaser.Sound.WebAudioSound#volume
- * @type {number}
- */
 Object.defineProperty(WebAudioSound.prototype, 'volume', {
 
     get: function ()
