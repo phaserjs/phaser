@@ -563,14 +563,6 @@ Object.defineProperty(BaseSound.prototype, 'rate', {
         this.emit('rate', this, value);
     }
 });
-
-/**
- * Detuning of sound.
- *
- * @name Phaser.Sound.BaseSound#detune
- * @property {number} detune
- * @since 3.0.0
- */
 Object.defineProperty(BaseSound.prototype, 'detune', {
 
     get: function ()
