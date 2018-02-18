@@ -87,6 +87,7 @@ var WebAudioSound = new Class({
          *
          * @name Phaser.Sound.WebAudioSound#volumeNode
          * @type {GainNode}
+         * @private
          * @since 3.0.0
          */
         this.volumeNode = manager.context.createGain();
