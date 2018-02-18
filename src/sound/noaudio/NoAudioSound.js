@@ -98,13 +98,6 @@ var NoAudioSound = new Class({
     {
         return false;
     },
-
-    /**
-     * [description]
-     *
-     * @method Phaser.Sound.NoAudioSound#destroy
-     * @since 3.0.0
-     */
     destroy: function ()
     {
         this.manager.remove(this);
