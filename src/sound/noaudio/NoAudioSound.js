@@ -55,14 +55,6 @@ var NoAudioSound = new Class({
             loop: false,
             delay: 0
         }, config);
-
-        /**
-         * [description]
-         *
-         * @name Phaser.Sound.NoAudioSound#currentConfig
-         * @type {[type]}
-         * @since 3.0.0
-         */
         this.currentConfig = this.config;
 
         /**
