@@ -158,6 +158,7 @@ var WebAudioSound = new Class({
          *
          * @name Phaser.Sound.WebAudioSound#hasLooped
          * @type {boolean}
+         * @private
          * @default false
          * @since 3.0.0
          */
