@@ -219,12 +219,6 @@ Object.defineProperty(WebAudioSoundManager.prototype, 'mute', {
 
 });
 
-/**
- * Global volume setting.
- *
- * @name Phaser.Sound.WebAudioSoundManager#volume
- * @type {number}
- */
 Object.defineProperty(WebAudioSoundManager.prototype, 'volume', {
 
     get: function ()
