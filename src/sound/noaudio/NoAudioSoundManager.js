@@ -46,18 +46,6 @@ var NoAudioSoundManager = new Class({
         this.pauseOnBlur = true;
         this.locked = false;
     },
-
-    /**
-     * [description]
-     *
-     * @method Phaser.Sound.NoAudioSoundManager#add
-     * @since 3.0.0
-     *
-     * @param {string} key - Asset key for the sound.
-     * @param {ISoundConfig} [config] - An optional config object containing default sound settings.
-     *
-     * @return {ISound} The new sound instance.
-     */
     add: function (key, config)
     {
         var sound = new NoAudioSound(this, key, config);
