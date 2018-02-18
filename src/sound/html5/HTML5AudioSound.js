@@ -563,20 +563,11 @@ Object.defineProperty(HTML5AudioSound.prototype, 'mute', {
         this.emit('mute', this, value);
     }
 });
-
-/**
- * Volume setting.
- *
- * @name Phaser.Sound.HTML5AudioSound#volume
- * @type {number}
- */
 Object.defineProperty(HTML5AudioSound.prototype, 'volume', {
-
     get: function ()
     {
         return this.currentConfig.volume;
     },
-
     set: function (value)
     {
         this.currentConfig.volume = value;
@@ -593,7 +584,6 @@ Object.defineProperty(HTML5AudioSound.prototype, 'volume', {
          */
         this.emit('volume', this, value);
     }
-
 });
 
 /**
