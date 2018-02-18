@@ -135,6 +135,7 @@ var WebAudioSound = new Class({
          * @name Phaser.Sound.WebAudioSound#rateUpdates
          * @type {array}
          * @private
+         * @default []
          * @since 3.0.0
          */
         this.rateUpdates = [];
