@@ -86,15 +86,6 @@ var NoAudioSound = new Class({
     {
         return false;
     },
-
-    /**
-     * [description]
-     *
-     * @method Phaser.Sound.NoAudioSound#pause
-     * @since 3.0.0
-     *
-     * @return {boolean} False
-     */
     pause: function ()
     {
         return false;
