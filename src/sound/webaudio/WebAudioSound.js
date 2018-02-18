@@ -620,12 +620,6 @@ Object.defineProperty(WebAudioSound.prototype, 'volume', {
 
 });
 
-/**
- * Current position of playing sound.
- *
- * @name Phaser.Sound.WebAudioSound#seek
- * @type {number}
- */
 Object.defineProperty(WebAudioSound.prototype, 'seek', {
 
     get: function ()
