@@ -78,21 +78,10 @@ var NoAudioSoundManager = new Class({
     {
         return BaseSoundManager.prototype.removeByKey.call(this, key);
     },
-
     pauseAll: NOOP,
-
     resumeAll: NOOP,
-
     stopAll: NOOP,
-
     update: NOOP,
-
-    /**
-     * [description]
-     *
-     * @method Phaser.Sound.NoAudioSoundManager#destroy
-     * @since 3.0.0
-     */
     destroy: function ()
     {
         BaseSoundManager.prototype.destroy.call(this);
