@@ -74,17 +74,6 @@ var NoAudioSoundManager = new Class({
     {
         return BaseSoundManager.prototype.remove.call(this, sound);
     },
-
-    /**
-     * [description]
-     *
-     * @method Phaser.Sound.NoAudioSoundManager#removeByKey
-     * @since 3.0.0
-     *
-     * @param {string} key - The key to match when removing sound objects.
-     *
-     * @return {number} The number of matching sound objects that were removed.
-     */
     removeByKey: function (key)
     {
         return BaseSoundManager.prototype.removeByKey.call(this, key);
