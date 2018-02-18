@@ -110,6 +110,7 @@ var WebAudioSound = new Class({
          *
          * @name Phaser.Sound.WebAudioSound#startTime
          * @type {number}
+         * @private
          * @default 0
          * @since 3.0.0
          */
