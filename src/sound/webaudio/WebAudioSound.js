@@ -168,14 +168,6 @@ var WebAudioSound = new Class({
         this.volumeNode.connect(manager.destination);
 
         this.duration = this.audioBuffer.duration;
-
-        /**
-         * [description]
-         *
-         * @name Phaser.Sound.WebAudioSound#totalDuration
-         * @type {number}
-         * @since 3.0.0
-         */
         this.totalDuration = this.audioBuffer.duration;
 
         BaseSound.call(this, manager, key, config);
