@@ -46,14 +46,6 @@ var NoAudioSound = new Class({
         this.totalRate = 1;
         this.duration = 0;
         this.totalDuration = 0;
-
-        /**
-         * [description]
-         *
-         * @name Phaser.Sound.NoAudioSound#config
-         * @type {object}
-         * @since 3.0.0
-         */
         this.config = Extend({
             mute: false,
             volume: 1,
