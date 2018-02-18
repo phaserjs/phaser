@@ -90,15 +90,6 @@ var NoAudioSound = new Class({
     {
         return false;
     },
-
-    /**
-     * [description]
-     *
-     * @method Phaser.Sound.NoAudioSound#resume
-     * @since 3.0.0
-     *
-     * @return {boolean} False
-     */
     resume: function ()
     {
         return false;
