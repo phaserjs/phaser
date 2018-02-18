@@ -122,6 +122,7 @@ var WebAudioSound = new Class({
          *
          * @name Phaser.Sound.WebAudioSound#loopTime
          * @type {number}
+         * @private
          * @default 0
          * @since 3.0.0
          */
