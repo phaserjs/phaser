@@ -70,17 +70,6 @@ var NoAudioSoundManager = new Class({
     {
         return false;
     },
-
-    /**
-     * [description]
-     *
-     * @method Phaser.Sound.NoAudioSoundManager#remove
-     * @since 3.0.0
-     *
-     * @param {ISound} sound - The sound object to remove.
-     *
-     * @return {boolean} True if the sound was removed successfully, otherwise false.
-     */
     remove: function (sound)
     {
         return BaseSoundManager.prototype.remove.call(this, sound);
