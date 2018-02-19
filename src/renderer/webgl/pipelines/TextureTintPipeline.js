@@ -1263,6 +1263,8 @@ var TextureTintPipeline = new Class({
                 vTintBR = getTint(vTintBR, alpha);
             }
 
+            x -= bitmapText.displayOriginX;
+            y -= bitmapText.displayOriginY;
             x *= scale;
             y *= scale;
             x -= cameraScrollX;
