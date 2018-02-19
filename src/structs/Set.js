@@ -300,14 +300,14 @@ var Set = new Class({
     {
         var newSet = new Set();
 
-        set.values.forEach(function (value)
+        set.entries.forEach(function (value)
         {
-            newSet.add(value);
+            newSet.set(value);
         });
 
         this.entries.forEach(function (value)
         {
-            newSet.add(value);
+            newSet.set(value);
         });
 
         return newSet;
@@ -331,7 +331,7 @@ var Set = new Class({
         {
             if (set.contains(value))
             {
-                newSet.add(value);
+                newSet.set(value);
             }
         });
 
@@ -356,7 +356,7 @@ var Set = new Class({
         {
             if (!set.contains(value))
             {
-                newSet.add(value);
+                newSet.set(value);
             }
         });
 

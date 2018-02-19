@@ -74,16 +74,6 @@ var ScenePlugin = new Class({
          * @since 3.0.0
          */
         this.manager = scene.sys.game.scene;
-
-        /**
-         * [description]
-         *
-         * @name Phaser.Scenes.ScenePlugin#_queue
-         * @type {array}
-         * @private
-         * @since 3.0.0
-         */
-        this._queue = [];
     },
 
     /**

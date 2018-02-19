@@ -39,7 +39,7 @@ module.exports = {
         }),
 
         new WebpackShellPlugin({
-            onBuildEnd: 'node copy-to-examples.js'
+            onBuildExit: 'node copy-to-examples.js'
         })
 
     ],
