@@ -983,6 +983,9 @@ var TextureTintPipeline = new Class({
                 continue;
             }
 
+            x -= bitmapText.displayOriginX;
+            y -= bitmapText.displayOriginY;
+
             xw = x + glyphW * scale;
             yh = y + glyphH * scale;
             tx0 = x * mva + y * mvc + mve;

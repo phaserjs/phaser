@@ -87,6 +87,7 @@ var BitmapTextCanvasRenderer = function (renderer, src, interpolationPercentage,
     ctx.save();
     ctx.translate((src.x - cameraScrollX) + src.frame.x, (src.y - cameraScrollY) + src.frame.y);
     ctx.rotate(src.rotation);
+    ctx.translate(-src.displayOriginX, -src.displayOriginY);
     ctx.scale(src.scaleX, src.scaleY);
 
     // ctx.fillStyle = 'rgba(255,0,255,0.5)';
