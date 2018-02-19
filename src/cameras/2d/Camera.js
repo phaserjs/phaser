@@ -1323,6 +1323,12 @@ var Camera = new Class({
             {
                 this._shakeOffsetX = (Math.random() * intensity * this.width * 2 - intensity * this.width) * this.zoom;
                 this._shakeOffsetY = (Math.random() * intensity * this.height * 2 - intensity * this.height) * this.zoom;
+                
+                if (this.roundPixels)
+                {
+                    this._shakeOffsetX |= 0;
+                    this._shakeOffsetY |= 0;
+                }
             }
         }
     },
