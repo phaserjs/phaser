@@ -207,7 +207,7 @@ var FlatTintPipeline = new Class({
         }
         
         var renderer = this.renderer;
-        var resolution = renderer.config.resolution;
+        var resolution = renderer.config.resolution; // eslint-disable-line no-unused-vars
         var vertexViewF32 = this.vertexViewF32;
         var vertexViewU32 = this.vertexViewU32;
         var vertexOffset = this.vertexCount * this.vertexComponentCount;
@@ -294,7 +294,7 @@ var FlatTintPipeline = new Class({
         }
 
         var renderer = this.renderer;
-        var resolution = renderer.config.resolution;
+        var resolution = renderer.config.resolution; // eslint-disable-line no-unused-vars
         var vertexViewF32 = this.vertexViewF32;
         var vertexViewU32 = this.vertexViewU32;
         var vertexOffset = this.vertexCount * this.vertexComponentCount;
@@ -420,7 +420,7 @@ var FlatTintPipeline = new Class({
         this.renderer.setPipeline(this);
 
         var renderer = this.renderer;
-        var resolution = renderer.config.resolution;
+        var resolution = renderer.config.resolution; // eslint-disable-line no-unused-vars
         var length = path.length;
         var polygonCache = this.polygonCache;
         var polygonIndexArray;
@@ -628,7 +628,7 @@ var FlatTintPipeline = new Class({
         }
         
         var renderer = this.renderer;
-        var resolution = renderer.config.resolution;
+        var resolution = renderer.config.resolution; // eslint-disable-line no-unused-vars
         var a0 = currentMatrix[0];
         var b0 = currentMatrix[1];
         var c0 = currentMatrix[2];
