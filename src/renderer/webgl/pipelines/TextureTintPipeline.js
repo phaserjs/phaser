@@ -724,10 +724,10 @@ var TextureTintPipeline = new Class({
         var ty2 = xw * mvb + yh * mvd + mvf;
         var tx3 = xw * mva + y * mvc + mve;
         var ty3 = xw * mvb + y * mvd + mvf;
-        var tint0 = getTint(tintTL, alphaTL);
-        var tint1 = getTint(tintTR, alphaTR);
-        var tint2 = getTint(tintBL, alphaBL);
-        var tint3 = getTint(tintBR, alphaBR);
+        var vTintTL = getTint(tintTL, alphaTL);
+        var vTintTR = getTint(tintTR, alphaTR);
+        var vTintBL = getTint(tintBL, alphaBL);
+        var vTintBR = getTint(tintBR, alphaBR);
         var vertexOffset = 0;
 
         this.setTexture2D(texture, 0);
@@ -750,32 +750,32 @@ var TextureTintPipeline = new Class({
         vertexViewF32[vertexOffset + 1] = ty0;
         vertexViewF32[vertexOffset + 2] = uvs.x0;
         vertexViewF32[vertexOffset + 3] = uvs.y0;
-        vertexViewU32[vertexOffset + 4] = tint0;
+        vertexViewU32[vertexOffset + 4] = vTintTL;
         vertexViewF32[vertexOffset + 5] = tx1;
         vertexViewF32[vertexOffset + 6] = ty1;
         vertexViewF32[vertexOffset + 7] = uvs.x1;
         vertexViewF32[vertexOffset + 8] = uvs.y1;
-        vertexViewU32[vertexOffset + 9] = tint1;
+        vertexViewU32[vertexOffset + 9] = vTintBL;
         vertexViewF32[vertexOffset + 10] = tx2;
         vertexViewF32[vertexOffset + 11] = ty2;
         vertexViewF32[vertexOffset + 12] = uvs.x2;
         vertexViewF32[vertexOffset + 13] = uvs.y2;
-        vertexViewU32[vertexOffset + 14] = tint2;
+        vertexViewU32[vertexOffset + 14] = vTintBR;
         vertexViewF32[vertexOffset + 15] = tx0;
         vertexViewF32[vertexOffset + 16] = ty0;
         vertexViewF32[vertexOffset + 17] = uvs.x0;
         vertexViewF32[vertexOffset + 18] = uvs.y0;
-        vertexViewU32[vertexOffset + 19] = tint0;
+        vertexViewU32[vertexOffset + 19] = vTintTL;
         vertexViewF32[vertexOffset + 20] = tx2;
         vertexViewF32[vertexOffset + 21] = ty2;
         vertexViewF32[vertexOffset + 22] = uvs.x2;
         vertexViewF32[vertexOffset + 23] = uvs.y2;
-        vertexViewU32[vertexOffset + 24] = tint2;
+        vertexViewU32[vertexOffset + 24] = vTintBR;
         vertexViewF32[vertexOffset + 25] = tx3;
         vertexViewF32[vertexOffset + 26] = ty3;
         vertexViewF32[vertexOffset + 27] = uvs.x3;
         vertexViewF32[vertexOffset + 28] = uvs.y3;
-        vertexViewU32[vertexOffset + 29] = tint3;
+        vertexViewU32[vertexOffset + 29] = vTintTR;
 
         this.vertexCount += 6;
     },
@@ -911,10 +911,10 @@ var TextureTintPipeline = new Class({
         var scale = (bitmapText.fontSize / fontData.size);
         var chars = fontData.chars;
         var alpha = bitmapText.alpha;
-        var tint0 = getTint(bitmapText._tintTL, alpha);
-        var tint1 = getTint(bitmapText._tintTR, alpha);
-        var tint2 = getTint(bitmapText._tintBL, alpha);
-        var tint3 = getTint(bitmapText._tintBR, alpha);
+        var vTintTL = getTint(bitmapText._tintTL, alpha);
+        var vTintTR = getTint(bitmapText._tintTR, alpha);
+        var vTintBL = getTint(bitmapText._tintBL, alpha);
+        var vTintBR = getTint(bitmapText._tintBR, alpha);
         var srcX = bitmapText.x;
         var srcY = bitmapText.y;
         var textureX = frame.cutX;
@@ -1073,32 +1073,32 @@ var TextureTintPipeline = new Class({
             vertexViewF32[vertexOffset + 1] = ty0;
             vertexViewF32[vertexOffset + 2] = umin;
             vertexViewF32[vertexOffset + 3] = vmin;
-            vertexViewU32[vertexOffset + 4] = tint0;
+            vertexViewU32[vertexOffset + 4] = vTintTL;
             vertexViewF32[vertexOffset + 5] = tx1;
             vertexViewF32[vertexOffset + 6] = ty1;
             vertexViewF32[vertexOffset + 7] = umin;
             vertexViewF32[vertexOffset + 8] = vmax;
-            vertexViewU32[vertexOffset + 9] = tint1;
+            vertexViewU32[vertexOffset + 9] = vTintBL;
             vertexViewF32[vertexOffset + 10] = tx2;
             vertexViewF32[vertexOffset + 11] = ty2;
             vertexViewF32[vertexOffset + 12] = umax;
             vertexViewF32[vertexOffset + 13] = vmax;
-            vertexViewU32[vertexOffset + 14] = tint2;
+            vertexViewU32[vertexOffset + 14] = vTintBR;
             vertexViewF32[vertexOffset + 15] = tx0;
             vertexViewF32[vertexOffset + 16] = ty0;
             vertexViewF32[vertexOffset + 17] = umin;
             vertexViewF32[vertexOffset + 18] = vmin;
-            vertexViewU32[vertexOffset + 19] = tint0;
+            vertexViewU32[vertexOffset + 19] = vTintTL;
             vertexViewF32[vertexOffset + 20] = tx2;
             vertexViewF32[vertexOffset + 21] = ty2;
             vertexViewF32[vertexOffset + 22] = umax;
             vertexViewF32[vertexOffset + 23] = vmax;
-            vertexViewU32[vertexOffset + 24] = tint2;
+            vertexViewU32[vertexOffset + 24] = vTintBR;
             vertexViewF32[vertexOffset + 25] = tx3;
             vertexViewF32[vertexOffset + 26] = ty3;
             vertexViewF32[vertexOffset + 27] = umax;
             vertexViewF32[vertexOffset + 28] = vmin;
-            vertexViewU32[vertexOffset + 29] = tint3;
+            vertexViewU32[vertexOffset + 29] = vTintTR;
         
             this.vertexCount += 6;
         }
@@ -1143,10 +1143,10 @@ var TextureTintPipeline = new Class({
         var scale = (bitmapText.fontSize / fontData.size);
         var chars = fontData.chars;
         var alpha = bitmapText.alpha;
-        var tint0 = getTint(bitmapText._tintTL, alpha);
-        var tint1 = getTint(bitmapText._tintTR, alpha);
-        var tint2 = getTint(bitmapText._tintBL, alpha);
-        var tint3 = getTint(bitmapText._tintBR, alpha);
+        var vTintTL = getTint(bitmapText._tintTL, alpha);
+        var vTintTR = getTint(bitmapText._tintTR, alpha);
+        var vTintBL = getTint(bitmapText._tintBL, alpha);
+        var vTintBR = getTint(bitmapText._tintBR, alpha);
         var srcX = bitmapText.x;
         var srcY = bitmapText.y;
         var textureX = frame.cutX;
@@ -1276,10 +1276,10 @@ var TextureTintPipeline = new Class({
                 var output = displayCallback({
                     color: 0,
                     tint: {
-                        topLeft: tint0,
-                        topRight: tint1,
-                        bottomLeft: tint2,
-                        bottomRight: tint3
+                        topLeft: vTintTL,
+                        topRight: vTintTR,
+                        bottomLeft: vTintBL,
+                        bottomRight: vTintBR
                     },
                     index: index,
                     charCode: charCode,
@@ -1297,23 +1297,23 @@ var TextureTintPipeline = new Class({
 
                 if (output.color)
                 {
-                    tint0 = output.color;
-                    tint1 = output.color;
-                    tint2 = output.color;
-                    tint3 = output.color;
+                    vTintTL = output.color;
+                    vTintTR = output.color;
+                    vTintBL = output.color;
+                    vTintBR = output.color;
                 }
                 else
                 {
-                    tint0 = output.tint.topLeft;
-                    tint1 = output.tint.topRight;
-                    tint2 = output.tint.bottomLeft;
-                    tint3 = output.tint.bottomRight;
+                    vTintTL = output.tint.topLeft;
+                    vTintTR = output.tint.topRight;
+                    vTintBL = output.tint.bottomLeft;
+                    vTintBR = output.tint.bottomRight;
                 }
 
-                tint0 = getTint(tint0, alpha);
-                tint1 = getTint(tint1, alpha);
-                tint2 = getTint(tint2, alpha);
-                tint3 = getTint(tint3, alpha);
+                vTintTL = getTint(vTintTL, alpha);
+                vTintTR = getTint(vTintTR, alpha);
+                vTintBL = getTint(vTintBL, alpha);
+                vTintBR = getTint(vTintBR, alpha);
             }
 
             x *= scale;
@@ -1376,32 +1376,32 @@ var TextureTintPipeline = new Class({
             vertexViewF32[vertexOffset + 1] = ty0;
             vertexViewF32[vertexOffset + 2] = umin;
             vertexViewF32[vertexOffset + 3] = vmin;
-            vertexViewU32[vertexOffset + 4] = tint0;
+            vertexViewU32[vertexOffset + 4] = vTintTL;
             vertexViewF32[vertexOffset + 5] = tx1;
             vertexViewF32[vertexOffset + 6] = ty1;
             vertexViewF32[vertexOffset + 7] = umin;
             vertexViewF32[vertexOffset + 8] = vmax;
-            vertexViewU32[vertexOffset + 9] = tint1;
+            vertexViewU32[vertexOffset + 9] = vTintBL;
             vertexViewF32[vertexOffset + 10] = tx2;
             vertexViewF32[vertexOffset + 11] = ty2;
             vertexViewF32[vertexOffset + 12] = umax;
             vertexViewF32[vertexOffset + 13] = vmax;
-            vertexViewU32[vertexOffset + 14] = tint2;
+            vertexViewU32[vertexOffset + 14] = vTintBR;
             vertexViewF32[vertexOffset + 15] = tx0;
             vertexViewF32[vertexOffset + 16] = ty0;
             vertexViewF32[vertexOffset + 17] = umin;
             vertexViewF32[vertexOffset + 18] = vmin;
-            vertexViewU32[vertexOffset + 19] = tint0;
+            vertexViewU32[vertexOffset + 19] = vTintTL;
             vertexViewF32[vertexOffset + 20] = tx2;
             vertexViewF32[vertexOffset + 21] = ty2;
             vertexViewF32[vertexOffset + 22] = umax;
             vertexViewF32[vertexOffset + 23] = vmax;
-            vertexViewU32[vertexOffset + 24] = tint2;
+            vertexViewU32[vertexOffset + 24] = vTintBR;
             vertexViewF32[vertexOffset + 25] = tx3;
             vertexViewF32[vertexOffset + 26] = ty3;
             vertexViewF32[vertexOffset + 27] = umax;
             vertexViewF32[vertexOffset + 28] = vmin;
-            vertexViewU32[vertexOffset + 29] = tint3;
+            vertexViewU32[vertexOffset + 29] = vTintTR;
         
             this.vertexCount += 6;
         }
