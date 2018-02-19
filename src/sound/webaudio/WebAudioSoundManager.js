@@ -178,7 +178,14 @@ var WebAudioSoundManager = new Class({
         this.masterVolumeNode = null;
         this.masterMuteNode.disconnect();
         this.masterMuteNode = null;
-        this.context.suspend();
+        if (this.game.config.audio && this.game.config.audio.context)
+        {
+            this.context.suspend();
+        }
+        else
+        {
+            this.context.close();
+        }
         this.context = null;
         BaseSoundManager.prototype.destroy.call(this);
     }
