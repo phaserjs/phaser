@@ -18,7 +18,11 @@
 * Removed unused `_queue` property from `ScenePlugin` class (thanks @rblopes)
 * The variable `static` is no longer used in Arcade Physics, fixing the 'static is a reserved word' in strict mode error (thanks @samme)
 * Fixed `Set.union`, `Set.intersect` and `Set.difference` (thanks @yupaul)
-
+* The corner tints were being applied in the wrong order. Fixes #3252 (thanks @Rybar)
+* BitmapText objects would ignore calls to setOrigin. Fixes #3249 (thanks @amkazan)
+* Fixed a 1px camera jitter and bleeding issue in the renderer. Fixes #3245 (thanks @bradharms)
+* Fixed the error `WebGL: INVALID_ENUM: blendEquation: invalid mode.` that would arise on iOS. Fixes #3244 (thanks @Ziao)
+* The `drawBlitter` function would crash if `roundPixels` was true. Fixes #3243 (thanks @Jerenaux and @vulcanoidlogic)
 
 ## Version 3.1.0 - Onishi - 16th February 2018
 
