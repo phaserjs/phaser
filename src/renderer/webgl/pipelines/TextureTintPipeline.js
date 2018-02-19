@@ -347,12 +347,12 @@ var TextureTintPipeline = new Class({
             }
 
             this.vertexBuffer = tilemap.vertexBuffer;
-            
+
             renderer.setTexture2D(frame.source.glTexture, 0);
             renderer.setPipeline(this);
 
             gl.drawArrays(this.topology, 0, tilemap.vertexCount);
-    
+
             this.vertexBuffer = pipelineVertexBuffer;
         }
 
@@ -397,7 +397,7 @@ var TextureTintPipeline = new Class({
         var texture = emitterManager.defaultFrame.source.glTexture;
 
         this.setTexture2D(texture, 0);
-        
+
         for (var emitterIndex = 0; emitterIndex < emitterCount; ++emitterIndex)
         {
             var emitter = emitters[emitterIndex];
@@ -464,18 +464,6 @@ var TextureTintPipeline = new Class({
                     var tx3 = xw * mva + y * mvc + mve;
                     var ty3 = xw * mvb + y * mvd + mvf;
                     var vertexOffset = this.vertexCount * vertexComponentCount;
-
-                    if (roundPixels)
-                    {
-                        tx0 = ((tx0 * resolution)|0) / resolution;
-                        ty0 = ((ty0 * resolution)|0) / resolution;
-                        tx1 = ((tx1 * resolution)|0) / resolution;
-                        ty1 = ((ty1 * resolution)|0) / resolution;
-                        tx2 = ((tx2 * resolution)|0) / resolution;
-                        ty2 = ((ty2 * resolution)|0) / resolution;
-                        tx3 = ((tx3 * resolution)|0) / resolution;
-                        ty3 = ((ty3 * resolution)|0) / resolution;
-                    }
 
                     vertexViewF32[vertexOffset + 0] = tx0;
                     vertexViewF32[vertexOffset + 1] = ty0;
@@ -582,21 +570,13 @@ var TextureTintPipeline = new Class({
                 var tx1 = xw * a + yh * c + e;
                 var ty1 = xw * b + yh * d + f;
 
-                if (roundPixels)
-                {
-                    tx0 = ((tx0 * resolution)|0) / resolution;
-                    ty0 = ((ty0 * resolution)|0) / resolution;
-                    tx1 = ((tx1 * resolution)|0) / resolution;
-                    ty1 = ((ty1 * resolution)|0) / resolution;
-                }
-            
                 // Bind Texture if texture wasn't bound.
                 // This needs to be here because of multiple
                 // texture atlas.
                 this.setTexture2D(frame.texture.source[frame.sourceIndex].glTexture, 0);
 
                 var vertexOffset = this.vertexCount * this.vertexComponentCount;
-            
+
                 vertexViewF32[vertexOffset + 0] = tx0;
                 vertexViewF32[vertexOffset + 1] = ty0;
                 vertexViewF32[vertexOffset + 2] = uvs.x0;
@@ -734,18 +714,6 @@ var TextureTintPipeline = new Class({
 
         vertexOffset = this.vertexCount * this.vertexComponentCount;
 
-        if (roundPixels)
-        {
-            tx0 = ((tx0 * resolution)|0) / resolution;
-            ty0 = ((ty0 * resolution)|0) / resolution;
-            tx1 = ((tx1 * resolution)|0) / resolution;
-            ty1 = ((ty1 * resolution)|0) / resolution;
-            tx2 = ((tx2 * resolution)|0) / resolution;
-            ty2 = ((ty2 * resolution)|0) / resolution;
-            tx3 = ((tx3 * resolution)|0) / resolution;
-            ty3 = ((ty3 * resolution)|0) / resolution;
-        }
-
         vertexViewF32[vertexOffset + 0] = tx0;
         vertexViewF32[vertexOffset + 1] = ty0;
         vertexViewF32[vertexOffset + 2] = uvs.x0;
@@ -851,12 +819,6 @@ var TextureTintPipeline = new Class({
             var y = vertices[index + 1];
             var tx = x * mva + y * mvc + mve;
             var ty = x * mvb + y * mvd + mvf;
-
-            if (roundPixels)
-            {
-                tx = ((tx * resolution)|0) / resolution;
-                tx = ((tx * resolution)|0) / resolution;
-            }
 
             vertexViewF32[vertexOffset + 0] = tx;
             vertexViewF32[vertexOffset + 1] = ty;
@@ -1054,20 +1016,8 @@ var TextureTintPipeline = new Class({
             {
                 this.flush();
             }
-            
-            vertexOffset = this.vertexCount * this.vertexComponentCount;
 
-            if (roundPixels)
-            {
-                tx0 = ((tx0 * resolution)|0) / resolution;
-                ty0 = ((ty0 * resolution)|0) / resolution;
-                tx1 = ((tx1 * resolution)|0) / resolution;
-                ty1 = ((ty1 * resolution)|0) / resolution;
-                tx2 = ((tx2 * resolution)|0) / resolution;
-                ty2 = ((ty2 * resolution)|0) / resolution;
-                tx3 = ((tx3 * resolution)|0) / resolution;
-                ty3 = ((ty3 * resolution)|0) / resolution;
-            }
+            vertexOffset = this.vertexCount * this.vertexComponentCount;
 
             vertexViewF32[vertexOffset + 0] = tx0;
             vertexViewF32[vertexOffset + 1] = ty0;
@@ -1099,7 +1049,7 @@ var TextureTintPipeline = new Class({
             vertexViewF32[vertexOffset + 27] = umax;
             vertexViewF32[vertexOffset + 28] = vmin;
             vertexViewU32[vertexOffset + 29] = tint3;
-        
+
             this.vertexCount += 6;
         }
     },
@@ -1250,7 +1200,7 @@ var TextureTintPipeline = new Class({
 
             glyphW = glyph.width;
             glyphH = glyph.height;
-            
+
             x = (indexCount + glyph.xOffset + xAdvance) - scrollX;
             y = (glyph.yOffset + yAdvance) - scrollY;
 
@@ -1357,20 +1307,8 @@ var TextureTintPipeline = new Class({
             {
                 this.flush();
             }
-            
-            vertexOffset = this.vertexCount * this.vertexComponentCount;
 
-            if (roundPixels)
-            {
-                tx0 = ((tx0 * resolution)|0) / resolution;
-                ty0 = ((ty0 * resolution)|0) / resolution;
-                tx1 = ((tx1 * resolution)|0) / resolution;
-                ty1 = ((ty1 * resolution)|0) / resolution;
-                tx2 = ((tx2 * resolution)|0) / resolution;
-                ty2 = ((ty2 * resolution)|0) / resolution;
-                tx3 = ((tx3 * resolution)|0) / resolution;
-                ty3 = ((ty3 * resolution)|0) / resolution;
-            }
+            vertexOffset = this.vertexCount * this.vertexComponentCount;
 
             vertexViewF32[vertexOffset + 0] = tx0;
             vertexViewF32[vertexOffset + 1] = ty0;
@@ -1402,7 +1340,7 @@ var TextureTintPipeline = new Class({
             vertexViewF32[vertexOffset + 27] = umax;
             vertexViewF32[vertexOffset + 28] = vmin;
             vertexViewU32[vertexOffset + 29] = tint3;
-        
+
             this.vertexCount += 6;
         }
 
@@ -1645,22 +1583,10 @@ var TextureTintPipeline = new Class({
         var v0 = (frameY / textureHeight) + vOffset;
         var u1 = (frameX + frameWidth) / textureWidth + uOffset;
         var v1 = (frameY + frameHeight) / textureHeight + vOffset;
-        
+
         this.setTexture2D(texture, 0);
 
         vertexOffset = this.vertexCount * this.vertexComponentCount;
-
-        if (roundPixels)
-        {
-            tx0 = ((tx0 * resolution)|0) / resolution;
-            ty0 = ((ty0 * resolution)|0) / resolution;
-            tx1 = ((tx1 * resolution)|0) / resolution;
-            ty1 = ((ty1 * resolution)|0) / resolution;
-            tx2 = ((tx2 * resolution)|0) / resolution;
-            ty2 = ((ty2 * resolution)|0) / resolution;
-            tx3 = ((tx3 * resolution)|0) / resolution;
-            ty3 = ((ty3 * resolution)|0) / resolution;
-        }
 
         vertexViewF32[vertexOffset + 0] = tx0;
         vertexViewF32[vertexOffset + 1] = ty0;

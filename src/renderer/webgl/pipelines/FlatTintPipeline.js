@@ -168,7 +168,7 @@ var FlatTintPipeline = new Class({
     {
         WebGLPipeline.prototype.resize.call(this, width, height, resolution);
         this.projOrtho(0, this.width, this.height, 0, -1000.0, 1000.0);
-        
+
         return this;
     },
 
@@ -206,7 +206,7 @@ var FlatTintPipeline = new Class({
         {
             this.flush();
         }
-        
+
         var renderer = this.renderer;
         var resolution = renderer.config.resolution;
         var vertexViewF32 = this.vertexViewF32;
@@ -235,18 +235,6 @@ var FlatTintPipeline = new Class({
         var tx3 = xw * a + y * c + e;
         var ty3 = xw * b + y * d + f;
         var tint = Utils.getTintAppendFloatAlphaAndSwap(fillColor, fillAlpha);
-
-        if (roundPixels)
-        {
-            tx0 = ((tx0 * resolution)|0) / resolution;
-            ty0 = ((ty0 * resolution)|0) / resolution;
-            tx1 = ((tx1 * resolution)|0) / resolution;
-            ty1 = ((ty1 * resolution)|0) / resolution;
-            tx2 = ((tx2 * resolution)|0) / resolution;
-            ty2 = ((ty2 * resolution)|0) / resolution;
-            tx3 = ((tx3 * resolution)|0) / resolution;
-            ty3 = ((ty3 * resolution)|0) / resolution;
-        }
 
         vertexViewF32[vertexOffset + 0] = tx0;
         vertexViewF32[vertexOffset + 1] = ty0;
@@ -331,16 +319,6 @@ var FlatTintPipeline = new Class({
         var tx2 = x2 * a + y2 * c + e;
         var ty2 = x2 * b + y2 * d + f;
         var tint = Utils.getTintAppendFloatAlphaAndSwap(fillColor, fillAlpha);
-
-        if (roundPixels)
-        {
-            tx0 = ((tx0 * resolution)|0) / resolution;
-            ty0 = ((ty0 * resolution)|0) / resolution;
-            tx1 = ((tx1 * resolution)|0) / resolution;
-            ty1 = ((ty1 * resolution)|0) / resolution;
-            tx2 = ((tx2 * resolution)|0) / resolution;
-            ty2 = ((ty2 * resolution)|0) / resolution;
-        }
 
         vertexViewF32[vertexOffset + 0] = tx0;
         vertexViewF32[vertexOffset + 1] = ty0;
@@ -508,16 +486,6 @@ var FlatTintPipeline = new Class({
             tx2 = x2 * a + y2 * c + e;
             ty2 = x2 * b + y2 * d + f;
 
-            if (roundPixels)
-            {
-                tx0 = ((tx0 * resolution)|0) / resolution;
-                ty0 = ((ty0 * resolution)|0) / resolution;
-                tx1 = ((tx1 * resolution)|0) / resolution;
-                ty1 = ((ty1 * resolution)|0) / resolution;
-                tx2 = ((tx2 * resolution)|0) / resolution;
-                ty2 = ((ty2 * resolution)|0) / resolution;
-            }
-
             vertexViewF32[vertexOffset + 0] = tx0;
             vertexViewF32[vertexOffset + 1] = ty0;
             vertexViewU32[vertexOffset + 2] = tint;
@@ -666,7 +634,7 @@ var FlatTintPipeline = new Class({
         {
             this.flush();
         }
-        
+
         var renderer = this.renderer;
         var resolution = renderer.config.resolution;
         var a0 = currentMatrix[0];
@@ -711,18 +679,6 @@ var FlatTintPipeline = new Class({
         var bTint = getTint(bLineColor, lineAlpha);
         var vertexOffset = this.vertexCount * this.vertexComponentCount;
 
-        if (roundPixels)
-        {
-            x0 = ((x0 * resolution)|0) / resolution;
-            y0 = ((y0 * resolution)|0) / resolution;
-            x1 = ((x1 * resolution)|0) / resolution;
-            y1 = ((y1 * resolution)|0) / resolution;
-            x2 = ((x2 * resolution)|0) / resolution;
-            y2 = ((y2 * resolution)|0) / resolution;
-            x3 = ((x3 * resolution)|0) / resolution;
-            y3 = ((y3 * resolution)|0) / resolution;
-        }
-
         vertexViewF32[vertexOffset + 0] = x0;
         vertexViewF32[vertexOffset + 1] = y0;
         vertexViewU32[vertexOffset + 2] = bTint;
@@ -764,7 +720,7 @@ var FlatTintPipeline = new Class({
     batchGraphics: function (graphics, camera)
     {
         if (graphics.commandBuffer.length <= 0) { return; }
-        
+
         this.renderer.setPipeline(this);
 
         var cameraScrollX = camera.scrollX * graphics.scrollFactorX;
@@ -844,7 +800,7 @@ var FlatTintPipeline = new Class({
                         endAngle = startAngle;
                         startAngle = -ta;
                     }
-                    
+
                     while (iteration < 1)
                     {
                         ta = (endAngle - startAngle) * iteration + startAngle;
@@ -904,7 +860,7 @@ var FlatTintPipeline = new Class({
                             /* Graphics Game Object Properties */
                             srcX, srcY, srcScaleX, srcScaleY, srcRotation,
 
-                            /* Rectangle properties */ 
+                            /* Rectangle properties */
                             pathArray[pathArrayIndex].points,
                             fillColor,
                             fillAlpha,
@@ -928,7 +884,7 @@ var FlatTintPipeline = new Class({
                             /* Graphics Game Object Properties */
                             srcX, srcY, srcScaleX, srcScaleY, srcRotation,
 
-                            /* Rectangle properties */ 
+                            /* Rectangle properties */
                             path.points,
                             lineWidth,
                             lineColor,
@@ -942,14 +898,14 @@ var FlatTintPipeline = new Class({
                         );
                     }
                     break;
-                    
+
                 case Commands.FILL_RECT:
                     this.batchFillRect(
 
                         /* Graphics Game Object Properties */
                         srcX, srcY, srcScaleX, srcScaleY, srcRotation,
 
-                        /* Rectangle properties */ 
+                        /* Rectangle properties */
                         commands[cmdIndex + 1],
                         commands[cmdIndex + 2],
                         commands[cmdIndex + 3],
@@ -962,7 +918,7 @@ var FlatTintPipeline = new Class({
                         currentMatrix,
                         roundPixels
                     );
-                 
+
                     cmdIndex += 4;
                     break;
 
@@ -972,7 +928,7 @@ var FlatTintPipeline = new Class({
                         /* Graphics Game Object Properties */
                         srcX, srcY, srcScaleX, srcScaleY, srcRotation,
 
-                        /* Triangle properties */ 
+                        /* Triangle properties */
                         commands[cmdIndex + 1],
                         commands[cmdIndex + 2],
                         commands[cmdIndex + 3],
@@ -987,7 +943,7 @@ var FlatTintPipeline = new Class({
                         currentMatrix,
                         roundPixels
                     );
-                    
+
                     cmdIndex += 6;
                     break;
 
@@ -997,7 +953,7 @@ var FlatTintPipeline = new Class({
                         /* Graphics Game Object Properties */
                         srcX, srcY, srcScaleX, srcScaleY, srcRotation,
 
-                        /* Triangle properties */ 
+                        /* Triangle properties */
                         commands[cmdIndex + 1],
                         commands[cmdIndex + 2],
                         commands[cmdIndex + 3],
@@ -1013,7 +969,7 @@ var FlatTintPipeline = new Class({
                         currentMatrix,
                         roundPixels
                     );
-                    
+
                     cmdIndex += 6;
                     break;
 
