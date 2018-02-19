@@ -179,15 +179,6 @@ var WebGLRenderer = new Class({
             encoder: null
         };
 
-        for (var i = 0; i <= 16; i++)
-        {
-            this.blendModes.push({ func: [ WebGLRenderingContext.ONE, WebGLRenderingContext.ONE_MINUS_SRC_ALPHA ], equation: WebGLRenderingContext.FUNC_ADD });
-        }
-
-        this.blendModes[1].func = [ WebGLRenderingContext.ONE, WebGLRenderingContext.DST_ALPHA ];
-        this.blendModes[2].func = [ WebGLRenderingContext.DST_COLOR, WebGLRenderingContext.ONE_MINUS_SRC_ALPHA ];
-        this.blendModes[3].func = [ WebGLRenderingContext.ONE, WebGLRenderingContext.ONE_MINUS_SRC_COLOR ];
-
         // Internal Renderer State (Textures, Framebuffers, Pipelines, Buffers, etc)
 
         /**
@@ -388,6 +379,15 @@ var WebGLRenderer = new Class({
         }
 
         this.gl = gl;
+
+        for (var i = 0; i <= 16; i++)
+        {
+            this.blendModes.push({ func: [ gl.ONE, gl.ONE_MINUS_SRC_ALPHA ], equation: gl.FUNC_ADD });
+        }
+
+        this.blendModes[1].func = [ gl.ONE, gl.DST_ALPHA ];
+        this.blendModes[2].func = [ gl.DST_COLOR, gl.ONE_MINUS_SRC_ALPHA ];
+        this.blendModes[3].func = [ gl.ONE, gl.ONE_MINUS_SRC_COLOR ];
 
         // Load supported extensions
         this.supportedExtensions = gl.getSupportedExtensions();

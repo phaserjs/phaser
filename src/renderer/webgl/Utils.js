@@ -97,10 +97,11 @@ module.exports = {
      * @since 3.0.0
      * 
      * @param {number} attributes - [description]
+     * @param {WebGLRenderingContext} glContext - [description]
      * 
      * @return {number} [description]
      */
-    getComponentCount: function (attributes)
+    getComponentCount: function (attributes, glContext)
     {
         var count = 0;
 
@@ -108,7 +109,7 @@ module.exports = {
         {
             var element = attributes[index];
             
-            if (element.type === WebGLRenderingContext.FLOAT)
+            if (element.type === glContext.FLOAT)
             {
                 count += element.size;
             }
