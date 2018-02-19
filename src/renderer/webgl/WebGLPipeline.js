@@ -185,7 +185,7 @@ var WebGLPipeline = new Class({
          * @type {integer}
          * @since 3.0.0
          */
-        this.vertexComponentCount = Utils.getComponentCount(config.attributes);
+        this.vertexComponentCount = Utils.getComponentCount(config.attributes, this.gl);
 
         /**
          * Indicates if the current pipeline is flushing the contents to the GPU.

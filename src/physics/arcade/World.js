@@ -695,7 +695,7 @@ var World = new Class({
         var body;
 
         var dynamic = this.bodies;
-        var static = this.staticBodies;
+        var staticBodies = this.staticBodies;
         var pending = this.pendingDestroy;
 
         var bodies = dynamic.entries;
@@ -727,7 +727,7 @@ var World = new Class({
                 }
             }
 
-            bodies = static.entries;
+            bodies = staticBodies.entries;
             len = bodies.length;
 
             for (i = 0; i < len; i++)
@@ -761,7 +761,7 @@ var World = new Class({
                 else if (body.physicsType === CONST.STATIC_BODY)
                 {
                     staticTree.remove(body);
-                    static.delete(body);
+                    staticBodies.delete(body);
                 }
 
                 body.world = undefined;

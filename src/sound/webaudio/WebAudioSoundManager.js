@@ -3,7 +3,6 @@
  * @copyright    2018 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
-
 var Class = require('../../utils/Class');
 var BaseSoundManager = require('../BaseSoundManager');
 var WebAudioSound = require('./WebAudioSound');
@@ -18,22 +17,19 @@ var WebAudioSound = require('./WebAudioSound');
  * @constructor
  * @author Pavle Goloskokovic <pgoloskokovic@gmail.com> (http://prunegames.com)
  * @since 3.0.0
- * 
+ *
  * @param {Phaser.Game} game - Reference to the current game instance.
  */
 var WebAudioSoundManager = new Class({
-
     Extends: BaseSoundManager,
-
-    initialize:
-
-    function WebAudioSoundManager (game)
+    initialize: function WebAudioSoundManager (game)
     {
         /**
          * The AudioContext being used for playback.
          *
          * @name Phaser.Sound.WebAudioSoundManager#context
          * @type {AudioContext}
+         * @private
          * @since 3.0.0
          */
         this.context = this.createAudioContext(game);
@@ -43,6 +39,7 @@ var WebAudioSoundManager = new Class({
          *
          * @name Phaser.Sound.WebAudioSoundManager#masterMuteNode
          * @type {GainNode}
+         * @private
          * @since 3.0.0
          */
         this.masterMuteNode = this.context.createGain();
@@ -52,12 +49,11 @@ var WebAudioSoundManager = new Class({
          *
          * @name Phaser.Sound.WebAudioSoundManager#masterVolumeNode
          * @type {GainNode}
+         * @private
          * @since 3.0.0
          */
         this.masterVolumeNode = this.context.createGain();
-
         this.masterMuteNode.connect(this.masterVolumeNode);
-
         this.masterVolumeNode.connect(this.context.destination);
 
         /**
@@ -65,19 +61,11 @@ var WebAudioSoundManager = new Class({
          *
          * @name Phaser.Sound.WebAudioSoundManager#destination
          * @type {AudioNode}
+         * @private
          * @since 3.0.0
          */
         this.destination = this.masterMuteNode;
-
-        /**
-         * Is the Sound Manager touch locked?
-         *
-         * @name Phaser.Sound.WebAudioSoundManager#locked
-         * @type {boolean}
-         * @since 3.0.0
-         */
         this.locked = this.context.state === 'suspended' && 'ontouchstart' in window;
-
         BaseSoundManager.call(this, game);
     },
 
@@ -91,21 +79,19 @@ var WebAudioSoundManager = new Class({
      * @method Phaser.Sound.WebAudioSoundManager#createAudioContext
      * @private
      * @since 3.0.0
-     * 
+     *
      * @param {Phaser.Game} game - Reference to the current game instance.
-     * 
+     *
      * @return {AudioContext} The AudioContext instance to be used for playback.
      */
     createAudioContext: function (game)
     {
         var audioConfig = game.config.audio;
-
         if (audioConfig && audioConfig.context)
         {
             audioConfig.context.resume();
             return audioConfig.context;
         }
-
         return new AudioContext();
     },
 
@@ -114,18 +100,16 @@ var WebAudioSoundManager = new Class({
      *
      * @method Phaser.Sound.WebAudioSoundManager#add
      * @since 3.0.0
-     * 
+     *
      * @param {string} key - Asset key for the sound.
-     * @param {ISoundConfig} [config] - An optional config object containing default sound settings.
-     * 
+     * @param {SoundConfig} [config] - An optional config object containing default sound settings.
+     *
      * @return {Phaser.Sound.WebAudioSound} The new sound instance.
      */
     add: function (key, config)
     {
         var sound = new WebAudioSound(this, key, config);
-
         this.sounds.push(sound);
-
         return sound;
     },
 
@@ -141,7 +125,6 @@ var WebAudioSoundManager = new Class({
     unlock: function ()
     {
         var _this = this;
-
         var unlock = function ()
         {
             _this.context.resume().then(function ()
@@ -151,7 +134,6 @@ var WebAudioSoundManager = new Class({
                 _this.unlocked = true;
             });
         };
-
         document.body.addEventListener('touchstart', unlock, false);
         document.body.addEventListener('touchend', unlock, false);
     },
@@ -191,30 +173,28 @@ var WebAudioSoundManager = new Class({
      */
     destroy: function ()
     {
-        BaseSoundManager.prototype.destroy.call(this);
         this.destination = null;
         this.masterVolumeNode.disconnect();
         this.masterVolumeNode = null;
         this.masterMuteNode.disconnect();
         this.masterMuteNode = null;
-        this.context.suspend();
+        if (this.game.config.audio && this.game.config.audio.context)
+        {
+            this.context.suspend();
+        }
+        else
+        {
+            this.context.close();
+        }
         this.context = null;
+        BaseSoundManager.prototype.destroy.call(this);
     }
 });
-
-/**
- * Global mute setting.
- *
- * @name Phaser.Sound.WebAudioSoundManager#mute
- * @type {boolean}
- */
 Object.defineProperty(WebAudioSoundManager.prototype, 'mute', {
-
     get: function ()
     {
         return this.masterMuteNode.gain.value === 0;
     },
-
     set: function (value)
     {
         this.masterMuteNode.gain.setValueAtTime(value ? 0 : 1, 0);
@@ -226,22 +206,12 @@ Object.defineProperty(WebAudioSoundManager.prototype, 'mute', {
          */
         this.emit('mute', this, value);
     }
-
 });
-
-/**
- * Global volume setting.
- *
- * @name Phaser.Sound.WebAudioSoundManager#volume
- * @type {number}
- */
 Object.defineProperty(WebAudioSoundManager.prototype, 'volume', {
-
     get: function ()
     {
         return this.masterVolumeNode.gain.value;
     },
-
     set: function (value)
     {
         this.masterVolumeNode.gain.setValueAtTime(value, 0);
@@ -253,7 +223,5 @@ Object.defineProperty(WebAudioSoundManager.prototype, 'volume', {
          */
         this.emit('volume', this, value);
     }
-
 });
-
 module.exports = WebAudioSoundManager;
