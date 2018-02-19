@@ -10,7 +10,7 @@ This Issue is about (delete as applicable)
 * An error on the web site
 * A problem with my own code
 
-API errors must include example code showing what happens, and why you don't believe this is the expected behavior. Issues posted without code take _far_ longer to get resolved, _if ever_. Feel free to use a site such as jsbin to demo the problem. If we can run it, and see the error, we can usually fix it.
+API errors must include example code showing what happens, and why you don't believe this is the expected behavior. Issues posted without code take _far_ longer to get resolved, _if ever_. Feel free to use a site such as jsBin or [CodePen](https://codepen.io/pen?template=YeEWom) to demo the problem. If we can run it, and see the error, we can usually fix it.
 
 If your Issue contains _any_ form of hostility it will be instantly closed.
 
