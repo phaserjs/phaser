@@ -24,9 +24,9 @@ Grab the source and join in the fun!
 
 <div align="center"><img src="https://phaser.io/images/github/news.jpg"></div>
 
-> 16th February 2018
+> 20th February 2018
 
-**Updated:** Thank you for the amazing response to the 3.0.0 release! We've been hard at work and have now prepared 3.1.0 for you, which is available today. This fixes a few issues that crept in and further speeds up the WebGL rendering. Check out the [Change Log](#changelog) for more details.
+**Updated:** Thank you for the amazing response to the 3.0.0 release! We've been hard at work and have now prepared 3.1.1 for you, which is available today. Check out the [Change Log](#changelog) for more details.
 
 After 1.5 years in the making, tens of thousands of lines of code, hundreds of examples and countless hours of relentless work: Phaser 3 is finally out. It has been a real labor of love and then some!
 
@@ -94,13 +94,13 @@ npm install phaser
 [Phaser is on jsDelivr](http://www.jsdelivr.com/projects/phaser), a "super-fast CDN for developers". Include the following in your html:
 
 ```html
-<script src="//cdn.jsdelivr.net/npm/phaser@3.1.0/dist/phaser.js"></script>
+<script src="//cdn.jsdelivr.net/npm/phaser@3.1.1/dist/phaser.js"></script>
 ```
 
 or the minified version:
 
 ```html
-<script src="//cdn.jsdelivr.net/npm/phaser@3.1.0/dist/phaser.min.js"></script>
+<script src="//cdn.jsdelivr.net/npm/phaser@3.1.1/dist/phaser.min.js"></script>
 ```
 
 ### License
@@ -233,36 +233,31 @@ You can then run `webpack` to perform a dev build to the `build` folder, includi
 ![Change Log](https://phaser.io/images/github/div-change-log.png "Change Log")
 <a name="changelog"></a>
 
-## Version 3.1.0 - Onishi - 16th February 2018
+## Version 3.1.1 - 20th February 2018
 
 ### Updates
 
-* Vertex resource handling code updated, further optimizing the WebGL batching. You should now see less gl ops per frame across all batches.
-* The `Blitter` game object has been updated to use the `List` structure instead of `DisplayList`.
-* Arcade Physics World `disableBody` has been renamed `disableGameObjectBody` to more accurately reflect what it does.
-* Lots of un-used properties were removed from the Arcade Physics Static Body object.
-* Arcade Physics Static Body can now refresh itself from its parent via `refreshBody`.
+* The entire codebase now passes our eslint config (which helped highlight a few errors), if you're submitting a PR, please ensure your PR passes the config too.
+* The Web Audio Context is now suspended instead of closed to allow for prevention of 'Failed to construct AudioContext: maximum number of hardware contexts reached' errors from Chrome in a hot reload environment. We still strongly recommend reusing the same context in a production environment. See [this example](http://labs.phaser.io/view.html?src=src%5Caudio%5CWeb%20Audio%5CReuse%20AudioContext.js) for details. Fixes #3238 (thanks @z0y1 @Ziao)
+* The Webpack shell plugin now fires on `onBuildExit`, meaning it'll update the examples if you use `webpack watch` (thanks @rblopes)
+* Added `root: true` flag to the eslint config to stop it scanning further-up the filesystem.
 
 ### Bug Fixes
 
-* A couple of accidental uses of `let` existed, which broke Image loading in Safari # (thanks Yat Hin Wong)
-* Added the static property `Graphics.TargetCamera` was added back in which fixed `Graphics.generateTexture`.
-* The SetHitArea Action now calls `setInteractive`, fixing `Group.createMultiple` when a hitArea has been set.
-* Removed rogue Tween emit calls. Fix #3222 (thanks @ZaDarkSide)
-* Fixed incorrect call to TweenManager.makeActive. Fix #3219 (thanks @ZaDarkSide)
-* The Depth component was missing from the Zone Game Object. Fix #3213 (thanks @Twilrom)
-* Fixed issue with `Blitter` overwriting previous objects vertex data.
-* The `Tile` game object tinting was fixed, so tiles now honor alpha values correctly.
-* The `BitmapMask` would sometimes incorrectly bind its resources.
-* Fixed the wrong Extend target in MergeXHRSettings (thanks @samme)
+* Math.Fuzzy.Floor had an incorrect method signature.
+* Arcade Physics World didn't import GetOverlapX or GetOverlapY, causing `separateCircle` to break.
+* TileSprite was missing a gl reference, causing it to fail during a context loss and restore.
+* The Mesh Game Object Factory entry had incorrect arguments passed to Mesh constructor.
+* Removed unused `_queue` property from `ScenePlugin` class (thanks @rblopes)
+* The variable `static` is no longer used in Arcade Physics, fixing the 'static is a reserved word' in strict mode error (thanks @samme)
+* Fixed `Set.union`, `Set.intersect` and `Set.difference` (thanks @yupaul)
+* The corner tints were being applied in the wrong order. Fixes #3252 (thanks @Rybar)
+* BitmapText objects would ignore calls to setOrigin. Fixes #3249 (thanks @amkazan)
+* Fixed a 1px camera jitter and bleeding issue in the renderer. Fixes #3245 (thanks @bradharms)
+* Fixed the error `WebGL: INVALID_ENUM: blendEquation: invalid mode.` that would arise on iOS. Fixes #3244 (thanks @Ziao)
+* The `drawBlitter` function would crash if `roundPixels` was true. Fixes #3243 (thanks @Jerenaux and @vulcanoidlogic)
 
-### New Features
-
-* Destroying a Game Object will now call destroy on its physics body, if it has one set.
-* Arcade Physics Colliders have a new `name` property and corresponding `setName` method.
-* Matter.js bodies now have an inlined destroy method that removes them from the World.
-* Impact bodies now remove themselves from the World when destroyed.
-* Added Vector2.ZERO static property.
+Please see the complete [Change Log]((https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md)) for previous releases.
 
 Looking for a v2 change? Check out the [Phaser CE Change Log](https://github.com/photonstorm/phaser-ce/blob/master/CHANGELOG.md)
 

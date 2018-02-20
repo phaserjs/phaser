@@ -1,6 +1,6 @@
 # Change Log
 
-## Version 3.1.1 - In Development
+## Version 3.1.1 - 20th February 2018
 
 ### Updates
 
