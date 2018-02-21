@@ -485,7 +485,7 @@ var BaseSoundManager = new Class({
      * @since 3.0.0
      *
      * @param {function} callbackfn - Callback function. (sound: ISound, index: number, array: ISound[]) => void
-     * @param [scope] - Callback context.
+     * @param {object} scope - Callback context.
      */
     forEachActiveSound: function (callbackfn, scope)
     {
@@ -499,11 +499,21 @@ var BaseSoundManager = new Class({
         });
     }
 });
+
+/**
+ * [description]
+ *
+ * @name Phaser.Sound.BaseSoundManager#rate
+ * @type {number}
+ * @since 3.0.0
+ */
 Object.defineProperty(BaseSoundManager.prototype, 'rate', {
+
     get: function ()
     {
         return this._rate;
     },
+
     set: function (value)
     {
         this._rate = value;
@@ -519,12 +529,23 @@ Object.defineProperty(BaseSoundManager.prototype, 'rate', {
          */
         this.emit('rate', this, value);
     }
+
 });
+
+/**
+ * [description]
+ *
+ * @name Phaser.Sound.BaseSoundManager#detune
+ * @type {number}
+ * @since 3.0.0
+ */
 Object.defineProperty(BaseSoundManager.prototype, 'detune', {
+
     get: function ()
     {
         return this._detune;
     },
+
     set: function (value)
     {
         this._detune = value;
@@ -540,5 +561,7 @@ Object.defineProperty(BaseSoundManager.prototype, 'detune', {
          */
         this.emit('detune', this, value);
     }
+
 });
+
 module.exports = BaseSoundManager;

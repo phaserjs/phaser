@@ -290,9 +290,9 @@ var TextStyle = new Class({
      * @since 3.0.0
      *
      * @param {[type]} style - [description]
-     * @param {[type]} updateText - [description]
+     * @param {boolean} [updateText=true] - [description]
      *
-     * @return {Phaser.GameObjects.Components.TextStyle This TextStyle component.
+     * @return {Phaser.GameObjects.Components.TextStyle} This TextStyle component.
      */
     setStyle: function (style, updateText)
     {
@@ -565,7 +565,7 @@ var TextStyle = new Class({
      * @method Phaser.GameObjects.Components.TextStyle#setBackgroundColor
      * @since 3.0.0
      *
-     * @param {string color - [description]
+     * @param {string} color - [description]
      *
      * @return {Phaser.GameObjects.Text} The parent Text object.
      */
