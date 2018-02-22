@@ -10,6 +10,7 @@
 ### Bug Fixes
 
 * The KeyCode `FORWAD_SLASH` had a typo and has been changed to `FORWAD_SLASH`. Fix #3271 (thanks @josedarioxyz)
+* Added missing data parameter to ScenePlugin. Fixes #3810 (thanks @AleBles)
 
 
 
