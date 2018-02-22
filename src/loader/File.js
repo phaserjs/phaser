@@ -272,7 +272,7 @@ var File = new Class({
 
             if (this.src.indexOf('data:') === 0)
             {
-                console.log('Local data URI');
+                console.warn('Local data URIs are not supported: ' + this.key);
             }
             else
             {
