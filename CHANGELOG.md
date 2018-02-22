@@ -13,6 +13,7 @@
 * Fixed issue with vertex buffer creation on Static Tilemap Layer, causing tilemap layers to appear black. Fix #3266 (thanks @akleemans)
 * Implemented Static Tilemap Layer scaling and Tile alpha support.
 * Fixed issue with null texture on Particle Emitter batch generation. This would manifest if you had particles with blend modes on-top of other images not appearing.
+* Added missing data parameter to ScenePlugin. Fixes #3810 (thanks @AleBles)
 
 ## Version 3.1.1 - 20th February 2018
 
