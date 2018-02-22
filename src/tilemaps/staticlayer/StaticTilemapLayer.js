@@ -289,7 +289,7 @@ var StaticTilemapLayer = new Class({
                         var ty2 = tyh;
                         var tx3 = txw;
                         var ty3 = ty;
-                        var tint = Utils.getTintAppendFloatAlpha(0xffffff, tile.alpha);
+                        var tint = Utils.getTintAppendFloatAlpha(0xffffff, this.alpha * tile.alpha);
 
                         vertexViewF32[voffset + 0] = tx0;
                         vertexViewF32[voffset + 1] = ty0;
@@ -343,6 +343,7 @@ var StaticTilemapLayer = new Class({
 
             pipeline.modelIdentity();
             pipeline.modelTranslate(this.x - (camera.scrollX * this.scrollFactorX), this.y - (camera.scrollY * this.scrollFactorY), 0.0);
+            pipeline.modelScale(this.scaleX, this.scaleY, 1.0);
             pipeline.viewLoad2D(camera.matrix.matrix);
         }
 
