@@ -32,7 +32,7 @@ var Vector4 = new Class({
         /**
          * The x component of this Vector.
          *
-         * @name Phaser.Math.Vector3#x
+         * @name Phaser.Math.Vector4#x
          * @type {number}
          * @default 0
          * @since 3.0.0
@@ -41,7 +41,7 @@ var Vector4 = new Class({
         /**
          * The y component of this Vector.
          *
-         * @name Phaser.Math.Vector3#y
+         * @name Phaser.Math.Vector4#y
          * @type {number}
          * @default 0
          * @since 3.0.0
@@ -50,7 +50,7 @@ var Vector4 = new Class({
         /**
          * The z component of this Vector.
          *
-         * @name Phaser.Math.Vector3#z
+         * @name Phaser.Math.Vector4#z
          * @type {number}
          * @default 0
          * @since 3.0.0
@@ -59,7 +59,7 @@ var Vector4 = new Class({
         /**
          * The w component of this Vector.
          *
-         * @name Phaser.Math.Vector3#w
+         * @name Phaser.Math.Vector4#w
          * @type {number}
          * @default 0
          * @since 3.0.0
@@ -87,7 +87,7 @@ var Vector4 = new Class({
      * @method Phaser.Math.Vector4#clone
      * @since 3.0.0
      *
-     * @return {[type]} [description]
+     * @return {Phaser.Math.Vector4} [description]
      */
     clone: function ()
     {
@@ -100,9 +100,9 @@ var Vector4 = new Class({
      * @method Phaser.Math.Vector4#copy
      * @since 3.0.0
      *
-     * @param {[type]} src - [description]
+     * @param {Phaser.Math.Vector4} src - [description]
      *
-     * @return {[type]} [description]
+     * @return {Phaser.Math.Vector4} This Vector4 object.
      */
     copy: function (src)
     {
@@ -120,9 +120,9 @@ var Vector4 = new Class({
      * @method Phaser.Math.Vector4#equals
      * @since 3.0.0
      *
-     * @param {[type]} v - [description]
+     * @param {Phaser.Math.Vector4} v - [description]
      *
-     * @return {[type]} [description]
+     * @return {boolean} [description]
      */
     equals: function (v)
     {
@@ -135,12 +135,12 @@ var Vector4 = new Class({
      * @method Phaser.Math.Vector4#set
      * @since 3.0.0
      *
-     * @param {[type]} x - [description]
-     * @param {[type]} y - [description]
-     * @param {[type]} z - [description]
-     * @param {[type]} w - [description]
+     * @param {number} x - [description]
+     * @param {number} y - [description]
+     * @param {number} z - [description]
+     * @param {number} w - [description]
      *
-     * @return {[type]} [description]
+     * @return {Phaser.Math.Vector4} This Vector4 object.
      */
     set: function (x, y, z, w)
     {
@@ -168,9 +168,9 @@ var Vector4 = new Class({
      * @method Phaser.Math.Vector4#add
      * @since 3.0.0
      *
-     * @param {[type]} v - [description]
+     * @param {Phaser.Math.Vector2|Phaser.Math.Vector3|Phaser.Math.Vector4} v - [description]
      *
-     * @return {[type]} [description]
+     * @return {Phaser.Math.Vector4} This Vector4 object.
      */
     add: function (v)
     {
@@ -188,9 +188,9 @@ var Vector4 = new Class({
      * @method Phaser.Math.Vector4#subtract
      * @since 3.0.0
      *
-     * @param {[type]} v - [description]
+     * @param {Phaser.Math.Vector2|Phaser.Math.Vector3|Phaser.Math.Vector4} v - [description]
      *
-     * @return {[type]} [description]
+     * @return {Phaser.Math.Vector4} This Vector4 object.
      */
     subtract: function (v)
     {
@@ -208,9 +208,9 @@ var Vector4 = new Class({
      * @method Phaser.Math.Vector4#scale
      * @since 3.0.0
      *
-     * @param {[type]} scale - [description]
+     * @param {number} scale - [description]
      *
-     * @return {[type]} [description]
+     * @return {Phaser.Math.Vector4} This Vector4 object.
      */
     scale: function (scale)
     {
@@ -228,7 +228,7 @@ var Vector4 = new Class({
      * @method Phaser.Math.Vector4#length
      * @since 3.0.0
      *
-     * @return {[type]} [description]
+     * @return {number} [description]
      */
     length: function ()
     {
@@ -246,7 +246,7 @@ var Vector4 = new Class({
      * @method Phaser.Math.Vector4#lengthSq
      * @since 3.0.0
      *
-     * @return {[type]} [description]
+     * @return {number} [description]
      */
     lengthSq: function ()
     {
@@ -264,7 +264,7 @@ var Vector4 = new Class({
      * @method Phaser.Math.Vector4#normalize
      * @since 3.0.0
      *
-     * @return {[type]} [description]
+     * @return {Phaser.Math.Vector4} This Vector4 object.
      */
     normalize: function ()
     {
@@ -295,7 +295,7 @@ var Vector4 = new Class({
      *
      * @param {[type]} v - [description]
      *
-     * @return {[type]} [description]
+     * @return {number} [description]
      */
     dot: function (v)
     {
@@ -311,7 +311,7 @@ var Vector4 = new Class({
      * @param {[type]} v - [description]
      * @param {[type]} t - [description]
      *
-     * @return {[type]} [description]
+     * @return {Phaser.Math.Vector4} This Vector4 object.
      */
     lerp: function (v, t)
     {
@@ -338,7 +338,7 @@ var Vector4 = new Class({
      *
      * @param {[type]} v - [description]
      *
-     * @return {[type]} [description]
+     * @return {Phaser.Math.Vector4} This Vector4 object.
      */
     multiply: function (v)
     {
@@ -358,7 +358,7 @@ var Vector4 = new Class({
      *
      * @param {[type]} v - [description]
      *
-     * @return {[type]} [description]
+     * @return {Phaser.Math.Vector4} This Vector4 object.
      */
     divide: function (v)
     {
@@ -378,7 +378,7 @@ var Vector4 = new Class({
      *
      * @param {[type]} v - [description]
      *
-     * @return {[type]} [description]
+     * @return {number} [description]
      */
     distance: function (v)
     {
@@ -398,7 +398,7 @@ var Vector4 = new Class({
      *
      * @param {[type]} v - [description]
      *
-     * @return {[type]} [description]
+     * @return {number} [description]
      */
     distanceSq: function (v)
     {
@@ -416,7 +416,7 @@ var Vector4 = new Class({
      * @method Phaser.Math.Vector4#negate
      * @since 3.0.0
      *
-     * @return {[type]} [description]
+     * @return {Phaser.Math.Vector4} This Vector4 object.
      */
     negate: function ()
     {
@@ -436,7 +436,7 @@ var Vector4 = new Class({
      *
      * @param {[type]} mat - [description]
      *
-     * @return {[type]} [description]
+     * @return {Phaser.Math.Vector4} This Vector4 object.
      */
     transformMat4: function (mat)
     {
@@ -464,7 +464,7 @@ var Vector4 = new Class({
      *
      * @param {[type]} q - [description]
      *
-     * @return {[type]} [description]
+     * @return {Phaser.Math.Vector4} This Vector4 object.
      */
     transformQuat: function (q)
     {
@@ -497,7 +497,7 @@ var Vector4 = new Class({
      * @method Phaser.Math.Vector4#reset
      * @since 3.0.0
      *
-     * @return {[type]} [description]
+     * @return {Phaser.Math.Vector4} This Vector4 object.
      */
     reset: function ()
     {
@@ -511,6 +511,7 @@ var Vector4 = new Class({
 
 });
 
+//  TODO: Check if these are required internally, if not, remove.
 Vector4.prototype.sub = Vector4.prototype.subtract;
 Vector4.prototype.mul = Vector4.prototype.multiply;
 Vector4.prototype.div = Vector4.prototype.divide;

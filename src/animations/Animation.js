@@ -54,7 +54,7 @@ var Animation = new Class({
         /**
          * A frame based animation (as opposed to a bone based animation)
          *
-         * @name Phaser.Animations.Animation#key
+         * @name Phaser.Animations.Animation#type
          * @type {string}
          * @default frame
          * @since 3.0.0
