@@ -71,29 +71,6 @@ var BaseSoundManager = new Class({
         this.volume = 1;
 
         /**
-         * Global playback rate at which all the sounds will be played.
-         * Value of 1.0 plays the audio at full speed, 0.5 plays the audio at half speed
-         * and 2.0 doubles the audio's playback speed.
-         *
-         * @name Phaser.Sound.BaseSoundManager#rate
-         * @type {number}
-         * @default 1
-         * @since 3.0.0
-         */
-        this.rate = 1;
-
-        /**
-         * Global detuning of all sounds in [cents](https://en.wikipedia.org/wiki/Cent_%28music%29).
-         * The range of the value is -1200 to 1200, but we recommend setting it to [50](https://en.wikipedia.org/wiki/50_Cent).
-         *
-         * @name Phaser.Sound.BaseSoundManager#detune
-         * @type {number}
-         * @default 0
-         * @since 3.0.0
-         */
-        this.detune = 0;
-
-        /**
          * Flag indicating if sounds should be paused when game looses focus,
          * for instance when user switches to another tab/program/app.
          *
@@ -103,6 +80,7 @@ var BaseSoundManager = new Class({
          * @since 3.0.0
          */
         this.pauseOnBlur = true;
+
         game.events.on('blur', function ()
         {
             if (this.pauseOnBlur)
@@ -110,6 +88,7 @@ var BaseSoundManager = new Class({
                 this.onBlur();
             }
         }, this);
+
         game.events.on('focus', function ()
         {
             if (this.pauseOnBlur)
@@ -117,6 +96,7 @@ var BaseSoundManager = new Class({
                 this.onFocus();
             }
         }, this);
+
         game.events.once('destroy', this.destroy, this);
 
         /**
@@ -164,6 +144,7 @@ var BaseSoundManager = new Class({
          * @since 3.0.0
          */
         this.unlocked = false;
+
         if (this.locked)
         {
             this.unlock();
@@ -497,69 +478,77 @@ var BaseSoundManager = new Class({
                 callbackfn.call(scope || _this, sound, index, _this.sounds);
             }
         });
-    }
-});
-
-/**
- * [description]
- *
- * @name Phaser.Sound.BaseSoundManager#rate
- * @type {number}
- * @since 3.0.0
- */
-Object.defineProperty(BaseSoundManager.prototype, 'rate', {
-
-    get: function ()
-    {
-        return this._rate;
     },
 
-    set: function (value)
-    {
-        this._rate = value;
-        this.forEachActiveSound(function (sound)
+    /**
+     * Global playback rate at which all the sounds will be played.
+     * Value of 1.0 plays the audio at full speed, 0.5 plays the audio at half speed
+     * and 2.0 doubles the audio's playback speed.
+     *
+     * @name Phaser.Sound.BaseSoundManager#rate
+     * @type {number}
+     * @default 1
+     * @since 3.0.0
+     */
+    rate: {
+
+        get: function ()
         {
-            sound.setRate();
-        });
+            return this._rate;
+        },
 
-        /**
-         * @event Phaser.Sound.BaseSoundManager#rate
-         * @param {Phaser.Sound.BaseSoundManager} soundManager - Reference to the sound manager that emitted event.
-         * @param {number} value - An updated value of Phaser.Sound.BaseSoundManager#rate property.
-         */
-        this.emit('rate', this, value);
-    }
+        set: function (value)
+        {
+            this._rate = value;
 
-});
+            this.forEachActiveSound(function (sound)
+            {
+                sound.setRate();
+            });
 
-/**
- * [description]
- *
- * @name Phaser.Sound.BaseSoundManager#detune
- * @type {number}
- * @since 3.0.0
- */
-Object.defineProperty(BaseSoundManager.prototype, 'detune', {
+            /**
+             * @event Phaser.Sound.BaseSoundManager#rate
+             * @param {Phaser.Sound.BaseSoundManager} soundManager - Reference to the sound manager that emitted event.
+             * @param {number} value - An updated value of Phaser.Sound.BaseSoundManager#rate property.
+             */
+            this.emit('rate', this, value);
+        }
 
-    get: function ()
-    {
-        return this._detune;
     },
 
-    set: function (value)
-    {
-        this._detune = value;
-        this.forEachActiveSound(function (sound)
-        {
-            sound.setRate();
-        });
+    /**
+     * Global detuning of all sounds in [cents](https://en.wikipedia.org/wiki/Cent_%28music%29).
+     * The range of the value is -1200 to 1200, but we recommend setting it to [50](https://en.wikipedia.org/wiki/50_Cent).
+     *
+     * @name Phaser.Sound.BaseSoundManager#detune
+     * @type {number}
+     * @default 0
+     * @since 3.0.0
+     */
+    detune: {
 
-        /**
-         * @event Phaser.Sound.BaseSoundManager#detune
-         * @param {Phaser.Sound.BaseSoundManager} soundManager - Reference to the sound manager that emitted event.
-         * @param {number} value - An updated value of Phaser.Sound.BaseSoundManager#detune property.
-         */
-        this.emit('detune', this, value);
+        get: function ()
+        {
+            return this._detune;
+        },
+
+        set: function (value)
+        {
+            this._detune = value;
+
+            this.forEachActiveSound(function (sound)
+            {
+                sound.setRate();
+            });
+
+            /**
+             * @event Phaser.Sound.BaseSoundManager#detune
+             * @param {Phaser.Sound.BaseSoundManager} soundManager - Reference to the sound manager that emitted event.
+             * @param {number} value - An updated value of Phaser.Sound.BaseSoundManager#detune property.
+             */
+            this.emit('detune', this, value);
+        }
+
     }
 
 });
