@@ -277,6 +277,7 @@ var TextureTintPipeline = new Class({
 
         this.vertexCount = 0;
         batches.length = 0;
+        this.pushBatch();
         this.flushLocked = false;
 
         return this;
@@ -375,7 +376,6 @@ var TextureTintPipeline = new Class({
         var vertexViewF32 = this.vertexViewF32;
         var vertexViewU32 = this.vertexViewU32;
         var renderer = this.renderer;
-        var resolution = renderer.config.resolution; // eslint-disable-line no-unused-vars
         var maxQuads = this.maxQuads;
         var cameraScrollX = camera.scrollX;
         var cameraScrollY = camera.scrollY;
@@ -505,6 +505,8 @@ var TextureTintPipeline = new Class({
                 }
             }
         }
+        
+        this.setTexture2D(texture, 0);
     },
 
     /**
@@ -524,7 +526,6 @@ var TextureTintPipeline = new Class({
         var vertexViewF32 = this.vertexViewF32;
         var vertexViewU32 = this.vertexViewU32;
         var renderer = this.renderer;
-        var resolution = renderer.config.resolution; // eslint-disable-line no-unused-vars
         var list = blitter.getRenderList();
         var length = list.length;
         var cameraMatrix = camera.matrix.matrix;
@@ -643,7 +644,6 @@ var TextureTintPipeline = new Class({
         var vertexViewF32 = this.vertexViewF32;
         var vertexViewU32 = this.vertexViewU32;
         var renderer = this.renderer;
-        var resolution = renderer.config.resolution; // eslint-disable-line no-unused-vars
         var cameraMatrix = camera.matrix.matrix;
         var frame = sprite.frame;
         var texture = frame.texture.source[frame.sourceIndex].glTexture;
@@ -771,7 +771,6 @@ var TextureTintPipeline = new Class({
         var vertexViewF32 = this.vertexViewF32;
         var vertexViewU32 = this.vertexViewU32;
         var renderer = this.renderer;
-        var resolution = renderer.config.resolution; // eslint-disable-line no-unused-vars
         var cameraMatrix = camera.matrix.matrix;
         var frame = mesh.frame;
         var texture = mesh.texture.source[frame.sourceIndex].glTexture;
@@ -850,7 +849,6 @@ var TextureTintPipeline = new Class({
         var vertexViewF32 = this.vertexViewF32;
         var vertexViewU32 = this.vertexViewU32;
         var renderer = this.renderer;
-        var resolution = renderer.config.resolution; // eslint-disable-line no-unused-vars
         var cameraMatrix = camera.matrix.matrix;
         var cameraWidth = camera.width + 50;
         var cameraHeight = camera.height + 50;
@@ -1074,7 +1072,6 @@ var TextureTintPipeline = new Class({
         var vertexViewF32 = this.vertexViewF32;
         var vertexViewU32 = this.vertexViewU32;
         var renderer = this.renderer;
-        var resolution = renderer.config.resolution; // eslint-disable-line no-unused-vars
         var cameraMatrix = camera.matrix.matrix;
         var frame = bitmapText.frame;
         var textureSource = bitmapText.texture.source[frame.sourceIndex];
@@ -1535,7 +1532,6 @@ var TextureTintPipeline = new Class({
         var vertexViewF32 = this.vertexViewF32;
         var vertexViewU32 = this.vertexViewU32;
         var renderer = this.renderer;
-        var resolution = renderer.config.resolution; // eslint-disable-line no-unused-vars
         var cameraMatrix = camera.matrix.matrix;
         var width = srcWidth * (flipX ? -1.0 : 1.0);
         var height = srcHeight * (flipY ? -1.0 : 1.0);
@@ -1615,6 +1611,93 @@ var TextureTintPipeline = new Class({
         vertexViewU32[vertexOffset + 29] = tintBR;
 
         this.vertexCount += 6;
+    },
+
+    drawTexture: function (
+        texture,
+        srcX, srcY,
+        frameX, frameY, frameWidth, frameHeight,
+        transformMatrix
+    )
+    {
+        this.renderer.setPipeline(this);
+
+        if (this.vertexCount + 6 > this.vertexCapacity)
+        {
+            this.flush();
+        }
+
+        var vertexViewF32 = this.vertexViewF32;
+        var vertexViewU32 = this.vertexViewU32;
+        var renderer = this.renderer;
+        var width = srcWidth;
+        var height = srcHeight;
+        var x = srcX;
+        var y = srcY;
+        var xw = x + width;
+        var yh = y + height;
+        var mva = transformMatrix[0];
+        var mvb = transformMatrix[1];
+        var mvc = transformMatrix[2];
+        var mvd = transformMatrix[3];
+        var mve = transformMatrix[4];
+        var mvf = transformMatrix[5];
+        var tx0 = x * mva + y * mvc + mve;
+        var ty0 = x * mvb + y * mvd + mvf;
+        var tx1 = x * mva + yh * mvc + mve;
+        var ty1 = x * mvb + yh * mvd + mvf;
+        var tx2 = xw * mva + yh * mvc + mve;
+        var ty2 = xw * mvb + yh * mvd + mvf;
+        var tx3 = xw * mva + y * mvc + mve;
+        var ty3 = xw * mvb + y * mvd + mvf;
+        var vertexOffset = 0;
+        var textureWidth = texture.width;
+        var textureHeight = texture.height;
+        var u0 = (frameX / textureWidth);
+        var v0 = (frameY / textureHeight);
+        var u1 = (frameX + frameWidth) / textureWidth;
+        var v1 = (frameY + frameHeight) / textureHeight;
+        var tint = 0xffffffff;
+        
+        this.setTexture2D(texture, 0);
+
+        vertexOffset = this.vertexCount * this.vertexComponentCount;
+
+        vertexViewF32[vertexOffset + 0] = tx0;
+        vertexViewF32[vertexOffset + 1] = ty0;
+        vertexViewF32[vertexOffset + 2] = u0;
+        vertexViewF32[vertexOffset + 3] = v0;
+        vertexViewU32[vertexOffset + 4] = tint;
+        vertexViewF32[vertexOffset + 5] = tx1;
+        vertexViewF32[vertexOffset + 6] = ty1;
+        vertexViewF32[vertexOffset + 7] = u0;
+        vertexViewF32[vertexOffset + 8] = v1;
+        vertexViewU32[vertexOffset + 9] = tint;
+        vertexViewF32[vertexOffset + 10] = tx2;
+        vertexViewF32[vertexOffset + 11] = ty2;
+        vertexViewF32[vertexOffset + 12] = u1;
+        vertexViewF32[vertexOffset + 13] = v1;
+        vertexViewU32[vertexOffset + 14] = tint;
+        vertexViewF32[vertexOffset + 15] = tx0;
+        vertexViewF32[vertexOffset + 16] = ty0;
+        vertexViewF32[vertexOffset + 17] = u0;
+        vertexViewF32[vertexOffset + 18] = v0;
+        vertexViewU32[vertexOffset + 19] = tint;
+        vertexViewF32[vertexOffset + 20] = tx2;
+        vertexViewF32[vertexOffset + 21] = ty2;
+        vertexViewF32[vertexOffset + 22] = u1;
+        vertexViewF32[vertexOffset + 23] = v1;
+        vertexViewU32[vertexOffset + 24] = tint;
+        vertexViewF32[vertexOffset + 25] = tx3;
+        vertexViewF32[vertexOffset + 26] = ty3;
+        vertexViewF32[vertexOffset + 27] = u1;
+        vertexViewF32[vertexOffset + 28] = v0;
+        vertexViewU32[vertexOffset + 29] = tint;
+
+        this.vertexCount += 6;
+
+        // Force an immediate draw
+        this.flush();
     },
 
     /**
