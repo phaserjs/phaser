@@ -329,10 +329,10 @@ var StaticTilemapLayer = new Class({
 
                 this.vertexCount = vertexCount;
                 this.dirty = false;
-
                 if (vertexBuffer === null)
                 {
                     vertexBuffer = renderer.createVertexBuffer(bufferData, gl.STATIC_DRAW);
+                    this.vertexBuffer = vertexBuffer;
                 }
                 else
                 {

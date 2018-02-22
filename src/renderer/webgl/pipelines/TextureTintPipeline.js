@@ -347,12 +347,9 @@ var TextureTintPipeline = new Class({
             }
 
             this.vertexBuffer = tilemap.vertexBuffer;
-            
-            renderer.setTexture2D(frame.source.glTexture, 0);
             renderer.setPipeline(this);
-
+            renderer.setTexture2D(frame.source.glTexture, 0);
             gl.drawArrays(this.topology, 0, tilemap.vertexCount);
-    
             this.vertexBuffer = pipelineVertexBuffer;
         }
 
