@@ -525,11 +525,11 @@ module.exports = {
     PERIOD: 190,
 
     /**
-     * @name Phaser.Input.Keyboard.KeyCodes.FORWAD_SLASH
+     * @name Phaser.Input.Keyboard.KeyCodes.FORWARD_SLASH
      * @type {integer}
      * @since 3.0.0
      */
-    FORWAD_SLASH: 191,
+    FORWARD_SLASH: 191,
 
     /**
      * @name Phaser.Input.Keyboard.KeyCodes.BACK_SLASH
