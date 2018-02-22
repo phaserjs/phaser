@@ -1136,6 +1136,12 @@ var Tween = new Class({
             case TWEEN_CONST.PLAYING_FORWARD:
             case TWEEN_CONST.PLAYING_BACKWARD:
 
+                if (!tweenData.target)
+                {
+                    tweenData.state = TWEEN_CONST.COMPLETE;
+                    break;
+                }
+
                 var elapsed = tweenData.elapsed;
                 var duration = tweenData.duration;
                 var diff = 0;
@@ -1240,15 +1246,22 @@ var Tween = new Class({
 
             case TWEEN_CONST.PENDING_RENDER:
 
-                tweenData.start = tweenData.getStartValue(tweenData.target, tweenData.key, tweenData.target[tweenData.key]);
+                if (tweenData.target)
+                {
+                    tweenData.start = tweenData.getStartValue(tweenData.target, tweenData.key, tweenData.target[tweenData.key]);
 
-                tweenData.end = tweenData.getEndValue(tweenData.target, tweenData.key, tweenData.start);
+                    tweenData.end = tweenData.getEndValue(tweenData.target, tweenData.key, tweenData.start);
 
-                tweenData.current = tweenData.start;
+                    tweenData.current = tweenData.start;
 
-                tweenData.target[tweenData.key] = tweenData.start;
+                    tweenData.target[tweenData.key] = tweenData.start;
 
-                tweenData.state = TWEEN_CONST.PLAYING_FORWARD;
+                    tweenData.state = TWEEN_CONST.PLAYING_FORWARD;
+                }
+                else
+                {
+                    tweenData.state = TWEEN_CONST.COMPLETE;
+                }
 
                 break;
         }
