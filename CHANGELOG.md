@@ -6,6 +6,7 @@
 
 * Hundreds of JSDoc fixes across the whole API.
 * Tween.updateTweenData will now check to see if the Tween target still exists before trying to update its properties.
+* If you try to use a local data URI in the Loader it now console warns instead of logs (thanks @samme)
 
 ### Bug Fixes
 
