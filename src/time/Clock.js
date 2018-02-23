@@ -206,7 +206,7 @@ var Clock = new Class({
      * @param {number} time - [description]
      * @param {number} delta - [description]
      */
-    preUpdate: function (time, delta)
+    preUpdate: function ()
     {
         var toRemove = this._pendingRemoval.length;
         var toInsert = this._pendingInsertion.length;

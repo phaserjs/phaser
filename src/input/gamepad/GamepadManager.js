@@ -209,11 +209,12 @@ var GamepadManager = new Class({
      *
      * @method Phaser.Input.Gamepad.GamepadManager#removePad
      * @since 3.0.0
+     * @todo  Code this feature
      *
      * @param {[type]} index - [description]
      * @param {[type]} pad - [description]
      */
-    removePad: function (index, pad)
+    removePad: function ()
     {
         //  TODO
     },

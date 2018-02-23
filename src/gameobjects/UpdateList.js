@@ -128,7 +128,7 @@ var UpdateList = new Class({
      * @param {number} time - [description]
      * @param {number} delta - [description]
      */
-    preUpdate: function (time, delta)
+    preUpdate: function ()
     {
         var toRemove = this._pendingRemoval.length;
         var toInsert = this._pendingInsertion.length;
@@ -153,9 +153,6 @@ var UpdateList = new Class({
             {
                 this._list.splice(index, 1);
             }
-
-            //  Pool them?
-            // gameObject.destroy();
         }
 
         //  Move pending to active

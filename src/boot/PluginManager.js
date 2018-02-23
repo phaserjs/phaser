@@ -161,7 +161,7 @@ var PluginManager = new Class({
  * Plugin is the object to instantiate to create the plugin
  * Mapping is what the plugin is injected into the Scene.Systems as (i.e. input)
  *
- * @name PluginManager.register
+ * @method PluginManager.register
  * @since 3.0.0
  * 
  * @param {string} key - [description]

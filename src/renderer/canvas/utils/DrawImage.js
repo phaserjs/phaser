@@ -40,6 +40,7 @@ var DrawImage = function (src, camera)
     if (this.currentScaleMode !== src.scaleMode)
     {
         this.currentScaleMode = src.scaleMode;
+
         // ctx[this.smoothProperty] = (source.scaleMode === ScaleModes.LINEAR);
     }
 

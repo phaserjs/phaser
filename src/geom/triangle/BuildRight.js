@@ -25,7 +25,7 @@ var Triangle = require('./Triangle');
  */
 var BuildRight = function (x, y, width, height)
 {
-    if (height === undefined) {  height = width; }
+    if (height === undefined) { height = width; }
 
     //  90 degree angle
     var x1 = x;

@@ -27,7 +27,7 @@ var TWEEN_CONST = {
     /**
      * TweenData state.
      * 
-     * @name Phaser.Tweens.OFFSET_DELAY
+     * @name Phaser.Tweens.DELAY
      * @type {integer}
      * @since 3.0.0
      */
@@ -45,7 +45,7 @@ var TWEEN_CONST = {
     /**
      * TweenData state.
      * 
-     * @name Phaser.Tweens.PLAYING_FORWARD
+     * @name Phaser.Tweens.PENDING_RENDER
      * @type {integer}
      * @since 3.0.0
      */
@@ -110,7 +110,7 @@ var TWEEN_CONST = {
     /**
      * Tween state.
      * 
-     * @name Phaser.Tweens.LOOP_DELAY
+     * @name Phaser.Tweens.PAUSED
      * @type {integer}
      * @since 3.0.0
      */

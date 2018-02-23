@@ -12,7 +12,9 @@ var addFrame = function (texture, sourceIndex, name, frame)
 
     var y = imageHeight - frame.y - frame.height;
 
-    var newFrame = texture.add(name, sourceIndex, frame.x, y, frame.width, frame.height);
+    // var newFrame = texture.add(name, sourceIndex, frame.x, y, frame.width, frame.height);
+
+    texture.add(name, sourceIndex, frame.x, y, frame.width, frame.height);
 
     // console.log('name', name, 'rect', frame.x, y, frame.width, frame.height);
 
@@ -61,8 +63,9 @@ var UnityYAML = function (texture, sourceIndex, yaml)
     var prevSprite = '';
     var currentSprite = '';
     var rect = { x: 0, y: 0, width: 0, height: 0 };
-    var pivot = { x: 0, y: 0 };
-    var border = { x: 0, y: 0, z: 0, w: 0 };
+
+    // var pivot = { x: 0, y: 0 };
+    // var border = { x: 0, y: 0, z: 0, w: 0 };
 
     for (var i = 0; i < data.length; i++)
     {
@@ -105,13 +108,13 @@ var UnityYAML = function (texture, sourceIndex, yaml)
                 rect[key] = parseInt(value, 10);
                 break;
 
-            case 'pivot':
-                pivot = eval('var obj = ' + value);
-                break;
+            // case 'pivot':
+            //     pivot = eval('var obj = ' + value);
+            //     break;
 
-            case 'border':
-                border = eval('var obj = ' + value);
-                break;
+            // case 'border':
+            //     border = eval('var obj = ' + value);
+            //     break;
         }
     }
 

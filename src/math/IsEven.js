@@ -17,6 +17,8 @@
 var IsEven = function (value)
 {
     // Use abstract equality == for "is number" test
+
+    // eslint-disable-next-line eqeqeq
     return (value == parseFloat(value)) ? !(value % 2) : void 0;
 };
 

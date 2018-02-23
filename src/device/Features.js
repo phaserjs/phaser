@@ -117,11 +117,8 @@ function init ()
                 //  Can't be done on a webgl context
                 var image = ctx2D.createImageData(1, 1);
 
-                /**
-                * Test to see if ImageData uses CanvasPixelArray or Uint8ClampedArray.
-                *
-                * @author Matt DesLauriers (@mattdesl)
-                */
+                //  Test to see if ImageData uses CanvasPixelArray or Uint8ClampedArray.
+                //  @author Matt DesLauriers (@mattdesl)
                 isUint8 = image.data instanceof Uint8ClampedArray;
 
                 CanvasPool.remove(canvas);

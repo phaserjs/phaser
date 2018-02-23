@@ -12,7 +12,6 @@ var EdgeZone = require('./zones/EdgeZone');
 var EmitterOp = require('./EmitterOp');
 var GetFastValue = require('../../utils/object/GetFastValue');
 var GetRandomElement = require('../../utils/array/GetRandomElement');
-var GetValue = require('../../utils/object/GetValue');
 var HasAny = require('../../utils/object/HasAny');
 var HasValue = require('../../utils/object/HasValue');
 var Particle = require('./Particle');
@@ -942,7 +941,7 @@ var ParticleEmitter = new Class({
             if (this._frameCounter === this.frameQuantity)
             {
                 this._frameCounter = 0;
-                this.currentFrame = Wrap(this.currentFrame + 1, 0, this._frameLength);                
+                this.currentFrame = Wrap(this.currentFrame + 1, 0, this._frameLength);
             }
 
             return frame;
@@ -986,7 +985,8 @@ var ParticleEmitter = new Class({
         else if (t === 'object')
         {
             var frameConfig = frames;
-            var frames = GetFastValue(frameConfig, 'frames', null);
+            
+            frames = GetFastValue(frameConfig, 'frames', null);
 
             if (frames)
             {
@@ -1068,10 +1068,10 @@ var ParticleEmitter = new Class({
         {
             var obj = x;
 
-            var x = obj.x;
-            var y = obj.y;
-            var width = (HasValue(obj, 'w')) ? obj.w : obj.width;
-            var height = (HasValue(obj, 'h')) ? obj.h : obj.height;
+            x = obj.x;
+            y = obj.y;
+            width = (HasValue(obj, 'w')) ? obj.w : obj.width;
+            height = (HasValue(obj, 'h')) ? obj.h : obj.height;
         }
 
         if (this.bounds)

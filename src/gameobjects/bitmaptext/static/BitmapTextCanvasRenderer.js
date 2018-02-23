@@ -62,7 +62,6 @@ var BitmapTextCanvasRenderer = function (renderer, src, interpolationPercentage,
     var textureX = textureFrame.cutX;
     var textureY = textureFrame.cutY;
 
-    var rotation = 0;
     var scale = (src.fontSize / src.fontData.size);
 
     //  Blend Mode
@@ -88,6 +87,7 @@ var BitmapTextCanvasRenderer = function (renderer, src, interpolationPercentage,
     ctx.save();
     ctx.translate((src.x - cameraScrollX) + src.frame.x, (src.y - cameraScrollY) + src.frame.y);
     ctx.rotate(src.rotation);
+    ctx.translate(-src.displayOriginX, -src.displayOriginY);
     ctx.scale(src.scaleX, src.scaleY);
 
     // ctx.fillStyle = 'rgba(255,0,255,0.5)';
@@ -144,6 +144,7 @@ var BitmapTextCanvasRenderer = function (renderer, src, interpolationPercentage,
         ctx.save();
         ctx.translate(x, y);
         ctx.scale(scale, scale);
+
         // ctx.fillRect(0, 0, glyphW, glyphH);
         ctx.drawImage(image, glyphX, glyphY, glyphW, glyphH, 0, 0, glyphW, glyphH);
         ctx.restore();

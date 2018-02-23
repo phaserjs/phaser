@@ -688,8 +688,8 @@ var TextureManager = new Class({
 
                 // if (textureFrame.trimmed)
                 // {
-                    // x -= this.sprite.texture.trim.x;
-                    // y -= this.sprite.texture.trim.y;
+                //     x -= this.sprite.texture.trim.x;
+                //     y -= this.sprite.texture.trim.y;
                 // }
 
                 var context = this._tempContext;

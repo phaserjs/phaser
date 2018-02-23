@@ -11,6 +11,8 @@ var Collider = require('./Collider');
 var CONST = require('./const');
 var DistanceBetween = require('../../math/distance/DistanceBetween');
 var EventEmitter = require('eventemitter3');
+var GetOverlapX = require('./GetOverlapX');
+var GetOverlapY = require('./GetOverlapY');
 var GetValue = require('../../utils/object/GetValue');
 var ProcessQueue = require('../../structs/ProcessQueue');
 var ProcessTileCallbacks = require('./tilemap/ProcessTileCallbacks');
@@ -73,6 +75,15 @@ var World = new Class({
          * @since 3.0.0
          */
         this.staticBodies = new Set();
+
+        /**
+         * Static Bodies
+         *
+         * @name Phaser.Physics.Arcade.World#pendingDestroy
+         * @type {Phaser.Structs.Set}
+         * @since 3.1.0
+         */
+        this.pendingDestroy = new Set();
 
         /**
          * [description]
@@ -383,7 +394,7 @@ var World = new Class({
      * [description]
      *
      * @method Phaser.Physics.Arcade.World#disableGameObjectBody
-     * @since 3.0.1
+     * @since 3.1.0
      *
      * @param {Phaser.GameObjects.GameObject} object - [description]
      *
@@ -682,10 +693,13 @@ var World = new Class({
     {
         var i;
         var body;
-        var bodies = this.bodies.entries;
-        var len = bodies.length;
 
-        var toDestroy = [];
+        var dynamic = this.bodies;
+        var staticBodies = this.staticBodies;
+        var pending = this.pendingDestroy;
+
+        var bodies = dynamic.entries;
+        var len = bodies.length;
 
         for (i = 0; i < len; i++)
         {
@@ -694,11 +708,6 @@ var World = new Class({
             if (body.enable)
             {
                 body.postUpdate();
-            }
-
-            if (body.pendingDestroy)
-            {
-                toDestroy.push(body);
             }
         }
 
@@ -718,7 +727,7 @@ var World = new Class({
                 }
             }
 
-            bodies = this.staticBodies.entries;
+            bodies = staticBodies.entries;
             len = bodies.length;
 
             for (i = 0; i < len; i++)
@@ -732,13 +741,34 @@ var World = new Class({
             }
         }
 
-        for (i = 0; i < toDestroy.length; i++)
+        if (pending.size > 0)
         {
-            body = toDestroy[i];
+            var dynamicTree = this.tree;
+            var staticTree = this.staticTree;
 
-            this.emit('destroybody', this, body);
+            bodies = pending.entries;
+            len = bodies.length;
 
-            body.destroy();
+            for (i = 0; i < len; i++)
+            {
+                body = bodies[i];
+
+                if (body.physicsType === CONST.DYNAMIC_BODY)
+                {
+                    dynamicTree.remove(body);
+                    dynamic.delete(body);
+                }
+                else if (body.physicsType === CONST.STATIC_BODY)
+                {
+                    staticTree.remove(body);
+                    staticBodies.delete(body);
+                }
+
+                body.world = undefined;
+                body.gameObject = undefined;
+            }
+
+            pending.clear();
         }
     },
 
@@ -1360,6 +1390,7 @@ var World = new Class({
                 return this.collideSpriteVsTilemapLayer(object1, object2, collideCallback, processCallback, callbackContext, overlapOnly);
             }
         }
+
         //  GROUPS
         else if (object1.isParent)
         {
@@ -1376,6 +1407,7 @@ var World = new Class({
                 return this.collideGroupVsTilemapLayer(object1, object2, collideCallback, processCallback, callbackContext, overlapOnly);
             }
         }
+
         //  TILEMAP LAYERS
         else if (object1.isTilemap)
         {
@@ -1518,7 +1550,8 @@ var World = new Class({
         {
             if (children[i].body)
             {
-                if (this.collideSpriteVsTilemapLayer(children[i], tilemapLayer, collideCallback, processCallback, callbackContext, overlapOnly)) {
+                if (this.collideSpriteVsTilemapLayer(children[i], tilemapLayer, collideCallback, processCallback, callbackContext, overlapOnly))
+                {
                     didCollide = true;
                 }
             }

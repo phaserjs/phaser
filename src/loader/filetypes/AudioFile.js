@@ -82,6 +82,7 @@ var AudioFile = new Class({
             },
             function (e)
             {
+                // eslint-disable-next-line no-console
                 console.error('Error with decoding audio data for \'' + this.key + '\':', e.message);
 
                 _this.state = CONST.FILE_ERRORED;
@@ -103,7 +104,7 @@ AudioFile.create = function (loader, key, urls, config, xhrSettings)
 
     if ((audioConfig && audioConfig.noAudio) || (!deviceAudio.webAudio && !deviceAudio.audioData))
     {
-        console.info('Skipping loading audio \'' + key + '\' since sounds are disabled.');
+        // console.info('Skipping loading audio \'' + key + '\' since sounds are disabled.');
         return null;
     }
 
@@ -111,7 +112,7 @@ AudioFile.create = function (loader, key, urls, config, xhrSettings)
 
     if (!url)
     {
-        console.warn('No supported url provided for audio \'' + key + '\'!');
+        // console.warn('No supported url provided for audio \'' + key + '\'!');
         return null;
     }
 

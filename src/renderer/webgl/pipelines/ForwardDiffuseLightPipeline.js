@@ -7,8 +7,6 @@
 var Class = require('../../../utils/Class');
 var ShaderSourceFS = require('../shaders/ForwardDiffuse.frag');
 var TextureTintPipeline = require('./TextureTintPipeline');
-var Utils = require('../Utils');
-var WebGLPipeline = require('../WebGLPipeline');
 
 var LIGHT_COUNT = 10;
 
@@ -89,18 +87,19 @@ var ForwardDiffuseLightPipeline = new Class({
         var cameraMatrix = camera.matrix;
         var point = {x: 0, y: 0};
         var height = renderer.height;
+        var index;
 
-        for (var index = 0; index < LIGHT_COUNT; ++index)
+        for (index = 0; index < LIGHT_COUNT; ++index)
         {
             renderer.setFloat1(program, 'uLights[' + index + '].radius', 0); // reset lights
         }
 
-        if (lightCount <= 0) return this;
+        if (lightCount <= 0) { return this; }
 
         renderer.setFloat4(program, 'uCamera', camera.x, camera.y, camera.rotation, camera.zoom);
         renderer.setFloat3(program, 'uAmbientLightColor', lightManager.ambientColor.r, lightManager.ambientColor.g, lightManager.ambientColor.b);
 
-        for (var index = 0; index < lightCount; ++index)
+        for (index = 0; index < lightCount; ++index)
         {
             var light = lights[index];
             var lightName = 'uLights[' + index + '].';
@@ -130,6 +129,8 @@ var ForwardDiffuseLightPipeline = new Class({
 
         if (normalTexture)
         {
+            this.renderer.setPipeline(this);
+            this.setTexture2D(normalTexture.glTexture, 1);
             TextureTintPipeline.prototype.drawStaticTilemapLayer.call(this, tilemap, camera);
         }
         else
@@ -155,6 +156,8 @@ var ForwardDiffuseLightPipeline = new Class({
 
         if (normalTexture)
         {
+            this.renderer.setPipeline(this);
+            this.setTexture2D(normalTexture.glTexture, 1);
             TextureTintPipeline.prototype.drawEmitterManager.call(this, emitterManager, camera);
         }
         else
@@ -180,6 +183,8 @@ var ForwardDiffuseLightPipeline = new Class({
 
         if (normalTexture)
         {
+            this.renderer.setPipeline(this);
+            this.setTexture2D(normalTexture.glTexture, 1);
             TextureTintPipeline.prototype.drawBlitter.call(this, blitter, camera);
         }
         else
@@ -205,7 +210,8 @@ var ForwardDiffuseLightPipeline = new Class({
 
         if (normalTexture)
         {
-            this.renderer.setTexture2D(normalTexture.glTexture, 1);
+            this.renderer.setPipeline(this);
+            this.setTexture2D(normalTexture.glTexture, 1);
             TextureTintPipeline.prototype.batchSprite.call(this, sprite, camera);
         }
         else
@@ -231,7 +237,8 @@ var ForwardDiffuseLightPipeline = new Class({
 
         if (normalTexture)
         {
-            this.renderer.setTexture2D(normalTexture.glTexture, 1);
+            this.renderer.setPipeline(this);
+            this.setTexture2D(normalTexture.glTexture, 1);
             TextureTintPipeline.prototype.batchMesh.call(this, mesh, camera);
         }
         else
@@ -258,6 +265,8 @@ var ForwardDiffuseLightPipeline = new Class({
 
         if (normalTexture)
         {
+            this.renderer.setPipeline(this);
+            this.setTexture2D(normalTexture.glTexture, 1);
             TextureTintPipeline.prototype.batchBitmapText.call(this, bitmapText, camera);
         }
         else
@@ -283,6 +292,8 @@ var ForwardDiffuseLightPipeline = new Class({
 
         if (normalTexture)
         {
+            this.renderer.setPipeline(this);
+            this.setTexture2D(normalTexture.glTexture, 1);
             TextureTintPipeline.prototype.batchDynamicBitmapText.call(this, bitmapText, camera);
         }
         else
@@ -308,6 +319,8 @@ var ForwardDiffuseLightPipeline = new Class({
 
         if (normalTexture)
         {
+            this.renderer.setPipeline(this);
+            this.setTexture2D(normalTexture.glTexture, 1);
             TextureTintPipeline.prototype.batchText.call(this, text, camera);
         }
         else
@@ -333,6 +346,8 @@ var ForwardDiffuseLightPipeline = new Class({
 
         if (normalTexture)
         {
+            this.renderer.setPipeline(this);
+            this.setTexture2D(normalTexture.glTexture, 1);
             TextureTintPipeline.prototype.batchDynamicTilemapLayer.call(this, tilemapLayer, camera);
         }
         else
@@ -358,6 +373,8 @@ var ForwardDiffuseLightPipeline = new Class({
 
         if (normalTexture)
         {
+            this.renderer.setPipeline(this);
+            this.setTexture2D(normalTexture.glTexture, 1);
             TextureTintPipeline.prototype.batchTileSprite.call(this, tileSprite, camera);
         }
         else

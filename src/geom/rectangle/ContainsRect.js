@@ -28,7 +28,7 @@ var ContainsRect = function (rectA, rectB)
     return (
         (rectB.x > rectA.x && rectB.x < rectA.right) &&
         (rectB.right > rectA.x && rectB.right < rectA.right) &&
-        (rectB.y > rectA.y && rectB.y < rectA.bottom) && 
+        (rectB.y > rectA.y && rectB.y < rectA.bottom) &&
         (rectB.bottom > rectA.y && rectB.bottom < rectA.bottom)
     );
 };

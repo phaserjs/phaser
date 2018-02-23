@@ -54,7 +54,7 @@ var Camera = new Class({
          * [description]
          *
          * @name Phaser.Cameras.Sprite3D#displayList
-         * @type {[type]}
+         * @type {Phaser.GameObjects.DisplayList}
          * @since 3.0.0
          */
         this.displayList = scene.sys.displayList;
@@ -63,7 +63,7 @@ var Camera = new Class({
          * [description]
          *
          * @name Phaser.Cameras.Sprite3D#updateList
-         * @type {[type]}
+         * @type {Phaser.GameObjects.UpdateList}
          * @since 3.0.0
          */
         this.updateList = scene.sys.updateList;
@@ -892,8 +892,8 @@ var Camera = new Class({
     {
         if (out === undefined) { out = new Vector2(); }
 
-        //TODO: optimize this with a simple distance calculation:
-        //https://developer.valvesoftware.com/wiki/Field_of_View
+        // TODO: optimize this with a simple distance calculation:
+        // https://developer.valvesoftware.com/wiki/Field_of_View
 
         if (this.billboardMatrixDirty)
         {

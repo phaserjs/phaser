@@ -11,7 +11,7 @@ Along with the fantastic open source community, Phaser is actively developed and
 Thousands of developers worldwide use Phaser. From indies and multi-national digital agencies, to schools and Universities. Each creating their own incredible [games](https://phaser.io/games/).
 
 **Visit:** The [Phaser website](https://phaser.io) and follow on [Twitter](https://twitter.com/phaser_) (#phaserjs)<br />
-**Learn:** [API Docs](https://phaser.io/docs), [Support Forum][forum] and [StackOverflow](https://stackoverflow.com/questions/tagged/phaser-framework)<br />
+**Learn:** [API Docs](https://github.com/photonstorm/phaser3-docs), [Support Forum][forum] and [StackOverflow](https://stackoverflow.com/questions/tagged/phaser-framework)<br />
 **Code:** 700+ [Examples](https://labs.phaser.io) (source available in this [repo][examples])<br />
 **Read:** Weekly [Phaser World](#newsletter) Newsletter<br />
 **Chat:** [Slack](https://phaser.io/community/slack) and [Discord](https://phaser.io/community/discord)<br />
@@ -24,7 +24,9 @@ Grab the source and join in the fun!
 
 <div align="center"><img src="https://phaser.io/images/github/news.jpg"></div>
 
-> 12th February 2018
+> 23rd February 2018
+
+**Updated:** Thank you for the continued amazing response to the 3.0.0 release! We've carried on working hard and now prepared 3.1.2 for you, which is available today. Check out the [Change Log](#changelog) for more details.
 
 After 1.5 years in the making, tens of thousands of lines of code, hundreds of examples and countless hours of relentless work: Phaser 3 is finally out. It has been a real labor of love and then some!
 
@@ -92,13 +94,13 @@ npm install phaser
 [Phaser is on jsDelivr](http://www.jsdelivr.com/projects/phaser), a "super-fast CDN for developers". Include the following in your html:
 
 ```html
-<script src="//cdn.jsdelivr.net/npm/phaser@3.0.0/dist/phaser.js"></script>
+<script src="//cdn.jsdelivr.net/npm/phaser@3.1.2/dist/phaser.js"></script>
 ```
 
 or the minified version:
 
 ```html
-<script src="//cdn.jsdelivr.net/npm/phaser@3.0.0/dist/phaser.min.js"></script>
+<script src="//cdn.jsdelivr.net/npm/phaser@3.1.2/dist/phaser.min.js"></script>
 ```
 
 ### License
@@ -110,7 +112,13 @@ Phaser is released under the [MIT License](https://opensource.org/licenses/MIT).
 
 <img src="https://phaser.io/images/github/learn.jpg" align="right">
 
-Phaser 3 is so brand new the paint is still wet. As such we don't yet have any guides or tutorials! This will change in the coming weeks and we'll update this area as they emerge. For now, please subscribe to the [Phaser World](https://phaser.io/community/newsletter) newsletter as we'll publish them in there first.
+Phaser 3 is so brand new the paint is still wet, but tutorials and guides are starting to come out!
+
+* [Getting Started with Phaser 3](https://phaser.io/tutorials/getting-started-phaser3) (useful if you are completely new to Phaser)
+* [Making your first Phaser 3 Game](https://phaser.io/tutorials/making-your-first-phaser-3-game)
+* [Phaser 3 Bootstrap and Platformer Example](https://phaser.io/news/2018/02/phaser-3-bootstrap-platformer)
+
+Also, please subscribe to the [Phaser World](https://phaser.io/community/newsletter) newsletter for details about new tutorials as they are published.
 
 ### Source Code Examples
 
@@ -229,8 +237,25 @@ Should you wish to build Phaser 3 from source ensure you have the required packa
 You can then run `webpack` to perform a dev build to the `build` folder, including source maps for local testing, or run `npm run dist` to create a minified packaged build into the `dist` folder.
 
 ![Change Log](https://phaser.io/images/github/div-change-log.png "Change Log")
+<a name="changelog"></a>
 
-We have always been meticulous in recording changes to the Phaser code base, and where relevant, giving attribution to those in the community who helped. This is something we'll continue with Phaser 3 and you'll see this section expand as we push through the 3.0.0 releases.
+## Version 3.1.2 - 23rd February 2018
+
+### Updates
+
+* Hundreds of JSDoc fixes across the whole API.
+* Tween.updateTweenData will now check to see if the Tween target still exists before trying to update its properties.
+* If you try to use a local data URI in the Loader it now console warns instead of logs (thanks @samme)
+
+### Bug Fixes
+
+* The KeyCode `FORWAD_SLASH` had a typo and has been changed to `FORWAD_SLASH`. Fix #3271 (thanks @josedarioxyz)
+* Fixed issue with vertex buffer creation on Static Tilemap Layer, causing tilemap layers to appear black. Fix #3266 (thanks @akleemans)
+* Implemented Static Tilemap Layer scaling and Tile alpha support.
+* Fixed issue with null texture on Particle Emitter batch generation. This would manifest if you had particles with blend modes on-top of other images not appearing.
+* Added missing data parameter to ScenePlugin. Fixes #3810 (thanks @AleBles)
+
+Please see the complete [Change Log]((https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md)) for previous releases.
 
 Looking for a v2 change? Check out the [Phaser CE Change Log](https://github.com/photonstorm/phaser-ce/blob/master/CHANGELOG.md)
 
@@ -261,8 +286,8 @@ All rights reserved.
 
 "Above all, video games are meant to be just one thing: fun. Fun for everyone." - Satoru Iwata
 
-[get-js]: https://github.com/photonstorm/phaser/releases/download/v3.0.0/phaser.js
-[get-minjs]: https://github.com/photonstorm/phaser/releases/download/v3.0.0/phaser.min.js
+[get-js]: https://github.com/photonstorm/phaser/releases/download/v3.1.2/phaser.js
+[get-minjs]: https://github.com/photonstorm/phaser/releases/download/v3.1.2/phaser.min.js
 [clone-http]: https://github.com/photonstorm/phaser.git
 [clone-ssh]: git@github.com:photonstorm/phaser.git
 [clone-ghwin]: github-windows://openRepo/https://github.com/photonstorm/phaser

@@ -155,7 +155,7 @@ var WebGLPipeline = new Class({
          * [description]
          *
          * @name Phaser.Renderer.WebGL.WebGLPipeline#vertexSize
-         * @type {int}
+         * @type {integer}
          * @since 3.0.0
          */
         this.vertexSize = config.vertexSize;
@@ -164,7 +164,7 @@ var WebGLPipeline = new Class({
          * [description]
          *
          * @name Phaser.Renderer.WebGL.WebGLPipeline#topology
-         * @type {int}
+         * @type {integer}
          * @since 3.0.0
          */
         this.topology = config.topology;
@@ -182,10 +182,20 @@ var WebGLPipeline = new Class({
          * This will store the amount of components of 32 bit length
          *
          * @name Phaser.Renderer.WebGL.WebGLPipeline#vertexComponentCount
-         * @type {int}
+         * @type {integer}
          * @since 3.0.0
          */
-        this.vertexComponentCount = Utils.getComponentCount(config.attributes);
+        this.vertexComponentCount = Utils.getComponentCount(config.attributes, this.gl);
+
+        /**
+         * Indicates if the current pipeline is flushing the contents to the GPU.
+         * When the variable is set the flush function will be locked.
+         *
+         * @name Phaser.Renderer.WebGL.WebGLPipeline#flushLocked
+         * @type {boolean}
+         * @since 3.1.0
+         */
+        this.flushLocked = false;
     },
 
     /**
@@ -298,7 +308,7 @@ var WebGLPipeline = new Class({
      *
      * @return {Phaser.Renderer.WebGL.WebGLPipeline} [description]
      */
-    onRender: function (scene, camera)
+    onRender: function ()
     {
         // called for each camera
         return this;
@@ -328,19 +338,26 @@ var WebGLPipeline = new Class({
      */
     flush: function ()
     {
+        if (this.flushLocked) { return this; }
+
+        this.flushLocked = true;
+
         var gl = this.gl;
         var vertexCount = this.vertexCount;
-        var vertexBuffer = this.vertexBuffer;
-        var vertexData = this.vertexData;
         var topology = this.topology;
         var vertexSize = this.vertexSize;
 
-        if (vertexCount === 0) return;
+        if (vertexCount === 0)
+        {
+            this.flushLocked = false;
+            return;
+        }
 
         gl.bufferSubData(gl.ARRAY_BUFFER, 0, this.bytes.subarray(0, vertexCount * vertexSize));
         gl.drawArrays(topology, 0, vertexCount);
 
         this.vertexCount = 0;
+        this.flushLocked = false;
 
         return this;
     },

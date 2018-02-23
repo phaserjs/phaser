@@ -90,6 +90,7 @@ var DynamicBitmapTextCanvasRenderer = function (renderer, src, interpolationPerc
     ctx.save();
     ctx.translate(src.x, src.y);
     ctx.rotate(src.rotation);
+    ctx.translate(-src.displayOriginX, -src.displayOriginY);
     ctx.scale(src.scaleX, src.scaleY);
 
     if (src.cropWidth > 0 && src.cropHeight > 0)

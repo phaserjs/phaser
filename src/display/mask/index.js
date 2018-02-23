@@ -10,7 +10,7 @@
 
 module.exports = {
 
-	BitmapMask: require('./BitmapMask'),
-	GeometryMask: require('./GeometryMask')
+    BitmapMask: require('./BitmapMask'),
+    GeometryMask: require('./GeometryMask')
 
 };

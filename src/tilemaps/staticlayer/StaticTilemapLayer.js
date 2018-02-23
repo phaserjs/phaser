@@ -9,6 +9,7 @@ var Components = require('../../gameobjects/components');
 var GameObject = require('../../gameobjects/GameObject');
 var StaticTilemapLayerRender = require('./StaticTilemapLayerRender');
 var TilemapComponents = require('../components');
+var Utils = require('../../renderer/webgl/Utils');
 
 /**
  * @classdesc
@@ -204,7 +205,7 @@ var StaticTilemapLayer = new Class({
      *
      * @return {Phaser.Tilemaps.StaticTilemapLayer} This Tilemap Layer object.
      */
-    contextRestore: function (renderer)
+    contextRestore: function ()
     {
         this.dirty = true;
         this.vertexBuffer = null;
@@ -248,7 +249,6 @@ var StaticTilemapLayer = new Class({
                 var voffset = 0;
                 var vertexCount = 0;
                 var bufferSize = (mapWidth * mapHeight) * pipeline.vertexSize * 6;
-                var tint = 0xffffffff;
 
                 if (bufferData === null)
                 {
@@ -289,6 +289,7 @@ var StaticTilemapLayer = new Class({
                         var ty2 = tyh;
                         var tx3 = txw;
                         var ty3 = ty;
+                        var tint = Utils.getTintAppendFloatAlpha(0xffffff, this.alpha * tile.alpha);
 
                         vertexViewF32[voffset + 0] = tx0;
                         vertexViewF32[voffset + 1] = ty0;
@@ -328,20 +329,21 @@ var StaticTilemapLayer = new Class({
 
                 this.vertexCount = vertexCount;
                 this.dirty = false;
-
-                if (this.vertexBuffer === null)
+                if (vertexBuffer === null)
                 {
-                    this.vertexBuffer = renderer.createVertexBuffer(bufferData, gl.STATIC_DRAW);
+                    vertexBuffer = renderer.createVertexBuffer(bufferData, gl.STATIC_DRAW);
+                    this.vertexBuffer = vertexBuffer;
                 }
                 else
                 {
-                    renderer.setVertexBuffer(this.vertexBuffer);
+                    renderer.setVertexBuffer(vertexBuffer);
                     gl.bufferSubData(gl.ARRAY_BUFFER, 0, bufferData);
                 }
             }
 
             pipeline.modelIdentity();
             pipeline.modelTranslate(this.x - (camera.scrollX * this.scrollFactorX), this.y - (camera.scrollY * this.scrollFactorY), 0.0);
+            pipeline.modelScale(this.scaleX, this.scaleY, 1.0);
             pipeline.viewLoad2D(camera.matrix.matrix);
         }
 

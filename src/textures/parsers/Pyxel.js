@@ -54,7 +54,7 @@ var Pyxel = function (texture, json)
             frames[i].y,
             tilewidth,
             tileheight,
-            "frame_" + i  // No names are included in pyxel tilemap data.
+            'frame_' + i // No names are included in pyxel tilemap data.
         ));
 
         // No trim data is included.

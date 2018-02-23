@@ -111,7 +111,7 @@ var StaticPhysicsGroup = new Class({
      *
      * @param {object} entries - [description]
      */
-    createMultipleCallback: function (entries)
+    createMultipleCallback: function ()
     {
         this.refresh();
     },

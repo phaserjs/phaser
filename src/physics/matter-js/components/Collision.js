@@ -75,7 +75,7 @@ var Collision = {
         this.body.collisionFilter.mask = flags;
 
         return this;
-    },
+    }
 
 };
 

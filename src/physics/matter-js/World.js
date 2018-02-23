@@ -172,19 +172,22 @@ var World = new Class({
         var _this = this;
         var engine = this.engine;
 
-        MatterEvents.on(engine, 'beforeUpdate', function (event) {
+        MatterEvents.on(engine, 'beforeUpdate', function (event)
+        {
 
             _this.emit('beforeupdate', event);
 
         });
 
-        MatterEvents.on(engine, 'afterUpdate', function (event) {
+        MatterEvents.on(engine, 'afterUpdate', function (event)
+        {
 
             _this.emit('afterupdate', event);
 
         });
 
-        MatterEvents.on(engine, 'collisionStart', function (event) {
+        MatterEvents.on(engine, 'collisionStart', function (event)
+        {
 
             var pairs = event.pairs;
             var bodyA;
@@ -200,7 +203,8 @@ var World = new Class({
 
         });
 
-        MatterEvents.on(engine, 'collisionActive', function (event) {
+        MatterEvents.on(engine, 'collisionActive', function (event)
+        {
 
             var pairs = event.pairs;
             var bodyA;
@@ -216,7 +220,8 @@ var World = new Class({
 
         });
 
-        MatterEvents.on(engine, 'collisionEnd', function (event) {
+        MatterEvents.on(engine, 'collisionEnd', function (event)
+        {
 
             var pairs = event.pairs;
             var bodyA;
@@ -480,9 +485,7 @@ var World = new Class({
     convertTilemapLayer: function (tilemapLayer, options)
     {
         var layerData = tilemapLayer.layer;
-        var tiles = tilemapLayer.getTilesWithin(0, 0, layerData.width, layerData.height, {
-            isColliding: true
-        });
+        var tiles = tilemapLayer.getTilesWithin(0, 0, layerData.width, layerData.height, {isColliding: true});
 
         this.convertTiles(tiles, options);
 
@@ -661,9 +664,12 @@ var World = new Class({
     {
         if (points === undefined) { points = []; }
 
+        // var pathPattern = /L?\s*([-\d.e]+)[\s,]*([-\d.e]+)*/ig;
+
+        // eslint-disable-next-line no-useless-escape
         var pathPattern = /L?\s*([\-\d\.e]+)[\s,]*([\-\d\.e]+)*/ig;
 
-        path.replace(pathPattern, function(match, x, y)
+        path.replace(pathPattern, function (match, x, y)
         {
             points.push({ x: parseFloat(x), y: parseFloat(y) });
         });

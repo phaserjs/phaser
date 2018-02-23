@@ -103,7 +103,7 @@ module.exports = {
     /**
      * Hard Light blend mode.
      * 
-     * @name Phaser.BlendModes.SOFT_LIGHT
+     * @name Phaser.BlendModes.HARD_LIGHT
      * @type {integer}
      * @since 3.0.0
      */
