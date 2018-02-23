@@ -1,7 +1,16 @@
 var RenderTextureWebGL = {
 
-    fill: function (color)
+    fill: function (rgb)
     {
+        var ur = ((rgb >> 16)|0) & 0xff;
+        var ug = ((rgb >> 8)|0) & 0xff;
+        var ub = (rgb|0) & 0xff;
+
+        this.renderer.setFramebuffer(this.framebuffer);
+        var gl = this.gl;
+        gl.clearColor(ur / 255.0, ug / 255.0, ub / 255.0, 1);
+        gl.clear(gl.COLOR_BUFFER_BIT);
+        this.renderer.setFramebuffer(null);
         return this;
     },
 

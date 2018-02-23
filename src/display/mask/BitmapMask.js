@@ -89,7 +89,7 @@ var BitmapMask = new Class({
          * [description]
          *
          * @name Phaser.Display.Masks.BitmapMask#mainFramebuffer
-         * @type {[type]}
+         * @type {WebGLFramebuffer}
          * @since 3.0.0
          */
         this.mainFramebuffer = null;
@@ -98,10 +98,19 @@ var BitmapMask = new Class({
          * [description]
          *
          * @name Phaser.Display.Masks.BitmapMask#maskFramebuffer
-         * @type {[type]}
+         * @type {WebGLFramebuffer}
          * @since 3.0.0
          */
         this.maskFramebuffer = null;
+
+        /**
+         * [description]
+         *
+         * @name Phaser.Display.Masks.BitmapMask#invertAlpha
+         * @type {boolean}
+         * @since 3.1.2
+         */
+        this.invertAlpha = false;
 
         if (renderer.gl)
         {

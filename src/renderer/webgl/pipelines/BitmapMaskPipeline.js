@@ -194,7 +194,8 @@ var BitmapMaskPipeline = new Class({
             
             renderer.setTexture2D(mask.maskTexture, 1);
             renderer.setTexture2D(mask.mainTexture, 0);
-            
+            renderer.setInt1(this.program, 'uInvertMaskAlpha', mask.invertAlpha);
+
             // Finally draw a triangle filling the whole screen
             gl.drawArrays(this.topology, 0, 3);
         }
