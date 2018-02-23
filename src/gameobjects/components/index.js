@@ -17,6 +17,7 @@ module.exports = {
     Depth: require('./Depth'),
     Flip: require('./Flip'),
     GetBounds: require('./GetBounds'),
+    MatrixStack: require('./MatrixStack'),
     Origin: require('./Origin'),
     Pipeline: require('./Pipeline'),
     ScaleMode: require('./ScaleMode'),

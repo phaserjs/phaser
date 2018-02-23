@@ -1203,8 +1203,9 @@ var WebGLRenderer = new Class({
      *
      * @return {Phaser.Renderer.WebGL.WebGLRenderer} [description]
      */
-    deleteTexture: function ()
+    deleteTexture: function (texture)
     {
+        this.gl.deleteTexture(texture);
         return this;
     },
 
@@ -1218,8 +1219,9 @@ var WebGLRenderer = new Class({
      *
      * @return {Phaser.Renderer.WebGL.WebGLRenderer} [description]
      */
-    deleteFramebuffer: function ()
+    deleteFramebuffer: function (framebuffer)
     {
+        this.gl.deleteFramebuffer(framebuffer);
         return this;
     },
 
@@ -1233,8 +1235,9 @@ var WebGLRenderer = new Class({
      *
      * @return {Phaser.Renderer.WebGL.WebGLRenderer} [description]
      */
-    deleteProgram: function ()
+    deleteProgram: function (program)
     {
+        this.gl.deleteProgram(program);
         return this;
     },
 
@@ -1248,8 +1251,9 @@ var WebGLRenderer = new Class({
      *
      * @return {Phaser.Renderer.WebGL.WebGLRenderer} [description]
      */
-    deleteBuffer: function ()
+    deleteBuffer: function (buffer)
     {
+        this.gl.deleteBuffer(buffer);
         return this;
     },
 
