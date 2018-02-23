@@ -1,6 +1,12 @@
 # Change Log
 
-## Version 3.1.2 - In Development
+## Version 3.2.0 - In Development
+
+### New Features
+### Bug Fixes
+### Updates
+
+## Version 3.1.2 - 23rd February 2018
 
 ### Updates
 
