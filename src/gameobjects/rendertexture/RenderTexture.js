@@ -2,7 +2,9 @@ var Class = require('../../utils/Class');
 var Components = require('../components');
 var GameObject = require('../GameObject');
 var RenderTextureWebGL = require('./RenderTextureWebGL');
+var RenderTextureCanvas = require('./RenderTextureCanvas');
 var Render = require('./RenderTextureRender');
+var CanvasPool = require('../../display/canvas/CanvasPool');
 
 var RenderTexture = new Class({
 
@@ -48,11 +50,12 @@ var RenderTexture = new Class({
         }
         else
         {
-            // For now we'll just add canvas stubs
-            this.fill = function () {};
-            this.clear = function () {};
-            this.draw = function () {};
-            this.drawFrame = function () {};
+            this.fill = RenderTextureCanvas.fill;
+            this.clear = RenderTextureCanvas.clear;
+            this.draw = RenderTextureCanvas.draw;
+            this.drawFrame = RenderTextureCanvas.drawFrame;
+            this.canvas = CanvasPool.create2D(null, width, height);
+            this.context = this.canvas.getContext('2d'); 
         }
 
         this.setPosition(x, y);

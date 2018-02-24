@@ -24,18 +24,11 @@ var RenderTextureWebGL = {
         return this;
     },
 
-    draw: function (texture, x, y)
+    draw: function (texture, frame, x, y)
     {
+        var glTexture = texture.source[frame.sourceIndex].glTexture;
         this.renderer.setFramebuffer(this.framebuffer);
-        this.renderer.pipelines.TextureTintPipeline.drawTexture(texture, x, y, 0, 0, texture.width, texture.height, this.currentMatrix);
-        this.renderer.setFramebuffer(null);
-        return this;
-    },
-
-    drawFrame: function (texture, x, y, frame)
-    {
-        this.renderer.setFramebuffer(this.framebuffer);
-        this.renderer.pipelines.TextureTintPipeline.drawTexture(texture, frame.x, frame.y, frame.width, frame.height, texture.width, texture.height, this.currentMatrix);
+        this.renderer.pipelines.TextureTintPipeline.drawTexture(glTexture, x, y, frame.x, frame.y, frame.width, frame.height, this.currentMatrix);
         this.renderer.setFramebuffer(null);
         return this;
     }
