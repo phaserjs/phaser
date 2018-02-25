@@ -34,10 +34,14 @@ var ProcessKeyDown = function (key, event)
     key.shiftKey = event.shiftKey;
     key.location = event.location;
 
-    key.isDown = true;
-    key.isUp = false;
-    key.timeDown = event.timeStamp;
-    key.duration = 0;
+    if (key.isDown === false)
+    {
+        key.isDown = true;
+        key.isUp = false;
+        key.timeDown = event.timeStamp;
+        key.duration = 0;
+    }
+
     key.repeats++;
 
     key._justDown = true;

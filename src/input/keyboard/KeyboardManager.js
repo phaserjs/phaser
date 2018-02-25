@@ -372,7 +372,7 @@ var KeyboardManager = new Class({
                     this.emit('keydown_' + KeyMap[code], event);
                 }
 
-                if (keys[code] && keys[code].isDown === false)
+                if (keys[code])
                 {
                     ProcessKeyDown(keys[code], event);
                 }
