@@ -364,7 +364,7 @@ var KeyboardManager = new Class({
 
             if (event.type === 'keydown')
             {
-                if (KeyMap[code] && (keys[code] === undefined || (keys[code] && keys[code].isDown === false)))
+                if (KeyMap[code] && (keys[code] === undefined || keys[code].isDown === false))
                 {
                     //  Will emit a keyboard or keyup event
                     this.emit(event.type, event);
