@@ -335,8 +335,8 @@ var Animation = new Class({
      * @method Phaser.GameObjects.Components.Animation#load
      * @since 3.0.0
      *
-     * @param {[type]} key - [description]
-     * @param {[type]} startFrame - [description]
+     * @param {string} key - [description]
+     * @param {integer} [startFrame=0] - [description]
      *
      * @return {Phaser.GameObjects.GameObject} This Game Object.
      */
@@ -418,9 +418,9 @@ var Animation = new Class({
      * @method Phaser.GameObjects.Components.Animation#play
      * @since 3.0.0
      *
-     * @param {[type]} key - [description]
-     * @param {[type]} ignoreIfPlaying - [description]
-     * @param {[type]} startFrame - [description]
+     * @param {string} key - [description]
+     * @param {boolean} [ignoreIfPlaying=false] - [description]
+     * @param {integer} [startFrame=0] - [description]
      *
      * @return {Phaser.GameObjects.GameObject} This Game Object.
      */
@@ -437,6 +437,7 @@ var Animation = new Class({
         this.load(key, startFrame);
 
         var anim = this.currentAnim;
+        var gameObject = this.parent;
 
         //  Should give us 9,007,199,254,740,991 safe repeats
         this.repeatCounter = (this._repeat === -1) ? Number.MAX_VALUE : this._repeat;
@@ -449,13 +450,16 @@ var Animation = new Class({
 
         if (anim.showOnStart)
         {
-            this.parent.visible = true;
+            gameObject.visible = true;
         }
 
         if (anim.onStart)
         {
             anim.onStart.apply(anim.callbackScope, this._callbackArgs.concat(anim.onStartParams));
         }
+
+        gameObject.setSizeToFrame();
+        gameObject.updateDisplayOrigin();
 
         return this;
     },
