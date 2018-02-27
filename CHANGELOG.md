@@ -11,6 +11,10 @@
 ### Updates
 
 * AnimationComponent.play now calls `setSizeToFrame()` and `updateDisplayOrigin()` on the parent Game Object in order to catch situations where you've started playing an animation on a Game Object that uses a different size to the previously set frame.
+* Text.setText will check if the value given is falsey but not a zero and set to an empty string if so.
+* BitmapText.setText will check if the value given is falsey but not a zero and set to an empty string if so.
+* BitmapText.setText will now cast the given value to a string before setting.
+* BitmapText.setText will not change the text via `setText` unless the new text is different to the old one.
 
 ## Version 3.1.2 - 23rd February 2018
 

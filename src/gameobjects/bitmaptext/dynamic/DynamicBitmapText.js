@@ -226,18 +226,26 @@ var DynamicBitmapText = new Class({
      * @method Phaser.GameObjects.DynamicBitmapText#setText
      * @since 3.0.0
      *
-     * @param {string|string[]} text - [description]
+     * @param {string|string[]} value - The string, or array of strings, to be set as the content of this BitmapText.
      *
      * @return {Phaser.GameObjects.DynamicBitmapText} This Game Object.
      */
     setText: function (value)
     {
+        if (!value && value !== 0)
+        {
+            value = '';
+        }
+
         if (Array.isArray(value))
         {
             value = value.join('\n');
         }
 
-        this.text = value;
+        if (value !== this.text)
+        {
+            this.text = value.toString();
+        }
 
         return this;
     },
