@@ -490,13 +490,13 @@ var Text = new Class({
      * @method Phaser.GameObjects.Text#setText
      * @since 3.0.0
      *
-     * @param {string|string[]} value - The text to set.
+     * @param {string|string[]} value - The string, or array of strings, to be set as the content of this Text object.
      *
      * @return {Phaser.GameObjects.Text} This Text object.
      */
     setText: function (value)
     {
-        if (!value)
+        if (!value && value !== 0)
         {
             value = '';
         }
