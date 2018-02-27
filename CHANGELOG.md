@@ -3,8 +3,14 @@
 ## Version 3.2.0 - In Development
 
 ### New Features
+
 ### Bug Fixes
+
+* Arcade Physics Bodies didn't apply the results of `allowRotation` to the parent Game Object.
+
 ### Updates
+
+* AnimationComponent.play now calls `setSizeToFrame()` and `updateDisplayOrigin()` on the parent Game Object in order to catch situations where you've started playing an animation on a Game Object that uses a different size to the previously set frame.
 
 ## Version 3.1.2 - 23rd February 2018
 
