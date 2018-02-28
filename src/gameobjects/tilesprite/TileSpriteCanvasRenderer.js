@@ -30,6 +30,8 @@ var TileSpriteCanvasRenderer = function (renderer, src, interpolationPercentage,
     var ctx = renderer.currentContext;
     var frame = src.frame;
 
+    src.updateTileTexture();
+
     //  Blend Mode
 
     if (renderer.currentBlendMode !== src.blendMode)

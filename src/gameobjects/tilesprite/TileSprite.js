@@ -175,6 +175,8 @@ var TileSprite = new Class({
          */
         this.canvasBufferCtx = this.canvasBuffer.getContext('2d');
 
+        this.oldFrame = null;
+
         this.updateTileTexture();
 
         scene.sys.game.renderer.onContextRestored(function (renderer)
@@ -194,11 +196,14 @@ var TileSprite = new Class({
      */
     updateTileTexture: function ()
     {
-        if (!this.dirty)
+        if (!this.dirty && this.oldFrame == this.frame)
         {
             return;
         }
 
+        this.oldFrame = this.frame;
+
+        this.canvasBufferCtx.clearRect(0, 0, this.canvasBuffer.width, this.canvasBuffer.height);
         this.canvasBufferCtx.drawImage(
             this.frame.source.image,
             this.frame.cutX, this.frame.cutY,
