@@ -4,9 +4,14 @@
 
 ### New Features
 
+* Game.resize allows you to resize the game config, renderer and input system in one call.
+* InputManager.resize allows you to update the bounds def and input scale in one call.
+* Game.Config.roundPixels property added to prevent sub-pixel interpolation during rendering of Game Objects.
+
 ### Bug Fixes
 
 * Arcade Physics Bodies didn't apply the results of `allowRotation` to the parent Game Object.
+* InputManager.updateBounds wouldn't correctly get the bounds of the canvas if it had horizontal or vertical translation in the page, causing the scale factor to be off (and subsequently input values to mis-fire)
 
 ### Updates
 
