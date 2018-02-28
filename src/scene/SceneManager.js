@@ -166,13 +166,13 @@ var SceneManager = new Class({
             return;
         }
 
-        for (i = 0; i < queueLength; i++)
+        for (i = 0; i < this._queue.length; i++)
         {
             entry = this._queue[i];
 
             this[entry.op](entry.keyA, entry.keyB);
         }
-        
+
         this._queue.length = 0;
     },
 
@@ -278,7 +278,7 @@ var SceneManager = new Class({
         if (scene.sys.load)
         {
             loader = scene.sys.load;
-                
+
             loader.reset();
         }
 
@@ -872,7 +872,7 @@ var SceneManager = new Class({
                     return this;
                 }
             }
-            
+
             this.bootScene(scene);
         }
 
