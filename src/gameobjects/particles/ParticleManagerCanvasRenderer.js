@@ -53,6 +53,8 @@ var ParticleManagerCanvasRenderer = function (renderer, emitterManager, interpol
             ctx.globalCompositeOperation = renderer.blendModes[emitter.blendMode];
         }
 
+        var roundPixels = renderer.config.roundPixels;
+
         for (var index = 0; index < length; ++index)
         {
             var particle = particles[index];
@@ -74,13 +76,27 @@ var ParticleManagerCanvasRenderer = function (renderer, emitterManager, interpol
             var x = -ox;
             var y = -oy;
 
+            var tx = particle.x - cameraScrollX * particle.scrollFactorX;
+            var ty = particle.y - cameraScrollY * particle.scrollFactorY;
+
+            if (roundPixels)
+            {
+                tx |= 0;
+                ty |= 0;
+            }
+
             ctx.globalAlpha = alpha;
         
             ctx.save();
-            ctx.translate(particle.x - cameraScrollX * particle.scrollFactorX, particle.y - cameraScrollY * particle.scrollFactorY);
+
+            ctx.translate(tx, ty);
+
             ctx.rotate(particle.rotation);
+
             ctx.scale(particle.scaleX, particle.scaleY);
+
             ctx.drawImage(frame.source.image, cd.sx, cd.sy, cd.sWidth, cd.sHeight, x, y, cd.dWidth, cd.dHeight);
+
             ctx.restore();
         }
 
