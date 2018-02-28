@@ -445,6 +445,14 @@ var Game = new Class({
     },
 
     /**
+     * Game Resize event.
+     *
+     * @event Phaser.Game#resizeEvent
+     * @param {number} width - The new width of the Game.
+     * @param {number} height - The new height of the Game.
+     */
+
+    /**
      * Updates the Game Config with the new width and height values given.
      * Then resizes the Renderer and Input Manager scale.
      *
@@ -462,6 +470,10 @@ var Game = new Class({
         this.renderer.resize(width, height);
 
         this.input.resize();
+
+        this.scene.resize(width, height);
+
+        this.events.emit('resize', width, height);
     },
 
     /**
