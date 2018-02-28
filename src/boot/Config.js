@@ -186,7 +186,15 @@ var Config = new Class({
         this.roundPixels = GetValue(config, 'roundPixels', false);
         this.transparent = GetValue(config, 'transparent', false);
         this.clearBeforeRender = GetValue(config, 'clearBeforeRender', true);
-        this.backgroundColor = ValueToColor(GetValue(config, 'backgroundColor', 0));
+
+        var bgc = GetValue(config, 'backgroundColor', 0);
+
+        this.backgroundColor = ValueToColor(bgc);
+
+        if (bgc === 0 && this.transparent)
+        {
+            this.backgroundColor.alpha = 0;
+        }
 
         //  Callbacks
         this.preBoot = GetValue(config, 'callbacks.preBoot', NOOP);
