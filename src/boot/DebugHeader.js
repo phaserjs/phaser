@@ -25,7 +25,16 @@ var DebugHeader = function (game)
         return;
     }
 
-    var renderType = (config.renderType === CONST.CANVAS) ? 'Canvas' : 'WebGL';
+    var renderType = 'WebGL';
+
+    if (config.renderType === CONST.CANVAS)
+    {
+        renderType = 'Canvas';
+    }
+    else if (config.renderType === CONST.HEADLESS)
+    {
+        renderType = 'Headless';
+    }
 
     var audioConfig = config.audio;
     var deviceAudio = game.device.audio;

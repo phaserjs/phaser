@@ -52,10 +52,11 @@ var Pipeline = {
     {
         var renderer = this.scene.sys.game.renderer;
 
-        if (renderer.gl && renderer.hasPipeline(pipelineName))
+        if (renderer && renderer.gl && renderer.hasPipeline(pipelineName))
         {
             this.defaultPipeline = renderer.getPipeline(pipelineName);
             this.pipeline = this.defaultPipeline;
+
             return true;
         }
 
@@ -77,9 +78,10 @@ var Pipeline = {
     {
         var renderer = this.scene.sys.game.renderer;
 
-        if (renderer.gl && renderer.hasPipeline(pipelineName))
+        if (renderer && renderer.gl && renderer.hasPipeline(pipelineName))
         {
             this.pipeline = renderer.getPipeline(pipelineName);
+
             return true;
         }
         
@@ -98,6 +100,7 @@ var Pipeline = {
     resetPipeline: function ()
     {
         this.pipeline = this.defaultPipeline;
+
         return (this.pipeline !== null);
     },
 

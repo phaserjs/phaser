@@ -25,22 +25,26 @@ var CreateRenderer = function (game)
 
     //  Game either requested Canvas,
     //  or requested AUTO or WEBGL but the browser doesn't support it, so fall back to Canvas
-    if (config.renderType === CONST.CANVAS || (config.renderType !== CONST.CANVAS && !Features.webGL))
+
+    if (config.renderType !== CONST.HEADLESS)
     {
-        if (Features.canvas)
+        if (config.renderType === CONST.CANVAS || (config.renderType !== CONST.CANVAS && !Features.webGL))
         {
-            //  They requested Canvas and their browser supports it
-            config.renderType = CONST.CANVAS;
+            if (Features.canvas)
+            {
+                //  They requested Canvas and their browser supports it
+                config.renderType = CONST.CANVAS;
+            }
+            else
+            {
+                throw new Error('Cannot create Canvas or WebGL context, aborting.');
+            }
         }
         else
         {
-            throw new Error('Cannot create Canvas or WebGL context, aborting.');
+            //  Game requested WebGL and browser says it supports it
+            config.renderType = CONST.WEBGL;
         }
-    }
-    else
-    {
-        //  Game requested WebGL and browser says it supports it
-        config.renderType = CONST.WEBGL;
     }
 
     //  Pixel Art mode?
@@ -76,6 +80,12 @@ var CreateRenderer = function (game)
     {
         game.canvas.style.width = (config.width * config.zoom).toString() + 'px';
         game.canvas.style.height = (config.height * config.zoom).toString() + 'px';
+    }
+
+    if (config.renderType === CONST.HEADLESS)
+    {
+        //  Nothing more to do here
+        return;
     }
 
     var CanvasRenderer;
