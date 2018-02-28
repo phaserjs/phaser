@@ -6,12 +6,17 @@
 
 * Game.resize allows you to resize the game config, renderer and input system in one call.
 * InputManager.resize allows you to update the bounds def and input scale in one call.
-* Game.Config.roundPixels property added to prevent sub-pixel interpolation during rendering of Game Objects.
+* Game.Config.roundPixels property added to prevent sub-pixel interpolation during rendering of Game Objects in WebGL and Canvas.
+* Load.plugin now accepts a class as an argument as well as a URL string (thanks @nkholski)
+* Tween.complete will allow you to flag a tween as being complete, no matter what stage it is at. If an onComplete callback has been defined it will be invoked. You can set an optional delay before this happens (thanks @Jerenaux for the idea)
 
 ### Bug Fixes
 
 * Arcade Physics Bodies didn't apply the results of `allowRotation` to the parent Game Object.
 * InputManager.updateBounds wouldn't correctly get the bounds of the canvas if it had horizontal or vertical translation in the page, causing the scale factor to be off (and subsequently input values to mis-fire)
+* TileSprite.setFrame now works and allows you to change the frame to any other in the texture. Fix #3232 (thanks @Jerenaux)
+* Swapped the queue loop in the SceneManager to to use `_queue.length` rather than a cached length (thanks @srobertson421)
+* When calling `ScenePlugin.launch` the `data` argument is now passed to the queued scenes (thanks @gaudeon)
 
 ### Updates
 
@@ -20,6 +25,9 @@
 * BitmapText.setText will check if the value given is falsey but not a zero and set to an empty string if so.
 * BitmapText.setText will now cast the given value to a string before setting.
 * BitmapText.setText will not change the text via `setText` unless the new text is different to the old one.
+* If you set `transparent` in the Game Config but didn't provide a `backgroundColor` then it would render as black. It will now be properly transparent. If you do provide a color value then it must include an alpha component.
+* You can now pass normal Groups to Arcade Physics collide / overlap, as well as Physics Groups. Fix #3277 (thanks @nkholski)
+* Documentation updates: thanks to @melissaelopez @samme
 
 ## Version 3.1.2 - 23rd February 2018
 

@@ -825,6 +825,43 @@ var Tween = new Class({
     },
 
     /**
+     * Flags the Tween as being complete, whatever stage of progress it is at.
+     * 
+     * If an onComplete callback has been defined it will automatically invoke it, unless a `delay`
+     * argument is provided, in which case the Tween will delay for that period of time before calling the callback.
+     *
+     * If you don't need a delay, or have an onComplete callback, then call `Tween.stop` instead.
+     *
+     * @method Phaser.Tweens.Tween#complete
+     * @since 3.2.0
+     *
+     * @param {number} [delay=0] - The time to wait before invoking the complete callback. If zero it will fire immediately.
+     */
+    complete: function (delay)
+    {
+        if (delay === undefined) { delay = 0; }
+
+        if (delay)
+        {
+            this.countdown = delay;
+            this.state = TWEEN_CONST.COMPLETE_DELAY;
+        }
+        else
+        {
+            var onComplete = this.callbacks.onComplete;
+
+            if (onComplete)
+            {
+                onComplete.params[1] = this.targets;
+
+                onComplete.func.apply(onComplete.scope, onComplete.params);
+            }
+
+            this.state = TWEEN_CONST.PENDING_REMOVE;
+        }
+    },
+
+    /**
      * Stops the Tween immediately, whatever stage of progress it is at and flags it for removal by the TweenManager.
      *
      * @method Phaser.Tweens.Tween#stop
