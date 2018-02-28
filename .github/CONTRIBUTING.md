@@ -73,5 +73,5 @@ Thanks to Chad for creating the original Pixi.js Contributing file which we adap
 [1]: http://jsfiddle.net
 [2]: http://jsbin.com/
 [3]: http://nodejs.org
-[4]: http://www.html5gamedevs.com/forum/14-phaser/
+[4]: http://www.html5gamedevs.com/forum/33-phaser-3/
 [5]: https://codepen.io/pen?template=YeEWom "Phaser 3 game template"
