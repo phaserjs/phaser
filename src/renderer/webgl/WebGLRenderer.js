@@ -60,7 +60,8 @@ var WebGLRenderer = new Class({
             backgroundColor: game.config.backgroundColor,
             contextCreation: contextCreationConfig,
             resolution: game.config.resolution,
-            autoResize: game.config.autoResize
+            autoResize: game.config.autoResize,
+            roundPixels: game.config.roundPixels
         };
 
         /**

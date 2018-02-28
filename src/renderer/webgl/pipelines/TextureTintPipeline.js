@@ -371,6 +371,7 @@ var TextureTintPipeline = new Class({
     {
         this.renderer.setPipeline(this);
 
+        var roundPixels = this.renderer.config.roundPixels;
         var emitters = emitterManager.emitters.list;
         var emitterCount = emitters.length;
         var vertexViewF32 = this.vertexViewF32;
@@ -461,6 +462,18 @@ var TextureTintPipeline = new Class({
                     var ty3 = xw * mvb + y * mvd + mvf;
                     var vertexOffset = this.vertexCount * vertexComponentCount;
 
+                    if (roundPixels)
+                    {
+                        tx0 |= 0;
+                        ty0 |= 0;
+                        tx1 |= 0;
+                        ty1 |= 0;
+                        tx2 |= 0;
+                        ty2 |= 0;
+                        tx3 |= 0;
+                        ty3 |= 0;
+                    }
+
                     vertexViewF32[vertexOffset + 0] = tx0;
                     vertexViewF32[vertexOffset + 1] = ty0;
                     vertexViewF32[vertexOffset + 2] = uvs.x0;
@@ -522,10 +535,10 @@ var TextureTintPipeline = new Class({
     {
         this.renderer.setPipeline(this);
 
+        var roundPixels = this.renderer.config.roundPixels;
         var getTint = Utils.getTintAppendFloatAlpha;
         var vertexViewF32 = this.vertexViewF32;
         var vertexViewU32 = this.vertexViewU32;
-        var renderer = this.renderer;
         var list = blitter.getRenderList();
         var length = list.length;
         var cameraMatrix = camera.matrix.matrix;
@@ -572,6 +585,14 @@ var TextureTintPipeline = new Class({
                 this.setTexture2D(frame.texture.source[frame.sourceIndex].glTexture, 0);
 
                 var vertexOffset = this.vertexCount * this.vertexComponentCount;
+
+                if (roundPixels)
+                {
+                    tx0 |= 0;
+                    ty0 |= 0;
+                    tx1 |= 0;
+                    ty1 |= 0;
+                }
             
                 vertexViewF32[vertexOffset + 0] = tx0;
                 vertexViewF32[vertexOffset + 1] = ty0;
@@ -640,10 +661,10 @@ var TextureTintPipeline = new Class({
             this.flush();
         }
 
+        var roundPixels = this.renderer.config.roundPixels;
         var getTint = Utils.getTintAppendFloatAlpha;
         var vertexViewF32 = this.vertexViewF32;
         var vertexViewU32 = this.vertexViewU32;
-        var renderer = this.renderer;
         var cameraMatrix = camera.matrix.matrix;
         var frame = sprite.frame;
         var texture = frame.texture.source[frame.sourceIndex].glTexture;
@@ -655,8 +676,8 @@ var TextureTintPipeline = new Class({
         var height = frame.height * (flipY ? -1.0 : 1.0);
         var x = -sprite.displayOriginX + frame.x + ((frame.width) * (flipX ? 1.0 : 0.0));
         var y = -sprite.displayOriginY + frame.y + ((frame.height) * (flipY ? 1.0 : 0.0));
-        var xw = x + width;
-        var yh = y + height;
+        var xw = (roundPixels ? (x|0) : x) + width;
+        var yh = (roundPixels ? (y|0) : y) + height;
         var translateX = sprite.x - camera.scrollX * sprite.scrollFactorX;
         var translateY = sprite.y - camera.scrollY * sprite.scrollFactorY;
         var scaleX = sprite.scaleX;
@@ -703,6 +724,18 @@ var TextureTintPipeline = new Class({
         var vTintBL = getTint(tintBL, alphaBL);
         var vTintBR = getTint(tintBR, alphaBR);
         var vertexOffset = 0;
+
+        if (roundPixels)
+        {
+            tx0 |= 0;
+            ty0 |= 0;
+            tx1 |= 0;
+            ty1 |= 0;
+            tx2 |= 0;
+            ty2 |= 0;
+            tx3 |= 0;
+            ty3 |= 0;
+        }
 
         this.setTexture2D(texture, 0);
 
@@ -764,13 +797,13 @@ var TextureTintPipeline = new Class({
             this.flush();
         }
 
+        var roundPixels = this.renderer.config.roundPixels;
         var getTint = Utils.getTintAppendFloatAlpha;
         var uvs = mesh.uv;
         var colors = mesh.colors;
         var alphas = mesh.alphas;
         var vertexViewF32 = this.vertexViewF32;
         var vertexViewU32 = this.vertexViewU32;
-        var renderer = this.renderer;
         var cameraMatrix = camera.matrix.matrix;
         var frame = mesh.frame;
         var texture = mesh.texture.source[frame.sourceIndex].glTexture;
@@ -812,6 +845,12 @@ var TextureTintPipeline = new Class({
             var tx = x * mva + y * mvc + mve;
             var ty = x * mvb + y * mvd + mvf;
 
+            if (roundPixels)
+            {
+                tx |= 0;
+                ty |= 0;
+            }
+
             vertexViewF32[vertexOffset + 0] = tx;
             vertexViewF32[vertexOffset + 1] = ty;
             vertexViewF32[vertexOffset + 2] = uvs[index + 0];
@@ -843,12 +882,12 @@ var TextureTintPipeline = new Class({
             this.flush();
         }
 
+        var roundPixels = this.renderer.config.roundPixels;
         var text = bitmapText.text;
         var textLength = text.length;
         var getTint = Utils.getTintAppendFloatAlpha;
         var vertexViewF32 = this.vertexViewF32;
         var vertexViewU32 = this.vertexViewU32;
-        var renderer = this.renderer;
         var cameraMatrix = camera.matrix.matrix;
         var cameraWidth = camera.width + 50;
         var cameraHeight = camera.height + 50;
@@ -1012,6 +1051,18 @@ var TextureTintPipeline = new Class({
             
             vertexOffset = this.vertexCount * this.vertexComponentCount;
 
+            if (roundPixels)
+            {
+                tx0 |= 0;
+                ty0 |= 0;
+                tx1 |= 0;
+                ty1 |= 0;
+                tx2 |= 0;
+                ty2 |= 0;
+                tx3 |= 0;
+                ty3 |= 0;
+            }
+
             vertexViewF32[vertexOffset + 0] = tx0;
             vertexViewF32[vertexOffset + 1] = ty0;
             vertexViewF32[vertexOffset + 2] = umin;
@@ -1065,6 +1116,7 @@ var TextureTintPipeline = new Class({
             this.flush();
         }
 
+        var roundPixels = this.renderer.config.roundPixels;
         var displayCallback = bitmapText.displayCallback;
         var text = bitmapText.text;
         var textLength = text.length;
@@ -1303,6 +1355,18 @@ var TextureTintPipeline = new Class({
             
             vertexOffset = this.vertexCount * this.vertexComponentCount;
 
+            if (roundPixels)
+            {
+                tx0 |= 0;
+                ty0 |= 0;
+                tx1 |= 0;
+                ty1 |= 0;
+                tx2 |= 0;
+                ty2 |= 0;
+                tx3 |= 0;
+                ty3 |= 0;
+            }
+
             vertexViewF32[vertexOffset + 0] = tx0;
             vertexViewF32[vertexOffset + 1] = ty0;
             vertexViewF32[vertexOffset + 2] = umin;
@@ -1529,9 +1593,9 @@ var TextureTintPipeline = new Class({
         flipY = flipY ^ (texture.isRenderTexture ? 1 : 0);
         rotation = -rotation;
 
+        var roundPixels = this.renderer.config.roundPixels;
         var vertexViewF32 = this.vertexViewF32;
         var vertexViewU32 = this.vertexViewU32;
-        var renderer = this.renderer;
         var cameraMatrix = camera.matrix.matrix;
         var width = srcWidth * (flipX ? -1.0 : 1.0);
         var height = srcHeight * (flipY ? -1.0 : 1.0);
@@ -1578,6 +1642,18 @@ var TextureTintPipeline = new Class({
         this.setTexture2D(texture, 0);
 
         vertexOffset = this.vertexCount * this.vertexComponentCount;
+
+        if (roundPixels)
+        {
+            tx0 |= 0;
+            ty0 |= 0;
+            tx1 |= 0;
+            ty1 |= 0;
+            tx2 |= 0;
+            ty2 |= 0;
+            tx3 |= 0;
+            ty3 |= 0;
+        }
 
         vertexViewF32[vertexOffset + 0] = tx0;
         vertexViewF32[vertexOffset + 1] = ty0;
@@ -1627,9 +1703,9 @@ var TextureTintPipeline = new Class({
             this.flush();
         }
 
+        var roundPixels = this.renderer.config.roundPixels;
         var vertexViewF32 = this.vertexViewF32;
         var vertexViewU32 = this.vertexViewU32;
-        var renderer = this.renderer;
         var width = frameWidth;
         var height = frameHeight;
         var x = srcX;
@@ -1662,6 +1738,18 @@ var TextureTintPipeline = new Class({
         this.setTexture2D(texture, 0);
 
         vertexOffset = this.vertexCount * this.vertexComponentCount;
+
+        if (roundPixels)
+        {
+            tx0 |= 0;
+            ty0 |= 0;
+            tx1 |= 0;
+            ty1 |= 0;
+            tx2 |= 0;
+            ty2 |= 0;
+            tx3 |= 0;
+            ty3 |= 0;
+        }
 
         vertexViewF32[vertexOffset + 0] = tx0;
         vertexViewF32[vertexOffset + 1] = ty0;
