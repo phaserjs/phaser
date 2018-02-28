@@ -2,7 +2,7 @@
 
 It's important to us that you feel you can contribute towards the evolution of Phaser. This can take many forms: from helping to fix bugs or improve the docs, to adding in new features to the source. This guide should help you in making that process as smooth as possible.
 
-Before contributing, please read the [code of conduct](https://github.com/photonstorm/phaser/blob/master/v2/CODE_OF_CONDUCT.md).
+Before contributing, please read the [code of conduct](https://github.com/photonstorm/phaser/blob/master/.github/CODE_OF_CONDUCT.md).
 
 ## Reporting issues
 
