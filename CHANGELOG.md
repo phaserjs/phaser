@@ -17,6 +17,7 @@
 * TileSprite.setFrame now works and allows you to change the frame to any other in the texture. Fix #3232 (thanks @Jerenaux)
 * Swapped the queue loop in the SceneManager to to use `_queue.length` rather than a cached length (thanks @srobertson421)
 * When calling `ScenePlugin.launch` the `data` argument is now passed to the queued scenes (thanks @gaudeon)
+* Rectangle.top wouldn't reset the `y` position if the value given never exceed the Rectangles bottom. Fix #3290 (thanks @chancezeus)
 
 ### Updates
 

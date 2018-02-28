@@ -364,12 +364,13 @@ var Rectangle = new Class({
             if (value >= this.bottom)
             {
                 this.height = 0;
-                this.y = value;
             }
             else
             {
                 this.height = (this.bottom - value);
             }
+            
+            this.y = value;
         }
 
     },
