@@ -227,13 +227,37 @@ var InputManager = new Class({
      */
     updateBounds: function ()
     {
-        var clientRect = this.canvas.getBoundingClientRect();
         var bounds = this.bounds;
 
-        bounds.left = clientRect.left + window.pageXOffset;
-        bounds.top = clientRect.top + window.pageYOffset;
+        var clientRect = this.canvas.getBoundingClientRect();
+
+        bounds.x = clientRect.left + window.pageXOffset - document.documentElement.clientLeft;
+        bounds.y = clientRect.top + window.pageYOffset - document.documentElement.clientTop;
         bounds.width = clientRect.width;
         bounds.height = clientRect.height;
+    },
+
+    /**
+     * [description]
+     *
+     * @method Phaser.Input.InputManager#resize
+     * @since 3.2.0
+     */
+    resize: function ()
+    {
+        this.updateBounds();
+
+        //  Game config size
+        var gw = this.game.config.width;
+        var gh = this.game.config.height;
+
+        //  Actual canvas size
+        var bw = this.bounds.width;
+        var bh = this.bounds.height;
+
+        //  Scale factor
+        this.scale.x = gw / bw;
+        this.scale.y = gh / bh;
     },
 
     /**
