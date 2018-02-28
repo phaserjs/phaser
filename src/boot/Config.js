@@ -75,6 +75,7 @@ var ValueToColor = require('../display/color/ValueToColor');
  * @property {array} [banner.background] - [description]
  * @property {FPSConfig} [?fps] - [description]
  * @property {boolean} [pixelArt=false] - [description]
+ * @property {boolean} [roundPixels=false] - [description]
  * @property {boolean} [transparent=false] - [description]
  * @property {boolean} [clearBeforeRender=true] - [description]
  * @property {string|number} [backgroundColor=0x000000] - [description]
@@ -180,6 +181,7 @@ var Config = new Class({
         this.fps = GetValue(config, 'fps', null);
 
         this.pixelArt = GetValue(config, 'pixelArt', false);
+        this.roundPixels = GetValue(config, 'roundPixels', false);
         this.transparent = GetValue(config, 'transparent', false);
         this.clearBeforeRender = GetValue(config, 'clearBeforeRender', true);
         this.backgroundColor = ValueToColor(GetValue(config, 'backgroundColor', 0));
