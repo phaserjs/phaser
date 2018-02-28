@@ -510,6 +510,21 @@ var Systems = new Class({
     },
 
     /**
+     * Called automatically by the SceneManager if the Game resizes.
+     * Dispatches an event you can respond to in your game code.
+     *
+     * @method Phaser.Scenes.Systems#resize
+     * @since 3.2.0
+     *
+     * @param {number} width - The new width of the game.
+     * @param {number} height - The new height of the game.
+     */
+    resize: function (width, height)
+    {
+        this.events.emit('resize', width, height);
+    },
+
+    /**
      * Shutdown this Scene and send a shutdown event to all of its systems.
      *
      * @method Phaser.Scenes.Systems#shutdown

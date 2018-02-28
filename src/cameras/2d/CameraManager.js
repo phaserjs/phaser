@@ -432,6 +432,23 @@ var CameraManager = new Class({
     },
 
     /**
+     * Resizes all cameras to the given dimensions.
+     *
+     * @method Phaser.Cameras.Scene2D.CameraManager#resize
+     * @since 3.2.0
+     * 
+     * @param {number} width - The new width of the camera.
+     * @param {number} height - The new height of the camera.
+     */
+    resize: function (width, height)
+    {
+        for (var i = 0, l = this.cameras.length; i < l; ++i)
+        {
+            this.cameras[i].setSize(width, height);
+        }
+    },
+
+    /**
      * [description]
      *
      * @method Phaser.Cameras.Scene2D.CameraManager#shutdown
