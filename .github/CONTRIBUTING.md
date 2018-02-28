@@ -2,7 +2,7 @@
 
 It's important to us that you feel you can contribute towards the evolution of Phaser. This can take many forms: from helping to fix bugs or improve the docs, to adding in new features to the source. This guide should help you in making that process as smooth as possible.
 
-Before contributing, please read the [code of conduct](https://github.com/photonstorm/phaser/blob/master/v2/CODE_OF_CONDUCT.md).
+Before contributing, please read the [code of conduct](https://github.com/photonstorm/phaser/blob/master/.github/CODE_OF_CONDUCT.md).
 
 ## Reporting issues
 
@@ -21,7 +21,7 @@ Before contributing, please read the [code of conduct](https://github.com/photon
 
 ## Pixi and Phaser
 
-It's important to understand that internally Phaser 2 uses a heavily customized version of [Pixi.js v2](https://github.com/GoodBoyDigital/pixi.js/) for all rendering. It's possible you may find a bug that is generated on the Pixi level rather than Phaser. You're welcome to still report the issue of course, but if you get a reply saying we think it might be a Pixi issue, this is what we're talking about :)
+Phaser doesn't use Pixi anymore.
 
 
 ## Support Forum
@@ -73,5 +73,5 @@ Thanks to Chad for creating the original Pixi.js Contributing file which we adap
 [1]: http://jsfiddle.net
 [2]: http://jsbin.com/
 [3]: http://nodejs.org
-[4]: http://www.html5gamedevs.com/forum/14-phaser/
+[4]: http://www.html5gamedevs.com/forum/33-phaser-3/
 [5]: https://codepen.io/pen?template=YeEWom "Phaser 3 game template"
