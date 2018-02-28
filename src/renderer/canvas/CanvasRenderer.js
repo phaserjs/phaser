@@ -88,7 +88,8 @@ var CanvasRenderer = new Class({
             pixelArt: game.config.pixelArt,
             backgroundColor: game.config.backgroundColor,
             resolution: game.config.resolution,
-            autoResize: game.config.autoResize
+            autoResize: game.config.autoResize,
+            roundPixels: game.config.roundPixels
         };
 
         /**
@@ -134,7 +135,7 @@ var CanvasRenderer = new Class({
          * @type {function}
          * @since 3.0.0
          */
-        this.drawImage = DrawImage;
+        this.drawImage = DrawImage(this.config.roundPixels);
 
         /**
          * [description]
@@ -143,7 +144,7 @@ var CanvasRenderer = new Class({
          * @type {function}
          * @since 3.0.0
          */
-        this.blitImage = BlitImage;
+        this.blitImage = BlitImage(this.config.roundPixels);
 
         /**
          * [description]

@@ -4,6 +4,8 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
+var roundPixels = false;
+
 /**
  * No scaling, anchor, rotation or effects, literally draws the frame directly to the canvas.
  *
@@ -19,6 +21,12 @@ var BlitImage = function (dx, dy, frame)
     var ctx = this.currentContext;
     var cd = frame.canvasData;
 
+    if (roundPixels)
+    {
+        dx |= 0;
+        dy |= 0;
+    }
+
     ctx.drawImage(
         frame.source.image,
         cd.sx,
@@ -32,4 +40,11 @@ var BlitImage = function (dx, dy, frame)
     );
 };
 
-module.exports = BlitImage;
+//  Special return so we can store the config value locally
+
+module.exports = function (configRoundPixels)
+{
+    roundPixels = configRoundPixels;
+
+    return BlitImage;
+};

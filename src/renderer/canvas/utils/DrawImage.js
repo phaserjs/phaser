@@ -4,6 +4,8 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
+var roundPixels = false;
+
 /**
  * [description]
  *
@@ -70,11 +72,22 @@ var DrawImage = function (src, camera)
         dy -= src.displayOriginY;
     }
 
+    var tx = src.x - camera.scrollX * src.scrollFactorX;
+    var ty = src.y - camera.scrollY * src.scrollFactorY;
+
+    if (roundPixels)
+    {
+        tx |= 0;
+        ty |= 0;
+        dx |= 0;
+        dy |= 0;
+    }
+
     //  Perform Matrix ITRS
 
     ctx.save();
 
-    ctx.translate(src.x - camera.scrollX * src.scrollFactorX, src.y - camera.scrollY * src.scrollFactorY);
+    ctx.translate(tx, ty);
 
     ctx.rotate(src.rotation);
 
@@ -86,4 +99,11 @@ var DrawImage = function (src, camera)
     ctx.restore();
 };
 
-module.exports = DrawImage;
+//  Special return so we can store the config value locally
+
+module.exports = function (configRoundPixels)
+{
+    roundPixels = configRoundPixels;
+
+    return DrawImage;
+};
