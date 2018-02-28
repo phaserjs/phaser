@@ -32,9 +32,6 @@ var BitmapTextCanvasRenderer = function (renderer, src, interpolationPercentage,
     
     var textureFrame = src.frame;
 
-    var cameraScrollX = camera.scrollX * src.scrollFactorX;
-    var cameraScrollY = camera.scrollY * src.scrollFactorY;
-
     var chars = src.fontData.chars;
     var lineHeight = src.fontData.lineHeight;
 
@@ -84,13 +81,26 @@ var BitmapTextCanvasRenderer = function (renderer, src, interpolationPercentage,
         renderer.currentScaleMode = src.scaleMode;
     }
 
-    ctx.save();
-    ctx.translate((src.x - cameraScrollX) + src.frame.x, (src.y - cameraScrollY) + src.frame.y);
-    ctx.rotate(src.rotation);
-    ctx.translate(-src.displayOriginX, -src.displayOriginY);
-    ctx.scale(src.scaleX, src.scaleY);
+    var roundPixels = renderer.config.roundPixels;
 
-    // ctx.fillStyle = 'rgba(255,0,255,0.5)';
+    var tx = (src.x - camera.scrollX * src.scrollFactorX) + src.frame.x;
+    var ty = (src.y - camera.scrollY * src.scrollFactorY) + src.frame.y;
+
+    if (roundPixels)
+    {
+        tx |= 0;
+        ty |= 0;
+    }
+
+    ctx.save();
+
+    ctx.translate(tx, ty);
+
+    ctx.rotate(src.rotation);
+
+    ctx.translate(-src.displayOriginX, -src.displayOriginY);
+
+    ctx.scale(src.scaleX, src.scaleY);
 
     for (var index = 0; index < textLength; ++index)
     {
@@ -141,12 +151,20 @@ var BitmapTextCanvasRenderer = function (renderer, src, interpolationPercentage,
             continue;
         }
 
+        if (roundPixels)
+        {
+            x |= 0;
+            y |= 0;
+        }
+
         ctx.save();
+
         ctx.translate(x, y);
+
         ctx.scale(scale, scale);
 
-        // ctx.fillRect(0, 0, glyphW, glyphH);
         ctx.drawImage(image, glyphX, glyphY, glyphW, glyphH, 0, 0, glyphW, glyphH);
+
         ctx.restore();
     }
 

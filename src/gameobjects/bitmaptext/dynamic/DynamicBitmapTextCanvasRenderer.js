@@ -88,9 +88,13 @@ var DynamicBitmapTextCanvasRenderer = function (renderer, src, interpolationPerc
     }
 
     ctx.save();
+
     ctx.translate(src.x, src.y);
+
     ctx.rotate(src.rotation);
+
     ctx.translate(-src.displayOriginX, -src.displayOriginY);
+
     ctx.scale(src.scaleX, src.scaleY);
 
     if (src.cropWidth > 0 && src.cropHeight > 0)
@@ -100,6 +104,8 @@ var DynamicBitmapTextCanvasRenderer = function (renderer, src, interpolationPerc
         ctx.rect(0, 0, src.cropWidth, src.cropHeight);
         ctx.clip();
     }
+
+    var roundPixels = renderer.config.roundPixels;
 
     for (var index = 0; index < textLength; ++index)
     {
@@ -158,13 +164,19 @@ var DynamicBitmapTextCanvasRenderer = function (renderer, src, interpolationPerc
         x -= cameraScrollX;
         y -= cameraScrollY;
 
-        ctx.save();
-        ctx.translate(x, y);
-        ctx.rotate(rotation);
-        ctx.scale(scale, scale);
+        if (roundPixels)
+        {
+            x |= 0;
+            y |= 0;
+        }
 
-        // ctx.fillStyle = 'rgba(0,255,0,0.2)';
-        // ctx.fillRect(0, 0, glyphW, glyphH);
+        ctx.save();
+
+        ctx.translate(x, y);
+
+        ctx.rotate(rotation);
+
+        ctx.scale(scale, scale);
 
         ctx.drawImage(image, glyphX, glyphY, glyphW, glyphH, 0, 0, glyphW, glyphH);
 
