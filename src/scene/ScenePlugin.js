@@ -158,7 +158,7 @@ var ScenePlugin = new Class({
         {
             if (this.settings.status !== CONST.RUNNING)
             {
-                this.manager.queueOp('start', key);
+                this.manager.queueOp('start', key, data);
             }
             else
             {
