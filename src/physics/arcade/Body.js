@@ -324,7 +324,7 @@ var Body = new Class({
         //  If true this Body will dispatch events
 
         /**
-         * [description]
+         * Emit a `worldbounds` event when this body collides with the world bounds (and `collideWorldBounds` is also true).
          *
          * @name Phaser.Physics.Arcade.Body#onWorldBounds
          * @type {boolean}
