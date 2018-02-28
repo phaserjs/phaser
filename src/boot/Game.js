@@ -445,6 +445,26 @@ var Game = new Class({
     },
 
     /**
+     * Updates the Game Config with the new width and height values given.
+     * Then resizes the Renderer and Input Manager scale.
+     *
+     * @method Phaser.Game#resize
+     * @since 3.2.0
+     * 
+     * @param {number} width - The new width of the game.
+     * @param {number} height - The new height of the game.
+     */
+    resize: function (width, height)
+    {
+        this.config.width = width;
+        this.config.height = height;
+
+        this.renderer.resize(width, height);
+
+        this.input.resize();
+    },
+
+    /**
      * Destroys this Phaser.Game instance, all global systems, all sub-systems and all Scenes.
      *
      * @method Phaser.Game#destroy
