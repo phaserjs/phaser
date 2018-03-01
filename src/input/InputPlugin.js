@@ -185,6 +185,17 @@ var InputPlugin = new Class({
         this._temp = [];
 
         /**
+         * Used to temporarily store the results of the Hit Test dropZones
+         *
+         * @name Phaser.Input.InputPlugin#_tempZones
+         * @type {array}
+         * @private
+         * @default []
+         * @since 3.0.0
+         */
+        this._tempZones = [];
+
+        /**
          * A list of all Game Objects that have been set to be interactive.
          *
          * @name Phaser.Input.InputPlugin#_list
@@ -314,8 +325,6 @@ var InputPlugin = new Class({
             {
                 current.splice(index, 1);
 
-                //  TODO: Clear from _draggable, _drag and _over too
-
                 this.clear(gameObject);
             }
         }
@@ -333,9 +342,9 @@ var InputPlugin = new Class({
      * @method Phaser.Input.InputPlugin#clear
      * @since 3.0.0
      *
-     * @param {[type]} gameObject - [description]
+     * @param {Phaser.GameObjects.GameObject} gameObject - [description]
      *
-     * @return {[type]} [description]
+     * @return {Phaser.GameObjects.GameObject} [description]
      */
     clear: function (gameObject)
     {
@@ -349,6 +358,28 @@ var InputPlugin = new Class({
 
         gameObject.input = null;
 
+        //  Clear from _draggable, _drag and _over
+        var index = this._draggable.indexOf(gameObject);
+
+        if (index > -1)
+        {
+            this._draggable.splice(index, 1);
+        }
+
+        index = this._drag.indexOf(gameObject);
+
+        if (index > -1)
+        {
+            this._drag.splice(index, 1);
+        }
+
+        index = this._over.indexOf(gameObject);
+
+        if (index > -1)
+        {
+            this._over.splice(index, 1);
+        }
+
         return gameObject;
     },
 
@@ -358,7 +389,7 @@ var InputPlugin = new Class({
      * @method Phaser.Input.InputPlugin#disable
      * @since 3.0.0
      *
-     * @param {[type]} gameObject - [description]
+     * @param {Phaser.GameObjects.GameObject} gameObject - [description]
      */
     disable: function (gameObject)
     {
@@ -371,14 +402,17 @@ var InputPlugin = new Class({
      * @method Phaser.Input.InputPlugin#enable
      * @since 3.0.0
      *
-     * @param {[type]} gameObject - [description]
-     * @param {[type]} shape - [description]
-     * @param {[type]} callback - [description]
+     * @param {Phaser.GameObjects.GameObject} gameObject - [description]
+     * @param {object} shape - [description]
+     * @param {function} callback - [description]
+     * @param {boolean} [dropZone=false] - [description]
      *
-     * @return {[type]} [description]
+     * @return {Phaser.Input.InputPlugin} This Input Plugin.
      */
-    enable: function (gameObject, shape, callback)
+    enable: function (gameObject, shape, callback, dropZone)
     {
+        if (dropZone === undefined) { dropZone = false; }
+
         if (gameObject.input)
         {
             //  If it is already has an InteractiveObject then just enable it and return
@@ -389,6 +423,8 @@ var InputPlugin = new Class({
             //  Create an InteractiveObject and enable it
             this.setHitArea(gameObject, shape, callback);
         }
+        
+        gameObject.input.dropZone = dropZone;
 
         return this;
     },
@@ -401,7 +437,7 @@ var InputPlugin = new Class({
      *
      * @param {[type]} pointer - [description]
      *
-     * @return {[type]} [description]
+     * @return {array} [description]
      */
     hitTestPointer: function (pointer)
     {
@@ -413,7 +449,20 @@ var InputPlugin = new Class({
 
             //  Get a list of all objects that can be seen by the camera below the pointer in the scene and store in 'output' array.
             //  All objects in this array are input enabled, as checked by the hitTest method, so we don't need to check later on as well.
-            return this.manager.hitTest(pointer.x, pointer.y, this._list, camera);
+            var over = this.manager.hitTest(pointer.x, pointer.y, this._list, camera);
+
+            //  Filter out the drop zones
+            for (var i = 0; i < over.length; i++)
+            {
+                var obj = over[i];
+
+                if (obj.input.dropZone)
+                {
+                    this._tempZones.push(obj);
+                }
+            }
+
+            return over;
         }
         else
         {
@@ -466,10 +515,10 @@ var InputPlugin = new Class({
      * @method Phaser.Input.InputPlugin#processDragEvents
      * @since 3.0.0
      *
-     * @param {[type]} pointer - [description]
-     * @param {[type]} time - [description]
+     * @param {number} pointer - [description]
+     * @param {number} time - [description]
      *
-     * @return {[type]} [description]
+     * @return {integer} [description]
      */
     processDragEvents: function (pointer, time)
     {
@@ -601,16 +650,7 @@ var InputPlugin = new Class({
         //  4 = Pointer actively dragging the draglist and has moved
         if (pointer.dragState === 4 && pointer.justMoved)
         {
-            //  Let's filter out currentlyOver for dropZones only
-            var dropZones = [];
-
-            for (c = 0; c < currentlyOver.length; c++)
-            {
-                if (currentlyOver[c].input.dropZone)
-                {
-                    dropZones.push(currentlyOver[c]);
-                }
-            }
+            var dropZones = this._tempZones;
 
             list = this._drag[pointer.id];
 
@@ -793,6 +833,7 @@ var InputPlugin = new Class({
         var justOver = [];
         var stillOver = [];
         var previouslyOver = this._over[pointer.id];
+        var currentlyDragging = this._drag[pointer.id];
 
         //  Go through all objects the pointer was previously over, and see if it still is.
         //  Splits the previouslyOver array into two parts: justOut and stillOver
@@ -801,7 +842,7 @@ var InputPlugin = new Class({
         {
             gameObject = previouslyOver[i];
 
-            if (currentlyOver.indexOf(gameObject) === -1)
+            if (currentlyOver.indexOf(gameObject) === -1 && currentlyDragging.indexOf(gameObject) === -1)
             {
                 //  Not in the currentlyOver array, so must be outside of this object now
                 justOut.push(gameObject);
@@ -1398,10 +1439,8 @@ var InputPlugin = new Class({
      * @method Phaser.Input.InputPlugin#update
      * @since 3.0.0
      *
-     * @param {[type]} time - [description]
-     * @param {[type]} delta - [description]
-     *
-     * @return {[type]} [description]
+     * @param {number} time - [description]
+     * @param {number} delta - [description]
      */
     update: function (time, delta)
     {
@@ -1435,14 +1474,27 @@ var InputPlugin = new Class({
             return;
         }
 
+        //  Always reset this array
+        this._tempZones = [];
+
+        //  _temp contains a hit tested and camera culled list of IO objects
         this._temp = this.hitTestPointer(pointer);
 
         this.sortGameObjects(this._temp);
+        this.sortGameObjects(this._tempZones);
 
-        if (this.topOnly && this._temp.length)
+        if (this.topOnly)
         {
             //  Only the top-most one counts now, so safely ignore the rest
-            this._temp.splice(1);
+            if (this._temp.length)
+            {
+                this._temp.splice(1);
+            }
+
+            if (this._tempZones.length)
+            {
+                this._tempZones.splice(1);
+            }
         }
 
         var total = this.processDragEvents(pointer, time);

@@ -255,12 +255,13 @@ var GameObject = new Class({
      *
      * @param {any} [shape] - A geometric shape that defines the hit area for the Game Object. If not specified a Rectangle will be used.
      * @param {function} [callback] - A callback to be invoked when the Game Object is interacted with.
+     * @param {boolean} [dropZone=false] - Should this Game Object be treated as a drop zone target?
      * 
      * @return {Phaser.GameObjects.GameObject} This GameObject.
      */
-    setInteractive: function (shape, callback)
+    setInteractive: function (shape, callback, dropZone)
     {
-        this.scene.sys.input.enable(this, shape, callback);
+        this.scene.sys.input.enable(this, shape, callback, dropZone);
 
         return this;
     },

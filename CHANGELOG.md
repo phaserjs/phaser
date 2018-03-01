@@ -10,6 +10,8 @@
 * Load.plugin now accepts a class as an argument as well as a URL string (thanks @nkholski)
 * Tween.complete will allow you to flag a tween as being complete, no matter what stage it is at. If an onComplete callback has been defined it will be invoked. You can set an optional delay before this happens (thanks @Jerenaux for the idea)
 * The Headless render mode has been implemented. You can now set HEADLESS as the `renderType` in the Game Config and it will run a special game step that skips rendering. It will still create a Canvas element, as lots of internal systems (like input) rely on it, but it will not draw anything to it. Fix #3256 (thanks @rgk)
+* GameObject.setInteractive has a new boolean argument `dropZone` which will allow you to set the object as being a drop zone right from the method.
+* Sprites can now be drop zones and have other Game Objects dragged onto them as targets.
 
 ### Bug Fixes
 
@@ -19,6 +21,9 @@
 * Swapped the queue loop in the SceneManager to to use `_queue.length` rather than a cached length (thanks @srobertson421)
 * When calling `ScenePlugin.launch` the `data` argument is now passed to the queued scenes (thanks @gaudeon)
 * Rectangle.top wouldn't reset the `y` position if the value given never exceed the Rectangles bottom. Fix #3290 (thanks @chancezeus)
+* The implementation of `topOnly` within the Input Manager had broken the way drop zones worked, as they were now filtered out of the display list before processing. Drop zones are now treated on their own in the Input Plugin meaning you can still have `topOnly` set and still drop an item into a drop zone. This indirectly fixed #3291 (thanks @rexrainbow)
+* InputPlugin.clear now properly removes a Game Object from all internal arrays, not just the _list.
+* InputPlugin.processOverOut no longer considers an item as being 'out' if it's in the internal `_drag` array.
 
 ### Updates
 

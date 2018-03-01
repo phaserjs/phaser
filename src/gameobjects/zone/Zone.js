@@ -251,10 +251,8 @@ var Zone = new Class({
         {
             if (!this.input)
             {
-                this.setInteractive(shape, callback);
+                this.setInteractive(shape, callback, true);
             }
-
-            this.input.dropZone = true;
         }
 
         return this;
