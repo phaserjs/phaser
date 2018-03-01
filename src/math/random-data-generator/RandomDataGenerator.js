@@ -68,6 +68,17 @@ var RandomDataGenerator = new Class({
         this.s2 = 0;
 
         /**
+         * Internal var.
+         *
+         * @name Phaser.Math.RandomDataGenerator#n
+         * @type {number}
+         * @default 0
+         * @private
+         * @since 3.0.0
+         */
+        this.n = 0;
+
+        /**
          * [description]
          *
          * @name Phaser.Math.RandomDataGenerator#sign
@@ -117,7 +128,7 @@ var RandomDataGenerator = new Class({
     hash: function (data)
     {
         var h;
-        var n = 0xefc8249d;
+        var n = this.n;
 
         data = data.toString();
 
@@ -132,6 +143,8 @@ var RandomDataGenerator = new Class({
             h -= n;
             n += h * 0x100000000;// 2^32
         }
+
+        this.n = n;
 
         return (n >>> 0) * 2.3283064365386963e-10;// 2^-32
     },
@@ -169,9 +182,10 @@ var RandomDataGenerator = new Class({
     sow: function (seeds)
     {
         // Always reset to default seed
+        this.n = 0xefc8249d;
         this.s0 = this.hash(' ');
-        this.s1 = this.hash(this.s0);
-        this.s2 = this.hash(this.s1);
+        this.s1 = this.hash(' ');
+        this.s2 = this.hash(' ');
         this.c = 1;
 
         if (!seeds)
