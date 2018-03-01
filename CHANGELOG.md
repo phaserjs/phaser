@@ -24,6 +24,7 @@
 * The implementation of `topOnly` within the Input Manager had broken the way drop zones worked, as they were now filtered out of the display list before processing. Drop zones are now treated on their own in the Input Plugin meaning you can still have `topOnly` set and still drop an item into a drop zone. This indirectly fixed #3291 (thanks @rexrainbow)
 * InputPlugin.clear now properly removes a Game Object from all internal arrays, not just the _list.
 * InputPlugin.processOverOut no longer considers an item as being 'out' if it's in the internal `_drag` array.
+* When a Game Object is scaled, its Arcade Physics body was still calculating its position based on its original size instead of scaled one (thanks @pixelpicosean)
 
 ### Updates
 
