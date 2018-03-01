@@ -366,18 +366,18 @@ var InputPlugin = new Class({
             this._draggable.splice(index, 1);
         }
 
-        index = this._drag.indexOf(gameObject);
+        index = this._drag[0].indexOf(gameObject);
 
         if (index > -1)
         {
-            this._drag.splice(index, 1);
+            this._drag[0].splice(index, 1);
         }
 
-        index = this._over.indexOf(gameObject);
+        index = this._over[0].indexOf(gameObject);
 
         if (index > -1)
         {
-            this._over.splice(index, 1);
+            this._over[0].splice(index, 1);
         }
 
         return gameObject;
