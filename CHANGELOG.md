@@ -29,7 +29,10 @@
 * BitmapText.setText will not change the text via `setText` unless the new text is different to the old one.
 * If you set `transparent` in the Game Config but didn't provide a `backgroundColor` then it would render as black. It will now be properly transparent. If you do provide a color value then it must include an alpha component.
 * You can now pass normal Groups to Arcade Physics collide / overlap, as well as Physics Groups. Fix #3277 (thanks @nkholski)
+* Texture.get has been optimized to fail first, then error, with a new falsey check. This allows you to skip out specifying animation frames in the animation config without generating a console warning.
+
 * Documentation updates: thanks to @melissaelopez @samme
+
 
 ## Version 3.1.2 - 23rd February 2018
 
