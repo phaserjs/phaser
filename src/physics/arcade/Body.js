@@ -788,8 +788,8 @@ var Body = new Class({
 
         var sprite = this.gameObject;
 
-        this.position.x = sprite.x - sprite.displayOriginX + (sprite.scaleX * this.offset.x);
-        this.position.y = sprite.y - sprite.displayOriginY + (sprite.scaleY * this.offset.y);
+        this.position.x = sprite.x + sprite.scaleX * (this.offset.x - sprite.displayOriginX);
+        this.position.y = sprite.y + sprite.scaleY * (this.offset.y - sprite.displayOriginY);
 
         this.updateCenter();
 
