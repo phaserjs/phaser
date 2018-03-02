@@ -135,8 +135,8 @@ var MatrixStack = {
 
         currentMatrix[0] = m0 * ct + m2 * st;
         currentMatrix[1] = m1 * ct + m3 * st;
-        currentMatrix[2] = m2 * -st + m2 * ct;
-        currentMatrix[3] = m3 * -st + m3 * ct;
+        currentMatrix[2] = m0 * -st + m2 * ct;
+        currentMatrix[3] = m1 * -st + m3 * ct;
 
         return this;
     }
