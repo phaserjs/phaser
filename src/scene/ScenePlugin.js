@@ -377,20 +377,24 @@ var ScenePlugin = new Class({
     },
 
     /**
-     * [description]
+     * Swaps the position of two scenes in the Scenes list.
+     * This controls the order in which they are rendered and updated.
      *
      * @method Phaser.Scenes.ScenePlugin#swapPosition
-     * @since 3.0.0
+     * @since 3.2.0
      *
-     * @param {string} key - [description]
+     * @param {string} keyA - The first Scene to swap.
+     * @param {string} [keyB] - The second Scene to swap. If none is given it defaults to this Scene.
      *
      * @return {Phaser.Scenes.ScenePlugin} This ScenePlugin object.
      */
-    swapPosition: function (key)
+    swapPosition: function (keyA, keyB)
     {
-        if (key && key !== this.key)
+        if (keyB === undefined) { keyB = this.key; }
+
+        if (keyA !== keyB)
         {
-            this.manager.swapPosition(this.key, key);
+            this.manager.swapPosition(keyA, keyB);
         }
 
         return this;
