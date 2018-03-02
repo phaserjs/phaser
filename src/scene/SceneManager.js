@@ -258,6 +258,58 @@ var SceneManager = new Class({
     },
 
     /**
+     * Removes a Scene from the SceneManager.
+     *
+     * The Scene is removed from the local scenes array, it's key is cleared from the keys
+     * cache and Scene.Systems.destroy is then called on it.
+     *
+     * If the SceneManager is processing the Scenes when this method is called it wil
+     * queue the operation for the next update sequence.
+     *
+     * @method Phaser.Scenes.SceneManager#remove
+     * @since 3.2.0
+     *
+     * @param {string|Phaser.Scene} scene - The Scene to be removed.
+     *
+     * @return {Phaser.Scenes.SceneManager} This SceneManager.
+     */
+    remove: function (key)
+    {
+        if (this._processing)
+        {
+            this._queue.push({ op: 'remove', keyA: key, keyB: null });
+        }
+        else
+        {
+            var sceneToRemove = this.getScene(key);
+
+            if (!sceneToRemove)
+            {
+                return this;
+            }
+
+            var index = this.scenes.indexOf(sceneToRemove);
+            var sceneKey = sceneToRemove.sys.settings.key;
+
+            if (index > -1)
+            {
+                this.keys[sceneKey] = undefined;
+                this.scenes.splice(index, 1);
+
+                if (this._start.indexOf(sceneKey) > -1)
+                {
+                    index = this._start.indexOf(sceneKey);
+                    this._start.splice(index, 1);
+                }
+
+                sceneToRemove.sys.destroy();
+            }
+        }
+
+        return this;
+    },
+
+    /**
      * [description]
      *
      * @method Phaser.Scenes.SceneManager#bootScene
