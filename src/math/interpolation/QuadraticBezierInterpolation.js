@@ -8,7 +8,7 @@ function P0 (t, p)
 {
     var k = 1 - t;
 
-    return k * k * k * p;
+    return k * k * p;
 }
 
 function P1 (t, p)
