@@ -1024,7 +1024,7 @@ var SceneManager = new Class({
      * @method Phaser.Scenes.SceneManager#bringToTop
      * @since 3.0.0
      *
-     * @param {string|Phaser.Scene} scene - [description]
+     * @param {string|Phaser.Scene} key - [description]
      *
      * @return {Phaser.Scenes.SceneManager} [description]
      */
@@ -1056,7 +1056,7 @@ var SceneManager = new Class({
      * @method Phaser.Scenes.SceneManager#sendToBack
      * @since 3.0.0
      *
-     * @param {string|Phaser.Scene} scene - [description]
+     * @param {string|Phaser.Scene} key - [description]
      *
      * @return {Phaser.Scenes.SceneManager} [description]
      */
@@ -1088,7 +1088,7 @@ var SceneManager = new Class({
      * @method Phaser.Scenes.SceneManager#moveDown
      * @since 3.0.0
      *
-     * @param {string|Phaser.Scene} scene - [description]
+     * @param {string|Phaser.Scene} key - [description]
      *
      * @return {Phaser.Scenes.SceneManager} [description]
      */
@@ -1122,7 +1122,7 @@ var SceneManager = new Class({
      * @method Phaser.Scenes.SceneManager#moveUp
      * @since 3.0.0
      *
-     * @param {string|Phaser.Scene} scene - [description]
+     * @param {string|Phaser.Scene} key - [description]
      *
      * @return {Phaser.Scenes.SceneManager} [description]
      */
@@ -1144,6 +1144,92 @@ var SceneManager = new Class({
 
                 this.scenes[indexA] = sceneB;
                 this.scenes[indexB] = sceneA;
+            }
+        }
+
+        return this;
+    },
+
+    /**
+     * Moves a Scene so it is immediately above another Scene in the Scenes list.
+     * This means it will render over the top of the other Scene.
+     *
+     * @method Phaser.Scenes.SceneManager#moveAbove
+     * @since 3.2.0
+     *
+     * @param {string|Phaser.Scene} keyA - The Scene that Scene B will be moved above.
+     * @param {string|Phaser.Scene} keyB - The Scene to be moved.
+     *
+     * @return {Phaser.Scenes.SceneManager} [description]
+     */
+    moveAbove: function (keyA, keyB)
+    {
+        if (keyA === keyB)
+        {
+            return this;
+        }
+
+        if (this._processing)
+        {
+            this._queue.push({ op: 'moveAbove', keyA: keyA, keyB: keyB });
+        }
+        else
+        {
+            var indexA = this.getIndex(keyA);
+            var indexB = this.getIndex(keyB);
+
+            if (indexA > indexB && indexA !== -1 && indexB !== -1)
+            {
+                var tempScene = this.getAt(indexB);
+
+                //  Remove
+                this.scenes.splice(indexB, 1);
+
+                //  Add in new location
+                this.scenes.splice(indexA, 0, tempScene);
+            }
+        }
+
+        return this;
+    },
+
+    /**
+     * Moves a Scene so it is immediately below another Scene in the Scenes list.
+     * This means it will render behind the other Scene.
+     *
+     * @method Phaser.Scenes.SceneManager#moveBelow
+     * @since 3.2.0
+     *
+     * @param {string|Phaser.Scene} keyA - The Scene that Scene B will be moved above.
+     * @param {string|Phaser.Scene} keyB - The Scene to be moved.
+     *
+     * @return {Phaser.Scenes.SceneManager} [description]
+     */
+    moveBelow: function (keyA, keyB)
+    {
+        if (keyA === keyB)
+        {
+            return this;
+        }
+
+        if (this._processing)
+        {
+            this._queue.push({ op: 'moveBelow', keyA: keyA, keyB: keyB });
+        }
+        else
+        {
+            var indexA = this.getIndex(keyA);
+            var indexB = this.getIndex(keyB);
+
+            if (indexA < indexB && indexA !== -1 && indexB !== -1)
+            {
+                var tempScene = this.getAt(indexB);
+
+                //  Remove
+                this.scenes.splice(indexB, 1);
+
+                //  Add in new location
+                this.scenes.splice(indexA, 0, tempScene);
             }
         }
 

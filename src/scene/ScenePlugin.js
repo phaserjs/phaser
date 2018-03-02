@@ -401,6 +401,54 @@ var ScenePlugin = new Class({
     },
 
     /**
+     * Swaps the position of two scenes in the Scenes list, so that Scene B is directly above Scene A.
+     * This controls the order in which they are rendered and updated.
+     *
+     * @method Phaser.Scenes.ScenePlugin#moveAbove
+     * @since 3.2.0
+     *
+     * @param {string} keyA - The Scene that Scene B will be moved to be above.
+     * @param {string} [keyB] - The Scene to be moved. If none is given it defaults to this Scene.
+     *
+     * @return {Phaser.Scenes.ScenePlugin} This ScenePlugin object.
+     */
+    moveAbove: function (keyA, keyB)
+    {
+        if (keyB === undefined) { keyB = this.key; }
+
+        if (keyA !== keyB)
+        {
+            this.manager.moveAbove(keyA, keyB);
+        }
+
+        return this;
+    },
+
+    /**
+     * Swaps the position of two scenes in the Scenes list, so that Scene B is directly below Scene A.
+     * This controls the order in which they are rendered and updated.
+     *
+     * @method Phaser.Scenes.ScenePlugin#moveBelow
+     * @since 3.2.0
+     *
+     * @param {string} keyA - The Scene that Scene B will be moved to be below.
+     * @param {string} [keyB] - The Scene to be moved. If none is given it defaults to this Scene.
+     *
+     * @return {Phaser.Scenes.ScenePlugin} This ScenePlugin object.
+     */
+    moveBelow: function (keyA, keyB)
+    {
+        if (keyB === undefined) { keyB = this.key; }
+
+        if (keyA !== keyB)
+        {
+            this.manager.moveBelow(keyA, keyB);
+        }
+
+        return this;
+    },
+
+    /**
      * Removes a Scene from the SceneManager.
      *
      * The Scene is removed from the local scenes array, it's key is cleared from the keys
