@@ -452,7 +452,7 @@ var SceneManager = new Class({
         {
             var sys = this.scenes[i].sys;
 
-            if (sys.settings.visible)
+            if (sys.settings.visible && (sys.settings.status === CONST.RUNNING || sys.settings.status === CONST.PAUSED))
             {
                 sys.render(renderer);
             }
@@ -1194,6 +1194,24 @@ var SceneManager = new Class({
         }
 
         return this;
+    },
+
+    dump: function ()
+    {
+        var out  = [];
+        var map = [ 'pending', 'init', 'start', 'loading', 'creating', 'running', 'paused', 'sleeping', 'shutdown', 'destroyed' ];
+
+        for (var i = 0; i < this.scenes.length; i++)
+        {
+            var sys = this.scenes[i].sys;
+
+            var key = (sys.settings.visible && (sys.settings.status === CONST.RUNNING || sys.settings.status === CONST.PAUSED)) ? '[*] ' : '[-] ';
+            key += sys.settings.key + ' (' + map[sys.settings.status] + ')';
+
+            out.push(key);
+        }
+
+        console.log(out.join('\n'));
     },
 
     /**
