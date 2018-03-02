@@ -122,7 +122,7 @@ Also, please subscribe to the [Phaser World](https://phaser.io/community/newslet
 
 ### Source Code Examples
 
-During our development of Phaser 3 we created hundreds of examples using the full source code and assets. Until these examples are fully integrated into the Phaser website, you can browse them on [Phaser 3 Labs](http://labs.phaser.io), or clone the [examples repo][examples]. Note: Not all examples work, sorry! We're tidying them up as fast as we can.
+During our development of Phaser 3, we created hundreds of examples with the full source code and assets. Until these examples are fully integrated into the Phaser website, you can browse them on [Phaser 3 Labs](http://labs.phaser.io), or clone the [examples repo][examples]. Note: Not all examples work, sorry! We're tidying them up as fast as we can.
 
 ### Create Your First Phaser 3 Example
 
