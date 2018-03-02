@@ -9,10 +9,9 @@
  */
 
 module.exports = {
-
     Bezier: require('./BezierInterpolation'),
     CatmullRom: require('./CatmullRomInterpolation'),
     CubicBezier: require('./CubicBezierInterpolation'),
-    Linear: require('./LinearInterpolation')
-
+    Linear: require('./LinearInterpolation'),
+    QuadraticBezier: require('./QuadraticBezierInterpolation')
 };
