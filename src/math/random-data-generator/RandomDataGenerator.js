@@ -74,7 +74,7 @@ var RandomDataGenerator = new Class({
          * @type {number}
          * @default 0
          * @private
-         * @since 3.0.0
+         * @since 3.2.0
          */
         this.n = 0;
 
