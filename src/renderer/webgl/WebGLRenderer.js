@@ -354,6 +354,8 @@ var WebGLRenderer = new Class({
          */
         this.extensions = {};
 
+        this.glFormats = [];
+
         this.init(this.config);
     },
 
@@ -390,6 +392,12 @@ var WebGLRenderer = new Class({
         this.blendModes[2].func = [ gl.DST_COLOR, gl.ONE_MINUS_SRC_ALPHA ];
         this.blendModes[3].func = [ gl.ONE, gl.ONE_MINUS_SRC_COLOR ];
 
+        this.glFormats[0] = gl.BYTE;
+        this.glFormats[1] = gl.SHORT;
+        this.glFormats[2] = gl.UNSIGNED_BYTE;
+        this.glFormats[3] = gl.UNSIGNED_SHORT;
+        this.glFormats[4] = gl.FLOAT;
+
         // Load supported extensions
         this.supportedExtensions = gl.getSupportedExtensions();
 
@@ -409,10 +417,10 @@ var WebGLRenderer = new Class({
         // Clear previous pipelines and reload default ones
         this.pipelines = {};
 
-        this.addPipeline('TextureTintPipeline', new TextureTintPipeline(this.game, gl, this));
-        this.addPipeline('FlatTintPipeline', new FlatTintPipeline(this.game, gl, this));
-        this.addPipeline('BitmapMaskPipeline', new BitmapMaskPipeline(this.game, gl, this));
-        this.addPipeline('Light2D', new ForwardDiffuseLightPipeline(this.game, gl, this));
+        this.addPipeline('TextureTintPipeline', new TextureTintPipeline({ game: this.game, renderer: this }));
+        this.addPipeline('FlatTintPipeline', new FlatTintPipeline({ game: this.game, renderer: this }));
+        this.addPipeline('BitmapMaskPipeline', new BitmapMaskPipeline({ game: this.game, renderer: this }));
+        this.addPipeline('Light2D', new ForwardDiffuseLightPipeline({ game: this.game, renderer: this }));
         
         this.setBlendMode(CONST.BlendModes.NORMAL);
         this.resize(this.width, this.height);
@@ -602,7 +610,7 @@ var WebGLRenderer = new Class({
      * @param {string} pipelineName - [description]
      * @param {Phaser.Renderer.WebGL.WebGLPipeline} pipelineInstance - [description]
      *
-     * @return {Phaser.Renderer.WebGL.WebGLRenderer} [description]
+     * @return {Phaser.Renderer.WebGL.WebGLPipeline} [description]
      */
     addPipeline: function (pipelineName, pipelineInstance)
     {
@@ -612,7 +620,7 @@ var WebGLRenderer = new Class({
         pipelineInstance.name = pipelineName;
         this.pipelines[pipelineName].resize(this.width, this.height, this.config.resolution);
 
-        return this;
+        return pipelineInstance;
     },
 
     /**

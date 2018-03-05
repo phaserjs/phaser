@@ -198,6 +198,19 @@ var WebGLPipeline = new Class({
         this.flushLocked = false;
     },
 
+    addAttribute: function (name, size, type, normalized, offset) 
+    {
+        this.attributes.push({
+            name: name,
+            size: size,
+            type: this.renderer.glFormats[type],
+            normalized: normalized,
+            offset: offset
+        });
+
+        return this;
+    },
+
     /**
      * [description]
      *
@@ -381,6 +394,75 @@ var WebGLPipeline = new Class({
         delete this.vertexBuffer;
         delete this.gl;
 
+        return this;
+    },
+
+    setFloat1: function (name, x)
+    {
+        this.renderer.setFloat1(this.program, name, x);
+        return this;
+    },
+
+    setFloat2: function (name, x, y)
+    {
+
+        this.renderer.setFloat2(this.program, name, x, y);
+        return this;
+    },
+
+    setFloat3: function (name, x, y, z)
+    {
+
+        this.renderer.setFloat3(this.program, name, x, y, z);
+        return this;
+    },
+
+    setFloat4: function (name, x, y, z, w)
+    {
+
+        this.renderer.setFloat4(this.program, name, x, y, z, w);
+        return this;
+    },
+
+    setInt1: function (name, x)
+    {
+        this.renderer.setInt1(this.program, name, x);
+        return this;
+    },
+
+    setInt2: function (name, x, y)
+    {
+        this.renderer.setInt2(this.program, name, x, y);
+        return this;
+    },
+
+    setInt3: function (name, x, y, z)
+    {
+        this.renderer.setInt3(this.program, name, x, y, z);
+        return this;
+    },
+
+    setInt4: function (name, x, y, z, w)
+    {
+        this.renderer.setInt4(this.program, name, x, y, z, w);
+        return this;
+    },
+
+    setMatrix2: function (name, transpose, matrix)
+    {
+        this.renderer.setMatrix2(this.program, name, transpose,  matrix);
+        return this;
+    },
+
+    setMatrix3: function (name, transpose, matrix)
+    {
+        this.renderer.setMatrix3(this.program, name, transpose,  matrix);
+        return this;
+    },
+
+    setMatrix4: function (name, transpose, matrix)
+    {
+        this.renderer.setMatrix4(this.program, name, transpose,  matrix);
         return this;
     }
 
