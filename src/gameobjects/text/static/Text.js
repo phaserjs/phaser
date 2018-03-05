@@ -200,6 +200,11 @@ var Text = new Class({
         {
             this.setPadding(style.padding);
         }
+        
+        if (style && style.lineSpacing)
+        {
+            this._lineSpacing = style.lineSpacing;
+        }
 
         this.setText(text);
 
