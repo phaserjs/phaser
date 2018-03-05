@@ -6,6 +6,7 @@
 
 * The new Render Texture Game Object is now available. You can clear, fill and draw texture frames to it. The Render Texture itself can be displayed in-game with its own transform, or you can use it as a Bitmap Mask for another Game Object.
 * Game.resize allows you to resize the game config, renderer and input system in one call.
+* When Game.resize is called it causes all Scene.Systems to have their resize method called. This is turn emits a `resize` event which your Scene can respond to. It will be sent the new width and height of the canvas as the only two parameters.
 * InputManager.resize allows you to update the bounds def and input scale in one call.
 * Game.Config.roundPixels property added to prevent sub-pixel interpolation during rendering of Game Objects in WebGL and Canvas.
 * Load.plugin now accepts a class as an argument as well as a URL string (thanks @nkholski)
