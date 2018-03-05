@@ -21,10 +21,7 @@ var WebGLPipeline = require('../WebGLPipeline');
  * @constructor
  * @since 3.0.0
  *
- * @param {Phaser.Game} game - [description]
- * @param {WebGLRenderingContext} gl - [description]
- * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - [description]
- * @param {boolean} overrideFragmentShader - [description]
+ * @param {object} config - [description]
  */
 var TextureTintPipeline = new Class({
 

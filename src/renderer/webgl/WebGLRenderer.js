@@ -354,6 +354,14 @@ var WebGLRenderer = new Class({
          */
         this.extensions = {};
 
+        /**
+         * [description]
+         *
+         * @name Phaser.Renderer.WebGL.WebGLRenderer#glFormats
+         * @type {array}
+         * @default []
+         * @since 3.2.0
+         */
         this.glFormats = [];
 
         this.init(this.config);
