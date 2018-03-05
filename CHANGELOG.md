@@ -57,6 +57,7 @@
 * The SceneManager no longer renders a Scene unless it is visible AND either running or paused. This now skips Scenes that are in an `init` state.
 * The Keyboard Manager will now no longer emit `keydown` events if you keep holding a key down. Fix #3239 (thanks @squaresun)
 * The SceneManager now employs a new queue for all pending Scenes, creating them and booting them in strict sequence. This should prevent errors where Scenes were unable to reference other Scenes further down the boot list in their create functions. Fix #3314 (thanks @max1701 @rblopes)
+* Game.preBoot and Game.postBoot callbacks now pass an instance of the game to the callback (thanks @rblopes)
 * Phaser is now running Travis CI build testing again (thanks @vpmedia)
 * Documentation updates: thanks to @melissaelopez @samme @jblang94 
 
