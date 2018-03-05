@@ -20,6 +20,7 @@
 * Quadratic Bezier Interpolation has been added to the Math.Interpolation functions (thanks @RiCoTeRoX)
 * A new Quadratic Bezier Curve class has been added, expanding the available Curve types (thanks @RiCoTeRoX)
 * Path.quadraticBezierTo allows you to add a Quadratic Bezier Curve into your Path.
+* Loader.multiatlas now supports Texture Packers new JSON atlas format which exports one combined atlas for all image files. This is available if you use the new Phaser 3 Export from within Texture Packer (thanks @CodeAndWeb)
 
 ### Bug Fixes
 
@@ -34,6 +35,8 @@
 * InputPlugin.processOverOut no longer considers an item as being 'out' if it's in the internal `_drag` array.
 * When a Game Object is scaled, its Arcade Physics body was still calculating its position based on its original size instead of scaled one (thanks @pixelpicosean)
 * The RandomDataGenerator classes randomness has been improved thanks to the correct caching of a class property. Fix #3289 (thanks @migiyubi)
+* The RandomDataGenerator `sign` property had a method collision. Fix #3323 (thanks @vinerz and @samme)
+* In Arcade Physics World if you collided a group with itself it would call a missing method (`collideGroupVsSelf`), it now calls `collideGroupVsGroup` correctly (thanks @patrickgalbraith)
 
 ### Updates
 
@@ -48,6 +51,7 @@
 * The `setFrame` method of the Texture component has been updated so that it will now automatically reset the `width` and `height` of a Game Object to match that of the new Frame. Related, it will also adjust the display origin values, because they are size based. If the Frame has a custom pivot it will set the origin to match the custom pivot instead.
 * ScenePlugin.swapPosition now allows you to use it to swap the positions of any two Scenes. Before the change it only allowed you to swap the position of the calling Scene and another one, but a new optional `keyB` argument opens this up.
 * The SceneManager no longer renders a Scene unless it is visible AND either running or paused. This now skips Scenes that are in an `init` state.
+* The Keyboard Manager will now no longer emit `keydown` events if you keep holding a key down. Fix #3239 (thanks @squaresun)
 * Phaser is now running Travis CI build testing again (thanks @vpmedia)
 * Documentation updates: thanks to @melissaelopez @samme @jblang94 
 
