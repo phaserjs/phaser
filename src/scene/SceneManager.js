@@ -152,8 +152,6 @@ var SceneManager = new Class({
             }
             else if (typeof sceneConfig === 'object')
             {
-                sceneConfig.key = key;
-
                 newScene = this.createSceneFromObject(key, sceneConfig);
             }
             else if (typeof sceneConfig === 'function')
@@ -163,7 +161,7 @@ var SceneManager = new Class({
 
             //  Replace key in case the scene changed it
             key = newScene.sys.settings.key;
-
+                
             this.keys[key] = newScene;
 
             this.scenes.push(newScene);
