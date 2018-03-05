@@ -21,6 +21,7 @@
 * A new Quadratic Bezier Curve class has been added, expanding the available Curve types (thanks @RiCoTeRoX)
 * Path.quadraticBezierTo allows you to add a Quadratic Bezier Curve into your Path.
 * Loader.multiatlas now supports Texture Packers new JSON atlas format which exports one combined atlas for all image files. This is available if you use the new Phaser 3 Export from within Texture Packer (thanks @CodeAndWeb)
+* Modified WebGLPipeline to make it easier to extend and easier to create custom rendering passes.
 
 ### Bug Fixes
 
@@ -39,6 +40,7 @@
 * In Arcade Physics World if you collided a group with itself it would call a missing method (`collideGroupVsSelf`), it now calls `collideGroupVsGroup` correctly (thanks @patrickgalbraith)
 * The HTML5 Sound Manager would unlock the Sound API on a touch event but only if the audio files were loaded in the first Scene, if they were loaded in a subsequent Scene the audio system would never unlock. It now unlocks only if there are audio files in the cache. Fix #3311 (thanks @chancezeus)
 * The Text.lineSpacing value was not taken into account when rendering the Text. Fix #3215 (thanks @sftsk)
+* InputPlugin.update now takes the totals from the drag and pointerup events into consideration when deciding to fall through to the Scene below. Fix #3333 (thanks @chancezeus)
 
 ### Updates
 

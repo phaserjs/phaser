@@ -435,7 +435,7 @@ var InputPlugin = new Class({
      * @method Phaser.Input.InputPlugin#hitTestPointer
      * @since 3.0.0
      *
-     * @param {[type]} pointer - [description]
+     * @param {Phaser.Input.Pointer} pointer - [description]
      *
      * @return {array} [description]
      */
@@ -476,7 +476,7 @@ var InputPlugin = new Class({
      * @method Phaser.Input.InputPlugin#processDownEvents
      * @since 3.0.0
      *
-     * @param {[type]} pointer - [description]
+     * @param {Phaser.Input.Pointer} pointer - [description]
      *
      * @return {[type]} [description]
      */
@@ -572,7 +572,7 @@ var InputPlugin = new Class({
             {
                 pointer.dragState = 0;
 
-                return;
+                return 0;
             }
             else if (draglist.length > 1)
             {
@@ -643,7 +643,7 @@ var InputPlugin = new Class({
 
             pointer.dragState = 4;
 
-            return;
+            return 1;
         }
 
         //  4 = Pointer actively dragging the draglist and has moved
@@ -775,7 +775,7 @@ var InputPlugin = new Class({
      * @method Phaser.Input.InputPlugin#processMoveEvents
      * @since 3.0.0
      *
-     * @param {[type]} pointer - [description]
+     * @param {Phaser.Input.Pointer} pointer - [description]
      *
      * @return {[type]} [description]
      */
@@ -818,7 +818,7 @@ var InputPlugin = new Class({
      * @method Phaser.Input.InputPlugin#processOverOutEvents
      * @since 3.0.0
      *
-     * @param {[type]} pointer - [description]
+     * @param {Phaser.Input.Pointer} pointer - [description]
      *
      * @return {[type]} [description]
      */
@@ -934,7 +934,7 @@ var InputPlugin = new Class({
      * @method Phaser.Input.InputPlugin#processUpEvents
      * @since 3.0.0
      *
-     * @param {[type]} pointer - [description]
+     * @param {Phaser.Input.Pointer} pointer - [description]
      */
     processUpEvents: function (pointer)
     {
@@ -957,6 +957,8 @@ var InputPlugin = new Class({
 
             this.emit('gameobjectup', pointer, gameObject);
         }
+
+        return currentlyOver.length;
     },
 
     /**
@@ -1510,7 +1512,7 @@ var InputPlugin = new Class({
 
         if (pointer.justUp)
         {
-            this.processUpEvents(pointer);
+            total += this.processUpEvents(pointer);
         }
 
         if (pointer.justMoved)
