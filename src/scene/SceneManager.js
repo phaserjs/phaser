@@ -119,8 +119,72 @@ var SceneManager = new Class({
             }
 
             //  Only need to wait for the boot event if we've scenes to actually boot
-            game.events.once('ready', this.processQueue, this);
+            game.events.once('ready', this.bootQueue, this);
         }
+    },
+
+    /**
+     * Internal first-time Scene boot handler.
+     *
+     * @method Phaser.Scenes.SceneManager#bootQueue
+     * @since 3.2.0
+     */
+    bootQueue: function ()
+    {
+        var i;
+        var entry;
+        var key;
+        var sceneConfig;
+
+        for (i = 0; i < this._pending.length; i++)
+        {
+            entry = this._pending[i];
+
+            key = entry.key;
+            sceneConfig = entry.scene;
+
+            var newScene;
+
+            if (sceneConfig instanceof Scene)
+            {
+                newScene = this.createSceneFromInstance(key, sceneConfig);
+            }
+            else if (typeof sceneConfig === 'object')
+            {
+                sceneConfig.key = key;
+
+                newScene = this.createSceneFromObject(key, sceneConfig);
+            }
+            else if (typeof sceneConfig === 'function')
+            {
+                newScene = this.createSceneFromFunction(key, sceneConfig);
+            }
+
+            //  Replace key in case the scene changed it
+            key = newScene.sys.settings.key;
+
+            this.keys[key] = newScene;
+
+            this.scenes.push(newScene);
+
+            if (entry.autoStart || newScene.sys.settings.active)
+            {
+                this._start.push(key);
+            }
+        }
+
+        //  Clear the pending lists
+        this._pending.length = 0;
+
+        //  _start might have been populated by the above
+        for (i = 0; i < this._start.length; i++)
+        {
+            entry = this._start[i];
+
+            this.start(entry);
+        }
+
+        this._start.length = 0;
     },
 
     /**
