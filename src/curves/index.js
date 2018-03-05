@@ -15,6 +15,6 @@ module.exports = {
     Curve: require('./Curve'),
     Ellipse: require('./EllipseCurve'),
     Line: require('./LineCurve'),
-    Spline: require('./SplineCurve'),
-    QuadraticBezier: require('./QuadraticBezier')
+    QuadraticBezier: require('./QuadraticBezierCurve'),
+    Spline: require('./SplineCurve')
 };

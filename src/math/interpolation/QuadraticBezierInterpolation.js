@@ -31,7 +31,7 @@ function P2 (t, p)
  * [description]
  *
  * @function Phaser.Math.Interpolation.QuadraticBezier
- * @since 3.0.0
+ * @since 3.2.0
  *
  * @param {float} t - [description]
  * @param {number} p0 - [description]

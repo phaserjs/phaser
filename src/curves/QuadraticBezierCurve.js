@@ -4,10 +4,9 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-
 var Class = require('../utils/Class');
-var QuadraticBezierInter = require('../math/interpolation/QuadraticBezierInterpolation');
 var Curve = require('./Curve');
+var QuadraticBezierInterpolation = require('../math/interpolation/QuadraticBezierInterpolation');
 var Vector2 = require('../math/Vector2');
 
 /**
@@ -18,12 +17,11 @@ var Vector2 = require('../math/Vector2');
  * @extends Phaser.Curves.Curve
  * @memberOf Phaser.Curves
  * @constructor
- * @since 3.0.0
+ * @since 3.2.0
  *
  * @param {Phaser.Math.Vector2|Phaser.Math.Vector2[]} p0 - Start point, or an array of point pairs.
  * @param {Phaser.Math.Vector2} p1 - Control Point 1.
  * @param {Phaser.Math.Vector2} p2 - Control Point 2.
- * @param {Phaser.Math.Vector2} p3 - End Point.
  */
 var QuadraticBezier = new Class({
 
@@ -47,7 +45,7 @@ var QuadraticBezier = new Class({
          *
          * @name Phaser.Curves.QuadraticBezier#p0
          * @type {Phaser.Math.Vector2}
-         * @since 3.0.0
+         * @since 3.2.0
          */
         this.p0 = p0;
 
@@ -56,7 +54,7 @@ var QuadraticBezier = new Class({
          *
          * @name Phaser.Curves.QuadraticBezier#p1
          * @type {Phaser.Math.Vector2}
-         * @since 3.0.0
+         * @since 3.2.0
          */
         this.p1 = p1;
 
@@ -65,7 +63,7 @@ var QuadraticBezier = new Class({
          *
          * @name Phaser.Curves.QuadraticBezier#p2
          * @type {Phaser.Math.Vector2}
-         * @since 3.0.0
+         * @since 3.2.0
          */
         this.p2 = p2;
     },
@@ -74,7 +72,7 @@ var QuadraticBezier = new Class({
      * [description]
      *
      * @method Phaser.Curves.QuadraticBezier#getStartPoint
-     * @since 3.0.0
+     * @since 3.2.0
      *
      * @param {Phaser.Math.Vector2} out - [description]
      *
@@ -91,11 +89,11 @@ var QuadraticBezier = new Class({
      * [description]
      *
      * @method Phaser.Curves.QuadraticBezier#getResolution
-     * @since 3.0.0
+     * @since 3.2.0
      *
-     * @param {[type]} divisions - [description]
+     * @param {number} divisions - [description]
      *
-     * @return {[type]} [description]
+     * @return {number} [description]
      */
     getResolution: function (divisions)
     {
@@ -106,12 +104,12 @@ var QuadraticBezier = new Class({
      * [description]
      *
      * @method Phaser.Curves.QuadraticBezier#getPoint
-     * @since 3.0.0
+     * @since 3.2.0
      *
-     * @param {[type]} t - [description]
-     * @param {[type]} out - [description]
+     * @param {number} t - [description]
+     * @param {Phaser.Math.Vector2} [out] - [description]
      *
-     * @return {[type]} [description]
+     * @return {Phaser.Math.Vector2} [description]
      */
     getPoint: function (t, out)
     {
@@ -121,14 +119,17 @@ var QuadraticBezier = new Class({
         var p1 = this.p1;
         var p2 = this.p2;
 
-        return out.set(QuadraticBezierInter(t, p0.x, p1.x, p2.x), QuadraticBezierInter(t, p0.y, p1.y, p2.y));
+        return out.set(
+            QuadraticBezierInterpolation(t, p0.x, p1.x, p2.x),
+            QuadraticBezierInterpolation(t, p0.y, p1.y, p2.y)
+        );
     },
 
     /**
      * [description]
      *
      * @method Phaser.Curves.QuadraticBezier#draw
-     * @since 3.0.0
+     * @since 3.2.0
      *
      * @param {Phaser.GameObjects.Graphics} graphics - [description]
      * @param {integer} [pointsTotal=32] - [description]
@@ -159,7 +160,7 @@ var QuadraticBezier = new Class({
      * [description]
      *
      * @method Phaser.Curves.QuadraticBezier#toJSON
-     * @since 3.0.0
+     * @since 3.2.0
      *
      * @return {object} [description]
      */
