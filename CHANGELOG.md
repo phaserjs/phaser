@@ -58,6 +58,9 @@
 * The Keyboard Manager will now no longer emit `keydown` events if you keep holding a key down. Fix #3239 (thanks @squaresun)
 * The SceneManager now employs a new queue for all pending Scenes, creating them and booting them in strict sequence. This should prevent errors where Scenes were unable to reference other Scenes further down the boot list in their create functions. Fix #3314 (thanks @max1701 @rblopes)
 * Game.preBoot and Game.postBoot callbacks now pass an instance of the game to the callback (thanks @rblopes)
+* Graphics.arc in WebGL mode now works more like arc does in Canvas (thanks @Twilrom)
+* GameObjects now emit a 'destroy' event when they are destroyed, which you can use to perform any additional processing you require. Fix #3251 (thanks @rexrainbow)
+* If an HTML5AudioSound sound fails to play it will now issue a console.warn (thanks @samme)
 * Phaser is now running Travis CI build testing again (thanks @vpmedia)
 * Documentation updates: thanks to @melissaelopez @samme @jblang94 
 
