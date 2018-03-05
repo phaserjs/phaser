@@ -85,7 +85,7 @@ var RandomDataGenerator = new Class({
          * @type {array}
          * @since 3.0.0
          */
-        this.sign = [ -1, 1 ];
+        this.signs = [ -1, 1 ];
 
         if (seeds)
         {
@@ -171,7 +171,7 @@ var RandomDataGenerator = new Class({
 
     /**
      * Reset the seed of the random data generator.
-     * 
+     *
      * _Note_: the seed array is only processed up to the first `undefined` (or `null`) value, should such be present.
      *
      * @method Phaser.Math.RandomDataGenerator#sow
@@ -356,7 +356,7 @@ var RandomDataGenerator = new Class({
      */
     sign: function ()
     {
-        return this.pick(this.sign);
+        return this.pick(this.signs);
     },
 
     /**

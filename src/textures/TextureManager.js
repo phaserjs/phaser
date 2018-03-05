@@ -314,9 +314,11 @@ var TextureManager = new Class({
 
         if (Array.isArray(data))
         {
-            for (var i = 0; i < data.length; i++)
+            var singleAtlasFile = (data.length === 1); // multi-pack with one atlas file for all images
+            for (var i = 0; i < texture.source.length; i++)
             {
-                Parser.JSONArray(texture, i, data[i]);
+                var atlasData = singleAtlasFile ? data[0] : data[i];
+                Parser.JSONArray(texture, i, atlasData);
             }
         }
         else

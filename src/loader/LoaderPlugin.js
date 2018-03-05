@@ -656,7 +656,7 @@ var LoaderPlugin = new Class({
                 //  Yup, add them to the Texture Manager
 
                 //  Is the data JSON Hash or JSON Array?
-                if (Array.isArray(data[0].frames))
+                if (Array.isArray(data[0].textures) || Array.isArray(data[0].frames))
                 {
                     textures.addAtlasJSONArray(key, images, data);
                 }
