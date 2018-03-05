@@ -1,6 +1,6 @@
 # Change Log
 
-## Version 3.2.0 - In Development
+## Version 3.2.0 - Kaori - 5th March 2018
 
 ### New Features
 
