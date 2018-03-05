@@ -44,9 +44,7 @@ var pathArray = [];
  * @constructor
  * @since 3.0.0
  *
- * @param {Phaser.Game} game - [description]
- * @param {WebGLRenderingContext} gl - [description]
- * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - [description]
+ * @param {object} config - [description]
  */
 var FlatTintPipeline = new Class({
 
@@ -58,33 +56,33 @@ var FlatTintPipeline = new Class({
 
     initialize:
 
-    function FlatTintPipeline (game, gl, renderer)
+    function FlatTintPipeline (config)
     {
         WebGLPipeline.call(this, {
-            game: game,
-            gl: gl,
-            renderer: renderer,
-            topology: gl.TRIANGLES,
-            vertShader: ShaderSourceVS,
-            fragShader: ShaderSourceFS,
-            vertexCapacity: 12000,
+            game: config.game,
+            renderer: config.renderer,
+            gl: config.renderer.gl,
+            topology: (config.topology ? config.topology : config.renderer.gl.TRIANGLES),
+            vertShader: (config.vertShader ? config.vertShader : ShaderSourceVS),
+            fragShader: (config.fragShader ? config.fragShader : ShaderSourceFS),
+            vertexCapacity: (config.vertexCapcity ? config.vertexCapacity : 12000),
 
-            vertexSize:
+            vertexSize: (config.vertexSize ? config.vertexSize :
                 Float32Array.BYTES_PER_ELEMENT * 2 +
-                Uint8Array.BYTES_PER_ELEMENT * 4,
+                Uint8Array.BYTES_PER_ELEMENT * 4),
 
             attributes: [
                 {
                     name: 'inPosition',
                     size: 2,
-                    type: gl.FLOAT,
+                    type: config.renderer.gl.FLOAT,
                     normalized: false,
                     offset: 0
                 },
                 {
                     name: 'inTint',
                     size: 4,
-                    type: gl.UNSIGNED_BYTE,
+                    type: config.renderer.gl.UNSIGNED_BYTE,
                     normalized: true,
                     offset: Float32Array.BYTES_PER_ELEMENT * 2
                 }

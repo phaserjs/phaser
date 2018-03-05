@@ -19,9 +19,7 @@ var WebGLPipeline = require('../WebGLPipeline');
  * @constructor
  * @since 3.0.0
  *
- * @param {Phaser.Game} game - [description]
- * @param {WebGLRenderingContext} gl - [description]
- * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - [description]
+ * @param {object} config - [description]
  */
 var BitmapMaskPipeline = new Class({
 
@@ -29,19 +27,19 @@ var BitmapMaskPipeline = new Class({
     
     initialize:
 
-    function BitmapMaskPipeline (game, gl, renderer)
+    function BitmapMaskPipeline (config)
     {
         WebGLPipeline.call(this, {
-            game: game,
-            gl: gl,
-            renderer: renderer,
-            topology: gl.TRIANGLES,
-            vertShader: ShaderSourceVS,
-            fragShader: ShaderSourceFS,
-            vertexCapacity: 3,
+            game: config.game,
+            renderer: config.renderer,
+            gl: config.renderer.gl,
+            topology: (config.topology ? config.topology : config.renderer.gl.TRIANGLES),
+            vertShader: (config.vertShader ? config.vertShader : ShaderSourceVS),
+            fragShader: (config.fragShader ? config.fragShader : ShaderSourceFS),
+            vertexCapacity: (config.vertexCapacity ? config.vertexCapacity : 3),
 
-            vertexSize:
-                Float32Array.BYTES_PER_ELEMENT * 2,
+            vertexSize: (config.vertexSize ? config.vertexSize :
+                Float32Array.BYTES_PER_ELEMENT * 2),
 
             vertices: new Float32Array([
                 -1, +1, -1, -7, +7, +1
@@ -51,7 +49,7 @@ var BitmapMaskPipeline = new Class({
                 {
                     name: 'inPosition',
                     size: 2,
-                    type: gl.FLOAT,
+                    type: config.renderer.gl.FLOAT,
                     normalized: false,
                     offset: 0
                 }

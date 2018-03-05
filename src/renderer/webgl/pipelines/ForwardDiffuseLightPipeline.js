@@ -20,9 +20,7 @@ var LIGHT_COUNT = 10;
  * @constructor
  * @since 3.0.0
  *
- * @param {Phaser.Game} game - [description]
- * @param {WebGLRenderingContext} gl - [description]
- * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - [description]
+ * @param {object} config - [description]
  */
 var ForwardDiffuseLightPipeline = new Class({
 
@@ -30,9 +28,11 @@ var ForwardDiffuseLightPipeline = new Class({
 
     initialize:
 
-    function ForwardDiffuseLightPipeline (game, gl, renderer)
+    function ForwardDiffuseLightPipeline (config)
     {
-        TextureTintPipeline.call(this, game, gl, renderer, ShaderSourceFS.replace('%LIGHT_COUNT%', LIGHT_COUNT.toString()));
+        config.fragShader = ShaderSourceFS.replace('%LIGHT_COUNT%', LIGHT_COUNT.toString());
+
+        TextureTintPipeline.call(this, config);
     },
 
     /**

@@ -201,6 +201,33 @@ var WebGLPipeline = new Class({
     /**
      * [description]
      *
+     * @method Phaser.Renderer.WebGL.WebGLPipeline#addAttribute
+     * @since 3.2.0
+     *
+     * @param {string} name - [description]
+     * @param {int} size - [description]
+     * @param {int} type - [description]
+     * @param {boolean} normalized - [description]
+     * @param {int} offset - [description]
+     *
+     * @return {Phaser.Renderer.WebGL.WebGLPipeline} [description]
+     */
+    addAttribute: function (name, size, type, normalized, offset) 
+    {
+        this.attributes.push({
+            name: name,
+            size: size,
+            type: this.renderer.glFormats[type],
+            normalized: normalized,
+            offset: offset
+        });
+
+        return this;
+    },
+
+    /**
+     * [description]
+     *
      * @method Phaser.Renderer.WebGL.WebGLPipeline#shouldFlush
      * @since 3.0.0
      *
@@ -381,6 +408,211 @@ var WebGLPipeline = new Class({
         delete this.vertexBuffer;
         delete this.gl;
 
+        return this;
+    },
+
+    /**
+     * [description]
+     *
+     * @method Phaser.Renderer.WebGL.WebGLPipeline#setFloat1
+     * @since 3.2.0
+     *
+     * @param {string} name - [description]
+     * @param {float} x - [description]
+     *
+     * @return {Phaser.Renderer.WebGL.WebGLPipeline} [description]
+     */
+    setFloat1: function (name, x)
+    {
+        this.renderer.setFloat1(this.program, name, x);
+        return this;
+    },
+
+    /**
+     * [description]
+     *
+     * @method Phaser.Renderer.WebGL.WebGLPipeline#setFloat2
+     * @since 3.2.0
+     *
+     * @param {string} name - [description]
+     * @param {float} x - [description]
+     * @param {float} y - [description]
+     *
+     * @return {Phaser.Renderer.WebGL.WebGLPipeline} [description]
+     */
+    setFloat2: function (name, x, y)
+    {
+
+        this.renderer.setFloat2(this.program, name, x, y);
+        return this;
+    },
+
+    /**
+     * [description]
+     *
+     * @method Phaser.Renderer.WebGL.WebGLPipeline#setFloat3
+     * @since 3.2.0
+     *
+     * @param {string} name - [description]
+     * @param {float} x - [description]
+     * @param {float} y - [description]
+     * @param {float} z - [description]
+     *
+     * @return {Phaser.Renderer.WebGL.WebGLPipeline} [description]
+     */
+    setFloat3: function (name, x, y, z)
+    {
+
+        this.renderer.setFloat3(this.program, name, x, y, z);
+        return this;
+    },
+
+    /**
+     * [description]
+     *
+     * @method Phaser.Renderer.WebGL.WebGLPipeline#setFloat4
+     * @since 3.2.0
+     *
+     * @param {string} name - [description]
+     * @param {float} x - [description]
+     * @param {float} y - [description]
+     * @param {float} z - [description]
+     * @param {float} w - [description]
+     *
+     * @return {Phaser.Renderer.WebGL.WebGLPipeline} [description]
+     */
+    setFloat4: function (name, x, y, z, w)
+    {
+
+        this.renderer.setFloat4(this.program, name, x, y, z, w);
+        return this;
+    },
+
+    /**
+     * [description]
+     *
+     * @method Phaser.Renderer.WebGL.WebGLPipeline#setInt1
+     * @since 3.2.0
+     *
+     * @param {string} name - [description]
+     * @param {int} x - [description]
+     *
+     * @return {Phaser.Renderer.WebGL.WebGLPipeline} [description]
+     */
+    setInt1: function (name, x)
+    {
+        this.renderer.setInt1(this.program, name, x);
+        return this;
+    },
+
+    /**
+     * [description]
+     *
+     * @method Phaser.Renderer.WebGL.WebGLPipeline#setInt2
+     * @since 3.2.0
+     *
+     * @param {string} name - [description]
+     * @param {int} x - [description]
+     * @param {int} y - [description]
+     *
+     * @return {Phaser.Renderer.WebGL.WebGLPipeline} [description]
+     */
+    setInt2: function (name, x, y)
+    {
+        this.renderer.setInt2(this.program, name, x, y);
+        return this;
+    },
+
+    /**
+     * [description]
+     *
+     * @method Phaser.Renderer.WebGL.WebGLPipeline#setInt3
+     * @since 3.2.0
+     *
+     * @param {string} name - [description]
+     * @param {int} x - [description]
+     * @param {int} y - [description]
+     * @param {int} z - [description]
+     *
+     * @return {Phaser.Renderer.WebGL.WebGLPipeline} [description]
+     */
+    setInt3: function (name, x, y, z)
+    {
+        this.renderer.setInt3(this.program, name, x, y, z);
+        return this;
+    },
+
+    /**
+     * [description]
+     *
+     * @method Phaser.Renderer.WebGL.WebGLPipeline#setInt4
+     * @since 3.2.0
+     *
+     * @param {string} name - [description]
+     * @param {int} x - [description]
+     * @param {int} y - [description]
+     * @param {int} z - [description]
+     * @param {int} w - [description]
+     *
+     * @return {Phaser.Renderer.WebGL.WebGLPipeline} [description]
+     */
+    setInt4: function (name, x, y, z, w)
+    {
+        this.renderer.setInt4(this.program, name, x, y, z, w);
+        return this;
+    },
+
+    /**
+     * [description]
+     *
+     * @method Phaser.Renderer.WebGL.WebGLPipeline#setMatrix2
+     * @since 3.2.0
+     *
+     * @param {string} name - [description]
+     * @param {boolean} transpose - [description]
+     * @param {Float32Array} matrix - [description]
+     *
+     * @return {Phaser.Renderer.WebGL.WebGLPipeline} [description]
+     */
+    setMatrix2: function (name, transpose, matrix)
+    {
+        this.renderer.setMatrix2(this.program, name, transpose,  matrix);
+        return this;
+    },
+
+    /**
+     * [description]
+     *
+     * @method Phaser.Renderer.WebGL.WebGLPipeline#setMatrix3
+     * @since 3.2.0
+     *
+     * @param {string} name - [description]
+     * @param {boolean} transpose - [description]
+     * @param {Float32Array} matrix - [description]
+     *
+     * @return {Phaser.Renderer.WebGL.WebGLPipeline} [description]
+     */
+    setMatrix3: function (name, transpose, matrix)
+    {
+        this.renderer.setMatrix3(this.program, name, transpose,  matrix);
+        return this;
+    },
+
+    /**
+     * [description]
+     *
+     * @method Phaser.Renderer.WebGL.WebGLPipeline#setMatrix4
+     * @since 3.2.0
+     *
+     * @param {string} name - [description]
+     * @param {boolean} transpose - [description]
+     * @param {Float32Array} matrix - [description]
+     *
+     * @return {Phaser.Renderer.WebGL.WebGLPipeline} [description]
+     */
+    setMatrix4: function (name, transpose, matrix)
+    {
+        this.renderer.setMatrix4(this.program, name, transpose,  matrix);
         return this;
     }
 
