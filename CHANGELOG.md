@@ -28,6 +28,7 @@
 * InputPlugin.clear now properly removes a Game Object from all internal arrays, not just the _list.
 * InputPlugin.processOverOut no longer considers an item as being 'out' if it's in the internal `_drag` array.
 * When a Game Object is scaled, its Arcade Physics body was still calculating its position based on its original size instead of scaled one (thanks @pixelpicosean)
+* The RandomDataGenerator classes randomness has been improved thanks to the correct caching of a class property. Fix #3289 (thanks @migiyubi)
 
 ### Updates
 
@@ -42,7 +43,7 @@
 * The `setFrame` method of the Texture component has been updated so that it will now automatically reset the `width` and `height` of a Game Object to match that of the new Frame. Related, it will also adjust the display origin values, because they are size based. If the Frame has a custom pivot it will set the origin to match the custom pivot instead.
 * ScenePlugin.swapPosition now allows you to use it to swap the positions of any two Scenes. Before the change it only allowed you to swap the position of the calling Scene and another one, but a new optional `keyB` argument opens this up.
 * The SceneManager no longer renders a Scene unless it is visible AND either running or paused. This now skips Scenes that are in an `init` state.
-* Documentation updates: thanks to @melissaelopez @samme
+* Documentation updates: thanks to @melissaelopez @samme @jblang94 
 
 
 ## Version 3.1.2 - 23rd February 2018
