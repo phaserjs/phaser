@@ -117,7 +117,7 @@ var Sprite = new Class({
      * @param {boolean} ignoreIfPlaying - [description]
      * @param {integer|string} startFrame - [description]
      *
-     * @return {[type]} [description]
+     * @return {Phaser.GameObjects.Sprite} This Game Object.
      */
     play: function (key, ignoreIfPlaying, startFrame)
     {
