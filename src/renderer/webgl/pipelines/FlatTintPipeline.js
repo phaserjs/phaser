@@ -734,6 +734,7 @@ var FlatTintPipeline = new Class({
         var path = null;
         var sin = Math.sin;
         var cos = Math.cos;
+        var PI2 = Math.PI * 2;
         var sr = sin(srcRotation);
         var cr = cos(srcRotation);
         var sra = cr * srcScaleX;
@@ -775,31 +776,51 @@ var FlatTintPipeline = new Class({
                     endAngle = commands[cmdIndex + 5];
                     anticlockwise = commands[cmdIndex + 6];
 
+                    if (lastPath === null)
+                    {
+                        lastPath = new Path(x + cos(startAngle) * radius, y + sin(startAngle) * radius, lineWidth, lineColor, lineAlpha);
+                        pathArray.push(lastPath);
+                        iteration += iterStep;
+                    }
+
+                    endAngle -= startAngle;
                     if (anticlockwise)
                     {
-                        ta = endAngle;
-                        endAngle = startAngle;
-                        startAngle = -ta;
+                        if (endAngle < -PI2)
+                        {
+                            endAngle = -PI2;
+                        }
+                        else if (endAngle > 0)
+                        {
+                            endAngle = -PI2 + endAngle % PI2;
+                        }
                     }
-                    
+                    else if (endAngle > PI2)
+                    {
+                        endAngle = PI2;
+                    }
+                    else if (endAngle < 0)
+                    {
+                        endAngle = PI2 + endAngle % PI2;
+                    }
+
                     while (iteration < 1)
                     {
-                        ta = (endAngle - startAngle) * iteration + startAngle;
+                        ta = endAngle * iteration + startAngle;
                         tx = x + cos(ta) * radius;
                         ty = y + sin(ta) * radius;
 
-                        if (iteration === 0)
-                        {
-                            lastPath = new Path(tx, ty, lineWidth, lineColor, lineAlpha);
-                            pathArray.push(lastPath);
-                        }
-                        else
-                        {
-                            lastPath.points.push(new Point(tx, ty, lineWidth, lineColor, lineAlpha));
-                        }
+                        lastPath.points.push(new Point(tx, ty, lineWidth, lineColor, lineAlpha));
 
                         iteration += iterStep;
                     }
+
+                    ta = endAngle + startAngle;
+                    tx = x + cos(ta) * radius;
+                    ty = y + sin(ta) * radius;
+
+                    lastPath.points.push(new Point(tx, ty, lineWidth, lineColor, lineAlpha));
+
                     cmdIndex += 6;
                     break;
 
@@ -818,16 +839,13 @@ var FlatTintPipeline = new Class({
 
                 case Commands.BEGIN_PATH:
                     pathArray.length = 0;
+                    lastPath = null;
                     break;
 
                 case Commands.CLOSE_PATH:
-                    if (lastPath !== null && lastPath.points.length > 0)
+                    if (lastPath && lastPath.points.length)
                     {
-                        var firstPoint = lastPath.points[0];
-                        var lastPoint = lastPath.points[lastPath.points.length - 1];
-                        lastPath.points.push(firstPoint);
-                        lastPath = new Path(lastPoint.x, lastPoint.y, lastPoint.width, lastPoint.rgb, lastPoint.alpha);
-                        pathArray.push(lastPath);
+                        lastPath.points.push(lastPath.points[0]);
                     }
                     break;
 
