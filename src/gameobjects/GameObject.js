@@ -320,9 +320,9 @@ var GameObject = new Class({
      */
     destroy: function ()
     {
-        // this gameobject had been destroyed
-        if (this.scene === undefined)
-        {        
+        //  This Game Object had already been destroyed
+        if (!this.scene)
+        {
             return;
         }
 
