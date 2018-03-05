@@ -1,5 +1,4 @@
 var BuildGameObject = require('../BuildGameObject');
-var BuildGameObjectAnimation = require('../BuildGameObjectAnimation');
 var GameObjectCreator = require('../GameObjectCreator');
 var GetAdvancedValue = require('../../utils/object/GetAdvancedValue');
 var RenderTexture = require('./RenderTexture');

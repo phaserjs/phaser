@@ -1475,7 +1475,7 @@ var WebGLRenderer = new Class({
      *
      * @return {WebGLTexture} [description]
      */
-    canvasToTexture: function (srcCanvas, dstTexture, shouldReallocate)
+    canvasToTexture: function (srcCanvas, dstTexture)
     {
         var gl = this.gl;
 

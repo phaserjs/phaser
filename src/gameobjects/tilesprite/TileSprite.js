@@ -196,7 +196,7 @@ var TileSprite = new Class({
      */
     updateTileTexture: function ()
     {
-        if (!this.dirty && this.oldFrame == this.frame)
+        if (!this.dirty && this.oldFrame === this.frame)
         {
             return;
         }
@@ -204,6 +204,7 @@ var TileSprite = new Class({
         this.oldFrame = this.frame;
 
         this.canvasBufferCtx.clearRect(0, 0, this.canvasBuffer.width, this.canvasBuffer.height);
+
         this.canvasBufferCtx.drawImage(
             this.frame.source.image,
             this.frame.cutX, this.frame.cutY,

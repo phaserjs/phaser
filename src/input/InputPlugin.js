@@ -529,7 +529,6 @@ var InputPlugin = new Class({
         }
 
         var i;
-        var c;
         var gameObject;
         var list;
         var input;
