@@ -30,7 +30,7 @@ var RenderTexture = new Class({
 
     initialize:
 
-    function RenderTexture(scene, x, y, width, height)
+    function RenderTexture (scene, x, y, width, height)
     {
         GameObject.call(this, scene, 'RenderTexture');
         this.initMatrixStack();
@@ -55,7 +55,7 @@ var RenderTexture = new Class({
             this.draw = RenderTextureCanvas.draw;
             this.drawFrame = RenderTextureCanvas.drawFrame;
             this.canvas = CanvasPool.create2D(null, width, height);
-            this.context = this.canvas.getContext('2d'); 
+            this.context = this.canvas.getContext('2d');
         }
 
         this.setPosition(x, y);
@@ -71,7 +71,7 @@ var RenderTexture = new Class({
             this.renderer.deleteTexture(this.texture);
             this.renderer.deleteFramebuffer(this.framebuffer);
         }
-    }  
+    }
 
 });
 

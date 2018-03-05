@@ -1284,7 +1284,7 @@ var SceneManager = new Class({
 
     dump: function ()
     {
-        var out  = [];
+        var out = [];
         var map = [ 'pending', 'init', 'start', 'loading', 'creating', 'running', 'paused', 'sleeping', 'shutdown', 'destroyed' ];
 
         for (var i = 0; i < this.scenes.length; i++)

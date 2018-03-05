@@ -7,14 +7,14 @@ var MatrixStack = {
     initMatrixStack: function ()
     {
         this.matrixStack = new Float32Array(6000); // up to 1000 matrices
-        this.currentMatrix = new Float32Array([1.0, 0.0, 0.0, 1.0, 0.0, 0.0]);
+        this.currentMatrix = new Float32Array([ 1.0, 0.0, 0.0, 1.0, 0.0, 0.0 ]);
         this.currentMatrixIndex = 0;
         return this;
     },
 
     save: function ()
     {
-        if (this.currentMatrixIndex >= this.matrixStack.length) return this;
+        if (this.currentMatrixIndex >= this.matrixStack.length) { return this; }
 
         var matrixStack = this.matrixStack;
         var currentMatrix = this.currentMatrix;
@@ -33,7 +33,7 @@ var MatrixStack = {
 
     restore: function ()
     {
-        if (this.currentMatrixIndex <= 0) return this;
+        if (this.currentMatrixIndex <= 0) { return this; }
 
         this.currentMatrixIndex -= 6;
 

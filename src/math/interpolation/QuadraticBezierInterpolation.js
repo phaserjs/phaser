@@ -13,7 +13,7 @@ function P0 (t, p)
 
 function P1 (t, p)
 {
-    return 2 * ( 1 - t ) * t * p;
+    return 2 * (1 - t) * t * p;
 }
 
 function P2 (t, p)

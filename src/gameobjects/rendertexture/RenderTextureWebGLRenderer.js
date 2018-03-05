@@ -20,7 +20,7 @@ var RenderTextureWebGLRenderer = function (renderer, renderTexture, interpolatio
         renderTexture.displayOriginX, renderTexture.displayOriginY,
         0, 0, renderTexture.texture.width, renderTexture.texture.height,
         0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff,
-        0, 0, 
+        0, 0,
         camera
     );
 };
