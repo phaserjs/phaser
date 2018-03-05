@@ -9,13 +9,12 @@
  */
 
 module.exports = {
-
     Path: require('./path/Path'),
 
     CubicBezier: require('./CubicBezierCurve'),
     Curve: require('./Curve'),
     Ellipse: require('./EllipseCurve'),
     Line: require('./LineCurve'),
-    Spline: require('./SplineCurve')
-
+    Spline: require('./SplineCurve'),
+    QuadraticBezier: require('./QuadraticBezier')
 };
