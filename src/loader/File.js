@@ -118,7 +118,7 @@ var File = new Class({
          * @type {integer}
          * @since 3.0.0
          */
-        this.state = typeof(this.url) === "function" ? CONST.FILE_POPULATED : CONST.FILE_PENDING;
+        this.state = typeof(this.url) === 'function' ? CONST.FILE_POPULATED : CONST.FILE_PENDING;
 
         /**
          * The total size of this file.

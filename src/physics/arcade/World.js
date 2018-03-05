@@ -1364,10 +1364,11 @@ var World = new Class({
      */
     collideHandler: function (object1, object2, collideCallback, processCallback, callbackContext, overlapOnly)
     {
+        //  Collide Group with Self
         //  Only collide valid objects
         if (object2 === undefined && object1.isParent)
         {
-            return this.collideGroupVsSelf(object1, collideCallback, processCallback, callbackContext, overlapOnly);
+            return this.collideGroupVsGroup(object1, object1, collideCallback, processCallback, callbackContext, overlapOnly);
         }
 
         //  If neither of the objects are set then bail out

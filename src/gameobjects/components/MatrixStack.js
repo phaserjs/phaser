@@ -1,20 +1,77 @@
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
+/**
+ * Provides methods used for getting and setting the transform values of a Game Object.
+ * Should be applied as a mixin and not used directly.
+ * 
+ * @name Phaser.GameObjects.Components.MatrixStack
+ * @since 3.2.0
+ */
+
 var MatrixStack = {
 
+    /**
+     * [description]
+     * 
+     * @name Phaser.GameObjects.Components.MatrixStack#matrixStack
+     * @type {Float32Array}
+     * @private
+     * @since 3.2.0
+     */
     matrixStack: null,
+
+    /**
+     * [description]
+     * 
+     * @name Phaser.GameObjects.Components.MatrixStack#currentMatrix
+     * @type {Float32Array}
+     * @private
+     * @since 3.2.0
+     */
     currentMatrix: null,
+
+    /**
+     * [description]
+     * 
+     * @name Phaser.GameObjects.Components.MatrixStack#currentMatrixIndex
+     * @type {integer}
+     * @private
+     * @since 3.2.0
+     */
     currentMatrixIndex: 0,
 
+    /**
+     * [description]
+     * 
+     * @method Phaser.GameObjects.Components.MatrixStack#initMatrixStack
+     * @since 3.2.0
+     *
+     * @return {Phaser.GameObjects.GameObject} This Game Object instance.
+     */
     initMatrixStack: function ()
     {
         this.matrixStack = new Float32Array(6000); // up to 1000 matrices
-        this.currentMatrix = new Float32Array([1.0, 0.0, 0.0, 1.0, 0.0, 0.0]);
+        this.currentMatrix = new Float32Array([ 1.0, 0.0, 0.0, 1.0, 0.0, 0.0 ]);
         this.currentMatrixIndex = 0;
+
         return this;
     },
 
+    /**
+     * [description]
+     * 
+     * @method Phaser.GameObjects.Components.MatrixStack#save
+     * @since 3.2.0
+     * 
+     * @return {Phaser.GameObjects.GameObject} This Game Object instance.
+     */
     save: function ()
     {
-        if (this.currentMatrixIndex >= this.matrixStack.length) return this;
+        if (this.currentMatrixIndex >= this.matrixStack.length) { return this; }
 
         var matrixStack = this.matrixStack;
         var currentMatrix = this.currentMatrix;
@@ -31,9 +88,17 @@ var MatrixStack = {
         return this;
     },
 
+    /**
+     * [description]
+     * 
+     * @method Phaser.GameObjects.Components.MatrixStack#restore
+     * @since 3.2.0
+     * 
+     * @return {Phaser.GameObjects.GameObject} This Game Object instance.
+     */
     restore: function ()
     {
-        if (this.currentMatrixIndex <= 0) return this;
+        if (this.currentMatrixIndex <= 0) { return this; }
 
         this.currentMatrixIndex -= 6;
 
@@ -51,12 +116,36 @@ var MatrixStack = {
         return this;
     },
 
+    /**
+     * [description]
+     * 
+     * @method Phaser.GameObjects.Components.MatrixStack#loadIdentity
+     * @since 3.2.0
+     * 
+     * @return {Phaser.GameObjects.GameObject} This Game Object instance.
+     */
     loadIdentity: function ()
     {
         this.setTransform(1.0, 0.0, 0.0, 1.0, 0.0, 0.0);
+
         return this;
     },
 
+    /**
+     * [description]
+     * 
+     * @method Phaser.GameObjects.Components.MatrixStack#transform
+     * @since 3.2.0
+     *
+     * @param {number} a - [description]
+     * @param {number} b - [description]
+     * @param {number} c - [description]
+     * @param {number} d - [description]
+     * @param {number} tx - [description]
+     * @param {number} ty - [description]
+     * 
+     * @return {Phaser.GameObjects.GameObject} This Game Object instance.
+     */
     transform: function (a, b, c, d, tx, ty)
     {
         var currentMatrix = this.currentMatrix;
@@ -77,6 +166,21 @@ var MatrixStack = {
         return this;
     },
 
+    /**
+     * [description]
+     * 
+     * @method Phaser.GameObjects.Components.MatrixStack#setTransform
+     * @since 3.2.0
+     *
+     * @param {number} a - [description]
+     * @param {number} b - [description]
+     * @param {number} c - [description]
+     * @param {number} d - [description]
+     * @param {number} tx - [description]
+     * @param {number} ty - [description]
+     * 
+     * @return {Phaser.GameObjects.GameObject} This Game Object instance.
+     */
     setTransform: function (a, b, c, d, tx, ty)
     {
         var currentMatrix = this.currentMatrix;
@@ -91,6 +195,17 @@ var MatrixStack = {
         return this;
     },
 
+    /**
+     * [description]
+     * 
+     * @method Phaser.GameObjects.Components.MatrixStack#translate
+     * @since 3.2.0
+     *
+     * @param {number} x - [description]
+     * @param {number} y - [description]
+     * 
+     * @return {Phaser.GameObjects.GameObject} This Game Object instance.
+     */
     translate: function (x, y)
     {
         var currentMatrix = this.currentMatrix;
@@ -107,6 +222,17 @@ var MatrixStack = {
         return this;
     },
 
+    /**
+     * [description]
+     * 
+     * @method Phaser.GameObjects.Components.MatrixStack#scale
+     * @since 3.2.0
+     *
+     * @param {number} x - [description]
+     * @param {number} y - [description]
+     * 
+     * @return {Phaser.GameObjects.GameObject} This Game Object instance.
+     */
     scale: function (x, y)
     {
         var currentMatrix = this.currentMatrix;
@@ -123,6 +249,16 @@ var MatrixStack = {
         return this;
     },
 
+    /**
+     * [description]
+     * 
+     * @method Phaser.GameObjects.Components.MatrixStack#rotate
+     * @since 3.2.0
+     *
+     * @param {number} t - The angle of rotation, in radians.
+     * 
+     * @return {Phaser.GameObjects.GameObject} This Game Object instance.
+     */
     rotate: function (t)
     {
         var currentMatrix = this.currentMatrix;

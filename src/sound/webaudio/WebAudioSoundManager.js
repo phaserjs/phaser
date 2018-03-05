@@ -3,8 +3,9 @@
  * @copyright    2018 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
-var Class = require('../../utils/Class');
+
 var BaseSoundManager = require('../BaseSoundManager');
+var Class = require('../../utils/Class');
 var WebAudioSound = require('./WebAudioSound');
 
 /**
@@ -21,8 +22,12 @@ var WebAudioSound = require('./WebAudioSound');
  * @param {Phaser.Game} game - Reference to the current game instance.
  */
 var WebAudioSoundManager = new Class({
+
     Extends: BaseSoundManager,
-    initialize: function WebAudioSoundManager (game)
+
+    initialize:
+
+    function WebAudioSoundManager (game)
     {
         /**
          * The AudioContext being used for playback.
@@ -53,7 +58,9 @@ var WebAudioSoundManager = new Class({
          * @since 3.0.0
          */
         this.masterVolumeNode = this.context.createGain();
+
         this.masterMuteNode.connect(this.masterVolumeNode);
+
         this.masterVolumeNode.connect(this.context.destination);
 
         /**
@@ -65,7 +72,9 @@ var WebAudioSoundManager = new Class({
          * @since 3.0.0
          */
         this.destination = this.masterMuteNode;
+
         this.locked = this.context.state === 'suspended' && 'ontouchstart' in window;
+
         BaseSoundManager.call(this, game);
     },
 
@@ -87,11 +96,13 @@ var WebAudioSoundManager = new Class({
     createAudioContext: function (game)
     {
         var audioConfig = game.config.audio;
+
         if (audioConfig && audioConfig.context)
         {
             audioConfig.context.resume();
             return audioConfig.context;
         }
+
         return new AudioContext();
     },
 
@@ -108,8 +119,11 @@ var WebAudioSoundManager = new Class({
      */
     add: function (key, config)
     {
+
         var sound = new WebAudioSound(this, key, config);
+
         this.sounds.push(sound);
+
         return sound;
     },
 
@@ -125,6 +139,7 @@ var WebAudioSoundManager = new Class({
     unlock: function ()
     {
         var _this = this;
+
         var unlock = function ()
         {
             _this.context.resume().then(function ()
@@ -134,6 +149,7 @@ var WebAudioSoundManager = new Class({
                 _this.unlocked = true;
             });
         };
+
         document.body.addEventListener('touchstart', unlock, false);
         document.body.addEventListener('touchend', unlock, false);
     },
@@ -178,6 +194,7 @@ var WebAudioSoundManager = new Class({
         this.masterVolumeNode = null;
         this.masterMuteNode.disconnect();
         this.masterMuteNode = null;
+
         if (this.game.config.audio && this.game.config.audio.context)
         {
             this.context.suspend();
@@ -186,42 +203,68 @@ var WebAudioSoundManager = new Class({
         {
             this.context.close();
         }
+
         this.context = null;
+
         BaseSoundManager.prototype.destroy.call(this);
-    }
-});
-Object.defineProperty(WebAudioSoundManager.prototype, 'mute', {
-    get: function ()
-    {
-        return this.masterMuteNode.gain.value === 0;
     },
-    set: function (value)
-    {
-        this.masterMuteNode.gain.setValueAtTime(value ? 0 : 1, 0);
 
-        /**
-         * @event Phaser.Sound.WebAudioSoundManager#mute
-         * @param {Phaser.Sound.WebAudioSoundManager} soundManager - Reference to the sound manager that emitted event.
-         * @param {boolean} value - An updated value of Phaser.Sound.WebAudioSoundManager#mute property.
-         */
-        this.emit('mute', this, value);
-    }
-});
-Object.defineProperty(WebAudioSoundManager.prototype, 'volume', {
-    get: function ()
-    {
-        return this.masterVolumeNode.gain.value;
+    /**
+     * @event Phaser.Sound.WebAudioSoundManager#MuteEvent
+     * @param {Phaser.Sound.WebAudioSoundManager} soundManager - Reference to the sound manager that emitted event.
+     * @param {boolean} value - An updated value of Phaser.Sound.WebAudioSoundManager#mute property.
+     */
+
+    /**
+     * @name Phaser.Sound.WebAudioSoundManager#mute
+     * @type {boolean}
+     * @fires Phaser.Sound.WebAudioSoundManager#MuteEvent
+     * @since 3.0.0
+     */
+    mute: {
+
+        get: function ()
+        {
+            return (this.masterMuteNode.gain.value === 0);
+        },
+
+        set: function (value)
+        {
+            this.masterMuteNode.gain.setValueAtTime(value ? 0 : 1, 0);
+
+            this.emit('mute', this, value);
+        }
+
     },
-    set: function (value)
-    {
-        this.masterVolumeNode.gain.setValueAtTime(value, 0);
 
-        /**
-         * @event Phaser.Sound.WebAudioSoundManager#volume
-         * @param {Phaser.Sound.WebAudioSoundManager} soundManager - Reference to the sound manager that emitted event.
-         * @param {number} value - An updated value of Phaser.Sound.WebAudioSoundManager#volume property.
-         */
-        this.emit('volume', this, value);
+    /**
+     * @event Phaser.Sound.WebAudioSoundManager#VolumeEvent
+     * @param {Phaser.Sound.WebAudioSoundManager} soundManager - Reference to the sound manager that emitted event.
+     * @param {number} value - An updated value of Phaser.Sound.WebAudioSoundManager#volume property.
+     */
+
+    /**
+     * @name Phaser.Sound.WebAudioSoundManager#volume
+     * @type {number}
+     * @fires Phaser.Sound.WebAudioSoundManager#VolumeEvent
+     * @since 3.0.0
+     */
+    volume: {
+
+        get: function ()
+        {
+            return this.masterVolumeNode.gain.value;
+        },
+
+        set: function (value)
+        {
+            this.masterVolumeNode.gain.setValueAtTime(value, 0);
+
+            this.emit('volume', this, value);
+        }
+
     }
+
 });
+
 module.exports = WebAudioSoundManager;

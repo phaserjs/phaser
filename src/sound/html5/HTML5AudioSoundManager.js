@@ -3,8 +3,9 @@
  * @copyright    2018 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
-var Class = require('../../utils/Class');
+
 var BaseSoundManager = require('../BaseSoundManager');
+var Class = require('../../utils/Class');
 var HTML5AudioSound = require('./HTML5AudioSound');
 
 /**
@@ -20,8 +21,12 @@ var HTML5AudioSound = require('./HTML5AudioSound');
  * @param {Phaser.Game} game - Reference to the current game instance.
  */
 var HTML5AudioSoundManager = new Class({
+
     Extends: BaseSoundManager,
-    initialize: function HTML5AudioSoundManager (game)
+
+    initialize:
+
+    function HTML5AudioSoundManager (game)
     {
         /**
          * Flag indicating whether if there are no idle instances of HTML5 Audio tag,
@@ -77,6 +82,7 @@ var HTML5AudioSoundManager = new Class({
          * @since 3.0.0
          */
         this.onBlurPausedSounds = [];
+
         this.locked = 'ontouchstart' in window;
 
         /**
@@ -115,6 +121,7 @@ var HTML5AudioSoundManager = new Class({
          * @since 3.0.0
          */
         this._volume = 1;
+
         BaseSoundManager.call(this, game);
     },
 
@@ -132,7 +139,9 @@ var HTML5AudioSoundManager = new Class({
     add: function (key, config)
     {
         var sound = new HTML5AudioSound(this, key, config);
+
         this.sounds.push(sound);
+
         return sound;
     },
 
@@ -147,21 +156,32 @@ var HTML5AudioSoundManager = new Class({
     unlock: function ()
     {
         var _this = this;
+
         var moved = false;
+
         var detectMove = function ()
         {
             moved = true;
         };
+
         var unlock = function ()
         {
+            if (!_this.game.cache.audio.entries.size)
+            {
+                return;
+            }
+
             if (moved)
             {
                 moved = false;
                 return;
             }
+
             document.body.removeEventListener('touchmove', detectMove);
             document.body.removeEventListener('touchend', unlock);
+
             var allTags = [];
+
             _this.game.cache.audio.entries.each(function (key, tags)
             {
                 for (var i = 0; i < tags.length; i++)
@@ -170,25 +190,30 @@ var HTML5AudioSoundManager = new Class({
                 }
                 return true;
             });
+
             var lastTag = allTags[allTags.length - 1];
+
             lastTag.oncanplaythrough = function ()
             {
                 lastTag.oncanplaythrough = null;
                 _this.unlocked = true;
             };
+
             allTags.forEach(function (tag)
             {
                 tag.load();
             });
         };
+
         this.once('unlocked', function ()
         {
-            _this.forEachActiveSound(function (sound)
+            this.forEachActiveSound(function (sound)
             {
                 sound.duration = sound.tags[0].duration;
                 sound.totalDuration = sound.tags[0].duration;
             });
-            _this.lockedActionsQueue.forEach(function (lockedAction)
+
+            this.lockedActionsQueue.forEach(function (lockedAction)
             {
                 if (lockedAction.sound[lockedAction.prop].apply)
                 {
@@ -199,9 +224,11 @@ var HTML5AudioSoundManager = new Class({
                     lockedAction.sound[lockedAction.prop] = lockedAction.value;
                 }
             });
-            _this.lockedActionsQueue.length = 0;
-            _this.lockedActionsQueue = null;
-        });
+
+            this.lockedActionsQueue.length = 0;
+            this.lockedActionsQueue = null;
+        }, this);
+
         document.body.addEventListener('touchmove', detectMove, false);
         document.body.addEventListener('touchend', unlock, false);
     },
@@ -240,6 +267,7 @@ var HTML5AudioSoundManager = new Class({
         {
             sound.onFocus();
         });
+
         this.onBlurPausedSounds.length = 0;
     },
 
@@ -253,6 +281,7 @@ var HTML5AudioSoundManager = new Class({
     destroy: function ()
     {
         BaseSoundManager.prototype.destroy.call(this);
+
         this.onBlurPausedSounds.length = 0;
         this.onBlurPausedSounds = null;
     },
@@ -281,51 +310,79 @@ var HTML5AudioSoundManager = new Class({
                 prop: prop,
                 value: value
             });
+
             return true;
         }
+
         return false;
-    }
-});
-Object.defineProperty(HTML5AudioSoundManager.prototype, 'mute', {
-    get: function ()
-    {
-        return this._mute;
     },
-    set: function (value)
-    {
-        this._mute = value;
-        this.forEachActiveSound(function (sound)
-        {
-            sound.setMute();
-        });
 
-        /**
-         * @event Phaser.Sound.HTML5AudioSoundManager#mute
-         * @param {Phaser.Sound.HTML5AudioSoundManager} soundManager - Reference to the sound manager that emitted event.
-         * @param {boolean} value - An updated value of Phaser.Sound.HTML5AudioSoundManager#mute property.
-         */
-        this.emit('mute', this, value);
-    }
-});
-Object.defineProperty(HTML5AudioSoundManager.prototype, 'volume', {
-    get: function ()
-    {
-        return this._volume;
+    /**
+     * @event Phaser.Sound.HTML5AudioSoundManager#MuteEvent
+     * @param {Phaser.Sound.HTML5AudioSoundManager} soundManager - Reference to the sound manager that emitted event.
+     * @param {boolean} value - An updated value of Phaser.Sound.HTML5AudioSoundManager#mute property.
+     */
+
+    /**
+     * @name Phaser.Sound.HTML5AudioSoundManager#mute
+     * @type {boolean}
+     * @fires Phaser.Sound.HTML5AudioSoundManager#MuteEvent
+     * @since 3.0.0
+     */
+    mute: {
+
+        get: function ()
+        {
+            return this._mute;
+        },
+
+        set: function (value)
+        {
+            this._mute = value;
+
+            this.forEachActiveSound(function (sound)
+            {
+                sound.setMute();
+            });
+
+            this.emit('mute', this, value);
+        }
+
     },
-    set: function (value)
-    {
-        this._volume = value;
-        this.forEachActiveSound(function (sound)
-        {
-            sound.setVolume();
-        });
 
-        /**
-         * @event Phaser.Sound.HTML5AudioSoundManager#volume
-         * @param {Phaser.Sound.HTML5AudioSoundManager} soundManager - Reference to the sound manager that emitted event.
-         * @param {number} value - An updated value of Phaser.Sound.HTML5AudioSoundManager#volume property.
-         */
-        this.emit('volume', this, value);
+    /**
+     * @event Phaser.Sound.HTML5AudioSoundManager#VolumeEvent
+     * @param {Phaser.Sound.HTML5AudioSoundManager} soundManager - Reference to the sound manager that emitted event.
+     * @param {number} value - An updated value of Phaser.Sound.HTML5AudioSoundManager#volume property.
+     */
+
+    /**
+     * @name Phaser.Sound.HTML5AudioSoundManager#volume
+     * @type {number}
+     * @fires Phaser.Sound.HTML5AudioSoundManager#VolumeEvent
+     * @since 3.0.0
+     */
+    volume: {
+
+        get: function ()
+        {
+            return this._volume;
+        },
+
+        set: function (value)
+        {
+            this._volume = value;
+
+            this.forEachActiveSound(function (sound)
+            {
+                sound.setVolume();
+            });
+
+            this.emit('volume', this, value);
+        }
+
     }
+
 });
+
 module.exports = HTML5AudioSoundManager;

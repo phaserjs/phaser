@@ -1483,7 +1483,7 @@ var WebGLRenderer = new Class({
      *
      * @return {WebGLTexture} [description]
      */
-    canvasToTexture: function (srcCanvas, dstTexture, shouldReallocate)
+    canvasToTexture: function (srcCanvas, dstTexture)
     {
         var gl = this.gl;
 
@@ -1502,11 +1502,11 @@ var WebGLRenderer = new Class({
         {
             this.setTexture2D(dstTexture, 0);
 
-            //if (!shouldReallocate && dstTexture.width >= srcCanvas.width || dstTexture.height >= srcCanvas.height)
-            //{
+            // if (!shouldReallocate && dstTexture.width >= srcCanvas.width || dstTexture.height >= srcCanvas.height)
+            // {
             //    gl.texSubImage2D(gl.TEXTURE_2D, 0, 0, srcCanvas.width, srcCanvas.height, gl.RGBA, gl.UNSIGNED_BYTE, srcCanvas);
-            //}
-            //else
+            // }
+            // else
             {
                 gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, srcCanvas);
                 dstTexture.width = srcCanvas.width;

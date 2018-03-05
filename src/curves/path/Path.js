@@ -12,6 +12,7 @@ var EllipseCurve = require('../EllipseCurve');
 var GameObjectFactory = require('../../gameobjects/GameObjectFactory');
 var LineCurve = require('../LineCurve');
 var MovePathTo = require('./MoveTo');
+var QuadraticBezierCurve = require('../QuadraticBezierCurve');
 var Rectangle = require('../../geom/rectangle/Rectangle');
 var SplineCurve = require('../SplineCurve');
 var Vector2 = require('../../math/Vector2');
@@ -140,8 +141,8 @@ var Path = new Class({
      * @since 3.0.0
      *
      * @param {number} radius - [description]
-     * @param {boolean} [clockwise] - [description]
-     * @param {number} [rotation] - [description]
+     * @param {boolean} [clockwise=false] - [description]
+     * @param {number} [rotation=0] - [description]
      *
      * @return {Phaser.Curves.Path} [description]
      */
@@ -185,10 +186,10 @@ var Path = new Class({
      *
      * @param {number} x - [description]
      * @param {number} y - [description]
-     * @param {Phaser.Math.Vector2} control1X - {Phaser.Math[description]
-     * @param {Phaser.Math.Vector2} control1Y - {Phaser.Math[description]
-     * @param {Phaser.Math.Vector2} control2X - {Phaser.Math[description]
-     * @param {Phaser.Math.Vector2} control2Y - {Phaser.Math[description]
+     * @param {Phaser.Math.Vector2} control1X - [description]
+     * @param {Phaser.Math.Vector2} control1Y - [description]
+     * @param {Phaser.Math.Vector2} control2X - [description]
+     * @param {Phaser.Math.Vector2} control2Y - [description]
      *
      * @return {Phaser.Curves.Path} [description]
      */
@@ -216,17 +217,40 @@ var Path = new Class({
         return this.add(new CubicBezierCurve(p0, p1, p2, p3));
     },
 
+    //  Creates a quadratic bezier curve starting at the previous end point and ending at p2, using p1 as a control point
+
     /**
      * [description]
      *
-     * @method Phaser.Curves.Path#destroy
-     * @since 3.0.0
+     * @method Phaser.Curves.Path#quadraticBezierTo
+     * @since 3.2.0
+     *
+     * @param {number|Phaser.Math.Vector2[]} x - [description]
+     * @param {number} [y] - [description]
+     * @param {number} [controlX] - [description]
+     * @param {number} [controlY] - [description]
+     *
+     * @return {Phaser.Curves.Path} [description]
      */
-    destroy: function ()
+    quadraticBezierTo: function (x, y, controlX, controlY)
     {
-        this.curves.length = 0;
-        this.cacheLengths.length = 0;
-        this.startPoint = undefined;
+        var p0 = this.getEndPoint();
+        var p1;
+        var p2;
+
+        //  Assume they're all vec2s
+        if (x instanceof Vector2)
+        {
+            p1 = x;
+            p2 = y;
+        }
+        else
+        {
+            p1 = new Vector2(controlX, controlY);
+            p2 = new Vector2(x, y);
+        }
+
+        return this.add(new QuadraticBezierCurve(p0, p1, p2));
     },
 
     /**
@@ -331,6 +355,10 @@ var Path = new Class({
                 case 'CubicBezierCurve':
                     this.add(CubicBezierCurve.fromJSON(curve));
                     break;
+
+                case 'QuadraticBezierCurve':
+                    this.add(QuadraticBezierCurve.fromJSON(curve));
+                    break;
             }
         }
 
@@ -425,9 +453,9 @@ var Path = new Class({
      * @method Phaser.Curves.Path#getEndPoint
      * @since 3.0.0
      *
-     * @param {Phaser.Math.Vector2} [out] - {Phaser.Math[description]
+     * @param {Phaser.Math.Vector2} [out] - [description]
      *
-     * @return {Phaser.Math.Vector2} {Phaser.Math[description]
+     * @return {Phaser.Math.Vector2} [description]
      */
     getEndPoint: function (out)
     {
@@ -476,7 +504,7 @@ var Path = new Class({
      * @since 3.0.0
      *
      * @param {number} t - [description]
-     * @param {Phaser.Math.Vector2} [out] - {Phaser.Math[description]
+     * @param {Phaser.Math.Vector2} [out] - [description]
      *
      * @return {Phaser.Math.Vector2|null} [description]
      */
@@ -568,9 +596,9 @@ var Path = new Class({
      * @method Phaser.Curves.Path#getRandomPoint
      * @since 3.0.0
      *
-     * @param {Phaser.Math.Vector2} [out] - {Phaser.Math[description]
+     * @param {Phaser.Math.Vector2} [out] - [description]
      *
-     * @return {Phaser.Math.Vector2} {Phaser.Math[description]
+     * @return {Phaser.Math.Vector2} [description]
      */
     getRandomPoint: function (out)
     {
@@ -614,9 +642,9 @@ var Path = new Class({
      * @method Phaser.Curves.Path#getStartPoint
      * @since 3.0.0
      *
-     * @param {Phaser.Math.Vector2} [out] - {Phaser.Math[description]
+     * @param {Phaser.Math.Vector2} [out] - [description]
      *
-     * @return {Phaser.Math.Vector2} {Phaser.Math[description]
+     * @return {Phaser.Math.Vector2} [description]
      */
     getStartPoint: function (out)
     {
@@ -633,7 +661,7 @@ var Path = new Class({
      * @method Phaser.Curves.Path#lineTo
      * @since 3.0.0
      *
-     * @param {number|Phaser.Math.Vector2} x - {Phaser.Math[description]
+     * @param {number|Phaser.Math.Vector2} x - [description]
      * @param {number} [y] - [description]
      *
      * @return {Phaser.Curves.Path} [description]
@@ -728,6 +756,19 @@ var Path = new Class({
         this.cacheLengths = [];
 
         this.getCurveLengths();
+    },
+
+    /**
+     * [description]
+     *
+     * @method Phaser.Curves.Path#destroy
+     * @since 3.0.0
+     */
+    destroy: function ()
+    {
+        this.curves.length = 0;
+        this.cacheLengths.length = 0;
+        this.startPoint = undefined;
     }
 
 });

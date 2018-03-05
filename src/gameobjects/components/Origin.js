@@ -17,6 +17,17 @@
 var Origin = {
 
     /**
+     * A property indicating that a Game Object has this component.
+     * 
+     * @name Phaser.GameObjects.Components.Origin#_originComponent
+     * @type {boolean}
+     * @private
+     * @default true
+     * @since 3.2.0
+     */
+    _originComponent: true,
+
+    /**
      * The horizontal origin of this Game Object.
      * The origin maps the relationship between the size and position of the Game Object.
      * The default value is 0.5, meaning all Game Objects are positioned based on their center.

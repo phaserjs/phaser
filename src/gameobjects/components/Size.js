@@ -14,6 +14,17 @@
 var Size = {
 
     /**
+     * A property indicating that a Game Object has this component.
+     * 
+     * @name Phaser.GameObjects.Components.Size#_sizeComponent
+     * @type {boolean}
+     * @private
+     * @default true
+     * @since 3.2.0
+     */
+    _sizeComponent: true,
+
+    /**
      * The native (un-scaled) width of this Game Object.
      * 
      * @name Phaser.GameObjects.Components.Size#width
