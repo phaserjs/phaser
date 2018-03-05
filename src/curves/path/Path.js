@@ -243,7 +243,6 @@ var Path = new Class({
         {
             p1 = x;
             p2 = y;
-            p3 = controlX;
         }
         else
         {
