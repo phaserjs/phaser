@@ -27,8 +27,9 @@ var RenderTextureWebGL = {
     draw: function (texture, frame, x, y)
     {
         var glTexture = texture.source[frame.sourceIndex].glTexture;
+        var tint = (this.globalTint >> 16) + (this.globalTint & 0xff00) + ((this.globalTint & 0xff) << 16);
         this.renderer.setFramebuffer(this.framebuffer);
-        this.renderer.pipelines.TextureTintPipeline.drawTexture(glTexture, x, y, frame.x, frame.y, frame.width, frame.height, this.currentMatrix);
+        this.renderer.pipelines.TextureTintPipeline.drawTexture(glTexture, x, y, tint, this.globalAlpha, frame.x, frame.y, frame.width, frame.height, this.currentMatrix);
         this.renderer.setFramebuffer(null);
         return this;
     }

@@ -78,6 +78,8 @@ var RenderTexture = new Class({
         this.initMatrixStack();
 
         this.renderer = scene.sys.game.renderer;
+        this.globalTint = 0xFFFFFFF;
+        this.globalAlpha = 1.0;
         
         if (this.renderer.type === CONST.WEBGL)
         {
@@ -120,7 +122,39 @@ var RenderTexture = new Class({
             this.renderer.deleteTexture(this.texture);
             this.renderer.deleteFramebuffer(this.framebuffer);
         }
-    }
+    },
+
+    /**
+     * [description]
+     *
+     * @method Phaser.GameObjects.RenderTexture#setGlobalTint
+     * @since 3.2.0
+     *
+     * @param {int} tint [description]
+     *
+     * @return {Phaser.GameObjects.RenderTexture} [description]
+     */
+    setGlobalTint: function (tint)
+    {
+        this.globalTint = tint;
+        return this;
+    },
+
+    /**
+     * [description]
+     *
+     * @method Phaser.GameObjects.RenderTexture#setGlobalAlpha
+     * @since 3.2.0
+     *
+     * @param {float} alpha [description]
+     *
+     * @return {Phaser.GameObjects.RenderTexture} [description]
+     */
+    setGlobalAlpha: function (alpha)
+    {
+        this.globalAlpha = alpha;
+        return this;
+    },
 
     /**
      * Fills the Render Texture with the given color.

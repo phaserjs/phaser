@@ -1689,6 +1689,7 @@ var TextureTintPipeline = new Class({
     drawTexture: function (
         texture,
         srcX, srcY,
+        tint, alpha,
         frameX, frameY, frameWidth, frameHeight,
         transformMatrix
     )
@@ -1730,7 +1731,7 @@ var TextureTintPipeline = new Class({
         var v0 = (frameY / textureHeight);
         var u1 = (frameX + frameWidth) / textureWidth;
         var v1 = (frameY + frameHeight) / textureHeight;
-        var tint = 0xffffffff;
+        var tint = Utils.getTintAppendFloatAlpha(tint, alpha);
         
         this.setTexture2D(texture, 0);
 
