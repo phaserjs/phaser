@@ -154,7 +154,7 @@ var RenderTexture = new Class({
     {
         this.globalAlpha = alpha;
         return this;
-    },
+    }
 
     /**
      * Fills the Render Texture with the given color.

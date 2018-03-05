@@ -187,6 +187,8 @@ var TextureTintPipeline = new Class({
      *
      * @method Phaser.Renderer.WebGL.TextureTintPipeline#flush
      * @since 3.1.0
+     *
+     * @return {Phaser.Renderer.WebGL.TextureTintPipeline} This Pipeline.
      */
     flush: function ()
     {
@@ -1686,6 +1688,25 @@ var TextureTintPipeline = new Class({
         this.vertexCount += 6;
     },
 
+    /**
+     * Immediately draws a texture with no batching.
+     *
+     * @method Phaser.Renderer.WebGL.TextureTintPipeline#drawTexture
+     * @since 3.2.0
+     *
+     * @param {WebGLTexture} texture [description]
+     * @param {number} srcX - [description]
+     * @param {number} srcY - [description]
+     * @param {number} tint - [description]
+     * @param {number} alpha - [description]
+     * @param {number} frameX - [description]
+     * @param {number} frameY - [description]
+     * @param {number} frameWidth - [description]
+     * @param {number} frameHeight - [description]
+     * @param {Phaser.GameObjects.Components.TransformMatrix} transformMatrix - [description]
+     *
+     * @return {Phaser.Renderer.WebGL.TextureTintPipeline} This Pipeline.
+     */
     drawTexture: function (
         texture,
         srcX, srcY,
@@ -1731,7 +1752,7 @@ var TextureTintPipeline = new Class({
         var v0 = (frameY / textureHeight);
         var u1 = (frameX + frameWidth) / textureWidth;
         var v1 = (frameY + frameHeight) / textureHeight;
-        var tint = Utils.getTintAppendFloatAlpha(tint, alpha);
+        tint = Utils.getTintAppendFloatAlpha(tint, alpha);
         
         this.setTexture2D(texture, 0);
 

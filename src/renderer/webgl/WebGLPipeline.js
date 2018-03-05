@@ -212,7 +212,7 @@ var WebGLPipeline = new Class({
      *
      * @return {Phaser.Renderer.WebGL.WebGLPipeline} [description]
      */
-    addAttribute: function (name, size, type, normalized, offset) 
+    addAttribute: function (name, size, type, normalized, offset)
     {
         this.attributes.push({
             name: name,
@@ -576,7 +576,7 @@ var WebGLPipeline = new Class({
      */
     setMatrix2: function (name, transpose, matrix)
     {
-        this.renderer.setMatrix2(this.program, name, transpose,  matrix);
+        this.renderer.setMatrix2(this.program, name, transpose, matrix);
         return this;
     },
 
@@ -594,7 +594,7 @@ var WebGLPipeline = new Class({
      */
     setMatrix3: function (name, transpose, matrix)
     {
-        this.renderer.setMatrix3(this.program, name, transpose,  matrix);
+        this.renderer.setMatrix3(this.program, name, transpose, matrix);
         return this;
     },
 
@@ -612,7 +612,7 @@ var WebGLPipeline = new Class({
      */
     setMatrix4: function (name, transpose, matrix)
     {
-        this.renderer.setMatrix4(this.program, name, transpose,  matrix);
+        this.renderer.setMatrix4(this.program, name, transpose, matrix);
         return this;
     }
 
