@@ -50,7 +50,7 @@ var Game = new Class({
     {
         /**
          * The parsed Game Configuration object.
-         * 
+         *
          * The values stored within this object are read-only and should not be changed at run-time.
          *
          * @name Phaser.Game#config
@@ -118,7 +118,7 @@ var Game = new Class({
 
         /**
          * An instance of the Animation Manager.
-         * 
+         *
          * The Animation Manager is a global system responsible for managing all animations used within your game.
          *
          * @name Phaser.Game#anims
@@ -129,7 +129,7 @@ var Game = new Class({
 
         /**
          * An instance of the Texture Manager.
-         * 
+         *
          * The Texture Manager is a global system responsible for managing all textures being used by your game.
          *
          * @name Phaser.Game#textures
@@ -140,7 +140,7 @@ var Game = new Class({
 
         /**
          * An instance of the Cache Manager.
-         * 
+         *
          * The Cache Manager is a global system responsible for caching, accessing and releasing external game assets.
          *
          * @name Phaser.Game#cache
@@ -160,7 +160,7 @@ var Game = new Class({
 
         /**
          * An instance of the Input Manager.
-         * 
+         *
          * The Input Manager is a global system responsible for the capture of browser-level input events.
          *
          * @name Phaser.Game#input
@@ -171,7 +171,7 @@ var Game = new Class({
 
         /**
          * An instance of the Scene Manager.
-         * 
+         *
          * The Scene Manager is a global system responsible for creating, modifying and updating the Scenes in your game.
          *
          * @name Phaser.Game#scene
@@ -265,7 +265,7 @@ var Game = new Class({
     {
         this.isBooted = true;
 
-        this.config.preBoot();
+        this.config.preBoot(this);
 
         CreateRenderer(this);
 
@@ -292,7 +292,7 @@ var Game = new Class({
     {
         this.isRunning = true;
 
-        this.config.postBoot();
+        this.config.postBoot(this);
 
         if (this.renderer)
         {
@@ -379,7 +379,7 @@ var Game = new Class({
 
     /**
      * A special version of the Game Step for the HEADLESS renderer only.
-     * 
+     *
      * The main Game Step. Called automatically by the Time Step, once per browser frame (typically as a result of
      * Request Animation Frame, or Set Timeout on very old browsers.)
      *
@@ -504,7 +504,7 @@ var Game = new Class({
      *
      * @method Phaser.Game#resize
      * @since 3.2.0
-     * 
+     *
      * @param {number} width - The new width of the game.
      * @param {number} height - The new height of the game.
      */
