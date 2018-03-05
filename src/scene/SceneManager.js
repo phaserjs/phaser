@@ -127,6 +127,7 @@ var SceneManager = new Class({
      * Internal first-time Scene boot handler.
      *
      * @method Phaser.Scenes.SceneManager#bootQueue
+     * @private
      * @since 3.2.0
      */
     bootQueue: function ()

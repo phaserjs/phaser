@@ -38,6 +38,7 @@
 * The RandomDataGenerator `sign` property had a method collision. Fix #3323 (thanks @vinerz and @samme)
 * In Arcade Physics World if you collided a group with itself it would call a missing method (`collideGroupVsSelf`), it now calls `collideGroupVsGroup` correctly (thanks @patrickgalbraith)
 * The HTML5 Sound Manager would unlock the Sound API on a touch event but only if the audio files were loaded in the first Scene, if they were loaded in a subsequent Scene the audio system would never unlock. It now unlocks only if there are audio files in the cache. Fix #3311 (thanks @chancezeus)
+* The Text.lineSpacing value was not taken into account when rendering the Text. Fix #3215 (thanks @sftsk)
 
 ### Updates
 
@@ -53,6 +54,7 @@
 * ScenePlugin.swapPosition now allows you to use it to swap the positions of any two Scenes. Before the change it only allowed you to swap the position of the calling Scene and another one, but a new optional `keyB` argument opens this up.
 * The SceneManager no longer renders a Scene unless it is visible AND either running or paused. This now skips Scenes that are in an `init` state.
 * The Keyboard Manager will now no longer emit `keydown` events if you keep holding a key down. Fix #3239 (thanks @squaresun)
+* The SceneManager now employs a new queue for all pending Scenes, creating them and booting them in strict sequence. This should prevent errors where Scenes were unable to reference other Scenes further down the boot list in their create functions. Fix #3314 (thanks @max1701 @rblopes)
 * Phaser is now running Travis CI build testing again (thanks @vpmedia)
 * Documentation updates: thanks to @melissaelopez @samme @jblang94 
 
