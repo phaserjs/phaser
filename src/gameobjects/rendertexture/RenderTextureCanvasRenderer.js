@@ -45,7 +45,7 @@ var RenderTextureCanvasRenderer = function (renderer, renderTexture, interpolati
     if (renderTexture.flipY)
     {
         fy = -1;
-        dy -= renderTexture.canvas.height - src.displayOriginY;
+        dy -= renderTexture.canvas.height - renderTexture.displayOriginY;
     }
     else
     {
@@ -59,7 +59,6 @@ var RenderTextureCanvasRenderer = function (renderer, renderTexture, interpolati
     ctx.scale(fx, fy);
     ctx.drawImage(renderTexture.canvas, dx, dy);
     ctx.restore();
-
 };
 
 module.exports = RenderTextureCanvasRenderer;
