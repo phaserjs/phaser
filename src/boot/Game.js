@@ -265,7 +265,7 @@ var Game = new Class({
     {
         this.isBooted = true;
 
-        this.config.preBoot();
+        this.config.preBoot(this);
 
         CreateRenderer(this);
 
@@ -292,7 +292,7 @@ var Game = new Class({
     {
         this.isRunning = true;
 
-        this.config.postBoot();
+        this.config.postBoot(this);
 
         if (this.renderer)
         {
