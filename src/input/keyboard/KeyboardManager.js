@@ -362,13 +362,13 @@ var KeyboardManager = new Class({
             var event = queue[i];
             var code = event.keyCode;
 
-            //  Will emit a keyboard or keyup event
-            this.emit(event.type, event);
-
             if (event.type === 'keydown')
             {
-                if (KeyMap[code])
+                if (KeyMap[code] && (keys[code] === undefined || keys[code].isDown === false))
                 {
+                    //  Will emit a keyboard or keyup event
+                    this.emit(event.type, event);
+
                     this.emit('keydown_' + KeyMap[code], event);
                 }
 
@@ -379,6 +379,9 @@ var KeyboardManager = new Class({
             }
             else
             {
+                //  Will emit a keyboard or keyup event
+                this.emit(event.type, event);
+
                 this.emit('keyup_' + KeyMap[code], event);
 
                 if (keys[code])
