@@ -4,6 +4,7 @@
 
 ### New Features
 
+* The new Render Texture Game Object is now available. You can clear, fill and draw texture frames to it. The Render Texture itself can be displayed in-game with its own transform, or you can use it as a Bitmap Mask for another Game Object.
 * Game.resize allows you to resize the game config, renderer and input system in one call.
 * InputManager.resize allows you to update the bounds def and input scale in one call.
 * Game.Config.roundPixels property added to prevent sub-pixel interpolation during rendering of Game Objects in WebGL and Canvas.
@@ -46,8 +47,8 @@
 * The `setFrame` method of the Texture component has been updated so that it will now automatically reset the `width` and `height` of a Game Object to match that of the new Frame. Related, it will also adjust the display origin values, because they are size based. If the Frame has a custom pivot it will set the origin to match the custom pivot instead.
 * ScenePlugin.swapPosition now allows you to use it to swap the positions of any two Scenes. Before the change it only allowed you to swap the position of the calling Scene and another one, but a new optional `keyB` argument opens this up.
 * The SceneManager no longer renders a Scene unless it is visible AND either running or paused. This now skips Scenes that are in an `init` state.
+* Phaser is now running Travis CI build testing again (thanks @vpmedia)
 * Documentation updates: thanks to @melissaelopez @samme @jblang94 
-
 
 ## Version 3.1.2 - 23rd February 2018
 
