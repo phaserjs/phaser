@@ -78,7 +78,7 @@ var RenderTexture = new Class({
         this.initMatrixStack();
 
         this.renderer = scene.sys.game.renderer;
-        this.globalTint = 0xFFFFFFF;
+        this.globalTint = 0xffffff;
         this.globalAlpha = 1.0;
         
         if (this.renderer.type === CONST.WEBGL)
