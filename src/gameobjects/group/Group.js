@@ -478,9 +478,9 @@ var Group = new Class({
         {
             var children = this.children;
 
-            for (var i = 0; i < children.length; i++)
+            for (var i = 0; i < children.size; i++)
             {
-                var gameObject = children[i];
+                var gameObject = children.entries[i];
 
                 this.scene.sys.displayList.remove(gameObject);
 
