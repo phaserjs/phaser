@@ -6,9 +6,9 @@
 
 ### Bug Fixes
 
+* Fix #3345 debug draws are not cleared in CANVAS mode using Matter physics.(thanks @msamid737)
+
 ### Updates
-
-
 
 ## Version 3.2.0 - Kaori - 5th March 2018
 

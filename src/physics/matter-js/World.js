@@ -619,6 +619,7 @@ var World = new Class({
 
         graphics.clear();
         graphics.lineStyle(1, this.defaults.bodyDebugColor);
+        graphics.beginPath();
 
         for (var i = 0; i < bodies.length; i++)
         {
@@ -647,6 +648,7 @@ var World = new Class({
                 graphics.strokePath();
             }
         }
+        graphics.closePath(); 
     },
 
     /**
