@@ -852,8 +852,8 @@ var Camera = new Class({
             originX = follow.x;
             originY = follow.y;
 
-            this.scrollX = originX - width * 0.5;
-            this.scrollY = originY - height * 0.5;
+            this.scrollX = (originX - width * 0.5)/zoom;
+            this.scrollY = (originY - height * 0.5)/zoom;
         }
 
         if (this.useBounds)
