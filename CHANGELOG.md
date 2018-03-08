@@ -6,7 +6,7 @@
 
 ### Bug Fixes
 
-* Fix #3345 debug draws are not cleared in CANVAS mode using Matter physics.(thanks @msamid737)
+* Fix #3345 debug draws are not cleared in CANVAS mode using Matter physics.(thanks @samid737)
 
 ### Updates
 
