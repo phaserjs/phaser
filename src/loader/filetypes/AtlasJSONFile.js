@@ -41,7 +41,7 @@ var AtlasJSONFile = function (key, textureURL, atlasURL, path, textureXhrSetting
 
 /**
  * Adds a Texture Atlas file to the current load queue.
- * 
+ *
  * Note: This method will only be available if the Atlas JSON File type has been built into Phaser.
  *
  * The file is **not** loaded immediately after calling this method.
@@ -55,13 +55,24 @@ var AtlasJSONFile = function (key, textureURL, atlasURL, path, textureXhrSetting
  * @param {string} atlasURL - The url to load the atlas file from.
  * @param {object} textureXhrSettings - Optional texture file specific XHR settings.
  * @param {object} atlasXhrSettings - Optional atlas file specific XHR settings.
- * 
+ *
  * @return {Phaser.Loader.LoaderPlugin} The Loader.
  */
 FileTypesManager.register('atlas', function (key, textureURL, atlasURL, textureXhrSettings, atlasXhrSettings)
 {
-    //  Returns an object with two properties: 'texture' and 'data'
-    var files = new AtlasJSONFile(key, textureURL, atlasURL, this.path, textureXhrSettings, atlasXhrSettings);
+
+    var files;
+    // If param key is an object, use object based loading method
+    if ((typeof key === "object") && (key !== null))
+    {
+        files = new AtlasJSONFile(key.key, key.texture, key.data, this.path, textureXhrSettings, atlasXhrSettings);
+    }
+    // Else just use the parameters like normal
+    else
+    {
+        //  Returns an object with two properties: 'texture' and 'data'
+        files = new AtlasJSONFile(key, textureURL, atlasURL, this.path, textureXhrSettings, atlasXhrSettings);
+    }
 
     this.addFile(files.texture);
     this.addFile(files.data);
