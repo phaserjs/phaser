@@ -648,7 +648,7 @@ var World = new Class({
                 graphics.strokePath();
             }
         }
-        graphics.closePath(); 
+        graphics.closePath();
     },
 
     /**
