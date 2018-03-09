@@ -62,11 +62,13 @@ FileTypesManager.register('atlas', function (key, textureURL, atlasURL, textureX
 {
 
     var files;
+
     // If param key is an object, use object based loading method
-    if ((typeof key === "object") && (key !== null))
+    if ((typeof key === 'object') && (key !== null))
     {
         files = new AtlasJSONFile(key.key, key.texture, key.data, this.path, textureXhrSettings, atlasXhrSettings);
     }
+
     // Else just use the parameters like normal
     else
     {
