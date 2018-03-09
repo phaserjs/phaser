@@ -8,6 +8,7 @@
 
 * Fixed issue with Render Texture tinting. Fix #3336 (thanks @rexrainbow)
 * Fixed Utils.String.Format (thanks @samme)
+* The Matter Debug Layer wouldn't clear itself in canvas mode. Fix #3345 (thanks @samid737)
 
 ### Updates
 
