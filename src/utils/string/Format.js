@@ -20,12 +20,10 @@
  */
 var Format = function (string, values)
 {
-    string.replace(/%([0-9]+)/g, function (s, n)
+    return string.replace(/%([0-9]+)/g, function (s, n)
     {
         return values[Number(n) - 1];
     });
-
-    return string;
 };
 
 module.exports = Format;

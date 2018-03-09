@@ -6,9 +6,14 @@
 
 ### Bug Fixes
 
-* Fix #3345 debug draws are not cleared in CANVAS mode using Matter physics.(thanks @samid737)
+* Fixed issue with Render Texture tinting. Fix #3336 (thanks @rexrainbow)
+* Fixed Utils.String.Format (thanks @samme)
+* The Matter Debug Layer wouldn't clear itself in canvas mode. Fix #3345 (thanks @samid737)
 
 ### Updates
+
+* The SceneManager.render will now render a Scene as long as it's in a LOADING state or higher. Before it would only render RUNNING scenes, but this precluded those that were loading assets.
+* A Scene can now be restarted by calling `scene.start()` and providing no arguments (thanks @migiyubi)
 
 ## Version 3.2.0 - Kaori - 5th March 2018
 
