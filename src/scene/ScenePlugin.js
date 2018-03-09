@@ -105,18 +105,15 @@ var ScenePlugin = new Class({
     {
         if (key === undefined) { key = this.key; }
 
-        if (key !== this.key)
+        if (this.settings.status !== CONST.RUNNING)
         {
-            if (this.settings.status !== CONST.RUNNING)
-            {
-                this.manager.queueOp('stop', this.key);
-                this.manager.queueOp('start', key);
-            }
-            else
-            {
-                this.manager.stop(this.key);
-                this.manager.start(key, data);
-            }
+            this.manager.queueOp('stop', this.key);
+            this.manager.queueOp('start', key);
+        }
+        else
+        {
+            this.manager.stop(this.key);
+            this.manager.start(key, data);
         }
 
         return this;
