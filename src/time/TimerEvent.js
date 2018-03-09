@@ -274,7 +274,7 @@ var TimerEvent = new Class({
 
         this.elapsed = this.delay;
 
-        this.hasDispatched = !!dispatchCallback;
+        this.hasDispatched = !dispatchCallback;
 
         this.repeatCount = 0;
     },
