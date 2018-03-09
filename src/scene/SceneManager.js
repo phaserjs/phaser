@@ -515,7 +515,7 @@ var SceneManager = new Class({
         {
             var sys = this.scenes[i].sys;
 
-            if (sys.settings.visible && (sys.settings.status === CONST.RUNNING || sys.settings.status === CONST.PAUSED))
+            if (sys.settings.visible && sys.settings.status >= CONST.LOADING && sys.settings.status < CONST.SLEEPING)
             {
                 sys.render(renderer);
             }

@@ -8,7 +8,7 @@
 
 ### Updates
 
-
+* The SceneManager.render will now render a Scene as long as it's in a LOADING state or higher. Before it would only render RUNNING scenes, but this precluded those that were loading assets.
 
 ## Version 3.2.0 - Kaori - 5th March 2018
 
