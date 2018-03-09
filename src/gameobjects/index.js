@@ -17,6 +17,7 @@ var GameObjects = {
 
     Components: require('./components'),
 
+    GameObject: require('./GameObject'),
     BitmapText: require('./bitmaptext/static/BitmapText'),
     Blitter: require('./blitter/Blitter'),
     DynamicBitmapText: require('./bitmaptext/dynamic/DynamicBitmapText'),
