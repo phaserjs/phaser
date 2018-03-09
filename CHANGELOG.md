@@ -19,6 +19,7 @@
 * A Scene can now be restarted by calling `scene.start()` and providing no arguments (thanks @migiyubi)
 * The class GameObject has now been exposed, available via `Phaser.GameObjects.GameObject` (thanks @rexrainbow)
 * A Camera following a Game Object will now take the zoom factor of the camera into consideration when scrolling. Fix #3353 (thanks @brandonvdongen)
+* Calling `setText` on a BitmapText object will now recalculate its display origin values. Fix #3350 (thanks @migiyubi)
 
 ## Version 3.2.0 - Kaori - 5th March 2018
 

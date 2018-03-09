@@ -245,6 +245,8 @@ var DynamicBitmapText = new Class({
         if (value !== this.text)
         {
             this.text = value.toString();
+
+            this.updateDisplayOrigin();
         }
 
         return this;

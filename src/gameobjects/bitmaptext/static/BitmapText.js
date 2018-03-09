@@ -164,6 +164,8 @@ var BitmapText = new Class({
         if (value !== this.text)
         {
             this.text = value.toString();
+
+            this.updateDisplayOrigin();
         }
 
         return this;
@@ -216,6 +218,7 @@ var BitmapText = new Class({
         get: function ()
         {
             this.getTextBounds(false);
+
             return this._bounds.global.width;
         }
 
@@ -233,6 +236,7 @@ var BitmapText = new Class({
         get: function ()
         {
             this.getTextBounds(false);
+
             return this._bounds.global.height;
         }
 
