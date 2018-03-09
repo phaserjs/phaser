@@ -9,11 +9,16 @@
 * Fixed issue with Render Texture tinting. Fix #3336 (thanks @rexrainbow)
 * Fixed Utils.String.Format (thanks @samme)
 * The Matter Debug Layer wouldn't clear itself in canvas mode. Fix #3345 (thanks @samid737)
+* TimerEvent.remove would dispatch the Timer event immediately based on the opposite of the method argument, making it behave the opposite of what was expected. It now only fires when requested (thanks @migiyubi)
+* The TileSprite Canvas Renderer did not support rotation, scaling or flipping. Fix #3231 (thanks @TCatshoek)
+* Fixed Group doesn't remove children from Scene when cleared with the `removeFromScene` argument set (thanks @iamchristopher)
 
 ### Updates
 
 * The SceneManager.render will now render a Scene as long as it's in a LOADING state or higher. Before it would only render RUNNING scenes, but this precluded those that were loading assets.
 * A Scene can now be restarted by calling `scene.start()` and providing no arguments (thanks @migiyubi)
+* The class GameObject has now been exposed, available via `Phaser.GameObjects.GameObject` (thanks @rexrainbow)
+* A Camera following a Game Object will now take the zoom factor of the camera into consideration when scrolling. Fix #3353 (thanks @brandonvdongen)
 
 ## Version 3.2.0 - Kaori - 5th March 2018
 
