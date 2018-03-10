@@ -25,6 +25,7 @@ var Set = require('../../structs/Set');
 var StaticBody = require('./StaticBody');
 var TileIntersectsBody = require('./tilemap/TileIntersectsBody');
 var Vector2 = require('../../math/Vector2');
+var Wrap = require('../../math/Wrap');
 
 /**
  * @classdesc
@@ -1690,6 +1691,80 @@ var World = new Class({
         {
             this.collideSpriteVsGroup(children[i], group2, collideCallback, processCallback, callbackContext, overlapOnly);
         }
+    },
+
+    /**
+    * Wrap an object's coordinates (or several objects' coordinates) within {@link Phaser.Physics.Arcade.World#bounds}.
+    *
+    * If the object is outside any boundary edge (left, top, right, bottom), it will be moved to the same offset from the opposite edge (the interior).
+    *
+    * @method Phaser.Physics.Arcade.World#wrap
+    * @since [version]
+    *
+    * @param {any} object - A Game Object, a Group, an object with `x` and `y` coordinates, or an array of such objects.
+    * @param {number} [padding=0] - An amount added to each boundary edge during the operation.
+    */
+    wrap: function (object, padding)
+    {
+        if (object.body)
+        {
+            this.wrapObject(object, padding);
+        }
+        else if (object.getChildren)
+        {
+            this.wrapArray(object.getChildren(), padding);
+        }
+        else if (Array.isArray(object))
+        {
+            this.wrapArray(object, padding);
+        }
+        else
+        {
+            this.wrapObject(object, padding);
+        }
+    },
+
+
+    /**
+    * Wrap each object's coordinates within {@link Phaser.Physics.Arcade.World#bounds}.
+    *
+    * @method Phaser.Physics.Arcade.World#wrapArray
+    * @since [version]
+    *
+    * @param {any[]} arr
+    * @param {number} [padding=0] - An amount added to the boundary.
+    */
+    wrapArray: function (arr, padding)
+    {
+        if (arr.length === 0)
+        {
+            return;
+        }
+
+        for (var i = 0, len = arr.length; i < len; i++)
+        {
+            this.wrapObject(arr[i], padding);
+        }
+    },
+
+    /**
+    * Wrap an object's coordinates within {@link Phaser.Physics.Arcade.World#bounds}.
+    *
+    * @method Phaser.Physics.Arcade.World#wrapObject
+    * @since [version]
+    *
+    * @param {any} object - A Game Object, a Physics Body, or any object with `x` and `y` coordinates
+    * @param {number} [padding=0] - An amount added to the boundary.
+    */
+    wrapObject: function (object, padding)
+    {
+        if (padding === undefined)
+        {
+            padding = 0;
+        }
+
+        object.x = Wrap(object.x, this.bounds.left - padding, this.bounds.right + padding);
+        object.y = Wrap(object.y, this.bounds.top - padding, this.bounds.bottom + padding);
     },
 
     /**
