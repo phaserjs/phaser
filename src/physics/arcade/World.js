@@ -618,7 +618,7 @@ var World = new Class({
      * @since 3.0.0
      *
      * @param {Phaser.Physics.Arcade.Collider} collider - [description]
-     * 
+     *
      * @return {Phaser.Physics.Arcade.World} This World object.
      */
     removeCollider: function (collider)
@@ -1699,7 +1699,7 @@ var World = new Class({
     * If the object is outside any boundary edge (left, top, right, bottom), it will be moved to the same offset from the opposite edge (the interior).
     *
     * @method Phaser.Physics.Arcade.World#wrap
-    * @since [version]
+    * @since 3.3.0
     *
     * @param {any} object - A Game Object, a Group, an object with `x` and `y` coordinates, or an array of such objects.
     * @param {number} [padding=0] - An amount added to each boundary edge during the operation.
@@ -1729,7 +1729,7 @@ var World = new Class({
     * Wrap each object's coordinates within {@link Phaser.Physics.Arcade.World#bounds}.
     *
     * @method Phaser.Physics.Arcade.World#wrapArray
-    * @since [version]
+    * @since 3.3.0
     *
     * @param {any[]} arr
     * @param {number} [padding=0] - An amount added to the boundary.
@@ -1751,7 +1751,7 @@ var World = new Class({
     * Wrap an object's coordinates within {@link Phaser.Physics.Arcade.World#bounds}.
     *
     * @method Phaser.Physics.Arcade.World#wrapObject
-    * @since [version]
+    * @since 3.3.0
     *
     * @param {any} object - A Game Object, a Physics Body, or any object with `x` and `y` coordinates
     * @param {number} [padding=0] - An amount added to the boundary.
