@@ -14,6 +14,7 @@
 * Fixed Group doesn't remove children from Scene when cleared with the `removeFromScene` argument set (thanks @iamchristopher)
 * Fixed an error in the lights pipeline when no Light Manager has been defined (thanks @samme)
 * The ForwardDiffuseLightPipeline now uses `sys.lights` instead of the Scene variable to avoid errors due to injection removal.
+* Phaser.Display.Color.Interpolate would return NaN values because it was loading the wrong Linear function. Fix #3372 (thanks @samid737)
 
 ### Updates
 

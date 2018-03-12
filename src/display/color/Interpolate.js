@@ -4,7 +4,7 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Linear = require('../../math/interpolation/LinearInterpolation');
+var Linear = require('../../math/Linear');
 
 /**
  * Interpolates color values
