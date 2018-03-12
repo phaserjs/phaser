@@ -192,7 +192,7 @@ var TileSprite = new Class({
      * Sets {@link Phaser.GameObjects.TileSprite#tilePositionX} and {@link Phaser.GameObjects.TileSprite#tilePositionY}.
      *
      * @method Phaser.GameObjects.TileSprite#setTilePosition
-     * @since [version]
+     * @since 3.3.0
      *
      * @param {number} [x] - The x position of this sprite's tiling texture.
      * @param {number} [y] - The y position of this sprite's tiling texture.
