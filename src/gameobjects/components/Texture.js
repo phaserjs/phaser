@@ -68,11 +68,16 @@ var Texture = {
      * @since 3.0.0
      *
      * @param {string|integer} frame - The name or index of the frame within the Texture.
+     * @param {boolean} [updateSize=true] - Should this call adjust the size of the Game Object?
+     * @param {boolean} [updateOrigin=true] - Should this call adjust the origin of the Game Object?
      * 
      * @return {Phaser.GameObjects.GameObject} This Game Object instance.
      */
-    setFrame: function (frame)
+    setFrame: function (frame, updateSize, updateOrigin)
     {
+        if (updateSize === undefined) { updateSize = true; }
+        if (updateOrigin === undefined) { updateOrigin = true; }
+
         this.frame = this.texture.get(frame);
 
         if (!this.frame.cutWidth || !this.frame.cutHeight)
@@ -84,12 +89,12 @@ var Texture = {
             this.renderFlags |= _FLAG;
         }
 
-        if (this._sizeComponent)
+        if (this._sizeComponent && updateSize)
         {
             this.setSizeToFrame();
         }
 
-        if (this._originComponent)
+        if (this._originComponent && updateOrigin)
         {
             if (this.frame.customPivot)
             {
