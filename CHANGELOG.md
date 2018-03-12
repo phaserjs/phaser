@@ -13,6 +13,8 @@
 * Fixed an error in the lights pipeline when no Light Manager has been defined (thanks @samme)
 * The ForwardDiffuseLightPipeline now uses `sys.lights` instead of the Scene variable to avoid errors due to injection removal.
 * Phaser.Display.Color.Interpolate would return NaN values because it was loading the wrong Linear function. Fix #3372 (thanks @samid737)
+* RenderTexture.draw was only drawing the base frame of a Texture. Fix #3374 (thanks @samid737)
+* TileSprite scaling differed between WebGL and Canvas. Fix #3338 (thanks @TCatshoek)
 
 ### Updates
 
