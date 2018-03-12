@@ -181,6 +181,7 @@ var UpdateList = new Class({
             if (gameObject.active)
             {
                 gameObject.preUpdate.call(gameObject, time, delta);
+                gameObject.update.call(gameObject);
             }
         }
     },
