@@ -23,7 +23,7 @@ var RenderTextureCanvas = {
 
         this.context.globalAlpha = this.globalAlpha;
         this.context.setTransform(matrix[0], matrix[1], matrix[2], matrix[3], matrix[4], matrix[5]);
-        this.context.drawImage(texture.source[frame.sourceIndex].image, frame.x, frame.y, frame.width, frame.height, x, y, frame.width, frame.height);
+        this.context.drawImage(texture.source[frame.sourceIndex].image, frame.cutX, frame.cutY, frame.cutWidth, frame.cutHeight, x, y, frame.cutWidth, frame.cutWidth);
         
         return this;
     }

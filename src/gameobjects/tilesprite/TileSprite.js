@@ -210,20 +210,30 @@ var TileSprite = new Class({
 
         this.canvasBufferCtx.clearRect(0, 0, this.canvasBuffer.width, this.canvasBuffer.height);
 
-        this.canvasBufferCtx.drawImage(
-            this.frame.source.image,
-            this.frame.cutX, this.frame.cutY,
-            this.frame.cutWidth, this.frame.cutHeight,
-            0, 0,
-            this.potWidth, this.potHeight
-        );
-
         if (this.renderer.gl)
         {
+            this.canvasBufferCtx.drawImage(
+                this.frame.source.image,
+                this.frame.cutX, this.frame.cutY,
+                this.frame.cutWidth, this.frame.cutHeight,
+                0, 0,
+                this.potWidth, this.potHeight
+            );
+
             this.tileTexture = this.renderer.canvasToTexture(this.canvasBuffer, this.tileTexture, (this.tileTexture === null), this.scaleMode);
         }
         else
         {
+            this.canvasBuffer.width = this.frame.cutWidth;
+            this.canvasBuffer.height = this.frame.cutHeight;
+            this.canvasBufferCtx.drawImage(
+                this.frame.source.image,
+                this.frame.cutX, this.frame.cutY,
+                this.frame.cutWidth, this.frame.cutHeight,
+                0, 0,
+                this.frame.cutWidth, this.frame.cutHeight
+            );
+
             this.canvasPattern = this.canvasBufferCtx.createPattern(this.canvasBuffer, 'repeat');
         }
 
