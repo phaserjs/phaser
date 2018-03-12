@@ -188,7 +188,7 @@ var TileSprite = new Class({
 
                 this.tileTexture = null;
                 this.dirty = true;
-                this.tileTexture = renderer.createTexture2D(0, gl.LINEAR, gl.LINEAR, gl.REPEAT, gl.REPEAT, gl.RGBA, _this.canvasBuffer, _this.potWidth, _this.potHeight);
+                this.tileTexture = renderer.createTexture2D(0, gl.LINEAR, gl.LINEAR, gl.REPEAT, gl.REPEAT, gl.RGBA, this.canvasBuffer, this.potWidth, this.potHeight);
             }, this);
         }
     },
