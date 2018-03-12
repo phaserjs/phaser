@@ -16,6 +16,7 @@
 * RenderTexture.draw was only drawing the base frame of a Texture. Fix #3374 (thanks @samid737)
 * TileSprite scaling differed between WebGL and Canvas. Fix #3338 (thanks @TCatshoek)
 * Text.setFixedSize was incorrectly setting the `text` property instead of the `parent` property. Fix #3375 (thanks @rexrainbow)
+* RenderTexture.clear on canvas was using the last transform state, instead of clearing the whole texture.
 
 ### Updates
 
