@@ -73,6 +73,11 @@ var ForwardDiffuseLightPipeline = new Class({
     {
         var lightManager = scene.lights;
 
+        if (!lightManager)
+        {
+            return this;
+        }
+
         lightManager.culledLights.length = 0;
 
         if (lightManager.lights.length <= 0 || !lightManager.active)
