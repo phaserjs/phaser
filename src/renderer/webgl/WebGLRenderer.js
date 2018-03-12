@@ -490,6 +490,7 @@ var WebGLRenderer = new Class({
     onContextRestored: function (callback, target)
     {
         this.restoredContextCallbacks.push([ callback, target ]);
+
         return this;
     },
 

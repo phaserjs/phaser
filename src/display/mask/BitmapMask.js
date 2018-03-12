@@ -112,7 +112,7 @@ var BitmapMask = new Class({
          */
         this.invertAlpha = false;
 
-        if (renderer.gl)
+        if (renderer && renderer.gl)
         {
             var width = renderer.width;
             var height = renderer.height;

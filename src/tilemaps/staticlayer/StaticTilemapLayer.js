@@ -6,6 +6,7 @@
 
 var Class = require('../../utils/Class');
 var Components = require('../../gameobjects/components');
+var CONST = require('../../const');
 var GameObject = require('../../gameobjects/GameObject');
 var StaticTilemapLayerRender = require('./StaticTilemapLayerRender');
 var TilemapComponents = require('../components');
@@ -194,23 +195,14 @@ var StaticTilemapLayer = new Class({
 
         this.initPipeline('TextureTintPipeline');
 
-        this.renderer.onContextRestored(this.contextRestore, this);
-    },
-
-    /**
-     * @method Phaser.Tilemaps.StaticTilemapLayer#contextRestore
-     * @since 3.0.0
-     * 
-     * @param {Phaser.Renderer.WebGLRenderer} renderer - The renderer instance.
-     *
-     * @return {Phaser.Tilemaps.StaticTilemapLayer} This Tilemap Layer object.
-     */
-    contextRestore: function ()
-    {
-        this.dirty = true;
-        this.vertexBuffer = null;
-
-        return this;
+        if (scene.sys.game.config.renderType === CONST.WEBGL)
+        {
+            scene.sys.game.renderer.onContextRestored(function ()
+            {
+                this.dirty = true;
+                this.vertexBuffer = null;
+            }, this);
+        }
     },
 
     /**
