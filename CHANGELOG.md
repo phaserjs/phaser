@@ -13,6 +13,7 @@
 * The TileSprite Canvas Renderer did not support rotation, scaling or flipping. Fix #3231 (thanks @TCatshoek)
 * Fixed Group doesn't remove children from Scene when cleared with the `removeFromScene` argument set (thanks @iamchristopher)
 * Fixed an error in the lights pipeline when no Light Manager has been defined (thanks @samme)
+* The ForwardDiffuseLightPipeline now uses `sys.lights` instead of the Scene variable to avoid errors due to injection removal.
 
 ### Updates
 
