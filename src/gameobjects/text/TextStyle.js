@@ -292,7 +292,7 @@ var TextStyle = new Class({
      * @param {[type]} style - [description]
      * @param {boolean} [updateText=true] - [description]
      *
-     * @return {Phaser.GameObjects.Components.TextStyle} This TextStyle component.
+     * @return {Phaser.GameObjects.Text} The parent Text object.
      */
     setStyle: function (style, updateText)
     {
@@ -339,10 +339,12 @@ var TextStyle = new Class({
 
         if (updateText)
         {
-            this.update(true);
+            return this.update(true);
         }
-
-        return this;
+        else
+        {
+            return this.parent;
+        }
     },
 
     /**
