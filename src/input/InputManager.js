@@ -390,8 +390,8 @@ var InputManager = new Class({
                 continue;
             }
 
-            var px = tempPoint.x + (camera.scrollX * gameObject.scrollFactorX) - camera.scrollX;
-            var py = tempPoint.y + (camera.scrollY * gameObject.scrollFactorY) - camera.scrollY;
+            var px = tempPoint.x * this.game.config.resolution + (camera.scrollX * gameObject.scrollFactorX) - camera.scrollX;
+            var py = tempPoint.y * this.game.config.resolution + (camera.scrollY * gameObject.scrollFactorY) - camera.scrollY;
 
             TransformXY(px, py, gameObject.x, gameObject.y, gameObject.rotation, gameObject.scaleX, gameObject.scaleY, point);
 
