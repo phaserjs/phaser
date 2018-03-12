@@ -1293,7 +1293,7 @@ var Body = new Class({
 
             if (this.isCircle)
             {
-                graphic.strokeCircle(x, y, this.radius);
+                graphic.strokeCircle(x, y, this.width);
             }
             else
             {
