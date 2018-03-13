@@ -1,5 +1,19 @@
 # Change Log
 
+## Version 3.3.0 - Tetsuo - In Development
+
+### New Features
+
+* TextStyle has two new properties: `baselineX` and `baselineY` which allow you to customize the 'magic' value used in calculating the text metrics.
+
+### Bug Fixes
+
+### Updates
+
+* The Text testString has changed from `|MÉqgy` to `|MÃ‰qgy`.
+
+
+
 ## Version 3.2.1 - 12th March 2018
 
 ### Bug Fixes
