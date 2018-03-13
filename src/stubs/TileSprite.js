@@ -1,1 +1,0 @@
-Phaser.TileSprite = function () {};

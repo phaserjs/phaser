@@ -1,5 +1,2 @@
 **/.*
-bower_components/
-resources/
-examples/
-plugins/
+build/
