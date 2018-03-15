@@ -8,6 +8,8 @@
 
 var CheckMatrix = require('./CheckMatrix');
 var TransposeMatrix = require('./TransposeMatrix');
+var ReverseColumns = require('./ReverseColumns');
+var ReverseRows = require('./ReverseRows');
 
 /**
  * [description]
@@ -37,21 +39,17 @@ var RotateMatrix = function (matrix, direction)
     if (direction === 90 || direction === -270 || direction === 'rotateLeft')
     {
         matrix = TransposeMatrix(matrix);
-        matrix = matrix.reverse();
+        matrix = ReverseColumns(matrix);
     }
     else if (direction === -90 || direction === 270 || direction === 'rotateRight')
     {
-        matrix = matrix.reverse();
+        matrix = ReverseColumns(matrix);
         matrix = TransposeMatrix(matrix);
     }
     else if (Math.abs(direction) === 180 || direction === 'rotate180')
     {
-        for (var i = 0; i < matrix.length; i++)
-        {
-            matrix[i].reverse();
-        }
-
-        matrix = matrix.reverse();
+        matrix = ReverseColumns(matrix);
+        matrix = ReverseRows(matrix);
     }
 
     return matrix;
