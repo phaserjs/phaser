@@ -4,6 +4,11 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
+/**
+ * @function GetColor
+ * @since  3.0.0
+ * @private
+ */
 var GetColor = function (value)
 {
     return (value >> 16) + (value & 0xff00) + ((value & 0xff) << 16);

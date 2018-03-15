@@ -65,6 +65,7 @@ var EventEmitter = new Class({
  * Return an array listing the events for which the emitter has registered listeners.
  *
  * @method EventEmitter#eventNames
+ * @since 3.0.0
  * 
  * @return {array}
  */
@@ -73,6 +74,7 @@ var EventEmitter = new Class({
  * Return the listeners registered for a given event.
  *
  * @method EventEmitter#listeners
+ * @since 3.0.0
  * 
  * @param {string|symbol} event - The event name.
  * 
@@ -83,6 +85,7 @@ var EventEmitter = new Class({
  * Return the number of listeners listening to a given event.
  * 
  * @method EventEmitter#listenerCount
+ * @since 3.0.0
  *
  * @param {string|symbol} event - The event name.
  * 
@@ -93,6 +96,7 @@ var EventEmitter = new Class({
  * Calls each of the listeners registered for a given event.
  *
  * @method EventEmitter#emit
+ * @since 3.0.0
  * 
  * @param {string|symbol} event - The event name.
  * 
@@ -103,6 +107,7 @@ var EventEmitter = new Class({
  * Add a listener for a given event.
  *
  * @method EventEmitter#on
+ * @since 3.0.0
  * 
  * @param {string|symbol} event - The event name.
  * @param {function} fn - The listener function.
@@ -115,6 +120,7 @@ var EventEmitter = new Class({
  * Add a listener for a given event.
  *
  * @method EventEmitter#addListener
+ * @since 3.0.0
  * 
  * @param {string|symbol} event - The event name.
  * @param {function} fn - The listener function.
@@ -127,6 +133,7 @@ var EventEmitter = new Class({
  * Add a one-time listener for a given event.
  *
  * @method EventEmitter#once
+ * @since 3.0.0
  * 
  * @param {string|symbol} event - The event name.
  * @param {function} fn - The listener function.
@@ -139,6 +146,7 @@ var EventEmitter = new Class({
  * Remove the listeners of a given event.
  *
  * @method EventEmitter#removeListener
+ * @since 3.0.0
  * 
  * @param {string|symbol} event - The event name.
  * @param {function} fn - Only remove the listeners that match this function.
@@ -152,6 +160,7 @@ var EventEmitter = new Class({
  * Remove the listeners of a given event.
  *
  * @method EventEmitter#off
+ * @since 3.0.0
  * 
  * @param {string|symbol} event - The event name.
  * @param {function} fn - Only remove the listeners that match this function.
@@ -165,6 +174,7 @@ var EventEmitter = new Class({
  * Remove all listeners, or those of the specified event.
  *
  * @method EventEmitter#removeAllListeners
+ * @since 3.0.0
  * 
  * @param {string|symbol} [event] - The event name.
  * 
