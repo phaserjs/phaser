@@ -30,7 +30,7 @@ var CalculateFacesAt = function (tileX, tileY, layer)
     // Assume the changed tile has all interesting edges
     if (tileCollides)
     {
-        tile.faceBottom = true;
+        tile.faceTop = true;
         tile.faceBottom = true;
         tile.faceLeft = true;
         tile.faceRight = true;
