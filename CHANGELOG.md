@@ -5,12 +5,18 @@
 ### New Features
 
 * TextStyle has two new properties: `baselineX` and `baselineY` which allow you to customize the 'magic' value used in calculating the text metrics.
+* Game.Config.preserveDrawingBuffer is now passed to the WebGL Renderer (default `false`).
+* Game.Config.failIfMajorPerformanceCaveat is now passed to the WebGL Renderer (default `false`).
+* Game.Config.powerPreference is now passed to the WebGL Renderer (default `default`).
+* Game.Config.pixelArt is now passed to the WebGL Renderer as the antialias context property (default `false`).
+
 
 ### Bug Fixes
 
 ### Updates
 
 * The Text testString has changed from `|MÉqgy` to `|MÃ‰qgy`.
+* The WebGLRenderer width and height values are now floored when multiplied by the resolution.
 
 
 

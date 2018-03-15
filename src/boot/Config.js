@@ -181,11 +181,17 @@ var Config = new Class({
 
         this.fps = GetValue(config, 'fps', null);
 
+        //  Renderer Settings
         this.pixelArt = GetValue(config, 'pixelArt', false);
         this.autoResize = GetValue(config, 'autoResize', false);
         this.roundPixels = GetValue(config, 'roundPixels', false);
         this.transparent = GetValue(config, 'transparent', false);
         this.clearBeforeRender = GetValue(config, 'clearBeforeRender', true);
+        this.preserveDrawingBuffer = GetValue(config, 'preserveDrawingBuffer', false);
+        this.failIfMajorPerformanceCaveat = GetValue(config, 'failIfMajorPerformanceCaveat', false);
+
+        // "high-performance", "low-power" or "default". 
+        this.powerPreference = GetValue(config, 'powerPreference', 'default');
 
         var bgc = GetValue(config, 'backgroundColor', 0);
 
