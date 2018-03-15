@@ -308,13 +308,13 @@ var CameraManager = new Class({
      */
     getCamera: function (name)
     {
-        this.cameras.forEach(function (camera)
+        for (var camera of this.cameras)
         {
             if (camera.name === name)
             {
                 return camera;
             }
-        });
+        }
 
         return null;
     },
