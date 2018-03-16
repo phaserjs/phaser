@@ -125,7 +125,7 @@ var Color = new Class({
     /**
      * Sets this color to be transparent. Sets all values to zero.
      *
-     * @method Phaser.Curves.Color#transparent
+     * @method Phaser.Display.Color#transparent
      * @since 3.0.0
      *
      * @return {Phaser.Display.Color} This Color object.
@@ -143,7 +143,7 @@ var Color = new Class({
     /**
      * Sets the color of this Color component.
      *
-     * @method Phaser.Curves.Color#setTo
+     * @method Phaser.Display.Color#setTo
      * @since 3.0.0
      *
      * @param {integer} red - The red color value. A number between 0 and 255.
@@ -168,7 +168,7 @@ var Color = new Class({
     /**
      * Sets the red, green, blue and alpha GL values of this Color component.
      *
-     * @method Phaser.Curves.Color#setGLTo
+     * @method Phaser.Display.Color#setGLTo
      * @since 3.0.0
      *
      * @param {float} red - The red color value. A number between 0 and 1.
@@ -193,7 +193,7 @@ var Color = new Class({
     /**
      * Sets the color based on the color object given.
      *
-     * @method Phaser.Curves.Color#setFromRGB
+     * @method Phaser.Display.Color#setFromRGB
      * @since 3.0.0
      *
      * @param {object} color - An object containing `r`, `g`, `b` and optionally `a` values in the range 0 to 255.
@@ -217,7 +217,7 @@ var Color = new Class({
     /**
      * Updates the internal cache values.
      *
-     * @method Phaser.Curves.Color#update
+     * @method Phaser.Display.Color#update
      * @since 3.0.0
      *
      * @return {Phaser.Display.Color} This Color object.
@@ -234,7 +234,7 @@ var Color = new Class({
     /**
      * Returns a new Color component using the values from this one.
      *
-     * @method Phaser.Curves.Color#clone
+     * @method Phaser.Display.Color#clone
      * @since 3.0.0
      *
      * @return {Phaser.Display.Color} A new Color object.
