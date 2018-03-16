@@ -194,7 +194,6 @@ var Config = new Class({
         this.clearBeforeRender = GetValue(config, 'clearBeforeRender', true);
         this.preserveDrawingBuffer = GetValue(config, 'preserveDrawingBuffer', false);
         this.failIfMajorPerformanceCaveat = GetValue(config, 'failIfMajorPerformanceCaveat', false);
-        // "high-performance", "low-power" or "default"
         this.powerPreference = GetValue(config, 'powerPreference', 'default');
 
         var bgc = GetValue(config, 'backgroundColor', 0);
