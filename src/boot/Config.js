@@ -186,7 +186,7 @@ var Config = new Class({
         this.fps = GetValue(config, 'fps', null);
 
         //  Renderer Settings
-        this.antialias = GetValue(config, 'pixelArt', true);
+        this.antialias = GetValue(config, 'antialias', true);
         this.pixelArt = GetValue(config, 'pixelArt', false);
         this.autoResize = GetValue(config, 'autoResize', false);
         this.roundPixels = GetValue(config, 'roundPixels', false);
