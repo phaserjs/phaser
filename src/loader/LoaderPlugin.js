@@ -388,7 +388,7 @@ var LoaderPlugin = new Class({
      */
     updateProgress: function ()
     {
-        this.progress = 1 - (this.list.size / this.totalToLoad);
+        this.progress = 1 - ((this.list.size + this.inflight.size) / this.totalToLoad);
 
         this.emit('progress', this.progress);
     },
