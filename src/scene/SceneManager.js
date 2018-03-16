@@ -655,7 +655,7 @@ var SceneManager = new Class({
 
         //  Extract callbacks
 
-        var defaults = [ 'init', 'preload', 'create', 'update', 'render', 'shutdown', 'destroy' ];
+        var defaults = [ 'init', 'preload', 'create', 'update', 'render' ];
 
         for (var i = 0; i < defaults.length; i++)
         {
