@@ -182,10 +182,10 @@ var Config = new Class({
         this.fps = GetValue(config, 'fps', null);
 
         //  Renderer Settings
-        this.pixelArt = GetValue(config, 'pixelArt', false);
+        this.pixelArt = GetValue(config, 'pixelArt', true);
         this.autoResize = GetValue(config, 'autoResize', false);
         this.roundPixels = GetValue(config, 'roundPixels', false);
-        this.transparent = GetValue(config, 'transparent', false);
+        this.transparent = GetValue(config, 'transparent', true);
         this.clearBeforeRender = GetValue(config, 'clearBeforeRender', true);
         this.preserveDrawingBuffer = GetValue(config, 'preserveDrawingBuffer', false);
         this.failIfMajorPerformanceCaveat = GetValue(config, 'failIfMajorPerformanceCaveat', false);
