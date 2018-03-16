@@ -510,12 +510,14 @@ var Tween = new Class({
         //  You can't have a paused Tween if it's part of a Timeline
         if (this.paused && !this.parentIsTimeline)
         {
-            this.state = TWEEN_CONST.PAUSED;
+            this.state = TWEEN_CONST.PENDING_ADD;
 
             return false;
         }
         else
         {
+            this.state = TWEEN_CONST.INIT;
+
             return true;
         }
     },
@@ -871,12 +873,18 @@ var Tween = new Class({
      */
     stop: function (resetTo)
     {
-        if (resetTo !== undefined)
+        if (this.state === TWEEN_CONST.ACTIVE)
         {
-            this.seek(resetTo);
+            if (resetTo !== undefined)
+            {
+                this.seek(resetTo);
+            }
         }
 
-        this.state = TWEEN_CONST.PENDING_REMOVE;
+        if (this.state !== TWEEN_CONST.REMOVED)
+        {
+            this.state = TWEEN_CONST.PENDING_REMOVE;
+        }
     },
 
     /**
