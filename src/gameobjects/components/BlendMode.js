@@ -56,8 +56,6 @@ var BlendMode = {
                 value = BlendModes[value];
             }
 
-            value | 0;
-
             if (value >= 0)
             {
                 this._blendMode = value;
