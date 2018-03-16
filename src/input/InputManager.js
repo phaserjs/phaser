@@ -381,6 +381,8 @@ var InputManager = new Class({
 
         var point = { x: 0, y: 0 };
 
+        var res = this.game.config.resolution;
+
         for (var i = 0; i < culledGameObjects.length; i++)
         {
             var gameObject = culledGameObjects[i];
@@ -390,8 +392,8 @@ var InputManager = new Class({
                 continue;
             }
 
-            var px = tempPoint.x + (camera.scrollX * gameObject.scrollFactorX) - camera.scrollX;
-            var py = tempPoint.y + (camera.scrollY * gameObject.scrollFactorY) - camera.scrollY;
+            var px = tempPoint.x * res + (camera.scrollX * gameObject.scrollFactorX) - camera.scrollX;
+            var py = tempPoint.y * res + (camera.scrollY * gameObject.scrollFactorY) - camera.scrollY;
 
             TransformXY(px, py, gameObject.x, gameObject.y, gameObject.rotation, gameObject.scaleX, gameObject.scaleY, point);
 
