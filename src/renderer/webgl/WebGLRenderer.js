@@ -1351,7 +1351,7 @@ var WebGLRenderer = new Class({
         var resolution = this.config.resolution;
 
         var cx = Math.floor(camera.x * resolution);
-        var cy = Math.floor(camera.x * resolution);
+        var cy = Math.floor(camera.y * resolution);
         var cw = Math.floor(camera.width * resolution);
         var ch = Math.floor(camera.height * resolution);
 
