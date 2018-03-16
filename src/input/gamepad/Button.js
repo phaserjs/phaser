@@ -69,7 +69,7 @@ var Button = new Class({
          * @default 0
          * @since 3.0.0
          */
-        this.threshold = 0;
+        this.threshold = 1;
 
         /**
          * Is the Button being pressed down or not?
