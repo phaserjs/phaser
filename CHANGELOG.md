@@ -13,6 +13,11 @@
 
 ### Bug Fixes
 
+* Fixed the Debug draw of a scaled circle body in Arcade Physics (thanks @pixelpicosean)
+* Fixed bug in `DataManager.merge` where it would copy the object reference instead of its value (thanks @rexrainbow)
+* The SceneManager no longer copies over the `shutdown` and `destroy` callbacks in createSceneFromObject, as these are not called automatically and should be invoked via the Scene events (thanks @samme)
+* The default Gamepad Button threshold has been changed from 0 to 1. Previously the value of 0 was making all gamepad buttons appear as if they were always pressed down (thanks @jmcriat)
+
 ### Updates
 
 * The Text testString has changed from `|MÉqgy` to `|MÃ‰qgy`.
