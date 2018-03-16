@@ -11,7 +11,7 @@ var TILEMAP_FORMATS = require('../../tilemaps/Formats');
 /**
  * A Tilemap File.
  *
- * @function Phaser.Loader.Filetypes.TilemapJSONFile
+ * @function Phaser.Loader.FileTypes.TilemapJSONFile
  * @since 3.0.0
  *
  * @param {string} key - [description]

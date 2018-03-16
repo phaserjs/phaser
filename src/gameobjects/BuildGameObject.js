@@ -11,7 +11,7 @@ var ScaleModes = require('../renderer/ScaleModes');
 /**
  * Builds a Game Object using the provided configuration object.
  *
- * @function Phaser.Gameobjects.BuildGameObject
+ * @function Phaser.GameObjects.BuildGameObject
  * @since 3.0.0
  *
  * @param {Phaser.Scene} scene - [description]
