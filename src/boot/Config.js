@@ -78,8 +78,9 @@ var ValueToColor = require('../display/color/ValueToColor');
  * @property {boolean} [pixelArt=false] - [description]
  * @property {boolean} [autoResize=false] - [description]
  * @property {boolean} [roundPixels=false] - [description]
- * @property {boolean} [transparent=true] - [description]
+ * @property {boolean} [transparent=false] - [description]
  * @property {boolean} [clearBeforeRender=true] - [description]
+ * @property {boolean} [premultipliedAlpha=true] - [description]
  * @property {boolean} [preserveDrawingBuffer=false] - [description]
  * @property {boolean} [failIfMajorPerformanceCaveat=false] - [description]
  * @property {boolean} [powerPreference='default'] - "high-performance", "low-power" or "default"
@@ -186,15 +187,20 @@ var Config = new Class({
         this.fps = GetValue(config, 'fps', null);
 
         //  Renderer Settings
-        this.antialias = GetValue(config, 'antialias', true);
-        this.pixelArt = GetValue(config, 'pixelArt', false);
-        this.autoResize = GetValue(config, 'autoResize', false);
-        this.roundPixels = GetValue(config, 'roundPixels', false);
-        this.transparent = GetValue(config, 'transparent', true);
-        this.clearBeforeRender = GetValue(config, 'clearBeforeRender', true);
-        this.preserveDrawingBuffer = GetValue(config, 'preserveDrawingBuffer', false);
-        this.failIfMajorPerformanceCaveat = GetValue(config, 'failIfMajorPerformanceCaveat', false);
-        this.powerPreference = GetValue(config, 'powerPreference', 'default');
+        //  These can either be in a `render` object within the Config, or specified on their own
+
+        var renderConfig = GetValue(config, 'render', config);
+
+        this.antialias = GetValue(renderConfig, 'antialias', true);
+        this.pixelArt = GetValue(renderConfig, 'pixelArt', false);
+        this.autoResize = GetValue(renderConfig, 'autoResize', false);
+        this.roundPixels = GetValue(renderConfig, 'roundPixels', false);
+        this.transparent = GetValue(renderConfig, 'transparent', false);
+        this.clearBeforeRender = GetValue(renderConfig, 'clearBeforeRender', true);
+        this.premultipliedAlpha = GetValue(renderConfig, 'premultipliedAlpha', true);
+        this.preserveDrawingBuffer = GetValue(renderConfig, 'preserveDrawingBuffer', false);
+        this.failIfMajorPerformanceCaveat = GetValue(renderConfig, 'failIfMajorPerformanceCaveat', false);
+        this.powerPreference = GetValue(renderConfig, 'powerPreference', 'default');
 
         var bgc = GetValue(config, 'backgroundColor', 0);
 
@@ -216,6 +222,7 @@ var Config = new Class({
         //      gravity: 0,
         //      cellSize: 64
         //  }
+
         this.physics = GetValue(config, 'physics', {});
         this.defaultPhysicsSystem = GetValue(this.physics, 'default', false);
 

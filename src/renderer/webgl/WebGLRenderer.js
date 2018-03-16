@@ -36,15 +36,17 @@ var WebGLRenderer = new Class({
         // eslint-disable-next-line consistent-this
         var renderer = this;
 
+        var gameConfig = game.config;
+
         var contextCreationConfig = {
-            alpha: game.config.transparent,
+            alpha: gameConfig.transparent,
             depth: false, // enable when 3D is added in the future
-            antialias: game.config.antialias,
-            premultipliedAlpha: game.config.transparent,
+            antialias: gameConfig.antialias,
+            premultipliedAlpha: gameConfig.premultipliedAlpha,
             stencil: true,
-            preserveDrawingBuffer: game.config.preserveDrawingBuffer,
-            failIfMajorPerformanceCaveat: game.config.failIfMajorPerformanceCaveat,
-            powerPreference: game.config.powerPreference
+            preserveDrawingBuffer: gameConfig.preserveDrawingBuffer,
+            failIfMajorPerformanceCaveat: gameConfig.failIfMajorPerformanceCaveat,
+            powerPreference: gameConfig.powerPreference
         };
 
         /**
@@ -55,13 +57,13 @@ var WebGLRenderer = new Class({
          * @since 3.0.0
          */
         this.config = {
-            clearBeforeRender: game.config.clearBeforeRender,
-            pixelArt: game.config.pixelArt,
-            backgroundColor: game.config.backgroundColor,
+            clearBeforeRender: gameConfig.clearBeforeRender,
+            pixelArt: gameConfig.pixelArt,
+            backgroundColor: gameConfig.backgroundColor,
             contextCreation: contextCreationConfig,
-            resolution: game.config.resolution,
-            autoResize: game.config.autoResize,
-            roundPixels: game.config.roundPixels
+            resolution: gameConfig.resolution,
+            autoResize: gameConfig.autoResize,
+            roundPixels: gameConfig.roundPixels
         };
 
         /**
