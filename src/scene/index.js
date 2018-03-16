@@ -4,11 +4,14 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
+var CONST = require('./const');
+var Extend = require('../utils/object/Extend');
+
 /**
  * @namespace Phaser.Scenes
  */
 
-module.exports = {
+var Scene = {
 
     SceneManager: require('./SceneManager'),
     ScenePlugin: require('./ScenePlugin'),
@@ -16,3 +19,8 @@ module.exports = {
     Systems: require('./Systems')
 
 };
+
+//   Merge in the consts
+Scene = Extend(false, Scene, CONST);
+
+module.exports = Scene;

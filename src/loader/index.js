@@ -4,11 +4,14 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
+var CONST = require('./const');
+var Extend = require('../utils/object/Extend');
+
 /**
  * @namespace Phaser.Loader
  */
 
-module.exports = {
+var Loader = {
 
     FileTypes: require('./filetypes'),
 
@@ -21,3 +24,8 @@ module.exports = {
     XHRSettings: require('./XHRSettings')
 
 };
+
+//   Merge in the consts
+Loader = Extend(false, Loader, CONST);
+
+module.exports = Loader;
