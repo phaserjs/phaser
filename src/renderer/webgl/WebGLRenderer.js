@@ -39,7 +39,7 @@ var WebGLRenderer = new Class({
         var contextCreationConfig = {
             alpha: game.config.transparent,
             depth: false, // enable when 3D is added in the future
-            antialias: game.config.pixelArt,
+            antialias: game.config.antialias,
             premultipliedAlpha: game.config.transparent,
             stencil: true,
             preserveDrawingBuffer: game.config.preserveDrawingBuffer,

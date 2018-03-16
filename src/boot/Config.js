@@ -74,11 +74,15 @@ var ValueToColor = require('../display/color/ValueToColor');
  * @property {string} [banner.text='#ffffff'] - [description]
  * @property {array} [banner.background] - [description]
  * @property {FPSConfig} [?fps] - [description]
+ * @property {boolean} [antialias=true] - [description]
  * @property {boolean} [pixelArt=false] - [description]
  * @property {boolean} [autoResize=false] - [description]
  * @property {boolean} [roundPixels=false] - [description]
- * @property {boolean} [transparent=false] - [description]
+ * @property {boolean} [transparent=true] - [description]
  * @property {boolean} [clearBeforeRender=true] - [description]
+ * @property {boolean} [preserveDrawingBuffer=false] - [description]
+ * @property {boolean} [failIfMajorPerformanceCaveat=false] - [description]
+ * @property {boolean} [powerPreference='default'] - "high-performance", "low-power" or "default"
  * @property {string|number} [backgroundColor=0x000000] - [description]
  * @property {object} [?callbacks] - [description]
  * @property {function} [callbacks.preBoot=NOOP] - [description]
@@ -182,15 +186,15 @@ var Config = new Class({
         this.fps = GetValue(config, 'fps', null);
 
         //  Renderer Settings
-        this.pixelArt = GetValue(config, 'pixelArt', true);
+        this.antialias = GetValue(config, 'pixelArt', true);
+        this.pixelArt = GetValue(config, 'pixelArt', false);
         this.autoResize = GetValue(config, 'autoResize', false);
         this.roundPixels = GetValue(config, 'roundPixels', false);
         this.transparent = GetValue(config, 'transparent', true);
         this.clearBeforeRender = GetValue(config, 'clearBeforeRender', true);
         this.preserveDrawingBuffer = GetValue(config, 'preserveDrawingBuffer', false);
         this.failIfMajorPerformanceCaveat = GetValue(config, 'failIfMajorPerformanceCaveat', false);
-
-        // "high-performance", "low-power" or "default". 
+        // "high-performance", "low-power" or "default"
         this.powerPreference = GetValue(config, 'powerPreference', 'default');
 
         var bgc = GetValue(config, 'backgroundColor', 0);
