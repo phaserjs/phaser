@@ -10,7 +10,7 @@
 
 module.exports = {
 
-    Components: require('./components/'),
+    Components: require('./components'),
     Parsers: require('./parsers'),
 
     Formats: require('./Formats'),
