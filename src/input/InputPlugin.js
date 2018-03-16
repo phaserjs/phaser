@@ -643,7 +643,7 @@ var InputPlugin = new Class({
 
             pointer.dragState = 4;
 
-            return 1;
+            return list.length;
         }
 
         //  4 = Pointer actively dragging the draglist and has moved
@@ -725,9 +725,11 @@ var InputPlugin = new Class({
 
                 this.emit('drag', pointer, gameObject, dragX, dragY);
             }
+
+            return list.length;
         }
 
-        //  5 = Pointer actively dragging but has been released, notify draglist
+        //  5 = Pointer was actively dragging but has been released, notify draglist
         if (pointer.dragState === 5)
         {
             list = this._drag[pointer.id];
@@ -765,8 +767,8 @@ var InputPlugin = new Class({
 
             pointer.dragState = 0;
         }
-        
-        return (pointer.dragState > 0);
+
+        return 0;
     },
 
     /**
@@ -820,7 +822,7 @@ var InputPlugin = new Class({
      *
      * @param {Phaser.Input.Pointer} pointer - [description]
      *
-     * @return {[type]} [description]
+     * @return {integer} The number of objects interacted with.
      */
     processOverOutEvents: function (pointer)
     {
@@ -872,6 +874,8 @@ var InputPlugin = new Class({
         //  Process the Just Out objects
         var total = justOut.length;
 
+        var totalInteracted = 0;
+
         if (total > 0)
         {
             this.sortGameObjects(justOut);
@@ -891,6 +895,8 @@ var InputPlugin = new Class({
                 this.emit('gameobjectout', pointer, gameObject);
 
                 gameObject.emit('pointerout', pointer);
+
+                totalInteracted++;
             }
         }
 
@@ -916,6 +922,8 @@ var InputPlugin = new Class({
                 this.emit('gameobjectover', pointer, gameObject);
 
                 gameObject.emit('pointerover', pointer, gameObject.input.localX, gameObject.input.localY);
+
+                totalInteracted++;
             }
         }
 
@@ -925,7 +933,7 @@ var InputPlugin = new Class({
         //  Then sort it into display list order
         this._over[pointer.id] = this.sortGameObjects(previouslyOver);
 
-        return previouslyOver.length;
+        return totalInteracted;
     },
 
     /**
