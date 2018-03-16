@@ -242,7 +242,7 @@ var DataManager = new Class({
         {
             if (overwrite || (!overwrite && !this.has(key)))
             {
-                this.list[key] = data;
+                this.list[key] = data[key];
             }
         }
 
