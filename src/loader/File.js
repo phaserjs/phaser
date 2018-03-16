@@ -242,9 +242,12 @@ var File = new Class({
      */
     resetXHR: function ()
     {
-        this.xhrLoader.onload = undefined;
-        this.xhrLoader.onerror = undefined;
-        this.xhrLoader.onprogress = undefined;
+        if (this.xhrLoader)
+        {
+            this.xhrLoader.onload = undefined;
+            this.xhrLoader.onerror = undefined;
+            this.xhrLoader.onprogress = undefined;
+        }
     },
 
     /**
