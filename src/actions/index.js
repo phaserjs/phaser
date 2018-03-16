@@ -54,6 +54,7 @@ module.exports = {
     SmootherStep: require('./SmootherStep'),
     SmoothStep: require('./SmoothStep'),
     Spread: require('./Spread'),
-    ToggleVisible: require('./ToggleVisible')
+    ToggleVisible: require('./ToggleVisible'),
+    WrapInRectangle: require('./WrapInRectangle')
 
 };

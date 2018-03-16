@@ -14,7 +14,7 @@
  * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.
  * @param {Phaser.Cameras.Scene2D.Camera} [camera] - The Camera to run the cull check against.
  * @param {array} [outputArray] - [description]
- * 
+ *
  * @return {Phaser.Tilemaps.Tile[]} An array of Tile objects.
  */
 var CullTiles = function (layer, camera, outputArray)
@@ -27,8 +27,8 @@ var CullTiles = function (layer, camera, outputArray)
     var mapData = layer.data;
     var mapWidth = layer.width;
     var mapHeight = layer.height;
-    var left = (camera.scrollX * tilemapLayer.scrollFactorX) - tilemapLayer.x;
-    var top = (camera.scrollY * tilemapLayer.scrollFactorY) - tilemapLayer.y;
+    var left = (camera.scrollX * camera.zoom * tilemapLayer.scrollFactorX) - tilemapLayer.x;
+    var top = (camera.scrollY * camera.zoom * tilemapLayer.scrollFactorY) - tilemapLayer.y;
     var sx = tilemapLayer.scaleX;
     var sy = tilemapLayer.scaleY;
     var tileWidth = layer.tileWidth * sx;
