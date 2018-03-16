@@ -4,11 +4,14 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
+var FilterMode = require('./FilterMode');
+var Extend = require('../utils/object/Extend');
+
 /**
  * @namespace Phaser.Textures
  */
 
-module.exports = {
+var Textures = {
 
     Parsers: require('./parsers'),
 
@@ -19,3 +22,8 @@ module.exports = {
     TextureSource: require('./TextureSource')
 
 };
+
+//   Merge in the consts
+Textures = Extend(false, Textures, FilterMode);
+
+module.exports = Textures;

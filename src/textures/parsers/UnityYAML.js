@@ -40,6 +40,7 @@ var addFrame = function (texture, sourceIndex, name, frame)
  * For more details about Sprite Meta Data see https://docs.unity3d.com/ScriptReference/SpriteMetaData.html
  *
  * @function Phaser.Textures.Parsers.UnityYAML
+ * @memberOf Phaser.Textures.Parsers
  * @since 3.0.0
  *
  * @param {Phaser.Textures.Texture} texture - The Texture to add the Frames to.

@@ -8,6 +8,7 @@
  * Parses a Pyxel JSON object and adds the Frames to a Texture.
  *
  * @function Phaser.Textures.Parsers.Pyxel
+ * @memberOf Phaser.Textures.Parsers
  * @since 3.0.0
  *
  * @param {Phaser.Textures.Texture} texture - The Texture to add the Frames to.
