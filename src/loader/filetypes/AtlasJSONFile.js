@@ -11,7 +11,7 @@ var JSONFile = require('./JSONFile.js');
 /**
  * An Atlas JSON File.
  *
- * @function Phaser.Loader.Filetypes.AtlasJSONFile
+ * @function Phaser.Loader.FileTypes.AtlasJSONFile
  * @since 3.0.0
  *
  * @param {string} key - The key of the file within the loader.

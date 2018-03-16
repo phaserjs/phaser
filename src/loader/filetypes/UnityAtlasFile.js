@@ -11,7 +11,7 @@ var TextFile = require('./TextFile.js');
 /**
  * An Atlas JSON File.
  *
- * @function Phaser.Loader.Filetypes.UnityAtlasFile
+ * @function Phaser.Loader.FileTypes.UnityAtlasFile
  * @since 3.0.0
  *
  * @param {string} key - The key of the file within the loader.

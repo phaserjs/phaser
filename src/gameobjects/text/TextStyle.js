@@ -30,7 +30,9 @@ var propertyMap = {
     fixedWidth: [ 'fixedWidth', 0 ],
     fixedHeight: [ 'fixedHeight', 0 ],
     rtl: [ 'rtl', false ],
-    testString: [ 'testString', '|MÉqgy' ],
+    testString: [ 'testString', '|MÃ‰qgy' ],
+    baselineX: [ 'baselineX', 1.2 ],
+    baselineY: [ 'baselineY', 1.4 ],
     wordWrapWidth: [ 'wordWrap.width', null ],
     wordWrapCallback: [ 'wordWrap.callback', null ],
     wordWrapCallbackScope: [ 'wordWrap.callbackScope', null ],
@@ -251,6 +253,26 @@ var TextStyle = new Class({
          * @since 3.0.0
          */
         this.testString;
+
+        /**
+         * The amount of horizontal padding adding to the width of the text when calculating the font metrics.
+         *
+         * @name Phaser.GameObjects.Components.TextStyle#baselineX
+         * @type {number}
+         * @default 1.2
+         * @since 3.3.0
+         */
+        this.baselineX;
+
+        /**
+         * The amount of vertical padding adding to the width of the text when calculating the font metrics.
+         *
+         * @name Phaser.GameObjects.Components.TextStyle#baselineY
+         * @type {number}
+         * @default 1.4
+         * @since 3.3.0
+         */
+        this.baselineY;
 
         /**
          * [description]

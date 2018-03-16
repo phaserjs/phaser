@@ -166,15 +166,18 @@ var Group = new Class({
      * @param {number} y - The vertical position of this Game Object in the world.
      * @param {string} texture - The key of the Texture this Game Object will use to render with, as stored in the Texture Manager.
      * @param {string|integer} [frame] - An optional frame from the Texture this Game Object is rendering with.
-     * @param {boolean} [visible=true] - [description]
+     * @param {string|integer} [frame] - An optional frame from the Texture this Game Object is rendering with.
+     * @param {boolean} [visible=true] - The {@link Phaser.GameObjects.Components.Visible#visible} state of this Game Object.
+     * @param {boolean} [active=true] - The {@link Phaser.GameObjects.GameObject#active} state of this Game Object.
      *
      * @return {Phaser.GameObjects.GameObject} [description]
      */
-    create: function (x, y, key, frame, visible)
+    create: function (x, y, key, frame, visible, active)
     {
         if (key === undefined) { key = this.defaultKey; }
         if (frame === undefined) { frame = this.defaultFrame; }
         if (visible === undefined) { visible = true; }
+        if (active === undefined) { active = true; }
 
         //  Pool?
         if (this.isFull())
@@ -192,6 +195,7 @@ var Group = new Class({
         }
 
         child.visible = visible;
+        child.setActive(active);
 
         this.add(child);
 
@@ -244,6 +248,7 @@ var Group = new Class({
         var key = GetFastValue(options, 'key', undefined);
         var frame = GetFastValue(options, 'frame', null);
         var visible = GetFastValue(options, 'visible', true);
+        var active = GetFastValue(options, 'active', true);
 
         var entries = [];
 
@@ -287,7 +292,7 @@ var Group = new Class({
 
         for (var c = 0; c < range.length; c++)
         {
-            entries.push(this.create(0, 0, range[c].a, range[c].b, visible));
+            entries.push(this.create(0, 0, range[c].a, range[c].b, visible, active));
         }
 
         //  Post-creation options (applied only to those items created in this call):

@@ -11,7 +11,7 @@ var XMLFile = require('./XMLFile.js');
 /**
  * An Bitmap Font File.
  *
- * @function Phaser.Loader.Filetypes.BitmapFontFile
+ * @function Phaser.Loader.FileTypes.BitmapFontFile
  * @since 3.0.0
  *
  * @param {string} key - The key of the file within the loader.

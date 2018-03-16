@@ -9,7 +9,7 @@ var GetAdvancedValue = require('../utils/object/GetAdvancedValue');
 /**
  * Adds an Animation component to a Sprite and populates it based on the given config.
  *
- * @function Phaser.Gameobjects.BuildGameObjectAnimation
+ * @function Phaser.GameObjects.BuildGameObjectAnimation
  * @since 3.0.0
  *
  * @param {Phaser.GameObjects.Sprite} sprite - [description]

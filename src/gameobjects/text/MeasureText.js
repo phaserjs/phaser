@@ -20,11 +20,11 @@ var MeasureText = function (textStyle)
 
     textStyle.syncFont(canvas, context);
 
-    var width = Math.ceil(context.measureText(textStyle.testString).width * 1.2);
+    var width = Math.ceil(context.measureText(textStyle.testString).width * textStyle.baselineX);
     var baseline = width;
     var height = 2 * baseline;
 
-    baseline = baseline * 1.4 | 0;
+    baseline = baseline * textStyle.baselineY | 0;
 
     canvas.width = width;
     canvas.height = height;

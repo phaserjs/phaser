@@ -10,7 +10,7 @@ var ImageFile = require('./ImageFile.js');
 /**
  * A Sprite Sheet File.
  *
- * @function Phaser.Loader.Filetypes.SpriteSheetFile
+ * @function Phaser.Loader.FileTypes.SpriteSheetFile
  * @since 3.0.0
  *
  * @param {string} key - The key of the file within the loader.

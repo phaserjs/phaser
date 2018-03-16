@@ -1,5 +1,52 @@
 # Change Log
 
+## Version 3.3.0 - Tetsuo - In Development
+
+### New Features
+
+* TextStyle has two new properties: `baselineX` and `baselineY` which allow you to customize the 'magic' value used in calculating the text metrics.
+* Game.Config.preserveDrawingBuffer is now passed to the WebGL Renderer (default `false`).
+* Game.Config.failIfMajorPerformanceCaveat is now passed to the WebGL Renderer (default `false`).
+* Game.Config.powerPreference is now passed to the WebGL Renderer (default `default`).
+* Game.Config.antialias is now passed to the WebGL Renderer as the antialias context property (default `true`).
+* Game.Config.pixelArt is now only used by the WebGL Renderer when creating new textures.
+* Game.Config.premultipliedAlpha is now passed to the WebGL Renderer as the premultipliedAlpha context property (default `true`).
+* You can now specify all of the renderer config options within a `render` object in the config. If no `render` object is found, it will scan the config object directly for the properties.
+* Group.create has a new optional argument: `active` which will set the active state of the child being created (thanks @samme)
+* Group.create has a new optional argument: `active` which will set the active state of the child being created (thanks @samme)
+* Group.createMultiple now allows you to include the `active` property in the config object (thanks @samme)
+* TileSprite has a new method: `setTilePosition` which allows you to set the tile position in a chained called (thanks @samme)
+* Added the new Action - WrapInRectangle. This will wrap each items coordinates within a rectangles area (thanks @samme)
+* Arcade Physics has the new methods `wrap`, `wrapArray` and `wrapObject` which allow you to wrap physics bodies around the world bounds (thanks @samme)
+* The Tweens Timeline has a new method: `makeActive` which delegates control to the Tween Manager (thanks @allanbreyes)
+
+### Bug Fixes
+
+* Fixed the Debug draw of a scaled circle body in Arcade Physics (thanks @pixelpicosean)
+* Fixed bug in `DataManager.merge` where it would copy the object reference instead of its value (thanks @rexrainbow)
+* The SceneManager no longer copies over the `shutdown` and `destroy` callbacks in createSceneFromObject, as these are not called automatically and should be invoked via the Scene events (thanks @samme)
+* The default Gamepad Button threshold has been changed from 0 to 1. Previously the value of 0 was making all gamepad buttons appear as if they were always pressed down (thanks @jmcriat)
+* InputManager.hitTest will now factor the game resolution into account, stopping the tests from being offset if resolution didn't equal 1 (thanks @sftsk)
+* CameraManager.getCamera now returns the Camera based on its name (thanks @bigbozo)
+* Fixed Tile Culling for zoomed Cameras. When a Camera was zoomed the tiles would be aggressively culled as the dimensions didn't factor in the zoom level (thanks @bigbozo)
+* When calling ScenePlugin.start any additional data passed to the method would be lost if the scene wasn't in an active running state (thanks @stuff)
+* When calling Timeline.resetTweens, while the tweens are pending removal or completed, it would throw a TypeError about the undefined `makeActive` (thanks @allanbreyes)
+* The WebGL Context would set `antialias` to `undefined` as it wasn't set in the Game Config. Fix #3386 (thanks @samme)
+* The TweenManager will now check the state of a tween before playing it. If not in a pending state it will be skipped. This allows you to stop a tween immediately after creating it and not have it play through once anyway. Fix #3405 (thanks @Twilrom)
+
+### Updates
+
+* The Text testString has changed from `|MÉqgy` to `|MÃ‰qgy`.
+* The WebGLRenderer width and height values are now floored when multiplied by the resolution.
+* The WebGL Context now sets `premultipliedAlpha` to `true` by default, this prevents the WebGL context from rendering as plain white under certain versions of macOS Safari.
+* The Phaser.Display.Align constants are now exposed on the namespace. Fix #3387 (thanks @samme)
+* The Phaser.Loader constants are now exposed on the namespace. Fix #3387 (thanks @samme)
+* The Phaser.Physics.Arcade constants are now exposed on the namespace. Fix #3387 (thanks @samme)
+* The Phaser.Scene constants are now exposed on the namespace. Fix #3387 (thanks @samme)
+* The Phaser.Tweens constants are now exposed on the namespace. Fix #3387 (thanks @samme)
+
+
+
 ## Version 3.2.1 - 12th March 2018
 
 ### Bug Fixes

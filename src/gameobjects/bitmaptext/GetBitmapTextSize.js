@@ -4,7 +4,16 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-
+/**
+ * [description]
+ *
+ * @function GetBitmapTextSize
+ * @since  3.0.0
+ * @private
+ * 
+ * @param {Phaser.GameObjects.DynamicBitmapText|Phaser.GameObjects.BitmapText} src - [description]
+ * @param {boolean} round - [description]
+ */
 var GetBitmapTextSize = function (src, round)
 {
     var text = src.text;
