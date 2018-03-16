@@ -44,7 +44,7 @@ var propertyMap = {
  * [description]
  *
  * @class TextStyle
- * @memberOf Phaser.GameObjects.Components
+ * @memberOf Phaser.GameObjects.Text
  * @constructor
  * @since 3.0.0
  *

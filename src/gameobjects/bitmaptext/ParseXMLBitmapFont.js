@@ -6,7 +6,7 @@
 
 /**
  * @function getValue
- * @since  3.0.0
+ * @since 3.0.0
  * @private
  */
 function getValue (node, attribute)
@@ -16,7 +16,7 @@ function getValue (node, attribute)
 
 /**
  * @function ParseXMLBitmapFont
- * @since  3.0.0
+ * @since 3.0.0
  * @private
  * 
  * @param {[type]} xml - [description]

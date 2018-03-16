@@ -6,8 +6,16 @@
 
 /**
  * Returns an object containing dimensions of the Text object.
+ *
+ * @function Phaser.GameObjects.Text.GetTextSize
+ * @since 3.0.0
+ *
+ * @param {Phaser.GameObjects.Text} text - The Text object to get the size from.
+ * @param {number} size - [description]
+ * @param {array} lines - [description]
+ *
+ * @return {object} An object containing dimensions of the Text object.
  */
-
 var GetTextSize = function (text, size, lines)
 {
     var canvas = text.canvas;

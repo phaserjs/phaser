@@ -26,6 +26,13 @@ var GetValue = require('../../utils/object/GetValue');
 //      offset: { x: 0, y: 0 }
 // }
 
+/**
+ * [description]
+ *
+ * @function ParseRetroFont
+ * @since 3.0.0
+ * @private
+ */
 var ParseRetroFont = function (scene, config)
 {
     var w = config.width;

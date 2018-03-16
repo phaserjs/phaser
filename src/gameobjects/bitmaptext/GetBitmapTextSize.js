@@ -8,7 +8,7 @@
  * [description]
  *
  * @function GetBitmapTextSize
- * @since  3.0.0
+ * @since 3.0.0
  * @private
  * 
  * @param {Phaser.GameObjects.DynamicBitmapText|Phaser.GameObjects.BitmapText} src - [description]

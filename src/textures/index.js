@@ -10,7 +10,7 @@
 
 module.exports = {
 
-    Parsers: require('./parsers/'),
+    Parsers: require('./parsers'),
 
     FilterMode: require('./FilterMode'),
     Frame: require('./Frame'),

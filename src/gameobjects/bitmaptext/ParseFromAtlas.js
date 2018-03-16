@@ -6,6 +6,13 @@
 
 var ParseXMLBitmapFont = require('./ParseXMLBitmapFont');
 
+/**
+ * [description]
+ *
+ * @function ParseFromAtlas
+ * @since 3.0.0
+ * @private
+ */
 var ParseFromAtlas = function (scene, fontName, textureKey, frameKey, xmlKey, xSpacing, ySpacing)
 {
     var frame = scene.sys.textures.getFrame(textureKey, frameKey);
