@@ -8,6 +8,7 @@ var Bodies = require('./lib/factory/Bodies');
 var Class = require('../../utils/Class');
 var Composites = require('./lib/factory/Composites');
 var Constraint = require('./lib/constraint/Constraint');
+var MatterGameObject = require('./MatterGameObject');
 var MatterImage = require('./MatterImage');
 var MatterSprite = require('./MatterSprite');
 var MatterTileBody = require('./MatterTileBody');
@@ -538,6 +539,11 @@ var Factory = new Class({
         this.sys.displayList.add(image);
 
         return image;
+    },
+
+    gameObject: function (gameObject, options)
+    {
+        return new MatterGameObject(this.world, gameObject, options);
     },
 
     /**
