@@ -12,7 +12,7 @@ var PropertyValueInc = require('./PropertyValueInc');
  * 
  * The optional `stepX` and `stepY` properties are applied incrementally, multiplied by each item in the array.
  * 
- * To use this with a Group: `IncXY(group.getChildren(), value, step)`
+ * To use this with a Group: `IncXY(group.getChildren(), x, y, stepX, stepY)`
  *
  * @function Phaser.Actions.IncXY
  * @since 3.0.0
