@@ -23,7 +23,7 @@ var Vector2 = require('../math/Vector2');
  * @param {integer} [direction=0] - [description]
  * @param {Phaser.Math.Vector2|object} [output] - [description]
  *
- * @return {array} The array of Game Objects that was passed to this Action.
+ * @return {Phaser.Math.Vector2} The output vector.
  */
 var ShiftPosition = function (items, x, y, direction, output)
 {

@@ -19,6 +19,7 @@
 * Added the new Action - WrapInRectangle. This will wrap each items coordinates within a rectangles area (thanks @samme)
 * Arcade Physics has the new methods `wrap`, `wrapArray` and `wrapObject` which allow you to wrap physics bodies around the world bounds (thanks @samme)
 * The Tweens Timeline has a new method: `makeActive` which delegates control to the Tween Manager (thanks @allanbreyes)
+* Actions.GetLast will return the last element in the items array matching the conditions.
 
 ### Bug Fixes
 
@@ -36,6 +37,9 @@
 * The InputPlugin.processOverOutEvents method wasn't correctly working out the total of the number of objects interacted with, which caused input events to be disabled in Scenes further down the scene list if something was being dragged in an upper scene. Fix #3399 (thanks @Jerenaux)
 * The InputPlugin.processDragEvents wasn't always returning an integer.
 * LoaderPlugin.progress and the corresponding event now factor in both the list size and the inflight size when calculating the percentage complete. Fix #3384 (thanks @vinerz @rblopes @samme)
+* Phaser.Utils.Array.Matrix.RotateLeft actually rotated to the right (thanks @Tomas2h)
+* Phaser.Utils.Array.Matrix.RotateRight actually rotated to the left (thanks @Tomas2h)
+* When deleting a Scene from the SceneManager it would set the key in the scenes has to `undefined`, preventing you from registering a new Scene with the same key. It's now properly removed from the hash(thanks @macbury)
 
 ### Updates
 
@@ -48,6 +52,12 @@
 * The Phaser.Scene constants are now exposed on the namespace. Fix #3387 (thanks @samme)
 * The Phaser.Tweens constants are now exposed on the namespace. Fix #3387 (thanks @samme)
 * The Array Matrix utils are now exposed and available via `Phaser.Utils.Array.Matrix`.
+* Actions.Angle has 3 new arguments: `step`, `index` and `direction`.
+* Actions.Angle has 3 new arguments: `step`, `index` and `direction`.
+
+
+
+
 
 
 
@@ -68,8 +78,6 @@
 * TileSprite scaling differed between WebGL and Canvas. Fix #3338 (thanks @TCatshoek)
 * Text.setFixedSize was incorrectly setting the `text` property instead of the `parent` property. Fix #3375 (thanks @rexrainbow)
 * RenderTexture.clear on canvas was using the last transform state, instead of clearing the whole texture.
-* Phaser.Utils.Array.Matrix.RotateLeft actually rotated to the right (thanks @Tomas2h)
-* Phaser.Utils.Array.Matrix.RotateRight actually rotated to the left (thanks @Tomas2h)
 
 ### Updates
 
