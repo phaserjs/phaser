@@ -20,6 +20,8 @@
 * Arcade Physics has the new methods `wrap`, `wrapArray` and `wrapObject` which allow you to wrap physics bodies around the world bounds (thanks @samme)
 * The Tweens Timeline has a new method: `makeActive` which delegates control to the Tween Manager (thanks @allanbreyes)
 * Actions.GetLast will return the last element in the items array matching the conditions.
+* Actions.PropertyValueInc is a new action that will increment any property of an array of objects by the given amount, using an optional step value, index and iteration direction. Most Actions have been updated to use this internally.
+* Actions.PropertyValueSet is a new action that will set any property of an array of objects to the given value, using an optional step value, index and iteration direction. Most Actions have been updated to use this internally.
 
 ### Bug Fixes
 
@@ -53,9 +55,23 @@
 * The Phaser.Tweens constants are now exposed on the namespace. Fix #3387 (thanks @samme)
 * The Array Matrix utils are now exposed and available via `Phaser.Utils.Array.Matrix`.
 * Actions.Angle has 3 new arguments: `step`, `index` and `direction`.
-* Actions.Angle has 3 new arguments: `step`, `index` and `direction`.
-
-
+* Actions.IncAlpha has 3 new arguments: `step`, `index` and `direction`.
+* Actions.IncX has 3 new arguments: `step`, `index` and `direction`.
+* Actions.IncY has 3 new arguments: `step`, `index` and `direction`.
+* Actions.IncXY has 4 new arguments: `stepX`, `stepY`, `index` and `direction`.
+* Actions.Rotate has 3 new arguments: `step`, `index` and `direction`.
+* Actions.ScaleX has 3 new arguments: `step`, `index` and `direction`.
+* Actions.ScaleY has 3 new arguments: `step`, `index` and `direction`.
+* Actions.ScaleXY has 4 new arguments: `stepX`, `stepY`, `index` and `direction`.
+* Actions.SetAlpha has 2 new arguments: `index` and `direction`.
+* Actions.SetBlendMode has 2 new arguments: `index` and `direction`.
+* Actions.SetDepth has 2 new arguments: `index` and `direction`.
+* Actions.SetOrigin has 4 new arguments: `stepX`, `stepY`, `index` and `direction`.
+* Actions.SetRotation has 2 new arguments: `index` and `direction`.
+* Actions.SetScale has 2 new arguments: `index` and `direction`.
+* Actions.SetScaleX has 2 new arguments: `index` and `direction`.
+* Actions.SetScaleY has 2 new arguments: `index` and `direction`.
+* Actions.SetVisible has 2 new arguments: `index` and `direction`.
 
 
 
