@@ -61,8 +61,8 @@
 * Actions.IncXY has 4 new arguments: `stepX`, `stepY`, `index` and `direction`.
 * Actions.Rotate has 3 new arguments: `step`, `index` and `direction`.
 * Actions.ScaleX has 3 new arguments: `step`, `index` and `direction`.
-* Actions.ScaleY has 3 new arguments: `step`, `index` and `direction`.
 * Actions.ScaleXY has 4 new arguments: `stepX`, `stepY`, `index` and `direction`.
+* Actions.ScaleY has 3 new arguments: `step`, `index` and `direction`.
 * Actions.SetAlpha has 2 new arguments: `index` and `direction`.
 * Actions.SetBlendMode has 2 new arguments: `index` and `direction`.
 * Actions.SetDepth has 2 new arguments: `index` and `direction`.
@@ -72,6 +72,9 @@
 * Actions.SetScaleX has 2 new arguments: `index` and `direction`.
 * Actions.SetScaleY has 2 new arguments: `index` and `direction`.
 * Actions.SetVisible has 2 new arguments: `index` and `direction`.
+* Actions.SetX has 2 new arguments: `index` and `direction`.
+* Actions.SetXY has 2 new arguments: `index` and `direction`.
+* Actions.SetY has 2 new arguments: `index` and `direction`.
 
 
 
