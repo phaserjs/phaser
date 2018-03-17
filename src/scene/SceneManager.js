@@ -161,7 +161,7 @@ var SceneManager = new Class({
 
             //  Replace key in case the scene changed it
             key = newScene.sys.settings.key;
-                
+
             this.keys[key] = newScene;
 
             this.scenes.push(newScene);
@@ -356,7 +356,7 @@ var SceneManager = new Class({
 
             if (index > -1)
             {
-                this.keys[sceneKey] = undefined;
+                delete this.keys[sceneKey];
                 this.scenes.splice(index, 1);
 
                 if (this._start.indexOf(sceneKey) > -1)
