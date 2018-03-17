@@ -37,11 +37,11 @@ var RotateMatrix = function (matrix, direction)
     if (direction === 90 || direction === -270 || direction === 'rotateLeft')
     {
         matrix = TransposeMatrix(matrix);
-        matrix = matrix.reverse();
+        matrix.reverse();
     }
     else if (direction === -90 || direction === 270 || direction === 'rotateRight')
     {
-        matrix = matrix.reverse();
+        matrix.reverse();
         matrix = TransposeMatrix(matrix);
     }
     else if (Math.abs(direction) === 180 || direction === 'rotate180')
@@ -51,7 +51,7 @@ var RotateMatrix = function (matrix, direction)
             matrix[i].reverse();
         }
 
-        matrix = matrix.reverse();
+        matrix.reverse();
     }
 
     return matrix;

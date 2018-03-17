@@ -47,6 +47,7 @@
 * The Phaser.Physics.Arcade constants are now exposed on the namespace. Fix #3387 (thanks @samme)
 * The Phaser.Scene constants are now exposed on the namespace. Fix #3387 (thanks @samme)
 * The Phaser.Tweens constants are now exposed on the namespace. Fix #3387 (thanks @samme)
+* The Array Matrix utils are now exposed and available via `Phaser.Utils.Array.Matrix`.
 
 
 
@@ -67,6 +68,8 @@
 * TileSprite scaling differed between WebGL and Canvas. Fix #3338 (thanks @TCatshoek)
 * Text.setFixedSize was incorrectly setting the `text` property instead of the `parent` property. Fix #3375 (thanks @rexrainbow)
 * RenderTexture.clear on canvas was using the last transform state, instead of clearing the whole texture.
+* Phaser.Utils.Array.Matrix.RotateLeft actually rotated to the right (thanks @Tomas2h)
+* Phaser.Utils.Array.Matrix.RotateRight actually rotated to the left (thanks @Tomas2h)
 
 ### Updates
 
