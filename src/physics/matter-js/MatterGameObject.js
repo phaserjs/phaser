@@ -61,7 +61,7 @@ var MatterGameObject = new Class({
 
         this.world = world;
 
-        this._tempVec2 = new Vector2(x, y);
+        this._tempVec2 = new Vector2(gameObject.x, gameObject.y);
 
         var shape = GetFastValue(options, 'shape', null);
 
