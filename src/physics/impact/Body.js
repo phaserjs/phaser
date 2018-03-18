@@ -293,7 +293,7 @@ var Body = new Class({
          * @since 3.0.0
          */
         this.updateCallback;
-    
+
         /**
          * min 44 deg, max 136 deg
          *
@@ -331,7 +331,7 @@ var Body = new Class({
         this.accelGround = 0;
         this.accelAir = 0;
         this.jumpSpeed = 0;
-    
+
         this.type = TYPE.NONE;
         this.checkAgainst = TYPE.NONE;
         this.collides = COLLIDES.NEVER;
@@ -353,10 +353,10 @@ var Body = new Class({
         this.last.y = pos.y;
 
         this.vel.y += this.world.gravity * delta * this.gravityFactor;
-        
+
         this.vel.x = GetVelocity(delta, this.vel.x, this.accel.x, this.friction.x, this.maxVel.x);
         this.vel.y = GetVelocity(delta, this.vel.y, this.accel.y, this.friction.y, this.maxVel.y);
-        
+
         var mx = this.vel.x * delta;
         var my = this.vel.y * delta;
 
@@ -539,7 +539,7 @@ var Body = new Class({
      * @since 3.0.0
      *
      * @param {Phaser.Physics.Impact.Body} other - [description]
-     * @param {[type]} axis - [description]
+     * @param {string} axis - [description]
      */
     collideWith: function (other, axis)
     {

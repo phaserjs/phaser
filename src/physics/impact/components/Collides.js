@@ -23,10 +23,10 @@ var Collides = {
      * @method Phaser.Physics.Impact.Components.Collides#setCollideCallback
      * @since 3.0.0
      *
-     * @param {[type]} callback - [description]
-     * @param {[type]} scope - [description]
+     * @param {function} callback - [description]
+     * @param {object} scope - [description]
      *
-     * @return {[type]} [description]
+     * @return {Phaser.GameObjects.GameObject} This Game Object.
      */
     setCollideCallback: function (callback, scope)
     {
@@ -46,7 +46,7 @@ var Collides = {
      * @method Phaser.Physics.Impact.Components.Collides#setCollidesNever
      * @since 3.0.0
      *
-     * @return {[type]} [description]
+     * @return {Phaser.GameObjects.GameObject} This Game Object.
      */
     setCollidesNever: function ()
     {
@@ -61,7 +61,7 @@ var Collides = {
      * @method Phaser.Physics.Impact.Components.Collides#setLite
      * @since 3.0.0
      *
-     * @return {[type]} [description]
+     * @return {Phaser.GameObjects.GameObject} This Game Object.
      */
     setLite: function ()
     {
@@ -76,7 +76,7 @@ var Collides = {
      * @method Phaser.Physics.Impact.Components.Collides#setPassive
      * @since 3.0.0
      *
-     * @return {[type]} [description]
+     * @return {Phaser.GameObjects.GameObject} This Game Object.
      */
     setPassive: function ()
     {
@@ -91,7 +91,7 @@ var Collides = {
      * @method Phaser.Physics.Impact.Components.Collides#setActive
      * @since 3.0.0
      *
-     * @return {[type]} [description]
+     * @return {Phaser.GameObjects.GameObject} This Game Object.
      */
     setActive: function ()
     {
@@ -106,7 +106,7 @@ var Collides = {
      * @method Phaser.Physics.Impact.Components.Collides#setFixed
      * @since 3.0.0
      *
-     * @return {[type]} [description]
+     * @return {Phaser.GameObjects.GameObject} This Game Object.
      */
     setFixed: function ()
     {
@@ -119,7 +119,7 @@ var Collides = {
      * [description]
      *
      * @name Phaser.Physics.Impact.Components.Collides#collides
-     * @type {[type]}
+     * @type {number}
      * @since 3.0.0
      */
     collides: {

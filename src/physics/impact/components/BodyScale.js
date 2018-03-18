@@ -18,10 +18,10 @@ var BodyScale = {
      * @method Phaser.Physics.Impact.Components.BodyScale#setBodySize
      * @since 3.0.0
      *
-     * @param {[type]} width - [description]
-     * @param {[type]} height - [description]
+     * @param {number} width - [description]
+     * @param {number} [height=width] - [description]
      *
-     * @return {[type]} [description]
+     * @return {Phaser.GameObjects.GameObject} This Game Object.
      */
     setBodySize: function (width, height)
     {
@@ -39,10 +39,10 @@ var BodyScale = {
      * @method Phaser.Physics.Impact.Components.BodyScale#setBodyScale
      * @since 3.0.0
      *
-     * @param {[type]} scaleX - [description]
-     * @param {[type]} scaleY - [description]
+     * @param {number} scaleX - [description]
+     * @param {number} [scaleY] - [description]
      *
-     * @return {[type]} [description]
+     * @return {Phaser.GameObjects.GameObject} This Game Object.
      */
     setBodyScale: function (scaleX, scaleY)
     {
