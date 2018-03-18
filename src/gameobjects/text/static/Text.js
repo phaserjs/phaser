@@ -486,6 +486,8 @@ var Text = new Class({
     {
         if (text === undefined) { text = this.text; }
 
+        this.style.syncFont(this.canvas, this.context);
+
         var wrappedLines = this.runWordWrap(text);
 
         return wrappedLines.split(this.splitRegExp);
