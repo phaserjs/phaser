@@ -188,7 +188,7 @@ var ArcadePhysics = new Class({
      * @method Phaser.Physics.Arcade.ArcadePhysics#pause
      * @since 3.0.0
      *
-     * @return {[type]} [description]
+     * @return {Phaser.Physics.Arcade.World} [description]
      */
     pause: function ()
     {
@@ -201,7 +201,7 @@ var ArcadePhysics = new Class({
      * @method Phaser.Physics.Arcade.ArcadePhysics#resume
      * @since 3.0.0
      *
-     * @return {[type]} [description]
+     * @return {Phaser.Physics.Arcade.World} [description]
      */
     resume: function ()
     {
@@ -210,9 +210,9 @@ var ArcadePhysics = new Class({
 
     /**
      * Sets the acceleration.x/y property on the game object so it will move towards the x/y coordinates at the given speed (in pixels per second sq.)
-     * 
+     *
      * You must give a maximum speed value, beyond which the game object won't go any faster.
-     * 
+     *
      * Note: The game object does not continuously track the target. If the target changes location during transit the game object will not modify its course.
      * Note: The game object doesn't stop moving once it reaches the destination coordinates.
      *
@@ -246,9 +246,9 @@ var ArcadePhysics = new Class({
 
     /**
      * Sets the acceleration.x/y property on the game object so it will move towards the x/y coordinates at the given speed (in pixels per second sq.)
-     * 
+     *
      * You must give a maximum speed value, beyond which the game object won't go any faster.
-     * 
+     *
      * Note: The game object does not continuously track the target. If the target changes location during transit the game object will not modify its course.
      * Note: The game object doesn't stop moving once it reaches the destination coordinates.
      *

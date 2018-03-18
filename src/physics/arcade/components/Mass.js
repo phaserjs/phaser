@@ -18,9 +18,9 @@ var Mass = {
      * @method Phaser.Physics.Arcade.Components.Mass#setMass
      * @since 3.0.0
      *
-     * @param {[type]} value - [description]
+     * @param {number} value - [description]
      *
-     * @return {[type]} [description]
+     * @return {Phaser.GameObjects.GameObject} This Game Object.
      */
     setMass: function (value)
     {

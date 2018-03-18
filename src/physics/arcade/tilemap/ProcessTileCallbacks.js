@@ -10,7 +10,7 @@
  * @function Phaser.Physics.Arcade.Tilemap.ProcessTileCallbacks
  * @since 3.0.0
  *
- * @param {[type]} tile - [description]
+ * @param {Phaser.Tilemaps.Tilemap} tile - [description]
  * @param {Phaser.GameObjects.Sprite} sprite - [description]
  *
  * @return {boolean} [description]

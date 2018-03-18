@@ -18,9 +18,9 @@ var Angular = {
      * @method Phaser.Physics.Arcade.Components.Angular#setAngularVelocity
      * @since 3.0.0
      *
-     * @param {[type]} value - [description]
+     * @param {number} value - [description]
      *
-     * @return {[type]} [description]
+     * @return {Phaser.GameObjects.GameObject} This Game Object.
      */
     setAngularVelocity: function (value)
     {
@@ -35,9 +35,9 @@ var Angular = {
      * @method Phaser.Physics.Arcade.Components.Angular#setAngularAcceleration
      * @since 3.0.0
      *
-     * @param {[type]} value - [description]
+     * @param {number} value - [description]
      *
-     * @return {[type]} [description]
+     * @return {Phaser.GameObjects.GameObject} This Game Object.
      */
     setAngularAcceleration: function (value)
     {
@@ -52,9 +52,9 @@ var Angular = {
      * @method Phaser.Physics.Arcade.Components.Angular#setAngularDrag
      * @since 3.0.0
      *
-     * @param {[type]} value - [description]
+     * @param {number} value - [description]
      *
-     * @return {[type]} [description]
+     * @return {Phaser.GameObjects.GameObject} This Game Object.
      */
     setAngularDrag: function (value)
     {

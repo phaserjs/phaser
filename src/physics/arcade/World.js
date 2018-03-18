@@ -1531,7 +1531,7 @@ var World = new Class({
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.Group} group - [description]
-     * @param {[type]} tilemapLayer - [description]
+     * @param {Phaser.Tilemaps.DynamicTilemapLayer|Phaser.Tilemaps.StaticTilemapLayer} tilemapLayer - [description]
      * @param {function} collideCallback - [description]
      * @param {function} processCallback - [description]
      * @param {object} callbackContext - [description]
@@ -1571,7 +1571,7 @@ var World = new Class({
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.GameObject} sprite - [description]
-     * @param {[type]} tilemapLayer - [description]
+     * @param {Phaser.Tilemaps.DynamicTilemapLayer|Phaser.Tilemaps.StaticTilemapLayer} tilemapLayer - [description]
      * @param {function} collideCallback - [description]
      * @param {function} processCallback - [description]
      * @param {object} callbackContext - [description]
