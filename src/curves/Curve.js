@@ -139,10 +139,10 @@ var Curve = new Class({
      * @method Phaser.Curves.Curve#getBounds
      * @since 3.0.0
      *
-     * @param {Phaser.Geom.Rectangle} out - The Rectangle to store the bounds in. If falsey a new object will be created.
+     * @param {Phaser.Geom.Rectangle} [out] - The Rectangle to store the bounds in. If falsey a new object will be created.
      * @param {integer} [accuracy=16] - The accuracy of the bounds calculations.
      *
-     * @return {Phaser.Geom.Rectangle} A Rectangle containing the bounds values of this Curve.
+     * @return {Phaser.Geom.Rectangle} A Rectangle object holding the bounds of this curve. If `out` was given it will be this object.
      */
     getBounds: function (out, accuracy)
     {

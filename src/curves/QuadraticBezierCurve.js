@@ -69,14 +69,14 @@ var QuadraticBezier = new Class({
     },
 
     /**
-     * [description]
+     * Gets the starting point on the curve.
      *
      * @method Phaser.Curves.QuadraticBezier#getStartPoint
      * @since 3.2.0
      *
-     * @param {Phaser.Math.Vector2} out - [description]
+     * @param {Phaser.Math.Vector2} [out] - A Vector2 object to store the result in. If not given will be created.
      *
-     * @return {Phaser.Math.Vector2} [description]
+     * @return {Phaser.Math.Vector2} The coordinates of the point on the curve. If an `out` object was given this will be returned.
      */
     getStartPoint: function (out)
     {
@@ -101,15 +101,15 @@ var QuadraticBezier = new Class({
     },
 
     /**
-     * [description]
+     * Get point at relative position in curve according to length.
      *
      * @method Phaser.Curves.QuadraticBezier#getPoint
      * @since 3.2.0
      *
-     * @param {number} t - [description]
-     * @param {Phaser.Math.Vector2} [out] - [description]
+     * @param {float} t - The position along the curve to return. Where 0 is the start and 1 is the end.
+     * @param {Phaser.Math.Vector2} [out] - A Vector2 object to store the result in. If not given will be created.
      *
-     * @return {Phaser.Math.Vector2} [description]
+     * @return {Phaser.Math.Vector2} The coordinates of the point on the curve. If an `out` object was given this will be returned.
      */
     getPoint: function (t, out)
     {
@@ -178,6 +178,16 @@ var QuadraticBezier = new Class({
 
 });
 
+/**
+ * [description]
+ *
+ * @function Phaser.Curves.QuadraticBezier.fromJSON
+ * @since 3.2.0
+ *
+ * @param {object} data - The JSON object containing this curve data.
+ *
+ * @return {Phaser.Curves.QuadraticBezier} [description]
+ */
 QuadraticBezier.fromJSON = function (data)
 {
     var points = data.points;

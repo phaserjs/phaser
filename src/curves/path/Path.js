@@ -690,7 +690,7 @@ var Path = new Class({
      * @method Phaser.Curves.Path#splineTo
      * @since 3.0.0
      *
-     * @param {[type]} points - [description]
+     * @param {Phaser.Math.Vector2[]} points - [description]
      *
      * @return {Phaser.Curves.Path} [description]
      */

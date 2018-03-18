@@ -435,7 +435,7 @@ var Animation = new Class({
      * @method Phaser.Animations.Animation#getFrames
      * @since 3.0.0
      *
-     * @param {[type]} textureManager - [description]
+     * @param {Phaser.Textures.TextureManager} textureManager - [description]
      * @param {[type]} frames - [description]
      *
      * @return {Phaser.Animations.AnimationFrame[]} [description]

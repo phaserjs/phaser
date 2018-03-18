@@ -723,7 +723,7 @@ var Animation = new Class({
      * @since 3.0.0
      *
      * @param {[type]} timestamp - [description]
-     * @param {[type]} delta - [description]
+     * @param {number} delta - The delta time, in ms, elapsed since the last frame.
      */
     update: function (timestamp, delta)
     {
