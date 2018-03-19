@@ -297,7 +297,7 @@ var Camera = new Class({
          * @type {function}
          * @private
          * @default null
-         * @since
+         * @since 3.3.0
          */
         this._shakeCallback = null;
 
@@ -363,7 +363,7 @@ var Camera = new Class({
          * @type {function}
          * @private
          * @default null
-         * @since
+         * @since 3.3.0
          */
         this._fadeCallback = null;
 
@@ -429,7 +429,7 @@ var Camera = new Class({
          * @type {function}
          * @private
          * @default null
-         * @since
+         * @since 3.3.0
          */
         this._flashCallback = null;
 
