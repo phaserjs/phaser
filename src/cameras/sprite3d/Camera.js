@@ -175,10 +175,17 @@ var Camera = new Class({
         this.far = 100;
 
         /**
+         * @typedef {object} RayDef
+         *
+         * @property {Phaser.Math.Vector3} origin - [description]
+         * @property {Phaser.Math.Vector3} direction - [description]
+         */
+
+        /**
          * [description]
          *
          * @name Phaser.Cameras.Sprite3D#ray
-         * @type {{origin:Phaser.Math.Vector3,direction:Phaser.Math.Vector3}}
+         * @type {RayDef}
          * @since 3.0.0
          */
         this.ray = {
@@ -774,7 +781,7 @@ var Camera = new Class({
      * @param {number} x - [description]
      * @param {number} [y] - [description]
      *
-     * @return {{origin:Phaser.Math.Vector3,direction:Phaser.Math.Vector3}} [description]
+     * @return {RayDef} [description]
      */
     getPickRay: function (x, y)
     {
