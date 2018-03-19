@@ -150,29 +150,41 @@ var Line = new Class({
     },
 
     /**
-     * [description]
+     * Returns a Vector2 object that corresponds to the start of this Line.
      *
      * @method Phaser.Geom.Line#getPointA
      * @since 3.0.0
      *
-     * @return {Phaser.Math.Vector2} [description]
+     * @param {Phaser.Math.Vector2} [vec2] - A Vector2 object to set the results in. If `undefined` a new Vector2 will be created.
+     *
+     * @return {Phaser.Math.Vector2} A Vector2 object that corresponds to the start of this Line.
      */
-    getPointA: function ()
+    getPointA: function (vec2)
     {
-        return new Vector2(this.x1, this.y1);
+        if (vec2 === undefined) { vec2 = new Vector2(); }
+
+        vec2.setTo(this.x1, this.y1);
+
+        return vec2;
     },
 
     /**
-     * [description]
+     * Returns a Vector2 object that corresponds to the start of this Line.
      *
      * @method Phaser.Geom.Line#getPointB
      * @since 3.0.0
      *
-     * @return {Phaser.Math.Vector2} [description]
+     * @param {Phaser.Math.Vector2} [vec2] - A Vector2 object to set the results in. If `undefined` a new Vector2 will be created.
+     *
+     * @return {Phaser.Math.Vector2} A Vector2 object that corresponds to the start of this Line.
      */
-    getPointB: function ()
+    getPointB: function (vec2)
     {
-        return new Vector2(this.x2, this.y2);
+        if (vec2 === undefined) { vec2 = new Vector2(); }
+
+        vec2.setTo(this.x2, this.y2);
+
+        return vec2;
     },
 
     /**
