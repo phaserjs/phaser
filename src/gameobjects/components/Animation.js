@@ -270,7 +270,7 @@ var Animation = new Class({
 
     /**
      * Sets the amount of time, in seconds that the animation will be delayed before starting playback.
-     * 
+     *
      * @method Phaser.GameObjects.Components.Animation#delay
      * @since 3.0.0
      *
@@ -298,9 +298,9 @@ var Animation = new Class({
      * @method Phaser.GameObjects.Components.Animation#delayedPlay
      * @since 3.0.0
      *
-     * @param {[type]} delay - [description]
-     * @param {[type]} key - [description]
-     * @param {[type]} startFrame - [description]
+     * @param {number} delay - [description]
+     * @param {string} key - [description]
+     * @param {integer} startFrame - [description]
      *
      * @return {Phaser.GameObjects.GameObject} This Game Object.
      */
@@ -319,7 +319,7 @@ var Animation = new Class({
      * @method Phaser.GameObjects.Components.Animation#getCurrentKey
      * @since 3.0.0
      *
-     * @return {[type]} [description]
+     * @return {string} [description]
      */
     getCurrentKey: function ()
     {
@@ -361,7 +361,7 @@ var Animation = new Class({
      * @method Phaser.GameObjects.Components.Animation#pause
      * @since 3.0.0
      *
-     * @param {[type]} atFrame - [description]
+     * @param {Phaser.Animations.Animation} [atFrame] - [description]
      *
      * @return {Phaser.GameObjects.GameObject} This Game Object.
      */
@@ -378,7 +378,7 @@ var Animation = new Class({
         {
             this.updateFrame(atFrame);
         }
-        
+
         return this;
     },
 
@@ -388,9 +388,9 @@ var Animation = new Class({
      * @method Phaser.GameObjects.Components.Animation#paused
      * @since 3.0.0
      *
-     * @param {[type]} value - [description]
+     * @param {boolean} [value] - [description]
      *
-     * @return {[type]} [description]
+     * @return {boolean|Phaser.GameObjects.GameObject} [description]
      */
     paused: function (value)
     {
@@ -464,18 +464,17 @@ var Animation = new Class({
         return this;
     },
 
-    //  Value between 0 and 1. How far this animation is through, ignoring repeats and yoyos.
-    //  If the animation has a non-zero repeat defined, progress and totalProgress will be different
-    //  because progress doesn't include any repeats or repeatDelays whereas totalProgress does.
     /**
-     * [description]
+     * Value between 0 and 1. How far this animation is through, ignoring repeats and yoyos.
+     * If the animation has a non-zero repeat defined, progress and totalProgress will be different
+     * because progress doesn't include any repeats or repeatDelays whereas totalProgress does.
      *
      * @method Phaser.GameObjects.Components.Animation#progress
      * @since 3.0.0
      *
-     * @param {[type]} value - [description]
+     * @param {number} [value] - [description]
      *
-     * @return {[type]} [description]
+     * @return {number|Phaser.GameObjects.GameObject} [description]
      */
     progress: function (value)
     {
@@ -504,7 +503,7 @@ var Animation = new Class({
      * @method Phaser.GameObjects.Components.Animation#remove
      * @since 3.0.0
      *
-     * @param {[type]} event - [description]
+     * @param {Phaser.Animations.Animation} [event] - [description]
      */
     remove: function (event)
     {
@@ -524,20 +523,18 @@ var Animation = new Class({
         }
     },
 
-    //  Gets or sets the number of times that the animation should repeat
-    //  after its first iteration. For example, if repeat is 1, the animation will
-    //  play a total of twice (the initial play plus 1 repeat).
-    //  To repeat indefinitely, use -1. repeat should always be an integer.
-
     /**
-     * [description]
+     * Gets or sets the number of times that the animation should repeat
+     * after its first iteration. For example, if repeat is 1, the animation will
+     * play a total of twice (the initial play plus 1 repeat).
+     * To repeat indefinitely, use -1. repeat should always be an integer.
      *
      * @method Phaser.GameObjects.Components.Animation#repeat
      * @since 3.0.0
      *
-     * @param {[type]} value - [description]
+     * @param {number} value - [description]
      *
-     * @return {[type]} [description]
+     * @return {number|Phaser.GameObjects.GameObject} [description]
      */
     repeat: function (value)
     {
@@ -554,20 +551,18 @@ var Animation = new Class({
         }
     },
 
-    //  Gets or sets the amount of time in seconds between repeats.
-    //  For example, if repeat is 2 and repeatDelay is 1, the animation will play initially,
-    //  then wait for 1 second before it repeats, then play again, then wait 1 second again
-    //  before doing its final repeat.
-
     /**
-     * [description]
+     * Gets or sets the amount of time in seconds between repeats.
+     * For example, if repeat is 2 and repeatDelay is 1, the animation will play initially,
+     * then wait for 1 second before it repeats, then play again, then wait 1 second again
+     * before doing its final repeat.
      *
      * @method Phaser.GameObjects.Components.Animation#repeatDelay
      * @since 3.0.0
      *
-     * @param {[type]} value - [description]
+     * @param {number} [value] - [description]
      *
-     * @return {[type]} [description]
+     * @return {number|Phaser.GameObjects.GameObject} [description]
      */
     repeatDelay: function (value)
     {
@@ -589,7 +584,7 @@ var Animation = new Class({
      * @method Phaser.GameObjects.Components.Animation#restart
      * @since 3.0.0
      *
-     * @param {[type]} includeDelay - [description]
+     * @param {boolean} [includeDelay=false] - [description]
      *
      * @return {Phaser.GameObjects.GameObject} This Game Object.
      */
@@ -616,7 +611,7 @@ var Animation = new Class({
      * @method Phaser.GameObjects.Components.Animation#resume
      * @since 3.0.0
      *
-     * @param {[type]} fromFrame - [description]
+     * @param {Phaser.Animations.AnimationFrame} fromFrame - [description]
      *
      * @return {Phaser.GameObjects.GameObject} This Game Object.
      */
@@ -632,7 +627,7 @@ var Animation = new Class({
         {
             this.updateFrame(fromFrame);
         }
-        
+
         return this;
     },
 
@@ -642,7 +637,7 @@ var Animation = new Class({
      * @method Phaser.GameObjects.Components.Animation#stop
      * @since 3.0.0
      *
-     * @param {[type]} dispatchCallbacks - [description]
+     * @param {boolean} [dispatchCallbacks=false] - [description]
      *
      * @return {Phaser.GameObjects.GameObject} This Game Object.
      */
@@ -662,18 +657,16 @@ var Animation = new Class({
         return this;
     },
 
-    //  Scale the time (make it go faster / slower)
-    //  Factor that's used to scale time where 1 = normal speed (the default), 0.5 = half speed, 2 = double speed, etc.
-
     /**
-     * [description]
+     * Scale the time (make it go faster / slower)
+     * Factor that's used to scale time where 1 = normal speed (the default), 0.5 = half speed, 2 = double speed, etc.
      *
      * @method Phaser.GameObjects.Components.Animation#timeScale
      * @since 3.0.0
      *
-     * @param {[type]} value - [description]
+     * @param {number} [value] - [description]
      *
-     * @return {[type]} [description]
+     * @return {number|Phaser.GameObjects.GameObject} [description]
      */
     timeScale: function (value)
     {
@@ -695,7 +688,7 @@ var Animation = new Class({
      * @method Phaser.GameObjects.Components.Animation#totalFrames
      * @since 3.0.0
      *
-     * @return {[type]} [description]
+     * @return {number} [description]
      */
     totalFrames: function ()
     {
@@ -722,7 +715,7 @@ var Animation = new Class({
      * @method Phaser.GameObjects.Components.Animation#update
      * @since 3.0.0
      *
-     * @param {[type]} timestamp - [description]
+     * @param {number} timestamp - [description]
      * @param {number} delta - The delta time, in ms, elapsed since the last frame.
      */
     update: function (timestamp, delta)
@@ -746,7 +739,7 @@ var Animation = new Class({
      * @method Phaser.GameObjects.Components.Animation#updateFrame
      * @since 3.0.0
      *
-     * @param {[type]} animationFrame - [description]
+     * @param {Phaser.Animations.AnimationFrame} animationFrame - [description]
      */
     updateFrame: function (animationFrame)
     {
@@ -784,9 +777,9 @@ var Animation = new Class({
      * @method Phaser.GameObjects.Components.Animation#yoyo
      * @since 3.0.0
      *
-     * @param {[type]} value - [description]
+     * @param {boolean} [value] - [description]
      *
-     * @return {[type]} [description]
+     * @return {boolean|Phaser.GameObjects.GameObject} [description]
      */
     yoyo: function (value)
     {

@@ -109,7 +109,7 @@ var TileSprite = new Class({
          * [description]
          *
          * @name Phaser.GameObjects.TileSprite#tileTexture
-         * @type {?[type]}
+         * @type {?WebGLTexture}
          * @default null
          * @since 3.0.0
          */
@@ -119,7 +119,7 @@ var TileSprite = new Class({
          * [description]
          *
          * @name Phaser.GameObjects.TileSprite#renderer
-         * @type {[type]}
+         * @type {Phaser.Renderer.Canvas.CanvasRenderer|Phaser.Renderer.WebGL.WebGLRenderer}
          * @since 3.0.0
          */
         this.renderer = renderer;
