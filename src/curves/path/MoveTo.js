@@ -113,7 +113,7 @@ var MoveTo = new Class({
      * @method Phaser.Curves.MoveTo#toJSON
      * @since 3.0.0
      *
-     * @return {object} [description]
+     * @return {JSONCurve} [description]
      */
     toJSON: function ()
     {

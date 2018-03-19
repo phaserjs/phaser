@@ -13,6 +13,21 @@ var ParseRetroFont = require('../ParseRetroFont');
 var Render = require('./BitmapTextRender');
 
 /**
+ * @typedef {object} TextBounds
+ *
+ * @param {object} local - [description]
+ * @param {number} local.x - [description]
+ * @param {number} local.y - [description]
+ * @param {number} local.width - [description]
+ * @param {number} local.height - [description]
+ * @param {object} global - [description]
+ * @param {number} global.x - [description]
+ * @param {number} global.y - [description]
+ * @param {number} global.width - [description]
+ * @param {number} global.height - [description]
+ */
+
+/**
  * @classdesc
  * [description]
  *
@@ -171,21 +186,6 @@ var BitmapText = new Class({
         return this;
     },
 
-    // {
-    //     local: {
-    //         x,
-    //         y,
-    //         width,
-    //         height
-    //     },
-    //     global: {
-    //         x,
-    //         y,
-    //         width,
-    //         height
-    //     }
-    // }
-
     /**
      * [description]
      *
@@ -194,7 +194,7 @@ var BitmapText = new Class({
      *
      * @param {boolean} round - [description]
      *
-     * @return {object} [description]
+     * @return {TextBounds} [description]
      */
     getTextBounds: function (round)
     {
@@ -208,7 +208,7 @@ var BitmapText = new Class({
 
     /**
      * [description]
-     * 
+     *
      * @name Phaser.GameObjects.BitmapText#width
      * @type {number}
      * @since 3.0.0
@@ -226,7 +226,7 @@ var BitmapText = new Class({
 
     /**
      * [description]
-     * 
+     *
      * @name Phaser.GameObjects.BitmapText#height
      * @type {number}
      * @since 3.0.0
@@ -248,7 +248,7 @@ var BitmapText = new Class({
      * @method Phaser.GameObjects.BitmapText#toJSON
      * @since 3.0.0
      *
-     * @return {object} [description]
+     * @return {JSONGameObject} [description]
      */
     toJSON: function ()
     {

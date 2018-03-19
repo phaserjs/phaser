@@ -47,7 +47,7 @@ var TextureSource = new Class({
          * The source image data. This is either an Image Element, or a Canvas Element.
          *
          * @name Phaser.Textures.TextureSource#image
-         * @type {Image|HTMLCanvasElement}
+         * @type {HTMLImageElement|HTMLCanvasElement}
          * @since 3.0.0
          */
         this.image = source;

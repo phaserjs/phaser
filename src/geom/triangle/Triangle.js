@@ -8,6 +8,7 @@ var Class = require('../../utils/Class');
 var Contains = require('./Contains');
 var GetPoint = require('./GetPoint');
 var GetPoints = require('./GetPoints');
+var Line = require('../line/Line');
 var Random = require('./Random');
 
 /**
@@ -203,42 +204,60 @@ var Triangle = new Class({
     },
 
     /**
-     * [description]
+     * Returns a Line object that corresponds to Line A of this Triangle.
      *
      * @method Phaser.Geom.Triangle#getLineA
      * @since 3.0.0
      *
-     * @return {{x1:number,y1:number,x2:number,y2:number}} [description]
+     * @param {Phaser.Geom.Line} [line] - A Line object to set the results in. If `undefined` a new Line will be created.
+     *
+     * @return {Phaser.Geom.Line} A Line object that corresponds to line A of this Triangle.
      */
-    getLineA: function ()
+    getLineA: function (line)
     {
-        return { x1: this.x1, y1: this.y1, x2: this.x2, y2: this.y2 };
+        if (line === undefined) { line = new Line(); }
+
+        line.setTo(this.x1, this.y1, this.x2, this.y2);
+
+        return line;
     },
 
     /**
-     * [description]
+     * Returns a Line object that corresponds to Line B of this Triangle.
      *
      * @method Phaser.Geom.Triangle#getLineB
      * @since 3.0.0
      *
-     * @return {{x1:number,y1:number,x2:number,y2:number}} [description]
+     * @param {Phaser.Geom.Line} [line] - A Line object to set the results in. If `undefined` a new Line will be created.
+     *
+     * @return {Phaser.Geom.Line} A Line object that corresponds to line B of this Triangle.
      */
-    getLineB: function ()
+    getLineB: function (line)
     {
-        return { x1: this.x2, y1: this.y2, x2: this.x3, y2: this.y3 };
+        if (line === undefined) { line = new Line(); }
+
+        line.setTo(this.x2, this.y2, this.x3, this.y3);
+
+        return line;
     },
 
     /**
-     * [description]
+     * Returns a Line object that corresponds to Line C of this Triangle.
      *
      * @method Phaser.Geom.Triangle#getLineC
      * @since 3.0.0
      *
-     * @return {{x1:number,y1:number,x2:number,y2:number}} [description]
+     * @param {Phaser.Geom.Line} [line] - A Line object to set the results in. If `undefined` a new Line will be created.
+     *
+     * @return {Phaser.Geom.Line} A Line object that corresponds to line C of this Triangle.
      */
-    getLineC: function ()
+    getLineC: function (line)
     {
-        return { x1: this.x3, y1: this.y3, x2: this.x1, y2: this.y1 };
+        if (line === undefined) { line = new Line(); }
+
+        line.setTo(this.x3, this.y3, this.x1, this.y1);
+
+        return line;
     },
 
     /**

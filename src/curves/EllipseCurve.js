@@ -14,6 +14,20 @@ var RadToDeg = require('../math/RadToDeg');
 var Vector2 = require('../math/Vector2');
 
 /**
+ * @typedef {object} JSONEllipseCurve
+ *
+ * @property {string} type - The of the curve.
+ * @property {number} x - [description]
+ * @property {number} y - [description]
+ * @property {number} xRadius - The horizontal radius of ellipse.
+ * @property {number} yRadius - The vertical radius of ellipse.
+ * @property {integer} startAngle - The start angle of ellipse.
+ * @property {integer} endAngle - The end angle of ellipse.
+ * @property {boolean} clockwise - The clockwise of ellipse.
+ * @property {integer} rotation - The rotation of ellipse.
+ */
+
+/**
  * @classdesc
  * [description]
  *
@@ -69,7 +83,7 @@ var EllipseCurve = new Class({
         /**
          * [description]
          *
-         * @name {Phaser.MathPhaser.Curves.EllipseCurve#p0
+         * @name {Phaser.Curves.EllipseCurve#p0
          * @type {Phaser.Math.Vector2}
          * @since 3.0.0
          */
@@ -510,7 +524,7 @@ var EllipseCurve = new Class({
      * [description]
      *
      * @name Phaser.Curves.EllipseCurve#clockwise
-     * @type {number}
+     * @type {boolean}
      * @since 3.0.0
      */
     clockwise: {
@@ -554,7 +568,7 @@ var EllipseCurve = new Class({
      * @method Phaser.Curves.EllipseCurve#toJSON
      * @since 3.0.0
      *
-     * @return {object} [description]
+     * @return {JSONEllipseCurve} The JSON object containing this curve data.
      */
     toJSON: function ()
     {
@@ -579,7 +593,7 @@ var EllipseCurve = new Class({
  * @function Phaser.Curves.EllipseCurve.fromJSON
  * @since 3.0.0
  *
- * @param {object} data - The JSON object containing this curve data.
+ * @param {JSONEllipseCurve} data - The JSON object containing this curve data.
  *
  * @return {Phaser.Curves.EllipseCurve} [description]
  */

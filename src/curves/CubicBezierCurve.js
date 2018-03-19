@@ -173,7 +173,7 @@ var CubicBezierCurve = new Class({
      * @method Phaser.Curves.CubicBezierCurve#toJSON
      * @since 3.0.0
      *
-     * @return {object} [description]
+     * @return {JSONCurve} The JSON object containing this curve data.
      */
     toJSON: function ()
     {
@@ -196,7 +196,7 @@ var CubicBezierCurve = new Class({
  * @function Phaser.Curves.CubicBezierCurve.fromJSON
  * @since 3.0.0
  *
- * @param {object} data - The JSON object containing this curve data.
+ * @param {JSONCurve} data - The JSON object containing this curve data.
  *
  * @return {Phaser.Curves.CubicBezierCurve} [description]
  */

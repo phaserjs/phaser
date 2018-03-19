@@ -100,7 +100,7 @@ var EventEmitter = new Class({
  * 
  * @param {string|symbol} event - The event name.
  * 
- * @return {Boolean} `true` if the event had listeners, else `false`.
+ * @return {boolean} `true` if the event had listeners, else `false`.
  */
 
 /**

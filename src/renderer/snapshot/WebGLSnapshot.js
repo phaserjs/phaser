@@ -14,7 +14,7 @@
  * @param {string} [type='image/png'] - [description]
  * @param {float} [encoderOptions=0.92] - [description]
  *
- * @return {Image} [description]
+ * @return {HTMLImageElement} [description]
  */
 var WebGLSnapshot = function (sourceCanvas, type, encoderOptions)
 {

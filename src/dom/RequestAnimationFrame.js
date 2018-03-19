@@ -46,7 +46,7 @@ var RequestAnimationFrame = new Class({
          * The most recent timestamp. Either a DOMHighResTimeStamp under RAF or `Date.now` under SetTimeout.
          *
          * @name Phaser.DOM.RequestAnimationFrame#tick
-         * @type {DOMHighResTimeStamp|number}
+         * @type {number}
          * @default 0
          * @since 3.0.0
          */

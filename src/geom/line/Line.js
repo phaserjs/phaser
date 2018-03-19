@@ -8,6 +8,7 @@ var Class = require('../../utils/Class');
 var GetPoint = require('./GetPoint');
 var GetPoints = require('./GetPoints');
 var Random = require('./Random');
+var Vector2 = require('../../math/Vector2');
 
 /**
  * @classdesc
@@ -149,29 +150,41 @@ var Line = new Class({
     },
 
     /**
-     * [description]
+     * Returns a Vector2 object that corresponds to the start of this Line.
      *
      * @method Phaser.Geom.Line#getPointA
      * @since 3.0.0
      *
-     * @return {{x:number,y:number}} [description]
+     * @param {Phaser.Math.Vector2} [vec2] - A Vector2 object to set the results in. If `undefined` a new Vector2 will be created.
+     *
+     * @return {Phaser.Math.Vector2} A Vector2 object that corresponds to the start of this Line.
      */
-    getPointA: function ()
+    getPointA: function (vec2)
     {
-        return { x: this.x1, y: this.y1 };
+        if (vec2 === undefined) { vec2 = new Vector2(); }
+
+        vec2.setTo(this.x1, this.y1);
+
+        return vec2;
     },
 
     /**
-     * [description]
+     * Returns a Vector2 object that corresponds to the start of this Line.
      *
      * @method Phaser.Geom.Line#getPointB
      * @since 3.0.0
      *
-     * @return {{x:number,y:number}} [description]
+     * @param {Phaser.Math.Vector2} [vec2] - A Vector2 object to set the results in. If `undefined` a new Vector2 will be created.
+     *
+     * @return {Phaser.Math.Vector2} A Vector2 object that corresponds to the start of this Line.
      */
-    getPointB: function ()
+    getPointB: function (vec2)
     {
-        return { x: this.x2, y: this.y2 };
+        if (vec2 === undefined) { vec2 = new Vector2(); }
+
+        vec2.setTo(this.x2, this.y2);
+
+        return vec2;
     },
 
     /**

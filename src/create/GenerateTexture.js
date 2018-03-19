@@ -9,12 +9,26 @@ var CanvasPool = require('../display/canvas/CanvasPool');
 var GetValue = require('../utils/object/GetValue');
 
 /**
+ * @typedef {object} GenerateTextureConfig
+ *
+ * @property {array} [data=[]] - [description]
+ * @property {HTMLCanvasElement} [canvas=null] - [description]
+ * @property {Palette} [palette=Arne16] - [description]
+ * @property {number} [pixelWidth=1] - [description]
+ * @property {number} [pixelHeight=1] - [description]
+ * @property {boolean} [resizeCanvas=true] - [description]
+ * @property {boolean} [clearCanvas=true] - [description]
+ * @property {function} [preRender] - [description]
+ * @property {function} [postRender] - [description]
+ */
+
+/**
  * [description]
  *
  * @function Phaser.Create.GenerateTexture
  * @since 3.0.0
  *
- * @param {object} config - [description]
+ * @param {GenerateTextureConfig} config - [description]
  *
  * @return {HTMLCanvasElement} [description]
  */
