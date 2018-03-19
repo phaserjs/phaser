@@ -4,7 +4,7 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-//  Adapted from [gl-matrix](https://github.com/toji/gl-matrix) by toji 
+//  Adapted from [gl-matrix](https://github.com/toji/gl-matrix) by toji
 //  and [vecmath](https://github.com/mattdesl/vecmath) by mattdesl
 
 var Class = require('../utils/Class');
@@ -105,8 +105,8 @@ var Vector3 = new Class({
      * @method Phaser.Math.Vector3#crossVectors
      * @since 3.0.0
      *
-     * @param {[type]} a - [description]
-     * @param {[type]} b - [description]
+     * @param {Phaser.Math.Vector3} a - [description]
+     * @param {Phaser.Math.Vector3} b - [description]
      *
      * @return {Phaser.Math.Vector3} This Vector3 object.
      */
@@ -659,7 +659,7 @@ var Vector3 = new Class({
         var viewY = viewport.y;
         var viewWidth = viewport.z;
         var viewHeight = viewport.w;
-        
+
         var x = this.x - viewX;
         var y = (viewHeight - this.y - 1) - viewY;
         var z = this.z;
