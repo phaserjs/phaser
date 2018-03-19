@@ -19,11 +19,11 @@
  * @function Phaser.Utils.Array.QuickSelect
  * @since 3.0.0
  *
- * @param {[type]} arr - [description]
- * @param {[type]} k - [description]
- * @param {[type]} left - [description]
- * @param {[type]} right - [description]
- * @param {[type]} compare - [description]
+ * @param {array} arr - [description]
+ * @param {number} k - [description]
+ * @param {number} left - [description]
+ * @param {number} right - [description]
+ * @param {function} compare - [description]
  */
 var QuickSelect = function (arr, k, left, right, compare)
 {

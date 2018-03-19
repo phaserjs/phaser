@@ -291,7 +291,7 @@ var Timeline = new Class({
      * @method Phaser.Tweens.Timeline#add
      * @since 3.0.0
      *
-     * @param {[type]} config - [description]
+     * @param {object} config - [description]
      *
      * @return {Phaser.Tweens.Timeline} This Timeline object.
      */
@@ -306,7 +306,7 @@ var Timeline = new Class({
      * @method Phaser.Tweens.Timeline#queue
      * @since 3.0.0
      *
-     * @param {[type]} tween - [description]
+     * @param {Phaser.Tweens.Tween} tween - [description]
      *
      * @return {Phaser.Tweens.Timeline} This Timeline object.
      */
