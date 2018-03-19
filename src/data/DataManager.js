@@ -53,7 +53,7 @@ var DataManager = new Class({
          * [description]
          *
          * @name Phaser.Data.DataManager#list
-         * @type {Object.<string, any>}
+         * @type {Object<string, any>}
          * @default {}
          * @since 3.0.0
          */
@@ -112,7 +112,10 @@ var DataManager = new Class({
 
         for (var key in this.list)
         {
-            results[key] = this.list[key];
+            if(this.list.hasOwnProperty(key))
+            {
+                results[key] = this.list[key];
+            }
         }
 
         return results;
@@ -126,7 +129,7 @@ var DataManager = new Class({
      *
      * @param {string} search - [description]
      *
-     * @return {Object.<string, any>} [description]
+     * @return {Object<string, any>} [description]
      */
     query: function (search)
     {
@@ -228,7 +231,7 @@ var DataManager = new Class({
      * @method Phaser.Data.DataManager#merge
      * @since 3.0.0
      *
-     * @param {Object.<string, any>} data - [description]
+     * @param {Object<string, any>} data - [description]
      * @param {boolean} overwrite - [description]
      *
      * @return {Phaser.Data.DataManager} This DataManager object.
