@@ -402,7 +402,7 @@ var InputPlugin = new Class({
      *
      * @param {Phaser.GameObjects.GameObject} gameObject - [description]
      * @param {object} shape - [description]
-     * @param {function} callback - [description]
+     * @param {HitAreaCallback} callback - [description]
      * @param {boolean} [dropZone=false] - [description]
      *
      * @return {Phaser.Input.InputPlugin} This Input Plugin.
@@ -1053,7 +1053,7 @@ var InputPlugin = new Class({
      *
      * @param {Phaser.GameObjects.GameObject|Phaser.GameObjects.GameObject[]} gameObjects - An array of Game Objects to set the hit area on.
      * @param {object} [shape] - The shape or object to check if the pointer is within for hit area checks.
-     * @param {function} [callback] - The 'contains' function to invoke to check if the pointer is within the hit area.
+     * @param {HitAreaCallback} [callback] - The 'contains' function to invoke to check if the pointer is within the hit area.
      *
      * @return {Phaser.Input.InputPlugin} This InputPlugin object.
      */
@@ -1091,7 +1091,7 @@ var InputPlugin = new Class({
      * @param {number} x - The center of the circle.
      * @param {number} y - The center of the circle.
      * @param {number} radius - The radius of the circle.
-     * @param {function} [callback] - The hit area callback. If undefined it uses Circle.Contains.
+     * @param {HitAreaCallback} [callback] - The hit area callback. If undefined it uses Circle.Contains.
      *
      * @return {Phaser.Input.InputPlugin} This InputPlugin object.
      */
@@ -1115,7 +1115,7 @@ var InputPlugin = new Class({
      * @param {number} y - The center of the ellipse.
      * @param {number} width - The width of the ellipse.
      * @param {number} height - The height of the ellipse.
-     * @param {function} [callback] - The hit area callback. If undefined it uses Ellipse.Contains.
+     * @param {HitAreaCallback} [callback] - The hit area callback. If undefined it uses Ellipse.Contains.
      *
      * @return {Phaser.Input.InputPlugin} This InputPlugin object.
      */
@@ -1135,7 +1135,7 @@ var InputPlugin = new Class({
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.GameObject|Phaser.GameObjects.GameObject[]} gameObjects - An array of Game Objects to set as having an ellipse hit area.
-     * @param {function} [callback] - The hit area callback. If undefined it uses Rectangle.Contains.
+     * @param {HitAreaCallback} [callback] - The hit area callback. If undefined it uses Rectangle.Contains.
      *
      * @return {Phaser.Input.InputPlugin} This InputPlugin object.
      */
@@ -1189,7 +1189,7 @@ var InputPlugin = new Class({
      * @param {number} y - The top-left of the rectangle.
      * @param {number} width - The width of the rectangle.
      * @param {number} height - The height of the rectangle.
-     * @param {function} [callback] - The hit area callback. If undefined it uses Rectangle.Contains.
+     * @param {HitAreaCallback} [callback] - The hit area callback. If undefined it uses Rectangle.Contains.
      *
      * @return {Phaser.Input.InputPlugin} This InputPlugin object.
      */
@@ -1215,7 +1215,7 @@ var InputPlugin = new Class({
      * @param {number} y2 - The y coordinate of the second point of the triangle.
      * @param {number} x3 - The x coordinate of the third point of the triangle.
      * @param {number} y3 - The y coordinate of the third point of the triangle.
-     * @param {function} [callback] - The hit area callback. If undefined it uses Triangle.Contains.
+     * @param {HitAreaCallback} [callback] - The hit area callback. If undefined it uses Triangle.Contains.
      *
      * @return {Phaser.Input.InputPlugin} This InputPlugin object.
      */

@@ -8,6 +8,14 @@ var Centroid = require('./Centroid');
 var Offset = require('./Offset');
 
 /**
+ * @callback CenterFunction
+ *
+ * @param {Phaser.Geom.Triangle} triangle - [description]
+ *
+ * @return {Phaser.Math.Vector2} [description]
+ */
+
+/**
  * [description]
  *
  * @function Phaser.Geom.Triangle.CenterOn
@@ -16,7 +24,7 @@ var Offset = require('./Offset');
  * @param {Phaser.Geom.Triangle} triangle - [description]
  * @param {number} x - [description]
  * @param {number} y - [description]
- * @param {function} [centerFunc] - [description]
+ * @param {CenterFunction} [centerFunc] - [description]
  *
  * @return {Phaser.Geom.Triangle} [description]
  */

@@ -10,6 +10,12 @@ var ProcessKeyCombo = require('./ProcessKeyCombo');
 var ResetKeyCombo = require('./ResetKeyCombo');
 
 /**
+ * @callback KeyboardKeydownCallback
+ *
+ * @param {KeyboardEvent} event - [description]
+ */
+
+/**
  * @classdesc
  * [description]
  *
@@ -219,7 +225,7 @@ var KeyCombo = new Class({
          * [description]
          *
          * @name Phaser.Input.Keyboard.KeyCombo#onKeyDown
-         * @type {function}
+         * @type {KeyboardKeydownCallback}
          * @since 3.0.0
          */
         this.onKeyDown = onKeyDownHandler;
