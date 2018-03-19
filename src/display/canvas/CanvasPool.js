@@ -46,7 +46,7 @@ var CanvasPool = function ()
         if (canvasType === undefined) { canvasType = CONST.CANVAS; }
 
         var canvas;
-        var container = first(type);
+        var container = first(canvasType);
 
         if (container === null)
         {
