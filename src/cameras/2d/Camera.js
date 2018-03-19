@@ -724,7 +724,7 @@ var Camera = new Class({
      */
     fade: function (duration, red, green, blue, force, callback)
     {
-        if (!duration) { duration = 0; }
+        if (!duration) { duration = Number.MIN_VALUE; }
         if (red === undefined) { red = 0; }
         if (green === undefined) { green = 0; }
         if (blue === undefined) { blue = 0; }
@@ -741,7 +741,7 @@ var Camera = new Class({
         this._fadeBlue = blue;
         this._fadeCallback = callback;
         this._fadeDuration = duration;
-        this._fadeAlpha = 0;
+        this._fadeAlpha = Number.MIN_VALUE;
 
         return this;
     },
@@ -763,7 +763,7 @@ var Camera = new Class({
      */
     flash: function (duration, red, green, blue, force, callback)
     {
-        if (!duration) { duration = 0; }
+        if (!duration) { duration = Number.MIN_VALUE; }
         if (red === undefined) { red = 1; }
         if (green === undefined) { green = 1; }
         if (blue === undefined) { blue = 1; }
@@ -800,7 +800,7 @@ var Camera = new Class({
      */
     shake: function (duration, intensity, force, callback)
     {
-        if (!duration) { duration = 0; }
+        if (!duration) { duration = Number.MIN_VALUE; }
         if (intensity === undefined) { intensity = 0.05; }
         if (force === undefined) { force = false; }
         if (callback === undefined) { callback = null; }
@@ -1350,9 +1350,12 @@ var Camera = new Class({
 
                 if (this._flashCallback)
                 {
-                    this._flashCallback(this);
+                    //  Do this in case the callback flashes again (otherwise we'd overwrite the new callback)
+                    var flashCallback = this._flashCallback;
 
                     this._flashCallback = null;
+
+                    flashCallback(this);
                 }
             }
         }
@@ -1367,9 +1370,12 @@ var Camera = new Class({
 
                 if (this._fadeCallback)
                 {
-                    this._fadeCallback(this);
+                    //  Do this in case the callback flashes again (otherwise we'd overwrite the new callback)
+                    var fadeCallback = this._fadeCallback;
 
                     this._fadeCallback = null;
+
+                    fadeCallback(this);
                 }
             }
         }
@@ -1387,9 +1393,12 @@ var Camera = new Class({
 
                 if (this._shakeCallback)
                 {
-                    this._shakeCallback(this);
+                    //  Do this in case the callback flashes again (otherwise we'd overwrite the new callback)
+                    var shakeCallback = this._shakeCallback;
 
                     this._shakeCallback = null;
+
+                    shakeCallback(this);
                 }
             }
             else
