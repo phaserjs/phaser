@@ -19,6 +19,12 @@ var ValueToColor = require('../display/color/ValueToColor');
  */
 
 /**
+ * @callback BootCallback
+ *
+ * @param {Phaser.Game} game - [description]
+ */
+
+/**
  * @typedef {object} FPSConfig
  *
  * @property {integer} [min=10] - [description]
@@ -86,8 +92,8 @@ var ValueToColor = require('../display/color/ValueToColor');
  * @property {boolean} [powerPreference='default'] - "high-performance", "low-power" or "default"
  * @property {string|number} [backgroundColor=0x000000] - [description]
  * @property {object} [?callbacks] - [description]
- * @property {function} [callbacks.preBoot=NOOP] - [description]
- * @property {function} [callbacks.postBoot=NOOP] - [description]
+ * @property {BootCallback} [callbacks.preBoot=NOOP] - [description]
+ * @property {BootCallback} [callbacks.postBoot=NOOP] - [description]
  * @property {LoaderConfig} [?loader] - [description]
  * @property {object} [?images] - [description]
  * @property {string} [images.default] - [description]

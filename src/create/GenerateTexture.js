@@ -9,6 +9,13 @@ var CanvasPool = require('../display/canvas/CanvasPool');
 var GetValue = require('../utils/object/GetValue');
 
 /**
+ * @callback GenerateTextureRendererCallback
+ *
+ * @param {HTMLCanvasElement} canvas - [description]
+ * @param {CanvasRenderingContext2D} context - [description]
+ */
+
+/**
  * @typedef {object} GenerateTextureConfig
  *
  * @property {array} [data=[]] - [description]
@@ -18,8 +25,8 @@ var GetValue = require('../utils/object/GetValue');
  * @property {number} [pixelHeight=1] - [description]
  * @property {boolean} [resizeCanvas=true] - [description]
  * @property {boolean} [clearCanvas=true] - [description]
- * @property {function} [preRender] - [description]
- * @property {function} [postRender] - [description]
+ * @property {GenerateTextureRendererCallback} [preRender] - [description]
+ * @property {GenerateTextureRendererCallback} [postRender] - [description]
  */
 
 /**
