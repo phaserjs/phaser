@@ -276,6 +276,17 @@ var Camera = new Class({
         /**
          * [description]
          *
+         * @name Phaser.Cameras.Scene2D.Camera#_shakeCallback
+         * @type {function}
+         * @private
+         * @default undefined
+         * @since 3.2.1
+         */
+        this._shakeCallback = undefined;
+
+        /**
+         * [description]
+         *
          * @name Phaser.Cameras.Scene2D.Camera#_fadeDuration
          * @type {number}
          * @private
@@ -331,6 +342,17 @@ var Camera = new Class({
         /**
          * [description]
          *
+         * @name Phaser.Cameras.Scene2D.Camera#_fadeCallback
+         * @type {function}
+         * @private
+         * @default undefined
+         * @since 3.2.1
+         */
+        this._fadeCallback = undefined;
+
+        /**
+         * [description]
+         *
          * @name Phaser.Cameras.Scene2D.Camera#_flashDuration
          * @type {number}
          * @private
@@ -382,6 +404,17 @@ var Camera = new Class({
          * @since 3.0.0
          */
         this._flashAlpha = 0;
+
+        /**
+         * [description]
+         *
+         * @name Phaser.Cameras.Scene2D.Camera#_flashCallback
+         * @type {function}
+         * @private
+         * @default undefined
+         * @since 3.2.1
+         */
+        this._flashCallback = undefined;
 
         /**
          * [description]
@@ -668,10 +701,11 @@ var Camera = new Class({
      * @param {number} green - [description]
      * @param {number} blue - [description]
      * @param {number} force - [description]
+     * @param {function} callback - [description]
      *
      * @return {Phaser.Cameras.Scene2D.Camera} This Camera instance.
      */
-    fade: function (duration, red, green, blue, force)
+    fade: function (duration, red, green, blue, force, callback)
     {
         if (red === undefined) { red = 0; }
         if (green === undefined) { green = 0; }
@@ -685,6 +719,7 @@ var Camera = new Class({
         this._fadeRed = red;
         this._fadeGreen = green;
         this._fadeBlue = blue;
+        this._fadeCallback = callback;
 
         if (duration <= 0)
         {
@@ -708,10 +743,11 @@ var Camera = new Class({
      * @param {number} green - [description]
      * @param {number} blue - [description]
      * @param {number} force - [description]
+     * @param {function} callback - [description]
      *
      * @return {Phaser.Cameras.Scene2D.Camera} This Camera instance.
      */
-    flash: function (duration, red, green, blue, force)
+    flash: function (duration, red, green, blue, force, callback)
     {
         if (!force && this._flashAlpha > 0.0)
         {
@@ -725,6 +761,7 @@ var Camera = new Class({
         this._flashRed = red;
         this._flashGreen = green;
         this._flashBlue = blue;
+        this._flashCallback = callback;
 
         if (duration <= 0)
         {
@@ -733,6 +770,37 @@ var Camera = new Class({
 
         this._flashDuration = duration;
         this._flashAlpha = 1.0;
+
+        return this;
+    },
+
+    /**
+     * [description]
+     *
+     * @method Phaser.Cameras.Scene2D.Camera#shake
+     * @since 3.0.0
+     *
+     * @param {number} duration - [description]
+     * @param {number} intensity - [description]
+     * @param {number} force - [description]
+     * @param {function} callback - [description]
+     *
+     * @return {Phaser.Cameras.Scene2D.Camera} This Camera instance.
+     */
+    shake: function (duration, intensity, force, callback)
+    {
+        if (intensity === undefined) { intensity = 0.05; }
+
+        if (!force && (this._shakeOffsetX !== 0 || this._shakeOffsetY !== 0))
+        {
+            return this;
+        }
+
+        this._shakeDuration = duration;
+        this._shakeIntensity = intensity;
+        this._shakeOffsetX = 0;
+        this._shakeOffsetY = 0;
+        this._shakeCallback = callback;
 
         return this;
     },
@@ -1156,35 +1224,6 @@ var Camera = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Cameras.Scene2D.Camera#shake
-     * @since 3.0.0
-     *
-     * @param {number} duration - [description]
-     * @param {number} intensity - [description]
-     * @param {number} force - [description]
-     *
-     * @return {Phaser.Cameras.Scene2D.Camera} This Camera instance.
-     */
-    shake: function (duration, intensity, force)
-    {
-        if (intensity === undefined) { intensity = 0.05; }
-
-        if (!force && (this._shakeOffsetX !== 0 || this._shakeOffsetY !== 0))
-        {
-            return this;
-        }
-
-        this._shakeDuration = duration;
-        this._shakeIntensity = intensity;
-        this._shakeOffsetX = 0;
-        this._shakeOffsetY = 0;
-
-        return this;
-    },
-
-    /**
-     * [description]
-     *
      * @method Phaser.Cameras.Scene2D.Camera#startFollow
      * @since 3.0.0
      *
@@ -1296,6 +1335,11 @@ var Camera = new Class({
             {
                 this._flashAlpha = 0.0;
             }
+            if (this._flashCallback !== undefined && this._flashAlpha === 0.0)
+            {
+                this._flashCallback();
+                this._flashCallback = undefined;
+            }
         }
 
         if (this._fadeAlpha > 0.0 && this._fadeAlpha < 1.0)
@@ -1305,6 +1349,11 @@ var Camera = new Class({
             if (this._fadeAlpha >= 1.0)
             {
                 this._fadeAlpha = 1.0;
+            }
+            if (this._fadeCallback !== undefined && this._fadeAlpha === 1.0)
+            {
+                this._fadeCallback();
+                this._fadeCallback = undefined;
             }
         }
 
@@ -1318,12 +1367,18 @@ var Camera = new Class({
             {
                 this._shakeOffsetX = 0.0;
                 this._shakeOffsetY = 0.0;
+
+                if (this._shakeCallback !== undefined)
+                {
+                    this._shakeCallback();
+                    this._shakeCallback = undefined;
+                }
             }
             else
             {
                 this._shakeOffsetX = (Math.random() * intensity * this.width * 2 - intensity * this.width) * this.zoom;
                 this._shakeOffsetY = (Math.random() * intensity * this.height * 2 - intensity * this.height) * this.zoom;
-                
+
                 if (this.roundPixels)
                 {
                     this._shakeOffsetX |= 0;
