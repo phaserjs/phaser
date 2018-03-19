@@ -11,6 +11,12 @@ var TYPE = require('./TYPE');
 var UpdateMotion = require('./UpdateMotion');
 
 /**
+ * @callback BodyUpdateCallback
+ *
+ * @param {Phaser.Physics.Impact.Body} body - [description]
+ */
+
+/**
  * @classdesc
  * An Impact.js compatible physics body.
  * This re-creates the properties you'd get on an Entity and the math needed to update them.
@@ -289,7 +295,7 @@ var Body = new Class({
          * [description]
          *
          * @name Phaser.Physics.Impact.Body#updateCallback
-         * @type {function}
+         * @type {?BodyUpdateCallback}
          * @since 3.0.0
          */
         this.updateCallback;
