@@ -179,7 +179,7 @@ var Text = new Class({
          * [description]
          *
          * @name Phaser.GameObjects.Text#canvasTexture
-         * @type {?[type]}
+         * @type {HTMLCanvasElement}
          * @default null
          * @since 3.0.0
          */

@@ -205,10 +205,10 @@ var WebGLPipeline = new Class({
      * @since 3.2.0
      *
      * @param {string} name - [description]
-     * @param {int} size - [description]
-     * @param {int} type - [description]
+     * @param {integer} size - [description]
+     * @param {integer} type - [description]
      * @param {boolean} normalized - [description]
-     * @param {int} offset - [description]
+     * @param {integer} offset - [description]
      *
      * @return {Phaser.Renderer.WebGL.WebGLPipeline} [description]
      */
@@ -495,7 +495,7 @@ var WebGLPipeline = new Class({
      * @since 3.2.0
      *
      * @param {string} name - [description]
-     * @param {int} x - [description]
+     * @param {integer} x - [description]
      *
      * @return {Phaser.Renderer.WebGL.WebGLPipeline} [description]
      */
@@ -512,8 +512,8 @@ var WebGLPipeline = new Class({
      * @since 3.2.0
      *
      * @param {string} name - [description]
-     * @param {int} x - [description]
-     * @param {int} y - [description]
+     * @param {integer} x - [description]
+     * @param {integer} y - [description]
      *
      * @return {Phaser.Renderer.WebGL.WebGLPipeline} [description]
      */
@@ -530,9 +530,9 @@ var WebGLPipeline = new Class({
      * @since 3.2.0
      *
      * @param {string} name - [description]
-     * @param {int} x - [description]
-     * @param {int} y - [description]
-     * @param {int} z - [description]
+     * @param {integer} x - [description]
+     * @param {integer} y - [description]
+     * @param {integer} z - [description]
      *
      * @return {Phaser.Renderer.WebGL.WebGLPipeline} [description]
      */
@@ -549,10 +549,10 @@ var WebGLPipeline = new Class({
      * @since 3.2.0
      *
      * @param {string} name - [description]
-     * @param {int} x - [description]
-     * @param {int} y - [description]
-     * @param {int} z - [description]
-     * @param {int} w - [description]
+     * @param {integer} x - [description]
+     * @param {integer} y - [description]
+     * @param {integer} z - [description]
+     * @param {integer} w - [description]
      *
      * @return {Phaser.Renderer.WebGL.WebGLPipeline} [description]
      */

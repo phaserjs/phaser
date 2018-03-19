@@ -555,7 +555,7 @@ var Body = new Class({
      * @method Phaser.Physics.Impact.Body#handleMovementTrace
      * @since 3.0.0
      *
-     * @param {[type]} res - [description]
+     * @param {number} res - [description]
      *
      * @return {boolean} [description]
      */
