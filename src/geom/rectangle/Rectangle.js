@@ -8,6 +8,7 @@ var Class = require('../../utils/Class');
 var Contains = require('./Contains');
 var GetPoint = require('./GetPoint');
 var GetPoints = require('./GetPoints');
+var Line = require('../line/Line');
 var Random = require('./Random');
 
 /**
@@ -231,60 +232,80 @@ var Rectangle = new Class({
         return (this.width <= 0 || this.height <= 0);
     },
 
-    //  TOP
     /**
-     * [description]
+     * Returns a Line object that corresponds to the top of this Rectangle.
      *
      * @method Phaser.Geom.Rectangle#getLineA
      * @since 3.0.0
      *
-     * @return {{x1:number,y1:number,x2:number,y2:number}} [description]
+     * @param {Phaser.Geom.Line} [line] - A Line object to set the results in. If `undefined` a new Line will be created.
+     *
+     * @return {Phaser.Geom.Line} A Line object that corresponds to the top of this Rectangle.
      */
-    getLineA: function ()
+    getLineA: function (line)
     {
-        return { x1: this.x, y1: this.y, x2: this.right, y2: this.y };
+        if (line === undefined) { line = new Line(); }
+
+        line.setTo(this.x, this.y, this.right, this.y);
+
+        return line;
     },
 
-    //  RIGHT
     /**
-     * [description]
+     * Returns a Line object that corresponds to the right of this Rectangle.
      *
      * @method Phaser.Geom.Rectangle#getLineB
      * @since 3.0.0
      *
-     * @return {{x1:number,y1:number,x2:number,y2:number}} [description]
+     * @param {Phaser.Geom.Line} [line] - A Line object to set the results in. If `undefined` a new Line will be created.
+     *
+     * @return {Phaser.Geom.Line} A Line object that corresponds to the right of this Rectangle.
      */
-    getLineB: function ()
+    getLineB: function (line)
     {
-        return { x1: this.right, y1: this.y, x2: this.right, y2: this.bottom };
+        if (line === undefined) { line = new Line(); }
+
+        line.setTo(this.right, this.y, this.right, this.bottom);
+
+        return line;
     },
 
-    //  BOTTOM
     /**
-     * [description]
+     * Returns a Line object that corresponds to the bottom of this Rectangle.
      *
      * @method Phaser.Geom.Rectangle#getLineC
      * @since 3.0.0
      *
-     * @return {{x1:number,y1:number,x2:number,y2:number}} [description]
+     * @param {Phaser.Geom.Line} [line] - A Line object to set the results in. If `undefined` a new Line will be created.
+     *
+     * @return {Phaser.Geom.Line} A Line object that corresponds to the bottom of this Rectangle.
      */
-    getLineC: function ()
+    getLineC: function (line)
     {
-        return { x1: this.right, y1: this.bottom, x2: this.x, y2: this.bottom };
+        if (line === undefined) { line = new Line(); }
+
+        line.setTo(this.right, this.bottom, this.x, this.bottom);
+
+        return line;
     },
 
-    //  LEFT
     /**
-     * [description]
+     * Returns a Line object that corresponds to the left of this Rectangle.
      *
      * @method Phaser.Geom.Rectangle#getLineD
      * @since 3.0.0
      *
-     * @return {{x1:number,y1:number,x2:number,y2:number}} [description]
+     * @param {Phaser.Geom.Line} [line] - A Line object to set the results in. If `undefined` a new Line will be created.
+     *
+     * @return {Phaser.Geom.Line} A Line object that corresponds to the left of this Rectangle.
      */
-    getLineD: function ()
+    getLineD: function (line)
     {
-        return { x1: this.x, y1: this.bottom, x2: this.x, y2: this.y };
+        if (line === undefined) { line = new Line(); }
+
+        line.setTo(this.x, this.bottom, this.x, this.y);
+
+        return line;
     },
 
     /**
