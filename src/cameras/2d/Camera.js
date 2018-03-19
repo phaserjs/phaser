@@ -279,10 +279,10 @@ var Camera = new Class({
          * @name Phaser.Cameras.Scene2D.Camera#_shakeCallback
          * @type {function}
          * @private
-         * @default undefined
-         * @since 3.2.1
+         * @default null
+         * @since
          */
-        this._shakeCallback = undefined;
+        this._shakeCallback = null;
 
         /**
          * [description]
@@ -345,10 +345,10 @@ var Camera = new Class({
          * @name Phaser.Cameras.Scene2D.Camera#_fadeCallback
          * @type {function}
          * @private
-         * @default undefined
-         * @since 3.2.1
+         * @default null
+         * @since
          */
-        this._fadeCallback = undefined;
+        this._fadeCallback = null;
 
         /**
          * [description]
@@ -411,10 +411,10 @@ var Camera = new Class({
          * @name Phaser.Cameras.Scene2D.Camera#_flashCallback
          * @type {function}
          * @private
-         * @default undefined
-         * @since 3.2.1
+         * @default null
+         * @since
          */
-        this._flashCallback = undefined;
+        this._flashCallback = null;
 
         /**
          * [description]
@@ -719,7 +719,7 @@ var Camera = new Class({
         this._fadeRed = red;
         this._fadeGreen = green;
         this._fadeBlue = blue;
-        this._fadeCallback = callback;
+        this._fadeCallback = callback || null;
 
         if (duration <= 0)
         {
@@ -761,7 +761,7 @@ var Camera = new Class({
         this._flashRed = red;
         this._flashGreen = green;
         this._flashBlue = blue;
-        this._flashCallback = callback;
+        this._flashCallback = callback || null;
 
         if (duration <= 0)
         {
@@ -800,7 +800,7 @@ var Camera = new Class({
         this._shakeIntensity = intensity;
         this._shakeOffsetX = 0;
         this._shakeOffsetY = 0;
-        this._shakeCallback = callback;
+        this._shakeCallback = callback || null;
 
         return this;
     },
@@ -1335,10 +1335,10 @@ var Camera = new Class({
             {
                 this._flashAlpha = 0.0;
             }
-            if (this._flashCallback !== undefined && this._flashAlpha === 0.0)
+            if (this._flashCallback !== null && this._flashAlpha === 0.0)
             {
                 this._flashCallback();
-                this._flashCallback = undefined;
+                this._flashCallback = null;
             }
         }
 
@@ -1350,10 +1350,10 @@ var Camera = new Class({
             {
                 this._fadeAlpha = 1.0;
             }
-            if (this._fadeCallback !== undefined && this._fadeAlpha === 1.0)
+            if (this._fadeCallback !== null && this._fadeAlpha === 1.0)
             {
                 this._fadeCallback();
-                this._fadeCallback = undefined;
+                this._fadeCallback = null;
             }
         }
 
@@ -1368,10 +1368,10 @@ var Camera = new Class({
                 this._shakeOffsetX = 0.0;
                 this._shakeOffsetY = 0.0;
 
-                if (this._shakeCallback !== undefined)
+                if (this._shakeCallback !== null)
                 {
                     this._shakeCallback();
-                    this._shakeCallback = undefined;
+                    this._shakeCallback = null;
                 }
             }
             else
