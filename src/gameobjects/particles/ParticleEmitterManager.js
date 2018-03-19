@@ -29,7 +29,7 @@ var Render = require('./ParticleManagerRender');
  * @param {Phaser.Scene} scene - [description]
  * @param {string} texture - [description]
  * @param {string|integer} frame - [description]
- * @param {[type]} emitters - [description]
+ * @param {Phaser.GameObjects.Particles.ParticleEmitter[]} emitters - [description]
  */
 var ParticleEmitterManager = new Class({
 
@@ -94,7 +94,7 @@ var ParticleEmitterManager = new Class({
          * [description]
          *
          * @name Phaser.GameObjects.Particles.ParticleEmitterManager#frameNames
-         * @type {array}
+         * @type {Phaser.Textures.Frame[]}
          * @since 3.0.0
          */
         this.frameNames = [];
@@ -194,8 +194,8 @@ var ParticleEmitterManager = new Class({
      * @method Phaser.GameObjects.Particles.ParticleEmitterManager#setEmitterFrames
      * @since 3.0.0
      *
-     * @param {[type]} frames - [description]
-     * @param {[type]} emitter - [description]
+     * @param {Phaser.Textures.Frame|Phaser.Textures.Frame[]} frames - [description]
+     * @param {Phaser.GameObjects.Particles.ParticleEmitter} emitter - [description]
      *
      * @return {Phaser.GameObjects.Particles.ParticleEmitterManager} This Game Object.
      */
@@ -378,7 +378,7 @@ var ParticleEmitterManager = new Class({
      * @method Phaser.GameObjects.Particles.ParticleEmitterManager#getProcessors
      * @since 3.0.0
      *
-     * @return {[type]} [description]
+     * @return {Phaser.GameObjects.Particles.GravityWell[]} [description]
      */
     getProcessors: function ()
     {
