@@ -10,6 +10,12 @@ var LightPipeline = require('../../renderer/webgl/pipelines/ForwardDiffuseLightP
 var Utils = require('../../renderer/webgl/Utils');
 
 /**
+ * @callback LightForEach
+ *
+ * @param {Phaser.GameObjects.Light} light - [description]
+ */
+
+/**
  * @classdesc
  * [description]
  *
@@ -28,7 +34,7 @@ var LightsManager = new Class({
          * [description]
          *
          * @name Phaser.GameObjects.LightsManager#lightPool
-         * @type {array}
+         * @type {Phaser.GameObjects.Light[]}
          * @default []
          * @since 3.0.0
          */
@@ -38,7 +44,7 @@ var LightsManager = new Class({
          * [description]
          *
          * @name Phaser.GameObjects.LightsManager#lights
-         * @type {array}
+         * @type {Phaser.GameObjects.Light[]}
          * @default []
          * @since 3.0.0
          */
@@ -48,7 +54,7 @@ var LightsManager = new Class({
          * [description]
          *
          * @name Phaser.GameObjects.LightsManager#culledLights
-         * @type {array}
+         * @type {Phaser.GameObjects.Light[]}
          * @default []
          * @since 3.0.0
          */
@@ -155,7 +161,7 @@ var LightsManager = new Class({
      * @method Phaser.GameObjects.LightsManager#forEachLight
      * @since 3.0.0
      *
-     * @param {function} callback - [description]
+     * @param {LightForEach} callback - [description]
      *
      * @return {Phaser.GameObjects.LightsManager} This Lights Manager object.
      */

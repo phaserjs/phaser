@@ -105,7 +105,7 @@ var Zone = new Class({
     /**
      * The displayed width of this Game Object.
      * This value takes into account the scale factor.
-     * 
+     *
      * @name Phaser.GameObjects.Zone#displayWidth
      * @type {number}
      * @since 3.0.0
@@ -127,7 +127,7 @@ var Zone = new Class({
     /**
      * The displayed height of this Game Object.
      * This value takes into account the scale factor.
-     * 
+     *
      * @name Phaser.GameObjects.Zone#displayHeight
      * @type {number}
      * @since 3.0.0
@@ -237,7 +237,7 @@ var Zone = new Class({
      * @since 3.0.0
      *
      * @param {object} shape - A Geometry shape instance, such as Phaser.Geom.Ellipse, or your own custom shape.
-     * @param {function} callback - A function that will return `true` if the given x/y coords it is sent are within the shape.
+     * @param {HitAreaCallback} callback - A function that will return `true` if the given x/y coords it is sent are within the shape.
      *
      * @return {Phaser.GameObjects.Zone} This Game Object.
      */

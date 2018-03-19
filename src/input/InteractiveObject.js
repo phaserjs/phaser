@@ -13,6 +13,8 @@
  * @param {number} x - [description]
  * @param {number} y - [description]
  * @param {Phaser.GameObjects.GameObject} gameObject - [description]
+ *
+ * @return {boolean} [description]
  */
 
 /**
