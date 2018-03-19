@@ -11,8 +11,8 @@
  * @function Phaser.Input.Keyboard.KeyCombo.AdvanceKeyCombo
  * @since 3.0.0
  *
- * @param {[type]} event - [description]
- * @param {[type]} combo - [description]
+ * @param {KeyboardEvent} event - [description]
+ * @param {Phaser.Input.Keyboard.KeyCombo} combo - [description]
  *
  * @return {boolean} `true` if it reached the end of the combo, `false` if not.
  */
