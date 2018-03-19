@@ -142,7 +142,7 @@ var FixedKeyControl = new Class({
          * @default 0
          * @since 3.0.0
          */
-        this.speedY = 0
+        this.speedY = 0;
 
         var speed = GetValue(config, 'speed', null);
 
