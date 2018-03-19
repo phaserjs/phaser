@@ -315,7 +315,7 @@ var Body = new Class({
          * [description]
          *
          * @name Phaser.Physics.Arcade.Body#worldBounce
-         * @type {?[type]}
+         * @type {?Phaser.Math.Vector2}
          * @default null
          * @since 3.0.0
          */

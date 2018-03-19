@@ -283,12 +283,12 @@ var List = new Class({
      * @method Phaser.Structs.List#getFirst
      * @since 3.0.0
      *
-     * @param {[type]} property - [description]
-     * @param {[type]} value - [description]
-     * @param {[type]} startIndex - [description]
-     * @param {[type]} endIndex - [description]
+     * @param {string} property - [description]
+     * @param {any} value - [description]
+     * @param {number} [startIndex=0] - [description]
+     * @param {number} [endIndex] - [description]
      *
-     * @return {[type]} [description]
+     * @return {any} [description]
      */
     getFirst: function (property, value, startIndex, endIndex)
     {
@@ -459,7 +459,7 @@ var List = new Class({
         {
             this.list.splice(index, 1);
         }
-        
+
         return child;
     },
 

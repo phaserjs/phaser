@@ -33,7 +33,7 @@ var ParseWeltmeister = require('./impact/ParseWeltmeister');
  * consumption. However if your map is small or you need to update the tiles dynamically, then leave
  * the default value set.
  *
- * @return {[type]} [description]
+ * @return {Phaser.Tilemaps.MapData} [description]
  */
 var Parse = function (name, mapFormat, data, tileWidth, tileHeight, insertNull)
 {

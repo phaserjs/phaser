@@ -19,10 +19,10 @@ var Friction = {
      * @since 3.0.0
      *
      * @param {[type]} value - [description]
-     * @param {[type]} air - [description]
-     * @param {[type]} fstatic - [description]
+     * @param {[type]} [air] - [description]
+     * @param {[type]} [fstatic] - [description]
      *
-     * @return {[type]} [description]
+     * @return {Phaser.GameObjects.GameObject} This Game Object.
      */
     setFriction: function (value, air, fstatic)
     {
@@ -49,7 +49,7 @@ var Friction = {
      *
      * @param {[type]} value - [description]
      *
-     * @return {[type]} [description]
+     * @return {Phaser.GameObjects.GameObject} This Game Object.
      */
     setFrictionAir: function (value)
     {
@@ -66,7 +66,7 @@ var Friction = {
      *
      * @param {[type]} value - [description]
      *
-     * @return {[type]} [description]
+     * @return {Phaser.GameObjects.GameObject} This Game Object.
      */
     setFrictionStatic: function (value)
     {

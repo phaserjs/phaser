@@ -18,12 +18,12 @@ var Offset = {
      * @method Phaser.Physics.Impact.Components.Offset#setOffset
      * @since 3.0.0
      *
-     * @param {[type]} x - [description]
-     * @param {[type]} y - [description]
-     * @param {[type]} width - [description]
-     * @param {[type]} height - [description]
+     * @param {number} x - [description]
+     * @param {number} y - [description]
+     * @param {number} [width] - [description]
+     * @param {number} [height] - [description]
      *
-     * @return {[type]} [description]
+     * @return {Phaser.GameObjects.GameObject} This Game Object.
      */
     setOffset: function (x, y, width, height)
     {

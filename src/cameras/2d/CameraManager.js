@@ -200,7 +200,7 @@ var CameraManager = new Class({
             this.cameraPool.slice(poolIndex, 1);
             return camera;
         }
-        
+
         return null;
     },
 
@@ -236,9 +236,9 @@ var CameraManager = new Class({
      * @method Phaser.Cameras.Scene2D.CameraManager#fromJSON
      * @since 3.0.0
      *
-     * @param {[type]} config - [description]
+     * @param {object|object[]} config - [description]
      *
-     * @return {[type]} [description]
+     * @return {Phaser.Cameras.Scene2D.CameraManager} [description]
      */
     fromJSON: function (config)
     {
@@ -436,7 +436,7 @@ var CameraManager = new Class({
      *
      * @method Phaser.Cameras.Scene2D.CameraManager#resize
      * @since 3.2.0
-     * 
+     *
      * @param {number} width - The new width of the camera.
      * @param {number} height - The new height of the camera.
      */

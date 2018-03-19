@@ -181,7 +181,7 @@ var Map = new Class({
      * @method Phaser.Structs.Map#keys
      * @since 3.0.0
      *
-     * @return {[type]} [description]
+     * @return {string[]} [description]
      */
     keys: function ()
     {

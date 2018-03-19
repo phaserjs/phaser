@@ -20,7 +20,7 @@ var Collision = {
      *
      * @param {[type]} value - [description]
      *
-     * @return {[type]} [description]
+     * @return {Phaser.GameObjects.GameObject} This Game Object.
      */
     setCollisionCategory: function (value)
     {
@@ -37,7 +37,7 @@ var Collision = {
      *
      * @param {[type]} value - [description]
      *
-     * @return {[type]} [description]
+     * @return {Phaser.GameObjects.GameObject} This Game Object.
      */
     setCollisionGroup: function (value)
     {
@@ -52,9 +52,9 @@ var Collision = {
      * @method Phaser.Physics.Matter.Components.Collision#setCollidesWith
      * @since 3.0.0
      *
-     * @param {[type]} categories - [description]
+     * @param {number|number[]} categories - [description]
      *
-     * @return {[type]} [description]
+     * @return {Phaser.GameObjects.GameObject} This Game Object.
      */
     setCollidesWith: function (categories)
     {

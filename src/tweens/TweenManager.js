@@ -193,7 +193,7 @@ var TweenManager = new Class({
      * @method Phaser.Tweens.TweenManager#add
      * @since 3.0.0
      *
-     * @param {[type]} config - [description]
+     * @param {object} config - [description]
      *
      * @return {Phaser.Tweens.Tween} [description]
      */

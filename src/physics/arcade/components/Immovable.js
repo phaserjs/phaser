@@ -18,9 +18,9 @@ var Immovable = {
      * @method Phaser.Physics.Arcade.Components.Immovable#setImmovable
      * @since 3.0.0
      *
-     * @param {[type]} value - [description]
+     * @param {boolean} [value=true] - [description]
      *
-     * @return {[type]} [description]
+     * @return {Phaser.GameObjects.GameObject} This Game Object.
      */
     setImmovable: function (value)
     {

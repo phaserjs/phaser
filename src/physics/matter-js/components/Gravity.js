@@ -20,7 +20,7 @@ var Gravity = {
      *
      * @param {[type]} value - [description]
      *
-     * @return {[type]} [description]
+     * @return {Phaser.GameObjects.GameObject} This Game Object.
      */
     setIgnoreGravity: function (value)
     {

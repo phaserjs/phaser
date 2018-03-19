@@ -20,7 +20,7 @@ var Bounce = {
      *
      * @param {[type]} value - [description]
      *
-     * @return {[type]} [description]
+     * @return {Phaser.GameObjects.GameObject} This Game Object.
      */
     setBounce: function (value)
     {

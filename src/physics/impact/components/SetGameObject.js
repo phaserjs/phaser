@@ -18,10 +18,10 @@ var SetGameObject = {
      * @method Phaser.Physics.Impact.Components.SetGameObject#setGameObject
      * @since 3.0.0
      *
-     * @param {[type]} gameObject - [description]
-     * @param {[type]} sync - [description]
+     * @param {Phaser.GameObjects.GameObject} gameObject - [description]
+     * @param {boolean} [sync=true] - [description]
      *
-     * @return {[type]} [description]
+     * @return {Phaser.GameObjects.GameObject} This Game Object.
      */
     setGameObject: function (gameObject, sync)
     {
@@ -50,7 +50,7 @@ var SetGameObject = {
      * @method Phaser.Physics.Impact.Components.SetGameObject#syncGameObject
      * @since 3.0.0
      *
-     * @return {[type]} [description]
+     * @return {Phaser.GameObjects.GameObject} This Game Object.
      */
     syncGameObject: function ()
     {

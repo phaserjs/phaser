@@ -12,7 +12,7 @@ module.exports = {
 
     FindClosestInSorted: require('./FindClosestInSorted'),
     GetRandomElement: require('./GetRandomElement'),
-    Matrix: require('./Matrix'),
+    Matrix: require('./matrix'),
     NumberArray: require('./NumberArray'),
     NumberArrayStep: require('./NumberArrayStep'),
     QuickSelect: require('./QuickSelect'),

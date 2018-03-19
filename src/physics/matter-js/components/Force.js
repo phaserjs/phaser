@@ -21,9 +21,9 @@ var Force = {
      * @method Phaser.Physics.Matter.Components.Force#applyForce
      * @since 3.0.0
      *
-     * @param {[type]} force - [description]
+     * @param {Phaser.Math.Vector2} force - [description]
      *
-     * @return {[type]} [description]
+     * @return {Phaser.GameObjects.GameObject} This Game Object.
      */
     applyForce: function (force)
     {
@@ -40,10 +40,10 @@ var Force = {
      * @method Phaser.Physics.Matter.Components.Force#applyForceFrom
      * @since 3.0.0
      *
-     * @param {[type]} position - [description]
-     * @param {[type]} force - [description]
+     * @param {Phaser.Math.Vector2} position - [description]
+     * @param {Phaser.Math.Vector2} force - [description]
      *
-     * @return {[type]} [description]
+     * @return {Phaser.GameObjects.GameObject} This Game Object.
      */
     applyForceFrom: function (position, force)
     {
@@ -58,9 +58,9 @@ var Force = {
      * @method Phaser.Physics.Matter.Components.Force#thrust
      * @since 3.0.0
      *
-     * @param {[type]} speed - [description]
+     * @param {number} speed - [description]
      *
-     * @return {[type]} [description]
+     * @return {Phaser.GameObjects.GameObject} This Game Object.
      */
     thrust: function (speed)
     {
@@ -79,9 +79,9 @@ var Force = {
      * @method Phaser.Physics.Matter.Components.Force#thrustLeft
      * @since 3.0.0
      *
-     * @param {[type]} speed - [description]
+     * @param {number} speed - [description]
      *
-     * @return {[type]} [description]
+     * @return {Phaser.GameObjects.GameObject} This Game Object.
      */
     thrustLeft: function (speed)
     {
@@ -100,9 +100,9 @@ var Force = {
      * @method Phaser.Physics.Matter.Components.Force#thrustRight
      * @since 3.0.0
      *
-     * @param {[type]} speed - [description]
+     * @param {number} speed - [description]
      *
-     * @return {[type]} [description]
+     * @return {Phaser.GameObjects.GameObject} This Game Object.
      */
     thrustRight: function (speed)
     {
@@ -121,9 +121,9 @@ var Force = {
      * @method Phaser.Physics.Matter.Components.Force#thrustBack
      * @since 3.0.0
      *
-     * @param {[type]} speed - [description]
+     * @param {number} speed - [description]
      *
-     * @return {[type]} [description]
+     * @return {Phaser.GameObjects.GameObject} This Game Object.
      */
     thrustBack: function (speed)
     {

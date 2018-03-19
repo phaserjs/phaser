@@ -289,7 +289,7 @@ var Tween = new Class({
      * @method Phaser.Tweens.Tween#getValue
      * @since 3.0.0
      *
-     * @return {[type]} [description]
+     * @return {number} [description]
      */
     getValue: function ()
     {
@@ -828,7 +828,7 @@ var Tween = new Class({
 
     /**
      * Flags the Tween as being complete, whatever stage of progress it is at.
-     * 
+     *
      * If an onComplete callback has been defined it will automatically invoke it, unless a `delay`
      * argument is provided, in which case the Tween will delay for that period of time before calling the callback.
      *
@@ -1161,7 +1161,7 @@ var Tween = new Class({
         return TWEEN_CONST.COMPLETE;
     },
 
-    //  
+    //
     /**
      * [description]
      *
@@ -1335,7 +1335,7 @@ Tween.TYPES = [
  * @since 3.0.0
  *
  * @param {object} config - The Tween configuration.
- * 
+ *
  * @return {Phaser.Tweens.Tween} The Tween that was created.
  */
 GameObjectFactory.register('tween', function (config)
@@ -1360,7 +1360,7 @@ GameObjectFactory.register('tween', function (config)
  * @since 3.0.0
  *
  * @param {object} config - The Tween configuration.
- * 
+ *
  * @return {Phaser.Tweens.Tween} The Tween that was created.
  */
 GameObjectCreator.register('tween', function (config)

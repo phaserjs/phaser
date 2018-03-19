@@ -18,10 +18,10 @@ var Size = {
      * @method Phaser.Physics.Arcade.Components.Size#setOffset
      * @since 3.0.0
      *
-     * @param {[type]} x - [description]
-     * @param {[type]} y - [description]
+     * @param {number} x - [description]
+     * @param {number} [y=x] - [description]
      *
-     * @return {[type]} [description]
+     * @return {Phaser.GameObjects.GameObject} This Game Object.
      */
     setOffset: function (x, y)
     {
@@ -36,11 +36,11 @@ var Size = {
      * @method Phaser.Physics.Arcade.Components.Size#setSize
      * @since 3.0.0
      *
-     * @param {[type]} width - [description]
-     * @param {[type]} height - [description]
-     * @param {[type]} center - [description]
+     * @param {number} width - [description]
+     * @param {number} height - [description]
+     * @param {boolean} [center=true] - [description]
      *
-     * @return {[type]} [description]
+     * @return {Phaser.GameObjects.GameObject} This Game Object.
      */
     setSize: function (width, height, center)
     {
@@ -55,11 +55,11 @@ var Size = {
      * @method Phaser.Physics.Arcade.Components.Size#setCircle
      * @since 3.0.0
      *
-     * @param {[type]} radius - [description]
-     * @param {[type]} offsetX - [description]
-     * @param {[type]} offsetY - [description]
+     * @param {number} radius - [description]
+     * @param {number} [offsetX] - [description]
+     * @param {number} [offsetY] - [description]
      *
-     * @return {[type]} [description]
+     * @return {Phaser.GameObjects.GameObject} This Game Object.
      */
     setCircle: function (radius, offsetX, offsetY)
     {

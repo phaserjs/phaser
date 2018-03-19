@@ -18,9 +18,9 @@ var Acceleration = {
      * @method Phaser.Physics.Impact.Components.Acceleration#setAccelerationX
      * @since 3.0.0
      *
-     * @param {[type]} x - [description]
+     * @param {number} x - [description]
      *
-     * @return {[type]} [description]
+     * @return {Phaser.GameObjects.GameObject} This Game Object.
      */
     setAccelerationX: function (x)
     {
@@ -35,9 +35,9 @@ var Acceleration = {
      * @method Phaser.Physics.Impact.Components.Acceleration#setAccelerationY
      * @since 3.0.0
      *
-     * @param {[type]} y - [description]
+     * @param {number} y - [description]
      *
-     * @return {[type]} [description]
+     * @return {Phaser.GameObjects.GameObject} This Game Object.
      */
     setAccelerationY: function (y)
     {
@@ -52,10 +52,10 @@ var Acceleration = {
      * @method Phaser.Physics.Impact.Components.Acceleration#setAcceleration
      * @since 3.0.0
      *
-     * @param {[type]} x - [description]
-     * @param {[type]} y - [description]
+     * @param {number} x - [description]
+     * @param {number} y - [description]
      *
-     * @return {[type]} [description]
+     * @return {Phaser.GameObjects.GameObject} This Game Object.
      */
     setAcceleration: function (x, y)
     {

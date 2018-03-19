@@ -183,7 +183,7 @@ var Factory = new Class({
      * @method Phaser.Physics.Matter.Factory#imageStack
      * @since 3.0.0
      *
-     * @param {string} texture - The key of the Texture this Game Object will use to render with, as stored in the Texture Manager.
+     * @param {string} key - The key of the Texture this Game Object will use to render with, as stored in the Texture Manager.
      * @param {string|integer} [frame] - An optional frame from the Texture this Game Object is rendering with.
      * @param {number} x - The horizontal position of this composite in the world.
      * @param {number} y - The vertical position of this composite in the world.
@@ -232,7 +232,6 @@ var Factory = new Class({
      * @param {number} rows - The number of rows in the Composite.
      * @param {number} columnGap - The distance between each column.
      * @param {number} rowGap - The distance between each row.
-     * @param {object} options - [description]
      * @param {function} callback - [description]
      *
      * @return {object} A Matter JS Composite Stack.
@@ -278,10 +277,10 @@ var Factory = new Class({
      * @since 3.0.0
      *
      * @param {[type]} composite - [description]
-     * @param {[type]} xOffsetA - [description]
-     * @param {[type]} yOffsetA - [description]
-     * @param {[type]} xOffsetB - [description]
-     * @param {[type]} yOffsetB - [description]
+     * @param {number} xOffsetA - [description]
+     * @param {number} yOffsetA - [description]
+     * @param {number} xOffsetB - [description]
+     * @param {number} yOffsetB - [description]
      * @param {object} options - [description]
      *
      * @return {object} A Matter JS Composite.
@@ -298,9 +297,9 @@ var Factory = new Class({
      * @since 3.0.0
      *
      * @param {[type]} composite - [description]
-     * @param {[type]} columns - [description]
-     * @param {[type]} rows - [description]
-     * @param {[type]} crossBrace - [description]
+     * @param {number} columns - [description]
+     * @param {number} rows - [description]
+     * @param {boolean} crossBrace - [description]
      * @param {object} options - [description]
      *
      * @return {object} A Matter JS Composite.
@@ -368,7 +367,7 @@ var Factory = new Class({
      * @param {number} rows - The number of rows in the Composite.
      * @param {number} columnGap - The distance between each column.
      * @param {number} rowGap - The distance between each row.
-     * @param {[type]} crossBrace - [description]
+     * @param {boolean} crossBrace - [description]
      * @param {number} particleRadius - [description]
      * @param {object} particleOptions - [description]
      * @param {object} constraintOptions - [description]
@@ -394,9 +393,9 @@ var Factory = new Class({
      *
      * @param {[type]} bodyA - [description]
      * @param {[type]} bodyB - [description]
-     * @param {[type]} length - [description]
-     * @param {[type]} stiffness - [description]
-     * @param {object} options - [description]
+     * @param {number} length - [description]
+     * @param {number} [stiffness=1] - [description]
+     * @param {object} [options={}] - [description]
      *
      * @return {object} A Matter JS Constraint.
      */
@@ -413,9 +412,9 @@ var Factory = new Class({
      *
      * @param {[type]} bodyA - [description]
      * @param {[type]} bodyB - [description]
-     * @param {[type]} length - [description]
-     * @param {[type]} stiffness - [description]
-     * @param {object} options - [description]
+     * @param {number} length - [description]
+     * @param {number} [stiffness=1] - [description]
+     * @param {object} [options={}] - [description]
      *
      * @return {object} A Matter JS Constraint.
      */
@@ -432,9 +431,9 @@ var Factory = new Class({
      *
      * @param {[type]} bodyA - [description]
      * @param {[type]} bodyB - [description]
-     * @param {[type]} length - [description]
-     * @param {[type]} stiffness - [description]
-     * @param {object} options - [description]
+     * @param {number} length - [description]
+     * @param {number} [stiffness=1] - [description]
+     * @param {object} [options={}] - [description]
      *
      * @return {object} A Matter JS Constraint.
      */
@@ -462,9 +461,9 @@ var Factory = new Class({
      * @since 3.0.0
      *
      * @param {[type]} bodyB - [description]
-     * @param {[type]} length - [description]
-     * @param {[type]} stiffness - [description]
-     * @param {object} options - [description]
+     * @param {number} length - [description]
+     * @param {number} [stiffness=1] - [description]
+     * @param {object} [options={}] - [description]
      *
      * @return {object} A Matter JS Constraint.
      */
@@ -526,7 +525,7 @@ var Factory = new Class({
      *
      * @param {number} x - The horizontal position of this Game Object in the world.
      * @param {number} y - The vertical position of this Game Object in the world.
-     * @param {string} texture - The key of the Texture this Game Object will use to render with, as stored in the Texture Manager.
+     * @param {string} key - The key of the Texture this Game Object will use to render with, as stored in the Texture Manager.
      * @param {string|integer} [frame] - An optional frame from the Texture this Game Object is rendering with.
      * @param {object} options - [description]
      *
@@ -552,7 +551,7 @@ var Factory = new Class({
      * @method Phaser.Physics.Matter.Factory#tileBody
      * @since 3.0.0
      *
-     * @param {[type]} tile - [description]
+     * @param {Phaser.GameObjects.Tile} tile - [description]
      * @param {object} options - [description]
      *
      * @return {Phaser.Physics.Matter.MatterTileBody} [description]
@@ -572,7 +571,7 @@ var Factory = new Class({
      *
      * @param {number} x - The horizontal position of this Game Object in the world.
      * @param {number} y - The vertical position of this Game Object in the world.
-     * @param {string} texture - The key of the Texture this Game Object will use to render with, as stored in the Texture Manager.
+     * @param {string} key - The key of the Texture this Game Object will use to render with, as stored in the Texture Manager.
      * @param {string|integer} [frame] - An optional frame from the Texture this Game Object is rendering with.
      * @param {object} options - [description]
      *

@@ -249,10 +249,10 @@ var World = new Class({
      * @method Phaser.Physics.Matter.World#setBounds
      * @since 3.0.0
      *
-     * @param {number} x - The x coordinate of the top-left corner of the bounds.
-     * @param {number} y - The y coordinate of the top-left corner of the bounds.
-     * @param {number} width - The width of the bounds.
-     * @param {number} height - The height of the bounds.
+     * @param {number} [x=0] - The x coordinate of the top-left corner of the bounds.
+     * @param {number} [y=0] - The y coordinate of the top-left corner of the bounds.
+     * @param {number} [width] - The width of the bounds.
+     * @param {number} [height] - The height of the bounds.
      * @param {number} [thickness=128] - The thickness of each wall, in pixels.
      * @param {boolean} [left=true] - If true will create the left bounds wall.
      * @param {boolean} [right=true] - If true will create the right bounds wall.
@@ -288,12 +288,12 @@ var World = new Class({
      * @method Phaser.Physics.Matter.World#updateWall
      * @since 3.0.0
      *
-     * @param {[type]} add - [description]
-     * @param {[type]} position - [description]
-     * @param {[type]} x - [description]
-     * @param {[type]} y - [description]
-     * @param {[type]} width - [description]
-     * @param {[type]} height - [description]
+     * @param {boolean} add - [description]
+     * @param {string} position - [description]
+     * @param {number} x - [description]
+     * @param {number} y - [description]
+     * @param {number} width - [description]
+     * @param {number} height - [description]
      */
     updateWall: function (add, position, x, y, width, height)
     {
@@ -368,7 +368,7 @@ var World = new Class({
      * @since 3.0.0
      *
      * @param {number} [x=0] - [description]
-     * @param {number} [y] - [description]
+     * @param {number} [y=1] - [description]
      * @param {number} [scale] - [description]
      *
      * @return {Phaser.Physics.Matter.World} This Matter World object.
@@ -395,11 +395,11 @@ var World = new Class({
      * @method Phaser.Physics.Matter.World#create
      * @since 3.0.0
      *
-     * @param {[type]} x - [description]
-     * @param {[type]} y - [description]
-     * @param {[type]} width - [description]
-     * @param {[type]} height - [description]
-     * @param {[type]} options - [description]
+     * @param {number} x - [description]
+     * @param {number} y - [description]
+     * @param {number} width - [description]
+     * @param {number} height - [description]
+     * @param {object} options - [description]
      *
      * @return {[type]} [description]
      */
@@ -475,11 +475,10 @@ var World = new Class({
      * @method Phaser.Physics.Matter.World#convertTilemapLayer
      * @since 3.0.0
      *
-     * @param {Phaser.GameObjects.StaticTilemapLayer|Phaser.GameObjects.DynamicTilemapLayer} tiles -
+     * @param {Phaser.GameObjects.StaticTilemapLayer|Phaser.GameObjects.DynamicTilemapLayer} tilemapLayer -
      * An array of tiles.
-     * @param {object} [options] - Options to be passed to the MatterTileBody constructor. See
-     * Phaser.Physics.Matter.TileBody.
-     * 
+     * @param {object} [options] - Options to be passed to the MatterTileBody constructor. {@ee Phaser.Physics.Matter.TileBody}
+     *
      * @return {Phaser.Physics.Matter.World} This Matter World object.
      */
     convertTilemapLayer: function (tilemapLayer, options)
@@ -500,9 +499,8 @@ var World = new Class({
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.Tile[]} tiles - An array of tiles.
-     * @param {object} [options] - Options to be passed to the MatterTileBody constructor. See
-     * Phaser.Physics.Matter.TileBody.
-     * 
+     * @param {object} [options] - Options to be passed to the MatterTileBody constructor. {@see Phaser.Physics.Matter.TileBody}
+     *
      * @return {Phaser.Physics.Matter.World} This Matter World object.
      */
     convertTiles: function (tiles, options)
@@ -526,9 +524,9 @@ var World = new Class({
      * @method Phaser.Physics.Matter.World#nextGroup
      * @since 3.0.0
      *
-     * @param {[type]} isNonColliding - [description]
+     * @param {boolean} isNonColliding - [description]
      *
-     * @return {[type]} [description]
+     * @return {number} [description]
      */
     nextGroup: function (isNonColliding)
     {
@@ -541,7 +539,7 @@ var World = new Class({
      * @method Phaser.Physics.Matter.World#nextCategory
      * @since 3.0.0
      *
-     * @return {[type]} [description]
+     * @return {number} [description]
      */
     nextCategory: function ()
     {
@@ -658,9 +656,9 @@ var World = new Class({
      * @since 3.0.0
      *
      * @param {[type]} path - [description]
-     * @param {[type]} points - [description]
+     * @param {array} points - [description]
      *
-     * @return {[type]} [description]
+     * @return {array} [description]
      */
     fromPath: function (path, points)
     {

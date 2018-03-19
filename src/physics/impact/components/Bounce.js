@@ -18,9 +18,9 @@ var Bounce = {
      * @method Phaser.Physics.Impact.Components.Bounce#setBounce
      * @since 3.0.0
      *
-     * @param {[type]} value - [description]
+     * @param {number} value - [description]
      *
-     * @return {[type]} [description]
+     * @return {Phaser.GameObjects.GameObject} This Game Object.
      */
     setBounce: function (value)
     {
@@ -35,9 +35,9 @@ var Bounce = {
      * @method Phaser.Physics.Impact.Components.Bounce#setMinBounceVelocity
      * @since 3.0.0
      *
-     * @param {[type]} value - [description]
+     * @param {number} value - [description]
      *
-     * @return {[type]} [description]
+     * @return {Phaser.GameObjects.GameObject} This Game Object.
      */
     setMinBounceVelocity: function (value)
     {
@@ -50,7 +50,7 @@ var Bounce = {
      * [description]
      *
      * @name Phaser.Physics.Impact.Components.Bounce#bounce
-     * @type {[type]}
+     * @type {number}
      * @since 3.0.0
      */
     bounce: {

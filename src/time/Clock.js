@@ -160,7 +160,7 @@ var Clock = new Class({
      * @param {array} args - [description]
      * @param {object} callbackScope - [description]
      *
-     * @return {[type]} [description]
+     * @return {Phaser.Time.TimerEvent} [description]
      */
     delayedCall: function (delay, callback, args, callbackScope)
     {
@@ -172,7 +172,7 @@ var Clock = new Class({
      *
      * @method Phaser.Time.Clock#clearPendingEvents
      * @since 3.0.0
-     * 
+     *
      * @return {Phaser.Time.Clock} [description]
      */
     clearPendingEvents: function ()

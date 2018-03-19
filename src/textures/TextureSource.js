@@ -97,7 +97,7 @@ var TextureSource = new Class({
          * Either Linear or Nearest.
          *
          * @name Phaser.Textures.TextureSource#scaleMode
-         * @type {[type]}
+         * @type {number}
          * @since 3.0.0
          */
         this.scaleMode = ScaleModes.DEFAULT;
@@ -124,7 +124,7 @@ var TextureSource = new Class({
          * The WebGL Texture of the source image.
          *
          * @name Phaser.Textures.TextureSource#glTexture
-         * @type {?[type]}
+         * @type {?WebGLTexture}
          * @default null
          * @since 3.0.0
          */
