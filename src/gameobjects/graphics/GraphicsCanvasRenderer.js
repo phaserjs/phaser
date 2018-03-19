@@ -20,7 +20,7 @@ var GameObject = require('../GameObject');
  * @param {Phaser.GameObjects.Graphics} src - The Game Object being rendered in this call.
  * @param {number} interpolationPercentage - Reserved for future use and custom pipelines.
  * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera that is rendering the Game Object.
- * @param {[type]} renderTargetCtx - [description]
+ * @param {CanvasRenderingContext2D} renderTargetCtx - [description]
  * @param {boolean} allowClip - [description]
  */
 var GraphicsCanvasRenderer = function (renderer, src, interpolationPercentage, camera, renderTargetCtx, allowClip)
