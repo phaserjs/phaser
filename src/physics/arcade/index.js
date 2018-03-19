@@ -8,6 +8,13 @@ var CONST = require('./const');
 var Extend = require('../../utils/object/Extend');
 
 /**
+ * @callback ArcadePhysicsCallback
+ *
+ * @param {Phaser.GameObjects.GameObject} object1 - [description]
+ * @param {Phaser.GameObjects.GameObject} object2 - [description]
+ */
+
+/**
  * @namespace Phaser.Physics.Arcade
  */
 
@@ -23,7 +30,7 @@ var Arcade = {
     StaticBody: require('./StaticBody'),
     StaticGroup: require('./StaticPhysicsGroup'),
     World: require('./World')
-  
+
 };
 
 //   Merge in the consts

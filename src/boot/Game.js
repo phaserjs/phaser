@@ -26,6 +26,10 @@ var TimeStep = require('./TimeStep');
 var VisibilityHandler = require('./VisibilityHandler');
 
 /**
+ * @callback GameStepCallback
+ */
+
+/**
  * @classdesc
  * The Phaser.Game instance is the main controller for the entire Phaser game. It is responsible
  * for handling the boot process, parsing the configuration values, creating the renderer,
@@ -232,7 +236,7 @@ var Game = new Class({
          * It is set automatically when the Game boot process has completed.
          *
          * @name Phaser.Game#onStepCallback
-         * @type {function}
+         * @type {GameStepCallback}
          * @private
          * @since 3.0.0
          */

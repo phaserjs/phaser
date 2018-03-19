@@ -565,9 +565,9 @@ var World = new Class({
      *
      * @param {Phaser.Physics.Arcade.Body} object1 - The first object to check for collision.
      * @param {Phaser.Physics.Arcade.Body} object2 - The second object to check for collision.
-     * @param {function} collideCallback - The callback to invoke when the two objects collide.
-     * @param {function} processCallback - The callback to invoke when the two objects collide. Must return a boolean.
-     * @param {object} callbackContext - The scope in which to call the callbacks.
+     * @param {ArcadePhysicsCallback} [collideCallback] - The callback to invoke when the two objects collide.
+     * @param {ArcadePhysicsCallback} [processCallback] - The callback to invoke when the two objects collide. Must return a boolean.
+     * @param {object} [callbackContext] - The scope in which to call the callbacks.
      *
      * @return {Phaser.Physics.Arcade.Collider} The Collider that was created.
      */
@@ -592,9 +592,9 @@ var World = new Class({
      *
      * @param {Phaser.Physics.Arcade.Body} object1 - The first object to check for overlap.
      * @param {Phaser.Physics.Arcade.Body} object2 - The second object to check for overlap.
-     * @param {function} collideCallback - The callback to invoke when the two objects overlap.
-     * @param {function} processCallback - The callback to invoke when the two objects overlap. Must return a boolean.
-     * @param {object} callbackContext - The scope in which to call the callbacks.
+     * @param {ArcadePhysicsCallback} [collideCallback] - The callback to invoke when the two objects overlap.
+     * @param {ArcadePhysicsCallback} [processCallback] - The callback to invoke when the two objects overlap. Must return a boolean.
+     * @param {object} [callbackContext] - The scope in which to call the callbacks.
      *
      * @return {Phaser.Physics.Arcade.Collider} The Collider that was created.
      */
@@ -865,7 +865,7 @@ var World = new Class({
      *
      * @param {Phaser.Physics.Arcade.Body} body1 - [description]
      * @param {Phaser.Physics.Arcade.Body} body2 - [description]
-     * @param {function} processCallback - [description]
+     * @param {ArcadePhysicsCallback} processCallback - [description]
      * @param {object} callbackContext - [description]
      * @param {boolean} overlapOnly - [description]
      *
@@ -1249,9 +1249,9 @@ var World = new Class({
      *
      * @param {Phaser.GameObjects.GameObject} object1 - [description]
      * @param {Phaser.GameObjects.GameObject} object2 - [description]
-     * @param {function} overlapCallback - [description]
-     * @param {function} processCallback - [description]
-     * @param {object} callbackContext - [description]
+     * @param {ArcadePhysicsCallback} [overlapCallback] - [description]
+     * @param {ArcadePhysicsCallback} [processCallback] - [description]
+     * @param {object} [callbackContext] - [description]
      *
      * @return {boolean} [description]
      */
@@ -1272,9 +1272,9 @@ var World = new Class({
      *
      * @param {Phaser.GameObjects.GameObject} object1 - [description]
      * @param {Phaser.GameObjects.GameObject} object2 - [description]
-     * @param {function} collideCallback - [description]
-     * @param {function} processCallback - [description]
-     * @param {object} callbackContext - [description]
+     * @param {ArcadePhysicsCallback} [collideCallback] - [description]
+     * @param {ArcadePhysicsCallback} [processCallback] - [description]
+     * @param {object} [callbackContext] - [description]
      *
      * @return {boolean} [description]
      */
@@ -1295,8 +1295,8 @@ var World = new Class({
      *
      * @param {Phaser.GameObjects.GameObject} object1 - [description]
      * @param {Phaser.GameObjects.GameObject} object2 - [description]
-     * @param {function} collideCallback - [description]
-     * @param {function} processCallback - [description]
+     * @param {ArcadePhysicsCallback} collideCallback - [description]
+     * @param {ArcadePhysicsCallback} processCallback - [description]
      * @param {object} callbackContext - [description]
      * @param {boolean} overlapOnly - [description]
      *
@@ -1356,8 +1356,8 @@ var World = new Class({
      *
      * @param {Phaser.GameObjects.GameObject} object1 - [description]
      * @param {Phaser.GameObjects.GameObject} object2 - [description]
-     * @param {function} collideCallback - [description]
-     * @param {function} processCallback - [description]
+     * @param {ArcadePhysicsCallback} collideCallback - [description]
+     * @param {ArcadePhysicsCallback} processCallback - [description]
      * @param {object} callbackContext - [description]
      * @param {boolean} overlapOnly - [description]
      *
@@ -1434,8 +1434,8 @@ var World = new Class({
      *
      * @param {Phaser.GameObjects.GameObject} sprite1 - [description]
      * @param {Phaser.GameObjects.GameObject} sprite2 - [description]
-     * @param {function} collideCallback - [description]
-     * @param {function} processCallback - [description]
+     * @param {ArcadePhysicsCallback} collideCallback - [description]
+     * @param {ArcadePhysicsCallback} processCallback - [description]
      * @param {object} callbackContext - [description]
      * @param {boolean} overlapOnly - [description]
      *
@@ -1469,8 +1469,8 @@ var World = new Class({
      *
      * @param {Phaser.GameObjects.GameObject} sprite - [description]
      * @param {Phaser.GameObjects.Group} group - [description]
-     * @param {function} collideCallback - [description]
-     * @param {function} processCallback - [description]
+     * @param {ArcadePhysicsCallback} collideCallback - [description]
+     * @param {ArcadePhysicsCallback} processCallback - [description]
      * @param {object} callbackContext - [description]
      * @param {boolean} overlapOnly - [description]
      *
@@ -1532,8 +1532,8 @@ var World = new Class({
      *
      * @param {Phaser.GameObjects.Group} group - [description]
      * @param {Phaser.Tilemaps.DynamicTilemapLayer|Phaser.Tilemaps.StaticTilemapLayer} tilemapLayer - [description]
-     * @param {function} collideCallback - [description]
-     * @param {function} processCallback - [description]
+     * @param {ArcadePhysicsCallback} collideCallback - [description]
+     * @param {ArcadePhysicsCallback} processCallback - [description]
      * @param {object} callbackContext - [description]
      * @param {boolean} overlapOnly - [description]
      *
@@ -1572,8 +1572,8 @@ var World = new Class({
      *
      * @param {Phaser.GameObjects.GameObject} sprite - [description]
      * @param {Phaser.Tilemaps.DynamicTilemapLayer|Phaser.Tilemaps.StaticTilemapLayer} tilemapLayer - [description]
-     * @param {function} collideCallback - [description]
-     * @param {function} processCallback - [description]
+     * @param {ArcadePhysicsCallback} collideCallback - [description]
+     * @param {ArcadePhysicsCallback} processCallback - [description]
      * @param {object} callbackContext - [description]
      * @param {boolean} overlapOnly - [description]
      *
@@ -1671,8 +1671,8 @@ var World = new Class({
      *
      * @param {Phaser.GameObjects.Group} group1 - [description]
      * @param {Phaser.GameObjects.Group} group2 - [description]
-     * @param {function} collideCallback - [description]
-     * @param {function} processCallback - [description]
+     * @param {ArcadePhysicsCallback} collideCallback - [description]
+     * @param {ArcadePhysicsCallback} processCallback - [description]
      * @param {object} callbackContext - [description]
      * @param {boolean} overlapOnly - [description]
      *

@@ -7,6 +7,15 @@
 var Class = require('../utils/Class');
 
 /**
+ * @callback DataEachCallback
+ *
+ * @param {any} parent - [description]
+ * @param {string} key - [description]
+ * @param {any} value - [description]
+ * @param {...*} [arguments] - Additional arguments that will be passed to the callback, after the game object, key, and data.
+ */
+
+/**
  * @classdesc
  * The Data Component features a means to store pieces of data specific to a Game Object, System or Plugin.
  * You can then search, query it, and retrieve the data. The parent must either extend EventEmitter,
@@ -199,7 +208,7 @@ var DataManager = new Class({
      * @method Phaser.Data.DataManager#each
      * @since 3.0.0
      *
-     * @param {function} callback - The function to call.
+     * @param {DataEachCallback} callback - The function to call.
      * @param {object} [scope] - Value to use as `this` when executing callback.
      * @param {...*} [arguments] - Additional arguments that will be passed to the callback, after the game object, key, and data.
      *

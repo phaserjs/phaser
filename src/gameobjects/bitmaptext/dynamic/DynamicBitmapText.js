@@ -11,6 +11,20 @@ var GetBitmapTextSize = require('../GetBitmapTextSize');
 var Render = require('./DynamicBitmapTextRender');
 
 /**
+ * @callback DisplayCallback
+ *
+ * @param {object} display - [description]
+ * @param {{topLeft:number,topRight:number,bottomLeft:number,bottomRight:number}} display.tint - [description]
+ * @param {number} display.index - [description]
+ * @param {number} display.charCode - [description]
+ * @param {number} display.x - [description]
+ * @param {number} display.y - [description]
+ * @param {number} display.scale - [description]
+ * @param {number} display.rotation - [description]
+ * @param {[type]} display.data - [description]
+ */
+
+/**
  * @classdesc
  * [description]
  *
@@ -161,7 +175,7 @@ var DynamicBitmapText = new Class({
          * [description]
          *
          * @name Phaser.GameObjects.DynamicBitmapText#displayCallback;
-         * @type {function}
+         * @type {DisplayCallback}
          * @since 3.0.0
          */
         this.displayCallback;
@@ -192,7 +206,7 @@ var DynamicBitmapText = new Class({
      * @method Phaser.GameObjects.DynamicBitmapText#setDisplayCallback
      * @since 3.0.0
      *
-     * @param {function} callback - [description]
+     * @param {DisplayCallback} callback - [description]
      *
      * @return {Phaser.GameObjects.DynamicBitmapText} This Game Object.
      */
@@ -285,21 +299,6 @@ var DynamicBitmapText = new Class({
 
         return this;
     },
-
-    // {
-    //     local: {
-    //         x,
-    //         y,
-    //         width,
-    //         height
-    //     },
-    //     global: {
-    //         x,
-    //         y,
-    //         width,
-    //         height
-    //     }
-    // }
 
     /**
      * [description]

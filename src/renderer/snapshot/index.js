@@ -5,6 +5,12 @@
  */
 
 /**
+ * @callback SnapshotCallback
+ *
+ * @param {HTMLImageElement} snapshot - [description]
+ */
+
+/**
  * @namespace Phaser.Renderer.Snapshot
  */
 

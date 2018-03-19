@@ -7,6 +7,13 @@
 var Class = require('../utils/Class');
 
 /**
+ * @callback EachListCallback
+ *
+ * @param {any} item - [description]
+ * @param {...*} [arguments] - Additional arguments that will be passed to the callback, after the child.
+ */
+
+/**
  * @classdesc
  * [description]
  *
@@ -737,7 +744,7 @@ var List = new Class({
      * @method Phaser.Structs.List#each
      * @since 3.0.0
      *
-     * @param {function} callback - The function to call.
+     * @param {EachListCallback} callback - The function to call.
      * @param {object} [thisArg] - Value to use as `this` when executing callback.
      * @param {...*} [arguments] - Additional arguments that will be passed to the callback, after the child.
      */

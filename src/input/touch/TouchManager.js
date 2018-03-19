@@ -11,6 +11,12 @@ var Class = require('../../utils/Class');
 // https://www.html5rocks.com/en/mobile/touch/
 
 /**
+ * @callback TouchHandler
+ *
+ * @param {TouchEvent} event - [description]
+ */
+
+/**
  * @classdesc
  * [description]
  *
@@ -69,7 +75,7 @@ var TouchManager = new Class({
          * [description]
          *
          * @name Phaser.Input.Touch.TouchManager#handler
-         * @type {function}
+         * @type {TouchHandler}
          * @since 3.0.0
          */
         this.handler;
@@ -154,7 +160,7 @@ var TouchManager = new Class({
             target.addEventListener('touchmove', handler, passive);
             target.addEventListener('touchend', handler, passive);
         }
-        
+
         this.handler = handler;
     },
 

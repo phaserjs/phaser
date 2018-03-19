@@ -8,6 +8,15 @@ var EventEmitter = require('eventemitter3');
 var NOOP = require('../utils/NOOP');
 
 /**
+ * @callback EachActiveSoundCallback
+ *
+ * @param {Phaser.Sound.BaseSoundManager} manager - [description]
+ * @param {Phaser.Sound.BaseSound} sound - [description]
+ * @param {number} index - [description]
+ * @param {Phaser.Sound.BaseSound[]} sounds - [description]
+ */
+
+/**
  * @classdesc
  * The sound manager is responsible for playing back audio via Web Audio API or HTML Audio tag as fallback.
  * The audio file type and the encoding of those files are extremely important.
@@ -466,17 +475,17 @@ var BaseSoundManager = new Class({
      * @private
      * @since 3.0.0
      *
-     * @param {function} callbackfn - Callback function. (sound: ISound, index: number, array: ISound[]) => void
+     * @param {EachActiveSoundCallback} callback - Callback function. (sound: ISound, index: number, array: ISound[]) => void
      * @param {object} [scope] - Callback context.
      */
-    forEachActiveSound: function (callbackfn, scope)
+    forEachActiveSound: function (callback, scope)
     {
         var _this = this;
         this.sounds.forEach(function (sound, index)
         {
             if (!sound.pendingRemove)
             {
-                callbackfn.call(scope || _this, sound, index, _this.sounds);
+                callback.call(scope || _this, sound, index, _this.sounds);
             }
         });
     },
