@@ -61,7 +61,7 @@ var Curve = new Class({
          * An array of cached arc length values.
          *
          * @name Phaser.Curves.Curve#cacheArcLengths
-         * @type {array}
+         * @type {number[]}
          * @default []
          * @since 3.0.0
          */
@@ -110,7 +110,7 @@ var Curve = new Class({
 
     /**
      * Draws this curve on the given Graphics object.
-     * 
+     *
      * The curve is drawn using `Graphics.strokePoints` so will be drawn at whatever the present Graphics stroke color is.
      * The Graphics object is not cleared before the draw, so the curve will appear on-top of anything else already rendered to it.
      *
