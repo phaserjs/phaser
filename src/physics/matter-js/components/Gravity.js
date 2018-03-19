@@ -18,7 +18,7 @@ var Gravity = {
      * @method Phaser.Physics.Matter.Components.Gravity#setIgnoreGravity
      * @since 3.0.0
      *
-     * @param {[type]} value - [description]
+     * @param {boolean} value - [description]
      *
      * @return {Phaser.GameObjects.GameObject} This Game Object.
      */
