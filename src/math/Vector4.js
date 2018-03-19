@@ -293,7 +293,7 @@ var Vector4 = new Class({
      * @method Phaser.Math.Vector4#dot
      * @since 3.0.0
      *
-     * @param {[type]} v - [description]
+     * @param {Phaser.Math.Vector4} v - [description]
      *
      * @return {number} [description]
      */
@@ -308,8 +308,8 @@ var Vector4 = new Class({
      * @method Phaser.Math.Vector4#lerp
      * @since 3.0.0
      *
-     * @param {[type]} v - [description]
-     * @param {[type]} t - [description]
+     * @param {Phaser.Math.Vector4} v - [description]
+     * @param {number} [t=0] - [description]
      *
      * @return {Phaser.Math.Vector4} This Vector4 object.
      */
@@ -336,7 +336,7 @@ var Vector4 = new Class({
      * @method Phaser.Math.Vector4#multiply
      * @since 3.0.0
      *
-     * @param {[type]} v - [description]
+     * @param {Phaser.Math.Vector2|Phaser.Math.Vector3|Phaser.Math.Vector4} v - [description]
      *
      * @return {Phaser.Math.Vector4} This Vector4 object.
      */
@@ -356,7 +356,7 @@ var Vector4 = new Class({
      * @method Phaser.Math.Vector4#divide
      * @since 3.0.0
      *
-     * @param {[type]} v - [description]
+     * @param {Phaser.Math.Vector2|Phaser.Math.Vector3|Phaser.Math.Vector4} v - [description]
      *
      * @return {Phaser.Math.Vector4} This Vector4 object.
      */
@@ -376,7 +376,7 @@ var Vector4 = new Class({
      * @method Phaser.Math.Vector4#distance
      * @since 3.0.0
      *
-     * @param {[type]} v - [description]
+     * @param {Phaser.Math.Vector2|Phaser.Math.Vector3|Phaser.Math.Vector4} v - [description]
      *
      * @return {number} [description]
      */
@@ -396,7 +396,7 @@ var Vector4 = new Class({
      * @method Phaser.Math.Vector4#distanceSq
      * @since 3.0.0
      *
-     * @param {[type]} v - [description]
+     * @param {Phaser.Math.Vector2|Phaser.Math.Vector3|Phaser.Math.Vector4} v - [description]
      *
      * @return {number} [description]
      */
@@ -434,7 +434,7 @@ var Vector4 = new Class({
      * @method Phaser.Math.Vector4#transformMat4
      * @since 3.0.0
      *
-     * @param {[type]} mat - [description]
+     * @param {Phaser.Math.Matrix4} mat - [description]
      *
      * @return {Phaser.Math.Vector4} This Vector4 object.
      */
@@ -456,13 +456,14 @@ var Vector4 = new Class({
 
     //  TODO: is this really the same as Vector3?
     //  Also, what about this: http://molecularmusings.wordpress.com/2013/05/24/a-faster-quaternion-vector-multiplication/
+
     /**
      * [description]
      *
      * @method Phaser.Math.Vector4#transformQuat
      * @since 3.0.0
      *
-     * @param {[type]} q - [description]
+     * @param {Phaser.Math.Quaternion} q - [description]
      *
      * @return {Phaser.Math.Vector4} This Vector4 object.
      */

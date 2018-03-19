@@ -120,7 +120,7 @@ var Systems = new Class({
          * [description]
          *
          * @name Phaser.Scenes.Systems#registry
-         * @type {[type]}
+         * @type {Phaser.Data.DataManager}
          * @since 3.0.0
          */
         this.registry;
