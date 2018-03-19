@@ -77,8 +77,8 @@ var Line = new Class({
      * @method Phaser.Geom.Line#getPoint
      * @since 3.0.0
      *
-     * @param {[type]} position - [description]
-     * @param {[type]} output - [description]
+     * @param {float} position - [description]
+     * @param {Phaser.Geom.Point|object} [output] - [description]
      *
      * @return {Phaser.Geom.Point|object} A Point, or point-like object, containing the coordinates of the point around the ellipse.
      */
@@ -93,11 +93,11 @@ var Line = new Class({
      * @method Phaser.Geom.Line#getPoints
      * @since 3.0.0
      *
-     * @param {[type]} quantity - [description]
-     * @param {[type]} stepRate - [description]
-     * @param {[type]} output - [description]
+     * @param {integer} quantity - [description]
+     * @param {integer} [stepRate] - [description]
+     * @param {array|Phaser.Geom.Point[]} [output] - [description]
      *
-     * @return {[type]} [description]
+     * @return {array|Phaser.Geom.Point[]} [description]
      */
     getPoints: function (quantity, stepRate, output)
     {
@@ -110,9 +110,9 @@ var Line = new Class({
      * @method Phaser.Geom.Line#getRandomPoint
      * @since 3.0.0
      *
-     * @param {[type]} point - [description]
+     * @param {Phaser.Geom.Point|object} point - [description]
      *
-     * @return {[type]} [description]
+     * @return {Phaser.Geom.Point} [description]
      */
     getRandomPoint: function (point)
     {
@@ -125,10 +125,10 @@ var Line = new Class({
      * @method Phaser.Geom.Line#setTo
      * @since 3.0.0
      *
-     * @param {[type]} x1 - [description]
-     * @param {[type]} y1 - [description]
-     * @param {[type]} x2 - [description]
-     * @param {[type]} y2 - [description]
+     * @param {number} [x1=0] - [description]
+     * @param {number} [y1=0] - [description]
+     * @param {number} [x2=0] - [description]
+     * @param {number} [y2=0] - [description]
      *
      * @return {Phaser.Geom.Line} This Line object.
      */
@@ -154,7 +154,7 @@ var Line = new Class({
      * @method Phaser.Geom.Line#getPointA
      * @since 3.0.0
      *
-     * @return {[type]} [description]
+     * @return {{x:number,y:number}} [description]
      */
     getPointA: function ()
     {
@@ -167,7 +167,7 @@ var Line = new Class({
      * @method Phaser.Geom.Line#getPointB
      * @since 3.0.0
      *
-     * @return {[type]} [description]
+     * @return {{x:number,y:number}} [description]
      */
     getPointB: function ()
     {
@@ -176,7 +176,7 @@ var Line = new Class({
 
     /**
      * The left position of the Line.
-     * 
+     *
      * @name Phaser.Geom.Line#left
      * @type {number}
      * @since 3.0.0
@@ -204,7 +204,7 @@ var Line = new Class({
 
     /**
      * The right position of the Line.
-     * 
+     *
      * @name Phaser.Geom.Line#right
      * @type {number}
      * @since 3.0.0
@@ -232,7 +232,7 @@ var Line = new Class({
 
     /**
      * The top position of the Line.
-     * 
+     *
      * @name Phaser.Geom.Line#top
      * @type {number}
      * @since 3.0.0
@@ -260,7 +260,7 @@ var Line = new Class({
 
     /**
      * The bottom position of the Line.
-     * 
+     *
      * @name Phaser.Geom.Line#bottom
      * @type {number}
      * @since 3.0.0
