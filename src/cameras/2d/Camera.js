@@ -12,6 +12,23 @@ var ValueToColor = require('../../display/color/ValueToColor');
 var Vector2 = require('../../math/Vector2');
 
 /**
+ * @typedef {object} JSONCamera
+ *
+ * @property {string} name - The name of the camera
+ * @property {number} x - The horizontal position of camera
+ * @property {number} y - The vertical position of camera
+ * @property {number} width - The width size of camera
+ * @property {number} height - The height size of camera
+ * @property {number} zoom - The zoom of camera
+ * @property {number} rotation - The rotation of camera
+ * @property {boolean} roundPixels - The round pixels st status of camera
+ * @property {number} scrollX - The horizontal scroll of camera
+ * @property {number} scrollY - The vertical scroll of camera
+ * @property {string} backgroundColor - The background color of camera
+ * @property {object} [bounds] - The bounds of camera // TODO 19/03/2018 Create BoundsObject ({x:number,y:number,width:number,height:number})
+ */
+
+/**
  * @classdesc
  * [description]
  *
@@ -939,7 +956,7 @@ var Camera = new Class({
      * @method Phaser.Cameras.Scene2D.Camera#setBackgroundColor
      * @since 3.0.0
      *
-     * @param {integer} color - [description]
+     * @param {string|number|InputColorObject} color - [description]
      *
      * @return {Phaser.Cameras.Scene2D.Camera} This Camera instance.
      */
@@ -1226,7 +1243,7 @@ var Camera = new Class({
      * @method Phaser.Cameras.Scene2D.Camera#toJSON
      * @since 3.0.0
      *
-     * @return {object} [description]
+     * @return {JSONCamera} [description]
      */
     toJSON: function ()
     {
@@ -1323,7 +1340,7 @@ var Camera = new Class({
             {
                 this._shakeOffsetX = (Math.random() * intensity * this.width * 2 - intensity * this.width) * this.zoom;
                 this._shakeOffsetY = (Math.random() * intensity * this.height * 2 - intensity * this.height) * this.zoom;
-                
+
                 if (this.roundPixels)
                 {
                     this._shakeOffsetX |= 0;

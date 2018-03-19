@@ -10,7 +10,7 @@
  * @function Phaser.DOM.RemoveFromDOM
  * @since 3.0.0
  *
- * @param {any} element - The DOM element to remove from its parent node.
+ * @param {HTMLElement} element - The DOM element to remove from its parent node.
  */
 var RemoveFromDOM = function (element)
 {

@@ -172,7 +172,7 @@ var LineCurve = new Class({
 
     /**
      * Draws this curve on the given Graphics object.
-     * 
+     *
      * The curve is drawn using `Graphics.lineBetween` so will be drawn at whatever the present Graphics line color is.
      * The Graphics object is not cleared before the draw, so the curve will appear on-top of anything else already rendered to it.
      *
@@ -197,7 +197,7 @@ var LineCurve = new Class({
      * @method Phaser.Curves.LineCurve#toJSON
      * @since 3.0.0
      *
-     * @return {object} [description]
+     * @return {JSONCurve} The JSON object containing this curve data.
      */
     toJSON: function ()
     {
@@ -218,7 +218,7 @@ var LineCurve = new Class({
  * @function Phaser.Curves.LineCurve.fromJSON
  * @since 3.0.0
  *
- * @param {object} data - The JSON object containing this curve data.
+ * @param {JSONCurve} data - The JSON object containing this curve data.
  *
  * @return {Phaser.Curves.LineCurve} [description]
  */
