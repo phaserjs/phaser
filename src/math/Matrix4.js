@@ -4,7 +4,7 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-//  Adapted from [gl-matrix](https://github.com/toji/gl-matrix) by toji 
+//  Adapted from [gl-matrix](https://github.com/toji/gl-matrix) by toji
 //  and [vecmath](https://github.com/mattdesl/vecmath) by mattdesl
 
 var Class = require('../utils/Class');
@@ -70,7 +70,7 @@ var Matrix4 = new Class({
      * @method Phaser.Math.Matrix4#set
      * @since 3.0.0
      *
-     * @param {[type]} src - [description]
+     * @param {Phaser.Math.Matrix4} src - [description]
      *
      * @return {Phaser.Math.Matrix4} This Matrix4 object.
      */
@@ -713,7 +713,7 @@ var Matrix4 = new Class({
         {
             return null;
         }
-        
+
         len = 1 / len;
         x *= len;
         y *= len;

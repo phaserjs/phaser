@@ -20,7 +20,7 @@ var Rectangle = require('./Rectangle');
  * @function Phaser.Geom.Rectangle.FromPoints
  * @since 3.0.0
  *
- * @param {[type]} points - [description]
+ * @param {array} points - [description]
  * @param {Phaser.Geom.Rectangle} out - [description]
  *
  * @return {Phaser.Geom.Rectangle} [description]

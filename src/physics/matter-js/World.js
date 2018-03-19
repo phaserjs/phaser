@@ -54,16 +54,16 @@ var World = new Class({
          * [description]
          *
          * @name Phaser.Physics.Matter.World#engine
-         * @type {[type]}
+         * @type {Matter.Engine}
          * @since 3.0.0
          */
         this.engine = Engine.create(config);
 
         /**
-         * [description]
+         * A `World` composite object that will contain all simulated bodies and constraints.
          *
          * @name Phaser.Physics.Matter.World#localWorld
-         * @type {[type]}
+         * @type {Matter.World}
          * @since 3.0.0
          */
         this.localWorld = this.engine.world;
@@ -79,7 +79,7 @@ var World = new Class({
          * An object containing the 4 wall bodies that bound the physics world.
          *
          * @name Phaser.Physics.Matter.World#walls
-         * @type {[type]}
+         * @type {object}
          * @since 3.0.0
          */
         this.walls = { left: null, right: null, top: null, bottom: null };
@@ -401,7 +401,7 @@ var World = new Class({
      * @param {number} height - [description]
      * @param {object} options - [description]
      *
-     * @return {[type]} [description]
+     * @return {Matter.Body} [description]
      */
     create: function (x, y, width, height, options)
     {
@@ -412,14 +412,13 @@ var World = new Class({
         return body;
     },
 
-    //  object can be single or an array, and can be a body, composite or constraint
     /**
      * [description]
      *
      * @method Phaser.Physics.Matter.World#add
      * @since 3.0.0
      *
-     * @param {[type]} object - [description]
+     * @param {object|object[]} object - Can be single or an array, and can be a body, composite or constraint
      *
      * @return {Phaser.Physics.Matter.World} This Matter World object.
      */
@@ -436,7 +435,7 @@ var World = new Class({
      * @method Phaser.Physics.Matter.World#remove
      * @since 3.0.0
      *
-     * @param {[type]} object - [description]
+     * @param {object} object - The object to be removed from the world.
      * @param {boolean} deep - [description]
      *
      * @return {Phaser.Physics.Matter.World} This Matter World object.
@@ -456,7 +455,7 @@ var World = new Class({
      * @method Phaser.Physics.Matter.World#removeConstraint
      * @since 3.0.0
      *
-     * @param {[type]} constraint - [description]
+     * @param {Matter.Constraint} constraint - [description]
      * @param {boolean} deep - [description]
      *
      * @return {Phaser.Physics.Matter.World} This Matter World object.
@@ -655,7 +654,7 @@ var World = new Class({
      * @method Phaser.Physics.Matter.World#fromPath
      * @since 3.0.0
      *
-     * @param {[type]} path - [description]
+     * @param {string} path - [description]
      * @param {array} points - [description]
      *
      * @return {array} [description]

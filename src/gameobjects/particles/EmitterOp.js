@@ -121,7 +121,7 @@ var EmitterOp = new Class({
          * [description]
          *
          * @name Phaser.GameObjects.Particles.EmitterOp#onEmit
-         * @type {[type]}
+         * @type {function}
          * @since 3.0.0
          */
         this.onEmit = this.defaultEmit;
@@ -130,7 +130,7 @@ var EmitterOp = new Class({
          * [description]
          *
          * @name Phaser.GameObjects.Particles.EmitterOp#onUpdate
-         * @type {[type]}
+         * @type {function}
          * @since 3.0.0
          */
         this.onUpdate = this.defaultUpdate;
@@ -186,7 +186,7 @@ var EmitterOp = new Class({
      * @method Phaser.GameObjects.Particles.EmitterOp#onChange
      * @since 3.0.0
      *
-     * @param {[type]} value - [description]
+     * @param {number} value - [description]
      *
      * @return {Phaser.GameObjects.Particles.EmitterOp} This Emitter Op object.
      */

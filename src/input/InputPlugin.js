@@ -199,7 +199,7 @@ var InputPlugin = new Class({
          * A list of all Game Objects that have been set to be interactive.
          *
          * @name Phaser.Input.InputPlugin#_list
-         * @type {array}
+         * @type {Phaser.GameObjects.GameObject[]}
          * @private
          * @default []
          * @since 3.0.0
@@ -210,7 +210,7 @@ var InputPlugin = new Class({
          * Objects waiting to be inserted to the list on the next call to 'begin'.
          *
          * @name Phaser.Input.InputPlugin#_pendingInsertion
-         * @type {array}
+         * @type {Phaser.GameObjects.GameObject[]}
          * @private
          * @default []
          * @since 3.0.0
@@ -221,7 +221,7 @@ var InputPlugin = new Class({
          * Objects waiting to be removed from the list on the next call to 'begin'.
          *
          * @name Phaser.Input.InputPlugin#_pendingRemoval
-         * @type {array}
+         * @type {Phaser.GameObjects.GameObject[]}
          * @private
          * @default []
          * @since 3.0.0
@@ -232,7 +232,7 @@ var InputPlugin = new Class({
          * A list of all Game Objects that have been enabled for dragging.
          *
          * @name Phaser.Input.InputPlugin#_draggable
-         * @type {array}
+         * @type {Phaser.GameObjects.GameObject[]}
          * @private
          * @default []
          * @since 3.0.0
@@ -243,7 +243,7 @@ var InputPlugin = new Class({
          * A list of all Interactive Objects currently considered as being 'draggable' by any pointer, indexed by pointer ID.
          *
          * @name Phaser.Input.InputPlugin#_drag
-         * @type {[type]}
+         * @type {{0:Array,2:Array,3:Array,4:Array,5:Array,6:Array,7:Array,8:Array,9:Array}}
          * @private
          * @since 3.0.0
          */
@@ -253,7 +253,7 @@ var InputPlugin = new Class({
          * A list of all Interactive Objects currently considered as being 'over' by any pointer, indexed by pointer ID.
          *
          * @name Phaser.Input.InputPlugin#_over
-         * @type {[type]}
+         * @type {{0:Array,2:Array,3:Array,4:Array,5:Array,6:Array,7:Array,8:Array,9:Array}}
          * @private
          * @since 3.0.0
          */
@@ -263,7 +263,7 @@ var InputPlugin = new Class({
          * [description]
          *
          * @name Phaser.Input.InputPlugin#_validTypes
-         * @type {[type]}
+         * @type {string[]}
          * @private
          * @since 3.0.0
          */
@@ -295,8 +295,6 @@ var InputPlugin = new Class({
      *
      * @method Phaser.Input.InputPlugin#preUpdate
      * @since 3.0.0
-     *
-     * @return {[type]} [description]
      */
     preUpdate: function ()
     {
@@ -423,7 +421,7 @@ var InputPlugin = new Class({
             //  Create an InteractiveObject and enable it
             this.setHitArea(gameObject, shape, callback);
         }
-        
+
         gameObject.input.dropZone = dropZone;
 
         return this;
@@ -476,9 +474,9 @@ var InputPlugin = new Class({
      * @method Phaser.Input.InputPlugin#processDownEvents
      * @since 3.0.0
      *
-     * @param {Phaser.Input.Pointer} pointer - [description]
+     * @param {Phaser.Input.Pointer} pointer - The Pointer to check for events against.
      *
-     * @return {[type]} [description]
+     * @return {integer} The total number of objects interacted with.
      */
     processDownEvents: function (pointer)
     {
@@ -777,9 +775,9 @@ var InputPlugin = new Class({
      * @method Phaser.Input.InputPlugin#processMoveEvents
      * @since 3.0.0
      *
-     * @param {Phaser.Input.Pointer} pointer - [description]
+     * @param {Phaser.Input.Pointer} pointer - The pointer to check for events against.
      *
-     * @return {[type]} [description]
+     * @return {integer} The total number of objects interacted with.
      */
     processMoveEvents: function (pointer)
     {
@@ -975,9 +973,9 @@ var InputPlugin = new Class({
      * @method Phaser.Input.InputPlugin#queueForInsertion
      * @since 3.0.0
      *
-     * @param {[type]} child - [description]
+     * @param {Phaser.GameObjects.GameObject} child - The Game Object to add.
      *
-     * @return {[type]} [description]
+     * @return {Phaser.Input.InputPlugin} This InputPlugin object.
      */
     queueForInsertion: function (child)
     {
@@ -995,9 +993,9 @@ var InputPlugin = new Class({
      * @method Phaser.Input.InputPlugin#queueForRemoval
      * @since 3.0.0
      *
-     * @param {[type]} child - [description]
+     * @param {Phaser.GameObjects.GameObject} child - The Game Object to remove.
      *
-     * @return {[type]} [description]
+     * @return {Phaser.Input.InputPlugin} This InputPlugin object.
      */
     queueForRemoval: function (child)
     {
@@ -1012,10 +1010,10 @@ var InputPlugin = new Class({
      * @method Phaser.Input.InputPlugin#setDraggable
      * @since 3.0.0
      *
-     * @param {[type]} gameObjects - [description]
-     * @param {[type]} value - [description]
+     * @param {Phaser.GameObjects.GameObject|Phaser.GameObjects.GameObject[]} gameObjects - An array of Game Objects to change the draggable state on.
+     * @param {boolean} [value=true] - Set to `true` if the Game Objects should be made draggable, `false` if they should be unset.
      *
-     * @return {[type]} [description]
+     * @return {Phaser.Input.InputPlugin} This InputPlugin object.
      */
     setDraggable: function (gameObjects, value)
     {
@@ -1053,11 +1051,11 @@ var InputPlugin = new Class({
      * @method Phaser.Input.InputPlugin#setHitArea
      * @since 3.0.0
      *
-     * @param {[type]} gameObjects - [description]
-     * @param {[type]} shape - [description]
-     * @param {[type]} callback - [description]
+     * @param {Phaser.GameObjects.GameObject|Phaser.GameObjects.GameObject[]} gameObjects - An array of Game Objects to set the hit area on.
+     * @param {object} [shape] - The shape or object to check if the pointer is within for hit area checks.
+     * @param {function} [callback] - The 'contains' function to invoke to check if the pointer is within the hit area.
      *
-     * @return {[type]} [description]
+     * @return {Phaser.Input.InputPlugin} This InputPlugin object.
      */
     setHitArea: function (gameObjects, shape, callback)
     {
@@ -1089,13 +1087,13 @@ var InputPlugin = new Class({
      * @method Phaser.Input.InputPlugin#setHitAreaCircle
      * @since 3.0.0
      *
-     * @param {[type]} gameObjects - [description]
-     * @param {[type]} x - [description]
-     * @param {[type]} y - [description]
-     * @param {[type]} radius - [description]
-     * @param {[type]} callback - [description]
+     * @param {Phaser.GameObjects.GameObject|Phaser.GameObjects.GameObject[]} gameObjects - An array of Game Objects to set as having a circle hit area.
+     * @param {number} x - The center of the circle.
+     * @param {number} y - The center of the circle.
+     * @param {number} radius - The radius of the circle.
+     * @param {function} [callback] - The hit area callback. If undefined it uses Circle.Contains.
      *
-     * @return {[type]} [description]
+     * @return {Phaser.Input.InputPlugin} This InputPlugin object.
      */
     setHitAreaCircle: function (gameObjects, x, y, radius, callback)
     {
@@ -1112,14 +1110,14 @@ var InputPlugin = new Class({
      * @method Phaser.Input.InputPlugin#setHitAreaEllipse
      * @since 3.0.0
      *
-     * @param {[type]} gameObjects - [description]
-     * @param {[type]} x - [description]
-     * @param {[type]} y - [description]
-     * @param {[type]} width - [description]
-     * @param {[type]} height - [description]
-     * @param {[type]} callback - [description]
+     * @param {Phaser.GameObjects.GameObject|Phaser.GameObjects.GameObject[]} gameObjects - An array of Game Objects to set as having an ellipse hit area.
+     * @param {number} x - The center of the ellipse.
+     * @param {number} y - The center of the ellipse.
+     * @param {number} width - The width of the ellipse.
+     * @param {number} height - The height of the ellipse.
+     * @param {function} [callback] - The hit area callback. If undefined it uses Ellipse.Contains.
      *
-     * @return {[type]} [description]
+     * @return {Phaser.Input.InputPlugin} This InputPlugin object.
      */
     setHitAreaEllipse: function (gameObjects, x, y, width, height, callback)
     {
@@ -1136,10 +1134,10 @@ var InputPlugin = new Class({
      * @method Phaser.Input.InputPlugin#setHitAreaFromTexture
      * @since 3.0.0
      *
-     * @param {[type]} gameObjects - [description]
-     * @param {[type]} callback - [description]
+     * @param {Phaser.GameObjects.GameObject|Phaser.GameObjects.GameObject[]} gameObjects - An array of Game Objects to set as having an ellipse hit area.
+     * @param {function} [callback] - The hit area callback. If undefined it uses Rectangle.Contains.
      *
-     * @return {[type]} [description]
+     * @return {Phaser.Input.InputPlugin} This InputPlugin object.
      */
     setHitAreaFromTexture: function (gameObjects, callback)
     {
@@ -1186,14 +1184,14 @@ var InputPlugin = new Class({
      * @method Phaser.Input.InputPlugin#setHitAreaRectangle
      * @since 3.0.0
      *
-     * @param {[type]} gameObjects - [description]
-     * @param {[type]} x - [description]
-     * @param {[type]} y - [description]
-     * @param {[type]} width - [description]
-     * @param {[type]} height - [description]
-     * @param {[type]} callback - [description]
+     * @param {Phaser.GameObjects.GameObject|Phaser.GameObjects.GameObject[]} gameObjects - An array of Game Objects to set as having a rectangular hit area.
+     * @param {number} x - The top-left of the rectangle.
+     * @param {number} y - The top-left of the rectangle.
+     * @param {number} width - The width of the rectangle.
+     * @param {number} height - The height of the rectangle.
+     * @param {function} [callback] - The hit area callback. If undefined it uses Rectangle.Contains.
      *
-     * @return {[type]} [description]
+     * @return {Phaser.Input.InputPlugin} This InputPlugin object.
      */
     setHitAreaRectangle: function (gameObjects, x, y, width, height, callback)
     {
@@ -1210,16 +1208,16 @@ var InputPlugin = new Class({
      * @method Phaser.Input.InputPlugin#setHitAreaTriangle
      * @since 3.0.0
      *
-     * @param {[type]} gameObjects - [description]
-     * @param {[type]} x1 - [description]
-     * @param {[type]} y1 - [description]
-     * @param {[type]} x2 - [description]
-     * @param {[type]} y2 - [description]
-     * @param {[type]} x3 - [description]
-     * @param {[type]} y3 - [description]
-     * @param {[type]} callback - [description]
+     * @param {Phaser.GameObjects.GameObject|Phaser.GameObjects.GameObject[]} gameObjects - An array of Game Objects to set as having a  triangular hit area.
+     * @param {number} x1 - The x coordinate of the first point of the triangle.
+     * @param {number} y1 - The y coordinate of the first point of the triangle.
+     * @param {number} x2 - The x coordinate of the second point of the triangle.
+     * @param {number} y2 - The y coordinate of the second point of the triangle.
+     * @param {number} x3 - The x coordinate of the third point of the triangle.
+     * @param {number} y3 - The y coordinate of the third point of the triangle.
+     * @param {function} [callback] - The hit area callback. If undefined it uses Triangle.Contains.
      *
-     * @return {[type]} [description]
+     * @return {Phaser.Input.InputPlugin} This InputPlugin object.
      */
     setHitAreaTriangle: function (gameObjects, x1, y1, x2, y2, x3, y3, callback)
     {
@@ -1236,7 +1234,7 @@ var InputPlugin = new Class({
      * @method Phaser.Input.InputPlugin#setPollAlways
      * @since 3.0.0
      *
-     * @return {[type]} [description]
+     * @return {Phaser.Input.InputPlugin} This InputPlugin object.
      */
     setPollAlways: function ()
     {
@@ -1252,7 +1250,7 @@ var InputPlugin = new Class({
      * @method Phaser.Input.InputPlugin#setPollOnMove
      * @since 3.0.0
      *
-     * @return {[type]} [description]
+     * @return {Phaser.Input.InputPlugin} This InputPlugin object.
      */
     setPollOnMove: function ()
     {
@@ -1268,9 +1266,9 @@ var InputPlugin = new Class({
      * @method Phaser.Input.InputPlugin#setPollRate
      * @since 3.0.0
      *
-     * @param {[type]} value - [description]
+     * @param {number} value - [description]
      *
-     * @return {[type]} [description]
+     * @return {Phaser.Input.InputPlugin} This InputPlugin object.
      */
     setPollRate: function (value)
     {
@@ -1286,9 +1284,9 @@ var InputPlugin = new Class({
      * @method Phaser.Input.InputPlugin#setGlobalTopOnly
      * @since 3.0.0
      *
-     * @param {[type]} value - [description]
+     * @param {boolean} value - [description]
      *
-     * @return {[type]} [description]
+     * @return {Phaser.Input.InputPlugin} This InputPlugin object.
      */
     setGlobalTopOnly: function (value)
     {
@@ -1303,9 +1301,9 @@ var InputPlugin = new Class({
      * @method Phaser.Input.InputPlugin#setTopOnly
      * @since 3.0.0
      *
-     * @param {[type]} value - [description]
+     * @param {boolean} value - [description]
      *
-     * @return {[type]} [description]
+     * @return {Phaser.Input.InputPlugin} This InputPlugin object.
      */
     setTopOnly: function (value)
     {
@@ -1321,9 +1319,9 @@ var InputPlugin = new Class({
      * @method Phaser.Input.InputPlugin#sortGameObjects
      * @since 3.0.0
      *
-     * @param {[type]} gameObjects - [description]
+     * @param {Phaser.GameObjects.GameObject[]} gameObjects - [description]
      *
-     * @return {[type]} [description]
+     * @return {Phaser.GameObjects.GameObject[]} [description]
      */
     sortGameObjects: function (gameObjects)
     {
@@ -1343,10 +1341,10 @@ var InputPlugin = new Class({
      * @method Phaser.Input.InputPlugin#sortHandlerGO
      * @since 3.0.0
      *
-     * @param {[type]} childA - [description]
-     * @param {[type]} childB - [description]
+     * @param {Phaser.GameObjects.GameObject} childA - [description]
+     * @param {Phaser.GameObjects.GameObject} childB - [description]
      *
-     * @return {[type]} [description]
+     * @return {integer} [description]
      */
     sortHandlerGO: function (childA, childB)
     {
@@ -1375,10 +1373,10 @@ var InputPlugin = new Class({
      * @method Phaser.Input.InputPlugin#sortHandlerIO
      * @since 3.0.0
      *
-     * @param {[type]} childA - [description]
-     * @param {[type]} childB - [description]
+     * @param {Phaser.Input.InteractiveObject} childA - [description]
+     * @param {Phaser.Input.InteractiveObject} childB - [description]
      *
-     * @return {[type]} [description]
+     * @return {integer} [description]
      */
     sortHandlerIO: function (childA, childB)
     {
@@ -1408,9 +1406,9 @@ var InputPlugin = new Class({
      * @method Phaser.Input.InputPlugin#sortInteractiveObjects
      * @since 3.0.0
      *
-     * @param {[type]} interactiveObjects - [description]
+     * @param {Phaser.Input.InteractiveObject[]} interactiveObjects - [description]
      *
-     * @return {[type]} [description]
+     * @return {Phaser.Input.InteractiveObject[]} [description]
      */
     sortInteractiveObjects: function (interactiveObjects)
     {
@@ -1430,7 +1428,7 @@ var InputPlugin = new Class({
      * @method Phaser.Input.InputPlugin#stopPropagation
      * @since 3.0.0
      *
-     * @return {[type]} [description]
+     * @return {Phaser.Input.InputPlugin} This InputPlugin object.
      */
     stopPropagation: function ()
     {
@@ -1579,7 +1577,7 @@ var InputPlugin = new Class({
 
     /**
      * The current active input Pointer.
-     * 
+     *
      * @name Phaser.Input.InputPlugin#activePointer
      * @type {Phaser.Input.Pointer}
      * @readOnly
@@ -1597,7 +1595,7 @@ var InputPlugin = new Class({
     /**
      * The x coordinates of the ActivePointer based on the first camera in the camera list.
      * This is only safe to use if your game has just 1 non-transformed camera and doesn't use multi-touch.
-     * 
+     *
      * @name Phaser.Input.InputPlugin#x
      * @type {number}
      * @readOnly
@@ -1615,7 +1613,7 @@ var InputPlugin = new Class({
     /**
      * The y coordinates of the ActivePointer based on the first camera in the camera list.
      * This is only safe to use if your game has just 1 non-transformed camera and doesn't use multi-touch.
-     * 
+     *
      * @name Phaser.Input.InputPlugin#y
      * @type {number}
      * @readOnly

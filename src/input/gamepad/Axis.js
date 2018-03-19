@@ -15,7 +15,7 @@ var Class = require('../../utils/Class');
  * @constructor
  * @since 3.0.0
  *
- * @param {[type]} pad - [description]
+ * @param {Phaser.Input.Gamepad.Gamepad} pad - [description]
  * @param {integer} index - [description]
  */
 var Axis = new Class({
@@ -37,7 +37,7 @@ var Axis = new Class({
          * [description]
          *
          * @name Phaser.Input.Gamepad.Axis#events
-         * @type {[type]}
+         * @type {EventEmitter}
          * @since 3.0.0
          */
         this.events = pad.events;
@@ -70,7 +70,7 @@ var Axis = new Class({
      * @method Phaser.Input.Gamepad.Axis#update
      * @since 3.0.0
      *
-     * @param {[type]} value - [description]
+     * @param {float} value - [description]
      */
     update: function (value)
     {
@@ -83,7 +83,7 @@ var Axis = new Class({
      * @method Phaser.Input.Gamepad.Axis#getValue
      * @since 3.0.0
      *
-     * @return {[type]} [description]
+     * @return {float} [description]
      */
     getValue: function ()
     {

@@ -16,10 +16,10 @@ var Class = require('../../utils/Class');
  * @since 3.0.0
  *
  * @param {Phaser.Scene} scene - [description]
- * @param {[type]} renderable - [description]
+ * @param {Phaser.GameObjects.GameObject} renderable - A renderable Game Object that uses a texture, such as a Sprite.
  */
 var BitmapMask = new Class({
-    
+
     initialize:
 
     function BitmapMask (scene, renderable)
@@ -27,10 +27,10 @@ var BitmapMask = new Class({
         var renderer = scene.sys.game.renderer;
 
         /**
-         * [description]
+         * A renderable Game Object that uses a texture, such as a Sprite.
          *
          * @name Phaser.Display.Masks.BitmapMask#bitmapMask
-         * @type {[type]}
+         * @type {Phaser.GameObjects.GameObject}
          * @since 3.0.0
          */
         this.bitmapMask = renderable;
@@ -38,28 +38,8 @@ var BitmapMask = new Class({
         /**
          * [description]
          *
-         * @name Phaser.Display.Masks.BitmapMask#maskRenderTarget
-         * @type {[type]}
-         * @default null
-         * @since 3.0.0
-         */
-        this.maskRenderTarget = null;
-
-        /**
-         * [description]
-         *
-         * @name Phaser.Display.Masks.BitmapMask#mainRenderTarget
-         * @type {[type]}
-         * @default null
-         * @since 3.0.0
-         */
-        this.mainRenderTarget = null;
-
-        /**
-         * [description]
-         *
          * @name Phaser.Display.Masks.BitmapMask#maskTexture
-         * @type {[type]}
+         * @type {WebGLTexture}
          * @default null
          * @since 3.0.0
          */
@@ -69,7 +49,7 @@ var BitmapMask = new Class({
          * [description]
          *
          * @name Phaser.Display.Masks.BitmapMask#mainTexture
-         * @type {[type]}
+         * @type {WebGLTexture}
          * @default null
          * @since 3.0.0
          */
@@ -125,7 +105,7 @@ var BitmapMask = new Class({
             this.maskTexture = renderer.createTexture2D(0, filter, filter, wrap, wrap, gl.RGBA, null, width, height);
             this.mainFramebuffer = renderer.createFramebuffer(width, height, this.mainTexture, false);
             this.maskFramebuffer = renderer.createFramebuffer(width, height, this.maskTexture, false);
-            
+
             renderer.onContextRestored(function (renderer)
             {
                 var width = renderer.width;
@@ -150,7 +130,7 @@ var BitmapMask = new Class({
      * @method Phaser.Display.Masks.BitmapMask#setBitmap
      * @since 3.0.0
      *
-     * @param {[type]} renderable - [description]
+     * @param {Phaser.GameObjects.GameObject} renderable - A renderable Game Object that uses a texture, such as a Sprite.
      */
     setBitmap: function (renderable)
     {
@@ -163,8 +143,8 @@ var BitmapMask = new Class({
      * @method Phaser.Display.Masks.BitmapMask#preRenderWebGL
      * @since 3.0.0
      *
-     * @param {[type]} renderer - [description]
-     * @param {[type]} maskedObject - [description]
+     * @param {Phaser.Renderer.Canvas.CanvasRenderer|Phaser.Renderer.WebGL.WebGLRenderer} renderer - [description]
+     * @param {Phaser.GameObjects.GameObject} maskedObject - [description]
      * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera to render to.
      */
     preRenderWebGL: function (renderer, maskedObject, camera)
@@ -178,7 +158,7 @@ var BitmapMask = new Class({
      * @method Phaser.Display.Masks.BitmapMask#postRenderWebGL
      * @since 3.0.0
      *
-     * @param {[type]} renderer - [description]
+     * @param {Phaser.Renderer.Canvas.CanvasRenderer|Phaser.Renderer.WebGL.WebGLRenderer} renderer - [description]
      */
     postRenderWebGL: function (renderer)
     {
@@ -191,8 +171,8 @@ var BitmapMask = new Class({
      * @method Phaser.Display.Masks.BitmapMask#preRenderCanvas
      * @since 3.0.0
      *
-     * @param {[type]} renderer - [description]
-     * @param {[type]} mask - [description]
+     * @param {Phaser.Renderer.Canvas.CanvasRenderer|Phaser.Renderer.WebGL.WebGLRenderer} renderer - [description]
+     * @param {Phaser.GameObjects.GameObject} mask - [description]
      * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera to render to.
      */
     preRenderCanvas: function ()
@@ -206,7 +186,7 @@ var BitmapMask = new Class({
      * @method Phaser.Display.Masks.BitmapMask#postRenderCanvas
      * @since 3.0.0
      *
-     * @param {[type]} renderer - [description]
+     * @param {Phaser.Renderer.Canvas.CanvasRenderer|Phaser.Renderer.WebGL.WebGLRenderer} renderer - [description]
      */
     postRenderCanvas: function ()
     {

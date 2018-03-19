@@ -11,9 +11,9 @@ var GetValue = require('../utils/object/GetValue');
 /**
  * @classdesc
  * A Frame based Animation.
- * 
+ *
  * This consists of a key, some default values (like the frame rate) and a bunch of Frame objects.
- * 
+ *
  * The Animation Manager creates these. Game Objects don't own an instance of these directly.
  * Game Objects have the Animation Component, which are like playheads to global Animations (these objects)
  * So multiple Game Objects can have playheads all pointing to this one Animation instance.
@@ -303,7 +303,7 @@ var Animation = new Class({
      * @method Phaser.Animations.Animation#addFrame
      * @since 3.0.0
      *
-     * @param {[type]} config - [description]
+     * @param {string|object[]} config - [description]
      *
      * @return {Phaser.Animations.Animation} This Animation object.
      */
@@ -326,7 +326,7 @@ var Animation = new Class({
      * @since 3.0.0
      *
      * @param {integer} index - [description]
-     * @param {[type]} config - [description]
+     * @param {string|object[]} config - [description]
      *
      * @return {Phaser.Animations.Animation} This Animation object.
      */
@@ -436,7 +436,8 @@ var Animation = new Class({
      * @since 3.0.0
      *
      * @param {Phaser.Textures.TextureManager} textureManager - [description]
-     * @param {[type]} frames - [description]
+     * @param {string|object[]} frames - [description]
+     * @param {string} [defaultTextureKey] - [description]
      *
      * @return {Phaser.Animations.AnimationFrame[]} [description]
      */

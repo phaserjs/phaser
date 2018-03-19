@@ -3,17 +3,18 @@
 * Source: http://www.html5gamedevs.com/topic/5988-phaser-12-ie9/
 * Cameron Foale (http://www.kibibu.com)
 */
-if (typeof window.Uint32Array !== "function" && typeof window.Uint32Array !== "object")
+if (typeof window.Uint32Array !== 'function' && typeof window.Uint32Array !== 'object')
 {
-    var CheapArray = function(type)
+    var CheapArray = function (fakeType)
     {
         var proto = new Array(); // jshint ignore:line
 
-        window[type] = function(arg) {
+        window[fakeType] = function(arg) {
 
-            if (typeof(arg) === "number")
+            if (typeof(arg) === 'number')
             {
                 Array.call(this, arg);
+
                 this.length = arg;
 
                 for (var i = 0; i < this.length; i++)
@@ -34,8 +35,8 @@ if (typeof window.Uint32Array !== "function" && typeof window.Uint32Array !== "o
             }
         };
 
-        window[type].prototype = proto;
-        window[type].constructor = window[type];
+        window[fakeType].prototype = proto;
+        window[fakeType].constructor = window[fakeType];
     };
 
     CheapArray('Float32Array'); // jshint ignore:line

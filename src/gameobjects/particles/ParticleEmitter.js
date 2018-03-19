@@ -149,7 +149,7 @@ var ParticleEmitter = new Class({
 
         /**
          * The name of this Game Object.
-         * 
+         *
          * Empty by default and never populated by Phaser, this is left for developers to use.
          *
          * @name Phaser.GameObjects.Particles.ParticleEmitter#name
@@ -614,7 +614,7 @@ var ParticleEmitter = new Class({
          * [description]
          *
          * @name Phaser.GameObjects.Particles.ParticleEmitter#follow
-         * @type {?[type]}
+         * @type {?Phaser.GameObjects.Particles.Particle}
          * @default null
          * @since 3.0.0
          */
@@ -673,7 +673,7 @@ var ParticleEmitter = new Class({
          * [description]
          *
          * @name Phaser.GameObjects.Particles.ParticleEmitter#dead
-         * @type {array}
+         * @type {Phaser.GameObjects.Particles.Particle[]}
          * @private
          * @since 3.0.0
          */
@@ -683,7 +683,7 @@ var ParticleEmitter = new Class({
          * [description]
          *
          * @name Phaser.GameObjects.Particles.ParticleEmitter#alive
-         * @type {array}
+         * @type {Phaser.GameObjects.Particles.Particle[]}
          * @private
          * @since 3.0.0
          */
@@ -877,10 +877,10 @@ var ParticleEmitter = new Class({
      * @method Phaser.GameObjects.Particles.ParticleEmitter#startFollow
      * @since 3.0.0
      *
-     * @param {[type]} target - [description]
-     * @param {number} offsetX - [description]
-     * @param {number} offsetY - [description]
-     * @param {boolean} trackVisible - [description]
+     * @param {Phaser.GameObjects.Particles.Particle} target - [description]
+     * @param {number} [offsetX=0] - [description]
+     * @param {number} [offsetY=0] - [description]
+     * @param {boolean} [trackVisible=false] - [description]
      *
      * @return {Phaser.GameObjects.Particles.ParticleEmitter} This Particle Emitter.
      */
@@ -985,7 +985,7 @@ var ParticleEmitter = new Class({
         else if (t === 'object')
         {
             var frameConfig = frames;
-            
+
             frames = GetFastValue(frameConfig, 'frames', null);
 
             if (frames)
@@ -1372,7 +1372,7 @@ var ParticleEmitter = new Class({
      * @method Phaser.GameObjects.Particles.ParticleEmitter#setEmitZone
      * @since 3.0.0
      *
-     * @param {[type]} zoneConfig - [description]
+     * @param {object} [zoneConfig] - [description]
      *
      * @return {Phaser.GameObjects.Particles.ParticleEmitter} This Particle Emitter.
      */
@@ -1424,7 +1424,7 @@ var ParticleEmitter = new Class({
      * @method Phaser.GameObjects.Particles.ParticleEmitter#setDeathZone
      * @since 3.0.0
      *
-     * @param {[type]} zoneConfig - [description]
+     * @param {object} [zoneConfig] - [description]
      *
      * @return {Phaser.GameObjects.Particles.ParticleEmitter} This Particle Emitter.
      */
@@ -1534,8 +1534,8 @@ var ParticleEmitter = new Class({
      * @method Phaser.GameObjects.Particles.ParticleEmitter#onParticleEmit
      * @since 3.0.0
      *
-     * @param {[type]} callback - [description]
-     * @param {[type]} context - [description]
+     * @param {function} callback - [description]
+     * @param {any} [context] - [description]
      *
      * @return {Phaser.GameObjects.Particles.ParticleEmitter} This Particle Emitter.
      */
@@ -1566,8 +1566,8 @@ var ParticleEmitter = new Class({
      * @method Phaser.GameObjects.Particles.ParticleEmitter#onParticleDeath
      * @since 3.0.0
      *
-     * @param {[type]} callback - [description]
-     * @param {[type]} context - [description]
+     * @param {function} callback - [description]
+     * @param {any} [context] - [description]
      *
      * @return {Phaser.GameObjects.Particles.ParticleEmitter} This Particle Emitter.
      */
@@ -1619,8 +1619,8 @@ var ParticleEmitter = new Class({
      * @method Phaser.GameObjects.Particles.ParticleEmitter#forEachAlive
      * @since 3.0.0
      *
-     * @param {[type]} callback - [description]
-     * @param {[type]} thisArg - [description]
+     * @param {function} callback - [description]
+     * @param {any} thisArg - [description]
      *
      * @return {Phaser.GameObjects.Particles.ParticleEmitter} This Particle Emitter.
      */
@@ -1644,8 +1644,8 @@ var ParticleEmitter = new Class({
      * @method Phaser.GameObjects.Particles.ParticleEmitter#forEachDead
      * @since 3.0.0
      *
-     * @param {[type]} callback - [description]
-     * @param {[type]} thisArg - [description]
+     * @param {function} callback - [description]
+     * @param {any} thisArg - [description]
      *
      * @return {Phaser.GameObjects.Particles.ParticleEmitter} This Particle Emitter.
      */
@@ -1914,7 +1914,7 @@ var ParticleEmitter = new Class({
 
             StableSort.inplace(particles, this.indexSortCallback);
         }
-        
+
         if (!this.on)
         {
             return;

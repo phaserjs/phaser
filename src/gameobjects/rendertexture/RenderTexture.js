@@ -130,7 +130,7 @@ var RenderTexture = new Class({
      * @method Phaser.GameObjects.RenderTexture#setGlobalTint
      * @since 3.2.0
      *
-     * @param {int} tint [description]
+     * @param {integer} tint [description]
      *
      * @return {Phaser.GameObjects.RenderTexture} [description]
      */

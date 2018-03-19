@@ -18,7 +18,7 @@ var Vector2 = require('../../math/Vector2');
  *
  * A PathFollower is a Sprite Game Object with some extra helpers to allow it to follow a Path automatically.
  *
- * Anything you can do with a standard Sprite can be done with this PathFollower, such as animate it, tint it, 
+ * Anything you can do with a standard Sprite can be done with this PathFollower, such as animate it, tint it,
  * scale it and so on.
  *
  * PathFollowers are bound to a single Path at any one time and can traverse the length of the Path, from start
@@ -121,7 +121,7 @@ var PathFollower = new Class({
          * [description]
          *
          * @name Phaser.GameObjects.PathFollower#pathConfig
-         * @type {?[type]}
+         * @type {?object}
          * @default null
          * @since 3.0.0
          */
@@ -145,7 +145,7 @@ var PathFollower = new Class({
      * @since 3.0.0
      *
      * @param {Phaser.Curves.Path} path - The Path this PathFollower is following. It can only follow one Path at a time.
-     * @param {[type]} config - [description]
+     * @param {object} config - [description]
      *
      * @return {Phaser.GameObjects.PathFollower} This Game Object.
      */
@@ -177,9 +177,9 @@ var PathFollower = new Class({
      * @method Phaser.GameObjects.PathFollower#setRotateToPath
      * @since 3.0.0
      *
-     * @param {[type]} value - [description]
-     * @param {[type]} offset - [description]
-     * @param {[type]} verticalAdjust - [description]
+     * @param {number} value - [description]
+     * @param {number} [offset=0] - [description]
+     * @param {boolean} [verticalAdjust=false] - [description]
      *
      * @return {Phaser.GameObjects.PathFollower} This Game Object.
      */

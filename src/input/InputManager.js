@@ -128,7 +128,7 @@ var InputManager = new Class({
          * [description]
          *
          * @name Phaser.Input.InputManager#activePointer
-         * @type {[type]}
+         * @type {Phaser.Input.Pointer}
          * @since 3.0.0
          */
         this.activePointer = new Pointer(this, 0);
@@ -137,7 +137,7 @@ var InputManager = new Class({
          * [description]
          *
          * @name Phaser.Input.InputManager#scale
-         * @type {object}
+         * @type {{x:number,y:number}}
          * @since 3.0.0
          */
         this.scale = { x: 1, y: 1 };
@@ -178,7 +178,7 @@ var InputManager = new Class({
          * [description]
          *
          * @name Phaser.Input.InputManager#_tempPoint
-         * @type {object}
+         * @type {{x:number,y:number}}
          * @private
          * @since 3.0.0
          */

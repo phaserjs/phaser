@@ -71,7 +71,7 @@ var Factory = new Class({
      * @param {number} height - [description]
      * @param {object} options - [description]
      *
-     * @return {object} A Matter JS Body.
+     * @return {Matter.Body} A Matter JS Body.
      */
     rectangle: function (x, y, width, height, options)
     {
@@ -95,7 +95,7 @@ var Factory = new Class({
      * @param {number} slope - [description]
      * @param {object} options - [description]
      *
-     * @return {object} A Matter JS Body.
+     * @return {Matter.Body} A Matter JS Body.
      */
     trapezoid: function (x, y, width, height, slope, options)
     {
@@ -118,7 +118,7 @@ var Factory = new Class({
      * @param {object} options - [description]
      * @param {number} maxSides - [description]
      *
-     * @return {object} A Matter JS Body.
+     * @return {Matter.Body} A Matter JS Body.
      */
     circle: function (x, y, radius, options, maxSides)
     {
@@ -141,7 +141,7 @@ var Factory = new Class({
      * @param {number} radius - [description]
      * @param {object} options - [description]
      *
-     * @return {object} A Matter JS Body.
+     * @return {Matter.Body} A Matter JS Body.
      */
     polygon: function (x, y, sides, radius, options)
     {
@@ -166,7 +166,7 @@ var Factory = new Class({
      * @param {boolean} removeCollinear - [description]
      * @param {number} minimumArea - [description]
      *
-     * @return {object} A Matter JS Body.
+     * @return {Matter.Body} A Matter JS Body.
      */
     fromVertices: function (x, y, vertexSets, options, flagInternal, removeCollinear, minimumArea)
     {
@@ -178,7 +178,8 @@ var Factory = new Class({
     },
 
     /**
-     * [description]
+     * Create a new composite containing Matter Image objects created in a grid arrangement.
+     * This function uses the body bounds to prevent overlaps.
      *
      * @method Phaser.Physics.Matter.Factory#imageStack
      * @since 3.0.0
@@ -187,13 +188,13 @@ var Factory = new Class({
      * @param {string|integer} [frame] - An optional frame from the Texture this Game Object is rendering with.
      * @param {number} x - The horizontal position of this composite in the world.
      * @param {number} y - The vertical position of this composite in the world.
-     * @param {number} columns - The number of columns in the Composite.
-     * @param {number} rows - The number of rows in the Composite.
+     * @param {number} columns - The number of columns in the grid.
+     * @param {number} rows - The number of rows in the grid.
      * @param {number} columnGap - The distance between each column.
      * @param {number} rowGap - The distance between each row.
      * @param {object} options - [description]
      *
-     * @return {object} A Matter JS Composite Stack.
+     * @return {Matter.Composite} A Matter JS Composite Stack.
      */
     imageStack: function (key, frame, x, y, columns, rows, columnGap, rowGap, options)
     {
@@ -221,20 +222,21 @@ var Factory = new Class({
     },
 
     /**
-     * [description]
+     * Create a new composite containing bodies created in the callback in a grid arrangement.
+     * This function uses the body bounds to prevent overlaps.
      *
      * @method Phaser.Physics.Matter.Factory#stack
      * @since 3.0.0
      *
      * @param {number} x - The horizontal position of this composite in the world.
      * @param {number} y - The vertical position of this composite in the world.
-     * @param {number} columns - The number of columns in the Composite.
-     * @param {number} rows - The number of rows in the Composite.
+     * @param {number} columns - The number of columns in the grid.
+     * @param {number} rows - The number of rows in the grid.
      * @param {number} columnGap - The distance between each column.
      * @param {number} rowGap - The distance between each row.
-     * @param {function} callback - [description]
+     * @param {function} callback - The callback that creates the stack.
      *
-     * @return {object} A Matter JS Composite Stack.
+     * @return {Matter.Composite} A new composite containing objects created in the callback.
      */
     stack: function (x, y, columns, rows, columnGap, rowGap, callback)
     {
@@ -246,20 +248,21 @@ var Factory = new Class({
     },
 
     /**
-     * [description]
+     * Create a new composite containing bodies created in the callback in a pyramid arrangement.
+     * This function uses the body bounds to prevent overlaps.
      *
      * @method Phaser.Physics.Matter.Factory#pyramid
      * @since 3.0.0
      *
      * @param {number} x - The horizontal position of this composite in the world.
      * @param {number} y - The vertical position of this composite in the world.
-     * @param {number} columns - The number of columns in the Composite.
-     * @param {number} rows - The number of rows in the Composite.
+     * @param {number} columns - The number of columns in the pyramid.
+     * @param {number} rows - The number of rows in the pyramid.
      * @param {number} columnGap - The distance between each column.
      * @param {number} rowGap - The distance between each row.
      * @param {function} callback - [description]
      *
-     * @return {object} A Matter JS Composite pyramid.
+     * @return {Matter.Composite} A Matter JS Composite pyramid.
      */
     pyramid: function (x, y, columns, rows, columnGap, rowGap, callback)
     {
@@ -271,19 +274,19 @@ var Factory = new Class({
     },
 
     /**
-     * [description]
+     * Chains all bodies in the given composite together using constraints.
      *
      * @method Phaser.Physics.Matter.Factory#chain
      * @since 3.0.0
      *
-     * @param {[type]} composite - [description]
+     * @param {Matter.Composite} composite - [description]
      * @param {number} xOffsetA - [description]
      * @param {number} yOffsetA - [description]
      * @param {number} xOffsetB - [description]
      * @param {number} yOffsetB - [description]
      * @param {object} options - [description]
      *
-     * @return {object} A Matter JS Composite.
+     * @return {Matter.Composite} A new composite containing objects chained together with constraints.
      */
     chain: function (composite, xOffsetA, yOffsetA, xOffsetB, yOffsetB, options)
     {
@@ -291,18 +294,18 @@ var Factory = new Class({
     },
 
     /**
-     * [description]
+     * Connects bodies in the composite with constraints in a grid pattern, with optional cross braces.
      *
      * @method Phaser.Physics.Matter.Factory#mesh
      * @since 3.0.0
      *
-     * @param {[type]} composite - [description]
+     * @param {Matter.Composite} composite - [description]
      * @param {number} columns - [description]
      * @param {number} rows - [description]
      * @param {boolean} crossBrace - [description]
      * @param {object} options - [description]
      *
-     * @return {object} A Matter JS Composite.
+     * @return {Matter.Composite} The composite containing objects meshed together with constraints.
      */
     mesh: function (composite, columns, rows, crossBrace, options)
     {
@@ -310,7 +313,7 @@ var Factory = new Class({
     },
 
     /**
-     * [description]
+     * Creates a composite with a Newton's Cradle setup of bodies and constraints.
      *
      * @method Phaser.Physics.Matter.Factory#newtonsCradle
      * @since 3.0.0
@@ -321,7 +324,7 @@ var Factory = new Class({
      * @param {number} size - [description]
      * @param {number} length - [description]
      *
-     * @return {object} A Matter JS Composite.
+     * @return {Matter.Composite} A new composite newtonsCradle body.
      */
     newtonsCradle: function (x, y, number, size, length)
     {
@@ -333,7 +336,7 @@ var Factory = new Class({
     },
 
     /**
-     * [description]
+     * Creates a composite with simple car setup of bodies and constraints.
      *
      * @method Phaser.Physics.Matter.Factory#car
      * @since 3.0.0
@@ -344,7 +347,7 @@ var Factory = new Class({
      * @param {number} height - [description]
      * @param {number} wheelSize - [description]
      *
-     * @return {object} A Matter JS Composite.
+     * @return {Matter.Composite} A new composite car body.
      */
     car: function (x, y, width, height, wheelSize)
     {
@@ -356,7 +359,7 @@ var Factory = new Class({
     },
 
     /**
-     * [description]
+     * Creates a simple soft body like object.
      *
      * @method Phaser.Physics.Matter.Factory#softBody
      * @since 3.0.0
@@ -372,7 +375,7 @@ var Factory = new Class({
      * @param {object} particleOptions - [description]
      * @param {object} constraintOptions - [description]
      *
-     * @return {object} A Matter JS Composite.
+     * @return {Matter.Composite} A new composite simple soft body.
      */
     softBody: function (x, y, columns, rows, columnGap, rowGap, crossBrace, particleRadius, particleOptions, constraintOptions)
     {
@@ -383,21 +386,19 @@ var Factory = new Class({
         return composite;
     },
 
-    //  To help those used to Box2D
-
     /**
      * [description]
      *
      * @method Phaser.Physics.Matter.Factory#joint
      * @since 3.0.0
      *
-     * @param {[type]} bodyA - [description]
-     * @param {[type]} bodyB - [description]
+     * @param {Matter.Body} bodyA - [description]
+     * @param {Matter.Body} bodyB - [description]
      * @param {number} length - [description]
      * @param {number} [stiffness=1] - [description]
      * @param {object} [options={}] - [description]
      *
-     * @return {object} A Matter JS Constraint.
+     * @return {Matter.Constraint} A Matter JS Constraint.
      */
     joint: function (bodyA, bodyB, length, stiffness, options)
     {
@@ -410,13 +411,13 @@ var Factory = new Class({
      * @method Phaser.Physics.Matter.Factory#spring
      * @since 3.0.0
      *
-     * @param {[type]} bodyA - [description]
-     * @param {[type]} bodyB - [description]
+     * @param {Matter.Body} bodyA - [description]
+     * @param {Matter.Body} bodyB - [description]
      * @param {number} length - [description]
      * @param {number} [stiffness=1] - [description]
      * @param {object} [options={}] - [description]
      *
-     * @return {object} A Matter JS Constraint.
+     * @return {Matter.Constraint} A Matter JS Constraint.
      */
     spring: function (bodyA, bodyB, length, stiffness, options)
     {
@@ -429,13 +430,13 @@ var Factory = new Class({
      * @method Phaser.Physics.Matter.Factory#constraint
      * @since 3.0.0
      *
-     * @param {[type]} bodyA - [description]
-     * @param {[type]} bodyB - [description]
+     * @param {Matter.Body} bodyA - [description]
+     * @param {Matter.Body} bodyB - [description]
      * @param {number} length - [description]
      * @param {number} [stiffness=1] - [description]
      * @param {object} [options={}] - [description]
      *
-     * @return {object} A Matter JS Constraint.
+     * @return {Matter.Constraint} A Matter JS Constraint.
      */
     constraint: function (bodyA, bodyB, length, stiffness, options)
     {
@@ -460,12 +461,12 @@ var Factory = new Class({
      * @method Phaser.Physics.Matter.Factory#worldConstraint
      * @since 3.0.0
      *
-     * @param {[type]} bodyB - [description]
+     * @param {Matter.Body} bodyB - [description]
      * @param {number} length - [description]
      * @param {number} [stiffness=1] - [description]
      * @param {object} [options={}] - [description]
      *
-     * @return {object} A Matter JS Constraint.
+     * @return {Matter.Constraint} A Matter JS Constraint.
      */
     worldConstraint: function (bodyB, length, stiffness, options)
     {
@@ -491,7 +492,7 @@ var Factory = new Class({
      *
      * @param {object} options - [description]
      *
-     * @return {object} A Matter JS Constraint.
+     * @return {Matter.Constraint} A Matter JS Constraint.
      */
     mouseSpring: function (options)
     {
@@ -506,7 +507,7 @@ var Factory = new Class({
      *
      * @param {object} options - [description]
      *
-     * @return {object} A Matter JS Constraint.
+     * @return {Matter.Constraint} A Matter JS Constraint.
      */
     pointerConstraint: function (options)
     {
@@ -538,11 +539,6 @@ var Factory = new Class({
         this.sys.displayList.add(image);
 
         return image;
-    },
-
-    gameObject: function (gameObject, options)
-    {
-        return new MatterGameObject(this.world, gameObject, options);
     },
 
     /**
@@ -585,6 +581,11 @@ var Factory = new Class({
         this.sys.updateList.add(sprite);
 
         return sprite;
+    },
+
+    gameObject: function (gameObject, options)
+    {
+        return new MatterGameObject(this.world, gameObject, options);
     }
 
 });

@@ -216,14 +216,15 @@ AudioFile.findAudioURL = function (game, urls)
             return url;
         }
 
-        var type = url.match(/\.([a-zA-Z0-9]+)($|\?)/);
-        type = GetFastValue(urls[i], 'type', type ? type[1] : '').toLowerCase();
+        var audioType = url.match(/\.([a-zA-Z0-9]+)($|\?)/);
 
-        if (game.device.audio[type])
+        audioType = GetFastValue(urls[i], 'type', (audioType) ? audioType[1] : '').toLowerCase();
+
+        if (game.device.audio[audioType])
         {
             return {
                 uri: url,
-                type: type
+                type: audioType
             };
         }
     }

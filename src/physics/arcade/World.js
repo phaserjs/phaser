@@ -268,11 +268,11 @@ var World = new Class({
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.GameObject|Phaser.GameObjects.GameObject[]} object - [description]
-     * @param {integer} [type] - [description]
+     * @param {integer} [bodyType] - The type of Body to create. Either `DYNAMIC_BODY` or `STATIC_BODY`.
      */
-    enable: function (object, type)
+    enable: function (object, bodyType)
     {
-        if (type === undefined) { type = CONST.DYNAMIC_BODY; }
+        if (bodyType === undefined) { bodyType = CONST.DYNAMIC_BODY; }
 
         var i = 1;
 
@@ -285,22 +285,22 @@ var World = new Class({
                 if (object[i].hasOwnProperty('children'))
                 {
                     //  If it's a Group then we do it on the children regardless
-                    this.enable(object[i].children.entries, type);
+                    this.enable(object[i].children.entries, bodyType);
                 }
                 else
                 {
-                    this.enableBody(object[i], type);
+                    this.enableBody(object[i], bodyType);
                 }
             }
         }
         else if (object.hasOwnProperty('children'))
         {
             //  If it's a Group then we do it on the children regardless
-            this.enable(object.children.entries, type);
+            this.enable(object.children.entries, bodyType);
         }
         else
         {
-            this.enableBody(object, type);
+            this.enableBody(object, bodyType);
         }
     },
 
@@ -311,21 +311,21 @@ var World = new Class({
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.GameObject} object - [description]
-     * @param {integer} type - [description]
+     * @param {integer} [bodyType] - The type of Body to create. Either `DYNAMIC_BODY` or `STATIC_BODY`.
      *
      * @return {Phaser.GameObjects.GameObject} [description]
      */
-    enableBody: function (object, type)
+    enableBody: function (object, bodyType)
     {
         if (object.body === null)
         {
-            if (type === CONST.DYNAMIC_BODY)
+            if (bodyType === CONST.DYNAMIC_BODY)
             {
                 object.body = new Body(this, object);
 
                 this.bodies.set(object.body);
             }
-            else if (type === CONST.STATIC_BODY)
+            else if (bodyType === CONST.STATIC_BODY)
             {
                 object.body = new StaticBody(this, object);
 

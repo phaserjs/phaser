@@ -18,9 +18,9 @@ var Friction = {
      * @method Phaser.Physics.Matter.Components.Friction#setFriction
      * @since 3.0.0
      *
-     * @param {[type]} value - [description]
-     * @param {[type]} [air] - [description]
-     * @param {[type]} [fstatic] - [description]
+     * @param {number} value - [description]
+     * @param {number} [air] - [description]
+     * @param {number} [fstatic] - [description]
      *
      * @return {Phaser.GameObjects.GameObject} This Game Object.
      */
@@ -47,7 +47,7 @@ var Friction = {
      * @method Phaser.Physics.Matter.Components.Friction#setFrictionAir
      * @since 3.0.0
      *
-     * @param {[type]} value - [description]
+     * @param {number} value - [description]
      *
      * @return {Phaser.GameObjects.GameObject} This Game Object.
      */
@@ -64,7 +64,7 @@ var Friction = {
      * @method Phaser.Physics.Matter.Components.Friction#setFrictionStatic
      * @since 3.0.0
      *
-     * @param {[type]} value - [description]
+     * @param {number} value - [description]
      *
      * @return {Phaser.GameObjects.GameObject} This Game Object.
      */
