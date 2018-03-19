@@ -75,7 +75,7 @@
 * Actions.SetX has 2 new arguments: `index` and `direction`.
 * Actions.SetXY has 2 new arguments: `index` and `direction`.
 * Actions.SetY has 2 new arguments: `index` and `direction`.
-
+* Line.getPointA and Line.getPointB now return Vector2 instances instead of un-typed objects.
 
 
 

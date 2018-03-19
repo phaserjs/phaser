@@ -8,6 +8,7 @@ var Class = require('../../utils/Class');
 var GetPoint = require('./GetPoint');
 var GetPoints = require('./GetPoints');
 var Random = require('./Random');
+var Vector2 = require('../../math/Vector2');
 
 /**
  * @classdesc
@@ -154,11 +155,11 @@ var Line = new Class({
      * @method Phaser.Geom.Line#getPointA
      * @since 3.0.0
      *
-     * @return {{x:number,y:number}} [description]
+     * @return {Phaser.Math.Vector2} [description]
      */
     getPointA: function ()
     {
-        return { x: this.x1, y: this.y1 };
+        return new Vector2(this.x1, this.y1);
     },
 
     /**
@@ -167,11 +168,11 @@ var Line = new Class({
      * @method Phaser.Geom.Line#getPointB
      * @since 3.0.0
      *
-     * @return {{x:number,y:number}} [description]
+     * @return {Phaser.Math.Vector2} [description]
      */
     getPointB: function ()
     {
-        return { x: this.x2, y: this.y2 };
+        return new Vector2(this.x2, this.y2);
     },
 
     /**
