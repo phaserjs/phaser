@@ -132,7 +132,7 @@ var CanvasRenderer = new Class({
          * Map to the required function.
          *
          * @name Phaser.Renderer.Canvas.CanvasRenderer#drawImage
-         * @type {function}
+         * @type {Phaser.Renderer.Canvas.DrawImage}
          * @since 3.0.0
          */
         this.drawImage = DrawImage(this.config.roundPixels);
@@ -141,7 +141,7 @@ var CanvasRenderer = new Class({
          * [description]
          *
          * @name Phaser.Renderer.Canvas.CanvasRenderer#blitImage
-         * @type {function}
+         * @type {Phaser.Renderer.Canvas.BlitImage}
          * @since 3.0.0
          */
         this.blitImage = BlitImage(this.config.roundPixels);
@@ -189,7 +189,7 @@ var CanvasRenderer = new Class({
          * [description]
          *
          * @name Phaser.Renderer.Canvas.CanvasRenderer#snapshotCallback
-         * @type {?function}
+         * @type {?SnapshotCallback}
          * @default null
          * @since 3.0.0
          */
@@ -494,7 +494,7 @@ var CanvasRenderer = new Class({
      * @method Phaser.Renderer.Canvas.CanvasRenderer#snapshot
      * @since 3.0.0
      *
-     * @param {function} callback - [description]
+     * @param {SnapshotCallback} callback - [description]
      * @param {string} type - [description]
      * @param {number} encoderOptions - [description]
      */
