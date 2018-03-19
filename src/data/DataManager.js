@@ -104,7 +104,7 @@ var DataManager = new Class({
      * @method Phaser.Data.DataManager#getAll
      * @since 3.0.0
      *
-     * @return {object} [description]
+     * @return {Object.<string, any>} [description]
      */
     getAll: function ()
     {
@@ -112,7 +112,10 @@ var DataManager = new Class({
 
         for (var key in this.list)
         {
-            results[key] = this.list[key];
+            if(this.list.hasOwnProperty(key))
+            {
+                results[key] = this.list[key];
+            }
         }
 
         return results;

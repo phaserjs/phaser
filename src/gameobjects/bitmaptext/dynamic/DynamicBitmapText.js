@@ -309,7 +309,7 @@ var DynamicBitmapText = new Class({
      *
      * @param {boolean} round - [description]
      *
-     * @return {object} [description]
+     * @return {TextBounds} [description]
      */
     getTextBounds: function (round)
     {
@@ -323,7 +323,7 @@ var DynamicBitmapText = new Class({
 
     /**
      * [description]
-     * 
+     *
      * @name Phaser.GameObjects.DynamicBitmapText#width
      * @type {number}
      * @since 3.0.0
@@ -340,7 +340,7 @@ var DynamicBitmapText = new Class({
 
     /**
      * [description]
-     * 
+     *
      * @name Phaser.GameObjects.DynamicBitmapText#height
      * @type {number}
      * @since 3.0.0

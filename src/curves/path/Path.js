@@ -733,7 +733,7 @@ var Path = new Class({
      * @method Phaser.Curves.Path#toJSON
      * @since 3.0.0
      *
-     * @return {object} [description]
+     * @return {JSONPath} [description]
      */
     toJSON: function ()
     {
