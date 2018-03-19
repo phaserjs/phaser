@@ -2,6 +2,8 @@
 
 ## Version 3.3.0 - Tetsuo - In Development
 
+A special mention must go to @orblazer for their outstanding assistance in helping to complete the JSDoc data-types, callbacks and type defs across the API.
+
 ### New Features
 
 * TextStyle has two new properties: `baselineX` and `baselineY` which allow you to customize the 'magic' value used in calculating the text metrics.
@@ -22,6 +24,9 @@
 * Actions.GetLast will return the last element in the items array matching the conditions.
 * Actions.PropertyValueInc is a new action that will increment any property of an array of objects by the given amount, using an optional step value, index and iteration direction. Most Actions have been updated to use this internally.
 * Actions.PropertyValueSet is a new action that will set any property of an array of objects to the given value, using an optional step value, index and iteration direction. Most Actions have been updated to use this internally.
+* Camera.shake now has an optional `callback` argument that is invoked when the effect completes (thanks @pixelscripter)
+* Camera.fade now has an optional `callback` argument that is invoked when the effect completes (thanks @pixelscripter)
+* Camera.flash now has an optional `callback` argument that is invoked when the effect completes (thanks @pixelscripter)
 
 ### Bug Fixes
 
