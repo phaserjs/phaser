@@ -16,7 +16,7 @@ var Class = require('../../utils/Class');
  * @since 3.0.0
  *
  * @param {Phaser.Scene} scene - [description]
- * @param {[type]} renderable - [description]
+ * @param {Phaser.GameObjects.GameObject} renderable - A renderable Game Object that uses a texture, such as a Sprite.
  */
 var BitmapMask = new Class({
 
@@ -27,33 +27,13 @@ var BitmapMask = new Class({
         var renderer = scene.sys.game.renderer;
 
         /**
-         * [description]
+         * A renderable Game Object that uses a texture, such as a Sprite.
          *
          * @name Phaser.Display.Masks.BitmapMask#bitmapMask
-         * @type {[type]}
+         * @type {Phaser.GameObjects.GameObject}
          * @since 3.0.0
          */
         this.bitmapMask = renderable;
-
-        /**
-         * [description]
-         *
-         * @name Phaser.Display.Masks.BitmapMask#maskRenderTarget
-         * @type {[type]}
-         * @default null
-         * @since 3.0.0
-         */
-        this.maskRenderTarget = null;
-
-        /**
-         * [description]
-         *
-         * @name Phaser.Display.Masks.BitmapMask#mainRenderTarget
-         * @type {[type]}
-         * @default null
-         * @since 3.0.0
-         */
-        this.mainRenderTarget = null;
 
         /**
          * [description]
@@ -150,7 +130,7 @@ var BitmapMask = new Class({
      * @method Phaser.Display.Masks.BitmapMask#setBitmap
      * @since 3.0.0
      *
-     * @param {[type]} renderable - [description]
+     * @param {Phaser.GameObjects.GameObject} renderable - A renderable Game Object that uses a texture, such as a Sprite.
      */
     setBitmap: function (renderable)
     {
