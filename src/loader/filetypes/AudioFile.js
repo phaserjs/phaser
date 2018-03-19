@@ -62,7 +62,7 @@ var AudioFile = new Class({
      * @method Phaser.Loader.FileTypes.AudioFile#onProcess
      * @since 3.0.0
      *
-     * @param {function} callback - [description]
+     * @param {FileProcessCallback} callback - [description]
      */
     onProcess: function (callback)
     {

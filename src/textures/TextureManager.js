@@ -14,6 +14,13 @@ var Parser = require('./parsers');
 var Texture = require('./Texture');
 
 /**
+ * @callback EachTextureCallback
+ *
+ * @param {Phaser.Textures.Texture} texture - [description]
+ * @param {...*} [arguments] - Additional arguments that will be passed to the callback, after the child.
+ */
+
+/**
  * @classdesc
  * Textures are managed by the global TextureManager. This is a singleton class that is
  * responsible for creating and delivering Textures and their corresponding Frames to Game Objects.
@@ -163,7 +170,7 @@ var TextureManager = new Class({
         image.onload = function ()
         {
             var texture = _this.create(key, image);
-        
+
             Parser.Image(texture, 0);
 
             _this.emit('onload', key, texture);
@@ -187,7 +194,7 @@ var TextureManager = new Class({
     addImage: function (key, source, dataSource)
     {
         var texture = this.create(key, source);
-        
+
         Parser.Image(texture, 0);
 
         if (dataSource)
@@ -262,7 +269,7 @@ var TextureManager = new Class({
     addCanvas: function (key, source)
     {
         var texture = this.create(key, source);
-        
+
         Parser.Canvas(texture, 0);
 
         return texture;
@@ -386,7 +393,7 @@ var TextureManager = new Class({
 
     /**
      * Adds a Sprite Sheet to this Texture Manager.
-     * 
+     *
      * In Phaser terminology a Sprite Sheet is a texture containing different frames, but each frame is the exact
      * same size and cannot be trimmed or rotated.
      *
@@ -419,7 +426,7 @@ var TextureManager = new Class({
 
     /**
      * Adds a Sprite Sheet to this Texture Manager, where the Sprite Sheet exists as a Frame within a Texture Atlas.
-     * 
+     *
      * In Phaser terminology a Sprite Sheet is a texture containing different frames, but each frame is the exact
      * same size and cannot be trimmed or rotated.
      *
@@ -738,7 +745,7 @@ var TextureManager = new Class({
      * @method Phaser.Textures.TextureManager#each
      * @since 3.0.0
      *
-     * @param {function} callback - The callback function to be sent the Textures.
+     * @param {EachTextureCallback} callback - The callback function to be sent the Textures.
      * @param {object} scope - The value to use as `this` when executing the callback.
      * @param {...*} [arguments] - Additional arguments that will be passed to the callback, after the child.
      */

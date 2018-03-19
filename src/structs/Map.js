@@ -7,6 +7,15 @@
 var Class = require('../utils/Class');
 
 /**
+ * @callback EachMapCallback
+ *
+ * @param {string} key - [description]
+ * @param {any} entry - [description]
+ *
+ * @return {?boolean} [description]
+ */
+
+/**
  * @classdesc
  * The keys of a Map can be arbitrary values.
  * var map = new Map([
@@ -32,7 +41,7 @@ var Map = new Class({
          * [description]
          *
          * @name Phaser.Structs.Map#entries
-         * @type {object}
+         * @type {Object.<string, any>}
          * @default {}
          * @since 3.0.0
          */
@@ -237,7 +246,7 @@ var Map = new Class({
      * @method Phaser.Structs.Map#each
      * @since 3.0.0
      *
-     * @param {function} callback - [description]
+     * @param {EachMapCallback} callback - [description]
      *
      * @return {Phaser.Structs.Map} This Map object.
      */

@@ -13,6 +13,12 @@ var XHRLoader = require('./XHRLoader');
 var XHRSettings = require('./XHRSettings');
 
 /**
+ * @callback FileProcessCallback
+ *
+ * @param {Phaser.Loader.File} file - [description]
+ */
+
+/**
  * @classdesc
  * [description]
  *
@@ -31,7 +37,7 @@ var File = new Class({
     {
         /**
          * The file type string (image, json, etc) for sorting within the Loader.
-         * 
+         *
          * @name Phaser.Loader.File#type
          * @type {string}
          * @since 3.0.0
@@ -219,7 +225,7 @@ var File = new Class({
      *
      * @method Phaser.Loader.File#setLinkFile
      * @since 3.0.0
-     * 
+     *
      * @param {Phaser.Loader.File} fileB - The linked file.
      * @param {string} linkType - The type of association.
      */
@@ -350,7 +356,7 @@ var File = new Class({
      * @method Phaser.Loader.File#onProcess
      * @since 3.0.0
      *
-     * @param {function} callback - The callback to invoke to process this File.
+     * @param {FileProcessCallback} callback - The callback to invoke to process this File.
      */
     onProcess: function (callback)
     {

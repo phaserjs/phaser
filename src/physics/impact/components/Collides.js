@@ -7,6 +7,14 @@
 var COLLIDES = require('../COLLIDES');
 
 /**
+ * @callback CollideCallback
+ *
+ * @param {Phaser.Physics.Impact.Body} body - [description]
+ * @param {Phaser.Physics.Impact.Body} other - [description]
+ * @param {string} axis - [description]
+ */
+
+/**
  * [description]
  *
  * @name Phaser.Physics.Impact.Components.Collides
@@ -23,7 +31,7 @@ var Collides = {
      * @method Phaser.Physics.Impact.Components.Collides#setCollideCallback
      * @since 3.0.0
      *
-     * @param {function} callback - [description]
+     * @param {CollideCallback} callback - [description]
      * @param {object} scope - [description]
      *
      * @return {Phaser.GameObjects.GameObject} This Game Object.
