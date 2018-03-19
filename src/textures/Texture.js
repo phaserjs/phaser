@@ -311,7 +311,7 @@ var Texture = new Class({
      *
      * @param {string|integer} [name] - The string-based name, or integer based index, of the Frame to get from this Texture.
      *
-     * @return {Image|HTMLCanvasElement} The DOM Image or Canvas Element.
+     * @return {HTMLImageElement|HTMLCanvasElement} The DOM Image or Canvas Element.
      */
     getSourceImage: function (name)
     {
