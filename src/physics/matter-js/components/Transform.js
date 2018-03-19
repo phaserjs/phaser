@@ -26,7 +26,7 @@ var Transform = {
      * [description]
      *
      * @name Phaser.Physics.Matter.Components.Transform#x
-     * @type {[type]}
+     * @type {number}
      * @since 3.0.0
      */
     x: {
@@ -49,7 +49,7 @@ var Transform = {
      * [description]
      *
      * @name Phaser.Physics.Matter.Components.Transform#y
-     * @type {[type]}
+     * @type {number}
      * @since 3.0.0
      */
     y: {
@@ -72,7 +72,7 @@ var Transform = {
      * [description]
      *
      * @name Phaser.Physics.Matter.Components.Transform#scaleX
-     * @type {[type]}
+     * @type {number}
      * @since 3.0.0
      */
     scaleX: {
@@ -104,7 +104,7 @@ var Transform = {
      * [description]
      *
      * @name Phaser.Physics.Matter.Components.Transform#scaleY
-     * @type {[type]}
+     * @type {number}
      * @since 3.0.0
      */
     scaleY: {
@@ -136,7 +136,7 @@ var Transform = {
      * [description]
      *
      * @name Phaser.Physics.Matter.Components.Transform#angle
-     * @type {[type]}
+     * @type {number}
      * @since 3.0.0
      */
     angle: {
@@ -157,7 +157,7 @@ var Transform = {
      * [description]
      *
      * @name Phaser.Physics.Matter.Components.Transform#rotation
-     * @type {[type]}
+     * @type {number}
      * @since 3.0.0
      */
     rotation: {
@@ -182,10 +182,10 @@ var Transform = {
      * @method Phaser.Physics.Matter.Components.Transform#setPosition
      * @since 3.0.0
      *
-     * @param {[type]} x - [description]
-     * @param {[type]} y - [description]
+     * @param {number} [x=0] - [description]
+     * @param {number} [y=x] - [description]
      *
-     * @return {[type]} [description]
+     * @return{Phaser.GameObjects.GameObject} This Game Object.
      */
     setPosition: function (x, y)
     {
@@ -205,9 +205,9 @@ var Transform = {
      * @method Phaser.Physics.Matter.Components.Transform#setRotation
      * @since 3.0.0
      *
-     * @param {[type]} radians - [description]
+     * @param {number} [radians=0] - [description]
      *
-     * @return {[type]} [description]
+     * @return {Phaser.GameObjects.GameObject} This Game Object.
      */
     setRotation: function (radians)
     {
@@ -226,7 +226,7 @@ var Transform = {
      * @method Phaser.Physics.Matter.Components.Transform#setFixedRotation
      * @since 3.0.0
      *
-     * @return {[type]} [description]
+     * @return {Phaser.GameObjects.GameObject} This Game Object.
      */
     setFixedRotation: function ()
     {
@@ -241,9 +241,9 @@ var Transform = {
      * @method Phaser.Physics.Matter.Components.Transform#setAngle
      * @since 3.0.0
      *
-     * @param {[type]} degrees - [description]
+     * @param {number} [degrees=0] - [description]
      *
-     * @return {[type]} [description]
+     * @return {Phaser.GameObjects.GameObject} This Game Object.
      */
     setAngle: function (degrees)
     {
@@ -262,11 +262,11 @@ var Transform = {
      * @method Phaser.Physics.Matter.Components.Transform#setScale
      * @since 3.0.0
      *
-     * @param {[type]} x - [description]
-     * @param {[type]} y - [description]
-     * @param {[type]} point - [description]
+     * @param {number} [x=1] - [description]
+     * @param {number} [y=x] - [description]
+     * @param {Phaser.Math.Vector2} [point] - [description]
      *
-     * @return {[type]} [description]
+     * @return {Phaser.GameObjects.GameObject} This Game Object.
      */
     setScale: function (x, y, point)
     {
