@@ -300,7 +300,7 @@ var Tilemap = new Class({
      * @method Phaser.Tilemaps.Tilemap#convertLayerToStatic
      * @since 3.0.0
      *
-     * @param {string|integer|Phaser.Tilemaps.DynamicTilemapLayer} [layer] - The name of the layer from Tiled, the
+     * @param {(string|integer|Phaser.Tilemaps.DynamicTilemapLayer)} [layer] - The name of the layer from Tiled, the
      * index of the layer in the map, or a DynamicTilemapLayer.
      *
      * @return {?Phaser.Tilemaps.StaticTilemapLayer} Returns the new layer that was created, or null if it
@@ -444,7 +444,7 @@ var Tilemap = new Class({
      * @method Phaser.Tilemaps.Tilemap#createDynamicLayer
      * @since 3.0.0
      *
-     * @param {integer|string} layerID - The layer array index value, or if a string is given, the
+     * @param {(integer|string)} layerID - The layer array index value, or if a string is given, the
      * layer name from Tiled.
      * @param {Phaser.Tilemaps.Tileset} tileset - The tileset the new layer will use.
      * @param {number} x - The x position to place the layer in the world. If not specified, it will
@@ -503,7 +503,7 @@ var Tilemap = new Class({
      * @since 3.0.0
      *
      * @param {string} name - The name of the object layer (from Tiled) to create Sprites from.
-     * @param {integer|string} id - Either the id (object), gid (tile object) or name (object or
+     * @param {(integer|string)} id - Either the id (object), gid (tile object) or name (object or
      * tile object) from Tiled. Ids are unique in Tiled, but a gid is shared by all tile objects
      * with the same graphic. The same name can be used on multiple objects.
      * @param {object} spriteConfig - The config object to pass into the Sprite creator (i.e.
@@ -593,8 +593,8 @@ var Tilemap = new Class({
      * @method Phaser.Tilemaps.Tilemap#createFromTiles
      * @since 3.0.0
      *
-     * @param {integer|array} indexes - The tile index, or array of indexes, to create Sprites from.
-     * @param {integer|array} replacements - The tile index, or array of indexes, to change a converted
+     * @param {(integer|array)} indexes - The tile index, or array of indexes, to create Sprites from.
+     * @param {(integer|array)} replacements - The tile index, or array of indexes, to change a converted
      * tile to. Set to `null` to leave the tiles unchanged. If an array is given, it is assumed to be a
      * one-to-one mapping with the indexes array.
      * @param {object} spriteConfig - The config object to pass into the Sprite creator (i.e.
@@ -628,7 +628,7 @@ var Tilemap = new Class({
      * @method Phaser.Tilemaps.Tilemap#createStaticLayer
      * @since 3.0.0
      *
-     * @param {integer|string} layerID - The layer array index value, or if a string is given, the
+     * @param {(integer|string)} layerID - The layer array index value, or if a string is given, the
      * layer name from Tiled.
      * @param {Phaser.Tilemaps.Tileset} tileset - The tileset the new layer will use.
      * @param {number} x - The x position to place the layer in the world. If not specified, it will
@@ -735,7 +735,7 @@ var Tilemap = new Class({
      * @method Phaser.Tilemaps.Tilemap#filterObjects
      * @since 3.0.0
      *
-     * @param {Phaser.Tilemaps.ObjectLayer|string} [objectLayer] - The name of an object layer (from Tiled) or an
+     * @param {(Phaser.Tilemaps.ObjectLayer|string)} [objectLayer] - The name of an object layer (from Tiled) or an
      * ObjectLayer instance.
      * @param {TilemapFilterCallback} callback - The callback. Each object in the given area will be passed to
      * this callback as the first and only parameter.
@@ -835,7 +835,7 @@ var Tilemap = new Class({
      * @method Phaser.Tilemaps.Tilemap#findObject
      * @since 3.0.0
      *
-     * @param {Phaser.Tilemaps.ObjectLayer|string} [objectLayer] - The name of an object layer (from Tiled) or an
+     * @param {(Phaser.Tilemaps.ObjectLayer|string)} [objectLayer] - The name of an object layer (from Tiled) or an
      * ObjectLayer instance.
      * @param {TilemapFindCallback} callback - The callback. Each object in the given area will be passed to
      * this callback as the first and only parameter.
@@ -983,7 +983,7 @@ var Tilemap = new Class({
      * @method Phaser.Tilemaps.Tilemap#getLayer
      * @since 3.0.0
      *
-     * @param {string|integer|Phaser.Tilemaps.DynamicTilemapLayer|Phaser.Tilemaps.StaticTilemapLayer} [layer] - The name of the
+     * @param {(string|integer|Phaser.Tilemaps.DynamicTilemapLayer|Phaser.Tilemaps.StaticTilemapLayer)} [layer] - The name of the
      * layer from Tiled, the index of the layer in the map, a DynamicTilemapLayer or a
      * StaticTilemapLayer. If not given will default to the maps current layer index.
      *
@@ -1021,7 +1021,7 @@ var Tilemap = new Class({
      * @method Phaser.Tilemaps.Tilemap#getLayerIndex
      * @since 3.0.0
      *
-     * @param {string|integer|Phaser.Tilemaps.DynamicTilemapLayer|Phaser.Tilemaps.StaticTilemapLayer} [layer] - The name of the
+     * @param {(string|integer|Phaser.Tilemaps.DynamicTilemapLayer|Phaser.Tilemaps.StaticTilemapLayer)} [layer] - The name of the
      * layer from Tiled, the index of the layer in the map, a DynamicTilemapLayer or a
      * StaticTilemapLayer. If not given will default to the map's current layer index.
      *
@@ -1156,7 +1156,7 @@ var Tilemap = new Class({
      * @method Phaser.Tilemaps.Tilemap#getTilesWithinShape
      * @since 3.0.0
      *
-     * @param {Phaser.Geom.Circle|Phaser.Geom.Line|Phaser.Geom.Rectangle|Phaser.Geom.Triangle} shape - A shape in world (pixel) coordinates
+     * @param {(Phaser.Geom.Circle|Phaser.Geom.Line|Phaser.Geom.Rectangle|Phaser.Geom.Triangle)} shape - A shape in world (pixel) coordinates
      * @param {object} [filteringOptions] - Optional filters to apply when getting the tiles.
      * @param {boolean} [filteringOptions.isNotEmpty=false] - If true, only return tiles that don't have
      * -1 for an index.
@@ -1308,7 +1308,7 @@ var Tilemap = new Class({
      * @method Phaser.Tilemaps.Tilemap#putTileAt
      * @since 3.0.0
      *
-     * @param {integer|Phaser.Tilemaps.Tile} tile - The index of this tile to set or a Tile object.
+     * @param {(integer|Phaser.Tilemaps.Tile)} tile - The index of this tile to set or a Tile object.
      * @param {integer} tileX - [description]
      * @param {integer} tileY - [description]
      * @param {boolean} [recalculateFaces=true] - [description]
@@ -1339,7 +1339,7 @@ var Tilemap = new Class({
      * @method Phaser.Tilemaps.Tilemap#putTileAtWorldXY
      * @since 3.0.0
      *
-     * @param {integer|Phaser.Tilemaps.Tile} tile - The index of this tile to set or a Tile object.
+     * @param {(integer|Phaser.Tilemaps.Tile)} tile - The index of this tile to set or a Tile object.
      * @param {integer} worldX - [description]
      * @param {integer} worldY - [description]
      * @param {boolean} [recalculateFaces=true] - [description]
@@ -1372,7 +1372,7 @@ var Tilemap = new Class({
      * @method Phaser.Tilemaps.Tilemap#putTilesAt
      * @since 3.0.0
      *
-     * @param {integer[]|integer[][]|Phaser.Tilemaps.Tile[]|Phaser.Tilemaps.Tile[][]} tile - A row (array) or grid (2D array) of Tiles
+     * @param {(integer[]|integer[][]|Phaser.Tilemaps.Tile[]|Phaser.Tilemaps.Tile[][])} tile - A row (array) or grid (2D array) of Tiles
      * or tile indexes to place.
      * @param {integer} tileX - [description]
      * @param {integer} tileY - [description]
@@ -1523,7 +1523,7 @@ var Tilemap = new Class({
      * @method Phaser.Tilemaps.Tilemap#removeTileAt
      * @since 3.0.0
      *
-     * @param {integer|Phaser.Tilemaps.Tile} tile - The index of this tile to set or a Tile object.
+     * @param {(integer|Phaser.Tilemaps.Tile)} tile - The index of this tile to set or a Tile object.
      * @param {integer} tileX - [description]
      * @param {integer} tileY - [description]
      * @param {boolean} [replaceWithNull=true] - If true, this will replace the tile at the specified
@@ -1554,7 +1554,7 @@ var Tilemap = new Class({
      * @method Phaser.Tilemaps.Tilemap#removeTileAtWorldXY
      * @since 3.0.0
      *
-     * @param {integer|Phaser.Tilemaps.Tile} tile - The index of this tile to set or a Tile object.
+     * @param {(integer|Phaser.Tilemaps.Tile)} tile - The index of this tile to set or a Tile object.
      * @param {number} worldX - [description]
      * @param {number} worldY - [description]
      * @param {boolean} [replaceWithNull=true] - If true, this will replace the tile at the specified
@@ -1655,7 +1655,7 @@ var Tilemap = new Class({
      * @method Phaser.Tilemaps.Tilemap#setCollision
      * @since 3.0.0
      *
-     * @param {integer|array} indexes - Either a single tile index, or an array of tile indexes.
+     * @param {(integer|array)} indexes - Either a single tile index, or an array of tile indexes.
      * @param {boolean} [collides=true] - If true it will enable collision. If false it will clear
      * collision.
      * @param {boolean} [recalculateFaces=true] - Whether or not to recalculate the tile faces after the
@@ -1813,7 +1813,7 @@ var Tilemap = new Class({
      * @method Phaser.Tilemaps.Tilemap#setTileIndexCallback
      * @since 3.0.0
      *
-     * @param {integer|array} indexes - Either a single tile index, or an array of tile indexes to have a
+     * @param {(integer|array)} indexes - Either a single tile index, or an array of tile indexes to have a
      * collision callback set for.
      * @param {function} callback - The callback that will be invoked when the tile is collided with.
      * @param {object} callbackContext - The context under which the callback is called.
@@ -1869,7 +1869,7 @@ var Tilemap = new Class({
      * @method Phaser.Tilemaps.Tilemap#setLayer
      * @since 3.0.0
      *
-     * @param {string|integer|Phaser.Tilemaps.DynamicTilemapLayer|Phaser.Tilemaps.StaticTilemapLayer} [layer] - The name of the
+     * @param {(string|integer|Phaser.Tilemaps.DynamicTilemapLayer|Phaser.Tilemaps.StaticTilemapLayer)} [layer] - The name of the
      * layer from Tiled, the index of the layer in the map, a DynamicTilemapLayer or a
      * StaticTilemapLayer. If not given will default to the map's current layer index.
      *
@@ -1943,7 +1943,7 @@ var Tilemap = new Class({
      *
      * @param {integer} tileWidth - The width of the tiles (in pixels) in the layer.
      * @param {integer} tileHeight - The height of the tiles (in pixels) in the layer.
-     * @param {string|integer|Phaser.Tilemaps.DynamicTilemapLayer|Phaser.Tilemaps.StaticTilemapLayer} [layer] - The name of the
+     * @param {(string|integer|Phaser.Tilemaps.DynamicTilemapLayer|Phaser.Tilemaps.StaticTilemapLayer)} [layer] - The name of the
      * layer from Tiled, the index of the layer in the map, a DynamicTilemapLayer or a
      * StaticTilemapLayer. If not given will default to the map's current layer index.
      *

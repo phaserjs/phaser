@@ -21,7 +21,7 @@ var ParseWeltmeister = require('./impact/ParseWeltmeister');
  *
  * @param {string} name - The name of the tilemap, used to set the name on the MapData.
  * @param {integer} mapFormat - See ../Formats.js.
- * @param {integer[][]|string|object} data - 2D array, CSV string or Tiled JSON object.
+ * @param {(integer[][]|string|object)} data - 2D array, CSV string or Tiled JSON object.
  * @param {integer} tileWidth - The width of a tile in pixels. Required for 2D array and CSV, but
  * ignored for Tiled JSON.
  * @param {integer} tileHeight - The height of a tile in pixels. Required for 2D array and CSV, but

@@ -28,7 +28,7 @@ var TriangleToRectangle = function (triangle, rect)
  * @function Phaser.Tilemaps.Components.GetTilesWithinShape
  * @since 3.0.0
  *
- * @param {Phaser.Geom.Circle|Phaser.Geom.Line|Phaser.Geom.Rectangle|Phaser.Geom.Triangle} shape - A shape in world (pixel) coordinates
+ * @param {(Phaser.Geom.Circle|Phaser.Geom.Line|Phaser.Geom.Rectangle|Phaser.Geom.Triangle)} shape - A shape in world (pixel) coordinates
  * @param {object} [filteringOptions] - Optional filters to apply when getting the tiles.
  * @param {boolean} [filteringOptions.isNotEmpty=false] - If true, only return tiles that don't have
  * -1 for an index.
@@ -38,7 +38,7 @@ var TriangleToRectangle = function (triangle, rect)
  * have at least one interesting face.
  * @param {Phaser.Cameras.Scene2D.Camera} [camera=main camera] - [description]
  * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.
- * 
+ *
  * @return {Phaser.Tilemaps.Tile[]} Array of Tile objects.
  */
 var GetTilesWithinShape = function (shape, filteringOptions, camera, layer)

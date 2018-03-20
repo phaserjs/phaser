@@ -30,7 +30,7 @@ var LayerData = new Class({
 
         /**
          * [description]
-         * 
+         *
          * @name Phaser.Tilemaps.LayerData#name
          * @type {string}
          * @since 3.0.0
@@ -39,7 +39,7 @@ var LayerData = new Class({
 
         /**
          * [description]
-         * 
+         *
          * @name Phaser.Tilemaps.LayerData#x
          * @type {number}
          * @since 3.0.0
@@ -48,7 +48,7 @@ var LayerData = new Class({
 
         /**
          * [description]
-         * 
+         *
          * @name Phaser.Tilemaps.LayerData#y
          * @type {number}
          * @since 3.0.0
@@ -57,7 +57,7 @@ var LayerData = new Class({
 
         /**
          * [description]
-         * 
+         *
          * @name Phaser.Tilemaps.LayerData#width
          * @type {number}
          * @since 3.0.0
@@ -66,7 +66,7 @@ var LayerData = new Class({
 
         /**
          * [description]
-         * 
+         *
          * @name Phaser.Tilemaps.LayerData#height
          * @type {number}
          * @since 3.0.0
@@ -75,7 +75,7 @@ var LayerData = new Class({
 
         /**
          * [description]
-         * 
+         *
          * @name Phaser.Tilemaps.LayerData#tileWidth
          * @type {number}
          * @since 3.0.0
@@ -84,7 +84,7 @@ var LayerData = new Class({
 
         /**
          * [description]
-         * 
+         *
          * @name Phaser.Tilemaps.LayerData#tileHeight
          * @type {number}
          * @since 3.0.0
@@ -93,7 +93,7 @@ var LayerData = new Class({
 
         /**
          * [description]
-         * 
+         *
          * @name Phaser.Tilemaps.LayerData#baseTileWidth
          * @type {number}
          * @since 3.0.0
@@ -102,7 +102,7 @@ var LayerData = new Class({
 
         /**
          * [description]
-         * 
+         *
          * @name Phaser.Tilemaps.LayerData#baseTileHeight
          * @type {number}
          * @since 3.0.0
@@ -111,7 +111,7 @@ var LayerData = new Class({
 
         /**
          * [description]
-         * 
+         *
          * @name Phaser.Tilemaps.LayerData#widthInPixels
          * @type {number}
          * @since 3.0.0
@@ -120,7 +120,7 @@ var LayerData = new Class({
 
         /**
          * [description]
-         * 
+         *
          * @name Phaser.Tilemaps.LayerData#heightInPixels
          * @type {number}
          * @since 3.0.0
@@ -129,7 +129,7 @@ var LayerData = new Class({
 
         /**
          * [description]
-         * 
+         *
          * @name Phaser.Tilemaps.LayerData#alpha
          * @type {float}
          * @since 3.0.0
@@ -138,7 +138,7 @@ var LayerData = new Class({
 
         /**
          * [description]
-         * 
+         *
          * @name Phaser.Tilemaps.LayerData#visible
          * @type {boolean}
          * @since 3.0.0
@@ -147,7 +147,7 @@ var LayerData = new Class({
 
         /**
          * [description]
-         * 
+         *
          * @name Phaser.Tilemaps.LayerData#properties
          * @type {object}
          * @since 3.0.0
@@ -156,7 +156,7 @@ var LayerData = new Class({
 
         /**
          * [description]
-         * 
+         *
          * @name Phaser.Tilemaps.LayerData#indexes
          * @type {array}
          * @since 3.0.0
@@ -165,7 +165,7 @@ var LayerData = new Class({
 
         /**
          * [description]
-         * 
+         *
          * @name Phaser.Tilemaps.LayerData#collideIndexes
          * @type {array}
          * @since 3.0.0
@@ -174,7 +174,7 @@ var LayerData = new Class({
 
         /**
          * [description]
-         * 
+         *
          * @name Phaser.Tilemaps.LayerData#callbacks
          * @type {array}
          * @since 3.0.0
@@ -183,7 +183,7 @@ var LayerData = new Class({
 
         /**
          * [description]
-         * 
+         *
          * @name Phaser.Tilemaps.LayerData#bodies
          * @type {array}
          * @since 3.0.0
@@ -192,7 +192,7 @@ var LayerData = new Class({
 
         /**
          * [description]
-         * 
+         *
          * @name Phaser.Tilemaps.LayerData#data
          * @type {array}
          * @since 3.0.0
@@ -201,9 +201,9 @@ var LayerData = new Class({
 
         /**
          * [description]
-         * 
+         *
          * @name Phaser.Tilemaps.LayerData#tilemapLayer
-         * @type {Phaser.Tilemaps.DynamicTilemapLayer|Phaser.Tilemaps.StaticTilemapLayer}
+         * @type {(Phaser.Tilemaps.DynamicTilemapLayer|Phaser.Tilemaps.StaticTilemapLayer)}
          * @since 3.0.0
          */
         this.tilemapLayer = GetFastValue(config, 'tilemapLayer', null);
