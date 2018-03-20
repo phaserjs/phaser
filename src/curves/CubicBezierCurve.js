@@ -21,7 +21,7 @@ var Vector2 = require('../math/Vector2');
  * @constructor
  * @since 3.0.0
  *
- * @param {Phaser.Math.Vector2|Phaser.Math.Vector2[]} p0 - Start point, or an array of point pairs.
+ * @param {(Phaser.Math.Vector2|Phaser.Math.Vector2[])} p0 - Start point, or an array of point pairs.
  * @param {Phaser.Math.Vector2} p1 - Control Point 1.
  * @param {Phaser.Math.Vector2} p2 - Control Point 2.
  * @param {Phaser.Math.Vector2} p3 - End Point.

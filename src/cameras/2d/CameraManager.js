@@ -236,7 +236,7 @@ var CameraManager = new Class({
      * @method Phaser.Cameras.Scene2D.CameraManager#fromJSON
      * @since 3.0.0
      *
-     * @param {object|object[]} config - [description]
+     * @param {(object|object[])} config - [description]
      *
      * @return {Phaser.Cameras.Scene2D.CameraManager} [description]
      */
@@ -375,7 +375,7 @@ var CameraManager = new Class({
      * @method Phaser.Cameras.Scene2D.CameraManager#render
      * @since 3.0.0
      *
-     * @param {Phaser.Renderer.Canvas.CanvasRenderer|Phaser.Renderer.WebGL.WebGLRenderer} renderer - The Renderer that will render the children to this camera.
+     * @param {(Phaser.Renderer.Canvas.CanvasRenderer|Phaser.Renderer.WebGL.WebGLRenderer)} renderer - The Renderer that will render the children to this camera.
      * @param {Phaser.GameObjects.GameObject[]} children - An array of renderable Game Objects.
      * @param {number} interpolation - Interpolation value. Reserved for future use.
      */

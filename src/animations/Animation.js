@@ -29,7 +29,7 @@ var GetValue = require('../utils/object/GetValue');
  * @typedef {object} AnimationFrameConfig
  *
  * @property {string} key - [description]
- * @property {string|number} frame - [description]
+ * @property {(string|number)} frame - [description]
  * @property {float} [duration=0] - [description]
  * @property {boolean} [visible] - [description]
  * @property {function} [onUpdate] - [description]
@@ -350,7 +350,7 @@ var Animation = new Class({
      * @method Phaser.Animations.Animation#addFrame
      * @since 3.0.0
      *
-     * @param {string|AnimationFrameConfig[]} config - [description]
+     * @param {(string|AnimationFrameConfig[])} config - [description]
      *
      * @return {Phaser.Animations.Animation} This Animation object.
      */
@@ -368,7 +368,7 @@ var Animation = new Class({
      * @since 3.0.0
      *
      * @param {integer} index - [description]
-     * @param {string|AnimationFrameConfig[]} config - [description]
+     * @param {(string|AnimationFrameConfig[])} config - [description]
      *
      * @return {Phaser.Animations.Animation} This Animation object.
      */
@@ -478,7 +478,7 @@ var Animation = new Class({
      * @since 3.0.0
      *
      * @param {Phaser.Textures.TextureManager} textureManager - [description]
-     * @param {string|AnimationFrameConfig[]} frames - [description]
+     * @param {(string|AnimationFrameConfig[])} frames - [description]
      * @param {string} [defaultTextureKey] - [description]
      *
      * @return {Phaser.Animations.AnimationFrame[]} [description]
