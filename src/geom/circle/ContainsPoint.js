@@ -13,7 +13,7 @@ var Contains = require('./Contains');
  * @since 3.0.0
  *
  * @param {Phaser.Geom.Circle} circle - The Circle to check.
- * @param {Phaser.Geom.Point|object} point - The Point object to check if it's within the Circle or not.
+ * @param {(Phaser.Geom.Point|object)} point - The Point object to check if it's within the Circle or not.
  *
  * @return {boolean} True if the Point coordinates are within the circle, otherwise false.
  */

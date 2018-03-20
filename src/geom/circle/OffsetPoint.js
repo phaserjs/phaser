@@ -11,7 +11,7 @@
  * @since 3.0.0
  *
  * @param {Phaser.Geom.Circle} circle - The Circle to be offset (translated.)
- * @param {Phaser.Geom.Point|object} point - The Point object containing the values to offset the Circle by.
+ * @param {(Phaser.Geom.Point|object)} point - The Point object containing the values to offset the Circle by.
  *
  * @return {Phaser.Geom.Circle} The Circle that was offset.
  */

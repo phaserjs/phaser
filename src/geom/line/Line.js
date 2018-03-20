@@ -79,9 +79,9 @@ var Line = new Class({
      * @since 3.0.0
      *
      * @param {float} position - [description]
-     * @param {Phaser.Geom.Point|object} [output] - [description]
+     * @param {(Phaser.Geom.Point|object)} [output] - [description]
      *
-     * @return {Phaser.Geom.Point|object} A Point, or point-like object, containing the coordinates of the point around the ellipse.
+     * @return {(Phaser.Geom.Point|object)} A Point, or point-like object, containing the coordinates of the point around the ellipse.
      */
     getPoint: function (position, output)
     {
@@ -96,9 +96,9 @@ var Line = new Class({
      *
      * @param {integer} quantity - [description]
      * @param {integer} [stepRate] - [description]
-     * @param {array|Phaser.Geom.Point[]} [output] - [description]
+     * @param {(array|Phaser.Geom.Point[])} [output] - [description]
      *
-     * @return {array|Phaser.Geom.Point[]} [description]
+     * @return {(array|Phaser.Geom.Point[])} [description]
      */
     getPoints: function (quantity, stepRate, output)
     {
@@ -111,7 +111,7 @@ var Line = new Class({
      * @method Phaser.Geom.Line#getRandomPoint
      * @since 3.0.0
      *
-     * @param {Phaser.Geom.Point|object} point - [description]
+     * @param {(Phaser.Geom.Point|object)} point - [description]
      *
      * @return {Phaser.Geom.Point} [description]
      */

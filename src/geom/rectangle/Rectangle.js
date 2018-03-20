@@ -100,9 +100,9 @@ var Rectangle = new Class({
      * @since 3.0.0
      *
      * @param {float} position - [description]
-     * @param {Phaser.Geom.Point|object} output - [description]
+     * @param {(Phaser.Geom.Point|object)} output - [description]
      *
-     * @return {Phaser.Geom.Point|object} [description]
+     * @return {(Phaser.Geom.Point|object)} [description]
      */
     getPoint: function (position, output)
     {
@@ -117,9 +117,9 @@ var Rectangle = new Class({
      *
      * @param {integer} quantity - [description]
      * @param {number} [stepRate] - [description]
-     * @param {array|Phaser.Geom.Point[]} [output] - [description]
+     * @param {(array|Phaser.Geom.Point[])} [output] - [description]
      *
-     * @return {array|Phaser.Geom.Point[]} [description]
+     * @return {(array|Phaser.Geom.Point[])} [description]
      */
     getPoints: function (quantity, stepRate, output)
     {

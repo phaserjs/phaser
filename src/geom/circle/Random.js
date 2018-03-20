@@ -13,9 +13,9 @@ var Point = require('../point/Point');
  * @since 3.0.0
  *
  * @param {Phaser.Geom.Circle} circle - The Circle to get a random point from.
- * @param {Phaser.Geom.Point|object} [point] - A Point or point-like object to set the random `x` and `y` values in.
+ * @param {(Phaser.Geom.Point|object)} [point] - A Point or point-like object to set the random `x` and `y` values in.
  *
- * @return {Phaser.Geom.Point|object} A Point object with the random values set in the `x` and `y` properties.
+ * @return {(Phaser.Geom.Point|object)} A Point object with the random values set in the `x` and `y` properties.
  */
 var Random = function (circle, out)
 {

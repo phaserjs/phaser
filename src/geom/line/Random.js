@@ -13,9 +13,9 @@ var Point = require('../point/Point');
  * @since 3.0.0
  *
  * @param {Phaser.Geom.Line} line - [description]
- * @param {Phaser.Geom.Point|object} [out] - [description]
+ * @param {(Phaser.Geom.Point|object)} [out] - [description]
  *
- * @return {Phaser.Geom.Point|object} [description]
+ * @return {(Phaser.Geom.Point|object)} [description]
  */
 var Random = function (line, out)
 {
