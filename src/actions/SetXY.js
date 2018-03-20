@@ -9,17 +9,17 @@ var PropertyValueSet = require('./PropertyValueSet');
 /**
  * Takes an array of Game Objects, or any objects that have the public properties `x` and `y`
  * and then sets them to the given values.
- * 
+ *
  * The optional `stepX` and `stepY` properties are applied incrementally, multiplied by each item in the array.
- * 
+ *
  * To use this with a Group: `SetXY(group.getChildren(), x, y, stepX, stepY)`
  *
  * @function Phaser.Actions.SetXY
  * @since 3.0.0
- * 
- * @param {array|Phaser.GameObjects.GameObject[]} items - The array of items to be updated by this action.
+ *
+ * @param {(array|Phaser.GameObjects.GameObject[])} items - The array of items to be updated by this action.
  * @param {number} x - The amount to set the `x` property to.
- * @param {number} [y] - The amount to set the `y` property to. If `undefined` or `null` it uses the `x` value.
+ * @param {number} [y=x] - The amount to set the `y` property to. If `undefined` or `null` it uses the `x` value.
  * @param {number} [stepX=0] - This is added to the `x` amount, multiplied by the iteration counter.
  * @param {number} [stepY=0] - This is added to the `y` amount, multiplied by the iteration counter.
  * @param {integer} [index=0] - An optional offset to start searching from within the items array.

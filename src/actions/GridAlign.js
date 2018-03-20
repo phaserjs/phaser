@@ -32,8 +32,8 @@ var tempZone = new Zone({ sys: { queueDepthSort: NOOP }}, 0, 0, 1, 1);
  *
  * @function Phaser.Actions.GridAlign
  * @since 3.0.0
- * 
- * @param {array|Phaser.GameObjects.GameObject[]} items - The array of items to be updated by this action.
+ *
+ * @param {(array|Phaser.GameObjects.GameObject[])} items - The array of items to be updated by this action.
  * @param {GridAlignConfig} options - The GridAlign Configuration object.
  *
  * @return {array} The array of objects that were passed to this Action.

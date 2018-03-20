@@ -9,8 +9,8 @@
  *
  * @function Phaser.Actions.SetTint
  * @since 3.0.0
- * 
- * @param {array} items - An array of Game Objects. The contents of this array are updated by this Action.
+ *
+ * @param {(array|Phaser.GameObjects.GameObject[])} items - An array of Game Objects. The contents of this array are updated by this Action.
  * @param {number} topLeft - [description]
  * @param {number} [topRight] - [description]
  * @param {number} [bottomLeft] - [description]

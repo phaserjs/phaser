@@ -11,10 +11,10 @@ var Wrap = require('../math/Wrap');
  * Wrap each item's coordinates within a rectangle's area.
  *
  * @function Phaser.Actions.WrapInRectangle
- * @since [version]
+ * @since 3.0.0
  * @see Phaser.Math.Wrap
  *
- * @param {array} items - An array of Game Objects. The contents of this array are updated by this Action.
+ * @param {(array|Phaser.GameObjects.GameObject[])} items - An array of Game Objects. The contents of this array are updated by this Action.
  * @param {Phaser.Geom.Rectangle} rect - The rectangle.
  * @param {number} [padding=0] - An amount added to each side of the rectangle during the operation.
  *

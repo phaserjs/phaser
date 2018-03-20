@@ -10,7 +10,7 @@
  * @function Phaser.Actions.SetHitArea
  * @since 3.0.0
  *
- * @param {array} items - An array of Game Objects. The contents of this array are updated by this Action.
+ * @param {(array|Phaser.GameObjects.GameObject[])} items - An array of Game Objects. The contents of this array are updated by this Action.
  * @param {any} hitArea - [description]
  * @param {HitAreaCallback} hitAreaCallback - [description]
  *
