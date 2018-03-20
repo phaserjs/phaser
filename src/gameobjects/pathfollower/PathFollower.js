@@ -13,6 +13,18 @@ var TWEEN_CONST = require('../../tweens/tween/const');
 var Vector2 = require('../../math/Vector2');
 
 /**
+ * @typedef {object} PathConfig
+ *
+ * @property {number} duration - [description]
+ * @property {number} from - [description]
+ * @property {number} to - [description]
+ * @property {boolean} [positionOnPath=false] - [description]
+ * @property {boolean} [rotateToPath=false] - [description]
+ * @property {number} [rotationOffset=0] - [description]
+ * @property {boolean} [verticalAdjust=false] - [description]
+ */
+
+/**
  * @classdesc
  * A PathFollower Game Object.
  *
@@ -112,7 +124,7 @@ var PathFollower = new Class({
          * [description]
          *
          * @name Phaser.GameObjects.PathFollower#pathTween
-         * @type {null}
+         * @type {Phaser.Tweens.Tween}
          * @since 3.0.0
          */
         this.pathTween;
@@ -121,7 +133,7 @@ var PathFollower = new Class({
          * [description]
          *
          * @name Phaser.GameObjects.PathFollower#pathConfig
-         * @type {?object}
+         * @type {?PathConfig}
          * @default null
          * @since 3.0.0
          */
@@ -145,7 +157,7 @@ var PathFollower = new Class({
      * @since 3.0.0
      *
      * @param {Phaser.Curves.Path} path - The Path this PathFollower is following. It can only follow one Path at a time.
-     * @param {object} config - [description]
+     * @param {PathConfig} [config] - [description]
      *
      * @return {Phaser.GameObjects.PathFollower} This Game Object.
      */
@@ -218,7 +230,7 @@ var PathFollower = new Class({
      * @method Phaser.GameObjects.PathFollower#start
      * @since 3.0.0
      *
-     * @param {object} config - [description]
+     * @param {(number|PathConfig)} [config={}] - [description]
      * @param {number} [startAt=0] - [description]
      *
      * @return {Phaser.GameObjects.PathFollower} This Game Object.

@@ -125,7 +125,7 @@ var DynamicBitmapText = new Class({
          * [description]
          *
          * @name Phaser.GameObjects.DynamicBitmapText#_bounds
-         * @type {object}
+         * @type {TextBounds}
          * @private
          * @since 3.0.0
          */
@@ -360,7 +360,7 @@ var DynamicBitmapText = new Class({
      * @method Phaser.GameObjects.DynamicBitmapText#toJSON
      * @since 3.0.0
      *
-     * @return {object} [description]
+     * @return {JSONGameObject.<JSONBitmapText>} [description]
      */
     toJSON: function ()
     {

@@ -10,14 +10,24 @@ var GameObjectCreator = require('../../GameObjectCreator');
 var GetAdvancedValue = require('../../../utils/object/GetAdvancedValue');
 
 /**
+ * @typedef {object} BitmapTextConfig
+ * @extends GameObjectConfig
+ *
+ * @property {string} [font=''] - [description]
+ * @property {string} [text=''] - [description]
+ * @property {(number|false)} [size=false] - [description]
+ * @property {string} [align=''] - [description]
+ */
+
+/**
  * Creates a new Dynamic Bitmap Text Game Object and returns it.
  *
  * Note: This method will only be available if the Dynamic Bitmap Text Game Object has been built into Phaser.
  *
  * @method Phaser.GameObjects.GameObjectCreator#dynamicBitmapText
  * @since 3.0.0
- *
- * @param {object} config - [description]
+ *²
+ * @param {BitmapTextConfig} config - [description]
  *
  * @return {Phaser.GameObjects.DynamicBitmapText} The Game Object that was created.
  */

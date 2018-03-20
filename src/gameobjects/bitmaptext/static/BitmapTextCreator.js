@@ -18,7 +18,7 @@ var GetValue = require('../../../utils/object/GetValue');
  * @method Phaser.GameObjects.GameObjectCreator#bitmapText
  * @since 3.0.0
  *
- * @param {object} config - [description]
+ * @param {BitmapTextConfig} config - [description]
  *
  * @return {Phaser.GameObjects.BitmapText} The Game Object that was created.
  */
