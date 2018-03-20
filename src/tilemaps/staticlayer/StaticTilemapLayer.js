@@ -26,7 +26,7 @@ var Utils = require('../../renderer/webgl/Utils');
  * @memberOf Phaser.Tilemaps
  * @constructor
  * @since 3.0.0
- * 
+ *
  * @extends Phaser.GameObjects.Components.Alpha
  * @extends Phaser.GameObjects.Components.BlendMode
  * @extends Phaser.GameObjects.Components.Depth
@@ -75,7 +75,7 @@ var StaticTilemapLayer = new Class({
 
         /**
          * Used internally by physics system to perform fast type checks.
-         * 
+         *
          * @name Phaser.Tilemaps.StaticTilemapLayer#isTilemap
          * @type {boolean}
          * @readOnly
@@ -85,7 +85,7 @@ var StaticTilemapLayer = new Class({
 
         /**
          * The Tilemap that this layer is a part of.
-         * 
+         *
          * @name Phaser.Tilemaps.StaticTilemapLayer#tilemap
          * @type {Phaser.Tilemaps.Tilemap}
          * @since 3.0.0
@@ -94,7 +94,7 @@ var StaticTilemapLayer = new Class({
 
         /**
          * The index of the LayerData associated with this layer.
-         * 
+         *
          * @name Phaser.Tilemaps.StaticTilemapLayer#layerIndex
          * @type {integer}
          * @since 3.0.0
@@ -104,7 +104,7 @@ var StaticTilemapLayer = new Class({
         /**
          * The LayerData associated with this layer. LayerData can only be associated with one
          * tilemap layer.
-         * 
+         *
          * @name Phaser.Tilemaps.StaticTilemapLayer#layer
          * @type {Phaser.Tilemaps.LayerData}
          * @since 3.0.0
@@ -115,7 +115,7 @@ var StaticTilemapLayer = new Class({
 
         /**
          * The Tileset associated with this layer. A tilemap layer can only render from one Tileset.
-         * 
+         *
          * @name Phaser.Tilemaps.StaticTilemapLayer#tileset
          * @type {Phaser.Tilemaps.Tileset}
          * @since 3.0.0
@@ -125,7 +125,7 @@ var StaticTilemapLayer = new Class({
         /**
          * Used internally with the canvas render. This holds the tiles that are visible within the
          * camera.
-         * 
+         *
          * @name Phaser.Tilemaps.StaticTilemapLayer#culledTiles
          * @type {array}
          * @since 3.0.0
@@ -207,10 +207,10 @@ var StaticTilemapLayer = new Class({
 
     /**
      * Upload the tile data to a VBO.
-     * 
+     *
      * @method Phaser.Tilemaps.StaticTilemapLayer#upload
      * @since 3.0.0
-     * 
+     *
      * @param {Phaser.Cameras.Scene2D.Camera} camera - The camera to render to.
      *
      * @return {Phaser.Tilemaps.StaticTilemapLayer} This Tilemap Layer object.
@@ -346,10 +346,10 @@ var StaticTilemapLayer = new Class({
      * Calculates interesting faces at the given tile coordinates of the specified layer. Interesting
      * faces are used internally for optimizing collisions against tiles. This method is mostly used
      * internally to optimize recalculating faces when only one tile has been changed.
-     * 
+     *
      * @method Phaser.Tilemaps.StaticTilemapLayer#calculateFacesAt
      * @since 3.0.0
-     * 
+     *
      * @param {integer} tileX - The x coordinate.
      * @param {integer} tileY - The y coordinate.
      *
@@ -366,10 +366,10 @@ var StaticTilemapLayer = new Class({
      * Calculates interesting faces within the rectangular area specified (in tile coordinates) of the
      * layer. Interesting faces are used internally for optimizing collisions against tiles. This method
      * is mostly used internally.
-     * 
+     *
      * @method Phaser.Tilemaps.StaticTilemapLayer#calculateFacesWithin
      * @since 3.0.0
-     * 
+     *
      * @param {integer} [tileX=0] - [description]
      * @param {integer} [tileY=0] - [description]
      * @param {integer} [width=max width based on tileX] - [description]
@@ -389,10 +389,10 @@ var StaticTilemapLayer = new Class({
      * optionally specify if each tile will be replaced with a new tile after the Sprite has been
      * created. This is useful if you want to lay down special tiles in a level that are converted to
      * Sprites, but want to replace the tile itself with a floor tile or similar once converted.
-     * 
+     *
      * @method Phaser.Tilemaps.StaticTilemapLayer#createFromTiles
      * @since 3.0.0
-     * 
+     *
      * @param {integer|array} indexes - The tile index, or array of indexes, to create Sprites from.
      * @param {integer|array} replacements - The tile index, or array of indexes, to change a converted
      * tile to. Set to `null` to leave the tiles unchanged. If an array is given, it is assumed to be a
@@ -412,10 +412,10 @@ var StaticTilemapLayer = new Class({
     /**
      * Returns the tiles in the given layer that are within the cameras viewport.
      * This is used internally.
-     * 
+     *
      * @method Phaser.Tilemaps.StaticTilemapLayer#cull
      * @since 3.0.0
-     * 
+     *
      * @param {Phaser.Cameras.Scene2D.Camera} [camera] - The Camera to run the cull check against.
      *
      * @return {Phaser.Tilemaps.Tile[]} An array of Tile objects.
@@ -427,7 +427,7 @@ var StaticTilemapLayer = new Class({
 
     /**
      * Destroys this StaticTilemapLayer and removes its link to the associated LayerData.
-     * 
+     *
      * @method Phaser.Tilemaps.StaticTilemapLayer#destroy
      * @since 3.0.0
      */
@@ -452,10 +452,10 @@ var StaticTilemapLayer = new Class({
      * continues horizontally until it hits the end of the row, then it drops down to the next column.
      * If the reverse boolean is true, it scans starting from the bottom-right corner traveling up to
      * the top-left.
-     * 
+     *
      * @method Phaser.Tilemaps.StaticTilemapLayer#findByIndex
      * @since 3.0.0
-     * 
+     *
      * @param {integer} index - The tile index value to search for.
      * @param {integer} [skip=0] - The number of times to skip a matching tile before returning.
      * @param {boolean} [reverse=false] - If true it will scan the layer in reverse, starting at the
@@ -472,10 +472,10 @@ var StaticTilemapLayer = new Class({
      * Find the first tile in the given rectangular area (in tile coordinates) of the layer that
      * satisfies the provided testing function. I.e. finds the first tile for which `callback` returns
      * true. Similar to Array.prototype.find in vanilla JS.
-     * 
+     *
      * @method Phaser.Tilemaps.StaticTilemapLayer#findTile
      * @since 3.0.0
-     * 
+     *
      * @param {function} callback - The callback. Each tile in the given area will be passed to this
      * callback as the first and only parameter.
      * @param {object} [context] - The context under which the callback should be run.
@@ -491,7 +491,7 @@ var StaticTilemapLayer = new Class({
      * @param {boolean} [filteringOptions.hasInterestingFace=false] - If true, only return tiles that
      * have at least one interesting face.
      *
-     * @return {Phaser.Tilemaps.Tile|null}
+     * @return {?Phaser.Tilemaps.Tile}
      */
     findTile: function (callback, context, tileX, tileY, width, height, filteringOptions)
     {
@@ -502,10 +502,10 @@ var StaticTilemapLayer = new Class({
      * For each tile in the given rectangular area (in tile coordinates) of the layer, run the given
      * filter callback function. Any tiles that pass the filter test (i.e. where the callback returns
      * true) will returned as a new array. Similar to Array.prototype.Filter in vanilla JS.
-     * 
+     *
      * @method Phaser.Tilemaps.StaticTilemapLayer#filterTiles
      * @since 3.0.0
-     * 
+     *
      * @param {function} callback - The callback. Each tile in the given area will be passed to this
      * callback as the first and only parameter. The callback should return true for tiles that pass the
      * filter.
@@ -532,10 +532,10 @@ var StaticTilemapLayer = new Class({
     /**
      * For each tile in the given rectangular area (in tile coordinates) of the layer, run the given
      * callback. Similar to Array.prototype.forEach in vanilla JS.
-     * 
+     *
      * @method Phaser.Tilemaps.StaticTilemapLayer#forEachTile
      * @since 3.0.0
-     * 
+     *
      * @param {function} callback - The callback. Each tile in the given area will be passed to this
      * callback as the first and only parameter.
      * @param {object} [context] - The context under which the callback should be run.
@@ -562,10 +562,10 @@ var StaticTilemapLayer = new Class({
 
     /**
      * Gets a tile at the given tile coordinates from the given layer.
-     * 
+     *
      * @method Phaser.Tilemaps.StaticTilemapLayer#getTileAt
      * @since 3.0.0
-     * 
+     *
      * @param {integer} tileX - X position to get the tile from (given in tile units, not pixels).
      * @param {integer} tileY - Y position to get the tile from (given in tile units, not pixels).
      * @param {boolean} [nonNull=false] - If true getTile won't return null for empty tiles, but a Tile
@@ -580,10 +580,10 @@ var StaticTilemapLayer = new Class({
 
     /**
      * Gets a tile at the given world coordinates from the given layer.
-     * 
+     *
      * @method Phaser.Tilemaps.StaticTilemapLayer#getTileAtWorldXY
      * @since 3.0.0
-     * 
+     *
      * @param {number} worldX - X position to get the tile from (given in pixels)
      * @param {number} worldY - Y position to get the tile from (given in pixels)
      * @param {boolean} [nonNull=false] - If true, function won't return null for empty tiles, but a Tile
@@ -600,10 +600,10 @@ var StaticTilemapLayer = new Class({
 
     /**
      * Gets the tiles in the given rectangular area (in tile coordinates) of the layer.
-     * 
+     *
      * @method Phaser.Tilemaps.StaticTilemapLayer#getTilesWithin
      * @since 3.0.0
-     * 
+     *
      * @param {integer} [tileX=0] - [description]
      * @param {integer} [tileY=0] - [description]
      * @param {integer} [width=max width based on tileX] - [description]
@@ -625,10 +625,10 @@ var StaticTilemapLayer = new Class({
 
     /**
      * Gets the tiles in the given rectangular area (in world coordinates) of the layer.
-     * 
+     *
      * @method Phaser.Tilemaps.StaticTilemapLayer#getTilesWithinWorldXY
      * @since 3.0.0
-     * 
+     *
      * @param {number} worldX - [description]
      * @param {number} worldY - [description]
      * @param {number} width - [description]
@@ -652,10 +652,10 @@ var StaticTilemapLayer = new Class({
     /**
      * Gets the tiles that overlap with the given shape in the given layer. The shape must be a Circle,
      * Line, Rectangle or Triangle. The shape should be in world coordinates.
-     * 
+     *
      * @method Phaser.Tilemaps.StaticTilemapLayer#getTilesWithinShape
      * @since 3.0.0
-     * 
+     *
      * @param {Phaser.Geom.Circle|Phaser.Geom.Line|Phaser.Geom.Rectangle|Phaser.Geom.Triangle} shape - A shape in world (pixel) coordinates
      * @param {object} [filteringOptions] - Optional filters to apply when getting the tiles.
      * @param {boolean} [filteringOptions.isNotEmpty=false] - If true, only return tiles that don't have
@@ -676,10 +676,10 @@ var StaticTilemapLayer = new Class({
     /**
      * Checks if there is a tile at the given location (in tile coordinates) in the given layer. Returns
      * false if there is no tile or if the tile at that location has an index of -1.
-     * 
+     *
      * @method Phaser.Tilemaps.StaticTilemapLayer#hasTileAt
      * @since 3.0.0
-     * 
+     *
      * @param {integer} tileX - [description]
      * @param {integer} tileY - [description]
      *
@@ -693,10 +693,10 @@ var StaticTilemapLayer = new Class({
     /**
      * Checks if there is a tile at the given location (in world coordinates) in the given layer. Returns
      * false if there is no tile or if the tile at that location has an index of -1.
-     * 
+     *
      * @method Phaser.Tilemaps.StaticTilemapLayer#hasTileAtWorldXY
      * @since 3.0.0
-     * 
+     *
      * @param {number} worldX - [description]
      * @param {number} worldY - [description]
      * @param {Phaser.Cameras.Scene2D.Camera} [camera=main camera] - [description]
@@ -713,17 +713,17 @@ var StaticTilemapLayer = new Class({
      * get a quick idea of which of your tiles are colliding and which have interesting faces. The tiles
      * are drawn starting at (0, 0) in the Graphics, allowing you to place the debug representation
      * wherever you want on the screen.
-     * 
+     *
      * @method Phaser.Tilemaps.StaticTilemapLayer#renderDebug
      * @since 3.0.0
-     * 
+     *
      * @param {Phaser.GameObjects.Graphics} graphics - The target Graphics object to draw upon.
      * @param {object} styleConfig - An object specifying the colors to use for the debug drawing.
-     * @param {Color|null} [styleConfig.tileColor=blue] - Color to use for drawing a filled rectangle at
+     * @param {?Color} [styleConfig.tileColor=blue] - Color to use for drawing a filled rectangle at
      * non-colliding tile locations. If set to null, non-colliding tiles will not be drawn.
-     * @param {Color|null} [styleConfig.collidingTileColor=orange] - Color to use for drawing a filled
+     * @param {?Color} [styleConfig.collidingTileColor=orange] - Color to use for drawing a filled
      * rectangle at colliding tile locations. If set to null, colliding tiles will not be drawn.
-     * @param {Color|null} [styleConfig.faceColor=grey] - Color to use for drawing a line at interesting
+     * @param {?Color} [styleConfig.faceColor=grey] - Color to use for drawing a line at interesting
      * tile faces. If set to null, interesting tile faces will not be drawn.
      *
      * @return {Phaser.Tilemaps.StaticTilemapLayer} This Tilemap Layer object.
@@ -739,10 +739,10 @@ var StaticTilemapLayer = new Class({
      * Sets collision on the given tile or tiles within a layer by index. You can pass in either a
      * single numeric index or an array of indexes: [2, 3, 15, 20]. The `collides` parameter controls if
      * collision will be enabled (true) or disabled (false).
-     * 
+     *
      * @method Phaser.Tilemaps.StaticTilemapLayer#setCollision
      * @since 3.0.0
-     * 
+     *
      * @param {integer|array} indexes - Either a single tile index, or an array of tile indexes.
      * @param {boolean} [collides=true] - If true it will enable collision. If false it will clear
      * collision.
@@ -763,10 +763,10 @@ var StaticTilemapLayer = new Class({
      * `stop` (inclusive). Calling this with a start value of 10 and a stop value of 14 would set
      * collision for tiles 10, 11, 12, 13 and 14. The `collides` parameter controls if collision will be
      * enabled (true) or disabled (false).
-     * 
+     *
      * @method Phaser.Tilemaps.StaticTilemapLayer#setCollisionBetween
      * @since 3.0.0
-     * 
+     *
      * @param {integer} start - The first index of the tile to be set for collision.
      * @param {integer} stop - The last index of the tile to be set for collision.
      * @param {boolean} [collides=true] - If true it will enable collision. If false it will clear
@@ -791,7 +791,7 @@ var StaticTilemapLayer = new Class({
      * has a value of true. Any tile that doesn't have "collides" set to true will be ignored. You can
      * also use an array of values, e.g. `{ types: ["stone", "lava", "sand" ] }`. If a tile has a
      * "types" property that matches any of those values, its collision flag will be updated.
-     * 
+     *
      * @method Phaser.Tilemaps.StaticTilemapLayer#setCollisionByProperty
      * @since 3.0.0
      *
@@ -801,7 +801,7 @@ var StaticTilemapLayer = new Class({
      * collision.
      * @param {boolean} [recalculateFaces=true] - Whether or not to recalculate the tile faces after the
      * update.
-     * 
+     *
      * @return {Phaser.Tilemaps.StaticTilemapLayer} This Tilemap Layer object.
      */
     setCollisionByProperty: function (properties, collides, recalculateFaces)
@@ -815,10 +815,10 @@ var StaticTilemapLayer = new Class({
      * Sets collision on all tiles in the given layer, except for tiles that have an index specified in
      * the given array. The `collides` parameter controls if collision will be enabled (true) or
      * disabled (false).
-     * 
+     *
      * @method Phaser.Tilemaps.StaticTilemapLayer#setCollisionByExclusion
      * @since 3.0.0
-     * 
+     *
      * @param {integer[]} indexes - An array of the tile indexes to not be counted for collision.
      * @param {boolean} [collides=true] - If true it will enable collision. If false it will clear
      * collision.
@@ -839,10 +839,10 @@ var StaticTilemapLayer = new Class({
      * tiles on this layer that have the same index. If a callback is already set for the tile index it
      * will be replaced. Set the callback to null to remove it. If you want to set a callback for a tile
      * at a specific location on the map then see setTileLocationCallback.
-     * 
+     *
      * @method Phaser.Tilemaps.StaticTilemapLayer#setTileIndexCallback
      * @since 3.0.0
-     * 
+     *
      * @param {integer|array} indexes - Either a single tile index, or an array of tile indexes to have a
      * collision callback set for.
      * @param {function} callback - The callback that will be invoked when the tile is collided with.
@@ -862,10 +862,10 @@ var StaticTilemapLayer = new Class({
      * (typically defined in Tiled within the tileset collision editor). If any objects are found within
      * a tiles collision group, the tile's colliding information will be set. The `collides` parameter
      * controls if collision will be enabled (true) or disabled (false).
-     * 
+     *
      * @method Phaser.Tilemaps.StaticTilemapLayer#setCollisionFromCollisionGroup
      * @since 3.0.0
-     * 
+     *
      * @param {boolean} [collides=true] - If true it will enable collision. If false it will clear
      * collision.
      * @param {boolean} [recalculateFaces=true] - Whether or not to recalculate the tile faces after the
@@ -884,10 +884,10 @@ var StaticTilemapLayer = new Class({
      * Sets a collision callback for the given rectangular area (in tile coordinates) within the layer.
      * If a callback is already set for the tile index it will be replaced. Set the callback to null to
      * remove it.
-     * 
+     *
      * @method Phaser.Tilemaps.StaticTilemapLayer#setTileLocationCallback
      * @since 3.0.0
-     * 
+     *
      * @param {integer} [tileX=0] - [description]
      * @param {integer} [tileY=0] - [description]
      * @param {integer} [width=max width based on tileX] - [description]
@@ -907,10 +907,10 @@ var StaticTilemapLayer = new Class({
     /**
      * Converts from tile X coordinates (tile units) to world X coordinates (pixels), factoring in the
      * layers position, scale and scroll.
-     * 
+     *
      * @method Phaser.Tilemaps.StaticTilemapLayer#tileToWorldX
      * @since 3.0.0
-     * 
+     *
      * @param {integer} tileX - [description]
      * @param {Phaser.Cameras.Scene2D.Camera} [camera=main camera] - [description]
      *
@@ -924,10 +924,10 @@ var StaticTilemapLayer = new Class({
     /**
      * Converts from tile Y coordinates (tile units) to world Y coordinates (pixels), factoring in the
      * layers position, scale and scroll.
-     * 
+     *
      * @method Phaser.Tilemaps.StaticTilemapLayer#tileToWorldY
      * @since 3.0.0
-     * 
+     *
      * @param {integer} tileY - [description]
      * @param {Phaser.Cameras.Scene2D.Camera} [camera=main camera] - [description]
      *
@@ -942,10 +942,10 @@ var StaticTilemapLayer = new Class({
      * Converts from tile XY coordinates (tile units) to world XY coordinates (pixels), factoring in the
      * layers position, scale and scroll. This will return a new Vector2 object or update the given
      * `point` object.
-     * 
+     *
      * @method Phaser.Tilemaps.StaticTilemapLayer#tileToWorldXY
      * @since 3.0.0
-     * 
+     *
      * @param {integer} tileX - [description]
      * @param {integer} tileY - [description]
      * @param {Phaser.Math.Vector2} [point] - [description]
@@ -961,10 +961,10 @@ var StaticTilemapLayer = new Class({
     /**
      * Converts from world X coordinates (pixels) to tile X coordinates (tile units), factoring in the
      * layers position, scale and scroll.
-     * 
+     *
      * @method Phaser.Tilemaps.StaticTilemapLayer#worldToTileX
      * @since 3.0.0
-     * 
+     *
      * @param {number} worldX - [description]
      * @param {boolean} [snapToFloor=true] - Whether or not to round the tile coordinate down to the
      * nearest integer.
@@ -980,10 +980,10 @@ var StaticTilemapLayer = new Class({
     /**
      * Converts from world Y coordinates (pixels) to tile Y coordinates (tile units), factoring in the
      * layers position, scale and scroll.
-     * 
+     *
      * @method Phaser.Tilemaps.StaticTilemapLayer#worldToTileXY
      * @since 3.0.0
-     * 
+     *
      * @param {number} worldY - [description]
      * @param {boolean} [snapToFloor=true] - Whether or not to round the tile coordinate down to the
      * nearest integer.
@@ -1000,10 +1000,10 @@ var StaticTilemapLayer = new Class({
      * Converts from world XY coordinates (pixels) to tile XY coordinates (tile units), factoring in the
      * layers position, scale and scroll. This will return a new Vector2 object or update the given
      * `point` object.
-     * 
+     *
      * @method Phaser.Tilemaps.StaticTilemapLayer#worldToTileXY
      * @since 3.0.0
-     * 
+     *
      * @param {number} worldX - [description]
      * @param {number} worldY - [description]
      * @param {boolean} [snapToFloor=true] - Whether or not to round the tile coordinate down to the

@@ -18,11 +18,11 @@ var Color = require('../../display/color');
  *
  * @param {Phaser.GameObjects.Graphics} graphics - The target Graphics object to draw upon.
  * @param {object} styleConfig - An object specifying the colors to use for the debug drawing.
- * @param {Color|null} [styleConfig.tileColor=blue] - Color to use for drawing a filled rectangle at
+ * @param {?Phaser.Display.Color} [styleConfig.tileColor=blue] - Color to use for drawing a filled rectangle at
  * non-colliding tile locations. If set to null, non-colliding tiles will not be drawn.
- * @param {Color|null} [styleConfig.collidingTileColor=orange] - Color to use for drawing a filled
+ * @param {?Phaser.Display.Color} [styleConfig.collidingTileColor=orange] - Color to use for drawing a filled
  * rectangle at colliding tile locations. If set to null, colliding tiles will not be drawn.
- * @param {Color|null} [styleConfig.faceColor=grey] - Color to use for drawing a line at interesting
+ * @param {?Phaser.Display.Color} [styleConfig.faceColor=grey] - Color to use for drawing a line at interesting
  * tile faces. If set to null, interesting tile faces will not be drawn.
  * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.
  */

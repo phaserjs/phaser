@@ -33,7 +33,7 @@ var ObjectLayer = new Class({
 
         /**
          * [description]
-         * 
+         *
          * @name Phaser.Tilemaps.ObjectLayer#name
          * @type {string}
          * @since 3.0.0
@@ -42,7 +42,7 @@ var ObjectLayer = new Class({
 
         /**
          * [description]
-         * 
+         *
          * @name Phaser.Tilemaps.ObjectLayer#opacity
          * @type {number}
          * @since 3.0.0
@@ -51,7 +51,7 @@ var ObjectLayer = new Class({
 
         /**
          * [description]
-         * 
+         *
          * @name Phaser.Tilemaps.ObjectLayer#properties
          * @type {object}
          * @since 3.0.0
@@ -60,7 +60,7 @@ var ObjectLayer = new Class({
 
         /**
          * [description]
-         * 
+         *
          * @name Phaser.Tilemaps.ObjectLayer#propertyTypes
          * @type {object}
          * @since 3.0.0
@@ -69,7 +69,7 @@ var ObjectLayer = new Class({
 
         /**
          * [description]
-         * 
+         *
          * @name Phaser.Tilemaps.ObjectLayer#type
          * @type {string}
          * @since 3.0.0
@@ -78,7 +78,7 @@ var ObjectLayer = new Class({
 
         /**
          * [description]
-         * 
+         *
          * @name Phaser.Tilemaps.ObjectLayer#visible
          * @type {boolean}
          * @since 3.0.0
@@ -87,9 +87,9 @@ var ObjectLayer = new Class({
 
         /**
          * [description]
-         * 
+         *
          * @name Phaser.Tilemaps.ObjectLayer#objects
-         * @type {array}
+         * @type {Phaser.GameObjects.GameObject[]}
          * @since 3.0.0
          */
         this.objects = GetFastValue(config, 'objects', []);

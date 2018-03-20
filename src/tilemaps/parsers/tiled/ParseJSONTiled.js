@@ -28,7 +28,7 @@ var AssignTileProperties = require('./AssignTileProperties');
  * consumption. However if your map is small or you need to update the tiles dynamically, then leave
  * the default value set.
  *
- * @return {Phaser.Tilemaps.MapData|null} [description]
+ * @return {?Phaser.Tilemaps.MapData} [description]
  */
 var ParseJSONTiled = function (name, json, insertNull)
 {
