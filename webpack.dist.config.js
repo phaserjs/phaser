@@ -33,7 +33,23 @@ module.exports = {
         ]
     },
 
-    optimization: {minimize: false},
+    optimization: {
+        minimizer: [
+            new UglifyJSPlugin({
+                include: /\.min\.js$/,
+                parallel: true,
+                sourceMap: false,
+                uglifyOptions: {
+                    compress: true,
+                    ie8: false,
+                    ecma: 5,
+                    output: {comments: false},
+                    warnings: false
+                },
+                warningsFilter: () => false
+            })
+        ]
+    },
 
     plugins: [
         new webpack.DefinePlugin({
@@ -41,20 +57,6 @@ module.exports = {
             WEBGL_RENDERER: JSON.stringify(true)
         }),
 
-        new CleanWebpackPlugin([ 'dist' ]),
-
-        new UglifyJSPlugin({
-            include: /\.min\.js$/,
-            parallel: true,
-            sourceMap: false,
-            uglifyOptions: {
-                compress: true,
-                ie8: false,
-                ecma: 5,
-                output: {comments: false},
-                warnings: false
-            },
-            warningsFilter: () => false
-        })
+        new CleanWebpackPlugin([ 'dist' ])
     ]
 };
