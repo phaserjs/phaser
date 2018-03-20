@@ -18,7 +18,7 @@ var TWEEN_CONST = require('./const');
  * @constructor
  * @since 3.0.0
  *
- * @param {Phaser.Tweens.TweenManager|Phaser.Tweens.Timeline} parent - [description]
+ * @param {(Phaser.Tweens.TweenManager|Phaser.Tweens.Timeline)} parent - [description]
  * @param {Phaser.Tweens.TweenData[]} data - [description]
  * @param {array} targets - [description]
  */
@@ -32,7 +32,7 @@ var Tween = new Class({
          * [description]
          *
          * @name Phaser.Tweens.Tween#parent
-         * @type {Phaser.Tweens.TweenManager|Phaser.Tweens.Timeline}
+         * @type {(Phaser.Tweens.TweenManager|Phaser.Tweens.Timeline)}
          * @since 3.0.0
          */
         this.parent = parent;

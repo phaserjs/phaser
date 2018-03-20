@@ -257,7 +257,7 @@ var SceneManager = new Class({
      * @since 3.0.0
      *
      * @param {string} key - A unique key used to reference the Scene, i.e. `MainMenu` or `Level1`.
-     * @param {Phaser.Scene|object|function} sceneConfig - [description]
+     * @param {(Phaser.Scene|object|function)} sceneConfig - [description]
      * @param {boolean} [autoStart=false] - If `true` the Scene will be started immediately after being added.
      *
      * @return {?Phaser.Scene} [description]
@@ -332,7 +332,7 @@ var SceneManager = new Class({
      * @method Phaser.Scenes.SceneManager#remove
      * @since 3.2.0
      *
-     * @param {string|Phaser.Scene} scene - The Scene to be removed.
+     * @param {(string|Phaser.Scene)} scene - The Scene to be removed.
      *
      * @return {Phaser.Scenes.SceneManager} This SceneManager.
      */
@@ -706,7 +706,7 @@ var SceneManager = new Class({
      * @since 3.0.0
      *
      * @param {string} key - [description]
-     * @param {Phaser.Scene|object|function} sceneConfig - [description]
+     * @param {(Phaser.Scene|object|function)} sceneConfig - [description]
      *
      * @return {string} [description]
      */
@@ -1057,7 +1057,7 @@ var SceneManager = new Class({
      *
      * @param {integer} index - [description]
      *
-     * @return {Phaser.Scene|undefined} [description]
+     * @return {(Phaser.Scene|undefined)} [description]
      */
     getAt: function (index)
     {
@@ -1070,7 +1070,7 @@ var SceneManager = new Class({
      * @method Phaser.Scenes.SceneManager#getIndex
      * @since 3.0.0
      *
-     * @param {string|Phaser.Scene} key - [description]
+     * @param {(string|Phaser.Scene)} key - [description]
      *
      * @return {integer} [description]
      */
@@ -1087,7 +1087,7 @@ var SceneManager = new Class({
      * @method Phaser.Scenes.SceneManager#bringToTop
      * @since 3.0.0
      *
-     * @param {string|Phaser.Scene} key - [description]
+     * @param {(string|Phaser.Scene)} key - [description]
      *
      * @return {Phaser.Scenes.SceneManager} [description]
      */
@@ -1119,7 +1119,7 @@ var SceneManager = new Class({
      * @method Phaser.Scenes.SceneManager#sendToBack
      * @since 3.0.0
      *
-     * @param {string|Phaser.Scene} key - [description]
+     * @param {(string|Phaser.Scene)} key - [description]
      *
      * @return {Phaser.Scenes.SceneManager} [description]
      */
@@ -1151,7 +1151,7 @@ var SceneManager = new Class({
      * @method Phaser.Scenes.SceneManager#moveDown
      * @since 3.0.0
      *
-     * @param {string|Phaser.Scene} key - [description]
+     * @param {(string|Phaser.Scene)} key - [description]
      *
      * @return {Phaser.Scenes.SceneManager} [description]
      */
@@ -1185,7 +1185,7 @@ var SceneManager = new Class({
      * @method Phaser.Scenes.SceneManager#moveUp
      * @since 3.0.0
      *
-     * @param {string|Phaser.Scene} key - [description]
+     * @param {(string|Phaser.Scene)} key - [description]
      *
      * @return {Phaser.Scenes.SceneManager} [description]
      */
@@ -1220,8 +1220,8 @@ var SceneManager = new Class({
      * @method Phaser.Scenes.SceneManager#moveAbove
      * @since 3.2.0
      *
-     * @param {string|Phaser.Scene} keyA - The Scene that Scene B will be moved above.
-     * @param {string|Phaser.Scene} keyB - The Scene to be moved.
+     * @param {(string|Phaser.Scene)} keyA - The Scene that Scene B will be moved above.
+     * @param {(string|Phaser.Scene)} keyB - The Scene to be moved.
      *
      * @return {Phaser.Scenes.SceneManager} [description]
      */
@@ -1263,8 +1263,8 @@ var SceneManager = new Class({
      * @method Phaser.Scenes.SceneManager#moveBelow
      * @since 3.2.0
      *
-     * @param {string|Phaser.Scene} keyA - The Scene that Scene B will be moved above.
-     * @param {string|Phaser.Scene} keyB - The Scene to be moved.
+     * @param {(string|Phaser.Scene)} keyA - The Scene that Scene B will be moved above.
+     * @param {(string|Phaser.Scene)} keyB - The Scene to be moved.
      *
      * @return {Phaser.Scenes.SceneManager} [description]
      */
@@ -1312,8 +1312,8 @@ var SceneManager = new Class({
      * @method Phaser.Scenes.SceneManager#swapPosition
      * @since 3.0.0
      *
-     * @param {string|Phaser.Scene} keyA - [description]
-     * @param {string|Phaser.Scene} keyB - [description]
+     * @param {(string|Phaser.Scene)} keyA - [description]
+     * @param {(string|Phaser.Scene)} keyB - [description]
      *
      * @return {Phaser.Scenes.SceneManager} [description]
      */

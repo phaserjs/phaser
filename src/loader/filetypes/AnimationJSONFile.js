@@ -32,7 +32,7 @@ var AnimationJSONFile = function (key, url, path, xhrSettings)
 
 /**
  * Adds an Animation JSON file to the current load queue.
- * 
+ *
  * Note: This method will only be available if the Animation JSON File type has been built into Phaser.
  *
  * The file is **not** loaded immediately after calling this method.
@@ -41,11 +41,11 @@ var AnimationJSONFile = function (key, url, path, xhrSettings)
  * @method Phaser.Loader.LoaderPlugin#animation
  * @since 3.0.0
  *
- * @param {string|array|object} key - A unique string to be used as the key to reference this file from the Cache. Must be unique within this file type.
+ * @param {(string|array|object)} key - A unique string to be used as the key to reference this file from the Cache. Must be unique within this file type.
  * @param {string} [url] - URL of the file. If `undefined` or `null` the url will be set to `<key>.json`,
  * i.e. if `key` was "alien" then the URL will be "alien.json".
  * @param {object} [xhrSettings] - File specific XHR settings to be used during the load. These settings are merged with the global Loader XHR settings.
- * 
+ *
  * @return {Phaser.Loader.LoaderPlugin} The Loader.
  */
 FileTypesManager.register('animation', function (key, url, xhrSettings)
@@ -68,9 +68,9 @@ FileTypesManager.register('animation', function (key, url, xhrSettings)
 });
 
 //  When registering a factory function 'this' refers to the Loader context.
-//  
+//
 //  There are several properties available to use:
-//  
+//
 //  this.scene - a reference to the Scene that owns the GameObjectFactory
 
 module.exports = AnimationJSONFile;
