@@ -406,6 +406,8 @@ var Group = new Class({
             }
         }
 
+        child.on('destroy', this.remove, this);
+
         return this;
     },
 
@@ -462,6 +464,8 @@ var Group = new Class({
             }
         }
 
+        child.off('destroy', this.remove, this);
+
         return this;
     },
 
@@ -479,14 +483,16 @@ var Group = new Class({
     {
         if (removeFromScene === undefined) { removeFromScene = false; }
 
-        if (removeFromScene)
+        var children = this.children;
+
+        for (var i = 0; i < children.size; i++)
         {
-            var children = this.children;
+            var gameObject = children.entries[i];
 
-            for (var i = 0; i < children.size; i++)
+            gameObject.off('destroy', this.remove, this);
+
+            if (removeFromScene)
             {
-                var gameObject = children.entries[i];
-
                 this.scene.sys.displayList.remove(gameObject);
 
                 if (gameObject.preUpdate)
