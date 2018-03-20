@@ -15,6 +15,7 @@ var Loader = {
 
     FileTypes: require('./filetypes'),
 
+    CONST: require('./const'),
     File: require('./File'),
     FileTypesManager: require('./FileTypesManager'),
     GetURL: require('./GetURL'),
