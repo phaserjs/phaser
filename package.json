@@ -20,7 +20,7 @@
     "dist": "webpack --config webpack.dist.config.js",
     "lint": "eslint --config .eslintrc.json \"src/**/*.js\"",
     "lintfix": "eslint --config .eslintrc.json \"src/**/*.js\" --fix",
-    "sloc": "node-sloc './src' --include-extensions \"js\""
+    "sloc": "node-sloc \"./src\" --include-extensions \"js\""
   },
   "keywords": [
     "2d",
@@ -35,17 +35,18 @@
     "web audio"
   ],
   "devDependencies": {
-    "clean-webpack-plugin": "^0.1.18",
-    "eslint": "^4.13.1",
+    "clean-webpack-plugin": "^0.1.19",
+    "eslint": "^4.19.0",
     "fs-extra": "^5.0.0",
     "node-sloc": "^0.1.10",
     "raw-loader": "^0.5.1",
-    "uglifyjs-webpack-plugin": "^1.1.2",
-    "uuid": "^3.1.0",
-    "webpack": "^3.11.0",
+    "uglifyjs-webpack-plugin": "^1.2.4",
+    "uuid": "^3.2.1",
+    "webpack": "^4.1.1",
+    "webpack-cli": "^2.0.12",
     "webpack-shell-plugin": "^0.5.0"
   },
   "dependencies": {
-    "eventemitter3": "^3.0.0"
+    "eventemitter3": "^3.0.1"
   }
 }
