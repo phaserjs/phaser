@@ -42,7 +42,7 @@ var TextStyle = require('../TextStyle');
  * @param {Phaser.Scene} scene - The Scene to which this Game Object belongs. A Game Object can only belong to one Scene at a time.
  * @param {number} x - The horizontal position of this Game Object in the world.
  * @param {number} y - The vertical position of this Game Object in the world.
- * @param {string|string[]} text - The text this Text object will display.
+ * @param {(string|string[])} text - The text this Text object will display.
  * @param {object} style - The text style configuration object.
  */
 var Text = new Class({
@@ -499,7 +499,7 @@ var Text = new Class({
      * @method Phaser.GameObjects.Text#setText
      * @since 3.0.0
      *
-     * @param {string|string[]} value - The string, or array of strings, to be set as the content of this Text object.
+     * @param {(string|string[])} value - The string, or array of strings, to be set as the content of this Text object.
      *
      * @return {Phaser.GameObjects.Text} This Text object.
      */
@@ -832,7 +832,7 @@ var Text = new Class({
      * @method Phaser.GameObjects.Text#setPadding
      * @since 3.0.0
      *
-     * @param {number|object} left - [description]
+     * @param {(number|object)} left - [description]
      * @param {number} top - [description]
      * @param {number} right - [description]
      * @param {number} bottom - [description]

@@ -23,7 +23,7 @@
  * @property {float} alpha - The alpha value of the Game Object.
  * @property {boolean} visible - The visible state of the Game Object.
  * @property {integer} scaleMode - The Scale Mode being used by this Game Object.
- * @property {integer|string} blendMode - Sets the Blend Mode being used by this Game Object.
+ * @property {(integer|string)} blendMode - Sets the Blend Mode being used by this Game Object.
  * @property {string} textureKey - The texture key of this Game Object.
  * @property {string} frameKey - The frame key of this Game Object.
  * @property {object} data - The data of this Game Object.

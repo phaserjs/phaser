@@ -30,7 +30,7 @@ var Class = require('../../utils/Class');
  * @param {Phaser.GameObjects.Blitter} blitter - The parent Blitter object is responsible for updating this Bob.
  * @param {number} x - The horizontal position of this Game Object in the world, relative to the parent Blitter position.
  * @param {number} y - The vertical position of this Game Object in the world, relative to the parent Blitter position.
- * @param {string|integer} frame - The Frame this Bob will render with, as defined in the Texture the parent Blitter is using.
+ * @param {(string|integer)} frame - The Frame this Bob will render with, as defined in the Texture the parent Blitter is using.
  * @param {boolean} visible - Should the Bob render visible or not to start with?
  */
 var Bob = new Class({
@@ -70,7 +70,7 @@ var Bob = new Class({
          * [description]
          *
          * @name Phaser.GameObjects.Blitter.Bob#frame
-         * @type {string|integer}
+         * @type {(string|integer)}
          * @since 3.0.0
          */
         this.frame = frame;

@@ -49,7 +49,7 @@ var Render = require('./DynamicBitmapTextRender');
  * @param {number} [x=0] - The x coordinate of this Game Object in world space.
  * @param {number} [y=0] - The y coordinate of this Game Object in world space.
  * @param {string} font - [description]
- * @param {string|string[]} [text] - [description]
+ * @param {(string|string[])} [text] - [description]
  * @param {number} [size] - [description]
  */
 var DynamicBitmapText = new Class({
@@ -240,7 +240,7 @@ var DynamicBitmapText = new Class({
      * @method Phaser.GameObjects.DynamicBitmapText#setText
      * @since 3.0.0
      *
-     * @param {string|string[]} value - The string, or array of strings, to be set as the content of this BitmapText.
+     * @param {(string|string[])} value - The string, or array of strings, to be set as the content of this BitmapText.
      *
      * @return {Phaser.GameObjects.DynamicBitmapText} This Game Object.
      */

@@ -973,7 +973,7 @@ var ParticleEmitter = new Class({
      * @method Phaser.GameObjects.Particles.ParticleEmitter#setFrame
      * @since 3.0.0
      *
-     * @param {array|string|integer|object} frames - [description]
+     * @param {(array|string|integer|object)} frames - [description]
      * @param {boolean} [pickRandom=true] - [description]
      * @param {integer} [quantity=1] - [description]
      *
@@ -1068,7 +1068,7 @@ var ParticleEmitter = new Class({
      * @method Phaser.GameObjects.Particles.ParticleEmitter#setBounds
      * @since 3.0.0
      *
-     * @param {number|object} x - [description]
+     * @param {(number|object)} x - [description]
      * @param {number} y - [description]
      * @param {number} width - [description]
      * @param {number} height - [description]
