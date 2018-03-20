@@ -27,6 +27,8 @@ A special mention must go to @orblazer for their outstanding assistance in helpi
 * Camera.shake now has an optional `callback` argument that is invoked when the effect completes (thanks @pixelscripter)
 * Camera.fade now has an optional `callback` argument that is invoked when the effect completes (thanks @pixelscripter)
 * Camera.flash now has an optional `callback` argument that is invoked when the effect completes (thanks @pixelscripter)
+* Camera.fadeIn is a new method that will fade the camera in from a given color (black by default) and then optionally invoke a callback. This is the same as using Camera.flash but with an easier to grok method name. Fix #3412 (thanks @Jerenaux)
+* Camera.fadeOut is a new method that will fade the camera out to a given color (black by default) and then optionally invoke a callback. This is the same as using Camera.fade but with an easier to grok method name. Fix #3412 (thanks @Jerenaux)
 
 ### Bug Fixes
 

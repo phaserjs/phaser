@@ -708,6 +708,53 @@ var Camera = new Class({
     },
 
     /**
+     * Fades the Camera in from the given color over the duration specified.
+     *
+     * @method Phaser.Cameras.Scene2D.Camera#fadeIn
+     * @since 3.3.0
+     *
+     * @param {number} duration - The duration of the effect in milliseconds.
+     * @param {function} [callback] - An optional callback to invoke when the fade completes. Will be sent one argument - a reference to this camera.
+     * @param {number} [red=0] - The value to fade the red channel from. A value between 0 and 1.
+     * @param {number} [green=0] - The value to fade the green channel from. A value between 0 and 1.
+     * @param {number} [blue=0] - The value to fade the blue channel from. A value between 0 and 1.
+     *
+     * @return {Phaser.Cameras.Scene2D.Camera} This Camera instance.
+     */
+    fadeIn: function (duration, callback, red, green, blue)
+    {
+        if (red === undefined) { red = 0; }
+        if (green === undefined) { green = 0; }
+        if (blue === undefined) { blue = 0; }
+
+        return this.flash(duration, red, green, blue, true, callback);
+    },
+
+    /**
+     * Fades the Camera out to the given color over the duration specified.
+     * This is an alias for Camera.fade that forces the fade to start, regardless of existing fades.
+     *
+     * @method Phaser.Cameras.Scene2D.Camera#fadeOut
+     * @since 3.3.0
+     *
+     * @param {number} duration - The duration of the effect in milliseconds.
+     * @param {function} [callback] - An optional callback to invoke when the fade completes. Will be sent one argument - a reference to this camera.
+     * @param {number} [red=0] - The value to fade the red channel from. A value between 0 and 1.
+     * @param {number} [green=0] - The value to fade the green channel from. A value between 0 and 1.
+     * @param {number} [blue=0] - The value to fade the blue channel from. A value between 0 and 1.
+     *
+     * @return {Phaser.Cameras.Scene2D.Camera} This Camera instance.
+     */
+    fadeOut: function (duration, callback, red, green, blue)
+    {
+        if (red === undefined) { red = 0; }
+        if (green === undefined) { green = 0; }
+        if (blue === undefined) { blue = 0; }
+
+        return this.fade(duration, red, green, blue, true, callback);
+    },
+
+    /**
      * Fades the Camera to the given color over the duration specified.
      *
      * @method Phaser.Cameras.Scene2D.Camera#fade
@@ -1370,7 +1417,7 @@ var Camera = new Class({
 
                 if (this._fadeCallback)
                 {
-                    //  Do this in case the callback flashes again (otherwise we'd overwrite the new callback)
+                    //  Do this in case the callback fades again (otherwise we'd overwrite the new callback)
                     var fadeCallback = this._fadeCallback;
 
                     this._fadeCallback = null;
@@ -1393,7 +1440,7 @@ var Camera = new Class({
 
                 if (this._shakeCallback)
                 {
-                    //  Do this in case the callback flashes again (otherwise we'd overwrite the new callback)
+                    //  Do this in case the callback shakes again (otherwise we'd overwrite the new callback)
                     var shakeCallback = this._shakeCallback;
 
                     this._shakeCallback = null;
