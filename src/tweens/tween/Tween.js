@@ -374,7 +374,7 @@ var Tween = new Class({
      * @since 3.0.0
      *
      * @param {string} key - [description]
-     * @param {any} value - [description]
+     * @param {*} value - [description]
      * @param {boolean} startToCurrent - [description]
      *
      * @return {Phaser.Tweens.Tween} This Tween object.

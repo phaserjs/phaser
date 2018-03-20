@@ -154,7 +154,7 @@ var TextureManager = new Class({
      * @since 3.0.0
      *
      * @param {string} key - The unique string-based key of the Texture.
-     * @param {any} data - The Base64 encoded data.
+     * @param {*} data - The Base64 encoded data.
      */
     addBase64: function (key, data)
     {

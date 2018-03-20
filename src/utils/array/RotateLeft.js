@@ -14,7 +14,7 @@
  * @param {array} array - The array to shift to the left. This array is modified in place.
  * @param {integer} [total=1] - The number of times to shift the array.
  *
- * @return {any} The most recently shifted element.
+ * @return {*} The most recently shifted element.
  */
 var RotateLeft = function (array, total)
 {

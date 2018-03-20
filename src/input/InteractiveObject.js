@@ -9,7 +9,7 @@
 /**
  * @callback HitAreaCallback
  *
- * @param {any} hitArea - [description]
+ * @param {*} hitArea - [description]
  * @param {number} x - [description]
  * @param {number} y - [description]
  * @param {Phaser.GameObjects.GameObject} gameObject - [description]
@@ -26,7 +26,7 @@
  * @property {boolean} dropZone - [description]
  * @property {[type]} target - [description]
  * @property {Phaser.Cameras.Scene2D.Camera} camera - [description]
- * @property {any} hitArea - [description]
+ * @property {*} hitArea - [description]
  * @property {HitAreaCallback} hitAreaCallback - [description]
  * @property {number} localX - [description]
  * @property {number} localY - [description]
@@ -44,7 +44,7 @@
  * @since 3.0.0
  *
  * @param {Phaser.GameObjects.GameObject} gameObject - [description]
- * @param {any} hitArea - [description]
+ * @param {*} hitArea - [description]
  * @param {HitAreaCallback} hitAreaCallback - [description]
  *
  * @return {InteractiveObject} [description]
