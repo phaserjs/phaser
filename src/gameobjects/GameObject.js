@@ -331,6 +331,8 @@ var GameObject = new Class({
             this.preDestroy.call(this);
         }
 
+        this.emit('destroy', this);
+
         var sys = this.scene.sys;
 
         sys.displayList.remove(this);
@@ -362,8 +364,6 @@ var GameObject = new Class({
         this.visible = false;
 
         this.scene = undefined;
-
-        this.emit('destroy');
 
         this.removeAllListeners();
     }
