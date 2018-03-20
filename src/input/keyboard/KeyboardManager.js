@@ -239,7 +239,7 @@ var KeyboardManager = new Class({
      * @method Phaser.Input.Keyboard.KeyboardManager#addKey
      * @since 3.0.0
      *
-     * @param {string|integer} keyCode - [description]
+     * @param {(string|integer)} keyCode - [description]
      *
      * @return {Phaser.Input.Keyboard.Key} [description]
      */
@@ -262,7 +262,7 @@ var KeyboardManager = new Class({
      * @method Phaser.Input.Keyboard.KeyboardManager#removeKey
      * @since 3.0.0
      *
-     * @param {string|integer} keyCode - [description]
+     * @param {(string|integer)} keyCode - [description]
      */
     removeKey: function (keyCode)
     {
@@ -279,7 +279,7 @@ var KeyboardManager = new Class({
      * @method Phaser.Input.Keyboard.KeyboardManager#addKeyCapture
      * @since 3.0.0
      *
-     * @param {string|integer|string[]|integer[]} keyCodes - [description]
+     * @param {(string|integer|string[]|integer[])} keyCodes - [description]
      */
     addKeyCapture: function (keyCodes)
     {
@@ -300,7 +300,7 @@ var KeyboardManager = new Class({
      * @method Phaser.Input.Keyboard.KeyboardManager#removeKeyCapture
      * @since 3.0.0
      *
-     * @param {string|integer|string[]|integer[]} keyCodes - [description]
+     * @param {(string|integer|string[]|integer[])} keyCodes - [description]
      */
     removeKeyCapture: function (keyCodes)
     {
@@ -321,7 +321,7 @@ var KeyboardManager = new Class({
      * @method Phaser.Input.Keyboard.KeyboardManager#createCombo
      * @since 3.0.0
      *
-     * @param {string|integer[]|object[]} keys - [description]
+     * @param {(string|integer[]|object[])} keys - [description]
      * @param {object} config - [description]
      *
      * @return {Phaser.Input.Keyboard.KeyCombo} [description]

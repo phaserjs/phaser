@@ -27,7 +27,7 @@ var TextureSource = require('./TextureSource');
  *
  * @param {Phaser.Textures.TextureManager} manager - A reference to the Texture Manager this Texture belongs to.
  * @param {string} key - The unique string-based key of this Texture.
- * @param {Image|HTMLCanvasElement} source - The source that is used to create the texture. Usually an Image, but can also be a Canvas.
+ * @param {(Image|HTMLCanvasElement)} source - The source that is used to create the texture. Usually an Image, but can also be a Canvas.
  * @param {number} [width] - The width of the Texture. This is optional and automatically derived from the source images.
  * @param {number} [height] - The height of the Texture. This is optional and automatically derived from the source images.
  */
@@ -133,7 +133,7 @@ var Texture = new Class({
      * @method Phaser.Textures.Texture#add
      * @since 3.0.0
      *
-     * @param {integer|string} name - The name of this Frame. The name is unique within the Texture.
+     * @param {(integer|string)} name - The name of this Frame. The name is unique within the Texture.
      * @param {integer} sourceIndex - The index of the TextureSource that this Frame is a part of.
      * @param {number} x - The x coordinate of the top-left of this Frame.
      * @param {number} y - The y coordinate of the top-left of this Frame.
@@ -187,7 +187,7 @@ var Texture = new Class({
      * @method Phaser.Textures.Texture#get
      * @since 3.0.0
      *
-     * @param {string|integer} [name] - The string-based name, or integer based index, of the Frame to get from this Texture.
+     * @param {(string|integer)} [name] - The string-based name, or integer based index, of the Frame to get from this Texture.
      *
      * @return {Phaser.Textures.Frame} The Texture Frame.
      */
@@ -204,10 +204,10 @@ var Texture = new Class({
         if (!frame)
         {
             console.warn('No Texture.frame found with name ' + name);
-             
+
             frame = this.frames[this.firstFrame];
         }
-        
+
         return frame;
     },
 
@@ -271,7 +271,7 @@ var Texture = new Class({
 
     /**
      * Returns an array with all of the names of the Frames in this Texture.
-     * 
+     *
      * Useful if you want to randomly assign a Frame to a Game Object, as you can
      * pick a random element from the returned array.
      *
@@ -309,9 +309,9 @@ var Texture = new Class({
      * @method Phaser.Textures.Texture#getSourceImage
      * @since 3.0.0
      *
-     * @param {string|integer} [name] - The string-based name, or integer based index, of the Frame to get from this Texture.
+     * @param {(string|integer)} [name] - The string-based name, or integer based index, of the Frame to get from this Texture.
      *
-     * @return {HTMLImageElement|HTMLCanvasElement} The DOM Image or Canvas Element.
+     * @return {(HTMLImageElement|HTMLCanvasElement)} The DOM Image or Canvas Element.
      */
     getSourceImage: function (name)
     {
@@ -336,14 +336,14 @@ var Texture = new Class({
 
     /**
      * Adds a data source image to this Texture.
-     * 
+     *
      * An example of a data source image would be a normal map, where all of the Frames for this Texture
      * equally apply to the normal map.
      *
      * @method Phaser.Textures.Texture#setDataSource
      * @since 3.0.0
      *
-     * @param {Image|HTMLCanvasElement} data - The source image.
+     * @param {(Image|HTMLCanvasElement)} data - The source image.
      */
     setDataSource: function (data)
     {
@@ -372,7 +372,7 @@ var Texture = new Class({
      * @method Phaser.Textures.Texture#setFilter
      * @since 3.0.0
      *
-     * @param {Phaser.Textures.FilterMode.LINEAR|Phaser.Textures.FilterMode.NEAREST} filterMode - The Filter Mode.
+     * @param {(Phaser.Textures.FilterMode.LINEAR|Phaser.Textures.FilterMode.NEAREST)} filterMode - The Filter Mode.
      */
     setFilter: function (filterMode)
     {

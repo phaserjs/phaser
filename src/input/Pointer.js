@@ -270,9 +270,9 @@ var Pointer = new Class({
      * @since 3.0.0
      *
      * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
-     * @param {Phaser.Math.Vector2|object} output - [description]
+     * @param {(Phaser.Math.Vector2|object)} output - [description]
      *
-     * @return {Phaser.Math.Vector2|object} [description]
+     * @return {(Phaser.Math.Vector2|object)} [description]
      */
     positionToCamera: function (camera, output)
     {

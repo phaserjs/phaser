@@ -64,7 +64,7 @@ var MatterAttractors = {
               if (Matter.Common.isFunction(attractor)) {
                 forceVector = attractor(bodyA, bodyB);
               }
-              
+
               if (forceVector) {
                 Matter.Body.applyForce(bodyB, bodyB.position, forceVector);
               }
@@ -74,9 +74,9 @@ var MatterAttractors = {
       }
     }
   },
-  
+
   /**
-   * Defines some useful common attractor functions that can be used 
+   * Defines some useful common attractor functions that can be used
    * by pushing them to your body's `body.plugin.attractors` array.
    * @namespace MatterAttractors.Attractors
    * @property {number} gravityConstant The gravitational constant used by the gravity attractor.
@@ -87,7 +87,7 @@ var MatterAttractors = {
     /**
      * An attractor function that applies Newton's law of gravitation.
      * Use this by pushing `MatterAttractors.Attractors.gravity` to your body's `body.plugin.attractors` array.
-     * The gravitational constant defaults to `0.001` which you can change 
+     * The gravitational constant defaults to `0.001` which you can change
      * at `MatterAttractors.Attractors.gravityConstant`.
      * @function MatterAttractors.Attractors.gravity
      * @param {Matter.Body} bodyA The first body.
@@ -117,7 +117,7 @@ module.exports = MatterAttractors;
  */
 
 /**
- * This plugin adds a new property `body.plugin.attractors` to instances of `Matter.Body`.  
+ * This plugin adds a new property `body.plugin.attractors` to instances of `Matter.Body`.
  * This is an array of callback functions that will be called automatically
  * for every pair of bodies, on every engine update.
  * @property {Function[]} body.plugin.attractors
@@ -132,5 +132,5 @@ module.exports = MatterAttractors;
  * @callback AttractorFunction
  * @param {Matter.Body} bodyA
  * @param {Matter.Body} bodyB
- * @returns {Vector|undefined} a force vector (optional)
+ * @returns {(Vector|undefined)} a force vector (optional)
  */

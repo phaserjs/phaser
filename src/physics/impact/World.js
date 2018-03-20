@@ -222,7 +222,7 @@ var World = new Class({
      * @method Phaser.Physics.Impact.World#setCollisionMap
      * @since 3.0.0
      *
-     * @param {string|integer[][]} key - Either a string key that corresponds to a Weltmeister level
+     * @param {(string|integer[][])} key - Either a string key that corresponds to a Weltmeister level
      * in the cache, or a 2D array of collision IDs.
      * @param {integer} tileSize - The size of a tile. This is optional if loading from a Weltmeister
      * level in the cache.
@@ -278,7 +278,7 @@ var World = new Class({
      * @method Phaser.Physics.Impact.World#setCollisionMapFromTilemapLayer
      * @since 3.0.0
      *
-     * @param {StaticTilemapLayer|DynamicTilemapLayer} tilemapLayer - The tilemap layer to use.
+     * @param {(StaticTilemapLayer|DynamicTilemapLayer)} tilemapLayer - The tilemap layer to use.
      * @param {object} [options] - Options for controlling the mapping from tiles to slope IDs.
      * @param {string} [options.slopeTileProperty=null] - Slope IDs can be stored on tiles directly
      * using Tiled's tileset editor. If a tile has a property with the given slopeTileProperty string

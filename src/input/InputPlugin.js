@@ -1010,7 +1010,7 @@ var InputPlugin = new Class({
      * @method Phaser.Input.InputPlugin#setDraggable
      * @since 3.0.0
      *
-     * @param {Phaser.GameObjects.GameObject|Phaser.GameObjects.GameObject[]} gameObjects - An array of Game Objects to change the draggable state on.
+     * @param {(Phaser.GameObjects.GameObject|Phaser.GameObjects.GameObject[])} gameObjects - An array of Game Objects to change the draggable state on.
      * @param {boolean} [value=true] - Set to `true` if the Game Objects should be made draggable, `false` if they should be unset.
      *
      * @return {Phaser.Input.InputPlugin} This InputPlugin object.
@@ -1051,7 +1051,7 @@ var InputPlugin = new Class({
      * @method Phaser.Input.InputPlugin#setHitArea
      * @since 3.0.0
      *
-     * @param {Phaser.GameObjects.GameObject|Phaser.GameObjects.GameObject[]} gameObjects - An array of Game Objects to set the hit area on.
+     * @param {(Phaser.GameObjects.GameObject|Phaser.GameObjects.GameObject[])} gameObjects - An array of Game Objects to set the hit area on.
      * @param {object} [shape] - The shape or object to check if the pointer is within for hit area checks.
      * @param {HitAreaCallback} [callback] - The 'contains' function to invoke to check if the pointer is within the hit area.
      *
@@ -1087,7 +1087,7 @@ var InputPlugin = new Class({
      * @method Phaser.Input.InputPlugin#setHitAreaCircle
      * @since 3.0.0
      *
-     * @param {Phaser.GameObjects.GameObject|Phaser.GameObjects.GameObject[]} gameObjects - An array of Game Objects to set as having a circle hit area.
+     * @param {(Phaser.GameObjects.GameObject|Phaser.GameObjects.GameObject[])} gameObjects - An array of Game Objects to set as having a circle hit area.
      * @param {number} x - The center of the circle.
      * @param {number} y - The center of the circle.
      * @param {number} radius - The radius of the circle.
@@ -1110,7 +1110,7 @@ var InputPlugin = new Class({
      * @method Phaser.Input.InputPlugin#setHitAreaEllipse
      * @since 3.0.0
      *
-     * @param {Phaser.GameObjects.GameObject|Phaser.GameObjects.GameObject[]} gameObjects - An array of Game Objects to set as having an ellipse hit area.
+     * @param {(Phaser.GameObjects.GameObject|Phaser.GameObjects.GameObject[])} gameObjects - An array of Game Objects to set as having an ellipse hit area.
      * @param {number} x - The center of the ellipse.
      * @param {number} y - The center of the ellipse.
      * @param {number} width - The width of the ellipse.
@@ -1134,7 +1134,7 @@ var InputPlugin = new Class({
      * @method Phaser.Input.InputPlugin#setHitAreaFromTexture
      * @since 3.0.0
      *
-     * @param {Phaser.GameObjects.GameObject|Phaser.GameObjects.GameObject[]} gameObjects - An array of Game Objects to set as having an ellipse hit area.
+     * @param {(Phaser.GameObjects.GameObject|Phaser.GameObjects.GameObject[])} gameObjects - An array of Game Objects to set as having an ellipse hit area.
      * @param {HitAreaCallback} [callback] - The hit area callback. If undefined it uses Rectangle.Contains.
      *
      * @return {Phaser.Input.InputPlugin} This InputPlugin object.
@@ -1184,7 +1184,7 @@ var InputPlugin = new Class({
      * @method Phaser.Input.InputPlugin#setHitAreaRectangle
      * @since 3.0.0
      *
-     * @param {Phaser.GameObjects.GameObject|Phaser.GameObjects.GameObject[]} gameObjects - An array of Game Objects to set as having a rectangular hit area.
+     * @param {(Phaser.GameObjects.GameObject|Phaser.GameObjects.GameObject[])} gameObjects - An array of Game Objects to set as having a rectangular hit area.
      * @param {number} x - The top-left of the rectangle.
      * @param {number} y - The top-left of the rectangle.
      * @param {number} width - The width of the rectangle.
@@ -1208,7 +1208,7 @@ var InputPlugin = new Class({
      * @method Phaser.Input.InputPlugin#setHitAreaTriangle
      * @since 3.0.0
      *
-     * @param {Phaser.GameObjects.GameObject|Phaser.GameObjects.GameObject[]} gameObjects - An array of Game Objects to set as having a  triangular hit area.
+     * @param {(Phaser.GameObjects.GameObject|Phaser.GameObjects.GameObject[])} gameObjects - An array of Game Objects to set as having a  triangular hit area.
      * @param {number} x1 - The x coordinate of the first point of the triangle.
      * @param {number} y1 - The y coordinate of the first point of the triangle.
      * @param {number} x2 - The x coordinate of the second point of the triangle.
