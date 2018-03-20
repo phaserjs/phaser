@@ -506,7 +506,7 @@ var SceneManager = new Class({
      * @method Phaser.Scenes.SceneManager#render
      * @since 3.0.0
      *
-     * @param {any} renderer - [description]
+     * @param {*} renderer - [description]
      */
     render: function (renderer)
     {

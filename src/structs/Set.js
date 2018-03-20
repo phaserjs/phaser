@@ -9,7 +9,7 @@ var Class = require('../utils/Class');
 /**
  * @callback EachSetCallback
  *
- * @param {any} entry - [description]
+ * @param {*} entry - [description]
  * @param {number} index - [description]
  *
  * @return {?boolean} [description]
@@ -57,7 +57,7 @@ var Set = new Class({
      * @method Phaser.Structs.Set#set
      * @since 3.0.0
      *
-     * @param {any} value - [description]
+     * @param {*} value - [description]
      *
      * @return {Phaser.Structs.Set} This Set object.
      */
@@ -78,9 +78,9 @@ var Set = new Class({
      * @since 3.0.0
      *
      * @param {string} property - [description]
-     * @param {any} value - [description]
+     * @param {*} value - [description]
      *
-     * @return {any} [description]
+     * @return {*} [description]
      */
     get: function (property, value)
     {
@@ -114,7 +114,7 @@ var Set = new Class({
      * @method Phaser.Structs.Set#delete
      * @since 3.0.0
      *
-     * @param {any} value - [description]
+     * @param {*} value - [description]
      *
      * @return {Phaser.Structs.Set} This Set object.
      */
@@ -286,7 +286,7 @@ var Set = new Class({
      * @method Phaser.Structs.Set#contains
      * @since 3.0.0
      *
-     * @param {any} value - [description]
+     * @param {*} value - [description]
      *
      * @return {boolean} [description]
      */

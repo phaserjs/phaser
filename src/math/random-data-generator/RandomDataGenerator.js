@@ -177,7 +177,7 @@ var RandomDataGenerator = new Class({
      * @method Phaser.Math.RandomDataGenerator#sow
      * @since 3.0.0
      *
-     * @param {any[]} seeds - The array of seeds: the `toString()` of each value is used.
+     * @param {*[]} seeds - The array of seeds: the `toString()` of each value is used.
      */
     sow: function (seeds)
     {
@@ -339,7 +339,7 @@ var RandomDataGenerator = new Class({
      *
      * @param {array} array - The array to pick a random element from.
      *
-     * @return {any} A random member of the array.
+     * @return {*} A random member of the array.
      */
     pick: function (array)
     {
@@ -367,7 +367,7 @@ var RandomDataGenerator = new Class({
      *
      * @param {array} array - The array to pick a random element from.
      *
-     * @return {any} A random member of the array.
+     * @return {*} A random member of the array.
      */
     weightedPick: function (array)
     {

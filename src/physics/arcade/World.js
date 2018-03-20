@@ -1701,7 +1701,7 @@ var World = new Class({
     * @method Phaser.Physics.Arcade.World#wrap
     * @since 3.3.0
     *
-    * @param {any} object - A Game Object, a Group, an object with `x` and `y` coordinates, or an array of such objects.
+    * @param {*} object - A Game Object, a Group, an object with `x` and `y` coordinates, or an array of such objects.
     * @param {number} [padding=0] - An amount added to each boundary edge during the operation.
     */
     wrap: function (object, padding)
@@ -1731,7 +1731,7 @@ var World = new Class({
     * @method Phaser.Physics.Arcade.World#wrapArray
     * @since 3.3.0
     *
-    * @param {any[]} arr
+    * @param {*[]} arr
     * @param {number} [padding=0] - An amount added to the boundary.
     */
     wrapArray: function (arr, padding)
@@ -1753,7 +1753,7 @@ var World = new Class({
     * @method Phaser.Physics.Arcade.World#wrapObject
     * @since 3.3.0
     *
-    * @param {any} object - A Game Object, a Physics Body, or any object with `x` and `y` coordinates
+    * @param {*} object - A Game Object, a Physics Body, or any object with `x` and `y` coordinates
     * @param {number} [padding=0] - An amount added to the boundary.
     */
     wrapObject: function (object, padding)

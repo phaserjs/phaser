@@ -26,7 +26,7 @@ function hasGetters (def)
  * @since 3.0.0
  *
  * @param {string} key - [description]
- * @param {any} propertyValue - [description]
+ * @param {*} propertyValue - [description]
  *
  * @return {function} [description]
  */

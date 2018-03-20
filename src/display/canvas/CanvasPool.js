@@ -20,7 +20,7 @@ var _disableContextSmoothing = false;
  * before a Phaser.Game instance has even been created.
  * Which means all instances of Phaser Games on the same page
  * can share the one single pool
- * 
+ *
  * @namespace Phaser.Display.Canvas.CanvasPool
  * @since 3.0.0
  */
@@ -31,12 +31,12 @@ var CanvasPool = function ()
      *
      * @function Phaser.Display.Canvas.CanvasPool.create
      * @since 3.0.0
-     * 
-     * @param {any} parent - The parent of the Canvas object.
+     *
+     * @param {*} parent - The parent of the Canvas object.
      * @param {integer} [width=1] - The width of the Canvas.
      * @param {integer} [height=1] - The height of the Canvas.
      * @param {integer} [canvasType=Phaser.CANVAS] - The type of the Canvas. Either `Phaser.CANVAS` or `Phaser.WEBGL`.
-     * 
+     *
      * @return {HTMLCanvasElement} [description]
      */
     var create = function (parent, width, height, canvasType)
@@ -74,7 +74,7 @@ var CanvasPool = function ()
         {
             Smoothing.disable(canvas.getContext('2d'));
         }
-        
+
         return canvas;
     };
 
@@ -83,11 +83,11 @@ var CanvasPool = function ()
      *
      * @function Phaser.Display.Canvas.CanvasPool.create2D
      * @since 3.0.0
-     * 
-     * @param {any} parent - The parent of the Canvas object.
+     *
+     * @param {*} parent - The parent of the Canvas object.
      * @param {integer} [width=1] - The width of the Canvas.
      * @param {integer} [height=1] - The height of the Canvas.
-     * 
+     *
      * @return {HTMLCanvasElement} [description]
      */
     var create2D = function (parent, width, height)
@@ -100,11 +100,11 @@ var CanvasPool = function ()
      *
      * @function Phaser.Display.Canvas.CanvasPool.createWebGL
      * @since 3.0.0
-     * 
-     * @param {any} parent - The parent of the Canvas object.
+     *
+     * @param {*} parent - The parent of the Canvas object.
      * @param {integer} [width=1] - The width of the Canvas.
      * @param {integer} [height=1] - The height of the Canvas.
-     * 
+     *
      * @return {HTMLCanvasElement} [description]
      */
     var createWebGL = function (parent, width, height)
@@ -117,9 +117,9 @@ var CanvasPool = function ()
      *
      * @function Phaser.Display.Canvas.CanvasPool.first
      * @since 3.0.0
-     * 
+     *
      * @param {integer} [canvasType=Phaser.CANVAS] - The type of the Canvas. Either `Phaser.CANVAS` or `Phaser.WEBGL`.
-     * 
+     *
      * @return {HTMLCanvasElement} [description]
      */
     var first = function (canvasType)
@@ -143,8 +143,8 @@ var CanvasPool = function ()
      *
      * @function Phaser.Display.Canvas.CanvasPool.remove
      * @since 3.0.0
-     * 
-     * @param {any} parent - [description]
+     *
+     * @param {*} parent - [description]
      */
     var remove = function (parent)
     {
@@ -168,7 +168,7 @@ var CanvasPool = function ()
      *
      * @function Phaser.Display.Canvas.CanvasPool.total
      * @since 3.0.0
-     * 
+     *
      * @return {integer} [description]
      */
     var total = function ()
@@ -191,7 +191,7 @@ var CanvasPool = function ()
      *
      * @function Phaser.Display.Canvas.CanvasPool.free
      * @since 3.0.0
-     * 
+     *
      * @return {integer} [description]
      */
     var free = function ()

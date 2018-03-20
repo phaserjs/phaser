@@ -173,7 +173,7 @@ var File = new Class({
          * The processed file data, stored in here after the file has loaded.
          *
          * @name Phaser.Loader.File#data
-         * @type {any}
+         * @type {*}
          * @since 3.0.0
          */
         this.data = undefined;
