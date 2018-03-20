@@ -601,7 +601,7 @@ var Matrix4 = new Class({
      * @method Phaser.Math.Matrix4#translate
      * @since 3.0.0
      *
-     * @param {Phaser.Math.Vector3|Phaser.Math.Vector4} v - [description]
+     * @param {(Phaser.Math.Vector3|Phaser.Math.Vector4)} v - [description]
      *
      * @return {Phaser.Math.Matrix4} This Matrix4 object.
      */
@@ -626,7 +626,7 @@ var Matrix4 = new Class({
      * @method Phaser.Math.Matrix4#scale
      * @since 3.0.0
      *
-     * @param {Phaser.Math.Vector3|Phaser.Math.Vector4} v - [description]
+     * @param {(Phaser.Math.Vector3|Phaser.Math.Vector4)} v - [description]
      *
      * @return {Phaser.Math.Matrix4} This Matrix4 object.
      */
@@ -661,7 +661,7 @@ var Matrix4 = new Class({
      * @method Phaser.Math.Matrix4#makeRotationAxis
      * @since 3.0.0
      *
-     * @param {Phaser.Math.Vector3|Phaser.Math.Vector4} axis - [description]
+     * @param {(Phaser.Math.Vector3|Phaser.Math.Vector4)} axis - [description]
      * @param {float} angle - The angle of rotation in radians.
      *
      * @return {Phaser.Math.Matrix4} This Matrix4 object.

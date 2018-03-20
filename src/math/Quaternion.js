@@ -4,7 +4,7 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-//  Adapted from [gl-matrix](https://github.com/toji/gl-matrix) by toji 
+//  Adapted from [gl-matrix](https://github.com/toji/gl-matrix) by toji
 //  and [vecmath](https://github.com/mattdesl/vecmath) by mattdesl
 
 var Class = require('../utils/Class');
@@ -101,7 +101,7 @@ var Quaternion = new Class({
      * @method Phaser.Math.Quaternion#copy
      * @since 3.0.0
      *
-     * @param {Phaser.Math.Quaternion|Phaser.Math.Vector4} src - [description]
+     * @param {(Phaser.Math.Quaternion|Phaser.Math.Vector4)} src - [description]
      *
      * @return {Phaser.Math.Quaternion} This Quaternion object.
      */
@@ -121,7 +121,7 @@ var Quaternion = new Class({
      * @method Phaser.Math.Quaternion#set
      * @since 3.0.0
      *
-     * @param {number|object} [x=0] - [description]
+     * @param {(number|object)} [x=0] - [description]
      * @param {number} [y=0] - [description]
      * @param {number} [z=0] - [description]
      * @param {number} [w=0] - [description]
@@ -154,7 +154,7 @@ var Quaternion = new Class({
      * @method Phaser.Math.Quaternion#add
      * @since 3.0.0
      *
-     * @param {Phaser.Math.Quaternion|Phaser.Math.Vector4} v - [description]
+     * @param {(Phaser.Math.Quaternion|Phaser.Math.Vector4)} v - [description]
      *
      * @return {Phaser.Math.Quaternion} This Quaternion object.
      */
@@ -174,7 +174,7 @@ var Quaternion = new Class({
      * @method Phaser.Math.Quaternion#subtract
      * @since 3.0.0
      *
-     * @param {Phaser.Math.Quaternion|Phaser.Math.Vector4} v - [description]
+     * @param {(Phaser.Math.Quaternion|Phaser.Math.Vector4)} v - [description]
      *
      * @return {Phaser.Math.Quaternion} This Quaternion object.
      */
@@ -279,7 +279,7 @@ var Quaternion = new Class({
      * @method Phaser.Math.Quaternion#dot
      * @since 3.0.0
      *
-     * @param {Phaser.Math.Quaternion|Phaser.Math.Vector4} v - [description]
+     * @param {(Phaser.Math.Quaternion|Phaser.Math.Vector4)} v - [description]
      *
      * @return {number} [description]
      */
@@ -294,7 +294,7 @@ var Quaternion = new Class({
      * @method Phaser.Math.Quaternion#lerp
      * @since 3.0.0
      *
-     * @param {Phaser.Math.Quaternion|Phaser.Math.Vector4} v - [description]
+     * @param {(Phaser.Math.Quaternion|Phaser.Math.Vector4)} v - [description]
      * @param {number} [t=0] - [description]
      *
      * @return {Phaser.Math.Quaternion} This Quaternion object.
@@ -337,7 +337,7 @@ var Quaternion = new Class({
             {
                 tmpvec.copy(yUnitVec3).cross(a);
             }
-            
+
             tmpvec.normalize();
 
             return this.setAxisAngle(tmpvec, Math.PI);
@@ -445,7 +445,7 @@ var Quaternion = new Class({
      * @method Phaser.Math.Quaternion#multiply
      * @since 3.0.0
      *
-     * @param {Phaser.Math.Quaternion|Phaser.Math.Vector4} b - [description]
+     * @param {(Phaser.Math.Quaternion|Phaser.Math.Vector4)} b - [description]
      *
      * @return {Phaser.Math.Quaternion} This Quaternion object.
      */
@@ -475,7 +475,7 @@ var Quaternion = new Class({
      * @method Phaser.Math.Quaternion#slerp
      * @since 3.0.0
      *
-     * @param {Phaser.Math.Quaternion|Phaser.Math.Vector4} b - [description]
+     * @param {(Phaser.Math.Quaternion|Phaser.Math.Vector4)} b - [description]
      * @param {number} t - [description]
      *
      * @return {Phaser.Math.Quaternion} This Quaternion object.
@@ -507,7 +507,7 @@ var Quaternion = new Class({
             bw = - bw;
         }
 
-        // "from" and "to" quaternions are very close 
+        // "from" and "to" quaternions are very close
         //  ... so we can do a linear interpolation
         var scale0 = 1 - t;
         var scale1 = t;
@@ -549,7 +549,7 @@ var Quaternion = new Class({
 
         var dot = a0 * a0 + a1 * a1 + a2 * a2 + a3 * a3;
         var invDot = (dot) ? 1 / dot : 0;
-        
+
         // TODO: Would be faster to return [0,0,0,0] immediately if dot == 0
 
         this.x = -a0 * invDot;
@@ -738,7 +738,7 @@ var Quaternion = new Class({
 
             var j = siNext[i];
             var k = siNext[j];
-                
+
             //  This isn't quite as clean without array access
             fRoot = Math.sqrt(m[i * 3 + i] - m[j * 3 + j] - m[k * 3 + k] + 1);
             tmp[i] = 0.5 * fRoot;
@@ -753,7 +753,7 @@ var Quaternion = new Class({
             this.z = tmp[2];
             this.w = (m[k * 3 + j] - m[j * 3 + k]) * fRoot;
         }
-        
+
         return this;
     }
 
