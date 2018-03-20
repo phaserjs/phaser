@@ -679,7 +679,7 @@ var TextureManager = new Class({
      * @param {string} key - The unique string-based key of the Texture.
      * @param {string|integer} frame - The string or index of the Frame.
      *
-     * @return {Phaser.Display.Color|null} A Color object populated with the color values of the requested pixel,
+     * @return {?Phaser.Display.Color} A Color object populated with the color values of the requested pixel,
      * or `null` if the coordinates were out of bounds.
      */
     getPixel: function (x, y, key, frame)

@@ -227,7 +227,7 @@ var World = new Class({
      * @param {integer} tileSize - The size of a tile. This is optional if loading from a Weltmeister
      * level in the cache.
      *
-     * @return {CollisionMap|null} The newly created CollisionMap, or null if the method failed to
+     * @return {?Phaser.Physics.Impact.CollisionMap} The newly created CollisionMap, or null if the method failed to
      * create the CollisionMap.
      */
     setCollisionMap: function (key, tileSize)

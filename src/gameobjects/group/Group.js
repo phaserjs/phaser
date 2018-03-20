@@ -562,7 +562,7 @@ var Group = new Class({
      * @param {string|integer} [frame] - An optional frame from the Texture this Game Object is rendering with.
      * @param {boolean} [visible] - [description]
      *
-     * @return {Phaser.GameObjects.GameObject|null} [description]
+     * @return {?Phaser.GameObjects.GameObject} [description]
      */
     getFirst: function (state, createIfNull, x, y, key, frame, visible)
     {

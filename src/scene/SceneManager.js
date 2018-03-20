@@ -260,7 +260,7 @@ var SceneManager = new Class({
      * @param {Phaser.Scene|object|function} sceneConfig - [description]
      * @param {boolean} [autoStart=false] - If `true` the Scene will be started immediately after being added.
      *
-     * @return {Phaser.Scene|null} [description]
+     * @return {?Phaser.Scene} [description]
      */
     add: function (key, sceneConfig, autoStart)
     {
@@ -747,7 +747,7 @@ var SceneManager = new Class({
      *
      * @param {string} key - [description]
      *
-     * @return {Phaser.Scene|null} [description]
+     * @return {?Phaser.Scene} [description]
      */
     getScene: function (key)
     {

@@ -107,7 +107,7 @@ var Smoothing = function ()
      *
      * @param {CanvasRenderingContext2D|WebGLRenderingContext} context - [description]
      *
-     * @return {boolean|null} [description]
+     * @return {?boolean} [description]
      */
     var isEnabled = function (context)
     {

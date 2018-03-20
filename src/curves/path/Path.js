@@ -516,7 +516,7 @@ var Path = new Class({
      * @param {number} t - [description]
      * @param {Phaser.Math.Vector2} [out] - [description]
      *
-     * @return {Phaser.Math.Vector2|null} [description]
+     * @return {?Phaser.Math.Vector2} [description]
      */
     getPoint: function (t, out)
     {
