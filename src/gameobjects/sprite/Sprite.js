@@ -47,7 +47,7 @@ var SpriteRender = require('./SpriteRender');
  * @param {number} x - The horizontal position of this Game Object in the world.
  * @param {number} y - The vertical position of this Game Object in the world.
  * @param {string} texture - The key of the Texture this Game Object will use to render with, as stored in the Texture Manager.
- * @param {string|integer} [frame] - An optional frame from the Texture this Game Object is rendering with.
+ * @param {(string|integer)} [frame] - An optional frame from the Texture this Game Object is rendering with.
  */
 var Sprite = new Class({
 
@@ -115,7 +115,7 @@ var Sprite = new Class({
      *
      * @param {string} key - [description]
      * @param {boolean} ignoreIfPlaying - [description]
-     * @param {integer|string} startFrame - [description]
+     * @param {(integer|string)} startFrame - [description]
      *
      * @return {Phaser.GameObjects.Sprite} This Game Object.
      */

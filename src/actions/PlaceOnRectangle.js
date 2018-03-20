@@ -19,8 +19,8 @@ var RotateRight = require('../utils/array/RotateRight');
  *
  * @function Phaser.Actions.PlaceOnRectangle
  * @since 3.0.0
- * 
- * @param {array} items - An array of Game Objects. The contents of this array are updated by this Action.
+ *
+ * @param {(array|Phaser.GameObjects.GameObject[])} items - An array of Game Objects. The contents of this array are updated by this Action.
  * @param {Phaser.Geom.Rectangle} rect - [description]
  * @param {integer} [shift=1] - [description]
  *

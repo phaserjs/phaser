@@ -457,7 +457,7 @@ var ScenePlugin = new Class({
      * @method Phaser.Scenes.ScenePlugin#remove
      * @since 3.2.0
      *
-     * @param {string|Phaser.Scene} scene - The Scene to be removed.
+     * @param {(string|Phaser.Scene)} scene - The Scene to be removed.
      *
      * @return {Phaser.Scenes.SceneManager} This SceneManager.
      */

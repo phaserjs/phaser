@@ -24,7 +24,7 @@ var GetValue = require('../../utils/object/GetValue');
  * @property {Phaser.Input.Keyboard.Key} [zoomIn] - The Key to be pressed that will zoom the Camera in.
  * @property {Phaser.Input.Keyboard.Key} [zoomOut] - The Key to be pressed that will zoom the Camera out.
  * @property {float} [zoomSpeed=0.01] - The speed at which the camera will zoom if the `zoomIn` or `zoomOut` keys are pressed.
- * @property {float|{x:float,y:float}} [speed=0] - The horizontal and vertical speed the camera will move.
+ * @property {(float|{x:float,y:float})} [speed=0] - The horizontal and vertical speed the camera will move.
  */
 
 /**

@@ -19,7 +19,7 @@
  * @since 3.0.0
  *
  * @param {Phaser.Geom.Line} line - [description]
- * @param {Phaser.Geom.Rectangle|object} rect - [description]
+ * @param {(Phaser.Geom.Rectangle|object)} rect - [description]
  *
  * @return {boolean} [description]
  */

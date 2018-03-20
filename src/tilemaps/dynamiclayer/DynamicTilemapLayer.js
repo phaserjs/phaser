@@ -190,8 +190,8 @@ var DynamicTilemapLayer = new Class({
      * @method Phaser.Tilemaps.DynamicTilemapLayer#createFromTiles
      * @since 3.0.0
      *
-     * @param {integer|array} indexes - The tile index, or array of indexes, to create Sprites from.
-     * @param {integer|array} replacements - The tile index, or array of indexes, to change a converted
+     * @param {(integer|array)} indexes - The tile index, or array of indexes, to create Sprites from.
+     * @param {(integer|array)} replacements - The tile index, or array of indexes, to change a converted
      * tile to. Set to `null` to leave the tiles unchanged. If an array is given, it is assumed to be a
      * one-to-one mapping with the indexes array.
      * @param {object} spriteConfig - The config object to pass into the Sprite creator (i.e.
@@ -478,7 +478,7 @@ var DynamicTilemapLayer = new Class({
      * @method Phaser.Tilemaps.DynamicTilemapLayer#getTilesWithinShape
      * @since 3.0.0
      *
-     * @param {Phaser.Geom.Circle|Phaser.Geom.Line|Phaser.Geom.Rectangle|Phaser.Geom.Triangle} shape - A shape in world (pixel) coordinates
+     * @param {(Phaser.Geom.Circle|Phaser.Geom.Line|Phaser.Geom.Rectangle|Phaser.Geom.Triangle)} shape - A shape in world (pixel) coordinates
      * @param {object} [filteringOptions] - Optional filters to apply when getting the tiles.
      * @param {boolean} [filteringOptions.isNotEmpty=false] - If true, only return tiles that don't have
      * -1 for an index.
@@ -565,7 +565,7 @@ var DynamicTilemapLayer = new Class({
      * @method Phaser.Tilemaps.DynamicTilemapLayer#putTileAt
      * @since 3.0.0
      *
-     * @param {integer|Phaser.Tilemaps.Tile} tile - The index of this tile to set or a Tile object.
+     * @param {(integer|Phaser.Tilemaps.Tile)} tile - The index of this tile to set or a Tile object.
      * @param {integer} tileX - [description]
      * @param {integer} tileY - [description]
      * @param {boolean} [recalculateFaces=true] - [description]
@@ -586,7 +586,7 @@ var DynamicTilemapLayer = new Class({
      * @method Phaser.Tilemaps.DynamicTilemapLayer#putTileAtWorldXY
      * @since 3.0.0
      *
-     * @param {integer|Phaser.Tilemaps.Tile} tile - The index of this tile to set or a Tile object.
+     * @param {(integer|Phaser.Tilemaps.Tile)} tile - The index of this tile to set or a Tile object.
      * @param {integer} worldX - [description]
      * @param {integer} worldY - [description]
      * @param {boolean} [recalculateFaces=true] - [description]
@@ -609,7 +609,7 @@ var DynamicTilemapLayer = new Class({
      * @method Phaser.Tilemaps.DynamicTilemapLayer#putTilesAt
      * @since 3.0.0
      *
-     * @param {integer[]|integer[][]|Phaser.Tilemaps.Tile[]|Phaser.Tilemaps.Tile[][]} tile - A row (array) or grid (2D array) of Tiles
+     * @param {(integer[]|integer[][]|Phaser.Tilemaps.Tile[]|Phaser.Tilemaps.Tile[][])} tile - A row (array) or grid (2D array) of Tiles
      * or tile indexes to place.
      * @param {integer} tileX - [description]
      * @param {integer} tileY - [description]
@@ -656,7 +656,7 @@ var DynamicTilemapLayer = new Class({
      * @method Phaser.Tilemaps.DynamicTilemapLayer#removeTileAt
      * @since 3.0.0
      *
-     * @param {integer|Phaser.Tilemaps.Tile} tile - The index of this tile to set or a Tile object.
+     * @param {(integer|Phaser.Tilemaps.Tile)} tile - The index of this tile to set or a Tile object.
      * @param {integer} tileX - [description]
      * @param {integer} tileY - [description]
      * @param {boolean} [replaceWithNull=true] - If true, this will replace the tile at the specified
@@ -677,7 +677,7 @@ var DynamicTilemapLayer = new Class({
      * @method Phaser.Tilemaps.DynamicTilemapLayer#removeTileAtWorldXY
      * @since 3.0.0
      *
-     * @param {integer|Phaser.Tilemaps.Tile} tile - The index of this tile to set or a Tile object.
+     * @param {(integer|Phaser.Tilemaps.Tile)} tile - The index of this tile to set or a Tile object.
      * @param {number} worldX - [description]
      * @param {number} worldY - [description]
      * @param {boolean} [replaceWithNull=true] - If true, this will replace the tile at the specified
@@ -751,7 +751,7 @@ var DynamicTilemapLayer = new Class({
      * @method Phaser.Tilemaps.DynamicTilemapLayer#setCollision
      * @since 3.0.0
      *
-     * @param {integer|array} indexes - Either a single tile index, or an array of tile indexes.
+     * @param {(integer|array)} indexes - Either a single tile index, or an array of tile indexes.
      * @param {boolean} [collides=true] - If true it will enable collision. If false it will clear
      * collision.
      * @param {boolean} [recalculateFaces=true] - Whether or not to recalculate the tile faces after the
@@ -874,7 +874,7 @@ var DynamicTilemapLayer = new Class({
      * @method Phaser.Tilemaps.DynamicTilemapLayer#setTileIndexCallback
      * @since 3.0.0
      *
-     * @param {integer|array} indexes - Either a single tile index, or an array of tile indexes to have a
+     * @param {(integer|array)} indexes - Either a single tile index, or an array of tile indexes to have a
      * collision callback set for.
      * @param {function} callback - The callback that will be invoked when the tile is collided with.
      * @param {object} callbackContext - The context under which the callback is called.

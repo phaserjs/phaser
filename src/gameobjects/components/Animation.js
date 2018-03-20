@@ -390,7 +390,7 @@ var Animation = new Class({
      *
      * @param {boolean} [value] - [description]
      *
-     * @return {boolean|Phaser.GameObjects.GameObject} [description]
+     * @return {(boolean|Phaser.GameObjects.GameObject)} [description]
      */
     paused: function (value)
     {
@@ -474,7 +474,7 @@ var Animation = new Class({
      *
      * @param {number} [value] - [description]
      *
-     * @return {number|Phaser.GameObjects.GameObject} [description]
+     * @return {(number|Phaser.GameObjects.GameObject)} [description]
      */
     progress: function (value)
     {
@@ -534,7 +534,7 @@ var Animation = new Class({
      *
      * @param {number} value - [description]
      *
-     * @return {number|Phaser.GameObjects.GameObject} [description]
+     * @return {(number|Phaser.GameObjects.GameObject)} [description]
      */
     repeat: function (value)
     {
@@ -562,7 +562,7 @@ var Animation = new Class({
      *
      * @param {number} [value] - [description]
      *
-     * @return {number|Phaser.GameObjects.GameObject} [description]
+     * @return {(number|Phaser.GameObjects.GameObject)} [description]
      */
     repeatDelay: function (value)
     {
@@ -666,7 +666,7 @@ var Animation = new Class({
      *
      * @param {number} [value] - [description]
      *
-     * @return {number|Phaser.GameObjects.GameObject} [description]
+     * @return {(number|Phaser.GameObjects.GameObject)} [description]
      */
     timeScale: function (value)
     {
@@ -779,7 +779,7 @@ var Animation = new Class({
      *
      * @param {boolean} [value] - [description]
      *
-     * @return {boolean|Phaser.GameObjects.GameObject} [description]
+     * @return {(boolean|Phaser.GameObjects.GameObject)} [description]
      */
     yoyo: function (value)
     {

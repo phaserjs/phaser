@@ -874,7 +874,7 @@ var Camera = new Class({
      *
      * @param {number} x - [description]
      * @param {number} y - [description]
-     * @param {object|Phaser.Math.Vector2} output - [description]
+     * @param {(object|Phaser.Math.Vector2)} output - [description]
      *
      * @return {Phaser.Math.Vector2} [description]
      */
@@ -935,7 +935,7 @@ var Camera = new Class({
      * @method Phaser.Cameras.Scene2D.Camera#ignore
      * @since 3.0.0
      *
-     * @param {Phaser.GameObjects.GameObject|Phaser.GameObjects.GameObject[]} gameObjectOrArray - [description]
+     * @param {(Phaser.GameObjects.GameObject|Phaser.GameObjects.GameObject[])} gameObjectOrArray - [description]
      *
      * @return {Phaser.Cameras.Scene2D.Camera} This Camera instance.
      */
@@ -1068,7 +1068,7 @@ var Camera = new Class({
      * @method Phaser.Cameras.Scene2D.Camera#setBackgroundColor
      * @since 3.0.0
      *
-     * @param {string|number|InputColorObject} color - [description]
+     * @param {(string|number|InputColorObject)} color - [description]
      *
      * @return {Phaser.Cameras.Scene2D.Camera} This Camera instance.
      */
@@ -1288,7 +1288,7 @@ var Camera = new Class({
      * @method Phaser.Cameras.Scene2D.Camera#startFollow
      * @since 3.0.0
      *
-     * @param {Phaser.GameObjects.GameObject|object} target - [description]
+     * @param {(Phaser.GameObjects.GameObject|object)} target - [description]
      * @param {boolean} roundPx - [description]
      *
      * @return {Phaser.Cameras.Scene2D.Camera} This Camera instance.

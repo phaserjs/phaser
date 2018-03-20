@@ -13,7 +13,7 @@ var Mesh = require('../mesh/Mesh');
  *
  * A Quad is a Mesh Game Object pre-configured with two triangles arranged into a rectangle, with a single
  * texture spread across them.
- * 
+ *
  * You can manipulate the corner points of the quad via the getters and setters such as `topLeftX`, and also
  * change their alpha and color values. The quad itself can be moved by adjusting the `x` and `y` properties.
  *
@@ -28,7 +28,7 @@ var Mesh = require('../mesh/Mesh');
  * @param {number} x - The horizontal position of this Game Object in the world.
  * @param {number} y - The vertical position of this Game Object in the world.
  * @param {string} texture - The key of the Texture this Game Object will use to render with, as stored in the Texture Manager.
- * @param {string|integer} [frame] - An optional frame from the Texture this Game Object is rendering with.
+ * @param {(string|integer)} [frame] - An optional frame from the Texture this Game Object is rendering with.
  */
 var Quad = new Class({
 
@@ -47,7 +47,7 @@ var Quad = new Class({
         //  1----2
 
         var vertices = [
-            0, 0, // tl 
+            0, 0, // tl
             0, 0, // bl
             0, 0, // br
             0, 0, // tl
@@ -86,7 +86,7 @@ var Quad = new Class({
 
     /**
      * The top-left x vertex of this Quad.
-     * 
+     *
      * @name Phaser.GameObjects.Quad#topLeftX
      * @type {number}
      * @since 3.0.0
@@ -108,7 +108,7 @@ var Quad = new Class({
 
     /**
      * The top-left y vertex of this Quad.
-     * 
+     *
      * @name Phaser.GameObjects.Quad#topLeftY
      * @type {number}
      * @since 3.0.0
@@ -130,7 +130,7 @@ var Quad = new Class({
 
     /**
      * The top-right x vertex of this Quad.
-     * 
+     *
      * @name Phaser.GameObjects.Quad#topRightX
      * @type {number}
      * @since 3.0.0
@@ -151,7 +151,7 @@ var Quad = new Class({
 
     /**
      * The top-right y vertex of this Quad.
-     * 
+     *
      * @name Phaser.GameObjects.Quad#topRightY
      * @type {number}
      * @since 3.0.0
@@ -172,7 +172,7 @@ var Quad = new Class({
 
     /**
      * The bottom-left x vertex of this Quad.
-     * 
+     *
      * @name Phaser.GameObjects.Quad#bottomLeftX
      * @type {number}
      * @since 3.0.0
@@ -193,7 +193,7 @@ var Quad = new Class({
 
     /**
      * The bottom-left y vertex of this Quad.
-     * 
+     *
      * @name Phaser.GameObjects.Quad#bottomLeftY
      * @type {number}
      * @since 3.0.0
@@ -214,7 +214,7 @@ var Quad = new Class({
 
     /**
      * The bottom-right x vertex of this Quad.
-     * 
+     *
      * @name Phaser.GameObjects.Quad#bottomRightX
      * @type {number}
      * @since 3.0.0
@@ -236,7 +236,7 @@ var Quad = new Class({
 
     /**
      * The bottom-right y vertex of this Quad.
-     * 
+     *
      * @name Phaser.GameObjects.Quad#bottomRightY
      * @type {number}
      * @since 3.0.0
@@ -258,7 +258,7 @@ var Quad = new Class({
 
     /**
      * The top-left alpha value of this Quad.
-     * 
+     *
      * @name Phaser.GameObjects.Quad#topLeftAlpha
      * @type {float}
      * @since 3.0.0
@@ -280,7 +280,7 @@ var Quad = new Class({
 
     /**
      * The top-right alpha value of this Quad.
-     * 
+     *
      * @name Phaser.GameObjects.Quad#topRightAlpha
      * @type {float}
      * @since 3.0.0
@@ -301,7 +301,7 @@ var Quad = new Class({
 
     /**
      * The bottom-left alpha value of this Quad.
-     * 
+     *
      * @name Phaser.GameObjects.Quad#bottomLeftAlpha
      * @type {float}
      * @since 3.0.0
@@ -322,7 +322,7 @@ var Quad = new Class({
 
     /**
      * The bottom-right alpha value of this Quad.
-     * 
+     *
      * @name Phaser.GameObjects.Quad#bottomRightAlpha
      * @type {float}
      * @since 3.0.0
@@ -344,7 +344,7 @@ var Quad = new Class({
 
     /**
      * The top-left color value of this Quad.
-     * 
+     *
      * @name Phaser.GameObjects.Quad#topLeftColor
      * @type {number}
      * @since 3.0.0
@@ -366,7 +366,7 @@ var Quad = new Class({
 
     /**
      * The top-right color value of this Quad.
-     * 
+     *
      * @name Phaser.GameObjects.Quad#topRightColor
      * @type {number}
      * @since 3.0.0
@@ -387,7 +387,7 @@ var Quad = new Class({
 
     /**
      * The bottom-left color value of this Quad.
-     * 
+     *
      * @name Phaser.GameObjects.Quad#bottomLeftColor
      * @type {number}
      * @since 3.0.0
@@ -408,7 +408,7 @@ var Quad = new Class({
 
     /**
      * The bottom-right color value of this Quad.
-     * 
+     *
      * @name Phaser.GameObjects.Quad#bottomRightColor
      * @type {number}
      * @since 3.0.0

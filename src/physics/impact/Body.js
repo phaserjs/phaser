@@ -74,7 +74,7 @@ var Body = new Class({
          * The ImpactBody, ImpactSprite or ImpactImage object that owns this Body, if any.
          *
          * @name Phaser.Physics.Impact.Body#parent
-         * @type {Phaser.Physics.Impact.ImpactBody|Phaser.Physics.Impact.ImpactImage|Phaser.Physics.Impact.ImpactSprite|null}
+         * @type {?(Phaser.Physics.Impact.ImpactBody|Phaser.Physics.Impact.ImpactImage|Phaser.Physics.Impact.ImpactSprite)}
          * @since 3.0.0
          */
         this.parent;

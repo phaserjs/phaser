@@ -611,7 +611,7 @@ var TextureManager = new Class({
      * @since 3.0.0
      *
      * @param {string} key - The unique string-based key of the Texture.
-     * @param {string|integer} frame - The string or index of the Frame to be cloned.
+     * @param {(string|integer)} frame - The string or index of the Frame to be cloned.
      *
      * @return {Phaser.Textures.Frame} A Clone of the given Frame.
      */
@@ -630,7 +630,7 @@ var TextureManager = new Class({
      * @since 3.0.0
      *
      * @param {string} key - The unique string-based key of the Texture.
-     * @param {string|integer} frame - The string or index of the Frame.
+     * @param {(string|integer)} frame - The string or index of the Frame.
      *
      * @return {Phaser.Textures.Frame} A Texture Frame object.
      */
@@ -677,9 +677,9 @@ var TextureManager = new Class({
      * @param {integer} x - The x coordinate of the pixel within the Texture.
      * @param {integer} y - The y coordinate of the pixel within the Texture.
      * @param {string} key - The unique string-based key of the Texture.
-     * @param {string|integer} frame - The string or index of the Frame.
+     * @param {(string|integer)} frame - The string or index of the Frame.
      *
-     * @return {Phaser.Display.Color|null} A Color object populated with the color values of the requested pixel,
+     * @return {?Phaser.Display.Color} A Color object populated with the color values of the requested pixel,
      * or `null` if the coordinates were out of bounds.
      */
     getPixel: function (x, y, key, frame)
@@ -724,7 +724,7 @@ var TextureManager = new Class({
      *
      * @param {Phaser.GameObjects.GameObject} gameObject - [description]
      * @param {string} key - The unique string-based key of the Texture.
-     * @param {string|integer} frame - The string or index of the Frame.
+     * @param {(string|integer)} frame - The string or index of the Frame.
      *
      * @return {Phaser.GameObjects.GameObject} The Game Object the texture was set on.
      */

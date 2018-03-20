@@ -164,7 +164,7 @@ var File = new Class({
          * If this is undefined then the File will check BaseLoader.crossOrigin and use that (if set)
          *
          * @name Phaser.Loader.File#crossOrigin
-         * @type {string|undefined}
+         * @type {(string|undefined)}
          * @since 3.0.0
          */
         this.crossOrigin = undefined;

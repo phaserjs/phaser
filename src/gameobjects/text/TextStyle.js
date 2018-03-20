@@ -470,7 +470,7 @@ var TextStyle = new Class({
      * @method Phaser.GameObjects.Components.TextStyle#setFont
      * @since 3.0.0
      *
-     * @param {string|object} font - [description]
+     * @param {(string|object)} font - [description]
      *
      * @return {Phaser.GameObjects.Text} The parent Text object.
      */
@@ -532,7 +532,7 @@ var TextStyle = new Class({
      * @method Phaser.GameObjects.Components.TextStyle#setFontSize
      * @since 3.0.0
      *
-     * @param {number|string} size - [description]
+     * @param {(number|string)} size - [description]
      *
      * @return {Phaser.GameObjects.Text} The parent Text object.
      */

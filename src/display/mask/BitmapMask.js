@@ -143,7 +143,7 @@ var BitmapMask = new Class({
      * @method Phaser.Display.Masks.BitmapMask#preRenderWebGL
      * @since 3.0.0
      *
-     * @param {Phaser.Renderer.Canvas.CanvasRenderer|Phaser.Renderer.WebGL.WebGLRenderer} renderer - [description]
+     * @param {(Phaser.Renderer.Canvas.CanvasRenderer|Phaser.Renderer.WebGL.WebGLRenderer)} renderer - [description]
      * @param {Phaser.GameObjects.GameObject} maskedObject - [description]
      * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera to render to.
      */
@@ -158,7 +158,7 @@ var BitmapMask = new Class({
      * @method Phaser.Display.Masks.BitmapMask#postRenderWebGL
      * @since 3.0.0
      *
-     * @param {Phaser.Renderer.Canvas.CanvasRenderer|Phaser.Renderer.WebGL.WebGLRenderer} renderer - [description]
+     * @param {(Phaser.Renderer.Canvas.CanvasRenderer|Phaser.Renderer.WebGL.WebGLRenderer)} renderer - [description]
      */
     postRenderWebGL: function (renderer)
     {
@@ -171,7 +171,7 @@ var BitmapMask = new Class({
      * @method Phaser.Display.Masks.BitmapMask#preRenderCanvas
      * @since 3.0.0
      *
-     * @param {Phaser.Renderer.Canvas.CanvasRenderer|Phaser.Renderer.WebGL.WebGLRenderer} renderer - [description]
+     * @param {(Phaser.Renderer.Canvas.CanvasRenderer|Phaser.Renderer.WebGL.WebGLRenderer)} renderer - [description]
      * @param {Phaser.GameObjects.GameObject} mask - [description]
      * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera to render to.
      */
@@ -186,7 +186,7 @@ var BitmapMask = new Class({
      * @method Phaser.Display.Masks.BitmapMask#postRenderCanvas
      * @since 3.0.0
      *
-     * @param {Phaser.Renderer.Canvas.CanvasRenderer|Phaser.Renderer.WebGL.WebGLRenderer} renderer - [description]
+     * @param {(Phaser.Renderer.Canvas.CanvasRenderer|Phaser.Renderer.WebGL.WebGLRenderer)} renderer - [description]
      */
     postRenderCanvas: function ()
     {

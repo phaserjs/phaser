@@ -22,7 +22,7 @@ var TweenData = require('../tween/TweenData');
  * @function Phaser.Tweens.Builders.TweenBuilder
  * @since 3.0.0
  *
- * @param {Phaser.Tweens.TweenManager|Phaser.Tweens.Timeline} parent - [description]
+ * @param {(Phaser.Tweens.TweenManager|Phaser.Tweens.Timeline)} parent - [description]
  * @param {object} config - [description]
  * @param {Phaser.Tweens.Tween~ConfigDefaults} defaults - [description]
  *

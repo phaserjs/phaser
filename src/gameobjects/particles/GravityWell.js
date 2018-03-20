@@ -16,7 +16,7 @@ var GetFastValue = require('../../utils/object/GetFastValue');
  * @constructor
  * @since 3.0.0
  *
- * @param {number|object} [x=0] - The x coordinate of the Gravity Well, in world space.
+ * @param {(number|object)} [x=0] - The x coordinate of the Gravity Well, in world space.
  * @param {number} [y=0] - The y coordinate of the Gravity Well, in world space.
  * @param {number} [power=0] - The power of the Gravity Well.
  * @param {number} [epsilon=100] - [description]

@@ -17,13 +17,13 @@ var WorldToTileY = require('./WorldToTileY');
  * @function Phaser.Tilemaps.Components.PutTileAtWorldXY
  * @since 3.0.0
  *
- * @param {integer|Phaser.Tilemaps.Tile} tile - The index of this tile to set or a Tile object.
+ * @param {(integer|Phaser.Tilemaps.Tile)} tile - The index of this tile to set or a Tile object.
  * @param {integer} worldX - [description]
  * @param {integer} worldY - [description]
  * @param {boolean} [recalculateFaces=true] - [description]
  * @param {Phaser.Cameras.Scene2D.Camera} [camera=main camera] - [description]
  * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.
- * 
+ *
  * @return {Phaser.Tilemaps.Tile} The Tile object that was created or added to this map.
  */
 var PutTileAtWorldXY = function (tile, worldX, worldY, recalculateFaces, camera, layer)

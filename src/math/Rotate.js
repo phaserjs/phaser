@@ -10,7 +10,7 @@
  * @function Phaser.Math.Rotate
  * @since 3.0.0
  *
- * @param {Phaser.Geom.Point|object} point - [description]
+ * @param {(Phaser.Geom.Point|object)} point - [description]
  * @param {number} angle - [description]
  *
  * @return {Phaser.Geom.Point} [description]

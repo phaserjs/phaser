@@ -155,7 +155,7 @@ var RandomDataGenerator = new Class({
      * @method Phaser.Math.RandomDataGenerator#init
      * @since 3.0.0
      *
-     * @param {string|array} seeds - [description]
+     * @param {(string|array)} seeds - [description]
      */
     init: function (seeds)
     {

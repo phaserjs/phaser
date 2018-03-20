@@ -15,7 +15,7 @@ var WorldToTileY = require('./WorldToTileY');
  * @function Phaser.Tilemaps.Components.RemoveTileAtWorldXY
  * @since 3.0.0
  *
- * @param {integer|Phaser.Tilemaps.Tile} tile - The index of this tile to set or a Tile object.
+ * @param {(integer|Phaser.Tilemaps.Tile)} tile - The index of this tile to set or a Tile object.
  * @param {number} worldX - [description]
  * @param {number} worldY - [description]
  * @param {boolean} [replaceWithNull=true] - If true, this will replace the tile at the specified
@@ -23,7 +23,7 @@ var WorldToTileY = require('./WorldToTileY');
  * @param {boolean} [recalculateFaces=true] - [description]
  * @param {Phaser.Cameras.Scene2D.Camera} [camera=main camera] - [description]
  * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.
- * 
+ *
  * @return {Phaser.Tilemaps.Tile} The Tile object that was removed.
  */
 var RemoveTileAtWorldXY = function (worldX, worldY, replaceWithNull, recalculateFaces, camera, layer)
