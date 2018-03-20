@@ -454,6 +454,11 @@ var Group = new Class({
 
         this.children.delete(child);
 
+        if (this.removeCallback)
+        {
+            this.removeCallback.call(this, child);
+        }
+
         if (removeFromScene)
         {
             this.scene.sys.displayList.remove(child);
