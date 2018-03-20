@@ -49,6 +49,7 @@ A special mention must go to @orblazer for their outstanding assistance in helpi
 * Phaser.Utils.Array.Matrix.RotateLeft actually rotated to the right (thanks @Tomas2h)
 * Phaser.Utils.Array.Matrix.RotateRight actually rotated to the left (thanks @Tomas2h)
 * When deleting a Scene from the SceneManager it would set the key in the scenes has to `undefined`, preventing you from registering a new Scene with the same key. It's now properly removed from the hash(thanks @macbury)
+* Graphics.alpha was being ignored in the WebGL renderer and is now applied properly to strokes and fills. Fix #3426 (thanks @Ziao)
 
 ### Updates
 
