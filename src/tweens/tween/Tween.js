@@ -19,7 +19,7 @@ var TWEEN_CONST = require('./const');
  * @since 3.0.0
  *
  * @param {(Phaser.Tweens.TweenManager|Phaser.Tweens.Timeline)} parent - [description]
- * @param {Phaser.Tweens.TweenData[]} data - [description]
+ * @param {Phaser.Tweens.TweenDataConfig[]} data - [description]
  * @param {array} targets - [description]
  */
 var Tween = new Class({
@@ -50,7 +50,7 @@ var Tween = new Class({
          * An array of TweenData objects, each containing a unique property and target being tweened.
          *
          * @name Phaser.Tweens.Tween#data
-         * @type {Phaser.Tweens.TweenData[]}
+         * @type {Phaser.Tweens.TweenDataConfig[]}
          * @since 3.0.0
          */
         this.data = data;
@@ -1000,7 +1000,7 @@ var Tween = new Class({
      * @since 3.0.0
      *
      * @param {Phaser.Tweens.Tween} tween - [description]
-     * @param {Phaser.Tweens.TweenData} tweenData - [description]
+     * @param {Phaser.Tweens.TweenDataConfig} tweenData - [description]
      * @param {number} diff - [description]
      *
      * @return {integer} The state of this Tween.
@@ -1104,7 +1104,7 @@ var Tween = new Class({
      * @since 3.0.0
      *
      * @param {Phaser.Tweens.Tween} tween - [description]
-     * @param {Phaser.Tweens.TweenData} tweenData - [description]
+     * @param {Phaser.Tweens.TweenDataConfig} tweenData - [description]
      * @param {number} diff - [description]
      *
      * @return {integer} The state of this Tween.
@@ -1169,7 +1169,7 @@ var Tween = new Class({
      * @since 3.0.0
      *
      * @param {Phaser.Tweens.Tween} tween - [description]
-     * @param {Phaser.Tweens.TweenData} tweenData - [description]
+     * @param {Phaser.Tweens.TweenDataConfig} tweenData - [description]
      * @param {number} delta - Either a value in ms, or 1 if Tween.useFrames is true
      *
      * @return {boolean} [description]
