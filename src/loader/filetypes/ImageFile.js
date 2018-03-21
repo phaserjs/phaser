@@ -23,7 +23,7 @@ var GetFastValue = require('../../utils/object/GetFastValue');
  * @param {string} key - [description]
  * @param {string} url - [description]
  * @param {string} path - [description]
- * @param {object} xhrSettings - [description]
+ * @param {Phaser.Loader.XHRSettingsConfig} xhrSettings - [description]
  * @param {object} config - [description]
  */
 var ImageFile = new Class({

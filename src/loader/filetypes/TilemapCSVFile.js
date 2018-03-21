@@ -24,7 +24,7 @@ var TILEMAP_FORMATS = require('../../tilemaps/Formats');
  * @param {string} url - [description]
  * @param {string} path - [description]
  * @param {string} format - [description]
- * @param {object} xhrSettings - [description]
+ * @param {Phaser.Loader.XHRSettingsConfig} xhrSettings - [description]
  */
 var TilemapCSVFile = new Class({
 

@@ -17,7 +17,7 @@ var ImageFile = require('./ImageFile.js');
  * @param {string} url - The url to load the texture file from.
  * @param {object} config - Optional texture file specific XHR settings.
  * @param {string} path - Optional texture file specific XHR settings.
- * @param {object} xhrSettings - Optional atlas file specific XHR settings.
+ * @param {Phaser.Loader.XHRSettingsConfig} xhrSettings - Optional atlas file specific XHR settings.
  *
  * @return {object} An object containing two File objects to be added to the loader.
  */

@@ -18,7 +18,7 @@ var TILEMAP_FORMATS = require('../../tilemaps/Formats');
  * @param {string} url - [description]
  * @param {string} path - [description]
  * @param {string} format - [description]
- * @param {object} xhrSettings - [description]
+ * @param {Phaser.Loader.XHRSettingsConfig} xhrSettings - [description]
  *
  * @return {object} An object containing two File objects to be added to the loader.
  */

@@ -24,7 +24,7 @@ var HTML5AudioFile = require('./HTML5AudioFile');
  * @param {string} key - [description]
  * @param {string} url - [description]
  * @param {string} path - [description]
- * @param {object} xhrSettings - [description]
+ * @param {Phaser.Loader.XHRSettingsConfig} xhrSettings - [description]
  * @param {AudioContext} audioContext - [description]
  */
 var AudioFile = new Class({

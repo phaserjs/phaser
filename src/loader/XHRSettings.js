@@ -5,18 +5,28 @@
  */
 
 /**
+ * @typedef {object} Phaser.Loader.XHRSettingsConfig
+ *
+ * @property {string} [responseType=''] - [description]
+ * @property {boolean} [async=true] - [description]
+ * @property {string} [user=''] - [description]
+ * @property {string} [password=''] - [description]
+ * @property {integer} [timeout=0] - [description]
+ */
+
+/**
  * Creates an XHRSettings Object with default values.
  *
  * @function Phaser.Loader.XHRSettings
  * @since 3.0.0
  *
- * @param {string} [responseType] - The responseType, such as 'text'.
+ * @param {string} [responseType=''] - The responseType, such as 'text'.
  * @param {boolean} [async=true] - Should the XHR request use async or not?
- * @param {string} [user] - Optional username for the XHR request.
- * @param {string} [password] - Optional password for the XHR request.
+ * @param {string} [user=''] - Optional username for the XHR request.
+ * @param {string} [password=''] - Optional password for the XHR request.
  * @param {integer} [timeout=0] - Optional XHR timeout value.
  *
- * @return {Phaser.Loader.XHRSettings} The XHRSettings object as used by the Loader.
+ * @return {Phaser.Loader.XHRSettingsConfig} The XHRSettings object as used by the Loader.
  */
 var XHRSettings = function (responseType, async, user, password, timeout)
 {

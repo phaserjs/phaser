@@ -24,8 +24,8 @@ var JSONFile = require('./JSONFile.js');
  * @param {(string|string[])} urls - [description]
  * @param {object} json - [description]
  * @param {object} config - [description]
- * @param {object} audioXhrSettings - Optional file specific XHR settings.
- * @param {object} jsonXhrSettings - Optional file specific XHR settings.
+ * @param {Phaser.Loader.XHRSettingsConfig} audioXhrSettings - Optional file specific XHR settings.
+ * @param {Phaser.Loader.XHRSettingsConfig} jsonXhrSettings - Optional file specific XHR settings.
  *
  * @return {Phaser.Loader.LoaderPlugin} The Loader.
  */

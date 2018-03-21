@@ -24,7 +24,7 @@ var ParseXML = require('../../dom/ParseXML');
  * @param {string} key - [description]
  * @param {string} url - [description]
  * @param {string} path - [description]
- * @param {object} xhrSettings - [description]
+ * @param {Phaser.Loader.XHRSettingsConfig} xhrSettings - [description]
  */
 var XMLFile = new Class({
 

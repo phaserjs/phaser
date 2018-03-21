@@ -122,7 +122,7 @@ var LoaderPlugin = new Class({
          * xhr specific global settings (can be overridden on a per-file basis)
          *
          * @name Phaser.Loader.LoaderPlugin#xhr
-         * @type {Phaser.Loader.XHRSettings}
+         * @type {Phaser.Loader.XHRSettingsConfig}
          * @since 3.0.0
          */
         this.xhr = XHRSettings(

@@ -18,8 +18,8 @@ var XMLFile = require('./XMLFile.js');
  * @param {string} textureURL - The url to load the texture file from.
  * @param {string} xmlURL - The url to load the atlas file from.
  * @param {string} path - The path of the file.
- * @param {object} textureXhrSettings - Optional texture file specific XHR settings.
- * @param {object} xmlXhrSettings - Optional atlas file specific XHR settings.
+ * @param {Phaser.Loader.XHRSettingsConfig} textureXhrSettings - Optional texture file specific XHR settings.
+ * @param {Phaser.Loader.XHRSettingsConfig} xmlXhrSettings - Optional atlas file specific XHR settings.
  *
  * @return {object} An object containing two File objects to be added to the loader.
  */

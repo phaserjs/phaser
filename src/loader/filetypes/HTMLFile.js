@@ -25,7 +25,7 @@ var GetFastValue = require('../../utils/object/GetFastValue');
  * @param {number} width - [description]
  * @param {number} height - [description]
  * @param {string} path - [description]
- * @param {object} xhrSettings - [description]
+ * @param {Phaser.Loader.XHRSettingsConfig} xhrSettings - [description]
  */
 var HTMLFile = new Class({
 
