@@ -13,6 +13,67 @@ var Set = require('../../structs/Set');
 var Sprite = require('../sprite/Sprite');
 
 /**
+ * @callback GroupCallback
+ *
+ * @param {Phaser.GameObjects.GameObject} item - [description]
+ */
+
+/**
+ * @callback GroupMultipleCreateCallback
+ *
+ * @param {Phaser.GameObjects.GameObject[]} items - [description]
+ */
+
+/**
+ * @typedef {object} GroupConfig
+ *
+ * @property {object} [classType=Sprite] - [description]
+ * @property {boolean} [active=true] - [description]
+ * @property {number} [maxSize=-1] - [description]
+ * @property {?string} [defaultKey=null] - [description]
+ * @property {?(string|integer)} [defaultFrame=null] - [description]
+ * @property {boolean} [runChildUpdate=false] - [description]
+ * @property {?GroupCallback} [createCallback=null] - [description]
+ * @property {?GroupCallback} [removeCallback=null] - [description]
+ * @property {?GroupMultipleCreateCallback} [createMultipleCallback=null] - [description]
+ */
+
+/**
+ * @typedef {object} GroupCreateConfig
+ *
+ * @property {object} [classType] - [description]
+ * @property {string} [key] - [description]
+ * @property {?(string|integer)} [frame=null] - [description]
+ * @property {boolean} [visible=true] - [description]
+ * @property {boolean} [active=true] - [description]
+ * @property {number} [repeat=0] - [description]
+ * @property {boolean} [randomKey=false] - [description]
+ * @property {boolean} [randomFrame=false] - [description]
+ * @property {boolean} [yoyo=false] - [description]
+ * @property {number} [frameQuantity=1] - [description]
+ * @property {number} [max=1] - [description]
+ * @property {object} [setXY] - [description]
+ * @property {number} [setXY.x=0] - [description]
+ * @property {number} [setXY.y=0] - [description]
+ * @property {number} [setXY.stepX=0] - [description]
+ * @property {number} [setXY.stepY=0] - [description]
+ * @property {object} [setRotation] - [description]
+ * @property {number} [setRotation.value=0] - [description]
+ * @property {number} [setRotation.step=0] - [description]
+ * @property {object} [setScale] - [description]
+ * @property {number} [setScale.x=0] - [description]
+ * @property {number} [setScale.y=0] - [description]
+ * @property {number} [setScale.stepX=0] - [description]
+ * @property {number} [setScale.stepY=0] - [description]
+ * @property {object} [setAlpha] - [description]
+ * @property {number} [setAlpha.value=0] - [description]
+ * @property {number} [setAlpha.step=0] - [description]
+ * @property {*} [hitArea] - [description]
+ * @property {HitAreaCallback} [hitAreaCallback] - [description]
+ * @property {(false|GridAlignConfig)} [gridAlign=false] - [description]
+ */
+
+/**
  * @classdesc
  * [description]
  *
@@ -26,7 +87,7 @@ var Sprite = require('../sprite/Sprite');
  *
  * @param {Phaser.Scene} scene - [description]
  * @param {array} children - [description]
- * @param {object} config - [description]
+ * @param {GroupConfig} config - [description]
  */
 var Group = new Class({
 
@@ -127,7 +188,7 @@ var Group = new Class({
          * [description]
          *
          * @name Phaser.GameObjects.Group#createCallback
-         * @type {?function}
+         * @type {?GroupCallback}
          * @since 3.0.0
          */
         this.createCallback = GetFastValue(config, 'createCallback', null);
@@ -136,7 +197,7 @@ var Group = new Class({
          * [description]
          *
          * @name Phaser.GameObjects.Group#removeCallback
-         * @type {?function}
+         * @type {?GroupCallback}
          * @since 3.0.0
          */
         this.removeCallback = GetFastValue(config, 'removeCallback', null);
@@ -145,7 +206,7 @@ var Group = new Class({
          * [description]
          *
          * @name Phaser.GameObjects.Group#createMultipleCallback
-         * @type {?function}
+         * @type {?GroupMultipleCreateCallback}
          * @since 3.0.0
          */
         this.createMultipleCallback = GetFastValue(config, 'createMultipleCallback', null);
@@ -208,7 +269,7 @@ var Group = new Class({
      * @method Phaser.GameObjects.Group#createMultiple
      * @since 3.0.0
      *
-     * @param {object} config - [description]
+     * @param {GroupCreateConfig} config - [description]
      *
      * @return {Phaser.GameObjects.GameObject[]} [description]
      */
@@ -237,7 +298,7 @@ var Group = new Class({
      * @method Phaser.GameObjects.Group#createFromConfig
      * @since 3.0.0
      *
-     * @param {object} options - [description]
+     * @param {GroupCreateConfig} options - [description]
      *
      * @return {Phaser.GameObjects.GameObject[]} [description]
      */
@@ -453,6 +514,11 @@ var Group = new Class({
         if (removeFromScene === undefined) { removeFromScene = false; }
 
         this.children.delete(child);
+
+        if (this.removeCallback)
+        {
+            this.removeCallback.call(this, child);
+        }
 
         if (removeFromScene)
         {
