@@ -32,6 +32,8 @@ A special mention must go to @orblazer for their outstanding assistance in helpi
 * Groups will now listen for a `destroy` event from any Game Object added to them, and if received will automatically remove that GameObject from the Group. Fix #3418 (thanks @hadikcz)
 * MatterGameObject is a new function, available via the Matter Factory in `this.matter.add.gameObject`, that will inject a Matter JS Body into any Game Object, such as a Text or TileSprite object.
 * Matter.SetBody and SetExistingBody will now set the origin of the Game Object to be the Matter JS sprite.xOffset and yOffset values, which will auto-center the Game Object to the origin of the body, regardless of shape.
+* SoundManager.setRate is a chainable method to allow you to set the global playback rate of all sounds in the SoundManager.
+* SoundManager.setDetune is a chainable method to allow you to set the global detuning of all sounds in the SoundManager.
 
 ### Bug Fixes
 
