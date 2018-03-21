@@ -23,7 +23,7 @@ var GetFastValue = require('../../utils/object/GetFastValue');
  * @param {string} key - [description]
  * @param {string} url - [description]
  * @param {string} path - [description]
- * @param {object} xhrSettings - [description]
+ * @param {XHRSettingsObject} xhrSettings - [description]
  */
 var ScriptFile = new Class({
 
@@ -69,7 +69,7 @@ var ScriptFile = new Class({
 
 /**
  * Adds a JavaScript file to the current load queue.
- * 
+ *
  * Note: This method will only be available if the Script File type has been built into Phaser.
  *
  * The file is **not** loaded immediately after calling this method.
@@ -80,8 +80,8 @@ var ScriptFile = new Class({
  *
  * @param {string} key - [description]
  * @param {string} url - [description]
- * @param {object} xhrSettings - [description]
- * 
+ * @param {XHRSettingsObject} xhrSettings - [description]
+ *
  * @return {Phaser.Loader.LoaderPlugin} The Loader.
  */
 FileTypesManager.register('script', function (key, url, xhrSettings)

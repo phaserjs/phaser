@@ -24,7 +24,7 @@ var PluginManager = require('../../boot/PluginManager');
  * @param {string} key - [description]
  * @param {string} url - [description]
  * @param {string} path - [description]
- * @param {object} xhrSettings - [description]
+ * @param {XHRSettingsObject} xhrSettings - [description]
  */
 var PluginFile = new Class({
 
@@ -81,7 +81,7 @@ var PluginFile = new Class({
 
 /**
  * Adds a Plugin file to the current load queue.
- * 
+ *
  * Note: This method will only be available if the Plugin File type has been built into Phaser.
  *
  * The file is **not** loaded immediately after calling this method.
@@ -92,8 +92,8 @@ var PluginFile = new Class({
  *
  * @param {string} key - [description]
  * @param {string} url - [description]
- * @param {object} xhrSettings - [description]
- * 
+ * @param {XHRSettingsObject} xhrSettings - [description]
+ *
  * @return {Phaser.Loader.LoaderPlugin} The Loader.
  */
 FileTypesManager.register('plugin', function (key, url, xhrSettings)

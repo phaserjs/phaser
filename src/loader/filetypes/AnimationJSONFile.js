@@ -16,7 +16,7 @@ var JSONFile = require('./JSONFile.js');
  * @param {string} key - The key of the file within the loader.
  * @param {string} url - The url to load the file from.
  * @param {string} path - The path of the file.
- * @param {object} xhrSettings - Optional file specific XHR settings.
+ * @param {XHRSettingsObject} xhrSettings - Optional file specific XHR settings.
  *
  * @return {Phaser.Loader.FileTypes.AnimationJSONFile} A File instance to be added to the Loader.
  */
@@ -44,7 +44,7 @@ var AnimationJSONFile = function (key, url, path, xhrSettings)
  * @param {(string|array|object)} key - A unique string to be used as the key to reference this file from the Cache. Must be unique within this file type.
  * @param {string} [url] - URL of the file. If `undefined` or `null` the url will be set to `<key>.json`,
  * i.e. if `key` was "alien" then the URL will be "alien.json".
- * @param {object} [xhrSettings] - File specific XHR settings to be used during the load. These settings are merged with the global Loader XHR settings.
+ * @param {XHRSettingsObject} [xhrSettings] - File specific XHR settings to be used during the load. These settings are merged with the global Loader XHR settings.
  *
  * @return {Phaser.Loader.LoaderPlugin} The Loader.
  */

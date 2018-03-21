@@ -19,6 +19,19 @@ var XHRSettings = require('./XHRSettings');
  */
 
 /**
+ * @typedef {object} FileConfig
+ *
+ * @property {(string|false)} [type=false] - The file type string (image, json, etc) for sorting within the Loader.
+ * @property {(string|false)} [key=false] - Unique cache key (unique within its file type)
+ * @property {string} [url] - The URL of the file, not including baseURL.
+ * @property {string} [path=''] - [description]
+ * @property {string} [extension=''] - [description]
+ * @property {XMLHttpRequestResponseType} [responseType] - [description]
+ * @property {(XHRSettingsObject|false)} [xhrSettings=false] - [description]
+ * @property {object} [config] - A config object that can be used by file types to store transitional data.
+ */
+
+/**
  * @classdesc
  * [description]
  *
@@ -27,7 +40,7 @@ var XHRSettings = require('./XHRSettings');
  * @constructor
  * @since 3.0.0
  *
- * @param {object} fileConfig - [description]
+ * @param {FileConfig} fileConfig - [description]
  */
 var File = new Class({
 
@@ -89,7 +102,7 @@ var File = new Class({
          * The merged XHRSettings for this file.
          *
          * @name Phaser.Loader.File#xhrSettings
-         * @type {Phaser.Loader.XHRSettings}
+         * @type {XHRSettingsObject}
          * @since 3.0.0
          */
         this.xhrSettings = XHRSettings(GetFastValue(fileConfig, 'responseType', undefined));

@@ -16,10 +16,10 @@ var XHRSettings = require('./XHRSettings');
  * @function Phaser.Loader.MergeXHRSettings
  * @since 3.0.0
  *
- * @param {Phaser.Loader.XHRSettings} global - The global XHRSettings object.
- * @param {Phaser.Loader.XHRSettings} local - The local XHRSettings object.
+ * @param {XHRSettingsObject} global - The global XHRSettings object.
+ * @param {XHRSettingsObject} local - The local XHRSettings object.
  *
- * @return {Phaser.Loader.XHRSettings} A newly formed XHRSettings object.
+ * @return {XHRSettingsObject} A newly formed XHRSettings object.
  */
 var MergeXHRSettings = function (global, local)
 {

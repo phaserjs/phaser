@@ -23,7 +23,7 @@ var GetFastValue = require('../../utils/object/GetFastValue');
  * @param {string} key - [description]
  * @param {string} url - [description]
  * @param {string} path - [description]
- * @param {object} xhrSettings - [description]
+ * @param {XHRSettingsObject} xhrSettings - [description]
  * @param {object} config - [description]
  */
 var ImageFile = new Class({
@@ -101,7 +101,7 @@ var ImageFile = new Class({
 
 /**
  * Adds an Image file to the current load queue.
- * 
+ *
  * Note: This method will only be available if the Image File type has been built into Phaser.
  *
  * The file is **not** loaded immediately after calling this method.
@@ -112,8 +112,8 @@ var ImageFile = new Class({
  *
  * @param {string} key - [description]
  * @param {string} url - [description]
- * @param {object} xhrSettings - [description]
- * 
+ * @param {XHRSettingsObject} xhrSettings - [description]
+ *
  * @return {Phaser.Loader.LoaderPlugin} The Loader.
  */
 FileTypesManager.register('image', function (key, url, xhrSettings)

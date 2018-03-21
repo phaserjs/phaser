@@ -11,7 +11,7 @@ var NumberArray = require('../../utils/array/NumberArray');
 
 /**
  * Adds a Multi File Texture Atlas to the current load queue.
- * 
+ *
  * Note: This method will only be available if the Multi Atlas File type has been built into Phaser.
  *
  * The file is **not** loaded immediately after calling this method.
@@ -23,9 +23,9 @@ var NumberArray = require('../../utils/array/NumberArray');
  * @param {string} key - [description]
  * @param {string[]} textureURLs - [description]
  * @param {string[]} atlasURLs - [description]
- * @param {object} textureXhrSettings - [description]
- * @param {object} atlasXhrSettings - [description]
- * 
+ * @param {XHRSettingsObject} textureXhrSettings - [description]
+ * @param {XHRSettingsObject} atlasXhrSettings - [description]
+ *
  * @return {Phaser.Loader.LoaderPlugin} The Loader.
  */
 FileTypesManager.register('multiatlas', function (key, textureURLs, atlasURLs, textureXhrSettings, atlasXhrSettings)
