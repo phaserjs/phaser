@@ -36,6 +36,8 @@ A special mention must go to @orblazer for their outstanding assistance in helpi
 * SoundManager.setDetune is a chainable method to allow you to set the global detuning of all sounds in the SoundManager.
 * SoundManager.setMute is a chainable method to allow you to set the global mute state of the SoundManager.
 * SoundManager.setVolume is a chainable method to allow you to set the global volume of the SoundManager.
+* BaseSound.setRate is a chainable method to allow you to set the playback rate of the BaseSound.
+* BaseSound.setDetune is a chainable method to allow you to set the detuning value of the BaseSound.
 
 ### Bug Fixes
 
@@ -109,6 +111,7 @@ A special mention must go to @orblazer for their outstanding assistance in helpi
 * PathFollower.pause has been renamed to `pauseFollow` to avoid conflicting with the Animation component.
 * PathFollower.resume has been renamed to `resumeFollow` to avoid conflicting with the Animation component.
 * PathFollower.stop has been renamed to `stopFollow` to avoid conflicting with the Animation component.
+* BaseSound.setRate has been renamed to `calculateRate` to avoid confusion over the setting of the sounds rate.
 
 
 
