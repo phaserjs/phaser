@@ -34,6 +34,8 @@ A special mention must go to @orblazer for their outstanding assistance in helpi
 * Matter.SetBody and SetExistingBody will now set the origin of the Game Object to be the Matter JS sprite.xOffset and yOffset values, which will auto-center the Game Object to the origin of the body, regardless of shape.
 * SoundManager.setRate is a chainable method to allow you to set the global playback rate of all sounds in the SoundManager.
 * SoundManager.setDetune is a chainable method to allow you to set the global detuning of all sounds in the SoundManager.
+* SoundManager.setMute is a chainable method to allow you to set the global mute state of the SoundManager.
+* SoundManager.setVolume is a chainable method to allow you to set the global volume of the SoundManager.
 
 ### Bug Fixes
 
