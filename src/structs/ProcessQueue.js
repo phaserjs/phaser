@@ -72,7 +72,7 @@ var ProcessQueue = new Class({
      * @method Phaser.Structs.ProcessQueue#add
      * @since 3.0.0
      *
-     * @param {any} item - [description]
+     * @param {*} item - [description]
      *
      * @return {Phaser.Structs.ProcessQueue} This Process Queue object.
      */
@@ -91,7 +91,7 @@ var ProcessQueue = new Class({
      * @method Phaser.Structs.ProcessQueue#remove
      * @since 3.0.0
      *
-     * @param {any} item - [description]
+     * @param {*} item - [description]
      *
      * @return {Phaser.Structs.ProcessQueue} This Process Queue object.
      */

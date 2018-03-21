@@ -10,8 +10,8 @@
  * @function GetBitmapTextSize
  * @since 3.0.0
  * @private
- * 
- * @param {Phaser.GameObjects.DynamicBitmapText|Phaser.GameObjects.BitmapText} src - [description]
+ *
+ * @param {(Phaser.GameObjects.DynamicBitmapText|Phaser.GameObjects.BitmapText)} src - [description]
  * @param {boolean} round - [description]
  */
 var GetBitmapTextSize = function (src, round)
@@ -23,7 +23,7 @@ var GetBitmapTextSize = function (src, round)
     var by = Number.MAX_VALUE;
     var bw = 0;
     var bh = 0;
-    
+
     var chars = src.fontData.chars;
     var lineHeight = src.fontData.lineHeight;
 
@@ -92,7 +92,7 @@ var GetBitmapTextSize = function (src, round)
         {
             bw = gw;
         }
-        
+
         if (bh < gh)
         {
             bh = gh;

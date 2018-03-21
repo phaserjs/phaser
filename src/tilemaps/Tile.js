@@ -443,7 +443,7 @@ var Tile = new Class({
      * @param {Phaser.Cameras.Scene2D.Camera} [camera] - The Camera to use to perform the check.
      * @param {object} [output] - [description]
      *
-     * @return {Phaser.Geom.Rectangle|object}
+     * @return {(Phaser.Geom.Rectangle|object)}
      */
     getBounds: function (camera, output)
     {

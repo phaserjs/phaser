@@ -18,9 +18,9 @@ var GameObjectFactory = require('../../GameObjectFactory');
  * @param {number} x - The x position of the Game Object.
  * @param {number} y - The y position of the Game Object.
  * @param {string} font - [description]
- * @param {string|string[]} [text] - [description]
+ * @param {(string|string[])} [text] - [description]
  * @param {number} [size] - [description]
- * 
+ *
  * @return {Phaser.GameObjects.DynamicBitmapText} The Game Object that was created.
  */
 GameObjectFactory.register('dynamicBitmapText', function (x, y, font, text, size)
@@ -29,9 +29,9 @@ GameObjectFactory.register('dynamicBitmapText', function (x, y, font, text, size
 });
 
 //  When registering a factory function 'this' refers to the GameObjectFactory context.
-//  
+//
 //  There are several properties available to use:
-//  
+//
 //  this.scene - a reference to the Scene that owns the GameObjectFactory
 //  this.displayList - a reference to the Display List the Scene owns
 //  this.updateList - a reference to the Update List the Scene owns

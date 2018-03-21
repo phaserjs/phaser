@@ -15,9 +15,9 @@ var Point = require('./Point');
  * @param {Phaser.Geom.Point} pointA - [description]
  * @param {Phaser.Geom.Point} pointB - [description]
  * @param {float} [t=0] - [description]
- * @param {Phaser.Geom.Point|object} [out] - [description]
+ * @param {(Phaser.Geom.Point|object)} [out] - [description]
  *
- * @return {Phaser.Geom.Point|object} [description]
+ * @return {(Phaser.Geom.Point|object)} [description]
  */
 var Interpolate = function (pointA, pointB, t, out)
 {

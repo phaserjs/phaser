@@ -211,7 +211,7 @@ var GameObject = new Class({
      * @since 3.0.0
      *
      * @param {string} key - The key of the property to be stored.
-     * @param {any} value - The value to store with the key. Can be a string, number, array or object.
+     * @param {*} value - The value to store with the key. Can be a string, number, array or object.
      *
      * @return {Phaser.GameObjects.GameObject} This GameObject.
      */
@@ -235,7 +235,7 @@ var GameObject = new Class({
      *
      * @param {string} key - The key of the property to be retrieved.
      *
-     * @return {any} The data, if present in the Data Store.
+     * @return {*} The data, if present in the Data Store.
      */
     getData: function (key)
     {
@@ -253,7 +253,7 @@ var GameObject = new Class({
      * @method Phaser.GameObjects.GameObject#setInteractive
      * @since 3.0.0
      *
-     * @param {any} [shape] - A geometric shape that defines the hit area for the Game Object. If not specified a Rectangle will be used.
+     * @param {*} [shape] - A geometric shape that defines the hit area for the Game Object. If not specified a Rectangle will be used.
      * @param {HitAreaCallback} [callback] - A callback to be invoked when the Game Object is interacted with.
      * @param {boolean} [dropZone=false] - Should this Game Object be treated as a drop zone target?
      *

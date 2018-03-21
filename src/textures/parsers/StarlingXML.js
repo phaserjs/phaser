@@ -12,7 +12,7 @@
  * @since 3.0.0
  *
  * @param {Phaser.Textures.Texture} texture - The Texture to add the Frames to.
- * @param {any} xml - The XML data.
+ * @param {*} xml - The XML data.
  *
  * @return {Phaser.Textures.Texture} The Texture modified by this parser.
  */

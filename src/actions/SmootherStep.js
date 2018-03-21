@@ -11,8 +11,8 @@ var MathSmootherStep = require('../math/SmootherStep');
  *
  * @function Phaser.Actions.SmootherStep
  * @since 3.0.0
- * 
- * @param {array} items - An array of Game Objects. The contents of this array are updated by this Action.
+ *
+ * @param {(array|Phaser.GameObjects.GameObject[])} items - An array of Game Objects. The contents of this array are updated by this Action.
  * @param {string} property - [description]
  * @param {number} min - [description]
  * @param {number} max - [description]

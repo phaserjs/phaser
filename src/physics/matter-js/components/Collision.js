@@ -52,7 +52,7 @@ var Collision = {
      * @method Phaser.Physics.Matter.Components.Collision#setCollidesWith
      * @since 3.0.0
      *
-     * @param {number|number[]} categories - A unique category bitfield, or an array of them.
+     * @param {(number|number[])} categories - A unique category bitfield, or an array of them.
      *
      * @return {Phaser.GameObjects.GameObject} This Game Object.
      */

@@ -9,9 +9,9 @@ var Class = require('../utils/Class');
 /**
  * @callback DataEachCallback
  *
- * @param {any} parent - [description]
+ * @param {*} parent - [description]
  * @param {string} key - [description]
- * @param {any} value - [description]
+ * @param {*} value - [description]
  * @param {...*} [arguments] - Additional arguments that will be passed to the callback, after the game object, key, and data.
  */
 
@@ -26,7 +26,7 @@ var Class = require('../utils/Class');
  * @constructor
  * @since 3.0.0
  *
- * @param {any} parent - [description]
+ * @param {*} parent - [description]
  * @param {EventEmitter} eventEmitter - [description]
  */
 var DataManager = new Class({
@@ -39,7 +39,7 @@ var DataManager = new Class({
          * [description]
          *
          * @name Phaser.Data.DataManager#parent
-         * @type {any}
+         * @type {*}
          * @since 3.0.0
          */
         this.parent = parent;
@@ -100,7 +100,7 @@ var DataManager = new Class({
      *
      * @param {string} key - [description]
      *
-     * @return {any} [description]
+     * @return {*} [description]
      */
     get: function (key)
     {
@@ -162,7 +162,7 @@ var DataManager = new Class({
      * @since 3.0.0
      *
      * @param {string} key - [description]
-     * @param {any} data - [description]
+     * @param {*} data - [description]
      *
      * @return {Phaser.Data.DataManager} This DataManager object.
      */
@@ -293,7 +293,7 @@ var DataManager = new Class({
      *
      * @param {string} key - [description]
      *
-     * @return {any} [description]
+     * @return {*} [description]
      */
     pop: function (key)
     {

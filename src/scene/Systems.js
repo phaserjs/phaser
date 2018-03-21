@@ -288,7 +288,7 @@ var Systems = new Class({
      * @method Phaser.Scenes.Systems#render
      * @since 3.0.0
      *
-     * @param {Phaser.Renderer.Canvas.CanvasRenderer|Phaser.Renderer.WebGL.WebGLRenderer} renderer - [description]
+     * @param {(Phaser.Renderer.Canvas.CanvasRenderer|Phaser.Renderer.WebGL.WebGLRenderer)} renderer - [description]
      */
     render: function (renderer)
     {

@@ -368,7 +368,7 @@ var Camera = new Class({
      * @param {number} y - [description]
      * @param {number} z - [description]
      * @param {string} key - [description]
-     * @param {string|number} frame - [description]
+     * @param {(string|number)} frame - [description]
      * @param {boolean} [visible=true] - [description]
      *
      * @return {Phaser.GameObjects.Sprite3D} [description]
@@ -399,7 +399,7 @@ var Camera = new Class({
      *
      * @param {number} quantity - [description]
      * @param {string} key - [description]
-     * @param {string|number} frame - [description]
+     * @param {(string|number)} frame - [description]
      * @param {boolean} [visible=true] - [description]
      *
      * @return {Phaser.GameObjects.Sprite3D[]} [description]
@@ -435,10 +435,10 @@ var Camera = new Class({
      * @method Phaser.Cameras.Sprite3D.Camera#createRect
      * @since 3.0.0
      *
-     * @param {number|{x:number,y:number}} size - [description]
-     * @param {number|{x:number,y:number,z:number}} spacing - [description]
+     * @param {(number|{x:number,y:number})} size - [description]
+     * @param {(number|{x:number,y:number,z:number})} spacing - [description]
      * @param {string} key - [description]
-     * @param {string|number} [frame] - [description]
+     * @param {(string|number)} [frame] - [description]
      *
      * @return {Phaser.GameObjects.Sprite3D[]} [description]
      */
@@ -595,7 +595,7 @@ var Camera = new Class({
      * @method Phaser.Cameras.Sprite3D.Camera#translate
      * @since 3.0.0
      *
-     * @param {number|object} x - [description]
+     * @param {(number|object)} x - [description]
      * @param {number} [y] - [description]
      * @param {number} [z] - [description]
      *
@@ -625,7 +625,7 @@ var Camera = new Class({
      * @method Phaser.Cameras.Sprite3D.Camera#lookAt
      * @since 3.0.0
      *
-     * @param {number|object} x - [description]
+     * @param {(number|object)} x - [description]
      * @param {number} [y] - [description]
      * @param {number} [z] - [description]
      *

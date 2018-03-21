@@ -142,7 +142,7 @@ var StaticTilemapLayer = new Class({
 
         /**
          * @name Phaser.Tilemaps.StaticTilemapLayer#renderer
-         * @type {Phaser.Renderer.CanvasRenderer|Phaser.Renderer.WebGLRenderer}
+         * @type {(Phaser.Renderer.CanvasRenderer|Phaser.Renderer.WebGLRenderer)}
          * @private
          * @since 3.0.0
          */
@@ -393,8 +393,8 @@ var StaticTilemapLayer = new Class({
      * @method Phaser.Tilemaps.StaticTilemapLayer#createFromTiles
      * @since 3.0.0
      *
-     * @param {integer|array} indexes - The tile index, or array of indexes, to create Sprites from.
-     * @param {integer|array} replacements - The tile index, or array of indexes, to change a converted
+     * @param {(integer|array)} indexes - The tile index, or array of indexes, to create Sprites from.
+     * @param {(integer|array)} replacements - The tile index, or array of indexes, to change a converted
      * tile to. Set to `null` to leave the tiles unchanged. If an array is given, it is assumed to be a
      * one-to-one mapping with the indexes array.
      * @param {object} spriteConfig - The config object to pass into the Sprite creator (i.e.
@@ -656,7 +656,7 @@ var StaticTilemapLayer = new Class({
      * @method Phaser.Tilemaps.StaticTilemapLayer#getTilesWithinShape
      * @since 3.0.0
      *
-     * @param {Phaser.Geom.Circle|Phaser.Geom.Line|Phaser.Geom.Rectangle|Phaser.Geom.Triangle} shape - A shape in world (pixel) coordinates
+     * @param {(Phaser.Geom.Circle|Phaser.Geom.Line|Phaser.Geom.Rectangle|Phaser.Geom.Triangle)} shape - A shape in world (pixel) coordinates
      * @param {object} [filteringOptions] - Optional filters to apply when getting the tiles.
      * @param {boolean} [filteringOptions.isNotEmpty=false] - If true, only return tiles that don't have
      * -1 for an index.
@@ -743,7 +743,7 @@ var StaticTilemapLayer = new Class({
      * @method Phaser.Tilemaps.StaticTilemapLayer#setCollision
      * @since 3.0.0
      *
-     * @param {integer|array} indexes - Either a single tile index, or an array of tile indexes.
+     * @param {(integer|array)} indexes - Either a single tile index, or an array of tile indexes.
      * @param {boolean} [collides=true] - If true it will enable collision. If false it will clear
      * collision.
      * @param {boolean} [recalculateFaces=true] - Whether or not to recalculate the tile faces after the
@@ -843,7 +843,7 @@ var StaticTilemapLayer = new Class({
      * @method Phaser.Tilemaps.StaticTilemapLayer#setTileIndexCallback
      * @since 3.0.0
      *
-     * @param {integer|array} indexes - Either a single tile index, or an array of tile indexes to have a
+     * @param {(integer|array)} indexes - Either a single tile index, or an array of tile indexes to have a
      * collision callback set for.
      * @param {function} callback - The callback that will be invoked when the tile is collided with.
      * @param {object} callbackContext - The context under which the callback is called.

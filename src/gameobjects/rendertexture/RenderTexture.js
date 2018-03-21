@@ -80,7 +80,7 @@ var RenderTexture = new Class({
         this.renderer = scene.sys.game.renderer;
         this.globalTint = 0xffffff;
         this.globalAlpha = 1.0;
-        
+
         if (this.renderer.type === CONST.WEBGL)
         {
             var gl = this.renderer.gl;
@@ -183,7 +183,7 @@ var RenderTexture = new Class({
      * @since 3.2.0
      *
      * @param {string} texture - The key of the Texture this Game Object will use to render with, as stored in the Texture Manager.
-     * @param {string|integer} [frame] - An optional frame from the Texture this Game Object is rendering with.
+     * @param {(string|integer)} [frame] - An optional frame from the Texture this Game Object is rendering with.
      * @param {number} x - The x position to draw the frame at.
      * @param {number} y - The y position to draw the frame at.
      *

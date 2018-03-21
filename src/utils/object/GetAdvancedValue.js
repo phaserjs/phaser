@@ -42,9 +42,9 @@ var GetValue = require('./GetValue');
  *
  * @param {object} source - [description]
  * @param {string} key - [description]
- * @param {any} defaultValue - [description]
+ * @param {*} defaultValue - [description]
  *
- * @return {any} [description]
+ * @return {*} [description]
  */
 var GetAdvancedValue = function (source, key, defaultValue)
 {

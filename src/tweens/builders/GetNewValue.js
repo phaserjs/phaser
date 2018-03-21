@@ -12,7 +12,7 @@
  *
  * @param {object} source - [description]
  * @param {string} key - [description]
- * @param {any} defaultValue - [description]
+ * @param {*} defaultValue - [description]
  *
  * @return {function} [description]
  */

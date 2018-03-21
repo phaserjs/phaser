@@ -41,7 +41,7 @@ var ValueToColor = require('../display/color/ValueToColor');
  * @property {string} [path] - [description]
  * @property {boolean} [enableParallel=true] - [description]
  * @property {integer} [maxParallelDownloads=4] - [description]
- * @property {string|undefined} [crossOrigin=undefined] - [description]
+ * @property {(string|undefined)} [crossOrigin=undefined] - [description]
  * @property {string} [responseType] - [description]
  * @property {boolean} [async=true] - [description]
  * @property {string} [user] - [description]
@@ -52,8 +52,8 @@ var ValueToColor = require('../display/color/ValueToColor');
 /**
  * @typedef {object} GameConfig
  *
- * @property {integer|string} [width=1024] - [description]
- * @property {integer|string} [height=768] - [description]
+ * @property {(integer|string)} [width=1024] - [description]
+ * @property {(integer|string)} [height=768] - [description]
  * @property {number} [zoom=1] - [description]
  * @property {number} [resolution=1] - [description]
  * @property {number} [type=CONST.AUTO] - [description]
@@ -90,7 +90,7 @@ var ValueToColor = require('../display/color/ValueToColor');
  * @property {boolean} [preserveDrawingBuffer=false] - [description]
  * @property {boolean} [failIfMajorPerformanceCaveat=false] - [description]
  * @property {boolean} [powerPreference='default'] - "high-performance", "low-power" or "default"
- * @property {string|number} [backgroundColor=0x000000] - [description]
+ * @property {(string|number)} [backgroundColor=0x000000] - [description]
  * @property {object} [?callbacks] - [description]
  * @property {BootCallback} [callbacks.preBoot=NOOP] - [description]
  * @property {BootCallback} [callbacks.postBoot=NOOP] - [description]

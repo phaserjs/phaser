@@ -28,7 +28,7 @@ var Render = require('./ParticleManagerRender');
  *
  * @param {Phaser.Scene} scene - [description]
  * @param {string} texture - [description]
- * @param {string|integer} frame - [description]
+ * @param {(string|integer)} frame - [description]
  * @param {Phaser.GameObjects.Particles.ParticleEmitter[]} emitters - [description]
  */
 var ParticleEmitterManager = new Class({
@@ -152,7 +152,7 @@ var ParticleEmitterManager = new Class({
      * @since 3.0.0
      *
      * @param {string} key - The key of the texture to be used, as stored in the Texture Manager.
-     * @param {string|integer} [frame] - The name or index of the frame within the Texture.
+     * @param {(string|integer)} [frame] - The name or index of the frame within the Texture.
      *
      * @return {Phaser.GameObjects.Particles.ParticleEmitterManager} This Game Object.
      */
@@ -173,7 +173,7 @@ var ParticleEmitterManager = new Class({
      * @method Phaser.GameObjects.Particles.ParticleEmitterManager#setFrame
      * @since 3.0.0
      *
-     * @param {string|integer} [frame] - The name or index of the frame within the Texture.
+     * @param {(string|integer)} [frame] - The name or index of the frame within the Texture.
      *
      * @return {Phaser.GameObjects.Particles.ParticleEmitterManager} This Game Object.
      */
@@ -194,7 +194,7 @@ var ParticleEmitterManager = new Class({
      * @method Phaser.GameObjects.Particles.ParticleEmitterManager#setEmitterFrames
      * @since 3.0.0
      *
-     * @param {Phaser.Textures.Frame|Phaser.Textures.Frame[]} frames - [description]
+     * @param {(Phaser.Textures.Frame|Phaser.Textures.Frame[])} frames - [description]
      * @param {Phaser.GameObjects.Particles.ParticleEmitter} emitter - [description]
      *
      * @return {Phaser.GameObjects.Particles.ParticleEmitterManager} This Game Object.

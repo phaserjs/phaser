@@ -4,7 +4,7 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-//  Adapted from [gl-matrix](https://github.com/toji/gl-matrix) by toji 
+//  Adapted from [gl-matrix](https://github.com/toji/gl-matrix) by toji
 //  and [vecmath](https://github.com/mattdesl/vecmath) by mattdesl
 
 var Class = require('../utils/Class');
@@ -78,7 +78,7 @@ var Vector2 = new Class({
      * @method Phaser.Math.Vector2#copy
      * @since 3.0.0
      *
-     * @param {Phaser.Math.Vector2|object} src - [description]
+     * @param {(Phaser.Math.Vector2|object)} src - [description]
      *
      * @return {Phaser.Math.Vector2} This Vector2.
      */
@@ -389,7 +389,7 @@ var Vector2 = new Class({
             this.x = x * len;
             this.y = y * len;
         }
-    
+
         return this;
     },
 

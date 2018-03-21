@@ -31,7 +31,7 @@ var ResetKeyCombo = require('./ResetKeyCombo');
  * @since 3.0.0
  *
  * @param {Phaser.Input.Keyboard.KeyboardManager} keyboardManager - [description]
- * @param {string|integer[]|object[]} keys - [description]
+ * @param {(string|integer[]|object[])} keys - [description]
  * @param {object} [config] - [description]
  */
 var KeyCombo = new Class({

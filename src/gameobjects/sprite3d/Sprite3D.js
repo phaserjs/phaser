@@ -28,7 +28,7 @@ var Vector4 = require('../../math/Vector4');
  * @param {number} y - The y position of this Game Object.
  * @param {number} z - The z position of this Game Object.
  * @param {string} texture - The key of the Texture this Game Object will use to render with, as stored in the Texture Manager.
- * @param {string|integer} [frame] - An optional frame from the Texture this Game Object is rendering with.
+ * @param {(string|integer)} [frame] - An optional frame from the Texture this Game Object is rendering with.
  */
 var Sprite3D = new Class({
 
@@ -170,9 +170,9 @@ var Sprite3D = new Class({
 
     /**
      * The visible state of the Game Object.
-     * 
+     *
      * An invisible Game Object will skip rendering, but will still process update logic.
-     * 
+     *
      * @name Phaser.GameObjects.Sprite3D#visible
      * @type {boolean}
      * @since 3.0.0
@@ -194,7 +194,7 @@ var Sprite3D = new Class({
 
     /**
      * The x position of this Game Object.
-     * 
+     *
      * @name Phaser.GameObjects.Sprite3D#x
      * @type {number}
      * @since 3.0.0
@@ -215,7 +215,7 @@ var Sprite3D = new Class({
 
     /**
      * The y position of this Game Object.
-     * 
+     *
      * @name Phaser.GameObjects.Sprite3D#y
      * @type {number}
      * @since 3.0.0
@@ -236,7 +236,7 @@ var Sprite3D = new Class({
 
     /**
      * The z position of this Game Object.
-     * 
+     *
      * @name Phaser.GameObjects.Sprite3D#z
      * @type {number}
      * @since 3.0.0

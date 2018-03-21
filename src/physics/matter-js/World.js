@@ -418,7 +418,7 @@ var World = new Class({
      * @method Phaser.Physics.Matter.World#add
      * @since 3.0.0
      *
-     * @param {object|object[]} object - Can be single or an array, and can be a body, composite or constraint
+     * @param {(object|object[])} object - Can be single or an array, and can be a body, composite or constraint
      *
      * @return {Phaser.Physics.Matter.World} This Matter World object.
      */
@@ -474,7 +474,7 @@ var World = new Class({
      * @method Phaser.Physics.Matter.World#convertTilemapLayer
      * @since 3.0.0
      *
-     * @param {Phaser.GameObjects.StaticTilemapLayer|Phaser.GameObjects.DynamicTilemapLayer} tilemapLayer -
+     * @param {(Phaser.GameObjects.StaticTilemapLayer|Phaser.GameObjects.DynamicTilemapLayer)} tilemapLayer -
      * An array of tiles.
      * @param {object} [options] - Options to be passed to the MatterTileBody constructor. {@ee Phaser.Physics.Matter.TileBody}
      *

@@ -43,7 +43,7 @@ var TileSpriteRender = require('./TileSpriteRender');
  * @param {number} width - The width of the Game Object.
  * @param {number} height - The height of the Game Object.
  * @param {string} texture - The key of the Texture this Game Object will use to render with, as stored in the Texture Manager.
- * @param {string|integer} [frame] - An optional frame from the Texture this Game Object is rendering with.
+ * @param {(string|integer)} [frame] - An optional frame from the Texture this Game Object is rendering with.
  */
 var TileSprite = new Class({
 
@@ -119,7 +119,7 @@ var TileSprite = new Class({
          * [description]
          *
          * @name Phaser.GameObjects.TileSprite#renderer
-         * @type {Phaser.Renderer.Canvas.CanvasRenderer|Phaser.Renderer.WebGL.WebGLRenderer}
+         * @type {(Phaser.Renderer.Canvas.CanvasRenderer|Phaser.Renderer.WebGL.WebGLRenderer)}
          * @since 3.0.0
          */
         this.renderer = renderer;

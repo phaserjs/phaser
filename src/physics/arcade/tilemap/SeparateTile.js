@@ -18,7 +18,7 @@ var TileIntersectsBody = require('./TileIntersectsBody');
  * @param {Phaser.Physics.Arcade.Body} body - The Body object to separate.
  * @param {Phaser.Tilemaps.Tile} tile - The tile to collide against.
  * @param {Phaser.Geom.Rectangle} tileWorldRect - [description]
- * @param {Phaser.Tilemaps.DynamicTilemapLayer|Phaser.Tilemaps.StaticTilemapLayer} tilemapLayer - The tilemapLayer to collide against.
+ * @param {(Phaser.Tilemaps.DynamicTilemapLayer|Phaser.Tilemaps.StaticTilemapLayer)} tilemapLayer - The tilemapLayer to collide against.
  * @param {number} tileBias - [description]
  *
  * @return {boolean} Returns true if the body was separated, otherwise false.

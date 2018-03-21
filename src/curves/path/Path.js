@@ -235,7 +235,7 @@ var Path = new Class({
      * @method Phaser.Curves.Path#quadraticBezierTo
      * @since 3.2.0
      *
-     * @param {number|Phaser.Math.Vector2[]} x - [description]
+     * @param {(number|Phaser.Math.Vector2[])} x - [description]
      * @param {number} [y] - [description]
      * @param {number} [controlX] - [description]
      * @param {number} [controlY] - [description]
@@ -516,7 +516,7 @@ var Path = new Class({
      * @param {number} t - [description]
      * @param {Phaser.Math.Vector2} [out] - [description]
      *
-     * @return {Phaser.Math.Vector2|null} [description]
+     * @return {?Phaser.Math.Vector2} [description]
      */
     getPoint: function (t, out)
     {
@@ -671,7 +671,7 @@ var Path = new Class({
      * @method Phaser.Curves.Path#lineTo
      * @since 3.0.0
      *
-     * @param {number|Phaser.Math.Vector2} x - [description]
+     * @param {(number|Phaser.Math.Vector2)} x - [description]
      * @param {number} [y] - [description]
      *
      * @return {Phaser.Curves.Path} [description]

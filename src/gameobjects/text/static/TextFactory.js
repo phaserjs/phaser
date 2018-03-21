@@ -17,9 +17,9 @@ var GameObjectFactory = require('../../GameObjectFactory');
  *
  * @param {number} x - The horizontal position of this Game Object in the world.
  * @param {number} y - The vertical position of this Game Object in the world.
- * @param {string|string[]} text - The text this Text object will display.
+ * @param {(string|string[])} text - The text this Text object will display.
  * @param {object} [style] - The Text style configuration object.
- * 
+ *
  * @return {Phaser.GameObjects.Text} The Game Object that was created.
  */
 GameObjectFactory.register('text', function (x, y, text, style)
@@ -28,9 +28,9 @@ GameObjectFactory.register('text', function (x, y, text, style)
 });
 
 //  When registering a factory function 'this' refers to the GameObjectFactory context.
-//  
+//
 //  There are several properties available to use:
-//  
+//
 //  this.scene - a reference to the Scene that owns the GameObjectFactory
 //  this.displayList - a reference to the Display List the Scene owns
 //  this.updateList - a reference to the Update List the Scene owns

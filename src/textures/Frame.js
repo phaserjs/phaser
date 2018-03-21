@@ -17,7 +17,7 @@ var Extend = require('../utils/object/Extend');
  * @since 3.0.0
  *
  * @param {Phaser.Textures.Texture} texture - The Texture this Frame is a part of.
- * @param {integer|string} name - The name of this Frame. The name is unique within the Texture.
+ * @param {(integer|string)} name - The name of this Frame. The name is unique within the Texture.
  * @param {integer} sourceIndex - The index of the TextureSource that this Frame is a part of.
  * @param {number} x - The x coordinate of the top-left of this Frame.
  * @param {number} y - The y coordinate of the top-left of this Frame.
@@ -211,7 +211,7 @@ var Frame = new Class({
 
         /**
          * **CURRENTLY UNSUPPORTED**
-         * 
+         *
          * Is this frame is rotated or not in the Texture?
          * Rotation allows you to use rotated frames in texture atlas packing.
          * It has nothing to do with Sprite rotation.
@@ -374,7 +374,7 @@ var Frame = new Class({
         var tw = this.source.width;
         var th = this.source.height;
         var uvs = this.data.uvs;
-        
+
         uvs.x0 = cx / tw;
         uvs.y0 = cy / th;
 
@@ -403,16 +403,16 @@ var Frame = new Class({
         var tw = this.source.width;
         var th = this.source.height;
         var uvs = this.data.uvs;
-        
+
         uvs.x3 = (this.cutX + this.cutHeight) / tw;
         uvs.y3 = (this.cutY + this.cutWidth) / th;
 
         uvs.x2 = this.cutX / tw;
         uvs.y2 = (this.cutY + this.cutWidth) / th;
-        
+
         uvs.x1 = this.cutX / tw;
         uvs.y1 = this.cutY / th;
-        
+
         uvs.x0 = (this.cutX + this.cutHeight) / tw;
         uvs.y0 = this.cutY / th;
 
@@ -525,7 +525,7 @@ var Frame = new Class({
 
     /**
      * The radius of the Frame (derived from sqrt(w * w + h * h) / 2)
-     * 
+     *
      * @name Phaser.Textures.Frame#radius
      * @type {number}
      * @readOnly
@@ -542,7 +542,7 @@ var Frame = new Class({
 
     /**
      * Is the Frame trimmed or not?
-     * 
+     *
      * @name Phaser.Textures.Frame#trimmed
      * @type {boolean}
      * @readOnly
@@ -559,7 +559,7 @@ var Frame = new Class({
 
     /**
      * The Canvas drawImage data object.
-     * 
+     *
      * @name Phaser.Textures.Frame#canvasData
      * @type {object}
      * @readOnly

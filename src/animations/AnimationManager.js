@@ -186,7 +186,7 @@ var AnimationManager = new Class({
      * @method Phaser.Animations.AnimationManager#fromJSON
      * @since 3.0.0
      *
-     * @param {string|object} data - [description]
+     * @param {(string|object)} data - [description]
      * @param {boolean} [clearCurrentAnimations=false] - [description]
      *
      * @return {Phaser.Animations.Animation[]} An array containing all of the Animation objects that were created as a result of this call.
@@ -394,7 +394,7 @@ var AnimationManager = new Class({
      *
      * @param {Phaser.GameObjects.GameObject} child - [description]
      * @param {string} key - [description]
-     * @param {string|integer} [startFrame] - [description]
+     * @param {(string|integer)} [startFrame] - [description]
      *
      * @return {Phaser.GameObjects.GameObject} [description]
      */

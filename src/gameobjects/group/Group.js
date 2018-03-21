@@ -108,7 +108,7 @@ var Group = new Class({
          * [description]
          *
          * @name Phaser.GameObjects.Group#defaultFrame
-         * @type {string|integer}
+         * @type {(string|integer)}
          * @since 3.0.0
          */
         this.defaultFrame = GetFastValue(config, 'defaultFrame', null);
@@ -165,8 +165,8 @@ var Group = new Class({
      * @param {number} x - The horizontal position of this Game Object in the world.
      * @param {number} y - The vertical position of this Game Object in the world.
      * @param {string} texture - The key of the Texture this Game Object will use to render with, as stored in the Texture Manager.
-     * @param {string|integer} [frame] - An optional frame from the Texture this Game Object is rendering with.
-     * @param {string|integer} [frame] - An optional frame from the Texture this Game Object is rendering with.
+     * @param {(string|integer)} [frame] - An optional frame from the Texture this Game Object is rendering with.
+     * @param {(string|integer)} [frame] - An optional frame from the Texture this Game Object is rendering with.
      * @param {boolean} [visible=true] - The {@link Phaser.GameObjects.Components.Visible#visible} state of this Game Object.
      * @param {boolean} [active=true] - The {@link Phaser.GameObjects.GameObject#active} state of this Game Object.
      *
@@ -454,6 +454,11 @@ var Group = new Class({
 
         this.children.delete(child);
 
+        if (this.removeCallback)
+        {
+            this.removeCallback.call(this, child);
+        }
+
         if (removeFromScene)
         {
             this.scene.sys.displayList.remove(child);
@@ -559,10 +564,10 @@ var Group = new Class({
      * @param {number} [x] - The horizontal position of this Game Object in the world.
      * @param {number} [y] - The vertical position of this Game Object in the world.
      * @param {string} [texture] - The key of the Texture this Game Object will use to render with, as stored in the Texture Manager.
-     * @param {string|integer} [frame] - An optional frame from the Texture this Game Object is rendering with.
+     * @param {(string|integer)} [frame] - An optional frame from the Texture this Game Object is rendering with.
      * @param {boolean} [visible] - [description]
      *
-     * @return {Phaser.GameObjects.GameObject|null} [description]
+     * @return {?Phaser.GameObjects.GameObject} [description]
      */
     getFirst: function (state, createIfNull, x, y, key, frame, visible)
     {
@@ -613,7 +618,7 @@ var Group = new Class({
      * @param {number} x - The horizontal position of this Game Object in the world.
      * @param {number} y - The vertical position of this Game Object in the world.
      * @param {string} texture - The key of the Texture this Game Object will use to render with, as stored in the Texture Manager.
-     * @param {string|integer} [frame] - An optional frame from the Texture this Game Object is rendering with.
+     * @param {(string|integer)} [frame] - An optional frame from the Texture this Game Object is rendering with.
      * @param {boolean} visible - [description]
      *
      * @return {Phaser.GameObjects.GameObject} [description]
@@ -633,7 +638,7 @@ var Group = new Class({
      * @param {number} x - The horizontal position of this Game Object in the world.
      * @param {number} y - The vertical position of this Game Object in the world.
      * @param {string} texture - The key of the Texture this Game Object will use to render with, as stored in the Texture Manager.
-     * @param {string|integer} [frame] - An optional frame from the Texture this Game Object is rendering with.
+     * @param {(string|integer)} [frame] - An optional frame from the Texture this Game Object is rendering with.
      * @param {boolean} visible - [description]
      *
      * @return {Phaser.GameObjects.GameObject} [description]
@@ -653,7 +658,7 @@ var Group = new Class({
      * @param {number} x - The horizontal position of this Game Object in the world.
      * @param {number} y - The vertical position of this Game Object in the world.
      * @param {string} texture - The key of the Texture this Game Object will use to render with, as stored in the Texture Manager.
-     * @param {string|integer} [frame] - An optional frame from the Texture this Game Object is rendering with.
+     * @param {(string|integer)} [frame] - An optional frame from the Texture this Game Object is rendering with.
      * @param {boolean} visible - [description]
      *
      * @return {Phaser.GameObjects.GameObject} [description]

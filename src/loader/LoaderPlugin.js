@@ -812,7 +812,7 @@ var LoaderPlugin = new Class({
      * @method Phaser.Loader.LoaderPlugin#saveJSON
      * @since 3.0.0
      *
-     * @param {any} data - [description]
+     * @param {*} data - [description]
      * @param {string} [filename=file.json] - [description]
      *
      * @return {Phaser.Loader.LoaderPlugin} This Loader plugin.
@@ -828,7 +828,7 @@ var LoaderPlugin = new Class({
      * @method Phaser.Loader.LoaderPlugin#save
      * @since 3.0.0
      *
-     * @param {any} data - [description]
+     * @param {*} data - [description]
      * @param {string} [filename=file.json] - [description]
      * @param {string} [filetype=application/json] - [description]
      *

@@ -12,7 +12,7 @@ var EaseMap = require('../../math/easing/EaseMap');
  * @function Phaser.Tweens.Builders.GetEaseFunction
  * @since 3.0.0
  *
- * @param {string|function} ease - [description]
+ * @param {(string|function)} ease - [description]
  * @param {array} easeParams - [description]
  *
  * @return {function} [description]

@@ -9,15 +9,15 @@ var PropertyValueSet = require('./PropertyValueSet');
 /**
  * Takes an array of Game Objects, or any objects that have the public properties `originX` and `originY`
  * and then sets them to the given values.
- * 
+ *
  * The optional `stepX` and `stepY` properties are applied incrementally, multiplied by each item in the array.
- * 
+ *
  * To use this with a Group: `SetOrigin(group.getChildren(), originX, originY, stepX, stepY)`
  *
  * @function Phaser.Actions.SetOrigin
  * @since 3.0.0
- * 
- * @param {array|Phaser.GameObjects.GameObject[]} items - The array of items to be updated by this action.
+ *
+ * @param {(array|Phaser.GameObjects.GameObject[])} items - The array of items to be updated by this action.
  * @param {number} originX - The amount to set the `originX` property to.
  * @param {number} [originY] - The amount to set the `originY` property to. If `undefined` or `null` it uses the `originX` value.
  * @param {number} [stepX=0] - This is added to the `originX` amount, multiplied by the iteration counter.

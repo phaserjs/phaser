@@ -68,7 +68,7 @@ var Game = new Class({
          * A reference to either the Canvas or WebGL Renderer that this Game is using.
          *
          * @name Phaser.Game#renderer
-         * @type {Phaser.Renderer.Canvas.CanvasRenderer|Phaser.Renderer.WebGL.WebGLRenderer}
+         * @type {(Phaser.Renderer.Canvas.CanvasRenderer|Phaser.Renderer.WebGL.WebGLRenderer)}
          * @since 3.0.0
          */
         this.renderer = null;
@@ -323,7 +323,7 @@ var Game = new Class({
      * the Scenes for rendering, but it won't have actually drawn anything yet.
      *
      * @event Phaser.Game#prerenderEvent
-     * @param {Phaser.Renderer.CanvasRenderer|Phaser.Renderer.WebGLRenderer} renderer - A reference to the current renderer.
+     * @param {(Phaser.Renderer.CanvasRenderer|Phaser.Renderer.WebGLRenderer)} renderer - A reference to the current renderer.
      */
 
     /**
@@ -333,7 +333,7 @@ var Game = new Class({
      * Every Scene will have rendered and drawn to the canvas.
      *
      * @event Phaser.Game#postrenderEvent
-     * @param {Phaser.Renderer.CanvasRenderer|Phaser.Renderer.WebGLRenderer} renderer - A reference to the current renderer.
+     * @param {(Phaser.Renderer.CanvasRenderer|Phaser.Renderer.WebGLRenderer)} renderer - A reference to the current renderer.
      */
 
     /**

@@ -7,15 +7,15 @@
 /**
  * Takes an array of Game Objects, or any objects that have a public property as defined in `key`,
  * and then adds the given value to it.
- * 
+ *
  * The optional `step` property is applied incrementally, multiplied by each item in the array.
- * 
+ *
  * To use this with a Group: `PropertyValueInc(group.getChildren(), key, value, step)`
  *
  * @function Phaser.Actions.PropertyValueInc
  * @since 3.3.0
- * 
- * @param {array|Phaser.GameObjects.GameObject[]} items - The array of items to be updated by this action.
+ *
+ * @param {(array|Phaser.GameObjects.GameObject[])} items - The array of items to be updated by this action.
  * @param {string} key - The property to be updated.
  * @param {number} value - The amount to be added to the property.
  * @param {number} [step=0] - This is added to the `value` amount, multiplied by the iteration counter.

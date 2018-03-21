@@ -4,7 +4,7 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-//  Adapted from [gl-matrix](https://github.com/toji/gl-matrix) by toji 
+//  Adapted from [gl-matrix](https://github.com/toji/gl-matrix) by toji
 //  and [vecmath](https://github.com/mattdesl/vecmath) by mattdesl
 
 var Class = require('../utils/Class');
@@ -168,7 +168,7 @@ var Vector4 = new Class({
      * @method Phaser.Math.Vector4#add
      * @since 3.0.0
      *
-     * @param {Phaser.Math.Vector2|Phaser.Math.Vector3|Phaser.Math.Vector4} v - [description]
+     * @param {(Phaser.Math.Vector2|Phaser.Math.Vector3|Phaser.Math.Vector4)} v - [description]
      *
      * @return {Phaser.Math.Vector4} This Vector4 object.
      */
@@ -188,7 +188,7 @@ var Vector4 = new Class({
      * @method Phaser.Math.Vector4#subtract
      * @since 3.0.0
      *
-     * @param {Phaser.Math.Vector2|Phaser.Math.Vector3|Phaser.Math.Vector4} v - [description]
+     * @param {(Phaser.Math.Vector2|Phaser.Math.Vector3|Phaser.Math.Vector4)} v - [description]
      *
      * @return {Phaser.Math.Vector4} This Vector4 object.
      */
@@ -336,7 +336,7 @@ var Vector4 = new Class({
      * @method Phaser.Math.Vector4#multiply
      * @since 3.0.0
      *
-     * @param {Phaser.Math.Vector2|Phaser.Math.Vector3|Phaser.Math.Vector4} v - [description]
+     * @param {(Phaser.Math.Vector2|Phaser.Math.Vector3|Phaser.Math.Vector4)} v - [description]
      *
      * @return {Phaser.Math.Vector4} This Vector4 object.
      */
@@ -356,7 +356,7 @@ var Vector4 = new Class({
      * @method Phaser.Math.Vector4#divide
      * @since 3.0.0
      *
-     * @param {Phaser.Math.Vector2|Phaser.Math.Vector3|Phaser.Math.Vector4} v - [description]
+     * @param {(Phaser.Math.Vector2|Phaser.Math.Vector3|Phaser.Math.Vector4)} v - [description]
      *
      * @return {Phaser.Math.Vector4} This Vector4 object.
      */
@@ -376,7 +376,7 @@ var Vector4 = new Class({
      * @method Phaser.Math.Vector4#distance
      * @since 3.0.0
      *
-     * @param {Phaser.Math.Vector2|Phaser.Math.Vector3|Phaser.Math.Vector4} v - [description]
+     * @param {(Phaser.Math.Vector2|Phaser.Math.Vector3|Phaser.Math.Vector4)} v - [description]
      *
      * @return {number} [description]
      */
@@ -396,7 +396,7 @@ var Vector4 = new Class({
      * @method Phaser.Math.Vector4#distanceSq
      * @since 3.0.0
      *
-     * @param {Phaser.Math.Vector2|Phaser.Math.Vector3|Phaser.Math.Vector4} v - [description]
+     * @param {(Phaser.Math.Vector2|Phaser.Math.Vector3|Phaser.Math.Vector4)} v - [description]
      *
      * @return {number} [description]
      */

@@ -56,7 +56,7 @@ var BaseCache = new Class({
      * @event Phaser.Cache.BaseCache#addEvent
      * @param {Phaser.Cache.BaseCache} The BaseCache to which the object was added.
      * @param {string} The key of the object added to the cache.
-     * @param {any} A reference to the object added to the cache.
+     * @param {*} A reference to the object added to the cache.
      */
 
     /**
@@ -68,7 +68,7 @@ var BaseCache = new Class({
      * @since 3.0.0
      *
      * @param {string} key - The unique key by which the data added to the cache will be referenced.
-     * @param {any} data - The data to be stored in the cache.
+     * @param {*} data - The data to be stored in the cache.
      *
      * @return {Phaser.Cache.BaseCache} This BaseCache object.
      */
@@ -88,7 +88,7 @@ var BaseCache = new Class({
      * @since 3.0.0
      *
      * @param {string} key - The unique key of the item to be checked in this cache.
-     * 
+     *
      * @return {boolean} Returns `true` if the cache contains an item matching the given key, otherwise `false`.
      */
     has: function (key)
@@ -103,8 +103,8 @@ var BaseCache = new Class({
      * @since 3.0.0
      *
      * @param {string} key - The unique key of the item to be retrieved from this cache.
-     * 
-     * @return {any} The item in the cache, or `null` if no item matching the given key was found.
+     *
+     * @return {*} The item in the cache, or `null` if no item matching the given key was found.
      */
     get: function (key)
     {
@@ -119,7 +119,7 @@ var BaseCache = new Class({
      * @event Phaser.Cache.BaseCache#removeEvent
      * @param {Phaser.Cache.BaseCache} The BaseCache from which the object was removed.
      * @param {string} The key of the object removed from the cache.
-     * @param {any} The object that was removed from the cache.
+     * @param {*} The object that was removed from the cache.
      */
 
     /**

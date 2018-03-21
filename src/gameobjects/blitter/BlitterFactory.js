@@ -18,7 +18,7 @@ var GameObjectFactory = require('../GameObjectFactory');
  * @param {number} x - The x position of the Game Object.
  * @param {number} y - The y position of the Game Object.
  * @param {string} key - The key of the Texture the Blitter object will use.
- * @param {string|integer} [frame] - The default Frame children of the Blitter will use.
+ * @param {(string|integer)} [frame] - The default Frame children of the Blitter will use.
  * 
  * @return {Phaser.GameObjects.Blitter} The Game Object that was created.
  */

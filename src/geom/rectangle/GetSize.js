@@ -6,7 +6,7 @@
 
 var Point = require('../point/Point');
 
-//  The size of the Rectangle object, expressed as a Point object 
+//  The size of the Rectangle object, expressed as a Point object
 //  with the values of the width and height properties.
 
 /**
@@ -16,9 +16,9 @@ var Point = require('../point/Point');
  * @since 3.0.0
  *
  * @param {Phaser.Geom.Rectangle} rect - [description]
- * @param {Phaser.Geom.Point|object} [out] - [description]
+ * @param {(Phaser.Geom.Point|object)} [out] - [description]
  *
- * @return {Phaser.Geom.Point|object} [description]
+ * @return {(Phaser.Geom.Point|object)} [description]
  */
 var GetSize = function (rect, out)
 {

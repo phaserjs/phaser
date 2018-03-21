@@ -6,7 +6,7 @@
 
 /**
  * @typedef {object} Phaser.Tweens.Tween~ConfigDefaults
- * @property {object|object[]} targets - [description]
+ * @property {(object|object[])} targets - [description]
  * @property {number} [delay=0] - [description]
  * @property {number} [duration=1000] - [description]
  * @property {string} [ease='Power0'] - [description]

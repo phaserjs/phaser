@@ -446,7 +446,7 @@ var TweenManager = new Class({
      * @method Phaser.Tweens.TweenManager#getTweensOf
      * @since 3.0.0
      *
-     * @param {object|array} target - [description]
+     * @param {(object|array)} target - [description]
      *
      * @return {Phaser.Tweens.Tween[]} [description]
      */
@@ -542,7 +542,7 @@ var TweenManager = new Class({
      * @method Phaser.Tweens.TweenManager#killTweensOf
      * @since 3.0.0
      *
-     * @param {object|array} target - [description]
+     * @param {(object|array)} target - [description]
      *
      * @return {Phaser.Tweens.TweenManager} [description]
      */

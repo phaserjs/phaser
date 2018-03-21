@@ -147,7 +147,7 @@ var Vector3 = new Class({
      * @method Phaser.Math.Vector3#copy
      * @since 3.0.0
      *
-     * @param {Phaser.Math.Vector2|Phaser.Math.Vector3} src - [description]
+     * @param {(Phaser.Math.Vector2|Phaser.Math.Vector3)} src - [description]
      *
      * @return {Phaser.Math.Vector3} This Vector3 object.
      */
@@ -166,7 +166,7 @@ var Vector3 = new Class({
      * @method Phaser.Math.Vector3#set
      * @since 3.0.0
      *
-     * @param {number|object} x - [description]
+     * @param {(number|object)} x - [description]
      * @param {number} [y] - [description]
      * @param {number} [z] - [description]
      *
@@ -196,7 +196,7 @@ var Vector3 = new Class({
      * @method Phaser.Math.Vector3#add
      * @since 3.0.0
      *
-     * @param {Phaser.Math.Vector2|Phaser.Math.Vector3} v - [description]
+     * @param {(Phaser.Math.Vector2|Phaser.Math.Vector3)} v - [description]
      *
      * @return {Phaser.Math.Vector3} This Vector3 object.
      */
@@ -215,7 +215,7 @@ var Vector3 = new Class({
      * @method Phaser.Math.Vector3#subtract
      * @since 3.0.0
      *
-     * @param {Phaser.Math.Vector2|Phaser.Math.Vector3} v - [description]
+     * @param {(Phaser.Math.Vector2|Phaser.Math.Vector3)} v - [description]
      *
      * @return {Phaser.Math.Vector3} This Vector3 object.
      */
@@ -234,7 +234,7 @@ var Vector3 = new Class({
      * @method Phaser.Math.Vector3#multiply
      * @since 3.0.0
      *
-     * @param {Phaser.Math.Vector2|Phaser.Math.Vector3} v - [description]
+     * @param {(Phaser.Math.Vector2|Phaser.Math.Vector3)} v - [description]
      *
      * @return {Phaser.Math.Vector3} This Vector3 object.
      */
@@ -281,7 +281,7 @@ var Vector3 = new Class({
      * @method Phaser.Math.Vector3#divide
      * @since 3.0.0
      *
-     * @param {Phaser.Math.Vector2|Phaser.Math.Vector3} v - [description]
+     * @param {(Phaser.Math.Vector2|Phaser.Math.Vector3)} v - [description]
      *
      * @return {Phaser.Math.Vector3} This Vector3 object.
      */
@@ -317,7 +317,7 @@ var Vector3 = new Class({
      * @method Phaser.Math.Vector3#distance
      * @since 3.0.0
      *
-     * @param {Phaser.Math.Vector2|Phaser.Math.Vector3} v - [description]
+     * @param {(Phaser.Math.Vector2|Phaser.Math.Vector3)} v - [description]
      *
      * @return {number} [description]
      */
@@ -336,7 +336,7 @@ var Vector3 = new Class({
      * @method Phaser.Math.Vector3#distanceSq
      * @since 3.0.0
      *
-     * @param {Phaser.Math.Vector2|Phaser.Math.Vector3} v - [description]
+     * @param {(Phaser.Math.Vector2|Phaser.Math.Vector3)} v - [description]
      *
      * @return {number} [description]
      */
@@ -389,7 +389,7 @@ var Vector3 = new Class({
      * @method Phaser.Math.Vector3#normalize
      * @since 3.0.0
      *
-     * @param {Phaser.Math.Vector2|Phaser.Math.Vector3} v - [description]
+     * @param {(Phaser.Math.Vector2|Phaser.Math.Vector3)} v - [description]
      *
      * @return {Phaser.Math.Vector3} This Vector3 object.
      */

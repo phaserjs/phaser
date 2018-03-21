@@ -15,7 +15,7 @@ var Point = require('../point/Point');
  *
  * @param {Phaser.Geom.Rectangle} rectangle - [description]
  * @param {float} position - [description]
- * @param {Phaser.Geom.Point|object} [out] - [description]
+ * @param {(Phaser.Geom.Point|object)} [out] - [description]
  *
  * @return {Phaser.Geom.Point} [description]
  */
