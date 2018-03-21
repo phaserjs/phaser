@@ -166,7 +166,7 @@ var LoaderPlugin = new Class({
          * [description]
          *
          * @name Phaser.Loader.LoaderPlugin#list
-         * @type {Phaser.Structs.Set}
+         * @type {Phaser.Structs.Set.<Phaser.Loader.File>}
          * @since 3.0.0
          */
         this.list = new CustomSet();
@@ -175,7 +175,7 @@ var LoaderPlugin = new Class({
          * [description]
          *
          * @name Phaser.Loader.LoaderPlugin#inflight
-         * @type {Phaser.Structs.Set}
+         * @type {Phaser.Structs.Set.<Phaser.Loader.File>}
          * @since 3.0.0
          */
         this.inflight = new CustomSet();
@@ -184,7 +184,7 @@ var LoaderPlugin = new Class({
          * [description]
          *
          * @name Phaser.Loader.LoaderPlugin#failed
-         * @type {Phaser.Structs.Set}
+         * @type {Phaser.Structs.Set.<Phaser.Loader.File>}
          * @since 3.0.0
          */
         this.failed = new CustomSet();
@@ -193,7 +193,7 @@ var LoaderPlugin = new Class({
          * [description]
          *
          * @name Phaser.Loader.LoaderPlugin#queue
-         * @type {Phaser.Structs.Set}
+         * @type {Phaser.Structs.Set.<Phaser.Loader.File>}
          * @since 3.0.0
          */
         this.queue = new CustomSet();
@@ -202,7 +202,7 @@ var LoaderPlugin = new Class({
          * [description]
          *
          * @name Phaser.Loader.LoaderPlugin#storage
-         * @type {Phaser.Structs.Set}
+         * @type {Phaser.Structs.Set.<(Phaser.Loader.File|object)>} // TODO 21/03/2018 Fix type
          * @since 3.0.0
          */
         this.storage = new CustomSet();

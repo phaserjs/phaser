@@ -33,7 +33,7 @@ var BaseCache = new Class({
          * You can query the Map directly or use the BaseCache methods.
          *
          * @name Phaser.Cache.BaseCache#entries
-         * @type {Phaser.Structs.Map}
+         * @type {Phaser.Structs.Map.<string, *>}
          * @since 3.0.0
          */
         this.entries = new CustomMap();

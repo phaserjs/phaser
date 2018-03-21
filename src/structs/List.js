@@ -8,14 +8,17 @@ var Class = require('../utils/Class');
 
 /**
  * @callback EachListCallback
+ * @template T
  *
- * @param {*} item - [description]
+ * @param {T} item - [description]
  * @param {...*} [arguments] - Additional arguments that will be passed to the callback, after the child.
  */
 
 /**
  * @classdesc
  * [description]
+ *
+ * @template T
  *
  * @class List
  * @memberOf Phaser.Structs
@@ -43,7 +46,7 @@ var List = new Class({
          * The objects that belong to this collection.
          *
          * @name Phaser.Structs.List#list
-         * @type {array}
+         * @type {T[]}
          * @default []
          * @since 3.0.0
          */
@@ -66,9 +69,9 @@ var List = new Class({
      * @method Phaser.Structs.List#add
      * @since 3.0.0
      *
-     * @param {object} child - [description]
+     * @param {T} child - [description]
      *
-     * @return {object} [description]
+     * @return {T} [description]
      */
     add: function (child)
     {
@@ -88,10 +91,10 @@ var List = new Class({
      * @method Phaser.Structs.List#addAt
      * @since 3.0.0
      *
-     * @param {object} child - [description]
+     * @param {T} child - [description]
      * @param {integer} index - [description]
      *
-     * @return {object} [description]
+     * @return {T} [description]
      */
     addAt: function (child, index)
     {
@@ -119,9 +122,9 @@ var List = new Class({
      * @method Phaser.Structs.List#addMultiple
      * @since 3.0.0
      *
-     * @param {array} children - [description]
+     * @param {T[]} children - [description]
      *
-     * @return {array} [description]
+     * @return {T[]} [description]
      */
     addMultiple: function (children)
     {
@@ -144,7 +147,7 @@ var List = new Class({
      *
      * @param {integer} index - [description]
      *
-     * @return {object} [description]
+     * @return {T} [description]
      */
     getAt: function (index)
     {
@@ -157,7 +160,7 @@ var List = new Class({
      * @method Phaser.Structs.List#getIndex
      * @since 3.0.0
      *
-     * @param {object} child - [description]
+     * @param {T} child - [description]
      *
      * @return {integer} [description]
      */
@@ -174,9 +177,9 @@ var List = new Class({
      * @method Phaser.Structs.List#sort
      * @since 3.0.0
      *
-     * @param {array} children - [description]
+     * @param {T[]} [children] - [description]
      *
-     * @return {array} [description]
+     * @return {T[]} [description]
      */
     sort: function (children)
     {
@@ -191,8 +194,8 @@ var List = new Class({
      * @method Phaser.Structs.List#sortIndexHandler
      * @since 3.0.0
      *
-     * @param {object} childA - [description]
-     * @param {object} childB - [description]
+     * @param {T} childA - [description]
+     * @param {T} childB - [description]
      *
      * @return {integer} [description]
      */
@@ -224,9 +227,9 @@ var List = new Class({
      * @since 3.0.0
      *
      * @param {string} property - The property to check against the value.
-     * @param {*} value - The value to check if the property strictly equals.
+     * @param {T} value - The value to check if the property strictly equals.
      *
-     * @return {*} The item that was found, or null if nothing matched.
+     * @return {?T} The item that was found, or null if nothing matched.
      */
     getByKey: function (property, value)
     {
@@ -251,7 +254,7 @@ var List = new Class({
      *
      * @param {string} name - The name to search for.
      *
-     * @return {*} The first child with a matching name, or null if none were found.
+     * @return {?T} The first child with a matching name, or null if none were found.
      */
     getByName: function (name)
     {
@@ -267,7 +270,7 @@ var List = new Class({
      * @param {integer} [startIndex=0] - Offset from the front of the group (lowest child).
      * @param {integer} [length=(to top)] - Restriction on the number of values you want to randomly select from.
      *
-     * @return {*} A random child of this Group.
+     * @return {?T} A random child of this Group.
      */
     getRandom: function (startIndex, length)
     {
@@ -291,11 +294,11 @@ var List = new Class({
      * @since 3.0.0
      *
      * @param {string} property - [description]
-     * @param {*} value - [description]
+     * @param {T} value - [description]
      * @param {number} [startIndex=0] - [description]
      * @param {number} [endIndex] - [description]
      *
-     * @return {*} [description]
+     * @return {?T} [description]
      */
     getFirst: function (property, value, startIndex, endIndex)
     {
@@ -330,11 +333,11 @@ var List = new Class({
      * @since 3.0.0
      *
      * @param {string} [property] - An optional property to test against the value argument.
-     * @param {*} [value] - If property is set then Child.property must strictly equal this value to be included in the results.
+     * @param {T} [value] - If property is set then Child.property must strictly equal this value to be included in the results.
      * @param {integer} [startIndex=0] - The first child index to start the search from.
      * @param {integer} [endIndex] - The last child index to search up until.
      *
-     * @return {array} [description]
+     * @return {T[]} [description]
      */
     getAll: function (property, value, startIndex, endIndex)
     {
@@ -370,7 +373,7 @@ var List = new Class({
      * @since 3.0.0
      *
      * @param {string} property - [description]
-     * @param {*} value - [description]
+     * @param {T} value - [description]
      *
      * @return {integer} [description]
      */
@@ -397,8 +400,8 @@ var List = new Class({
      * @method Phaser.Structs.List#swap
      * @since 3.0.0
      *
-     * @param {object} child1 - [description]
-     * @param {object} child2 - [description]
+     * @param {T} child1 - [description]
+     * @param {T} child2 - [description]
      */
     swap: function (child1, child2)
     {
@@ -425,10 +428,10 @@ var List = new Class({
      * @method Phaser.Structs.List#moveTo
      * @since 3.0.0
      *
-     * @param {object} child - [description]
+     * @param {T} child - [description]
      * @param {integer} index - [description]
      *
-     * @return {object} [description]
+     * @return {T} [description]
      */
     moveTo: function (child, index)
     {
@@ -454,9 +457,9 @@ var List = new Class({
      * @method Phaser.Structs.List#remove
      * @since 3.0.0
      *
-     * @param {object} child - [description]
+     * @param {T} child - [description]
      *
-     * @return {object} [description]
+     * @return {T} [description]
      */
     remove: function (child)
     {
@@ -478,7 +481,7 @@ var List = new Class({
      *
      * @param {integer} index - [description]
      *
-     * @return {object} [description]
+     * @return {T} [description]
      */
     removeAt: function (index)
     {
@@ -501,7 +504,7 @@ var List = new Class({
      * @param {integer} beginIndex - [description]
      * @param {integer} endIndex - [description]
      *
-     * @return {array} [description]
+     * @return {T[]} [description]
      */
     removeBetween: function (beginIndex, endIndex)
     {
@@ -552,9 +555,9 @@ var List = new Class({
      * @method Phaser.Structs.List#bringToTop
      * @since 3.0.0
      *
-     * @param {object} child - [description]
+     * @param {T} child - [description]
      *
-     * @return {object} [description]
+     * @return {T} [description]
      */
     bringToTop: function (child)
     {
@@ -573,9 +576,9 @@ var List = new Class({
      * @method Phaser.Structs.List#sendToBack
      * @since 3.0.0
      *
-     * @param {object} child - [description]
+     * @param {T} child - [description]
      *
-     * @return {object} [description]
+     * @return {T} [description]
      */
     sendToBack: function (child)
     {
@@ -594,9 +597,9 @@ var List = new Class({
      * @method Phaser.Structs.List#moveUp
      * @since 3.0.0
      *
-     * @param {object} child - [description]
+     * @param {T} child - [description]
      *
-     * @return {object} [description]
+     * @return {T} [description]
      */
     moveUp: function (child)
     {
@@ -621,9 +624,9 @@ var List = new Class({
      * @method Phaser.Structs.List#moveDown
      * @since 3.0.0
      *
-     * @param {object} child - [description]
+     * @param {T} child - [description]
      *
-     * @return {object} [description]
+     * @return {T} [description]
      */
     moveDown: function (child)
     {
@@ -684,10 +687,10 @@ var List = new Class({
      * @method Phaser.Structs.List#replace
      * @since 3.0.0
      *
-     * @param {object} oldChild - The child in this List that will be replaced.
-     * @param {object} newChild - The child to be inserted into this List.
+     * @param {T} oldChild - The child in this List that will be replaced.
+     * @param {T} newChild - The child to be inserted into this List.
      *
-     * @return {object} Returns the oldChild that was replaced within this group.
+     * @return {T} Returns the oldChild that was replaced within this group.
      */
     replace: function (oldChild, newChild)
     {
@@ -709,7 +712,7 @@ var List = new Class({
      * @method Phaser.Structs.List#exists
      * @since 3.0.0
      *
-     * @param {object} child - [description]
+     * @param {T} child - [description]
      *
      * @return {boolean} True if the item is found in the list, otherwise false.
      */
@@ -725,7 +728,7 @@ var List = new Class({
      * @since 3.0.0
      *
      * @param {string} key - [description]
-     * @param {*} value - [description]
+     * @param {T} value - [description]
      */
     setAll: function (key, value)
     {
@@ -744,8 +747,8 @@ var List = new Class({
      * @method Phaser.Structs.List#each
      * @since 3.0.0
      *
-     * @param {EachListCallback} callback - The function to call.
-     * @param {object} [thisArg] - Value to use as `this` when executing callback.
+     * @param {EachListCallback<T>} callback - The function to call.
+     * @param {*} [thisArg] - Value to use as `this` when executing callback.
      * @param {...*} [arguments] - Additional arguments that will be passed to the callback, after the child.
      */
     each: function (callback, thisArg)

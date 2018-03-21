@@ -108,7 +108,7 @@ var World = new Class({
          * [description]
          *
          * @name Phaser.Physics.Impact.World#bodies
-         * @type {Phaser.Structs.Set}
+         * @type {Phaser.Structs.Set.<Phaser.Physics.Impact.Body>}
          * @since 3.0.0
          */
         this.bodies = new Set();

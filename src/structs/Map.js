@@ -8,9 +8,10 @@ var Class = require('../utils/Class');
 
 /**
  * @callback EachMapCallback
+ * @template T
  *
  * @param {string} key - [description]
- * @param {*} entry - [description]
+ * @param {T} entry - [description]
  *
  * @return {?boolean} [description]
  */
@@ -24,12 +25,14 @@ var Class = require('../utils/Class');
  *    [ 3, 'three' ]
  * ]);
  *
+ * @template K, T
+ *
  * @class Map
  * @memberOf Phaser.Structs
  * @constructor
  * @since 3.0.0
  *
- * @param {array} elements - [description]
+ * @param {*[]} elements - [description]
  */
 var Map = new Class({
 
@@ -41,7 +44,7 @@ var Map = new Class({
          * [description]
          *
          * @name Phaser.Structs.Map#entries
-         * @type {Object.<string, any>}
+         * @type {Object.<K, T>}
          * @default {}
          * @since 3.0.0
          */
@@ -72,8 +75,8 @@ var Map = new Class({
      * @method Phaser.Structs.Map#set
      * @since 3.0.0
      *
-     * @param {string} key - [description]
-     * @param {*} value - [description]
+     * @param {K} key - [description]
+     * @param {T} value - [description]
      *
      * @return {Phaser.Structs.Map} This Map object.
      */
@@ -94,9 +97,9 @@ var Map = new Class({
      * @method Phaser.Structs.Map#get
      * @since 3.0.0
      *
-     * @param {string} key - [description]
+     * @param {K} key - [description]
      *
-     * @return {*} [description]
+     * @return {T} [description]
      */
     get: function (key)
     {
@@ -112,7 +115,7 @@ var Map = new Class({
      * @method Phaser.Structs.Map#getArray
      * @since 3.0.0
      *
-     * @return {array} [description]
+     * @return {T[]} [description]
      */
     getArray: function ()
     {
@@ -121,7 +124,10 @@ var Map = new Class({
 
         for (var key in entries)
         {
-            output.push(entries[key]);
+            if(entries.hasOwnProperty(key))
+            {
+                output.push(entries[key]);
+            }
         }
 
         return output;
@@ -133,7 +139,7 @@ var Map = new Class({
      * @method Phaser.Structs.Map#has
      * @since 3.0.0
      *
-     * @param {string} key - [description]
+     * @param {K} key - [description]
      *
      * @return {boolean} [description]
      */
@@ -148,7 +154,7 @@ var Map = new Class({
      * @method Phaser.Structs.Map#delete
      * @since 3.0.0
      *
-     * @param {string} key - [description]
+     * @param {K} key - [description]
      *
      * @return {Phaser.Structs.Map} This Map object.
      */
@@ -203,7 +209,7 @@ var Map = new Class({
      * @method Phaser.Structs.Map#values
      * @since 3.0.0
      *
-     * @return {array} [description]
+     * @return {T[]} [description]
      */
     values: function ()
     {
@@ -246,7 +252,7 @@ var Map = new Class({
      * @method Phaser.Structs.Map#each
      * @since 3.0.0
      *
-     * @param {EachMapCallback} callback - [description]
+     * @param {EachMapCallback<T>} callback - [description]
      *
      * @return {Phaser.Structs.Map} This Map object.
      */
@@ -256,7 +262,7 @@ var Map = new Class({
 
         for (var key in entries)
         {
-            if (callback(key, entries[key]) === false)
+            if (entries.hasOwnProperty(key) && (callback(key, entries[key]) === false))
             {
                 break;
             }
@@ -271,7 +277,7 @@ var Map = new Class({
      * @method Phaser.Structs.Map#contains
      * @since 3.0.0
      *
-     * @param {*} value - [description]
+     * @param {T} value - [description]
      *
      * @return {boolean} [description]
      */
@@ -281,7 +287,7 @@ var Map = new Class({
 
         for (var key in entries)
         {
-            if (entries[key] === value)
+            if (entries.hasOwnProperty(key) && (entries[key] === value))
             {
                 return true;
             }
@@ -312,13 +318,16 @@ var Map = new Class({
 
         for (var key in source)
         {
-            if (local.hasOwnProperty(key) && override)
+            if(source.hasOwnProperty(key))
             {
-                local[key] = source[key];
-            }
-            else
-            {
-                this.set(key, source[key]);
+                if (local.hasOwnProperty(key) && override)
+                {
+                    local[key] = source[key];
+                }
+                else
+                {
+                    this.set(key, source[key]);
+                }
             }
         }
 
