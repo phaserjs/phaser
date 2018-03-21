@@ -30,7 +30,7 @@ A special mention must go to @orblazer for their outstanding assistance in helpi
 * Camera.fadeIn is a new method that will fade the camera in from a given color (black by default) and then optionally invoke a callback. This is the same as using Camera.flash but with an easier to grok method name. Fix #3412 (thanks @Jerenaux)
 * Camera.fadeOut is a new method that will fade the camera out to a given color (black by default) and then optionally invoke a callback. This is the same as using Camera.fade but with an easier to grok method name. Fix #3412 (thanks @Jerenaux)
 * Groups will now listen for a `destroy` event from any Game Object added to them, and if received will automatically remove that GameObject from the Group. Fix #3418 (thanks @hadikcz)
-* MatterGameObject is a new function, available via the Matter Factory in `this.matter.add.gameObject`, that will inject a Matter JS Body into any Game Object, such as a Text object.
+* MatterGameObject is a new function, available via the Matter Factory in `this.matter.add.gameObject`, that will inject a Matter JS Body into any Game Object, such as a Text or TileSprite object.
 * Matter.SetBody and SetExistingBody will now set the origin of the Game Object to be the Matter JS sprite.xOffset and yOffset values, which will auto-center the Game Object to the origin of the body, regardless of shape.
 
 ### Bug Fixes
@@ -100,7 +100,11 @@ A special mention must go to @orblazer for their outstanding assistance in helpi
 * Triangle.getLineC now returns a Line instead of an untyped object. It also now has an optional argument that allows you to pass a Line in to be populated, rather than creating a new one.
 * The GameObject `destroy` event is now emitted at the start of the destroy process, before things like the body or input managers have been removed, so you're able to use the event handler to extract any information you require from the GameObject before it's actually disposed of. Previously, the event was dispatched at the very end of the process.
 * Phaser 3 is now built with Webpack v4.1.1 and all related packages have been updated (thanks @orblazer)
-
+* On WebGL the currentScissor is now updated when the renderer `resize` method is called (thanks @jmcriat)
+* PathFollower.start has been renamed to `startFollow` to avoid conflicting with the Animation component.
+* PathFollower.pause has been renamed to `pauseFollow` to avoid conflicting with the Animation component.
+* PathFollower.resume has been renamed to `resumeFollow` to avoid conflicting with the Animation component.
+* PathFollower.stop has been renamed to `stopFollow` to avoid conflicting with the Animation component.
 
 
 
