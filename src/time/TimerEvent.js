@@ -8,6 +8,20 @@ var Class = require('../utils/Class');
 var GetFastValue = require('../utils/object/GetFastValue');
 
 /**
+ * @typedef {object} TimerEventConfig
+ *
+ * @property {number} [delay=0] - [description]
+ * @property {number} [repeat=0] - [description]
+ * @property {boolean} [loop=false] - [description]
+ * @property {function} [callback] - [description]
+ * @property {*} [callbackScope] - [description]
+ * @property {*[]} [args] - [description]
+ * @property {number} [timeScale=1] - [description]
+ * @property {number} [startAt=1] - [description]
+ * @property {boolean} [paused=false] - [description]
+ */
+
+/**
  * @classdesc
  * [description]
  *
@@ -16,7 +30,7 @@ var GetFastValue = require('../utils/object/GetFastValue');
  * @constructor
  * @since 3.0.0
  *
- * @param {object} config - [description]
+ * @param {TimerEventConfig} config - [description]
  */
 var TimerEvent = new Class({
 
@@ -153,7 +167,7 @@ var TimerEvent = new Class({
      * @method Phaser.Time.TimerEvent#reset
      * @since 3.0.0
      *
-     * @param {object} config - [description]
+     * @param {TimerEventConfig} config - [description]
      *
      * @return {Phaser.Time.TimerEvent} This TimerEvent object.
      */

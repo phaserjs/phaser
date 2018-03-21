@@ -477,7 +477,7 @@ var BaseSoundManager = new Class({
      * @since 3.0.0
      *
      * @param {EachActiveSoundCallback} callback - Callback function. (sound: ISound, index: number, array: ISound[]) => void
-     * @param {object} [scope] - Callback context.
+     * @param {*} [scope] - Callback context.
      */
     forEachActiveSound: function (callback, scope)
     {
