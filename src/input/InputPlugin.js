@@ -959,6 +959,8 @@ var InputPlugin = new Class({
                 continue;
             }
 
+            //  pointerupoutside
+
             gameObject.emit('pointerup', pointer, gameObject.input.localX, gameObject.input.localY);
 
             this.emit('gameobjectup', pointer, gameObject);
