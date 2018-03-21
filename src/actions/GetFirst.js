@@ -18,7 +18,7 @@
  * @param {object} compare - The comparison object. Each property in this object will be checked against the items of the array.
  * @param {integer} [index=0] - An optional offset to start searching from within the items array.
  *
- * @return {object} The first object in the array that matches the comparison object, or `null` if no match was found.
+ * @return {?(object|Phaser.GameObjects.GameObject)} The first object in the array that matches the comparison object, or `null` if no match was found.
  */
 var GetFirst = function (items, compare, index)
 {

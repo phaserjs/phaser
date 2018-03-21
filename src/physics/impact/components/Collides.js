@@ -32,7 +32,7 @@ var Collides = {
      * @since 3.0.0
      *
      * @param {CollideCallback} callback - [description]
-     * @param {object} scope - [description]
+     * @param {*} scope - [description]
      *
      * @return {Phaser.GameObjects.GameObject} This Game Object.
      */

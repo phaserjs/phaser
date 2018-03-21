@@ -9,17 +9,48 @@ var GetValue = require('../utils/object/GetValue');
 var InjectionMap = require('./InjectionMap');
 
 /**
- * Takes a Scene configuration object and returns a fully formed Systems object.
+ * @typedef {object} SettingsConfig
  *
- * @function Phaser.Scenes.Settings.create
- * @since 3.0.0
- *
- * @param {object} config - [description]
- *
- * @return {object} [description]
+ * @property {string} [key] - [description]
+ * @property {boolean} [active=false] - [description]
+ * @property {boolean} [visible=true] - [description]
+ * @property {(false|[type])} [files=false] - [description]
+ * @property {?[type]} [cameras=null] - [description]
+ * @property {Object.<string, string>} [map] - [description]
+ * @property {object} [physics={}] - [description]
+ * @property {object} [loader={}] - [description]
+ * @property {(false|[type])} [plugins=false] - [description]
  */
+
+/**
+ * @typedef {object} SettingsObject
+ *
+ * @property {number} status - [description]
+ * @property {string} key - [description]
+ * @property {boolean} active - [description]
+ * @property {boolean} visible - [description]
+ * @property {boolean} isBooted - [description]
+ * @property {object} data - [description]
+ * @property {(false|[type])} files - [description]
+ * @property {?[type]} cameras - [description]
+ * @property {Object.<string, string>} map - [description]
+ * @property {object} physics - [description]
+ * @property {object} loader - [description]
+ * @property {(false|[type])} plugins - [description]
+ */
+
 var Settings = {
 
+    /**
+     * Takes a Scene configuration object and returns a fully formed Systems object.
+     *
+     * @function Phaser.Scenes.Settings.create
+     * @since 3.0.0
+     *
+     * @param {(string|SettingsConfig)} config - [description]
+     *
+     * @return {SettingsObject} [description]
+     */
     create: function (config)
     {
         if (typeof config === 'string')

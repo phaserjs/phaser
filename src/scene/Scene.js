@@ -8,6 +8,12 @@ var Class = require('../utils/Class');
 var Systems = require('./Systems');
 
 /**
+ * @typedef {object} SceneConfig
+ *
+ * @property
+ */
+
+/**
  * @classdesc
  * [description]
  *
@@ -16,7 +22,7 @@ var Systems = require('./Systems');
  * @constructor
  * @since 3.0.0
  *
- * @param {object} config - [description]
+ * @param {(string|SettingsConfig)} config - Scene specific configuration settings.
  */
 var Scene = new Class({
 

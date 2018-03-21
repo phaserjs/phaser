@@ -18,7 +18,7 @@
  *
  * @param {(array|Phaser.GameObjects.GameObject[])} items - The array of items to be updated by this action.
  * @param {CallCallback} callback - The callback to be invoked. It will be passed just one argument: the item from the array.
- * @param {object} context - The scope in which the callback will be invoked.
+ * @param {*} context - The scope in which the callback will be invoked.
  *
  * @return {array} The array of objects that was passed to this Action.
  */

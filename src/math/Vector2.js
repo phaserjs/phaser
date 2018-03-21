@@ -10,6 +10,13 @@
 var Class = require('../utils/Class');
 
 /**
+ * @typedef {object} Vector2Like
+ *
+ * @property {number} x - [description]
+ * @property {number} y - [description]
+ */
+
+/**
  * @classdesc
  * [description]
  *
@@ -35,6 +42,7 @@ var Vector2 = new Class({
          * @default 0
          * @since 3.0.0
          */
+        this.x = 0;
 
         /**
          * The y component of this Vector.
@@ -44,6 +52,7 @@ var Vector2 = new Class({
          * @default 0
          * @since 3.0.0
          */
+        this.y = 0;
 
         if (typeof x === 'object')
         {
@@ -78,7 +87,7 @@ var Vector2 = new Class({
      * @method Phaser.Math.Vector2#copy
      * @since 3.0.0
      *
-     * @param {(Phaser.Math.Vector2|object)} src - [description]
+     * @param {Phaser.Math.Vector2} src - [description]
      *
      * @return {Phaser.Math.Vector2} This Vector2.
      */
@@ -96,7 +105,7 @@ var Vector2 = new Class({
      * @method Phaser.Math.Vector2#setFromObject
      * @since 3.0.0
      *
-     * @param {object} obj - [description]
+     * @param {Vector2Like} obj - [description]
      *
      * @return {Phaser.Math.Vector2} This Vector2.
      */

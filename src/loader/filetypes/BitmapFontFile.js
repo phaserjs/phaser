@@ -18,8 +18,8 @@ var XMLFile = require('./XMLFile.js');
  * @param {string} textureURL - The url to load the texture file from.
  * @param {string} xmlURL - The url to load the atlas file from.
  * @param {string} path - The path of the file.
- * @param {Phaser.Loader.XHRSettingsConfig} textureXhrSettings - Optional texture file specific XHR settings.
- * @param {Phaser.Loader.XHRSettingsConfig} xmlXhrSettings - Optional atlas file specific XHR settings.
+ * @param {XHRSettingsObject} textureXhrSettings - Optional texture file specific XHR settings.
+ * @param {XHRSettingsObject} xmlXhrSettings - Optional atlas file specific XHR settings.
  *
  * @return {object} An object containing two File objects to be added to the loader.
  */
@@ -41,7 +41,7 @@ var BitmapFontFile = function (key, textureURL, xmlURL, path, textureXhrSettings
 
 /**
  * Adds a Bitmap Font file to the current load queue.
- * 
+ *
  * Note: This method will only be available if the Bitmap Font File type has been built into Phaser.
  *
  * The file is **not** loaded immediately after calling this method.
@@ -53,9 +53,9 @@ var BitmapFontFile = function (key, textureURL, xmlURL, path, textureXhrSettings
  * @param {string} key - [description]
  * @param {string} textureURL - [description]
  * @param {string} xmlURL - [description]
- * @param {object} textureXhrSettings - [description]
- * @param {object} xmlXhrSettings - [description]
- * 
+ * @param {XHRSettingsObject} textureXhrSettings - [description]
+ * @param {XHRSettingsObject} xmlXhrSettings - [description]
+ *
  * @return {Phaser.Loader.LoaderPlugin} The Loader.
  */
 FileTypesManager.register('bitmapFont', function (key, textureURL, xmlURL, textureXhrSettings, xmlXhrSettings)

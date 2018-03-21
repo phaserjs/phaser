@@ -16,7 +16,7 @@
  *
  * @param {object} source - [description]
  * @param {string} key - [description]
- * @param {*} defaultValue - [description]
+ * @param {*} [defaultValue] - [description]
  *
  * @return {*} [description]
  */

@@ -136,7 +136,7 @@ var Clock = new Class({
      * @method Phaser.Time.Clock#addEvent
      * @since 3.0.0
      *
-     * @param {object} config - [description]
+     * @param {TimerEventConfig} config - [description]
      *
      * @return {Phaser.Time.TimerEvent} [description]
      */
@@ -157,8 +157,8 @@ var Clock = new Class({
      *
      * @param {number} delay - [description]
      * @param {function} callback - [description]
-     * @param {array} args - [description]
-     * @param {object} callbackScope - [description]
+     * @param {*[]} args - [description]
+     * @param {*} callbackScope - [description]
      *
      * @return {Phaser.Time.TimerEvent} [description]
      */

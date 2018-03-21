@@ -9,6 +9,26 @@ var GetAdvancedValue = require('../utils/object/GetAdvancedValue');
 var ScaleModes = require('../renderer/ScaleModes');
 
 /**
+ * @typedef {object} GameObjectConfig
+ *
+ * @property {number} [x=0] - [description]
+ * @property {number} [y=0] - [description]
+ * @property {number} [depth=0] - [description]
+ * @property {boolean} [flipX=false] - [description]
+ * @property {boolean} [flipY=false] - [description]
+ * @property {?(number|object)} [scale=null] - [description]
+ * @property {?(number|object)} [scrollFactor=null] - [description]
+ * @property {number} [rotation=0] - [description]
+ * @property {?number} [angle=null] - [description]
+ * @property {number} [alpha=1] - [description]
+ * @property {?(number|object)} [origin=null] - [description]
+ * @property {number} [scaleMode=ScaleModes.DEFAULT] - [description]
+ * @property {number} [blendMode=BlendModes.DEFAULT] - [description]
+ * @property {boolean} [visible=true] - [description]
+ * @property {boolean} [add=true] - [description]
+ */
+
+/**
  * Builds a Game Object using the provided configuration object.
  *
  * @function Phaser.GameObjects.BuildGameObject
@@ -16,7 +36,7 @@ var ScaleModes = require('../renderer/ScaleModes');
  *
  * @param {Phaser.Scene} scene - [description]
  * @param {Phaser.GameObjects.GameObject} gameObject - [description]
- * @param {object} config - [description]
+ * @param {GameObjectConfig} config - [description]
  *
  * @return {Phaser.GameObjects.GameObject} The built Game Object.
  */

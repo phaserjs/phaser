@@ -25,6 +25,13 @@ var billboardMatrix = new Matrix4();
 //  @author attribute https://github.com/mattdesl/cam3d/wiki
 
 /**
+ * @typedef {object} RayDef
+ *
+ * @property {Phaser.Math.Vector3} origin - [description]
+ * @property {Phaser.Math.Vector3} direction - [description]
+ */
+
+/**
  * @classdesc
  * [description]
  *
@@ -173,13 +180,6 @@ var Camera = new Class({
          * @since 3.0.0
          */
         this.far = 100;
-
-        /**
-         * @typedef {object} RayDef
-         *
-         * @property {Phaser.Math.Vector3} origin - [description]
-         * @property {Phaser.Math.Vector3} direction - [description]
-         */
 
         /**
          * [description]

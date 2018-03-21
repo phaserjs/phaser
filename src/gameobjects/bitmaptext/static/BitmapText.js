@@ -15,16 +15,24 @@ var Render = require('./BitmapTextRender');
 /**
  * @typedef {object} TextBounds
  *
- * @param {object} local - [description]
- * @param {number} local.x - [description]
- * @param {number} local.y - [description]
- * @param {number} local.width - [description]
- * @param {number} local.height - [description]
- * @param {object} global - [description]
- * @param {number} global.x - [description]
- * @param {number} global.y - [description]
- * @param {number} global.width - [description]
- * @param {number} global.height - [description]
+ * @property {object} local - [description]
+ * @property {number} local.x - [description]
+ * @property {number} local.y - [description]
+ * @property {number} local.width - [description]
+ * @property {number} local.height - [description]
+ * @property {object} global - [description]
+ * @property {number} global.x - [description]
+ * @property {number} global.y - [description]
+ * @property {number} global.width - [description]
+ * @property {number} global.height - [description]
+ */
+
+/**
+ * @typedef {object} JSONBitmapText
+ *
+ * @property {string} font - [description]
+ * @property {string} text - [description]
+ * @property {number} fontSize - [description]
  */
 
 /**
@@ -130,7 +138,7 @@ var BitmapText = new Class({
          * [description]
          *
          * @name Phaser.GameObjects.BitmapText#_bounds
-         * @type {object}
+         * @type {TextBounds}
          * @private
          * @since 3.0.0
          */
@@ -248,7 +256,7 @@ var BitmapText = new Class({
      * @method Phaser.GameObjects.BitmapText#toJSON
      * @since 3.0.0
      *
-     * @return {JSONGameObject} [description]
+     * @return {JSONGameObject.<JSONBitmapText>} [description]
      */
     toJSON: function ()
     {

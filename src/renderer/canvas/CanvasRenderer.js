@@ -80,7 +80,7 @@ var CanvasRenderer = new Class({
          * [description]
          *
          * @name Phaser.Renderer.Canvas.CanvasRenderer#config
-         * @type {object}
+         * @type {RendererConfig}
          * @since 3.0.0
          */
         this.config = {

@@ -18,7 +18,7 @@ var TILEMAP_FORMATS = require('../../tilemaps/Formats');
  * @param {string} url - [description]
  * @param {string} path - [description]
  * @param {string} format - [description]
- * @param {Phaser.Loader.XHRSettingsConfig} xhrSettings - [description]
+ * @param {XHRSettingsObject} xhrSettings - [description]
  *
  * @return {object} An object containing two File objects to be added to the loader.
  */
@@ -36,7 +36,7 @@ var TilemapJSONFile = function (key, url, path, format, xhrSettings)
 
 /**
  * Adds a Tilemap (Tiled JSON Format) file to the current load queue.
- * 
+ *
  * Note: This method will only be available if the Tilemap File type has been built into Phaser.
  *
  * The file is **not** loaded immediately after calling this method.
@@ -47,8 +47,8 @@ var TilemapJSONFile = function (key, url, path, format, xhrSettings)
  *
  * @param {string} key - [description]
  * @param {string} url - [description]
- * @param {object} xhrSettings - [description]
- * 
+ * @param {XHRSettingsObject} xhrSettings - [description]
+ *
  * @return {Phaser.Loader.LoaderPlugin} The Loader.
  */
 FileTypesManager.register('tilemapTiledJSON', function (key, url, xhrSettings)
@@ -72,7 +72,7 @@ FileTypesManager.register('tilemapTiledJSON', function (key, url, xhrSettings)
 
 /**
  * Adds a Tilemap (Weltmeister Format) file to the current load queue.
- * 
+ *
  * Note: This method will only be available if the Tilemap File type has been built into Phaser.
  *
  * The file is **not** loaded immediately after calling this method.
@@ -83,8 +83,8 @@ FileTypesManager.register('tilemapTiledJSON', function (key, url, xhrSettings)
  *
  * @param {string} key - [description]
  * @param {string} url - [description]
- * @param {object} xhrSettings - [description]
- * 
+ * @param {XHRSettingsObject} xhrSettings - [description]
+ *
  * @return {Phaser.Loader.LoaderPlugin} The Loader.
  */
 FileTypesManager.register('tilemapWeltmeister', function (key, url, xhrSettings)

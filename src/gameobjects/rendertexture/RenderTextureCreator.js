@@ -10,6 +10,15 @@ var GetAdvancedValue = require('../../utils/object/GetAdvancedValue');
 var RenderTexture = require('./RenderTexture');
 
 /**
+ * @typedef {object} RenderTextureConfig
+ *
+ * @property {number} [x=0] - [description]
+ * @property {number} [y=0] - [description]
+ * @property {number} [width=32] - [description]
+ * @property {number} [height=32] - [description]
+ */
+
+/**
  * Creates a new Render Texture Game Object and returns it.
  *
  * Note: This method will only be available if the Render Texture Game Object has been built into Phaser.
@@ -17,7 +26,7 @@ var RenderTexture = require('./RenderTexture');
  * @method Phaser.GameObjects.GameObjectCreator#renderTexture
  * @since 3.2.0
  *
- * @param {object} config - [description]
+ * @param {RenderTextureConfig} config - [description]
  *
  * @return {Phaser.GameObjects.RenderTexture} The Game Object that was created.
  */

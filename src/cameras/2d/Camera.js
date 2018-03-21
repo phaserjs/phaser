@@ -25,7 +25,11 @@ var Vector2 = require('../../math/Vector2');
  * @property {number} scrollX - The horizontal scroll of camera
  * @property {number} scrollY - The vertical scroll of camera
  * @property {string} backgroundColor - The background color of camera
- * @property {object} [bounds] - The bounds of camera // TODO 19/03/2018 Create BoundsObject ({x:number,y:number,width:number,height:number})
+ * @property {object} [bounds] - The bounds of camera
+ * @property {number} [bounds.x] - The horizontal position of bounds of camera
+ * @property {number} [bounds.y] - The vertical position of bounds of camera
+ * @property {number} [bounds.width] - The width of the bounds of camera
+ * @property {number} [bounds.height] - The height of the bounds of camera
  */
 
 /**

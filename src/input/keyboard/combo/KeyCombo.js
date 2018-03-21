@@ -16,6 +16,15 @@ var ResetKeyCombo = require('./ResetKeyCombo');
  */
 
 /**
+ * @typedef {object} KeyComboConfig
+ *
+ * @property {boolean} [resetOnWrongKey=true] - [description]
+ * @property {number} [maxKeyDelay=0] - [description]
+ * @property {boolean} [resetOnMatch=false] - [description]
+ * @property {boolean} [deleteOnMatch=false] - [description]
+ */
+
+/**
  * @classdesc
  * [description]
  *
@@ -32,7 +41,7 @@ var ResetKeyCombo = require('./ResetKeyCombo');
  *
  * @param {Phaser.Input.Keyboard.KeyboardManager} keyboardManager - [description]
  * @param {(string|integer[]|object[])} keys - [description]
- * @param {object} [config] - [description]
+ * @param {KeyComboConfig} [config] - [description]
  */
 var KeyCombo = new Class({
 

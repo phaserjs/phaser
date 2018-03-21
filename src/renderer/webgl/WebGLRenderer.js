@@ -23,6 +23,14 @@ var TextureTintPipeline = require('./pipelines/TextureTintPipeline');
  */
 
 /**
+ * @typedef {object} SnapshotState
+ *
+ * @property {SnapshotCallback} callback - [description]
+ * @property {string} type - [description]
+ * @property {float} encoder - [description]
+ */
+
+/**
  * @classdesc
  * [description]
  *
@@ -59,7 +67,7 @@ var WebGLRenderer = new Class({
          * [description]
          *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#config
-         * @type {object}
+         * @type {RendererConfig}
          * @since 3.0.0
          */
         this.config = {
@@ -179,7 +187,7 @@ var WebGLRenderer = new Class({
          * [description]
          *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#snapshotState
-         * @type {object}
+         * @type {SnapshotState}
          * @since 3.0.0
          */
         this.snapshotState = {

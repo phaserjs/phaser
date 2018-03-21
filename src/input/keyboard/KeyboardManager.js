@@ -322,7 +322,7 @@ var KeyboardManager = new Class({
      * @since 3.0.0
      *
      * @param {(string|integer[]|object[])} keys - [description]
-     * @param {object} config - [description]
+     * @param {KeyComboConfig} config - [description]
      *
      * @return {Phaser.Input.Keyboard.KeyCombo} [description]
      */
