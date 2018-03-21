@@ -87,7 +87,7 @@ var Vector2 = new Class({
      * @method Phaser.Math.Vector2#copy
      * @since 3.0.0
      *
-     * @param {(Phaser.Math.Vector2|Vector2Like)} src - [description]
+     * @param {Phaser.Math.Vector2} src - [description]
      *
      * @return {Phaser.Math.Vector2} This Vector2.
      */
@@ -105,7 +105,7 @@ var Vector2 = new Class({
      * @method Phaser.Math.Vector2#setFromObject
      * @since 3.0.0
      *
-     * @param {object} obj - [description]
+     * @param {Vector2Like} obj - [description]
      *
      * @return {Phaser.Math.Vector2} This Vector2.
      */

@@ -17,6 +17,25 @@ var UpdateMotion = require('./UpdateMotion');
  */
 
 /**
+ * @typedef {object} JSONImpactBody
+ * @todo Replace object types
+ *
+ * @property {string} name - [description]
+ * @property {object} size - [description]
+ * @property {object} pos - [description]
+ * @property {object} vel - [description]
+ * @property {object} accel - [description]
+ * @property {object} friction - [description]
+ * @property {object} maxVel - [description]
+ * @property {number} gravityFactor - [description]
+ * @property {number} bounciness - [description]
+ * @property {number} minBounceVelocity - [description]
+ * @property {Phaser.Physics.Impact.TYPE} type - [description]
+ * @property {Phaser.Physics.Impact.TYPE} checkAgainst - [description]
+ * @property {Phaser.Physics.Impact.COLLIDES} collides - [description]
+ */
+
+/**
  * @classdesc
  * An Impact.js compatible physics body.
  * This re-creates the properties you'd get on an Entity and the math needed to update them.
@@ -490,7 +509,7 @@ var Body = new Class({
      * @method Phaser.Physics.Impact.Body#toJSON
      * @since 3.0.0
      *
-     * @return {object} [description]
+     * @return {JSONImpactBody} [description]
      */
     toJSON: function ()
     {

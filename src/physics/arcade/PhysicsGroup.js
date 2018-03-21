@@ -11,9 +11,56 @@ var GetFastValue = require('../../utils/object/GetFastValue');
 var Group = require('../../gameobjects/group/Group');
 
 /**
+ * @typedef {object} PhysicsGroupConfig
+ * @extends GroupConfig
+ *
+ * @property {[type]} [collideWorldBounds=false] - [description]
+ * @property {number} [accelerationX=0] - [description]
+ * @property {number} [accelerationY=0] - [description]
+ * @property {number} [bounceX=0] - [description]
+ * @property {number} [bounceY=0] - [description]
+ * @property {number} [dragX=0] - [description]
+ * @property {number} [dragY=0] - [description]
+ * @property {number} [gravityX=0] - [description]
+ * @property {number} [gravityY=0] - [description]
+ * @property {number} [frictionX=0] - [description]
+ * @property {number} [frictionY=0] - [description]
+ * @property {number} [velocityX=0] - [description]
+ * @property {number} [velocityY=0] - [description]
+ * @property {number} [angularVelocity=0] - [description]
+ * @property {number} [angularAcceleration=0] - [description]
+ * @property {number} [angularDrag=0] - [description]
+ * @property {number} [mass=0] - [description]
+ * @property {boolean} [immovable=false] - [description]
+ */
+
+/**
+ * @typedef {object} PhysicsGroupDefaults
+ *
+ * @property {[type]} setCollideWorldBounds - [description]
+ * @property {number} setAccelerationX - [description]
+ * @property {number} setAccelerationY - [description]
+ * @property {number} setBounceX - [description]
+ * @property {number} setBounceY - [description]
+ * @property {number} setDragX - [description]
+ * @property {number} setDragY - [description]
+ * @property {number} setGravityX - [description]
+ * @property {number} setGravityY - [description]
+ * @property {number} setFrictionX - [description]
+ * @property {number} setFrictionY - [description]
+ * @property {number} setVelocityX - [description]
+ * @property {number} setVelocityY - [description]
+ * @property {number} setAngularVelocity - [description]
+ * @property {number} setAngularAcceleration - [description]
+ * @property {number} setAngularDrag - [description]
+ * @property {number} setMass - [description]
+ * @property {boolean} setImmovable - [description]
+ */
+
+/**
  * @classdesc
  * An Arcade Physics Group object.
- * 
+ *
  * All Game Objects created by this Group will automatically be dynamic Arcade Physics objects.
  *
  * @class Group
@@ -25,7 +72,7 @@ var Group = require('../../gameobjects/group/Group');
  * @param {Phaser.Physics.Arcade.World} world - [description]
  * @param {Phaser.Scene} scene - [description]
  * @param {array} children - [description]
- * @param {object} config - [description]
+ * @param {PhysicsGroupConfig} [config] - [description]
  */
 var PhysicsGroup = new Class({
 
@@ -72,7 +119,7 @@ var PhysicsGroup = new Class({
          * [description]
          *
          * @name Phaser.Physics.Arcade.Group#defaults
-         * @type {object}
+         * @type {PhysicsGroupDefaults}
          * @since 3.0.0
          */
         this.defaults = {

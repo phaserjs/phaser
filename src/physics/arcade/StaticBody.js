@@ -320,7 +320,7 @@ var StaticBody = new Class({
          * [description]
          *
          * @name Phaser.Physics.Arcade.StaticBody#checkCollision
-         * @type {object}
+         * @type {ArcadeBodyCollision}
          * @since 3.0.0
          */
         this.checkCollision = { none: false, up: true, down: true, left: true, right: true };
@@ -329,7 +329,7 @@ var StaticBody = new Class({
          * [description]
          *
          * @name Phaser.Physics.Arcade.StaticBody#touching
-         * @type {object}
+         * @type {ArcadeBodyCollision}
          * @since 3.0.0
          */
         this.touching = { none: true, up: false, down: false, left: false, right: false };
@@ -338,7 +338,7 @@ var StaticBody = new Class({
          * [description]
          *
          * @name Phaser.Physics.Arcade.StaticBody#wasTouching
-         * @type {object}
+         * @type {ArcadeBodyCollision}
          * @since 3.0.0
          */
         this.wasTouching = { none: true, up: false, down: false, left: false, right: false };
@@ -347,7 +347,7 @@ var StaticBody = new Class({
          * [description]
          *
          * @name Phaser.Physics.Arcade.StaticBody#blocked
-         * @type {object}
+         * @type {ArcadeBodyCollision}
          * @since 3.0.0
          */
         this.blocked = { none: true, up: false, down: false, left: false, right: false };
@@ -564,9 +564,9 @@ var StaticBody = new Class({
      * @method Phaser.Physics.Arcade.StaticBody#getBounds
      * @since 3.0.0
      *
-     * @param {object} obj - [description]
+     * @param {ArcadeBodyBounds} obj - [description]
      *
-     * @return {object} [description]
+     * @return {ArcadeBodyBounds} [description]
      */
     getBounds: function (obj)
     {

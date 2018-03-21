@@ -12,6 +12,25 @@ var RectangleContains = require('../../geom/rectangle/Contains');
 var Vector2 = require('../../math/Vector2');
 
 /**
+ * @typedef {object} ArcadeBodyBounds
+ *
+ * @property {number} x - [description]
+ * @property {number} y - [description]
+ * @property {number} right - [description]
+ * @property {number} bottom - [description]
+ */
+
+/**
+ * @typedef {object} ArcadeBodyCollision
+ *
+ * @property {boolean} none - [description]
+ * @property {boolean} up - [description]
+ * @property {boolean} down - [description]
+ * @property {boolean} left - [description]
+ * @property {boolean} right - [description]
+ */
+
+/**
  * @classdesc
  * [description]
  *
@@ -544,7 +563,7 @@ var Body = new Class({
          * [description]
          *
          * @name Phaser.Physics.Arcade.Body#checkCollision
-         * @type {object}
+         * @type {ArcadeBodyCollision}
          * @since 3.0.0
          */
         this.checkCollision = { none: false, up: true, down: true, left: true, right: true };
@@ -553,7 +572,7 @@ var Body = new Class({
          * [description]
          *
          * @name Phaser.Physics.Arcade.Body#touching
-         * @type {object}
+         * @type {ArcadeBodyCollision}
          * @since 3.0.0
          */
         this.touching = { none: true, up: false, down: false, left: false, right: false };
@@ -562,7 +581,7 @@ var Body = new Class({
          * [description]
          *
          * @name Phaser.Physics.Arcade.Body#wasTouching
-         * @type {object}
+         * @type {ArcadeBodyCollision}
          * @since 3.0.0
          */
         this.wasTouching = { none: true, up: false, down: false, left: false, right: false };
@@ -571,7 +590,7 @@ var Body = new Class({
          * [description]
          *
          * @name Phaser.Physics.Arcade.Body#blocked
-         * @type {object}
+         * @type {ArcadeBodyCollision}
          * @since 3.0.0
          */
         this.blocked = { none: true, up: false, down: false, left: false, right: false };
@@ -1126,9 +1145,9 @@ var Body = new Class({
      * @method Phaser.Physics.Arcade.Body#getBounds
      * @since 3.0.0
      *
-     * @param {object} obj - [description]
+     * @param {ArcadeBodyBounds} obj - [description]
      *
-     * @return {object} [description]
+     * @return {ArcadeBodyBounds} [description]
      */
     getBounds: function (obj)
     {

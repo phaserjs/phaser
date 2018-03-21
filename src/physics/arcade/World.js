@@ -28,6 +28,64 @@ var Vector2 = require('../../math/Vector2');
 var Wrap = require('../../math/Wrap');
 
 /**
+ * @typedef {object} ArcadeWorldConfig
+ *
+ * @property {object} [gravity] - [description]
+ * @property {number} [gravity.x=0] - [description]
+ * @property {number} [gravity.y=0] - [description]
+ * @property {number} [x=0] - [description]
+ * @property {number} [y=0] - [description]
+ * @property {number} [width=0] - [description]
+ * @property {number} [height=0] - [description]
+ * @property {object} [checkCollision] - [description]
+ * @property {boolean} [checkCollision.up=true] - [description]
+ * @property {boolean} [checkCollision.down=true] - [description]
+ * @property {boolean} [checkCollision.left=true] - [description]
+ * @property {boolean} [checkCollision.right=true] - [description]
+ * @property {number} [overlapBias=4] - [description]
+ * @property {number} [tileBias=16] - [description]
+ * @property {boolean} [forceX=false] - [description]
+ * @property {boolean} [isPaused=false] - [description]
+ * @property {boolean} [debug=false] - [description]
+ * @property {boolean} [debugShowBody=true] - [description]
+ * @property {boolean} [debugShowStaticBody=true] - [description]
+ * @property {boolean} [debugShowVelocity=true] - [description]
+ * @property {number} [debugBodyColor=0xff00ff] - [description]
+ * @property {number} [debugStaticBodyColor=0x0000ff] - [description]
+ * @property {number} [debugVelocityColor=0x00ff00] - [description]
+ * @property {number} [maxEntries=16] - [description]
+ */
+
+/**
+ * @typedef {object} CheckCollisionObject
+ *
+ * @property {boolean} up - [description]
+ * @property {boolean} down - [description]
+ * @property {boolean} left - [description]
+ * @property {boolean} right - [description]
+ */
+
+/**
+ * @typedef {object} ArcadeWorldDefaults
+ *
+ * @property {boolean} debugShowBody - [description]
+ * @property {boolean} debugShowStaticBody - [description]
+ * @property {boolean} debugShowVelocity - [description]
+ * @property {number} bodyDebugColor - [description]
+ * @property {number} staticBodyDebugColor - [description]
+ * @property {number} velocityDebugColor - [description]
+ */
+
+/**
+ * @typedef {object} ArcadeWorldTreeMinMax
+ *
+ * @property {number} minX - [description]
+ * @property {number} minY - [description]
+ * @property {number} maxX - [description]
+ * @property {number} maxY - [description]
+ */
+
+/**
  * @classdesc
  * [description]
  *
@@ -38,7 +96,7 @@ var Wrap = require('../../math/Wrap');
  * @since 3.0.0
  *
  * @param {Phaser.Scene} scene - [description]
- * @param {object} config - [description]
+ * @param {ArcadeWorldConfig} config - [description]
  */
 var World = new Class({
 
@@ -122,7 +180,7 @@ var World = new Class({
          * [description]
          *
          * @name Phaser.Physics.Arcade.World#checkCollision
-         * @type {object}
+         * @type {CheckCollisionObject}
          * @since 3.0.0
          */
         this.checkCollision = {
@@ -206,7 +264,7 @@ var World = new Class({
          * [description]
          *
          * @name Phaser.Physics.Arcade.World#defaults
-         * @type {object}
+         * @type {ArcadeWorldDefaults}
          * @since 3.0.0
          */
         this.defaults = {
@@ -214,7 +272,7 @@ var World = new Class({
             debugShowStaticBody: GetValue(config, 'debugShowStaticBody', true),
             debugShowVelocity: GetValue(config, 'debugShowVelocity', true),
             bodyDebugColor: GetValue(config, 'debugBodyColor', 0xff00ff),
-            staticBodyDebugColor: GetValue(config, 'debugBodyColor', 0x0000ff),
+            staticBodyDebugColor: GetValue(config, 'debugStaticBodyColor', 0x0000ff),
             velocityDebugColor: GetValue(config, 'debugVelocityColor', 0x00ff00)
         };
 
@@ -250,7 +308,7 @@ var World = new Class({
          * [description]
          *
          * @name Phaser.Physics.Arcade.World#treeMinMax
-         * @type {object}
+         * @type {ArcadeWorldTreeMinMax}
          * @since 3.0.0
          */
         this.treeMinMax = { minX: 0, minY: 0, maxX: 0, maxY: 0 };
@@ -567,7 +625,7 @@ var World = new Class({
      * @param {Phaser.Physics.Arcade.Body} object2 - The second object to check for collision.
      * @param {ArcadePhysicsCallback} [collideCallback] - The callback to invoke when the two objects collide.
      * @param {ArcadePhysicsCallback} [processCallback] - The callback to invoke when the two objects collide. Must return a boolean.
-     * @param {object} [callbackContext] - The scope in which to call the callbacks.
+     * @param {*} [callbackContext] - The scope in which to call the callbacks.
      *
      * @return {Phaser.Physics.Arcade.Collider} The Collider that was created.
      */
@@ -594,7 +652,7 @@ var World = new Class({
      * @param {Phaser.Physics.Arcade.Body} object2 - The second object to check for overlap.
      * @param {ArcadePhysicsCallback} [collideCallback] - The callback to invoke when the two objects overlap.
      * @param {ArcadePhysicsCallback} [processCallback] - The callback to invoke when the two objects overlap. Must return a boolean.
-     * @param {object} [callbackContext] - The scope in which to call the callbacks.
+     * @param {*} [callbackContext] - The scope in which to call the callbacks.
      *
      * @return {Phaser.Physics.Arcade.Collider} The Collider that was created.
      */
@@ -865,9 +923,9 @@ var World = new Class({
      *
      * @param {Phaser.Physics.Arcade.Body} body1 - [description]
      * @param {Phaser.Physics.Arcade.Body} body2 - [description]
-     * @param {ArcadePhysicsCallback} processCallback - [description]
-     * @param {object} callbackContext - [description]
-     * @param {boolean} overlapOnly - [description]
+     * @param {ArcadePhysicsCallback} [processCallback] - [description]
+     * @param {*} [callbackContext] - [description]
+     * @param {boolean} [overlapOnly] - [description]
      *
      * @return {boolean} [description]
      */
@@ -1251,7 +1309,7 @@ var World = new Class({
      * @param {Phaser.GameObjects.GameObject} object2 - [description]
      * @param {ArcadePhysicsCallback} [overlapCallback] - [description]
      * @param {ArcadePhysicsCallback} [processCallback] - [description]
-     * @param {object} [callbackContext] - [description]
+     * @param {*} [callbackContext] - [description]
      *
      * @return {boolean} [description]
      */
@@ -1274,7 +1332,7 @@ var World = new Class({
      * @param {Phaser.GameObjects.GameObject} object2 - [description]
      * @param {ArcadePhysicsCallback} [collideCallback] - [description]
      * @param {ArcadePhysicsCallback} [processCallback] - [description]
-     * @param {object} [callbackContext] - [description]
+     * @param {*} [callbackContext] - [description]
      *
      * @return {boolean} [description]
      */
@@ -1297,7 +1355,7 @@ var World = new Class({
      * @param {Phaser.GameObjects.GameObject} object2 - [description]
      * @param {ArcadePhysicsCallback} collideCallback - [description]
      * @param {ArcadePhysicsCallback} processCallback - [description]
-     * @param {object} callbackContext - [description]
+     * @param {*} callbackContext - [description]
      * @param {boolean} overlapOnly - [description]
      *
      * @return {boolean} [description]
@@ -1358,7 +1416,7 @@ var World = new Class({
      * @param {Phaser.GameObjects.GameObject} object2 - [description]
      * @param {ArcadePhysicsCallback} collideCallback - [description]
      * @param {ArcadePhysicsCallback} processCallback - [description]
-     * @param {object} callbackContext - [description]
+     * @param {*} callbackContext - [description]
      * @param {boolean} overlapOnly - [description]
      *
      * @return {boolean} [description]
@@ -1436,7 +1494,7 @@ var World = new Class({
      * @param {Phaser.GameObjects.GameObject} sprite2 - [description]
      * @param {ArcadePhysicsCallback} collideCallback - [description]
      * @param {ArcadePhysicsCallback} processCallback - [description]
-     * @param {object} callbackContext - [description]
+     * @param {*} callbackContext - [description]
      * @param {boolean} overlapOnly - [description]
      *
      * @return {boolean} [description]
@@ -1471,7 +1529,7 @@ var World = new Class({
      * @param {Phaser.GameObjects.Group} group - [description]
      * @param {ArcadePhysicsCallback} collideCallback - [description]
      * @param {ArcadePhysicsCallback} processCallback - [description]
-     * @param {object} callbackContext - [description]
+     * @param {*} callbackContext - [description]
      * @param {boolean} overlapOnly - [description]
      *
      * @return {boolean} [description]
@@ -1534,7 +1592,7 @@ var World = new Class({
      * @param {(Phaser.Tilemaps.DynamicTilemapLayer|Phaser.Tilemaps.StaticTilemapLayer)} tilemapLayer - [description]
      * @param {ArcadePhysicsCallback} collideCallback - [description]
      * @param {ArcadePhysicsCallback} processCallback - [description]
-     * @param {object} callbackContext - [description]
+     * @param {*} callbackContext - [description]
      * @param {boolean} overlapOnly - [description]
      *
      * @return {boolean} [description]
@@ -1574,7 +1632,7 @@ var World = new Class({
      * @param {(Phaser.Tilemaps.DynamicTilemapLayer|Phaser.Tilemaps.StaticTilemapLayer)} tilemapLayer - [description]
      * @param {ArcadePhysicsCallback} collideCallback - [description]
      * @param {ArcadePhysicsCallback} processCallback - [description]
-     * @param {object} callbackContext - [description]
+     * @param {*} callbackContext - [description]
      * @param {boolean} overlapOnly - [description]
      *
      * @return {boolean} [description]
@@ -1673,7 +1731,7 @@ var World = new Class({
      * @param {Phaser.GameObjects.Group} group2 - [description]
      * @param {ArcadePhysicsCallback} collideCallback - [description]
      * @param {ArcadePhysicsCallback} processCallback - [description]
-     * @param {object} callbackContext - [description]
+     * @param {*} callbackContext - [description]
      * @param {boolean} overlapOnly - [description]
      *
      * @return {boolean} [description]
