@@ -480,6 +480,8 @@ var WebGLRenderer = new Class({
         {
             pipelines[pipelineName].resize(width, height, resolution);
         }
+                
+        this.currentScissor.set([ 0, 0, this.width, this.height ]);
 
         return this;
     },
