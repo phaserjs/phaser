@@ -125,6 +125,8 @@ var SetBody = {
             this.world.add(this.body);
         }
 
+        this.setOrigin(body.render.sprite.xOffset, body.render.sprite.yOffset);
+
         return this;
     },
 
