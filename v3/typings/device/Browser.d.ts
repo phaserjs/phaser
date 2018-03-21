@@ -1,0 +1,20 @@
+declare var _default: {
+    arora: boolean;
+    chrome: boolean;
+    chromeVersion: number;
+    epiphany: boolean;
+    firefox: boolean;
+    firefoxVersion: number;
+    mobileSafari: boolean;
+    ie: boolean;
+    ieVersion: number;
+    midori: boolean;
+    opera: boolean;
+    safari: boolean;
+    safariVersion: number;
+    trident: boolean;
+    tridentVersion: number;
+    edge: boolean;
+    silk: boolean;
+};
+export default _default;

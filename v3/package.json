@@ -1,0 +1,46 @@
+{
+  "name": "phaser",
+  "version": "3.0.0",
+  "release": "Shadow Coast",
+  "description": "A fast, free and fun HTML5 Game Framework for Desktop and Mobile web browsers.",
+  "author": "Richard Davey <rdavey@gmail.com> (http://www.photonstorm.com)",
+  "logo": "https://raw.github.com/photonstorm/phaser/master/phaser-logo-small.png",
+  "homepage": "http://phaser.io",
+  "bugs": "https://github.com/photonstorm/phaser/issues",
+  "license": "MIT",
+  "licenseUrl": "http://www.opensource.org/licenses/mit-license.php",
+  "main": "./build/phaser.js",
+  "typings": "./typings/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "https://photonstorm@github.com/photonstorm/phaser.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "2d",
+    "HTML5",
+    "WebGL",
+    "canvas",
+    "game",
+    "javascript",
+    "physics",
+    "tweens",
+    "typescript",
+    "web audio"
+  ],
+  "dependencies": {
+    "json-loader": "^0.5.4",
+    "webpack": "2.1.0-beta.27"
+  },
+  "devDependencies": {
+    "copy-webpack-plugin": "^4.0.1",
+    "fs-extra": "^1.0.0",
+    "json-loader": "^0.5.4",
+    "node-uuid": "^1.4.7",
+    "webpack": "2.1.0-beta.27",
+    "webpack-dev-server": "2.1.0-beta.11",
+    "webpack-shell-plugin": "^0.4.3"
+  }
+}

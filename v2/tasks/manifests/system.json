@@ -1,0 +1,5 @@
+[
+    "src/utils/Device.js",
+    "src/utils/Canvas.js",
+    "src/utils/RequestAnimationFrame.js"
+]
