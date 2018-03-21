@@ -11,34 +11,48 @@ var GetFastValue = require('../../utils/object/GetFastValue');
 var Vector2 = require('../../math/Vector2');
 
 /**
- * @classdesc
- * A Matter Physics Body applied to a Game Object.
+ * [description]
  *
- * @class MatterGameObject
- * @memberOf Phaser.Physics.Matter
- * @constructor
+ * @function hasGetterOrSetter
+ * @private
+ *
+ * @param {object} def - The object to check.
+ *
+ * @return {boolean} True if it has a getter or setter, otherwise false.
+ */
+function hasGetterOrSetter (def)
+{
+    return (!!def.get && typeof def.get === 'function') || (!!def.set && typeof def.set === 'function');
+}
+
+/**
+ * [description]
+ *
+ * @function Phaser.Physics.Matter.MatterGameObject
  * @since 3.3.0
- *
- * @extends Phaser.Physics.Matter.Components.Bounce
- * @extends Phaser.Physics.Matter.Components.Collision
- * @extends Phaser.Physics.Matter.Components.Force
- * @extends Phaser.Physics.Matter.Components.Friction
- * @extends Phaser.Physics.Matter.Components.Gravity
- * @extends Phaser.Physics.Matter.Components.Mass
- * @extends Phaser.Physics.Matter.Components.Sensor
- * @extends Phaser.Physics.Matter.Components.SetBody
- * @extends Phaser.Physics.Matter.Components.Sleep
- * @extends Phaser.Physics.Matter.Components.Static
- * @extends Phaser.Physics.Matter.Components.Transform
- * @extends Phaser.Physics.Matter.Components.Velocity
  *
  * @param {Phaser.Physics.Matter.World} world - [description]
  * @param {Phaser.GameObjects.GameObject} gameObject - [description]
  * @param {object} options - [description]
+ *
+ * @return {Phaser.GameObjects.GameObject} [description]
  */
-var MatterGameObject = new Class({
+var MatterGameObject = function (world, gameObject, options)
+{
+    if (options === undefined) { options = {}; }
 
-    Mixins: [
+    var x = gameObject.x;
+    var y = gameObject.y;
+
+    //  Temp body pos to avoid body null checks
+    gameObject.body = {
+        position: {
+            x: x,
+            y: y
+        }
+    };
+
+    var mixins = [
         Components.Bounce,
         Components.Collision,
         Components.Force,
@@ -51,37 +65,44 @@ var MatterGameObject = new Class({
         Components.Static,
         Components.Transform,
         Components.Velocity
-    ],
+    ];
 
-    initialize:
+    //  First let's inject all of the components into the Game Object
+    mixins.forEach(function (mixin) {
 
-    function MatterGameObject (world, gameObject, options)
-    {
-        this.gameObject = gameObject;
-
-        this.world = world;
-
-        this._tempVec2 = new Vector2(gameObject.x, gameObject.y);
-
-        var shape = GetFastValue(options, 'shape', null);
-
-        if (!shape)
+        for (var key in mixin)
         {
-            this.body = Bodies.rectangle(gameObject.x, gameObject.y, gameObject.width, gameObject.height, options);
-
-            this.body.gameObject = this.gameObject;
-
-            if (GetFastValue(options, 'addToWorld', true))
+            if (hasGetterOrSetter(mixin[key]))
             {
-                world.add(this.body);
+                Object.defineProperty(gameObject, key, {
+                    get: mixin[key].get,
+                    set: mixin[key].set
+                });
+            }
+            else
+            {
+                Object.defineProperty(gameObject, key, {
+                    value: mixin[key]
+                });
             }
         }
-        else
-        {
-            this.setBody(shape, options);
-        }
+
+    });
+
+    gameObject.world = world;
+
+    gameObject._tempVec2 = new Vector2(x, y);
+
+    var shape = GetFastValue(options, 'shape', null);
+
+    if (!shape)
+    {
+        shape = 'rectangle';
     }
 
-});
+    gameObject.setBody(shape, options);
+
+    return gameObject;
+};
 
 module.exports = MatterGameObject;
