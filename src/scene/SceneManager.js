@@ -257,7 +257,7 @@ var SceneManager = new Class({
      * @since 3.0.0
      *
      * @param {string} key - A unique key used to reference the Scene, i.e. `MainMenu` or `Level1`.
-     * @param {(Phaser.Scene|object|function)} sceneConfig - [description]
+     * @param {(Phaser.Scene|SettingsConfig|function)} sceneConfig - [description]
      * @param {boolean} [autoStart=false] - If `true` the Scene will be started immediately after being added.
      *
      * @return {?Phaser.Scene} [description]
@@ -430,7 +430,7 @@ var SceneManager = new Class({
      * @private
      * @since 3.0.0
      *
-     * @param {object} loader - [description]
+     * @param {Phaser.Loader.LoaderPlugin} loader - [description]
      */
     loadComplete: function (loader)
     {
@@ -446,7 +446,7 @@ var SceneManager = new Class({
      * @private
      * @since 3.0.0
      *
-     * @param {object} loader - [description]
+     * @param {Phaser.Loader.LoaderPlugin} loader - [description]
      */
     payloadComplete: function (loader)
     {
@@ -632,7 +632,7 @@ var SceneManager = new Class({
      * @since 3.0.0
      *
      * @param {string} key - [description]
-     * @param {object} sceneConfig - [description]
+     * @param {(string|SettingsConfig)} sceneConfig - [description]
      *
      * @return {Phaser.Scene} [description]
      */
@@ -706,7 +706,7 @@ var SceneManager = new Class({
      * @since 3.0.0
      *
      * @param {string} key - [description]
-     * @param {(Phaser.Scene|object|function)} sceneConfig - [description]
+     * @param {(Phaser.Scene|SettingsConfig|function)} sceneConfig - [description]
      *
      * @return {string} [description]
      */

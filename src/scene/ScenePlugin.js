@@ -52,7 +52,7 @@ var ScenePlugin = new Class({
          * [description]
          *
          * @name Phaser.Scenes.ScenePlugin#settings
-         * @type {object}
+         * @type {SettingsObject}
          * @since 3.0.0
          */
         this.settings = scene.sys.settings;

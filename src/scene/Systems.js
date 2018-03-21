@@ -25,7 +25,7 @@ var Settings = require('./Settings');
  * @since 3.0.0
  *
  * @param {Phaser.Scene} scene - The Scene that owns this Systems instance.
- * @param {object} config - Scene specific configuration settings.
+ * @param {(string|SettingsConfig)} config - Scene specific configuration settings.
  */
 var Systems = new Class({
 
@@ -55,7 +55,7 @@ var Systems = new Class({
          * [description]
          *
          * @name Phaser.Scenes.Systems#config
-         * @type {object}
+         * @type {(string|SettingsConfig)}
          * @since 3.0.0
          */
         this.config = config;
@@ -64,7 +64,7 @@ var Systems = new Class({
          * [description]
          *
          * @name Phaser.Scenes.Systems#settings
-         * @type {object}
+         * @type {SettingsObject}
          * @since 3.0.0
          */
         this.settings = Settings.create(config);
