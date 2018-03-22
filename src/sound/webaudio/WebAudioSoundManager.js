@@ -225,12 +225,12 @@ var WebAudioSoundManager = new Class({
      *
      * @return {Phaser.Sound.WebAudioSoundManager} This Sound Manager.
      */
-     setMute: function (value)
-     {
+    setMute: function (value)
+    {
         this.mute = value;
 
         return this;
-     },
+    },
 
     /**
      * @name Phaser.Sound.WebAudioSoundManager#mute
@@ -271,12 +271,12 @@ var WebAudioSoundManager = new Class({
      *
      * @return {Phaser.Sound.WebAudioSoundManager} This Sound Manager.
      */
-     setVolume: function (value)
-     {
+    setVolume: function (value)
+    {
         this.volume = value;
 
         return this;
-     },
+    },
 
     /**
      * @name Phaser.Sound.WebAudioSoundManager#volume

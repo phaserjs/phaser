@@ -547,12 +547,12 @@ var BaseSound = new Class({
      *
      * @return {Phaser.Sound.BaseSound} This Sound.
      */
-     setRate: function (value)
-     {
+    setRate: function (value)
+    {
         this.rate = value;
 
         return this;
-     },
+    },
 
     /**
      * Rate at which this Sound will be played.
@@ -594,12 +594,12 @@ var BaseSound = new Class({
      *
      * @return {Phaser.Sound.BaseSound} This Sound.
      */
-     setDetune: function (value)
-     {
+    setDetune: function (value)
+    {
         this.detune = value;
 
         return this;
-     },
+    },
 
     /**
      * @event Phaser.Sound.BaseSound#detune

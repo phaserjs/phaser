@@ -333,12 +333,12 @@ var HTML5AudioSoundManager = new Class({
      *
      * @return {Phaser.Sound.HTML5AudioSoundManager} This Sound Manager.
      */
-     setMute: function (value)
-     {
+    setMute: function (value)
+    {
         this.mute = value;
 
         return this;
-     },
+    },
 
     /**
      * @name Phaser.Sound.HTML5AudioSoundManager#mute
@@ -384,12 +384,12 @@ var HTML5AudioSoundManager = new Class({
      *
      * @return {Phaser.Sound.HTML5AudioSoundManager} This Sound Manager.
      */
-     setVolume: function (value)
-     {
+    setVolume: function (value)
+    {
         this.volume = value;
 
         return this;
-     },
+    },
 
     /**
      * @name Phaser.Sound.HTML5AudioSoundManager#volume

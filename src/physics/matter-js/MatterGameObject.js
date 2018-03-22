@@ -4,8 +4,6 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Bodies = require('./lib/factory/Bodies');
-var Class = require('../../utils/Class');
 var Components = require('./components');
 var GetFastValue = require('../../utils/object/GetFastValue');
 var Vector2 = require('../../math/Vector2');
@@ -68,7 +66,8 @@ var MatterGameObject = function (world, gameObject, options)
     ];
 
     //  First let's inject all of the components into the Game Object
-    mixins.forEach(function (mixin) {
+    mixins.forEach(function (mixin)
+    {
 
         for (var key in mixin)
         {
@@ -81,9 +80,7 @@ var MatterGameObject = function (world, gameObject, options)
             }
             else
             {
-                Object.defineProperty(gameObject, key, {
-                    value: mixin[key]
-                });
+                Object.defineProperty(gameObject, key, {value: mixin[key]});
             }
         }
 

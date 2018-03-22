@@ -549,12 +549,12 @@ var BaseSoundManager = new Class({
      *
      * @return {Phaser.Sound.BaseSoundManager} This Sound Manager.
      */
-     setRate: function (value)
-     {
+    setRate: function (value)
+    {
         this.rate = value;
 
         return this;
-     },
+    },
 
     /**
      * Global playback rate at which all the sounds will be played.
@@ -599,12 +599,12 @@ var BaseSoundManager = new Class({
      *
      * @return {Phaser.Sound.BaseSoundManager} This Sound Manager.
      */
-     setDetune: function (value)
-     {
+    setDetune: function (value)
+    {
         this.detune = value;
 
         return this;
-     },
+    },
 
     /**
      * @event Phaser.Sound.BaseSoundManager#detune
