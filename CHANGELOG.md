@@ -1,6 +1,6 @@
 # Change Log
 
-## Version 3.3.0 - Tetsuo - In Development
+## Version 3.3.0 - Tetsuo - 22nd March 2018
 
 A special mention must go to @orblazer for their outstanding assistance in helping to complete the JSDoc data-types, callbacks and type defs across the API.
 
@@ -112,8 +112,6 @@ A special mention must go to @orblazer for their outstanding assistance in helpi
 * PathFollower.resume has been renamed to `resumeFollow` to avoid conflicting with the Animation component.
 * PathFollower.stop has been renamed to `stopFollow` to avoid conflicting with the Animation component.
 * BaseSound.setRate has been renamed to `calculateRate` to avoid confusion over the setting of the sounds rate.
-
-
 
 ## Version 3.2.1 - 12th March 2018
 
