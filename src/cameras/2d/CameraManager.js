@@ -11,6 +11,27 @@ var PluginManager = require('../../boot/PluginManager');
 var RectangleContains = require('../../geom/rectangle/Contains');
 
 /**
+ * @typedef {object} InputJSONCameraObject
+ *
+ * @property {string} [name=''] - [description]
+ * @property {integer} [x=0] - [description]
+ * @property {integer} [y=0] - [description]
+ * @property {integer} [width] - [description]
+ * @property {integer} [height] - [description]
+ * @property {float} [zoom=1] - [description]
+ * @property {float} [rotation=0] - [description]
+ * @property {boolean} [roundPixels=false] - [description]
+ * @property {float} [scrollX=0] - [description]
+ * @property {float} [scrollY=0] - [description]
+ * @property {(false|string)} [backgroundColor=false] - [description]
+ * @property {?object} [bounds] - [description]
+ * @property {number} [bounds.x=0] - [description]
+ * @property {number} [bounds.y=0] - [description]
+ * @property {number} [bounds.width] - [description]
+ * @property {number} [bounds.height] - [description]
+ */
+
+/**
  * @classdesc
  * [description]
  *
@@ -204,39 +225,13 @@ var CameraManager = new Class({
         return null;
     },
 
-    /*
-    {
-        cameras: [
-            {
-                name: string
-                x: int
-                y: int
-                width: int
-                height: int
-                zoom: float
-                rotation: float
-                roundPixels: bool
-                scrollX: float
-                scrollY: float
-                backgroundColor: string
-                bounds: {
-                    x: int
-                    y: int
-                    width: int
-                    height: int
-                }
-            }
-        ]
-    }
-    */
-
     /**
      * [description]
      *
      * @method Phaser.Cameras.Scene2D.CameraManager#fromJSON
      * @since 3.0.0
      *
-     * @param {(object|object[])} config - [description]
+     * @param {(InputJSONCameraObject|InputJSONCameraObject[])} config - [description]
      *
      * @return {Phaser.Cameras.Scene2D.CameraManager} [description]
      */
