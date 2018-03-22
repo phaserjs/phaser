@@ -5,6 +5,7 @@
  */
 
 var GameObject = require('../GameObject');
+var Utils = require('../../renderer/webgl/Utils');
 
 /**
  * Renders this Game Object with the Canvas Renderer to the given Camera.
@@ -39,7 +40,7 @@ var RenderTextureWebGLRenderer = function (renderer, renderTexture, interpolatio
         renderTexture.scrollFactorX, renderTexture.scrollFactorY,
         renderTexture.displayOriginX, renderTexture.displayOriginY,
         0, 0, renderTexture.texture.width, renderTexture.texture.height,
-        0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff,
+        Utils.getTintAppendFloatAlpha(renderTexture.tintTopLeft, renderTexture.alphaTopLeft), Utils.getTintAppendFloatAlpha(renderTexture.tintTopRight, renderTexture.alphaTopRight), Utils.getTintAppendFloatAlpha(renderTexture.tintBottomLeft, renderTexture.alphaBottomLeft), Utils.getTintAppendFloatAlpha(renderTexture.tintBottomRight, renderTexture.alphaBottomRight),
         0, 0,
         camera
     );
