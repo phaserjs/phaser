@@ -4,26 +4,22 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-/**
- * @namespace Phaser.Textures.FilterMode
- */
-
 var CONST = {
 
     /**
-     * CSV Map Type
+     * Linear filter type.
      * 
-     * @name Phaser.Textures.FilterMode.LINEAR
-     * @type {number}
+     * @name Phaser.Textures.LINEAR
+     * @type {integer}
      * @since 3.0.0
      */
     LINEAR: 0,
 
     /**
-     * CSV Map Type
+     * Nearest neighbor filter type.
      * 
-     * @name Phaser.Textures.FilterMode.NEAREST
-     * @type {number}
+     * @name Phaser.Textures.NEAREST
+     * @type {integer}
      * @since 3.0.0
      */
     NEAREST: 1

@@ -236,7 +236,6 @@ var DynamicTilemapLayer = new Class({
      * @param {integer} height - [description]
      * @param {integer} destTileX - [description]
      * @param {integer} destTileY - [description]
-     * @param {integer} destTileY - [description]
      * @param {boolean} [recalculateFaces=true] - [description]
      *
      * @return {Phaser.Tilemaps.DynamicTilemapLayer} This Tilemap Layer object.

@@ -8,12 +8,6 @@ var Class = require('../utils/Class');
 var Systems = require('./Systems');
 
 /**
- * @typedef {object} SceneConfig
- *
- * @property
- */
-
-/**
  * @classdesc
  * [description]
  *

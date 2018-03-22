@@ -182,7 +182,6 @@ var PathFollower = new Class({
         return this;
     },
 
-    //  rotation offset in degrees
     /**
      * [description]
      *
@@ -190,7 +189,7 @@ var PathFollower = new Class({
      * @since 3.0.0
      *
      * @param {number} value - [description]
-     * @param {number} [offset=0] - [description]
+     * @param {number} [offset=0] - Rotation offset in degrees.
      * @param {boolean} [verticalAdjust=false] - [description]
      *
      * @return {Phaser.GameObjects.PathFollower} This Game Object.
@@ -227,15 +226,15 @@ var PathFollower = new Class({
     /**
      * Starts this PathFollower following its given Path.
      *
-     * @method Phaser.GameObjects.PathFollower#start
-     * @since 3.0.0
+     * @method Phaser.GameObjects.PathFollower#startFollow
+     * @since 3.3.0
      *
      * @param {(number|PathConfig)} [config={}] - [description]
      * @param {number} [startAt=0] - [description]
      *
      * @return {Phaser.GameObjects.PathFollower} This Game Object.
      */
-    start: function (config, startAt)
+    startFollow: function (config, startAt)
     {
         if (config === undefined) { config = {}; }
         if (startAt === undefined) { startAt = 0; }
@@ -297,12 +296,12 @@ var PathFollower = new Class({
      * Pauses this PathFollower. It will still continue to render, but it will remain motionless at the
      * point on the Path at which you paused it.
      *
-     * @method Phaser.GameObjects.PathFollower#pause
-     * @since 3.0.0
+     * @method Phaser.GameObjects.PathFollower#pauseFollow
+     * @since 3.3.0
      *
      * @return {Phaser.GameObjects.PathFollower} This Game Object.
      */
-    pause: function ()
+    pauseFollow: function ()
     {
         var tween = this.pathTween;
 
@@ -318,12 +317,12 @@ var PathFollower = new Class({
      * Resumes a previously paused PathFollower.
      * If the PathFollower was not paused this has no effect.
      *
-     * @method Phaser.GameObjects.PathFollower#resume
-     * @since 3.0.0
+     * @method Phaser.GameObjects.PathFollower#resumeFollow
+     * @since 3.3.0
      *
      * @return {Phaser.GameObjects.PathFollower} This Game Object.
      */
-    resume: function ()
+    resumeFollow: function ()
     {
         var tween = this.pathTween;
 
@@ -339,12 +338,12 @@ var PathFollower = new Class({
      * Stops this PathFollower from following the path any longer.
      * This will invoke any 'stop' conditions that may exist on the Path, or for the follower.
      *
-     * @method Phaser.GameObjects.PathFollower#stop
-     * @since 3.0.0
+     * @method Phaser.GameObjects.PathFollower#stopFollow
+     * @since 3.3.0
      *
      * @return {Phaser.GameObjects.PathFollower} This Game Object.
      */
-    stop: function ()
+    stopFollow: function ()
     {
         var tween = this.pathTween;
 

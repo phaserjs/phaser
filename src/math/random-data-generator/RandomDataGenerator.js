@@ -15,7 +15,7 @@ var Class = require('../../utils/Class');
  * @constructor
  * @since 3.0.0
  *
- * @param {array} [seeds] - [description]
+ * @param {string[]} [seeds] - [description]
  */
 var RandomDataGenerator = new Class({
 
@@ -82,7 +82,7 @@ var RandomDataGenerator = new Class({
          * [description]
          *
          * @name Phaser.Math.RandomDataGenerator#sign
-         * @type {array}
+         * @type {number[]}
          * @since 3.0.0
          */
         this.signs = [ -1, 1 ];
@@ -155,7 +155,7 @@ var RandomDataGenerator = new Class({
      * @method Phaser.Math.RandomDataGenerator#init
      * @since 3.0.0
      *
-     * @param {(string|array)} seeds - [description]
+     * @param {(string|string[])} seeds - [description]
      */
     init: function (seeds)
     {
@@ -177,7 +177,7 @@ var RandomDataGenerator = new Class({
      * @method Phaser.Math.RandomDataGenerator#sow
      * @since 3.0.0
      *
-     * @param {*[]} seeds - The array of seeds: the `toString()` of each value is used.
+     * @param {string[]} seeds - The array of seeds: the `toString()` of each value is used.
      */
     sow: function (seeds)
     {

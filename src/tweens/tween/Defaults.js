@@ -5,7 +5,8 @@
  */
 
 /**
- * @typedef {object} Phaser.Tweens.Tween~ConfigDefaults
+ * @typedef {object} Phaser.Tweens.TweenConfigDefaults
+ * 
  * @property {(object|object[])} targets - [description]
  * @property {number} [delay=0] - [description]
  * @property {number} [duration=1000] - [description]

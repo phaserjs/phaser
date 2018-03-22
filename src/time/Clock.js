@@ -157,7 +157,7 @@ var Clock = new Class({
      *
      * @param {number} delay - [description]
      * @param {function} callback - [description]
-     * @param {*[]} args - [description]
+     * @param {Array.<*>} args - [description]
      * @param {*} callbackScope - [description]
      *
      * @return {Phaser.Time.TimerEvent} [description]

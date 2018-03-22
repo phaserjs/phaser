@@ -22,7 +22,7 @@ var TweenData = require('../tween/TweenData');
  *
  * @param {(Phaser.Tweens.TweenManager|Phaser.Tweens.Timeline)} parent - [description]
  * @param {object} config - [description]
- * @param {Phaser.Tweens.Tween~ConfigDefaults} defaults - [description]
+ * @param {Phaser.Tweens.TweenConfigDefaults} defaults - [description]
  *
  * @return {Phaser.Tweens.Tween} [description]
  */

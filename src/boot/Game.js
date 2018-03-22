@@ -191,7 +191,7 @@ var Game = new Class({
          * Used by various systems to determine capabilities and code paths.
          *
          * @name Phaser.Game#device
-         * @type {Phaser.Device}
+         * @type {Phaser.DeviceConf}
          * @since 3.0.0
          */
         this.device = Device;

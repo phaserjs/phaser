@@ -48,7 +48,7 @@
  * @fires Phaser.Boot.VisibilityHandler#focus
  * @since 3.0.0
  *
- * @param {Phaser.EventEmitter} eventEmitter - The EventEmitter that will emit the visibility events.
+ * @param {Phaser.Events.EventEmitter} eventEmitter - The EventEmitter that will emit the visibility events.
  */
 var VisibilityHandler = function (eventEmitter)
 {

@@ -15,6 +15,28 @@ var PluginManager = require('../boot/PluginManager');
 var XHRSettings = require('./XHRSettings');
 
 /**
+ * @typedef {object} LoaderFileObject
+ *
+ * @property {string} key - [description]
+ * @property {string} type - [description]
+ * @property {string} [url] - [description]
+ * @property {string[]} [urls] - [description]
+ * @property {string} [textureURL] - [description]
+ * @property {string} [atlasURL] - [description]
+ * @property {string} [xmlURL] - [description]
+ * @property {string[]} [textureURLs] - [description]
+ * @property {string[]} [atlasURLs] - [description]
+ * @property {object} [config] - [description]
+ * @property {object} [json] - [description]
+ * @property {XHRSettingsObject} [xhrSettings] - [description]
+ * @property {XHRSettingsObject} [textureXhrSettings] - [description]
+ * @property {XHRSettingsObject} [atlasXhrSettings] - [description]
+ * @property {XHRSettingsObject} [xmlXhrSettings] - [description]
+ * @property {XHRSettingsObject} [audioXhrSettings] - [description]
+ * @property {XHRSettingsObject} [jsonXhrSettings] - [description]
+ */
+
+/**
  * @classdesc
  * [description]
  *
@@ -882,7 +904,7 @@ var LoaderPlugin = new Class({
      * @method Phaser.Loader.LoaderPlugin#loadArray
      * @since 3.0.0
      *
-     * @param {array} files - [description]
+     * @param {LoaderFileObject[]} files - [description]
      *
      * @return {boolean} [description]
      */
@@ -905,7 +927,7 @@ var LoaderPlugin = new Class({
      * @method Phaser.Loader.LoaderPlugin#file
      * @since 3.0.0
      *
-     * @param {object} file - [description]
+     * @param {LoaderFileObject} file - [description]
      *
      * @return {Phaser.Loader.File} [description]
      */

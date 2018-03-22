@@ -21,7 +21,6 @@ var CalculateFacesWithin = require('./CalculateFacesWithin');
  * @param {integer} height - [description]
  * @param {integer} destTileX - [description]
  * @param {integer} destTileY - [description]
- * @param {integer} destTileY - [description]
  * @param {boolean} [recalculateFaces=true] - [description]
  * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.
  */

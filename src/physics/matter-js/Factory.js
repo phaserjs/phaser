@@ -583,9 +583,20 @@ var Factory = new Class({
         return sprite;
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Physics.Matter.Factory#gameObject
+     * @since 3.3.0
+     *
+     * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object to inject the Matter Body in to.
+     * @param {object} options - [description]
+     *
+     * @return {Phaser.GameObjects.GameObject} The Game Object that had the Matter Body injected into it.
+     */
     gameObject: function (gameObject, options)
     {
-        return new MatterGameObject(this.world, gameObject, options);
+        return MatterGameObject(this.world, gameObject, options);
     }
 
 });

@@ -26,7 +26,7 @@ var Vector2 = require('../../math/Vector2');
  * As such, Sprites take a fraction longer to process and have a larger API footprint due to the Animation
  * Component. If you do not require animation then you can safely use Images to replace Sprites in all cases.
  *
- * @class MatterSprite
+ * @class Sprite
  * @extends Phaser.GameObjects.Sprite
  * @memberOf Phaser.Physics.Matter
  * @constructor
@@ -99,8 +99,23 @@ var MatterSprite = new Class({
         this.setSizeToFrame();
         this.setOrigin();
 
+        /**
+         * [description]
+         *
+         * @name Phaser.Physics.Matter.Image#world
+         * @type {Phaser.Physics.Matter.World}
+         * @since 3.0.0
+         */
         this.world = world;
 
+        /**
+         * [description]
+         *
+         * @name Phaser.Physics.Matter.Image#_tempVec2
+         * @type {Phaser.Math.Vector2}
+         * @private
+         * @since 3.0.0
+         */
         this._tempVec2 = new Vector2(x, y);
 
         var shape = GetFastValue(options, 'shape', null);

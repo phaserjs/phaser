@@ -13,7 +13,9 @@
  * with other LITE or PASSIVE entities at all. The behavior for FIXED vs.
  * FIXED collisions is undefined.
  *
- * @namespace Phaser.Physics.Impact.COLLIDES
+ * @name Phaser.Physics.Impact.COLLIDES
+ * @type {object}
+ * @since 3.0.0
  */
 module.exports = {
 

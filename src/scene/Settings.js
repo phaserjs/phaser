@@ -8,18 +8,20 @@ var CONST = require('./const');
 var GetValue = require('../utils/object/GetValue');
 var InjectionMap = require('./InjectionMap');
 
+// TODO 22/03/2018 Fix "plugins" type
+
 /**
  * @typedef {object} SettingsConfig
  *
  * @property {string} [key] - [description]
  * @property {boolean} [active=false] - [description]
  * @property {boolean} [visible=true] - [description]
- * @property {(false|[type])} [files=false] - [description]
- * @property {?[type]} [cameras=null] - [description]
+ * @property {(false|LoaderFileObject[])} [files=false] - [description]
+ * @property {?(InputJSONCameraObject|InputJSONCameraObject[])} [cameras=null] - [description]
  * @property {Object.<string, string>} [map] - [description]
  * @property {object} [physics={}] - [description]
  * @property {object} [loader={}] - [description]
- * @property {(false|[type])} [plugins=false] - [description]
+ * @property {(false|*)} [plugins=false] - [description]
  */
 
 /**
@@ -31,12 +33,12 @@ var InjectionMap = require('./InjectionMap');
  * @property {boolean} visible - [description]
  * @property {boolean} isBooted - [description]
  * @property {object} data - [description]
- * @property {(false|[type])} files - [description]
- * @property {?[type]} cameras - [description]
+ * @property {(false|LoaderFileObject[])} files - [description]
+ * @property {?(InputJSONCameraObject|InputJSONCameraObject[])} cameras - [description]
  * @property {Object.<string, string>} map - [description]
  * @property {object} physics - [description]
  * @property {object} loader - [description]
- * @property {(false|[type])} plugins - [description]
+ * @property {(false|*)} plugins - [description]
  */
 
 var Settings = {

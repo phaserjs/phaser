@@ -186,8 +186,8 @@ var TextureManager = new Class({
      * @since 3.0.0
      *
      * @param {string} key - The unique string-based key of the Texture.
-     * @param {Image} source - The source Image element.
-     * @param {Image} [dataSource] - An optional data Image element.
+     * @param {HTMLImageElement} source - The source Image element.
+     * @param {HTMLImageElement} [dataSource] - An optional data Image element.
      *
      * @return {Phaser.Textures.Texture} The Texture that was created.
      */
@@ -283,7 +283,7 @@ var TextureManager = new Class({
      * @since 3.0.0
      *
      * @param {string} key - The unique string-based key of the Texture.
-     * @param {Image} source - The source Image element.
+     * @param {HTMLImageElement} source - The source Image element.
      * @param {object} data - The Texture Atlas data.
      *
      * @return {Phaser.Textures.Texture} The Texture that was created.
@@ -310,7 +310,7 @@ var TextureManager = new Class({
      * @since 3.0.0
      *
      * @param {string} key - The unique string-based key of the Texture.
-     * @param {Image} source - The source Image element.
+     * @param {HTMLImageElement} source - The source Image element.
      * @param {object} data - The Texture Atlas data.
      *
      * @return {Phaser.Textures.Texture} The Texture that was created.
@@ -345,7 +345,7 @@ var TextureManager = new Class({
      * @since 3.0.0
      *
      * @param {string} key - The unique string-based key of the Texture.
-     * @param {Image} source - The source Image element.
+     * @param {HTMLImageElement} source - The source Image element.
      * @param {object} data - The Texture Atlas data.
      *
      * @return {Phaser.Textures.Texture} The Texture that was created.
@@ -377,7 +377,7 @@ var TextureManager = new Class({
      * @since 3.0.0
      *
      * @param {string} key - The unique string-based key of the Texture.
-     * @param {Image} source - The source Image element.
+     * @param {HTMLImageElement} source - The source Image element.
      * @param {object} data - The Texture Atlas data.
      *
      * @return {Phaser.Textures.Texture} The Texture that was created.
@@ -401,7 +401,7 @@ var TextureManager = new Class({
      * @since 3.0.0
      *
      * @param {string} key - The unique string-based key of the Texture.
-     * @param {Image} source - The source Image element.
+     * @param {HTMLImageElement} source - The source Image element.
      * @param {object} config - The configuration object for this Sprite Sheet.
      * @param {integer} config.frameWidth - The fixed width of each frame.
      * @param {integer} [config.frameHeight] - The fixed height of each frame. If not set it will use the frameWidth as the height.
@@ -485,7 +485,7 @@ var TextureManager = new Class({
      * @since 3.0.0
      *
      * @param {string} key - The unique string-based key of the Texture.
-     * @param {Image} source - The source Image element.
+     * @param {HTMLImageElement} source - The source Image element.
      * @param {object} data - The Texture Atlas XML data.
      *
      * @return {Phaser.Textures.Texture} The Texture that was created.
@@ -517,7 +517,7 @@ var TextureManager = new Class({
      * @since 3.0.0
      *
      * @param {string} key - The unique string-based key of the Texture.
-     * @param {Image} source - The source Image element.
+     * @param {HTMLImageElement} source - The source Image element.
      * @param {object} data - The Texture Atlas XML data.
      *
      * @return {Phaser.Textures.Texture} The Texture that was created.
@@ -548,7 +548,7 @@ var TextureManager = new Class({
      * @since 3.0.0
      *
      * @param {string} key - The unique string-based key of the Texture.
-     * @param {Image} source - The source Image element.
+     * @param {HTMLImageElement} source - The source Image element.
      * @param {integer} width - The width of the Texture.
      * @param {integer} height - The height of the Texture.
      *

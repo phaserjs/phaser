@@ -1,5 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
+ * @author       Pavle Goloskokovic <pgoloskokovic@gmail.com> (http://prunegames.com)
  * @copyright    2018 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
@@ -16,7 +17,6 @@ var WebAudioSound = require('./WebAudioSound');
  * @extends Phaser.Sound.BaseSoundManager
  * @memberOf Phaser.Sound
  * @constructor
- * @author Pavle Goloskokovic <pgoloskokovic@gmail.com> (http://prunegames.com)
  * @since 3.0.0
  *
  * @param {Phaser.Game} game - Reference to the current game instance.
@@ -100,6 +100,7 @@ var WebAudioSoundManager = new Class({
         if (audioConfig && audioConfig.context)
         {
             audioConfig.context.resume();
+
             return audioConfig.context;
         }
 
@@ -119,7 +120,6 @@ var WebAudioSoundManager = new Class({
      */
     add: function (key, config)
     {
-
         var sound = new WebAudioSound(this, key, config);
 
         this.sounds.push(sound);
@@ -133,7 +133,6 @@ var WebAudioSoundManager = new Class({
      * Read more about how this issue is handled here in [this article](https://medium.com/@pgoloskokovic/unlocking-web-audio-the-smarter-way-8858218c0e09).
      *
      * @method Phaser.Sound.WebAudioSoundManager#unlock
-     * @private
      * @since 3.0.0
      */
     unlock: function ()
@@ -216,6 +215,24 @@ var WebAudioSoundManager = new Class({
      */
 
     /**
+     * Sets the muted state of all this Sound Manager.
+     *
+     * @method Phaser.Sound.WebAudioSoundManager#setMute
+     * @fires Phaser.Sound.WebAudioSoundManager#MuteEvent
+     * @since 3.3.0
+     *
+     * @param {boolean} value - `true` to mute all sounds, `false` to unmute them.
+     *
+     * @return {Phaser.Sound.WebAudioSoundManager} This Sound Manager.
+     */
+     setMute: function (value)
+     {
+        this.mute = value;
+
+        return this;
+     },
+
+    /**
      * @name Phaser.Sound.WebAudioSoundManager#mute
      * @type {boolean}
      * @fires Phaser.Sound.WebAudioSoundManager#MuteEvent
@@ -242,6 +259,24 @@ var WebAudioSoundManager = new Class({
      * @param {Phaser.Sound.WebAudioSoundManager} soundManager - Reference to the sound manager that emitted event.
      * @param {number} value - An updated value of Phaser.Sound.WebAudioSoundManager#volume property.
      */
+
+    /**
+     * Sets the volume of this Sound Manager.
+     *
+     * @method Phaser.Sound.WebAudioSoundManager#setVolume
+     * @fires Phaser.Sound.WebAudioSoundManager#VolumeEvent
+     * @since 3.3.0
+     *
+     * @param {number} value - The global volume of this Sound Manager.
+     *
+     * @return {Phaser.Sound.WebAudioSoundManager} This Sound Manager.
+     */
+     setVolume: function (value)
+     {
+        this.volume = value;
+
+        return this;
+     },
 
     /**
      * @name Phaser.Sound.WebAudioSoundManager#volume
