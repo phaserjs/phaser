@@ -32,7 +32,7 @@ var Class = require('../utils/Class');
  * @constructor
  * @since 3.0.0
  *
- * @param {*[]} elements - [description]
+ * @param {T[]} elements - [description]
  */
 var Map = new Class({
 

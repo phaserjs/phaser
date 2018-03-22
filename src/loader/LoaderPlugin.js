@@ -37,6 +37,14 @@ var XHRSettings = require('./XHRSettings');
  */
 
 /**
+ * @typedef {object} LinkFileObject
+ *
+ * @property {string} type - [description]
+ * @property {Phaser.Loader.File} fileA - [description]
+ * @property {Phaser.Loader.File} fileB - [description]
+ */
+
+/**
  * @classdesc
  * [description]
  *
@@ -224,7 +232,7 @@ var LoaderPlugin = new Class({
          * [description]
          *
          * @name Phaser.Loader.LoaderPlugin#storage
-         * @type {Phaser.Structs.Set.<(Phaser.Loader.File|object)>} // TODO 21/03/2018 Fix type
+         * @type {Phaser.Structs.Set.<(Phaser.Loader.File|LinkFileObject)>}
          * @since 3.0.0
          */
         this.storage = new CustomSet();
