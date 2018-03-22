@@ -10,6 +10,8 @@ var Class = require('../utils/Class');
  * @classdesc
  * [description]
  *
+ * @template T
+ *
  * @class ProcessQueue
  * @memberOf Phaser.Structs
  * @constructor
@@ -25,7 +27,7 @@ var ProcessQueue = new Class({
          * [description]
          *
          * @name Phaser.Structs.ProcessQueue#_pending
-         * @type {array}
+         * @type {T[]}
          * @private
          * @default []
          * @since 3.0.0
@@ -36,7 +38,7 @@ var ProcessQueue = new Class({
          * [description]
          *
          * @name Phaser.Structs.ProcessQueue#_active
-         * @type {array}
+         * @type {T[]}
          * @private
          * @default []
          * @since 3.0.0
@@ -47,7 +49,7 @@ var ProcessQueue = new Class({
          * [description]
          *
          * @name Phaser.Structs.ProcessQueue#_destroy
-         * @type {array}
+         * @type {T[]}
          * @private
          * @default []
          * @since 3.0.0
@@ -72,7 +74,7 @@ var ProcessQueue = new Class({
      * @method Phaser.Structs.ProcessQueue#add
      * @since 3.0.0
      *
-     * @param {*} item - [description]
+     * @param {T} item - [description]
      *
      * @return {Phaser.Structs.ProcessQueue} This Process Queue object.
      */
@@ -91,7 +93,7 @@ var ProcessQueue = new Class({
      * @method Phaser.Structs.ProcessQueue#remove
      * @since 3.0.0
      *
-     * @param {*} item - [description]
+     * @param {T} item - [description]
      *
      * @return {Phaser.Structs.ProcessQueue} This Process Queue object.
      */
@@ -110,7 +112,7 @@ var ProcessQueue = new Class({
      * @method Phaser.Structs.ProcessQueue#update
      * @since 3.0.0
      *
-     * @return {array} [description]
+     * @return {T[]} [description]
      */
     update: function ()
     {
@@ -167,7 +169,7 @@ var ProcessQueue = new Class({
      * @method Phaser.Structs.ProcessQueue#getActive
      * @since 3.0.0
      *
-     * @return {array} [description]
+     * @return {T[]} [description]
      */
     getActive: function ()
     {

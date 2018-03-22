@@ -90,7 +90,7 @@ var Blitter = new Class({
          * [description]
          *
          * @name Phaser.GameObjects.Blitter#children
-         * @type {Phaser.Structs.List}
+         * @type {Phaser.Structs.List.<Phaser.GameObjects.Blitter.Bob>}
          * @since 3.0.0
          */
         this.children = new List();
@@ -179,7 +179,7 @@ var Blitter = new Class({
      * @since 3.0.0
      *
      * @param {integer} quantity - The quantity of Bob objects to create.
-     * @param {string} [frame] - The Frame the Bobs will use. It must be part of the Blitter Texture.
+     * @param {[type]} [frame] - The Frame the Bobs will use. It must be part of the Blitter Texture. // TODO 21/03/2018 Fix this type
      * @param {boolean} [visible=true] - [description]
      *
      * @return {Phaser.GameObjects.Blitter.Bob[]} An array of Bob objects that were created.
