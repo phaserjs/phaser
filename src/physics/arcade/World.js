@@ -402,7 +402,7 @@ var World = new Class({
      * @method Phaser.Physics.Arcade.World#remove
      * @since 3.0.0
      *
-     * @param {Phaser.GameObjects.GameObject} object - [description]
+     * @param {Phaser.Physics.Arcade.Body} object - [description]
      */
     remove: function (object)
     {
@@ -1789,7 +1789,7 @@ var World = new Class({
     * @method Phaser.Physics.Arcade.World#wrapArray
     * @since 3.3.0
     *
-    * @param {*[]} arr
+    * @param {Array.<*>} arr
     * @param {number} [padding=0] - An amount added to the boundary.
     */
     wrapArray: function (arr, padding)

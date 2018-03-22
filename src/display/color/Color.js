@@ -81,7 +81,7 @@ var Color = new Class({
          * An array containing the calculated color values for WebGL use.
          *
          * @name Phaser.Display.Color#gl
-         * @type {[number,number,number,number]}
+         * @type {number[]}
          * @since 3.0.0
          */
         this.gl = [ 0, 0, 0, 1 ];

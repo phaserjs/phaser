@@ -15,7 +15,7 @@ var GetFastValue = require('../utils/object/GetFastValue');
  * @property {boolean} [loop=false] - [description]
  * @property {function} [callback] - [description]
  * @property {*} [callbackScope] - [description]
- * @property {*[]} [args] - [description]
+ * @property {Array.<*>} [args] - [description]
  * @property {number} [timeScale=1] - [description]
  * @property {number} [startAt=1] - [description]
  * @property {boolean} [paused=false] - [description]
