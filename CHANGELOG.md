@@ -2,7 +2,11 @@
 
 ## Version 3.3.1 - Tetsuo - In Development
 
+### Bug Fixes
 
+* In the WebGL Render Texture the tint of the texture was always set to 0xffffff and therefore the alpha values were ignored. The tint is now calculated using the alpha value. Fix #3385 (thanks @ger1995)
+
+### Updates
 
 ## Version 3.3.0 - Tetsuo - 22nd March 2018
 
