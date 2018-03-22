@@ -1,5 +1,9 @@
 # Change Log
 
+## Version 3.3.1 - Tetsuo - In Development
+
+
+
 ## Version 3.3.0 - Tetsuo - 22nd March 2018
 
 A special mention must go to @orblazer for their outstanding assistance in helping to complete the JSDoc data-types, callbacks and type defs across the API.
