@@ -2,11 +2,21 @@
 
 ## Version 3.3.1 - Tetsuo - In Development
 
+### New Features
+
+* A new property was added to Matter.World, `correction` which is used in the Engine.update call and allows you to adjust the time
+being passed to the simulation. The default value is 1 to remain consistent with previous releases.
+
+
 ### Bug Fixes
 
 * In the WebGL Render Texture the tint of the texture was always set to 0xffffff and therefore the alpha values were ignored. The tint is now calculated using the alpha value. Fix #3385 (thanks @ger1995)
 
 ### Updates
+
+
+
+
 
 ## Version 3.3.0 - Tetsuo - 22nd March 2018
 

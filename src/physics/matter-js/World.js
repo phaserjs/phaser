@@ -119,6 +119,20 @@ var World = new Class({
         this.enabled = GetValue(config, 'enabled', true);
 
         /**
+         * The correction argument is an optional Number that specifies the time correction factor to apply to the update.
+         * This can help improve the accuracy of the simulation in cases where delta is changing between updates.
+         * The value of correction is defined as delta / lastDelta, i.e. the percentage change of delta over the last step.
+         * Therefore the value is always 1 (no correction) when delta constant (or when no correction is desired, which is the default).
+         * See the paper on Time Corrected Verlet for more information.
+         *
+         * @name Phaser.Physics.Matter.World#correction
+         * @type {number}
+         * @default 1
+         * @since 3.3.1
+         */
+        this.correction = GetValue(config, 'correction', 1);
+
+        /**
          * [description]
          *
          * @name Phaser.Physics.Matter.World#drawDebug
@@ -592,9 +606,7 @@ var World = new Class({
     {
         if (this.enabled)
         {
-            var correction = 1;
-
-            Engine.update(this.engine, delta, correction);
+            Engine.update(this.engine, delta, this.correction);
         }
     },
 
