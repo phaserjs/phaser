@@ -11,6 +11,7 @@ being passed to the simulation. The default value is 1 to remain consistent with
 ### Bug Fixes
 
 * In the WebGL Render Texture the tint of the texture was always set to 0xffffff and therefore the alpha values were ignored. The tint is now calculated using the alpha value. Fix #3385 (thanks @ger1995)
+* The RenderTexture now uses the ComputedSize component instead of Size (which requires a frame), allowing calls to getBounds to work. Fix #3451 (thanks @kuoruan)
 
 ### Updates
 

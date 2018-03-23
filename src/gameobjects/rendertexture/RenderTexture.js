@@ -33,7 +33,7 @@ var RenderTextureWebGL = require('./RenderTextureWebGL');
  * @extends Phaser.GameObjects.Components.Pipeline
  * @extends Phaser.GameObjects.Components.ScaleMode
  * @extends Phaser.GameObjects.Components.ScrollFactor
- * @extends Phaser.GameObjects.Components.Size
+ * @extends Phaser.GameObjects.Components.ComputedSize
  * @extends Phaser.GameObjects.Components.Tint
  * @extends Phaser.GameObjects.Components.Transform
  * @extends Phaser.GameObjects.Components.Visible
@@ -51,6 +51,7 @@ var RenderTexture = new Class({
     Mixins: [
         Components.Alpha,
         Components.BlendMode,
+        Components.ComputedSize,
         Components.Depth,
         Components.Flip,
         Components.GetBounds,
@@ -59,7 +60,6 @@ var RenderTexture = new Class({
         Components.Pipeline,
         Components.ScaleMode,
         Components.ScrollFactor,
-        Components.Size,
         Components.Tint,
         Components.Transform,
         Components.Visible,
@@ -77,13 +77,39 @@ var RenderTexture = new Class({
 
         this.initMatrixStack();
 
+        /**
+         * A reference to either the Canvas or WebGL Renderer that the Game instance is using.
+         *
+         * @name Phaser.GameObjects.RenderTexture#renderer
+         * @type {(Phaser.Renderer.Canvas.CanvasRenderer|Phaser.Renderer.WebGL.WebGLRenderer)}
+         * @since 3.2.0
+         */
         this.renderer = scene.sys.game.renderer;
+
+        /**
+         * [description]
+         *
+         * @name Phaser.GameObjects.RenderTexture#globalTint
+         * @type {number}
+         * @default 0xffffff
+         * @since 3.2.0
+         */
         this.globalTint = 0xffffff;
-        this.globalAlpha = 1.0;
+
+        /**
+         * [description]
+         *
+         * @name Phaser.GameObjects.RenderTexture#globalAlpha
+         * @type {float}
+         * @default 1
+         * @since 3.2.0
+         */
+        this.globalAlpha = 1;
 
         if (this.renderer.type === CONST.WEBGL)
         {
             var gl = this.renderer.gl;
+
             this.gl = gl;
             this.fill = RenderTextureWebGL.fill;
             this.clear = RenderTextureWebGL.clear;
@@ -137,6 +163,7 @@ var RenderTexture = new Class({
     setGlobalTint: function (tint)
     {
         this.globalTint = tint;
+
         return this;
     },
 
@@ -153,6 +180,7 @@ var RenderTexture = new Class({
     setGlobalAlpha: function (alpha)
     {
         this.globalAlpha = alpha;
+
         return this;
     }
 
