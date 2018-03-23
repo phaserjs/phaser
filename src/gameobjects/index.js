@@ -22,6 +22,7 @@ var GameObjects = {
     GameObject: require('./GameObject'),
     BitmapText: require('./bitmaptext/static/BitmapText'),
     Blitter: require('./blitter/Blitter'),
+    Container: require('./container/Container'),
     DynamicBitmapText: require('./bitmaptext/dynamic/DynamicBitmapText'),
     Graphics: require('./graphics/Graphics.js'),
     Group: require('./group/Group'),
@@ -39,6 +40,7 @@ var GameObjects = {
 
     Factories: {
         Blitter: require('./blitter/BlitterFactory'),
+        Container: require('./container/ContainerFactory'),
         DynamicBitmapText: require('./bitmaptext/dynamic/DynamicBitmapTextFactory'),
         Graphics: require('./graphics/GraphicsFactory'),
         Group: require('./group/GroupFactory'),
@@ -56,6 +58,7 @@ var GameObjects = {
 
     Creators: {
         Blitter: require('./blitter/BlitterCreator'),
+        Container: require('./container/ContainerCreator'),
         DynamicBitmapText: require('./bitmaptext/dynamic/DynamicBitmapTextCreator'),
         Graphics: require('./graphics/GraphicsCreator'),
         Group: require('./group/GroupCreator'),

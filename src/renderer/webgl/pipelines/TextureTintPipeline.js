@@ -10,6 +10,7 @@ var ShaderSourceFS = require('../shaders/TextureTint.frag');
 var ShaderSourceVS = require('../shaders/TextureTint.vert');
 var Utils = require('../Utils');
 var WebGLPipeline = require('../WebGLPipeline');
+var IdentityMatrix = new Float32Array([1, 0, 0, 1, 0, 0]);
 
 /**
  * @classdesc
@@ -651,15 +652,26 @@ var TextureTintPipeline = new Class({
      * @param {Phaser.GameObjects.Sprite} sprite - [description]
      * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
      */
-    batchSprite: function (sprite, camera)
+    batchSprite: function (sprite, camera, parentTransformMatrix)
     {
+        var parentMatrix;
+
+        if (parentTransformMatrix === undefined)
+        {
+            parentMatrix = IdentityMatrix;
+        }
+        else
+        {
+            parentMatrix = parentTransformMatrix.matrix;
+        }
+
         this.renderer.setPipeline(this);
 
         if (this.vertexCount + 6 > this.vertexCapacity)
         {
             this.flush();
         }
-
+        
         var roundPixels = this.renderer.config.roundPixels;
         var getTint = Utils.getTintAppendFloatAlpha;
         var vertexViewF32 = this.vertexViewF32;
@@ -704,12 +716,24 @@ var TextureTintPipeline = new Class({
         var cmd = cameraMatrix[3];
         var cme = cameraMatrix[4];
         var cmf = cameraMatrix[5];
-        var mva = sra * cma + srb * cmc;
-        var mvb = sra * cmb + srb * cmd;
-        var mvc = src * cma + srd * cmc;
-        var mvd = src * cmb + srd * cmd;
-        var mve = sre * cma + srf * cmc + cme;
-        var mvf = sre * cmb + srf * cmd + cmf;
+        var pma = parentMatrix[0];
+        var pmb = parentMatrix[1];
+        var pmc = parentMatrix[2];
+        var pmd = parentMatrix[3];
+        var pme = parentMatrix[4];
+        var pmf = parentMatrix[5];
+        var pca = cma * pma + cmb * pmc;
+        var pcb = cma * pmb + cmb * pmd;
+        var pcc = cmc * pma + cmd * pmc;
+        var pcd = cmc * pmb + cmd * pmd;
+        var pce = cme * pma + cmf * pmc + pme;
+        var pcf = cme * pmb + cmf * pmd + pmf;
+        var mva = sra * pca + srb * pcc;
+        var mvb = sra * pcb + srb * pcd;
+        var mvc = src * pca + srd * pcc;
+        var mvd = src * pcb + srd * pcd;
+        var mve = sre * pca + srf * pcc + pce;
+        var mvf = sre * pcb + srf * pcd + pcf;
         var tx0 = x * mva + y * mvc + mve;
         var ty0 = x * mvb + y * mvd + mvf;
         var tx1 = x * mva + yh * mvc + mve;

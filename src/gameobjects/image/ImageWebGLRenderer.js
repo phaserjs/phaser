@@ -20,14 +20,14 @@ var GameObject = require('../GameObject');
  * @param {number} interpolationPercentage - Reserved for future use and custom pipelines.
  * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera that is rendering the Game Object.
  */
-var ImageWebGLRenderer = function (renderer, src, interpolationPercentage, camera)
+var ImageWebGLRenderer = function (renderer, src, interpolationPercentage, camera, parentMatrix)
 {
     if (GameObject.RENDER_MASK !== src.renderFlags || (src.cameraFilter > 0 && (src.cameraFilter & camera._id)))
     {
         return;
     }
     
-    this.pipeline.batchSprite(src, camera);
+    this.pipeline.batchSprite(src, camera, parentMatrix);
 };
 
 module.exports = ImageWebGLRenderer;
