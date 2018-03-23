@@ -114,7 +114,7 @@ var ParticleEmitterManager = new Class({
          * A list of Emitters being managed by this Emitter Manager.
          *
          * @name Phaser.GameObjects.Particles.ParticleEmitterManager#emitters
-         * @type {Phaser.Structs.List}
+             * @type {Phaser.Structs.List.<Phaser.GameObjects.Particles.ParticleEmitter>}
          * @since 3.0.0
          */
         this.emitters = new List(this);
@@ -123,7 +123,7 @@ var ParticleEmitterManager = new Class({
          * A list of Gravity Wells being managed by this Emitter Manager.
          *
          * @name Phaser.GameObjects.Particles.ParticleEmitterManager#wells
-         * @type {Phaser.Structs.List}
+         * @type {Phaser.Structs.List.<Phaser.GameObjects.Particles.GravityWell>}
          * @since 3.0.0
          */
         this.wells = new List(this);

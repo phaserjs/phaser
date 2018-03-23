@@ -8,14 +8,17 @@ var Class = require('../utils/Class');
 
 /**
  * @callback EachListCallback
+ * @template T
  *
- * @param {*} item - [description]
+ * @param {T} item - [description]
  * @param {...*} [arguments] - Additional arguments that will be passed to the callback, after the child.
  */
 
 /**
  * @classdesc
  * [description]
+ *
+ * @generic T
  *
  * @class List
  * @memberOf Phaser.Structs
@@ -43,7 +46,7 @@ var List = new Class({
          * The objects that belong to this collection.
          *
          * @name Phaser.Structs.List#list
-         * @type {array}
+         * @type {Array.<*>}
          * @default []
          * @since 3.0.0
          */
@@ -66,9 +69,9 @@ var List = new Class({
      * @method Phaser.Structs.List#add
      * @since 3.0.0
      *
-     * @param {object} child - [description]
+     * @param {*} child - [description]
      *
-     * @return {object} [description]
+     * @return {*} [description]
      */
     add: function (child)
     {
@@ -88,10 +91,10 @@ var List = new Class({
      * @method Phaser.Structs.List#addAt
      * @since 3.0.0
      *
-     * @param {object} child - [description]
+     * @param {*} child - [description]
      * @param {integer} index - [description]
      *
-     * @return {object} [description]
+     * @return {*} [description]
      */
     addAt: function (child, index)
     {
@@ -119,9 +122,9 @@ var List = new Class({
      * @method Phaser.Structs.List#addMultiple
      * @since 3.0.0
      *
-     * @param {array} children - [description]
+     * @param {Array.<*>} children - [description]
      *
-     * @return {array} [description]
+     * @return {Array.<*>} [description]
      */
     addMultiple: function (children)
     {
@@ -144,7 +147,7 @@ var List = new Class({
      *
      * @param {integer} index - [description]
      *
-     * @return {object} [description]
+     * @return {*} [description]
      */
     getAt: function (index)
     {
@@ -157,7 +160,7 @@ var List = new Class({
      * @method Phaser.Structs.List#getIndex
      * @since 3.0.0
      *
-     * @param {object} child - [description]
+     * @param {*} child - [description]
      *
      * @return {integer} [description]
      */
@@ -174,9 +177,9 @@ var List = new Class({
      * @method Phaser.Structs.List#sort
      * @since 3.0.0
      *
-     * @param {array} children - [description]
+     * @param {Array.<*>} children - [description]
      *
-     * @return {array} [description]
+     * @return {Array.<*>} [description]
      */
     sort: function (children)
     {
@@ -191,8 +194,8 @@ var List = new Class({
      * @method Phaser.Structs.List#sortIndexHandler
      * @since 3.0.0
      *
-     * @param {object} childA - [description]
-     * @param {object} childB - [description]
+     * @param {*} childA - [description]
+     * @param {*} childB - [description]
      *
      * @return {integer} [description]
      */
@@ -334,7 +337,7 @@ var List = new Class({
      * @param {integer} [startIndex=0] - The first child index to start the search from.
      * @param {integer} [endIndex] - The last child index to search up until.
      *
-     * @return {array} [description]
+     * @return {Array.<*>} [description]
      */
     getAll: function (property, value, startIndex, endIndex)
     {
@@ -397,8 +400,8 @@ var List = new Class({
      * @method Phaser.Structs.List#swap
      * @since 3.0.0
      *
-     * @param {object} child1 - [description]
-     * @param {object} child2 - [description]
+     * @param {*} child1 - [description]
+     * @param {*} child2 - [description]
      */
     swap: function (child1, child2)
     {
@@ -425,10 +428,10 @@ var List = new Class({
      * @method Phaser.Structs.List#moveTo
      * @since 3.0.0
      *
-     * @param {object} child - [description]
+     * @param {*} child - [description]
      * @param {integer} index - [description]
      *
-     * @return {object} [description]
+     * @return {*} [description]
      */
     moveTo: function (child, index)
     {
@@ -454,9 +457,9 @@ var List = new Class({
      * @method Phaser.Structs.List#remove
      * @since 3.0.0
      *
-     * @param {object} child - [description]
+     * @param {*} child - [description]
      *
-     * @return {object} [description]
+     * @return {*} [description]
      */
     remove: function (child)
     {
@@ -478,7 +481,7 @@ var List = new Class({
      *
      * @param {integer} index - [description]
      *
-     * @return {object} [description]
+     * @return {*} [description]
      */
     removeAt: function (index)
     {
@@ -501,7 +504,7 @@ var List = new Class({
      * @param {integer} beginIndex - [description]
      * @param {integer} endIndex - [description]
      *
-     * @return {array} [description]
+     * @return {Array.<*>} [description]
      */
     removeBetween: function (beginIndex, endIndex)
     {
@@ -552,9 +555,9 @@ var List = new Class({
      * @method Phaser.Structs.List#bringToTop
      * @since 3.0.0
      *
-     * @param {object} child - [description]
+     * @param {*} child - [description]
      *
-     * @return {object} [description]
+     * @return {*} [description]
      */
     bringToTop: function (child)
     {
@@ -573,9 +576,9 @@ var List = new Class({
      * @method Phaser.Structs.List#sendToBack
      * @since 3.0.0
      *
-     * @param {object} child - [description]
+     * @param {*} child - [description]
      *
-     * @return {object} [description]
+     * @return {*} [description]
      */
     sendToBack: function (child)
     {
@@ -594,9 +597,9 @@ var List = new Class({
      * @method Phaser.Structs.List#moveUp
      * @since 3.0.0
      *
-     * @param {object} child - [description]
+     * @param {*} child - [description]
      *
-     * @return {object} [description]
+     * @return {*} [description]
      */
     moveUp: function (child)
     {
@@ -621,9 +624,9 @@ var List = new Class({
      * @method Phaser.Structs.List#moveDown
      * @since 3.0.0
      *
-     * @param {object} child - [description]
+     * @param {*} child - [description]
      *
-     * @return {object} [description]
+     * @return {*} [description]
      */
     moveDown: function (child)
     {
@@ -684,10 +687,10 @@ var List = new Class({
      * @method Phaser.Structs.List#replace
      * @since 3.0.0
      *
-     * @param {object} oldChild - The child in this List that will be replaced.
-     * @param {object} newChild - The child to be inserted into this List.
+     * @param {*} oldChild - The child in this List that will be replaced.
+     * @param {*} newChild - The child to be inserted into this List.
      *
-     * @return {object} Returns the oldChild that was replaced within this group.
+     * @return {*} Returns the oldChild that was replaced within this group.
      */
     replace: function (oldChild, newChild)
     {
@@ -709,7 +712,7 @@ var List = new Class({
      * @method Phaser.Structs.List#exists
      * @since 3.0.0
      *
-     * @param {object} child - [description]
+     * @param {*} child - [description]
      *
      * @return {boolean} True if the item is found in the list, otherwise false.
      */
@@ -744,8 +747,8 @@ var List = new Class({
      * @method Phaser.Structs.List#each
      * @since 3.0.0
      *
-     * @param {EachListCallback} callback - The function to call.
-     * @param {object} [thisArg] - Value to use as `this` when executing callback.
+     * @param {EachListCallback.<T>} callback - The function to call.
+     * @param {*} [thisArg] - Value to use as `this` when executing callback.
      * @param {...*} [arguments] - Additional arguments that will be passed to the callback, after the child.
      */
     each: function (callback, thisArg)
