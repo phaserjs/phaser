@@ -176,7 +176,7 @@ var PathFollower = new Class({
 
         if (config)
         {
-            this.start(config);
+            this.startFollow(config);
         }
 
         return this;
