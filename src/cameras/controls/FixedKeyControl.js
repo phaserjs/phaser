@@ -15,6 +15,19 @@ var GetValue = require('../../utils/object/GetValue');
 //  })
 
 /**
+ * @typedef {object} FixedKeyControlConfig
+ *
+ * @property {Phaser.Cameras.Scene2D.Camera} [camera] - The Camera that this Control will update.
+ * @property {Phaser.Input.Keyboard.Key} [left] - The Key to be pressed that will move the Camera left.
+ * @property {Phaser.Input.Keyboard.Key} [right] - The Key to be pressed that will move the Camera right.
+ * @property {Phaser.Input.Keyboard.Key} [up] - The Key to be pressed that will move the Camera up.
+ * @property {Phaser.Input.Keyboard.Key} [zoomIn] - The Key to be pressed that will zoom the Camera in.
+ * @property {Phaser.Input.Keyboard.Key} [zoomOut] - The Key to be pressed that will zoom the Camera out.
+ * @property {float} [zoomSpeed=0.01] - The speed at which the camera will zoom if the `zoomIn` or `zoomOut` keys are pressed.
+ * @property {(float|{x:float,y:float})} [speed=0] - The horizontal and vertical speed the camera will move.
+ */
+
+/**
  * @classdesc
  * [description]
  *
@@ -23,7 +36,7 @@ var GetValue = require('../../utils/object/GetValue');
  * @constructor
  * @since 3.0.0
  *
- * @param {object} config - [description]
+ * @param {FixedKeyControlConfig} config - [description]
  */
 var FixedKeyControl = new Class({
 
@@ -45,7 +58,7 @@ var FixedKeyControl = new Class({
          * The Key to be pressed that will move the Camera left.
          *
          * @name Phaser.Cameras.Controls.FixedKeyControl#left
-         * @type {Phaser.Input.Keyboard}
+         * @type {Phaser.Input.Keyboard.Key}
          * @default null
          * @since 3.0.0
          */
@@ -55,7 +68,7 @@ var FixedKeyControl = new Class({
          * The Key to be pressed that will move the Camera right.
          *
          * @name Phaser.Cameras.Controls.FixedKeyControl#right
-         * @type {Phaser.Input.Keyboard}
+         * @type {Phaser.Input.Keyboard.Key}
          * @default null
          * @since 3.0.0
          */
@@ -65,7 +78,7 @@ var FixedKeyControl = new Class({
          * The Key to be pressed that will move the Camera up.
          *
          * @name Phaser.Cameras.Controls.FixedKeyControl#up
-         * @type {Phaser.Input.Keyboard}
+         * @type {Phaser.Input.Keyboard.Key}
          * @default null
          * @since 3.0.0
          */
@@ -75,7 +88,7 @@ var FixedKeyControl = new Class({
          * The Key to be pressed that will move the Camera down.
          *
          * @name Phaser.Cameras.Controls.FixedKeyControl#down
-         * @type {Phaser.Input.Keyboard}
+         * @type {Phaser.Input.Keyboard.Key}
          * @default null
          * @since 3.0.0
          */
@@ -85,7 +98,7 @@ var FixedKeyControl = new Class({
          * The Key to be pressed that will zoom the Camera in.
          *
          * @name Phaser.Cameras.Controls.FixedKeyControl#zoomIn
-         * @type {Phaser.Input.Keyboard}
+         * @type {Phaser.Input.Keyboard.Key}
          * @default null
          * @since 3.0.0
          */
@@ -95,7 +108,7 @@ var FixedKeyControl = new Class({
          * The Key to be pressed that will zoom the Camera out.
          *
          * @name Phaser.Cameras.Controls.FixedKeyControl#zoomOut
-         * @type {Phaser.Input.Keyboard}
+         * @type {Phaser.Input.Keyboard.Key}
          * @default null
          * @since 3.0.0
          */
@@ -119,6 +132,7 @@ var FixedKeyControl = new Class({
          * @default 0
          * @since 3.0.0
          */
+        this.speedX = 0;
 
         /**
          * The vertical speed the camera will move.
@@ -128,6 +142,8 @@ var FixedKeyControl = new Class({
          * @default 0
          * @since 3.0.0
          */
+        this.speedY = 0;
+
         var speed = GetValue(config, 'speed', null);
 
         if (typeof speed === 'number')

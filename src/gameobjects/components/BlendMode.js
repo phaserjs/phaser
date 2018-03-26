@@ -9,7 +9,7 @@ var BlendModes = require('../../renderer/BlendModes');
 /**
  * Provides methods used for setting the blend mode of a Game Object.
  * Should be applied as a mixin and not used directly.
- * 
+ *
  * @name Phaser.GameObjects.Components.BlendMode
  * @since 3.0.0
  */
@@ -20,11 +20,11 @@ var BlendMode = {
 
     /**
      * Sets the Blend Mode being used by this Game Object.
-     * 
+     *
      * This can be a const, such as `Phaser.BlendModes.SCREEN`, or an integer, such as 4 (for Overlay)
-     * 
+     *
      * Under WebGL only the following Blend Modes are available:
-     * 
+     *
      * * ADD
      * * MULTIPLY
      * * SCREEN
@@ -37,9 +37,9 @@ var BlendMode = {
      * on support. Blend Modes also cause a WebGL batch flush should it encounter a new blend mode. For these
      * reasons try to be careful about the construction of your Scene and the frequency of which blend modes
      * are used.
-     * 
+     *
      * @name Phaser.GameObjects.Components.BlendMode#blendMode
-     * @type {integer|string}
+     * @type {(integer|string)}
      * @since 3.0.0
      */
     blendMode: {
@@ -56,7 +56,7 @@ var BlendMode = {
                 value = BlendModes[value];
             }
 
-            value | 0;
+            value |= 0;
 
             if (value >= 0)
             {
@@ -68,11 +68,11 @@ var BlendMode = {
 
     /**
      * Sets the Blend Mode being used by this Game Object.
-     * 
+     *
      * This can be a const, such as `Phaser.BlendModes.SCREEN`, or an integer, such as 4 (for Overlay)
-     * 
+     *
      * Under WebGL only the following Blend Modes are available:
-     * 
+     *
      * * ADD
      * * MULTIPLY
      * * SCREEN
@@ -85,12 +85,12 @@ var BlendMode = {
      * on support. Blend Modes also cause a WebGL batch flush should it encounter a new blend mode. For these
      * reasons try to be careful about the construction of your Scene and the frequency of which blend modes
      * are used.
-     * 
+     *
      * @method Phaser.GameObjects.Components.BlendMode#setBlendMode
      * @since 3.0.0
      *
-     * @param {string|integer} value - The BlendMode value. Either a string or a CONST.
-     * 
+     * @param {(string|integer)} value - The BlendMode value. Either a string or a CONST.
+     *
      * @return {Phaser.GameObjects.GameObject} This Game Object instance.
      */
     setBlendMode: function (value)

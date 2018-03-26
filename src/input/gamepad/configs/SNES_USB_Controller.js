@@ -7,12 +7,11 @@
 /**
  * Tatar SNES USB Controller Gamepad Configuration.
  * USB Gamepad  (STANDARD GAMEPAD Vendor: 0079 Product: 0011)
- * 
+ *
  * @name Phaser.Input.Gamepad.Configs.SNES_USB
  * @type {object}
  * @since 3.0.0
  */
-
 module.exports = {
 
     UP: 12,

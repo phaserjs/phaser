@@ -23,7 +23,7 @@ var GetFastValue = require('../../utils/object/GetFastValue');
  * @param {string} key - [description]
  * @param {string} url - [description]
  * @param {string} path - [description]
- * @param {object} xhrSettings - [description]
+ * @param {XHRSettingsObject} xhrSettings - [description]
  */
 var JSONFile = new Class({
 
@@ -73,7 +73,7 @@ var JSONFile = new Class({
 
 /**
  * Adds a JSON file to the current load queue.
- * 
+ *
  * Note: This method will only be available if the JSON File type has been built into Phaser.
  *
  * The file is **not** loaded immediately after calling this method.
@@ -84,8 +84,8 @@ var JSONFile = new Class({
  *
  * @param {string} key - [description]
  * @param {string} url - [description]
- * @param {object} xhrSettings - [description]
- * 
+ * @param {XHRSettingsObject} xhrSettings - [description]
+ *
  * @return {Phaser.Loader.LoaderPlugin} The Loader.
  */
 FileTypesManager.register('json', function (key, url, xhrSettings)

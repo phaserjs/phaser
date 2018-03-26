@@ -13,6 +13,29 @@ var ParseRetroFont = require('../ParseRetroFont');
 var Render = require('./BitmapTextRender');
 
 /**
+ * @typedef {object} TextBounds
+ *
+ * @property {object} local - [description]
+ * @property {number} local.x - [description]
+ * @property {number} local.y - [description]
+ * @property {number} local.width - [description]
+ * @property {number} local.height - [description]
+ * @property {object} global - [description]
+ * @property {number} global.x - [description]
+ * @property {number} global.y - [description]
+ * @property {number} global.width - [description]
+ * @property {number} global.height - [description]
+ */
+
+/**
+ * @typedef {object} JSONBitmapText
+ *
+ * @property {string} font - [description]
+ * @property {string} text - [description]
+ * @property {number} fontSize - [description]
+ */
+
+/**
  * @classdesc
  * [description]
  *
@@ -28,17 +51,17 @@ var Render = require('./BitmapTextRender');
  * @extends Phaser.GameObjects.Components.Origin
  * @extends Phaser.GameObjects.Components.Pipeline
  * @extends Phaser.GameObjects.Components.ScaleMode
+ * @extends Phaser.GameObjects.Components.ScrollFactor
  * @extends Phaser.GameObjects.Components.Texture
  * @extends Phaser.GameObjects.Components.Tint
  * @extends Phaser.GameObjects.Components.Transform
  * @extends Phaser.GameObjects.Components.Visible
- * @extends Phaser.GameObjects.Components.ScrollFactor
- *
+ * 
  * @param {Phaser.Scene} scene - The Scene to which this Game Object belongs. It can only belong to one Scene at any given time.
  * @param {number} [x=0] - The x coordinate of this Game Object in world space.
  * @param {number} [y=0] - The y coordinate of this Game Object in world space.
  * @param {string} font - [description]
- * @param {string|string[]} [text] - [description]
+ * @param {(string|string[])} [text] - [description]
  * @param {number} [size] - [description]
  */
 var BitmapText = new Class({
@@ -52,11 +75,11 @@ var BitmapText = new Class({
         Components.Origin,
         Components.Pipeline,
         Components.ScaleMode,
+        Components.ScrollFactor,
         Components.Texture,
         Components.Tint,
         Components.Transform,
         Components.Visible,
-        Components.ScrollFactor,
         Render
     ],
 
@@ -115,7 +138,7 @@ var BitmapText = new Class({
          * [description]
          *
          * @name Phaser.GameObjects.BitmapText#_bounds
-         * @type {object}
+         * @type {TextBounds}
          * @private
          * @since 3.0.0
          */
@@ -145,7 +168,7 @@ var BitmapText = new Class({
      * @method Phaser.GameObjects.BitmapText#setText
      * @since 3.0.0
      *
-     * @param {string|string[]} value - The string, or array of strings, to be set as the content of this BitmapText.
+     * @param {(string|string[])} value - The string, or array of strings, to be set as the content of this BitmapText.
      *
      * @return {Phaser.GameObjects.BitmapText} This Game Object.
      */
@@ -171,21 +194,6 @@ var BitmapText = new Class({
         return this;
     },
 
-    // {
-    //     local: {
-    //         x,
-    //         y,
-    //         width,
-    //         height
-    //     },
-    //     global: {
-    //         x,
-    //         y,
-    //         width,
-    //         height
-    //     }
-    // }
-
     /**
      * [description]
      *
@@ -194,7 +202,7 @@ var BitmapText = new Class({
      *
      * @param {boolean} round - [description]
      *
-     * @return {object} [description]
+     * @return {TextBounds} [description]
      */
     getTextBounds: function (round)
     {
@@ -208,7 +216,7 @@ var BitmapText = new Class({
 
     /**
      * [description]
-     * 
+     *
      * @name Phaser.GameObjects.BitmapText#width
      * @type {number}
      * @since 3.0.0
@@ -226,7 +234,7 @@ var BitmapText = new Class({
 
     /**
      * [description]
-     * 
+     *
      * @name Phaser.GameObjects.BitmapText#height
      * @type {number}
      * @since 3.0.0
@@ -248,7 +256,7 @@ var BitmapText = new Class({
      * @method Phaser.GameObjects.BitmapText#toJSON
      * @since 3.0.0
      *
-     * @return {object} [description]
+     * @return {JSONGameObject.<JSONBitmapText>} [description]
      */
     toJSON: function ()
     {

@@ -16,7 +16,7 @@ var RGBStringToColor = require('./RGBStringToColor');
  * @function Phaser.Display.Color.ValueToColor
  * @since 3.0.0
  *
- * @param {string|number|object} input - The source color value to convert.
+ * @param {(string|number|InputColorObject)} input - The source color value to convert.
  *
  * @return {Phaser.Display.Color} A Color object.
  */

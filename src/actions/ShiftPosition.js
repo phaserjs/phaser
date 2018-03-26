@@ -6,24 +6,22 @@
 
 var Vector2 = require('../math/Vector2');
 
-//  Iterate through items changing the position of each element to
-//  be that of the element that came before it in the array (or after it if direction = 1)
-//  The first items position is set to x/y.
-//  The final x/y coords are returned
-
 /**
- * [description]
+ * Iterate through items changing the position of each element to
+ * be that of the element that came before it in the array (or after it if direction = 1)
+ * The first items position is set to x/y.
+ * The final x/y coords are returned
  *
  * @function Phaser.Actions.ShiftPosition
  * @since 3.0.0
- * 
- * @param {array} items - An array of Game Objects. The contents of this array are updated by this Action.
+ *
+ * @param {(array|Phaser.GameObjects.GameObject[])} items - An array of Game Objects. The contents of this array are updated by this Action.
  * @param {number} x - [description]
  * @param {number} y - [description]
  * @param {integer} [direction=0] - [description]
- * @param {Phaser.Math.Vector2|object} [output] - [description]
+ * @param {(Phaser.Math.Vector2|object)} [output] - [description]
  *
- * @return {array} The array of Game Objects that was passed to this Action.
+ * @return {Phaser.Math.Vector2} The output vector.
  */
 var ShiftPosition = function (items, x, y, direction, output)
 {

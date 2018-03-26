@@ -6,12 +6,11 @@
 
 /**
  * XBox 360 Gamepad Configuration.
- * 
+ *
  * @name Phaser.Input.Gamepad.Configs.XBOX_360
  * @type {object}
  * @since 3.0.0
  */
-
 module.exports = {
 
     UP: 12,

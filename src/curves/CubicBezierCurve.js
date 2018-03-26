@@ -21,7 +21,7 @@ var Vector2 = require('../math/Vector2');
  * @constructor
  * @since 3.0.0
  *
- * @param {Phaser.Math.Vector2|Phaser.Math.Vector2[]} p0 - Start point, or an array of point pairs.
+ * @param {(Phaser.Math.Vector2|Phaser.Math.Vector2[])} p0 - Start point, or an array of point pairs.
  * @param {Phaser.Math.Vector2} p1 - Control Point 1.
  * @param {Phaser.Math.Vector2} p2 - Control Point 2.
  * @param {Phaser.Math.Vector2} p3 - End Point.
@@ -82,14 +82,14 @@ var CubicBezierCurve = new Class({
     },
 
     /**
-     * [description]
+     * Gets the starting point on the curve.
      *
      * @method Phaser.Curves.CubicBezierCurve#getStartPoint
      * @since 3.0.0
      *
-     * @param {Phaser.Math.Vector2} out - [description]
+     * @param {Phaser.Math.Vector2} [out] - A Vector2 object to store the result in. If not given will be created.
      *
-     * @return {Phaser.Math.Vector2} [description]
+     * @return {Phaser.Math.Vector2} The coordinates of the point on the curve. If an `out` object was given this will be returned.
      */
     getStartPoint: function (out)
     {
@@ -104,9 +104,9 @@ var CubicBezierCurve = new Class({
      * @method Phaser.Curves.CubicBezierCurve#getResolution
      * @since 3.0.0
      *
-     * @param {[type]} divisions - [description]
+     * @param {number} divisions - The amount of divisions used by this curve.
      *
-     * @return {[type]} [description]
+     * @return {number} The resolution of the curve.
      */
     getResolution: function (divisions)
     {
@@ -114,15 +114,15 @@ var CubicBezierCurve = new Class({
     },
 
     /**
-     * [description]
+     * Get point at relative position in curve according to length.
      *
      * @method Phaser.Curves.CubicBezierCurve#getPoint
      * @since 3.0.0
      *
-     * @param {[type]} t - [description]
-     * @param {[type]} out - [description]
+     * @param {float} t - The position along the curve to return. Where 0 is the start and 1 is the end.
+     * @param {Phaser.Math.Vector2} [out] - A Vector2 object to store the result in. If not given will be created.
      *
-     * @return {[type]} [description]
+     * @return {Phaser.Math.Vector2} The coordinates of the point on the curve. If an `out` object was given this will be returned.
      */
     getPoint: function (t, out)
     {
@@ -173,7 +173,7 @@ var CubicBezierCurve = new Class({
      * @method Phaser.Curves.CubicBezierCurve#toJSON
      * @since 3.0.0
      *
-     * @return {object} [description]
+     * @return {JSONCurve} The JSON object containing this curve data.
      */
     toJSON: function ()
     {
@@ -190,6 +190,16 @@ var CubicBezierCurve = new Class({
 
 });
 
+/**
+ * [description]
+ *
+ * @function Phaser.Curves.CubicBezierCurve.fromJSON
+ * @since 3.0.0
+ *
+ * @param {JSONCurve} data - The JSON object containing this curve data.
+ *
+ * @return {Phaser.Curves.CubicBezierCurve} [description]
+ */
 CubicBezierCurve.fromJSON = function (data)
 {
     var points = data.points;

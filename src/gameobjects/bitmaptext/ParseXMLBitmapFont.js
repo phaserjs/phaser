@@ -6,7 +6,7 @@
 
 /**
  * @function getValue
- * @since  3.0.0
+ * @since 3.0.0
  * @private
  */
 function getValue (node, attribute)
@@ -16,13 +16,13 @@ function getValue (node, attribute)
 
 /**
  * @function ParseXMLBitmapFont
- * @since  3.0.0
+ * @since 3.0.0
  * @private
- * 
- * @param {[type]} xml - [description]
- * @param {integer} xSpacing - [description]
- * @param {integer} ySpacing - [description]
- * @param {[type]} frame - [description]
+ *
+ * @param {XMLDocument} xml - [description]
+ * @param {integer} [xSpacing=0] - [description]
+ * @param {integer} [ySpacing=0] - [description]
+ * @param {Phaser.Textures.Frame} [frame] - [description]
  */
 var ParseXMLBitmapFont = function (xml, xSpacing, ySpacing, frame)
 {

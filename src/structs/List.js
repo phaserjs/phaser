@@ -7,6 +7,13 @@
 var Class = require('../utils/Class');
 
 /**
+ * @callback EachListCallback
+ *
+ * @param {*} item - [description]
+ * @param {...*} [arguments] - Additional arguments that will be passed to the callback, after the child.
+ */
+
+/**
  * @classdesc
  * [description]
  *
@@ -15,7 +22,7 @@ var Class = require('../utils/Class');
  * @constructor
  * @since 3.0.0
  *
- * @param {any} parent - [description]
+ * @param {*} parent - [description]
  */
 var List = new Class({
 
@@ -27,7 +34,7 @@ var List = new Class({
          * The parent of this list.
          *
          * @name Phaser.Structs.List#parent
-         * @type {any}
+         * @type {*}
          * @since 3.0.0
          */
         this.parent = parent;
@@ -217,9 +224,9 @@ var List = new Class({
      * @since 3.0.0
      *
      * @param {string} property - The property to check against the value.
-     * @param {any} value - The value to check if the property strictly equals.
+     * @param {*} value - The value to check if the property strictly equals.
      *
-     * @return {any} The item that was found, or null if nothing matched.
+     * @return {*} The item that was found, or null if nothing matched.
      */
     getByKey: function (property, value)
     {
@@ -244,7 +251,7 @@ var List = new Class({
      *
      * @param {string} name - The name to search for.
      *
-     * @return {any} The first child with a matching name, or null if none were found.
+     * @return {*} The first child with a matching name, or null if none were found.
      */
     getByName: function (name)
     {
@@ -260,7 +267,7 @@ var List = new Class({
      * @param {integer} [startIndex=0] - Offset from the front of the group (lowest child).
      * @param {integer} [length=(to top)] - Restriction on the number of values you want to randomly select from.
      *
-     * @return {any} A random child of this Group.
+     * @return {*} A random child of this Group.
      */
     getRandom: function (startIndex, length)
     {
@@ -283,12 +290,12 @@ var List = new Class({
      * @method Phaser.Structs.List#getFirst
      * @since 3.0.0
      *
-     * @param {[type]} property - [description]
-     * @param {[type]} value - [description]
-     * @param {[type]} startIndex - [description]
-     * @param {[type]} endIndex - [description]
+     * @param {string} property - [description]
+     * @param {*} value - [description]
+     * @param {number} [startIndex=0] - [description]
+     * @param {number} [endIndex] - [description]
      *
-     * @return {[type]} [description]
+     * @return {*} [description]
      */
     getFirst: function (property, value, startIndex, endIndex)
     {
@@ -323,7 +330,7 @@ var List = new Class({
      * @since 3.0.0
      *
      * @param {string} [property] - An optional property to test against the value argument.
-     * @param {any} [value] - If property is set then Child.property must strictly equal this value to be included in the results.
+     * @param {*} [value] - If property is set then Child.property must strictly equal this value to be included in the results.
      * @param {integer} [startIndex=0] - The first child index to start the search from.
      * @param {integer} [endIndex] - The last child index to search up until.
      *
@@ -363,7 +370,7 @@ var List = new Class({
      * @since 3.0.0
      *
      * @param {string} property - [description]
-     * @param {any} value - [description]
+     * @param {*} value - [description]
      *
      * @return {integer} [description]
      */
@@ -459,7 +466,7 @@ var List = new Class({
         {
             this.list.splice(index, 1);
         }
-        
+
         return child;
     },
 
@@ -718,7 +725,7 @@ var List = new Class({
      * @since 3.0.0
      *
      * @param {string} key - [description]
-     * @param {any} value - [description]
+     * @param {*} value - [description]
      */
     setAll: function (key, value)
     {
@@ -737,7 +744,7 @@ var List = new Class({
      * @method Phaser.Structs.List#each
      * @since 3.0.0
      *
-     * @param {function} callback - The function to call.
+     * @param {EachListCallback} callback - The function to call.
      * @param {object} [thisArg] - Value to use as `this` when executing callback.
      * @param {...*} [arguments] - Additional arguments that will be passed to the callback, after the child.
      */

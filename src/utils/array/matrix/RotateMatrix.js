@@ -16,7 +16,7 @@ var TransposeMatrix = require('./TransposeMatrix');
  * @since 3.0.0
  *
  * @param {array} matrix - The array to rotate.
- * @param {number|string} [direction=90] - The amount to rotate the matrix by. The value can be given in degrees: 90, -90, 270, -270 or 180, or a string command: `rotateLeft`, `rotateRight` or `rotate180`.
+ * @param {(number|string)} [direction=90] - The amount to rotate the matrix by. The value can be given in degrees: 90, -90, 270, -270 or 180, or a string command: `rotateLeft`, `rotateRight` or `rotate180`.
  *
  * @return {array} The rotated matrix array. The source matrix should be discard for the returned matrix.
  */
@@ -37,11 +37,11 @@ var RotateMatrix = function (matrix, direction)
     if (direction === 90 || direction === -270 || direction === 'rotateLeft')
     {
         matrix = TransposeMatrix(matrix);
-        matrix = matrix.reverse();
+        matrix.reverse();
     }
     else if (direction === -90 || direction === 270 || direction === 'rotateRight')
     {
-        matrix = matrix.reverse();
+        matrix.reverse();
         matrix = TransposeMatrix(matrix);
     }
     else if (Math.abs(direction) === 180 || direction === 'rotate180')
@@ -51,7 +51,7 @@ var RotateMatrix = function (matrix, direction)
             matrix[i].reverse();
         }
 
-        matrix = matrix.reverse();
+        matrix.reverse();
     }
 
     return matrix;

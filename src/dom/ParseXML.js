@@ -14,7 +14,7 @@
  *
  * @param {string} data - The XML source stored in a string.
  *
- * @return {any} The parsed XML data, or `null` if the data could not be parsed.
+ * @return {?(DOMParser|ActiveXObject)} The parsed XML data, or `null` if the data could not be parsed.
  */
 var ParseXML = function (data)
 {

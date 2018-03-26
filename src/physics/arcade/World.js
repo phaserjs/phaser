@@ -28,6 +28,64 @@ var Vector2 = require('../../math/Vector2');
 var Wrap = require('../../math/Wrap');
 
 /**
+ * @typedef {object} ArcadeWorldConfig
+ *
+ * @property {object} [gravity] - [description]
+ * @property {number} [gravity.x=0] - [description]
+ * @property {number} [gravity.y=0] - [description]
+ * @property {number} [x=0] - [description]
+ * @property {number} [y=0] - [description]
+ * @property {number} [width=0] - [description]
+ * @property {number} [height=0] - [description]
+ * @property {object} [checkCollision] - [description]
+ * @property {boolean} [checkCollision.up=true] - [description]
+ * @property {boolean} [checkCollision.down=true] - [description]
+ * @property {boolean} [checkCollision.left=true] - [description]
+ * @property {boolean} [checkCollision.right=true] - [description]
+ * @property {number} [overlapBias=4] - [description]
+ * @property {number} [tileBias=16] - [description]
+ * @property {boolean} [forceX=false] - [description]
+ * @property {boolean} [isPaused=false] - [description]
+ * @property {boolean} [debug=false] - [description]
+ * @property {boolean} [debugShowBody=true] - [description]
+ * @property {boolean} [debugShowStaticBody=true] - [description]
+ * @property {boolean} [debugShowVelocity=true] - [description]
+ * @property {number} [debugBodyColor=0xff00ff] - [description]
+ * @property {number} [debugStaticBodyColor=0x0000ff] - [description]
+ * @property {number} [debugVelocityColor=0x00ff00] - [description]
+ * @property {number} [maxEntries=16] - [description]
+ */
+
+/**
+ * @typedef {object} CheckCollisionObject
+ *
+ * @property {boolean} up - [description]
+ * @property {boolean} down - [description]
+ * @property {boolean} left - [description]
+ * @property {boolean} right - [description]
+ */
+
+/**
+ * @typedef {object} ArcadeWorldDefaults
+ *
+ * @property {boolean} debugShowBody - [description]
+ * @property {boolean} debugShowStaticBody - [description]
+ * @property {boolean} debugShowVelocity - [description]
+ * @property {number} bodyDebugColor - [description]
+ * @property {number} staticBodyDebugColor - [description]
+ * @property {number} velocityDebugColor - [description]
+ */
+
+/**
+ * @typedef {object} ArcadeWorldTreeMinMax
+ *
+ * @property {number} minX - [description]
+ * @property {number} minY - [description]
+ * @property {number} maxX - [description]
+ * @property {number} maxY - [description]
+ */
+
+/**
  * @classdesc
  * [description]
  *
@@ -38,7 +96,7 @@ var Wrap = require('../../math/Wrap');
  * @since 3.0.0
  *
  * @param {Phaser.Scene} scene - [description]
- * @param {object} config - [description]
+ * @param {ArcadeWorldConfig} config - [description]
  */
 var World = new Class({
 
@@ -122,7 +180,7 @@ var World = new Class({
          * [description]
          *
          * @name Phaser.Physics.Arcade.World#checkCollision
-         * @type {object}
+         * @type {CheckCollisionObject}
          * @since 3.0.0
          */
         this.checkCollision = {
@@ -206,7 +264,7 @@ var World = new Class({
          * [description]
          *
          * @name Phaser.Physics.Arcade.World#defaults
-         * @type {object}
+         * @type {ArcadeWorldDefaults}
          * @since 3.0.0
          */
         this.defaults = {
@@ -214,7 +272,7 @@ var World = new Class({
             debugShowStaticBody: GetValue(config, 'debugShowStaticBody', true),
             debugShowVelocity: GetValue(config, 'debugShowVelocity', true),
             bodyDebugColor: GetValue(config, 'debugBodyColor', 0xff00ff),
-            staticBodyDebugColor: GetValue(config, 'debugBodyColor', 0x0000ff),
+            staticBodyDebugColor: GetValue(config, 'debugStaticBodyColor', 0x0000ff),
             velocityDebugColor: GetValue(config, 'debugVelocityColor', 0x00ff00)
         };
 
@@ -250,7 +308,7 @@ var World = new Class({
          * [description]
          *
          * @name Phaser.Physics.Arcade.World#treeMinMax
-         * @type {object}
+         * @type {ArcadeWorldTreeMinMax}
          * @since 3.0.0
          */
         this.treeMinMax = { minX: 0, minY: 0, maxX: 0, maxY: 0 };
@@ -267,12 +325,12 @@ var World = new Class({
      * @method Phaser.Physics.Arcade.World#enable
      * @since 3.0.0
      *
-     * @param {Phaser.GameObjects.GameObject|Phaser.GameObjects.GameObject[]} object - [description]
-     * @param {integer} [type] - [description]
+     * @param {(Phaser.GameObjects.GameObject|Phaser.GameObjects.GameObject[])} object - [description]
+     * @param {integer} [bodyType] - The type of Body to create. Either `DYNAMIC_BODY` or `STATIC_BODY`.
      */
-    enable: function (object, type)
+    enable: function (object, bodyType)
     {
-        if (type === undefined) { type = CONST.DYNAMIC_BODY; }
+        if (bodyType === undefined) { bodyType = CONST.DYNAMIC_BODY; }
 
         var i = 1;
 
@@ -285,22 +343,22 @@ var World = new Class({
                 if (object[i].hasOwnProperty('children'))
                 {
                     //  If it's a Group then we do it on the children regardless
-                    this.enable(object[i].children.entries, type);
+                    this.enable(object[i].children.entries, bodyType);
                 }
                 else
                 {
-                    this.enableBody(object[i], type);
+                    this.enableBody(object[i], bodyType);
                 }
             }
         }
         else if (object.hasOwnProperty('children'))
         {
             //  If it's a Group then we do it on the children regardless
-            this.enable(object.children.entries, type);
+            this.enable(object.children.entries, bodyType);
         }
         else
         {
-            this.enableBody(object, type);
+            this.enableBody(object, bodyType);
         }
     },
 
@@ -311,21 +369,21 @@ var World = new Class({
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.GameObject} object - [description]
-     * @param {integer} type - [description]
+     * @param {integer} [bodyType] - The type of Body to create. Either `DYNAMIC_BODY` or `STATIC_BODY`.
      *
      * @return {Phaser.GameObjects.GameObject} [description]
      */
-    enableBody: function (object, type)
+    enableBody: function (object, bodyType)
     {
         if (object.body === null)
         {
-            if (type === CONST.DYNAMIC_BODY)
+            if (bodyType === CONST.DYNAMIC_BODY)
             {
                 object.body = new Body(this, object);
 
                 this.bodies.set(object.body);
             }
-            else if (type === CONST.STATIC_BODY)
+            else if (bodyType === CONST.STATIC_BODY)
             {
                 object.body = new StaticBody(this, object);
 
@@ -344,7 +402,7 @@ var World = new Class({
      * @method Phaser.Physics.Arcade.World#remove
      * @since 3.0.0
      *
-     * @param {Phaser.GameObjects.GameObject} object - [description]
+     * @param {Phaser.Physics.Arcade.Body} object - [description]
      */
     remove: function (object)
     {
@@ -357,7 +415,7 @@ var World = new Class({
      * @method Phaser.Physics.Arcade.World#disable
      * @since 3.0.0
      *
-     * @param {Phaser.GameObjects.GameObject|Phaser.GameObjects.GameObject[]} object - [description]
+     * @param {(Phaser.GameObjects.GameObject|Phaser.GameObjects.GameObject[])} object - [description]
      */
     disable: function (object)
     {
@@ -565,9 +623,9 @@ var World = new Class({
      *
      * @param {Phaser.Physics.Arcade.Body} object1 - The first object to check for collision.
      * @param {Phaser.Physics.Arcade.Body} object2 - The second object to check for collision.
-     * @param {function} collideCallback - The callback to invoke when the two objects collide.
-     * @param {function} processCallback - The callback to invoke when the two objects collide. Must return a boolean.
-     * @param {object} callbackContext - The scope in which to call the callbacks.
+     * @param {ArcadePhysicsCallback} [collideCallback] - The callback to invoke when the two objects collide.
+     * @param {ArcadePhysicsCallback} [processCallback] - The callback to invoke when the two objects collide. Must return a boolean.
+     * @param {*} [callbackContext] - The scope in which to call the callbacks.
      *
      * @return {Phaser.Physics.Arcade.Collider} The Collider that was created.
      */
@@ -592,9 +650,9 @@ var World = new Class({
      *
      * @param {Phaser.Physics.Arcade.Body} object1 - The first object to check for overlap.
      * @param {Phaser.Physics.Arcade.Body} object2 - The second object to check for overlap.
-     * @param {function} collideCallback - The callback to invoke when the two objects overlap.
-     * @param {function} processCallback - The callback to invoke when the two objects overlap. Must return a boolean.
-     * @param {object} callbackContext - The scope in which to call the callbacks.
+     * @param {ArcadePhysicsCallback} [collideCallback] - The callback to invoke when the two objects overlap.
+     * @param {ArcadePhysicsCallback} [processCallback] - The callback to invoke when the two objects overlap. Must return a boolean.
+     * @param {*} [callbackContext] - The scope in which to call the callbacks.
      *
      * @return {Phaser.Physics.Arcade.Collider} The Collider that was created.
      */
@@ -865,9 +923,9 @@ var World = new Class({
      *
      * @param {Phaser.Physics.Arcade.Body} body1 - [description]
      * @param {Phaser.Physics.Arcade.Body} body2 - [description]
-     * @param {function} processCallback - [description]
-     * @param {object} callbackContext - [description]
-     * @param {boolean} overlapOnly - [description]
+     * @param {ArcadePhysicsCallback} [processCallback] - [description]
+     * @param {*} [callbackContext] - [description]
+     * @param {boolean} [overlapOnly] - [description]
      *
      * @return {boolean} [description]
      */
@@ -1249,9 +1307,9 @@ var World = new Class({
      *
      * @param {Phaser.GameObjects.GameObject} object1 - [description]
      * @param {Phaser.GameObjects.GameObject} object2 - [description]
-     * @param {function} overlapCallback - [description]
-     * @param {function} processCallback - [description]
-     * @param {object} callbackContext - [description]
+     * @param {ArcadePhysicsCallback} [overlapCallback] - [description]
+     * @param {ArcadePhysicsCallback} [processCallback] - [description]
+     * @param {*} [callbackContext] - [description]
      *
      * @return {boolean} [description]
      */
@@ -1272,9 +1330,9 @@ var World = new Class({
      *
      * @param {Phaser.GameObjects.GameObject} object1 - [description]
      * @param {Phaser.GameObjects.GameObject} object2 - [description]
-     * @param {function} collideCallback - [description]
-     * @param {function} processCallback - [description]
-     * @param {object} callbackContext - [description]
+     * @param {ArcadePhysicsCallback} [collideCallback] - [description]
+     * @param {ArcadePhysicsCallback} [processCallback] - [description]
+     * @param {*} [callbackContext] - [description]
      *
      * @return {boolean} [description]
      */
@@ -1295,9 +1353,9 @@ var World = new Class({
      *
      * @param {Phaser.GameObjects.GameObject} object1 - [description]
      * @param {Phaser.GameObjects.GameObject} object2 - [description]
-     * @param {function} collideCallback - [description]
-     * @param {function} processCallback - [description]
-     * @param {object} callbackContext - [description]
+     * @param {ArcadePhysicsCallback} collideCallback - [description]
+     * @param {ArcadePhysicsCallback} processCallback - [description]
+     * @param {*} callbackContext - [description]
      * @param {boolean} overlapOnly - [description]
      *
      * @return {boolean} [description]
@@ -1356,9 +1414,9 @@ var World = new Class({
      *
      * @param {Phaser.GameObjects.GameObject} object1 - [description]
      * @param {Phaser.GameObjects.GameObject} object2 - [description]
-     * @param {function} collideCallback - [description]
-     * @param {function} processCallback - [description]
-     * @param {object} callbackContext - [description]
+     * @param {ArcadePhysicsCallback} collideCallback - [description]
+     * @param {ArcadePhysicsCallback} processCallback - [description]
+     * @param {*} callbackContext - [description]
      * @param {boolean} overlapOnly - [description]
      *
      * @return {boolean} [description]
@@ -1434,9 +1492,9 @@ var World = new Class({
      *
      * @param {Phaser.GameObjects.GameObject} sprite1 - [description]
      * @param {Phaser.GameObjects.GameObject} sprite2 - [description]
-     * @param {function} collideCallback - [description]
-     * @param {function} processCallback - [description]
-     * @param {object} callbackContext - [description]
+     * @param {ArcadePhysicsCallback} collideCallback - [description]
+     * @param {ArcadePhysicsCallback} processCallback - [description]
+     * @param {*} callbackContext - [description]
      * @param {boolean} overlapOnly - [description]
      *
      * @return {boolean} [description]
@@ -1469,9 +1527,9 @@ var World = new Class({
      *
      * @param {Phaser.GameObjects.GameObject} sprite - [description]
      * @param {Phaser.GameObjects.Group} group - [description]
-     * @param {function} collideCallback - [description]
-     * @param {function} processCallback - [description]
-     * @param {object} callbackContext - [description]
+     * @param {ArcadePhysicsCallback} collideCallback - [description]
+     * @param {ArcadePhysicsCallback} processCallback - [description]
+     * @param {*} callbackContext - [description]
      * @param {boolean} overlapOnly - [description]
      *
      * @return {boolean} [description]
@@ -1531,10 +1589,10 @@ var World = new Class({
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.Group} group - [description]
-     * @param {[type]} tilemapLayer - [description]
-     * @param {function} collideCallback - [description]
-     * @param {function} processCallback - [description]
-     * @param {object} callbackContext - [description]
+     * @param {(Phaser.Tilemaps.DynamicTilemapLayer|Phaser.Tilemaps.StaticTilemapLayer)} tilemapLayer - [description]
+     * @param {ArcadePhysicsCallback} collideCallback - [description]
+     * @param {ArcadePhysicsCallback} processCallback - [description]
+     * @param {*} callbackContext - [description]
      * @param {boolean} overlapOnly - [description]
      *
      * @return {boolean} [description]
@@ -1571,10 +1629,10 @@ var World = new Class({
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.GameObject} sprite - [description]
-     * @param {[type]} tilemapLayer - [description]
-     * @param {function} collideCallback - [description]
-     * @param {function} processCallback - [description]
-     * @param {object} callbackContext - [description]
+     * @param {(Phaser.Tilemaps.DynamicTilemapLayer|Phaser.Tilemaps.StaticTilemapLayer)} tilemapLayer - [description]
+     * @param {ArcadePhysicsCallback} collideCallback - [description]
+     * @param {ArcadePhysicsCallback} processCallback - [description]
+     * @param {*} callbackContext - [description]
      * @param {boolean} overlapOnly - [description]
      *
      * @return {boolean} [description]
@@ -1671,9 +1729,9 @@ var World = new Class({
      *
      * @param {Phaser.GameObjects.Group} group1 - [description]
      * @param {Phaser.GameObjects.Group} group2 - [description]
-     * @param {function} collideCallback - [description]
-     * @param {function} processCallback - [description]
-     * @param {object} callbackContext - [description]
+     * @param {ArcadePhysicsCallback} collideCallback - [description]
+     * @param {ArcadePhysicsCallback} processCallback - [description]
+     * @param {*} callbackContext - [description]
      * @param {boolean} overlapOnly - [description]
      *
      * @return {boolean} [description]
@@ -1701,7 +1759,7 @@ var World = new Class({
     * @method Phaser.Physics.Arcade.World#wrap
     * @since 3.3.0
     *
-    * @param {any} object - A Game Object, a Group, an object with `x` and `y` coordinates, or an array of such objects.
+    * @param {*} object - A Game Object, a Group, an object with `x` and `y` coordinates, or an array of such objects.
     * @param {number} [padding=0] - An amount added to each boundary edge during the operation.
     */
     wrap: function (object, padding)
@@ -1731,7 +1789,7 @@ var World = new Class({
     * @method Phaser.Physics.Arcade.World#wrapArray
     * @since 3.3.0
     *
-    * @param {any[]} arr
+    * @param {Array.<*>} arr
     * @param {number} [padding=0] - An amount added to the boundary.
     */
     wrapArray: function (arr, padding)
@@ -1753,7 +1811,7 @@ var World = new Class({
     * @method Phaser.Physics.Arcade.World#wrapObject
     * @since 3.3.0
     *
-    * @param {any} object - A Game Object, a Physics Body, or any object with `x` and `y` coordinates
+    * @param {*} object - A Game Object, a Physics Body, or any object with `x` and `y` coordinates
     * @param {number} [padding=0] - An amount added to the boundary.
     */
     wrapObject: function (object, padding)

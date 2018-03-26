@@ -11,7 +11,7 @@ var JSONFile = require('./JSONFile.js');
 
 /**
  * Adds an Audio Sprite file to the current load queue.
- * 
+ *
  * Note: This method will only be available if the Audio Sprite File type has been built into Phaser.
  *
  * The file is **not** loaded immediately after calling this method.
@@ -21,12 +21,12 @@ var JSONFile = require('./JSONFile.js');
  * @since 3.0.0
  *
  * @param {string} key - [description]
- * @param {string|string[]} urls - [description]
+ * @param {(string|string[])} urls - [description]
  * @param {object} json - [description]
  * @param {object} config - [description]
- * @param {object} audioXhrSettings - Optional file specific XHR settings.
- * @param {object} jsonXhrSettings - Optional file specific XHR settings.
- * 
+ * @param {XHRSettingsObject} audioXhrSettings - Optional file specific XHR settings.
+ * @param {XHRSettingsObject} jsonXhrSettings - Optional file specific XHR settings.
+ *
  * @return {Phaser.Loader.LoaderPlugin} The Loader.
  */
 FileTypesManager.register('audioSprite', function (key, urls, json, config, audioXhrSettings, jsonXhrSettings)

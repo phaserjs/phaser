@@ -21,6 +21,14 @@ var RequestAnimationFrame = require('../dom/RequestAnimationFrame');
 // http://www.testufo.com/#test=animation-time-graph
 
 /**
+ * @callback TimeStepCallback
+ *
+ * @param {number} time - The current time. Either a High Resolution Timer value if it comes from Request Animation Frame, or Date.now if using SetTimeout.
+ * @param {number} average - The Delta Average.
+ * @param {number} interpolation - Interpolation - how far between what is expected and where we are?
+ */
+
+/**
  * @classdesc
  * [description]
  *
@@ -78,7 +86,7 @@ var TimeStep = new Class({
          * @since 3.0.0
          */
         this.running = false;
-        
+
         /**
          * The minimum fps rate you want the Time Step to run at.
          *
@@ -90,7 +98,7 @@ var TimeStep = new Class({
 
         /**
          * The target fps rate for the Time Step to run at.
-         * 
+         *
          * Setting this value will not actually change the speed at which the browser runs, that is beyond
          * the control of Phaser. Instead, it allows you to determine performance issues and if the Time Step
          * is spiraling out of control.
@@ -154,7 +162,7 @@ var TimeStep = new Class({
         /**
          * A callback to be invoked each time the Time Step steps.
          *
-         * @property {function} callback
+         * @property {TimeStepCallback} callback
          * @default NOOP
          * @since 3.0.0
          */
@@ -379,7 +387,7 @@ var TimeStep = new Class({
      * @method Phaser.Boot.TimeStep#start
      * @since 3.0.0
      *
-     * @param {function} callback - The callback to be invoked each time the Time Step steps.
+     * @param {TimeStepCallback} callback - The callback to be invoked each time the Time Step steps.
      */
     start: function (callback)
     {
@@ -544,7 +552,7 @@ var TimeStep = new Class({
         if (this.running)
         {
             this.raf.stop();
-            
+
             this.running = false;
         }
     },

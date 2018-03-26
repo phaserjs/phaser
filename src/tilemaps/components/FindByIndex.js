@@ -19,8 +19,8 @@
  * @param {boolean} [reverse=false] - If true it will scan the layer in reverse, starting at the
  * bottom-right. Otherwise it scans from the top-left.
  * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.
- * 
- * @return {Phaser.Tilemaps.Tile|null} The first (or n skipped) tile with the matching index.
+ *
+ * @return {?Phaser.Tilemaps.Tile} The first (or n skipped) tile with the matching index.
  */
 var FindByIndex = function (findIndex, skip, reverse, layer)
 {

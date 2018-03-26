@@ -147,11 +147,11 @@ var GameObjectFactory = new Class({
 
 //  Static method called directly by the Game Object factory functions
 
-GameObjectFactory.register = function (type, factoryFunction)
+GameObjectFactory.register = function (factoryType, factoryFunction)
 {
-    if (!GameObjectFactory.prototype.hasOwnProperty(type))
+    if (!GameObjectFactory.prototype.hasOwnProperty(factoryType))
     {
-        GameObjectFactory.prototype[type] = factoryFunction;
+        GameObjectFactory.prototype[factoryType] = factoryFunction;
     }
 };
 

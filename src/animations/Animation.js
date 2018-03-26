@@ -9,11 +9,63 @@ var Frame = require('./AnimationFrame');
 var GetValue = require('../utils/object/GetValue');
 
 /**
+ * @typedef {object} JSONAnimation
+ *
+ * @property {string} key - [description]
+ * @property {string} type - A frame based animation (as opposed to a bone based animation)
+ * @property {JSONAnimationFrame[]} frames - [description]
+ * @property {integer} frameRate - The frame rate of playback in frames per second (default 24 if duration is null)
+ * @property {integer} duration - How long the animation should play for.
+ * @property {boolean} skipMissedFrames - Skip frames if the time lags, or always advanced anyway?
+ * @property {integer} delay - Delay before starting playback (in seconds)
+ * @property {integer} repeat - Number of times to repeat the animation (-1 for infinity)
+ * @property {integer} repeatDelay - Delay before the repeat starts (in seconds)
+ * @property {boolean} yoyo - Should the animation yoyo? (reverse back down to the start) before repeating?
+ * @property {boolean} showOnStart - Should sprite.visible = true when the animation starts to play?
+ * @property {boolean} hideOnComplete - Should sprite.visible = false when the animation finishes?
+ */
+
+/**
+ * @typedef {object} AnimationFrameConfig
+ *
+ * @property {string} key - [description]
+ * @property {(string|number)} frame - [description]
+ * @property {float} [duration=0] - [description]
+ * @property {boolean} [visible] - [description]
+ * @property {function} [onUpdate] - [description]
+ */
+
+/**
+ * @typedef {object} AnimationConfig // TODO 19/03/2018 fix type
+ *
+ * @property {AnimationFrameConfig[]} [frames] - [description]
+ * @property {string} [defaultTextureKey=null] - [description]
+ * @property {integer} [frameRate] - The frame rate of playback in frames per second (default 24 if duration is null)
+ * @property {integer} [duration] - How long the animation should play for.
+ * @property {boolean} [skipMissedFrames=true] - Skip frames if the time lags, or always advanced anyway?
+ * @property {integer} [delay=0] - Delay before starting playback (in seconds)
+ * @property {integer} [repeat=0] - Number of times to repeat the animation (-1 for infinity)
+ * @property {integer} [repeatDelay=0] - Delay before the repeat starts (in seconds)
+ * @property {boolean} [yoyo=false] - Should the animation yoyo? (reverse back down to the start) before repeating?
+ * @property {boolean} [showOnStart=false] - Should sprite.visible = true when the animation starts to play?
+ * @property {boolean} [hideOnComplete=false] - Should sprite.visible = false when the animation finishes?
+ * @property {object} [callbackScope] - [description]
+ * @property {boolean} [onStart=false] - [description]
+ * @property {array} [onStartParams] - [description]
+ * @property {boolean} [onRepeat=false] - [description]
+ * @property {array} [onRepeatParams] - [description]
+ * @property {boolean} [onUpdate=false] - [description]
+ * @property {array} [onUpdateParams] - [description]
+ * @property {boolean} [onComplete=false] - [description]
+ * @property {array} [onCompleteParams] - [description]
+ */
+
+/**
  * @classdesc
  * A Frame based Animation.
- * 
+ *
  * This consists of a key, some default values (like the frame rate) and a bunch of Frame objects.
- * 
+ *
  * The Animation Manager creates these. Game Objects don't own an instance of these directly.
  * Game Objects have the Animation Component, which are like playheads to global Animations (these objects)
  * So multiple Game Objects can have playheads all pointing to this one Animation instance.
@@ -25,7 +77,7 @@ var GetValue = require('../utils/object/GetValue');
  *
  * @param {Phaser.Animations.AnimationManager} manager - [description]
  * @param {string} key - [description]
- * @param {object} config - [description]
+ * @param {AnimationConfig} config - [description]
  */
 var Animation = new Class({
 
@@ -65,7 +117,7 @@ var Animation = new Class({
          * Extract all the frame data into the frames array
          *
          * @name Phaser.Animations.Animation#frames
-         * @type {array}
+         * @type {Phaser.Animations.AnimationFrame[]}
          * @since 3.0.0
          */
         this.frames = this.getFrames(
@@ -290,11 +342,6 @@ var Animation = new Class({
         this.manager.on('resumeall', this.resume.bind(this));
     },
 
-    //  config = Array of Animation config objects, like:
-    //  [
-    //      { key: 'gems', frame: 'diamond0001', [duration], [visible], [onUpdate] }
-    //  ]
-
     //  Add frames to the end of the animation
 
     /**
@@ -303,7 +350,7 @@ var Animation = new Class({
      * @method Phaser.Animations.Animation#addFrame
      * @since 3.0.0
      *
-     * @param {[type]} config - [description]
+     * @param {(string|AnimationFrameConfig[])} config - [description]
      *
      * @return {Phaser.Animations.Animation} This Animation object.
      */
@@ -311,11 +358,6 @@ var Animation = new Class({
     {
         return this.addFrameAt(this.frames.length, config);
     },
-
-    //  config = Array of Animation config objects, like:
-    //  [
-    //      { key: 'gems', frame: 'diamond0001', [duration], [visible], [onUpdate] }
-    //  ]
 
     //  Add frame/s into the animation
 
@@ -326,7 +368,7 @@ var Animation = new Class({
      * @since 3.0.0
      *
      * @param {integer} index - [description]
-     * @param {[type]} config - [description]
+     * @param {(string|AnimationFrameConfig[])} config - [description]
      *
      * @return {Phaser.Animations.Animation} This Animation object.
      */
@@ -435,20 +477,14 @@ var Animation = new Class({
      * @method Phaser.Animations.Animation#getFrames
      * @since 3.0.0
      *
-     * @param {[type]} textureManager - [description]
-     * @param {[type]} frames - [description]
+     * @param {Phaser.Textures.TextureManager} textureManager - [description]
+     * @param {(string|AnimationFrameConfig[])} frames - [description]
+     * @param {string} [defaultTextureKey] - [description]
      *
      * @return {Phaser.Animations.AnimationFrame[]} [description]
      */
     getFrames: function (textureManager, frames, defaultTextureKey)
     {
-        //      frames: [
-        //          { key: textureKey, frame: textureFrame },
-        //          { key: textureKey, frame: textureFrame, duration: float },
-        //          { key: textureKey, frame: textureFrame, onUpdate: function }
-        //          { key: textureKey, frame: textureFrame, visible: boolean }
-        //      ],
-
         var out = [];
         var prev;
         var animationFrame;
@@ -778,7 +814,7 @@ var Animation = new Class({
      * @method Phaser.Animations.Animation#toJSON
      * @since 3.0.0
      *
-     * @return {object} [description]
+     * @return {JSONAnimation} [description]
      */
     toJSON: function ()
     {

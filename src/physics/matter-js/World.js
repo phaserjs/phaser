@@ -54,16 +54,16 @@ var World = new Class({
          * [description]
          *
          * @name Phaser.Physics.Matter.World#engine
-         * @type {[type]}
+         * @type {Matter.Engine}
          * @since 3.0.0
          */
         this.engine = Engine.create(config);
 
         /**
-         * [description]
+         * A `World` composite object that will contain all simulated bodies and constraints.
          *
          * @name Phaser.Physics.Matter.World#localWorld
-         * @type {[type]}
+         * @type {Matter.World}
          * @since 3.0.0
          */
         this.localWorld = this.engine.world;
@@ -79,7 +79,7 @@ var World = new Class({
          * An object containing the 4 wall bodies that bound the physics world.
          *
          * @name Phaser.Physics.Matter.World#walls
-         * @type {[type]}
+         * @type {object}
          * @since 3.0.0
          */
         this.walls = { left: null, right: null, top: null, bottom: null };
@@ -117,6 +117,20 @@ var World = new Class({
          * @since 3.0.0
          */
         this.enabled = GetValue(config, 'enabled', true);
+
+        /**
+         * The correction argument is an optional Number that specifies the time correction factor to apply to the update.
+         * This can help improve the accuracy of the simulation in cases where delta is changing between updates.
+         * The value of correction is defined as delta / lastDelta, i.e. the percentage change of delta over the last step.
+         * Therefore the value is always 1 (no correction) when delta constant (or when no correction is desired, which is the default).
+         * See the paper on Time Corrected Verlet for more information.
+         *
+         * @name Phaser.Physics.Matter.World#correction
+         * @type {number}
+         * @default 1
+         * @since 3.3.1
+         */
+        this.correction = GetValue(config, 'correction', 1);
 
         /**
          * [description]
@@ -249,10 +263,10 @@ var World = new Class({
      * @method Phaser.Physics.Matter.World#setBounds
      * @since 3.0.0
      *
-     * @param {number} x - The x coordinate of the top-left corner of the bounds.
-     * @param {number} y - The y coordinate of the top-left corner of the bounds.
-     * @param {number} width - The width of the bounds.
-     * @param {number} height - The height of the bounds.
+     * @param {number} [x=0] - The x coordinate of the top-left corner of the bounds.
+     * @param {number} [y=0] - The y coordinate of the top-left corner of the bounds.
+     * @param {number} [width] - The width of the bounds.
+     * @param {number} [height] - The height of the bounds.
      * @param {number} [thickness=128] - The thickness of each wall, in pixels.
      * @param {boolean} [left=true] - If true will create the left bounds wall.
      * @param {boolean} [right=true] - If true will create the right bounds wall.
@@ -288,12 +302,12 @@ var World = new Class({
      * @method Phaser.Physics.Matter.World#updateWall
      * @since 3.0.0
      *
-     * @param {[type]} add - [description]
-     * @param {[type]} position - [description]
-     * @param {[type]} x - [description]
-     * @param {[type]} y - [description]
-     * @param {[type]} width - [description]
-     * @param {[type]} height - [description]
+     * @param {boolean} add - [description]
+     * @param {string} position - [description]
+     * @param {number} x - [description]
+     * @param {number} y - [description]
+     * @param {number} width - [description]
+     * @param {number} height - [description]
      */
     updateWall: function (add, position, x, y, width, height)
     {
@@ -368,7 +382,7 @@ var World = new Class({
      * @since 3.0.0
      *
      * @param {number} [x=0] - [description]
-     * @param {number} [y] - [description]
+     * @param {number} [y=1] - [description]
      * @param {number} [scale] - [description]
      *
      * @return {Phaser.Physics.Matter.World} This Matter World object.
@@ -395,13 +409,13 @@ var World = new Class({
      * @method Phaser.Physics.Matter.World#create
      * @since 3.0.0
      *
-     * @param {[type]} x - [description]
-     * @param {[type]} y - [description]
-     * @param {[type]} width - [description]
-     * @param {[type]} height - [description]
-     * @param {[type]} options - [description]
+     * @param {number} x - [description]
+     * @param {number} y - [description]
+     * @param {number} width - [description]
+     * @param {number} height - [description]
+     * @param {object} options - [description]
      *
-     * @return {[type]} [description]
+     * @return {Matter.Body} [description]
      */
     create: function (x, y, width, height, options)
     {
@@ -412,14 +426,13 @@ var World = new Class({
         return body;
     },
 
-    //  object can be single or an array, and can be a body, composite or constraint
     /**
      * [description]
      *
      * @method Phaser.Physics.Matter.World#add
      * @since 3.0.0
      *
-     * @param {[type]} object - [description]
+     * @param {(object|object[])} object - Can be single or an array, and can be a body, composite or constraint
      *
      * @return {Phaser.Physics.Matter.World} This Matter World object.
      */
@@ -436,7 +449,7 @@ var World = new Class({
      * @method Phaser.Physics.Matter.World#remove
      * @since 3.0.0
      *
-     * @param {[type]} object - [description]
+     * @param {object} object - The object to be removed from the world.
      * @param {boolean} deep - [description]
      *
      * @return {Phaser.Physics.Matter.World} This Matter World object.
@@ -456,7 +469,7 @@ var World = new Class({
      * @method Phaser.Physics.Matter.World#removeConstraint
      * @since 3.0.0
      *
-     * @param {[type]} constraint - [description]
+     * @param {Matter.Constraint} constraint - [description]
      * @param {boolean} deep - [description]
      *
      * @return {Phaser.Physics.Matter.World} This Matter World object.
@@ -475,11 +488,10 @@ var World = new Class({
      * @method Phaser.Physics.Matter.World#convertTilemapLayer
      * @since 3.0.0
      *
-     * @param {Phaser.GameObjects.StaticTilemapLayer|Phaser.GameObjects.DynamicTilemapLayer} tiles -
+     * @param {(Phaser.GameObjects.StaticTilemapLayer|Phaser.GameObjects.DynamicTilemapLayer)} tilemapLayer -
      * An array of tiles.
-     * @param {object} [options] - Options to be passed to the MatterTileBody constructor. See
-     * Phaser.Physics.Matter.TileBody.
-     * 
+     * @param {object} [options] - Options to be passed to the MatterTileBody constructor. {@ee Phaser.Physics.Matter.TileBody}
+     *
      * @return {Phaser.Physics.Matter.World} This Matter World object.
      */
     convertTilemapLayer: function (tilemapLayer, options)
@@ -500,9 +512,8 @@ var World = new Class({
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.Tile[]} tiles - An array of tiles.
-     * @param {object} [options] - Options to be passed to the MatterTileBody constructor. See
-     * Phaser.Physics.Matter.TileBody.
-     * 
+     * @param {object} [options] - Options to be passed to the MatterTileBody constructor. {@see Phaser.Physics.Matter.TileBody}
+     *
      * @return {Phaser.Physics.Matter.World} This Matter World object.
      */
     convertTiles: function (tiles, options)
@@ -526,9 +537,9 @@ var World = new Class({
      * @method Phaser.Physics.Matter.World#nextGroup
      * @since 3.0.0
      *
-     * @param {[type]} isNonColliding - [description]
+     * @param {boolean} isNonColliding - [description]
      *
-     * @return {[type]} [description]
+     * @return {number} [description]
      */
     nextGroup: function (isNonColliding)
     {
@@ -541,7 +552,7 @@ var World = new Class({
      * @method Phaser.Physics.Matter.World#nextCategory
      * @since 3.0.0
      *
-     * @return {[type]} [description]
+     * @return {number} [description]
      */
     nextCategory: function ()
     {
@@ -595,9 +606,7 @@ var World = new Class({
     {
         if (this.enabled)
         {
-            var correction = 1;
-
-            Engine.update(this.engine, delta, correction);
+            Engine.update(this.engine, delta, this.correction);
         }
     },
 
@@ -648,6 +657,7 @@ var World = new Class({
                 graphics.strokePath();
             }
         }
+
         graphics.closePath();
     },
 
@@ -657,10 +667,10 @@ var World = new Class({
      * @method Phaser.Physics.Matter.World#fromPath
      * @since 3.0.0
      *
-     * @param {[type]} path - [description]
-     * @param {[type]} points - [description]
+     * @param {string} path - [description]
+     * @param {array} points - [description]
      *
-     * @return {[type]} [description]
+     * @return {array} [description]
      */
     fromPath: function (path, points)
     {

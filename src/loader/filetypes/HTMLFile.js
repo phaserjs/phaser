@@ -25,7 +25,7 @@ var GetFastValue = require('../../utils/object/GetFastValue');
  * @param {number} width - [description]
  * @param {number} height - [description]
  * @param {string} path - [description]
- * @param {object} xhrSettings - [description]
+ * @param {XHRSettingsObject} xhrSettings - [description]
  */
 var HTMLFile = new Class({
 
@@ -119,7 +119,7 @@ var HTMLFile = new Class({
 
 /**
  * Adds an HTML file to the current load queue.
- * 
+ *
  * Note: This method will only be available if the HTML File type has been built into Phaser.
  *
  * The file is **not** loaded immediately after calling this method.
@@ -132,8 +132,8 @@ var HTMLFile = new Class({
  * @param {string} url - [description]
  * @param {number} width - [description]
  * @param {number} height - [description]
- * @param {object} xhrSettings - [description]
- * 
+ * @param {XHRSettingsObject} xhrSettings - [description]
+ *
  * @return {Phaser.Loader.LoaderPlugin} The Loader.
  */
 FileTypesManager.register('html', function (key, url, width, height, xhrSettings)

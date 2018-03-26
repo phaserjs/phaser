@@ -8,6 +8,7 @@ var Class = require('../../utils/Class');
 var Contains = require('./Contains');
 var GetPoint = require('./GetPoint');
 var GetPoints = require('./GetPoints');
+var Line = require('../line/Line');
 var Random = require('./Random');
 
 /**
@@ -108,10 +109,10 @@ var Triangle = new Class({
      * @method Phaser.Geom.Triangle#contains
      * @since 3.0.0
      *
-     * @param {[type]} x - [description]
-     * @param {[type]} y - [description]
+     * @param {number} x - [description]
+     * @param {number} y - [description]
      *
-     * @return {[type]} [description]
+     * @return {boolean} [description]
      */
     contains: function (x, y)
     {
@@ -124,10 +125,10 @@ var Triangle = new Class({
      * @method Phaser.Geom.Triangle#getPoint
      * @since 3.0.0
      *
-     * @param {[type]} position - [description]
-     * @param {[type]} output - [description]
+     * @param {float} position - [description]
+     * @param {(Phaser.Geom.Point|object)} output - [description]
      *
-     * @return {[type]} [description]
+     * @return {(Phaser.Geom.Point|object)} [description]
      */
     getPoint: function (position, output)
     {
@@ -140,11 +141,11 @@ var Triangle = new Class({
      * @method Phaser.Geom.Triangle#getPoints
      * @since 3.0.0
      *
-     * @param {[type]} quantity - [description]
-     * @param {[type]} stepRate - [description]
-     * @param {[type]} output - [description]
+     * @param {integer} quantity - [description]
+     * @param {number} [stepRate] - [description]
+     * @param {(array|Phaser.Geom.Point[])} [output] - [description]
      *
-     * @return {[type]} [description]
+     * @return {(array|Phaser.Geom.Point[])} [description]
      */
     getPoints: function (quantity, stepRate, output)
     {
@@ -157,9 +158,9 @@ var Triangle = new Class({
      * @method Phaser.Geom.Triangle#getRandomPoint
      * @since 3.0.0
      *
-     * @param {[type]} point - [description]
+     * @param {Phaser.Geom.Point} point - [description]
      *
-     * @return {[type]} [description]
+     * @return {Phaser.Geom.Point} [description]
      */
     getRandomPoint: function (point)
     {
@@ -172,12 +173,12 @@ var Triangle = new Class({
      * @method Phaser.Geom.Triangle#setTo
      * @since 3.0.0
      *
-     * @param {[type]} x1 - [description]
-     * @param {[type]} y1 - [description]
-     * @param {[type]} x2 - [description]
-     * @param {[type]} y2 - [description]
-     * @param {[type]} x3 - [description]
-     * @param {[type]} y3 - [description]
+     * @param {number} [x1=0] - [description]
+     * @param {number} [y1=0] - [description]
+     * @param {number} [x2=0] - [description]
+     * @param {number} [y2=0] - [description]
+     * @param {number} [x3=0] - [description]
+     * @param {number} [y3=0] - [description]
      *
      * @return {Phaser.Geom.Triangle} This Triangle object.
      */
@@ -203,47 +204,65 @@ var Triangle = new Class({
     },
 
     /**
-     * [description]
+     * Returns a Line object that corresponds to Line A of this Triangle.
      *
      * @method Phaser.Geom.Triangle#getLineA
      * @since 3.0.0
      *
-     * @return {[type]} [description]
+     * @param {Phaser.Geom.Line} [line] - A Line object to set the results in. If `undefined` a new Line will be created.
+     *
+     * @return {Phaser.Geom.Line} A Line object that corresponds to line A of this Triangle.
      */
-    getLineA: function ()
+    getLineA: function (line)
     {
-        return { x1: this.x1, y1: this.y1, x2: this.x2, y2: this.y2 };
+        if (line === undefined) { line = new Line(); }
+
+        line.setTo(this.x1, this.y1, this.x2, this.y2);
+
+        return line;
     },
 
     /**
-     * [description]
+     * Returns a Line object that corresponds to Line B of this Triangle.
      *
      * @method Phaser.Geom.Triangle#getLineB
      * @since 3.0.0
      *
-     * @return {[type]} [description]
+     * @param {Phaser.Geom.Line} [line] - A Line object to set the results in. If `undefined` a new Line will be created.
+     *
+     * @return {Phaser.Geom.Line} A Line object that corresponds to line B of this Triangle.
      */
-    getLineB: function ()
+    getLineB: function (line)
     {
-        return { x1: this.x2, y1: this.y2, x2: this.x3, y2: this.y3 };
+        if (line === undefined) { line = new Line(); }
+
+        line.setTo(this.x2, this.y2, this.x3, this.y3);
+
+        return line;
     },
 
     /**
-     * [description]
+     * Returns a Line object that corresponds to Line C of this Triangle.
      *
      * @method Phaser.Geom.Triangle#getLineC
      * @since 3.0.0
      *
-     * @return {[type]} [description]
+     * @param {Phaser.Geom.Line} [line] - A Line object to set the results in. If `undefined` a new Line will be created.
+     *
+     * @return {Phaser.Geom.Line} A Line object that corresponds to line C of this Triangle.
      */
-    getLineC: function ()
+    getLineC: function (line)
     {
-        return { x1: this.x3, y1: this.y3, x2: this.x1, y2: this.y1 };
+        if (line === undefined) { line = new Line(); }
+
+        line.setTo(this.x3, this.y3, this.x1, this.y1);
+
+        return line;
     },
 
     /**
      * [description]
-     * 
+     *
      * @name Phaser.Geom.Triangle#left
      * @type {number}
      * @since 3.0.0
@@ -281,7 +300,7 @@ var Triangle = new Class({
 
     /**
      * [description]
-     * 
+     *
      * @name Phaser.Geom.Triangle#right
      * @type {number}
      * @since 3.0.0
@@ -319,7 +338,7 @@ var Triangle = new Class({
 
     /**
      * [description]
-     * 
+     *
      * @name Phaser.Geom.Triangle#top
      * @type {number}
      * @since 3.0.0
@@ -357,7 +376,7 @@ var Triangle = new Class({
 
     /**
      * [description]
-     * 
+     *
      * @name Phaser.Geom.Triangle#bottom
      * @type {number}
      * @since 3.0.0

@@ -24,7 +24,7 @@ var Group = require('../../gameobjects/group/Group');
  * @param {Phaser.Physics.Arcade.World} world - [description]
  * @param {Phaser.Scene} scene - [description]
  * @param {array} children - [description]
- * @param {object} config - [description]
+ * @param {GroupConfig} config - [description]
  */
 var StaticPhysicsGroup = new Class({
 

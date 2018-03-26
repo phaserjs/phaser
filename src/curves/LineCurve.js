@@ -64,14 +64,14 @@ var LineCurve = new Class({
     },
 
     /**
-     * [description]
+     * Returns a Rectangle where the position and dimensions match the bounds of this Curve.
      *
      * @method Phaser.Curves.LineCurve#getBounds
      * @since 3.0.0
      *
-     * @param {[type]} out - [description]
+     * @param {Phaser.Geom.Rectangle} [out] - A Rectangle object to store the bounds in. If not given a new Rectangle will be created.
      *
-     * @return {[type]} [description]
+     * @return {Phaser.Geom.Rectangle} A Rectangle object holding the bounds of this curve. If `out` was given it will be this object.
      */
     getBounds: function (out)
     {
@@ -81,14 +81,14 @@ var LineCurve = new Class({
     },
 
     /**
-     * [description]
+     * Gets the starting point on the curve.
      *
      * @method Phaser.Curves.LineCurve#getStartPoint
      * @since 3.0.0
      *
-     * @param {[type]} out - [description]
+     * @param {Phaser.Math.Vector2} [out] - A Vector2 object to store the result in. If not given will be created.
      *
-     * @return {[type]} [description]
+     * @return {Phaser.Math.Vector2} The coordinates of the point on the curve. If an `out` object was given this will be returned.
      */
     getStartPoint: function (out)
     {
@@ -111,15 +111,15 @@ var LineCurve = new Class({
     },
 
     /**
-     * [description]
+     * Get point at relative position in curve according to length.
      *
      * @method Phaser.Curves.LineCurve#getPoint
      * @since 3.0.0
      *
-     * @param {[type]} t - [description]
-     * @param {[type]} out - [description]
+     * @param {float} t - The position along the curve to return. Where 0 is the start and 1 is the end.
+     * @param {Phaser.Math.Vector2} [out] - A Vector2 object to store the result in. If not given will be created.
      *
-     * @return {[type]} [description]
+     * @return {Phaser.Math.Vector2} The coordinates of the point on the curve. If an `out` object was given this will be returned.
      */
     getPoint: function (t, out)
     {
@@ -136,16 +136,17 @@ var LineCurve = new Class({
     },
 
     // Line curve is linear, so we can overwrite default getPointAt
+
     /**
      * [description]
      *
      * @method Phaser.Curves.LineCurve#getPointAt
      * @since 3.0.0
      *
-     * @param {[type]} u - [description]
-     * @param {[type]} out - [description]
+     * @param {float} u - The position along the curve to return. Where 0 is the start and 1 is the end.
+     * @param {Phaser.Math.Vector2} [out] - A Vector2 object to store the result in. If not given will be created.
      *
-     * @return {[type]} [description]
+     * @return {Phaser.Math.Vector2} The coordinates of the point on the curve. If an `out` object was given this will be returned.
      */
     getPointAt: function (u, out)
     {
@@ -158,7 +159,7 @@ var LineCurve = new Class({
      * @method Phaser.Curves.LineCurve#getTangent
      * @since 3.0.0
      *
-     * @return {[type]} [description]
+     * @return {Phaser.Math.Vector2} [description]
      */
     getTangent: function ()
     {
@@ -168,15 +169,19 @@ var LineCurve = new Class({
     },
 
     //  Override default Curve.draw because this is better than calling getPoints on a line!
+
     /**
-     * [description]
+     * Draws this curve on the given Graphics object.
+     *
+     * The curve is drawn using `Graphics.lineBetween` so will be drawn at whatever the present Graphics line color is.
+     * The Graphics object is not cleared before the draw, so the curve will appear on-top of anything else already rendered to it.
      *
      * @method Phaser.Curves.LineCurve#draw
      * @since 3.0.0
      *
-     * @param {[type]} graphics - [description]
+     * @param {Phaser.GameObjects.Graphics} graphics - The Graphics instance onto which this curve will be drawn.
      *
-     * @return {[type]} [description]
+     * @return {Phaser.GameObjects.Graphics} The Graphics object to which the curve was drawn.
      */
     draw: function (graphics)
     {
@@ -192,7 +197,7 @@ var LineCurve = new Class({
      * @method Phaser.Curves.LineCurve#toJSON
      * @since 3.0.0
      *
-     * @return {[type]} [description]
+     * @return {JSONCurve} The JSON object containing this curve data.
      */
     toJSON: function ()
     {
@@ -207,6 +212,16 @@ var LineCurve = new Class({
 
 });
 
+/**
+ * [description]
+ *
+ * @function Phaser.Curves.LineCurve.fromJSON
+ * @since 3.0.0
+ *
+ * @param {JSONCurve} data - The JSON object containing this curve data.
+ *
+ * @return {Phaser.Curves.LineCurve} [description]
+ */
 LineCurve.fromJSON = function (data)
 {
     var points = data.points;

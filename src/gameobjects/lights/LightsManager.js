@@ -10,6 +10,12 @@ var LightPipeline = require('../../renderer/webgl/pipelines/ForwardDiffuseLightP
 var Utils = require('../../renderer/webgl/Utils');
 
 /**
+ * @callback LightForEach
+ *
+ * @param {Phaser.GameObjects.Light} light - [description]
+ */
+
+/**
  * @classdesc
  * [description]
  *
@@ -28,7 +34,7 @@ var LightsManager = new Class({
          * [description]
          *
          * @name Phaser.GameObjects.LightsManager#lightPool
-         * @type {array}
+         * @type {Phaser.GameObjects.Light[]}
          * @default []
          * @since 3.0.0
          */
@@ -38,7 +44,7 @@ var LightsManager = new Class({
          * [description]
          *
          * @name Phaser.GameObjects.LightsManager#lights
-         * @type {array}
+         * @type {Phaser.GameObjects.Light[]}
          * @default []
          * @since 3.0.0
          */
@@ -48,7 +54,7 @@ var LightsManager = new Class({
          * [description]
          *
          * @name Phaser.GameObjects.LightsManager#culledLights
-         * @type {array}
+         * @type {Phaser.GameObjects.Light[]}
          * @default []
          * @since 3.0.0
          */
@@ -134,7 +140,7 @@ var LightsManager = new Class({
 
             cameraMatrix.transformPoint(light.x, light.y, point);
 
-            // We'll just use bounding spheres to test 
+            // We'll just use bounding spheres to test
             // if lights should be rendered
             var dx = cameraCenterX - (point.x - (camera.scrollX * light.scrollFactorX * camera.zoom));
             var dy = cameraCenterY - (viewportHeight - (point.y - (camera.scrollY * light.scrollFactorY) * camera.zoom));
@@ -155,7 +161,7 @@ var LightsManager = new Class({
      * @method Phaser.GameObjects.LightsManager#forEachLight
      * @since 3.0.0
      *
-     * @param {function} callback - [description]
+     * @param {LightForEach} callback - [description]
      *
      * @return {Phaser.GameObjects.LightsManager} This Lights Manager object.
      */
@@ -183,14 +189,14 @@ var LightsManager = new Class({
      * @method Phaser.GameObjects.LightsManager#setAmbientColor
      * @since 3.0.0
      *
-     * @param {[type]} rgb - [description]
+     * @param {number} rgb - [description]
      *
      * @return {Phaser.GameObjects.LightsManager} This Lights Manager object.
      */
     setAmbientColor: function (rgb)
     {
         var color = Utils.getFloatsFromUintRGB(rgb);
-        
+
         this.ambientColor.r = color[0];
         this.ambientColor.g = color[1];
         this.ambientColor.b = color[2];
@@ -274,7 +280,7 @@ var LightsManager = new Class({
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.Light} light - [description]
-     * 
+     *
      * @return {Phaser.GameObjects.LightsManager} This Lights Manager object.
      */
     removeLight: function (light)
@@ -302,7 +308,7 @@ var LightsManager = new Class({
         {
             this.lightPool.push(this.lights.pop());
         }
-        
+
         this.ambientColor = { r: 0.1, g: 0.1, b: 0.1 };
         this.culledLights.length = 0;
         this.lights.length = 0;

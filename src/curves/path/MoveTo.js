@@ -48,15 +48,15 @@ var MoveTo = new Class({
     },
 
     /**
-     * [description]
+     * Get point at relative position in curve according to length.
      *
      * @method Phaser.Curves.MoveTo#getPoint
      * @since 3.0.0
      *
-     * @param {[type]} t - [description]
-     * @param {[type]} out - [description]
+     * @param {float} t - The position along the curve to return. Where 0 is the start and 1 is the end.
+     * @param {Phaser.Math.Vector2} [out] - A Vector2 object to store the result in. If not given will be created.
      *
-     * @return {[type]} [description]
+     * @return {Phaser.Math.Vector2} The coordinates of the point on the curve. If an `out` object was given this will be returned.
      */
     getPoint: function (t, out)
     {
@@ -71,10 +71,10 @@ var MoveTo = new Class({
      * @method Phaser.Curves.MoveTo#getPointAt
      * @since 3.0.0
      *
-     * @param {[type]} u - [description]
-     * @param {[type]} out - [description]
+     * @param {float} u - [description]
+     * @param {Phaser.Math.Vector2} [out] - [description]
      *
-     * @return {[type]} [description]
+     * @return {Phaser.Math.Vector2} [description]
      */
     getPointAt: function (u, out)
     {
@@ -82,12 +82,12 @@ var MoveTo = new Class({
     },
 
     /**
-     * [description]
+     * Gets the resolution of this curve.
      *
      * @method Phaser.Curves.MoveTo#getResolution
      * @since 3.0.0
      *
-     * @return {[type]} [description]
+     * @return {number} The resolution of this curve. For a MoveTo the value is always 1.
      */
     getResolution: function ()
     {
@@ -95,12 +95,12 @@ var MoveTo = new Class({
     },
 
     /**
-     * [description]
+     * Gets the length of this curve.
      *
      * @method Phaser.Curves.MoveTo#getLength
      * @since 3.0.0
      *
-     * @return {[type]} [description]
+     * @return {number} The length of this curve. For a MoveTo the value is always 0.
      */
     getLength: function ()
     {
@@ -113,7 +113,7 @@ var MoveTo = new Class({
      * @method Phaser.Curves.MoveTo#toJSON
      * @since 3.0.0
      *
-     * @return {[type]} [description]
+     * @return {JSONCurve} [description]
      */
     toJSON: function ()
     {

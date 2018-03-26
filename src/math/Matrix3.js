@@ -4,7 +4,7 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-//  Adapted from [gl-matrix](https://github.com/toji/gl-matrix) by toji 
+//  Adapted from [gl-matrix](https://github.com/toji/gl-matrix) by toji
 //  and [vecmath](https://github.com/mattdesl/vecmath) by mattdesl
 
 var Class = require('../utils/Class');
@@ -54,7 +54,7 @@ var Matrix3 = new Class({
      * @method Phaser.Math.Matrix3#clone
      * @since 3.0.0
      *
-     * @return {[type]} [description]
+     * @return {Phaser.Math.Matrix3} A new Matrix3 object.
      */
     clone: function ()
     {
@@ -67,9 +67,9 @@ var Matrix3 = new Class({
      * @method Phaser.Math.Matrix3#set
      * @since 3.0.0
      *
-     * @param {[type]} src - [description]
+     * @param {Phaser.Math.Matrix3} src - [description]
      *
-     * @return {[type]} [description]
+     * @return {Phaser.Math.Matrix3} This Matrix3 object.
      */
     set: function (src)
     {
@@ -82,9 +82,9 @@ var Matrix3 = new Class({
      * @method Phaser.Math.Matrix3#copy
      * @since 3.0.0
      *
-     * @param {[type]} src - [description]
+     * @param {Phaser.Math.Matrix3} src - [description]
      *
-     * @return {[type]} [description]
+     * @return {Phaser.Math.Matrix3} This Matrix3 object.
      */
     copy: function (src)
     {
@@ -110,9 +110,9 @@ var Matrix3 = new Class({
      * @method Phaser.Math.Matrix3#fromMat4
      * @since 3.0.0
      *
-     * @param {[type]} m - [description]
+     * @param {Phaser.Math.Matrix4} m - [description]
      *
-     * @return {[type]} [description]
+     * @return {Phaser.Math.Matrix3} This Matrix3 object.
      */
     fromMat4: function (m)
     {
@@ -138,9 +138,9 @@ var Matrix3 = new Class({
      * @method Phaser.Math.Matrix3#fromArray
      * @since 3.0.0
      *
-     * @param {[type]} a - [description]
+     * @param {array} a - [description]
      *
-     * @return {[type]} [description]
+     * @return {Phaser.Math.Matrix3} This Matrix3 object.
      */
     fromArray: function (a)
     {
@@ -165,7 +165,7 @@ var Matrix3 = new Class({
      * @method Phaser.Math.Matrix3#identity
      * @since 3.0.0
      *
-     * @return {[type]} [description]
+     * @return {Phaser.Math.Matrix3} This Matrix3 object.
      */
     identity: function ()
     {
@@ -190,7 +190,7 @@ var Matrix3 = new Class({
      * @method Phaser.Math.Matrix3#transpose
      * @since 3.0.0
      *
-     * @return {[type]} [description]
+     * @return {Phaser.Math.Matrix3} This Matrix3 object.
      */
     transpose: function ()
     {
@@ -215,7 +215,7 @@ var Matrix3 = new Class({
      * @method Phaser.Math.Matrix3#invert
      * @since 3.0.0
      *
-     * @return {[type]} [description]
+     * @return {Phaser.Math.Matrix3} This Matrix3 object.
      */
     invert: function ()
     {
@@ -264,7 +264,7 @@ var Matrix3 = new Class({
      * @method Phaser.Math.Matrix3#adjoint
      * @since 3.0.0
      *
-     * @return {[type]} [description]
+     * @return {Phaser.Math.Matrix3} This Matrix3 object.
      */
     adjoint: function ()
     {
@@ -299,7 +299,7 @@ var Matrix3 = new Class({
      * @method Phaser.Math.Matrix3#determinant
      * @since 3.0.0
      *
-     * @return {[type]} [description]
+     * @return {number} [description]
      */
     determinant: function ()
     {
@@ -324,9 +324,9 @@ var Matrix3 = new Class({
      * @method Phaser.Math.Matrix3#multiply
      * @since 3.0.0
      *
-     * @param {[type]} src - [description]
+     * @param {Phaser.Math.Matrix3} src - [description]
      *
-     * @return {[type]} [description]
+     * @return {Phaser.Math.Matrix3} This Matrix3 object.
      */
     multiply: function (src)
     {
@@ -375,9 +375,9 @@ var Matrix3 = new Class({
      * @method Phaser.Math.Matrix3#translate
      * @since 3.0.0
      *
-     * @param {[type]} v - [description]
+     * @param {(Phaser.Math.Vector2|Phaser.Math.Vector3|Phaser.Math.Vector4)} v - [description]
      *
-     * @return {[type]} [description]
+     * @return {Phaser.Math.Matrix3} This Matrix3 object.
      */
     translate: function (v)
     {
@@ -398,9 +398,9 @@ var Matrix3 = new Class({
      * @method Phaser.Math.Matrix3#rotate
      * @since 3.0.0
      *
-     * @param {[type]} rad - [description]
+     * @param {number} rad - [description]
      *
-     * @return {[type]} [description]
+     * @return {Phaser.Math.Matrix3} This Matrix3 object.
      */
     rotate: function (rad)
     {
@@ -433,9 +433,9 @@ var Matrix3 = new Class({
      * @method Phaser.Math.Matrix3#scale
      * @since 3.0.0
      *
-     * @param {[type]} v - [description]
+     * @param {(Phaser.Math.Vector2|Phaser.Math.Vector3|Phaser.Math.Vector4)} v - [description]
      *
-     * @return {[type]} [description]
+     * @return {Phaser.Math.Matrix3} This Matrix3 object.
      */
     scale: function (v)
     {
@@ -460,9 +460,9 @@ var Matrix3 = new Class({
      * @method Phaser.Math.Matrix3#fromQuat
      * @since 3.0.0
      *
-     * @param {[type]} q - [description]
+     * @param {Phaser.Math.Quaternion} q - [description]
      *
-     * @return {[type]} [description]
+     * @return {Phaser.Math.Matrix3} This Matrix3 object.
      */
     fromQuat: function (q)
     {
@@ -510,9 +510,9 @@ var Matrix3 = new Class({
      * @method Phaser.Math.Matrix3#normalFromMat4
      * @since 3.0.0
      *
-     * @param {[type]} m - [description]
+     * @param {Phaser.Math.Matrix4} m - [description]
      *
-     * @return {[type]} [description]
+     * @return {Phaser.Math.Matrix3} This Matrix3 object.
      */
     normalFromMat4: function (m)
     {

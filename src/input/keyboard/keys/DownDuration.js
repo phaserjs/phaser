@@ -12,7 +12,7 @@
  * @since 3.0.0
  *
  * @param {Phaser.Input.Keyboard.Key} key - [description]
- * @param {integer} duration - [description]
+ * @param {integer} [duration=50] - [description]
  *
  * @return {boolean} [description]
  */

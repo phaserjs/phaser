@@ -71,7 +71,7 @@ var TransformMatrix = new Class({
     loadIdentity: function ()
     {
         var matrix = this.matrix;
-        
+
         matrix[0] = 1;
         matrix[1] = 0;
         matrix[2] = 0;
@@ -227,9 +227,9 @@ var TransformMatrix = new Class({
      *
      * @param {number} x - [description]
      * @param {number} y - [description]
-     * @param {Phaser.Geom.Point|Phaser.Math.Vec2|object} point - [description]
+     * @param {(Phaser.Geom.Point|Phaser.Math.Vector2|object)} point - [description]
      *
-     * @return {Phaser.Geom.Point|Phaser.Math.Vec2|object} [description]
+     * @return {(Phaser.Geom.Point|Phaser.Math.Vector2|object)} [description]
      */
     transformPoint: function (x, y, point)
     {

@@ -10,6 +10,18 @@ var GetAdvancedValue = require('../../utils/object/GetAdvancedValue');
 var TileSprite = require('./TileSprite');
 
 /**
+ * @typedef {object} TileSprite
+ * @extends GameObjectConfig
+ *
+ * @property {number} [x=0] - [description]
+ * @property {number} [y=0] - [description]
+ * @property {number} [width=512] - [description]
+ * @property {number} [height=512] - [description]
+ * @property {string} [key=''] - [description]
+ * @property {string} [frame=''] - [description]
+ */
+
+/**
  * Creates a new TileSprite Game Object and returns it.
  *
  * Note: This method will only be available if the TileSprite Game Object has been built into Phaser.
@@ -17,7 +29,7 @@ var TileSprite = require('./TileSprite');
  * @method Phaser.GameObjects.GameObjectCreator#tileSprite
  * @since 3.0.0
  *
- * @param {object} config - [description]
+ * @param {TileSprite} config - [description]
  *
  * @return {Phaser.GameObjects.TileSprite} The Game Object that was created.
  */

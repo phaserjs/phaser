@@ -120,11 +120,11 @@ var GameObjectCreator = new Class({
 
 //  Static method called directly by the Game Object creator functions
 
-GameObjectCreator.register = function (type, factoryFunction)
+GameObjectCreator.register = function (factoryType, factoryFunction)
 {
-    if (!GameObjectCreator.prototype.hasOwnProperty(type))
+    if (!GameObjectCreator.prototype.hasOwnProperty(factoryType))
     {
-        GameObjectCreator.prototype[type] = factoryFunction;
+        GameObjectCreator.prototype[factoryType] = factoryFunction;
     }
 };
 

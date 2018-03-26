@@ -22,7 +22,7 @@ var ScaleModes = require('../renderer/ScaleModes');
  * @since 3.0.0
  *
  * @param {Phaser.Textures.Texture} texture - The Texture this TextureSource belongs to.
- * @param {Image|HTMLCanvasElement} source - The source image data.
+ * @param {(Image|HTMLCanvasElement)} source - The source image data.
  * @param {integer} [width] - Optional width of the source image. If not given it's derived from the source itself.
  * @param {integer} [height] - Optional height of the source image. If not given it's derived from the source itself.
  */
@@ -47,7 +47,7 @@ var TextureSource = new Class({
          * The source image data. This is either an Image Element, or a Canvas Element.
          *
          * @name Phaser.Textures.TextureSource#image
-         * @type {Image|HTMLCanvasElement}
+         * @type {(HTMLImageElement|HTMLCanvasElement)}
          * @since 3.0.0
          */
         this.image = source;
@@ -97,7 +97,7 @@ var TextureSource = new Class({
          * Either Linear or Nearest.
          *
          * @name Phaser.Textures.TextureSource#scaleMode
-         * @type {[type]}
+         * @type {number}
          * @since 3.0.0
          */
         this.scaleMode = ScaleModes.DEFAULT;
@@ -124,7 +124,7 @@ var TextureSource = new Class({
          * The WebGL Texture of the source image.
          *
          * @name Phaser.Textures.TextureSource#glTexture
-         * @type {?[type]}
+         * @type {?WebGLTexture}
          * @default null
          * @since 3.0.0
          */
@@ -164,7 +164,7 @@ var TextureSource = new Class({
      * @method Phaser.Textures.TextureSource#setFilter
      * @since 3.0.0
      *
-     * @param {Phaser.Textures.FilterMode.LINEAR|Phaser.Textures.FilterMode.NEAREST} filterMode - The Filter Mode.
+     * @param {(Phaser.Textures.LINEAR|Phaser.Textures.NEAREST)} filterMode - The Filter Mode.
      */
     setFilter: function (filterMode)
     {

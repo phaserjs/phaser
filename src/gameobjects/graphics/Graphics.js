@@ -477,7 +477,7 @@ var Graphics = new Class({
      * @method Phaser.GameObjects.Graphics#fillPointShape
      * @since 3.0.0
      *
-     * @param {Phaser.Geom.Point|Phaser.Math.Vector2|object} point - [description]
+     * @param {(Phaser.Geom.Point|Phaser.Math.Vector2|object)} point - [description]
      * @param {number} [size=1] - [description]
      *
      * @return {Phaser.GameObjects.Graphics} This Game Object.
@@ -731,7 +731,7 @@ var Graphics = new Class({
      * @method Phaser.GameObjects.Graphics#strokePoints
      * @since 3.0.0
      *
-     * @param {array|Phaser.Geom.Point[]} points - [description]
+     * @param {(array|Phaser.Geom.Point[])} points - [description]
      * @param {boolean} [autoClose=false] - [description]
      * @param {integer} [endIndex] - [description]
      *
@@ -767,7 +767,7 @@ var Graphics = new Class({
      * @method Phaser.GameObjects.Graphics#fillPoints
      * @since 3.0.0
      *
-     * @param {array|Phaser.Geom.Point[]} points - [description]
+     * @param {(array|Phaser.Geom.Point[])} points - [description]
      * @param {boolean} [autoClose=false] - [description]
      * @param {integer} [endIndex] - [description]
      *
@@ -1043,7 +1043,7 @@ var Graphics = new Class({
      * @method Phaser.GameObjects.Graphics#generateTexture
      * @since 3.0.0
      *
-     * @param {string|HTMLCanvasElement} key - [description]
+     * @param {(string|HTMLCanvasElement)} key - [description]
      * @param {integer} [width] - [description]
      * @param {integer} [height] - [description]
      *

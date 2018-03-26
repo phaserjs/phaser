@@ -23,7 +23,7 @@ var GetFastValue = require('../../utils/object/GetFastValue');
  * @param {string} key - [description]
  * @param {string} url - [description]
  * @param {string} path - [description]
- * @param {object} xhrSettings - [description]
+ * @param {XHRSettingsObject} xhrSettings - [description]
  */
 var GLSLFile = new Class({
 
@@ -63,7 +63,7 @@ var GLSLFile = new Class({
 
 /**
  * Adds a GLSL file to the current load queue.
- * 
+ *
  * Note: This method will only be available if the GLSL File type has been built into Phaser.
  *
  * The file is **not** loaded immediately after calling this method.
@@ -74,8 +74,8 @@ var GLSLFile = new Class({
  *
  * @param {string} key - [description]
  * @param {string} url - [description]
- * @param {object} xhrSettings - [description]
- * 
+ * @param {XHRSettingsObject} xhrSettings - [description]
+ *
  * @return {Phaser.Loader.LoaderPlugin} The Loader.
  */
 FileTypesManager.register('glsl', function (key, url, xhrSettings)

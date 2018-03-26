@@ -24,8 +24,8 @@ var HTML5AudioFile = require('./HTML5AudioFile');
  * @param {string} key - [description]
  * @param {string} url - [description]
  * @param {string} path - [description]
- * @param {object} xhrSettings - [description]
- * @param {[type]} audioContext - [description]
+ * @param {XHRSettingsObject} xhrSettings - [description]
+ * @param {AudioContext} audioContext - [description]
  */
 var AudioFile = new Class({
 
@@ -38,7 +38,7 @@ var AudioFile = new Class({
         /**
          * [description]
          *
-         * @property {[type]} context
+         * @property {AudioContext} context
          * @since 3.0.0
          */
         this.context = audioContext;
@@ -62,7 +62,7 @@ var AudioFile = new Class({
      * @method Phaser.Loader.FileTypes.AudioFile#onProcess
      * @since 3.0.0
      *
-     * @param {[type]} callback - [description]
+     * @param {FileProcessCallback} callback - [description]
      */
     onProcess: function (callback)
     {
@@ -128,7 +128,7 @@ AudioFile.create = function (loader, key, urls, config, xhrSettings)
 
 /**
  * Adds an Audio file to the current load queue.
- * 
+ *
  * Note: This method will only be available if the Audio File type has been built into Phaser.
  *
  * The file is **not** loaded immediately after calling this method.
@@ -138,10 +138,10 @@ AudioFile.create = function (loader, key, urls, config, xhrSettings)
  * @since 3.0.0
  *
  * @param {string} key - [description]
- * @param {string|string[]} urls - [description]
+ * @param {(string|string[])} urls - [description]
  * @param {object} config - [description]
  * @param {object} xhrSettings - [description]
- * 
+ *
  * @return {Phaser.Loader.LoaderPlugin} The Loader.
  */
 FileTypesManager.register('audio', function (key, urls, config, xhrSettings)
@@ -216,14 +216,15 @@ AudioFile.findAudioURL = function (game, urls)
             return url;
         }
 
-        var type = url.match(/\.([a-zA-Z0-9]+)($|\?)/);
-        type = GetFastValue(urls[i], 'type', type ? type[1] : '').toLowerCase();
+        var audioType = url.match(/\.([a-zA-Z0-9]+)($|\?)/);
 
-        if (game.device.audio[type])
+        audioType = GetFastValue(urls[i], 'type', (audioType) ? audioType[1] : '').toLowerCase();
+
+        if (game.device.audio[audioType])
         {
             return {
                 uri: url,
-                type: type
+                type: audioType
             };
         }
     }

@@ -18,12 +18,12 @@ var SetTileCollision = require('./SetTileCollision');
  * @function Phaser.Tilemaps.Components.PutTileAt
  * @since 3.0.0
  *
- * @param {integer|Phaser.Tilemaps.Tile} tile - The index of this tile to set or a Tile object.
+ * @param {(integer|Phaser.Tilemaps.Tile)} tile - The index of this tile to set or a Tile object.
  * @param {integer} tileX - [description]
  * @param {integer} tileY - [description]
  * @param {boolean} [recalculateFaces=true] - [description]
  * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.
- * 
+ *
  * @return {Phaser.Tilemaps.Tile} The Tile object that was created or added to this map.
  */
 var PutTileAt = function (tile, tileX, tileY, recalculateFaces, layer)

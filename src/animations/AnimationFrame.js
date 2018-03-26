@@ -7,6 +7,14 @@
 var Class = require('../utils/Class');
 
 /**
+ * @typedef {object} JSONAnimationFrame
+ *
+ * @property {string} key - The key of the Texture this AnimationFrame uses.
+ * @property {(string|integer)} frame - The key of the Frame within the Texture that this AnimationFrame uses.
+ * @property {number} duration - Additional time (in ms) that this frame should appear for during playback.
+ */
+
+/**
  * @classdesc
  * A single frame in an Animation sequence.
  *
@@ -22,7 +30,7 @@ var Class = require('../utils/Class');
  * @since 3.0.0
  *
  * @param {string} textureKey - The key of the Texture this AnimationFrame uses.
- * @param {string|integer} textureFrame - The key of the Frame within the Texture that this AnimationFrame uses.
+ * @param {(string|integer)} textureFrame - The key of the Frame within the Texture that this AnimationFrame uses.
  * @param {integer} index - The index of this AnimationFrame within the Animation sequence.
  * @param {Phaser.Textures.Frame} frame - A reference to the Texture Frame this AnimationFrame uses for rendering.
  */
@@ -45,7 +53,7 @@ var AnimationFrame = new Class({
          * The key of the Frame within the Texture that this AnimationFrame uses.
          *
          * @name Phaser.Animations.AnimationFrame#textureFrame
-         * @type {string|integer}
+         * @type {(string|integer)}
          * @since 3.0.0
          */
         this.textureFrame = textureFrame;
@@ -151,8 +159,8 @@ var AnimationFrame = new Class({
      *
      * @method Phaser.Animations.AnimationFrame#toJSON
      * @since 3.0.0
-     * 
-     * @return {object} The AnimationFrame data.
+     *
+     * @return {JSONAnimationFrame} The AnimationFrame data.
      */
     toJSON: function ()
     {

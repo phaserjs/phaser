@@ -52,7 +52,7 @@ var ScenePlugin = new Class({
          * [description]
          *
          * @name Phaser.Scenes.ScenePlugin#settings
-         * @type {object}
+         * @type {SettingsObject}
          * @since 3.0.0
          */
         this.settings = scene.sys.settings;
@@ -457,7 +457,7 @@ var ScenePlugin = new Class({
      * @method Phaser.Scenes.ScenePlugin#remove
      * @since 3.2.0
      *
-     * @param {string|Phaser.Scene} scene - The Scene to be removed.
+     * @param {(string|Phaser.Scene)} scene - The Scene to be removed.
      *
      * @return {Phaser.Scenes.SceneManager} This SceneManager.
      */

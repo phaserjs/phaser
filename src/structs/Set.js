@@ -7,6 +7,15 @@
 var Class = require('../utils/Class');
 
 /**
+ * @callback EachSetCallback
+ *
+ * @param {*} entry - [description]
+ * @param {number} index - [description]
+ *
+ * @return {?boolean} [description]
+ */
+
+/**
  * @classdesc
  * A Set is a collection of unique elements.
  *
@@ -48,7 +57,7 @@ var Set = new Class({
      * @method Phaser.Structs.Set#set
      * @since 3.0.0
      *
-     * @param {any} value - [description]
+     * @param {*} value - [description]
      *
      * @return {Phaser.Structs.Set} This Set object.
      */
@@ -69,9 +78,9 @@ var Set = new Class({
      * @since 3.0.0
      *
      * @param {string} property - [description]
-     * @param {any} value - [description]
+     * @param {*} value - [description]
      *
-     * @return {any} [description]
+     * @return {*} [description]
      */
     get: function (property, value)
     {
@@ -105,7 +114,7 @@ var Set = new Class({
      * @method Phaser.Structs.Set#delete
      * @since 3.0.0
      *
-     * @param {any} value - [description]
+     * @param {*} value - [description]
      *
      * @return {Phaser.Structs.Set} This Set object.
      */
@@ -148,7 +157,7 @@ var Set = new Class({
      * @method Phaser.Structs.Set#each
      * @since 3.0.0
      *
-     * @param {function} callback - [description]
+     * @param {EachSetCallback} callback - [description]
      * @param {object} callbackScope - [description]
      *
      * @return {Phaser.Structs.Set} This Set object.
@@ -189,7 +198,7 @@ var Set = new Class({
      * @method Phaser.Structs.Set#iterate
      * @since 3.0.0
      *
-     * @param {function} callback - [description]
+     * @param {EachSetCallback} callback - [description]
      * @param {object} callbackScope - [description]
      *
      * @return {Phaser.Structs.Set} This Set object.
@@ -277,7 +286,7 @@ var Set = new Class({
      * @method Phaser.Structs.Set#contains
      * @since 3.0.0
      *
-     * @param {any} value - [description]
+     * @param {*} value - [description]
      *
      * @return {boolean} [description]
      */

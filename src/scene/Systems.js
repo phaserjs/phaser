@@ -25,7 +25,7 @@ var Settings = require('./Settings');
  * @since 3.0.0
  *
  * @param {Phaser.Scene} scene - The Scene that owns this Systems instance.
- * @param {object} config - Scene specific configuration settings.
+ * @param {(string|SettingsConfig)} config - Scene specific configuration settings.
  */
 var Systems = new Class({
 
@@ -55,7 +55,7 @@ var Systems = new Class({
          * [description]
          *
          * @name Phaser.Scenes.Systems#config
-         * @type {object}
+         * @type {(string|SettingsConfig)}
          * @since 3.0.0
          */
         this.config = config;
@@ -64,7 +64,7 @@ var Systems = new Class({
          * [description]
          *
          * @name Phaser.Scenes.Systems#settings
-         * @type {[type]}
+         * @type {SettingsObject}
          * @since 3.0.0
          */
         this.settings = Settings.create(config);
@@ -120,7 +120,7 @@ var Systems = new Class({
          * [description]
          *
          * @name Phaser.Scenes.Systems#registry
-         * @type {[type]}
+         * @type {Phaser.Data.DataManager}
          * @since 3.0.0
          */
         this.registry;
@@ -203,7 +203,7 @@ var Systems = new Class({
          * [description]
          *
          * @name Phaser.Scenes.Systems#updateList
-         * @type {[type]}
+         * @type {Phaser.GameObjects.UpdateList}
          * @since 3.0.0
          */
         this.updateList;
@@ -288,7 +288,7 @@ var Systems = new Class({
      * @method Phaser.Scenes.Systems#render
      * @since 3.0.0
      *
-     * @param {Phaser.Renderer.Canvas.CanvasRenderer|Phaser.Renderer.WebGL.WebGLRenderer} renderer - [description]
+     * @param {(Phaser.Renderer.Canvas.CanvasRenderer|Phaser.Renderer.WebGL.WebGLRenderer)} renderer - [description]
      */
     render: function (renderer)
     {
@@ -370,7 +370,7 @@ var Systems = new Class({
 
     /**
      * Send this Scene to sleep.
-     * 
+     *
      * A sleeping Scene doesn't run it's update step or render anything, but it also isn't destroyed,
      * or have any of its systems or children removed, meaning it can be re-activated at any point.
      *

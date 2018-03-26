@@ -20,9 +20,9 @@ var Velocity = {
      * @method Phaser.Physics.Matter.Components.Velocity#setAngularVelocity
      * @since 3.0.0
      *
-     * @param {[type]} value - [description]
+     * @param {number} value - [description]
      *
-     * @return {[type]} [description]
+     * @return {Phaser.GameObjects.GameObject} This Game Object.
      */
     setAngularVelocity: function (value)
     {
@@ -37,9 +37,9 @@ var Velocity = {
      * @method Phaser.Physics.Matter.Components.Velocity#setVelocityX
      * @since 3.0.0
      *
-     * @param {[type]} x - [description]
+     * @param {number} x - [description]
      *
-     * @return {[type]} [description]
+     * @return {Phaser.GameObjects.GameObject} This Game Object.
      */
     setVelocityX: function (x)
     {
@@ -56,9 +56,9 @@ var Velocity = {
      * @method Phaser.Physics.Matter.Components.Velocity#setVelocityY
      * @since 3.0.0
      *
-     * @param {[type]} y - [description]
+     * @param {number} y - [description]
      *
-     * @return {[type]} [description]
+     * @return {Phaser.GameObjects.GameObject} This Game Object.
      */
     setVelocityY: function (y)
     {
@@ -75,10 +75,10 @@ var Velocity = {
      * @method Phaser.Physics.Matter.Components.Velocity#setVelocity
      * @since 3.0.0
      *
-     * @param {[type]} x - [description]
-     * @param {[type]} y - [description]
+     * @param {number} x - [description]
+     * @param {number} [y=x] - [description]
      *
-     * @return {[type]} [description]
+     * @return {Phaser.GameObjects.GameObject} This Game Object.
      */
     setVelocity: function (x, y)
     {

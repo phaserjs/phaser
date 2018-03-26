@@ -11,6 +11,29 @@ var GetFastValue = require('../../utils/object/GetFastValue');
 var Wrap = require('../../math/Wrap');
 
 /**
+ * The returned value sets what the property will be at the START of the particles life, on emit.
+ * @callback EmitterOpOnEmitCallback
+ *
+ * @param {Phaser.GameObjects.Particles.Particle} particle - [description]
+ * @param {string} key - [description]
+ * @param {number} value - [description]
+ *
+ * @return {number} [description]
+ */
+
+/**
+ * The returned value updates the property for the duration of the particles life.
+ * @callback EmitterOpOnUpdateCallback
+ *
+ * @param {Phaser.GameObjects.Particles.Particle} particle - [description]
+ * @param {string} key - [description]
+ * @param {float} t - The T value (between 0 and 1)
+ * @param {number} value - [description]
+ *
+ * @return {number} [description]
+ */
+
+/**
  * @classdesc
  * [description]
  *
@@ -121,7 +144,7 @@ var EmitterOp = new Class({
          * [description]
          *
          * @name Phaser.GameObjects.Particles.EmitterOp#onEmit
-         * @type {[type]}
+         * @type {EmitterOpOnEmitCallback}
          * @since 3.0.0
          */
         this.onEmit = this.defaultEmit;
@@ -130,7 +153,7 @@ var EmitterOp = new Class({
          * [description]
          *
          * @name Phaser.GameObjects.Particles.EmitterOp#onUpdate
-         * @type {[type]}
+         * @type {EmitterOpOnUpdateCallback}
          * @since 3.0.0
          */
         this.onUpdate = this.defaultUpdate;
@@ -186,7 +209,7 @@ var EmitterOp = new Class({
      * @method Phaser.GameObjects.Particles.EmitterOp#onChange
      * @since 3.0.0
      *
-     * @param {[type]} value - [description]
+     * @param {number} value - [description]
      *
      * @return {Phaser.GameObjects.Particles.EmitterOp} This Emitter Op object.
      */

@@ -713,6 +713,7 @@ var FlatTintPipeline = new Class({
         var srcScaleY = graphics.scaleY;
         var srcRotation = -graphics.rotation;
         var commands = graphics.commandBuffer;
+        var alpha = graphics.alpha;
         var lineAlpha = 1.0;
         var fillAlpha = 1.0;
         var lineColor = 0;
@@ -778,12 +779,13 @@ var FlatTintPipeline = new Class({
 
                     if (lastPath === null)
                     {
-                        lastPath = new Path(x + cos(startAngle) * radius, y + sin(startAngle) * radius, lineWidth, lineColor, lineAlpha);
+                        lastPath = new Path(x + cos(startAngle) * radius, y + sin(startAngle) * radius, lineWidth, lineColor, lineAlpha * alpha);
                         pathArray.push(lastPath);
                         iteration += iterStep;
                     }
 
                     endAngle -= startAngle;
+
                     if (anticlockwise)
                     {
                         if (endAngle < -PI2)
@@ -810,7 +812,7 @@ var FlatTintPipeline = new Class({
                         tx = x + cos(ta) * radius;
                         ty = y + sin(ta) * radius;
 
-                        lastPath.points.push(new Point(tx, ty, lineWidth, lineColor, lineAlpha));
+                        lastPath.points.push(new Point(tx, ty, lineWidth, lineColor, lineAlpha * alpha));
 
                         iteration += iterStep;
                     }
@@ -819,7 +821,7 @@ var FlatTintPipeline = new Class({
                     tx = x + cos(ta) * radius;
                     ty = y + sin(ta) * radius;
 
-                    lastPath.points.push(new Point(tx, ty, lineWidth, lineColor, lineAlpha));
+                    lastPath.points.push(new Point(tx, ty, lineWidth, lineColor, lineAlpha * alpha));
 
                     cmdIndex += 6;
                     break;
@@ -862,7 +864,7 @@ var FlatTintPipeline = new Class({
                             /* Rectangle properties */ 
                             pathArray[pathArrayIndex].points,
                             fillColor,
-                            fillAlpha,
+                            fillAlpha * alpha,
 
                             /* Transform */
                             mva, mvb, mvc, mvd, mve, mvf,
@@ -886,7 +888,7 @@ var FlatTintPipeline = new Class({
                             path.points,
                             lineWidth,
                             lineColor,
-                            lineAlpha,
+                            lineAlpha * alpha,
 
                             /* Transform */
                             mva, mvb, mvc, mvd, mve, mvf,
@@ -908,7 +910,7 @@ var FlatTintPipeline = new Class({
                         commands[cmdIndex + 3],
                         commands[cmdIndex + 4],
                         fillColor,
-                        fillAlpha,
+                        fillAlpha * alpha,
 
                         /* Transform */
                         mva, mvb, mvc, mvd, mve, mvf,
@@ -932,7 +934,7 @@ var FlatTintPipeline = new Class({
                         commands[cmdIndex + 5],
                         commands[cmdIndex + 6],
                         fillColor,
-                        fillAlpha,
+                        fillAlpha * alpha,
 
                         /* Transform */
                         mva, mvb, mvc, mvd, mve, mvf,
@@ -957,7 +959,7 @@ var FlatTintPipeline = new Class({
                         commands[cmdIndex + 6],
                         lineWidth,
                         lineColor,
-                        lineAlpha,
+                        lineAlpha * alpha,
 
                         /* Transform */
                         mva, mvb, mvc, mvd, mve, mvf,
@@ -970,18 +972,18 @@ var FlatTintPipeline = new Class({
                 case Commands.LINE_TO:
                     if (lastPath !== null)
                     {
-                        lastPath.points.push(new Point(commands[cmdIndex + 1], commands[cmdIndex + 2], lineWidth, lineColor, lineAlpha));
+                        lastPath.points.push(new Point(commands[cmdIndex + 1], commands[cmdIndex + 2], lineWidth, lineColor, lineAlpha * alpha));
                     }
                     else
                     {
-                        lastPath = new Path(commands[cmdIndex + 1], commands[cmdIndex + 2], lineWidth, lineColor, lineAlpha);
+                        lastPath = new Path(commands[cmdIndex + 1], commands[cmdIndex + 2], lineWidth, lineColor, lineAlpha * alpha);
                         pathArray.push(lastPath);
                     }
                     cmdIndex += 2;
                     break;
 
                 case Commands.MOVE_TO:
-                    lastPath = new Path(commands[cmdIndex + 1], commands[cmdIndex + 2], lineWidth, lineColor, lineAlpha);
+                    lastPath = new Path(commands[cmdIndex + 1], commands[cmdIndex + 2], lineWidth, lineColor, lineAlpha * alpha);
                     pathArray.push(lastPath);
                     cmdIndex += 2;
                     break;
@@ -994,7 +996,7 @@ var FlatTintPipeline = new Class({
                             commands[cmdIndex + 2],
                             commands[cmdIndex + 3],
                             commands[cmdIndex + 4],
-                            commands[cmdIndex + 5]
+                            commands[cmdIndex + 5] * alpha
                         ));
                     }
                     else
@@ -1004,7 +1006,7 @@ var FlatTintPipeline = new Class({
                             commands[cmdIndex + 2],
                             commands[cmdIndex + 3],
                             commands[cmdIndex + 4],
-                            commands[cmdIndex + 5]
+                            commands[cmdIndex + 5] * alpha
                         );
                         pathArray.push(lastPath);
                     }
@@ -1017,7 +1019,7 @@ var FlatTintPipeline = new Class({
                         commands[cmdIndex + 2],
                         commands[cmdIndex + 3],
                         commands[cmdIndex + 4],
-                        commands[cmdIndex + 5]
+                        commands[cmdIndex + 5] * alpha
                     );
                     pathArray.push(lastPath);
                     cmdIndex += 5;

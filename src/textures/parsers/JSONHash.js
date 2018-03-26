@@ -11,6 +11,7 @@ var Clone = require('../../utils/object/Clone');
  * JSON format expected to match that defined by Texture Packer, with the frames property containing an object of Frames.
  *
  * @function Phaser.Textures.Parsers.JSONHash
+ * @memberOf Phaser.Textures.Parsers
  * @since 3.0.0
  *
  * @param {Phaser.Textures.Texture} texture - The Texture to add the Frames to.

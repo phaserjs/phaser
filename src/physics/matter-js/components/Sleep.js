@@ -20,9 +20,9 @@ var Sleep = {
      * @method Phaser.Physics.Matter.Components.Sleep#setSleepThreshold
      * @since 3.0.0
      *
-     * @param {[type]} value - [description]
+     * @param {number} [value=60] - [description]
      *
-     * @return {[type]} [description]
+     * @return {Phaser.GameObjects.GameObject} This Game Object.
      */
     setSleepThreshold: function (value)
     {
@@ -39,10 +39,10 @@ var Sleep = {
      * @method Phaser.Physics.Matter.Components.Sleep#setSleepEvents
      * @since 3.0.0
      *
-     * @param {[type]} start - [description]
-     * @param {[type]} end - [description]
+     * @param {boolean} start - [description]
+     * @param {boolean} end - [description]
      *
-     * @return {[type]} [description]
+     * @return {Phaser.GameObjects.GameObject} This Game Object.
      */
     setSleepEvents: function (start, end)
     {
@@ -58,9 +58,9 @@ var Sleep = {
      * @method Phaser.Physics.Matter.Components.Sleep#setSleepStartEvent
      * @since 3.0.0
      *
-     * @param {[type]} value - [description]
+     * @param {boolean} value - [description]
      *
-     * @return {[type]} [description]
+     * @return {Phaser.GameObjects.GameObject} This Game Object.
      */
     setSleepStartEvent: function (value)
     {
@@ -87,9 +87,9 @@ var Sleep = {
      * @method Phaser.Physics.Matter.Components.Sleep#setSleepEndEvent
      * @since 3.0.0
      *
-     * @param {[type]} value - [description]
+     * @param {boolean} value - [description]
      *
-     * @return {[type]} [description]
+     * @return {Phaser.GameObjects.GameObject} This Game Object.
      */
     setSleepEndEvent: function (value)
     {

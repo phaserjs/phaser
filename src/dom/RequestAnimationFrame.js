@@ -37,7 +37,7 @@ var RequestAnimationFrame = new Class({
          * The callback to be invoked each step.
          *
          * @name Phaser.DOM.RequestAnimationFrame#callback
-         * @type {function}
+         * @type {FrameRequestCallback}
          * @since 3.0.0
          */
         this.callback = NOOP;
@@ -46,7 +46,7 @@ var RequestAnimationFrame = new Class({
          * The most recent timestamp. Either a DOMHighResTimeStamp under RAF or `Date.now` under SetTimeout.
          *
          * @name Phaser.DOM.RequestAnimationFrame#tick
-         * @type {DOMHighResTimeStamp|number}
+         * @type {number}
          * @default 0
          * @since 3.0.0
          */
@@ -89,7 +89,7 @@ var RequestAnimationFrame = new Class({
          * Updates the local tick value, invokes the callback and schedules another call to requestAnimationFrame.
          *
          * @name Phaser.DOM.RequestAnimationFrame#step
-         * @type {function}
+         * @type {FrameRequestCallback}
          * @since 3.0.0
          */
         this.step = function step (timestamp)
@@ -134,7 +134,7 @@ var RequestAnimationFrame = new Class({
      * @method Phaser.DOM.RequestAnimationFrame#start
      * @since 3.0.0
      *
-     * @param {function} callback - The callback to invoke each step.
+     * @param {FrameRequestCallback} callback - The callback to invoke each step.
      * @param {boolean} forceSetTimeOut - Should it use SetTimeout, even if RAF is available?
      */
     start: function (callback, forceSetTimeOut)

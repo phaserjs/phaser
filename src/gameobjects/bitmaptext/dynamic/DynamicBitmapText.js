@@ -11,6 +11,20 @@ var GetBitmapTextSize = require('../GetBitmapTextSize');
 var Render = require('./DynamicBitmapTextRender');
 
 /**
+ * @callback DisplayCallback
+ *
+ * @param {object} display - [description]
+ * @param {{topLeft:number,topRight:number,bottomLeft:number,bottomRight:number}} display.tint - [description]
+ * @param {number} display.index - [description]
+ * @param {number} display.charCode - [description]
+ * @param {number} display.x - [description]
+ * @param {number} display.y - [description]
+ * @param {number} display.scale - [description]
+ * @param {number} display.rotation - [description]
+ * @param {[type]} display.data - [description]
+ */
+
+/**
  * @classdesc
  * [description]
  *
@@ -25,17 +39,17 @@ var Render = require('./DynamicBitmapTextRender');
  * @extends Phaser.GameObjects.Components.Depth
  * @extends Phaser.GameObjects.Components.Origin
  * @extends Phaser.GameObjects.Components.Pipeline
+ * @extends Phaser.GameObjects.Components.ScrollFactor
  * @extends Phaser.GameObjects.Components.Texture
  * @extends Phaser.GameObjects.Components.Tint
  * @extends Phaser.GameObjects.Components.Transform
  * @extends Phaser.GameObjects.Components.Visible
- * @extends Phaser.GameObjects.Components.ScrollFactor
  *
  * @param {Phaser.Scene} scene - The Scene to which this Game Object belongs. It can only belong to one Scene at any given time.
  * @param {number} [x=0] - The x coordinate of this Game Object in world space.
  * @param {number} [y=0] - The y coordinate of this Game Object in world space.
  * @param {string} font - [description]
- * @param {string|string[]} [text] - [description]
+ * @param {(string|string[])} [text] - [description]
  * @param {number} [size] - [description]
  */
 var DynamicBitmapText = new Class({
@@ -48,11 +62,11 @@ var DynamicBitmapText = new Class({
         Components.Depth,
         Components.Origin,
         Components.Pipeline,
+        Components.ScrollFactor,
         Components.Texture,
         Components.Tint,
         Components.Transform,
         Components.Visible,
-        Components.ScrollFactor,
         Render
     ],
 
@@ -111,7 +125,7 @@ var DynamicBitmapText = new Class({
          * [description]
          *
          * @name Phaser.GameObjects.DynamicBitmapText#_bounds
-         * @type {object}
+         * @type {TextBounds}
          * @private
          * @since 3.0.0
          */
@@ -161,7 +175,7 @@ var DynamicBitmapText = new Class({
          * [description]
          *
          * @name Phaser.GameObjects.DynamicBitmapText#displayCallback;
-         * @type {function}
+         * @type {DisplayCallback}
          * @since 3.0.0
          */
         this.displayCallback;
@@ -192,7 +206,7 @@ var DynamicBitmapText = new Class({
      * @method Phaser.GameObjects.DynamicBitmapText#setDisplayCallback
      * @since 3.0.0
      *
-     * @param {function} callback - [description]
+     * @param {DisplayCallback} callback - [description]
      *
      * @return {Phaser.GameObjects.DynamicBitmapText} This Game Object.
      */
@@ -226,7 +240,7 @@ var DynamicBitmapText = new Class({
      * @method Phaser.GameObjects.DynamicBitmapText#setText
      * @since 3.0.0
      *
-     * @param {string|string[]} value - The string, or array of strings, to be set as the content of this BitmapText.
+     * @param {(string|string[])} value - The string, or array of strings, to be set as the content of this BitmapText.
      *
      * @return {Phaser.GameObjects.DynamicBitmapText} This Game Object.
      */
@@ -286,21 +300,6 @@ var DynamicBitmapText = new Class({
         return this;
     },
 
-    // {
-    //     local: {
-    //         x,
-    //         y,
-    //         width,
-    //         height
-    //     },
-    //     global: {
-    //         x,
-    //         y,
-    //         width,
-    //         height
-    //     }
-    // }
-
     /**
      * [description]
      *
@@ -309,7 +308,7 @@ var DynamicBitmapText = new Class({
      *
      * @param {boolean} round - [description]
      *
-     * @return {object} [description]
+     * @return {TextBounds} [description]
      */
     getTextBounds: function (round)
     {
@@ -323,7 +322,7 @@ var DynamicBitmapText = new Class({
 
     /**
      * [description]
-     * 
+     *
      * @name Phaser.GameObjects.DynamicBitmapText#width
      * @type {number}
      * @since 3.0.0
@@ -340,7 +339,7 @@ var DynamicBitmapText = new Class({
 
     /**
      * [description]
-     * 
+     *
      * @name Phaser.GameObjects.DynamicBitmapText#height
      * @type {number}
      * @since 3.0.0
@@ -361,7 +360,7 @@ var DynamicBitmapText = new Class({
      * @method Phaser.GameObjects.DynamicBitmapText#toJSON
      * @since 3.0.0
      *
-     * @return {object} [description]
+     * @return {JSONGameObject.<JSONBitmapText>} [description]
      */
     toJSON: function ()
     {

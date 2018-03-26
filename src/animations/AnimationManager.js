@@ -12,13 +12,20 @@ var GetValue = require('../utils/object/GetValue');
 var Pad = require('../utils/string/Pad');
 
 /**
+ * @typedef {object} JSONAnimationManager
+ *
+ * @property {JSONAnimation[]} anims - [description]
+ * @property {number} globalTimeScale - [description]
+ */
+
+/**
  * @classdesc
  * The Animation Manager.
- * 
+ *
  * Animations are managed by the global Animation Manager. This is a singleton class that is
  * responsible for creating and delivering animations and their corresponding data to all Game Objects.
  * Unlike plugins it is owned by the Game instance, not the Scene.
- * 
+ *
  * Sprites and other Game Objects get the data they need from the AnimationManager.
  *
  * @class AnimationManager
@@ -26,7 +33,7 @@ var Pad = require('../utils/string/Pad');
  * @memberOf Phaser.Animations
  * @constructor
  * @since 3.0.0
- * 
+ *
  * @param {Phaser.Game} game - [description]
  */
 var AnimationManager = new Class({
@@ -120,10 +127,10 @@ var AnimationManager = new Class({
      * @method Phaser.Animations.AnimationManager#add
      * @fires AddAnimationEvent
      * @since 3.0.0
-     * 
+     *
      * @param {string} key - [description]
      * @param {Phaser.Animations.Animation} animation - [description]
-     * 
+     *
      * @return {Phaser.Animations.AnimationManager} This Animation Manager.
      */
     add: function (key, animation)
@@ -149,9 +156,9 @@ var AnimationManager = new Class({
      * @method Phaser.Animations.AnimationManager#create
      * @fires AddAnimationEvent
      * @since 3.0.0
-     * 
-     * @param {object} config - [description]
-     * 
+     *
+     * @param {AnimationConfig} config - [description]
+     *
      * @return {Phaser.Animations.Animation} The Animation that was created.
      */
     create: function (config)
@@ -178,10 +185,10 @@ var AnimationManager = new Class({
      *
      * @method Phaser.Animations.AnimationManager#fromJSON
      * @since 3.0.0
-     * 
-     * @param {string|object} data - [description]
+     *
+     * @param {(string|object)} data - [description]
      * @param {boolean} [clearCurrentAnimations=false] - [description]
-     * 
+     *
      * @return {Phaser.Animations.Animation[]} An array containing all of the Animation objects that were created as a result of this call.
      */
     fromJSON: function (data, clearCurrentAnimations)
@@ -227,7 +234,7 @@ var AnimationManager = new Class({
      *
      * @method Phaser.Animations.AnimationManager#generateFrameNames
      * @since 3.0.0
-     * 
+     *
      * @param {string} key - [description]
      * @param {object} config - [description]
      * @param {string} [config.prefix=''] - [description]
@@ -237,8 +244,8 @@ var AnimationManager = new Class({
      * @param {integer} [config.zeroPad=0] - [description]
      * @param {array} [config.outputArray=[]] - [description]
      * @param {boolean} [config.frames=false] - [description]
-     * 
-     * @return {object[]} [description]
+     *
+     * @return {AnimationFrameConfig[]} [description]
      */
     generateFrameNames: function (key, config)
     {
@@ -299,7 +306,7 @@ var AnimationManager = new Class({
      *
      * @method Phaser.Animations.AnimationManager#generateFrameNumbers
      * @since 3.0.0
-     * 
+     *
      * @param {string} key - [description]
      * @param {object} config - [description]
      * @param {integer} [config.start=0] - [description]
@@ -307,8 +314,8 @@ var AnimationManager = new Class({
      * @param {boolean} [config.first=false] - [description]
      * @param {array} [config.outputArray=[]] - [description]
      * @param {boolean} [config.frames=false] - [description]
-     * 
-     * @return {object[]} [description]
+     *
+     * @return {AnimationFrameConfig[]} [description]
      */
     generateFrameNumbers: function (key, config)
     {
@@ -369,9 +376,9 @@ var AnimationManager = new Class({
      *
      * @method Phaser.Animations.AnimationManager#get
      * @since 3.0.0
-     * 
+     *
      * @param {string} key - [description]
-     * 
+     *
      * @return {Phaser.Animations.Animation} [description]
      */
     get: function (key)
@@ -384,11 +391,11 @@ var AnimationManager = new Class({
      *
      * @method Phaser.Animations.AnimationManager#load
      * @since 3.0.0
-     * 
+     *
      * @param {Phaser.GameObjects.GameObject} child - [description]
      * @param {string} key - [description]
-     * @param {string|integer} [startFrame] - [description]
-     * 
+     * @param {(string|integer)} [startFrame] - [description]
+     *
      * @return {Phaser.GameObjects.GameObject} [description]
      */
     load: function (child, key, startFrame)
@@ -409,7 +416,7 @@ var AnimationManager = new Class({
      * @method Phaser.Animations.AnimationManager#pauseAll
      * @fires PauseAllAnimationEvent
      * @since 3.0.0
-     * 
+     *
      * @return {Phaser.Animations.AnimationManager} This Animation Manager.
      */
     pauseAll: function ()
@@ -429,10 +436,10 @@ var AnimationManager = new Class({
      *
      * @method Phaser.Animations.AnimationManager#play
      * @since 3.0.0
-     * 
+     *
      * @param {string} key - [description]
      * @param {Phaser.GameObjects.GameObject} child - [description]
-     * 
+     *
      * @return {Phaser.Animations.AnimationManager} This Animation Manager.
      */
     play: function (key, child)
@@ -463,9 +470,9 @@ var AnimationManager = new Class({
      * @method Phaser.Animations.AnimationManager#remove
      * @fires RemoveAnimationEvent
      * @since 3.0.0
-     * 
+     *
      * @param {string} key - [description]
-     * 
+     *
      * @return {Phaser.Animations.Animation} [description]
      */
     remove: function (key)
@@ -488,7 +495,7 @@ var AnimationManager = new Class({
      * @method Phaser.Animations.AnimationManager#resumeAll
      * @fires ResumeAllAnimationEvent
      * @since 3.0.0
-     * 
+     *
      * @return {Phaser.Animations.AnimationManager} This Animation Manager.
      */
     resumeAll: function ()
@@ -508,11 +515,11 @@ var AnimationManager = new Class({
      *
      * @method Phaser.Animations.AnimationManager#staggerPlay
      * @since 3.0.0
-     * 
+     *
      * @param {string} key - [description]
      * @param {Phaser.GameObjects.GameObject} child - [description]
      * @param {number} [stagger=0] - [description]
-     * 
+     *
      * @return {Phaser.Animations.AnimationManager} This Animation Manager.
      */
     staggerPlay: function (key, child, stagger)
@@ -544,10 +551,10 @@ var AnimationManager = new Class({
      *
      * @method Phaser.Animations.AnimationManager#toJSON
      * @since 3.0.0
-     * 
+     *
      * @param {string} key - [description]
-     * 
-     * @return {object} [description]
+     *
+     * @return {JSONAnimationManager} [description]
      */
     toJSON: function (key)
     {

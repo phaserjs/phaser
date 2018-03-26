@@ -7,6 +7,15 @@
 var Class = require('../utils/Class');
 
 /**
+ * @callback EachMapCallback
+ *
+ * @param {string} key - [description]
+ * @param {*} entry - [description]
+ *
+ * @return {?boolean} [description]
+ */
+
+/**
  * @classdesc
  * The keys of a Map can be arbitrary values.
  * var map = new Map([
@@ -32,7 +41,7 @@ var Map = new Class({
          * [description]
          *
          * @name Phaser.Structs.Map#entries
-         * @type {object}
+         * @type {Object.<string, any>}
          * @default {}
          * @since 3.0.0
          */
@@ -64,7 +73,7 @@ var Map = new Class({
      * @since 3.0.0
      *
      * @param {string} key - [description]
-     * @param {any} value - [description]
+     * @param {*} value - [description]
      *
      * @return {Phaser.Structs.Map} This Map object.
      */
@@ -87,7 +96,7 @@ var Map = new Class({
      *
      * @param {string} key - [description]
      *
-     * @return {any} [description]
+     * @return {*} [description]
      */
     get: function (key)
     {
@@ -181,7 +190,7 @@ var Map = new Class({
      * @method Phaser.Structs.Map#keys
      * @since 3.0.0
      *
-     * @return {[type]} [description]
+     * @return {string[]} [description]
      */
     keys: function ()
     {
@@ -237,7 +246,7 @@ var Map = new Class({
      * @method Phaser.Structs.Map#each
      * @since 3.0.0
      *
-     * @param {function} callback - [description]
+     * @param {EachMapCallback} callback - [description]
      *
      * @return {Phaser.Structs.Map} This Map object.
      */
@@ -262,7 +271,7 @@ var Map = new Class({
      * @method Phaser.Structs.Map#contains
      * @since 3.0.0
      *
-     * @param {any} value - [description]
+     * @param {*} value - [description]
      *
      * @return {boolean} [description]
      */

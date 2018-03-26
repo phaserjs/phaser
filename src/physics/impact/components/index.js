@@ -4,7 +4,9 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-//  Phaser.Physics.Impact.Body.Components
+/**
+ * @namespace Phaser.Physics.Impact.Body.Components
+ */
 
 module.exports = {
 

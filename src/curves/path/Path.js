@@ -18,6 +18,16 @@ var SplineCurve = require('../SplineCurve');
 var Vector2 = require('../../math/Vector2');
 
 /**
+ * @typedef {object} JSONPath
+ *
+ * @property {string} type - The of the curve.
+ * @property {number} x - [description]
+ * @property {number} y - [description]
+ * @property {boolean} autoClose - The path is auto closed.
+ * @property {JSONCurve[]} curves - The list of the curves
+ */
+
+/**
  * @classdesc
  * [description]
  *
@@ -52,7 +62,7 @@ var Path = new Class({
          * [description]
          *
          * @name Phaser.Curves.Path#curves
-         * @type {array}
+         * @type {Phaser.Curves.Curve[]}
          * @default []
          * @since 3.0.0
          */
@@ -62,7 +72,7 @@ var Path = new Class({
          * [description]
          *
          * @name Phaser.Curves.Path#cacheLengths
-         * @type {array}
+         * @type {number[]}
          * @default []
          * @since 3.0.0
          */
@@ -81,7 +91,7 @@ var Path = new Class({
         /**
          * [description]
          *
-         * @name {Phaser.MathPhaser.Curves.Path#startPoint
+         * @name {Phaser.Curves.Path#startPoint
          * @type {Phaser.Math.Vector2}
          * @since 3.0.0
          */
@@ -90,7 +100,7 @@ var Path = new Class({
         /**
          * [description]
          *
-         * @name {Phaser.MathPhaser.Curves.Path#_tmpVec2A
+         * @name {Phaser.Curves.Path#_tmpVec2A
          * @type {Phaser.Math.Vector2}
          * @private
          * @since 3.0.0
@@ -100,7 +110,7 @@ var Path = new Class({
         /**
          * [description]
          *
-         * @name {Phaser.MathPhaser.Curves.Path#_tmpVec2B
+         * @name {Phaser.Curves.Path#_tmpVec2B
          * @type {Phaser.Math.Vector2}
          * @private
          * @since 3.0.0
@@ -225,7 +235,7 @@ var Path = new Class({
      * @method Phaser.Curves.Path#quadraticBezierTo
      * @since 3.2.0
      *
-     * @param {number|Phaser.Math.Vector2[]} x - [description]
+     * @param {(number|Phaser.Math.Vector2[])} x - [description]
      * @param {number} [y] - [description]
      * @param {number} [controlX] - [description]
      * @param {number} [controlY] - [description]
@@ -506,7 +516,7 @@ var Path = new Class({
      * @param {number} t - [description]
      * @param {Phaser.Math.Vector2} [out] - [description]
      *
-     * @return {Phaser.Math.Vector2|null} [description]
+     * @return {?Phaser.Math.Vector2} [description]
      */
     getPoint: function (t, out)
     {
@@ -661,7 +671,7 @@ var Path = new Class({
      * @method Phaser.Curves.Path#lineTo
      * @since 3.0.0
      *
-     * @param {number|Phaser.Math.Vector2} x - [description]
+     * @param {(number|Phaser.Math.Vector2)} x - [description]
      * @param {number} [y] - [description]
      *
      * @return {Phaser.Curves.Path} [description]
@@ -690,7 +700,7 @@ var Path = new Class({
      * @method Phaser.Curves.Path#splineTo
      * @since 3.0.0
      *
-     * @param {[type]} points - [description]
+     * @param {Phaser.Math.Vector2[]} points - [description]
      *
      * @return {Phaser.Curves.Path} [description]
      */
@@ -723,7 +733,7 @@ var Path = new Class({
      * @method Phaser.Curves.Path#toJSON
      * @since 3.0.0
      *
-     * @return {object} [description]
+     * @return {JSONPath} [description]
      */
     toJSON: function ()
     {
@@ -781,7 +791,7 @@ var Path = new Class({
  *
  * @param {number} x - The horizontal position of this Path.
  * @param {number} y - The vertical position of this Path.
- * 
+ *
  * @return {Phaser.Curves.Path} The Path Object that was created.
  */
 GameObjectFactory.register('path', function (x, y)
@@ -790,9 +800,9 @@ GameObjectFactory.register('path', function (x, y)
 });
 
 //  When registering a factory function 'this' refers to the GameObjectFactory context.
-//  
+//
 //  There are several properties available to use:
-//  
+//
 //  this.scene - a reference to the Scene that owns the GameObjectFactory
 //  this.displayList - a reference to the Display List the Scene owns
 //  this.updateList - a reference to the Update List the Scene owns

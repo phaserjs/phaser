@@ -11,6 +11,31 @@ var TYPE = require('./TYPE');
 var UpdateMotion = require('./UpdateMotion');
 
 /**
+ * @callback BodyUpdateCallback
+ *
+ * @param {Phaser.Physics.Impact.Body} body - [description]
+ */
+
+/**
+ * @typedef {object} JSONImpactBody
+ * @todo Replace object types
+ *
+ * @property {string} name - [description]
+ * @property {object} size - [description]
+ * @property {object} pos - [description]
+ * @property {object} vel - [description]
+ * @property {object} accel - [description]
+ * @property {object} friction - [description]
+ * @property {object} maxVel - [description]
+ * @property {number} gravityFactor - [description]
+ * @property {number} bounciness - [description]
+ * @property {number} minBounceVelocity - [description]
+ * @property {Phaser.Physics.Impact.TYPE} type - [description]
+ * @property {Phaser.Physics.Impact.TYPE} checkAgainst - [description]
+ * @property {Phaser.Physics.Impact.COLLIDES} collides - [description]
+ */
+
+/**
  * @classdesc
  * An Impact.js compatible physics body.
  * This re-creates the properties you'd get on an Entity and the math needed to update them.
@@ -68,7 +93,7 @@ var Body = new Class({
          * The ImpactBody, ImpactSprite or ImpactImage object that owns this Body, if any.
          *
          * @name Phaser.Physics.Impact.Body#parent
-         * @type {Phaser.Physics.Impact.ImpactBody|Phaser.Physics.Impact.ImpactImage|Phaser.Physics.Impact.ImpactSprite|null}
+         * @type {?(Phaser.Physics.Impact.ImpactBody|Phaser.Physics.Impact.ImpactImage|Phaser.Physics.Impact.ImpactSprite)}
          * @since 3.0.0
          */
         this.parent;
@@ -289,11 +314,11 @@ var Body = new Class({
          * [description]
          *
          * @name Phaser.Physics.Impact.Body#updateCallback
-         * @type {function}
+         * @type {?BodyUpdateCallback}
          * @since 3.0.0
          */
         this.updateCallback;
-    
+
         /**
          * min 44 deg, max 136 deg
          *
@@ -331,7 +356,7 @@ var Body = new Class({
         this.accelGround = 0;
         this.accelAir = 0;
         this.jumpSpeed = 0;
-    
+
         this.type = TYPE.NONE;
         this.checkAgainst = TYPE.NONE;
         this.collides = COLLIDES.NEVER;
@@ -353,10 +378,10 @@ var Body = new Class({
         this.last.y = pos.y;
 
         this.vel.y += this.world.gravity * delta * this.gravityFactor;
-        
+
         this.vel.x = GetVelocity(delta, this.vel.x, this.accel.x, this.friction.x, this.maxVel.x);
         this.vel.y = GetVelocity(delta, this.vel.y, this.accel.y, this.friction.y, this.maxVel.y);
-        
+
         var mx = this.vel.x * delta;
         var my = this.vel.y * delta;
 
@@ -484,7 +509,7 @@ var Body = new Class({
      * @method Phaser.Physics.Impact.Body#toJSON
      * @since 3.0.0
      *
-     * @return {object} [description]
+     * @return {JSONImpactBody} [description]
      */
     toJSON: function ()
     {
@@ -539,7 +564,7 @@ var Body = new Class({
      * @since 3.0.0
      *
      * @param {Phaser.Physics.Impact.Body} other - [description]
-     * @param {[type]} axis - [description]
+     * @param {string} axis - [description]
      */
     collideWith: function (other, axis)
     {
@@ -555,7 +580,7 @@ var Body = new Class({
      * @method Phaser.Physics.Impact.Body#handleMovementTrace
      * @since 3.0.0
      *
-     * @param {[type]} res - [description]
+     * @param {number} res - [description]
      *
      * @return {boolean} [description]
      */

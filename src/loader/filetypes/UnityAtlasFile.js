@@ -18,8 +18,8 @@ var TextFile = require('./TextFile.js');
  * @param {string} textureURL - The url to load the texture file from.
  * @param {string} atlasURL - The url to load the atlas file from.
  * @param {string} path - The path of the file.
- * @param {object} textureXhrSettings - Optional texture file specific XHR settings.
- * @param {object} atlasXhrSettings - Optional atlas file specific XHR settings.
+ * @param {XHRSettingsObject} textureXhrSettings - Optional texture file specific XHR settings.
+ * @param {XHRSettingsObject} atlasXhrSettings - Optional atlas file specific XHR settings.
  *
  * @return {object} An object containing two File objects to be added to the loader.
  */
@@ -41,7 +41,7 @@ var UnityAtlasFile = function (key, textureURL, atlasURL, path, textureXhrSettin
 
 /**
  * Adds a Unity Texture Atlas file to the current load queue.
- * 
+ *
  * Note: This method will only be available if the Unity Atlas File type has been built into Phaser.
  *
  * The file is **not** loaded immediately after calling this method.
@@ -53,9 +53,9 @@ var UnityAtlasFile = function (key, textureURL, atlasURL, path, textureXhrSettin
  * @param {string} key - The key of the file within the loader.
  * @param {string} textureURL - The url to load the texture file from.
  * @param {string} atlasURL - The url to load the atlas file from.
- * @param {object} textureXhrSettings - Optional texture file specific XHR settings.
- * @param {object} atlasXhrSettings - Optional atlas file specific XHR settings.
- * 
+ * @param {XHRSettingsObject} textureXhrSettings - Optional texture file specific XHR settings.
+ * @param {XHRSettingsObject} atlasXhrSettings - Optional atlas file specific XHR settings.
+ *
  * @return {Phaser.Loader.LoaderPlugin} The Loader.
  */
 FileTypesManager.register('unityAtlas', function (key, textureURL, atlasURL, textureXhrSettings, atlasXhrSettings)

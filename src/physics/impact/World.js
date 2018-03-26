@@ -17,6 +17,62 @@ var TILEMAP_FORMATS = require('../../tilemaps/Formats');
 var TYPE = require('./TYPE');
 
 /**
+ * @typedef {object} ImpactWorldConfig
+ *
+ * @property {number} [gravity=0] - [description]
+ * @property {number} [cellSize=64] - [description]
+ * @property {number} [timeScale=1] - [description]
+ * @property {float} [maxStep=0.05] - [description]
+ * @property {number} [gravity=0] - [description]
+ * @property {boolean} [debug=false] - [description]
+ * @property {number} [maxVelocity=100] - [description]
+ * @property {boolean} [debugShowBody=true] - [description]
+ * @property {boolean} [debugShowVelocity=true] - [description]
+ * @property {number} [debugBodyColor=0xff00ff] - [description]
+ * @property {number} [debugVelocityColor=0x00ff00] - [description]
+ * @property {number} [maxVelocityX=maxVelocity] - [description]
+ * @property {number} [maxVelocityY=maxVelocity] - [description]
+ * @property {number} [minBounceVelocity=40] - [description]
+ * @property {number} [gravityFactor=1] - [description]
+ * @property {number} [bounciness=0] - [description]
+ * @property {(object|boolean)} [setBounds] - [description]
+ * @property {number} [setBounds.x=0] - [description]
+ * @property {number} [setBounds.y=0] - [description]
+ * @property {number} [setBounds.x=0] - [description]
+ * @property {number} [setBounds.width] - [description]
+ * @property {number} [setBounds.height] - [description]
+ * @property {number} [setBounds.thickness=64] - [description]
+ * @property {boolean} [setBounds.left=true] - [description]
+ * @property {boolean} [setBounds.right=true] - [description]
+ * @property {boolean} [setBounds.top=true] - [description]
+ * @property {boolean} [setBounds.bottom=true] - [description]
+ */
+
+/**
+ * An object containing the 4 wall bodies that bound the physics world.
+ * @typedef {object} ImpactWorldDefaults
+ *
+ * @property {boolean} debugShowBody - [description]
+ * @property {boolean} debugShowVelocity - [description]
+ * @property {number} bodyDebugColor - [description]
+ * @property {number} velocityDebugColor - [description]
+ * @property {number} maxVelocityX - [description]
+ * @property {number} maxVelocityY - [description]
+ * @property {number} minBounceVelocity - [description]
+ * @property {number} gravityFactor - [description]
+ * @property {number} bounciness - [description]
+ */
+
+/**
+ * @typedef {object} ImpactWorldWalls
+ *
+ * @property {?Phaser.Physics.Impact.Body} left - [description]
+ * @property {?Phaser.Physics.Impact.Body} right - [description]
+ * @property {?Phaser.Physics.Impact.Body} top - [description]
+ * @property {?Phaser.Physics.Impact.Body} bottom - [description]
+ */
+
+/**
  * @classdesc
  * [description]
  *
@@ -27,7 +83,7 @@ var TYPE = require('./TYPE');
  * @since 3.0.0
  *
  * @param {Phaser.Scene} scene - [description]
- * @param {object} config - [description]
+ * @param {ImpactWorldConfig} config - [description]
  */
 var World = new Class({
 
@@ -140,7 +196,7 @@ var World = new Class({
          * [description]
          *
          * @name Phaser.Physics.Impact.World#defaults
-         * @type {object}
+         * @type {ImpactWorldDefaults}
          * @since 3.0.0
          */
         this.defaults = {
@@ -159,7 +215,7 @@ var World = new Class({
          * An object containing the 4 wall bodies that bound the physics world.
          *
          * @name Phaser.Physics.Impact.World#walls
-         * @type {object}
+         * @type {ImpactWorldWalls}
          * @since 3.0.0
          */
         this.walls = { left: null, right: null, top: null, bottom: null };
@@ -222,12 +278,12 @@ var World = new Class({
      * @method Phaser.Physics.Impact.World#setCollisionMap
      * @since 3.0.0
      *
-     * @param {string|integer[][]} key - Either a string key that corresponds to a Weltmeister level
+     * @param {(string|integer[][])} key - Either a string key that corresponds to a Weltmeister level
      * in the cache, or a 2D array of collision IDs.
      * @param {integer} tileSize - The size of a tile. This is optional if loading from a Weltmeister
      * level in the cache.
      *
-     * @return {CollisionMap|null} The newly created CollisionMap, or null if the method failed to
+     * @return {?Phaser.Physics.Impact.CollisionMap} The newly created CollisionMap, or null if the method failed to
      * create the CollisionMap.
      */
     setCollisionMap: function (key, tileSize)
@@ -278,7 +334,7 @@ var World = new Class({
      * @method Phaser.Physics.Impact.World#setCollisionMapFromTilemapLayer
      * @since 3.0.0
      *
-     * @param {StaticTilemapLayer|DynamicTilemapLayer} tilemapLayer - The tilemap layer to use.
+     * @param {(StaticTilemapLayer|DynamicTilemapLayer)} tilemapLayer - The tilemap layer to use.
      * @param {object} [options] - Options for controlling the mapping from tiles to slope IDs.
      * @param {string} [options.slopeTileProperty=null] - Slope IDs can be stored on tiles directly
      * using Tiled's tileset editor. If a tile has a property with the given slopeTileProperty string

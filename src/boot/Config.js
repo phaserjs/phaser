@@ -19,6 +19,12 @@ var ValueToColor = require('../display/color/ValueToColor');
  */
 
 /**
+ * @callback BootCallback
+ *
+ * @param {Phaser.Game} game - [description]
+ */
+
+/**
  * @typedef {object} FPSConfig
  *
  * @property {integer} [min=10] - [description]
@@ -35,7 +41,7 @@ var ValueToColor = require('../display/color/ValueToColor');
  * @property {string} [path] - [description]
  * @property {boolean} [enableParallel=true] - [description]
  * @property {integer} [maxParallelDownloads=4] - [description]
- * @property {string|undefined} [crossOrigin=undefined] - [description]
+ * @property {(string|undefined)} [crossOrigin=undefined] - [description]
  * @property {string} [responseType] - [description]
  * @property {boolean} [async=true] - [description]
  * @property {string} [user] - [description]
@@ -46,8 +52,8 @@ var ValueToColor = require('../display/color/ValueToColor');
 /**
  * @typedef {object} GameConfig
  *
- * @property {integer|string} [width=1024] - [description]
- * @property {integer|string} [height=768] - [description]
+ * @property {(integer|string)} [width=1024] - [description]
+ * @property {(integer|string)} [height=768] - [description]
  * @property {number} [zoom=1] - [description]
  * @property {number} [resolution=1] - [description]
  * @property {number} [type=CONST.AUTO] - [description]
@@ -55,7 +61,7 @@ var ValueToColor = require('../display/color/ValueToColor');
  * @property {HTMLCanvasElement} [?canvas=null] - [description]
  * @property {string} [?canvasStyle=null] - [description]
  * @property {object} [?scene=null] - [description]
- * @property {array} [seed] - [description]
+ * @property {string[]} [seed] - [description]
  * @property {string} [title=''] - [description]
  * @property {string} [url='http://phaser.io'] - [description]
  * @property {string} [version=''] - [description]
@@ -72,7 +78,7 @@ var ValueToColor = require('../display/color/ValueToColor');
  * @property {boolean} [banner=false] - [description]
  * @property {boolean} [banner.hidePhaser=false] - [description]
  * @property {string} [banner.text='#ffffff'] - [description]
- * @property {array} [banner.background] - [description]
+ * @property {string[]} [banner.background] - [description]
  * @property {FPSConfig} [?fps] - [description]
  * @property {boolean} [antialias=true] - [description]
  * @property {boolean} [pixelArt=false] - [description]
@@ -84,10 +90,10 @@ var ValueToColor = require('../display/color/ValueToColor');
  * @property {boolean} [preserveDrawingBuffer=false] - [description]
  * @property {boolean} [failIfMajorPerformanceCaveat=false] - [description]
  * @property {boolean} [powerPreference='default'] - "high-performance", "low-power" or "default"
- * @property {string|number} [backgroundColor=0x000000] - [description]
+ * @property {(string|number)} [backgroundColor=0x000000] - [description]
  * @property {object} [?callbacks] - [description]
- * @property {function} [callbacks.preBoot=NOOP] - [description]
- * @property {function} [callbacks.postBoot=NOOP] - [description]
+ * @property {BootCallback} [callbacks.preBoot=NOOP] - [description]
+ * @property {BootCallback} [callbacks.postBoot=NOOP] - [description]
  * @property {LoaderConfig} [?loader] - [description]
  * @property {object} [?images] - [description]
  * @property {string} [images.default] - [description]
@@ -103,7 +109,7 @@ var ValueToColor = require('../display/color/ValueToColor');
  * @constructor
  * @since 3.0.0
  *
- * @param {object} [GameConfig] - The configuration object for your Phaser Game instance.
+ * @param {GameConfig} [GameConfig] - The configuration object for your Phaser Game instance.
  *
  */
 var Config = new Class({

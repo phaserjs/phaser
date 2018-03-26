@@ -6,17 +6,18 @@
 
 var imageHeight = 0;
 
+/**
+ * @function addFrame
+ * @private
+ * @since 3.0.0
+ */
 var addFrame = function (texture, sourceIndex, name, frame)
 {
     //  The frame values are the exact coordinates to cut the frame out of the atlas from
 
     var y = imageHeight - frame.y - frame.height;
 
-    // var newFrame = texture.add(name, sourceIndex, frame.x, y, frame.width, frame.height);
-
     texture.add(name, sourceIndex, frame.x, y, frame.width, frame.height);
-
-    // console.log('name', name, 'rect', frame.x, y, frame.width, frame.height);
 
     //  These are the original (non-trimmed) sprite values
     /*
@@ -39,6 +40,7 @@ var addFrame = function (texture, sourceIndex, name, frame)
  * For more details about Sprite Meta Data see https://docs.unity3d.com/ScriptReference/SpriteMetaData.html
  *
  * @function Phaser.Textures.Parsers.UnityYAML
+ * @memberOf Phaser.Textures.Parsers
  * @since 3.0.0
  *
  * @param {Phaser.Textures.Texture} texture - The Texture to add the Frames to.

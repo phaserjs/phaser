@@ -105,9 +105,9 @@ var Ellipse = new Class({
      * @since 3.0.0
      *
      * @param {float} position - A value between 0 and 1, where 0 equals 0 degrees, 0.5 equals 180 degrees and 1 equals 360 around the ellipse.
-     * @param {Phaser.Geom.Point|object} [out] - An object to store the return values in. If not given a Point object will be created.
+     * @param {(Phaser.Geom.Point|object)} [out] - An object to store the return values in. If not given a Point object will be created.
      *
-     * @return {Phaser.Geom.Point|object} A Point, or point-like object, containing the coordinates of the point around the ellipse.
+     * @return {(Phaser.Geom.Point|object)} A Point, or point-like object, containing the coordinates of the point around the ellipse.
      */
     getPoint: function (position, point)
     {
@@ -138,9 +138,9 @@ var Ellipse = new Class({
      * @method Phaser.Geom.Ellipse#getRandomPoint
      * @since 3.0.0
      *
-     * @param {Phaser.Geom.Point|object} [point] - A Point or point-like object to set the random `x` and `y` values in.
+     * @param {(Phaser.Geom.Point|object)} [point] - A Point or point-like object to set the random `x` and `y` values in.
      *
-     * @return {Phaser.Geom.Point|object} A Point object with the random values set in the `x` and `y` properties.
+     * @return {(Phaser.Geom.Point|object)} A Point object with the random values set in the `x` and `y` properties.
      */
     getRandomPoint: function (point)
     {

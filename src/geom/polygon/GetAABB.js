@@ -13,9 +13,9 @@ var Rectangle = require('../rectangle/Rectangle');
  * @since 3.0.0
  *
  * @param {Phaser.Geom.Polygon} polygon - [description]
- * @param {Phaser.Geom.Rectangle|object} [out] - [description]
+ * @param {(Phaser.Geom.Rectangle|object)} [out] - [description]
  *
- * @return {Phaser.Geom.Rectangle|object} [description]
+ * @return {(Phaser.Geom.Rectangle|object)} [description]
  */
 var GetAABB = function (polygon, out)
 {

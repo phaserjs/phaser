@@ -18,10 +18,10 @@ var Bounce = {
      * @method Phaser.Physics.Arcade.Components.Bounce#setBounce
      * @since 3.0.0
      *
-     * @param {[type]} x - [description]
-     * @param {[type]} y - [description]
+     * @param {number} x - [description]
+     * @param {number} [y=x] - [description]
      *
-     * @return {[type]} [description]
+     * @return {Phaser.GameObjects.GameObject} This Game Object.
      */
     setBounce: function (x, y)
     {
@@ -36,9 +36,9 @@ var Bounce = {
      * @method Phaser.Physics.Arcade.Components.Bounce#setBounceX
      * @since 3.0.0
      *
-     * @param {[type]} value - [description]
+     * @param {number} value - [description]
      *
-     * @return {[type]} [description]
+     * @return {Phaser.GameObjects.GameObject} This Game Object.
      */
     setBounceX: function (value)
     {
@@ -53,9 +53,9 @@ var Bounce = {
      * @method Phaser.Physics.Arcade.Components.Bounce#setBounceY
      * @since 3.0.0
      *
-     * @param {[type]} value - [description]
+     * @param {number} value - [description]
      *
-     * @return {[type]} [description]
+     * @return {Phaser.GameObjects.GameObject} This Game Object.
      */
     setBounceY: function (value)
     {
@@ -70,9 +70,9 @@ var Bounce = {
      * @method Phaser.Physics.Arcade.Components.Bounce#setCollideWorldBounds
      * @since 3.0.0
      *
-     * @param {[type]} value - [description]
+     * @param {number} value - [description]
      *
-     * @return {[type]} [description]
+     * @return {Phaser.GameObjects.GameObject} This Game Object.
      */
     setCollideWorldBounds: function (value)
     {

@@ -18,10 +18,10 @@ var Acceleration = {
      * @method Phaser.Physics.Arcade.Components.Acceleration#setAcceleration
      * @since 3.0.0
      *
-     * @param {[type]} x - [description]
-     * @param {[type]} y - [description]
+     * @param {number} x - The horizontal acceleration
+     * @param {number} [y=x] - The vertical acceleration
      *
-     * @return {[type]} [description]
+     * @return {Phaser.GameObjects.GameObject} This Game Object.
      */
     setAcceleration: function (x, y)
     {
@@ -36,9 +36,9 @@ var Acceleration = {
      * @method Phaser.Physics.Arcade.Components.Acceleration#setAccelerationX
      * @since 3.0.0
      *
-     * @param {[type]} value - [description]
+     * @param {number} value - The horizontal acceleration
      *
-     * @return {[type]} [description]
+     * @return {Phaser.GameObjects.GameObject} This Game Object.
      */
     setAccelerationX: function (value)
     {
@@ -53,9 +53,9 @@ var Acceleration = {
      * @method Phaser.Physics.Arcade.Components.Acceleration#setAccelerationY
      * @since 3.0.0
      *
-     * @param {[type]} value - [description]
+     * @param {number} value - The vertical acceleration
      *
-     * @return {[type]} [description]
+     * @return {Phaser.GameObjects.GameObject} This Game Object.
      */
     setAccelerationY: function (value)
     {

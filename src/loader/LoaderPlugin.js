@@ -15,6 +15,28 @@ var PluginManager = require('../boot/PluginManager');
 var XHRSettings = require('./XHRSettings');
 
 /**
+ * @typedef {object} LoaderFileObject
+ *
+ * @property {string} key - [description]
+ * @property {string} type - [description]
+ * @property {string} [url] - [description]
+ * @property {string[]} [urls] - [description]
+ * @property {string} [textureURL] - [description]
+ * @property {string} [atlasURL] - [description]
+ * @property {string} [xmlURL] - [description]
+ * @property {string[]} [textureURLs] - [description]
+ * @property {string[]} [atlasURLs] - [description]
+ * @property {object} [config] - [description]
+ * @property {object} [json] - [description]
+ * @property {XHRSettingsObject} [xhrSettings] - [description]
+ * @property {XHRSettingsObject} [textureXhrSettings] - [description]
+ * @property {XHRSettingsObject} [atlasXhrSettings] - [description]
+ * @property {XHRSettingsObject} [xmlXhrSettings] - [description]
+ * @property {XHRSettingsObject} [audioXhrSettings] - [description]
+ * @property {XHRSettingsObject} [jsonXhrSettings] - [description]
+ */
+
+/**
  * @classdesc
  * [description]
  *
@@ -122,7 +144,7 @@ var LoaderPlugin = new Class({
          * xhr specific global settings (can be overridden on a per-file basis)
          *
          * @name Phaser.Loader.LoaderPlugin#xhr
-         * @type {Phaser.Loader.XHRSettings}
+         * @type {XHRSettingsObject}
          * @since 3.0.0
          */
         this.xhr = XHRSettings(
@@ -388,7 +410,7 @@ var LoaderPlugin = new Class({
      */
     updateProgress: function ()
     {
-        this.progress = 1 - (this.list.size / this.totalToLoad);
+        this.progress = 1 - ((this.list.size + this.inflight.size) / this.totalToLoad);
 
         this.emit('progress', this.progress);
     },
@@ -812,10 +834,10 @@ var LoaderPlugin = new Class({
      * @method Phaser.Loader.LoaderPlugin#saveJSON
      * @since 3.0.0
      *
-     * @param {[type]} data - [description]
-     * @param {[type]} filename - [description]
+     * @param {*} data - [description]
+     * @param {string} [filename=file.json] - [description]
      *
-     * @return {[type]} [description]
+     * @return {Phaser.Loader.LoaderPlugin} This Loader plugin.
      */
     saveJSON: function (data, filename)
     {
@@ -828,9 +850,9 @@ var LoaderPlugin = new Class({
      * @method Phaser.Loader.LoaderPlugin#save
      * @since 3.0.0
      *
-     * @param {[type]} data - [description]
-     * @param {[type]} filename - [description]
-     * @param {[type]} filetype - [description]
+     * @param {*} data - [description]
+     * @param {string} [filename=file.json] - [description]
+     * @param {string} [filetype=application/json] - [description]
      *
      * @return {Phaser.Loader.LoaderPlugin} This Loader plugin.
      */
@@ -882,7 +904,7 @@ var LoaderPlugin = new Class({
      * @method Phaser.Loader.LoaderPlugin#loadArray
      * @since 3.0.0
      *
-     * @param {array} files - [description]
+     * @param {LoaderFileObject[]} files - [description]
      *
      * @return {boolean} [description]
      */
@@ -905,7 +927,7 @@ var LoaderPlugin = new Class({
      * @method Phaser.Loader.LoaderPlugin#file
      * @since 3.0.0
      *
-     * @param {object} file - [description]
+     * @param {LoaderFileObject} file - [description]
      *
      * @return {Phaser.Loader.File} [description]
      */

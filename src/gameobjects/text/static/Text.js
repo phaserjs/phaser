@@ -28,6 +28,7 @@ var TextStyle = require('../TextStyle');
  *
  * @extends Phaser.GameObjects.Components.Alpha
  * @extends Phaser.GameObjects.Components.BlendMode
+ * @extends Phaser.GameObjects.Components.ComputedSize
  * @extends Phaser.GameObjects.Components.Depth
  * @extends Phaser.GameObjects.Components.Flip
  * @extends Phaser.GameObjects.Components.GetBounds
@@ -42,7 +43,7 @@ var TextStyle = require('../TextStyle');
  * @param {Phaser.Scene} scene - The Scene to which this Game Object belongs. A Game Object can only belong to one Scene at a time.
  * @param {number} x - The horizontal position of this Game Object in the world.
  * @param {number} y - The vertical position of this Game Object in the world.
- * @param {string|string[]} text - The text this Text object will display.
+ * @param {(string|string[])} text - The text this Text object will display.
  * @param {object} style - The text style configuration object.
  */
 var Text = new Class({
@@ -52,6 +53,7 @@ var Text = new Class({
     Mixins: [
         Components.Alpha,
         Components.BlendMode,
+        Components.ComputedSize,
         Components.Depth,
         Components.Flip,
         Components.GetBounds,
@@ -150,7 +152,7 @@ var Text = new Class({
          * Allows you to add extra spacing if the browser is unable to accurately determine the true font dimensions.
          *
          * @name Phaser.GameObjects.Text#padding
-         * @type {object}
+         * @type {{left:number,right:number,top:number,bottom:number}}
          * @since 3.0.0
          */
         this.padding = { left: 0, right: 0, top: 0, bottom: 0 };
@@ -179,7 +181,7 @@ var Text = new Class({
          * [description]
          *
          * @name Phaser.GameObjects.Text#canvasTexture
-         * @type {?[type]}
+         * @type {HTMLCanvasElement}
          * @default null
          * @since 3.0.0
          */
@@ -201,7 +203,7 @@ var Text = new Class({
         {
             this.setPadding(style.padding);
         }
-        
+
         if (style && style.lineSpacing)
         {
             this._lineSpacing = style.lineSpacing;
@@ -486,6 +488,8 @@ var Text = new Class({
     {
         if (text === undefined) { text = this.text; }
 
+        this.style.syncFont(this.canvas, this.context);
+
         var wrappedLines = this.runWordWrap(text);
 
         return wrappedLines.split(this.splitRegExp);
@@ -497,7 +501,7 @@ var Text = new Class({
      * @method Phaser.GameObjects.Text#setText
      * @since 3.0.0
      *
-     * @param {string|string[]} value - The string, or array of strings, to be set as the content of this Text object.
+     * @param {(string|string[])} value - The string, or array of strings, to be set as the content of this Text object.
      *
      * @return {Phaser.GameObjects.Text} This Text object.
      */
@@ -777,7 +781,7 @@ var Text = new Class({
      * @method Phaser.GameObjects.Text#setWordWrapWidth
      * @since 3.0.0
      *
-     * @param {number|null} width - The maximum width of a line in pixels. Set to null to remove wrapping.
+     * @param {?number} width - The maximum width of a line in pixels. Set to null to remove wrapping.
      * @param {boolean} [useAdvancedWrap=false] - Whether or not to use the advanced wrapping
      * algorithm. If true, spaces are collapsed and whitespace is trimmed from lines. If false,
      * spaces and whitespace are left as is.
@@ -795,7 +799,7 @@ var Text = new Class({
      * @method Phaser.GameObjects.Text#setWordWrapCallback
      * @since 3.0.0
      *
-     * @param {function} callback - A custom function that will be responsible for wrapping the
+     * @param {TextStyleWordWrapCallback} callback - A custom function that will be responsible for wrapping the
      * text. It will receive two arguments: text (the string to wrap), textObject (this Text
      * instance). It should return the wrapped lines either as an array of lines or as a string with
      * newline characters in place to indicate where breaks should happen.
@@ -830,7 +834,7 @@ var Text = new Class({
      * @method Phaser.GameObjects.Text#setPadding
      * @since 3.0.0
      *
-     * @param {number|object} left - [description]
+     * @param {(number|object)} left - [description]
      * @param {number} top - [description]
      * @param {number} right - [description]
      * @param {number} bottom - [description]

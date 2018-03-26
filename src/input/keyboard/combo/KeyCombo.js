@@ -10,11 +10,26 @@ var ProcessKeyCombo = require('./ProcessKeyCombo');
 var ResetKeyCombo = require('./ResetKeyCombo');
 
 /**
+ * @callback KeyboardKeydownCallback
+ *
+ * @param {KeyboardEvent} event - [description]
+ */
+
+/**
+ * @typedef {object} KeyComboConfig
+ *
+ * @property {boolean} [resetOnWrongKey=true] - [description]
+ * @property {number} [maxKeyDelay=0] - [description]
+ * @property {boolean} [resetOnMatch=false] - [description]
+ * @property {boolean} [deleteOnMatch=false] - [description]
+ */
+
+/**
  * @classdesc
  * [description]
  *
  * `keys` argument can be:
- * 
+ *
  * A string (ATARI)
  * An array of either integers (key codes) or strings, or a mixture of both
  * An array of objects (such as Key objects) with a public 'keyCode' property
@@ -25,8 +40,8 @@ var ResetKeyCombo = require('./ResetKeyCombo');
  * @since 3.0.0
  *
  * @param {Phaser.Input.Keyboard.KeyboardManager} keyboardManager - [description]
- * @param {string|integers[]|object[]} keys - [description]
- * @param {object} [config] - [description]
+ * @param {(string|integer[]|object[])} keys - [description]
+ * @param {KeyComboConfig} [config] - [description]
  */
 var KeyCombo = new Class({
 
@@ -114,7 +129,7 @@ var KeyCombo = new Class({
          * The length of this combo (in keycodes)
          *
          * @name Phaser.Input.Keyboard.KeyCombo#size
-         * @type {[type]}
+         * @type {number}
          * @since 3.0.0
          */
         this.size = this.keyCodes.length;
@@ -219,7 +234,7 @@ var KeyCombo = new Class({
          * [description]
          *
          * @name Phaser.Input.Keyboard.KeyCombo#onKeyDown
-         * @type {function}
+         * @type {KeyboardKeydownCallback}
          * @since 3.0.0
          */
         this.onKeyDown = onKeyDownHandler;
@@ -229,7 +244,7 @@ var KeyCombo = new Class({
 
     /**
      * How far complete is this combo? A value between 0 and 1.
-     * 
+     *
      * @name Phaser.Input.Keyboard.KeyCombo#progress
      * @type {number}
      * @readOnly

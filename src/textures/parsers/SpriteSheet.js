@@ -13,6 +13,7 @@ var GetFastValue = require('../../utils/object/GetFastValue');
  * same size and cannot be trimmed or rotated.
  *
  * @function Phaser.Textures.Parsers.SpriteSheet
+ * @memberOf Phaser.Textures.Parsers
  * @since 3.0.0
  *
  * @param {Phaser.Textures.Texture} texture - The Texture to add the Frames to.

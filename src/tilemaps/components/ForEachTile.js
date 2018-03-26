@@ -7,13 +7,21 @@
 var GetTilesWithin = require('./GetTilesWithin');
 
 /**
+ * @callback EachTileCallback
+ *
+ * @param {Phaser.Tilemaps.Tile} value - [description]
+ * @param {number} index - [description]
+ * @param {Phaser.Tilemaps.Tile[]} array - [description]
+ */
+
+/**
  * For each tile in the given rectangular area (in tile coordinates) of the layer, run the given
  * callback. Similar to Array.prototype.forEach in vanilla JS.
  *
  * @function Phaser.Tilemaps.Components.ForEachTile
  * @since 3.0.0
  *
- * @param {function} callback - The callback. Each tile in the given area will be passed to this
+ * @param {EachTileCallback} callback - The callback. Each tile in the given area will be passed to this
  * callback as the first and only parameter.
  * @param {object} [context] - The context under which the callback should be run.
  * @param {integer} [tileX=0] - [description]

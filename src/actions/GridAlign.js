@@ -6,46 +6,54 @@
 
 var AlignIn = require('../display/align/in/QuickSet');
 var CONST = require('../display/align/const');
-var GetValue = require('../utils/object/GetValue');
+var GetFastValue = require('../utils/object/GetFastValue');
 var NOOP = require('../utils/NOOP');
 var Zone = require('../gameobjects/zone/Zone');
 
 var tempZone = new Zone({ sys: { queueDepthSort: NOOP }}, 0, 0, 1, 1);
 
 /**
- * [description]
+ * @typedef {object} GridAlignConfig
+ *
+ * @property {integer} [width=-1] - The width of the grid in items (not pixels). -1 means lay all items out horizontally, regardless of quantity.
+ *                                  If both this value and height are set to -1 then this value overrides it and the `height` value is ignored.
+ * @property {integer} [height=-1] - The height of the grid in items (not pixels). -1 means lay all items out vertically, regardless of quantity.
+ *                                   If both this value and `width` are set to -1 then `width` overrides it and this value is ignored.
+ * @property {boolean} [cellWidth=1] - The width of the cell, in pixels, in which the item is positioned.
+ * @property {integer} [cellHeight=1] - The height of the cell, in pixels, in which the item is positioned.
+ * @property {integer} [position=0] - The alignment position. One of the Phaser.Display.Align consts such as `TOP_LEFT` or `RIGHT_CENTER`.
+ * @property {number} [x=0] - Optionally place the top-left of the final grid at this coordinate.
+ * @property {number} [y=0] - Optionally place the top-left of the final grid at this coordinate.
+ */
+
+/**
+ * Takes an array of Game Objects, or any objects that have public `x` and `y` properties,
+ * and then aligns them based on the grid configuration given to this action.
  *
  * @function Phaser.Actions.GridAlign
  * @since 3.0.0
- * 
- * @param {array} items - An array of Game Objects. The contents of this array are updated by this Action.
- * @param {object} options - [description]
  *
- * @return {array} The array of Game Objects that was passed to this Action.
+ * @param {(array|Phaser.GameObjects.GameObject[])} items - The array of items to be updated by this action.
+ * @param {GridAlignConfig} options - The GridAlign Configuration object.
+ *
+ * @return {array} The array of objects that were passed to this Action.
  */
 var GridAlign = function (items, options)
 {
-    var width = GetValue(options, 'width', -1);
-    var height = GetValue(options, 'height', -1);
-    var cellWidth = GetValue(options, 'cellWidth', 1);
-    var cellHeight = GetValue(options, 'cellHeight', cellWidth);
-    var position = GetValue(options, 'position', CONST.TOP_LEFT);
-    var x = GetValue(options, 'x', 0);
-    var y = GetValue(options, 'y', 0);
+    if (options === undefined) { options = {}; }
 
-    // var centerX = GetValue(options, 'centerX', null);
-    // var centerY = GetValue(options, 'centerY', null);
+    var width = GetFastValue(options, 'width', -1);
+    var height = GetFastValue(options, 'height', -1);
+    var cellWidth = GetFastValue(options, 'cellWidth', 1);
+    var cellHeight = GetFastValue(options, 'cellHeight', cellWidth);
+    var position = GetFastValue(options, 'position', CONST.TOP_LEFT);
+    var x = GetFastValue(options, 'x', 0);
+    var y = GetFastValue(options, 'y', 0);
 
     var cx = 0;
     var cy = 0;
     var w = (width * cellWidth);
     var h = (height * cellHeight);
-
-    //  If the Grid is centered on a position then we need to calculate it now
-    // if (centerX !== null && centerY !== null)
-    // {
-    // 
-    // }
 
     tempZone.setPosition(x, y);
     tempZone.setSize(cellWidth, cellHeight);

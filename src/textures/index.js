@@ -4,18 +4,25 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
+var CONST = require('./const');
+var Extend = require('../utils/object/Extend');
+
 /**
  * @namespace Phaser.Textures
  */
 
-module.exports = {
+var Textures = {
 
-    Parsers: require('./parsers/'),
+    Parsers: require('./parsers'),
 
-    FilterMode: require('./FilterMode'),
     Frame: require('./Frame'),
     Texture: require('./Texture'),
     TextureManager: require('./TextureManager'),
     TextureSource: require('./TextureSource')
 
 };
+
+//   Merge in the consts
+Textures = Extend(false, Textures, CONST);
+
+module.exports = Textures;

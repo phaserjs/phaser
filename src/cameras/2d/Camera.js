@@ -12,6 +12,27 @@ var ValueToColor = require('../../display/color/ValueToColor');
 var Vector2 = require('../../math/Vector2');
 
 /**
+ * @typedef {object} JSONCamera
+ *
+ * @property {string} name - The name of the camera
+ * @property {number} x - The horizontal position of camera
+ * @property {number} y - The vertical position of camera
+ * @property {number} width - The width size of camera
+ * @property {number} height - The height size of camera
+ * @property {number} zoom - The zoom of camera
+ * @property {number} rotation - The rotation of camera
+ * @property {boolean} roundPixels - The round pixels st status of camera
+ * @property {number} scrollX - The horizontal scroll of camera
+ * @property {number} scrollY - The vertical scroll of camera
+ * @property {string} backgroundColor - The background color of camera
+ * @property {object} [bounds] - The bounds of camera
+ * @property {number} [bounds.x] - The horizontal position of bounds of camera
+ * @property {number} [bounds.y] - The vertical position of bounds of camera
+ * @property {number} [bounds.width] - The width of the bounds of camera
+ * @property {number} [bounds.height] - The height of the bounds of camera
+ */
+
+/**
  * @classdesc
  * [description]
  *
@@ -276,6 +297,17 @@ var Camera = new Class({
         /**
          * [description]
          *
+         * @name Phaser.Cameras.Scene2D.Camera#_shakeCallback
+         * @type {function}
+         * @private
+         * @default null
+         * @since 3.3.0
+         */
+        this._shakeCallback = null;
+
+        /**
+         * [description]
+         *
          * @name Phaser.Cameras.Scene2D.Camera#_fadeDuration
          * @type {number}
          * @private
@@ -331,6 +363,17 @@ var Camera = new Class({
         /**
          * [description]
          *
+         * @name Phaser.Cameras.Scene2D.Camera#_fadeCallback
+         * @type {function}
+         * @private
+         * @default null
+         * @since 3.3.0
+         */
+        this._fadeCallback = null;
+
+        /**
+         * [description]
+         *
          * @name Phaser.Cameras.Scene2D.Camera#_flashDuration
          * @type {number}
          * @private
@@ -382,6 +425,17 @@ var Camera = new Class({
          * @since 3.0.0
          */
         this._flashAlpha = 0;
+
+        /**
+         * [description]
+         *
+         * @name Phaser.Cameras.Scene2D.Camera#_flashCallback
+         * @type {function}
+         * @private
+         * @default null
+         * @since 3.3.0
+         */
+        this._flashCallback = null;
 
         /**
          * [description]
@@ -658,24 +712,75 @@ var Camera = new Class({
     },
 
     /**
-     * [description]
+     * Fades the Camera in from the given color over the duration specified.
      *
-     * @method Phaser.Cameras.Scene2D.Camera#fade
-     * @since 3.0.0
+     * @method Phaser.Cameras.Scene2D.Camera#fadeIn
+     * @since 3.3.0
      *
-     * @param {number} duration - [description]
-     * @param {number} red - [description]
-     * @param {number} green - [description]
-     * @param {number} blue - [description]
-     * @param {number} force - [description]
+     * @param {number} duration - The duration of the effect in milliseconds.
+     * @param {function} [callback] - An optional callback to invoke when the fade completes. Will be sent one argument - a reference to this camera.
+     * @param {number} [red=0] - The value to fade the red channel from. A value between 0 and 1.
+     * @param {number} [green=0] - The value to fade the green channel from. A value between 0 and 1.
+     * @param {number} [blue=0] - The value to fade the blue channel from. A value between 0 and 1.
      *
      * @return {Phaser.Cameras.Scene2D.Camera} This Camera instance.
      */
-    fade: function (duration, red, green, blue, force)
+    fadeIn: function (duration, callback, red, green, blue)
     {
         if (red === undefined) { red = 0; }
         if (green === undefined) { green = 0; }
         if (blue === undefined) { blue = 0; }
+
+        return this.flash(duration, red, green, blue, true, callback);
+    },
+
+    /**
+     * Fades the Camera out to the given color over the duration specified.
+     * This is an alias for Camera.fade that forces the fade to start, regardless of existing fades.
+     *
+     * @method Phaser.Cameras.Scene2D.Camera#fadeOut
+     * @since 3.3.0
+     *
+     * @param {number} duration - The duration of the effect in milliseconds.
+     * @param {function} [callback] - An optional callback to invoke when the fade completes. Will be sent one argument - a reference to this camera.
+     * @param {number} [red=0] - The value to fade the red channel from. A value between 0 and 1.
+     * @param {number} [green=0] - The value to fade the green channel from. A value between 0 and 1.
+     * @param {number} [blue=0] - The value to fade the blue channel from. A value between 0 and 1.
+     *
+     * @return {Phaser.Cameras.Scene2D.Camera} This Camera instance.
+     */
+    fadeOut: function (duration, callback, red, green, blue)
+    {
+        if (red === undefined) { red = 0; }
+        if (green === undefined) { green = 0; }
+        if (blue === undefined) { blue = 0; }
+
+        return this.fade(duration, red, green, blue, true, callback);
+    },
+
+    /**
+     * Fades the Camera to the given color over the duration specified.
+     *
+     * @method Phaser.Cameras.Scene2D.Camera#fade
+     * @since 3.0.0
+     *
+     * @param {number} duration - The duration of the effect in milliseconds.
+     * @param {number} [red=0] - The value to fade the red channel to. A value between 0 and 1.
+     * @param {number} [green=0] - The value to fade the green channel to. A value between 0 and 1.
+     * @param {number} [blue=0] - The value to fade the blue channel to. A value between 0 and 1.
+     * @param {boolean} [force=false] - Force the fade effect to start immediately, even if already running.
+     * @param {function} [callback] - An optional callback to invoke when the fade completes. Will be sent one argument - a reference to this camera.
+     *
+     * @return {Phaser.Cameras.Scene2D.Camera} This Camera instance.
+     */
+    fade: function (duration, red, green, blue, force, callback)
+    {
+        if (!duration) { duration = Number.MIN_VALUE; }
+        if (red === undefined) { red = 0; }
+        if (green === undefined) { green = 0; }
+        if (blue === undefined) { blue = 0; }
+        if (force === undefined) { force = false; }
+        if (callback === undefined) { callback = null; }
 
         if (!force && this._fadeAlpha > 0)
         {
@@ -685,12 +790,7 @@ var Camera = new Class({
         this._fadeRed = red;
         this._fadeGreen = green;
         this._fadeBlue = blue;
-
-        if (duration <= 0)
-        {
-            duration = Number.MIN_VALUE;
-        }
-
+        this._fadeCallback = callback;
         this._fadeDuration = duration;
         this._fadeAlpha = Number.MIN_VALUE;
 
@@ -698,41 +798,74 @@ var Camera = new Class({
     },
 
     /**
-     * [description]
+     * Flashes the Camera to the given color over the duration specified.
      *
      * @method Phaser.Cameras.Scene2D.Camera#flash
      * @since 3.0.0
      *
-     * @param {number} duration - [description]
-     * @param {number} red - [description]
-     * @param {number} green - [description]
-     * @param {number} blue - [description]
-     * @param {number} force - [description]
+     * @param {number} duration - The duration of the effect in milliseconds.
+     * @param {number} [red=1] - The value to flash the red channel to. A value between 0 and 1.
+     * @param {number} [green=1] - The value to flash the green channel to. A value between 0 and 1.
+     * @param {number} [blue=1] - The value to flash the blue channel to. A value between 0 and 1.
+     * @param {boolean} [force=false] - Force the flash effect to start immediately, even if already running.
+     * @param {function} [callback] - An optional callback to invoke when the flash completes. Will be sent one argument - a reference to this camera.
      *
      * @return {Phaser.Cameras.Scene2D.Camera} This Camera instance.
      */
-    flash: function (duration, red, green, blue, force)
+    flash: function (duration, red, green, blue, force, callback)
     {
-        if (!force && this._flashAlpha > 0.0)
+        if (!duration) { duration = Number.MIN_VALUE; }
+        if (red === undefined) { red = 1; }
+        if (green === undefined) { green = 1; }
+        if (blue === undefined) { blue = 1; }
+        if (force === undefined) { force = false; }
+        if (callback === undefined) { callback = null; }
+
+        if (!force && this._flashAlpha > 0)
         {
             return this;
         }
 
-        if (red === undefined) { red = 1.0; }
-        if (green === undefined) { green = 1.0; }
-        if (blue === undefined) { blue = 1.0; }
-
         this._flashRed = red;
         this._flashGreen = green;
         this._flashBlue = blue;
+        this._flashCallback = callback;
+        this._flashDuration = duration;
+        this._flashAlpha = 1;
 
-        if (duration <= 0)
+        return this;
+    },
+
+    /**
+     * Shakes the Camera by the given intensity over the duration specified.
+     *
+     * @method Phaser.Cameras.Scene2D.Camera#shake
+     * @since 3.0.0
+     *
+     * @param {number} duration - The duration of the effect in milliseconds.
+     * @param {number} [intensity=0.05] - The intensity of the shake.
+     * @param {boolean} [force=false] - Force the shake effect to start immediately, even if already running.
+     * @param {function} [callback] - An optional callback to invoke when the shake completes. Will be sent one argument - a reference to this camera.
+     *
+     * @return {Phaser.Cameras.Scene2D.Camera} This Camera instance.
+     */
+    shake: function (duration, intensity, force, callback)
+    {
+        if (!duration) { duration = Number.MIN_VALUE; }
+        if (intensity === undefined) { intensity = 0.05; }
+        if (force === undefined) { force = false; }
+        if (callback === undefined) { callback = null; }
+
+        if (!force && (this._shakeOffsetX !== 0 || this._shakeOffsetY !== 0))
         {
-            duration = Number.MIN_VALUE;
+            return this;
         }
 
-        this._flashDuration = duration;
-        this._flashAlpha = 1.0;
+        this._shakeDuration = duration;
+        this._shakeIntensity = intensity;
+        this._shakeOffsetX = 0;
+        this._shakeOffsetY = 0;
+        this._shakeCallback = callback;
 
         return this;
     },
@@ -745,7 +878,7 @@ var Camera = new Class({
      *
      * @param {number} x - [description]
      * @param {number} y - [description]
-     * @param {object|Phaser.Math.Vector2} output - [description]
+     * @param {(object|Phaser.Math.Vector2)} output - [description]
      *
      * @return {Phaser.Math.Vector2} [description]
      */
@@ -806,7 +939,7 @@ var Camera = new Class({
      * @method Phaser.Cameras.Scene2D.Camera#ignore
      * @since 3.0.0
      *
-     * @param {Phaser.GameObjects.GameObject|Phaser.GameObjects.GameObject[]} gameObjectOrArray - [description]
+     * @param {(Phaser.GameObjects.GameObject|Phaser.GameObjects.GameObject[])} gameObjectOrArray - [description]
      *
      * @return {Phaser.Cameras.Scene2D.Camera} This Camera instance.
      */
@@ -939,7 +1072,7 @@ var Camera = new Class({
      * @method Phaser.Cameras.Scene2D.Camera#setBackgroundColor
      * @since 3.0.0
      *
-     * @param {integer} color - [description]
+     * @param {(string|number|InputColorObject)} color - [description]
      *
      * @return {Phaser.Cameras.Scene2D.Camera} This Camera instance.
      */
@@ -1002,7 +1135,7 @@ var Camera = new Class({
      * @since 3.0.0
      *
      * @param {number} x - [description]
-     * @param {number} y - [description]
+     * @param {number} [y=x] - [description]
      *
      * @return {Phaser.Cameras.Scene2D.Camera} This Camera instance.
      */
@@ -1022,7 +1155,7 @@ var Camera = new Class({
      * @method Phaser.Cameras.Scene2D.Camera#setRotation
      * @since 3.0.0
      *
-     * @param {number} value - [description]
+     * @param {number} [value=0] - [description]
      *
      * @return {Phaser.Cameras.Scene2D.Camera} This Camera instance.
      */
@@ -1076,7 +1209,7 @@ var Camera = new Class({
      * @since 3.0.0
      *
      * @param {number} x - [description]
-     * @param {number} y - [description]
+     * @param {number} [y=x] - [description]
      *
      * @return {Phaser.Cameras.Scene2D.Camera} This Camera instance.
      */
@@ -1097,7 +1230,7 @@ var Camera = new Class({
      * @since 3.0.0
      *
      * @param {number} width - [description]
-     * @param {number} height - [description]
+     * @param {number} [height=width] - [description]
      *
      * @return {Phaser.Cameras.Scene2D.Camera} This Camera instance.
      */
@@ -1140,7 +1273,7 @@ var Camera = new Class({
      * @method Phaser.Cameras.Scene2D.Camera#setZoom
      * @since 3.0.0
      *
-     * @param {float} value - [description]
+     * @param {float} [value=1] - [description]
      *
      * @return {Phaser.Cameras.Scene2D.Camera} This Camera instance.
      */
@@ -1156,51 +1289,21 @@ var Camera = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Cameras.Scene2D.Camera#shake
-     * @since 3.0.0
-     *
-     * @param {number} duration - [description]
-     * @param {number} intensity - [description]
-     * @param {number} force - [description]
-     *
-     * @return {Phaser.Cameras.Scene2D.Camera} This Camera instance.
-     */
-    shake: function (duration, intensity, force)
-    {
-        if (intensity === undefined) { intensity = 0.05; }
-
-        if (!force && (this._shakeOffsetX !== 0 || this._shakeOffsetY !== 0))
-        {
-            return this;
-        }
-
-        this._shakeDuration = duration;
-        this._shakeIntensity = intensity;
-        this._shakeOffsetX = 0;
-        this._shakeOffsetY = 0;
-
-        return this;
-    },
-
-    /**
-     * [description]
-     *
      * @method Phaser.Cameras.Scene2D.Camera#startFollow
      * @since 3.0.0
      *
-     * @param {Phaser.GameObjects.GameObject|object} gameObjectOrPoint - [description]
+     * @param {(Phaser.GameObjects.GameObject|object)} target - [description]
      * @param {boolean} roundPx - [description]
      *
      * @return {Phaser.Cameras.Scene2D.Camera} This Camera instance.
      */
-    startFollow: function (gameObjectOrPoint, roundPx)
+    startFollow: function (target, roundPx)
     {
-        this._follow = gameObjectOrPoint;
+        if (roundPx === undefined) { roundPx = false; }
 
-        if (roundPx !== undefined)
-        {
-            this.roundPixels = roundPx;
-        }
+        this._follow = target;
+
+        this.roundPixels = roundPx;
 
         return this;
     },
@@ -1226,7 +1329,7 @@ var Camera = new Class({
      * @method Phaser.Cameras.Scene2D.Camera#toJSON
      * @since 3.0.0
      *
-     * @return {object} [description]
+     * @return {JSONCamera} [description]
      */
     toJSON: function ()
     {
@@ -1270,8 +1373,8 @@ var Camera = new Class({
     {
         this._flashAlpha = 0;
         this._fadeAlpha = 0;
-        this._shakeOffsetX = 0.0;
-        this._shakeOffsetY = 0.0;
+        this._shakeOffsetX = 0;
+        this._shakeOffsetY = 0;
         this._shakeDuration = 0;
 
         return this;
@@ -1283,47 +1386,77 @@ var Camera = new Class({
      * @method Phaser.Cameras.Scene2D.Camera#update
      * @since 3.0.0
      *
-     * @param {[type]} timestep - [description]
-     * @param {[type]} delta - [description]
+     * @param {integer} time - The current timestamp as generated by the Request Animation Frame or SetTimeout.
+     * @param {number} delta - The delta time, in ms, elapsed since the last frame.
      */
-    update: function (timestep, delta)
+    update: function (time, delta)
     {
-        if (this._flashAlpha > 0.0)
+        if (this._flashAlpha > 0)
         {
             this._flashAlpha -= delta / this._flashDuration;
 
-            if (this._flashAlpha < 0.0)
+            if (this._flashAlpha <= 0)
             {
-                this._flashAlpha = 0.0;
+                this._flashAlpha = 0;
+
+                if (this._flashCallback)
+                {
+                    //  Do this in case the callback flashes again (otherwise we'd overwrite the new callback)
+                    var flashCallback = this._flashCallback;
+
+                    this._flashCallback = null;
+
+                    flashCallback(this);
+                }
             }
         }
 
-        if (this._fadeAlpha > 0.0 && this._fadeAlpha < 1.0)
+        if (this._fadeAlpha > 0 && this._fadeAlpha < 1)
         {
             this._fadeAlpha += delta / this._fadeDuration;
 
-            if (this._fadeAlpha >= 1.0)
+            if (this._fadeAlpha >= 1)
             {
-                this._fadeAlpha = 1.0;
+                this._fadeAlpha = 1;
+
+                if (this._fadeCallback)
+                {
+                    //  Do this in case the callback fades again (otherwise we'd overwrite the new callback)
+                    var fadeCallback = this._fadeCallback;
+
+                    this._fadeCallback = null;
+
+                    fadeCallback(this);
+                }
             }
         }
 
-        if (this._shakeDuration > 0.0)
+        if (this._shakeDuration > 0)
         {
             var intensity = this._shakeIntensity;
 
             this._shakeDuration -= delta;
 
-            if (this._shakeDuration <= 0.0)
+            if (this._shakeDuration <= 0)
             {
-                this._shakeOffsetX = 0.0;
-                this._shakeOffsetY = 0.0;
+                this._shakeOffsetX = 0;
+                this._shakeOffsetY = 0;
+
+                if (this._shakeCallback)
+                {
+                    //  Do this in case the callback shakes again (otherwise we'd overwrite the new callback)
+                    var shakeCallback = this._shakeCallback;
+
+                    this._shakeCallback = null;
+
+                    shakeCallback(this);
+                }
             }
             else
             {
                 this._shakeOffsetX = (Math.random() * intensity * this.width * 2 - intensity * this.width) * this.zoom;
                 this._shakeOffsetY = (Math.random() * intensity * this.height * 2 - intensity * this.height) * this.zoom;
-                
+
                 if (this.roundPixels)
                 {
                     this._shakeOffsetX |= 0;

@@ -11,6 +11,17 @@ var MeasureText = require('./MeasureText');
 
 //  Key: [ Object Key, Default Value ]
 
+/**
+ * A custom function that will be responsible for wrapping the text.
+ * @callback TextStyleWordWrapCallback
+ *
+ * @param {string} text - The string to wrap.
+ * @param {Phaser.GameObjects.Text} textObject - The Text instance.
+ *
+ * @return {(string|string[])} Should return the wrapped lines either as an array of lines or as a string with
+ * newline characters in place to indicate where breaks should happen.
+ */
+
 var propertyMap = {
     fontFamily: [ 'fontFamily', 'Courier' ],
     fontSize: [ 'fontSize', '16px' ],
@@ -44,7 +55,7 @@ var propertyMap = {
  * [description]
  *
  * @class TextStyle
- * @memberOf Phaser.GameObjects.Components
+ * @memberOf Phaser.GameObjects.Text
  * @constructor
  * @since 3.0.0
  *
@@ -311,7 +322,7 @@ var TextStyle = new Class({
      * @method Phaser.GameObjects.Components.TextStyle#setStyle
      * @since 3.0.0
      *
-     * @param {[type]} style - [description]
+     * @param {CSSStyleRule} style - [description]
      * @param {boolean} [updateText=true] - [description]
      *
      * @return {Phaser.GameObjects.Text} The parent Text object.
@@ -375,8 +386,8 @@ var TextStyle = new Class({
      * @method Phaser.GameObjects.Components.TextStyle#syncFont
      * @since 3.0.0
      *
-     * @param {[type]} canvas - [description]
-     * @param {[type]} context - [description]
+     * @param {HTMLCanvasElement} canvas - [description]
+     * @param {CanvasRenderingContext2D} context - [description]
      */
     syncFont: function (canvas, context)
     {
@@ -389,8 +400,8 @@ var TextStyle = new Class({
      * @method Phaser.GameObjects.Components.TextStyle#syncStyle
      * @since 3.0.0
      *
-     * @param {[type]} canvas - [description]
-     * @param {[type]} context - [description]
+     * @param {HTMLCanvasElement} canvas - [description]
+     * @param {CanvasRenderingContext2D} context - [description]
      */
     syncStyle: function (canvas, context)
     {
@@ -410,8 +421,8 @@ var TextStyle = new Class({
      * @method Phaser.GameObjects.Components.TextStyle#syncShadow
      * @since 3.0.0
      *
-     * @param {[type]} context - [description]
-     * @param {[type]} enabled - [description]
+     * @param {CanvasRenderingContext2D} context - [description]
+     * @param {boolean} enabled - [description]
      */
     syncShadow: function (context, enabled)
     {
@@ -459,7 +470,7 @@ var TextStyle = new Class({
      * @method Phaser.GameObjects.Components.TextStyle#setFont
      * @since 3.0.0
      *
-     * @param {string|object} font - [description]
+     * @param {(string|object)} font - [description]
      *
      * @return {Phaser.GameObjects.Text} The parent Text object.
      */
@@ -487,7 +498,7 @@ var TextStyle = new Class({
      * @method Phaser.GameObjects.Components.TextStyle#setFontFamily
      * @since 3.0.0
      *
-     * @param {[type]} family - [description]
+     * @param {string} family - [description]
      *
      * @return {Phaser.GameObjects.Text} The parent Text object.
      */
@@ -504,7 +515,7 @@ var TextStyle = new Class({
      * @method Phaser.GameObjects.Components.TextStyle#setFontStyle
      * @since 3.0.0
      *
-     * @param {[type]} style - [description]
+     * @param {string} style - [description]
      *
      * @return {Phaser.GameObjects.Text} The parent Text object.
      */
@@ -521,7 +532,7 @@ var TextStyle = new Class({
      * @method Phaser.GameObjects.Components.TextStyle#setFontSize
      * @since 3.0.0
      *
-     * @param {[type]} size - [description]
+     * @param {(number|string)} size - [description]
      *
      * @return {Phaser.GameObjects.Text} The parent Text object.
      */
@@ -543,7 +554,7 @@ var TextStyle = new Class({
      * @method Phaser.GameObjects.Components.TextStyle#setTestString
      * @since 3.0.0
      *
-     * @param {[type]} string - [description]
+     * @param {string} string - [description]
      *
      * @return {Phaser.GameObjects.Text} The parent Text object.
      */
@@ -820,7 +831,7 @@ var TextStyle = new Class({
      * @method Phaser.GameObjects.Components.TextStyle#setWordWrapCallback
      * @since 3.0.0
      *
-     * @param {function} callback - A custom function that will be responsible for wrapping the
+     * @param {TextStyleWordWrapCallback} callback - A custom function that will be responsible for wrapping the
      * text. It will receive two arguments: text (the string to wrap), textObject (this Text
      * instance). It should return the wrapped lines either as an array of lines or as a string with
      * newline characters in place to indicate where breaks should happen.

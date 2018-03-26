@@ -20,9 +20,9 @@ var TweenData = require('../tween/TweenData');
  * @function Phaser.Tweens.Builders.NumberTweenBuilder
  * @since 3.0.0
  *
- * @param {Phaser.Tweens.TweenManager|Phaser.Tweens.Timeline} parent - [description]
+ * @param {(Phaser.Tweens.TweenManager|Phaser.Tweens.Timeline)} parent - [description]
  * @param {object} config - [description]
- * @param {Phaser.Tweens.Tween~ConfigDefaults} defaults - [description]
+ * @param {Phaser.Tweens.TweenConfigDefaults} defaults - [description]
  *
  * @return {Phaser.Tweens.Tween} [description]
  */
@@ -38,9 +38,9 @@ var NumberTweenBuilder = function (parent, config, defaults)
     //      to: 200,
     //      ... (normal tween properties)
     //  })
-    //  
+    //
     //  Then use it in your game via:
-    //  
+    //
     //  tween.getValue()
 
     var from = GetValue(config, 'from', 0);

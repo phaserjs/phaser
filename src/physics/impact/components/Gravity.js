@@ -18,9 +18,9 @@ var Gravity = {
      * @method Phaser.Physics.Impact.Components.Gravity#setGravity
      * @since 3.0.0
      *
-     * @param {[type]} value - [description]
+     * @param {number} value - [description]
      *
-     * @return {[type]} [description]
+     * @return {Phaser.GameObjects.GameObject} This Game Object.
      */
     setGravity: function (value)
     {
@@ -33,7 +33,7 @@ var Gravity = {
      * [description]
      *
      * @name Phaser.Physics.Impact.Components.Gravity#gravity
-     * @type {[type]}
+     * @type {number}
      * @since 3.0.0
      */
     gravity: {

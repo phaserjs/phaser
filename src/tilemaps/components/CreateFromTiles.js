@@ -18,8 +18,8 @@ var ReplaceByIndex = require('./ReplaceByIndex');
  * @function Phaser.Tilemaps.Components.CreateFromTiles
  * @since 3.0.0
  *
- * @param {integer|array} indexes - The tile index, or array of indexes, to create Sprites from.
- * @param {integer|array} replacements - The tile index, or array of indexes, to change a converted
+ * @param {(integer|array)} indexes - The tile index, or array of indexes, to create Sprites from.
+ * @param {(integer|array)} replacements - The tile index, or array of indexes, to change a converted
  * tile to. Set to `null` to leave the tiles unchanged. If an array is given, it is assumed to be a
  * one-to-one mapping with the indexes array.
  * @param {object} spriteConfig - The config object to pass into the Sprite creator (i.e.
@@ -27,7 +27,7 @@ var ReplaceByIndex = require('./ReplaceByIndex');
  * @param {Phaser.Scene} [scene=scene the map is within] - The Scene to create the Sprites within.
  * @param {Phaser.Cameras.Scene2D.Camera} [camera=main camera] - The Camera to use when determining the world XY
  * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.
- * 
+ *
  * @return {Phaser.GameObjects.Sprite[]} An array of the Sprites that were created.
  */
 var CreateFromTiles = function (indexes, replacements, spriteConfig, scene, camera, layer)

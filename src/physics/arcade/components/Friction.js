@@ -18,10 +18,10 @@ var Friction = {
      * @method Phaser.Physics.Arcade.Components.Friction#setFriction
      * @since 3.0.0
      *
-     * @param {[type]} x - [description]
-     * @param {[type]} y - [description]
+     * @param {number} x - [description]
+     * @param {number} [y=x] - [description]
      *
-     * @return {[type]} [description]
+     * @return {Phaser.GameObjects.GameObject} This Game Object.
      */
     setFriction: function (x, y)
     {
@@ -36,9 +36,9 @@ var Friction = {
      * @method Phaser.Physics.Arcade.Components.Friction#setFrictionX
      * @since 3.0.0
      *
-     * @param {[type]} x - [description]
+     * @param {number} x - [description]
      *
-     * @return {[type]} [description]
+     * @return {Phaser.GameObjects.GameObject} This Game Object.
      */
     setFrictionX: function (x)
     {
@@ -53,9 +53,9 @@ var Friction = {
      * @method Phaser.Physics.Arcade.Components.Friction#setFrictionY
      * @since 3.0.0
      *
-     * @param {[type]} y - [description]
+     * @param {number} y - [description]
      *
-     * @return {[type]} [description]
+     * @return {Phaser.GameObjects.GameObject} This Game Object.
      */
     setFrictionY: function (y)
     {

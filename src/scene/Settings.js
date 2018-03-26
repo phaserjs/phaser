@@ -8,18 +8,51 @@ var CONST = require('./const');
 var GetValue = require('../utils/object/GetValue');
 var InjectionMap = require('./InjectionMap');
 
+// TODO 22/03/2018 Fix "plugins" type
+
 /**
- * Takes a Scene configuration object and returns a fully formed Systems object.
+ * @typedef {object} SettingsConfig
  *
- * @function Phaser.Scenes.Settings.create
- * @since 3.0.0
- *
- * @param {object} config - [description]
- *
- * @return {object} [description]
+ * @property {string} [key] - [description]
+ * @property {boolean} [active=false] - [description]
+ * @property {boolean} [visible=true] - [description]
+ * @property {(false|LoaderFileObject[])} [files=false] - [description]
+ * @property {?(InputJSONCameraObject|InputJSONCameraObject[])} [cameras=null] - [description]
+ * @property {Object.<string, string>} [map] - [description]
+ * @property {object} [physics={}] - [description]
+ * @property {object} [loader={}] - [description]
+ * @property {(false|*)} [plugins=false] - [description]
  */
+
+/**
+ * @typedef {object} SettingsObject
+ *
+ * @property {number} status - [description]
+ * @property {string} key - [description]
+ * @property {boolean} active - [description]
+ * @property {boolean} visible - [description]
+ * @property {boolean} isBooted - [description]
+ * @property {object} data - [description]
+ * @property {(false|LoaderFileObject[])} files - [description]
+ * @property {?(InputJSONCameraObject|InputJSONCameraObject[])} cameras - [description]
+ * @property {Object.<string, string>} map - [description]
+ * @property {object} physics - [description]
+ * @property {object} loader - [description]
+ * @property {(false|*)} plugins - [description]
+ */
+
 var Settings = {
 
+    /**
+     * Takes a Scene configuration object and returns a fully formed Systems object.
+     *
+     * @function Phaser.Scenes.Settings.create
+     * @since 3.0.0
+     *
+     * @param {(string|SettingsConfig)} config - [description]
+     *
+     * @return {SettingsObject} [description]
+     */
     create: function (config)
     {
         if (typeof config === 'string')

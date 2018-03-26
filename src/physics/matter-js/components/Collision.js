@@ -18,9 +18,9 @@ var Collision = {
      * @method Phaser.Physics.Matter.Components.Collision#setCollisionCategory
      * @since 3.0.0
      *
-     * @param {[type]} value - [description]
+     * @param {number} value - Unique category bitfield.
      *
-     * @return {[type]} [description]
+     * @return {Phaser.GameObjects.GameObject} This Game Object.
      */
     setCollisionCategory: function (value)
     {
@@ -35,9 +35,9 @@ var Collision = {
      * @method Phaser.Physics.Matter.Components.Collision#setCollisionGroup
      * @since 3.0.0
      *
-     * @param {[type]} value - [description]
+     * @param {number} value - Unique group index.
      *
-     * @return {[type]} [description]
+     * @return {Phaser.GameObjects.GameObject} This Game Object.
      */
     setCollisionGroup: function (value)
     {
@@ -52,9 +52,9 @@ var Collision = {
      * @method Phaser.Physics.Matter.Components.Collision#setCollidesWith
      * @since 3.0.0
      *
-     * @param {[type]} categories - [description]
+     * @param {(number|number[])} categories - A unique category bitfield, or an array of them.
      *
-     * @return {[type]} [description]
+     * @return {Phaser.GameObjects.GameObject} This Game Object.
      */
     setCollidesWith: function (categories)
     {

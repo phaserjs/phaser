@@ -80,7 +80,7 @@ var CanvasRenderer = new Class({
          * [description]
          *
          * @name Phaser.Renderer.Canvas.CanvasRenderer#config
-         * @type {object}
+         * @type {RendererConfig}
          * @since 3.0.0
          */
         this.config = {
@@ -132,7 +132,7 @@ var CanvasRenderer = new Class({
          * Map to the required function.
          *
          * @name Phaser.Renderer.Canvas.CanvasRenderer#drawImage
-         * @type {function}
+         * @type {Phaser.Renderer.Canvas.DrawImage}
          * @since 3.0.0
          */
         this.drawImage = DrawImage(this.config.roundPixels);
@@ -141,7 +141,7 @@ var CanvasRenderer = new Class({
          * [description]
          *
          * @name Phaser.Renderer.Canvas.CanvasRenderer#blitImage
-         * @type {function}
+         * @type {Phaser.Renderer.Canvas.BlitImage}
          * @since 3.0.0
          */
         this.blitImage = BlitImage(this.config.roundPixels);
@@ -189,7 +189,7 @@ var CanvasRenderer = new Class({
          * [description]
          *
          * @name Phaser.Renderer.Canvas.CanvasRenderer#snapshotCallback
-         * @type {?function}
+         * @type {?SnapshotCallback}
          * @default null
          * @since 3.0.0
          */
@@ -199,7 +199,7 @@ var CanvasRenderer = new Class({
          * [description]
          *
          * @name Phaser.Renderer.Canvas.CanvasRenderer#snapshotType
-         * @type {?[type]}
+         * @type {?string}
          * @default null
          * @since 3.0.0
          */
@@ -209,7 +209,7 @@ var CanvasRenderer = new Class({
          * [description]
          *
          * @name Phaser.Renderer.Canvas.CanvasRenderer#snapshotEncoder
-         * @type {?[type]}
+         * @type {?number}
          * @default null
          * @since 3.0.0
          */
@@ -244,7 +244,7 @@ var CanvasRenderer = new Class({
 
         this.width = width * resolution;
         this.height = height * resolution;
-        
+
         this.gameCanvas.width = this.width;
         this.gameCanvas.height = this.height;
 
@@ -302,9 +302,9 @@ var CanvasRenderer = new Class({
      * @method Phaser.Renderer.Canvas.CanvasRenderer#setBlendMode
      * @since 3.0.0
      *
-     * @param {[type]} blendMode - [description]
+     * @param {number} blendMode - [description]
      *
-     * @return {[type]} [description]
+     * @return {number} [description]
      */
     setBlendMode: function (blendMode)
     {
@@ -444,7 +444,7 @@ var CanvasRenderer = new Class({
         if (camera._fadeAlpha > 0 || camera._flashAlpha > 0)
         {
             ctx.globalCompositeOperation = 'source-over';
-            
+
             // fade rendering
             ctx.fillStyle = 'rgb(' + (camera._fadeRed * 255) + ',' + (camera._fadeGreen * 255) + ',' + (camera._fadeBlue * 255) + ')';
             ctx.globalAlpha = camera._fadeAlpha;
@@ -494,9 +494,9 @@ var CanvasRenderer = new Class({
      * @method Phaser.Renderer.Canvas.CanvasRenderer#snapshot
      * @since 3.0.0
      *
-     * @param {[type]} callback - [description]
-     * @param {[type]} type - [description]
-     * @param {[type]} encoderOptions - [description]
+     * @param {SnapshotCallback} callback - [description]
+     * @param {string} type - [description]
+     * @param {number} encoderOptions - [description]
      */
     snapshot: function (callback, type, encoderOptions)
     {

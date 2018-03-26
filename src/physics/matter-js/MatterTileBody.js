@@ -25,8 +25,8 @@ var Vertices = require('./lib/geometry/Vertices');
  * Note: not all Tiled collision shapes are supported. See
  * Phaser.Physics.Matter.TileBody#setFromTileCollision for more information.
  *
- * @class MatterTileBody
- * @memberOf Phaser.Physics.Matter.TileBody
+ * @class TileBody
+ * @memberOf Phaser.Physics.Matter
  * @constructor
  * @since 3.0.0
  *
@@ -70,7 +70,7 @@ var MatterTileBody = new Class({
         /**
          * The tile object the body is associated with.
          *
-         * @name Phaser.Physics.Matter.MatterTileBody#tile
+         * @name Phaser.Physics.Matter.TileBody#tile
          * @type {Phaser.GameObjects.Tile}
          * @since 3.0.0
          */
@@ -79,7 +79,7 @@ var MatterTileBody = new Class({
         /**
          * The Matter world the body exists within.
          *
-         * @name Phaser.Physics.Matter.MatterTileBody#world
+         * @name Phaser.Physics.Matter.TileBody#world
          * @type {Phaser.Physics.Matter.World}
          * @since 3.0.0
          */
@@ -97,6 +97,7 @@ var MatterTileBody = new Class({
         // Set the body either from an existing body (if provided), the shapes in the tileset
         // collision layer (if it exists) or a rectangle matching the tile.
         var body = GetFastValue(options, 'body', null);
+
         var addToWorld = GetFastValue(options, 'addToWorld', true);
 
         if (!body)
@@ -283,7 +284,7 @@ var MatterTileBody = new Class({
     },
 
     /**
-     * Removes the current body from the MatterTileBody and from the Matter world
+     * Removes the current body from the TileBody and from the Matter world
      *
      * @method Phaser.Physics.Matter.TileBody#removeBody
      * @since 3.0.0

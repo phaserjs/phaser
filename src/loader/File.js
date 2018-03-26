@@ -13,6 +13,25 @@ var XHRLoader = require('./XHRLoader');
 var XHRSettings = require('./XHRSettings');
 
 /**
+ * @callback FileProcessCallback
+ *
+ * @param {Phaser.Loader.File} file - [description]
+ */
+
+/**
+ * @typedef {object} FileConfig
+ *
+ * @property {(string|false)} [type=false] - The file type string (image, json, etc) for sorting within the Loader.
+ * @property {(string|false)} [key=false] - Unique cache key (unique within its file type)
+ * @property {string} [url] - The URL of the file, not including baseURL.
+ * @property {string} [path=''] - [description]
+ * @property {string} [extension=''] - [description]
+ * @property {XMLHttpRequestResponseType} [responseType] - [description]
+ * @property {(XHRSettingsObject|false)} [xhrSettings=false] - [description]
+ * @property {object} [config] - A config object that can be used by file types to store transitional data.
+ */
+
+/**
  * @classdesc
  * [description]
  *
@@ -21,7 +40,7 @@ var XHRSettings = require('./XHRSettings');
  * @constructor
  * @since 3.0.0
  *
- * @param {object} fileConfig - [description]
+ * @param {FileConfig} fileConfig - [description]
  */
 var File = new Class({
 
@@ -31,7 +50,7 @@ var File = new Class({
     {
         /**
          * The file type string (image, json, etc) for sorting within the Loader.
-         * 
+         *
          * @name Phaser.Loader.File#type
          * @type {string}
          * @since 3.0.0
@@ -83,7 +102,7 @@ var File = new Class({
          * The merged XHRSettings for this file.
          *
          * @name Phaser.Loader.File#xhrSettings
-         * @type {Phaser.Loader.XHRSettings}
+         * @type {XHRSettingsObject}
          * @since 3.0.0
          */
         this.xhrSettings = XHRSettings(GetFastValue(fileConfig, 'responseType', undefined));
@@ -158,7 +177,7 @@ var File = new Class({
          * If this is undefined then the File will check BaseLoader.crossOrigin and use that (if set)
          *
          * @name Phaser.Loader.File#crossOrigin
-         * @type {string|undefined}
+         * @type {(string|undefined)}
          * @since 3.0.0
          */
         this.crossOrigin = undefined;
@@ -167,7 +186,7 @@ var File = new Class({
          * The processed file data, stored in here after the file has loaded.
          *
          * @name Phaser.Loader.File#data
-         * @type {any}
+         * @type {*}
          * @since 3.0.0
          */
         this.data = undefined;
@@ -219,7 +238,7 @@ var File = new Class({
      *
      * @method Phaser.Loader.File#setLinkFile
      * @since 3.0.0
-     * 
+     *
      * @param {Phaser.Loader.File} fileB - The linked file.
      * @param {string} linkType - The type of association.
      */
@@ -242,9 +261,12 @@ var File = new Class({
      */
     resetXHR: function ()
     {
-        this.xhrLoader.onload = undefined;
-        this.xhrLoader.onerror = undefined;
-        this.xhrLoader.onprogress = undefined;
+        if (this.xhrLoader)
+        {
+            this.xhrLoader.onload = undefined;
+            this.xhrLoader.onerror = undefined;
+            this.xhrLoader.onprogress = undefined;
+        }
     },
 
     /**
@@ -347,7 +369,7 @@ var File = new Class({
      * @method Phaser.Loader.File#onProcess
      * @since 3.0.0
      *
-     * @param {function} callback - The callback to invoke to process this File.
+     * @param {FileProcessCallback} callback - The callback to invoke to process this File.
      */
     onProcess: function (callback)
     {

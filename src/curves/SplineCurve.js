@@ -54,9 +54,9 @@ var SplineCurve = new Class({
      * @method Phaser.Curves.SplineCurve#addPoints
      * @since 3.0.0
      *
-     * @param {[type]} points - [description]
+     * @param {Phaser.Math.Vector2[]} points - [description]
      *
-     * @return {[type]} [description]
+     * @return {Phaser.Curves.SplineCurve} This curve object.
      */
     addPoints: function (points)
     {
@@ -94,10 +94,10 @@ var SplineCurve = new Class({
      * @method Phaser.Curves.SplineCurve#addPoint
      * @since 3.0.0
      *
-     * @param {[type]} x - [description]
-     * @param {[type]} y - [description]
+     * @param {number} x - [description]
+     * @param {number} y - [description]
      *
-     * @return {[type]} [description]
+     * @return {Phaser.Math.Vector2} [description]
      */
     addPoint: function (x, y)
     {
@@ -109,14 +109,14 @@ var SplineCurve = new Class({
     },
 
     /**
-     * [description]
+     * Gets the starting point on the curve.
      *
      * @method Phaser.Curves.SplineCurve#getStartPoint
      * @since 3.0.0
      *
-     * @param {[type]} out - [description]
+     * @param {Phaser.Math.Vector2} [out] - A Vector2 object to store the result in. If not given will be created.
      *
-     * @return {[type]} [description]
+     * @return {Phaser.Math.Vector2} The coordinates of the point on the curve. If an `out` object was given this will be returned.
      */
     getStartPoint: function (out)
     {
@@ -131,9 +131,9 @@ var SplineCurve = new Class({
      * @method Phaser.Curves.SplineCurve#getResolution
      * @since 3.0.0
      *
-     * @param {[type]} divisions - [description]
+     * @param {number} divisions - [description]
      *
-     * @return {[type]} [description]
+     * @return {number} [description]
      */
     getResolution: function (divisions)
     {
@@ -141,15 +141,15 @@ var SplineCurve = new Class({
     },
 
     /**
-     * [description]
+     * Get point at relative position in curve according to length.
      *
      * @method Phaser.Curves.SplineCurve#getPoint
      * @since 3.0.0
      *
-     * @param {[type]} t - [description]
-     * @param {[type]} out - [description]
+     * @param {float} t - The position along the curve to return. Where 0 is the start and 1 is the end.
+     * @param {Phaser.Math.Vector2} [out] - A Vector2 object to store the result in. If not given will be created.
      *
-     * @return {[type]} [description]
+     * @return {Phaser.Math.Vector2} The coordinates of the point on the curve. If an `out` object was given this will be returned.
      */
     getPoint: function (t, out)
     {
@@ -177,7 +177,7 @@ var SplineCurve = new Class({
      * @method Phaser.Curves.SplineCurve#toJSON
      * @since 3.0.0
      *
-     * @return {object} [description]
+     * @return {JSONCurve} The JSON object containing this curve data.
      */
     toJSON: function ()
     {
@@ -197,6 +197,16 @@ var SplineCurve = new Class({
 
 });
 
+/**
+ * [description]
+ *
+ * @function Phaser.Curves.SplineCurve.fromJSON
+ * @since 3.0.0
+ *
+ * @param {JSONCurve} data - The JSON object containing this curve data.
+ *
+ * @return {Phaser.Curves.SplineCurve} [description]
+ */
 SplineCurve.fromJSON = function (data)
 {
     return new SplineCurve(data.points);

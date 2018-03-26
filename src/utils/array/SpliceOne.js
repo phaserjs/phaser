@@ -15,7 +15,7 @@
  * @param {array} array - [description]
  * @param {integer} index - [description]
  *
- * @return {any} [description]
+ * @return {*} [description]
  */
 var SpliceOne = function (array, index)
 {
