@@ -8,9 +8,10 @@ var Class = require('../utils/Class');
 
 /**
  * @callback EachMapCallback
+ * @template T
  *
  * @param {string} key - [description]
- * @param {*} entry - [description]
+ * @param {T} entry - [description]
  *
  * @return {?boolean} [description]
  */
@@ -24,12 +25,14 @@ var Class = require('../utils/Class');
  *    [ 3, 'three' ]
  * ]);
  *
+ * @generic T
+ *
  * @class Map
  * @memberOf Phaser.Structs
  * @constructor
  * @since 3.0.0
  *
- * @param {array} elements - [description]
+ * @param {Array.<*>} elements - [description]
  */
 var Map = new Class({
 
@@ -41,7 +44,7 @@ var Map = new Class({
          * [description]
          *
          * @name Phaser.Structs.Map#entries
-         * @type {Object.<string, any>}
+         * @type {Object.<string, *>}
          * @default {}
          * @since 3.0.0
          */
@@ -112,7 +115,7 @@ var Map = new Class({
      * @method Phaser.Structs.Map#getArray
      * @since 3.0.0
      *
-     * @return {array} [description]
+     * @return {Array.<*>} [description]
      */
     getArray: function ()
     {
@@ -203,7 +206,7 @@ var Map = new Class({
      * @method Phaser.Structs.Map#values
      * @since 3.0.0
      *
-     * @return {array} [description]
+     * @return {Array.<*>} [description]
      */
     values: function ()
     {
@@ -246,7 +249,7 @@ var Map = new Class({
      * @method Phaser.Structs.Map#each
      * @since 3.0.0
      *
-     * @param {EachMapCallback} callback - [description]
+     * @param {EachMapCallback.<T>} callback - [description]
      *
      * @return {Phaser.Structs.Map} This Map object.
      */
