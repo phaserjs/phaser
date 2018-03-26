@@ -30,6 +30,17 @@ var Container = new Class({
         {
             this.children.push(gameObject);
         }
+        return this;
+    },
+
+    remove: function (gameObject)
+    {
+        var index = this.children.indexOf(gameObject);
+        if (index >= 0)
+        {
+            this.children.splice(index, 1);
+        }
+        return this;
     }
 
 });

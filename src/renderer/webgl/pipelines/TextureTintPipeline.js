@@ -366,8 +366,9 @@ var TextureTintPipeline = new Class({
      *
      * @param {Phaser.GameObjects.Particles.ParticleEmitterManager} emitterManager - [description]
      * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
+     * @param {Phaser.GameObjects.Components.TransformMatrix} parentTransformMatrix - [description]
      */
-    drawEmitterManager: function (emitterManager, camera)
+    drawEmitterManager: function (emitterManager, camera, parentTransformMatrix)
     {
         this.renderer.setPipeline(this);
 
@@ -530,8 +531,9 @@ var TextureTintPipeline = new Class({
      *
      * @param {Phaser.GameObjects.Blitter} blitter - [description]
      * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
+     * @param {Phaser.GameObjects.Components.TransformMatrix} parentTransformMatrix - [description]
      */
-    drawBlitter: function (blitter, camera)
+    drawBlitter: function (blitter, camera, parentTransformMatrix)
     {
         this.renderer.setPipeline(this);
 
@@ -651,6 +653,7 @@ var TextureTintPipeline = new Class({
      *
      * @param {Phaser.GameObjects.Sprite} sprite - [description]
      * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
+     * @param {Phaser.GameObjects.Components.TransformMatrix} parentTransformMatrix - [description]
      */
     batchSprite: function (sprite, camera, parentTransformMatrix)
     {
@@ -806,8 +809,9 @@ var TextureTintPipeline = new Class({
      *
      * @param {Phaser.GameObjects.Mesh} mesh - [description]
      * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
+     * @param {Phaser.GameObjects.Components.TransformMatrix} parentTransformMatrix - [description]
      */
-    batchMesh: function (mesh, camera)
+    batchMesh: function (mesh, camera, parentTransformMatrix)
     {
         var vertices = mesh.vertices;
         var length = vertices.length;
@@ -895,8 +899,9 @@ var TextureTintPipeline = new Class({
      *
      * @param {Phaser.GameObjects.BitmapText} bitmapText - [description]
      * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
+     * @param {Phaser.GameObjects.Components.TransformMatrix} parentTransformMatrix - [description]
      */
-    batchBitmapText: function (bitmapText, camera)
+    batchBitmapText: function (bitmapText, camera, parentTransformMatrix)
     {
         this.renderer.setPipeline(this);
 
@@ -1129,8 +1134,9 @@ var TextureTintPipeline = new Class({
      *
      * @param {Phaser.GameObjects.DynamicBitmapText} bitmapText - [description]
      * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
+     * @param {Phaser.GameObjects.Components.TransformMatrix} parentTransformMatrix - [description]
      */
-    batchDynamicBitmapText: function (bitmapText, camera)
+    batchDynamicBitmapText: function (bitmapText, camera, parentTransformMatrix)
     {
         this.renderer.setPipeline(this);
 
@@ -1438,8 +1444,9 @@ var TextureTintPipeline = new Class({
      *
      * @param {Phaser.GameObjects.Text} text - [description]
      * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
+     * @param {Phaser.GameObjects.Components.TransformMatrix} parentTransformMatrix - [description]
      */
-    batchText: function (text, camera)
+    batchText: function (text, camera, parentTransformMatrix)
     {
         var getTint = Utils.getTintAppendFloatAlpha;
 
@@ -1472,8 +1479,9 @@ var TextureTintPipeline = new Class({
      *
      * @param {Phaser.Tilemaps.DynamicTilemapLayer} tilemapLayer - [description]
      * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
+     * @param {Phaser.GameObjects.Components.TransformMatrix} parentTransformMatrix - [description]
      */
-    batchDynamicTilemapLayer: function (tilemapLayer, camera)
+    batchDynamicTilemapLayer: function (tilemapLayer, camera, parentTransformMatrix)
     {
         var renderTiles = tilemapLayer.culledTiles;
         var length = renderTiles.length;
@@ -1528,8 +1536,9 @@ var TextureTintPipeline = new Class({
      *
      * @param {Phaser.GameObjects.TileSprite} tileSprite - [description]
      * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
+     * @param {Phaser.GameObjects.Components.TransformMatrix} parentTransformMatrix - [description]
      */
-    batchTileSprite: function (tileSprite, camera)
+    batchTileSprite: function (tileSprite, camera, parentTransformMatrix)
     {
         var getTint = Utils.getTintAppendFloatAlpha;
 
@@ -1589,6 +1598,7 @@ var TextureTintPipeline = new Class({
      * @param {float} uOffset - [description]
      * @param {float} vOffset - [description]
      * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
+     * @param {Phaser.GameObjects.Components.TransformMatrix} parentTransformMatrix - [description]
      */
     batchTexture: function (
         gameObject,
@@ -1604,7 +1614,8 @@ var TextureTintPipeline = new Class({
         frameX, frameY, frameWidth, frameHeight,
         tintTL, tintTR, tintBL, tintBR,
         uOffset, vOffset,
-        camera)
+        camera, 
+        parentTransformMatrix)
     {
         this.renderer.setPipeline(this);
 
@@ -1728,6 +1739,7 @@ var TextureTintPipeline = new Class({
      * @param {number} frameWidth - [description]
      * @param {number} frameHeight - [description]
      * @param {Phaser.GameObjects.Components.TransformMatrix} transformMatrix - [description]
+     * @param {Phaser.GameObjects.Components.TransformMatrix} parentTransformMatrix - [description]
      *
      * @return {Phaser.Renderer.WebGL.TextureTintPipeline} This Pipeline.
      */
@@ -1736,7 +1748,8 @@ var TextureTintPipeline = new Class({
         srcX, srcY,
         tint, alpha,
         frameX, frameY, frameWidth, frameHeight,
-        transformMatrix
+        transformMatrix, 
+        parentTransformMatrix
     )
     {
         this.renderer.setPipeline(this);
