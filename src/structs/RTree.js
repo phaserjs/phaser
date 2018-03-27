@@ -470,15 +470,19 @@ rbush.prototype = {
         // Do not use string-generated Functions for CSP policies
         // Instead a combination of anonymous functions and grabbing
         // properties by string is used.
-        var compareArr = function(accessor) {
-            return function(a, b) {
+        var compareArr = function (accessor)
+        {
+            return function (a, b)
+            {
                 return this[a + accessor] - this[b + accessor];
             };
         };
+
         this.compareMinX = compareArr(format[0]);
         this.compareMinY = compareArr(format[1]);
 
-        this.toBBox = function (a) {
+        this.toBBox = function (a)
+        {
             return {
                 minX: a + format[0],
                 minY: a + format[1],
