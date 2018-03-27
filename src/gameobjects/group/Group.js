@@ -86,7 +86,7 @@ var Sprite = require('../sprite/Sprite');
  * @since 3.0.0
  *
  * @param {Phaser.Scene} scene - [description]
- * @param {array} children - [description]
+ * @param {Phaser.GameObjects.GameObject[]} children - [description]
  * @param {GroupConfig} config - [description]
  */
 var Group = new Class({
@@ -114,7 +114,7 @@ var Group = new Class({
          * [description]
          *
          * @name Phaser.GameObjects.Group#children
-         * @type {Phaser.Structs.Set}
+         * @type {Phaser.Structs.Set.<Phaser.GameObjects.GameObject>}
          * @since 3.0.0
          */
         this.children = new Set(children);

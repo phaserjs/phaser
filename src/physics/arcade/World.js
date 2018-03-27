@@ -121,7 +121,7 @@ var World = new Class({
          * Dynamic Bodies
          *
          * @name Phaser.Physics.Arcade.World#bodies
-         * @type {Phaser.Structs.Set}
+         * @type {Phaser.Structs.Set.<Phaser.Physics.Arcade.Body>}
          * @since 3.0.0
          */
         this.bodies = new Set();
@@ -130,7 +130,7 @@ var World = new Class({
          * Static Bodies
          *
          * @name Phaser.Physics.Arcade.World#staticBodies
-         * @type {Phaser.Structs.Set}
+         * @type {Phaser.Structs.Set.<Phaser.Physics.Arcade.StaticBody>}
          * @since 3.0.0
          */
         this.staticBodies = new Set();
@@ -139,7 +139,7 @@ var World = new Class({
          * Static Bodies
          *
          * @name Phaser.Physics.Arcade.World#pendingDestroy
-         * @type {Phaser.Structs.Set}
+         * @type {Phaser.Structs.Set.<(Phaser.Physics.Arcade.Body|Phaser.Physics.Arcade.StaticBody)>}
          * @since 3.1.0
          */
         this.pendingDestroy = new Set();
@@ -148,7 +148,7 @@ var World = new Class({
          * [description]
          *
          * @name Phaser.Physics.Arcade.World#colliders
-         * @type {Phaser.Structs.ProcessQueue}
+         * @type {Phaser.Structs.ProcessQueue.<Phaser.Physics.Arcade.Collider>}
          * @since 3.0.0
          */
         this.colliders = new ProcessQueue();
