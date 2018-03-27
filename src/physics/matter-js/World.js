@@ -128,9 +128,51 @@ var World = new Class({
          * @name Phaser.Physics.Matter.World#correction
          * @type {number}
          * @default 1
-         * @since 3.3.1
+         * @since 3.4.0
          */
         this.correction = GetValue(config, 'correction', 1);
+
+        /**
+         * This function is called every time the core game loop steps, which is bound to the
+         * Request Animation Frame frequency unless otherwise modified.
+         * 
+         * The function is passed two values: `time` and `delta`, both of which come from the game step values.
+         * 
+         * It must return a number. This number is used as the delta value passed to Matter.Engine.update.
+         * 
+         * You can override this function with your own to define your own timestep.
+         * 
+         * If you need to update the Engine multiple times in a single game step then call
+         * `World.update` as many times as required. Each call will trigger the `getDelta` function.
+         * If you wish to have full control over when the Engine updates then see the property `autoUpdate`.
+         *
+         * You can also adjust the number of iterations that Engine.update performs.
+         * Use the Scene Matter Physics config object to set the following properties:
+         *
+         * positionIterations (defaults to 6)
+         * velocityIterations (defaults to 4)
+         * constraintIterations (defaults to 2)
+         *
+         * Adjusting these values can help performance in certain situations, depending on the physics requirements
+         * of your game.
+         *
+         * @name Phaser.Physics.Matter.World#getDelta
+         * @type {function}
+         * @since 3.4.0
+         */
+        this.getDelta = GetValue(config, 'getDelta', this.update60Hz);
+
+        /**
+         * Automatically call Engine.update every time the game steps.
+         * If you disable this then you are responsible for calling `World.step` directly from your game.
+         * If you call `set60Hz` or `set30Hz` then `autoUpdate` is reset to `true`.
+         *
+         * @name Phaser.Physics.Matter.World#autoUpdate
+         * @type {boolean}
+         * @default true
+         * @since 3.4.0
+         */
+        this.autoUpdate = GetValue(config, 'autoUpdate', true);
 
         /**
          * [description]
@@ -604,10 +646,68 @@ var World = new Class({
      */
     update: function (time, delta)
     {
-        if (this.enabled)
+        if (this.enabled && this.autoUpdate)
         {
-            Engine.update(this.engine, delta, this.correction);
+            Engine.update(this.engine, this.getDelta(time, delta), this.correction);
         }
+    },
+
+    /**
+     * Manually advances the physics simulation by one iteration.
+     * 
+     * You can optionally pass in the `delta` and `correction` values to be used by Engine.update.
+     * If undefined they use the Matter defaults of 60Hz and no correction.
+     * 
+     * Calling `step` directly bypasses any checks of `enabled` or `autoUpdate`.
+     * 
+     * It also ignores any custom `getDelta` functions, as you should be passing the delta
+     * value in to this call.
+     *
+     * You can adjust the number of iterations that Engine.update performs internally.
+     * Use the Scene Matter Physics config object to set the following properties:
+     *
+     * positionIterations (defaults to 6)
+     * velocityIterations (defaults to 4)
+     * constraintIterations (defaults to 2)
+     *
+     * Adjusting these values can help performance in certain situations, depending on the physics requirements
+     * of your game.
+     *
+     * @method Phaser.Physics.Matter.World#step
+     * @since 3.4.0
+     *
+     * @param {number} [delta=16.666] - [description]
+     * @param {number} [correction=1] - [description]
+     */
+    step: function (delta, correction)
+    {
+        Engine.update(this.engine, delta, correction);
+    },
+
+    /**
+     * Runs the Matter Engine.update at a fixed timestep of 60Hz.
+     *
+     * @method Phaser.Physics.Matter.World#update60Hz
+     * @since 3.4.0
+     *
+     * @return {number} The delta value to be passed to Engine.update.
+     */
+    update60Hz: function ()
+    {
+        return 1000 / 60;
+    },
+
+    /**
+     * Runs the Matter Engine.update at a fixed timestep of 30Hz.
+     *
+     * @method Phaser.Physics.Matter.World#update30Hz
+     * @since 3.4.0
+     *
+     * @return {number} The delta value to be passed to Engine.update.
+     */
+    update30Hz: function ()
+    {
+        return 1000 / 30;
     },
 
     /**

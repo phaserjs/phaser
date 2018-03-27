@@ -1,13 +1,16 @@
 # Change Log
 
-## Version 3.3.1 - Tetsuo - In Development
+## Version 3.4.0 - In Development
 
 ### New Features
 
 * A new property was added to Matter.World, `correction` which is used in the Engine.update call and allows you to adjust the time
 being passed to the simulation. The default value is 1 to remain consistent with previous releases.
 * Group.destroy has a new optional argument `destroyChildren` which will automatically call `destroy` on all children of a Group if set to true (the default is false, hence it doesn't change the public API). Fix #3246 (thanks @DouglasLapsley)
-
+* Matter Physics now has a new config property `getDelta` which allows you to specify your own function to calculate the delta value given to the Matter Engine when it updates.
+* Matter Physics has two new methods: `set60Hz` and `set30Hz` which will set an Engine update rate of 60Hz and 30Hz respectively. 60Hz being the default.
+* Matter Physics has a new config and run-time property `autoUpdate`, which defaults to `true`. When enabled the Matter Engine will update in sync with the game step (set by Request Animation Frame). The delta value given to Matter is now controlled by the `getDelta` function.
+* Matter Physics has a new method `step` which manually advances the physics simulation by one iteration, using whatever delta and correction values you pass in to it. When used in combination with `autoUpdate=false` you can now explicitly control the update frequency of the physics simulation and unbind it from the game step.
 
 ### Bug Fixes
 

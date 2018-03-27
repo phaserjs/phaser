@@ -145,6 +145,8 @@ var MatterPhysics = new Class({
      *
      * @method Phaser.Physics.Matter.MatterPhysics#enableAttractorPlugin
      * @since 3.0.0
+     * 
+     * @return {Phaser.Physics.Matter.MatterPhysics} This Matter Physics instance.
      */
     enableAttractorPlugin: function ()
     {
@@ -159,6 +161,8 @@ var MatterPhysics = new Class({
      *
      * @method Phaser.Physics.Matter.MatterPhysics#enableWrapPlugin
      * @since 3.0.0
+     * 
+     * @return {Phaser.Physics.Matter.MatterPhysics} This Matter Physics instance.
      */
     enableWrapPlugin: function ()
     {
@@ -192,6 +196,72 @@ var MatterPhysics = new Class({
     resume: function ()
     {
         return this.world.resume();
+    },
+
+    /**
+     * Sets the Matter Engine to run at fixed timestep of 60Hz and enables `autoUpdate`.
+     * If you have set a custom `getDelta` function then this will override it.
+     *
+     * @method Phaser.Physics.Matter.MatterPhysics#set60Hz
+     * @since 3.4.0
+     *
+     * @return {Phaser.Physics.Matter.MatterPhysics} This Matter Physics instance.
+     */
+    set60Hz: function ()
+    {
+        this.world.getDelta = this.world.update60Hz;
+        this.world.autoUpdate = true;
+
+        return this;
+    },
+
+    /**
+     * Sets the Matter Engine to run at fixed timestep of 30Hz and enables `autoUpdate`.
+     * If you have set a custom `getDelta` function then this will override it.
+     *
+     * @method Phaser.Physics.Matter.MatterPhysics#set30Hz
+     * @since 3.4.0
+     *
+     * @return {Phaser.Physics.Matter.MatterPhysics} This Matter Physics instance.
+     */
+    set30Hz: function ()
+    {
+        this.world.getDelta = this.world.update30Hz;
+        this.world.autoUpdate = true;
+
+        return this;
+    },
+
+    /**
+     * Manually advances the physics simulation by one iteration.
+     * 
+     * You can optionally pass in the `delta` and `correction` values to be used by Engine.update.
+     * If undefined they use the Matter defaults of 60Hz and no correction.
+     * 
+     * Calling `step` directly bypasses any checks of `enabled` or `autoUpdate`.
+     * 
+     * It also ignores any custom `getDelta` functions, as you should be passing the delta
+     * value in to this call.
+     *
+     * You can adjust the number of iterations that Engine.update performs internally.
+     * Use the Scene Matter Physics config object to set the following properties:
+     *
+     * positionIterations (defaults to 6)
+     * velocityIterations (defaults to 4)
+     * constraintIterations (defaults to 2)
+     *
+     * Adjusting these values can help performance in certain situations, depending on the physics requirements
+     * of your game.
+     *
+     * @method Phaser.Physics.Matter.MatterPhysics#step
+     * @since 3.4.0
+     *
+     * @param {number} [delta=16.666] - [description]
+     * @param {number} [correction=1] - [description]
+     */
+    step: function (delta, correction)
+    {
+        this.world.step(delta, correction);
     },
 
     /**
