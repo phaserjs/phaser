@@ -22,9 +22,9 @@ var tmpVec3 = new Vector3();
  * @since 3.0.0
  *
  * @param {Phaser.Scene} scene - [description]
- * @param {integer} fieldOfView - [description]
- * @param {integer} viewportWidth - [description]
- * @param {integer} viewportHeight - [description]
+ * @param {integer} [fieldOfView=80] - [description]
+ * @param {integer} [viewportWidth=0] - [description]
+ * @param {integer} [viewportHeight=0] - [description]
  */
 var PerspectiveCamera = new Class({
 

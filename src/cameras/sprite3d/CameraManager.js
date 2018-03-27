@@ -48,7 +48,7 @@ var CameraManager = new Class({
          * An Array of the Camera objects being managed by this Camera Manager.
          *
          * @name Phaser.Cameras.Sprite3D.CameraManager#cameras
-         * @type {array}
+         * @type {Phaser.Cameras.Sprite3D.Camera[]}
          * @since 3.0.0
          */
         this.cameras = [];
