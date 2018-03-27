@@ -44,7 +44,7 @@ var VisibilityHandler = require('./VisibilityHandler');
  * @constructor
  * @since 3.0.0
  *
- * @param {object} [GameConfig] - The configuration object for your Phaser Game instance.
+ * @param {GameConfig} [GameConfig] - The configuration object for your Phaser Game instance.
  */
 var Game = new Class({
 
