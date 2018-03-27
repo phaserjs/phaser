@@ -33,7 +33,7 @@ var BaseCache = new Class({
          * You can query the Map directly or use the BaseCache methods.
          *
          * @name Phaser.Cache.BaseCache#entries
-         * @type {Phaser.Structs.Map}
+         * @type {Phaser.Structs.Map.<String, *>}
          * @since 3.0.0
          */
         this.entries = new CustomMap();
@@ -54,9 +54,9 @@ var BaseCache = new Class({
      * This event is fired by the Cache each time a new object is added to it.
      *
      * @event Phaser.Cache.BaseCache#addEvent
-     * @param {Phaser.Cache.BaseCache} The BaseCache to which the object was added.
-     * @param {string} The key of the object added to the cache.
-     * @param {*} A reference to the object added to the cache.
+     * @param {Phaser.Cache.BaseCache} base - The BaseCache to which the object was added.
+     * @param {string} key - The key of the object added to the cache.
+     * @param {*} object - A reference to the object added to the cache.
      */
 
     /**

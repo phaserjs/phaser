@@ -90,7 +90,7 @@ var Blitter = new Class({
          * [description]
          *
          * @name Phaser.GameObjects.Blitter#children
-         * @type {Phaser.Structs.List}
+         * @type {Phaser.Structs.List.<Phaser.GameObjects.Blitter.Blitter>}
          * @since 3.0.0
          */
         this.children = new List();
@@ -153,7 +153,7 @@ var Blitter = new Class({
      *
      * @param {BlitterFromCallback} callback - The callback to invoke after creating a bob. It will be sent two arguments: The Bob and the index of the Bob.
      * @param {integer} quantity - The quantity of Bob objects to create.
-     * @param {string} [frame] - The Frame the Bobs will use. It must be part of the Blitter Texture.
+     * @param {(string|integer|Phaser.Textures.Frame|string[]|integer[]|Phaser.Textures.Frame[])} [frame] - The Frame the Bobs will use. It must be part of the Blitter Texture.
      * @param {boolean} [visible=true] - [description]
      *
      * @return {Phaser.GameObjects.Blitter.Bob[]} An array of Bob objects that were created.
@@ -179,7 +179,7 @@ var Blitter = new Class({
      * @since 3.0.0
      *
      * @param {integer} quantity - The quantity of Bob objects to create.
-     * @param {string} [frame] - The Frame the Bobs will use. It must be part of the Blitter Texture.
+     * @param {(string|integer|Phaser.Textures.Frame|string[]|integer[]|Phaser.Textures.Frame[])} [frame] - The Frame the Bobs will use. It must be part of the Blitter Texture.
      * @param {boolean} [visible=true] - [description]
      *
      * @return {Phaser.GameObjects.Blitter.Bob[]} An array of Bob objects that were created.

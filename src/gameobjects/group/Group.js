@@ -86,7 +86,7 @@ var Sprite = require('../sprite/Sprite');
  * @since 3.0.0
  *
  * @param {Phaser.Scene} scene - [description]
- * @param {array} children - [description]
+ * @param {Phaser.GameObjects.GameObject[]} children - [description]
  * @param {GroupConfig} config - [description]
  */
 var Group = new Class({
@@ -114,7 +114,7 @@ var Group = new Class({
          * [description]
          *
          * @name Phaser.GameObjects.Group#children
-         * @type {Phaser.Structs.Set}
+         * @type {Phaser.Structs.Set.<Phaser.GameObjects.GameObject>}
          * @since 3.0.0
          */
         this.children = new Set(children);
@@ -894,9 +894,28 @@ var Group = new Class({
      *
      * @method Phaser.GameObjects.Group#destroy
      * @since 3.0.0
+     *
+     * @param {boolean} [destroyChildren=false] - Call `GameObject.destroy` on all children of this Group?
      */
-    destroy: function ()
+    destroy: function (destroyChildren)
     {
+        if (destroyChildren === undefined) { destroyChildren = false; }
+
+        if (destroyChildren)
+        {
+            var children = this.children;
+
+            for (var i = 0; i < children.size; i++)
+            {
+                var gameObject = children.entries[i];
+
+                //  Remove the event hook first or it'll go all recursive hell on us
+                gameObject.off('destroy', this.remove, this);
+
+                gameObject.destroy();
+            }
+        }
+
         this.children.clear();
 
         this.scene = undefined;

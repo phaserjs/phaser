@@ -6,15 +6,19 @@
 
 * A new property was added to Matter.World, `correction` which is used in the Engine.update call and allows you to adjust the time
 being passed to the simulation. The default value is 1 to remain consistent with previous releases.
+* Group.destroy has a new optional argument `destroyChildren` which will automatically call `destroy` on all children of a Group if set to true (the default is false, hence it doesn't change the public API). Fix #3246 (thanks @DouglasLapsley)
 
 
 ### Bug Fixes
 
 * In the WebGL Render Texture the tint of the texture was always set to 0xffffff and therefore the alpha values were ignored. The tint is now calculated using the alpha value. Fix #3385 (thanks @ger1995)
 * The RenderTexture now uses the ComputedSize component instead of Size (which requires a frame), allowing calls to getBounds to work. Fix #3451 (thanks @kuoruan)
-* PathFollower.start has been renamed to `startFollow`, but PathFollower.setPath was still using PathFollower.start. (thanks @samid737)
+* PathFollower.start has been renamed to `startFollow`, but PathFollower.setPath was still using `PathFollower.start` (thanks @samid737)
 
 ### Updates
+
+* The RTree library (rbush) used by Phaser 3 suffered from violating CSP policies by dynamically creating Functions at run-time in an eval-like manner. These are now defined via generators. Fix #3441 (thanks @jamierocks @Colbydude)
+
 
 
 

@@ -80,7 +80,7 @@ var AnimationManager = new Class({
          * [description]
          *
          * @name Phaser.Animations.AnimationManager#anims
-         * @type {Phaser.Structs.Map}
+         * @type {Phaser.Structs.Map<string, Phaser.Animations.Animation>}
          * @protected
          * @since 3.0.0
          */

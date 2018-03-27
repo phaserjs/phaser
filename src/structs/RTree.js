@@ -467,20 +467,29 @@ rbush.prototype = {
     {
         // data format (minX, minY, maxX, maxY accessors)
 
-        // uses eval-type function compilation instead of just accepting a toBBox function
-        // because the algorithms are very sensitive to sorting functions performance,
-        // so they should be dead simple and without inner calls
+        // Do not use string-generated Functions for CSP policies
+        // Instead a combination of anonymous functions and grabbing
+        // properties by string is used.
+        var compareArr = function (accessor)
+        {
+            return function (a, b)
+            {
+                return this[a + accessor] - this[b + accessor];
+            };
+        };
 
-        var compareArr = ['return a', ' - b', ';'];
+        this.compareMinX = compareArr(format[0]);
+        this.compareMinY = compareArr(format[1]);
 
-        this.compareMinX = new Function('a', 'b', compareArr.join(format[0]));
-        this.compareMinY = new Function('a', 'b', compareArr.join(format[1]));
-
-        this.toBBox = new Function('a',
-            'return {minX: a' + format[0] +
-            ', minY: a' + format[1] +
-            ', maxX: a' + format[2] +
-            ', maxY: a' + format[3] + '};');
+        this.toBBox = function (a)
+        {
+            return {
+                minX: a + format[0],
+                minY: a + format[1],
+                maxX: a + format[2],
+                maxy: a + format[3]
+            };
+        };
     }
 };
 
