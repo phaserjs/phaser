@@ -377,7 +377,6 @@ var TextureTintPipeline = new Class({
             parentMatrix = parentTransformMatrix.matrix;
         }
 
-
         this.renderer.setPipeline(this);
 
         var roundPixels = this.renderer.config.roundPixels;
@@ -1972,7 +1971,6 @@ var TextureTintPipeline = new Class({
         {
             parentMatrix = parentTransformMatrix.matrix;
         }
-
 
         this.renderer.setPipeline(this);
 
