@@ -54,7 +54,7 @@ var SplineCurve = new Class({
      * @method Phaser.Curves.SplineCurve#addPoints
      * @since 3.0.0
      *
-     * @param {Phaser.Math.Vector2[]} points - [description]
+     * @param {(Phaser.Math.Vector2[]|number[]|number[][])} points - [description]
      *
      * @return {Phaser.Curves.SplineCurve} This curve object.
      */
@@ -114,6 +114,8 @@ var SplineCurve = new Class({
      * @method Phaser.Curves.SplineCurve#getStartPoint
      * @since 3.0.0
      *
+     * @generic {Phaser.Math.Vector2} O - [out,$return]
+     *
      * @param {Phaser.Math.Vector2} [out] - A Vector2 object to store the result in. If not given will be created.
      *
      * @return {Phaser.Math.Vector2} The coordinates of the point on the curve. If an `out` object was given this will be returned.
@@ -145,6 +147,8 @@ var SplineCurve = new Class({
      *
      * @method Phaser.Curves.SplineCurve#getPoint
      * @since 3.0.0
+     *
+     * @generic {Phaser.Math.Vector2} O - [out,$return]
      *
      * @param {float} t - The position along the curve to return. Where 0 is the start and 1 is the end.
      * @param {Phaser.Math.Vector2} [out] - A Vector2 object to store the result in. If not given will be created.

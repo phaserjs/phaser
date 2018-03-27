@@ -28,6 +28,19 @@ var Vector2 = require('../math/Vector2');
  */
 
 /**
+ * @typedef {object} EllipseCurveConfig
+ *
+ * @property {number} [x=0] - [description]
+ * @property {number} [y=0] - [description]
+ * @property {number} [xRadius=0] - [description]
+ * @property {number} [yRadius=0] - [description]
+ * @property {integer} [startAngle=0] - [description]
+ * @property {integer} [endAngle=360] - [description]
+ * @property {boolean} [clockwise=false] - [description]
+ * @property {integer} [rotation=0] - [description]
+  */
+
+/**
  * @classdesc
  * [description]
  *
@@ -37,14 +50,14 @@ var Vector2 = require('../math/Vector2');
  * @constructor
  * @since 3.0.0
  *
- * @param {number} [x=0] - [description]
+ * @param {(number|EllipseCurveConfig)} [x=0] - [description]
  * @param {number} [y=0] - [description]
  * @param {number} [xRadius=0] - [description]
  * @param {number} [yRadius=0] - [description]
- * @param {number} [startAngle=0] - [description]
- * @param {number} [endAngle=360] - [description]
+ * @param {integer} [startAngle=0] - [description]
+ * @param {integer} [endAngle=360] - [description]
  * @param {boolean} [clockwise=false] - [description]
- * @param {number} [rotation=0] - [description]
+ * @param {integer} [rotation=0] - [description]
  */
 var EllipseCurve = new Class({
 
@@ -158,6 +171,8 @@ var EllipseCurve = new Class({
      * @method Phaser.Curves.EllipseCurve#getStartPoint
      * @since 3.0.0
      *
+     * @generic {Phaser.Math.Vector2} O - [out,$return]
+     *
      * @param {Phaser.Math.Vector2} [out] - A Vector2 object to store the result in. If not given will be created.
      *
      * @return {Phaser.Math.Vector2} The coordinates of the point on the curve. If an `out` object was given this will be returned.
@@ -189,6 +204,8 @@ var EllipseCurve = new Class({
      *
      * @method Phaser.Curves.EllipseCurve#getPoint
      * @since 3.0.0
+     *
+     * @generic {Phaser.Math.Vector2} O - [out,$return]
      *
      * @param {float} t - The position along the curve to return. Where 0 is the start and 1 is the end.
      * @param {Phaser.Math.Vector2} [out] - A Vector2 object to store the result in. If not given will be created.
