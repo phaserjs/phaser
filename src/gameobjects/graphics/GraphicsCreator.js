@@ -4,6 +4,7 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
+var GetAdvancedValue = require('../../utils/object/GetAdvancedValue');
 var GameObjectCreator = require('../GameObjectCreator');
 var Graphics = require('./Graphics');
 
@@ -21,7 +22,15 @@ var Graphics = require('./Graphics');
  */
 GameObjectCreator.register('graphics', function (config)
 {
-    return new Graphics(this.scene, config);
+    var add = GetAdvancedValue(config, 'add', true);
+    var graphics = new Graphics(this.scene, config);
+
+    if (add)
+    {
+        this.scene.sys.displayList.add(graphics);
+    }
+    
+    return graphics;
 });
 
 //  When registering a factory function 'this' refers to the GameObjectCreator context.
