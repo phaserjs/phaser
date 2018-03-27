@@ -19,15 +19,16 @@ var GameObject = require('../GameObject');
  * @param {Phaser.GameObjects.Blitter} gameObject - The Game Object being rendered in this call.
  * @param {number} interpolationPercentage - Reserved for future use and custom pipelines.
  * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera that is rendering the Game Object.
+ * @param {Phaser.GameObjects.Components.TransformMatrix} parentMatrix - This transform matrix is defined if the game object is nested
  */
-var BlitterWebGLRenderer = function (renderer, gameObject, interpolationPercentage, camera)
+var BlitterWebGLRenderer = function (renderer, gameObject, interpolationPercentage, camera, parentMatrix)
 {
     if (GameObject.RENDER_MASK !== gameObject.renderFlags || (gameObject.cameraFilter > 0 && (gameObject.cameraFilter & camera._id)))
     {
         return;
     }
 
-    this.pipeline.drawBlitter(gameObject, camera);
+    this.pipeline.drawBlitter(gameObject, camera, parentMatrix);
 };
 
 module.exports = BlitterWebGLRenderer;
