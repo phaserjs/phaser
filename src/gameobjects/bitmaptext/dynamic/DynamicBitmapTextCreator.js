@@ -16,7 +16,7 @@ var GetAdvancedValue = require('../../../utils/object/GetAdvancedValue');
  * @property {string} [font=''] - [description]
  * @property {string} [text=''] - [description]
  * @property {(number|false)} [size=false] - [description]
- * @property {string} [align=''] - [description]
+ * @property {string} [align='left'] - [description]
  */
 
 /**

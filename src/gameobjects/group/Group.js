@@ -86,8 +86,8 @@ var Sprite = require('../sprite/Sprite');
  * @since 3.0.0
  *
  * @param {Phaser.Scene} scene - [description]
- * @param {Phaser.GameObjects.GameObject[]} children - [description]
- * @param {GroupConfig} config - [description]
+ * @param {?(Phaser.GameObjects.GameObject[]|GroupConfig)} children - [description]
+ * @param {GroupConfig} [config] - [description]
  */
 var Group = new Class({
 

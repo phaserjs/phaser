@@ -48,12 +48,12 @@ var Wrap = require('../../math/Wrap');
  * @param {boolean} [emitOnly=false] - [description]
  */
 var EmitterOp = new Class({
-
-    initialize:
-
-    function EmitterOp (config, key, defaultValue, emitOnly)
+    initialize: function EmitterOp (config, key, defaultValue, emitOnly)
     {
-        if (emitOnly === undefined) { emitOnly = false; }
+        if (emitOnly === undefined)
+        {
+            emitOnly = false;
+        }
 
         /**
          * [description]
@@ -167,19 +167,26 @@ var EmitterOp = new Class({
      * @method Phaser.GameObjects.Particles.EmitterOp#loadConfig
      * @since 3.0.0
      *
-     * @param {object} config - [description]
-     * @param {string} newKey - [description]
+     * @param {object} [config] - [description]
+     * @param {string} [newKey] - [description]
      */
     loadConfig: function (config, newKey)
     {
-        if (config === undefined) { config = {}; }
+        if (config === undefined)
+        {
+            config = {};
+        }
 
         if (newKey)
         {
             this.propertyKey = newKey;
         }
 
-        this.propertyValue = GetFastValue(config, this.propertyKey, this.defaultValue);
+        this.propertyValue = GetFastValue(
+            config,
+            this.propertyKey,
+            this.defaultValue
+        );
 
         this.setMethods();
 
@@ -232,7 +239,7 @@ var EmitterOp = new Class({
     {
         var value = this.propertyValue;
 
-        var t = typeof(value);
+        var t = typeof value;
 
         if (t === 'number')
         {
@@ -270,12 +277,18 @@ var EmitterOp = new Class({
                 this.onUpdate = value;
             }
         }
-        else if (t === 'object' && (this.has(value, 'random') || this.hasBoth(value, 'start', 'end') || this.hasBoth(value, 'min', 'max')))
+        else if (
+            t === 'object' &&
+            (this.has(value, 'random') ||
+                this.hasBoth(value, 'start', 'end') ||
+                this.hasBoth(value, 'min', 'max'))
+        )
         {
-            this.start = (this.has(value, 'start')) ? value.start : value.min;
-            this.end = (this.has(value, 'end')) ? value.end : value.max;
+            this.start = this.has(value, 'start') ? value.start : value.min;
+            this.end = this.has(value, 'end') ? value.end : value.max;
 
-            var isRandom = (this.hasBoth(value, 'min', 'max') || this.has(value, 'random'));
+            var isRandom =
+                this.hasBoth(value, 'min', 'max') || this.has(value, 'random');
 
             //  A random starting value (using 'min | max' instead of 'start | end' automatically implies a random value)
 
@@ -314,7 +327,7 @@ var EmitterOp = new Class({
 
                 //  x: { start: 100, end: 400, [ ease: 'Linear' ] }
 
-                var easeType = (this.has(value, 'ease')) ? value.ease : 'Linear';
+                var easeType = this.has(value, 'ease') ? value.ease : 'Linear';
 
                 this.ease = GetEaseFunction(easeType);
 
@@ -326,7 +339,10 @@ var EmitterOp = new Class({
                 this.onUpdate = this.easeValueUpdate;
             }
         }
-        else if (t === 'object' && this.hasEither(value, 'onEmit', 'onUpdate'))
+        else if (
+            t === 'object' &&
+            this.hasEither(value, 'onEmit', 'onUpdate')
+        )
         {
             //  Custom onEmit and onUpdate callbacks
 
@@ -373,7 +389,7 @@ var EmitterOp = new Class({
      */
     has: function (object, key)
     {
-        return (object.hasOwnProperty(key));
+        return object.hasOwnProperty(key);
     },
 
     /**
@@ -390,7 +406,7 @@ var EmitterOp = new Class({
      */
     hasBoth: function (object, key1, key2)
     {
-        return (object.hasOwnProperty(key1) && object.hasOwnProperty(key2));
+        return object.hasOwnProperty(key1) && object.hasOwnProperty(key2);
     },
 
     /**
@@ -407,7 +423,7 @@ var EmitterOp = new Class({
      */
     hasEither: function (object, key1, key2)
     {
-        return (object.hasOwnProperty(key1) || object.hasOwnProperty(key2));
+        return object.hasOwnProperty(key1) || object.hasOwnProperty(key2);
     },
 
     /**
@@ -521,7 +537,7 @@ var EmitterOp = new Class({
     {
         var current = this.counter;
 
-        var next = this.counter + ((this.end - this.start) / this.steps);
+        var next = this.counter + (this.end - this.start) / this.steps;
 
         this.counter = Wrap(next, this.start, this.end);
 
@@ -570,7 +586,6 @@ var EmitterOp = new Class({
 
         return (data.max - data.min) * this.ease(t) + data.min;
     }
-
 });
 
 module.exports = EmitterOp;
