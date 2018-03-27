@@ -8,10 +8,10 @@ var Class = require('../utils/Class');
 
 /**
  * @callback EachMapCallback
- * @template T
+ * @generic {*} E - [entry]
  *
  * @param {string} key - [description]
- * @param {T} entry - [description]
+ * @param {E} entry - [description]
  *
  * @return {?boolean} [description]
  */
@@ -25,12 +25,13 @@ var Class = require('../utils/Class');
  *    [ 3, 'three' ]
  * ]);
  *
- * @generic T
- *
  * @class Map
  * @memberOf Phaser.Structs
  * @constructor
  * @since 3.0.0
+ *
+ * @generic T
+ * @genericUse {T[]} T - [elements]
  *
  * @param {Array.<*>} elements - [description]
  */
@@ -42,6 +43,8 @@ var Map = new Class({
     {
         /**
          * [description]
+         *
+         * @genericUse {Object.<string, T>} T - [$type]
          *
          * @name Phaser.Structs.Map#entries
          * @type {Object.<string, *>}
@@ -75,6 +78,8 @@ var Map = new Class({
      * @method Phaser.Structs.Map#set
      * @since 3.0.0
      *
+     * @genericUse {T} T - [value]
+     *
      * @param {string} key - [description]
      * @param {*} value - [description]
      *
@@ -97,6 +102,8 @@ var Map = new Class({
      * @method Phaser.Structs.Map#get
      * @since 3.0.0
      *
+     * @genericUse {T} T - [$return]
+     *
      * @param {string} key - [description]
      *
      * @return {*} [description]
@@ -114,6 +121,8 @@ var Map = new Class({
      *
      * @method Phaser.Structs.Map#getArray
      * @since 3.0.0
+     *
+     * @genericUse {T[]} T - [$return]
      *
      * @return {Array.<*>} [description]
      */
@@ -206,6 +215,8 @@ var Map = new Class({
      * @method Phaser.Structs.Map#values
      * @since 3.0.0
      *
+     * @genericUse {T[]} T - [$return]
+     *
      * @return {Array.<*>} [description]
      */
     values: function ()
@@ -273,6 +284,8 @@ var Map = new Class({
      *
      * @method Phaser.Structs.Map#contains
      * @since 3.0.0
+     *
+     * @genericUse {T} T - [value]
      *
      * @param {*} value - [description]
      *

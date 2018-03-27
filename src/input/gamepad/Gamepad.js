@@ -87,7 +87,7 @@ var Gamepad = new Class({
          * [description]
          *
          * @name Phaser.Input.Gamepad.Gamepad#buttons
-         * @type {array}
+         * @type {Phaser.Input.Gamepad.Button[]}
          * @default []
          * @since 3.0.0
          */
@@ -97,7 +97,7 @@ var Gamepad = new Class({
          * [description]
          *
          * @name Phaser.Input.Gamepad.Gamepad#axes
-         * @type {array}
+         * @type {Phaser.Input.Gamepad.Axis[]}
          * @default []
          * @since 3.0.0
          */

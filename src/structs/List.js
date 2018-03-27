@@ -8,9 +8,9 @@ var Class = require('../utils/Class');
 
 /**
  * @callback EachListCallback
- * @template T
+ * @generic {*} I - [item]
  *
- * @param {T} item - [description]
+ * @param {*} item - [description]
  * @param {...*} [arguments] - Additional arguments that will be passed to the callback, after the child.
  */
 
@@ -24,6 +24,8 @@ var Class = require('../utils/Class');
  * @memberOf Phaser.Structs
  * @constructor
  * @since 3.0.0
+ *
+ * @generic T
  *
  * @param {*} parent - [description]
  */
@@ -44,6 +46,8 @@ var List = new Class({
 
         /**
          * The objects that belong to this collection.
+         *
+         * @genericUse {T[]} T - [$type]
          *
          * @name Phaser.Structs.List#list
          * @type {Array.<*>}
@@ -69,6 +73,8 @@ var List = new Class({
      * @method Phaser.Structs.List#add
      * @since 3.0.0
      *
+     * @genericUse {T} T - [child,$return]
+     *
      * @param {*} child - [description]
      *
      * @return {*} [description]
@@ -91,8 +97,10 @@ var List = new Class({
      * @method Phaser.Structs.List#addAt
      * @since 3.0.0
      *
+     * @genericUse {T} T - [child,$return]
+     *
      * @param {*} child - [description]
-     * @param {integer} index - [description]
+     * @param {integer} [index=0] - [description]
      *
      * @return {*} [description]
      */
@@ -122,6 +130,8 @@ var List = new Class({
      * @method Phaser.Structs.List#addMultiple
      * @since 3.0.0
      *
+     * @genericUse {T[]} T - [children,$return]
+     *
      * @param {Array.<*>} children - [description]
      *
      * @return {Array.<*>} [description]
@@ -145,6 +155,8 @@ var List = new Class({
      * @method Phaser.Structs.List#getAt
      * @since 3.0.0
      *
+     * @genericUse {T} T - [$return]
+     *
      * @param {integer} index - [description]
      *
      * @return {*} [description]
@@ -159,6 +171,8 @@ var List = new Class({
      *
      * @method Phaser.Structs.List#getIndex
      * @since 3.0.0
+     *
+     * @genericUse {T} T - [child]
      *
      * @param {*} child - [description]
      *
@@ -177,6 +191,8 @@ var List = new Class({
      * @method Phaser.Structs.List#sort
      * @since 3.0.0
      *
+     * @genericUse {T[]} T - [children,$return]
+     *
      * @param {Array.<*>} children - [description]
      *
      * @return {Array.<*>} [description]
@@ -193,6 +209,8 @@ var List = new Class({
      *
      * @method Phaser.Structs.List#sortIndexHandler
      * @since 3.0.0
+     *
+     * @genericUse {T} T - [childA,childB]
      *
      * @param {*} childA - [description]
      * @param {*} childB - [description]
@@ -226,10 +244,13 @@ var List = new Class({
      * @method Phaser.Structs.List#getByKey
      * @since 3.0.0
      *
+     * @genericUse {T} T - [value]
+     * @genericUse {?T} T - [$return]
+     *
      * @param {string} property - The property to check against the value.
      * @param {*} value - The value to check if the property strictly equals.
      *
-     * @return {*} The item that was found, or null if nothing matched.
+     * @return {?*} The item that was found, or null if nothing matched.
      */
     getByKey: function (property, value)
     {
@@ -252,9 +273,11 @@ var List = new Class({
      * @method Phaser.Structs.List#getByName
      * @since 3.0.0
      *
+     * @genericUse {?T} T - [$return]
+     *
      * @param {string} name - The name to search for.
      *
-     * @return {*} The first child with a matching name, or null if none were found.
+     * @return {?*} The first child with a matching name, or null if none were found.
      */
     getByName: function (name)
     {
@@ -267,10 +290,12 @@ var List = new Class({
      * @method Phaser.Structs.List#getRandom
      * @since 3.0.0
      *
+     * @genericUse {?T} T - [$return]
+     *
      * @param {integer} [startIndex=0] - Offset from the front of the group (lowest child).
      * @param {integer} [length=(to top)] - Restriction on the number of values you want to randomly select from.
      *
-     * @return {*} A random child of this Group.
+     * @return {?*} A random child of this Group.
      */
     getRandom: function (startIndex, length)
     {
@@ -293,12 +318,15 @@ var List = new Class({
      * @method Phaser.Structs.List#getFirst
      * @since 3.0.0
      *
+     * @genericUse {T} T - [value]
+     * @genericUse {?T} T - [$return]
+     *
      * @param {string} property - [description]
      * @param {*} value - [description]
      * @param {number} [startIndex=0] - [description]
      * @param {number} [endIndex] - [description]
      *
-     * @return {*} [description]
+     * @return {?*} [description]
      */
     getFirst: function (property, value, startIndex, endIndex)
     {
@@ -331,6 +359,9 @@ var List = new Class({
      *
      * @method Phaser.Structs.List#getAll
      * @since 3.0.0
+     *
+     * @genericUse {T} T - [value]
+     * @genericUse {T[]} T - [$return]
      *
      * @param {string} [property] - An optional property to test against the value argument.
      * @param {*} [value] - If property is set then Child.property must strictly equal this value to be included in the results.
@@ -372,6 +403,8 @@ var List = new Class({
      * @method Phaser.Structs.List#count
      * @since 3.0.0
      *
+     * @genericUse {T} T - [value]
+     *
      * @param {string} property - [description]
      * @param {*} value - [description]
      *
@@ -400,6 +433,8 @@ var List = new Class({
      * @method Phaser.Structs.List#swap
      * @since 3.0.0
      *
+     * @genericUse {T} T - [child1,child2]
+     *
      * @param {*} child1 - [description]
      * @param {*} child2 - [description]
      */
@@ -427,6 +462,8 @@ var List = new Class({
      *
      * @method Phaser.Structs.List#moveTo
      * @since 3.0.0
+     *
+     * @genericUse {T} T - [child,$return]
      *
      * @param {*} child - [description]
      * @param {integer} index - [description]
@@ -457,6 +494,8 @@ var List = new Class({
      * @method Phaser.Structs.List#remove
      * @since 3.0.0
      *
+     * @genericUse {T} T - [child,$return]
+     *
      * @param {*} child - [description]
      *
      * @return {*} [description]
@@ -478,6 +517,8 @@ var List = new Class({
      *
      * @method Phaser.Structs.List#removeAt
      * @since 3.0.0
+     *
+     * @genericUse {T} T - [$return]
      *
      * @param {integer} index - [description]
      *
@@ -501,8 +542,10 @@ var List = new Class({
      * @method Phaser.Structs.List#removeBetween
      * @since 3.0.0
      *
-     * @param {integer} beginIndex - [description]
-     * @param {integer} endIndex - [description]
+     * @genericUse {T[]} T - [$return]
+     *
+     * @param {integer} [beginIndex=0] - [description]
+     * @param {integer} [endIndex] - [description]
      *
      * @return {Array.<*>} [description]
      */
@@ -555,6 +598,8 @@ var List = new Class({
      * @method Phaser.Structs.List#bringToTop
      * @since 3.0.0
      *
+     * @generic {T} T - [child,$return]
+     *
      * @param {*} child - [description]
      *
      * @return {*} [description]
@@ -576,6 +621,8 @@ var List = new Class({
      * @method Phaser.Structs.List#sendToBack
      * @since 3.0.0
      *
+     * @generic {T} T - [child,$return]
+     *
      * @param {*} child - [description]
      *
      * @return {*} [description]
@@ -596,6 +643,8 @@ var List = new Class({
      *
      * @method Phaser.Structs.List#moveUp
      * @since 3.0.0
+     *
+     * @generic {T} T - [child,$return]
      *
      * @param {*} child - [description]
      *
@@ -623,6 +672,8 @@ var List = new Class({
      *
      * @method Phaser.Structs.List#moveDown
      * @since 3.0.0
+     *
+     * @generic {T} T - [child,$return]
      *
      * @param {*} child - [description]
      *
@@ -687,6 +738,9 @@ var List = new Class({
      * @method Phaser.Structs.List#replace
      * @since 3.0.0
      *
+     * @generic {T} T - [oldChild,$return]
+     * @genericUse {T} T - [newChild]
+     *
      * @param {*} oldChild - The child in this List that will be replaced.
      * @param {*} newChild - The child to be inserted into this List.
      *
@@ -712,6 +766,8 @@ var List = new Class({
      * @method Phaser.Structs.List#exists
      * @since 3.0.0
      *
+     * @genericUse {T} T - [child]
+     *
      * @param {*} child - [description]
      *
      * @return {boolean} True if the item is found in the list, otherwise false.
@@ -726,6 +782,8 @@ var List = new Class({
      *
      * @method Phaser.Structs.List#setAll
      * @since 3.0.0
+     *
+     * @genericUse {T} T - [value]
      *
      * @param {string} key - [description]
      * @param {*} value - [description]

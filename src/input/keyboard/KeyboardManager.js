@@ -14,6 +14,12 @@ var ProcessKeyDown = require('./keys/ProcessKeyDown');
 var ProcessKeyUp = require('./keys/ProcessKeyUp');
 
 /**
+ * @callback KeyboardHandler
+ *
+ * @property {KeyboardEvent} event - [description]
+ */
+
+/**
  * @classdesc
  * The Keyboard class monitors keyboard input and dispatches keyboard events.
  *
@@ -114,7 +120,7 @@ var KeyboardManager = new Class({
          * [description]
          *
          * @name Phaser.Input.Keyboard.KeyboardManager#handler
-         * @type {?function}
+         * @type {?KeyboardHandler}
          * @since 3.0.0
          */
         this.handler;
