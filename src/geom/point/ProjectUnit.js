@@ -12,6 +12,8 @@ var Point = require('./Point');
  * @function Phaser.Geom.Point.ProjectUnit
  * @since 3.0.0
  *
+ * @generic {Phaser.Geom.Point} O - [out,$return]
+ *
  * @param {Phaser.Geom.Point} pointA - [description]
  * @param {Phaser.Geom.Point} pointB - [description]
  * @param {Phaser.Geom.Point} [out] - [description]

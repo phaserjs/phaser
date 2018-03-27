@@ -13,13 +13,15 @@ var Triangle = require('./Triangle');
  * @function Phaser.Geom.Triangle.BuildFromPolygon
  * @since 3.0.0
  *
+ * @generic {Phaser.Geom.Triangle[]} O - [out,$return]
+ *
  * @param {array} data - A flat array of vertice coordinates like [x0,y0, x1,y1, x2,y2, ...]
  * @param {array} [?holes] - An array of hole indices if any (e.g. [5, 8] for a 12-vertice input would mean one hole with vertices 5–7 and another with 8–11).
  * @param {float} [scaleX=1] - [description]
  * @param {float} [scaleY=1] - [description]
- * @param {array} [out] - [description]
+ * @param {(array|Phaser.Geom.Triangle[])} [out] - [description]
  *
- * @return {Phaser.Geom.Triangle[]} [description]
+ * @return {(array|Phaser.Geom.Triangle[])} [description]
  */
 var BuildFromPolygon = function (data, holes, scaleX, scaleY, out)
 {

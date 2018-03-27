@@ -10,6 +10,8 @@
  * @function Phaser.Geom.Triangle.Offset
  * @since 3.0.0
  *
+ * @generic {Phaser.Geom.Triangle} O - [triangle,$return]
+ *
  * @param {Phaser.Geom.Triangle} triangle - [description]
  * @param {number} x - [description]
  * @param {number} y - [description]

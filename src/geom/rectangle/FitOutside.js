@@ -16,6 +16,8 @@ var GetAspectRatio = require('./GetAspectRatio');
  * @function Phaser.Geom.Rectangle.FitOutside
  * @since 3.0.0
  *
+ * @generic {Phaser.Geom.Rectangle} O - [target,$return]
+ *
  * @param {Phaser.Geom.Rectangle} target - [description]
  * @param {Phaser.Geom.Rectangle} source - [description]
  *

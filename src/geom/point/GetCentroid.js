@@ -12,6 +12,8 @@ var Point = require('./Point');
  * @function Phaser.Geom.Point.GetCentroid
  * @since 3.0.0
  *
+ * @generic {Phaser.Geom.Point} O - [out,$return]
+ *
  * @param {Phaser.Geom.Point[]} points - [description]
  * @param {Phaser.Geom.Point} [out] - [description]
  *

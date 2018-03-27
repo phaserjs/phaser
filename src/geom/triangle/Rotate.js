@@ -13,6 +13,8 @@ var InCenter = require('./InCenter');
  * @function Phaser.Geom.Triangle.Rotate
  * @since 3.0.0
  *
+ * @generic {Phaser.Geom.Triangle} O - [triangle,$return]
+ *
  * @param {Phaser.Geom.Triangle} triangle - [description]
  * @param {number} angle - [description]
  *

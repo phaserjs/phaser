@@ -12,6 +12,8 @@ var RotateAroundXY = require('./RotateAroundXY');
  * @function Phaser.Geom.Line.RotateAroundPoint
  * @since 3.0.0
  *
+ * @generic {Phaser.Geom.Line} O - [line,$return]
+ *
  * @param {Phaser.Geom.Line} line - [description]
  * @param {(Phaser.Geom.Point|object)} point - [description]
  * @param {number} angle - [description]

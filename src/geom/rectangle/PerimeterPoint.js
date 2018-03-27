@@ -13,6 +13,8 @@ var DegToRad = require('../../math/DegToRad');
  * @function Phaser.Geom.Rectangle.PerimeterPoint
  * @since 3.0.0
  *
+ * @generic {Phaser.Geom.Point} O - [out,$return]
+ *
  * @param {Phaser.Geom.Rectangle} rectangle - [description]
  * @param {integer} angle - [description]
  * @param {Phaser.Geom.Point} [out] - [description]

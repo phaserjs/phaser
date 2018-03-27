@@ -10,6 +10,8 @@
  * @function Phaser.Geom.Line.RotateAroundXY
  * @since 3.0.0
  *
+ * @generic {Phaser.Geom.Line} O - [line,$return]
+ *
  * @param {Phaser.Geom.Line} line - [description]
  * @param {number} x - [description]
  * @param {number} y - [description]

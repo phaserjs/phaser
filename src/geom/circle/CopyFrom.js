@@ -11,6 +11,8 @@
  * @function Phaser.Geom.Circle.CopyFrom
  * @since 3.0.0
  *
+ * @generic {Phaser.Geom.Circle} O - [dest,$return]
+ *
  * @param {Phaser.Geom.Circle} source - The source Circle to copy the values from.
  * @param {Phaser.Geom.Circle} dest - The destination Circle to copy the values to.
  *

@@ -102,6 +102,8 @@ var Circle = new Class({
      * @method Phaser.Geom.Circle#getPoint
      * @since 3.0.0
      *
+     * @generic {Phaser.Geom.Point} O - [out,$return]
+     *
      * @param {float} position - A value between 0 and 1, where 0 equals 0 degrees, 0.5 equals 180 degrees and 1 equals 360 around the circle.
      * @param {(Phaser.Geom.Point|object)} [out] - An object to store the return values in. If not given a Point object will be created.
      *
@@ -119,11 +121,13 @@ var Circle = new Class({
      * @method Phaser.Geom.Circle#getPoints
      * @since 3.0.0
      *
+     * @generic {Phaser.Geom.Point[]} O - [output,$return]
+     *
      * @param {integer} quantity - The amount of points to return. If a falsey value the quantity will be derived from the `stepRate` instead.
      * @param {number} [stepRate] - Sets the quantity by getting the circumference of the circle and dividing it by the stepRate.
-     * @param {array} [output] - An array to insert the points in to. If not provided a new array will be created.
+     * @param {(array|Phaser.Geom.Point[])} [output] - An array to insert the points in to. If not provided a new array will be created.
      *
-     * @return {Phaser.Geom.Point[]} An array of Point objects pertaining to the points around the circumference of the circle.
+     * @return {(array|Phaser.Geom.Point[])} An array of Point objects pertaining to the points around the circumference of the circle.
      */
     getPoints: function (quantity, stepRate, output)
     {
@@ -135,6 +139,8 @@ var Circle = new Class({
      *
      * @method Phaser.Geom.Circle#getRandomPoint
      * @since 3.0.0
+     *
+     * @generic {Phaser.Geom.Point} O - [point,$return]
      *
      * @param {(Phaser.Geom.Point|object)} [point] - A Point or point-like object to set the random `x` and `y` values in.
      *

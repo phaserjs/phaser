@@ -14,6 +14,8 @@ var Circle = require('../circle/Circle');
  * @function Phaser.Geom.Triangle.CircumCircle
  * @since 3.0.0
  *
+ * @generic {Phaser.Geom.Circle} O - [out,$return]
+ *
  * @param {Phaser.Geom.Triangle} triangle - [description]
  * @param {Phaser.Geom.Circle} [out] - [description]
  *

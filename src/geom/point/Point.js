@@ -16,7 +16,7 @@ var Class = require('../../utils/Class');
  * @since 3.0.0
  *
  * @param {number} [x=0] - The x coordinate of this Point.
- * @param {number} [y=0] - The y coordinate of this Point.
+ * @param {number} [y=x] - The y coordinate of this Point.
  */
 var Point = new Class({
 
@@ -55,7 +55,7 @@ var Point = new Class({
      * @since 3.0.0
      *
      * @param {number} [x=0] - The x coordinate of this Point.
-     * @param {number} [y=0] - The y coordinate of this Point.
+     * @param {number} [y=x] - The y coordinate of this Point.
      *
      * @return {Phaser.Geom.Point} This Point object.
      */
