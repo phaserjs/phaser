@@ -10,6 +10,8 @@
  * @function Phaser.Display.Bounds.SetCenterY
  * @since 3.0.0
  *
+ * @generic {Phaser.GameObjects.GameObject} G - [gameObject,$return]
+ *
  * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object that will be re-positioned.
  * @param {number} y - The coordinate to position the Game Object bounds on.
  *
