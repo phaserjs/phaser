@@ -14,6 +14,8 @@
  * @function Phaser.Actions.GetLast
  * @since 3.3.0
  *
+ * @generic {Phaser.GameObjects.GameObject[]} G - [items]
+ *
  * @param {(array|Phaser.GameObjects.GameObject[])} items - The array of items to be searched by this action.
  * @param {object} compare - The comparison object. Each property in this object will be checked against the items of the array.
  * @param {integer} [index=0] - An optional offset to start searching from within the items array.

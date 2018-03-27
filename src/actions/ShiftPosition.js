@@ -15,6 +15,9 @@ var Vector2 = require('../math/Vector2');
  * @function Phaser.Actions.ShiftPosition
  * @since 3.0.0
  *
+ * @generic {Phaser.GameObjects.GameObject[]} G - [items]
+ * @generic {Phaser.Math.Vector2} O - [output,$return]
+ *
  * @param {(array|Phaser.GameObjects.GameObject[])} items - An array of Game Objects. The contents of this array are updated by this Action.
  * @param {number} x - [description]
  * @param {number} y - [description]
