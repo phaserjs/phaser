@@ -62,7 +62,7 @@ var DataManager = new Class({
          * [description]
          *
          * @name Phaser.Data.DataManager#list
-         * @type {Object.<string, any>}
+         * @type {Object.<string, *>}
          * @default {}
          * @since 3.0.0
          */
@@ -113,7 +113,7 @@ var DataManager = new Class({
      * @method Phaser.Data.DataManager#getAll
      * @since 3.0.0
      *
-     * @return {Object.<string, any>} [description]
+     * @return {Object.<string, *>} [description]
      */
     getAll: function ()
     {
@@ -138,7 +138,7 @@ var DataManager = new Class({
      *
      * @param {string} search - [description]
      *
-     * @return {Object.<string, any>} [description]
+     * @return {Object.<string, *>} [description]
      */
     query: function (search)
     {
@@ -209,7 +209,7 @@ var DataManager = new Class({
      * @since 3.0.0
      *
      * @param {DataEachCallback} callback - The function to call.
-     * @param {object} [scope] - Value to use as `this` when executing callback.
+     * @param {*} [scope] - Value to use as `this` when executing callback.
      * @param {...*} [arguments] - Additional arguments that will be passed to the callback, after the game object, key, and data.
      *
      * @return {Phaser.Data.DataManager} This DataManager object.
@@ -240,7 +240,7 @@ var DataManager = new Class({
      * @method Phaser.Data.DataManager#merge
      * @since 3.0.0
      *
-     * @param {Object.<string, any>} data - [description]
+     * @param {Object.<string, *>} data - [description]
      * @param {boolean} overwrite - [description]
      *
      * @return {Phaser.Data.DataManager} This DataManager object.

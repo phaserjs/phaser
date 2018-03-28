@@ -10,6 +10,8 @@
  * @function Phaser.Geom.Ellipse.Offset
  * @since 3.0.0
  *
+ * @generic {Phaser.Geom.Ellipse} O - [ellipse,$return]
+ *
  * @param {Phaser.Geom.Ellipse} ellipse - The Ellipse to be offset (translated.)
  * @param {number} x - The amount to horizontally offset the Ellipse by.
  * @param {number} y - The amount to vertically offset the Ellipse by.

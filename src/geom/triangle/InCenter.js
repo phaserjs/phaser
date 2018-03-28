@@ -24,6 +24,8 @@ function getLength (x1, y1, x2, y2)
  * @function Phaser.Geom.Triangle.InCenter
  * @since 3.0.0
  *
+ * @generic {Phaser.Geom.Point} O - [out,$return]
+ *
  * @param {Phaser.Geom.Triangle} triangle - [description]
  * @param {Phaser.Geom.Point} [out] - [description]
  *

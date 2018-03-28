@@ -10,6 +10,8 @@
  * @function Phaser.Geom.Point.CopyFrom
  * @since 3.0.0
  *
+ * @generic {Phaser.Geom.Point} O - [dest,$return]
+ *
  * @param {Phaser.Geom.Point} source - [description]
  * @param {Phaser.Geom.Point} dest - [description]
  *

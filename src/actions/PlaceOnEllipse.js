@@ -10,12 +10,14 @@
  * @function Phaser.Actions.PlaceOnEllipse
  * @since 3.0.0
  *
+ * @generic {Phaser.GameObjects.GameObject[]} G - [items,$return]
+ *
  * @param {(array|Phaser.GameObjects.GameObject[])} items - An array of Game Objects. The contents of this array are updated by this Action.
  * @param {Phaser.Geom.Ellipse} ellipse - [description]
  * @param {number} [startAngle=0] - [description]
  * @param {number} [endAngle=6.28] - [description]
  *
- * @return {array} The array of Game Objects that was passed to this Action.
+ * @return {(array|Phaser.GameObjects.GameObject[])} The array of Game Objects that was passed to this Action.
  */
 var PlaceOnEllipse = function (items, ellipse, startAngle, endAngle)
 {

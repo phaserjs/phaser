@@ -20,10 +20,10 @@ var Random = require('./Random');
  * @constructor
  * @since 3.0.0
  *
- * @param {number} [x] - [description]
- * @param {number} [y] - [description]
- * @param {number} [width] - [description]
- * @param {number} [height] - [description]
+ * @param {number} [x=0] - [description]
+ * @param {number} [y=0] - [description]
+ * @param {number} [width=0] - [description]
+ * @param {number} [height=0] - [description]
  */
 var Rectangle = new Class({
 
@@ -99,8 +99,10 @@ var Rectangle = new Class({
      * @method Phaser.Geom.Rectangle#getPoint
      * @since 3.0.0
      *
+     * @generic {Phaser.Geom.Point} O - [output,$return]
+     *
      * @param {float} position - [description]
-     * @param {(Phaser.Geom.Point|object)} output - [description]
+     * @param {(Phaser.Geom.Point|object)} [output] - [description]
      *
      * @return {(Phaser.Geom.Point|object)} [description]
      */
@@ -114,6 +116,8 @@ var Rectangle = new Class({
      *
      * @method Phaser.Geom.Rectangle#getPoints
      * @since 3.0.0
+     *
+     * @generic {Phaser.Geom.Point[]} O - [output,$return]
      *
      * @param {integer} quantity - [description]
      * @param {number} [stepRate] - [description]
@@ -132,7 +136,9 @@ var Rectangle = new Class({
      * @method Phaser.Geom.Rectangle#getRandomPoint
      * @since 3.0.0
      *
-     * @param {Phaser.Geom.Point} point - [description]
+     * @generic {Phaser.Geom.Point} O - [point,$return]
+     *
+     * @param {Phaser.Geom.Point} [point] - [description]
      *
      * @return {Phaser.Geom.Point} [description]
      */
@@ -238,6 +244,8 @@ var Rectangle = new Class({
      * @method Phaser.Geom.Rectangle#getLineA
      * @since 3.0.0
      *
+     * @generic {Phaser.Geom.Line} O - [line,$return]
+     *
      * @param {Phaser.Geom.Line} [line] - A Line object to set the results in. If `undefined` a new Line will be created.
      *
      * @return {Phaser.Geom.Line} A Line object that corresponds to the top of this Rectangle.
@@ -256,6 +264,8 @@ var Rectangle = new Class({
      *
      * @method Phaser.Geom.Rectangle#getLineB
      * @since 3.0.0
+     *
+     * @generic {Phaser.Geom.Line} O - [line,$return]
      *
      * @param {Phaser.Geom.Line} [line] - A Line object to set the results in. If `undefined` a new Line will be created.
      *
@@ -276,6 +286,8 @@ var Rectangle = new Class({
      * @method Phaser.Geom.Rectangle#getLineC
      * @since 3.0.0
      *
+     * @generic {Phaser.Geom.Line} O - [line,$return]
+     *
      * @param {Phaser.Geom.Line} [line] - A Line object to set the results in. If `undefined` a new Line will be created.
      *
      * @return {Phaser.Geom.Line} A Line object that corresponds to the bottom of this Rectangle.
@@ -294,6 +306,8 @@ var Rectangle = new Class({
      *
      * @method Phaser.Geom.Rectangle#getLineD
      * @since 3.0.0
+     *
+     * @generic {Phaser.Geom.Line} O - [line,$return]
      *
      * @param {Phaser.Geom.Line} [line] - A Line object to set the results in. If `undefined` a new Line will be created.
      *

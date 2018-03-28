@@ -15,6 +15,8 @@ var Point = require('../point/Point');
  * @function Phaser.Geom.Line.GetPoint
  * @since 3.0.0
  *
+ * @generic {Phaser.Geom.Point} O - [out,$return]
+ *
  * @param {Phaser.Geom.Line} line - [description]
  * @param {float} position - A value between 0 and 1, where 0 equals 0 degrees, 0.5 equals 180 degrees and 1 equals 360 around the circle.
  * @param {(Phaser.Geom.Point|object)} [out] - [description]

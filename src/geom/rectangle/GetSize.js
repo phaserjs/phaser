@@ -15,6 +15,8 @@ var Point = require('../point/Point');
  * @function Phaser.Geom.Rectangle.GetSize
  * @since 3.0.0
  *
+ * @generic {Phaser.Geom.Point} O - [out,$return]
+ *
  * @param {Phaser.Geom.Rectangle} rect - [description]
  * @param {(Phaser.Geom.Point|object)} [out] - [description]
  *

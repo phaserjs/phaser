@@ -75,7 +75,7 @@ var TouchManager = new Class({
          * [description]
          *
          * @name Phaser.Input.Touch.TouchManager#handler
-         * @type {TouchHandler}
+         * @type {?TouchHandler}
          * @since 3.0.0
          */
         this.handler;

@@ -10,6 +10,8 @@
  * @function Phaser.Geom.Rectangle.Offset
  * @since 3.0.0
  *
+ * @generic {Phaser.Geom.Rectangle} O - [rect,$return]
+ *
  * @param {Phaser.Geom.Rectangle} rect - [description]
  * @param {number} x - [description]
  * @param {number} y - [description]

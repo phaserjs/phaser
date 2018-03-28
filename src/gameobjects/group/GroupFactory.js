@@ -15,8 +15,8 @@ var GameObjectFactory = require('../GameObjectFactory');
  * @method Phaser.GameObjects.GameObjectFactory#group
  * @since 3.0.0
  *
- * @param {(array|object)} children - [description]
- * @param {object} [config] - [description]
+ * @param {?(Phaser.GameObjects.GameObject[]|GroupConfig)} children - [description]
+ * @param {GroupConfig} [config] - [description]
  *
  * @return {Phaser.GameObjects.Group} The Game Object that was created.
  */

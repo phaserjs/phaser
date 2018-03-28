@@ -10,6 +10,8 @@
  * @function Phaser.Geom.Triangle.CopyFrom
  * @since 3.0.0
  *
+ * @generic {Phaser.Geom.Triangle} O - [dest,$return]
+ *
  * @param {Phaser.Geom.Triangle} source - [description]
  * @param {Phaser.Geom.Triangle} dest - [description]
  *

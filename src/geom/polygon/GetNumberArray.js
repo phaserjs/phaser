@@ -12,10 +12,12 @@
  * @function Phaser.Geom.Polygon.GetNumberArray
  * @since 3.0.0
  *
- * @param {Phaser.Geom.Polygon} polygon - [description]
- * @param {array} [output] - [description]
+ * @generic {number[]} O - [output,$return]
  *
- * @return {number[]} [description]
+ * @param {Phaser.Geom.Polygon} polygon - [description]
+ * @param {(array|number[])} [output] - [description]
+ *
+ * @return {(array|number[])} [description]
  */
 var GetNumberArray = function (polygon, output)
 {

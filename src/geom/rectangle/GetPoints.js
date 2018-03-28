@@ -16,12 +16,14 @@ var Perimeter = require('./Perimeter');
  * @function Phaser.Geom.Rectangle.GetPoints
  * @since 3.0.0
  *
+ * @generic {Phaser.Geom.Point[]} O - [out,$return]
+ *
  * @param {Phaser.Geom.Rectangle} rectangle - [description]
  * @param {number} step - [description]
  * @param {integer} quantity - [description]
- * @param {array} [out] - [description]
+ * @param {(array|Phaser.Geom.Point[])} [out] - [description]
  *
- * @return {Phaser.Geom.Point[]} [description]
+ * @return {(array|Phaser.Geom.Point[])} [description]
  */
 var GetPoints = function (rectangle, quantity, stepRate, out)
 {

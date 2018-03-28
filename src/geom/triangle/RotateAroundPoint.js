@@ -12,6 +12,8 @@ var RotateAroundXY = require('./RotateAroundXY');
  * @function Phaser.Geom.Triangle.RotateAroundPoint
  * @since 3.0.0
  *
+ * @generic {Phaser.Geom.Triangle} O - [triangle,$return]
+ *
  * @param {Phaser.Geom.Triangle} triangle - [description]
  * @param {Phaser.Geom.Point} point - [description]
  * @param {number} angle - [description]

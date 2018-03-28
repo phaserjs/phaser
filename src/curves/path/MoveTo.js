@@ -53,6 +53,8 @@ var MoveTo = new Class({
      * @method Phaser.Curves.MoveTo#getPoint
      * @since 3.0.0
      *
+     * @generic {Phaser.Math.Vector2} O - [out,$return]
+     *
      * @param {float} t - The position along the curve to return. Where 0 is the start and 1 is the end.
      * @param {Phaser.Math.Vector2} [out] - A Vector2 object to store the result in. If not given will be created.
      *
@@ -70,6 +72,8 @@ var MoveTo = new Class({
      *
      * @method Phaser.Curves.MoveTo#getPointAt
      * @since 3.0.0
+     *
+     * @generic {Phaser.Math.Vector2} O - [out,$return]
      *
      * @param {float} u - [description]
      * @param {Phaser.Math.Vector2} [out] - [description]

@@ -8,6 +8,16 @@ var Class = require('../../utils/Class');
 var GetFastValue = require('../../utils/object/GetFastValue');
 
 /**
+ * @typedef {object} GravityWellConfig
+ *
+ * @property {number} [x=0] - The x coordinate of the Gravity Well, in world space.
+ * @property {number} [y=0] - The y coordinate of the Gravity Well, in world space.
+ * @property {number} [power=0] - The power of the Gravity Well.
+ * @property {number} [epsilon=100] - [description]
+ * @property {number} [gravity=50] - The gravitational force of this Gravity Well.
+ */
+
+/**
  * @classdesc
  * [description]
  *
@@ -16,7 +26,7 @@ var GetFastValue = require('../../utils/object/GetFastValue');
  * @constructor
  * @since 3.0.0
  *
- * @param {(number|object)} [x=0] - The x coordinate of the Gravity Well, in world space.
+ * @param {(number|GravityWellConfig)} [x=0] - The x coordinate of the Gravity Well, in world space.
  * @param {number} [y=0] - The y coordinate of the Gravity Well, in world space.
  * @param {number} [power=0] - The power of the Gravity Well.
  * @param {number} [epsilon=100] - [description]

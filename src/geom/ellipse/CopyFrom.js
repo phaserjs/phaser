@@ -11,6 +11,8 @@
  * @function Phaser.Geom.Ellipse.CopyFrom
  * @since 3.0.0
  *
+ * @generic {Phaser.Geom.Ellipse} O - [dest,$return]
+ *
  * @param {Phaser.Geom.Ellipse} source - The source Ellipse to copy the values from.
  * @param {Phaser.Geom.Ellipse} dest - The destination Ellipse to copy the values to.
  *

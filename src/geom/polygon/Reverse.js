@@ -10,6 +10,8 @@
  * @function Phaser.Geom.Polygon.Reverse
  * @since 3.0.0
  *
+ * @generic {Phaser.Geom.Polygon} O - [polygon,$return]
+ *
  * @param {Phaser.Geom.Polygon} polygon - [description]
  *
  * @return {Phaser.Geom.Polygon} [description]

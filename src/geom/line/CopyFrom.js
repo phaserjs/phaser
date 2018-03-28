@@ -10,6 +10,8 @@
  * @function Phaser.Geom.Line.CopyFrom
  * @since 3.0.0
  *
+ * @generic {Phaser.Geom.Line} O - [dest,$return]
+ *
  * @param {Phaser.Geom.Line} source - [description]
  * @param {Phaser.Geom.Line} dest - [description]
  *

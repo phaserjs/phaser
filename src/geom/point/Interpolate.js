@@ -12,6 +12,8 @@ var Point = require('./Point');
  * @function Phaser.Geom.Point.Interpolate
  * @since 3.0.0
  *
+ * @generic {Phaser.Geom.Point} O - [out,$return]
+ *
  * @param {Phaser.Geom.Point} pointA - [description]
  * @param {Phaser.Geom.Point} pointB - [description]
  * @param {float} [t=0] - [description]

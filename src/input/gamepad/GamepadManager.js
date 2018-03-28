@@ -20,6 +20,12 @@ var Gamepad = require('./Gamepad');
  */
 
 /**
+ * @callback GamepadHandler
+ *
+ * @property {GamepadEvent} event - [description]
+ */
+
+/**
  * @classdesc
  * [description]
  *
@@ -77,7 +83,7 @@ var GamepadManager = new Class({
          * [description]
          *
          * @name Phaser.Input.Gamepad.GamepadManager#handler
-         * @type {?function}
+         * @type {?GamepadHandler}
          * @since 3.0.0
          */
         this.handler;

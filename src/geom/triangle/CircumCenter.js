@@ -10,7 +10,7 @@ var Vector2 = require('../../math/Vector2');
 
 /**
  * Computes the determinant of a 2x2 matrix. Uses standard double-precision arithmetic, so is susceptible to round-off error.
- * 
+ *
  * @function det
  * @private
  * @since 3.0.0
@@ -19,7 +19,7 @@ var Vector2 = require('../../math/Vector2');
  * @param {number} m01 - The [0,1] entry of the matrix.
  * @param {number} m10 - The [1,0] entry of the matrix.
  * @param {number} m11 - The [1,1] entry of the matrix.
- * 
+ *
  * @return {number} the determinant.
  */
 function det (m00, m01, m10, m11)
@@ -36,6 +36,8 @@ function det (m00, m01, m10, m11)
  *
  * @function Phaser.Geom.Triangle.CircumCenter
  * @since 3.0.0
+ *
+ * @generic {Phaser.Math.Vector2} O - [out,$return]
  *
  * @param {Phaser.Geom.Triangle} triangle - [description]
  * @param {Phaser.Math.Vector2} [out] - [description]
