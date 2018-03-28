@@ -17,7 +17,7 @@ var Texture = require('./Texture');
  * @callback EachTextureCallback
  *
  * @param {Phaser.Textures.Texture} texture - [description]
- * @param {...*} [arguments] - Additional arguments that will be passed to the callback, after the child.
+ * @param {...*} [args] - Additional arguments that will be passed to the callback, after the child.
  */
 
 /**
@@ -747,7 +747,7 @@ var TextureManager = new Class({
      *
      * @param {EachTextureCallback} callback - The callback function to be sent the Textures.
      * @param {object} scope - The value to use as `this` when executing the callback.
-     * @param {...*} [arguments] - Additional arguments that will be passed to the callback, after the child.
+     * @param {...*} [args] - Additional arguments that will be passed to the callback, after the child.
      */
     each: function (callback, scope)
     {

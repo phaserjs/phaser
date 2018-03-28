@@ -253,7 +253,7 @@ var Set = new Class({
      * @since 3.0.0
      *
      * @param {string} callbackKey - [description]
-     * @param {...*} [arguments] - Additional arguments that will be passed to the callback, after the child.
+     * @param {...*} [args] - Additional arguments that will be passed to the callback, after the child.
      *
      * @return {Phaser.Structs.Set} This Set object.
      */

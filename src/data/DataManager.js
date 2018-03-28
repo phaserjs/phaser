@@ -12,7 +12,7 @@ var Class = require('../utils/Class');
  * @param {*} parent - [description]
  * @param {string} key - [description]
  * @param {*} value - [description]
- * @param {...*} [arguments] - Additional arguments that will be passed to the callback, after the game object, key, and data.
+ * @param {...*} [args] - Additional arguments that will be passed to the callback, after the game object, key, and data.
  */
 
 /**
@@ -210,7 +210,7 @@ var DataManager = new Class({
      *
      * @param {DataEachCallback} callback - The function to call.
      * @param {*} [scope] - Value to use as `this` when executing callback.
-     * @param {...*} [arguments] - Additional arguments that will be passed to the callback, after the game object, key, and data.
+     * @param {...*} [args] - Additional arguments that will be passed to the callback, after the game object, key, and data.
      *
      * @return {Phaser.Data.DataManager} This DataManager object.
      */

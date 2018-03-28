@@ -11,7 +11,7 @@ var Class = require('../utils/Class');
  * @generic {*} I - [item]
  *
  * @param {*} item - [description]
- * @param {...*} [arguments] - Additional arguments that will be passed to the callback, after the child.
+ * @param {...*} [args] - Additional arguments that will be passed to the callback, after the child.
  */
 
 /**
@@ -807,7 +807,7 @@ var List = new Class({
      *
      * @param {EachListCallback.<T>} callback - The function to call.
      * @param {*} [thisArg] - Value to use as `this` when executing callback.
-     * @param {...*} [arguments] - Additional arguments that will be passed to the callback, after the child.
+     * @param {...*} [args] - Additional arguments that will be passed to the callback, after the child.
      */
     each: function (callback, thisArg)
     {
