@@ -11,19 +11,27 @@ being passed to the simulation. The default value is 1 to remain consistent with
 * Matter Physics has two new methods: `set60Hz` and `set30Hz` which will set an Engine update rate of 60Hz and 30Hz respectively. 60Hz being the default.
 * Matter Physics has a new config and run-time property `autoUpdate`, which defaults to `true`. When enabled the Matter Engine will update in sync with the game step (set by Request Animation Frame). The delta value given to Matter is now controlled by the `getDelta` function.
 * Matter Physics has a new method `step` which manually advances the physics simulation by one iteration, using whatever delta and correction values you pass in to it. When used in combination with `autoUpdate=false` you can now explicitly control the update frequency of the physics simulation and unbind it from the game step.
+* WebAudioSound.setMute is a chainable way to mute a single Sound instance.
+* WebAudioSound.setVolume is a chainable way to set the volume of a single Sound instance.
+* WebAudioSound.setSeek is a chainable way to set seek to a point of a single Sound instance.
+* WebAudioSound.setLoop is a chainable way to set the loop state of a single Sound instance.
+* HTML5AudioSound.setMute is a chainable way to mute a single Sound instance.
+* HTML5AudioSound.setVolume is a chainable way to set the volume of a single Sound instance.
+* HTML5AudioSound.setSeek is a chainable way to set seek to a point of a single Sound instance.
+* HTML5AudioSound.setLoop is a chainable way to set the loop state of a single Sound instance.
 
 ### Bug Fixes
 
 * In the WebGL Render Texture the tint of the texture was always set to 0xffffff and therefore the alpha values were ignored. The tint is now calculated using the alpha value. Fix #3385 (thanks @ger1995)
 * The RenderTexture now uses the ComputedSize component instead of Size (which requires a frame), allowing calls to getBounds to work. Fix #3451 (thanks @kuoruan)
 * PathFollower.start has been renamed to `startFollow`, but PathFollower.setPath was still using `PathFollower.start` (thanks @samid737)
+* BaseSoundManager.rate and BaseSoundManager.detune would incorrectly called `setRate` on its sounds, instead of `calculateRate`.
 
 ### Updates
 
 * The RTree library (rbush) used by Phaser 3 suffered from violating CSP policies by dynamically creating Functions at run-time in an eval-like manner. These are now defined via generators. Fix #3441 (thanks @jamierocks @Colbydude)
-
-
-
+* BaseSound has had its `rate` and `detune` properties removed as they are always set in the overriding class.
+* BaseSound `setRate` and `setDetune` from the 3.3.0 release have moved to the WebAudioSound and HTML5AudioSound classes respectively, as they each handle the values differently.
 
 
 
