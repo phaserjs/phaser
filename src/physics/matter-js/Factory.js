@@ -530,7 +530,7 @@ var Factory = new Class({
      * @param {(string|integer)} [frame] - An optional frame from the Texture this Game Object is rendering with. Set to `null` to skip this value.
      * @param {object} [options={}] - [description]
      *
-     * @return {Phaser.Physics.Matter.MatterImage} [description]
+     * @return {Phaser.Physics.Matter.Image} [description]
      */
     image: function (x, y, key, frame, options)
     {
@@ -547,10 +547,10 @@ var Factory = new Class({
      * @method Phaser.Physics.Matter.Factory#tileBody
      * @since 3.0.0
      *
-     * @param {Phaser.GameObjects.Tile} tile - [description]
+     * @param {Phaser.Tilemaps.Tile} tile - [description]
      * @param {object} options - [description]
      *
-     * @return {Phaser.Physics.Matter.MatterTileBody} [description]
+     * @return {Phaser.Physics.Matter.TileBody} [description]
      */
     tileBody: function (tile, options)
     {
@@ -571,7 +571,7 @@ var Factory = new Class({
      * @param {(string|integer)} [frame] - An optional frame from the Texture this Game Object is rendering with. Set to `null` to skip this value.
      * @param {object} [options={}] - [description]
      *
-     * @return {Phaser.Physics.Matter.MatterSprite} [description]
+     * @return {Phaser.Physics.Matter.Sprite} [description]
      */
     sprite: function (x, y, key, frame, options)
     {

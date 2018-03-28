@@ -18,11 +18,26 @@ var Textures = {
     Frame: require('./Frame'),
     Texture: require('./Texture'),
     TextureManager: require('./TextureManager'),
-    TextureSource: require('./TextureSource')
+    TextureSource: require('./TextureSource'),
+
+    /**
+     * Linear filter type.
+     * 
+     * @name Phaser.Textures.LINEAR
+     * @type {integer}
+     * @since 3.0.0
+     */
+    LINEAR: 0,
+
+    /**
+     * Nearest neighbor filter type.
+     * 
+     * @name Phaser.Textures.NEAREST
+     * @type {integer}
+     * @since 3.0.0
+     */
+    NEAREST: 1
 
 };
-
-//   Merge in the consts
-Textures = Extend(false, Textures, CONST);
 
 module.exports = Textures;
