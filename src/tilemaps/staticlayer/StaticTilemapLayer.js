@@ -142,7 +142,7 @@ var StaticTilemapLayer = new Class({
 
         /**
          * @name Phaser.Tilemaps.StaticTilemapLayer#renderer
-         * @type {(Phaser.Renderer.CanvasRenderer|Phaser.Renderer.WebGLRenderer)}
+         * @type {(Phaser.Renderer.Canvas.CanvasRenderer|Phaser.Renderer.WebGL.WebGLRenderer)}
          * @private
          * @since 3.0.0
          */

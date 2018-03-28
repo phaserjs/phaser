@@ -122,10 +122,10 @@ var File = new Class({
         this.loader = null;
 
         /**
-         * The XHR Loader instance that is loading this File.
+         * The XMLHttpRequest instance (as created by XHR Loader) that is loading this File.
          *
          * @name Phaser.Loader.File#xhrLoader
-         * @type {?Phaser.Loader.XHRLoader}
+         * @type {?XMLHttpRequest}
          * @since 3.0.0
          */
         this.xhrLoader = null;

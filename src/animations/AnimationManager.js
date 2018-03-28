@@ -29,7 +29,7 @@ var Pad = require('../utils/string/Pad');
  * Sprites and other Game Objects get the data they need from the AnimationManager.
  *
  * @class AnimationManager
- * @extends EventEmitter
+ * @extends Phaser.Events.EventEmitter
  * @memberOf Phaser.Animations
  * @constructor
  * @since 3.0.0

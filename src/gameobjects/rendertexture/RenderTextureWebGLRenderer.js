@@ -16,7 +16,7 @@ var Utils = require('../../renderer/webgl/Utils');
  * @since 3.2.0
  * @private
  *
- * @param {Phaser.Renderer.WebGLRenderer} renderer - A reference to the current active Canvas renderer.
+ * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - A reference to the current active Canvas renderer.
  * @param {Phaser.GameObjects.RenderTexture} renderTexture - The Game Object being rendered in this call.
  * @param {number} interpolationPercentage - Reserved for future use and custom pipelines.
  * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera that is rendering the Game Object.

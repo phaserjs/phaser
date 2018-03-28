@@ -1,5 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
+ * @author       Pavle Goloskokovic <pgoloskokovic@gmail.com> (http://prunegames.com)
  * @copyright    2018 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
@@ -12,7 +13,6 @@ var WebAudioSoundManager = require('./webaudio/WebAudioSoundManager');
  * Creates a Web Audio, HTML5 Audio or No Audio Sound Manager based on config and device settings.
  *
  * @function Phaser.Sound.SoundManagerCreator
- * @author Pavle Goloskokovic <pgoloskokovic@gmail.com> (http://prunegames.com)
  * @since 3.0.0
  *
  * @param {Phaser.Game} game - Reference to the current game instance.

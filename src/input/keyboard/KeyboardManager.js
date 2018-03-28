@@ -31,7 +31,7 @@ var ProcessKeyUp = require('./keys/ProcessKeyUp');
  * So please check your extensions before opening Phaser issues.
  *
  * @class KeyboardManager
- * @extends EventEmitter
+ * @extends Phaser.Events.EventEmitter
  * @memberOf Phaser.Input.Keyboard
  * @constructor
  * @since 3.0.0

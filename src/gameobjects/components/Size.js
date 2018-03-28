@@ -18,7 +18,7 @@ var Size = {
      * 
      * @name Phaser.GameObjects.Components.Size#_sizeComponent
      * @type {boolean}
-     * @private
+     * @protected
      * @default true
      * @since 3.2.0
      */

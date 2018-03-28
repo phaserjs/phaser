@@ -30,7 +30,7 @@ var Texture = require('./Texture');
  * Access it via `scene.textures`.
  *
  * @class TextureManager
- * @extends EventEmitter
+ * @extends Phaser.Events.EventEmitter
  * @memberOf Phaser.Textures
  * @constructor
  * @since 3.0.0

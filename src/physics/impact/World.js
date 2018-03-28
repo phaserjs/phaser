@@ -77,7 +77,7 @@ var TYPE = require('./TYPE');
  * [description]
  *
  * @class World
- * @extends EventEmitter
+ * @extends Phaser.Events.EventEmitter
  * @memberOf Phaser.Physics.Impact
  * @constructor
  * @since 3.0.0
