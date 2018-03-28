@@ -579,7 +579,7 @@ var BaseSoundManager = new Class({
 
             this.forEachActiveSound(function (sound)
             {
-                sound.setRate();
+                sound.calculateRate();
             });
 
             this.emit('rate', this, value);
@@ -634,7 +634,7 @@ var BaseSoundManager = new Class({
 
             this.forEachActiveSound(function (sound)
             {
-                sound.setRate();
+                sound.calculateRate();
             });
 
             this.emit('detune', this, value);
