@@ -22,6 +22,7 @@ var Container = new Class({
         this.children = [];
         this.setPosition(x, y);
         this.localTransform = new Components.TransformMatrix();
+        this.tempTransformMatrix = new Components.TransformMatrix();
     },
 
     add: function (gameObject)
@@ -41,6 +42,34 @@ var Container = new Class({
             this.children.splice(index, 1);
         }
         return this;
+    },
+
+    pointToContainer: function (pointSrc, pointDst)
+    {
+        var parent = this.parentContainer;
+        var tempMatrix = this.tempTransformMatrix;
+        
+        if (pointDst === undefined)
+        {
+            pointDst = { x: 0, y: 0 };
+        }
+
+        if (parent !== null)
+        {
+            parent.pointToContainer(pointSrc, pointDst);
+        }
+
+        tempMatrix.loadIdentity();
+        tempMatrix.applyITRS(this.x, this.y, this.rotation, this.scaleX, this.scaleY);
+        tempMatrix.invert();
+        tempMatrix.transformPoint(pointSrc.x, pointSrc.y, pointDst);
+
+        return pointDst;
+    },
+
+    hasPoint: function (gameObject, point)
+    {
+        return false;
     }
 
 });
