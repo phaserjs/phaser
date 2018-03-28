@@ -137,6 +137,8 @@ var BaseSound = new Class({
          */
         this.currentConfig = this.config;
 
+        this.config = Extend(this.config, config);
+
         /**
          * Boolean indicating whether the sound is muted or not.
          * Gets or sets the muted state of this sound.
@@ -160,30 +162,6 @@ var BaseSound = new Class({
         this.volume = 1;
 
         /**
-         * Defines the speed at which the audio asset will be played.
-         * Value of 1.0 plays the audio at full speed, 0.5 plays the audio
-         * at half speed and 2.0 doubles the audio's playback speed.
-         * This value gets multiplied by global rate to have the final playback speed.
-         *
-         * @name Phaser.Sound.BaseSound#rate
-         * @type {number}
-         * @default 1
-         * @since 3.0.0
-         */
-        this.rate = 1;
-
-        /**
-         * Represents detuning of sound in [cents](https://en.wikipedia.org/wiki/Cent_%28music%29).
-         * The range of the value is -1200 to 1200, but we recommend setting it to [50](https://en.wikipedia.org/wiki/50_Cent).
-         *
-         * @name Phaser.Sound.BaseSound#detune
-         * @type {number}
-         * @default 0
-         * @since 3.0.0
-         */
-        this.detune = 0;
-
-        /**
          * Property representing the position of playback for this sound, in seconds.
          * Setting it to a specific value moves current playback to that position.
          * The value given is clamped to the range 0 to current marker duration.
@@ -205,7 +183,6 @@ var BaseSound = new Class({
          * @since 3.0.0
          */
         this.loop = false;
-        this.config = Extend(this.config, config);
 
         /**
          * Object containing markers definitions.
@@ -525,113 +502,6 @@ var BaseSound = new Class({
         var detuneRate = Math.pow(cent, totalDetune);
 
         this.totalRate = this.currentConfig.rate * this.manager.rate * detuneRate;
-    },
-
-    /**
-     * @event Phaser.Sound.BaseSound#rate
-     * @param {Phaser.Sound.BaseSound} sound - Reference to the sound that emitted the event.
-     * @param {number} value - An updated value of Phaser.Sound.BaseSound#rate property.
-     */
-
-    /**
-     * Sets the playback rate of this Sound.
-     * 
-     * For example, a value of 1.0 plays the audio at full speed, 0.5 plays the audio at half speed
-     * and 2.0 doubles the audios playback speed.
-     *
-     * @method Phaser.Sound.BaseSound#setRate
-     * @fires Phaser.Sound.BaseSound#rate
-     * @since 3.3.0
-     *
-     * @param {number} value - The playback rate at of this Sound.
-     *
-     * @return {Phaser.Sound.BaseSound} This Sound.
-     */
-    setRate: function (value)
-    {
-        this.rate = value;
-
-        return this;
-    },
-
-    /**
-     * Rate at which this Sound will be played.
-     * Value of 1.0 plays the audio at full speed, 0.5 plays the audio at half speed
-     * and 2.0 doubles the audios playback speed.
-     *
-     * @name Phaser.Sound.BaseSound#rate
-     * @type {number}
-     * @default 1
-     * @since 3.0.0
-     */
-    rate: {
-
-        get: function ()
-        {
-            return this.currentConfig.rate;
-        },
-
-        set: function (value)
-        {
-            this.currentConfig.rate = value;
-
-            this.calculateRate();
-
-            this.emit('rate', this, value);
-        }
-
-    },
-
-    /**
-     * Sets the detune value of this Sound, given in [cents](https://en.wikipedia.org/wiki/Cent_%28music%29).
-     * The range of the value is -1200 to 1200, but we recommend setting it to [50](https://en.wikipedia.org/wiki/50_Cent).
-     *
-     * @method Phaser.Sound.BaseSound#setDetune
-     * @fires Phaser.Sound.BaseSound#detune
-     * @since 3.3.0
-     *
-     * @param {number} value - The range of the value is -1200 to 1200, but we recommend setting it to [50](https://en.wikipedia.org/wiki/50_Cent).
-     *
-     * @return {Phaser.Sound.BaseSound} This Sound.
-     */
-    setDetune: function (value)
-    {
-        this.detune = value;
-
-        return this;
-    },
-
-    /**
-     * @event Phaser.Sound.BaseSound#detune
-     * @param {Phaser.Sound.BaseSound} sound - Reference to the Sound that emitted event.
-     * @param {number} value - An updated value of Phaser.Sound.BaseSound#detune property.
-     */
-
-    /**
-     * The detune value of this Sound, given in [cents](https://en.wikipedia.org/wiki/Cent_%28music%29).
-     * The range of the value is -1200 to 1200, but we recommend setting it to [50](https://en.wikipedia.org/wiki/50_Cent).
-     *
-     * @name Phaser.Sound.BaseSound#detune
-     * @type {number}
-     * @default 0
-     * @since 3.0.0
-     */
-    detune: {
-
-        get: function ()
-        {
-            return this.currentConfig.detune;
-        },
-
-        set: function (value)
-        {
-            this.currentConfig.detune = value;
-
-            this.calculateRate();
-
-            this.emit('detune', this, value);
-        }
-
     },
 
     /**
