@@ -209,7 +209,7 @@ var WebAudioSoundManager = new Class({
     },
 
     /**
-     * @event Phaser.Sound.WebAudioSoundManager#MuteEvent
+     * @event Phaser.Sound.WebAudioSoundManager#muteEvent
      * @param {Phaser.Sound.WebAudioSoundManager} soundManager - Reference to the sound manager that emitted event.
      * @param {boolean} value - An updated value of Phaser.Sound.WebAudioSoundManager#mute property.
      */
@@ -218,7 +218,7 @@ var WebAudioSoundManager = new Class({
      * Sets the muted state of all this Sound Manager.
      *
      * @method Phaser.Sound.WebAudioSoundManager#setMute
-     * @fires Phaser.Sound.WebAudioSoundManager#MuteEvent
+     * @fires Phaser.Sound.WebAudioSoundManager#muteEvent
      * @since 3.3.0
      *
      * @param {boolean} value - `true` to mute all sounds, `false` to unmute them.

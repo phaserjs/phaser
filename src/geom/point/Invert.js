@@ -10,6 +10,8 @@
  * @function Phaser.Geom.Point.Invert
  * @since 3.0.0
  *
+ * @generic {Phaser.Geom.Point} O - [point,$return]
+ *
  * @param {Phaser.Geom.Point} point - [description]
  *
  * @return {Phaser.Geom.Point} [description]

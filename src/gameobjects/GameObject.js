@@ -139,7 +139,7 @@ var GameObject = new Class({
          * If this Game Object is enabled for physics then this property will contain a reference to a Physics Body.
          *
          * @name Phaser.GameObjects.GameObject#body
-         * @type {?Phaser.Physics.Body}
+         * @type {?object}
          * @default null
          * @since 3.0.0
          */

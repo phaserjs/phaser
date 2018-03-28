@@ -12,10 +12,9 @@ var Browser = require('./Browser');
  * They are then referenced by internal game systems and are available for you to access
  * via `this.sys.game.device.audio` from within any Scene.
  * 
- * @name Phaser.Device.Audio
+ * @typedef {object} Phaser.Device.Audio
  * @since 3.0.0
  * 
- * @type {object}
  * @property {boolean} audioData - Can this device play HTML Audio tags?
  * @property {boolean} dolby - Can this device play EC-3 Dolby Digital Plus files?
  * @property {boolean} m4a - Can this device can play m4a files.

@@ -15,7 +15,7 @@ var TWEEN_CONST = require('./tween/const');
  *
  * @class Timeline
  * @memberOf Phaser.Tweens
- * @extends EventEmitter
+ * @extends Phaser.Events.EventEmitter
  * @constructor
  * @since 3.0.0
  *

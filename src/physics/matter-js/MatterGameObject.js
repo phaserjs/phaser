@@ -68,7 +68,6 @@ var MatterGameObject = function (world, gameObject, options)
     //  First let's inject all of the components into the Game Object
     mixins.forEach(function (mixin)
     {
-
         for (var key in mixin)
         {
             if (hasGetterOrSetter(mixin[key]))

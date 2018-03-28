@@ -40,7 +40,7 @@ var Particle = new Class({
          * [description]
          *
          * @name Phaser.GameObjects.Particles.Particle#frame
-         * @type {Phaser.Texture.Frame}
+         * @type {Phaser.Textures.Frame}
          * @default null
          * @since 3.0.0
          */

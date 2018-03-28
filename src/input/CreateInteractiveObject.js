@@ -4,8 +4,6 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-//  Phaser.Input.InteractiveObject
-
 /**
  * @callback HitAreaCallback
  *
@@ -18,7 +16,7 @@
  */
 
 /**
- * @typedef {object} InteractiveObject
+ * @typedef {object} Phaser.Input.InteractiveObject
  *
  * @property {Phaser.GameObjects.GameObject} gameObject - [description]
  * @property {boolean} enabled - [description]
@@ -40,16 +38,16 @@
 /**
  * [description]
  *
- * @method Phaser.Input.Pointer#positionToCamera
+ * @function Phaser.Input.CreateInteractiveObject
  * @since 3.0.0
  *
  * @param {Phaser.GameObjects.GameObject} gameObject - [description]
  * @param {*} hitArea - [description]
  * @param {HitAreaCallback} hitAreaCallback - [description]
  *
- * @return {InteractiveObject} [description]
+ * @return {Phaser.Input.InteractiveObject} [description]
  */
-var InteractiveObject = function (gameObject, hitArea, hitAreaCallback)
+var CreateInteractiveObject = function (gameObject, hitArea, hitAreaCallback)
 {
     return {
 
@@ -83,4 +81,4 @@ var InteractiveObject = function (gameObject, hitArea, hitAreaCallback)
     };
 };
 
-module.exports = InteractiveObject;
+module.exports = CreateInteractiveObject;

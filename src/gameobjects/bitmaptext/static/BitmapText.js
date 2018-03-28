@@ -58,8 +58,8 @@ var Render = require('./BitmapTextRender');
  * @extends Phaser.GameObjects.Components.Visible
  * 
  * @param {Phaser.Scene} scene - The Scene to which this Game Object belongs. It can only belong to one Scene at any given time.
- * @param {number} [x=0] - The x coordinate of this Game Object in world space.
- * @param {number} [y=0] - The y coordinate of this Game Object in world space.
+ * @param {number} x - The x coordinate of this Game Object in world space.
+ * @param {number} y - The y coordinate of this Game Object in world space.
  * @param {string} font - [description]
  * @param {(string|string[])} [text] - [description]
  * @param {number} [size] - [description]

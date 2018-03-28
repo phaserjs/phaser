@@ -18,8 +18,8 @@ var Class = require('../../../utils/Class');
  * @param {object} source - [description]
  * @param {number} quantity - [description]
  * @param {number} stepRate - [description]
- * @param {boolean} yoyo - [description]
- * @param {boolean} seamless - [description]
+ * @param {boolean} [yoyo=false] - [description]
+ * @param {boolean} [seamless=true] - [description]
  */
 var EdgeZone = new Class({
 

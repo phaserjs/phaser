@@ -11,6 +11,12 @@ var Features = require('../../device/Features');
 //  https://github.com/WICG/EventListenerOptions/blob/gh-pages/explainer.md
 
 /**
+ * @callback MouseHandler
+ *
+ * @property {MouseEvent} event - [description]
+ */
+
+/**
  * @classdesc
  * [description]
  *
@@ -69,7 +75,7 @@ var MouseManager = new Class({
          * [description]
          *
          * @name Phaser.Input.Mouse.MouseManager#handler
-         * @type {null}
+         * @type {?MouseHandler}
          * @since 3.0.0
          */
         this.handler;
@@ -136,13 +142,13 @@ var MouseManager = new Class({
 
     /**
      * If the browser supports it, you can request that the pointer be locked to the browser window.
-     * 
+     *
      * This is classically known as 'FPS controls', where the pointer can't leave the browser until
      * the user presses an exit key.
-     * 
+     *
      * If the browser successfully enters a locked state, a `POINTER_LOCK_CHANGE_EVENT` will be dispatched,
      * from the games Input Manager, with an `isPointerLocked` property.
-     * 
+     *
      * It is important to note that pointer lock can only be enabled after an 'engagement gesture',
      * see: https://w3c.github.io/pointerlock/#dfn-engagement-gesture.
      *
@@ -165,7 +171,7 @@ var MouseManager = new Class({
      * @method Phaser.Input.Mouse.MouseManager#pointerLockChange
      * @since 3.0.0
      *
-     * @param {Event} event - The native event from the browser.
+     * @param {MouseHandler} event - The native event from the browser.
      */
     pointerLockChange: function (event)
     {

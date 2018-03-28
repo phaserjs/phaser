@@ -10,6 +10,8 @@
  * @function Phaser.Geom.Circle.OffsetPoint
  * @since 3.0.0
  *
+ * @generic {Phaser.Geom.Circle} O - [circle,$return]
+ *
  * @param {Phaser.Geom.Circle} circle - The Circle to be offset (translated.)
  * @param {(Phaser.Geom.Point|object)} point - The Point object containing the values to offset the Circle by.
  *

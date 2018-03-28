@@ -99,7 +99,7 @@ var Blitter = new Class({
          * [description]
          *
          * @name Phaser.GameObjects.Blitter#renderList
-         * @type {array}
+         * @type {Phaser.GameObjects.Blitter.Bob[]}
          * @default []
          * @since 3.0.0
          */

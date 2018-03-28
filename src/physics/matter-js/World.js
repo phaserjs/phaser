@@ -23,7 +23,7 @@ var MatterTileBody = require('./MatterTileBody');
  * [description]
  *
  * @class World
- * @extends EventEmitter
+ * @extends Phaser.Events.EventEmitter
  * @memberOf Phaser.Physics.Matter
  * @constructor
  * @since 3.0.0
@@ -530,7 +530,7 @@ var World = new Class({
      * @method Phaser.Physics.Matter.World#convertTilemapLayer
      * @since 3.0.0
      *
-     * @param {(Phaser.GameObjects.StaticTilemapLayer|Phaser.GameObjects.DynamicTilemapLayer)} tilemapLayer -
+     * @param {(Phaser.Tilemaps.DynamicTilemapLayer|Phaser.Tilemaps.StaticTilemapLayer)} tilemapLayer -
      * An array of tiles.
      * @param {object} [options] - Options to be passed to the MatterTileBody constructor. {@ee Phaser.Physics.Matter.TileBody}
      *
@@ -553,7 +553,7 @@ var World = new Class({
      * @method Phaser.Physics.Matter.World#convertTiles
      * @since 3.0.0
      *
-     * @param {Phaser.GameObjects.Tile[]} tiles - An array of tiles.
+     * @param {Phaser.Tilemaps.Tile[]} tiles - An array of tiles.
      * @param {object} [options] - Options to be passed to the MatterTileBody constructor. {@see Phaser.Physics.Matter.TileBody}
      *
      * @return {Phaser.Physics.Matter.World} This Matter World object.

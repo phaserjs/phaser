@@ -117,6 +117,8 @@ var Curve = new Class({
      * @method Phaser.Curves.Curve#draw
      * @since 3.0.0
      *
+     * @generic {Phaser.GameObjects.Graphics} G - [out,$return]
+     *
      * @param {Phaser.GameObjects.Graphics} graphics - The Graphics instance onto which this curve will be drawn.
      * @param {integer} [pointsTotal=32] - The resolution of the curve. The higher the value the smoother it will render, at the cost of rendering performance.
      *
@@ -274,6 +276,8 @@ var Curve = new Class({
      * @method Phaser.Curves.Curve#getPointAt
      * @since 3.0.0
      *
+     * @generic {Phaser.Math.Vector2} O - [out,$return]
+     *
      * @param {float} u - [description]
      * @param {Phaser.Math.Vector2} [out] - [description]
      *
@@ -317,6 +321,8 @@ var Curve = new Class({
      *
      * @method Phaser.Curves.Curve#getRandomPoint
      * @since 3.0.0
+     *
+     * @generic {Phaser.Math.Vector2} O - [out,$return]
      *
      * @param {Phaser.Math.Vector2} [out] - [description]
      *
@@ -363,6 +369,8 @@ var Curve = new Class({
      * @method Phaser.Curves.Curve#getStartPoint
      * @since 3.0.0
      *
+     * @generic {Phaser.Math.Vector2} O - [out,$return]
+     *
      * @param {Phaser.Math.Vector2} [out] - [description]
      *
      * @return {Phaser.Math.Vector2} [description]
@@ -384,6 +392,8 @@ var Curve = new Class({
      *
      * @method Phaser.Curves.Curve#getTangent
      * @since 3.0.0
+     *
+     * @generic {Phaser.Math.Vector2} O - [out,$return]
      *
      * @param {number} t - [description]
      * @param {Phaser.Math.Vector2} [out] - [description]
@@ -421,6 +431,8 @@ var Curve = new Class({
      *
      * @method Phaser.Curves.Curve#getTangentAt
      * @since 3.0.0
+     *
+     * @generic {Phaser.Math.Vector2} O - [out,$return]
      *
      * @param {float} u - [description]
      * @param {Phaser.Math.Vector2} [out] - [description]

@@ -5,13 +5,14 @@
  */
 
 var Class = require('../../utils/Class');
+var DegToRad = require('../../math/DegToRad');
+var DistanceBetween = require('../../math/distance/DistanceBetween');
 var Factory = require('./Factory');
 var GetFastValue = require('../../utils/object/GetFastValue');
 var Merge = require('../../utils/object/Merge');
 var PluginManager = require('../../boot/PluginManager');
+var Vector2 = require('../../math/Vector2');
 var World = require('./World');
-var DistanceBetween = require('../../math/distance/DistanceBetween');
-var DegToRad = require('../../math/DegToRad');
 
 //  All methods in this class are available under `this.physics` in a Scene.
 
@@ -405,13 +406,14 @@ var ArcadePhysics = new Class({
      *
      * @param {number} angle - The angle in degrees calculated in clockwise positive direction (down = 90 degrees positive, right = 0 degrees positive, up = 90 degrees negative)
      * @param {number} [speed=60] - The speed it will move, in pixels per second sq.
-     * @param {Phaser.Math.Vector2} vec2 - The Vector2 in which the x and y properties will be set to the calculated velocity.
+     * @param {Phaser.Math.Vector2} [vec2] - The Vector2 in which the x and y properties will be set to the calculated velocity.
      *
      * @return {Phaser.Math.Vector2} The Vector2 that stores the velocity.
      */
     velocityFromAngle: function (angle, speed, vec2)
     {
         if (speed === undefined) { speed = 60; }
+        if (vec2 === undefined) { vec2 = new Vector2(); }
 
         return vec2.setToPolar(DegToRad(angle), speed);
     },
@@ -425,13 +427,14 @@ var ArcadePhysics = new Class({
      *
      * @param {number} rotation - The angle in radians.
      * @param {number} [speed=60] - The speed it will move, in pixels per second sq.
-     * @param {Phaser.Math.Vector2} vec2 - The Vector2 in which the x and y properties will be set to the calculated velocity.
+     * @param {Phaser.Math.Vector2} [vec2] - The Vector2 in which the x and y properties will be set to the calculated velocity.
      *
      * @return {Phaser.Math.Vector2} The Vector2 that stores the velocity.
      */
     velocityFromRotation: function (rotation, speed, vec2)
     {
         if (speed === undefined) { speed = 60; }
+        if (vec2 === undefined) { vec2 = new Vector2(); }
 
         return vec2.setToPolar(rotation, speed);
     },

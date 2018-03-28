@@ -65,7 +65,7 @@ var Vector2 = require('../../math/Vector2');
  * @param {number} y - The vertical position of this Game Object in the world.
  * @param {string} texture - The key of the Texture this Game Object will use to render with, as stored in the Texture Manager.
  * @param {(string|integer)} [frame] - An optional frame from the Texture this Game Object is rendering with.
- * @param {object} options - [description]
+ * @param {object} [options={}] - Matter.js configuration object.
  */
 var MatterSprite = new Class({
 
@@ -102,7 +102,7 @@ var MatterSprite = new Class({
         /**
          * [description]
          *
-         * @name Phaser.Physics.Matter.Image#world
+         * @name Phaser.Physics.Matter.Sprite#world
          * @type {Phaser.Physics.Matter.World}
          * @since 3.0.0
          */
@@ -111,7 +111,7 @@ var MatterSprite = new Class({
         /**
          * [description]
          *
-         * @name Phaser.Physics.Matter.Image#_tempVec2
+         * @name Phaser.Physics.Matter.Sprite#_tempVec2
          * @type {Phaser.Math.Vector2}
          * @private
          * @since 3.0.0

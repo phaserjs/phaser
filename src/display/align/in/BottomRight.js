@@ -15,6 +15,8 @@ var SetRight = require('../../bounds/SetRight');
  * @function Phaser.Display.Align.In.BottomRight
  * @since 3.0.0
  *
+ * @generic {Phaser.GameObjects.GameObject} G - [gameObject,$return]
+ *
  * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object that will be positioned.
  * @param {Phaser.GameObjects.GameObject} alignIn - The Game Object to base the alignment position on.
  * @param {number} [offsetX=0] - Optional horizontal offset from the position.

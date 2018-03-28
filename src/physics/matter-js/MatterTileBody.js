@@ -40,7 +40,7 @@ var Vertices = require('./lib/geometry/Vertices');
  * @extends Phaser.Physics.Matter.Components.Static
  *
  * @param {Phaser.Physics.Matter.World} world - [description]
- * @param {Phaser.GameObjects.Tile} tile - The target tile that should have a Matter body.
+ * @param {Phaser.Tilemaps.Tile} tile - The target tile that should have a Matter body.
  * @param {object} [options] - Options to be used when creating the Matter body. See
  * Phaser.Physics.Matter.Matter.Body for a list of what Matter accepts.
  * @param {Phaser.Physics.Matter.Matter.Body} [options.body=null] - An existing Matter body to
@@ -71,7 +71,7 @@ var MatterTileBody = new Class({
          * The tile object the body is associated with.
          *
          * @name Phaser.Physics.Matter.TileBody#tile
-         * @type {Phaser.GameObjects.Tile}
+         * @type {Phaser.Tilemaps.Tile}
          * @since 3.0.0
          */
         this.tile = tile;
@@ -306,7 +306,7 @@ var MatterTileBody = new Class({
     /**
      * Removes the current body from the tile and the world.
      *
-     * @method Phaser.Physics.Matter.TileBody#removeBody
+     * @method Phaser.Physics.Matter.TileBody#destroy
      * @since 3.0.0
      *
      * @return {Phaser.Physics.Matter.TileBody} This TileBody object.

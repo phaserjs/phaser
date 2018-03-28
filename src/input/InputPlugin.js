@@ -11,7 +11,7 @@ var DistanceBetween = require('../math/distance/DistanceBetween');
 var Ellipse = require('../geom/ellipse/Ellipse');
 var EllipseContains = require('../geom/ellipse/Contains');
 var EventEmitter = require('eventemitter3');
-var InteractiveObject = require('./InteractiveObject');
+var CreateInteractiveObject = require('./CreateInteractiveObject');
 var PluginManager = require('../boot/PluginManager');
 var Rectangle = require('../geom/rectangle/Rectangle');
 var RectangleContains = require('../geom/rectangle/Contains');
@@ -23,7 +23,7 @@ var TriangleContains = require('../geom/triangle/Contains');
  * [description]
  *
  * @class InputPlugin
- * @extends EventEmitter
+ * @extends Phaser.Events.EventEmitter
  * @memberOf Phaser.Input
  * @constructor
  * @since 3.0.0
@@ -1075,7 +1075,7 @@ var InputPlugin = new Class({
         {
             var gameObject = gameObjects[i];
 
-            gameObject.input = InteractiveObject(gameObject, shape, callback);
+            gameObject.input = CreateInteractiveObject(gameObject, shape, callback);
 
             this.queueForInsertion(gameObject);
         }
@@ -1171,7 +1171,7 @@ var InputPlugin = new Class({
 
             if (width !== 0 && height !== 0)
             {
-                gameObject.input = InteractiveObject(gameObject, new Rectangle(0, 0, width, height), callback);
+                gameObject.input = CreateInteractiveObject(gameObject, new Rectangle(0, 0, width, height), callback);
 
                 this.queueForInsertion(gameObject);
             }

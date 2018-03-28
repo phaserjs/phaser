@@ -37,7 +37,7 @@ var NOOP = require('../utils/NOOP');
  * There is a good guide to what's supported [here](https://developer.mozilla.org/en-US/Apps/Fundamentals/Audio_and_video_delivery/Cross-browser_audio_basics#Audio_Codec_Support).
  *
  * @class BaseSoundManager
- * @extends EventEmitter
+ * @extends Phaser.Events.EventEmitter
  * @memberOf Phaser.Sound
  * @constructor
  * @since 3.0.0
@@ -579,7 +579,7 @@ var BaseSoundManager = new Class({
 
             this.forEachActiveSound(function (sound)
             {
-                sound.setRate();
+                sound.calculateRate();
             });
 
             this.emit('rate', this, value);
@@ -634,7 +634,7 @@ var BaseSoundManager = new Class({
 
             this.forEachActiveSound(function (sound)
             {
-                sound.setRate();
+                sound.calculateRate();
             });
 
             this.emit('detune', this, value);

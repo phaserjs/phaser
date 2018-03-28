@@ -13,6 +13,8 @@ var RectangleToRectangle = require('./RectangleToRectangle');
  * @function Phaser.Geom.Intersects.GetRectangleIntersection
  * @since 3.0.0
  *
+ * @generic {Phaser.Geom.Rectangle} O - [output,$return]
+ *
  * @param {Phaser.Geom.Rectangle} rectA - [description]
  * @param {Phaser.Geom.Rectangle} rectB - [description]
  * @param {Phaser.Geom.Rectangle} [output] - [description]

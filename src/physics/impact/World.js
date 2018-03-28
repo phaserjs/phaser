@@ -23,7 +23,6 @@ var TYPE = require('./TYPE');
  * @property {number} [cellSize=64] - [description]
  * @property {number} [timeScale=1] - [description]
  * @property {float} [maxStep=0.05] - [description]
- * @property {number} [gravity=0] - [description]
  * @property {boolean} [debug=false] - [description]
  * @property {number} [maxVelocity=100] - [description]
  * @property {boolean} [debugShowBody=true] - [description]
@@ -38,7 +37,6 @@ var TYPE = require('./TYPE');
  * @property {(object|boolean)} [setBounds] - [description]
  * @property {number} [setBounds.x=0] - [description]
  * @property {number} [setBounds.y=0] - [description]
- * @property {number} [setBounds.x=0] - [description]
  * @property {number} [setBounds.width] - [description]
  * @property {number} [setBounds.height] - [description]
  * @property {number} [setBounds.thickness=64] - [description]
@@ -77,7 +75,7 @@ var TYPE = require('./TYPE');
  * [description]
  *
  * @class World
- * @extends EventEmitter
+ * @extends Phaser.Events.EventEmitter
  * @memberOf Phaser.Physics.Impact
  * @constructor
  * @since 3.0.0
@@ -334,7 +332,7 @@ var World = new Class({
      * @method Phaser.Physics.Impact.World#setCollisionMapFromTilemapLayer
      * @since 3.0.0
      *
-     * @param {(StaticTilemapLayer|DynamicTilemapLayer)} tilemapLayer - The tilemap layer to use.
+     * @param {(Phaser.Tilemaps.DynamicTilemapLayer|Phaser.Tilemaps.StaticTilemapLayer)} tilemapLayer - The tilemap layer to use.
      * @param {object} [options] - Options for controlling the mapping from tiles to slope IDs.
      * @param {string} [options.slopeTileProperty=null] - Slope IDs can be stored on tiles directly
      * using Tiled's tileset editor. If a tile has a property with the given slopeTileProperty string

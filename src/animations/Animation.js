@@ -36,7 +36,7 @@ var GetValue = require('../utils/object/GetValue');
  */
 
 /**
- * @typedef {object} AnimationConfig // TODO 19/03/2018 fix type
+ * @typedef {object} AnimationConfig
  *
  * @property {AnimationFrameConfig[]} [frames] - [description]
  * @property {string} [defaultTextureKey=null] - [description]
@@ -49,15 +49,15 @@ var GetValue = require('../utils/object/GetValue');
  * @property {boolean} [yoyo=false] - Should the animation yoyo? (reverse back down to the start) before repeating?
  * @property {boolean} [showOnStart=false] - Should sprite.visible = true when the animation starts to play?
  * @property {boolean} [hideOnComplete=false] - Should sprite.visible = false when the animation finishes?
- * @property {object} [callbackScope] - [description]
- * @property {boolean} [onStart=false] - [description]
- * @property {array} [onStartParams] - [description]
- * @property {boolean} [onRepeat=false] - [description]
- * @property {array} [onRepeatParams] - [description]
- * @property {boolean} [onUpdate=false] - [description]
- * @property {array} [onUpdateParams] - [description]
- * @property {boolean} [onComplete=false] - [description]
- * @property {array} [onCompleteParams] - [description]
+ * @property {*} [callbackScope] - [description]
+ * @property {(false|function)} [onStart=false] - [description]
+ * @property {Array.<*>} [onStartParams] - [description]
+ * @property {(false|function)} [onRepeat=false] - [description]
+ * @property {Array.<*>} [onRepeatParams] - [description]
+ * @property {(false|function)} [onUpdate=false] - [description]
+ * @property {Array.<*>} [onUpdateParams] - [description]
+ * @property {(false|function)} [onComplete=false] - [description]
+ * @property {Array.<*>} [onCompleteParams] - [description]
  */
 
 /**
@@ -250,7 +250,7 @@ var Animation = new Class({
          * [description]
          *
          * @name Phaser.Animations.Animation#callbackScope
-         * @type {object}
+         * @type {*}
          * @since 3.0.0
          */
         this.callbackScope = GetValue(config, 'callbackScope', this);
@@ -259,7 +259,7 @@ var Animation = new Class({
          * [description]
          *
          * @name Phaser.Animations.Animation#onStart
-         * @type {function}
+         * @type {(false|function)}
          * @since 3.0.0
          */
         this.onStart = GetValue(config, 'onStart', false);
@@ -268,7 +268,7 @@ var Animation = new Class({
          * [description]
          *
          * @name Phaser.Animations.Animation#onStartParams
-         * @type {array}
+         * @type {Array.<*>}
          * @since 3.0.0
          */
         this.onStartParams = GetValue(config, 'onStartParams', []);
@@ -277,7 +277,7 @@ var Animation = new Class({
          * [description]
          *
          * @name Phaser.Animations.Animation#onRepeat
-         * @type {function}
+         * @type {(false|function)}
          * @since 3.0.0
          */
         this.onRepeat = GetValue(config, 'onRepeat', false);
@@ -286,7 +286,7 @@ var Animation = new Class({
          * [description]
          *
          * @name Phaser.Animations.Animation#onRepeatParams
-         * @type {array}
+         * @type {Array.<*>}
          * @since 3.0.0
          */
         this.onRepeatParams = GetValue(config, 'onRepeatParams', []);
@@ -296,7 +296,7 @@ var Animation = new Class({
          * See AnimationFrame.onUpdate for a frame specific callback.
          *
          * @name Phaser.Animations.Animation#onUpdate
-         * @type {function}
+         * @type {(false|function)}
          * @since 3.0.0
          */
         this.onUpdate = GetValue(config, 'onUpdate', false);
@@ -305,7 +305,7 @@ var Animation = new Class({
          * [description]
          *
          * @name Phaser.Animations.Animation#onUpdateParams
-         * @type {array}
+         * @type {Array.<*>}
          * @since 3.0.0
          */
         this.onUpdateParams = GetValue(config, 'onUpdateParams', []);
@@ -314,7 +314,7 @@ var Animation = new Class({
          * [description]
          *
          * @name Phaser.Animations.Animation#onComplete
-         * @type {function}
+         * @type {(false|function)}
          * @since 3.0.0
          */
         this.onComplete = GetValue(config, 'onComplete', false);
@@ -323,7 +323,7 @@ var Animation = new Class({
          * [description]
          *
          * @name Phaser.Animations.Animation#onCompleteParams
-         * @type {array}
+         * @type {Array.<*>}
          * @since 3.0.0
          */
         this.onCompleteParams = GetValue(config, 'onCompleteParams', []);

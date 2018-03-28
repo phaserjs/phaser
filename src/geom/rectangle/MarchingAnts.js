@@ -16,12 +16,14 @@ var Point = require('../point/Point');
  * @function Phaser.Geom.Rectangle.MarchingAnts
  * @since 3.0.0
  *
+ * @generic {Phaser.Geom.Point[]} O - [out,$return]
+ *
  * @param {Phaser.Geom.Rectangle} rect - [description]
  * @param {number} step - [description]
  * @param {integer} quantity - [description]
- * @param {array} [out] - [description]
+ * @param {(array|Phaser.Geom.Point[])} [out] - [description]
  *
- * @return {Phaser.Geom.Point[]} [description]
+ * @return {(array|Phaser.Geom.Point[])} [description]
  */
 var MarchingAnts = function (rect, step, quantity, out)
 {

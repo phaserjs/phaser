@@ -1,8 +1,10 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
+ * @author       Pavle Goloskokovic <pgoloskokovic@gmail.com> (http://prunegames.com)
  * @copyright    2018 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
+
 var BaseSound = require('../BaseSound');
 var Class = require('../../utils/Class');
 var EventEmitter = require('eventemitter3');
@@ -21,7 +23,6 @@ var Extend = require('../../utils/object/Extend');
  * @extends Phaser.Sound.BaseSound
  * @memberOf Phaser.Sound
  * @constructor
- * @author Pavle Goloskokovic <pgoloskokovic@gmail.com> (http://prunegames.com)
  * @since 3.0.0
  *
  * @param {Phaser.Sound.NoAudioSoundManager} manager - Reference to the current sound manager instance.
@@ -29,11 +30,17 @@ var Extend = require('../../utils/object/Extend');
  * @param {SoundConfig} [config={}] - An optional config object containing default sound settings.
  */
 var NoAudioSound = new Class({
+
     Extends: EventEmitter,
-    initialize: function NoAudioSound (manager, key, config)
+
+    initialize:
+
+    function NoAudioSound (manager, key, config)
     {
         if (config === void 0) { config = {}; }
+
         EventEmitter.call(this);
+
         this.manager = manager;
         this.key = key;
         this.isPlaying = false;
@@ -41,6 +48,7 @@ var NoAudioSound = new Class({
         this.totalRate = 1;
         this.duration = 0;
         this.totalDuration = 0;
+
         this.config = Extend({
             mute: false,
             volume: 1,
@@ -50,6 +58,7 @@ var NoAudioSound = new Class({
             loop: false,
             delay: 0
         }, config);
+
         this.currentConfig = this.config;
         this.mute = false;
         this.volume = 1;
@@ -61,42 +70,52 @@ var NoAudioSound = new Class({
         this.currentMarker = null;
         this.pendingRemove = false;
     },
+
     // eslint-disable-next-line no-unused-vars
     addMarker: function (marker)
     {
         return false;
     },
+
     // eslint-disable-next-line no-unused-vars
     updateMarker: function (marker)
     {
         return false;
     },
+
     // eslint-disable-next-line no-unused-vars
     removeMarker: function (markerName)
     {
         return null;
     },
+
     // eslint-disable-next-line no-unused-vars
     play: function (markerName, config)
     {
         return false;
     },
+
     pause: function ()
     {
         return false;
     },
+
     resume: function ()
     {
         return false;
     },
+
     stop: function ()
     {
         return false;
     },
+
     destroy: function ()
     {
         this.manager.remove(this);
+
         BaseSound.prototype.destroy.call(this);
     }
 });
+
 module.exports = NoAudioSound;

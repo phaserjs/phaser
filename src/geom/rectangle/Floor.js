@@ -10,6 +10,8 @@
  * @function Phaser.Geom.Rectangle.Floor
  * @since 3.0.0
  *
+ * @generic {Phaser.Geom.Rectangle} O - [rect,$return]
+ *
  * @param {Phaser.Geom.Rectangle} rect - [description]
  *
  * @return {Phaser.Geom.Rectangle} [description]

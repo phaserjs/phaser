@@ -6,7 +6,7 @@
 
 /**
  * @typedef {object} JSONGameObject
- * @template DATA
+ * @generic {object} DATA - [data]
  *
  * @property {string} name - The name of this Game Object.
  * @property {string} type - A textual representation of this Game Object, i.e. `sprite`.
@@ -27,7 +27,7 @@
  * @property {(integer|string)} blendMode - Sets the Blend Mode being used by this Game Object.
  * @property {string} textureKey - The texture key of this Game Object.
  * @property {string} frameKey - The frame key of this Game Object.
- * @property {DATA} data - The data of this Game Object.
+ * @property {object} data - The data of this Game Object.
  */
 
 //  Default Game Object JSON export

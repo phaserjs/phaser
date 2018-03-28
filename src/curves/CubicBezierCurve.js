@@ -87,6 +87,8 @@ var CubicBezierCurve = new Class({
      * @method Phaser.Curves.CubicBezierCurve#getStartPoint
      * @since 3.0.0
      *
+     * @generic {Phaser.Math.Vector2} O - [out,$return]
+     *
      * @param {Phaser.Math.Vector2} [out] - A Vector2 object to store the result in. If not given will be created.
      *
      * @return {Phaser.Math.Vector2} The coordinates of the point on the curve. If an `out` object was given this will be returned.
@@ -119,6 +121,8 @@ var CubicBezierCurve = new Class({
      * @method Phaser.Curves.CubicBezierCurve#getPoint
      * @since 3.0.0
      *
+     * @generic {Phaser.Math.Vector2} O - [out,$return]
+     *
      * @param {float} t - The position along the curve to return. Where 0 is the start and 1 is the end.
      * @param {Phaser.Math.Vector2} [out] - A Vector2 object to store the result in. If not given will be created.
      *
@@ -141,6 +145,8 @@ var CubicBezierCurve = new Class({
      *
      * @method Phaser.Curves.CubicBezierCurve#draw
      * @since 3.0.0
+     *
+     * @generic {Phaser.GameObjects.Graphics} G - [out,$return]
      *
      * @param {Phaser.GameObjects.Graphics} graphics - [description]
      * @param {integer} [pointsTotal=32] - [description]

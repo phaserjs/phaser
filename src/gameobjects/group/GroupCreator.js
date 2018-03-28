@@ -15,7 +15,7 @@ var Group = require('./Group');
  * @method Phaser.GameObjects.GameObjectCreator#group
  * @since 3.0.0
  *
- * @param {object} config - [description]
+ * @param {GroupConfig} config - [description]
  *
  * @return {Phaser.GameObjects.Group} The Game Object that was created.
  */

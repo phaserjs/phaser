@@ -44,7 +44,7 @@ var VisibilityHandler = require('./VisibilityHandler');
  * @constructor
  * @since 3.0.0
  *
- * @param {object} [GameConfig] - The configuration object for your Phaser Game instance.
+ * @param {GameConfig} [GameConfig] - The configuration object for your Phaser Game instance.
  */
 var Game = new Class({
 
@@ -202,7 +202,7 @@ var Game = new Class({
          * The Sound Manager is a global system responsible for the playback and updating of all audio in your game.
          *
          * @name Phaser.Game#sound
-         * @type {Phaser.BaseSoundManager}
+         * @type {Phaser.Sound.BaseSoundManager}
          * @since 3.0.0
          */
         this.sound = SoundManagerCreator.create(this);
@@ -323,7 +323,7 @@ var Game = new Class({
      * the Scenes for rendering, but it won't have actually drawn anything yet.
      *
      * @event Phaser.Game#prerenderEvent
-     * @param {(Phaser.Renderer.CanvasRenderer|Phaser.Renderer.WebGLRenderer)} renderer - A reference to the current renderer.
+     * @param {(Phaser.Renderer.Canvas.CanvasRenderer|Phaser.Renderer.WebGL.WebGLRenderer)} renderer - A reference to the current renderer.
      */
 
     /**
@@ -333,7 +333,7 @@ var Game = new Class({
      * Every Scene will have rendered and drawn to the canvas.
      *
      * @event Phaser.Game#postrenderEvent
-     * @param {(Phaser.Renderer.CanvasRenderer|Phaser.Renderer.WebGLRenderer)} renderer - A reference to the current renderer.
+     * @param {(Phaser.Renderer.Canvas.CanvasRenderer|Phaser.Renderer.WebGL.WebGLRenderer)} renderer - A reference to the current renderer.
      */
 
     /**

@@ -17,6 +17,8 @@ var PropertyValueSet = require('./PropertyValueSet');
  * @function Phaser.Actions.SetOrigin
  * @since 3.0.0
  *
+ * @generic {Phaser.GameObjects.GameObject[]} G - [items,$return]
+ *
  * @param {(array|Phaser.GameObjects.GameObject[])} items - The array of items to be updated by this action.
  * @param {number} originX - The amount to set the `originX` property to.
  * @param {number} [originY] - The amount to set the `originY` property to. If `undefined` or `null` it uses the `originX` value.
@@ -25,7 +27,7 @@ var PropertyValueSet = require('./PropertyValueSet');
  * @param {integer} [index=0] - An optional offset to start searching from within the items array.
  * @param {integer} [direction=1] - The direction to iterate through the array. 1 is from beginning to end, -1 from end to beginning.
  *
- * @return {array} The array of objects that were passed to this Action.
+ * @return {(array|Phaser.GameObjects.GameObject[])} The array of objects that were passed to this Action.
  */
 var SetOrigin = function (items, originX, originY, stepX, stepY, index, direction)
 {

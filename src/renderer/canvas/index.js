@@ -10,8 +10,8 @@
 
 module.exports = {
 
-    CanvasRenderer: require('./CanvasRenderer'),
     BlitImage: require('./utils/BlitImage'),
+    CanvasRenderer: require('./CanvasRenderer'),
     DrawImage: require('./utils/DrawImage'),
     GetBlendModes: require('./utils/GetBlendModes')
 

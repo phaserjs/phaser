@@ -86,8 +86,8 @@ var Sprite = require('../sprite/Sprite');
  * @since 3.0.0
  *
  * @param {Phaser.Scene} scene - [description]
- * @param {Phaser.GameObjects.GameObject[]} children - [description]
- * @param {GroupConfig} config - [description]
+ * @param {?(Phaser.GameObjects.GameObject[]|GroupConfig)} children - [description]
+ * @param {GroupConfig} [config] - [description]
  */
 var Group = new Class({
 
@@ -223,11 +223,10 @@ var Group = new Class({
      * @method Phaser.GameObjects.Group#create
      * @since 3.0.0
      *
-     * @param {number} x - The horizontal position of this Game Object in the world.
-     * @param {number} y - The vertical position of this Game Object in the world.
-     * @param {string} texture - The key of the Texture this Game Object will use to render with, as stored in the Texture Manager.
-     * @param {(string|integer)} [frame] - An optional frame from the Texture this Game Object is rendering with.
-     * @param {(string|integer)} [frame] - An optional frame from the Texture this Game Object is rendering with.
+     * @param {number} [x=0] - The horizontal position of this Game Object in the world.
+     * @param {number} [y=0] - The vertical position of this Game Object in the world.
+     * @param {string} [key=defaultKey] - The key of the Texture this Game Object will use to render with, as stored in the Texture Manager.
+     * @param {(string|integer)} [frame=defaultFrame] - An optional frame from the Texture this Game Object is rendering with.
      * @param {boolean} [visible=true] - The {@link Phaser.GameObjects.Components.Visible#visible} state of this Game Object.
      * @param {boolean} [active=true] - The {@link Phaser.GameObjects.GameObject#active} state of this Game Object.
      *
@@ -235,6 +234,8 @@ var Group = new Class({
      */
     create: function (x, y, key, frame, visible, active)
     {
+        if (x === undefined) { x = 0; }
+        if (y === undefined) { y = 0; }
         if (key === undefined) { key = this.defaultKey; }
         if (frame === undefined) { frame = this.defaultFrame; }
         if (visible === undefined) { visible = true; }
@@ -622,11 +623,11 @@ var Group = new Class({
      *
      * @param {boolean} [state=false] - [description]
      * @param {boolean} [createIfNull=false] - [description]
-     * @param {number} [x] - The horizontal position of this Game Object in the world.
-     * @param {number} [y] - The vertical position of this Game Object in the world.
-     * @param {string} [texture] - The key of the Texture this Game Object will use to render with, as stored in the Texture Manager.
-     * @param {(string|integer)} [frame] - An optional frame from the Texture this Game Object is rendering with.
-     * @param {boolean} [visible] - [description]
+     * @param {number} [x=0] - The horizontal position of this Game Object in the world.
+     * @param {number} [y=0] - The vertical position of this Game Object in the world.
+     * @param {string} [key=defaultKey] - The key of the Texture this Game Object will use to render with, as stored in the Texture Manager.
+     * @param {(string|integer)} [frame=defaultFrame] - An optional frame from the Texture this Game Object is rendering with.
+     * @param {boolean} [visible=true] - The {@link Phaser.GameObjects.Components.Visible#visible} state of this Game Object.
      *
      * @return {?Phaser.GameObjects.GameObject} [description]
      */
@@ -671,16 +672,19 @@ var Group = new Class({
     },
 
     /**
-     * [description]
+     * Scans the Group for the first child that has an `active` state set to `false` and returns it.
+     * 
+     * If no child is found then it will create a new one using the arguments given to this method.
+     * Unless a new child is being created the arguments are ignored.
      *
      * @method Phaser.GameObjects.Group#get
      * @since 3.0.0
      *
-     * @param {number} x - The horizontal position of this Game Object in the world.
-     * @param {number} y - The vertical position of this Game Object in the world.
-     * @param {string} texture - The key of the Texture this Game Object will use to render with, as stored in the Texture Manager.
-     * @param {(string|integer)} [frame] - An optional frame from the Texture this Game Object is rendering with.
-     * @param {boolean} visible - [description]
+     * @param {number} [x=0] - The horizontal position of this Game Object in the world.
+     * @param {number} [y=0] - The vertical position of this Game Object in the world.
+     * @param {string} [key=defaultKey] - The key of the Texture this Game Object will use to render with, as stored in the Texture Manager.
+     * @param {(string|integer)} [frame=defaultFrame] - An optional frame from the Texture this Game Object is rendering with.
+     * @param {boolean} [visible=true] - The {@link Phaser.GameObjects.Components.Visible#visible} state of this Game Object.
      *
      * @return {Phaser.GameObjects.GameObject} [description]
      */
@@ -690,17 +694,20 @@ var Group = new Class({
     },
 
     /**
-     * [description]
+     * Scans the Group for the first child that has an `active` state set to `true` and returns it.
+     * 
+     * If no child is found, and `createIfNull` is `true`, then it will create a new one using the arguments given to this method.
+     * Unless a new child is being created the arguments are ignored.
      *
      * @method Phaser.GameObjects.Group#getFirstAlive
      * @since 3.0.0
      *
      * @param {boolean} createIfNull - [description]
-     * @param {number} x - The horizontal position of this Game Object in the world.
-     * @param {number} y - The vertical position of this Game Object in the world.
-     * @param {string} texture - The key of the Texture this Game Object will use to render with, as stored in the Texture Manager.
-     * @param {(string|integer)} [frame] - An optional frame from the Texture this Game Object is rendering with.
-     * @param {boolean} visible - [description]
+     * @param {number} [x=0] - The horizontal position of this Game Object in the world.
+     * @param {number} [y=0] - The vertical position of this Game Object in the world.
+     * @param {string} [key=defaultKey] - The key of the Texture this Game Object will use to render with, as stored in the Texture Manager.
+     * @param {(string|integer)} [frame=defaultFrame] - An optional frame from the Texture this Game Object is rendering with.
+     * @param {boolean} [visible=true] - The {@link Phaser.GameObjects.Components.Visible#visible} state of this Game Object.
      *
      * @return {Phaser.GameObjects.GameObject} [description]
      */
@@ -710,17 +717,20 @@ var Group = new Class({
     },
 
     /**
-     * [description]
+     * Scans the Group for the first child that has an `active` state set to `false` and returns it.
+     * 
+     * If no child is found, and `createIfNull` is `true`, then it will create a new one using the arguments given to this method.
+     * Unless a new child is being created the arguments are ignored.
      *
      * @method Phaser.GameObjects.Group#getFirstDead
      * @since 3.0.0
      *
      * @param {boolean} createIfNull - [description]
-     * @param {number} x - The horizontal position of this Game Object in the world.
-     * @param {number} y - The vertical position of this Game Object in the world.
-     * @param {string} texture - The key of the Texture this Game Object will use to render with, as stored in the Texture Manager.
-     * @param {(string|integer)} [frame] - An optional frame from the Texture this Game Object is rendering with.
-     * @param {boolean} visible - [description]
+     * @param {number} [x=0] - The horizontal position of this Game Object in the world.
+     * @param {number} [y=0] - The vertical position of this Game Object in the world.
+     * @param {string} [key=defaultKey] - The key of the Texture this Game Object will use to render with, as stored in the Texture Manager.
+     * @param {(string|integer)} [frame=defaultFrame] - An optional frame from the Texture this Game Object is rendering with.
+     * @param {boolean} [visible=true] - The {@link Phaser.GameObjects.Components.Visible#visible} state of this Game Object.
      *
      * @return {Phaser.GameObjects.GameObject} [description]
      */

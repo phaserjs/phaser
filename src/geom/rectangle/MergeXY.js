@@ -10,6 +10,8 @@
  * @function Phaser.Geom.Rectangle.MergeXY
  * @since 3.0.0
  *
+ * @generic {Phaser.Geom.Rectangle} O - [target,$return]
+ *
  * @param {Phaser.Geom.Rectangle} target - [description]
  * @param {number} x - [description]
  * @param {number} y - [description]

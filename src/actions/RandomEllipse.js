@@ -12,10 +12,12 @@ var Random = require('../geom/ellipse/Random');
  * @function Phaser.Actions.RandomEllipse
  * @since 3.0.0
  *
+ * @generic {Phaser.GameObjects.GameObject[]} G - [items,$return]
+ *
  * @param {(array|Phaser.GameObjects.GameObject[])} items - An array of Game Objects. The contents of this array are updated by this Action.
  * @param {Phaser.Geom.Ellipse} ellipse - [description]
  *
- * @return {array} The array of Game Objects that was passed to this Action.
+ * @return {(array|Phaser.GameObjects.GameObject[])} The array of Game Objects that was passed to this Action.
  */
 var RandomEllipse = function (items, ellipse)
 {

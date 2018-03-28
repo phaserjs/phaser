@@ -12,6 +12,8 @@ var Rectangle = require('./Rectangle');
  * @function Phaser.Geom.Rectangle.Union
  * @since 3.0.0
  *
+ * @generic {Phaser.Geom.Rectangle} O - [out,$return]
+ *
  * @param {Phaser.Geom.Rectangle} rectA - [description]
  * @param {Phaser.Geom.Rectangle} rectB - [description]
  * @param {Phaser.Geom.Rectangle} [out] - [description]

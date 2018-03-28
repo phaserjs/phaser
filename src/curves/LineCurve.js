@@ -24,8 +24,8 @@ var tmpVec2 = new Vector2();
  * @constructor
  * @since 3.0.0
  *
- * @param {Phaser.Math.Vector2} p0 - [description]
- * @param {Phaser.Math.Vector2} p1 - [description]
+ * @param {(Phaser.Math.Vector2|number[])} p0 - [description]
+ * @param {Phaser.Math.Vector2} [p1] - [description]
  */
 var LineCurve = new Class({
 
@@ -69,6 +69,8 @@ var LineCurve = new Class({
      * @method Phaser.Curves.LineCurve#getBounds
      * @since 3.0.0
      *
+     * @generic {Phaser.Geom.Rectangle} O - [out,$return]
+     *
      * @param {Phaser.Geom.Rectangle} [out] - A Rectangle object to store the bounds in. If not given a new Rectangle will be created.
      *
      * @return {Phaser.Geom.Rectangle} A Rectangle object holding the bounds of this curve. If `out` was given it will be this object.
@@ -85,6 +87,8 @@ var LineCurve = new Class({
      *
      * @method Phaser.Curves.LineCurve#getStartPoint
      * @since 3.0.0
+     *
+     * @generic {Phaser.Math.Vector2} O - [out,$return]
      *
      * @param {Phaser.Math.Vector2} [out] - A Vector2 object to store the result in. If not given will be created.
      *
@@ -116,6 +120,8 @@ var LineCurve = new Class({
      * @method Phaser.Curves.LineCurve#getPoint
      * @since 3.0.0
      *
+     * @generic {Phaser.Math.Vector2} O - [out,$return]
+     *
      * @param {float} t - The position along the curve to return. Where 0 is the start and 1 is the end.
      * @param {Phaser.Math.Vector2} [out] - A Vector2 object to store the result in. If not given will be created.
      *
@@ -142,6 +148,8 @@ var LineCurve = new Class({
      *
      * @method Phaser.Curves.LineCurve#getPointAt
      * @since 3.0.0
+     *
+     * @generic {Phaser.Math.Vector2} O - [out,$return]
      *
      * @param {float} u - The position along the curve to return. Where 0 is the start and 1 is the end.
      * @param {Phaser.Math.Vector2} [out] - A Vector2 object to store the result in. If not given will be created.
@@ -178,6 +186,8 @@ var LineCurve = new Class({
      *
      * @method Phaser.Curves.LineCurve#draw
      * @since 3.0.0
+     *
+     * @generic {Phaser.GameObjects.Graphics} G - [graphics,$return]
      *
      * @param {Phaser.GameObjects.Graphics} graphics - The Graphics instance onto which this curve will be drawn.
      *

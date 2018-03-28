@@ -25,6 +25,8 @@ AlignInMap[ALIGN_CONST.TOP_RIGHT] = require('./TopRight');
  * @function Phaser.Display.Align.In.QuickSet
  * @since 3.0.0
  *
+ * @generic {Phaser.GameObjects.GameObject} G - [child,$return]
+ *
  * @param {Phaser.GameObjects.GameObject} child - The Game Object that will be positioned.
  * @param {Phaser.GameObjects.GameObject} alignIn - The Game Object to base the alignment position on.
  * @param {integer} position - The position to align the Game Object with. This is an align constant, such as `ALIGN_CONST.LEFT_CENTER`.

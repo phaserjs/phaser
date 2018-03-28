@@ -54,7 +54,7 @@ var BaseCache = new Class({
      * This event is fired by the Cache each time a new object is added to it.
      *
      * @event Phaser.Cache.BaseCache#addEvent
-     * @param {Phaser.Cache.BaseCache} base - The BaseCache to which the object was added.
+     * @param {Phaser.Cache.BaseCache} cache - The BaseCache to which the object was added.
      * @param {string} key - The key of the object added to the cache.
      * @param {*} object - A reference to the object added to the cache.
      */
@@ -117,9 +117,9 @@ var BaseCache = new Class({
      * This event is fired by the Cache each time an object is removed from it.
      *
      * @event Phaser.Cache.BaseCache#removeEvent
-     * @param {Phaser.Cache.BaseCache} The BaseCache from which the object was removed.
-     * @param {string} The key of the object removed from the cache.
-     * @param {*} The object that was removed from the cache.
+     * @param {Phaser.Cache.BaseCache} cache - The BaseCache from which the object was removed.
+     * @param {string} key - The key of the object removed from the cache.
+     * @param {*} object - The object that was removed from the cache.
      */
 
     /**

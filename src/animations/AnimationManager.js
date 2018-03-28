@@ -29,7 +29,7 @@ var Pad = require('../utils/string/Pad');
  * Sprites and other Game Objects get the data they need from the AnimationManager.
  *
  * @class AnimationManager
- * @extends EventEmitter
+ * @extends Phaser.Events.EventEmitter
  * @memberOf Phaser.Animations
  * @constructor
  * @since 3.0.0
@@ -80,7 +80,7 @@ var AnimationManager = new Class({
          * [description]
          *
          * @name Phaser.Animations.AnimationManager#anims
-         * @type {Phaser.Structs.Map<string, Phaser.Animations.Animation>}
+         * @type {Phaser.Structs.Map.<string, Phaser.Animations.Animation>}
          * @protected
          * @since 3.0.0
          */
@@ -186,7 +186,7 @@ var AnimationManager = new Class({
      * @method Phaser.Animations.AnimationManager#fromJSON
      * @since 3.0.0
      *
-     * @param {(string|object)} data - [description]
+     * @param {(string|JSONAnimationManager|JSONAnimation)} data - [description]
      * @param {boolean} [clearCurrentAnimations=false] - [description]
      *
      * @return {Phaser.Animations.Animation[]} An array containing all of the Animation objects that were created as a result of this call.
@@ -242,7 +242,7 @@ var AnimationManager = new Class({
      * @param {integer} [config.end=0] - [description]
      * @param {string} [config.suffix=''] - [description]
      * @param {integer} [config.zeroPad=0] - [description]
-     * @param {array} [config.outputArray=[]] - [description]
+     * @param {AnimationFrameConfig[]} [config.outputArray=[]] - [description]
      * @param {boolean} [config.frames=false] - [description]
      *
      * @return {AnimationFrameConfig[]} [description]
@@ -312,7 +312,7 @@ var AnimationManager = new Class({
      * @param {integer} [config.start=0] - [description]
      * @param {integer} [config.end=-1] - [description]
      * @param {boolean} [config.first=false] - [description]
-     * @param {array} [config.outputArray=[]] - [description]
+     * @param {AnimationFrameConfig[]} [config.outputArray=[]] - [description]
      * @param {boolean} [config.frames=false] - [description]
      *
      * @return {AnimationFrameConfig[]} [description]

@@ -17,7 +17,7 @@ var Texture = require('./Texture');
  * @callback EachTextureCallback
  *
  * @param {Phaser.Textures.Texture} texture - [description]
- * @param {...*} [arguments] - Additional arguments that will be passed to the callback, after the child.
+ * @param {...*} [args] - Additional arguments that will be passed to the callback, after the child.
  */
 
 /**
@@ -30,7 +30,7 @@ var Texture = require('./Texture');
  * Access it via `scene.textures`.
  *
  * @class TextureManager
- * @extends EventEmitter
+ * @extends Phaser.Events.EventEmitter
  * @memberOf Phaser.Textures
  * @constructor
  * @since 3.0.0
@@ -747,7 +747,7 @@ var TextureManager = new Class({
      *
      * @param {EachTextureCallback} callback - The callback function to be sent the Textures.
      * @param {object} scope - The value to use as `this` when executing the callback.
-     * @param {...*} [arguments] - Additional arguments that will be passed to the callback, after the child.
+     * @param {...*} [args] - Additional arguments that will be passed to the callback, after the child.
      */
     each: function (callback, scope)
     {

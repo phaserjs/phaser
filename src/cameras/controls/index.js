@@ -10,7 +10,7 @@
 
 module.exports = {
 
-    Fixed: require('./FixedKeyControl'),
-    Smoothed: require('./SmoothedKeyControl')
+    FixedKeyControl: require('./FixedKeyControl'),
+    SmoothedKeyControl: require('./SmoothedKeyControl')
 
 };

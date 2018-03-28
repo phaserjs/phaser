@@ -387,7 +387,7 @@ var TweenManager = new Class({
      *
      * @param {function} callback - [description]
      * @param {object} [scope] - [description]
-     * @param {...*} [arguments] - [description]
+     * @param {...*} [args] - [description]
      */
     each: function (callback, scope)
     {

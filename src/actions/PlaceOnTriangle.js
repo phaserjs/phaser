@@ -13,11 +13,13 @@ var BresenhamPoints = require('../geom/line/BresenhamPoints');
  * @function Phaser.Actions.PlaceOnTriangle
  * @since 3.0.0
  *
+ * @generic {Phaser.GameObjects.GameObject[]} G - [items,$return]
+ *
  * @param {(array|Phaser.GameObjects.GameObject[])} items - An array of Game Objects. The contents of this array are updated by this Action.
  * @param {Phaser.Geom.Triangle} triangle - [description]
  * @param {number} [stepRate=1] - [description]
  *
- * @return {array} The array of Game Objects that was passed to this Action.
+ * @return {(array|Phaser.GameObjects.GameObject[])} The array of Game Objects that was passed to this Action.
  */
 var PlaceOnTriangle = function (items, triangle, stepRate)
 {

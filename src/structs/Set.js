@@ -8,9 +8,9 @@ var Class = require('../utils/Class');
 
 /**
  * @callback EachSetCallback
- * @template T
+ * @generic {*} E - [entry]
  *
- * @param {T} entry - [description]
+ * @param {*} entry - [description]
  * @param {number} index - [description]
  *
  * @return {?boolean} [description]
@@ -20,12 +20,13 @@ var Class = require('../utils/Class');
  * @classdesc
  * A Set is a collection of unique elements.
  *
- * @generic T
- *
  * @class Set
  * @memberOf Phaser.Structs
  * @constructor
  * @since 3.0.0
+ *
+ * @generic T
+ * @genericUse {T[]} T - [elements]
  *
  * @param {Array.<*>} [elements] - [description]
  */
@@ -37,6 +38,8 @@ var Set = new Class({
     {
         /**
          * [description]
+         *
+         * @genericUse {T[]} T - [$type]
          *
          * @name Phaser.Structs.Set#entries
          * @type {Array.<*>}
@@ -60,6 +63,8 @@ var Set = new Class({
      * @method Phaser.Structs.Set#set
      * @since 3.0.0
      *
+     * @genericUse {T} T - [value]
+     *
      * @param {*} value - [description]
      *
      * @return {Phaser.Structs.Set} This Set object.
@@ -79,6 +84,8 @@ var Set = new Class({
      *
      * @method Phaser.Structs.Set#get
      * @since 3.0.0
+     *
+     * @genericUse {T} T - [value,$return]
      *
      * @param {string} property - [description]
      * @param {*} value - [description]
@@ -104,7 +111,9 @@ var Set = new Class({
      * @method Phaser.Structs.Set#getArray
      * @since 3.0.0
      *
-     * @return {array} [description]
+     * @genericUse {T[]} T - [$return]
+     *
+     * @return {Array.<*>} [description]
      */
     getArray: function ()
     {
@@ -116,6 +125,8 @@ var Set = new Class({
      *
      * @method Phaser.Structs.Set#delete
      * @since 3.0.0
+     *
+     * @genericUse {T} T - [value]
      *
      * @param {*} value - [description]
      *
@@ -242,7 +253,7 @@ var Set = new Class({
      * @since 3.0.0
      *
      * @param {string} callbackKey - [description]
-     * @param {...*} [arguments] - Additional arguments that will be passed to the callback, after the child.
+     * @param {...*} [args] - Additional arguments that will be passed to the callback, after the child.
      *
      * @return {Phaser.Structs.Set} This Set object.
      */
@@ -288,6 +299,8 @@ var Set = new Class({
      *
      * @method Phaser.Structs.Set#contains
      * @since 3.0.0
+     *
+     * @genericUse {T} T - [value]
      *
      * @param {*} value - [description]
      *

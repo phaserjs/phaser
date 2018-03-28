@@ -13,6 +13,8 @@ var SetCenterY = require('./SetCenterY');
  * @function Phaser.Display.Bounds.CenterOn
  * @since 3.0.0
  *
+ * @generic {Phaser.GameObjects.GameObject} G - [gameObject,$return]
+ *
  * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object that will be re-positioned.
  * @param {number} x - The horizontal coordinate to position the Game Object on.
  * @param {number} y - The vertical coordinate to position the Game Object on.

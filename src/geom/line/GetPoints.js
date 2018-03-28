@@ -13,12 +13,14 @@ var Point = require('../point/Point');
  * @function Phaser.Geom.Line.GetPoints
  * @since 3.0.0
  *
+ * @generic {Phaser.Geom.Point[]} O - [out,$return]
+ *
  * @param {Phaser.Geom.Line} line - [description]
  * @param {integer} quantity - [description]
  * @param {integer} [stepRate] - [description]
- * @param {array} out - [description]
+ * @param {(array|Phaser.Geom.Point[])} [out] - [description]
  *
- * @return {array} [description]
+ * @return {(array|Phaser.Geom.Point[])} [description]
  */
 var GetPoints = function (line, quantity, stepRate, out)
 {
