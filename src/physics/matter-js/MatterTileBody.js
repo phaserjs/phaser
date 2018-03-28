@@ -306,7 +306,7 @@ var MatterTileBody = new Class({
     /**
      * Removes the current body from the tile and the world.
      *
-     * @method Phaser.Physics.Matter.TileBody#removeBody
+     * @method Phaser.Physics.Matter.TileBody#destroy
      * @since 3.0.0
      *
      * @return {Phaser.Physics.Matter.TileBody} This TileBody object.

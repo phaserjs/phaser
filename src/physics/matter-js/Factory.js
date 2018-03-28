@@ -185,14 +185,14 @@ var Factory = new Class({
      * @since 3.0.0
      *
      * @param {string} key - The key of the Texture this Game Object will use to render with, as stored in the Texture Manager.
-     * @param {(string|integer)} [frame] - An optional frame from the Texture this Game Object is rendering with.
+     * @param {(string|integer)} frame - An optional frame from the Texture this Game Object is rendering with. Set to `null` to skip this value.
      * @param {number} x - The horizontal position of this composite in the world.
      * @param {number} y - The vertical position of this composite in the world.
      * @param {number} columns - The number of columns in the grid.
      * @param {number} rows - The number of rows in the grid.
-     * @param {number} columnGap - The distance between each column.
-     * @param {number} rowGap - The distance between each row.
-     * @param {object} options - [description]
+     * @param {number} [columnGap=0] - The distance between each column.
+     * @param {number} [rowGap=0] - The distance between each row.
+     * @param {object} [options] - [description]
      *
      * @return {Matter.Composite} A Matter JS Composite Stack.
      */
@@ -527,8 +527,8 @@ var Factory = new Class({
      * @param {number} x - The horizontal position of this Game Object in the world.
      * @param {number} y - The vertical position of this Game Object in the world.
      * @param {string} key - The key of the Texture this Game Object will use to render with, as stored in the Texture Manager.
-     * @param {(string|integer)} [frame] - An optional frame from the Texture this Game Object is rendering with.
-     * @param {object} options - [description]
+     * @param {(string|integer)} [frame] - An optional frame from the Texture this Game Object is rendering with. Set to `null` to skip this value.
+     * @param {object} [options={}] - [description]
      *
      * @return {Phaser.Physics.Matter.MatterImage} [description]
      */
@@ -568,8 +568,8 @@ var Factory = new Class({
      * @param {number} x - The horizontal position of this Game Object in the world.
      * @param {number} y - The vertical position of this Game Object in the world.
      * @param {string} key - The key of the Texture this Game Object will use to render with, as stored in the Texture Manager.
-     * @param {(string|integer)} [frame] - An optional frame from the Texture this Game Object is rendering with.
-     * @param {object} options - [description]
+     * @param {(string|integer)} [frame] - An optional frame from the Texture this Game Object is rendering with. Set to `null` to skip this value.
+     * @param {object} [options={}] - [description]
      *
      * @return {Phaser.Physics.Matter.MatterSprite} [description]
      */

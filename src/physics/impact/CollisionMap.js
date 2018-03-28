@@ -17,7 +17,7 @@ var DefaultDefs = require('./DefaultDefs');
  * @since 3.0.0
  *
  * @param {integer} [tilesize=32] - [description]
- * @param {array} data - [description]
+ * @param {array} [data] - [description]
  */
 var CollisionMap = new Class({
 
