@@ -5,13 +5,14 @@
  */
 
 var Class = require('../../utils/Class');
+var DegToRad = require('../../math/DegToRad');
+var DistanceBetween = require('../../math/distance/DistanceBetween');
 var Factory = require('./Factory');
 var GetFastValue = require('../../utils/object/GetFastValue');
 var Merge = require('../../utils/object/Merge');
 var PluginManager = require('../../boot/PluginManager');
+var Vector2 = require('../../math/Vector2');
 var World = require('./World');
-var DistanceBetween = require('../../math/distance/DistanceBetween');
-var DegToRad = require('../../math/DegToRad');
 
 //  All methods in this class are available under `this.physics` in a Scene.
 
