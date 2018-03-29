@@ -126,8 +126,7 @@ var MatterTileBody = new Class({
      * @method Phaser.Physics.Matter.TileBody#setFromTileRectangle
      * @since 3.0.0
      *
-     * @param {object} [options] - Options to be used when creating the Matter body. See
-     * Phaser.Physics.Matter.Matter.Body for a list of what Matter accepts.
+     * @param {object} [options] - Options to be used when creating the Matter body. See MatterJS.Body for a list of what Matter accepts.
      * @param {boolean} [options.isStatic=true] - Whether or not the newly created body should be
      * made static. This defaults to true since typically tiles should not be moved.
      * @param {boolean} [options.addToWorld=true] - Whether or not to add the newly created body (or
@@ -165,8 +164,7 @@ var MatterTileBody = new Class({
      * @method Phaser.Physics.Matter.TileBody#setFromTileCollision
      * @since 3.0.0
      *
-     * @param {object} [options] - Options to be used when creating the Matter body. See
-     * Phaser.Physics.Matter.Matter.Body for a list of what Matter accepts.
+     * @param {object} [options] - Options to be used when creating the Matter body. See MatterJS.Body for a list of what Matter accepts.
      * @param {boolean} [options.isStatic=true] - Whether or not the newly created body should be
      * made static. This defaults to true since typically tiles should not be moved.
      * @param {boolean} [options.addToWorld=true] - Whether or not to add the newly created body (or
@@ -258,7 +256,7 @@ var MatterTileBody = new Class({
      * @method Phaser.Physics.Matter.TileBody#setBody
      * @since 3.0.0
      *
-     * @param {Phaser.Physics.Matter.Matter.Body} body - The new Matter body to use.
+     * @param {MatterJS.Body} body - The new Matter body to use.
      * @param {boolean} [addToWorld=true] - Whether or not to add the body to the Matter world.
      * 
      * @return {Phaser.Physics.Matter.TileBody} This TileBody object.
