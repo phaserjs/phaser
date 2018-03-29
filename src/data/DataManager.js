@@ -27,7 +27,7 @@ var Class = require('../utils/Class');
  * @since 3.0.0
  *
  * @param {*} parent - [description]
- * @param {EventEmitter} eventEmitter - [description]
+ * @param {Phaser.Events.EventEmitter} eventEmitter - [description]
  */
 var DataManager = new Class({
 
@@ -48,7 +48,7 @@ var DataManager = new Class({
          * [description]
          *
          * @name Phaser.Data.DataManager#events
-         * @type {EventEmitter}
+         * @type {Phaser.Events.EventEmitter}
          * @since 3.0.0
          */
         this.events = eventEmitter;

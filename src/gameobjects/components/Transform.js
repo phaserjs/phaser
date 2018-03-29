@@ -20,9 +20,37 @@ var _FLAG = 4; // 0100
 
 var Transform = {
 
-    //  "private" properties
+    /**
+     * Private internal value. Holds the horizontal scale value.
+     * 
+     * @name Phaser.GameObjects.Components.Transform#_scaleX
+     * @type {float}
+     * @private
+     * @default 1
+     * @since 3.0.0
+     */
     _scaleX: 1,
+
+    /**
+     * Private internal value. Holds the vertical scale value.
+     * 
+     * @name Phaser.GameObjects.Components.Transform#_scaleY
+     * @type {float}
+     * @private
+     * @default 1
+     * @since 3.0.0
+     */
     _scaleY: 1,
+
+    /**
+     * Private internal value. Holds the rotation value in radians.
+     * 
+     * @name Phaser.GameObjects.Components.Transform#_rotation
+     * @type {float}
+     * @private
+     * @default 0
+     * @since 3.0.0
+     */
     _rotation: 0,
 
     /**

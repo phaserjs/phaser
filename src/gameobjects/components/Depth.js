@@ -14,6 +14,15 @@
 
 var Depth = {
 
+    /**
+     * Private internal value. Holds the depth of the Game Object.
+     * 
+     * @name Phaser.GameObjects.Components.Depth#_depth
+     * @type {integer}
+     * @private
+     * @default 0
+     * @since 3.0.0
+     */
     _depth: 0,
 
     /**

@@ -71,7 +71,7 @@ var Factory = new Class({
      * @param {number} height - [description]
      * @param {object} options - [description]
      *
-     * @return {Matter.Body} A Matter JS Body.
+     * @return {MatterJS.Body} A Matter JS Body.
      */
     rectangle: function (x, y, width, height, options)
     {
@@ -95,7 +95,7 @@ var Factory = new Class({
      * @param {number} slope - [description]
      * @param {object} options - [description]
      *
-     * @return {Matter.Body} A Matter JS Body.
+     * @return {MatterJS.Body} A Matter JS Body.
      */
     trapezoid: function (x, y, width, height, slope, options)
     {
@@ -118,7 +118,7 @@ var Factory = new Class({
      * @param {object} options - [description]
      * @param {number} maxSides - [description]
      *
-     * @return {Matter.Body} A Matter JS Body.
+     * @return {MatterJS.Body} A Matter JS Body.
      */
     circle: function (x, y, radius, options, maxSides)
     {
@@ -141,7 +141,7 @@ var Factory = new Class({
      * @param {number} radius - [description]
      * @param {object} options - [description]
      *
-     * @return {Matter.Body} A Matter JS Body.
+     * @return {MatterJS.Body} A Matter JS Body.
      */
     polygon: function (x, y, sides, radius, options)
     {
@@ -166,7 +166,7 @@ var Factory = new Class({
      * @param {boolean} removeCollinear - [description]
      * @param {number} minimumArea - [description]
      *
-     * @return {Matter.Body} A Matter JS Body.
+     * @return {MatterJS.Body} A Matter JS Body.
      */
     fromVertices: function (x, y, vertexSets, options, flagInternal, removeCollinear, minimumArea)
     {
@@ -194,7 +194,7 @@ var Factory = new Class({
      * @param {number} [rowGap=0] - The distance between each row.
      * @param {object} [options] - [description]
      *
-     * @return {Matter.Composite} A Matter JS Composite Stack.
+     * @return {MatterJS.Composite} A Matter JS Composite Stack.
      */
     imageStack: function (key, frame, x, y, columns, rows, columnGap, rowGap, options)
     {
@@ -236,7 +236,7 @@ var Factory = new Class({
      * @param {number} rowGap - The distance between each row.
      * @param {function} callback - The callback that creates the stack.
      *
-     * @return {Matter.Composite} A new composite containing objects created in the callback.
+     * @return {MatterJS.Composite} A new composite containing objects created in the callback.
      */
     stack: function (x, y, columns, rows, columnGap, rowGap, callback)
     {
@@ -262,7 +262,7 @@ var Factory = new Class({
      * @param {number} rowGap - The distance between each row.
      * @param {function} callback - [description]
      *
-     * @return {Matter.Composite} A Matter JS Composite pyramid.
+     * @return {MatterJS.Composite} A Matter JS Composite pyramid.
      */
     pyramid: function (x, y, columns, rows, columnGap, rowGap, callback)
     {
@@ -279,14 +279,14 @@ var Factory = new Class({
      * @method Phaser.Physics.Matter.Factory#chain
      * @since 3.0.0
      *
-     * @param {Matter.Composite} composite - [description]
+     * @param {MatterJS.Composite} composite - [description]
      * @param {number} xOffsetA - [description]
      * @param {number} yOffsetA - [description]
      * @param {number} xOffsetB - [description]
      * @param {number} yOffsetB - [description]
      * @param {object} options - [description]
      *
-     * @return {Matter.Composite} A new composite containing objects chained together with constraints.
+     * @return {MatterJS.Composite} A new composite containing objects chained together with constraints.
      */
     chain: function (composite, xOffsetA, yOffsetA, xOffsetB, yOffsetB, options)
     {
@@ -299,13 +299,13 @@ var Factory = new Class({
      * @method Phaser.Physics.Matter.Factory#mesh
      * @since 3.0.0
      *
-     * @param {Matter.Composite} composite - [description]
+     * @param {MatterJS.Composite} composite - [description]
      * @param {number} columns - [description]
      * @param {number} rows - [description]
      * @param {boolean} crossBrace - [description]
      * @param {object} options - [description]
      *
-     * @return {Matter.Composite} The composite containing objects meshed together with constraints.
+     * @return {MatterJS.Composite} The composite containing objects meshed together with constraints.
      */
     mesh: function (composite, columns, rows, crossBrace, options)
     {
@@ -324,7 +324,7 @@ var Factory = new Class({
      * @param {number} size - [description]
      * @param {number} length - [description]
      *
-     * @return {Matter.Composite} A new composite newtonsCradle body.
+     * @return {MatterJS.Composite} A new composite newtonsCradle body.
      */
     newtonsCradle: function (x, y, number, size, length)
     {
@@ -347,7 +347,7 @@ var Factory = new Class({
      * @param {number} height - [description]
      * @param {number} wheelSize - [description]
      *
-     * @return {Matter.Composite} A new composite car body.
+     * @return {MatterJS.Composite} A new composite car body.
      */
     car: function (x, y, width, height, wheelSize)
     {
@@ -375,7 +375,7 @@ var Factory = new Class({
      * @param {object} particleOptions - [description]
      * @param {object} constraintOptions - [description]
      *
-     * @return {Matter.Composite} A new composite simple soft body.
+     * @return {MatterJS.Composite} A new composite simple soft body.
      */
     softBody: function (x, y, columns, rows, columnGap, rowGap, crossBrace, particleRadius, particleOptions, constraintOptions)
     {
@@ -392,13 +392,13 @@ var Factory = new Class({
      * @method Phaser.Physics.Matter.Factory#joint
      * @since 3.0.0
      *
-     * @param {Matter.Body} bodyA - [description]
-     * @param {Matter.Body} bodyB - [description]
+     * @param {MatterJS.Body} bodyA - [description]
+     * @param {MatterJS.Body} bodyB - [description]
      * @param {number} length - [description]
      * @param {number} [stiffness=1] - [description]
      * @param {object} [options={}] - [description]
      *
-     * @return {Matter.Constraint} A Matter JS Constraint.
+     * @return {MatterJS.Constraint} A Matter JS Constraint.
      */
     joint: function (bodyA, bodyB, length, stiffness, options)
     {
@@ -411,13 +411,13 @@ var Factory = new Class({
      * @method Phaser.Physics.Matter.Factory#spring
      * @since 3.0.0
      *
-     * @param {Matter.Body} bodyA - [description]
-     * @param {Matter.Body} bodyB - [description]
+     * @param {MatterJS.Body} bodyA - [description]
+     * @param {MatterJS.Body} bodyB - [description]
      * @param {number} length - [description]
      * @param {number} [stiffness=1] - [description]
      * @param {object} [options={}] - [description]
      *
-     * @return {Matter.Constraint} A Matter JS Constraint.
+     * @return {MatterJS.Constraint} A Matter JS Constraint.
      */
     spring: function (bodyA, bodyB, length, stiffness, options)
     {
@@ -430,13 +430,13 @@ var Factory = new Class({
      * @method Phaser.Physics.Matter.Factory#constraint
      * @since 3.0.0
      *
-     * @param {Matter.Body} bodyA - [description]
-     * @param {Matter.Body} bodyB - [description]
+     * @param {MatterJS.Body} bodyA - [description]
+     * @param {MatterJS.Body} bodyB - [description]
      * @param {number} length - [description]
      * @param {number} [stiffness=1] - [description]
      * @param {object} [options={}] - [description]
      *
-     * @return {Matter.Constraint} A Matter JS Constraint.
+     * @return {MatterJS.Constraint} A Matter JS Constraint.
      */
     constraint: function (bodyA, bodyB, length, stiffness, options)
     {
@@ -461,12 +461,12 @@ var Factory = new Class({
      * @method Phaser.Physics.Matter.Factory#worldConstraint
      * @since 3.0.0
      *
-     * @param {Matter.Body} bodyB - [description]
+     * @param {MatterJS.Body} bodyB - [description]
      * @param {number} length - [description]
      * @param {number} [stiffness=1] - [description]
      * @param {object} [options={}] - [description]
      *
-     * @return {Matter.Constraint} A Matter JS Constraint.
+     * @return {MatterJS.Constraint} A Matter JS Constraint.
      */
     worldConstraint: function (bodyB, length, stiffness, options)
     {
@@ -492,7 +492,7 @@ var Factory = new Class({
      *
      * @param {object} options - [description]
      *
-     * @return {Matter.Constraint} A Matter JS Constraint.
+     * @return {MatterJS.Constraint} A Matter JS Constraint.
      */
     mouseSpring: function (options)
     {
@@ -507,7 +507,7 @@ var Factory = new Class({
      *
      * @param {object} options - [description]
      *
-     * @return {Matter.Constraint} A Matter JS Constraint.
+     * @return {MatterJS.Constraint} A Matter JS Constraint.
      */
     pointerConstraint: function (options)
     {

@@ -55,7 +55,7 @@ var MatrixStack = {
     initMatrixStack: function ()
     {
         this.matrixStack = new Float32Array(6000); // up to 1000 matrices
-        this.currentMatrix = new Float32Array([ 1.0, 0.0, 0.0, 1.0, 0.0, 0.0 ]);
+        this.currentMatrix = new Float32Array([ 1, 0, 0, 1, 0, 0 ]);
         this.currentMatrixIndex = 0;
 
         return this;
@@ -126,7 +126,7 @@ var MatrixStack = {
      */
     loadIdentity: function ()
     {
-        this.setTransform(1.0, 0.0, 0.0, 1.0, 0.0, 0.0);
+        this.setTransform(1, 0, 0, 1, 0, 0);
 
         return this;
     },

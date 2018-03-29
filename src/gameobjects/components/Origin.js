@@ -21,7 +21,7 @@ var Origin = {
      *
      * @name Phaser.GameObjects.Components.Origin#_originComponent
      * @type {boolean}
-     * @protected
+     * @private
      * @default true
      * @since 3.2.0
      */

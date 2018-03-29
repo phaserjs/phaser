@@ -47,7 +47,7 @@ var List = new Class({
         /**
          * The objects that belong to this collection.
          *
-         * @genericUse {T[]} T - [$type]
+         * @genericUse {T[]} - [$type]
          *
          * @name Phaser.Structs.List#list
          * @type {Array.<*>}
@@ -73,7 +73,7 @@ var List = new Class({
      * @method Phaser.Structs.List#add
      * @since 3.0.0
      *
-     * @genericUse {T} T - [child,$return]
+     * @genericUse {T} - [child,$return]
      *
      * @param {*} child - [description]
      *
@@ -97,7 +97,7 @@ var List = new Class({
      * @method Phaser.Structs.List#addAt
      * @since 3.0.0
      *
-     * @genericUse {T} T - [child,$return]
+     * @genericUse {T} - [child,$return]
      *
      * @param {*} child - [description]
      * @param {integer} [index=0] - [description]
@@ -130,7 +130,7 @@ var List = new Class({
      * @method Phaser.Structs.List#addMultiple
      * @since 3.0.0
      *
-     * @genericUse {T[]} T - [children,$return]
+     * @genericUse {T[]} - [children,$return]
      *
      * @param {Array.<*>} children - [description]
      *
@@ -155,7 +155,7 @@ var List = new Class({
      * @method Phaser.Structs.List#getAt
      * @since 3.0.0
      *
-     * @genericUse {T} T - [$return]
+     * @genericUse {T} - [$return]
      *
      * @param {integer} index - [description]
      *
@@ -172,7 +172,7 @@ var List = new Class({
      * @method Phaser.Structs.List#getIndex
      * @since 3.0.0
      *
-     * @genericUse {T} T - [child]
+     * @genericUse {T} - [child]
      *
      * @param {*} child - [description]
      *
@@ -191,7 +191,7 @@ var List = new Class({
      * @method Phaser.Structs.List#sort
      * @since 3.0.0
      *
-     * @genericUse {T[]} T - [children,$return]
+     * @genericUse {T[]} - [children,$return]
      *
      * @param {Array.<*>} children - [description]
      *
@@ -210,7 +210,7 @@ var List = new Class({
      * @method Phaser.Structs.List#sortIndexHandler
      * @since 3.0.0
      *
-     * @genericUse {T} T - [childA,childB]
+     * @genericUse {T} - [childA,childB]
      *
      * @param {*} childA - [description]
      * @param {*} childB - [description]
@@ -244,8 +244,8 @@ var List = new Class({
      * @method Phaser.Structs.List#getByKey
      * @since 3.0.0
      *
-     * @genericUse {T} T - [value]
-     * @genericUse {?T} T - [$return]
+     * @genericUse {T} - [value]
+     * @genericUse {?T} - [$return]
      *
      * @param {string} property - The property to check against the value.
      * @param {*} value - The value to check if the property strictly equals.
@@ -273,7 +273,7 @@ var List = new Class({
      * @method Phaser.Structs.List#getByName
      * @since 3.0.0
      *
-     * @genericUse {?T} T - [$return]
+     * @genericUse {?T} - [$return]
      *
      * @param {string} name - The name to search for.
      *
@@ -290,7 +290,7 @@ var List = new Class({
      * @method Phaser.Structs.List#getRandom
      * @since 3.0.0
      *
-     * @genericUse {?T} T - [$return]
+     * @genericUse {?T} - [$return]
      *
      * @param {integer} [startIndex=0] - Offset from the front of the group (lowest child).
      * @param {integer} [length=(to top)] - Restriction on the number of values you want to randomly select from.
@@ -318,8 +318,8 @@ var List = new Class({
      * @method Phaser.Structs.List#getFirst
      * @since 3.0.0
      *
-     * @genericUse {T} T - [value]
-     * @genericUse {?T} T - [$return]
+     * @genericUse {T} - [value]
+     * @genericUse {?T} - [$return]
      *
      * @param {string} property - [description]
      * @param {*} value - [description]
@@ -360,8 +360,8 @@ var List = new Class({
      * @method Phaser.Structs.List#getAll
      * @since 3.0.0
      *
-     * @genericUse {T} T - [value]
-     * @genericUse {T[]} T - [$return]
+     * @genericUse {T} - [value]
+     * @genericUse {T[]} - [$return]
      *
      * @param {string} [property] - An optional property to test against the value argument.
      * @param {*} [value] - If property is set then Child.property must strictly equal this value to be included in the results.
@@ -403,7 +403,7 @@ var List = new Class({
      * @method Phaser.Structs.List#count
      * @since 3.0.0
      *
-     * @genericUse {T} T - [value]
+     * @genericUse {T} - [value]
      *
      * @param {string} property - [description]
      * @param {*} value - [description]
@@ -433,7 +433,7 @@ var List = new Class({
      * @method Phaser.Structs.List#swap
      * @since 3.0.0
      *
-     * @genericUse {T} T - [child1,child2]
+     * @genericUse {T} - [child1,child2]
      *
      * @param {*} child1 - [description]
      * @param {*} child2 - [description]
@@ -463,7 +463,7 @@ var List = new Class({
      * @method Phaser.Structs.List#moveTo
      * @since 3.0.0
      *
-     * @genericUse {T} T - [child,$return]
+     * @genericUse {T} - [child,$return]
      *
      * @param {*} child - [description]
      * @param {integer} index - [description]
@@ -494,7 +494,7 @@ var List = new Class({
      * @method Phaser.Structs.List#remove
      * @since 3.0.0
      *
-     * @genericUse {T} T - [child,$return]
+     * @genericUse {T} - [child,$return]
      *
      * @param {*} child - [description]
      *
@@ -518,7 +518,7 @@ var List = new Class({
      * @method Phaser.Structs.List#removeAt
      * @since 3.0.0
      *
-     * @genericUse {T} T - [$return]
+     * @genericUse {T} - [$return]
      *
      * @param {integer} index - [description]
      *
@@ -542,7 +542,7 @@ var List = new Class({
      * @method Phaser.Structs.List#removeBetween
      * @since 3.0.0
      *
-     * @genericUse {T[]} T - [$return]
+     * @genericUse {T[]} - [$return]
      *
      * @param {integer} [beginIndex=0] - [description]
      * @param {integer} [endIndex] - [description]
@@ -598,7 +598,7 @@ var List = new Class({
      * @method Phaser.Structs.List#bringToTop
      * @since 3.0.0
      *
-     * @generic {T} T - [child,$return]
+     * @generic {T} O - [child,$return]
      *
      * @param {*} child - [description]
      *
@@ -621,7 +621,7 @@ var List = new Class({
      * @method Phaser.Structs.List#sendToBack
      * @since 3.0.0
      *
-     * @generic {T} T - [child,$return]
+     * @generic {T} O - [child,$return]
      *
      * @param {*} child - [description]
      *
@@ -644,7 +644,7 @@ var List = new Class({
      * @method Phaser.Structs.List#moveUp
      * @since 3.0.0
      *
-     * @generic {T} T - [child,$return]
+     * @generic {T} O - [child,$return]
      *
      * @param {*} child - [description]
      *
@@ -673,7 +673,7 @@ var List = new Class({
      * @method Phaser.Structs.List#moveDown
      * @since 3.0.0
      *
-     * @generic {T} T - [child,$return]
+     * @generic {T} O - [child,$return]
      *
      * @param {*} child - [description]
      *
@@ -738,8 +738,7 @@ var List = new Class({
      * @method Phaser.Structs.List#replace
      * @since 3.0.0
      *
-     * @generic {T} T - [oldChild,$return]
-     * @genericUse {T} T - [newChild]
+     * @generic {T} O - [oldChild,newChild,$return]
      *
      * @param {*} oldChild - The child in this List that will be replaced.
      * @param {*} newChild - The child to be inserted into this List.
@@ -766,7 +765,7 @@ var List = new Class({
      * @method Phaser.Structs.List#exists
      * @since 3.0.0
      *
-     * @genericUse {T} T - [child]
+     * @genericUse {T} - [child]
      *
      * @param {*} child - [description]
      *
@@ -783,7 +782,7 @@ var List = new Class({
      * @method Phaser.Structs.List#setAll
      * @since 3.0.0
      *
-     * @genericUse {T} T - [value]
+     * @genericUse {T} - [value]
      *
      * @param {string} key - [description]
      * @param {*} value - [description]
@@ -805,7 +804,9 @@ var List = new Class({
      * @method Phaser.Structs.List#each
      * @since 3.0.0
      *
-     * @param {EachListCallback.<T>} callback - The function to call.
+     * @genericUse {EachListCallback.<T>} - [callback]
+     *
+     * @param {EachListCallback} callback - The function to call.
      * @param {*} [thisArg] - Value to use as `this` when executing callback.
      * @param {...*} [args] - Additional arguments that will be passed to the callback, after the child.
      */

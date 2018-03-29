@@ -22,7 +22,7 @@ module.exports = {
 };
 
 /**
- * @namespace Matter
+ * @namespace MatterJS
  */
 
 /**
@@ -31,8 +31,7 @@ module.exports = {
  * A `Matter.Body` is a rigid body that can be simulated by a `Matter.Engine`.
  * Factories for commonly used body configurations (such as rectangles, circles and other polygons) can be found in the module `Matter.Bodies`.
  *
- * @class Body
- * @memberOf Matter
+ * @class MatterJS.Body
  */
 
 /**
@@ -42,8 +41,7 @@ module.exports = {
  * It is important to use the functions in this module to modify composites, rather than directly modifying their properties.
  * Note that the `Matter.World` object is also a type of `Matter.Composite` and as such all composite methods here can also operate on a `Matter.World`.
  *
- * @class Composite
- * @memberOf Matter
+ * @class MatterJS.Composite
  */
 
 /**
@@ -54,9 +52,8 @@ module.exports = {
  * It is important to use the functions in the `Matter.Composite` module to modify the world composite, rather than directly modifying its properties.
  * There are also a few methods here that alias those in `Matter.Composite` for easier readability.
  *
- * @class World
- * @extends Matter.Composite
- * @memberOf Matter
+ * @class MatterJS.World
+ * @extends MatterJS.Composite
  */
 
 /**
@@ -65,8 +62,7 @@ module.exports = {
  * Constraints are used for specifying that a fixed distance must be maintained between two bodies (or a body and a fixed world-space position).
  * The stiffness of constraints can be modified to create springs or elastic.
  *
- * @class Constraint
- * @memberOf Matter
+ * @class MatterJS.Constraint
  */
 
 /**
@@ -74,6 +70,5 @@ module.exports = {
  * The `Matter.Engine` module contains methods for creating and manipulating engines.
  * An engine is a controller that manages updating the simulation of the world.
  *
- * @class Engine
- * @memberOf Matter
+ * @class MatterJS.Engine
  */

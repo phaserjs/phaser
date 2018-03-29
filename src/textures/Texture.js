@@ -372,7 +372,7 @@ var Texture = new Class({
      * @method Phaser.Textures.Texture#setFilter
      * @since 3.0.0
      *
-     * @param {(Phaser.Textures.LINEAR|Phaser.Textures.NEAREST)} filterMode - The Filter Mode.
+     * @param {(Phaser.Textures.FilterMode.LINEAR|Phaser.Textures.FilterMode.NEAREST)} filterMode - The Filter Mode.
      */
     setFilter: function (filterMode)
     {

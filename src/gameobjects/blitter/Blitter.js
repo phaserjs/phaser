@@ -90,7 +90,7 @@ var Blitter = new Class({
          * [description]
          *
          * @name Phaser.GameObjects.Blitter#children
-         * @type {Phaser.Structs.List.<Phaser.GameObjects.Blitter.Blitter>}
+         * @type {Phaser.Structs.List.<Phaser.GameObjects.Blitter.Bob>}
          * @since 3.0.0
          */
         this.children = new List();

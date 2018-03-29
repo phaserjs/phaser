@@ -1141,7 +1141,7 @@ var FlatTintPipeline = new Class({
      * @method Phaser.Renderer.WebGL.FlatTintPipeline#drawEmitterManager
      * @since 3.0.0
      *
-     * @param {Phaser.GameObjects.Particles.ParticleEmittermanager} emitterManager - [description]
+     * @param {Phaser.GameObjects.Particles.ParticleEmitterManager} emitterManager - [description]
      * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
      */
     drawEmitterManager: function ()

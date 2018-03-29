@@ -16,6 +16,15 @@ var BlendModes = require('../../renderer/BlendModes');
 
 var BlendMode = {
 
+    /**
+     * Private internal value. Holds the current blend mode.
+     * 
+     * @name Phaser.GameObjects.Components.BlendMode#_blendMode
+     * @type {integer}
+     * @private
+     * @default 0
+     * @since 3.0.0
+     */
     _blendMode: BlendModes.NORMAL,
 
     /**

@@ -17,6 +17,15 @@ var _FLAG = 1; // 0001
 
 var Visible = {
 
+    /**
+     * Private internal value. Holds the visible value.
+     * 
+     * @name Phaser.GameObjects.Components.Visible#_visible
+     * @type {boolean}
+     * @private
+     * @default true
+     * @since 3.0.0
+     */
     _visible: true,
 
     /**
