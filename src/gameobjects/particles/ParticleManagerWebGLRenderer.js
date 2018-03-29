@@ -16,7 +16,7 @@ var GameObject = require('../GameObject');
  * @private
  *
  * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - A reference to the current active WebGL renderer.
- * @param {Phaser.GameObjects.Particles} emitterManager - The Game Object being rendered in this call.
+ * @param {Phaser.GameObjects.Particles.ParticleEmitterManager} emitterManager - The Game Object being rendered in this call.
  * @param {number} interpolationPercentage - Reserved for future use and custom pipelines.
  * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera that is rendering the Game Object.
  */

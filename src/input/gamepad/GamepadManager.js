@@ -55,7 +55,7 @@ var GamepadManager = new Class({
          * [description]
          *
          * @name Phaser.Input.Gamepad.GamepadManager#events
-         * @type {EventEmitter}
+         * @type {Phaser.Events.EventEmitter}
          * @since 3.0.0
          */
         this.events = inputManager.events;
