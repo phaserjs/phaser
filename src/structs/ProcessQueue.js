@@ -26,7 +26,7 @@ var ProcessQueue = new Class({
         /**
          * [description]
          *
-         * @genericUse {T[]} T - [$type]
+         * @genericUse {T[]} - [$type]
          *
          * @name Phaser.Structs.ProcessQueue#_pending
          * @type {Array.<*>}
@@ -39,7 +39,7 @@ var ProcessQueue = new Class({
         /**
          * [description]
          *
-         * @genericUse {T[]} T - [$type]
+         * @genericUse {T[]} - [$type]
          *
          * @name Phaser.Structs.ProcessQueue#_active
          * @type {Array.<*>}
@@ -52,7 +52,7 @@ var ProcessQueue = new Class({
         /**
          * [description]
          *
-         * @genericUse {T[]} T - [$type]
+         * @genericUse {T[]} - [$type]
          *
          * @name Phaser.Structs.ProcessQueue#_destroy
          * @type {Array.<*>}
@@ -80,7 +80,7 @@ var ProcessQueue = new Class({
      * @method Phaser.Structs.ProcessQueue#add
      * @since 3.0.0
      *
-     * @genericUse {T} T - [item]
+     * @genericUse {T} - [item]
      *
      * @param {*} item - [description]
      *
@@ -101,7 +101,7 @@ var ProcessQueue = new Class({
      * @method Phaser.Structs.ProcessQueue#remove
      * @since 3.0.0
      *
-     * @genericUse {T} T - [item]
+     * @genericUse {T} - [item]
      *
      * @param {*} item - [description]
      *
@@ -122,7 +122,7 @@ var ProcessQueue = new Class({
      * @method Phaser.Structs.ProcessQueue#update
      * @since 3.0.0
      *
-     * @genericUse {T[]} T - [$return]
+     * @genericUse {T[]} - [$return]
      *
      * @return {Array.<*>} [description]
      */
@@ -181,7 +181,7 @@ var ProcessQueue = new Class({
      * @method Phaser.Structs.ProcessQueue#getActive
      * @since 3.0.0
      *
-     * @genericUse {T[]} T - [$return]
+     * @genericUse {T[]} - [$return]
      *
      * @return {Array.<*>} [description]
      */

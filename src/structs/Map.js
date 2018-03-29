@@ -31,7 +31,7 @@ var Class = require('../utils/Class');
  * @since 3.0.0
  *
  * @generic T
- * @genericUse {T[]} T - [elements]
+ * @genericUse {T[]} - [elements]
  *
  * @param {Array.<*>} elements - [description]
  */
@@ -44,7 +44,7 @@ var Map = new Class({
         /**
          * [description]
          *
-         * @genericUse {Object.<string, T>} T - [$type]
+         * @genericUse {Object.<string, T>} - [$type]
          *
          * @name Phaser.Structs.Map#entries
          * @type {Object.<string, *>}
@@ -78,7 +78,7 @@ var Map = new Class({
      * @method Phaser.Structs.Map#set
      * @since 3.0.0
      *
-     * @genericUse {T} T - [value]
+     * @genericUse {T} - [value]
      *
      * @param {string} key - [description]
      * @param {*} value - [description]
@@ -102,7 +102,7 @@ var Map = new Class({
      * @method Phaser.Structs.Map#get
      * @since 3.0.0
      *
-     * @genericUse {T} T - [$return]
+     * @genericUse {T} - [$return]
      *
      * @param {string} key - [description]
      *
@@ -122,7 +122,7 @@ var Map = new Class({
      * @method Phaser.Structs.Map#getArray
      * @since 3.0.0
      *
-     * @genericUse {T[]} T - [$return]
+     * @genericUse {T[]} - [$return]
      *
      * @return {Array.<*>} [description]
      */
@@ -215,7 +215,7 @@ var Map = new Class({
      * @method Phaser.Structs.Map#values
      * @since 3.0.0
      *
-     * @genericUse {T[]} T - [$return]
+     * @genericUse {T[]} - [$return]
      *
      * @return {Array.<*>} [description]
      */
@@ -260,7 +260,9 @@ var Map = new Class({
      * @method Phaser.Structs.Map#each
      * @since 3.0.0
      *
-     * @param {EachMapCallback.<T>} callback - [description]
+     * @genericUse {EachMapCallback.<T>} - [callback]
+     *
+     * @param {EachMapCallback} callback - [description]
      *
      * @return {Phaser.Structs.Map} This Map object.
      */
@@ -285,7 +287,7 @@ var Map = new Class({
      * @method Phaser.Structs.Map#contains
      * @since 3.0.0
      *
-     * @genericUse {T} T - [value]
+     * @genericUse {T} - [value]
      *
      * @param {*} value - [description]
      *
