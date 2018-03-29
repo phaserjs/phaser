@@ -19,11 +19,59 @@ var _FLAG = 2; // 0010
 
 var Alpha = {
 
+    /**
+     * Private internal value. Holds the global alpha value.
+     * 
+     * @name Phaser.GameObjects.Components.Alpha#_alpha
+     * @type {float}
+     * @private
+     * @default 1
+     * @since 3.0.0
+     */
     _alpha: 1,
 
+    /**
+     * Private internal value. Holds the top-left alpha value.
+     * 
+     * @name Phaser.GameObjects.Components.Alpha#_alphaTL
+     * @type {float}
+     * @private
+     * @default 1
+     * @since 3.0.0
+     */
     _alphaTL: 1,
+
+    /**
+     * Private internal value. Holds the top-right alpha value.
+     * 
+     * @name Phaser.GameObjects.Components.Alpha#_alphaTR
+     * @type {float}
+     * @private
+     * @default 1
+     * @since 3.0.0
+     */
     _alphaTR: 1,
+
+    /**
+     * Private internal value. Holds the bottom-left alpha value.
+     * 
+     * @name Phaser.GameObjects.Components.Alpha#_alphaBL
+     * @type {float}
+     * @private
+     * @default 1
+     * @since 3.0.0
+     */
     _alphaBL: 1,
+
+    /**
+     * Private internal value. Holds the bottom-right alpha value.
+     * 
+     * @name Phaser.GameObjects.Components.Alpha#_alphaBR
+     * @type {float}
+     * @private
+     * @default 1
+     * @since 3.0.0
+     */
     _alphaBR: 1,
 
     /**

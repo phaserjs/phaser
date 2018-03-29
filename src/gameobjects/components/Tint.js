@@ -25,10 +25,48 @@ var GetColor = function (value)
 
 var Tint = {
 
-    //  0: topLeft, 1: topRight, 2: bottomLeft, 3: bottomRight
+    /**
+     * Private internal value. Holds the top-left tint value.
+     * 
+     * @name Phaser.GameObjects.Components.Tint#_tintTL
+     * @type {number}
+     * @private
+     * @default 16777215
+     * @since 3.0.0
+     */
     _tintTL: 16777215,
+
+    /**
+     * Private internal value. Holds the top-right tint value.
+     * 
+     * @name Phaser.GameObjects.Components.Tint#_tintTR
+     * @type {number}
+     * @private
+     * @default 16777215
+     * @since 3.0.0
+     */
     _tintTR: 16777215,
+
+    /**
+     * Private internal value. Holds the bottom-left tint value.
+     * 
+     * @name Phaser.GameObjects.Components.Tint#_tintBL
+     * @type {number}
+     * @private
+     * @default 16777215
+     * @since 3.0.0
+     */
     _tintBL: 16777215,
+
+    /**
+     * Private internal value. Holds the bottom-right tint value.
+     * 
+     * @name Phaser.GameObjects.Components.Tint#_tintBR
+     * @type {number}
+     * @private
+     * @default 16777215
+     * @since 3.0.0
+     */
     _tintBR: 16777215,
 
     /**
