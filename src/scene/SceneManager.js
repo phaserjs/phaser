@@ -180,7 +180,7 @@ var SceneManager = new Class({
         {
             entry = this._start[i];
 
-            this.start(entry);
+            this.start(entry, entry.scene.data);
         }
 
         this._start.length = 0;
@@ -219,7 +219,7 @@ var SceneManager = new Class({
             {
                 entry = this._start[i];
 
-                this.start(entry);
+                this.start(entry, entry.scene.data);
             }
 
             //  Clear the pending lists
@@ -309,7 +309,7 @@ var SceneManager = new Class({
         {
             if (this.game.isBooted)
             {
-                this.start(key);
+                this.start(key, newScene.sys.settings.data);
             }
             else
             {
@@ -695,6 +695,11 @@ var SceneManager = new Class({
             }
         }
 
+        if (sceneConfig.hasOwnProperty('data'))
+        {
+            newScene.data = sceneConfig.data;
+        }
+
         return newScene;
     },
 
@@ -951,7 +956,7 @@ var SceneManager = new Class({
                 if (entry.key === key)
                 {
                     entry.autoStart = true;
-                    entry.data = data;
+                    entry.scene.data = data;
                 }
             }
 
