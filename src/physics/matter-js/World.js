@@ -634,7 +634,9 @@ var World = new Class({
         graphics.lineStyle(1, this.defaults.bodyDebugColor);
         graphics.beginPath();
 
-        for (let i = 0; i < bodies.length; i++)
+        var i,j;
+
+        for (i = 0; i < bodies.length; i++)
         {
             if (!bodies[i].render.visible)
             {
@@ -643,7 +645,7 @@ var World = new Class({
 
             // Handle drawing both single bodies and compound bodies. If compound, draw both the
             // convex hull (first part) and the rest of the bodies.
-            for (let j = 0; j < bodies[i].parts.length; j++)
+            for (j = 0; j < bodies[i].parts.length; j++)
             {
                 var body = bodies[i].parts[j];
 
@@ -670,7 +672,7 @@ var World = new Class({
 
             // Render constraints 
             var constraints = Composite.allConstraints(this.localWorld);
-            for (let i = 0; i < constraints.length; i++)
+            for (i = 0; i < constraints.length; i++)
             {
                 var constraint = constraints[i];
 
@@ -723,7 +725,7 @@ var World = new Class({
                             coils = Math.ceil(Common.clamp(constraint.length / 5, 12, 20)),
                             offset;
 
-                        for (let j = 1; j < coils; j += 1)
+                        for (j = 1; j < coils; j += 1)
                         {
                             offset = j % 2 === 0 ? 1 : -1;
 
