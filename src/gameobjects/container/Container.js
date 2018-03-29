@@ -27,6 +27,10 @@ var Container = new Class({
 
     add: function (gameObject)
     {
+        if (gameObject.type === 'Container')
+        {
+            gameObject.parentContainer = this;
+        }
         if (this.children.indexOf(gameObject) < 0)
         {
             this.children.push(gameObject);
@@ -39,6 +43,10 @@ var Container = new Class({
         var index = this.children.indexOf(gameObject);
         if (index >= 0)
         {
+            if (gameObject.type === 'Container')
+            {
+                gameObject.parentContainer = null;
+            }
             this.children.splice(index, 1);
         }
         return this;
