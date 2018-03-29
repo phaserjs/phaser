@@ -5,7 +5,13 @@
  */
 
 /**
- * @namespace Phaser.BlendModes
+ * Phaser Blend Modes.
+ * 
+ * @name Phaser.BlendModes
+ * @enum {integer}
+ * @memberOf Phaser
+ * @readOnly
+ * @since 3.0.0
  */
 
 module.exports = {
@@ -14,8 +20,6 @@ module.exports = {
      * Skips the Blend Mode check in the renderer.
      * 
      * @name Phaser.BlendModes.SKIP_CHECK
-     * @type {integer}
-     * @since 3.0.0
      */
     SKIP_CHECK: -1,
 
@@ -23,8 +27,6 @@ module.exports = {
      * Normal blend mode.
      * 
      * @name Phaser.BlendModes.NORMAL
-     * @type {integer}
-     * @since 3.0.0
      */
     NORMAL: 0,
 
@@ -32,8 +34,6 @@ module.exports = {
      * Add blend mode.
      * 
      * @name Phaser.BlendModes.ADD
-     * @type {integer}
-     * @since 3.0.0
      */
     ADD: 1,
 
@@ -41,8 +41,6 @@ module.exports = {
      * Multiply blend mode.
      * 
      * @name Phaser.BlendModes.MULTIPLY
-     * @type {integer}
-     * @since 3.0.0
      */
     MULTIPLY: 2,
 
@@ -50,8 +48,6 @@ module.exports = {
      * Screen blend mode.
      * 
      * @name Phaser.BlendModes.SCREEN
-     * @type {integer}
-     * @since 3.0.0
      */
     SCREEN: 3,
 
@@ -59,8 +55,6 @@ module.exports = {
      * Overlay blend mode.
      * 
      * @name Phaser.BlendModes.OVERLAY
-     * @type {integer}
-     * @since 3.0.0
      */
     OVERLAY: 4,
 
@@ -68,8 +62,6 @@ module.exports = {
      * Darken blend mode.
      * 
      * @name Phaser.BlendModes.DARKEN
-     * @type {integer}
-     * @since 3.0.0
      */
     DARKEN: 5,
 
@@ -77,8 +69,6 @@ module.exports = {
      * Lighten blend mode.
      * 
      * @name Phaser.BlendModes.LIGHTEN
-     * @type {integer}
-     * @since 3.0.0
      */
     LIGHTEN: 6,
 
@@ -86,8 +76,6 @@ module.exports = {
      * Color Dodge blend mode.
      * 
      * @name Phaser.BlendModes.COLOR_DODGE
-     * @type {integer}
-     * @since 3.0.0
      */
     COLOR_DODGE: 7,
 
@@ -95,8 +83,6 @@ module.exports = {
      * Color Burn blend mode.
      * 
      * @name Phaser.BlendModes.COLOR_BURN
-     * @type {integer}
-     * @since 3.0.0
      */
     COLOR_BURN: 8,
 
@@ -104,8 +90,6 @@ module.exports = {
      * Hard Light blend mode.
      * 
      * @name Phaser.BlendModes.HARD_LIGHT
-     * @type {integer}
-     * @since 3.0.0
      */
     HARD_LIGHT: 9,
 
@@ -113,8 +97,6 @@ module.exports = {
      * Soft Light blend mode.
      * 
      * @name Phaser.BlendModes.SOFT_LIGHT
-     * @type {integer}
-     * @since 3.0.0
      */
     SOFT_LIGHT: 10,
 
@@ -122,8 +104,6 @@ module.exports = {
      * Difference blend mode.
      * 
      * @name Phaser.BlendModes.DIFFERENCE
-     * @type {integer}
-     * @since 3.0.0
      */
     DIFFERENCE: 11,
 
@@ -131,8 +111,6 @@ module.exports = {
      * Exclusion blend mode.
      * 
      * @name Phaser.BlendModes.EXCLUSION
-     * @type {integer}
-     * @since 3.0.0
      */
     EXCLUSION: 12,
 
@@ -140,8 +118,6 @@ module.exports = {
      * Hue blend mode.
      * 
      * @name Phaser.BlendModes.HUE
-     * @type {integer}
-     * @since 3.0.0
      */
     HUE: 13,
 
@@ -149,8 +125,6 @@ module.exports = {
      * Saturation blend mode.
      * 
      * @name Phaser.BlendModes.SATURATION
-     * @type {integer}
-     * @since 3.0.0
      */
     SATURATION: 14,
 
@@ -158,8 +132,6 @@ module.exports = {
      * Color blend mode.
      * 
      * @name Phaser.BlendModes.COLOR
-     * @type {integer}
-     * @since 3.0.0
      */
     COLOR: 15,
 
@@ -167,8 +139,6 @@ module.exports = {
      * Luminosity blend mode.
      * 
      * @name Phaser.BlendModes.LUMINOSITY
-     * @type {integer}
-     * @since 3.0.0
      */
     LUMINOSITY: 16
 

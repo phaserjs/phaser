@@ -164,7 +164,7 @@ var TextureSource = new Class({
      * @method Phaser.Textures.TextureSource#setFilter
      * @since 3.0.0
      *
-     * @param {(Phaser.Textures.FilterMode.LINEAR|Phaser.Textures.FilterMode.NEAREST)} filterMode - The Filter Mode.
+     * @param {Phaser.Textures.FilterMode} filterMode - The Filter Mode.
      */
     setFilter: function (filterMode)
     {
