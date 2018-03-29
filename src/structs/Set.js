@@ -26,7 +26,7 @@ var Class = require('../utils/Class');
  * @since 3.0.0
  *
  * @generic T
- * @genericUse {T[]} T - [elements]
+ * @genericUse {T[]} - [elements]
  *
  * @param {Array.<*>} [elements] - [description]
  */
@@ -39,7 +39,7 @@ var Set = new Class({
         /**
          * [description]
          *
-         * @genericUse {T[]} T - [$type]
+         * @genericUse {T[]} - [$type]
          *
          * @name Phaser.Structs.Set#entries
          * @type {Array.<*>}
@@ -63,7 +63,7 @@ var Set = new Class({
      * @method Phaser.Structs.Set#set
      * @since 3.0.0
      *
-     * @genericUse {T} T - [value]
+     * @genericUse {T} - [value]
      *
      * @param {*} value - [description]
      *
@@ -85,7 +85,7 @@ var Set = new Class({
      * @method Phaser.Structs.Set#get
      * @since 3.0.0
      *
-     * @genericUse {T} T - [value,$return]
+     * @genericUse {T} - [value,$return]
      *
      * @param {string} property - [description]
      * @param {*} value - [description]
@@ -111,7 +111,7 @@ var Set = new Class({
      * @method Phaser.Structs.Set#getArray
      * @since 3.0.0
      *
-     * @genericUse {T[]} T - [$return]
+     * @genericUse {T[]} - [$return]
      *
      * @return {Array.<*>} [description]
      */
@@ -126,7 +126,7 @@ var Set = new Class({
      * @method Phaser.Structs.Set#delete
      * @since 3.0.0
      *
-     * @genericUse {T} T - [value]
+     * @genericUse {T} - [value]
      *
      * @param {*} value - [description]
      *
@@ -171,7 +171,9 @@ var Set = new Class({
      * @method Phaser.Structs.Set#each
      * @since 3.0.0
      *
-     * @param {EachSetCallback.<T>} callback - [description]
+     * @genericUse {EachSetCallback.<T>} - [callback]
+     *
+     * @param {EachSetCallback} callback - [description]
      * @param {*} callbackScope - [description]
      *
      * @return {Phaser.Structs.Set} This Set object.
@@ -212,7 +214,9 @@ var Set = new Class({
      * @method Phaser.Structs.Set#iterate
      * @since 3.0.0
      *
-     * @param {EachSetCallback.<T>} callback - [description]
+     * @genericUse {EachSetCallback.<T>} - [callback]
+     *
+     * @param {EachSetCallback} callback - [description]
      * @param {*} callbackScope - [description]
      *
      * @return {Phaser.Structs.Set} This Set object.
@@ -300,7 +304,7 @@ var Set = new Class({
      * @method Phaser.Structs.Set#contains
      * @since 3.0.0
      *
-     * @genericUse {T} T - [value]
+     * @genericUse {T} - [value]
      *
      * @param {*} value - [description]
      *
