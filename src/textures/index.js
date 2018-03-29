@@ -6,6 +6,8 @@
 
 /**
  * @namespace Phaser.Textures
+ * @property {integer} LINEAR - Linear filter type.
+ * @property {integer} NEAREST - Nearest neighbor filter type.
  */
 
 var Textures = {
@@ -17,22 +19,7 @@ var Textures = {
     TextureManager: require('./TextureManager'),
     TextureSource: require('./TextureSource'),
 
-    /**
-     * Linear filter type.
-     * 
-     * @name Phaser.Textures.LINEAR
-     * @type {integer}
-     * @since 3.0.0
-     */
     LINEAR: 0,
-
-    /**
-     * Nearest neighbor filter type.
-     * 
-     * @name Phaser.Textures.NEAREST
-     * @type {integer}
-     * @since 3.0.0
-     */
     NEAREST: 1
 
 };
