@@ -22,7 +22,7 @@ module.exports = {
 };
 
 /**
- * @namespace Matter
+ * @module Matter
  */
 
 /**
