@@ -92,7 +92,7 @@ var SetBody = {
      * @method Phaser.Physics.Matter.Components.SetBody#setExistingBody
      * @since 3.0.0
      *
-     * @param {Phaser.Physics.Matter.Body} body - [description]
+     * @param {Matter.Body} body - [description]
      * @param {boolean} [addToWorld=true] - [description]
      *
      * @return {Phaser.GameObjects.GameObject} This Game Object.

@@ -730,8 +730,8 @@ var WebAudioSound = new Class({
      * [description]
      * 
      * @name Phaser.Sound.WebAudioSound#mute
-     * @type {number}
-     * @default 1
+     * @type {boolean}
+     * @default false
      * @since 3.0.0
      */
     mute: {
