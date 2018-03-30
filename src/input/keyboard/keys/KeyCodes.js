@@ -4,7 +4,11 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-module.exports = {
+/**
+ * @namespace Phaser.Input.Keyboard.KeyCodes
+ */
+
+var KeyCodes = {
 
     /**
      * @name Phaser.Input.Keyboard.KeyCodes.BACKSPACE
@@ -567,3 +571,5 @@ module.exports = {
     CLOSED_BRACKET: 221
 
 };
+
+module.exports = KeyCodes;
