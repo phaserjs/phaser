@@ -134,8 +134,10 @@ var Gamepad = new Class({
             {
                 axes[i] = new Axis(this, i);
             }
-
-            axes[i].update(axisData);
+            else
+            {
+                axes[i].update(axisData);
+            }
         }
     }
 
