@@ -33,7 +33,6 @@ var Render = require('./BitmapTextRender');
  * @property {string} font - [description]
  * @property {string} text - [description]
  * @property {number} fontSize - [description]
- * @property {number} kerning - [description]
  */
 
 /**
@@ -129,15 +128,6 @@ var BitmapText = new Class({
          * @since 3.0.0
          */
         this.fontSize = size || this.fontData.size;
-
-        /**
-         * [description]
-         *
-         * @name Phaser.GameObjects.BitmapText#kerning
-         * @type {number}
-         * @since 3.0.0
-         */
-        this.kerning = 0;
 
         this.setTexture(entry.texture, entry.frame);
         this.setPosition(x, y);

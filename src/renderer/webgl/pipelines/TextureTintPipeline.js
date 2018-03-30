@@ -946,7 +946,6 @@ var TextureTintPipeline = new Class({
         var rotation = -bitmapText.rotation;
         var scaleX = bitmapText.scaleX;
         var scaleY = bitmapText.scaleY;
-        var kerning = bitmapText.kerning;
         var sr = Math.sin(rotation);
         var cr = Math.cos(rotation);
         var sra = cr * scaleX;
@@ -1006,7 +1005,7 @@ var TextureTintPipeline = new Class({
                 x += (kerningOffset !== undefined) ? kerningOffset : 0;
             }
 
-            xAdvance += glyph.xAdvance + kerning;
+            xAdvance += glyph.xAdvance;
             indexCount += 1;
             lastGlyph = glyph;
             lastCharCode = charCode;
@@ -1179,7 +1178,6 @@ var TextureTintPipeline = new Class({
         var rotation = -bitmapText.rotation;
         var scaleX = bitmapText.scaleX;
         var scaleY = bitmapText.scaleY;
-        var kerning = bitmapText.kerning;
         var sr = Math.sin(rotation);
         var cr = Math.cos(rotation);
         var sra = cr * scaleX;
@@ -1254,7 +1252,7 @@ var TextureTintPipeline = new Class({
                 x += (kerningOffset !== undefined) ? kerningOffset : 0;
             }
 
-            xAdvance += glyph.xAdvance + kerning;
+            xAdvance += glyph.xAdvance;
             indexCount += 1;
             lastGlyph = glyph;
             lastCharCode = charCode;

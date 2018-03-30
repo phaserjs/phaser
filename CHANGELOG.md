@@ -19,7 +19,6 @@ being passed to the simulation. The default value is 1 to remain consistent with
 * HTML5AudioSound.setVolume is a chainable way to set the volume of a single Sound instance.
 * HTML5AudioSound.setSeek is a chainable way to set seek to a point of a single Sound instance.
 * HTML5AudioSound.setLoop is a chainable way to set the loop state of a single Sound instance.
-* A new property was added to BitmapText, 'kerning' which accepts a positive or negative number to add/reduce spacing in between characters.
 
 ### Bug Fixes
 
@@ -28,6 +27,7 @@ being passed to the simulation. The default value is 1 to remain consistent with
 * PathFollower.start has been renamed to `startFollow`, but PathFollower.setPath was still using `PathFollower.start` (thanks @samid737)
 * BaseSoundManager.rate and BaseSoundManager.detune would incorrectly called `setRate` on its sounds, instead of `calculateRate`.
 * The Gamepad Axis `getValue` method now correctly applies the threshold and zeroes out the returned value.
+* Fixes bug where animations with frames of varying sizes where not being properly anchored.
 
 ### Updates
 
