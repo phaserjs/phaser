@@ -135,7 +135,7 @@ var BitmapText = new Class({
          *
          * @name Phaser.GameObjects.BitmapText#kerning
          * @type {number}
-         * @since 3.0.0
+         * @since 3.4.0
          */
         this.kerning = 0;
 
