@@ -132,7 +132,7 @@ var CanvasRenderer = new Class({
          * Map to the required function.
          *
          * @name Phaser.Renderer.Canvas.CanvasRenderer#drawImage
-         * @type {Phaser.Renderer.Canvas.DrawImage}
+         * @type {function}
          * @since 3.0.0
          */
         this.drawImage = DrawImage(this.config.roundPixels);
@@ -141,7 +141,7 @@ var CanvasRenderer = new Class({
          * [description]
          *
          * @name Phaser.Renderer.Canvas.CanvasRenderer#blitImage
-         * @type {Phaser.Renderer.Canvas.BlitImage}
+         * @type {function}
          * @since 3.0.0
          */
         this.blitImage = BlitImage(this.config.roundPixels);
