@@ -5,8 +5,14 @@
  */
 
 //  These properties get injected into the Scene and map to local systems
-//  The map key is the property that is added to the Scene, the value is the Scene.Systems reference
+//  The map value is the property that is injected into the Scene, the key is the Scene.Systems reference.
 //  These defaults can be modified via the Scene config object
+//          var config = {
+//            map: {
+//                add: 'makeStuff',
+//                load: 'loader'
+//            }
+//        };
 
 var InjectionMap = {
 
