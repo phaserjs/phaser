@@ -81,6 +81,7 @@ var ProcessQueue = new Class({
      * @since 3.0.0
      *
      * @genericUse {T} - [item]
+     * @genericUse {Phaser.Structs.ProcessQueue.<T>} - [$return]
      *
      * @param {*} item - [description]
      *
@@ -102,6 +103,7 @@ var ProcessQueue = new Class({
      * @since 3.0.0
      *
      * @genericUse {T} - [item]
+     * @genericUse {Phaser.Structs.ProcessQueue.<T>} - [$return]
      *
      * @param {*} item - [description]
      *
