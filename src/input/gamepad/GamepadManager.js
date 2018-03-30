@@ -17,7 +17,7 @@ var Gamepad = require('./Gamepad');
  * @typedef {object} Pad
  *
  * @property {string} id - [description]
- * @property {number} index - [description]
+ * @property {integer} index - [description]
  */
 
 /**
