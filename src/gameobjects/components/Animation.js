@@ -749,6 +749,9 @@ var Animation = new Class({
 
         sprite.texture = animationFrame.frame.texture;
         sprite.frame = animationFrame.frame;
+        sprite.width = sprite.frame.width;
+        sprite.height = sprite.frame.height;
+        sprite.updateDisplayOrigin();
 
         if (this.isPlaying)
         {
