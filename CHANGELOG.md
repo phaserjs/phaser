@@ -35,6 +35,10 @@ being passed to the simulation. The default value is 1 to remain consistent with
 * The file `InteractiveObject.js` has been renamed to `CreateInteractiveObject.js` to more accurately reflect what it does and to avoid type errors in the docs.
 * Renamed the Camera Controls module exports for `Fixed` to `FixedKeyControl` and `Smoothed` to `SmoothedKeyControl` to match the class names. Fix #3463 (thanks @seivan)
 * The ComputedSize Component now has `setSize` and `setDisplaySize` methods. This component is used for Game Objects that have a non-texture based size.
+* The GamepadManager now extends EventEmitter directly, just like the KeyboardManager does.
+
+Also, my thanks to the following for helping with the Phaser 3 Examples, either by reporting errors or fixing them: @gabegordon @melissaelopez @samid737 @nbs @tgrajewski
+
 
 
 
