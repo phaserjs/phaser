@@ -1,0 +1,51 @@
+{
+  "name": "phaser",
+  "version": "3.4.0",
+  "release": "Tetsuo",
+  "description": "A fast, free and fun HTML5 Game Framework for Desktop and Mobile web browsers.",
+  "author": "Richard Davey <rich@photonstorm.com> (http://www.photonstorm.com)",
+  "logo": "https://raw.github.com/photonstorm/phaser/master/phaser-logo-small.png",
+  "homepage": "http://phaser.io",
+  "bugs": "https://github.com/photonstorm/phaser/issues",
+  "license": "MIT",
+  "licenseUrl": "http://www.opensource.org/licenses/mit-license.php",
+  "main": "./src/phaser.js",
+  "repository": {
+    "type": "git",
+    "url": "https://photonstorm@github.com/photonstorm/phaser.git"
+  },
+  "scripts": {
+    "build": "webpack",
+    "watch": "webpack --watch",
+    "dist": "webpack --config webpack.dist.config.js",
+    "lint": "eslint --config .eslintrc.json \"src/**/*.js\"",
+    "lintfix": "eslint --config .eslintrc.json \"src/**/*.js\" --fix",
+    "sloc": "node-sloc \"./src\" --include-extensions \"js\""
+  },
+  "keywords": [
+    "2d",
+    "HTML5",
+    "WebGL",
+    "canvas",
+    "game",
+    "javascript",
+    "physics",
+    "tweens",
+    "typescript",
+    "web audio"
+  ],
+  "devDependencies": {
+    "clean-webpack-plugin": "^0.1.19",
+    "eslint": "^4.19.0",
+    "fs-extra": "^5.0.0",
+    "node-sloc": "^0.1.10",
+    "raw-loader": "^0.5.1",
+    "uglifyjs-webpack-plugin": "^1.2.4",
+    "webpack": "^4.1.1",
+    "webpack-cli": "^2.0.12",
+    "webpack-shell-plugin": "^0.5.0"
+  },
+  "dependencies": {
+    "eventemitter3": "^3.0.1"
+  }
+}
