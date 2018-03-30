@@ -70,7 +70,7 @@ Extra special thanks to our top-tier sponsors: [Orange Games](http://orangegames
 
 Every week we publish the [Phaser World](https://phaser.io/community/newsletter) newsletter. It's packed full of the latest Phaser games, tutorials, videos, meet-ups, talks, and more. The newsletter also contains our weekly Development Progress updates which let you know about the new features we're working on.
 
-Over 100 previous editions can be found on our [Back Issues](http://phaser.io/community/backissues) page.
+Over 100 previous editions can be found on our [Back Issues](https://phaser.io/community/backissues) page.
 
 ![Download Phaser](https://phaser.io/images/github/div-download.png "Download Phaser")
 <a name="download"></a>
@@ -93,7 +93,7 @@ npm install phaser
 
 [![](https://data.jsdelivr.com/v1/package/gh/photonstorm/phaser/badge)](https://www.jsdelivr.com/package/gh/photonstorm/phaser)
 
-[Phaser is on jsDelivr](http://www.jsdelivr.com/projects/phaser) which is a "super-fast CDN for developers". Include the following in your html:
+[Phaser is on jsDelivr](https://www.jsdelivr.com/projects/phaser) which is a "super-fast CDN for developers". Include the following in your html:
 
 ```html
 <script src="//cdn.jsdelivr.net/npm/phaser@3.3.0/dist/phaser.js"></script>
@@ -137,7 +137,7 @@ Also, please subscribe to the [Phaser World](https://phaser.io/community/newslet
 
 ### Source Code Examples
 
-During our development of Phaser 3, we created hundreds of examples with the full source code and assets. Until these examples are fully integrated into the Phaser website, you can browse them on [Phaser 3 Labs](http://labs.phaser.io), or clone the [examples repo][examples]. Note: Not all examples work, sorry! We're tidying them up as fast as we can.
+During our development of Phaser 3, we created hundreds of examples with the full source code and assets. Until these examples are fully integrated into the Phaser website, you can browse them on [Phaser 3 Labs](https://labs.phaser.io), or clone the [examples repo][examples]. Note: Not all examples work, sorry! We're tidying them up as fast as we can.
 
 ### Create Your First Phaser 3 Example
 
@@ -147,7 +147,7 @@ Create an `index.html` page locally and paste the following code into it:
 <!DOCTYPE html>
 <html>
 <head>
-    <script src="http://labs.phaser.io/build/phaser-arcade-physics.min.js"></script> 
+    <script src="https://labs.phaser.io/build/phaser-arcade-physics.min.js"></script> 
 </head>
 <body>
 
