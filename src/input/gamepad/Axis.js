@@ -61,6 +61,14 @@ var Axis = new Class({
          */
         this.value = 0;
 
+        /**
+         * Movement tolerance threshold.
+         *
+         * @name Phaser.Input.Gamepad.Axis#threshold
+         * @type {float}
+         * @default 0.05
+         * @since 3.0.0
+         */
         this.threshold = 0.05;
     },
 

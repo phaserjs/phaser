@@ -5,6 +5,7 @@
  */
 
 var Class = require('../../utils/Class');
+var EventEmitter = require('eventemitter3');
 var Gamepad = require('./Gamepad');
 
 // https://developer.mozilla.org/en-US/docs/Web/API/Gamepad_API
@@ -30,6 +31,7 @@ var Gamepad = require('./Gamepad');
  * [description]
  *
  * @class GamepadManager
+ * @extends Phaser.Events.EventEmitter
  * @memberOf Phaser.Input.Gamepad
  * @constructor
  * @since 3.0.0
@@ -38,10 +40,14 @@ var Gamepad = require('./Gamepad');
  */
 var GamepadManager = new Class({
 
+    Extends: EventEmitter,
+
     initialize:
 
     function GamepadManager (inputManager)
     {
+        EventEmitter.call(this);
+
         /**
          * [description]
          *
@@ -50,15 +56,6 @@ var GamepadManager = new Class({
          * @since 3.0.0
          */
         this.manager = inputManager;
-
-        /**
-         * [description]
-         *
-         * @name Phaser.Input.Gamepad.GamepadManager#events
-         * @type {Phaser.Events.EventEmitter}
-         * @since 3.0.0
-         */
-        this.events = inputManager.events;
 
         /**
          * [description]
@@ -346,7 +343,7 @@ var GamepadManager = new Class({
 
                     pad = this.getPad(event.gamepad.index);
 
-                    this.events.emit('connected', pad, event);
+                    this.emit('connected', pad, event);
 
                     break;
 
@@ -354,7 +351,7 @@ var GamepadManager = new Class({
 
                     pad = this.getPad(event.gamepad.index);
 
-                    this.events.emit('disconnected', pad, event);
+                    this.emit('disconnected', pad, event);
 
                     break;
             }
