@@ -39,7 +39,7 @@ being passed to the simulation. The default value is 1 to remain consistent with
 * The GamepadManager now extends EventEmitter directly, just like the KeyboardManager does.
 * The Gamepad Axis threshold has been increased from 0.05 to 0.1.
 
-Also, my thanks to the following for helping with the Phaser 3 Examples, either by reporting errors or fixing them: @gabegordon @melissaelopez @samid737 @nbs @tgrajewski
+Also, my thanks to the following for helping with the Phaser 3 Examples, either by reporting errors or fixing them: @gabegordon @melissaelopez @samid737 @nbs @tgrajewski @pagesrichie
 
 
 
