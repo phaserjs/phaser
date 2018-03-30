@@ -6,15 +6,16 @@
 
 /**
  * Arcade Physics consts.
+ * 
+ * @ignore
  */
 
-module.exports = {
+var CONST = {
 
     /**
      * [description]
      * 
      * @name Phaser.Physics.Arcade.DYNAMIC_BODY
-     * @memberOf Phaser.Physics.Arcade
      * @readOnly
      * @type {number}
      * @since 3.0.0
@@ -25,7 +26,6 @@ module.exports = {
      * [description]
      * 
      * @name Phaser.Physics.Arcade.STATIC_BODY
-     * @memberOf Phaser.Physics.Arcade
      * @readOnly
      * @type {number}
      * @since 3.0.0
@@ -36,7 +36,6 @@ module.exports = {
      * [description]
      * 
      * @name Phaser.Physics.Arcade.GROUP
-     * @memberOf Phaser.Physics.Arcade
      * @readOnly
      * @type {number}
      * @since 3.0.0
@@ -47,7 +46,6 @@ module.exports = {
      * [description]
      * 
      * @name Phaser.Physics.Arcade.TILEMAPLAYER
-     * @memberOf Phaser.Physics.Arcade
      * @readOnly
      * @type {number}
      * @since 3.0.0
@@ -58,7 +56,6 @@ module.exports = {
      * [description]
      * 
      * @name Phaser.Physics.Arcade.FACING_NONE
-     * @memberOf Phaser.Physics.Arcade
      * @readOnly
      * @type {number}
      * @since 3.0.0
@@ -69,7 +66,6 @@ module.exports = {
      * [description]
      * 
      * @name Phaser.Physics.Arcade.FACING_UP
-     * @memberOf Phaser.Physics.Arcade
      * @readOnly
      * @type {number}
      * @since 3.0.0
@@ -80,7 +76,6 @@ module.exports = {
      * [description]
      * 
      * @name Phaser.Physics.Arcade.FACING_DOWN
-     * @memberOf Phaser.Physics.Arcade
      * @readOnly
      * @type {number}
      * @since 3.0.0
@@ -91,7 +86,6 @@ module.exports = {
      * [description]
      * 
      * @name Phaser.Physics.Arcade.FACING_LEFT
-     * @memberOf Phaser.Physics.Arcade
      * @readOnly
      * @type {number}
      * @since 3.0.0
@@ -102,7 +96,6 @@ module.exports = {
      * [description]
      * 
      * @name Phaser.Physics.Arcade.FACING_RIGHT
-     * @memberOf Phaser.Physics.Arcade
      * @readOnly
      * @type {number}
      * @since 3.0.0
@@ -110,3 +103,5 @@ module.exports = {
     FACING_RIGHT: 14
 
 };
+
+module.exports = CONST;
