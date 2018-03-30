@@ -27,6 +27,8 @@ being passed to the simulation. The default value is 1 to remain consistent with
 * PathFollower.start has been renamed to `startFollow`, but PathFollower.setPath was still using `PathFollower.start` (thanks @samid737)
 * BaseSoundManager.rate and BaseSoundManager.detune would incorrectly called `setRate` on its sounds, instead of `calculateRate`.
 * The Gamepad Axis `getValue` method now correctly applies the threshold and zeroes out the returned value.
+* Tween.Restart handles removed tweens properly and readds them back into the
+active queue for the TweenManager
 
 ### Updates
 
