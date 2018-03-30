@@ -105,6 +105,19 @@ or the minified version:
 <script src="//cdn.jsdelivr.net/npm/phaser@3.3.0/dist/phaser.min.js"></script>
 ```
 
+### API Documentation
+
+1. Go to https://photonstorm.github.io/phaser3-docs/index.html to read the docs online.
+2. Checkout the [phaser3-docs](https://github.com/photonstorm/phaser3-docs) repository and then read the documentation by pointing your browser to the local `docs/` folder.
+
+The documentation for Phaser 3 is an on-going project. Please help us by searching the Phaser code for any instance of the string `[description]` and then replacing it with some documentation.
+
+### TypeScript Definitions
+
+[TypeScript Definitions](https://github.com/photonstorm/phaser3-docs/tree/master/typescript) are now available.
+
+They are automatically generated from the jsdoc comments in the Phaser source code. If you wish to help refine them then you must edit the Phaser jsdoc blocks directly. You can find more details, including the source to the conversion tool we wrote in the Docs repo.
+
 ### License
 
 Phaser is released under the [MIT License](https://opensource.org/licenses/MIT).
