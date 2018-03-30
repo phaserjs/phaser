@@ -4,13 +4,19 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
+/**
+ * Scene consts.
+ * 
+ * @ignore
+ */
 
-module.exports = {
+var CONST = {
 
     /**
      * Scene state.
      * 
      * @name Phaser.Scenes.PENDING
+     * @readOnly
      * @type {integer}
      * @since 3.0.0
      */
@@ -20,6 +26,7 @@ module.exports = {
      * Scene state.
      * 
      * @name Phaser.Scenes.INIT
+     * @readOnly
      * @type {integer}
      * @since 3.0.0
      */
@@ -29,6 +36,7 @@ module.exports = {
      * Scene state.
      * 
      * @name Phaser.Scenes.START
+     * @readOnly
      * @type {integer}
      * @since 3.0.0
      */
@@ -38,6 +46,7 @@ module.exports = {
      * Scene state.
      * 
      * @name Phaser.Scenes.LOADING
+     * @readOnly
      * @type {integer}
      * @since 3.0.0
      */
@@ -47,6 +56,7 @@ module.exports = {
      * Scene state.
      * 
      * @name Phaser.Scenes.CREATING
+     * @readOnly
      * @type {integer}
      * @since 3.0.0
      */
@@ -56,6 +66,7 @@ module.exports = {
      * Scene state.
      * 
      * @name Phaser.Scenes.RUNNING
+     * @readOnly
      * @type {integer}
      * @since 3.0.0
      */
@@ -65,6 +76,7 @@ module.exports = {
      * Scene state.
      * 
      * @name Phaser.Scenes.PAUSED
+     * @readOnly
      * @type {integer}
      * @since 3.0.0
      */
@@ -74,6 +86,7 @@ module.exports = {
      * Scene state.
      * 
      * @name Phaser.Scenes.SLEEPING
+     * @readOnly
      * @type {integer}
      * @since 3.0.0
      */
@@ -83,6 +96,7 @@ module.exports = {
      * Scene state.
      * 
      * @name Phaser.Scenes.SHUTDOWN
+     * @readOnly
      * @type {integer}
      * @since 3.0.0
      */
@@ -92,9 +106,12 @@ module.exports = {
      * Scene state.
      * 
      * @name Phaser.Scenes.DESTROYED
+     * @readOnly
      * @type {integer}
      * @since 3.0.0
      */
     DESTROYED: 9
 
 };
+
+module.exports = CONST;

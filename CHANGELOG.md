@@ -26,6 +26,7 @@ being passed to the simulation. The default value is 1 to remain consistent with
 * The RenderTexture now uses the ComputedSize component instead of Size (which requires a frame), allowing calls to getBounds to work. Fix #3451 (thanks @kuoruan)
 * PathFollower.start has been renamed to `startFollow`, but PathFollower.setPath was still using `PathFollower.start` (thanks @samid737)
 * BaseSoundManager.rate and BaseSoundManager.detune would incorrectly called `setRate` on its sounds, instead of `calculateRate`.
+* The Gamepad Axis `getValue` method now correctly applies the threshold and zeroes out the returned value.
 
 ### Updates
 
@@ -35,6 +36,11 @@ being passed to the simulation. The default value is 1 to remain consistent with
 * The file `InteractiveObject.js` has been renamed to `CreateInteractiveObject.js` to more accurately reflect what it does and to avoid type errors in the docs.
 * Renamed the Camera Controls module exports for `Fixed` to `FixedKeyControl` and `Smoothed` to `SmoothedKeyControl` to match the class names. Fix #3463 (thanks @seivan)
 * The ComputedSize Component now has `setSize` and `setDisplaySize` methods. This component is used for Game Objects that have a non-texture based size.
+* The GamepadManager now extends EventEmitter directly, just like the KeyboardManager does.
+* The Gamepad Axis threshold has been increased from 0.05 to 0.1.
+
+Also, my thanks to the following for helping with the Phaser 3 Examples, either by reporting errors or fixing them: @gabegordon @melissaelopez @samid737 @nbs @tgrajewski @pagesrichie @hexus
+
 
 
 

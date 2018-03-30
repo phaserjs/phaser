@@ -40,7 +40,7 @@ var Button = new Class({
          * @type {Phaser.Events.EventEmitter}
          * @since 3.0.0
          */
-        this.events = pad.events;
+        this.events = pad.manager;
 
         /**
          * [description]

@@ -14,7 +14,9 @@
  * FIXED collisions is undefined.
  *
  * @name Phaser.Physics.Impact.COLLIDES
- * @type {object}
+ * @enum {integer}
+ * @memberOf Phaser.Physics.Impact
+ * @readOnly
  * @since 3.0.0
  */
 module.exports = {
@@ -23,8 +25,6 @@ module.exports = {
      * Never collides.
      *
      * @name Phaser.Physics.Impact.COLLIDES.NEVER
-     * @type {integer}
-     * @since 3.0.0
      */
     NEVER: 0,
 
@@ -32,8 +32,6 @@ module.exports = {
      * Lite collision.
      *
      * @name Phaser.Physics.Impact.COLLIDES.LITE
-     * @type {integer}
-     * @since 3.0.0
      */
     LITE: 1,
 
@@ -41,8 +39,6 @@ module.exports = {
      * Passive collision.
      *
      * @name Phaser.Physics.Impact.COLLIDES.PASSIVE
-     * @type {integer}
-     * @since 3.0.0
      */
     PASSIVE: 2,
 
@@ -50,8 +46,6 @@ module.exports = {
      * Active collision.
      *
      * @name Phaser.Physics.Impact.COLLIDES.ACTIVE
-     * @type {integer}
-     * @since 3.0.0
      */
     ACTIVE: 4,
 
@@ -59,8 +53,6 @@ module.exports = {
      * Fixed collision.
      *
      * @name Phaser.Physics.Impact.COLLIDES.FIXED
-     * @type {integer}
-     * @since 3.0.0
      */
     FIXED: 8
 
