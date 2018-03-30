@@ -8,7 +8,7 @@ var Class = require('../utils/Class');
 
 /**
  * @callback EachMapCallback
- * @generic {*} E - [entry]
+ * @generic E - [entry]
  *
  * @param {string} key - [description]
  * @param {E} entry - [description]
@@ -30,8 +30,9 @@ var Class = require('../utils/Class');
  * @constructor
  * @since 3.0.0
  *
- * @generic T
- * @genericUse {T[]} - [elements]
+ * @generic K
+ * @generic V
+ * @genericUse {V[]} - [elements]
  *
  * @param {Array.<*>} elements - [description]
  */
@@ -44,7 +45,7 @@ var Map = new Class({
         /**
          * [description]
          *
-         * @genericUse {Object.<string, T>} - [$type]
+         * @genericUse {Object.<string, V>} - [$type]
          *
          * @name Phaser.Structs.Map#entries
          * @type {Object.<string, *>}
@@ -78,7 +79,9 @@ var Map = new Class({
      * @method Phaser.Structs.Map#set
      * @since 3.0.0
      *
-     * @genericUse {T} - [value]
+     * @genericUse {K} - [key]
+     * @genericUse {V} - [value]
+     * @genericUse {Phaser.Structs.Map.<K, V>} - [$return]
      *
      * @param {string} key - [description]
      * @param {*} value - [description]
@@ -102,7 +105,8 @@ var Map = new Class({
      * @method Phaser.Structs.Map#get
      * @since 3.0.0
      *
-     * @genericUse {T} - [$return]
+     * @genericUse {K} - [key]
+     * @genericUse {V} - [$return]
      *
      * @param {string} key - [description]
      *
@@ -122,7 +126,7 @@ var Map = new Class({
      * @method Phaser.Structs.Map#getArray
      * @since 3.0.0
      *
-     * @genericUse {T[]} - [$return]
+     * @genericUse {V[]} - [$return]
      *
      * @return {Array.<*>} [description]
      */
@@ -145,6 +149,8 @@ var Map = new Class({
      * @method Phaser.Structs.Map#has
      * @since 3.0.0
      *
+     * @genericUse {K} - [key]
+     *
      * @param {string} key - [description]
      *
      * @return {boolean} [description]
@@ -159,6 +165,9 @@ var Map = new Class({
      *
      * @method Phaser.Structs.Map#delete
      * @since 3.0.0
+     *
+     * @genericUse {K} - [key]
+     * @genericUse {Phaser.Structs.Map.<K, V>} - [$return]
      *
      * @param {string} key - [description]
      *
@@ -181,6 +190,8 @@ var Map = new Class({
      * @method Phaser.Structs.Map#clear
      * @since 3.0.0
      *
+     * @genericUse {Phaser.Structs.Map.<K, V>} - [$return]
+     *
      * @return {Phaser.Structs.Map} This Map object.
      */
     clear: function ()
@@ -202,6 +213,8 @@ var Map = new Class({
      * @method Phaser.Structs.Map#keys
      * @since 3.0.0
      *
+     * @genericUse {K[]} - [$return]
+     *
      * @return {string[]} [description]
      */
     keys: function ()
@@ -215,7 +228,7 @@ var Map = new Class({
      * @method Phaser.Structs.Map#values
      * @since 3.0.0
      *
-     * @genericUse {T[]} - [$return]
+     * @genericUse {V[]} - [$return]
      *
      * @return {Array.<*>} [description]
      */
@@ -260,7 +273,8 @@ var Map = new Class({
      * @method Phaser.Structs.Map#each
      * @since 3.0.0
      *
-     * @genericUse {EachMapCallback.<T>} - [callback]
+     * @genericUse {EachMapCallback.<V>} - [callback]
+     * @genericUse {Phaser.Structs.Map.<K, V>} - [$return]
      *
      * @param {EachMapCallback} callback - [description]
      *
@@ -287,7 +301,7 @@ var Map = new Class({
      * @method Phaser.Structs.Map#contains
      * @since 3.0.0
      *
-     * @genericUse {T} - [value]
+     * @genericUse {V} - [value]
      *
      * @param {*} value - [description]
      *
@@ -315,6 +329,8 @@ var Map = new Class({
      *
      * @method Phaser.Structs.Map#merge
      * @since 3.0.0
+     *
+     * @genericUse {Phaser.Structs.Map.<K, V>} - [map,$return]
      *
      * @param {Phaser.Structs.Map} map - [description]
      * @param {boolean} [override=false] - [description]
