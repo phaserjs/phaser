@@ -22,7 +22,7 @@
  * @property {boolean} enabled - [description]
  * @property {boolean} draggable - [description]
  * @property {boolean} dropZone - [description]
- * @property {[type]} target - [description]
+ * @property {?Phaser.GameObjects.GameObject} target - [description]
  * @property {Phaser.Cameras.Scene2D.Camera} camera - [description]
  * @property {*} hitArea - [description]
  * @property {HitAreaCallback} hitAreaCallback - [description]
