@@ -26,7 +26,7 @@ var GetBitmapTextSize = function (src, round)
 
     var chars = src.fontData.chars;
     var lineHeight = src.fontData.lineHeight;
-    var kerning = src.kerning;
+    var letterSpacing = src.letterSpacing;
 
     var xAdvance = 0;
     var yAdvance = 0;
@@ -99,7 +99,7 @@ var GetBitmapTextSize = function (src, round)
             bh = gh;
         }
 
-        xAdvance += glyph.xAdvance + kerning;
+        xAdvance += glyph.xAdvance + letterSpacing;
         indexCount += 1;
         lastGlyph = glyph;
         lastCharCode = charCode;

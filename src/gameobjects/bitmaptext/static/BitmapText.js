@@ -33,7 +33,7 @@ var Render = require('./BitmapTextRender');
  * @property {string} font - [description]
  * @property {string} text - [description]
  * @property {number} fontSize - [description]
- * @property {number} kerning - [description]
+ * @property {number} letterSpacing - Adds/Removes spacing between characters
  */
 
 /**
@@ -131,13 +131,14 @@ var BitmapText = new Class({
         this.fontSize = size || this.fontData.size;
 
         /**
-         * [description]
+         * Adds/Removes spacing between characters
+         * Can be a negative or positive number
          *
-         * @name Phaser.GameObjects.BitmapText#kerning
+         * @name Phaser.GameObjects.BitmapText#letterSpacing
          * @type {number}
          * @since 3.4.0
          */
-        this.kerning = 0;
+        this.letterSpacing = 0;
 
         this.setTexture(entry.texture, entry.frame);
         this.setPosition(x, y);
