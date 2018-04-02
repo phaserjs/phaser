@@ -9,9 +9,9 @@ var Class = require('../utils/Class');
 /**
  * @callback DataEachCallback
  *
- * @param {*} parent - [description]
- * @param {string} key - [description]
- * @param {*} value - [description]
+ * @param {*} parent - The parent object of the DataManager.
+ * @param {string} key - The key of the value.
+ * @param {*} value - The value.
  * @param {...*} [args] - Additional arguments that will be passed to the callback, after the game object, key, and data.
  */
 
@@ -59,7 +59,7 @@ var DataManager = new Class({
         }
 
         /**
-         * The data.
+         * The data list.
          *
          * @name Phaser.Data.DataManager#list
          * @type {Object.<string, *>}
