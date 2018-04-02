@@ -26,8 +26,8 @@ var Class = require('../utils/Class');
  * @constructor
  * @since 3.0.0
  *
- * @param {*} parent - [description]
- * @param {Phaser.Events.EventEmitter} eventEmitter - [description]
+ * @param {object} parent - The object that this DataManager belongs to.
+ * @param {Phaser.Events.EventEmitter} eventEmitter - The DataManager's event emitter.
  */
 var DataManager = new Class({
 
@@ -36,7 +36,7 @@ var DataManager = new Class({
     function DataManager (parent, eventEmitter)
     {
         /**
-         * [description]
+         * The object that this DataManager belongs to.
          *
          * @name Phaser.Data.DataManager#parent
          * @type {*}
@@ -45,7 +45,7 @@ var DataManager = new Class({
         this.parent = parent;
 
         /**
-         * [description]
+         * The DataManager's event emitter.
          *
          * @name Phaser.Data.DataManager#events
          * @type {Phaser.Events.EventEmitter}
@@ -59,7 +59,7 @@ var DataManager = new Class({
         }
 
         /**
-         * [description]
+         * The data.
          *
          * @name Phaser.Data.DataManager#list
          * @type {Object.<string, *>}
@@ -69,7 +69,10 @@ var DataManager = new Class({
         this.list = {};
 
         /**
-         * [description]
+         * Whether setting data is blocked for this DataManager.
+         *
+         * Used temporarily to allow 'changedata' event listeners to prevent
+         * specific data from being set.
          *
          * @name Phaser.Data.DataManager#blockSet
          * @type {boolean}
@@ -79,7 +82,7 @@ var DataManager = new Class({
         this.blockSet = false;
 
         /**
-         * [description]
+         * Whether setting data is frozen for this DataManager.
          *
          * @name Phaser.Data.DataManager#_frozen
          * @type {boolean}
@@ -98,9 +101,9 @@ var DataManager = new Class({
      * @method Phaser.Data.DataManager#get
      * @since 3.0.0
      *
-     * @param {string} key - [description]
+     * @param {string} key - The key of the value to retrieve.
      *
-     * @return {*} [description]
+     * @return {*} The value belonging to the given key.
      */
     get: function (key)
     {
@@ -108,12 +111,12 @@ var DataManager = new Class({
     },
 
     /**
-     * [description]
+     * Retrieves all data values.
      *
      * @method Phaser.Data.DataManager#getAll
      * @since 3.0.0
      *
-     * @return {Object.<string, *>} [description]
+     * @return {Object.<string, *>} All data values.
      */
     getAll: function ()
     {
@@ -131,14 +134,14 @@ var DataManager = new Class({
     },
 
     /**
-     * [description]
+     * Queries the DataManager for the values of keys matching the given search string.
      *
      * @method Phaser.Data.DataManager#query
      * @since 3.0.0
      *
-     * @param {string} search - [description]
+     * @param {string} search - The search string.
      *
-     * @return {Object.<string, *>} [description]
+     * @return {Object.<string, *>} The values of the keys matching the search string.
      */
     query: function (search)
     {
@@ -156,13 +159,15 @@ var DataManager = new Class({
     },
 
     /**
-     * [description]
+     * Sets the value for the given key.
+     *
+     * Emits the 'changedata' and 'setdata' events.
      *
      * @method Phaser.Data.DataManager#set
      * @since 3.0.0
      *
-     * @param {string} key - [description]
-     * @param {*} data - [description]
+     * @param {string} key - The key to set the value for.
+     * @param {*} data - The value to set.
      *
      * @return {Phaser.Data.DataManager} This DataManager object.
      */
@@ -235,13 +240,13 @@ var DataManager = new Class({
     },
 
     /**
-     * [description]
+     * Merge the given data object into this DataManager's data object.
      *
      * @method Phaser.Data.DataManager#merge
      * @since 3.0.0
      *
-     * @param {Object.<string, *>} data - [description]
-     * @param {boolean} overwrite - [description]
+     * @param {Object.<string, *>} data - The data to merge.
+     * @param {boolean} overwrite - Whether to overwrite existing data. Defaults to true.
      *
      * @return {Phaser.Data.DataManager} This DataManager object.
      */
@@ -262,12 +267,12 @@ var DataManager = new Class({
     },
 
     /**
-     * [description]
+     * Remove the value for the given key.
      *
      * @method Phaser.Data.DataManager#remove
      * @since 3.0.0
      *
-     * @param {string} key - [description]
+     * @param {string} key - The key to remove
      *
      * @return {Phaser.Data.DataManager} This DataManager object.
      */
@@ -286,14 +291,14 @@ var DataManager = new Class({
     },
 
     /**
-     * Gets the data associated with the given 'key', deletes it from this Data store, then returns it.
+     * Retrieves the data associated with the given 'key', deletes it from this Data store, then returns it.
      *
      * @method Phaser.Data.DataManager#pop
      * @since 3.0.0
      *
-     * @param {string} key - [description]
+     * @param {string} key - The key of the value to retrieve and delete.
      *
-     * @return {*} [description]
+     * @return {*} The value of the given key.
      */
     pop: function (key)
     {
@@ -312,14 +317,14 @@ var DataManager = new Class({
     },
 
     /**
-     * [description]
+     * Determines whether the given key is set in this Data store.
      *
      * @method Phaser.Data.DataManager#has
      * @since 3.0.0
      *
-     * @param {string} key - [description]
+     * @param {string} key - The key to check.
      *
-     * @return {boolean} [description]
+     * @return {boolean} Whether the key is set.
      */
     has: function (key)
     {
@@ -327,12 +332,12 @@ var DataManager = new Class({
     },
 
     /**
-     * [description]
+     * Freeze or unfreeze this Data store, to allow or prevent setting its values.
      *
      * @method Phaser.Data.DataManager#setFreeze
      * @since 3.0.0
      *
-     * @param {boolean} value - [description]
+     * @param {boolean} value - Whether to freeze the Data store.
      *
      * @return {Phaser.Data.DataManager} This DataManager object.
      */
@@ -344,7 +349,7 @@ var DataManager = new Class({
     },
 
     /**
-     * [description]
+     * Delete all data in this Data store and unfreeze it.
      *
      * @method Phaser.Data.DataManager#reset
      * @since 3.0.0
@@ -365,7 +370,7 @@ var DataManager = new Class({
     },
 
     /**
-     * [description]
+     * Destroy this data manager.
      *
      * @method Phaser.Data.DataManager#destroy
      * @since 3.0.0
@@ -382,7 +387,7 @@ var DataManager = new Class({
     },
 
     /**
-     * Freeze this Data component, so no changes can be written to it.
+     * Freeze this Data component, so no values can be set.
      *
      * @name Phaser.Data.DataManager#freeze
      * @type {boolean}
