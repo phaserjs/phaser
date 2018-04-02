@@ -890,7 +890,7 @@ var SceneManager = new Class({
      * @method Phaser.Scenes.SceneManager#sleep
      * @since 3.0.0
      *
-     * @param {string} key - The Scene to sleep.
+     * @param {string} key - The Scene to put to sleep.
      *
      * @return {Phaser.Scenes.SceneManager} This SceneManager.
      */
@@ -935,7 +935,7 @@ var SceneManager = new Class({
      * @since 3.0.0
      *
      * @param {string} key - The Scene to start.
-     * @param {object} [data] - Scene config data.
+     * @param {object} [data] - The Scene data.
      *
      * @return {Phaser.Scenes.SceneManager} This SceneManager.
      */
@@ -1091,7 +1091,7 @@ var SceneManager = new Class({
      * @method Phaser.Scenes.SceneManager#bringToTop
      * @since 3.0.0
      *
-     * @param {(string|Phaser.Scene)} key - The Scene to affect.
+     * @param {(string|Phaser.Scene)} key - The Scene to move.
      *
      * @return {Phaser.Scenes.SceneManager} This SceneManager.
      */
@@ -1125,7 +1125,7 @@ var SceneManager = new Class({
      * @method Phaser.Scenes.SceneManager#sendToBack
      * @since 3.0.0
      *
-     * @param {(string|Phaser.Scene)} key - The Scene to affect.
+     * @param {(string|Phaser.Scene)} key - The Scene to move.
      *
      * @return {Phaser.Scenes.SceneManager} This SceneManager.
      */
@@ -1157,7 +1157,7 @@ var SceneManager = new Class({
      * @method Phaser.Scenes.SceneManager#moveDown
      * @since 3.0.0
      *
-     * @param {(string|Phaser.Scene)} key - The Scene to affect.
+     * @param {(string|Phaser.Scene)} key - The Scene to move.
      *
      * @return {Phaser.Scenes.SceneManager} This SceneManager.
      */
@@ -1191,7 +1191,7 @@ var SceneManager = new Class({
      * @method Phaser.Scenes.SceneManager#moveUp
      * @since 3.0.0
      *
-     * @param {(string|Phaser.Scene)} key - The Scene to affect.
+     * @param {(string|Phaser.Scene)} key - The Scene to move.
      *
      * @return {Phaser.Scenes.SceneManager} This SceneManager.
      */
