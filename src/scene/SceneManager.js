@@ -379,7 +379,7 @@ var SceneManager = new Class({
      * @private
      * @since 3.0.0
      *
-     * @param {Phaser.Scene} scene - The Scene to boot
+     * @param {Phaser.Scene} scene - The Scene to boot.
      */
     bootScene: function (scene)
     {
