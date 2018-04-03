@@ -231,7 +231,7 @@ var Tilemap = new Class({
      *
      * @param {string} tilesetName - The name of the tileset as specified in the map data.
      * @param {string} [key] - The key of the Phaser.Cache image used for this tileset. If
-     * `undefined` or `null` it will look for an image with a key matching the tileset parameter.
+     * `undefined` or `null` it will look for an image with a key matching the tilesetName parameter.
      * @param {integer} [tileWidth] - The width of the tile (in pixels) in the Tileset Image. If not
      * given it will default to the map's tileWidth value, or the tileWidth specified in the Tiled
      * JSON file.
