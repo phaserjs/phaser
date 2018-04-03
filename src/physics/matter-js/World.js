@@ -766,28 +766,31 @@ var World = new Class({
 
         graphics.closePath();
 
-        if(this.defaults.debugShowJoint)
+        if (this.defaults.debugShowJoint)
         {
             graphics.lineStyle(2, this.defaults.jointDebugColor);
 
             // Render constraints 
             var constraints = Composite.allConstraints(this.localWorld);
+
             for (i = 0; i < constraints.length; i++)
             {
                 var constraint = constraints[i];
 
                 if (!constraint.render.visible || !constraint.pointA || !constraint.pointB)
-                { continue; }
+                {
+                    continue;
+                }
 
                 if (constraint.render.lineWidth)
                 {
                     graphics.lineStyle(constraint.render.lineWidth, Common.colorToNumber(constraint.render.strokeStyle));
                 }
 
-                var bodyA = constraint.bodyA,
-                    bodyB = constraint.bodyB,
-                    start,
-                    end;
+                var bodyA = constraint.bodyA;
+                var bodyB = constraint.bodyB;
+                var start;
+                var end;
 
                 if (bodyA)
                 {
@@ -820,14 +823,14 @@ var World = new Class({
 
                     if (constraint.render.type === 'spring')
                     {
-                        var delta = Vector.sub(end, start),
-                            normal = Vector.perp(Vector.normalise(delta)),
-                            coils = Math.ceil(Common.clamp(constraint.length / 5, 12, 20)),
-                            offset;
+                        var delta = Vector.sub(end, start);
+                        var normal = Vector.perp(Vector.normalise(delta));
+                        var coils = Math.ceil(Common.clamp(constraint.length / 5, 12, 20));
+                        var offset;
 
                         for (j = 1; j < coils; j += 1)
                         {
-                            offset = j % 2 === 0 ? 1 : -1;
+                            offset = (j % 2 === 0) ? 1 : -1;
 
                             graphics.lineTo(
                                 start.x + delta.x * (j / coils) + normal.x * offset * 4,
