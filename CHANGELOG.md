@@ -19,6 +19,7 @@ being passed to the simulation. The default value is 1 to remain consistent with
 * HTML5AudioSound.setVolume is a chainable way to set the volume of a single Sound instance.
 * HTML5AudioSound.setSeek is a chainable way to set seek to a point of a single Sound instance.
 * HTML5AudioSound.setLoop is a chainable way to set the loop state of a single Sound instance.
+* Matter Physics has two new debug properties: `debugShowJoint` and `debugJointColor`. If defined they will display joints in Matter bodies during the postUpdate debug phase (only if debug is enabled) (thanks @OmarShehata)
 
 ### Bug Fixes
 
@@ -28,6 +29,7 @@ being passed to the simulation. The default value is 1 to remain consistent with
 * BaseSoundManager.rate and BaseSoundManager.detune would incorrectly called `setRate` on its sounds, instead of `calculateRate`.
 * The Gamepad Axis `getValue` method now correctly applies the threshold and zeroes out the returned value.
 * The HueToComponent module was not correctly exporting itself. Fix #3482 (thanks @jdotrjs)
+* Matter.World was using `setZ` instead of `setDepth` for the Debug Graphics Layer, causing it to appear behind objects in some display lists.
 
 ### Updates
 
