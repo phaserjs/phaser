@@ -215,9 +215,9 @@ var KeyboardManager = new Class({
      *
      * For example,
      *
-     *     addKeys( { 'up': Phaser.KeyCode.W, 'down': Phaser.KeyCode.S, 'left': Phaser.KeyCode.A, 'right': Phaser.KeyCode.D } );
+     *     addKeys({ 'up': Phaser.Input.Keyboard.KeyCodes.W, 'down': Phaser.Input.Keyboard.KeyCodes.S });
      *
-     * would return an object containing properties (`up`, `down`, `left` and `right`) referring to {@link Phaser.Key} object.
+     * would return an object containing properties (`up` and `down`) referring to {@link Phaser.Input.Keyboard.Key} objects.
      *
      * @method Phaser.Input.Keyboard.KeyboardManager#addKeys
      * @since 3.0.0
