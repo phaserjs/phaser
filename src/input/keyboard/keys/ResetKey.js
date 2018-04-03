@@ -5,8 +5,8 @@
  */
 
 /**
- *  Resets a Key object back to its default settings.
- *  Optionally resets the keyCode as well.
+ * Resets a Key object back to its default settings.
+ * Optionally resets the keyCode as well.
  *
  * @function Phaser.Input.Keyboard.Keys.ResetKey
  * @since 3.0.0
