@@ -4,10 +4,9 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-//  Phaser.Physics.Matter.World
-
 var Bodies = require('./lib/factory/Bodies');
 var Class = require('../../utils/Class');
+var Common = require('./lib/core/Common');
 var Composite = require('./lib/body/Composite');
 var Engine = require('./lib/core/Engine');
 var EventEmitter = require('eventemitter3');
@@ -15,10 +14,9 @@ var GetFastValue = require('../../utils/object/GetFastValue');
 var GetValue = require('../../utils/object/GetValue');
 var MatterBody = require('./lib/body/Body');
 var MatterEvents = require('./lib/core/Events');
-var MatterWorld = require('./lib/body/World');
 var MatterTileBody = require('./MatterTileBody');
+var MatterWorld = require('./lib/body/World');
 var Vector = require('./lib/geometry/Vector');
-var Common = require('./lib/core/Common');
 
 /**
  * @classdesc
@@ -395,7 +393,7 @@ var World = new Class({
     {
         var graphic = this.scene.sys.add.graphics({ x: 0, y: 0 });
 
-        graphic.setZ(Number.MAX_VALUE);
+        graphic.setDepth(Number.MAX_VALUE);
 
         this.debugGraphic = graphic;
 
