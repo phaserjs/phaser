@@ -30,6 +30,7 @@ being passed to the simulation. The default value is 1 to remain consistent with
 * The Gamepad Axis `getValue` method now correctly applies the threshold and zeroes out the returned value.
 * The HueToComponent module was not correctly exporting itself. Fix #3482 (thanks @jdotrjs)
 * Matter.World was using `setZ` instead of `setDepth` for the Debug Graphics Layer, causing it to appear behind objects in some display lists.
+* Game.destroy now checks to see if the `renderer` exists before calling destroy on it. Fix #3498 (thanks @Huararanga)
 
 ### Updates
 
