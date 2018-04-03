@@ -10,9 +10,9 @@
  * @function Phaser.Utils.Object.Clone
  * @since 3.0.0
  *
- * @param {object} obj - [description]
+ * @param {object} obj - the object from which to clone
  *
- * @return {object} [description]
+ * @return {object} a new object with the same properties as the input obj
  */
 var Clone = function (obj)
 {
