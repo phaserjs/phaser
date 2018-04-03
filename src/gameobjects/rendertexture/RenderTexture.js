@@ -141,7 +141,7 @@ var RenderTexture = new Class({
      */
     destroy: function ()
     {
-        GameObject.destroy.call(this);
+        GameObject.prototype.destroy.call(this);
 
         if (this.renderer.type === CONST.WEBGL)
         {
