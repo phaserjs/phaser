@@ -20,14 +20,14 @@ var GameObject = require('../GameObject');
  * @param {number} interpolationPercentage - Reserved for future use and custom pipelines.
  * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera that is rendering the Game Object.
  */
-var ImageCanvasRenderer = function (renderer, src, interpolationPercentage, camera)
+var ImageCanvasRenderer = function (renderer, src, interpolationPercentage, camera, parentMatrix)
 {
     if (GameObject.RENDER_MASK !== src.renderFlags || (src.cameraFilter > 0 && (src.cameraFilter & camera._id)))
     {
         return;
     }
 
-    renderer.drawImage(src, camera);
+    renderer.drawImage(src, camera, parentMatrix);
 };
 
 module.exports = ImageCanvasRenderer;
