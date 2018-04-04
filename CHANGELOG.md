@@ -21,6 +21,7 @@ being passed to the simulation. The default value is 1 to remain consistent with
 * HTML5AudioSound.setLoop is a chainable way to set the loop state of a single Sound instance.
 * Matter Physics has two new debug properties: `debugShowJoint` and `debugJointColor`. If defined they will display joints in Matter bodies during the postUpdate debug phase (only if debug is enabled) (thanks @OmarShehata)
 * You can now pass a Sprite Sheet or Canvas as the Texture key to `Tilemap.addTileset` and it will work in WebGL, where-as before it would display a corrupted tilemap. Fix #3407 (thanks @Zykino)
+* Graphics.slice allows you to easily draw a Pacman, or slice of pie shape to a Graphics object.
 
 ### Bug Fixes
 
@@ -35,7 +36,7 @@ being passed to the simulation. The default value is 1 to remain consistent with
 * Keyboard.JustDown and Keyboard.JustUp were being reset too early, causing them to fail when called in `update` loops. Fix #3490 (thanks @belen-albeza)
 * RenderTexture.destroy no longer throws an error when called. Fix #3475 (thanks @kuoruan)
 * The WebGL TileSprite batch now modulates the tilePosition to avoid large values being passed into the UV data, fixing corruption when scrolling TileSprites over a long period of time. Fix #3402 (thanks @vinerz @FrancescoNegri)
-* LineCurve.getResolution was missing the `divisions` argument and always returning 1, which made it fail when used as path of a Path. It now defaults to return 1 unless specified otherwise (thanks _ok)
+* LineCurve.getResolution was missing the `divisions` argument and always returning 1, which made it fail when used as part of a Path. It now defaults to return 1 unless specified otherwise (thanks _ok)
 
 ### Updates
 
