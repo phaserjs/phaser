@@ -49,6 +49,8 @@ being passed to the simulation. The default value is 1 to remain consistent with
 * The ComputedSize Component now has `setSize` and `setDisplaySize` methods. This component is used for Game Objects that have a non-texture based size.
 * The GamepadManager now extends EventEmitter directly, just like the KeyboardManager does.
 * The Gamepad Axis threshold has been increased from 0.05 to 0.1.
+* Animation.updateFrame will now call `setSizeToFrame` on the Game Object, which will adjust the Game Objects `width` and `height` properties to match the frame size. Fix #3473 (thanks @wtravO @jp-gc)
+* Animation.updateFrame now supports animation frames with custom pivot points and injects these into the Game Object origin.
 
 Also, my thanks to the following for helping with the Phaser 3 Examples and Docs, either by reporting errors, fixing them or helping author the docs: @gabegordon @melissaelopez @samid737 @nbs @tgrajewski @pagesrichie @hexus @mbrickn @erd0s @icbat @Matthew-Herman
 
