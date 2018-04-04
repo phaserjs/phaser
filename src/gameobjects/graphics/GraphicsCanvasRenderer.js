@@ -22,8 +22,9 @@ var GameObject = require('../GameObject');
  * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera that is rendering the Game Object.
  * @param {CanvasRenderingContext2D} renderTargetCtx - [description]
  * @param {boolean} allowClip - [description]
+ * @param {Phaser.GameObjects.Components.TransformMatrix} parentMatrix - This transform matrix is defined if the game object is nested
  */
-var GraphicsCanvasRenderer = function (renderer, src, interpolationPercentage, camera, renderTargetCtx, allowClip)
+var GraphicsCanvasRenderer = function (renderer, src, interpolationPercentage, camera, renderTargetCtx, allowClip, parentMatrix)
 {
     if (GameObject.RENDER_MASK !== src.renderFlags || (src.cameraFilter > 0 && (src.cameraFilter & camera._id)))
     {

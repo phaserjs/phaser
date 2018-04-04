@@ -19,8 +19,9 @@ var GameObject = require('../GameObject');
  * @param {Phaser.GameObjects.RenderTexture} renderTexture - The Game Object being rendered in this call.
  * @param {number} interpolationPercentage - Reserved for future use and custom pipelines.
  * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera that is rendering the Game Object.
+ * @param {Phaser.GameObjects.Components.TransformMatrix} parentMatrix - This transform matrix is defined if the game object is nested
  */
-var RenderTextureCanvasRenderer = function (renderer, renderTexture, interpolationPercentage, camera)
+var RenderTextureCanvasRenderer = function (renderer, renderTexture, interpolationPercentage, camera, parentMatrix)
 {
     if (GameObject.RENDER_MASK !== renderTexture.renderFlags || (renderTexture.cameraFilter > 0 && (renderTexture.cameraFilter & camera._id)))
     {
