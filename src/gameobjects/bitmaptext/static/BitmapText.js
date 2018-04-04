@@ -174,6 +174,27 @@ var BitmapText = new Class({
     },
 
     /**
+     * Sets the letter spacing between each character of this Bitmap Text.
+     * Can be a positive value to increase the space, or negative to reduce it.
+     * Spacing is applied after the kerning values have been set.
+     *
+     * @method Phaser.GameObjects.BitmapText#setLetterSpacing
+     * @since 3.4.0
+     *
+     * @param {number} [spacing=0] - The amount of horizontal space to add between each character.
+     *
+     * @return {Phaser.GameObjects.BitmapText} This Game Object.
+     */
+    setLetterSpacing: function (spacing)
+    {
+        if (spacing === undefined) { spacing = 0; }
+
+        this.letterSpacing = spacing;
+
+        return this;
+    },
+
+    /**
      * [description]
      *
      * @method Phaser.GameObjects.BitmapText#setText
@@ -278,7 +299,8 @@ var BitmapText = new Class({
         var data = {
             font: this.font,
             text: this.text,
-            fontSize: this.fontSize
+            fontSize: this.fontSize,
+            letterSpacing: this.letterSpacing
         };
 
         out.data = data;
