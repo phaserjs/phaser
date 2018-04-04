@@ -314,7 +314,7 @@ var Animation = new Class({
     {
         this.play(key, true, startFrame);
 
-        this.nextTick += (delay * 1000);
+        this.nextTick += delay;
 
         return this.parent;
     },

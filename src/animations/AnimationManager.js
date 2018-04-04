@@ -511,24 +511,28 @@ var AnimationManager = new Class({
     },
 
     /**
-     * [description]
+     * Takes an array of Game Objects that have the Animation Component and then
+     * starts the given animation playing on them, each one offset by the
+     * `stagger` amount given to this method.
      *
      * @method Phaser.Animations.AnimationManager#staggerPlay
      * @since 3.0.0
+     * 
+     * @generic {Phaser.GameObjects.GameObject[]} G - [items,$return]
      *
-     * @param {string} key - [description]
-     * @param {Phaser.GameObjects.GameObject} child - [description]
-     * @param {number} [stagger=0] - [description]
+     * @param {string} key - The key of the animation to play on the Game Objects.
+     * @param {Phaser.GameObjects.GameObject[]} children - An array of Game Objects to play the animation on. They must have the Animation Component.
+     * @param {number} [stagger=0] - The amount of time, in milliseconds, to offset each play time by.
      *
      * @return {Phaser.Animations.AnimationManager} This Animation Manager.
      */
-    staggerPlay: function (key, child, stagger)
+    staggerPlay: function (key, children, stagger)
     {
         if (stagger === undefined) { stagger = 0; }
 
-        if (!Array.isArray(child))
+        if (!Array.isArray(children))
         {
-            child = [ child ];
+            children = [ children ];
         }
 
         var anim = this.get(key);
@@ -538,9 +542,9 @@ var AnimationManager = new Class({
             return;
         }
 
-        for (var i = 0; i < child.length; i++)
+        for (var i = 0; i < children.length; i++)
         {
-            child[i].anims.delayedPlay(stagger * i, key);
+            children[i].anims.delayedPlay(stagger * i, key);
         }
 
         return this;
