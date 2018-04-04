@@ -30,6 +30,15 @@ var ParticleManagerCanvasRenderer = function (renderer, emitterManager, interpol
         return;
     }
 
+    var ctx = renderer.currentContext;
+
+    ctx.save();
+    if (parentMatrix !== undefined)
+    {
+        var matrix = parentMatrix.matrix;
+        ctx.transform(matrix[0], matrix[1], matrix[2], matrix[3], matrix[4], matrix[5]);
+    }
+
     for (var i = 0; i < emitters.length; i++)
     {
         var emitter = emitters[i];
@@ -42,7 +51,6 @@ var ParticleManagerCanvasRenderer = function (renderer, emitterManager, interpol
             continue;
         }
 
-        var ctx = renderer.currentContext;
 
         var lastAlpha = ctx.globalAlpha;
         var cameraScrollX = camera.scrollX * emitter.scrollFactorX;
@@ -103,6 +111,8 @@ var ParticleManagerCanvasRenderer = function (renderer, emitterManager, interpol
 
         ctx.globalAlpha = lastAlpha;
     }
+
+    ctx.restore();
 };
 
 module.exports = ParticleManagerCanvasRenderer;

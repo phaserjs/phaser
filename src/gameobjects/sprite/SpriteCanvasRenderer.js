@@ -28,7 +28,7 @@ var SpriteCanvasRenderer = function (renderer, src, interpolationPercentage, cam
         return;
     }
 
-    renderer.drawImage(src, camera);
+    renderer.drawImage(src, camera, parentMatrix);
 };
 
 module.exports = SpriteCanvasRenderer;

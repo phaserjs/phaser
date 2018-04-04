@@ -90,6 +90,12 @@ var DynamicBitmapTextCanvasRenderer = function (renderer, src, interpolationPerc
 
     ctx.save();
 
+    if (parentMatrix !== undefined)
+    {
+        var matrix = parentMatrix.matrix;
+        ctx.transform(matrix[0], matrix[1], matrix[2], matrix[3], matrix[4], matrix[5]);
+    }
+
     ctx.translate(src.x, src.y);
 
     ctx.rotate(src.rotation);

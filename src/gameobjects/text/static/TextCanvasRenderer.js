@@ -56,6 +56,12 @@ var TextCanvasRenderer = function (renderer, src, interpolationPercentage, camer
 
     ctx.save();
 
+    if (parentMatrix !== undefined)
+    {
+        var matrix = parentMatrix.matrix;
+        ctx.transform(matrix[0], matrix[1], matrix[2], matrix[3], matrix[4], matrix[5]);
+    }
+
     var tx = src.x - camera.scrollX * src.scrollFactorX;
     var ty = src.y - camera.scrollY * src.scrollFactorY;
 

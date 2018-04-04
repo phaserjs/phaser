@@ -36,6 +36,14 @@ var BlitterCanvasRenderer = function (renderer, src, interpolationPercentage, ca
     var cameraScrollX = src.x - camera.scrollX * src.scrollFactorX;
     var cameraScrollY = src.y - camera.scrollY * src.scrollFactorY;
 
+    ctx.save();
+
+    if (parentMatrix !== undefined)
+    {
+        var matrix = parentMatrix.matrix;
+        ctx.transform(matrix[0], matrix[1], matrix[2], matrix[3], matrix[4], matrix[5]);
+    }
+
     //  Render bobs
     for (var i = 0; i < list.length; i++)
     {
@@ -73,6 +81,8 @@ var BlitterCanvasRenderer = function (renderer, src, interpolationPercentage, ca
             ctx.restore();
         }
     }
+    
+    ctx.restore();
 };
 
 module.exports = BlitterCanvasRenderer;

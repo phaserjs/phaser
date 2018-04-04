@@ -74,6 +74,11 @@ var RenderTextureCanvasRenderer = function (renderer, renderTexture, interpolati
     }
 
     ctx.save();
+    if (parentMatrix !== undefined)
+    {
+        var matrix = parentMatrix.matrix;
+        ctx.transform(matrix[0], matrix[1], matrix[2], matrix[3], matrix[4], matrix[5]);
+    }
     ctx.translate(renderTexture.x - camera.scrollX * renderTexture.scrollFactorX, renderTexture.y - camera.scrollY * renderTexture.scrollFactorY);
     ctx.rotate(renderTexture.rotation);
     ctx.scale(renderTexture.scaleX, renderTexture.scaleY);
