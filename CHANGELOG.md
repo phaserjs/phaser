@@ -19,6 +19,7 @@ being passed to the simulation. The default value is 1 to remain consistent with
 * HTML5AudioSound.setVolume is a chainable way to set the volume of a single Sound instance.
 * HTML5AudioSound.setSeek is a chainable way to set seek to a point of a single Sound instance.
 * HTML5AudioSound.setLoop is a chainable way to set the loop state of a single Sound instance.
+* BitmapText has a new property `letterSpacing` which accepts a positive or negative number to add / reduce spacing between characters (thanks @wtravO)
 * Matter Physics has two new debug properties: `debugShowJoint` and `debugJointColor`. If defined they will display joints in Matter bodies during the postUpdate debug phase (only if debug is enabled) (thanks @OmarShehata)
 * You can now pass a Sprite Sheet or Canvas as the Texture key to `Tilemap.addTileset` and it will work in WebGL, where-as before it would display a corrupted tilemap. Fix #3407 (thanks @Zykino)
 * Graphics.slice allows you to easily draw a Pacman, or slice of pie shape to a Graphics object.
