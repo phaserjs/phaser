@@ -52,8 +52,9 @@ being passed to the simulation. The default value is 1 to remain consistent with
 
 ### Animation Component Updates
 
-We have refactored a large part of the Animation API to make it more consistent with the rest of Phaser 3 and to fix some issues. The following changes all apply to the Animation Component:
+We have refactored the Animation API to make it more consistent with the rest of Phaser 3 and to fix some issues. All of the following changes apply to the Animation Component:
 
+* Animation durations, delays and repeatDelays are all now specified in milliseconds, not seconds like before. This makes them consistent with Tweens, Sounds and other parts of v3. You can still use the `frameRate` property to set the speed of an animation in frames per second.
 * `delay` method has been removed.
 * `setDelay` allows you to define the delay before playback begins.
 * `getDelay` returns the animation playback delay value.
@@ -81,13 +82,18 @@ We have refactored a large part of the Animation API to make it more consistent 
 * `getTotalFrames` returns the total number of frames in the animation.
 * `totalProgres` method has been removed as it did nothing and was mis-spelt.
 * `yoyo` method has been removed.
-* `getYoYo` returns if the animation will yoyo or not.
-* `setYoYoScale` sets if the animation will yoyo or not.
+* `getYoyo` returns if the animation will yoyo or not.
+* `setYoyo` sets if the animation will yoyo or not.
 * `updateFrame` will now call `setSizeToFrame` on the Game Object, which will adjust the Game Objects `width` and `height` properties to match the frame size. Fix #3473 (thanks @wtravO @jp-gc)
 * `updateFrame` now supports animation frames with custom pivot points and injects these into the Game Object origin.
 * `destroy` now removes events, references to the Animation Manager and parent Game Object, clears the current animation and frame and empties internal arrays.
+* Changing the `yoyo` property on an Animation Component would have no effect as it only ever checked the global property, it now checks the local one properly allowing you to specify a `yoyo` on a per Game Object basis.
 
-Also, my thanks to the following for helping with the Phaser 3 Examples and Docs, either by reporting errors, fixing them or helping author the docs: @gabegordon @melissaelopez @samid737 @nbs @tgrajewski @pagesrichie @hexus @mbrickn @erd0s @icbat @Matthew-Herman
+### Examples, Documentation and TypeScript
+
+My thanks to the following for helping with the Phaser 3 Examples, Docs and TypeScript definitions, either by reporting errors, fixing them or helping author the docs:
+
+@gabegordon @melissaelopez @samid737 @nbs @tgrajewski @pagesrichie @hexus @mbrickn @erd0s @icbat @Matthew-Herman
 
 
 

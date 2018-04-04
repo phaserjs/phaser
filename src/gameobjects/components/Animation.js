@@ -98,9 +98,9 @@ var Animation = new Class({
         this.frameRate = 0;
 
         /**
-         * How long the animation should play for.
+         * How long the animation should play for, in milliseconds.
          * If the `frameRate` property has been set then it overrides this value,
-         * otherwise frameRate is derived from `duration`.
+         * otherwise the `frameRate` is derived from `duration`.
          *
          * @name Phaser.GameObjects.Components.Animation#duration
          * @type {number}
@@ -130,7 +130,7 @@ var Animation = new Class({
         this.skipMissedFrames = true;
 
         /**
-         * A delay before starting playback, in seconds.
+         * A delay before starting playback, in milliseconds.
          *
          * @name Phaser.GameObjects.Components.Animation#_delay
          * @type {number}
@@ -152,7 +152,7 @@ var Animation = new Class({
         this._repeat = 0;
 
         /**
-         * Delay before the repeat starts, in seconds.
+         * Delay before the repeat starts, in milliseconds.
          *
          * @name Phaser.GameObjects.Components.Animation#_repeatDelay
          * @type {number}
@@ -267,12 +267,12 @@ var Animation = new Class({
     },
 
     /**
-     * Sets the amount of time, in seconds that the animation will be delayed before starting playback.
+     * Sets the amount of time, in milliseconds, that the animation will be delayed before starting playback.
      *
      * @method Phaser.GameObjects.Components.Animation#delay
      * @since 3.4.0
      *
-     * @param {number} [value=0] - The amount of time, in seconds, to wait before starting playback.
+     * @param {integer} [value=0] - The amount of time, in milliseconds, to wait before starting playback.
      *
      * @return {Phaser.GameObjects.GameObject} The Game Object that owns this Animation Component.
      */
@@ -286,12 +286,12 @@ var Animation = new Class({
     },
 
     /**
-     * Gets the amount of time, in seconds that the animation will be delayed before starting playback.
+     * Gets the amount of time, in milliseconds that the animation will be delayed before starting playback.
      *
      * @method Phaser.GameObjects.Components.Animation#delay
      * @since 3.4.0
      *
-     * @return {number} The amount of time, in seconds, the Animation will wait before starting playback.
+     * @return {integer} The amount of time, in milliseconds, the Animation will wait before starting playback.
      */
     getDelay: function ()
     {
@@ -299,14 +299,14 @@ var Animation = new Class({
     },
 
     /**
-     * [description]
+     * Waits for the specified delay, in milliseconds, then starts playback of the requested animation.
      *
      * @method Phaser.GameObjects.Components.Animation#delayedPlay
      * @since 3.0.0
      *
-     * @param {number} delay - [description]
-     * @param {string} key - [description]
-     * @param {integer} startFrame - [description]
+     * @param {integer} delay - The delay, in milliseconds, to wait before starting the animation playing.
+     * @param {string} key - The key of the animation to play.
+     * @param {integer} [startFrame=0] - The frame of the animation to start from.
      *
      * @return {Phaser.GameObjects.GameObject} The Game Object that owns this Animation Component.
      */
@@ -320,12 +320,12 @@ var Animation = new Class({
     },
 
     /**
-     * [description]
+     * Returns the key of the animation currently loaded into this component.
      *
      * @method Phaser.GameObjects.Components.Animation#getCurrentKey
      * @since 3.0.0
      *
-     * @return {string} [description]
+     * @return {string} The key of the Animation loaded into this component.
      */
     getCurrentKey: function ()
     {
@@ -336,9 +336,10 @@ var Animation = new Class({
     },
 
     /**
-     * [description]
+     * Internal method used to load an animation into this component.
      *
      * @method Phaser.GameObjects.Components.Animation#load
+     * @protected
      * @since 3.0.0
      *
      * @param {string} key - [description]
@@ -362,12 +363,13 @@ var Animation = new Class({
     },
 
     /**
-     * [description]
+     * Pause the current animation and set the `isPlaying` property to `false`.
+     * You can optionally pause it at a specific frame.
      *
      * @method Phaser.GameObjects.Components.Animation#pause
      * @since 3.0.0
      *
-     * @param {Phaser.Animations.Animation} [atFrame] - [description]
+     * @param {Phaser.Animations.AnimationFrame} [atFrame] - An optional frame to set after pausing the animation.
      *
      * @return {Phaser.GameObjects.GameObject} The Game Object that owns this Animation Component.
      */
@@ -389,12 +391,13 @@ var Animation = new Class({
     },
 
     /**
-     * [description]
+     * Resumes playback of a paused animation and sets the `isPlaying` property to `true`.
+     * You can optionally tell it to start playback from a specific frame.
      *
      * @method Phaser.GameObjects.Components.Animation#resume
      * @since 3.0.0
      *
-     * @param {Phaser.Animations.AnimationFrame} [fromFrame] - [description]
+     * @param {Phaser.Animations.AnimationFrame} [fromFrame] - An optional frame to set before restarting playback.
      *
      * @return {Phaser.GameObjects.GameObject} The Game Object that owns this Animation Component.
      */
@@ -418,6 +421,7 @@ var Animation = new Class({
      * `true` if the current animation is paused, otherwise `false`.
      *
      * @name Phaser.GameObjects.Components.Animation#isPaused
+     * @readOnly
      * @type {boolean}
      * @since 3.4.0
      */
@@ -431,14 +435,14 @@ var Animation = new Class({
     },
 
     /**
-     * [description]
+     * Plays an Animation on the Game Object that owns this Animation Component.
      *
      * @method Phaser.GameObjects.Components.Animation#play
      * @since 3.0.0
      *
-     * @param {string} key - [description]
-     * @param {boolean} [ignoreIfPlaying=false] - [description]
-     * @param {integer} [startFrame=0] - [description]
+     * @param {string} key - The string-based key of the animation to play, as defined previously in the Animation Manager.
+     * @param {boolean} [ignoreIfPlaying=false] - If an animation is already playing then ignore this call.
+     * @param {integer} [startFrame=0] - Optionally start the animation playing from this frame index.
      *
      * @return {Phaser.GameObjects.GameObject} The Game Object that owns this Animation Component.
      */
@@ -501,7 +505,22 @@ var Animation = new Class({
         return p;
     },
 
-    //  TODO: Set progress
+    /**
+     * Takes a value between 0 and 1 and uses it to set how far this animation is through playback.
+     * Does not factor in repeats or yoyos.
+     *
+     * @method Phaser.GameObjects.Components.Animation#setProgress
+     * @todo
+     * @since 3.4.0
+     *
+     * @param {float} [value=0] - [description]
+     *
+     * @return {Phaser.GameObjects.GameObject} The Game Object that owns this Animation Component.
+     */
+    setProgress: function (value)
+    {
+        return this.parent;
+    },
 
     /**
      * [description]
@@ -789,14 +808,14 @@ var Animation = new Class({
      * Sets if the current Animation will yoyo when it reaches the end.
      * A yoyo'ing animation will play through consecutively, and then reverse-play back to the start again.
      *
-     * @method Phaser.GameObjects.Components.Animation#setYoYo
+     * @method Phaser.GameObjects.Components.Animation#setYoyo
      * @since 3.4.0
      *
      * @param {boolean} [value=false] - `true` if the animation should yoyo, `false` to not.
      *
      * @return {Phaser.GameObjects.GameObject} The Game Object this Animation Component belongs to.
      */
-    setYoYo: function (value)
+    setYoyo: function (value)
     {
         if (value === undefined) { value = false; }
 
@@ -809,12 +828,12 @@ var Animation = new Class({
      * Gets if the current Animation will yoyo when it reaches the end.
      * A yoyo'ing animation will play through consecutively, and then reverse-play back to the start again.
      *
-     * @method Phaser.GameObjects.Components.Animation#getYoYo
+     * @method Phaser.GameObjects.Components.Animation#getYoyo
      * @since 3.4.0
      *
      * @return {boolean} `true` if the animation is set to yoyo, `false` if not.
      */
-    getYoYo: function ()
+    getYoyo: function ()
     {
         return this._yoyo;
     },
