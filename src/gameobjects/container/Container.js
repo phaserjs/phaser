@@ -73,13 +73,7 @@ var Container = new Class({
         tempMatrix.transformPoint(pointSrc.x, pointSrc.y, pointDst);
 
         return pointDst;
-    },
-
-    hasPoint: function (gameObject, point)
-    {
-        return false;
     }
-
 });
 
 module.exports = Container;
