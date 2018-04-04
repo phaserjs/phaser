@@ -19,7 +19,10 @@ being passed to the simulation. The default value is 1 to remain consistent with
 * HTML5AudioSound.setVolume is a chainable way to set the volume of a single Sound instance.
 * HTML5AudioSound.setSeek is a chainable way to set seek to a point of a single Sound instance.
 * HTML5AudioSound.setLoop is a chainable way to set the loop state of a single Sound instance.
-* A new property was added to BitmapText, 'letterSpacing' which accepts a positive or negative number to add/reduce spacing in between characters.
+* BitmapText has a new property `letterSpacing` which accepts a positive or negative number to add / reduce spacing between characters (thanks @wtravO)
+* Matter Physics has two new debug properties: `debugShowJoint` and `debugJointColor`. If defined they will display joints in Matter bodies during the postUpdate debug phase (only if debug is enabled) (thanks @OmarShehata)
+* You can now pass a Sprite Sheet or Canvas as the Texture key to `Tilemap.addTileset` and it will work in WebGL, where-as before it would display a corrupted tilemap. Fix #3407 (thanks @Zykino)
+* Graphics.slice allows you to easily draw a Pacman, or slice of pie shape to a Graphics object.
 
 ### Bug Fixes
 
@@ -28,6 +31,13 @@ being passed to the simulation. The default value is 1 to remain consistent with
 * PathFollower.start has been renamed to `startFollow`, but PathFollower.setPath was still using `PathFollower.start` (thanks @samid737)
 * BaseSoundManager.rate and BaseSoundManager.detune would incorrectly called `setRate` on its sounds, instead of `calculateRate`.
 * The Gamepad Axis `getValue` method now correctly applies the threshold and zeroes out the returned value.
+* The HueToComponent module was not correctly exporting itself. Fix #3482 (thanks @jdotrjs)
+* Matter.World was using `setZ` instead of `setDepth` for the Debug Graphics Layer, causing it to appear behind objects in some display lists.
+* Game.destroy now checks to see if the `renderer` exists before calling destroy on it. Fix #3498 (thanks @Huararanga)
+* Keyboard.JustDown and Keyboard.JustUp were being reset too early, causing them to fail when called in `update` loops. Fix #3490 (thanks @belen-albeza)
+* RenderTexture.destroy no longer throws an error when called. Fix #3475 (thanks @kuoruan)
+* The WebGL TileSprite batch now modulates the tilePosition to avoid large values being passed into the UV data, fixing corruption when scrolling TileSprites over a long period of time. Fix #3402 (thanks @vinerz @FrancescoNegri)
+* LineCurve.getResolution was missing the `divisions` argument and always returning 1, which made it fail when used as part of a Path. It now defaults to return 1 unless specified otherwise (thanks _ok)
 
 ### Updates
 
@@ -40,7 +50,7 @@ being passed to the simulation. The default value is 1 to remain consistent with
 * The GamepadManager now extends EventEmitter directly, just like the KeyboardManager does.
 * The Gamepad Axis threshold has been increased from 0.05 to 0.1.
 
-Also, my thanks to the following for helping with the Phaser 3 Examples, either by reporting errors or fixing them: @gabegordon @melissaelopez @samid737 @nbs @tgrajewski @pagesrichie @hexus
+Also, my thanks to the following for helping with the Phaser 3 Examples and Docs, either by reporting errors, fixing them or helping author the docs: @gabegordon @melissaelopez @samid737 @nbs @tgrajewski @pagesrichie @hexus @mbrickn @erd0s @icbat @Matthew-Herman
 
 
 

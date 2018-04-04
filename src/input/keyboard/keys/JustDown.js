@@ -19,15 +19,16 @@
  */
 var JustDown = function (key)
 {
-    var current = false;
-
-    if (key.isDown)
+    if (key._justDown)
     {
-        current = key._justDown;
         key._justDown = false;
-    }
 
-    return current;
+        return true;
+    }
+    else
+    {
+        return false;
+    }
 };
 
 module.exports = JustDown;

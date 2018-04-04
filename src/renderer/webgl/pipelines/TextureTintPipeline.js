@@ -1527,8 +1527,8 @@ var TextureTintPipeline = new Class({
             getTint(tileSprite._tintTR, tileSprite._alphaTR),
             getTint(tileSprite._tintBL, tileSprite._alphaBL),
             getTint(tileSprite._tintBR, tileSprite._alphaBR),
-            tileSprite.tilePositionX / tileSprite.frame.width,
-            tileSprite.tilePositionY / tileSprite.frame.height,
+            (tileSprite.tilePositionX % tileSprite.frame.width) / tileSprite.frame.width,
+            (tileSprite.tilePositionY % tileSprite.frame.height) / tileSprite.frame.height,
             camera
         );
     },

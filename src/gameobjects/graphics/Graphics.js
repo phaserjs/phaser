@@ -913,6 +913,43 @@ var Graphics = new Class({
     },
 
     /**
+     * Creates a pie-chart slice shape centered at `x`, `y` with the given radius.
+     * You must define the start and end angle of the slice.
+     * 
+     * Setting the `anticlockwise` argument to `true` creates a shape similar to Pacman.
+     * Setting it to `false` creates a shape like a slice of pie.
+     * 
+     * This method will begin a new path and close the path at the end of it.
+     * To display the actual slice you need to call either `strokePath` or `fillPath` after it.
+     *
+     * @method Phaser.GameObjects.Graphics#slice
+     * @since 3.4.0
+     *
+     * @param {number} x - The horizontal center of the slice.
+     * @param {number} y - The vertical center of the slice.
+     * @param {number} radius - The radius of the slice.
+     * @param {number} startAngle - The start angle of the slice, given in radians.
+     * @param {number} endAngle - The end angle of the slice, given in radians.
+     * @param {boolean} [anticlockwise=false] - Draw the slice piece anticlockwise or clockwise?
+     *
+     * @return {Phaser.GameObjects.Graphics} This Game Object.
+     */
+    slice: function (x, y, radius, startAngle, endAngle, anticlockwise)
+    {
+        if (anticlockwise === undefined) { anticlockwise = false; }
+
+        this.commandBuffer.push(Commands.BEGIN_PATH);
+
+        this.commandBuffer.push(Commands.MOVE_TO, x, y);
+
+        this.commandBuffer.push(Commands.ARC, x, y, radius, startAngle, endAngle, anticlockwise);
+
+        this.commandBuffer.push(Commands.CLOSE_PATH);
+
+        return this;
+    },
+
+    /**
      * [description]
      *
      * @method Phaser.GameObjects.Graphics#save

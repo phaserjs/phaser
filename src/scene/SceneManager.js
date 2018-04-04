@@ -34,7 +34,7 @@ var SceneManager = new Class({
     function SceneManager (game, sceneConfig)
     {
         /**
-         * [description]
+         * The Game that this SceneManager belongs to.
          *
          * @name Phaser.Scenes.SceneManager#game
          * @type {Phaser.Game}
@@ -187,7 +187,7 @@ var SceneManager = new Class({
     },
 
     /**
-     * [description]
+     * Process the Scene operations queue.
      *
      * @method Phaser.Scenes.SceneManager#processQueue
      * @since 3.0.0
@@ -257,10 +257,10 @@ var SceneManager = new Class({
      * @since 3.0.0
      *
      * @param {string} key - A unique key used to reference the Scene, i.e. `MainMenu` or `Level1`.
-     * @param {(Phaser.Scene|SettingsConfig|function)} sceneConfig - [description]
+     * @param {(Phaser.Scene|SettingsConfig|function)} sceneConfig - The config for the Scene
      * @param {boolean} [autoStart=false] - If `true` the Scene will be started immediately after being added.
      *
-     * @return {?Phaser.Scene} [description]
+     * @return {?Phaser.Scene} The added Scene, if it was added immediately.
      */
     add: function (key, sceneConfig, autoStart)
     {
@@ -373,13 +373,13 @@ var SceneManager = new Class({
     },
 
     /**
-     * [description]
+     * Boot the given Scene.
      *
      * @method Phaser.Scenes.SceneManager#bootScene
      * @private
      * @since 3.0.0
      *
-     * @param {Phaser.Scene} scene - [description]
+     * @param {Phaser.Scene} scene - The Scene to boot.
      */
     bootScene: function (scene)
     {
@@ -424,13 +424,15 @@ var SceneManager = new Class({
     },
 
     /**
-     * [description]
+     * Handles load completion for a Scene's Loader.
+     *
+     * Starts the Scene that the Loader belongs to.
      *
      * @method Phaser.Scenes.SceneManager#loadComplete
      * @private
      * @since 3.0.0
      *
-     * @param {Phaser.Loader.LoaderPlugin} loader - [description]
+     * @param {Phaser.Loader.LoaderPlugin} loader - The loader that has completed loading.
      */
     loadComplete: function (loader)
     {
@@ -440,13 +442,13 @@ var SceneManager = new Class({
     },
 
     /**
-     * [description]
+     * Handle payload completion for a Scene.
      *
      * @method Phaser.Scenes.SceneManager#payloadComplete
      * @private
      * @since 3.0.0
      *
-     * @param {Phaser.Loader.LoaderPlugin} loader - [description]
+     * @param {Phaser.Loader.LoaderPlugin} loader - The loader that has completed loading its Scene's payload.
      */
     payloadComplete: function (loader)
     {
@@ -454,13 +456,13 @@ var SceneManager = new Class({
     },
 
     /**
-     * [description]
+     * Updates the Scenes.
      *
      * @method Phaser.Scenes.SceneManager#update
      * @since 3.0.0
      *
-     * @param {number} time - [description]
-     * @param {number} delta - [description]
+     * @param {number} time - Time elapsed.
+     * @param {number} delta - Delta time from the last update.
      */
     update: function (time, delta)
     {
@@ -481,7 +483,7 @@ var SceneManager = new Class({
     },
 
     /**
-     * [description]
+     * Informs the Scenes of the Game being resized.
      *
      * @method Phaser.Scenes.SceneManager#resize
      * @since 3.2.0
@@ -501,12 +503,12 @@ var SceneManager = new Class({
     },
 
     /**
-     * [description]
+     * Renders the Scenes.
      *
      * @method Phaser.Scenes.SceneManager#render
      * @since 3.0.0
      *
-     * @param {*} renderer - [description]
+     * @param {(Phaser.Renderer.Canvas.CanvasRenderer|Phaser.Renderer.WebGL.WebGLRenderer)} renderer - The renderer to use.
      */
     render: function (renderer)
     {
@@ -525,13 +527,13 @@ var SceneManager = new Class({
     },
 
     /**
-     * [description]
+     * Calls the given Scene's {@link Phaser.Scene#create} method and updates its status.
      *
      * @method Phaser.Scenes.SceneManager#create
      * @private
      * @since 3.0.0
      *
-     * @param {Phaser.Scene} scene - [description]
+     * @param {Phaser.Scene} scene - The Scene to create.
      */
     create: function (scene)
     {
@@ -546,16 +548,16 @@ var SceneManager = new Class({
     },
 
     /**
-     * [description]
+     * Creates and initializes a Scene from a function.
      *
      * @method Phaser.Scenes.SceneManager#createSceneFromFunction
      * @private
      * @since 3.0.0
      *
-     * @param {string} key - [description]
-     * @param {function} scene - [description]
+     * @param {string} key - The key of the Scene.
+     * @param {function} scene - The function to create the Scene from.
      *
-     * @return {Phaser.Scene} [description]
+     * @return {Phaser.Scene} The created Scene.
      */
     createSceneFromFunction: function (key, scene)
     {
@@ -595,16 +597,16 @@ var SceneManager = new Class({
     },
 
     /**
-     * [description]
+     * Creates and initializes a Scene instance.
      *
      * @method Phaser.Scenes.SceneManager#createSceneFromInstance
      * @private
      * @since 3.0.0
      *
-     * @param {string} key - [description]
-     * @param {Phaser.Scene} newScene - [description]
+     * @param {string} key - The key of the Scene.
+     * @param {Phaser.Scene} newScene - The Scene instance.
      *
-     * @return {Phaser.Scene} [description]
+     * @return {Phaser.Scene} The created Scene.
      */
     createSceneFromInstance: function (key, newScene)
     {
@@ -625,16 +627,16 @@ var SceneManager = new Class({
     },
 
     /**
-     * [description]
+     * Creates and initializes a Scene from an Object definition.
      *
      * @method Phaser.Scenes.SceneManager#createSceneFromObject
      * @private
      * @since 3.0.0
      *
-     * @param {string} key - [description]
-     * @param {(string|SettingsConfig)} sceneConfig - [description]
+     * @param {string} key - The key of the Scene.
+     * @param {(string|SettingsConfig)} sceneConfig - The Scene config.
      *
-     * @return {Phaser.Scene} [description]
+     * @return {Phaser.Scene} The created Scene.
      */
     createSceneFromObject: function (key, sceneConfig)
     {
@@ -699,16 +701,16 @@ var SceneManager = new Class({
     },
 
     /**
-     * [description]
+     * Retrieves the key of a Scene from a Scene config.
      *
      * @method Phaser.Scenes.SceneManager#getKey
      * @private
      * @since 3.0.0
      *
-     * @param {string} key - [description]
-     * @param {(Phaser.Scene|SettingsConfig|function)} sceneConfig - [description]
+     * @param {string} key - The key to check in the Scene config.
+     * @param {(Phaser.Scene|SettingsConfig|function)} sceneConfig - The Scene config.
      *
-     * @return {string} [description]
+     * @return {string} The Scene key.
      */
     getKey: function (key, sceneConfig)
     {
@@ -740,14 +742,14 @@ var SceneManager = new Class({
     },
 
     /**
-     * [description]
+     * Retrieves a Scene.
      *
      * @method Phaser.Scenes.SceneManager#getScene
      * @since 3.0.0
      *
-     * @param {string} key - [description]
+     * @param {string} key - The Scene to retrieve.
      *
-     * @return {?Phaser.Scene} [description]
+     * @return {?Phaser.Scene} The Scene.
      */
     getScene: function (key)
     {
@@ -773,14 +775,14 @@ var SceneManager = new Class({
     },
 
     /**
-     * [description]
+     * Determines whether a Scene is active.
      *
      * @method Phaser.Scenes.SceneManager#isActive
      * @since 3.0.0
      *
-     * @param {string} key - [description]
+     * @param {string} key - The Scene to check.
      *
-     * @return {boolean} [description]
+     * @return {boolean} Whether the Scene is active.
      */
     isActive: function (key)
     {
@@ -795,14 +797,14 @@ var SceneManager = new Class({
     },
 
     /**
-     * [description]
+     * Determines whether a Scene is visible.
      *
      * @method Phaser.Scenes.SceneManager#isVisible
      * @since 3.0.0
      *
-     * @param {string} key - [description]
+     * @param {string} key - The Scene to check.
      *
-     * @return {boolean} [description]
+     * @return {boolean} Whether the Scene is visible.
      */
     isVisible: function (key)
     {
@@ -817,14 +819,14 @@ var SceneManager = new Class({
     },
 
     /**
-     * [description]
+     * Determines whether a Scene is sleeping.
      *
      * @method Phaser.Scenes.SceneManager#isSleeping
      * @since 3.0.0
      *
-     * @param {string} key - [description]
+     * @param {string} key - The Scene to check.
      *
-     * @return {boolean} [description]
+     * @return {boolean} Whether the Scene is sleeping.
      */
     isSleeping: function (key)
     {
@@ -839,14 +841,14 @@ var SceneManager = new Class({
     },
 
     /**
-     * [description]
+     * Pauses the given Scene.
      *
      * @method Phaser.Scenes.SceneManager#pause
      * @since 3.0.0
      *
-     * @param {string} key - [description]
+     * @param {string} key - The Scene to pause.
      *
-     * @return {Phaser.Scenes.SceneManager} [description]
+     * @return {Phaser.Scenes.SceneManager} This SceneManager.
      */
     pause: function (key)
     {
@@ -861,14 +863,14 @@ var SceneManager = new Class({
     },
 
     /**
-     * [description]
+     * Resumes the given Scene.
      *
      * @method Phaser.Scenes.SceneManager#resume
      * @since 3.0.0
      *
-     * @param {string} key - [description]
+     * @param {string} key - The Scene to resume.
      *
-     * @return {Phaser.Scenes.SceneManager} [description]
+     * @return {Phaser.Scenes.SceneManager} This SceneManager.
      */
     resume: function (key)
     {
@@ -883,14 +885,14 @@ var SceneManager = new Class({
     },
 
     /**
-     * [description]
+     * Puts the given Scene to sleep.
      *
      * @method Phaser.Scenes.SceneManager#sleep
      * @since 3.0.0
      *
-     * @param {string} key - [description]
+     * @param {string} key - The Scene to put to sleep.
      *
-     * @return {Phaser.Scenes.SceneManager} [description]
+     * @return {Phaser.Scenes.SceneManager} This SceneManager.
      */
     sleep: function (key)
     {
@@ -905,14 +907,14 @@ var SceneManager = new Class({
     },
 
     /**
-     * [description]
+     * Awakens the given Scene.
      *
      * @method Phaser.Scenes.SceneManager#wake
      * @since 3.0.0
      *
-     * @param {string} key - [description]
+     * @param {string} key - The Scene to wake up.
      *
-     * @return {Phaser.Scenes.SceneManager} [description]
+     * @return {Phaser.Scenes.SceneManager} This SceneManager.
      */
     wake: function (key)
     {
@@ -927,21 +929,21 @@ var SceneManager = new Class({
     },
 
     /**
-     * [description]
+     * Starts the given Scene.
      *
      * @method Phaser.Scenes.SceneManager#start
      * @since 3.0.0
      *
-     * @param {string} key - [description]
-     * @param {object} [data] - [description]
+     * @param {string} key - The Scene to start.
+     * @param {object} [data] - The Scene data.
      *
-     * @return {Phaser.Scenes.SceneManager} [description]
+     * @return {Phaser.Scenes.SceneManager} This SceneManager.
      */
     start: function (key, data)
     {
         if (data === undefined) { data = {}; }
 
-        //  if not booted, then put scene into a holding pattern
+        //  If the Game is not booted, then put the Scene into a holding pattern
         if (!this.game.isBooted)
         {
             for (var i = 0; i < this._pending.length; i++)
@@ -995,14 +997,14 @@ var SceneManager = new Class({
     },
 
     /**
-     * [description]
+     * Stops the given Scene.
      *
      * @method Phaser.Scenes.SceneManager#stop
      * @since 3.0.0
      *
-     * @param {string} key - [description]
+     * @param {string} key - The Scene to stop.
      *
-     * @return {Phaser.Scenes.SceneManager} [description]
+     * @return {Phaser.Scenes.SceneManager} This SceneManager.
      */
     stop: function (key)
     {
@@ -1017,15 +1019,15 @@ var SceneManager = new Class({
     },
 
     /**
-     * [description]
+     * Sleeps one one Scene and starts the other.
      *
      * @method Phaser.Scenes.SceneManager#switch
      * @since 3.0.0
      *
-     * @param {string} from - [description]
-     * @param {string} to - [description]
+     * @param {string} from - The Scene to sleep.
+     * @param {string} to - The Scene to start.
      *
-     * @return {Phaser.Scenes.SceneManager} [description]
+     * @return {Phaser.Scenes.SceneManager} This SceneManager.
      */
     switch: function (from, to)
     {
@@ -1050,14 +1052,14 @@ var SceneManager = new Class({
     },
 
     /**
-     * [description]
+     * Retrieves a Scene by numeric index.
      *
      * @method Phaser.Scenes.SceneManager#getAt
      * @since 3.0.0
      *
-     * @param {integer} index - [description]
+     * @param {integer} index - The index of the Scene to retrieve.
      *
-     * @return {(Phaser.Scene|undefined)} [description]
+     * @return {(Phaser.Scene|undefined)} The Scene.
      */
     getAt: function (index)
     {
@@ -1065,14 +1067,14 @@ var SceneManager = new Class({
     },
 
     /**
-     * [description]
+     * Retrieves the numeric index of a Scene.
      *
      * @method Phaser.Scenes.SceneManager#getIndex
      * @since 3.0.0
      *
-     * @param {(string|Phaser.Scene)} key - [description]
+     * @param {(string|Phaser.Scene)} key - The key of the Scene.
      *
-     * @return {integer} [description]
+     * @return {integer} The index of the Scene.
      */
     getIndex: function (key)
     {
@@ -1082,14 +1084,16 @@ var SceneManager = new Class({
     },
 
     /**
-     * [description]
+     * Brings a Scene to the top of the Scenes list.
+     *
+     * This means it will render above all other Scenes.
      *
      * @method Phaser.Scenes.SceneManager#bringToTop
      * @since 3.0.0
      *
-     * @param {(string|Phaser.Scene)} key - [description]
+     * @param {(string|Phaser.Scene)} key - The Scene to move.
      *
-     * @return {Phaser.Scenes.SceneManager} [description]
+     * @return {Phaser.Scenes.SceneManager} This SceneManager.
      */
     bringToTop: function (key)
     {
@@ -1114,14 +1118,16 @@ var SceneManager = new Class({
     },
 
     /**
-     * [description]
+     * Sends a Scene to the back of the Scenes list.
+     *
+     * This means it will render below all other Scenes.
      *
      * @method Phaser.Scenes.SceneManager#sendToBack
      * @since 3.0.0
      *
-     * @param {(string|Phaser.Scene)} key - [description]
+     * @param {(string|Phaser.Scene)} key - The Scene to move.
      *
-     * @return {Phaser.Scenes.SceneManager} [description]
+     * @return {Phaser.Scenes.SceneManager} This SceneManager.
      */
     sendToBack: function (key)
     {
@@ -1146,14 +1152,14 @@ var SceneManager = new Class({
     },
 
     /**
-     * [description]
+     * Moves a Scene down one position in the Scenes list.
      *
      * @method Phaser.Scenes.SceneManager#moveDown
      * @since 3.0.0
      *
-     * @param {(string|Phaser.Scene)} key - [description]
+     * @param {(string|Phaser.Scene)} key - The Scene to move.
      *
-     * @return {Phaser.Scenes.SceneManager} [description]
+     * @return {Phaser.Scenes.SceneManager} This SceneManager.
      */
     moveDown: function (key)
     {
@@ -1180,14 +1186,14 @@ var SceneManager = new Class({
     },
 
     /**
-     * [description]
+     * Moves a Scene up one position in the Scenes list.
      *
      * @method Phaser.Scenes.SceneManager#moveUp
      * @since 3.0.0
      *
-     * @param {(string|Phaser.Scene)} key - [description]
+     * @param {(string|Phaser.Scene)} key - The Scene to move.
      *
-     * @return {Phaser.Scenes.SceneManager} [description]
+     * @return {Phaser.Scenes.SceneManager} This SceneManager.
      */
     moveUp: function (key)
     {
@@ -1215,6 +1221,7 @@ var SceneManager = new Class({
 
     /**
      * Moves a Scene so it is immediately above another Scene in the Scenes list.
+     *
      * This means it will render over the top of the other Scene.
      *
      * @method Phaser.Scenes.SceneManager#moveAbove
@@ -1223,7 +1230,7 @@ var SceneManager = new Class({
      * @param {(string|Phaser.Scene)} keyA - The Scene that Scene B will be moved above.
      * @param {(string|Phaser.Scene)} keyB - The Scene to be moved.
      *
-     * @return {Phaser.Scenes.SceneManager} [description]
+     * @return {Phaser.Scenes.SceneManager} This SceneManager.
      */
     moveAbove: function (keyA, keyB)
     {
@@ -1258,6 +1265,7 @@ var SceneManager = new Class({
 
     /**
      * Moves a Scene so it is immediately below another Scene in the Scenes list.
+     *
      * This means it will render behind the other Scene.
      *
      * @method Phaser.Scenes.SceneManager#moveBelow
@@ -1266,7 +1274,7 @@ var SceneManager = new Class({
      * @param {(string|Phaser.Scene)} keyA - The Scene that Scene B will be moved above.
      * @param {(string|Phaser.Scene)} keyB - The Scene to be moved.
      *
-     * @return {Phaser.Scenes.SceneManager} [description]
+     * @return {Phaser.Scenes.SceneManager} This SceneManager.
      */
     moveBelow: function (keyA, keyB)
     {
@@ -1307,15 +1315,15 @@ var SceneManager = new Class({
     },
 
     /**
-     * [description]
+     * Swaps the positions of two Scenes in the Scenes list.
      *
      * @method Phaser.Scenes.SceneManager#swapPosition
      * @since 3.0.0
      *
-     * @param {(string|Phaser.Scene)} keyA - [description]
-     * @param {(string|Phaser.Scene)} keyB - [description]
+     * @param {(string|Phaser.Scene)} keyA - The first Scene to swap.
+     * @param {(string|Phaser.Scene)} keyB - The second Scene to swap.
      *
-     * @return {Phaser.Scenes.SceneManager} [description]
+     * @return {Phaser.Scenes.SceneManager} This SceneManager.
      */
     swapPosition: function (keyA, keyB)
     {
@@ -1345,6 +1353,12 @@ var SceneManager = new Class({
         return this;
     },
 
+    /**
+     * Dumps debug information about each Scene to the developer console.
+     *
+     * @method Phaser.Scenes.SceneManager#dump
+     * @since 3.2.0
+     */
     dump: function ()
     {
         var out = [];
@@ -1364,7 +1378,7 @@ var SceneManager = new Class({
     },
 
     /**
-     * [description]
+     * Destroy the SceneManager and all of its Scene's systems.
      *
      * @method Phaser.Scenes.SceneManager#destroy
      * @since 3.0.0

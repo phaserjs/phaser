@@ -47,4 +47,4 @@ var HueToComponent = function (p, q, t)
     return p;
 };
 
-module.export = HueToComponent;
+module.exports = HueToComponent;

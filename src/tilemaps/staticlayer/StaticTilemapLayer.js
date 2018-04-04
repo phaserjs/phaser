@@ -220,8 +220,8 @@ var StaticTilemapLayer = new Class({
         var tileset = this.tileset;
         var mapWidth = this.layer.width;
         var mapHeight = this.layer.height;
-        var width = tileset.image.get().width;
-        var height = tileset.image.get().height;
+        var width = tileset.image.source[0].width;
+        var height = tileset.image.source[0].height;
         var mapData = this.layer.data;
         var renderer = this.renderer;
         var tile;
