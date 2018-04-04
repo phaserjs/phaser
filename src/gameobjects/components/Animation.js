@@ -507,10 +507,9 @@ var Animation = new Class({
 
     /**
      * Takes a value between 0 and 1 and uses it to set how far this animation is through playback.
-     * Does not factor in repeats or yoyos.
+     * Does not factor in repeats or yoyos, but does handle playing forwards or backwards.
      *
      * @method Phaser.GameObjects.Components.Animation#setProgress
-     * @todo
      * @since 3.4.0
      *
      * @param {float} [value=0] - [description]
@@ -519,6 +518,13 @@ var Animation = new Class({
      */
     setProgress: function (value)
     {
+        if (!this.forward)
+        {
+            value = 1 - value;
+        }
+
+        this.setCurrentFrame(this.animationManager.getFrameByProgress(value));
+
         return this.parent;
     },
 

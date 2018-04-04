@@ -49,6 +49,7 @@ being passed to the simulation. The default value is 1 to remain consistent with
 * The ComputedSize Component now has `setSize` and `setDisplaySize` methods. This component is used for Game Objects that have a non-texture based size.
 * The GamepadManager now extends EventEmitter directly, just like the KeyboardManager does.
 * The Gamepad Axis threshold has been increased from 0.05 to 0.1.
+* Utils.Array.FindClosestInSorted has a new optional argument `key` which will allow you to scan a top-level property of any object in the given sorted array and get the closest match to it.
 
 ### Animation Component Updates
 
@@ -67,6 +68,7 @@ We have refactored the Animation API to make it more consistent with the rest of
 * `play` now returns the parent Game Object instead of the component.
 * `progress` method has been removed.
 * `getProgress` returns the animation progress value.
+* `setProgress` lets you jump the animation to a specific progress point.
 * `repeat` method has been removed.
 * `getRepeat` returns the animation repeat value.
 * `setRepeat` sets the number of times the current animation will repeat.
@@ -88,6 +90,8 @@ We have refactored the Animation API to make it more consistent with the rest of
 * `updateFrame` now supports animation frames with custom pivot points and injects these into the Game Object origin.
 * `destroy` now removes events, references to the Animation Manager and parent Game Object, clears the current animation and frame and empties internal arrays.
 * Changing the `yoyo` property on an Animation Component would have no effect as it only ever checked the global property, it now checks the local one properly allowing you to specify a `yoyo` on a per Game Object basis.
+* Animation.destroy now properly clears the global animation object.
+* Animation.getFrameByProgress will return the Animation Frame that is closest to the given progress value. For example, in a 5 frame animation calling this method with a value of 0.5 would return the middle frame.
 
 ### Examples, Documentation and TypeScript
 

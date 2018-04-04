@@ -4,7 +4,9 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
+var Clamp = require('../math/Clamp');
 var Class = require('../utils/Class');
+var FindClosestInSorted = require('../utils/array/FindClosestInSorted');
 var Frame = require('./AnimationFrame');
 var GetValue = require('../utils/object/GetValue');
 
@@ -340,8 +342,8 @@ var Animation = new Class({
          */
         this.paused = false;
 
-        this.manager.on('pauseall', this.pause.bind(this));
-        this.manager.on('resumeall', this.resume.bind(this));
+        this.manager.on('pauseall', this.pause, this);
+        this.manager.on('resumeall', this.resume, this);
     },
 
     /**
@@ -630,6 +632,23 @@ var Animation = new Class({
         }
 
         component.updateFrame(this.frames[startFrame]);
+    },
+
+    /**
+     * Returns the frame closest to the given progress value between 0 and 1.
+     *
+     * @method Phaser.Animations.Animation#getFrameByProgress
+     * @since 3.4.0
+     *
+     * @param {float} value - A value between 0 and 1.
+     *
+     * @return {Phaser.Animations.AnimationFrame} [description]
+     */
+    getFrameByProgress: function (value)
+    {
+        value = Clamp(value, 0, 1);
+
+        return FindClosestInSorted(value, this.frames, 'progress');
     },
 
     /**
@@ -927,7 +946,19 @@ var Animation = new Class({
      */
     destroy: function ()
     {
-        //  TODO
+        this.manager.off('pauseall', this.pause, this);
+        this.manager.off('resumeall', this.resume, this);
+
+        this.manager.remove(this.key);
+
+        for (var i = 0; i < this.frames.length; i++)
+        {
+            this.frames[i].destroy();
+        }
+
+        this.frames = [];
+
+        this.manager = null;
     }
 
 });
