@@ -15,7 +15,7 @@ var GameObjectFactory = require('../GameObjectFactory');
  * @method Phaser.GameObjects.GameObjectFactory#graphics
  * @since 3.0.0
  *
- * @param {object} config - [description]
+ * @param {object} [config] - [description]
  * 
  * @return {Phaser.GameObjects.Graphics} The Game Object that was created.
  */
