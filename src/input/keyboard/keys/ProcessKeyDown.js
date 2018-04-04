@@ -40,12 +40,11 @@ var ProcessKeyDown = function (key, event)
         key.isUp = false;
         key.timeDown = event.timeStamp;
         key.duration = 0;
+        key._justDown = true;
+        key._justUp = false;
     }
 
     key.repeats++;
-
-    key._justDown = true;
-    key._justUp = false;
 
     return key;
 };

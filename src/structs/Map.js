@@ -11,7 +11,7 @@ var Class = require('../utils/Class');
  * @generic E - [entry]
  *
  * @param {string} key - [description]
- * @param {E} entry - [description]
+ * @param {*} entry - [description]
  *
  * @return {?boolean} [description]
  */

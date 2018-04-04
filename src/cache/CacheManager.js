@@ -43,7 +43,6 @@ var CacheManager = new Class({
          *
          * @name Phaser.Cache.CacheManager#binary
          * @type {Phaser.Cache.BaseCache}
-         * @protected
          * @since 3.0.0
          */
         this.binary = new BaseCache();
@@ -54,7 +53,6 @@ var CacheManager = new Class({
          *
          * @name Phaser.Cache.CacheManager#bitmapFont
          * @type {Phaser.Cache.BaseCache}
-         * @protected
          * @since 3.0.0
          */
         this.bitmapFont = new BaseCache();
@@ -64,7 +62,6 @@ var CacheManager = new Class({
          *
          * @name Phaser.Cache.CacheManager#json
          * @type {Phaser.Cache.BaseCache}
-         * @protected
          * @since 3.0.0
          */
         this.json = new BaseCache();
@@ -74,7 +71,6 @@ var CacheManager = new Class({
          *
          * @name Phaser.Cache.CacheManager#physics
          * @type {Phaser.Cache.BaseCache}
-         * @protected
          * @since 3.0.0
          */
         this.physics = new BaseCache();
@@ -84,7 +80,6 @@ var CacheManager = new Class({
          *
          * @name Phaser.Cache.CacheManager#shader
          * @type {Phaser.Cache.BaseCache}
-         * @protected
          * @since 3.0.0
          */
         this.shader = new BaseCache();
@@ -94,7 +89,6 @@ var CacheManager = new Class({
          *
          * @name Phaser.Cache.CacheManager#audio
          * @type {Phaser.Cache.BaseCache}
-         * @protected
          * @since 3.0.0
          */
         this.audio = new BaseCache();
@@ -104,7 +98,6 @@ var CacheManager = new Class({
          *
          * @name Phaser.Cache.CacheManager#text
          * @type {Phaser.Cache.BaseCache}
-         * @protected
          * @since 3.0.0
          */
         this.text = new BaseCache();
@@ -114,7 +107,6 @@ var CacheManager = new Class({
          *
          * @name Phaser.Cache.CacheManager#obj
          * @type {Phaser.Cache.BaseCache}
-         * @protected
          * @since 3.0.0
          */
         this.obj = new BaseCache();
@@ -125,7 +117,6 @@ var CacheManager = new Class({
          *
          * @name Phaser.Cache.CacheManager#tilemap
          * @type {Phaser.Cache.BaseCache}
-         * @protected
          * @since 3.0.0
          */
         this.tilemap = new BaseCache();
@@ -135,7 +126,6 @@ var CacheManager = new Class({
          *
          * @name Phaser.Cache.CacheManager#xml
          * @type {Phaser.Cache.BaseCache}
-         * @protected
          * @since 3.0.0
          */
         this.xml = new BaseCache();
@@ -146,7 +136,6 @@ var CacheManager = new Class({
          *
          * @name Phaser.Cache.CacheManager#custom
          * @type {Object.<Phaser.Cache.BaseCache>}
-         * @protected
          * @since 3.0.0
          */
         this.custom = {};

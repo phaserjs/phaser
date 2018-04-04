@@ -33,6 +33,7 @@ var Render = require('./BitmapTextRender');
  * @property {string} font - [description]
  * @property {string} text - [description]
  * @property {number} fontSize - [description]
+ * @property {number} letterSpacing - Adds/Removes spacing between characters
  */
 
 /**
@@ -129,6 +130,16 @@ var BitmapText = new Class({
          */
         this.fontSize = size || this.fontData.size;
 
+        /**
+         * Adds/Removes spacing between characters
+         * Can be a negative or positive number
+         *
+         * @name Phaser.GameObjects.BitmapText#letterSpacing
+         * @type {number}
+         * @since 3.4.0
+         */
+        this.letterSpacing = 0;
+
         this.setTexture(entry.texture, entry.frame);
         this.setPosition(x, y);
         this.setOrigin(0, 0);
@@ -158,6 +169,27 @@ var BitmapText = new Class({
     setFontSize: function (size)
     {
         this.fontSize = size;
+
+        return this;
+    },
+
+    /**
+     * Sets the letter spacing between each character of this Bitmap Text.
+     * Can be a positive value to increase the space, or negative to reduce it.
+     * Spacing is applied after the kerning values have been set.
+     *
+     * @method Phaser.GameObjects.BitmapText#setLetterSpacing
+     * @since 3.4.0
+     *
+     * @param {number} [spacing=0] - The amount of horizontal space to add between each character.
+     *
+     * @return {Phaser.GameObjects.BitmapText} This Game Object.
+     */
+    setLetterSpacing: function (spacing)
+    {
+        if (spacing === undefined) { spacing = 0; }
+
+        this.letterSpacing = spacing;
 
         return this;
     },
@@ -267,7 +299,8 @@ var BitmapText = new Class({
         var data = {
             font: this.font,
             text: this.text,
-            fontSize: this.fontSize
+            fontSize: this.fontSize,
+            letterSpacing: this.letterSpacing
         };
 
         out.data = data;

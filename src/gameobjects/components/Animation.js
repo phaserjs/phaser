@@ -513,13 +513,7 @@ var Animation = new Class({
         {
             this.stop();
 
-            var sprite = this.parent;
-            var frame = this.currentAnim.frames[0];
-
-            this.currentFrame = frame;
-
-            sprite.texture = frame.frame.texture;
-            sprite.frame = frame.frame;
+            this.setCurrentFrame(this.currentAnim.frames[0]);
         }
     },
 
@@ -734,6 +728,40 @@ var Animation = new Class({
     },
 
     /**
+     * Sets the given Animation Frame as being the current frame
+     * and applies it to the parent Game Object, adjusting its size and origin as needed.
+     *
+     * @method Phaser.GameObjects.Components.Animation#setCurrentFrame
+     * @since 3.4.0
+     *
+     * @param {Phaser.Animations.AnimationFrame} animationFrame - The Animation Frame to set as being current.
+     *
+     * @return {Phaser.GameObjects.GameObject} The Game Object this Animation Component belongs to.
+     */
+    setCurrentFrame: function (animationFrame)
+    {
+        var gameObject = this.parent;
+
+        this.currentFrame = animationFrame;
+
+        gameObject.texture = animationFrame.frame.texture;
+        gameObject.frame = animationFrame.frame;
+
+        gameObject.setSizeToFrame();
+
+        if (animationFrame.frame.customPivot)
+        {
+            gameObject.setOrigin(animationFrame.frame.pivotX, animationFrame.frame.pivotY);
+        }
+        else
+        {
+            gameObject.updateDisplayOrigin();
+        }
+
+        return gameObject;
+    },
+
+    /**
      * [description]
      *
      * @method Phaser.GameObjects.Components.Animation#updateFrame
@@ -743,18 +771,13 @@ var Animation = new Class({
      */
     updateFrame: function (animationFrame)
     {
-        var sprite = this.parent;
-
-        this.currentFrame = animationFrame;
-
-        sprite.texture = animationFrame.frame.texture;
-        sprite.frame = animationFrame.frame;
+        var gameObject = this.setCurrentFrame(animationFrame);
 
         if (this.isPlaying)
         {
             if (animationFrame.setAlpha)
             {
-                sprite.alpha = animationFrame.alpha;
+                gameObject.alpha = animationFrame.alpha;
             }
 
             var anim = this.currentAnim;
@@ -766,7 +789,7 @@ var Animation = new Class({
 
             if (animationFrame.onUpdate)
             {
-                animationFrame.onUpdate(sprite, animationFrame);
+                animationFrame.onUpdate(gameObject, animationFrame);
             }
         }
     },

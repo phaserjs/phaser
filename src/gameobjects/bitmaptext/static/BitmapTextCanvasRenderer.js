@@ -34,6 +34,7 @@ var BitmapTextCanvasRenderer = function (renderer, src, interpolationPercentage,
 
     var chars = src.fontData.chars;
     var lineHeight = src.fontData.lineHeight;
+    var letterSpacing = src.letterSpacing;
 
     var xAdvance = 0;
     var yAdvance = 0;
@@ -140,7 +141,7 @@ var BitmapTextCanvasRenderer = function (renderer, src, interpolationPercentage,
         x *= scale;
         y *= scale;
 
-        xAdvance += glyph.xAdvance;
+        xAdvance += glyph.xAdvance + letterSpacing;
         indexCount += 1;
         lastGlyph = glyph;
         lastCharCode = charCode;
