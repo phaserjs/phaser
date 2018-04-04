@@ -49,10 +49,51 @@ being passed to the simulation. The default value is 1 to remain consistent with
 * The ComputedSize Component now has `setSize` and `setDisplaySize` methods. This component is used for Game Objects that have a non-texture based size.
 * The GamepadManager now extends EventEmitter directly, just like the KeyboardManager does.
 * The Gamepad Axis threshold has been increased from 0.05 to 0.1.
-* Animation.updateFrame will now call `setSizeToFrame` on the Game Object, which will adjust the Game Objects `width` and `height` properties to match the frame size. Fix #3473 (thanks @wtravO @jp-gc)
-* Animation.updateFrame now supports animation frames with custom pivot points and injects these into the Game Object origin.
 
-Also, my thanks to the following for helping with the Phaser 3 Examples and Docs, either by reporting errors, fixing them or helping author the docs: @gabegordon @melissaelopez @samid737 @nbs @tgrajewski @pagesrichie @hexus @mbrickn @erd0s @icbat @Matthew-Herman
+### Animation Component Updates
+
+We have refactored the Animation API to make it more consistent with the rest of Phaser 3 and to fix some issues. All of the following changes apply to the Animation Component:
+
+* Animation durations, delays and repeatDelays are all now specified in milliseconds, not seconds like before. This makes them consistent with Tweens, Sounds and other parts of v3. You can still use the `frameRate` property to set the speed of an animation in frames per second.
+* `delay` method has been removed.
+* `setDelay` allows you to define the delay before playback begins.
+* `getDelay` returns the animation playback delay value.
+* `delayedPlay` now returns the parent Game Object instead of the component.
+* `load` now returns the parent Game Object instead of the component.
+* `pause` now returns the parent Game Object instead of the component.
+* `resume` now returns the parent Game Object instead of the component.
+* `isPaused` returns a boolean indicating the paused state of the animation.
+* `paused` method has been removed.
+* `play` now returns the parent Game Object instead of the component.
+* `progress` method has been removed.
+* `getProgress` returns the animation progress value.
+* `repeat` method has been removed.
+* `getRepeat` returns the animation repeat value.
+* `setRepeat` sets the number of times the current animation will repeat.
+* `repeatDelay` method has been removed.
+* `getRepeatDelay` returns the animation repeat delay value.
+* `setRepeatDelay` sets the delay time between each repeat.
+* `restart` now returns the parent Game Object instead of the component.
+* `stop` now returns the parent Game Object instead of the component.
+* `timeScale` method has been removed.
+* `getTimeScale` returns the animation time scale value.
+* `setTimeScale` sets the time scale value.
+* `totalFrames` method has been removed.
+* `getTotalFrames` returns the total number of frames in the animation.
+* `totalProgres` method has been removed as it did nothing and was mis-spelt.
+* `yoyo` method has been removed.
+* `getYoyo` returns if the animation will yoyo or not.
+* `setYoyo` sets if the animation will yoyo or not.
+* `updateFrame` will now call `setSizeToFrame` on the Game Object, which will adjust the Game Objects `width` and `height` properties to match the frame size. Fix #3473 (thanks @wtravO @jp-gc)
+* `updateFrame` now supports animation frames with custom pivot points and injects these into the Game Object origin.
+* `destroy` now removes events, references to the Animation Manager and parent Game Object, clears the current animation and frame and empties internal arrays.
+* Changing the `yoyo` property on an Animation Component would have no effect as it only ever checked the global property, it now checks the local one properly allowing you to specify a `yoyo` on a per Game Object basis.
+
+### Examples, Documentation and TypeScript
+
+My thanks to the following for helping with the Phaser 3 Examples, Docs and TypeScript definitions, either by reporting errors, fixing them or helping author the docs:
+
+@gabegordon @melissaelopez @samid737 @nbs @tgrajewski @pagesrichie @hexus @mbrickn @erd0s @icbat @Matthew-Herman
 
 
 

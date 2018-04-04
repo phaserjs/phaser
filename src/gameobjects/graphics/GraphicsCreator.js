@@ -16,7 +16,7 @@ var Graphics = require('./Graphics');
  * @method Phaser.GameObjects.GameObjectCreator#graphics
  * @since 3.0.0
  *
- * @param {object} config - [description]
+ * @param {object} [config] - [description]
  *
  * @return {Phaser.GameObjects.Graphics} The Game Object that was created.
  */

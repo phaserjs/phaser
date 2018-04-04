@@ -15,11 +15,11 @@ var GetValue = require('../utils/object/GetValue');
  * @property {string} type - A frame based animation (as opposed to a bone based animation)
  * @property {JSONAnimationFrame[]} frames - [description]
  * @property {integer} frameRate - The frame rate of playback in frames per second (default 24 if duration is null)
- * @property {integer} duration - How long the animation should play for.
+ * @property {integer} duration - How long the animation should play for in milliseconds. If not given its derived from frameRate.
  * @property {boolean} skipMissedFrames - Skip frames if the time lags, or always advanced anyway?
- * @property {integer} delay - Delay before starting playback (in seconds)
+ * @property {integer} delay - Delay before starting playback. Value given in milliseconds.
  * @property {integer} repeat - Number of times to repeat the animation (-1 for infinity)
- * @property {integer} repeatDelay - Delay before the repeat starts (in seconds)
+ * @property {integer} repeatDelay - Delay before the animation repeats. Value given in milliseconds.
  * @property {boolean} yoyo - Should the animation yoyo? (reverse back down to the start) before repeating?
  * @property {boolean} showOnStart - Should sprite.visible = true when the animation starts to play?
  * @property {boolean} hideOnComplete - Should sprite.visible = false when the animation finishes?
@@ -41,14 +41,15 @@ var GetValue = require('../utils/object/GetValue');
  * @property {AnimationFrameConfig[]} [frames] - [description]
  * @property {string} [defaultTextureKey=null] - [description]
  * @property {integer} [frameRate] - The frame rate of playback in frames per second (default 24 if duration is null)
- * @property {integer} [duration] - How long the animation should play for.
+ * @property {integer} [duration] - How long the animation should play for in milliseconds. If not given its derived from frameRate.
  * @property {boolean} [skipMissedFrames=true] - Skip frames if the time lags, or always advanced anyway?
- * @property {integer} [delay=0] - Delay before starting playback (in seconds)
+ * @property {integer} [delay=0] - Delay before starting playback. Value given in milliseconds.
  * @property {integer} [repeat=0] - Number of times to repeat the animation (-1 for infinity)
- * @property {integer} [repeatDelay=0] - Delay before the repeat starts (in seconds)
+ * @property {integer} [repeatDelay=0] - Delay before the animation repeats. Value given in milliseconds.
  * @property {boolean} [yoyo=false] - Should the animation yoyo? (reverse back down to the start) before repeating?
  * @property {boolean} [showOnStart=false] - Should sprite.visible = true when the animation starts to play?
  * @property {boolean} [hideOnComplete=false] - Should sprite.visible = false when the animation finishes?
+
  * @property {*} [callbackScope] - [description]
  * @property {(false|function)} [onStart=false] - [description]
  * @property {Array.<*>} [onStartParams] - [description]
@@ -137,8 +138,9 @@ var Animation = new Class({
         this.frameRate = GetValue(config, 'frameRate', null);
 
         /**
-         * How long the animation should play for.
-         * If frameRate is set it overrides this value otherwise frameRate is derived from duration.
+         * How long the animation should play for, in milliseconds.
+         * If the `frameRate` property has been set then it overrides this value,
+         * otherwise the `frameRate` is derived from `duration`.
          *
          * @name Phaser.Animations.Animation#duration
          * @type {integer}
@@ -150,25 +152,25 @@ var Animation = new Class({
         {
             //  No duration or frameRate given, use default frameRate of 24fps
             this.frameRate = 24;
-            this.duration = this.frameRate / this.frames.length;
+            this.duration = (this.frameRate / this.frames.length) * 1000;
         }
         else if (this.duration && this.frameRate === null)
         {
             //  Duration given but no frameRate, so set the frameRate based on duration
-            //  I.e. 12 frames in the animation, duration = 4 (4000 ms)
-            //  So frameRate is 12 / 4 = 3 fps
-            this.frameRate = this.frames.length / this.duration;
+            //  I.e. 12 frames in the animation, duration = 4000 ms
+            //  So frameRate is 12 / (4000 / 1000) = 3 fps
+            this.frameRate = this.frames.length / (this.duration / 1000);
         }
         else
         {
             //  frameRate given, derive duration from it (even if duration also specified)
             //  I.e. 15 frames in the animation, frameRate = 30 fps
-            //  So duration is 15 / 30 = 0.5 (half a second)
-            this.duration = this.frames.length / this.frameRate;
+            //  So duration is 15 / 30 = 0.5 * 1000 (half a second, or 500ms)
+            this.duration = (this.frames.length / this.frameRate) * 1000;
         }
 
         /**
-         * ms per frame (without including frame specific modifiers)
+         * How many ms per frame, not including frame specific modifiers.
          *
          * @name Phaser.Animations.Animation#msPerFrame
          * @type {integer}
@@ -187,7 +189,7 @@ var Animation = new Class({
         this.skipMissedFrames = GetValue(config, 'skipMissedFrames', true);
 
         /**
-         * Delay before starting playback (in seconds)
+         * The delay in ms before the playback will begin.
          *
          * @name Phaser.Animations.Animation#delay
          * @type {integer}
@@ -197,7 +199,7 @@ var Animation = new Class({
         this.delay = GetValue(config, 'delay', 0);
 
         /**
-         * Number of times to repeat the animation (-1 for infinity)
+         * Number of times to repeat the animation. Set to -1 to repeat forever.
          *
          * @name Phaser.Animations.Animation#repeat
          * @type {integer}
@@ -207,7 +209,7 @@ var Animation = new Class({
         this.repeat = GetValue(config, 'repeat', 0);
 
         /**
-         * Delay before the repeat starts (in seconds)
+         * The delay in ms before the a repeat playthrough starts.
          *
          * @name Phaser.Animations.Animation#repeatDelay
          * @type {integer}
@@ -329,7 +331,7 @@ var Animation = new Class({
         this.onCompleteParams = GetValue(config, 'onCompleteParams', []);
 
         /**
-         * Global pause, effects all Game Objects using this Animation instance
+         * Global pause. All Game Objects using this Animation instance are impacted by this property.
          *
          * @name Phaser.Animations.Animation#paused
          * @type {boolean}
@@ -342,10 +344,8 @@ var Animation = new Class({
         this.manager.on('resumeall', this.resume.bind(this));
     },
 
-    //  Add frames to the end of the animation
-
     /**
-     * [description]
+     * Add frames to the end of the animation.
      *
      * @method Phaser.Animations.Animation#addFrame
      * @since 3.0.0
@@ -359,10 +359,8 @@ var Animation = new Class({
         return this.addFrameAt(this.frames.length, config);
     },
 
-    //  Add frame/s into the animation
-
     /**
-     * [description]
+     * Add frame/s into the animation.
      *
      * @method Phaser.Animations.Animation#addFrameAt
      * @since 3.0.0
@@ -401,24 +399,25 @@ var Animation = new Class({
     },
 
     /**
-     * [description]
+     * Check if the given frame index is valid.
      *
      * @method Phaser.Animations.Animation#checkFrame
      * @since 3.0.0
      *
-     * @param {integer} index - [description]
+     * @param {integer} index - The index to be checked.
      *
-     * @return {boolean} [description]
+     * @return {boolean} `true` if the index is valid, otherwise `false`.
      */
     checkFrame: function (index)
     {
-        return (index < this.frames.length);
+        return (index >= 0 && index < this.frames.length);
     },
 
     /**
      * [description]
      *
      * @method Phaser.Animations.Animation#completeAnimation
+     * @protected
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.Components.Animation} component - [description]
@@ -437,6 +436,7 @@ var Animation = new Class({
      * [description]
      *
      * @method Phaser.Animations.Animation#getFirstTick
+     * @protected
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.Components.Animation} component - [description]
@@ -452,7 +452,7 @@ var Animation = new Class({
 
         if (includeDelay)
         {
-            component.nextTick += (component._delay * 1000);
+            component.nextTick += component._delay;
         }
     },
 
@@ -460,6 +460,7 @@ var Animation = new Class({
      * [description]
      *
      * @method Phaser.Animations.Animation#getFrameAt
+     * @protected
      * @since 3.0.0
      *
      * @param {integer} index - [description]
@@ -594,9 +595,10 @@ var Animation = new Class({
     },
 
     /**
-     * [description]
+     * Loads the Animation values into the Animation Component.
      *
      * @method Phaser.Animations.Animation#load
+     * @private
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.Components.Animation} component - [description]
@@ -613,11 +615,12 @@ var Animation = new Class({
         {
             component.currentAnim = this;
 
-            component._timeScale = 1;
             component.frameRate = this.frameRate;
             component.duration = this.duration;
             component.msPerFrame = this.msPerFrame;
             component.skipMissedFrames = this.skipMissedFrames;
+
+            component._timeScale = 1;
             component._delay = this.delay;
             component._repeat = this.repeat;
             component._repeatDelay = this.repeatDelay;
@@ -648,7 +651,7 @@ var Animation = new Class({
             //  We're at the end of the animation
 
             //  Yoyo? (happens before repeat)
-            if (this.yoyo)
+            if (component.yoyo)
             {
                 component.forward = false;
 
@@ -766,7 +769,7 @@ var Animation = new Class({
         {
             component.pendingRepeat = true;
             component.accumulator -= component.nextTick;
-            component.nextTick += (component._repeatDelay * 1000);
+            component.nextTick += component._repeatDelay;
         }
         else
         {
