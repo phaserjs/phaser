@@ -35,6 +35,7 @@ being passed to the simulation. The default value is 1 to remain consistent with
 * Keyboard.JustDown and Keyboard.JustUp were being reset too early, causing them to fail when called in `update` loops. Fix #3490 (thanks @belen-albeza)
 * RenderTexture.destroy no longer throws an error when called. Fix #3475 (thanks @kuoruan)
 * The WebGL TileSprite batch now modulates the tilePosition to avoid large values being passed into the UV data, fixing corruption when scrolling TileSprites over a long period of time. Fix #3402 (thanks @vinerz @FrancescoNegri)
+* LineCurve.getResolution was missing the `divisions` argument and always returning 1, which made it fail when used as path of a Path. It now defaults to return 1 unless specified otherwise (thanks _ok)
 
 ### Updates
 
