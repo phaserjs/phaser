@@ -12,31 +12,64 @@
  *
  * @param {number} value - The value to search for in the array.
  * @param {array} array - The array to search, which must be sorted.
+ * @param {string} [key] - An optional property key. If specified the array elements property will be checked against value.
  *
- * @return {number} The nearest value found in the array.
+ * @return {number|object} The nearest value found in the array, or if a `key` was given, the nearest object with the matching property value.
  */
-var FindClosestInSorted = function (value, array)
+var FindClosestInSorted = function (value, array, key)
 {
     if (!array.length)
     {
         return NaN;
     }
-    else if (array.length === 1 || value < array[0])
+    else if (array.length === 1)
     {
         return array[0];
     }
 
     var i = 1;
+    var low;
+    var high;
 
-    while (array[i] < value)
+    if (key)
     {
-        i++;
+        if (value < array[0][key])
+        {
+            return array[0];
+        }
+
+        while (array[i][key] < value)
+        {
+            i++;
+        }
+    }
+    else
+    {
+        while (array[i] < value)
+        {
+            i++;
+        }
     }
 
-    var low = array[i - 1];
-    var high = (i < array.length) ? array[i] : Number.POSITIVE_INFINITY;
+    if (i > array.length)
+    {
+        i = array.length;
+    }
 
-    return ((high - value) <= (value - low)) ? high : low;
+    if (key)
+    {
+        low = array[i - 1][key];
+        high = array[i][key];
+
+        return ((high - value) <= (value - low)) ? array[i] : array[i - 1];
+    }
+    else
+    {
+        low = array[i - 1];
+        high = array[i];
+
+        return ((high - value) <= (value - low)) ? high : low;
+    }
 };
 
 module.exports = FindClosestInSorted;
