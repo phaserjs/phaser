@@ -750,6 +750,12 @@ var Animation = new Class({
         sprite.texture = animationFrame.frame.texture;
         sprite.frame = animationFrame.frame;
 
+        if (sprite.width !== sprite.frame.width || sprite.height !== sprite.frame.height)
+        {
+            sprite.setSizeToFrame();
+            sprite.updateDisplayOrigin();
+        }
+
         if (this.isPlaying)
         {
             if (animationFrame.setAlpha)

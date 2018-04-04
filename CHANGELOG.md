@@ -31,6 +31,7 @@ being passed to the simulation. The default value is 1 to remain consistent with
 * PathFollower.start has been renamed to `startFollow`, but PathFollower.setPath was still using `PathFollower.start` (thanks @samid737)
 * BaseSoundManager.rate and BaseSoundManager.detune would incorrectly called `setRate` on its sounds, instead of `calculateRate`.
 * The Gamepad Axis `getValue` method now correctly applies the threshold and zeroes out the returned value.
+* Fixes bug where animations with frames of varying sizes where not being properly anchored.
 * The HueToComponent module was not correctly exporting itself. Fix #3482 (thanks @jdotrjs)
 * Matter.World was using `setZ` instead of `setDepth` for the Debug Graphics Layer, causing it to appear behind objects in some display lists.
 * Game.destroy now checks to see if the `renderer` exists before calling destroy on it. Fix #3498 (thanks @Huararanga)
