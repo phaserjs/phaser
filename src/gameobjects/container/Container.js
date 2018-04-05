@@ -137,10 +137,12 @@ var Container = new Class({
     {
         gameObject.on('destroy', this.remove, this);
 
-        if (gameObject.type === 'Container')
+        if (gameObject.parentContainer)
         {
-            gameObject.parentContainer = list;
+            gameObject.parentContainer.remove(gameObject);
         }
+
+        gameObject.parentContainer = list;
     },
 
     /**
@@ -157,10 +159,7 @@ var Container = new Class({
     {
         gameObject.off('destroy', list.remove, this);
 
-        if (gameObject.type === 'Container')
-        {
-            gameObject.parentContainer = null;
-        }
+        gameObject.parentContainer = null;
     },
 
     /**
