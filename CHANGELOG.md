@@ -23,6 +23,8 @@ being passed to the simulation. The default value is 1 to remain consistent with
 * Matter Physics has two new debug properties: `debugShowJoint` and `debugJointColor`. If defined they will display joints in Matter bodies during the postUpdate debug phase (only if debug is enabled) (thanks @OmarShehata)
 * You can now pass a Sprite Sheet or Canvas as the Texture key to `Tilemap.addTileset` and it will work in WebGL, where-as before it would display a corrupted tilemap. Fix #3407 (thanks @Zykino)
 * Graphics.slice allows you to easily draw a Pacman, or slice of pie shape to a Graphics object.
+* List.addCallback is a new optional callback that is invoked every time a new child is added to the List. You can use this to have a callback fire when children are added to the Display List.
+* List.removeCallback is a new optional callback that is invoked every time a new child is removed from the List. You can use this to have a callback fire when children are removed from the Display List.
 
 ### Bug Fixes
 
@@ -53,6 +55,14 @@ being passed to the simulation. The default value is 1 to remain consistent with
 * The Gamepad Axis threshold has been increased from 0.05 to 0.1.
 * Utils.Array.FindClosestInSorted has a new optional argument `key` which will allow you to scan a top-level property of any object in the given sorted array and get the closest match to it.
 * Vector2.setTo is a method alias for Vector2.set allowing it to be used inter-changeably with Geom.Point.
+* List.add can now take an array or a single child. If an array is given it's passed over to List.addMultiple.
+* List.add has a new optional argument `skipCallback`.
+* List.addAt has a new optional argument `skipCallback`.
+* List.addMultiple has a new optional argument `skipCallback`.
+* List.remove has a new optional argument `skipCallback`.
+* List.removeAt has a new optional argument `skipCallback`.
+* List.removeBetween has a new optional argument `skipCallback`.
+* List.removeAll has a new optional argument `skipCallback`.
 
 ### Animation Component Updates
 
