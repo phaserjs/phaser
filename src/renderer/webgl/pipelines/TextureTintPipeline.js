@@ -10,6 +10,7 @@ var ShaderSourceFS = require('../shaders/TextureTint.frag');
 var ShaderSourceVS = require('../shaders/TextureTint.vert');
 var Utils = require('../Utils');
 var WebGLPipeline = require('../WebGLPipeline');
+var IdentityMatrix = new Float32Array([1, 0, 0, 1, 0, 0]);
 
 /**
  * @classdesc
@@ -365,9 +366,17 @@ var TextureTintPipeline = new Class({
      *
      * @param {Phaser.GameObjects.Particles.ParticleEmitterManager} emitterManager - [description]
      * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
+     * @param {Phaser.GameObjects.Components.TransformMatrix} parentTransformMatrix - [description]
      */
-    drawEmitterManager: function (emitterManager, camera)
+    drawEmitterManager: function (emitterManager, camera, parentTransformMatrix)
     {
+        var parentMatrix = null;
+
+        if (parentTransformMatrix !== undefined)
+        {
+            parentMatrix = parentTransformMatrix.matrix;
+        }
+
         this.renderer.setPipeline(this);
 
         var roundPixels = this.renderer.config.roundPixels;
@@ -391,6 +400,31 @@ var TextureTintPipeline = new Class({
         var vertexComponentCount = this.vertexComponentCount;
         var vertexCapacity = this.vertexCapacity;
         var texture = emitterManager.defaultFrame.source.glTexture;
+        var pca, pcb, pcc, pcd, pce, pcf;
+
+        if (parentMatrix != null)
+        {
+            var pma = parentMatrix[0];
+            var pmb = parentMatrix[1];
+            var pmc = parentMatrix[2];
+            var pmd = parentMatrix[3];
+            var pme = parentMatrix[4];
+            var pmf = parentMatrix[5];
+            
+            pca = cma * pma + cmb * pmc;
+            pcb = cma * pmb + cmb * pmd;
+            pcc = cmc * pma + cmd * pmc;
+            pcd = cmc * pmb + cmd * pmd;
+            pce = cme * pma + cmf * pmc + pme;
+            pcf = cme * pmb + cmf * pmd + pmf;
+
+            cma = pca;
+            cmb = pcb;
+            cmc = pcc;
+            cmd = pcd;
+            cme = pce;
+            cmf = pcf;
+        }
 
         this.setTexture2D(texture, 0);
         
@@ -529,9 +563,18 @@ var TextureTintPipeline = new Class({
      *
      * @param {Phaser.GameObjects.Blitter} blitter - [description]
      * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
+     * @param {Phaser.GameObjects.Components.TransformMatrix} parentTransformMatrix - [description]
      */
-    drawBlitter: function (blitter, camera)
+    drawBlitter: function (blitter, camera, parentTransformMatrix)
     {
+        var parentMatrix = null;
+
+        if (parentTransformMatrix !== undefined)
+        {
+            parentMatrix = parentTransformMatrix.matrix;
+        }
+
+
         this.renderer.setPipeline(this);
 
         var roundPixels = this.renderer.config.roundPixels;
@@ -553,6 +596,29 @@ var TextureTintPipeline = new Class({
         var batchOffset = 0;
         var blitterX = blitter.x - cameraScrollX;
         var blitterY = blitter.y - cameraScrollY;
+
+        if (parentMatrix != null)
+        {
+            var pma = parentMatrix[0];
+            var pmb = parentMatrix[1];
+            var pmc = parentMatrix[2];
+            var pmd = parentMatrix[3];
+            var pme = parentMatrix[4];
+            var pmf = parentMatrix[5];
+            var pca = a * pma + b * pmc;
+            var pcb = a * pmb + b * pmd;
+            var pcc = c * pma + d * pmc;
+            var pcd = c * pmb + d * pmd;
+            var pce = e * pma + f * pmc + pme;
+            var pcf = e * pmb + f * pmd + pmf;
+
+            a = pca;
+            b = pcb;
+            c = pcc;
+            d = pcd;
+            e = pce;
+            f = pcf;
+        }
 
         for (var batchIndex = 0; batchIndex < batchCount; ++batchIndex)
         {
@@ -650,16 +716,25 @@ var TextureTintPipeline = new Class({
      *
      * @param {Phaser.GameObjects.Sprite} sprite - [description]
      * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
+     * @param {Phaser.GameObjects.Components.TransformMatrix} parentTransformMatrix - [description]
      */
-    batchSprite: function (sprite, camera)
+    batchSprite: function (sprite, camera, parentTransformMatrix)
     {
+        var parentMatrix = null;
+
+        if (parentTransformMatrix !== undefined)
+        {
+            parentMatrix = parentTransformMatrix.matrix;
+        }
+
+
         this.renderer.setPipeline(this);
 
         if (this.vertexCount + 6 > this.vertexCapacity)
         {
             this.flush();
         }
-
+        
         var roundPixels = this.renderer.config.roundPixels;
         var getTint = Utils.getTintAppendFloatAlpha;
         var vertexViewF32 = this.vertexViewF32;
@@ -704,12 +779,39 @@ var TextureTintPipeline = new Class({
         var cmd = cameraMatrix[3];
         var cme = cameraMatrix[4];
         var cmf = cameraMatrix[5];
-        var mva = sra * cma + srb * cmc;
-        var mvb = sra * cmb + srb * cmd;
-        var mvc = src * cma + srd * cmc;
-        var mvd = src * cmb + srd * cmd;
-        var mve = sre * cma + srf * cmc + cme;
-        var mvf = sre * cmb + srf * cmd + cmf;
+        var mva, mvb, mvc, mvd, mve, mvf;
+
+        if (parentMatrix === null)
+        {
+            mva = sra * cma + srb * cmc;
+            mvb = sra * cmb + srb * cmd;
+            mvc = src * cma + srd * cmc;
+            mvd = src * cmb + srd * cmd;
+            mve = sre * cma + srf * cmc + cme;
+            mvf = sre * cmb + srf * cmd + cmf;
+        }
+        else
+        {
+            var pma = parentMatrix[0];
+            var pmb = parentMatrix[1];
+            var pmc = parentMatrix[2];
+            var pmd = parentMatrix[3];
+            var pme = parentMatrix[4];
+            var pmf = parentMatrix[5];
+            var pca = cma * pma + cmb * pmc;
+            var pcb = cma * pmb + cmb * pmd;
+            var pcc = cmc * pma + cmd * pmc;
+            var pcd = cmc * pmb + cmd * pmd;
+            var pce = cme * pma + cmf * pmc + pme;
+            var pcf = cme * pmb + cmf * pmd + pmf;
+            mva = sra * pca + srb * pcc;
+            mvb = sra * pcb + srb * pcd;
+            mvc = src * pca + srd * pcc;
+            mvd = src * pcb + srd * pcd;
+            mve = sre * pca + srf * pcc + pce;
+            mvf = sre * pcb + srf * pcd + pcf;
+        }
+
         var tx0 = x * mva + y * mvc + mve;
         var ty0 = x * mvb + y * mvd + mvf;
         var tx1 = x * mva + yh * mvc + mve;
@@ -782,9 +884,17 @@ var TextureTintPipeline = new Class({
      *
      * @param {Phaser.GameObjects.Mesh} mesh - [description]
      * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
+     * @param {Phaser.GameObjects.Components.TransformMatrix} parentTransformMatrix - [description]
      */
-    batchMesh: function (mesh, camera)
+    batchMesh: function (mesh, camera, parentTransformMatrix)
     {
+        var parentMatrix = null;
+
+        if (parentTransformMatrix !== undefined)
+        {
+            parentMatrix = parentTransformMatrix.matrix;
+        }
+
         var vertices = mesh.vertices;
         var length = vertices.length;
         var vertexCount = (length / 2)|0;
@@ -825,13 +935,40 @@ var TextureTintPipeline = new Class({
         var cmd = cameraMatrix[3];
         var cme = cameraMatrix[4];
         var cmf = cameraMatrix[5];
-        var mva = sra * cma + srb * cmc;
-        var mvb = sra * cmb + srb * cmd;
-        var mvc = src * cma + srd * cmc;
-        var mvd = src * cmb + srd * cmd;
-        var mve = sre * cma + srf * cmc + cme;
-        var mvf = sre * cmb + srf * cmd + cmf;
         var vertexOffset = 0;
+        var mva, mvb, mvc, mvd, mve, mvf;
+
+        if (parentMatrix === null)
+        {
+            mva = sra * cma + srb * cmc;
+            mvb = sra * cmb + srb * cmd;
+            mvc = src * cma + srd * cmc;
+            mvd = src * cmb + srd * cmd;
+            mve = sre * cma + srf * cmc + cme;
+            mvf = sre * cmb + srf * cmd + cmf;
+        }
+        else
+        {
+            var pma = parentMatrix[0];
+            var pmb = parentMatrix[1];
+            var pmc = parentMatrix[2];
+            var pmd = parentMatrix[3];
+            var pme = parentMatrix[4];
+            var pmf = parentMatrix[5];
+            var pca = cma * pma + cmb * pmc;
+            var pcb = cma * pmb + cmb * pmd;
+            var pcc = cmc * pma + cmd * pmc;
+            var pcd = cmc * pmb + cmd * pmd;
+            var pce = cme * pma + cmf * pmc + pme;
+            var pcf = cme * pmb + cmf * pmd + pmf;
+            mva = sra * pca + srb * pcc;
+            mvb = sra * pcb + srb * pcd;
+            mvc = src * pca + srd * pcc;
+            mvd = src * pcb + srd * pcd;
+            mve = sre * pca + srf * pcc + pce;
+            mvf = sre * pcb + srf * pcd + pcf;
+        }
+
 
         this.setTexture2D(texture, 0);
 
@@ -871,9 +1008,18 @@ var TextureTintPipeline = new Class({
      *
      * @param {Phaser.GameObjects.BitmapText} bitmapText - [description]
      * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
+     * @param {Phaser.GameObjects.Components.TransformMatrix} parentTransformMatrix - [description]
      */
-    batchBitmapText: function (bitmapText, camera)
+    batchBitmapText: function (bitmapText, camera, parentTransformMatrix)
     {
+        var parentMatrix = null;
+
+        if (parentTransformMatrix !== undefined)
+        {
+            parentMatrix = parentTransformMatrix.matrix;
+        }
+
+
         this.renderer.setPipeline(this);
 
         if (this.vertexCount + 6 > this.vertexCapacity)
@@ -961,13 +1107,39 @@ var TextureTintPipeline = new Class({
         var cmd = cameraMatrix[3];
         var cme = cameraMatrix[4];
         var cmf = cameraMatrix[5];
-        var mva = sra * cma + srb * cmc;
-        var mvb = sra * cmb + srb * cmd;
-        var mvc = src * cma + srd * cmc;
-        var mvd = src * cmb + srd * cmd;
-        var mve = sre * cma + srf * cmc + cme;
-        var mvf = sre * cmb + srf * cmd + cmf;
         var vertexOffset = 0;
+        var mva, mvb, mvc, mvd, mve, mvf;
+
+        if (parentMatrix === null)
+        {
+            mva = sra * cma + srb * cmc;
+            mvb = sra * cmb + srb * cmd;
+            mvc = src * cma + srd * cmc;
+            mvd = src * cmb + srd * cmd;
+            mve = sre * cma + srf * cmc + cme;
+            mvf = sre * cmb + srf * cmd + cmf;
+        }
+        else
+        {
+            var pma = parentMatrix[0];
+            var pmb = parentMatrix[1];
+            var pmc = parentMatrix[2];
+            var pmd = parentMatrix[3];
+            var pme = parentMatrix[4];
+            var pmf = parentMatrix[5];
+            var pca = cma * pma + cmb * pmc;
+            var pcb = cma * pmb + cmb * pmd;
+            var pcc = cmc * pma + cmd * pmc;
+            var pcd = cmc * pmb + cmd * pmd;
+            var pce = cme * pma + cmf * pmc + pme;
+            var pcf = cme * pmb + cmf * pmd + pmf;
+            mva = sra * pca + srb * pcc;
+            mvb = sra * pcb + srb * pcd;
+            mvc = src * pca + srd * pcc;
+            mvd = src * pcb + srd * pcd;
+            mve = sre * pca + srf * pcc + pce;
+            mvf = sre * pcb + srf * pcd + pcf;
+        }
 
         this.setTexture2D(texture, 0);
 
@@ -1106,9 +1278,18 @@ var TextureTintPipeline = new Class({
      *
      * @param {Phaser.GameObjects.DynamicBitmapText} bitmapText - [description]
      * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
+     * @param {Phaser.GameObjects.Components.TransformMatrix} parentTransformMatrix - [description]
      */
-    batchDynamicBitmapText: function (bitmapText, camera)
+    batchDynamicBitmapText: function (bitmapText, camera, parentTransformMatrix)
     {
+        var parentMatrix = null;
+
+        if (parentTransformMatrix !== undefined)
+        {
+            parentMatrix = parentTransformMatrix.matrix;
+        }
+
+
         this.renderer.setPipeline(this);
 
         if (this.vertexCount + 6 > this.vertexCapacity)
@@ -1194,15 +1375,41 @@ var TextureTintPipeline = new Class({
         var cmd = cameraMatrix[3];
         var cme = cameraMatrix[4];
         var cmf = cameraMatrix[5];
-        var mva = sra * cma + srb * cmc;
-        var mvb = sra * cmb + srb * cmd;
-        var mvc = src * cma + srd * cmc;
-        var mvd = src * cmb + srd * cmd;
-        var mve = sre * cma + srf * cmc + cme;
-        var mvf = sre * cmb + srf * cmd + cmf;
         var crop = (bitmapText.cropWidth > 0 || bitmapText.cropHeight > 0);
         var uta, utb, utc, utd, ute, utf;
         var vertexOffset = 0;
+        var mva, mvb, mvc, mvd, mve, mvf;
+
+        if (parentMatrix === null)
+        {
+            mva = sra * cma + srb * cmc;
+            mvb = sra * cmb + srb * cmd;
+            mvc = src * cma + srd * cmc;
+            mvd = src * cmb + srd * cmd;
+            mve = sre * cma + srf * cmc + cme;
+            mvf = sre * cmb + srf * cmd + cmf;
+        }
+        else
+        {
+            var pma = parentMatrix[0];
+            var pmb = parentMatrix[1];
+            var pmc = parentMatrix[2];
+            var pmd = parentMatrix[3];
+            var pme = parentMatrix[4];
+            var pmf = parentMatrix[5];
+            var pca = cma * pma + cmb * pmc;
+            var pcb = cma * pmb + cmb * pmd;
+            var pcc = cmc * pma + cmd * pmc;
+            var pcd = cmc * pmb + cmd * pmd;
+            var pce = cme * pma + cmf * pmc + pme;
+            var pcf = cme * pmb + cmf * pmd + pmf;
+            mva = sra * pca + srb * pcc;
+            mvb = sra * pcb + srb * pcd;
+            mvc = src * pca + srd * pcc;
+            mvd = src * pcb + srd * pcd;
+            mve = sre * pca + srf * pcc + pce;
+            mvf = sre * pcb + srf * pcd + pcf;
+        }
 
         this.setTexture2D(texture, 0);
 
@@ -1416,8 +1623,9 @@ var TextureTintPipeline = new Class({
      *
      * @param {Phaser.GameObjects.Text} text - [description]
      * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
+     * @param {Phaser.GameObjects.Components.TransformMatrix} parentTransformMatrix - [description]
      */
-    batchText: function (text, camera)
+    batchText: function (text, camera, parentTransformMatrix)
     {
         var getTint = Utils.getTintAppendFloatAlpha;
 
@@ -1438,7 +1646,8 @@ var TextureTintPipeline = new Class({
             getTint(text._tintBL, text._alphaBL),
             getTint(text._tintBR, text._alphaBR),
             0, 0,
-            camera
+            camera,
+            parentTransformMatrix
         );
     },
 
@@ -1450,8 +1659,9 @@ var TextureTintPipeline = new Class({
      *
      * @param {Phaser.Tilemaps.DynamicTilemapLayer} tilemapLayer - [description]
      * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
+     * @param {Phaser.GameObjects.Components.TransformMatrix} parentTransformMatrix - [description]
      */
-    batchDynamicTilemapLayer: function (tilemapLayer, camera)
+    batchDynamicTilemapLayer: function (tilemapLayer, camera, parentTransformMatrix)
     {
         var renderTiles = tilemapLayer.culledTiles;
         var length = renderTiles.length;
@@ -1493,7 +1703,8 @@ var TextureTintPipeline = new Class({
                 frameX, frameY, frameWidth, frameHeight,
                 tint, tint, tint, tint,
                 0, 0,
-                camera
+                camera,
+                parentTransformMatrix
             );
         }
     },
@@ -1506,8 +1717,9 @@ var TextureTintPipeline = new Class({
      *
      * @param {Phaser.GameObjects.TileSprite} tileSprite - [description]
      * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
+     * @param {Phaser.GameObjects.Components.TransformMatrix} parentTransformMatrix - [description]
      */
-    batchTileSprite: function (tileSprite, camera)
+    batchTileSprite: function (tileSprite, camera, parentTransformMatrix)
     {
         var getTint = Utils.getTintAppendFloatAlpha;
 
@@ -1529,7 +1741,8 @@ var TextureTintPipeline = new Class({
             getTint(tileSprite._tintBR, tileSprite._alphaBR),
             (tileSprite.tilePositionX % tileSprite.frame.width) / tileSprite.frame.width,
             (tileSprite.tilePositionY % tileSprite.frame.height) / tileSprite.frame.height,
-            camera
+            camera,
+            parentTransformMatrix
         );
     },
 
@@ -1567,6 +1780,7 @@ var TextureTintPipeline = new Class({
      * @param {float} uOffset - [description]
      * @param {float} vOffset - [description]
      * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
+     * @param {Phaser.GameObjects.Components.TransformMatrix} parentTransformMatrix - [description]
      */
     batchTexture: function (
         gameObject,
@@ -1582,8 +1796,17 @@ var TextureTintPipeline = new Class({
         frameX, frameY, frameWidth, frameHeight,
         tintTL, tintTR, tintBL, tintBR,
         uOffset, vOffset,
-        camera)
+        camera, 
+        parentTransformMatrix)
     {
+        var parentMatrix = null;
+
+        if (parentTransformMatrix !== undefined)
+        {
+            parentMatrix = parentTransformMatrix.matrix;
+        }
+
+
         this.renderer.setPipeline(this);
 
         if (this.vertexCount + 6 > this.vertexCapacity)
@@ -1620,12 +1843,37 @@ var TextureTintPipeline = new Class({
         var cmd = cameraMatrix[3];
         var cme = cameraMatrix[4];
         var cmf = cameraMatrix[5];
-        var mva = sra * cma + srb * cmc;
-        var mvb = sra * cmb + srb * cmd;
-        var mvc = src * cma + srd * cmc;
-        var mvd = src * cmb + srd * cmd;
-        var mve = sre * cma + srf * cmc + cme;
-        var mvf = sre * cmb + srf * cmd + cmf;
+        var mva, mvb, mvc, mvd, mve, mvf;
+        if (parentMatrix === null)
+        {
+            mva = sra * cma + srb * cmc;
+            mvb = sra * cmb + srb * cmd;
+            mvc = src * cma + srd * cmc;
+            mvd = src * cmb + srd * cmd;
+            mve = sre * cma + srf * cmc + cme;
+            mvf = sre * cmb + srf * cmd + cmf;
+        }
+        else
+        {
+            var pma = parentMatrix[0];
+            var pmb = parentMatrix[1];
+            var pmc = parentMatrix[2];
+            var pmd = parentMatrix[3];
+            var pme = parentMatrix[4];
+            var pmf = parentMatrix[5];
+            var pca = cma * pma + cmb * pmc;
+            var pcb = cma * pmb + cmb * pmd;
+            var pcc = cmc * pma + cmd * pmc;
+            var pcd = cmc * pmb + cmd * pmd;
+            var pce = cme * pma + cmf * pmc + pme;
+            var pcf = cme * pmb + cmf * pmd + pmf;
+            mva = sra * pca + srb * pcc;
+            mvb = sra * pcb + srb * pcd;
+            mvc = src * pca + srd * pcc;
+            mvd = src * pcb + srd * pcd;
+            mve = sre * pca + srf * pcc + pce;
+            mvf = sre * pcb + srf * pcd + pcf;
+        }
         var tx0 = x * mva + y * mvc + mve;
         var ty0 = x * mvb + y * mvd + mvf;
         var tx1 = x * mva + yh * mvc + mve;
@@ -1706,6 +1954,7 @@ var TextureTintPipeline = new Class({
      * @param {number} frameWidth - [description]
      * @param {number} frameHeight - [description]
      * @param {Phaser.GameObjects.Components.TransformMatrix} transformMatrix - [description]
+     * @param {Phaser.GameObjects.Components.TransformMatrix} parentTransformMatrix - [description]
      *
      * @return {Phaser.Renderer.WebGL.TextureTintPipeline} This Pipeline.
      */
@@ -1714,9 +1963,17 @@ var TextureTintPipeline = new Class({
         srcX, srcY,
         tint, alpha,
         frameX, frameY, frameWidth, frameHeight,
-        transformMatrix
+        transformMatrix, 
+        parentTransformMatrix
     )
     {
+        var parentMatrix = null;
+
+        if (parentTransformMatrix !== undefined)
+        {
+            parentMatrix = parentTransformMatrix.matrix;
+        }
+
         this.renderer.setPipeline(this);
 
         if (this.vertexCount + 6 > this.vertexCapacity)
@@ -1739,6 +1996,29 @@ var TextureTintPipeline = new Class({
         var mvd = transformMatrix[3];
         var mve = transformMatrix[4];
         var mvf = transformMatrix[5];
+
+        if (parentMatrix !== null)
+        {
+            var pma = parentMatrix[0];
+            var pmb = parentMatrix[1];
+            var pmc = parentMatrix[2];
+            var pmd = parentMatrix[3];
+            var pme = parentMatrix[4];
+            var pmf = parentMatrix[5];
+            var pca = mva * pma + mvb * pmc;
+            var pcb = mva * pmb + mvb * pmd;
+            var pcc = mvc * pma + mvd * pmc;
+            var pcd = mvc * pmb + mvd * pmd;
+            var pce = mve * pma + mvf * pmc + pme;
+            var pcf = mve * pmb + mvf * pmd + pmf;
+            mva = pca;
+            mvb = pcb;
+            mvc = pcc;
+            mvd = pcd;
+            mve = pce;
+            mvf = pcf;
+        }
+
         var tx0 = x * mva + y * mvc + mve;
         var ty0 = x * mvb + y * mvd + mvf;
         var tx1 = x * mva + yh * mvc + mve;

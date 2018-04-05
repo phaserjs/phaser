@@ -19,8 +19,9 @@ var GameObject = require('../../GameObject');
  * @param {Phaser.GameObjects.Text} src - The Game Object being rendered in this call.
  * @param {number} interpolationPercentage - Reserved for future use and custom pipelines.
  * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera that is rendering the Game Object.
+ * @param {Phaser.GameObjects.Components.TransformMatrix} parentMatrix - This transform matrix is defined if the game object is nested
  */
-var TextCanvasRenderer = function (renderer, src, interpolationPercentage, camera)
+var TextCanvasRenderer = function (renderer, src, interpolationPercentage, camera, parentMatrix)
 {
     if (GameObject.RENDER_MASK !== src.renderFlags || (src.cameraFilter > 0 && (src.cameraFilter & camera._id)) || src.text === '')
     {
@@ -54,6 +55,12 @@ var TextCanvasRenderer = function (renderer, src, interpolationPercentage, camer
     var canvas = src.canvas;
 
     ctx.save();
+
+    if (parentMatrix !== undefined)
+    {
+        var matrix = parentMatrix.matrix;
+        ctx.transform(matrix[0], matrix[1], matrix[2], matrix[3], matrix[4], matrix[5]);
+    }
 
     var tx = src.x - camera.scrollX * src.scrollFactorX;
     var ty = src.y - camera.scrollY * src.scrollFactorY;

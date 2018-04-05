@@ -15,7 +15,7 @@ var roundPixels = false;
  * @param {Phaser.GameObjects.GameObject} src - [description]
  * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
  */
-var DrawImage = function (src, camera)
+var DrawImage = function (src, camera, parentMatrix)
 {
     var ctx = this.currentContext;
     var frame = src.frame;
@@ -86,6 +86,12 @@ var DrawImage = function (src, camera)
     //  Perform Matrix ITRS
 
     ctx.save();
+
+    if (parentMatrix !== undefined)
+    {
+        var matrix = parentMatrix.matrix;
+        ctx.transform(matrix[0], matrix[1], matrix[2], matrix[3], matrix[4], matrix[5]);
+    }
 
     ctx.translate(tx, ty);
 
