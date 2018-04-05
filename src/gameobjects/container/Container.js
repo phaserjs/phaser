@@ -62,8 +62,6 @@ var Container = new Class({
          */
         this.children = [];
 
-        this.setPosition(x, y);
-
         /**
          * [description]
          *
@@ -81,6 +79,8 @@ var Container = new Class({
          * @since 3.4.0
          */
         this.tempTransformMatrix = new Components.TransformMatrix();
+
+        this.setPosition(x, y);
     },
 
     /**
@@ -163,14 +163,16 @@ var Container = new Class({
 
         if (this.parentContainer)
         {
-            this.parentContainer.pointToContainer(source, output);
+            return this.parentContainer.pointToContainer(source, output);
         }
 
         var tempMatrix = this.tempTransformMatrix;
 
-        tempMatrix.loadIdentity();
+        //  No need to loadIdentity because applyITRS overwrites every value anyway
         tempMatrix.applyITRS(this.x, this.y, this.rotation, this.scaleX, this.scaleY);
+
         tempMatrix.invert();
+
         tempMatrix.transformPoint(source.x, source.y, output);
 
         return output;
