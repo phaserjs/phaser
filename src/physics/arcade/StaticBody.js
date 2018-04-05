@@ -429,6 +429,32 @@ var StaticBody = new Class({
     /**
      * [description]
      *
+     * @method Phaser.Physics.Arcade.StaticBody#setOffset
+     * @since 3.4.0
+     *
+     * @param {number} x - [description]
+     * @param {number} y - [description]
+     *
+     * @return {Phaser.Physics.Arcade.StaticBody} This Static Body object.
+     */
+    setOffset: function (x, y)
+    {
+        if (y === undefined) { y = x; }
+
+        this.world.staticTree.remove(this);
+
+        this.offset.set(x, y);
+
+        this.updateCenter();
+
+        this.world.staticTree.insert(this);
+
+        return this;
+    },
+
+    /**
+     * [description]
+     *
      * @method Phaser.Physics.Arcade.StaticBody#setSize
      * @since 3.0.0
      *
