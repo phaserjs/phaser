@@ -707,7 +707,7 @@ var FlatTintPipeline = new Class({
 
         var parentMatrix = null;
 
-        if (parentTransformMatrix !== undefined)
+        if (parentTransformMatrix)
         {
             parentMatrix = parentTransformMatrix.matrix;
         }
@@ -761,16 +761,7 @@ var FlatTintPipeline = new Class({
         var cmf = cameraMatrix[5];
         var mva, mvb, mvc, mvd, mve, mvf;
 
-        if (parentMatrix === null)
-        {
-            mva = sra * cma + srb * cmc;
-            mvb = sra * cmb + srb * cmd;
-            mvc = src * cma + srd * cmc;
-            mvd = src * cmb + srd * cmd;
-            mve = sre * cma + srf * cmc + cme;
-            mvf = sre * cmb + srf * cmd + cmf;
-        }
-        else
+        if (parentMatrix)
         {
             var pma = parentMatrix[0];
             var pmb = parentMatrix[1];
@@ -790,6 +781,15 @@ var FlatTintPipeline = new Class({
             mvd = src * pcb + srd * pcd;
             mve = sre * pca + srf * pcc + pce;
             mvf = sre * pcb + srf * pcd + pcf;
+        }
+        else
+        {
+            mva = sra * cma + srb * cmc;
+            mvb = sra * cmb + srb * cmd;
+            mvc = src * cma + srd * cmc;
+            mvd = src * cmb + srd * cmd;
+            mve = sre * cma + srf * cmc + cme;
+            mvf = sre * cmb + srf * cmd + cmf;
         }
 
         var pathArrayIndex;

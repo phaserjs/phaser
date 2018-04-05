@@ -372,7 +372,7 @@ var TextureTintPipeline = new Class({
     {
         var parentMatrix = null;
 
-        if (parentTransformMatrix !== undefined)
+        if (parentTransformMatrix)
         {
             parentMatrix = parentTransformMatrix.matrix;
         }
@@ -402,7 +402,7 @@ var TextureTintPipeline = new Class({
         var texture = emitterManager.defaultFrame.source.glTexture;
         var pca, pcb, pcc, pcd, pce, pcf;
 
-        if (parentMatrix != null)
+        if (parentMatrix)
         {
             var pma = parentMatrix[0];
             var pmb = parentMatrix[1];
@@ -569,11 +569,10 @@ var TextureTintPipeline = new Class({
     {
         var parentMatrix = null;
 
-        if (parentTransformMatrix !== undefined)
+        if (parentTransformMatrix)
         {
             parentMatrix = parentTransformMatrix.matrix;
         }
-
 
         this.renderer.setPipeline(this);
 
@@ -597,7 +596,7 @@ var TextureTintPipeline = new Class({
         var blitterX = blitter.x - cameraScrollX;
         var blitterY = blitter.y - cameraScrollY;
 
-        if (parentMatrix != null)
+        if (parentMatrix)
         {
             var pma = parentMatrix[0];
             var pmb = parentMatrix[1];
@@ -722,11 +721,10 @@ var TextureTintPipeline = new Class({
     {
         var parentMatrix = null;
 
-        if (parentTransformMatrix !== undefined)
+        if (parentTransformMatrix)
         {
             parentMatrix = parentTransformMatrix.matrix;
         }
-
 
         this.renderer.setPipeline(this);
 
@@ -781,16 +779,7 @@ var TextureTintPipeline = new Class({
         var cmf = cameraMatrix[5];
         var mva, mvb, mvc, mvd, mve, mvf;
 
-        if (parentMatrix === null)
-        {
-            mva = sra * cma + srb * cmc;
-            mvb = sra * cmb + srb * cmd;
-            mvc = src * cma + srd * cmc;
-            mvd = src * cmb + srd * cmd;
-            mve = sre * cma + srf * cmc + cme;
-            mvf = sre * cmb + srf * cmd + cmf;
-        }
-        else
+        if (parentMatrix)
         {
             var pma = parentMatrix[0];
             var pmb = parentMatrix[1];
@@ -810,6 +799,15 @@ var TextureTintPipeline = new Class({
             mvd = src * pcb + srd * pcd;
             mve = sre * pca + srf * pcc + pce;
             mvf = sre * pcb + srf * pcd + pcf;
+        }
+        else
+        {
+            mva = sra * cma + srb * cmc;
+            mvb = sra * cmb + srb * cmd;
+            mvc = src * cma + srd * cmc;
+            mvd = src * cmb + srd * cmd;
+            mve = sre * cma + srf * cmc + cme;
+            mvf = sre * cmb + srf * cmd + cmf;
         }
 
         var tx0 = x * mva + y * mvc + mve;
@@ -890,7 +888,7 @@ var TextureTintPipeline = new Class({
     {
         var parentMatrix = null;
 
-        if (parentTransformMatrix !== undefined)
+        if (parentTransformMatrix)
         {
             parentMatrix = parentTransformMatrix.matrix;
         }
@@ -938,16 +936,7 @@ var TextureTintPipeline = new Class({
         var vertexOffset = 0;
         var mva, mvb, mvc, mvd, mve, mvf;
 
-        if (parentMatrix === null)
-        {
-            mva = sra * cma + srb * cmc;
-            mvb = sra * cmb + srb * cmd;
-            mvc = src * cma + srd * cmc;
-            mvd = src * cmb + srd * cmd;
-            mve = sre * cma + srf * cmc + cme;
-            mvf = sre * cmb + srf * cmd + cmf;
-        }
-        else
+        if (parentMatrix)
         {
             var pma = parentMatrix[0];
             var pmb = parentMatrix[1];
@@ -968,7 +957,15 @@ var TextureTintPipeline = new Class({
             mve = sre * pca + srf * pcc + pce;
             mvf = sre * pcb + srf * pcd + pcf;
         }
-
+        else
+        {
+            mva = sra * cma + srb * cmc;
+            mvb = sra * cmb + srb * cmd;
+            mvc = src * cma + srd * cmc;
+            mvd = src * cmb + srd * cmd;
+            mve = sre * cma + srf * cmc + cme;
+            mvf = sre * cmb + srf * cmd + cmf;
+        }
 
         this.setTexture2D(texture, 0);
 
@@ -1014,11 +1011,10 @@ var TextureTintPipeline = new Class({
     {
         var parentMatrix = null;
 
-        if (parentTransformMatrix !== undefined)
+        if (parentTransformMatrix)
         {
             parentMatrix = parentTransformMatrix.matrix;
         }
-
 
         this.renderer.setPipeline(this);
 
@@ -1110,16 +1106,7 @@ var TextureTintPipeline = new Class({
         var vertexOffset = 0;
         var mva, mvb, mvc, mvd, mve, mvf;
 
-        if (parentMatrix === null)
-        {
-            mva = sra * cma + srb * cmc;
-            mvb = sra * cmb + srb * cmd;
-            mvc = src * cma + srd * cmc;
-            mvd = src * cmb + srd * cmd;
-            mve = sre * cma + srf * cmc + cme;
-            mvf = sre * cmb + srf * cmd + cmf;
-        }
-        else
+        if (parentMatrix)
         {
             var pma = parentMatrix[0];
             var pmb = parentMatrix[1];
@@ -1139,6 +1126,15 @@ var TextureTintPipeline = new Class({
             mvd = src * pcb + srd * pcd;
             mve = sre * pca + srf * pcc + pce;
             mvf = sre * pcb + srf * pcd + pcf;
+        }
+        else
+        {
+            mva = sra * cma + srb * cmc;
+            mvb = sra * cmb + srb * cmd;
+            mvc = src * cma + srd * cmc;
+            mvd = src * cmb + srd * cmd;
+            mve = sre * cma + srf * cmc + cme;
+            mvf = sre * cmb + srf * cmd + cmf;
         }
 
         this.setTexture2D(texture, 0);
@@ -1284,11 +1280,10 @@ var TextureTintPipeline = new Class({
     {
         var parentMatrix = null;
 
-        if (parentTransformMatrix !== undefined)
+        if (parentTransformMatrix)
         {
             parentMatrix = parentTransformMatrix.matrix;
         }
-
 
         this.renderer.setPipeline(this);
 
@@ -1380,16 +1375,7 @@ var TextureTintPipeline = new Class({
         var vertexOffset = 0;
         var mva, mvb, mvc, mvd, mve, mvf;
 
-        if (parentMatrix === null)
-        {
-            mva = sra * cma + srb * cmc;
-            mvb = sra * cmb + srb * cmd;
-            mvc = src * cma + srd * cmc;
-            mvd = src * cmb + srd * cmd;
-            mve = sre * cma + srf * cmc + cme;
-            mvf = sre * cmb + srf * cmd + cmf;
-        }
-        else
+        if (parentMatrix)
         {
             var pma = parentMatrix[0];
             var pmb = parentMatrix[1];
@@ -1409,6 +1395,15 @@ var TextureTintPipeline = new Class({
             mvd = src * pcb + srd * pcd;
             mve = sre * pca + srf * pcc + pce;
             mvf = sre * pcb + srf * pcd + pcf;
+        }
+        else
+        {
+            mva = sra * cma + srb * cmc;
+            mvb = sra * cmb + srb * cmd;
+            mvc = src * cma + srd * cmc;
+            mvd = src * cmb + srd * cmd;
+            mve = sre * cma + srf * cmc + cme;
+            mvf = sre * cmb + srf * cmd + cmf;
         }
 
         this.setTexture2D(texture, 0);
@@ -1801,11 +1796,10 @@ var TextureTintPipeline = new Class({
     {
         var parentMatrix = null;
 
-        if (parentTransformMatrix !== undefined)
+        if (parentTransformMatrix)
         {
             parentMatrix = parentTransformMatrix.matrix;
         }
-
 
         this.renderer.setPipeline(this);
 
@@ -1844,16 +1838,8 @@ var TextureTintPipeline = new Class({
         var cme = cameraMatrix[4];
         var cmf = cameraMatrix[5];
         var mva, mvb, mvc, mvd, mve, mvf;
-        if (parentMatrix === null)
-        {
-            mva = sra * cma + srb * cmc;
-            mvb = sra * cmb + srb * cmd;
-            mvc = src * cma + srd * cmc;
-            mvd = src * cmb + srd * cmd;
-            mve = sre * cma + srf * cmc + cme;
-            mvf = sre * cmb + srf * cmd + cmf;
-        }
-        else
+
+        if (parentMatrix)
         {
             var pma = parentMatrix[0];
             var pmb = parentMatrix[1];
@@ -1874,6 +1860,16 @@ var TextureTintPipeline = new Class({
             mve = sre * pca + srf * pcc + pce;
             mvf = sre * pcb + srf * pcd + pcf;
         }
+        else
+        {
+            mva = sra * cma + srb * cmc;
+            mvb = sra * cmb + srb * cmd;
+            mvc = src * cma + srd * cmc;
+            mvd = src * cmb + srd * cmd;
+            mve = sre * cma + srf * cmc + cme;
+            mvf = sre * cmb + srf * cmd + cmf;
+        }
+
         var tx0 = x * mva + y * mvc + mve;
         var ty0 = x * mvb + y * mvd + mvf;
         var tx1 = x * mva + yh * mvc + mve;
@@ -1969,7 +1965,7 @@ var TextureTintPipeline = new Class({
     {
         var parentMatrix = null;
 
-        if (parentTransformMatrix !== undefined)
+        if (parentTransformMatrix)
         {
             parentMatrix = parentTransformMatrix.matrix;
         }
@@ -1997,7 +1993,7 @@ var TextureTintPipeline = new Class({
         var mve = transformMatrix[4];
         var mvf = transformMatrix[5];
 
-        if (parentMatrix !== null)
+        if (parentMatrix)
         {
             var pma = parentMatrix[0];
             var pmb = parentMatrix[1];
