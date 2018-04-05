@@ -37,7 +37,9 @@ var Container = new Class({
 
     Mixins: [
         Components.BlendMode,
+        Components.Depth,
         Components.Transform,
+        Components.Visible,
         Render,
         List
     ],
