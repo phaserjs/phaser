@@ -77,15 +77,6 @@ var Container = new Class({
         this.position = 0;
 
         /**
-         * The parent Container of this Container, if there is one.
-         *
-         * @name Phaser.GameObjects.Container#parentContainer
-         * @type {Phaser.GameObjects.Container}
-         * @since 3.4.0
-         */
-        this.parentContainer = null;
-
-        /**
          * [description]
          *
          * @name Phaser.GameObjects.Container#localTransform
