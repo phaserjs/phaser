@@ -94,6 +94,7 @@ var EventEmitter = new Class({
  * @since 3.0.0
  *
  * @param {(string|symbol)} event - The event name.
+ * @param {...*} [args] - Additional arguments that will be passed to the event handler.
  *
  * @return {boolean} `true` if the event had listeners, else `false`.
  */

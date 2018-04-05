@@ -198,7 +198,7 @@ var Scene = new Class({
          * This property will only be available if defined in the Scene Injection Map and the plugin is installed.
          *
          * @name Phaser.Scene#load
-         * @type {Phaser.Loader.LoadPlugin}
+         * @type {Phaser.Loader.LoaderPlugin}
          * @since 3.0.0
          */
         this.load;
