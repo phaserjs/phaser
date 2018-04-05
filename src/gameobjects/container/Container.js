@@ -15,7 +15,7 @@ var Container = new Class({
 
     initialize:
 
-    function Container(scene, x, y)
+    function Container (scene, x, y)
     {
         GameObject.call(this, scene, 'Container');
         this.parentContainer = null;

@@ -1,5 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
+ * @author       Felipe Alfonso <@bitnenfer>
  * @copyright    2018 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
@@ -10,7 +11,6 @@ var ShaderSourceFS = require('../shaders/TextureTint.frag');
 var ShaderSourceVS = require('../shaders/TextureTint.vert');
 var Utils = require('../Utils');
 var WebGLPipeline = require('../WebGLPipeline');
-var IdentityMatrix = new Float32Array([1, 0, 0, 1, 0, 0]);
 
 /**
  * @classdesc
@@ -1796,7 +1796,7 @@ var TextureTintPipeline = new Class({
         frameX, frameY, frameWidth, frameHeight,
         tintTL, tintTR, tintBL, tintBR,
         uOffset, vOffset,
-        camera, 
+        camera,
         parentTransformMatrix)
     {
         var parentMatrix = null;
@@ -1963,7 +1963,7 @@ var TextureTintPipeline = new Class({
         srcX, srcY,
         tint, alpha,
         frameX, frameY, frameWidth, frameHeight,
-        transformMatrix, 
+        transformMatrix,
         parentTransformMatrix
     )
     {

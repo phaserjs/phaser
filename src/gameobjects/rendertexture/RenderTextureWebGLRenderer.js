@@ -43,7 +43,7 @@ var RenderTextureWebGLRenderer = function (renderer, renderTexture, interpolatio
         0, 0, renderTexture.texture.width, renderTexture.texture.height,
         Utils.getTintAppendFloatAlpha(renderTexture.tintTopLeft, renderTexture.alphaTopLeft), Utils.getTintAppendFloatAlpha(renderTexture.tintTopRight, renderTexture.alphaTopRight), Utils.getTintAppendFloatAlpha(renderTexture.tintBottomLeft, renderTexture.alphaBottomLeft), Utils.getTintAppendFloatAlpha(renderTexture.tintBottomRight, renderTexture.alphaBottomRight),
         0, 0,
-        camera, 
+        camera,
         parentMatrix
     );
 };
