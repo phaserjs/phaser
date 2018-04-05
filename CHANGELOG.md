@@ -39,6 +39,7 @@ being passed to the simulation. The default value is 1 to remain consistent with
 * The WebGL TileSprite batch now modulates the tilePosition to avoid large values being passed into the UV data, fixing corruption when scrolling TileSprites over a long period of time. Fix #3402 (thanks @vinerz @FrancescoNegri)
 * LineCurve.getResolution was missing the `divisions` argument and always returning 1, which made it fail when used as part of a Path. It now defaults to return 1 unless specified otherwise (thanks _ok)
 * A Game Object enabled for drag would no longer fire over and out events after being dragged, now it does (thanks @jmcriat)
+* Line.getPointA and Line.getPointB incorrectly set the values into the Vector2 (thanks @Tomas2h)
 
 ### Updates
 
@@ -51,6 +52,7 @@ being passed to the simulation. The default value is 1 to remain consistent with
 * The GamepadManager now extends EventEmitter directly, just like the KeyboardManager does.
 * The Gamepad Axis threshold has been increased from 0.05 to 0.1.
 * Utils.Array.FindClosestInSorted has a new optional argument `key` which will allow you to scan a top-level property of any object in the given sorted array and get the closest match to it.
+* Vector2.setTo is a method alias for Vector2.set allowing it to be used inter-changeably with Geom.Point.
 
 ### Animation Component Updates
 
