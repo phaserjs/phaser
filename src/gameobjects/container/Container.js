@@ -115,6 +115,16 @@ var Container = new Class({
          */
         this.removeCallback = this.removeHandler;
 
+        /**
+         * A reference to the Scene Display List.
+         *
+         * @name Phaser.GameObjects.Container#_displayList
+         * @type {Phaser.GameObjects.DisplayList}
+         * @private
+         * @since 3.4.0
+         */
+        this._displayList = scene.sys.displayList;
+
         this.setPosition(x, y);
 
         if (Array.isArray(children))
@@ -135,6 +145,8 @@ var Container = new Class({
      */
     addHandler: function (list, gameObject)
     {
+        this._displayList.remove(gameObject);
+
         gameObject.on('destroy', this.remove, this);
 
         if (gameObject.parentContainer)
