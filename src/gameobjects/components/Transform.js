@@ -376,35 +376,32 @@ var Transform = {
         return tempMatrix.applyITRS(this.x, this.y, this._rotation, this._scaleX, this._scaleY);
     },
 
-    getWorldTransformMatrix: function (tempMatrix, tempParentMatrix)
+    getWorldTransformMatrix: function (tempMatrix)
     {
-        this.getLocalTransformMatrix(tempMatrix);
-
         var parent = this.parentContainer;
-
-        if (!parent)
-        {
-            return tempMatrix;
-        }
-
         var parents = [];
-
-        do
+        
+        while (parent)
         {
-            parents.push(parent);
+            parents.unshift(parent);
             parent = parent.parentContainer;
         }
-        while (parent);
 
-        //  We've got all the ancestors in the 'parents' array, let's loop it
-        for (var i = 0; i < parents.length; i++)
+        tempMatrix.loadIdentity();
+
+        var length = parents.length;
+        
+        for (var i = 0; i < length; ++i)
         {
-            parent = parents[i];
-
-            parent.getLocalTransformMatrix(tempParentMatrix);
-
-            tempMatrix.multiply(tempParentMatrix);
+            rootContainer = parents[i];
+            tempMatrix.translate(rootContainer.x, rootContainer.y);
+            tempMatrix.rotate(rootContainer.rotation);
+            tempMatrix.scale(rootContainer.scaleX, rootContainer.scaleY);
         }
+
+        tempMatrix.translate(this.x, this.y);
+        tempMatrix.rotate(this._rotation);
+        tempMatrix.scale(this._scaleX, this._scaleY);
 
         return tempMatrix;
     }
