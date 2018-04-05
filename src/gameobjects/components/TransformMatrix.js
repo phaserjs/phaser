@@ -15,12 +15,12 @@ var Class = require('../../utils/Class');
  * @constructor
  * @since 3.0.0
  *
- * @param {number} [a=1] - [description]
- * @param {number} [b=0] - [description]
- * @param {number} [c=0] - [description]
- * @param {number} [d=1] - [description]
- * @param {number} [tx=0] - [description]
- * @param {number} [ty=0] - [description]
+ * @param {number} [a=1] - The Scale X value.
+ * @param {number} [b=0] - The Shear Y value.
+ * @param {number} [c=0] - The Shear X value.
+ * @param {number} [d=1] - The Scale Y value.
+ * @param {number} [tx=0] - The Translate X value.
+ * @param {number} [ty=0] - The Translate Y value.
  */
 var TransformMatrix = new Class({
 
@@ -189,12 +189,12 @@ var TransformMatrix = new Class({
      * @method Phaser.GameObjects.Components.TransformMatrix#transform
      * @since 3.0.0
      *
-     * @param {number} a - [description]
-     * @param {number} b - [description]
-     * @param {number} c - [description]
-     * @param {number} d - [description]
-     * @param {number} tx - [description]
-     * @param {number} ty - [description]
+     * @param {number} a - The Scale X value.
+     * @param {number} b - The Shear Y value.
+     * @param {number} c - The Shear X value.
+     * @param {number} d - The Scale Y value.
+     * @param {number} tx - The Translate X value.
+     * @param {number} ty - The Translate Y value.
      *
      * @return {Phaser.GameObjects.Components.TransformMatrix} This TransformMatrix.
      */
@@ -323,6 +323,11 @@ var TransformMatrix = new Class({
         var decomposedMatrix = this.decomposedMatrix;
 
         var matrix = this.matrix;
+
+        //  a = scale X (1)
+        //  b = shear Y (0)
+        //  c = shear X (0)
+        //  d = scale Y (1)
 
         var a = matrix[0];
         var b = matrix[1];
