@@ -101,7 +101,7 @@ var List = new Class({
     {
         if (Array.isArray(child))
         {
-            return this.addMultiple(child);
+            return this.addMultiple(child, skipCallback);
         }
         else
         {
