@@ -18,10 +18,11 @@ var GameObjectFactory = require('../GameObjectFactory');
  *
  * @param {number} x - The horizontal position of this Game Object in the world.
  * @param {number} y - The vertical position of this Game Object in the world.
+ * @param {Phaser.GameObjects.GameObject[]} [children] - An optional array of Game Objects to add to this Container.
  *
  * @return {Phaser.GameObjects.Container} The Game Object that was created.
  */
-GameObjectFactory.register('container', function (x, y)
+GameObjectFactory.register('container', function (x, y, children)
 {
-    return this.displayList.add(new Container(this.scene, x, y));
+    return this.displayList.add(new Container(this.scene, x, y, children));
 });
