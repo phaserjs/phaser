@@ -42,6 +42,8 @@ being passed to the simulation. The default value is 1 to remain consistent with
 * LineCurve.getResolution was missing the `divisions` argument and always returning 1, which made it fail when used as part of a Path. It now defaults to return 1 unless specified otherwise (thanks _ok)
 * A Game Object enabled for drag would no longer fire over and out events after being dragged, now it does (thanks @jmcriat)
 * Line.getPointA and Line.getPointB incorrectly set the values into the Vector2 (thanks @Tomas2h)
+* DynamicTilemapLayer now uses the ComputedSize component, which stops it breaking if you call `setDisplaySize` (thanks Babsobar)
+* StaticTilemapLayer now uses the ComputedSize component, which stops it breaking if you call `setDisplaySize` (thanks Babsobar)
 
 ### Updates
 
