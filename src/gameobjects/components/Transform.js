@@ -7,6 +7,7 @@
 var MATH_CONST = require('../../math/const');
 var WrapAngle = require('../../math/angle/Wrap');
 var WrapAngleDegrees = require('../../math/angle/WrapDegrees');
+var TransformMatrix = require('./TransformMatrix');
 
 //  global bitmask flag for GameObject.renderMask (used by Scale)
 var _FLAG = 4; // 0100
@@ -368,6 +369,44 @@ var Transform = {
         this.w = value;
 
         return this;
+    },
+
+    getLocalTransformMatrix: function (tempMatrix)
+    {
+        return tempMatrix.applyITRS(this.x, this.y, this._rotation, this._scaleX, this._scaleY);
+    },
+
+    getWorldTransformMatrix: function (tempMatrix, tempParentMatrix)
+    {
+        this.getLocalTransformMatrix(tempMatrix);
+
+        var parent = this.parentContainer;
+
+        if (!parent)
+        {
+            return tempMatrix;
+        }
+
+        var parents = [];
+
+        do
+        {
+            parents.push(parent);
+            parent = parent.parentContainer;
+        }
+        while (parent);
+
+        //  We've got all the ancestors in the 'parents' array, let's loop it
+        for (var i = 0; i < parents.length; i++)
+        {
+            parent = parents[i];
+
+            parent.getLocalTransformMatrix(tempParentMatrix);
+
+            tempMatrix.multiply(tempParentMatrix);
+        }
+
+        return tempMatrix;
     }
 
 };
