@@ -29,7 +29,7 @@ var ContainerWebGLRenderer = function (renderer, container, interpolationPercent
         return;
     }
 
-    var children = container.children;
+    var children = container.list;
     var transformMatrix = container.localTransform;
     
     if (parentMatrix === undefined)

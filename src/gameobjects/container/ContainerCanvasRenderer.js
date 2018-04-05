@@ -29,7 +29,7 @@ var ContainerCanvasRenderer = function (renderer, container, interpolationPercen
         return;
     }
 
-    var children = container.children;
+    var children = container.list;
     var transformMatrix = container.localTransform;
     
     if (parentMatrix === undefined)
