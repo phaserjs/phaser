@@ -213,7 +213,7 @@ var Transform = {
      * @since 3.0.0
      *
      * @param {number} [x=0] - The x position of this Game Object.
-     * @param {number} [y] - The y position of this Game Object. If not set it will use the `x` value.
+     * @param {number} [y=x] - The y position of this Game Object. If not set it will use the `x` value.
      * @param {number} [z=0] - The z position of this Game Object.
      * @param {number} [w=0] - The w position of this Game Object.
      *
