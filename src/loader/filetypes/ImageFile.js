@@ -20,11 +20,11 @@ var GetFastValue = require('../../utils/object/GetFastValue');
  * @constructor
  * @since 3.0.0
  *
- * @param {string} key - [description]
- * @param {string} url - [description]
- * @param {string} path - [description]
- * @param {XHRSettingsObject} xhrSettings - [description]
- * @param {object} config - [description]
+ * @param {string} key - The name of the asset to load or an object representing the asset
+ * @param {string} url - The asset's filename
+ * @param {string} path - The path the asset can be found in
+ * @param {XHRSettingsObject} xhrSettings - Optional image specific XHR settings
+ * @param {object} config - config can include: frameWidth, frameHeight, startFrame, endFrame, margin, spacing
  */
 var ImageFile = new Class({
 
