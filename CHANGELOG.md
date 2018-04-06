@@ -44,6 +44,7 @@ being passed to the simulation. The default value is 1 to remain consistent with
 * Line.getPointA and Line.getPointB incorrectly set the values into the Vector2 (thanks @Tomas2h)
 * DynamicTilemapLayer now uses the ComputedSize component, which stops it breaking if you call `setDisplaySize` (thanks Babsobar)
 * StaticTilemapLayer now uses the ComputedSize component, which stops it breaking if you call `setDisplaySize` (thanks Babsobar)
+* Fixed loading normals with multi image load (thanks @iamchristopher)
 
 ### Updates
 
