@@ -45,6 +45,19 @@ var ImageFile = new Class({
     //         headerValue: 'text/xml'
     //     }
     // });
+    // this.load.image([
+    //     {
+    //         key: 'bunny',
+    //         file: 'assets/sprites/bunny.png',
+    //         xhr: {
+    //             user: 'root',
+    //             password: 'th3G1bs0n',
+    //             timeout: 30,
+    //             header: 'Content-Type',
+    //             headerValue: 'text/xml'
+    //         }
+    //     }
+    // ]);
     // this.load.image({ key: 'bunny' });
     // this.load.image({ key: 'bunny', extension: 'jpg' });
 
