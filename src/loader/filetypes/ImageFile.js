@@ -51,13 +51,14 @@ var ImageFile = new Class({
     function ImageFile (key, url, path, xhrSettings, config)
     {
         var fileKey = (typeof key === 'string') ? key : GetFastValue(key, 'key', '');
+        if (url === undefined) url = GetFastValue(key, 'file');
 
         var fileConfig = {
             type: 'image',
             extension: GetFastValue(key, 'extension', 'png'),
             responseType: 'blob',
             key: fileKey,
-            url: GetFastValue(key, 'file', url),
+            url: url,
             path: path,
             xhrSettings: GetFastValue(key, 'xhr', xhrSettings),
             config: GetFastValue(key, 'config', config)
