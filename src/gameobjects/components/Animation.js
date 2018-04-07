@@ -246,24 +246,29 @@ var Animation = new Class({
         this._wasPlaying = false;
 
         /**
-         * Container for the callback arguments.
+         * Internal property tracking if this Animation is waiting to stop.
+         * 
+         * 0 = No
+         * 1 = Waiting for ms to pass
+         * 2 = Waiting for repeat
+         * 3 = Waiting for specific frame
          *
-         * @name Phaser.GameObjects.Components.Animation#_callbackArgs
-         * @type {array}
+         * @name Phaser.GameObjects.Components.Animation#_pendingStop
+         * @type {integer}
          * @private
-         * @since 3.0.0
+         * @since 3.4.0
          */
-        this._callbackArgs = [ parent, null ];
+        this._pendingStop = 0;
 
         /**
-         * Container for the update arguments.
+         * Internal property used by _pendingStop.
          *
-         * @name Phaser.GameObjects.Components.Animation#_updateParams
-         * @type {array}
+         * @name Phaser.GameObjects.Components.Animation#_pendingStopValue
+         * @type {any}
          * @private
-         * @since 3.0.0
+         * @since 3.4.0
          */
-        this._updateParams = [];
+        this._pendingStopValue;
     },
 
     /**
@@ -475,10 +480,7 @@ var Animation = new Class({
             gameObject.visible = true;
         }
 
-        if (anim.onStart)
-        {
-            anim.onStart.apply(anim.callbackScope, this._callbackArgs.concat(anim.onStartParams));
-        }
+        gameObject.emit('animationstart', this.currentAnim, this.currentFrame);
 
         return gameObject;
     },
@@ -647,27 +649,74 @@ var Animation = new Class({
     },
 
     /**
-     * Stops the current animation from playing and optionally dispatches any onComplete callbacks.
+     * Immediately stops the current animation from playing and dispatches the `animationcomplete` event.
      *
      * @method Phaser.GameObjects.Components.Animation#stop
      * @since 3.0.0
      *
-     * @param {boolean} [dispatchCallbacks=false] - [description]
-     *
      * @return {Phaser.GameObjects.GameObject} The Game Object that owns this Animation Component.
      */
-    stop: function (dispatchCallbacks)
+    stop: function ()
     {
-        if (dispatchCallbacks === undefined) { dispatchCallbacks = false; }
+        this._pendingStop = 0;
 
         this.isPlaying = false;
 
-        var anim = this.currentAnim;
+        var gameObject = this.parent;
 
-        if (dispatchCallbacks && anim.onComplete)
-        {
-            anim.onComplete.apply(anim.callbackScope, this._callbackArgs.concat(anim.onCompleteParams));
-        }
+        gameObject.emit('animtioncomplete', this.currentAnim, this.currentFrame);
+
+        return gameObject;
+    },
+
+    /**
+     * Stops the current animation from playing after the specified time delay, given in milliseconds.
+     *
+     * @method Phaser.GameObjects.Components.Animation#stopAfterDelay
+     * @since 3.4.0
+     *
+     * @param {integer} delay - The number of miliseconds to wait before stopping this animation.
+     *
+     * @return {Phaser.GameObjects.GameObject} The Game Object that owns this Animation Component.
+     */
+    stopAfterDelay: function (delay)
+    {
+        this._pendingStop = 1;
+        this._pendingStopValue = delay;
+
+        return this.parent;
+    },
+
+    /**
+     * Stops the current animation from playing when it next repeats.
+     *
+     * @method Phaser.GameObjects.Components.Animation#stopOnRepeat
+     * @since 3.4.0
+     *
+     * @return {Phaser.GameObjects.GameObject} The Game Object that owns this Animation Component.
+     */
+    stopOnRepeat: function ()
+    {
+        this._pendingStop = 2;
+
+        return this.parent;
+    },
+
+    /**
+     * Stops the current animation from playing when it next sets the given frame.
+     * If this frame doesn't exist within the animation it will not stop it from playing.
+     *
+     * @method Phaser.GameObjects.Components.Animation#stopOnFrame
+     * @since 3.4.0
+     *
+     * @param {Phaser.Animations.AnimationFrame} delay - The frame to check before stopping this animation.
+     *
+     * @return {Phaser.GameObjects.GameObject} The Game Object that owns this Animation Component.
+     */
+    stopOnFrame: function (frame)
+    {
+        this._pendingStop = 3;
+        this._pendingStopValue = frame;
 
         return this.parent;
     },
@@ -729,16 +778,24 @@ var Animation = new Class({
      */
     update: function (timestamp, delta)
     {
-        if (!this.isPlaying || this.currentAnim.paused)
+        if (this.isPlaying || !this.currentAnim.paused)
         {
-            return;
-        }
+            this.accumulator += delta * this._timeScale;
 
-        this.accumulator += delta * this._timeScale;
+            if (this._pendingStop === 1)
+            {
+                this._pendingStopValue -= delta;
 
-        if (this.accumulator >= this.nextTick)
-        {
-            this.currentAnim.setFrame(this);
+                if (this._pendingStopValue <= 0)
+                {
+                    return this.currentAnim.completeAnimation(this);
+                }
+            }
+            
+            if (this.accumulator >= this.nextTick)
+            {
+                this.currentAnim.setFrame(this);
+            }
         }
     },
 
@@ -798,14 +855,11 @@ var Animation = new Class({
 
             var anim = this.currentAnim;
 
-            if (anim.onUpdate)
-            {
-                anim.onUpdate.apply(anim.callbackScope, this._updateParams);
-            }
+            gameObject.emit('animationupdate', anim, animationFrame);
 
-            if (animationFrame.onUpdate)
+            if (this._pendingStop === 3 && this._pendingStopValue === animationFrame)
             {
-                animationFrame.onUpdate(gameObject, animationFrame);
+                this.currentAnim.completeAnimation(this);
             }
         }
     },
@@ -859,9 +913,6 @@ var Animation = new Class({
 
         this.currentAnim = null;
         this.currentFrame = null;
-
-        this._callbackArgs = [];
-        this._updateParams = [];
     }
 
 });
