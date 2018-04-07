@@ -915,10 +915,10 @@ var Graphics = new Class({
     /**
      * Creates a pie-chart slice shape centered at `x`, `y` with the given radius.
      * You must define the start and end angle of the slice.
-     * 
+     *
      * Setting the `anticlockwise` argument to `true` creates a shape similar to Pacman.
      * Setting it to `false` creates a shape like a slice of pie.
-     * 
+     *
      * This method will begin a new path and close the path at the end of it.
      * To display the actual slice you need to call either `strokePath` or `fillPath` after it.
      *
@@ -1133,7 +1133,7 @@ var Graphics = new Class({
 
         if (ctx)
         {
-            this.renderCanvas(sys.game.renderer, this, 0, Graphics.TargetCamera, ctx);
+            this.renderCanvas(sys.game.renderer, this, 0.0, Graphics.TargetCamera, null, ctx);
 
             if (sys.game.renderer.gl && texture)
             {
