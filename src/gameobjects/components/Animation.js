@@ -7,6 +7,40 @@
 var Class = require('../../utils/Class');
 
 /**
+ * This event is dispatched when an animation starts playing.
+ * 
+ * @event Phaser.GameObjects.Components.Animation#onStartEvent
+ * @param {Phaser.Animations.Animation} animation - Reference to the currently playing animation.
+ * @param {Phaser.Animations.AnimationFrame} frame - Reference to the current Animation Frame.
+ */
+
+/**
+ * This event is dispatched when an animation repeats.
+ * 
+ * @event Phaser.GameObjects.Components.Animation#onRepeatEvent
+ * @param {Phaser.Animations.Animation} animation - Reference to the currently playing animation.
+ * @param {Phaser.Animations.AnimationFrame} frame - Reference to the current Animation Frame.
+ * @param {integer} repeatCount - The number of times this animation has repeated.
+ */
+
+/**
+ * This event is dispatched when an animation updates. This happens when the animation frame changes,
+ * based on the animation frame rate and other factors like timeScale and delay.
+ * 
+ * @event Phaser.GameObjects.Components.Animation#onUpdateEvent
+ * @param {Phaser.Animations.Animation} animation - Reference to the currently playing animation.
+ * @param {Phaser.Animations.AnimationFrame} frame - Reference to the current Animation Frame.
+ */
+
+/**
+ * This event is dispatched when an animation completes playing, either naturally or via Animation.stop.
+ * 
+ * @event Phaser.GameObjects.Components.Animation#onCompleteEvent
+ * @param {Phaser.Animations.Animation} animation - Reference to the currently playing animation.
+ * @param {Phaser.Animations.AnimationFrame} frame - Reference to the current Animation Frame.
+ */
+
+/**
  * @classdesc
  * A Game Object Animation Controller.
  *
@@ -443,6 +477,7 @@ var Animation = new Class({
      * Plays an Animation on the Game Object that owns this Animation Component.
      *
      * @method Phaser.GameObjects.Components.Animation#play
+     * @fires Phaser.GameObjects.Components.Animation#onStartEvent
      * @since 3.0.0
      *
      * @param {string} key - The string-based key of the animation to play, as defined previously in the Animation Manager.
@@ -652,6 +687,7 @@ var Animation = new Class({
      * Immediately stops the current animation from playing and dispatches the `animationcomplete` event.
      *
      * @method Phaser.GameObjects.Components.Animation#stop
+     * @fires Phaser.GameObjects.Components.Animation#onCompleteEvent
      * @since 3.0.0
      *
      * @return {Phaser.GameObjects.GameObject} The Game Object that owns this Animation Component.
@@ -673,6 +709,7 @@ var Animation = new Class({
      * Stops the current animation from playing after the specified time delay, given in milliseconds.
      *
      * @method Phaser.GameObjects.Components.Animation#stopAfterDelay
+     * @fires Phaser.GameObjects.Components.Animation#onCompleteEvent
      * @since 3.4.0
      *
      * @param {integer} delay - The number of miliseconds to wait before stopping this animation.
@@ -691,6 +728,7 @@ var Animation = new Class({
      * Stops the current animation from playing when it next repeats.
      *
      * @method Phaser.GameObjects.Components.Animation#stopOnRepeat
+     * @fires Phaser.GameObjects.Components.Animation#onCompleteEvent
      * @since 3.4.0
      *
      * @return {Phaser.GameObjects.GameObject} The Game Object that owns this Animation Component.
@@ -707,6 +745,7 @@ var Animation = new Class({
      * If this frame doesn't exist within the animation it will not stop it from playing.
      *
      * @method Phaser.GameObjects.Components.Animation#stopOnFrame
+     * @fires Phaser.GameObjects.Components.Animation#onCompleteEvent
      * @since 3.4.0
      *
      * @param {Phaser.Animations.AnimationFrame} delay - The frame to check before stopping this animation.
@@ -837,6 +876,7 @@ var Animation = new Class({
      * Internal frame change handler.
      *
      * @method Phaser.GameObjects.Components.Animation#updateFrame
+     * @fires Phaser.GameObjects.Components.Animation#onUpdateEvent
      * @private
      * @since 3.0.0
      *
