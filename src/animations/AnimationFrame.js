@@ -142,16 +142,6 @@ var AnimationFrame = new Class({
          * @since 3.0.0
          */
         this.progress = 0;
-
-        /**
-         * A frame specific callback, invoked if this frame gets displayed and the callback is set.
-         *
-         * @name Phaser.Animations.AnimationFrame#onUpdate
-         * @type {?function}
-         * @default null
-         * @since 3.0.0
-         */
-        this.onUpdate = null;
     },
 
     /**
@@ -180,7 +170,6 @@ var AnimationFrame = new Class({
     destroy: function ()
     {
         this.frame = undefined;
-        this.onUpdate = undefined;
     }
 
 });
