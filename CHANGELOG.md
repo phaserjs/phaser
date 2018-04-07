@@ -66,11 +66,17 @@ being passed to the simulation. The default value is 1 to remain consistent with
 * List.removeBetween has a new optional argument `skipCallback`.
 * List.removeAll has a new optional argument `skipCallback`.
 
-### Animation Component Updates
+### Animation System Updates
 
 We have refactored the Animation API to make it more consistent with the rest of Phaser 3 and to fix some issues. All of the following changes apply to the Animation Component:
 
 * Animation durations, delays and repeatDelays are all now specified in milliseconds, not seconds like before. This makes them consistent with Tweens, Sounds and other parts of v3. You can still use the `frameRate` property to set the speed of an animation in frames per second.
+* All of the Animation callbacks have been removed, including `onStart`, `onRepat`, `onUpdate` and `onComplete` and the corresponding params arrays like `onStartParams` and the property `callbackScope`. The reason for this is that they were all set on a global level, meaning that if you had 100 Sprites sharing the same animation, it was impossible to set the callbacks to fire for just one of those Sprites, but instead they would fire for all 100 and it was up to you to figure out which Sprite you wanted to update. Instead of callbacks animations now dispatch events on the Game Objects in which they are running. This means you can now do `sprite.on('animationstart')` and it will be invoked at the same point the old `onStart` callback would have been. The new events are: `animationstart`, `animtionrepeat`, `animationupdate` and `animationcomplete`. They're all dispatched from the Game Object that has the animation playing, not from the animation itself. This allows you far more control over what happens in the callbacks and we believe generally makes them more useful.
+* The AnimationFrame.onUpdate callback has been removed. You can now use the `animationupdate` event dispatched from the Game Object itself and check the 2nd argument, which is the animation frame.
+* Animation.stopAfterDelay is a new method that will stop a Sprites animation after the given time in ms.
+* Animation.stopOnRepeat is a new method that will stop a Sprites animation when it goes to repeat.
+* Animation.stopOnFrame is a new method that will stop a Sprites animation when it sets the given frame.
+* Animation.stop no longer has the `dispatchCallbacks` argument, because it dispatches an event which you can choose to ignore.
 * `delay` method has been removed.
 * `setDelay` allows you to define the delay before playback begins.
 * `getDelay` returns the animation playback delay value.
