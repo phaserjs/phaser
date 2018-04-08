@@ -817,7 +817,7 @@ var Animation = new Class({
      */
     update: function (timestamp, delta)
     {
-        if (this.isPlaying || !this.currentAnim.paused)
+        if (this.currentAnim && (this.isPlaying || !this.currentAnim.paused))
         {
             this.accumulator += delta * this._timeScale;
 
