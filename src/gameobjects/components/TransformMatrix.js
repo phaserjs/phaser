@@ -60,6 +60,117 @@ var TransformMatrix = new Class({
         };
     },
 
+    a: {
+
+        get: function ()
+        {
+            return this.matrix[0];
+        },
+
+        set: function (value)
+        {
+            this.matrix[0] = value;
+        }
+
+    },
+
+    b: {
+
+        get: function ()
+        {
+            return this.matrix[1];
+        },
+
+        set: function (value)
+        {
+            this.matrix[1] = value;
+        }
+
+    },
+
+    c: {
+
+        get: function ()
+        {
+            return this.matrix[2];
+        },
+
+        set: function (value)
+        {
+            this.matrix[2] = value;
+        }
+
+    },
+
+    d: {
+
+        get: function ()
+        {
+            return this.matrix[3];
+        },
+
+        set: function (value)
+        {
+            this.matrix[3] = value;
+        }
+
+    },
+
+    tx: {
+
+        get: function ()
+        {
+            return this.matrix[4];
+        },
+
+        set: function (value)
+        {
+            this.matrix[4] = value;
+        }
+
+    },
+
+    ty: {
+
+        get: function ()
+        {
+            return this.matrix[5];
+        },
+
+        set: function (value)
+        {
+            this.matrix[5] = value;
+        }
+
+    },
+
+    rotation: {
+
+        get: function ()
+        {
+            return Math.acos(this.a / this.scaleX) * (Math.atan(-this.c / this.a) < 0 ? -1 : 1);
+        }
+
+    },
+
+    scaleX: {
+
+        get: function ()
+        {
+            return Math.sqrt((this.a * this.a) + (this.c * this.c));
+        }
+
+    },
+
+    scaleY: {
+
+        get: function ()
+        {
+            return Math.sqrt((this.b * this.b) + (this.d * this.d));
+        }
+
+    },
+
     /**
      * [description]
      *
