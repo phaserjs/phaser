@@ -45,9 +45,15 @@ var ContainerWebGLRenderer = function (renderer, container, interpolationPercent
         transformMatrix.scale(container.scaleX, container.scaleY);
     }
 
+    var alpha = container._alpha;
+
     for (var index = 0; index < children.length; ++index)
     {
-        children[index].renderWebGL(renderer, children[index], interpolationPercentage, camera, transformMatrix);
+        var child = children[index];
+        var childAlpha = child._alpha;
+        child.setAlpha(childAlpha * alpha);
+        child.renderWebGL(renderer, child, interpolationPercentage, camera, transformMatrix);
+        child.setAlpha(childAlpha);
     }
 };
 
