@@ -4,6 +4,7 @@
 
 ### New Features
 
+* A new property was added to the scene config, `mapAdd` which is used to extend the default injection map of a scene instead of overwriting it.
 * A new property was added to Matter.World, `correction` which is used in the Engine.update call and allows you to adjust the time
 being passed to the simulation. The default value is 1 to remain consistent with previous releases.
 * Group.destroy has a new optional argument `destroyChildren` which will automatically call `destroy` on all children of a Group if set to true (the default is false, hence it doesn't change the public API). Fix #3246 (thanks @DouglasLapsley)
