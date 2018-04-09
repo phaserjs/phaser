@@ -409,8 +409,16 @@ var Tween = new Class({
      */
     restart: function ()
     {
-        this.stop();
-        this.play();
+        if (this.state === TWEEN_CONST.REMOVED)
+        {
+            this.seek(0);
+            this.parent.makeActive(this);
+        }
+        else
+        {
+            this.stop();
+            this.play();
+        }
     },
 
     /**
