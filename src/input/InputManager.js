@@ -12,6 +12,7 @@ var Mouse = require('./mouse/MouseManager');
 var Pointer = require('./Pointer');
 var Rectangle = require('../geom/rectangle/Rectangle');
 var Touch = require('./touch/TouchManager');
+var TransformMatrix = require('../gameobjects/components/TransformMatrix');
 var TransformXY = require('../math/TransformXY');
 
 /**
@@ -194,6 +195,16 @@ var InputManager = new Class({
          * @since 3.0.0
          */
         this._tempHitTest = [];
+
+        /**
+         * [description]
+         *
+         * @name Phaser.Input.InputManager#_tempMatrix
+         * @type {Phaser.GameObjects.Components.TransformMatrix}
+         * @private
+         * @since 3.4.0
+         */
+        this._tempMatrix = new TransformMatrix();
 
         game.events.once('boot', this.boot, this);
     },
@@ -383,6 +394,8 @@ var InputManager = new Class({
 
         var res = this.game.config.resolution;
 
+        var matrix = this._tempMatrix;
+
         for (var i = 0; i < culledGameObjects.length; i++)
         {
             var gameObject = culledGameObjects[i];
@@ -395,7 +408,16 @@ var InputManager = new Class({
             var px = tempPoint.x * res + (camera.scrollX * gameObject.scrollFactorX) - camera.scrollX;
             var py = tempPoint.y * res + (camera.scrollY * gameObject.scrollFactorY) - camera.scrollY;
 
-            TransformXY(px, py, gameObject.x, gameObject.y, gameObject.rotation, gameObject.scaleX, gameObject.scaleY, point);
+            if (gameObject.parentContainer)
+            {
+                gameObject.getWorldTransformMatrix(matrix);
+
+                TransformXY(px, py, matrix.tx, matrix.ty, matrix.rotation, matrix.scaleX, matrix.scaleY, point);
+            }
+            else
+            {
+                TransformXY(px, py, gameObject.x, gameObject.y, gameObject.rotation, gameObject.scaleX, gameObject.scaleY, point);
+            }
 
             if (this.pointWithinHitArea(gameObject, point.x, point.y))
             {
