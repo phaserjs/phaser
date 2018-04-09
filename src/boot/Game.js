@@ -154,7 +154,7 @@ var Game = new Class({
         this.cache = new CacheManager(this);
 
         /**
-         * [description]
+         * An instance of the Data Manager
          *
          * @name Phaser.Game#registry
          * @type {Phaser.Data.DataManager}
@@ -538,7 +538,10 @@ var Game = new Class({
 
         this.scene.destroy();
 
-        this.renderer.destroy();
+        if (this.renderer)
+        {
+            this.renderer.destroy();
+        }
 
         this.events.emit('destroy');
 
@@ -546,7 +549,7 @@ var Game = new Class({
 
         this.onStepCallback = null;
 
-        if (removeCanvas)
+        if (removeCanvas && this.canvas)
         {
             CanvasPool.remove(this.canvas);
         }

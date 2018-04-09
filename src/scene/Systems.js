@@ -167,7 +167,7 @@ var Systems = new Class({
          * [description]
          *
          * @name Phaser.Scenes.Systems#displayList
-         * @type {null}
+         * @type {Phaser.GameObjects.DisplayList}
          * @since 3.0.0
          */
         this.displayList;

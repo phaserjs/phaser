@@ -764,6 +764,7 @@ var InputPlugin = new Class({
             }
 
             pointer.dragState = 0;
+            list.splice(0);
         }
 
         return 0;

@@ -213,7 +213,7 @@ var Transform = {
      * @since 3.0.0
      *
      * @param {number} [x=0] - The x position of this Game Object.
-     * @param {number} [y] - The y position of this Game Object. If not set it will use the `x` value.
+     * @param {number} [y=x] - The y position of this Game Object. If not set it will use the `x` value.
      * @param {number} [z=0] - The z position of this Game Object.
      * @param {number} [w=0] - The w position of this Game Object.
      *
@@ -368,6 +368,62 @@ var Transform = {
         this.w = value;
 
         return this;
+    },
+
+    /**
+     * Gets the local transform matrix for this Game Object.
+     *
+     * @method Phaser.GameObjects.Components.Transform#getLocalTransformMatrix
+     * @since 3.4.0
+     *
+     * @param {Phaser.GameObjects.Components.TransformMatrix} tempMatrix - The matrix to populate with the values from this Game Object.
+     *
+     * @return {Phaser.GameObjects.Components.TransformMatrix} The populated Transform Matrix.
+     */
+    getLocalTransformMatrix: function (tempMatrix)
+    {
+        return tempMatrix.applyITRS(this.x, this.y, this._rotation, this._scaleX, this._scaleY);
+    },
+
+    /**
+     * Gets the world transform matrix for this Game Object, factoring in any parent Containers.
+     *
+     * @method Phaser.GameObjects.Components.Transform#getWorldTransformMatrix
+     * @since 3.4.0
+     *
+     * @param {Phaser.GameObjects.Components.TransformMatrix} tempMatrix - The matrix to populate with the values from this Game Object.
+     *
+     * @return {Phaser.GameObjects.Components.TransformMatrix} The populated Transform Matrix.
+     */
+    getWorldTransformMatrix: function (tempMatrix)
+    {
+        var parent = this.parentContainer;
+        var parents = [];
+        
+        while (parent)
+        {
+            parents.unshift(parent);
+            parent = parent.parentContainer;
+        }
+
+        tempMatrix.loadIdentity();
+
+        var length = parents.length;
+        
+        for (var i = 0; i < length; ++i)
+        {
+            parent = parents[i];
+
+            tempMatrix.translate(parent.x, parent.y);
+            tempMatrix.rotate(parent._rotation);
+            tempMatrix.scale(parent._scaleX, parent._scaleY);
+        }
+
+        tempMatrix.translate(this.x, this.y);
+        tempMatrix.rotate(this._rotation);
+        tempMatrix.scale(this._scaleX, this._scaleY);
+
+        return tempMatrix;
     }
 
 };

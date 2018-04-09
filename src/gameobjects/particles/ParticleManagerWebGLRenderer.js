@@ -19,8 +19,9 @@ var GameObject = require('../GameObject');
  * @param {Phaser.GameObjects.Particles.ParticleEmitterManager} emitterManager - The Game Object being rendered in this call.
  * @param {number} interpolationPercentage - Reserved for future use and custom pipelines.
  * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera that is rendering the Game Object.
+ * @param {Phaser.GameObjects.Components.TransformMatrix} parentMatrix - This transform matrix is defined if the game object is nested
  */
-var ParticleManagerWebGLRenderer = function (renderer, emitterManager, interpolationPercentage, camera)
+var ParticleManagerWebGLRenderer = function (renderer, emitterManager, interpolationPercentage, camera, parentMatrix)
 {
     var emitters = emitterManager.emitters;
 
@@ -29,7 +30,7 @@ var ParticleManagerWebGLRenderer = function (renderer, emitterManager, interpola
         return;
     }
 
-    this.pipeline.drawEmitterManager(emitterManager, camera);
+    this.pipeline.drawEmitterManager(emitterManager, camera, parentMatrix);
 };
 
 module.exports = ParticleManagerWebGLRenderer;

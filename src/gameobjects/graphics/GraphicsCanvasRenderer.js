@@ -20,10 +20,11 @@ var GameObject = require('../GameObject');
  * @param {Phaser.GameObjects.Graphics} src - The Game Object being rendered in this call.
  * @param {number} interpolationPercentage - Reserved for future use and custom pipelines.
  * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera that is rendering the Game Object.
+ * @param {Phaser.GameObjects.Components.TransformMatrix} parentMatrix - This transform matrix is defined if the game object is nested
  * @param {CanvasRenderingContext2D} renderTargetCtx - [description]
  * @param {boolean} allowClip - [description]
  */
-var GraphicsCanvasRenderer = function (renderer, src, interpolationPercentage, camera, renderTargetCtx, allowClip)
+var GraphicsCanvasRenderer = function (renderer, src, interpolationPercentage, camera, parentMatrix, renderTargetCtx, allowClip)
 {
     if (GameObject.RENDER_MASK !== src.renderFlags || (src.cameraFilter > 0 && (src.cameraFilter & camera._id)))
     {
@@ -69,6 +70,11 @@ var GraphicsCanvasRenderer = function (renderer, src, interpolationPercentage, c
     }
 
     ctx.save();
+    if (parentMatrix)
+    {
+        var matrix = parentMatrix.matrix;
+        ctx.transform(matrix[0], matrix[1], matrix[2], matrix[3], matrix[4], matrix[5]);
+    }
     ctx.translate(srcX - cameraScrollX, srcY - cameraScrollY);
     ctx.rotate(srcRotation);
     ctx.scale(srcScaleX, srcScaleY);

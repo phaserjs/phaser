@@ -4,10 +4,9 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-//  Phaser.Physics.Matter.World
-
 var Bodies = require('./lib/factory/Bodies');
 var Class = require('../../utils/Class');
+var Common = require('./lib/core/Common');
 var Composite = require('./lib/body/Composite');
 var Engine = require('./lib/core/Engine');
 var EventEmitter = require('eventemitter3');
@@ -15,8 +14,9 @@ var GetFastValue = require('../../utils/object/GetFastValue');
 var GetValue = require('../../utils/object/GetValue');
 var MatterBody = require('./lib/body/Body');
 var MatterEvents = require('./lib/core/Events');
-var MatterWorld = require('./lib/body/World');
 var MatterTileBody = require('./MatterTileBody');
+var MatterWorld = require('./lib/body/World');
+var Vector = require('./lib/geometry/Vector');
 
 /**
  * @classdesc
@@ -206,7 +206,9 @@ var World = new Class({
             debugShowVelocity: GetValue(config, 'debugShowVelocity', true),
             bodyDebugColor: GetValue(config, 'debugBodyColor', 0xff00ff),
             staticBodyDebugColor: GetValue(config, 'debugBodyColor', 0x0000ff),
-            velocityDebugColor: GetValue(config, 'debugVelocityColor', 0x00ff00)
+            velocityDebugColor: GetValue(config, 'debugVelocityColor', 0x00ff00),
+            debugShowJoint: GetValue(config, 'debugShowJoint', true),
+            jointDebugColor: GetValue(config, 'debugJointColor', 0x000000)
         };
 
         if (this.drawDebug)
@@ -391,7 +393,7 @@ var World = new Class({
     {
         var graphic = this.scene.sys.add.graphics({ x: 0, y: 0 });
 
-        graphic.setZ(Number.MAX_VALUE);
+        graphic.setDepth(Number.MAX_VALUE);
 
         this.debugGraphic = graphic;
 
@@ -730,7 +732,9 @@ var World = new Class({
         graphics.lineStyle(1, this.defaults.bodyDebugColor);
         graphics.beginPath();
 
-        for (var i = 0; i < bodies.length; i++)
+        var i,j;
+
+        for (i = 0; i < bodies.length; i++)
         {
             if (!bodies[i].render.visible)
             {
@@ -739,7 +743,7 @@ var World = new Class({
 
             // Handle drawing both single bodies and compound bodies. If compound, draw both the
             // convex hull (first part) and the rest of the bodies.
-            for (var j = 0; j < bodies[i].parts.length; j++)
+            for (j = 0; j < bodies[i].parts.length; j++)
             {
                 var body = bodies[i].parts[j];
 
@@ -759,6 +763,99 @@ var World = new Class({
         }
 
         graphics.closePath();
+
+        if (this.defaults.debugShowJoint)
+        {
+            graphics.lineStyle(2, this.defaults.jointDebugColor);
+
+            // Render constraints 
+            var constraints = Composite.allConstraints(this.localWorld);
+
+            for (i = 0; i < constraints.length; i++)
+            {
+                var constraint = constraints[i];
+
+                if (!constraint.render.visible || !constraint.pointA || !constraint.pointB)
+                {
+                    continue;
+                }
+
+                if (constraint.render.lineWidth)
+                {
+                    graphics.lineStyle(constraint.render.lineWidth, Common.colorToNumber(constraint.render.strokeStyle));
+                }
+
+                var bodyA = constraint.bodyA;
+                var bodyB = constraint.bodyB;
+                var start;
+                var end;
+
+                if (bodyA)
+                {
+                    start = Vector.add(bodyA.position, constraint.pointA);
+                }
+                else
+                {
+                    start = constraint.pointA;
+                }
+
+                if (constraint.render.type === 'pin')
+                {
+                    graphics.beginPath();
+                    graphics.arc(start.x, start.y, 3, 0, 2 * Math.PI);
+                    graphics.closePath();
+                }
+                else
+                {
+                    if (bodyB)
+                    {
+                        end = Vector.add(bodyB.position, constraint.pointB);
+                    }
+                    else
+                    {
+                        end = constraint.pointB;
+                    }
+
+                    graphics.beginPath();
+                    graphics.moveTo(start.x, start.y);
+
+                    if (constraint.render.type === 'spring')
+                    {
+                        var delta = Vector.sub(end, start);
+                        var normal = Vector.perp(Vector.normalise(delta));
+                        var coils = Math.ceil(Common.clamp(constraint.length / 5, 12, 20));
+                        var offset;
+
+                        for (j = 1; j < coils; j += 1)
+                        {
+                            offset = (j % 2 === 0) ? 1 : -1;
+
+                            graphics.lineTo(
+                                start.x + delta.x * (j / coils) + normal.x * offset * 4,
+                                start.y + delta.y * (j / coils) + normal.y * offset * 4
+                            );
+                        }
+                    }
+
+                    graphics.lineTo(end.x, end.y);
+                }
+
+                if (constraint.render.lineWidth)
+                {
+                    graphics.strokePath();
+                }
+
+                if (constraint.render.anchors)
+                {
+                    graphics.fillStyle(Common.colorToNumber(constraint.render.strokeStyle));
+                    graphics.beginPath();
+                    graphics.arc(start.x, start.y, 6, 0, 2 * Math.PI);
+                    graphics.arc(end.x, end.y, 6, 0, 2 * Math.PI);
+                    graphics.closePath();
+                    graphics.fillPath();
+                }
+            }
+        }
     },
 
     /**

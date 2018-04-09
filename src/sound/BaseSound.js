@@ -12,7 +12,7 @@ var NOOP = require('../utils/NOOP');
 
 /**
  * @classdesc
- * Class containing all the shared state and behaviour of a sound object, independent of the implementation.
+ * Class containing all the shared state and behavior of a sound object, independent of the implementation.
  *
  * @class BaseSound
  * @extends Phaser.Events.EventEmitter

@@ -20,8 +20,9 @@ var Utils = require('../../renderer/webgl/Utils');
  * @param {Phaser.GameObjects.RenderTexture} renderTexture - The Game Object being rendered in this call.
  * @param {number} interpolationPercentage - Reserved for future use and custom pipelines.
  * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera that is rendering the Game Object.
+ * @param {Phaser.GameObjects.Components.TransformMatrix} parentMatrix - This transform matrix is defined if the game object is nested
  */
-var RenderTextureWebGLRenderer = function (renderer, renderTexture, interpolationPercentage, camera)
+var RenderTextureWebGLRenderer = function (renderer, renderTexture, interpolationPercentage, camera, parentMatrix)
 {
     if (GameObject.RENDER_MASK !== renderTexture.renderFlags || (renderTexture.cameraFilter > 0 && (renderTexture.cameraFilter & camera._id)))
     {
@@ -42,7 +43,8 @@ var RenderTextureWebGLRenderer = function (renderer, renderTexture, interpolatio
         0, 0, renderTexture.texture.width, renderTexture.texture.height,
         Utils.getTintAppendFloatAlpha(renderTexture.tintTopLeft, renderTexture.alphaTopLeft), Utils.getTintAppendFloatAlpha(renderTexture.tintTopRight, renderTexture.alphaTopRight), Utils.getTintAppendFloatAlpha(renderTexture.tintBottomLeft, renderTexture.alphaBottomLeft), Utils.getTintAppendFloatAlpha(renderTexture.tintBottomRight, renderTexture.alphaBottomRight),
         0, 0,
-        camera
+        camera,
+        parentMatrix
     );
 };
 

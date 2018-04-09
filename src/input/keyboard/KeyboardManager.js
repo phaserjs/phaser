@@ -191,12 +191,23 @@ var KeyboardManager = new Class({
     },
 
     /**
+     * @typedef {object} CursorKeys
+     *
+     * @property {Phaser.Input.Keyboard.Key} [up] - [description]
+     * @property {Phaser.Input.Keyboard.Key} [down] - [description]
+     * @property {Phaser.Input.Keyboard.Key} [left] - [description]
+     * @property {Phaser.Input.Keyboard.Key} [right] - [description]
+     * @property {Phaser.Input.Keyboard.Key} [space] - [description]
+     * @property {Phaser.Input.Keyboard.Key} [shift] - [description]
+     */
+
+    /**
      * Creates and returns an object containing 4 hotkeys for Up, Down, Left and Right, and also space and shift.
      *
      * @method Phaser.Input.Keyboard.KeyboardManager#createCursorKeys
      * @since 3.0.0
      *
-     * @return {object} [description]
+     * @return {CursorKeys} [description]
      */
     createCursorKeys: function ()
     {
@@ -215,9 +226,9 @@ var KeyboardManager = new Class({
      *
      * For example,
      *
-     *     addKeys( { 'up': Phaser.KeyCode.W, 'down': Phaser.KeyCode.S, 'left': Phaser.KeyCode.A, 'right': Phaser.KeyCode.D } );
+     *     addKeys({ 'up': Phaser.Input.Keyboard.KeyCodes.W, 'down': Phaser.Input.Keyboard.KeyCodes.S });
      *
-     * would return an object containing properties (`up`, `down`, `left` and `right`) referring to {@link Phaser.Key} object.
+     * would return an object containing properties (`up` and `down`) referring to {@link Phaser.Input.Keyboard.Key} objects.
      *
      * @method Phaser.Input.Keyboard.KeyboardManager#addKeys
      * @since 3.0.0

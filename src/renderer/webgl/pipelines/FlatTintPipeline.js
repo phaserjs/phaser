@@ -1,5 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
+ * @author       Felipe Alfonso <@bitnenfer>
  * @copyright    2018 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
@@ -698,10 +699,18 @@ var FlatTintPipeline = new Class({
      *
      * @param {Phaser.GameObjects.Graphics} graphics - [description]
      * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
+     * @param {Phaser.GameObjects.Components.TransformMatrix} parentTransformMatrix - [description]
      */
-    batchGraphics: function (graphics, camera)
+    batchGraphics: function (graphics, camera, parentTransformMatrix)
     {
         if (graphics.commandBuffer.length <= 0) { return; }
+
+        var parentMatrix = null;
+
+        if (parentTransformMatrix)
+        {
+            parentMatrix = parentTransformMatrix.matrix;
+        }
         
         this.renderer.setPipeline(this);
 
@@ -750,12 +759,38 @@ var FlatTintPipeline = new Class({
         var cmd = cameraMatrix[3];
         var cme = cameraMatrix[4];
         var cmf = cameraMatrix[5];
-        var mva = sra * cma + srb * cmc;
-        var mvb = sra * cmb + srb * cmd;
-        var mvc = src * cma + srd * cmc;
-        var mvd = src * cmb + srd * cmd;
-        var mve = sre * cma + srf * cmc + cme;
-        var mvf = sre * cmb + srf * cmd + cmf;
+        var mva, mvb, mvc, mvd, mve, mvf;
+
+        if (parentMatrix)
+        {
+            var pma = parentMatrix[0];
+            var pmb = parentMatrix[1];
+            var pmc = parentMatrix[2];
+            var pmd = parentMatrix[3];
+            var pme = parentMatrix[4];
+            var pmf = parentMatrix[5];
+            var pca = cma * pma + cmb * pmc;
+            var pcb = cma * pmb + cmb * pmd;
+            var pcc = cmc * pma + cmd * pmc;
+            var pcd = cmc * pmb + cmd * pmd;
+            var pce = cme * pma + cmf * pmc + pme;
+            var pcf = cme * pmb + cmf * pmd + pmf;
+            mva = sra * pca + srb * pcc;
+            mvb = sra * pcb + srb * pcd;
+            mvc = src * pca + srd * pcc;
+            mvd = src * pcb + srd * pcd;
+            mve = sre * pca + srf * pcc + pce;
+            mvf = sre * pcb + srf * pcd + pcf;
+        }
+        else
+        {
+            mva = sra * cma + srb * cmc;
+            mvb = sra * cmb + srb * cmd;
+            mvc = src * cma + srd * cmc;
+            mvd = src * cmb + srd * cmd;
+            mve = sre * cma + srf * cmc + cme;
+            mvf = sre * cmb + srf * cmd + cmf;
+        }
 
         var pathArrayIndex;
         var pathArrayLength;

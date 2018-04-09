@@ -13,7 +13,7 @@
  *
  * @param {HTMLElement} element - The element to be added to the DOM. Usually a Canvas object.
  * @param {(string|HTMLElement)} [parent] - The parent in which to add the element. Can be a string which is passed to `getElementById` or an actual DOM object.
- * @param {boolean} [overflowHidden=true] - [description]
+ * @param {boolean} [overflowHidden=true] - Whether or not to hide overflowing content inside the parent.
  *
  * @return {HTMLElement} The element that was added to the DOM.
  */

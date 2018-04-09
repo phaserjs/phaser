@@ -1,5 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
+ * @author       Felipe Alfonso <@bitnenfer>
  * @copyright    2018 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
@@ -440,22 +441,20 @@ var CanvasRenderer = new Class({
         }
 
         ctx.setTransform(1, 0, 0, 1, 0, 0);
+        ctx.globalCompositeOperation = 'source-over';
 
-        if (camera._fadeAlpha > 0 || camera._flashAlpha > 0)
+        if (camera._fadeAlpha > 0)
         {
-            ctx.globalCompositeOperation = 'source-over';
-
             // fade rendering
-            ctx.fillStyle = 'rgb(' + (camera._fadeRed * 255) + ',' + (camera._fadeGreen * 255) + ',' + (camera._fadeBlue * 255) + ')';
-            ctx.globalAlpha = camera._fadeAlpha;
+            ctx.fillStyle = 'rgba(' + (camera._fadeRed * 255) + ',' + (camera._fadeGreen * 255) + ',' + (camera._fadeBlue * 255) + ',' + camera._fadeAlpha + ')';
             ctx.fillRect(camera.x, camera.y, camera.width, camera.height);
+        }
 
+        if (camera._flashAlpha > 0)
+        {
             // flash rendering
-            ctx.fillStyle = 'rgb(' + (camera._flashRed * 255) + ',' + (camera._flashGreen * 255) + ',' + (camera._flashBlue * 255) + ')';
-            ctx.globalAlpha = camera._flashAlpha;
+            ctx.fillStyle = 'rgba(' + (camera._flashRed * 255) + ',' + (camera._flashGreen * 255) + ',' + (camera._flashBlue * 255) + ',' + camera._flashAlpha + ')';
             ctx.fillRect(camera.x, camera.y, camera.width, camera.height);
-
-            ctx.globalAlpha = 1.0;
         }
 
         //  Reset the camera scissor

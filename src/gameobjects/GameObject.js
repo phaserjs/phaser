@@ -56,6 +56,15 @@ var GameObject = new Class({
         this.type = type;
 
         /**
+         * The parent Container of this Game Object, if it has one.
+         *
+         * @name Phaser.GameObjects.GameObject#parentContainer
+         * @type {Phaser.GameObjects.Container}
+         * @since 3.4.0
+         */
+        this.parentContainer = null;
+
+        /**
          * The name of this Game Object.
          * Empty by default and never populated by Phaser, this is left for developers to use.
          *
@@ -186,10 +195,11 @@ var GameObject = new Class({
     },
 
     /**
-     * [description]
+     * Adds a DataManager to this object.
      *
      * @method Phaser.GameObjects.GameObject#setDataEnabled
      * @since 3.0.0
+     * @see Phaser.Data.DataManager
      *
      * @return {Phaser.GameObjects.GameObject} This GameObject.
      */

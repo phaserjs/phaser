@@ -958,7 +958,7 @@ var Camera = new Class({
      */
     ignore: function (gameObjectOrArray)
     {
-        if (gameObjectOrArray instanceof Array)
+        if (Array.isArray(gameObjectOrArray))
         {
             for (var index = 0; index < gameObjectOrArray.length; ++index)
             {

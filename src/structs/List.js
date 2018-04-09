@@ -5,6 +5,7 @@
  */
 
 var Class = require('../utils/Class');
+var NOOP = require('../utils/NOOP');
 
 /**
  * @callback EachListCallback
@@ -63,6 +64,24 @@ var List = new Class({
          * @since 3.0.0
          */
         this.position = 0;
+
+        /**
+         * A callback that is invoked every time a child is added to this list.
+         *
+         * @name Phaser.Structs.List#addCallback
+         * @type {function}
+         * @since 3.4.0
+         */
+        this.addCallback = NOOP;
+
+        /**
+         * A callback that is invoked every time a child is removed from this list.
+         *
+         * @name Phaser.Structs.List#removeCallback
+         * @type {function}
+         * @since 3.4.0
+         */
+        this.removeCallback = NOOP;
     },
 
     /**
@@ -73,20 +92,33 @@ var List = new Class({
      *
      * @genericUse {T} - [child,$return]
      *
-     * @param {*} child - [description]
+     * @param {*|Array.<*>} child - [description]
+     * @param {boolean} [skipCallback=false] - Skip calling the List.addCallback if this child is added successfully.
      *
      * @return {*} [description]
      */
-    add: function (child)
+    add: function (child, skipCallback)
     {
-        //  Is child already in this display list?
-
-        if (this.getIndex(child) === -1)
+        if (Array.isArray(child))
         {
-            this.list.push(child);
+            return this.addMultiple(child, skipCallback);
         }
+        else
+        {
+            //  Is child already in this display list?
 
-        return child;
+            if (this.getIndex(child) === -1)
+            {
+                this.list.push(child);
+
+                if (!skipCallback)
+                {
+                    this.addCallback(this, child);
+                }
+            }
+
+            return child;
+        }
     },
 
     /**
@@ -99,16 +131,17 @@ var List = new Class({
      *
      * @param {*} child - [description]
      * @param {integer} [index=0] - [description]
+     * @param {boolean} [skipCallback=false] - Skip calling the List.addCallback if this child is added successfully.
      *
      * @return {*} [description]
      */
-    addAt: function (child, index)
+    addAt: function (child, index, skipCallback)
     {
         if (index === undefined) { index = 0; }
 
         if (this.list.length === 0)
         {
-            return this.add(child);
+            return this.add(child, skipCallback);
         }
 
         if (index >= 0 && index <= this.list.length)
@@ -116,6 +149,11 @@ var List = new Class({
             if (this.getIndex(child) === -1)
             {
                 this.list.splice(index, 0, child);
+
+                if (!skipCallback)
+                {
+                    this.addCallback(this, child);
+                }
             }
         }
 
@@ -131,16 +169,17 @@ var List = new Class({
      * @genericUse {T[]} - [children,$return]
      *
      * @param {Array.<*>} children - [description]
+     * @param {boolean} [skipCallback=false] - Skip calling the List.addCallback if this child is added successfully.
      *
      * @return {Array.<*>} [description]
      */
-    addMultiple: function (children)
+    addMultiple: function (children, skipCallback)
     {
         if (Array.isArray(children))
         {
             for (var i = 0; i < children.length; i++)
             {
-                this.add(children[i]);
+                this.add(children[i], skipCallback);
             }
         }
 
@@ -495,16 +534,22 @@ var List = new Class({
      * @genericUse {T} - [child,$return]
      *
      * @param {*} child - [description]
+     * @param {boolean} [skipCallback=false] - Skip calling the List.removeCallback.
      *
      * @return {*} [description]
      */
-    remove: function (child)
+    remove: function (child, skipCallback)
     {
         var index = this.list.indexOf(child);
 
         if (index !== -1)
         {
             this.list.splice(index, 1);
+
+            if (!skipCallback)
+            {
+                this.removeCallback(this, child);
+            }
         }
 
         return child;
@@ -519,16 +564,22 @@ var List = new Class({
      * @genericUse {T} - [$return]
      *
      * @param {integer} index - [description]
+     * @param {boolean} [skipCallback=false] - Skip calling the List.removeCallback.
      *
      * @return {*} [description]
      */
-    removeAt: function (index)
+    removeAt: function (index, skipCallback)
     {
         var child = this.list[index];
 
         if (child)
         {
             this.children.splice(index, 1);
+
+            if (!skipCallback)
+            {
+                this.removeCallback(this, child);
+            }
         }
 
         return child;
@@ -544,10 +595,11 @@ var List = new Class({
      *
      * @param {integer} [beginIndex=0] - [description]
      * @param {integer} [endIndex] - [description]
+     * @param {boolean} [skipCallback=false] - Skip calling the List.removeCallback.
      *
      * @return {Array.<*>} [description]
      */
-    removeBetween: function (beginIndex, endIndex)
+    removeBetween: function (beginIndex, endIndex, skipCallback)
     {
         if (beginIndex === undefined) { beginIndex = 0; }
         if (endIndex === undefined) { endIndex = this.list.length; }
@@ -557,6 +609,11 @@ var List = new Class({
         if (range > 0 && range <= endIndex)
         {
             var removed = this.list.splice(beginIndex, range);
+
+            if (!skipCallback)
+            {
+                this.removeCallback(this, removed);
+            }
 
             return removed;
         }
@@ -577,16 +634,18 @@ var List = new Class({
      * @since 3.0.0
      *
      * @genericUse {Phaser.Structs.List.<T>} - [$return]
+     * 
+     * @param {boolean} [skipCallback=false] - Skip calling the List.removeCallback.
      *
      * @return {Phaser.Structs.List} This List object.
      */
-    removeAll: function ()
+    removeAll: function (skipCallback)
     {
         var i = this.list.length;
 
         while (i--)
         {
-            this.remove(this.list[i]);
+            this.remove(this.list[i], skipCallback);
         }
 
         return this;
@@ -608,8 +667,8 @@ var List = new Class({
     {
         if (this.getIndex(child) < this.list.length)
         {
-            this.remove(child);
-            this.add(child);
+            this.remove(child, true);
+            this.add(child, true);
         }
 
         return child;
@@ -631,8 +690,8 @@ var List = new Class({
     {
         if (this.getIndex(child) > 0)
         {
-            this.remove(child);
-            this.addAt(child, 0);
+            this.remove(child, true);
+            this.addAt(child, 0, true);
         }
 
         return child;

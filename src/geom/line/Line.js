@@ -171,7 +171,7 @@ var Line = new Class({
     {
         if (vec2 === undefined) { vec2 = new Vector2(); }
 
-        vec2.setTo(this.x1, this.y1);
+        vec2.set(this.x1, this.y1);
 
         return vec2;
     },
@@ -192,7 +192,7 @@ var Line = new Class({
     {
         if (vec2 === undefined) { vec2 = new Vector2(); }
 
-        vec2.setTo(this.x2, this.y2);
+        vec2.set(this.x2, this.y2);
 
         return vec2;
     },

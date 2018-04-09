@@ -19,8 +19,9 @@ var GameObject = require('../../GameObject');
  * @param {Phaser.GameObjects.BitmapText} gameObject - The Game Object being rendered in this call.
  * @param {number} interpolationPercentage - Reserved for future use and custom pipelines.
  * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera that is rendering the Game Object.
+ * @param {Phaser.GameObjects.Components.TransformMatrix} parentMatrix - This transform matrix is defined if the game object is nested
  */
-var BitmapTextWebGLRenderer = function (renderer, gameObject, interpolationPercentage, camera)
+var BitmapTextWebGLRenderer = function (renderer, gameObject, interpolationPercentage, camera, parentMatrix)
 {
     var text = gameObject.text;
     var textLength = text.length;
@@ -30,7 +31,7 @@ var BitmapTextWebGLRenderer = function (renderer, gameObject, interpolationPerce
         return;
     }
 
-    this.pipeline.batchBitmapText(this, camera);
+    this.pipeline.batchBitmapText(this, camera, parentMatrix);
 };
 
 module.exports = BitmapTextWebGLRenderer;

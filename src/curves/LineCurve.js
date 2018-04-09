@@ -107,11 +107,15 @@ var LineCurve = new Class({
      * @method Phaser.Curves.LineCurve#getResolution
      * @since 3.0.0
      *
-     * @return {integer} [description]
+     * @param {number} [divisions=1] - [description]
+     *
+     * @return {number} [description]
      */
-    getResolution: function ()
+    getResolution: function (divisions)
     {
-        return 1;
+        if (divisions === undefined) { divisions = 1; }
+
+        return divisions;
     },
 
     /**
