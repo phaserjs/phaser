@@ -36,6 +36,7 @@ var Container = new Class({
     Extends: GameObject,
 
     Mixins: [
+        Components.Alpha,
         Components.BlendMode,
         Components.Depth,
         Components.Transform,
@@ -128,6 +129,7 @@ var Container = new Class({
         this._displayList = scene.sys.displayList;
 
         this.setPosition(x, y);
+        this.clearAlpha();
 
         if (Array.isArray(children))
         {

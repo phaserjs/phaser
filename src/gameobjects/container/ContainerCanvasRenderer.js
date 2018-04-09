@@ -45,9 +45,15 @@ var ContainerCanvasRenderer = function (renderer, container, interpolationPercen
         transformMatrix.scale(container.scaleX, container.scaleY);
     }
 
+    var alpha = container._alpha;
+
     for (var index = 0; index < children.length; ++index)
     {
-        children[index].renderCanvas(renderer, children[index], interpolationPercentage, camera, transformMatrix);
+        var child = children[index];
+        var childAlpha = child._alpha;
+        child.setAlpha(childAlpha * alpha);
+        child.renderCanvas(renderer, child, interpolationPercentage, camera, transformMatrix);
+        child.setAlpha(childAlpha);
     }
 };
 
