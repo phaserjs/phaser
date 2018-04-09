@@ -19,7 +19,8 @@ var InjectionMap = require('./InjectionMap');
  * @property {boolean} [visible=true] - [description]
  * @property {(false|LoaderFileObject[])} [files=false] - [description]
  * @property {?(InputJSONCameraObject|InputJSONCameraObject[])} [cameras=null] - [description]
- * @property {Object.<string, string>} [map] - [description]
+ * @property {Object.<string, string>} [map] - Overwrites the default injection map for a scene.
+ * @property {Object.<string, string>} [mapAdd] - Extends the injection map for a scene.
  * @property {object} [physics={}] - [description]
  * @property {object} [loader={}] - [description]
  * @property {(false|*)} [plugins=false] - [description]
