@@ -6,6 +6,7 @@
 
 var CONST = require('./const');
 var GetValue = require('../utils/object/GetValue');
+var Merge = require('../utils/object/Merge');
 var InjectionMap = require('./InjectionMap');
 
 // TODO 22/03/2018 Fix "plugins" type
@@ -87,7 +88,7 @@ var Settings = {
 
             //  Scene Property Injection Map
 
-            map: GetValue(config, 'map', InjectionMap),
+            map: GetValue(config, 'map', Merge(InjectionMap, GetValue(config, 'mapAdd', {}))),
 
             //  Physics
 
