@@ -126,13 +126,14 @@ var CanvasPool = function ()
     {
         if (canvasType === undefined) { canvasType = CONST.CANVAS; }
 
-        pool.forEach(function (container)
+        for (var i = 0, len = pool.length; i < len; i++) 
         {
+            var container = pool[i];
             if (!container.parent && container.type === canvasType)
             {
                 return container;
             }
-        });
+        }
 
         return null;
     };
