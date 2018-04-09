@@ -71,6 +71,26 @@ var Container = new Class({
         this.list = [];
 
         /**
+         * Does this Container exclusively manage its children?
+         * 
+         * The default is `true` which means a child added to this Container cannot
+         * belong in another Container, which includes the Scene display list.
+         * 
+         * If you disable this then this Container will no longer exclusively manage its children.
+         * This allows you to create all kinds of interesting graphical effects, such as replicating
+         * Game Objects without reparenting them all over the Scene.
+         * However, doing so will prevent children from receiving any kind of input event or have
+         * their physics bodies work by default, as they're no longer a single entity on the
+         * display list, but are being replicated where-ever this Container is.
+         *
+         * @name Phaser.GameObjects.Container#exclusive
+         * @type {boolean}
+         * @default true
+         * @since 3.4.0
+         */
+        this.exclusive = true;
+
+        /**
          * The cursor position.
          *
          * @name Phaser.GameObjects.Container#position
@@ -138,6 +158,35 @@ var Container = new Class({
     },
 
     /**
+     * Does this Container exclusively manage its children?
+     * 
+     * The default is `true` which means a child added to this Container cannot
+     * belong in another Container, which includes the Scene display list.
+     * 
+     * If you disable this then this Container will no longer exclusively manage its children.
+     * This allows you to create all kinds of interesting graphical effects, such as replicating
+     * Game Objects without reparenting them all over the Scene.
+     * However, doing so will prevent children from receiving any kind of input event or have
+     * their physics bodies work by default, as they're no longer a single entity on the
+     * display list, but are being replicated where-ever this Container is.
+     *
+     * @method Phaser.GameObjects.Container#setExclusive
+     * @since 3.4.0
+     *
+     * @param {boolean} [value=true] - The exclusive state of this Container.
+     *
+     * @return {Phaser.GameObjects.Container} This Container.
+     */
+    setExclusive: function (value)
+    {
+        if (value === undefined) { value = true; }
+
+        this.exclusive = value;
+
+        return this;
+    },
+
+    /**
      * Internal add handler.
      *
      * @method Phaser.GameObjects.Container#addHandler
@@ -149,16 +198,19 @@ var Container = new Class({
      */
     addHandler: function (list, gameObject)
     {
-        this._displayList.remove(gameObject);
-
         gameObject.on('destroy', this.remove, this);
 
-        if (gameObject.parentContainer)
+        if (this.exclusive)
         {
-            gameObject.parentContainer.remove(gameObject);
-        }
+            this._displayList.remove(gameObject);
 
-        gameObject.parentContainer = list;
+            if (gameObject.parentContainer)
+            {
+                gameObject.parentContainer.remove(gameObject);
+            }
+
+            gameObject.parentContainer = list;
+        }
     },
 
     /**
@@ -175,7 +227,10 @@ var Container = new Class({
     {
         gameObject.off('destroy', list.remove, this);
 
-        gameObject.parentContainer = null;
+        if (this.exclusive)
+        {
+            gameObject.parentContainer = null;
+        }
     },
 
     /**
