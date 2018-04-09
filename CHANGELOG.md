@@ -50,6 +50,7 @@ being passed to the simulation. The default value is 1 to remain consistent with
 * Tween.restart handles removed tweens properly and reads them back into the active queue for the TweenManager (thanks @wtravO)
 * Tween.resume will now call `Tween.play` on a tween that was paused due to its config object, not as a result of having its paused method called. Fix #3452 (thanks @jazen)
 * LoaderPlugin.isReady referenced a constant that no longer exists. Fix #3503 (thanks @Twilrom)
+* Ellipse.random() returned a subset of possible points within the ellipse area. (thanks @budda)
 
 ### Updates
 
