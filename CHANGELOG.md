@@ -44,6 +44,8 @@ being passed to the simulation. The default value is 1 to remain consistent with
 * Line.getPointA and Line.getPointB incorrectly set the values into the Vector2 (thanks @Tomas2h)
 * DynamicTilemapLayer now uses the ComputedSize component, which stops it breaking if you call `setDisplaySize` (thanks Babsobar)
 * StaticTilemapLayer now uses the ComputedSize component, which stops it breaking if you call `setDisplaySize` (thanks Babsobar)
+* CanvasPool.first always returned `null`, and now returns the first available Canvas. Fix #3520 (thanks @mchiasson)
+* When starting a new Scene with an optional `data` argument it wouldn't get passed through if the Scene was not yet available (i.e. the game had not fully booted). The data is now passed to the Scene `init` method and stored in the Scene Settings data property. Fix #3363 (thanks @pixelhijack)
 
 ### Updates
 
