@@ -126,7 +126,7 @@ var Container = new Class({
          * @private
          * @since 3.4.0
          */
-        this.addCallback = this.addHandler;
+        this.addCallback = this.addHandler.bind(this);
 
         /**
          * A callback that is invoked every time a child is removed from this list.
@@ -136,7 +136,7 @@ var Container = new Class({
          * @private
          * @since 3.4.0
          */
-        this.removeCallback = this.removeHandler;
+        this.removeCallback = this.removeHandler.bind(this);
 
         /**
          * A reference to the Scene Display List.
@@ -151,9 +151,9 @@ var Container = new Class({
         this.setPosition(x, y);
         this.clearAlpha();
 
-        if (Array.isArray(children))
+        if (children)
         {
-            this.addMultiple(children);
+            this.add(children);
         }
     },
 
@@ -196,7 +196,7 @@ var Container = new Class({
      * @param {Phaser.GameObjects.Container} list - The List the Game Object was added to (also this Container)
      * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object that was just added to this Container.
      */
-    addHandler: function (list, gameObject)
+    addHandler: function (gameObject)
     {
         gameObject.on('destroy', this.remove, this);
 
@@ -209,7 +209,7 @@ var Container = new Class({
                 gameObject.parentContainer.remove(gameObject);
             }
 
-            gameObject.parentContainer = list;
+            gameObject.parentContainer = this;
         }
     },
 
@@ -223,9 +223,9 @@ var Container = new Class({
      * @param {Phaser.GameObjects.Container} list - The List the Game Object was removed from (also this Container)
      * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object that was just removed from this Container.
      */
-    removeHandler: function (list, gameObject)
+    removeHandler: function (gameObject)
     {
-        gameObject.off('destroy', list.remove, this);
+        gameObject.off('destroy', this.remove, this);
 
         if (this.exclusive)
         {
