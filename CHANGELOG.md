@@ -26,6 +26,25 @@ being passed to the simulation. The default value is 1 to remain consistent with
 * List.addCallback is a new optional callback that is invoked every time a new child is added to the List. You can use this to have a callback fire when children are added to the Display List.
 * List.removeCallback is a new optional callback that is invoked every time a new child is removed from the List. You can use this to have a callback fire when children are removed from the Display List.
 * ScenePlugin.restart allows you to restart the current Scene. It's the same result as calling `ScenePlugin.start` without any arguments, but is more clear.
+* Utils.Array.Add allows you to add one or more items safely to an array, with optional limits and callbacks.
+* Utils.Array.AddAt allows you to add one or more items safely to an array at a specified position, with optional limits and callbacks.
+* Utils.Array.BringToTop allows you to bring an array element to the top of the array.
+* Utils.Array.CountAllMatching will scan an array and count all elements with properties matching the given value.
+* Utils.Array.Each will pass each element of an array to a given callback, with optional arguments.
+* Utils.Array.EachInRange will pass each element of an array in a given range to a callback, with optional arguments.
+* Utils.Array.GetAll will return all elements from an array, with optional property and value comparisons.
+* Utils.Array.GetFirst will return the first element in an array, with optional property and value comparisons.
+* Utils.Array.GetRandomElement has been renamed to GetRandom and will return a random element from an array.
+* Utils.Array.MoveDown will move the given array element down one position in the array.
+* Utils.Array.MoveTo will move the given array element to the given position in the array.
+* Utils.Array.MoveUp will move the given array element up one position in the array.
+* Utils.Array.Remove will remove the given element or array of elements from the array, with an optional callback.
+* Utils.Array.RemoveAt will remove the element from the given position in the array, with an optional callback.
+* Utils.Array.RemoveBetween will remove the elements between the given range in the array, with an optional callback.
+* Utils.Array.Replace will replace an existing element in an array with a new one.
+* Utils.Array.SendToBack allows you to send an array element to the bottom of the array.
+* Utils.Array.SetAll will set a property on all elements of an array to the given value, with optional range limits.
+* Utils.Array.Swap will swap the position of two elements in an array.
 
 ### Bug Fixes
 
@@ -76,6 +95,11 @@ being passed to the simulation. The default value is 1 to remain consistent with
 * SceneManager._processing has been renamed to `isProcessing` which is now a boolean, not an integer. It's also now public and read-only.
 * SceneManager.isBooted is a new boolean read-only property that lets you know if the Scene Manager has performed its initial boot sequence.
 * TransformMatrix has the following new getter and setters: `a`, `b`, `c`, `d`, `tx` and `ty`. It also has the following new getters: `scaleX`, `scaleY` and `rotation`.
+* List.getByKey has been removed. Use `List.getFirst` instead which offers the exact same functionality.
+* List.sortIndexHandler has been removed because it's no longer required.
+* List.sort no longer takes an array as its argument, instead it only sorts the List contents by the defined property.
+* List.addMultiple has been removed. Used `List.add` instead which offers the exact same functionality.
+* List is now internally using all of the new Utils.Array functions.
 
 ### Animation System Updates
 

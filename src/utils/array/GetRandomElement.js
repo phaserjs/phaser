@@ -5,23 +5,23 @@
  */
 
 /**
- * [description]
+ * Returns a Random element from the array.
  *
  * @function Phaser.Utils.Array.GetRandomElement
  * @since 3.0.0
  *
  * @param {array} array - The array to select the random entry from.
- * @param {integer} [start=0] - [description]
- * @param {integer} [length=array.length] - [description]
+ * @param {integer} [startIndex=0] - An optional start index.
+ * @param {integer} [length=array.length] - An optional length, the total number of elements (from the startIndex) to choose from.
  *
  * @return {object} A random element from the array, or `null` if no element could be found in the range given.
  */
-var GetRandomElement = function (array, start, length)
+var GetRandomElement = function (array, startIndex, length)
 {
-    if (start === undefined) { start = 0; }
+    if (startIndex === undefined) { startIndex = 0; }
     if (length === undefined) { length = array.length; }
 
-    var randomIndex = start + Math.floor(Math.random() * length);
+    var randomIndex = startIndex + Math.floor(Math.random() * length);
 
     return (array[randomIndex] === undefined) ? null : array[randomIndex];
 };
