@@ -609,34 +609,27 @@ var World = new Class({
 
         //  Update all active bodies
 
-        var i;
-        var body;
         var bodies = this.bodies.entries;
-        var len = bodies.length;
         var hash = {};
         var size = this.cellSize;
 
-        for (i = 0; i < len; i++)
+        bodies.forEach(function (body)
         {
-            body = bodies[i];
-
             if (body.enabled)
             {
                 body.update(clampedDelta);
             }
-        }
+        }.bind(this));
 
         //  Run collision against them all now they're in the new positions from the update
 
-        for (i = 0; i < len; i++)
+        bodies.forEach(function (body)
         {
-            body = bodies[i];
-
             if (!body.skipHash())
             {
                 this.checkHash(body, hash, size);
             }
-        }
+        }.bind(this));
 
         if (this.drawDebug)
         {
@@ -644,15 +637,13 @@ var World = new Class({
 
             graphics.clear();
 
-            for (i = 0; i < len; i++)
+            bodies.forEach(function (body)
             {
-                body = bodies[i];
-
                 if (body.willDrawDebug())
                 {
                     body.drawDebug(graphics);
                 }
-            }
+            }.bind(this));
         }
     },
 
