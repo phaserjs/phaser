@@ -562,6 +562,18 @@ var TransformMatrix = new Class({
         matrix[3] = cr * scaleY;
 
         return this;
+    },
+
+    /**
+     * Destroys this Transform Matrix.
+     *
+     * @method Phaser.GameObjects.Components.TransformMatrix#destroy
+     * @since 3.4.0
+     */
+    destroy: function ()
+    {
+        this.matrix = null;
+        this.decomposedMatrix = null;
     }
 
 });
