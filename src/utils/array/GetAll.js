@@ -4,16 +4,18 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
+var SafeRange = require('./SafeRange');
+
 /**
  * Returns all elements in the array.
  *
  * You can optionally specify a matching criteria using the `property` and `value` arguments.
  *
- * For example: `getAll('visible', true)` would return only children that have their visible property set.
+ * For example: `getAll('visible', true)` would return only elements that have their visible property set.
  *
- * Optionally you can specify a start and end index. For example if this List had 100 children,
+ * Optionally you can specify a start and end index. For example if the array had 100 elements,
  * and you set `startIndex` to 0 and `endIndex` to 50, it would return matches from only
- * the first 50 children in the List.
+ * the first 50 elements.
  *
  * @function Phaser.Utils.Array.GetAll
  * @since 3.4.0
@@ -33,15 +35,18 @@ var GetAll = function (array, property, value, startIndex, endIndex)
 
     var output = [];
 
-    for (var i = startIndex; i < endIndex; i++)
+    if (SafeRange(array, startIndex, endIndex))
     {
-        var child = array[i];
-
-        if (!property ||
-            (property && value === undefined && child.hasOwnProperty(property)) ||
-            (property && value !== undefined && child[property] === value))
+        for (var i = startIndex; i < endIndex; i++)
         {
-            output.push(child);
+            var child = array[i];
+
+            if (!property ||
+                (property && value === undefined && child.hasOwnProperty(property)) ||
+                (property && value !== undefined && child[property] === value))
+            {
+                output.push(child);
+            }
         }
     }
 

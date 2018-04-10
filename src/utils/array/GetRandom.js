@@ -7,7 +7,7 @@
 /**
  * Returns a Random element from the array.
  *
- * @function Phaser.Utils.Array.GetRandomElement
+ * @function Phaser.Utils.Array.GetRandom
  * @since 3.0.0
  *
  * @param {array} array - The array to select the random entry from.
@@ -16,7 +16,7 @@
  *
  * @return {object} A random element from the array, or `null` if no element could be found in the range given.
  */
-var GetRandomElement = function (array, startIndex, length)
+var GetRandom = function (array, startIndex, length)
 {
     if (startIndex === undefined) { startIndex = 0; }
     if (length === undefined) { length = array.length; }
@@ -26,4 +26,4 @@ var GetRandomElement = function (array, startIndex, length)
     return (array[randomIndex] === undefined) ? null : array[randomIndex];
 };
 
-module.exports = GetRandomElement;
+module.exports = GetRandom;

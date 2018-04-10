@@ -4,6 +4,8 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
+var SafeRange = require('./SafeRange');
+
 /**
  * Removes the item within the given range in the array.
  * 
@@ -24,38 +26,32 @@
  */
 var RemoveBetween = function (array, startIndex, endIndex, callback, context)
 {
+    if (startIndex === undefined) { startIndex = 0; }
+    if (endIndex === undefined) { endIndex = array.length; }
     if (context === undefined) { context = array; }
 
-    var len = array.length;
-
-    if (startIndex === undefined) { startIndex = 0; }
-    if (endIndex === undefined) { endIndex = len; }
-
-    if (endIndex > len)
+    if (SafeRange(array, startIndex, endIndex))
     {
-        endIndex = len;
-    }
+        var size = endIndex - startIndex;
 
-    if (startIndex < 0 || startIndex > len || startIndex >= endIndex)
-    {
-        throw new Error('Range Error: Values outside acceptable range');
-    }
+        var removed = array.splice(startIndex, size);
 
-    var size = endIndex - startIndex;
-
-    var removed = array.splice(startIndex, size);
-
-    if (callback)
-    {
-        for (var i = 0; i < removed.length; i++)
+        if (callback)
         {
-            var entry = removed[i];
+            for (var i = 0; i < removed.length; i++)
+            {
+                var entry = removed[i];
 
-            callback.call(context, entry);
+                callback.call(context, entry);
+            }
         }
-    }
 
-    return removed;
+        return removed;
+    }
+    else
+    {
+        return [];
+    }
 };
 
 module.exports = RemoveBetween;

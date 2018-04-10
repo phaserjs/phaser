@@ -4,6 +4,8 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
+var SafeRange = require('./SafeRange');
+
 /**
  * Scans the array for elements with the given property. If found, the property is set to the `value`.
  *
@@ -25,28 +27,19 @@
  */
 var SetAll = function (array, property, value, startIndex, endIndex)
 {
-    var len = array.length;
-
     if (startIndex === undefined) { startIndex = 0; }
-    if (endIndex === undefined) { endIndex = len; }
+    if (endIndex === undefined) { endIndex = array.length; }
 
-    if (endIndex > len)
+    if (SafeRange(array, startIndex, endIndex))
     {
-        endIndex = len;
-    }
-
-    if (startIndex < 0 || startIndex > len || startIndex > endIndex)
-    {
-        throw new Error('Range Error: Values outside acceptable range');
-    }
-
-    for (var i = startIndex; i < endIndex; i++)
-    {
-        var entry = array[i];
-
-        if (entry.hasOwnProperty(property))
+        for (var i = startIndex; i < endIndex; i++)
         {
-            entry[property] = value;
+            var entry = array[i];
+
+            if (entry.hasOwnProperty(property))
+            {
+                entry[property] = value;
+            }
         }
     }
 

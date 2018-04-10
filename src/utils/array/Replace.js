@@ -15,7 +15,7 @@
  * @param {*} oldChild - The element in the array that will be replaced.
  * @param {*} newChild - The element to be inserted into the array at the position of `oldChild`.
  *
- * @return {*} Returns the oldChild that was replaced.
+ * @return {boolean} Returns true if the oldChild was successfully replaced, otherwise returns false.
  */
 var Replace = function (array, oldChild, newChild)
 {
@@ -25,9 +25,13 @@ var Replace = function (array, oldChild, newChild)
     if (index1 !== -1 && index2 === -1)
     {
         array[index1] = newChild;
-    }
 
-    return oldChild;
+        return true;
+    }
+    else
+    {
+        return false;
+    }
 };
 
 module.exports = Replace;

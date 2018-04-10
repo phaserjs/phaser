@@ -4,6 +4,8 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
+var SafeRange = require('./SafeRange');
+
 /**
  * Passes each element in the array, between the start and end indexes, to the given callback.
  *
@@ -21,34 +23,25 @@
  */
 var EachInRange = function (array, callback, context, startIndex, endIndex)
 {
-    var len = array.length;
-
     if (startIndex === undefined) { startIndex = 0; }
-    if (endIndex === undefined) { endIndex = len; }
+    if (endIndex === undefined) { endIndex = array.length; }
 
-    if (endIndex > len)
+    if (SafeRange(array, startIndex, endIndex))
     {
-        endIndex = len;
-    }
+        var i;
+        var args = [ null ];
 
-    if (startIndex < 0 || startIndex > len || startIndex >= endIndex)
-    {
-        throw new Error('Range Error: Values outside acceptable range');
-    }
+        for (i = 5; i < arguments.length; i++)
+        {
+            args.push(arguments[i]);
+        }
 
-    var i;
-    var args = [ null ];
+        for (i = startIndex; i < endIndex; i++)
+        {
+            args[0] = array[i];
 
-    for (i = 5; i < arguments.length; i++)
-    {
-        args.push(arguments[i]);
-    }
-
-    for (i = startIndex; i < endIndex; i++)
-    {
-        args[0] = array[i];
-
-        callback.apply(context, args);
+            callback.apply(context, args);
+        }
     }
 
     return array;

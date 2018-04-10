@@ -36,6 +36,7 @@ module.exports = {
     Replace: require('./Replace'),
     RotateLeft: require('./RotateLeft'),
     RotateRight: require('./RotateRight'),
+    SafeRange: require('./SafeRange'),
     SendToBack: require('./SendToBack'),
     SetAll: require('./SetAll'),
     Shuffle: require('./Shuffle'),
