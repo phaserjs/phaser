@@ -558,18 +558,18 @@ var TransformMatrix = new Class({
     {
         var matrix = this.matrix;
 
-        var sr = Math.sin(rotation);
-        var cr = Math.cos(rotation);
+        var radianSin = Math.sin(rotation);
+        var radianCos = Math.cos(rotation);
 
         // Translate
         matrix[4] = x;
         matrix[5] = y;
 
         // Rotate and Scale
-        matrix[0] = cr * scaleX;
-        matrix[1] = -sr * scaleX;
-        matrix[2] = sr * scaleY;
-        matrix[3] = cr * scaleY;
+        matrix[0] = radianCos * scaleX;
+        matrix[1] = radianSin * scaleX;
+        matrix[2] = -radianSin * scaleY;
+        matrix[3] = radianCos * scaleY;
 
         return this;
     },
