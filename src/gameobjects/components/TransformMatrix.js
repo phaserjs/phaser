@@ -317,8 +317,18 @@ var TransformMatrix = new Class({
     {
         var radianSin = Math.sin(radian);
         var radianCos = Math.cos(radian);
+        var matrix = this.matrix;
+        var a = matrix[0];
+        var b = matrix[1];
+        var c = matrix[2];
+        var d = matrix[3];
 
-        return this.transform(radianCos, radianSin, -radianSin, radianCos, 0, 0);
+        matrix[0] = a * radianCos + c * radianSin;
+        matrix[1] = b * radianCos + d * radianSin;
+        matrix[2] = a * -radianSin + c * radianCos;
+        matrix[3] = b * -radianSin + d * radianCos;
+
+        return this;
     },
 
     /**

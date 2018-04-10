@@ -34,14 +34,14 @@ var ContainerCanvasRenderer = function (renderer, container, interpolationPercen
     
     if (parentMatrix === undefined)
     {
-        transformMatrix.applyITRS(container.x, container.y, container.rotation, container.scaleX, container.scaleY);
+        transformMatrix.applyITRS(container.x, container.y, -container.rotation, container.scaleX, container.scaleY);
     }
     else
     {
         transformMatrix.loadIdentity();
         transformMatrix.multiply(parentMatrix);
         transformMatrix.translate(container.x, container.y);
-        transformMatrix.rotate(container.rotation);
+        transformMatrix.rotate(-container.rotation);
         transformMatrix.scale(container.scaleX, container.scaleY);
     }
 
