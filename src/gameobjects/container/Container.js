@@ -340,7 +340,7 @@ var Container = new Class({
         {
             this._sortKey = property;
 
-            StableSort.inplace(this.list, this.sortHandler);
+            ArrayUtils.StableSort.inplace(this.list, this.sortHandler);
         }
 
         return this;
@@ -577,7 +577,7 @@ var Container = new Class({
      *
      * @return {Phaser.GameObjects.Container} This Container instance.
      */
-    removeAt: function (index)
+    removeAt: function (index, destroyChild)
     {
         var removed = ArrayUtils.RemoveAt(this.list, index, this.removeHandler, this);
 
