@@ -8,7 +8,7 @@ var Class = require('../../utils/Class');
 
 /**
  * This event is dispatched when an animation starts playing.
- * 
+ *
  * @event Phaser.GameObjects.Components.Animation#onStartEvent
  * @param {Phaser.Animations.Animation} animation - Reference to the currently playing animation.
  * @param {Phaser.Animations.AnimationFrame} frame - Reference to the current Animation Frame.
@@ -16,7 +16,7 @@ var Class = require('../../utils/Class');
 
 /**
  * This event is dispatched when an animation repeats.
- * 
+ *
  * @event Phaser.GameObjects.Components.Animation#onRepeatEvent
  * @param {Phaser.Animations.Animation} animation - Reference to the currently playing animation.
  * @param {Phaser.Animations.AnimationFrame} frame - Reference to the current Animation Frame.
@@ -26,7 +26,7 @@ var Class = require('../../utils/Class');
 /**
  * This event is dispatched when an animation updates. This happens when the animation frame changes,
  * based on the animation frame rate and other factors like timeScale and delay.
- * 
+ *
  * @event Phaser.GameObjects.Components.Animation#onUpdateEvent
  * @param {Phaser.Animations.Animation} animation - Reference to the currently playing animation.
  * @param {Phaser.Animations.AnimationFrame} frame - Reference to the current Animation Frame.
@@ -34,7 +34,7 @@ var Class = require('../../utils/Class');
 
 /**
  * This event is dispatched when an animation completes playing, either naturally or via Animation.stop.
- * 
+ *
  * @event Phaser.GameObjects.Components.Animation#onCompleteEvent
  * @param {Phaser.Animations.Animation} animation - Reference to the currently playing animation.
  * @param {Phaser.Animations.AnimationFrame} frame - Reference to the current Animation Frame.
@@ -281,7 +281,7 @@ var Animation = new Class({
 
         /**
          * Internal property tracking if this Animation is waiting to stop.
-         * 
+         *
          * 0 = No
          * 1 = Waiting for ms to pass
          * 2 = Waiting for repeat
@@ -625,7 +625,7 @@ var Animation = new Class({
 
     /**
      * Gets the amount of delay between repeats, if any.
-     * 
+     *
      * @method Phaser.GameObjects.Components.Animation#getRepeatDelay
      * @since 3.4.0
      *
@@ -700,7 +700,7 @@ var Animation = new Class({
 
         var gameObject = this.parent;
 
-        gameObject.emit('animtioncomplete', this.currentAnim, this.currentFrame);
+        gameObject.emit('animationcomplete', this.currentAnim, this.currentFrame);
 
         return gameObject;
     },
@@ -830,7 +830,7 @@ var Animation = new Class({
                     return this.currentAnim.completeAnimation(this);
                 }
             }
-            
+
             if (this.accumulator >= this.nextTick)
             {
                 this.currentAnim.setFrame(this);
