@@ -375,6 +375,8 @@ var GameObject = new Class({
 
         this.scene = undefined;
 
+        this.parentContainer = undefined;
+
         this.removeAllListeners();
     }
 
