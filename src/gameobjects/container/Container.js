@@ -45,6 +45,7 @@ var Container = new Class({
         Components.BlendMode,
         Components.ComputedSize,
         Components.Depth,
+        Components.ScrollFactor,
         Components.Transform,
         Components.Visible,
         Render
@@ -132,27 +133,7 @@ var Container = new Class({
          */
         this._sortKey = '';
 
-        /**
-         * Internal value to allow Containers to be used for input.
-         * Do not change this value. It has no effect other than to break input.
-         *
-         * @name Phaser.GameObjects.Container#scrollFactorX
-         * @type {number}
-         * @private
-         * @since 3.4.0
-         */
-        this.scrollFactorX = 1;
-
-        /**
-         * Internal value to allow Containers to be used for input.
-         * Do not change this value. It has no effect other than to break input.
-         *
-         * @name Phaser.GameObjects.Container#scrollFactorY
-         * @type {number}
-         * @private
-         * @since 3.4.0
-         */
-        this.scrollFactorY = 1;
+        this.setScrollFactor(1.0, 1.0);
 
         this.setPosition(x, y);
 
