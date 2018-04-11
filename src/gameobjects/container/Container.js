@@ -330,6 +330,30 @@ var Container = new Class({
     },
 
     /**
+     * Returns the world transform matrix.
+     * The returned matrix is a temporal and shouldn't be stored.
+     *
+     * @method Phaser.GameObjects.Container#getWorldTransformMatrix
+     * @since 3.4.0
+     *
+     * @return {Phaser.GameObjects.Components.TransformMatrix} The world transform matrix.
+     */
+    getWorldTransformMatrix: function ()
+    {
+        var tempMatrix = this.tempTransformMatrix;
+
+        tempMatrix.applyITRS(this.x, this.y, this.rotation, this.scaleX, this.scaleY);
+
+        if (this.parentContainer)
+        {
+            var parentMatrix = this.parentContainer.getTransformMatrix();
+            tempMatrix.multiply(parentMatrix);
+        }
+
+        return tempMatrix;
+    },
+
+    /**
      * Adds the given Game Object, or array of Game Objects, to this Container.
      * 
      * Each Game Object must be unique within the Container.
