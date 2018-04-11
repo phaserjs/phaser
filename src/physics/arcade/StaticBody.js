@@ -443,7 +443,13 @@ var StaticBody = new Class({
 
         this.world.staticTree.remove(this);
 
+        this.position.x -= this.offset.x;
+        this.position.y -= this.offset.y;
+
         this.offset.set(x, y);
+
+        this.position.x += this.offset.x;
+        this.position.y += this.offset.y;
 
         this.updateCenter();
 

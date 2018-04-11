@@ -11,7 +11,7 @@ var DeathZone = require('./zones/DeathZone');
 var EdgeZone = require('./zones/EdgeZone');
 var EmitterOp = require('./EmitterOp');
 var GetFastValue = require('../../utils/object/GetFastValue');
-var GetRandomElement = require('../../utils/array/GetRandomElement');
+var GetRandom = require('../../utils/array/GetRandom');
 var HasAny = require('../../utils/object/HasAny');
 var HasValue = require('../../utils/object/HasValue');
 var Particle = require('./Particle');
@@ -943,7 +943,7 @@ var ParticleEmitter = new Class({
         }
         else if (this.randomFrame)
         {
-            return GetRandomElement(this.frames);
+            return GetRandom(this.frames);
         }
         else
         {
