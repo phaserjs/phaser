@@ -30,7 +30,7 @@ var Union = function (rectA, rectB, out)
     var w = Math.max(rectA.right, rectB.right) - x;
     var h = Math.max(rectA.bottom, rectB.bottom) - y;
 
-    return out.setTo(x, y,w, h);
+    return out.setTo(x, y, w, h);
 };
 
 module.exports = Union;
