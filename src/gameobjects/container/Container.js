@@ -28,6 +28,7 @@ var Vector2 = require('../../math/Vector2');
  * @extends Phaser.GameObjects.Components.BlendMode
  * @extends Phaser.GameObjects.Components.ComputedSize
  * @extends Phaser.GameObjects.Components.Depth
+ * @extends Phaser.GameObjects.Components.ScrollFactor
  * @extends Phaser.GameObjects.Components.Transform
  * @extends Phaser.GameObjects.Components.Visible
  *
@@ -132,8 +133,6 @@ var Container = new Class({
          * @since 3.4.0
          */
         this._sortKey = '';
-
-        this.setScrollFactor(1.0, 1.0);
 
         this.setPosition(x, y);
 
