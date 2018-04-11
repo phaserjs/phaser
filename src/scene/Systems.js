@@ -491,6 +491,7 @@ var Systems = new Class({
 
     /**
      * Start this Scene running and rendering.
+     * Called automatically by the SceneManager.
      *
      * @method Phaser.Scenes.Systems#start
      * @since 3.0.0
@@ -499,9 +500,12 @@ var Systems = new Class({
      */
     start: function (data)
     {
-        this.settings.status = CONST.START;
+        if (data)
+        {
+            this.settings.data = data;
+        }
 
-        this.settings.data = data;
+        this.settings.status = CONST.START;
 
         this.settings.active = true;
         this.settings.visible = true;

@@ -114,7 +114,7 @@ var SetBody = {
 
         var _this = this;
 
-        this.body.destroy = function ()
+        body.destroy = function destroy ()
         {
             _this.world.remove(_this.body);
             _this.body.gameObject = null;
@@ -122,10 +122,13 @@ var SetBody = {
 
         if (addToWorld)
         {
-            this.world.add(this.body);
+            this.world.add(body);
         }
 
-        this.setOrigin(body.render.sprite.xOffset, body.render.sprite.yOffset);
+        if (this._originComponent)
+        {
+            this.setOrigin(body.render.sprite.xOffset, body.render.sprite.yOffset);
+        }
 
         return this;
     },

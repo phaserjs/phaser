@@ -4,13 +4,13 @@
 
 ### New Features
 
-* A new property was added to Matter.World, `correction` which is used in the Engine.update call and allows you to adjust the time
-being passed to the simulation. The default value is 1 to remain consistent with previous releases.
-* Group.destroy has a new optional argument `destroyChildren` which will automatically call `destroy` on all children of a Group if set to true (the default is false, hence it doesn't change the public API). Fix #3246 (thanks @DouglasLapsley)
+* A new property was added to Matter.World, `correction` which is used in the Engine.update call and allows you to adjust the time being passed to the simulation. The default value is 1 to remain consistent with previous releases.
 * Matter Physics now has a new config property `getDelta` which allows you to specify your own function to calculate the delta value given to the Matter Engine when it updates.
 * Matter Physics has two new methods: `set60Hz` and `set30Hz` which will set an Engine update rate of 60Hz and 30Hz respectively. 60Hz being the default.
 * Matter Physics has a new config and run-time property `autoUpdate`, which defaults to `true`. When enabled the Matter Engine will update in sync with the game step (set by Request Animation Frame). The delta value given to Matter is now controlled by the `getDelta` function.
 * Matter Physics has a new method `step` which manually advances the physics simulation by one iteration, using whatever delta and correction values you pass in to it. When used in combination with `autoUpdate=false` you can now explicitly control the update frequency of the physics simulation and unbind it from the game step.
+* Matter Physics has two new debug properties: `debugShowJoint` and `debugJointColor`. If defined they will display joints in Matter bodies during the postUpdate debug phase (only if debug is enabled) (thanks @OmarShehata)
+* Group.destroy has a new optional argument `destroyChildren` which will automatically call `destroy` on all children of a Group if set to true (the default is false, hence it doesn't change the public API). Fix #3246 (thanks @DouglasLapsley)
 * WebAudioSound.setMute is a chainable way to mute a single Sound instance.
 * WebAudioSound.setVolume is a chainable way to set the volume of a single Sound instance.
 * WebAudioSound.setSeek is a chainable way to set seek to a point of a single Sound instance.
@@ -20,11 +20,33 @@ being passed to the simulation. The default value is 1 to remain consistent with
 * HTML5AudioSound.setSeek is a chainable way to set seek to a point of a single Sound instance.
 * HTML5AudioSound.setLoop is a chainable way to set the loop state of a single Sound instance.
 * BitmapText has a new property `letterSpacing` which accepts a positive or negative number to add / reduce spacing between characters (thanks @wtravO)
-* Matter Physics has two new debug properties: `debugShowJoint` and `debugJointColor`. If defined they will display joints in Matter bodies during the postUpdate debug phase (only if debug is enabled) (thanks @OmarShehata)
 * You can now pass a Sprite Sheet or Canvas as the Texture key to `Tilemap.addTileset` and it will work in WebGL, where-as before it would display a corrupted tilemap. Fix #3407 (thanks @Zykino)
 * Graphics.slice allows you to easily draw a Pacman, or slice of pie shape to a Graphics object.
 * List.addCallback is a new optional callback that is invoked every time a new child is added to the List. You can use this to have a callback fire when children are added to the Display List.
 * List.removeCallback is a new optional callback that is invoked every time a new child is removed from the List. You can use this to have a callback fire when children are removed from the Display List.
+* ScenePlugin.restart allows you to restart the current Scene. It's the same result as calling `ScenePlugin.start` without any arguments, but is more clear.
+* Utils.Array.Add allows you to add one or more items safely to an array, with optional limits and callbacks.
+* Utils.Array.AddAt allows you to add one or more items safely to an array at a specified position, with optional limits and callbacks.
+* Utils.Array.BringToTop allows you to bring an array element to the top of the array.
+* Utils.Array.CountAllMatching will scan an array and count all elements with properties matching the given value.
+* Utils.Array.Each will pass each element of an array to a given callback, with optional arguments.
+* Utils.Array.EachInRange will pass each element of an array in a given range to a callback, with optional arguments.
+* Utils.Array.GetAll will return all elements from an array, with optional property and value comparisons.
+* Utils.Array.GetFirst will return the first element in an array, with optional property and value comparisons.
+* Utils.Array.GetRandomElement has been renamed to GetRandom and will return a random element from an array.
+* Utils.Array.MoveDown will move the given array element down one position in the array.
+* Utils.Array.MoveTo will move the given array element to the given position in the array.
+* Utils.Array.MoveUp will move the given array element up one position in the array.
+* Utils.Array.Remove will remove the given element or array of elements from the array, with an optional callback.
+* Utils.Array.RemoveAt will remove the element from the given position in the array, with an optional callback.
+* Utils.Array.RemoveBetween will remove the elements between the given range in the array, with an optional callback.
+* Utils.Array.Replace will replace an existing element in an array with a new one.
+* Utils.Array.SendToBack allows you to send an array element to the bottom of the array.
+* Utils.Array.SetAll will set a property on all elements of an array to the given value, with optional range limits.
+* Utils.Array.Swap will swap the position of two elements in an array.
+* TransformMatrix.destroy is a new method that will clear out the array and object used by a Matrix internally.
+* BaseSound, and by extension WebAudioSound and HTMLAudioSound, will now emit a `destroy` event when they are destroyed (thanks @rexrainbow)
+* A new property was added to the Scene config: `mapAdd` which is used to extend the default injection map of a scene instead of overwriting it (thanks @sebashwa)
 
 ### Bug Fixes
 
@@ -44,11 +66,22 @@ being passed to the simulation. The default value is 1 to remain consistent with
 * Line.getPointA and Line.getPointB incorrectly set the values into the Vector2 (thanks @Tomas2h)
 * DynamicTilemapLayer now uses the ComputedSize component, which stops it breaking if you call `setDisplaySize` (thanks Babsobar)
 * StaticTilemapLayer now uses the ComputedSize component, which stops it breaking if you call `setDisplaySize` (thanks Babsobar)
+* CanvasPool.first always returned `null`, and now returns the first available Canvas. Fix #3520 (thanks @mchiasson)
+* When starting a new Scene with an optional `data` argument it wouldn't get passed through if the Scene was not yet available (i.e. the game had not fully booted). The data is now passed to the Scene `init` and `create` methods and stored in the Scene Settings `data` property. Fix #3363 (thanks @pixelhijack)
+* Tween.restart handles removed tweens properly and reads them back into the active queue for the TweenManager (thanks @wtravO)
+* Tween.resume will now call `Tween.play` on a tween that was paused due to its config object, not as a result of having its paused method called. Fix #3452 (thanks @jazen)
+* LoaderPlugin.isReady referenced a constant that no longer exists. Fix #3503 (thanks @Twilrom)
+* Tween Timeline.destroy was trying to call `destroy` on Tweens instead of `stop` (thanks @Antriel)
+* Calling `setOffset` on a Static Arcade Physics Body would break because the method was missing. It has been added and now functions as expected. Fix #3465 (thanks @josephjaniga and @DouglasLapsley)
+* Calling Impact.World.remove(body) during a Body.updateCallback would cause the internal loop to crash when trying to access a now missing body. Two extra checks are in place to avoid this (thanks @iamDecode)
+* If `setInteractive` is called on a Game Object that fails to set a hit area, it will no longer try to assign `dropZone` to an undefined `input` property.
+* The Matter SetBody Component will no longer try to call `setOrigin` unless the Game Object has the origin component (which not all do, like Graphics and Container)
+* Matter Image and Matter Sprite didn't define a `destroy` method, causing an error when trying to destroy the parent Game Object. Fix #3516 (thanks @RollinSafary)
 * Fixed loading normals with multi image load (thanks @iamchristopher)
 
 ### Updates
 
-* The RTree library (rbush) used by Phaser 3 suffered from violating CSP policies by dynamically creating Functions at run-time in an eval-like manner. These are now defined via generators. Fix #3441 (thanks @jamierocks @Colbydude)
+* The RTree library (rbush) used by Phaser 3 suffered from violating CSP policies by dynamically creating Functions at run-time in an eval-like manner. These are now defined via generators. Fix #3441 (thanks @jamierocks @Colbydude @jdotrjs)
 * BaseSound has had its `rate` and `detune` properties removed as they are always set in the overriding class.
 * BaseSound `setRate` and `setDetune` from the 3.3.0 release have moved to the WebAudioSound and HTML5AudioSound classes respectively, as they each handle the values differently.
 * The file `InteractiveObject.js` has been renamed to `CreateInteractiveObject.js` to more accurately reflect what it does and to avoid type errors in the docs.
@@ -66,12 +99,30 @@ being passed to the simulation. The default value is 1 to remain consistent with
 * List.removeAt has a new optional argument `skipCallback`.
 * List.removeBetween has a new optional argument `skipCallback`.
 * List.removeAll has a new optional argument `skipCallback`.
+* When using the `extend` property of a Scene config object it will now block overwriting the Scene `sys` property.
+* When using the `extend` property of a Scene config object, if you define a property called `data` that has an object set, it will populate the Scenes Data Manager with those values.
+* SceneManager._processing has been renamed to `isProcessing` which is now a boolean, not an integer. It's also now public and read-only.
+* SceneManager.isBooted is a new boolean read-only property that lets you know if the Scene Manager has performed its initial boot sequence.
+* TransformMatrix has the following new getter and setters: `a`, `b`, `c`, `d`, `tx` and `ty`. It also has the following new getters: `scaleX`, `scaleY` and `rotation`.
+* List.getByKey has been removed. Use `List.getFirst` instead which offers the exact same functionality.
+* List.sortIndexHandler has been removed because it's no longer required.
+* List.sort no longer takes an array as its argument, instead it only sorts the List contents by the defined property.
+* List.addMultiple has been removed. Used `List.add` instead which offers the exact same functionality.
+* List is now internally using all of the new Utils.Array functions.
+* Rectangle.Union will now cache all vars internally so you can use one of the input rectangles as the output rectangle without corrupting it.
+* When shutting down a Matter World it will now call MatterEvents.off, clearing all events, and also `removeAllListeners` for any local events.
 
-### Animation Component Updates
+### Animation System Updates
 
 We have refactored the Animation API to make it more consistent with the rest of Phaser 3 and to fix some issues. All of the following changes apply to the Animation Component:
 
 * Animation durations, delays and repeatDelays are all now specified in milliseconds, not seconds like before. This makes them consistent with Tweens, Sounds and other parts of v3. You can still use the `frameRate` property to set the speed of an animation in frames per second.
+* All of the Animation callbacks have been removed, including `onStart`, `onRepeat`, `onUpdate` and `onComplete` and the corresponding params arrays like `onStartParams` and the property `callbackScope`. The reason for this is that they were all set on a global level, meaning that if you had 100 Sprites sharing the same animation, it was impossible to set the callbacks to fire for just one of those Sprites, but instead they would fire for all 100 and it was up to you to figure out which Sprite you wanted to update. Instead of callbacks animations now dispatch events on the Game Objects in which they are running. This means you can now do `sprite.on('animationstart')` and it will be invoked at the same point the old `onStart` callback would have been. The new events are: `animationstart`, `animtionrepeat`, `animationupdate` and `animationcomplete`. They're all dispatched from the Game Object that has the animation playing, not from the animation itself. This allows you far more control over what happens in the callbacks and we believe generally makes them more useful.
+* The AnimationFrame.onUpdate callback has been removed. You can now use the `animationupdate` event dispatched from the Game Object itself and check the 2nd argument, which is the animation frame.
+* Animation.stopAfterDelay is a new method that will stop a Sprites animation after the given time in ms.
+* Animation.stopOnRepeat is a new method that will stop a Sprites animation when it goes to repeat.
+* Animation.stopOnFrame is a new method that will stop a Sprites animation when it sets the given frame.
+* Animation.stop no longer has the `dispatchCallbacks` argument, because it dispatches an event which you can choose to ignore.
 * `delay` method has been removed.
 * `setDelay` allows you to define the delay before playback begins.
 * `getDelay` returns the animation playback delay value.
@@ -113,7 +164,7 @@ We have refactored the Animation API to make it more consistent with the rest of
 
 My thanks to the following for helping with the Phaser 3 Examples, Docs and TypeScript definitions, either by reporting errors, fixing them or helping author the docs:
 
-@gabegordon @melissaelopez @samid737 @nbs @tgrajewski @pagesrichie @hexus @mbrickn @erd0s @icbat @Matthew-Herman @ampled
+@gabegordon @melissaelopez @samid737 @nbs @tgrajewski @pagesrichie @hexus @mbrickn @erd0s @icbat @Matthew-Herman @ampled @mkimmet @PaNaVTEC
 
 
 

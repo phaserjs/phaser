@@ -7,10 +7,11 @@
 var ArrayShuffle = require('../utils/array/Shuffle');
 
 /**
- * [description]
+ * Shuffles the array in place. The shuffled array is both modified and returned.
  *
  * @function Phaser.Actions.Shuffle
  * @since 3.0.0
+ * @see Phaser.Utils.Array.Shuffle
  *
  * @generic {Phaser.GameObjects.GameObject[]} G - [items,$return]
  *

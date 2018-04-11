@@ -369,7 +369,7 @@ var LoaderPlugin = new Class({
      */
     isReady: function ()
     {
-        return (this.state === CONST.LOADER_IDLE || this.state === CONST.LOADER_COMPLETE || this.state === CONST.LOADER_FAILED);
+        return (this.state === CONST.LOADER_IDLE || this.state === CONST.LOADER_COMPLETE);
     },
 
     /**

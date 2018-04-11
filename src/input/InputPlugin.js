@@ -422,7 +422,10 @@ var InputPlugin = new Class({
             this.setHitArea(gameObject, shape, callback);
         }
 
-        gameObject.input.dropZone = dropZone;
+        if (gameObject.input)
+        {
+            gameObject.input.dropZone = dropZone;
+        }
 
         return this;
     },
@@ -1154,6 +1157,13 @@ var InputPlugin = new Class({
         for (var i = 0; i < gameObjects.length; i++)
         {
             var gameObject = gameObjects[i];
+
+            if (gameObject.type === 'Container')
+            {
+                console.warn('Container.setInteractive() must specify a Shape');
+                continue;
+            }
+
             var frame = gameObject.frame;
 
             var width = 0;

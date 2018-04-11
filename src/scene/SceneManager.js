@@ -91,14 +91,36 @@ var SceneManager = new Class({
         this._queue = [];
 
         /**
-         * The number of Scenes to process.
+         * Boot time data to merge.
          *
-         * @name Phaser.Scenes.SceneManager#_processing
-         * @type {integer}
+         * @name Phaser.Scenes.SceneManager#_data
+         * @type {object}
          * @private
+         * @since 3.4.0
+         */
+        this._data = {};
+
+        /**
+         * Is the Scene Manager actively processing the Scenes list?
+         *
+         * @name Phaser.Scenes.SceneManager#isProcessing
+         * @type {boolean}
+         * @default false
+         * @readOnly
          * @since 3.0.0
          */
-        this._processing = 0;
+        this.isProcessing = false;
+
+        /**
+         * Has the Scene Manager properly started?
+         *
+         * @name Phaser.Scenes.SceneManager#isBooted
+         * @type {boolean}
+         * @default false
+         * @readOnly
+         * @since 3.4.0
+         */
+        this.isBooted = false;
 
         if (sceneConfig)
         {
@@ -132,6 +154,11 @@ var SceneManager = new Class({
      */
     bootQueue: function ()
     {
+        if (this.isBooted)
+        {
+            return;
+        }
+
         var i;
         var entry;
         var key;
@@ -166,6 +193,17 @@ var SceneManager = new Class({
 
             this.scenes.push(newScene);
 
+            //  Any data to inject?
+            if (this._data[key])
+            {
+                newScene.sys.settings.data = this._data[key].data;
+
+                if (this._data[key].autoStart)
+                {
+                    entry.autoStart = true;
+                }
+            }
+
             if (entry.autoStart || newScene.sys.settings.active)
             {
                 this._start.push(key);
@@ -174,6 +212,10 @@ var SceneManager = new Class({
 
         //  Clear the pending lists
         this._pending.length = 0;
+
+        this._data = {};
+
+        this.isBooted = true;
 
         //  _start might have been populated by the above
         for (i = 0; i < this._start.length; i++)
@@ -211,7 +253,7 @@ var SceneManager = new Class({
             {
                 entry = this._pending[i];
 
-                this.add(entry.key, entry.scene, entry.autoStart);
+                this.add(entry.key, entry.scene, entry.autoStart, entry.data);
             }
 
             //  _start might have been populated by this.add
@@ -259,21 +301,23 @@ var SceneManager = new Class({
      * @param {string} key - A unique key used to reference the Scene, i.e. `MainMenu` or `Level1`.
      * @param {(Phaser.Scene|SettingsConfig|function)} sceneConfig - The config for the Scene
      * @param {boolean} [autoStart=false] - If `true` the Scene will be started immediately after being added.
+     * @param {object} [data] - Optional data object. This will be set as Scene.settings.data and passed to `Scene.init`.
      *
-     * @return {?Phaser.Scene} The added Scene, if it was added immediately.
+     * @return {?Phaser.Scene} The added Scene, if it was added immediately, otherwise `null`.
      */
-    add: function (key, sceneConfig, autoStart)
+    add: function (key, sceneConfig, autoStart, data)
     {
         if (autoStart === undefined) { autoStart = false; }
+        if (data === undefined) { data = {}; }
 
-        //  if not booted, then put scene into a holding pattern
-        if (this._processing === 1 || !this.game.isBooted)
+        //  If processing or not booted then put scene into a holding pattern
+        if (this.isProcessing || !this.isBooted)
         {
             this._pending.push({
                 key: key,
                 scene: sceneConfig,
                 autoStart: autoStart,
-                data: {}
+                data: data
             });
 
             return null;
@@ -298,6 +342,9 @@ var SceneManager = new Class({
             newScene = this.createSceneFromFunction(key, sceneConfig);
         }
 
+        //  Any data to inject?
+        newScene.sys.settings.data = data;
+
         //  Replace key in case the scene changed it
         key = newScene.sys.settings.key;
 
@@ -307,13 +354,13 @@ var SceneManager = new Class({
 
         if (autoStart || newScene.sys.settings.active)
         {
-            if (this.game.isBooted)
+            if (this._pending.length)
             {
-                this.start(key);
+                this._start.push(key);
             }
             else
             {
-                this._start.push(key);
+                this.start(key);
             }
         }
 
@@ -338,7 +385,7 @@ var SceneManager = new Class({
      */
     remove: function (key)
     {
-        if (this._processing)
+        if (this.isProcessing)
         {
             this._queue.push({ op: 'remove', keyA: key, keyB: null });
         }
@@ -468,7 +515,7 @@ var SceneManager = new Class({
     {
         this.processQueue();
 
-        this._processing = 1;
+        this.isProcessing = true;
 
         //  Loop through the active scenes in reverse order
         for (var i = this.scenes.length - 1; i >= 0; i--)
@@ -523,7 +570,7 @@ var SceneManager = new Class({
             }
         }
 
-        this._processing = 0;
+        this.isProcessing = false;
     },
 
     /**
@@ -693,7 +740,17 @@ var SceneManager = new Class({
         {
             for (var propertyKey in sceneConfig.extend)
             {
-                newScene[propertyKey] = sceneConfig.extend[propertyKey];
+                var value = sceneConfig.extend[propertyKey];
+
+                if (propertyKey === 'data' && newScene.hasOwnProperty('data') && typeof value === 'object')
+                {
+                    //  Populate the DataManager
+                    newScene.data.merge(value);
+                }
+                else if (propertyKey !== 'sys')
+                {
+                    newScene[propertyKey] = value;
+                }
             }
         }
 
@@ -935,27 +992,19 @@ var SceneManager = new Class({
      * @since 3.0.0
      *
      * @param {string} key - The Scene to start.
-     * @param {object} [data] - The Scene data.
+     * @param {object} [data] - Optional data object to pass to Scene.Settings and Scene.init.
      *
      * @return {Phaser.Scenes.SceneManager} This SceneManager.
      */
     start: function (key, data)
     {
-        if (data === undefined) { data = {}; }
-
-        //  If the Game is not booted, then put the Scene into a holding pattern
-        if (!this.game.isBooted)
+        //  If the Scene Manager is not running, then put the Scene into a holding pattern
+        if (!this.isBooted)
         {
-            for (var i = 0; i < this._pending.length; i++)
-            {
-                var entry = this._pending[i];
-
-                if (entry.key === key)
-                {
-                    entry.autoStart = true;
-                    entry.data = data;
-                }
-            }
+            this._data[key] = {
+                autoStart: true,
+                data: data
+            };
 
             return this;
         }
@@ -1097,7 +1146,7 @@ var SceneManager = new Class({
      */
     bringToTop: function (key)
     {
-        if (this._processing)
+        if (this.isProcessing)
         {
             this._queue.push({ op: 'bringToTop', keyA: key, keyB: null });
         }
@@ -1131,7 +1180,7 @@ var SceneManager = new Class({
      */
     sendToBack: function (key)
     {
-        if (this._processing)
+        if (this.isProcessing)
         {
             this._queue.push({ op: 'sendToBack', keyA: key, keyB: null });
         }
@@ -1163,7 +1212,7 @@ var SceneManager = new Class({
      */
     moveDown: function (key)
     {
-        if (this._processing)
+        if (this.isProcessing)
         {
             this._queue.push({ op: 'moveDown', keyA: key, keyB: null });
         }
@@ -1197,7 +1246,7 @@ var SceneManager = new Class({
      */
     moveUp: function (key)
     {
-        if (this._processing)
+        if (this.isProcessing)
         {
             this._queue.push({ op: 'moveUp', keyA: key, keyB: null });
         }
@@ -1239,7 +1288,7 @@ var SceneManager = new Class({
             return this;
         }
 
-        if (this._processing)
+        if (this.isProcessing)
         {
             this._queue.push({ op: 'moveAbove', keyA: keyA, keyB: keyB });
         }
@@ -1283,7 +1332,7 @@ var SceneManager = new Class({
             return this;
         }
 
-        if (this._processing)
+        if (this.isProcessing)
         {
             this._queue.push({ op: 'moveBelow', keyA: keyA, keyB: keyB });
         }
@@ -1307,6 +1356,19 @@ var SceneManager = new Class({
         return this;
     },
 
+    /**
+     * Queue a Scene operation for the next update.
+     *
+     * @method Phaser.Scenes.SceneManager#queueOp
+     * @private
+     * @since 3.0.0
+     *
+     * @param {string} op - The operation to perform.
+     * @param {(string|Phaser.Scene)} keyA - Scene A.
+     * @param {(string|Phaser.Scene)} [keyB] - Scene B.
+     *
+     * @return {Phaser.Scenes.SceneManager} This SceneManager.
+     */
     queueOp: function (op, keyA, keyB)
     {
         this._queue.push({ op: op, keyA: keyA, keyB: keyB });
@@ -1332,7 +1394,7 @@ var SceneManager = new Class({
             return this;
         }
 
-        if (this._processing)
+        if (this.isProcessing)
         {
             this._queue.push({ op: 'swapPosition', keyA: keyA, keyB: keyB });
         }

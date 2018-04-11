@@ -195,10 +195,11 @@ var GameObject = new Class({
     },
 
     /**
-     * [description]
+     * Adds a DataManager to this object.
      *
      * @method Phaser.GameObjects.GameObject#setDataEnabled
      * @since 3.0.0
+     * @see Phaser.Data.DataManager
      *
      * @return {Phaser.GameObjects.GameObject} This GameObject.
      */
@@ -373,6 +374,8 @@ var GameObject = new Class({
         this.visible = false;
 
         this.scene = undefined;
+
+        this.parentContainer = undefined;
 
         this.removeAllListeners();
     }

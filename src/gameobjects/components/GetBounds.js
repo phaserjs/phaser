@@ -20,6 +20,7 @@ var GetBounds = {
 
     /**
      * Gets the center coordinate of this Game Object, regardless of origin.
+     * The returned point is calculated in local space and does not factor in any parent containers
      *
      * @method Phaser.GameObjects.Components.GetBounds#getCenter
      * @since 3.0.0
@@ -42,6 +43,7 @@ var GetBounds = {
 
     /**
      * Gets the top-left corner coordinate of this Game Object, regardless of origin.
+     * The returned point is calculated in local space and does not factor in any parent containers
      *
      * @method Phaser.GameObjects.Components.GetBounds#getTopLeft
      * @since 3.0.0
@@ -69,6 +71,7 @@ var GetBounds = {
 
     /**
      * Gets the top-right corner coordinate of this Game Object, regardless of origin.
+     * The returned point is calculated in local space and does not factor in any parent containers
      *
      * @method Phaser.GameObjects.Components.GetBounds#getTopRight
      * @since 3.0.0
@@ -96,6 +99,7 @@ var GetBounds = {
 
     /**
      * Gets the bottom-left corner coordinate of this Game Object, regardless of origin.
+     * The returned point is calculated in local space and does not factor in any parent containers
      *
      * @method Phaser.GameObjects.Components.GetBounds#getBottomLeft
      * @since 3.0.0
@@ -123,6 +127,7 @@ var GetBounds = {
 
     /**
      * Gets the bottom-right corner coordinate of this Game Object, regardless of origin.
+     * The returned point is calculated in local space and does not factor in any parent containers
      *
      * @method Phaser.GameObjects.Components.GetBounds#getBottomRight
      * @since 3.0.0
@@ -167,25 +172,60 @@ var GetBounds = {
 
         //  We can use the output object to temporarily store the x/y coords in:
 
-        this.getTopLeft(output);
+        var TLx, TLy, TRx, TRy, BLx, BLy, BRx, BRy;
 
-        var TLx = output.x;
-        var TLy = output.y;
+        // Instead of doing a check if parent container is 
+        // defined per corner we only do it once.
+        if (this.parentContainer)
+        {
+            var parentMatrix = this.parentContainer.getWorldTransformMatrix();
 
-        this.getTopRight(output);
+            this.getTopLeft(output);
+            parentMatrix.transformPoint(output.x, output.y, output);
 
-        var TRx = output.x;
-        var TRy = output.y;
+            TLx = output.x;
+            TLy = output.y;
 
-        this.getBottomLeft(output);
+            this.getTopRight(output);
+            parentMatrix.transformPoint(output.x, output.y, output);
 
-        var BLx = output.x;
-        var BLy = output.y;
+            TRx = output.x;
+            TRy = output.y;
 
-        this.getBottomRight(output);
+            this.getBottomLeft(output);
+            parentMatrix.transformPoint(output.x, output.y, output);
 
-        var BRx = output.x;
-        var BRy = output.y;
+            BLx = output.x;
+            BLy = output.y;
+
+            this.getBottomRight(output);
+            parentMatrix.transformPoint(output.x, output.y, output);
+
+            BRx = output.x;
+            BRy = output.y;
+        }
+        else
+        {
+            this.getTopLeft(output);
+
+            TLx = output.x;
+            TLy = output.y;
+
+            this.getTopRight(output);
+
+            TRx = output.x;
+            TRy = output.y;
+
+            this.getBottomLeft(output);
+
+            BLx = output.x;
+            BLy = output.y;
+
+            this.getBottomRight(output);
+
+            BRx = output.x;
+            BRy = output.y;
+        }
 
         output.x = Math.min(TLx, TRx, BLx, BRx);
         output.y = Math.min(TLy, TRy, BLy, BRy);

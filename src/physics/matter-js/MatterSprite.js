@@ -5,7 +5,6 @@
  */
 
 var AnimationComponent = require('../../gameobjects/components/Animation');
-var Bodies = require('./lib/factory/Bodies');
 var Class = require('../../utils/Class');
 var Components = require('./components');
 var GameObject = require('../../gameobjects/GameObject');
@@ -120,20 +119,13 @@ var MatterSprite = new Class({
 
         var shape = GetFastValue(options, 'shape', null);
 
-        if (!shape)
+        if (shape)
         {
-            this.body = Bodies.rectangle(x, y, this.width, this.height, options);
-
-            this.body.gameObject = this;
-
-            if (GetFastValue(options, 'addToWorld', true))
-            {
-                world.add(this.body);
-            }
+            this.setBody(shape, options);
         }
         else
         {
-            this.setBody(shape, options);
+            this.setRectangle(this.width, this.height, options);
         }
 
         this.setPosition(x, y);

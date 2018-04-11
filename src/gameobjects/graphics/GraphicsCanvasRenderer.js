@@ -70,7 +70,7 @@ var GraphicsCanvasRenderer = function (renderer, src, interpolationPercentage, c
     }
 
     ctx.save();
-    if (parentMatrix !== undefined)
+    if (parentMatrix)
     {
         var matrix = parentMatrix.matrix;
         ctx.transform(matrix[0], matrix[1], matrix[2], matrix[3], matrix[4], matrix[5]);

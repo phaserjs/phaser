@@ -7,8 +7,10 @@
 var CircleContains = require('../../geom/circle/Contains');
 var Class = require('../../utils/Class');
 var CONST = require('./const');
+var RadToDeg = require('../../math/RadToDeg');
 var Rectangle = require('../../geom/rectangle/Rectangle');
 var RectangleContains = require('../../geom/rectangle/Contains');
+var TransformMatrix = require('../../gameobjects/components/TransformMatrix');
 var Vector2 = require('../../math/Vector2');
 
 /**
@@ -48,6 +50,9 @@ var Body = new Class({
 
     function Body (world, gameObject)
     {
+        var width = (gameObject.width) ? gameObject.width : 64;
+        var height = (gameObject.height) ? gameObject.height : 64;
+
         /**
          * [description]
          *
@@ -65,6 +70,23 @@ var Body = new Class({
          * @since 3.0.0
          */
         this.gameObject = gameObject;
+
+        /**
+         * [description]
+         *
+         * @name Phaser.Physics.Arcade.Body#transform
+         * @type {object}
+         * @since 3.4.0
+         */
+        this.transform = {
+            x: gameObject.x,
+            y: gameObject.y,
+            rotation: gameObject.angle,
+            scaleX: gameObject.scaleX,
+            scaleY: gameObject.scaleY,
+            displayOriginX: gameObject.displayOriginX,
+            displayOriginY: gameObject.displayOriginY
+        };
 
         /**
          * [description]
@@ -148,7 +170,7 @@ var Body = new Class({
          * @type {Phaser.Math.Vector2}
          * @since 3.0.0
          */
-        this.prev = new Vector2(this.position.x, this.position.y);
+        this.prev = new Vector2(gameObject.x, gameObject.y);
 
         /**
          * [description]
@@ -185,7 +207,7 @@ var Body = new Class({
          * @type {number}
          * @since 3.0.0
          */
-        this.width = gameObject.width;
+        this.width = width;
 
         /**
          * [description]
@@ -194,7 +216,7 @@ var Body = new Class({
          * @type {number}
          * @since 3.0.0
          */
-        this.height = gameObject.height;
+        this.height = height;
 
         /**
          * [description]
@@ -203,7 +225,7 @@ var Body = new Class({
          * @type {number}
          * @since 3.0.0
          */
-        this.sourceWidth = gameObject.width;
+        this.sourceWidth = width;
 
         /**
          * [description]
@@ -212,7 +234,7 @@ var Body = new Class({
          * @type {number}
          * @since 3.0.0
          */
-        this.sourceHeight = gameObject.height;
+        this.sourceHeight = height;
 
         if (gameObject.frame)
         {
@@ -227,7 +249,7 @@ var Body = new Class({
          * @type {number}
          * @since 3.0.0
          */
-        this.halfWidth = Math.abs(gameObject.width / 2);
+        this.halfWidth = Math.abs(width / 2);
 
         /**
          * [description]
@@ -236,7 +258,7 @@ var Body = new Class({
          * @type {number}
          * @since 3.0.0
          */
-        this.halfHeight = Math.abs(gameObject.height / 2);
+        this.halfHeight = Math.abs(height / 2);
 
         /**
          * [description]
@@ -709,6 +731,8 @@ var Body = new Class({
          * @since 3.0.0
          */
         this._bounds = new Rectangle();
+
+        this._tempMatrix = new TransformMatrix();
     },
 
     /**
@@ -720,6 +744,29 @@ var Body = new Class({
     updateBounds: function ()
     {
         var sprite = this.gameObject;
+
+        //  Container?
+
+        var transform = this.transform;
+
+        if (sprite.parentContainer)
+        {
+            var matrix = sprite.getWorldTransformMatrix(this._tempMatrix);
+
+            transform.x = matrix.tx;
+            transform.y = matrix.ty;
+            transform.rotation = RadToDeg(matrix.rotation);
+            transform.scaleX = matrix.scaleX;
+            transform.scaleY = matrix.scaleY;
+        }
+        else
+        {
+            transform.x = sprite.x;
+            transform.y = sprite.y;
+            transform.rotation = sprite.angle;
+            transform.scaleX = sprite.scaleX;
+            transform.scaleY = sprite.scaleY;
+        }
 
         if (this.syncBounds)
         {
@@ -734,8 +781,8 @@ var Body = new Class({
         }
         else
         {
-            var asx = Math.abs(sprite.scaleX);
-            var asy = Math.abs(sprite.scaleY);
+            var asx = Math.abs(transform.scaleX);
+            var asy = Math.abs(transform.scaleY);
 
             if (asx !== this._sx || asy !== this._sy)
             {
@@ -803,16 +850,17 @@ var Body = new Class({
 
         this.embedded = false;
 
+        //  Updates the transform values
         this.updateBounds();
 
-        var sprite = this.gameObject;
+        var sprite = this.transform;
 
         this.position.x = sprite.x + sprite.scaleX * (this.offset.x - sprite.displayOriginX);
         this.position.y = sprite.y + sprite.scaleY * (this.offset.y - sprite.displayOriginY);
 
         this.updateCenter();
 
-        this.rotation = sprite.angle;
+        this.rotation = sprite.rotation;
 
         this.preRotation = this.rotation;
 
@@ -917,6 +965,9 @@ var Body = new Class({
                     this._dy = this.deltaMax.y;
                 }
             }
+
+            // this.transform.x += this._dx;
+            // this.transform.y += this._dy;
 
             this.gameObject.x += this._dx;
             this.gameObject.y += this._dy;

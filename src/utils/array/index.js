@@ -10,17 +10,38 @@
 
 module.exports = {
 
-    FindClosestInSorted: require('./FindClosestInSorted'),
-    GetRandomElement: require('./GetRandomElement'),
     Matrix: require('./matrix'),
+
+    Add: require('./Add'),
+    AddAt: require('./AddAt'),
+    BringToTop: require('./BringToTop'),
+    CountAllMatching: require('./CountAllMatching'),
+    Each: require('./Each'),
+    EachInRange: require('./EachInRange'),
+    FindClosestInSorted: require('./FindClosestInSorted'),
+    GetAll: require('./GetAll'),
+    GetFirst: require('./GetFirst'),
+    GetRandom: require('./GetRandom'),
+    MoveDown: require('./MoveDown'),
+    MoveTo: require('./MoveTo'),
+    MoveUp: require('./MoveUp'),
     NumberArray: require('./NumberArray'),
     NumberArrayStep: require('./NumberArrayStep'),
     QuickSelect: require('./QuickSelect'),
     Range: require('./Range'),
+    Remove: require('./Remove'),
+    RemoveAt: require('./RemoveAt'),
+    RemoveBetween: require('./RemoveBetween'),
     RemoveRandomElement: require('./RemoveRandomElement'),
+    Replace: require('./Replace'),
     RotateLeft: require('./RotateLeft'),
     RotateRight: require('./RotateRight'),
+    SafeRange: require('./SafeRange'),
+    SendToBack: require('./SendToBack'),
+    SetAll: require('./SetAll'),
     Shuffle: require('./Shuffle'),
-    SpliceOne: require('./SpliceOne')
+    SpliceOne: require('./SpliceOne'),
+    StableSort: require('./StableSort'),
+    Swap: require('./Swap')
 
 };

@@ -34,7 +34,6 @@ var GetValue = require('../utils/object/GetValue');
  * @property {(string|number)} frame - [description]
  * @property {float} [duration=0] - [description]
  * @property {boolean} [visible] - [description]
- * @property {function} [onUpdate] - [description]
  */
 
 /**
@@ -51,16 +50,6 @@ var GetValue = require('../utils/object/GetValue');
  * @property {boolean} [yoyo=false] - Should the animation yoyo? (reverse back down to the start) before repeating?
  * @property {boolean} [showOnStart=false] - Should sprite.visible = true when the animation starts to play?
  * @property {boolean} [hideOnComplete=false] - Should sprite.visible = false when the animation finishes?
-
- * @property {*} [callbackScope] - [description]
- * @property {(false|function)} [onStart=false] - [description]
- * @property {Array.<*>} [onStartParams] - [description]
- * @property {(false|function)} [onRepeat=false] - [description]
- * @property {Array.<*>} [onRepeatParams] - [description]
- * @property {(false|function)} [onUpdate=false] - [description]
- * @property {Array.<*>} [onUpdateParams] - [description]
- * @property {(false|function)} [onComplete=false] - [description]
- * @property {Array.<*>} [onCompleteParams] - [description]
  */
 
 /**
@@ -251,88 +240,6 @@ var Animation = new Class({
         this.hideOnComplete = GetValue(config, 'hideOnComplete', false);
 
         /**
-         * [description]
-         *
-         * @name Phaser.Animations.Animation#callbackScope
-         * @type {*}
-         * @since 3.0.0
-         */
-        this.callbackScope = GetValue(config, 'callbackScope', this);
-
-        /**
-         * [description]
-         *
-         * @name Phaser.Animations.Animation#onStart
-         * @type {(false|function)}
-         * @since 3.0.0
-         */
-        this.onStart = GetValue(config, 'onStart', false);
-
-        /**
-         * [description]
-         *
-         * @name Phaser.Animations.Animation#onStartParams
-         * @type {Array.<*>}
-         * @since 3.0.0
-         */
-        this.onStartParams = GetValue(config, 'onStartParams', []);
-
-        /**
-         * [description]
-         *
-         * @name Phaser.Animations.Animation#onRepeat
-         * @type {(false|function)}
-         * @since 3.0.0
-         */
-        this.onRepeat = GetValue(config, 'onRepeat', false);
-
-        /**
-         * [description]
-         *
-         * @name Phaser.Animations.Animation#onRepeatParams
-         * @type {Array.<*>}
-         * @since 3.0.0
-         */
-        this.onRepeatParams = GetValue(config, 'onRepeatParams', []);
-
-        /**
-         * Called for EVERY frame of the animation.
-         * See AnimationFrame.onUpdate for a frame specific callback.
-         *
-         * @name Phaser.Animations.Animation#onUpdate
-         * @type {(false|function)}
-         * @since 3.0.0
-         */
-        this.onUpdate = GetValue(config, 'onUpdate', false);
-
-        /**
-         * [description]
-         *
-         * @name Phaser.Animations.Animation#onUpdateParams
-         * @type {Array.<*>}
-         * @since 3.0.0
-         */
-        this.onUpdateParams = GetValue(config, 'onUpdateParams', []);
-
-        /**
-         * [description]
-         *
-         * @name Phaser.Animations.Animation#onComplete
-         * @type {(false|function)}
-         * @since 3.0.0
-         */
-        this.onComplete = GetValue(config, 'onComplete', false);
-
-        /**
-         * [description]
-         *
-         * @name Phaser.Animations.Animation#onCompleteParams
-         * @type {Array.<*>}
-         * @since 3.0.0
-         */
-        this.onCompleteParams = GetValue(config, 'onCompleteParams', []);
-
-        /**
          * Global pause. All Game Objects using this Animation instance are impacted by this property.
          *
          * @name Phaser.Animations.Animation#paused
@@ -431,7 +338,7 @@ var Animation = new Class({
             component.parent.visible = false;
         }
 
-        component.stop(true);
+        component.stop();
     },
 
     /**
@@ -536,7 +443,6 @@ var Animation = new Class({
             animationFrame = new Frame(key, frame, index, textureFrame);
 
             animationFrame.duration = GetValue(item, 'duration', 0);
-            animationFrame.onUpdate = GetValue(item, 'onUpdate', null);
 
             animationFrame.isFirst = (!prev);
 
@@ -627,8 +533,6 @@ var Animation = new Class({
             component._repeat = this.repeat;
             component._repeatDelay = this.repeatDelay;
             component._yoyo = this.yoyo;
-            component._callbackArgs[1] = this;
-            component._updateParams = component._callbackArgs.concat(this.onUpdateParams);
         }
 
         component.updateFrame(this.frames[startFrame]);
@@ -784,6 +688,11 @@ var Animation = new Class({
      */
     repeatAnimation: function (component)
     {
+        if (component._pendingStop === 2)
+        {
+            return this.completeAnimation(component);
+        }
+
         if (component._repeatDelay > 0 && component.pendingRepeat === false)
         {
             component.pendingRepeat = true;
@@ -798,13 +707,13 @@ var Animation = new Class({
 
             component.updateFrame(component.currentFrame.nextFrame);
 
-            this.getNextTick(component);
-
-            component.pendingRepeat = false;
-
-            if (this.onRepeat)
+            if (component.isPlaying)
             {
-                this.onRepeat.apply(this.callbackScope, component._callbackArgs.concat(this.onRepeatParams));
+                this.getNextTick(component);
+
+                component.pendingRepeat = false;
+
+                component.parent.emit('animationrepeat', this, component.currentFrame, component.repeatCounter);
             }
         }
     },

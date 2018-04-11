@@ -5,14 +5,23 @@
  */
 
 /**
- * [description]
+ * Capitalizes the first letter of a string if there is one.
+ * @example
+ * UppercaseFirst('abc');
+ * // returns 'Abc'
+ * @example
+ * UppercaseFirst('the happy family');
+ * // returns 'The happy family'
+ * @example
+ * UppercaseFirst('');
+ * // returns ''
  *
  * @function Phaser.Utils.String.UppercaseFirst
  * @since 3.0.0
  *
- * @param {string} str - [description]
+ * @param {string} str - The string to capitalize.
  *
- * @return {string} [description]
+ * @return {string} A new string, same as the first, but with the first letter capitalized.
  */
 var UppercaseFirst = function (str)
 {

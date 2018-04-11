@@ -22,7 +22,13 @@ var GetFastValue = require('../../utils/object/GetFastValue');
  * @param {integer} y - [description]
  * @param {integer} width - [description]
  * @param {integer} height - [description]
- * @param {object} config - [description]
+ * @param {object} config - An object describing how to parse the Sprite Sheet.
+ * @param {number} config.frameWidth - Width in pixels of a single frame in the sprite sheet.
+ * @param {number} [config.frameHeight] - Height in pixels of a single frame in the sprite sheet. Defaults to frameWidth if not provided.
+ * @param {number} [config.startFrame=0] - [description]
+ * @param {number} [config.endFrame=-1] - [description]
+ * @param {number} [config.margin=0] - If the frames have been drawn with a margin, specify the amount here.
+ * @param {number} [config.spacing=0] - If the frames have been drawn with spacing between them, specify the amount here.
  *
  * @return {Phaser.Textures.Texture} The Texture modified by this parser.
  */

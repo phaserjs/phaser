@@ -122,6 +122,34 @@ var ScenePlugin = new Class({
     },
 
     /**
+     * Restarts this Scene.
+     *
+     * @method Phaser.Scenes.ScenePlugin#restart
+     * @since 3.4.0
+     * 
+     * @param {object} [data] - The Scene data.
+     *
+     * @return {Phaser.Scenes.ScenePlugin} This ScenePlugin object.
+     */
+    restart: function (data)
+    {
+        var key = this.key;
+
+        if (this.settings.status !== CONST.RUNNING)
+        {
+            this.manager.queueOp('stop', key);
+            this.manager.queueOp('start', key, data);
+        }
+        else
+        {
+            this.manager.stop(key);
+            this.manager.start(key, data);
+        }
+
+        return this;
+    },
+
+    /**
      * Add the Scene into the Scene Manager and start it if 'autoStart' is true or the Scene config 'active' property is set.
      *
      * @method Phaser.Scenes.ScenePlugin#add
