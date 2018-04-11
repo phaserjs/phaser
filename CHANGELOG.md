@@ -108,6 +108,7 @@
 * List.addMultiple has been removed. Used `List.add` instead which offers the exact same functionality.
 * List is now internally using all of the new Utils.Array functions.
 * Rectangle.Union will now cache all vars internally so you can use one of the input rectangles as the output rectangle without corrupting it.
+* When shutting down a Matter World it will now call MatterEvents.off, clearing all events, and also `removeAllListeners` for any local events.
 
 ### Animation System Updates
 
