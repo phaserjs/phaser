@@ -35,7 +35,7 @@ var AddAt = function (array, item, index, limit, callback, context)
     if (index === undefined) { index = 0; }
     if (context === undefined) { context = array; }
 
-    if (limit)
+    if (limit > 0)
     {
         var remaining = limit - array.length;
 
@@ -91,7 +91,7 @@ var AddAt = function (array, item, index, limit, callback, context)
     }
 
     //  Truncate to the limit
-    if (limit && itemLength > remaining)
+    if (limit > 0 && itemLength > remaining)
     {
         item.splice(remaining);
 

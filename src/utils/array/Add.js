@@ -31,7 +31,7 @@ var Add = function (array, item, limit, callback, context)
 {
     if (context === undefined) { context = array; }
 
-    if (limit)
+    if (limit > 0)
     {
         var remaining = limit - array.length;
 
@@ -86,7 +86,7 @@ var Add = function (array, item, limit, callback, context)
         return null;
     }
 
-    if (limit && itemLength > remaining)
+    if (limit > 0 && itemLength > remaining)
     {
         item.splice(remaining);
 
