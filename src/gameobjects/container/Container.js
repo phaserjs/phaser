@@ -91,7 +91,7 @@ var Container = new Class({
         this.position = 0;
 
         /**
-         * [description]
+         * Internal Transform Matrix used for local space conversion.
          *
          * @name Phaser.GameObjects.Container#localTransform
          * @type {Phaser.GameObjects.Components.TransformMatrix}
@@ -100,7 +100,7 @@ var Container = new Class({
         this.localTransform = new Components.TransformMatrix();
 
         /**
-         * [description]
+         * Internal temporary Transform Matrix used to avoid object creation.
          *
          * @name Phaser.GameObjects.Container#tempTransformMatrix
          * @type {Phaser.GameObjects.Components.TransformMatrix}
@@ -127,6 +127,50 @@ var Container = new Class({
          * @since 3.4.0
          */
         this._sortKey = '';
+
+        /**
+         * Internal value to allow Containers to be used for input.
+         * Do not change this value. It has no effect other than to break input.
+         *
+         * @name Phaser.GameObjects.Container#displayOriginX
+         * @type {number}
+         * @private
+         * @since 3.4.0
+         */
+        this.displayOriginX = 0;
+
+        /**
+         * Internal value to allow Containers to be used for input.
+         * Do not change this value. It has no effect other than to break input.
+         *
+         * @name Phaser.GameObjects.Container#displayOriginY
+         * @type {number}
+         * @private
+         * @since 3.4.0
+         */
+        this.displayOriginY = 0;
+
+        /**
+         * Internal value to allow Containers to be used for input.
+         * Do not change this value. It has no effect other than to break input.
+         *
+         * @name Phaser.GameObjects.Container#scrollFactorX
+         * @type {number}
+         * @private
+         * @since 3.4.0
+         */
+        this.scrollFactorX = 1;
+
+        /**
+         * Internal value to allow Containers to be used for input.
+         * Do not change this value. It has no effect other than to break input.
+         *
+         * @name Phaser.GameObjects.Container#scrollFactorY
+         * @type {number}
+         * @private
+         * @since 3.4.0
+         */
+        this.scrollFactorY = 1;
 
         this.setPosition(x, y);
 
