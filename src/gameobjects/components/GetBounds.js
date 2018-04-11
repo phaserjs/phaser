@@ -25,8 +25,6 @@ var GetBounds = {
      * @method Phaser.GameObjects.Components.GetBounds#getCenter
      * @since 3.0.0
      *
-     * @generic {Phaser.Math.Vector2} O - [output,$return]
-     *
      * @param {(Phaser.Math.Vector2|object)} [output] - An object to store the values in. If not provided a new Vector2 will be created.
      *
      * @return {(Phaser.Math.Vector2|object)} The values stored in the output object.
@@ -47,8 +45,6 @@ var GetBounds = {
      *
      * @method Phaser.GameObjects.Components.GetBounds#getTopLeft
      * @since 3.0.0
-     *
-     * @generic {Phaser.Math.Vector2} O - [output,$return]
      *
      * @param {(Phaser.Math.Vector2|object)} [output] - An object to store the values in. If not provided a new Vector2 will be created.
      *
@@ -76,8 +72,6 @@ var GetBounds = {
      * @method Phaser.GameObjects.Components.GetBounds#getTopRight
      * @since 3.0.0
      *
-     * @generic {Phaser.Math.Vector2} O - [output,$return]
-     *
      * @param {(Phaser.Math.Vector2|object)} [output] - An object to store the values in. If not provided a new Vector2 will be created.
      *
      * @return {(Phaser.Math.Vector2|object)} The values stored in the output object.
@@ -103,8 +97,6 @@ var GetBounds = {
      *
      * @method Phaser.GameObjects.Components.GetBounds#getBottomLeft
      * @since 3.0.0
-     *
-     * @generic {Phaser.Math.Vector2} O - [output,$return]
      *
      * @param {(Phaser.Math.Vector2|object)} [output] - An object to store the values in. If not provided a new Vector2 will be created.
      *
@@ -132,8 +124,6 @@ var GetBounds = {
      * @method Phaser.GameObjects.Components.GetBounds#getBottomRight
      * @since 3.0.0
      *
-     * @generic {Phaser.Math.Vector2} O - [output,$return]
-     *
      * @param {(Phaser.Math.Vector2|object)} [output] - An object to store the values in. If not provided a new Vector2 will be created.
      *
      * @return {(Phaser.Math.Vector2|object)} The values stored in the output object.
@@ -159,8 +149,6 @@ var GetBounds = {
      *
      * @method Phaser.GameObjects.Components.GetBounds#getBounds
      * @since 3.0.0
-     *
-     * @generic {Phaser.Math.Vector2} O - [output,$return]
      *
      * @param {(Phaser.Geom.Rectangle|object)} [output] - An object to store the values in. If not provided a new Rectangle will be created.
      *
