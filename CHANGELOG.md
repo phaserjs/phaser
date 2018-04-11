@@ -69,6 +69,7 @@
 * Tween.restart handles removed tweens properly and reads them back into the active queue for the TweenManager (thanks @wtravO)
 * Tween.resume will now call `Tween.play` on a tween that was paused due to its config object, not as a result of having its paused method called. Fix #3452 (thanks @jazen)
 * LoaderPlugin.isReady referenced a constant that no longer exists. Fix #3503 (thanks @Twilrom)
+* Tween Timeline.destroy was trying to call `destroy` on Tweens instead of `stop` (thanks @Antriel)
 
 ### Updates
 
