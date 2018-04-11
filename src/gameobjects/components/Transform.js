@@ -5,6 +5,7 @@
  */
 
 var MATH_CONST = require('../../math/const');
+var TransformMatrix = require('./TransformMatrix');
 var WrapAngle = require('../../math/angle/Wrap');
 var WrapAngleDegrees = require('../../math/angle/WrapDegrees');
 
@@ -376,12 +377,14 @@ var Transform = {
      * @method Phaser.GameObjects.Components.Transform#getLocalTransformMatrix
      * @since 3.4.0
      *
-     * @param {Phaser.GameObjects.Components.TransformMatrix} tempMatrix - The matrix to populate with the values from this Game Object.
+     * @param {Phaser.GameObjects.Components.TransformMatrix} [tempMatrix] - The matrix to populate with the values from this Game Object.
      *
      * @return {Phaser.GameObjects.Components.TransformMatrix} The populated Transform Matrix.
      */
     getLocalTransformMatrix: function (tempMatrix)
     {
+        if (tempMatrix === undefined) { tempMatrix = new TransformMatrix(); }
+
         return tempMatrix.applyITRS(this.x, this.y, this._rotation, this._scaleX, this._scaleY);
     },
 
@@ -391,13 +394,21 @@ var Transform = {
      * @method Phaser.GameObjects.Components.Transform#getWorldTransformMatrix
      * @since 3.4.0
      *
-     * @param {Phaser.GameObjects.Components.TransformMatrix} tempMatrix - The matrix to populate with the values from this Game Object.
+     * @param {Phaser.GameObjects.Components.TransformMatrix} [tempMatrix] - The matrix to populate with the values from this Game Object.
      *
      * @return {Phaser.GameObjects.Components.TransformMatrix} The populated Transform Matrix.
      */
     getWorldTransformMatrix: function (tempMatrix)
     {
+        if (tempMatrix === undefined) { tempMatrix = new TransformMatrix(); }
+
         var parent = this.parentContainer;
+
+        if (!parent)
+        {
+            return tempMatrix();
+        }
+
         var parents = [];
         
         while (parent)
