@@ -45,6 +45,7 @@
 * Utils.Array.SetAll will set a property on all elements of an array to the given value, with optional range limits.
 * Utils.Array.Swap will swap the position of two elements in an array.
 * TransformMatrix.destroy is a new method that will clear out the array and object used by a Matrix internally.
+* Add 'destroy' event in sound object.
 
 ### Bug Fixes
 
