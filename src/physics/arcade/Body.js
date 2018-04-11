@@ -50,6 +50,9 @@ var Body = new Class({
 
     function Body (world, gameObject)
     {
+        var width = (gameObject.width) ? gameObject.width : 64;
+        var height = (gameObject.height) ? gameObject.height : 64;
+
         /**
          * [description]
          *
@@ -167,7 +170,7 @@ var Body = new Class({
          * @type {Phaser.Math.Vector2}
          * @since 3.0.0
          */
-        this.prev = new Vector2(this.position.x, this.position.y);
+        this.prev = new Vector2(gameObject.x, gameObject.y);
 
         /**
          * [description]
@@ -204,7 +207,7 @@ var Body = new Class({
          * @type {number}
          * @since 3.0.0
          */
-        this.width = gameObject.width;
+        this.width = width;
 
         /**
          * [description]
@@ -213,7 +216,7 @@ var Body = new Class({
          * @type {number}
          * @since 3.0.0
          */
-        this.height = gameObject.height;
+        this.height = height;
 
         /**
          * [description]
@@ -222,7 +225,7 @@ var Body = new Class({
          * @type {number}
          * @since 3.0.0
          */
-        this.sourceWidth = gameObject.width;
+        this.sourceWidth = width;
 
         /**
          * [description]
@@ -231,7 +234,7 @@ var Body = new Class({
          * @type {number}
          * @since 3.0.0
          */
-        this.sourceHeight = gameObject.height;
+        this.sourceHeight = height;
 
         if (gameObject.frame)
         {
@@ -246,7 +249,7 @@ var Body = new Class({
          * @type {number}
          * @since 3.0.0
          */
-        this.halfWidth = Math.abs(gameObject.width / 2);
+        this.halfWidth = Math.abs(width / 2);
 
         /**
          * [description]
@@ -255,7 +258,7 @@ var Body = new Class({
          * @type {number}
          * @since 3.0.0
          */
-        this.halfHeight = Math.abs(gameObject.height / 2);
+        this.halfHeight = Math.abs(height / 2);
 
         /**
          * [description]

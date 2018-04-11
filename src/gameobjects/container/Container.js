@@ -26,6 +26,7 @@ var Vector2 = require('../../math/Vector2');
  *
  * @extends Phaser.GameObjects.Components.Alpha
  * @extends Phaser.GameObjects.Components.BlendMode
+ * @extends Phaser.GameObjects.Components.ComputedSize
  * @extends Phaser.GameObjects.Components.Depth
  * @extends Phaser.GameObjects.Components.Transform
  * @extends Phaser.GameObjects.Components.Visible
@@ -42,6 +43,7 @@ var Container = new Class({
     Mixins: [
         Components.Alpha,
         Components.BlendMode,
+        Components.ComputedSize,
         Components.Depth,
         Components.Transform,
         Components.Visible,
@@ -134,28 +136,6 @@ var Container = new Class({
          * Internal value to allow Containers to be used for input.
          * Do not change this value. It has no effect other than to break input.
          *
-         * @name Phaser.GameObjects.Container#displayOriginX
-         * @type {number}
-         * @private
-         * @since 3.4.0
-         */
-        this.displayOriginX = 0;
-
-        /**
-         * Internal value to allow Containers to be used for input.
-         * Do not change this value. It has no effect other than to break input.
-         *
-         * @name Phaser.GameObjects.Container#displayOriginY
-         * @type {number}
-         * @private
-         * @since 3.4.0
-         */
-        this.displayOriginY = 0;
-
-        /**
-         * Internal value to allow Containers to be used for input.
-         * Do not change this value. It has no effect other than to break input.
-         *
          * @name Phaser.GameObjects.Container#scrollFactorX
          * @type {number}
          * @private
@@ -182,6 +162,42 @@ var Container = new Class({
         {
             this.add(children);
         }
+    },
+
+    /**
+     * Internal value to allow Containers to be used for input and physics.
+     * Do not change this value. It has no effect other than to break things.
+     *
+     * @name Phaser.GameObjects.Container#displayOriginX
+     * @type {number}
+     * @readOnly
+     * @since 3.4.0
+     */
+    displayOriginX: {
+
+        get: function ()
+        {
+            return this.width * 0.5;
+        }
+
+    },
+
+    /**
+     * Internal value to allow Containers to be used for input and physics.
+     * Do not change this value. It has no effect other than to break things.
+     *
+     * @name Phaser.GameObjects.Container#displayOriginY
+     * @type {number}
+     * @readOnly
+     * @since 3.4.0
+     */
+    displayOriginY: {
+
+        get: function ()
+        {
+            return this.height * 0.5;
+        }
+
     },
 
     /**
