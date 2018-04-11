@@ -9,7 +9,9 @@ var ArrayUtils = require('../../utils/array');
 var Class = require('../../utils/Class');
 var Components = require('../components');
 var GameObject = require('../GameObject');
+var Rectangle = require('../../geom/rectangle/Rectangle');
 var Render = require('./ContainerRender');
+var Union = require('../../geom/rectangle/Union');
 var Vector2 = require('../../math/Vector2');
 
 /**
@@ -209,6 +211,47 @@ var Container = new Class({
         this.exclusive = value;
 
         return this;
+    },
+
+    /**
+     * Gets the bounds of this Container. It works by iterating all children of the Container,
+     * getting their respective bounds, and then working out a min-max rectangle from that.
+     * It does not factor in if the children render or not, all are included.
+     * 
+     * Depending on the quantity of children in this Container it could be a really expensive call,
+     * so cache it and only poll it as needed.
+     * 
+     * The values are stored and returned in a Rectangle object.
+     *
+     * @method Phaser.GameObjects.Container#getBounds
+     * @since 3.4.0
+     *
+     * @param {Phaser.Geom.Rectangle} [output] - A Geom.Rectangle object to store the values in. If not provided a new Rectangle will be created.
+     *
+     * @return {Phaser.Geom.Rectangle} The values stored in the output object.
+     */
+    getBounds: function (output)
+    {
+        if (output === undefined) { output = new Rectangle(); }
+
+        output.setTo(this.x, this.y, 0, 0);
+
+        if (this.list.length > 0)
+        {
+            var children = this.list;
+            var tempRect = new Rectangle();
+
+            for (var i = 0; i < children.length; i++)
+            {
+                var entry = children[i];
+
+                entry.getBounds(tempRect);
+
+                Union(tempRect, output, output);
+            }
+        }
+
+        return output;
     },
 
     /**
