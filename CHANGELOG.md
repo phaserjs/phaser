@@ -73,6 +73,7 @@
 * LoaderPlugin.isReady referenced a constant that no longer exists. Fix #3503 (thanks @Twilrom)
 * Tween Timeline.destroy was trying to call `destroy` on Tweens instead of `stop` (thanks @Antriel)
 * Calling `setOffset` on a Static Arcade Physics Body would break because the method was missing. It has been added and now functions as expected. Fix #3465 (thanks @josephjaniga and @DouglasLapsley)
+* Calling Impact.World.remove(body) during a Body.updateCallback would cause the internal loop to crash when trying to access a now missing body. Two extra checks are in place to avoid this (thanks @iamDecode)
 
 ### Updates
 
