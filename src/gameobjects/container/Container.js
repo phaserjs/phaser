@@ -190,6 +190,42 @@ var Container = new Class({
      * Internal value to allow Containers to be used for input and physics.
      * Do not change this value. It has no effect other than to break things.
      *
+     * @name Phaser.GameObjects.Container#originX
+     * @type {number}
+     * @readOnly
+     * @since 3.4.0
+     */
+    originX: {
+
+        get: function ()
+        {
+            return 0.5;
+        }
+
+    },
+
+    /**
+     * Internal value to allow Containers to be used for input and physics.
+     * Do not change this value. It has no effect other than to break things.
+     *
+     * @name Phaser.GameObjects.Container#originY
+     * @type {number}
+     * @readOnly
+     * @since 3.4.0
+     */
+    originY: {
+
+        get: function ()
+        {
+            return 0.5;
+        }
+
+    },
+
+    /**
+     * Internal value to allow Containers to be used for input and physics.
+     * Do not change this value. It has no effect other than to break things.
+     *
      * @name Phaser.GameObjects.Container#displayOriginX
      * @type {number}
      * @readOnly
