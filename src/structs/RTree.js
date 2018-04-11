@@ -465,29 +465,41 @@ rbush.prototype = {
 
     _initFormat: function (format)
     {
-        // data format (minX, minY, maxX, maxY accessors)
+        // format: [minX, minY, maxX, maxY accessors]
+        // accessors will be dotted names
+
+        // Because we have historically used eval-based function constructor
+        // the format accerrsors need to have their leading dots stripped to
+        // obtain the actual accessor
+        format = format.map(
+            function (f)
+            {
+                return f.substring(1);
+            }
+        );
 
         // Do not use string-generated Functions for CSP policies
-        // Instead a combination of anonymous functions and grabbing
-        // properties by string is used.
-        var compareArr = function (accessor)
-        {
-            return function (a, b)
-            {
-                return this[a + accessor] - this[b + accessor];
-            };
+        // Instead a combination of anonymous functions and grabbing properties
+        // by string is used.
+        // cf. https://github.com/photonstorm/phaser/issues/3441
+        // and https://github.com/photonstorm/phaser/issues/3535
+
+        var mkCompareFn = function(attr) {
+          return function(a, b) {
+            return a[attr] - b[attr];
+          };
         };
 
-        this.compareMinX = compareArr(format[0]);
-        this.compareMinY = compareArr(format[1]);
+        this.compareMinX = mkCompareFn(format[0]);
+        this.compareMinY = mkCompareFn(format[1]);
 
-        this.toBBox = function (a)
+        this.toBBox = function(a)
         {
             return {
-                minX: a + format[0],
-                minY: a + format[1],
-                maxX: a + format[2],
-                maxy: a + format[3]
+                minX: a[format[0]],
+                minY: a[format[1]],
+                maxX: a[format[2]],
+                maxY: a[format[3]],
             };
         };
     }
