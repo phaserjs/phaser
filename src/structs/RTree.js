@@ -474,9 +474,9 @@ rbush.prototype = {
         format = format.map(
             function (f)
             {
-                return f.substring(1)
+                return f.substring(1);
             }
-        )
+        );
 
         // Do not use string-generated Functions for CSP policies
         // Instead a combination of anonymous functions and grabbing properties
@@ -486,12 +486,12 @@ rbush.prototype = {
 
         var mkCompareFn = function(attr) {
           return function(a, b) {
-            return a[attr] - b[attr]
-          }
-        }
+            return a[attr] - b[attr];
+          };
+        };
 
-        this.compareMinX = mkCompareFn(format[0])
-        this.compareMinY = mkCompareFn(format[1])
+        this.compareMinX = mkCompareFn(format[0]);
+        this.compareMinY = mkCompareFn(format[1]);
 
         this.toBBox = function(a)
         {
@@ -500,8 +500,8 @@ rbush.prototype = {
                 minY: a[format[1]],
                 maxX: a[format[2]],
                 maxY: a[format[3]],
-            }
-        }
+            };
+        };
     }
 };
 
