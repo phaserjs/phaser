@@ -64,14 +64,14 @@ var ImageFile = new Class({
     function ImageFile (key, url, path, xhrSettings, config)
     {
         var fileKey = (typeof key === 'string') ? key : GetFastValue(key, 'key', '');
-        if (url === undefined) url = GetFastValue(key, 'file');
+        var fileUrl = (url === undefined) ? GetFastValue(key, 'file') : url;
 
         var fileConfig = {
             type: 'image',
             extension: GetFastValue(key, 'extension', 'png'),
             responseType: 'blob',
             key: fileKey,
-            url: url,
+            url: fileUrl,
             path: path,
             xhrSettings: GetFastValue(key, 'xhr', xhrSettings),
             config: GetFastValue(key, 'config', config)
