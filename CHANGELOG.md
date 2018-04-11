@@ -45,7 +45,7 @@
 * Utils.Array.SetAll will set a property on all elements of an array to the given value, with optional range limits.
 * Utils.Array.Swap will swap the position of two elements in an array.
 * TransformMatrix.destroy is a new method that will clear out the array and object used by a Matrix internally.
-* Add 'destroy' event in sound object.
+* BaseSound, and by extension WebAudioSound and HTMLAudioSound, will now emit a `destroy` event when they are destroyed (thanks @rexrainbow)
 
 ### Bug Fixes
 
@@ -71,6 +71,7 @@
 * Tween.resume will now call `Tween.play` on a tween that was paused due to its config object, not as a result of having its paused method called. Fix #3452 (thanks @jazen)
 * LoaderPlugin.isReady referenced a constant that no longer exists. Fix #3503 (thanks @Twilrom)
 * Tween Timeline.destroy was trying to call `destroy` on Tweens instead of `stop` (thanks @Antriel)
+* Calling `setOffset` on a Static Arcade Physics Body would break because the method was missing. It has been added and now functions as expected. Fix #3465 (thanks @josephjaniga and @DouglasLapsley)
 
 ### Updates
 
