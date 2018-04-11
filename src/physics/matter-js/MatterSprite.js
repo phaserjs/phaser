@@ -5,7 +5,6 @@
  */
 
 var AnimationComponent = require('../../gameobjects/components/Animation');
-var Bodies = require('./lib/factory/Bodies');
 var Class = require('../../utils/Class');
 var Components = require('./components');
 var GameObject = require('../../gameobjects/GameObject');
@@ -126,7 +125,7 @@ var MatterSprite = new Class({
         }
         else
         {
-            this.setRectangle(this.width, this.height, options)
+            this.setRectangle(this.width, this.height, options);
         }
 
         this.setPosition(x, y);

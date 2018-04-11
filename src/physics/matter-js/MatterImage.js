@@ -4,7 +4,6 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Bodies = require('./lib/factory/Bodies');
 var Class = require('../../utils/Class');
 var Components = require('./components');
 var GameObject = require('../../gameobjects/GameObject');
@@ -119,7 +118,7 @@ var MatterImage = new Class({
         }
         else
         {
-            this.setRectangle(this.width, this.height, options)
+            this.setRectangle(this.width, this.height, options);
         }
 
         this.setPosition(x, y);
