@@ -192,6 +192,11 @@ var GetBounds = {
         output.width = Math.max(TLx, TRx, BLx, BRx) - output.x;
         output.height = Math.max(TLy, TRy, BLy, BRy) - output.y;
 
+        if (this.parentContainer)
+        {
+            //  Clearly something needs to happen here :)
+        }
+
         return output;
     }
 
