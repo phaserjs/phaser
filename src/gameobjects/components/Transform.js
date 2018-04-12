@@ -406,7 +406,7 @@ var Transform = {
 
         if (!parent)
         {
-            return tempMatrix();
+            return this.getLocalTransformMatrix(tempMatrix);
         }
 
         var parents = [];

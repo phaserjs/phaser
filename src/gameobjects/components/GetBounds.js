@@ -178,7 +178,7 @@ var GetBounds = {
         // defined per corner we only do it once.
         if (this.parentContainer)
         {
-            var parentMatrix = this.parentContainer.getWorldTransformMatrix();
+            var parentMatrix = this.parentContainer.getBoundsTransformMatrix();
 
             this.getTopLeft(output);
             parentMatrix.transformPoint(output.x, output.y, output);
