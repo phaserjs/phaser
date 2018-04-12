@@ -541,7 +541,7 @@ var WebAudioSound = new Class({
 
         var now = this.manager.context.currentTime;
 
-        if (this.source)
+        if (this.source && typeof this.totalRate === 'number')
         {
             this.source.playbackRate.setValueAtTime(this.totalRate, now);
         }

@@ -6,6 +6,7 @@
 
 var CONST = require('./const');
 var GetValue = require('../utils/object/GetValue');
+var Merge = require('../utils/object/Merge');
 var InjectionMap = require('./InjectionMap');
 
 // TODO 22/03/2018 Fix "plugins" type
@@ -18,7 +19,8 @@ var InjectionMap = require('./InjectionMap');
  * @property {boolean} [visible=true] - [description]
  * @property {(false|LoaderFileObject[])} [files=false] - [description]
  * @property {?(InputJSONCameraObject|InputJSONCameraObject[])} [cameras=null] - [description]
- * @property {Object.<string, string>} [map] - [description]
+ * @property {Object.<string, string>} [map] - Overwrites the default injection map for a scene.
+ * @property {Object.<string, string>} [mapAdd] - Extends the injection map for a scene.
  * @property {object} [physics={}] - [description]
  * @property {object} [loader={}] - [description]
  * @property {(false|*)} [plugins=false] - [description]
@@ -87,7 +89,7 @@ var Settings = {
 
             //  Scene Property Injection Map
 
-            map: GetValue(config, 'map', InjectionMap),
+            map: GetValue(config, 'map', Merge(InjectionMap, GetValue(config, 'mapAdd', {}))),
 
             //  Physics
 

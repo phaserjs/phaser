@@ -118,6 +118,12 @@ The documentation for Phaser 3 is an on-going project. Please help us by searchi
 
 They are automatically generated from the jsdoc comments in the Phaser source code. If you wish to help refine them then you must edit the Phaser jsdoc blocks directly. You can find more details, including the source to the conversion tool we wrote in the Docs repo.
 
+### Webpack
+
+We use Webpack to build Phaser and we take advantage of several features specific to Webpack to do this, including `raw-loader` to handle our shader files and build-time flags for renderer swapping.
+
+If you wish to use Webpack with Phaser then please use our [Phaser 3 Project Template](https://github.com/photonstorm/phaser3-project-template) as it's already set-up to handle the build conditions Phaser needs.
+
 ### License
 
 Phaser is released under the [MIT License](https://opensource.org/licenses/MIT).
