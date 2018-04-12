@@ -51,12 +51,14 @@ var GetBounds = {
      * @generic {Phaser.Math.Vector2} O - [output,$return]
      *
      * @param {(Phaser.Math.Vector2|object)} [output] - An object to store the values in. If not provided a new Vector2 will be created.
+     * @param {boolean} [includeParent=false] - If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector?
      *
      * @return {(Phaser.Math.Vector2|object)} The values stored in the output object.
      */
-    getTopLeft: function (output)
+    getTopLeft: function (output, includeParent)
     {
-        if (output === undefined) { output = new Vector2(); }
+        if (!output) { output = new Vector2(); }
+        if (includeParent === undefined) { includeParent = false; }
 
         output.x = this.x - (this.displayWidth * this.originX);
         output.y = this.y - (this.displayHeight * this.originY);
@@ -64,6 +66,13 @@ var GetBounds = {
         if (this.rotation !== 0)
         {
             RotateAround(output, this.x, this.y, this.rotation);
+        }
+
+        if (includeParent && this.parentContainer)
+        {
+            var parentMatrix = this.parentContainer.getBoundsTransformMatrix();
+
+            parentMatrix.transformPoint(output.x, output.y, output);
         }
 
         return output;
@@ -79,12 +88,14 @@ var GetBounds = {
      * @generic {Phaser.Math.Vector2} O - [output,$return]
      *
      * @param {(Phaser.Math.Vector2|object)} [output] - An object to store the values in. If not provided a new Vector2 will be created.
+     * @param {boolean} [includeParent=false] - If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector?
      *
      * @return {(Phaser.Math.Vector2|object)} The values stored in the output object.
      */
-    getTopRight: function (output)
+    getTopRight: function (output, includeParent)
     {
-        if (output === undefined) { output = new Vector2(); }
+        if (!output) { output = new Vector2(); }
+        if (includeParent === undefined) { includeParent = false; }
 
         output.x = (this.x - (this.displayWidth * this.originX)) + this.displayWidth;
         output.y = this.y - (this.displayHeight * this.originY);
@@ -92,6 +103,13 @@ var GetBounds = {
         if (this.rotation !== 0)
         {
             RotateAround(output, this.x, this.y, this.rotation);
+        }
+
+        if (includeParent && this.parentContainer)
+        {
+            var parentMatrix = this.parentContainer.getBoundsTransformMatrix();
+
+            parentMatrix.transformPoint(output.x, output.y, output);
         }
 
         return output;
@@ -107,12 +125,14 @@ var GetBounds = {
      * @generic {Phaser.Math.Vector2} O - [output,$return]
      *
      * @param {(Phaser.Math.Vector2|object)} [output] - An object to store the values in. If not provided a new Vector2 will be created.
+     * @param {boolean} [includeParent=false] - If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector?
      *
      * @return {(Phaser.Math.Vector2|object)} The values stored in the output object.
      */
-    getBottomLeft: function (output)
+    getBottomLeft: function (output, includeParent)
     {
-        if (output === undefined) { output = new Vector2(); }
+        if (!output) { output = new Vector2(); }
+        if (includeParent === undefined) { includeParent = false; }
 
         output.x = this.x - (this.displayWidth * this.originX);
         output.y = (this.y - (this.displayHeight * this.originY)) + this.displayHeight;
@@ -120,6 +140,13 @@ var GetBounds = {
         if (this.rotation !== 0)
         {
             RotateAround(output, this.x, this.y, this.rotation);
+        }
+
+        if (includeParent && this.parentContainer)
+        {
+            var parentMatrix = this.parentContainer.getBoundsTransformMatrix();
+
+            parentMatrix.transformPoint(output.x, output.y, output);
         }
 
         return output;
@@ -135,12 +162,14 @@ var GetBounds = {
      * @generic {Phaser.Math.Vector2} O - [output,$return]
      *
      * @param {(Phaser.Math.Vector2|object)} [output] - An object to store the values in. If not provided a new Vector2 will be created.
+     * @param {boolean} [includeParent=false] - If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector?
      *
      * @return {(Phaser.Math.Vector2|object)} The values stored in the output object.
      */
-    getBottomRight: function (output)
+    getBottomRight: function (output, includeParent)
     {
-        if (output === undefined) { output = new Vector2(); }
+        if (!output) { output = new Vector2(); }
+        if (includeParent === undefined) { includeParent = false; }
 
         output.x = (this.x - (this.displayWidth * this.originX)) + this.displayWidth;
         output.y = (this.y - (this.displayHeight * this.originY)) + this.displayHeight;
@@ -148,6 +177,13 @@ var GetBounds = {
         if (this.rotation !== 0)
         {
             RotateAround(output, this.x, this.y, this.rotation);
+        }
+
+        if (includeParent && this.parentContainer)
+        {
+            var parentMatrix = this.parentContainer.getBoundsTransformMatrix();
+
+            parentMatrix.transformPoint(output.x, output.y, output);
         }
 
         return output;
