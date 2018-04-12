@@ -464,7 +464,8 @@ var RandomDataGenerator = new Class({
     shuffle: function (array)
     {
         var len = array.length - 1;
-        for (var i = len; i > 0; i--) {
+        for (var i = len; i > 0; i--)
+        {
             var randomIndex = this.integerInRange(0, len);
             var itemAtIndex = array[randomIndex];
 
