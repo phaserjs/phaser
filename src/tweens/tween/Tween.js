@@ -991,14 +991,14 @@ var Tween = new Class({
 
                 if (this.countdown <= 0)
                 {
+                    this.state = TWEEN_CONST.PENDING_REMOVE;
+
                     var onComplete = this.callbacks.onComplete;
 
                     if (onComplete)
                     {
                         onComplete.func.apply(onComplete.scope, onComplete.params);
                     }
-
-                    this.state = TWEEN_CONST.PENDING_REMOVE;
                 }
 
                 break;

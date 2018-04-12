@@ -372,6 +372,7 @@ A special mention must go to @orblazer for their outstanding assistance in helpi
 * PathFollower.resume has been renamed to `resumeFollow` to avoid conflicting with the Animation component.
 * PathFollower.stop has been renamed to `stopFollow` to avoid conflicting with the Animation component.
 * BaseSound.setRate has been renamed to `calculateRate` to avoid confusion over the setting of the sounds rate.
+* Phaser.Tweens.Tween now allows restarting the tween in the `onComplete` listener
 
 Please see the complete [Change Log]((https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md)) for previous releases.
 
