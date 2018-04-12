@@ -367,7 +367,7 @@ A special mention must go to @orblazer for their outstanding assistance in helpi
 * PathFollower.stop has been renamed to `stopFollow` to avoid conflicting with the Animation component.
 * BaseSound.setRate has been renamed to `calculateRate` to avoid confusion over the setting of the sounds rate.
 
-Please see the complete [Change Log]((https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md)) for previous releases.
+Please see the complete [Change Log](https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md) for previous releases.
 
 Looking for a v2 change? Check out the [Phaser CE Change Log](https://github.com/photonstorm/phaser-ce/blob/master/CHANGELOG.md)
 
