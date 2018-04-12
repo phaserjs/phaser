@@ -48,6 +48,7 @@
 * BaseSound, and by extension WebAudioSound and HTMLAudioSound, will now emit a `destroy` event when they are destroyed (thanks @rexrainbow)
 * A new property was added to the Scene config: `mapAdd` which is used to extend the default injection map of a scene instead of overwriting it (thanks @sebashwa)
 * A new method was added to RandomDataGenerator, 'shuffle' which uses the current seed as the basis for an array shuffle.
+* GetBounds `getTopLeft`, `getTopRight`, `getBottomLeft` and `getBottomRight` all have a new optional argument `includeParent` which will factor in all ancestor transforms to the returned point.
 
 ### Bug Fixes
 
