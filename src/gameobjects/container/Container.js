@@ -18,6 +18,11 @@ var Vector2 = require('../../math/Vector2');
  * @classdesc
  * A Container Game Object.
  *
+ * WARNING: EXPERIMENTAL. There are several known cases where Containers will not behave correctly,
+ * especially if you use a multi-camera or transformed camera set-up. We are still working on them,
+ * but wanted to release as part of 3.4 under a beta feature flag, because in the main they work
+ * are and worth getting used to.
+ *
  * A Container, as the name implies, can 'contain' other types of Game Object.
  * When a Game Object is added to a Container, the Container becomes responsible for the rendering of it.
  * By default it will be removed from the Display List and instead added to the Containers own internal list.
