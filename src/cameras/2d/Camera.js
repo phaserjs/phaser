@@ -466,6 +466,20 @@ var Camera = new Class({
         this._id = 0;
     },
 
+    scaleX: {
+        get: function ()
+        {
+            return this.zoom;
+        }
+    },
+
+    scaleY: {
+        get: function ()
+        {
+            return this.zoom;
+        }
+    },
+
     /**
      * [description]
      *
