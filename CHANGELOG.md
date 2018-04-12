@@ -25,6 +25,7 @@ being passed to the simulation. The default value is 1 to remain consistent with
 * Graphics.slice allows you to easily draw a Pacman, or slice of pie shape to a Graphics object.
 * List.addCallback is a new optional callback that is invoked every time a new child is added to the List. You can use this to have a callback fire when children are added to the Display List.
 * List.removeCallback is a new optional callback that is invoked every time a new child is removed from the List. You can use this to have a callback fire when children are removed from the Display List.
+* A new method was added to RandomDataGenerator, 'shuffle' which uses the current seed as the basis for an array shuffle.
 
 ### Bug Fixes
 
