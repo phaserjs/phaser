@@ -410,7 +410,7 @@ var InputManager = new Class({
 
             if (gameObject.parentContainer)
             {
-                gameObject.getWorldTransformMatrix(matrix);
+                gameObject.getWorldTransformMatrix(matrix, camera);
 
                 TransformXY(px, py, matrix.tx, matrix.ty, matrix.rotation, matrix.scaleX, matrix.scaleY, point);
             }
@@ -426,6 +426,44 @@ var InputManager = new Class({
         }
 
         return output;
+    },
+
+    debugHitTest: function (x, y, gameObject, camera, output)
+    {
+        if (output === undefined) { output = this._tempHitTest; }
+
+        var tempPoint = this._tempPoint;
+
+        //  Stores the translated world point inside of tempPoint
+        camera.getWorldPoint(x, y, tempPoint);
+
+        var point = { x: 0, y: 0 };
+
+        var res = this.game.config.resolution;
+
+        var matrix = this._tempMatrix;
+
+        var px = tempPoint.x * res + (camera.scrollX * gameObject.scrollFactorX) - camera.scrollX;
+        var py = tempPoint.y * res + (camera.scrollY * gameObject.scrollFactorY) - camera.scrollY;
+
+        gameObject.getWorldTransformMatrix(matrix);
+
+        matrix.invert();
+        matrix.transformPoint(px, py, point);
+
+        // var tt = new TransformMatrix();
+
+        // tt.translate(px, py);
+
+        // matrix.invert();
+        // matrix.multiply(tt);
+
+        // TransformXY(px, py, matrix.tx, matrix.ty, matrix.rotation, matrix.scaleX, matrix.scaleY, point);
+
+        // point.x = px;
+        // point.y = py;
+
+        return [ matrix, point, this.pointWithinHitArea(gameObject, point.x, point.y) ];
     },
 
     /**
