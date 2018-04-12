@@ -327,6 +327,7 @@ var GameObject = new Class({
      */
     getIndexList: function ()
     {
+        // eslint-disable-next-line consistent-this
         var child = this;
         var parent = this.parentContainer;
 
