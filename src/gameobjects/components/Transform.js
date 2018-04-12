@@ -426,8 +426,8 @@ var Transform = {
             parent = parents[i];
 
             tempMatrix.translate(parent.x, parent.y);
-            tempMatrix.rotate(parent._rotation);
-            tempMatrix.scale(parent._scaleX, parent._scaleY);
+            tempMatrix.rotate(parent.rotation);
+            tempMatrix.scale(parent.scaleX, parent.scaleY);
         }
 
         tempMatrix.translate(this.x, this.y);
