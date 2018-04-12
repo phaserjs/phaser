@@ -20,7 +20,7 @@ var hasWarned = false;
  *
  * @param {number} x - The horizontal position of this Game Object in the world.
  * @param {number} y - The vertical position of this Game Object in the world.
- * @param {Phaser.GameObjects.GameObject[]} [children] - An optional array of Game Objects to add to this Container.
+ * @param {Phaser.GameObjects.GameObject|Phaser.GameObjects.GameObject[]} [children] - An optional array of Game Objects to add to this Container.
  *
  * @return {Phaser.GameObjects.Container} The Game Object that was created.
  */
@@ -28,7 +28,7 @@ GameObjectFactory.register('container', function (x, y, children)
 {
     if (!hasWarned)
     {
-        console.warn('Containers are experimental and should not be used in production');
+        console.warn('Use of a beta feature: Containers');
         hasWarned = true;
     }
 
