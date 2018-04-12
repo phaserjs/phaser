@@ -410,7 +410,7 @@ var InputManager = new Class({
 
             if (gameObject.parentContainer)
             {
-                gameObject.getWorldTransformMatrix(matrix, camera);
+                gameObject.getWorldTransformMatrix(matrix);
 
                 TransformXY(px, py, matrix.tx, matrix.ty, matrix.rotation, matrix.scaleX, matrix.scaleY, point);
             }
@@ -428,6 +428,7 @@ var InputManager = new Class({
         return output;
     },
 
+    /*
     debugHitTest: function (x, y, gameObject, camera, output)
     {
         if (output === undefined) { output = this._tempHitTest; }
@@ -448,7 +449,7 @@ var InputManager = new Class({
 
         gameObject.getWorldTransformMatrix(matrix);
 
-        matrix.invert();
+        // matrix.invert();
         matrix.transformPoint(px, py, point);
 
         // var tt = new TransformMatrix();
@@ -465,6 +466,7 @@ var InputManager = new Class({
 
         return [ matrix, point, this.pointWithinHitArea(gameObject, point.x, point.y) ];
     },
+    */
 
     /**
      * x/y MUST be translated before being passed to this function,

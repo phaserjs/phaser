@@ -8,6 +8,8 @@
 var Container = require('./Container');
 var GameObjectFactory = require('../GameObjectFactory');
 
+var hasWarned = false;
+
 /**
  * Creates a new Container Game Object and adds it to the Scene.
  *
@@ -24,5 +26,11 @@ var GameObjectFactory = require('../GameObjectFactory');
  */
 GameObjectFactory.register('container', function (x, y, children)
 {
+    if (!hasWarned)
+    {
+        console.warn('Containers are experimental and should not be used in production');
+        hasWarned = true;
+    }
+
     return this.displayList.add(new Container(this.scene, x, y, children));
 });
