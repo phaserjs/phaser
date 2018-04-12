@@ -298,6 +298,7 @@ A special mention must go to @orblazer for their outstanding assistance in helpi
 * SoundManager.setVolume is a chainable method to allow you to set the global volume of the SoundManager.
 * BaseSound.setRate is a chainable method to allow you to set the playback rate of the BaseSound.
 * BaseSound.setDetune is a chainable method to allow you to set the detuning value of the BaseSound.
+* A new method was added to RandomDataGenerator, 'shuffle' which uses the current seed as the basis for an array shuffle.
 
 ### Bug Fixes
 
