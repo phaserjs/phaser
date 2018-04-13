@@ -70,6 +70,56 @@ var ScenePlugin = new Class({
          */
         this.manager = scene.sys.game.scene;
 
+        /**
+         * Transition elapsed timer.
+         *
+         * @name Phaser.Scenes.ScenePlugin#_elapsed
+         * @type {integer}
+         * @private
+         * @since 3.4.1
+         */
+        this._elapsed = 0;
+
+        /**
+         * Transition elapsed timer.
+         *
+         * @name Phaser.Scenes.ScenePlugin#_target
+         * @type {Phaser.Scenes.Scene}
+         * @private
+         * @since 3.4.1
+         */
+        this._target;
+
+        /**
+         * Transition duration.
+         *
+         * @name Phaser.Scenes.ScenePlugin#_duration
+         * @type {integer}
+         * @private
+         * @since 3.4.1
+         */
+        this._duration = 0;
+
+        /**
+         * Transition callback.
+         *
+         * @name Phaser.Scenes.ScenePlugin#_onUpdate
+         * @type {function}
+         * @private
+         * @since 3.4.1
+         */
+        this._onUpdate;
+
+        /**
+         * Transition callback.
+         *
+         * @name Phaser.Scenes.ScenePlugin#_onUpdateScope
+         * @type {object}
+         * @private
+         * @since 3.4.1
+         */
+        this._onUpdateScope;
+
         scene.sys.events.on('start', this.pluginStart, this);
     },
 
@@ -145,6 +195,78 @@ var ScenePlugin = new Class({
         }
 
         return this;
+    },
+
+    /**
+     * BETA ( + fadeTo )
+     * Fire start and complete events in target Scene + this Scene.
+     * const leaving
+     *
+     * @method Phaser.Scenes.ScenePlugin#transition
+     * @since 3.4.1
+     *
+     * @param {string} key - The Scene key to transition to.
+     * @param {integer} [duration=1000] - The duration, in ms, for the transition to last.
+     * @param {boolean} [moveAbove=false] - More the target Scene to be above this one before the transition starts. `false` means no change to the Scene display order.
+     * @param {function} [callback] - This callback is invoked every frame for the duration of the transition.
+     * @param {any} [context] - The context in which the callback is invoked.
+     *
+     * @return {Phaser.Scenes.ScenePlugin} This ScenePlugin object.
+     */
+    transition: function (key, duration, moveAbove, callback, context)
+    {
+        if (duration === undefined) { duration = 1000; }
+
+        var target = this.get(key);
+
+        if (target && this.settings.status === CONST.RUNNING && this._duration === 0)
+        {
+            this._elapsed = 0;
+            this._target = target;
+            this._duration = duration;
+            this._onUpdate = callback;
+            this._onUpdateScope = context;
+
+            //  Do it via the manager?
+            // this.manager.transition(from, to, duration, moveAbove, data);
+
+            this.manager.start(key);
+
+            //  Needs storing in manager data, as fires too early here
+            target.sys.events.emit('transitionstart', this.scene, duration);
+
+            this.systems.events.on('postupdate', this.step, this);
+        }
+
+        return this;
+    },
+
+    /**
+     * A single game step. This is only called if the parent Scene is transitioning
+     * out to another Scene.
+     *
+     * @method Phaser.Scenes.ScenePlugin#step
+     * @private
+     * @since 3.4.1
+     *
+     * @param {number} time - [description]
+     * @param {number} delta - [description]
+     */
+    step: function (time, delta)
+    {
+        this._elapsed += delta;
+
+        if (this._elapsed >= this._duration)
+        {
+            //  Stop the step
+            this.systems.events.off('postupdate', this.step, this);
+
+            //  Notify target scene
+            this._target.sys.events.emit('transitioncomplete', this.scene);
+
+            //  Stop this Scene
+            this.manager.stop(this.key);
+        }
     },
 
     /**
@@ -606,9 +728,12 @@ var ScenePlugin = new Class({
      */
     shutdown: function ()
     {
+        this._duration = 0;
+
         var eventEmitter = this.systems.events;
 
         eventEmitter.off('shutdown', this.shutdown, this);
+        eventEmitter.off('postupdate', this.step, this);
     },
 
     /**
