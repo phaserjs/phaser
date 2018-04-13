@@ -47,7 +47,7 @@ var HTML5AudioSound = new Class({
         if (!this.tags)
         {
             // eslint-disable-next-line no-console
-            console.error('No audio loaded in cache with key: \'' + key + '\'!');
+            console.warn('Audio cache entry missing: ' + key);
             return;
         }
 
@@ -119,6 +119,7 @@ var HTML5AudioSound = new Class({
         {
             return false;
         }
+
         if (!BaseSound.prototype.play.call(this, markerName, config))
         {
             return false;
@@ -610,7 +611,8 @@ var HTML5AudioSound = new Class({
      */
 
     /**
-     * [description]
+     * Boolean indicating whether the sound is muted or not.
+     * Gets or sets the muted state of this sound.
      * 
      * @name Phaser.Sound.HTML5AudioSound#mute
      * @type {boolean}
@@ -632,8 +634,6 @@ var HTML5AudioSound = new Class({
             {
                 return;
             }
-
-            this.setMute();
 
             this.emit('mute', this, value);
         }
@@ -664,7 +664,7 @@ var HTML5AudioSound = new Class({
      */
 
     /**
-     * [description]
+     * Gets or sets the volume of this sound, a value between 0 (silence) and 1 (full volume).
      * 
      * @name Phaser.Sound.HTML5AudioSound#volume
      * @type {number}
@@ -686,8 +686,6 @@ var HTML5AudioSound = new Class({
             {
                 return;
             }
-
-            this.setVolume();
 
             this.emit('volume', this, value);
         }
@@ -839,7 +837,10 @@ var HTML5AudioSound = new Class({
      */
 
     /**
-     * [description]
+     * Property representing the position of playback for this sound, in seconds.
+     * Setting it to a specific value moves current playback to that position.
+     * The value given is clamped to the range 0 to current marker duration.
+     * Setting seek of a stopped sound has no effect.
      * 
      * @name Phaser.Sound.HTML5AudioSound#seek
      * @type {number}
@@ -919,7 +920,7 @@ var HTML5AudioSound = new Class({
      */
 
     /**
-     * [description]
+     * Flag indicating whether or not the sound or current sound marker will loop.
      * 
      * @name Phaser.Sound.HTML5AudioSound#loop
      * @type {boolean}
