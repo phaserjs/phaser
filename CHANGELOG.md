@@ -13,7 +13,7 @@
 * The Animation component didn't properly check for the animation state in its update, causing pause / resume to fail. Fix #3556 (thanks @Antriel @siolfyr)
 * The Scene Manager would never reach an `isBooted` state if you didn't add any Scenes into the Game Config. Fix #3553 (thanks @rgk)
 * Fixed issue in HTMLAudioSound where `mute` would get into a recursive loop.
-* Every RenderTexture would draw the same content due to a mis-use of the CanvasPool (this would also effect TileSprites). Fix #3555 (thanks @kuoruan)
+* Every RenderTexture would draw the same content due to a mis-use of the CanvasPool (this also impacted TileSprites). Fix #3555 (thanks @kuoruan)
 
 ### Updates
 
