@@ -165,7 +165,7 @@ var TileSprite = new Class({
          * @type {HTMLCanvasElement}
          * @since 3.0.0
          */
-        this.canvasBuffer = CanvasPool.create2D(null, this.potWidth, this.potHeight);
+        this.canvasBuffer = CanvasPool.create2D(this, this.potWidth, this.potHeight);
 
         /**
          * [description]
