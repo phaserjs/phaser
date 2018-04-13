@@ -135,13 +135,13 @@ var World = new Class({
         /**
          * This function is called every time the core game loop steps, which is bound to the
          * Request Animation Frame frequency unless otherwise modified.
-         * 
+         *
          * The function is passed two values: `time` and `delta`, both of which come from the game step values.
-         * 
+         *
          * It must return a number. This number is used as the delta value passed to Matter.Engine.update.
-         * 
+         *
          * You can override this function with your own to define your own timestep.
-         * 
+         *
          * If you need to update the Engine multiple times in a single game step then call
          * `World.update` as many times as required. Each call will trigger the `getDelta` function.
          * If you wish to have full control over when the Engine updates then see the property `autoUpdate`.
@@ -656,12 +656,12 @@ var World = new Class({
 
     /**
      * Manually advances the physics simulation by one iteration.
-     * 
+     *
      * You can optionally pass in the `delta` and `correction` values to be used by Engine.update.
      * If undefined they use the Matter defaults of 60Hz and no correction.
-     * 
+     *
      * Calling `step` directly bypasses any checks of `enabled` or `autoUpdate`.
-     * 
+     *
      * It also ignores any custom `getDelta` functions, as you should be passing the delta
      * value in to this call.
      *
@@ -768,7 +768,7 @@ var World = new Class({
         {
             graphics.lineStyle(2, this.defaults.jointDebugColor);
 
-            // Render constraints 
+            // Render constraints
             var constraints = Composite.allConstraints(this.localWorld);
 
             for (i = 0; i < constraints.length; i++)
@@ -894,7 +894,7 @@ var World = new Class({
      */
     shutdown: function ()
     {
-        MatterEvents.off();
+        MatterEvents.off(this.engine);
 
         this.removeAllListeners();
 
