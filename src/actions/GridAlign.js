@@ -10,7 +10,7 @@ var GetFastValue = require('../utils/object/GetFastValue');
 var NOOP = require('../utils/NOOP');
 var Zone = require('../gameobjects/zone/Zone');
 
-var tempZone = new Zone({ sys: { queueDepthSort: NOOP }}, 0, 0, 1, 1);
+var tempZone = new Zone({ sys: { queueDepthSort: NOOP, events: { once: NOOP } } }, 0, 0, 1, 1);
 
 /**
  * @typedef {object} GridAlignConfig
