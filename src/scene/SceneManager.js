@@ -139,10 +139,9 @@ var SceneManager = new Class({
                     data: {}
                 });
             }
-
-            //  Only need to wait for the boot event if we've scenes to actually boot
-            game.events.once('ready', this.bootQueue, this);
         }
+        
+        game.events.once('ready', this.bootQueue, this);
     },
 
     /**
