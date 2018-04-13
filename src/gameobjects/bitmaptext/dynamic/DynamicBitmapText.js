@@ -116,6 +116,16 @@ var DynamicBitmapText = new Class({
          */
         this.fontSize = size || this.fontData.size;
 
+        /**
+         * Adds/Removes spacing between characters
+         * Can be a negative or positive number
+         *
+         * @name Phaser.GameObjects.DynamicBitmapText#letterSpacing
+         * @type {number}
+         * @since 3.4.1
+         */
+        this.letterSpacing = 0;
+
         this.setTexture(entry.texture, entry.frame);
         this.setPosition(x, y);
         this.setOrigin(0, 0);
