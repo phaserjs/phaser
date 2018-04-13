@@ -452,14 +452,14 @@ var RandomDataGenerator = new Class({
     },
 
     /**
-     * Returns a shuffled copy of the array.
+     * A standard array shuffle implementation using the seed as a basis.
      *
      * @method Phaser.Math.RandomDataGenerator#shuffle
      * @since 3.4.0
      * 
      * @param {array[]} [array] - The array to be shuffled.
      *
-     * @return {array} Shuffled copy of the provided array.
+     * @return {array} The shuffled array.
      */
     shuffle: function (array)
     {
