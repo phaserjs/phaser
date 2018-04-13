@@ -597,6 +597,19 @@ var Factory = new Class({
     gameObject: function (gameObject, options)
     {
         return MatterGameObject(this.world, gameObject, options);
+    },
+
+    /**
+     * Destroys this Factory.
+     *
+     * @method Phaser.Physics.Matter.Factory#destroy
+     * @since 3.4.1
+     */
+    destroy: function ()
+    {
+        this.world = null;
+        this.scene = null;
+        this.sys = null;
     }
 
 });

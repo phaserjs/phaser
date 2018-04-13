@@ -58,11 +58,6 @@ var InputPlugin = new Class({
          */
         this.systems = scene.sys;
 
-        if (!scene.sys.settings.isBooted)
-        {
-            scene.sys.events.once('boot', this.boot, this);
-        }
-
         /**
          * [description]
          *
@@ -268,22 +263,27 @@ var InputPlugin = new Class({
          * @since 3.0.0
          */
         this._validTypes = [ 'onDown', 'onUp', 'onOver', 'onOut', 'onMove', 'onDragStart', 'onDrag', 'onDragEnd', 'onDragEnter', 'onDragLeave', 'onDragOver', 'onDrop' ];
+
+        scene.sys.events.on('start', this.start, this);
     },
 
     /**
-     * [description]
+     * This method is called automatically by the Scene when it is starting up.
+     * It is responsible for creating local systems, properties and listening for Scene events.
+     * Do not invoke it directly.
      *
-     * @method Phaser.Input.InputPlugin#boot
-     * @since 3.0.0
+     * @method Phaser.Input.InputPlugin#start
+     * @private
+     * @since 3.4.1
      */
-    boot: function ()
+    start: function ()
     {
         var eventEmitter = this.systems.events;
 
         eventEmitter.on('preupdate', this.preUpdate, this);
         eventEmitter.on('update', this.update, this);
-        eventEmitter.on('shutdown', this.shutdown, this);
-        eventEmitter.on('destroy', this.destroy, this);
+        eventEmitter.once('shutdown', this.shutdown, this);
+        eventEmitter.once('destroy', this.destroy, this);
 
         this.cameras = this.systems.cameras;
 
@@ -1516,8 +1516,10 @@ var InputPlugin = new Class({
 
     /**
      * The Scene that owns this plugin is shutting down.
+     * We need to kill and reset all internal properties as well as stop listening to Scene events.
      *
      * @method Phaser.Input.InputPlugin#shutdown
+     * @private
      * @since 3.0.0
      */
     shutdown: function ()
@@ -1535,25 +1537,35 @@ var InputPlugin = new Class({
         }
 
         this.removeAllListeners();
+
+        var eventEmitter = this.systems.events;
+
+        eventEmitter.off('preupdate', this.preUpdate, this);
+        eventEmitter.off('update', this.update, this);
+        eventEmitter.off('shutdown', this.shutdown, this);
     },
 
     /**
-     * [description]
+     * The Scene that owns this plugin is being destroyed.
+     * We need to shutdown and then kill off all external references.
      *
      * @method Phaser.Input.InputPlugin#destroy
+     * @private
      * @since 3.0.0
      */
     destroy: function ()
     {
         this.shutdown();
 
-        this.scene = undefined;
-        this.cameras = undefined;
-        this.manager = undefined;
-        this.events = undefined;
-        this.keyboard = undefined;
-        this.mouse = undefined;
-        this.gamepad = undefined;
+        this.scene.sys.events.off('start', this.start, this);
+
+        this.scene = null;
+        this.cameras = null;
+        this.manager = null;
+        this.events = null;
+        this.keyboard = null;
+        this.mouse = null;
+        this.gamepad = null;
     },
 
     /**

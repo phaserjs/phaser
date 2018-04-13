@@ -48,11 +48,6 @@ var GameObjectFactory = new Class({
          */
         this.systems = scene.sys;
 
-        if (!scene.sys.settings.isBooted)
-        {
-            scene.sys.events.once('boot', this.boot, this);
-        }
-
         /**
          * A reference to the Scene Display List.
          *
@@ -72,24 +67,28 @@ var GameObjectFactory = new Class({
          * @since 3.0.0
          */
         this.updateList;
+
+        scene.sys.events.on('start', this.start, this);
     },
 
     /**
-     * Boots the plugin.
+     * This method is called automatically by the Scene when it is starting up.
+     * It is responsible for creating local systems, properties and listening for Scene events.
+     * Do not invoke it directly.
      *
-     * @method Phaser.GameObjects.GameObjectFactory#boot
+     * @method Phaser.GameObjects.GameObjectFactory#start
      * @private
-     * @since 3.0.0
+     * @since 3.4.1
      */
-    boot: function ()
+    start: function ()
     {
         this.displayList = this.systems.displayList;
         this.updateList = this.systems.updateList;
 
         var eventEmitter = this.systems.events;
 
-        eventEmitter.on('shutdown', this.shutdown, this);
-        eventEmitter.on('destroy', this.destroy, this);
+        eventEmitter.once('shutdown', this.shutdown, this);
+        eventEmitter.once('destroy', this.destroy, this);
     },
 
     /**
@@ -121,24 +120,37 @@ var GameObjectFactory = new Class({
     },
 
     /**
-     * Shuts this plugin down.
+     * The Scene that owns this plugin is shutting down.
+     * We need to kill and reset all internal properties as well as stop listening to Scene events.
      *
      * @method Phaser.GameObjects.GameObjectFactory#shutdown
+     * @private
      * @since 3.0.0
      */
     shutdown: function ()
     {
+        var eventEmitter = this.systems.events;
+
+        eventEmitter.off('shutdown', this.shutdown, this);
     },
 
     /**
-     * Destroys this plugin.
+     * The Scene that owns this plugin is being destroyed.
+     * We need to shutdown and then kill off all external references.
      *
      * @method Phaser.GameObjects.GameObjectFactory#destroy
+     * @private
      * @since 3.0.0
      */
     destroy: function ()
     {
+        this.shutdown();
+
+        this.scene.sys.events.off('start', this.start, this);
+
         this.scene = null;
+        this.systems = null;
+
         this.displayList = null;
         this.updateList = null;
     }

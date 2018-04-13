@@ -210,12 +210,15 @@ var Systems = new Class({
     },
 
     /**
-     * [description]
+     * This method is called only once by the Scene Manager when the Scene is instantiated.
+     * It is responsible for setting up all of the Scene plugins and references.
+     * It should never be called directly.
      *
      * @method Phaser.Scenes.Systems#init
+     * @protected
      * @since 3.0.0
      *
-     * @param {Phaser.Game} game - A reference to the Phaser Game
+     * @param {Phaser.Game} game - A reference to the Phaser Game instance.
      */
     init: function (game)
     {
@@ -244,7 +247,7 @@ var Systems = new Class({
     },
 
     /**
-     * [description]
+     * Called by a plugin, it tells the System to install the plugin locally.
      *
      * @method Phaser.Scenes.Systems#install
      * @private
@@ -263,7 +266,8 @@ var Systems = new Class({
     },
 
     /**
-     * [description]
+     * A single game step. Called automatically by the Scene Manager as a result of a Request Animation
+     * Frame or Set Timeout call to the main Game instance.
      *
      * @method Phaser.Scenes.Systems#step
      * @since 3.0.0
@@ -283,7 +287,8 @@ var Systems = new Class({
     },
 
     /**
-     * [description]
+     * Called automatically by the Scene Manager. Instructs the Scene to render itself via
+     * its Camera Manager to the renderer given.
      *
      * @method Phaser.Scenes.Systems#render
      * @since 3.0.0
@@ -347,7 +352,7 @@ var Systems = new Class({
     },
 
     /**
-     * Resume this Scene.
+     * Resume this Scene from a paused state.
      *
      * @method Phaser.Scenes.Systems#resume
      * @since 3.0.0
@@ -451,7 +456,8 @@ var Systems = new Class({
     },
 
     /**
-     * [description]
+     * Sets the visible state of this Scene.
+     * An invisible Scene will not render, but will still process updates.
      *
      * @method Phaser.Scenes.Systems#setVisible
      * @since 3.0.0
@@ -468,12 +474,13 @@ var Systems = new Class({
     },
 
     /**
-     * [description]
+     * Set the active state of this Scene.
+     * An active Scene will run its core update loop.
      *
      * @method Phaser.Scenes.Systems#setActive
      * @since 3.0.0
      *
-     * @param {boolean} value - [description]
+     * @param {boolean} value - If `true` the Scene will be resumed, if previously paused. If `false` it will be paused.
      *
      * @return {Phaser.Scenes.Systems} This Systems object.
      */
@@ -496,7 +503,7 @@ var Systems = new Class({
      * @method Phaser.Scenes.Systems#start
      * @since 3.0.0
      *
-     * @param {object} data - [description]
+     * @param {object} data - Optional data object that may have been passed to this Scene from another.
      */
     start: function (data)
     {
@@ -530,6 +537,10 @@ var Systems = new Class({
 
     /**
      * Shutdown this Scene and send a shutdown event to all of its systems.
+     * A Scene that has been shutdown will not run its update loop or render, but it does
+     * not destroy any of its plugins or references. It is put into hibernation for later use.
+     * If you don't ever plan to use this Scene again, then it should be destroyed instead
+     * to free-up resources.
      *
      * @method Phaser.Scenes.Systems#shutdown
      * @since 3.0.0
@@ -546,8 +557,11 @@ var Systems = new Class({
 
     /**
      * Destroy this Scene and send a destroy event all of its systems.
+     * A destroyed Scene cannot be restarted.
+     * You should not call this directly, instead use `SceneManager.remove`.
      *
      * @method Phaser.Scenes.Systems#destroy
+     * @private
      * @since 3.0.0
      */
     destroy: function ()
@@ -558,6 +572,15 @@ var Systems = new Class({
         this.settings.visible = false;
 
         this.events.emit('destroy', this);
+
+        this.events.removeAllListeners();
+
+        var props = [ 'scene', 'game', 'anims', 'cache', 'plugins', 'registry', 'sound', 'textures', 'add', 'camera', 'displayList', 'events', 'make', 'scenePlugin', 'updateList' ];
+
+        for (var i = 0; i < props.length; i++)
+        {
+            this[props[i]] = null;
+        }
     }
 
 });

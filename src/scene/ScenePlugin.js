@@ -43,11 +43,6 @@ var ScenePlugin = new Class({
          */
         this.systems = scene.sys;
 
-        if (!scene.sys.settings.isBooted)
-        {
-            scene.sys.events.once('boot', this.boot, this);
-        }
-
         /**
          * The settings of the Scene this ScenePlugin belongs to.
          *
@@ -74,22 +69,25 @@ var ScenePlugin = new Class({
          * @since 3.0.0
          */
         this.manager = scene.sys.game.scene;
+
+        scene.sys.events.on('start', this.pluginStart, this);
     },
 
     /**
-     * Boot the ScenePlugin.
+     * This method is called automatically by the Scene when it is starting up.
+     * It is responsible for creating local systems, properties and listening for Scene events.
+     * Do not invoke it directly.
      *
-     * Registers event handlers.
-     *
-     * @method Phaser.Scenes.ScenePlugin#boot
+     * @method Phaser.Scenes.ScenePlugin#pluginStart
+     * @private
      * @since 3.0.0
      */
-    boot: function ()
+    pluginStart: function ()
     {
         var eventEmitter = this.systems.events;
 
-        eventEmitter.on('shutdown', this.shutdown, this);
-        eventEmitter.on('destroy', this.destroy, this);
+        eventEmitter.once('shutdown', this.shutdown, this);
+        eventEmitter.once('destroy', this.destroy, this);
     },
 
     /**
@@ -599,25 +597,38 @@ var ScenePlugin = new Class({
     },
 
     /**
-     * Shut down the given Scene.
+     * The Scene that owns this plugin is shutting down.
+     * We need to kill and reset all internal properties as well as stop listening to Scene events.
      *
      * @method Phaser.Scenes.ScenePlugin#shutdown
+     * @private
      * @since 3.0.0
      */
-    shutdown: function ()
+    shutdown: function (key)
     {
-        //  TODO
+        var eventEmitter = this.systems.events;
+
+        eventEmitter.off('shutdown', this.shutdown, this);
     },
 
     /**
-     * Destroy the given Scene.
+     * The Scene that owns this plugin is being destroyed.
+     * We need to shutdown and then kill off all external references.
      *
      * @method Phaser.Scenes.ScenePlugin#destroy
+     * @private
      * @since 3.0.0
      */
     destroy: function ()
     {
-        //  TODO
+        this.shutdown();
+
+        this.scene.sys.events.off('start', this.start, this);
+
+        this.scene = null;
+        this.systems = null;
+        this.settings = null;
+        this.manager = null;
     }
 
 });

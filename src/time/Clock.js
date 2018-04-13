@@ -43,11 +43,6 @@ var Clock = new Class({
          */
         this.systems = scene.sys;
 
-        if (!scene.sys.settings.isBooted)
-        {
-            scene.sys.events.once('boot', this.boot, this);
-        }
-
         /**
          * [description]
          *
@@ -112,22 +107,27 @@ var Clock = new Class({
          * @since 3.0.0
          */
         this._pendingRemoval = [];
+
+        scene.sys.events.on('start', this.start, this);
     },
 
     /**
-     * [description]
+     * This method is called automatically by the Scene when it is starting up.
+     * It is responsible for creating local systems, properties and listening for Scene events.
+     * Do not invoke it directly.
      *
-     * @method Phaser.Time.Clock#boot
-     * @since 3.0.0
+     * @method Phaser.Time.Clock#start
+     * @private
+     * @since 3.4.1
      */
-    boot: function ()
+    start: function ()
     {
         var eventEmitter = this.systems.events;
 
         eventEmitter.on('preupdate', this.preUpdate, this);
         eventEmitter.on('update', this.update, this);
-        eventEmitter.on('shutdown', this.shutdown, this);
-        eventEmitter.on('destroy', this.destroy, this);
+        eventEmitter.once('shutdown', this.shutdown, this);
+        eventEmitter.once('destroy', this.destroy, this);
     },
 
     /**
@@ -313,9 +313,11 @@ var Clock = new Class({
     },
 
     /**
-     * [description]
+     * The Scene that owns this plugin is shutting down.
+     * We need to kill and reset all internal properties as well as stop listening to Scene events.
      *
      * @method Phaser.Time.Clock#shutdown
+     * @private
      * @since 3.0.0
      */
     shutdown: function ()
@@ -340,19 +342,30 @@ var Clock = new Class({
         this._active.length = 0;
         this._pendingRemoval.length = 0;
         this._pendingInsertion.length = 0;
+
+        var eventEmitter = this.systems.events;
+
+        eventEmitter.off('preupdate', this.preUpdate, this);
+        eventEmitter.off('update', this.update, this);
+        eventEmitter.off('shutdown', this.shutdown, this);
     },
 
     /**
-     * [description]
+     * The Scene that owns this plugin is being destroyed.
+     * We need to shutdown and then kill off all external references.
      *
      * @method Phaser.Time.Clock#destroy
+     * @private
      * @since 3.0.0
      */
     destroy: function ()
     {
         this.shutdown();
 
-        this.scene = undefined;
+        this.scene.sys.events.off('start', this.start, this);
+
+        this.scene = null;
+        this.systems = null;
     }
 
 });

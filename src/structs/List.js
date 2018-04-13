@@ -668,6 +668,8 @@ var List = new Class({
     shutdown: function ()
     {
         this.removeAll();
+
+        this.list = [];
     },
 
     /**
@@ -680,9 +682,9 @@ var List = new Class({
     {
         this.removeAll();
 
-        this.list = [];
-
         this.parent = null;
+        this.addCallback = null;
+        this.removeCallback = null;
     },
 
     /**

@@ -216,7 +216,8 @@ var World = new Class({
             this.createDebugGraphic();
         }
 
-        this.setEventsProxy();
+        scene.sys.events.on('start', this.setEventsProxy, this);
+        // this.setEventsProxy();
     },
 
     /**

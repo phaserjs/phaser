@@ -155,7 +155,9 @@ var GameObject = new Class({
         this.body = null;
 
         //  Tell the Scene to re-sort the children
-        this.scene.sys.queueDepthSort();
+        scene.sys.queueDepthSort();
+
+        scene.sys.events.once('shutdown', this.destroy, this);
     },
 
     /**

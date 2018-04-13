@@ -51,11 +51,6 @@ var MatterPhysics = new Class({
          */
         this.systems = scene.sys;
 
-        if (!scene.sys.settings.isBooted)
-        {
-            scene.sys.events.once('boot', this.boot, this);
-        }
-
         /**
          * [description]
          *
@@ -82,6 +77,44 @@ var MatterPhysics = new Class({
          * @since 3.0.0
          */
         this.add;
+
+        //  Matter plugins
+
+        if (GetValue(this.config, 'plugins.attractors', false))
+        {
+            Plugin.register(MatterAttractors);
+            Plugin.use(MatterLib, MatterAttractors);
+        }
+
+        if (GetValue(this.config, 'plugins.wrap', false))
+        {
+            Plugin.register(MatterWrap);
+            Plugin.use(MatterLib, MatterWrap);
+        }
+
+        scene.sys.events.on('start', this.start, this);
+    },
+
+    /**
+     * This method is called automatically by the Scene when it is starting up.
+     * It is responsible for creating local systems, properties and listening for Scene events.
+     * Do not invoke it directly.
+     *
+     * @method Phaser.Physics.Matter.MatterPhysics#start
+     * @private
+     * @since 3.4.1
+     */
+    start: function ()
+    {
+        this.world = new World(this.scene, config);
+        this.add = new Factory(this.world);
+
+        var eventEmitter = this.systems.events;
+
+        eventEmitter.on('update', this.world.update, this.world);
+        eventEmitter.on('postupdate', this.world.postUpdate, this.world);
+        eventEmitter.once('shutdown', this.shutdown, this);
+        eventEmitter.once('destroy', this.destroy, this);
     },
 
     /**
@@ -103,41 +136,6 @@ var MatterPhysics = new Class({
         );
 
         return config;
-    },
-
-    /**
-     * [description]
-     *
-     * @method Phaser.Physics.Matter.MatterPhysics#boot
-     * @since 3.0.0
-     */
-    boot: function ()
-    {
-        var config = this.config;
-
-        this.world = new World(this.scene, config);
-        this.add = new Factory(this.world);
-
-        //  Matter plugins
-
-        if (GetValue(config, 'plugins.attractors', false))
-        {
-            Plugin.register(MatterAttractors);
-            Plugin.use(MatterLib, MatterAttractors);
-        }
-
-        if (GetValue(config, 'plugins.wrap', false))
-        {
-            Plugin.register(MatterWrap);
-            Plugin.use(MatterLib, MatterWrap);
-        }
-
-        var eventEmitter = this.systems.events;
-
-        eventEmitter.on('update', this.world.update, this.world);
-        eventEmitter.on('postupdate', this.world.postUpdate, this.world);
-        eventEmitter.on('shutdown', this.shutdown, this);
-        eventEmitter.on('destroy', this.destroy, this);
     },
 
     /**
@@ -265,25 +263,45 @@ var MatterPhysics = new Class({
     },
 
     /**
-     * [description]
+     * The Scene that owns this plugin is shutting down.
+     * We need to kill and reset all internal properties as well as stop listening to Scene events.
      *
      * @method Phaser.Physics.Matter.MatterPhysics#shutdown
+     * @private
      * @since 3.0.0
      */
     shutdown: function ()
     {
         this.world.shutdown();
+
+        var eventEmitter = this.systems.events;
+
+        eventEmitter.off('update', this.world.update, this.world);
+        eventEmitter.off('postupdate', this.world.postUpdate, this.world);
+        eventEmitter.off('shutdown', this.shutdown, this);
     },
 
     /**
-     * [description]
+     * The Scene that owns this plugin is being destroyed.
+     * We need to shutdown and then kill off all external references.
      *
      * @method Phaser.Physics.Matter.MatterPhysics#destroy
+     * @private
      * @since 3.0.0
      */
     destroy: function ()
     {
+        this.shutdown();
+
+        this.add.destroy();
         this.world.destroy();
+
+        this.scene.sys.events.off('start', this.start, this);
+
+        this.scene = null;
+        this.systems = null;
+        this.world = null;
+        this.add = null;
     }
 
 });

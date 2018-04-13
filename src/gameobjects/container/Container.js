@@ -1215,7 +1215,7 @@ var Container = new Class({
      */
     destroy: function ()
     {
-        this.removeAll(this.exclusive);
+        this.removeAll(!!this.exclusive);
 
         this.localTransform.destroy();
         this.tempTransformMatrix.destroy();
