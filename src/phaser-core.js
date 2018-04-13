@@ -17,14 +17,10 @@ var Phaser = {
 
     Animation: require('./animations'),
     Cache: require('./cache'),
-    Cameras: {
-        Scene2D: require('./cameras/2d')
-    },
+    Cameras: { Scene2D: require('./cameras/2d') },
     Class: require('./utils/Class'),
     Data: require('./data'),
-    Display: {
-        Masks: require('./display/mask')
-    },
+    Display: { Masks: require('./display/mask') },
     EventEmitter: require('./events/EventEmitter'),
     Game: require('./boot/Game'),
     GameObjects: {
@@ -69,7 +65,7 @@ var Phaser = {
             SpriteSheetFile: require('./loader/filetypes/SpriteSheetFile'),
             TextFile: require('./loader/filetypes/TextFile'),
             XMLFile: require('./loader/filetypes/XMLFile')
-        },
+        }
     },
     Math: {
         Between: require('./math/Between'),

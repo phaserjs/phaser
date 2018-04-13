@@ -511,7 +511,7 @@ var Factory = new Class({
      */
     pointerConstraint: function (options)
     {
-        if (options === undefined) { options = {} };
+        if (options === undefined) { options = {}; }
 
         if (!options.hasOwnProperty('render'))
         {

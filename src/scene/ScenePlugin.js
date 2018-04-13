@@ -604,7 +604,7 @@ var ScenePlugin = new Class({
      * @private
      * @since 3.0.0
      */
-    shutdown: function (key)
+    shutdown: function ()
     {
         var eventEmitter = this.systems.events;
 
