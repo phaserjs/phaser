@@ -5,7 +5,7 @@
 ### Bug Fixes
 
 * MatterEvents.off() would cause a TypeError if you destroyed the Matter world. Fix #3562 (thanks @pixelscripter)
-
+* DynamicBitmapText was missing the `letterSpacing` property, causing it to only render the first character in WebGL (thanks @Antriel)
 
 ## Version 3.4.0 - Miyako - 12th April 2018
 
