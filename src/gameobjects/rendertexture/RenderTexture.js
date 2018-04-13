@@ -124,7 +124,7 @@ var RenderTexture = new Class({
             this.clear = RenderTextureCanvas.clear;
             this.draw = RenderTextureCanvas.draw;
             this.drawFrame = RenderTextureCanvas.drawFrame;
-            this.canvas = CanvasPool.create2D(null, width, height);
+            this.canvas = CanvasPool.create2D(this, width, height);
             this.context = this.canvas.getContext('2d');
         }
 
