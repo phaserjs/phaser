@@ -106,7 +106,7 @@ var MatterPhysics = new Class({
      */
     start: function ()
     {
-        this.world = new World(this.scene, config);
+        this.world = new World(this.scene, this.config);
         this.add = new Factory(this.world);
 
         var eventEmitter = this.systems.events;
