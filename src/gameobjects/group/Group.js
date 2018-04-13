@@ -483,6 +483,11 @@ var Group = new Class({
     {
         if (addToScene === undefined) { addToScene = false; }
 
+        if (this.isFull())
+        {
+            return this;
+        }
+
         this.children.set(child);
 
         if (this.createCallback)
