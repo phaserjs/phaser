@@ -894,7 +894,7 @@ var World = new Class({
      */
     shutdown: function ()
     {
-        MatterEvents.off();
+        MatterEvents.off(this.engine);
 
         this.removeAllListeners();
 

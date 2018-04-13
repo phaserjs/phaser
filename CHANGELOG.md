@@ -1,5 +1,12 @@
 # Change Log
 
+## Version 3.4.1 - Miyako - 13th April 2018
+
+### Bug Fixes
+
+* MatterEvents.off() would cause a TypeError if you destroyed the Matter world. Fix #3562 (thanks @pixelscripter)
+
+
 ## Version 3.4.0 - Miyako - 12th April 2018
 
 ### New Features
