@@ -511,6 +511,13 @@ var Factory = new Class({
      */
     pointerConstraint: function (options)
     {
+        if (options === undefined) { options = {} };
+
+        if (!options.hasOwnProperty('render'))
+        {
+            options.render = { visible: false };
+        }
+
         var pointerConstraint = new PointerConstraint(this.scene, this.world, options);
 
         this.world.add(pointerConstraint.constraint);
