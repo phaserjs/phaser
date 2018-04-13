@@ -429,16 +429,28 @@ var SceneManager = new Class({
      */
     bootScene: function (scene)
     {
+        var sys = scene.sys;
+        var settings = sys.settings;
+
         if (scene.init)
         {
-            scene.init.call(scene, scene.sys.settings.data);
+            scene.init.call(scene, settings.data);
+
+            if (settings.isTransition && sys.events.listenerCount('transitionstart') > 0)
+            {
+                //  There are listeners waiting for the event after 'init' has run, so emit it
+                sys.events.emit('transitionstart', settings.transitionFrom);
+
+                settings.isTransition = false;
+                settings.transitionFrom = null;
+            }
         }
 
         var loader;
 
-        if (scene.sys.load)
+        if (sys.load)
         {
-            loader = scene.sys.load;
+            loader = sys.load;
 
             loader.reset();
         }
@@ -454,7 +466,7 @@ var SceneManager = new Class({
             }
             else
             {
-                scene.sys.settings.status = CONST.LOADING;
+                settings.status = CONST.LOADING;
 
                 //  Start the loader going as we have something in the queue
                 loader.once('complete', this.loadComplete, this);
@@ -583,14 +595,26 @@ var SceneManager = new Class({
      */
     create: function (scene)
     {
+        var sys = scene.sys;
+        var settings = sys.settings;
+
         if (scene.create)
         {
             scene.sys.settings.status = CONST.CREATING;
 
             scene.create.call(scene, scene.sys.settings.data);
+
+            if (settings.isTransition && sys.events.listenerCount('transitionstart') > 0)
+            {
+                //  There are listeners waiting for the event after 'init' has run, so emit it
+                sys.events.emit('transitionstart', settings.transitionFrom);
+
+                settings.isTransition = false;
+                settings.transitionFrom = null;
+            }
         }
 
-        scene.sys.settings.status = CONST.RUNNING;
+        settings.status = CONST.RUNNING;
     },
 
     /**

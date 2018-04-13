@@ -34,6 +34,8 @@ var InjectionMap = require('./InjectionMap');
  * @property {boolean} active - [description]
  * @property {boolean} visible - [description]
  * @property {boolean} isBooted - [description]
+ * @property {boolean} isTransition - [description]
+ * @property {?Phaser.Scene} transitionFrom - [description]
  * @property {object} data - [description]
  * @property {(false|LoaderFileObject[])} files - [description]
  * @property {?(InputJSONCameraObject|InputJSONCameraObject[])} cameras - [description]
@@ -76,6 +78,9 @@ var Settings = {
             visible: GetValue(config, 'visible', true),
 
             isBooted: false,
+
+            isTransition: false,
+            transitionFrom: null,
 
             //  Loader payload array
 

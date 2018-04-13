@@ -84,11 +84,11 @@ var ScenePlugin = new Class({
          * Transition elapsed timer.
          *
          * @name Phaser.Scenes.ScenePlugin#_target
-         * @type {Phaser.Scenes.Scene}
+         * @type {?Phaser.Scenes.Scene}
          * @private
          * @since 3.4.1
          */
-        this._target;
+        this._target = null;
 
         /**
          * Transition duration.
@@ -216,10 +216,17 @@ var ScenePlugin = new Class({
     transition: function (key, duration, moveAbove, callback, context)
     {
         if (duration === undefined) { duration = 1000; }
+        if (moveAbove === undefined) { moveAbove = false; }
+        if (context === undefined) { context = this.scene; }
 
         var target = this.get(key);
 
-        if (target && this.settings.status === CONST.RUNNING && this._duration === 0)
+        if (
+            target &&
+            !target.sys.isActive() &&
+            !target.sys.settings.isTransition &&
+            this.settings.status === CONST.RUNNING &&
+            !this._target)
         {
             this._elapsed = 0;
             this._target = target;
@@ -227,13 +234,15 @@ var ScenePlugin = new Class({
             this._onUpdate = callback;
             this._onUpdateScope = context;
 
-            //  Do it via the manager?
-            // this.manager.transition(from, to, duration, moveAbove, data);
+            target.sys.settings.isTransition = true;
+            target.sys.settings.transitionFrom = this.scene;
 
             this.manager.start(key);
 
-            //  Needs storing in manager data, as fires too early here
-            target.sys.events.emit('transitionstart', this.scene, duration);
+            if (moveAbove)
+            {
+                this.manager.moveAbove(this.key, key);
+            }
 
             this.systems.events.on('postupdate', this.step, this);
         }
@@ -256,6 +265,11 @@ var ScenePlugin = new Class({
     {
         this._elapsed += delta;
 
+        if (this._onUpdate)
+        {
+            this._onUpdate.call(this._onUpdateScope, time, delta);
+        }
+
         if (this._elapsed >= this._duration)
         {
             //  Stop the step
@@ -263,6 +277,10 @@ var ScenePlugin = new Class({
 
             //  Notify target scene
             this._target.sys.events.emit('transitioncomplete', this.scene);
+
+            //  Clear the target out
+            this._target.sys.settings.isTransition = false;
+            this._target.sys.settings.transitionFrom = null;
 
             //  Stop this Scene
             this.manager.stop(this.key);
@@ -728,7 +746,9 @@ var ScenePlugin = new Class({
      */
     shutdown: function ()
     {
-        this._duration = 0;
+        this._target = null;
+        this._onUpdate = null;
+        this._onUpdateScope = null;
 
         var eventEmitter = this.systems.events;
 
