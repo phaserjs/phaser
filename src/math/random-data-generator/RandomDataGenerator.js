@@ -449,6 +449,30 @@ var RandomDataGenerator = new Class({
         }
 
         return [ '!rnd', this.c, this.s0, this.s1, this.s2 ].join(',');
+    },
+
+    /**
+     * A standard array shuffle implementation using the current seed.
+     *
+     * @method Phaser.Math.RandomDataGenerator#shuffle
+     * @since 3.4.0
+     * 
+     * @param {array[]} [array] - The array to be shuffled.
+     *
+     * @return {array} The shuffled array.
+     */
+    shuffle: function (array)
+    {
+        var len = array.length - 1;
+        for (var i = len; i > 0; i--)
+        {
+            var randomIndex = this.integerInRange(0, len);
+            var itemAtIndex = array[randomIndex];
+
+            array[randomIndex] = array[i];
+            array[i] = itemAtIndex;
+        }
+        return array;
     }
 
 });
