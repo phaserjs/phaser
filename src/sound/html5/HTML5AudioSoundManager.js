@@ -154,6 +154,13 @@ var HTML5AudioSoundManager = new Class({
      */
     unlock: function ()
     {
+        this.locked = 'ontouchstart' in window;
+
+        if(!this.locked)
+        {
+            return;
+        }
+
         var _this = this;
 
         var moved = false;
