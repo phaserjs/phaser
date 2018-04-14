@@ -172,11 +172,6 @@ var HTML5AudioSoundManager = new Class({
 
         var unlock = function ()
         {
-            if (!_this.game.cache.audio.entries.size)
-            {
-                return;
-            }
-
             if (moved)
             {
                 moved = false;
