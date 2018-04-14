@@ -192,8 +192,14 @@ var HTML5AudioSoundManager = new Class({
             {
                 for (var i = 0; i < tags.length; i++)
                 {
-                    lockedTags.push(tags[i]);
+                    var tag = tags[i];
+
+                    if (tag.dataset.locked === 'true')
+                    {
+                        lockedTags.push(tag);
+                    }
                 }
+
                 return true;
             });
 
