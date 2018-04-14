@@ -310,6 +310,7 @@ A beta release of the new Container Game Object arrives in this version. We've f
 * BaseSound, and by extension WebAudioSound and HTMLAudioSound, will now emit a `destroy` event when they are destroyed (thanks @rexrainbow)
 * A new property was added to the Scene config: `mapAdd` which is used to extend the default injection map of a scene instead of overwriting it (thanks @sebashwa)
 * GetBounds `getTopLeft`, `getTopRight`, `getBottomLeft` and `getBottomRight` all have a new optional argument `includeParent` which will factor in all ancestor transforms to the returned point.
+* LoaderPlugin will now emit a `filecomplete` event for each file when it fully completes loading.
 
 ### Bug Fixes
 
