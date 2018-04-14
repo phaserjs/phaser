@@ -203,6 +203,11 @@ var HTML5AudioSoundManager = new Class({
                 return true;
             });
 
+            if (lockedTags.length === 0)
+            {
+                return;
+            }
+
             var lastTag = lockedTags[lockedTags.length - 1];
 
             lastTag.oncanplaythrough = function ()
