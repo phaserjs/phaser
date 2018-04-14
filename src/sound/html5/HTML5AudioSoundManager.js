@@ -208,6 +208,12 @@ var HTML5AudioSoundManager = new Class({
             lastTag.oncanplaythrough = function ()
             {
                 lastTag.oncanplaythrough = null;
+
+                lockedTags.forEach(function (tag)
+                {
+                    tag.dataset.locked = 'false';
+                });
+
                 _this.unlocked = true;
             };
 
