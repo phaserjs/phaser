@@ -61,11 +61,30 @@ var InputPlugin = new Class({
         /**
          * [description]
          *
+         * @name Phaser.Input.InputPlugin#settings
+         * @type {SettingsObject}
+         * @since 3.4.1
+         */
+        this.settings = scene.sys.settings;
+
+        /**
+         * [description]
+         *
          * @name Phaser.Input.InputPlugin#manager
          * @type {Phaser.Input.InputManager}
          * @since 3.0.0
          */
         this.manager = scene.sys.game.input;
+
+        /**
+         * [description]
+         *
+         * @name Phaser.Input.InputPlugin#enabled
+         * @type {boolean}
+         * @default true
+         * @since 3.4.1
+         */
+        this.enabled = true;
 
         /**
          * A reference to this.scene.sys.displayList (set in boot)
@@ -280,10 +299,16 @@ var InputPlugin = new Class({
     {
         var eventEmitter = this.systems.events;
 
+        eventEmitter.on('transitionstart', this.transitionIn, this);
+        eventEmitter.on('transitionout', this.transitionOut, this);
+        eventEmitter.on('transitioncomplete', this.transitionComplete, this);
         eventEmitter.on('preupdate', this.preUpdate, this);
         eventEmitter.on('update', this.update, this);
+
         eventEmitter.once('shutdown', this.shutdown, this);
         eventEmitter.once('destroy', this.destroy, this);
+
+        this.enabled = true;
 
         this.cameras = this.systems.cameras;
 
@@ -1434,8 +1459,8 @@ var InputPlugin = new Class({
     {
         var manager = this.manager;
 
-        //  Another Scene above this one has already consumed the input events
-        if (manager.globalTopOnly && manager.ignoreEvents)
+        //  Another Scene above this one has already consumed the input events, or we're in transition
+        if (!this.enabled || (manager.globalTopOnly && manager.ignoreEvents))
         {
             return;
         }
@@ -1515,6 +1540,45 @@ var InputPlugin = new Class({
     },
 
     /**
+     * The Scene that owns this plugin is transitioning in.
+     *
+     * @method Phaser.Input.InputPlugin#transitionIn
+     * @private
+     * @since 3.4.1
+     */
+    transitionIn: function ()
+    {
+        this.enabled = this.settings.transitionAllowInput;
+    },
+
+    /**
+     * The Scene that owns this plugin has finished transitioning in.
+     *
+     * @method Phaser.Input.InputPlugin#transitionComplete
+     * @private
+     * @since 3.4.1
+     */
+    transitionComplete: function ()
+    {
+        if (!this.settings.transitionAllowInput)
+        {
+            this.enabled = true;
+        }
+    },
+
+    /**
+     * The Scene that owns this plugin is transitioning out.
+     *
+     * @method Phaser.Input.InputPlugin#transitionOut
+     * @private
+     * @since 3.4.1
+     */
+    transitionOut: function ()
+    {
+        this.enabled = this.settings.transitionAllowInput;
+    },
+
+    /**
      * The Scene that owns this plugin is shutting down.
      * We need to kill and reset all internal properties as well as stop listening to Scene events.
      *
@@ -1539,6 +1603,10 @@ var InputPlugin = new Class({
         this.removeAllListeners();
 
         var eventEmitter = this.systems.events;
+
+        eventEmitter.off('transitionstart', this.transitionIn, this);
+        eventEmitter.off('transitionout', this.transitionOut, this);
+        eventEmitter.off('transitioncomplete', this.transitionComplete, this);
 
         eventEmitter.off('preupdate', this.preUpdate, this);
         eventEmitter.off('update', this.update, this);

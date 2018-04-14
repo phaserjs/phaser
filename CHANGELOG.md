@@ -5,6 +5,7 @@
 ### New Features
 
 * GameObject.ignoreDestroy allows you to control if a Game Object is destroyed or not. Setting the flag will tell it to ignore destroy requests from Groups, Containers and even the Scene itself. See the docs for more details.
+* The Scene Input Plugin has a new property `enabled` which allows you to enable or disable input processing on per Scene basis.
 
 ### Bug Fixes
 
