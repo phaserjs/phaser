@@ -6,6 +6,8 @@
 
 var Class = require('../utils/Class');
 var CONST = require('./const');
+var Clamp = require('../math/Clamp');
+var GetFastValue = require('../utils/object/GetFastValue');
 var PluginManager = require('../boot/PluginManager');
 
 /**
@@ -71,6 +73,16 @@ var ScenePlugin = new Class({
         this.manager = scene.sys.game.scene;
 
         /**
+         * If this Scene is currently transitioning to another, this holds
+         * the current percentage of the transition progress, between 0 and 1.
+         *
+         * @name Phaser.Scenes.ScenePlugin#transitionProgress
+         * @type {float}
+         * @since 3.4.1
+         */
+        this.transitionProgress = 0;
+
+        /**
          * Transition elapsed timer.
          *
          * @name Phaser.Scenes.ScenePlugin#_elapsed
@@ -120,6 +132,16 @@ var ScenePlugin = new Class({
          */
         this._onUpdateScope;
 
+        /**
+         * Will this Scene sleep (true) after the transition, or stop (false)
+         *
+         * @name Phaser.Scenes.ScenePlugin#_willSleep
+         * @type {boolean}
+         * @private
+         * @since 3.4.1
+         */
+        this._willSleep = false;
+
         scene.sys.events.on('start', this.pluginStart, this);
     },
 
@@ -134,6 +156,8 @@ var ScenePlugin = new Class({
      */
     pluginStart: function ()
     {
+        this._target = null;
+
         var eventEmitter = this.systems.events;
 
         eventEmitter.once('shutdown', this.shutdown, this);
@@ -198,56 +222,120 @@ var ScenePlugin = new Class({
     },
 
     /**
-     * BETA ( + fadeTo )
-     * Fire start and complete events in target Scene + this Scene.
-     * const leaving
+     * @typedef {object} SceneTransitionConfig
+     * 
+     * @property {string} target - The Scene key to transition to.
+     * @property {integer} [duration=1000] - The duration, in ms, for the transition to last.
+     * @property {boolean} [sleep=false] - Will the Scene responsible for the transition be sent to sleep on completion (`true`), or stopped? (`false`)
+     * @property {boolean} [allowInput=false] - Will the Scenes Input system be able to process events while it is transitioning in or out?
+     * @property {boolean} [moveAbove] - More the target Scene to be above this one before the transition starts.
+     * @property {boolean} [moveBelow] - More the target Scene to be below this one before the transition starts.
+     * @property {function} [onUpdate] - This callback is invoked every frame for the duration of the transition.
+     * @property {any} [onUpdateScope] - The context in which the callback is invoked.
+     */
+
+    /**
+     * This will start a transition from the current Scene to the target Scene given.
+     * 
+     * The transition will last for the duration specified in milliseconds.
+     * 
+     * You can have the target Scene moved above or below this one in the display list.
+     * 
+     * You can specify an update callback. This callback will be invoked _every frame_ for the duration
+     * of the transition.
      *
+     * This Scene can either be sent to sleep at the end of the transition, or stopped. The default is to stop.
+     * 
+     * There are also 3 transition related events: This scene will emit the event `transitionto` when
+     * the transition begins, which is typically the frame after calling this method. The target Scene
+     * will emit the event `transitionstart` when that Scene's `init` and / or `create` methods are called.
+     * It will then emit the event `transitioncomplete` when the duration of the transition is up and this
+     * Scene has been stopped.
+     * 
      * @method Phaser.Scenes.ScenePlugin#transition
      * @since 3.4.1
      *
-     * @param {string} key - The Scene key to transition to.
-     * @param {integer} [duration=1000] - The duration, in ms, for the transition to last.
-     * @param {boolean} [moveAbove=false] - More the target Scene to be above this one before the transition starts. `false` means no change to the Scene display order.
-     * @param {function} [callback] - This callback is invoked every frame for the duration of the transition.
-     * @param {any} [context] - The context in which the callback is invoked.
+     * @param {SceneTransitionConfig} config - The transition configuration object.
      *
-     * @return {Phaser.Scenes.ScenePlugin} This ScenePlugin object.
+     * @return {boolean} `true` is the transition was started, otherwise `false`.
      */
-    transition: function (key, duration, moveAbove, callback, context)
+    transition: function (config)
     {
-        if (duration === undefined) { duration = 1000; }
-        if (moveAbove === undefined) { moveAbove = false; }
-        if (context === undefined) { context = this.scene; }
+        if (config === undefined) { config = {}; }
 
-        var target = this.get(key);
+        var key = GetFastValue(config, 'target', false);
 
-        if (
-            target &&
-            !target.sys.isActive() &&
-            !target.sys.settings.isTransition &&
-            this.settings.status === CONST.RUNNING &&
-            !this._target)
+        var target = this.manager.getScene(key);
+
+        if (!key || !this.checkValidTransition(target))
         {
-            this._elapsed = 0;
-            this._target = target;
-            this._duration = duration;
-            this._onUpdate = callback;
-            this._onUpdateScope = context;
-
-            target.sys.settings.isTransition = true;
-            target.sys.settings.transitionFrom = this.scene;
-
-            this.manager.start(key);
-
-            if (moveAbove)
-            {
-                this.manager.moveAbove(this.key, key);
-            }
-
-            this.systems.events.on('postupdate', this.step, this);
+            return false;
         }
 
-        return this;
+        var duration = GetFastValue(config, 'duration', 1000);
+
+        this._elapsed = 0;
+        this._target = target;
+        this._duration = duration;
+        this._willSleep = GetFastValue(config, 'sleep', false);
+
+        var callback = GetFastValue(config, 'onUpdate', null);
+
+        if (callback)
+        {
+            this._onUpdate = callback;
+            this._onUpdateScope = GetFastValue(config, 'onUpdateScope', this.scene);
+        }
+
+        var allowInput = GetFastValue(config, 'allowInput', false);
+
+        this.settings.transitionAllowInput = allowInput;
+
+        var targetSettings = target.sys.settings;
+
+        targetSettings.isTransition = true;
+        targetSettings.transitionFrom = this.scene;
+        targetSettings.transitionDuration = duration;
+        targetSettings.transitionAllowInput = allowInput;
+
+        if (GetFastValue(config, 'moveAbove', false))
+        {
+            this.manager.moveAbove(this.key, key);
+        }
+        else if (GetFastValue(config, 'moveBelow', false))
+        {
+            this.manager.moveBelow(this.key, key);
+        }
+
+        this.manager.start(key);
+
+        this.systems.events.emit('transitionout', target, duration);
+
+        this.systems.events.on('update', this.step, this);
+
+        return true;
+    },
+
+    /**
+     * Checks to see if this Scene can transition to the target Scene or not.
+     *
+     * @method Phaser.Scenes.ScenePlugin#checkValidTransition
+     * @private
+     * @since 3.4.1
+     *
+     * @param {Phaser.Scene} target - The Scene to test against.
+     *
+     * @return {boolean} `true` if this Scene can transition, otherwise `false`.
+     */
+    checkValidTransition: function (target)
+    {
+        //  Not a valid target if it doesn't exist, isn't active or is already transitioning in or out
+        if (!target || target.sys.isActive() || target.sys.isTransitioning() || target === this.scene || this.systems.isTransitioning())
+        {
+            return false;
+        }
+
+        return true;
     },
 
     /**
@@ -265,24 +353,57 @@ var ScenePlugin = new Class({
     {
         this._elapsed += delta;
 
+        this.transitionProgress = Clamp(this._elapsed / this._duration, 0, 1);
+
         if (this._onUpdate)
         {
-            this._onUpdate.call(this._onUpdateScope, time, delta);
+            this._onUpdate.call(this._onUpdateScope, this.transitionProgress);
         }
 
         if (this._elapsed >= this._duration)
         {
-            //  Stop the step
-            this.systems.events.off('postupdate', this.step, this);
+            this.transitionComplete();
+        }
+    },
 
-            //  Notify target scene
-            this._target.sys.events.emit('transitioncomplete', this.scene);
+    /**
+     * Called by `step` when the transition out of this scene to another is over.
+     *
+     * @method Phaser.Scenes.ScenePlugin#transitionComplete
+     * @private
+     * @since 3.4.1
+     */
+    transitionComplete: function ()
+    {
+        var targetSys = this._target.sys;
 
-            //  Clear the target out
-            this._target.sys.settings.isTransition = false;
-            this._target.sys.settings.transitionFrom = null;
+        //  Stop the step
+        this.systems.events.off('update', this.step, this);
 
-            //  Stop this Scene
+        //  Notify target scene
+        targetSys.events.emit('transitioncomplete', this.scene);
+
+        //  Incase they forget to use `once` instead of `on`
+        targetSys.events.off('transitioncomplete');
+
+        this.systems.events.off('transitionout');
+
+        //  Clear the target out
+        targetSys.settings.isTransition = false;
+        targetSys.settings.transitionFrom = null;
+
+        this._duration = 0;
+        this._target = null;
+        this._onUpdate = null;
+        this._onUpdateScope = null;
+
+        //  Stop this Scene
+        if (this._willSleep)
+        {
+            this.systems.sleep();
+        }
+        else
+        {
             this.manager.stop(this.key);
         }
     },
@@ -746,14 +867,11 @@ var ScenePlugin = new Class({
      */
     shutdown: function ()
     {
-        this._target = null;
-        this._onUpdate = null;
-        this._onUpdateScope = null;
-
         var eventEmitter = this.systems.events;
 
         eventEmitter.off('shutdown', this.shutdown, this);
         eventEmitter.off('postupdate', this.step, this);
+        eventEmitter.off('transitionout');
     },
 
     /**
