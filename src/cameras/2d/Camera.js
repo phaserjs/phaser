@@ -6,6 +6,7 @@
 
 var Class = require('../../utils/Class');
 var DegToRad = require('../../math/DegToRad');
+var EventEmitter = require('eventemitter3');
 var Rectangle = require('../../geom/rectangle/Rectangle');
 var TransformMatrix = require('../../gameobjects/components/TransformMatrix');
 var ValueToColor = require('../../display/color/ValueToColor');
@@ -43,6 +44,7 @@ var Vector2 = require('../../math/Vector2');
  * [description]
  *
  * @class Camera
+ * @extends Phaser.Events.EventEmitter
  * @memberOf Phaser.Cameras.Scene2D
  * @constructor
  * @since 3.0.0
@@ -54,10 +56,14 @@ var Vector2 = require('../../math/Vector2');
  */
 var Camera = new Class({
 
+    Extends: EventEmitter,
+
     initialize:
 
     function Camera (x, y, width, height)
     {
+        EventEmitter.call(this);
+
         /**
          * A reference to the Scene this camera belongs to.
          *
@@ -217,16 +223,6 @@ var Camera = new Class({
         this.transparent = true;
 
         /**
-         * TODO
-         *
-         * @name Phaser.Cameras.Scene2D.Camera#clearBeforeRender
-         * @type {boolean}
-         * @default true
-         * @since 3.0.0
-         */
-        this.clearBeforeRender = true;
-
-        /**
          * The background color of this Camera. Only used if `transparent` is `false`.
          *
          * @name Phaser.Cameras.Scene2D.Camera#backgroundColor
@@ -236,7 +232,7 @@ var Camera = new Class({
         this.backgroundColor = ValueToColor('rgba(0,0,0,0)');
 
         /**
-         * Should the camera cull Game Objects before rendering?
+         * Should the camera cull Game Objects before checking them for input hit tests?
          * In some special cases it may be beneficial to disable this.
          *
          * @name Phaser.Cameras.Scene2D.Camera#disableCull
@@ -256,60 +252,6 @@ var Camera = new Class({
          */
         this.culledObjects = [];
 
-        /**
-         * [description]
-         *
-         * @name Phaser.Cameras.Scene2D.Camera#_shakeDuration
-         * @type {number}
-         * @private
-         * @default 0
-         * @since 3.0.0
-         */
-        this._shakeDuration = 0;
-
-        /**
-         * [description]
-         *
-         * @name Phaser.Cameras.Scene2D.Camera#_shakeIntensity
-         * @type {number}
-         * @private
-         * @default 0
-         * @since 3.0.0
-         */
-        this._shakeIntensity = 0;
-
-        /**
-         * [description]
-         *
-         * @name Phaser.Cameras.Scene2D.Camera#_shakeOffsetX
-         * @type {number}
-         * @private
-         * @default 0
-         * @since 3.0.0
-         */
-        this._shakeOffsetX = 0;
-
-        /**
-         * [description]
-         *
-         * @name Phaser.Cameras.Scene2D.Camera#_shakeOffsetY
-         * @type {number}
-         * @private
-         * @default 0
-         * @since 3.0.0
-         */
-        this._shakeOffsetY = 0;
-
-        /**
-         * [description]
-         *
-         * @name Phaser.Cameras.Scene2D.Camera#_shakeCallback
-         * @type {?Camera2DCallback}
-         * @private
-         * @default null
-         * @since 3.3.0
-         */
-        this._shakeCallback = null;
 
         /**
          * [description]
@@ -804,28 +746,12 @@ var Camera = new Class({
      * @param {number} [intensity=0.05] - The intensity of the shake.
      * @param {boolean} [force=false] - Force the shake effect to start immediately, even if already running.
      * @param {function} [callback] - An optional callback to invoke when the shake completes. Will be sent one argument - a reference to this camera.
+     * @param {any} [context] - The context in which the callback is invoked. Defaults to the Scene to which the Camera belongs.
      *
      * @return {Phaser.Cameras.Scene2D.Camera} This Camera instance.
      */
-    shake: function (duration, intensity, force, callback)
+    shake: function (duration, intensity, force, callback, context)
     {
-        if (!duration) { duration = Number.MIN_VALUE; }
-        if (intensity === undefined) { intensity = 0.05; }
-        if (force === undefined) { force = false; }
-        if (callback === undefined) { callback = null; }
-
-        if (!force && (this._shakeOffsetX !== 0 || this._shakeOffsetY !== 0))
-        {
-            return this;
-        }
-
-        this._shakeDuration = duration;
-        this._shakeIntensity = intensity;
-        this._shakeOffsetX = 0;
-        this._shakeOffsetY = 0;
-        this._shakeCallback = callback;
-
-        return this;
     },
 
     /**
@@ -987,7 +913,8 @@ var Camera = new Class({
         matrix.rotate(this.rotation);
         matrix.scale(zoom, zoom);
         matrix.translate(-originX, -originY);
-        matrix.translate(this._shakeOffsetX, this._shakeOffsetY);
+
+        //  shake.update
     },
 
     /**
@@ -1333,9 +1260,8 @@ var Camera = new Class({
     {
         this._flashAlpha = 0;
         this._fadeAlpha = 0;
-        this._shakeOffsetX = 0;
-        this._shakeOffsetY = 0;
-        this._shakeDuration = 0;
+
+        //  shake.reset
 
         return this;
     },
@@ -1391,52 +1317,36 @@ var Camera = new Class({
             }
         }
 
-        if (this._shakeDuration > 0)
-        {
-            var intensity = this._shakeIntensity;
+        //  shake.update
 
-            this._shakeDuration -= delta;
-
-            if (this._shakeDuration <= 0)
-            {
-                this._shakeOffsetX = 0;
-                this._shakeOffsetY = 0;
-
-                if (this._shakeCallback)
-                {
-                    //  Do this in case the callback shakes again (otherwise we'd overwrite the new callback)
-                    var shakeCallback = this._shakeCallback;
-
-                    this._shakeCallback = null;
-
-                    shakeCallback(this);
-                }
-            }
-            else
-            {
-                this._shakeOffsetX = (Math.random() * intensity * this.width * 2 - intensity * this.width) * this.zoom;
-                this._shakeOffsetY = (Math.random() * intensity * this.height * 2 - intensity * this.height) * this.zoom;
-
-                if (this.roundPixels)
-                {
-                    this._shakeOffsetX |= 0;
-                    this._shakeOffsetY |= 0;
-                }
-            }
-        }
     },
+
+    /**
+     * This event is fired when a camera is destroyed by the Camera Manager.
+     *
+     * @event CameraDestroyEvent
+     * @param {Phaser.Cameras.Scene2D.Camera} camera - The camera that was destroyed.
+     */
 
     /**
      * [description]
      *
      * @method Phaser.Cameras.Scene2D.Camera#destroy
+     * @fires CameraDestroyEvent
      * @since 3.0.0
      */
     destroy: function ()
     {
+        this.emit('cameradestroy', this);
+
+        this.removeAllListeners();
+
+        this.matrix.destroy();
+
         this._bounds = undefined;
-        this.matrix = undefined;
+
         this.culledObjects = [];
+
         this.scene = undefined;
     }
 
