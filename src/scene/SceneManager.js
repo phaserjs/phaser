@@ -439,7 +439,9 @@ var SceneManager = new Class({
             if (settings.isTransition && sys.events.listenerCount('transitionstart') > 0)
             {
                 //  There are listeners waiting for the event after 'init' has run, so emit it
-                sys.events.emit('transitionstart', settings.transitionFrom);
+                sys.events.emit('transitionstart', settings.transitionFrom, settings.transitionDuration);
+                //  In case they forget to use `once`
+                sys.events.off('transitionstart');
 
                 settings.isTransition = false;
                 settings.transitionFrom = null;
@@ -607,7 +609,9 @@ var SceneManager = new Class({
             if (settings.isTransition && sys.events.listenerCount('transitionstart') > 0)
             {
                 //  There are listeners waiting for the event after 'init' has run, so emit it
-                sys.events.emit('transitionstart', settings.transitionFrom);
+                sys.events.emit('transitionstart', settings.transitionFrom, settings.transitionDuration);
+                //  In case they forget to use `once`
+                sys.events.off('transitionstart');
 
                 settings.isTransition = false;
                 settings.transitionFrom = null;
@@ -840,6 +844,10 @@ var SceneManager = new Class({
                 return this.keys[key];
             }
         }
+
+        //  What's the point? If you already have the Scene to pass in to this function, you have the Scene!
+
+        /*
         else
         {
             for (var i = 0; i < this.scenes.length; i++)
@@ -850,6 +858,7 @@ var SceneManager = new Class({
                 }
             }
         }
+        */
 
         return null;
     },
