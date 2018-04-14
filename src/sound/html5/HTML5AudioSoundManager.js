@@ -325,7 +325,7 @@ var HTML5AudioSoundManager = new Class({
      */
     isLocked: function (sound, prop, value)
     {
-        if (this.locked)
+        if (sound.tags[0].dataset.locked === 'true')
         {
             this.lockedActionsQueue.push({
                 sound: sound,
