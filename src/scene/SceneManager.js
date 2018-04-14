@@ -440,6 +440,7 @@ var SceneManager = new Class({
             {
                 //  There are listeners waiting for the event after 'init' has run, so emit it
                 sys.events.emit('transitionstart', settings.transitionFrom, settings.transitionDuration);
+
                 //  In case they forget to use `once`
                 sys.events.off('transitionstart');
 
@@ -610,6 +611,7 @@ var SceneManager = new Class({
             {
                 //  There are listeners waiting for the event after 'init' has run, so emit it
                 sys.events.emit('transitionstart', settings.transitionFrom, settings.transitionDuration);
+
                 //  In case they forget to use `once`
                 sys.events.off('transitionstart');
 
