@@ -36,6 +36,8 @@ var InjectionMap = require('./InjectionMap');
  * @property {boolean} isBooted - [description]
  * @property {boolean} isTransition - [description]
  * @property {?Phaser.Scene} transitionFrom - [description]
+ * @property {integer} transitionDuration - [description]
+ * @property {boolean} transitionAllowInput - [description]
  * @property {object} data - [description]
  * @property {(false|LoaderFileObject[])} files - [description]
  * @property {?(InputJSONCameraObject|InputJSONCameraObject[])} cameras - [description]
@@ -81,6 +83,8 @@ var Settings = {
 
             isTransition: false,
             transitionFrom: null,
+            transitionDuration: 0,
+            transitionAllowInput: true,
 
             //  Loader payload array
 
