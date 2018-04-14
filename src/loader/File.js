@@ -396,6 +396,7 @@ var File = new Class({
                 //  The linkfile has finished processing, and is waiting for this file, so let's do them both
                 this.state = CONST.FILE_COMPLETE;
                 this.linkFile.state = CONST.FILE_COMPLETE;
+                this.loader.emit('filecomplete', this)
             }
             else
             {
@@ -406,6 +407,7 @@ var File = new Class({
         else
         {
             this.state = CONST.FILE_COMPLETE;
+            this.loader.emit('filecomplete', this)
         }
     }
 
