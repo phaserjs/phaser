@@ -376,8 +376,10 @@ var Systems = new Class({
     /**
      * Send this Scene to sleep.
      *
-     * A sleeping Scene doesn't run it's update step or render anything, but it also isn't destroyed,
-     * or have any of its systems or children removed, meaning it can be re-activated at any point.
+     * A sleeping Scene doesn't run it's update step or render anything, but it also isn't shut down
+     * or have any of its systems or children removed, meaning it can be re-activated at any point and
+     * will carry on from where it left off. It also keeps everything in memory and events and callbacks
+     * from other Scenes may still invoke changes within it, so be careful what is left active.
      *
      * @method Phaser.Scenes.Systems#sleep
      * @since 3.0.0
@@ -440,6 +442,45 @@ var Systems = new Class({
     isActive: function ()
     {
         return (this.settings.status === CONST.RUNNING);
+    },
+
+    /**
+     * Is this Scene currently transitioning out to, or in from another Scene?
+     *
+     * @method Phaser.Scenes.Systems#isTransitioning
+     * @since 3.4.1
+     *
+     * @return {boolean} `true` if this Scene is currently transitioning, otherwise `false`.
+     */
+    isTransitioning: function ()
+    {
+        return (this.settings.isTransition || this.scenePlugin._target !== null);
+    },
+
+    /**
+     * Is this Scene currently transitioning out from itself to another Scene?
+     *
+     * @method Phaser.Scenes.Systems#isTransitionOut
+     * @since 3.4.1
+     *
+     * @return {boolean} `true` if this Scene is in transition to another Scene, otherwise `false`.
+     */
+    isTransitionOut: function ()
+    {
+        return (this.scenePlugin._target !== null && this.scenePlugin._duration > 0);
+    },
+
+    /**
+     * Is this Scene currently transitioning in from another Scene?
+     *
+     * @method Phaser.Scenes.Systems#isTransitionIn
+     * @since 3.4.1
+     *
+     * @return {boolean} `true` if this Scene is transitioning in from another Scene, otherwise `false`.
+     */
+    isTransitionIn: function ()
+    {
+        return (this.settings.isTransition);
     },
 
     /**
