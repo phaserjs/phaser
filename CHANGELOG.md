@@ -24,6 +24,8 @@
 * Every Plugin has been updated to correctly follow the same flow through the Scene lifecycle. Instead of listening for the Scene 'boot' event, which is only dispatched once (when the Scene is first created), they will now listen for the Scene 'start' event, which occurs every time the Scene is started. All plugins now consistently follow the same Shutdown and Destroy patterns too, meaning they tidy-up after themselves on a shutdown, not just a destroy. Overall, this change means that there should be less issues when returning to previously closed Scenes, as the plugins will restart themselves properly.
 * When shutting down a Scene all Game Objects that belong to the scene will now automatically destroy themselves. They would previously be removed from the display and update lists, but the objects themselves didn't self-destruct. You can control this on a per-object basis with the `ignoreDestroy` property.
 * A Matter Mouse Spring will disable debug draw of its constraint by default (you can override it by passing in your own config)
+* Removed Camera.clearBeforeRender property as it was never used internally. This setting can be enabled on a Game-wide basis.
+* Camera now extends the Event Emitter, allowing it to emit events.
 
 ### Examples, Documentation and TypeScript
 

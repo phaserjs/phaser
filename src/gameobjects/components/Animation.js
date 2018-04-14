@@ -712,7 +712,7 @@ var Animation = new Class({
      * @fires Phaser.GameObjects.Components.Animation#onCompleteEvent
      * @since 3.4.0
      *
-     * @param {integer} delay - The number of miliseconds to wait before stopping this animation.
+     * @param {integer} delay - The number of milliseconds to wait before stopping this animation.
      *
      * @return {Phaser.GameObjects.GameObject} The Game Object that owns this Animation Component.
      */

@@ -123,7 +123,7 @@ var ScenePlugin = new Class({
         this._onUpdate;
 
         /**
-         * Transition callback.
+         * Transition callback scope.
          *
          * @name Phaser.Scenes.ScenePlugin#_onUpdateScope
          * @type {object}
