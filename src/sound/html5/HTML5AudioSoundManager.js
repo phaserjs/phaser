@@ -96,7 +96,7 @@ var HTML5AudioSoundManager = new Class({
          * @private
          * @since 3.0.0
          */
-        this.lockedActionsQueue = this.locked ? [] : null;
+        this.lockedActionsQueue = null;
 
         /**
          * Property that actually holds the value of global mute
@@ -156,7 +156,11 @@ var HTML5AudioSoundManager = new Class({
     {
         this.locked = 'ontouchstart' in window;
 
-        if(!this.locked)
+        if(this.locked)
+        {
+            this.lockedActionsQueue = [];
+        }
+        else
         {
             return;
         }
@@ -249,6 +253,7 @@ var HTML5AudioSoundManager = new Class({
 
             this.lockedActionsQueue.length = 0;
             this.lockedActionsQueue = null;
+
         }, this);
 
         document.body.addEventListener('touchmove', detectMove, false);
