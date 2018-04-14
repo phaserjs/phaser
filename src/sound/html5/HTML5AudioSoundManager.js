@@ -186,18 +186,18 @@ var HTML5AudioSoundManager = new Class({
             document.body.removeEventListener('touchmove', detectMove);
             document.body.removeEventListener('touchend', unlock);
 
-            var allTags = [];
+            var lockedTags = [];
 
             _this.game.cache.audio.entries.each(function (key, tags)
             {
                 for (var i = 0; i < tags.length; i++)
                 {
-                    allTags.push(tags[i]);
+                    lockedTags.push(tags[i]);
                 }
                 return true;
             });
 
-            var lastTag = allTags[allTags.length - 1];
+            var lastTag = lockedTags[lockedTags.length - 1];
 
             lastTag.oncanplaythrough = function ()
             {
@@ -205,7 +205,7 @@ var HTML5AudioSoundManager = new Class({
                 _this.unlocked = true;
             };
 
-            allTags.forEach(function (tag)
+            lockedTags.forEach(function (tag)
             {
                 tag.load();
             });
