@@ -31,9 +31,9 @@ var HTML5AudioFile = new Class({
 
     initialize:
 
-        function HTML5AudioFile (key, url, path, config, locked)
+        function HTML5AudioFile (key, url, path, config)
         {
-            this.locked = locked;
+            this.locked = 'ontouchstart' in window;
 
             this.loaded = false;
 
