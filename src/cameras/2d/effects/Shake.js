@@ -6,6 +6,7 @@
 
 var Clamp = require('../../../math/Clamp');
 var Class = require('../../../utils/Class');
+var Vector2 = require('../../../math/Vector2');
 
 /**
  * @classdesc
@@ -65,17 +66,15 @@ var Shake = new Class({
         this.duration = 0;
 
         /**
-         * The intensity of the effect. Use small float values.
-         * The default when the effect starts is 0.05.
-         * You can modify this value while the effect is active to create
-         * more varied shake effects.
+         * The intensity of the effect. Use small float values. The default when the effect starts is 0.05.
+         * This is a Vector2 object, allowing you to control the shake intensity independently across x and y.
+         * You can modify this value while the effect is active to create more varied shake effects.
          *
          * @name Phaser.Cameras.Scene2D.Effects.Shake#intensity
-         * @type {float}
-         * @default 0
+         * @type {Phaser.Math.Vector2}
          * @since 3.5.0
          */
-        this.intensity = 0;
+        this.intensity = new Vector2();
 
         /**
          * If this effect is running this holds the current percentage of the progress, a value between 0 and 1.
@@ -166,7 +165,7 @@ var Shake = new Class({
      * @fires CameraShakeCompleteEvent
      * @since 3.5.0
      *
-     * @param {number} duration - The duration of the effect in milliseconds.
+     * @param {integer} [duration=100] - The duration of the effect in milliseconds.
      * @param {number} [intensity=0.05] - The intensity of the shake.
      * @param {boolean} [force=false] - Force the shake effect to start immediately, even if already running.
      * @param {function} [callback] - This callback will be invoked every frame for the duration of the effect.
@@ -177,7 +176,7 @@ var Shake = new Class({
      */
     start: function (duration, intensity, force, callback, context)
     {
-        if (!duration) { duration = Number.MIN_VALUE; }
+        if (duration === undefined) { duration = 100; }
         if (intensity === undefined) { intensity = 0.05; }
         if (force === undefined) { force = false; }
         if (callback === undefined) { callback = null; }
@@ -190,8 +189,16 @@ var Shake = new Class({
 
         this.isRunning = true;
         this.duration = duration;
-        this.intensity = intensity;
         this.progress = 0;
+
+        if (typeof intensity === 'number')
+        {
+            this.intensity.set(intensity);
+        }
+        else
+        {
+            this.intensity.set(intensity.x, intensity.y);
+        }
 
         this._elapsed = 0;
         this._offsetX = 0;
@@ -251,8 +258,8 @@ var Shake = new Class({
             var height = this.camera.height;
             var zoom = this.camera.zoom;
 
-            this._offsetX = (Math.random() * intensity * width * 2 - intensity * width) * zoom;
-            this._offsetY = (Math.random() * intensity * height * 2 - intensity * height) * zoom;
+            this._offsetX = (Math.random() * intensity.x * width * 2 - intensity.x * width) * zoom;
+            this._offsetY = (Math.random() * intensity.y * height * 2 - intensity.y * height) * zoom;
 
             if (this.camera.roundPixels)
             {
@@ -282,7 +289,7 @@ var Shake = new Class({
 
         this.isRunning = false;
 
-        this.camera.emit('camerashakecomplete', this, this.camera);
+        this.camera.emit('camerashakecomplete', this.camera, this);
     },
 
     /**
@@ -314,6 +321,7 @@ var Shake = new Class({
         this.reset();
 
         this.camera = null;
+        this.intensity = null;
     }
 
 });
