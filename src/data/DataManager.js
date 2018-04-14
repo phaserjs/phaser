@@ -92,7 +92,10 @@ var DataManager = new Class({
          */
         this._frozen = false;
 
-        this.events.once('destroy', this.destroy, this);
+        if (this.events)
+        {
+            this.events.once('destroy', this.destroy, this);
+        }
     },
 
     /**

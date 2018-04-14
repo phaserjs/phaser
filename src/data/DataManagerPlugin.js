@@ -30,7 +30,7 @@ var DataManagerPlugin = new Class({
 
     function DataManagerPlugin (scene)
     {
-        DataManager.call(this, this.scene, scene.sys.events);
+        DataManager.call(this, scene, scene.sys.events);
 
         /**
          * [description]
@@ -64,7 +64,12 @@ var DataManagerPlugin = new Class({
      */
     start: function ()
     {
-        this.events = this.scene.sys.events;
+        if (this.events)
+        {
+            this.events.off('destroy', this.destroy, this);
+        }
+
+        this.events = this.systems.events;
 
         var eventEmitter = this.systems.events;
 
@@ -98,7 +103,7 @@ var DataManagerPlugin = new Class({
     {
         DataManager.prototype.destroy.call(this);
 
-        this.scene.sys.events.off('start', this.start, this);
+        this.systems.events.off('start', this.start, this);
 
         this.scene = null;
         this.systems = null;
