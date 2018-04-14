@@ -307,7 +307,14 @@ var ScenePlugin = new Class({
             this.manager.moveBelow(this.key, key);
         }
 
-        this.manager.start(key);
+        if (target.sys.isSleeping())
+        {
+            target.sys.wake();
+        }
+        else
+        {
+            this.manager.start(key);
+        }
 
         this.systems.events.emit('transitionout', target, duration);
 
