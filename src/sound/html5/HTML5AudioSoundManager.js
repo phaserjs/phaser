@@ -227,7 +227,11 @@ var HTML5AudioSoundManager = new Class({
         {
             this.forEachActiveSound(function (sound)
             {
-                sound.duration = sound.tags[0].duration;
+                if(sound.duration === 0)
+                {
+                    sound.duration = sound.tags[0].duration;
+                }
+
                 sound.totalDuration = sound.tags[0].duration;
             });
 
