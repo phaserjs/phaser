@@ -110,8 +110,14 @@ var HTML5AudioFile = new Class({
             audio.dataset.name = this.key + ('0' + i).slice(-2); // Useful for debugging
             audio.dataset.used = 'false';
 
-            if (!this.locked)
+            if (this.locked)
             {
+                audio.dataset.locked = 'true';
+            }
+            else
+            {
+                audio.dataset.locked = 'false';
+
                 audio.preload = 'auto';
                 audio.oncanplaythrough = this.onProgress.bind(this);
                 audio.onerror = this.onError.bind(this);
