@@ -88,7 +88,7 @@ var ArcadePhysics = new Class({
      *
      * @method Phaser.Physics.Arcade.ArcadePhysics#start
      * @private
-     * @since 3.4.1
+     * @since 3.5.0
      */
     start: function ()
     {

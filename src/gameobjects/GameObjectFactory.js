@@ -78,7 +78,7 @@ var GameObjectFactory = new Class({
      *
      * @method Phaser.GameObjects.GameObjectFactory#start
      * @private
-     * @since 3.4.1
+     * @since 3.5.0
      */
     start: function ()
     {

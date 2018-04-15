@@ -63,7 +63,7 @@ var CameraManager = new Class({
      *
      * @method Phaser.Cameras.Sprite3D.CameraManager#start
      * @private
-     * @since 3.4.1
+     * @since 3.5.0
      */
     start: function ()
     {

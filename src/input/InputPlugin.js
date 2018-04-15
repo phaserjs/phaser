@@ -63,7 +63,7 @@ var InputPlugin = new Class({
          *
          * @name Phaser.Input.InputPlugin#settings
          * @type {SettingsObject}
-         * @since 3.4.1
+         * @since 3.5.0
          */
         this.settings = scene.sys.settings;
 
@@ -82,7 +82,7 @@ var InputPlugin = new Class({
          * @name Phaser.Input.InputPlugin#enabled
          * @type {boolean}
          * @default true
-         * @since 3.4.1
+         * @since 3.5.0
          */
         this.enabled = true;
 
@@ -293,7 +293,7 @@ var InputPlugin = new Class({
      *
      * @method Phaser.Input.InputPlugin#start
      * @private
-     * @since 3.4.1
+     * @since 3.5.0
      */
     start: function ()
     {
@@ -1544,7 +1544,7 @@ var InputPlugin = new Class({
      *
      * @method Phaser.Input.InputPlugin#transitionIn
      * @private
-     * @since 3.4.1
+     * @since 3.5.0
      */
     transitionIn: function ()
     {
@@ -1556,7 +1556,7 @@ var InputPlugin = new Class({
      *
      * @method Phaser.Input.InputPlugin#transitionComplete
      * @private
-     * @since 3.4.1
+     * @since 3.5.0
      */
     transitionComplete: function ()
     {
@@ -1571,7 +1571,7 @@ var InputPlugin = new Class({
      *
      * @method Phaser.Input.InputPlugin#transitionOut
      * @private
-     * @since 3.4.1
+     * @since 3.5.0
      */
     transitionOut: function ()
     {

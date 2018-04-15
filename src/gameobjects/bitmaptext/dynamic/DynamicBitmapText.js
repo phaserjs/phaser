@@ -122,7 +122,7 @@ var DynamicBitmapText = new Class({
          *
          * @name Phaser.GameObjects.DynamicBitmapText#letterSpacing
          * @type {number}
-         * @since 3.4.1
+         * @since 3.5.0
          */
         this.letterSpacing = 0;
 

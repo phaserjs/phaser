@@ -60,7 +60,7 @@ var DataManagerPlugin = new Class({
      *
      * @method Phaser.Data.DataManagerPlugin#start
      * @private
-     * @since 3.4.1
+     * @since 3.5.0
      */
     start: function ()
     {
@@ -83,7 +83,7 @@ var DataManagerPlugin = new Class({
      *
      * @method Phaser.Data.DataManagerPlugin#shutdown
      * @private
-     * @since 3.4.1
+     * @since 3.5.0
      */
     shutdown: function ()
     {
@@ -97,7 +97,7 @@ var DataManagerPlugin = new Class({
      * We need to shutdown and then kill off all external references.
      *
      * @method Phaser.Data.DataManagerPlugin#destroy
-     * @since 3.4.1
+     * @since 3.5.0
      */
     destroy: function ()
     {

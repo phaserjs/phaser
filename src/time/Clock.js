@@ -118,7 +118,7 @@ var Clock = new Class({
      *
      * @method Phaser.Time.Clock#start
      * @private
-     * @since 3.4.1
+     * @since 3.5.0
      */
     start: function ()
     {

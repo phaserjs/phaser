@@ -610,7 +610,7 @@ var Factory = new Class({
      * Destroys this Factory.
      *
      * @method Phaser.Physics.Matter.Factory#destroy
-     * @since 3.4.1
+     * @since 3.5.0
      */
     destroy: function ()
     {

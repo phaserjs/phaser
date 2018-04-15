@@ -79,7 +79,7 @@ var GameObjectCreator = new Class({
      *
      * @method Phaser.GameObjects.GameObjectCreator#start
      * @private
-     * @since 3.4.1
+     * @since 3.5.0
      */
     start: function ()
     {

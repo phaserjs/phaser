@@ -78,7 +78,7 @@ var ScenePlugin = new Class({
          *
          * @name Phaser.Scenes.ScenePlugin#transitionProgress
          * @type {float}
-         * @since 3.4.1
+         * @since 3.5.0
          */
         this.transitionProgress = 0;
 
@@ -88,7 +88,7 @@ var ScenePlugin = new Class({
          * @name Phaser.Scenes.ScenePlugin#_elapsed
          * @type {integer}
          * @private
-         * @since 3.4.1
+         * @since 3.5.0
          */
         this._elapsed = 0;
 
@@ -98,7 +98,7 @@ var ScenePlugin = new Class({
          * @name Phaser.Scenes.ScenePlugin#_target
          * @type {?Phaser.Scenes.Scene}
          * @private
-         * @since 3.4.1
+         * @since 3.5.0
          */
         this._target = null;
 
@@ -108,7 +108,7 @@ var ScenePlugin = new Class({
          * @name Phaser.Scenes.ScenePlugin#_duration
          * @type {integer}
          * @private
-         * @since 3.4.1
+         * @since 3.5.0
          */
         this._duration = 0;
 
@@ -118,7 +118,7 @@ var ScenePlugin = new Class({
          * @name Phaser.Scenes.ScenePlugin#_onUpdate
          * @type {function}
          * @private
-         * @since 3.4.1
+         * @since 3.5.0
          */
         this._onUpdate;
 
@@ -128,7 +128,7 @@ var ScenePlugin = new Class({
          * @name Phaser.Scenes.ScenePlugin#_onUpdateScope
          * @type {object}
          * @private
-         * @since 3.4.1
+         * @since 3.5.0
          */
         this._onUpdateScope;
 
@@ -138,7 +138,7 @@ var ScenePlugin = new Class({
          * @name Phaser.Scenes.ScenePlugin#_willSleep
          * @type {boolean}
          * @private
-         * @since 3.4.1
+         * @since 3.5.0
          */
         this._willSleep = false;
 
@@ -253,7 +253,7 @@ var ScenePlugin = new Class({
      * Scene has been stopped.
      * 
      * @method Phaser.Scenes.ScenePlugin#transition
-     * @since 3.4.1
+     * @since 3.5.0
      *
      * @param {SceneTransitionConfig} config - The transition configuration object.
      *
@@ -328,7 +328,7 @@ var ScenePlugin = new Class({
      *
      * @method Phaser.Scenes.ScenePlugin#checkValidTransition
      * @private
-     * @since 3.4.1
+     * @since 3.5.0
      *
      * @param {Phaser.Scene} target - The Scene to test against.
      *
@@ -351,7 +351,7 @@ var ScenePlugin = new Class({
      *
      * @method Phaser.Scenes.ScenePlugin#step
      * @private
-     * @since 3.4.1
+     * @since 3.5.0
      *
      * @param {number} time - [description]
      * @param {number} delta - [description]
@@ -378,7 +378,7 @@ var ScenePlugin = new Class({
      *
      * @method Phaser.Scenes.ScenePlugin#transitionComplete
      * @private
-     * @since 3.4.1
+     * @since 3.5.0
      */
     transitionComplete: function ()
     {
