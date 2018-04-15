@@ -66,11 +66,6 @@ var CameraManager = new Class({
          */
         this.systems = scene.sys;
 
-        if (!scene.sys.settings.isBooted)
-        {
-            scene.sys.events.once('boot', this.boot, this);
-        }
-
         /**
          * The current Camera ID.
          *
@@ -100,17 +95,6 @@ var CameraManager = new Class({
          */
         this.cameraPool = [];
 
-        if (scene.sys.settings.cameras)
-        {
-            //  We have cameras to create
-            this.fromJSON(scene.sys.settings.cameras);
-        }
-        else
-        {
-            //  Make one
-            this.add();
-        }
-
         /**
          * The default Camera in the Camera Manager.
          *
@@ -118,7 +102,7 @@ var CameraManager = new Class({
          * @type {Phaser.Cameras.Scene2D.Camera}
          * @since 3.0.0
          */
-        this.main = this.cameras[0];
+        this.main;
 
         /**
          * This scale affects all cameras. It's used by Scale Manager.
@@ -127,23 +111,42 @@ var CameraManager = new Class({
          * @type {number}
          * @since 3.0.0
          */
-        this.baseScale = 1.0;
+        this.baseScale = 1;
+
+        scene.sys.events.on('start', this.start, this);
     },
 
     /**
-     * Called when the Camera Manager boots.
-     * Starts the event listeners running.
+     * This method is called automatically by the Scene when it is starting up.
+     * It is responsible for creating local systems, properties and listening for Scene events.
+     * Do not invoke it directly.
      *
-     * @method Phaser.Cameras.Scene2D.CameraManager#boot
-     * @since 3.0.0
+     * @method Phaser.Cameras.Scene2D.CameraManager#start
+     * @private
+     * @since 3.5.0
      */
-    boot: function ()
+    start: function ()
     {
-        var eventEmitter = this.systems.events;
+        var sys = this.systems;
+
+        if (sys.settings.cameras)
+        {
+            //  We have cameras to create
+            this.fromJSON(sys.settings.cameras);
+        }
+        else
+        {
+            //  Make one
+            this.add();
+        }
+
+        this.main = this.cameras[0];
+
+        var eventEmitter = sys.events;
 
         eventEmitter.on('update', this.update, this);
-        eventEmitter.on('shutdown', this.shutdown, this);
-        eventEmitter.on('destroy', this.destroy, this);
+        eventEmitter.once('shutdown', this.shutdown, this);
+        eventEmitter.once('destroy', this.destroy, this);
     },
 
     /**
@@ -444,23 +447,14 @@ var CameraManager = new Class({
     },
 
     /**
-     * [description]
+     * The Scene that owns this plugin is shutting down.
+     * We need to kill and reset all internal properties as well as stop listening to Scene events.
      *
      * @method Phaser.Cameras.Scene2D.CameraManager#shutdown
+     * @private
      * @since 3.0.0
      */
     shutdown: function ()
-    {
-        //  TODO
-    },
-
-    /**
-     * [description]
-     *
-     * @method Phaser.Cameras.Scene2D.CameraManager#destroy
-     * @since 3.0.0
-     */
-    destroy: function ()
     {
         this.main = undefined;
 
@@ -476,7 +470,29 @@ var CameraManager = new Class({
 
         this.cameras = [];
         this.cameraPool = [];
-        this.scene = undefined;
+
+        var eventEmitter = this.systems.events;
+
+        eventEmitter.off('update', this.update, this);
+        eventEmitter.off('shutdown', this.shutdown, this);
+    },
+
+    /**
+     * The Scene that owns this plugin is being destroyed.
+     * We need to shutdown and then kill off all external references.
+     *
+     * @method Phaser.Cameras.Scene2D.CameraManager#destroy
+     * @private
+     * @since 3.0.0
+     */
+    destroy: function ()
+    {
+        this.shutdown();
+
+        this.scene.sys.events.off('start', this.start, this);
+
+        this.scene = null;
+        this.systems = null;
     }
 
 });

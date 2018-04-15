@@ -245,6 +245,19 @@ var Factory = new Class({
     group: function (children, config)
     {
         return this.sys.updateList.add(new PhysicsGroup(this.world, this.world.scene, children, config));
+    },
+
+    /**
+     * Destroys this Factory.
+     *
+     * @method Phaser.Physics.Arcade.Factory#destroy
+     * @since 3.5.0
+     */
+    destroy: function ()
+    {
+        this.world = null;
+        this.scene = null;
+        this.sys = null;
     }
 
 });

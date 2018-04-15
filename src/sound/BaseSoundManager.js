@@ -31,9 +31,9 @@ var NOOP = require('../utils/NOOP');
  * @classdesc
  * The sound manager is responsible for playing back audio via Web Audio API or HTML Audio tag as fallback.
  * The audio file type and the encoding of those files are extremely important.
- * 
+ *
  * Not all browsers can play all audio formats.
- * 
+ *
  * There is a good guide to what's supported [here](https://developer.mozilla.org/en-US/Apps/Fundamentals/Audio_and_video_delivery/Cross-browser_audio_basics#Audio_Codec_Support).
  *
  * @class BaseSoundManager
@@ -169,11 +169,6 @@ var BaseSoundManager = new Class({
          * @since 3.0.0
          */
         this.unlocked = false;
-
-        if (this.locked)
-        {
-            this.unlock();
-        }
     },
 
     /**
@@ -537,7 +532,7 @@ var BaseSoundManager = new Class({
 
     /**
      * Sets the global playback rate at which all the sounds will be played.
-     * 
+     *
      * For example, a value of 1.0 plays the audio at full speed, 0.5 plays the audio at half speed
      * and 2.0 doubles the audios playback speed.
      *

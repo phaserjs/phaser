@@ -145,51 +145,6 @@ var BaseSound = new Class({
         this.config = Extend(this.config, config);
 
         /**
-         * Boolean indicating whether the sound is muted or not.
-         * Gets or sets the muted state of this sound.
-         *
-         * @name Phaser.Sound.BaseSound#mute
-         * @type {boolean}
-         * @default false
-         * @since 3.0.0
-         */
-        this.mute = false;
-
-        /**
-         * Gets or sets the volume of this sound,
-         * a value between 0 (silence) and 1 (full volume).
-         *
-         * @name Phaser.Sound.BaseSound#volume
-         * @type {number}
-         * @default 1
-         * @since 3.0.0
-         */
-        this.volume = 1;
-
-        /**
-         * Property representing the position of playback for this sound, in seconds.
-         * Setting it to a specific value moves current playback to that position.
-         * The value given is clamped to the range 0 to current marker duration.
-         * Setting seek of a stopped sound has no effect.
-         *
-         * @name Phaser.Sound.BaseSound#seek
-         * @type {number}
-         * @default 0
-         * @since 3.0.0
-         */
-        this.seek = 0;
-
-        /**
-         * Flag indicating whether or not the sound or current sound marker will loop.
-         *
-         * @name Phaser.Sound.BaseSound#loop
-         * @type {boolean}
-         * @default false
-         * @since 3.0.0
-         */
-        this.loop = false;
-
-        /**
          * Object containing markers definitions.
          *
          * @name Phaser.Sound.BaseSound#markers
@@ -290,7 +245,7 @@ var BaseSound = new Class({
         if (!this.markers[marker.name])
         {
             // eslint-disable-next-line no-console
-            console.error('updateMarker - Marker with name \'' + marker.name + '\' does not exist for sound \'' + this.key + '\'!');
+            console.warn('Audio Marker: ' + marker.name + ' missing in Sound: ' + this.key);
 
             return false;
         }
@@ -349,9 +304,6 @@ var BaseSound = new Class({
 
         if (typeof markerName !== 'string')
         {
-            // eslint-disable-next-line no-console
-            console.error('Sound marker name has to be a string!');
-
             return false;
         }
 
@@ -366,7 +318,7 @@ var BaseSound = new Class({
             if (!this.markers[markerName])
             {
                 // eslint-disable-next-line no-console
-                console.error('No marker with name \'' + markerName + '\' found for sound \'' + this.key + '\'!');
+                console.warn('Marker: ' + markerName + ' missing in Sound: ' + this.key);
 
                 return false;
             }

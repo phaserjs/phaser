@@ -210,12 +210,15 @@ var Systems = new Class({
     },
 
     /**
-     * [description]
+     * This method is called only once by the Scene Manager when the Scene is instantiated.
+     * It is responsible for setting up all of the Scene plugins and references.
+     * It should never be called directly.
      *
      * @method Phaser.Scenes.Systems#init
+     * @protected
      * @since 3.0.0
      *
-     * @param {Phaser.Game} game - A reference to the Phaser Game
+     * @param {Phaser.Game} game - A reference to the Phaser Game instance.
      */
     init: function (game)
     {
@@ -244,7 +247,7 @@ var Systems = new Class({
     },
 
     /**
-     * [description]
+     * Called by a plugin, it tells the System to install the plugin locally.
      *
      * @method Phaser.Scenes.Systems#install
      * @private
@@ -263,7 +266,8 @@ var Systems = new Class({
     },
 
     /**
-     * [description]
+     * A single game step. Called automatically by the Scene Manager as a result of a Request Animation
+     * Frame or Set Timeout call to the main Game instance.
      *
      * @method Phaser.Scenes.Systems#step
      * @since 3.0.0
@@ -283,7 +287,8 @@ var Systems = new Class({
     },
 
     /**
-     * [description]
+     * Called automatically by the Scene Manager. Instructs the Scene to render itself via
+     * its Camera Manager to the renderer given.
      *
      * @method Phaser.Scenes.Systems#render
      * @since 3.0.0
@@ -347,7 +352,7 @@ var Systems = new Class({
     },
 
     /**
-     * Resume this Scene.
+     * Resume this Scene from a paused state.
      *
      * @method Phaser.Scenes.Systems#resume
      * @since 3.0.0
@@ -371,8 +376,10 @@ var Systems = new Class({
     /**
      * Send this Scene to sleep.
      *
-     * A sleeping Scene doesn't run it's update step or render anything, but it also isn't destroyed,
-     * or have any of its systems or children removed, meaning it can be re-activated at any point.
+     * A sleeping Scene doesn't run it's update step or render anything, but it also isn't shut down
+     * or have any of its systems or children removed, meaning it can be re-activated at any point and
+     * will carry on from where it left off. It also keeps everything in memory and events and callbacks
+     * from other Scenes may still invoke changes within it, so be careful what is left active.
      *
      * @method Phaser.Scenes.Systems#sleep
      * @since 3.0.0
@@ -401,12 +408,19 @@ var Systems = new Class({
      */
     wake: function ()
     {
-        this.settings.status = CONST.RUNNING;
+        var settings = this.settings;
 
-        this.settings.active = true;
-        this.settings.visible = true;
+        settings.status = CONST.RUNNING;
+
+        settings.active = true;
+        settings.visible = true;
 
         this.events.emit('wake', this);
+
+        if (settings.isTransition)
+        {
+            this.events.emit('transitionwake', settings.transitionFrom, settings.transitionDuration);
+        }
 
         return this;
     },
@@ -438,6 +452,45 @@ var Systems = new Class({
     },
 
     /**
+     * Is this Scene currently transitioning out to, or in from another Scene?
+     *
+     * @method Phaser.Scenes.Systems#isTransitioning
+     * @since 3.5.0
+     *
+     * @return {boolean} `true` if this Scene is currently transitioning, otherwise `false`.
+     */
+    isTransitioning: function ()
+    {
+        return (this.settings.isTransition || this.scenePlugin._target !== null);
+    },
+
+    /**
+     * Is this Scene currently transitioning out from itself to another Scene?
+     *
+     * @method Phaser.Scenes.Systems#isTransitionOut
+     * @since 3.5.0
+     *
+     * @return {boolean} `true` if this Scene is in transition to another Scene, otherwise `false`.
+     */
+    isTransitionOut: function ()
+    {
+        return (this.scenePlugin._target !== null && this.scenePlugin._duration > 0);
+    },
+
+    /**
+     * Is this Scene currently transitioning in from another Scene?
+     *
+     * @method Phaser.Scenes.Systems#isTransitionIn
+     * @since 3.5.0
+     *
+     * @return {boolean} `true` if this Scene is transitioning in from another Scene, otherwise `false`.
+     */
+    isTransitionIn: function ()
+    {
+        return (this.settings.isTransition);
+    },
+
+    /**
      * Is this Scene visible and rendering?
      *
      * @method Phaser.Scenes.Systems#isVisible
@@ -451,7 +504,8 @@ var Systems = new Class({
     },
 
     /**
-     * [description]
+     * Sets the visible state of this Scene.
+     * An invisible Scene will not render, but will still process updates.
      *
      * @method Phaser.Scenes.Systems#setVisible
      * @since 3.0.0
@@ -468,12 +522,13 @@ var Systems = new Class({
     },
 
     /**
-     * [description]
+     * Set the active state of this Scene.
+     * An active Scene will run its core update loop.
      *
      * @method Phaser.Scenes.Systems#setActive
      * @since 3.0.0
      *
-     * @param {boolean} value - [description]
+     * @param {boolean} value - If `true` the Scene will be resumed, if previously paused. If `false` it will be paused.
      *
      * @return {Phaser.Scenes.Systems} This Systems object.
      */
@@ -496,7 +551,7 @@ var Systems = new Class({
      * @method Phaser.Scenes.Systems#start
      * @since 3.0.0
      *
-     * @param {object} data - [description]
+     * @param {object} data - Optional data object that may have been passed to this Scene from another.
      */
     start: function (data)
     {
@@ -530,12 +585,21 @@ var Systems = new Class({
 
     /**
      * Shutdown this Scene and send a shutdown event to all of its systems.
+     * A Scene that has been shutdown will not run its update loop or render, but it does
+     * not destroy any of its plugins or references. It is put into hibernation for later use.
+     * If you don't ever plan to use this Scene again, then it should be destroyed instead
+     * to free-up resources.
      *
      * @method Phaser.Scenes.Systems#shutdown
      * @since 3.0.0
      */
     shutdown: function ()
     {
+        this.events.off('transitioninit');
+        this.events.off('transitionstart');
+        this.events.off('transitioncomplete');
+        this.events.off('transitionout');
+
         this.settings.status = CONST.SHUTDOWN;
 
         this.settings.active = false;
@@ -546,8 +610,11 @@ var Systems = new Class({
 
     /**
      * Destroy this Scene and send a destroy event all of its systems.
+     * A destroyed Scene cannot be restarted.
+     * You should not call this directly, instead use `SceneManager.remove`.
      *
      * @method Phaser.Scenes.Systems#destroy
+     * @private
      * @since 3.0.0
      */
     destroy: function ()
@@ -558,6 +625,15 @@ var Systems = new Class({
         this.settings.visible = false;
 
         this.events.emit('destroy', this);
+
+        this.events.removeAllListeners();
+
+        var props = [ 'scene', 'game', 'anims', 'cache', 'plugins', 'registry', 'sound', 'textures', 'add', 'camera', 'displayList', 'events', 'make', 'scenePlugin', 'updateList' ];
+
+        for (var i = 0; i < props.length; i++)
+        {
+            this[props[i]] = null;
+        }
     }
 
 });

@@ -37,7 +37,7 @@ var RenderTextureWebGLRenderer = function (renderer, renderTexture, interpolatio
         renderTexture.width, renderTexture.height,
         renderTexture.scaleX, renderTexture.scaleY,
         renderTexture.rotation,
-        renderTexture.flipX, renderTexture.flipY,
+        renderTexture.flipX, !renderTexture.flipY,
         renderTexture.scrollFactorX, renderTexture.scrollFactorY,
         renderTexture.displayOriginX, renderTexture.displayOriginY,
         0, 0, renderTexture.texture.width, renderTexture.texture.height,

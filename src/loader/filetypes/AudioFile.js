@@ -122,7 +122,7 @@ AudioFile.create = function (loader, key, urls, config, xhrSettings)
     }
     else
     {
-        return new HTML5AudioFile(key, url, loader.path, config, game.sound.locked);
+        return new HTML5AudioFile(key, url, loader.path, config);
     }
 };
 

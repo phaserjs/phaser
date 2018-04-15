@@ -443,19 +443,8 @@ var CanvasRenderer = new Class({
         ctx.setTransform(1, 0, 0, 1, 0, 0);
         ctx.globalCompositeOperation = 'source-over';
 
-        if (camera._fadeAlpha > 0)
-        {
-            // fade rendering
-            ctx.fillStyle = 'rgba(' + (camera._fadeRed * 255) + ',' + (camera._fadeGreen * 255) + ',' + (camera._fadeBlue * 255) + ',' + camera._fadeAlpha + ')';
-            ctx.fillRect(camera.x, camera.y, camera.width, camera.height);
-        }
-
-        if (camera._flashAlpha > 0)
-        {
-            // flash rendering
-            ctx.fillStyle = 'rgba(' + (camera._flashRed * 255) + ',' + (camera._flashGreen * 255) + ',' + (camera._flashBlue * 255) + ',' + camera._flashAlpha + ')';
-            ctx.fillRect(camera.x, camera.y, camera.width, camera.height);
-        }
+        camera.flashEffect.postRenderCanvas(ctx);
+        camera.fadeEffect.postRenderCanvas(ctx);
 
         //  Reset the camera scissor
         if (scissor)

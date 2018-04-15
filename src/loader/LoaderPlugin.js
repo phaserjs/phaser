@@ -84,11 +84,6 @@ var LoaderPlugin = new Class({
          */
         this.systems = scene.sys;
 
-        if (!scene.sys.settings.isBooted)
-        {
-            scene.sys.events.once('boot', this.boot, this);
-        }
-
         /**
          * [description]
          *
@@ -245,20 +240,25 @@ var LoaderPlugin = new Class({
          * @since 3.0.0
          */
         this.state = CONST.LOADER_IDLE;
+
+        scene.sys.events.on('start', this.boot, this);
     },
 
     /**
-     * [description]
+     * This method is called automatically by the Scene when it is starting up.
+     * It is responsible for creating local systems, properties and listening for Scene events.
+     * Do not invoke it directly.
      *
      * @method Phaser.Loader.LoaderPlugin#boot
+     * @private
      * @since 3.0.0
      */
     boot: function ()
     {
         var eventEmitter = this.systems.events;
 
-        eventEmitter.on('shutdown', this.shutdown, this);
-        eventEmitter.on('destroy', this.destroy, this);
+        eventEmitter.once('shutdown', this.shutdown, this);
+        eventEmitter.once('destroy', this.destroy, this);
     },
 
     /**
@@ -976,27 +976,48 @@ var LoaderPlugin = new Class({
     },
 
     /**
-     * [description]
+     * The Scene that owns this plugin is shutting down.
+     * We need to kill and reset all internal properties as well as stop listening to Scene events.
      *
      * @method Phaser.Loader.LoaderPlugin#shutdown
+     * @private
      * @since 3.0.0
      */
     shutdown: function ()
     {
         this.reset();
+
         this.state = CONST.LOADER_SHUTDOWN;
+
+        var eventEmitter = this.systems.events;
+
+        eventEmitter.off('shutdown', this.shutdown, this);
     },
 
     /**
-     * [description]
+     * The Scene that owns this plugin is being destroyed.
+     * We need to shutdown and then kill off all external references.
      *
      * @method Phaser.Loader.LoaderPlugin#destroy
+     * @private
      * @since 3.0.0
      */
     destroy: function ()
     {
-        this.reset();
+        this.shutdown();
+
         this.state = CONST.LOADER_DESTROYED;
+
+        this.scene.sys.events.off('start', this.start, this);
+
+        this.list = null;
+        this.inflight = null;
+        this.failed = null;
+        this.queue = null;
+        this.storage = null;
+
+        this.scene = null;
+        this.systems = null;
     }
 
 });

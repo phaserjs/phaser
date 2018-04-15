@@ -10,8 +10,8 @@ var CONST = require('./const');
 var Extend = require('./utils/object/Extend');
 
 /**
-* @namespace Phaser
-*/
+ * @namespace Phaser
+ */
 
 var Phaser = {
 

@@ -511,6 +511,13 @@ var Factory = new Class({
      */
     pointerConstraint: function (options)
     {
+        if (options === undefined) { options = {}; }
+
+        if (!options.hasOwnProperty('render'))
+        {
+            options.render = { visible: false };
+        }
+
         var pointerConstraint = new PointerConstraint(this.scene, this.world, options);
 
         this.world.add(pointerConstraint.constraint);
@@ -597,6 +604,19 @@ var Factory = new Class({
     gameObject: function (gameObject, options)
     {
         return MatterGameObject(this.world, gameObject, options);
+    },
+
+    /**
+     * Destroys this Factory.
+     *
+     * @method Phaser.Physics.Matter.Factory#destroy
+     * @since 3.5.0
+     */
+    destroy: function ()
+    {
+        this.world = null;
+        this.scene = null;
+        this.sys = null;
     }
 
 });

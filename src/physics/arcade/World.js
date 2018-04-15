@@ -1833,6 +1833,12 @@ var World = new Class({
      */
     shutdown: function ()
     {
+        this.tree.clear();
+        this.staticTree.clear();
+        this.bodies.clear();
+        this.staticBodies.clear();
+        this.colliders.destroy();
+
         this.removeAllListeners();
     },
 
@@ -1844,13 +1850,9 @@ var World = new Class({
      */
     destroy: function ()
     {
-        this.tree.clear();
-        this.staticTree.clear();
-        this.bodies.clear();
-        this.staticBodies.clear();
-        this.colliders.destroy();
+        this.shutdown();
 
-        this.removeAllListeners();
+        this.scene = null;
     }
 
 });

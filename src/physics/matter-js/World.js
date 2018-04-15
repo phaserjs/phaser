@@ -232,21 +232,16 @@ var World = new Class({
 
         MatterEvents.on(engine, 'beforeUpdate', function (event)
         {
-
             _this.emit('beforeupdate', event);
-
         });
 
         MatterEvents.on(engine, 'afterUpdate', function (event)
         {
-
             _this.emit('afterupdate', event);
-
         });
 
         MatterEvents.on(engine, 'collisionStart', function (event)
         {
-
             var pairs = event.pairs;
             var bodyA;
             var bodyB;
@@ -258,12 +253,10 @@ var World = new Class({
             }
 
             _this.emit('collisionstart', event, bodyA, bodyB);
-
         });
 
         MatterEvents.on(engine, 'collisionActive', function (event)
         {
-
             var pairs = event.pairs;
             var bodyA;
             var bodyB;
@@ -275,12 +268,10 @@ var World = new Class({
             }
 
             _this.emit('collisionactive', event, bodyA, bodyB);
-
         });
 
         MatterEvents.on(engine, 'collisionEnd', function (event)
         {
-
             var pairs = event.pairs;
             var bodyA;
             var bodyB;
@@ -292,7 +283,6 @@ var World = new Class({
             }
 
             _this.emit('collisionend', event, bodyA, bodyB);
-
         });
     },
 
@@ -894,7 +884,7 @@ var World = new Class({
      */
     shutdown: function ()
     {
-        MatterEvents.off();
+        MatterEvents.off(this.engine);
 
         this.removeAllListeners();
 

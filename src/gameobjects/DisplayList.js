@@ -59,24 +59,24 @@ var DisplayList = new Class({
          */
         this.systems = scene.sys;
 
-        if (!scene.sys.settings.isBooted)
-        {
-            scene.sys.events.once('boot', this.boot, this);
-        }
+        scene.sys.events.on('start', this.start, this);
     },
 
     /**
-     * [description]
+     * This method is called automatically by the Scene when it is starting up.
+     * It is responsible for creating local systems, properties and listening for Scene events.
+     * Do not invoke it directly.
      *
-     * @method Phaser.GameObjects.DisplayList#boot
-     * @since 3.0.0
+     * @method Phaser.GameObjects.DisplayList#start
+     * @private
+     * @since 3.5.0
      */
-    boot: function ()
+    start: function ()
     {
         var eventEmitter = this.systems.events;
 
-        eventEmitter.on('shutdown', this.shutdown, this);
-        eventEmitter.on('destroy', this.destroy, this);
+        eventEmitter.once('shutdown', this.shutdown, this);
+        eventEmitter.once('destroy', this.destroy, this);
     },
 
     /**
@@ -157,6 +157,41 @@ var DisplayList = new Class({
         this.sortGameObjects(gameObjects);
 
         return gameObjects[gameObjects.length - 1];
+    },
+
+    /**
+     * The Scene that owns this plugin is shutting down.
+     * We need to kill and reset all internal properties as well as stop listening to Scene events.
+     *
+     * @method Phaser.GameObjects.DisplayList#shutdown
+     * @private
+     * @since 3.0.0
+     */
+    shutdown: function ()
+    {
+        this.removeAll();
+
+        var eventEmitter = this.systems.events;
+
+        eventEmitter.off('shutdown', this.shutdown, this);
+    },
+
+    /**
+     * The Scene that owns this plugin is being destroyed.
+     * We need to shutdown and then kill off all external references.
+     *
+     * @method Phaser.GameObjects.DisplayList#destroy
+     * @private
+     * @since 3.0.0
+     */
+    destroy: function ()
+    {
+        this.shutdown();
+
+        this.scene.sys.events.off('start', this.start, this);
+
+        this.scene = null;
+        this.systems = null;
     }
 
 });

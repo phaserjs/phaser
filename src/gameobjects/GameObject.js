@@ -154,8 +154,23 @@ var GameObject = new Class({
          */
         this.body = null;
 
+        /**
+         * This Game Object will ignore all calls made to its destroy method if this flag is set to `true`.
+         * This includes calls that may come from a Group, Container or the Scene itself.
+         * While it allows you to persist a Game Object across Scenes, please understand you are entirely
+         * responsible for managing references to and from this Game Object.
+         *
+         * @name Phaser.GameObjects.GameObject#ignoreDestroy
+         * @type {boolean}
+         * @default false
+         * @since 3.5.0
+         */
+        this.ignoreDestroy = false;
+
         //  Tell the Scene to re-sort the children
-        this.scene.sys.queueDepthSort();
+        scene.sys.queueDepthSort();
+
+        scene.sys.events.once('shutdown', this.destroy, this);
     },
 
     /**
@@ -375,7 +390,7 @@ var GameObject = new Class({
     destroy: function ()
     {
         //  This Game Object had already been destroyed
-        if (!this.scene)
+        if (!this.scene || this.ignoreDestroy)
         {
             return;
         }
