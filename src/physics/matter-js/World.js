@@ -894,6 +894,10 @@ var World = new Class({
      */
     shutdown: function ()
     {
+        MatterEvents.off();
+
+        this.removeAllListeners();
+
         MatterWorld.clear(this.localWorld, false);
 
         Engine.clear(this.engine);

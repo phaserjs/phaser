@@ -632,7 +632,7 @@ var World = new Class({
         {
             body = bodies[i];
 
-            if (!body.skipHash())
+            if (body && !body.skipHash())
             {
                 this.checkHash(body, hash, size);
             }
@@ -648,7 +648,7 @@ var World = new Class({
             {
                 body = bodies[i];
 
-                if (body.willDrawDebug())
+                if (body && body.willDrawDebug())
                 {
                     body.drawDebug(graphics);
                 }

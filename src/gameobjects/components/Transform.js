@@ -5,9 +5,9 @@
  */
 
 var MATH_CONST = require('../../math/const');
+var TransformMatrix = require('./TransformMatrix');
 var WrapAngle = require('../../math/angle/Wrap');
 var WrapAngleDegrees = require('../../math/angle/WrapDegrees');
-var TransformMatrix = require('./TransformMatrix');
 
 //  global bitmask flag for GameObject.renderMask (used by Scale)
 var _FLAG = 4; // 0100
@@ -371,14 +371,44 @@ var Transform = {
         return this;
     },
 
+    /**
+     * Gets the local transform matrix for this Game Object.
+     *
+     * @method Phaser.GameObjects.Components.Transform#getLocalTransformMatrix
+     * @since 3.4.0
+     *
+     * @param {Phaser.GameObjects.Components.TransformMatrix} [tempMatrix] - The matrix to populate with the values from this Game Object.
+     *
+     * @return {Phaser.GameObjects.Components.TransformMatrix} The populated Transform Matrix.
+     */
     getLocalTransformMatrix: function (tempMatrix)
     {
+        if (tempMatrix === undefined) { tempMatrix = new TransformMatrix(); }
+
         return tempMatrix.applyITRS(this.x, this.y, this._rotation, this._scaleX, this._scaleY);
     },
 
+    /**
+     * Gets the world transform matrix for this Game Object, factoring in any parent Containers.
+     *
+     * @method Phaser.GameObjects.Components.Transform#getWorldTransformMatrix
+     * @since 3.4.0
+     *
+     * @param {Phaser.GameObjects.Components.TransformMatrix} [tempMatrix] - The matrix to populate with the values from this Game Object.
+     *
+     * @return {Phaser.GameObjects.Components.TransformMatrix} The populated Transform Matrix.
+     */
     getWorldTransformMatrix: function (tempMatrix)
     {
+        if (tempMatrix === undefined) { tempMatrix = new TransformMatrix(); }
+
         var parent = this.parentContainer;
+
+        if (!parent)
+        {
+            return this.getLocalTransformMatrix(tempMatrix);
+        }
+
         var parents = [];
         
         while (parent)
@@ -393,10 +423,11 @@ var Transform = {
         
         for (var i = 0; i < length; ++i)
         {
-            rootContainer = parents[i];
-            tempMatrix.translate(rootContainer.x, rootContainer.y);
-            tempMatrix.rotate(rootContainer.rotation);
-            tempMatrix.scale(rootContainer.scaleX, rootContainer.scaleY);
+            parent = parents[i];
+
+            tempMatrix.translate(parent.x, parent.y);
+            tempMatrix.rotate(parent.rotation);
+            tempMatrix.scale(parent.scaleX, parent.scaleY);
         }
 
         tempMatrix.translate(this.x, this.y);

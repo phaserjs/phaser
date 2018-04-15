@@ -12,7 +12,7 @@ var NOOP = require('../utils/NOOP');
 
 /**
  * @classdesc
- * Class containing all the shared state and behaviour of a sound object, independent of the implementation.
+ * Class containing all the shared state and behavior of a sound object, independent of the implementation.
  *
  * @class BaseSound
  * @extends Phaser.Events.EventEmitter
@@ -120,10 +120,15 @@ var BaseSound = new Class({
          * @since 3.0.0
          */
         this.config = {
-            /**
-             * Initializing delay config setting
-             */
+
+            mute: false,
+            volume: 1,
+            rate: 1,
+            detune: 0,
+            seek: 0,
+            loop: false,
             delay: 0
+
         };
 
         /**
@@ -517,6 +522,7 @@ var BaseSound = new Class({
             return;
         }
 
+        this.emit('destroy', this);
         this.pendingRemove = true;
         this.manager = null;
         this.key = '';

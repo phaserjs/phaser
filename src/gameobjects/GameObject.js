@@ -195,10 +195,11 @@ var GameObject = new Class({
     },
 
     /**
-     * [description]
+     * Adds a DataManager to this object.
      *
      * @method Phaser.GameObjects.GameObject#setDataEnabled
      * @since 3.0.0
+     * @see Phaser.Data.DataManager
      *
      * @return {Phaser.GameObjects.GameObject} This GameObject.
      */
@@ -312,6 +313,50 @@ var GameObject = new Class({
     },
 
     /**
+     * Returns an array containing the display list index of either this Game Object, or if it has one,
+     * its parent Container. It then iterates up through all of the parent containers until it hits the
+     * root of the display list (which is index 0 in the returned array).
+     * 
+     * Used internally by the InputPlugin but also useful if you wish to find out the display depth of
+     * this Game Object and all of its ancestors.
+     *
+     * @method Phaser.GameObjects.GameObject#getIndexList
+     * @since 3.4.0
+     *
+     * @return {integer[]} An array of display list position indexes.
+     */
+    getIndexList: function ()
+    {
+        // eslint-disable-next-line consistent-this
+        var child = this;
+        var parent = this.parentContainer;
+
+        var indexes = [];
+        
+        while (parent)
+        {
+            // indexes.unshift([parent.getIndex(child), parent.name]);
+            indexes.unshift(parent.getIndex(child));
+
+            child = parent;
+
+            if (!parent.parentContainer)
+            {
+                break;
+            }
+            else
+            {
+                parent = parent.parentContainer;
+            }
+        }
+
+        // indexes.unshift([this.scene.sys.displayList.getIndex(child), 'root']);
+        indexes.unshift(this.scene.sys.displayList.getIndex(child));
+
+        return indexes;
+    },
+
+    /**
      * Destroys this Game Object removing it from the Display List and Update List and
      * severing all ties to parent resources.
      *
@@ -373,6 +418,8 @@ var GameObject = new Class({
         this.visible = false;
 
         this.scene = undefined;
+
+        this.parentContainer = undefined;
 
         this.removeAllListeners();
     }

@@ -8,7 +8,7 @@ var GetTilesWithin = require('./GetTilesWithin');
 
 /**
  * Randomizes the indexes of a rectangular region of tiles (in tile coordinates) within the
- * specified layer. Each tile will recieve a new index. New indexes are drawn from the given
+ * specified layer. Each tile will receive a new index. New indexes are drawn from the given
  * weightedIndexes array. An example weighted array:
  *
  * [

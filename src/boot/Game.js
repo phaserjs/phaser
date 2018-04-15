@@ -154,7 +154,7 @@ var Game = new Class({
         this.cache = new CacheManager(this);
 
         /**
-         * [description]
+         * An instance of the Data Manager
          *
          * @name Phaser.Game#registry
          * @type {Phaser.Data.DataManager}

@@ -4,8 +4,10 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
+var ArrayUtils = require('../utils/array');
 var Class = require('../utils/Class');
 var NOOP = require('../utils/NOOP');
+var StableSort = require('../utils/array/StableSort');
 
 /**
  * @callback EachListCallback
@@ -82,6 +84,15 @@ var List = new Class({
          * @since 3.4.0
          */
         this.removeCallback = NOOP;
+
+        /**
+         * The property key to sort by.
+         *
+         * @name Phaser.Structs.List#_sortKey
+         * @type {string}
+         * @since 3.4.0
+         */
+        this._sortKey = '';
     },
 
     /**
@@ -99,25 +110,13 @@ var List = new Class({
      */
     add: function (child, skipCallback)
     {
-        if (Array.isArray(child))
+        if (skipCallback)
         {
-            return this.addMultiple(child, skipCallback);
+            return ArrayUtils.Add(this.list, child);
         }
         else
         {
-            //  Is child already in this display list?
-
-            if (this.getIndex(child) === -1)
-            {
-                this.list.push(child);
-
-                if (!skipCallback)
-                {
-                    this.addCallback(this, child);
-                }
-            }
-
-            return child;
+            return ArrayUtils.Add(this.list, child, 0, this.addCallback, this);
         }
     },
 
@@ -137,53 +136,14 @@ var List = new Class({
      */
     addAt: function (child, index, skipCallback)
     {
-        if (index === undefined) { index = 0; }
-
-        if (this.list.length === 0)
+        if (skipCallback)
         {
-            return this.add(child, skipCallback);
+            return ArrayUtils.AddAt(this.list, child, index);
         }
-
-        if (index >= 0 && index <= this.list.length)
+        else
         {
-            if (this.getIndex(child) === -1)
-            {
-                this.list.splice(index, 0, child);
-
-                if (!skipCallback)
-                {
-                    this.addCallback(this, child);
-                }
-            }
+            return ArrayUtils.AddAt(this.list, child, index, 0, this.addCallback, this);
         }
-
-        return child;
-    },
-
-    /**
-     * [description]
-     *
-     * @method Phaser.Structs.List#addMultiple
-     * @since 3.0.0
-     *
-     * @genericUse {T[]} - [children,$return]
-     *
-     * @param {Array.<*>} children - [description]
-     * @param {boolean} [skipCallback=false] - Skip calling the List.addCallback if this child is added successfully.
-     *
-     * @return {Array.<*>} [description]
-     */
-    addMultiple: function (children, skipCallback)
-    {
-        if (Array.isArray(children))
-        {
-            for (var i = 0; i < children.length; i++)
-            {
-                this.add(children[i], skipCallback);
-            }
-        }
-
-        return children;
     },
 
     /**
@@ -222,30 +182,37 @@ var List = new Class({
     },
 
     /**
-     * Given an array of objects, sort the array and return it,
-     * so that the objects are in index order with the lowest at the bottom.
+     * Sort the contents of this List so the items are in order based
+     * on the given property. For example, `sort('alpha')` would sort the List
+     * contents based on the value of their `alpha` property.
      *
      * @method Phaser.Structs.List#sort
      * @since 3.0.0
      *
      * @genericUse {T[]} - [children,$return]
      *
-     * @param {Array.<*>} children - [description]
+     * @param {string} property - The property to lexically sort by.
      *
      * @return {Array.<*>} [description]
      */
-    sort: function (children)
+    sort: function (property)
     {
-        if (children === undefined) { children = this.list; }
+        if (property)
+        {
+            this._sortKey = property;
 
-        return children.sort(this.sortIndexHandler.bind(this));
+            StableSort.inplace(this.list, this.sortHandler);
+        }
+
+        return this;
     },
 
     /**
      * [description]
      *
-     * @method Phaser.Structs.List#sortIndexHandler
-     * @since 3.0.0
+     * @method Phaser.Structs.List#sortHandler
+     * @private
+     * @since 3.4.0
      *
      * @genericUse {T} - [childA,childB]
      *
@@ -254,58 +221,15 @@ var List = new Class({
      *
      * @return {integer} [description]
      */
-    sortIndexHandler: function (childA, childB)
+    sortHandler: function (childA, childB)
     {
-        //  The lower the index, the lower down the display list they are
-        var indexA = this.getIndex(childA);
-        var indexB = this.getIndex(childB);
-
-        if (indexA < indexB)
-        {
-            return -1;
-        }
-        else if (indexA > indexB)
-        {
-            return 1;
-        }
-
-        //  Technically this shouldn't happen, but if the GO wasn't part of this display list then it'll
-        //  have an index of -1, so in some cases it can
-        return 0;
+        return childA[this._sortKey] - childB[this._sortKey];
     },
 
     /**
-     * Gets the first item from the set based on the property strictly equaling the value given.
-     * Returns null if not found.
-     *
-     * @method Phaser.Structs.List#getByKey
-     * @since 3.0.0
-     *
-     * @genericUse {T} - [value]
-     * @genericUse {T | null} - [$return]
-     *
-     * @param {string} property - The property to check against the value.
-     * @param {*} value - The value to check if the property strictly equals.
-     *
-     * @return {?*} The item that was found, or null if nothing matched.
-     */
-    getByKey: function (property, value)
-    {
-        for (var i = 0; i < this.list.length; i++)
-        {
-            if (this.list[i][property] === value)
-            {
-                return this.list[i];
-            }
-        }
-
-        return null;
-    },
-
-    /**
-     * Searches the Group for the first instance of a child with the `name`
+     * Searches for the first instance of a child with its `name`
      * property matching the given argument. Should more than one child have
-     * the same name only the first instance is returned.
+     * the same name only the first is returned.
      *
      * @method Phaser.Structs.List#getByName
      * @since 3.0.0
@@ -318,7 +242,7 @@ var List = new Class({
      */
     getByName: function (name)
     {
-        return this.getByKey('name', name);
+        return ArrayUtils.GetFirst(this.list, 'name', name);
     },
 
     /**
@@ -336,17 +260,7 @@ var List = new Class({
      */
     getRandom: function (startIndex, length)
     {
-        if (startIndex === undefined) { startIndex = 0; }
-        if (length === undefined) { length = this.list.length; }
-
-        if (length === 0 || length > this.list.length)
-        {
-            return null;
-        }
-
-        var randomIndex = startIndex + Math.floor(Math.random() * length);
-
-        return this.list[randomIndex];
+        return ArrayUtils.GetRandom(this.list, startIndex, length);
     },
 
     /**
@@ -367,20 +281,7 @@ var List = new Class({
      */
     getFirst: function (property, value, startIndex, endIndex)
     {
-        if (startIndex === undefined) { startIndex = 0; }
-        if (endIndex === undefined) { endIndex = this.list.length; }
-
-        for (var i = startIndex; i < endIndex; i++)
-        {
-            var child = this.list[i];
-
-            if (child[property] === value)
-            {
-                return child;
-            }
-        }
-
-        return null;
+        return ArrayUtils.GetFirstElement(this.list, property, value, startIndex, endIndex);
     },
 
     /**
@@ -388,7 +289,11 @@ var List = new Class({
      *
      * You can optionally specify a matching criteria using the `property` and `value` arguments.
      *
-     * For example: `getAll('visible', true)` would return only children that have their visible property set.
+     * For example: `getAll('parent')` would return only children that have a property called `parent`.
+     *
+     * You can also specify a value to compare the property to:
+     * 
+     * `getAll('visible', true)` would return only children that have their visible property set to `true`.
      *
      * Optionally you can specify a start and end index. For example if this List had 100 children,
      * and you set `startIndex` to 0 and `endIndex` to 50, it would return matches from only
@@ -402,36 +307,14 @@ var List = new Class({
      *
      * @param {string} [property] - An optional property to test against the value argument.
      * @param {*} [value] - If property is set then Child.property must strictly equal this value to be included in the results.
-     * @param {integer} [startIndex=0] - The first child index to start the search from.
+     * @param {integer} [startIndex] - The first child index to start the search from.
      * @param {integer} [endIndex] - The last child index to search up until.
      *
      * @return {Array.<*>} [description]
      */
     getAll: function (property, value, startIndex, endIndex)
     {
-        if (startIndex === undefined) { startIndex = 0; }
-        if (endIndex === undefined) { endIndex = this.list.length; }
-
-        var output = [];
-
-        for (var i = startIndex; i < endIndex; i++)
-        {
-            var child = this.list[i];
-
-            if (property)
-            {
-                if (child[property] === value)
-                {
-                    output.push(child);
-                }
-            }
-            else
-            {
-                output.push(child);
-            }
-        }
-
-        return output;
+        return ArrayUtils.GetAll(this.list, property, value, startIndex, endIndex);
     },
 
     /**
@@ -449,19 +332,7 @@ var List = new Class({
      */
     count: function (property, value)
     {
-        var total = 0;
-
-        for (var i = 0; i < this.list.length; i++)
-        {
-            var child = this.list[i];
-
-            if (child[property] === value)
-            {
-                total++;
-            }
-        }
-
-        return total;
+        return ArrayUtils.CountAllMatching(this.list, property, value);
     },
 
     /**
@@ -477,21 +348,7 @@ var List = new Class({
      */
     swap: function (child1, child2)
     {
-        if (child1 === child2)
-        {
-            return;
-        }
-
-        var index1 = this.getIndex(child1);
-        var index2 = this.getIndex(child2);
-
-        if (index1 < 0 || index2 < 0)
-        {
-            throw new Error('List.swap: Supplied objects must be children of the same list');
-        }
-
-        this.list[index1] = child2;
-        this.list[index2] = child1;
+        ArrayUtils.Swap(this.list, child1, child2);
     },
 
     /**
@@ -509,20 +366,7 @@ var List = new Class({
      */
     moveTo: function (child, index)
     {
-        var currentIndex = this.getIndex(child);
-
-        if (currentIndex === -1 || index < 0 || index >= this.list.length)
-        {
-            throw new Error('List.moveTo: The supplied index is out of bounds');
-        }
-
-        //  Remove
-        this.list.splice(currentIndex, 1);
-
-        //  Add in new location
-        this.list.splice(index, 0, child);
-
-        return child;
+        return ArrayUtils.MoveTo(this.list, child, index);
     },
 
     /**
@@ -540,19 +384,14 @@ var List = new Class({
      */
     remove: function (child, skipCallback)
     {
-        var index = this.list.indexOf(child);
-
-        if (index !== -1)
+        if (skipCallback)
         {
-            this.list.splice(index, 1);
-
-            if (!skipCallback)
-            {
-                this.removeCallback(this, child);
-            }
+            return ArrayUtils.Remove(this.list, child);
         }
-
-        return child;
+        else
+        {
+            return ArrayUtils.Remove(this.list, child, this.removeCallback, this);
+        }
     },
 
     /**
@@ -570,19 +409,14 @@ var List = new Class({
      */
     removeAt: function (index, skipCallback)
     {
-        var child = this.list[index];
-
-        if (child)
+        if (skipCallback)
         {
-            this.children.splice(index, 1);
-
-            if (!skipCallback)
-            {
-                this.removeCallback(this, child);
-            }
+            return ArrayUtils.RemoveAt(this.list, index);
         }
-
-        return child;
+        else
+        {
+            return ArrayUtils.RemoveAt(this.list, index, this.removeCallback, this);
+        }
     },
 
     /**
@@ -593,37 +427,21 @@ var List = new Class({
      *
      * @genericUse {T[]} - [$return]
      *
-     * @param {integer} [beginIndex=0] - [description]
+     * @param {integer} [startIndex=0] - [description]
      * @param {integer} [endIndex] - [description]
      * @param {boolean} [skipCallback=false] - Skip calling the List.removeCallback.
      *
      * @return {Array.<*>} [description]
      */
-    removeBetween: function (beginIndex, endIndex, skipCallback)
+    removeBetween: function (startIndex, endIndex, skipCallback)
     {
-        if (beginIndex === undefined) { beginIndex = 0; }
-        if (endIndex === undefined) { endIndex = this.list.length; }
-
-        var range = endIndex - beginIndex;
-
-        if (range > 0 && range <= endIndex)
+        if (skipCallback)
         {
-            var removed = this.list.splice(beginIndex, range);
-
-            if (!skipCallback)
-            {
-                this.removeCallback(this, removed);
-            }
-
-            return removed;
-        }
-        else if (range === 0 && this.list.length === 0)
-        {
-            return [];
+            return ArrayUtils.RemoveBetween(this.list, startIndex, endIndex);
         }
         else
         {
-            throw new Error('List.removeBetween: Range Error, numeric values are outside the acceptable range');
+            return ArrayUtils.RemoveBetween(this.list, startIndex, endIndex, this.removeCallback, this);
         }
     },
 
@@ -665,13 +483,7 @@ var List = new Class({
      */
     bringToTop: function (child)
     {
-        if (this.getIndex(child) < this.list.length)
-        {
-            this.remove(child, true);
-            this.add(child, true);
-        }
-
-        return child;
+        return ArrayUtils.BringToTop(this.list, child);
     },
 
     /**
@@ -688,13 +500,7 @@ var List = new Class({
      */
     sendToBack: function (child)
     {
-        if (this.getIndex(child) > 0)
-        {
-            this.remove(child, true);
-            this.addAt(child, 0, true);
-        }
-
-        return child;
+        return ArrayUtils.SendToBack(this.list, child);
     },
 
     /**
@@ -711,17 +517,7 @@ var List = new Class({
      */
     moveUp: function (child)
     {
-        var a = this.getIndex(child);
-
-        if (a !== -1 && a < this.list.length - 1)
-        {
-            var b = this.getAt(a + 1);
-
-            if (b)
-            {
-                this.swap(child, b);
-            }
-        }
+        ArrayUtils.MoveUp(this.list, child);
 
         return child;
     },
@@ -740,17 +536,7 @@ var List = new Class({
      */
     moveDown: function (child)
     {
-        var a = this.getIndex(child);
-
-        if (a > 0)
-        {
-            var b = this.getAt(a - 1);
-
-            if (b)
-            {
-                this.swap(child, b);
-            }
-        }
+        ArrayUtils.MoveDown(this.list, child);
 
         return child;
     },
@@ -784,13 +570,7 @@ var List = new Class({
      */
     shuffle: function ()
     {
-        for (var i = this.list.length - 1; i > 0; i--)
-        {
-            var j = Math.floor(Math.random() * (i + 1));
-            var temp = this.list[i];
-            this.list[i] = this.list[j];
-            this.list[j] = temp;
-        }
+        ArrayUtils.Shuffle(this.list);
 
         return this;
     },
@@ -810,16 +590,7 @@ var List = new Class({
      */
     replace: function (oldChild, newChild)
     {
-        var index = this.getIndex(oldChild);
-
-        if (index !== -1)
-        {
-            this.remove(oldChild);
-
-            this.addAt(newChild, index);
-
-            return oldChild;
-        }
+        return ArrayUtils.Replace(this.list, oldChild, newChild);
     },
 
     /**
@@ -847,18 +618,16 @@ var List = new Class({
      *
      * @genericUse {T} - [value]
      *
-     * @param {string} key - [description]
+     * @param {string} property - [description]
      * @param {*} value - [description]
+     * @param {integer} [startIndex] - The first child index to start the search from.
+     * @param {integer} [endIndex] - The last child index to search up until.
      */
-    setAll: function (key, value)
+    setAll: function (property, value, startIndex, endIndex)
     {
-        for (var i = 0; i < this.list.length; i++)
-        {
-            if (this.list[i])
-            {
-                this.list[i][key] = value;
-            }
-        }
+        ArrayUtils.SetAll(this.list, property, value, startIndex, endIndex);
+
+        return this;
     },
 
     /**
@@ -873,11 +642,11 @@ var List = new Class({
      * @param {*} [thisArg] - Value to use as `this` when executing callback.
      * @param {...*} [args] - Additional arguments that will be passed to the callback, after the child.
      */
-    each: function (callback, thisArg)
+    each: function (callback, context)
     {
         var args = [ null ];
 
-        for (var i = 1; i < arguments.length; i++)
+        for (var i = 2; i < arguments.length; i++)
         {
             args.push(arguments[i]);
         }
@@ -885,7 +654,8 @@ var List = new Class({
         for (i = 0; i < this.list.length; i++)
         {
             args[0] = this.list[i];
-            callback.apply(thisArg, args);
+
+            callback.apply(context, args);
         }
     },
 

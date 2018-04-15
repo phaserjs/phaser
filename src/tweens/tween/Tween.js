@@ -409,8 +409,16 @@ var Tween = new Class({
      */
     restart: function ()
     {
-        this.stop();
-        this.play();
+        if (this.state === TWEEN_CONST.REMOVED)
+        {
+            this.seek(0);
+            this.parent.makeActive(this);
+        }
+        else
+        {
+            this.stop();
+            this.play();
+        }
     },
 
     /**
@@ -475,7 +483,8 @@ var Tween = new Class({
     },
 
     /**
-     * [description]
+     * Called by TweenManager.preUpdate as part of its loop to check pending and active tweens.
+     * Should not be called directly.
      *
      * @method Phaser.Tweens.Tween#init
      * @since 3.0.0
@@ -511,6 +520,7 @@ var Tween = new Class({
         if (this.paused && !this.parentIsTimeline)
         {
             this.state = TWEEN_CONST.PENDING_ADD;
+            this._pausedState = TWEEN_CONST.INIT;
 
             return false;
         }
@@ -725,6 +735,10 @@ var Tween = new Class({
             this.paused = false;
 
             this.state = this._pausedState;
+        }
+        else
+        {
+            this.play();
         }
 
         return this;

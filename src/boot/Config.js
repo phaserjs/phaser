@@ -98,6 +98,7 @@ var ValueToColor = require('../display/color/ValueToColor');
  * @property {object} [images] - [description]
  * @property {string} [images.default] - [description]
  * @property {string} [images.missing] - [description]
+ * @property {object} [physics] - [description]
  */
 
 /**

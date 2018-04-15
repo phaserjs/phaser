@@ -45,9 +45,22 @@ var ContainerCanvasRenderer = function (renderer, container, interpolationPercen
         transformMatrix.scale(container.scaleX, container.scaleY);
     }
 
+    var alpha = container._alpha;
+    var scrollFactorX = container.scrollFactorX;
+    var scrollFactorY = container.scrollFactorY;
+
     for (var index = 0; index < children.length; ++index)
     {
-        children[index].renderCanvas(renderer, children[index], interpolationPercentage, camera, transformMatrix);
+        var child = children[index];
+        var childAlpha = child._alpha;
+        var childScrollFactorX = child.scrollFactorX;
+        var childScrollFactorY = child.scrollFactorY;
+
+        child.setScrollFactor(childScrollFactorX * scrollFactorX, childScrollFactorY * scrollFactorY);
+        child.setAlpha(childAlpha * alpha);
+        child.renderCanvas(renderer, child, interpolationPercentage, camera, transformMatrix);
+        child.setAlpha(childAlpha);
+        child.setScrollFactor(childScrollFactorX, childScrollFactorY);
     }
 };
 
