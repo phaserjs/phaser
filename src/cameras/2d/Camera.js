@@ -565,7 +565,7 @@ var Camera = new Class({
      * @method Phaser.Cameras.Scene2D.Camera#flash
      * @since 3.0.0
      *
-     * @param {integer} [duration=50] - The duration of the effect in milliseconds.
+     * @param {integer} [duration=250] - The duration of the effect in milliseconds.
      * @param {integer} [red=255] - The amount to fade the red channel towards. A value between 0 and 255.
      * @param {integer} [green=255] - The amount to fade the green channel towards. A value between 0 and 255.
      * @param {integer} [blue=255] - The amount to fade the blue channel towards. A value between 0 and 255.
@@ -1106,6 +1106,7 @@ var Camera = new Class({
     resetFX: function ()
     {
         this.effects.shake.reset();
+        this.effects.flash.reset();
         this.effects.fade.reset();
 
         return this;
@@ -1122,29 +1123,8 @@ var Camera = new Class({
      */
     update: function (time, delta)
     {
-        /*
-        if (this._flashAlpha > 0)
-        {
-            this._flashAlpha -= delta / this._flashDuration;
-
-            if (this._flashAlpha <= 0)
-            {
-                this._flashAlpha = 0;
-
-                if (this._flashCallback)
-                {
-                    //  Do this in case the callback flashes again (otherwise we'd overwrite the new callback)
-                    var flashCallback = this._flashCallback;
-
-                    this._flashCallback = null;
-
-                    flashCallback(this);
-                }
-            }
-        }
-        */
-
         this.effects.shake.update(time, delta);
+        this.effects.flash.update(time, delta);
         this.effects.fade.update(time, delta);
     },
 
@@ -1167,6 +1147,8 @@ var Camera = new Class({
         this.emit('cameradestroy', this);
 
         this.removeAllListeners();
+
+        this.resetFX();
 
         this.matrix.destroy();
 
