@@ -392,7 +392,7 @@ var SceneManager = new Class({
         {
             var sceneToRemove = this.getScene(key);
 
-            if (!sceneToRemove)
+            if (!sceneToRemove || sceneToRemove.sys.isTransitioning())
             {
                 return this;
             }
@@ -436,16 +436,9 @@ var SceneManager = new Class({
         {
             scene.init.call(scene, settings.data);
 
-            if (settings.isTransition && sys.events.listenerCount('transitionstart') > 0)
+            if (settings.isTransition)
             {
-                //  There are listeners waiting for the event after 'init' has run, so emit it
-                sys.events.emit('transitionstart', settings.transitionFrom, settings.transitionDuration);
-
-                //  In case they forget to use `once`
-                sys.events.off('transitionstart');
-
-                settings.isTransition = false;
-                settings.transitionFrom = null;
+                sys.events.emit('transitioninit', settings.transitionFrom, settings.transitionDuration);
             }
         }
 
@@ -613,16 +606,9 @@ var SceneManager = new Class({
 
             scene.create.call(scene, scene.sys.settings.data);
 
-            if (settings.isTransition && sys.events.listenerCount('transitionstart') > 0)
+            if (settings.isTransition)
             {
-                //  There are listeners waiting for the event after 'init' has run, so emit it
                 sys.events.emit('transitionstart', settings.transitionFrom, settings.transitionDuration);
-
-                //  In case they forget to use `once`
-                sys.events.off('transitionstart');
-
-                settings.isTransition = false;
-                settings.transitionFrom = null;
             }
         }
 
@@ -995,7 +981,7 @@ var SceneManager = new Class({
     {
         var scene = this.getScene(key);
 
-        if (scene)
+        if (scene && !scene.sys.isTransitioning())
         {
             scene.sys.sleep();
         }
@@ -1099,7 +1085,7 @@ var SceneManager = new Class({
     {
         var scene = this.getScene(key);
 
-        if (scene)
+        if (scene && !scene.sys.isTransitioning())
         {
             scene.sys.shutdown();
         }

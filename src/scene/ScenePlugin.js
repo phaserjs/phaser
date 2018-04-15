@@ -4,9 +4,9 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
+var Clamp = require('../math/Clamp');
 var Class = require('../utils/Class');
 var CONST = require('./const');
-var Clamp = require('../math/Clamp');
 var GetFastValue = require('../utils/object/GetFastValue');
 var PluginManager = require('../boot/PluginManager');
 
@@ -142,6 +142,16 @@ var ScenePlugin = new Class({
          */
         this._willSleep = false;
 
+        /**
+         * Will this Scene be removed from the Scene Manager after the transition completes?
+         *
+         * @name Phaser.Scenes.ScenePlugin#_willRemove
+         * @type {boolean}
+         * @private
+         * @since 3.5.0
+         */
+        this._willRemove = false;
+
         scene.sys.events.on('start', this.pluginStart, this);
     },
 
@@ -222,7 +232,7 @@ var ScenePlugin = new Class({
     },
 
     /**
-     * @typedef {object} SceneTransitionConfig
+     * @typedef {object} Phaser.Scenes.ScenePlugin#SceneTransitionConfig
      * 
      * @property {string} target - The Scene key to transition to.
      * @property {integer} [duration=1000] - The duration, in ms, for the transition to last.
@@ -232,6 +242,7 @@ var ScenePlugin = new Class({
      * @property {boolean} [moveBelow] - More the target Scene to be below this one before the transition starts.
      * @property {function} [onUpdate] - This callback is invoked every frame for the duration of the transition.
      * @property {any} [onUpdateScope] - The context in which the callback is invoked.
+     * @property {any} [data] - An object containing any data you wish to be passed to the target Scenes init / create methods.
      */
 
     /**
@@ -246,16 +257,28 @@ var ScenePlugin = new Class({
      *
      * This Scene can either be sent to sleep at the end of the transition, or stopped. The default is to stop.
      * 
-     * There are also 3 transition related events: This scene will emit the event `transitionto` when
-     * the transition begins, which is typically the frame after calling this method. The target Scene
-     * will emit the event `transitionstart` when that Scene's `init` and / or `create` methods are called.
-     * It will then emit the event `transitioncomplete` when the duration of the transition is up and this
-     * Scene has been stopped.
+     * There are also 5 transition related events: This scene will emit the event `transitionto` when
+     * the transition begins, which is typically the frame after calling this method.
+     * 
+     * The target Scene will emit the event `transitioninit` when that Scene's `init` method is called.
+     * It will then emit the event `transitionstart` when its `create` method is called.
+     * If the Scene was sleeping and has been woken up, it will emit the event `transitionwake` instead of these two,
+     * as the Scenes `init` and `create` methods are not invoked when a sleep wakes up.
+     * 
+     * When the duration of the transition has elapsed it will emit the event `transitioncomplete`.
+     * These events are all cleared of listeners when the Scene shuts down, but not if it is sent to sleep.
+     *
+     * It's important to understand that the duration of the transition begins the moment you call this method.
+     * If the Scene you are transitioning to includes delayed processes, such as waiting for files to load, the
+     * time still counts down even while that is happening. If the game itself pauses, or something else causes
+     * this Scenes update loop to stop, then the transition will also pause for that duration. There are
+     * checks in place to prevent you accidentally stopping a transitioning Scene but if you've got code to
+     * override this understand that until the target Scene completes it might never be unlocked for input events.
      * 
      * @method Phaser.Scenes.ScenePlugin#transition
      * @since 3.5.0
      *
-     * @param {SceneTransitionConfig} config - The transition configuration object.
+     * @param {Phaser.Scenes.ScenePlugin#SceneTransitionConfig} config - The transition configuration object.
      *
      * @return {boolean} `true` is the transition was started, otherwise `false`.
      */
@@ -278,6 +301,7 @@ var ScenePlugin = new Class({
         this._target = target;
         this._duration = duration;
         this._willSleep = GetFastValue(config, 'sleep', false);
+        this._willRemove = GetFastValue(config, 'remove', false);
 
         var callback = GetFastValue(config, 'onUpdate', null);
 
@@ -383,6 +407,7 @@ var ScenePlugin = new Class({
     transitionComplete: function ()
     {
         var targetSys = this._target.sys;
+        var targetSettings = this._target.sys.settings;
 
         //  Stop the step
         this.systems.events.off('update', this.step, this);
@@ -390,22 +415,22 @@ var ScenePlugin = new Class({
         //  Notify target scene
         targetSys.events.emit('transitioncomplete', this.scene);
 
-        //  Incase they forget to use `once` instead of `on`
-        targetSys.events.off('transitioncomplete');
+        //  Clear target scene settings
+        targetSettings.isTransition = false;
+        targetSettings.transitionFrom = null;
 
-        this.systems.events.off('transitionout');
-
-        //  Clear the target out
-        targetSys.settings.isTransition = false;
-        targetSys.settings.transitionFrom = null;
-
+        //  Clear local settings
         this._duration = 0;
         this._target = null;
         this._onUpdate = null;
         this._onUpdateScope = null;
 
-        //  Stop this Scene
-        if (this._willSleep)
+        //  Now everything is clear we can handle what happens to this Scene
+        if (this._willRemove)
+        {
+            this.manager.remove(this.key);
+        }
+        else if (this._willSleep)
         {
             this.systems.sleep();
         }
