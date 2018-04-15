@@ -443,8 +443,8 @@ var CanvasRenderer = new Class({
         ctx.setTransform(1, 0, 0, 1, 0, 0);
         ctx.globalCompositeOperation = 'source-over';
 
-        camera.effects.flash.postRenderCanvas(ctx);
-        camera.effects.fade.postRenderCanvas(ctx);
+        camera.flashEffect.postRenderCanvas(ctx);
+        camera.fadeEffect.postRenderCanvas(ctx);
 
         //  Reset the camera scissor
         if (scissor)

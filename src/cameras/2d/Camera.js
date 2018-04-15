@@ -35,14 +35,27 @@ var Vector2 = require('../../math/Vector2');
  */
 
 /**
- * @callback Camera2DCallback
- *
- * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
- */
-
-/**
  * @classdesc
- * [description]
+ * A Camera.
+ *
+ * The Camera is the way in which all games are rendered in Phaser. They provide a view into your game world,
+ * and can be positioned, rotated, zoomed and scrolled accordingly.
+ *
+ * A Camera consists of two elements: The viewport and the scroll values.
+ *
+ * The viewport is the physical position and size of the Camera within your game. Cameras, by default, are
+ * created the same size as your game, but their position and size can be set to anything. This means if you
+ * wanted to create a camera that was 320x200 in size, positioned in the bottom-right corner of your game,
+ * you'd adjust the viewport to do that (using methods like `setViewport` and `setSize`).
+ *
+ * If you wish to change where the Camera is looking in your game, then you scroll it. You can do this
+ * via the properties `scrollX` and `scrollY` or the method `setScroll`. Scrolling has no impact on the
+ * viewport, and changing the viewport has no impact on the scrolling.
+ *
+ * By default a Camera will render all Game Objects it can see. You can change this using the `ignore` method,
+ * allowing you to filter Game Objects out on a per-Camera basis.
+ *
+ * A Camera also has built-in special effects including Fade, Flash and Camera Shake.
  *
  * @class Camera
  * @extends Phaser.Events.EventEmitter
@@ -232,12 +245,35 @@ var Camera = new Class({
          */
         this.backgroundColor = ValueToColor('rgba(0,0,0,0)');
 
-        //  Allow to be modified
-        this.effects = {
-            fade: new Effects.Fade(this),
-            flash: new Effects.Flash(this),
-            shake: new Effects.Shake(this)
-        };
+        /**
+         * The Camera Fade effect handler.
+         * To fade this camera see the `Camera.fade` methods.
+         *
+         * @name Phaser.Cameras.Scene2D.Camera#fadeEffect
+         * @type {Phaser.Cameras.Scene2D.Effects.Fade}
+         * @since 3.5.0
+         */
+        this.fadeEffect = new Effects.Fade(this);
+
+        /**
+         * The Camera Flash effect handler.
+         * To flash this camera see the `Camera.flash` method.
+         *
+         * @name Phaser.Cameras.Scene2D.Camera#flashEffect
+         * @type {Phaser.Cameras.Scene2D.Effects.Flash}
+         * @since 3.5.0
+         */
+        this.flashEffect = new Effects.Flash(this);
+
+        /**
+         * The Camera Shake effect handler.
+         * To shake this camera see the `Camera.shake` method.
+         *
+         * @name Phaser.Cameras.Scene2D.Camera#shakeEffect
+         * @type {Phaser.Cameras.Scene2D.Effects.Shake}
+         * @since 3.5.0
+         */
+        this.shakeEffect = new Effects.Shake(this);
 
         /**
          * Should the camera cull Game Objects before checking them for input hit tests?
@@ -261,7 +297,7 @@ var Camera = new Class({
         this.culledObjects = [];
 
         /**
-         * [description]
+         * Internal follow target reference.
          *
          * @name Phaser.Cameras.Scene2D.Camera#_follow
          * @type {?any}
@@ -272,7 +308,7 @@ var Camera = new Class({
         this._follow = null;
 
         /**
-         * [description]
+         * Internal camera ID. Assigned by the Camera Manager and used in the camera pool.
          *
          * @name Phaser.Cameras.Scene2D.Camera#_id
          * @type {integer}
@@ -284,7 +320,7 @@ var Camera = new Class({
     },
 
     /**
-     * [description]
+     * Scrolls the Camera so that it is looking at the center of the Camera Bounds (if previously enabled)
      *
      * @method Phaser.Cameras.Scene2D.Camera#centerToBounds
      * @since 3.0.0
@@ -293,14 +329,17 @@ var Camera = new Class({
      */
     centerToBounds: function ()
     {
-        this.scrollX = (this._bounds.width * 0.5) - (this.width * 0.5);
-        this.scrollY = (this._bounds.height * 0.5) - (this.height * 0.5);
+        if (this.useBounds)
+        {
+            this.scrollX = (this._bounds.width * 0.5) - (this.width * 0.5);
+            this.scrollY = (this._bounds.height * 0.5) - (this.height * 0.5);
+        }
 
         return this;
     },
 
     /**
-     * [description]
+     * Scrolls the Camera so that it is re-centered based on its viewport size.
      *
      * @method Phaser.Cameras.Scene2D.Camera#centerToSize
      * @since 3.0.0
@@ -316,16 +355,17 @@ var Camera = new Class({
     },
 
     /**
-     * [description]
+     * Takes an array of Game Objects and returns a new array featuring only those objects
+     * visible by this camera.
      *
      * @method Phaser.Cameras.Scene2D.Camera#cull
      * @since 3.0.0
      *
      * @generic {Phaser.GameObjects.GameObject[]} G - [renderableObjects,$return]
      *
-     * @param {Phaser.GameObjects.GameObject[]} renderableObjects - [description]
+     * @param {Phaser.GameObjects.GameObject[]} renderableObjects - An array of Game Objects to cull.
      *
-     * @return {Phaser.GameObjects.GameObject[]} [description]
+     * @return {Phaser.GameObjects.GameObject[]} An array of Game Objects visible to this Camera.
      */
     cull: function (renderableObjects)
     {
@@ -412,7 +452,7 @@ var Camera = new Class({
      */
     fadeIn: function (duration, red, green, blue, callback, context)
     {
-        return this.effects.fade.start(false, duration, red, green, blue, true, callback, context);
+        return this.fadeEffect.start(false, duration, red, green, blue, true, callback, context);
     },
 
     /**
@@ -434,7 +474,7 @@ var Camera = new Class({
      */
     fadeOut: function (duration, red, green, blue, callback, context)
     {
-        return this.effects.fade.start(true, duration, red, green, blue, true, callback, context);
+        return this.fadeEffect.start(true, duration, red, green, blue, true, callback, context);
     },
 
     /**
@@ -456,7 +496,7 @@ var Camera = new Class({
      */
     fadeFrom: function (duration, red, green, blue, force, callback, context)
     {
-        return this.effects.fade.start(false, duration, red, green, blue, force, callback, context);
+        return this.fadeEffect.start(false, duration, red, green, blue, force, callback, context);
     },
 
     /**
@@ -478,7 +518,7 @@ var Camera = new Class({
      */
     fade: function (duration, red, green, blue, force, callback, context)
     {
-        return this.effects.fade.start(true, duration, red, green, blue, force, callback, context);
+        return this.fadeEffect.start(true, duration, red, green, blue, force, callback, context);
     },
 
     /**
@@ -500,7 +540,7 @@ var Camera = new Class({
      */
     flash: function (duration, red, green, blue, force, callback, context)
     {
-        return this.effects.flash.start(duration, red, green, blue, force, callback, context);
+        return this.flashEffect.start(duration, red, green, blue, force, callback, context);
     },
 
     /**
@@ -520,22 +560,23 @@ var Camera = new Class({
      */
     shake: function (duration, intensity, force, callback, context)
     {
-        return this.effects.shake.start(duration, intensity, force, callback, context);
+        return this.shakeEffect.start(duration, intensity, force, callback, context);
     },
 
     /**
-     * [description]
+     * Converts the given `x` and `y` coordinates into World space, based on this Cameras transform.
+     * You can optionally provide a Vector2, or similar object, to store the results in.
      *
      * @method Phaser.Cameras.Scene2D.Camera#getWorldPoint
      * @since 3.0.0
      *
      * @generic {Phaser.Math.Vector2} O - [output,$return]
      *
-     * @param {number} x - [description]
-     * @param {number} y - [description]
-     * @param {(object|Phaser.Math.Vector2)} [output] - [description]
+     * @param {number} x - The x position to convert to world space.
+     * @param {number} y - The y position to convert to world space.
+     * @param {(object|Phaser.Math.Vector2)} [output] - An optional object to store the results in. If not provided a new Vector2 will be created.
      *
-     * @return {Phaser.Math.Vector2} [description]
+     * @return {Phaser.Math.Vector2} An object holding the converted values in its `x` and `y` properties.
      */
     getWorldPoint: function (x, y, output)
     {
@@ -589,41 +630,44 @@ var Camera = new Class({
     },
 
     /**
-     * [description]
+     * Given a Game Object, or an array of Game Objects, it will update all of their camera filter settings
+     * so that they are ignored by this Camera. This means they will not be rendered by this Camera.
      *
      * @method Phaser.Cameras.Scene2D.Camera#ignore
      * @since 3.0.0
      *
-     * @param {(Phaser.GameObjects.GameObject|Phaser.GameObjects.GameObject[])} gameObjectOrArray - [description]
+     * @param {(Phaser.GameObjects.GameObject|Phaser.GameObjects.GameObject[])} gameObject - The Game Object, or array of Game Objects, to be ignored by this Camera.
      *
      * @return {Phaser.Cameras.Scene2D.Camera} This Camera instance.
      */
-    ignore: function (gameObjectOrArray)
+    ignore: function (gameObject)
     {
-        if (Array.isArray(gameObjectOrArray))
+        var id = this._id;
+
+        if (Array.isArray(gameObject))
         {
-            for (var index = 0; index < gameObjectOrArray.length; ++index)
+            for (var i = 0; i < gameObject.length; i++)
             {
-                gameObjectOrArray[index].cameraFilter |= this._id;
+                gameObject[i].cameraFilter |= id;
             }
         }
         else
         {
-            gameObjectOrArray.cameraFilter |= this._id;
+            gameObject.cameraFilter |= id;
         }
 
         return this;
     },
 
     /**
-     * [description]
+     * Internal preRender step.
      *
      * @method Phaser.Cameras.Scene2D.Camera#preRender
+     * @protected
      * @since 3.0.0
      *
-     * @param {number} baseScale - [description]
-     * @param {number} resolution - [description]
-     *
+     * @param {number} baseScale - The base scale, as set in the Camera Manager.
+     * @param {number} resolution - The game resolution.
      */
     preRender: function (baseScale, resolution)
     {
@@ -683,11 +727,11 @@ var Camera = new Class({
         matrix.scale(zoom, zoom);
         matrix.translate(-originX, -originY);
 
-        this.effects.shake.preRender();
+        this.shakeEffect.preRender();
     },
 
     /**
-     * [description]
+     * If this Camera has previously had movement bounds set on it, this will remove them.
      *
      * @method Phaser.Cameras.Scene2D.Camera#removeBounds
      * @since 3.0.0
@@ -704,12 +748,14 @@ var Camera = new Class({
     },
 
     /**
-     * [description]
+     * Set the rotation of this Camera. This causes everything it renders to appear rotated.
+     * 
+     * Rotating a camera does not rotate the viewport itself, it is applied during rendering.
      *
      * @method Phaser.Cameras.Scene2D.Camera#setAngle
      * @since 3.0.0
      *
-     * @param {number} [value=0] - [description]
+     * @param {number} [value=0] - The cameras angle of rotation, given in degrees.
      *
      * @return {Phaser.Cameras.Scene2D.Camera} This Camera instance.
      */
@@ -723,12 +769,17 @@ var Camera = new Class({
     },
 
     /**
-     * [description]
+     * Sets the background color for this Camera.
+     * 
+     * By default a Camera has a transparent background but it can be given a solid color, with any level
+     * of transparency, via this method.
+     *
+     * The color value can be specified using CSS color notation, hex or numbers.
      *
      * @method Phaser.Cameras.Scene2D.Camera#setBackgroundColor
      * @since 3.0.0
      *
-     * @param {(string|number|InputColorObject)} [color='rgba(0,0,0,0)'] - [description]
+     * @param {(string|number|InputColorObject)} [color='rgba(0,0,0,0)'] - The color value. In CSS, hex or numeric color notation.
      *
      * @return {Phaser.Cameras.Scene2D.Camera} This Camera instance.
      */
@@ -744,15 +795,18 @@ var Camera = new Class({
     },
 
     /**
-     * [description]
+     * Set the world bounds for this Camera.
+     *
+     * A Camera bounds controls where the camera can scroll to within the world. It does not limit
+     * rendering of the camera, or placement of the viewport within your game.
      *
      * @method Phaser.Cameras.Scene2D.Camera#setBounds
      * @since 3.0.0
      *
-     * @param {number} x - [description]
-     * @param {number} y - [description]
-     * @param {number} width - [description]
-     * @param {number} height - [description]
+     * @param {integer} x - The top-left x coordinate of the bounds.
+     * @param {integer} y - The top-left y coordinate of the bounds.
+     * @param {integer} width - The width of the bounds, in pixels.
+     * @param {integer} height - The height of the bounds, in pixels.
      *
      * @return {Phaser.Cameras.Scene2D.Camera} This Camera instance.
      */
@@ -766,12 +820,13 @@ var Camera = new Class({
     },
 
     /**
-     * [description]
+     * Sets the name of this Camera.
+     * This value is for your own use and isn't used internally.
      *
      * @method Phaser.Cameras.Scene2D.Camera#setName
      * @since 3.0.0
      *
-     * @param {string} [value=''] - [description]
+     * @param {string} [value=''] - The name of the Camera.
      *
      * @return {Phaser.Cameras.Scene2D.Camera} This Camera instance.
      */
@@ -785,13 +840,15 @@ var Camera = new Class({
     },
 
     /**
-     * [description]
+     * Set the position of the Camera viewport within the game.
+     * 
+     * This does not change where the camera is 'looking'. See `setScroll` to control that.
      *
      * @method Phaser.Cameras.Scene2D.Camera#setPosition
      * @since 3.0.0
      *
-     * @param {number} x - [description]
-     * @param {number} [y=x] - [description]
+     * @param {number} x - The top-left x coordinate of the Camera viewport.
+     * @param {number} [y=x] - The top-left y coordinate of the Camera viewport.
      *
      * @return {Phaser.Cameras.Scene2D.Camera} This Camera instance.
      */
@@ -806,12 +863,14 @@ var Camera = new Class({
     },
 
     /**
-     * [description]
+     * Set the rotation of this Camera. This causes everything it renders to appear rotated.
+     * 
+     * Rotating a camera does not rotate the viewport itself, it is applied during rendering.
      *
      * @method Phaser.Cameras.Scene2D.Camera#setRotation
      * @since 3.0.0
      *
-     * @param {number} [value=0] - [description]
+     * @param {number} [value=0] - The rotation of the Camera, in radians.
      *
      * @return {Phaser.Cameras.Scene2D.Camera} This Camera instance.
      */
@@ -825,12 +884,13 @@ var Camera = new Class({
     },
 
     /**
-     * [description]
+     * Should the Camera round pixel values to whole integers when scrolling?
+     * In some types of game this is required to prevent sub-pixel aliasing.
      *
      * @method Phaser.Cameras.Scene2D.Camera#setRoundPixels
      * @since 3.0.0
      *
-     * @param {boolean} value - [description]
+     * @param {boolean} value - `true` to round Camera pixels, `false` to not.
      *
      * @return {Phaser.Cameras.Scene2D.Camera} This Camera instance.
      */
@@ -842,12 +902,12 @@ var Camera = new Class({
     },
 
     /**
-     * [description]
+     * Sets the Scene the Camera is bound to.
      *
      * @method Phaser.Cameras.Scene2D.Camera#setScene
      * @since 3.0.0
      *
-     * @param {Phaser.Scene} scene - [description]
+     * @param {Phaser.Scene} scene - The Scene the camera is bound to.
      *
      * @return {Phaser.Cameras.Scene2D.Camera} This Camera instance.
      */
@@ -859,13 +919,17 @@ var Camera = new Class({
     },
 
     /**
-     * [description]
+     * Set the position of where the Camera is looking within the game.
+     * You can also modify the properties `Camera.scrollX` and `Camera.scrollY` directly.
+     * Use this method, or the scroll properties, to move your camera around the game world.
+     * 
+     * This does not change where the camera viewport is placed. See `setPosition` to control that.
      *
      * @method Phaser.Cameras.Scene2D.Camera#setScroll
      * @since 3.0.0
      *
-     * @param {number} x - [description]
-     * @param {number} [y=x] - [description]
+     * @param {number} x - The x coordinate of the Camera in the game world.
+     * @param {number} [y=x] - The y coordinate of the Camera in the game world.
      *
      * @return {Phaser.Cameras.Scene2D.Camera} This Camera instance.
      */
@@ -880,13 +944,17 @@ var Camera = new Class({
     },
 
     /**
-     * [description]
+     * Set the size of the Camera viewport.
+     *
+     * By default a Camera is the same size as the game, but can be made smaller via this method,
+     * allowing you to create mini-cam style effects by creating and positioning a smaller Camera
+     * viewport within your game.
      *
      * @method Phaser.Cameras.Scene2D.Camera#setSize
      * @since 3.0.0
      *
-     * @param {number} width - [description]
-     * @param {number} [height=width] - [description]
+     * @param {integer} width - The width of the Camera viewport.
+     * @param {integer} [height=width] - The height of the Camera viewport.
      *
      * @return {Phaser.Cameras.Scene2D.Camera} This Camera instance.
      */
@@ -901,15 +969,23 @@ var Camera = new Class({
     },
 
     /**
-     * [description]
+     * This method sets the position and size of the Camera viewport in a single call.
+     *
+     * If you're trying to change where the Camera is looking at in your game, then see
+     * the method `Camera.setScroll` instead. This method is for changing the viewport
+     * itself, not what the camera can see.
+     * 
+     * By default a Camera is the same size as the game, but can be made smaller via this method,
+     * allowing you to create mini-cam style effects by creating and positioning a smaller Camera
+     * viewport within your game.
      *
      * @method Phaser.Cameras.Scene2D.Camera#setViewport
      * @since 3.0.0
      *
-     * @param {number} x - [description]
-     * @param {number} y - [description]
-     * @param {number} width - [description]
-     * @param {number} height - [description]
+     * @param {number} x - The top-left x coordinate of the Camera viewport.
+     * @param {number} y - The top-left y coordinate of the Camera viewport.
+     * @param {integer} width - The width of the Camera viewport.
+     * @param {integer} [height=width] - The height of the Camera viewport.
      *
      * @return {Phaser.Cameras.Scene2D.Camera} This Camera instance.
      */
@@ -924,12 +1000,19 @@ var Camera = new Class({
     },
 
     /**
-     * [description]
+     * Set the zoom value of the Camera.
+     *
+     * Changing to a smaller value, such as 0.5, will cause the camera to 'zoom out'.
+     * Changing to a larger value, such as 2, will cause the camera to 'zoom in'.
+     *
+     * A value of 1 means 'no zoom' and is the default.
+     *
+     * Changing the zoom does not impact the Camera viewport in any way, it is only applied during rendering.
      *
      * @method Phaser.Cameras.Scene2D.Camera#setZoom
      * @since 3.0.0
      *
-     * @param {float} [value=1] - [description]
+     * @param {float} [value=1] - The zoom value of the Camera.
      *
      * @return {Phaser.Cameras.Scene2D.Camera} This Camera instance.
      */
@@ -943,13 +1026,16 @@ var Camera = new Class({
     },
 
     /**
-     * [description]
+     * Sets the Camera to follow a Game Object.
+     *
+     * When enabled the Camera will automatically adjust its scroll position to keep the target Game Object
+     * in its center.
      *
      * @method Phaser.Cameras.Scene2D.Camera#startFollow
      * @since 3.0.0
      *
-     * @param {(Phaser.GameObjects.GameObject|object)} target - [description]
-     * @param {boolean} [roundPx=false] - [description]
+     * @param {(Phaser.GameObjects.GameObject|object)} target - The target for the Camera to follow.
+     * @param {boolean} [roundPx=false] - Round the movement pixels to whole integers?
      *
      * @return {Phaser.Cameras.Scene2D.Camera} This Camera instance.
      */
@@ -965,7 +1051,7 @@ var Camera = new Class({
     },
 
     /**
-     * [description]
+     * Stops a Camera from following a Game Object, if previously set via `Camera.startFollow`.
      *
      * @method Phaser.Cameras.Scene2D.Camera#stopFollow
      * @since 3.0.0
@@ -980,12 +1066,12 @@ var Camera = new Class({
     },
 
     /**
-     * [description]
+     * Returns an Object suitable for JSON storage containing all of the Camera viewport and rendering properties.
      *
      * @method Phaser.Cameras.Scene2D.Camera#toJSON
      * @since 3.0.0
      *
-     * @return {JSONCamera} [description]
+     * @return {JSONCamera} A well-formed object suitable for conversion to JSON.
      */
     toJSON: function ()
     {
@@ -1027,17 +1113,18 @@ var Camera = new Class({
      */
     resetFX: function ()
     {
-        this.effects.shake.reset();
-        this.effects.flash.reset();
-        this.effects.fade.reset();
+        this.shakeEffect.reset();
+        this.flashEffect.reset();
+        this.fadeEffect.reset();
 
         return this;
     },
 
     /**
-     * [description]
+     * Internal method called automatically by the Camera Manager.
      *
      * @method Phaser.Cameras.Scene2D.Camera#update
+     * @protected
      * @since 3.0.0
      *
      * @param {integer} time - The current timestamp as generated by the Request Animation Frame or SetTimeout.
@@ -1045,9 +1132,9 @@ var Camera = new Class({
      */
     update: function (time, delta)
     {
-        this.effects.shake.update(time, delta);
-        this.effects.flash.update(time, delta);
-        this.effects.fade.update(time, delta);
+        this.shakeEffect.update(time, delta);
+        this.flashEffect.update(time, delta);
+        this.fadeEffect.update(time, delta);
     },
 
     /**
@@ -1058,10 +1145,14 @@ var Camera = new Class({
      */
 
     /**
-     * [description]
+     * Destroys this Camera instance.
+     *
+     * Called by the Camera Manager. If you wish to destroy a Camera please use `CameraManager.remove` as
+     * cameras are stored in a pool, ready for recycling later, and calling this directly will prevent that.
      *
      * @method Phaser.Cameras.Scene2D.Camera#destroy
      * @fires CameraDestroyEvent
+     * @protected
      * @since 3.0.0
      */
     destroy: function ()
@@ -1074,9 +1165,11 @@ var Camera = new Class({
 
         this.matrix.destroy();
 
-        this._bounds = undefined;
-
         this.culledObjects = [];
+
+        this.target = undefined;
+
+        this._bounds = undefined;
 
         this.scene = undefined;
     }

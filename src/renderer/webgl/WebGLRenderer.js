@@ -1404,8 +1404,8 @@ var WebGLRenderer = new Class({
     {
         var FlatTintPipeline = this.pipelines.FlatTintPipeline;
 
-        var isFlashing = camera.effects.flash.postRenderWebGL(FlatTintPipeline, Utils.getTintFromFloats);
-        var isFading = camera.effects.fade.postRenderWebGL(FlatTintPipeline, Utils.getTintFromFloats);
+        var isFlashing = camera.flashEffect.postRenderWebGL(FlatTintPipeline, Utils.getTintFromFloats);
+        var isFading = camera.fadeEffect.postRenderWebGL(FlatTintPipeline, Utils.getTintFromFloats);
 
         if (isFading || isFlashing)
         {
