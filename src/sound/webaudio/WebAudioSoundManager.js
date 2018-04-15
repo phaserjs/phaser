@@ -76,6 +76,11 @@ var WebAudioSoundManager = new Class({
         this.locked = this.context.state === 'suspended' && 'ontouchstart' in window;
 
         BaseSoundManager.call(this, game);
+
+        if (this.locked)
+        {
+            this.unlock();
+        }
     },
 
     /**
@@ -145,6 +150,7 @@ var WebAudioSoundManager = new Class({
             {
                 document.body.removeEventListener('touchstart', unlock);
                 document.body.removeEventListener('touchend', unlock);
+
                 _this.unlocked = true;
             });
         };
