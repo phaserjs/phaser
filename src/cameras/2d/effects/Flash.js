@@ -150,7 +150,7 @@ var Flash = new Class({
     },
 
     /**
-     * This event is fired when the fade in effect begins to run on a camera.
+     * This event is fired when the flash effect begins to run on a camera.
      *
      * @event CameraFlashStartEvent
      * @param {Phaser.Cameras.Scene2D.Camera} camera - The camera that the effect began on.
@@ -162,7 +162,7 @@ var Flash = new Class({
      */
 
     /**
-     * This event is fired when the fade in effect completes.
+     * This event is fired when the flash effect completes.
      *
      * @event CameraFlashCompleteEvent
      * @param {Phaser.Cameras.Scene2D.Camera} camera - The camera that the effect began on.
@@ -177,7 +177,7 @@ var Flash = new Class({
      * @fires CameraFlashCompleteEvent
      * @since 3.5.0
      *
-     * @param {integer} [duration=50] - The duration of the effect in milliseconds.
+     * @param {integer} [duration=250] - The duration of the effect in milliseconds.
      * @param {integer} [red=255] - The amount to fade the red channel towards. A value between 0 and 255.
      * @param {integer} [green=255] - The amount to fade the green channel towards. A value between 0 and 255.
      * @param {integer} [blue=255] - The amount to fade the blue channel towards. A value between 0 and 255.
@@ -190,7 +190,7 @@ var Flash = new Class({
      */
     start: function (duration, red, green, blue, force, callback, context)
     {
-        if (duration === undefined) { duration = 1000; }
+        if (duration === undefined) { duration = 250; }
         if (red === undefined) { red = 255; }
         if (green === undefined) { green = 255; }
         if (blue === undefined) { blue = 255; }
