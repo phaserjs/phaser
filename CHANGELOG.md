@@ -2,6 +2,22 @@
 
 ## Version 3.5.0 - in development
 
+### Changes to Cameras
+
+* The Camera class and all Camera effects are now fully covered by 100% complete JS Docs.
+* All Camera effects have been recoded from scratch. They now follow a unified effects structure and each effect is encapsulated in its own class found in the 'effects' folder. Currently there are Fade, Flash and Shake effects.
+* The new effects classes are accessed via the Camera properties `fadeEffect`, `flashEffect` and `shakeEffect`. You can still use the friendly Camera level methods: `shake`, `fade` and `flash`.
+* The new structure means you can replace the default effects with your own by simply overwriting the properties with your own class.
+* The effects now work properly under any combination. For example, you can fade out then in, or in then out, and still flash or shake while a fade is happening. The renderers will stack the effects in order properly now to allow this.
+* All of the effect related Camera properties (like `_fadeAlpha`) have been removed. If you need access to these values you can get it much more cleanly via the camera effects classes themselves. They were always private anyway, but we know some of you needed to modify them, so have been doing so from your code. This code will now need updating.
+* Removed Camera.clearBeforeRender property as it was never used internally. This setting can be enabled on a Game-wide basis.
+* Camera now extends the Event Emitter, allowing it to emit events.
+* Camera.cullHitTest has been removed. It was never used internally and duplicates the code in `Camera.cull`.
+* The `callback` property of the Camera effects methods has changed purpose. It is no longer an `onComplete` callback, but is now an `onUpdate` callback. It is invoked every frame for the duration of the effect. See the docs for argument details.
+* Camera effects now dispatch events. They dispatch 'start' and 'complete' events, which can be used to handle any actions you may previously have been doing in the callback. See the effects docs and examples for the event names and arguments.
+* The Camera Shake effect now lets you specify a different intensities for the x and y dimensions.
+* You can track the progress of all events via the `progress` property on the effect instance, allowing you to sync effect duration with other in-game events.
+
 ### New Features
 
 * GameObject.ignoreDestroy allows you to control if a Game Object is destroyed or not. Setting the flag will tell it to ignore destroy requests from Groups, Containers and even the Scene itself. See the docs for more details.
@@ -25,9 +41,6 @@
 * Every Plugin has been updated to correctly follow the same flow through the Scene lifecycle. Instead of listening for the Scene 'boot' event, which is only dispatched once (when the Scene is first created), they will now listen for the Scene 'start' event, which occurs every time the Scene is started. All plugins now consistently follow the same Shutdown and Destroy patterns too, meaning they tidy-up after themselves on a shutdown, not just a destroy. Overall, this change means that there should be less issues when returning to previously closed Scenes, as the plugins will restart themselves properly.
 * When shutting down a Scene all Game Objects that belong to the scene will now automatically destroy themselves. They would previously be removed from the display and update lists, but the objects themselves didn't self-destruct. You can control this on a per-object basis with the `ignoreDestroy` property.
 * A Matter Mouse Spring will disable debug draw of its constraint by default (you can override it by passing in your own config)
-* Removed Camera.clearBeforeRender property as it was never used internally. This setting can be enabled on a Game-wide basis.
-* Camera now extends the Event Emitter, allowing it to emit events.
-* Camera.cullHitTest has been removed. It was never used internally and duplicates the code in `Camera.cull`.
 
 ### Examples, Documentation and TypeScript
 
