@@ -18,6 +18,11 @@ var Vector2 = require('../../math/Vector2');
  * @classdesc
  * A Container Game Object.
  *
+ * WARNING: EXPERIMENTAL. There are several known cases where Containers will not behave correctly,
+ * especially if you use a multi-camera or transformed camera set-up. We are still working on them,
+ * but wanted to release as part of 3.4 under a beta feature flag, because in the main they work
+ * are and worth getting used to.
+ *
  * A Container, as the name implies, can 'contain' other types of Game Object.
  * When a Game Object is added to a Container, the Container becomes responsible for the rendering of it.
  * By default it will be removed from the Display List and instead added to the Containers own internal list.
@@ -184,6 +189,42 @@ var Container = new Class({
         {
             this.add(children);
         }
+    },
+
+    /**
+     * Internal value to allow Containers to be used for input and physics.
+     * Do not change this value. It has no effect other than to break things.
+     *
+     * @name Phaser.GameObjects.Container#originX
+     * @type {number}
+     * @readOnly
+     * @since 3.4.0
+     */
+    originX: {
+
+        get: function ()
+        {
+            return 0.5;
+        }
+
+    },
+
+    /**
+     * Internal value to allow Containers to be used for input and physics.
+     * Do not change this value. It has no effect other than to break things.
+     *
+     * @name Phaser.GameObjects.Container#originY
+     * @type {number}
+     * @readOnly
+     * @since 3.4.0
+     */
+    originY: {
+
+        get: function ()
+        {
+            return 0.5;
+        }
+
     },
 
     /**
@@ -371,15 +412,15 @@ var Container = new Class({
     },
 
     /**
-     * Returns the world transform matrix.
+     * Returns the world transform matrix as used for Bounds checks.
      * The returned matrix is a temporal and shouldn't be stored.
      *
-     * @method Phaser.GameObjects.Container#getWorldTransformMatrix
+     * @method Phaser.GameObjects.Container#getBoundsTransformMatrix
      * @since 3.4.0
      *
      * @return {Phaser.GameObjects.Components.TransformMatrix} The world transform matrix.
      */
-    getWorldTransformMatrix: function ()
+    getBoundsTransformMatrix: function ()
     {
         var tempMatrix = this.tempTransformMatrix;
 
@@ -1174,7 +1215,7 @@ var Container = new Class({
      */
     destroy: function ()
     {
-        this.removeAll(this.exclusive);
+        this.removeAll(!!this.exclusive);
 
         this.localTransform.destroy();
         this.tempTransformMatrix.destroy();

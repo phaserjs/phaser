@@ -712,7 +712,7 @@ var Animation = new Class({
      * @fires Phaser.GameObjects.Components.Animation#onCompleteEvent
      * @since 3.4.0
      *
-     * @param {integer} delay - The number of miliseconds to wait before stopping this animation.
+     * @param {integer} delay - The number of milliseconds to wait before stopping this animation.
      *
      * @return {Phaser.GameObjects.GameObject} The Game Object that owns this Animation Component.
      */
@@ -817,24 +817,26 @@ var Animation = new Class({
      */
     update: function (timestamp, delta)
     {
-        if (this.currentAnim && (this.isPlaying || !this.currentAnim.paused))
+        if (!this.currentAnim || !this.isPlaying || this.currentAnim.paused)
         {
-            this.accumulator += delta * this._timeScale;
+            return;
+        }
 
-            if (this._pendingStop === 1)
+        this.accumulator += delta * this._timeScale;
+
+        if (this._pendingStop === 1)
+        {
+            this._pendingStopValue -= delta;
+
+            if (this._pendingStopValue <= 0)
             {
-                this._pendingStopValue -= delta;
-
-                if (this._pendingStopValue <= 0)
-                {
-                    return this.currentAnim.completeAnimation(this);
-                }
+                return this.currentAnim.completeAnimation(this);
             }
+        }
 
-            if (this.accumulator >= this.nextTick)
-            {
-                this.currentAnim.setFrame(this);
-            }
+        if (this.accumulator >= this.nextTick)
+        {
+            this.currentAnim.setFrame(this);
         }
     },
 

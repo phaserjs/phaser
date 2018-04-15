@@ -53,25 +53,25 @@ var CameraManager = new Class({
          */
         this.cameras = [];
 
-        if (!scene.sys.settings.isBooted)
-        {
-            scene.sys.events.once('boot', this.boot, this);
-        }
+        scene.sys.events.on('start', this.start, this);
     },
 
     /**
-     * [description]
+     * This method is called automatically by the Scene when it is starting up.
+     * It is responsible for creating local systems, properties and listening for Scene events.
+     * Do not invoke it directly.
      *
-     * @method Phaser.Cameras.Sprite3D.CameraManager#boot
-     * @since 3.0.0
+     * @method Phaser.Cameras.Sprite3D.CameraManager#start
+     * @private
+     * @since 3.5.0
      */
-    boot: function ()
+    start: function ()
     {
         var eventEmitter = this.systems.events;
 
         eventEmitter.on('update', this.update, this);
-        eventEmitter.on('shutdown', this.shutdown, this);
-        eventEmitter.on('destroy', this.destroy, this);
+        eventEmitter.once('shutdown', this.shutdown, this);
+        eventEmitter.once('destroy', this.destroy, this);
     },
 
     /**
@@ -222,24 +222,39 @@ var CameraManager = new Class({
     },
 
     /**
-     * [description]
+     * The Scene that owns this plugin is shutting down.
+     * We need to kill and reset all internal properties as well as stop listening to Scene events.
      *
      * @method Phaser.Cameras.Sprite3D.CameraManager#shutdown
+     * @private
      * @since 3.0.0
      */
     shutdown: function ()
     {
+        var eventEmitter = this.systems.events;
+
+        eventEmitter.off('update', this.update, this);
+        eventEmitter.off('shutdown', this.shutdown, this);
+
+        this.removeAll();
     },
 
     /**
-     * [description]
+     * The Scene that owns this plugin is being destroyed.
+     * We need to shutdown and then kill off all external references.
      *
      * @method Phaser.Cameras.Sprite3D.CameraManager#destroy
+     * @private
      * @since 3.0.0
      */
     destroy: function ()
     {
-        this.scene = undefined;
+        this.shutdown();
+
+        this.scene.sys.events.off('start', this.start, this);
+
+        this.scene = null;
+        this.systems = null;
     }
 
 });

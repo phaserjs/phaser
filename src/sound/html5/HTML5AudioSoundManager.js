@@ -96,7 +96,7 @@ var HTML5AudioSoundManager = new Class({
          * @private
          * @since 3.0.0
          */
-        this.lockedActionsQueue = this.locked ? [] : null;
+        this.lockedActionsQueue = null;
 
         /**
          * Property that actually holds the value of global mute
@@ -154,6 +154,17 @@ var HTML5AudioSoundManager = new Class({
      */
     unlock: function ()
     {
+        this.locked = 'ontouchstart' in window;
+
+        if(this.locked)
+        {
+            this.lockedActionsQueue = [];
+        }
+        else
+        {
+            return;
+        }
+
         var _this = this;
 
         var moved = false;
@@ -165,11 +176,6 @@ var HTML5AudioSoundManager = new Class({
 
         var unlock = function ()
         {
-            if (!_this.game.cache.audio.entries.size)
-            {
-                return;
-            }
-
             if (moved)
             {
                 moved = false;
@@ -179,26 +185,43 @@ var HTML5AudioSoundManager = new Class({
             document.body.removeEventListener('touchmove', detectMove);
             document.body.removeEventListener('touchend', unlock);
 
-            var allTags = [];
+            var lockedTags = [];
 
             _this.game.cache.audio.entries.each(function (key, tags)
             {
                 for (var i = 0; i < tags.length; i++)
                 {
-                    allTags.push(tags[i]);
+                    var tag = tags[i];
+
+                    if (tag.dataset.locked === 'true')
+                    {
+                        lockedTags.push(tag);
+                    }
                 }
+
                 return true;
             });
 
-            var lastTag = allTags[allTags.length - 1];
+            if (lockedTags.length === 0)
+            {
+                return;
+            }
+
+            var lastTag = lockedTags[lockedTags.length - 1];
 
             lastTag.oncanplaythrough = function ()
             {
                 lastTag.oncanplaythrough = null;
+
+                lockedTags.forEach(function (tag)
+                {
+                    tag.dataset.locked = 'false';
+                });
+
                 _this.unlocked = true;
             };
 
-            allTags.forEach(function (tag)
+            lockedTags.forEach(function (tag)
             {
                 tag.load();
             });
@@ -208,7 +231,11 @@ var HTML5AudioSoundManager = new Class({
         {
             this.forEachActiveSound(function (sound)
             {
-                sound.duration = sound.tags[0].duration;
+                if(sound.currentMarker === null && sound.duration === 0)
+                {
+                    sound.duration = sound.tags[0].duration;
+                }
+
                 sound.totalDuration = sound.tags[0].duration;
             });
 
@@ -226,6 +253,7 @@ var HTML5AudioSoundManager = new Class({
 
             this.lockedActionsQueue.length = 0;
             this.lockedActionsQueue = null;
+
         }, this);
 
         document.body.addEventListener('touchmove', detectMove, false);
@@ -302,7 +330,7 @@ var HTML5AudioSoundManager = new Class({
      */
     isLocked: function (sound, prop, value)
     {
-        if (this.locked)
+        if (sound.tags[0].dataset.locked === 'true')
         {
             this.lockedActionsQueue.push({
                 sound: sound,

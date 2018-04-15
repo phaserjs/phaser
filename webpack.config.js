@@ -8,7 +8,10 @@ module.exports = {
 
     context: `${__dirname}/src/`,
 
-    entry: {phaser: './phaser.js'},
+    entry: {
+        phaser: './phaser.js',
+        'phaser-core': './phaser-core.js'
+    },
 
     output: {
         path: `${__dirname}/build/`,

@@ -5,13 +5,13 @@
  */
 
 /**
- * @namespace Phaser.Cameras.Scene2D
+ * @namespace Phaser.Cameras.Scene2D.Effects
  */
 
 module.exports = {
 
-    Camera: require('./Camera'),
-    CameraManager: require('./CameraManager'),
-    Effects: require('./effects')
+    Fade: require('./Fade'),
+    Flash: require('./Flash'),
+    Shake: require('./Shake')
 
 };

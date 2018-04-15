@@ -23,7 +23,6 @@ var GetURL = require('../GetURL');
  * @param {string} url - [description]
  * @param {string} path - [description]
  * @param {XHRSettingsObject} config - [description]
- * @param {boolean} locked - [description]
  */
 var HTML5AudioFile = new Class({
 
@@ -31,9 +30,9 @@ var HTML5AudioFile = new Class({
 
     initialize:
 
-        function HTML5AudioFile (key, url, path, config, locked)
+        function HTML5AudioFile (key, url, path, config)
         {
-            this.locked = locked;
+            this.locked = 'ontouchstart' in window;
 
             this.loaded = false;
 
@@ -110,8 +109,14 @@ var HTML5AudioFile = new Class({
             audio.dataset.name = this.key + ('0' + i).slice(-2); // Useful for debugging
             audio.dataset.used = 'false';
 
-            if (!this.locked)
+            if (this.locked)
             {
+                audio.dataset.locked = 'true';
+            }
+            else
+            {
+                audio.dataset.locked = 'false';
+
                 audio.preload = 'auto';
                 audio.oncanplaythrough = this.onProgress.bind(this);
                 audio.onerror = this.onError.bind(this);

@@ -132,6 +132,18 @@ var Factory = new Class({
         this.sys.updateList.add(sprite);
 
         return sprite;
+    },
+
+    /**
+     * Destroys this Factory.
+     *
+     * @method Phaser.Physics.Impact.Factory#destroy
+     * @since 3.5.0
+     */
+    destroy: function ()
+    {
+        this.world = null;
+        this.sys = null;
     }
 
 });

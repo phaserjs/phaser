@@ -6,8 +6,31 @@ let sourceMap = './build/phaser.js.map';
 let dest = '../phaser3-examples/public/build/dev.js';
 let destMap = '../phaser3-examples/public/build/phaser.js.map';
 
+let sourceCore = './build/phaser-core.js';
+let sourceMapCore = './build/phaser-core.js.map';
+let destCore = '../phaser3-examples/public/build/phaser-core.js';
+let destMapCore = '../phaser3-examples/public/build/phaser-core.js.map';
+
 if (fs.existsSync(dest))
 {
+    fs.copy(sourceMapCore, destMapCore, function (err) {
+
+        if (err)
+        {
+            return console.error(err);
+        }
+
+    });
+
+    fs.copy(sourceCore, destCore, function (err) {
+
+        if (err)
+        {
+            return console.error(err);
+        }
+
+    });
+
     fs.copy(sourceMap, destMap, function (err) {
 
         if (err)
