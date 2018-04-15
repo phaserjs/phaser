@@ -49,7 +49,7 @@ var Sprite = require('../sprite/Sprite');
  *
  * If `max` is positive, then the total created will not exceed `max`.
  *
- * `key` is required.
+ * `key` is required. {@link Phaser.GameObjects.Group#defaultKey} is not used.
  *
  * @property {?object} [classType] - The class of each new Game Object.
  * @property {string} [key] - The texture key of each new Game Object.
@@ -105,7 +105,7 @@ var Sprite = require('../sprite/Sprite');
  * @since 3.0.0
  * @param {Phaser.Scene} scene - The scene this group belongs to.
  * @param {?(Phaser.GameObjects.GameObject[]|GroupConfig)} [children] - Game objects to add to this group; or the `config` argument.
- * @param {GroupConfig} [config] - Settings for this group.
+ * @param {GroupConfig|GroupCreateConfig} [config] - Settings for this group. If `key` is set, Phaser.GameObjects.Group#createMultiple is also called with these settings.
  *
  * @see Phaser.Physics.Arcade.Group
  * @see Phaser.Physics.Arcade.StaticGroup
@@ -183,6 +183,9 @@ var Group = new Class({
         /**
          * A default texture key to use when creating new group members.
          *
+         * This is used in {@link Phaser.GameObjects.Group#create}
+         * but not in {@link Phaser.GameObjects.Group#createMultiple}.
+         *
          * @name Phaser.GameObjects.Group#defaultKey
          * @type {string}
          * @since 3.0.0
@@ -236,7 +239,7 @@ var Group = new Class({
          */
         this.createMultipleCallback = GetFastValue(config, 'createMultipleCallback', null);
 
-        if (config)
+        if (config && config.key !== undefined)
         {
             this.createMultiple(config);
         }
@@ -294,6 +297,8 @@ var Group = new Class({
     /**
      * Creates several Game Objects and adds them to this group.
      *
+     * If the group becomes {@link Phaser.GameObjects.Group#isFull}, no further Game Objects are created.
+     *
      * Calls {@link Phaser.GameObjects.Group#createMultipleCallback}
      * and {@link Phaser.GameObjects.Group#createCallback}.
      *
@@ -306,6 +311,11 @@ var Group = new Class({
      */
     createMultiple: function (config)
     {
+        if (this.isFull())
+        {
+            return [];
+        }
+
         if (!Array.isArray(config))
         {
             config = [ config ];
@@ -335,6 +345,11 @@ var Group = new Class({
      */
     createFromConfig: function (options)
     {
+        if (this.isFull())
+        {
+            return [];
+        }
+
         this.classType = GetFastValue(options, 'classType', this.classType);
 
         var key = GetFastValue(options, 'key', undefined);
@@ -384,7 +399,14 @@ var Group = new Class({
 
         for (var c = 0; c < range.length; c++)
         {
-            entries.push(this.create(0, 0, range[c].a, range[c].b, visible, active));
+            var created = this.create(0, 0, range[c].a, range[c].b, visible, active);
+
+            if (!created)
+            {
+                break;
+            }
+
+            entries.push(created);
         }
 
         //  Post-creation options (applied only to those items created in this call):
@@ -554,6 +576,11 @@ var Group = new Class({
     remove: function (child, removeFromScene)
     {
         if (removeFromScene === undefined) { removeFromScene = false; }
+
+        if (!this.children.contains(child))
+        {
+            return this;
+        }
 
         this.children.delete(child);
 
@@ -825,7 +852,7 @@ var Group = new Class({
         }
         else
         {
-            return (this.children.size === this.maxSize);
+            return (this.children.size >= this.maxSize);
         }
     },
 
