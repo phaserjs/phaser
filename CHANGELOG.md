@@ -26,6 +26,7 @@
 * A Matter Mouse Spring will disable debug draw of its constraint by default (you can override it by passing in your own config)
 * Removed Camera.clearBeforeRender property as it was never used internally. This setting can be enabled on a Game-wide basis.
 * Camera now extends the Event Emitter, allowing it to emit events.
+* Camera.cullHitTest has been removed. It was never used internally and duplicates the code in `Camera.cull`.
 
 ### Examples, Documentation and TypeScript
 
