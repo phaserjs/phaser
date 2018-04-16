@@ -243,7 +243,7 @@ var Game = new Class({
         this.onStepCallback = NOOP;
 
         /**
-         * Is this Game pending destroy at the end of the next frame?
+         * Is this Game pending destruction at the start of the next frame?
          *
          * @name Phaser.Game#pendingDestroy
          * @type {boolean}
@@ -552,17 +552,19 @@ var Game = new Class({
     },
 
     /**
-     * Destroys this Phaser.Game instance, all global systems, all sub-systems and all Scenes.
+     * Flags this Game instance as needing to be destroyed on the next frame.
+     * It will wait until the current frame has completed and then call `runDestroy` internally.
      *
      * @method Phaser.Game#destroy
      * @since 3.0.0
+     *
+     * @param {boolean} removeCanvas - Set to `true` if you would like the parent canvas element removed from the DOM, or `false` to leave it in place.
      */
     destroy: function (removeCanvas)
     {
         this.pendingDestroy = true;
-        this.removeCanvas = removeCanvas;
 
-        this.loop.stop();
+        this.removeCanvas = removeCanvas;
     },
 
     /**

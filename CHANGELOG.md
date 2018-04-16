@@ -55,6 +55,7 @@ Please see the complete JSDocs for the ScenePlugin for more details, as well as 
 * When shutting down a Scene all Game Objects that belong to the scene will now automatically destroy themselves. They would previously be removed from the display and update lists, but the objects themselves didn't self-destruct. You can control this on a per-object basis with the `ignoreDestroy` property.
 * A Matter Mouse Spring will disable debug draw of its constraint by default (you can override it by passing in your own config)
 * The RandomDataGenerator class is now exposed under Phaser.Math should you wish to instantiate it yourself. Fix #3576 (thanks @wtravO)
+* Refined the Game.destroy sequence, so it will now only destroy the game at the start of the next frame, not during processing.
 
 ### Examples, Documentation and TypeScript
 
