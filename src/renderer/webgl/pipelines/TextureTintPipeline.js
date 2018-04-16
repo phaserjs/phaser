@@ -401,6 +401,7 @@ var TextureTintPipeline = new Class({
         var vertexCapacity = this.vertexCapacity;
         var texture = emitterManager.defaultFrame.source.glTexture;
         var pca, pcb, pcc, pcd, pce, pcf;
+        var vertexCount = this.vertexCount;
 
         if (parentMatrix)
         {
@@ -445,10 +446,12 @@ var TextureTintPipeline = new Class({
 
             renderer.setBlendMode(emitter.blendMode);
 
-            if (this.vertexCount >= vertexCapacity)
+            if (vertexCount >= vertexCapacity)
             {
+                this.vertexCount = vertexCount;
                 this.flush();
                 this.setTexture2D(texture, 0);
+                vertexCount = 0;
             }
 
             for (var batchIndex = 0; batchIndex < batchCount; ++batchIndex)
@@ -493,7 +496,7 @@ var TextureTintPipeline = new Class({
                     var ty2 = xw * mvb + yh * mvd + mvf;
                     var tx3 = xw * mva + y * mvc + mve;
                     var ty3 = xw * mvb + y * mvd + mvf;
-                    var vertexOffset = this.vertexCount * vertexComponentCount;
+                    var vertexOffset = vertexCount * vertexComponentCount;
 
                     if (roundPixels)
                     {
@@ -538,20 +541,31 @@ var TextureTintPipeline = new Class({
                     vertexViewF32[vertexOffset + 28] = uvs.y3;
                     vertexViewU32[vertexOffset + 29] = color;
 
-                    this.vertexCount += 6;
+                    vertexCount += 6;
+
+                    if (vertexCount >= vertexCapacity)
+                    {
+                        this.vertexCount = vertexCount;
+                        this.flush();
+                        vertexCount = 0;
+                    }
+
                 }
 
                 particleOffset += batchSize;
                 aliveLength -= batchSize;
 
-                if (this.vertexCount >= vertexCapacity)
+                if (vertexCount >= vertexCapacity)
                 {
+                    this.vertexCount = vertexCount;
                     this.flush();
                     this.setTexture2D(texture, 0);
+                    vertexCount = 0;
                 }
             }
         }
         
+        this.vertexCount = vertexCount;
         this.setTexture2D(texture, 0);
     },
 
