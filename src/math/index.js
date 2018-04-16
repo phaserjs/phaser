@@ -22,6 +22,9 @@ var PhaserMath = {
     Pow2: require('./pow2/'),
     Snap: require('./snap/'),
 
+    //  Expose the RNG Class
+    RandomDataGenerator: require('./random-data-generator/RandomDataGenerator'),
+
     //  Single functions
     Average: require('./Average'),
     Bernstein: require('./Bernstein'),
