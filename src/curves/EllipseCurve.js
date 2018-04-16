@@ -96,7 +96,7 @@ var EllipseCurve = new Class({
         /**
          * [description]
          *
-         * @name {Phaser.Curves.EllipseCurve#p0
+         * @name Phaser.Curves.EllipseCurve#p0
          * @type {Phaser.Math.Vector2}
          * @since 3.0.0
          */

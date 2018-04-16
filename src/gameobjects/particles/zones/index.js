@@ -5,13 +5,13 @@
  */
 
 /**
- * @namespace Phaser.Math.Easing.Back
+ * @namespace Phaser.GameObjects.Particles.Zones
  */
 
 module.exports = {
 
-    In: require('./In'),
-    Out: require('./Out'),
-    InOut: require('./InOut')
+    DeathZone: require('./DeathZone'),
+    EdgeZone: require('./EdgeZone'),
+    RandomZone: require('./RandomZone')
 
 };

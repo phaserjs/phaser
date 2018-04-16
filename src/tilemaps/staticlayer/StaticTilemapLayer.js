@@ -981,7 +981,7 @@ var StaticTilemapLayer = new Class({
      * Converts from world Y coordinates (pixels) to tile Y coordinates (tile units), factoring in the
      * layers position, scale and scroll.
      *
-     * @method Phaser.Tilemaps.StaticTilemapLayer#worldToTileXY
+     * @method Phaser.Tilemaps.StaticTilemapLayer#worldToTileY
      * @since 3.0.0
      *
      * @param {number} worldY - [description]

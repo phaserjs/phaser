@@ -7,7 +7,7 @@
 /**
  * [description]
  *
- * @function Phaser.Math.Easing.Linear
+ * @function Phaser.Math.Easing.Linear.Linear
  * @since 3.0.0
  *
  * @param {number} v - [description]
