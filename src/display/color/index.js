@@ -21,10 +21,6 @@
  * @property {number} a - The alpha color value in the range 0 to 255.
  */
 
-/**
- * @namespace Phaser.Display.Color
- */
-
 var Color = require('./Color');
 
 Color.ColorToRGBA = require('./ColorToRGBA');
