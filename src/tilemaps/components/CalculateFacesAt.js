@@ -12,6 +12,7 @@ var GetTileAt = require('./GetTileAt');
  * internally to optimize recalculating faces when only one tile has been changed.
  *
  * @function Phaser.Tilemaps.Components.CalculateFacesAt
+ * @private
  * @since 3.0.0
  * 
  * @param {integer} tileX - The x coordinate.

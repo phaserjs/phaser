@@ -14,6 +14,7 @@ var Vector2 = require('../../math/Vector2');
  * `point` object.
  *
  * @function Phaser.Tilemaps.Components.TileToWorldXY
+ * @private
  * @since 3.0.0
  *
  * @param {integer} tileX - [description]

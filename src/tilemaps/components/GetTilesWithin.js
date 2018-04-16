@@ -18,6 +18,7 @@ var GetFastValue = require('../../utils/object/GetFastValue');
  * Gets the tiles in the given rectangular area (in tile coordinates) of the layer.
  *
  * @function Phaser.Tilemaps.Components.GetTilesWithin
+ * @private
  * @since 3.0.0
  *
  * @param {integer} tileX - [description]

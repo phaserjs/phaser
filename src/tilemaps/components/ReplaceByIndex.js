@@ -12,6 +12,7 @@ var GetTilesWithin = require('./GetTilesWithin');
  * not change collision information.
  *
  * @function Phaser.Tilemaps.Components.ReplaceByIndex
+ * @private
  * @since 3.0.0
  *
  * @param {integer} findIndex - [description]

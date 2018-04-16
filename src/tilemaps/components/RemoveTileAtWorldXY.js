@@ -13,6 +13,7 @@ var WorldToTileY = require('./WorldToTileY');
  * collision information.
  *
  * @function Phaser.Tilemaps.Components.RemoveTileAtWorldXY
+ * @private
  * @since 3.0.0
  *
  * @param {(integer|Phaser.Tilemaps.Tile)} tile - The index of this tile to set or a Tile object.

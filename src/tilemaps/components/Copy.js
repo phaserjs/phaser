@@ -13,6 +13,7 @@ var CalculateFacesWithin = require('./CalculateFacesWithin');
  * information in the destination region.
  *
  * @function Phaser.Tilemaps.Components.Copy
+ * @private
  * @since 3.0.0
  *
  * @param {integer} srcTileX - [description]

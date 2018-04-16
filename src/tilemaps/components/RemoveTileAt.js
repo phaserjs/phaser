@@ -13,6 +13,7 @@ var CalculateFacesAt = require('./CalculateFacesAt');
  * collision information.
  *
  * @function Phaser.Tilemaps.Components.RemoveTileAt
+ * @private
  * @since 3.0.0
  *
  * @param {(integer|Phaser.Tilemaps.Tile)} tile - The index of this tile to set or a Tile object.

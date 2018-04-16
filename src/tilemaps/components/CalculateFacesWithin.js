@@ -13,6 +13,7 @@ var GetTilesWithin = require('./GetTilesWithin');
  * is mostly used internally.
  *
  * @function Phaser.Tilemaps.Components.CalculateFacesWithin
+ * @private
  * @since 3.0.0
  *
  * @param {integer} tileX - [description]

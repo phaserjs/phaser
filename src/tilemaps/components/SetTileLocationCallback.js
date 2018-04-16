@@ -12,6 +12,7 @@ var GetTilesWithin = require('./GetTilesWithin');
  * remove it.
  *
  * @function Phaser.Tilemaps.Components.SetTileLocationCallback
+ * @private
  * @since 3.0.0
  *
  * @param {integer} [tileX=0] - [description]
