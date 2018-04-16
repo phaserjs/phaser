@@ -8,7 +8,6 @@ var Class = require('../utils/Class');
 var CONST = require('./const');
 var GetPhysicsPlugins = require('./GetPhysicsPlugins');
 var GetScenePlugins = require('./GetScenePlugins');
-var NOOP = require('../utils/NOOP');
 var Plugins = require('../plugins');
 var Settings = require('./Settings');
 
