@@ -888,12 +888,12 @@ var StaticTilemapLayer = new Class({
      * @method Phaser.Tilemaps.StaticTilemapLayer#setTileLocationCallback
      * @since 3.0.0
      *
-     * @param {integer} [tileX=0] - [description]
-     * @param {integer} [tileY=0] - [description]
-     * @param {integer} [width=max width based on tileX] - [description]
-     * @param {integer} [height=max height based on tileY] - [description]
+     * @param {integer} tileX - [description]
+     * @param {integer} tileY - [description]
+     * @param {integer} width - [description]
+     * @param {integer} height - [description]
      * @param {function} callback - The callback that will be invoked when the tile is collided with.
-     * @param {object} callbackContext - The context under which the callback is called.
+     * @param {object} [callbackContext] - The context under which the callback is called.
      *
      * @return {Phaser.Tilemaps.StaticTilemapLayer} This Tilemap Layer object.
      */
