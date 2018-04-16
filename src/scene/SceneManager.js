@@ -1480,6 +1480,8 @@ var SceneManager = new Class({
             sys.destroy();
         }
 
+        this.update = NOOP;
+
         this.scenes = [];
 
         this._pending = [];
