@@ -400,7 +400,7 @@ var WebGLRenderer = new Class({
         var clearColor = config.backgroundColor;
         var gl = canvas.getContext('webgl', config.contextCreation) || canvas.getContext('experimental-webgl', config.contextCreation);
 
-        if (!gl)
+        if (!gl || gl.isContextLost())
         {
             this.contextLost = true;
             throw new Error('This browser does not support WebGL. Try using the Canvas pipeline.');
@@ -1888,11 +1888,6 @@ var WebGLRenderer = new Class({
         {
             this.deleteTexture(this.nativeTextures[index]);
             delete this.nativeTextures[index];
-        }
-
-        if (this.hasExtension('WEBGL_lose_context'))
-        {
-            this.getExtension('WEBGL_lose_context').loseContext();
         }
 
         delete this.gl;
