@@ -1,6 +1,6 @@
 # Change Log
 
-## Version 3.5.0 - in development
+## Version 3.5.0 - Kirito - 16th April 2018
 
 ### Changes to Cameras
 
@@ -46,6 +46,7 @@ Please see the complete JSDocs for the ScenePlugin for more details, as well as 
 * If a Group size exceeded `maxSize` (which can happen if you reduce maxSize beneath the current size), `isFull` would return false and the group could continue to grow. Now `isFull` returns true in that case (thanks @samme)
 * Camera.fadeIn following a fadeOut wouldn't work, but is now fixed as a result of the Camera effects rewrite. Fix #3527 (thanks @Jerenaux)
 * Particle Emitters with large volumes of particles would throw the error `GL_INVALID_OPERATION: Vertex buffer is not big enough for the draw call` in WebGL.
+* Fixed issue with Game.destroy not working correctly under WebGL since 3.4. Fix #3569 (thanks @Huararanga)
 
 ### Updates
 
@@ -61,7 +62,7 @@ Please see the complete JSDocs for the ScenePlugin for more details, as well as 
 
 My thanks to the following for helping with the Phaser 3 Examples, Docs and TypeScript definitions, either by reporting errors, fixing them or helping author the docs:
 
-@samme
+@samme @Antriel
 
 ## Version 3.4.0 - Miyako - 12th April 2018
 
