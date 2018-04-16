@@ -5,7 +5,7 @@
  */
 
 /**
- * @namespace Phaser.Physics.Arcade.Body.Components
+ * @namespace Phaser.Physics.Arcade.Components
  */
 
 module.exports = {

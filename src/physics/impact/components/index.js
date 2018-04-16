@@ -5,7 +5,7 @@
  */
 
 /**
- * @namespace Phaser.Physics.Impact.Body.Components
+ * @namespace Phaser.Physics.Impact.Components
  */
 
 module.exports = {
