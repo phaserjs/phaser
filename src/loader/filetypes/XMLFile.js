@@ -80,7 +80,7 @@ var XMLFile = new Class({
  *
  * @param {string} key - [description]
  * @param {string} url - [description]
- * @param {XHRSettingsObject} xhrSettings - [description]
+ * @param {XHRSettingsObject} [xhrSettings] - [description]
  *
  * @return {Phaser.Loader.LoaderPlugin} The Loader.
  */

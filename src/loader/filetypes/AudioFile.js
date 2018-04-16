@@ -140,7 +140,7 @@ AudioFile.create = function (loader, key, urls, config, xhrSettings)
  * @param {string} key - [description]
  * @param {(string|string[])} urls - [description]
  * @param {object} config - [description]
- * @param {object} xhrSettings - [description]
+ * @param {object} [xhrSettings] - [description]
  *
  * @return {Phaser.Loader.LoaderPlugin} The Loader.
  */

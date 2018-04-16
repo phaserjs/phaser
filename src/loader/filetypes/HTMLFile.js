@@ -132,7 +132,7 @@ var HTMLFile = new Class({
  * @param {string} url - [description]
  * @param {number} width - [description]
  * @param {number} height - [description]
- * @param {XHRSettingsObject} xhrSettings - [description]
+ * @param {XHRSettingsObject} [xhrSettings] - [description]
  *
  * @return {Phaser.Loader.LoaderPlugin} The Loader.
  */

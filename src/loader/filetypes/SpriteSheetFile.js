@@ -45,7 +45,7 @@ var SpriteSheetFile = function (key, url, config, path, xhrSettings)
  * @param {string} key - [description]
  * @param {string} url - [description]
  * @param {object} config - config can include: frameWidth, frameHeight, startFrame, endFrame, margin, spacing.
- * @param {XHRSettingsObject} xhrSettings - [description]
+ * @param {XHRSettingsObject} [xhrSettings] - [description]
  *
  * @return {Phaser.Loader.LoaderPlugin} The Loader.
  */

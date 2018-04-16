@@ -53,8 +53,8 @@ var BitmapFontFile = function (key, textureURL, xmlURL, path, textureXhrSettings
  * @param {string} key - [description]
  * @param {string} textureURL - [description]
  * @param {string} xmlURL - [description]
- * @param {XHRSettingsObject} textureXhrSettings - [description]
- * @param {XHRSettingsObject} xmlXhrSettings - [description]
+ * @param {XHRSettingsObject} [textureXhrSettings] - [description]
+ * @param {XHRSettingsObject} [xmlXhrSettings] - [description]
  *
  * @return {Phaser.Loader.LoaderPlugin} The Loader.
  */
