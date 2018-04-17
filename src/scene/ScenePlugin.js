@@ -152,7 +152,21 @@ var ScenePlugin = new Class({
          */
         this._willRemove = false;
 
+        scene.sys.events.once('boot', this.boot, this);
         scene.sys.events.on('start', this.pluginStart, this);
+    },
+
+    /**
+     * This method is called automatically, only once, when the Scene is first created.
+     * Do not invoke it directly.
+     *
+     * @method Phaser.Scenes.ScenePlugin#boot
+     * @private
+     * @since 3.0.0
+     */
+    boot: function ()
+    {
+        this.systems.events.once('destroy', this.destroy, this);
     },
 
     /**
@@ -162,16 +176,13 @@ var ScenePlugin = new Class({
      *
      * @method Phaser.Scenes.ScenePlugin#pluginStart
      * @private
-     * @since 3.0.0
+     * @since 3.5.0
      */
     pluginStart: function ()
     {
         this._target = null;
 
-        var eventEmitter = this.systems.events;
-
-        eventEmitter.once('shutdown', this.shutdown, this);
-        eventEmitter.once('destroy', this.destroy, this);
+        this.systems.events.once('shutdown', this.shutdown, this);
     },
 
     /**

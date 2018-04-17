@@ -53,7 +53,22 @@ var CameraManager = new Class({
          */
         this.cameras = [];
 
+        scene.sys.events.once('boot', this.boot, this);
         scene.sys.events.on('start', this.start, this);
+    },
+
+
+    /**
+     * This method is called automatically, only once, when the Scene is first created.
+     * Do not invoke it directly.
+     *
+     * @method Phaser.Cameras.Scene3D.CameraManager#boot
+     * @private
+     * @since 3.5.1
+     */
+    boot: function ()
+    {
+        this.systems.events.once('destroy', this.destroy, this);
     },
 
     /**
@@ -71,7 +86,6 @@ var CameraManager = new Class({
 
         eventEmitter.on('update', this.update, this);
         eventEmitter.once('shutdown', this.shutdown, this);
-        eventEmitter.once('destroy', this.destroy, this);
     },
 
     /**

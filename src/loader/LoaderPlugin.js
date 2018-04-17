@@ -241,7 +241,21 @@ var LoaderPlugin = new Class({
          */
         this.state = CONST.LOADER_IDLE;
 
+        scene.sys.events.once('boot', this.boot, this);
         scene.sys.events.on('start', this.pluginStart, this);
+    },
+
+    /**
+     * This method is called automatically, only once, when the Scene is first created.
+     * Do not invoke it directly.
+     *
+     * @method Phaser.Loader.LoaderPlugin#boot
+     * @private
+     * @since 3.5.1
+     */
+    boot: function ()
+    {
+        this.systems.events.once('destroy', this.destroy, this);
     },
 
     /**
@@ -255,10 +269,7 @@ var LoaderPlugin = new Class({
      */
     pluginStart: function ()
     {
-        var eventEmitter = this.systems.events;
-
-        eventEmitter.once('shutdown', this.shutdown, this);
-        eventEmitter.once('destroy', this.destroy, this);
+        this.systems.events.once('shutdown', this.shutdown, this);
     },
 
     /**
@@ -989,9 +1000,7 @@ var LoaderPlugin = new Class({
 
         this.state = CONST.LOADER_SHUTDOWN;
 
-        var eventEmitter = this.systems.events;
-
-        eventEmitter.off('shutdown', this.shutdown, this);
+        this.systems.events.off('shutdown', this.shutdown, this);
     },
 
     /**

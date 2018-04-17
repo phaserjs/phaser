@@ -89,6 +89,8 @@ var ImpactPhysics = new Class({
     {
         this.world = new World(this.scene, this.config);
         this.add = new Factory(this.world);
+
+        this.systems.events.once('destroy', this.destroy, this);
     },
 
     /**
@@ -112,7 +114,6 @@ var ImpactPhysics = new Class({
 
         eventEmitter.on('update', this.world.update, this.world);
         eventEmitter.once('shutdown', this.shutdown, this);
-        eventEmitter.once('destroy', this.destroy, this);
     },
 
     /**

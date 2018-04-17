@@ -94,6 +94,8 @@ var ArcadePhysics = new Class({
     {
         this.world = new World(this.scene, this.config);
         this.add = new Factory(this.world);
+
+        this.systems.events.once('destroy', this.destroy, this);
     },
 
     /**
@@ -118,7 +120,6 @@ var ArcadePhysics = new Class({
         eventEmitter.on('update', this.world.update, this.world);
         eventEmitter.on('postupdate', this.world.postUpdate, this.world);
         eventEmitter.once('shutdown', this.shutdown, this);
-        eventEmitter.once('destroy', this.destroy, this);
     },
 
     /**

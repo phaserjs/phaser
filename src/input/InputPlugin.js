@@ -300,6 +300,8 @@ var InputPlugin = new Class({
         this.cameras = this.systems.cameras;
 
         this.displayList = this.systems.displayList;
+
+        this.systems.events.once('destroy', this.destroy, this);
     },
 
     /**
@@ -322,7 +324,6 @@ var InputPlugin = new Class({
         eventEmitter.on('update', this.update, this);
 
         eventEmitter.once('shutdown', this.shutdown, this);
-        eventEmitter.once('destroy', this.destroy, this);
 
         this.enabled = true;
     },

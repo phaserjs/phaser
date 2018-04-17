@@ -141,6 +141,8 @@ var CameraManager = new Class({
         }
 
         this.main = this.cameras[0];
+
+        this.systems.events.once('destroy', this.destroy, this);
     },
 
     /**
@@ -163,7 +165,6 @@ var CameraManager = new Class({
 
         eventEmitter.on('update', this.update, this);
         eventEmitter.once('shutdown', this.shutdown, this);
-        eventEmitter.once('destroy', this.destroy, this);
     },
 
     /**

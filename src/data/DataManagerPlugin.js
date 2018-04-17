@@ -65,6 +65,8 @@ var DataManagerPlugin = new Class({
     boot: function ()
     {
         this.events = this.systems.events;
+
+        this.events.once('destroy', this.destroy, this);
     },
 
     /**
@@ -85,10 +87,7 @@ var DataManagerPlugin = new Class({
 
         this.events = this.systems.events;
 
-        var eventEmitter = this.systems.events;
-
-        eventEmitter.once('shutdown', this.shutdown, this);
-        eventEmitter.once('destroy', this.destroy, this);
+        this.events.once('shutdown', this.shutdown, this);
     },
 
     /**
@@ -101,9 +100,7 @@ var DataManagerPlugin = new Class({
      */
     shutdown: function ()
     {
-        var eventEmitter = this.systems.events;
-
-        eventEmitter.off('shutdown', this.shutdown, this);
+        this.systems.events.off('shutdown', this.shutdown, this);
     },
 
     /**

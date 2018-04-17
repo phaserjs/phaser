@@ -85,6 +85,8 @@ var GameObjectCreator = new Class({
     {
         this.displayList = this.systems.displayList;
         this.updateList = this.systems.updateList;
+
+        this.systems.events.once('destroy', this.destroy, this);
     },
 
     /**
@@ -98,10 +100,7 @@ var GameObjectCreator = new Class({
      */
     start: function ()
     {
-        var eventEmitter = this.systems.events;
-
-        eventEmitter.once('shutdown', this.shutdown, this);
-        eventEmitter.once('destroy', this.destroy, this);
+        this.systems.events.once('shutdown', this.shutdown, this);
     },
 
     /**
@@ -114,9 +113,7 @@ var GameObjectCreator = new Class({
      */
     shutdown: function ()
     {
-        var eventEmitter = this.systems.events;
-
-        eventEmitter.off('shutdown', this.shutdown, this);
+        this.systems.events.off('shutdown', this.shutdown, this);
     },
 
     /**
