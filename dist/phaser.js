@@ -2294,7 +2294,24 @@ var GameObjectFactory = new Class({
          */
         this.updateList;
 
+        scene.sys.events.once('boot', this.boot, this);
         scene.sys.events.on('start', this.start, this);
+    },
+
+    /**
+     * This method is called automatically, only once, when the Scene is first created.
+     * Do not invoke it directly.
+     *
+     * @method Phaser.GameObjects.GameObjectFactory#boot
+     * @private
+     * @since 3.5.1
+     */
+    boot: function ()
+    {
+        this.displayList = this.systems.displayList;
+        this.updateList = this.systems.updateList;
+
+        this.systems.events.once('destroy', this.destroy, this);
     },
 
     /**
@@ -2308,13 +2325,7 @@ var GameObjectFactory = new Class({
      */
     start: function ()
     {
-        this.displayList = this.systems.displayList;
-        this.updateList = this.systems.updateList;
-
-        var eventEmitter = this.systems.events;
-
-        eventEmitter.once('shutdown', this.shutdown, this);
-        eventEmitter.once('destroy', this.destroy, this);
+        this.systems.events.once('shutdown', this.shutdown, this);
     },
 
     /**
@@ -2355,9 +2366,7 @@ var GameObjectFactory = new Class({
      */
     shutdown: function ()
     {
-        var eventEmitter = this.systems.events;
-
-        eventEmitter.off('shutdown', this.shutdown, this);
+        this.systems.events.off('shutdown', this.shutdown, this);
     },
 
     /**
@@ -2964,7 +2973,24 @@ var GameObjectCreator = new Class({
          */
         this.updateList;
 
+        scene.sys.events.once('boot', this.boot, this);
         scene.sys.events.on('start', this.start, this);
+    },
+
+    /**
+     * This method is called automatically, only once, when the Scene is first created.
+     * Do not invoke it directly.
+     *
+     * @method Phaser.GameObjects.GameObjectCreator#boot
+     * @private
+     * @since 3.5.1
+     */
+    boot: function ()
+    {
+        this.displayList = this.systems.displayList;
+        this.updateList = this.systems.updateList;
+
+        this.systems.events.once('destroy', this.destroy, this);
     },
 
     /**
@@ -2978,13 +3004,7 @@ var GameObjectCreator = new Class({
      */
     start: function ()
     {
-        this.displayList = this.systems.displayList;
-        this.updateList = this.systems.updateList;
-
-        var eventEmitter = this.systems.events;
-
-        eventEmitter.once('shutdown', this.shutdown, this);
-        eventEmitter.once('destroy', this.destroy, this);
+        this.systems.events.once('shutdown', this.shutdown, this);
     },
 
     /**
@@ -2997,9 +3017,7 @@ var GameObjectCreator = new Class({
      */
     shutdown: function ()
     {
-        var eventEmitter = this.systems.events;
-
-        eventEmitter.off('shutdown', this.shutdown, this);
+        this.systems.events.off('shutdown', this.shutdown, this);
     },
 
     /**
@@ -3923,7 +3941,7 @@ var CONST = {
      * @type {string}
      * @since 3.0.0
      */
-    VERSION: '3.5.0-beta',
+    VERSION: '3.5.1',
 
     BlendModes: __webpack_require__(48),
 
@@ -4300,12 +4318,12 @@ var pool = [];
 var _disableContextSmoothing = false;
 
 /**
- * The CanvasPool is a global static object, that allows Phaser to recycle and pool Canvas DOM elements.
+ * The CanvasPool is a global static object, that allows Phaser to recycle and pool 2D Context Canvas DOM elements.
+ * It does not pool WebGL Contexts, because once the context options are set they cannot be modified again, 
+ * which is useless for some of the Phaser pipelines / renderer.
  *
- * This singleton is instantiated as soon as Phaser loads,
- * before a Phaser.Game instance has even been created.
- * Which means all instances of Phaser Games on the same page
- * can share the one single pool
+ * This singleton is instantiated as soon as Phaser loads, before a Phaser.Game instance has even been created.
+ * Which means all instances of Phaser Games on the same page can share the one single pool.
  *
  * @namespace Phaser.Display.Canvas.CanvasPool
  * @since 3.0.0
@@ -4342,7 +4360,10 @@ var CanvasPool = function ()
                 type: canvasType
             };
 
-            pool.push(container);
+            if (canvasType === CONST.CANVAS)
+            {
+                pool.push(container);
+            }
 
             canvas = container.canvas;
         }
@@ -4412,6 +4433,11 @@ var CanvasPool = function ()
     {
         if (canvasType === undefined) { canvasType = CONST.CANVAS; }
 
+        if (canvasType === CONST.WEBGL)
+        {
+            return null;
+        }
+
         for (var i = 0; i < pool.length; i++)
         {
             var container = pool[i];
@@ -4443,7 +4469,6 @@ var CanvasPool = function ()
         {
             if ((isCanvas && container.canvas === parent) || (!isCanvas && container.parent === parent))
             {
-                // console.log('CanvasPool.remove found and removed');
                 container.parent = null;
                 container.canvas.width = 1;
                 container.canvas.height = 1;
@@ -5827,7 +5852,7 @@ var GetFastValue = __webpack_require__(2);
  * @param {string} key - [description]
  * @param {string} url - [description]
  * @param {string} path - [description]
- * @param {XHRSettingsObject} xhrSettings - [description]
+ * @param {XHRSettingsObject} [xhrSettings] - [description]
  */
 var JSONFile = new Class({
 
@@ -6728,8 +6753,8 @@ var GetFastValue = __webpack_require__(2);
  * @param {string} key - [description]
  * @param {string} url - [description]
  * @param {string} path - [description]
- * @param {XHRSettingsObject} xhrSettings - [description]
- * @param {object} config - [description]
+ * @param {XHRSettingsObject} [xhrSettings] - [description]
+ * @param {object} [config] - [description]
  */
 var ImageFile = new Class({
 
@@ -28014,7 +28039,6 @@ var TextureTintPipeline = new Class({
         var vertexCapacity = this.vertexCapacity;
         var texture = emitterManager.defaultFrame.source.glTexture;
         var pca, pcb, pcc, pcd, pce, pcf;
-        var vertexCount = this.vertexCount;
 
         if (parentMatrix)
         {
@@ -28059,12 +28083,10 @@ var TextureTintPipeline = new Class({
 
             renderer.setBlendMode(emitter.blendMode);
 
-            if (vertexCount >= vertexCapacity)
+            if (this.vertexCount >= vertexCapacity)
             {
-                this.vertexCount = vertexCount;
                 this.flush();
                 this.setTexture2D(texture, 0);
-                vertexCount = 0;
             }
 
             for (var batchIndex = 0; batchIndex < batchCount; ++batchIndex)
@@ -28109,7 +28131,7 @@ var TextureTintPipeline = new Class({
                     var ty2 = xw * mvb + yh * mvd + mvf;
                     var tx3 = xw * mva + y * mvc + mve;
                     var ty3 = xw * mvb + y * mvd + mvf;
-                    var vertexOffset = vertexCount * vertexComponentCount;
+                    var vertexOffset = this.vertexCount * vertexComponentCount;
 
                     if (roundPixels)
                     {
@@ -28154,13 +28176,12 @@ var TextureTintPipeline = new Class({
                     vertexViewF32[vertexOffset + 28] = uvs.y3;
                     vertexViewU32[vertexOffset + 29] = color;
 
-                    vertexCount += 6;
+                    this.vertexCount += 6;
 
-                    if (vertexCount >= vertexCapacity)
+                    if (this.vertexCount >= vertexCapacity)
                     {
-                        this.vertexCount = vertexCount;
                         this.flush();
-                        vertexCount = 0;
+                        this.setTexture2D(texture, 0);
                     }
 
                 }
@@ -28168,17 +28189,14 @@ var TextureTintPipeline = new Class({
                 particleOffset += batchSize;
                 aliveLength -= batchSize;
 
-                if (vertexCount >= vertexCapacity)
+                if (this.vertexCount >= vertexCapacity)
                 {
-                    this.vertexCount = vertexCount;
                     this.flush();
                     this.setTexture2D(texture, 0);
-                    vertexCount = 0;
                 }
             }
         }
         
-        this.vertexCount = vertexCount;
         this.setTexture2D(texture, 0);
     },
 
@@ -34710,7 +34728,7 @@ var GetURL = __webpack_require__(117);
  * @param {string} key - [description]
  * @param {string} url - [description]
  * @param {string} path - [description]
- * @param {XHRSettingsObject} config - [description]
+ * @param {XHRSettingsObject} [config] - [description]
  */
 var HTML5AudioFile = new Class({
 
@@ -34865,8 +34883,8 @@ var HTML5AudioFile = __webpack_require__(157);
  * @param {string} key - [description]
  * @param {string} url - [description]
  * @param {string} path - [description]
- * @param {XHRSettingsObject} xhrSettings - [description]
- * @param {AudioContext} audioContext - [description]
+ * @param {XHRSettingsObject} [xhrSettings] - [description]
+ * @param {AudioContext} [audioContext] - [description]
  */
 var AudioFile = new Class({
 
@@ -41515,7 +41533,7 @@ var SceneManager = new Class({
      * @method Phaser.Scenes.SceneManager#getScene
      * @since 3.0.0
      *
-     * @param {string} key - The Scene to retrieve.
+     * @param {string|Phaser.Scene} key - The Scene to retrieve.
      *
      * @return {?Phaser.Scene} The Scene.
      */
@@ -41528,10 +41546,6 @@ var SceneManager = new Class({
                 return this.keys[key];
             }
         }
-
-        //  What's the point? If you already have the Scene to pass in to this function, you have the Scene!
-
-        /*
         else
         {
             for (var i = 0; i < this.scenes.length; i++)
@@ -41542,7 +41556,6 @@ var SceneManager = new Class({
                 }
             }
         }
-        */
 
         return null;
     },
@@ -50946,7 +50959,7 @@ var FileTypesManager = __webpack_require__(7);
  * @param {string} key - [description]
  * @param {string} url - [description]
  * @param {string} path - [description]
- * @param {XHRSettingsObject} xhrSettings - [description]
+ * @param {XHRSettingsObject} [xhrSettings] - [description]
  */
 var TextFile = new Class({
 
@@ -51051,7 +51064,7 @@ var ParseXML = __webpack_require__(262);
  * @param {string} key - [description]
  * @param {string} url - [description]
  * @param {string} path - [description]
- * @param {XHRSettingsObject} xhrSettings - [description]
+ * @param {XHRSettingsObject} [xhrSettings] - [description]
  */
 var XMLFile = new Class({
 
@@ -52521,7 +52534,7 @@ var TileSprite = new Class({
      */
     destroy: function ()
     {
-        if (this.renderer)
+        if (this.renderer.gl)
         {
             this.renderer.deleteTexture(this.tileTexture);
         }
@@ -67734,7 +67747,21 @@ var TweenManager = new Class({
          */
         this._toProcess = 0;
 
+        scene.sys.events.once('boot', this.boot, this);
         scene.sys.events.on('start', this.start, this);
+    },
+
+    /**
+     * This method is called automatically, only once, when the Scene is first created.
+     * Do not invoke it directly.
+     *
+     * @method Phaser.Tweens.TweenManager#boot
+     * @private
+     * @since 3.5.1
+     */
+    boot: function ()
+    {
+        this.systems.events.once('destroy', this.destroy, this);
     },
 
     /**
@@ -67753,7 +67780,6 @@ var TweenManager = new Class({
         eventEmitter.on('preupdate', this.preUpdate, this);
         eventEmitter.on('update', this.update, this);
         eventEmitter.once('shutdown', this.shutdown, this);
-        eventEmitter.once('destroy', this.destroy, this);
 
         this.timeScale = 1;
     },
@@ -68539,7 +68565,21 @@ var Clock = new Class({
          */
         this._pendingRemoval = [];
 
+        scene.sys.events.once('boot', this.boot, this);
         scene.sys.events.on('start', this.start, this);
+    },
+
+    /**
+     * This method is called automatically, only once, when the Scene is first created.
+     * Do not invoke it directly.
+     *
+     * @method Phaser.Time.Clock#boot
+     * @private
+     * @since 3.5.1
+     */
+    boot: function ()
+    {
+        this.systems.events.once('destroy', this.destroy, this);
     },
 
     /**
@@ -68558,7 +68598,6 @@ var Clock = new Class({
         eventEmitter.on('preupdate', this.preUpdate, this);
         eventEmitter.on('update', this.update, this);
         eventEmitter.once('shutdown', this.shutdown, this);
-        eventEmitter.once('destroy', this.destroy, this);
     },
 
     /**
@@ -74450,7 +74489,21 @@ var ScenePlugin = new Class({
          */
         this._willRemove = false;
 
+        scene.sys.events.once('boot', this.boot, this);
         scene.sys.events.on('start', this.pluginStart, this);
+    },
+
+    /**
+     * This method is called automatically, only once, when the Scene is first created.
+     * Do not invoke it directly.
+     *
+     * @method Phaser.Scenes.ScenePlugin#boot
+     * @private
+     * @since 3.0.0
+     */
+    boot: function ()
+    {
+        this.systems.events.once('destroy', this.destroy, this);
     },
 
     /**
@@ -74460,16 +74513,13 @@ var ScenePlugin = new Class({
      *
      * @method Phaser.Scenes.ScenePlugin#pluginStart
      * @private
-     * @since 3.0.0
+     * @since 3.5.0
      */
     pluginStart: function ()
     {
         this._target = null;
 
-        var eventEmitter = this.systems.events;
-
-        eventEmitter.once('shutdown', this.shutdown, this);
-        eventEmitter.once('destroy', this.destroy, this);
+        this.systems.events.once('shutdown', this.shutdown, this);
     },
 
     /**
@@ -81557,7 +81607,7 @@ var ImageFile = __webpack_require__(46);
  * @param {string} url - The url to load the texture file from.
  * @param {object} config - Optional texture file specific XHR settings.
  * @param {string} path - Optional texture file specific XHR settings.
- * @param {XHRSettingsObject} xhrSettings - Optional atlas file specific XHR settings.
+ * @param {XHRSettingsObject} [xhrSettings] - Optional atlas file specific XHR settings.
  *
  * @return {object} An object containing two File objects to be added to the loader.
  */
@@ -81640,7 +81690,7 @@ var GetFastValue = __webpack_require__(2);
  * @param {string} key - [description]
  * @param {string} url - [description]
  * @param {string} path - [description]
- * @param {XHRSettingsObject} xhrSettings - [description]
+ * @param {XHRSettingsObject} [xhrSettings] - [description]
  */
 var ScriptFile = new Class({
 
@@ -81753,7 +81803,7 @@ var PluginManager = __webpack_require__(10);
  * @param {string} key - [description]
  * @param {string} url - [description]
  * @param {string} path - [description]
- * @param {XHRSettingsObject} xhrSettings - [description]
+ * @param {XHRSettingsObject} [xhrSettings] - [description]
  */
 var PluginFile = new Class({
 
@@ -82034,8 +82084,8 @@ var JSONFile = __webpack_require__(36);
  * @param {string} textureURL - The url to load the texture file from.
  * @param {string} atlasURL - The url to load the atlas file from.
  * @param {string} path - The path of the file.
- * @param {XHRSettingsObject} textureXhrSettings - Optional texture file specific XHR settings.
- * @param {XHRSettingsObject} atlasXhrSettings - Optional atlas file specific XHR settings.
+ * @param {XHRSettingsObject} [textureXhrSettings] - Optional texture file specific XHR settings.
+ * @param {XHRSettingsObject} [atlasXhrSettings] - Optional atlas file specific XHR settings.
  *
  * @return {object} An object containing two File objects to be added to the loader.
  */
@@ -82123,7 +82173,7 @@ var JSONFile = __webpack_require__(36);
  * @param {string} key - The key of the file within the loader.
  * @param {string} url - The url to load the file from.
  * @param {string} path - The path of the file.
- * @param {XHRSettingsObject} xhrSettings - Optional file specific XHR settings.
+ * @param {XHRSettingsObject} [xhrSettings] - Optional file specific XHR settings.
  *
  * @return {Phaser.Loader.FileTypes.AnimationJSONFile} A File instance to be added to the Loader.
  */
@@ -82693,7 +82743,25 @@ var InputPlugin = new Class({
          */
         this._validTypes = [ 'onDown', 'onUp', 'onOver', 'onOut', 'onMove', 'onDragStart', 'onDrag', 'onDragEnd', 'onDragEnter', 'onDragLeave', 'onDragOver', 'onDrop' ];
 
+        scene.sys.events.once('boot', this.boot, this);
         scene.sys.events.on('start', this.start, this);
+    },
+
+    /**
+     * This method is called automatically, only once, when the Scene is first created.
+     * Do not invoke it directly.
+     *
+     * @method Phaser.Input.InputPlugin#boot
+     * @private
+     * @since 3.5.1
+     */
+    boot: function ()
+    {
+        this.cameras = this.systems.cameras;
+
+        this.displayList = this.systems.displayList;
+
+        this.systems.events.once('destroy', this.destroy, this);
     },
 
     /**
@@ -82716,13 +82784,8 @@ var InputPlugin = new Class({
         eventEmitter.on('update', this.update, this);
 
         eventEmitter.once('shutdown', this.shutdown, this);
-        eventEmitter.once('destroy', this.destroy, this);
 
         this.enabled = true;
-
-        this.cameras = this.systems.cameras;
-
-        this.displayList = this.systems.displayList;
     },
 
     /**
@@ -93274,7 +93337,21 @@ var UpdateList = new Class({
          */
         this._pendingRemoval = [];
 
+        scene.sys.events.once('boot', this.boot, this);
         scene.sys.events.on('start', this.start, this);
+    },
+
+    /**
+     * This method is called automatically, only once, when the Scene is first created.
+     * Do not invoke it directly.
+     *
+     * @method Phaser.GameObjects.UpdateList#boot
+     * @private
+     * @since 3.5.1
+     */
+    boot: function ()
+    {
+        this.systems.events.once('destroy', this.destroy, this);
     },
 
     /**
@@ -93293,7 +93370,6 @@ var UpdateList = new Class({
         eventEmitter.on('preupdate', this.preUpdate, this);
         eventEmitter.on('update', this.update, this);
         eventEmitter.once('shutdown', this.shutdown, this);
-        eventEmitter.once('destroy', this.destroy, this);
     },
 
     /**
@@ -94985,7 +95061,21 @@ var DisplayList = new Class({
          */
         this.systems = scene.sys;
 
+        scene.sys.events.once('boot', this.boot, this);
         scene.sys.events.on('start', this.start, this);
+    },
+
+    /**
+     * This method is called automatically, only once, when the Scene is first created.
+     * Do not invoke it directly.
+     *
+     * @method Phaser.GameObjects.DisplayList#boot
+     * @private
+     * @since 3.5.1
+     */
+    boot: function ()
+    {
+        this.systems.events.once('destroy', this.destroy, this);
     },
 
     /**
@@ -94999,10 +95089,7 @@ var DisplayList = new Class({
      */
     start: function ()
     {
-        var eventEmitter = this.systems.events;
-
-        eventEmitter.once('shutdown', this.shutdown, this);
-        eventEmitter.once('destroy', this.destroy, this);
+        this.systems.events.once('shutdown', this.shutdown, this);
     },
 
     /**
@@ -95097,9 +95184,7 @@ var DisplayList = new Class({
     {
         this.removeAll();
 
-        var eventEmitter = this.systems.events;
-
-        eventEmitter.off('shutdown', this.shutdown, this);
+        this.systems.events.off('shutdown', this.shutdown, this);
     },
 
     /**
@@ -99891,7 +99976,23 @@ var DataManagerPlugin = new Class({
          */
         this.systems = scene.sys;
 
+        scene.sys.events.once('boot', this.boot, this);
         scene.sys.events.on('start', this.start, this);
+    },
+
+    /**
+     * This method is called automatically, only once, when the Scene is first created.
+     * Do not invoke it directly.
+     *
+     * @method Phaser.Data.DataManagerPlugin#boot
+     * @private
+     * @since 3.5.1
+     */
+    boot: function ()
+    {
+        this.events = this.systems.events;
+
+        this.events.once('destroy', this.destroy, this);
     },
 
     /**
@@ -99912,10 +100013,7 @@ var DataManagerPlugin = new Class({
 
         this.events = this.systems.events;
 
-        var eventEmitter = this.systems.events;
-
-        eventEmitter.once('shutdown', this.shutdown, this);
-        eventEmitter.once('destroy', this.destroy, this);
+        this.events.once('shutdown', this.shutdown, this);
     },
 
     /**
@@ -99928,9 +100026,7 @@ var DataManagerPlugin = new Class({
      */
     shutdown: function ()
     {
-        var eventEmitter = this.systems.events;
-
-        eventEmitter.off('shutdown', this.shutdown, this);
+        this.systems.events.off('shutdown', this.shutdown, this);
     },
 
     /**
@@ -103685,19 +103781,19 @@ var CameraManager = new Class({
          */
         this.baseScale = 1;
 
+        scene.sys.events.once('boot', this.boot, this);
         scene.sys.events.on('start', this.start, this);
     },
 
     /**
-     * This method is called automatically by the Scene when it is starting up.
-     * It is responsible for creating local systems, properties and listening for Scene events.
+     * This method is called automatically, only once, when the Scene is first created.
      * Do not invoke it directly.
      *
-     * @method Phaser.Cameras.Scene2D.CameraManager#start
+     * @method Phaser.Cameras.Scene2D.CameraManager#boot
      * @private
-     * @since 3.5.0
+     * @since 3.5.1
      */
-    start: function ()
+    boot: function ()
     {
         var sys = this.systems;
 
@@ -103714,11 +103810,29 @@ var CameraManager = new Class({
 
         this.main = this.cameras[0];
 
-        var eventEmitter = sys.events;
+        this.systems.events.once('destroy', this.destroy, this);
+    },
+
+    /**
+     * This method is called automatically by the Scene when it is starting up.
+     * It is responsible for creating local systems, properties and listening for Scene events.
+     * Do not invoke it directly.
+     *
+     * @method Phaser.Cameras.Scene2D.CameraManager#start
+     * @private
+     * @since 3.5.0
+     */
+    start: function ()
+    {
+        if (!this.main)
+        {
+            this.boot();
+        }
+
+        var eventEmitter = this.systems.events;
 
         eventEmitter.on('update', this.update, this);
         eventEmitter.once('shutdown', this.shutdown, this);
-        eventEmitter.once('destroy', this.destroy, this);
     },
 
     /**
@@ -116734,7 +116848,24 @@ var ArcadePhysics = new Class({
          */
         this.add;
 
+        scene.sys.events.once('boot', this.boot, this);
         scene.sys.events.on('start', this.start, this);
+    },
+
+    /**
+     * This method is called automatically, only once, when the Scene is first created.
+     * Do not invoke it directly.
+     *
+     * @method Phaser.Physics.Arcade.ArcadePhysics#boot
+     * @private
+     * @since 3.5.1
+     */
+    boot: function ()
+    {
+        this.world = new World(this.scene, this.config);
+        this.add = new Factory(this.world);
+
+        this.systems.events.once('destroy', this.destroy, this);
     },
 
     /**
@@ -116748,15 +116879,17 @@ var ArcadePhysics = new Class({
      */
     start: function ()
     {
-        this.world = new World(this.scene, this.config);
-        this.add = new Factory(this.world);
+        if (!this.world)
+        {
+            this.world = new World(this.scene, this.config);
+            this.add = new Factory(this.world);
+        }
 
         var eventEmitter = this.systems.events;
 
         eventEmitter.on('update', this.world.update, this.world);
         eventEmitter.on('postupdate', this.world.postUpdate, this.world);
         eventEmitter.once('shutdown', this.shutdown, this);
-        eventEmitter.once('destroy', this.destroy, this);
     },
 
     /**
@@ -117110,7 +117243,11 @@ var ArcadePhysics = new Class({
         eventEmitter.off('postupdate', this.world.postUpdate, this.world);
         eventEmitter.off('shutdown', this.shutdown, this);
 
-        this.world.shutdown();
+        this.add.destroy();
+        this.world.destroy();
+
+        this.add = null;
+        this.world = null;
     },
 
     /**
@@ -117124,15 +117261,10 @@ var ArcadePhysics = new Class({
     {
         this.shutdown();
 
-        this.add.destroy();
-        this.world.destroy();
-
         this.scene.sys.events.off('start', this.start, this);
 
         this.scene = null;
         this.systems = null;
-        this.world = null;
-        this.add = null;
     }
 
 });
@@ -118983,7 +119115,21 @@ var LoaderPlugin = new Class({
          */
         this.state = CONST.LOADER_IDLE;
 
-        scene.sys.events.on('start', this.boot, this);
+        scene.sys.events.once('boot', this.boot, this);
+        scene.sys.events.on('start', this.pluginStart, this);
+    },
+
+    /**
+     * This method is called automatically, only once, when the Scene is first created.
+     * Do not invoke it directly.
+     *
+     * @method Phaser.Loader.LoaderPlugin#boot
+     * @private
+     * @since 3.5.1
+     */
+    boot: function ()
+    {
+        this.systems.events.once('destroy', this.destroy, this);
     },
 
     /**
@@ -118991,16 +119137,13 @@ var LoaderPlugin = new Class({
      * It is responsible for creating local systems, properties and listening for Scene events.
      * Do not invoke it directly.
      *
-     * @method Phaser.Loader.LoaderPlugin#boot
+     * @method Phaser.Loader.LoaderPlugin#pluginStart
      * @private
-     * @since 3.0.0
+     * @since 3.5.1
      */
-    boot: function ()
+    pluginStart: function ()
     {
-        var eventEmitter = this.systems.events;
-
-        eventEmitter.once('shutdown', this.shutdown, this);
-        eventEmitter.once('destroy', this.destroy, this);
+        this.systems.events.once('shutdown', this.shutdown, this);
     },
 
     /**
@@ -119731,9 +119874,7 @@ var LoaderPlugin = new Class({
 
         this.state = CONST.LOADER_SHUTDOWN;
 
-        var eventEmitter = this.systems.events;
-
-        eventEmitter.off('shutdown', this.shutdown, this);
+        this.systems.events.off('shutdown', this.shutdown, this);
     },
 
     /**
@@ -119750,7 +119891,7 @@ var LoaderPlugin = new Class({
 
         this.state = CONST.LOADER_DESTROYED;
 
-        this.scene.sys.events.off('start', this.start, this);
+        this.systems.events.off('start', this.pluginStart, this);
 
         this.list = null;
         this.inflight = null;
@@ -119793,8 +119934,8 @@ var TextFile = __webpack_require__(214);
  * @param {string} textureURL - The url to load the texture file from.
  * @param {string} atlasURL - The url to load the atlas file from.
  * @param {string} path - The path of the file.
- * @param {XHRSettingsObject} textureXhrSettings - Optional texture file specific XHR settings.
- * @param {XHRSettingsObject} atlasXhrSettings - Optional atlas file specific XHR settings.
+ * @param {XHRSettingsObject} [textureXhrSettings] - Optional texture file specific XHR settings.
+ * @param {XHRSettingsObject} [atlasXhrSettings] - Optional atlas file specific XHR settings.
  *
  * @return {object} An object containing two File objects to be added to the loader.
  */
@@ -119872,7 +120013,7 @@ var TILEMAP_FORMATS = __webpack_require__(29);
  * @param {string} url - [description]
  * @param {string} path - [description]
  * @param {string} format - [description]
- * @param {XHRSettingsObject} xhrSettings - [description]
+ * @param {XHRSettingsObject} [xhrSettings] - [description]
  *
  * @return {object} An object containing two File objects to be added to the loader.
  */
@@ -119937,7 +120078,7 @@ FileTypesManager.register('tilemapTiledJSON', function (key, url, xhrSettings)
  *
  * @param {string} key - [description]
  * @param {string} url - [description]
- * @param {XHRSettingsObject} xhrSettings - [description]
+ * @param {XHRSettingsObject} [xhrSettings] - [description]
  *
  * @return {Phaser.Loader.LoaderPlugin} The Loader.
  */
@@ -119993,7 +120134,7 @@ var TILEMAP_FORMATS = __webpack_require__(29);
  * @param {string} url - [description]
  * @param {string} path - [description]
  * @param {string} format - [description]
- * @param {XHRSettingsObject} xhrSettings - [description]
+ * @param {XHRSettingsObject} [xhrSettings] - [description]
  */
 var TilemapCSVFile = new Class({
 
@@ -120099,7 +120240,7 @@ var GetFastValue = __webpack_require__(2);
  * @param {string} key - [description]
  * @param {string} url - [description]
  * @param {string} path - [description]
- * @param {XHRSettingsObject} xhrSettings - [description]
+ * @param {XHRSettingsObject} [xhrSettings] - [description]
  */
 var SVGFile = new Class({
 
@@ -120256,7 +120397,7 @@ var GetFastValue = __webpack_require__(2);
  * @param {number} width - [description]
  * @param {number} height - [description]
  * @param {string} path - [description]
- * @param {XHRSettingsObject} xhrSettings - [description]
+ * @param {XHRSettingsObject} [xhrSettings] - [description]
  */
 var HTMLFile = new Class({
 
@@ -120418,7 +120559,7 @@ var GetFastValue = __webpack_require__(2);
  * @param {string} key - [description]
  * @param {string} url - [description]
  * @param {string} path - [description]
- * @param {XHRSettingsObject} xhrSettings - [description]
+ * @param {XHRSettingsObject} [xhrSettings] - [description]
  */
 var GLSLFile = new Class({
 
@@ -120519,8 +120660,8 @@ var XMLFile = __webpack_require__(215);
  * @param {string} textureURL - The url to load the texture file from.
  * @param {string} xmlURL - The url to load the atlas file from.
  * @param {string} path - The path of the file.
- * @param {XHRSettingsObject} textureXhrSettings - Optional texture file specific XHR settings.
- * @param {XHRSettingsObject} xmlXhrSettings - Optional atlas file specific XHR settings.
+ * @param {XHRSettingsObject} [textureXhrSettings] - Optional texture file specific XHR settings.
+ * @param {XHRSettingsObject} [xmlXhrSettings] - Optional atlas file specific XHR settings.
  *
  * @return {object} An object containing two File objects to be added to the loader.
  */
@@ -120602,7 +120743,7 @@ var GetFastValue = __webpack_require__(2);
  * @param {string} key - [description]
  * @param {string} url - [description]
  * @param {string} path - [description]
- * @param {XHRSettingsObject} xhrSettings - [description]
+ * @param {XHRSettingsObject} [xhrSettings] - [description]
  */
 var BinaryFile = new Class({
 
@@ -131431,7 +131572,22 @@ var CameraManager = new Class({
          */
         this.cameras = [];
 
+        scene.sys.events.once('boot', this.boot, this);
         scene.sys.events.on('start', this.start, this);
+    },
+
+
+    /**
+     * This method is called automatically, only once, when the Scene is first created.
+     * Do not invoke it directly.
+     *
+     * @method Phaser.Cameras.Scene3D.CameraManager#boot
+     * @private
+     * @since 3.5.1
+     */
+    boot: function ()
+    {
+        this.systems.events.once('destroy', this.destroy, this);
     },
 
     /**
@@ -131449,7 +131605,6 @@ var CameraManager = new Class({
 
         eventEmitter.on('update', this.update, this);
         eventEmitter.once('shutdown', this.shutdown, this);
-        eventEmitter.once('destroy', this.destroy, this);
     },
 
     /**
@@ -141264,7 +141419,24 @@ var MatterPhysics = new Class({
             Plugin.use(MatterLib, MatterWrap);
         }
 
+        scene.sys.events.once('boot', this.boot, this);
         scene.sys.events.on('start', this.start, this);
+    },
+
+    /**
+     * This method is called automatically, only once, when the Scene is first created.
+     * Do not invoke it directly.
+     *
+     * @method Phaser.Physics.Matter.MatterPhysics#boot
+     * @private
+     * @since 3.5.1
+     */
+    boot: function ()
+    {
+        this.world = new World(this.scene, this.config);
+        this.add = new Factory(this.world);
+
+        this.systems.events.once('destroy', this.destroy, this);
     },
 
     /**
@@ -141278,15 +141450,17 @@ var MatterPhysics = new Class({
      */
     start: function ()
     {
-        this.world = new World(this.scene, this.config);
-        this.add = new Factory(this.world);
+        if (!this.world)
+        {
+            this.world = new World(this.scene, this.config);
+            this.add = new Factory(this.world);
+        }
 
         var eventEmitter = this.systems.events;
 
         eventEmitter.on('update', this.world.update, this.world);
         eventEmitter.on('postupdate', this.world.postUpdate, this.world);
         eventEmitter.once('shutdown', this.shutdown, this);
-        eventEmitter.once('destroy', this.destroy, this);
     },
 
     /**
@@ -141444,13 +141618,17 @@ var MatterPhysics = new Class({
      */
     shutdown: function ()
     {
-        this.world.shutdown();
-
         var eventEmitter = this.systems.events;
 
         eventEmitter.off('update', this.world.update, this.world);
         eventEmitter.off('postupdate', this.world.postUpdate, this.world);
         eventEmitter.off('shutdown', this.shutdown, this);
+
+        this.add.destroy();
+        this.world.destroy();
+
+        this.add = null;
+        this.world = null;
     },
 
     /**
@@ -141465,15 +141643,10 @@ var MatterPhysics = new Class({
     {
         this.shutdown();
 
-        this.add.destroy();
-        this.world.destroy();
-
         this.scene.sys.events.off('start', this.start, this);
 
         this.scene = null;
         this.systems = null;
-        this.world = null;
-        this.add = null;
     }
 
 });
@@ -144005,7 +144178,24 @@ var ImpactPhysics = new Class({
          */
         this.add;
 
+        scene.sys.events.once('boot', this.boot, this);
         scene.sys.events.on('start', this.start, this);
+    },
+
+    /**
+     * This method is called automatically, only once, when the Scene is first created.
+     * Do not invoke it directly.
+     *
+     * @method Phaser.Physics.Impact.ImpactPhysics#boot
+     * @private
+     * @since 3.5.1
+     */
+    boot: function ()
+    {
+        this.world = new World(this.scene, this.config);
+        this.add = new Factory(this.world);
+
+        this.systems.events.once('destroy', this.destroy, this);
     },
 
     /**
@@ -144019,14 +144209,16 @@ var ImpactPhysics = new Class({
      */
     start: function ()
     {
-        this.world = new World(this.scene, this.config);
-        this.add = new Factory(this.world);
+        if (!this.world)
+        {
+            this.world = new World(this.scene, this.config);
+            this.add = new Factory(this.world);
+        }
 
         var eventEmitter = this.systems.events;
 
         eventEmitter.on('update', this.world.update, this.world);
         eventEmitter.once('shutdown', this.shutdown, this);
-        eventEmitter.once('destroy', this.destroy, this);
     },
 
     /**
@@ -144086,12 +144278,16 @@ var ImpactPhysics = new Class({
      */
     shutdown: function ()
     {
-        this.world.shutdown();
-
         var eventEmitter = this.systems.events;
 
         eventEmitter.off('update', this.world.update, this.world);
         eventEmitter.off('shutdown', this.shutdown, this);
+
+        this.add.destroy();
+        this.world.destroy();
+
+        this.add = null;
+        this.world = null;
     },
 
     /**
@@ -144106,15 +144302,10 @@ var ImpactPhysics = new Class({
     {
         this.shutdown();
 
-        this.add.destroy();
-        this.world.destroy();
-
         this.scene.sys.events.off('start', this.start, this);
 
         this.scene = null;
         this.systems = null;
-        this.world = null;
-        this.add = null;
     }
 
 });
