@@ -171,7 +171,7 @@ var DataManager = new Class({
      *
      * @param {string} key - The key to set the value for.
      * @param {*} data - The value to set.
-     * @param {boolean} customUpdateEvent - Allow event emitter to emit a custom update for this data update - event name = ${key}_update
+     * @param {boolean} [customUpdateEvent] - Allow event emitter to emit a custom update for this data update - event name = ${key}_update
      *
      * @return {Phaser.Data.DataManager} This DataManager object.
      */
