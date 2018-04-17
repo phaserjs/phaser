@@ -23,7 +23,7 @@ var GetFastValue = require('../../utils/object/GetFastValue');
  * @param {string} key - [description]
  * @param {string} url - [description]
  * @param {string} path - [description]
- * @param {XHRSettingsObject} xhrSettings - [description]
+ * @param {XHRSettingsObject} [xhrSettings] - [description]
  */
 var SVGFile = new Class({
 

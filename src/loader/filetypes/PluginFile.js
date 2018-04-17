@@ -24,7 +24,7 @@ var PluginManager = require('../../boot/PluginManager');
  * @param {string} key - [description]
  * @param {string} url - [description]
  * @param {string} path - [description]
- * @param {XHRSettingsObject} xhrSettings - [description]
+ * @param {XHRSettingsObject} [xhrSettings] - [description]
  */
 var PluginFile = new Class({
 
