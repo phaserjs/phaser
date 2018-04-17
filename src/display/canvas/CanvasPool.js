@@ -129,7 +129,7 @@ var CanvasPool = function ()
     {
         if (canvasType === undefined) { canvasType = CONST.CANVAS; }
 
-        if (canvasType ===  CONST.WEBGL)
+        if (canvasType === CONST.WEBGL)
         {
             return null;
         }
