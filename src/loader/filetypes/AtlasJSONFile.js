@@ -18,8 +18,8 @@ var JSONFile = require('./JSONFile.js');
  * @param {string} textureURL - The url to load the texture file from.
  * @param {string} atlasURL - The url to load the atlas file from.
  * @param {string} path - The path of the file.
- * @param {XHRSettingsObject} textureXhrSettings - Optional texture file specific XHR settings.
- * @param {XHRSettingsObject} atlasXhrSettings - Optional atlas file specific XHR settings.
+ * @param {XHRSettingsObject} [textureXhrSettings] - Optional texture file specific XHR settings.
+ * @param {XHRSettingsObject} [atlasXhrSettings] - Optional atlas file specific XHR settings.
  *
  * @return {object} An object containing two File objects to be added to the loader.
  */
