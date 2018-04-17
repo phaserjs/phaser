@@ -241,7 +241,7 @@ var LoaderPlugin = new Class({
          */
         this.state = CONST.LOADER_IDLE;
 
-        scene.sys.events.on('start', this.boot, this);
+        scene.sys.events.on('start', this.pluginStart, this);
     },
 
     /**
@@ -249,11 +249,11 @@ var LoaderPlugin = new Class({
      * It is responsible for creating local systems, properties and listening for Scene events.
      * Do not invoke it directly.
      *
-     * @method Phaser.Loader.LoaderPlugin#boot
+     * @method Phaser.Loader.LoaderPlugin#pluginStart
      * @private
-     * @since 3.0.0
+     * @since 3.5.1
      */
-    boot: function ()
+    pluginStart: function ()
     {
         var eventEmitter = this.systems.events;
 
@@ -1008,7 +1008,7 @@ var LoaderPlugin = new Class({
 
         this.state = CONST.LOADER_DESTROYED;
 
-        this.scene.sys.events.off('start', this.start, this);
+        this.systems.events.off('start', this.pluginStart, this);
 
         this.list = null;
         this.inflight = null;

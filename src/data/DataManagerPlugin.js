@@ -50,7 +50,21 @@ var DataManagerPlugin = new Class({
          */
         this.systems = scene.sys;
 
+        scene.sys.events.once('boot', this.boot, this);
         scene.sys.events.on('start', this.start, this);
+    },
+
+    /**
+     * This method is called automatically, only once, when the Scene is first created.
+     * Do not invoke it directly.
+     *
+     * @method Phaser.Data.DataManagerPlugin#boot
+     * @private
+     * @since 3.5.1
+     */
+    boot: function ()
+    {
+        this.events = this.systems.events;
     },
 
     /**

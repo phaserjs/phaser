@@ -69,7 +69,22 @@ var GameObjectCreator = new Class({
          */
         this.updateList;
 
+        scene.sys.events.once('boot', this.boot, this);
         scene.sys.events.on('start', this.start, this);
+    },
+
+    /**
+     * This method is called automatically, only once, when the Scene is first created.
+     * Do not invoke it directly.
+     *
+     * @method Phaser.GameObjects.GameObjectCreator#boot
+     * @private
+     * @since 3.5.1
+     */
+    boot: function ()
+    {
+        this.displayList = this.systems.displayList;
+        this.updateList = this.systems.updateList;
     },
 
     /**
@@ -83,9 +98,6 @@ var GameObjectCreator = new Class({
      */
     start: function ()
     {
-        this.displayList = this.systems.displayList;
-        this.updateList = this.systems.updateList;
-
         var eventEmitter = this.systems.events;
 
         eventEmitter.once('shutdown', this.shutdown, this);

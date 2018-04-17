@@ -73,7 +73,22 @@ var ImpactPhysics = new Class({
          */
         this.add;
 
+        scene.sys.events.once('boot', this.boot, this);
         scene.sys.events.on('start', this.start, this);
+    },
+
+    /**
+     * This method is called automatically, only once, when the Scene is first created.
+     * Do not invoke it directly.
+     *
+     * @method Phaser.Physics.Impact.ImpactPhysics#boot
+     * @private
+     * @since 3.5.1
+     */
+    boot: function ()
+    {
+        this.world = new World(this.scene, this.config);
+        this.add = new Factory(this.world);
     },
 
     /**
@@ -87,8 +102,11 @@ var ImpactPhysics = new Class({
      */
     start: function ()
     {
-        this.world = new World(this.scene, this.config);
-        this.add = new Factory(this.world);
+        if (!this.world)
+        {
+            this.world = new World(this.scene, this.config);
+            this.add = new Factory(this.world);
+        }
 
         var eventEmitter = this.systems.events;
 
@@ -154,12 +172,16 @@ var ImpactPhysics = new Class({
      */
     shutdown: function ()
     {
-        this.world.shutdown();
-
         var eventEmitter = this.systems.events;
 
         eventEmitter.off('update', this.world.update, this.world);
         eventEmitter.off('shutdown', this.shutdown, this);
+
+        this.add.destroy();
+        this.world.destroy();
+
+        this.add = null;
+        this.world = null;
     },
 
     /**
@@ -174,15 +196,10 @@ var ImpactPhysics = new Class({
     {
         this.shutdown();
 
-        this.add.destroy();
-        this.world.destroy();
-
         this.scene.sys.events.off('start', this.start, this);
 
         this.scene = null;
         this.systems = null;
-        this.world = null;
-        this.add = null;
     }
 
 });

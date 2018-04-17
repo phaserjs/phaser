@@ -283,7 +283,23 @@ var InputPlugin = new Class({
          */
         this._validTypes = [ 'onDown', 'onUp', 'onOver', 'onOut', 'onMove', 'onDragStart', 'onDrag', 'onDragEnd', 'onDragEnter', 'onDragLeave', 'onDragOver', 'onDrop' ];
 
+        scene.sys.events.once('boot', this.boot, this);
         scene.sys.events.on('start', this.start, this);
+    },
+
+    /**
+     * This method is called automatically, only once, when the Scene is first created.
+     * Do not invoke it directly.
+     *
+     * @method Phaser.Input.InputPlugin#boot
+     * @private
+     * @since 3.5.1
+     */
+    boot: function ()
+    {
+        this.cameras = this.systems.cameras;
+
+        this.displayList = this.systems.displayList;
     },
 
     /**
@@ -309,10 +325,6 @@ var InputPlugin = new Class({
         eventEmitter.once('destroy', this.destroy, this);
 
         this.enabled = true;
-
-        this.cameras = this.systems.cameras;
-
-        this.displayList = this.systems.displayList;
     },
 
     /**
