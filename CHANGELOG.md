@@ -9,6 +9,7 @@
 ### Bug Fixes
 
 * LoaderPlugin.destroy would try and remove an incorrect event listener.
+* TileSprites would try to call `deleteTexture` on both renderers, but it's only available in WebGL (thanks @jmcriat)
 
 
 ## Version 3.5.0 - Kirito - 16th April 2018
