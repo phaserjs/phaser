@@ -11,6 +11,7 @@
 * LoaderPlugin.destroy would try and remove an incorrect event listener.
 * TileSprites would try to call `deleteTexture` on both renderers, but it's only available in WebGL (thanks @jmcriat)
 * Using a geometry mask stopped working in WebGL. Fix #3582 (thanks @rafelsanso)
+* The particle emitter incorrectly adjusted the vertex count, causing WebGL rendering issues. Fix #3583 (thanks @murteira)
 
 ### Examples, Documentation and TypeScript
 
