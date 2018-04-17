@@ -10,7 +10,13 @@
 
 * LoaderPlugin.destroy would try and remove an incorrect event listener.
 * TileSprites would try to call `deleteTexture` on both renderers, but it's only available in WebGL (thanks @jmcriat)
+* Using a geometry mask stopped working in WebGL. Fix #3582 (thanks @rafelsanso)
 
+### Examples, Documentation and TypeScript
+
+My thanks to the following for helping with the Phaser 3 Examples, Docs and TypeScript definitions, either by reporting errors, fixing them or helping author the docs:
+
+@NemoStein
 
 ## Version 3.5.0 - Kirito - 16th April 2018
 
