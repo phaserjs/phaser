@@ -14,12 +14,12 @@ var pool = [];
 var _disableContextSmoothing = false;
 
 /**
- * The CanvasPool is a global static object, that allows Phaser to recycle and pool Canvas DOM elements.
+ * The CanvasPool is a global static object, that allows Phaser to recycle and pool 2D Context Canvas DOM elements.
+ * It does not pool WebGL Contexts, because once the context options are set they cannot be modified again, 
+ * which is useless for some of the Phaser pipelines / renderer.
  *
- * This singleton is instantiated as soon as Phaser loads,
- * before a Phaser.Game instance has even been created.
- * Which means all instances of Phaser Games on the same page
- * can share the one single pool
+ * This singleton is instantiated as soon as Phaser loads, before a Phaser.Game instance has even been created.
+ * Which means all instances of Phaser Games on the same page can share the one single pool.
  *
  * @namespace Phaser.Display.Canvas.CanvasPool
  * @since 3.0.0
@@ -56,7 +56,10 @@ var CanvasPool = function ()
                 type: canvasType
             };
 
-            pool.push(container);
+            if (canvasType === CONST.CANVAS)
+            {
+                pool.push(container);
+            }
 
             canvas = container.canvas;
         }
@@ -126,6 +129,11 @@ var CanvasPool = function ()
     {
         if (canvasType === undefined) { canvasType = CONST.CANVAS; }
 
+        if (canvasType ===  CONST.WEBGL)
+        {
+            return null;
+        }
+
         for (var i = 0; i < pool.length; i++)
         {
             var container = pool[i];
@@ -157,7 +165,6 @@ var CanvasPool = function ()
         {
             if ((isCanvas && container.canvas === parent) || (!isCanvas && container.parent === parent))
             {
-                // console.log('CanvasPool.remove found and removed');
                 container.parent = null;
                 container.canvas.width = 1;
                 container.canvas.height = 1;
