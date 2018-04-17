@@ -1,5 +1,15 @@
 # Change Log
 
+## Version 3.6.0 - in development
+
+### New Features
+
+### Updates
+
+### Bug Fixes
+
+
+
 ## Version 3.5.1 - Kirito - 17th April 2018
 
 ### Updates
