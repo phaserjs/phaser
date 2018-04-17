@@ -825,7 +825,7 @@ var SceneManager = new Class({
      * @method Phaser.Scenes.SceneManager#getScene
      * @since 3.0.0
      *
-     * @param {string} key - The Scene to retrieve.
+     * @param {string|Phaser.Scene} key - The Scene to retrieve.
      *
      * @return {?Phaser.Scene} The Scene.
      */
@@ -838,10 +838,6 @@ var SceneManager = new Class({
                 return this.keys[key];
             }
         }
-
-        //  What's the point? If you already have the Scene to pass in to this function, you have the Scene!
-
-        /*
         else
         {
             for (var i = 0; i < this.scenes.length; i++)
@@ -852,7 +848,6 @@ var SceneManager = new Class({
                 }
             }
         }
-        */
 
         return null;
     },
