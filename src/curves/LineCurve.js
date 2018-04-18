@@ -170,6 +170,8 @@ var LineCurve = new Class({
      *
      * @method Phaser.Curves.LineCurve#getTangent
      * @since 3.0.0
+     * 
+     * @generic {Phaser.Math.Vector2} O - [out,$return]
      *
      * @return {Phaser.Math.Vector2} [description]
      */
