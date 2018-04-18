@@ -29,6 +29,7 @@ var Render = require('./BitmapTextRender');
 
 /**
  * @typedef {object} JSONBitmapText
+ * @extends {JSONGameObject}
  *
  * @property {string} font - [description]
  * @property {string} text - [description]
