@@ -707,6 +707,58 @@ var Group = new Class({
      */
     getFirst: function (state, createIfNull, x, y, key, frame, visible)
     {
+        return this.getHandler(true, state, createIfNull, x, y, key, frame, visible);
+    },
+
+    /**
+     * Scans the group for the last member that has an {@link Phaser.GameObjects.GameObject#active} state matching the argument,
+     * assigns `x` and `y`, and returns the member.
+     *
+     * If no matching member is found and `createIfNull` is true and the group isn't full then it will create a new Game Object using `x`, `y`, `key`, `frame`, and `visible`.
+     * Unless a new member is created, `key`, `frame`, and `visible` are ignored.
+     *
+     * @method Phaser.GameObjects.Group#getLast
+     * @since 3.6.0
+     *
+     * @param {boolean} [state=false] - The {@link Phaser.GameObjects.GameObject#active} value to match.
+     * @param {boolean} [createIfNull=false] - Create a new Game Object if no matching members are found, using the following arguments.
+     * @param {number} [x] - The horizontal position of the Game Object in the world.
+     * @param {number} [y] - The vertical position of the Game Object in the world.
+     * @param {string} [key=defaultKey] - The texture key assigned to a new Game Object (if one is created).
+     * @param {(string|integer)} [frame=defaultFrame] - A texture frame assigned to a new Game Object (if one is created).
+     * @param {boolean} [visible=true] - The {@link Phaser.GameObjects.Components.Visible#visible} state of a new Game Object (if one is created).
+     *
+     * @return {?Phaser.GameObjects.GameObject} The first matching group member, or a newly created member, or null.
+     */
+    getLast: function (state, createIfNull, x, y, key, frame, visible)
+    {
+        return this.getHandler(false, state, createIfNull, x, y, key, frame, visible);
+    },
+
+    /**
+     * Scans the group for the last member that has an {@link Phaser.GameObjects.GameObject#active} state matching the argument,
+     * assigns `x` and `y`, and returns the member.
+     *
+     * If no matching member is found and `createIfNull` is true and the group isn't full then it will create a new Game Object using `x`, `y`, `key`, `frame`, and `visible`.
+     * Unless a new member is created, `key`, `frame`, and `visible` are ignored.
+     *
+     * @method Phaser.GameObjects.Group#getHandler
+     * @private
+     * @since 3.6.0
+     *
+     * @param {boolean} forwards - Search front to back or back to front?
+     * @param {boolean} [state=false] - The {@link Phaser.GameObjects.GameObject#active} value to match.
+     * @param {boolean} [createIfNull=false] - Create a new Game Object if no matching members are found, using the following arguments.
+     * @param {number} [x] - The horizontal position of the Game Object in the world.
+     * @param {number} [y] - The vertical position of the Game Object in the world.
+     * @param {string} [key=defaultKey] - The texture key assigned to a new Game Object (if one is created).
+     * @param {(string|integer)} [frame=defaultFrame] - A texture frame assigned to a new Game Object (if one is created).
+     * @param {boolean} [visible=true] - The {@link Phaser.GameObjects.Components.Visible#visible} state of a new Game Object (if one is created).
+     *
+     * @return {?Phaser.GameObjects.GameObject} The first matching group member, or a newly created member, or null.
+     */
+    getHandler: function (forwards, state, createIfNull, x, y, key, frame, visible)
+    {
         if (state === undefined) { state = false; }
         if (createIfNull === undefined) { createIfNull = false; }
 
@@ -714,24 +766,44 @@ var Group = new Class({
 
         var children = this.children.entries;
 
-        for (var i = 0; i < children.length; i++)
+        if (forwards)
         {
-            gameObject = children[i];
-
-            if (gameObject.active === state)
+            for (var i = 0; i < children.length; i++)
             {
-                if (typeof(x) === 'number')
-                {
-                    gameObject.x = x;
-                }
+                gameObject = children[i];
 
-                if (typeof(y) === 'number')
+                if (gameObject.active === state)
                 {
-                    gameObject.y = y;
+                    break;
                 }
-
-                return gameObject;
             }
+        }
+        else
+        {
+            for (var i = children.length - 1; i >= 0; i--)
+            {
+                gameObject = children[i];
+
+                if (gameObject.active === state)
+                {
+                    break;
+                }
+            }
+        }
+
+        if (gameObject)
+        {
+            if (typeof(x) === 'number')
+            {
+                gameObject.x = x;
+            }
+
+            if (typeof(y) === 'number')
+            {
+                gameObject.y = y;
+            }
+
+            return gameObject;
         }
 
         //  Got this far? We need to create or bail
