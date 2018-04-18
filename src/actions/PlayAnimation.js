@@ -5,7 +5,7 @@
  */
 
 /**
- * [description]
+ * Play an animation with the given key, starting at the given startFrame on all Game Objects in items
  *
  * @function Phaser.Actions.PlayAnimation
  * @since 3.0.0
