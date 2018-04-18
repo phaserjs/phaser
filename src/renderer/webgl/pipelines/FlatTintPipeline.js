@@ -716,11 +716,11 @@ var FlatTintPipeline = new Class({
 
         var cameraScrollX = camera.scrollX * graphics.scrollFactorX;
         var cameraScrollY = camera.scrollY * graphics.scrollFactorY;
-        var srcX = graphics.x - cameraScrollX;
-        var srcY = graphics.y - cameraScrollY;
+        var srcX = graphics.x;
+        var srcY = graphics.y;
         var srcScaleX = graphics.scaleX;
         var srcScaleY = graphics.scaleY;
-        var srcRotation = -graphics.rotation;
+        var srcRotation = graphics.rotation;
         var commands = graphics.commandBuffer;
         var alpha = graphics.alpha;
         var lineAlpha = 1.0;
@@ -748,8 +748,8 @@ var FlatTintPipeline = new Class({
         var sr = sin(srcRotation);
         var cr = cos(srcRotation);
         var sra = cr * srcScaleX;
-        var srb = -sr * srcScaleX;
-        var src = sr * srcScaleY;
+        var srb = sr * srcScaleX;
+        var src = -sr * srcScaleY;
         var srd = cr * srcScaleY;
         var sre = srcX;
         var srf = srcY;
@@ -769,12 +769,17 @@ var FlatTintPipeline = new Class({
             var pmd = parentMatrix[3];
             var pme = parentMatrix[4];
             var pmf = parentMatrix[5];
-            var pca = cma * pma + cmb * pmc;
-            var pcb = cma * pmb + cmb * pmd;
-            var pcc = cmc * pma + cmd * pmc;
-            var pcd = cmc * pmb + cmd * pmd;
-            var pce = cme * pma + cmf * pmc + pme;
-            var pcf = cme * pmb + cmf * pmd + pmf;
+            var cse = -cameraScrollX;
+            var csf = -cameraScrollY;
+            var pse = cse * cma + csf * cmc + cme;
+            var psf = cse * cmb + csf * cmd + cmf;
+            var pca = pma * cma + pmb * cmc;
+            var pcb = pma * cmb + pmb * cmd;
+            var pcc = pmc * cma + pmd * cmc;
+            var pcd = pmc * cmb + pmd * cmd;
+            var pce = pme * cma + pmf * cmc + pse;
+            var pcf = pme * cmb + pmf * cmd + psf;
+
             mva = sra * pca + srb * pcc;
             mvb = sra * pcb + srb * pcd;
             mvc = src * pca + srd * pcc;
@@ -784,6 +789,9 @@ var FlatTintPipeline = new Class({
         }
         else
         {
+            sre -= cameraScrollX;
+            srf -= cameraScrollY;
+
             mva = sra * cma + srb * cmc;
             mvb = sra * cmb + srb * cmd;
             mvc = src * cma + srd * cmc;
