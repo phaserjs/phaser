@@ -348,7 +348,7 @@ var ScenePlugin = new Class({
         }
         else
         {
-            this.manager.start(key);
+            this.manager.start(key, GetFastValue(config, 'data'));
         }
 
         this.systems.events.emit('transitionout', target, duration);

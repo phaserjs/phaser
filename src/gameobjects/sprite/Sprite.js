@@ -96,6 +96,7 @@ var Sprite = new Class({
      * [description]
      *
      * @method Phaser.GameObjects.Sprite#preUpdate
+     * @protected
      * @since 3.0.0
      *
      * @param {number} time - [description]
