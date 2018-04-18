@@ -197,26 +197,6 @@ var Particle = new Class({
         this.rotation = 0;
 
         /**
-         * The horizontal scroll factor of this Particle.
-         *
-         * @name Phaser.GameObjects.Particles.Particle#scrollFactorX
-         * @type {number}
-         * @default 1
-         * @since 3.0.0
-         */
-        this.scrollFactorX = 1;
-
-        /**
-         * The vertical scroll factor of this Particle.
-         *
-         * @name Phaser.GameObjects.Particles.Particle#scrollFactorY
-         * @type {number}
-         * @default 1
-         * @since 3.0.0
-         */
-        this.scrollFactorY = 1;
-
-        /**
          * The tint applied to this Particle.
          *
          * @name Phaser.GameObjects.Particles.Particle#tint

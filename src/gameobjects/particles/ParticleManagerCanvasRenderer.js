@@ -85,8 +85,8 @@ var ParticleManagerCanvasRenderer = function (renderer, emitterManager, interpol
             var x = -ox;
             var y = -oy;
 
-            var tx = particle.x - cameraScrollX * particle.scrollFactorX;
-            var ty = particle.y - cameraScrollY * particle.scrollFactorY;
+            var tx = particle.x - cameraScrollX;
+            var ty = particle.y - cameraScrollY;
 
             if (roundPixels)
             {
