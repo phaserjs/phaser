@@ -293,7 +293,7 @@ var World = new Class({
          * @type {Phaser.Structs.RTree}
          * @since 3.0.0
          */
-        this.tree = new RTree(this.maxEntries, [ '.left', '.top', '.right', '.bottom' ]);
+        this.tree = new RTree(this.maxEntries);
 
         /**
          * [description]
@@ -302,7 +302,7 @@ var World = new Class({
          * @type {Phaser.Structs.RTree}
          * @since 3.0.0
          */
-        this.staticTree = new RTree(this.maxEntries, [ '.left', '.top', '.right', '.bottom' ]);
+        this.staticTree = new RTree(this.maxEntries);
 
         /**
          * [description]
