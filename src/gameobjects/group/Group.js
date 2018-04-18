@@ -836,6 +836,10 @@ var Group = new Class({
                         break;
                     }
                 }
+                else
+                {
+                    gameObject = null;
+                }
             }
         }
         else
@@ -852,6 +856,10 @@ var Group = new Class({
                     {
                         break;
                     }
+                }
+                else
+                {
+                    gameObject = null;
                 }
             }
         }
