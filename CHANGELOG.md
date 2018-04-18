@@ -1,14 +1,23 @@
 # Change Log
 
-## Version 3.6.0 - in development
+## Version 3.5.2 - Kirito - 18th April 2018
 
 ### New Features
 
+* Group.getLast will return the last member in the Group matching the search criteria.
+* Group.getFirstNth will return the nth member in the Group, scanning from top to bottom, that matches the search criteria.
+* Group.getLastNth will return the nth member in the Group, scanning in reverse, that matches the search criteria.
+
 ### Updates
+
+* Impact Physics Game Objects have changed `setLite` to `setLiteCollision`.
+* Impact Physics Game Objects have changed `setPassive` to `setPassiveCollision`.
+* Impact Physics Game Objects have changed `setFixed` to `setFixedCollision`.
+* Impact Physics Game Objects have changed `setActive` to `setActiveCollision`, previously the `setActive` collision method was overwriting the Game Objects `setActive` method, hence the renaming.
 
 ### Bug Fixes
 
-
+* Fixed a bug that caused data to not be passed to another Scene if you used a transition to start it. Fix #3586 (thanks @willywu)
 
 ## Version 3.5.1 - Kirito - 17th April 2018
 
