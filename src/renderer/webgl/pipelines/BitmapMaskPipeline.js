@@ -16,7 +16,7 @@ var WebGLPipeline = require('../WebGLPipeline');
  *
  * @class BitmapMaskPipeline
  * @extends Phaser.Renderer.WebGL.WebGLPipeline
- * @memberOf Phaser.Renderer.WebGL
+ * @memberOf Phaser.Renderer.WebGL.Pipelines
  * @constructor
  * @since 3.0.0
  *
@@ -60,7 +60,7 @@ var BitmapMaskPipeline = new Class({
         /**
          * [description]
          *
-         * @name Phaser.Renderer.WebGL.BitmapMaskPipeline#vertexViewF32
+         * @name Phaser.Renderer.WebGL.Pipelines.BitmapMaskPipeline#vertexViewF32
          * @type {Float32Array}
          * @since 3.0.0
          */
@@ -69,7 +69,7 @@ var BitmapMaskPipeline = new Class({
         /**
          * [description]
          *
-         * @name Phaser.Renderer.WebGL.BitmapMaskPipeline#maxQuads
+         * @name Phaser.Renderer.WebGL.Pipelines.BitmapMaskPipeline#maxQuads
          * @type {number}
          * @default 1
          * @since 3.0.0
@@ -79,7 +79,7 @@ var BitmapMaskPipeline = new Class({
         /**
          * [description]
          *
-         * @name Phaser.Renderer.WebGL.BitmapMaskPipeline#resolutionDirty
+         * @name Phaser.Renderer.WebGL.Pipelines.BitmapMaskPipeline#resolutionDirty
          * @type {boolean}
          * @default true
          * @since 3.0.0
@@ -90,10 +90,10 @@ var BitmapMaskPipeline = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Renderer.WebGL.BitmapMaskPipeline#onBind
+     * @method Phaser.Renderer.WebGL.Pipelines.BitmapMaskPipeline#onBind
      * @since 3.0.0
      *
-     * @return {Phaser.Renderer.WebGL.BitmapMaskPipeline} [description]
+     * @return {Phaser.Renderer.WebGL.Pipelines.BitmapMaskPipeline} [description]
      */
     onBind: function ()
     {
@@ -116,14 +116,14 @@ var BitmapMaskPipeline = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Renderer.WebGL.BitmapMaskPipeline#resize
+     * @method Phaser.Renderer.WebGL.Pipelines.BitmapMaskPipeline#resize
      * @since 3.0.0
      *
      * @param {number} width - [description]
      * @param {number} height - [description]
      * @param {number} resolution - [description]
      *
-     * @return {Phaser.Renderer.WebGL.BitmapMaskPipeline} [description]
+     * @return {Phaser.Renderer.WebGL.Pipelines.BitmapMaskPipeline} [description]
      */
     resize: function (width, height, resolution)
     {
@@ -135,7 +135,7 @@ var BitmapMaskPipeline = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Renderer.WebGL.BitmapMaskPipeline#beginMask
+     * @method Phaser.Renderer.WebGL.Pipelines.BitmapMaskPipeline#beginMask
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.GameObject} mask - [description]
@@ -172,7 +172,7 @@ var BitmapMaskPipeline = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Renderer.WebGL.BitmapMaskPipeline#endMask
+     * @method Phaser.Renderer.WebGL.Pipelines.BitmapMaskPipeline#endMask
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.GameObject} mask - [description]

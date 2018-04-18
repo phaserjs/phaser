@@ -41,7 +41,7 @@ var pathArray = [];
  *
  * @class FlatTintPipeline
  * @extends Phaser.Renderer.WebGL.WebGLPipeline
- * @memberOf Phaser.Renderer.WebGL
+ * @memberOf Phaser.Renderer.WebGL.Pipelines
  * @constructor
  * @since 3.0.0
  *
@@ -93,7 +93,7 @@ var FlatTintPipeline = new Class({
         /**
          * [description]
          *
-         * @name Phaser.Renderer.WebGL.FlatTintPipeline#vertexViewF32
+         * @name Phaser.Renderer.WebGL.Pipelines.FlatTintPipeline#vertexViewF32
          * @type {Float32Array}
          * @since 3.0.0
          */
@@ -102,7 +102,7 @@ var FlatTintPipeline = new Class({
         /**
          * [description]
          *
-         * @name Phaser.Renderer.WebGL.FlatTintPipeline#vertexViewU32
+         * @name Phaser.Renderer.WebGL.Pipelines.FlatTintPipeline#vertexViewU32
          * @type {Uint32Array}
          * @since 3.0.0
          */
@@ -111,7 +111,7 @@ var FlatTintPipeline = new Class({
         /**
          * [description]
          *
-         * @name Phaser.Renderer.WebGL.FlatTintPipeline#tempTriangle
+         * @name Phaser.Renderer.WebGL.Pipelines.FlatTintPipeline#tempTriangle
          * @type {array}
          * @since 3.0.0
          */
@@ -125,7 +125,7 @@ var FlatTintPipeline = new Class({
         /**
          * [description]
          *
-         * @name Phaser.Renderer.WebGL.FlatTintPipeline#polygonCache
+         * @name Phaser.Renderer.WebGL.Pipelines.FlatTintPipeline#polygonCache
          * @type {array}
          * @default []
          * @since 3.0.0
@@ -138,10 +138,10 @@ var FlatTintPipeline = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Renderer.WebGL.FlatTintPipeline#onBind
+     * @method Phaser.Renderer.WebGL.Pipelines.FlatTintPipeline#onBind
      * @since 3.0.0
      *
-     * @return {Phaser.Renderer.WebGL.FlatTintPipeline} [description]
+     * @return {Phaser.Renderer.WebGL.Pipelines.FlatTintPipeline} [description]
      */
     onBind: function ()
     {
@@ -154,14 +154,14 @@ var FlatTintPipeline = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Renderer.WebGL.FlatTintPipeline#resize
+     * @method Phaser.Renderer.WebGL.Pipelines.FlatTintPipeline#resize
      * @since 3.0.0
      *
      * @param {number} width - [description]
      * @param {number} height - [description]
      * @param {number} resolution - [description]
      *
-     * @return {Phaser.Renderer.WebGL.FlatTintPipeline} [description]
+     * @return {Phaser.Renderer.WebGL.Pipelines.FlatTintPipeline} [description]
      */
     resize: function (width, height, resolution)
     {
@@ -174,7 +174,7 @@ var FlatTintPipeline = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Renderer.WebGL.FlatTintPipeline#batchFillRect
+     * @method Phaser.Renderer.WebGL.Pipelines.FlatTintPipeline#batchFillRect
      * @since 3.0.0
      *
      * @param {float} srcX - [description]
@@ -257,7 +257,7 @@ var FlatTintPipeline = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Renderer.WebGL.FlatTintPipeline#batchFillTriangle
+     * @method Phaser.Renderer.WebGL.Pipelines.FlatTintPipeline#batchFillTriangle
      * @since 3.0.0
      *
      * @param {float} srcX - [description]
@@ -329,7 +329,7 @@ var FlatTintPipeline = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Renderer.WebGL.FlatTintPipeline#batchStrokeTriangle
+     * @method Phaser.Renderer.WebGL.Pipelines.FlatTintPipeline#batchStrokeTriangle
      * @since 3.0.0
      *
      * @param {float} srcX - [description]
@@ -391,7 +391,7 @@ var FlatTintPipeline = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Renderer.WebGL.FlatTintPipeline#batchFillPath
+     * @method Phaser.Renderer.WebGL.Pipelines.FlatTintPipeline#batchFillPath
      * @since 3.0.0
      *
      * @param {float} srcX - [description]
@@ -493,7 +493,7 @@ var FlatTintPipeline = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Renderer.WebGL.FlatTintPipeline#batchStrokePath
+     * @method Phaser.Renderer.WebGL.Pipelines.FlatTintPipeline#batchStrokePath
      * @since 3.0.0
      *
      * @param {float} srcX - [description]
@@ -586,7 +586,7 @@ var FlatTintPipeline = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Renderer.WebGL.FlatTintPipeline#batchLine
+     * @method Phaser.Renderer.WebGL.Pipelines.FlatTintPipeline#batchLine
      * @since 3.0.0
      *
      * @param {float} srcX - [description]
@@ -694,7 +694,7 @@ var FlatTintPipeline = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Renderer.WebGL.FlatTintPipeline#batchGraphics
+     * @method Phaser.Renderer.WebGL.Pipelines.FlatTintPipeline#batchGraphics
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.Graphics} graphics - [description]
@@ -1126,7 +1126,7 @@ var FlatTintPipeline = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Renderer.WebGL.FlatTintPipeline#drawStaticTilemapLayer
+     * @method Phaser.Renderer.WebGL.Pipelines.FlatTintPipeline#drawStaticTilemapLayer
      * @since 3.0.0
      *
      * @param {Phaser.Tilemaps.StaticTilemapLayer} tilemap - [description]
@@ -1139,7 +1139,7 @@ var FlatTintPipeline = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Renderer.WebGL.FlatTintPipeline#drawEmitterManager
+     * @method Phaser.Renderer.WebGL.Pipelines.FlatTintPipeline#drawEmitterManager
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.Particles.ParticleEmitterManager} emitterManager - [description]
@@ -1152,7 +1152,7 @@ var FlatTintPipeline = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Renderer.WebGL.FlatTintPipeline#drawBlitter
+     * @method Phaser.Renderer.WebGL.Pipelines.FlatTintPipeline#drawBlitter
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.Blitter} blitter - [description]
@@ -1165,7 +1165,7 @@ var FlatTintPipeline = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Renderer.WebGL.FlatTintPipeline#batchSprite
+     * @method Phaser.Renderer.WebGL.Pipelines.FlatTintPipeline#batchSprite
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.Sprite} sprite - [description]
@@ -1178,7 +1178,7 @@ var FlatTintPipeline = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Renderer.WebGL.FlatTintPipeline#batchMesh
+     * @method Phaser.Renderer.WebGL.Pipelines.FlatTintPipeline#batchMesh
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.Mesh} mesh - [description]
@@ -1191,7 +1191,7 @@ var FlatTintPipeline = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Renderer.WebGL.FlatTintPipeline#batchBitmapText
+     * @method Phaser.Renderer.WebGL.Pipelines.FlatTintPipeline#batchBitmapText
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.BitmapText} bitmapText - [description]
@@ -1204,7 +1204,7 @@ var FlatTintPipeline = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Renderer.WebGL.FlatTintPipeline#batchDynamicBitmapText
+     * @method Phaser.Renderer.WebGL.Pipelines.FlatTintPipeline#batchDynamicBitmapText
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.DynamicBitmapText} bitmapText - [description]
@@ -1217,7 +1217,7 @@ var FlatTintPipeline = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Renderer.WebGL.FlatTintPipeline#batchText
+     * @method Phaser.Renderer.WebGL.Pipelines.FlatTintPipeline#batchText
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.Text} text - [description]
@@ -1230,7 +1230,7 @@ var FlatTintPipeline = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Renderer.WebGL.FlatTintPipeline#batchDynamicTilemapLayer
+     * @method Phaser.Renderer.WebGL.Pipelines.FlatTintPipeline#batchDynamicTilemapLayer
      * @since 3.0.0
      *
      * @param {Phaser.Tilemaps.DynamicTilemapLayer} tilemapLayer - [description]
@@ -1243,7 +1243,7 @@ var FlatTintPipeline = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Renderer.WebGL.FlatTintPipeline#batchTileSprite
+     * @method Phaser.Renderer.WebGL.Pipelines.FlatTintPipeline#batchTileSprite
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.TileSprite} tileSprite - [description]

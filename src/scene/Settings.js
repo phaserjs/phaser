@@ -57,7 +57,7 @@ var Settings = {
      * @function Phaser.Scenes.Settings.create
      * @since 3.0.0
      *
-     * @param {(string|Phaser.Scenes.SettingsConfig)} config - [description]
+     * @param {(string|Phaser.Scenes.Settings.Config)} config - [description]
      *
      * @return {Phaser.Scenes.Settings.Object} [description]
      */

@@ -16,8 +16,8 @@ var LIGHT_COUNT = 10;
  * [description]
  *
  * @class ForwardDiffuseLightPipeline
- * @extends Phaser.Renderer.WebGL.TextureTintPipeline
- * @memberOf Phaser.Renderer.WebGL
+ * @extends Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline
+ * @memberOf Phaser.Renderer.WebGL.Pipelines
  * @constructor
  * @since 3.0.0
  *
@@ -39,10 +39,10 @@ var ForwardDiffuseLightPipeline = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Renderer.WebGL.ForwardDiffuseLightPipeline#onBind
+     * @method Phaser.Renderer.WebGL.Pipelines.ForwardDiffuseLightPipeline#onBind
      * @since 3.0.0
      *
-     * @return {Phaser.Renderer.WebGL.ForwardDiffuseLightPipeline} [description]
+     * @return {Phaser.Renderer.WebGL.Pipelines.ForwardDiffuseLightPipeline} [description]
      */
     onBind: function ()
     {
@@ -62,13 +62,13 @@ var ForwardDiffuseLightPipeline = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Renderer.WebGL.ForwardDiffuseLightPipeline#onRender
+     * @method Phaser.Renderer.WebGL.Pipelines.ForwardDiffuseLightPipeline#onRender
      * @since 3.0.0
      *
      * @param {Phaser.Scene} scene - [description]
      * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
      *
-     * @return {Phaser.Renderer.WebGL.ForwardDiffuseLightPipeline} [description]
+     * @return {Phaser.Renderer.WebGL.Pipelines.ForwardDiffuseLightPipeline} [description]
      */
     onRender: function (scene, camera)
     {
@@ -122,7 +122,7 @@ var ForwardDiffuseLightPipeline = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Renderer.WebGL.ForwardDiffuseLightPipeline#drawStaticTilemapLayer
+     * @method Phaser.Renderer.WebGL.Pipelines.ForwardDiffuseLightPipeline#drawStaticTilemapLayer
      * @since 3.0.0
      *
      * @param {Phaser.Tilemaps.StaticTilemapLayer} tilemap - [description]
@@ -149,7 +149,7 @@ var ForwardDiffuseLightPipeline = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Renderer.WebGL.ForwardDiffuseLightPipeline#drawEmitterManager
+     * @method Phaser.Renderer.WebGL.Pipelines.ForwardDiffuseLightPipeline#drawEmitterManager
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.Particles.ParticleEmitterManager} emitterManager - [description]
@@ -176,7 +176,7 @@ var ForwardDiffuseLightPipeline = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Renderer.WebGL.ForwardDiffuseLightPipeline#drawBlitter
+     * @method Phaser.Renderer.WebGL.Pipelines.ForwardDiffuseLightPipeline#drawBlitter
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.Blitter} blitter - [description]
@@ -203,7 +203,7 @@ var ForwardDiffuseLightPipeline = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Renderer.WebGL.ForwardDiffuseLightPipeline#batchSprite
+     * @method Phaser.Renderer.WebGL.Pipelines.ForwardDiffuseLightPipeline#batchSprite
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.Sprite} sprite - [description]
@@ -230,7 +230,7 @@ var ForwardDiffuseLightPipeline = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Renderer.WebGL.ForwardDiffuseLightPipeline#batchMesh
+     * @method Phaser.Renderer.WebGL.Pipelines.ForwardDiffuseLightPipeline#batchMesh
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.Mesh} mesh - [description]
@@ -258,7 +258,7 @@ var ForwardDiffuseLightPipeline = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Renderer.WebGL.ForwardDiffuseLightPipeline#batchBitmapText
+     * @method Phaser.Renderer.WebGL.Pipelines.ForwardDiffuseLightPipeline#batchBitmapText
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.BitmapText} bitmapText - [description]
@@ -285,7 +285,7 @@ var ForwardDiffuseLightPipeline = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Renderer.WebGL.ForwardDiffuseLightPipeline#batchDynamicBitmapText
+     * @method Phaser.Renderer.WebGL.Pipelines.ForwardDiffuseLightPipeline#batchDynamicBitmapText
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.DynamicBitmapText} bitmapText - [description]
@@ -312,7 +312,7 @@ var ForwardDiffuseLightPipeline = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Renderer.WebGL.ForwardDiffuseLightPipeline#batchText
+     * @method Phaser.Renderer.WebGL.Pipelines.ForwardDiffuseLightPipeline#batchText
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.Text} text - [description]
@@ -339,7 +339,7 @@ var ForwardDiffuseLightPipeline = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Renderer.WebGL.ForwardDiffuseLightPipeline#batchDynamicTilemapLayer
+     * @method Phaser.Renderer.WebGL.Pipelines.ForwardDiffuseLightPipeline#batchDynamicTilemapLayer
      * @since 3.0.0
      *
      * @param {Phaser.Tilemaps.DynamicTilemapLayer} tilemapLayer - [description]
@@ -366,7 +366,7 @@ var ForwardDiffuseLightPipeline = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Renderer.WebGL.ForwardDiffuseLightPipeline#batchTileSprite
+     * @method Phaser.Renderer.WebGL.Pipelines.ForwardDiffuseLightPipeline#batchTileSprite
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.TileSprite} tileSprite - [description]
