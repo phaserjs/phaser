@@ -1866,7 +1866,6 @@ var TextureTintPipeline = new Class({
         }
 
         flipY = flipY ^ (texture.isRenderTexture ? 1 : 0);
-        rotation = -rotation;
 
         var roundPixels = this.renderer.config.roundPixels;
         var vertexViewF32 = this.vertexViewF32;
@@ -1878,13 +1877,13 @@ var TextureTintPipeline = new Class({
         var y = -displayOriginY + ((srcHeight) * (flipY ? 1.0 : 0.0));
         var xw = x + width;
         var yh = y + height;
-        var translateX = srcX - camera.scrollX * scrollFactorX;
-        var translateY = srcY - camera.scrollY * scrollFactorY;
+        var translateX = srcX;
+        var translateY = srcY;
         var sr = Math.sin(rotation);
         var cr = Math.cos(rotation);
         var sra = cr * scaleX;
-        var srb = -sr * scaleX;
-        var src = sr * scaleY;
+        var srb = sr * scaleX;
+        var src = -sr * scaleY;
         var srd = cr * scaleY;
         var sre = translateX;
         var srf = translateY;
@@ -1904,12 +1903,17 @@ var TextureTintPipeline = new Class({
             var pmd = parentMatrix[3];
             var pme = parentMatrix[4];
             var pmf = parentMatrix[5];
-            var pca = cma * pma + cmb * pmc;
-            var pcb = cma * pmb + cmb * pmd;
-            var pcc = cmc * pma + cmd * pmc;
-            var pcd = cmc * pmb + cmd * pmd;
-            var pce = cme * pma + cmf * pmc + pme;
-            var pcf = cme * pmb + cmf * pmd + pmf;
+            var cse = -camera.scrollX * scrollFactorX;
+            var csf = -camera.scrollY * scrollFactorY;
+            var pse = cse * cma + csf * cmc + cme;
+            var psf = cse * cmb + csf * cmd + cmf;
+            var pca = pma * cma + pmb * cmc;
+            var pcb = pma * cmb + pmb * cmd;
+            var pcc = pmc * cma + pmd * cmc;
+            var pcd = pmc * cmb + pmd * cmd;
+            var pce = pme * cma + pmf * cmc + pse;
+            var pcf = pme * cmb + pmf * cmd + psf;
+
             mva = sra * pca + srb * pcc;
             mvb = sra * pcb + srb * pcd;
             mvc = src * pca + srd * pcc;
@@ -1919,6 +1923,9 @@ var TextureTintPipeline = new Class({
         }
         else
         {
+            sre -= camera.scrollX * scrollFactorX;
+            srf -= camera.scrollY * scrollFactorY;
+
             mva = sra * cma + srb * cmc;
             mvb = sra * cmb + srb * cmd;
             mvc = src * cma + srd * cmc;
