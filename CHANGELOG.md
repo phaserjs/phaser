@@ -14,6 +14,7 @@
 * Impact Physics Game Objects have changed `setPassive` to `setPassiveCollision`.
 * Impact Physics Game Objects have changed `setFixed` to `setFixedCollision`.
 * Impact Physics Game Objects have changed `setActive` to `setActiveCollision`, previously the `setActive` collision method was overwriting the Game Objects `setActive` method, hence the renaming.
+* The modifications made to the RTree class in Phaser 3.4.0 to avoid CSP policy violations caused a significant performance hit once a substantial number of bodies were involved. We have recoded how the class deals with its accessor formats and returned to 3.3 level performance while still maintaining CSP policy adherence. Fix #3594 (thanks @16patsle)
 
 ### Bug Fixes
 
