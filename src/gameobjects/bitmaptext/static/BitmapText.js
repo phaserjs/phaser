@@ -288,7 +288,7 @@ var BitmapText = new Class({
      * @method Phaser.GameObjects.BitmapText#toJSON
      * @since 3.0.0
      *
-     * @return {JSONGameObject.<JSONBitmapText>} [description]
+     * @return {JSONBitmapText} [description]
      */
     toJSON: function ()
     {
