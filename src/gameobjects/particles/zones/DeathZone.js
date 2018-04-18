@@ -7,6 +7,21 @@
 var Class = require('../../../utils/Class');
 
 /**
+ * @callback DeathZoneSourceCallback
+ *
+ * @param {float} x - [description]
+ * @param {float} y - [description]
+ *
+ * @return {boolean} - True if the coordinates are within the source area.
+ */
+
+/**
+ * @typedef {object} DeathZoneSource
+ *
+ * @property {DeathZoneSourceCallback} contains
+ */
+
+/**
  * @classdesc
  * A Death Zone.
  *
@@ -20,7 +35,7 @@ var Class = require('../../../utils/Class');
  * @constructor
  * @since 3.0.0
  *
- * @param {object} source - An object instance that has a `contains` method that returns a boolean when given `x` and `y` arguments.
+ * @param {DeathZoneSource} source - An object instance that has a `contains` method that returns a boolean when given `x` and `y` arguments.
  * @param {boolean} killOnEnter - Should the Particle be killed when it enters the zone? `true` or leaves it? `false`
  */
 var DeathZone = new Class({
@@ -34,7 +49,7 @@ var DeathZone = new Class({
          * This could be a Geometry shape, such as `Phaser.Geom.Circle`, or your own custom object.
          *
          * @name Phaser.GameObjects.Particles.Zones.DeathZone#source
-         * @type {object}
+         * @type {DeathZoneSource}
          * @since 3.0.0
          */
         this.source = source;
