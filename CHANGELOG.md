@@ -19,6 +19,7 @@
 ### Bug Fixes
 
 * Fixed a bug that caused data to not be passed to another Scene if you used a transition to start it. Fix #3586 (thanks @willywu)
+* Group.getHandler would return any member of the Group, regardless of the state, causing pools to remain fixed at once member. Fix #3592 (thanks @samme)
 
 ## Version 3.5.1 - Kirito - 17th April 2018
 
