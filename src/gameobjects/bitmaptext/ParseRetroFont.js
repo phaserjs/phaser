@@ -115,7 +115,7 @@ var ParseRetroFont = function (scene, config)
 /**
  * Text Set 1 =  !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~
  * 
- * @name Phaser.GameObjects.BitmapText.ParseRetroFont.TEXT_SET1
+ * @name Phaser.GameObjects.BitmapText.TEXT_SET1
  * @type {string}
  */
 ParseRetroFont.TEXT_SET1 = ' !"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~';
@@ -123,14 +123,14 @@ ParseRetroFont.TEXT_SET1 = ' !"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQR
 /**
  * Text Set 2 =  !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ
  * 
- * @name Phaser.GameObjects.BitmapText.ParseRetroFont.TEXT_SET2
+ * @name Phaser.GameObjects.BitmapText.TEXT_SET2
  * @type {string}
  */
 ParseRetroFont.TEXT_SET2 = ' !"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
 /**
  * Text Set 3 = ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 
- * @name Phaser.GameObjects.BitmapText.ParseRetroFont.TEXT_SET3
+ * @name Phaser.GameObjects.BitmapText.TEXT_SET3
  * 
  * @type {string}
  */
@@ -139,7 +139,7 @@ ParseRetroFont.TEXT_SET3 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 ';
 /**
  * Text Set 4 = ABCDEFGHIJKLMNOPQRSTUVWXYZ 0123456789
  * 
- * @name Phaser.GameObjects.BitmapText.ParseRetroFont.TEXT_SET4
+ * @name Phaser.GameObjects.BitmapText.TEXT_SET4
  * @type {string}
  */
 ParseRetroFont.TEXT_SET4 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ 0123456789';
@@ -147,7 +147,7 @@ ParseRetroFont.TEXT_SET4 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ 0123456789';
 /**
  * Text Set 5 = ABCDEFGHIJKLMNOPQRSTUVWXYZ.,/() '!?-*:0123456789
  * 
- * @name Phaser.GameObjects.BitmapText.ParseRetroFont.TEXT_SET5
+ * @name Phaser.GameObjects.BitmapText.TEXT_SET5
  * @type {string}
  */
 ParseRetroFont.TEXT_SET5 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ.,/() \'!?-*:0123456789';
@@ -155,7 +155,7 @@ ParseRetroFont.TEXT_SET5 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ.,/() \'!?-*:0123456789';
 /**
  * Text Set 6 = ABCDEFGHIJKLMNOPQRSTUVWXYZ!?:;0123456789"(),-.' 
  * 
- * @name Phaser.GameObjects.BitmapText.ParseRetroFont.TEXT_SET6
+ * @name Phaser.GameObjects.BitmapText.TEXT_SET6
  * @type {string}
 * /
 ParseRetroFont.TEXT_SET6 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ!?:;0123456789"(),-.\' ';
@@ -163,7 +163,7 @@ ParseRetroFont.TEXT_SET6 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ!?:;0123456789"(),-.\' ';
 /**
  * Text Set 7 = AGMSY+:4BHNTZ!;5CIOU.?06DJPV,(17EKQW")28FLRX-'39
  * 
- * @name Phaser.GameObjects.BitmapText.ParseRetroFont.TEXT_SET7
+ * @name Phaser.GameObjects.BitmapText.TEXT_SET7
  * @type {string}
  */
 ParseRetroFont.TEXT_SET7 = 'AGMSY+:4BHNTZ!;5CIOU.?06DJPV,(17EKQW")28FLRX-\'39';
@@ -171,7 +171,7 @@ ParseRetroFont.TEXT_SET7 = 'AGMSY+:4BHNTZ!;5CIOU.?06DJPV,(17EKQW")28FLRX-\'39';
 /**
  * Text Set 8 = 0123456789 .ABCDEFGHIJKLMNOPQRSTUVWXYZ
  * 
- * @name Phaser.GameObjects.BitmapText.ParseRetroFont.TEXT_SET8
+ * @name Phaser.GameObjects.BitmapText.TEXT_SET8
  * @type {string}
  */
 ParseRetroFont.TEXT_SET8 = '0123456789 .ABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -179,7 +179,7 @@ ParseRetroFont.TEXT_SET8 = '0123456789 .ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 /**
  * Text Set 9 = ABCDEFGHIJKLMNOPQRSTUVWXYZ()-0123456789.:,'"?!
  * 
- * @name Phaser.GameObjects.BitmapText.ParseRetroFont.TEXT_SET9
+ * @name Phaser.GameObjects.BitmapText.TEXT_SET9
  * @type {string}
  */
 ParseRetroFont.TEXT_SET9 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ()-0123456789.:,\'"?!';
@@ -187,7 +187,7 @@ ParseRetroFont.TEXT_SET9 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ()-0123456789.:,\'"?!';
 /**
  * Text Set 10 = ABCDEFGHIJKLMNOPQRSTUVWXYZ
  * 
- * @name Phaser.GameObjects.BitmapText.ParseRetroFont.TEXT_SET10
+ * @name Phaser.GameObjects.BitmapText.TEXT_SET10
  * @type {string}
  */
 ParseRetroFont.TEXT_SET10 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -195,7 +195,7 @@ ParseRetroFont.TEXT_SET10 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 /**
  * Text Set 11 = ABCDEFGHIJKLMNOPQRSTUVWXYZ.,"-+!?()':;0123456789
  * 
- * @name Phaser.GameObjects.BitmapText.ParseRetroFont.TEXT_SET11
+ * @name Phaser.GameObjects.BitmapText.TEXT_SET11
  * @type {string}
  */
 ParseRetroFont.TEXT_SET11 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ.,"-+!?()\':;0123456789';
