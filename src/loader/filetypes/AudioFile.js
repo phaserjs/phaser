@@ -38,7 +38,8 @@ var AudioFile = new Class({
         /**
          * [description]
          *
-         * @name {AudioContext} context
+         * @name Phaser.Loader.FileTypes.AudioFile.context
+         * @type {AudioContext}
          * @since 3.0.0
          */
         this.context = audioContext;
