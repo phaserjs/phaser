@@ -84,7 +84,7 @@ var TimeStep = new Class({
          * the TimeStep is actually stopped, not just paused.
          *
          * @name Phaser.Boot.TimeStep#running
-         * @name {boolean}
+         * @type {boolean}
          * @readOnly
          * @default false
          * @since 3.0.0
@@ -109,7 +109,7 @@ var TimeStep = new Class({
          * is spiraling out of control.
          *
          * @name Phaser.Boot.TimeStep#targetFps
-         * @name {integer}
+         * @type {integer}
          * @default 60
          * @since 3.0.0
          */

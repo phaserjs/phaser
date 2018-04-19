@@ -56,7 +56,7 @@ var LineCurve = new Class({
         /**
          * [description]
          *
-         * @property Phaser.Curves.LineCurve#p1
+         * @name Phaser.Curves.LineCurve#p1
          * @type {Phaser.Math.Vector2}
          * @since 3.0.0
          */

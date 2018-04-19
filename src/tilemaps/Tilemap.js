@@ -915,7 +915,7 @@ var Tilemap = new Class({
      * on at least one side.
      * @param {boolean} [filteringOptions.hasInterestingFace=false] - If true, only return tiles that
      * have at least one interesting face.
-     * @param {LayerData} layer - [description]
+     * @param {LayerData} [layer] - [description]
      *
      * @return {?Phaser.Tilemaps.Tilemap} Returns this, or null if the layer given was invalid.
      */

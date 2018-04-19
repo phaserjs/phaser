@@ -38,7 +38,7 @@ var AudioFile = new Class({
         /**
          * [description]
          *
-         * @property {AudioContext} context
+         * @name {AudioContext} context
          * @since 3.0.0
          */
         this.context = audioContext;
