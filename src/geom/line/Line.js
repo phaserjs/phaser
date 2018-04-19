@@ -19,10 +19,10 @@ var Vector2 = require('../../math/Vector2');
  * @constructor
  * @since 3.0.0
  *
- * @param {number} [x1=0] - The x coordinate of the lines starting point
- * @param {number} [y1=0] - The y coordinate of the lines starting point
- * @param {number} [x2=0] - The x coordinate of the lines ending point
- * @param {number} [y2=0] - The y coordinate of the lines ending point
+ * @param {number} [x1=0] - The x coordinate of the lines starting point.
+ * @param {number} [y1=0] - The y coordinate of the lines starting point.
+ * @param {number} [x2=0] - The x coordinate of the lines ending point.
+ * @param {number} [y2=0] - The y coordinate of the lines ending point.
  */
 var Line = new Class({
 
@@ -36,7 +36,7 @@ var Line = new Class({
         if (y2 === undefined) { y2 = 0; }
 
         /**
-         * The x coordinate of the lines starting point
+         * The x coordinate of the lines starting point.
          *
          * @name Phaser.Geom.Line#x1
          * @type {number}
@@ -45,7 +45,7 @@ var Line = new Class({
         this.x1 = x1;
 
         /**
-         * The y coordinate of the lines starting point
+         * The y coordinate of the lines starting point.
          *
          * @name Phaser.Geom.Line#y1
          * @type {number}
@@ -54,7 +54,7 @@ var Line = new Class({
         this.y1 = y1;
 
         /**
-         * The x coordinate of the lines ending point
+         * The x coordinate of the lines ending point.
          *
          * @name Phaser.Geom.Line#x2
          * @type {number}
@@ -63,7 +63,7 @@ var Line = new Class({
         this.x2 = x2;
 
         /**
-         * The y coordinate of the lines ending point
+         * The y coordinate of the lines ending point.
          *
          * @name Phaser.Geom.Line#y2
          * @type {number}
@@ -83,7 +83,7 @@ var Line = new Class({
      * @param {float} position - [description]
      * @param {(Phaser.Geom.Point|object)} [output] - [description]
      *
-     * @return {(Phaser.Geom.Point|object)} A Point, or point-like object, containing the coordinates of the point on the line
+     * @return {(Phaser.Geom.Point|object)} A Point, or point-like object, containing the coordinates of the point on the line.
      */
     getPoint: function (position, output)
     {
@@ -110,16 +110,16 @@ var Line = new Class({
     },
 
     /**
-     * Get a random point on the Line
+     * Get a random Point on the Line.
      *
      * @method Phaser.Geom.Line#getRandomPoint
      * @since 3.0.0
      *
      * @generic {Phaser.Geom.Point} O - [point,$return]
      *
-     * @param {(Phaser.Geom.Point|object)} [point] - An instance of a Point to be modified
+     * @param {(Phaser.Geom.Point|object)} [point] - An instance of a Point to be modified.
      *
-     * @return {Phaser.Geom.Point} A random Point on the Line
+     * @return {Phaser.Geom.Point} A random Point on the Line.
      */
     getRandomPoint: function (point)
     {
@@ -127,15 +127,15 @@ var Line = new Class({
     },
 
     /**
-     * Set new coordinates for the line endpoints
+     * Set new coordinates for the line endpoints.
      *
      * @method Phaser.Geom.Line#setTo
      * @since 3.0.0
      *
-     * @param {number} [x1=0] - The x coordinate of the lines starting point
-     * @param {number} [y1=0] - The y coordinate of the lines starting point
-     * @param {number} [x2=0] - The x coordinate of the lines ending point
-     * @param {number} [y2=0] - The y coordinate of the lines ending point
+     * @param {number} [x1=0] - The x coordinate of the lines starting point.
+     * @param {number} [y1=0] - The y coordinate of the lines starting point.
+     * @param {number} [x2=0] - The x coordinate of the lines ending point.
+     * @param {number} [y2=0] - The y coordinate of the lines ending point.
      *
      * @return {Phaser.Geom.Line} This Line object.
      */
