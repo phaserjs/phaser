@@ -1,5 +1,18 @@
 # Change Log
 
+## Version 3.6.1 - Asuna - in development
+
+### New Features
+
+* The Phaser 3 Labs has gained a nifty 'search' feature box thanks to @NemoStein - it allows you to filter out the example categories.
+
+### Updates
+
+### Bug Fixes
+
+
+
+
 ## Version 3.6.0 - Asuna - 19th April 2018
 
 ### New Features
