@@ -5,29 +5,17 @@
  */
 
 var GetValue = require('../../utils/object/GetValue');
+var RETRO_FONT_CONST = require('./const');
 
 /**
- * @typedef {object} Phaser.GameObjects.BitmapText.ParseRetroFont.RetroFontConfig
- * 
- * @property {string} image - [description]
- * @property {number} offset.x - If the font set doesn't start at the top left of the given image, specify the X coordinate offset here.
- * @property {number} offset.y - If the font set doesn't start at the top left of the given image, specify the Y coordinate offset here.
- * @property {number} width - The width of each character in the font set.
- * @property {number} height - The height of each character in the font set.
- * @property {string} chars - The characters used in the font set, in display order. You can use the TEXT_SET consts for common font set arrangements.
- * @property {number} charsPerRow - The number of characters per row in the font set. If not given charsPerRow will be the image width / characterWidth.
- * @property {number} spacing.x - If the characters in the font set have horizontal spacing between them set the required amount here.
- * @property {number} spacing.y - If the characters in the font set have vertical spacing between them set the required amount here.
-*/
-
-/**
- * [description]
+ * Parses a Retro Font configuration object so you can pass it to the BitmapText constructor
+ * and create a BitmapText object using a fixed-width retro font.
  *
- * @function Phaser.GameObjects.BitmapText.ParseRetroFont
+ * @function Phaser.GameObjects.RetroFont.Parse
  * @since 3.0.0
  *
  * @param {Phaser.Scene} scene - A reference to the Phaser Scene.
- * @param {Phaser.GameObjects.BitmapText.ParseRetroFont.RetroFontConfig} config - The font configuration object.
+ * @param {Phaser.GameObjects.RetroFont.Config} config - The font configuration object.
  */
 var ParseRetroFont = function (scene, config)
 {
@@ -35,7 +23,13 @@ var ParseRetroFont = function (scene, config)
     var h = config.height;
     var cx = Math.floor(w / 2);
     var cy = Math.floor(h / 2);
-    var letters = config.chars;
+    var letters = GetValue(config, 'chars', '');
+
+    if (letters === '')
+    {
+        console.error('ParseRetroFont: Invalid chars');
+        return;
+    }
 
     var key = GetValue(config, 'image', '');
     var offsetX = GetValue(config, 'offset.x', 0);
@@ -111,93 +105,5 @@ var ParseRetroFont = function (scene, config)
 
     return entry;
 };
-
-/**
- * Text Set 1 =  !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~
- * 
- * @name Phaser.GameObjects.BitmapText.TEXT_SET1
- * @type {string}
- */
-ParseRetroFont.TEXT_SET1 = ' !"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~';
-
-/**
- * Text Set 2 =  !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ
- * 
- * @name Phaser.GameObjects.BitmapText.TEXT_SET2
- * @type {string}
- */
-ParseRetroFont.TEXT_SET2 = ' !"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-
-/**
- * Text Set 3 = ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 
- * @name Phaser.GameObjects.BitmapText.TEXT_SET3
- * 
- * @type {string}
- */
-ParseRetroFont.TEXT_SET3 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 ';
-
-/**
- * Text Set 4 = ABCDEFGHIJKLMNOPQRSTUVWXYZ 0123456789
- * 
- * @name Phaser.GameObjects.BitmapText.TEXT_SET4
- * @type {string}
- */
-ParseRetroFont.TEXT_SET4 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ 0123456789';
-
-/**
- * Text Set 5 = ABCDEFGHIJKLMNOPQRSTUVWXYZ.,/() '!?-*:0123456789
- * 
- * @name Phaser.GameObjects.BitmapText.TEXT_SET5
- * @type {string}
- */
-ParseRetroFont.TEXT_SET5 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ.,/() \'!?-*:0123456789';
-
-/**
- * Text Set 6 = ABCDEFGHIJKLMNOPQRSTUVWXYZ!?:;0123456789"(),-.' 
- * 
- * @name Phaser.GameObjects.BitmapText.TEXT_SET6
- * @type {string}
-* /
-ParseRetroFont.TEXT_SET6 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ!?:;0123456789"(),-.\' ';
-
-/**
- * Text Set 7 = AGMSY+:4BHNTZ!;5CIOU.?06DJPV,(17EKQW")28FLRX-'39
- * 
- * @name Phaser.GameObjects.BitmapText.TEXT_SET7
- * @type {string}
- */
-ParseRetroFont.TEXT_SET7 = 'AGMSY+:4BHNTZ!;5CIOU.?06DJPV,(17EKQW")28FLRX-\'39';
-
-/**
- * Text Set 8 = 0123456789 .ABCDEFGHIJKLMNOPQRSTUVWXYZ
- * 
- * @name Phaser.GameObjects.BitmapText.TEXT_SET8
- * @type {string}
- */
-ParseRetroFont.TEXT_SET8 = '0123456789 .ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-
-/**
- * Text Set 9 = ABCDEFGHIJKLMNOPQRSTUVWXYZ()-0123456789.:,'"?!
- * 
- * @name Phaser.GameObjects.BitmapText.TEXT_SET9
- * @type {string}
- */
-ParseRetroFont.TEXT_SET9 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ()-0123456789.:,\'"?!';
-
-/**
- * Text Set 10 = ABCDEFGHIJKLMNOPQRSTUVWXYZ
- * 
- * @name Phaser.GameObjects.BitmapText.TEXT_SET10
- * @type {string}
- */
-ParseRetroFont.TEXT_SET10 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-
-/**
- * Text Set 11 = ABCDEFGHIJKLMNOPQRSTUVWXYZ.,"-+!?()':;0123456789
- * 
- * @name Phaser.GameObjects.BitmapText.TEXT_SET11
- * @type {string}
- */
-ParseRetroFont.TEXT_SET11 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ.,"-+!?()\':;0123456789';
 
 module.exports = ParseRetroFont;

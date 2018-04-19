@@ -9,7 +9,6 @@ var Components = require('../../components');
 var GameObject = require('../../GameObject');
 var GetBitmapTextSize = require('../GetBitmapTextSize');
 var ParseFromAtlas = require('../ParseFromAtlas');
-var ParseRetroFont = require('../ParseRetroFont');
 var Render = require('./BitmapTextRender');
 
 /**
@@ -311,7 +310,6 @@ var BitmapText = new Class({
 
 });
 
-BitmapText.ParseRetroFont = ParseRetroFont;
 BitmapText.ParseFromAtlas = ParseFromAtlas;
 
 module.exports = BitmapText;
