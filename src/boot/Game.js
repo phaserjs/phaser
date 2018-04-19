@@ -592,6 +592,11 @@ var Game = new Class({
         if (this.removeCanvas && this.canvas)
         {
             CanvasPool.remove(this.canvas);
+
+            if (this.canvas.parentNode)
+            {
+                this.canvas.parentNode.removeChild(this.canvas);
+            }
         }
 
         this.loop.destroy();
