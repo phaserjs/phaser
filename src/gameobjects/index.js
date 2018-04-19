@@ -76,7 +76,7 @@ var GameObjects = {
 
 };
 
-if (WEBGL_RENDERER)
+if (typeof WEBGL_RENDERER)
 {
     //  WebGL only Game Objects
     GameObjects.Mesh = require('./mesh/Mesh');

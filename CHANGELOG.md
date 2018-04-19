@@ -8,6 +8,8 @@
 
 ### Updates
 
+* We've swapped use of the Webpack DefinePlugin so instead of setting a global flag for the compilation of the Canvas and WebGL renderers, we now use a typeof check instead. This means you should now be able to ingest the Phaser source more easily outside of Webpack without having to define any global vars first (thanks @tgrajewski)
+
 ### Bug Fixes
 
 
