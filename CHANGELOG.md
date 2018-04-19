@@ -1,6 +1,6 @@
 # Change Log
 
-## Version 3.5.2 - Kirito - 18th April 2018
+## Version 3.6.0 - Asuna - 19th April 2018
 
 ### New Features
 

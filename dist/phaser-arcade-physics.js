@@ -76,7 +76,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 1008);
+/******/ 	return __webpack_require__(__webpack_require__.s = 1010);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -931,7 +931,7 @@ var Class = __webpack_require__(0);
 
 /**
  * @classdesc
- * [description]
+ * Defines a Point in 2D space, with an x and y component.
  *
  * @class Point
  * @memberOf Phaser.Geom
@@ -972,7 +972,7 @@ var Point = new Class({
     },
 
     /**
-     * [description]
+     * Set the x and y coordinates of the point to the given values.
      *
      * @method Phaser.Geom.Point#setTo
      * @since 3.0.0
@@ -3171,6 +3171,105 @@ module.exports = MATH_CONST;
 
 /***/ }),
 /* 16 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
+var IsPlainObject = __webpack_require__(292);
+
+// @param {boolean} deep - Perform a deep copy?
+// @param {object} target - The target object to copy to.
+// @return {object} The extended object.
+
+/**
+ * This is a slightly modified version of http://api.jquery.com/jQuery.extend/
+ *
+ * @function Phaser.Utils.Object.Extend
+ * @since 3.0.0
+ *
+ * @return {object} [description]
+ */
+var Extend = function ()
+{
+    var options, name, src, copy, copyIsArray, clone,
+        target = arguments[0] || {},
+        i = 1,
+        length = arguments.length,
+        deep = false;
+
+    // Handle a deep copy situation
+    if (typeof target === 'boolean')
+    {
+        deep = target;
+        target = arguments[1] || {};
+
+        // skip the boolean and the target
+        i = 2;
+    }
+
+    // extend Phaser if only one argument is passed
+    if (length === i)
+    {
+        target = this;
+        --i;
+    }
+
+    for (; i < length; i++)
+    {
+        // Only deal with non-null/undefined values
+        if ((options = arguments[i]) != null)
+        {
+            // Extend the base object
+            for (name in options)
+            {
+                src = target[name];
+                copy = options[name];
+
+                // Prevent never-ending loop
+                if (target === copy)
+                {
+                    continue;
+                }
+
+                // Recurse if we're merging plain objects or arrays
+                if (deep && copy && (IsPlainObject(copy) || (copyIsArray = Array.isArray(copy))))
+                {
+                    if (copyIsArray)
+                    {
+                        copyIsArray = false;
+                        clone = src && Array.isArray(src) ? src : [];
+                    }
+                    else
+                    {
+                        clone = src && IsPlainObject(src) ? src : {};
+                    }
+
+                    // Never move original objects, clone them
+                    target[name] = Extend(deep, clone, copy);
+
+                // Don't bring in undefined values
+                }
+                else if (copy !== undefined)
+                {
+                    target[name] = copy;
+                }
+            }
+        }
+    }
+
+    // Return the modified object
+    return target;
+};
+
+module.exports = Extend;
+
+
+/***/ }),
+/* 17 */
 /***/ (function(module, exports) {
 
 /**
@@ -3349,105 +3448,6 @@ module.exports = FILE_CONST;
 
 
 /***/ }),
-/* 17 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
- */
-
-var IsPlainObject = __webpack_require__(292);
-
-// @param {boolean} deep - Perform a deep copy?
-// @param {object} target - The target object to copy to.
-// @return {object} The extended object.
-
-/**
- * This is a slightly modified version of http://api.jquery.com/jQuery.extend/
- *
- * @function Phaser.Utils.Object.Extend
- * @since 3.0.0
- *
- * @return {object} [description]
- */
-var Extend = function ()
-{
-    var options, name, src, copy, copyIsArray, clone,
-        target = arguments[0] || {},
-        i = 1,
-        length = arguments.length,
-        deep = false;
-
-    // Handle a deep copy situation
-    if (typeof target === 'boolean')
-    {
-        deep = target;
-        target = arguments[1] || {};
-
-        // skip the boolean and the target
-        i = 2;
-    }
-
-    // extend Phaser if only one argument is passed
-    if (length === i)
-    {
-        target = this;
-        --i;
-    }
-
-    for (; i < length; i++)
-    {
-        // Only deal with non-null/undefined values
-        if ((options = arguments[i]) != null)
-        {
-            // Extend the base object
-            for (name in options)
-            {
-                src = target[name];
-                copy = options[name];
-
-                // Prevent never-ending loop
-                if (target === copy)
-                {
-                    continue;
-                }
-
-                // Recurse if we're merging plain objects or arrays
-                if (deep && copy && (IsPlainObject(copy) || (copyIsArray = Array.isArray(copy))))
-                {
-                    if (copyIsArray)
-                    {
-                        copyIsArray = false;
-                        clone = src && Array.isArray(src) ? src : [];
-                    }
-                    else
-                    {
-                        clone = src && IsPlainObject(src) ? src : {};
-                    }
-
-                    // Never move original objects, clone them
-                    target[name] = Extend(deep, clone, copy);
-
-                // Don't bring in undefined values
-                }
-                else if (copy !== undefined)
-                {
-                    target[name] = copy;
-                }
-            }
-        }
-    }
-
-    // Return the modified object
-    return target;
-};
-
-module.exports = Extend;
-
-
-/***/ }),
 /* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -3458,7 +3458,7 @@ module.exports = Extend;
  */
 
 var Class = __webpack_require__(0);
-var CONST = __webpack_require__(16);
+var CONST = __webpack_require__(17);
 var GetFastValue = __webpack_require__(2);
 var GetURL = __webpack_require__(117);
 var MergeXHRSettings = __webpack_require__(116);
@@ -3870,7 +3870,7 @@ var File = new Class({
  *
  * @method Phaser.Loader.File.createObjectURL
  * @static
- * @param {Image} image - Image object which 'src' attribute should be set to object URL.
+ * @param {HTMLImageElement} image - Image object which 'src' attribute should be set to object URL.
  * @param {Blob} blob - A Blob object to create an object URL for.
  * @param {string} defaultType - Default mime type used if blob type is not available.
  */
@@ -3902,7 +3902,7 @@ File.createObjectURL = function (image, blob, defaultType)
  *
  * @method Phaser.Loader.File.revokeObjectURL
  * @static
- * @param {Image} image - Image object which 'src' attribute should be revoked.
+ * @param {HTMLImageElement} image - Image object which 'src' attribute should be revoked.
  */
 File.revokeObjectURL = function (image)
 {
@@ -3941,7 +3941,7 @@ var CONST = {
      * @type {string}
      * @since 3.0.0
      */
-    VERSION: '3.5.1',
+    VERSION: '3.6.0',
 
     BlendModes: __webpack_require__(48),
 
@@ -5577,6 +5577,7 @@ var Sprite = new Class({
      * [description]
      *
      * @method Phaser.GameObjects.Sprite#preUpdate
+     * @protected
      * @since 3.0.0
      *
      * @param {number} time - [description]
@@ -5834,7 +5835,7 @@ module.exports = CalculateFacesWithin;
  */
 
 var Class = __webpack_require__(0);
-var CONST = __webpack_require__(16);
+var CONST = __webpack_require__(17);
 var File = __webpack_require__(18);
 var FileTypesManager = __webpack_require__(7);
 var GetFastValue = __webpack_require__(2);
@@ -6195,7 +6196,7 @@ module.exports = GetBottom;
  */
 
 var Class = __webpack_require__(0);
-var CONST = __webpack_require__(16);
+var CONST = __webpack_require__(17);
 var File = __webpack_require__(18);
 var FileTypesManager = __webpack_require__(7);
 var GetFastValue = __webpack_require__(2);
@@ -9889,7 +9890,7 @@ module.exports = RotateMatrix;
 
 var Class = __webpack_require__(0);
 var EventEmitter = __webpack_require__(9);
-var Extend = __webpack_require__(17);
+var Extend = __webpack_require__(16);
 var NOOP = __webpack_require__(3);
 
 /**
@@ -12916,7 +12917,7 @@ var Curve = new Class({
      * @method Phaser.Curves.Curve#draw
      * @since 3.0.0
      *
-     * @generic {Phaser.GameObjects.Graphics} G - [out,$return]
+     * @generic {Phaser.GameObjects.Graphics} G - [graphics,$return]
      *
      * @param {Phaser.GameObjects.Graphics} graphics - The Graphics instance onto which this curve will be drawn.
      * @param {integer} [pointsTotal=32] - The resolution of the curve. The higher the value the smoother it will render, at the cost of rendering performance.
@@ -15628,10 +15629,10 @@ var Vector2 = __webpack_require__(6);
  * @constructor
  * @since 3.0.0
  *
- * @param {number} [x1=0] - [description]
- * @param {number} [y1=0] - [description]
- * @param {number} [x2=0] - [description]
- * @param {number} [y2=0] - [description]
+ * @param {number} [x1=0] - The x coordinate of the lines starting point.
+ * @param {number} [y1=0] - The y coordinate of the lines starting point.
+ * @param {number} [x2=0] - The x coordinate of the lines ending point.
+ * @param {number} [y2=0] - The y coordinate of the lines ending point.
  */
 var Line = new Class({
 
@@ -15645,7 +15646,7 @@ var Line = new Class({
         if (y2 === undefined) { y2 = 0; }
 
         /**
-         * [description]
+         * The x coordinate of the lines starting point.
          *
          * @name Phaser.Geom.Line#x1
          * @type {number}
@@ -15654,7 +15655,7 @@ var Line = new Class({
         this.x1 = x1;
 
         /**
-         * [description]
+         * The y coordinate of the lines starting point.
          *
          * @name Phaser.Geom.Line#y1
          * @type {number}
@@ -15663,7 +15664,7 @@ var Line = new Class({
         this.y1 = y1;
 
         /**
-         * [description]
+         * The x coordinate of the lines ending point.
          *
          * @name Phaser.Geom.Line#x2
          * @type {number}
@@ -15672,7 +15673,7 @@ var Line = new Class({
         this.x2 = x2;
 
         /**
-         * [description]
+         * The y coordinate of the lines ending point.
          *
          * @name Phaser.Geom.Line#y2
          * @type {number}
@@ -15692,7 +15693,7 @@ var Line = new Class({
      * @param {float} position - [description]
      * @param {(Phaser.Geom.Point|object)} [output] - [description]
      *
-     * @return {(Phaser.Geom.Point|object)} A Point, or point-like object, containing the coordinates of the point around the ellipse.
+     * @return {(Phaser.Geom.Point|object)} A Point, or point-like object, containing the coordinates of the point on the line.
      */
     getPoint: function (position, output)
     {
@@ -15719,16 +15720,16 @@ var Line = new Class({
     },
 
     /**
-     * [description]
+     * Get a random Point on the Line.
      *
      * @method Phaser.Geom.Line#getRandomPoint
      * @since 3.0.0
      *
      * @generic {Phaser.Geom.Point} O - [point,$return]
      *
-     * @param {(Phaser.Geom.Point|object)} [point] - [description]
+     * @param {(Phaser.Geom.Point|object)} [point] - An instance of a Point to be modified.
      *
-     * @return {Phaser.Geom.Point} [description]
+     * @return {Phaser.Geom.Point} A random Point on the Line.
      */
     getRandomPoint: function (point)
     {
@@ -15736,15 +15737,15 @@ var Line = new Class({
     },
 
     /**
-     * [description]
+     * Set new coordinates for the line endpoints.
      *
      * @method Phaser.Geom.Line#setTo
      * @since 3.0.0
      *
-     * @param {number} [x1=0] - [description]
-     * @param {number} [y1=0] - [description]
-     * @param {number} [x2=0] - [description]
-     * @param {number} [y2=0] - [description]
+     * @param {number} [x1=0] - The x coordinate of the lines starting point.
+     * @param {number} [y1=0] - The y coordinate of the lines starting point.
+     * @param {number} [x2=0] - The x coordinate of the lines ending point.
+     * @param {number} [y2=0] - The y coordinate of the lines ending point.
      *
      * @return {Phaser.Geom.Line} This Line object.
      */
@@ -18321,7 +18322,7 @@ var Text = new Class({
          * [description]
          *
          * @name Phaser.GameObjects.Text#style
-         * @type {Phaser.GameObjects.Components.TextStyle}
+         * @type {Phaser.GameObjects.Text.TextStyle}
          * @since 3.0.0
          */
         this.style = new TextStyle(this, style);
@@ -19279,7 +19280,7 @@ var Text = new Class({
      * @method Phaser.GameObjects.Text#toJSON
      * @since 3.0.0
      *
-     * @return {object} [description]
+     * @return {JSONGameObject} A JSON representation of the Game Object.
      */
     toJSON: function ()
     {
@@ -19922,7 +19923,7 @@ var Group = new Class({
     },
 
     /**
-     * Removes a member of this group.
+     * Removes a member of this Group and optionally removes it from the Scene and / or destroys it.
      *
      * Calls {@link Phaser.GameObjects.Group#removeCallback}.
      *
@@ -19930,13 +19931,15 @@ var Group = new Class({
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.GameObject} child - The Game Object to remove.
-     * @param {boolean} [removeFromScene=false] - Also remove the group member from the scene.
+     * @param {boolean} [removeFromScene=false] - Optionally remove the Group member from the Scene it belongs to.
+     * @param {boolean} [destroyChild=false] - Optionally call destroy on the removed Group member.
      *
      * @return {Phaser.GameObjects.Group} This Group object.
      */
-    remove: function (child, removeFromScene)
+    remove: function (child, removeFromScene, destroyChild)
     {
         if (removeFromScene === undefined) { removeFromScene = false; }
+        if (destroyChild === undefined) { destroyChild = false; }
 
         if (!this.children.contains(child))
         {
@@ -19950,36 +19953,42 @@ var Group = new Class({
             this.removeCallback.call(this, child);
         }
 
-        if (removeFromScene)
+        child.off('destroy', this.remove, this);
+
+        if (destroyChild)
         {
-            this.scene.sys.displayList.remove(child);
+            child.destroy();
+        }
+        else if (removeFromScene)
+        {
+            child.scene.sys.displayList.remove(child);
 
             if (child.preUpdate)
             {
-                this.scene.sys.updateList.remove(child);
+                child.scene.sys.updateList.remove(child);
             }
         }
-
-        child.off('destroy', this.remove, this);
 
         return this;
     },
 
     /**
-     * Removes all members of this group.
+     * Removes all members of this Group and optionally removes them from the Scene and / or destroys them.
      *
      * Does not call {@link Phaser.GameObjects.Group#removeCallback}.
      *
      * @method Phaser.GameObjects.Group#clear
      * @since 3.0.0
      *
-     * @param {boolean} [removeFromScene=false] - Also remove each group member from the scene.
+     * @param {boolean} [removeFromScene=false] - Optionally remove each Group member from the Scene.
+     * @param {boolean} [destroyChild=false] - Optionally call destroy on the removed Group members.
      *
      * @return {Phaser.GameObjects.Group} This group.
      */
-    clear: function (removeFromScene)
+    clear: function (removeFromScene, destroyChild)
     {
         if (removeFromScene === undefined) { removeFromScene = false; }
+        if (destroyChild === undefined) { destroyChild = false; }
 
         var children = this.children;
 
@@ -19989,13 +19998,17 @@ var Group = new Class({
 
             gameObject.off('destroy', this.remove, this);
 
-            if (removeFromScene)
+            if (destroyChild)
             {
-                this.scene.sys.displayList.remove(gameObject);
+                gameObject.destroy();
+            }
+            else if (removeFromScene)
+            {
+                gameObject.scene.sys.displayList.remove(gameObject);
 
                 if (gameObject.preUpdate)
                 {
-                    this.scene.sys.updateList.remove(gameObject);
+                    gameObject.scene.sys.updateList.remove(gameObject);
                 }
             }
         }
@@ -20047,7 +20060,7 @@ var Group = new Class({
     },
 
     /**
-     * Scans the group for the first member that has an {@link Phaser.GameObjects.GameObject#active} state matching the argument,
+     * Scans the Group, from top to bottom, for the first member that has an {@link Phaser.GameObjects.GameObject#active} state matching the argument,
      * assigns `x` and `y`, and returns the member.
      *
      * If no matching member is found and `createIfNull` is true and the group isn't full then it will create a new Game Object using `x`, `y`, `key`, `frame`, and `visible`.
@@ -20068,31 +20081,176 @@ var Group = new Class({
      */
     getFirst: function (state, createIfNull, x, y, key, frame, visible)
     {
+        return this.getHandler(true, 1, state, createIfNull, x, y, key, frame, visible);
+    },
+
+    /**
+     * Scans the Group, from top to bottom, for the nth member that has an {@link Phaser.GameObjects.GameObject#active} state matching the argument,
+     * assigns `x` and `y`, and returns the member.
+     *
+     * If no matching member is found and `createIfNull` is true and the group isn't full then it will create a new Game Object using `x`, `y`, `key`, `frame`, and `visible`.
+     * Unless a new member is created, `key`, `frame`, and `visible` are ignored.
+     *
+     * @method Phaser.GameObjects.Group#getFirstNth
+     * @since 3.6.0
+     *
+     * @param {integer} nth - The nth matching Group member to search for.
+     * @param {boolean} [state=false] - The {@link Phaser.GameObjects.GameObject#active} value to match.
+     * @param {boolean} [createIfNull=false] - Create a new Game Object if no matching members are found, using the following arguments.
+     * @param {number} [x] - The horizontal position of the Game Object in the world.
+     * @param {number} [y] - The vertical position of the Game Object in the world.
+     * @param {string} [key=defaultKey] - The texture key assigned to a new Game Object (if one is created).
+     * @param {(string|integer)} [frame=defaultFrame] - A texture frame assigned to a new Game Object (if one is created).
+     * @param {boolean} [visible=true] - The {@link Phaser.GameObjects.Components.Visible#visible} state of a new Game Object (if one is created).
+     *
+     * @return {?Phaser.GameObjects.GameObject} The first matching group member, or a newly created member, or null.
+     */
+    getFirstNth: function (nth, state, createIfNull, x, y, key, frame, visible)
+    {
+        return this.getHandler(true, nth, state, createIfNull, x, y, key, frame, visible);
+    },
+
+    /**
+     * Scans the Group for the last member that has an {@link Phaser.GameObjects.GameObject#active} state matching the argument,
+     * assigns `x` and `y`, and returns the member.
+     *
+     * If no matching member is found and `createIfNull` is true and the group isn't full then it will create a new Game Object using `x`, `y`, `key`, `frame`, and `visible`.
+     * Unless a new member is created, `key`, `frame`, and `visible` are ignored.
+     *
+     * @method Phaser.GameObjects.Group#getLast
+     * @since 3.6.0
+     *
+     * @param {boolean} [state=false] - The {@link Phaser.GameObjects.GameObject#active} value to match.
+     * @param {boolean} [createIfNull=false] - Create a new Game Object if no matching members are found, using the following arguments.
+     * @param {number} [x] - The horizontal position of the Game Object in the world.
+     * @param {number} [y] - The vertical position of the Game Object in the world.
+     * @param {string} [key=defaultKey] - The texture key assigned to a new Game Object (if one is created).
+     * @param {(string|integer)} [frame=defaultFrame] - A texture frame assigned to a new Game Object (if one is created).
+     * @param {boolean} [visible=true] - The {@link Phaser.GameObjects.Components.Visible#visible} state of a new Game Object (if one is created).
+     *
+     * @return {?Phaser.GameObjects.GameObject} The first matching group member, or a newly created member, or null.
+     */
+    getLast: function (state, createIfNull, x, y, key, frame, visible)
+    {
+        return this.getHandler(false, 1, state, createIfNull, x, y, key, frame, visible);
+    },
+
+    /**
+     * Scans the Group for the last nth member that has an {@link Phaser.GameObjects.GameObject#active} state matching the argument,
+     * assigns `x` and `y`, and returns the member.
+     *
+     * If no matching member is found and `createIfNull` is true and the group isn't full then it will create a new Game Object using `x`, `y`, `key`, `frame`, and `visible`.
+     * Unless a new member is created, `key`, `frame`, and `visible` are ignored.
+     *
+     * @method Phaser.GameObjects.Group#getLastNth
+     * @since 3.6.0
+     *
+     * @param {integer} nth - The nth matching Group member to search for.
+     * @param {boolean} [state=false] - The {@link Phaser.GameObjects.GameObject#active} value to match.
+     * @param {boolean} [createIfNull=false] - Create a new Game Object if no matching members are found, using the following arguments.
+     * @param {number} [x] - The horizontal position of the Game Object in the world.
+     * @param {number} [y] - The vertical position of the Game Object in the world.
+     * @param {string} [key=defaultKey] - The texture key assigned to a new Game Object (if one is created).
+     * @param {(string|integer)} [frame=defaultFrame] - A texture frame assigned to a new Game Object (if one is created).
+     * @param {boolean} [visible=true] - The {@link Phaser.GameObjects.Components.Visible#visible} state of a new Game Object (if one is created).
+     *
+     * @return {?Phaser.GameObjects.GameObject} The first matching group member, or a newly created member, or null.
+     */
+    getLastNth: function (nth, state, createIfNull, x, y, key, frame, visible)
+    {
+        return this.getHandler(false, nth, state, createIfNull, x, y, key, frame, visible);
+    },
+
+    /**
+     * Scans the group for the last member that has an {@link Phaser.GameObjects.GameObject#active} state matching the argument,
+     * assigns `x` and `y`, and returns the member.
+     *
+     * If no matching member is found and `createIfNull` is true and the group isn't full then it will create a new Game Object using `x`, `y`, `key`, `frame`, and `visible`.
+     * Unless a new member is created, `key`, `frame`, and `visible` are ignored.
+     *
+     * @method Phaser.GameObjects.Group#getHandler
+     * @private
+     * @since 3.6.0
+     *
+     * @param {boolean} forwards - Search front to back or back to front?
+     * @param {integer} nth - Stop matching after nth successful matches.
+     * @param {boolean} [state=false] - The {@link Phaser.GameObjects.GameObject#active} value to match.
+     * @param {boolean} [createIfNull=false] - Create a new Game Object if no matching members are found, using the following arguments.
+     * @param {number} [x] - The horizontal position of the Game Object in the world.
+     * @param {number} [y] - The vertical position of the Game Object in the world.
+     * @param {string} [key=defaultKey] - The texture key assigned to a new Game Object (if one is created).
+     * @param {(string|integer)} [frame=defaultFrame] - A texture frame assigned to a new Game Object (if one is created).
+     * @param {boolean} [visible=true] - The {@link Phaser.GameObjects.Components.Visible#visible} state of a new Game Object (if one is created).
+     *
+     * @return {?Phaser.GameObjects.GameObject} The first matching group member, or a newly created member, or null.
+     */
+    getHandler: function (forwards, nth, state, createIfNull, x, y, key, frame, visible)
+    {
         if (state === undefined) { state = false; }
         if (createIfNull === undefined) { createIfNull = false; }
 
         var gameObject;
 
+        var i;
+        var total = 0;
         var children = this.children.entries;
 
-        for (var i = 0; i < children.length; i++)
+        if (forwards)
         {
-            gameObject = children[i];
-
-            if (gameObject.active === state)
+            for (i = 0; i < children.length; i++)
             {
-                if (typeof(x) === 'number')
-                {
-                    gameObject.x = x;
-                }
+                gameObject = children[i];
 
-                if (typeof(y) === 'number')
+                if (gameObject.active === state)
                 {
-                    gameObject.y = y;
-                }
+                    total++;
 
-                return gameObject;
+                    if (total === nth)
+                    {
+                        break;
+                    }
+                }
+                else
+                {
+                    gameObject = null;
+                }
             }
+        }
+        else
+        {
+            for (i = children.length - 1; i >= 0; i--)
+            {
+                gameObject = children[i];
+
+                if (gameObject.active === state)
+                {
+                    total++;
+
+                    if (total === nth)
+                    {
+                        break;
+                    }
+                }
+                else
+                {
+                    gameObject = null;
+                }
+            }
+        }
+
+        if (gameObject)
+        {
+            if (typeof(x) === 'number')
+            {
+                gameObject.x = x;
+            }
+
+            if (typeof(y) === 'number')
+            {
+                gameObject.y = y;
+            }
+
+            return gameObject;
         }
 
         //  Got this far? We need to create or bail
@@ -22044,7 +22202,7 @@ var Settings = __webpack_require__(178);
  * @since 3.0.0
  *
  * @param {Phaser.Scene} scene - The Scene that owns this Systems instance.
- * @param {(string|SettingsConfig)} config - Scene specific configuration settings.
+ * @param {(string|Phaser.Scenes.Settings.Config)} config - Scene specific configuration settings.
  */
 var Systems = new Class({
 
@@ -22074,7 +22232,7 @@ var Systems = new Class({
          * [description]
          *
          * @name Phaser.Scenes.Systems#config
-         * @type {(string|SettingsConfig)}
+         * @type {(string|Phaser.Scenes.Settings.Config)}
          * @since 3.0.0
          */
         this.config = config;
@@ -22083,7 +22241,7 @@ var Systems = new Class({
          * [description]
          *
          * @name Phaser.Scenes.Systems#settings
-         * @type {SettingsObject}
+         * @type {Phaser.Scenes.Settings.Object}
          * @since 3.0.0
          */
         this.settings = Settings.create(config);
@@ -24474,14 +24632,13 @@ var Camera = new Class({
      */
 
     /**
-     * Destroys this Camera instance.
+     * Destroys this Camera instance. You rarely need to call this directly.
      *
      * Called by the Camera Manager. If you wish to destroy a Camera please use `CameraManager.remove` as
      * cameras are stored in a pool, ready for recycling later, and calling this directly will prevent that.
      *
      * @method Phaser.Cameras.Scene2D.Camera#destroy
      * @fires CameraDestroyEvent
-     * @protected
      * @since 3.0.0
      */
     destroy: function ()
@@ -24889,7 +25046,7 @@ module.exports = Map;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Extend = __webpack_require__(17);
+var Extend = __webpack_require__(16);
 var XHRSettings = __webpack_require__(88);
 
 /**
@@ -25068,7 +25225,7 @@ module.exports = BuildGameObjectAnimation;
  */
 
 var Class = __webpack_require__(0);
-var Extend = __webpack_require__(17);
+var Extend = __webpack_require__(16);
 
 /**
  * @classdesc
@@ -25666,7 +25823,7 @@ var WebGLPipeline = __webpack_require__(80);
  *
  * @class TextureTintPipeline
  * @extends Phaser.Renderer.WebGL.WebGLPipeline
- * @memberOf Phaser.Renderer.WebGL
+ * @memberOf Phaser.Renderer.WebGL.Pipelines
  * @constructor
  * @since 3.0.0
  *
@@ -25726,7 +25883,7 @@ var TextureTintPipeline = new Class({
         /**
          * [description]
          *
-         * @name Phaser.Renderer.WebGL.TextureTintPipeline#vertexViewF32
+         * @name Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#vertexViewF32
          * @type {Float32Array}
          * @since 3.0.0
          */
@@ -25735,7 +25892,7 @@ var TextureTintPipeline = new Class({
         /**
          * [description]
          *
-         * @name Phaser.Renderer.WebGL.TextureTintPipeline#vertexViewU32
+         * @name Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#vertexViewU32
          * @type {Uint32Array}
          * @since 3.0.0
          */
@@ -25744,7 +25901,7 @@ var TextureTintPipeline = new Class({
         /**
          * [description]
          *
-         * @name Phaser.Renderer.WebGL.TextureTintPipeline#maxQuads
+         * @name Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#maxQuads
          * @type {integer}
          * @default 2000
          * @since 3.0.0
@@ -25754,7 +25911,7 @@ var TextureTintPipeline = new Class({
         /**
          * [description]
          *
-         * @name Phaser.Renderer.WebGL.TextureTintPipeline#batches
+         * @name Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#batches
          * @type {array}
          * @since 3.1.0
          */
@@ -25766,13 +25923,13 @@ var TextureTintPipeline = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Renderer.WebGL.TextureTintPipeline#setTexture2D
+     * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#setTexture2D
      * @since 3.1.0
      *
      * @param {WebGLTexture} texture - [description]
      * @param {integer} textureUnit - [description]
      *
-     * @return {Phaser.Renderer.WebGL.TextureTintPipeline} [description]
+     * @return {Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline} [description]
      */
     setTexture2D: function (texture, unit)
     {
@@ -25817,7 +25974,7 @@ var TextureTintPipeline = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Renderer.WebGL.TextureTintPipeline#pushBatch
+     * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#pushBatch
      * @since 3.1.0
      */
     pushBatch: function ()
@@ -25834,10 +25991,10 @@ var TextureTintPipeline = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Renderer.WebGL.TextureTintPipeline#flush
+     * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#flush
      * @since 3.1.0
      *
-     * @return {Phaser.Renderer.WebGL.TextureTintPipeline} This Pipeline.
+     * @return {Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline} This Pipeline.
      */
     flush: function ()
     {
@@ -25934,14 +26091,15 @@ var TextureTintPipeline = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Renderer.WebGL.TextureTintPipeline#onBind
+     * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#onBind
      * @since 3.0.0
      *
-     * @return {Phaser.Renderer.WebGL.TextureTintPipeline} [description]
+     * @return {Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline} [description]
      */
     onBind: function ()
     {
         WebGLPipeline.prototype.onBind.call(this);
+
         this.mvpUpdate();
 
         if (this.batches.length === 0)
@@ -25955,14 +26113,14 @@ var TextureTintPipeline = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Renderer.WebGL.TextureTintPipeline#resize
+     * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#resize
      * @since 3.0.0
      *
      * @param {number} width - [description]
      * @param {number} height - [description]
      * @param {number} resolution - [description]
      *
-     * @return {Phaser.Renderer.WebGL.TextureTintPipeline} [description]
+     * @return {Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline} [description]
      */
     resize: function (width, height, resolution)
     {
@@ -25974,11 +26132,12 @@ var TextureTintPipeline = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Renderer.WebGL.TextureTintPipeline#drawStaticTilemapLayer
+     * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#drawStaticTilemapLayer
      * @since 3.0.0
      *
      * @param {Phaser.Tilemaps.StaticTilemapLayer} tilemap - [description]
      * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
+     * @param {Phaser.GameObjects.Components.TransformMatrix} parentTransformMatrix - [description]
      */
     drawStaticTilemapLayer: function (tilemap)
     {
@@ -26009,7 +26168,7 @@ var TextureTintPipeline = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Renderer.WebGL.TextureTintPipeline#drawEmitterManager
+     * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#drawEmitterManager
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.Particles.ParticleEmitterManager} emitterManager - [description]
@@ -26049,29 +26208,16 @@ var TextureTintPipeline = new Class({
         var vertexCapacity = this.vertexCapacity;
         var texture = emitterManager.defaultFrame.source.glTexture;
         var pca, pcb, pcc, pcd, pce, pcf;
+        var pma, pmb, pmc, pmd, pme, pmf;
 
         if (parentMatrix)
         {
-            var pma = parentMatrix[0];
-            var pmb = parentMatrix[1];
-            var pmc = parentMatrix[2];
-            var pmd = parentMatrix[3];
-            var pme = parentMatrix[4];
-            var pmf = parentMatrix[5];
-            
-            pca = cma * pma + cmb * pmc;
-            pcb = cma * pmb + cmb * pmd;
-            pcc = cmc * pma + cmd * pmc;
-            pcd = cmc * pmb + cmd * pmd;
-            pce = cme * pma + cmf * pmc + pme;
-            pcf = cme * pmb + cmf * pmd + pmf;
-
-            cma = pca;
-            cmb = pcb;
-            cmc = pcc;
-            cmd = pcd;
-            cme = pce;
-            cmf = pcf;
+            pma = parentMatrix[0];
+            pmb = parentMatrix[1];
+            pmc = parentMatrix[2];
+            pmd = parentMatrix[3];
+            pme = parentMatrix[4];
+            pmf = parentMatrix[5];
         }
 
         this.setTexture2D(texture, 0);
@@ -26085,6 +26231,31 @@ var TextureTintPipeline = new Class({
             var particleOffset = 0;
             var scrollX = cameraScrollX * emitter.scrollFactorX;
             var scrollY = cameraScrollY * emitter.scrollFactorY;
+
+            if (parentMatrix)
+            {
+                var cse = -scrollX;
+                var csf = -scrollY;
+                var pse = cse * cma + csf * cmc + cme;
+                var psf = cse * cmb + csf * cmd + cmf;
+                pca = pma * cma + pmb * cmc;
+                pcb = pma * cmb + pmb * cmd;
+                pcc = pmc * cma + pmd * cmc;
+                pcd = pmc * cmb + pmd * cmd;
+                pce = pme * cma + pmf * cmc + pse;
+                pcf = pme * cmb + pmf * cmd + psf;
+
+                cma = pca;
+                cmb = pcb;
+                cmc = pcc;
+                cmd = pcd;
+                cme = pce;
+                cmf = pcf;
+
+                scrollX = 0.0;
+                scrollY = 0.0;
+            }
+
 
             if (!emitter.visible || aliveLength === 0)
             {
@@ -26122,11 +26293,11 @@ var TextureTintPipeline = new Class({
                     var sr = sin(particle.rotation);
                     var cr = cos(particle.rotation);
                     var sra = cr * particle.scaleX;
-                    var srb = -sr * particle.scaleX;
-                    var src = sr * particle.scaleY;
+                    var srb = sr * particle.scaleX;
+                    var src = -sr * particle.scaleY;
                     var srd = cr * particle.scaleY;
-                    var sre = particle.x - scrollX * particle.scrollFactorX;
-                    var srf = particle.y - scrollY * particle.scrollFactorY;
+                    var sre = particle.x - scrollX;
+                    var srf = particle.y - scrollY;
                     var mva = sra * cma + srb * cmc;
                     var mvb = sra * cmb + srb * cmd;
                     var mvc = src * cma + srd * cmc;
@@ -26213,7 +26384,7 @@ var TextureTintPipeline = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Renderer.WebGL.TextureTintPipeline#drawBlitter
+     * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#drawBlitter
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.Blitter} blitter - [description]
@@ -26248,8 +26419,6 @@ var TextureTintPipeline = new Class({
         var cameraScrollY = camera.scrollY * blitter.scrollFactorY;
         var batchCount = Math.ceil(length / this.maxQuads);
         var batchOffset = 0;
-        var blitterX = blitter.x - cameraScrollX;
-        var blitterY = blitter.y - cameraScrollY;
 
         if (parentMatrix)
         {
@@ -26259,12 +26428,16 @@ var TextureTintPipeline = new Class({
             var pmd = parentMatrix[3];
             var pme = parentMatrix[4];
             var pmf = parentMatrix[5];
-            var pca = a * pma + b * pmc;
-            var pcb = a * pmb + b * pmd;
-            var pcc = c * pma + d * pmc;
-            var pcd = c * pmb + d * pmd;
-            var pce = e * pma + f * pmc + pme;
-            var pcf = e * pmb + f * pmd + pmf;
+            var cse = -cameraScrollX;
+            var csf = -cameraScrollY;
+            var pse = cse * a + csf * c + e;
+            var psf = cse * b + csf * d + f;
+            var pca = pma * a + pmb * c;
+            var pcb = pma * b + pmb * d;
+            var pcc = pmc * a + pmd * c;
+            var pcd = pmc * b + pmd * d;
+            var pce = pme * a + pmf * c + pse;
+            var pcf = pme * b + pmf * d + psf;
 
             a = pca;
             b = pcb;
@@ -26272,7 +26445,13 @@ var TextureTintPipeline = new Class({
             d = pcd;
             e = pce;
             f = pcf;
+
+            cameraScrollX = 0.0;
+            cameraScrollY = 0.0;
         }
+
+        var blitterX = blitter.x - cameraScrollX;
+        var blitterY = blitter.y - cameraScrollY;
 
         for (var batchIndex = 0; batchIndex < batchCount; ++batchIndex)
         {
@@ -26365,7 +26544,7 @@ var TextureTintPipeline = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Renderer.WebGL.TextureTintPipeline#batchSprite
+     * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#batchSprite
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.Sprite} sprite - [description]
@@ -26405,11 +26584,9 @@ var TextureTintPipeline = new Class({
         var y = -sprite.displayOriginY + frame.y + ((frame.height) * (flipY ? 1.0 : 0.0));
         var xw = (roundPixels ? (x|0) : x) + width;
         var yh = (roundPixels ? (y|0) : y) + height;
-        var translateX = sprite.x - camera.scrollX * sprite.scrollFactorX;
-        var translateY = sprite.y - camera.scrollY * sprite.scrollFactorY;
         var scaleX = sprite.scaleX;
         var scaleY = sprite.scaleY;
-        var rotation = -sprite.rotation;
+        var rotation = sprite.rotation;
         var alphaTL = sprite._alphaTL;
         var alphaTR = sprite._alphaTR;
         var alphaBL = sprite._alphaBL;
@@ -26421,11 +26598,11 @@ var TextureTintPipeline = new Class({
         var sr = Math.sin(rotation);
         var cr = Math.cos(rotation);
         var sra = cr * scaleX;
-        var srb = -sr * scaleX;
-        var src = sr * scaleY;
+        var srb = sr * scaleX;
+        var src = -sr * scaleY;
         var srd = cr * scaleY;
-        var sre = translateX;
-        var srf = translateY;
+        var sre = sprite.x;
+        var srf = sprite.y;
         var cma = cameraMatrix[0];
         var cmb = cameraMatrix[1];
         var cmc = cameraMatrix[2];
@@ -26442,12 +26619,17 @@ var TextureTintPipeline = new Class({
             var pmd = parentMatrix[3];
             var pme = parentMatrix[4];
             var pmf = parentMatrix[5];
-            var pca = cma * pma + cmb * pmc;
-            var pcb = cma * pmb + cmb * pmd;
-            var pcc = cmc * pma + cmd * pmc;
-            var pcd = cmc * pmb + cmd * pmd;
-            var pce = cme * pma + cmf * pmc + pme;
-            var pcf = cme * pmb + cmf * pmd + pmf;
+            var cse = -camera.scrollX * sprite.scrollFactorX;
+            var csf = -camera.scrollY * sprite.scrollFactorY;
+            var pse = cse * cma + csf * cmc + cme;
+            var psf = cse * cmb + csf * cmd + cmf;
+            var pca = pma * cma + pmb * cmc;
+            var pcb = pma * cmb + pmb * cmd;
+            var pcc = pmc * cma + pmd * cmc;
+            var pcd = pmc * cmb + pmd * cmd;
+            var pce = pme * cma + pmf * cmc + pse;
+            var pcf = pme * cmb + pmf * cmd + psf;
+
             mva = sra * pca + srb * pcc;
             mvb = sra * pcb + srb * pcd;
             mvc = src * pca + srd * pcc;
@@ -26457,6 +26639,9 @@ var TextureTintPipeline = new Class({
         }
         else
         {
+            sre -= camera.scrollX * sprite.scrollFactorX;
+            srf -= camera.scrollY * sprite.scrollFactorY;
+
             mva = sra * cma + srb * cmc;
             mvb = sra * cmb + srb * cmd;
             mvc = src * cma + srd * cmc;
@@ -26532,7 +26717,7 @@ var TextureTintPipeline = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Renderer.WebGL.TextureTintPipeline#batchMesh
+     * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#batchMesh
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.Mesh} mesh - [description]
@@ -26569,16 +26754,16 @@ var TextureTintPipeline = new Class({
         var cameraMatrix = camera.matrix.matrix;
         var frame = mesh.frame;
         var texture = mesh.texture.source[frame.sourceIndex].glTexture;
-        var translateX = mesh.x - camera.scrollX * mesh.scrollFactorX;
-        var translateY = mesh.y - camera.scrollY * mesh.scrollFactorY;
+        var translateX = mesh.x;
+        var translateY = mesh.y;
         var scaleX = mesh.scaleX;
         var scaleY = mesh.scaleY;
-        var rotation = -mesh.rotation;
+        var rotation = mesh.rotation;
         var sr = Math.sin(rotation);
         var cr = Math.cos(rotation);
         var sra = cr * scaleX;
-        var srb = -sr * scaleX;
-        var src = sr * scaleY;
+        var srb = sr * scaleX;
+        var src = -sr * scaleY;
         var srd = cr * scaleY;
         var sre = translateX;
         var srf = translateY;
@@ -26599,12 +26784,17 @@ var TextureTintPipeline = new Class({
             var pmd = parentMatrix[3];
             var pme = parentMatrix[4];
             var pmf = parentMatrix[5];
-            var pca = cma * pma + cmb * pmc;
-            var pcb = cma * pmb + cmb * pmd;
-            var pcc = cmc * pma + cmd * pmc;
-            var pcd = cmc * pmb + cmd * pmd;
-            var pce = cme * pma + cmf * pmc + pme;
-            var pcf = cme * pmb + cmf * pmd + pmf;
+            var cse = -camera.scrollX * mesh.scrollFactorX;
+            var csf = -camera.scrollY * mesh.scrollFactorY;
+            var pse = cse * cma + csf * cmc + cme;
+            var psf = cse * cmb + csf * cmd + cmf;
+            var pca = pma * cma + pmb * cmc;
+            var pcb = pma * cmb + pmb * cmd;
+            var pcc = pmc * cma + pmd * cmc;
+            var pcd = pmc * cmb + pmd * cmd;
+            var pce = pme * cma + pmf * cmc + pse;
+            var pcf = pme * cmb + pmf * cmd + psf;
+
             mva = sra * pca + srb * pcc;
             mvb = sra * pcb + srb * pcd;
             mvc = src * pca + srd * pcc;
@@ -26614,6 +26804,9 @@ var TextureTintPipeline = new Class({
         }
         else
         {
+            sre -= camera.scrollX * mesh.scrollFactorX;
+            srf -= camera.scrollY * mesh.scrollFactorY;
+
             mva = sra * cma + srb * cmc;
             mvb = sra * cmb + srb * cmd;
             mvc = src * cma + srd * cmc;
@@ -26655,7 +26848,7 @@ var TextureTintPipeline = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Renderer.WebGL.TextureTintPipeline#batchBitmapText
+     * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#batchBitmapText
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.BitmapText} bitmapText - [description]
@@ -26738,17 +26931,17 @@ var TextureTintPipeline = new Class({
         var vmax = 0;
         var lastGlyph = null;
         var lastCharCode = 0;
-        var translateX = (srcX - cameraScrollX) + frame.x;
-        var translateY = (srcY - cameraScrollY) + frame.y;
-        var rotation = -bitmapText.rotation;
+        var translateX = srcX + frame.x;
+        var translateY = srcY + frame.y;
+        var rotation = bitmapText.rotation;
         var scaleX = bitmapText.scaleX;
         var scaleY = bitmapText.scaleY;
         var letterSpacing = bitmapText.letterSpacing;
         var sr = Math.sin(rotation);
         var cr = Math.cos(rotation);
         var sra = cr * scaleX;
-        var srb = -sr * scaleX;
-        var src = sr * scaleY;
+        var srb = sr * scaleX;
+        var src = -sr * scaleY;
         var srd = cr * scaleY;
         var sre = translateX;
         var srf = translateY;
@@ -26769,12 +26962,17 @@ var TextureTintPipeline = new Class({
             var pmd = parentMatrix[3];
             var pme = parentMatrix[4];
             var pmf = parentMatrix[5];
-            var pca = cma * pma + cmb * pmc;
-            var pcb = cma * pmb + cmb * pmd;
-            var pcc = cmc * pma + cmd * pmc;
-            var pcd = cmc * pmb + cmd * pmd;
-            var pce = cme * pma + cmf * pmc + pme;
-            var pcf = cme * pmb + cmf * pmd + pmf;
+            var cse = -cameraScrollX;
+            var csf = -cameraScrollY;
+            var pse = cse * cma + csf * cmc + cme;
+            var psf = cse * cmb + csf * cmd + cmf;
+            var pca = pma * cma + pmb * cmc;
+            var pcb = pma * cmb + pmb * cmd;
+            var pcc = pmc * cma + pmd * cmc;
+            var pcd = pmc * cmb + pmd * cmd;
+            var pce = pme * cma + pmf * cmc + pse;
+            var pcf = pme * cmb + pmf * cmd + psf;
+
             mva = sra * pca + srb * pcc;
             mvb = sra * pcb + srb * pcd;
             mvc = src * pca + srd * pcc;
@@ -26784,6 +26982,9 @@ var TextureTintPipeline = new Class({
         }
         else
         {
+            sre -= cameraScrollX;
+            srf -= cameraScrollY;
+
             mva = sra * cma + srb * cmc;
             mvb = sra * cmb + srb * cmd;
             mvc = src * cma + srd * cmc;
@@ -26924,7 +27125,7 @@ var TextureTintPipeline = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Renderer.WebGL.TextureTintPipeline#batchDynamicBitmapText
+     * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#batchDynamicBitmapText
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.DynamicBitmapText} bitmapText - [description]
@@ -27007,15 +27208,15 @@ var TextureTintPipeline = new Class({
         var lastCharCode = 0;
         var translateX = srcX + frame.x;
         var translateY = srcY + frame.y;
-        var rotation = -bitmapText.rotation;
+        var rotation = bitmapText.rotation;
         var scaleX = bitmapText.scaleX;
         var scaleY = bitmapText.scaleY;
         var letterSpacing = bitmapText.letterSpacing;
         var sr = Math.sin(rotation);
         var cr = Math.cos(rotation);
         var sra = cr * scaleX;
-        var srb = -sr * scaleX;
-        var src = sr * scaleY;
+        var srb = sr * scaleX;
+        var src = -sr * scaleY;
         var srd = cr * scaleY;
         var sre = translateX;
         var srf = translateY;
@@ -27038,12 +27239,17 @@ var TextureTintPipeline = new Class({
             var pmd = parentMatrix[3];
             var pme = parentMatrix[4];
             var pmf = parentMatrix[5];
-            var pca = cma * pma + cmb * pmc;
-            var pcb = cma * pmb + cmb * pmd;
-            var pcc = cmc * pma + cmd * pmc;
-            var pcd = cmc * pmb + cmd * pmd;
-            var pce = cme * pma + cmf * pmc + pme;
-            var pcf = cme * pmb + cmf * pmd + pmf;
+            var cse = -cameraScrollX;
+            var csf = -cameraScrollY;
+            var pse = cse * cma + csf * cmc + cme;
+            var psf = cse * cmb + csf * cmd + cmf;
+            var pca = pma * cma + pmb * cmc;
+            var pcb = pma * cmb + pmb * cmd;
+            var pcc = pmc * cma + pmd * cmc;
+            var pcd = pmc * cmb + pmd * cmd;
+            var pce = pme * cma + pmf * cmc + pse;
+            var pcf = pme * cmb + pmf * cmd + psf;
+
             mva = sra * pca + srb * pcc;
             mvb = sra * pcb + srb * pcd;
             mvc = src * pca + srd * pcc;
@@ -27053,6 +27259,9 @@ var TextureTintPipeline = new Class({
         }
         else
         {
+            sre -= cameraScrollX;
+            srf -= cameraScrollY;
+
             mva = sra * cma + srb * cmc;
             mvb = sra * cmb + srb * cmd;
             mvc = src * cma + srd * cmc;
@@ -27171,14 +27380,12 @@ var TextureTintPipeline = new Class({
             y -= bitmapText.displayOriginY;
             x *= scale;
             y *= scale;
-            x -= cameraScrollX;
-            y -= cameraScrollY;
 
-            sr = Math.sin(-rotation);
-            cr = Math.cos(-rotation);
+            sr = Math.sin(rotation);
+            cr = Math.cos(rotation);
             uta = cr * scale;
-            utb = -sr * scale;
-            utc = sr * scale;
+            utb = sr * scale;
+            utc = -sr * scale;
             utd = cr * scale;
             ute = x;
             utf = y;
@@ -27268,7 +27475,7 @@ var TextureTintPipeline = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Renderer.WebGL.TextureTintPipeline#batchText
+     * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#batchText
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.Text} text - [description]
@@ -27304,7 +27511,7 @@ var TextureTintPipeline = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Renderer.WebGL.TextureTintPipeline#batchDynamicTilemapLayer
+     * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#batchDynamicTilemapLayer
      * @since 3.0.0
      *
      * @param {Phaser.Tilemaps.DynamicTilemapLayer} tilemapLayer - [description]
@@ -27362,7 +27569,7 @@ var TextureTintPipeline = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Renderer.WebGL.TextureTintPipeline#batchTileSprite
+     * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#batchTileSprite
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.TileSprite} tileSprite - [description]
@@ -27399,7 +27606,7 @@ var TextureTintPipeline = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Renderer.WebGL.TextureTintPipeline#batchTexture
+     * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#batchTexture
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.GameObject} gameObject - [description]
@@ -27464,7 +27671,6 @@ var TextureTintPipeline = new Class({
         }
 
         flipY = flipY ^ (texture.isRenderTexture ? 1 : 0);
-        rotation = -rotation;
 
         var roundPixels = this.renderer.config.roundPixels;
         var vertexViewF32 = this.vertexViewF32;
@@ -27476,13 +27682,13 @@ var TextureTintPipeline = new Class({
         var y = -displayOriginY + ((srcHeight) * (flipY ? 1.0 : 0.0));
         var xw = x + width;
         var yh = y + height;
-        var translateX = srcX - camera.scrollX * scrollFactorX;
-        var translateY = srcY - camera.scrollY * scrollFactorY;
+        var translateX = srcX;
+        var translateY = srcY;
         var sr = Math.sin(rotation);
         var cr = Math.cos(rotation);
         var sra = cr * scaleX;
-        var srb = -sr * scaleX;
-        var src = sr * scaleY;
+        var srb = sr * scaleX;
+        var src = -sr * scaleY;
         var srd = cr * scaleY;
         var sre = translateX;
         var srf = translateY;
@@ -27502,12 +27708,17 @@ var TextureTintPipeline = new Class({
             var pmd = parentMatrix[3];
             var pme = parentMatrix[4];
             var pmf = parentMatrix[5];
-            var pca = cma * pma + cmb * pmc;
-            var pcb = cma * pmb + cmb * pmd;
-            var pcc = cmc * pma + cmd * pmc;
-            var pcd = cmc * pmb + cmd * pmd;
-            var pce = cme * pma + cmf * pmc + pme;
-            var pcf = cme * pmb + cmf * pmd + pmf;
+            var cse = -camera.scrollX * scrollFactorX;
+            var csf = -camera.scrollY * scrollFactorY;
+            var pse = cse * cma + csf * cmc + cme;
+            var psf = cse * cmb + csf * cmd + cmf;
+            var pca = pma * cma + pmb * cmc;
+            var pcb = pma * cmb + pmb * cmd;
+            var pcc = pmc * cma + pmd * cmc;
+            var pcd = pmc * cmb + pmd * cmd;
+            var pce = pme * cma + pmf * cmc + pse;
+            var pcf = pme * cmb + pmf * cmd + psf;
+
             mva = sra * pca + srb * pcc;
             mvb = sra * pcb + srb * pcd;
             mvc = src * pca + srd * pcc;
@@ -27517,6 +27728,9 @@ var TextureTintPipeline = new Class({
         }
         else
         {
+            sre -= camera.scrollX * scrollFactorX;
+            srf -= camera.scrollY * scrollFactorY;
+
             mva = sra * cma + srb * cmc;
             mvb = sra * cmb + srb * cmd;
             mvc = src * cma + srd * cmc;
@@ -27592,7 +27806,7 @@ var TextureTintPipeline = new Class({
     /**
      * Immediately draws a texture with no batching.
      *
-     * @method Phaser.Renderer.WebGL.TextureTintPipeline#drawTexture
+     * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#drawTexture
      * @since 3.2.0
      *
      * @param {WebGLTexture} texture [description]
@@ -27607,7 +27821,7 @@ var TextureTintPipeline = new Class({
      * @param {Phaser.GameObjects.Components.TransformMatrix} transformMatrix - [description]
      * @param {Phaser.GameObjects.Components.TransformMatrix} parentTransformMatrix - [description]
      *
-     * @return {Phaser.Renderer.WebGL.TextureTintPipeline} This Pipeline.
+     * @return {Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline} This Pipeline.
      */
     drawTexture: function (
         texture,
@@ -27743,7 +27957,7 @@ var TextureTintPipeline = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Renderer.WebGL.TextureTintPipeline#batchGraphics
+     * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#batchGraphics
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.Graphics} graphics - [description]
@@ -28920,7 +29134,6 @@ var Sprite = __webpack_require__(31);
  * @extends Phaser.Physics.Arcade.Components.Size
  * @extends Phaser.Physics.Arcade.Components.Velocity
  * @extends Phaser.GameObjects.Components.Alpha
- * @extends Phaser.GameObjects.Components.Animation
  * @extends Phaser.GameObjects.Components.BlendMode
  * @extends Phaser.GameObjects.Components.Depth
  * @extends Phaser.GameObjects.Components.Flip
@@ -29318,8 +29531,8 @@ var LIGHT_COUNT = 10;
  * [description]
  *
  * @class ForwardDiffuseLightPipeline
- * @extends Phaser.Renderer.WebGL.TextureTintPipeline
- * @memberOf Phaser.Renderer.WebGL
+ * @extends Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline
+ * @memberOf Phaser.Renderer.WebGL.Pipelines
  * @constructor
  * @since 3.0.0
  *
@@ -29341,10 +29554,11 @@ var ForwardDiffuseLightPipeline = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Renderer.WebGL.ForwardDiffuseLightPipeline#onBind
+     * @method Phaser.Renderer.WebGL.Pipelines.ForwardDiffuseLightPipeline#onBind
+     * @override
      * @since 3.0.0
      *
-     * @return {Phaser.Renderer.WebGL.ForwardDiffuseLightPipeline} [description]
+     * @return {Phaser.Renderer.WebGL.Pipelines.ForwardDiffuseLightPipeline} [description]
      */
     onBind: function ()
     {
@@ -29364,13 +29578,13 @@ var ForwardDiffuseLightPipeline = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Renderer.WebGL.ForwardDiffuseLightPipeline#onRender
+     * @method Phaser.Renderer.WebGL.Pipelines.ForwardDiffuseLightPipeline#onRender
      * @since 3.0.0
      *
      * @param {Phaser.Scene} scene - [description]
      * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
      *
-     * @return {Phaser.Renderer.WebGL.ForwardDiffuseLightPipeline} [description]
+     * @return {Phaser.Renderer.WebGL.Pipelines.ForwardDiffuseLightPipeline} [description]
      */
     onRender: function (scene, camera)
     {
@@ -29424,14 +29638,15 @@ var ForwardDiffuseLightPipeline = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Renderer.WebGL.ForwardDiffuseLightPipeline#drawStaticTilemapLayer
+     * @method Phaser.Renderer.WebGL.Pipelines.ForwardDiffuseLightPipeline#drawStaticTilemapLayer
+     * @override
      * @since 3.0.0
      *
      * @param {Phaser.Tilemaps.StaticTilemapLayer} tilemap - [description]
      * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
-     *
+     * @param {Phaser.GameObjects.Components.TransformMatrix} parentTransformMatrix - [description]
      */
-    drawStaticTilemapLayer: function (tilemap, camera)
+    drawStaticTilemapLayer: function (tilemap, camera, parentTransformMatrix)
     {
         var normalTexture = tilemap.texture.dataSource[0];
 
@@ -29439,26 +29654,27 @@ var ForwardDiffuseLightPipeline = new Class({
         {
             this.renderer.setPipeline(this);
             this.setTexture2D(normalTexture.glTexture, 1);
-            TextureTintPipeline.prototype.drawStaticTilemapLayer.call(this, tilemap, camera);
+            TextureTintPipeline.prototype.drawStaticTilemapLayer.call(this, tilemap, camera, parentTransformMatrix);
         }
         else
         {
             console.warn('Normal map texture missing for using Light2D pipeline. StaticTilemapLayer rendered with default pipeline.');
-            this.renderer.pipelines.TextureTintPipeline.drawStaticTilemapLayer(tilemap, camera);
+            this.renderer.pipelines.TextureTintPipeline.drawStaticTilemapLayer(tilemap, camera, parentTransformMatrix);
         }
     },
 
     /**
      * [description]
      *
-     * @method Phaser.Renderer.WebGL.ForwardDiffuseLightPipeline#drawEmitterManager
+     * @method Phaser.Renderer.WebGL.Pipelines.ForwardDiffuseLightPipeline#drawEmitterManager
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.Particles.ParticleEmitterManager} emitterManager - [description]
      * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
+     * @param {Phaser.GameObjects.Components.TransformMatrix} parentTransformMatrix - [description]
      *
      */
-    drawEmitterManager: function (emitterManager, camera)
+    drawEmitterManager: function (emitterManager, camera, parentTransformMatrix)
     {
         var normalTexture = emitterManager.texture.dataSource[0];
 
@@ -29466,26 +29682,27 @@ var ForwardDiffuseLightPipeline = new Class({
         {
             this.renderer.setPipeline(this);
             this.setTexture2D(normalTexture.glTexture, 1);
-            TextureTintPipeline.prototype.drawEmitterManager.call(this, emitterManager, camera);
+            TextureTintPipeline.prototype.drawEmitterManager.call(this, emitterManager, camera, parentTransformMatrix);
         }
         else
         {
             console.warn('Normal map texture missing for using Light2D pipeline. EmitterManager rendered with default pipeline.');
-            this.renderer.pipelines.TextureTintPipeline.drawEmitterManager(emitterManager, camera);
+            this.renderer.pipelines.TextureTintPipeline.drawEmitterManager(emitterManager, camera, parentTransformMatrix);
         }
     },
 
     /**
      * [description]
      *
-     * @method Phaser.Renderer.WebGL.ForwardDiffuseLightPipeline#drawBlitter
+     * @method Phaser.Renderer.WebGL.Pipelines.ForwardDiffuseLightPipeline#drawBlitter
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.Blitter} blitter - [description]
      * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
+     * @param {Phaser.GameObjects.Components.TransformMatrix} parentTransformMatrix - [description]
      *
      */
-    drawBlitter: function (blitter, camera)
+    drawBlitter: function (blitter, camera, parentTransformMatrix)
     {
         var normalTexture = blitter.texture.dataSource[0];
 
@@ -29493,26 +29710,27 @@ var ForwardDiffuseLightPipeline = new Class({
         {
             this.renderer.setPipeline(this);
             this.setTexture2D(normalTexture.glTexture, 1);
-            TextureTintPipeline.prototype.drawBlitter.call(this, blitter, camera);
+            TextureTintPipeline.prototype.drawBlitter.call(this, blitter, camera, parentTransformMatrix);
         }
         else
         {
             console.warn('Normal map texture missing for using Light2D pipeline. Blitter rendered with default pipeline.');
-            this.renderer.pipelines.TextureTintPipeline.drawBlitter(blitter, camera);
+            this.renderer.pipelines.TextureTintPipeline.drawBlitter(blitter, camera, parentTransformMatrix);
         }
     },
 
     /**
      * [description]
      *
-     * @method Phaser.Renderer.WebGL.ForwardDiffuseLightPipeline#batchSprite
+     * @method Phaser.Renderer.WebGL.Pipelines.ForwardDiffuseLightPipeline#batchSprite
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.Sprite} sprite - [description]
      * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
+     * @param {Phaser.GameObjects.Components.TransformMatrix} parentTransformMatrix - [description]
      *
      */
-    batchSprite: function (sprite, camera)
+    batchSprite: function (sprite, camera, parentTransformMatrix)
     {
         var normalTexture = sprite.texture.dataSource[0];
 
@@ -29520,26 +29738,27 @@ var ForwardDiffuseLightPipeline = new Class({
         {
             this.renderer.setPipeline(this);
             this.setTexture2D(normalTexture.glTexture, 1);
-            TextureTintPipeline.prototype.batchSprite.call(this, sprite, camera);
+            TextureTintPipeline.prototype.batchSprite.call(this, sprite, camera, parentTransformMatrix);
         }
         else
         {
             console.warn('Normal map texture missing for using Light2D pipeline. Sprite rendered with default pipeline.');
-            this.renderer.pipelines.TextureTintPipeline.batchSprite(sprite, camera);
+            this.renderer.pipelines.TextureTintPipeline.batchSprite(sprite, camera, parentTransformMatrix);
         }
     },
 
     /**
      * [description]
      *
-     * @method Phaser.Renderer.WebGL.ForwardDiffuseLightPipeline#batchMesh
+     * @method Phaser.Renderer.WebGL.Pipelines.ForwardDiffuseLightPipeline#batchMesh
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.Mesh} mesh - [description]
      * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
+     * @param {Phaser.GameObjects.Components.TransformMatrix} parentTransformMatrix - [description]
      *
      */
-    batchMesh: function (mesh, camera)
+    batchMesh: function (mesh, camera, parentTransformMatrix)
     {
         var normalTexture = mesh.texture.dataSource[0];
 
@@ -29547,12 +29766,12 @@ var ForwardDiffuseLightPipeline = new Class({
         {
             this.renderer.setPipeline(this);
             this.setTexture2D(normalTexture.glTexture, 1);
-            TextureTintPipeline.prototype.batchMesh.call(this, mesh, camera);
+            TextureTintPipeline.prototype.batchMesh.call(this, mesh, camera, parentTransformMatrix);
         }
         else
         {
             console.warn('Normal map texture missing for using Light2D pipeline. Mesh rendered with default pipeline.');
-            this.renderer.pipelines.TextureTintPipeline.batchMesh(mesh, camera);
+            this.renderer.pipelines.TextureTintPipeline.batchMesh(mesh, camera, parentTransformMatrix);
 
         }
     },
@@ -29560,14 +29779,15 @@ var ForwardDiffuseLightPipeline = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Renderer.WebGL.ForwardDiffuseLightPipeline#batchBitmapText
+     * @method Phaser.Renderer.WebGL.Pipelines.ForwardDiffuseLightPipeline#batchBitmapText
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.BitmapText} bitmapText - [description]
      * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
+     * @param {Phaser.GameObjects.Components.TransformMatrix} parentTransformMatrix - [description]
      *
      */
-    batchBitmapText: function (bitmapText, camera)
+    batchBitmapText: function (bitmapText, camera, parentTransformMatrix)
     {
         var normalTexture = bitmapText.texture.dataSource[0];
 
@@ -29575,26 +29795,27 @@ var ForwardDiffuseLightPipeline = new Class({
         {
             this.renderer.setPipeline(this);
             this.setTexture2D(normalTexture.glTexture, 1);
-            TextureTintPipeline.prototype.batchBitmapText.call(this, bitmapText, camera);
+            TextureTintPipeline.prototype.batchBitmapText.call(this, bitmapText, camera, parentTransformMatrix);
         }
         else
         {
             console.warn('Normal map texture missing for using Light2D pipeline. BitmapText rendered with default pipeline.');
-            this.renderer.pipelines.TextureTintPipeline.batchBitmapText(bitmapText, camera);
+            this.renderer.pipelines.TextureTintPipeline.batchBitmapText(bitmapText, camera, parentTransformMatrix);
         }
     },
 
     /**
      * [description]
      *
-     * @method Phaser.Renderer.WebGL.ForwardDiffuseLightPipeline#batchDynamicBitmapText
+     * @method Phaser.Renderer.WebGL.Pipelines.ForwardDiffuseLightPipeline#batchDynamicBitmapText
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.DynamicBitmapText} bitmapText - [description]
      * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
+     * @param {Phaser.GameObjects.Components.TransformMatrix} parentTransformMatrix - [description]
      *
      */
-    batchDynamicBitmapText: function (bitmapText, camera)
+    batchDynamicBitmapText: function (bitmapText, camera, parentTransformMatrix)
     {
         var normalTexture = bitmapText.texture.dataSource[0];
 
@@ -29602,26 +29823,27 @@ var ForwardDiffuseLightPipeline = new Class({
         {
             this.renderer.setPipeline(this);
             this.setTexture2D(normalTexture.glTexture, 1);
-            TextureTintPipeline.prototype.batchDynamicBitmapText.call(this, bitmapText, camera);
+            TextureTintPipeline.prototype.batchDynamicBitmapText.call(this, bitmapText, camera, parentTransformMatrix);
         }
         else
         {
             console.warn('Normal map texture missing for using Light2D pipeline. DynamicBitmapText rendered with default pipeline.');
-            this.renderer.pipelines.TextureTintPipeline.batchDynamicBitmapText(bitmapText, camera);
+            this.renderer.pipelines.TextureTintPipeline.batchDynamicBitmapText(bitmapText, camera, parentTransformMatrix);
         }
     },
 
     /**
      * [description]
      *
-     * @method Phaser.Renderer.WebGL.ForwardDiffuseLightPipeline#batchText
+     * @method Phaser.Renderer.WebGL.Pipelines.ForwardDiffuseLightPipeline#batchText
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.Text} text - [description]
      * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
+     * @param {Phaser.GameObjects.Components.TransformMatrix} parentTransformMatrix - [description]
      *
      */
-    batchText: function (text, camera)
+    batchText: function (text, camera, parentTransformMatrix)
     {
         var normalTexture = text.texture.dataSource[0];
 
@@ -29629,26 +29851,27 @@ var ForwardDiffuseLightPipeline = new Class({
         {
             this.renderer.setPipeline(this);
             this.setTexture2D(normalTexture.glTexture, 1);
-            TextureTintPipeline.prototype.batchText.call(this, text, camera);
+            TextureTintPipeline.prototype.batchText.call(this, text, camera, parentTransformMatrix);
         }
         else
         {
             console.warn('Normal map texture missing for using Light2D pipeline. Text rendered with default pipeline.');
-            this.renderer.pipelines.TextureTintPipeline.batchText(text, camera);
+            this.renderer.pipelines.TextureTintPipeline.batchText(text, camera, parentTransformMatrix);
         }
     },
 
     /**
      * [description]
      *
-     * @method Phaser.Renderer.WebGL.ForwardDiffuseLightPipeline#batchDynamicTilemapLayer
+     * @method Phaser.Renderer.WebGL.Pipelines.ForwardDiffuseLightPipeline#batchDynamicTilemapLayer
      * @since 3.0.0
      *
      * @param {Phaser.Tilemaps.DynamicTilemapLayer} tilemapLayer - [description]
      * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
+     * @param {Phaser.GameObjects.Components.TransformMatrix} parentTransformMatrix - [description]
      *
      */
-    batchDynamicTilemapLayer: function (tilemapLayer, camera)
+    batchDynamicTilemapLayer: function (tilemapLayer, camera, parentTransformMatrix)
     {
         var normalTexture = tilemapLayer.texture.dataSource[0];
 
@@ -29656,26 +29879,27 @@ var ForwardDiffuseLightPipeline = new Class({
         {
             this.renderer.setPipeline(this);
             this.setTexture2D(normalTexture.glTexture, 1);
-            TextureTintPipeline.prototype.batchDynamicTilemapLayer.call(this, tilemapLayer, camera);
+            TextureTintPipeline.prototype.batchDynamicTilemapLayer.call(this, tilemapLayer, camera, parentTransformMatrix);
         }
         else
         {
             console.warn('Normal map texture missing for using Light2D pipeline. DynamicTilemapLayer rendered with default pipeline.');
-            this.renderer.pipelines.TextureTintPipeline.batchDynamicTilemapLayer(tilemapLayer, camera);
+            this.renderer.pipelines.TextureTintPipeline.batchDynamicTilemapLayer(tilemapLayer, camera, parentTransformMatrix);
         }
     },
 
     /**
      * [description]
      *
-     * @method Phaser.Renderer.WebGL.ForwardDiffuseLightPipeline#batchTileSprite
+     * @method Phaser.Renderer.WebGL.Pipelines.ForwardDiffuseLightPipeline#batchTileSprite
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.TileSprite} tileSprite - [description]
      * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
+     * @param {Phaser.GameObjects.Components.TransformMatrix} parentTransformMatrix - [description]
      *
      */
-    batchTileSprite: function (tileSprite, camera)
+    batchTileSprite: function (tileSprite, camera, parentTransformMatrix)
     {
         var normalTexture = tileSprite.texture.dataSource[0];
 
@@ -29683,12 +29907,12 @@ var ForwardDiffuseLightPipeline = new Class({
         {
             this.renderer.setPipeline(this);
             this.setTexture2D(normalTexture.glTexture, 1);
-            TextureTintPipeline.prototype.batchTileSprite.call(this, tileSprite, camera);
+            TextureTintPipeline.prototype.batchTileSprite.call(this, tileSprite, camera, parentTransformMatrix);
         }
         else
         {
             console.warn('Normal map texture missing for using Light2D pipeline. TileSprite rendered with default pipeline.');
-            this.renderer.pipelines.TextureTintPipeline.batchTileSprite(tileSprite, camera);
+            this.renderer.pipelines.TextureTintPipeline.batchTileSprite(tileSprite, camera, parentTransformMatrix);
         }
     }
 
@@ -30132,17 +30356,17 @@ module.exports = Random;
 var Point = __webpack_require__(5);
 
 /**
- * [description]
+ * Returns a random point on a given Line.
  *
  * @function Phaser.Geom.Line.Random
  * @since 3.0.0
  *
  * @generic {Phaser.Geom.Point} O - [out,$return]
  *
- * @param {Phaser.Geom.Line} line - [description]
- * @param {(Phaser.Geom.Point|object)} [out] - [description]
+ * @param {Phaser.Geom.Line} line - The Line to calculate the random Point on.
+ * @param {(Phaser.Geom.Point|object)} [out] - An instance of a Point to be modified.
  *
- * @return {(Phaser.Geom.Point|object)} [description]
+ * @return {(Phaser.Geom.Point|object)} A random Point on the Line.
  */
 var Random = function (line, out)
 {
@@ -32319,7 +32543,8 @@ var AudioFile = new Class({
         /**
          * [description]
          *
-         * @property {AudioContext} context
+         * @name Phaser.Loader.FileTypes.AudioFile#context
+         * @type {AudioContext}
          * @since 3.0.0
          */
         this.context = audioContext;
@@ -33263,7 +33488,7 @@ var ScaleModes = __webpack_require__(55);
  * @since 3.0.0
  *
  * @param {Phaser.Textures.Texture} texture - The Texture this TextureSource belongs to.
- * @param {(Image|HTMLCanvasElement)} source - The source image data.
+ * @param {(HTMLImageElement|HTMLCanvasElement)} source - The source image data.
  * @param {integer} [width] - Optional width of the source image. If not given it's derived from the source itself.
  * @param {integer} [height] - Optional height of the source image. If not given it's derived from the source itself.
  */
@@ -33468,7 +33693,7 @@ var TextureSource = __webpack_require__(167);
  *
  * @param {Phaser.Textures.TextureManager} manager - A reference to the Texture Manager this Texture belongs to.
  * @param {string} key - The unique string-based key of this Texture.
- * @param {(Image|HTMLCanvasElement)} source - The source that is used to create the texture. Usually an Image, but can also be a Canvas.
+ * @param {(HTMLImageElement|HTMLCanvasElement)} source - The source that is used to create the texture. Usually an Image, but can also be a Canvas.
  * @param {number} [width] - The width of the Texture. This is optional and automatically derived from the source images.
  * @param {number} [height] - The height of the Texture. This is optional and automatically derived from the source images.
  */
@@ -33784,7 +34009,7 @@ var Texture = new Class({
      * @method Phaser.Textures.Texture#setDataSource
      * @since 3.0.0
      *
-     * @param {(Image|HTMLCanvasElement)} data - The source image.
+     * @param {(HTMLImageElement|HTMLCanvasElement)} data - The source image.
      */
     setDataSource: function (data)
     {
@@ -35999,7 +36224,7 @@ module.exports = WebAudioSoundManager;
 var BaseSound = __webpack_require__(72);
 var Class = __webpack_require__(0);
 var EventEmitter = __webpack_require__(9);
-var Extend = __webpack_require__(17);
+var Extend = __webpack_require__(16);
 
 /**
  * @classdesc
@@ -37780,7 +38005,7 @@ var Settings = {
      * @function Phaser.Scenes.Settings.create
      * @since 3.0.0
      *
-     * @param {(string|Phaser.Scenes.SettingsConfig)} config - [description]
+     * @param {(string|Phaser.Scenes.Settings.Config)} config - [description]
      *
      * @return {Phaser.Scenes.Settings.Object} [description]
      */
@@ -37867,7 +38092,7 @@ var Systems = __webpack_require__(109);
  * @constructor
  * @since 3.0.0
  *
- * @param {(string|SettingsConfig)} config - Scene specific configuration settings.
+ * @param {(string|Phaser.Scenes.Settings.Config)} config - Scene specific configuration settings.
  */
 var Scene = new Class({
 
@@ -38428,7 +38653,7 @@ var SceneManager = new Class({
      * @since 3.0.0
      *
      * @param {string} key - A unique key used to reference the Scene, i.e. `MainMenu` or `Level1`.
-     * @param {(Phaser.Scene|SettingsConfig|function)} sceneConfig - The config for the Scene
+     * @param {(Phaser.Scene|Phaser.Scenes.Settings.Config|function)} sceneConfig - The config for the Scene
      * @param {boolean} [autoStart=false] - If `true` the Scene will be started immediately after being added.
      * @param {object} [data] - Optional data object. This will be set as Scene.settings.data and passed to `Scene.init`.
      *
@@ -38832,7 +39057,7 @@ var SceneManager = new Class({
      * @since 3.0.0
      *
      * @param {string} key - The key of the Scene.
-     * @param {(string|SettingsConfig)} sceneConfig - The Scene config.
+     * @param {(string|Phaser.Scenes.Settings.Config)} sceneConfig - The Scene config.
      *
      * @return {Phaser.Scene} The created Scene.
      */
@@ -38916,7 +39141,7 @@ var SceneManager = new Class({
      * @since 3.0.0
      *
      * @param {string} key - The key to check in the Scene config.
-     * @param {(Phaser.Scene|SettingsConfig|function)} sceneConfig - The Scene config.
+     * @param {(Phaser.Scene|Phaser.Scenes.Settings.Config|function)} sceneConfig - The Scene config.
      *
      * @return {string} The Scene key.
      */
@@ -41251,6 +41476,33 @@ var Key = new Class({
          * @since 3.0.0
          */
         this._justUp = false;
+    },
+
+    /**
+     * Resets this Key object back to its default un-pressed state.
+     *
+     * @method Phaser.Input.Keyboard.Key.reset
+     * @since 3.6.0
+     * 
+     * @return {Phaser.Input.Keyboard.Key} This Key instance.
+     */
+    reset: function ()
+    {
+        this.preventDefault = true;
+        this.enabled = true;
+        this.isDown = false;
+        this.isUp = true;
+        this.altKey = false;
+        this.ctrlKey = false;
+        this.shiftKey = false;
+        this.timeDown = 0;
+        this.duration = 0;
+        this.timeUp = 0;
+        this.repeats = 0;
+        this._justDown = false;
+        this._justUp = false;
+
+        return this;
     }
 
 });
@@ -46502,24 +46754,24 @@ var quickselect = __webpack_require__(164);
  * Spatial index is a special data structure for points and rectangles that allows you to perform queries like
  * "all items within this bounding box" very efficiently (e.g. hundreds of times faster than looping over all items).
  *
+ * This version of RBush uses a fixed min/max accessor structure of `[ '.left', '.top', '.right', '.bottom' ]`.
+ * This is to avoid the eval like function creation that the original library used, which caused CSP policy violations.
+ *
  * @class RTree
  * @memberOf Phaser.Structs
  * @constructor
  * @since 3.0.0
  */
 
-function rbush (maxEntries, format)
+function rbush (maxEntries)
 {
+    var format = [ '.left', '.top', '.right', '.bottom' ];
+
     if (!(this instanceof rbush)) return new rbush(maxEntries, format);
 
     // max entries in a node is 9 by default; min node fill is 40% for best performance
     this._maxEntries = Math.max(4, maxEntries || 9);
     this._minEntries = Math.max(2, Math.ceil(this._maxEntries * 0.4));
-
-    if (format)
-    {
-        this._initFormat(format);
-    }
 
     this.clear();
 }
@@ -46951,44 +47203,23 @@ rbush.prototype = {
         }
     },
 
-    _initFormat: function (format)
+    compareMinX: function (a, b)
     {
-        // format: [minX, minY, maxX, maxY accessors]
-        // accessors will be dotted names
+        return a.left - b.left;
+    },
 
-        // Because we have historically used eval-based function constructor
-        // the format accerrsors need to have their leading dots stripped to
-        // obtain the actual accessor
-        format = format.map(
-            function (f)
-            {
-                return f.substring(1);
-            }
-        );
+    compareMinY: function (a, b)
+    {
+        return a.top - b.top;
+    },
 
-        // Do not use string-generated Functions for CSP policies
-        // Instead a combination of anonymous functions and grabbing properties
-        // by string is used.
-        // cf. https://github.com/photonstorm/phaser/issues/3441
-        // and https://github.com/photonstorm/phaser/issues/3535
-
-        var mkCompareFn = function(attr) {
-          return function(a, b) {
-            return a[attr] - b[attr];
-          };
-        };
-
-        this.compareMinX = mkCompareFn(format[0]);
-        this.compareMinY = mkCompareFn(format[1]);
-
-        this.toBBox = function(a)
-        {
-            return {
-                minX: a[format[0]],
-                minY: a[format[1]],
-                maxX: a[format[2]],
-                maxY: a[format[3]],
-            };
+    toBBox: function (a)
+    {
+        return {
+            minX: a.left,
+            minY: a.top,
+            maxX: a.right,
+            maxY: a.bottom
         };
     }
 };
@@ -47110,7 +47341,6 @@ function multiSelect (arr, left, right, n, compare)
 }
 
 module.exports = rbush;
-
 
 /***/ }),
 /* 213 */
@@ -47339,7 +47569,7 @@ module.exports = ProcessQueue;
  */
 
 var Class = __webpack_require__(0);
-var CONST = __webpack_require__(16);
+var CONST = __webpack_require__(17);
 var File = __webpack_require__(18);
 var FileTypesManager = __webpack_require__(7);
 
@@ -47442,7 +47672,7 @@ module.exports = TextFile;
  */
 
 var Class = __webpack_require__(0);
-var CONST = __webpack_require__(16);
+var CONST = __webpack_require__(17);
 var File = __webpack_require__(18);
 var FileTypesManager = __webpack_require__(7);
 var GetFastValue = __webpack_require__(2);
@@ -48966,9 +49196,9 @@ var Class = __webpack_require__(0);
 var Components = __webpack_require__(14);
 var CONST = __webpack_require__(19);
 var GameObject = __webpack_require__(1);
-var Render = __webpack_require__(876);
-var RenderTextureCanvas = __webpack_require__(873);
-var RenderTextureWebGL = __webpack_require__(872);
+var Render = __webpack_require__(879);
+var RenderTextureCanvas = __webpack_require__(876);
+var RenderTextureWebGL = __webpack_require__(875);
 
 /**
  * @classdesc
@@ -49196,7 +49426,7 @@ var GameObject = __webpack_require__(1);
 var GravityWell = __webpack_require__(435);
 var List = __webpack_require__(89);
 var ParticleEmitter = __webpack_require__(433);
-var Render = __webpack_require__(880);
+var Render = __webpack_require__(883);
 
 /**
  * @classdesc
@@ -49941,7 +50171,7 @@ var Class = __webpack_require__(0);
 var Components = __webpack_require__(14);
 var GameObject = __webpack_require__(1);
 var GetBitmapTextSize = __webpack_require__(452);
-var Render = __webpack_require__(885);
+var Render = __webpack_require__(888);
 
 /**
  * @typedef {object} DisplayCallbackConfig
@@ -50307,7 +50537,7 @@ var DynamicBitmapText = new Class({
      * @method Phaser.GameObjects.DynamicBitmapText#toJSON
      * @since 3.0.0
      *
-     * @return {JSONGameObject.<JSONBitmapText>} [description]
+     * @return {JSONBitmapText} [description]
      */
     toJSON: function ()
     {
@@ -50347,18 +50577,13 @@ var Class = __webpack_require__(0);
 var Components = __webpack_require__(14);
 var GameObject = __webpack_require__(1);
 var Rectangle = __webpack_require__(12);
-var Render = __webpack_require__(888);
+var Render = __webpack_require__(891);
 var Union = __webpack_require__(450);
 var Vector2 = __webpack_require__(6);
 
 /**
  * @classdesc
  * A Container Game Object.
- *
- * WARNING: EXPERIMENTAL. There are several known cases where Containers will not behave correctly,
- * especially if you use a multi-camera or transformed camera set-up. We are still working on them,
- * but wanted to release as part of 3.4 under a beta feature flag, because in the main they work
- * are and worth getting used to.
  *
  * A Container, as the name implies, can 'contain' other types of Game Object.
  * When a Game Object is added to a Container, the Container becomes responsible for the rendering of it.
@@ -50381,8 +50606,10 @@ var Vector2 = __webpack_require__(6);
  * to use as their hit area. Container children can also be enabled for input, independent of the Container.
  *
  * Containers can be given a physics body for either Arcade Physics, Impact Physics or Matter Physics. However,
- * if Container children are enabled for physics you may get unexpected results,such as offset bodies,
- * if the Container itself, or any of its ancestors, is positioned anywhere other than at 0x0.
+ * if Container _children_ are enabled for physics you may get unexpected results, such as offset bodies,
+ * if the Container itself, or any of its ancestors, is positioned anywhere other than at 0 x 0. Container children
+ * with physics do not factor in the Container due to the excessive extra calculations needed. Please structure
+ * your game to work around this.
  *
  * It's important to understand the impact of using Containers. They add additional processing overhead into
  * every one of their children. The deeper you nest them, the more the cost escalates. This is especially true
@@ -51578,8 +51805,8 @@ module.exports = Container;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var BlitterRender = __webpack_require__(892);
-var Bob = __webpack_require__(889);
+var BlitterRender = __webpack_require__(895);
+var Bob = __webpack_require__(892);
 var Class = __webpack_require__(0);
 var Components = __webpack_require__(14);
 var Frame = __webpack_require__(119);
@@ -51847,9 +52074,8 @@ var Class = __webpack_require__(0);
 var Components = __webpack_require__(14);
 var GameObject = __webpack_require__(1);
 var GetBitmapTextSize = __webpack_require__(452);
-var ParseFromAtlas = __webpack_require__(897);
-var ParseRetroFont = __webpack_require__(896);
-var Render = __webpack_require__(895);
+var ParseFromAtlas = __webpack_require__(899);
+var Render = __webpack_require__(898);
 
 /**
  * @typedef {object} TextBounds
@@ -51868,6 +52094,7 @@ var Render = __webpack_require__(895);
 
 /**
  * @typedef {object} JSONBitmapText
+ * @extends {JSONGameObject}
  *
  * @property {string} font - [description]
  * @property {string} text - [description]
@@ -52127,7 +52354,7 @@ var BitmapText = new Class({
      * @method Phaser.GameObjects.BitmapText#toJSON
      * @since 3.0.0
      *
-     * @return {JSONGameObject.<JSONBitmapText>} [description]
+     * @return {JSONBitmapText} [description]
      */
     toJSON: function ()
     {
@@ -52149,7 +52376,6 @@ var BitmapText = new Class({
 
 });
 
-BitmapText.ParseRetroFont = ParseRetroFont;
 BitmapText.ParseFromAtlas = ParseFromAtlas;
 
 module.exports = BitmapText;
@@ -53149,7 +53375,7 @@ var pathArray = [];
  *
  * @class FlatTintPipeline
  * @extends Phaser.Renderer.WebGL.WebGLPipeline
- * @memberOf Phaser.Renderer.WebGL
+ * @memberOf Phaser.Renderer.WebGL.Pipelines
  * @constructor
  * @since 3.0.0
  *
@@ -53201,7 +53427,7 @@ var FlatTintPipeline = new Class({
         /**
          * [description]
          *
-         * @name Phaser.Renderer.WebGL.FlatTintPipeline#vertexViewF32
+         * @name Phaser.Renderer.WebGL.Pipelines.FlatTintPipeline#vertexViewF32
          * @type {Float32Array}
          * @since 3.0.0
          */
@@ -53210,7 +53436,7 @@ var FlatTintPipeline = new Class({
         /**
          * [description]
          *
-         * @name Phaser.Renderer.WebGL.FlatTintPipeline#vertexViewU32
+         * @name Phaser.Renderer.WebGL.Pipelines.FlatTintPipeline#vertexViewU32
          * @type {Uint32Array}
          * @since 3.0.0
          */
@@ -53219,7 +53445,7 @@ var FlatTintPipeline = new Class({
         /**
          * [description]
          *
-         * @name Phaser.Renderer.WebGL.FlatTintPipeline#tempTriangle
+         * @name Phaser.Renderer.WebGL.Pipelines.FlatTintPipeline#tempTriangle
          * @type {array}
          * @since 3.0.0
          */
@@ -53233,7 +53459,7 @@ var FlatTintPipeline = new Class({
         /**
          * [description]
          *
-         * @name Phaser.Renderer.WebGL.FlatTintPipeline#polygonCache
+         * @name Phaser.Renderer.WebGL.Pipelines.FlatTintPipeline#polygonCache
          * @type {array}
          * @default []
          * @since 3.0.0
@@ -53246,10 +53472,10 @@ var FlatTintPipeline = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Renderer.WebGL.FlatTintPipeline#onBind
+     * @method Phaser.Renderer.WebGL.Pipelines.FlatTintPipeline#onBind
      * @since 3.0.0
      *
-     * @return {Phaser.Renderer.WebGL.FlatTintPipeline} [description]
+     * @return {Phaser.Renderer.WebGL.Pipelines.FlatTintPipeline} [description]
      */
     onBind: function ()
     {
@@ -53262,14 +53488,14 @@ var FlatTintPipeline = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Renderer.WebGL.FlatTintPipeline#resize
+     * @method Phaser.Renderer.WebGL.Pipelines.FlatTintPipeline#resize
      * @since 3.0.0
      *
      * @param {number} width - [description]
      * @param {number} height - [description]
      * @param {number} resolution - [description]
      *
-     * @return {Phaser.Renderer.WebGL.FlatTintPipeline} [description]
+     * @return {Phaser.Renderer.WebGL.Pipelines.FlatTintPipeline} [description]
      */
     resize: function (width, height, resolution)
     {
@@ -53282,7 +53508,7 @@ var FlatTintPipeline = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Renderer.WebGL.FlatTintPipeline#batchFillRect
+     * @method Phaser.Renderer.WebGL.Pipelines.FlatTintPipeline#batchFillRect
      * @since 3.0.0
      *
      * @param {float} srcX - [description]
@@ -53365,7 +53591,7 @@ var FlatTintPipeline = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Renderer.WebGL.FlatTintPipeline#batchFillTriangle
+     * @method Phaser.Renderer.WebGL.Pipelines.FlatTintPipeline#batchFillTriangle
      * @since 3.0.0
      *
      * @param {float} srcX - [description]
@@ -53437,7 +53663,7 @@ var FlatTintPipeline = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Renderer.WebGL.FlatTintPipeline#batchStrokeTriangle
+     * @method Phaser.Renderer.WebGL.Pipelines.FlatTintPipeline#batchStrokeTriangle
      * @since 3.0.0
      *
      * @param {float} srcX - [description]
@@ -53499,7 +53725,7 @@ var FlatTintPipeline = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Renderer.WebGL.FlatTintPipeline#batchFillPath
+     * @method Phaser.Renderer.WebGL.Pipelines.FlatTintPipeline#batchFillPath
      * @since 3.0.0
      *
      * @param {float} srcX - [description]
@@ -53601,7 +53827,7 @@ var FlatTintPipeline = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Renderer.WebGL.FlatTintPipeline#batchStrokePath
+     * @method Phaser.Renderer.WebGL.Pipelines.FlatTintPipeline#batchStrokePath
      * @since 3.0.0
      *
      * @param {float} srcX - [description]
@@ -53694,7 +53920,7 @@ var FlatTintPipeline = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Renderer.WebGL.FlatTintPipeline#batchLine
+     * @method Phaser.Renderer.WebGL.Pipelines.FlatTintPipeline#batchLine
      * @since 3.0.0
      *
      * @param {float} srcX - [description]
@@ -53802,7 +54028,7 @@ var FlatTintPipeline = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Renderer.WebGL.FlatTintPipeline#batchGraphics
+     * @method Phaser.Renderer.WebGL.Pipelines.FlatTintPipeline#batchGraphics
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.Graphics} graphics - [description]
@@ -53824,11 +54050,11 @@ var FlatTintPipeline = new Class({
 
         var cameraScrollX = camera.scrollX * graphics.scrollFactorX;
         var cameraScrollY = camera.scrollY * graphics.scrollFactorY;
-        var srcX = graphics.x - cameraScrollX;
-        var srcY = graphics.y - cameraScrollY;
+        var srcX = graphics.x;
+        var srcY = graphics.y;
         var srcScaleX = graphics.scaleX;
         var srcScaleY = graphics.scaleY;
-        var srcRotation = -graphics.rotation;
+        var srcRotation = graphics.rotation;
         var commands = graphics.commandBuffer;
         var alpha = graphics.alpha;
         var lineAlpha = 1.0;
@@ -53856,8 +54082,8 @@ var FlatTintPipeline = new Class({
         var sr = sin(srcRotation);
         var cr = cos(srcRotation);
         var sra = cr * srcScaleX;
-        var srb = -sr * srcScaleX;
-        var src = sr * srcScaleY;
+        var srb = sr * srcScaleX;
+        var src = -sr * srcScaleY;
         var srd = cr * srcScaleY;
         var sre = srcX;
         var srf = srcY;
@@ -53877,12 +54103,17 @@ var FlatTintPipeline = new Class({
             var pmd = parentMatrix[3];
             var pme = parentMatrix[4];
             var pmf = parentMatrix[5];
-            var pca = cma * pma + cmb * pmc;
-            var pcb = cma * pmb + cmb * pmd;
-            var pcc = cmc * pma + cmd * pmc;
-            var pcd = cmc * pmb + cmd * pmd;
-            var pce = cme * pma + cmf * pmc + pme;
-            var pcf = cme * pmb + cmf * pmd + pmf;
+            var cse = -cameraScrollX;
+            var csf = -cameraScrollY;
+            var pse = cse * cma + csf * cmc + cme;
+            var psf = cse * cmb + csf * cmd + cmf;
+            var pca = pma * cma + pmb * cmc;
+            var pcb = pma * cmb + pmb * cmd;
+            var pcc = pmc * cma + pmd * cmc;
+            var pcd = pmc * cmb + pmd * cmd;
+            var pce = pme * cma + pmf * cmc + pse;
+            var pcf = pme * cmb + pmf * cmd + psf;
+
             mva = sra * pca + srb * pcc;
             mvb = sra * pcb + srb * pcd;
             mvc = src * pca + srd * pcc;
@@ -53892,6 +54123,9 @@ var FlatTintPipeline = new Class({
         }
         else
         {
+            sre -= cameraScrollX;
+            srf -= cameraScrollY;
+
             mva = sra * cma + srb * cmc;
             mvb = sra * cmb + srb * cmd;
             mvc = src * cma + srd * cmc;
@@ -54234,7 +54468,7 @@ var FlatTintPipeline = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Renderer.WebGL.FlatTintPipeline#drawStaticTilemapLayer
+     * @method Phaser.Renderer.WebGL.Pipelines.FlatTintPipeline#drawStaticTilemapLayer
      * @since 3.0.0
      *
      * @param {Phaser.Tilemaps.StaticTilemapLayer} tilemap - [description]
@@ -54247,7 +54481,7 @@ var FlatTintPipeline = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Renderer.WebGL.FlatTintPipeline#drawEmitterManager
+     * @method Phaser.Renderer.WebGL.Pipelines.FlatTintPipeline#drawEmitterManager
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.Particles.ParticleEmitterManager} emitterManager - [description]
@@ -54260,7 +54494,7 @@ var FlatTintPipeline = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Renderer.WebGL.FlatTintPipeline#drawBlitter
+     * @method Phaser.Renderer.WebGL.Pipelines.FlatTintPipeline#drawBlitter
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.Blitter} blitter - [description]
@@ -54273,7 +54507,7 @@ var FlatTintPipeline = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Renderer.WebGL.FlatTintPipeline#batchSprite
+     * @method Phaser.Renderer.WebGL.Pipelines.FlatTintPipeline#batchSprite
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.Sprite} sprite - [description]
@@ -54286,7 +54520,7 @@ var FlatTintPipeline = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Renderer.WebGL.FlatTintPipeline#batchMesh
+     * @method Phaser.Renderer.WebGL.Pipelines.FlatTintPipeline#batchMesh
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.Mesh} mesh - [description]
@@ -54299,7 +54533,7 @@ var FlatTintPipeline = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Renderer.WebGL.FlatTintPipeline#batchBitmapText
+     * @method Phaser.Renderer.WebGL.Pipelines.FlatTintPipeline#batchBitmapText
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.BitmapText} bitmapText - [description]
@@ -54312,7 +54546,7 @@ var FlatTintPipeline = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Renderer.WebGL.FlatTintPipeline#batchDynamicBitmapText
+     * @method Phaser.Renderer.WebGL.Pipelines.FlatTintPipeline#batchDynamicBitmapText
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.DynamicBitmapText} bitmapText - [description]
@@ -54325,7 +54559,7 @@ var FlatTintPipeline = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Renderer.WebGL.FlatTintPipeline#batchText
+     * @method Phaser.Renderer.WebGL.Pipelines.FlatTintPipeline#batchText
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.Text} text - [description]
@@ -54338,7 +54572,7 @@ var FlatTintPipeline = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Renderer.WebGL.FlatTintPipeline#batchDynamicTilemapLayer
+     * @method Phaser.Renderer.WebGL.Pipelines.FlatTintPipeline#batchDynamicTilemapLayer
      * @since 3.0.0
      *
      * @param {Phaser.Tilemaps.DynamicTilemapLayer} tilemapLayer - [description]
@@ -54351,7 +54585,7 @@ var FlatTintPipeline = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Renderer.WebGL.FlatTintPipeline#batchTileSprite
+     * @method Phaser.Renderer.WebGL.Pipelines.FlatTintPipeline#batchTileSprite
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.TileSprite} tileSprite - [description]
@@ -54388,7 +54622,7 @@ var WebGLPipeline = __webpack_require__(80);
  *
  * @class BitmapMaskPipeline
  * @extends Phaser.Renderer.WebGL.WebGLPipeline
- * @memberOf Phaser.Renderer.WebGL
+ * @memberOf Phaser.Renderer.WebGL.Pipelines
  * @constructor
  * @since 3.0.0
  *
@@ -54432,7 +54666,7 @@ var BitmapMaskPipeline = new Class({
         /**
          * [description]
          *
-         * @name Phaser.Renderer.WebGL.BitmapMaskPipeline#vertexViewF32
+         * @name Phaser.Renderer.WebGL.Pipelines.BitmapMaskPipeline#vertexViewF32
          * @type {Float32Array}
          * @since 3.0.0
          */
@@ -54441,7 +54675,7 @@ var BitmapMaskPipeline = new Class({
         /**
          * [description]
          *
-         * @name Phaser.Renderer.WebGL.BitmapMaskPipeline#maxQuads
+         * @name Phaser.Renderer.WebGL.Pipelines.BitmapMaskPipeline#maxQuads
          * @type {number}
          * @default 1
          * @since 3.0.0
@@ -54451,7 +54685,7 @@ var BitmapMaskPipeline = new Class({
         /**
          * [description]
          *
-         * @name Phaser.Renderer.WebGL.BitmapMaskPipeline#resolutionDirty
+         * @name Phaser.Renderer.WebGL.Pipelines.BitmapMaskPipeline#resolutionDirty
          * @type {boolean}
          * @default true
          * @since 3.0.0
@@ -54462,10 +54696,10 @@ var BitmapMaskPipeline = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Renderer.WebGL.BitmapMaskPipeline#onBind
+     * @method Phaser.Renderer.WebGL.Pipelines.BitmapMaskPipeline#onBind
      * @since 3.0.0
      *
-     * @return {Phaser.Renderer.WebGL.BitmapMaskPipeline} [description]
+     * @return {Phaser.Renderer.WebGL.Pipelines.BitmapMaskPipeline} [description]
      */
     onBind: function ()
     {
@@ -54488,14 +54722,14 @@ var BitmapMaskPipeline = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Renderer.WebGL.BitmapMaskPipeline#resize
+     * @method Phaser.Renderer.WebGL.Pipelines.BitmapMaskPipeline#resize
      * @since 3.0.0
      *
      * @param {number} width - [description]
      * @param {number} height - [description]
      * @param {number} resolution - [description]
      *
-     * @return {Phaser.Renderer.WebGL.BitmapMaskPipeline} [description]
+     * @return {Phaser.Renderer.WebGL.Pipelines.BitmapMaskPipeline} [description]
      */
     resize: function (width, height, resolution)
     {
@@ -54507,7 +54741,7 @@ var BitmapMaskPipeline = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Renderer.WebGL.BitmapMaskPipeline#beginMask
+     * @method Phaser.Renderer.WebGL.Pipelines.BitmapMaskPipeline#beginMask
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.GameObject} mask - [description]
@@ -54544,7 +54778,7 @@ var BitmapMaskPipeline = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Renderer.WebGL.BitmapMaskPipeline#endMask
+     * @method Phaser.Renderer.WebGL.Pipelines.BitmapMaskPipeline#endMask
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.GameObject} mask - [description]
@@ -64253,7 +64487,7 @@ module.exports = {
  */
 
 var CONST = __webpack_require__(57);
-var Extend = __webpack_require__(17);
+var Extend = __webpack_require__(16);
 
 /**
  * @namespace Phaser.Tweens
@@ -66852,7 +67086,7 @@ module.exports = DynamicTilemapLayer;
 var Class = __webpack_require__(0);
 var DegToRad = __webpack_require__(33);
 var DynamicTilemapLayer = __webpack_require__(303);
-var Extend = __webpack_require__(17);
+var Extend = __webpack_require__(16);
 var Formats = __webpack_require__(29);
 var LayerData = __webpack_require__(100);
 var Rotate = __webpack_require__(337);
@@ -67760,7 +67994,7 @@ var Tilemap = new Class({
      * on at least one side.
      * @param {boolean} [filteringOptions.hasInterestingFace=false] - If true, only return tiles that
      * have at least one interesting face.
-     * @param {LayerData} layer - [description]
+     * @param {LayerData} [layer] - [description]
      *
      * @return {?Phaser.Tilemaps.Tilemap} Returns this, or null if the layer given was invalid.
      */
@@ -70035,7 +70269,7 @@ module.exports = CONST;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Extend = __webpack_require__(17);
+var Extend = __webpack_require__(16);
 var FilterMode = __webpack_require__(316);
 
 /**
@@ -70211,7 +70445,7 @@ var ScenePlugin = new Class({
          * The settings of the Scene this ScenePlugin belongs to.
          *
          * @name Phaser.Scenes.ScenePlugin#settings
-         * @type {SettingsObject}
+         * @type {Phaser.Scenes.Settings.Object}
          * @since 3.0.0
          */
         this.settings = scene.sys.settings;
@@ -70405,7 +70639,7 @@ var ScenePlugin = new Class({
     },
 
     /**
-     * @typedef {object} Phaser.Scenes.ScenePlugin#SceneTransitionConfig
+     * @typedef {object} Phaser.Scenes.ScenePlugin.SceneTransitionConfig
      * 
      * @property {string} target - The Scene key to transition to.
      * @property {integer} [duration=1000] - The duration, in ms, for the transition to last.
@@ -70451,7 +70685,7 @@ var ScenePlugin = new Class({
      * @method Phaser.Scenes.ScenePlugin#transition
      * @since 3.5.0
      *
-     * @param {Phaser.Scenes.ScenePlugin#SceneTransitionConfig} config - The transition configuration object.
+     * @param {Phaser.Scenes.ScenePlugin.SceneTransitionConfig} config - The transition configuration object.
      *
      * @return {boolean} `true` is the transition was started, otherwise `false`.
      */
@@ -70510,7 +70744,7 @@ var ScenePlugin = new Class({
         }
         else
         {
-            this.manager.start(key);
+            this.manager.start(key, GetFastValue(config, 'data'));
         }
 
         this.systems.events.emit('transitionout', target, duration);
@@ -70620,7 +70854,7 @@ var ScenePlugin = new Class({
      * @since 3.0.0
      *
      * @param {string} key - The Scene key.
-     * @param {(Phaser.Scene|SettingsConfig|function)} sceneConfig - The config for the Scene.
+     * @param {(Phaser.Scene|Phaser.Scenes.Settings.Config|function)} sceneConfig - The config for the Scene.
      * @param {boolean} autoStart - Whether to start the Scene after it's added.
      *
      * @return {Phaser.Scenes.ScenePlugin} This ScenePlugin object.
@@ -71117,7 +71351,7 @@ module.exports = ScenePlugin;
  */
 
 var CONST = __webpack_require__(52);
-var Extend = __webpack_require__(17);
+var Extend = __webpack_require__(16);
 
 /**
  * @namespace Phaser.Scenes
@@ -74629,7 +74863,7 @@ var World = new Class({
          * @type {Phaser.Structs.RTree}
          * @since 3.0.0
          */
-        this.tree = new RTree(this.maxEntries, [ '.left', '.top', '.right', '.bottom' ]);
+        this.tree = new RTree(this.maxEntries);
 
         /**
          * [description]
@@ -74638,7 +74872,7 @@ var World = new Class({
          * @type {Phaser.Structs.RTree}
          * @since 3.0.0
          */
-        this.staticTree = new RTree(this.maxEntries, [ '.left', '.top', '.right', '.bottom' ]);
+        this.staticTree = new RTree(this.maxEntries);
 
         /**
          * [description]
@@ -76255,9 +76489,9 @@ var StaticPhysicsGroup = new Class({
          */
         this.world = world;
 
-        config.createCallback = this.createCallback;
-        config.removeCallback = this.removeCallback;
-        config.createMultipleCallback = this.createMultipleCallback;
+        config.createCallback = this.createCallbackHandler;
+        config.removeCallback = this.removeCallbackHandler;
+        config.createMultipleCallback = this.createMultipleCallbackHandler;
 
         config.classType = ArcadeSprite;
 
@@ -76276,12 +76510,12 @@ var StaticPhysicsGroup = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Physics.Arcade.StaticGroup#createCallback
+     * @method Phaser.Physics.Arcade.StaticGroup#createCallbackHandler
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.GameObject} child - [description]
      */
-    createCallback: function (child)
+    createCallbackHandler: function (child)
     {
         if (!child.body)
         {
@@ -76292,12 +76526,12 @@ var StaticPhysicsGroup = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Physics.Arcade.StaticGroup#removeCallback
+     * @method Phaser.Physics.Arcade.StaticGroup#removeCallbackHandler
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.GameObject} child - [description]
      */
-    removeCallback: function (child)
+    removeCallbackHandler: function (child)
     {
         if (child.body)
         {
@@ -76308,12 +76542,12 @@ var StaticPhysicsGroup = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Physics.Arcade.StaticGroup#createMultipleCallback
+     * @method Phaser.Physics.Arcade.StaticGroup#createMultipleCallbackHandler
      * @since 3.0.0
      *
      * @param {object} entries - [description]
      */
-    createMultipleCallback: function ()
+    createMultipleCallbackHandler: function ()
     {
         this.refresh();
     },
@@ -76450,8 +76684,8 @@ var PhysicsGroup = new Class({
          */
         this.world = world;
 
-        config.createCallback = this.createCallback;
-        config.removeCallback = this.removeCallback;
+        config.createCallback = this.createCallbackHandler;
+        config.removeCallback = this.removeCallbackHandler;
 
         config.classType = GetFastValue(config, 'classType', ArcadeSprite);
 
@@ -76498,12 +76732,12 @@ var PhysicsGroup = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Physics.Arcade.Group#createCallback
+     * @method Phaser.Physics.Arcade.Group#createCallbackHandler
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.GameObject} child - [description]
      */
-    createCallback: function (child)
+    createCallbackHandler: function (child)
     {
         if (!child.body)
         {
@@ -76521,12 +76755,12 @@ var PhysicsGroup = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Physics.Arcade.Group#removeCallback
+     * @method Phaser.Physics.Arcade.Group#removeCallbackHandler
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.GameObject} child - [description]
      */
-    removeCallback: function (child)
+    removeCallbackHandler: function (child)
     {
         if (child.body)
         {
@@ -77242,7 +77476,7 @@ module.exports = SpriteSheetFile;
  */
 
 var Class = __webpack_require__(0);
-var CONST = __webpack_require__(16);
+var CONST = __webpack_require__(17);
 var File = __webpack_require__(18);
 var FileTypesManager = __webpack_require__(7);
 var GetFastValue = __webpack_require__(2);
@@ -77354,7 +77588,7 @@ module.exports = ScriptFile;
  */
 
 var Class = __webpack_require__(0);
-var CONST = __webpack_require__(16);
+var CONST = __webpack_require__(17);
 var File = __webpack_require__(18);
 var FileTypesManager = __webpack_require__(7);
 var GetFastValue = __webpack_require__(2);
@@ -77567,7 +77801,7 @@ FileTypesManager.register('multiatlas', function (key, textureURLs, atlasURLs, t
  */
 
 var AudioFile = __webpack_require__(158);
-var CONST = __webpack_require__(16);
+var CONST = __webpack_require__(17);
 var FileTypesManager = __webpack_require__(7);
 var JSONFile = __webpack_require__(36);
 
@@ -77745,7 +77979,7 @@ var JSONFile = __webpack_require__(36);
  * @param {string} path - The path of the file.
  * @param {XHRSettingsObject} [xhrSettings] - Optional file specific XHR settings.
  *
- * @return {Phaser.Loader.FileTypes.AnimationJSONFile} A File instance to be added to the Loader.
+ * @return {Phaser.Loader.FileTypes.JSONFile} A File instance to be added to the Loader.
  */
 var AnimationJSONFile = function (key, url, path, xhrSettings)
 {
@@ -78092,7 +78326,7 @@ var InputPlugin = new Class({
          * [description]
          *
          * @name Phaser.Input.InputPlugin#settings
-         * @type {SettingsObject}
+         * @type {Phaser.Scenes.Settings.Object}
          * @since 3.5.0
          */
         this.settings = scene.sys.settings;
@@ -85208,7 +85442,7 @@ var Class = __webpack_require__(0);
 var Components = __webpack_require__(14);
 var DeathZone = __webpack_require__(432);
 var EdgeZone = __webpack_require__(431);
-var EmitterOp = __webpack_require__(881);
+var EmitterOp = __webpack_require__(884);
 var GetFastValue = __webpack_require__(2);
 var GetRandom = __webpack_require__(139);
 var HasAny = __webpack_require__(397);
@@ -87388,26 +87622,6 @@ var Particle = new Class({
          * @since 3.0.0
          */
         this.rotation = 0;
-
-        /**
-         * The horizontal scroll factor of this Particle.
-         *
-         * @name Phaser.GameObjects.Particles.Particle#scrollFactorX
-         * @type {number}
-         * @default 1
-         * @since 3.0.0
-         */
-        this.scrollFactorX = 1;
-
-        /**
-         * The vertical scroll factor of this Particle.
-         *
-         * @name Phaser.GameObjects.Particles.Particle#scrollFactorY
-         * @type {number}
-         * @default 1
-         * @since 3.0.0
-         */
-        this.scrollFactorY = 1;
 
         /**
          * The tint applied to this Particle.
@@ -90986,7 +91200,7 @@ var TimeStep = new Class({
          * the TimeStep is actually stopped, not just paused.
          *
          * @name Phaser.Boot.TimeStep#running
-         * @name {boolean}
+         * @type {boolean}
          * @readOnly
          * @default false
          * @since 3.0.0
@@ -91011,7 +91225,7 @@ var TimeStep = new Class({
          * is spiraling out of control.
          *
          * @name Phaser.Boot.TimeStep#targetFps
-         * @name {integer}
+         * @type {integer}
          * @default 60
          * @since 3.0.0
          */
@@ -94509,6 +94723,11 @@ var Game = new Class({
         if (this.removeCanvas && this.canvas)
         {
             CanvasPool.remove(this.canvas);
+
+            if (this.canvas.parentNode)
+            {
+                this.canvas.parentNode.removeChild(this.canvas);
+            }
         }
 
         this.loop.destroy();
@@ -95468,23 +95687,23 @@ module.exports = ComponentToHex;
 
 var Color = __webpack_require__(27);
 
-Color.ColorToRGBA = __webpack_require__(906);
+Color.ColorToRGBA = __webpack_require__(908);
 Color.ComponentToHex = __webpack_require__(525);
 Color.GetColor = __webpack_require__(144);
 Color.GetColor32 = __webpack_require__(278);
 Color.HexStringToColor = __webpack_require__(279);
-Color.HSLToColor = __webpack_require__(905);
-Color.HSVColorWheel = __webpack_require__(904);
+Color.HSLToColor = __webpack_require__(907);
+Color.HSVColorWheel = __webpack_require__(906);
 Color.HSVToRGB = __webpack_require__(523);
 Color.HueToComponent = __webpack_require__(524);
 Color.IntegerToColor = __webpack_require__(277);
 Color.IntegerToRGB = __webpack_require__(276);
-Color.Interpolate = __webpack_require__(903);
+Color.Interpolate = __webpack_require__(905);
 Color.ObjectToColor = __webpack_require__(275);
-Color.RandomRGB = __webpack_require__(902);
+Color.RandomRGB = __webpack_require__(904);
 Color.RGBStringToColor = __webpack_require__(274);
-Color.RGBToHSV = __webpack_require__(901);
-Color.RGBToString = __webpack_require__(900);
+Color.RGBToHSV = __webpack_require__(903);
+Color.RGBToString = __webpack_require__(902);
 Color.ValueToColor = __webpack_require__(124);
 
 module.exports = Color;
@@ -96200,7 +96419,7 @@ var LineCurve = new Class({
         /**
          * [description]
          *
-         * @property Phaser.Curves.LineCurve#p1
+         * @name Phaser.Curves.LineCurve#p1
          * @type {Phaser.Math.Vector2}
          * @since 3.0.0
          */
@@ -96314,6 +96533,8 @@ var LineCurve = new Class({
      *
      * @method Phaser.Curves.LineCurve#getTangent
      * @since 3.0.0
+     * 
+     * @generic {Phaser.Math.Vector2} O - [out,$return]
      *
      * @return {Phaser.Math.Vector2} [description]
      */
@@ -97236,7 +97457,7 @@ var CubicBezierCurve = new Class({
      * @method Phaser.Curves.CubicBezierCurve#draw
      * @since 3.0.0
      *
-     * @generic {Phaser.GameObjects.Graphics} G - [out,$return]
+     * @generic {Phaser.GameObjects.Graphics} G - [graphics,$return]
      *
      * @param {Phaser.GameObjects.Graphics} graphics - [description]
      * @param {integer} [pointsTotal=32] - [description]
@@ -100401,7 +100622,7 @@ var Flash = new Class({
      * @method Phaser.Cameras.Scene2D.Effects.Flash#postRenderWebGL
      * @since 3.5.0
      *
-     * @param {Phaser.Renderer.WebGL.WebGLPipeline.FlatTintPipeline} pipeline - The WebGL Pipeline to render to.
+     * @param {Phaser.Renderer.WebGL.Pipelines.FlatTintPipeline} pipeline - The WebGL Pipeline to render to.
      * @param {function} getTintFunction - A function that will return the gl safe tint colors.
      *
      * @return {boolean} `true` if the effect drew to the renderer, otherwise `false`.
@@ -100833,7 +101054,7 @@ var Fade = new Class({
      * @method Phaser.Cameras.Scene2D.Effects.Fade#postRenderWebGL
      * @since 3.5.0
      *
-     * @param {Phaser.Renderer.WebGL.WebGLPipeline.FlatTintPipeline} pipeline - The WebGL Pipeline to render to.
+     * @param {Phaser.Renderer.WebGL.Pipelines.FlatTintPipeline} pipeline - The WebGL Pipeline to render to.
      * @param {function} getTintFunction - A function that will return the gl safe tint colors.
      *
      * @return {boolean} `true` if the effect drew to the renderer, otherwise `false`.
@@ -105390,55 +105611,55 @@ module.exports = QuickSet;
 
 module.exports = {
 
-    Angle: __webpack_require__(988),
-    Call: __webpack_require__(987),
-    GetFirst: __webpack_require__(986),
-    GetLast: __webpack_require__(985),
-    GridAlign: __webpack_require__(984),
-    IncAlpha: __webpack_require__(983),
-    IncX: __webpack_require__(982),
-    IncXY: __webpack_require__(981),
-    IncY: __webpack_require__(980),
-    PlaceOnCircle: __webpack_require__(979),
-    PlaceOnEllipse: __webpack_require__(978),
-    PlaceOnLine: __webpack_require__(977),
-    PlaceOnRectangle: __webpack_require__(976),
-    PlaceOnTriangle: __webpack_require__(975),
-    PlayAnimation: __webpack_require__(974),
+    Angle: __webpack_require__(990),
+    Call: __webpack_require__(989),
+    GetFirst: __webpack_require__(988),
+    GetLast: __webpack_require__(987),
+    GridAlign: __webpack_require__(986),
+    IncAlpha: __webpack_require__(985),
+    IncX: __webpack_require__(984),
+    IncXY: __webpack_require__(983),
+    IncY: __webpack_require__(982),
+    PlaceOnCircle: __webpack_require__(981),
+    PlaceOnEllipse: __webpack_require__(980),
+    PlaceOnLine: __webpack_require__(979),
+    PlaceOnRectangle: __webpack_require__(978),
+    PlaceOnTriangle: __webpack_require__(977),
+    PlayAnimation: __webpack_require__(976),
     PropertyValueInc: __webpack_require__(32),
     PropertyValueSet: __webpack_require__(24),
-    RandomCircle: __webpack_require__(973),
-    RandomEllipse: __webpack_require__(972),
-    RandomLine: __webpack_require__(971),
-    RandomRectangle: __webpack_require__(970),
-    RandomTriangle: __webpack_require__(969),
-    Rotate: __webpack_require__(968),
-    RotateAround: __webpack_require__(967),
-    RotateAroundDistance: __webpack_require__(966),
-    ScaleX: __webpack_require__(965),
-    ScaleXY: __webpack_require__(964),
-    ScaleY: __webpack_require__(963),
-    SetAlpha: __webpack_require__(962),
-    SetBlendMode: __webpack_require__(961),
-    SetDepth: __webpack_require__(960),
-    SetHitArea: __webpack_require__(959),
-    SetOrigin: __webpack_require__(958),
-    SetRotation: __webpack_require__(957),
-    SetScale: __webpack_require__(956),
-    SetScaleX: __webpack_require__(955),
-    SetScaleY: __webpack_require__(954),
-    SetTint: __webpack_require__(953),
-    SetVisible: __webpack_require__(952),
-    SetX: __webpack_require__(951),
-    SetXY: __webpack_require__(950),
-    SetY: __webpack_require__(949),
-    ShiftPosition: __webpack_require__(948),
-    Shuffle: __webpack_require__(947),
-    SmootherStep: __webpack_require__(946),
-    SmoothStep: __webpack_require__(945),
-    Spread: __webpack_require__(944),
-    ToggleVisible: __webpack_require__(943),
-    WrapInRectangle: __webpack_require__(942)
+    RandomCircle: __webpack_require__(975),
+    RandomEllipse: __webpack_require__(974),
+    RandomLine: __webpack_require__(973),
+    RandomRectangle: __webpack_require__(972),
+    RandomTriangle: __webpack_require__(971),
+    Rotate: __webpack_require__(970),
+    RotateAround: __webpack_require__(969),
+    RotateAroundDistance: __webpack_require__(968),
+    ScaleX: __webpack_require__(967),
+    ScaleXY: __webpack_require__(966),
+    ScaleY: __webpack_require__(965),
+    SetAlpha: __webpack_require__(964),
+    SetBlendMode: __webpack_require__(963),
+    SetDepth: __webpack_require__(962),
+    SetHitArea: __webpack_require__(961),
+    SetOrigin: __webpack_require__(960),
+    SetRotation: __webpack_require__(959),
+    SetScale: __webpack_require__(958),
+    SetScaleX: __webpack_require__(957),
+    SetScaleY: __webpack_require__(956),
+    SetTint: __webpack_require__(955),
+    SetVisible: __webpack_require__(954),
+    SetX: __webpack_require__(953),
+    SetXY: __webpack_require__(952),
+    SetY: __webpack_require__(951),
+    ShiftPosition: __webpack_require__(950),
+    Shuffle: __webpack_require__(949),
+    SmootherStep: __webpack_require__(948),
+    SmoothStep: __webpack_require__(947),
+    Spread: __webpack_require__(946),
+    ToggleVisible: __webpack_require__(945),
+    WrapInRectangle: __webpack_require__(944)
 
 };
 
@@ -106166,7 +106387,7 @@ module.exports = GetMinMaxValue;
 module.exports = {
 
     Clone: __webpack_require__(47),
-    Extend: __webpack_require__(17),
+    Extend: __webpack_require__(16),
     GetAdvancedValue: __webpack_require__(8),
     GetFastValue: __webpack_require__(2),
     GetMinMaxValue: __webpack_require__(604),
@@ -106785,7 +107006,7 @@ module.exports = ParseTileLayers;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Extend = __webpack_require__(17);
+var Extend = __webpack_require__(16);
 
 /**
  * Copy properties from tileset to tiles.
@@ -111201,7 +111422,7 @@ module.exports = ArcadePhysics;
  */
 
 var CONST = __webpack_require__(64);
-var Extend = __webpack_require__(17);
+var Extend = __webpack_require__(16);
 
 /**
  * @callback ArcadePhysicsCallback
@@ -112708,7 +112929,7 @@ module.exports = {
  */
 
 var CONST = __webpack_require__(15);
-var Extend = __webpack_require__(17);
+var Extend = __webpack_require__(16);
 
 /**
  * @namespace Phaser.Math
@@ -112795,7 +113016,7 @@ module.exports = PhaserMath;
  */
 
 var Class = __webpack_require__(0);
-var CONST = __webpack_require__(16);
+var CONST = __webpack_require__(17);
 var CustomSet = __webpack_require__(75);
 var EventEmitter = __webpack_require__(9);
 var FileTypesManager = __webpack_require__(7);
@@ -114031,7 +114252,7 @@ module.exports = TilemapJSONFile;
  */
 
 var Class = __webpack_require__(0);
-var CONST = __webpack_require__(16);
+var CONST = __webpack_require__(17);
 var File = __webpack_require__(18);
 var FileTypesManager = __webpack_require__(7);
 var TILEMAP_FORMATS = __webpack_require__(29);
@@ -114138,7 +114359,7 @@ module.exports = TilemapCSVFile;
  */
 
 var Class = __webpack_require__(0);
-var CONST = __webpack_require__(16);
+var CONST = __webpack_require__(17);
 var File = __webpack_require__(18);
 var FileTypesManager = __webpack_require__(7);
 var GetFastValue = __webpack_require__(2);
@@ -114293,7 +114514,7 @@ module.exports = SVGFile;
  */
 
 var Class = __webpack_require__(0);
-var CONST = __webpack_require__(16);
+var CONST = __webpack_require__(17);
 var File = __webpack_require__(18);
 var FileTypesManager = __webpack_require__(7);
 var GetFastValue = __webpack_require__(2);
@@ -114457,7 +114678,7 @@ module.exports = HTMLFile;
  */
 
 var Class = __webpack_require__(0);
-var CONST = __webpack_require__(16);
+var CONST = __webpack_require__(17);
 var File = __webpack_require__(18);
 var FileTypesManager = __webpack_require__(7);
 var GetFastValue = __webpack_require__(2);
@@ -114641,7 +114862,7 @@ module.exports = BitmapFontFile;
  */
 
 var Class = __webpack_require__(0);
-var CONST = __webpack_require__(16);
+var CONST = __webpack_require__(17);
 var File = __webpack_require__(18);
 var FileTypesManager = __webpack_require__(7);
 var GetFastValue = __webpack_require__(2);
@@ -114810,8 +115031,8 @@ module.exports = {
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var CONST = __webpack_require__(16);
-var Extend = __webpack_require__(17);
+var CONST = __webpack_require__(17);
+var Extend = __webpack_require__(16);
 
 /**
  * @namespace Phaser.Loader
@@ -119986,8 +120207,6 @@ GameObjectFactory.register('dynamicBitmapText', function (x, y, font, text, size
 var Container = __webpack_require__(243);
 var GameObjectFactory = __webpack_require__(11);
 
-var hasWarned = false;
-
 /**
  * Creates a new Container Game Object and adds it to the Scene.
  *
@@ -120004,12 +120223,6 @@ var hasWarned = false;
  */
 GameObjectFactory.register('container', function (x, y, children)
 {
-    if (!hasWarned)
-    {
-        console.warn('Use of a beta feature: Containers');
-        hasWarned = true;
-    }
-
     return this.displayList.add(new Container(this.scene, x, y, children));
 });
 
@@ -120256,6 +120469,275 @@ module.exports = {
 
 /***/ }),
 /* 872 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
+var GetValue = __webpack_require__(4);
+
+/**
+ * Parses a Retro Font configuration object so you can pass it to the BitmapText constructor
+ * and create a BitmapText object using a fixed-width retro font.
+ *
+ * @function Phaser.GameObjects.RetroFont.Parse
+ * @since 3.0.0
+ *
+ * @param {Phaser.Scene} scene - A reference to the Phaser Scene.
+ * @param {Phaser.GameObjects.RetroFont.Config} config - The font configuration object.
+ */
+var ParseRetroFont = function (scene, config)
+{
+    var w = config.width;
+    var h = config.height;
+    var cx = Math.floor(w / 2);
+    var cy = Math.floor(h / 2);
+    var letters = GetValue(config, 'chars', '');
+
+    if (letters === '')
+    {
+        return;
+    }
+
+    var key = GetValue(config, 'image', '');
+    var offsetX = GetValue(config, 'offset.x', 0);
+    var offsetY = GetValue(config, 'offset.y', 0);
+    var spacingX = GetValue(config, 'spacing.x', 0);
+    var spacingY = GetValue(config, 'spacing.y', 0);
+
+    var charsPerRow = GetValue(config, 'charsPerRow', null);
+
+    if (charsPerRow === null)
+    {
+        charsPerRow = scene.sys.textures.getFrame(key).width / w;
+
+        if (charsPerRow > letters.length)
+        {
+            charsPerRow = letters.length;
+        }
+    }
+
+    var x = offsetX;
+    var y = offsetY;
+
+    var data = {
+        retroFont: true,
+        font: key,
+        size: w,
+        lineHeight: h,
+        chars: {}
+    };
+
+    var r = 0;
+
+    for (var i = 0; i < letters.length; i++)
+    {
+        // var node = letters[i];
+
+        var charCode = letters.charCodeAt(i);
+
+        data.chars[charCode] =
+        {
+            x: x,
+            y: y,
+            width: w,
+            height: h,
+            centerX: cx,
+            centerY: cy,
+            xOffset: 0,
+            yOffset: 0,
+            xAdvance: w,
+            data: {},
+            kerning: {}
+        };
+
+        r++;
+
+        if (r === charsPerRow)
+        {
+            r = 0;
+            x = offsetX;
+            y += h + spacingY;
+        }
+        else
+        {
+            x += w + spacingX;
+        }
+    }
+
+    var entry = {
+        data: data,
+        frame: null,
+        texture: key
+    };
+
+    return entry;
+};
+
+module.exports = ParseRetroFont;
+
+
+/***/ }),
+/* 873 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
+var RETRO_FONT_CONST = {
+
+    /**
+     * Text Set 1 =  !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~
+     * 
+     * @name Phaser.GameObjects.RetroFont.TEXT_SET1
+     * @type {string}
+     * @since 3.6.0
+     */
+    TEXT_SET1: ' !"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~',
+
+    /**
+     * Text Set 2 =  !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ
+     * 
+     * @name Phaser.GameObjects.RetroFont.TEXT_SET2
+     * @type {string}
+     * @since 3.6.0
+     */
+    TEXT_SET2: ' !"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+
+    /**
+     * Text Set 3 = ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 
+     * 
+     * @name Phaser.GameObjects.RetroFont.TEXT_SET3
+     * @type {string}
+     * @since 3.6.0
+     */
+    TEXT_SET3: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 ',
+
+    /**
+     * Text Set 4 = ABCDEFGHIJKLMNOPQRSTUVWXYZ 0123456789
+     * 
+     * @name Phaser.GameObjects.RetroFont.TEXT_SET4
+     * @type {string}
+     * @since 3.6.0
+     */
+    TEXT_SET4: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ 0123456789',
+
+    /**
+     * Text Set 5 = ABCDEFGHIJKLMNOPQRSTUVWXYZ.,/() '!?-*:0123456789
+     * 
+     * @name Phaser.GameObjects.RetroFont.TEXT_SET5
+     * @type {string}
+     * @since 3.6.0
+     */
+    TEXT_SET5: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ.,/() \'!?-*:0123456789',
+
+    /**
+     * Text Set 6 = ABCDEFGHIJKLMNOPQRSTUVWXYZ!?:;0123456789"(),-.' 
+     * 
+     * @name Phaser.GameObjects.RetroFont.TEXT_SET6
+     * @type {string}
+     * @since 3.6.0
+     */
+    TEXT_SET6: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ!?:;0123456789"(),-.\' ',
+
+    /**
+     * Text Set 7 = AGMSY+:4BHNTZ!;5CIOU.?06DJPV,(17EKQW")28FLRX-'39
+     * 
+     * @name Phaser.GameObjects.RetroFont.TEXT_SET7
+     * @type {string}
+     * @since 3.6.0
+     */
+    TEXT_SET7: 'AGMSY+:4BHNTZ!;5CIOU.?06DJPV,(17EKQW")28FLRX-\'39',
+
+    /**
+     * Text Set 8 = 0123456789 .ABCDEFGHIJKLMNOPQRSTUVWXYZ
+     * 
+     * @name Phaser.GameObjects.RetroFont.TEXT_SET8
+     * @type {string}
+     * @since 3.6.0
+     */
+    TEXT_SET8: '0123456789 .ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+
+    /**
+     * Text Set 9 = ABCDEFGHIJKLMNOPQRSTUVWXYZ()-0123456789.:,'"?!
+     * 
+     * @name Phaser.GameObjects.RetroFont.TEXT_SET9
+     * @type {string}
+     * @since 3.6.0
+     */
+    TEXT_SET9: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ()-0123456789.:,\'"?!',
+
+    /**
+     * Text Set 10 = ABCDEFGHIJKLMNOPQRSTUVWXYZ
+     * 
+     * @name Phaser.GameObjects.RetroFont.TEXT_SET10
+     * @type {string}
+     * @since 3.6.0
+     */
+    TEXT_SET10: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+
+    /**
+     * Text Set 11 = ABCDEFGHIJKLMNOPQRSTUVWXYZ.,"-+!?()':;0123456789
+     * 
+     * @name Phaser.GameObjects.RetroFont.TEXT_SET11
+     * @since 3.6.0
+     * @type {string}
+     */
+    TEXT_SET11: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ.,"-+!?()\':;0123456789'
+
+};
+
+module.exports = RETRO_FONT_CONST;
+
+
+/***/ }),
+/* 874 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
+var RETRO_FONT_CONST = __webpack_require__(873);
+var Extend = __webpack_require__(16);
+
+/**
+ * @typedef {object} Phaser.GameObjects.RetroFont.Config
+ * 
+ * @property {string} image - [description]
+ * @property {number} offset.x - If the font set doesn't start at the top left of the given image, specify the X coordinate offset here.
+ * @property {number} offset.y - If the font set doesn't start at the top left of the given image, specify the Y coordinate offset here.
+ * @property {number} width - The width of each character in the font set.
+ * @property {number} height - The height of each character in the font set.
+ * @property {string} chars - The characters used in the font set, in display order. You can use the TEXT_SET consts for common font set arrangements.
+ * @property {number} charsPerRow - The number of characters per row in the font set. If not given charsPerRow will be the image width / characterWidth.
+ * @property {number} spacing.x - If the characters in the font set have horizontal spacing between them set the required amount here.
+ * @property {number} spacing.y - If the characters in the font set have vertical spacing between them set the required amount here.
+*/
+
+/**
+ * @namespace Phaser.GameObjects.RetroFont
+ * @since 3.6.0
+ */
+
+var RetroFont = { Parse: __webpack_require__(872) };
+
+//   Merge in the consts
+RetroFont = Extend(false, RetroFont, RETRO_FONT_CONST);
+
+module.exports = RetroFont;
+
+
+/***/ }),
+/* 875 */
 /***/ (function(module, exports) {
 
 var RenderTextureWebGL = {
@@ -120302,7 +120784,7 @@ module.exports = RenderTextureWebGL;
 
 
 /***/ }),
-/* 873 */
+/* 876 */
 /***/ (function(module, exports) {
 
 var RenderTextureCanvas = {
@@ -120344,7 +120826,7 @@ module.exports = RenderTextureCanvas;
 
 
 /***/ }),
-/* 874 */
+/* 877 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -120440,7 +120922,7 @@ module.exports = RenderTextureCanvasRenderer;
 
 
 /***/ }),
-/* 875 */
+/* 878 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -120497,7 +120979,7 @@ module.exports = RenderTextureWebGLRenderer;
 
 
 /***/ }),
-/* 876 */
+/* 879 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -120511,12 +120993,12 @@ var renderCanvas = __webpack_require__(3);
 
 if (true)
 {
-    renderWebGL = __webpack_require__(875);
+    renderWebGL = __webpack_require__(878);
 }
 
 if (true)
 {
-    renderCanvas = __webpack_require__(874);
+    renderCanvas = __webpack_require__(877);
 }
 
 module.exports = {
@@ -120528,7 +121010,7 @@ module.exports = {
 
 
 /***/ }),
-/* 877 */
+/* 880 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -120551,7 +121033,7 @@ module.exports = {
 
 
 /***/ }),
-/* 878 */
+/* 881 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -120641,8 +121123,8 @@ var ParticleManagerCanvasRenderer = function (renderer, emitterManager, interpol
             var x = -ox;
             var y = -oy;
 
-            var tx = particle.x - cameraScrollX * particle.scrollFactorX;
-            var ty = particle.y - cameraScrollY * particle.scrollFactorY;
+            var tx = particle.x - cameraScrollX;
+            var ty = particle.y - cameraScrollY;
 
             if (roundPixels)
             {
@@ -120675,7 +121157,7 @@ module.exports = ParticleManagerCanvasRenderer;
 
 
 /***/ }),
-/* 879 */
+/* 882 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -120717,7 +121199,7 @@ module.exports = ParticleManagerWebGLRenderer;
 
 
 /***/ }),
-/* 880 */
+/* 883 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -120731,12 +121213,12 @@ var renderCanvas = __webpack_require__(3);
 
 if (true)
 {
-    renderWebGL = __webpack_require__(879);
+    renderWebGL = __webpack_require__(882);
 }
 
 if (true)
 {
-    renderCanvas = __webpack_require__(878);
+    renderCanvas = __webpack_require__(881);
 }
 
 module.exports = {
@@ -120748,7 +121230,7 @@ module.exports = {
 
 
 /***/ }),
-/* 881 */
+/* 884 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -121345,7 +121827,7 @@ module.exports = EmitterOp;
 
 
 /***/ }),
-/* 882 */
+/* 885 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -121364,13 +121846,13 @@ module.exports = {
     Particle: __webpack_require__(434),
     ParticleEmitter: __webpack_require__(433),
     ParticleEmitterManager: __webpack_require__(227),
-    Zones: __webpack_require__(877)
+    Zones: __webpack_require__(880)
 
 };
 
 
 /***/ }),
-/* 883 */
+/* 886 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -121582,7 +122064,7 @@ module.exports = DynamicBitmapTextCanvasRenderer;
 
 
 /***/ }),
-/* 884 */
+/* 887 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -121625,7 +122107,7 @@ module.exports = DynamicBitmapTextWebGLRenderer;
 
 
 /***/ }),
-/* 885 */
+/* 888 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -121639,12 +122121,12 @@ var renderCanvas = __webpack_require__(3);
 
 if (true)
 {
-    renderWebGL = __webpack_require__(884);
+    renderWebGL = __webpack_require__(887);
 }
 
 if (true)
 {
-    renderCanvas = __webpack_require__(883);
+    renderCanvas = __webpack_require__(886);
 }
 
 module.exports = {
@@ -121656,7 +122138,7 @@ module.exports = {
 
 
 /***/ }),
-/* 886 */
+/* 889 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -121729,7 +122211,7 @@ module.exports = ContainerCanvasRenderer;
 
 
 /***/ }),
-/* 887 */
+/* 890 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -121802,7 +122284,7 @@ module.exports = ContainerWebGLRenderer;
 
 
 /***/ }),
-/* 888 */
+/* 891 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -121817,12 +122299,12 @@ var renderCanvas = __webpack_require__(3);
 
 if (true)
 {
-    renderWebGL = __webpack_require__(887);
+    renderWebGL = __webpack_require__(890);
 }
 
 if (true)
 {
-    renderCanvas = __webpack_require__(886);
+    renderCanvas = __webpack_require__(889);
 }
 
 module.exports = {
@@ -121834,7 +122316,7 @@ module.exports = {
 
 
 /***/ }),
-/* 889 */
+/* 892 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -122179,7 +122661,7 @@ module.exports = Bob;
 
 
 /***/ }),
-/* 890 */
+/* 893 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -122273,7 +122755,7 @@ module.exports = BlitterCanvasRenderer;
 
 
 /***/ }),
-/* 891 */
+/* 894 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -122313,7 +122795,7 @@ module.exports = BlitterWebGLRenderer;
 
 
 /***/ }),
-/* 892 */
+/* 895 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -122327,12 +122809,12 @@ var renderCanvas = __webpack_require__(3);
 
 if (true)
 {
-    renderWebGL = __webpack_require__(891);
+    renderWebGL = __webpack_require__(894);
 }
 
 if (true)
 {
-    renderCanvas = __webpack_require__(890);
+    renderCanvas = __webpack_require__(893);
 }
 
 module.exports = {
@@ -122344,7 +122826,7 @@ module.exports = {
 
 
 /***/ }),
-/* 893 */
+/* 896 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -122532,7 +123014,7 @@ module.exports = BitmapTextCanvasRenderer;
 
 
 /***/ }),
-/* 894 */
+/* 897 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -122575,7 +123057,7 @@ module.exports = BitmapTextWebGLRenderer;
 
 
 /***/ }),
-/* 895 */
+/* 898 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -122589,12 +123071,12 @@ var renderCanvas = __webpack_require__(3);
 
 if (true)
 {
-    renderWebGL = __webpack_require__(894);
+    renderWebGL = __webpack_require__(897);
 }
 
 if (true)
 {
-    renderCanvas = __webpack_require__(893);
+    renderCanvas = __webpack_require__(896);
 }
 
 module.exports = {
@@ -122606,209 +123088,7 @@ module.exports = {
 
 
 /***/ }),
-/* 896 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
- */
-
-var GetValue = __webpack_require__(4);
-
-// * @param {number} characterWidth - The width of each character in the font set.
-// * @param {number} characterHeight - The height of each character in the font set.
-// * @param {string} chars - The characters used in the font set, in display order. You can use the TEXT_SET consts for common font set arrangements.
-// * @param {number} [charsPerRow] - The number of characters per row in the font set. If not given charsPerRow will be the image width / characterWidth.
-// * @param {number} [xSpacing=0] - If the characters in the font set have horizontal spacing between them set the required amount here.
-// * @param {number} [ySpacing=0] - If the characters in the font set have vertical spacing between them set the required amount here.
-// * @param {number} [xOffset=0] - If the font set doesn't start at the top left of the given image, specify the X coordinate offset here.
-// * @param {number} [yOffset=0] - If the font set doesn't start at the top left of the given image, specify the Y coordinate offset here.
-// Phaser.GameObject.RetroFont = function (game, key, characterWidth, characterHeight, chars, charsPerRow, xSpacing, ySpacing, xOffset, yOffset)
-
-// {
-//      image: key,
-//      width: 32,
-//      height: 32,
-//      chars: 'string',
-//      charsPerRow: null,
-//      spacing: { x: 0, y: 0 },
-//      offset: { x: 0, y: 0 }
-// }
-
-/**
- * [description]
- *
- * @function ParseRetroFont
- * @since 3.0.0
- * @private
- */
-var ParseRetroFont = function (scene, config)
-{
-    var w = config.width;
-    var h = config.height;
-    var cx = Math.floor(w / 2);
-    var cy = Math.floor(h / 2);
-    var letters = config.chars;
-
-    var key = GetValue(config, 'image', '');
-    var offsetX = GetValue(config, 'offset.x', 0);
-    var offsetY = GetValue(config, 'offset.y', 0);
-    var spacingX = GetValue(config, 'spacing.x', 0);
-    var spacingY = GetValue(config, 'spacing.y', 0);
-
-    var charsPerRow = GetValue(config, 'charsPerRow', null);
-
-    if (charsPerRow === null)
-    {
-        charsPerRow = scene.sys.textures.getFrame(key).width / w;
-
-        if (charsPerRow > letters.length)
-        {
-            charsPerRow = letters.length;
-        }
-    }
-
-    var x = offsetX;
-    var y = offsetY;
-
-    var data = {
-        retroFont: true,
-        font: key,
-        size: w,
-        lineHeight: h,
-        chars: {}
-    };
-
-    var r = 0;
-
-    for (var i = 0; i < letters.length; i++)
-    {
-        // var node = letters[i];
-
-        var charCode = letters.charCodeAt(i);
-
-        data.chars[charCode] =
-        {
-            x: x,
-            y: y,
-            width: w,
-            height: h,
-            centerX: cx,
-            centerY: cy,
-            xOffset: 0,
-            yOffset: 0,
-            xAdvance: w,
-            data: {},
-            kerning: {}
-        };
-
-        r++;
-
-        if (r === charsPerRow)
-        {
-            r = 0;
-            x = offsetX;
-            y += h + spacingY;
-        }
-        else
-        {
-            x += w + spacingX;
-        }
-    }
-
-    var entry = {
-        data: data,
-        frame: null,
-        texture: key
-    };
-
-    return entry;
-};
-
-/**
-* Text Set 1 =  !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~
-* @constant
-* @type {string}
-*/
-ParseRetroFont.TEXT_SET1 = ' !"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~';
-
-/**
-* Text Set 2 =  !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ
-* @constant
-* @type {string}
-*/
-ParseRetroFont.TEXT_SET2 = ' !"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-
-/**
-* Text Set 3 = ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 
-* @constant
-* @type {string}
-*/
-ParseRetroFont.TEXT_SET3 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 ';
-
-/**
-* Text Set 4 = ABCDEFGHIJKLMNOPQRSTUVWXYZ 0123456789
-* @constant
-* @type {string}
-*/
-ParseRetroFont.TEXT_SET4 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ 0123456789';
-
-/**
-* Text Set 5 = ABCDEFGHIJKLMNOPQRSTUVWXYZ.,/() '!?-*:0123456789
-* @constant
-* @type {string}
-*/
-ParseRetroFont.TEXT_SET5 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ.,/() \'!?-*:0123456789';
-
-/**
-* Text Set 6 = ABCDEFGHIJKLMNOPQRSTUVWXYZ!?:;0123456789"(),-.' 
-* @constant
-* @type {string}
-*/
-ParseRetroFont.TEXT_SET6 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ!?:;0123456789"(),-.\' ';
-
-/**
-* Text Set 7 = AGMSY+:4BHNTZ!;5CIOU.?06DJPV,(17EKQW")28FLRX-'39
-* @constant
-* @type {string}
-*/
-ParseRetroFont.TEXT_SET7 = 'AGMSY+:4BHNTZ!;5CIOU.?06DJPV,(17EKQW")28FLRX-\'39';
-
-/**
-* Text Set 8 = 0123456789 .ABCDEFGHIJKLMNOPQRSTUVWXYZ
-* @constant
-* @type {string}
-*/
-ParseRetroFont.TEXT_SET8 = '0123456789 .ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-
-/**
-* Text Set 9 = ABCDEFGHIJKLMNOPQRSTUVWXYZ()-0123456789.:,'"?!
-* @constant
-* @type {string}
-*/
-ParseRetroFont.TEXT_SET9 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ()-0123456789.:,\'"?!';
-
-/**
-* Text Set 10 = ABCDEFGHIJKLMNOPQRSTUVWXYZ
-* @constant
-* @type {string}
-*/
-ParseRetroFont.TEXT_SET10 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-
-/**
-* Text Set 11 = ABCDEFGHIJKLMNOPQRSTUVWXYZ.,"-+!?()':;0123456789
-* @constant
-* @type {string}
-*/
-ParseRetroFont.TEXT_SET11 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ.,"-+!?()\':;0123456789';
-
-module.exports = ParseRetroFont;
-
-
-/***/ }),
-/* 897 */
+/* 899 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -122849,7 +123129,7 @@ module.exports = ParseFromAtlas;
 
 
 /***/ }),
-/* 898 */
+/* 900 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -122881,9 +123161,10 @@ var GameObjects = {
     Graphics: __webpack_require__(107),
     Group: __webpack_require__(104),
     Image: __webpack_require__(66),
-    Particles: __webpack_require__(882),
+    Particles: __webpack_require__(885),
     PathFollower: __webpack_require__(395),
     RenderTexture: __webpack_require__(226),
+    RetroFont: __webpack_require__(874),
     Sprite3D: __webpack_require__(143),
     Sprite: __webpack_require__(31),
     Text: __webpack_require__(102),
@@ -122951,7 +123232,7 @@ module.exports = GameObjects;
 
 
 /***/ }),
-/* 899 */
+/* 901 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -122976,7 +123257,7 @@ module.exports = {
 
 
 /***/ }),
-/* 900 */
+/* 902 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -123020,7 +123301,7 @@ module.exports = RGBToString;
 
 
 /***/ }),
-/* 901 */
+/* 903 */
 /***/ (function(module, exports) {
 
 /**
@@ -123092,7 +123373,7 @@ module.exports = RGBToHSV;
 
 
 /***/ }),
-/* 902 */
+/* 904 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -123128,7 +123409,7 @@ module.exports = RandomRGB;
 
 
 /***/ }),
-/* 903 */
+/* 905 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -123231,7 +123512,7 @@ module.exports = {
 
 
 /***/ }),
-/* 904 */
+/* 906 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -123272,7 +123553,7 @@ module.exports = HSVColorWheel;
 
 
 /***/ }),
-/* 905 */
+/* 907 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -123322,7 +123603,7 @@ module.exports = HSLToColor;
 
 
 /***/ }),
-/* 906 */
+/* 908 */
 /***/ (function(module, exports) {
 
 /**
@@ -123362,7 +123643,7 @@ module.exports = ColorToRGBA;
 
 
 /***/ }),
-/* 907 */
+/* 909 */
 /***/ (function(module, exports) {
 
 /**
@@ -123409,7 +123690,7 @@ module.exports = UserSelect;
 
 
 /***/ }),
-/* 908 */
+/* 910 */
 /***/ (function(module, exports) {
 
 /**
@@ -123444,7 +123725,7 @@ module.exports = TouchAction;
 
 
 /***/ }),
-/* 909 */
+/* 911 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -123462,14 +123743,14 @@ module.exports = {
     Interpolation: __webpack_require__(266),
     Pool: __webpack_require__(22),
     Smoothing: __webpack_require__(123),
-    TouchAction: __webpack_require__(908),
-    UserSelect: __webpack_require__(907)
+    TouchAction: __webpack_require__(910),
+    UserSelect: __webpack_require__(909)
     
 };
 
 
 /***/ }),
-/* 910 */
+/* 912 */
 /***/ (function(module, exports) {
 
 /**
@@ -123499,7 +123780,7 @@ module.exports = GetOffsetY;
 
 
 /***/ }),
-/* 911 */
+/* 913 */
 /***/ (function(module, exports) {
 
 /**
@@ -123529,7 +123810,7 @@ module.exports = GetOffsetX;
 
 
 /***/ }),
-/* 912 */
+/* 914 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -123549,8 +123830,8 @@ module.exports = {
     GetCenterX: __webpack_require__(87),
     GetCenterY: __webpack_require__(84),
     GetLeft: __webpack_require__(42),
-    GetOffsetX: __webpack_require__(911),
-    GetOffsetY: __webpack_require__(910),
+    GetOffsetX: __webpack_require__(913),
+    GetOffsetY: __webpack_require__(912),
     GetRight: __webpack_require__(40),
     GetTop: __webpack_require__(38),
     SetBottom: __webpack_require__(43),
@@ -123564,7 +123845,7 @@ module.exports = {
 
 
 /***/ }),
-/* 913 */
+/* 915 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -123608,7 +123889,7 @@ module.exports = TopRight;
 
 
 /***/ }),
-/* 914 */
+/* 916 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -123652,7 +123933,7 @@ module.exports = TopLeft;
 
 
 /***/ }),
-/* 915 */
+/* 917 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -123696,7 +123977,7 @@ module.exports = TopCenter;
 
 
 /***/ }),
-/* 916 */
+/* 918 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -123740,7 +124021,7 @@ module.exports = RightTop;
 
 
 /***/ }),
-/* 917 */
+/* 919 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -123784,7 +124065,7 @@ module.exports = RightCenter;
 
 
 /***/ }),
-/* 918 */
+/* 920 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -123828,7 +124109,7 @@ module.exports = RightBottom;
 
 
 /***/ }),
-/* 919 */
+/* 921 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -123872,7 +124153,7 @@ module.exports = LeftTop;
 
 
 /***/ }),
-/* 920 */
+/* 922 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -123916,7 +124197,7 @@ module.exports = LeftCenter;
 
 
 /***/ }),
-/* 921 */
+/* 923 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -123960,7 +124241,7 @@ module.exports = LeftBottom;
 
 
 /***/ }),
-/* 922 */
+/* 924 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -124004,7 +124285,7 @@ module.exports = BottomRight;
 
 
 /***/ }),
-/* 923 */
+/* 925 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -124048,7 +124329,7 @@ module.exports = BottomLeft;
 
 
 /***/ }),
-/* 924 */
+/* 926 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -124092,7 +124373,7 @@ module.exports = BottomCenter;
 
 
 /***/ }),
-/* 925 */
+/* 927 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -124107,24 +124388,24 @@ module.exports = BottomCenter;
 
 module.exports = {
 
-    BottomCenter: __webpack_require__(924),
-    BottomLeft: __webpack_require__(923),
-    BottomRight: __webpack_require__(922),
-    LeftBottom: __webpack_require__(921),
-    LeftCenter: __webpack_require__(920),
-    LeftTop: __webpack_require__(919),
-    RightBottom: __webpack_require__(918),
-    RightCenter: __webpack_require__(917),
-    RightTop: __webpack_require__(916),
-    TopCenter: __webpack_require__(915),
-    TopLeft: __webpack_require__(914),
-    TopRight: __webpack_require__(913)
+    BottomCenter: __webpack_require__(926),
+    BottomLeft: __webpack_require__(925),
+    BottomRight: __webpack_require__(924),
+    LeftBottom: __webpack_require__(923),
+    LeftCenter: __webpack_require__(922),
+    LeftTop: __webpack_require__(921),
+    RightBottom: __webpack_require__(920),
+    RightCenter: __webpack_require__(919),
+    RightTop: __webpack_require__(918),
+    TopCenter: __webpack_require__(917),
+    TopLeft: __webpack_require__(916),
+    TopRight: __webpack_require__(915)
 
 };
 
 
 /***/ }),
-/* 926 */
+/* 928 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -124154,7 +124435,7 @@ module.exports = {
 
 
 /***/ }),
-/* 927 */
+/* 929 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -124164,7 +124445,7 @@ module.exports = {
  */
 
 var CONST = __webpack_require__(291);
-var Extend = __webpack_require__(17);
+var Extend = __webpack_require__(16);
 
 /**
  * @namespace Phaser.Display.Align
@@ -124172,8 +124453,8 @@ var Extend = __webpack_require__(17);
 
 var Align = {
 
-    In: __webpack_require__(926),
-    To: __webpack_require__(925)
+    In: __webpack_require__(928),
+    To: __webpack_require__(927)
 
 };
 
@@ -124184,7 +124465,7 @@ module.exports = Align;
 
 
 /***/ }),
-/* 928 */
+/* 930 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -124199,9 +124480,9 @@ module.exports = Align;
 
 module.exports = {
 
-    Align: __webpack_require__(927),
-    Bounds: __webpack_require__(912),
-    Canvas: __webpack_require__(909),
+    Align: __webpack_require__(929),
+    Bounds: __webpack_require__(914),
+    Canvas: __webpack_require__(911),
     Color: __webpack_require__(526),
     Masks: __webpack_require__(522)
   
@@ -124209,7 +124490,7 @@ module.exports = {
 
 
 /***/ }),
-/* 929 */
+/* 931 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -124349,7 +124630,7 @@ module.exports = MoveTo;
 
 
 /***/ }),
-/* 930 */
+/* 932 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -124365,7 +124646,7 @@ var CubicBezierCurve = __webpack_require__(535);
 var EllipseCurve = __webpack_require__(533);
 var GameObjectFactory = __webpack_require__(11);
 var LineCurve = __webpack_require__(532);
-var MovePathTo = __webpack_require__(929);
+var MovePathTo = __webpack_require__(931);
 var QuadraticBezierCurve = __webpack_require__(531);
 var Rectangle = __webpack_require__(12);
 var SplineCurve = __webpack_require__(529);
@@ -125177,7 +125458,7 @@ module.exports = Path;
 
 
 /***/ }),
-/* 931 */
+/* 933 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -125198,7 +125479,7 @@ module.exports = Path;
  */
 
 module.exports = {
-    Path: __webpack_require__(930),
+    Path: __webpack_require__(932),
 
     CubicBezier: __webpack_require__(535),
     Curve: __webpack_require__(81),
@@ -125210,7 +125491,7 @@ module.exports = {
 
 
 /***/ }),
-/* 932 */
+/* 934 */
 /***/ (function(module, exports) {
 
 /**
@@ -125248,7 +125529,7 @@ module.exports = {
 
 
 /***/ }),
-/* 933 */
+/* 935 */
 /***/ (function(module, exports) {
 
 /**
@@ -125286,7 +125567,7 @@ module.exports = {
 
 
 /***/ }),
-/* 934 */
+/* 936 */
 /***/ (function(module, exports) {
 
 /**
@@ -125324,7 +125605,7 @@ module.exports = {
 
 
 /***/ }),
-/* 935 */
+/* 937 */
 /***/ (function(module, exports) {
 
 /**
@@ -125362,7 +125643,7 @@ module.exports = {
 
 
 /***/ }),
-/* 936 */
+/* 938 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -125399,16 +125680,16 @@ module.exports = {
 module.exports = {
 
     ARNE16: __webpack_require__(269),
-    C64: __webpack_require__(935),
-    CGA: __webpack_require__(934),
-    JMP: __webpack_require__(933),
-    MSX: __webpack_require__(932)
+    C64: __webpack_require__(937),
+    CGA: __webpack_require__(936),
+    JMP: __webpack_require__(935),
+    MSX: __webpack_require__(934)
 
 };
 
 
 /***/ }),
-/* 937 */
+/* 939 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -125424,13 +125705,13 @@ module.exports = {
 module.exports = {
   
     GenerateTexture: __webpack_require__(270),
-    Palettes: __webpack_require__(936)
+    Palettes: __webpack_require__(938)
 
 };
 
 
 /***/ }),
-/* 938 */
+/* 940 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -125714,7 +125995,7 @@ module.exports = CameraManager;
 
 
 /***/ }),
-/* 939 */
+/* 941 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -125730,7 +126011,7 @@ module.exports = CameraManager;
 module.exports = {
 
     Camera: __webpack_require__(273),
-    CameraManager: __webpack_require__(938),
+    CameraManager: __webpack_require__(940),
     OrthographicCamera: __webpack_require__(537),
     PerspectiveCamera: __webpack_require__(536)
 
@@ -125738,7 +126019,7 @@ module.exports = {
 
 
 /***/ }),
-/* 940 */
+/* 942 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -125779,7 +126060,7 @@ module.exports = {
 
 
 /***/ }),
-/* 941 */
+/* 943 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -125794,15 +126075,15 @@ module.exports = {
 
 module.exports = {
 
-    Controls: __webpack_require__(940),
+    Controls: __webpack_require__(942),
     Scene2D: __webpack_require__(550),
-    Sprite3D: __webpack_require__(939)
+    Sprite3D: __webpack_require__(941)
 
 };
 
 
 /***/ }),
-/* 942 */
+/* 944 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -125851,7 +126132,7 @@ module.exports = WrapInRectangle;
 
 
 /***/ }),
-/* 943 */
+/* 945 */
 /***/ (function(module, exports) {
 
 /**
@@ -125886,7 +126167,7 @@ module.exports = ToggleVisible;
 
 
 /***/ }),
-/* 944 */
+/* 946 */
 /***/ (function(module, exports) {
 
 /**
@@ -125940,7 +126221,7 @@ module.exports = Spread;
 
 
 /***/ }),
-/* 945 */
+/* 947 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -125996,7 +126277,7 @@ module.exports = SmoothStep;
 
 
 /***/ }),
-/* 946 */
+/* 948 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -126052,7 +126333,7 @@ module.exports = SmootherStep;
 
 
 /***/ }),
-/* 947 */
+/* 949 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -126085,7 +126366,7 @@ module.exports = Shuffle;
 
 
 /***/ }),
-/* 948 */
+/* 950 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -126213,7 +126494,7 @@ module.exports = ShiftPosition;
 
 
 /***/ }),
-/* 949 */
+/* 951 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -126254,7 +126535,7 @@ module.exports = SetY;
 
 
 /***/ }),
-/* 950 */
+/* 952 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -126301,7 +126582,7 @@ module.exports = SetXY;
 
 
 /***/ }),
-/* 951 */
+/* 953 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -126342,7 +126623,7 @@ module.exports = SetX;
 
 
 /***/ }),
-/* 952 */
+/* 954 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -126380,7 +126661,7 @@ module.exports = SetVisible;
 
 
 /***/ }),
-/* 953 */
+/* 955 */
 /***/ (function(module, exports) {
 
 /**
@@ -126419,7 +126700,7 @@ module.exports = SetTint;
 
 
 /***/ }),
-/* 954 */
+/* 956 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -126460,7 +126741,7 @@ module.exports = SetScaleY;
 
 
 /***/ }),
-/* 955 */
+/* 957 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -126501,7 +126782,7 @@ module.exports = SetScaleX;
 
 
 /***/ }),
-/* 956 */
+/* 958 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -126548,7 +126829,7 @@ module.exports = SetScale;
 
 
 /***/ }),
-/* 957 */
+/* 959 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -126589,7 +126870,7 @@ module.exports = SetRotation;
 
 
 /***/ }),
-/* 958 */
+/* 960 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -126636,7 +126917,7 @@ module.exports = SetOrigin;
 
 
 /***/ }),
-/* 959 */
+/* 961 */
 /***/ (function(module, exports) {
 
 /**
@@ -126673,7 +126954,7 @@ module.exports = SetHitArea;
 
 
 /***/ }),
-/* 960 */
+/* 962 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -126714,7 +126995,7 @@ module.exports = SetDepth;
 
 
 /***/ }),
-/* 961 */
+/* 963 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -126754,7 +127035,7 @@ module.exports = SetBlendMode;
 
 
 /***/ }),
-/* 962 */
+/* 964 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -126795,7 +127076,7 @@ module.exports = SetAlpha;
 
 
 /***/ }),
-/* 963 */
+/* 965 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -126836,7 +127117,7 @@ module.exports = ScaleY;
 
 
 /***/ }),
-/* 964 */
+/* 966 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -126883,7 +127164,7 @@ module.exports = ScaleXY;
 
 
 /***/ }),
-/* 965 */
+/* 967 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -126924,7 +127205,7 @@ module.exports = ScaleX;
 
 
 /***/ }),
-/* 966 */
+/* 968 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -126973,7 +127254,7 @@ module.exports = RotateAroundDistance;
 
 
 /***/ }),
-/* 967 */
+/* 969 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -127019,7 +127300,7 @@ module.exports = RotateAround;
 
 
 /***/ }),
-/* 968 */
+/* 970 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -127060,7 +127341,7 @@ module.exports = Rotate;
 
 
 /***/ }),
-/* 969 */
+/* 971 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -127098,7 +127379,7 @@ module.exports = RandomTriangle;
 
 
 /***/ }),
-/* 970 */
+/* 972 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -127136,7 +127417,7 @@ module.exports = RandomRectangle;
 
 
 /***/ }),
-/* 971 */
+/* 973 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -127174,7 +127455,7 @@ module.exports = RandomLine;
 
 
 /***/ }),
-/* 972 */
+/* 974 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -127212,7 +127493,7 @@ module.exports = RandomEllipse;
 
 
 /***/ }),
-/* 973 */
+/* 975 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -127250,7 +127531,7 @@ module.exports = RandomCircle;
 
 
 /***/ }),
-/* 974 */
+/* 976 */
 /***/ (function(module, exports) {
 
 /**
@@ -127260,7 +127541,7 @@ module.exports = RandomCircle;
  */
 
 /**
- * [description]
+ * Play an animation with the given key, starting at the given startFrame on all Game Objects in items.
  *
  * @function Phaser.Actions.PlayAnimation
  * @since 3.0.0
@@ -127268,8 +127549,8 @@ module.exports = RandomCircle;
  * @generic {Phaser.GameObjects.GameObject[]} G - [items,$return]
  *
  * @param {(array|Phaser.GameObjects.GameObject[])} items - An array of Game Objects. The contents of this array are updated by this Action.
- * @param {string} key - [description]
- * @param {(string|integer)} [startFrame] - [description]
+ * @param {string} key - The name of the animation to play.
+ * @param {(string|integer)} [startFrame] - The starting frame of the animation with the given key.
  *
  * @return {(array|Phaser.GameObjects.GameObject[])} The array of Game Objects that was passed to this Action.
  */
@@ -127287,7 +127568,7 @@ module.exports = PlayAnimation;
 
 
 /***/ }),
-/* 975 */
+/* 977 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -127347,7 +127628,7 @@ module.exports = PlaceOnTriangle;
 
 
 /***/ }),
-/* 976 */
+/* 978 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -127408,7 +127689,7 @@ module.exports = PlaceOnRectangle;
 
 
 /***/ }),
-/* 977 */
+/* 979 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -127452,7 +127733,7 @@ module.exports = PlaceOnLine;
 
 
 /***/ }),
-/* 978 */
+/* 980 */
 /***/ (function(module, exports) {
 
 /**
@@ -127502,7 +127783,7 @@ module.exports = PlaceOnEllipse;
 
 
 /***/ }),
-/* 979 */
+/* 981 */
 /***/ (function(module, exports) {
 
 /**
@@ -127549,7 +127830,7 @@ module.exports = PlaceOnCircle;
 
 
 /***/ }),
-/* 980 */
+/* 982 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -127590,7 +127871,7 @@ module.exports = IncY;
 
 
 /***/ }),
-/* 981 */
+/* 983 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -127637,7 +127918,7 @@ module.exports = IncXY;
 
 
 /***/ }),
-/* 982 */
+/* 984 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -127678,7 +127959,7 @@ module.exports = IncX;
 
 
 /***/ }),
-/* 983 */
+/* 985 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -127719,7 +128000,7 @@ module.exports = IncAlpha;
 
 
 /***/ }),
-/* 984 */
+/* 986 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -127843,7 +128124,7 @@ module.exports = GridAlign;
 
 
 /***/ }),
-/* 985 */
+/* 987 */
 /***/ (function(module, exports) {
 
 /**
@@ -127901,7 +128182,7 @@ module.exports = GetLast;
 
 
 /***/ }),
-/* 986 */
+/* 988 */
 /***/ (function(module, exports) {
 
 /**
@@ -127959,7 +128240,7 @@ module.exports = GetFirst;
 
 
 /***/ }),
-/* 987 */
+/* 989 */
 /***/ (function(module, exports) {
 
 /**
@@ -128004,7 +128285,7 @@ module.exports = Call;
 
 
 /***/ }),
-/* 988 */
+/* 990 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -128045,8 +128326,6 @@ module.exports = Angle;
 
 
 /***/ }),
-/* 989 */,
-/* 990 */,
 /* 991 */,
 /* 992 */,
 /* 993 */,
@@ -128064,7 +128343,9 @@ module.exports = Angle;
 /* 1005 */,
 /* 1006 */,
 /* 1007 */,
-/* 1008 */
+/* 1008 */,
+/* 1009 */,
+/* 1010 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global) {/**
@@ -128076,7 +128357,7 @@ module.exports = Angle;
 __webpack_require__(596);
 
 var CONST = __webpack_require__(19);
-var Extend = __webpack_require__(17);
+var Extend = __webpack_require__(16);
 
 /**
  * @namespace Phaser
@@ -128087,16 +128368,16 @@ var Phaser = {
     Actions: __webpack_require__(586),
     Animation: __webpack_require__(554),
     Cache: __webpack_require__(553),
-    Cameras: __webpack_require__(941),
+    Cameras: __webpack_require__(943),
     Class: __webpack_require__(0),
-    Create: __webpack_require__(937),
-    Curves: __webpack_require__(931),
+    Create: __webpack_require__(939),
+    Curves: __webpack_require__(933),
     Data: __webpack_require__(528),
-    Display: __webpack_require__(928),
-    DOM: __webpack_require__(899),
+    Display: __webpack_require__(930),
+    DOM: __webpack_require__(901),
     EventEmitter: __webpack_require__(518),
     Game: __webpack_require__(517),
-    GameObjects: __webpack_require__(898),
+    GameObjects: __webpack_require__(900),
     Geom: __webpack_require__(377),
     Input: __webpack_require__(361),
     Loader: __webpack_require__(744),
