@@ -191,7 +191,7 @@ var Key = new Class({
      * Resets this Key object back to its default un-pressed state.
      *
      * @method Phaser.Input.Keyboard.Key.reset
-     * @since 3.5.2
+     * @since 3.6.0
      * 
      * @return {Phaser.Input.Keyboard.Key} This Key instance.
      */

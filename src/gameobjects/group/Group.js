@@ -730,7 +730,7 @@ var Group = new Class({
      * Unless a new member is created, `key`, `frame`, and `visible` are ignored.
      *
      * @method Phaser.GameObjects.Group#getFirstNth
-     * @since 3.5.2
+     * @since 3.6.0
      *
      * @param {integer} nth - The nth matching Group member to search for.
      * @param {boolean} [state=false] - The {@link Phaser.GameObjects.GameObject#active} value to match.
@@ -756,7 +756,7 @@ var Group = new Class({
      * Unless a new member is created, `key`, `frame`, and `visible` are ignored.
      *
      * @method Phaser.GameObjects.Group#getLast
-     * @since 3.5.2
+     * @since 3.6.0
      *
      * @param {boolean} [state=false] - The {@link Phaser.GameObjects.GameObject#active} value to match.
      * @param {boolean} [createIfNull=false] - Create a new Game Object if no matching members are found, using the following arguments.
@@ -781,7 +781,7 @@ var Group = new Class({
      * Unless a new member is created, `key`, `frame`, and `visible` are ignored.
      *
      * @method Phaser.GameObjects.Group#getLastNth
-     * @since 3.5.2
+     * @since 3.6.0
      *
      * @param {integer} nth - The nth matching Group member to search for.
      * @param {boolean} [state=false] - The {@link Phaser.GameObjects.GameObject#active} value to match.
@@ -808,7 +808,7 @@ var Group = new Class({
      *
      * @method Phaser.GameObjects.Group#getHandler
      * @private
-     * @since 3.5.2
+     * @since 3.6.0
      *
      * @param {boolean} forwards - Search front to back or back to front?
      * @param {integer} nth - Stop matching after nth successful matches.
