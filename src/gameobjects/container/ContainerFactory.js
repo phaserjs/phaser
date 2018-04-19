@@ -8,8 +8,6 @@
 var Container = require('./Container');
 var GameObjectFactory = require('../GameObjectFactory');
 
-var hasWarned = false;
-
 /**
  * Creates a new Container Game Object and adds it to the Scene.
  *
@@ -26,11 +24,5 @@ var hasWarned = false;
  */
 GameObjectFactory.register('container', function (x, y, children)
 {
-    if (!hasWarned)
-    {
-        console.warn('Use of a beta feature: Containers');
-        hasWarned = true;
-    }
-
     return this.displayList.add(new Container(this.scene, x, y, children));
 });

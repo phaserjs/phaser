@@ -4,6 +4,7 @@
 
 ### New Features
 
+* Containers are now fully available! We have removed the beta warning and fixed the way in which they work with Cameras, input and scroll factors. They are also fully documented, so please see their docs and examples for use.
 * Group.getLast will return the last member in the Group matching the search criteria.
 * Group.getFirstNth will return the nth member in the Group, scanning from top to bottom, that matches the search criteria.
 * Group.getLastNth will return the nth member in the Group, scanning in reverse, that matches the search criteria.
