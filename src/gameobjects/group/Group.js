@@ -561,7 +561,7 @@ var Group = new Class({
     },
 
     /**
-     * Removes a member of this group.
+     * Removes a member of this Group and optionally removes it from the Scene and / or destroys it.
      *
      * Calls {@link Phaser.GameObjects.Group#removeCallback}.
      *
@@ -569,13 +569,15 @@ var Group = new Class({
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.GameObject} child - The Game Object to remove.
-     * @param {boolean} [removeFromScene=false] - Also remove the group member from the scene.
+     * @param {boolean} [removeFromScene=false] - Optionally remove the Group member from the Scene it belongs to.
+     * @param {boolean} [destroyChild=false] - Optionally call destroy on the removed Group member.
      *
      * @return {Phaser.GameObjects.Group} This Group object.
      */
-    remove: function (child, removeFromScene)
+    remove: function (child, removeFromScene, destroyChild)
     {
         if (removeFromScene === undefined) { removeFromScene = false; }
+        if (destroyChild === undefined) { destroyChild = false; }
 
         if (!this.children.contains(child))
         {
@@ -589,36 +591,42 @@ var Group = new Class({
             this.removeCallback.call(this, child);
         }
 
-        if (removeFromScene)
+        child.off('destroy', this.remove, this);
+
+        if (destroyChild)
         {
-            this.scene.sys.displayList.remove(child);
+            child.destroy();
+        }
+        else if (removeFromScene)
+        {
+            child.scene.sys.displayList.remove(child);
 
             if (child.preUpdate)
             {
-                this.scene.sys.updateList.remove(child);
+                child.scene.sys.updateList.remove(child);
             }
         }
-
-        child.off('destroy', this.remove, this);
 
         return this;
     },
 
     /**
-     * Removes all members of this group.
+     * Removes all members of this Group and optionally removes them from the Scene and / or destroys them.
      *
      * Does not call {@link Phaser.GameObjects.Group#removeCallback}.
      *
      * @method Phaser.GameObjects.Group#clear
      * @since 3.0.0
      *
-     * @param {boolean} [removeFromScene=false] - Also remove each group member from the scene.
+     * @param {boolean} [removeFromScene=false] - Optionally remove each Group member from the Scene.
+     * @param {boolean} [destroyChild=false] - Optionally call destroy on the removed Group members.
      *
      * @return {Phaser.GameObjects.Group} This group.
      */
-    clear: function (removeFromScene)
+    clear: function (removeFromScene, destroyChild)
     {
         if (removeFromScene === undefined) { removeFromScene = false; }
+        if (destroyChild === undefined) { destroyChild = false; }
 
         var children = this.children;
 
@@ -628,13 +636,17 @@ var Group = new Class({
 
             gameObject.off('destroy', this.remove, this);
 
-            if (removeFromScene)
+            if (destroyChild)
             {
-                this.scene.sys.displayList.remove(gameObject);
+                gameObject.destroy();
+            }
+            else if (removeFromScene)
+            {
+                gameObject.scene.sys.displayList.remove(gameObject);
 
                 if (gameObject.preUpdate)
                 {
-                    this.scene.sys.updateList.remove(gameObject);
+                    gameObject.scene.sys.updateList.remove(gameObject);
                 }
             }
         }

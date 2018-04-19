@@ -7,6 +7,8 @@
 * Group.getLast will return the last member in the Group matching the search criteria.
 * Group.getFirstNth will return the nth member in the Group, scanning from top to bottom, that matches the search criteria.
 * Group.getLastNth will return the nth member in the Group, scanning in reverse, that matches the search criteria.
+* Group.remove has a new optional argument `destroyChild` that will call `destroy` on the child after removing it.
+* Group.clear has a new optional argument `destroyChild` that will call `destroy` on all children in the Group after removing them.
 
 ### Updates
 
@@ -16,6 +18,7 @@
 * Impact Physics Game Objects have changed `setActive` to `setActiveCollision`, previously the `setActive` collision method was overwriting the Game Objects `setActive` method, hence the renaming.
 * The modifications made to the RTree class in Phaser 3.4.0 to avoid CSP policy violations caused a significant performance hit once a substantial number of bodies were involved. We have recoded how the class deals with its accessor formats and returned to 3.3 level performance while still maintaining CSP policy adherence. Fix #3594 (thanks @16patsle)
 * The Retro Font namespace has changed to `Phaser.GameObjects.RetroFont`. Previously, you would access the parser and constants via `BitmapText`, i.e.: `Phaser.GameObjects.BitmapText.ParseRetroFont.TEXT_SET6`. This has now changed to its own namespace, so the same line would be: `Phaser.GameObjects.RetroFont.TEXT_SET6`. The Parser is available via `Phaser.GameObjects.RetroFont.Parse`. This keeps things cleaner and also unbinds RetroFont from BitmapText, allowing you to cleanly exclude it from your build should you wish. All examples have been updated to reflect this.
+* If using the `removeFromScene` option in Group.remove or Group.clear it will remove the child/ren from the Scene to which they belong, not the Scene the Group belongs to.
 
 ### Bug Fixes
 
