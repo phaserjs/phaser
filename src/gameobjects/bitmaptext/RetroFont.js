@@ -26,11 +26,7 @@ var Extend = require('../../utils/object/Extend');
  * @since 3.6.0
  */
 
-var RetroFont = {
-
-    Parse: require('./ParseRetroFont')
-
-};
+var RetroFont = { Parse: require('./ParseRetroFont') };
 
 //   Merge in the consts
 RetroFont = Extend(false, RetroFont, RETRO_FONT_CONST);

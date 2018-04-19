@@ -5,7 +5,6 @@
  */
 
 var GetValue = require('../../utils/object/GetValue');
-var RETRO_FONT_CONST = require('./const');
 
 /**
  * Parses a Retro Font configuration object so you can pass it to the BitmapText constructor
@@ -27,7 +26,6 @@ var ParseRetroFont = function (scene, config)
 
     if (letters === '')
     {
-        console.error('ParseRetroFont: Invalid chars');
         return;
     }
 
