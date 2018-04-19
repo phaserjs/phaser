@@ -5,7 +5,6 @@
  */
 
 var Class = require('../../../utils/Class');
-var ResetKey = require('./ResetKey');
 
 /**
  * @classdesc
