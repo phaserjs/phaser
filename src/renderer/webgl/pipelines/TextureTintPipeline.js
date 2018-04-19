@@ -294,6 +294,7 @@ var TextureTintPipeline = new Class({
     onBind: function ()
     {
         WebGLPipeline.prototype.onBind.call(this);
+
         this.mvpUpdate();
 
         if (this.batches.length === 0)
@@ -331,6 +332,7 @@ var TextureTintPipeline = new Class({
      *
      * @param {Phaser.Tilemaps.StaticTilemapLayer} tilemap - [description]
      * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
+     * @param {Phaser.GameObjects.Components.TransformMatrix} parentTransformMatrix - [description]
      */
     drawStaticTilemapLayer: function (tilemap)
     {

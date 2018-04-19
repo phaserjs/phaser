@@ -40,6 +40,7 @@ var ForwardDiffuseLightPipeline = new Class({
      * [description]
      *
      * @method Phaser.Renderer.WebGL.Pipelines.ForwardDiffuseLightPipeline#onBind
+     * @override
      * @since 3.0.0
      *
      * @return {Phaser.Renderer.WebGL.Pipelines.ForwardDiffuseLightPipeline} [description]
@@ -123,12 +124,12 @@ var ForwardDiffuseLightPipeline = new Class({
      * [description]
      *
      * @method Phaser.Renderer.WebGL.Pipelines.ForwardDiffuseLightPipeline#drawStaticTilemapLayer
+     * @override
      * @since 3.0.0
      *
      * @param {Phaser.Tilemaps.StaticTilemapLayer} tilemap - [description]
      * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
      * @param {Phaser.GameObjects.Components.TransformMatrix} parentTransformMatrix - [description]
-     *
      */
     drawStaticTilemapLayer: function (tilemap, camera, parentTransformMatrix)
     {
