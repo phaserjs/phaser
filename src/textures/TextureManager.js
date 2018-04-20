@@ -173,6 +173,8 @@ var TextureManager = new Class({
 
             Parser.Image(texture, 0);
 
+            _this.emit('addtexture', key, texture);
+
             _this.emit('onload', key, texture);
         };
 
@@ -201,6 +203,8 @@ var TextureManager = new Class({
         {
             texture.setDataSource(dataSource);
         }
+
+        this.emit('addtexture', key, texture);
 
         return texture;
     },
@@ -272,6 +276,8 @@ var TextureManager = new Class({
 
         Parser.Canvas(texture, 0);
 
+        this.emit('addtexture', key, texture);
+
         return texture;
     },
 
@@ -322,9 +328,11 @@ var TextureManager = new Class({
         if (Array.isArray(data))
         {
             var singleAtlasFile = (data.length === 1); // multi-pack with one atlas file for all images
+
             for (var i = 0; i < texture.source.length; i++)
             {
                 var atlasData = singleAtlasFile ? data[0] : data[i];
+
                 Parser.JSONArray(texture, i, atlasData);
             }
         }
@@ -332,6 +340,8 @@ var TextureManager = new Class({
         {
             Parser.JSONArray(texture, 0, data);
         }
+
+        this.emit('addtexture', key, texture);
 
         return texture;
     },
@@ -366,6 +376,8 @@ var TextureManager = new Class({
             Parser.JSONHash(texture, 0, data);
         }
 
+        this.emit('addtexture', key, texture);
+
         return texture;
     },
 
@@ -387,6 +399,8 @@ var TextureManager = new Class({
         var texture = this.create(key, source);
 
         Parser.UnityYAML(texture, 0, data);
+
+        this.emit('addtexture', key, texture);
 
         return texture;
     },
@@ -425,6 +439,8 @@ var TextureManager = new Class({
         var height = texture.source[0].height;
 
         Parser.SpriteSheet(texture, 0, 0, 0, width, height, config);
+
+        this.emit('addtexture', key, texture);
 
         return texture;
     },
@@ -483,6 +499,8 @@ var TextureManager = new Class({
                 Parser.SpriteSheet(texture, 0, sheet.cutX, sheet.cutY, sheet.cutWidth, sheet.cutHeight, config);
             }
 
+            this.emit('addtexture', key, texture);
+
             return texture;
         }
     },
@@ -516,6 +534,8 @@ var TextureManager = new Class({
             Parser.StarlingXML(texture, 0, data);
         }
 
+        this.emit('addtexture', key, texture);
+
         return texture;
     },
 
@@ -548,6 +568,8 @@ var TextureManager = new Class({
             Parser.Pyxel(texture, 0, data);
         }
 
+        this.emit('addtexture', key, texture);
+
         return texture;
     },
 
@@ -569,6 +591,8 @@ var TextureManager = new Class({
         var texture = new Texture(this, key, source, width, height);
 
         this.list[key] = texture;
+
+        this.emit('addtexture', key, texture);
 
         return texture;
     },
