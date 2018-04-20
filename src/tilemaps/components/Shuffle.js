@@ -14,6 +14,7 @@ var ShuffleArray = require('../../utils/array/Shuffle');
  * information.
  *
  * @function Phaser.Tilemaps.Components.Shuffle
+ * @private
  * @since 3.0.0
  *
  * @param {integer} [tileX=0] - [description]

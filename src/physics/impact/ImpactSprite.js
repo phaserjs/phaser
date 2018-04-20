@@ -39,7 +39,6 @@ var Sprite = require('../../gameobjects/sprite/Sprite');
  * @extends Phaser.Physics.Impact.Components.SetGameObject
  * @extends Phaser.Physics.Impact.Components.Velocity
  * @extends Phaser.GameObjects.Components.Alpha
- * @extends Phaser.GameObjects.Components.Animation
  * @extends Phaser.GameObjects.Components.BlendMode
  * @extends Phaser.GameObjects.Components.Depth
  * @extends Phaser.GameObjects.Components.Flip

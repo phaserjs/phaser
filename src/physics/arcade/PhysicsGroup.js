@@ -101,8 +101,8 @@ var PhysicsGroup = new Class({
          */
         this.world = world;
 
-        config.createCallback = this.createCallback;
-        config.removeCallback = this.removeCallback;
+        config.createCallback = this.createCallbackHandler;
+        config.removeCallback = this.removeCallbackHandler;
 
         config.classType = GetFastValue(config, 'classType', ArcadeSprite);
 
@@ -149,12 +149,12 @@ var PhysicsGroup = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Physics.Arcade.Group#createCallback
+     * @method Phaser.Physics.Arcade.Group#createCallbackHandler
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.GameObject} child - [description]
      */
-    createCallback: function (child)
+    createCallbackHandler: function (child)
     {
         if (!child.body)
         {
@@ -172,12 +172,12 @@ var PhysicsGroup = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Physics.Arcade.Group#removeCallback
+     * @method Phaser.Physics.Arcade.Group#removeCallbackHandler
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.GameObject} child - [description]
      */
-    removeCallback: function (child)
+    removeCallbackHandler: function (child)
     {
         if (child.body)
         {

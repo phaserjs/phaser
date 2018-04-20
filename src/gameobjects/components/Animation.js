@@ -308,7 +308,7 @@ var Animation = new Class({
     /**
      * Sets the amount of time, in milliseconds, that the animation will be delayed before starting playback.
      *
-     * @method Phaser.GameObjects.Components.Animation#delay
+     * @method Phaser.GameObjects.Components.Animation#setDelay
      * @since 3.4.0
      *
      * @param {integer} [value=0] - The amount of time, in milliseconds, to wait before starting playback.
@@ -327,7 +327,7 @@ var Animation = new Class({
     /**
      * Gets the amount of time, in milliseconds that the animation will be delayed before starting playback.
      *
-     * @method Phaser.GameObjects.Components.Animation#delay
+     * @method Phaser.GameObjects.Components.Animation#getDelay
      * @since 3.4.0
      *
      * @return {integer} The amount of time, in milliseconds, the Animation will wait before starting playback.
@@ -712,7 +712,7 @@ var Animation = new Class({
      * @fires Phaser.GameObjects.Components.Animation#onCompleteEvent
      * @since 3.4.0
      *
-     * @param {integer} delay - The number of miliseconds to wait before stopping this animation.
+     * @param {integer} delay - The number of milliseconds to wait before stopping this animation.
      *
      * @return {Phaser.GameObjects.GameObject} The Game Object that owns this Animation Component.
      */

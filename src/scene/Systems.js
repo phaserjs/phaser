@@ -25,7 +25,7 @@ var Settings = require('./Settings');
  * @since 3.0.0
  *
  * @param {Phaser.Scene} scene - The Scene that owns this Systems instance.
- * @param {(string|SettingsConfig)} config - Scene specific configuration settings.
+ * @param {(string|Phaser.Scenes.Settings.Config)} config - Scene specific configuration settings.
  */
 var Systems = new Class({
 
@@ -55,7 +55,7 @@ var Systems = new Class({
          * [description]
          *
          * @name Phaser.Scenes.Systems#config
-         * @type {(string|SettingsConfig)}
+         * @type {(string|Phaser.Scenes.Settings.Config)}
          * @since 3.0.0
          */
         this.config = config;
@@ -64,7 +64,7 @@ var Systems = new Class({
          * [description]
          *
          * @name Phaser.Scenes.Systems#settings
-         * @type {SettingsObject}
+         * @type {Phaser.Scenes.Settings.Object}
          * @since 3.0.0
          */
         this.settings = Settings.create(config);
@@ -376,8 +376,10 @@ var Systems = new Class({
     /**
      * Send this Scene to sleep.
      *
-     * A sleeping Scene doesn't run it's update step or render anything, but it also isn't destroyed,
-     * or have any of its systems or children removed, meaning it can be re-activated at any point.
+     * A sleeping Scene doesn't run it's update step or render anything, but it also isn't shut down
+     * or have any of its systems or children removed, meaning it can be re-activated at any point and
+     * will carry on from where it left off. It also keeps everything in memory and events and callbacks
+     * from other Scenes may still invoke changes within it, so be careful what is left active.
      *
      * @method Phaser.Scenes.Systems#sleep
      * @since 3.0.0
@@ -406,12 +408,19 @@ var Systems = new Class({
      */
     wake: function ()
     {
-        this.settings.status = CONST.RUNNING;
+        var settings = this.settings;
 
-        this.settings.active = true;
-        this.settings.visible = true;
+        settings.status = CONST.RUNNING;
+
+        settings.active = true;
+        settings.visible = true;
 
         this.events.emit('wake', this);
+
+        if (settings.isTransition)
+        {
+            this.events.emit('transitionwake', settings.transitionFrom, settings.transitionDuration);
+        }
 
         return this;
     },
@@ -440,6 +449,45 @@ var Systems = new Class({
     isActive: function ()
     {
         return (this.settings.status === CONST.RUNNING);
+    },
+
+    /**
+     * Is this Scene currently transitioning out to, or in from another Scene?
+     *
+     * @method Phaser.Scenes.Systems#isTransitioning
+     * @since 3.5.0
+     *
+     * @return {boolean} `true` if this Scene is currently transitioning, otherwise `false`.
+     */
+    isTransitioning: function ()
+    {
+        return (this.settings.isTransition || this.scenePlugin._target !== null);
+    },
+
+    /**
+     * Is this Scene currently transitioning out from itself to another Scene?
+     *
+     * @method Phaser.Scenes.Systems#isTransitionOut
+     * @since 3.5.0
+     *
+     * @return {boolean} `true` if this Scene is in transition to another Scene, otherwise `false`.
+     */
+    isTransitionOut: function ()
+    {
+        return (this.scenePlugin._target !== null && this.scenePlugin._duration > 0);
+    },
+
+    /**
+     * Is this Scene currently transitioning in from another Scene?
+     *
+     * @method Phaser.Scenes.Systems#isTransitionIn
+     * @since 3.5.0
+     *
+     * @return {boolean} `true` if this Scene is transitioning in from another Scene, otherwise `false`.
+     */
+    isTransitionIn: function ()
+    {
+        return (this.settings.isTransition);
     },
 
     /**
@@ -547,6 +595,11 @@ var Systems = new Class({
      */
     shutdown: function ()
     {
+        this.events.off('transitioninit');
+        this.events.off('transitionstart');
+        this.events.off('transitioncomplete');
+        this.events.off('transitionout');
+
         this.settings.status = CONST.SHUTDOWN;
 
         this.settings.active = false;

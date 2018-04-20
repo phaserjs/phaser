@@ -14,6 +14,7 @@ var SetLayerCollisionIndex = require('./SetLayerCollisionIndex');
  * collision will be enabled (true) or disabled (false).
  *
  * @function Phaser.Tilemaps.Components.SetCollision
+ * @private
  * @since 3.0.0
  *
  * @param {(integer|array)} indexes - Either a single tile index, or an array of tile indexes.

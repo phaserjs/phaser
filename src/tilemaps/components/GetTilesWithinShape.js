@@ -26,6 +26,7 @@ var TriangleToRectangle = function (triangle, rect)
  * Line, Rectangle or Triangle. The shape should be in world coordinates.
  *
  * @function Phaser.Tilemaps.Components.GetTilesWithinShape
+ * @private
  * @since 3.0.0
  *
  * @param {(Phaser.Geom.Circle|Phaser.Geom.Line|Phaser.Geom.Rectangle|Phaser.Geom.Triangle)} shape - A shape in world (pixel) coordinates

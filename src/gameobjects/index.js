@@ -30,6 +30,7 @@ var GameObjects = {
     Particles: require('./particles'),
     PathFollower: require('./pathfollower/PathFollower'),
     RenderTexture: require('./rendertexture/RenderTexture'),
+    RetroFont: require('./bitmaptext/RetroFont'),
     Sprite3D: require('./sprite3d/Sprite3D'),
     Sprite: require('./sprite/Sprite'),
     Text: require('./text/static/Text'),
@@ -75,7 +76,7 @@ var GameObjects = {
 
 };
 
-if (WEBGL_RENDERER)
+if (typeof WEBGL_RENDERER)
 {
     //  WebGL only Game Objects
     GameObjects.Mesh = require('./mesh/Mesh');

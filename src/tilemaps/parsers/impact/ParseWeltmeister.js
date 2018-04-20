@@ -10,6 +10,10 @@ var ParseTileLayers = require('./ParseTileLayers');
 var ParseTilesets = require('./ParseTilesets');
 
 /**
+ * @namespace Phaser.Tilemaps.Parsers.Impact
+ */
+
+/**
  * Parses a Weltmeister JSON object into a new MapData object.
  *
  * @function Phaser.Tilemaps.Parsers.Impact.ParseWeltmeister

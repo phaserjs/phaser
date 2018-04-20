@@ -49,7 +49,7 @@ var Sprite = require('../sprite/Sprite');
  *
  * If `max` is positive, then the total created will not exceed `max`.
  *
- * `key` is required.
+ * `key` is required. {@link Phaser.GameObjects.Group#defaultKey} is not used.
  *
  * @property {?object} [classType] - The class of each new Game Object.
  * @property {string} [key] - The texture key of each new Game Object.
@@ -105,7 +105,7 @@ var Sprite = require('../sprite/Sprite');
  * @since 3.0.0
  * @param {Phaser.Scene} scene - The scene this group belongs to.
  * @param {?(Phaser.GameObjects.GameObject[]|GroupConfig)} [children] - Game objects to add to this group; or the `config` argument.
- * @param {GroupConfig} [config] - Settings for this group.
+ * @param {GroupConfig|GroupCreateConfig} [config] - Settings for this group. If `key` is set, Phaser.GameObjects.Group#createMultiple is also called with these settings.
  *
  * @see Phaser.Physics.Arcade.Group
  * @see Phaser.Physics.Arcade.StaticGroup
@@ -183,6 +183,9 @@ var Group = new Class({
         /**
          * A default texture key to use when creating new group members.
          *
+         * This is used in {@link Phaser.GameObjects.Group#create}
+         * but not in {@link Phaser.GameObjects.Group#createMultiple}.
+         *
          * @name Phaser.GameObjects.Group#defaultKey
          * @type {string}
          * @since 3.0.0
@@ -236,7 +239,7 @@ var Group = new Class({
          */
         this.createMultipleCallback = GetFastValue(config, 'createMultipleCallback', null);
 
-        if (config)
+        if (config && config.key !== undefined)
         {
             this.createMultiple(config);
         }
@@ -294,6 +297,8 @@ var Group = new Class({
     /**
      * Creates several Game Objects and adds them to this group.
      *
+     * If the group becomes {@link Phaser.GameObjects.Group#isFull}, no further Game Objects are created.
+     *
      * Calls {@link Phaser.GameObjects.Group#createMultipleCallback}
      * and {@link Phaser.GameObjects.Group#createCallback}.
      *
@@ -306,6 +311,11 @@ var Group = new Class({
      */
     createMultiple: function (config)
     {
+        if (this.isFull())
+        {
+            return [];
+        }
+
         if (!Array.isArray(config))
         {
             config = [ config ];
@@ -335,6 +345,11 @@ var Group = new Class({
      */
     createFromConfig: function (options)
     {
+        if (this.isFull())
+        {
+            return [];
+        }
+
         this.classType = GetFastValue(options, 'classType', this.classType);
 
         var key = GetFastValue(options, 'key', undefined);
@@ -384,7 +399,14 @@ var Group = new Class({
 
         for (var c = 0; c < range.length; c++)
         {
-            entries.push(this.create(0, 0, range[c].a, range[c].b, visible, active));
+            var created = this.create(0, 0, range[c].a, range[c].b, visible, active);
+
+            if (!created)
+            {
+                break;
+            }
+
+            entries.push(created);
         }
 
         //  Post-creation options (applied only to those items created in this call):
@@ -539,7 +561,7 @@ var Group = new Class({
     },
 
     /**
-     * Removes a member of this group.
+     * Removes a member of this Group and optionally removes it from the Scene and / or destroys it.
      *
      * Calls {@link Phaser.GameObjects.Group#removeCallback}.
      *
@@ -547,13 +569,20 @@ var Group = new Class({
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.GameObject} child - The Game Object to remove.
-     * @param {boolean} [removeFromScene=false] - Also remove the group member from the scene.
+     * @param {boolean} [removeFromScene=false] - Optionally remove the Group member from the Scene it belongs to.
+     * @param {boolean} [destroyChild=false] - Optionally call destroy on the removed Group member.
      *
      * @return {Phaser.GameObjects.Group} This Group object.
      */
-    remove: function (child, removeFromScene)
+    remove: function (child, removeFromScene, destroyChild)
     {
         if (removeFromScene === undefined) { removeFromScene = false; }
+        if (destroyChild === undefined) { destroyChild = false; }
+
+        if (!this.children.contains(child))
+        {
+            return this;
+        }
 
         this.children.delete(child);
 
@@ -562,36 +591,42 @@ var Group = new Class({
             this.removeCallback.call(this, child);
         }
 
-        if (removeFromScene)
+        child.off('destroy', this.remove, this);
+
+        if (destroyChild)
         {
-            this.scene.sys.displayList.remove(child);
+            child.destroy();
+        }
+        else if (removeFromScene)
+        {
+            child.scene.sys.displayList.remove(child);
 
             if (child.preUpdate)
             {
-                this.scene.sys.updateList.remove(child);
+                child.scene.sys.updateList.remove(child);
             }
         }
-
-        child.off('destroy', this.remove, this);
 
         return this;
     },
 
     /**
-     * Removes all members of this group.
+     * Removes all members of this Group and optionally removes them from the Scene and / or destroys them.
      *
      * Does not call {@link Phaser.GameObjects.Group#removeCallback}.
      *
      * @method Phaser.GameObjects.Group#clear
      * @since 3.0.0
      *
-     * @param {boolean} [removeFromScene=false] - Also remove each group member from the scene.
+     * @param {boolean} [removeFromScene=false] - Optionally remove each Group member from the Scene.
+     * @param {boolean} [destroyChild=false] - Optionally call destroy on the removed Group members.
      *
      * @return {Phaser.GameObjects.Group} This group.
      */
-    clear: function (removeFromScene)
+    clear: function (removeFromScene, destroyChild)
     {
         if (removeFromScene === undefined) { removeFromScene = false; }
+        if (destroyChild === undefined) { destroyChild = false; }
 
         var children = this.children;
 
@@ -601,13 +636,17 @@ var Group = new Class({
 
             gameObject.off('destroy', this.remove, this);
 
-            if (removeFromScene)
+            if (destroyChild)
             {
-                this.scene.sys.displayList.remove(gameObject);
+                gameObject.destroy();
+            }
+            else if (removeFromScene)
+            {
+                gameObject.scene.sys.displayList.remove(gameObject);
 
                 if (gameObject.preUpdate)
                 {
-                    this.scene.sys.updateList.remove(gameObject);
+                    gameObject.scene.sys.updateList.remove(gameObject);
                 }
             }
         }
@@ -659,7 +698,7 @@ var Group = new Class({
     },
 
     /**
-     * Scans the group for the first member that has an {@link Phaser.GameObjects.GameObject#active} state matching the argument,
+     * Scans the Group, from top to bottom, for the first member that has an {@link Phaser.GameObjects.GameObject#active} state matching the argument,
      * assigns `x` and `y`, and returns the member.
      *
      * If no matching member is found and `createIfNull` is true and the group isn't full then it will create a new Game Object using `x`, `y`, `key`, `frame`, and `visible`.
@@ -680,31 +719,176 @@ var Group = new Class({
      */
     getFirst: function (state, createIfNull, x, y, key, frame, visible)
     {
+        return this.getHandler(true, 1, state, createIfNull, x, y, key, frame, visible);
+    },
+
+    /**
+     * Scans the Group, from top to bottom, for the nth member that has an {@link Phaser.GameObjects.GameObject#active} state matching the argument,
+     * assigns `x` and `y`, and returns the member.
+     *
+     * If no matching member is found and `createIfNull` is true and the group isn't full then it will create a new Game Object using `x`, `y`, `key`, `frame`, and `visible`.
+     * Unless a new member is created, `key`, `frame`, and `visible` are ignored.
+     *
+     * @method Phaser.GameObjects.Group#getFirstNth
+     * @since 3.6.0
+     *
+     * @param {integer} nth - The nth matching Group member to search for.
+     * @param {boolean} [state=false] - The {@link Phaser.GameObjects.GameObject#active} value to match.
+     * @param {boolean} [createIfNull=false] - Create a new Game Object if no matching members are found, using the following arguments.
+     * @param {number} [x] - The horizontal position of the Game Object in the world.
+     * @param {number} [y] - The vertical position of the Game Object in the world.
+     * @param {string} [key=defaultKey] - The texture key assigned to a new Game Object (if one is created).
+     * @param {(string|integer)} [frame=defaultFrame] - A texture frame assigned to a new Game Object (if one is created).
+     * @param {boolean} [visible=true] - The {@link Phaser.GameObjects.Components.Visible#visible} state of a new Game Object (if one is created).
+     *
+     * @return {?Phaser.GameObjects.GameObject} The first matching group member, or a newly created member, or null.
+     */
+    getFirstNth: function (nth, state, createIfNull, x, y, key, frame, visible)
+    {
+        return this.getHandler(true, nth, state, createIfNull, x, y, key, frame, visible);
+    },
+
+    /**
+     * Scans the Group for the last member that has an {@link Phaser.GameObjects.GameObject#active} state matching the argument,
+     * assigns `x` and `y`, and returns the member.
+     *
+     * If no matching member is found and `createIfNull` is true and the group isn't full then it will create a new Game Object using `x`, `y`, `key`, `frame`, and `visible`.
+     * Unless a new member is created, `key`, `frame`, and `visible` are ignored.
+     *
+     * @method Phaser.GameObjects.Group#getLast
+     * @since 3.6.0
+     *
+     * @param {boolean} [state=false] - The {@link Phaser.GameObjects.GameObject#active} value to match.
+     * @param {boolean} [createIfNull=false] - Create a new Game Object if no matching members are found, using the following arguments.
+     * @param {number} [x] - The horizontal position of the Game Object in the world.
+     * @param {number} [y] - The vertical position of the Game Object in the world.
+     * @param {string} [key=defaultKey] - The texture key assigned to a new Game Object (if one is created).
+     * @param {(string|integer)} [frame=defaultFrame] - A texture frame assigned to a new Game Object (if one is created).
+     * @param {boolean} [visible=true] - The {@link Phaser.GameObjects.Components.Visible#visible} state of a new Game Object (if one is created).
+     *
+     * @return {?Phaser.GameObjects.GameObject} The first matching group member, or a newly created member, or null.
+     */
+    getLast: function (state, createIfNull, x, y, key, frame, visible)
+    {
+        return this.getHandler(false, 1, state, createIfNull, x, y, key, frame, visible);
+    },
+
+    /**
+     * Scans the Group for the last nth member that has an {@link Phaser.GameObjects.GameObject#active} state matching the argument,
+     * assigns `x` and `y`, and returns the member.
+     *
+     * If no matching member is found and `createIfNull` is true and the group isn't full then it will create a new Game Object using `x`, `y`, `key`, `frame`, and `visible`.
+     * Unless a new member is created, `key`, `frame`, and `visible` are ignored.
+     *
+     * @method Phaser.GameObjects.Group#getLastNth
+     * @since 3.6.0
+     *
+     * @param {integer} nth - The nth matching Group member to search for.
+     * @param {boolean} [state=false] - The {@link Phaser.GameObjects.GameObject#active} value to match.
+     * @param {boolean} [createIfNull=false] - Create a new Game Object if no matching members are found, using the following arguments.
+     * @param {number} [x] - The horizontal position of the Game Object in the world.
+     * @param {number} [y] - The vertical position of the Game Object in the world.
+     * @param {string} [key=defaultKey] - The texture key assigned to a new Game Object (if one is created).
+     * @param {(string|integer)} [frame=defaultFrame] - A texture frame assigned to a new Game Object (if one is created).
+     * @param {boolean} [visible=true] - The {@link Phaser.GameObjects.Components.Visible#visible} state of a new Game Object (if one is created).
+     *
+     * @return {?Phaser.GameObjects.GameObject} The first matching group member, or a newly created member, or null.
+     */
+    getLastNth: function (nth, state, createIfNull, x, y, key, frame, visible)
+    {
+        return this.getHandler(false, nth, state, createIfNull, x, y, key, frame, visible);
+    },
+
+    /**
+     * Scans the group for the last member that has an {@link Phaser.GameObjects.GameObject#active} state matching the argument,
+     * assigns `x` and `y`, and returns the member.
+     *
+     * If no matching member is found and `createIfNull` is true and the group isn't full then it will create a new Game Object using `x`, `y`, `key`, `frame`, and `visible`.
+     * Unless a new member is created, `key`, `frame`, and `visible` are ignored.
+     *
+     * @method Phaser.GameObjects.Group#getHandler
+     * @private
+     * @since 3.6.0
+     *
+     * @param {boolean} forwards - Search front to back or back to front?
+     * @param {integer} nth - Stop matching after nth successful matches.
+     * @param {boolean} [state=false] - The {@link Phaser.GameObjects.GameObject#active} value to match.
+     * @param {boolean} [createIfNull=false] - Create a new Game Object if no matching members are found, using the following arguments.
+     * @param {number} [x] - The horizontal position of the Game Object in the world.
+     * @param {number} [y] - The vertical position of the Game Object in the world.
+     * @param {string} [key=defaultKey] - The texture key assigned to a new Game Object (if one is created).
+     * @param {(string|integer)} [frame=defaultFrame] - A texture frame assigned to a new Game Object (if one is created).
+     * @param {boolean} [visible=true] - The {@link Phaser.GameObjects.Components.Visible#visible} state of a new Game Object (if one is created).
+     *
+     * @return {?Phaser.GameObjects.GameObject} The first matching group member, or a newly created member, or null.
+     */
+    getHandler: function (forwards, nth, state, createIfNull, x, y, key, frame, visible)
+    {
         if (state === undefined) { state = false; }
         if (createIfNull === undefined) { createIfNull = false; }
 
         var gameObject;
 
+        var i;
+        var total = 0;
         var children = this.children.entries;
 
-        for (var i = 0; i < children.length; i++)
+        if (forwards)
         {
-            gameObject = children[i];
-
-            if (gameObject.active === state)
+            for (i = 0; i < children.length; i++)
             {
-                if (typeof(x) === 'number')
-                {
-                    gameObject.x = x;
-                }
+                gameObject = children[i];
 
-                if (typeof(y) === 'number')
+                if (gameObject.active === state)
                 {
-                    gameObject.y = y;
-                }
+                    total++;
 
-                return gameObject;
+                    if (total === nth)
+                    {
+                        break;
+                    }
+                }
+                else
+                {
+                    gameObject = null;
+                }
             }
+        }
+        else
+        {
+            for (i = children.length - 1; i >= 0; i--)
+            {
+                gameObject = children[i];
+
+                if (gameObject.active === state)
+                {
+                    total++;
+
+                    if (total === nth)
+                    {
+                        break;
+                    }
+                }
+                else
+                {
+                    gameObject = null;
+                }
+            }
+        }
+
+        if (gameObject)
+        {
+            if (typeof(x) === 'number')
+            {
+                gameObject.x = x;
+            }
+
+            if (typeof(y) === 'number')
+            {
+                gameObject.y = y;
+            }
+
+            return gameObject;
         }
 
         //  Got this far? We need to create or bail
@@ -825,7 +1009,7 @@ var Group = new Class({
         }
         else
         {
-            return (this.children.size === this.maxSize);
+            return (this.children.size >= this.maxSize);
         }
     },
 

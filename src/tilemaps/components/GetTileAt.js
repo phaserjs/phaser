@@ -10,6 +10,7 @@ var IsInLayerBounds = require('./IsInLayerBounds');
  * Gets a tile at the given tile coordinates from the given layer.
  *
  * @function Phaser.Tilemaps.Components.GetTileAt
+ * @private
  * @since 3.0.0
  *
  * @param {integer} tileX - X position to get the tile from (given in tile units, not pixels).

@@ -4,8 +4,10 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
+var Clamp = require('../math/Clamp');
 var Class = require('../utils/Class');
 var CONST = require('./const');
+var GetFastValue = require('../utils/object/GetFastValue');
 var PluginManager = require('../boot/PluginManager');
 
 /**
@@ -47,7 +49,7 @@ var ScenePlugin = new Class({
          * The settings of the Scene this ScenePlugin belongs to.
          *
          * @name Phaser.Scenes.ScenePlugin#settings
-         * @type {SettingsObject}
+         * @type {Phaser.Scenes.Settings.Object}
          * @since 3.0.0
          */
         this.settings = scene.sys.settings;
@@ -71,12 +73,22 @@ var ScenePlugin = new Class({
         this.manager = scene.sys.game.scene;
 
         /**
+         * If this Scene is currently transitioning to another, this holds
+         * the current percentage of the transition progress, between 0 and 1.
+         *
+         * @name Phaser.Scenes.ScenePlugin#transitionProgress
+         * @type {float}
+         * @since 3.5.0
+         */
+        this.transitionProgress = 0;
+
+        /**
          * Transition elapsed timer.
          *
          * @name Phaser.Scenes.ScenePlugin#_elapsed
          * @type {integer}
          * @private
-         * @since 3.4.1
+         * @since 3.5.0
          */
         this._elapsed = 0;
 
@@ -86,7 +98,7 @@ var ScenePlugin = new Class({
          * @name Phaser.Scenes.ScenePlugin#_target
          * @type {?Phaser.Scenes.Scene}
          * @private
-         * @since 3.4.1
+         * @since 3.5.0
          */
         this._target = null;
 
@@ -96,7 +108,7 @@ var ScenePlugin = new Class({
          * @name Phaser.Scenes.ScenePlugin#_duration
          * @type {integer}
          * @private
-         * @since 3.4.1
+         * @since 3.5.0
          */
         this._duration = 0;
 
@@ -106,21 +118,55 @@ var ScenePlugin = new Class({
          * @name Phaser.Scenes.ScenePlugin#_onUpdate
          * @type {function}
          * @private
-         * @since 3.4.1
+         * @since 3.5.0
          */
         this._onUpdate;
 
         /**
-         * Transition callback.
+         * Transition callback scope.
          *
          * @name Phaser.Scenes.ScenePlugin#_onUpdateScope
          * @type {object}
          * @private
-         * @since 3.4.1
+         * @since 3.5.0
          */
         this._onUpdateScope;
 
+        /**
+         * Will this Scene sleep (true) after the transition, or stop (false)
+         *
+         * @name Phaser.Scenes.ScenePlugin#_willSleep
+         * @type {boolean}
+         * @private
+         * @since 3.5.0
+         */
+        this._willSleep = false;
+
+        /**
+         * Will this Scene be removed from the Scene Manager after the transition completes?
+         *
+         * @name Phaser.Scenes.ScenePlugin#_willRemove
+         * @type {boolean}
+         * @private
+         * @since 3.5.0
+         */
+        this._willRemove = false;
+
+        scene.sys.events.once('boot', this.boot, this);
         scene.sys.events.on('start', this.pluginStart, this);
+    },
+
+    /**
+     * This method is called automatically, only once, when the Scene is first created.
+     * Do not invoke it directly.
+     *
+     * @method Phaser.Scenes.ScenePlugin#boot
+     * @private
+     * @since 3.0.0
+     */
+    boot: function ()
+    {
+        this.systems.events.once('destroy', this.destroy, this);
     },
 
     /**
@@ -130,14 +176,13 @@ var ScenePlugin = new Class({
      *
      * @method Phaser.Scenes.ScenePlugin#pluginStart
      * @private
-     * @since 3.0.0
+     * @since 3.5.0
      */
     pluginStart: function ()
     {
-        var eventEmitter = this.systems.events;
+        this._target = null;
 
-        eventEmitter.once('shutdown', this.shutdown, this);
-        eventEmitter.once('destroy', this.destroy, this);
+        this.systems.events.once('shutdown', this.shutdown, this);
     },
 
     /**
@@ -198,56 +243,141 @@ var ScenePlugin = new Class({
     },
 
     /**
-     * BETA ( + fadeTo )
-     * Fire start and complete events in target Scene + this Scene.
-     * const leaving
-     *
-     * @method Phaser.Scenes.ScenePlugin#transition
-     * @since 3.4.1
-     *
-     * @param {string} key - The Scene key to transition to.
-     * @param {integer} [duration=1000] - The duration, in ms, for the transition to last.
-     * @param {boolean} [moveAbove=false] - More the target Scene to be above this one before the transition starts. `false` means no change to the Scene display order.
-     * @param {function} [callback] - This callback is invoked every frame for the duration of the transition.
-     * @param {any} [context] - The context in which the callback is invoked.
-     *
-     * @return {Phaser.Scenes.ScenePlugin} This ScenePlugin object.
+     * @typedef {object} Phaser.Scenes.ScenePlugin.SceneTransitionConfig
+     * 
+     * @property {string} target - The Scene key to transition to.
+     * @property {integer} [duration=1000] - The duration, in ms, for the transition to last.
+     * @property {boolean} [sleep=false] - Will the Scene responsible for the transition be sent to sleep on completion (`true`), or stopped? (`false`)
+     * @property {boolean} [allowInput=false] - Will the Scenes Input system be able to process events while it is transitioning in or out?
+     * @property {boolean} [moveAbove] - More the target Scene to be above this one before the transition starts.
+     * @property {boolean} [moveBelow] - More the target Scene to be below this one before the transition starts.
+     * @property {function} [onUpdate] - This callback is invoked every frame for the duration of the transition.
+     * @property {any} [onUpdateScope] - The context in which the callback is invoked.
+     * @property {any} [data] - An object containing any data you wish to be passed to the target Scenes init / create methods.
      */
-    transition: function (key, duration, moveAbove, callback, context)
+
+    /**
+     * This will start a transition from the current Scene to the target Scene given.
+     * 
+     * The transition will last for the duration specified in milliseconds.
+     * 
+     * You can have the target Scene moved above or below this one in the display list.
+     * 
+     * You can specify an update callback. This callback will be invoked _every frame_ for the duration
+     * of the transition.
+     *
+     * This Scene can either be sent to sleep at the end of the transition, or stopped. The default is to stop.
+     * 
+     * There are also 5 transition related events: This scene will emit the event `transitionto` when
+     * the transition begins, which is typically the frame after calling this method.
+     * 
+     * The target Scene will emit the event `transitioninit` when that Scene's `init` method is called.
+     * It will then emit the event `transitionstart` when its `create` method is called.
+     * If the Scene was sleeping and has been woken up, it will emit the event `transitionwake` instead of these two,
+     * as the Scenes `init` and `create` methods are not invoked when a sleep wakes up.
+     * 
+     * When the duration of the transition has elapsed it will emit the event `transitioncomplete`.
+     * These events are all cleared of listeners when the Scene shuts down, but not if it is sent to sleep.
+     *
+     * It's important to understand that the duration of the transition begins the moment you call this method.
+     * If the Scene you are transitioning to includes delayed processes, such as waiting for files to load, the
+     * time still counts down even while that is happening. If the game itself pauses, or something else causes
+     * this Scenes update loop to stop, then the transition will also pause for that duration. There are
+     * checks in place to prevent you accidentally stopping a transitioning Scene but if you've got code to
+     * override this understand that until the target Scene completes it might never be unlocked for input events.
+     * 
+     * @method Phaser.Scenes.ScenePlugin#transition
+     * @since 3.5.0
+     *
+     * @param {Phaser.Scenes.ScenePlugin.SceneTransitionConfig} config - The transition configuration object.
+     *
+     * @return {boolean} `true` is the transition was started, otherwise `false`.
+     */
+    transition: function (config)
     {
-        if (duration === undefined) { duration = 1000; }
-        if (moveAbove === undefined) { moveAbove = false; }
-        if (context === undefined) { context = this.scene; }
+        if (config === undefined) { config = {}; }
 
-        var target = this.get(key);
+        var key = GetFastValue(config, 'target', false);
 
-        if (
-            target &&
-            !target.sys.isActive() &&
-            !target.sys.settings.isTransition &&
-            this.settings.status === CONST.RUNNING &&
-            !this._target)
+        var target = this.manager.getScene(key);
+
+        if (!key || !this.checkValidTransition(target))
         {
-            this._elapsed = 0;
-            this._target = target;
-            this._duration = duration;
-            this._onUpdate = callback;
-            this._onUpdateScope = context;
-
-            target.sys.settings.isTransition = true;
-            target.sys.settings.transitionFrom = this.scene;
-
-            this.manager.start(key);
-
-            if (moveAbove)
-            {
-                this.manager.moveAbove(this.key, key);
-            }
-
-            this.systems.events.on('postupdate', this.step, this);
+            return false;
         }
 
-        return this;
+        var duration = GetFastValue(config, 'duration', 1000);
+
+        this._elapsed = 0;
+        this._target = target;
+        this._duration = duration;
+        this._willSleep = GetFastValue(config, 'sleep', false);
+        this._willRemove = GetFastValue(config, 'remove', false);
+
+        var callback = GetFastValue(config, 'onUpdate', null);
+
+        if (callback)
+        {
+            this._onUpdate = callback;
+            this._onUpdateScope = GetFastValue(config, 'onUpdateScope', this.scene);
+        }
+
+        var allowInput = GetFastValue(config, 'allowInput', false);
+
+        this.settings.transitionAllowInput = allowInput;
+
+        var targetSettings = target.sys.settings;
+
+        targetSettings.isTransition = true;
+        targetSettings.transitionFrom = this.scene;
+        targetSettings.transitionDuration = duration;
+        targetSettings.transitionAllowInput = allowInput;
+
+        if (GetFastValue(config, 'moveAbove', false))
+        {
+            this.manager.moveAbove(this.key, key);
+        }
+        else if (GetFastValue(config, 'moveBelow', false))
+        {
+            this.manager.moveBelow(this.key, key);
+        }
+
+        if (target.sys.isSleeping())
+        {
+            target.sys.wake();
+        }
+        else
+        {
+            this.manager.start(key, GetFastValue(config, 'data'));
+        }
+
+        this.systems.events.emit('transitionout', target, duration);
+
+        this.systems.events.on('update', this.step, this);
+
+        return true;
+    },
+
+    /**
+     * Checks to see if this Scene can transition to the target Scene or not.
+     *
+     * @method Phaser.Scenes.ScenePlugin#checkValidTransition
+     * @private
+     * @since 3.5.0
+     *
+     * @param {Phaser.Scene} target - The Scene to test against.
+     *
+     * @return {boolean} `true` if this Scene can transition, otherwise `false`.
+     */
+    checkValidTransition: function (target)
+    {
+        //  Not a valid target if it doesn't exist, isn't active or is already transitioning in or out
+        if (!target || target.sys.isActive() || target.sys.isTransitioning() || target === this.scene || this.systems.isTransitioning())
+        {
+            return false;
+        }
+
+        return true;
     },
 
     /**
@@ -256,7 +386,7 @@ var ScenePlugin = new Class({
      *
      * @method Phaser.Scenes.ScenePlugin#step
      * @private
-     * @since 3.4.1
+     * @since 3.5.0
      *
      * @param {number} time - [description]
      * @param {number} delta - [description]
@@ -265,24 +395,58 @@ var ScenePlugin = new Class({
     {
         this._elapsed += delta;
 
+        this.transitionProgress = Clamp(this._elapsed / this._duration, 0, 1);
+
         if (this._onUpdate)
         {
-            this._onUpdate.call(this._onUpdateScope, time, delta);
+            this._onUpdate.call(this._onUpdateScope, this.transitionProgress);
         }
 
         if (this._elapsed >= this._duration)
         {
-            //  Stop the step
-            this.systems.events.off('postupdate', this.step, this);
+            this.transitionComplete();
+        }
+    },
 
-            //  Notify target scene
-            this._target.sys.events.emit('transitioncomplete', this.scene);
+    /**
+     * Called by `step` when the transition out of this scene to another is over.
+     *
+     * @method Phaser.Scenes.ScenePlugin#transitionComplete
+     * @private
+     * @since 3.5.0
+     */
+    transitionComplete: function ()
+    {
+        var targetSys = this._target.sys;
+        var targetSettings = this._target.sys.settings;
 
-            //  Clear the target out
-            this._target.sys.settings.isTransition = false;
-            this._target.sys.settings.transitionFrom = null;
+        //  Stop the step
+        this.systems.events.off('update', this.step, this);
 
-            //  Stop this Scene
+        //  Notify target scene
+        targetSys.events.emit('transitioncomplete', this.scene);
+
+        //  Clear target scene settings
+        targetSettings.isTransition = false;
+        targetSettings.transitionFrom = null;
+
+        //  Clear local settings
+        this._duration = 0;
+        this._target = null;
+        this._onUpdate = null;
+        this._onUpdateScope = null;
+
+        //  Now everything is clear we can handle what happens to this Scene
+        if (this._willRemove)
+        {
+            this.manager.remove(this.key);
+        }
+        else if (this._willSleep)
+        {
+            this.systems.sleep();
+        }
+        else
+        {
             this.manager.stop(this.key);
         }
     },
@@ -294,7 +458,7 @@ var ScenePlugin = new Class({
      * @since 3.0.0
      *
      * @param {string} key - The Scene key.
-     * @param {(Phaser.Scene|SettingsConfig|function)} sceneConfig - The config for the Scene.
+     * @param {(Phaser.Scene|Phaser.Scenes.Settings.Config|function)} sceneConfig - The config for the Scene.
      * @param {boolean} autoStart - Whether to start the Scene after it's added.
      *
      * @return {Phaser.Scenes.ScenePlugin} This ScenePlugin object.
@@ -746,14 +910,11 @@ var ScenePlugin = new Class({
      */
     shutdown: function ()
     {
-        this._target = null;
-        this._onUpdate = null;
-        this._onUpdateScope = null;
-
         var eventEmitter = this.systems.events;
 
         eventEmitter.off('shutdown', this.shutdown, this);
         eventEmitter.off('postupdate', this.step, this);
+        eventEmitter.off('transitionout');
     },
 
     /**

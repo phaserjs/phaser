@@ -12,6 +12,7 @@ var WorldToTileY = require('./WorldToTileY');
  * Gets the tiles in the given rectangular area (in world coordinates) of the layer.
  *
  * @function Phaser.Tilemaps.Components.GetTilesWithinWorldXY
+ * @private
  * @since 3.0.0
  *
  * @param {number} worldX - [description]

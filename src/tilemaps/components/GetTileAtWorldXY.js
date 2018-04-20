@@ -12,6 +12,7 @@ var WorldToTileY = require('./WorldToTileY');
  * Gets a tile at the given world coordinates from the given layer.
  *
  * @function Phaser.Tilemaps.Components.GetTileAtWorldXY
+ * @private
  * @since 3.0.0
  *
  * @param {number} worldX - X position to get the tile from (given in pixels)

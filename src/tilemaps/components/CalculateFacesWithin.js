@@ -13,12 +13,13 @@ var GetTilesWithin = require('./GetTilesWithin');
  * is mostly used internally.
  *
  * @function Phaser.Tilemaps.Components.CalculateFacesWithin
+ * @private
  * @since 3.0.0
  *
- * @param {integer} [tileX=0] - [description]
- * @param {integer} [tileY=0] - [description]
- * @param {integer} [width=max width based on tileX] - [description]
- * @param {integer} [height=max height based on tileY] - [description]
+ * @param {integer} tileX - [description]
+ * @param {integer} tileY - [description]
+ * @param {integer} width - [description]
+ * @param {integer} height - [description]
  * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.
  */
 var CalculateFacesWithin = function (tileX, tileY, width, height, layer)

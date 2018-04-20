@@ -44,7 +44,6 @@ var Vector2 = require('../../math/Vector2');
  * @extends Phaser.Physics.Matter.Components.Transform
  * @extends Phaser.Physics.Matter.Components.Velocity
  * @extends Phaser.GameObjects.Components.Alpha
- * @extends Phaser.GameObjects.Components.Animation
  * @extends Phaser.GameObjects.Components.BlendMode
  * @extends Phaser.GameObjects.Components.Depth
  * @extends Phaser.GameObjects.Components.Flip

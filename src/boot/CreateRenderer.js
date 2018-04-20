@@ -91,7 +91,7 @@ var CreateRenderer = function (game)
     var CanvasRenderer;
     var WebGLRenderer;
 
-    if (WEBGL_RENDERER && CANVAS_RENDERER)
+    if (typeof WEBGL_RENDERER && typeof CANVAS_RENDERER)
     {
         CanvasRenderer = require('../renderer/canvas/CanvasRenderer');
         WebGLRenderer = require('../renderer/webgl/WebGLRenderer');
@@ -109,7 +109,7 @@ var CreateRenderer = function (game)
         }
     }
 
-    if (WEBGL_RENDERER && !CANVAS_RENDERER)
+    if (typeof WEBGL_RENDERER && !typeof CANVAS_RENDERER)
     {
         WebGLRenderer = require('../renderer/webgl/WebGLRenderer');
 
@@ -119,7 +119,7 @@ var CreateRenderer = function (game)
         game.context = null;
     }
 
-    if (!WEBGL_RENDERER && CANVAS_RENDERER)
+    if (!typeof WEBGL_RENDERER && typeof CANVAS_RENDERER)
     {
         CanvasRenderer = require('../renderer/canvas/CanvasRenderer');
 

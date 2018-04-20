@@ -44,6 +44,7 @@ var Wrap = require('../../math/Wrap');
  * @since 3.0.0
  *
  * @extends Phaser.GameObjects.Components.BlendMode
+ * @extends Phaser.GameObjects.Components.Mask
  * @extends Phaser.GameObjects.Components.ScrollFactor
  * @extends Phaser.GameObjects.Components.Visible
  *
@@ -54,6 +55,7 @@ var ParticleEmitter = new Class({
 
     Mixins: [
         Components.BlendMode,
+        Components.Mask,
         Components.ScrollFactor,
         Components.Visible
     ],

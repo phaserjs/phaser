@@ -25,7 +25,7 @@ var GetFastValue = require('../../utils/object/GetFastValue');
  * @param {number} width - [description]
  * @param {number} height - [description]
  * @param {string} path - [description]
- * @param {XHRSettingsObject} xhrSettings - [description]
+ * @param {XHRSettingsObject} [xhrSettings] - [description]
  */
 var HTMLFile = new Class({
 
@@ -132,7 +132,7 @@ var HTMLFile = new Class({
  * @param {string} url - [description]
  * @param {number} width - [description]
  * @param {number} height - [description]
- * @param {XHRSettingsObject} xhrSettings - [description]
+ * @param {XHRSettingsObject} [xhrSettings] - [description]
  *
  * @return {Phaser.Loader.LoaderPlugin} The Loader.
  */

@@ -230,20 +230,25 @@ var AnimationManager = new Class({
     },
 
     /**
+     * @typedef {object} GenerateFrameNamesConfig
+     *
+     * @property {string} [prefix=''] - [description]
+     * @property {integer} [start=0] - [description]
+     * @property {integer} [end=0] - [description]
+     * @property {string} [suffix=''] - [description]
+     * @property {integer} [zeroPad=0] - [description]
+     * @property {AnimationFrameConfig[]} [outputArray=[]] - [description]
+     * @property {boolean} [frames=false] - [description]
+     */
+
+    /**
      * [description]
      *
      * @method Phaser.Animations.AnimationManager#generateFrameNames
      * @since 3.0.0
      *
      * @param {string} key - [description]
-     * @param {object} config - [description]
-     * @param {string} [config.prefix=''] - [description]
-     * @param {integer} [config.start=0] - [description]
-     * @param {integer} [config.end=0] - [description]
-     * @param {string} [config.suffix=''] - [description]
-     * @param {integer} [config.zeroPad=0] - [description]
-     * @param {AnimationFrameConfig[]} [config.outputArray=[]] - [description]
-     * @param {boolean} [config.frames=false] - [description]
+     * @param {GenerateFrameNamesConfig} config - [description]
      *
      * @return {AnimationFrameConfig[]} [description]
      */
@@ -302,18 +307,23 @@ var AnimationManager = new Class({
     },
 
     /**
+     * @typedef {object} GenerateFrameNumbersConfig
+     *
+     * @property {integer} [start=0] - [description]
+     * @property {integer} [end=-1] - [description]
+     * @property {boolean} [first=false] - [description]
+     * @property {AnimationFrameConfig[]} [outputArray=[]] - [description]
+     * @property {boolean} [frames=false] - [description]
+     */
+
+    /**
      * [description]
      *
      * @method Phaser.Animations.AnimationManager#generateFrameNumbers
      * @since 3.0.0
      *
      * @param {string} key - [description]
-     * @param {object} config - [description]
-     * @param {integer} [config.start=0] - [description]
-     * @param {integer} [config.end=-1] - [description]
-     * @param {boolean} [config.first=false] - [description]
-     * @param {AnimationFrameConfig[]} [config.outputArray=[]] - [description]
-     * @param {boolean} [config.frames=false] - [description]
+     * @param {GenerateFrameNumbersConfig} config - [description]
      *
      * @return {AnimationFrameConfig[]} [description]
      */

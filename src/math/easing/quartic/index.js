@@ -4,7 +4,9 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-//  Phaser.Math.Easing.Quartic
+/**
+ * @namespace Phaser.Math.Easing.Quartic
+ */
 
 module.exports = {
 

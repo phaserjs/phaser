@@ -9,6 +9,7 @@
  * internally.
  *
  * @function Phaser.Tilemaps.Components.CullTiles
+ * @private
  * @since 3.0.0
  *
  * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.

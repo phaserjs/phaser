@@ -27,7 +27,7 @@ var TextureSource = require('./TextureSource');
  *
  * @param {Phaser.Textures.TextureManager} manager - A reference to the Texture Manager this Texture belongs to.
  * @param {string} key - The unique string-based key of this Texture.
- * @param {(Image|HTMLCanvasElement)} source - The source that is used to create the texture. Usually an Image, but can also be a Canvas.
+ * @param {(HTMLImageElement|HTMLCanvasElement)} source - The source that is used to create the texture. Usually an Image, but can also be a Canvas.
  * @param {number} [width] - The width of the Texture. This is optional and automatically derived from the source images.
  * @param {number} [height] - The height of the Texture. This is optional and automatically derived from the source images.
  */
@@ -343,7 +343,7 @@ var Texture = new Class({
      * @method Phaser.Textures.Texture#setDataSource
      * @since 3.0.0
      *
-     * @param {(Image|HTMLCanvasElement)} data - The source image.
+     * @param {(HTMLImageElement|HTMLCanvasElement)} data - The source image.
      */
     setDataSource: function (data)
     {

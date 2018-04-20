@@ -14,11 +14,6 @@ module.exports = {
     Particle: require('./Particle'),
     ParticleEmitter: require('./ParticleEmitter'),
     ParticleEmitterManager: require('./ParticleEmitterManager'),
-
-    Zones: {
-        DeathZone: require('./zones/DeathZone'),
-        EdgeZone: require('./zones/EdgeZone'),
-        RandomZone: require('./zones/RandomZone')
-    }
+    Zones: require('./zones')
 
 };

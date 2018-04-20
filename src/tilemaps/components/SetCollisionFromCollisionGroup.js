@@ -14,6 +14,7 @@ var CalculateFacesWithin = require('./CalculateFacesWithin');
  * controls if collision will be enabled (true) or disabled (false).
  *
  * @function Phaser.Tilemaps.Components.SetCollisionFromCollisionGroup
+ * @private
  * @since 3.0.0
  *
  * @param {boolean} [collides=true] - If true it will enable collision. If false it will clear

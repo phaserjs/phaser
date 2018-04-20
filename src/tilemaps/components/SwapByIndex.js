@@ -12,6 +12,7 @@ var GetTilesWithin = require('./GetTilesWithin');
  * information.
  *
  * @function Phaser.Tilemaps.Components.SwapByIndex
+ * @private
  * @since 3.0.0
  *
  * @param {integer} tileA - First tile index.

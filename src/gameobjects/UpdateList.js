@@ -75,7 +75,21 @@ var UpdateList = new Class({
          */
         this._pendingRemoval = [];
 
+        scene.sys.events.once('boot', this.boot, this);
         scene.sys.events.on('start', this.start, this);
+    },
+
+    /**
+     * This method is called automatically, only once, when the Scene is first created.
+     * Do not invoke it directly.
+     *
+     * @method Phaser.GameObjects.UpdateList#boot
+     * @private
+     * @since 3.5.1
+     */
+    boot: function ()
+    {
+        this.systems.events.once('destroy', this.destroy, this);
     },
 
     /**
@@ -85,7 +99,7 @@ var UpdateList = new Class({
      *
      * @method Phaser.GameObjects.UpdateList#start
      * @private
-     * @since 3.4.1
+     * @since 3.5.0
      */
     start: function ()
     {
@@ -94,7 +108,6 @@ var UpdateList = new Class({
         eventEmitter.on('preupdate', this.preUpdate, this);
         eventEmitter.on('update', this.update, this);
         eventEmitter.once('shutdown', this.shutdown, this);
-        eventEmitter.once('destroy', this.destroy, this);
     },
 
     /**

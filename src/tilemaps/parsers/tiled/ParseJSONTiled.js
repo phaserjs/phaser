@@ -14,6 +14,10 @@ var BuildTilesetIndex = require('./BuildTilesetIndex');
 var AssignTileProperties = require('./AssignTileProperties');
 
 /**
+ * @namespace Phaser.Tilemaps.Parsers.Tiled
+ */
+
+/**
  * Parses a Tiled JSON object into a new MapData object.
  *
  * @function Phaser.Tilemaps.Parsers.Tiled.ParseJSONTiled

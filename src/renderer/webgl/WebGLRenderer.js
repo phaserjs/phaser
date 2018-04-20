@@ -400,7 +400,7 @@ var WebGLRenderer = new Class({
         var clearColor = config.backgroundColor;
         var gl = canvas.getContext('webgl', config.contextCreation) || canvas.getContext('experimental-webgl', config.contextCreation);
 
-        if (!gl)
+        if (!gl || gl.isContextLost())
         {
             this.contextLost = true;
             throw new Error('This browser does not support WebGL. Try using the Canvas pipeline.');
@@ -1402,30 +1402,13 @@ var WebGLRenderer = new Class({
      */
     postRenderCamera: function (camera)
     {
-        if (camera._fadeAlpha > 0 || camera._flashAlpha > 0)
+        var FlatTintPipeline = this.pipelines.FlatTintPipeline;
+
+        var isFlashing = camera.flashEffect.postRenderWebGL(FlatTintPipeline, Utils.getTintFromFloats);
+        var isFading = camera.fadeEffect.postRenderWebGL(FlatTintPipeline, Utils.getTintFromFloats);
+
+        if (isFading || isFlashing)
         {
-            var FlatTintPipeline = this.pipelines.FlatTintPipeline;
-
-            // Fade
-            FlatTintPipeline.batchFillRect(
-                0, 0, 1, 1, 0,
-                camera.x, camera.y, camera.width, camera.height,
-                Utils.getTintFromFloats(camera._fadeRed, camera._fadeGreen, camera._fadeBlue, 1.0),
-                camera._fadeAlpha,
-                1, 0, 0, 1, 0, 0,
-                [ 1, 0, 0, 1, 0, 0 ]
-            );
-
-            // Flash
-            FlatTintPipeline.batchFillRect(
-                0, 0, 1, 1, 0,
-                camera.x, camera.y, camera.width, camera.height,
-                Utils.getTintFromFloats(camera._flashRed, camera._flashGreen, camera._flashBlue, 1.0),
-                camera._flashAlpha,
-                1, 0, 0, 1, 0, 0,
-                [ 1, 0, 0, 1, 0, 0 ]
-            );
-
             FlatTintPipeline.flush();
         }
 
@@ -1905,11 +1888,6 @@ var WebGLRenderer = new Class({
         {
             this.deleteTexture(this.nativeTextures[index]);
             delete this.nativeTextures[index];
-        }
-
-        if (this.hasExtension('WEBGL_lose_context'))
-        {
-            this.getExtension('WEBGL_lose_context').loseContext();
         }
 
         delete this.gl;

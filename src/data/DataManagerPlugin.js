@@ -30,7 +30,7 @@ var DataManagerPlugin = new Class({
 
     function DataManagerPlugin (scene)
     {
-        DataManager.call(this, this.scene, scene.sys.events);
+        DataManager.call(this, scene, scene.sys.events);
 
         /**
          * [description]
@@ -50,7 +50,23 @@ var DataManagerPlugin = new Class({
          */
         this.systems = scene.sys;
 
+        scene.sys.events.once('boot', this.boot, this);
         scene.sys.events.on('start', this.start, this);
+    },
+
+    /**
+     * This method is called automatically, only once, when the Scene is first created.
+     * Do not invoke it directly.
+     *
+     * @method Phaser.Data.DataManagerPlugin#boot
+     * @private
+     * @since 3.5.1
+     */
+    boot: function ()
+    {
+        this.events = this.systems.events;
+
+        this.events.once('destroy', this.destroy, this);
     },
 
     /**
@@ -60,16 +76,11 @@ var DataManagerPlugin = new Class({
      *
      * @method Phaser.Data.DataManagerPlugin#start
      * @private
-     * @since 3.4.1
+     * @since 3.5.0
      */
     start: function ()
     {
-        this.events = this.scene.sys.events;
-
-        var eventEmitter = this.systems.events;
-
-        eventEmitter.once('shutdown', this.shutdown, this);
-        eventEmitter.once('destroy', this.destroy, this);
+        this.events.once('shutdown', this.shutdown, this);
     },
 
     /**
@@ -78,13 +89,11 @@ var DataManagerPlugin = new Class({
      *
      * @method Phaser.Data.DataManagerPlugin#shutdown
      * @private
-     * @since 3.4.1
+     * @since 3.5.0
      */
     shutdown: function ()
     {
-        var eventEmitter = this.systems.events;
-
-        eventEmitter.off('shutdown', this.shutdown, this);
+        this.systems.events.off('shutdown', this.shutdown, this);
     },
 
     /**
@@ -92,13 +101,13 @@ var DataManagerPlugin = new Class({
      * We need to shutdown and then kill off all external references.
      *
      * @method Phaser.Data.DataManagerPlugin#destroy
-     * @since 3.4.1
+     * @since 3.5.0
      */
     destroy: function ()
     {
         DataManager.prototype.destroy.call(this);
 
-        this.scene.sys.events.off('start', this.start, this);
+        this.events.off('start', this.start, this);
 
         this.scene = null;
         this.systems = null;

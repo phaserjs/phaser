@@ -163,7 +163,7 @@ var GameObject = new Class({
          * @name Phaser.GameObjects.GameObject#ignoreDestroy
          * @type {boolean}
          * @default false
-         * @since 3.4.1
+         * @since 3.5.0
          */
         this.ignoreDestroy = false;
 

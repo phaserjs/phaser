@@ -7,7 +7,7 @@
 /**
  * [description]
  *
- * @function Phaser.Math.Easing.Stepped
+ * @function Phaser.Math.Easing.Stepped.Stepped
  * @since 3.0.0
  *
  * @param {number} v - [description]

@@ -297,7 +297,7 @@ var Tile = new Class({
      * Copies the tile data & properties from the given tile to this tile. This copies everything
      * except for position and interesting faces.
      *
-     * @method Phaser.Tilemaps.Tile#containsPoint
+     * @method Phaser.Tilemaps.Tile#copy
      * @since 3.0.0
      *
      * @param {Phaser.Tilemaps.Tile} tile - The tile to copy from.

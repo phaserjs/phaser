@@ -9,6 +9,7 @@
  * layer's position, scale and scroll.
  *
  * @function Phaser.Tilemaps.Components.WorldToTileY
+ * @private
  * @since 3.0.0
  *
  * @param {number} worldY - [description]
