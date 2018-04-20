@@ -13,7 +13,7 @@
 
 ### Bug Fixes
 
-
+* DataManagerPlugin would throw an error on Game.destroy if you had any Scenes in the Scene Manager had not been run. Fix #3596 (thanks @kuoruan)
 
 
 ## Version 3.6.0 - Asuna - 19th April 2018
