@@ -196,7 +196,7 @@ var GetBounds = {
      * @method Phaser.GameObjects.Components.GetBounds#getBounds
      * @since 3.0.0
      *
-     * @generic {Phaser.Math.Vector2} O - [output,$return]
+     * @generic {Phaser.Geom.Rectangle} O - [output,$return]
      *
      * @param {(Phaser.Geom.Rectangle|object)} [output] - An object to store the values in. If not provided a new Rectangle will be created.
      *
