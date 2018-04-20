@@ -34,20 +34,6 @@ var Wrap = require('../../math/Wrap');
  */
 
 /**
- * Defines a value or an operation yielding a value, setting what a particle property will be at the START of the particle's life, on emit.
- * @typedef {float|float[]|EmitterOpOnEmitCallback|EmitterOpRandomConfig|EmitterOpRandomMinMaxConfig|EmitterOpRandomStartEndConfig|EmitterOpSteppedConfig|EmitterOpCustomEmitConfig} EmitterOpEmitConfig
- *
- * @see Phaser.GameObjects.Particles.Particle#fire
- */
-
-/**
- * Defines an operation yielding a value, updating a particle property for the duration of the particle's life.
- * @typedef {EmitterOpOnUpdateCallback|EmitterOpEaseConfig|EmitterOpCustomUpdateConfig} EmitterOpUpdateConfig
- *
- * @see Phaser.GameObjects.Particles.Particle#update
- */
-
-/**
  * Defines an operation yielding a random value within a range.
  * @typedef {object} EmitterOpRandomConfig
  *
