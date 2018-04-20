@@ -51,6 +51,7 @@
         "linebreak-style": [ "off" ],
         "lines-around-comment": [ "error", { "beforeBlockComment": true, "afterBlockComment": false, "beforeLineComment": true, "afterLineComment": false, "allowBlockStart": true, "allowBlockEnd": false, "allowObjectStart": true, "allowArrayStart": true }],
         "new-parens": "error",
+        "no-constant-condition": 0,
         "no-array-constructor": "error",
         "no-lonely-if": "error",
         "no-mixed-spaces-and-tabs": "error",
