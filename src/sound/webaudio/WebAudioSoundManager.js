@@ -208,7 +208,8 @@ var WebAudioSoundManager = new Class({
         {
             var _this = this;
 
-            this.context.close().then(function () {
+            this.context.close().then(function ()
+            {
 
                 _this.context = null;
 
