@@ -206,10 +206,14 @@ var WebAudioSoundManager = new Class({
         }
         else
         {
-            this.context.close();
-        }
+            var _this = this;
 
-        this.context = null;
+            this.context.close().then(function () {
+
+                _this.context = null;
+
+            });
+        }
 
         BaseSoundManager.prototype.destroy.call(this);
     },
