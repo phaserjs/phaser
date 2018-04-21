@@ -156,11 +156,7 @@ var HTML5AudioSoundManager = new Class({
     {
         this.locked = 'ontouchstart' in window;
 
-        if(this.locked)
-        {
-            this.lockedActionsQueue = [];
-        }
-        else
+        if(!this.locked)
         {
             return;
         }
