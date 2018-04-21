@@ -219,7 +219,6 @@ A beta release of the new Container Game Object arrives in this version. We've f
 * If `setInteractive` is called on a Game Object that fails to set a hit area, it will no longer try to assign `dropZone` to an undefined `input` property.
 * The Matter SetBody Component will no longer try to call `setOrigin` unless the Game Object has the origin component (which not all do, like Graphics and Container)
 * Matter Image and Matter Sprite didn't define a `destroy` method, causing an error when trying to destroy the parent Game Object. Fix #3516 (thanks @RollinSafary)
-* Fixed loading normals with multi image load (thanks @iamchristopher)
 
 ### Updates
 
