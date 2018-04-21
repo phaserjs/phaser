@@ -235,8 +235,10 @@ var HTML5AudioSoundManager = new Class({
                 sound.totalDuration = sound.tags[0].duration;
             });
 
-            this.lockedActionsQueue.forEach(function (lockedAction)
+            while(this.lockedActionsQueue.length)
             {
+                var lockedAction = this.lockedActionsQueue.shift();
+
                 if (lockedAction.sound[lockedAction.prop].apply)
                 {
                     lockedAction.sound[lockedAction.prop].apply(lockedAction.sound, lockedAction.value || []);
@@ -245,7 +247,7 @@ var HTML5AudioSoundManager = new Class({
                 {
                     lockedAction.sound[lockedAction.prop] = lockedAction.value;
                 }
-            });
+            }
 
         }, this);
 
