@@ -13,6 +13,7 @@ var WorldToTileY = require('./WorldToTileY');
  * false if there is no tile or if the tile at that location has an index of -1.
  *
  * @function Phaser.Tilemaps.Components.HasTileAtWorldXY
+ * @private
  * @since 3.0.0
  *
  * @param {number} worldX - [description]

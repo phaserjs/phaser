@@ -9,6 +9,7 @@
  * interesting faces.
  *
  * @function Phaser.Tilemaps.Components.SetTileCollision
+ * @private
  * @since 3.0.0
  *
  * @param {Phaser.Tilemaps.Tile} tile - [description]

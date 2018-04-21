@@ -242,6 +242,26 @@ var Game = new Class({
          */
         this.onStepCallback = NOOP;
 
+        /**
+         * Is this Game pending destruction at the start of the next frame?
+         *
+         * @name Phaser.Game#pendingDestroy
+         * @type {boolean}
+         * @private
+         * @since 3.5.0
+         */
+        this.pendingDestroy = false;
+
+        /**
+         * Remove the Canvas once the destroy is over?
+         *
+         * @name Phaser.Game#removeCanvas
+         * @type {boolean}
+         * @private
+         * @since 3.5.0
+         */
+        this.removeCanvas = false;
+
         //  Wait for the DOM Ready event, then call boot.
         DOMContentLoaded(this.boot.bind(this));
     },
@@ -354,6 +374,11 @@ var Game = new Class({
      */
     step: function (time, delta)
     {
+        if (this.pendingDestroy)
+        {
+            return this.runDestroy();
+        }
+
         //  Global Managers
 
         this.input.update(time, delta);
@@ -527,14 +552,33 @@ var Game = new Class({
     },
 
     /**
-     * Destroys this Phaser.Game instance, all global systems, all sub-systems and all Scenes.
+     * Flags this Game instance as needing to be destroyed on the next frame.
+     * It will wait until the current frame has completed and then call `runDestroy` internally.
      *
      * @method Phaser.Game#destroy
      * @since 3.0.0
+     *
+     * @param {boolean} removeCanvas - Set to `true` if you would like the parent canvas element removed from the DOM, or `false` to leave it in place.
      */
     destroy: function (removeCanvas)
     {
-        this.loop.destroy();
+        this.pendingDestroy = true;
+
+        this.removeCanvas = removeCanvas;
+    },
+
+    /**
+     * Destroys this Phaser.Game instance, all global systems, all sub-systems and all Scenes.
+     *
+     * @method Phaser.Game#runDestroy
+     * @private
+     * @since 3.5.0
+     */
+    runDestroy: function ()
+    {
+        this.events.emit('destroy');
+
+        this.events.removeAllListeners();
 
         this.scene.destroy();
 
@@ -543,16 +587,21 @@ var Game = new Class({
             this.renderer.destroy();
         }
 
-        this.events.emit('destroy');
-
-        this.events.removeAllListeners();
-
         this.onStepCallback = null;
 
-        if (removeCanvas && this.canvas)
+        if (this.removeCanvas && this.canvas)
         {
             CanvasPool.remove(this.canvas);
+
+            if (this.canvas.parentNode)
+            {
+                this.canvas.parentNode.removeChild(this.canvas);
+            }
         }
+
+        this.loop.destroy();
+
+        this.pendingDestroy = false;
     }
 
 });

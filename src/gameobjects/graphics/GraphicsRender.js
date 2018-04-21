@@ -7,7 +7,7 @@
 var renderWebGL = require('../../utils/NOOP');
 var renderCanvas = require('../../utils/NOOP');
 
-if (WEBGL_RENDERER)
+if (typeof WEBGL_RENDERER)
 {
     renderWebGL = require('./GraphicsWebGLRenderer');
 
@@ -15,7 +15,7 @@ if (WEBGL_RENDERER)
     renderCanvas = require('./GraphicsCanvasRenderer');
 }
 
-if (CANVAS_RENDERER)
+if (typeof CANVAS_RENDERER)
 {
     renderCanvas = require('./GraphicsCanvasRenderer');
 }

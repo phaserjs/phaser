@@ -41,6 +41,7 @@ var addFrame = function (texture, sourceIndex, name, frame)
  *
  * @function Phaser.Textures.Parsers.UnityYAML
  * @memberOf Phaser.Textures.Parsers
+ * @private
  * @since 3.0.0
  *
  * @param {Phaser.Textures.Texture} texture - The Texture to add the Frames to.

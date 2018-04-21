@@ -18,11 +18,6 @@ var Vector2 = require('../../math/Vector2');
  * @classdesc
  * A Container Game Object.
  *
- * WARNING: EXPERIMENTAL. There are several known cases where Containers will not behave correctly,
- * especially if you use a multi-camera or transformed camera set-up. We are still working on them,
- * but wanted to release as part of 3.4 under a beta feature flag, because in the main they work
- * are and worth getting used to.
- *
  * A Container, as the name implies, can 'contain' other types of Game Object.
  * When a Game Object is added to a Container, the Container becomes responsible for the rendering of it.
  * By default it will be removed from the Display List and instead added to the Containers own internal list.
@@ -44,8 +39,10 @@ var Vector2 = require('../../math/Vector2');
  * to use as their hit area. Container children can also be enabled for input, independent of the Container.
  *
  * Containers can be given a physics body for either Arcade Physics, Impact Physics or Matter Physics. However,
- * if Container children are enabled for physics you may get unexpected results,such as offset bodies,
- * if the Container itself, or any of its ancestors, is positioned anywhere other than at 0x0.
+ * if Container _children_ are enabled for physics you may get unexpected results, such as offset bodies,
+ * if the Container itself, or any of its ancestors, is positioned anywhere other than at 0 x 0. Container children
+ * with physics do not factor in the Container due to the excessive extra calculations needed. Please structure
+ * your game to work around this.
  *
  * It's important to understand the impact of using Containers. They add additional processing overhead into
  * every one of their children. The deeper you nest them, the more the cost escalates. This is especially true

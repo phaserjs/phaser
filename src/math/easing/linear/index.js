@@ -4,6 +4,8 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-//  Phaser.Math.Easing.Linear
+/**
+ * @namespace Phaser.Math.Easing.Linear
+ */
 
 module.exports = require('./Linear');

@@ -18,6 +18,7 @@ var HasValue = require('../../utils/object/HasValue');
  * "types" property that matches any of those values, its collision flag will be updated.
  *
  * @function Phaser.Tilemaps.Components.SetCollisionByProperty
+ * @private
  * @since 3.0.0
  *
  * @param {object} properties - An object with tile properties and corresponding values that should

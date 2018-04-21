@@ -14,6 +14,7 @@ var SetTileCollision = require('./SetTileCollision');
  * Collision information in the region will be recalculated.
  *
  * @function Phaser.Tilemaps.Components.Fill
+ * @private
  * @since 3.0.0
  *
  * @param {integer} index - [description]

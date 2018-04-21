@@ -18,7 +18,7 @@ var WebGLPipeline = require('../WebGLPipeline');
  *
  * @class TextureTintPipeline
  * @extends Phaser.Renderer.WebGL.WebGLPipeline
- * @memberOf Phaser.Renderer.WebGL
+ * @memberOf Phaser.Renderer.WebGL.Pipelines
  * @constructor
  * @since 3.0.0
  *
@@ -78,7 +78,7 @@ var TextureTintPipeline = new Class({
         /**
          * [description]
          *
-         * @name Phaser.Renderer.WebGL.TextureTintPipeline#vertexViewF32
+         * @name Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#vertexViewF32
          * @type {Float32Array}
          * @since 3.0.0
          */
@@ -87,7 +87,7 @@ var TextureTintPipeline = new Class({
         /**
          * [description]
          *
-         * @name Phaser.Renderer.WebGL.TextureTintPipeline#vertexViewU32
+         * @name Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#vertexViewU32
          * @type {Uint32Array}
          * @since 3.0.0
          */
@@ -96,7 +96,7 @@ var TextureTintPipeline = new Class({
         /**
          * [description]
          *
-         * @name Phaser.Renderer.WebGL.TextureTintPipeline#maxQuads
+         * @name Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#maxQuads
          * @type {integer}
          * @default 2000
          * @since 3.0.0
@@ -106,7 +106,7 @@ var TextureTintPipeline = new Class({
         /**
          * [description]
          *
-         * @name Phaser.Renderer.WebGL.TextureTintPipeline#batches
+         * @name Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#batches
          * @type {array}
          * @since 3.1.0
          */
@@ -118,13 +118,13 @@ var TextureTintPipeline = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Renderer.WebGL.TextureTintPipeline#setTexture2D
+     * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#setTexture2D
      * @since 3.1.0
      *
      * @param {WebGLTexture} texture - [description]
      * @param {integer} textureUnit - [description]
      *
-     * @return {Phaser.Renderer.WebGL.TextureTintPipeline} [description]
+     * @return {Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline} [description]
      */
     setTexture2D: function (texture, unit)
     {
@@ -169,7 +169,7 @@ var TextureTintPipeline = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Renderer.WebGL.TextureTintPipeline#pushBatch
+     * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#pushBatch
      * @since 3.1.0
      */
     pushBatch: function ()
@@ -186,10 +186,10 @@ var TextureTintPipeline = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Renderer.WebGL.TextureTintPipeline#flush
+     * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#flush
      * @since 3.1.0
      *
-     * @return {Phaser.Renderer.WebGL.TextureTintPipeline} This Pipeline.
+     * @return {Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline} This Pipeline.
      */
     flush: function ()
     {
@@ -286,14 +286,15 @@ var TextureTintPipeline = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Renderer.WebGL.TextureTintPipeline#onBind
+     * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#onBind
      * @since 3.0.0
      *
-     * @return {Phaser.Renderer.WebGL.TextureTintPipeline} [description]
+     * @return {Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline} [description]
      */
     onBind: function ()
     {
         WebGLPipeline.prototype.onBind.call(this);
+
         this.mvpUpdate();
 
         if (this.batches.length === 0)
@@ -307,14 +308,14 @@ var TextureTintPipeline = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Renderer.WebGL.TextureTintPipeline#resize
+     * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#resize
      * @since 3.0.0
      *
      * @param {number} width - [description]
      * @param {number} height - [description]
      * @param {number} resolution - [description]
      *
-     * @return {Phaser.Renderer.WebGL.TextureTintPipeline} [description]
+     * @return {Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline} [description]
      */
     resize: function (width, height, resolution)
     {
@@ -326,11 +327,12 @@ var TextureTintPipeline = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Renderer.WebGL.TextureTintPipeline#drawStaticTilemapLayer
+     * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#drawStaticTilemapLayer
      * @since 3.0.0
      *
      * @param {Phaser.Tilemaps.StaticTilemapLayer} tilemap - [description]
      * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
+     * @param {Phaser.GameObjects.Components.TransformMatrix} parentTransformMatrix - [description]
      */
     drawStaticTilemapLayer: function (tilemap)
     {
@@ -361,7 +363,7 @@ var TextureTintPipeline = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Renderer.WebGL.TextureTintPipeline#drawEmitterManager
+     * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#drawEmitterManager
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.Particles.ParticleEmitterManager} emitterManager - [description]
@@ -401,29 +403,16 @@ var TextureTintPipeline = new Class({
         var vertexCapacity = this.vertexCapacity;
         var texture = emitterManager.defaultFrame.source.glTexture;
         var pca, pcb, pcc, pcd, pce, pcf;
+        var pma, pmb, pmc, pmd, pme, pmf;
 
         if (parentMatrix)
         {
-            var pma = parentMatrix[0];
-            var pmb = parentMatrix[1];
-            var pmc = parentMatrix[2];
-            var pmd = parentMatrix[3];
-            var pme = parentMatrix[4];
-            var pmf = parentMatrix[5];
-            
-            pca = cma * pma + cmb * pmc;
-            pcb = cma * pmb + cmb * pmd;
-            pcc = cmc * pma + cmd * pmc;
-            pcd = cmc * pmb + cmd * pmd;
-            pce = cme * pma + cmf * pmc + pme;
-            pcf = cme * pmb + cmf * pmd + pmf;
-
-            cma = pca;
-            cmb = pcb;
-            cmc = pcc;
-            cmd = pcd;
-            cme = pce;
-            cmf = pcf;
+            pma = parentMatrix[0];
+            pmb = parentMatrix[1];
+            pmc = parentMatrix[2];
+            pmd = parentMatrix[3];
+            pme = parentMatrix[4];
+            pmf = parentMatrix[5];
         }
 
         this.setTexture2D(texture, 0);
@@ -437,6 +426,31 @@ var TextureTintPipeline = new Class({
             var particleOffset = 0;
             var scrollX = cameraScrollX * emitter.scrollFactorX;
             var scrollY = cameraScrollY * emitter.scrollFactorY;
+
+            if (parentMatrix)
+            {
+                var cse = -scrollX;
+                var csf = -scrollY;
+                var pse = cse * cma + csf * cmc + cme;
+                var psf = cse * cmb + csf * cmd + cmf;
+                pca = pma * cma + pmb * cmc;
+                pcb = pma * cmb + pmb * cmd;
+                pcc = pmc * cma + pmd * cmc;
+                pcd = pmc * cmb + pmd * cmd;
+                pce = pme * cma + pmf * cmc + pse;
+                pcf = pme * cmb + pmf * cmd + psf;
+
+                cma = pca;
+                cmb = pcb;
+                cmc = pcc;
+                cmd = pcd;
+                cme = pce;
+                cmf = pcf;
+
+                scrollX = 0.0;
+                scrollY = 0.0;
+            }
+
 
             if (!emitter.visible || aliveLength === 0)
             {
@@ -474,11 +488,11 @@ var TextureTintPipeline = new Class({
                     var sr = sin(particle.rotation);
                     var cr = cos(particle.rotation);
                     var sra = cr * particle.scaleX;
-                    var srb = -sr * particle.scaleX;
-                    var src = sr * particle.scaleY;
+                    var srb = sr * particle.scaleX;
+                    var src = -sr * particle.scaleY;
                     var srd = cr * particle.scaleY;
-                    var sre = particle.x - scrollX * particle.scrollFactorX;
-                    var srf = particle.y - scrollY * particle.scrollFactorY;
+                    var sre = particle.x - scrollX;
+                    var srf = particle.y - scrollY;
                     var mva = sra * cma + srb * cmc;
                     var mvb = sra * cmb + srb * cmd;
                     var mvc = src * cma + srd * cmc;
@@ -539,6 +553,13 @@ var TextureTintPipeline = new Class({
                     vertexViewU32[vertexOffset + 29] = color;
 
                     this.vertexCount += 6;
+
+                    if (this.vertexCount >= vertexCapacity)
+                    {
+                        this.flush();
+                        this.setTexture2D(texture, 0);
+                    }
+
                 }
 
                 particleOffset += batchSize;
@@ -558,7 +579,7 @@ var TextureTintPipeline = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Renderer.WebGL.TextureTintPipeline#drawBlitter
+     * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#drawBlitter
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.Blitter} blitter - [description]
@@ -593,8 +614,6 @@ var TextureTintPipeline = new Class({
         var cameraScrollY = camera.scrollY * blitter.scrollFactorY;
         var batchCount = Math.ceil(length / this.maxQuads);
         var batchOffset = 0;
-        var blitterX = blitter.x - cameraScrollX;
-        var blitterY = blitter.y - cameraScrollY;
 
         if (parentMatrix)
         {
@@ -604,12 +623,16 @@ var TextureTintPipeline = new Class({
             var pmd = parentMatrix[3];
             var pme = parentMatrix[4];
             var pmf = parentMatrix[5];
-            var pca = a * pma + b * pmc;
-            var pcb = a * pmb + b * pmd;
-            var pcc = c * pma + d * pmc;
-            var pcd = c * pmb + d * pmd;
-            var pce = e * pma + f * pmc + pme;
-            var pcf = e * pmb + f * pmd + pmf;
+            var cse = -cameraScrollX;
+            var csf = -cameraScrollY;
+            var pse = cse * a + csf * c + e;
+            var psf = cse * b + csf * d + f;
+            var pca = pma * a + pmb * c;
+            var pcb = pma * b + pmb * d;
+            var pcc = pmc * a + pmd * c;
+            var pcd = pmc * b + pmd * d;
+            var pce = pme * a + pmf * c + pse;
+            var pcf = pme * b + pmf * d + psf;
 
             a = pca;
             b = pcb;
@@ -617,7 +640,13 @@ var TextureTintPipeline = new Class({
             d = pcd;
             e = pce;
             f = pcf;
+
+            cameraScrollX = 0.0;
+            cameraScrollY = 0.0;
         }
+
+        var blitterX = blitter.x - cameraScrollX;
+        var blitterY = blitter.y - cameraScrollY;
 
         for (var batchIndex = 0; batchIndex < batchCount; ++batchIndex)
         {
@@ -710,7 +739,7 @@ var TextureTintPipeline = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Renderer.WebGL.TextureTintPipeline#batchSprite
+     * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#batchSprite
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.Sprite} sprite - [description]
@@ -750,11 +779,9 @@ var TextureTintPipeline = new Class({
         var y = -sprite.displayOriginY + frame.y + ((frame.height) * (flipY ? 1.0 : 0.0));
         var xw = (roundPixels ? (x|0) : x) + width;
         var yh = (roundPixels ? (y|0) : y) + height;
-        var translateX = sprite.x - camera.scrollX * sprite.scrollFactorX;
-        var translateY = sprite.y - camera.scrollY * sprite.scrollFactorY;
         var scaleX = sprite.scaleX;
         var scaleY = sprite.scaleY;
-        var rotation = -sprite.rotation;
+        var rotation = sprite.rotation;
         var alphaTL = sprite._alphaTL;
         var alphaTR = sprite._alphaTR;
         var alphaBL = sprite._alphaBL;
@@ -766,11 +793,11 @@ var TextureTintPipeline = new Class({
         var sr = Math.sin(rotation);
         var cr = Math.cos(rotation);
         var sra = cr * scaleX;
-        var srb = -sr * scaleX;
-        var src = sr * scaleY;
+        var srb = sr * scaleX;
+        var src = -sr * scaleY;
         var srd = cr * scaleY;
-        var sre = translateX;
-        var srf = translateY;
+        var sre = sprite.x;
+        var srf = sprite.y;
         var cma = cameraMatrix[0];
         var cmb = cameraMatrix[1];
         var cmc = cameraMatrix[2];
@@ -787,12 +814,17 @@ var TextureTintPipeline = new Class({
             var pmd = parentMatrix[3];
             var pme = parentMatrix[4];
             var pmf = parentMatrix[5];
-            var pca = cma * pma + cmb * pmc;
-            var pcb = cma * pmb + cmb * pmd;
-            var pcc = cmc * pma + cmd * pmc;
-            var pcd = cmc * pmb + cmd * pmd;
-            var pce = cme * pma + cmf * pmc + pme;
-            var pcf = cme * pmb + cmf * pmd + pmf;
+            var cse = -camera.scrollX * sprite.scrollFactorX;
+            var csf = -camera.scrollY * sprite.scrollFactorY;
+            var pse = cse * cma + csf * cmc + cme;
+            var psf = cse * cmb + csf * cmd + cmf;
+            var pca = pma * cma + pmb * cmc;
+            var pcb = pma * cmb + pmb * cmd;
+            var pcc = pmc * cma + pmd * cmc;
+            var pcd = pmc * cmb + pmd * cmd;
+            var pce = pme * cma + pmf * cmc + pse;
+            var pcf = pme * cmb + pmf * cmd + psf;
+
             mva = sra * pca + srb * pcc;
             mvb = sra * pcb + srb * pcd;
             mvc = src * pca + srd * pcc;
@@ -802,6 +834,9 @@ var TextureTintPipeline = new Class({
         }
         else
         {
+            sre -= camera.scrollX * sprite.scrollFactorX;
+            srf -= camera.scrollY * sprite.scrollFactorY;
+
             mva = sra * cma + srb * cmc;
             mvb = sra * cmb + srb * cmd;
             mvc = src * cma + srd * cmc;
@@ -877,7 +912,7 @@ var TextureTintPipeline = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Renderer.WebGL.TextureTintPipeline#batchMesh
+     * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#batchMesh
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.Mesh} mesh - [description]
@@ -914,16 +949,16 @@ var TextureTintPipeline = new Class({
         var cameraMatrix = camera.matrix.matrix;
         var frame = mesh.frame;
         var texture = mesh.texture.source[frame.sourceIndex].glTexture;
-        var translateX = mesh.x - camera.scrollX * mesh.scrollFactorX;
-        var translateY = mesh.y - camera.scrollY * mesh.scrollFactorY;
+        var translateX = mesh.x;
+        var translateY = mesh.y;
         var scaleX = mesh.scaleX;
         var scaleY = mesh.scaleY;
-        var rotation = -mesh.rotation;
+        var rotation = mesh.rotation;
         var sr = Math.sin(rotation);
         var cr = Math.cos(rotation);
         var sra = cr * scaleX;
-        var srb = -sr * scaleX;
-        var src = sr * scaleY;
+        var srb = sr * scaleX;
+        var src = -sr * scaleY;
         var srd = cr * scaleY;
         var sre = translateX;
         var srf = translateY;
@@ -944,12 +979,17 @@ var TextureTintPipeline = new Class({
             var pmd = parentMatrix[3];
             var pme = parentMatrix[4];
             var pmf = parentMatrix[5];
-            var pca = cma * pma + cmb * pmc;
-            var pcb = cma * pmb + cmb * pmd;
-            var pcc = cmc * pma + cmd * pmc;
-            var pcd = cmc * pmb + cmd * pmd;
-            var pce = cme * pma + cmf * pmc + pme;
-            var pcf = cme * pmb + cmf * pmd + pmf;
+            var cse = -camera.scrollX * mesh.scrollFactorX;
+            var csf = -camera.scrollY * mesh.scrollFactorY;
+            var pse = cse * cma + csf * cmc + cme;
+            var psf = cse * cmb + csf * cmd + cmf;
+            var pca = pma * cma + pmb * cmc;
+            var pcb = pma * cmb + pmb * cmd;
+            var pcc = pmc * cma + pmd * cmc;
+            var pcd = pmc * cmb + pmd * cmd;
+            var pce = pme * cma + pmf * cmc + pse;
+            var pcf = pme * cmb + pmf * cmd + psf;
+
             mva = sra * pca + srb * pcc;
             mvb = sra * pcb + srb * pcd;
             mvc = src * pca + srd * pcc;
@@ -959,6 +999,9 @@ var TextureTintPipeline = new Class({
         }
         else
         {
+            sre -= camera.scrollX * mesh.scrollFactorX;
+            srf -= camera.scrollY * mesh.scrollFactorY;
+
             mva = sra * cma + srb * cmc;
             mvb = sra * cmb + srb * cmd;
             mvc = src * cma + srd * cmc;
@@ -1000,7 +1043,7 @@ var TextureTintPipeline = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Renderer.WebGL.TextureTintPipeline#batchBitmapText
+     * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#batchBitmapText
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.BitmapText} bitmapText - [description]
@@ -1083,17 +1126,17 @@ var TextureTintPipeline = new Class({
         var vmax = 0;
         var lastGlyph = null;
         var lastCharCode = 0;
-        var translateX = (srcX - cameraScrollX) + frame.x;
-        var translateY = (srcY - cameraScrollY) + frame.y;
-        var rotation = -bitmapText.rotation;
+        var translateX = srcX + frame.x;
+        var translateY = srcY + frame.y;
+        var rotation = bitmapText.rotation;
         var scaleX = bitmapText.scaleX;
         var scaleY = bitmapText.scaleY;
         var letterSpacing = bitmapText.letterSpacing;
         var sr = Math.sin(rotation);
         var cr = Math.cos(rotation);
         var sra = cr * scaleX;
-        var srb = -sr * scaleX;
-        var src = sr * scaleY;
+        var srb = sr * scaleX;
+        var src = -sr * scaleY;
         var srd = cr * scaleY;
         var sre = translateX;
         var srf = translateY;
@@ -1114,12 +1157,17 @@ var TextureTintPipeline = new Class({
             var pmd = parentMatrix[3];
             var pme = parentMatrix[4];
             var pmf = parentMatrix[5];
-            var pca = cma * pma + cmb * pmc;
-            var pcb = cma * pmb + cmb * pmd;
-            var pcc = cmc * pma + cmd * pmc;
-            var pcd = cmc * pmb + cmd * pmd;
-            var pce = cme * pma + cmf * pmc + pme;
-            var pcf = cme * pmb + cmf * pmd + pmf;
+            var cse = -cameraScrollX;
+            var csf = -cameraScrollY;
+            var pse = cse * cma + csf * cmc + cme;
+            var psf = cse * cmb + csf * cmd + cmf;
+            var pca = pma * cma + pmb * cmc;
+            var pcb = pma * cmb + pmb * cmd;
+            var pcc = pmc * cma + pmd * cmc;
+            var pcd = pmc * cmb + pmd * cmd;
+            var pce = pme * cma + pmf * cmc + pse;
+            var pcf = pme * cmb + pmf * cmd + psf;
+
             mva = sra * pca + srb * pcc;
             mvb = sra * pcb + srb * pcd;
             mvc = src * pca + srd * pcc;
@@ -1129,6 +1177,9 @@ var TextureTintPipeline = new Class({
         }
         else
         {
+            sre -= cameraScrollX;
+            srf -= cameraScrollY;
+
             mva = sra * cma + srb * cmc;
             mvb = sra * cmb + srb * cmd;
             mvc = src * cma + srd * cmc;
@@ -1269,7 +1320,7 @@ var TextureTintPipeline = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Renderer.WebGL.TextureTintPipeline#batchDynamicBitmapText
+     * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#batchDynamicBitmapText
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.DynamicBitmapText} bitmapText - [description]
@@ -1352,15 +1403,15 @@ var TextureTintPipeline = new Class({
         var lastCharCode = 0;
         var translateX = srcX + frame.x;
         var translateY = srcY + frame.y;
-        var rotation = -bitmapText.rotation;
+        var rotation = bitmapText.rotation;
         var scaleX = bitmapText.scaleX;
         var scaleY = bitmapText.scaleY;
         var letterSpacing = bitmapText.letterSpacing;
         var sr = Math.sin(rotation);
         var cr = Math.cos(rotation);
         var sra = cr * scaleX;
-        var srb = -sr * scaleX;
-        var src = sr * scaleY;
+        var srb = sr * scaleX;
+        var src = -sr * scaleY;
         var srd = cr * scaleY;
         var sre = translateX;
         var srf = translateY;
@@ -1383,12 +1434,17 @@ var TextureTintPipeline = new Class({
             var pmd = parentMatrix[3];
             var pme = parentMatrix[4];
             var pmf = parentMatrix[5];
-            var pca = cma * pma + cmb * pmc;
-            var pcb = cma * pmb + cmb * pmd;
-            var pcc = cmc * pma + cmd * pmc;
-            var pcd = cmc * pmb + cmd * pmd;
-            var pce = cme * pma + cmf * pmc + pme;
-            var pcf = cme * pmb + cmf * pmd + pmf;
+            var cse = -cameraScrollX;
+            var csf = -cameraScrollY;
+            var pse = cse * cma + csf * cmc + cme;
+            var psf = cse * cmb + csf * cmd + cmf;
+            var pca = pma * cma + pmb * cmc;
+            var pcb = pma * cmb + pmb * cmd;
+            var pcc = pmc * cma + pmd * cmc;
+            var pcd = pmc * cmb + pmd * cmd;
+            var pce = pme * cma + pmf * cmc + pse;
+            var pcf = pme * cmb + pmf * cmd + psf;
+
             mva = sra * pca + srb * pcc;
             mvb = sra * pcb + srb * pcd;
             mvc = src * pca + srd * pcc;
@@ -1398,6 +1454,9 @@ var TextureTintPipeline = new Class({
         }
         else
         {
+            sre -= cameraScrollX;
+            srf -= cameraScrollY;
+
             mva = sra * cma + srb * cmc;
             mvb = sra * cmb + srb * cmd;
             mvc = src * cma + srd * cmc;
@@ -1516,14 +1575,12 @@ var TextureTintPipeline = new Class({
             y -= bitmapText.displayOriginY;
             x *= scale;
             y *= scale;
-            x -= cameraScrollX;
-            y -= cameraScrollY;
 
-            sr = Math.sin(-rotation);
-            cr = Math.cos(-rotation);
+            sr = Math.sin(rotation);
+            cr = Math.cos(rotation);
             uta = cr * scale;
-            utb = -sr * scale;
-            utc = sr * scale;
+            utb = sr * scale;
+            utc = -sr * scale;
             utd = cr * scale;
             ute = x;
             utf = y;
@@ -1613,7 +1670,7 @@ var TextureTintPipeline = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Renderer.WebGL.TextureTintPipeline#batchText
+     * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#batchText
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.Text} text - [description]
@@ -1649,7 +1706,7 @@ var TextureTintPipeline = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Renderer.WebGL.TextureTintPipeline#batchDynamicTilemapLayer
+     * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#batchDynamicTilemapLayer
      * @since 3.0.0
      *
      * @param {Phaser.Tilemaps.DynamicTilemapLayer} tilemapLayer - [description]
@@ -1707,7 +1764,7 @@ var TextureTintPipeline = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Renderer.WebGL.TextureTintPipeline#batchTileSprite
+     * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#batchTileSprite
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.TileSprite} tileSprite - [description]
@@ -1744,7 +1801,7 @@ var TextureTintPipeline = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Renderer.WebGL.TextureTintPipeline#batchTexture
+     * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#batchTexture
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.GameObject} gameObject - [description]
@@ -1809,7 +1866,6 @@ var TextureTintPipeline = new Class({
         }
 
         flipY = flipY ^ (texture.isRenderTexture ? 1 : 0);
-        rotation = -rotation;
 
         var roundPixels = this.renderer.config.roundPixels;
         var vertexViewF32 = this.vertexViewF32;
@@ -1821,13 +1877,13 @@ var TextureTintPipeline = new Class({
         var y = -displayOriginY + ((srcHeight) * (flipY ? 1.0 : 0.0));
         var xw = x + width;
         var yh = y + height;
-        var translateX = srcX - camera.scrollX * scrollFactorX;
-        var translateY = srcY - camera.scrollY * scrollFactorY;
+        var translateX = srcX;
+        var translateY = srcY;
         var sr = Math.sin(rotation);
         var cr = Math.cos(rotation);
         var sra = cr * scaleX;
-        var srb = -sr * scaleX;
-        var src = sr * scaleY;
+        var srb = sr * scaleX;
+        var src = -sr * scaleY;
         var srd = cr * scaleY;
         var sre = translateX;
         var srf = translateY;
@@ -1847,12 +1903,17 @@ var TextureTintPipeline = new Class({
             var pmd = parentMatrix[3];
             var pme = parentMatrix[4];
             var pmf = parentMatrix[5];
-            var pca = cma * pma + cmb * pmc;
-            var pcb = cma * pmb + cmb * pmd;
-            var pcc = cmc * pma + cmd * pmc;
-            var pcd = cmc * pmb + cmd * pmd;
-            var pce = cme * pma + cmf * pmc + pme;
-            var pcf = cme * pmb + cmf * pmd + pmf;
+            var cse = -camera.scrollX * scrollFactorX;
+            var csf = -camera.scrollY * scrollFactorY;
+            var pse = cse * cma + csf * cmc + cme;
+            var psf = cse * cmb + csf * cmd + cmf;
+            var pca = pma * cma + pmb * cmc;
+            var pcb = pma * cmb + pmb * cmd;
+            var pcc = pmc * cma + pmd * cmc;
+            var pcd = pmc * cmb + pmd * cmd;
+            var pce = pme * cma + pmf * cmc + pse;
+            var pcf = pme * cmb + pmf * cmd + psf;
+
             mva = sra * pca + srb * pcc;
             mvb = sra * pcb + srb * pcd;
             mvc = src * pca + srd * pcc;
@@ -1862,6 +1923,9 @@ var TextureTintPipeline = new Class({
         }
         else
         {
+            sre -= camera.scrollX * scrollFactorX;
+            srf -= camera.scrollY * scrollFactorY;
+
             mva = sra * cma + srb * cmc;
             mvb = sra * cmb + srb * cmd;
             mvc = src * cma + srd * cmc;
@@ -1937,7 +2001,7 @@ var TextureTintPipeline = new Class({
     /**
      * Immediately draws a texture with no batching.
      *
-     * @method Phaser.Renderer.WebGL.TextureTintPipeline#drawTexture
+     * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#drawTexture
      * @since 3.2.0
      *
      * @param {WebGLTexture} texture [description]
@@ -1952,7 +2016,7 @@ var TextureTintPipeline = new Class({
      * @param {Phaser.GameObjects.Components.TransformMatrix} transformMatrix - [description]
      * @param {Phaser.GameObjects.Components.TransformMatrix} parentTransformMatrix - [description]
      *
-     * @return {Phaser.Renderer.WebGL.TextureTintPipeline} This Pipeline.
+     * @return {Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline} This Pipeline.
      */
     drawTexture: function (
         texture,
@@ -2088,7 +2152,7 @@ var TextureTintPipeline = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Renderer.WebGL.TextureTintPipeline#batchGraphics
+     * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#batchGraphics
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.Graphics} graphics - [description]

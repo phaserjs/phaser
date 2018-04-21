@@ -96,7 +96,7 @@ var HTML5AudioSoundManager = new Class({
          * @private
          * @since 3.0.0
          */
-        this.lockedActionsQueue = null;
+        this.lockedActionsQueue = this.locked ? [] : null;
 
         /**
          * Property that actually holds the value of global mute
@@ -154,18 +154,29 @@ var HTML5AudioSoundManager = new Class({
      */
     unlock: function ()
     {
-        this.locked = 'ontouchstart' in window;
+        this.locked = false;
 
-        if(this.locked)
+        var _this = this;
+
+        this.game.cache.audio.entries.each(function (key, tags)
         {
-            this.lockedActionsQueue = [];
-        }
-        else
+            for (var i = 0; i < tags.length; i++)
+            {
+                if (tags[i].dataset.locked === 'true')
+                {
+                    _this.locked = true;
+
+                    return false;
+                }
+            }
+
+            return true;
+        });
+
+        if(!this.locked)
         {
             return;
         }
-
-        var _this = this;
 
         var moved = false;
 
@@ -239,8 +250,10 @@ var HTML5AudioSoundManager = new Class({
                 sound.totalDuration = sound.tags[0].duration;
             });
 
-            this.lockedActionsQueue.forEach(function (lockedAction)
+            while(this.lockedActionsQueue.length)
             {
+                var lockedAction = this.lockedActionsQueue.shift();
+
                 if (lockedAction.sound[lockedAction.prop].apply)
                 {
                     lockedAction.sound[lockedAction.prop].apply(lockedAction.sound, lockedAction.value || []);
@@ -249,10 +262,7 @@ var HTML5AudioSoundManager = new Class({
                 {
                     lockedAction.sound[lockedAction.prop] = lockedAction.value;
                 }
-            });
-
-            this.lockedActionsQueue.length = 0;
-            this.lockedActionsQueue = null;
+            }
 
         }, this);
 

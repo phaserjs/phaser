@@ -1,11 +1,10 @@
-** >> Make sure you describe your PR to the README Change Log section! << **
+Please do not update the README or Change Log, we will do this when we merge your PR.
 
-This PR changes (delete as applicable)
+This PR (delete as applicable)
 
-* Documentation
-* TypeScript Defs
-* The public-facing API
-* Nothing, it's a bug fix
+* Updates the Documentation
+* Adds a new feature
+* Fixes a bug
 
 Describe the changes below:
 

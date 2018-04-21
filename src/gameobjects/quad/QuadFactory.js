@@ -23,7 +23,7 @@ var GameObjectFactory = require('../GameObjectFactory');
  * 
  * @return {Phaser.GameObjects.Quad} The Game Object that was created.
  */
-if (WEBGL_RENDERER)
+if (typeof WEBGL_RENDERER)
 {
     GameObjectFactory.register('quad', function (x, y, key, frame)
     {

@@ -22,7 +22,7 @@ var GetURL = require('../GetURL');
  * @param {string} key - [description]
  * @param {string} url - [description]
  * @param {string} path - [description]
- * @param {XHRSettingsObject} config - [description]
+ * @param {XHRSettingsObject} [config] - [description]
  */
 var HTML5AudioFile = new Class({
 

@@ -11,17 +11,21 @@ var GetBitmapTextSize = require('../GetBitmapTextSize');
 var Render = require('./DynamicBitmapTextRender');
 
 /**
+ * @typedef {object} DisplayCallbackConfig
+ * @property {{topLeft:number,topRight:number,bottomLeft:number,bottomRight:number}} tint - [description]
+ * @property {number} index - [description]
+ * @property {number} charCode - [description]
+ * @property {number} x - [description]
+ * @property {number} y - [description]
+ * @property {number} scale - [description]
+ * @property {number} rotation - [description]
+ * @property {any} data - [description]
+ */
+
+/**
  * @callback DisplayCallback
  *
- * @param {object} display - [description]
- * @param {{topLeft:number,topRight:number,bottomLeft:number,bottomRight:number}} display.tint - [description]
- * @param {number} display.index - [description]
- * @param {number} display.charCode - [description]
- * @param {number} display.x - [description]
- * @param {number} display.y - [description]
- * @param {number} display.scale - [description]
- * @param {number} display.rotation - [description]
- * @param {[type]} display.data - [description]
+ * @param {DisplayCallbackConfig} display - [description]
  */
 
 /**
@@ -37,6 +41,7 @@ var Render = require('./DynamicBitmapTextRender');
  * @extends Phaser.GameObjects.Components.Alpha
  * @extends Phaser.GameObjects.Components.BlendMode
  * @extends Phaser.GameObjects.Components.Depth
+ * @extends Phaser.GameObjects.Components.Mask
  * @extends Phaser.GameObjects.Components.Origin
  * @extends Phaser.GameObjects.Components.Pipeline
  * @extends Phaser.GameObjects.Components.ScrollFactor
@@ -60,6 +65,7 @@ var DynamicBitmapText = new Class({
         Components.Alpha,
         Components.BlendMode,
         Components.Depth,
+        Components.Mask,
         Components.Origin,
         Components.Pipeline,
         Components.ScrollFactor,
@@ -370,7 +376,7 @@ var DynamicBitmapText = new Class({
      * @method Phaser.GameObjects.DynamicBitmapText#toJSON
      * @since 3.0.0
      *
-     * @return {JSONGameObject.<JSONBitmapText>} [description]
+     * @return {JSONBitmapText} [description]
      */
     toJSON: function ()
     {

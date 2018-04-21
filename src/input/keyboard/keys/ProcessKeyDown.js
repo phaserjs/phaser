@@ -7,7 +7,7 @@
 /**
  * Used internally by the KeyboardManager.
  *
- * @function Phaser.Input.Keyboard.Keys.ProcessKeyDown
+ * @function Phaser.Input.Keyboard.ProcessKeyDown
  * @since 3.0.0
  *
  * @param {Phaser.Input.Keyboard.Key} key - [description]

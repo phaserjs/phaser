@@ -18,7 +18,7 @@ var TILEMAP_FORMATS = require('../../tilemaps/Formats');
  * @param {string} url - [description]
  * @param {string} path - [description]
  * @param {string} format - [description]
- * @param {XHRSettingsObject} xhrSettings - [description]
+ * @param {XHRSettingsObject} [xhrSettings] - [description]
  *
  * @return {object} An object containing two File objects to be added to the loader.
  */
@@ -47,7 +47,7 @@ var TilemapJSONFile = function (key, url, path, format, xhrSettings)
  *
  * @param {string} key - [description]
  * @param {string} url - [description]
- * @param {XHRSettingsObject} xhrSettings - [description]
+ * @param {XHRSettingsObject} [xhrSettings] - [description]
  *
  * @return {Phaser.Loader.LoaderPlugin} The Loader.
  */
@@ -83,7 +83,7 @@ FileTypesManager.register('tilemapTiledJSON', function (key, url, xhrSettings)
  *
  * @param {string} key - [description]
  * @param {string} url - [description]
- * @param {XHRSettingsObject} xhrSettings - [description]
+ * @param {XHRSettingsObject} [xhrSettings] - [description]
  *
  * @return {Phaser.Loader.LoaderPlugin} The Loader.
  */

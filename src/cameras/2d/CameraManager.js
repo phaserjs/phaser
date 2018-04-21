@@ -113,19 +113,19 @@ var CameraManager = new Class({
          */
         this.baseScale = 1;
 
+        scene.sys.events.once('boot', this.boot, this);
         scene.sys.events.on('start', this.start, this);
     },
 
     /**
-     * This method is called automatically by the Scene when it is starting up.
-     * It is responsible for creating local systems, properties and listening for Scene events.
+     * This method is called automatically, only once, when the Scene is first created.
      * Do not invoke it directly.
      *
-     * @method Phaser.Cameras.Scene2D.CameraManager#start
+     * @method Phaser.Cameras.Scene2D.CameraManager#boot
      * @private
-     * @since 3.5.0
+     * @since 3.5.1
      */
-    start: function ()
+    boot: function ()
     {
         var sys = this.systems;
 
@@ -142,11 +142,29 @@ var CameraManager = new Class({
 
         this.main = this.cameras[0];
 
-        var eventEmitter = sys.events;
+        this.systems.events.once('destroy', this.destroy, this);
+    },
+
+    /**
+     * This method is called automatically by the Scene when it is starting up.
+     * It is responsible for creating local systems, properties and listening for Scene events.
+     * Do not invoke it directly.
+     *
+     * @method Phaser.Cameras.Scene2D.CameraManager#start
+     * @private
+     * @since 3.5.0
+     */
+    start: function ()
+    {
+        if (!this.main)
+        {
+            this.boot();
+        }
+
+        var eventEmitter = this.systems.events;
 
         eventEmitter.on('update', this.update, this);
         eventEmitter.once('shutdown', this.shutdown, this);
-        eventEmitter.once('destroy', this.destroy, this);
     },
 
     /**

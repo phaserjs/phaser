@@ -13,7 +13,7 @@ var GetValue = require('../utils/object/GetValue');
 /**
  * @typedef {object} JSONAnimation
  *
- * @property {string} key - [description]
+ * @property {string} key - The key that the animation will be associated with. i.e. sprite.animations.play(key)
  * @property {string} type - A frame based animation (as opposed to a bone based animation)
  * @property {JSONAnimationFrame[]} frames - [description]
  * @property {integer} frameRate - The frame rate of playback in frames per second (default 24 if duration is null)
@@ -30,7 +30,7 @@ var GetValue = require('../utils/object/GetValue');
 /**
  * @typedef {object} AnimationFrameConfig
  *
- * @property {string} key - [description]
+ * @property {string} key - The key that the animation will be associated with. i.e. sprite.animations.play(key)
  * @property {(string|number)} frame - [description]
  * @property {float} [duration=0] - [description]
  * @property {boolean} [visible] - [description]
@@ -39,8 +39,9 @@ var GetValue = require('../utils/object/GetValue');
 /**
  * @typedef {object} AnimationConfig
  *
- * @property {AnimationFrameConfig[]} [frames] - [description]
- * @property {string} [defaultTextureKey=null] - [description]
+ * @property {string} [key] - The key that the animation will be associated with. i.e. sprite.animations.play(key)
+ * @property {AnimationFrameConfig[]} [frames] - An object containing data used to generate the frames for the animation
+ * @property {string} [defaultTextureKey=null] - The key of the texture all frames of the animation will use. Can be overridden on a per frame basis.
  * @property {integer} [frameRate] - The frame rate of playback in frames per second (default 24 if duration is null)
  * @property {integer} [duration] - How long the animation should play for in milliseconds. If not given its derived from frameRate.
  * @property {boolean} [skipMissedFrames=true] - Skip frames if the time lags, or always advanced anyway?
@@ -78,7 +79,7 @@ var Animation = new Class({
     function Animation (manager, key, config)
     {
         /**
-         * [description]
+         * A reference to the global Animation Manager
          *
          * @name Phaser.Animations.Animation#manager
          * @type {Phaser.Animations.AnimationManager}
@@ -87,7 +88,7 @@ var Animation = new Class({
         this.manager = manager;
 
         /**
-         * [description]
+         * The unique identifying string for this animation
          *
          * @name Phaser.Animations.Animation#key
          * @type {string}
@@ -366,15 +367,15 @@ var Animation = new Class({
     },
 
     /**
-     * [description]
+     * Returns the AnimationFrame at the provided index
      *
      * @method Phaser.Animations.Animation#getFrameAt
      * @protected
      * @since 3.0.0
      *
-     * @param {integer} index - [description]
+     * @param {integer} index - The index in the AnimationFrame array
      *
-     * @return {Phaser.Animations.AnimationFrame} [description]
+     * @return {Phaser.Animations.AnimationFrame} The frame at the index provided from the animation sequence
      */
     getFrameAt: function (index)
     {
@@ -660,12 +661,13 @@ var Animation = new Class({
     },
 
     /**
-     * [description]
+     * Removes a frame from the AnimationFrame array at the provided index
+     * and updates the animation accordingly.
      *
      * @method Phaser.Animations.Animation#removeFrameAt
      * @since 3.0.0
      *
-     * @param {integer} index - [description]
+     * @param {integer} index - The index in the AnimationFrame array
      *
      * @return {Phaser.Animations.Animation} This Animation object.
      */

@@ -12,6 +12,7 @@
  * the top-left.
  *
  * @function Phaser.Tilemaps.Components.FindByIndex
+ * @private
  * @since 3.0.0
  *
  * @param {integer} index - The tile index value to search for.
