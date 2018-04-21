@@ -96,7 +96,7 @@ var HTML5AudioSoundManager = new Class({
          * @private
          * @since 3.0.0
          */
-        this.lockedActionsQueue = null;
+        this.lockedActionsQueue = this.locked ? [] : null;
 
         /**
          * Property that actually holds the value of global mute
