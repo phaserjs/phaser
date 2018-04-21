@@ -247,9 +247,6 @@ var HTML5AudioSoundManager = new Class({
                 }
             });
 
-            this.lockedActionsQueue.length = 0;
-            this.lockedActionsQueue = null;
-
         }, this);
 
         document.body.addEventListener('touchmove', detectMove, false);
