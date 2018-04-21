@@ -154,14 +154,29 @@ var HTML5AudioSoundManager = new Class({
      */
     unlock: function ()
     {
-        this.locked = 'ontouchstart' in window;
+        this.locked = false;
+
+        var _this = this;
+
+        this.game.cache.audio.entries.each(function (key, tags)
+        {
+            for (var i = 0; i < tags.length; i++)
+            {
+                if (tags[i].dataset.locked === 'true')
+                {
+                    _this.locked = true;
+
+                    return false;
+                }
+            }
+
+            return true;
+        });
 
         if(!this.locked)
         {
             return;
         }
-
-        var _this = this;
 
         var moved = false;
 
