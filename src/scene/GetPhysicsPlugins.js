@@ -13,9 +13,9 @@ var UppercaseFirst = require('../utils/string/UppercaseFirst');
  * @function Phaser.Scenes.GetPhysicsPlugins
  * @since 3.0.0
  *
- * @param {Phaser.Scenes.Systems} sys - [description]
+ * @param {Phaser.Scenes.Systems} sys - The scene system to get the physics systems of.
  *
- * @return {array} [description]
+ * @return {array} An array of Physics systems to start for this Scene.
  */
 var GetPhysicsPlugins = function (sys)
 {
