@@ -5,15 +5,15 @@
  */
 
 /**
- * [description]
+ * Generate a random floating point number between the given maximum and minimum bounds with the minimum bound inclusive, maximum bound exclusive.
  *
  * @function Phaser.Math.FloatBetween
  * @since 3.0.0
  *
- * @param {float} min - [description]
- * @param {float} max - [description]
+ * @param {float} min - The minimum bound of the generated float (inclusive).
+ * @param {float} max - The maximum bound of the generated float (exclusive).
  *
- * @return {float} [description]
+ * @return {float} The randomly generated float.
  */
 var FloatBetween = function (min, max)
 {
