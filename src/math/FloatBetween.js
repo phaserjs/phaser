@@ -13,7 +13,7 @@
  * @param {float} min - The lower bound for the float, inclusive.
  * @param {float} max - The upper bound for the float exclusive.
  *
- * @return {float} A random float within the given range
+ * @return {float} A random float within the given range.
  */
 var FloatBetween = function (min, max)
 {
