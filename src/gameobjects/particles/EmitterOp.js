@@ -103,7 +103,10 @@ var Wrap = require('../../math/Wrap');
  * @param {boolean} [emitOnly=false] - [description]
  */
 var EmitterOp = new Class({
-    initialize: function EmitterOp (config, key, defaultValue, emitOnly)
+
+    initialize:
+
+    function EmitterOp (config, key, defaultValue, emitOnly)
     {
         if (emitOnly === undefined)
         {
@@ -332,18 +335,12 @@ var EmitterOp = new Class({
                 this.onUpdate = value;
             }
         }
-        else if (
-            t === 'object' &&
-            (this.has(value, 'random') ||
-                this.hasBoth(value, 'start', 'end') ||
-                this.hasBoth(value, 'min', 'max'))
-        )
+        else if (t === 'object' && (this.has(value, 'random') || this.hasBoth(value, 'start', 'end') || this.hasBoth(value, 'min', 'max')))
         {
             this.start = this.has(value, 'start') ? value.start : value.min;
             this.end = this.has(value, 'end') ? value.end : value.max;
 
-            var isRandom =
-                this.hasBoth(value, 'min', 'max') || this.has(value, 'random');
+            var isRandom = (this.hasBoth(value, 'min', 'max') || this.has(value, 'random'));
 
             //  A random starting value (using 'min | max' instead of 'start | end' automatically implies a random value)
 
@@ -382,7 +379,6 @@ var EmitterOp = new Class({
 
                 //  x: { start: 100, end: 400, [ ease: 'Linear' ] }
 
-
                 var easeType = this.has(value, 'ease') ? value.ease : 'Linear';
 
                 this.ease = GetEaseFunction(easeType);
@@ -398,10 +394,7 @@ var EmitterOp = new Class({
                 this.onUpdate = this.easeValueUpdate;
             }
         }
-        else if (
-            t === 'object' &&
-            this.hasEither(value, 'onEmit', 'onUpdate')
-        )
+        else if (t === 'object' && this.hasEither(value, 'onEmit', 'onUpdate'))
         {
             //  Custom onEmit and onUpdate callbacks
 
