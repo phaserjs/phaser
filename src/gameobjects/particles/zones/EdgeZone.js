@@ -7,15 +7,39 @@
 var Class = require('../../../utils/Class');
 
 /**
+ * @callback EdgeZoneSourceCallback
+ *
+ * @param {integer} quantity - [description]
+ * @param {integer} [stepRate] - [description]
+ *
+ * @return {Phaser.Geom.Point[]} - [description]
+ */
+
+/**
+ * @typedef {object} EdgeZoneSource
+ *
+ * @property {EdgeZoneSourceCallback} getPoints - A function placing points on the source's edge or edges.
+ *
+ * @see Phaser.Curves.Curve
+ * @see Phaser.Curves.Path
+ * @see Phaser.Geom.Circle
+ * @see Phaser.Geom.Ellipse
+ * @see Phaser.Geom.Line
+ * @see Phaser.Geom.Polygon
+ * @see Phaser.Geom.Rectangle
+ * @see Phaser.Geom.Triangle
+ */
+
+/**
  * @classdesc
- * [description]
+ * A zone that places particles on a shape's edges.
  *
  * @class EdgeZone
  * @memberOf Phaser.GameObjects.Particles.Zones
  * @constructor
  * @since 3.0.0
  *
- * @param {object} source - [description]
+ * @param {EdgeZoneSource} source - An object instance with a `getPoints(quantity, stepRate)` method returning an array of points.
  * @param {number} quantity - [description]
  * @param {number} stepRate - [description]
  * @param {boolean} [yoyo=false] - [description]
@@ -34,7 +58,7 @@ var EdgeZone = new Class({
          * [description]
          *
          * @name Phaser.GameObjects.Particles.Zones.EdgeZone#source
-         * @type {object}
+         * @type {EdgeZoneSource|RandomZoneSource}
          * @since 3.0.0
          */
         this.source = source;
