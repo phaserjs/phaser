@@ -22,7 +22,7 @@
 
 My thanks to the following for helping with the Phaser 3 Examples, Docs and TypeScript definitions, either by reporting errors, fixing them or helping author the docs:
 
-@wtravO
+@wtravO @Fabadiculous @zilbuz @samme 
 
 ## Version 3.6.0 - Asuna - 19th April 2018
 
