@@ -16,7 +16,7 @@ var Systems = require('./Systems');
  * @constructor
  * @since 3.0.0
  *
- * @param {(string|SettingsConfig)} config - Scene specific configuration settings.
+ * @param {(string|Phaser.Scenes.Settings.Config)} config - Scene specific configuration settings.
  */
 var Scene = new Class({
 

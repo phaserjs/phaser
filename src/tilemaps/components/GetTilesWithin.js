@@ -7,22 +7,25 @@
 var GetFastValue = require('../../utils/object/GetFastValue');
 
 /**
+ * @typedef {object} GetTilesWithinFilteringOptions
+ *
+ * @property {boolean} [isNotEmpty=false] - If true, only return tiles that don't have -1 for an index.
+ * @property {boolean} [isColliding=false] - If true, only return tiles that collide on at least one side.
+ * @property {boolean} [hasInterestingFace=false] - If true, only return tiles that have at least one interesting face.
+ */
+
+/**
  * Gets the tiles in the given rectangular area (in tile coordinates) of the layer.
  *
  * @function Phaser.Tilemaps.Components.GetTilesWithin
+ * @private
  * @since 3.0.0
  *
- * @param {integer} [tileX=0] - [description]
- * @param {integer} [tileY=0] - [description]
- * @param {integer} [width=max width based on tileX] - [description]
- * @param {integer} [height=max height based on tileY] - [description]
- * @param {object} [filteringOptions] - Optional filters to apply when getting the tiles.
- * @param {boolean} [filteringOptions.isNotEmpty=false] - If true, only return tiles that don't have
- * -1 for an index.
- * @param {boolean} [filteringOptions.isColliding=false] - If true, only return tiles that collide on
- * at least one side.
- * @param {boolean} [filteringOptions.hasInterestingFace=false] - If true, only return tiles that
- * have at least one interesting face.
+ * @param {integer} tileX - [description]
+ * @param {integer} tileY - [description]
+ * @param {integer} width - [description]
+ * @param {integer} height - [description]
+ * @param {object} GetTilesWithinFilteringOptions - Optional filters to apply when getting the tiles.
  * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.
  * 
  * @return {Phaser.Tilemaps.Tile[]} Array of Tile objects.

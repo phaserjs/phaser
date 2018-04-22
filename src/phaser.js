@@ -4,6 +4,24 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
+//  For file loading of shader source outside of Webpack
+//  See: https://github.com/photonstorm/phaser/issues/3598
+
+/* eslint-disable */
+if (typeof SHADER_REQUIRE)
+{
+    var fs = require('fs');
+
+    require.extensions['.frag'] = function (module, filename) {
+        module.exports = fs.readFileSync(filename, 'utf8');
+    };
+
+    require.extensions['.vert'] = function (module, filename) {
+        module.exports = fs.readFileSync(filename, 'utf8');
+    };
+}
+/* eslint-enable */
+
 require('./polyfills');
 
 var CONST = require('./const');

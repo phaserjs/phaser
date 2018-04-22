@@ -23,8 +23,8 @@ var NumberArray = require('../../utils/array/NumberArray');
  * @param {string} key - [description]
  * @param {string[]} textureURLs - [description]
  * @param {string[]} atlasURLs - [description]
- * @param {XHRSettingsObject} textureXhrSettings - [description]
- * @param {XHRSettingsObject} atlasXhrSettings - [description]
+ * @param {XHRSettingsObject} [textureXhrSettings] - [description]
+ * @param {XHRSettingsObject} [atlasXhrSettings] - [description]
  *
  * @return {Phaser.Loader.LoaderPlugin} The Loader.
  */

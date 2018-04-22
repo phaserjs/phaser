@@ -15,6 +15,7 @@ var GetRandom = require('../../utils/array/GetRandom');
  * indexes. This method only modifies tile indexes and does not change collision information.
  *
  * @function Phaser.Tilemaps.Components.Randomize
+ * @private
  * @since 3.0.0
  *
  * @param {integer} [tileX=0] - [description]

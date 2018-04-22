@@ -4,6 +4,8 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-//  Phaser.Math.Easing.Stepped
+/**
+ * @namespace Phaser.Math.Easing.Stepped
+ */
 
 module.exports = require('./Stepped');

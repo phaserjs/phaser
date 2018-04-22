@@ -22,7 +22,7 @@ var ScaleModes = require('../renderer/ScaleModes');
  * @since 3.0.0
  *
  * @param {Phaser.Textures.Texture} texture - The Texture this TextureSource belongs to.
- * @param {(Image|HTMLCanvasElement)} source - The source image data.
+ * @param {(HTMLImageElement|HTMLCanvasElement)} source - The source image data.
  * @param {integer} [width] - Optional width of the source image. If not given it's derived from the source itself.
  * @param {integer} [height] - Optional height of the source image. If not given it's derived from the source itself.
  */

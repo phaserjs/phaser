@@ -50,7 +50,23 @@ var DataManagerPlugin = new Class({
          */
         this.systems = scene.sys;
 
+        scene.sys.events.once('boot', this.boot, this);
         scene.sys.events.on('start', this.start, this);
+    },
+
+    /**
+     * This method is called automatically, only once, when the Scene is first created.
+     * Do not invoke it directly.
+     *
+     * @method Phaser.Data.DataManagerPlugin#boot
+     * @private
+     * @since 3.5.1
+     */
+    boot: function ()
+    {
+        this.events = this.systems.events;
+
+        this.events.once('destroy', this.destroy, this);
     },
 
     /**
@@ -64,17 +80,7 @@ var DataManagerPlugin = new Class({
      */
     start: function ()
     {
-        if (this.events)
-        {
-            this.events.off('destroy', this.destroy, this);
-        }
-
-        this.events = this.systems.events;
-
-        var eventEmitter = this.systems.events;
-
-        eventEmitter.once('shutdown', this.shutdown, this);
-        eventEmitter.once('destroy', this.destroy, this);
+        this.events.once('shutdown', this.shutdown, this);
     },
 
     /**
@@ -87,9 +93,7 @@ var DataManagerPlugin = new Class({
      */
     shutdown: function ()
     {
-        var eventEmitter = this.systems.events;
-
-        eventEmitter.off('shutdown', this.shutdown, this);
+        this.systems.events.off('shutdown', this.shutdown, this);
     },
 
     /**
@@ -103,7 +107,7 @@ var DataManagerPlugin = new Class({
     {
         DataManager.prototype.destroy.call(this);
 
-        this.systems.events.off('start', this.start, this);
+        this.events.off('start', this.start, this);
 
         this.scene = null;
         this.systems = null;

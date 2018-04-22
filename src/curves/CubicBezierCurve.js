@@ -146,7 +146,7 @@ var CubicBezierCurve = new Class({
      * @method Phaser.Curves.CubicBezierCurve#draw
      * @since 3.0.0
      *
-     * @generic {Phaser.GameObjects.Graphics} G - [out,$return]
+     * @generic {Phaser.GameObjects.Graphics} G - [graphics,$return]
      *
      * @param {Phaser.GameObjects.Graphics} graphics - [description]
      * @param {integer} [pointsTotal=32] - [description]

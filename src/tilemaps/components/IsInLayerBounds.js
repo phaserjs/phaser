@@ -8,6 +8,7 @@
  * Checks if the given tile coordinates are within the bounds of the layer.
  *
  * @function Phaser.Tilemaps.Components.IsInLayerBounds
+ * @private
  * @since 3.0.0
  *
  * @param {integer} tileX - [description]

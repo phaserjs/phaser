@@ -1,6 +1,81 @@
 # Change Log
 
-## Version 3.5.0 - in development
+## Version 3.6.1 - Asuna - in development
+
+### New Features
+
+* The Phaser 3 Labs has gained a nifty 'search' feature box thanks to @NemoStein - it allows you to filter out the example categories.
+* We've added a Mask component, which is available on nearly all Game Objects. It includes the methods `setMask`, `clearMask`, `createBitmapMask` and `createGeometryMask`.
+
+### Updates
+
+* If you're using Webpack with Phaser you'll need to update your config to match our new one.
+* We've swapped use of the Webpack DefinePlugin so instead of setting a global flag for the compilation of the Canvas and WebGL renderers, we now use a typeof check instead. This means you should now be able to ingest the Phaser source more easily outside of Webpack without having to define any global vars first (thanks @tgrajewski)
+* Under Webpack we still use the raw-loader to import our shader source, but outside of Webpack we now use `require.extensions` to load the shader source via fs. This should allow you to bundle Phaser with packages other than Webpack more easily (thanks @tgrajewski)
+* The Texture Manager will now emit an `addtexture` event whenever you add a new texture to it, which includes when you load images files from the Loader (as it automatically populates the Texture Manager). Once you receive an `addtexture` event you know the image is loaded and the texture is safe to be applied to a Game Object.
+
+### Bug Fixes
+
+* DataManagerPlugin would throw an error on Game.destroy if you had any Scenes in the Scene Manager had not been run. Fix #3596 (thanks @kuoruan)
+
+### Examples, Documentation and TypeScript
+
+My thanks to the following for helping with the Phaser 3 Examples, Docs and TypeScript definitions, either by reporting errors, fixing them or helping author the docs:
+
+@wtravO
+
+## Version 3.6.0 - Asuna - 19th April 2018
+
+### New Features
+
+* Containers are now fully available! We have removed the beta warning and fixed the way in which they work with Cameras, input and scroll factors. They are also fully documented, so please see their docs and examples for use.
+* Group.getLast will return the last member in the Group matching the search criteria.
+* Group.getFirstNth will return the nth member in the Group, scanning from top to bottom, that matches the search criteria.
+* Group.getLastNth will return the nth member in the Group, scanning in reverse, that matches the search criteria.
+* Group.remove has a new optional argument `destroyChild` that will call `destroy` on the child after removing it.
+* Group.clear has a new optional argument `destroyChild` that will call `destroy` on all children in the Group after removing them.
+
+### Updates
+
+* Impact Physics Game Objects have changed `setLite` to `setLiteCollision`.
+* Impact Physics Game Objects have changed `setPassive` to `setPassiveCollision`.
+* Impact Physics Game Objects have changed `setFixed` to `setFixedCollision`.
+* Impact Physics Game Objects have changed `setActive` to `setActiveCollision`, previously the `setActive` collision method was overwriting the Game Objects `setActive` method, hence the renaming.
+* The modifications made to the RTree class in Phaser 3.4.0 to avoid CSP policy violations caused a significant performance hit once a substantial number of bodies were involved. We have recoded how the class deals with its accessor formats and returned to 3.3 level performance while still maintaining CSP policy adherence. Fix #3594 (thanks @16patsle)
+* The Retro Font namespace has changed to `Phaser.GameObjects.RetroFont`. Previously, you would access the parser and constants via `BitmapText`, i.e.: `Phaser.GameObjects.BitmapText.ParseRetroFont.TEXT_SET6`. This has now changed to its own namespace, so the same line would be: `Phaser.GameObjects.RetroFont.TEXT_SET6`. The Parser is available via `Phaser.GameObjects.RetroFont.Parse`. This keeps things cleaner and also unbinds RetroFont from BitmapText, allowing you to cleanly exclude it from your build should you wish. All examples have been updated to reflect this.
+* If using the `removeFromScene` option in Group.remove or Group.clear it will remove the child/ren from the Scene to which they belong, not the Scene the Group belongs to.
+
+### Bug Fixes
+
+* Fixed a bug that caused data to not be passed to another Scene if you used a transition to start it. Fix #3586 (thanks @willywu)
+* Group.getHandler would return any member of the Group, regardless of the state, causing pools to remain fixed at once member. Fix #3592 (thanks @samme)
+
+### Examples, Documentation and TypeScript
+
+My thanks to the following for helping with the Phaser 3 Examples, Docs and TypeScript definitions, either by reporting errors, fixing them or helping author the docs:
+
+@Fabadiculous @Antriel
+
+## Version 3.5.1 - Kirito - 17th April 2018
+
+### Updates
+
+* The change made in 3.5.0 with how the Scene systems lifecycle is handled has been tweaked. When a Scene is instantiated it will now emit a boot event, as before, and Systems that need it will listen for this event and set-up their internal properties as required. They'll also do the same under the 'start' event, allowing them to restart properly once shutdown. In 3.5 if a Scene was previously not launched or started you wouldn't be able to access all of its internal systems fully, but in 3.5.1 you can.
+
+### Bug Fixes
+
+* LoaderPlugin.destroy would try and remove an incorrect event listener.
+* TileSprites would try to call `deleteTexture` on both renderers, but it's only available in WebGL (thanks @jmcriat)
+* Using a geometry mask stopped working in WebGL. Fix #3582 (thanks @rafelsanso)
+* The particle emitter incorrectly adjusted the vertex count, causing WebGL rendering issues. Fix #3583 (thanks @murteira)
+
+### Examples, Documentation and TypeScript
+
+My thanks to the following for helping with the Phaser 3 Examples, Docs and TypeScript definitions, either by reporting errors, fixing them or helping author the docs:
+
+@NemoStein @gabegordon @gazpachu @samme @cristlee @melissaelopez @dazigemm @tgrajewski
+
+## Version 3.5.0 - Kirito - 16th April 2018
 
 ### Changes to Cameras
 
@@ -45,6 +120,8 @@ Please see the complete JSDocs for the ScenePlugin for more details, as well as 
 * Group.remove didn't check if the passed Game Object was already a member of the group and would call `removeCallback` and (if specified) `destroy` in any case. Now it does nothing if the Game Object isn't a member of the group (thanks @samme)
 * If a Group size exceeded `maxSize` (which can happen if you reduce maxSize beneath the current size), `isFull` would return false and the group could continue to grow. Now `isFull` returns true in that case (thanks @samme)
 * Camera.fadeIn following a fadeOut wouldn't work, but is now fixed as a result of the Camera effects rewrite. Fix #3527 (thanks @Jerenaux)
+* Particle Emitters with large volumes of particles would throw the error `GL_INVALID_OPERATION: Vertex buffer is not big enough for the draw call` in WebGL.
+* Fixed issue with Game.destroy not working correctly under WebGL since 3.4. Fix #3569 (thanks @Huararanga)
 
 ### Updates
 
@@ -53,12 +130,14 @@ Please see the complete JSDocs for the ScenePlugin for more details, as well as 
 * Every Plugin has been updated to correctly follow the same flow through the Scene lifecycle. Instead of listening for the Scene 'boot' event, which is only dispatched once (when the Scene is first created), they will now listen for the Scene 'start' event, which occurs every time the Scene is started. All plugins now consistently follow the same Shutdown and Destroy patterns too, meaning they tidy-up after themselves on a shutdown, not just a destroy. Overall, this change means that there should be less issues when returning to previously closed Scenes, as the plugins will restart themselves properly.
 * When shutting down a Scene all Game Objects that belong to the scene will now automatically destroy themselves. They would previously be removed from the display and update lists, but the objects themselves didn't self-destruct. You can control this on a per-object basis with the `ignoreDestroy` property.
 * A Matter Mouse Spring will disable debug draw of its constraint by default (you can override it by passing in your own config)
+* The RandomDataGenerator class is now exposed under Phaser.Math should you wish to instantiate it yourself. Fix #3576 (thanks @wtravO)
+* Refined the Game.destroy sequence, so it will now only destroy the game at the start of the next frame, not during processing.
 
 ### Examples, Documentation and TypeScript
 
 My thanks to the following for helping with the Phaser 3 Examples, Docs and TypeScript definitions, either by reporting errors, fixing them or helping author the docs:
 
-@samme
+@samme @Antriel
 
 ## Version 3.4.0 - Miyako - 12th April 2018
 

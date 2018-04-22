@@ -185,6 +185,33 @@ var Key = new Class({
          * @since 3.0.0
          */
         this._justUp = false;
+    },
+
+    /**
+     * Resets this Key object back to its default un-pressed state.
+     *
+     * @method Phaser.Input.Keyboard.Key.reset
+     * @since 3.6.0
+     * 
+     * @return {Phaser.Input.Keyboard.Key} This Key instance.
+     */
+    reset: function ()
+    {
+        this.preventDefault = true;
+        this.enabled = true;
+        this.isDown = false;
+        this.isUp = true;
+        this.altKey = false;
+        this.ctrlKey = false;
+        this.shiftKey = false;
+        this.timeDown = 0;
+        this.duration = 0;
+        this.timeUp = 0;
+        this.repeats = 0;
+        this._justDown = false;
+        this._justUp = false;
+
+        return this;
     }
 
 });

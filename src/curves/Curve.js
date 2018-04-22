@@ -117,7 +117,7 @@ var Curve = new Class({
      * @method Phaser.Curves.Curve#draw
      * @since 3.0.0
      *
-     * @generic {Phaser.GameObjects.Graphics} G - [out,$return]
+     * @generic {Phaser.GameObjects.Graphics} G - [graphics,$return]
      *
      * @param {Phaser.GameObjects.Graphics} graphics - The Graphics instance onto which this curve will be drawn.
      * @param {integer} [pointsTotal=32] - The resolution of the curve. The higher the value the smoother it will render, at the cost of rendering performance.

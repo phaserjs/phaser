@@ -91,7 +91,7 @@ var Path = new Class({
         /**
          * [description]
          *
-         * @name {Phaser.Curves.Path#startPoint
+         * @name Phaser.Curves.Path#startPoint
          * @type {Phaser.Math.Vector2}
          * @since 3.0.0
          */
@@ -100,7 +100,7 @@ var Path = new Class({
         /**
          * [description]
          *
-         * @name {Phaser.Curves.Path#_tmpVec2A
+         * @name Phaser.Curves.Path#_tmpVec2A
          * @type {Phaser.Math.Vector2}
          * @private
          * @since 3.0.0
@@ -110,7 +110,7 @@ var Path = new Class({
         /**
          * [description]
          *
-         * @name {Phaser.Curves.Path#_tmpVec2B
+         * @name Phaser.Curves.Path#_tmpVec2B
          * @type {Phaser.Math.Vector2}
          * @private
          * @since 3.0.0

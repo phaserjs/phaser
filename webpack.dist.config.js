@@ -55,8 +55,9 @@ module.exports = {
 
     plugins: [
         new webpack.DefinePlugin({
-            CANVAS_RENDERER: JSON.stringify(true),
-            WEBGL_RENDERER: JSON.stringify(true)
+            "typeof SHADER_REQUIRE": JSON.stringify(false),
+            "typeof CANVAS_RENDERER": JSON.stringify(true),
+            "typeof WEBGL_RENDERER": JSON.stringify(true)
         }),
 
         new CleanWebpackPlugin([ 'dist' ])

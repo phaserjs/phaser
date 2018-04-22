@@ -16,6 +16,7 @@ var ReplaceByIndex = require('./ReplaceByIndex');
  * Sprites, but want to replace the tile itself with a floor tile or similar once converted.
  *
  * @function Phaser.Tilemaps.Components.CreateFromTiles
+ * @private
  * @since 3.0.0
  *
  * @param {(integer|array)} indexes - The tile index, or array of indexes, to create Sprites from.

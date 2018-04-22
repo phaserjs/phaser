@@ -81,7 +81,7 @@ var RandomDataGenerator = new Class({
         /**
          * [description]
          *
-         * @name Phaser.Math.RandomDataGenerator#sign
+         * @name Phaser.Math.RandomDataGenerator#signs
          * @type {number[]}
          * @since 3.0.0
          */

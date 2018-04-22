@@ -23,7 +23,7 @@ var GetFastValue = require('../../utils/object/GetFastValue');
  * @param {string} key - [description]
  * @param {string} url - [description]
  * @param {string} path - [description]
- * @param {XHRSettingsObject} xhrSettings - [description]
+ * @param {XHRSettingsObject} [xhrSettings] - [description]
  */
 var GLSLFile = new Class({
 
@@ -74,7 +74,7 @@ var GLSLFile = new Class({
  *
  * @param {string} key - [description]
  * @param {string} url - [description]
- * @param {XHRSettingsObject} xhrSettings - [description]
+ * @param {XHRSettingsObject} [xhrSettings] - [description]
  *
  * @return {Phaser.Loader.LoaderPlugin} The Loader.
  */

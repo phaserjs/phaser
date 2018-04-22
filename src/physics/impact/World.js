@@ -17,7 +17,7 @@ var TILEMAP_FORMATS = require('../../tilemaps/Formats');
 var TYPE = require('./TYPE');
 
 /**
- * @typedef {object} ImpactWorldConfig
+ * @typedef {object} Phaser.Physics.Impact.WorldConfig
  *
  * @property {number} [gravity=0] - [description]
  * @property {number} [cellSize=64] - [description]
@@ -48,7 +48,8 @@ var TYPE = require('./TYPE');
 
 /**
  * An object containing the 4 wall bodies that bound the physics world.
- * @typedef {object} ImpactWorldDefaults
+ * 
+ * @typedef {object} Phaser.Physics.Impact.WorldDefaults
  *
  * @property {boolean} debugShowBody - [description]
  * @property {boolean} debugShowVelocity - [description]
@@ -62,7 +63,7 @@ var TYPE = require('./TYPE');
  */
 
 /**
- * @typedef {object} ImpactWorldWalls
+ * @typedef {object} Phaser.Physics.Impact.WorldWalls
  *
  * @property {?Phaser.Physics.Impact.Body} left - [description]
  * @property {?Phaser.Physics.Impact.Body} right - [description]
@@ -81,7 +82,7 @@ var TYPE = require('./TYPE');
  * @since 3.0.0
  *
  * @param {Phaser.Scene} scene - [description]
- * @param {ImpactWorldConfig} config - [description]
+ * @param {Phaser.Physics.Impact.WorldConfig} config - [description]
  */
 var World = new Class({
 
@@ -194,7 +195,7 @@ var World = new Class({
          * [description]
          *
          * @name Phaser.Physics.Impact.World#defaults
-         * @type {ImpactWorldDefaults}
+         * @type {Phaser.Physics.Impact.WorldDefaults}
          * @since 3.0.0
          */
         this.defaults = {
@@ -213,7 +214,7 @@ var World = new Class({
          * An object containing the 4 wall bodies that bound the physics world.
          *
          * @name Phaser.Physics.Impact.World#walls
-         * @type {ImpactWorldWalls}
+         * @type {Phaser.Physics.Impact.WorldWalls}
          * @since 3.0.0
          */
         this.walls = { left: null, right: null, top: null, bottom: null };

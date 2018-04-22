@@ -27,6 +27,7 @@ var TileSpriteRender = require('./TileSpriteRender');
  * @extends Phaser.GameObjects.Components.Depth
  * @extends Phaser.GameObjects.Components.Flip
  * @extends Phaser.GameObjects.Components.GetBounds
+ * @extends Phaser.GameObjects.Components.Mask
  * @extends Phaser.GameObjects.Components.Origin
  * @extends Phaser.GameObjects.Components.Pipeline
  * @extends Phaser.GameObjects.Components.ScaleMode
@@ -55,6 +56,7 @@ var TileSprite = new Class({
         Components.Depth,
         Components.Flip,
         Components.GetBounds,
+        Components.Mask,
         Components.Origin,
         Components.Pipeline,
         Components.ScaleMode,
@@ -274,7 +276,7 @@ var TileSprite = new Class({
      */
     destroy: function ()
     {
-        if (this.renderer)
+        if (this.renderer.gl)
         {
             this.renderer.deleteTexture(this.tileTexture);
         }
