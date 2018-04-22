@@ -55,10 +55,19 @@ var Mask = {
      * @method Phaser.GameObjects.Components.Mask#clearMask
      * @since 3.6.2
      *
+     * @param {boolean} [destroyMask=false] - Destroy the mask before clearing it?
+     *
      * @return {Phaser.GameObjects.GameObject} This Game Object instance.
      */
-    clearMask: function ()
+    clearMask: function (destroyMask)
     {
+        if (destroyMask === undefined) { destroyMask = false; }
+
+        if (destroyMask)
+        {
+            this.mask.destroy();
+        }
+
         this.mask = null;
 
         return this;

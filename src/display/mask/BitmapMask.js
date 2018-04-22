@@ -191,6 +191,24 @@ var BitmapMask = new Class({
     postRenderCanvas: function ()
     {
         // NOOP
+    },
+
+    /**
+     * Destroys this BitmapMask and nulls any references it holds.
+     * 
+     * Note that if a Game Object is currently using this mask it will _not_ automatically detect you have destroyed it,
+     * so be sure to call `clearMask` on any Game Object using it, before destroying it.
+     *
+     * @method Phaser.Display.Masks.BitmapMask#destroy
+     * @since 3.6.1
+     */
+    destroy: function ()
+    {
+        this.bitmapMask = null;
+        this.mainTexture = null;
+        this.maskTexture = null;
+        this.mainFramebuffer = null;
+        this.maskFramebuffer = null;
     }
 
 });
