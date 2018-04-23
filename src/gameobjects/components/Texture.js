@@ -20,7 +20,7 @@ var Texture = {
      * The Texture this Game Object is using to render with.
      *
      * @name Phaser.GameObjects.Components.Texture#texture
-     * @type {Phaser.Textures.Texture}
+     * @type {Phaser.Textures.Texture|Phaser.Textures.CanvasTexture}
      * @since 3.0.0
      */
     texture: null,
