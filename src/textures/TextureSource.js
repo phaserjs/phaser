@@ -4,6 +4,7 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
+var CanvasPool = require('../display/canvas/CanvasPool');
 var Class = require('../utils/Class');
 var CONST = require('../const');
 var IsSizePowerOfTwo = require('../math/pow2/IsSizePowerOfTwo');
@@ -216,6 +217,11 @@ var TextureSource = new Class({
         if (this.glTexture)
         {
             this.renderer.deleteTexture(this.glTexture);
+        }
+
+        if (this.isCanvas)
+        {
+            CanvasPool.remove(this.image);
         }
 
         this.renderer = null;
