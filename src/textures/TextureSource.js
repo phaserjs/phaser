@@ -37,6 +37,15 @@ var TextureSource = new Class({
         /**
          * The Texture this TextureSource belongs to.
          *
+         * @name Phaser.Textures.TextureSource#renderer
+         * @type {(Phaser.Renderer.Canvas.CanvasRenderer|Phaser.Renderer.WebGL.WebGLRenderer)}
+         * @since 3.6.1
+         */
+        this.renderer = game.renderer;
+
+        /**
+         * The Texture this TextureSource belongs to.
+         *
          * @name Phaser.Textures.TextureSource#texture
          * @type {string}
          * @since 3.0.0
@@ -143,9 +152,16 @@ var TextureSource = new Class({
      */
     init: function (game)
     {
-        if (game.config.renderType === CONST.WEBGL)
+        if (this.renderer.gl)
         {
-            this.glTexture = game.renderer.createTextureFromSource(this.image, this.width, this.height, this.scaleMode);
+            if (this.isCanvas)
+            {
+                this.glTexture = this.renderer.canvasToTexture(this.image);
+            }
+            else
+            {
+                this.glTexture = this.renderer.createTextureFromSource(this.image, this.width, this.height, this.scaleMode);
+            }
         }
 
         if (game.config.pixelArt)
@@ -168,24 +184,42 @@ var TextureSource = new Class({
      */
     setFilter: function (filterMode)
     {
-        var game = this.texture.manager.game;
-
-        if (game.config.renderType === CONST.WEBGL)
+        if (this.renderer.gl)
         {
-            game.renderer.setTextureFilter(this.glTexture, filterMode);
+            this.renderer.setTextureFilter(this.glTexture, filterMode);
         }
     },
 
     /**
-     * Destroys this Texture Source and nulls the source image reference.
+     * If this TextureSource is backed by a Canvas and is running under WebGL,
+     * it updates the WebGLTexture using the canvas data.
+     *
+     * @method Phaser.Textures.TextureSource#update
+     * @since 3.6.1
+     */
+    update: function ()
+    {
+        if (this.renderer.gl && this.isCanvas)
+        {
+            this.renderer.canvasToTexture(this.image, this.glTexture);
+        }
+    },
+
+    /**
+     * Destroys this Texture Source and nulls the references.
      *
      * @method Phaser.Textures.TextureSource#destroy
      * @since 3.0.0
      */
     destroy: function ()
     {
-        this.texture = null;
+        if (this.glTexture)
+        {
+            this.renderer.deleteTexture(this.glTexture);
+        }
 
+        this.renderer = null;
+        this.texture = null;
         this.image = null;
     }
 
