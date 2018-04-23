@@ -18,7 +18,7 @@
 * CanvasPool has a new argument `selfParent` which allows the canvas itself to be the parent key, used for later removal.
 * Frame has a new method `setSize` which allows you to set the frame x, y, width and height and have it update all of the internal properties automatically. This is now called directly in the constructor.
 * When a TextureSource is destroyed if it's got a canvas texture it's removed from the CanvasPool.
-* TextureManager.checkKey will check if a texture key is in-use and log a console warning if it is and then return a boolean. This is now used extensively internally to prevent you from adding textures that already exist into the manager. If you wish to just check if a key is in use without the error, use the `TextureManager.exists` method as before.
+* TextureManager.checkKey will check if a texture key is in-use and log a console error if it is and then return a boolean. This is now used extensively internally to prevent you from adding textures that already exist into the manager. If you wish to just check if a key is in use without the error, use the `TextureManager.exists` method as before.
 * TextureManager.remove will allow you to remove a texture from the manager. The texture is destroyed and it emits a `removetexture` event.
 * TextureSource has a new property `renderer` as it's used a lot internally and is useful if you extend the class.
 * TextureSource will now remove its respective WebGLTexture from the renderer when destroyed.
