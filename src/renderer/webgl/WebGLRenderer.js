@@ -1881,12 +1881,14 @@ var WebGLRenderer = new Class({
         for (var key in this.pipelines)
         {
             this.pipelines[key].destroy();
+
             delete this.pipelines[key];
         }
 
         for (var index = 0; index < this.nativeTextures.length; ++index)
         {
             this.deleteTexture(this.nativeTextures[index]);
+
             delete this.nativeTextures[index];
         }
 
