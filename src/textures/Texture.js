@@ -419,6 +419,7 @@ var Texture = new Class({
         this.source = [];
         this.dataSource = [];
         this.frames = {};
+        this.manager = null;
     }
 
 });
