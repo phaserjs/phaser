@@ -6,7 +6,6 @@
 
 var CanvasPool = require('../display/canvas/CanvasPool');
 var Class = require('../utils/Class');
-var CONST = require('../const');
 var IsSizePowerOfTwo = require('../math/pow2/IsSizePowerOfTwo');
 var ScaleModes = require('../renderer/ScaleModes');
 

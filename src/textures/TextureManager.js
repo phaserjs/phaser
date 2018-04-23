@@ -163,6 +163,7 @@ var TextureManager = new Class({
     {
         if (this.exists(key))
         {
+            // eslint-disable-next-line no-console
             console.error('Texture key already in use: ' + key);
 
             return false;
@@ -187,8 +188,8 @@ var TextureManager = new Class({
      *
      * @return {Phaser.Textures.TextureManager} The Texture Manager.
      */
-     remove: function (key)
-     {
+    remove: function (key)
+    {
         if (typeof key === 'string')
         {
             if (this.exists(key))
@@ -197,7 +198,7 @@ var TextureManager = new Class({
             }
             else
             {
-                console.error('No texture found matching key: ' + key)
+                console.warn('No texture found matching key: ' + key);
                 return this;
             }
         }
@@ -213,7 +214,7 @@ var TextureManager = new Class({
         }
 
         return this;
-     },
+    },
 
     /**
      * Adds a new Texture to the Texture Manager created from the given Base64 encoded data.
@@ -503,7 +504,7 @@ var TextureManager = new Class({
 
         if (this.checkKey(key))
         {
-            var texture = this.create(key, source);
+            texture = this.create(key, source);
 
             Parser.UnityYAML(texture, 0, data);
 

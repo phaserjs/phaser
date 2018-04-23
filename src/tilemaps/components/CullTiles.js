@@ -64,8 +64,8 @@ var CullTiles = function (layer, camera, outputArray)
         {
             var tile = mapData[y][x];
 
-            if (tile === null || tile.index === -1) 
-                continue;
+            if (tile === null || tile.index === -1)
+            { continue; }
 
             var tileX = tile.pixelX * a + tile.pixelY * c + e;
             var tileY = tile.pixelX * b + tile.pixelY * d + f;
@@ -75,7 +75,7 @@ var CullTiles = function (layer, camera, outputArray)
                 tileY >= tCullY &&
                 tileX + tileW <= tCullW &&
                 tileY + tileH <= tCullH
-                )
+            )
             {
                 outputArray.push(tile);
             }
@@ -83,7 +83,7 @@ var CullTiles = function (layer, camera, outputArray)
     }
 
 
-    /*var tilemapLayer = layer.tilemapLayer;
+    /* var tilemapLayer = layer.tilemapLayer;
     var mapData = layer.data;
     var mapWidth = layer.width;
     var mapHeight = layer.height;
@@ -114,7 +114,7 @@ var CullTiles = function (layer, camera, outputArray)
                 outputArray.push(tile);
             }
         }
-    }*/
+    } */
 
     return outputArray;
 };
