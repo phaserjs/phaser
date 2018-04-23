@@ -148,6 +148,50 @@ var TextureManager = new Class({
     },
 
     /**
+     * Removes a Texture from the Texture Manager and destroys it. This will immediately
+     * clear all references to it from the Texture Manager, and if it has one, destroy its
+     * WebGLTexture. This will emit a `removetexture` event.
+     *
+     * Note: If you have any Game Objects still using this texture they will start throwing
+     * errors the next time they try to render. Make sure that removing the texture is the final
+     * step when clearing down to avoid this.
+     *
+     * @method Phaser.Textures.TextureManager#remove
+     * @since 3.6.1
+     *
+     * @param {(string|Phaser.Textures.Texture)} key - The key of the Texture to remove, or a reference to it.
+     *
+     * @return {Phaser.Textures.TextureManager} The Texture Manager.
+     */
+     remove: function (key)
+     {
+        if (typeof key === 'string')
+        {
+            if (this.exists(key))
+            {
+                key = this.get(key);
+            }
+            else
+            {
+                console.error('No texture found matching key: ' + key)
+                return this;
+            }
+        }
+
+        //  By this point key should be a Texture, if not, the following fails anyway
+        if (this.list.hasOwnProperty(key.key))
+        {
+            delete this.list[key.key];
+
+            key.destroy();
+
+            this.emit('removetexture', key.key);
+        }
+
+        return this;
+     },
+
+    /**
      * Adds a new Texture to the Texture Manager created from the given Base64 encoded data.
      *
      * @method Phaser.Textures.TextureManager#addBase64
