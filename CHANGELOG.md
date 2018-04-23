@@ -6,6 +6,7 @@
 
 * The Phaser 3 Labs has gained a nifty 'search' feature box thanks to @NemoStein - it allows you to filter out the example categories.
 * We've added a Mask component, which is available on nearly all Game Objects. It includes the methods `setMask`, `clearMask`, `createBitmapMask` and `createGeometryMask`.
+* CanvasTexture is a new extension of the Texture object specifically created for when you've got a Canvas element as the backing source of the texture that you wish to draw to programmatically using the Canvas API. This was possible in previous versions, as a Texture object supported having a Canvas as its source, but we've streamlined the process and made it a lot easier for you to refresh the resulting WebGLTexture on the GPU. To create a CanvasTexture just call the `TextureManager.createCanvas` method as before, only this time you'll get a CanvasTexture back which has helper properties and methods. See the complete JSDocs for more details.
 
 ### Updates
 
@@ -14,6 +15,15 @@
 * Under Webpack we still use the raw-loader to import our shader source, but outside of Webpack we now use `require.extensions` to load the shader source via fs. This should allow you to bundle Phaser with packages other than Webpack more easily (thanks @tgrajewski)
 * The Texture Manager will now emit an `addtexture` event whenever you add a new texture to it, which includes when you load image files from the Loader (as it automatically populates the Texture Manager). Once you receive an `addtexture` event you know the image is loaded and the texture is safe to be applied to a Game Object.
 * BitmapMask and GeometryMask both have new `destroy` methods which clear their references, freeing them for gc.
+* CanvasPool has a new argument `selfParent` which allows the canvas itself to be the parent key, used for later removal.
+* Frame has a new method `setSize` which allows you to set the frame x, y, width and height and have it update all of the internal properties automatically. This is now called directly in the constructor.
+* When a TextureSource is destroyed if it's got a canvas texture it's removed from the CanvasPool.
+* TextureManager.checkKey will check if a texture key is in-use and log a console warning if it is and then return a boolean. This is now used extensively internally to prevent you from adding textures that already exist into the manager. If you wish to just check if a key is in use without the error, use the `TextureManager.exists` method as before.
+* TextureManager.remove will allow you to remove a texture from the manager. The texture is destroyed and it emits a `removetexture` event.
+* TextureSource has a new property `renderer` as it's used a lot internally and is useful if you extend the class.
+* TextureSource will now remove its respective WebGLTexture from the renderer when destroyed.
+* TextureSource will now automatically create a glTexture from its canvas if using one.
+* WebGLRenderer will now remove a GL texture from its local `nativeTextures` array when you call the `deleteTexture` method.
 
 ### Bug Fixes
 
