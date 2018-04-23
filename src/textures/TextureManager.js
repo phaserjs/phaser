@@ -5,8 +5,10 @@
  */
 
 var CanvasPool = require('../display/canvas/CanvasPool');
+var CanvasTexture = require('./CanvasTexture');
 var Class = require('../utils/Class');
 var Color = require('../display/color/Color');
+var CONST = require('../const');
 var EventEmitter = require('eventemitter3');
 var GenerateTexture = require('../create/GenerateTexture');
 var GetValue = require('../utils/object/GetValue');
@@ -148,6 +150,28 @@ var TextureManager = new Class({
     },
 
     /**
+     * Checks the given texture key and throws a console.warn if the key is already in use, then returns false.
+     *
+     * @method Phaser.Textures.TextureManager#checkKey
+     * @since 3.6.1
+     *
+     * @param {string} key - The texture key to check.
+     *
+     * @return {boolean} `true` if it's safe to use the texture key, otherwise `false`.
+     */
+    checkKey: function (key)
+    {
+        if (this.exists(key))
+        {
+            console.error('Texture key already in use: ' + key);
+
+            return false;
+        }
+
+        return true;
+    },
+
+    /**
      * Removes a Texture from the Texture Manager and destroys it. This will immediately
      * clear all references to it from the Texture Manager, and if it has one, destroy its
      * WebGLTexture. This will emit a `removetexture` event.
@@ -202,27 +226,30 @@ var TextureManager = new Class({
      */
     addBase64: function (key, data)
     {
-        var _this = this;
-
-        var image = new Image();
-
-        image.onerror = function ()
+        if (this.checkKey(key))
         {
-            _this.emit('onerror', key);
-        };
+            var _this = this;
 
-        image.onload = function ()
-        {
-            var texture = _this.create(key, image);
+            var image = new Image();
 
-            Parser.Image(texture, 0);
+            image.onerror = function ()
+            {
+                _this.emit('onerror', key);
+            };
 
-            _this.emit('addtexture', key, texture);
+            image.onload = function ()
+            {
+                var texture = _this.create(key, image);
 
-            _this.emit('onload', key, texture);
-        };
+                Parser.Image(texture, 0);
 
-        image.src = data;
+                _this.emit('addtexture', key, texture);
+
+                _this.emit('onload', key, texture);
+            };
+
+            image.src = data;
+        }
     },
 
     /**
@@ -235,21 +262,26 @@ var TextureManager = new Class({
      * @param {HTMLImageElement} source - The source Image element.
      * @param {HTMLImageElement} [dataSource] - An optional data Image element.
      *
-     * @return {Phaser.Textures.Texture} The Texture that was created.
+     * @return {?Phaser.Textures.Texture} The Texture that was created, or `null` if the key is already in use.
      */
     addImage: function (key, source, dataSource)
     {
-        var texture = this.create(key, source);
+        var texture = null;
 
-        Parser.Image(texture, 0);
-
-        if (dataSource)
+        if (this.checkKey(key))
         {
-            texture.setDataSource(dataSource);
+            texture = this.create(key, source);
+
+            Parser.Image(texture, 0);
+
+            if (dataSource)
+            {
+                texture.setDataSource(dataSource);
+            }
+
+            this.emit('addtexture', key, texture);
         }
-
-        this.emit('addtexture', key, texture);
-
+        
         return texture;
     },
 
@@ -264,17 +296,24 @@ var TextureManager = new Class({
      * @param {string} key - The unique string-based key of the Texture.
      * @param {object} config - [description]
      *
-     * @return {Phaser.Textures.Texture} The Texture that was created.
+     * @return {?Phaser.Textures.Texture} The Texture that was created, or `null` if the key is already in use.
      */
     generate: function (key, config)
     {
-        var canvas = CanvasPool.create(this, 1, 1);
+        if (this.checkKey(key))
+        {
+            var canvas = CanvasPool.create(this, 1, 1);
 
-        config.canvas = canvas;
+            config.canvas = canvas;
 
-        GenerateTexture(config);
+            GenerateTexture(config);
 
-        return this.addCanvas(key, canvas);
+            return this.addCanvas(key, canvas);
+        }
+        else
+        {
+            return null;
+        }
     },
 
     /**
@@ -287,23 +326,28 @@ var TextureManager = new Class({
      * @since 3.0.0
      *
      * @param {string} key - The unique string-based key of the Texture.
-     * @param {integer} width - The width of the Canvas element.
-     * @param {integer} height - The height of the Canvas element.
+     * @param {integer} [width=256]- The width of the Canvas element.
+     * @param {integer} [height=256] - The height of the Canvas element.
      *
-     * @return {Phaser.Textures.Texture} The Texture that was created.
+     * @return {?Phaser.Textures.CanvasTexture} The Canvas Texture that was created, or `null` if the key is already in use.
      */
     createCanvas: function (key, width, height)
     {
         if (width === undefined) { width = 256; }
         if (height === undefined) { height = 256; }
 
-        var canvas = CanvasPool.create(this, width, height);
+        if (this.checkKey(key))
+        {
+            var canvas = CanvasPool.create(this, width, height, CONST.CANVAS, true);
 
-        return this.addCanvas(key, canvas);
+            return this.addCanvas(key, canvas);
+        }
+
+        return null;
     },
 
     /**
-     * Creates a new Texture object from an existing Canvas element and adds
+     * Creates a new Canvas Texture object from an existing Canvas element and adds
      * it to this Texture Manager.
      *
      * @method Phaser.Textures.TextureManager#addCanvas
@@ -312,15 +356,20 @@ var TextureManager = new Class({
      * @param {string} key - The unique string-based key of the Texture.
      * @param {HTMLCanvasElement} source - The Canvas element to form the base of the new Texture.
      *
-     * @return {Phaser.Textures.Texture} The Texture that was created.
+     * @return {?Phaser.Textures.CanvasTexture} The Canvas Texture that was created, or `null` if the key is already in use.
      */
     addCanvas: function (key, source)
     {
-        var texture = this.create(key, source);
+        var texture = null;
 
-        Parser.Canvas(texture, 0);
+        if (this.checkKey(key))
+        {
+            texture = new CanvasTexture(this, key, source, source.width, source.height);
 
-        this.emit('addtexture', key, texture);
+            this.list[key] = texture;
+
+            this.emit('addtexture', key, texture);
+        }
 
         return texture;
     },
@@ -336,7 +385,7 @@ var TextureManager = new Class({
      * @param {HTMLImageElement} source - The source Image element.
      * @param {object} data - The Texture Atlas data.
      *
-     * @return {Phaser.Textures.Texture} The Texture that was created.
+     * @return {?Phaser.Textures.Texture} The Texture that was created, or `null` if the key is already in use.
      */
     addAtlas: function (key, source, data)
     {
@@ -363,29 +412,34 @@ var TextureManager = new Class({
      * @param {HTMLImageElement} source - The source Image element.
      * @param {object} data - The Texture Atlas data.
      *
-     * @return {Phaser.Textures.Texture} The Texture that was created.
+     * @return {?Phaser.Textures.Texture} The Texture that was created, or `null` if the key is already in use.
      */
     addAtlasJSONArray: function (key, source, data)
     {
-        var texture = this.create(key, source);
+        var texture = null;
 
-        if (Array.isArray(data))
+        if (this.checkKey(key))
         {
-            var singleAtlasFile = (data.length === 1); // multi-pack with one atlas file for all images
+            texture = this.create(key, source);
 
-            for (var i = 0; i < texture.source.length; i++)
+            if (Array.isArray(data))
             {
-                var atlasData = singleAtlasFile ? data[0] : data[i];
+                var singleAtlasFile = (data.length === 1); // multi-pack with one atlas file for all images
 
-                Parser.JSONArray(texture, i, atlasData);
+                for (var i = 0; i < texture.source.length; i++)
+                {
+                    var atlasData = singleAtlasFile ? data[0] : data[i];
+
+                    Parser.JSONArray(texture, i, atlasData);
+                }
             }
-        }
-        else
-        {
-            Parser.JSONArray(texture, 0, data);
-        }
+            else
+            {
+                Parser.JSONArray(texture, 0, data);
+            }
 
-        this.emit('addtexture', key, texture);
+            this.emit('addtexture', key, texture);
+        }
 
         return texture;
     },
@@ -402,25 +456,30 @@ var TextureManager = new Class({
      * @param {HTMLImageElement} source - The source Image element.
      * @param {object} data - The Texture Atlas data.
      *
-     * @return {Phaser.Textures.Texture} The Texture that was created.
+     * @return {?Phaser.Textures.Texture} The Texture that was created, or `null` if the key is already in use.
      */
     addAtlasJSONHash: function (key, source, data)
     {
-        var texture = this.create(key, source);
+        var texture = null;
 
-        if (Array.isArray(data))
+        if (this.checkKey(key))
         {
-            for (var i = 0; i < data.length; i++)
+            texture = this.create(key, source);
+
+            if (Array.isArray(data))
             {
-                Parser.JSONHash(texture, i, data[i]);
+                for (var i = 0; i < data.length; i++)
+                {
+                    Parser.JSONHash(texture, i, data[i]);
+                }
             }
-        }
-        else
-        {
-            Parser.JSONHash(texture, 0, data);
-        }
+            else
+            {
+                Parser.JSONHash(texture, 0, data);
+            }
 
-        this.emit('addtexture', key, texture);
+            this.emit('addtexture', key, texture);
+        }
 
         return texture;
     },
@@ -436,15 +495,20 @@ var TextureManager = new Class({
      * @param {HTMLImageElement} source - The source Image element.
      * @param {object} data - The Texture Atlas data.
      *
-     * @return {Phaser.Textures.Texture} The Texture that was created.
+     * @return {?Phaser.Textures.Texture} The Texture that was created, or `null` if the key is already in use.
      */
     addUnityAtlas: function (key, source, data)
     {
-        var texture = this.create(key, source);
+        var texture = null;
 
-        Parser.UnityYAML(texture, 0, data);
+        if (this.checkKey(key))
+        {
+            var texture = this.create(key, source);
 
-        this.emit('addtexture', key, texture);
+            Parser.UnityYAML(texture, 0, data);
+
+            this.emit('addtexture', key, texture);
+        }
 
         return texture;
     },
@@ -473,18 +537,23 @@ var TextureManager = new Class({
      * @param {HTMLImageElement} source - The source Image element.
      * @param {SpriteSheetConfig} config - The configuration object for this Sprite Sheet.
      *
-     * @return {Phaser.Textures.Texture} The Texture that was created.
+     * @return {?Phaser.Textures.Texture} The Texture that was created, or `null` if the key is already in use.
      */
     addSpriteSheet: function (key, source, config)
     {
-        var texture = this.create(key, source);
+        var texture = null;
 
-        var width = texture.source[0].width;
-        var height = texture.source[0].height;
+        if (this.checkKey(key))
+        {
+            texture = this.create(key, source);
 
-        Parser.SpriteSheet(texture, 0, 0, 0, width, height, config);
+            var width = texture.source[0].width;
+            var height = texture.source[0].height;
 
-        this.emit('addtexture', key, texture);
+            Parser.SpriteSheet(texture, 0, 0, 0, width, height, config);
+
+            this.emit('addtexture', key, texture);
+        }
 
         return texture;
     },
@@ -514,10 +583,15 @@ var TextureManager = new Class({
      * @param {string} key - The unique string-based key of the Texture.
      * @param {SpriteSheetFromAtlasConfig} config - The configuration object for this Sprite Sheet.
      *
-     * @return {Phaser.Textures.Texture} The Texture that was created.
+     * @return {?Phaser.Textures.Texture} The Texture that was created, or `null` if the key is already in use.
      */
     addSpriteSheetFromAtlas: function (key, config)
     {
+        if (!this.checkKey(key))
+        {
+            return null;
+        }
+
         var atlasKey = GetValue(config, 'atlas', null);
         var atlasFrame = GetValue(config, 'frame', null);
 
@@ -560,25 +634,30 @@ var TextureManager = new Class({
      * @param {HTMLImageElement} source - The source Image element.
      * @param {object} data - The Texture Atlas XML data.
      *
-     * @return {Phaser.Textures.Texture} The Texture that was created.
+     * @return {?Phaser.Textures.Texture} The Texture that was created, or `null` if the key is already in use.
      */
     addAtlasStarlingXML: function (key, source, data)
     {
-        var texture = this.create(key, source);
+        var texture = null;
 
-        if (Array.isArray(data))
+        if (this.checkKey(key))
         {
-            for (var i = 0; i < data.length; i++)
+            texture = this.create(key, source);
+
+            if (Array.isArray(data))
             {
-                Parser.StarlingXML(texture, i, data[i]);
+                for (var i = 0; i < data.length; i++)
+                {
+                    Parser.StarlingXML(texture, i, data[i]);
+                }
             }
-        }
-        else
-        {
-            Parser.StarlingXML(texture, 0, data);
-        }
+            else
+            {
+                Parser.StarlingXML(texture, 0, data);
+            }
 
-        this.emit('addtexture', key, texture);
+            this.emit('addtexture', key, texture);
+        }
 
         return texture;
     },
@@ -594,25 +673,30 @@ var TextureManager = new Class({
      * @param {HTMLImageElement} source - The source Image element.
      * @param {object} data - The Texture Atlas XML data.
      *
-     * @return {Phaser.Textures.Texture} The Texture that was created.
+     * @return {?Phaser.Textures.Texture} The Texture that was created, or `null` if the key is already in use.
      */
     addAtlasPyxel: function (key, source, data)
     {
-        var texture = this.create(key, source);
+        var texture = null;
 
-        if (Array.isArray(data))
+        if (this.checkKey(key))
         {
-            for (var i = 0; i < data.length; i++)
+            texture = this.create(key, source);
+
+            if (Array.isArray(data))
             {
-                Parser.Pyxel(texture, i, data[i]);
+                for (var i = 0; i < data.length; i++)
+                {
+                    Parser.Pyxel(texture, i, data[i]);
+                }
             }
-        }
-        else
-        {
-            Parser.Pyxel(texture, 0, data);
-        }
+            else
+            {
+                Parser.Pyxel(texture, 0, data);
+            }
 
-        this.emit('addtexture', key, texture);
+            this.emit('addtexture', key, texture);
+        }
 
         return texture;
     },
@@ -628,15 +712,18 @@ var TextureManager = new Class({
      * @param {integer} width - The width of the Texture.
      * @param {integer} height - The height of the Texture.
      *
-     * @return {Phaser.Textures.Texture} The Texture that was created.
+     * @return {?Phaser.Textures.Texture} The Texture that was created, or `null` if the key is already in use.
      */
     create: function (key, source, width, height)
     {
-        var texture = new Texture(this, key, source, width, height);
+        var texture = null;
 
-        this.list[key] = texture;
+        if (this.checkKey(key))
+        {
+            texture = new Texture(this, key, source, width, height);
 
-        this.emit('addtexture', key, texture);
+            this.list[key] = texture;
+        }
 
         return texture;
     },
@@ -860,6 +947,8 @@ var TextureManager = new Class({
         this.list = {};
 
         this.game = null;
+
+        CanvasPool.remove(this._tempCanvas);
     }
 
 });
