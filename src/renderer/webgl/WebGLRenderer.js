@@ -8,6 +8,7 @@
 var Class = require('../../utils/Class');
 var CONST = require('../../const');
 var IsSizePowerOfTwo = require('../../math/pow2/IsSizePowerOfTwo');
+var SpliceOne = require('../../utils/array/SpliceOne');
 var Utils = require('./Utils');
 var WebGLSnapshot = require('../snapshot/WebGLSnapshot');
 
@@ -1297,6 +1298,13 @@ var WebGLRenderer = new Class({
      */
     deleteTexture: function (texture)
     {
+        var index = this.nativeTextures.indexOf(texture);
+
+        if (index !== -1)
+        {
+            SpliceOne(this.nativeTextures, index);
+        }
+
         this.gl.deleteTexture(texture);
 
         return this;
@@ -1555,9 +1563,7 @@ var WebGLRenderer = new Class({
      * @since 3.0.0
      *
      * @param {HTMLCanvasElement} srcCanvas - [description]
-     * @param {WebGLTexture} dstTexture - [description]
-     * @param {boolean} shouldReallocate - [description]
-     * @param {integer} scaleMode - [description]
+     * @param {WebGLTexture} [dstTexture] - [description]
      *
      * @return {WebGLTexture} [description]
      */
@@ -1580,16 +1586,10 @@ var WebGLRenderer = new Class({
         {
             this.setTexture2D(dstTexture, 0);
 
-            // if (!shouldReallocate && dstTexture.width >= srcCanvas.width || dstTexture.height >= srcCanvas.height)
-            // {
-            //    gl.texSubImage2D(gl.TEXTURE_2D, 0, 0, srcCanvas.width, srcCanvas.height, gl.RGBA, gl.UNSIGNED_BYTE, srcCanvas);
-            // }
-            // else
-            {
-                gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, srcCanvas);
-                dstTexture.width = srcCanvas.width;
-                dstTexture.height = srcCanvas.height;
-            }
+            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, srcCanvas);
+
+            dstTexture.width = srcCanvas.width;
+            dstTexture.height = srcCanvas.height;
 
             this.setTexture2D(null, 0);
         }
