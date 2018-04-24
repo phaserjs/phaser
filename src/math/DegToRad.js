@@ -14,7 +14,7 @@ var CONST = require('./const');
  *
  * @param {integer} degrees - The angle (in degrees) to convert to radians.
  *
- * @return {float} The equivalent angle in radians.
+ * @return {float} The given angle converted radians.
  */
 var DegToRad = function (degrees)
 {
