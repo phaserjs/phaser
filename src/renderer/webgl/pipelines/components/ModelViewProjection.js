@@ -4,17 +4,47 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-//  [pending] - please add comments explaining what all of these functions do
+
+/**
+ * Implements a model view projection matrices.
+ * Pipelines can implement this for doing 2D and 3D rendering.
+ */
 
 var ModelViewProjection = {
 
+    /**
+     * Dirty flag for checking if model matrix needs to be updated on GPU.
+     */
     modelMatrixDirty: false,
+
+    /**
+     * Dirty flag for checking if view matrix needs to be updated on GPU.
+     */
     viewMatrixDirty: false,
+
+    /**
+     * Dirty flag for checking if projection matrix needs to be updated on GPU.
+     */
     projectionMatrixDirty: false,
+
+    /**
+     * Model matrix
+     */
     modelMatrix: null,
+
+    /**
+     * View matrix
+     */
     viewMatrix: null,
+
+    /**
+     * Projection matrix
+     */
     projectionMatrix: null,
 
+    /**
+     * Initializes MVP matrices with an identity matrix
+     */
     mvpInit: function ()
     {
         this.modelMatrixDirty = true;
@@ -45,6 +75,9 @@ var ModelViewProjection = {
         return this;
     },
 
+    /**
+     * If dirty flags are set then the matrices are uploaded to the GPU.
+     */
     mvpUpdate: function ()
     {
         var program = this.program;
@@ -70,6 +103,9 @@ var ModelViewProjection = {
         return this;
     },
 
+    /**
+     * Loads an identity matrix to the model matrix
+     */
     modelIdentity: function ()
     {
         var modelMatrix = this.modelMatrix;
@@ -96,6 +132,9 @@ var ModelViewProjection = {
         return this;
     },
 
+    /**
+     * Scale model matrix
+     */
     modelScale: function (x, y, z)
     {
         var modelMatrix = this.modelMatrix;
@@ -118,6 +157,9 @@ var ModelViewProjection = {
         return this;
     },
 
+    /**
+     * Translate model matrix
+     */
     modelTranslate: function (x, y, z)
     {
         var modelMatrix = this.modelMatrix;
@@ -132,6 +174,10 @@ var ModelViewProjection = {
         return this;
     },
 
+
+    /**
+     * Rotates the model matrix in the X axis.
+     */
     modelRotateX: function (radians)
     {
         var modelMatrix = this.modelMatrix;
@@ -160,6 +206,9 @@ var ModelViewProjection = {
         return this;
     },
 
+    /**
+     * Rotates the model matrix in the Y axis.
+     */
     modelRotateY: function (radians)
     {
         var modelMatrix = this.modelMatrix;
@@ -187,7 +236,10 @@ var ModelViewProjection = {
         
         return this;
     },
-
+    
+    /**
+     * Rotates the model matrix in the Z axis.
+     */
     modelRotateZ: function (radians)
     {
         var modelMatrix = this.modelMatrix;
@@ -216,6 +268,9 @@ var ModelViewProjection = {
         return this;
     },
 
+    /**
+     * Loads identity matrix into the view matrix
+     */
     viewIdentity: function ()
     {
         var viewMatrix = this.viewMatrix;
@@ -241,7 +296,10 @@ var ModelViewProjection = {
         
         return this;
     },
-
+    
+    /**
+     * Scales view matrix
+     */
     viewScale: function (x, y, z)
     {
         var viewMatrix = this.viewMatrix;
@@ -264,6 +322,9 @@ var ModelViewProjection = {
         return this;
     },
 
+    /**
+     * Translates view matrix
+     */
     viewTranslate: function (x, y, z)
     {
         var viewMatrix = this.viewMatrix;
@@ -277,7 +338,10 @@ var ModelViewProjection = {
 
         return this;
     },
-
+    
+    /**
+     * Rotates view matrix in the X axis.
+     */
     viewRotateX: function (radians)
     {
         var viewMatrix = this.viewMatrix;
@@ -305,7 +369,10 @@ var ModelViewProjection = {
 
         return this;
     },
-
+    
+    /**
+     * Rotates view matrix in the Y axis.
+     */
     viewRotateY: function (radians)
     {
         var viewMatrix = this.viewMatrix;
@@ -333,7 +400,10 @@ var ModelViewProjection = {
         
         return this;
     },
-
+    
+    /**
+     * Rotates view matrix in the Z axis.
+     */
     viewRotateZ: function (radians)
     {
         var viewMatrix = this.viewMatrix;
@@ -362,6 +432,9 @@ var ModelViewProjection = {
         return this;
     },
 
+    /**
+     * Loads a 2D view matrix (3x2 matrix) into a 4x4 view matrix 
+     */
     viewLoad2D: function (matrix2D)
     {
         var vm = this.viewMatrix;
@@ -388,6 +461,10 @@ var ModelViewProjection = {
         return this;
     },
 
+
+    /**
+     * Copies a 4x4 matrix into the view matrix
+     */
     viewLoad: function (matrix)
     {
         var vm = this.viewMatrix;
@@ -413,7 +490,10 @@ var ModelViewProjection = {
 
         return this;
     },
-
+    
+    /**
+     * Loads identity matrix into the projection matrix.
+     */
     projIdentity: function ()
     {
         var projectionMatrix = this.projectionMatrix;
@@ -440,6 +520,9 @@ var ModelViewProjection = {
         return this;
     },
 
+    /**
+     * Sets up an orthographics projection matrix
+     */
     projOrtho: function (left, right, bottom, top, near, far)
     {
         var projectionMatrix = this.projectionMatrix;
@@ -467,7 +550,10 @@ var ModelViewProjection = {
         this.projectionMatrixDirty = true;
         return this;
     },
-
+    
+    /**
+     * Sets up a perspective projection matrix
+     */
     projPersp: function (fovy, aspectRatio, near, far)
     {
         var projectionMatrix = this.projectionMatrix;
