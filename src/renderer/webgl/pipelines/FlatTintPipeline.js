@@ -37,7 +37,7 @@ var pathArray = [];
 
 /**
  * @classdesc
- * [description]
+ * [pending] - explain what this pipeline handles and how the config object works.
  *
  * @class FlatTintPipeline
  * @extends Phaser.Renderer.WebGL.WebGLPipeline
@@ -91,7 +91,7 @@ var FlatTintPipeline = new Class({
         });
 
         /**
-         * [description]
+         * [pending]
          *
          * @name Phaser.Renderer.WebGL.Pipelines.FlatTintPipeline#vertexViewF32
          * @type {Float32Array}
@@ -100,7 +100,7 @@ var FlatTintPipeline = new Class({
         this.vertexViewF32 = new Float32Array(this.vertexData);
 
         /**
-         * [description]
+         * [pending]
          *
          * @name Phaser.Renderer.WebGL.Pipelines.FlatTintPipeline#vertexViewU32
          * @type {Uint32Array}
@@ -109,7 +109,7 @@ var FlatTintPipeline = new Class({
         this.vertexViewU32 = new Uint32Array(this.vertexData);
 
         /**
-         * [description]
+         * [pending]
          *
          * @name Phaser.Renderer.WebGL.Pipelines.FlatTintPipeline#tempTriangle
          * @type {array}
@@ -123,7 +123,7 @@ var FlatTintPipeline = new Class({
         ];
 
         /**
-         * [description]
+         * [pending]
          *
          * @name Phaser.Renderer.WebGL.Pipelines.FlatTintPipeline#polygonCache
          * @type {array}
@@ -172,29 +172,29 @@ var FlatTintPipeline = new Class({
     },
 
     /**
-     * [description]
+     * [pending]
      *
      * @method Phaser.Renderer.WebGL.Pipelines.FlatTintPipeline#batchFillRect
      * @since 3.0.0
      *
-     * @param {float} srcX - [description]
-     * @param {float} srcY - [description]
-     * @param {float} srcScaleX - [description]
-     * @param {float} srcScaleY - [description]
-     * @param {float} srcRotation - [description]
-     * @param {float} x - [description]
-     * @param {float} y - [description]
-     * @param {float} width - [description]
-     * @param {float} height - [description]
-     * @param {integer} fillColor - [description]
-     * @param {float} fillAlpha - [description]
-     * @param {float} a1 - [description]
-     * @param {float} b1 - [description]
-     * @param {float} c1 - [description]
-     * @param {float} d1 - [description]
-     * @param {float} e1 - [description]
-     * @param {float} f1 - [description]
-     * @param {Float32Array} currentMatrix - [description]
+     * @param {float} srcX - [pending]
+     * @param {float} srcY - [pending]
+     * @param {float} srcScaleX - [pending]
+     * @param {float} srcScaleY - [pending]
+     * @param {float} srcRotation - [pending]
+     * @param {float} x - [pending]
+     * @param {float} y - [pending]
+     * @param {float} width - [pending]
+     * @param {float} height - [pending]
+     * @param {integer} fillColor - [pending]
+     * @param {float} fillAlpha - [pending]
+     * @param {float} a1 - [pending]
+     * @param {float} b1 - [pending]
+     * @param {float} c1 - [pending]
+     * @param {float} d1 - [pending]
+     * @param {float} e1 - [pending]
+     * @param {float} f1 - [pending]
+     * @param {Float32Array} currentMatrix - [pending]
      */
     batchFillRect: function (srcX, srcY, srcScaleX, srcScaleY, srcRotation, x, y, width, height, fillColor, fillAlpha, a1, b1, c1, d1, e1, f1, currentMatrix)
     {
@@ -265,12 +265,12 @@ var FlatTintPipeline = new Class({
      * @param {float} srcScaleX - [description]
      * @param {float} srcScaleY - [description]
      * @param {float} srcRotation - [description]
-     * @param {float} x0 - [description]
-     * @param {float} y0 - [description]
-     * @param {float} x1 - [description]
-     * @param {float} y1 - [description]
-     * @param {float} x2 - [description]
-     * @param {float} y2 - [description]
+     * @param {float} x0 - [pending]
+     * @param {float} y0 - [pending]
+     * @param {float} x1 - [pending]
+     * @param {float} y1 - [pending]
+     * @param {float} x2 - [pending]
+     * @param {float} y2 - [pending]
      * @param {integer} fillColor - [description]
      * @param {float} fillAlpha - [description]
      * @param {float} a1 - [description]
@@ -343,15 +343,15 @@ var FlatTintPipeline = new Class({
      * @param {float} y1 - [description]
      * @param {float} x2 - [description]
      * @param {float} y2 - [description]
-     * @param {float} lineWidth - [description]
-     * @param {integer} lineColor - [description]
-     * @param {float} lineAlpha - [description]
-     * @param {float} a - [description]
-     * @param {float} b - [description]
-     * @param {float} c - [description]
-     * @param {float} d - [description]
-     * @param {float} e - [description]
-     * @param {float} f - [description]
+     * @param {float} lineWidth - [pending]
+     * @param {integer} lineColor - [pending]
+     * @param {float} lineAlpha - [pending]
+     * @param {float} a - [pending]
+     * @param {float} b - [pending]
+     * @param {float} c - [pending]
+     * @param {float} d - [pending]
+     * @param {float} e - [pending]
+     * @param {float} f - [pending]
      * @param {Float32Array} currentMatrix - [description]
      */
     batchStrokeTriangle: function (srcX, srcY, srcScaleX, srcScaleY, srcRotation, x0, y0, x1, y1, x2, y2, lineWidth, lineColor, lineAlpha, a, b, c, d, e, f, currentMatrix)
@@ -399,7 +399,7 @@ var FlatTintPipeline = new Class({
      * @param {float} srcScaleX - [description]
      * @param {float} srcScaleY - [description]
      * @param {float} srcRotation - [description]
-     * @param {float} path - [description]
+     * @param {float} path - [pending]
      * @param {integer} fillColor - [description]
      * @param {float} fillAlpha - [description]
      * @param {float} a1 - [description]
@@ -511,7 +511,7 @@ var FlatTintPipeline = new Class({
      * @param {float} d - [description]
      * @param {float} e - [description]
      * @param {float} f - [description]
-     * @param {boolean} isLastPath - [description]
+     * @param {boolean} isLastPath - [pending]
      * @param {Float32Array} currentMatrix - [description]
      */
     batchStrokePath: function (srcX, srcY, srcScaleX, srcScaleY, srcRotation, path, lineWidth, lineColor, lineAlpha, a, b, c, d, e, f, isLastPath, currentMatrix)
@@ -594,14 +594,14 @@ var FlatTintPipeline = new Class({
      * @param {float} srcScaleX - [description]
      * @param {float} srcScaleY - [description]
      * @param {float} srcRotation - [description]
-     * @param {float} ax - [description]
-     * @param {float} ay - [description]
-     * @param {float} bx - [description]
-     * @param {float} by - [description]
-     * @param {float} aLineWidth - [description]
-     * @param {float} bLineWidth - [description]
-     * @param {integer} aLineColor - [description]
-     * @param {integer} bLineColor - [description]
+     * @param {float} ax - [pending]
+     * @param {float} ay - [pending]
+     * @param {float} bx - [pending]
+     * @param {float} by - [pending]
+     * @param {float} aLineWidth - [pending]
+     * @param {float} bLineWidth - [pending]
+     * @param {integer} aLineColor - [pending]
+     * @param {integer} bLineColor - [pending]
      * @param {float} lineAlpha - [description]
      * @param {float} a1 - [description]
      * @param {float} b1 - [description]

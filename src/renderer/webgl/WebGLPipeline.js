@@ -10,7 +10,7 @@ var Utils = require('./Utils');
 
 /**
  * @classdesc
- * [description]
+ * [pending] explain the concept behind the pipelines, what they are and how they work.
  *
  * @class WebGLPipeline
  * @memberOf Phaser.Renderer.WebGL
@@ -26,7 +26,7 @@ var WebGLPipeline = new Class({
     function WebGLPipeline (config)
     {
         /**
-         * [description]
+         * [pending]
          *
          * @name Phaser.Renderer.WebGL.WebGLPipeline#name
          * @type {string}
@@ -53,7 +53,7 @@ var WebGLPipeline = new Class({
         this.view = config.game.canvas;
 
         /**
-         * [description]
+         * [pending]
          *
          * @name Phaser.Renderer.WebGL.WebGLPipeline#resolution
          * @type {number}
@@ -62,7 +62,7 @@ var WebGLPipeline = new Class({
         this.resolution = config.game.config.resolution;
 
         /**
-         * [description]
+         * [pending]
          *
          * @name Phaser.Renderer.WebGL.WebGLPipeline#width
          * @type {number}
@@ -71,7 +71,7 @@ var WebGLPipeline = new Class({
         this.width = config.game.config.width * this.resolution;
 
         /**
-         * [description]
+         * [pending]
          *
          * @name Phaser.Renderer.WebGL.WebGLPipeline#height
          * @type {number}
@@ -89,7 +89,7 @@ var WebGLPipeline = new Class({
         this.gl = config.gl;
 
         /**
-         * [description]
+         * [pending]
          *
          * @name Phaser.Renderer.WebGL.WebGLPipeline#vertexCount
          * @type {number}
@@ -99,7 +99,7 @@ var WebGLPipeline = new Class({
         this.vertexCount = 0;
 
         /**
-         * [description]
+         * [pending]
          *
          * @name Phaser.Renderer.WebGL.WebGLPipeline#vertexCapacity
          * @type {integer}
@@ -117,7 +117,7 @@ var WebGLPipeline = new Class({
         this.renderer = config.renderer;
 
         /**
-         * [description]
+         * [pending]
          *
          * @name Phaser.Renderer.WebGL.WebGLPipeline#vertexData
          * @type {ArrayBuffer}
@@ -126,7 +126,7 @@ var WebGLPipeline = new Class({
         this.vertexData = (config.vertices ? config.vertices : new ArrayBuffer(config.vertexCapacity * config.vertexSize));
 
         /**
-         * [description]
+         * [pending]
          *
          * @name Phaser.Renderer.WebGL.WebGLPipeline#vertexBuffer
          * @type {WebGLBuffer}
@@ -135,7 +135,7 @@ var WebGLPipeline = new Class({
         this.vertexBuffer = this.renderer.createVertexBuffer((config.vertices ? config.vertices : this.vertexData.byteLength), this.gl.STREAM_DRAW);
 
         /**
-         * [description]
+         * [pending]
          *
          * @name Phaser.Renderer.WebGL.WebGLPipeline#program
          * @type {WebGLProgram}
@@ -144,7 +144,7 @@ var WebGLPipeline = new Class({
         this.program = this.renderer.createProgram(config.vertShader, config.fragShader);
 
         /**
-         * [description]
+         * [pending]
          *
          * @name Phaser.Renderer.WebGL.WebGLPipeline#attributes
          * @type {object}
@@ -153,7 +153,7 @@ var WebGLPipeline = new Class({
         this.attributes = config.attributes;
 
         /**
-         * [description]
+         * [pending]
          *
          * @name Phaser.Renderer.WebGL.WebGLPipeline#vertexSize
          * @type {integer}
@@ -162,7 +162,7 @@ var WebGLPipeline = new Class({
         this.vertexSize = config.vertexSize;
 
         /**
-         * [description]
+         * [pending]
          *
          * @name Phaser.Renderer.WebGL.WebGLPipeline#topology
          * @type {integer}
@@ -171,7 +171,7 @@ var WebGLPipeline = new Class({
         this.topology = config.topology;
 
         /**
-         * [description]
+         * [pending]
          *
          * @name Phaser.Renderer.WebGL.WebGLPipeline#bytes
          * @type {Uint8Array}
@@ -200,16 +200,16 @@ var WebGLPipeline = new Class({
     },
 
     /**
-     * [description]
+     * [pending]
      *
      * @method Phaser.Renderer.WebGL.WebGLPipeline#addAttribute
      * @since 3.2.0
      *
-     * @param {string} name - [description]
-     * @param {integer} size - [description]
-     * @param {integer} type - [description]
-     * @param {boolean} normalized - [description]
-     * @param {integer} offset - [description]
+     * @param {string} name - [pending]
+     * @param {integer} size - [pending]
+     * @param {integer} type - [pending]
+     * @param {boolean} normalized - [pending]
+     * @param {integer} offset - [pending]
      *
      * @return {Phaser.Renderer.WebGL.WebGLPipeline} [description]
      */
@@ -227,7 +227,7 @@ var WebGLPipeline = new Class({
     },
 
     /**
-     * [description]
+     * [pending]
      *
      * @method Phaser.Renderer.WebGL.WebGLPipeline#shouldFlush
      * @since 3.0.0
@@ -240,7 +240,7 @@ var WebGLPipeline = new Class({
     },
 
     /**
-     * [description]
+     * [pending]
      *
      * @method Phaser.Renderer.WebGL.WebGLPipeline#resize
      * @since 3.0.0
@@ -259,7 +259,7 @@ var WebGLPipeline = new Class({
     },
 
     /**
-     * [description]
+     * [pending]
      *
      * @method Phaser.Renderer.WebGL.WebGLPipeline#bind
      * @since 3.0.0
@@ -357,7 +357,7 @@ var WebGLPipeline = new Class({
     },
 
     /**
-     * [description]
+     * [pending]
      *
      * @method Phaser.Renderer.WebGL.WebGLPipeline#flush
      * @since 3.0.0
@@ -469,16 +469,16 @@ var WebGLPipeline = new Class({
     },
 
     /**
-     * [description]
+     * [pending]
      *
      * @method Phaser.Renderer.WebGL.WebGLPipeline#setFloat4
      * @since 3.2.0
      *
-     * @param {string} name - [description]
-     * @param {float} x - [description]
-     * @param {float} y - [description]
-     * @param {float} z - [description]
-     * @param {float} w - [description]
+     * @param {string} name - [pending]
+     * @param {float} x - [pending]
+     * @param {float} y - [pending]
+     * @param {float} z - [pending]
+     * @param {float} w - [pending]
      *
      * @return {Phaser.Renderer.WebGL.WebGLPipeline} [description]
      */
@@ -544,16 +544,16 @@ var WebGLPipeline = new Class({
     },
 
     /**
-     * [description]
+     * [pending]
      *
      * @method Phaser.Renderer.WebGL.WebGLPipeline#setInt4
      * @since 3.2.0
      *
-     * @param {string} name - [description]
-     * @param {integer} x - [description]
-     * @param {integer} y - [description]
-     * @param {integer} z - [description]
-     * @param {integer} w - [description]
+     * @param {string} name - [pending]
+     * @param {integer} x - [pending]
+     * @param {integer} y - [pending]
+     * @param {integer} z - [pending]
+     * @param {integer} w - [pending]
      *
      * @return {Phaser.Renderer.WebGL.WebGLPipeline} [description]
      */
@@ -605,9 +605,9 @@ var WebGLPipeline = new Class({
      * @method Phaser.Renderer.WebGL.WebGLPipeline#setMatrix4
      * @since 3.2.0
      *
-     * @param {string} name - [description]
-     * @param {boolean} transpose - [description]
-     * @param {Float32Array} matrix - [description]
+     * @param {string} name - [pending]
+     * @param {boolean} transpose - [pending]
+     * @param {Float32Array} matrix - [pending]
      *
      * @return {Phaser.Renderer.WebGL.WebGLPipeline} [description]
      */

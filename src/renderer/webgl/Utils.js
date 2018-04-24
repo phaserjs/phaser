@@ -12,15 +12,15 @@
 module.exports = {
 
     /**
-     * [description]
+     * [pending]
      *
      * @function Phaser.Renderer.WebGL.Utils.getTintFromFloats
      * @since 3.0.0
      * 
-     * @param {number} r - [description]
+     * @param {number} r - [pending] - what's the range?
      * @param {number} g - [description]
      * @param {number} b - [description]
-     * @param {number} a - [description]
+     * @param {number} a - [pending] - what's the range?
      * 
      * @return {number} [description]
      */
@@ -35,15 +35,15 @@ module.exports = {
     },
 
     /**
-     * [description]
+     * [pending]
      *
      * @function Phaser.Renderer.WebGL.Utils.getTintAppendFloatAlpha
      * @since 3.0.0
      * 
-     * @param {number} rgb - [description]
-     * @param {number} a - [description]
+     * @param {number} rgb - [pending] - what's the range?
+     * @param {number} a - [pending] - what's the range?
      * 
-     * @return {number} [description]
+     * @return {number} [pending]
      */
     getTintAppendFloatAlpha: function (rgb, a)
     {
@@ -52,15 +52,15 @@ module.exports = {
     },
 
     /**
-     * [description]
+     * [pending]
      *
      * @function Phaser.Renderer.WebGL.Utils.getTintAppendFloatAlphaAndSwap
      * @since 3.0.0
      * 
-     * @param {number} rgb - [description]
-     * @param {number} a - [description]
+     * @param {number} rgb - [pending] - what's the range?
+     * @param {number} a - [pending] - what's the range?
      * 
-     * @return {number} [description]
+     * @return {number} [pending]
      */
     getTintAppendFloatAlphaAndSwap: function (rgb, a)
     {
@@ -73,14 +73,14 @@ module.exports = {
     },
 
     /**
-     * [description]
+     * [pending]
      *
      * @function Phaser.Renderer.WebGL.Utils.getFloatsFromUintRGB
      * @since 3.0.0
      * 
-     * @param {number} rgb - [description]
+     * @param {number} rgb - [pending]
      * 
-     * @return {number} [description]
+     * @return {number} [pending]
      */
     getFloatsFromUintRGB: function (rgb)
     {
@@ -92,15 +92,15 @@ module.exports = {
     },
 
     /**
-     * [description]
+     * [pending]
      *
      * @function Phaser.Renderer.WebGL.Utils.getComponentCount
      * @since 3.0.0
      * 
-     * @param {number} attributes - [description]
-     * @param {WebGLRenderingContext} glContext - [description]
+     * @param {number} attributes - [pending]
+     * @param {WebGLRenderingContext} glContext - [pending]
      * 
-     * @return {number} [description]
+     * @return {number} [pending]
      */
     getComponentCount: function (attributes, glContext)
     {

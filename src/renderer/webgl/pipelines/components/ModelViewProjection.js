@@ -4,6 +4,8 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
+//  [pending] - please add comments explaining what all of these functions do
+
 var ModelViewProjection = {
 
     modelMatrixDirty: false,

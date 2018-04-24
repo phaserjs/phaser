@@ -13,7 +13,7 @@ var LIGHT_COUNT = 10;
 
 /**
  * @classdesc
- * [description]
+ * [pending]
  *
  * @class ForwardDiffuseLightPipeline
  * @extends Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline
@@ -37,7 +37,7 @@ var ForwardDiffuseLightPipeline = new Class({
     },
 
     /**
-     * [description]
+     * [pending]
      *
      * @method Phaser.Renderer.WebGL.Pipelines.ForwardDiffuseLightPipeline#onBind
      * @override

@@ -12,7 +12,7 @@ var WebGLPipeline = require('../WebGLPipeline');
 
 /**
  * @classdesc
- * [description]
+ * [pending] - explain the config object properties and what they control
  *
  * @class BitmapMaskPipeline
  * @extends Phaser.Renderer.WebGL.WebGLPipeline
@@ -20,7 +20,7 @@ var WebGLPipeline = require('../WebGLPipeline');
  * @constructor
  * @since 3.0.0
  *
- * @param {object} config - [description]
+ * @param {object} config - [pending]
  */
 var BitmapMaskPipeline = new Class({
 
@@ -58,7 +58,7 @@ var BitmapMaskPipeline = new Class({
         });
 
         /**
-         * [description]
+         * [pending]
          *
          * @name Phaser.Renderer.WebGL.Pipelines.BitmapMaskPipeline#vertexViewF32
          * @type {Float32Array}
@@ -67,7 +67,7 @@ var BitmapMaskPipeline = new Class({
         this.vertexViewF32 = new Float32Array(this.vertexData);
 
         /**
-         * [description]
+         * [pending]
          *
          * @name Phaser.Renderer.WebGL.Pipelines.BitmapMaskPipeline#maxQuads
          * @type {number}
@@ -77,7 +77,7 @@ var BitmapMaskPipeline = new Class({
         this.maxQuads = 1;
 
         /**
-         * [description]
+         * [pending]
          *
          * @name Phaser.Renderer.WebGL.Pipelines.BitmapMaskPipeline#resolutionDirty
          * @type {boolean}
@@ -88,7 +88,7 @@ var BitmapMaskPipeline = new Class({
     },
 
     /**
-     * [description]
+     * [pending]
      *
      * @method Phaser.Renderer.WebGL.Pipelines.BitmapMaskPipeline#onBind
      * @since 3.0.0
@@ -133,13 +133,13 @@ var BitmapMaskPipeline = new Class({
     },
 
     /**
-     * [description]
+     * [pending]
      *
      * @method Phaser.Renderer.WebGL.Pipelines.BitmapMaskPipeline#beginMask
      * @since 3.0.0
      *
-     * @param {Phaser.GameObjects.GameObject} mask - [description]
-     * @param {Phaser.GameObjects.GameObject} maskedObject - [description]
+     * @param {Phaser.GameObjects.GameObject} mask - [pending]
+     * @param {Phaser.GameObjects.GameObject} maskedObject - [pending]
      * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
      */
     beginMask: function (mask, maskedObject, camera)
@@ -170,12 +170,12 @@ var BitmapMaskPipeline = new Class({
     },
 
     /**
-     * [description]
+     * [pending]
      *
      * @method Phaser.Renderer.WebGL.Pipelines.BitmapMaskPipeline#endMask
      * @since 3.0.0
      *
-     * @param {Phaser.GameObjects.GameObject} mask - [description]
+     * @param {Phaser.GameObjects.GameObject} mask - [pending]
      */
     endMask: function (mask)
     {

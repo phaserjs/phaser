@@ -14,7 +14,7 @@ var WebGLPipeline = require('../WebGLPipeline');
 
 /**
  * @classdesc
- * [description]
+ * [pending] - especially explain the config properties please
  *
  * @class TextureTintPipeline
  * @extends Phaser.Renderer.WebGL.WebGLPipeline
@@ -76,7 +76,7 @@ var TextureTintPipeline = new Class({
         });
 
         /**
-         * [description]
+         * [pending]
          *
          * @name Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#vertexViewF32
          * @type {Float32Array}
@@ -85,7 +85,7 @@ var TextureTintPipeline = new Class({
         this.vertexViewF32 = new Float32Array(this.vertexData);
 
         /**
-         * [description]
+         * [pending]
          *
          * @name Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#vertexViewU32
          * @type {Uint32Array}
@@ -94,7 +94,7 @@ var TextureTintPipeline = new Class({
         this.vertexViewU32 = new Uint32Array(this.vertexData);
 
         /**
-         * [description]
+         * [pending]
          *
          * @name Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#maxQuads
          * @type {integer}
@@ -104,7 +104,7 @@ var TextureTintPipeline = new Class({
         this.maxQuads = 2000;
 
         /**
-         * [description]
+         * [pending]
          *
          * @name Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#batches
          * @type {array}
@@ -116,13 +116,13 @@ var TextureTintPipeline = new Class({
     },
 
     /**
-     * [description]
+     * [pending]
      *
      * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#setTexture2D
      * @since 3.1.0
      *
-     * @param {WebGLTexture} texture - [description]
-     * @param {integer} textureUnit - [description]
+     * @param {WebGLTexture} texture - [pending]
+     * @param {integer} textureUnit - [pending]
      *
      * @return {Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline} [description]
      */
@@ -167,7 +167,7 @@ var TextureTintPipeline = new Class({
     },
 
     /**
-     * [description]
+     * [pending]
      *
      * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#pushBatch
      * @since 3.1.0
@@ -184,7 +184,7 @@ var TextureTintPipeline = new Class({
     },
 
     /**
-     * [description]
+     * [pending]
      *
      * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#flush
      * @since 3.1.0
@@ -284,7 +284,7 @@ var TextureTintPipeline = new Class({
     },
 
     /**
-     * [description]
+     * [pending]
      *
      * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#onBind
      * @since 3.0.0
@@ -325,7 +325,7 @@ var TextureTintPipeline = new Class({
     },
 
     /**
-     * [description]
+     * [pending]
      *
      * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#drawStaticTilemapLayer
      * @since 3.0.0
@@ -361,7 +361,7 @@ var TextureTintPipeline = new Class({
     },
 
     /**
-     * [description]
+     * [pending]
      *
      * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#drawEmitterManager
      * @since 3.0.0
@@ -577,7 +577,7 @@ var TextureTintPipeline = new Class({
     },
 
     /**
-     * [description]
+     * [pending]
      *
      * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#drawBlitter
      * @since 3.0.0
@@ -737,7 +737,7 @@ var TextureTintPipeline = new Class({
     },
 
     /**
-     * [description]
+     * [pending]
      *
      * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#batchSprite
      * @since 3.0.0
@@ -910,7 +910,7 @@ var TextureTintPipeline = new Class({
     },
 
     /**
-     * [description]
+     * [pending]
      *
      * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#batchMesh
      * @since 3.0.0
@@ -1041,7 +1041,7 @@ var TextureTintPipeline = new Class({
     },
 
     /**
-     * [description]
+     * [pending]
      *
      * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#batchBitmapText
      * @since 3.0.0
@@ -1318,7 +1318,7 @@ var TextureTintPipeline = new Class({
     },
 
     /**
-     * [description]
+     * [pending]
      *
      * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#batchDynamicBitmapText
      * @since 3.0.0
@@ -1668,7 +1668,7 @@ var TextureTintPipeline = new Class({
     },
 
     /**
-     * [description]
+     * [pending]
      *
      * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#batchText
      * @since 3.0.0
@@ -1704,7 +1704,7 @@ var TextureTintPipeline = new Class({
     },
 
     /**
-     * [description]
+     * [pending]
      *
      * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#batchDynamicTilemapLayer
      * @since 3.0.0
@@ -1762,7 +1762,7 @@ var TextureTintPipeline = new Class({
     },
 
     /**
-     * [description]
+     * [pending]
      *
      * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#batchTileSprite
      * @since 3.0.0
@@ -1799,40 +1799,40 @@ var TextureTintPipeline = new Class({
     },
 
     /**
-     * [description]
+     * [pending]
      *
      * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#batchTexture
      * @since 3.0.0
      *
-     * @param {Phaser.GameObjects.GameObject} gameObject - [description]
-     * @param {WebGLTexture} texture - [description]
-     * @param {integer} textureWidth - [description]
-     * @param {integer} textureHeight - [description]
-     * @param {float} srcX - [description]
-     * @param {float} srcY - [description]
-     * @param {float} srcWidth - [description]
-     * @param {float} srcHeight - [description]
-     * @param {float} scaleX - [description]
-     * @param {float} scaleY - [description]
-     * @param {float} rotation - [description]
-     * @param {boolean} flipX - [description]
-     * @param {boolean} flipY - [description]
-     * @param {float} scrollFactorX - [description]
-     * @param {float} scrollFactorY - [description]
-     * @param {float} displayOriginX - [description]
-     * @param {float} displayOriginY - [description]
-     * @param {float} frameX - [description]
-     * @param {float} frameY - [description]
-     * @param {float} frameWidth - [description]
-     * @param {float} frameHeight - [description]
-     * @param {integer} tintTL - [description]
-     * @param {integer} tintTR - [description]
-     * @param {integer} tintBL - [description]
-     * @param {integer} tintBR - [description]
-     * @param {float} uOffset - [description]
-     * @param {float} vOffset - [description]
-     * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
-     * @param {Phaser.GameObjects.Components.TransformMatrix} parentTransformMatrix - [description]
+     * @param {Phaser.GameObjects.GameObject} gameObject - [pending]
+     * @param {WebGLTexture} texture - [pending]
+     * @param {integer} textureWidth - [pending]
+     * @param {integer} textureHeight - [pending]
+     * @param {float} srcX - [pending]
+     * @param {float} srcY - [pending]
+     * @param {float} srcWidth - [pending]
+     * @param {float} srcHeight - [pending]
+     * @param {float} scaleX - [pending]
+     * @param {float} scaleY - [pending]
+     * @param {float} rotation - [pending]
+     * @param {boolean} flipX - [pending]
+     * @param {boolean} flipY - [pending]
+     * @param {float} scrollFactorX - [pending]
+     * @param {float} scrollFactorY - [pending]
+     * @param {float} displayOriginX - [pending]
+     * @param {float} displayOriginY - [pending]
+     * @param {float} frameX - [pending]
+     * @param {float} frameY - [pending]
+     * @param {float} frameWidth - [pending]
+     * @param {float} frameHeight - [pending]
+     * @param {integer} tintTL - [pending]
+     * @param {integer} tintTR - [pending]
+     * @param {integer} tintBL - [pending]
+     * @param {integer} tintBR - [pending]
+     * @param {float} uOffset - [pending]
+     * @param {float} vOffset - [pending]
+     * @param {Phaser.Cameras.Scene2D.Camera} camera - [pending]
+     * @param {Phaser.GameObjects.Components.TransformMatrix} parentTransformMatrix - [pending]
      */
     batchTexture: function (
         gameObject,
