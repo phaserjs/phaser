@@ -294,7 +294,7 @@ var Vector2 = new Class({
 
     /**
      * Perform an element-wise division between this Vector and the given Vector. This Vector is divided by the given Vector.
-      *
+     *
      * @method Phaser.Math.Vector2#divide
      * @since 3.0.0
      *
