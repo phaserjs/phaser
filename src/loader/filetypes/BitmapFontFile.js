@@ -23,10 +23,10 @@ var XMLFile = require('./XMLFile.js');
  *
  * @return {object} An object containing two File objects to be added to the loader.
  */
-var BitmapFontFile = function (key, textureURL, xmlURL, path, textureXhrSettings, xmlXhrSettings)
+var BitmapFontFile = function (loader, key, textureURL, xmlURL, textureXhrSettings, xmlXhrSettings)
 {
-    var image = new ImageFile(key, textureURL, path, textureXhrSettings);
-    var data = new XMLFile(key, xmlURL, path, xmlXhrSettings);
+    var image = new ImageFile(loader, key, textureURL, textureXhrSettings);
+    var data = new XMLFile(loader, key, xmlURL, xmlXhrSettings);
 
     //  Link them together
     image.linkFile = data;
@@ -61,7 +61,7 @@ var BitmapFontFile = function (key, textureURL, xmlURL, path, textureXhrSettings
 FileTypesManager.register('bitmapFont', function (key, textureURL, xmlURL, textureXhrSettings, xmlXhrSettings)
 {
     //  Returns an object with two properties: 'texture' and 'data'
-    var files = new BitmapFontFile(key, textureURL, xmlURL, this.path, textureXhrSettings, xmlXhrSettings);
+    var files = new BitmapFontFile(this, key, textureURL, xmlURL, textureXhrSettings, xmlXhrSettings);
 
     this.addFile(files.texture);
     this.addFile(files.data);

@@ -27,7 +27,7 @@
 * The BaseCache has a new method `exists` that will return a boolean if an entry for the given key exists in the cache or not.
 * Loader.File has a new argument in its constructor which is an instance of the LoaderPlugin. It stores this in the `loader` property. It also has a new property `cache` which is a reference to the cache that the file type will be stored in.
 * Loader.File has a new method `hasCacheConflict` which checks if a key matching the one used by this file exists in the target Cache or not.
-* Loader.File has a new method `addToCache` which will add the file to its target cache and then emit a `filecomplete` event, passing its key and a reference to itself to the listener.
+* Loader.File has a new method `addToCache` which will add the file to its target cache and then emit a `filecomplete` event, passing its key and a reference to itself to the listener (thanks to @kalebwalton for a related PR)
 * LoaderPlugin has a new property `cacheManager` which is a reference to the global game cache and is used by the File Types.
 * LoaderPlugin has a new property `textureManager` which is a reference to the global Texture Manager and is used by the File Types.
 * LoaderPlugin will now check to see if loading a file would cache a cache conflict or not, and prevent it if it will.

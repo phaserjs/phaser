@@ -65,7 +65,7 @@ var File = new Class({
          * @type {(Phaser.Cache.BaseCache|Phaser.Textures.TextureManager)}
          * @since 3.7.0
          */
-        this.cache = GetFastValue(fileConfig, 'cache');
+        this.cache = GetFastValue(fileConfig, 'cache', false);
 
         /**
          * The file type string (image, json, etc) for sorting within the Loader.
@@ -427,7 +427,7 @@ var File = new Class({
      */
     hasCacheConflict: function ()
     {
-        return (this.cache.exists(this.key));
+        return (this.cache && this.cache.exists(this.key));
     },
 
     /**
@@ -440,7 +440,10 @@ var File = new Class({
      */
     addToCache: function ()
     {
-        this.cache.add(this.key, this.data);
+        if (this.cache)
+        {
+            this.cache.add(this.key, this.data);
+        }
 
         this.loader.emit('filecomplete', this.key, this);
     }

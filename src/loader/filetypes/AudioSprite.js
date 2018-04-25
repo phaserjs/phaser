@@ -39,7 +39,7 @@ FileTypesManager.register('audioSprite', function (key, urls, json, config, audi
 
         if (typeof json === 'string')
         {
-            jsonFile = new JSONFile(key, json, this.path, jsonXhrSettings);
+            jsonFile = new JSONFile(this, key, json, jsonXhrSettings);
 
             this.addFile(jsonFile);
         }

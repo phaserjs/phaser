@@ -31,17 +31,18 @@ var ScriptFile = new Class({
 
     initialize:
 
-    function ScriptFile (key, url, path, xhrSettings)
+    function ScriptFile (loader, key, url, xhrSettings)
     {
         var fileKey = (typeof key === 'string') ? key : GetFastValue(key, 'key', '');
 
         var fileConfig = {
             type: 'script',
+            cache: false,
             extension: GetFastValue(key, 'extension', 'js'),
             responseType: 'text',
             key: fileKey,
             url: GetFastValue(key, 'file', url),
-            path: path,
+            path: loader.path,
             xhrSettings: GetFastValue(key, 'xhr', xhrSettings)
         };
 
@@ -91,12 +92,12 @@ FileTypesManager.register('script', function (key, url, xhrSettings)
         for (var i = 0; i < key.length; i++)
         {
             //  If it's an array it has to be an array of Objects, so we get everything out of the 'key' object
-            this.addFile(new ScriptFile(key[i], url, this.path, xhrSettings));
+            this.addFile(new ScriptFile(this, key[i], url, xhrSettings));
         }
     }
     else
     {
-        this.addFile(new ScriptFile(key, url, this.path, xhrSettings));
+        this.addFile(new ScriptFile(this, key, url, xhrSettings));
     }
 
     //  For method chaining
