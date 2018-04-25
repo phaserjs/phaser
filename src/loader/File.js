@@ -40,14 +40,33 @@ var XHRSettings = require('./XHRSettings');
  * @constructor
  * @since 3.0.0
  *
+ * @param {Phaser.Loader.LoaderPlugin} loader - The Loader that is going to load this File.
  * @param {FileConfig} fileConfig - [description]
  */
 var File = new Class({
 
     initialize:
 
-    function File (fileConfig)
+    function File (loader, fileConfig)
     {
+        /**
+         * A reference to the Loader that is going to load this file.
+         *
+         * @name Phaser.Loader.File#loader
+         * @type {Phaser.Loader.LoaderPlugin}
+         * @since 3.0.0
+         */
+        this.loader = loader;
+
+        /**
+         * A reference to the Cache, or Texture Manager, that is going to store this file if it loads.
+         *
+         * @name Phaser.Loader.File#cache
+         * @type {(Phaser.Cache.BaseCache|Phaser.Textures.TextureManager)}
+         * @since 3.7.0
+         */
+        this.cache = GetFastValue(fileConfig, 'cache');
+
         /**
          * The file type string (image, json, etc) for sorting within the Loader.
          *
@@ -111,15 +130,6 @@ var File = new Class({
         {
             this.xhrSettings = MergeXHRSettings(this.xhrSettings, GetFastValue(fileConfig, 'xhrSettings', {}));
         }
-
-        /**
-         * The LoaderPlugin instance that is loading this file.
-         *
-         * @name Phaser.Loader.File#loader
-         * @type {?Phaser.Loader.LoaderPlugin}
-         * @since 3.0.0
-         */
-        this.loader = null;
 
         /**
          * The XMLHttpRequest instance (as created by XHR Loader) that is loading this File.
@@ -275,22 +285,18 @@ var File = new Class({
      *
      * @method Phaser.Loader.File#load
      * @since 3.0.0
-     *
-     * @param {Phaser.Loader.LoaderPlugin} loader - The Loader that will load this File.
      */
-    load: function (loader)
+    load: function ()
     {
-        this.loader = loader;
-
         if (this.state === CONST.FILE_POPULATED)
         {
             this.onComplete();
 
-            loader.nextFile(this);
+            this.loader.nextFile(this);
         }
         else
         {
-            this.src = GetURL(this, loader.baseURL);
+            this.src = GetURL(this, this.loader.baseURL);
 
             if (this.src.indexOf('data:') === 0)
             {
@@ -298,7 +304,7 @@ var File = new Class({
             }
             else
             {
-                this.xhrLoader = XHRLoader(this, loader.xhr);
+                this.xhrLoader = XHRLoader(this, this.loader.xhr);
             }
         }
     },
@@ -407,6 +413,36 @@ var File = new Class({
         {
             this.state = CONST.FILE_COMPLETE;
         }
+    },
+
+    /**
+     * Checks if a key matching the one used by this file exists in the target Cache or not.
+     * This is called automatically by the LoaderPlugin to decide if the file can be safely
+     * loaded or will conflict.
+     *
+     * @method Phaser.Loader.File#hasCacheConflict
+     * @since 3.7.0
+     *
+     * @return {boolean} `true` if adding this file will cause a conflict, otherwise `false`.
+     */
+    hasCacheConflict: function ()
+    {
+        return (this.cache.exists(this.key));
+    },
+
+    /**
+     * Adds this file to its target cache upon successful loading and processing.
+     * It will emit a `filecomplete` event from the LoaderPlugin.
+     * This method is often overridden by specific file types.
+     *
+     * @method Phaser.Loader.File#addToCache
+     * @since 3.7.0
+     */
+    addToCache: function ()
+    {
+        this.cache.add(this.key, this.data);
+
+        this.loader.emit('filecomplete', this.key, this);
     }
 
 });

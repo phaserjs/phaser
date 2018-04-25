@@ -23,10 +23,10 @@ var TextFile = require('./TextFile.js');
  *
  * @return {object} An object containing two File objects to be added to the loader.
  */
-var UnityAtlasFile = function (key, textureURL, atlasURL, path, textureXhrSettings, atlasXhrSettings)
+var UnityAtlasFile = function (loader, key, textureURL, atlasURL, textureXhrSettings, atlasXhrSettings)
 {
-    var image = new ImageFile(key, textureURL, path, textureXhrSettings);
-    var data = new TextFile(key, atlasURL, path, atlasXhrSettings);
+    var image = new ImageFile(loader, key, textureURL, textureXhrSettings);
+    var data = new TextFile(loader, key, atlasURL, atlasXhrSettings);
 
     //  Link them together
     image.linkFile = data;
@@ -61,7 +61,7 @@ var UnityAtlasFile = function (key, textureURL, atlasURL, path, textureXhrSettin
 FileTypesManager.register('unityAtlas', function (key, textureURL, atlasURL, textureXhrSettings, atlasXhrSettings)
 {
     //  Returns an object with two properties: 'texture' and 'data'
-    var files = new UnityAtlasFile(key, textureURL, atlasURL, this.path, textureXhrSettings, atlasXhrSettings);
+    var files = new UnityAtlasFile(this, key, textureURL, atlasURL, textureXhrSettings, atlasXhrSettings);
 
     this.addFile(files.texture);
     this.addFile(files.data);

@@ -24,10 +24,19 @@
 * TextureSource will now remove its respective WebGLTexture from the renderer when destroyed.
 * TextureSource will now automatically create a glTexture from its canvas if using one.
 * WebGLRenderer will now remove a GL texture from its local `nativeTextures` array when you call the `deleteTexture` method.
+* The BaseCache has a new method `exists` that will return a boolean if an entry for the given key exists in the cache or not.
+* Loader.File has a new argument in its constructor which is an instance of the LoaderPlugin. It stores this in the `loader` property. It also has a new property `cache` which is a reference to the cache that the file type will be stored in.
+* Loader.File has a new method `hasCacheConflict` which checks if a key matching the one used by this file exists in the target Cache or not.
+* Loader.File has a new method `addToCache` which will add the file to its target cache and then emit a `filecomplete` event, passing its key and a reference to itself to the listener.
+* LoaderPlugin has a new property `cacheManager` which is a reference to the global game cache and is used by the File Types.
+* LoaderPlugin has a new property `textureManager` which is a reference to the global Texture Manager and is used by the File Types.
+* LoaderPlugin will now check to see if loading a file would cache a cache conflict or not, and prevent it if it will.
+* LoaderPlugin now passes off processing of the final file data to the file itself, which will now self-add itself to its target cache.
 
 ### Bug Fixes
 
 * DataManagerPlugin would throw an error on Game.destroy if you had any Scenes in the Scene Manager had not been run. Fix #3596 (thanks @kuoruan)
+* If you created a Game with no Scenes defined, and then added one via `Game.scene.add` and passed in a data object, the data would be ignored when starting the Scene.
 
 ### Examples, Documentation and TypeScript
 
