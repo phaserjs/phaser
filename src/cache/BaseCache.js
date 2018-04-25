@@ -83,6 +83,7 @@ var BaseCache = new Class({
 
     /**
      * Checks if this cache contains an item matching the given key.
+     * This performs the same action as `BaseCache.exists`.
      *
      * @method Phaser.Cache.BaseCache#has
      * @since 3.0.0
@@ -92,6 +93,22 @@ var BaseCache = new Class({
      * @return {boolean} Returns `true` if the cache contains an item matching the given key, otherwise `false`.
      */
     has: function (key)
+    {
+        return this.entries.has(key);
+    },
+
+    /**
+     * Checks if this cache contains an item matching the given key.
+     * This performs the same action as `BaseCache.has` and is called directly by the Loader.
+     *
+     * @method Phaser.Cache.BaseCache#exists
+     * @since 3.7.0
+     *
+     * @param {string} key - The unique key of the item to be checked in this cache.
+     *
+     * @return {boolean} Returns `true` if the cache contains an item matching the given key, otherwise `false`.
+     */
+    exists: function (key)
     {
         return this.entries.has(key);
     },
