@@ -32,19 +32,20 @@ var TilemapCSVFile = new Class({
 
     initialize:
 
-    function TilemapCSVFile (key, url, path, format, xhrSettings)
+    function TilemapCSVFile (loader, key, url, format, xhrSettings)
     {
         var fileConfig = {
             type: 'tilemapCSV',
+            cache: loader.cacheManager.tilemap,
             extension: '.csv',
             responseType: 'text',
             key: key,
             url: url,
-            path: path,
+            path: loader.path,
             xhrSettings: xhrSettings
         };
 
-        File.call(this, fileConfig);
+        File.call(this, loader, fileConfig);
 
         this.tilemapFormat = format;
     },
@@ -58,6 +59,13 @@ var TilemapCSVFile = new Class({
         this.onComplete();
 
         callback(this);
+    },
+
+    addToCache: function ()
+    {
+        this.cache.add(this.key, { format: this.tilemapFormat, data: this.data });
+
+        this.loader.emit('filecomplete', this.key, this);
     }
 
 });
@@ -86,12 +94,12 @@ FileTypesManager.register('tilemapCSV', function (key, url, xhrSettings)
         for (var i = 0; i < key.length; i++)
         {
             //  If it's an array it has to be an array of Objects, so we get everything out of the 'key' object
-            this.addFile(new TilemapCSVFile(key[i], url, this.path, TILEMAP_FORMATS.CSV, xhrSettings));
+            this.addFile(new TilemapCSVFile(this, key[i], url, TILEMAP_FORMATS.CSV, xhrSettings));
         }
     }
     else
     {
-        this.addFile(new TilemapCSVFile(key, url, this.path, TILEMAP_FORMATS.CSV, xhrSettings));
+        this.addFile(new TilemapCSVFile(this, key, url, TILEMAP_FORMATS.CSV, xhrSettings));
     }
 
     //  For method chaining

@@ -33,7 +33,7 @@ var AudioFile = new Class({
 
     initialize:
 
-    function AudioFile (key, url, path, xhrSettings, audioContext)
+    function AudioFile (loader, key, url, xhrSettings, audioContext)
     {
         /**
          * [description]
@@ -46,15 +46,16 @@ var AudioFile = new Class({
 
         var fileConfig = {
             type: 'audio',
+            cache: loader.cacheManager.audio,
             extension: GetFastValue(url, 'type', ''),
             responseType: 'arraybuffer',
             key: key,
             url: GetFastValue(url, 'uri', url),
-            path: path,
+            path: loader.path,
             xhrSettings: xhrSettings
         };
 
-        File.call(this, fileConfig);
+        File.call(this, loader, fileConfig);
     },
 
     /**
@@ -119,11 +120,11 @@ AudioFile.create = function (loader, key, urls, config, xhrSettings)
 
     if (deviceAudio.webAudio && !(audioConfig && audioConfig.disableWebAudio))
     {
-        return new AudioFile(key, url, loader.path, xhrSettings, game.sound.context);
+        return new AudioFile(loader, key, url, xhrSettings, game.sound.context);
     }
     else
     {
-        return new HTML5AudioFile(key, url, loader.path, config);
+        return new HTML5AudioFile(loader, key, url, config);
     }
 };
 

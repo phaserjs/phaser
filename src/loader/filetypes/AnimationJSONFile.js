@@ -20,9 +20,9 @@ var JSONFile = require('./JSONFile.js');
  *
  * @return {Phaser.Loader.FileTypes.JSONFile} A File instance to be added to the Loader.
  */
-var AnimationJSONFile = function (key, url, path, xhrSettings)
+var AnimationJSONFile = function (loader, key, url, xhrSettings)
 {
-    var json = new JSONFile(key, url, path, xhrSettings);
+    var json = new JSONFile(loader, key, url, xhrSettings);
 
     //  Override the File type
     json.type = 'animationJSON';
@@ -55,12 +55,12 @@ FileTypesManager.register('animation', function (key, url, xhrSettings)
         for (var i = 0; i < key.length; i++)
         {
             //  If it's an array it has to be an array of Objects, so we get everything out of the 'key' object
-            this.addFile(new AnimationJSONFile(key[i], url, this.path, xhrSettings));
+            this.addFile(new AnimationJSONFile(this, key[i], url, xhrSettings));
         }
     }
     else
     {
-        this.addFile(new AnimationJSONFile(key, url, this.path, xhrSettings));
+        this.addFile(new AnimationJSONFile(this, key, url, xhrSettings));
     }
 
     //  For method chaining

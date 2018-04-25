@@ -31,21 +31,22 @@ var SVGFile = new Class({
 
     initialize:
 
-    function SVGFile (key, url, path, xhrSettings)
+    function SVGFile (loader, key, url, xhrSettings)
     {
         var fileKey = (typeof key === 'string') ? key : GetFastValue(key, 'key', '');
 
         var fileConfig = {
             type: 'svg',
+            cache: loader.textureManager,
             extension: GetFastValue(key, 'extension', 'svg'),
             responseType: 'text',
             key: fileKey,
             url: GetFastValue(key, 'file', url),
-            path: path,
+            path: loader.path,
             xhrSettings: GetFastValue(key, 'xhr', xhrSettings)
         };
 
-        File.call(this, fileConfig);
+        File.call(this, loader, fileConfig);
     },
 
     onProcess: function (callback)
@@ -106,6 +107,13 @@ var SVGFile = new Class({
         };
 
         File.createObjectURL(this.data, blob, 'image/svg+xml');
+    },
+
+    addToCache: function ()
+    {
+        this.cache.addImage(this.key, this.data);
+
+        this.loader.emit('filecomplete', this.key, this);
     }
 
 });
@@ -134,12 +142,12 @@ FileTypesManager.register('svg', function (key, url, xhrSettings)
         for (var i = 0; i < key.length; i++)
         {
             //  If it's an array it has to be an array of Objects, so we get everything out of the 'key' object
-            this.addFile(new SVGFile(key[i], url, this.path, xhrSettings));
+            this.addFile(new SVGFile(this, key[i], url, xhrSettings));
         }
     }
     else
     {
-        this.addFile(new SVGFile(key, url, this.path, xhrSettings));
+        this.addFile(new SVGFile(this, key, url, xhrSettings));
     }
 
     //  For method chaining

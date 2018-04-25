@@ -32,21 +32,22 @@ var XMLFile = new Class({
 
     initialize:
 
-    function XMLFile (key, url, path, xhrSettings)
+    function XMLFile (loader, key, url, xhrSettings)
     {
         var fileKey = (typeof key === 'string') ? key : GetFastValue(key, 'key', '');
 
         var fileConfig = {
             type: 'xml',
+            cache: loader.cacheManager.xml,
             extension: GetFastValue(key, 'extension', 'xml'),
             responseType: 'text',
             key: fileKey,
             url: GetFastValue(key, 'file', url),
-            path: path,
+            path: loader.path,
             xhrSettings: GetFastValue(key, 'xhr', xhrSettings)
         };
 
-        File.call(this, fileConfig);
+        File.call(this, loader, fileConfig);
     },
 
     onProcess: function (callback)
@@ -91,12 +92,12 @@ FileTypesManager.register('xml', function (key, url, xhrSettings)
         for (var i = 0; i < key.length; i++)
         {
             //  If it's an array it has to be an array of Objects, so we get everything out of the 'key' object
-            this.addFile(new XMLFile(key[i], url, this.path, xhrSettings));
+            this.addFile(new XMLFile(this, key[i], url, xhrSettings));
         }
     }
     else
     {
-        this.addFile(new XMLFile(key, url, this.path, xhrSettings));
+        this.addFile(new XMLFile(this, key, url, xhrSettings));
     }
 
     //  For method chaining
