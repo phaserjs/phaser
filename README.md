@@ -270,6 +270,7 @@ You can then run `webpack` to create a development build in the `build` folder w
 * Group.getLastNth will return the nth member in the Group, scanning in reverse, that matches the search criteria.
 * Group.remove has a new optional argument `destroyChild` that will call `destroy` on the child after removing it.
 * Group.clear has a new optional argument `destroyChild` that will call `destroy` on all children in the Group after removing them.
+* LoaderPlugin will now emit a `filecomplete` event for each file when it fully completes loading.
 
 ### Updates
 
