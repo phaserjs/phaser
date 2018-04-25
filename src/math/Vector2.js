@@ -25,8 +25,8 @@ var Class = require('../utils/Class');
  * @constructor
  * @since 3.0.0
  *
- * @param {number} [x] - [description]
- * @param {number} [y] - [description]
+ * @param {number} [x] - The x component of this Vector.
+ * @param {number} [y] - The y component of this Vector.
  */
 var Vector2 = new Class({
 
@@ -100,12 +100,12 @@ var Vector2 = new Class({
     },
 
     /**
-     * [description]
+     * Set the component values of this Vector from a given Vector2Like object.
      *
      * @method Phaser.Math.Vector2#setFromObject
      * @since 3.0.0
      *
-     * @param {Vector2Like} obj - [description]
+     * @param {Vector2Like} obj - The object containing the component values to set for this Vector.
      *
      * @return {Phaser.Math.Vector2} This Vector2.
      */
@@ -293,7 +293,7 @@ var Vector2 = new Class({
     },
 
     /**
-     * Perform an element-wise division between this Vector and the given Vector. This vector is dived by the given Vector.
+     * Perform an element-wise division between this Vector and the given Vector. This Vector is divided by the given Vector.
       *
      * @method Phaser.Math.Vector2#divide
      * @since 3.0.0
@@ -334,7 +334,7 @@ var Vector2 = new Class({
      *
      * @param {Phaser.Math.Vector2} src - The Vector to calculate the distance to.
      *
-     * @return {number} The distance to the given Vector.
+     * @return {number} The distance to the given Vector from this Vector.
      */
     distance: function (src)
     {
@@ -352,7 +352,7 @@ var Vector2 = new Class({
      *
      * @param {Phaser.Math.Vector2} src - The Vector to calculate the distance to.
      *
-     * @return {number} The distance to the given Vector, squared.
+     * @return {number} The distance to this Vector and the given Vector, squared.
      */
     distanceSq: function (src)
     {
@@ -395,7 +395,7 @@ var Vector2 = new Class({
     },
 
     /**
-     * Normalise this Vector, that is, make it a unit length vector (magnitude of 1).
+     * Normalise this Vector, that is, make it a unit length vector (magnitude of 1) in the same direction.
      *
      * @method Phaser.Math.Vector2#normalize
      * @since 3.0.0
