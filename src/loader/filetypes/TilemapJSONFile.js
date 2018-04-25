@@ -38,7 +38,7 @@ var TilemapJSONFile = function (loader, key, url, format, xhrSettings)
         this.cache.add(this.key, { format: this.tilemapFormat, data: this.data });
 
         this.loader.emit('filecomplete', this.key, this);
-    }
+    };
 
     return json;
 };

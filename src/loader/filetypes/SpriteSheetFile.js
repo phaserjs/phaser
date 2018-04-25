@@ -33,7 +33,7 @@ var SpriteSheetFile = function (loader, key, url, config, xhrSettings)
         this.cache.addSpriteSheet(this.key, this.data, this.config);
 
         this.loader.emit('filecomplete', this.key, this);
-    }
+    };
 
     return image;
 };
