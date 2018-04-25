@@ -1010,6 +1010,8 @@ var LoaderPlugin = new Class({
 
         this.scene = null;
         this.systems = null;
+        this.textureManager = null;
+        this.cacheManager = null;
     }
 
 });
