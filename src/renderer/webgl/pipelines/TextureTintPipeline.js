@@ -14,7 +14,17 @@ var WebGLPipeline = require('../WebGLPipeline');
 
 /**
  * @classdesc
- * [pending] - especially explain the config properties please
+ * TextureTintPipeline implements the rendering infrastructure
+ * for displaying textured objects
+ * The config properties are:
+ * - game: Current game instance.
+ * - renderer: Current WebGL renderer.
+ * - topology: This indicates how the primitives are rendered. The default value is GL_TRIANGLES.
+ *              Here is the full list of rendering primitives (https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API/Constants).
+ * - vertShader: Source for vertex shader as a string.
+ * - fragShader: Source for fragment shader as a string.
+ * - vertexCapacity: The amount of vertices that shall be allocated
+ * - vertexSize: The size of a single vertex in bytes.
  *
  * @class TextureTintPipeline
  * @extends Phaser.Renderer.WebGL.WebGLPipeline
@@ -76,7 +86,7 @@ var TextureTintPipeline = new Class({
         });
 
         /**
-         * [pending]
+         * Float32 view of the array buffer containing the pipeline's vertices.
          *
          * @name Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#vertexViewF32
          * @type {Float32Array}
@@ -85,7 +95,7 @@ var TextureTintPipeline = new Class({
         this.vertexViewF32 = new Float32Array(this.vertexData);
 
         /**
-         * [pending]
+         * Uint32 view of the array buffer containing the pipeline's vertices.
          *
          * @name Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#vertexViewU32
          * @type {Uint32Array}
@@ -94,7 +104,7 @@ var TextureTintPipeline = new Class({
         this.vertexViewU32 = new Uint32Array(this.vertexData);
 
         /**
-         * [pending]
+         * Size of the batch.
          *
          * @name Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#maxQuads
          * @type {integer}
@@ -104,7 +114,7 @@ var TextureTintPipeline = new Class({
         this.maxQuads = 2000;
 
         /**
-         * [pending]
+         * Collection of batch information
          *
          * @name Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#batches
          * @type {array}
@@ -116,13 +126,14 @@ var TextureTintPipeline = new Class({
     },
 
     /**
-     * [pending]
+     * Assigns a texture to the current batch. If a texture is already set it creates
+     * a new batch object.
      *
      * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#setTexture2D
      * @since 3.1.0
      *
-     * @param {WebGLTexture} texture - [pending]
-     * @param {integer} textureUnit - [pending]
+     * @param {WebGLTexture} texture - WebGLTexture that will be assigned to the current batch.
+     * @param {integer} textureUnit - Texture unit to which the texture needs to be bound.
      *
      * @return {Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline} [description]
      */
@@ -167,7 +178,10 @@ var TextureTintPipeline = new Class({
     },
 
     /**
-     * [pending]
+     * Creates a new batch object and pushes it to a batch array.
+     * The batch object contains information relevant to the current 
+     * vertex batch like the offset in the vertex buffer, vertex count and 
+     * the textures used by that batch.
      *
      * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#pushBatch
      * @since 3.1.0
@@ -184,7 +198,7 @@ var TextureTintPipeline = new Class({
     },
 
     /**
-     * [pending]
+     * Binds, uploads resources and processes all batches generating draw calls.
      *
      * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#flush
      * @since 3.1.0
@@ -284,7 +298,8 @@ var TextureTintPipeline = new Class({
     },
 
     /**
-     * [pending]
+     * Called every time the pipeline needs to be used.
+     * It binds all necessary resources.
      *
      * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#onBind
      * @since 3.0.0
@@ -325,7 +340,8 @@ var TextureTintPipeline = new Class({
     },
 
     /**
-     * [pending]
+     * Renders immediately a static tilemap. This function won't use
+     * the batching functionality of the pipieline.
      *
      * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#drawStaticTilemapLayer
      * @since 3.0.0
@@ -361,7 +377,7 @@ var TextureTintPipeline = new Class({
     },
 
     /**
-     * [pending]
+     * Renders contents of a ParticleEmitterManager. It'll batch all particles if possible.
      *
      * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#drawEmitterManager
      * @since 3.0.0
@@ -577,7 +593,7 @@ var TextureTintPipeline = new Class({
     },
 
     /**
-     * [pending]
+     * Batches blitter game object
      *
      * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#drawBlitter
      * @since 3.0.0
@@ -737,7 +753,7 @@ var TextureTintPipeline = new Class({
     },
 
     /**
-     * [pending]
+     * Batches Sprite game object
      *
      * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#batchSprite
      * @since 3.0.0
@@ -910,7 +926,7 @@ var TextureTintPipeline = new Class({
     },
 
     /**
-     * [pending]
+     * Batches Mesh game object
      *
      * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#batchMesh
      * @since 3.0.0
@@ -1041,7 +1057,7 @@ var TextureTintPipeline = new Class({
     },
 
     /**
-     * [pending]
+     * Batches BitmapText game object
      *
      * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#batchBitmapText
      * @since 3.0.0
@@ -1318,7 +1334,7 @@ var TextureTintPipeline = new Class({
     },
 
     /**
-     * [pending]
+     * Batches DynamicBitmapText game object
      *
      * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#batchDynamicBitmapText
      * @since 3.0.0
@@ -1668,7 +1684,7 @@ var TextureTintPipeline = new Class({
     },
 
     /**
-     * [pending]
+     * Batches Text game object
      *
      * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#batchText
      * @since 3.0.0
@@ -1704,7 +1720,7 @@ var TextureTintPipeline = new Class({
     },
 
     /**
-     * [pending]
+     * Batches DynamicTilemapLayer game object
      *
      * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#batchDynamicTilemapLayer
      * @since 3.0.0
@@ -1762,7 +1778,7 @@ var TextureTintPipeline = new Class({
     },
 
     /**
-     * [pending]
+     * Batches TileSprite game object
      *
      * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#batchTileSprite
      * @since 3.0.0
@@ -1799,40 +1815,40 @@ var TextureTintPipeline = new Class({
     },
 
     /**
-     * [pending]
+     * Generic function for batching a textured quad
      *
      * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#batchTexture
      * @since 3.0.0
      *
-     * @param {Phaser.GameObjects.GameObject} gameObject - [pending]
-     * @param {WebGLTexture} texture - [pending]
-     * @param {integer} textureWidth - [pending]
-     * @param {integer} textureHeight - [pending]
-     * @param {float} srcX - [pending]
-     * @param {float} srcY - [pending]
-     * @param {float} srcWidth - [pending]
-     * @param {float} srcHeight - [pending]
-     * @param {float} scaleX - [pending]
-     * @param {float} scaleY - [pending]
-     * @param {float} rotation - [pending]
-     * @param {boolean} flipX - [pending]
-     * @param {boolean} flipY - [pending]
-     * @param {float} scrollFactorX - [pending]
-     * @param {float} scrollFactorY - [pending]
-     * @param {float} displayOriginX - [pending]
-     * @param {float} displayOriginY - [pending]
-     * @param {float} frameX - [pending]
-     * @param {float} frameY - [pending]
-     * @param {float} frameWidth - [pending]
-     * @param {float} frameHeight - [pending]
-     * @param {integer} tintTL - [pending]
-     * @param {integer} tintTR - [pending]
-     * @param {integer} tintBL - [pending]
-     * @param {integer} tintBR - [pending]
-     * @param {float} uOffset - [pending]
-     * @param {float} vOffset - [pending]
-     * @param {Phaser.Cameras.Scene2D.Camera} camera - [pending]
-     * @param {Phaser.GameObjects.Components.TransformMatrix} parentTransformMatrix - [pending]
+     * @param {Phaser.GameObjects.GameObject} gameObject - Source GameObject
+     * @param {WebGLTexture} texture - Raw WebGLTexture associated with the quad
+     * @param {integer} textureWidth - Real texture width
+     * @param {integer} textureHeight - Real texture height
+     * @param {float} srcX - X coordinate of the quad
+     * @param {float} srcY - Y coordinate of the quad
+     * @param {float} srcWidth - Width of the quad
+     * @param {float} srcHeight - Height of the quad
+     * @param {float} scaleX - X component of scale
+     * @param {float} scaleY - Y component of scale
+     * @param {float} rotation - Rotation of the quad
+     * @param {boolean} flipX - Indicates if the quad is horizontally flipped
+     * @param {boolean} flipY - Indicates if the quad is vertically flipped
+     * @param {float} scrollFactorX - By which factor is the quad affected by the camera horizontal scroll
+     * @param {float} scrollFactorY - By which factor is the quad effected by the camera vertical scroll
+     * @param {float} displayOriginX - Horizontal origin in pixels
+     * @param {float} displayOriginY - Vertical origin in pixels
+     * @param {float} frameX - X coordinate of the texture frame
+     * @param {float} frameY - Y coordinate of the texture frame
+     * @param {float} frameWidth - Width of the texture frame
+     * @param {float} frameHeight - Height of the texture frame
+     * @param {integer} tintTL - Tint for top left
+     * @param {integer} tintTR - Tint for top right
+     * @param {integer} tintBL - Tint for bottom left
+     * @param {integer} tintBR - Tint for bottom right
+     * @param {float} uOffset - Horizontal offset on texture coordinate
+     * @param {float} vOffset - Vertical offset on texture coordinate
+     * @param {Phaser.Cameras.Scene2D.Camera} camera - Current used camera
+     * @param {Phaser.GameObjects.Components.TransformMatrix} parentTransformMatrix - Parent container
      */
     batchTexture: function (
         gameObject,

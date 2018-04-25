@@ -38,7 +38,7 @@ var pathArray = [];
 /**
  * @classdesc
  * The FlatTintPipeline is used for rendering flat colored shapes. 
- * Mostyle used by the Graphics game object.
+ * Mostly used by the Graphics game object.
  * The config properties are:
  * - game: Current game instance.
  * - renderer: Current WebGL renderer.
