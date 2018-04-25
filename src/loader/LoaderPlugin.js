@@ -85,6 +85,24 @@ var LoaderPlugin = new Class({
         this.systems = scene.sys;
 
         /**
+         * A reference to the global Cache Manager.
+         *
+         * @name Phaser.Loader.LoaderPlugin#cacheManager
+         * @type {Phaser.Cache.CacheManager}
+         * @since 3.7.0
+         */
+        this.cacheManager = scene.sys.cache;
+
+        /**
+         * A reference to the global Texture Manager.
+         *
+         * @name Phaser.Loader.LoaderPlugin#textureManager
+         * @type {Phaser.Textures.TextureManager}
+         * @since 3.7.0
+         */
+        this.textureManager = scene.sys.textures;
+
+        /**
          * [description]
          *
          * @name Phaser.Loader.LoaderPlugin#_multilist
@@ -350,9 +368,13 @@ var LoaderPlugin = new Class({
             return -1;
         }
 
-        file.path = this.path;
+        //  Does the file already exist in the cache or texture manager?
+        if (!file.hasCacheConflict())
+        {
+            file.path = this.path;
 
-        this.list.set(file);
+            this.list.set(file);
+        }
 
         return file;
     },
@@ -721,12 +743,6 @@ var LoaderPlugin = new Class({
                     animJSON.push(file);
                     break;
 
-                case 'image':
-                case 'svg':
-                case 'html':
-                    textures.addImage(file.key, file.data);
-                    break;
-
                 case 'atlasjson':
 
                     fileA = file.fileA;
@@ -789,34 +805,6 @@ var LoaderPlugin = new Class({
                     }
                     break;
 
-                case 'spritesheet':
-                    textures.addSpriteSheet(file.key, file.data, file.config);
-                    break;
-
-                case 'json':
-                    cache.json.add(file.key, file.data);
-                    break;
-
-                case 'xml':
-                    cache.xml.add(file.key, file.data);
-                    break;
-
-                case 'text':
-                    cache.text.add(file.key, file.data);
-                    break;
-
-                case 'obj':
-                    cache.obj.add(file.key, file.data);
-                    break;
-
-                case 'binary':
-                    cache.binary.add(file.key, file.data);
-                    break;
-
-                case 'audio':
-                    cache.audio.add(file.key, file.data);
-                    break;
-
                 case 'audioSprite':
 
                     var files = [ file.fileA, file.fileB ];
@@ -828,14 +816,9 @@ var LoaderPlugin = new Class({
 
                     break;
 
-                case 'glsl':
-                    cache.shader.add(file.key, file.data);
-                    break;
+                default:
+                    file.addToCache();
 
-                case 'tilemapCSV':
-                case 'tilemapJSON':
-                    cache.tilemap.add(file.key, { format: file.tilemapFormat, data: file.data });
-                    break;
             }
         });
 
