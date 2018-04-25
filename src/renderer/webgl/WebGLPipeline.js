@@ -10,7 +10,35 @@ var Utils = require('./Utils');
 
 /**
  * @classdesc
- * [pending] explain the concept behind the pipelines, what they are and how they work.
+ * WebGLPipeline is a class that describes the way elements will be rendererd 
+ * in WebGL, specially focused on batching vertices (batching is not provided). 
+ * Pipelines are mostly used for describing 2D rendering passes but it's 
+ * flexible enough to be used for any type of rendering including 3D. 
+ * Internally WebGLPipeline will handle things like compiling shaders,
+ * creating vertex buffers, assigning primitive topology and binding 
+ * vertex attributes.
+ *
+ * The config properties are:
+ * - game: Current game instance.
+ * - renderer: Current WebGL renderer.
+ * - gl: Current WebGL context.
+ * - topology: This indicates how the primitives are rendered. The default value is GL_TRIANGLES.
+ *              Here is the full list of rendering primitives (https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API/Constants).
+ * - vertShader: Source for vertex shader as a string.
+ * - fragShader: Source for fragment shader as a string.
+ * - vertexCapacity: The amount of vertices that shall be allocated
+ * - vertexSize: The size of a single vertex in bytes.
+ * - vertices: An optional buffer of vertices
+ * - attributes: An array describing the vertex attributes
+ *  
+ * The vertex attributes properties are:
+ * - name : String - Name of the attribute in the vertex shader
+ * - size : integer - How many components describe the attribute. For ex: vec3 = size of 3, float = size of 1
+ * - type : GLenum - WebGL type (gl.BYTE, gl.SHORT, gl.UNSIGNED_BYTE, gl.UNSIGNED_SHORT, gl.FLOAT)
+ * - normalized : boolean - Is the attribute normalized
+ * - offset : integer - The offset in bytes to the current attribute in the vertex. Equivalent to offsetof(vertex, attrib) in C
+ * Here you can find more information of how to describe an attribute:
+ * - https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/vertexAttribPointer
  *
  * @class WebGLPipeline
  * @memberOf Phaser.Renderer.WebGL
@@ -26,7 +54,7 @@ var WebGLPipeline = new Class({
     function WebGLPipeline (config)
     {
         /**
-         * [pending]
+         * Name of the Pipeline. Used for identifying
          *
          * @name Phaser.Renderer.WebGL.WebGLPipeline#name
          * @type {string}
@@ -53,7 +81,7 @@ var WebGLPipeline = new Class({
         this.view = config.game.canvas;
 
         /**
-         * [pending]
+         * Used to store the current game resolution
          *
          * @name Phaser.Renderer.WebGL.WebGLPipeline#resolution
          * @type {number}
@@ -62,7 +90,7 @@ var WebGLPipeline = new Class({
         this.resolution = config.game.config.resolution;
 
         /**
-         * [pending]
+         * Width of the current viewport
          *
          * @name Phaser.Renderer.WebGL.WebGLPipeline#width
          * @type {number}
@@ -71,7 +99,7 @@ var WebGLPipeline = new Class({
         this.width = config.game.config.width * this.resolution;
 
         /**
-         * [pending]
+         * Height of the current viewport
          *
          * @name Phaser.Renderer.WebGL.WebGLPipeline#height
          * @type {number}
@@ -89,7 +117,7 @@ var WebGLPipeline = new Class({
         this.gl = config.gl;
 
         /**
-         * [pending]
+         * How many vertices have been fed to the current pipeline.
          *
          * @name Phaser.Renderer.WebGL.WebGLPipeline#vertexCount
          * @type {number}
@@ -99,7 +127,7 @@ var WebGLPipeline = new Class({
         this.vertexCount = 0;
 
         /**
-         * [pending]
+         * The limit of vertices that the pipeline can hold
          *
          * @name Phaser.Renderer.WebGL.WebGLPipeline#vertexCapacity
          * @type {integer}
@@ -117,7 +145,7 @@ var WebGLPipeline = new Class({
         this.renderer = config.renderer;
 
         /**
-         * [pending]
+         * Raw byte buffer of vertices.
          *
          * @name Phaser.Renderer.WebGL.WebGLPipeline#vertexData
          * @type {ArrayBuffer}
@@ -126,7 +154,7 @@ var WebGLPipeline = new Class({
         this.vertexData = (config.vertices ? config.vertices : new ArrayBuffer(config.vertexCapacity * config.vertexSize));
 
         /**
-         * [pending]
+         * The handle to a WebGL vertex buffer object.
          *
          * @name Phaser.Renderer.WebGL.WebGLPipeline#vertexBuffer
          * @type {WebGLBuffer}
@@ -135,7 +163,7 @@ var WebGLPipeline = new Class({
         this.vertexBuffer = this.renderer.createVertexBuffer((config.vertices ? config.vertices : this.vertexData.byteLength), this.gl.STREAM_DRAW);
 
         /**
-         * [pending]
+         * The handle to a WebGL program
          *
          * @name Phaser.Renderer.WebGL.WebGLPipeline#program
          * @type {WebGLProgram}
@@ -144,7 +172,7 @@ var WebGLPipeline = new Class({
         this.program = this.renderer.createProgram(config.vertShader, config.fragShader);
 
         /**
-         * [pending]
+         * Array of objects that describe the vertex attributes
          *
          * @name Phaser.Renderer.WebGL.WebGLPipeline#attributes
          * @type {object}
@@ -153,7 +181,7 @@ var WebGLPipeline = new Class({
         this.attributes = config.attributes;
 
         /**
-         * [pending]
+         * The size in bytes of the vertex
          *
          * @name Phaser.Renderer.WebGL.WebGLPipeline#vertexSize
          * @type {integer}
@@ -162,7 +190,7 @@ var WebGLPipeline = new Class({
         this.vertexSize = config.vertexSize;
 
         /**
-         * [pending]
+         * The primitive topology which the pipeline will use to submit draw calls
          *
          * @name Phaser.Renderer.WebGL.WebGLPipeline#topology
          * @type {integer}
@@ -171,7 +199,8 @@ var WebGLPipeline = new Class({
         this.topology = config.topology;
 
         /**
-         * [pending]
+         * Uint8 view to the vertex raw buffer. Used for uploading vertex buffer resources
+         * to the GPU.
          *
          * @name Phaser.Renderer.WebGL.WebGLPipeline#bytes
          * @type {Uint8Array}
@@ -200,16 +229,16 @@ var WebGLPipeline = new Class({
     },
 
     /**
-     * [pending]
+     * Adds a description of vertex attribute to the pipeline
      *
      * @method Phaser.Renderer.WebGL.WebGLPipeline#addAttribute
      * @since 3.2.0
      *
-     * @param {string} name - [pending]
-     * @param {integer} size - [pending]
-     * @param {integer} type - [pending]
-     * @param {boolean} normalized - [pending]
-     * @param {integer} offset - [pending]
+     * @param {string} name - Name of the vertex attribute
+     * @param {integer} size - Vertex component size
+     * @param {integer} type - Type of the attribute
+     * @param {boolean} normalized - Is the value normalized to a range
+     * @param {integer} offset - Byte offset to the beginning of the first element in the vertex
      *
      * @return {Phaser.Renderer.WebGL.WebGLPipeline} [description]
      */
@@ -227,7 +256,7 @@ var WebGLPipeline = new Class({
     },
 
     /**
-     * [pending]
+     * Check if the current batch of vertices is full.
      *
      * @method Phaser.Renderer.WebGL.WebGLPipeline#shouldFlush
      * @since 3.0.0
@@ -240,7 +269,7 @@ var WebGLPipeline = new Class({
     },
 
     /**
-     * [pending]
+     * Resizes the properties used to describe the viewport
      *
      * @method Phaser.Renderer.WebGL.WebGLPipeline#resize
      * @since 3.0.0
@@ -259,7 +288,7 @@ var WebGLPipeline = new Class({
     },
 
     /**
-     * [pending]
+     * Binds the pipeline resources, including programs, vertex buffers and binds attributes
      *
      * @method Phaser.Renderer.WebGL.WebGLPipeline#bind
      * @since 3.0.0
@@ -357,7 +386,8 @@ var WebGLPipeline = new Class({
     },
 
     /**
-     * [pending]
+     * Uploads the vertex data and emits a draw call
+     * for the current batch of vertices.
      *
      * @method Phaser.Renderer.WebGL.WebGLPipeline#flush
      * @since 3.0.0
@@ -413,7 +443,7 @@ var WebGLPipeline = new Class({
     },
 
     /**
-     * [description]
+     * Set a uniform value of the current pipeline program.
      *
      * @method Phaser.Renderer.WebGL.WebGLPipeline#setFloat1
      * @since 3.2.0
@@ -430,7 +460,7 @@ var WebGLPipeline = new Class({
     },
 
     /**
-     * [description]
+     * Set a uniform value of the current pipeline program.
      *
      * @method Phaser.Renderer.WebGL.WebGLPipeline#setFloat2
      * @since 3.2.0
@@ -449,7 +479,7 @@ var WebGLPipeline = new Class({
     },
 
     /**
-     * [description]
+     * Set a uniform value of the current pipeline program.
      *
      * @method Phaser.Renderer.WebGL.WebGLPipeline#setFloat3
      * @since 3.2.0
@@ -469,16 +499,16 @@ var WebGLPipeline = new Class({
     },
 
     /**
-     * [pending]
+     * Set a uniform value of the current pipeline program.
      *
      * @method Phaser.Renderer.WebGL.WebGLPipeline#setFloat4
      * @since 3.2.0
      *
-     * @param {string} name - [pending]
-     * @param {float} x - [pending]
-     * @param {float} y - [pending]
-     * @param {float} z - [pending]
-     * @param {float} w - [pending]
+     * @param {string} name - Name of the uniform
+     * @param {float} x - X component of the uniform
+     * @param {float} y - Y component of the uniform
+     * @param {float} z - Z component of the uniform
+     * @param {float} w - W component of the uniform
      *
      * @return {Phaser.Renderer.WebGL.WebGLPipeline} [description]
      */
@@ -490,7 +520,7 @@ var WebGLPipeline = new Class({
     },
 
     /**
-     * [description]
+     * Set a uniform value of the current pipeline program.
      *
      * @method Phaser.Renderer.WebGL.WebGLPipeline#setInt1
      * @since 3.2.0
@@ -507,7 +537,7 @@ var WebGLPipeline = new Class({
     },
 
     /**
-     * [description]
+     * Set a uniform value of the current pipeline program.
      *
      * @method Phaser.Renderer.WebGL.WebGLPipeline#setInt2
      * @since 3.2.0
@@ -525,7 +555,7 @@ var WebGLPipeline = new Class({
     },
 
     /**
-     * [description]
+     * Set a uniform value of the current pipeline program.
      *
      * @method Phaser.Renderer.WebGL.WebGLPipeline#setInt3
      * @since 3.2.0
@@ -544,16 +574,16 @@ var WebGLPipeline = new Class({
     },
 
     /**
-     * [pending]
+     * Set a uniform value of the current pipeline program.
      *
      * @method Phaser.Renderer.WebGL.WebGLPipeline#setInt4
      * @since 3.2.0
      *
-     * @param {string} name - [pending]
-     * @param {integer} x - [pending]
-     * @param {integer} y - [pending]
-     * @param {integer} z - [pending]
-     * @param {integer} w - [pending]
+     * @param {string} name - Name of the uniform
+     * @param {integer} x - X component of the uniform
+     * @param {integer} y - Y component of the uniform
+     * @param {integer} z - Z component of the uniform
+     * @param {integer} w - W component of the uniform
      *
      * @return {Phaser.Renderer.WebGL.WebGLPipeline} [description]
      */
@@ -564,6 +594,7 @@ var WebGLPipeline = new Class({
     },
 
     /**
+     * Set a uniform value of the current pipeline program.
      * [description]
      *
      * @method Phaser.Renderer.WebGL.WebGLPipeline#setMatrix2
@@ -582,6 +613,8 @@ var WebGLPipeline = new Class({
     },
 
     /**
+     * Set a uniform value of the current pipeline program.
+     * [description]
      * [description]
      *
      * @method Phaser.Renderer.WebGL.WebGLPipeline#setMatrix3
@@ -600,14 +633,14 @@ var WebGLPipeline = new Class({
     },
 
     /**
-     * [description]
+     * Set a uniform value of the current pipeline program.
      *
      * @method Phaser.Renderer.WebGL.WebGLPipeline#setMatrix4
      * @since 3.2.0
      *
-     * @param {string} name - [pending]
-     * @param {boolean} transpose - [pending]
-     * @param {Float32Array} matrix - [pending]
+     * @param {string} name - Name of the uniform
+     * @param {boolean} transpose - Should the matrix be transpose
+     * @param {Float32Array} matrix - Matrix data
      *
      * @return {Phaser.Renderer.WebGL.WebGLPipeline} [description]
      */
