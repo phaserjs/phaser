@@ -452,10 +452,10 @@ var RandomDataGenerator = new Class({
     },
 
     /**
-     * A standard array shuffle implementation using the current seed.
+     * Shuffles the given array, using the current seed.
      *
      * @method Phaser.Math.RandomDataGenerator#shuffle
-     * @since 3.4.0
+     * @since 3.7.0
      * 
      * @param {array[]} [array] - The array to be shuffled.
      *
@@ -464,14 +464,16 @@ var RandomDataGenerator = new Class({
     shuffle: function (array)
     {
         var len = array.length - 1;
+
         for (var i = len; i > 0; i--)
         {
-            var randomIndex = this.integerInRange(0, len);
+            var randomIndex = Math.floor(this.frac() * (len + 1));
             var itemAtIndex = array[randomIndex];
 
             array[randomIndex] = array[i];
             array[i] = itemAtIndex;
         }
+
         return array;
     }
 
