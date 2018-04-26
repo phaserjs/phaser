@@ -5,14 +5,14 @@
  */
 
 /**
- * [description]
+ * Check if a given value is an even number.
  *
  * @function Phaser.Math.IsEven
  * @since 3.0.0
  *
- * @param {number} value - [description]
+ * @param {number} value - The number to perform the check with.
  *
- * @return {boolean} [description]
+ * @return {boolean} Whether the number is even or not.
  */
 var IsEven = function (value)
 {

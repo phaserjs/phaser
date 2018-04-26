@@ -7,14 +7,14 @@
 var CONST = require('./const');
 
 /**
- * [description]
+ * Convert the given angle in radians, to the equivalent angle in degrees.
  *
  * @function Phaser.Math.RadToDeg
  * @since 3.0.0
  *
- * @param {float} radians - [description]
+ * @param {float} radians - The angle in radians to convert ot degrees.
  *
- * @return {integer} [description]
+ * @return {integer} The given angle converted to degrees.
  */
 var RadToDeg = function (radians)
 {
