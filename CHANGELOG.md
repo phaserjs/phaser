@@ -41,6 +41,7 @@
 * Adding a Group with an array of children in the constructor was broken since 3.5. Fix #3612 (thanks @fariazz @samme)
 * Fix ParticleEmitter toJSON output, it was missing the `angle` property and the Emitter Ops were being cast wrong (thanks @samme)
 * Fixed loading normals with multi image load (thanks @iamchristopher)
+* Array.AddAt would fail if it branched to the fast-path within a Container due to an invalid property. Fix #3617 (thanks @poasher)
 
 ### Examples, Documentation and TypeScript
 
