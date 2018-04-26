@@ -1139,7 +1139,7 @@ var Graphics = new Class({
 
             if (sys.game.renderer.gl && texture)
             {
-                texture.source[0].glTexture = sys.game.renderer.canvasToTexture(ctx.canvas, texture.source[0].glTexture, true, 0);
+                texture.source[0].glTexture = sys.game.renderer.canvasToTexture(ctx.canvas, texture.source[0].glTexture);
             }
         }
 

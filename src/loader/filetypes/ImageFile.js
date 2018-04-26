@@ -61,23 +61,24 @@ var ImageFile = new Class({
     // this.load.image({ key: 'bunny' });
     // this.load.image({ key: 'bunny', extension: 'jpg' });
 
-    function ImageFile (key, url, path, xhrSettings, config)
+    function ImageFile (loader, key, url, xhrSettings, config)
     {
         var fileKey = (typeof key === 'string') ? key : GetFastValue(key, 'key', '');
         var fileUrl = (url === undefined) ? GetFastValue(key, 'file') : url;
 
         var fileConfig = {
             type: 'image',
+            cache: loader.textureManager,
             extension: GetFastValue(key, 'extension', 'png'),
             responseType: 'blob',
             key: fileKey,
             url: fileUrl,
-            path: path,
+            path: loader.path,
             xhrSettings: GetFastValue(key, 'xhr', xhrSettings),
             config: GetFastValue(key, 'config', config)
         };
 
-        File.call(this, fileConfig);
+        File.call(this, loader, fileConfig);
     },
 
     onProcess: function (callback)
@@ -109,6 +110,13 @@ var ImageFile = new Class({
         };
 
         File.createObjectURL(this.data, this.xhrLoader.response, 'image/png');
+    },
+
+    addToCache: function ()
+    {
+        this.cache.addImage(this.key, this.data);
+
+        this.loader.emit('filecomplete', this.key, this);
     }
 
 });
@@ -145,14 +153,14 @@ FileTypesManager.register('image', function (key, url, xhrSettings)
 
             if (Array.isArray(urls) && urls.length === 2)
             {
-                fileA = this.addFile(new ImageFile(key[i], urls[0], this.path, xhrSettings));
-                fileB = this.addFile(new ImageFile(key[i], urls[1], this.path, xhrSettings));
+                fileA = this.addFile(new ImageFile(this, key[i], urls[0], xhrSettings));
+                fileB = this.addFile(new ImageFile(this, key[i], urls[1], xhrSettings));
 
                 fileA.setLinkFile(fileB, 'dataimage');
             }
             else
             {
-                this.addFile(new ImageFile(key[i], url, this.path, xhrSettings));
+                this.addFile(new ImageFile(this, key[i], url, xhrSettings));
             }
         }
     }
@@ -162,14 +170,14 @@ FileTypesManager.register('image', function (key, url, xhrSettings)
 
         if (Array.isArray(urls) && urls.length === 2)
         {
-            fileA = this.addFile(new ImageFile(key, urls[0], this.path, xhrSettings));
-            fileB = this.addFile(new ImageFile(key, urls[1], this.path, xhrSettings));
+            fileA = this.addFile(new ImageFile(this, key, urls[0], xhrSettings));
+            fileB = this.addFile(new ImageFile(this, key, urls[1], xhrSettings));
 
             fileA.setLinkFile(fileB, 'dataimage');
         }
         else
         {
-            this.addFile(new ImageFile(key, url, this.path, xhrSettings));
+            this.addFile(new ImageFile(this, key, url, xhrSettings));
         }
     }
 

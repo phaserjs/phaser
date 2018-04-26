@@ -61,7 +61,7 @@ FileTypesManager.register('multiatlas', function (key, textureURLs, atlasURLs, t
     {
         multiKey = '_MA_IMG_' + key + '_' + i.toString();
 
-        file = new ImageFile(multiKey, textureURLs[i], this.path, textureXhrSettings);
+        file = new ImageFile(this, multiKey, textureURLs[i], textureXhrSettings);
 
         this.addFile(file);
 
@@ -72,7 +72,7 @@ FileTypesManager.register('multiatlas', function (key, textureURLs, atlasURLs, t
     {
         multiKey = '_MA_JSON_' + key + '_' + i.toString();
 
-        file = new JSONFile(multiKey, atlasURLs[i], this.path, atlasXhrSettings);
+        file = new JSONFile(this, multiKey, atlasURLs[i], atlasXhrSettings);
 
         this.addFile(file);
 

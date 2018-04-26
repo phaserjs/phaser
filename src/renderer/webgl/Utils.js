@@ -12,15 +12,15 @@
 module.exports = {
 
     /**
-     * [description]
+     * Packs four floats on a range from 0.0 to 1.0 into a single Uint32
      *
      * @function Phaser.Renderer.WebGL.Utils.getTintFromFloats
      * @since 3.0.0
      * 
-     * @param {number} r - [description]
+     * @param {number} r - Red component in a range from 0.0 to 1.0 
      * @param {number} g - [description]
      * @param {number} b - [description]
-     * @param {number} a - [description]
+     * @param {number} a - Alpha component in a range from 0.0 to 1.0
      * 
      * @return {number} [description]
      */
@@ -35,15 +35,16 @@ module.exports = {
     },
 
     /**
-     * [description]
+     * Packs a Uint24, representing RGB components, with a Float32, representing
+     * the alpha component, with a range between 0.0 and 1.0 and return a Uint32
      *
      * @function Phaser.Renderer.WebGL.Utils.getTintAppendFloatAlpha
      * @since 3.0.0
      * 
-     * @param {number} rgb - [description]
-     * @param {number} a - [description]
+     * @param {number} rgb - Uint24 representing RGB components
+     * @param {number} a - Float32 representing Alpha component
      * 
-     * @return {number} [description]
+     * @return {number} Packed RGBA as Uint32
      */
     getTintAppendFloatAlpha: function (rgb, a)
     {
@@ -52,15 +53,17 @@ module.exports = {
     },
 
     /**
-     * [description]
+     * Packs a Uint24, representing RGB components, with a Float32, representing
+     * the alpha component, with a range between 0.0 and 1.0 and return a 
+     * swizzled Uint32
      *
      * @function Phaser.Renderer.WebGL.Utils.getTintAppendFloatAlphaAndSwap
      * @since 3.0.0
      * 
-     * @param {number} rgb - [description]
-     * @param {number} a - [description]
+     * @param {number} rgb - Uint24 representing RGB components
+     * @param {number} a - Float32 representing Alpha component
      * 
-     * @return {number} [description]
+     * @return {number} Packed RGBA as Uint32
      */
     getTintAppendFloatAlphaAndSwap: function (rgb, a)
     {
@@ -73,14 +76,14 @@ module.exports = {
     },
 
     /**
-     * [description]
+     * Unpacks a Uint24 RGB into an array of floats of ranges of 0.0 and 1.0
      *
      * @function Phaser.Renderer.WebGL.Utils.getFloatsFromUintRGB
      * @since 3.0.0
      * 
-     * @param {number} rgb - [description]
+     * @param {number} rgb - RGB packed as a Uint24
      * 
-     * @return {number} [description]
+     * @return {array} Array of floats representing each component as a float 
      */
     getFloatsFromUintRGB: function (rgb)
     {
@@ -92,15 +95,15 @@ module.exports = {
     },
 
     /**
-     * [description]
+     * Counts how many attributes of 32 bits a vertex has
      *
      * @function Phaser.Renderer.WebGL.Utils.getComponentCount
      * @since 3.0.0
      * 
-     * @param {number} attributes - [description]
-     * @param {WebGLRenderingContext} glContext - [description]
+     * @param {array} attributes - Array of attributes 
+     * @param {WebGLRenderingContext} glContext - WebGLContext used for check types
      * 
-     * @return {number} [description]
+     * @return {number} Count of 32 bit attributes in vertex
      */
     getComponentCount: function (attributes, glContext)
     {

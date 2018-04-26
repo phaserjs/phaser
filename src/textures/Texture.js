@@ -10,8 +10,8 @@ var TextureSource = require('./TextureSource');
 
 /**
  * @classdesc
- * A Texture consists of a source, usually an Image from the Cache, or a Canvas, and a collection
- * of Frames. The Frames represent the different areas of the Texture. For example a texture atlas
+ * A Texture consists of a source, usually an Image from the Cache, and a collection of Frames.
+ * The Frames represent the different areas of the Texture. For example a texture atlas
  * may have many Frames, one for each element within the atlas. Where-as a single image would have
  * just one frame, that encompasses the whole image.
  *
@@ -419,6 +419,7 @@ var Texture = new Class({
         this.source = [];
         this.dataSource = [];
         this.frames = {};
+        this.manager = null;
     }
 
 });

@@ -10,7 +10,8 @@ var DistanceBetween = require('../../math/distance/DistanceBetween');
 
 /**
  * @classdesc
- * [description]
+ * A Particle is a simple Game Object controlled by a Particle Emitter and Manager, and rendered by the Manager.
+ * It uses its own lightweight physics system, and can interact only with its Emitter's bounds and zones.
  *
  * @class Particle
  * @memberOf Phaser.GameObjects.Particles
@@ -37,7 +38,7 @@ var Particle = new Class({
         this.emitter = emitter;
 
         /**
-         * [description]
+         * The texture frame used to render this Particle.
          *
          * @name Phaser.GameObjects.Particles.Particle#frame
          * @type {Phaser.Textures.Frame}
@@ -47,7 +48,7 @@ var Particle = new Class({
         this.frame = null;
 
         /**
-         * [description]
+         * The position of this Particle within its Emitter's particle pool.
          *
          * @name Phaser.GameObjects.Particles.Particle#index
          * @type {number}
@@ -207,7 +208,7 @@ var Particle = new Class({
         this.tint = 0xffffffff;
 
         /**
-         * [description]
+         * The full color of this Particle, computed from its alpha and tint.
          *
          * @name Phaser.GameObjects.Particles.Particle#color
          * @type {number}
@@ -246,7 +247,7 @@ var Particle = new Class({
         this.delayCurrent = 0;
 
         /**
-         * The normalized lifespan T value.
+         * The normalized lifespan T value, where 0 is the start and 1 is the end.
          *
          * @name Phaser.GameObjects.Particles.Particle#lifeT
          * @type {float}
@@ -405,7 +406,7 @@ var Particle = new Class({
      * @param {Phaser.GameObjects.Particles.ParticleEmitter} emitter - The Emitter that is updating this Particle.
      * @param {number} delta - The delta time in ms.
      * @param {float} step - The delta value divided by 1000.
-     * @param {array} processors - [description]
+     * @param {array} processors - Particle processors (gravity wells).
      */
     computeVelocity: function (emitter, delta, step, processors)
     {

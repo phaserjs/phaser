@@ -74,7 +74,7 @@ var Frame = new Class({
          * @type {integer}
          * @since 3.0.0
          */
-        this.cutX = x;
+        this.cutX;
 
         /**
          * Y position within the source image to cut from.
@@ -83,7 +83,7 @@ var Frame = new Class({
          * @type {integer}
          * @since 3.0.0
          */
-        this.cutY = y;
+        this.cutY;
 
         /**
          * The width of the area in the source image to cut.
@@ -92,7 +92,7 @@ var Frame = new Class({
          * @type {integer}
          * @since 3.0.0
          */
-        this.cutWidth = width;
+        this.cutWidth;
 
         /**
          * The height of the area in the source image to cut.
@@ -101,7 +101,7 @@ var Frame = new Class({
          * @type {integer}
          * @since 3.0.0
          */
-        this.cutHeight = height;
+        this.cutHeight;
 
         /**
          * The X rendering offset of this Frame, taking trim into account.
@@ -130,7 +130,7 @@ var Frame = new Class({
          * @type {integer}
          * @since 3.0.0
          */
-        this.width = width;
+        this.width;
 
         /**
          * The rendering height of this Frame, taking trim into account.
@@ -139,7 +139,7 @@ var Frame = new Class({
          * @type {integer}
          * @since 3.0.0
          */
-        this.height = height;
+        this.height;
 
         /**
          * Half the width, floored.
@@ -149,7 +149,7 @@ var Frame = new Class({
          * @type {integer}
          * @since 3.0.0
          */
-        this.halfWidth = Math.floor(width * 0.5);
+        this.halfWidth;
 
         /**
          * Half the height, floored.
@@ -159,7 +159,7 @@ var Frame = new Class({
          * @type {integer}
          * @since 3.0.0
          */
-        this.halfHeight = Math.floor(height * 0.5);
+        this.halfHeight;
 
         /**
          * The x center of this frame, floored.
@@ -168,7 +168,7 @@ var Frame = new Class({
          * @type {integer}
          * @since 3.0.0
          */
-        this.centerX = Math.floor(width / 2);
+        this.centerX;
 
         /**
          * The y center of this frame, floored.
@@ -177,7 +177,7 @@ var Frame = new Class({
          * @type {integer}
          * @since 3.0.0
          */
-        this.centerY = Math.floor(height / 2);
+        this.centerY;
 
         /**
          * The horizontal pivot point of this Frame.
@@ -255,23 +255,23 @@ var Frame = new Class({
          */
         this.data = {
             cut: {
-                x: x,
-                y: y,
-                w: width,
-                h: height,
-                r: x + width,
-                b: y + height
+                x: 0,
+                y: 0,
+                w: 0,
+                h: 0,
+                r: 0,
+                b: 0
             },
             trim: false,
             sourceSize: {
-                w: width,
-                h: height
+                w: 0,
+                h: 0
             },
             spriteSourceSize: {
                 x: 0,
                 y: 0,
-                w: width,
-                h: height
+                w: 0,
+                h: 0
             },
             uvs: {
                 x0: 0,
@@ -283,18 +283,83 @@ var Frame = new Class({
                 x3: 0,
                 y3: 0
             },
-            radius: 0.5 * Math.sqrt(width * width + height * height),
+            radius: 0,
             drawImage: {
-                sx: x,
-                sy: y,
-                sWidth: width,
-                sHeight: height,
-                dWidth: width,
-                dHeight: height
+                sx: 0,
+                sy: 0,
+                sWidth: 0,
+                sHeight: 0,
+                dWidth: 0,
+                dHeight: 0
             }
         };
 
-        this.updateUVs();
+        this.setSize(width, height, x, y);
+    },
+
+    /**
+     * Sets the width, height, x and y of this Frame.
+     * 
+     * This is called automatically by the constructor
+     * and should rarely be changed on-the-fly.
+     *
+     * @method Phaser.Textures.Frame#setSize
+     * @since 3.6.1
+     *
+     * @param {integer} width - The width of the frame before being trimmed.
+     * @param {integer} height - The height of the frame before being trimmed.
+     * @param {integer} [x=0] - The x coordinate of the top-left of this Frame.
+     * @param {integer} [y=0] - The y coordinate of the top-left of this Frame.
+     *
+     * @return {Phaser.Textures.Frame} This Frame object.
+     */
+    setSize: function (width, height, x, y)
+    {
+        if (x === undefined) { x = 0; }
+        if (y === undefined) { y = 0; }
+
+        this.cutX = x;
+        this.cutY = y;
+        this.cutWidth = width;
+        this.cutHeight = height;
+
+        this.width = width;
+        this.height = height;
+
+        this.halfWidth = Math.floor(width * 0.5);
+        this.halfHeight = Math.floor(height * 0.5);
+
+        this.centerX = Math.floor(width / 2);
+        this.centerY = Math.floor(height / 2);
+
+        var data = this.data;
+        var cut = data.cut;
+
+        cut.x = x;
+        cut.y = y;
+        cut.w = width;
+        cut.h = height;
+        cut.r = x + width;
+        cut.b = y + height;
+
+        data.sourceSize.w = width;
+        data.sourceSize.h = height;
+
+        data.spriteSourceSize.w = width;
+        data.spriteSourceSize.h = height;
+
+        data.radius = 0.5 * Math.sqrt(width * width + height * height);
+
+        var drawImage = data.drawImage;
+
+        drawImage.sx = x;
+        drawImage.sy = y;
+        drawImage.sWidth = width;
+        drawImage.sHeight = height;
+        drawImage.dWidth = width;
+        drawImage.dHeight = height;
+
+        return this.updateUVs();
     },
 
     /**

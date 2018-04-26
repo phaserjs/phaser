@@ -30,23 +30,24 @@ var HTML5AudioFile = new Class({
 
     initialize:
 
-        function HTML5AudioFile (key, url, path, config)
-        {
-            this.locked = 'ontouchstart' in window;
+    function HTML5AudioFile (loader, key, url, config)
+    {
+        this.locked = 'ontouchstart' in window;
 
-            this.loaded = false;
+        this.loaded = false;
 
-            var fileConfig = {
-                type: 'audio',
-                extension: GetFastValue(url, 'type', ''),
-                key: key,
-                url: GetFastValue(url, 'uri', url),
-                path: path,
-                config: config
-            };
+        var fileConfig = {
+            type: 'audio',
+            cache: loader.cacheManager.audio,
+            extension: GetFastValue(url, 'type', ''),
+            key: key,
+            url: GetFastValue(url, 'uri', url),
+            path: loader.path,
+            config: config
+        };
 
-            File.call(this, fileConfig);
-        },
+        File.call(this, loader, fileConfig);
+    },
 
     onLoad: function ()
     {

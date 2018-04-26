@@ -33,7 +33,7 @@ var HTMLFile = new Class({
 
     initialize:
 
-    function HTMLFile (key, url, width, height, path, xhrSettings)
+    function HTMLFile (loader, key, url, width, height, xhrSettings)
     {
         if (width === undefined) { width = 512; }
         if (height === undefined) { height = 512; }
@@ -42,11 +42,12 @@ var HTMLFile = new Class({
 
         var fileConfig = {
             type: 'html',
+            cache: loader.textureManager,
             extension: GetFastValue(key, 'extension', 'html'),
             responseType: 'text',
             key: fileKey,
             url: GetFastValue(key, 'file', url),
-            path: path,
+            path: loader.path,
             xhrSettings: GetFastValue(key, 'xhr', xhrSettings),
             config: {
                 width: width,
@@ -54,7 +55,7 @@ var HTMLFile = new Class({
             }
         };
 
-        File.call(this, fileConfig);
+        File.call(this, loader, fileConfig);
     },
 
     onProcess: function (callback)
@@ -113,6 +114,13 @@ var HTMLFile = new Class({
         };
 
         File.createObjectURL(this.data, blob, 'image/svg+xml');
+    },
+
+    addToCache: function ()
+    {
+        this.cache.addImage(this.key, this.data);
+
+        this.loader.emit('filecomplete', this.key, this);
     }
 
 });
@@ -143,12 +151,12 @@ FileTypesManager.register('html', function (key, url, width, height, xhrSettings
         for (var i = 0; i < key.length; i++)
         {
             //  If it's an array it has to be an array of Objects, so we get everything out of the 'key' object
-            this.addFile(new HTMLFile(key[i], url, width, height, this.path, xhrSettings));
+            this.addFile(new HTMLFile(this, key[i], url, width, height, xhrSettings));
         }
     }
     else
     {
-        this.addFile(new HTMLFile(key, url, width, height, this.path, xhrSettings));
+        this.addFile(new HTMLFile(this, key, url, width, height, xhrSettings));
     }
 
     //  For method chaining

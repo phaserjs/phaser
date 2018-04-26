@@ -31,21 +31,22 @@ var GLSLFile = new Class({
 
     initialize:
 
-    function GLSLFile (key, url, path, xhrSettings)
+    function GLSLFile (loader, key, url, xhrSettings)
     {
         var fileKey = (typeof key === 'string') ? key : GetFastValue(key, 'key', '');
 
         var fileConfig = {
             type: 'glsl',
+            cache: loader.cacheManager.shader,
             extension: GetFastValue(key, 'extension', 'glsl'),
             responseType: 'text',
             key: fileKey,
             url: GetFastValue(key, 'file', url),
-            path: path,
+            path: loader.path,
             xhrSettings: GetFastValue(key, 'xhr', xhrSettings)
         };
 
-        File.call(this, fileConfig);
+        File.call(this, loader, fileConfig);
     },
 
     onProcess: function (callback)
@@ -85,12 +86,12 @@ FileTypesManager.register('glsl', function (key, url, xhrSettings)
         for (var i = 0; i < key.length; i++)
         {
             //  If it's an array it has to be an array of Objects, so we get everything out of the 'key' object
-            this.addFile(new GLSLFile(key[i], url, this.path, xhrSettings));
+            this.addFile(new GLSLFile(this, key[i], url, xhrSettings));
         }
     }
     else
     {
-        this.addFile(new GLSLFile(key, url, this.path, xhrSettings));
+        this.addFile(new GLSLFile(this, key, url, xhrSettings));
     }
 
     //  For method chaining

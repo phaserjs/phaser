@@ -23,10 +23,10 @@ var JSONFile = require('./JSONFile.js');
  *
  * @return {object} An object containing two File objects to be added to the loader.
  */
-var AtlasJSONFile = function (key, textureURL, atlasURL, path, textureXhrSettings, atlasXhrSettings)
+var AtlasJSONFile = function (loader, key, textureURL, atlasURL, textureXhrSettings, atlasXhrSettings)
 {
-    var image = new ImageFile(key, textureURL, path, textureXhrSettings);
-    var data = new JSONFile(key, atlasURL, path, atlasXhrSettings);
+    var image = new ImageFile(loader, key, textureURL, textureXhrSettings);
+    var data = new JSONFile(loader, key, atlasURL, atlasXhrSettings);
 
     //  Link them together
     image.linkFile = data;
@@ -60,20 +60,19 @@ var AtlasJSONFile = function (key, textureURL, atlasURL, path, textureXhrSetting
  */
 FileTypesManager.register('atlas', function (key, textureURL, atlasURL, textureXhrSettings, atlasXhrSettings)
 {
-
     var files;
 
     // If param key is an object, use object based loading method
     if ((typeof key === 'object') && (key !== null))
     {
-        files = new AtlasJSONFile(key.key, key.texture, key.data, this.path, textureXhrSettings, atlasXhrSettings);
+        files = new AtlasJSONFile(this, key.key, key.texture, key.data, textureXhrSettings, atlasXhrSettings);
     }
 
     // Else just use the parameters like normal
     else
     {
         //  Returns an object with two properties: 'texture' and 'data'
-        files = new AtlasJSONFile(key, textureURL, atlasURL, this.path, textureXhrSettings, atlasXhrSettings);
+        files = new AtlasJSONFile(this, key, textureURL, atlasURL, textureXhrSettings, atlasXhrSettings);
     }
 
     this.addFile(files.texture);

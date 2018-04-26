@@ -319,6 +319,11 @@ var SceneManager = new Class({
                 data: data
             });
 
+            if (!this.isBooted)
+            {
+                this._data[key] = { data: data };
+            }
+
             return null;
         }
 

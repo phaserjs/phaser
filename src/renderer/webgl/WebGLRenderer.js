@@ -8,6 +8,7 @@
 var Class = require('../../utils/Class');
 var CONST = require('../../const');
 var IsSizePowerOfTwo = require('../../math/pow2/IsSizePowerOfTwo');
+var SpliceOne = require('../../utils/array/SpliceOne');
 var Utils = require('./Utils');
 var WebGLSnapshot = require('../snapshot/WebGLSnapshot');
 
@@ -33,7 +34,13 @@ var TextureTintPipeline = require('./pipelines/TextureTintPipeline');
 
 /**
  * @classdesc
- * [description]
+ * WebGLRenderer is a class that contains the needed functionality to keep the
+ * WebGLRenderingContext state clean. The main idea of the WebGLRenderer is to keep track of
+ * any context change that happens for WebGL rendering inside of Phaser. This means
+ * if raw webgl functions are called outside the WebGLRenderer of the Phaser WebGL
+ * rendering ecosystem they might pollute the current WebGLRenderingContext state producing
+ * unexpected behaviour. It's recommended that WebGL interaction is done through 
+ * WebGLRenderer and/or WebGLPipeline.
  *
  * @class WebGLRenderer
  * @memberOf Phaser.Renderer.WebGL
@@ -155,7 +162,7 @@ var WebGLRenderer = new Class({
         this.blendModes = [];
 
         /**
-         * [description]
+         * Keeps track of any WebGLTexture created with the current WebGLRenderingContext
          *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#nativeTextures
          * @type {array}
@@ -175,7 +182,7 @@ var WebGLRenderer = new Class({
         this.contextLost = false;
 
         /**
-         * [description]
+         * This object will store all pipelines created through addPipeline
          *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#pipelines
          * @type {object}
@@ -200,7 +207,7 @@ var WebGLRenderer = new Class({
         // Internal Renderer State (Textures, Framebuffers, Pipelines, Buffers, etc)
 
         /**
-         * [description]
+         * Cached value for the last texture unit that was used
          *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#currentActiveTextureUnit
          * @type {integer}
@@ -209,7 +216,7 @@ var WebGLRenderer = new Class({
         this.currentActiveTextureUnit = 0;
 
         /**
-         * [description]
+         * An array of the last texture handles that were bound to the WebGLRenderingContext
          *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#currentTextures
          * @type {array}
@@ -218,7 +225,7 @@ var WebGLRenderer = new Class({
         this.currentTextures = new Array(16);
 
         /**
-         * [description]
+         * Current framebuffer in use
          *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#currentFramebuffer
          * @type {WebGLFramebuffer}
@@ -228,7 +235,7 @@ var WebGLRenderer = new Class({
         this.currentFramebuffer = null;
 
         /**
-         * [description]
+         * Current WebGLPipeline in use
          *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#currentPipeline
          * @type {Phaser.Renderer.WebGL.WebGLPipeline}
@@ -238,7 +245,7 @@ var WebGLRenderer = new Class({
         this.currentPipeline = null;
 
         /**
-         * [description]
+         * Current WebGLProgram in use
          *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#currentProgram
          * @type {WebGLProgram}
@@ -248,7 +255,7 @@ var WebGLRenderer = new Class({
         this.currentProgram = null;
 
         /**
-         * [description]
+         * Current WebGLBuffer (Vertex buffer) in use
          *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#currentVertexBuffer
          * @type {WebGLBuffer}
@@ -258,7 +265,7 @@ var WebGLRenderer = new Class({
         this.currentVertexBuffer = null;
 
         /**
-         * [description]
+         * Current WebGLBuffer (Index buffer) in use
          *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#currentIndexBuffer
          * @type {WebGLBuffer}
@@ -268,7 +275,7 @@ var WebGLRenderer = new Class({
         this.currentIndexBuffer = null;
 
         /**
-         * [description]
+         * Current blend mode in use
          *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#currentBlendMode
          * @type {integer}
@@ -277,7 +284,7 @@ var WebGLRenderer = new Class({
         this.currentBlendMode = Infinity;
 
         /**
-         * [description]
+         * Indicates if the the scissor state is enabled in WebGLRenderingContext
          *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#currentScissorEnabled
          * @type {boolean}
@@ -287,7 +294,7 @@ var WebGLRenderer = new Class({
         this.currentScissorEnabled = false;
 
         /**
-         * [description]
+         * Stores the current scissor data
          *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#currentScissor
          * @type {Uint32Array}
@@ -296,7 +303,7 @@ var WebGLRenderer = new Class({
         this.currentScissor = new Uint32Array([ 0, 0, this.width, this.height ]);
 
         /**
-         * [description]
+         * Index to the scissor stack top
          *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#currentScissorIdx
          * @type {number}
@@ -306,7 +313,7 @@ var WebGLRenderer = new Class({
         this.currentScissorIdx = 0;
 
         /**
-         * [description]
+         * Stack of scissor data
          *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#scissorStack
          * @type {Uint32Array}
@@ -339,7 +346,7 @@ var WebGLRenderer = new Class({
             }
         }, false);
 
-        // This are initialized post context creation
+        // These are initialized post context creation
 
         /**
          * [description]
@@ -352,7 +359,7 @@ var WebGLRenderer = new Class({
         this.gl = null;
 
         /**
-         * [description]
+         * Array of strings that indicate which WebGL extensions are supported by the browser
          *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#supportedExtensions
          * @type {object}
@@ -362,7 +369,7 @@ var WebGLRenderer = new Class({
         this.supportedExtensions = null;
 
         /**
-         * [description]
+         * Extensions loaded into the current context
          *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#extensions
          * @type {object}
@@ -372,7 +379,7 @@ var WebGLRenderer = new Class({
         this.extensions = {};
 
         /**
-         * [description]
+         * Stores the current WebGL component formats for further use
          *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#glFormats
          * @type {array}
@@ -385,7 +392,8 @@ var WebGLRenderer = new Class({
     },
 
     /**
-     * [description]
+     * Creates a new WebGLRenderingContext and initializes all internal
+     * state.
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#init
      * @since 3.0.0
@@ -532,12 +540,12 @@ var WebGLRenderer = new Class({
     },
 
     /**
-     * [description]
+     * Checks if a WebGL extension is supported
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#hasExtension
      * @since 3.0.0
      *
-     * @param {string} extensionName - [description]
+     * @param {string} extensionName - Name of the WebGL extension
      *
      * @return {boolean} [description]
      */
@@ -547,14 +555,14 @@ var WebGLRenderer = new Class({
     },
 
     /**
-     * [description]
+     * Loads a WebGL extension
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#getExtension
      * @since 3.0.0
      *
      * @param {string} extensionName - [description]
      *
-     * @return {object} [description]
+     * @return {object} WebGL extension if the extension is supported
      */
     getExtension: function (extensionName)
     {
@@ -569,7 +577,7 @@ var WebGLRenderer = new Class({
     },
 
     /**
-     * [description]
+     * Flushes the current pipeline if the pipeline is bound
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#flush
      * @since 3.0.0
@@ -585,12 +593,12 @@ var WebGLRenderer = new Class({
     /* Renderer State Manipulation Functions */
 
     /**
-     * [description]
+     * Checks if a pipeline is present in the current WebGLRenderer
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#hasPipeline
      * @since 3.0.0
      *
-     * @param {string} pipelineName - [description]
+     * @param {string} pipelineName - Name of the pipeline
      *
      * @return {boolean} [description]
      */
@@ -600,7 +608,7 @@ var WebGLRenderer = new Class({
     },
 
     /**
-     * [description]
+     * Returns the pipeline by name if the pipeline exists
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#getPipeline
      * @since 3.0.0
@@ -615,7 +623,7 @@ var WebGLRenderer = new Class({
     },
 
     /**
-     * [description]
+     * Removes a pipeline by name
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#removePipeline
      * @since 3.0.0
@@ -632,15 +640,15 @@ var WebGLRenderer = new Class({
     },
 
     /**
-     * [description]
+     * Adds a pipeline instance into the collection of pipelines
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#addPipeline
      * @since 3.0.0
      *
      * @param {string} pipelineName - [description]
-     * @param {Phaser.Renderer.WebGL.WebGLPipeline} pipelineInstance - [description]
+     * @param {Phaser.Renderer.WebGL.WebGLPipeline} pipelineInstance - Pipeline instance must extend WebGLPipeline
      *
-     * @return {Phaser.Renderer.WebGL.WebGLPipeline} [description]
+     * @return {Phaser.Renderer.WebGL.WebGLPipeline} The instance that was passed.
      */
     addPipeline: function (pipelineName, pipelineInstance)
     {
@@ -661,7 +669,7 @@ var WebGLRenderer = new Class({
     },
 
     /**
-     * [description]
+     * Sets the current scissor state
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#setScissor
      * @since 3.0.0
@@ -708,7 +716,7 @@ var WebGLRenderer = new Class({
     },
 
     /**
-     * [description]
+     * Pushes a new scissor state. This is used to set nested scissor states.
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#pushScissor
      * @since 3.0.0
@@ -738,7 +746,7 @@ var WebGLRenderer = new Class({
     },
 
     /**
-     * [description]
+     * Pops the last scissor state and sets it.
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#popScissor
      * @since 3.0.0
@@ -762,7 +770,7 @@ var WebGLRenderer = new Class({
     },
 
     /**
-     * [description]
+     * Binds a WebGLPipeline and sets it as the current pipeline to be used.
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#setPipeline
      * @since 3.0.0
@@ -891,13 +899,14 @@ var WebGLRenderer = new Class({
     },
 
     /**
-     * [description]
+     * Binds a texture at a texture unit. If a texture is already 
+     * bound to that unit it will force a flush on the current pipeline.
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#setTexture2D
      * @since 3.0.0
      *
-     * @param {WebGLTexture} texture - [description]
-     * @param {integer} textureUnit - [description]
+     * @param {WebGLTexture} texture - The WebGL texture that needs to be bound
+     * @param {integer} textureUnit - The texture unit to which the texture will be bound
      *
      * @return {Phaser.Renderer.WebGL.WebGLRenderer} This WebGL Renderer.
      */
@@ -925,12 +934,13 @@ var WebGLRenderer = new Class({
     },
 
     /**
-     * [description]
+     * Binds a framebuffer. If there was another framebuffer already bound
+     * it will force a pipeline flush.
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#setFramebuffer
      * @since 3.0.0
      *
-     * @param {WebGLFramebuffer} framebuffer - [description]
+     * @param {WebGLFramebuffer} framebuffer - The framebuffer that needs to be bound
      *
      * @return {Phaser.Renderer.WebGL.WebGLRenderer} This WebGL Renderer.
      */
@@ -951,12 +961,13 @@ var WebGLRenderer = new Class({
     },
 
     /**
-     * [description]
+     * Binds a program. If there was another program already bound
+     * it will force a pipeline flush
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#setProgram
      * @since 3.0.0
      *
-     * @param {WebGLProgram} program - [description]
+     * @param {WebGLProgram} program - The program that needs to be bound
      *
      * @return {Phaser.Renderer.WebGL.WebGLRenderer} This WebGL Renderer.
      */
@@ -977,12 +988,13 @@ var WebGLRenderer = new Class({
     },
 
     /**
-     * [description]
+     * Bounds a vertex buffer. If there is a vertex buffer already bound
+     * it'll force a pipeline flush.
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#setVertexBuffer
      * @since 3.0.0
      *
-     * @param {WebGLBuffer} vertexBuffer - [description]
+     * @param {WebGLBuffer} vertexBuffer - The buffer that needs to be bound
      *
      * @return {Phaser.Renderer.WebGL.WebGLRenderer} This WebGL Renderer.
      */
@@ -1003,12 +1015,13 @@ var WebGLRenderer = new Class({
     },
 
     /**
-     * [description]
+     * Bounds a index buffer. If there is a index buffer already bound
+     * it'll force a pipeline flush.
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#setIndexBuffer
      * @since 3.0.0
      *
-     * @param {WebGLBuffer} indexBuffer - [description]
+     * @param {WebGLBuffer} indexBuffer - The buffer the needs to be bound
      *
      * @return {Phaser.Renderer.WebGL.WebGLRenderer} This WebGL Renderer.
      */
@@ -1031,7 +1044,8 @@ var WebGLRenderer = new Class({
     /* Renderer Resource Creation Functions */
 
     /**
-     * [description]
+     * Creates a texture from an image source. If the source is not valid
+     * it creates an empty texture
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#createTextureFromSource
      * @since 3.0.0
@@ -1080,23 +1094,24 @@ var WebGLRenderer = new Class({
     },
 
     /**
-     * [description]
+     * A wrapper for creating a WebGLTexture. If not pixel data is passed
+     * it will create an empty texture.
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#createTexture2D
      * @since 3.0.0
      *
-     * @param {integer} mipLevel - [description]
-     * @param {integer} minFilter - [description]
-     * @param {integer} magFilter - [description]
-     * @param {integer} wrapT - [description]
-     * @param {integer} wrapS - [description]
-     * @param {integer} format - [description]
-     * @param {object} pixels - [description]
-     * @param {integer} width - [description]
-     * @param {integer} height - [description]
-     * @param {boolean} pma - [description]
+     * @param {integer} mipLevel - Mip level of the texture
+     * @param {integer} minFilter - Filtering of the texture
+     * @param {integer} magFilter - Filtering of the texture
+     * @param {integer} wrapT - Wrapping mode of the texture
+     * @param {integer} wrapS - Wrapping mode of the texture
+     * @param {integer} format - Which format does the texture use
+     * @param {object} pixels - pixel data
+     * @param {integer} width - Width of the texture in pixels
+     * @param {integer} height - Height of the texture in pixels
+     * @param {boolean} pma - Does the texture hace premultiplied alpha.
      *
-     * @return {WebGLTexture} [description]
+     * @return {WebGLTexture} Raw WebGLTexture
      */
     createTexture2D: function (mipLevel, minFilter, magFilter, wrapT, wrapS, format, pixels, width, height, pma)
     {
@@ -1137,17 +1152,17 @@ var WebGLRenderer = new Class({
     },
 
     /**
-     * [description]
+     * Wrapper for creating WebGLFramebuffer.
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#createFramebuffer
      * @since 3.0.0
      *
-     * @param {integer} width - [description]
-     * @param {integer} height - [description]
-     * @param {WebGLFramebuffer} renderTexture - [description]
-     * @param {boolean} addDepthStencilBuffer - [description]
+     * @param {integer} width - Width in pixels of the framebuffer
+     * @param {integer} height - Height in pixels of the framebuffer
+     * @param {WebGLTexture} renderTexture - The color texture to where the color pixels are written 
+     * @param {boolean} addDepthStencilBuffer - Indicates if the current framebuffer support depth and stencil buffers
      *
-     * @return {WebGLFramebuffer} [description]
+     * @return {WebGLFramebuffer} Raw WebGLFramebuffer
      */
     createFramebuffer: function (width, height, renderTexture, addDepthStencilBuffer)
     {
@@ -1192,15 +1207,15 @@ var WebGLRenderer = new Class({
     },
 
     /**
-     * [description]
+     * Wrapper for creating a WebGLProgram
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#createProgram
      * @since 3.0.0
      *
-     * @param {string} vertexShader - [description]
-     * @param {string} fragmentShader - [description]
+     * @param {string} vertexShader - Source to the vertex shader
+     * @param {string} fragmentShader - Source to the fragment shader
      *
-     * @return {WebGLProgram} [description]
+     * @return {WebGLProgram} Raw WebGLProgram
      */
     createProgram: function (vertexShader, fragmentShader)
     {
@@ -1236,15 +1251,15 @@ var WebGLRenderer = new Class({
     },
 
     /**
-     * [description]
+     * Wrapper for creating a vertex buffer.
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#createVertexBuffer
      * @since 3.0.0
      *
-     * @param {ArrayBuffer} initialDataOrSize - [description]
-     * @param {integer} bufferUsage - [description]
+     * @param {ArrayBuffer} initialDataOrSize - It's either ArrayBuffer or an integer indicating the size of the vbo
+     * @param {integer} bufferUsage - How the buffer is used. gl.DYNAMIC_DRAW, gl.STATIC_DRAW or gl.STREAM_DRAW
      *
-     * @return {WebGLBuffer} [description]
+     * @return {WebGLBuffer} Raw vertex buffer
      */
     createVertexBuffer: function (initialDataOrSize, bufferUsage)
     {
@@ -1261,15 +1276,15 @@ var WebGLRenderer = new Class({
     },
 
     /**
-     * [description]
+     * Wrapper for creating a vertex buffer.
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#createIndexBuffer
      * @since 3.0.0
      *
-     * @param {ArrayBuffer} initialDataOrSize - [description]
-     * @param {integer} bufferUsage - [description]
+     * @param {ArrayBuffer} initialDataOrSize - It's either ArrayBuffer or an integer indicating the size of the vbo
+     * @param {integer} bufferUsage - How the buffer is used. gl.DYNAMIC_DRAW, gl.STATIC_DRAW or gl.STREAM_DRAW
      *
-     * @return {WebGLBuffer} [description]
+     * @return {WebGLBuffer} Raw index buffer
      */
     createIndexBuffer: function (initialDataOrSize, bufferUsage)
     {
@@ -1297,13 +1312,20 @@ var WebGLRenderer = new Class({
      */
     deleteTexture: function (texture)
     {
+        var index = this.nativeTextures.indexOf(texture);
+
+        if (index !== -1)
+        {
+            SpliceOne(this.nativeTextures, index);
+        }
+
         this.gl.deleteTexture(texture);
 
         return this;
     },
 
     /**
-     * [description]
+     * Wrapper for deleting a raw WebGLFramebuffer
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#deleteFramebuffer
      * @since 3.0.0
@@ -1337,7 +1359,7 @@ var WebGLRenderer = new Class({
     },
 
     /**
-     * [description]
+     * Wrapper for deleting a vertex or index buffer
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#deleteBuffer
      * @since 3.0.0
@@ -1356,7 +1378,8 @@ var WebGLRenderer = new Class({
     /* Rendering Functions */
 
     /**
-     * [description]
+     * Handles any clipping needed by the camera and renders the background
+     * color if a color is visible.
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#preRenderCamera
      * @since 3.0.0
@@ -1393,7 +1416,8 @@ var WebGLRenderer = new Class({
     },
 
     /**
-     * [description]
+     * Renders the foreground camera effects like flash and fading.
+     * It resets the current scissor state.
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#postRenderCamera
      * @since 3.0.0
@@ -1416,7 +1440,7 @@ var WebGLRenderer = new Class({
     },
 
     /**
-     * [description]
+     * Clears the current vertex buffer and updates pipelines.
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#preRender
      * @since 3.0.0
@@ -1555,9 +1579,7 @@ var WebGLRenderer = new Class({
      * @since 3.0.0
      *
      * @param {HTMLCanvasElement} srcCanvas - [description]
-     * @param {WebGLTexture} dstTexture - [description]
-     * @param {boolean} shouldReallocate - [description]
-     * @param {integer} scaleMode - [description]
+     * @param {WebGLTexture} [dstTexture] - [description]
      *
      * @return {WebGLTexture} [description]
      */
@@ -1580,16 +1602,10 @@ var WebGLRenderer = new Class({
         {
             this.setTexture2D(dstTexture, 0);
 
-            // if (!shouldReallocate && dstTexture.width >= srcCanvas.width || dstTexture.height >= srcCanvas.height)
-            // {
-            //    gl.texSubImage2D(gl.TEXTURE_2D, 0, 0, srcCanvas.width, srcCanvas.height, gl.RGBA, gl.UNSIGNED_BYTE, srcCanvas);
-            // }
-            // else
-            {
-                gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, srcCanvas);
-                dstTexture.width = srcCanvas.width;
-                dstTexture.height = srcCanvas.height;
-            }
+            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, srcCanvas);
+
+            dstTexture.width = srcCanvas.width;
+            dstTexture.height = srcCanvas.height;
 
             this.setTexture2D(null, 0);
         }
@@ -1690,17 +1706,17 @@ var WebGLRenderer = new Class({
     },
 
     /**
-     * [description]
+     * Sets uniform of a WebGLProgram
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#setFloat4
      * @since 3.0.0
      *
-     * @param {WebGLProgram} program - [description]
-     * @param {string} name - [description]
-     * @param {float} x - [description]
-     * @param {float} y - [description]
-     * @param {float} z - [description]
-     * @param {float} w - [description]
+     * @param {WebGLProgram} program - Target program
+     * @param {string} name - Name of the uniform
+     * @param {float} x - X component
+     * @param {float} y - Y component
+     * @param {float} z - Z component
+     * @param {float} w - W component
      *
      * @return {Phaser.Renderer.WebGL.WebGLRenderer} [description]
      */
@@ -1780,17 +1796,17 @@ var WebGLRenderer = new Class({
     },
 
     /**
-     * [description]
+     * Sets uniform of a WebGLProgram
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#setInt4
      * @since 3.0.0
      *
-     * @param {WebGLProgram} program - [description]
-     * @param {string} name - [description]
-     * @param {integer} x - [description]
-     * @param {integer} y - [description]
-     * @param {integer} z - [description]
-     * @param {integer} w - [description]
+     * @param {WebGLProgram} program - Target Program
+     * @param {string} name - Name of the uniform
+     * @param {integer} x - X component
+     * @param {integer} y - Y component
+     * @param {integer} z - Z component
+     * @param {integer} w - W component
      *
      * @return {Phaser.Renderer.WebGL.WebGLRenderer} [description]
      */
@@ -1848,15 +1864,15 @@ var WebGLRenderer = new Class({
     },
 
     /**
-     * [description]
+     * Sets uniform of a WebGLProgram
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#setMatrix4
      * @since 3.0.0
      *
-     * @param {WebGLProgram} program - [description]
-     * @param {string} name - [description]
-     * @param {boolean} transpose - [description]
-     * @param {Float32Array} matrix - [description]
+     * @param {WebGLProgram} program - Target program
+     * @param {string} name - Name of the uniform
+     * @param {boolean} transpose - Is the matrix transposed
+     * @param {Float32Array} matrix - Matrix data
      *
      * @return {Phaser.Renderer.WebGL.WebGLRenderer} [description]
      */
@@ -1881,12 +1897,14 @@ var WebGLRenderer = new Class({
         for (var key in this.pipelines)
         {
             this.pipelines[key].destroy();
+
             delete this.pipelines[key];
         }
 
         for (var index = 0; index < this.nativeTextures.length; ++index)
         {
             this.deleteTexture(this.nativeTextures[index]);
+
             delete this.nativeTextures[index];
         }
 
