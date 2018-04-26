@@ -265,7 +265,7 @@ var EmitterOp = new Class({
      */
     toJSON: function ()
     {
-        return JSON.stringify(this.propertyValue);
+        return this.propertyValue;
     },
 
     /**

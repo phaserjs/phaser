@@ -256,6 +256,7 @@ var ParticleEmitter = new Class({
         this.configOpMap = [
             'accelerationX',
             'accelerationY',
+            'angle',
             'alpha',
             'bounce',
             'delay',
