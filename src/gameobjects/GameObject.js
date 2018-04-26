@@ -278,7 +278,7 @@ var GameObject = new Class({
      * @method Phaser.GameObjects.GameObject#setInteractive
      * @since 3.0.0
      *
-     * @param {*} [shape] - A geometric shape that defines the hit area for the Game Object. If not specified a Rectangle will be used.
+     * @param {*} [shape] - A geometric shape that defines the hit area for the Game Object. If not specified a Rectangle will be used. If set to false, disables the Game Object interactivity.
      * @param {HitAreaCallback} [callback] - A callback to be invoked when the Game Object is interacted with.
      * @param {boolean} [dropZone=false] - Should this Game Object be treated as a drop zone target?
      *
@@ -286,7 +286,14 @@ var GameObject = new Class({
      */
     setInteractive: function (shape, callback, dropZone)
     {
-        this.scene.sys.input.enable(this, shape, callback, dropZone);
+		if (shape === false)
+		{
+			this.scene.sys.input.disable(this);
+		}
+		else
+        {
+			this.scene.sys.input.enable(this, shape, callback, dropZone);
+		}
 
         return this;
     },
