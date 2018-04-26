@@ -42,6 +42,7 @@
 * Fix ParticleEmitter toJSON output, it was missing the `angle` property and the Emitter Ops were being cast wrong (thanks @samme)
 * Fixed loading normals with multi image load (thanks @iamchristopher)
 * Array.AddAt would fail if it branched to the fast-path within a Container due to an invalid property. Fix #3617 (thanks @poasher)
+* Polygon.setTo would fail if given an array of arrays as a list of points. Fix #3619 (thanks @PaulTodd)
 
 ### Examples, Documentation and TypeScript
 

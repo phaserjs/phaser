@@ -94,9 +94,8 @@ var Polygon = new Class({
             return this;
         }
 
-        var entry;
-        var y0 = Number.MAX_VALUE;
         var p;
+        var y0 = Number.MAX_VALUE;
 
         //  The points argument is an array, so iterate through it
         for (var i = 0; i < points.length; i++)
@@ -109,7 +108,7 @@ var Polygon = new Class({
                 p.y = points[i + 1];
                 i++;
             }
-            else if (Array.isArray(entry))
+            else if (Array.isArray(points[i]))
             {
                 //  An array of arrays?
                 p.x = points[i][0];
