@@ -30,19 +30,20 @@ var TextFile = new Class({
 
     initialize:
 
-    function TextFile (key, url, path, xhrSettings)
+    function TextFile (loader, key, url, xhrSettings)
     {
         var fileConfig = {
             type: 'text',
+            cache: loader.cacheManager.text,
             extension: 'txt',
             responseType: 'text',
             key: key,
             url: url,
-            path: path,
+            path: loader.path,
             xhrSettings: xhrSettings
         };
 
-        File.call(this, fileConfig);
+        File.call(this, loader, fileConfig);
     },
 
     onProcess: function (callback)
@@ -82,12 +83,12 @@ FileTypesManager.register('text', function (key, url, xhrSettings)
         for (var i = 0; i < key.length; i++)
         {
             //  If it's an array it has to be an array of Objects, so we get everything out of the 'key' object
-            this.addFile(new TextFile(key[i], url, this.path, xhrSettings));
+            this.addFile(new TextFile(this, key[i], url, xhrSettings));
         }
     }
     else
     {
-        this.addFile(new TextFile(key, url, this.path, xhrSettings));
+        this.addFile(new TextFile(this, key, url, xhrSettings));
     }
 
     //  For method chaining

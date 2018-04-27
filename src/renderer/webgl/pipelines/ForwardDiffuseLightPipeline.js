@@ -13,7 +13,9 @@ var LIGHT_COUNT = 10;
 
 /**
  * @classdesc
- * [description]
+ * ForwardDiffuseLightPipeline implements a forward rendering approach for 2D lights.
+ * This pipeline extends TextureTintPipeline so it implements all it's rendering functions
+ * and batching system.
  *
  * @class ForwardDiffuseLightPipeline
  * @extends Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline
@@ -37,7 +39,7 @@ var ForwardDiffuseLightPipeline = new Class({
     },
 
     /**
-     * [description]
+     * This function binds it's base class resources and this lights 2D resources.
      *
      * @method Phaser.Renderer.WebGL.Pipelines.ForwardDiffuseLightPipeline#onBind
      * @override
@@ -61,7 +63,7 @@ var ForwardDiffuseLightPipeline = new Class({
     },
 
     /**
-     * [description]
+     * This function sets all the needed resources for each camera pass.
      *
      * @method Phaser.Renderer.WebGL.Pipelines.ForwardDiffuseLightPipeline#onRender
      * @since 3.0.0

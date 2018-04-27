@@ -30,7 +30,7 @@ var TextWebGLRenderer = function (renderer, src, interpolationPercentage, camera
     
     if (src.dirty)
     {
-        src.canvasTexture = renderer.canvasToTexture(src.canvas, src.canvasTexture, true, src.scaleMode);
+        src.canvasTexture = renderer.canvasToTexture(src.canvas, src.canvasTexture);
         src.dirty = false;
     }
 

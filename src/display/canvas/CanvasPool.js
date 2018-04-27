@@ -36,14 +36,16 @@ var CanvasPool = function ()
      * @param {integer} [width=1] - The width of the Canvas.
      * @param {integer} [height=1] - The height of the Canvas.
      * @param {integer} [canvasType=Phaser.CANVAS] - The type of the Canvas. Either `Phaser.CANVAS` or `Phaser.WEBGL`.
+     * @param {boolean} [selfParent=false] - Use the generated Canvas element as the parent?
      *
      * @return {HTMLCanvasElement} [description]
      */
-    var create = function (parent, width, height, canvasType)
+    var create = function (parent, width, height, canvasType, selfParent)
     {
         if (width === undefined) { width = 1; }
         if (height === undefined) { height = 1; }
         if (canvasType === undefined) { canvasType = CONST.CANVAS; }
+        if (selfParent === undefined) { selfParent = false; }
 
         var canvas;
         var container = first(canvasType);
@@ -68,6 +70,11 @@ var CanvasPool = function ()
             container.parent = parent;
 
             canvas = container.canvas;
+        }
+
+        if (selfParent)
+        {
+            container.parent = canvas;
         }
 
         canvas.width = width;

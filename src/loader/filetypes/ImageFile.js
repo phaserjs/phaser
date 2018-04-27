@@ -20,11 +20,11 @@ var GetFastValue = require('../../utils/object/GetFastValue');
  * @constructor
  * @since 3.0.0
  *
- * @param {string} key - [description]
- * @param {string} url - [description]
- * @param {string} path - [description]
- * @param {XHRSettingsObject} [xhrSettings] - [description]
- * @param {object} [config] - [description]
+ * @param {(string|object)} key - The name of the asset to load or an object representing the asset
+ * @param {string} [url] - The asset's filename
+ * @param {string} [path] - The path the asset can be found in
+ * @param {XHRSettingsObject} [xhrSettings] - Optional image specific XHR settings
+ * @param {object} [config] - config can include: frameWidth, frameHeight, startFrame, endFrame, margin, spacing
  */
 var ImageFile = new Class({
 
@@ -45,25 +45,40 @@ var ImageFile = new Class({
     //         headerValue: 'text/xml'
     //     }
     // });
+    // this.load.image([
+    //     {
+    //         key: 'bunny',
+    //         file: 'assets/sprites/bunny.png',
+    //         xhr: {
+    //             user: 'root',
+    //             password: 'th3G1bs0n',
+    //             timeout: 30,
+    //             header: 'Content-Type',
+    //             headerValue: 'text/xml'
+    //         }
+    //     }
+    // ]);
     // this.load.image({ key: 'bunny' });
     // this.load.image({ key: 'bunny', extension: 'jpg' });
 
-    function ImageFile (key, url, path, xhrSettings, config)
+    function ImageFile (loader, key, url, xhrSettings, config)
     {
         var fileKey = (typeof key === 'string') ? key : GetFastValue(key, 'key', '');
+        var fileUrl = (url === undefined) ? GetFastValue(key, 'file') : url;
 
         var fileConfig = {
             type: 'image',
+            cache: loader.textureManager,
             extension: GetFastValue(key, 'extension', 'png'),
             responseType: 'blob',
             key: fileKey,
-            url: GetFastValue(key, 'file', url),
-            path: path,
+            url: fileUrl,
+            path: loader.path,
             xhrSettings: GetFastValue(key, 'xhr', xhrSettings),
             config: GetFastValue(key, 'config', config)
         };
 
-        File.call(this, fileConfig);
+        File.call(this, loader, fileConfig);
     },
 
     onProcess: function (callback)
@@ -95,6 +110,13 @@ var ImageFile = new Class({
         };
 
         File.createObjectURL(this.data, this.xhrLoader.response, 'image/png');
+    },
+
+    addToCache: function ()
+    {
+        this.cache.addImage(this.key, this.data);
+
+        this.loader.emit('filecomplete', this.key, this);
     }
 
 });
@@ -131,14 +153,14 @@ FileTypesManager.register('image', function (key, url, xhrSettings)
 
             if (Array.isArray(urls) && urls.length === 2)
             {
-                fileA = this.addFile(new ImageFile(key[i], urls[0], this.path, xhrSettings));
-                fileB = this.addFile(new ImageFile(key[i], urls[1], this.path, xhrSettings));
+                fileA = this.addFile(new ImageFile(this, key[i], urls[0], xhrSettings));
+                fileB = this.addFile(new ImageFile(this, key[i], urls[1], xhrSettings));
 
                 fileA.setLinkFile(fileB, 'dataimage');
             }
             else
             {
-                this.addFile(new ImageFile(key[i], url, this.path, xhrSettings));
+                this.addFile(new ImageFile(this, key[i], url, xhrSettings));
             }
         }
     }
@@ -148,14 +170,14 @@ FileTypesManager.register('image', function (key, url, xhrSettings)
 
         if (Array.isArray(urls) && urls.length === 2)
         {
-            fileA = this.addFile(new ImageFile(key, urls[0], this.path, xhrSettings));
-            fileB = this.addFile(new ImageFile(key, urls[1], this.path, xhrSettings));
+            fileA = this.addFile(new ImageFile(this, key, urls[0], xhrSettings));
+            fileB = this.addFile(new ImageFile(this, key, urls[1], xhrSettings));
 
             fileA.setLinkFile(fileB, 'dataimage');
         }
         else
         {
-            this.addFile(new ImageFile(key, url, this.path, xhrSettings));
+            this.addFile(new ImageFile(this, key, url, xhrSettings));
         }
     }
 

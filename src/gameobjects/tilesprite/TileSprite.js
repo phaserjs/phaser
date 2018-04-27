@@ -248,7 +248,7 @@ var TileSprite = new Class({
                 this.potWidth, this.potHeight
             );
 
-            this.tileTexture = this.renderer.canvasToTexture(this.canvasBuffer, this.tileTexture, (this.tileTexture === null), this.scaleMode);
+            this.tileTexture = this.renderer.canvasToTexture(this.canvasBuffer, this.tileTexture);
         }
         else
         {

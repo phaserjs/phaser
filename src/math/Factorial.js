@@ -5,14 +5,14 @@
  */
 
 /**
- * [description]
+ * Calculates the factorial of a given number for integer values greater than 0.
  *
  * @function Phaser.Math.Factorial
  * @since 3.0.0
  *
- * @param {number} value - [description]
+ * @param {number} value - A positive integer to calculate the factorial of.
  *
- * @return {number} [description]
+ * @return {number} The factorial of the given number.
  */
 var Factorial = function (value)
 {

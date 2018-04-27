@@ -21,12 +21,19 @@ var ImageFile = require('./ImageFile.js');
  *
  * @return {object} An object containing two File objects to be added to the loader.
  */
-var SpriteSheetFile = function (key, url, config, path, xhrSettings)
+var SpriteSheetFile = function (loader, key, url, config, xhrSettings)
 {
-    var image = new ImageFile(key, url, path, xhrSettings, config);
+    var image = new ImageFile(loader, key, url, xhrSettings, config);
 
     //  Override the File type
     image.type = 'spritesheet';
+
+    image.addToCache = function ()
+    {
+        this.cache.addSpriteSheet(this.key, this.data, this.config);
+
+        this.loader.emit('filecomplete', this.key, this);
+    };
 
     return image;
 };
@@ -56,12 +63,12 @@ FileTypesManager.register('spritesheet', function (key, url, config, xhrSettings
         for (var i = 0; i < key.length; i++)
         {
             //  If it's an array it has to be an array of Objects, so we get everything out of the 'key' object
-            this.addFile(new SpriteSheetFile(key[i], url, null, this.path, xhrSettings));
+            this.addFile(new SpriteSheetFile(this, key[i], url, null, xhrSettings));
         }
     }
     else
     {
-        this.addFile(new SpriteSheetFile(key, url, config, this.path, xhrSettings));
+        this.addFile(new SpriteSheetFile(this, key, url, config, xhrSettings));
     }
 
     //  For method chaining

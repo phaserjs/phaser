@@ -55,7 +55,7 @@ var AddAt = function (array, item, index, limit, callback, context)
 
             if (callback)
             {
-                callback.call(context, entry);
+                callback.call(context, item);
             }
 
             return item;

@@ -22,14 +22,23 @@ var TILEMAP_FORMATS = require('../../tilemaps/Formats');
  *
  * @return {object} An object containing two File objects to be added to the loader.
  */
-var TilemapJSONFile = function (key, url, path, format, xhrSettings)
+var TilemapJSONFile = function (loader, key, url, format, xhrSettings)
 {
-    var json = new JSONFile(key, url, path, xhrSettings);
+    var json = new JSONFile(loader, key, url, xhrSettings);
 
     //  Override the File type
     json.type = 'tilemapJSON';
 
+    json.cache = loader.cacheManager.tilemap;
+
     json.tilemapFormat = format;
+
+    json.addToCache = function ()
+    {
+        this.cache.add(this.key, { format: this.tilemapFormat, data: this.data });
+
+        this.loader.emit('filecomplete', this.key, this);
+    };
 
     return json;
 };
@@ -58,12 +67,12 @@ FileTypesManager.register('tilemapTiledJSON', function (key, url, xhrSettings)
         for (var i = 0; i < key.length; i++)
         {
             //  If it's an array it has to be an array of Objects, so we get everything out of the 'key' object
-            this.addFile(TilemapJSONFile(key[i], url, this.path, TILEMAP_FORMATS.TILED_JSON, xhrSettings));
+            this.addFile(TilemapJSONFile(this, key[i], url, TILEMAP_FORMATS.TILED_JSON, xhrSettings));
         }
     }
     else
     {
-        this.addFile(TilemapJSONFile(key, url, this.path, TILEMAP_FORMATS.TILED_JSON, xhrSettings));
+        this.addFile(TilemapJSONFile(this, key, url, TILEMAP_FORMATS.TILED_JSON, xhrSettings));
     }
 
     //  For method chaining
@@ -94,12 +103,12 @@ FileTypesManager.register('tilemapWeltmeister', function (key, url, xhrSettings)
         for (var i = 0; i < key.length; i++)
         {
             //  If it's an array it has to be an array of Objects, so we get everything out of the 'key' object
-            this.addFile(TilemapJSONFile(key[i], url, this.path, TILEMAP_FORMATS.WELTMEISTER, xhrSettings));
+            this.addFile(TilemapJSONFile(this, key[i], url, TILEMAP_FORMATS.WELTMEISTER, xhrSettings));
         }
     }
     else
     {
-        this.addFile(TilemapJSONFile(key, url, this.path, TILEMAP_FORMATS.WELTMEISTER, xhrSettings));
+        this.addFile(TilemapJSONFile(this, key, url, TILEMAP_FORMATS.WELTMEISTER, xhrSettings));
     }
 
     //  For method chaining

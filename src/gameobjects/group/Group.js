@@ -239,7 +239,7 @@ var Group = new Class({
          */
         this.createMultipleCallback = GetFastValue(config, 'createMultipleCallback', null);
 
-        if (config && config.key !== undefined)
+        if (config)
         {
             this.createMultiple(config);
         }
@@ -299,8 +299,7 @@ var Group = new Class({
      *
      * If the group becomes {@link Phaser.GameObjects.Group#isFull}, no further Game Objects are created.
      *
-     * Calls {@link Phaser.GameObjects.Group#createMultipleCallback}
-     * and {@link Phaser.GameObjects.Group#createCallback}.
+     * Calls {@link Phaser.GameObjects.Group#createMultipleCallback} and {@link Phaser.GameObjects.Group#createCallback}.
      *
      * @method Phaser.GameObjects.Group#createMultiple
      * @since 3.0.0
@@ -319,6 +318,11 @@ var Group = new Class({
         if (!Array.isArray(config))
         {
             config = [ config ];
+        }
+
+        if (config[0].key === undefined)
+        {
+            return [];
         }
 
         var output = [];

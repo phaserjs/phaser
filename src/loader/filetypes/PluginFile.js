@@ -32,7 +32,7 @@ var PluginFile = new Class({
 
     initialize:
 
-    function PluginFile (key, url, path, xhrSettings)
+    function PluginFile (loader, key, url, xhrSettings)
     {
         // If the url variable refers to a class, add the plugin directly
         if (typeof url === 'function')
@@ -46,11 +46,12 @@ var PluginFile = new Class({
 
         var fileConfig = {
             type: 'script',
+            cache: false,
             extension: GetFastValue(key, 'extension', 'js'),
             responseType: 'text',
             key: fileKey,
             url: GetFastValue(key, 'file', url),
-            path: path,
+            path: loader.path,
             xhrSettings: GetFastValue(key, 'xhr', xhrSettings)
         };
 
@@ -103,12 +104,12 @@ FileTypesManager.register('plugin', function (key, url, xhrSettings)
         for (var i = 0; i < key.length; i++)
         {
             //  If it's an array it has to be an array of Objects, so we get everything out of the 'key' object
-            this.addFile(new PluginFile(key[i], url, this.path, xhrSettings));
+            this.addFile(new PluginFile(this, key[i], url, xhrSettings));
         }
     }
     else
     {
-        this.addFile(new PluginFile(key, url, this.path, xhrSettings));
+        this.addFile(new PluginFile(this, key, url, xhrSettings));
     }
 
     //  For method chaining

@@ -6,23 +6,49 @@
 
 * The Phaser 3 Labs has gained a nifty 'search' feature box thanks to @NemoStein - it allows you to filter out the example categories.
 * We've added a Mask component, which is available on nearly all Game Objects. It includes the methods `setMask`, `clearMask`, `createBitmapMask` and `createGeometryMask`.
+* CanvasTexture is a new extension of the Texture object specifically created for when you've got a Canvas element as the backing source of the texture that you wish to draw to programmatically using the Canvas API. This was possible in previous versions, as a Texture object supported having a Canvas as its source, but we've streamlined the process and made it a lot easier for you to refresh the resulting WebGLTexture on the GPU. To create a CanvasTexture just call the `TextureManager.createCanvas` method as before, only this time you'll get a CanvasTexture back which has helper properties and methods. See the complete JSDocs for more details.
+* RandomDataGenerator has a new method: `shuffle` which allows you to shuffle an array using the current RNG seed (thanks @wtravO)
 
 ### Updates
 
 * If you're using Webpack with Phaser you'll need to update your config to match our new one.
 * We've swapped use of the Webpack DefinePlugin so instead of setting a global flag for the compilation of the Canvas and WebGL renderers, we now use a typeof check instead. This means you should now be able to ingest the Phaser source more easily outside of Webpack without having to define any global vars first (thanks @tgrajewski)
 * Under Webpack we still use the raw-loader to import our shader source, but outside of Webpack we now use `require.extensions` to load the shader source via fs. This should allow you to bundle Phaser with packages other than Webpack more easily (thanks @tgrajewski)
-* The Texture Manager will now emit an `addtexture` event whenever you add a new texture to it, which includes when you load images files from the Loader (as it automatically populates the Texture Manager). Once you receive an `addtexture` event you know the image is loaded and the texture is safe to be applied to a Game Object.
+* The Texture Manager will now emit an `addtexture` event whenever you add a new texture to it, which includes when you load image files from the Loader (as it automatically populates the Texture Manager). Once you receive an `addtexture` event you know the image is loaded and the texture is safe to be applied to a Game Object.
+* BitmapMask and GeometryMask both have new `destroy` methods which clear their references, freeing them for gc.
+* CanvasPool has a new argument `selfParent` which allows the canvas itself to be the parent key, used for later removal.
+* Frame has a new method `setSize` which allows you to set the frame x, y, width and height and have it update all of the internal properties automatically. This is now called directly in the constructor.
+* When a TextureSource is destroyed if it's got a canvas texture it's removed from the CanvasPool.
+* TextureManager.checkKey will check if a texture key is in-use and log a console error if it is and then return a boolean. This is now used extensively internally to prevent you from adding textures that already exist into the manager. If you wish to just check if a key is in use without the error, use the `TextureManager.exists` method as before.
+* TextureManager.remove will allow you to remove a texture from the manager. The texture is destroyed and it emits a `removetexture` event.
+* TextureSource has a new property `renderer` as it's used a lot internally and is useful if you extend the class.
+* TextureSource will now remove its respective WebGLTexture from the renderer when destroyed.
+* TextureSource will now automatically create a glTexture from its canvas if using one.
+* WebGLRenderer will now remove a GL texture from its local `nativeTextures` array when you call the `deleteTexture` method.
+* The BaseCache has a new method `exists` that will return a boolean if an entry for the given key exists in the cache or not.
+* Loader.File has a new argument in its constructor which is an instance of the LoaderPlugin. It stores this in the `loader` property. It also has a new property `cache` which is a reference to the cache that the file type will be stored in.
+* Loader.File has a new method `hasCacheConflict` which checks if a key matching the one used by this file exists in the target Cache or not.
+* Loader.File has a new method `addToCache` which will add the file to its target cache and then emit a `filecomplete` event, passing its key and a reference to itself to the listener (thanks to @kalebwalton for a related PR)
+* LoaderPlugin has a new property `cacheManager` which is a reference to the global game cache and is used by the File Types.
+* LoaderPlugin has a new property `textureManager` which is a reference to the global Texture Manager and is used by the File Types.
+* LoaderPlugin will now check to see if loading a file would cache a cache conflict or not, and prevent it if it will.
+* LoaderPlugin now passes off processing of the final file data to the file itself, which will now self-add itself to its target cache.
 
 ### Bug Fixes
 
 * DataManagerPlugin would throw an error on Game.destroy if you had any Scenes in the Scene Manager had not been run. Fix #3596 (thanks @kuoruan)
+* If you created a Game with no Scenes defined, and then added one via `Game.scene.add` and passed in a data object, the data would be ignored when starting the Scene.
+* Adding a Group with an array of children in the constructor was broken since 3.5. Fix #3612 (thanks @fariazz @samme)
+* Fix ParticleEmitter toJSON output, it was missing the `angle` property and the Emitter Ops were being cast wrong (thanks @samme)
+* Fixed loading normals with multi image load (thanks @iamchristopher)
+* Array.AddAt would fail if it branched to the fast-path within a Container due to an invalid property. Fix #3617 (thanks @poasher)
+* Polygon.setTo would fail if given an array of arrays as a list of points. Fix #3619 (thanks @PaulTodd)
 
 ### Examples, Documentation and TypeScript
 
 My thanks to the following for helping with the Phaser 3 Examples, Docs and TypeScript definitions, either by reporting errors, fixing them or helping author the docs:
 
-@wtravO
+@wtravO @Fabadiculous @zilbuz @samme @iamchristopher
 
 ## Version 3.6.0 - Asuna - 19th April 2018
 
