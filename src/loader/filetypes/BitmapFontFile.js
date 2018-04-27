@@ -4,14 +4,21 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
+var Class = require('../../utils/Class');
 var FileTypesManager = require('../FileTypesManager');
 var ImageFile = require('./ImageFile.js');
+var LinkFile = require('../LinkFile.js');
+var ParseXMLBitmapFont = require('../../gameobjects/bitmaptext/ParseXMLBitmapFont.js');
 var XMLFile = require('./XMLFile.js');
 
 /**
+ * @classdesc
  * An Bitmap Font File.
  *
- * @function Phaser.Loader.FileTypes.BitmapFontFile
+ * @class BitmapFontFile
+ * @extends Phaser.Loader.LinkFile
+ * @memberOf Phaser.Loader.FileTypes
+ * @constructor
  * @since 3.0.0
  *
  * @param {string} key - The key of the file within the loader.
@@ -20,24 +27,52 @@ var XMLFile = require('./XMLFile.js');
  * @param {string} path - The path of the file.
  * @param {XHRSettingsObject} [textureXhrSettings] - Optional texture file specific XHR settings.
  * @param {XHRSettingsObject} [xmlXhrSettings] - Optional atlas file specific XHR settings.
- *
- * @return {object} An object containing two File objects to be added to the loader.
  */
-var BitmapFontFile = function (loader, key, textureURL, xmlURL, textureXhrSettings, xmlXhrSettings)
-{
-    var image = new ImageFile(loader, key, textureURL, textureXhrSettings);
-    var data = new XMLFile(loader, key, xmlURL, xmlXhrSettings);
+var BitmapFontFile = new Class({
 
-    //  Link them together
-    image.linkFile = data;
-    data.linkFile = image;
+    Extends: LinkFile,
 
-    //  Set the type
-    image.linkType = 'bitmapfont';
-    data.linkType = 'bitmapfont';
+    initialize:
 
-    return { texture: image, data: data };
-};
+    function BitmapFontFile (loader, key, textureURL, atlasURL, textureXhrSettings, atlasXhrSettings)
+    {
+        var image = new ImageFile(loader, key, textureURL, textureXhrSettings);
+        var data = new XMLFile(loader, key, atlasURL, atlasXhrSettings);
+
+        LinkFile.call(this, loader, 'bitmapfont', key, [ image, data ]);
+    },
+
+    addToCache: function ()
+    {
+        if (this.failed === 0 && !this.complete)
+        {
+            var fileA = this.files[0];
+            var fileB = this.files[1];
+
+            if (fileA.type === 'image')
+            {
+                this.loader.cacheManager.bitmapFont.add(fileB.key, { data: ParseXMLBitmapFont(fileB.data), texture: fileA.key, frame: null });
+
+                this.loader.textureManager.addImage(fileA.key, fileA.data);
+
+                //  Add the XML into the XML cache
+                fileB.addToCache();
+            }
+            else
+            {
+                this.loader.cacheManager.bitmapFont.add(fileA.key, { data: ParseXMLBitmapFont(fileA.data), texture: fileB.key, frame: null });
+
+                this.loader.textureManager.addImage(fileB.key, fileB.data);
+
+                //  Add the XML into the XML cache
+                fileA.addToCache();
+            }
+
+            this.complete = true;
+        }
+    }
+
+});
 
 /**
  * Adds a Bitmap Font file to the current load queue.
@@ -61,10 +96,9 @@ var BitmapFontFile = function (loader, key, textureURL, xmlURL, textureXhrSettin
 FileTypesManager.register('bitmapFont', function (key, textureURL, xmlURL, textureXhrSettings, xmlXhrSettings)
 {
     //  Returns an object with two properties: 'texture' and 'data'
-    var files = new BitmapFontFile(this, key, textureURL, xmlURL, textureXhrSettings, xmlXhrSettings);
+    var linkfile = new BitmapFontFile(this, key, textureURL, xmlURL, textureXhrSettings, xmlXhrSettings);
 
-    this.addFile(files.texture);
-    this.addFile(files.data);
+    this.addFile(linkfile.files);
 
     return this;
 });

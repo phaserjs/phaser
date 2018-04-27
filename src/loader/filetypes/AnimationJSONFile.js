@@ -4,31 +4,54 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
+var Class = require('../../utils/Class');
 var FileTypesManager = require('../FileTypesManager');
 var JSONFile = require('./JSONFile.js');
 
 /**
- * An Animation JSON File.
+ * @classdesc
+ * [description]
  *
- * @function Phaser.Loader.FileTypes.AnimationJSONFile
+ * @class AnimationJSONFile
+ * @extends Phaser.Loader.File
+ * @memberOf Phaser.Loader.FileTypes
+ * @constructor
  * @since 3.0.0
  *
- * @param {string} key - The key of the file within the loader.
- * @param {string} url - The url to load the file from.
- * @param {string} path - The path of the file.
- * @param {XHRSettingsObject} [xhrSettings] - Optional file specific XHR settings.
- *
- * @return {Phaser.Loader.FileTypes.JSONFile} A File instance to be added to the Loader.
+ * @param {string} key - [description]
+ * @param {string} url - [description]
+ * @param {string} path - [description]
+ * @param {XHRSettingsObject} [xhrSettings] - [description]
  */
-var AnimationJSONFile = function (loader, key, url, xhrSettings)
-{
-    var json = new JSONFile(loader, key, url, xhrSettings);
+var AnimationJSONFile = new Class({
 
-    //  Override the File type
-    json.type = 'animationJSON';
+    Extends: JSONFile,
 
-    return json;
-};
+    initialize:
+
+    //  url can either be a string, in which case it is treated like a proper url, or an object, in which case it is treated as a ready-made JS Object
+
+    function AnimationJSONFile (loader, key, url, xhrSettings)
+    {
+        JSONFile.call(this, loader, key, url, xhrSettings);
+
+        this.type = 'animationJSON';
+    },
+
+    onProcess: function (callback)
+    {
+        JSONFile.prototype.onProcess.call(this, callback);
+
+        //  We also need to hook into this event:
+        this.loader.once('processcomplete', this.onProcessComplete, this);
+    },
+
+    onProcessComplete: function ()
+    {
+        this.loader.scene.sys.anims.fromJSON(this.data);
+    }
+
+});
 
 /**
  * Adds an Animation JSON file to the current load queue.
@@ -66,11 +89,5 @@ FileTypesManager.register('animation', function (key, url, xhrSettings)
     //  For method chaining
     return this;
 });
-
-//  When registering a factory function 'this' refers to the Loader context.
-//
-//  There are several properties available to use:
-//
-//  this.scene - a reference to the Scene that owns the GameObjectFactory
 
 module.exports = AnimationJSONFile;

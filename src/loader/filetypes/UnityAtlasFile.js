@@ -4,40 +4,64 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
+var Class = require('../../utils/Class');
 var FileTypesManager = require('../FileTypesManager');
 var ImageFile = require('./ImageFile.js');
+var LinkFile = require('../LinkFile.js');
 var TextFile = require('./TextFile.js');
 
 /**
- * An Atlas JSON File.
+ * @classdesc
+ * A Unity Atlas File.
  *
- * @function Phaser.Loader.FileTypes.UnityAtlasFile
- * @since 3.0.0
+ * @class UnityAtlasFile
+ * @extends Phaser.Loader.LinkFile
+ * @memberOf Phaser.Loader.FileTypes
+ * @constructor
  *
  * @param {string} key - The key of the file within the loader.
  * @param {string} textureURL - The url to load the texture file from.
  * @param {string} atlasURL - The url to load the atlas file from.
- * @param {string} path - The path of the file.
  * @param {XHRSettingsObject} [textureXhrSettings] - Optional texture file specific XHR settings.
  * @param {XHRSettingsObject} [atlasXhrSettings] - Optional atlas file specific XHR settings.
- *
- * @return {object} An object containing two File objects to be added to the loader.
  */
-var UnityAtlasFile = function (loader, key, textureURL, atlasURL, textureXhrSettings, atlasXhrSettings)
-{
-    var image = new ImageFile(loader, key, textureURL, textureXhrSettings);
-    var data = new TextFile(loader, key, atlasURL, atlasXhrSettings);
+var UnityAtlasFile = new Class({
 
-    //  Link them together
-    image.linkFile = data;
-    data.linkFile = image;
+    Extends: LinkFile,
 
-    //  Set the type
-    image.linkType = 'unityatlas';
-    data.linkType = 'unityatlas';
+    initialize:
 
-    return { texture: image, data: data };
-};
+    function UnityAtlasFile (loader, key, textureURL, atlasURL, textureXhrSettings, atlasXhrSettings)
+    {
+        var image = new ImageFile(loader, key, textureURL, textureXhrSettings);
+        var data = new TextFile(loader, key, atlasURL, atlasXhrSettings);
+
+        LinkFile.call(this, loader, 'unityatlas', key, [ image, data ]);
+    },
+
+    addToCache: function ()
+    {
+        if (this.failed === 0 && !this.complete)
+        {
+            var fileA = this.files[0];
+            var fileB = this.files[1];
+
+            if (fileA.type === 'image')
+            {
+                this.loader.textureManager.addUnityAtlas(fileA.key, fileA.data, fileB.data);
+                fileB.addToCache();
+            }
+            else
+            {
+                this.loader.textureManager.addUnityAtlas(fileB.key, fileB.data, fileA.data);
+                fileA.addToCache();
+            }
+
+            this.complete = true;
+        }
+    }
+
+});
 
 /**
  * Adds a Unity Texture Atlas file to the current load queue.
@@ -60,14 +84,11 @@ var UnityAtlasFile = function (loader, key, textureURL, atlasURL, textureXhrSett
  */
 FileTypesManager.register('unityAtlas', function (key, textureURL, atlasURL, textureXhrSettings, atlasXhrSettings)
 {
-    //  Returns an object with two properties: 'texture' and 'data'
-    var files = new UnityAtlasFile(this, key, textureURL, atlasURL, textureXhrSettings, atlasXhrSettings);
+    var linkfile = new UnityAtlasFile(this, key, textureURL, atlasURL, textureXhrSettings, atlasXhrSettings);
 
-    this.addFile(files.texture);
-    this.addFile(files.data);
+    this.addFile(linkfile.files);
 
     return this;
-
 });
 
 module.exports = UnityAtlasFile;

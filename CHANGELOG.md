@@ -9,6 +9,21 @@
 * CanvasTexture is a new extension of the Texture object specifically created for when you've got a Canvas element as the backing source of the texture that you wish to draw to programmatically using the Canvas API. This was possible in previous versions, as a Texture object supported having a Canvas as its source, but we've streamlined the process and made it a lot easier for you to refresh the resulting WebGLTexture on the GPU. To create a CanvasTexture just call the `TextureManager.createCanvas` method as before, only this time you'll get a CanvasTexture back which has helper properties and methods. See the complete JSDocs for more details.
 * RandomDataGenerator has a new method: `shuffle` which allows you to shuffle an array using the current RNG seed (thanks @wtravO)
 
+### Loader Updates
+
+The Loader has been given a slight overhaul to improve its performance and extensibility.
+
+* LinkFile is a new type of file used by the Loader that handles multiple files that need to be paired together. For example, loading a JSON and an Image for a Texture Atlas. This is now handled by a LinkFile.
+* File has a new argument in its constructor which is an instance of the LoaderPlugin. It stores this in the `loader` property. It also has a new property `cache` which is a reference to the cache that the file type will be stored in.
+* File has a new method `hasCacheConflict` which checks if a key matching the one used by this file exists in the target Cache or not.
+* File has a new method `addToCache` which will add the file to its target cache and then emit a `filecomplete` event, passing its key and a reference to itself to the listener (thanks to @kalebwalton for a related PR)
+* The Loader has a new property `cacheManager` which is a reference to the global game cache and is used by the File Types.
+* The Loader has a new property `textureManager` which is a reference to the global Texture Manager and is used by the File Types.
+* The Loader will now check to see if loading a file would cache a cache conflict or not, and prevent it if it will.
+* The Loader now passes off processing of the final file data to the file itself, which will now self-add itself to its target cache.
+* The Loader will now call 'destroy' on all Files when it finishes processing them. They now tidy-up references and extra data, freeing it for gc.
+* The File Types are now responsible for adding themselves to their respective caches and any extra processing that needs to happen. This has removed all of the code from the Loader that was doing this, meaning the file types are now properly abstracted away and the Loader is no longer bound to them. This will allow us to exclude file types in a future version if you don't need them, creating smaller bundles as a result.
+
 ### Updates
 
 * If you're using Webpack with Phaser you'll need to update your config to match our new one.
@@ -26,13 +41,6 @@
 * TextureSource will now automatically create a glTexture from its canvas if using one.
 * WebGLRenderer will now remove a GL texture from its local `nativeTextures` array when you call the `deleteTexture` method.
 * The BaseCache has a new method `exists` that will return a boolean if an entry for the given key exists in the cache or not.
-* Loader.File has a new argument in its constructor which is an instance of the LoaderPlugin. It stores this in the `loader` property. It also has a new property `cache` which is a reference to the cache that the file type will be stored in.
-* Loader.File has a new method `hasCacheConflict` which checks if a key matching the one used by this file exists in the target Cache or not.
-* Loader.File has a new method `addToCache` which will add the file to its target cache and then emit a `filecomplete` event, passing its key and a reference to itself to the listener (thanks to @kalebwalton for a related PR)
-* LoaderPlugin has a new property `cacheManager` which is a reference to the global game cache and is used by the File Types.
-* LoaderPlugin has a new property `textureManager` which is a reference to the global Texture Manager and is used by the File Types.
-* LoaderPlugin will now check to see if loading a file would cache a cache conflict or not, and prevent it if it will.
-* LoaderPlugin now passes off processing of the final file data to the file itself, which will now self-add itself to its target cache.
 
 ### Bug Fixes
 

@@ -215,52 +215,10 @@ var File = new Class({
          * to the linked file. Set and used internally by the Loader.
          *
          * @name Phaser.Loader.File#linkFile
-         * @type {?Phaser.Loader.File}
+         * @type {?Phaser.Loader.LinkFile}
          * @since 3.0.0
          */
-        this.linkFile = undefined;
-
-        /**
-         * If this is a multipart file, i.e. an atlas and its json together, then this is a reference
-         * to the type of linked association. Set and used internally by the Loader.
-         *
-         * @name Phaser.Loader.File#linkType
-         * @type {string}
-         * @default ''
-         * @since 3.0.0
-         */
-        this.linkType = '';
-
-        /**
-         * If this is a link file, is this the parent or the sibbling?
-         *
-         * @name Phaser.Loader.File#linkParent
-         * @type {boolean}
-         * @default false
-         * @since 3.0.0
-         */
-        this.linkParent = false;
-    },
-
-    /**
-     * If this is a multipart file, i.e. an atlas and its json together, then this is a reference
-     * to the linked file. Set and used internally by the Loader.
-     *
-     * @method Phaser.Loader.File#setLinkFile
-     * @since 3.0.0
-     *
-     * @param {Phaser.Loader.File} fileB - The linked file.
-     * @param {string} linkType - The type of association.
-     */
-    setLinkFile: function (fileB, linkType)
-    {
-        this.linkFile = fileB;
-        fileB.linkFile = this;
-
-        this.linkType = linkType;
-        fileB.linkType = linkType;
-
-        this.linkParent = true;
+        this.linkFile;
     },
 
     /**
@@ -387,7 +345,7 @@ var File = new Class({
     },
 
     /**
-     * Called with the File has completed loading.
+     * Called when the File has completed loading.
      * Checks on the state of its linkfile, if set.
      *
      * @method Phaser.Loader.File#onComplete
@@ -395,23 +353,11 @@ var File = new Class({
      */
     onComplete: function ()
     {
+        this.state = CONST.FILE_COMPLETE;
+
         if (this.linkFile)
         {
-            if (this.linkFile.state === CONST.FILE_WAITING_LINKFILE)
-            {
-                //  The linkfile has finished processing, and is waiting for this file, so let's do them both
-                this.state = CONST.FILE_COMPLETE;
-                this.linkFile.state = CONST.FILE_COMPLETE;
-            }
-            else
-            {
-                //  The linkfile still hasn't finished loading and/or processing yet
-                this.state = CONST.FILE_WAITING_LINKFILE;
-            }
-        }
-        else
-        {
-            this.state = CONST.FILE_COMPLETE;
+            this.linkFile.onFileComplete(this);
         }
     },
 
@@ -446,6 +392,22 @@ var File = new Class({
         }
 
         this.loader.emit('filecomplete', this.key, this);
+    },
+
+    /**
+     * Destroy this File and any references it holds.
+     * Called automatically by the Loader.
+     *
+     * @method Phaser.Loader.File#destroy
+     * @since 3.7.0
+     */
+    destroy: function ()
+    {
+        this.loader = null;
+        this.cache = null;
+        this.xhrSettings = null;
+        this.linkFile = null;
+        this.data = null;
     }
 
 });
