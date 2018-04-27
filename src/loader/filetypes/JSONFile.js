@@ -96,12 +96,12 @@ FileTypesManager.register('json', function (key, url, xhrSettings)
         for (var i = 0; i < key.length; i++)
         {
             //  If it's an array it has to be an array of Objects, so we get everything out of the 'key' object
-            this.addFile(new JSONFile(key[i], url, this.path, xhrSettings));
+            this.addFile(new JSONFile(this, key[i], url, xhrSettings));
         }
     }
     else
     {
-        this.addFile(new JSONFile(key, url, this.path, xhrSettings));
+        this.addFile(new JSONFile(this, key, url, xhrSettings));
     }
 
     //  For method chaining
