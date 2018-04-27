@@ -279,7 +279,7 @@ var GameObject = new Class({
      * @since 3.0.0
      *
      * @param {*} [shape] - A geometric shape that defines the hit area for the Game Object. If not specified a Rectangle will be used.
-     * @param {HitAreaCallback} [callback] - A callback to be invoked when the Game Object is interacted with.
+     * @param {HitAreaCallback} [callback] - A callback to be invoked when the Game Object is interacted with. If you provide a shape you must also provide a callback.
      * @param {boolean} [dropZone=false] - Should this Game Object be treated as a drop zone target?
      *
      * @return {Phaser.GameObjects.GameObject} This GameObject.
