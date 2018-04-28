@@ -462,7 +462,11 @@ var Text = new Class({
                 else
                 {
                     spaceLeft -= wordWidthWithSpace;
-                    result += words[j] + ' ';
+                    result += words[j];
+                    if (j < (words.length -1))
+                    {
+                        result += ' ';
+                    }
                 }
             }
 
