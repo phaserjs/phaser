@@ -1571,29 +1571,30 @@ var ParticleEmitter = new Class({
             var type = GetFastValue(zoneConfig, 'type', 'random');
             var source = GetFastValue(zoneConfig, 'source', null);
 
-            // TODO:
-            // For an EdgeZone, only source.getPoints(quantity, stepRate) is required.
-            // For a RandomZone, only source.getRandomPoint(point) is required.
-            // Any object implementing getPoint(position) could also be assigned here (instead of new EdgeZone, new RandomZone).
-
-            if (source && typeof source.getPoint === 'function')
+            if (source)
             {
                 switch (type)
                 {
                     case 'random':
 
-                        this.emitZone = new RandomZone(source);
+                        if (typeof source.getRandomPoint === 'function')
+                        {
+                            this.emitZone = new RandomZone(source);
+                        }
 
                         break;
 
                     case 'edge':
 
-                        var quantity = GetFastValue(zoneConfig, 'quantity', 1);
-                        var stepRate = GetFastValue(zoneConfig, 'stepRate', 0);
-                        var yoyo = GetFastValue(zoneConfig, 'yoyo', false);
-                        var seamless = GetFastValue(zoneConfig, 'seamless', true);
+                        if (typeof source.getPoints === 'function')
+                        {
+                            var quantity = GetFastValue(zoneConfig, 'quantity', 1);
+                            var stepRate = GetFastValue(zoneConfig, 'stepRate', 0);
+                            var yoyo = GetFastValue(zoneConfig, 'yoyo', false);
+                            var seamless = GetFastValue(zoneConfig, 'seamless', true);
 
-                        this.emitZone = new EdgeZone(source, quantity, stepRate, yoyo, seamless);
+                            this.emitZone = new EdgeZone(source, quantity, stepRate, yoyo, seamless);
+                        }
 
                         break;
                 }
