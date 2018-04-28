@@ -110,7 +110,7 @@ var LoaderPlugin = new Class({
          * @default {}
          * @since 3.0.0
          */
-        this._multilist = {};
+        // this._multilist = {};
 
         //  Inject the available filetypes into the Loader
         FileTypesManager.install(this);
@@ -362,7 +362,7 @@ var LoaderPlugin = new Class({
     {
         if (!this.isReady())
         {
-            return -1;
+            return;
         }
 
         if (Array.isArray(file))
@@ -666,6 +666,7 @@ var LoaderPlugin = new Class({
             return;
         }
 
+        /*
         //  The global Texture Manager
         var cache = this.scene.sys.cache;
         var textures = this.scene.sys.textures;
@@ -717,6 +718,7 @@ var LoaderPlugin = new Class({
                 }
             }
         }
+        */
 
         //  Process all of the files
 
@@ -843,14 +845,15 @@ var LoaderPlugin = new Class({
     },
 
     /**
-     * [description]
+     * Called by the Scene Manager if you specify a files payload for a pre-Scene Boot.
+     * Takes an array of file objects.
      *
      * @method Phaser.Loader.LoaderPlugin#loadArray
      * @since 3.0.0
      *
-     * @param {LoaderFileObject[]} files - [description]
+     * @param {LoaderFileObject[]} files - An array of files to load.
      *
-     * @return {boolean} [description]
+     * @return {boolean} `true` if any files were successfully added to the list, otherwise `false`.
      */
     loadArray: function (files)
     {
@@ -858,57 +861,14 @@ var LoaderPlugin = new Class({
         {
             for (var i = 0; i < files.length; i++)
             {
-                this.file(files[i]);
+                var file = files[i];
+
+                //  Calls file-type methods like `atlas` or `image`
+                this[file.type](file);
             }
         }
 
         return (this.list.size > 0);
-    },
-
-    /**
-     * [description]
-     *
-     * @method Phaser.Loader.LoaderPlugin#file
-     * @since 3.0.0
-     *
-     * @param {LoaderFileObject} file - [description]
-     *
-     * @return {Phaser.Loader.File} [description]
-     */
-    file: function (file)
-    {
-        var entry;
-        var key = file.key;
-
-        switch (file.type)
-        {
-            case 'spritesheet':
-                entry = this.spritesheet(key, file.url, file.config, file.xhrSettings);
-                break;
-
-            case 'atlas':
-                entry = this.atlas(key, file.textureURL, file.atlasURL, file.textureXhrSettings, file.atlasXhrSettings);
-                break;
-
-            case 'bitmapFont':
-                entry = this.bitmapFont(key, file.textureURL, file.xmlURL, file.textureXhrSettings, file.xmlXhrSettings);
-                break;
-
-            case 'multiatlas':
-                entry = this.multiatlas(key, file.textureURLs, file.atlasURLs, file.textureXhrSettings, file.atlasXhrSettings);
-                break;
-
-            case 'audioSprite':
-                entry = this.audioSprite(key, file.urls, file.json, file.config, file.audioXhrSettings, file.jsonXhrSettings);
-                break;
-
-            //  image, json, xml, binary, text, glsl, svg, obj
-            default:
-                entry = this[file.type](key, file.url, file.xhrSettings);
-                break;
-        }
-
-        return entry;
     },
 
     /**

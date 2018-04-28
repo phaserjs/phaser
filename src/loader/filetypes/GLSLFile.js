@@ -33,17 +33,27 @@ var GLSLFile = new Class({
 
     function GLSLFile (loader, key, url, xhrSettings)
     {
-        var fileKey = (typeof key === 'string') ? key : GetFastValue(key, 'key', '');
+        var extension = 'glsl';
+
+        if (IsPlainObject(key))
+        {
+            var config = key;
+
+            key = GetFastValue(config, 'key');
+            url = GetFastValue(config, 'url');
+            xhrSettings = GetFastValue(config, 'xhrSettings');
+            extension = GetFastValue(config, 'extension', extension);
+        }
 
         var fileConfig = {
             type: 'glsl',
             cache: loader.cacheManager.shader,
-            extension: GetFastValue(key, 'extension', 'glsl'),
+            extension: extension,
             responseType: 'text',
-            key: fileKey,
-            url: GetFastValue(key, 'file', url),
+            key: key,
+            url: url,
             path: loader.path,
-            xhrSettings: GetFastValue(key, 'xhr', xhrSettings)
+            xhrSettings: xhrSettings
         };
 
         File.call(this, loader, fileConfig);
@@ -94,7 +104,6 @@ FileTypesManager.register('glsl', function (key, url, xhrSettings)
         this.addFile(new GLSLFile(this, key, url, xhrSettings));
     }
 
-    //  For method chaining
     return this;
 });
 

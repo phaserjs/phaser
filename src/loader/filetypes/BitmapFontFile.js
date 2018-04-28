@@ -7,6 +7,7 @@
 var Class = require('../../utils/Class');
 var FileTypesManager = require('../FileTypesManager');
 var ImageFile = require('./ImageFile.js');
+var IsPlainObject = require('../../utils/object/IsPlainObject');
 var LinkFile = require('../LinkFile.js');
 var ParseXMLBitmapFont = require('../../gameobjects/bitmaptext/ParseXMLBitmapFont.js');
 var XMLFile = require('./XMLFile.js');
@@ -34,10 +35,21 @@ var BitmapFontFile = new Class({
 
     initialize:
 
-    function BitmapFontFile (loader, key, textureURL, atlasURL, textureXhrSettings, atlasXhrSettings)
+    function BitmapFontFile (loader, key, textureURL, xmlURL, textureXhrSettings, xmlXhrSettings)
     {
+        if (IsPlainObject(key))
+        {
+            var config = key;
+
+            key = GetFastValue(config, 'key');
+            textureURL = GetFastValue(config, 'textureURL');
+            xmlURL = GetFastValue(config, 'xmlURL');
+            textureXhrSettings = GetFastValue(config, 'textureXhrSettings');
+            xmlXhrSettings = GetFastValue(config, 'xmlXhrSettings');
+        }
+
         var image = new ImageFile(loader, key, textureURL, textureXhrSettings);
-        var data = new XMLFile(loader, key, atlasURL, atlasXhrSettings);
+        var data = new XMLFile(loader, key, xmlURL, xmlXhrSettings);
 
         LinkFile.call(this, loader, 'bitmapfont', key, [ image, data ]);
     },
@@ -95,10 +107,27 @@ var BitmapFontFile = new Class({
  */
 FileTypesManager.register('bitmapFont', function (key, textureURL, xmlURL, textureXhrSettings, xmlXhrSettings)
 {
-    //  Returns an object with two properties: 'texture' and 'data'
-    var linkfile = new BitmapFontFile(this, key, textureURL, xmlURL, textureXhrSettings, xmlXhrSettings);
+    var linkfile;
 
-    this.addFile(linkfile.files);
+    //  Supports an Object file definition in the key argument
+    //  Or an array of objects in the key argument
+    //  Or a single entry where all arguments have been defined
+
+    if (Array.isArray(key))
+    {
+        for (var i = 0; i < key.length; i++)
+        {
+            linkfile = new BitmapFontFile(this, key[i]);
+
+            this.addFile(linkfile.files);
+        }
+    }
+    else
+    {
+        linkfile = new BitmapFontFile(this, key, textureURL, xmlURL, textureXhrSettings, xmlXhrSettings);
+
+        this.addFile(linkfile.files);
+    }
 
     return this;
 });
