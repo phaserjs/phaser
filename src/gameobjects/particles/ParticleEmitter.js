@@ -66,7 +66,7 @@ var Wrap = require('../../math/Wrap');
 /**
  * @typedef {object} ParticleEmitterEdgeZoneConfig
  *
- * @property {EdgeZoneSource|RandomZoneSource} source - A shape representing the zone. See {@link Phaser.GameObjects.Particles.Zones.EdgeZone#source}.
+ * @property {EdgeZoneSource} source - A shape representing the zone. See {@link Phaser.GameObjects.Particles.Zones.EdgeZone#source}.
  * @property {string} type - 'edge'.
  * @property {integer} quantity - The number of particles to place on the source edge. Set to 0 to use `stepRate` instead.
  * @property {float} [stepRate] - The distance between each particle. When set, `quantity` is implied and should be set to 0.
@@ -77,7 +77,7 @@ var Wrap = require('../../math/Wrap');
 /**
  * @typedef {object} ParticleEmitterRandomZoneConfig
  *
- * @property {EdgeZoneSource|RandomZoneSource} source - A shape representing the zone. See {@link Phaser.GameObjects.Particles.Zones.RandomZone#source}.
+ * @property {RandomZoneSource} source - A shape representing the zone. See {@link Phaser.GameObjects.Particles.Zones.RandomZone#source}.
  * @property {string} [type] - 'random'.
  */
 
