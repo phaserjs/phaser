@@ -6,7 +6,6 @@
 
 var Class = require('../../utils/Class');
 var FileTypesManager = require('../FileTypesManager');
-var GetFastValue = require('../../utils/object/GetFastValue');
 var JSONFile = require('./JSONFile.js');
 
 /**
@@ -74,8 +73,6 @@ var AnimationJSONFile = new Class({
  */
 FileTypesManager.register('animation', function (key, url, xhrSettings)
 {
-    var file;
-
     //  Supports an Object file definition in the key argument
     //  Or an array of objects in the key argument
     //  Or a single entry where all arguments have been defined
@@ -84,16 +81,12 @@ FileTypesManager.register('animation', function (key, url, xhrSettings)
     {
         for (var i = 0; i < key.length; i++)
         {
-            file = new AnimationJSONFile(this, key[i]);
-
-            this.addFile(file);
+            this.addFile(new AnimationJSONFile(this, key[i]));
         }
     }
     else
     {
-        file = this.addFile(new AnimationJSONFile(this, key, url, xhrSettings));
-
-        this.addFile(file);
+        this.addFile(new AnimationJSONFile(this, key, url, xhrSettings));
     }
 
     return this;

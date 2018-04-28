@@ -9,6 +9,7 @@ var CONST = require('../const');
 var File = require('../File');
 var FileTypesManager = require('../FileTypesManager');
 var GetFastValue = require('../../utils/object/GetFastValue');
+var IsPlainObject = require('../../utils/object/IsPlainObject');
 var ParseXML = require('../../dom/ParseXML');
 
 /**
@@ -34,17 +35,27 @@ var XMLFile = new Class({
 
     function XMLFile (loader, key, url, xhrSettings)
     {
-        var fileKey = (typeof key === 'string') ? key : GetFastValue(key, 'key', '');
+        var extension = 'xml';
+
+        if (IsPlainObject(key))
+        {
+            var config = key;
+
+            key = GetFastValue(config, 'key');
+            url = GetFastValue(config, 'url');
+            xhrSettings = GetFastValue(config, 'xhrSettings');
+            extension = GetFastValue(config, 'extension', extension);
+        }
 
         var fileConfig = {
             type: 'xml',
             cache: loader.cacheManager.xml,
-            extension: GetFastValue(key, 'extension', 'xml'),
+            extension: extension,
             responseType: 'text',
-            key: fileKey,
-            url: GetFastValue(key, 'file', url),
+            key: key,
+            url: url,
             path: loader.path,
-            xhrSettings: GetFastValue(key, 'xhr', xhrSettings)
+            xhrSettings: xhrSettings
         };
 
         File.call(this, loader, fileConfig);
@@ -92,7 +103,7 @@ FileTypesManager.register('xml', function (key, url, xhrSettings)
         for (var i = 0; i < key.length; i++)
         {
             //  If it's an array it has to be an array of Objects, so we get everything out of the 'key' object
-            this.addFile(new XMLFile(this, key[i], url, xhrSettings));
+            this.addFile(new XMLFile(this, key[i]));
         }
     }
     else
@@ -100,7 +111,6 @@ FileTypesManager.register('xml', function (key, url, xhrSettings)
         this.addFile(new XMLFile(this, key, url, xhrSettings));
     }
 
-    //  For method chaining
     return this;
 });
 

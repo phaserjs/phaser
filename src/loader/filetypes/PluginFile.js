@@ -9,6 +9,7 @@ var CONST = require('../const');
 var File = require('../File');
 var FileTypesManager = require('../FileTypesManager');
 var GetFastValue = require('../../utils/object/GetFastValue');
+var IsPlainObject = require('../../utils/object/IsPlainObject');
 var PluginManager = require('../../boot/PluginManager');
 
 /**
@@ -34,25 +35,34 @@ var PluginFile = new Class({
 
     function PluginFile (loader, key, url, xhrSettings)
     {
+        var extension = 'js';
+
+        if (IsPlainObject(key))
+        {
+            var config = key;
+
+            key = GetFastValue(config, 'key');
+            url = GetFastValue(config, 'url');
+            xhrSettings = GetFastValue(config, 'xhrSettings');
+            extension = GetFastValue(config, 'extension', extension);
+        }
+
         // If the url variable refers to a class, add the plugin directly
         if (typeof url === 'function')
         {
-            this.key = key;
             window[key] = url;
             window[key].register(PluginManager);
         }
 
-        var fileKey = (typeof key === 'string') ? key : GetFastValue(key, 'key', '');
-
         var fileConfig = {
             type: 'script',
             cache: false,
-            extension: GetFastValue(key, 'extension', 'js'),
+            extension: extension,
             responseType: 'text',
-            key: fileKey,
-            url: GetFastValue(key, 'file', url),
+            key: key,
+            url: url,
             path: loader.path,
-            xhrSettings: GetFastValue(key, 'xhr', xhrSettings)
+            xhrSettings: xhrSettings
         };
 
         File.call(this, fileConfig);
@@ -104,7 +114,7 @@ FileTypesManager.register('plugin', function (key, url, xhrSettings)
         for (var i = 0; i < key.length; i++)
         {
             //  If it's an array it has to be an array of Objects, so we get everything out of the 'key' object
-            this.addFile(new PluginFile(this, key[i], url, xhrSettings));
+            this.addFile(new PluginFile(this, key[i]));
         }
     }
     else
@@ -112,7 +122,6 @@ FileTypesManager.register('plugin', function (key, url, xhrSettings)
         this.addFile(new PluginFile(this, key, url, xhrSettings));
     }
 
-    //  For method chaining
     return this;
 });
 

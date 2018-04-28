@@ -8,6 +8,8 @@ var Class = require('../../utils/Class');
 var CONST = require('../const');
 var File = require('../File');
 var FileTypesManager = require('../FileTypesManager');
+var GetFastValue = require('../../utils/object/GetFastValue');
+var IsPlainObject = require('../../utils/object/IsPlainObject');
 
 /**
  * @classdesc
@@ -32,10 +34,22 @@ var TextFile = new Class({
 
     function TextFile (loader, key, url, xhrSettings)
     {
+        var extension = 'txt';
+
+        if (IsPlainObject(key))
+        {
+            var config = key;
+
+            key = GetFastValue(config, 'key');
+            url = GetFastValue(config, 'url');
+            xhrSettings = GetFastValue(config, 'xhrSettings');
+            extension = GetFastValue(config, 'extension', extension);
+        }
+
         var fileConfig = {
             type: 'text',
             cache: loader.cacheManager.text,
-            extension: 'txt',
+            extension: extension,
             responseType: 'text',
             key: key,
             url: url,
@@ -83,7 +97,7 @@ FileTypesManager.register('text', function (key, url, xhrSettings)
         for (var i = 0; i < key.length; i++)
         {
             //  If it's an array it has to be an array of Objects, so we get everything out of the 'key' object
-            this.addFile(new TextFile(this, key[i], url, xhrSettings));
+            this.addFile(new TextFile(this, key[i]));
         }
     }
     else
@@ -91,7 +105,6 @@ FileTypesManager.register('text', function (key, url, xhrSettings)
         this.addFile(new TextFile(this, key, url, xhrSettings));
     }
 
-    //  For method chaining
     return this;
 });
 

@@ -6,6 +6,7 @@
 
 var Class = require('../../utils/Class');
 var FileTypesManager = require('../FileTypesManager');
+var GetFastValue = require('../../utils/object/GetFastValue');
 var ImageFile = require('./ImageFile.js');
 var IsPlainObject = require('../../utils/object/IsPlainObject');
 var LinkFile = require('../LinkFile.js');

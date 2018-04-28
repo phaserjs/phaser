@@ -9,6 +9,7 @@ var CONST = require('../const');
 var File = require('../File');
 var FileTypesManager = require('../FileTypesManager');
 var GetFastValue = require('../../utils/object/GetFastValue');
+var IsPlainObject = require('../../utils/object/IsPlainObject');
 
 /**
  * @classdesc
@@ -24,7 +25,7 @@ var GetFastValue = require('../../utils/object/GetFastValue');
  * @param {string} [url] - The asset's filename
  * @param {string} [path] - The path the asset can be found in
  * @param {XHRSettingsObject} [xhrSettings] - Optional image specific XHR settings
- * @param {object} [config] - config can include: frameWidth, frameHeight, startFrame, endFrame, margin, spacing
+ * @param {object} [frameConfig] - config can include: frameWidth, frameHeight, startFrame, endFrame, margin, spacing
  */
 var ImageFile = new Class({
 
@@ -32,50 +33,31 @@ var ImageFile = new Class({
 
     initialize:
 
-    // this.load.image('pic', 'assets/pics/taikodrummaster.jpg');
-    // this.load.image({ key: 'pic', file: 'assets/pics/taikodrummaster.jpg' });
-    // this.load.image({
-    //     key: 'bunny',
-    //     file: 'assets/sprites/bunny.png',
-    //     xhr: {
-    //         user: 'root',
-    //         password: 'th3G1bs0n',
-    //         timeout: 30,
-    //         header: 'Content-Type',
-    //         headerValue: 'text/xml'
-    //     }
-    // });
-    // this.load.image([
-    //     {
-    //         key: 'bunny',
-    //         file: 'assets/sprites/bunny.png',
-    //         xhr: {
-    //             user: 'root',
-    //             password: 'th3G1bs0n',
-    //             timeout: 30,
-    //             header: 'Content-Type',
-    //             headerValue: 'text/xml'
-    //         }
-    //     }
-    // ]);
-    // this.load.image({ key: 'bunny' });
-    // this.load.image({ key: 'bunny', extension: 'jpg' });
-
-    function ImageFile (loader, key, url, xhrSettings, config)
+    function ImageFile (loader, key, url, xhrSettings, frameConfig)
     {
-        var fileKey = (typeof key === 'string') ? key : GetFastValue(key, 'key', '');
-        var fileUrl = (url === undefined) ? GetFastValue(key, 'file') : url;
+        var extension = 'png';
+
+        if (IsPlainObject(key))
+        {
+            var config = key;
+
+            key = GetFastValue(config, 'key');
+            url = GetFastValue(config, 'url');
+            xhrSettings = GetFastValue(config, 'xhrSettings');
+            extension = GetFastValue(config, 'extension', extension);
+            frameConfig = GetFastValue(config, 'frameConfig');
+        }
 
         var fileConfig = {
             type: 'image',
             cache: loader.textureManager,
-            extension: GetFastValue(key, 'extension', 'png'),
+            extension: extension,
             responseType: 'blob',
-            key: fileKey,
-            url: fileUrl,
+            key: key,
+            url: url,
             path: loader.path,
-            xhrSettings: GetFastValue(key, 'xhr', xhrSettings),
-            config: GetFastValue(key, 'config', config)
+            xhrSettings: xhrSettings,
+            config: frameConfig
         };
 
         File.call(this, loader, fileConfig);
@@ -140,48 +122,19 @@ var ImageFile = new Class({
  */
 FileTypesManager.register('image', function (key, url, xhrSettings)
 {
-    var urls;
-    var fileA;
-    var fileB;
-
     if (Array.isArray(key))
     {
         for (var i = 0; i < key.length; i++)
         {
             //  If it's an array it has to be an array of Objects, so we get everything out of the 'key' object
-            urls = GetFastValue(key[i], 'file', url);
-
-            if (Array.isArray(urls) && urls.length === 2)
-            {
-                fileA = this.addFile(new ImageFile(this, key[i], urls[0], xhrSettings));
-                fileB = this.addFile(new ImageFile(this, key[i], urls[1], xhrSettings));
-
-                fileA.setLinkFile(fileB, 'dataimage');
-            }
-            else
-            {
-                this.addFile(new ImageFile(this, key[i], url, xhrSettings));
-            }
+            this.addFile(new ImageFile(this, key[i]));
         }
     }
     else
     {
-        urls = GetFastValue(key, 'file', url);
-
-        if (Array.isArray(urls) && urls.length === 2)
-        {
-            fileA = this.addFile(new ImageFile(this, key, urls[0], xhrSettings));
-            fileB = this.addFile(new ImageFile(this, key, urls[1], xhrSettings));
-
-            fileA.setLinkFile(fileB, 'dataimage');
-        }
-        else
-        {
-            this.addFile(new ImageFile(this, key, url, xhrSettings));
-        }
+        this.addFile(new ImageFile(this, key, url, xhrSettings));
     }
 
-    //  For method chaining
     return this;
 });
 

@@ -97,7 +97,7 @@ FileTypesManager.register('binary', function (key, url, xhrSettings)
         for (var i = 0; i < key.length; i++)
         {
             //  If it's an array it has to be an array of Objects, so we get everything out of the 'key' object
-            this.addFile(new BinaryFile(this, key[i], url, xhrSettings));
+            this.addFile(new BinaryFile(this, key[i]));
         }
     }
     else
@@ -105,7 +105,6 @@ FileTypesManager.register('binary', function (key, url, xhrSettings)
         this.addFile(new BinaryFile(this, key, url, xhrSettings));
     }
 
-    //  For method chaining
     return this;
 });
 

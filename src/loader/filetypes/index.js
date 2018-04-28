@@ -51,6 +51,7 @@ module.exports = {
     SVGFile: require('./SVGFile'),
     TextFile: require('./TextFile'),
     TilemapCSVFile: require('./TilemapCSVFile'),
+    TilemapImpactFile: require('./TilemapImpactFile'),
     TilemapJSONFile: require('./TilemapJSONFile'),
     UnityAtlasFile: require('./UnityAtlasFile'),
     XMLFile: require('./XMLFile')

@@ -724,6 +724,16 @@ var LoaderPlugin = new Class({
 
         this.storage.each(function (file)
         {
+            if (file.linkFile)
+            {
+                file.linkFile.addToCache();
+            }
+            else
+            {
+                file.addToCache();
+            }
+
+            /*
             switch (file.type)
             {
                 case 'dataimage':
@@ -751,19 +761,9 @@ var LoaderPlugin = new Class({
                     });
 
                     break;
-
-                default:
-
-                    if (file.linkFile)
-                    {
-                        file.linkFile.addToCache();
-                    }
-                    else
-                    {
-                        file.addToCache();
-                    }
-
             }
+            */
+
         });
 
         this.emit('processcomplete', this);

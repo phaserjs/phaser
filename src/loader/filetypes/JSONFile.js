@@ -9,6 +9,7 @@ var CONST = require('../const');
 var File = require('../File');
 var FileTypesManager = require('../FileTypesManager');
 var GetFastValue = require('../../utils/object/GetFastValue');
+var IsPlainObject = require('../../utils/object/IsPlainObject');
 
 /**
  * @classdesc
@@ -35,25 +36,35 @@ var JSONFile = new Class({
 
     function JSONFile (loader, key, url, xhrSettings)
     {
-        var fileKey = (typeof key === 'string') ? key : GetFastValue(key, 'key', '');
+        var extension = 'json';
+
+        if (IsPlainObject(key))
+        {
+            var config = key;
+
+            key = GetFastValue(config, 'key');
+            url = GetFastValue(config, 'url');
+            xhrSettings = GetFastValue(config, 'xhrSettings');
+            extension = GetFastValue(config, 'extension', extension);
+        }
 
         var fileConfig = {
             type: 'json',
             cache: loader.cacheManager.json,
-            extension: GetFastValue(key, 'extension', 'json'),
+            extension: extension,
             responseType: 'text',
-            key: fileKey,
-            url: GetFastValue(key, 'file', url),
+            key: key,
+            url: url,
             path: loader.path,
-            xhrSettings: GetFastValue(key, 'xhr', xhrSettings)
+            xhrSettings: xhrSettings
         };
 
         File.call(this, loader, fileConfig);
 
-        if (typeof fileConfig.url === 'object')
+        if (IsPlainObject(url))
         {
             //  Object provided instead of a URL, so no need to actually load it (populate data with value)
-            this.data = fileConfig.url;
+            this.data = url;
 
             this.state = CONST.FILE_POPULATED;
         }
@@ -96,7 +107,7 @@ FileTypesManager.register('json', function (key, url, xhrSettings)
         for (var i = 0; i < key.length; i++)
         {
             //  If it's an array it has to be an array of Objects, so we get everything out of the 'key' object
-            this.addFile(new JSONFile(this, key[i], url, xhrSettings));
+            this.addFile(new JSONFile(this, key[i]));
         }
     }
     else
@@ -104,7 +115,6 @@ FileTypesManager.register('json', function (key, url, xhrSettings)
         this.addFile(new JSONFile(this, key, url, xhrSettings));
     }
 
-    //  For method chaining
     return this;
 });
 

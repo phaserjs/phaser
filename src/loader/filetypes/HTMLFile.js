@@ -9,6 +9,7 @@ var CONST = require('../const');
 var File = require('../File');
 var FileTypesManager = require('../FileTypesManager');
 var GetFastValue = require('../../utils/object/GetFastValue');
+var IsPlainObject = require('../../utils/object/IsPlainObject');
 
 /**
  * @classdesc
@@ -38,17 +39,29 @@ var HTMLFile = new Class({
         if (width === undefined) { width = 512; }
         if (height === undefined) { height = 512; }
 
-        var fileKey = (typeof key === 'string') ? key : GetFastValue(key, 'key', '');
+        var extension = 'html';
+
+        if (IsPlainObject(key))
+        {
+            var config = key;
+
+            key = GetFastValue(config, 'key');
+            url = GetFastValue(config, 'url');
+            xhrSettings = GetFastValue(config, 'xhrSettings');
+            extension = GetFastValue(config, 'extension', extension);
+            width = GetFastValue(config, 'width', width);
+            height = GetFastValue(config, 'height', height);
+        }
 
         var fileConfig = {
             type: 'html',
             cache: loader.textureManager,
-            extension: GetFastValue(key, 'extension', 'html'),
+            extension: extension,
             responseType: 'text',
-            key: fileKey,
-            url: GetFastValue(key, 'file', url),
+            key: key,
+            url: url,
             path: loader.path,
-            xhrSettings: GetFastValue(key, 'xhr', xhrSettings),
+            xhrSettings: xhrSettings,
             config: {
                 width: width,
                 height: height
@@ -151,7 +164,7 @@ FileTypesManager.register('html', function (key, url, width, height, xhrSettings
         for (var i = 0; i < key.length; i++)
         {
             //  If it's an array it has to be an array of Objects, so we get everything out of the 'key' object
-            this.addFile(new HTMLFile(this, key[i], url, width, height, xhrSettings));
+            this.addFile(new HTMLFile(this, key[i]));
         }
     }
     else
@@ -159,7 +172,6 @@ FileTypesManager.register('html', function (key, url, width, height, xhrSettings
         this.addFile(new HTMLFile(this, key, url, width, height, xhrSettings));
     }
 
-    //  For method chaining
     return this;
 });
 

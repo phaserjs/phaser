@@ -13,24 +13,24 @@ var TILEMAP_FORMATS = require('../../tilemaps/Formats');
  * @classdesc
  * [description]
  *
- * @class TilemapJSONFile
+ * @class TilemapImpactFile
  * @extends Phaser.Loader.File
  * @memberOf Phaser.Loader.FileTypes
  * @constructor
- * @since 3.0.0
+ * @since 3.7.0
  *
  * @param {string} key - [description]
  * @param {string} url - [description]
  * @param {string} path - [description]
  * @param {XHRSettingsObject} [xhrSettings] - [description]
  */
-var TilemapJSONFile = new Class({
+var TilemapImpactFile = new Class({
 
     Extends: JSONFile,
 
     initialize:
 
-    function TilemapJSONFile (loader, key, url, xhrSettings)
+    function TilemapImpactFile (loader, key, url, xhrSettings)
     {
         JSONFile.call(this, loader, key, url, xhrSettings);
 
@@ -41,7 +41,7 @@ var TilemapJSONFile = new Class({
 
     addToCache: function ()
     {
-        this.cache.add(this.key, { format: TILEMAP_FORMATS.TILED_JSON, data: this.data });
+        this.cache.add(this.key, { format: TILEMAP_FORMATS.WELTMEISTER, data: this.data });
 
         this.loader.emit('filecomplete', this.key, this);
     }
@@ -49,14 +49,14 @@ var TilemapJSONFile = new Class({
 });
 
 /**
- * Adds a Tilemap (Tiled JSON Format) file to the current load queue.
+ * Adds a Tilemap (Weltmeister Format) file to the current load queue.
  *
  * Note: This method will only be available if the Tilemap File type has been built into Phaser.
  *
  * The file is **not** loaded immediately after calling this method.
  * Instead, the file is added to a queue within the Loader, which is processed automatically when the Loader starts.
  *
- * @method Phaser.Loader.LoaderPlugin#tilemapTiledJSON
+ * @method Phaser.Loader.LoaderPlugin#tilemapWeltmeister
  * @since 3.0.0
  *
  * @param {string} key - [description]
@@ -65,22 +65,22 @@ var TilemapJSONFile = new Class({
  *
  * @return {Phaser.Loader.LoaderPlugin} The Loader.
  */
-FileTypesManager.register('tilemapTiledJSON', function (key, url, xhrSettings)
+FileTypesManager.register('tilemapWeltmeister', function (key, url, xhrSettings)
 {
     if (Array.isArray(key))
     {
         for (var i = 0; i < key.length; i++)
         {
             //  If it's an array it has to be an array of Objects, so we get everything out of the 'key' object
-            this.addFile(TilemapJSONFile(this, key[i]));
+            this.addFile(TilemapImpactFile(this, key[i]));
         }
     }
     else
     {
-        this.addFile(TilemapJSONFile(this, key, url, xhrSettings));
+        this.addFile(TilemapImpactFile(this, key, url, xhrSettings));
     }
 
     return this;
 });
 
-module.exports = TilemapJSONFile;
+module.exports = TilemapImpactFile;

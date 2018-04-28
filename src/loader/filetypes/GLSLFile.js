@@ -9,6 +9,7 @@ var CONST = require('../const');
 var File = require('../File');
 var FileTypesManager = require('../FileTypesManager');
 var GetFastValue = require('../../utils/object/GetFastValue');
+var IsPlainObject = require('../../utils/object/IsPlainObject');
 
 /**
  * @classdesc
@@ -96,7 +97,7 @@ FileTypesManager.register('glsl', function (key, url, xhrSettings)
         for (var i = 0; i < key.length; i++)
         {
             //  If it's an array it has to be an array of Objects, so we get everything out of the 'key' object
-            this.addFile(new GLSLFile(this, key[i], url, xhrSettings));
+            this.addFile(new GLSLFile(this, key[i]));
         }
     }
     else
