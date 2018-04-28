@@ -1571,33 +1571,24 @@ var ParticleEmitter = new Class({
             var type = GetFastValue(zoneConfig, 'type', 'random');
             var source = GetFastValue(zoneConfig, 'source', null);
 
-            if (source)
+            switch (type)
             {
-                switch (type)
-                {
-                    case 'random':
+                case 'random':
 
-                        if (typeof source.getRandomPoint === 'function')
-                        {
-                            this.emitZone = new RandomZone(source);
-                        }
+                    this.emitZone = new RandomZone(source);
 
-                        break;
+                    break;
 
-                    case 'edge':
+                case 'edge':
 
-                        if (typeof source.getPoints === 'function')
-                        {
-                            var quantity = GetFastValue(zoneConfig, 'quantity', 1);
-                            var stepRate = GetFastValue(zoneConfig, 'stepRate', 0);
-                            var yoyo = GetFastValue(zoneConfig, 'yoyo', false);
-                            var seamless = GetFastValue(zoneConfig, 'seamless', true);
+                    var quantity = GetFastValue(zoneConfig, 'quantity', 1);
+                    var stepRate = GetFastValue(zoneConfig, 'stepRate', 0);
+                    var yoyo = GetFastValue(zoneConfig, 'yoyo', false);
+                    var seamless = GetFastValue(zoneConfig, 'seamless', true);
 
-                            this.emitZone = new EdgeZone(source, quantity, stepRate, yoyo, seamless);
-                        }
+                    this.emitZone = new EdgeZone(source, quantity, stepRate, yoyo, seamless);
 
-                        break;
-                }
+                    break;
             }
         }
 
