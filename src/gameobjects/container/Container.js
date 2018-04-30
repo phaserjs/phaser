@@ -293,6 +293,9 @@ var Container = new Class({
      * Gets the bounds of this Container. It works by iterating all children of the Container,
      * getting their respective bounds, and then working out a min-max rectangle from that.
      * It does not factor in if the children render or not, all are included.
+     *
+     * Some children are unable to return their bounds, such as Graphics objects, in which case
+     * they are skipped.
      * 
      * Depending on the quantity of children in this Container it could be a really expensive call,
      * so cache it and only poll it as needed.
@@ -321,9 +324,12 @@ var Container = new Class({
             {
                 var entry = children[i];
 
-                entry.getBounds(tempRect);
+                if (entry.getBounds)
+                {
+                    entry.getBounds(tempRect);
 
-                Union(tempRect, output, output);
+                    Union(tempRect, output, output);
+                }
             }
         }
 
