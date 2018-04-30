@@ -560,7 +560,7 @@ var Animation = new Class({
             value = 1 - value;
         }
 
-        this.setCurrentFrame(this.animationManager.getFrameByProgress(value));
+        this.setCurrentFrame(this.currentAnim.getFrameByProgress(value));
 
         return this.parent;
     },
