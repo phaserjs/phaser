@@ -14,6 +14,14 @@ var ValueToColor = require('../../display/color/ValueToColor');
 var Vector2 = require('../../math/Vector2');
 
 /**
+ * @typedef {object} JSONCameraBounds
+ * @property {number} x - The horizontal position of camera
+ * @property {number} y - The vertical position of camera
+ * @property {number} width - The width size of camera
+ * @property {number} height - The height size of camera
+ */
+
+/**
  * @typedef {object} JSONCamera
  *
  * @property {string} name - The name of the camera
@@ -27,11 +35,7 @@ var Vector2 = require('../../math/Vector2');
  * @property {number} scrollX - The horizontal scroll of camera
  * @property {number} scrollY - The vertical scroll of camera
  * @property {string} backgroundColor - The background color of camera
- * @property {object} [bounds] - The bounds of camera
- * @property {number} [bounds.x] - The horizontal position of bounds of camera
- * @property {number} [bounds.y] - The vertical position of bounds of camera
- * @property {number} [bounds.width] - The width of the bounds of camera
- * @property {number} [bounds.height] - The height of the bounds of camera
+ * @property {(JSONCameraBounds|undefined)} [bounds] - The bounds of camera
  */
 
 /**
