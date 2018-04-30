@@ -17,8 +17,8 @@ var Class = require('../../utils/Class');
  *
  * @param {Phaser.Physics.Arcade.World} world - [description]
  * @param {boolean} overlapOnly - [description]
- * @param {Phaser.Physics.Arcade.Body} object1 - The first object to check for collision.
- * @param {Phaser.Physics.Arcade.Body} object2 - The second object to check for collision.
+ * @param {(Phaser.GameObjects.GameObject|Phaser.GameObjects.GameObject[])} object1 - The first object to check for collision.
+ * @param {(Phaser.GameObjects.GameObject|Phaser.GameObjects.GameObject[])} object2 - The second object to check for collision.
  * @param {ArcadePhysicsCallback} collideCallback - The callback to invoke when the two objects collide.
  * @param {ArcadePhysicsCallback} processCallback - The callback to invoke when the two objects collide. Must return a boolean.
  * @param {object} callbackContext - The scope in which to call the callbacks.

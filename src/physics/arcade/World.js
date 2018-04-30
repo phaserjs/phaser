@@ -621,8 +621,8 @@ var World = new Class({
      * @method Phaser.Physics.Arcade.World#addCollider
      * @since 3.0.0
      *
-     * @param {Phaser.Physics.Arcade.Body} object1 - The first object to check for collision.
-     * @param {Phaser.Physics.Arcade.Body} object2 - The second object to check for collision.
+     * @param {(Phaser.GameObjects.GameObject|Phaser.GameObjects.GameObject[])} object1 - The first object to check for collision.
+     * @param {(Phaser.GameObjects.GameObject|Phaser.GameObjects.GameObject[])} object2 - The second object to check for collision.
      * @param {ArcadePhysicsCallback} [collideCallback] - The callback to invoke when the two objects collide.
      * @param {ArcadePhysicsCallback} [processCallback] - The callback to invoke when the two objects collide. Must return a boolean.
      * @param {*} [callbackContext] - The scope in which to call the callbacks.
@@ -648,8 +648,8 @@ var World = new Class({
      * @method Phaser.Physics.Arcade.World#addOverlap
      * @since 3.0.0
      *
-     * @param {Phaser.Physics.Arcade.Body} object1 - The first object to check for overlap.
-     * @param {Phaser.Physics.Arcade.Body} object2 - The second object to check for overlap.
+     * @param {(Phaser.GameObjects.GameObject|Phaser.GameObjects.GameObject[])} object1 - The first object to check for overlap.
+     * @param {(Phaser.GameObjects.GameObject|Phaser.GameObjects.GameObject[])} object2 - The second object to check for overlap.
      * @param {ArcadePhysicsCallback} [collideCallback] - The callback to invoke when the two objects overlap.
      * @param {ArcadePhysicsCallback} [processCallback] - The callback to invoke when the two objects overlap. Must return a boolean.
      * @param {*} [callbackContext] - The scope in which to call the callbacks.
@@ -1351,8 +1351,8 @@ var World = new Class({
      * @method Phaser.Physics.Arcade.World#collideObjects
      * @since 3.0.0
      *
-     * @param {Phaser.GameObjects.GameObject} object1 - [description]
-     * @param {Phaser.GameObjects.GameObject} object2 - [description]
+     * @param {(Phaser.GameObjects.GameObject|Phaser.GameObjects.GameObject[])} object1 - [description]
+     * @param {(Phaser.GameObjects.GameObject|Phaser.GameObjects.GameObject[])} object2 - [description]
      * @param {ArcadePhysicsCallback} collideCallback - [description]
      * @param {ArcadePhysicsCallback} processCallback - [description]
      * @param {*} callbackContext - [description]
