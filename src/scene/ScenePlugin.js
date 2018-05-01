@@ -901,6 +901,23 @@ var ScenePlugin = new Class({
     },
 
     /**
+     * Retrieves the numeric index of a Scene in the Scenes list.
+     *
+     * @method Phaser.Scenes.ScenePlugin#getIndex
+     * @since 3.7.0
+     *
+     * @param {(string|Phaser.Scene)} [key] - The Scene to get the index of.
+     *
+     * @return {integer} The index of the Scene.
+     */
+    getIndex: function (key)
+    {
+        if (key === undefined) { key = this.key; }
+
+        return this.manager.getIndex(key);
+    },
+
+    /**
      * The Scene that owns this plugin is shutting down.
      * We need to kill and reset all internal properties as well as stop listening to Scene events.
      *

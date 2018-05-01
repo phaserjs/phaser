@@ -41,6 +41,7 @@ The Loader has been given a slight overhaul to improve its performance and exten
 * TextureSource will now automatically create a glTexture from its canvas if using one.
 * WebGLRenderer will now remove a GL texture from its local `nativeTextures` array when you call the `deleteTexture` method.
 * The BaseCache has a new method `exists` that will return a boolean if an entry for the given key exists in the cache or not.
+* ScenePlugin.getIndex will return the index of the given Scene in the Scene List.
 
 ### Bug Fixes
 
@@ -54,6 +55,8 @@ The Loader has been given a slight overhaul to improve its performance and exten
 * Text objects with word wrapping enabled would gain an extra space at the end of the line. These are now only added when the word index is greater than the previous one. Fix #3626 (thanks @rexrainbow)
 * Container.getBounds now checks if it can call `getBounds` on its children before doing so, as some do not have this method (such as Graphics objects) so they no longer cause the call to crash. Fix #3623 (thanks @poasher)
 * The Animation Component `setProgress` method was setting the frame on the wrong object. Fix #3633 (thanks @benhhopkins)
+* SceneManager.moveAbove wouldn't move the Scene if it was already above the target Scene. Now it moves to be directly above the target Scene no matter where in the Scene List it is.
+* SceneManager.moveBelow wouldn't move the Scene if it was already below the target Scene. Now it moves to be directly below the target Scene no matter where in the Scene List it is.
 
 ### Examples, Documentation and TypeScript
 
