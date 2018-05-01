@@ -231,10 +231,9 @@ var PathFollower = new Class({
      *
      * @return {Phaser.GameObjects.PathFollower} This Game Object.
      */
-    startFollow: function (config, startAt)
+    startFollow: function (config)
     {
         if (config === undefined) { config = {}; }
-        if (startAt === undefined) { startAt = 0; }
 
         var tween = this.pathTween;
 
